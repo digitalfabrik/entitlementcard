@@ -1,28 +1,27 @@
 module.exports = {
+  root: true,
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint'],
+  plugins: ['@typescript-eslint', 'jest', 'jsx-a11y', 'jsx-expressions', 'prefer-arrow', 'react', 'react-hooks'],
   extends: [
+    'airbnb',
+    'airbnb/hooks',
     'plugin:@typescript-eslint/recommended',
-    'react-app',
-    'react-app/jest',
-    'eslint-config-prettier',
-    'plugin:@typescript-eslint/recommended',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
+    'prettier',
+    'plugin:jest/recommended',
+    'plugin:jest/style',
   ],
   ignorePatterns: ['src/generated/**', 'src/coverage/**', 'build/**'],
   rules: {
-    'prefer-template': 'error',
-    'testing-library/prefer-screen-queries': 'off',
-    'testing-library/no-node-access': 'off',
-    '@typescript-eslint/no-var-requires': 'off',
-    '@typescript-eslint/ban-types': ['error', { extendDefaults: true, types: { '{}': false } }],
-
     // Overly strict rules (for now)
     'class-methods-use-this': 'off',
     'no-console': 'off',
     'no-magic-numbers': 'off',
+    'no-param-reassign': 'off',
+    'no-plusplus': 'off',
     'no-shadow': 'off',
     'no-underscore-dangle': 'off',
-    '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
     'jest/no-mocks-import': 'off',
     'react/display-name': 'off',
@@ -37,8 +36,15 @@ module.exports = {
     'react/require-default-props': 'off',
     'react/sort-comp': 'off',
     'jest/expect-expect': 'off',
+    'jsx-a11y/label-has-associated-control': [
+      'error',
+      {
+        controlComponents: ['HTMLSelect'],
+      },
+    ],
 
     // Disabling since better @typescript-eslint rules available or they make no sense for ts projects
+    'consistent-return': 'off',
     'default-case': 'off',
     'no-use-before-define': 'off',
     'import/no-unresolved': 'off',
@@ -65,6 +71,7 @@ module.exports = {
     '@typescript-eslint/ban-ts-comment': 'error',
     '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
     '@typescript-eslint/explicit-module-boundary-types': 'error',
+    '@typescript-eslint/no-empty-function': 'error',
     '@typescript-eslint/no-explicit-any': 'error',
     '@typescript-eslint/no-unnecessary-condition': 'error',
     '@typescript-eslint/no-unused-vars': [
@@ -88,6 +95,10 @@ module.exports = {
 
     'jest/consistent-test-it': 'error',
     'jest/no-alias-methods': 'error',
+
+    'jsx-expressions/strict-logical-expressions': 'error',
+
+    'prefer-arrow/prefer-arrow-functions': 'error',
   },
   parserOptions: {
     project: true,
@@ -107,5 +118,30 @@ module.exports = {
         'react/jsx-no-constructed-context-values': 'off',
       },
     },
+    {
+      files: ['**/scripts/**', '**/config/**'],
+      rules: {
+        'global-require': 'off',
+        '@typescript-eslint/no-var-requires': 'off',
+        '@typescript-eslint/no-require-imports': 'off',
+        'import/no-extraneous-dependencies': 'off',
+        'import/no-dynamic-require': 'off',
+      },
+    },
+    {
+      files: ['**/src/mui-modules/application/forms/**'],
+      rules: {
+        'react/jsx-pascal-case': 'off',
+      },
+    },
   ],
+  reportUnusedDisableDirectives: true,
+  settings: {
+    jest: {
+      // Since eslint is installed in a different directory than jest, the jest eslint plugin fails to automatically detect the version of jest//
+      // https://github.com/digitalfabrik/entitlementcard/issues/1659
+      // eslint-disable-next-line global-require, @typescript-eslint/no-require-imports
+      version: require('jest/package.json').version,
+    },
+  },
 }

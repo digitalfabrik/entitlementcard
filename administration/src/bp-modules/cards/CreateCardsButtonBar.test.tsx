@@ -1,5 +1,5 @@
 import { act, fireEvent, render } from '@testing-library/react'
-import { ReactElement } from 'react'
+import React, { ReactNode } from 'react'
 
 import CardBlueprint from '../../cards/CardBlueprint'
 import { Region } from '../../generated/graphql'
@@ -9,7 +9,7 @@ import CreateCardsButtonBar from './CreateCardsButtonBar'
 
 jest.useFakeTimers()
 
-const wrapper = ({ children }: { children: ReactElement }) => <ProjectConfigProvider>{children}</ProjectConfigProvider>
+const wrapper = ({ children }: { children: ReactNode }) => <ProjectConfigProvider>{children}</ProjectConfigProvider>
 
 describe('CreateCardsButtonBar', () => {
   it('Should goBack when clicking back', async () => {
@@ -38,7 +38,7 @@ describe('CreateCardsButtonBar', () => {
     const generateCardsCsv = jest.fn()
     const { getByText } = render(
       <CreateCardsButtonBar
-        goBack={() => {}}
+        goBack={() => undefined}
         cardBlueprints={[]}
         generateCardsPdf={generateCardsPdf}
         generateCardsCsv={generateCardsCsv}
@@ -66,7 +66,7 @@ describe('CreateCardsButtonBar', () => {
     const cards = [new CardBlueprint('Thea Test', bayernConfig.card)]
     const { getByText } = render(
       <CreateCardsButtonBar
-        goBack={() => {}}
+        goBack={() => undefined}
         cardBlueprints={cards}
         generateCardsPdf={generateCardsPdf}
         generateCardsCsv={generateCardsCsv}
@@ -102,7 +102,7 @@ describe('CreateCardsButtonBar', () => {
     const cards = [new CardBlueprint('Thea Test', bayernConfig.card, [region])]
     const { getByText } = render(
       <CreateCardsButtonBar
-        goBack={() => {}}
+        goBack={() => undefined}
         cardBlueprints={cards}
         generateCardsPdf={generateCardsPdf}
         generateCardsCsv={generateCardsCsv}

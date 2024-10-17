@@ -77,7 +77,7 @@ const NoteDialogController = ({
           loading={loading}
           onSave={onSave}
           onClose={onClose}
-          placeholder={'Fügen Sie hier eine Notiz hinzu...'}
+          placeholder='Fügen Sie hier eine Notiz hinzu...'
         />
       )}
     </>

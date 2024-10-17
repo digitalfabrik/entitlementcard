@@ -95,7 +95,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
     },
 }
 
-let nuernberg: BuildConfigType = {
+const nuernberg: BuildConfigType = {
     common: nuernbergCommon,
     android: {
         ...nuernbergCommon,

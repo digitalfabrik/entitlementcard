@@ -21,8 +21,6 @@ const StatisticsBarChart = ({ statistics }: StatisticsBarChartProps): ReactEleme
   const barHeight = 50
   const axisHeight = 90
 
-  console.log(statistics)
-
   if (statistics.length === 0 || !cardStatistics.enabled) {
     return (
       <NonIdealState
@@ -64,13 +62,11 @@ const StatisticsBarChart = ({ statistics }: StatisticsBarChartProps): ReactEleme
         legends={[
           {
             dataFrom: 'keys',
-            data: statisticKeys.map((item, index) => {
-              return {
-                color: [cardStatistics.theme.primaryColor, cardStatistics.theme.primaryColorLight][index],
-                id: item,
-                label: statisticKeyLabels.get(item)!,
-              }
-            }),
+            data: statisticKeys.map((item, index) => ({
+              color: [cardStatistics.theme.primaryColor, cardStatistics.theme.primaryColorLight][index],
+              id: item,
+              label: statisticKeyLabels.get(item)!,
+            })),
             anchor: 'top-right',
             direction: 'column',
             translateX: 140,

@@ -18,17 +18,17 @@ export class PdfError extends Error {
   }
 }
 
-async function fillContentAreas(
+const fillContentAreas = async (
   doc: PDFDocument,
   templatePage: PDFPage,
   cardInfoHashBase64: string,
   dynamicCode: Extract<QrCode['qrCode'], { case: 'dynamicActivationCode' }>,
   staticCode: Extract<QrCode['qrCode'], { case: 'staticVerificationCode' }> | null,
-  region: Region,
   cardBlueprint: CardBlueprint,
   pdfConfig: PdfConfig,
-  deepLink: string
-): Promise<void> {
+  deepLink: string,
+  region?: Region
+): Promise<void> => {
   const helveticaFont = await doc.embedFont(StandardFonts.Helvetica)
   pdfConfig.elements?.dynamicActivationQrCodes.forEach(configOptions =>
     pdfQrCodeElement(configOptions, { page: templatePage, qrCode: dynamicCode })
@@ -59,9 +59,9 @@ async function fillContentAreas(
       form,
       font: helveticaFont,
       info: dynamicCode.value.info!,
-      region: region,
       cardBlueprint,
       cardInfoHash: cardInfoHashBase64,
+      region,
     })
   )
 
@@ -70,19 +70,19 @@ async function fillContentAreas(
       page: templatePage,
       font: helveticaFont,
       info: dynamicCode.value.info!,
-      region: region,
       cardBlueprint,
       cardInfoHash: cardInfoHashBase64,
+      region,
     })
   )
 }
 
-export async function generatePdf(
+export const generatePdf = async (
   codes: CreateCardsResult[],
   cardBlueprints: CardBlueprint[],
-  region: Region,
-  pdfConfig: PdfConfig
-): Promise<Blob> {
+  pdfConfig: PdfConfig,
+  region?: Region
+): Promise<Blob> => {
   try {
     const doc = await PDFDocument.create()
 
@@ -97,14 +97,16 @@ export async function generatePdf(
       const cardInfoHashBase64 = codes[k].dynamicCardInfoHashBase64
       const cardBlueprint = cardBlueprints[k]
 
+      // eslint-disable-next-line no-await-in-loop
       const [templatePage] = templateDocument ? await doc.copyPages(templateDocument, [0]) : [null]
 
-      const page = doc.addPage(templatePage ? templatePage : undefined)
+      const page = doc.addPage(templatePage || undefined)
       const dynamicPdfQrCode: PdfQrCode = {
         case: 'dynamicActivationCode',
         value: dynamicCode,
       }
 
+      // eslint-disable-next-line no-await-in-loop
       await fillContentAreas(
         doc,
         page,
@@ -116,10 +118,10 @@ export async function generatePdf(
               value: staticCode,
             }
           : null,
-        region,
         cardBlueprint,
         pdfConfig,
-        getDeepLinkFromQrCode(dynamicPdfQrCode)
+        getDeepLinkFromQrCode(dynamicPdfQrCode),
+        region
       )
     }
 

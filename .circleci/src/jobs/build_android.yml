@@ -4,11 +4,11 @@ parameters:
   buildConfig:
     description: "Name of the build config to use"
     type: enum
-    enum: ['bayern', 'bayern-floss', 'nuernberg']
+    enum: ['bayern', 'bayern-floss', 'nuernberg', 'koblenz']
   flutterFlavor:
     description: "Flutter Flavor to use"
     type: enum
-    enum: ['Bayern', 'BayernFloss', 'Nuernberg']
+    enum: ['Bayern', 'BayernFloss', 'Nuernberg', 'Koblenz']
 environment:
   GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m" -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2'
 resource_class: large

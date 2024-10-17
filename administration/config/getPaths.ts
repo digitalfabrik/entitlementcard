@@ -28,7 +28,7 @@ const resolveModule = (resolveFn: (path: string) => string, filePath: string) =>
   return resolveFn(`${filePath}.js`)
 }
 
-function getPaths(): Record<string, string> {
+const getPaths = (): Record<string, string> => {
   // Make sure any symlinks in the project folder are resolved:
   // https://github.com/facebook/create-react-app/issues/637
   const appDirectory = fs.realpathSync(process.cwd())

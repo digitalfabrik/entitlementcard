@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 
 export const dataPrivacyBaseHeadline =
   'Datenschutzerklärung für die Nutzung und Beantragung des digitalen Nürnberg-Pass'

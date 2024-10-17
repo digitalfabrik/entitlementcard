@@ -1,9 +1,11 @@
+import React from 'react'
+
 import { BlueCardWorkAtDepartmentEntitlementInput } from '../../../generated/graphql'
 import CustomDivider from '../CustomDivider'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
 import { FileRequirementsText, OptionalFileInputForm } from '../primitive-inputs/FileInputForm'
 import ShortTextForm from '../primitive-inputs/ShortTextForm'
-import { Form } from '../util/FormType'
+import { Form, FormComponentProps } from '../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
@@ -20,13 +22,12 @@ const SubForms = {
 
 type State = CompoundState<typeof SubForms>
 type ValidatedInput = BlueCardWorkAtDepartmentEntitlementInput
-type Options = {}
 type AdditionalProps = { applicantName: string }
-const WorkAtDepartmentEntitlementForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+const WorkAtDepartmentEntitlementForm: Form<State, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: createCompoundValidate(SubForms, {}),
-  Component: ({ state, setState, applicantName }) => (
+  Component: ({ state, setState, applicantName }: FormComponentProps<State, AdditionalProps>) => (
     <>
       <CustomDivider label='Angaben zur Tätigkeit' />
       <SubForms.organization.Component

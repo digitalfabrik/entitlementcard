@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 import { GetApplicationsQuery } from '../../generated/graphql'
 import StandaloneCenter from '../StandaloneCenter'
-import ApplicationCard from './ApplicationCard'
+import ApplicationCard, { ApplicationCardProps } from './ApplicationCard'
 import ApplicationStatusBar from './ApplicationStatusBar'
 import { getStatus } from './VerificationsView'
 import { ApplicationStatusBarItemType, barItems } from './constants'
@@ -29,10 +29,12 @@ const ApplicationList = styled(FlipMove)`
 export type Application = GetApplicationsQuery['applications'][number]
 
 // Necessary for FlipMove, as it cannot handle functional components
-export class ApplicationViewComponent extends React.Component<React.ComponentProps<typeof ApplicationCard>> {
+// eslint-disable-next-line react/prefer-stateless-function
+export class ApplicationViewComponent extends React.Component<ApplicationCardProps> {
   render(): ReactElement {
+    const { application } = this.props
     return (
-      <ApplicationListCard key={this.props.application.id}>
+      <ApplicationListCard key={application.id}>
         <ApplicationCard {...this.props} />
       </ApplicationListCard>
     )
@@ -51,12 +53,11 @@ const sortApplications = (applications: Application[]): Application[] =>
     }))
     .sort((a, b) => sortByStatus(a.status, b.status) || sortByDateAsc(new Date(a.createdDate), new Date(b.createdDate)))
 
-const getEmptyApplicationsListStatusDescription = (activeBarItem: ApplicationStatusBarItemType): string => {
-  return activeBarItem.status !== undefined ? `${activeBarItem.title.toLowerCase()}en` : ''
-}
+const getEmptyApplicationsListStatusDescription = (activeBarItem: ApplicationStatusBarItemType): string =>
+  activeBarItem.status !== undefined ? `${activeBarItem.title.toLowerCase()}en` : ''
 
-const ApplicationsOverview = (props: { applications: Application[] }): ReactElement => {
-  const [updatedApplications, setUpdatedApplications] = useState(props.applications)
+const ApplicationsOverview = ({ applications }: { applications: Application[] }): ReactElement => {
+  const [updatedApplications, setUpdatedApplications] = useState(applications)
   const { applicationIdForPrint, printApplicationById } = usePrintApplication()
   const [activeBarItem, setActiveBarItem] = useState<ApplicationStatusBarItemType>(barItems[0])
   const sortedApplications: Application[] = useMemo(() => sortApplications(updatedApplications), [updatedApplications])

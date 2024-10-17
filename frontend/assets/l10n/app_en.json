@@ -76,7 +76,8 @@
     "openSettings": "Open settings",
     "previous": "Back",
     "settings": "Settings",
-    "tryAgain": "Try again"
+    "tryAgain": "Try again",
+    "unknownError": "An unknown error occurred."
   },
   "identification": {
     "activate": "Activate",

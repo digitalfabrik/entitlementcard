@@ -1,6 +1,6 @@
 import { Cell, Column, Table2, TruncatedFormat2 } from '@blueprintjs/table'
 import '@blueprintjs/table/lib/css/table.css'
-import { ReactElement, useCallback } from 'react'
+import React, { ReactElement, useCallback } from 'react'
 import styled from 'styled-components'
 
 import CSVCard from '../../cards/CSVCard'
@@ -38,7 +38,7 @@ const CardImportTable = ({ headers, cardBlueprints }: CardImportTableProps): Rea
           tooltip={!valid ? 'Validierungsfehler' : undefined}
           intent={!valid ? 'danger' : 'none'}>
           <TruncatedFormat2 detectTruncation preformatted>
-            {!!value ? value : '-'}
+            {value || '-'}
           </TruncatedFormat2>
         </StyledCell>
       )
@@ -49,8 +49,8 @@ const CardImportTable = ({ headers, cardBlueprints }: CardImportTableProps): Rea
   return (
     <TableContainer>
       <Table2 numRows={cardBlueprints.length} enableGhostCells minRowHeight={16}>
-        {headers.map((name, idx) => (
-          <Column key={idx} name={name} cellRenderer={cellRenderer} />
+        {headers.map(name => (
+          <Column key={name} name={name} cellRenderer={cellRenderer} />
         ))}
       </Table2>
     </TableContainer>

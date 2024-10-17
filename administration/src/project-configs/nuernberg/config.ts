@@ -4,11 +4,11 @@ import NuernbergPassIdExtension from '../../cards/extensions/NuernbergPassIdExte
 import RegionExtension from '../../cards/extensions/RegionExtension'
 import StartDayExtension from '../../cards/extensions/StartDayExtension'
 import { ProjectConfig } from '../getProjectConfig'
+import { storesManagementConfig } from '../storesManagementConfig'
 import ActivityLogEntry from './ActivityLogEntry'
 import { buildCsvLine } from './csvExport'
 import { DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
 import pdfConfig from './pdf'
-import { storeConfig } from './storeConfig'
 
 const config: ProjectConfig = {
   name: 'Digitaler Nürnberg-Pass',
@@ -53,12 +53,13 @@ const config: ProjectConfig = {
       'ActivationCode',
       'StaticUserCode',
     ],
-    buildCsvLine: buildCsvLine,
+    buildCsvLine,
   },
   cardStatistics: { enabled: false },
   freinetCSVImportEnabled: false,
   cardCreation: true,
-  storeManagement: storeConfig,
+  selfServiceEnabled: false,
+  storesManagement: storesManagementConfig,
   userImportApiEnabled: false,
 }
 

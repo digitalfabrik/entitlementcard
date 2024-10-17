@@ -1,6 +1,6 @@
 import { OverlayToaster } from '@blueprintjs/core'
 import { fireEvent, render, waitFor } from '@testing-library/react'
-import { ReactElement } from 'react'
+import React, { ReactNode } from 'react'
 
 import CSVCard from '../../cards/CSVCard'
 import { Region } from '../../generated/graphql'
@@ -15,7 +15,7 @@ import ImportCardsInput, { ENTRY_LIMIT } from './ImportCardsInput'
 
 jest.mock('../../Router', () => ({}))
 
-const wrapper = ({ children }: { children: ReactElement }) => (
+const wrapper = ({ children }: { children: ReactNode }) => (
   <AppToasterProvider>
     <ProjectConfigProvider>{children}</ProjectConfigProvider>
   </AppToasterProvider>

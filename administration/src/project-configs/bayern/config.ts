@@ -23,6 +23,14 @@ export const applicationJsonToPersonalData = (
   return { forenames: forenames?.value, surname: surname?.value, emailAddress: emailAddress?.value }
 }
 
+const cardConfig = {
+  defaultValidity: { years: 3 },
+  nameColumnName: 'Name',
+  expiryColumnName: 'Ablaufdatum',
+  extensionColumnNames: ['Kartentyp', null, 'MailNotification'],
+  extensions: [BavariaCardTypeExtension, RegionExtension, EMailNotificationExtension],
+}
+
 export const applicationJsonToCardQuery = (json: JsonField<'Array'>): string | null => {
   const query = new URLSearchParams()
   const applicationDetails = findValue(json, 'applicationDetails', 'Array') ?? json
@@ -34,15 +42,15 @@ export const applicationJsonToCardQuery = (json: JsonField<'Array'>): string | n
     return null
   }
 
-  query.set(config.card.nameColumnName, `${personalData.forenames} ${personalData.surname}`)
-  const cardTypeExtensionIdx = config.card.extensions.findIndex(ext => ext === BavariaCardTypeExtension)
+  query.set(cardConfig.nameColumnName, `${personalData.forenames} ${personalData.surname}`)
+  const cardTypeExtensionIdx = cardConfig.extensions.findIndex(ext => ext === BavariaCardTypeExtension)
   const value = cardType.value === 'Goldene Ehrenamtskarte' ? 'Goldkarte' : 'Standard'
-  query.set(config.card.extensionColumnNames[cardTypeExtensionIdx] ?? '', value)
+  query.set(cardConfig.extensionColumnNames[cardTypeExtensionIdx] ?? '', value)
   if (personalData.emailAddress) {
-    const applicantMailNotificationExtensionIdx = config.card.extensions.findIndex(
+    const applicantMailNotificationExtensionIdx = cardConfig.extensions.findIndex(
       ext => ext === EMailNotificationExtension
     )
-    query.set(config.card.extensionColumnNames[applicantMailNotificationExtensionIdx] ?? '', personalData.emailAddress)
+    query.set(cardConfig.extensionColumnNames[applicantMailNotificationExtensionIdx] ?? '', personalData.emailAddress)
   }
 
   return `?${query.toString()}`
@@ -56,13 +64,7 @@ const config: ProjectConfig = {
     applicationJsonToCardQuery,
   },
   staticQrCodesEnabled: false,
-  card: {
-    defaultValidity: { years: 3 },
-    nameColumnName: 'Name',
-    expiryColumnName: 'Ablaufdatum',
-    extensionColumnNames: ['Kartentyp', null, 'MailNotification'],
-    extensions: [BavariaCardTypeExtension, RegionExtension, EMailNotificationExtension],
-  },
+  card: cardConfig,
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
   dataPrivacyContent: DataPrivacyBaseText,
   dataPrivacyAdditionalBaseContent: DataPrivacyAdditionalBaseText,
@@ -85,7 +87,8 @@ const config: ProjectConfig = {
   },
   freinetCSVImportEnabled: true,
   cardCreation: true,
-  storeManagement: {
+  selfServiceEnabled: false,
+  storesManagement: {
     enabled: false,
   },
   userImportApiEnabled: false,

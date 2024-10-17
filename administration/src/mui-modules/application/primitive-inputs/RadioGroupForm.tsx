@@ -1,17 +1,16 @@
 import { Divider, FormControl, FormControlLabel, FormHelperText, FormLabel, Radio, RadioGroup } from '@mui/material'
-import React from 'react'
-import { useContext, useState } from 'react'
+import React, { useContext, useState } from 'react'
 
 import { FormContext } from '../SteppedSubForms'
-import { Form, ValidationResult } from '../util/FormType'
+import { Form, FormComponentProps, ValidationResult } from '../util/FormType'
 
 type State<T extends string> = { selectedValue: T | null }
 type ValidatedInput<T extends string> = T
 type Options<T extends string> = { labelByValue: { [value in T]: string } }
 type AdditionalProps = { divideItems: boolean; title: string }
-type RadioGroupForm<T extends string> = Form<State<T>, Options<T>, ValidatedInput<T>, AdditionalProps>
+type RadioGroupForm<T extends string> = Form<State<T>, ValidatedInput<T>, AdditionalProps, Options<T>>
 
-export function createRadioGroupForm<T extends string>(): RadioGroupForm<T> {
+export const createRadioGroupForm = <T extends string>(): RadioGroupForm<T> => {
   const validate = ({ selectedValue }: State<T>, options: Options<T>): ValidationResult<T> => {
     if (selectedValue === null) {
       return { type: 'error', message: 'Feld ist erforderlich.' }
@@ -28,7 +27,13 @@ export function createRadioGroupForm<T extends string>(): RadioGroupForm<T> {
     initialState: { selectedValue: null },
     getArrayBufferKeys: () => [],
     validate,
-    Component: ({ state, setState, options, divideItems, title }) => {
+    Component: ({
+      state,
+      setState,
+      options,
+      divideItems,
+      title,
+    }: FormComponentProps<State<T>, AdditionalProps, Options<T>>) => {
       const [touched, setTouched] = useState(false)
       const { showAllErrors, disableAllInputs } = useContext(FormContext)
       const validationResult = validate(state, options)
@@ -43,7 +48,7 @@ export function createRadioGroupForm<T extends string>(): RadioGroupForm<T> {
             onBlur={() => setTouched(true)}
             onChange={e => setState(() => ({ selectedValue: e.target.value as T }))}>
             {labelByValueEntries.map(([value, label], index, array) => (
-              <React.Fragment key={index}>
+              <React.Fragment key={label}>
                 <FormControlLabel
                   disabled={disableAllInputs}
                   value={value}

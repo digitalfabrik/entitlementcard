@@ -7,9 +7,9 @@ import { Coordinates, PdfElement, mmToPt } from './PdfElements'
 
 export type InfoParams = {
   info: CardInfo
-  region: Region
   cardBlueprint: CardBlueprint
   cardInfoHash: string
+  region?: Region
 }
 
 export type PdfTextElementProps = {
@@ -26,9 +26,9 @@ type PdfTextElementRendererProps = {
   page: PDFPage
   font: PDFFont
   info: CardInfo
-  region: Region
   cardBlueprint: CardBlueprint
   cardInfoHash: string
+  region?: Region
 }
 
 const pdfTextElement: PdfElement<PdfTextElementProps, PdfTextElementRendererProps> = (
@@ -60,7 +60,7 @@ const pdfTextElement: PdfElement<PdfTextElementProps, PdfTextElementRendererProp
     wordBreaks: text.split('').filter(c => !'\n\f\r\u000B'.includes(c)), // Split on every character
     lineHeight,
     color,
-    rotate: { angle: angle, type: RotationTypes.Degrees },
+    rotate: { angle, type: RotationTypes.Degrees },
     size: fontSize,
   })
 }

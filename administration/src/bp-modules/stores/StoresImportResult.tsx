@@ -19,29 +19,25 @@ const StoresImportResult = ({
   storesUntouched,
   storesCreated,
   dryRun,
-}: StoreImportResultProps): ReactElement => {
-  return (
-    <Container>
-      <H5 data-testid='import-result-headline'>{`Der ${
-        dryRun ? 'Testimport' : 'Import'
-      } der Akzeptanzpartner war erfolgreich!`}</H5>
-      <span>
-        {dryRun
-          ? 'Folgende Änderungen würden sich ergeben:'
-          : 'Folgende Änderungen in der Datenbank wurden vorgenommen:'}
-      </span>
-      <br />
-      <div>
-        Akzeptanzstellen erstellt: <span data-testid='storesCreated'>{storesCreated}</span>
-      </div>
-      <div>
-        Akzeptanzstellen gelöscht: <span data-testid='storesDeleted'>{storesDeleted}</span>
-      </div>
-      <div>
-        Akzeptanzstellen unverändert: <span data-testid='storesUntouched'>{storesUntouched}</span>
-      </div>
-    </Container>
-  )
-}
+}: StoreImportResultProps): ReactElement => (
+  <Container>
+    <H5 data-testid='import-result-headline'>{`Der ${
+      dryRun ? 'Testimport' : 'Import'
+    } der Akzeptanzpartner war erfolgreich!`}</H5>
+    <span>
+      {dryRun ? 'Folgende Änderungen würden sich ergeben:' : 'Folgende Änderungen in der Datenbank wurden vorgenommen:'}
+    </span>
+    <br />
+    <div>
+      Akzeptanzstellen erstellt: <span data-testid='storesCreated'>{storesCreated}</span>
+    </div>
+    <div>
+      Akzeptanzstellen gelöscht: <span data-testid='storesDeleted'>{storesDeleted}</span>
+    </div>
+    <div>
+      Akzeptanzstellen unverändert: <span data-testid='storesUntouched'>{storesUntouched}</span>
+    </div>
+  </Container>
+)
 
 export default StoresImportResult

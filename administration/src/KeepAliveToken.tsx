@@ -1,5 +1,5 @@
 import { Button, Classes, Dialog } from '@blueprintjs/core'
-import { ReactElement, ReactNode, useContext, useEffect, useState } from 'react'
+import React, { ReactElement, ReactNode, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { TokenPayload } from './AuthProvider'
@@ -58,8 +58,8 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props): Rea
       {children}
       <Dialog
         isOpen={secondsLeft <= 180}
-        title={'Ihr Login-Zeitraum läuft ab!'}
-        icon={'warning-sign'}
+        title='Ihr Login-Zeitraum läuft ab!'
+        icon='warning-sign'
         isCloseButtonShown={false}>
         <form
           onSubmit={e => {
@@ -69,19 +69,14 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props): Rea
           <div className={Classes.DIALOG_BODY}>
             <p>Ihr Login-Zeitraum läuft in {secondsLeft} Sekunden ab. Danach werden Sie automatisch ausgeloggt.</p>
             <p>Geben Sie Ihr Passwort ein, um den Login-Zeitraum zu verlängern.</p>
-            <PasswordInput label='' placeholder={'Passwort'} setValue={setPassword} value={password} />
+            <PasswordInput label='' placeholder='Passwort' setValue={setPassword} value={password} />
           </div>
           <div className={Classes.DIALOG_FOOTER}>
             <div className={Classes.DIALOG_FOOTER_ACTIONS}>
               <Button onClick={onSignOut} loading={mutationState.loading}>
                 Ausloggen
               </Button>
-              <Button
-                intent={'primary'}
-                type='submit'
-                loading={mutationState.loading}
-                text='Login-Zeitraum verlängern'
-              />
+              <Button intent='primary' type='submit' loading={mutationState.loading} text='Login-Zeitraum verlängern' />
             </div>
           </div>
         </form>

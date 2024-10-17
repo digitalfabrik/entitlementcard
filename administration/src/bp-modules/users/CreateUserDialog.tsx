@@ -1,5 +1,5 @@
 import { Button, Checkbox, Classes, Dialog, FormGroup, InputGroup } from '@blueprintjs/core'
-import { ReactElement, useContext, useState } from 'react'
+import React, { ReactElement, useContext, useState } from 'react'
 import styled from 'styled-components'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
@@ -57,9 +57,8 @@ const CreateUserDialog = ({
   const getRegionId = () => {
     if (regionIdOverride !== null) {
       return regionIdOverride
-    } else {
-      return role !== null && rolesWithRegion.includes(role) ? regionId : null
     }
+    return role !== null && rolesWithRegion.includes(role) ? regionId : null
   }
 
   return (

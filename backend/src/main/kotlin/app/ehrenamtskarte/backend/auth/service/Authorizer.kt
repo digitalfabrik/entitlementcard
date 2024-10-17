@@ -2,7 +2,12 @@ package app.ehrenamtskarte.backend.auth.service
 
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
+import app.ehrenamtskarte.backend.common.webservice.KOBLENZ_PASS_PROJECT
+import app.ehrenamtskarte.backend.projects.database.ProjectEntity
+import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.RegionEntity
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.transactions.transaction
 
 object Authorizer {
 
@@ -139,12 +144,24 @@ object Authorizer {
         return user.projectId.value == projectId && user.role == Role.PROJECT_STORE_MANAGER.db_value
     }
 
-    fun mayAddApiTokensInProject(user: AdministratorEntity): Boolean =
-        user.role == Role.PROJECT_ADMIN.db_value
+    fun mayAddApiTokensInProject(user: AdministratorEntity): Boolean {
+        return transaction {
+            user.role == Role.PROJECT_ADMIN.db_value && ProjectEntity.find { Projects.project eq KOBLENZ_PASS_PROJECT }
+                .single().id.value == user.projectId.value
+        }
+    }
 
     fun mayViewApiMetadataInProject(user: AdministratorEntity): Boolean =
         user.role == Role.PROJECT_ADMIN.db_value
 
     fun mayDeleteApiTokensInProject(user: AdministratorEntity): Boolean =
         user.role == Role.PROJECT_ADMIN.db_value
+
+    fun maySeeHashingPepper(user: AdministratorEntity): Boolean {
+        return transaction {
+            ProjectEntity.find { Projects.project eq KOBLENZ_PASS_PROJECT }
+                .single().id.value == user.projectId.value &&
+                user.role == Role.PROJECT_ADMIN.db_value
+        }
+    }
 }

@@ -1,5 +1,5 @@
 import { Button, Callout, H2 } from '@blueprintjs/core'
-import { ReactElement, useContext, useState } from 'react'
+import React, { ReactElement, useContext, useState } from 'react'
 
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
@@ -68,7 +68,7 @@ const ChangePasswordForm = (): ReactElement => {
         <PasswordInput label='Neues Passwort bestätigen' value={repeatNewPassword} setValue={setRepeatNewPassword} />
         {warnMessage === null ? null : <Callout intent='danger'>{warnMessage}</Callout>}
         <div style={{ textAlign: 'right', padding: '10px 0' }}>
-          <Button text={'Passwort ändern'} intent='primary' type='submit' disabled={!valid} loading={loading} />
+          <Button text='Passwort ändern' intent='primary' type='submit' disabled={!valid} loading={loading} />
         </div>
       </form>
     </SettingsCard>

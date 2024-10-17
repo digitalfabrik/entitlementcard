@@ -1,6 +1,7 @@
-import { ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 
-export const dataPrivacyBaseHeadline = 'Datenschutzerklärung für die Nutzung und Beantragung des digitalen Koblenz-Pass'
+export const dataPrivacyBaseHeadline =
+  'Datenschutzerklärung für die Nutzung und Beantragung des digitalen KoblenzPasses'
 
 /* Generated using https://magic.reactjs.net/htmltojsx.htm
 Instructions:
@@ -39,17 +40,16 @@ r.substr(0, r.search("<p")) + r.substr(r.search("</p>") + 4)
 Copy the resulting string into the htmltojsx converter.
 */
 
-// TODO 1548 Provide data privacy text
 export const DataPrivacyBaseText = (): ReactElement => (
   <div>
+    <b>Vorbemerkungen:</b>
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       Diese Datenschutzerklärung bezieht sich auf die Verarbeitung personenbezogener Daten im Rahmen des digitalen
-      NürnbergPass einschließlich verbundener Dienste.
+      KoblenzPasses einschließlich verbundener Dienste.
     </p>
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
-      Der digitale NürnbergPass wird im Auftrag der Stadt Nürnberg, Amt für Existenzsicherung und soziale Integration,
-      Dietzstraße 4, 90443 Nürnberg durch die Tür an Tür – Digitalfabrik gGmbH, Wertachstr. 29, 86153 Augsburg
-      betrieben.
+      Der digitale KoblenzPass wird im Auftrag der Stadt Koblenz durch die Tür an Tür – Digitalfabrik gGmbH,
+      Wertachstraße 29, 86153 Augsburg betrieben.
     </p>
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       Die Betreiber dieser Seiten nehmen den Schutz Ihrer persönlichen Daten sehr ernst. Wir behandeln Ihre
@@ -57,7 +57,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
       Datenschutzerklärung.
     </p>
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
-      Der gesamte Programmcode des digitalen NürnbergPass ist darüber hinaus quelloffen lizenziert unter der MIT-Lizenz
+      Der gesamte Programmcode des digitalen KoblenzPasses ist darüber hinaus quelloffen lizenziert unter der MIT-Lizenz
       und kann hier eingesehen werden:
       <br />
       <a
@@ -70,6 +70,8 @@ export const DataPrivacyBaseText = (): ReactElement => (
         </span>
       </a>
     </p>
+    <br />
+    <b>Kontaktdaten:</b>
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       Für nähere Informationen zur Verarbeitung Ihrer personenbezogenen Daten können Sie uns unter den unten genannten
       Kontaktdaten erreichen.
@@ -78,37 +80,47 @@ export const DataPrivacyBaseText = (): ReactElement => (
       <span>
         <u>Name und Kontaktdaten des Verantwortlichen</u>
       </span>
-      &nbsp;
-      <br />
-      Stadt Nürnberg Sozialamt
       <br />
       <br />
-      Amt für Existenzsicherung und soziale Integration – Sozialamt
+      Stadt Koblenz
+      <br />
+      Amt für Jugend, Familie, Senioren und Soziales
       <span>
         <br />
         Telefon:{' '}
       </span>
-      0911 /231 - 2315
+      +49 (0)261 129 1000
       <br />
       E-Mail:
-      <a target='_blank' rel='noreferrer' href='mailto:SHA@stadt.nuernberg.de' title='mailto:SHA@stadt.nuernberg.de'>
+      <a
+        target='_blank'
+        rel='noreferrer'
+        href='mailto:koblenzpass@stadt.koblenz.de'
+        title='mailto:koblenzpass@stadt.koblenz.de'>
         <span style={{ color: '#0000ff' }}>
-          <u>SHA@stadt.nuernberg.de</u>
+          <u>koblenzpass@stadt.koblenz.de</u>
         </span>
       </a>
     </p>
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       <span>
-        <u>Für Fragen zum Datenschutz</u>
+        <u>Kontaktdaten der Datenschutzbeauftragten</u>
       </span>
       <br />
-      Stadt Nürnberg, Datenschutzbeauftragter
+      <br />
+      Informationssicherheits- und Datenschutz-Management der Stadtverwaltung Koblenz
+      <br />
+      Datenschutzbeauftragter: Oliver Philippsen
+      <br />
+      Informationssicherheitsbeauftragter: Dominik Weber
       <br />
       <br />
-      Fünferplatz 2, 90403 Nürnberg
+      Willi-Hörter-Platz 1
+      <br />
+      56068 Koblenz
       <span>
         <br />
-        Telefon:0911 / 231 - 5115
+        Telefon: +49 (0)261 129-1017
       </span>
       <span>
         <br />
@@ -117,14 +129,23 @@ export const DataPrivacyBaseText = (): ReactElement => (
       <a
         target='_blank'
         rel='noreferrer'
-        href='mailto:Datenschutz@stadt.nuernberg.de'
-        title='mailto:Datenschutz@stadt.nuernberg.de'>
+        href='mailto:security.management@stadt.koblenz.de'
+        title='mailto:security.management@stadt.koblenz.de'>
         <span style={{ color: '#0000ff' }}>
-          <u>Datenschutz@stadt.nuernberg.de</u>
+          <u>security.management@stadt.koblenz.de</u>
         </span>
       </a>
     </p>
     <br />
+    <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
+      Allgemeines zum Thema Datenschutz finden Sie auf der Website des Landesbeauftragten für den Datenschutz und die
+      Informationsfreiheit Rheinland-Pfalz{' '}
+      <a target='_blank' rel='noreferrer' href='https://www.datenschutz.rlp.de' title='https://www.datenschutz.rlp.de'>
+        <span style={{ color: '#0000ff' }}>
+          <u>(https://www.datenschutz.rlp.de)</u>.
+        </span>
+      </a>
+    </p>
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       <span>
         <b>Zwecke und Rechtsgrundlagen für die Verarbeitung personenbezogener Daten</b>
@@ -136,32 +157,32 @@ export const DataPrivacyBaseText = (): ReactElement => (
       </span>
     </p>
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
-      Zweck der Verarbeitung ist die Erfüllung der uns vom Gesetzgeber zugewiesenen öffentlichen Aufgaben, insbesondere
-      der Bereitstellung von Sozialleistungen.
+      Zweck der Verarbeitung ist die Bereitstellung und spätere Nutzung eines beantragten digitalen KoblenzPasses.
     </p>
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
-      Die Rechtsgrundlage für die Verarbeitung Ihrer Daten ergibt sich, soweit nichts anderes angegeben ist, aus Art. 4
-      Abs. 1 des Bayerischen Datenschutzgesetzes (BayDSG) in Verbindung mit Art. 6 Abs. 1 UAbs. 1 Buchst. e der
-      Datenschutzgrundverordnung (DSGVO). Demnach ist es uns erlaubt, die zur Erfüllung einer uns obliegenden Aufgabe
-      erforderlichen Daten zu verarbeiten.{' '}
+      Die Datenverarbeitungen im Zusammenhang mit der Bereitstellung und Nutzung des digitalen KoblenzPass sind
+      Verarbeitungen personenbezogener Daten gemäß Art. 4 der Datenschutz-Grundverordnung (DSGVO). Diese erfolgt
+      aufgrund ausdrücklicher Einwilligung, mithin des/der Personensorgeberechtigten (Art. 6 Abs. 1 lit. a DSGVO). Um
+      dies zu gewährleisten, müssen Sie beim Abrufen des digitalen KoblenzPasses explizit der Verarbeitung Ihrer Daten
+      zustimmen. Dies erfolgt ausschließlich, um Sie als berechtigten KoblenzPass-Inhaber bzw. -Inhaberin zu
+      identifizieren. Die Daten werden nicht gespeichert.
     </p>
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
-      Soweit Sie in eine Verarbeitung eingewilligt haben, stützt sich die Datenverarbeitung auf Art. 6 Abs. 1
-      <span style={{ fontFamily: '"Calibri"', fontSize: '11pt' }}>&nbsp;</span>
-      UAbs. 1 Buchstabe a DSGVO.
+      Rechtsgrundlage für die vorübergehende Speicherung und Verarbeitung von Daten hinsichtlich der Bereitstellung der
+      Website „KoblenzPass-Portal“ und Erstellung von notwendigen Logfiles ist Art. 6 Abs. 1 lit. e DSGVO.
     </p>
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       <span>
         <br />
-        <b>Automatische Speicherung von Daten</b>
+        <b>Automatische Speicherung von Daten:</b>
       </span>
       <span>
         <b>
           <br />
         </b>
       </span>
-      Bei Nutzung der digitalen NürnbergPass-App (Android/iOS) werden folgende Nutzungsdaten gemäß § 15 Abs. 1 TMG bei
-      jedem Aufruf mit aktiver Internetverbindung anonymisiert erhoben:
+      Bei jedem Zugriff auf das webbasierte KoblenzPass-Portal zum Abruf und zur Verlängerung eines KoblenzPasses werden
+      folgende Nutzungsdaten erhoben:
     </p>
     <ul>
       <li>
@@ -200,13 +221,17 @@ export const DataPrivacyBaseText = (): ReactElement => (
         </p>
       </li>
     </ul>
+    <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
+      Die in den Formularfelder eingegebenen Daten werden ebenfalls an den Server gesendet und dort transient
+      verarbeitet. Eine Speicherung der Daten erfolgt nicht.
+    </p>
     <p style={{ marginTop: '0pt', marginBottom: '0pt' }}>
       Sonstige Daten werden bei Ihrer Nutzung nicht automatisch erhoben und nicht an unsere Server gesendet. Nach dem
       Grundsatz der Datenvermeidung und der Datensparsamkeit sowie dem Grundsatz der anonymen und pseudonymen Nutzung
-      wird nur das Minimum an Nutzungsdaten erhoben, soweit dies für den technischen Betrieb der Apps sowie die
-      Ermittlung der aufgerufenen Inhalte erforderlich ist. Die erhobenen Informationen können weder direkt noch mit
-      Hilfe von Zusatzwissen auf eine bestimmte Person zurückgeführt werden. Die einzelnen Nutzerinnen und Nutzer können
-      somit nicht identifiziert werden. Wir erstellen keine Nutzungsprofile.
+      wird nur das Minimum an Nutzungsdaten erhoben, soweit dies für den technischen Betrieb und die Sicherheit der Apps
+      sowie die Ermittlung der aufgerufenen Inhalte erforderlich ist. Die erhobenen Informationen können weder direkt
+      noch mit Hilfe von Zusatzwissen auf eine bestimmte Person zurückgeführt werden. Die einzelnen Nutzerinnen und
+      Nutzer können somit nicht identifiziert werden. Wir erstellen keine Nutzungsprofile.
     </p>
     <p style={{ marginTop: '0pt', marginBottom: '0pt' }}>&nbsp;</p>
     <p style={{ marginTop: '0pt', marginBottom: '0pt' }}>
@@ -222,7 +247,6 @@ export const DataPrivacyBaseText = (): ReactElement => (
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       Der technische Betrieb unserer Datenverarbeitungssysteme erfolgt durch:
     </p>
-    <br />
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       Tür an Tür – Digitalfabrik gGmbH,
       <span>
@@ -234,56 +258,22 @@ export const DataPrivacyBaseText = (): ReactElement => (
         86153 Augsburg
       </span>
     </p>
-    <br />
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
-      Gegebenenfalls werden Ihre Daten an die zuständigen Aufsichts- und Rechnungsprüfungsbehörden zur Wahrnehmung der
-      jeweiligen Kontrollrechte übermittelt.
+      Alle uns bekannt gewordenen personenbezogenen Daten von betroffenen Personen dürfen wir nur dann an andere
+      Personen oder Stellen weitergeben oder für andere Zwecke verwenden, wenn diese dem zugestimmt haben oder die
+      Weitergabe gesetzlich zugelassen ist.
     </p>
-    <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
-      Zur Abwehr von Gefahren für die Sicherheit in der Informationstechnik können bei elektronischer Übermittlung Daten
-      an das Landesamt für Sicherheit in der Informationstechnik weitergeleitet werden und dort auf Grundlage der Art.
-      12 ff. des Bayerischen E-Government-Gesetzes verarbeitet werden. Ihre Daten werden an die&nbsp;Stadt Nürnberg, Amt
-      für Existenzsicherung und soziale Integration, Dietzstraße 4, 90443 Nürnberg weitergegeben, um den NürnbergPass
-      sachgemäß auszustellen.
-    </p>
-    <p style={{ marginTop: '0pt', marginBottom: '0pt' }}>
-      Eine Übermittlung der Daten in andere Drittländer&nbsp;erfolgt nicht. Der Serverstandort ist Deutschland.
-    </p>
-    <br />
-    <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
-      <span>
-        <b>Zustimmung (Einwilligung) zur Erhebung, Nutzung und Verarbeitung personenbezogener Daten</b>
-      </span>
-      <span>
-        <b>
-          <br />
-        </b>
-      </span>
-      Außerhalb gesetzlicher Verpflichtungen dürfen personenbezogene Daten nur mit (und im Rahmen) Ihrer Zustimmung
-      erhoben, genutzt oder verarbeitet werden.
-    </p>
-    <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
-      Beim Zugriff auf dieses Internetangebot werden von uns Cookies (kleine Dateien) auf Ihrer Festplatte mit einer
-      Gültigkeitsdauer von zwölf Monaten gespeichert. Wir verwenden diese ausschließlich dazu, Sie bei diesem und
-      weiteren Besuchen unserer Webseite wiedererkennen zu können. Die meisten Browser sind so eingestellt, dass sie die
-      Verwendung von Cookies akzeptieren, diese Funktion kann aber durch die Einstellung des Internetbrowsers von Ihnen
-      für die laufende Sitzung oder dauerhaft abgeschaltet werden.“
-    </p>
-    <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
-      Alle Einwilligungen können verweigert bzw. jederzeit ohne Angabe von Gründen durch Mitteilung an
-      digitalfabrik@tuerantuer.de widerrufen werden. In diesem Fall werden alle gespeicherten personenbezogenen Daten
-      gelöscht. Aus der Nicht-Einwilligung oder einem Widerruf darf Ihnen kein Nachteil entstehen. Ein Widerruf kann nur
-      mit Wirkung für die Zukunft erklärt werden.
-    </p>
+
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
       <br />
       <span>
         <b>Einwilligung durch Minderjährige</b>
       </span>
-      <br />
-      Jugendliche können laut Art. 8 Abs. 1 DSGVO erst ab 16 Jahren wirksam in die Verarbeitung ihrer personenbezogenen
-      Daten durch Dienstanbieter der Informationsgesellschaft einwilligen. Bei Minderjährigen unter 16 Jahren müssen die
-      Erziehungsberechtigten einwilligen.
+    </p>
+    <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
+      Personenbezogene Daten von Minderjährigen unter 16 Jahren werden nicht bewusst erhoben und verarbeitet. Gemäß Art.
+      8 DSGVO dürfen Jugendliche ab 16 Jahre ihr Einverständnis zur Datenverarbeitung selbst erteilen. Für Kinder und
+      Jugendliche unter 16 Jahren bedarf es der Einverständniserklärung der Personensorgeberechtigten.
     </p>
     <br />
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
@@ -292,8 +282,18 @@ export const DataPrivacyBaseText = (): ReactElement => (
       </span>
     </p>
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
-      Ihre Daten werden nur so lange gespeichert, wie dies unter Beachtung gesetzlicher Aufbewahrungsfristen zur
-      Aufgabenerfüllung erforderlich ist. Die Speicherdauer kann bis zu 10 Jahre dauern.
+      Ihre Daten werden, vorbehaltlich eines Widerrufs, nur so lange gespeichert, wie dies unter Beachtung gesetzlicher
+      Aufbewahrungsfristen zur Aufgabenerfüllung erforderlich ist.
+    </p>
+    <br />
+    <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
+      <span>
+        <b>Widerrufsrecht bei Einwilligung:</b>
+      </span>
+    </p>
+    <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
+      Die Einwilligung kann jederzeit für die Zukunft widerrufen werden. Die Rechtmäßigkeit der aufgrund der
+      Einwilligung bis zum Widerruf erfolgten Datenverarbeitung wird durch diesen nicht berührt.
     </p>
     <br />
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
@@ -340,7 +340,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
         <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
           Sie haben das Recht, aus Gründen, die sich aus Ihrer besonderen Situation ergeben, jederzeit gegen die
           Verarbeitung Ihrer Daten Widerspruch einzulegen, wenn die Verarbeitung ausschließlich auf Grundlage des Art. 6
-          Abs. 1 UAbs. 1 Buchst. e oder f DSGVO erfolgt (Art. 21 Abs. 1 Satz 1 DSGVO).
+          Abs. 1 lit. e oder f DSGVO erfolgt (Art. 21 Abs. 1 Satz 1 DSGVO).
         </p>
       </li>
     </ul>
@@ -351,26 +351,26 @@ export const DataPrivacyBaseText = (): ReactElement => (
       </span>
     </p>
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
-      Weiterhin besteht ein Beschwerderecht beim Bayerischen Landesbeauftragten für den Datenschutz. Diesen können Sie
-      unter folgenden Kontaktdaten erreichen:
+      Weiterhin besteht ein Beschwerderecht beim Landesbeauftragten für den Datenschutz und die Informationsfreiheit
+      Rheinland-Pfalz. Diesen können Sie unter folgenden Kontaktdaten erreichen:
     </p>
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
-      Postanschrift: Postfach 22 12 19, 80502 München
+      Postanschrift: Postfach 30 40 55020 Mainz
       <span>
         <br />
-        Adresse: Wagmüllerstraße 18, 80538 München
+        Adresse: Hinter Bleiche 34, 55116 Mainz
       </span>
       <span>
         <br />
-        Telefon: (089) 2126-72-0
+        Telefon: +49 (0) 6131 8920-0
       </span>
       <span>
         <br />
-        Telefax: (089) 2126-72-50
+        Telefax: +49 (0) 6131 8920-299
       </span>
       <span>
         <br />
-        Internet: www.datenschutz-bayern.de
+        E-Mail: poststelle@datenschutz.rlp.de
       </span>
     </p>
     <br />
@@ -378,42 +378,12 @@ export const DataPrivacyBaseText = (): ReactElement => (
       <span>
         <b>Datensicherheit</b>
       </span>
-      <span>
-        <br />
-        Wir verwenden technische
-      </span>
-      und organisatorische Maßnahmen, um Ihre Daten vor dem Zugriff Unberechtigter und vor Manipulation, Übermittlung,
-      Verlust oder Zerstörung zu schützen. Unsere Sicherheitsverfahren überprüfen wir regelmäßig und passen sie dem
-      technologischen Fortschritt an.
-    </p>
-    <br />
-    <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
-      <span>
-        <b>Offenlegung und Weitergabe personenbezogener Daten</b>
-      </span>
-      <span>
-        <br />
-        Alle personenbezogenen Daten werden ausschließlich mit Ihrer ausdrücklichen Zustimmung weitergegeben und werden
-        für keine anderen Zwecke als die in unserer Datenschutzerklärung genannten, verwendet.
-      </span>
-    </p>
-    <br />
-    <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
-      <span>
-        <b>Datenerhebung, Datennutzung und Verarbeitung</b>
-      </span>
       <br />
       <span>
-        <b>Elektronische Datenerhebung innerhalb des Webangebotes</b>
+        Wir verwenden technische und organisatorische Maßnahmen, um Ihre Daten vor dem Zugriff Unberechtigter und vor
+        Manipulation, Übermittlung, Verlust oder Zerstörung zu schützen. Unsere Sicherheitsverfahren überprüfen wir
+        regelmäßig und passen sie dem technologischen Fortschritt an.
       </span>
-      <span>
-        <b>
-          <br />
-        </b>
-      </span>
-      Wenn Sie innerhalb unserer Online-Dienste aufgefordert werden personenbezogene Daten einzugeben, erfolgt deren
-      Transport über das Internet unter Verwendung von SSL-Verschlüsselung, um Ihre Daten vor einer Kenntnisnahme durch
-      Unbefugte zu schützen.
     </p>
     <br />
     <p style={{ marginTop: '5pt', marginBottom: '5pt' }}>
@@ -423,11 +393,12 @@ export const DataPrivacyBaseText = (): ReactElement => (
       <span>
         <br />
         Wir weisen darauf hin, dass die Datenübertragung im Internet (z.B. bei der Kommunikation per E-Mail)
-        Sicherheitslücken aufweisen kann. Ein lückenloser Schutz der Daten vor dem Zugriff durch Dritte ist
+        Sicherheitslücken aufweisen kann. Ein lückenloser Schutz der Daten vor dem Zugriff durch Dritte ist nicht
+        möglich. Wenn Sie uns E-Mails senden, wird Ihre E-Mail-Adresse nur für die Korrespondenz mit Ihnen verwendet.
+        Informationen, die Sie unverschlüsselt per E-Mail an uns senden können, möglicherweise auf dem Übertragungsweg
+        von Dritten gelesen werden.
       </span>
-      nicht möglich. Wenn Sie uns E-Mails senden, wird Ihre E-Mail-Adresse nur für die Korrespondenz mit Ihnen
-      verwendet. Informationen, die Sie unverschlüsselt per E-Mail an uns senden können, möglicherweise auf dem
-      Übertragungsweg von Dritten gelesen werden.
     </p>
+    <br />
   </div>
 )

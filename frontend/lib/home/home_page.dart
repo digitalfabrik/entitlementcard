@@ -1,7 +1,6 @@
 import 'package:ehrenamtskarte/about/about_page.dart';
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
-import 'package:ehrenamtskarte/graphql/configured_graphql_provider.dart';
 import 'package:ehrenamtskarte/home/app_flow.dart';
 import 'package:ehrenamtskarte/home/app_flows_stack.dart';
 import 'package:ehrenamtskarte/identification/identification_page.dart';
@@ -76,14 +75,12 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsModel>(context);
 
-    return ConfiguredGraphQlProvider(
-      child: HomePageData(
-        navigateToMapTab: _navigateToMapTab,
-        child: settings.enableStaging
-            ? Banner(
-                message: 'Testing', location: BannerLocation.topEnd, color: Colors.red, child: _buildScaffold(context))
-            : _buildScaffold(context),
-      ),
+    return HomePageData(
+      navigateToMapTab: _navigateToMapTab,
+      child: settings.enableStaging
+          ? Banner(
+              message: 'Testing', location: BannerLocation.topEnd, color: Colors.red, child: _buildScaffold(context))
+          : _buildScaffold(context),
     );
   }
 

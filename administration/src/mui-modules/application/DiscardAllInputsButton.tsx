@@ -1,6 +1,6 @@
 import { Delete } from '@mui/icons-material'
 import { Button } from '@mui/material'
-import { ReactElement, useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 
 import ConfirmDialog from './ConfirmDialog'
 

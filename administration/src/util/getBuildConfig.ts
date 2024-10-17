@@ -2,9 +2,12 @@ import {
   BAYERN_PRODUCTION_ID,
   BAYERN_STAGING_ID,
   BuildConfigType,
+  KOBLENZ_PRODUCTION_ID,
+  KOBLENZ_STAGING_ID,
   NUERNBERG_PRODUCTION_ID,
   NUERNBERG_STAGING_ID,
   buildConfigBayern,
+  buildConfigKoblenz,
   buildConfigNuernberg,
 } from 'build-configs'
 
@@ -18,6 +21,9 @@ export const getBuildConfig = (hostname: string): BuildConfigType => {
     case NUERNBERG_PRODUCTION_ID:
     case NUERNBERG_STAGING_ID:
       return buildConfigNuernberg
+    case KOBLENZ_PRODUCTION_ID:
+    case KOBLENZ_STAGING_ID:
+      return buildConfigKoblenz
     default:
       console.debug('Falling back to bayern.')
       return buildConfigBayern

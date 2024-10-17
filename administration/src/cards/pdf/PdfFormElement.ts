@@ -7,9 +7,9 @@ import { Coordinates, PdfElement, mmToPt } from './PdfElements'
 
 export type InfoParams = {
   info: CardInfo
-  region: Region
   cardBlueprint: CardBlueprint
   cardInfoHash: string
+  region?: Region
 }
 
 export type PdfFormElementProps = {
@@ -23,9 +23,9 @@ type PdfFormElementRendererProps = {
   form: PDFForm
   font: PDFFont
   info: CardInfo
-  region: Region
   cardBlueprint: CardBlueprint
   cardInfoHash: string
+  region?: Region
 }
 
 const pdfFormElements: PdfElement<PdfFormElementProps, PdfFormElementRendererProps> = (

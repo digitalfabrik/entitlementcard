@@ -3,9 +3,9 @@ import { parse } from 'csv-parse/browser/esm/sync'
 import React, { ChangeEventHandler, ReactElement, useCallback, useRef } from 'react'
 import styled from 'styled-components'
 
-import { StoreFieldConfig } from '../../project-configs/getProjectConfig'
+import { StoresFieldConfig } from '../../project-configs/getProjectConfig'
 import { useAppToaster } from '../AppToaster'
-import { AcceptingStoreEntry } from './AcceptingStoreEntry'
+import { AcceptingStoresEntry } from './AcceptingStoresEntry'
 import StoresImportDuplicates from './StoresImportDuplicates'
 import StoresRequirementsText from './StoresRequirementsText'
 import { getStoresWithCoordinates } from './util/storeGeoDataService'
@@ -22,8 +22,8 @@ const InputContainer = styled(NonIdealState)`
   justify-content: center;
 `
 type StoresCsvInputProps = {
-  setAcceptingStores: (store: AcceptingStoreEntry[]) => void
-  fields: StoreFieldConfig[]
+  setAcceptingStores: (store: AcceptingStoresEntry[]) => void
+  fields: StoresFieldConfig[]
   setIsLoadingCoordinates: (value: boolean) => void
 }
 
@@ -35,16 +35,16 @@ const defaultExtensionsByMIMEType = {
 }
 const FILE_SIZE_LIMIT_BYTES = FILE_SIZE_LIMIT_MEGA_BYTES * 1000 * 1000
 
-const lineToStoreEntry = (line: string[], headers: string[], fields: StoreFieldConfig[]): AcceptingStoreEntry => {
+const lineToStoreEntry = (line: string[], headers: string[], fields: StoresFieldConfig[]): AcceptingStoresEntry => {
   const storeData = line.reduce((acc, entry, index) => {
     const columnName = headers[index]
     return { ...acc, [columnName]: entry.trim() }
   }, {})
-  return new AcceptingStoreEntry(storeData, fields)
+  return new AcceptingStoresEntry(storeData, fields)
 }
 
-const getStoreDuplicates = (stores: AcceptingStoreEntry[]): number[][] => {
-  return Object.values(
+const getStoreDuplicates = (stores: AcceptingStoresEntry[]): number[][] =>
+  Object.values(
     stores.reduce((acc: Record<string, number[]>, entry, index) => {
       const { data } = entry
       const groupKey = JSON.stringify([data.name, data.street, data.houseNumber, data.postalCode, data.location])
@@ -57,7 +57,6 @@ const getStoreDuplicates = (stores: AcceptingStoreEntry[]): number[][] => {
       return { ...acc, [groupKey]: [...acc[groupKey], entryNumber] }
     }, {})
   ).filter(entryNumber => entryNumber.length > 1)
-}
 
 const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }: StoresCsvInputProps): ReactElement => {
   const fileInput = useRef<HTMLInputElement>(null)
@@ -165,7 +164,7 @@ const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }:
   return (
     <InputContainer
       title='Wählen Sie eine Datei'
-      icon={<Icon intent='warning' size={NonIdealStateIconSize.STANDARD} icon={'upload'} />}
+      icon={<Icon intent='warning' size={NonIdealStateIconSize.STANDARD} icon='upload' />}
       description={<StoresRequirementsText header={headers} />}
       action={
         <StoreImportInputContainer>

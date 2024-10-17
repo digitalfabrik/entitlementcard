@@ -1,7 +1,7 @@
 import { Button, FormGroup, MenuItem } from '@blueprintjs/core'
 import { ItemRenderer, Select } from '@blueprintjs/select'
 import { PartialMessage } from '@bufbuild/protobuf'
-import { ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 
 import { BavariaCardType as BavariaCardTypeEnum, CardExtensions } from '../../generated/card_pb'
 import { Extension } from './extensions'

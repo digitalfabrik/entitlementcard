@@ -1,10 +1,7 @@
-import 'package:ehrenamtskarte/configuration/configuration.dart';
-import 'package:ehrenamtskarte/graphql/graphql_api.dart';
-import 'package:ehrenamtskarte/identification/id_card/id_card.dart';
+import 'package:ehrenamtskarte/identification/id_card/id_card_with_region_query.dart';
 import 'package:ehrenamtskarte/identification/info_dialog.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter/material.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
@@ -41,56 +38,41 @@ class PositiveVerificationResultDialogState extends State<PositiveVerificationRe
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    final projectId = Configuration.of(context).projectId;
-    final regionsQuery = GetRegionsByIdQuery(
-      variables: GetRegionsByIdArguments(
-        project: projectId,
-        ids: [widget.cardInfo.extensions.extensionRegion.regionId],
-      ),
-    );
 
-    return Query(
-      options: QueryOptions(document: regionsQuery.document, variables: regionsQuery.getVariablesMap()),
-      builder: (result, {refetch, fetchMore}) {
-        final data = result.data;
-        final region = result.isConcrete && data != null ? regionsQuery.parse(data).regionsByIdInProject[0] : null;
-        final bool isUncheckedStaticQrCode = !isChecked && widget.isStaticVerificationCode;
-        return InfoDialog(
-          title: isUncheckedStaticQrCode ? t.identification.checkRequired : t.identification.verificationSuccessful,
-          icon: isUncheckedStaticQrCode ? Icons.report : Icons.verified_user,
-          iconColor: isUncheckedStaticQrCode ? Theme.of(context).colorScheme.onBackground : Colors.green,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Flexible(
-                child: IdCard(
-                  cardInfo: widget.cardInfo,
-                  region: region != null ? Region(region.prefix, region.name) : null,
-                  // We trust the backend to have checked for expiration.
-                  isExpired: false,
-                  isNotYetValid: false,
+    final bool isUncheckedStaticQrCode = !isChecked && widget.isStaticVerificationCode;
+    return InfoDialog(
+      title: isUncheckedStaticQrCode ? t.identification.checkRequired : t.identification.verificationSuccessful,
+      icon: isUncheckedStaticQrCode ? Icons.report : Icons.verified_user,
+      iconColor: isUncheckedStaticQrCode ? Theme.of(context).colorScheme.onBackground : Colors.green,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Flexible(
+            child: IdCardWithRegionQuery(
+              cardInfo: widget.cardInfo,
+              // We trust the backend to have checked for expiration.
+              isExpired: false,
+              isNotYetValid: false,
+            ),
+          ),
+          if (widget.isStaticVerificationCode)
+            Flexible(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: CheckboxListTile(
+                  title: Text(t.identification.comparedWithID),
+                  controlAffinity: ListTileControlAffinity.leading,
+                  value: isChecked,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      isChecked = value ?? false;
+                    });
+                  },
                 ),
               ),
-              if (widget.isStaticVerificationCode)
-                Flexible(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 16.0),
-                    child: CheckboxListTile(
-                      title: Text(t.identification.comparedWithID),
-                      controlAffinity: ListTileControlAffinity.leading,
-                      value: isChecked,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          isChecked = value ?? false;
-                        });
-                      },
-                    ),
-                  ),
-                )
-            ],
-          ),
-        );
-      },
+            )
+        ],
+      ),
     );
   }
 }

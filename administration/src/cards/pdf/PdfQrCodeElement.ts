@@ -24,7 +24,7 @@ const pdfQrCodeElement: PdfElement<PdfQrCodeElementProps, PdfQrCodeElementRender
   const qrCodeYPdf = page.getSize().height - qrCodeSizePdf - mmToPt(y)
 
   const qrCodeContent = new QrCode({
-    qrCode: qrCode,
+    qrCode,
   }).toBinary()
 
   drawQRCode(qrCodeContent, qrCodeXPdf, qrCodeYPdf, qrCodeSizePdf, page, false)

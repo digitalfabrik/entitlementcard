@@ -1,5 +1,5 @@
 import { Button, Spinner } from '@blueprintjs/core'
-import { ReactElement, ReactNode, createContext, useContext } from 'react'
+import React, { ReactElement, ReactNode, createContext, useContext, useMemo } from 'react'
 
 import { AuthContext } from './AuthProvider'
 import StandaloneCenter from './bp-modules/StandaloneCenter'
@@ -11,7 +11,7 @@ export const WhoAmIContext = createContext<{
   refetch: () => void
 }>({
   me: null,
-  refetch: () => {},
+  refetch: () => undefined,
 })
 
 const WhoAmIProvider = ({ children }: { children: ReactNode }): ReactElement => {
@@ -22,27 +22,30 @@ const WhoAmIProvider = ({ children }: { children: ReactNode }): ReactElement => 
   })
   // Use the previous data (if existent) while potentially loading new data to prevent remounting
   const dataForContext = data ?? previousData
-  if (!dataForContext && loading) {
+  const context = useMemo(() => ({ me: dataForContext?.me, refetch }), [dataForContext, refetch])
+
+  if (!context.me && loading) {
     return (
       <StandaloneCenter>
         <Spinner />
       </StandaloneCenter>
     )
   }
-  if (!dataForContext || error) {
+  if (!context.me || error) {
     return (
       <StandaloneCenter>
         <p>Deine Konto-Informationen konnten nicht geladen werden.</p>
-        <Button icon='repeat' onClick={() => refetch()}>
+        <Button icon='repeat' onClick={refetch}>
           Erneut versuchen
         </Button>
-        <Button icon='log-out' onClick={() => signOut()}>
+        <Button icon='log-out' onClick={signOut}>
           Ausloggen
         </Button>
       </StandaloneCenter>
     )
   }
-  return <WhoAmIContext.Provider value={{ me: dataForContext.me, refetch }}>{children}</WhoAmIContext.Provider>
+  // @ts-expect-error we checked above that context.me is not undefined
+  return <WhoAmIContext.Provider value={context}>{children}</WhoAmIContext.Provider>
 }
 
 export default WhoAmIProvider

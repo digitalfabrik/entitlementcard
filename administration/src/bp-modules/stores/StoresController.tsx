@@ -16,14 +16,14 @@ const Buttons = styled(ButtonGroup)`
 const StoresController = (): ReactElement => {
   const navigate = useNavigate()
   const { role } = useContext(WhoAmIContext).me!
-  const storeManagement = useContext(ProjectConfigContext).storeManagement
-  if (role !== Role.ProjectStoreManager || !storeManagement.enabled) {
+  const storesManagement = useContext(ProjectConfigContext).storesManagement
+  if (role !== Role.ProjectStoreManager || !storesManagement.enabled) {
     return (
       <NonIdealState
         icon='cross'
         title='Fehlende Berechtigung'
         description={
-          storeManagement.enabled
+          storesManagement.enabled
             ? 'Sie sind nicht berechtigt, Akzeptanzpartner zu verwalten.'
             : 'Die Verwaltung der Akzeptanzpartner ist nicht aktiviert.'
         }

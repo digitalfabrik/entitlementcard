@@ -61,9 +61,7 @@ const renderPassId = ({ info }: InfoParams): string => {
   return passId?.toString() ?? ''
 }
 
-const renderCardHash = ({ cardInfoHash }: InfoParams): string => {
-  return cardInfoHash
-}
+const renderCardHash = ({ cardInfoHash }: InfoParams): string => cardInfoHash
 
 const pdfConfiguration: PdfConfig = {
   title: 'Nürnberg-Pässe',

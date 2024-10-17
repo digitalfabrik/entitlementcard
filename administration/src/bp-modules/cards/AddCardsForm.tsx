@@ -1,4 +1,4 @@
-import { ReactElement, useCallback, useContext, useEffect, useRef } from 'react'
+import React, { ReactElement, useCallback, useContext, useEffect, useRef } from 'react'
 import FlipMove from 'react-flip-move'
 import { useSearchParams } from 'react-router-dom'
 import styled from 'styled-components'
@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { CardBlueprint } from '../../cards/CardBlueprint'
 import { Region } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import CreateCardForm from './AddCardForm'
+import AddCardForm from './AddCardForm'
 import CardFormButton from './CardFormButton'
 import { getHeaders } from './ImportCardsController'
 
@@ -15,7 +15,6 @@ const FormsWrapper = styled(FlipMove)`
   flex-grow: 1;
   flex-direction: row;
   display: flex;
-  flex-wrap: wrap;
   justify-content: space-evenly;
   align-items: center;
 `
@@ -43,7 +42,7 @@ type CreateCardsFormProps = {
   setApplicationIdToMarkAsProcessed: (applicationIdToMarkAsProcessed: number | undefined) => void
 }
 
-const CreateCardsForm = ({
+const AddCardsForm = ({
   region,
   cardBlueprints,
   setCardBlueprints,
@@ -111,7 +110,7 @@ const CreateCardsForm = ({
         }}>
         {cardBlueprints.map(blueprint => (
           <FormColumn key={blueprint.id}>
-            <CreateCardForm
+            <AddCardForm
               cardBlueprint={blueprint}
               onRemove={() => removeCardBlueprint(blueprint)}
               onUpdate={notifyUpdate}
@@ -127,4 +126,4 @@ const CreateCardsForm = ({
   )
 }
 
-export default CreateCardsForm
+export default AddCardsForm

@@ -196,15 +196,16 @@ commands:
         steps:
             - restore_cache:
                 keys:
-                    - v1-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}-{{ checksum "administration/package.json" }}-{{checksum "administration/package-lock.json" }}-{{ checksum "frontend/build-configs/package.json" }}-{{checksum "frontend/build-configs/package-lock.json" }}
+                    - v2-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}-{{ checksum "administration/package.json" }}-{{ checksum "frontend/build-configs/package.json" }}
             - run:
                 command: '[ ! -d node_modules ] && npm ci --ignore-scripts --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache.'
-                name: Install node dependencies for npm workspace
+                name: Install node dependencies for npm workspaces
             - save_cache:
-                key: v1-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}-{{ checksum "administration/package.json" }}-{{checksum "administration/package-lock.json" }}-{{ checksum "frontend/build-configs/package.json" }}-{{checksum "frontend/build-configs/package-lock.json" }}
+                key: v2-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}-{{ checksum "administration/package.json" }}-{{ checksum "frontend/build-configs/package.json" }}
                 paths:
                     - ~/node_modules
                     - ~/administration/node_modules
+                    - ~/frontend/build-configs/node_modules
     restore_pods:
         description: Restores and saves the cocoa pods cache.
         steps:
@@ -299,6 +300,7 @@ jobs:
                     - bayern
                     - bayern-floss
                     - nuernberg
+                    - koblenz
                 type: enum
             flutterFlavor:
                 description: Flutter Flavor to use
@@ -306,6 +308,7 @@ jobs:
                     - Bayern
                     - BayernFloss
                     - Nuernberg
+                    - Koblenz
                 type: enum
         resource_class: large
         steps:
@@ -614,6 +617,12 @@ jobs:
                 name: Test
             - store_test_results:
                 path: ./build/test-results
+            - run:
+                command: ./gradlew koverLog koverHtmlReport
+                name: Generate test coverage report
+            - store_artifacts:
+                destination: test-coverage-report
+                path: ./build/reports/kover/html
             - save_cache:
                 key: v3-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
                 paths:

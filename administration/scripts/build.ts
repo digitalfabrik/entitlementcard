@@ -27,6 +27,14 @@ process.on('unhandledRejection', err => {
 
 const paths = getPaths()
 
+const copyPublicFolder = () => {
+  fs.cpSync(paths.appPublic, paths.appBuild, {
+    dereference: true,
+    recursive: true,
+    filter: srcFile => srcFile !== paths.appHtml,
+  })
+}
+
 const measureFileSizesBeforeBuild = FileSizeReporter.measureFileSizesBeforeBuild
 const printFileSizesAfterBuild = FileSizeReporter.printFileSizesAfterBuild
 const useYarn = false
@@ -48,15 +56,92 @@ const writeStatsJson = argv.indexOf('--stats') !== -1
 // Generate configuration
 const config = configFactory('production')
 
+// Create the production build and print the deployment instructions.
+const build = (
+  previousFileSizes: FileSizeReporter.OpaqueFileSizes
+): Promise<{
+  stats: webpack.Stats
+  previousFileSizes: FileSizeReporter.OpaqueFileSizes
+  warnings: string[]
+}> => {
+  console.log('Creating an optimized production build...')
+
+  const compiler = webpack(config)
+  return new Promise((resolve, reject) => {
+    compiler.run((err, stats) => {
+      let messages
+      if (err) {
+        if (!err.message) {
+          return reject(err)
+        }
+
+        messages = formatWebpackMessages({
+          errors: [err.message],
+          warnings: [],
+        })
+      } else if (!stats) {
+        return reject(new Error('stats is undefined, but expected webpack.Stats object'))
+      } else {
+        messages = formatWebpackMessages(stats.toJson({ all: false, warnings: true, errors: true }))
+      }
+
+      if (messages.errors.length) {
+        // Only keep the first error. Others are often indicative
+        // of the same problem, but confuse the reader with noise.
+        if (messages.errors.length > 1) {
+          messages.errors.length = 1
+        }
+        return reject(new Error(messages.errors.join('\n\n')))
+      }
+      if (
+        process.env.CI &&
+        (typeof process.env.CI !== 'string' || process.env.CI.toLowerCase() !== 'false') &&
+        messages.warnings.length
+      ) {
+        // Ignore sourcemap warnings in CI builds. See #8227 for more info.
+        const filteredWarnings = messages.warnings.filter(w => !/Failed to parse source map/.test(w))
+        if (filteredWarnings.length) {
+          console.log(
+            chalk.yellow(
+              '\nTreating warnings as errors because process.env.CI = true.\n' +
+                'Most CI servers set it automatically.\n'
+            )
+          )
+          return reject(new Error(filteredWarnings.join('\n\n')))
+        }
+      }
+      if (!stats) {
+        return reject(new Error('stats is undefined, but expected webpack.Stats object'))
+      }
+
+      const resolveArgs = {
+        stats,
+        previousFileSizes,
+        warnings: messages.warnings,
+      }
+
+      if (writeStatsJson) {
+        return bfj
+          .write(`${paths.appBuild}/bundle-stats.json`, stats.toJson())
+          .then(() => resolve(resolveArgs))
+          .catch(reject)
+      }
+
+      return resolve(resolveArgs)
+    })
+  })
+}
+
 // We require that you explicitly set browsers and do not fall back to
 // browserslist defaults.
 const { checkBrowsers } = require('react-dev-utils/browsersHelper')
+
 checkBrowsers(paths.appPath, isInteractive)
-  .then(() => {
+  .then(() =>
     // First, read the current file sizes in build directory.
     // This lets us display how much they changed later.
-    return measureFileSizesBeforeBuild(paths.appBuild)
-  })
+    measureFileSizesBeforeBuild(paths.appBuild)
+  )
   .then((previousFileSizes: FileSizeReporter.OpaqueFileSizes) => {
     // Remove all content but keep the directory so that
     // if you're in it, you don't end up in Trash
@@ -129,85 +214,3 @@ checkBrowsers(paths.appPath, isInteractive)
     }
     process.exit(1)
   })
-
-// Create the production build and print the deployment instructions.
-function build(previousFileSizes: FileSizeReporter.OpaqueFileSizes): Promise<{
-  stats: webpack.Stats
-  previousFileSizes: FileSizeReporter.OpaqueFileSizes
-  warnings: string[]
-}> {
-  console.log('Creating an optimized production build...')
-
-  const compiler = webpack(config)
-  return new Promise((resolve, reject) => {
-    compiler.run((err, stats) => {
-      let messages
-      if (err) {
-        if (!err.message) {
-          return reject(err)
-        }
-
-        messages = formatWebpackMessages({
-          errors: [err.message],
-          warnings: [],
-        })
-      } else if (!stats) {
-        return reject(new Error('stats is undefined, but expected webpack.Stats object'))
-      } else {
-        messages = formatWebpackMessages(stats.toJson({ all: false, warnings: true, errors: true }))
-      }
-
-      if (messages.errors.length) {
-        // Only keep the first error. Others are often indicative
-        // of the same problem, but confuse the reader with noise.
-        if (messages.errors.length > 1) {
-          messages.errors.length = 1
-        }
-        return reject(new Error(messages.errors.join('\n\n')))
-      }
-      if (
-        process.env.CI &&
-        (typeof process.env.CI !== 'string' || process.env.CI.toLowerCase() !== 'false') &&
-        messages.warnings.length
-      ) {
-        // Ignore sourcemap warnings in CI builds. See #8227 for more info.
-        const filteredWarnings = messages.warnings.filter(w => !/Failed to parse source map/.test(w))
-        if (filteredWarnings.length) {
-          console.log(
-            chalk.yellow(
-              '\nTreating warnings as errors because process.env.CI = true.\n' +
-                'Most CI servers set it automatically.\n'
-            )
-          )
-          return reject(new Error(filteredWarnings.join('\n\n')))
-        }
-      }
-      if (!stats) {
-        return reject(new Error('stats is undefined, but expected webpack.Stats object'))
-      }
-
-      const resolveArgs = {
-        stats,
-        previousFileSizes,
-        warnings: messages.warnings,
-      }
-
-      if (writeStatsJson) {
-        return bfj
-          .write(`${paths.appBuild}/bundle-stats.json`, stats.toJson())
-          .then(() => resolve(resolveArgs))
-          .catch(reject)
-      }
-
-      return resolve(resolveArgs)
-    })
-  })
-}
-
-function copyPublicFolder() {
-  fs.cpSync(paths.appPublic, paths.appBuild, {
-    dereference: true,
-    recursive: true,
-    filter: srcFile => srcFile !== paths.appHtml,
-  })
-}

@@ -1,14 +1,14 @@
 import { Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText } from '@mui/material'
-import { ReactElement, useContext, useState } from 'react'
+import React, { ReactElement, useContext, useState } from 'react'
 
 import { FormContext } from '../SteppedSubForms'
-import { Form } from '../util/FormType'
+import { Form, FormComponentProps } from '../util/FormType'
 
 type State = { checked: boolean }
 type ValidatedInput = boolean
 type Options = { required: true; notCheckedErrorMessage: string } | { required: false }
 type AdditionalProps = { label: string | ReactElement }
-const CheckboxForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+const CheckboxForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
   initialState: { checked: false },
   getArrayBufferKeys: () => [],
   validate: ({ checked }, options) => {
@@ -17,7 +17,7 @@ const CheckboxForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
     }
     return { type: 'valid', value: checked }
   },
-  Component: ({ state, setState, label, options }) => {
+  Component: ({ state, setState, label, options }: FormComponentProps<State, AdditionalProps, Options>) => {
     const [touched, setTouched] = useState(false)
     const { disableAllInputs, showAllErrors } = useContext(FormContext)
     const validationResult = CheckboxForm.validate(state, options)

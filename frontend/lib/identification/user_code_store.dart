@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/sentry.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -12,7 +11,7 @@ class UserCodeStore {
   static const _userCodesBase64Key = 'userCodesBase64';
 
   // legacy key for single card
-  static const _userCodeBase64Key = 'userCodeBase64';
+  static const _legacyUserCodeBase64Key = 'userCodeBase64';
   static const _storageDelimiter = ',';
 
   Future<void> store(List<DynamicUserCode> userCodes) async {
@@ -53,12 +52,12 @@ class UserCodeStore {
   }
 
   // legacy import of existing card to keep them in storage after update
-  Future<void> importLegacyCard() async {
+  Future<DynamicUserCode?> loadAndDeleteLegacyCard() async {
     const storage = FlutterSecureStorage();
-    final String? userCodeBase64 = await storage.read(key: _userCodeBase64Key);
-    if (userCodeBase64 == null) return;
+    final String? userCodeBase64 = await storage.read(key: _legacyUserCodeBase64Key);
+    if (userCodeBase64 == null) return null;
     DynamicUserCode importedLegacyCard = DynamicUserCode.fromBuffer(const Base64Decoder().convert(userCodeBase64));
-    UserCodeModel().insertCode(importedLegacyCard);
-    await storage.delete(key: _userCodeBase64Key);
+    await storage.delete(key: _legacyUserCodeBase64Key);
+    return importedLegacyCard;
   }
 }

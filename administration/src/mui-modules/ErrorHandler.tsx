@@ -16,18 +16,16 @@ const ErrorHandler = ({
   refetch,
   title = 'Ein Fehler ist aufgetreten.',
   description,
-}: ErrorHandlerProps): ReactElement => {
-  return (
-    <ErrorContainer>
-      <Typography variant='h6'>{title}</Typography>
-      <Typography my='8px' variant='body1' component='div'>
-        {description}
-      </Typography>
-      <Button color='primary' variant='contained' onClick={() => refetch()}>
-        Erneut versuchen
-      </Button>
-    </ErrorContainer>
-  )
-}
+}: ErrorHandlerProps): ReactElement => (
+  <ErrorContainer>
+    <Typography variant='h6'>{title}</Typography>
+    <Typography my='8px' variant='body1' component='div'>
+      {description}
+    </Typography>
+    <Button color='primary' variant='contained' onClick={() => refetch()}>
+      Erneut versuchen
+    </Button>
+  </ErrorContainer>
+)
 
 export default ErrorHandler

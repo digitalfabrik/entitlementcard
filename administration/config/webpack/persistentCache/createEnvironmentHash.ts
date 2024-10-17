@@ -1,7 +1,7 @@
 // This file originally stems from a CRA-eject.
 import { createHash } from 'crypto'
 
-function createEnvironmentHash(env: object): string {
+const createEnvironmentHash = (env: object): string => {
   const hash = createHash('md5')
   hash.update(JSON.stringify(env))
 

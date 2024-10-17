@@ -14,12 +14,12 @@ type State = {
   password: string
 }
 
-const Login = (props: { onSignIn: (payload: SignInPayload) => void }): ReactElement => {
+const Login = ({ onSignIn }: { onSignIn: (payload: SignInPayload) => void }): ReactElement => {
   const config = useContext(ProjectConfigContext)
   const appToaster = useAppToaster()
   const [state, setState] = React.useState<State>({ email: '', password: '' })
   const [signIn, mutationState] = useSignInMutation({
-    onCompleted: (payload: SignInMutation) => props.onSignIn(payload.signInPayload),
+    onCompleted: (payload: SignInMutation) => onSignIn(payload.signInPayload),
     onError: error => {
       const { title } = getMessageFromApolloError(error)
       appToaster?.show({ intent: 'danger', message: title })

@@ -6,10 +6,12 @@ import path from 'path'
 
 import getPaths from './getPaths'
 
-function getClientEnvironment(publicUrl: string): {
+const getClientEnvironment = (
+  publicUrl: string
+): {
   raw: Record<string, string | boolean | undefined>
   stringified: { 'process.env': Record<string, string> }
-} {
+} => {
   const paths = getPaths()
   const NODE_ENV = process.env.NODE_ENV
   if (!NODE_ENV) {

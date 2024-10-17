@@ -18,9 +18,12 @@ import 'package:provider/provider.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
-Future<void> activateCard(
+/// Returns
+/// - `true`, if the activation was successful,
+/// - `false`, if the activation was not successful, but feedback was given to the user,
+/// Throws an error otherwise.
+Future<bool> activateCard(
   BuildContext context,
-  VoidCallback onSuccessfulCardActivation,
   DynamicActivationCode activationCode, [
   bool overwriteExisting = false,
 ]) async {
@@ -30,6 +33,7 @@ Future<void> activateCard(
   final activationSecretBase64 = const Base64Encoder().convert(activationCode.activationSecret);
   final cardInfoBase64 = activationCode.info.hash(activationCode.pepper);
   final messengerState = ScaffoldMessenger.of(context);
+  final t = context.t;
 
   debugPrint('Card Activation: Sending request with overwriteExisting=$overwriteExisting.');
 
@@ -58,36 +62,36 @@ Future<void> activateCard(
           ..verificationTimeStamp = secondsSinceEpoch(DateTime.parse(activationResult.activationTimeStamp)));
 
       userCodesModel.insertCode(userCode);
+      debugPrint('Card Activation: Successfully activated.');
       messengerState.showSnackBar(
         SnackBar(
           backgroundColor: Theme.of(context).colorScheme.primary,
           content: Text(t.deeplinkActivation.activationSuccessful),
         ),
       );
-      onSuccessfulCardActivation();
-      debugPrint('Card Activation: Successfully activated.');
       if (Navigator.canPop(context)) Navigator.maybePop(context);
-      break;
+      return true;
     case ActivationState.failed:
       await QrParsingErrorDialog.showErrorDialog(
         context,
         t.identification.codeInvalid,
       );
-      break;
+      return false;
     case ActivationState.didNotOverwriteExisting:
       if (overwriteExisting) {
         throw const ActivationDidNotOverwriteExisting();
       }
       if (isAlreadyInList(userCodesModel.userCodes, activationCode.info)) {
         await ActivationExistingCardDialog.showExistingCardDialog(context);
-        break;
+        return false;
       }
       debugPrint(
           'Card Activation: Card had been activated already and was not overwritten. Waiting for user feedback.');
       if (await ActivationOverwriteExistingDialog.showActivationOverwriteExistingDialog(context)) {
-        await activateCard(context, onSuccessfulCardActivation, activationCode, overwriteExisting = true);
+        return await activateCard(context, activationCode, overwriteExisting = true);
+      } else {
+        return false;
       }
-      break;
     default:
       const errorMessage = 'Die Aktivierung befindet sich in einem ungültigen Zustand.';
       reportError(errorMessage, null);

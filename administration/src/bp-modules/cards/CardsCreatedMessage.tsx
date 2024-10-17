@@ -17,13 +17,11 @@ type Props = {
   reset: () => void
 }
 
-const CardsCreatedMessage = (props: Props): ReactElement => {
-  return (
-    <Container>
-      <Icon icon='tick-circle' color='green' iconSize={100} />
-      <p>Die Karten wurden erstellt.</p>
-      <Button onClick={props.reset}>Mehr Karten erstellen</Button>
-    </Container>
-  )
-}
+const CardsCreatedMessage = ({ reset }: Props): ReactElement => (
+  <Container>
+    <Icon icon='tick-circle' color='green' iconSize={100} />
+    <p>Die Karten wurden erstellt.</p>
+    <Button onClick={reset}>Mehr Karten erstellen</Button>
+  </Container>
+)
 export default CardsCreatedMessage

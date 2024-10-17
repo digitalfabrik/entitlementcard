@@ -5,7 +5,10 @@ import { applicationStorageKey } from './ApplyController'
 import { globalArrayBuffersKey } from './util/globalArrayBuffersManager'
 
 class ApplicationErrorBoundary extends Component<{ children: ReactNode }, { resetting: boolean }> {
-  state = { resetting: false }
+  constructor(props: { children: ReactNode }) {
+    super(props)
+    this.state = { resetting: false }
+  }
 
   async componentDidCatch(): Promise<void> {
     this.setState({ resetting: true })
@@ -20,10 +23,12 @@ class ApplicationErrorBoundary extends Component<{ children: ReactNode }, { rese
   }
 
   render(): ReactNode {
-    if (this.state.resetting) {
+    const { children } = this.props
+    const { resetting } = this.state
+    if (resetting) {
       return null
     }
-    return this.props.children
+    return children
   }
 
   static getDerivedStateFromError(error: Error): { resetting: boolean } {

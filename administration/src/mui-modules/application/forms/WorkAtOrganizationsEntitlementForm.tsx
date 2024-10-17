@@ -1,10 +1,10 @@
 import { Alert, Button } from '@mui/material'
-import { useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 
 import { BlueCardWorkAtOrganizationsEntitlementInput } from '../../../generated/graphql'
 import CustomDivider from '../CustomDivider'
 import { SetState } from '../hooks/useUpdateStateCallback'
-import { Form } from '../util/FormType'
+import { Form, FormComponentProps } from '../util/FormType'
 import { InferState } from '../util/compoundFormUtils'
 import WorkAtOrganizationForm from './WorkAtOrganizationForm'
 
@@ -38,13 +38,13 @@ const WorkAtOrganizationFormHelper = ({
   )
 }
 
-function replaceAt<T>(array: T[], index: number, newItem: T): T[] {
+const replaceAt = <T,>(array: T[], index: number, newItem: T): T[] => {
   const newArray = [...array]
   newArray[index] = newItem
   return newArray
 }
 
-function removeAt<T>(array: T[], index: number): T[] {
+const removeAt = <T,>(array: T[], index: number): T[] => {
   const newArray = [...array]
   newArray.splice(index, 1)
   return newArray
@@ -52,9 +52,8 @@ function removeAt<T>(array: T[], index: number): T[] {
 
 type State = { key: number; value: WorkAtOrganizationFormState }[]
 type ValidatedInput = BlueCardWorkAtOrganizationsEntitlementInput
-type Options = {}
 type AdditionalProps = { applicantName: string }
-const WorkAtOrganizationsEntitlementForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+const WorkAtOrganizationsEntitlementForm: Form<State, ValidatedInput, AdditionalProps> = {
   initialState: [{ key: 0, value: WorkAtOrganizationForm.initialState }],
   getArrayBufferKeys: state => state.map(({ value }) => WorkAtOrganizationForm.getArrayBufferKeys(value)).flat(),
   validate: state => {
@@ -74,7 +73,7 @@ const WorkAtOrganizationsEntitlementForm: Form<State, Options, ValidatedInput, A
       },
     }
   },
-  Component: ({ state, setState, applicantName }) => {
+  Component: ({ state, setState, applicantName }: FormComponentProps<State, AdditionalProps>) => {
     const addActivity = () =>
       setState(state => {
         const newKey = Math.max(...state.map(({ key }) => key), 0) + 1

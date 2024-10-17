@@ -61,7 +61,7 @@ const TextAreaDialog = ({
   return (
     <Dialog isOpen={isOpen} onClose={onClose}>
       <TextArea
-        fill={true}
+        fill
         onChange={e => setText(e.target.value)}
         value={text}
         readOnly={loading}

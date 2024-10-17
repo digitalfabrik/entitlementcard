@@ -95,7 +95,7 @@ export const bayernCommon: CommonBuildConfigType = {
     },
 }
 
-let bayern: BuildConfigType = {
+const bayern: BuildConfigType = {
     common: bayernCommon,
     android: {
         ...bayernCommon,

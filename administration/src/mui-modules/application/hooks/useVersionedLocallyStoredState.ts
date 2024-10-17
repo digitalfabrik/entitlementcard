@@ -3,14 +3,14 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { SetState, useUpdateStateCallback } from './useUpdateStateCallback'
 
-function useLocallyStoredState<T>(
+const useLocallyStoredState = <T>(
   initialState: T,
   storageKey: string
 ): {
   status: 'loading' | 'ready'
   state: T
   setState: SetState<T>
-} {
+} => {
   const [state, setState] = useState(initialState)
   const stateRef = useRef(state)
   const [status, setStatus] = useState<'loading' | 'ready'>('loading')
@@ -43,7 +43,7 @@ function useLocallyStoredState<T>(
   useEffect(() => {
     // Auto-save every 2 seconds unless we're still loading the state.
     if (status === 'loading') {
-      return
+      return () => undefined
     }
     let lastState: T | null = null
     const interval = setInterval(() => {
@@ -66,7 +66,7 @@ function useLocallyStoredState<T>(
  *  - returns the passed initial state otherwise.
  *  While localforage is loading, the returned status is set to `loading` otherwise to `ready`.
  */
-function useVersionedLocallyStoredState<T>(
+const useVersionedLocallyStoredState = <T>(
   initialState: T,
   storageKey: string,
   version: string
@@ -74,7 +74,7 @@ function useVersionedLocallyStoredState<T>(
   status: 'loading' | 'ready'
   state: T
   setState: SetState<T>
-} {
+} => {
   const {
     status: locallyStoredStatus,
     setState: setLocallyStoredState,

@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode, createContext, useMemo, useState } from 'react'
+import React, { ReactElement, ReactNode, createContext, useMemo, useState } from 'react'
 
 import { SignInPayload } from './generated/graphql'
 
@@ -8,7 +8,7 @@ export type TokenPayload = {
   adminId: number
 }
 
-const noop = () => {}
+const noop = () => undefined
 
 export const AuthContext = createContext<{
   data: TokenPayload | null

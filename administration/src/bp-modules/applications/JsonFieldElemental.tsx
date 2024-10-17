@@ -1,5 +1,5 @@
 import { Colors, Icon, Tag } from '@blueprintjs/core'
-import { memo, useContext } from 'react'
+import React, { memo, useContext } from 'react'
 import styled from 'styled-components'
 
 import { AuthContext } from '../../AuthProvider'

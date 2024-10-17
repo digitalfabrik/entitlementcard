@@ -1,0 +1,6 @@
+### DO NOT IMPORT THIS FILE.
+### This file is for testing only and includes the source data that was hashed. Do not adjust this file without adjusting the import_entitlements.csv
+regionKey,userHash,startDate,endDate,revoked,birthday,referenceNumber
+07111,"$argon2id$v=19$m=19456,t=2,p=1$cr3lP9IMUKNz4BLfPGlAOHq1z98G5/2tTbhDIko35tY",01.01.2024,01.01.2025,false, 10.06.2003(12213),123K
+07111,"$argon2id$v=19$m=19456,t=2,p=1$POG+rDhWlxSW7ItkP9hZRHqr46u6a6TQO1Ib2X+khMA",01.01.2024,01.01.2025,false, 10.06.2003(12213),5.021.025.688
+07111,"$argon2id$v=19$m=19456,t=2,p=1$zf7vqckgmYBPbjjW1CwqudF+OjHmo2EifgxhuuVHFs0",01.01.2024,01.01.2025,true, 28.05.2003(12200),000D000001

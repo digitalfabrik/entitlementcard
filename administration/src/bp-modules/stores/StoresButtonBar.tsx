@@ -2,12 +2,12 @@ import { Alert, Button, Tooltip } from '@blueprintjs/core'
 import React, { ReactElement, useState } from 'react'
 
 import ButtonBar from '../ButtonBar'
-import { AcceptingStoreEntry } from './AcceptingStoreEntry'
+import { AcceptingStoresEntry } from './AcceptingStoresEntry'
 import StoresImportAlert from './StoresImportAlert'
 
 type UploadStoresButtonBarProps = {
   goBack: () => void
-  acceptingStores: AcceptingStoreEntry[]
+  acceptingStores: AcceptingStoresEntry[]
   importStores: () => void
   dryRun: boolean
   setDryRun: (value: boolean) => void

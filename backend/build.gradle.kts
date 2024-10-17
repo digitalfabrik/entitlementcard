@@ -14,6 +14,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "1.9.10"
     id("org.jlleitschuh.gradle.ktlint") version "11.5.1"
     id("com.google.protobuf") version "0.9.4"
+    id("org.jetbrains.kotlinx.kover") version "0.8.3"
 
     // Apply the application plugin to add support for building a CLI application.
     application
@@ -24,16 +25,11 @@ repositories {
 }
 
 dependencies {
-    implementation("com.google.protobuf:protobuf-kotlin:4.27.2")
+    implementation("com.google.protobuf:protobuf-kotlin:4.27.5")
     implementation("com.github.ajalt.clikt:clikt:3.5.4")
     implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.11.0")
-    implementation("io.javalin:javalin:6.1.3")
-    testImplementation("io.javalin:javalin-testtools:6.1.3")
-    // jetty version 11.0.20 causes memory leaks, should be removed with next javalin update using higher jetty version https://github.com/jetty/jetty.project/pull/11780
-    constraints {
-        implementation("org.eclipse.jetty:jetty-server:11.0.21")
-        implementation("org.eclipse.jetty.websocket:websocket-jetty-server:11.0.21")
-    }
+    implementation("io.javalin:javalin:6.3.0")
+    testImplementation("io.javalin:javalin-testtools:6.3.0")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("org.slf4j:slf4j-simple:2.0.7")
     implementation("org.apache.commons:commons-text:1.10.0")
@@ -80,7 +76,7 @@ dependencies {
     implementation("com.auth0:java-jwt:4.4.0") // JSON web tokens
     implementation("at.favre.lib:bcrypt:0.10.2")
 
-    implementation("org.bouncycastle:bcpkix-jdk18on:1.76")
+    implementation("org.bouncycastle:bcpkix-jdk18on:1.78.1")
 
     implementation("com.google.zxing:core:3.5.2") // QR-Codes
 
@@ -118,6 +114,16 @@ protobuf {
 application {
     // Define the main class for the application.
     mainClass.set("app.ehrenamtskarte.backend.EntryPointKt")
+}
+
+kover {
+    reports {
+        filters {
+            includes {
+                classes("app.ehrenamtskarte.backend.*")
+            }
+        }
+    }
 }
 
 tasks.withType<JavaExec>().configureEach {

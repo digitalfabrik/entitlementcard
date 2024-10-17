@@ -20,7 +20,7 @@ type Props = {
   onSignOut: () => void
 }
 
-const Navigation = (props: Props): ReactElement => {
+const Navigation = ({ onSignOut }: Props): ReactElement => {
   const config = useContext(ProjectConfigContext)
   const { region, role } = useContext(WhoAmIContext).me!
 
@@ -28,7 +28,7 @@ const Navigation = (props: Props): ReactElement => {
     <PrintAwareNavbar style={{ height: 'auto' }}>
       <Navbar.Group>
         <Navbar.Heading>
-          <NavLink to={'/'} style={{ color: 'black', textDecoration: 'none', display: 'block' }}>
+          <NavLink to='/' style={{ color: 'black', textDecoration: 'none', display: 'block' }}>
             <div style={{ flexDirection: 'column' }}>{config.name} Verwaltung</div>
             {!region ? null : (
               <span>
@@ -41,12 +41,12 @@ const Navigation = (props: Props): ReactElement => {
         {role === Role.RegionAdmin || role === Role.RegionManager ? (
           <>
             {config.applicationFeature ? (
-              <NavLink to={'/applications'}>
+              <NavLink to='/applications'>
                 <Button minimal icon='form' text='Eingehende Anträge' />
               </NavLink>
             ) : null}
             {config.cardCreation ? (
-              <NavLink to={'/cards'}>
+              <NavLink to='/cards'>
                 <Button minimal icon='id-number' text='Karten erstellen' />
               </NavLink>
             ) : null}
@@ -54,29 +54,34 @@ const Navigation = (props: Props): ReactElement => {
         ) : null}
         {role === Role.ProjectAdmin || role === Role.RegionAdmin ? (
           <>
-            <NavLink to={'/users'}>
+            <NavLink to='/users'>
               <Button minimal icon='people' text='Benutzer verwalten' />
             </NavLink>
             {config.cardStatistics.enabled ? (
-              <NavLink to={'/statistics'}>
+              <NavLink to='/statistics'>
                 <Button minimal icon='stacked-chart' text='Statistiken' />
               </NavLink>
             ) : null}
           </>
         ) : null}
         {role === Role.RegionAdmin && config.applicationFeature ? (
-          <NavLink to={'/region'}>
+          <NavLink to='/region'>
             <Button minimal icon='path-search' text='Region verwalten' />
           </NavLink>
         ) : null}
+        {role === Role.ProjectAdmin && config.userImportApiEnabled ? (
+          <NavLink to='/project'>
+            <Button minimal icon='projects' text='Projekt verwalten' />
+          </NavLink>
+        ) : null}
         {role === Role.ProjectStoreManager ? (
-          <NavLink to={'/stores'}>
+          <NavLink to='/stores'>
             <Button minimal icon='shop' text='Akzeptanzpartner verwalten' />
           </NavLink>
         ) : null}
       </Navbar.Group>
       <Navbar.Group align={Alignment.RIGHT}>
-        <UserMenu onSignOut={props.onSignOut} />
+        <UserMenu onSignOut={onSignOut} />
       </Navbar.Group>
     </PrintAwareNavbar>
   )

@@ -1,5 +1,5 @@
 import { Button } from '@blueprintjs/core'
-import { ReactElement, useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import styled from 'styled-components'
 
 import { Administrator, Region, Role } from '../../generated/graphql'
@@ -29,6 +29,23 @@ const StyledTable = styled.table`
     border-bottom: 1px solid lightgray;
   }
 `
+
+export const roleToText = (role: Role): string => {
+  switch (role) {
+    case Role.NoRights:
+      return 'Keine'
+    case Role.ProjectAdmin:
+      return 'Administrator'
+    case Role.ProjectStoreManager:
+      return 'Verwaltung Akzeptanzpartner'
+    case Role.RegionAdmin:
+      return 'Regionsadministrator'
+    case Role.RegionManager:
+      return 'Regionsverwalter'
+    default:
+      return role
+  }
+}
 
 const UsersTable = ({
   users,
@@ -112,23 +129,6 @@ const UsersTable = ({
       />
     </>
   )
-}
-
-export const roleToText = (role: Role): string => {
-  switch (role) {
-    case Role.NoRights:
-      return 'Keine'
-    case Role.ProjectAdmin:
-      return 'Administrator'
-    case Role.ProjectStoreManager:
-      return 'Verwaltung Akzeptanzpartner'
-    case Role.RegionAdmin:
-      return 'Regionsadministrator'
-    case Role.RegionManager:
-      return 'Regionsverwalter'
-    default:
-      return role
-  }
 }
 
 export default UsersTable
