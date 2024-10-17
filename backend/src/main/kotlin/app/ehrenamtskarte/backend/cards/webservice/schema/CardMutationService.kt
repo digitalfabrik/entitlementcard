@@ -145,7 +145,7 @@ class CardMutationService {
         )
         val userHash = Argon2IdHasher.hashKoblenzUserData(user)
 
-        val userEntitlements = transaction { UserEntitlementsRepository.findUserEntitlements(userHash.toByteArray()) }
+        val userEntitlements = transaction { UserEntitlementsRepository.findByUserHash(userHash.toByteArray()) }
         if (userEntitlements == null || userEntitlements.revoked || userEntitlements.endDate.isBefore(LocalDate.now())) {
             throw InvalidUserEntitlementsException()
         }
