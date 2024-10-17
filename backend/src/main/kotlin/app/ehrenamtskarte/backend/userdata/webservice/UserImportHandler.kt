@@ -32,9 +32,9 @@ class UserImportHandler(
 ) {
     private val logger: Logger = LoggerFactory.getLogger(UserImportHandler::class.java)
 
-    fun handle(ctx: Context) {
+    fun handle(context: Context) {
         try {
-            val apiToken = authenticate(ctx)
+            val apiToken = authenticate(context)
 
             val project = transaction { ProjectEntity.find { Projects.id eq apiToken.projectId }.single() }
             val projectConfig = backendConfiguration.getProjectConfig(project.project)
@@ -43,7 +43,7 @@ class UserImportHandler(
                 throw UserImportException("User import is not enabled in the project")
             }
 
-            val files = ctx.uploadedFiles("file")
+            val files = context.uploadedFiles("file")
             when {
                 files.isEmpty() -> throw UserImportException("No file uploaded")
                 files.size > 1 -> throw UserImportException("Multiple files uploaded")
@@ -55,23 +55,23 @@ class UserImportHandler(
                     importData(csvParser, project.id.value)
                 }
             }
-            ctx.status(200).json(mapOf("message" to "Import successfully completed"))
+            context.status(200).json(mapOf("message" to "Import successfully completed"))
         } catch (exception: UserImportException) {
-            ctx.status(400).json(mapOf("message" to exception.message))
+            context.status(400).json(mapOf("message" to exception.message))
         } catch (exception: UnauthorizedException) {
-            ctx.status(401).json(mapOf("message" to exception.message))
+            context.status(401).json(mapOf("message" to exception.message))
         } catch (exception: ForbiddenException) {
-            ctx.status(403).json(mapOf("message" to exception.message))
+            context.status(403).json(mapOf("message" to exception.message))
         } catch (exception: ProjectNotFoundException) {
-            ctx.status(404).json(mapOf("message" to exception.message))
+            context.status(404).json(mapOf("message" to exception.message))
         } catch (exception: Exception) {
             logger.error("Failed to perform user import", exception)
-            ctx.status(500).json(mapOf("message" to "Internal error occurred"))
+            context.status(500).json(mapOf("message" to "Internal error occurred"))
         }
     }
 
-    private fun authenticate(ctx: Context): ApiTokenEntity {
-        val authHeader = ctx.header("Authorization")?.takeIf { it.startsWith("Bearer ") }
+    private fun authenticate(context: Context): ApiTokenEntity {
+        val authHeader = context.header("Authorization")?.takeIf { it.startsWith("Bearer ") }
             ?: throw UnauthorizedException()
         val tokenHash = PasswordCrypto.hashWithSHA256(authHeader.substring(7).toByteArray())
 
@@ -131,7 +131,7 @@ class UserImportHandler(
                     UserEntitlementsRepository.insert(userHash.toByteArray(), startDate, endDate, revoked, regionId)
                 } else {
                     UserEntitlementsRepository.update(userHash.toByteArray(), startDate, endDate, revoked, regionId)
-                    if (revoked || endDate <= LocalDate.now()) {
+                    if (revoked) {
                         CardRepository.revokeByEntitlementId(userEntitlement.id.value)
                     }
                 }

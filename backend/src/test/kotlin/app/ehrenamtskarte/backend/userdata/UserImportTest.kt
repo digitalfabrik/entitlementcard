@@ -420,41 +420,6 @@ internal class UserImportTest : IntegrationTest() {
         }
     }
 
-    @Test
-    fun `POST returns a successful response and existing cards are revoked when the user entitlement has been expired`() = JavalinTest.test(app) { _, client ->
-        TestData.createApiToken(creatorId = admin.id)
-        val entitlementId = TestData.createUserEntitlements(
-            userHash = TEST_USER_HASH,
-            regionId = 1
-        )
-        val dynamicCardId = TestData.createDynamicCard(
-            regionId = 1,
-            entitlementId = entitlementId
-        )
-        val staticCardId = TestData.createStaticCard(
-            regionId = 1,
-            entitlementId = entitlementId
-        )
-
-        val csvFile = generateCsvFile(
-            TEST_CSV_FILE_PATH,
-            listOf("regionKey", "userHash", "startDate", "endDate", "revoked"),
-            listOf("07111", "\"$TEST_USER_HASH\"", "01.02.2024", "01.07.2024", "false")
-        )
-        val response = importUsers(client, csvFile)
-
-        assertEquals(200, response.code)
-
-        val jsonResponse = jacksonObjectMapper().readTree(response.body?.string())
-
-        assertEquals("Import successfully completed", jsonResponse["message"].asText())
-
-        transaction {
-            assertTrue(CardEntity.find { Cards.id eq dynamicCardId }.single().revoked)
-            assertTrue(CardEntity.find { Cards.id eq staticCardId }.single().revoked)
-        }
-    }
-
     private fun importUsers(client: HttpClient, csvFile: File?, token: String? = "dummy"): Response {
         val requestBuilder = Request.Builder().url(client.origin + USER_IMPORT_PATH)
         if (token != null) {
