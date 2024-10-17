@@ -11,13 +11,12 @@ import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import app.ehrenamtskarte.backend.projects.database.Projects
-import app.ehrenamtskarte.backend.regions.database.Regions
+import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import app.ehrenamtskarte.backend.userdata.database.UserEntitlementsRepository
 import app.ehrenamtskarte.backend.userdata.exception.UserImportException
 import io.javalin.http.Context
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
-import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -52,7 +51,8 @@ class UserImportHandler(
 
             BufferedReader(InputStreamReader(file.content())).use { reader ->
                 getCSVParser(reader).use { csvParser ->
-                    importData(csvParser, project.id.value)
+                    validateHeaders(csvParser.headerNames)
+                    importData(csvParser, project.project)
                 }
             }
             context.status(200).json(mapOf("message" to "Import successfully completed"))
@@ -92,23 +92,23 @@ class UserImportHandler(
         )
     }
 
-    private fun importData(csvParser: CSVParser, projectId: Int) {
-        val headers = csvParser.headerMap.keys
+    private fun validateHeaders(headers: List<String>) {
         val requiredColumns = setOf("regionKey", "userHash", "startDate", "endDate", "revoked")
         if (!headers.containsAll(requiredColumns)) {
-            throw UserImportException("Missing required columns: ${requiredColumns - headers}")
+            throw UserImportException("Missing required columns: ${requiredColumns - headers.toSet()}")
         }
+    }
 
+    private fun importData(csvParser: CSVParser, project: String) {
         transaction {
-            val regionsByProject = Regions.select { Regions.projectId eq projectId }
-                .associate { it[Regions.regionIdentifier] to it[Regions.id].value }
+            val regionsByProject = RegionsRepository.findAllInProject(project)
 
             for (entry in csvParser) {
                 if (entry.toMap().size != csvParser.headerMap.size) {
                     throw UserImportException(entry.recordNumber, "Missing data")
                 }
 
-                val regionId = regionsByProject[entry.get("regionKey")]
+                val region = regionsByProject.singleOrNull { it.regionIdentifier == entry.get("regionKey") }
                     ?: throw UserImportException(entry.recordNumber, "Specified region not found for the current project")
 
                 val userHash = entry.get("userHash")
@@ -122,19 +122,9 @@ class UserImportHandler(
                     throw UserImportException(entry.recordNumber, "Start date cannot be after end date")
                 }
 
-                val revoked = entry.get("revoked").toBooleanStrictOrNull()
-                    ?: throw UserImportException(entry.recordNumber, "Revoked must be a boolean value")
+                val revoked = parseRevoked(entry.get("revoked"), entry.recordNumber)
 
-                val userEntitlement = UserEntitlementsRepository.findByUserHash(userHash.toByteArray())
-
-                if (userEntitlement == null) {
-                    UserEntitlementsRepository.insert(userHash.toByteArray(), startDate, endDate, revoked, regionId)
-                } else {
-                    UserEntitlementsRepository.update(userHash.toByteArray(), startDate, endDate, revoked, regionId)
-                    if (revoked) {
-                        CardRepository.revokeByEntitlementId(userEntitlement.id.value)
-                    }
-                }
+                upsertUserEntitlement(userHash, startDate, endDate, revoked, region.id.value)
             }
         }
     }
@@ -144,6 +134,23 @@ class UserImportHandler(
             return LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd.MM.yyyy"))
         } catch (exception: DateTimeParseException) {
             throw UserImportException(lineNumber, "Failed to parse date [$dateString]. Expected format: dd.MM.yyyy")
+        }
+    }
+
+    private fun parseRevoked(revokedString: String, lineNumber: Long): Boolean {
+        return revokedString.toBooleanStrictOrNull()
+            ?: throw UserImportException(lineNumber, "Revoked must be a boolean value")
+    }
+
+    private fun upsertUserEntitlement(userHash: String, startDate: LocalDate, endDate: LocalDate, revoked: Boolean, regionId: Int) {
+        val userEntitlement = UserEntitlementsRepository.findByUserHash(userHash.toByteArray())
+        if (userEntitlement == null) {
+            UserEntitlementsRepository.insert(userHash.toByteArray(), startDate, endDate, revoked, regionId)
+        } else {
+            UserEntitlementsRepository.update(userHash.toByteArray(), startDate, endDate, revoked, regionId)
+            if (revoked) {
+                CardRepository.revokeByEntitlementId(userEntitlement.id.value)
+            }
         }
     }
 }
