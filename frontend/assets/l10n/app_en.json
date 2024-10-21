@@ -27,6 +27,7 @@
     "headline": "Activate card",
     "description": "Do you want to activate this card?",
     "limitReached": "Your card limit has been reached. Please remove a card first.",
+    "replaceCard": "You already have an activated card on this device. If you continue, the old card will be removed.",
     "buttonText": "Activate Card",
     "invalidCode": "The activation code is invalid.",
     "alreadyExists": "This card has already been activated on this device.",

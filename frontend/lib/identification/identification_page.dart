@@ -49,7 +49,7 @@ class IdentificationPageState extends State<IdentificationPage> {
               startVerification: () => _showVerificationDialog(context, settings, userCodeModel),
               startActivation: () => _startActivation(context),
               startApplication: _startApplication,
-              openRemoveCardDialog: () => _openRemoveCardDialog(context),
+              openRemoveCardDialog: () => _openRemoveCardDialog(context, userCodeModel),
             ));
           }
 
@@ -105,10 +105,12 @@ class IdentificationPageState extends State<IdentificationPage> {
     );
   }
 
-  Future<void> _openRemoveCardDialog(BuildContext context) async {
-    final userCodeModel = Provider.of<UserCodeModel>(context, listen: false);
-    await RemoveCardConfirmationDialog.show(
-        context: context, userCode: userCodeModel.userCodes[cardIndex], carouselController: carouselController);
+  Future<void> _openRemoveCardDialog(BuildContext context, UserCodeModel userCodeModel) async {
+    final removed =
+        await RemoveCardConfirmationDialog.show(context: context, userCode: userCodeModel.userCodes[cardIndex]);
+    if (removed && userCodeModel.userCodes.isNotEmpty) {
+      carouselController.previousPage(duration: Duration(milliseconds: 500), curve: Curves.linear);
+    }
   }
 
   void _moveCarouselToLastPosition() {
