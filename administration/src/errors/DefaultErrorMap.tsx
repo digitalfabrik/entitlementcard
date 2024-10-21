@@ -92,9 +92,10 @@ const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
       return {
         title: 'Diese Rolle kann nicht zugewiesen werden.',
       }
-    case GraphQlExceptionCode.InvalidUserEntitlements:
+    case GraphQlExceptionCode.UserEntitlementNotFound:
       return {
-        title: 'Sie sind scheinbar nicht berechtigt einen KoblenzPass zu erstellen. Bitte prüfen Sie Ihre Eingaben',
+        title:
+          'Wir konnten Ihre Angaben nicht im System finden. Bitte überprüfen Sie Ihre Angaben und versuchen Sie es erneut.',
       }
     case GraphQlExceptionCode.MailNotSent:
       return {

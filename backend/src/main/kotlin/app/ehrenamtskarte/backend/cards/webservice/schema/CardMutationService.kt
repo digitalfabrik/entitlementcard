@@ -24,9 +24,9 @@ import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCardHashException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidQrCodeSize
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidUserEntitlementsException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotActivatedForCardConfirmationMailException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.UserEntitlementNotFoundException
 import app.ehrenamtskarte.backend.mail.Mailer
 import app.ehrenamtskarte.backend.matomo.Matomo
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
@@ -147,7 +147,7 @@ class CardMutationService {
 
         val userEntitlements = transaction { UserEntitlementsRepository.findByUserHash(userHash.toByteArray()) }
         if (userEntitlements == null || userEntitlements.revoked || userEntitlements.endDate.isBefore(LocalDate.now())) {
-            throw InvalidUserEntitlementsException()
+            throw UserEntitlementNotFoundException()
         }
 
         val updatedCardInfo = enrichCardInfo(
