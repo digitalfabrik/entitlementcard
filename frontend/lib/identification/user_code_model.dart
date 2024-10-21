@@ -1,38 +1,62 @@
-import 'dart:developer';
+import 'dart:collection';
 
 import 'package:ehrenamtskarte/build_config/build_config.dart';
 import 'package:ehrenamtskarte/identification/user_code_store.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter/foundation.dart';
 
+import 'package:ehrenamtskarte/sentry.dart';
+
+enum _InitializationState { uninitialized, initializing, failed, initialized }
+
 class UserCodeModel extends ChangeNotifier {
   List<DynamicUserCode> _userCodes = [];
-  bool _isInitialized = false;
-
-  List<DynamicUserCode> get userCodes {
-    return _userCodes;
-  }
+  _InitializationState _initState = _InitializationState.uninitialized;
 
   bool get isInitialized {
-    return _isInitialized;
+    return _initState == _InitializationState.initialized;
+  }
+
+  bool get initializationFailed {
+    return _initState == _InitializationState.failed;
+  }
+
+  void _requireInitialized() {
+    if (!isInitialized) {
+      throw StateError('UserCodeModel not initialized!');
+    }
+  }
+
+  List<DynamicUserCode> get userCodes {
+    _requireInitialized();
+    return UnmodifiableListView(_userCodes);
   }
 
   Future<void> initialize() async {
-    if (_isInitialized) {
+    if (_initState == _InitializationState.initializing || _initState == _InitializationState.initialized) {
       return;
     }
+    _initState = _InitializationState.initializing;
+    const store = UserCodeStore();
     try {
-      await UserCodeStore().importLegacyCard();
-      _userCodes = await const UserCodeStore().load();
-    } on Exception catch (e) {
-      log('Failed to initialize activation code from secure storage.', error: e);
+      DynamicUserCode? legacyCode = await store.loadAndDeleteLegacyCard();
+      var userCodes = await store.load();
+      if (legacyCode != null && !isAlreadyInList(userCodes, legacyCode.info)) {
+        userCodes.add(legacyCode);
+        await store.store(userCodes);
+      }
+      _userCodes = userCodes;
+      _initState = _InitializationState.initialized;
+    } catch (e, stackTrace) {
+      reportError('Failed to initialize activation code from secure storage: $e', stackTrace);
+      _initState = _InitializationState.failed;
     } finally {
-      _isInitialized = true;
       notifyListeners();
     }
   }
 
   void insertCode(DynamicUserCode code) {
+    _requireInitialized();
     List<DynamicUserCode> userCodes = _userCodes;
     if (isAlreadyInList(userCodes, code.info)) return;
     userCodes.add(code);
@@ -42,9 +66,10 @@ class UserCodeModel extends ChangeNotifier {
   }
 
   void updateCode(DynamicUserCode code) {
+    _requireInitialized();
     List<DynamicUserCode> userCodes = _userCodes;
     if (isAlreadyInList(userCodes, code.info)) {
-      userCodes = updateUserCode(userCodes, code);
+      userCodes = _updateUserCode(userCodes, code);
       const UserCodeStore().store(userCodes);
       _userCodes = userCodes;
       notifyListeners();
@@ -52,6 +77,7 @@ class UserCodeModel extends ChangeNotifier {
   }
 
   void removeCode(DynamicUserCode code) {
+    _requireInitialized();
     List<DynamicUserCode> userCodes = _userCodes;
     userCodes.remove(code);
     const UserCodeStore().store(userCodes);
@@ -59,16 +85,17 @@ class UserCodeModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeCodes() {
-    const UserCodeStore().remove();
+  Future<void> removeCodes() async {
+    _requireInitialized();
+    await const UserCodeStore().remove();
     _userCodes = [];
     notifyListeners();
   }
+}
 
-  List<DynamicUserCode> updateUserCode(List<DynamicUserCode> userCodes, DynamicUserCode userCode) {
-    userCodes[userCodes.indexWhere((code) => code.info == userCode.info)] = userCode;
-    return userCodes;
-  }
+List<DynamicUserCode> _updateUserCode(List<DynamicUserCode> userCodes, DynamicUserCode userCode) {
+  userCodes[userCodes.indexWhere((code) => code.info == userCode.info)] = userCode;
+  return userCodes;
 }
 
 bool isAlreadyInList(List<DynamicUserCode> userCodes, CardInfo info) {

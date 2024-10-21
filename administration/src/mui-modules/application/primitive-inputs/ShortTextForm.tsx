@@ -1,5 +1,5 @@
 import { TextField } from '@mui/material'
-import { useContext, useState } from 'react'
+import React, { useContext, useState } from 'react'
 
 import { ShortTextInput } from '../../../generated/graphql'
 import { FormContext } from '../SteppedSubForms'
@@ -9,7 +9,6 @@ export const MAX_SHORT_TEXT_LENGTH = 300
 
 type State = { shortText: string }
 type ValidatedInput = ShortTextInput
-type Options = {}
 type AdditionalProps = { label: string; minWidth?: number }
 
 const Component = <I,>({
@@ -19,7 +18,7 @@ const Component = <I,>({
   minWidth = 200,
   validate,
   required,
-}: FormComponentProps<State, AdditionalProps, Options> & {
+}: FormComponentProps<State, AdditionalProps> & {
   validate: (state: State) => ValidationResult<I>
   required: boolean
 }) => {
@@ -46,26 +45,31 @@ const Component = <I,>({
   )
 }
 
-const ShortTextForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+const ShortTextForm: Form<State, ValidatedInput, AdditionalProps> = {
   initialState: { shortText: '' },
   getArrayBufferKeys: () => [],
   validate: ({ shortText }) => {
-    if (shortText.length === 0) return { type: 'error', message: 'Feld ist erforderlich.' }
-    if (shortText.length > MAX_SHORT_TEXT_LENGTH)
+    if (shortText.length === 0) {
+      return { type: 'error', message: 'Feld ist erforderlich.' }
+    }
+    if (shortText.length > MAX_SHORT_TEXT_LENGTH) {
       return {
         type: 'error',
         message: `Text überschreitet die maximal erlaubten ${MAX_SHORT_TEXT_LENGTH} Zeichen.`,
       }
+    }
     return { type: 'valid', value: { shortText } }
   },
   Component: props => Component({ ...props, validate: ShortTextForm.validate, required: true }),
 }
 
-export const OptionalShortTextForm: Form<State, Options, ValidatedInput | null, AdditionalProps> = {
+export const OptionalShortTextForm: Form<State, ValidatedInput | null, AdditionalProps> = {
   initialState: ShortTextForm.initialState,
   getArrayBufferKeys: ShortTextForm.getArrayBufferKeys,
   validate: state => {
-    if (state.shortText.length === 0) return { type: 'valid', value: null }
+    if (state.shortText.length === 0) {
+      return { type: 'valid', value: null }
+    }
     return ShortTextForm.validate(state)
   },
   Component: props => Component({ ...props, validate: OptionalShortTextForm.validate, required: false }),

@@ -54,6 +54,12 @@ type Administrator {
   role: Role!
 }
 
+type ApiTokenMetaData {
+  creatorEmail: String!
+  expirationDate: String!
+  id: Int!
+}
+
 type ApplicationVerificationView {
   contactEmailAddress: String!
   contactName: String!
@@ -63,6 +69,7 @@ type ApplicationVerificationView {
 }
 
 type ApplicationView {
+  cardCreated: Boolean
   createdDate: String!
   id: Int!
   jsonValue: String!
@@ -81,6 +88,12 @@ type CardActivationResultModel {
 type CardCreationResultModel {
   dynamicActivationCode: DynamicActivationCodeResult!
   staticVerificationCode: StaticVerificationCodeResult
+}
+
+type CardStatisticsResultModel {
+  cardsActivated: Int!
+  cardsCreated: Int!
+  region: String!
 }
 
 type CardVerificationResultModel {
@@ -119,32 +132,40 @@ type Mutation {
   changePassword(currentPassword: String!, email: String!, newPassword: String!, project: String!): Boolean!
   "Creates a new administrator"
   createAdministrator(email: String!, project: String!, regionId: Int, role: Role!, sendWelcomeMail: Boolean!): Boolean!
+  "Creates a new api token for user import endpoint"
+  createApiToken(expiresIn: Int!): String!
+  "Creates a new digital entitlementcard from self-service portal"
+  createCardFromSelfService(encodedCardInfo: String!, generateStaticCode: Boolean!, project: String!): CardCreationResultModel!
   "Creates a new digital entitlementcard and returns it"
-  createCardsByCardInfos(encodedCardInfos: [String!]!, generateStaticCodes: Boolean!, project: String!): [CardCreationResultModel!]!
+  createCardsByCardInfos(applicationIdToMarkAsProcessed: Int, encodedCardInfos: [String!]!, generateStaticCodes: Boolean!, project: String!): [CardCreationResultModel!]!
   "Deletes an existing administrator"
   deleteAdministrator(adminId: Int!, project: String!): Boolean!
+  "Deletes a selected API token"
+  deleteApiToken(id: Int!): Int!
   "Deletes the application with specified id"
   deleteApplication(applicationId: Int!): Boolean!
   "Deletes a batch of cards (that have not yet been activated)"
   deleteInactiveCards(cardInfoHashBase64List: [String!]!, regionId: Int!): Boolean!
   "Edits an existing administrator"
   editAdministrator(adminId: Int!, newEmail: String!, newRegionId: Int, newRole: Role!, project: String!): Boolean!
+  "Import accepting stores via csv"
+  importAcceptingStores(dryRun: Boolean!, project: String!, stores: [CSVAcceptingStoreInput!]!): StoreImportReturnResultModel!
   "Reset the administrator's password"
   resetPassword(email: String!, newPassword: String!, passwordResetKey: String!, project: String!): Boolean!
   "Sends a confirmation mail to the user when the card creation was successful"
-  sendCardCreationConfirmationMail(deepLink: String!, project: String!, recipientAddress: String!, recipientName: String!): Boolean!
+  sendCardCreationConfirmationMail(deepLink: String!, project: String!, recipientAddress: String!, recipientName: String!, regionId: Int!): Boolean!
   "Sends a mail that allows the administrator to reset their password."
   sendResetMail(email: String!, project: String!): Boolean!
   "Signs in an administrator"
   signIn(authData: AuthDataInput!, project: String!): SignInPayload!
-  "Updates the activation state of a region for the application process"
-  updateActivatedForApplication(activated: Boolean!, regionId: Int!): Boolean!
   "Updates a note of an application"
   updateApplicationNote(applicationId: Int!, noteText: String!): Boolean!
   "Updates the data privacy policy of a region"
   updateDataPrivacy(dataPrivacyText: String!, regionId: Int!): Boolean!
   "Updates the notification settings"
   updateNotificationSettings(notificationSettings: NotificationSettingsInput!, project: String!): Boolean!
+  "Updates the region specific settings"
+  updateRegionSettings(activatedForApplication: Boolean!, activatedForConfirmationMail: Boolean!, regionId: Int!): Boolean!
   "Verifies or rejects an application verification"
   verifyOrRejectApplicationVerification(accessKey: String!, project: String!, verified: Boolean!): Boolean!
   "Withdraws the application"
@@ -170,14 +191,22 @@ type Query {
   categories: [Category!]!
   "Verify password reset link"
   checkPasswordResetLink(project: String!, resetKey: String!): Boolean!
+  "Gets metadata of all api tokens for a project"
+  getApiTokenMetaData: [ApiTokenMetaData!]!
   "Queries an application by application accessKey"
   getApplicationByApplicant(accessKey: String!): ApplicationView!
-  "Queries an application by application accessKey"
+  "Queries an application by application verification accessKey"
   getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey: String!): ApplicationView!
-  "Queries an application verification by application accessKey"
-  getApplicationVerification(accessKey: String!): ApplicationVerificationView!
+  "Queries an application verification by application verification accessKey"
+  getApplicationVerification(applicationVerificationAccessKey: String!): ApplicationVerificationView!
   "Queries all applications for a specific region"
   getApplications(regionId: Int!): [ApplicationView!]!
+  "Returns card statistics for project. Start and end dates are inclusive."
+  getCardStatisticsInProject(dateEnd: String!, dateStart: String!, project: String!): [CardStatisticsResultModel!]!
+  "Returns card statistics for region. Start and end dates are inclusive."
+  getCardStatisticsInRegion(dateEnd: String!, dateStart: String!, project: String!, regionId: Int!): [CardStatisticsResultModel!]!
+  "Get the pepper for Koblenz user hashing"
+  getHashingPepper: String!
   "Get the notification settings of the authenticated administrator"
   getNotificationSettings(project: String!): NotificationSettings!
   "Returns all administrators in a project. This query requires the role PROJECT_ADMIN."
@@ -218,6 +247,7 @@ type Query {
 
 type Region {
   activatedForApplication: Boolean!
+  activatedForCardConfirmationMail: Boolean!
   dataPrivacyPolicy: String
   id: Int!
   name: String!
@@ -232,6 +262,12 @@ type SignInPayload {
 type StaticVerificationCodeResult {
   cardInfoHashBase64: String!
   codeBase64: String!
+}
+
+type StoreImportReturnResultModel {
+  storesCreated: Int!
+  storesDeleted: Int!
+  storesUntouched: Int!
 }
 
 enum ActivationState {
@@ -278,6 +314,7 @@ enum GraphQLExceptionCode {
   INVALID_DATA_POLICY_SIZE
   INVALID_FILE_SIZE
   INVALID_FILE_TYPE
+  INVALID_INPUT
   INVALID_JSON
   INVALID_LINK
   INVALID_NOTE_SIZE
@@ -285,8 +322,10 @@ enum GraphQLExceptionCode {
   INVALID_PASSWORD_RESET_LINK
   INVALID_QR_CODE_SIZE
   INVALID_ROLE
+  INVALID_USER_ENTITLEMENTS
   MAIL_NOT_SENT
   PASSWORD_RESET_KEY_EXPIRED
+  REGION_NOT_ACTIVATED_CARD_CONFIRMATION_MAIL
   REGION_NOT_ACTIVATED_FOR_APPLICATION
   REGION_NOT_FOUND
 }
@@ -294,6 +333,7 @@ enum GraphQLExceptionCode {
 enum Role {
   NO_RIGHTS
   PROJECT_ADMIN
+  PROJECT_STORE_MANAGER
   REGION_ADMIN
   REGION_MANAGER
 }
@@ -378,6 +418,22 @@ input BlueCardWorkAtDepartmentEntitlementInput {
 
 input BlueCardWorkAtOrganizationsEntitlementInput {
   list: [WorkAtOrganizationInput!]!
+}
+
+input CSVAcceptingStoreInput {
+  categoryId: String
+  discountDE: String
+  discountEN: String
+  email: String
+  homepage: String
+  houseNumber: String
+  latitude: String
+  location: String
+  longitude: String
+  name: String
+  postalCode: String
+  street: String
+  telephone: String
 }
 
 input CardVerificationModelInput {

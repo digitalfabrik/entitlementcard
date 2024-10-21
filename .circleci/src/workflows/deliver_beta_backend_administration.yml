@@ -2,6 +2,7 @@ when: << pipeline.parameters.run_deliver_beta_backend_administration >>
 jobs:
   - bump_version:
       prepare_delivery: true
+      platforms: web
       context:
         - deliverino
   - check_administration
@@ -31,8 +32,8 @@ jobs:
   - pack_meta:
       requires:
         - bump_version
-  - deliver_to_server:
-      name: deliver_administration_staging
+  - upload_packages_to_server:
+      name: upload_administration_packages_to_server_staging
       production: false
       bundle: administration
       context:
@@ -42,8 +43,8 @@ jobs:
         - check_health_backend
         - pack_martin
         - pack_meta
-  - deliver_to_server:
-      name: deliver_backend_staging
+  - upload_packages_to_server:
+      name: upload_backend_packages_to_server_staging
       production: false
       bundle: backend
       context:
@@ -53,4 +54,19 @@ jobs:
         - check_health_backend
         - pack_martin
         - pack_meta
+  - install_packages_to_server:
+      name: install_packages_to_server_staging
+      production: false
+      context:
+        - credentials-ehrenamtskarte
+      requires:
+        - upload_administration_packages_to_server_staging
+        - upload_backend_packages_to_server_staging
+  - notify_release:
+      production_delivery: false
+      context:
+        - deliverino
+      requires:
+        - install_packages_to_server_staging
+
 

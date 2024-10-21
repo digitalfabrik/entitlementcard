@@ -18,6 +18,7 @@ object Applications : IntIdTable() {
     val accessKey = varchar("accessKey", 100).uniqueIndex()
     val withdrawalDate = timestamp("withdrawalDate").nullable()
     val note = varchar("note", NOTE_MAX_CHARS).nullable()
+    val cardCreated = bool("cardCreated").default(false)
 }
 
 class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
@@ -31,6 +32,7 @@ class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
     var accessKey by Applications.accessKey
     var withdrawalDate by Applications.withdrawalDate
     var note by Applications.note
+    var cardCreated by Applications.cardCreated
 }
 
 object ApplicationVerifications : IntIdTable() {

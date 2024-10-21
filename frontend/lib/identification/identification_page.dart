@@ -9,6 +9,7 @@ import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_camera_per
 import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/remove_card_confirmation_dialog.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/verification_workflow.dart';
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/routing.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,9 @@ class IdentificationPageState extends State<IdentificationPage> {
     return Consumer<UserCodeModel>(
       builder: (context, userCodeModel, child) {
         if (!userCodeModel.isInitialized) {
+          if (userCodeModel.initializationFailed) {
+            return SafeArea(child: Center(child: Text(context.t.common.unknownError, textAlign: TextAlign.center)));
+          }
           return Container();
         }
 

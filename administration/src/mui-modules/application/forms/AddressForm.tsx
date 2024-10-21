@@ -1,7 +1,9 @@
+import React from 'react'
+
 import { AddressInput } from '../../../generated/graphql'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
 import ShortTextForm, { OptionalShortTextForm } from '../primitive-inputs/ShortTextForm'
-import { Form } from '../util/FormType'
+import { Form, FormComponentProps } from '../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
@@ -20,14 +22,12 @@ const SubForms = {
 
 type State = CompoundState<typeof SubForms>
 type ValidatedInput = AddressInput
-type Options = {}
-type AdditionalProps = {}
 
-const AddressForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+const AddressForm: Form<State, ValidatedInput> = {
   initialState: { ...createCompoundInitialState(SubForms), country: { shortText: 'Deutschland' } },
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: createCompoundValidate(SubForms, {}),
-  Component: ({ state, setState }) => (
+  Component: ({ state, setState }: FormComponentProps<State>) => (
     <>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
         <div style={{ flex: '3' }}>

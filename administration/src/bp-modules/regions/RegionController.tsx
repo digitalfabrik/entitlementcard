@@ -4,8 +4,8 @@ import styled from 'styled-components'
 
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import { Role } from '../../generated/graphql'
-import ActivatedForApplicationCard from './ActivatedForApplicationCard'
 import DataPrivacyCard from './DataPrivacyCard'
+import RegionSettingsController from './RegionSettingsController'
 
 const RegionSettingsContainer = styled.div`
   display: flex;
@@ -25,14 +25,13 @@ const RegionController = (): ReactElement => {
         description='Sie sind nicht berechtigt, Änderungen an der Region vorzunehmen.'
       />
     )
-  } else {
-    return (
-      <RegionSettingsContainer>
-        <DataPrivacyCard />
-        <ActivatedForApplicationCard regionId={region.id} />
-      </RegionSettingsContainer>
-    )
   }
+  return (
+    <RegionSettingsContainer>
+      <DataPrivacyCard />
+      <RegionSettingsController regionId={region.id} />
+    </RegionSettingsContainer>
+  )
 }
 
 export default RegionController

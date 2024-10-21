@@ -13,7 +13,7 @@ const ErrorHandler = ({
   description,
 }: ErrorHandlerProps): ReactElement => (
   <NonIdealState
-    icon={'error'}
+    icon='error'
     title={title}
     description={description}
     action={<Button onClick={() => refetch()}>Erneut Versuchen</Button>}

@@ -1,9 +1,10 @@
 docker:
-  - image: cimg/node:19.1.0
+  - image: cimg/node:20.13.1
 working_directory: ~/project
 steps:
   - checkout:
       path: ~/project
+  - install_app_toolbelt
   - install_dart_linux
   - install_protobuf_linux
   - prepare_workspace
@@ -21,10 +22,14 @@ steps:
       command: npm run lint
       working_directory: ~/project/administration
   - run:
-      name: Test
-      command: npm run test -- --maxWorkers=2
+      name: Run tests and generate coverage report
+      command: npm run test:coverage -- --maxWorkers=2
       working_directory: ~/project/administration
+  - store_artifacts:
+      path: ~/project/administration/src/coverage
+      destination: ~/attached_workspace/coverage
   - run:
       name: Typescript
       command: npm run ts:check
       working_directory: ~/project/administration
+  - notify

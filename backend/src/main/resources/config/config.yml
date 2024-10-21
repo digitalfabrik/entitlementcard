@@ -1,3 +1,6 @@
+# Important:
+# - All updates in this file have to added/adjusted in salt before deployment!
+# - Example: https://git.tuerantuer.org/DF/salt/src/branch/master/pillars/entitlementcard/production/bayern.sls
 production: false
 postgres:
   url: jdbc:postgresql://localhost:5432/ehrenamtskarte
@@ -15,6 +18,7 @@ server:
   host: 0.0.0.0
   port: 8000
   dataDirectory: ./data
+matomoUrl: http://localhost:5003/matomo.php
 projects:
   - id: bayern.ehrenamtskarte.app
     importUrl: https://www.ehrenamt.bayern.de/xml-json/app-daten.xml
@@ -22,6 +26,7 @@ projects:
     administrationBaseUrl: https://bayern.ehrenamtskarte.app
     administrationName: Ehrenamtskarte-Bayern-Verwaltung
     timezone: "Europe/Berlin"
+    selfServiceEnabled: false
     smtp:
       host: mail.ehrenamtskarte.app
       port: 587
@@ -33,6 +38,18 @@ projects:
     administrationBaseUrl: https://nuernberg.sozialpass.app
     administrationName: Nürnberg-Pass-Verwaltung
     timezone: "Europe/Berlin"
+    selfServiceEnabled: false
+    smtp:
+      host: mail.sozialpass.app
+      port: 587
+      username: OVERRIDE_IN_LOCAL_CONFIG
+      password: OVERRIDE_IN_LOCAL_CONFIG
+  - id: koblenz.sozialpass.app
+    importUrl: ""
+    administrationBaseUrl: https://koblenz.sozialpass.app
+    administrationName: Koblenz-Pass-Verwaltung
+    timezone: "Europe/Berlin"
+    selfServiceEnabled: true
     smtp:
       host: mail.sozialpass.app
       port: 587
@@ -40,10 +57,10 @@ projects:
       password: OVERRIDE_IN_LOCAL_CONFIG
   - id: showcase.entitlementcard.app
     importUrl: https://example.com
-    pipelineName: BerechtigungskarteShowcase
     administrationBaseUrl: https://showcase.entitlementcard.app
     administrationName: Showcase-Entitlementcard-Verwaltung
     timezone: "Europe/Berlin"
+    selfServiceEnabled: false
     smtp:
       host: mail.sozialpass.app
       port: 587

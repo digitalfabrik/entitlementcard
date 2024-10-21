@@ -11,6 +11,7 @@
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
+    "noImplicitAny": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "moduleResolution": "node",
@@ -19,12 +20,14 @@
     "types": ["node", "jest"]
   },
   "include": [
+    "@types",
     "src",
     "scripts",
     "jest.config.ts",
     "jest.setup.ts",
     "src/**/*.d.ts",
-    "src/graphql/customScalarTypes.d.ts"
+    "src/graphql/customScalarTypes.d.ts",
+    ".eslintrc.js"
   ],
   "references": [
     {

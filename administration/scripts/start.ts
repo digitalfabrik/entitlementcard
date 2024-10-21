@@ -47,13 +47,14 @@ if (process.env.HOST) {
 // We require that you explicitly set browsers and do not fall back to
 // browserslist defaults.
 const { checkBrowsers } = require('react-dev-utils/browsersHelper')
+
 checkBrowsers(paths.appPath, isInteractive)
-  .then(() => {
+  .then(() =>
     // We attempt to use the default port but if it is busy, we offer the user to
     // run on a different port. `choosePort()` Promise resolves to the next free port.
-    return choosePort(HOST, DEFAULT_PORT)
-  })
-  .then((port: any) => {
+    choosePort(HOST, DEFAULT_PORT)
+  )
+  .then((port: number | null) => {
     if (port == null) {
       // We have not found a port.
       return
@@ -93,8 +94,8 @@ checkBrowsers(paths.appPath, isInteractive)
       console.log(chalk.cyan('Starting the development server...\n'))
       openBrowser(urls.localUrlForBrowser)
     })
-    ;['SIGINT', 'SIGTERM'].forEach(function (sig) {
-      process.on(sig, function () {
+    ;['SIGINT', 'SIGTERM'].forEach(sig => {
+      process.on(sig, () => {
         devServer.close()
         process.exit()
       })
@@ -102,14 +103,14 @@ checkBrowsers(paths.appPath, isInteractive)
 
     if (process.env.CI !== 'true') {
       // Gracefully exit when stdin ends
-      process.stdin.on('end', function () {
+      process.stdin.on('end', () => {
         devServer.close()
         process.exit()
       })
     }
   })
-  .catch((err: any) => {
-    if (err && err.message) {
+  .catch((err: unknown) => {
+    if (err instanceof Error) {
       console.log(err.message)
     }
     process.exit(1)

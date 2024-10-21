@@ -1,0 +1,6 @@
+query getRegionSettingsById($regionId: Int!) {
+  result: regionByRegionId(regionId: $regionId) {
+    activatedForApplication
+    activatedForCardConfirmationMail
+  }
+}

@@ -2,6 +2,7 @@ when: << pipeline.parameters.run_delivery_production_native >>
 jobs:
   - bump_version:
       prepare_delivery: true
+      platforms: native
       context:
         - deliverino
   - check_frontend
@@ -77,3 +78,12 @@ jobs:
       production_delivery: true
       requires:
         - build_ios_nuernberg
+  - notify_release:
+      production_delivery: true
+      context:
+        - deliverino
+      requires:
+        - deliver_bayern_ios
+        - deliver_nuernberg_ios
+        - deliver_android_bayern
+        - deliver_android_nuernberg

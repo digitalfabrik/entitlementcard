@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 
 import { WorkAtOrganizationInput } from '../../../generated/graphql'
 import ConfirmDialog from '../ConfirmDialog'
@@ -9,7 +9,7 @@ import DateForm from '../primitive-inputs/DateForm'
 import { FileRequirementsText, OptionalFileInputForm } from '../primitive-inputs/FileInputForm'
 import NumberForm from '../primitive-inputs/NumberForm'
 import ShortTextForm from '../primitive-inputs/ShortTextForm'
-import { Form } from '../util/FormType'
+import { Form, FormComponentProps } from '../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
@@ -33,7 +33,7 @@ const ActivityDivider = ({ onDelete }: { onDelete?: () => void }) => {
           confirmButtonText='Löschen'
           content='Wollen Sie die Tätigkeit unwiderruflich löschen?'
           onConfirm={onDelete}
-          title={'Tätigkeit löschen?'}
+          title='Tätigkeit löschen?'
         />
       )}
     </>
@@ -54,9 +54,8 @@ const SubForms = {
 
 type State = CompoundState<typeof SubForms>
 type ValidatedInput = WorkAtOrganizationInput
-type Options = {}
 type AdditionalProps = { onDelete?: () => void; applicantName: string }
-const WorkAtOrganizationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+const WorkAtOrganizationForm: Form<State, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: createCompoundValidate(SubForms, {
@@ -64,7 +63,7 @@ const WorkAtOrganizationForm: Form<State, Options, ValidatedInput, AdditionalPro
     payment: paymentOptions,
     workSinceDate: { maximumDate: null },
   }),
-  Component: ({ state, setState, onDelete, applicantName }) => (
+  Component: ({ state, setState, onDelete, applicantName }: FormComponentProps<State, AdditionalProps>) => (
     <>
       <ActivityDivider onDelete={onDelete} />
       <h4>Angaben zu Ihrer ehrenamtlichen Tätigkeit</h4>

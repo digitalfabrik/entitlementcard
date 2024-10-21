@@ -1,8 +1,7 @@
 import 'package:ehrenamtskarte/configuration/configuration.dart';
-import 'package:ehrenamtskarte/graphql/graphql_api.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/more_actions_dialog.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/self_verify_card.dart';
-import 'package:ehrenamtskarte/identification/id_card/id_card.dart';
+import 'package:ehrenamtskarte/identification/id_card/id_card_with_region_query.dart';
 import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter/material.dart';
@@ -56,72 +55,52 @@ class _CardDetailViewState extends State<CardDetailView> {
 
   @override
   Widget build(BuildContext context) {
-    final projectId = Configuration.of(context).projectId;
-    final regionsQuery = GetRegionsByIdQuery(
-      variables: GetRegionsByIdArguments(
-        project: projectId,
-        ids: [widget.userCode.info.extensions.extensionRegion.regionId],
-      ),
+    final orientation = MediaQuery.of(context).orientation;
+
+    final paddedCard = Padding(
+      padding: const EdgeInsets.all(8),
+      child: IdCardWithRegionQuery(
+          cardInfo: widget.userCode.info,
+          isExpired: isCardExpired(widget.userCode.info),
+          isNotYetValid: isCardNotYetValid(widget.userCode.info)),
+    );
+    final qrCodeAndStatus = QrCodeAndStatus(
+      userCode: widget.userCode,
+      onMoreActionsPressed: () => _onMoreActionsPressed(context),
+      onSelfVerifyPressed: () => _selfVerifyCard(widget.userCode),
     );
 
-    return Query(
-      options: QueryOptions(document: regionsQuery.document, variables: regionsQuery.getVariablesMap()),
-      builder: (result, {refetch, fetchMore}) {
-        final orientation = MediaQuery.of(context).orientation;
-
-        final fetchedData = result.data;
-
-        final region = result.isLoading || result.hasException || fetchedData == null
-            ? null
-            : regionsQuery.parse(fetchedData).regionsByIdInProject[0];
-
-        final paddedCard = Padding(
-          padding: const EdgeInsets.all(8),
-          child: IdCard(
-              cardInfo: widget.userCode.info,
-              region: region != null ? Region(region.prefix, region.name) : null,
-              isExpired: isCardExpired(widget.userCode.info),
-              isNotYetValid: isCardNotYetValid(widget.userCode.info)),
-        );
-        final qrCodeAndStatus = QrCodeAndStatus(
-          userCode: widget.userCode,
-          onMoreActionsPressed: () => _onMoreActionsPressed(context),
-          onSelfVerifyPressed: () => _selfVerifyCard(widget.userCode),
-        );
-
-        return orientation == Orientation.landscape
-            ? SafeArea(
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    const qrCodeMinWidth = 280.0;
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Flexible(child: paddedCard),
-                        if (constraints.maxWidth > qrCodeMinWidth * 2)
-                          Flexible(child: qrCodeAndStatus)
-                        else
-                          ConstrainedBox(
-                            constraints: const BoxConstraints.tightFor(width: qrCodeMinWidth),
-                            child: qrCodeAndStatus,
-                          )
-                      ],
-                    );
-                  },
-                ),
-              )
-            : SingleChildScrollView(
-                child: SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: Column(children: [paddedCard, const SizedBox(height: 16), qrCodeAndStatus]),
-                  ),
-                ),
-              );
-      },
-    );
+    return orientation == Orientation.landscape
+        ? SafeArea(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                const qrCodeMinWidth = 280.0;
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Flexible(child: paddedCard),
+                    if (constraints.maxWidth > qrCodeMinWidth * 2)
+                      Flexible(child: qrCodeAndStatus)
+                    else
+                      ConstrainedBox(
+                        constraints: const BoxConstraints.tightFor(width: qrCodeMinWidth),
+                        child: qrCodeAndStatus,
+                      )
+                  ],
+                );
+              },
+            ),
+          )
+        : SingleChildScrollView(
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Column(children: [paddedCard, const SizedBox(height: 16), qrCodeAndStatus]),
+              ),
+            ),
+          );
   }
 
   void _onMoreActionsPressed(BuildContext context) {
@@ -137,17 +116,22 @@ class _CardDetailViewState extends State<CardDetailView> {
 }
 
 enum CardStatus {
-  // The card expired according to the clock of the local device.
+  /// The card expired according to the clock of the local device.
   expired,
-  // The card was not verified lately by the server.
+
+  /// The card was not verified lately by the server.
   notVerifiedLately,
-  // The time of the device was out of sync with the server.
+
+  /// The time of the device was out of sync with the server.
   timeOutOfSync,
-  // The validity period didn't start yet according to the clock of the local device
+
+  /// The validity period didn't start yet according to the clock of the local device
   notYetValid,
-  // The card was verified lately by the server and it responded that the card is invalid.
+
+  /// The card was verified lately by the server and it responded that the card is invalid.
   invalid,
-  // In any other case, we assume the card is valid and show the dynamic QR code
+
+  /// In any other case, we assume the card is valid and show the dynamic QR code
   valid;
 
   factory CardStatus.from(DynamicUserCode code) {

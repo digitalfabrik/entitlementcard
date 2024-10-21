@@ -40,7 +40,7 @@ class ArrayBuffersManager {
 
 const globalArrayBuffersManager = new ArrayBuffersManager()
 
-export const useInitializeGlobalArrayBuffersManager = () => {
+export const useInitializeGlobalArrayBuffersManager = (): boolean => {
   const [initialized, setInitialized] = useState(false)
   useEffect(() => {
     globalArrayBuffersManager.initialize().finally(() => setInitialized(true))
@@ -48,7 +48,7 @@ export const useInitializeGlobalArrayBuffersManager = () => {
   return initialized
 }
 
-export const useGarbageCollectArrayBuffers = (getUsedArrayBufferKeys: (() => number[]) | null) => {
+export const useGarbageCollectArrayBuffers = (getUsedArrayBufferKeys: (() => number[]) | null): void => {
   const getUsedArrayBufferKeysRef = useRef(getUsedArrayBufferKeys)
 
   useEffect(() => {

@@ -10,7 +10,7 @@ import {
   SectionCard,
   Tooltip,
 } from '@blueprintjs/core'
-import { memo, useContext, useMemo, useState } from 'react'
+import React, { ReactElement, memo, useContext, useMemo, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
@@ -94,7 +94,38 @@ const SectionCardHeader = styled.div`
   flex-direction: row-reverse;
 `
 
-type ApplicationCardProps = {
+const RightElementContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 32px;
+`
+
+type RightElementProps = {
+  jsonField: JsonField<'Array'>
+  application: Application
+}
+
+const RightElement = ({ jsonField, application }: RightElementProps): ReactElement => {
+  const isJuleicaEntitlementType = (): boolean => {
+    const applicationDetails = findValue(jsonField, 'applicationDetails', 'Array') ?? jsonField
+    const blueCardJuleicaEntitlement = findValue(applicationDetails, 'blueCardJuleicaEntitlement', 'Array')
+    return !!blueCardJuleicaEntitlement
+  }
+
+  return (
+    <RightElementContainer>
+      {!!application.note && application.note.trim() && <Icon icon='annotation' intent='none' />}
+      {isJuleicaEntitlementType() ? (
+        <JuleicaVerificationQuickIndicator />
+      ) : (
+        <VerificationsQuickIndicator verifications={application.verifications} />
+      )}
+    </RightElementContainer>
+  )
+}
+
+export type ApplicationCardProps = {
   application: Application
   onDelete: () => void
   printApplicationById: (applicationId: number) => void
@@ -110,7 +141,7 @@ const ApplicationCard = ({
   onChange,
 }: ApplicationCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false)
-  const { createdDate: createdDateString, jsonValue, id, withdrawalDate } = application
+  const { createdDate: createdDateString, jsonValue, id, withdrawalDate, cardCreated } = application
   const jsonField: JsonField<'Array'> = JSON.parse(jsonValue)
   const config = useContext(ProjectConfigContext)
   const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${id}`
@@ -133,8 +164,8 @@ const ApplicationCard = ({
   })
 
   const createCardQuery = useMemo(
-    () => config.applicationFeature?.applicationJsonToCardQuery(jsonField),
-    [config.applicationFeature, jsonField]
+    () => `${config.applicationFeature?.applicationJsonToCardQuery(jsonField)}&applicationIdToMarkAsProcessed=${id}`,
+    [config.applicationFeature, jsonField, id]
   )
 
   const personalData = useMemo(
@@ -142,31 +173,19 @@ const ApplicationCard = ({
     [config.applicationFeature, jsonField]
   )
 
-  const isJuleicaEntitlementType = (): boolean => {
-    const applicationDetails = findValue(jsonField, 'applicationDetails', 'Array') ?? jsonField
-    const blueCardJuleicaEntitlement = findValue(applicationDetails, 'blueCardJuleicaEntitlement', 'Array')
-    return !!blueCardJuleicaEntitlement
-  }
-
   return (
     <ApplicationViewCard
       title={
         <div>
           <Title>Antrag vom {formatDateWithTimezone(createdDateString, config.timezone)}&emsp;</Title>{' '}
-          {personalData && personalData.forenames && personalData.surname && (
+          {personalData && personalData.forenames !== undefined && personalData.surname !== undefined && (
             <CardContentHint>
               Name: {personalData.surname}, {personalData.forenames}
             </CardContentHint>
           )}
         </div>
       }
-      rightElement={
-        isJuleicaEntitlementType() ? (
-          <JuleicaVerificationQuickIndicator />
-        ) : (
-          <VerificationsQuickIndicator verifications={application.verifications} />
-        )
-      }
+      rightElement={<RightElement jsonField={jsonField} application={application} />}
       elevation={1}
       icon={withdrawalDate ? <Icon icon='warning-sign' intent='warning' /> : undefined}
       collapseProps={{ isOpen: isExpanded, onToggle: () => setIsExpanded(!isExpanded), keepChildrenMounted: true }}
@@ -181,7 +200,7 @@ const ApplicationCard = ({
             onChange={onChange}
           />
 
-          {withdrawalDate && (
+          {!!withdrawalDate && (
             <WithdrawAlert intent='warning'>
               Der Antrag wurde vom Antragsteller am {formatDateWithTimezone(withdrawalDate, config.timezone)}{' '}
               zurückgezogen. <br />
@@ -205,15 +224,13 @@ const ApplicationCard = ({
         <ButtonContainer>
           <Tooltip
             disabled={!!createCardQuery}
-            content={
-              'Es existiert kein passendes Mapping, um aus diesem Antrag das Kartenformular vollständig auszufüllen.'
-            }>
+            content='Es existiert kein passendes Mapping, um aus diesem Antrag das Kartenformular vollständig auszufüllen.'>
             <PrintAwareAnchorButton
               disabled={!createCardQuery}
               href={createCardQuery ? `./cards/add${createCardQuery}` : undefined}
               icon='id-number'
               intent='primary'>
-              Karte erstellen
+              {cardCreated ? 'Karte erneut erstellen' : 'Karte erstellen'}
             </PrintAwareAnchorButton>
           </Tooltip>
           <PrintAwareButton onClick={() => setDeleteDialogOpen(true)} intent='danger' icon='trash'>
@@ -222,7 +239,7 @@ const ApplicationCard = ({
           <PrintAwareButton onClick={() => printApplicationById(id)} intent='none' icon='print'>
             PDF exportieren
           </PrintAwareButton>
-          <CollapseIcon icon={'chevron-up'} onClick={() => setIsExpanded(!isExpanded)} style={{ marginLeft: 'auto' }} />
+          <CollapseIcon icon='chevron-up' onClick={() => setIsExpanded(!isExpanded)} style={{ marginLeft: 'auto' }} />
         </ButtonContainer>
         <Alert
           cancelButtonText='Abbrechen'

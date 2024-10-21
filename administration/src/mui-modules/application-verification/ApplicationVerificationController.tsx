@@ -1,7 +1,7 @@
 import { Check, Close } from '@mui/icons-material'
 import { Alert, AlertTitle, Button, Card, Divider, Typography, styled } from '@mui/material'
 import { SnackbarProvider, useSnackbar } from 'notistack'
-import React, { useContext, useState } from 'react'
+import React, { ReactElement, useContext, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import JsonFieldView from '../../bp-modules/applications/JsonFieldView'
@@ -41,7 +41,7 @@ type ApplicationVerificationProps = {
 }
 
 const ApplicationVerification = ({ applicationVerificationAccessKey }: ApplicationVerificationProps) => {
-  const [verificationFinised, setVerificationFinished] = useState(false)
+  const [verificationFinished, setVerificationFinished] = useState(false)
   const config = useContext(ProjectConfigContext)
   const { enqueueSnackbar } = useSnackbar()
   const [verifyOrRejectApplicationVerification] = useVerifyOrRejectApplicationVerificationMutation({
@@ -74,28 +74,33 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
   })
 
   const applicationQueryHandler = getQueryResult(applicationQuery)
-  if (!applicationQueryHandler.successful) return applicationQueryHandler.component
+  if (!applicationQueryHandler.successful) {
+    return applicationQueryHandler.component
+  }
 
   const { verification, application } = applicationQueryHandler.data
 
-  if (verification.rejectedDate || verification.verifiedDate)
+  if (verification.rejectedDate || verification.verifiedDate) {
     return <CenteredMessage>Sie haben diesen Antrag bereits bearbeitet.</CenteredMessage>
-  if (application.withdrawalDate)
+  }
+  if (application.withdrawalDate) {
     return (
-      <CenteredMessage
-        title={`Der Antrag wurde vom Antragsteller am ${formatDateWithTimezone(
+      <CenteredMessage>
+        {`Der Antrag wurde vom Antragsteller am ${formatDateWithTimezone(
           application.withdrawalDate,
           config.timezone
         )} zurückgezogen.`}
-      />
+      </CenteredMessage>
     )
-  if (verificationFinised)
+  }
+  if (verificationFinished) {
     return (
       <CenteredMessage>
         <AlertTitle>Ihre Eingaben wurden erfolgreich gespeichert.</AlertTitle>
         Vielen Dank für Ihre Mithilfe. Sie können das Fenster jetzt schließen.
       </CenteredMessage>
     )
+  }
 
   const { jsonValue, createdDate: createdDateString, id } = application
   const jsonField = JSON.parse(jsonValue)
@@ -155,7 +160,7 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
   )
 }
 
-const ApplicationVerificationController = () => {
+const ApplicationVerificationController = (): ReactElement => {
   const { applicationVerificationAccessKey } = useParams()
 
   if (!applicationVerificationAccessKey) {

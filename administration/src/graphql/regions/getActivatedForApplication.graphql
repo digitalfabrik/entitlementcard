@@ -1,5 +1,0 @@
-query getActivatedForApplication($regionId: Int!) {
-  result: regionByRegionId(regionId: $regionId) {
-    activatedForApplication
-  }
-}

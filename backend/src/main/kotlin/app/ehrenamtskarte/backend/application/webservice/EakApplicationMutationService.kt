@@ -71,7 +71,7 @@ class EakApplicationMutationService {
                 val applicantName = "${application.personalData.forenames.shortText} ${application.personalData.surname.shortText}"
                 Mailer.sendApplicationVerificationMail(backendConfig, applicantName, projectConfig, applicationVerification)
             } catch (exception: MailNotSentException) {
-                dataFetcherResultBuilder.error(exception)
+                dataFetcherResultBuilder.error(exception.toError())
             }
         }
         Mailer.sendNotificationForApplicationMails(project, backendConfig, projectConfig, regionId)
@@ -114,7 +114,7 @@ class EakApplicationMutationService {
         verified: Boolean,
         dfe: DataFetchingEnvironment
     ): Boolean {
-        val application = transaction { getApplicationByApplicationVerificationAccessKey(accessKey) }
+        val application = transaction { getApplicationByApplicationVerificationAccessKey(accessKey, dfe) }
         return transaction {
             if (verified) {
                 val context = dfe.getContext<GraphQLContext>()

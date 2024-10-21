@@ -1,6 +1,6 @@
 import { OverlayToaster } from '@blueprintjs/core'
 import { fireEvent, render, waitFor } from '@testing-library/react'
-import { ReactElement } from 'react'
+import React, { ReactNode } from 'react'
 
 import CSVCard from '../../cards/CSVCard'
 import { Region } from '../../generated/graphql'
@@ -13,11 +13,9 @@ import { AppToasterProvider } from '../AppToaster'
 import { getHeaders } from './ImportCardsController'
 import ImportCardsInput, { ENTRY_LIMIT } from './ImportCardsInput'
 
-jest.mock('csv-stringify/browser/esm/sync', () => ({
-  stringify: jest.fn(),
-}))
+jest.mock('../../Router', () => ({}))
 
-const wrapper = ({ children }: { children: ReactElement }) => (
+const wrapper = ({ children }: { children: ReactNode }) => (
   <AppToasterProvider>
     <ProjectConfigProvider>{children}</ProjectConfigProvider>
   </AppToasterProvider>
@@ -29,6 +27,7 @@ describe('ImportCardsInput', () => {
     name: 'augsburg',
     prefix: 'a',
     activatedForApplication: true,
+    activatedForCardConfirmationMail: true,
   }
 
   const renderAndSubmitCardsInput = async (
@@ -38,6 +37,7 @@ describe('ImportCardsInput', () => {
     setCardBlueprints: () => void
   ) => {
     const fileReaderMock = {
+      // eslint-disable-next-line func-names
       readAsText: jest.fn(function (this: FileReader, _: Blob) {
         this.onloadend!({ target: { result: csv } } as ProgressEvent<FileReader>)
       }),
@@ -52,6 +52,7 @@ describe('ImportCardsInput', () => {
         headers={getHeaders(projectConfig)}
         lineToBlueprint={lineToBlueprint}
         setCardBlueprints={setCardBlueprints}
+        isFreinetFormat={false}
       />,
       { wrapper }
     )

@@ -73,12 +73,7 @@ class ConfiguredGraphQlProviderState extends State<ConfiguredGraphQlProvider> {
         ]),
       ),
     );
-    return GraphQLProvider(
-      client: client,
-      child: CacheProvider(
-        child: widget.child,
-      ),
-    );
+    return GraphQLProvider(client: client, child: widget.child);
   }
 
   void _printDebugMessage(BuildContext context, String message) {

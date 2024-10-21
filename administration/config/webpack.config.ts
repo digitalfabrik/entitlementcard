@@ -1,4 +1,6 @@
 // This file originally stems from a CRA-eject.
+
+/* eslint-disable @typescript-eslint/no-explicit-any, no-nested-ternary */
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
 import { DeeplLinkingConfig } from 'build-configs'
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin'
@@ -42,15 +44,15 @@ const babelRuntimeRegenerator = require.resolve('@babel/runtime/regenerator', {
 // makes for a smoother build process.
 const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== 'false'
 
-const imageInlineSizeLimit = parseInt(process.env.IMAGE_INLINE_SIZE_LIMIT || '10000')
+const imageInlineSizeLimit = parseInt(process.env.IMAGE_INLINE_SIZE_LIMIT || '10000', 10)
 
 // style files regexes
 const cssRegex = /\.css$/
 const cssModuleRegex = /\.module\.css$/
 
 // https://developer.android.com/training/app-links/verify-android-applinks#web-assoc
-const generateAssetLinks = (config: DeeplLinkingConfig) => {
-  return JSON.stringify(
+const generateAssetLinks = (config: DeeplLinkingConfig) =>
+  JSON.stringify(
     [
       {
         relation: ['delegate_permission/common.handle_all_urls'],
@@ -64,10 +66,9 @@ const generateAssetLinks = (config: DeeplLinkingConfig) => {
     null,
     2
   )
-}
 
-const generateAppleAppSiteAssociation = (config: DeeplLinkingConfig) => {
-  return JSON.stringify(
+const generateAppleAppSiteAssociation = (config: DeeplLinkingConfig) =>
+  JSON.stringify(
     {
       applinks: {
         apps: [],
@@ -87,11 +88,10 @@ const generateAppleAppSiteAssociation = (config: DeeplLinkingConfig) => {
     null,
     2
   )
-}
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
-function createWebpackConfig(webpackEnv: 'development' | 'production'): webpack.Configuration {
+const createWebpackConfig = (webpackEnv: 'development' | 'production'): webpack.Configuration => {
   const isEnvDevelopment = webpackEnv === 'development'
   const isEnvProduction = webpackEnv === 'production'
 
@@ -110,11 +110,11 @@ function createWebpackConfig(webpackEnv: 'development' | 'production'): webpack.
   // Get environment variables to inject into our app.
   const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1))
 
-  const shouldUseReactRefresh = env.raw.FAST_REFRESH
+  const shouldUseReactRefresh = env.raw.FAST_REFRESH === true
 
   // common function to get style loaders
-  const getStyleLoaders = (cssOptions: any) => {
-    return [
+  const getStyleLoaders = (cssOptions: any) =>
+    [
       isEnvDevelopment && require.resolve('style-loader'),
       isEnvProduction && {
         loader: MiniCssExtractPlugin.loader,
@@ -127,7 +127,6 @@ function createWebpackConfig(webpackEnv: 'development' | 'production'): webpack.
         options: cssOptions,
       },
     ].filter(Boolean)
-  }
 
   return {
     target: ['browserslist'],
@@ -208,7 +207,11 @@ function createWebpackConfig(webpackEnv: 'development' | 'production'): webpack.
       // We placed these paths second because we want `node_modules` to "win"
       // if there are any conflicts. This matches Node resolution mechanism.
       // https://github.com/facebook/create-react-app/issues/253
-      modules: ['node_modules', paths.appNodeModules].concat(modules.additionalModulePaths || []),
+      modules: ['node_modules', paths.appNodeModules].concat(
+        modules.additionalModulePaths !== null && modules.additionalModulePaths !== ''
+          ? modules.additionalModulePaths
+          : []
+      ),
       // These are the reasonable defaults supported by the Node ecosystem.
       // We also include JSX as a common component filename extension to support
       // some tools, although we do not recommend using it, see:
@@ -224,7 +227,7 @@ function createWebpackConfig(webpackEnv: 'development' | 'production'): webpack.
               'scheduler/tracing': 'scheduler/tracing-profiling',
             }
           : {}),
-        ...(modules.webpackAliases && modules.webpackAliases.src ? modules.webpackAliases : {}),
+        ...(modules.webpackAliases.src ? modules.webpackAliases : {}),
       },
       plugins: [
         // Prevents users from importing files from outside of src/ (or node_modules/).
@@ -415,31 +418,26 @@ function createWebpackConfig(webpackEnv: 'development' | 'production'): webpack.
     },
     plugins: [
       // Generates an `index.html` file with the <script> injected.
-      new HtmlWebpackPlugin(
-        Object.assign(
-          {},
-          {
-            inject: true,
-            template: paths.appHtml,
-          },
-          isEnvProduction
-            ? {
-                minify: {
-                  removeComments: true,
-                  collapseWhitespace: true,
-                  removeRedundantAttributes: true,
-                  useShortDoctype: true,
-                  removeEmptyAttributes: true,
-                  removeStyleLinkTypeAttributes: true,
-                  keepClosingSlash: true,
-                  minifyJS: true,
-                  minifyCSS: true,
-                  minifyURLs: true,
-                },
-              }
-            : undefined
-        )
-      ),
+      new HtmlWebpackPlugin({
+        inject: true,
+        template: paths.appHtml,
+        ...(isEnvProduction
+          ? {
+              minify: {
+                removeComments: true,
+                collapseWhitespace: true,
+                removeRedundantAttributes: true,
+                useShortDoctype: true,
+                removeEmptyAttributes: true,
+                removeStyleLinkTypeAttributes: true,
+                keepClosingSlash: true,
+                minifyJS: true,
+                minifyCSS: true,
+                minifyURLs: true,
+              },
+            }
+          : undefined),
+      }),
       // Inlines the webpack runtime script. This script is too small to warrant
       // a network request.
       // https://github.com/facebook/create-react-app/issues/5358

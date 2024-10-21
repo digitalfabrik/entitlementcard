@@ -19,13 +19,13 @@ const createAuthLink = (token?: string) =>
 const createClient = (token?: string) =>
   new ApolloClient({
     link: createAuthLink(token).concat(httpLink),
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({ addTypename: false }),
     defaultOptions: {
       watchQuery: { fetchPolicy: 'network-only' },
     },
   })
 
-const AppApolloProvider = ({ children }: { children: ReactElement }) => {
+const AppApolloProvider = ({ children }: { children: ReactElement }): ReactElement => {
   const authContext = useContext(AuthContext)
   return <ApolloProvider client={createClient(authContext.data?.token)}>{children}</ApolloProvider>
 }

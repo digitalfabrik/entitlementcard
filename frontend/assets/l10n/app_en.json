@@ -76,7 +76,8 @@
     "openSettings": "Open settings",
     "previous": "Back",
     "settings": "Settings",
-    "tryAgain": "Try again"
+    "tryAgain": "Try again",
+    "unknownError": "An unknown error occurred."
   },
   "identification": {
     "activate": "Activate",
@@ -99,7 +100,7 @@
     "codeExpired": "The scanned code has already expired on {{expirationDate}}.",
     "codeInvalid": "The content of the scanned code cannot be understood. It is probably a QR code that was not generated for this app.",
     "codeInvalidMissing": "The content of the scanned code is incomplete. (Error code: {{missing}}Missing)",
-    "codeInvalidType": "The scanned code is not valid for this operation. (Scanned: {{qrCodeType}})",
+    "codeInvalidType": "The scanned code is not intended for activation in the app. Please use the QR code shown as activation code.",
     "codeUnknownType": "The scanned code is not valid for this application.",
     "codeVerificationFailed": "The scanned code could not be verified by the server.",
     "codeActivationFailedConnection": "The scanned code could not be activated. Please make sure you have an internet connection and try again.",
@@ -168,14 +169,18 @@
   "search": {
     "filterByCategories": "Filter by categories",
     "findCloseBy": "Search near me",
+    "findAlphabetically": "Alphabetically",
     "noAcceptingStoresFound": "No acceptance points found matching this search.",
     "searchHint": "Tap to search …",
     "searchResults": "Search results",
+    "alphabetically": "(A-Z)",
+    "nearby": "(nearby)",
     "title": "Search"
   },
   "store": {
-    "acceptingStore": "Acceptance points",
+    "acceptingStore": "Acceptance point",
     "acceptingStoreNotFound": "Acceptance point not found.",
+    "acceptingStoreNotAvailable": "This acceptance point is no longer available.",
     "address": "Address",
     "email": "E-Mail",
     "loadingDataFailed": "Error loading the data.",
@@ -183,6 +188,16 @@
     "phone": "Phone",
     "showOnMap": "Show on map",
     "unknownCategory": "Unknown category",
-    "website": "Website"
+    "website": "Website",
+    "removeButtonText": "Remove",
+    "removeDescription": "Would you like to remove it from your favorites?"
+  },
+  "favorites": {
+    "title": "Favorites",
+    "noFavoritesFound": "You have not added any acceptance points to your favorites yet.",
+    "favoriteHasBeenAdded": "The acceptance point has been added to the favorites.",
+    "favoriteHasBeenRemoved": "The acceptance point has been removed from the favorites.",
+    "loadingFailed": "Failed to load favorites.",
+    "updateFailed": "Failed to update favorites."
   }
 }

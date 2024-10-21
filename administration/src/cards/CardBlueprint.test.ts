@@ -1,4 +1,5 @@
 import { BavariaCardType } from '../generated/card_pb'
+import { Region } from '../generated/graphql'
 import PlainDate from '../util/PlainDate'
 import CardBlueprint from './CardBlueprint'
 import BavariaCardTypeExtension from './extensions/BavariaCardTypeExtension'
@@ -7,11 +8,12 @@ import RegionExtension from './extensions/RegionExtension'
 jest.useFakeTimers({ now: new Date('2020-01-01') })
 
 describe('CardBlueprint', () => {
-  const region = {
+  const region: Region = {
     id: 0,
     name: 'augsburg',
     prefix: 'a',
     activatedForApplication: true,
+    activatedForCardConfirmationMail: true,
   }
 
   const cardConfig = {

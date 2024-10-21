@@ -29,34 +29,36 @@ class EakApplicationQueryService {
                 throw ForbiddenException()
             }
 
-            ApplicationRepository.getApplications(regionId)
+            ApplicationRepository.getApplicationsByAdmin(regionId)
         }
     }
 
     @GraphQLDescription("Queries an application by application accessKey")
     fun getApplicationByApplicant(
-        accessKey: String
+        accessKey: String,
+        dfe: DataFetchingEnvironment
     ): ApplicationView {
         return transaction {
-            ApplicationRepository.getApplicationByApplicant(accessKey)
+            ApplicationRepository.getApplicationByApplicant(accessKey, dfe)
         }
     }
 
-    @GraphQLDescription("Queries an application by application accessKey")
+    @GraphQLDescription("Queries an application by application verification accessKey")
     fun getApplicationByApplicationVerificationAccessKey(
-        applicationVerificationAccessKey: String
+        applicationVerificationAccessKey: String,
+        dfe: DataFetchingEnvironment
     ): ApplicationView {
         return transaction {
-            ApplicationRepository.getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey)
+            ApplicationRepository.getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey, dfe)
         }
     }
 
-    @GraphQLDescription("Queries an application verification by application accessKey")
+    @GraphQLDescription("Queries an application verification by application verification accessKey")
     fun getApplicationVerification(
-        accessKey: String
+        applicationVerificationAccessKey: String
     ): ApplicationVerificationView {
         return transaction {
-            ApplicationRepository.getApplicationVerification(accessKey).let {
+            ApplicationRepository.getApplicationVerification(applicationVerificationAccessKey).let {
                 ApplicationVerificationView.fromDbEntity(it)
             }
         }

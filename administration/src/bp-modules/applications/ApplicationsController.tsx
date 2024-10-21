@@ -1,22 +1,24 @@
 import { NonIdealState } from '@blueprintjs/core'
-import React, { useContext } from 'react'
+import React, { ReactElement, useContext } from 'react'
 
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import { Region, useGetApplicationsQuery } from '../../generated/graphql'
 import getQueryResult from '../util/getQueryResult'
 import ApplicationsOverview from './ApplicationsOverview'
 
-const ApplicationsController = (props: { region: Region }) => {
+const ApplicationsController = ({ region }: { region: Region }) => {
   const applicationsQuery = useGetApplicationsQuery({
-    variables: { regionId: props.region.id },
+    variables: { regionId: region.id },
     onError: error => console.error(error),
   })
   const applicationsQueryResult = getQueryResult(applicationsQuery)
-  if (!applicationsQueryResult.successful) return applicationsQueryResult.component
-  else return <ApplicationsOverview applications={applicationsQueryResult.data.applications} />
+  if (!applicationsQueryResult.successful) {
+    return applicationsQueryResult.component
+  }
+  return <ApplicationsOverview applications={applicationsQueryResult.data.applications} />
 }
 
-const ControllerWithRegion = () => {
+const ControllerWithRegion = (): ReactElement => {
   const region = useContext(WhoAmIContext).me!.region
 
   if (!region) {
@@ -27,9 +29,8 @@ const ControllerWithRegion = () => {
         description='Sie sind nicht berechtigt, Anträge einzusehen.'
       />
     )
-  } else {
-    return <ApplicationsController region={region} />
   }
+  return <ApplicationsController region={region} />
 }
 
 export default ControllerWithRegion

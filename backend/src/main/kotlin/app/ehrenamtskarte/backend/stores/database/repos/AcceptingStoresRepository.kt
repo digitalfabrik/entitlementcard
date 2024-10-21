@@ -2,13 +2,23 @@ package app.ehrenamtskarte.backend.stores.database.repos
 
 import app.ehrenamtskarte.backend.common.database.sortByKeys
 import app.ehrenamtskarte.backend.projects.database.Projects
+import app.ehrenamtskarte.backend.stores.COUNTRY_CODE
 import app.ehrenamtskarte.backend.stores.database.AcceptingStoreEntity
 import app.ehrenamtskarte.backend.stores.database.AcceptingStores
+import app.ehrenamtskarte.backend.stores.database.AddressEntity
 import app.ehrenamtskarte.backend.stores.database.Addresses
+import app.ehrenamtskarte.backend.stores.database.Categories
+import app.ehrenamtskarte.backend.stores.database.ContactEntity
 import app.ehrenamtskarte.backend.stores.database.Contacts
+import app.ehrenamtskarte.backend.stores.database.PhysicalStoreEntity
 import app.ehrenamtskarte.backend.stores.database.PhysicalStores
+import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
+import app.ehrenamtskarte.backend.stores.utils.mapCsvToStore
+import app.ehrenamtskarte.backend.stores.webservice.schema.types.CSVAcceptingStore
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.Coordinates
+import app.ehrenamtskarte.backend.stores.webservice.schema.types.StoreImportReturnResultModel
 import net.postgis.jdbc.geometry.Point
+import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.ComparisonOp
 import org.jetbrains.exposed.sql.CustomFunction
 import org.jetbrains.exposed.sql.DoubleColumnType
@@ -74,6 +84,86 @@ object AcceptingStoresRepository {
             .orderBy(sortExpression)
             .let { AcceptingStoreEntity.wrapRows(it) }
             .limit(limit, offset)
+    }
+
+    fun getIdIfExists(
+        acceptingStore: AcceptingStore,
+        projectId:
+            EntityID<Int>
+    ): Int? {
+        return AcceptingStores.innerJoin(PhysicalStores).innerJoin(Addresses).innerJoin(Contacts)
+            .slice(AcceptingStores.id).select {
+                (Addresses.street eq acceptingStore.streetWithHouseNumber) and
+                    (Addresses.postalCode eq acceptingStore.postalCode!!) and
+                    (Addresses.location eq acceptingStore.location) and
+                    (Addresses.countryCode eq acceptingStore.countryCode) and
+                    (Contacts.email eq acceptingStore.email) and
+                    (Contacts.telephone eq acceptingStore.telephone) and
+                    (Contacts.website eq acceptingStore.website) and
+                    (AcceptingStores.name eq acceptingStore.name) and
+                    (AcceptingStores.description eq acceptingStore.discount) and
+                    (AcceptingStores.categoryId eq acceptingStore.categoryId) and
+                    (AcceptingStores.regionId.isNull()) and // TODO #538: For now the region is always null
+                    (AcceptingStores.projectId eq projectId) and
+                    (
+                        PhysicalStores.coordinates eq Point(
+                            acceptingStore.longitude!!,
+                            acceptingStore.latitude!!
+                        )
+                        )
+            }.firstOrNull()?.let { it[AcceptingStores.id].value }
+    }
+
+    fun importAcceptingStores(stores: List<CSVAcceptingStore>, projectId: EntityID<Int>, dryRun: Boolean): StoreImportReturnResultModel {
+        var numStoresCreated = 0
+        var numStoresUntouched = 0
+        val acceptingStoreIdsToRemove =
+            AcceptingStores.slice(AcceptingStores.id).select { AcceptingStores.projectId eq projectId }
+                .map { it[AcceptingStores.id].value }.toMutableSet()
+        stores.map { mapCsvToStore(it) }.forEach {
+            val existingStoreId = getIdIfExists(it, projectId)
+            if (existingStoreId == null) {
+                if (!dryRun) {
+                    createStore(it, projectId)
+                }
+                numStoresCreated += 1
+            } else {
+                acceptingStoreIdsToRemove.remove(existingStoreId)
+                numStoresUntouched += 1
+            }
+        }
+        if (!dryRun) {
+            deleteStores(acceptingStoreIdsToRemove)
+        }
+
+        return StoreImportReturnResultModel(numStoresCreated, acceptingStoreIdsToRemove.size, numStoresUntouched)
+    }
+
+    fun createStore(acceptingStore: AcceptingStore, currentProjectId: EntityID<Int>) {
+        val address = AddressEntity.new {
+            street = acceptingStore.streetWithHouseNumber
+            postalCode = acceptingStore.postalCode!!
+            location = acceptingStore.location
+            countryCode = COUNTRY_CODE
+        }
+        val contact = ContactEntity.new {
+            email = acceptingStore.email
+            telephone = acceptingStore.telephone
+            website = acceptingStore.website
+        }
+        val storeEntity = AcceptingStoreEntity.new {
+            name = acceptingStore.name
+            description = acceptingStore.discount
+            contactId = contact.id
+            categoryId = EntityID(acceptingStore.categoryId, Categories)
+            regionId = null // TODO #538: For now the region is always null
+            projectId = currentProjectId
+        }
+        PhysicalStoreEntity.new {
+            storeId = storeEntity.id
+            addressId = address.id
+            coordinates = Point(acceptingStore.longitude!!, acceptingStore.latitude!!)
+        }
     }
 
     fun deleteStores(acceptingStoreIds: Iterable<Int>) {

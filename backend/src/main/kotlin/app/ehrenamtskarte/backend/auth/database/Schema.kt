@@ -9,6 +9,7 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.javatime.date
 import org.jetbrains.exposed.sql.javatime.timestamp
 import org.jetbrains.exposed.sql.lowerCase
 import org.jetbrains.exposed.sql.or
@@ -26,7 +27,7 @@ object Administrators : IntIdTable() {
     val deleted = bool("deleted")
 
     init {
-        val noRegionCompatibleRoles = listOf(Role.PROJECT_ADMIN, Role.NO_RIGHTS)
+        val noRegionCompatibleRoles = listOf(Role.PROJECT_ADMIN, Role.NO_RIGHTS, Role.PROJECT_STORE_MANAGER)
         val regionCompatibleRoles = listOf(Role.REGION_MANAGER, Role.REGION_ADMIN, Role.NO_RIGHTS)
         check("roleRegionCombinationConstraint") {
             regionId.isNull().and(role.inList(noRegionCompatibleRoles.map { it.db_value })) or
@@ -53,4 +54,22 @@ class AdministratorEntity(id: EntityID<Int>) : IntEntity(id) {
     var notificationOnApplication by Administrators.notificationOnApplication
     var notificationOnVerification by Administrators.notificationOnVerification
     var deleted by Administrators.deleted
+}
+
+const val TOKEN_LENGTH = 60
+
+object ApiTokens : IntIdTable() {
+    val tokenHash = binary("tokenHash").uniqueIndex()
+    val creatorId = reference("creatorId", Administrators)
+    val projectId = reference("projectId", Projects)
+    val expirationDate = date("expirationDate")
+}
+
+class ApiTokenEntity(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<ApiTokenEntity>(ApiTokens)
+
+    var tokenHash by ApiTokens.tokenHash
+    var creator by ApiTokens.creatorId
+    var projectId by ApiTokens.projectId
+    var expirationDate by ApiTokens.expirationDate
 }

@@ -27,11 +27,11 @@ object RegionsRepository {
     }
 
     fun findByIdInProject(project: String, id: Int): RegionEntity? {
-        val query = (Projects innerJoin Regions)
+        return (Projects innerJoin Regions)
             .slice(Regions.columns)
             .select { Projects.project eq project and (Regions.id eq id) }
-            .single()
-        return RegionEntity.wrapRow(query)
+            .singleOrNull()
+            ?.let { RegionEntity.wrapRow(it) }
     }
 
     fun findByIds(ids: List<Int>) =
@@ -45,8 +45,9 @@ object RegionsRepository {
         region.dataPrivacyPolicy = dataPrivacyText
     }
 
-    fun updateActivatedForApplication(region: RegionEntity, activated: Boolean) {
-        region.activatedForApplication = activated
+    fun updateRegionSettings(region: RegionEntity, activatedForApplication: Boolean, activatedForConfirmationMail: Boolean) {
+        region.activatedForApplication = activatedForApplication
+        region.activatedForCardConfirmationMail = activatedForConfirmationMail
     }
 
     fun findRegionByRegionIdentifier(

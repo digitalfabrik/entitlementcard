@@ -1,0 +1,3 @@
+query getHashingPepper {
+  pepper: getHashingPepper
+}

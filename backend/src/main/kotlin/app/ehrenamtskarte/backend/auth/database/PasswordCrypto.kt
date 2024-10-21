@@ -8,7 +8,7 @@ import java.util.Base64
 object PasswordCrypto {
     private const val cost = 11
 
-    fun hashPasswort(password: String): ByteArray =
+    fun hashPassword(password: String): ByteArray =
         BCrypt.withDefaults().hash(cost, password.toCharArray())
 
     fun verifyPassword(password: String, hash: ByteArray) =
@@ -22,11 +22,15 @@ object PasswordCrypto {
 
     fun hashPasswordResetKey(passwordResetKey: String): ByteArray {
         val resetKeyBytes = Base64.getUrlDecoder().decode(passwordResetKey)
-        return MessageDigest.getInstance("SHA-256").digest(resetKeyBytes)
+        return hashWithSHA256(resetKeyBytes)
     }
 
     fun verifyPasswordResetKey(passwordResetKey: String, hash: ByteArray): Boolean {
         val actualHash = hashPasswordResetKey(passwordResetKey)
         return MessageDigest.isEqual(actualHash, hash)
+    }
+
+    fun hashWithSHA256(input: ByteArray): ByteArray {
+        return MessageDigest.getInstance("SHA-256").digest(input)
     }
 }

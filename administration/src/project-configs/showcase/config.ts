@@ -28,10 +28,17 @@ const config: ProjectConfig = {
     issuer: 'Tür an Tür Digitalfabrik gGmbH',
     elements: bayern.pdf.elements,
   },
-  cardCreationConfirmationMailEnabled: false,
   csvExport: {
     enabled: false,
   },
+  cardStatistics: { enabled: false },
+  freinetCSVImportEnabled: true,
+  cardCreation: true,
+  selfServiceEnabled: false,
+  storesManagement: {
+    enabled: false,
+  },
+  userImportApiEnabled: false,
 }
 
 export default config

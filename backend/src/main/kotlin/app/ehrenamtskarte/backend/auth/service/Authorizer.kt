@@ -2,7 +2,12 @@ package app.ehrenamtskarte.backend.auth.service
 
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
+import app.ehrenamtskarte.backend.common.webservice.KOBLENZ_PASS_PROJECT
+import app.ehrenamtskarte.backend.projects.database.ProjectEntity
+import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.RegionEntity
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.transactions.transaction
 
 object Authorizer {
 
@@ -52,6 +57,21 @@ object Authorizer {
     fun mayViewUsersInRegion(user: AdministratorEntity?, region: RegionEntity): Boolean {
         return (user?.role == Role.REGION_ADMIN.db_value && user.regionId == region.id) ||
             mayViewUsersInProject(user, region.projectId.value)
+    }
+
+    fun maySendMailsInRegion(user: AdministratorEntity, regionId: Int): Boolean {
+        return user.regionId?.value == regionId && user.role in setOf(
+            Role.REGION_MANAGER.db_value,
+            Role.REGION_ADMIN.db_value
+        )
+    }
+
+    fun mayViewCardStatisticsInProject(user: AdministratorEntity?, projectId: Int): Boolean {
+        return user?.projectId?.value == projectId && user.role == Role.PROJECT_ADMIN.db_value
+    }
+
+    fun mayViewCardStatisticsInRegion(user: AdministratorEntity?, region: RegionEntity): Boolean {
+        return user?.role == Role.REGION_ADMIN.db_value && user.regionId == region.id
     }
 
     fun mayCreateUser(
@@ -118,5 +138,30 @@ object Authorizer {
             return true
         }
         return false
+    }
+
+    fun mayUpdateStoresInProject(user: AdministratorEntity, projectId: Int): Boolean {
+        return user.projectId.value == projectId && user.role == Role.PROJECT_STORE_MANAGER.db_value
+    }
+
+    fun mayAddApiTokensInProject(user: AdministratorEntity): Boolean {
+        return transaction {
+            user.role == Role.PROJECT_ADMIN.db_value && ProjectEntity.find { Projects.project eq KOBLENZ_PASS_PROJECT }
+                .single().id.value == user.projectId.value
+        }
+    }
+
+    fun mayViewApiMetadataInProject(user: AdministratorEntity): Boolean =
+        user.role == Role.PROJECT_ADMIN.db_value
+
+    fun mayDeleteApiTokensInProject(user: AdministratorEntity): Boolean =
+        user.role == Role.PROJECT_ADMIN.db_value
+
+    fun maySeeHashingPepper(user: AdministratorEntity): Boolean {
+        return transaction {
+            ProjectEntity.find { Projects.project eq KOBLENZ_PASS_PROJECT }
+                .single().id.value == user.projectId.value &&
+                user.role == Role.PROJECT_ADMIN.db_value
+        }
     }
 }

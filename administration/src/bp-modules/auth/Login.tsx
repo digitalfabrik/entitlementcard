@@ -1,5 +1,5 @@
 import { Card, H2, H3, H4 } from '@blueprintjs/core'
-import React, { useContext } from 'react'
+import React, { ReactElement, useContext } from 'react'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { SignInMutation, SignInPayload, useSignInMutation } from '../../generated/graphql'
@@ -9,17 +9,17 @@ import StandaloneCenter from '../StandaloneCenter'
 import ProjectSwitcher from '../util/ProjectSwitcher'
 import LoginForm from './LoginForm'
 
-interface State {
+type State = {
   email: string
   password: string
 }
 
-const Login = (props: { onSignIn: (payload: SignInPayload) => void }) => {
+const Login = ({ onSignIn }: { onSignIn: (payload: SignInPayload) => void }): ReactElement => {
   const config = useContext(ProjectConfigContext)
   const appToaster = useAppToaster()
   const [state, setState] = React.useState<State>({ email: '', password: '' })
   const [signIn, mutationState] = useSignInMutation({
-    onCompleted: (payload: SignInMutation) => props.onSignIn(payload.signInPayload),
+    onCompleted: (payload: SignInMutation) => onSignIn(payload.signInPayload),
     onError: error => {
       const { title } = getMessageFromApolloError(error)
       appToaster?.show({ intent: 'danger', message: title })

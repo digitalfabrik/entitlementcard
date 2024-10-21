@@ -14,6 +14,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "1.9.10"
     id("org.jlleitschuh.gradle.ktlint") version "11.5.1"
     id("com.google.protobuf") version "0.9.4"
+    id("org.jetbrains.kotlinx.kover") version "0.8.3"
 
     // Apply the application plugin to add support for building a CLI application.
     application
@@ -24,15 +25,16 @@ repositories {
 }
 
 dependencies {
-    implementation("com.google.protobuf:protobuf-kotlin:3.25.2")
+    implementation("com.google.protobuf:protobuf-kotlin:4.27.5")
     implementation("com.github.ajalt.clikt:clikt:3.5.4")
     implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.11.0")
-    implementation("io.javalin:javalin:6.1.3")
+    implementation("io.javalin:javalin:6.3.0")
+    testImplementation("io.javalin:javalin-testtools:6.3.0")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("org.slf4j:slf4j-simple:2.0.7")
     implementation("org.apache.commons:commons-text:1.10.0")
     implementation("org.simplejavamail:simple-java-mail:8.1.3")
-    implementation("org.piwik.java.tracking:matomo-java-tracker:3.2.0")
+    implementation("org.piwik.java.tracking:matomo-java-tracker:3.4.0")
 
     implementation("com.expediagroup:graphql-kotlin-schema-generator:6.5.3")
     implementation("com.graphql-java:graphql-java-extended-scalars:20.2")
@@ -49,9 +51,9 @@ dependencies {
 
     // Use the Kotlin test library.
     testImplementation("org.jetbrains.kotlin:kotlin-test")
-
-    // Use the Kotlin JUnit integration.
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.0")
+    testImplementation("io.mockk:mockk:1.13.11")
 
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
@@ -74,7 +76,15 @@ dependencies {
     implementation("com.auth0:java-jwt:4.4.0") // JSON web tokens
     implementation("at.favre.lib:bcrypt:0.10.2")
 
+    implementation("org.bouncycastle:bcpkix-jdk18on:1.78.1")
+
     implementation("com.google.zxing:core:3.5.2") // QR-Codes
+
+    testImplementation(platform("org.testcontainers:testcontainers-bom:1.19.8"))
+    testImplementation("org.testcontainers:testcontainers")
+    testImplementation("org.testcontainers:postgresql")
+    // Replace the library version used in testcontainers to avoid vulnerability
+    testImplementation("org.apache.commons:commons-compress:1.26.2")
 }
 
 ktlint {
@@ -106,6 +116,16 @@ application {
     mainClass.set("app.ehrenamtskarte.backend.EntryPointKt")
 }
 
+kover {
+    reports {
+        filters {
+            includes {
+                classes("app.ehrenamtskarte.backend.*")
+            }
+        }
+    }
+}
+
 tasks.withType<JavaExec>().configureEach {
     systemProperties = properties
 }
@@ -124,4 +144,10 @@ tasks.register<Copy>("copyStyle") {
 
 tasks.named("classes") {
     dependsOn(tasks.named("copyStyle"))
+}
+
+tasks.test {
+    useJUnitPlatform()
+    environment("JWT_SECRET", "HelloWorld")
+    environment("KOBLENZ_PEPPER", "123456789ABC")
 }

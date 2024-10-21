@@ -8,7 +8,7 @@ import NuernbergPassIdExtension from '../extensions/NuernbergPassIdExtension'
 import { findExtension } from '../extensions/extensions'
 
 jest.mock('csv-stringify/browser/esm/sync', () => ({
-  stringify: (input: any[]) => input[0].join(','),
+  stringify: (input: string[][]) => input[0].join(','),
 }))
 
 jest.mock('../../project-configs/showcase/config')
@@ -19,11 +19,13 @@ describe('CsvFactory', () => {
   it('should use pass id for single cards export', () => {
     const testPassId = '86152'
     const cards = [new CardBlueprint('Thea Test', nuernbergConfig.card)]
-    const passIdExtenstion = findExtension(cards[0].extensions, NuernbergPassIdExtension) //cards[0].extensions.find(ext => ext instanceof NuernbergPassIdExtension)
-    if (!passIdExtenstion) throw Error('test failed')
+    const passIdExtenstion = findExtension(cards[0].extensions, NuernbergPassIdExtension) // cards[0].extensions.find(ext => ext instanceof NuernbergPassIdExtension)
+    if (!passIdExtenstion) {
+      throw Error('test failed')
+    }
     passIdExtenstion.fromString(testPassId)
     const filename = getCSVFilename(cards)
-    expect(filename).toEqual(`${testPassId}.csv`)
+    expect(filename).toBe(`${testPassId}.csv`)
   })
 
   it('should use bulkname for multiple cards export', () => {
@@ -32,7 +34,7 @@ describe('CsvFactory', () => {
       new CardBlueprint('Theo Test', nuernbergConfig.card),
     ]
     const filename = getCSVFilename(cards)
-    expect(filename).toEqual('Pass-ID[0]mass.csv')
+    expect(filename).toBe('Pass-ID[0]mass.csv')
   })
 
   it('should throw error if csv export is disabled', () => {
@@ -53,11 +55,14 @@ describe('CsvFactory', () => {
   it('should return only header csv for empty input', async () => {
     jest
       .spyOn(global, 'Blob')
-      .mockImplementationOnce((blobParts?: BlobPart[] | undefined, options?: BlobPropertyBag | undefined): Blob => {
-        return TEST_BLOB_CONSTRUCTOR(blobParts, options)
-      })
+      .mockImplementationOnce(
+        (blobParts?: BlobPart[] | undefined, options?: BlobPropertyBag | undefined): Blob =>
+          TEST_BLOB_CONSTRUCTOR(blobParts, options)
+      )
 
-    if (!nuernbergConfig.csvExport.enabled) throw Error('test failed')
+    if (!nuernbergConfig.csvExport.enabled) {
+      throw Error('test failed')
+    }
     generateCsv([], [], nuernbergConfig.csvExport)
     expect(TEST_BLOB_CONSTRUCTOR).toHaveBeenCalledWith([nuernbergConfig.csvExport.csvHeader.join(',')], {
       type: 'text/csv;charset=utf-8;',

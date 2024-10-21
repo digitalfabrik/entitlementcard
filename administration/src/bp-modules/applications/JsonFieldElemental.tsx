@@ -1,5 +1,5 @@
 import { Colors, Icon, Tag } from '@blueprintjs/core'
-import { memo, useContext } from 'react'
+import React, { memo, useContext } from 'react'
 import styled from 'styled-components'
 
 import { AuthContext } from '../../AuthProvider'
@@ -55,21 +55,21 @@ const JsonFieldAttachment = memo(
           console.error(e)
           appToaster?.show({ message: 'Etwas ist schiefgelaufen.', intent: 'danger' })
         } finally {
-          if (loadingToastKey !== undefined) appToaster?.dismiss(loadingToastKey)
+          if (loadingToastKey !== undefined) {
+            appToaster?.dismiss(loadingToastKey)
+          }
         }
       }
       return (
         <p>
           {jsonField.translations.de}:&nbsp;
-          <>
-            <PrintAwareTag
-              round
-              rightIcon={<Icon icon='download' color={Colors.GRAY1} />}
-              interactive
-              minimal
-              onClick={onClick}>{`Anhang ${jsonField.value.fileIndex + 1}`}</PrintAwareTag>
-            <PrintOnlySpan>{`(siehe Anhang ${jsonField.value.fileIndex + 1})`}</PrintOnlySpan>
-          </>
+          <PrintAwareTag
+            round
+            rightIcon={<Icon icon='download' color={Colors.GRAY1} />}
+            interactive
+            minimal
+            onClick={onClick}>{`Anhang ${jsonField.value.fileIndex + 1}`}</PrintAwareTag>
+          <PrintOnlySpan>{`(siehe Anhang ${jsonField.value.fileIndex + 1})`}</PrintOnlySpan>
         </p>
       )
     }

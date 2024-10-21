@@ -1,12 +1,14 @@
 import { Alert, Typography, styled } from '@mui/material'
+import React from 'react'
 
 import { OrganizationInput } from '../../../generated/graphql'
+import { normalizeName } from '../../../util/normalizeString'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
 import CheckboxForm from '../primitive-inputs/CheckboxForm'
 import EmailForm from '../primitive-inputs/EmailForm'
 import SelectForm from '../primitive-inputs/SelectForm'
 import ShortTextForm from '../primitive-inputs/ShortTextForm'
-import { Form } from '../util/FormType'
+import { Form, FormComponentProps } from '../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
@@ -56,14 +58,15 @@ const getValidatedCompoundInput = createCompoundValidate(SubForms, {
 
 type State = CompoundState<typeof SubForms>
 type ValidatedInput = OrganizationInput
-type Options = {}
 type AdditionalProps = { applicantName: string }
-const OrganizationForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+const OrganizationForm: Form<State, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: state => {
     const compoundResult = getValidatedCompoundInput(state)
-    if (compoundResult.type === 'error') return compoundResult
+    if (compoundResult.type === 'error') {
+      return compoundResult
+    }
     return {
       type: 'valid',
       value: {
@@ -79,13 +82,13 @@ const OrganizationForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
       },
     }
   },
-  Component: ({ state, setState, applicantName }) => (
+  Component: ({ state, setState, applicantName }: FormComponentProps<State, AdditionalProps>) => (
     <>
       <h4>Angaben zur Organisation</h4>
       <ShortTextForm.Component
         state={state.name}
         setState={useUpdateStateCallback(setState, 'name')}
-        label={'Name der Organisation bzw. des Vereins'}
+        label='Name der Organisation bzw. des Vereins'
       />
       <AddressForm.Component state={state.address} setState={useUpdateStateCallback(setState, 'address')} />
       <SelectForm.Component
@@ -98,9 +101,10 @@ const OrganizationForm: Form<State, Options, ValidatedInput, AdditionalProps> = 
       <Typography>
         Bitte geben Sie hier die Daten der Person an, die ihr ehrenamtliches Engagement bestätigen kann.
       </Typography>
-      {applicantName === state.contactName.shortText && (
+      {normalizeName(applicantName) === normalizeName(state.contactName.shortText) && (
         <WarningContactPersonSamePerson severity='warning'>
-          Die Kontaktperson in der Organisation darf nicht der Antragssteller sein.
+          Die Kontaktperson der Organisation und die antragsstellende Person scheinen identisch zu sein. Bitte beachten
+          Sie, dass Anträge auf dieser Grundlage nicht bewilligt werden können.
         </WarningContactPersonSamePerson>
       )}
       <ShortTextForm.Component

@@ -1,5 +1,5 @@
 import { Button } from '@mui/material'
-import { useContext, useState } from 'react'
+import React, { useContext, useState } from 'react'
 
 import { useGetDataPolicyQuery } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
@@ -7,7 +7,7 @@ import getQueryResult from '../../util/getQueryResult'
 import BasicDialog from '../BasicDialog'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
 import CheckboxForm from '../primitive-inputs/CheckboxForm'
-import { Form } from '../util/FormType'
+import { Form, FormComponentProps } from '../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
@@ -39,10 +39,9 @@ type ValidatedInput = {
   givenInformationIsCorrectAndComplete: boolean
   hasAcceptedEmailUsage: boolean
 }
-type Options = {}
 type AdditionalProps = { regionId: number }
 
-const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+const StepSendForm: Form<State, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: createCompoundValidate(SubForms, {
@@ -50,14 +49,14 @@ const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
     givenInformationIsCorrectAndComplete: givenInformationIsCorrectAndCompleteOptions,
     hasAcceptedEmailUsage: hasAcceptedEmailUsageOptions,
   }),
-  Component: ({ state, setState, regionId }) => {
+  Component: ({ state, setState, regionId }: FormComponentProps<State, AdditionalProps>) => {
     const setHasAcceptedDataPrivacyState = useUpdateStateCallback(setState, 'hasAcceptedDataPrivacy')
     const setGivenInformationIsCorrectAndComplete = useUpdateStateCallback(
       setState,
       'givenInformationIsCorrectAndComplete'
     )
     const setHasAcceptedEmailUsage = useUpdateStateCallback(setState, 'hasAcceptedEmailUsage')
-    const policyQuery = useGetDataPolicyQuery({ variables: { regionId: regionId } })
+    const policyQuery = useGetDataPolicyQuery({ variables: { regionId } })
     const config = useContext(ProjectConfigContext)
     const [openPrivacyPolicy, setOpenPrivacyPolicy] = useState<boolean>(false)
     const PrivacyLabel = (
@@ -75,7 +74,9 @@ const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
     )
 
     const policyQueryHandler = getQueryResult(policyQuery)
-    if (!policyQueryHandler.successful) return policyQueryHandler.component
+    if (!policyQueryHandler.successful) {
+      return policyQueryHandler.component
+    }
     const dataPrivacyPolicy = policyQueryHandler.data.dataPolicy.dataPrivacyPolicy
 
     return (
@@ -86,17 +87,17 @@ const StepSendForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
           options={hasAcceptedDatePrivacyOptions}
           label={PrivacyLabel}
         />
+        <SubForms.hasAcceptedEmailUsage.Component
+          label='Ich stimme zu, dass ich von der lokalen Ehrenamtskoordination über Verlosungen und regionale Angebote informiert werden darf.'
+          state={state.hasAcceptedEmailUsage}
+          setState={setHasAcceptedEmailUsage}
+          options={hasAcceptedEmailUsageOptions}
+        />
         <SubForms.givenInformationIsCorrectAndComplete.Component
           label='Ich versichere, dass alle angegebenen Informationen korrekt und vollständig sind.'
           state={state.givenInformationIsCorrectAndComplete}
           setState={setGivenInformationIsCorrectAndComplete}
           options={givenInformationIsCorrectAndCompleteOptions}
-        />
-        <SubForms.hasAcceptedEmailUsage.Component
-          label='Meine E-Mail-Adresse darf im Sinne der Datenschutzerklärung für Kommunikationsmaßnahmen (z.B. Newsletter, Hinweise zu Gewinnspielen, ...) rund um das Thema Ehrenamt genutzt werden.'
-          state={state.hasAcceptedEmailUsage}
-          setState={setHasAcceptedEmailUsage}
-          options={hasAcceptedEmailUsageOptions}
         />
         <BasicDialog
           open={openPrivacyPolicy}

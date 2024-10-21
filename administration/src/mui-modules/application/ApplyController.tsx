@@ -4,7 +4,7 @@ import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import { CircularProgress, DialogActions, Typography } from '@mui/material'
 import { SnackbarProvider, useSnackbar } from 'notistack'
-import { useCallback, useContext, useMemo, useState } from 'react'
+import React, { ReactElement, useCallback, useContext, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
@@ -33,6 +33,11 @@ const SuccessContent = styled.div`
 const ApplyController = (): React.ReactElement | null => {
   const [formSubmitted, setFormSubmitted] = useState<boolean>(false)
   const { enqueueSnackbar } = useSnackbar()
+  const { status, state, setState } = useVersionedLocallyStoredState(
+    ApplicationForm.initialState,
+    applicationStorageKey,
+    lastCommitForApplicationForm
+  )
   const [addEakApplication, { loading: loadingSubmit }] = useAddEakApplicationMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
@@ -45,11 +50,6 @@ const ApplyController = (): React.ReactElement | null => {
       }
     },
   })
-  const { status, state, setState } = useVersionedLocallyStoredState(
-    ApplicationForm.initialState,
-    applicationStorageKey,
-    lastCommitForApplicationForm
-  )
 
   const projectId = useContext(ProjectConfigContext).projectId
   const regionsQuery = useGetRegionsQuery({
@@ -73,7 +73,9 @@ const ApplyController = (): React.ReactElement | null => {
             Über den Fortschritt Ihres Antrags werden Sie per E-Mail informiert.
             Sie können das Fenster jetzt schließen.`
 
-  if (!regionsQueryResult.successful) return regionsQueryResult.component
+  if (!regionsQueryResult.successful) {
+    return regionsQueryResult.component
+  }
 
   const regions = regionsQueryResult.data.regions.filter(region => region.activatedForApplication)
 
@@ -119,7 +121,7 @@ const ApplyController = (): React.ReactElement | null => {
   )
 }
 
-const ApplyApp = () => (
+const ApplyApp = (): ReactElement => (
   <SnackbarProvider>
     <ApplicationErrorBoundary>
       <ApplyController />

@@ -2,12 +2,13 @@ description: Restores and saves the node_modules directories of the npm workspac
 steps:
   - restore_cache:
       keys:
-      - v1-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}-{{ checksum "administration/package.json" }}-{{checksum "administration/package-lock.json" }}-{{ checksum "frontend/build-configs/package.json" }}-{{checksum "frontend/build-configs/package-lock.json" }}
+      - v2-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}-{{ checksum "administration/package.json" }}-{{ checksum "frontend/build-configs/package.json" }}
   - run:
-      name: Install node dependencies for npm workspace
+      name: Install node dependencies for npm workspaces
       command: "[ ! -d node_modules ] && npm ci --ignore-scripts --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache."
   - save_cache:
-      key: v1-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}-{{ checksum "administration/package.json" }}-{{checksum "administration/package-lock.json" }}-{{ checksum "frontend/build-configs/package.json" }}-{{checksum "frontend/build-configs/package-lock.json" }}
+      key: v2-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}-{{ checksum "administration/package.json" }}-{{ checksum "frontend/build-configs/package.json" }}
       paths:
         - ~/node_modules
         - ~/administration/node_modules
+        - ~/frontend/build-configs/node_modules

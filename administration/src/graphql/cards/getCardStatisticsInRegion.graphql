@@ -1,0 +1,12 @@
+query getCardStatisticsInRegion($projectId: String!, $regionId: Int!, $dateStart: String!, $dateEnd: String!) {
+  result: getCardStatisticsInRegion(
+    project: $projectId
+    regionId: $regionId
+    dateStart: $dateStart
+    dateEnd: $dateEnd
+  ) {
+    region
+    cardsCreated
+    cardsActivated
+  }
+}

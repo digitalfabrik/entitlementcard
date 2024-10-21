@@ -1,10 +1,10 @@
 import 'package:ehrenamtskarte/about/about_page.dart';
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
-import 'package:ehrenamtskarte/graphql/configured_graphql_provider.dart';
 import 'package:ehrenamtskarte/home/app_flow.dart';
 import 'package:ehrenamtskarte/home/app_flows_stack.dart';
 import 'package:ehrenamtskarte/identification/identification_page.dart';
+import 'package:ehrenamtskarte/favorites/favorites_page.dart';
 import 'package:ehrenamtskarte/map/floating_action_map_bar.dart';
 import 'package:ehrenamtskarte/map/map_page.dart';
 import 'package:ehrenamtskarte/search/search_page.dart';
@@ -18,6 +18,7 @@ const identityTabIndex = 2;
 
 class HomePage extends StatefulWidget {
   final int? initialTabIndex;
+
   const HomePage({super.key, this.initialTabIndex});
 
   @override
@@ -51,6 +52,13 @@ class HomePageState extends State<HomePage> {
         (BuildContext context) => t.search.title,
         GlobalKey<NavigatorState>(debugLabel: 'Search tab key'),
       ),
+      if (buildConfig.featureFlags.favorites)
+        AppFlow(
+          const FavoritesPage(),
+          Icons.favorite_border_outlined,
+          (BuildContext context) => t.favorites.title,
+          GlobalKey<NavigatorState>(debugLabel: 'Favorites tab key'),
+        ),
       if (buildConfig.featureFlags.verification)
         AppFlow(
           IdentificationPage(),
@@ -67,14 +75,12 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsModel>(context);
 
-    return ConfiguredGraphQlProvider(
-      child: HomePageData(
-        navigateToMapTab: _navigateToMapTab,
-        child: settings.enableStaging
-            ? Banner(
-                message: 'Testing', location: BannerLocation.topEnd, color: Colors.red, child: _buildScaffold(context))
-            : _buildScaffold(context),
-      ),
+    return HomePageData(
+      navigateToMapTab: _navigateToMapTab,
+      child: settings.enableStaging
+          ? Banner(
+              message: 'Testing', location: BannerLocation.topEnd, color: Colors.red, child: _buildScaffold(context))
+          : _buildScaffold(context),
     );
   }
 
@@ -82,15 +88,13 @@ class HomePageState extends State<HomePage> {
     return Scaffold(
       body: AppFlowsStack(appFlows: appFlows, currentIndex: _currentTabIndex),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: _currentTabIndex == mapTabIndex
-          ? FloatingActionMapBar(
-              bringCameraToUser: (position) async {
-                await mapPageController?.bringCameraToUser(position);
-              },
-              selectedAcceptingStoreId: selectedAcceptingStoreId,
-            )
-          // Returning a Container() instead of null avoids animations
-          : Container(),
+      floatingActionButton: FloatingActionMapBar(
+        bringCameraToUser: (position) async {
+          await mapPageController?.bringCameraToUser(position);
+        },
+        selectedAcceptingStoreId: selectedAcceptingStoreId,
+        currentTabIndex: _currentTabIndex,
+      ),
       bottomNavigationBar: _buildBottomNavigationBar(context),
     );
   }

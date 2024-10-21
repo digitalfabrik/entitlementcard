@@ -2,7 +2,6 @@ import { JsonField, findValue } from '../../bp-modules/applications/JsonFieldVie
 import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
 import EMailNotificationExtension from '../../cards/extensions/EMailNotificationExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
-import { isDevMode, isStagingMode } from '../../util/helper'
 import { ProjectConfig } from '../getProjectConfig'
 import { ActivationText } from './activationText'
 import { DataPrivacyAdditionalBaseText, DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
@@ -24,6 +23,14 @@ export const applicationJsonToPersonalData = (
   return { forenames: forenames?.value, surname: surname?.value, emailAddress: emailAddress?.value }
 }
 
+const cardConfig = {
+  defaultValidity: { years: 3 },
+  nameColumnName: 'Name',
+  expiryColumnName: 'Ablaufdatum',
+  extensionColumnNames: ['Kartentyp', null, 'MailNotification'],
+  extensions: [BavariaCardTypeExtension, RegionExtension, EMailNotificationExtension],
+}
+
 export const applicationJsonToCardQuery = (json: JsonField<'Array'>): string | null => {
   const query = new URLSearchParams()
   const applicationDetails = findValue(json, 'applicationDetails', 'Array') ?? json
@@ -35,15 +42,15 @@ export const applicationJsonToCardQuery = (json: JsonField<'Array'>): string | n
     return null
   }
 
-  query.set(config.card.nameColumnName, `${personalData.forenames} ${personalData.surname}`)
-  const cardTypeExtensionIdx = config.card.extensions.findIndex(ext => ext === BavariaCardTypeExtension)
+  query.set(cardConfig.nameColumnName, `${personalData.forenames} ${personalData.surname}`)
+  const cardTypeExtensionIdx = cardConfig.extensions.findIndex(ext => ext === BavariaCardTypeExtension)
   const value = cardType.value === 'Goldene Ehrenamtskarte' ? 'Goldkarte' : 'Standard'
-  query.set(config.card.extensionColumnNames[cardTypeExtensionIdx] ?? '', value)
+  query.set(cardConfig.extensionColumnNames[cardTypeExtensionIdx] ?? '', value)
   if (personalData.emailAddress) {
-    const applicantMailNotificationExtensionIdx = config.card.extensions.findIndex(
+    const applicantMailNotificationExtensionIdx = cardConfig.extensions.findIndex(
       ext => ext === EMailNotificationExtension
     )
-    query.set(config.card.extensionColumnNames[applicantMailNotificationExtensionIdx] ?? '', personalData.emailAddress)
+    query.set(cardConfig.extensionColumnNames[applicantMailNotificationExtensionIdx] ?? '', personalData.emailAddress)
   }
 
   return `?${query.toString()}`
@@ -57,13 +64,7 @@ const config: ProjectConfig = {
     applicationJsonToCardQuery,
   },
   staticQrCodesEnabled: false,
-  card: {
-    defaultValidity: { years: 3 },
-    nameColumnName: 'Name',
-    expiryColumnName: 'Ablaufdatum',
-    extensionColumnNames: ['Kartentyp', null, 'MailNotification'],
-    extensions: [BavariaCardTypeExtension, RegionExtension, EMailNotificationExtension],
-  },
+  card: cardConfig,
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
   dataPrivacyContent: DataPrivacyBaseText,
   dataPrivacyAdditionalBaseContent: DataPrivacyAdditionalBaseText,
@@ -73,11 +74,24 @@ const config: ProjectConfig = {
   },
   timezone: 'Europe/Berlin',
   pdf: pdfConfiguration,
-  // TODO Wait for bavarian confirmation until we enable it on production
-  cardCreationConfirmationMailEnabled: isDevMode() || isStagingMode(),
   csvExport: {
     enabled: false,
   },
+  cardStatistics: {
+    enabled: true,
+    theme: {
+      primaryColor: '#8377A9',
+      // https://a.atmos.washington.edu/~ovens/javascript/colorpicker.html - 80% lighter than primaryColor
+      primaryColorLight: '#c6c0d8',
+    },
+  },
+  freinetCSVImportEnabled: true,
+  cardCreation: true,
+  selfServiceEnabled: false,
+  storesManagement: {
+    enabled: false,
+  },
+  userImportApiEnabled: false,
 }
 
 export default config

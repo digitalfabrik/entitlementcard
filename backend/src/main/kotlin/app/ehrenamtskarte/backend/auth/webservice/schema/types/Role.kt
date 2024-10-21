@@ -6,6 +6,9 @@ enum class Role(val db_value: String) {
     // A Project Admin has the right to (de)nominate Region Admins for each region in his project
     PROJECT_ADMIN("PROJECT_ADMIN"),
 
+    // A project store manager has the right to import stores in his project.
+    PROJECT_STORE_MANAGER("PROJECT_STORE_MANAGER"),
+
     // A Region Admin has the right to (de)nominate Region Managers for his project. He also has the right to create cards
     // for his project.
     REGION_ADMIN("REGION_ADMIN"),

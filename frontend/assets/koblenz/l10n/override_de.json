@@ -1,0 +1,47 @@
+{
+  "identification": {
+    "activateCurrentDeviceDescription": "Ihr Pass wurde bereits auf einem anderen Gerät aktiviert. Wenn Sie fortfahren, wird Ihr Pass automatisch auf dem anderen Gerät deaktiviert, falls er dort noch aktiv ist.",
+    "activateCurrentDeviceTitle": "Pass auf diesem Gerät aktivieren?",
+    "activateDescription": "Sie haben den KoblenzPass bereits beantragt und einen Aktivierungscode erhalten? Scannen Sie den Code hier ein.",
+    "activateTitle": "Pass aktivieren",
+    "applyDescription": "Sie haben noch keinen KoblenzPass? Hier können Sie Ihren KoblenzPass beantragen.",
+    "cardExpired": "Ihr Pass ist abgelaufen. Unter \"Weitere Aktionen\" können Sie einen Antrag auf Verlängerung stellen.",
+    "cardInvalid": "Ihr Pass ist ungültig. Er wurde entweder widerrufen oder auf einem anderen Gerät aktiviert.",
+    "cardNotYetValid": "Der Gültigkeitszeitraum Ihres Passes hat noch nicht begonnen.",
+    "checkFailed": "Ihr Pass konnte nicht auf seine Gültigkeit geprüft werden. Bitte stellen Sie sicher, dass eine Internetverbindung besteht und prüfen Sie erneut.",
+    "moreActionsActivateDescription": "Ihr hinterlegter KoblenzPass bleibt erhalten. Sie können diesen manuell entfernen.",
+    "moreActionsActivateLimitDescription": "Um einen weiteren KoblenzPass hinzuzufügen, müssen Sie zuerst einen vorhandenen KoblenzPass löschen.",
+    "moreActionsActivateTitle": "Weiteren KoblenzPass hinzufügen",
+    "moreActionsApplyDescription": "Ihr hinterlegter Pass bleibt erhalten.",
+    "moreActionsApplyTitle": "KoblenzPass beantragen oder verlängern",
+    "moreActionsRemoveDescription": "Nach der Auswahl wird dieser KoblenzPass vom Gerät gelöscht.",
+    "moreActionsRemoveTitle": "Diesen KoblenzPass löschen",
+    "moreActionsVerifyDescription": "Prüfen Sie die Gültigkeit eines KoblenzPasses.",
+    "moreActionsVerifyTitle": "Einen KoblenzPass prüfen",
+    "removeDescription": "Wenn dieser Pass gelöscht wird, muss dieser für eine erneute Verwendung neu hinzugefügt werden.",
+    "removeTitle": "Diesen Pass löschen?",
+    "verificationSuccessful": "Pass ist gültig",
+    "verifyDescription": "Sie möchten die Gültigkeit eines KoblenzPasses prüfen? Scannen Sie den Code hier ein.",
+    "verifyInfoTitle": "So prüfen Sie die Gültigkeit eines KoblenzPasses"
+  },
+  "intro": {
+    "applyDescription": "Im Formular geben Sie Ihre persönlichen Informationen an. Anschließend wird der Antrag weitergeleitet und von der zuständigen Stelle bearbeitet.",
+    "applyTitle": "Wie kann ich den KoblenzPass beantragen?",
+    "usageDescription": "Auf der Karte von Koblenz können Sie alle Akzeptanzstellen finden. Tippen Sie auf einen Standort, um mehr Informationen sehen zu können.",
+    "usageTitle": "Wo kann ich den KoblenzPass nutzen?",
+    "welcomeDescription": "Vielen Dank, dass Sie sich die App zum KoblenzPass heruntergeladen haben!"
+  },
+  "about": {
+    "title": "Mehr"
+  },
+  "deeplinkActivation": {
+    "headline": "Pass aktivieren",
+    "description": "Wollen Sie diesen Pass aktivieren?",
+    "limitReached": "Ihr Passlimit wurde erreicht. Bitte entfernen Sie vorher einen Pass, damit Sie einen neuen aktivieren können.",
+    "buttonText": "Pass aktivieren",
+    "invalidCode": "Ihr Aktivierungscode ist ungültig.",
+    "alreadyExists": "Dieser Pass wurde bereits auf dem Gerät aktiviert.",
+    "activationSuccessful": "Die Aktivierung war erfolgreich.",
+    "activationInvalid": "Die Aktivierung befindet sich in einem ungültigen Zustand."
+  }
+}

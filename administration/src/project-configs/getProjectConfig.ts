@@ -1,6 +1,8 @@
 import {
   BAYERN_PRODUCTION_ID,
   BAYERN_STAGING_ID,
+  KOBLENZ_PRODUCTION_ID,
+  KOBLENZ_STAGING_ID,
   NUERNBERG_PRODUCTION_ID,
   NUERNBERG_STAGING_ID,
 } from 'build-configs/constants'
@@ -17,10 +19,11 @@ import { PdfQrCodeElementProps } from '../cards/pdf/PdfQrCodeElement'
 import { PdfTextElementProps } from '../cards/pdf/PdfTextElement'
 import bayernConfig from './bayern/config'
 import { LOCAL_STORAGE_PROJECT_KEY } from './constants'
+import koblenzConfig from './koblenz/config'
 import nuernbergConfig from './nuernberg/config'
 import showcaseConfig from './showcase/config'
 
-export interface PdfConfig {
+export type PdfConfig = {
   title: string
   templatePath: string | null
   issuer: string
@@ -33,12 +36,12 @@ export interface PdfConfig {
   }
 }
 
-export interface ActivityLogConfig {
+export type ActivityLogConfig = {
   columnNames: string[]
   renderLogEntry: (logEntry: ActivityLog) => ReactNode
 }
 
-export interface CardConfig {
+export type CardConfig = {
   nameColumnName: string
   expiryColumnName: string
   extensionColumnNames: (string | null)[]
@@ -46,7 +49,7 @@ export interface CardConfig {
   extensions: ExtensionClass[]
 }
 
-export interface ApplicationFeature {
+export type ApplicationFeature = {
   applicationJsonToPersonalData: (json: JsonField<'Array'>) => { forenames?: string; surname?: string } | null
   applicationJsonToCardQuery: (json: JsonField<'Array'>) => string | null
 }
@@ -61,7 +64,36 @@ export type CsvExport =
       enabled: false
     }
 
-export interface ProjectConfig {
+export type StatisticsTheme = {
+  primaryColor: string
+  primaryColorLight: string
+}
+
+export type CardStatistics =
+  | {
+      enabled: true
+      theme: StatisticsTheme
+    }
+  | {
+      enabled: false
+    }
+export type StoresFieldConfig = {
+  name: string
+  isMandatory: boolean
+  isValid: (value: string) => boolean
+  columnWidth: number
+}
+
+export type StoresManagementConfig =
+  | {
+      enabled: true
+      fields: StoresFieldConfig[]
+    }
+  | {
+      enabled: false
+    }
+
+export type ProjectConfig = {
   name: string
   projectId: string
   applicationFeature?: ApplicationFeature
@@ -74,14 +106,19 @@ export interface ProjectConfig {
   timezone: string
   activityLogConfig?: ActivityLogConfig
   activation?: {
-    activationText: (applicationName: string, downloadLink: string) => ReactElement
+    activationText: (applicationName: string, downloadLink: string, deepLink: string) => ReactElement
     downloadLink: string
   }
-  cardCreationConfirmationMailEnabled: boolean
   csvExport: CsvExport
+  cardStatistics: CardStatistics
+  freinetCSVImportEnabled: boolean
+  cardCreation: boolean
+  selfServiceEnabled: boolean
+  storesManagement: StoresManagementConfig
+  userImportApiEnabled: boolean
 }
 
-export const setProjectConfigOverride = (hostname: string) => {
+export const setProjectConfigOverride = (hostname: string): void => {
   window.localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, hostname)
 }
 
@@ -93,6 +130,9 @@ const getProjectConfig = (hostname: string): ProjectConfig => {
     case NUERNBERG_PRODUCTION_ID:
     case NUERNBERG_STAGING_ID:
       return nuernbergConfig
+    case KOBLENZ_PRODUCTION_ID:
+    case KOBLENZ_STAGING_ID:
+      return koblenzConfig
     default:
       console.debug('Falling back to showcase.')
       return showcaseConfig

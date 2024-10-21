@@ -1,5 +1,5 @@
 import { Tooltip } from '@blueprintjs/core'
-import { memo } from 'react'
+import React, { memo } from 'react'
 import styled from 'styled-components'
 
 import { Application } from './ApplicationsOverview'

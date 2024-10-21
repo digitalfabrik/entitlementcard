@@ -1,6 +1,8 @@
 package app.ehrenamtskarte.backend.config
 
+import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
@@ -23,14 +25,15 @@ data class MapConfig(val baseUrl: String)
 data class GeocodingConfig(val enabled: Boolean, val host: String)
 data class CsvWriterConfig(val enabled: Boolean)
 data class SmtpConfig(val host: String, val port: Int, val username: String, val password: String)
-data class MatomoConfig(val siteId: Int, val url: String, val accessToken: String)
+data class MatomoConfig(val siteId: Int, val accessToken: String)
 data class ProjectConfig(
     val id: String,
     val importUrl: String,
-    val pipelineName: String,
+    val pipelineName: String?,
     val administrationBaseUrl: String,
     val administrationName: String,
     val timezone: ZoneId,
+    val selfServiceEnabled: Boolean,
     val smtp: SmtpConfig,
     val matomo: MatomoConfig?
 )
@@ -44,13 +47,17 @@ data class BackendConfiguration(
     val postgres: PostgresConfig,
     val geocoding: GeocodingConfig,
     val projects: List<ProjectConfig>,
-    val csvWriter: CsvWriterConfig
+    val csvWriter: CsvWriterConfig,
+    val matomoUrl: String
 ) {
+    fun getProjectConfig(project: String): ProjectConfig {
+        return projects.find { it.id == project } ?: throw ProjectNotFoundException(project)
+    }
 
     fun sanityCheckMatomoConfig(): BackendConfiguration {
         val matomoConfig = projects.mapNotNull { it.matomo }
-        if (matomoConfig.size != matomoConfig.distinctBy { Pair(it.siteId, it.url) }.count()) {
-            throw Error("There are at least two matomo configs with the same siteId and url. This seems to be a copy/paste error.")
+        if (matomoConfig.size != matomoConfig.distinctBy { it.siteId }.count()) {
+            throw Error("There are at least two matomo configs with the same siteId. This seems to be a copy/paste error.")
         }
         return this
     }
@@ -64,6 +71,12 @@ data class BackendConfiguration(
             .registerModule(
                 KotlinModule.Builder().build()
             ).registerModule(JavaTimeModule())
+            // Allows unknown (potentially future) config options.
+            // Without this parsing a config fails if a property is defined that is missing
+            // from the BackendConfiguration class. We might want to be able to load configs that contain configuration
+            // for future features, therefore we want to allow unknown properties.
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+
         private val logger = LoggerFactory.getLogger(BackendConfiguration::class.java)
 
         fun load(configFile: URL?): BackendConfiguration {

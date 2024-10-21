@@ -1,0 +1,19 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run (env:local+buildConfig:koblenz)" type="FlutterRunConfigurationType" factoryName="Flutter">
+    <option name="additionalArgs" value="--dart-define=environment=local --flavor Koblenz" />
+    <option name="attachArgs" value="--dart-define=environment=local" />
+    <option name="filePath" value="$PROJECT_DIR$/frontend/lib/main.dart" />
+    <method v="2">
+      <option name="RunConfigurationTask" enabled="false" run_configuration_name="Set build config koblenz" run_configuration_type="ShConfigurationType" />
+      <option name="NpmBeforeRunTask" enabled="true">
+        <package-json value="$PROJECT_DIR$/package.json" />
+        <command value="run" />
+        <scripts>
+          <script value="expose:ports" />
+        </scripts>
+        <node-interpreter value="project" />
+        <envs />
+      </option>
+    </method>
+  </configuration>
+</component>

@@ -1,5 +1,5 @@
 import { Button, Callout, Checkbox, Classes, Dialog, FormGroup, InputGroup } from '@blueprintjs/core'
-import { useContext, useEffect, useState } from 'react'
+import React, { ReactElement, useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import { WhoAmIContext } from '../../WhoAmIProvider'
@@ -29,7 +29,7 @@ const EditUserDialog = ({
   // If regionIdOverride is set, the region selector will be hidden, and only RegionAdministrator and RegionManager
   // roles are selectable.
   regionIdOverride: number | null
-}) => {
+}): ReactElement => {
   const appToaster = useAppToaster()
   const { me, refetch: refetchMe } = useContext(WhoAmIContext)
   const [email, setEmail] = useState('')
@@ -65,9 +65,8 @@ const EditUserDialog = ({
   const getRegionId = () => {
     if (regionIdOverride !== null) {
       return regionIdOverride
-    } else {
-      return role !== null && rolesWithRegion.includes(role) ? regionId : null
     }
+    return role !== null && rolesWithRegion.includes(role) ? regionId : null
   }
 
   return (

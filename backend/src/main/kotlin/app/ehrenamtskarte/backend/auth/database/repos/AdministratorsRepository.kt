@@ -73,7 +73,7 @@ object AdministratorsRepository {
             if (passwordValidation != PasswordValidationResult.VALID) {
                 throw InvalidPasswordException()
             }
-            PasswordCrypto.hashPasswort(it)
+            PasswordCrypto.hashPassword(it)
         }
 
         return AdministratorEntity.new {
@@ -92,7 +92,7 @@ object AdministratorsRepository {
             throw InvalidPasswordException()
         }
 
-        administrator.passwordHash = PasswordCrypto.hashPasswort(newPassword)
+        administrator.passwordHash = PasswordCrypto.hashPassword(newPassword)
         administrator.passwordResetKeyHash = null
         administrator.passwordResetKeyExpiry = null
     }

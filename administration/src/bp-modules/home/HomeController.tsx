@@ -1,5 +1,5 @@
 import { Button, H3 } from '@blueprintjs/core'
-import React, { useContext } from 'react'
+import React, { ReactElement, useContext } from 'react'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -17,8 +17,8 @@ const Container = styled.div`
   flex-direction: column;
 `
 
-const HomeController = () => {
-  const { applicationFeature } = useContext(ProjectConfigContext)
+const HomeController = (): ReactElement => {
+  const { applicationFeature, cardStatistics, cardCreation, userImportApiEnabled } = useContext(ProjectConfigContext)
   const { role } = useContext(WhoAmIContext).me!
 
   return (
@@ -27,25 +27,42 @@ const HomeController = () => {
       {role === Role.RegionAdmin || role === Role.RegionManager ? (
         <>
           {applicationFeature ? (
-            <NavLink to={'/applications'}>
+            <NavLink to='/applications'>
               <StyledButton icon='form' text='Eingehende Anträge' />
             </NavLink>
           ) : null}
-          <NavLink to={'/cards'}>
-            <StyledButton icon='id-number' text='Karten erstellen' />
-          </NavLink>
+          {cardCreation ? (
+            <NavLink to='/cards'>
+              <StyledButton icon='id-number' text='Karten erstellen' />
+            </NavLink>
+          ) : null}
         </>
       ) : null}
       {role === Role.ProjectAdmin || role === Role.RegionAdmin ? (
         <>
-          <NavLink to={'/users'}>
+          <NavLink to='/users'>
             <StyledButton icon='people' text='Benutzer verwalten' />
           </NavLink>
+          {cardStatistics.enabled ? (
+            <NavLink to='/statistics'>
+              <StyledButton icon='stacked-chart' text='Statistiken' />
+            </NavLink>
+          ) : null}
         </>
       ) : null}
       {role === Role.RegionAdmin && applicationFeature ? (
-        <NavLink to={'/region'}>
+        <NavLink to='/region'>
           <StyledButton icon='path-search' text='Region verwalten' />
+        </NavLink>
+      ) : null}
+      {role === Role.ProjectAdmin && userImportApiEnabled ? (
+        <NavLink to='/project'>
+          <StyledButton icon='projects' text='Projekt verwalten' />
+        </NavLink>
+      ) : null}
+      {role === Role.ProjectStoreManager ? (
+        <NavLink to='/stores'>
+          <StyledButton icon='shop' text='Akzeptanzpartner verwalten' />
         </NavLink>
       ) : null}
     </Container>

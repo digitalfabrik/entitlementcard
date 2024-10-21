@@ -1,6 +1,7 @@
-import { Card } from '@mui/material'
+import { Alert, Card } from '@mui/material'
 import { styled } from '@mui/system'
 import React, { ReactElement, useContext } from 'react'
+import { useLocation } from 'react-router-dom'
 
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import ActivationPageContent from './components/ActivationPageContent'
@@ -20,13 +21,22 @@ const StandaloneHorizontalCenter = styled('div')`
   margin-top: 10%;
 `
 
+const CenteredMessage = styled(Alert)`
+  margin: auto;
+`
+
 const ActivationPage = (): ReactElement | null => {
   const config = useContext(ProjectConfigContext)
+  const { hash } = useLocation()
+
+  if (!hash) {
+    return <CenteredMessage severity='error'>Ihr Aktivierungslink ist ungültig</CenteredMessage>
+  }
 
   return (
     <StandaloneHorizontalCenter>
       <CardContainer>
-        <ActivationPageContent config={config} />
+        <ActivationPageContent config={config} activationCode={hash} />
       </CardContainer>
     </StandaloneHorizontalCenter>
   )

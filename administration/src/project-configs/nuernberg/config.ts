@@ -4,6 +4,7 @@ import NuernbergPassIdExtension from '../../cards/extensions/NuernbergPassIdExte
 import RegionExtension from '../../cards/extensions/RegionExtension'
 import StartDayExtension from '../../cards/extensions/StartDayExtension'
 import { ProjectConfig } from '../getProjectConfig'
+import { storesManagementConfig } from '../storesManagementConfig'
 import ActivityLogEntry from './ActivityLogEntry'
 import { buildCsvLine } from './csvExport'
 import { DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
@@ -37,7 +38,6 @@ const config: ProjectConfig = {
     renderLogEntry: ActivityLogEntry,
   },
   pdf: pdfConfig,
-  cardCreationConfirmationMailEnabled: false,
   csvExport: {
     enabled: true,
     csvHeader: [
@@ -53,8 +53,14 @@ const config: ProjectConfig = {
       'ActivationCode',
       'StaticUserCode',
     ],
-    buildCsvLine: buildCsvLine,
+    buildCsvLine,
   },
+  cardStatistics: { enabled: false },
+  freinetCSVImportEnabled: false,
+  cardCreation: true,
+  selfServiceEnabled: false,
+  storesManagement: storesManagementConfig,
+  userImportApiEnabled: false,
 }
 
 export default config

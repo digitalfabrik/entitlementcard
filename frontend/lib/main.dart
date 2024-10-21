@@ -5,7 +5,7 @@ import 'package:ehrenamtskarte/configuration/definitions.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/sentry.dart';
 import 'package:ehrenamtskarte/settings_provider.dart';
-import 'package:ehrenamtskarte/util/android_certificate.dart';
+import 'package:ehrenamtskarte/util/android_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:slang/builder/model/enums.dart';

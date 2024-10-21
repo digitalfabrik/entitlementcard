@@ -1,17 +1,15 @@
 import { act, fireEvent, render } from '@testing-library/react'
-import { ReactElement } from 'react'
+import React, { ReactNode } from 'react'
 
 import CardBlueprint from '../../cards/CardBlueprint'
+import { Region } from '../../generated/graphql'
 import { ProjectConfigProvider } from '../../project-configs/ProjectConfigContext'
 import bayernConfig from '../../project-configs/bayern/config'
 import CreateCardsButtonBar from './CreateCardsButtonBar'
 
 jest.useFakeTimers()
-jest.mock('csv-stringify/browser/esm/sync', () => ({
-  stringify: jest.fn(),
-}))
 
-const wrapper = ({ children }: { children: ReactElement }) => <ProjectConfigProvider>{children}</ProjectConfigProvider>
+const wrapper = ({ children }: { children: ReactNode }) => <ProjectConfigProvider>{children}</ProjectConfigProvider>
 
 describe('CreateCardsButtonBar', () => {
   it('Should goBack when clicking back', async () => {
@@ -30,7 +28,7 @@ describe('CreateCardsButtonBar', () => {
     expect(backButton).toBeTruthy()
 
     fireEvent.click(backButton)
-    await act(async () => await null) // Popper update() - https://github.com/popperjs/react-popper/issues/350
+    await act(async () => null) // Popper update() - https://github.com/popperjs/react-popper/issues/350
 
     expect(goBack).toHaveBeenCalled()
   })
@@ -40,7 +38,7 @@ describe('CreateCardsButtonBar', () => {
     const generateCardsCsv = jest.fn()
     const { getByText } = render(
       <CreateCardsButtonBar
-        goBack={() => {}}
+        goBack={() => undefined}
         cardBlueprints={[]}
         generateCardsPdf={generateCardsPdf}
         generateCardsCsv={generateCardsCsv}
@@ -68,7 +66,7 @@ describe('CreateCardsButtonBar', () => {
     const cards = [new CardBlueprint('Thea Test', bayernConfig.card)]
     const { getByText } = render(
       <CreateCardsButtonBar
-        goBack={() => {}}
+        goBack={() => undefined}
         cardBlueprints={cards}
         generateCardsPdf={generateCardsPdf}
         generateCardsCsv={generateCardsCsv}
@@ -94,16 +92,17 @@ describe('CreateCardsButtonBar', () => {
   it('Should generate valid cards', async () => {
     const generateCardsPdf = jest.fn()
     const generateCardsCsv = jest.fn()
-    const region = {
+    const region: Region = {
       id: 0,
       name: 'augsburg',
       prefix: 'a',
       activatedForApplication: true,
+      activatedForCardConfirmationMail: true,
     }
     const cards = [new CardBlueprint('Thea Test', bayernConfig.card, [region])]
     const { getByText } = render(
       <CreateCardsButtonBar
-        goBack={() => {}}
+        goBack={() => undefined}
         cardBlueprints={cards}
         generateCardsPdf={generateCardsPdf}
         generateCardsCsv={generateCardsCsv}
@@ -115,7 +114,7 @@ describe('CreateCardsButtonBar', () => {
     expect(generateButton).toBeTruthy()
 
     fireEvent.click(generateButton)
-    await act(async () => await null) // Popper update() - https://github.com/popperjs/react-popper/issues/350
+    await act(async () => null) // Popper update() - https://github.com/popperjs/react-popper/issues/350
 
     expect(generateCardsPdf).toHaveBeenCalled()
   })

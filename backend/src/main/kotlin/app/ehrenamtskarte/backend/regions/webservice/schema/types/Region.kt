@@ -6,5 +6,6 @@ data class Region(
     val name: String,
     val regionIdentifier: String?,
     val dataPrivacyPolicy: String?,
-    val activatedForApplication: Boolean
+    val activatedForApplication: Boolean,
+    val activatedForCardConfirmationMail: Boolean
 )

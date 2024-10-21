@@ -1,5 +1,5 @@
 import { Button } from '@blueprintjs/core'
-import { useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import styled from 'styled-components'
 
 import { Administrator, Region, Role } from '../../generated/graphql'
@@ -30,6 +30,23 @@ const StyledTable = styled.table`
   }
 `
 
+export const roleToText = (role: Role): string => {
+  switch (role) {
+    case Role.NoRights:
+      return 'Keine'
+    case Role.ProjectAdmin:
+      return 'Administrator'
+    case Role.ProjectStoreManager:
+      return 'Verwaltung Akzeptanzpartner'
+    case Role.RegionAdmin:
+      return 'Regionsadministrator'
+    case Role.RegionManager:
+      return 'Regionsverwalter'
+    default:
+      return role
+  }
+}
+
 const UsersTable = ({
   users,
   regions,
@@ -42,7 +59,7 @@ const UsersTable = ({
   // Moreover, the region column of the table is hidden.
   selectedRegionId?: number | null
   refetch: () => void
-}) => {
+}): ReactElement => {
   const [createUserDialogOpen, setCreateUserDialogOpen] = useState(false)
   const [userInEditDialog, setUserInEditDialog] = useState<Administrator | null>(null)
   const [userInDeleteDialog, setUserInDeleteDialog] = useState<Administrator | null>(null)
@@ -112,21 +129,6 @@ const UsersTable = ({
       />
     </>
   )
-}
-
-export const roleToText = (role: Role): string => {
-  switch (role) {
-    case Role.NoRights:
-      return 'Keine'
-    case Role.ProjectAdmin:
-      return 'Administrator'
-    case Role.RegionAdmin:
-      return 'Regionsadministrator'
-    case Role.RegionManager:
-      return 'Regionsverwalter'
-    default:
-      return role
-  }
 }
 
 export default UsersTable

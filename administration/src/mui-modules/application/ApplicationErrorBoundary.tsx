@@ -5,9 +5,12 @@ import { applicationStorageKey } from './ApplyController'
 import { globalArrayBuffersKey } from './util/globalArrayBuffersManager'
 
 class ApplicationErrorBoundary extends Component<{ children: ReactNode }, { resetting: boolean }> {
-  state = { resetting: false }
+  constructor(props: { children: ReactNode }) {
+    super(props)
+    this.state = { resetting: false }
+  }
 
-  async componentDidCatch() {
+  async componentDidCatch(): Promise<void> {
     this.setState({ resetting: true })
     try {
       await localforage.removeItem(applicationStorageKey)
@@ -19,12 +22,16 @@ class ApplicationErrorBoundary extends Component<{ children: ReactNode }, { rese
     }
   }
 
-  render() {
-    if (this.state.resetting) return null
-    return this.props.children
+  render(): ReactNode {
+    const { children } = this.props
+    const { resetting } = this.state
+    if (resetting) {
+      return null
+    }
+    return children
   }
 
-  static getDerivedStateFromError(error: Error) {
+  static getDerivedStateFromError(error: Error): { resetting: boolean } {
     console.error(
       'An error occurred while rendering the application form. Resetting the stored application state...',
       error

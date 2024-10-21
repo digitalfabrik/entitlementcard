@@ -1,9 +1,9 @@
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/material'
-import { useContext, useState } from 'react'
+import React, { useContext, useState } from 'react'
 
 import { ShortTextInput } from '../../../generated/graphql'
 import { FormContext } from '../SteppedSubForms'
-import { Form } from '../util/FormType'
+import { Form, FormComponentProps } from '../util/FormType'
 
 type State = { selectedValue: string; manuallySelected: boolean }
 type ValidatedInput = ShortTextInput
@@ -13,11 +13,13 @@ type Options = {
   items: SelectItem[]
 }
 type AdditionalProps = { label: string }
-const SelectForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+const SelectForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
   initialState: { selectedValue: '', manuallySelected: false },
   getArrayBufferKeys: () => [],
   validate: ({ selectedValue }, options) => {
-    if (selectedValue.length === 0) return { type: 'error', message: 'Feld ist erforderlich.' }
+    if (selectedValue.length === 0) {
+      return { type: 'error', message: 'Feld ist erforderlich.' }
+    }
     if (!options.items.map(item => item.value).includes(selectedValue)) {
       return {
         type: 'error',
@@ -26,7 +28,7 @@ const SelectForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
     }
     return { type: 'valid', value: { shortText: selectedValue } }
   },
-  Component: ({ state, setState, label, options }) => {
+  Component: ({ state, setState, label, options }: FormComponentProps<State, AdditionalProps, Options>) => {
     const [touched, setTouched] = useState(false)
     const { showAllErrors, disableAllInputs } = useContext(FormContext)
     const validationResult = SelectForm.validate(state, options)

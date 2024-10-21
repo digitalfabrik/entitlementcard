@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useRef } from 'react'
+import React, { ReactElement, useCallback, useContext, useEffect, useRef } from 'react'
 import FlipMove from 'react-flip-move'
 import { useSearchParams } from 'react-router-dom'
 import styled from 'styled-components'
@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { CardBlueprint } from '../../cards/CardBlueprint'
 import { Region } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import CreateCardForm from './AddCardForm'
+import AddCardForm from './AddCardForm'
 import CardFormButton from './CardFormButton'
 import { getHeaders } from './ImportCardsController'
 
@@ -15,7 +15,6 @@ const FormsWrapper = styled(FlipMove)`
   flex-grow: 1;
   flex-direction: row;
   display: flex;
-  flex-wrap: wrap;
   justify-content: space-evenly;
   align-items: center;
 `
@@ -40,9 +39,15 @@ type CreateCardsFormProps = {
   region: Region
   cardBlueprints: CardBlueprint[]
   setCardBlueprints: (blueprints: CardBlueprint[]) => void
+  setApplicationIdToMarkAsProcessed: (applicationIdToMarkAsProcessed: number | undefined) => void
 }
 
-const CreateCardsForm = ({ region, cardBlueprints, setCardBlueprints }: CreateCardsFormProps) => {
+const AddCardsForm = ({
+  region,
+  cardBlueprints,
+  setCardBlueprints,
+  setApplicationIdToMarkAsProcessed,
+}: CreateCardsFormProps): ReactElement => {
   const projectConfig = useContext(ProjectConfigContext)
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -58,13 +63,29 @@ const CreateCardsForm = ({ region, cardBlueprints, setCardBlueprints }: CreateCa
         cardBlueprint.setValue(header, value)
       })
       setCardBlueprints([cardBlueprint])
+
+      const applicationIdToMarkAsProcessed = searchParams.get('applicationIdToMarkAsProcessed')
+      setApplicationIdToMarkAsProcessed(
+        applicationIdToMarkAsProcessed == null ? undefined : +applicationIdToMarkAsProcessed
+      )
+
       setSearchParams(undefined, { replace: true })
     }
-  }, [cardBlueprints.length, projectConfig, region, searchParams, setCardBlueprints, setSearchParams])
+  }, [
+    cardBlueprints.length,
+    projectConfig,
+    region,
+    searchParams,
+    setCardBlueprints,
+    setSearchParams,
+    setApplicationIdToMarkAsProcessed,
+  ])
   const bottomRef = useRef<HTMLDivElement>(null)
 
   const scrollToBottom = () => {
-    if (bottomRef.current) bottomRef.current.scrollIntoView({ behavior: 'smooth' })
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
   }
 
   const addForm = useCallback(() => {
@@ -89,7 +110,7 @@ const CreateCardsForm = ({ region, cardBlueprints, setCardBlueprints }: CreateCa
         }}>
         {cardBlueprints.map(blueprint => (
           <FormColumn key={blueprint.id}>
-            <CreateCardForm
+            <AddCardForm
               cardBlueprint={blueprint}
               onRemove={() => removeCardBlueprint(blueprint)}
               onUpdate={notifyUpdate}
@@ -105,4 +126,4 @@ const CreateCardsForm = ({ region, cardBlueprints, setCardBlueprints }: CreateCa
   )
 }
 
-export default CreateCardsForm
+export default AddCardsForm

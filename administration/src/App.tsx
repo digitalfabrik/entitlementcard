@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 
 import AppApolloProvider from './AppApolloProvider'
 import AuthProvider from './AuthProvider'
@@ -11,7 +11,7 @@ if (!process.env.REACT_APP_API_BASE_URL) {
   throw new Error('REACT_APP_API_BASE_URL is not set!')
 }
 
-const App = () => {
+const App = (): ReactElement => {
   useMetaTags()
 
   return (

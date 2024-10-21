@@ -2,7 +2,7 @@ import { MockedProvider as ApolloProvider } from '@apollo/client/testing'
 import { OverlayToaster } from '@blueprintjs/core'
 import { act, renderHook } from '@testing-library/react'
 import { mocked } from 'jest-mock'
-import { ReactElement } from 'react'
+import React, { ReactNode } from 'react'
 
 import CardBlueprint from '../../../cards/CardBlueprint'
 import { PdfError, generatePdf } from '../../../cards/PdfFactory'
@@ -16,15 +16,13 @@ import downloadDataUri from '../../../util/downloadDataUri'
 import { AppToasterProvider } from '../../AppToaster'
 import useCardGenerator, { CardActivationState } from './useCardGenerator'
 
-const wrapper = ({ children }: { children: ReactElement }) => {
-  return (
-    <AppToasterProvider>
-      <ApolloProvider>
-        <ProjectConfigProvider>{children}</ProjectConfigProvider>
-      </ApolloProvider>
-    </AppToasterProvider>
-  )
-}
+const wrapper = ({ children }: { children: ReactNode }) => (
+  <AppToasterProvider>
+    <ApolloProvider>
+      <ProjectConfigProvider>{children}</ProjectConfigProvider>
+    </ApolloProvider>
+  </AppToasterProvider>
+)
 
 jest.mock('../../../cards/PdfFactory', () => ({
   ...jest.requireActual('../../../cards/PdfFactory'),
@@ -35,9 +33,6 @@ jest.mock('../../../cards/createCards', () => ({
   __esModule: true,
   default: jest.fn(),
 }))
-jest.mock('csv-stringify/browser/esm/sync', () => ({
-  stringify: jest.fn(),
-}))
 jest.mock('../../../cards/deleteCards')
 jest.mock('../../../util/downloadDataUri')
 
@@ -47,6 +42,7 @@ describe('useCardGenerator', () => {
     name: 'augsburg',
     prefix: 'a',
     activatedForApplication: true,
+    activatedForCardConfirmationMail: true,
   }
 
   const cards = [
@@ -65,6 +61,8 @@ describe('useCardGenerator', () => {
       staticVerificationCode: new StaticVerificationCode({ info: cards[1].generateCardInfo() }),
     },
   ]
+
+  beforeEach(jest.resetAllMocks)
 
   it('should successfully create multiple cards', async () => {
     const toasterSpy = jest.spyOn(OverlayToaster.prototype, 'show')
@@ -91,7 +89,7 @@ describe('useCardGenerator', () => {
       throw new CreateCardsError('error')
     })
 
-    const { result } = renderHook(() => useCardGenerator(region), { wrapper: wrapper })
+    const { result } = renderHook(() => useCardGenerator(region), { wrapper })
 
     act(() => result.current.setCardBlueprints(cards))
 
@@ -114,7 +112,7 @@ describe('useCardGenerator', () => {
     })
     const toasterSpy = jest.spyOn(OverlayToaster.prototype, 'show')
 
-    const { result } = renderHook(() => useCardGenerator(region), { wrapper: wrapper })
+    const { result } = renderHook(() => useCardGenerator(region), { wrapper })
 
     act(() => result.current.setCardBlueprints(cards))
 

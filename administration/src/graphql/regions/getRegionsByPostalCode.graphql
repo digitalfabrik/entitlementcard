@@ -4,5 +4,6 @@ query getRegionsByPostalCode($postalCode: String!, $project: String!) {
     name
     prefix
     activatedForApplication
+    activatedForCardConfirmationMail
   }
 }

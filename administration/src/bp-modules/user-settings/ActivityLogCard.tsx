@@ -65,17 +65,13 @@ const ActivityLogCard = ({ activityLogConfig }: { activityLogConfig: ActivityLog
           </div>
         </Card>
       </div>
-      <ActivityDialog
-        isOpen={openLog}
-        title='Aktivitätsprotokoll'
-        onClose={() => setOpenLog(false)}
-        isCloseButtonShown={true}>
+      <ActivityDialog isOpen={openLog} title='Aktivitätsprotokoll' onClose={() => setOpenLog(false)} isCloseButtonShown>
         <ActivityDialogBody>
           <StyledTable>
             <StickyTableHeader>
               <tr>
                 {activityLogConfig.columnNames.map(columnName => (
-                  <th>{columnName}</th>
+                  <th key={columnName}>{columnName}</th>
                 ))}
               </tr>
             </StickyTableHeader>

@@ -2,6 +2,7 @@ when: << pipeline.parameters.run_delivery_beta_native >>
 jobs:
   - bump_version:
       prepare_delivery: true
+      platforms: native
       context:
         - deliverino
   - check

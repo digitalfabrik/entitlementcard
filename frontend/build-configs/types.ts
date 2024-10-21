@@ -6,6 +6,7 @@ export type BuildConfigType = {
 
 export type FeatureFlagsType = {
     verification: boolean
+    favorites: boolean
 }
 
 export type DeeplLinkingConfig = {
@@ -87,7 +88,7 @@ export type CommonBuildConfigType = {
         boxDecorationRadius: number
     }
     iconInAboutTab: string
-    introSlidesImages: [string, string, string, string],
+    introSlidesImages: [string, string, string, string]
     theme: ThemeType
     categories: number[]
     featureFlags: FeatureFlagsType

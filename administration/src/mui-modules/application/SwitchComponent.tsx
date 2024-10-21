@@ -1,13 +1,15 @@
-import React from 'react'
+import { ReactElement } from 'react'
 
 const SwitchComponent = <T extends string>({
   children,
   value,
 }: {
-  children: { [key in T]: React.ReactElement | null }
+  children: { [key in T]: ReactElement | null }
   value: T | null
-}) => {
-  if (value === null) return null
+}): ReactElement | null => {
+  if (value === null) {
+    return null
+  }
   return children[value]
 }
 

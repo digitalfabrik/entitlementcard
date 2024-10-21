@@ -74,18 +74,18 @@ class BackendSwitchDialogState extends State<BackendSwitchDialog> {
     );
   }
 
-  void switchBackendUrl(BuildContext context) {
+  Future<void> switchBackendUrl(BuildContext context) async {
     final settings = Provider.of<SettingsModel>(context, listen: false);
     final updatedEnableStaging = !settings.enableStaging;
-    clearData();
-    settings.setEnableStaging(enabled: updatedEnableStaging);
+    await clearData();
+    await settings.setEnableStaging(enabled: updatedEnableStaging);
     Navigator.of(context, rootNavigator: true).pop();
   }
 
-  void clearData() {
+  Future<void> clearData() async {
     final settings = Provider.of<SettingsModel>(context, listen: false);
     final userCodesModel = Provider.of<UserCodeModel>(context, listen: false);
-    settings.clearSettings();
-    userCodesModel.removeCodes();
+    await settings.clearSettings();
+    await userCodesModel.removeCodes();
   }
 }

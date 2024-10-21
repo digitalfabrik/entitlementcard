@@ -1,7 +1,7 @@
 import { AttachFile, Attachment } from '@mui/icons-material'
 import { Button, Chip, FormHelperText } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import { ChangeEventHandler, useContext, useEffect, useRef } from 'react'
+import React, { ChangeEventHandler, useContext, useEffect, useRef } from 'react'
 
 import { AttachmentInput } from '../../../generated/graphql'
 import { FormContext } from '../SteppedSubForms'
@@ -49,15 +49,13 @@ type State = {
   filename: string
 } | null
 type ValidatedInput = AttachmentInput
-type Options = {}
-type AdditionalProps = {}
 
 const Component = <I,>({
   state,
   setState,
   required,
   validate,
-}: FormComponentProps<State, AdditionalProps, Options> & {
+}: FormComponentProps<State> & {
   required: boolean
   validate: (state: State) => ValidationResult<I>
 }) => {
@@ -119,12 +117,16 @@ const Component = <I,>({
   )
 }
 
-const FileInputForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
+const FileInputForm: Form<State, ValidatedInput> = {
   initialState: null,
   getArrayBufferKeys: state => (state === null ? [] : [state.arrayBufferKey]),
   validate: state => {
-    if (state === null) return { type: 'error', message: 'Feld ist erforderlich.' }
-    if (!globalArrayBuffersManager.has(state.arrayBufferKey)) return { type: 'error' }
+    if (state === null) {
+      return { type: 'error', message: 'Feld ist erforderlich.' }
+    }
+    if (!globalArrayBuffersManager.has(state.arrayBufferKey)) {
+      return { type: 'error' }
+    }
     const arrayBuffer = globalArrayBuffersManager.getArrayBufferByKey(state.arrayBufferKey)
     return {
       type: 'valid',
@@ -136,11 +138,13 @@ const FileInputForm: Form<State, Options, ValidatedInput, AdditionalProps> = {
   Component: ({ state, setState }) => Component({ state, setState, required: true, validate: FileInputForm.validate }),
 }
 
-export const OptionalFileInputForm: Form<State, Options, ValidatedInput | null, AdditionalProps> = {
+export const OptionalFileInputForm: Form<State, ValidatedInput | null> = {
   initialState: FileInputForm.initialState,
   getArrayBufferKeys: FileInputForm.getArrayBufferKeys,
   validate: state => {
-    if (state === null) return { type: 'valid', value: null }
+    if (state === null) {
+      return { type: 'valid', value: null }
+    }
     return FileInputForm.validate(state)
   },
   Component: ({ state, setState }) =>

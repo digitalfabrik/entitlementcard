@@ -13,11 +13,11 @@ export class CsvError extends Error {
   }
 }
 
-export function generateCsv(
+export const generateCsv = (
   codes: CreateCardsResult[],
   cardBlueprints: CardBlueprint[],
   csvProjectConfig: CsvExport
-): Blob {
+): Blob => {
   if (!csvProjectConfig.enabled) {
     throw new CsvError('CSV Export is disabled for this project')
   }
@@ -28,7 +28,9 @@ export function generateCsv(
     }
     return new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
   } catch (error) {
-    if (error instanceof Error) throw new CsvError(error.message)
+    if (error instanceof Error) {
+      throw new CsvError(error.message)
+    }
     throw error
   }
 }

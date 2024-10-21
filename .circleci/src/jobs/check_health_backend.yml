@@ -10,7 +10,7 @@ steps:
       path: ~/project
   - attach_workspace:
       at: /tmp/workspace
-  - run: apt update -y && apt install -y nodejs npm curl
+  - run: apt update -y && apt install -y nodejs npm curl sudo
   - install_app_toolbelt
   - run:
       name: Install ca-certificates-java # workaround for current issue: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1030129

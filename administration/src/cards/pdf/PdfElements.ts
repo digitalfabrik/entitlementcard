@@ -3,11 +3,9 @@ export type Coordinates = {
   y: number
 }
 
-export function mmToPt(mm: number) {
-  return (mm / 25.4) * 72
-}
+export const mmToPt = (mm: number): number => (mm / 25.4) * 72
 
-export type PdfElement<ConfigOptions extends Record<string, any>, DynamicOptions extends Record<string, any>> = (
-  options: ConfigOptions,
-  dynamicOptions: DynamicOptions
-) => void
+export type PdfElement<
+  ConfigOptions extends Record<string, unknown>,
+  DynamicOptions extends Record<string, unknown>
+> = (options: ConfigOptions, dynamicOptions: DynamicOptions) => void

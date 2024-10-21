@@ -9,28 +9,28 @@ type RegionState = { regionId: number }
 class RegionExtension extends Extension<RegionState, Region> {
   public readonly name = RegionExtension.name
 
-  setInitialState(region: Region) {
+  setInitialState(region: Region): void {
     this.state = { regionId: region.id }
   }
-  causesInfiniteLifetime() {
+  causesInfiniteLifetime(): boolean {
     return false
   }
-  createForm() {
+  createForm(): null {
     return null
   }
-  setProtobufData(message: PartialMessage<CardExtensions>) {
+  setProtobufData(message: PartialMessage<CardExtensions>): void {
     message.extensionRegion = {
       regionId: this.state?.regionId,
     }
   }
-  isValid() {
+  isValid(): boolean {
     return this.state !== null
   }
 
-  fromString(state: string) {
+  fromString(state: string): void {
     this.state = { regionId: parseInt(state, 10) }
   }
-  toString() {
+  toString(): string {
     return this.state ? `${this.state.regionId}` : ''
   }
 }

@@ -45,5 +45,8 @@ data class LbeAcceptingStore(
     var freinetId: String?,
     @JsonProperty("anbieter_name")
     @JacksonXmlCData
-    var districtName: String?
+    var districtName: String?,
+    @JsonProperty("p_eak_datensatz_id")
+    @JacksonXmlCData
+    var freinetDataId: String?
 )

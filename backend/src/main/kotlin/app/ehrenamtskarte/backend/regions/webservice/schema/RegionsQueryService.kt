@@ -21,7 +21,7 @@ class RegionsQueryService {
     @GraphQLDescription("Return list of all regions in the given project.")
     fun regionsInProject(project: String): List<Region> = transaction {
         RegionsRepository.findAllInProject(project).map {
-            Region(it.id.value, it.prefix, it.name, it.regionIdentifier, it.dataPrivacyPolicy, it.activatedForApplication)
+            Region(it.id.value, it.prefix, it.name, it.regionIdentifier, it.dataPrivacyPolicy, it.activatedForApplication, it.activatedForCardConfirmationMail)
         }
     }
 
@@ -31,7 +31,7 @@ class RegionsQueryService {
             if (it == null) {
                 null
             } else {
-                Region(it.id.value, it.prefix, it.name, it.regionIdentifier, it.dataPrivacyPolicy, it.activatedForApplication)
+                Region(it.id.value, it.prefix, it.name, it.regionIdentifier, it.dataPrivacyPolicy, it.activatedForApplication, it.activatedForCardConfirmationMail)
             }
         }
     }
@@ -45,7 +45,8 @@ class RegionsQueryService {
             regionEntity.name,
             regionEntity.regionIdentifier,
             regionEntity.dataPrivacyPolicy,
-            regionEntity.activatedForApplication
+            regionEntity.activatedForApplication,
+            regionEntity.activatedForCardConfirmationMail
         )
     }
 
@@ -75,7 +76,8 @@ class RegionsQueryService {
                 it.name,
                 it.regionIdentifier,
                 it.dataPrivacyPolicy,
-                it.activatedForApplication
+                it.activatedForApplication,
+                it.activatedForCardConfirmationMail
             )
         }
     }

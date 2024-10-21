@@ -7,8 +7,11 @@ working_directory: ~/project/backend
 steps:
   - checkout:
       path: ~/project
+  - setup_remote_docker:
+      docker_layer_caching: true
   - run: git submodule sync
   - run: git submodule update --init
+  - install_app_toolbelt
   - install_protobuf_linux
   - prepare_workspace
   - restore_cache:
@@ -27,6 +30,14 @@ steps:
       name: Test
       command: |
         ./gradlew test
+  - store_test_results:
+      path: ./build/test-results
+  - run:
+      name: Generate test coverage report
+      command: ./gradlew koverLog koverHtmlReport
+  - store_artifacts:
+      path: ./build/reports/kover/html
+      destination: test-coverage-report
   - save_cache:
       paths:
         - ~/.gradle/wrapper
@@ -35,3 +46,4 @@ steps:
       paths:
         - ~/.gradle/caches
       key: v3-gradle-cache-{{ checksum "build.gradle.kts" }}
+  - notify

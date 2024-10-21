@@ -8,11 +8,13 @@ import DataPrivacyOverview from './DataPrivacyOverview'
 
 const DataPrivacyController = ({ regionId }: { regionId: number }) => {
   const dataPolicyQuery = useGetDataPolicyQuery({
-    variables: { regionId: regionId },
+    variables: { regionId },
     onError: error => console.error(error),
   })
   const dataPolicyQueryResult = getQueryResult(dataPolicyQuery)
-  if (!dataPolicyQueryResult.successful) return dataPolicyQueryResult.component
+  if (!dataPolicyQueryResult.successful) {
+    return dataPolicyQueryResult.component
+  }
 
   const dataPrivacyPolicy = dataPolicyQueryResult.data.dataPolicy.dataPrivacyPolicy ?? ''
 
@@ -29,9 +31,8 @@ const DataPrivacyWithRegion = (): ReactElement => {
         description='Sie sind nicht berechtigt, Änderungen an der Datenschutzerklärung der Region vorzunehmen.'
       />
     )
-  } else {
-    return <DataPrivacyController regionId={region.id} />
   }
+  return <DataPrivacyController regionId={region.id} />
 }
 
 export default DataPrivacyWithRegion

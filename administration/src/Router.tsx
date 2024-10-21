@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react'
+import React, { ReactElement, useContext, useMemo } from 'react'
 import { Outlet, RouteObject, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -14,9 +14,14 @@ import AddCardsController from './bp-modules/cards/AddCardsController'
 import CreateCardsController from './bp-modules/cards/CreateCardsController'
 import ImportCardsController from './bp-modules/cards/ImportCardsController'
 import HomeController from './bp-modules/home/HomeController'
+import ProjectSettingsController from './bp-modules/project-settings/ProjectSettingsController'
 import RegionsController from './bp-modules/regions/RegionController'
 import DataPrivacyController from './bp-modules/regions/data-privacy-policy/DataPrivacyController'
 import DataPrivacyPolicy from './bp-modules/regions/data-privacy-policy/DataPrivacyPolicy'
+import CardSelfServiceView from './bp-modules/self-service/CardSelfServiceView'
+import StatisticsController from './bp-modules/statistics/StatisticsController'
+import StoresController from './bp-modules/stores/StoresController'
+import StoresImportController from './bp-modules/stores/StoresImportController'
 import UserSettingsController from './bp-modules/user-settings/UserSettingsController'
 import ManageUsersController from './bp-modules/users/ManageUsersController'
 import ActivationPage from './mui-modules/activation/ActivationPage'
@@ -35,7 +40,9 @@ const Main = styled.div`
   }
 `
 
-const Router = () => {
+export const FREINET_PARAM = 'freinet'
+
+const Router = (): ReactElement => {
   const { data: authData, signIn, signOut } = useContext(AuthContext)
   const projectConfig = useContext(ProjectConfigContext)
   const router = useMemo(() => {
@@ -55,6 +62,7 @@ const Router = () => {
             { path: '/antrag-einsehen/:accessKey', element: <ApplicationApplicantController /> },
           ]
         : []),
+      ...(projectConfig.selfServiceEnabled ? [{ path: '/erstellen', element: <CardSelfServiceView /> }] : []),
       {
         path: '*',
         element: !isLoggedIn ? (
@@ -78,17 +86,25 @@ const Router = () => {
                 { path: 'region', element: <RegionsController /> },
               ]
             : []),
-          { path: 'cards', element: <CreateCardsController /> },
-          { path: 'cards/add', element: <AddCardsController /> },
-          { path: 'cards/import', element: <ImportCardsController /> },
+          ...(projectConfig.cardStatistics.enabled ? [{ path: 'statistics', element: <StatisticsController /> }] : []),
+          ...(projectConfig.cardCreation
+            ? [
+                { path: 'cards', element: <CreateCardsController /> },
+                { path: 'cards/add', element: <AddCardsController /> },
+                { path: 'cards/import', element: <ImportCardsController /> },
+              ]
+            : []),
           { path: 'users', element: <ManageUsersController /> },
           { path: 'user-settings', element: <UserSettingsController /> },
+          { path: 'stores', element: <StoresController /> },
+          { path: 'stores/import', element: <StoresImportController /> },
+          { path: 'project', element: <ProjectSettingsController /> },
           { path: '*', element: <HomeController /> },
         ],
       },
     ]
     return createBrowserRouter(routes.filter((element): element is RouteObject => element !== null))
-  }, [authData, projectConfig.applicationFeature, signIn, signOut])
+  }, [authData, signIn, signOut, projectConfig])
 
   return <RouterProvider router={router} />
 }

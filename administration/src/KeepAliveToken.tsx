@@ -1,5 +1,5 @@
 import { Button, Classes, Dialog } from '@blueprintjs/core'
-import { ReactNode, useContext, useEffect, useState } from 'react'
+import React, { ReactElement, ReactNode, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { TokenPayload } from './AuthProvider'
@@ -10,7 +10,7 @@ import getMessageFromApolloError from './errors/getMessageFromApolloError'
 import { SignInPayload, useSignInMutation } from './generated/graphql'
 import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
 
-interface Props {
+type Props = {
   authData: TokenPayload
   children: ReactNode
   onSignIn: (payload: SignInPayload) => void
@@ -19,7 +19,7 @@ interface Props {
 
 const computeSecondsLeft = (authData: TokenPayload) => Math.round((authData.expiry.valueOf() - Date.now()) / 1000)
 
-const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props) => {
+const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props): ReactElement => {
   const navigate = useNavigate()
   const projectId = useContext(ProjectConfigContext).projectId
   const email = useContext(WhoAmIContext).me!.email
@@ -58,8 +58,8 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props) => {
       {children}
       <Dialog
         isOpen={secondsLeft <= 180}
-        title={'Ihr Login-Zeitraum läuft ab!'}
-        icon={'warning-sign'}
+        title='Ihr Login-Zeitraum läuft ab!'
+        icon='warning-sign'
         isCloseButtonShown={false}>
         <form
           onSubmit={e => {
@@ -69,19 +69,14 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props) => {
           <div className={Classes.DIALOG_BODY}>
             <p>Ihr Login-Zeitraum läuft in {secondsLeft} Sekunden ab. Danach werden Sie automatisch ausgeloggt.</p>
             <p>Geben Sie Ihr Passwort ein, um den Login-Zeitraum zu verlängern.</p>
-            <PasswordInput label='' placeholder={'Passwort'} setValue={setPassword} value={password} />
+            <PasswordInput label='' placeholder='Passwort' setValue={setPassword} value={password} />
           </div>
           <div className={Classes.DIALOG_FOOTER}>
             <div className={Classes.DIALOG_FOOTER_ACTIONS}>
               <Button onClick={onSignOut} loading={mutationState.loading}>
                 Ausloggen
               </Button>
-              <Button
-                intent={'primary'}
-                type='submit'
-                loading={mutationState.loading}
-                text='Login-Zeitraum verlängern'
-              />
+              <Button intent='primary' type='submit' loading={mutationState.loading} text='Login-Zeitraum verlängern' />
             </div>
           </div>
         </form>
