@@ -31,7 +31,7 @@ class HomePageState extends State<HomePage> {
 
   MapPageController? mapPageController;
   int? selectedAcceptingStoreId;
-  bool followUserLocation = false;
+  bool followUserLocation = true;
 
   @override
   void initState() {
