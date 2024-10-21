@@ -55,7 +55,7 @@ const AddCardForm = ({ cardBlueprint, onRemove, updateCard }: CreateCardsFormPro
               min: today.toString(),
               max: today.add(maxCardValidity).toString(),
             }}
-            onChange={event => updateCard({ expirationDate: PlainDate.safeEpochsFrom(event.target.value) })}
+            onChange={event => updateCard({ expirationDate: PlainDate.safeFrom(event.target.value) })}
           />
         </FormGroup>
       )}

@@ -16,8 +16,8 @@ const ActivityLogEntry = (logEntry: ActivityLog): ReactNode => {
       <td>{timestamp}</td>
       <td>{card.fullName}</td>
       {passIdExtension !== null && <td>{passIdExtension}</td>}
-      {birthdayExtension !== null && <td>{PlainDate.fromDaysSinceEpoch(birthdayExtension).format()}</td>}
-      {card.expirationDate !== null && <td>{PlainDate.fromDaysSinceEpoch(card.expirationDate).format()}</td>}
+      {birthdayExtension !== null && <td>{birthdayExtension.format()}</td>}
+      {card.expirationDate !== null && <td>{card.expirationDate.format()}</td>}
     </tr>
   )
 }

@@ -2,7 +2,7 @@ import { CardBlueprint } from '../CardBlueprint'
 import { Extension } from './extensions'
 
 export const ADDRESS_LINE_1_EXTENSION = 'addressLine1'
-export const ADDRESS_LINE_2_EXTENSION = 'addressLine1'
+export const ADDRESS_LINE_2_EXTENSION = 'addressLine2'
 export const ADDRESS_PLZ_EXTENSION = 'addressPlz'
 export const ADDRESS_LOCATION_EXTENSION = 'addressLocation'
 
@@ -20,7 +20,6 @@ const getAddressFieldExtension = <T extends AddressFieldExtension>(
   Component: () => null,
   getInitialState: () => ({ [name]: '' } as AddressFieldExtensionState<T>),
   causesInfiniteLifetime: () => false,
-  // TODO Why no protobuf data?
   getProtobufData: () => ({}),
   isValid: () => true,
   fromString: (value: string) => ({ [name]: value } as AddressFieldExtensionState<T>),

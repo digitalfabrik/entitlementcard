@@ -16,7 +16,7 @@ const MAX_ENCODED_NAME_LENGTH = 50
 export type CardBlueprint = {
   id: number
   fullName: string
-  expirationDate: number | null
+  expirationDate: PlainDate | null
   extensions: Partial<ExtensionState>
 }
 
@@ -30,7 +30,7 @@ export const initializeCardBlueprint = (
   region: Region | undefined = undefined,
   { id, fullName, expirationDate, extensions }: Partial<CardBlueprint> = {}
 ): CardBlueprint => {
-  const defaultExpirationDate = PlainDate.fromLocalDate(new Date()).add(cardConfig.defaultValidity).toDaysSinceEpoch()
+  const defaultExpirationDate = PlainDate.fromLocalDate(new Date()).add(cardConfig.defaultValidity)
   const defaultExtensions = cardConfig.extensions.reduce(
     (acc, extension) =>
       Object.assign(acc, extension.getInitialState(extension.name === REGION_EXTENSION_NAME ? region : undefined)),
@@ -72,19 +72,16 @@ export const isFullNameValid = ({ fullName }: CardBlueprint): boolean => {
 
 export const isExpirationDateValid = (cardBlueprint: CardBlueprint, { nullable } = { nullable: false }): boolean => {
   const today = PlainDate.fromLocalDate(new Date())
-  const expirationDate =
-    cardBlueprint.expirationDate !== null ? PlainDate.fromDaysSinceEpoch(cardBlueprint.expirationDate) : null
   const startDay = cardBlueprint.extensions.startDay
-  const startDayDate = startDay !== undefined ? PlainDate.fromDaysSinceEpoch(startDay) : null
 
-  if (expirationDate === null) {
+  if (cardBlueprint.expirationDate === null) {
     return nullable
   }
 
   return (
-    expirationDate.isAfter(today) &&
-    expirationDate.isBefore(today.add(maxCardValidity)) &&
-    (startDayDate ? startDayDate.isBefore(expirationDate) : true)
+    cardBlueprint.expirationDate.isAfter(today) &&
+    cardBlueprint.expirationDate.isBefore(today.add(maxCardValidity)) &&
+    (startDay?.isBefore(cardBlueprint.expirationDate) ?? true)
   )
 }
 
@@ -104,7 +101,9 @@ export const generateCardInfo = (cardBlueprint: CardBlueprint): CardInfo => {
 
   const expirationDate = cardBlueprint.expirationDate
   const expirationDay =
-    expirationDate !== null && !hasInfiniteLifetime(cardBlueprint) ? Math.max(expirationDate, 0) : undefined
+    expirationDate !== null && !hasInfiniteLifetime(cardBlueprint)
+      ? Math.max(expirationDate.toDaysSinceEpoch(), 0)
+      : undefined
 
   return new CardInfo({
     fullName: cardBlueprint.fullName,
@@ -155,9 +154,11 @@ export const getValueByCSVHeader = (
   if (key === null) {
     return null
   }
-  return Object.keys(cardBlueprint).includes(key)
-    ? cardBlueprint[key as CardBlueprintKey]
-    : cardBlueprint.extensions[key as keyof ExtensionState] ?? null
+  return (
+    (Object.keys(cardBlueprint).includes(key)
+      ? cardBlueprint[key as CardBlueprintKey]?.toString()
+      : cardBlueprint.extensions[key as keyof ExtensionState]?.toString()) ?? null
+  )
 }
 
 export const initializeCardFromCSV = (
@@ -178,7 +179,7 @@ export const initializeCardFromCSV = (
 
   const fullName = line[headers.indexOf(cardConfig.nameColumnName)] ?? defaultCard.fullName
   const rawExpirationDate = line[headers.indexOf(cardConfig.expiryColumnName)]
-  const expirationDate = PlainDate.safeEpochsFromCustomFormat(rawExpirationDate) ?? defaultCard.expirationDate
+  const expirationDate = PlainDate.safeFromCustomFormat(rawExpirationDate) ?? defaultCard.expirationDate
 
   return {
     id: createRandomId(),

@@ -7,10 +7,10 @@ import PlainDate from '../../util/PlainDate'
 import { Extension, ExtensionComponentProps } from './extensions'
 
 export const BIRTHDAY_EXTENSION_NAME = 'birthday'
-export type BirthdayExtensionState = { [BIRTHDAY_EXTENSION_NAME]: number | null }
+export type BirthdayExtensionState = { [BIRTHDAY_EXTENSION_NAME]: PlainDate | null }
 
 const minBirthday = new PlainDate(1900, 1, 1)
-const getInitialState = (): BirthdayExtensionState => ({ birthday: minBirthday.toDaysSinceEpoch() })
+const getInitialState = (): BirthdayExtensionState => ({ birthday: null })
 
 const BirthdayForm = ({ value, setValue, isValid }: ExtensionComponentProps<BirthdayExtensionState>): ReactElement => {
   const { viewportSmall } = useWindowDimensions()
@@ -19,7 +19,7 @@ const BirthdayForm = ({ value, setValue, isValid }: ExtensionComponentProps<Birt
     ? { fontSize: 16, padding: '9px 10px', color: inputColor }
     : { fontSize: 14, padding: '6px 10px', color: inputColor }
 
-  const birthdayDate = value.birthday !== null ? PlainDate.fromDaysSinceEpoch(value.birthday).toString() : ''
+  const birthdayDate = value.birthday?.toString() ?? ''
 
   return (
     <FormGroup label='Geburtsdatum'>
@@ -37,7 +37,7 @@ const BirthdayForm = ({ value, setValue, isValid }: ExtensionComponentProps<Birt
         }}
         onChange={event => {
           console.log('target', event.target.value)
-          const date = PlainDate.safeEpochsFrom(event.target.value)
+          const date = PlainDate.safeFrom(event.target.value)
           if (date !== null) {
             setValue({ birthday: date })
           }
@@ -54,23 +54,21 @@ const BirthdayExtension: Extension<BirthdayExtensionState> = {
   causesInfiniteLifetime: () => false,
   getProtobufData: ({ birthday }: BirthdayExtensionState) => ({
     extensionBirthday: {
-      birthday: birthday ?? undefined,
+      birthday: birthday?.toDaysSinceEpoch() ?? undefined,
     },
   }),
   isValid: ({ birthday }: BirthdayExtensionState) => {
     if (birthday === null) {
       return false
     }
-    const date = PlainDate.fromDaysSinceEpoch(birthday)
     const today = PlainDate.fromLocalDate(new Date())
-    return !date.isBefore(minBirthday) && !date.isAfter(today)
+    return !birthday.isBefore(minBirthday) && !birthday.isAfter(today)
   },
   fromString: (value: string) => {
-    const birthday = PlainDate.safeEpochsFromCustomFormat(value)
+    const birthday = PlainDate.safeFromCustomFormat(value)
     return birthday === null ? null : { birthday }
   },
-  toString: ({ birthday }: BirthdayExtensionState) =>
-    birthday !== null ? PlainDate.fromDaysSinceEpoch(birthday).format() : '',
+  toString: ({ birthday }: BirthdayExtensionState) => birthday?.format() ?? '',
 }
 
 export default BirthdayExtension

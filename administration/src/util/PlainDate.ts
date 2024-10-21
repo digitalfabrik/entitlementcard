@@ -63,20 +63,19 @@ class PlainDate {
     return PlainDate.fromLocalDate(date)
   }
 
-  static safeEpochsFromCustomFormat(value: string | null, format: string = 'dd.MM.yyyy'): number | null {
+  static safeFromCustomFormat(value: string | null, format: string = 'dd.MM.yyyy'): PlainDate | null {
     if (value === null) {
       return null
     }
     try {
-      return PlainDate.fromCustomFormat(value, format).toDaysSinceEpoch()
+      return PlainDate.fromCustomFormat(value, format)
     } catch (e) {
-      console.error(`Could not parse date from string '${value}'.`, e)
       return null
     }
   }
 
-  static safeEpochsFrom(valueISO8601: string | null): number | null {
-    return PlainDate.safeEpochsFromCustomFormat(valueISO8601, ISO_8601_DATE_FORMAT)
+  static safeFrom(valueISO8601: string | null): PlainDate | null {
+    return PlainDate.safeFromCustomFormat(valueISO8601, ISO_8601_DATE_FORMAT)
   }
 
   /**
