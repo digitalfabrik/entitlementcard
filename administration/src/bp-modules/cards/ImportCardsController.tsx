@@ -1,5 +1,4 @@
 import { NonIdealState, Spinner } from '@blueprintjs/core'
-import { sv } from 'date-fns/locale'
 import React, { ReactElement, useCallback, useContext, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 

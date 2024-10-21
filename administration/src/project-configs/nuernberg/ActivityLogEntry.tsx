@@ -3,7 +3,6 @@ import React, { ReactNode } from 'react'
 import { ActivityLog } from '../../bp-modules/user-settings/ActivityLog'
 import { BIRTHDAY_EXTENSION_NAME } from '../../cards/extensions/BirthdayExtension'
 import { NUERNBERG_PASS_ID_EXTENSION_NAME } from '../../cards/extensions/NuernbergPassIdExtension'
-import PlainDate from '../../util/PlainDate'
 
 // Check column names of the activityLogConfig have the same order and amount than here
 const ActivityLogEntry = (logEntry: ActivityLog): ReactNode => {

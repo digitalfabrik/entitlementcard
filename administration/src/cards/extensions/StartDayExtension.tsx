@@ -11,31 +11,29 @@ export type StartDayExtensionState = { [START_DAY_EXTENSION_NAME]: PlainDate }
 // Some minimum start day after 1970 is necessary, as we use an uint32 in the protobuf.
 const minStartDay = new PlainDate(2020, 1, 1)
 
-const StartDayForm = ({ value, setValue, isValid }: ExtensionComponentProps<StartDayExtensionState>): ReactElement => {
-  return (
-    <FormGroup label='Startdatum'>
-      <TextField
-        fullWidth
-        type='date'
-        required
-        size='small'
-        error={!isValid}
-        value={value.startDay.toString()}
-        sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' }, '& fieldset': { borderRadius: 0 } }}
-        inputProps={{
-          min: minStartDay.toString(),
-          style: { fontSize: 14, padding: '6px 10px' },
-        }}
-        onChange={event => {
-          const date = PlainDate.safeFrom(event.target.value)
-          if (date !== null) {
-            setValue({ startDay: date })
-          }
-        }}
-      />
-    </FormGroup>
-  )
-}
+const StartDayForm = ({ value, setValue, isValid }: ExtensionComponentProps<StartDayExtensionState>): ReactElement => (
+  <FormGroup label='Startdatum'>
+    <TextField
+      fullWidth
+      type='date'
+      required
+      size='small'
+      error={!isValid}
+      value={value.startDay.toString()}
+      sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' }, '& fieldset': { borderRadius: 0 } }}
+      inputProps={{
+        min: minStartDay.toString(),
+        style: { fontSize: 14, padding: '6px 10px' },
+      }}
+      onChange={event => {
+        const date = PlainDate.safeFrom(event.target.value)
+        if (date !== null) {
+          setValue({ startDay: date })
+        }
+      }}
+    />
+  </FormGroup>
+)
 
 const isStartDayValid = ({ startDay }: StartDayExtensionState): boolean => startDay.isAfter(minStartDay)
 

@@ -69,7 +69,7 @@ class PlainDate {
     }
     try {
       return PlainDate.fromCustomFormat(value, format)
-    } catch (e) {
+    } catch {
       return null
     }
   }
