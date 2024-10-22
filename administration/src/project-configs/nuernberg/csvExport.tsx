@@ -12,8 +12,8 @@ import { convertProtobufToHexCode } from '../../util/qrcode'
 export const buildCsvLine = (createCardsResult: CreateCardsResult, cardBlueprint: CardBlueprint): string => {
   const [addressLine1, addressLine2, plz, location] = getAddressFieldExtensionsValues(cardBlueprint)
   const passId = cardBlueprint.extensions[NUERNBERG_PASS_ID_EXTENSION_NAME]
-  const birthday = cardBlueprint.extensions[BIRTHDAY_EXTENSION_NAME]
-  const startDay = cardBlueprint.extensions[START_DAY_EXTENSION_NAME]
+  const birthday = cardBlueprint.extensions[BIRTHDAY_EXTENSION_NAME]?.format()
+  const startDay = cardBlueprint.extensions[START_DAY_EXTENSION_NAME]?.format()
 
   const activationHex = convertProtobufToHexCode(
     new QrCode({
@@ -43,7 +43,7 @@ export const buildCsvLine = (createCardsResult: CreateCardsResult, cardBlueprint
       passId,
       birthday,
       startDay,
-      cardBlueprint.expirationDate,
+      cardBlueprint.expirationDate?.format(),
       createCardsResult.staticCardInfoHashBase64,
       activationHex,
       staticVerificationHex,

@@ -20,9 +20,6 @@ export type CardBlueprint = {
   extensions: Partial<ExtensionState>
 }
 
-type CardBlueprintKey = keyof Omit<Omit<CardBlueprint, 'extensions'>, 'id'>
-type KeyType = CardBlueprintKey | ExtensionKey | null
-
 const createRandomId = () => Math.floor(Math.random() * 1000000)
 
 export const initializeCardBlueprint = (
@@ -117,20 +114,6 @@ const getExtensionNameByCSVHeader = (cardConfig: CardConfig, columnHeader: strin
   return (cardConfig.extensions[extensionIndex]?.name as ExtensionKey | undefined) ?? null
 }
 
-const getObjectKeyByCSVHeader = (cardConfig: CardConfig, columnHeader: string): CardBlueprintKey | null => {
-  switch (columnHeader) {
-    case cardConfig.nameColumnName:
-      return 'fullName'
-    case cardConfig.expiryColumnName:
-      return 'expirationDate'
-    default:
-      return null
-  }
-}
-
-const getKeyByCSVHeader = (cardConfig: CardConfig, columnHeader: string): KeyType =>
-  getExtensionNameByCSVHeader(cardConfig, columnHeader) ?? getObjectKeyByCSVHeader(cardConfig, columnHeader)
-
 export const isValueValid = (cardBlueprint: CardBlueprint, cardConfig: CardConfig, columnHeader: string): boolean => {
   switch (columnHeader) {
     case cardConfig.nameColumnName:
@@ -149,16 +132,18 @@ export const getValueByCSVHeader = (
   cardBlueprint: CardBlueprint,
   cardConfig: CardConfig,
   columnHeader: string
-): string | number | null => {
-  const key = getKeyByCSVHeader(cardConfig, columnHeader)
-  if (key === null) {
-    return null
+): string | number | undefined => {
+  switch (columnHeader) {
+    case cardConfig.nameColumnName:
+      return cardBlueprint.fullName
+    case cardConfig.expiryColumnName:
+      return cardBlueprint.expirationDate?.format()
+    default: {
+      const extensionName = getExtensionNameByCSVHeader(cardConfig, columnHeader)
+      const extension = getExtensions(cardBlueprint).find(({ extension }) => extension.name === extensionName)
+      return extension?.extension.toString(extension.state)
+    }
   }
-  return (
-    (Object.keys(cardBlueprint).includes(key)
-      ? cardBlueprint[key as CardBlueprintKey]?.toString()
-      : cardBlueprint.extensions[key as keyof ExtensionState]?.toString()) ?? null
-  )
 }
 
 export const initializeCardFromCSV = (

@@ -36,7 +36,6 @@ const BirthdayForm = ({ value, setValue, isValid }: ExtensionComponentProps<Birt
           style: formStyle,
         }}
         onChange={event => {
-          console.log('target', event.target.value)
           const date = PlainDate.safeFrom(event.target.value)
           if (date !== null) {
             setValue({ birthday: date })

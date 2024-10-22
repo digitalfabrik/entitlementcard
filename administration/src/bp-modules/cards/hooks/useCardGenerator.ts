@@ -63,8 +63,6 @@ const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
     },
   })
 
-  console.log(cardBlueprints)
-
   const updateCardBlueprint = useCallback(
     (updatedCard: Partial<CardBlueprint>, index: number) =>
       setCardBlueprints(updateArrayItem(cardBlueprints, updateCard(cardBlueprints[index], updatedCard), index)),
