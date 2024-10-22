@@ -106,7 +106,7 @@ describe('CardBlueprint', () => {
       expect(isValid(card)).toBeTruthy()
 
       expect(getValueByCSVHeader(card, cardConfig, 'Name')).toBe('Thea Test')
-      expect(getValueByCSVHeader(card, cardConfig, 'Ablaufdatum')).toBe(date.toString())
+      expect(getValueByCSVHeader(card, cardConfig, 'Ablaufdatum')).toBe(date.format())
       expect(getValueByCSVHeader(card, cardConfig, 'Kartentyp')).toBe('Goldkarte')
     })
 
@@ -117,7 +117,7 @@ describe('CardBlueprint', () => {
 
       expect(card.fullName).toBe('')
 
-      expect(getValueByCSVHeader(card, cardConfig, 'Region')).toBeNull()
+      expect(getValueByCSVHeader(card, cardConfig, 'Region')).toBeUndefined()
     })
 
     it('should correctly identify invalid values', () => {
@@ -128,9 +128,9 @@ describe('CardBlueprint', () => {
       expect(card.fullName).toBe('')
       expect(getValueByCSVHeader(card, cardConfig, 'Name')).toBe('')
       expect(card.expirationDate).toBeNull()
-      expect(getValueByCSVHeader(card, cardConfig, 'Ablaufdatum')).toBeNull()
+      expect(getValueByCSVHeader(card, cardConfig, 'Ablaufdatum')).toBeUndefined()
       expect(card.extensions[BAVARIA_CARD_TYPE_EXTENSION_NAME]).toBeUndefined()
-      expect(getValueByCSVHeader(card, cardConfig, 'Kartentyp')).toBeNull()
+      expect(getValueByCSVHeader(card, cardConfig, 'Kartentyp')).toBeUndefined()
 
       expect(isValueValid(card, cardConfig, 'Name')).toBeFalsy()
       expect(isValueValid(card, cardConfig, 'Ablaufdatum')).toBeFalsy()
