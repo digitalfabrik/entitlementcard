@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.config
 
+import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -49,6 +50,9 @@ data class BackendConfiguration(
     val csvWriter: CsvWriterConfig,
     val matomoUrl: String
 ) {
+    fun getProjectConfig(project: String): ProjectConfig {
+        return projects.find { it.id == project } ?: throw ProjectNotFoundException(project)
+    }
 
     fun sanityCheckMatomoConfig(): BackendConfiguration {
         val matomoConfig = projects.mapNotNull { it.matomo }

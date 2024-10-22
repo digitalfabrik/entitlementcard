@@ -136,13 +136,14 @@ platform :ios do
 
     # https://docs.fastlane.tools/actions/deliver/
     deliver(
+      metadata_path: "./fastlane/#{build_config_name}/metadata",
       ipa: "#{ENV['HOME']}/#{ipa_path}",
       app_version: version_name,
       submit_for_review: true,
       automatic_release: true,
       force: true,
       skip_screenshots: true,
-      skip_metadata: true,
+      skip_metadata: false,
       overwrite_screenshots: true,
       precheck_include_in_app_purchases: false, # We do not have inapp purchases
       submission_information: { add_id_info_uses_idfa: false }  # https://firebase.google.com/docs/analytics/configure-data-collection?platform=ios
@@ -177,7 +178,7 @@ platform :ios do
 
     # https://docs.fastlane.tools/actions/deliver/#submit-build
     deliver(
-      metadata_path: "./#{build_config_name}/metadata",
+      metadata_path: "./fastlane/#{build_config_name}/metadata",
       app_version: testflight_version,
       build_number: testflight_build_number.to_s,
       app_identifier: bundle_identifier,

@@ -59,7 +59,7 @@ class AdministratorEntity(id: EntityID<Int>) : IntEntity(id) {
 const val TOKEN_LENGTH = 60
 
 object ApiTokens : IntIdTable() {
-    val token = binary("token")
+    val tokenHash = binary("tokenHash").uniqueIndex()
     val creatorId = reference("creatorId", Administrators)
     val projectId = reference("projectId", Projects)
     val expirationDate = date("expirationDate")
@@ -68,7 +68,7 @@ object ApiTokens : IntIdTable() {
 class ApiTokenEntity(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<ApiTokenEntity>(ApiTokens)
 
-    var token by ApiTokens.token
+    var tokenHash by ApiTokens.tokenHash
     var creator by ApiTokens.creatorId
     var projectId by ApiTokens.projectId
     var expirationDate by ApiTokens.expirationDate

@@ -62,6 +62,97 @@
 			remoteGlobalIDString = 502E20F09A7CAFBD1DE1AA882DCC550C;
 			remoteInfo = geolocator_apple;
 		};
+		2E0A7C272CBD161000793A25 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = AF5281419A326DD7CD6E32341946DFEE;
+			remoteInfo = "device_info_plus-device_info_plus_privacy";
+		};
+		2E0A7C292CBD161000793A25 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = E3C330B5F4227ED6FDC9FC042B5115D5;
+			remoteInfo = "flutter_secure_storage-flutter_secure_storage";
+		};
+		2E0A7C2B2CBD161000793A25 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FA845F80B3847B22ACF63FD7E64E6D03;
+			remoteInfo = "geolocator_apple-geolocator_apple_privacy";
+		};
+		2E0A7C2D2CBD161000793A25 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F73AA961F4AEFF2B46B00AE435DF6BE3;
+			remoteInfo = "GoogleDataTransport-GoogleDataTransport_Privacy";
+		};
+		2E0A7C2F2CBD161000793A25 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 44E291D18340EAC3F761346198515323;
+			remoteInfo = "GoogleUtilities-GoogleUtilities_Privacy";
+		};
+		2E0A7C312CBD161000793A25 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3227F3FC45681D7CEE5D1355A532398A;
+			remoteInfo = "nanopb-nanopb_Privacy";
+		};
+		2E0A7C332CBD161000793A25 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3DBD4BADE27F8B91024E4B4B4DD75DB5;
+			remoteInfo = "path_provider_foundation-path_provider_foundation_privacy";
+		};
+		2E0A7C352CBD161000793A25 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4683C6A6BA60720F17CAD71C28988BDC;
+			remoteInfo = "permission_handler_apple-permission_handler_apple_privacy";
+		};
+		2E0A7C372CBD161000793A25 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3F238BB22C5201CE689CAF2F766AED95;
+			remoteInfo = "PromisesObjC-FBLPromises_Privacy";
+		};
+		2E0A7C392CBD161000793A25 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 842AED998605C42F2C05F53985DA2DF5;
+			remoteInfo = "ReachabilitySwift-ReachabilitySwift";
+		};
+		2E0A7C3B2CBD161000793A25 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2F194FCABAEDAB823F9B72AF05D34561;
+			remoteInfo = "Sentry-Sentry";
+		};
+		2E0A7C3D2CBD161000793A25 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0652FCE3FC19056983AABE058B3CC45B;
+			remoteInfo = "shared_preferences_foundation-shared_preferences_foundation_privacy";
+		};
+		2E0A7C3F2CBD161000793A25 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DBA6F34C072B134D3BE38983776DD1C3;
+			remoteInfo = "url_launcher_ios-url_launcher_ios_privacy";
+		};
 		2E331BFD2B11141C00F6E2D4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
@@ -103,13 +194,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 69E79B6352F5EEE6319DD35575B44D3F;
 			remoteInfo = sentry_flutter;
-		};
-		2E44B1082ADED161006E42CD /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B467DD492938EF656F5C454AC944394E;
-			remoteInfo = SentryPrivate;
 		};
 		2E44B10A2ADED161006E42CD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -174,27 +258,6 @@
 			remoteGlobalIDString = 3347A1AB6546F0A3977529B8F199DC41;
 			remoteInfo = PromisesObjC;
 		};
-		502F2F3429803DDE00B6F8ED /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = C2105C94812B6214B154F54DCEDB72AC;
-			remoteInfo = Protobuf;
-		};
-		5093F3E128D8D252009A9A33 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7DA7BAF0ACB92E1882061A0287A45D64;
-			remoteInfo = "MapLibreAnnotationExtension-framework";
-		};
-		5093F3E328D8D252009A9A33 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 138D7EAE524882D0B8E11AE6BD242880;
-			remoteInfo = "MapLibreAnnotationExtension-library";
-		};
 		5093F3E528D8D252009A9A33 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
@@ -248,12 +311,14 @@
 		2E331C022B11142500F6E2D4 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2EDA726A2B56E06C004E4833 /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
+		43694FFB0E5FEA74D9DFDF98 /* Pods-Runner.release-koblenz.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release-koblenz.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release-koblenz.xcconfig"; sourceTree = "<group>"; };
 		47F40A1A0A515BF56DB92CD1 /* Pods-Runner.release-nuernberg.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release-nuernberg.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release-nuernberg.xcconfig"; sourceTree = "<group>"; };
 		62F40225E0F5640034AD59F5 /* Pods-Runner.debug-bayern.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug-bayern.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug-bayern.xcconfig"; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
 		7BDA3E25D5519808108948E0 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
+		806C3E49B2F614F9750EDBDE /* Pods-Runner.debug-koblenz.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug-koblenz.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug-koblenz.xcconfig"; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
 		97C146EE1CF9000F007C117D /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -265,6 +330,7 @@
 		B5B93B7B58F73A7CD4C8D93D /* Pods-Runner.profile-bayern.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile-bayern.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile-bayern.xcconfig"; sourceTree = "<group>"; };
 		D36AC09BAE754EC9632D3C47 /* Pods-Runner.profile-nuernberg.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile-nuernberg.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile-nuernberg.xcconfig"; sourceTree = "<group>"; };
 		D971304CB14546F260E6DA62 /* Pods-Runner.debug-nuernberg.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug-nuernberg.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug-nuernberg.xcconfig"; sourceTree = "<group>"; };
+		E1965A3087CCC8625F30FEFA /* Pods-Runner.profile-koblenz.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile-koblenz.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile-koblenz.xcconfig"; sourceTree = "<group>"; };
 		F2AA1F850E210988C8F9C39C /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -290,33 +356,42 @@
 		0B1FA7F126DBD06400D4AEA7 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				0BE935D1274FD4CA004AF690 /* connectivity_plus */,
-				2E331BFE2B11141C00F6E2D4 /* device_info_plus */,
-				2E44B0FF2ADED161006E42CD /* fk_user_agent */,
-				0B1FA80826DBD06400D4AEA7 /* flutter_secure_storage */,
-				0BE935D3274FD4CA004AF690 /* geolocator_apple */,
-				502F2F2529803DDE00B6F8ED /* GoogleDataTransport */,
-				502F2F2729803DDE00B6F8ED /* GoogleToolboxForMac */,
-				502F2F2929803DDE00B6F8ED /* GoogleUtilities */,
-				502F2F2B29803DDE00B6F8ED /* GoogleUtilitiesComponents */,
-				502F2F2D29803DDE00B6F8ED /* GTMSessionFetcher */,
-				0B330E3A27143BA80011A908 /* maplibre_gl */,
-				5093F3E228D8D252009A9A33 /* MapLibreAnnotationExtension-framework */,
-				5093F3E428D8D252009A9A33 /* MapLibreAnnotationExtension-library */,
-				502F2F2F29803DDE00B6F8ED /* mobile_scanner */,
-				502F2F3129803DDE00B6F8ED /* nanopb */,
-				5093F3E628D8D252009A9A33 /* package_info_plus */,
-				2E44B1012ADED161006E42CD /* path_provider_foundation */,
-				2E44B1032ADED161006E42CD /* permission_handler_apple */,
-				0B1FA81C26DBD06400D4AEA7 /* Pods-Runner */,
-				502F2F3329803DDE00B6F8ED /* PromisesObjC */,
-				502F2F3529803DDE00B6F8ED /* Protobuf */,
-				5093F3EA28D8D252009A9A33 /* ReachabilitySwift */,
-				2E44B1052ADED161006E42CD /* Sentry */,
-				2E44B1072ADED161006E42CD /* sentry_flutter */,
-				2E44B1092ADED161006E42CD /* SentryPrivate */,
-				2E44B10B2ADED161006E42CD /* shared_preferences_foundation */,
-				5093F3EE28D8D252009A9A33 /* url_launcher_ios */,
+				0BE935D1274FD4CA004AF690 /* connectivity_plus.framework */,
+				2E331BFE2B11141C00F6E2D4 /* device_info_plus.framework */,
+				2E0A7C282CBD161000793A25 /* device_info_plus_privacy.bundle */,
+				2E44B0FF2ADED161006E42CD /* fk_user_agent.framework */,
+				0B1FA80826DBD06400D4AEA7 /* flutter_secure_storage.framework */,
+				2E0A7C2A2CBD161000793A25 /* flutter_secure_storage.bundle */,
+				0BE935D3274FD4CA004AF690 /* geolocator_apple.framework */,
+				2E0A7C2C2CBD161000793A25 /* geolocator_apple_privacy.bundle */,
+				502F2F2529803DDE00B6F8ED /* GoogleDataTransport.framework */,
+				2E0A7C2E2CBD161000793A25 /* GoogleDataTransport_Privacy.bundle */,
+				502F2F2729803DDE00B6F8ED /* GoogleToolboxForMac.framework */,
+				502F2F2929803DDE00B6F8ED /* GoogleUtilities.framework */,
+				2E0A7C302CBD161000793A25 /* GoogleUtilities_Privacy.bundle */,
+				502F2F2B29803DDE00B6F8ED /* GoogleUtilitiesComponents.framework */,
+				502F2F2D29803DDE00B6F8ED /* GTMSessionFetcher.framework */,
+				0B330E3A27143BA80011A908 /* maplibre_gl.framework */,
+				502F2F2F29803DDE00B6F8ED /* mobile_scanner.framework */,
+				502F2F3129803DDE00B6F8ED /* nanopb.framework */,
+				2E0A7C322CBD161000793A25 /* nanopb_Privacy.bundle */,
+				5093F3E628D8D252009A9A33 /* package_info_plus.framework */,
+				2E44B1012ADED161006E42CD /* path_provider_foundation.framework */,
+				2E0A7C342CBD161000793A25 /* path_provider_foundation_privacy.bundle */,
+				2E44B1032ADED161006E42CD /* permission_handler_apple.framework */,
+				2E0A7C362CBD161000793A25 /* permission_handler_apple_privacy.bundle */,
+				0B1FA81C26DBD06400D4AEA7 /* Pods_Runner.framework */,
+				502F2F3329803DDE00B6F8ED /* FBLPromises.framework */,
+				2E0A7C382CBD161000793A25 /* FBLPromises_Privacy.bundle */,
+				5093F3EA28D8D252009A9A33 /* Reachability.framework */,
+				2E0A7C3A2CBD161000793A25 /* ReachabilitySwift.bundle */,
+				2E44B1052ADED161006E42CD /* Sentry.framework */,
+				2E0A7C3C2CBD161000793A25 /* Sentry.bundle */,
+				2E44B1072ADED161006E42CD /* sentry_flutter.framework */,
+				2E44B10B2ADED161006E42CD /* shared_preferences_foundation.framework */,
+				2E0A7C3E2CBD161000793A25 /* shared_preferences_foundation_privacy.bundle */,
+				5093F3EE28D8D252009A9A33 /* url_launcher_ios.framework */,
+				2E0A7C402CBD161000793A25 /* url_launcher_ios_privacy.bundle */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -402,6 +477,9 @@
 				62F40225E0F5640034AD59F5 /* Pods-Runner.debug-bayern.xcconfig */,
 				AF82D4B6D188E2691D0F5720 /* Pods-Runner.release-bayern.xcconfig */,
 				B5B93B7B58F73A7CD4C8D93D /* Pods-Runner.profile-bayern.xcconfig */,
+				806C3E49B2F614F9750EDBDE /* Pods-Runner.debug-koblenz.xcconfig */,
+				43694FFB0E5FEA74D9DFDF98 /* Pods-Runner.release-koblenz.xcconfig */,
+				E1965A3087CCC8625F30FEFA /* Pods-Runner.profile-koblenz.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -456,6 +534,7 @@
 		97C146E61CF9000F007C117D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1250;
 				LastUpgradeCheck = 1510;
 				ORGANIZATIONNAME = "";
@@ -497,218 +576,254 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		0B1FA80826DBD06400D4AEA7 /* flutter_secure_storage */ = {
+		0B1FA80826DBD06400D4AEA7 /* flutter_secure_storage.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			name = flutter_secure_storage;
 			path = flutter_secure_storage.framework;
 			remoteRef = 0B1FA80726DBD06400D4AEA7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		0B1FA81C26DBD06400D4AEA7 /* Pods-Runner */ = {
+		0B1FA81C26DBD06400D4AEA7 /* Pods_Runner.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			name = "Pods-Runner";
 			path = Pods_Runner.framework;
 			remoteRef = 0B1FA81B26DBD06400D4AEA7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		0B330E3A27143BA80011A908 /* maplibre_gl */ = {
+		0B330E3A27143BA80011A908 /* maplibre_gl.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			name = maplibre_gl;
 			path = maplibre_gl.framework;
 			remoteRef = 0B330E3927143BA80011A908 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		0BE935D1274FD4CA004AF690 /* connectivity_plus */ = {
+		0BE935D1274FD4CA004AF690 /* connectivity_plus.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			name = connectivity_plus;
 			path = connectivity_plus.framework;
 			remoteRef = 0BE935D0274FD4CA004AF690 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		0BE935D3274FD4CA004AF690 /* geolocator_apple */ = {
+		0BE935D3274FD4CA004AF690 /* geolocator_apple.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			name = geolocator_apple;
 			path = geolocator_apple.framework;
 			remoteRef = 0BE935D2274FD4CA004AF690 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		2E331BFE2B11141C00F6E2D4 /* device_info_plus */ = {
+		2E0A7C282CBD161000793A25 /* device_info_plus_privacy.bundle */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = device_info_plus_privacy.bundle;
+			remoteRef = 2E0A7C272CBD161000793A25 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2E0A7C2A2CBD161000793A25 /* flutter_secure_storage.bundle */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = flutter_secure_storage.bundle;
+			remoteRef = 2E0A7C292CBD161000793A25 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2E0A7C2C2CBD161000793A25 /* geolocator_apple_privacy.bundle */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = geolocator_apple_privacy.bundle;
+			remoteRef = 2E0A7C2B2CBD161000793A25 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2E0A7C2E2CBD161000793A25 /* GoogleDataTransport_Privacy.bundle */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = GoogleDataTransport_Privacy.bundle;
+			remoteRef = 2E0A7C2D2CBD161000793A25 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2E0A7C302CBD161000793A25 /* GoogleUtilities_Privacy.bundle */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = GoogleUtilities_Privacy.bundle;
+			remoteRef = 2E0A7C2F2CBD161000793A25 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2E0A7C322CBD161000793A25 /* nanopb_Privacy.bundle */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = nanopb_Privacy.bundle;
+			remoteRef = 2E0A7C312CBD161000793A25 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2E0A7C342CBD161000793A25 /* path_provider_foundation_privacy.bundle */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = path_provider_foundation_privacy.bundle;
+			remoteRef = 2E0A7C332CBD161000793A25 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2E0A7C362CBD161000793A25 /* permission_handler_apple_privacy.bundle */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = permission_handler_apple_privacy.bundle;
+			remoteRef = 2E0A7C352CBD161000793A25 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2E0A7C382CBD161000793A25 /* FBLPromises_Privacy.bundle */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = FBLPromises_Privacy.bundle;
+			remoteRef = 2E0A7C372CBD161000793A25 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2E0A7C3A2CBD161000793A25 /* ReachabilitySwift.bundle */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = ReachabilitySwift.bundle;
+			remoteRef = 2E0A7C392CBD161000793A25 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2E0A7C3C2CBD161000793A25 /* Sentry.bundle */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = Sentry.bundle;
+			remoteRef = 2E0A7C3B2CBD161000793A25 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2E0A7C3E2CBD161000793A25 /* shared_preferences_foundation_privacy.bundle */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = shared_preferences_foundation_privacy.bundle;
+			remoteRef = 2E0A7C3D2CBD161000793A25 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2E0A7C402CBD161000793A25 /* url_launcher_ios_privacy.bundle */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = url_launcher_ios_privacy.bundle;
+			remoteRef = 2E0A7C3F2CBD161000793A25 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2E331BFE2B11141C00F6E2D4 /* device_info_plus.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			name = device_info_plus;
 			path = device_info_plus.framework;
 			remoteRef = 2E331BFD2B11141C00F6E2D4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		2E44B0FF2ADED161006E42CD /* fk_user_agent */ = {
+		2E44B0FF2ADED161006E42CD /* fk_user_agent.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			name = fk_user_agent;
 			path = fk_user_agent.framework;
 			remoteRef = 2E44B0FE2ADED161006E42CD /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		2E44B1012ADED161006E42CD /* path_provider_foundation */ = {
+		2E44B1012ADED161006E42CD /* path_provider_foundation.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			name = path_provider_foundation;
 			path = path_provider_foundation.framework;
 			remoteRef = 2E44B1002ADED161006E42CD /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		2E44B1032ADED161006E42CD /* permission_handler_apple */ = {
+		2E44B1032ADED161006E42CD /* permission_handler_apple.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			name = permission_handler_apple;
 			path = permission_handler_apple.framework;
 			remoteRef = 2E44B1022ADED161006E42CD /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		2E44B1052ADED161006E42CD /* Sentry */ = {
+		2E44B1052ADED161006E42CD /* Sentry.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			name = Sentry;
 			path = Sentry.framework;
 			remoteRef = 2E44B1042ADED161006E42CD /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		2E44B1072ADED161006E42CD /* sentry_flutter */ = {
+		2E44B1072ADED161006E42CD /* sentry_flutter.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			name = sentry_flutter;
 			path = sentry_flutter.framework;
 			remoteRef = 2E44B1062ADED161006E42CD /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		2E44B1092ADED161006E42CD /* SentryPrivate */ = {
+		2E44B10B2ADED161006E42CD /* shared_preferences_foundation.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			name = SentryPrivate;
-			path = SentryPrivate.framework;
-			remoteRef = 2E44B1082ADED161006E42CD /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		2E44B10B2ADED161006E42CD /* shared_preferences_foundation */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			name = shared_preferences_foundation;
 			path = shared_preferences_foundation.framework;
 			remoteRef = 2E44B10A2ADED161006E42CD /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		502F2F2529803DDE00B6F8ED /* GoogleDataTransport */ = {
+		502F2F2529803DDE00B6F8ED /* GoogleDataTransport.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			name = GoogleDataTransport;
 			path = GoogleDataTransport.framework;
 			remoteRef = 502F2F2429803DDE00B6F8ED /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		502F2F2729803DDE00B6F8ED /* GoogleToolboxForMac */ = {
+		502F2F2729803DDE00B6F8ED /* GoogleToolboxForMac.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			name = GoogleToolboxForMac;
 			path = GoogleToolboxForMac.framework;
 			remoteRef = 502F2F2629803DDE00B6F8ED /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		502F2F2929803DDE00B6F8ED /* GoogleUtilities */ = {
+		502F2F2929803DDE00B6F8ED /* GoogleUtilities.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			name = GoogleUtilities;
 			path = GoogleUtilities.framework;
 			remoteRef = 502F2F2829803DDE00B6F8ED /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		502F2F2B29803DDE00B6F8ED /* GoogleUtilitiesComponents */ = {
+		502F2F2B29803DDE00B6F8ED /* GoogleUtilitiesComponents.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			name = GoogleUtilitiesComponents;
 			path = GoogleUtilitiesComponents.framework;
 			remoteRef = 502F2F2A29803DDE00B6F8ED /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		502F2F2D29803DDE00B6F8ED /* GTMSessionFetcher */ = {
+		502F2F2D29803DDE00B6F8ED /* GTMSessionFetcher.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			name = GTMSessionFetcher;
 			path = GTMSessionFetcher.framework;
 			remoteRef = 502F2F2C29803DDE00B6F8ED /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		502F2F2F29803DDE00B6F8ED /* mobile_scanner */ = {
+		502F2F2F29803DDE00B6F8ED /* mobile_scanner.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			name = mobile_scanner;
 			path = mobile_scanner.framework;
 			remoteRef = 502F2F2E29803DDE00B6F8ED /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		502F2F3129803DDE00B6F8ED /* nanopb */ = {
+		502F2F3129803DDE00B6F8ED /* nanopb.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			name = nanopb;
 			path = nanopb.framework;
 			remoteRef = 502F2F3029803DDE00B6F8ED /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		502F2F3329803DDE00B6F8ED /* PromisesObjC */ = {
+		502F2F3329803DDE00B6F8ED /* FBLPromises.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			name = PromisesObjC;
 			path = FBLPromises.framework;
 			remoteRef = 502F2F3229803DDE00B6F8ED /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		502F2F3529803DDE00B6F8ED /* Protobuf */ = {
+		5093F3E628D8D252009A9A33 /* package_info_plus.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			name = Protobuf;
-			path = Protobuf.framework;
-			remoteRef = 502F2F3429803DDE00B6F8ED /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		5093F3E228D8D252009A9A33 /* MapLibreAnnotationExtension-framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			name = "MapLibreAnnotationExtension-framework";
-			path = MapLibreAnnotationExtension.framework;
-			remoteRef = 5093F3E128D8D252009A9A33 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		5093F3E428D8D252009A9A33 /* MapLibreAnnotationExtension-library */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			name = "MapLibreAnnotationExtension-library";
-			path = "libMapLibreAnnotationExtension-library.a";
-			remoteRef = 5093F3E328D8D252009A9A33 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		5093F3E628D8D252009A9A33 /* package_info_plus */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			name = package_info_plus;
 			path = package_info_plus.framework;
 			remoteRef = 5093F3E528D8D252009A9A33 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		5093F3EA28D8D252009A9A33 /* ReachabilitySwift */ = {
+		5093F3EA28D8D252009A9A33 /* Reachability.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			name = ReachabilitySwift;
 			path = Reachability.framework;
 			remoteRef = 5093F3E928D8D252009A9A33 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		5093F3EE28D8D252009A9A33 /* url_launcher_ios */ = {
+		5093F3EE28D8D252009A9A33 /* url_launcher_ios.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			name = url_launcher_ios;
 			path = url_launcher_ios.framework;
 			remoteRef = 5093F3ED28D8D252009A9A33 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
@@ -998,6 +1113,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1010,6 +1126,7 @@
 				DEVELOPMENT_TEAM = 7272KE28TJ;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				EXCLUDED_ARCHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1089,6 +1206,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1101,6 +1219,7 @@
 				DEVELOPMENT_TEAM = 7272KE28TJ;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 i386";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1216,6 +1335,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1229,6 +1349,7 @@
 				DEVELOPMENT_TEAM = 7272KE28TJ;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -1337,6 +1458,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1349,6 +1471,7 @@
 				DEVELOPMENT_TEAM = 7272KE28TJ;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				EXCLUDED_ARCHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1456,6 +1579,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1468,6 +1592,7 @@
 				DEVELOPMENT_TEAM = 7272KE28TJ;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 i386";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1583,6 +1708,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1596,6 +1722,7 @@
 				DEVELOPMENT_TEAM = 7272KE28TJ;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -1704,6 +1831,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1716,6 +1844,7 @@
 				DEVELOPMENT_TEAM = 7272KE28TJ;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				EXCLUDED_ARCHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1823,6 +1952,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1835,6 +1965,7 @@
 				DEVELOPMENT_TEAM = 7272KE28TJ;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 i386";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1884,6 +2015,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1897,6 +2029,7 @@
 				DEVELOPMENT_TEAM = 7272KE28TJ;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -1988,6 +2121,379 @@
 			};
 			name = Release;
 		};
+		BA67777D2CBE4E120007505C /* Debug-Koblenz */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 7272KE28TJ;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 i386";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(BUILD_CONFIG_BUNDLE_IDENTIFIER)";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = "Debug-Koblenz";
+		};
+		BA67777E2CBE4E120007505C /* Debug-Koblenz */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9740EEB21CF90195004384FC /* Debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = app_icon_koblenz;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Distribution: Tür an Tür - Digitalfabrik gGmbH (7272KE28TJ)";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7272KE28TJ;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Flutter",
+				);
+				INFOPLIST_FILE = Runner/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Flutter",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "$(BUILD_CONFIG_PROVISIONING_PROFILE_SPECIFIER)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = "Debug-Koblenz";
+		};
+		BA67777F2CBE4E120007505C /* Debug-Koblenz */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = P9FYW37G78;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = ScreenshotTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = app.ehrenamtskarte.ScreenshotTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Runner;
+			};
+			name = "Debug-Koblenz";
+		};
+		BA6777AB2CBE4E210007505C /* Release-Koblenz */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 7272KE28TJ;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(BUILD_CONFIG_BUNDLE_IDENTIFIER)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = "Release-Koblenz";
+		};
+		BA6777AC2CBE4E210007505C /* Release-Koblenz */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = app_icon_koblenz;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Distribution: Tür an Tür - Digitalfabrik gGmbH (7272KE28TJ)";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7272KE28TJ;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Flutter",
+				);
+				INFOPLIST_FILE = Runner/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Flutter",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "$(BUILD_CONFIG_PROVISIONING_PROFILE_SPECIFIER)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = "Release-Koblenz";
+		};
+		BA6777AD2CBE4E210007505C /* Release-Koblenz */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = P9FYW37G78;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = ScreenshotTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = app.ehrenamtskarte.ScreenshotTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Runner;
+			};
+			name = "Release-Koblenz";
+		};
+		BA6777AE2CBE4E2C0007505C /* Profile-Koblenz */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 7272KE28TJ;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				EXCLUDED_ARCHS = "";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(BUILD_CONFIG_BUNDLE_IDENTIFIER)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = "Profile-Koblenz";
+		};
+		BA6777AF2CBE4E2C0007505C /* Profile-Koblenz */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = app_icon_koblenz;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Distribution: Tür an Tür - Digitalfabrik gGmbH (7272KE28TJ)";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7272KE28TJ;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Flutter",
+				);
+				INFOPLIST_FILE = Runner/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Flutter",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "$(BUILD_CONFIG_PROVISIONING_PROFILE_SPECIFIER)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = "Profile-Koblenz";
+		};
+		BA6777B02CBE4E2C0007505C /* Profile-Koblenz */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = P9FYW37G78;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = ScreenshotTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = app.ehrenamtskarte.ScreenshotTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Runner;
+			};
+			name = "Profile-Koblenz";
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1997,12 +2503,15 @@
 				0BC36CA226DBC53B00AAB6AB /* Debug */,
 				5093F3FA28D8D361009A9A33 /* Debug-Bayern */,
 				5093F3CE28D8D252009A9A33 /* Debug-Nuernberg */,
+				BA67777F2CBE4E120007505C /* Debug-Koblenz */,
 				0BC36CA326DBC53B00AAB6AB /* Release */,
 				5093F40F28D8D36B009A9A33 /* Release-Bayern */,
 				5093F3F128D8D25F009A9A33 /* Release-Nuernberg */,
+				BA6777AD2CBE4E210007505C /* Release-Koblenz */,
 				0BC36CA426DBC53B00AAB6AB /* Profile */,
 				5093F41228D8D372009A9A33 /* Profile-Bayern */,
 				5093F3F428D8D264009A9A33 /* Profile-Nuernberg */,
+				BA6777B02CBE4E2C0007505C /* Profile-Koblenz */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2013,12 +2522,15 @@
 				97C147031CF9000F007C117D /* Debug */,
 				5093F3F828D8D361009A9A33 /* Debug-Bayern */,
 				5093F3CC28D8D252009A9A33 /* Debug-Nuernberg */,
+				BA67777D2CBE4E120007505C /* Debug-Koblenz */,
 				97C147041CF9000F007C117D /* Release */,
 				5093F40D28D8D36B009A9A33 /* Release-Bayern */,
 				5093F3EF28D8D25F009A9A33 /* Release-Nuernberg */,
+				BA6777AB2CBE4E210007505C /* Release-Koblenz */,
 				249021D3217E4FDB00AE95B9 /* Profile */,
 				5093F41028D8D372009A9A33 /* Profile-Bayern */,
 				5093F3F228D8D264009A9A33 /* Profile-Nuernberg */,
+				BA6777AE2CBE4E2C0007505C /* Profile-Koblenz */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2029,12 +2541,15 @@
 				97C147061CF9000F007C117D /* Debug */,
 				5093F3F928D8D361009A9A33 /* Debug-Bayern */,
 				5093F3CD28D8D252009A9A33 /* Debug-Nuernberg */,
+				BA67777E2CBE4E120007505C /* Debug-Koblenz */,
 				97C147071CF9000F007C117D /* Release */,
 				5093F40E28D8D36B009A9A33 /* Release-Bayern */,
 				5093F3F028D8D25F009A9A33 /* Release-Nuernberg */,
+				BA6777AC2CBE4E210007505C /* Release-Koblenz */,
 				249021D4217E4FDB00AE95B9 /* Profile */,
 				5093F41128D8D372009A9A33 /* Profile-Bayern */,
 				5093F3F328D8D264009A9A33 /* Profile-Nuernberg */,
+				BA6777AF2CBE4E2C0007505C /* Profile-Koblenz */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

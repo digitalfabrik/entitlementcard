@@ -5,7 +5,6 @@ import app.ehrenamtskarte.backend.cards.service.CardVerifier
 import app.ehrenamtskarte.backend.cards.webservice.schema.types.CardVerificationModel
 import app.ehrenamtskarte.backend.cards.webservice.schema.types.CardVerificationResultModel
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
-import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.matomo.Matomo
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
@@ -17,7 +16,7 @@ class CardQueryService {
     @GraphQLDescription("Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid and a timestamp of the last check")
     fun verifyCardInProject(project: String, card: CardVerificationModel, dfe: DataFetchingEnvironment): Boolean {
         val context = dfe.getContext<GraphQLContext>()
-        val projectConfig = context.backendConfiguration.projects.find { it.id == project } ?: throw ProjectNotFoundException(project)
+        val projectConfig = context.backendConfiguration.getProjectConfig(project)
         val cardHash = Base64.getDecoder().decode(card.cardInfoHashBase64)
         var verificationResult = false
 
@@ -33,7 +32,7 @@ class CardQueryService {
     @GraphQLDescription("Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid and a timestamp of the last check")
     fun verifyCardInProjectV2(project: String, card: CardVerificationModel, dfe: DataFetchingEnvironment): CardVerificationResultModel {
         val context = dfe.getContext<GraphQLContext>()
-        val projectConfig = context.backendConfiguration.projects.find { it.id == project } ?: throw ProjectNotFoundException(project)
+        val projectConfig = context.backendConfiguration.getProjectConfig(project)
         val cardHash = Base64.getDecoder().decode(card.cardInfoHashBase64)
         var verificationResult = CardVerificationResultModel(false)
 

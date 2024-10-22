@@ -26,8 +26,7 @@ class ResetPasswordMutationService {
     fun sendResetMail(dfe: DataFetchingEnvironment, project: String, email: String): Boolean {
         val logger = LoggerFactory.getLogger(ResetPasswordMutationService::class.java)
         val backendConfig = dfe.getContext<GraphQLContext>().backendConfiguration
-        val projectConfig = backendConfig.projects.find { it.id == project }
-            ?: throw ProjectNotFoundException(project)
+        val projectConfig = backendConfig.getProjectConfig(project)
         transaction {
             val user = Administrators.innerJoin(Projects).slice(Administrators.columns)
                 .select((Projects.project eq project) and (LowerCase(Administrators.email) eq email.lowercase()) and (Administrators.deleted eq false))

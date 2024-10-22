@@ -300,6 +300,7 @@ jobs:
                     - bayern
                     - bayern-floss
                     - nuernberg
+                    - koblenz
                 type: enum
             flutterFlavor:
                 description: Flutter Flavor to use
@@ -307,6 +308,7 @@ jobs:
                     - Bayern
                     - BayernFloss
                     - Nuernberg
+                    - Koblenz
                 type: enum
         resource_class: large
         steps:
@@ -615,6 +617,12 @@ jobs:
                 name: Test
             - store_test_results:
                 path: ./build/test-results
+            - run:
+                command: ./gradlew koverLog koverHtmlReport
+                name: Generate test coverage report
+            - store_artifacts:
+                destination: test-coverage-report
+                path: ./build/reports/kover/html
             - save_cache:
                 key: v3-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
                 paths:

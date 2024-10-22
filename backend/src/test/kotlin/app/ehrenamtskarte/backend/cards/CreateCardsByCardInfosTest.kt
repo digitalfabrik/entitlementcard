@@ -1,7 +1,6 @@
 package app.ehrenamtskarte.backend.cards
 
 import app.ehrenamtskarte.backend.GraphqlApiTest
-import app.ehrenamtskarte.backend.auth.database.Administrators
 import app.ehrenamtskarte.backend.cards.database.CardEntity
 import app.ehrenamtskarte.backend.cards.database.Cards
 import app.ehrenamtskarte.backend.cards.database.CodeType
@@ -31,7 +30,6 @@ internal class CreateCardsByCardInfosTest : GraphqlApiTest() {
     fun cleanUp() {
         transaction {
             Cards.deleteAll()
-            Administrators.deleteAll()
         }
     }
 

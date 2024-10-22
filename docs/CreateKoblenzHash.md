@@ -52,5 +52,5 @@ Hash with Argon2id with the following parameters:
 ## Additional Information
 
 - Online Argon2 hasher: https://argon2.online/
-- CanonicalJson creation is done in: [CanonicalJson.kt](../backend/src/main/kotlin/app/ehrenamtskarte/backend/verification/CanonicalJson.kt)
-- Hashing is done in: [Argon2IdHasher.kt](../backend/src/main/kotlin/app/ehrenamtskarte/backend/verification/Argon2IdHasher.kt)
+- CanonicalJson creation is done in: [CanonicalJson.kt](../backend/src/main/kotlin/app/ehrenamtskarte/backend/cards/CanonicalJson.kt)
+- Hashing is done in: [Argon2IdHasher.kt](../backend/src/main/kotlin/app/ehrenamtskarte/backend/cards/Argon2IdHasher.kt)

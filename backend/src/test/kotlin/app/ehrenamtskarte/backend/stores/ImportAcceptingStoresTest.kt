@@ -1,7 +1,6 @@
 package app.ehrenamtskarte.backend.stores
 
 import app.ehrenamtskarte.backend.GraphqlApiTest
-import app.ehrenamtskarte.backend.auth.database.Administrators
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestData
 import app.ehrenamtskarte.backend.stores.database.AcceptingStoreEntity
@@ -36,7 +35,6 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
             Addresses.deleteAll()
             AcceptingStores.deleteAll()
             Contacts.deleteAll()
-            Administrators.deleteAll()
         }
     }
 

@@ -49,7 +49,7 @@ projects:
     administrationBaseUrl: https://koblenz.sozialpass.app
     administrationName: Koblenz-Pass-Verwaltung
     timezone: "Europe/Berlin"
-    selfServiceEnabled: false
+    selfServiceEnabled: true
     smtp:
       host: mail.sozialpass.app
       port: 587
