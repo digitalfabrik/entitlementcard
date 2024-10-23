@@ -18,11 +18,13 @@ class LocationIcon extends StatelessWidget {
       return const SmallButtonSpinner();
     }
 
-    if (locationStatus == LocationStatus.always || locationStatus == LocationStatus.whileInUse) {
-      if (followUserLocation) {
-        return Icon(Icons.my_location, color: theme.colorScheme.secondary);
-      }
-      return Icon(Icons.location_searching, color: theme.colorScheme.secondary);
+    final bool hasLocationPermission =
+        locationStatus == LocationStatus.always || locationStatus == LocationStatus.whileInUse;
+    if (hasLocationPermission) {
+      return Icon(
+        followUserLocation ? Icons.my_location : Icons.location_searching,
+        color: theme.colorScheme.secondary,
+      );
     }
 
     return Icon(Icons.location_disabled, color: theme.colorScheme.error);

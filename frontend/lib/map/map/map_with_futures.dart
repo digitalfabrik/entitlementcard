@@ -32,13 +32,13 @@ class MapWithFutures extends StatelessWidget {
         final position = snapshot.data;
 
         return MapContainer(
-            onFeatureClick: onFeatureClick,
-            onNoFeatureClick: onNoFeatureClick,
-            locationAvailable: position?.isAvailable() ?? false,
-            userLocation: position?.toLatLng(),
-            onFeatureClickLayerFilter: onFeatureClickLayerFilter,
-            onMapCreated: onMapCreated,
-            setFollowUserLocation: setFollowUserLocation);
+          onFeatureClick: onFeatureClick,
+          onNoFeatureClick: onNoFeatureClick,
+          locationAvailable: position?.isAvailable() ?? false,
+          userLocation: position?.toLatLng(),
+          onFeatureClickLayerFilter: onFeatureClickLayerFilter,
+          onMapCreated: onMapCreated,
+          setFollowUserLocation: setFollowUserLocation);
       },
     );
   }
