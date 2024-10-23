@@ -42,17 +42,6 @@ class PlainDate {
   }
 
   /**
-   * Returns a PlainDate for a given ISO 8601 string.
-   * This function is a subset of Temporal.PlainDate.from.
-   * @param valueISO8601: The date in ISO 8601 format. Must be of the form yyyy-MM-dd
-   * @throws RangeError, if the given value does not represent a valid date.
-   */
-  static from(valueISO8601: string): PlainDate {
-    const date = parse(valueISO8601, ISO_8601_DATE_FORMAT, new Date(0))
-    return PlainDate.fromLocalDate(date)
-  }
-
-  /**
    * Returns a PlainDate by parsing a string using some custom format
    * @param value The string to be parsed.
    * @param format A custom format as used by date-fns
@@ -61,6 +50,16 @@ class PlainDate {
   static fromCustomFormat(value: string, format: string = 'dd.MM.yyyy'): PlainDate {
     const date = parse(value, format, new Date(0))
     return PlainDate.fromLocalDate(date)
+  }
+
+  /**
+   * Returns a PlainDate for a given ISO 8601 string.
+   * This function is a subset of Temporal.PlainDate.from.
+   * @param valueISO8601 The date in ISO 8601 format. Must be of the form yyyy-MM-dd
+   * @throws RangeError, if the given value does not represent a valid date.
+   */
+  static from(valueISO8601: string): PlainDate {
+    return PlainDate.fromCustomFormat(valueISO8601, ISO_8601_DATE_FORMAT)
   }
 
   static safeFromCustomFormat(value: string | null, format: string = 'dd.MM.yyyy'): PlainDate | null {

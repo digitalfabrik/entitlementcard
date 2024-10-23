@@ -5,11 +5,7 @@ export const updateArrayItem = <T>(array: T[], updatedItem: T, index: number): T
   if (index >= array.length || index < 0) {
     throw new RangeError(`Index ${index} is out of range`)
   }
-  return [
-    ...(index > 0 ? array.slice(0, index) : []),
-    updatedItem,
-    ...(index < array.length - 1 ? array.slice(index + 1) : []),
-  ]
+  return [...array.slice(0, index), updatedItem, ...array.slice(index + 1)]
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

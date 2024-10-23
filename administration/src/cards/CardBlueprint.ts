@@ -45,8 +45,11 @@ export const initializeCardBlueprint = (
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const getExtensions = ({ extensions }: CardBlueprint) => {
+type ExtensionWithState = {
+  extension: Extension<InferExtensionStateType<(typeof Extensions)[number]>>
+  state: InferExtensionStateType<(typeof Extensions)[number]>
+}
+export const getExtensions = ({ extensions }: CardBlueprint): ExtensionWithState[] => {
   const extensionKeys = Object.keys(extensions) as (keyof typeof Extensions)[]
   return extensionKeys.map(key => {
     const extensionObject = Extensions.find(extension => extension.name === key)!
