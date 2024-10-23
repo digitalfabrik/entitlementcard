@@ -2,7 +2,7 @@
 parameters:
   buildConfig:
     type: enum
-    enum: ['bayern', 'bayern-floss', 'nuernberg']
+    enum: ['bayern', 'bayern-floss', 'nuernberg', 'koblenz']
   production_delivery:
     description: Whether to deliver the build to production.
     type: boolean

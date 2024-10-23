@@ -24,9 +24,10 @@ KEYSTORE_PASSWORD = ENV['KEYSTORE_PASSWORD']
 
 KEYSTORE_KEY_ALIAS_BAYERN = ENV['KEYSTORE_KEY_ALIAS_BAYERN']
 KEYSTORE_KEY_ALIAS_NUERNBERG = ENV['KEYSTORE_KEY_ALIAS_NUERNBERG']
+KEYSTORE_KEY_ALIAS_KOBLENZ = ENV['KEYSTORE_KEY_ALIAS_KOBLENZ']
 KEYSTORE_KEY_PASSWORD_BAYERN = ENV['KEYSTORE_KEY_PASSWORD_BAYERN']
 KEYSTORE_KEY_PASSWORD_NUERNBERG = ENV['KEYSTORE_KEY_PASSWORD_NUERNBERG']
-
+KEYSTORE_KEY_PASSWORD_KOBLENZ = ENV['KEYSTORE_KEY_PASSWORD_KOBLENZ']
 
 default_platform(:android)
 
@@ -81,9 +82,23 @@ platform :android do
 
     env_prod = sh("echo -n environment=production | base64")
 
-    tasks = ["bundle", "assemble"]
+    keystore_options = {}
 
-    tasks.each do | task |
+    case build_config_name
+    when 'nuernberg'
+      keystore_options[:KEYSTORE_KEY_ALIAS] = KEYSTORE_KEY_ALIAS_NUERNBERG
+      keystore_options[:KEYSTORE_KEY_PASSWORD] = KEYSTORE_KEY_PASSWORD_NUERNBERG
+    when 'koblenz'
+      keystore_options[:KEYSTORE_KEY_ALIAS] = KEYSTORE_KEY_ALIAS_KOBLENZ  # New case for Koblenz
+      keystore_options[:KEYSTORE_KEY_PASSWORD] = KEYSTORE_KEY_PASSWORD_KOBLENZ  # New case for Koblenz
+    else
+      keystore_options[:KEYSTORE_KEY_ALIAS] = KEYSTORE_KEY_ALIAS_BAYERN
+      keystore_options[:KEYSTORE_KEY_PASSWORD] = KEYSTORE_KEY_PASSWORD_BAYERN
+    end
+
+      tasks = ["bundle", "assemble"]
+
+    tasks.each do |task|
       gradle(
         task: task,
         flavor: build_config_name,
@@ -94,9 +109,9 @@ platform :android do
           :VERSION_NAME => version_name,
           :BUILD_CONFIG_NAME => build_config_name,
           :KEYSTORE_PATH => KEYSTORE_PATH,
-          :KEYSTORE_KEY_ALIAS => build_config_name == 'nuernberg' ? KEYSTORE_KEY_ALIAS_NUERNBERG : KEYSTORE_KEY_ALIAS_BAYERN, #todo
+          :KEYSTORE_KEY_ALIAS => keystore_options[:KEYSTORE_KEY_ALIAS],
           :KEYSTORE_PASSWORD => KEYSTORE_PASSWORD,
-          :KEYSTORE_KEY_PASSWORD => build_config_name == 'nuernberg' ? KEYSTORE_KEY_PASSWORD_NUERNBERG : KEYSTORE_KEY_PASSWORD_BAYERN, #todo
+          :KEYSTORE_KEY_PASSWORD => keystore_options[:KEYSTORE_KEY_PASSWORD],
         }.compact,
         system_properties: gradle_system_properties,
         print_command: false

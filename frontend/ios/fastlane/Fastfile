@@ -211,4 +211,16 @@ platform :ios do
       launch_arguments: [bundle_identifier]
     )
   end
+
+  lane :snap_koblenz do
+    sh "fvm flutter pub run build_runner build --define df_build_config=name=koblenz"
+    bundle_identifier = "app.sozialpass.koblenz"
+    capture_screenshots(
+      workspace: "Runner.xcworkspace",
+      scheme: "koblenz",
+      app_identifier: bundle_identifier,
+      output_directory: "./fastlane/screenshots/koblenz",
+      launch_arguments: [bundle_identifier]
+    )
+  end
 end
