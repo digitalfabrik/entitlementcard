@@ -104,11 +104,13 @@ const nuernberg: BuildConfigType = {
             excludeLocationPlayServices: false,
             excludeX86: false,
         },
+        appStoreLink: `https://play.google.com/store/apps/details?id=${ANDROID_APPLICATION_ID}`,
     },
     ios: {
         ...nuernbergCommon,
         bundleIdentifier: IOS_BUNDLE_IDENTIFIER,
         provisioningProfileSpecifier: "match AppStore app.sozialpass.nuernberg",
+        appStoreLink: "https://apps.apple.com/ky/app/n%C3%BCrnberg-pass/id1667599309",
     },
 }
 

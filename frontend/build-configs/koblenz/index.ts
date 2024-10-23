@@ -104,11 +104,13 @@ const koblenz: BuildConfigType = {
             excludeLocationPlayServices: false,
             excludeX86: false,
         },
+        appStoreLink: `https://play.google.com/store/apps/details?id=${ANDROID_APPLICATION_ID}`
     },
     ios: {
         ...koblenzCommon,
         bundleIdentifier: IOS_BUNDLE_IDENTIFIER,
         provisioningProfileSpecifier: "match AppStore app.sozialpass.koblenz",
+        appStoreLink: "https://apps.apple.com/de/app/koblenzpass/id6670392532"
     },
 }
 
