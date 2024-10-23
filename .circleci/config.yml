@@ -302,14 +302,6 @@ jobs:
                     - nuernberg
                     - koblenz
                 type: enum
-            flutterFlavor:
-                description: Flutter Flavor to use
-                enum:
-                    - Bayern
-                    - BayernFloss
-                    - Nuernberg
-                    - Koblenz
-                type: enum
         resource_class: large
         steps:
             - checkout:
@@ -337,17 +329,17 @@ jobs:
                 name: '[FL] Prepare Android Keystore'
                 working_directory: ~/project/frontend/android
             - run:
-                command: bundle exec fastlane android build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} flavor:<< parameters.flutterFlavor >> build_config_name:<< parameters.buildConfig >>
+                command: bundle exec fastlane android build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} build_config_name:<< parameters.buildConfig >>
                 name: '[FL] Build'
                 working_directory: ~/project/frontend/android
             - run:
                 command: mkdir -p attached_workspace
                 name: Make attached_workspace dir
             - run:
-                command: mv ~/project/frontend/build/app/outputs/bundle/<< parameters.flutterFlavor >>Release/app-<< parameters.flutterFlavor >>-release.aab ~/attached_workspace/<< parameters.buildConfig >>.aab
+                command: mv ~/project/frontend/build/app/outputs/bundle/<< parameters.buildConfig >>Release/app-<< parameters.buildConfig >>-release.aab ~/attached_workspace/<< parameters.buildConfig >>.aab
                 name: Move aab
             - run:
-                command: mv ~/project/frontend/build/app/outputs/apk/<< parameters.flutterFlavor >>/release/app-<< parameters.flutterFlavor >>-release.apk ~/attached_workspace/<< parameters.buildConfig >>.apk
+                command: mv ~/project/frontend/build/app/outputs/apk/<< parameters.buildConfig >>/release/app-<< parameters.buildConfig >>-release.apk ~/attached_workspace/<< parameters.buildConfig >>.apk
                 name: Move apk
             - persist_to_workspace:
                 paths:
@@ -404,13 +396,7 @@ jobs:
                     - bayern
                     - bayern-floss
                     - nuernberg
-                type: enum
-            flutterFlavor:
-                description: Flutter Flavor to use
-                enum:
-                    - Bayern
-                    - BayernFloss
-                    - Nuernberg
+                    - koblenz
                 type: enum
         steps:
             - checkout:
@@ -434,7 +420,7 @@ jobs:
                 working_directory: frontend/
             - restore_pods
             - run:
-                command: bundle exec fastlane ios build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} flavor:<< parameters.flutterFlavor >> build_config_name:<< parameters.buildConfig >>
+                command: bundle exec fastlane ios build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} build_config_name:<< parameters.buildConfig >>
                 name: '[FL] Build'
                 working_directory: frontend/ios
             - store_artifacts:
@@ -1151,7 +1137,6 @@ workflows:
                 context:
                     - credentials-repo
                     - credentials-ehrenamtskarte
-                flutterFlavor: Bayern
                 name: build_android_bayern
                 requires:
                     - bump_version
@@ -1161,7 +1146,6 @@ workflows:
                 context:
                     - tuerantuer-apple
                     - fastlane-match
-                flutterFlavor: Bayern
                 name: build_ios_bayern
                 requires:
                     - bump_version
@@ -1193,7 +1177,6 @@ workflows:
                 context:
                     - credentials-repo
                     - credentials-ehrenamtskarte
-                flutterFlavor: Bayern
                 name: build_android_bayern
                 requires:
                     - bump_version
@@ -1211,7 +1194,6 @@ workflows:
                 context:
                     - credentials-repo
                     - credentials-ehrenamtskarte
-                flutterFlavor: Nuernberg
                 name: build_android_nuernberg
                 requires:
                     - bump_version
@@ -1224,12 +1206,28 @@ workflows:
                 production_delivery: false
                 requires:
                     - build_android_nuernberg
+            - build_android:
+                buildConfig: koblenz
+                context:
+                    - credentials-repo
+                    - credentials-ehrenamtskarte
+                name: build_android_koblenz
+                requires:
+                    - bump_version
+                    - check_frontend
+            - deliver_android:
+                buildConfig: koblenz
+                context:
+                    - tuerantuer-google-play
+                name: deliver_android_koblenz
+                production_delivery: false
+                requires:
+                    - build_android_koblenz
             - build_ios:
                 buildConfig: bayern
                 context:
                     - tuerantuer-apple
                     - fastlane-match
-                flutterFlavor: Bayern
                 name: build_ios_bayern
                 requires:
                     - bump_version
@@ -1247,7 +1245,6 @@ workflows:
                 context:
                     - tuerantuer-apple
                     - fastlane-match
-                flutterFlavor: Nuernberg
                 name: build_ios_nuernberg
                 requires:
                     - bump_version
@@ -1260,6 +1257,23 @@ workflows:
                 production_delivery: false
                 requires:
                     - build_ios_nuernberg
+            - build_ios:
+                buildConfig: koblenz
+                context:
+                    - tuerantuer-apple
+                    - fastlane-match
+                name: build_ios_koblenz
+                requires:
+                    - bump_version
+                    - check_frontend
+            - deliver_ios:
+                buildConfig: koblenz
+                context:
+                    - tuerantuer-apple
+                name: deliver_ios_koblenz
+                production_delivery: false
+                requires:
+                    - build_ios_koblenz
             - notify_release:
                 context:
                     - deliverino
@@ -1486,7 +1500,6 @@ workflows:
                 context:
                     - credentials-repo
                     - credentials-ehrenamtskarte
-                flutterFlavor: Bayern
                 name: build_android_bayern
                 requires:
                     - bump_version
@@ -1504,7 +1517,6 @@ workflows:
                 context:
                     - credentials-repo
                     - credentials-ehrenamtskarte
-                flutterFlavor: Nuernberg
                 name: build_android_nuernberg
                 requires:
                     - bump_version
@@ -1522,7 +1534,6 @@ workflows:
                 context:
                     - tuerantuer-apple
                     - fastlane-match
-                flutterFlavor: Bayern
                 name: build_ios_bayern
                 requires:
                     - bump_version
@@ -1540,7 +1551,6 @@ workflows:
                 context:
                     - tuerantuer-apple
                     - fastlane-match
-                flutterFlavor: Nuernberg
                 name: build_ios_nuernberg
                 requires:
                     - bump_version
@@ -1576,7 +1586,6 @@ workflows:
                 context:
                     - credentials-repo
                     - credentials-ehrenamtskarte
-                flutterFlavor: Bayern
                 name: build_android_bayern
                 requires:
                     - bump_version
@@ -1594,7 +1603,6 @@ workflows:
                 context:
                     - credentials-repo
                     - credentials-ehrenamtskarte
-                flutterFlavor: Nuernberg
                 name: build_android_nuernberg
                 requires:
                     - bump_version
@@ -1612,7 +1620,6 @@ workflows:
                 context:
                     - tuerantuer-apple
                     - fastlane-match
-                flutterFlavor: Bayern
                 name: build_ios_bayern
                 requires:
                     - bump_version
@@ -1630,7 +1637,6 @@ workflows:
                 context:
                     - tuerantuer-apple
                     - fastlane-match
-                flutterFlavor: Nuernberg
                 name: build_ios_nuernberg
                 requires:
                     - bump_version
@@ -1658,31 +1664,26 @@ workflows:
             - check_frontend
             - build_android:
                 buildConfig: bayern-floss
-                flutterFlavor: BayernFloss
                 name: frontend-android-build-bayern-floss
                 requires:
                     - check_frontend
             - build_android:
                 buildConfig: bayern
-                flutterFlavor: Bayern
                 name: frontend-android-build-bayern
                 requires:
                     - check_frontend
             - build_ios:
                 buildConfig: bayern
-                flutterFlavor: Bayern
                 name: frontend-ios-build-bayern
                 requires:
                     - check_frontend
             - build_android:
                 buildConfig: nuernberg
-                flutterFlavor: Nuernberg
                 name: frontend-android-build-nuernberg
                 requires:
                     - check_frontend
             - build_ios:
                 buildConfig: nuernberg
-                flutterFlavor: Nuernberg
                 name: frontend-ios-build-nuernberg
                 requires:
                     - check_frontend

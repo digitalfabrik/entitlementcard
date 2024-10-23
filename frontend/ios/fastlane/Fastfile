@@ -59,17 +59,12 @@ platform :ios do
     version_code = options[:version_code]
     version_name = options[:version_name]
     build_config_name = options[:build_config_name]
-    flavor = options[:flavor]
 
     puts(version_code)
     puts(version_name)
 
     if [version_code, version_name, build_config_name].include?(nil)
       raise "'nil' passed as parameter! Aborting..."
-    end
-
-    if build_config_name != flavor.downcase
-      raise "flavor and build config not matching! Aborting..."
     end
 
     apple_auth
@@ -94,7 +89,7 @@ platform :ios do
 
     build_app(
        workspace: "Runner.xcworkspace",
-       scheme: flavor,
+       scheme: build_config_name,
        output_directory: "#{ENV['HOME']}",
        output_name: "#{build_config_name}.ipa",
        export_method: "app-store",

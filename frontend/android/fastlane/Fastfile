@@ -60,15 +60,10 @@ platform :android do
   lane :build do |options|
     version_code = options[:version_code]
     version_name = options[:version_name]
-    flavor = options[:flavor]
     build_config_name = options[:build_config_name]
 
     if [version_name, version_code].include?(nil)
       raise "'nil' passed as parameter! Aborting..."
-    end
-
-    if build_config_name != flavor.downcase
-      raise "flavor and build config not matching! Aborting..."
     end
 
     gradle_system_properties = {
@@ -91,7 +86,7 @@ platform :android do
     tasks.each do | task |
       gradle(
         task: task,
-        flavor: flavor,
+        flavor: build_config_name,
         flags: " -Ptarget=lib/main.dart -Pdart-defines=#{env_prod}",
         build_type: "Release",
         properties: {
@@ -99,9 +94,9 @@ platform :android do
           :VERSION_NAME => version_name,
           :BUILD_CONFIG_NAME => build_config_name,
           :KEYSTORE_PATH => KEYSTORE_PATH,
-          :KEYSTORE_KEY_ALIAS => flavor == 'Nuernberg' ? KEYSTORE_KEY_ALIAS_NUERNBERG : KEYSTORE_KEY_ALIAS_BAYERN,
+          :KEYSTORE_KEY_ALIAS => build_config_name == 'nuernberg' ? KEYSTORE_KEY_ALIAS_NUERNBERG : KEYSTORE_KEY_ALIAS_BAYERN, #todo
           :KEYSTORE_PASSWORD => KEYSTORE_PASSWORD,
-          :KEYSTORE_KEY_PASSWORD => flavor == 'Nuernberg' ? KEYSTORE_KEY_PASSWORD_NUERNBERG : KEYSTORE_KEY_PASSWORD_BAYERN,
+          :KEYSTORE_KEY_PASSWORD => build_config_name == 'nuernberg' ? KEYSTORE_KEY_PASSWORD_NUERNBERG : KEYSTORE_KEY_PASSWORD_BAYERN, #todo
         }.compact,
         system_properties: gradle_system_properties,
         print_command: false

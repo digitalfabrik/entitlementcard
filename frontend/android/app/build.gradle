@@ -70,17 +70,17 @@ android {
 
     flavorDimensions "dummy"
     productFlavors {
-        Bayern { flavor ->
+        bayern { flavor ->
             flavor.getIsDefault().set(true)
             setupApplication(flavor, "bayern")
         }
-        Nuernberg { flavor ->
+        nuernberg { flavor ->
             setupApplication(flavor, "nuernberg")
         }
-        Koblenz { flavor ->
+        koblenz { flavor ->
             setupApplication(flavor, "koblenz")
         }
-        BayernFloss { flavor ->
+        bayernFloss { flavor ->
             setupApplication(flavor, "bayern-floss")
         }
     }
@@ -153,16 +153,16 @@ android {
     }
 
     androidComponents {
-        onVariants(selector().withFlavor(new Pair("dummy", "Bayern")), { variant ->
+        onVariants(selector().withFlavor(new Pair("dummy", "bayern")), { variant ->
             setupVariant(variant, "bayern")
         })
-        onVariants(selector().withFlavor(new Pair("dummy", "Nuernberg")), { variant ->
+        onVariants(selector().withFlavor(new Pair("dummy", "nuernberg")), { variant ->
             setupVariant(variant, "nuernberg")
         })
-        onVariants(selector().withFlavor(new Pair("dummy", "Koblenz")), { variant ->
+        onVariants(selector().withFlavor(new Pair("dummy", "koblenz")), { variant ->
             setupVariant(variant, "koblenz")
         })
-        onVariants(selector().withFlavor(new Pair("dummy", "BayernFloss")), { variant ->
+        onVariants(selector().withFlavor(new Pair("dummy", "bayernFloss")), { variant ->
             setupVariant(variant, "bayern-floss")
         })
     }
