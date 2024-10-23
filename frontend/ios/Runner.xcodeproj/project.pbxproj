@@ -69,13 +69,6 @@
 			remoteGlobalIDString = AF5281419A326DD7CD6E32341946DFEE;
 			remoteInfo = "device_info_plus-device_info_plus_privacy";
 		};
-		2E0A7C292CBD161000793A25 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = E3C330B5F4227ED6FDC9FC042B5115D5;
-			remoteInfo = "flutter_secure_storage-flutter_secure_storage";
-		};
 		2E0A7C2B2CBD161000793A25 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0B1FA7F026DBD06400D4AEA7 /* Pods.xcodeproj */;
@@ -361,7 +354,6 @@
 				2E0A7C282CBD161000793A25 /* device_info_plus_privacy.bundle */,
 				2E44B0FF2ADED161006E42CD /* fk_user_agent.framework */,
 				0B1FA80826DBD06400D4AEA7 /* flutter_secure_storage.framework */,
-				2E0A7C2A2CBD161000793A25 /* flutter_secure_storage.bundle */,
 				0BE935D3274FD4CA004AF690 /* geolocator_apple.framework */,
 				2E0A7C2C2CBD161000793A25 /* geolocator_apple_privacy.bundle */,
 				502F2F2529803DDE00B6F8ED /* GoogleDataTransport.framework */,
@@ -616,13 +608,6 @@
 			fileType = wrapper.cfbundle;
 			path = device_info_plus_privacy.bundle;
 			remoteRef = 2E0A7C272CBD161000793A25 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		2E0A7C2A2CBD161000793A25 /* flutter_secure_storage.bundle */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = flutter_secure_storage.bundle;
-			remoteRef = 2E0A7C292CBD161000793A25 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		2E0A7C2C2CBD161000793A25 /* geolocator_apple_privacy.bundle */ = {
