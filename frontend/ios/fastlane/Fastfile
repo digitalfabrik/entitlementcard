@@ -193,7 +193,7 @@ platform :ios do
    bundle_identifier = "de.nrw.it.ehrensachebayern"
     capture_screenshots(
       workspace: "Runner.xcworkspace", 
-      scheme: "Bayern",
+      scheme: "bayern",
       app_identifier: bundle_identifier,
       output_directory: "./fastlane/screenshots/bayern",
       launch_arguments: [bundle_identifier]
@@ -205,7 +205,7 @@ platform :ios do
     bundle_identifier = "app.sozialpass.nuernberg"
     capture_screenshots(
       workspace: "Runner.xcworkspace", 
-      scheme: "Nuernberg", 
+      scheme: "nuernberg",
       app_identifier: bundle_identifier,
       output_directory: "./fastlane/screenshots/nuernberg",
       launch_arguments: [bundle_identifier]
