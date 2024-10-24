@@ -8,18 +8,15 @@ import 'package:provider/provider.dart';
 
 class RemoveCardConfirmationDialog extends StatefulWidget {
   final DynamicUserCode userCode;
-  final CarouselController carouselController;
 
-  const RemoveCardConfirmationDialog({super.key, required this.userCode, required this.carouselController});
+  const RemoveCardConfirmationDialog({super.key, required this.userCode});
 
-  static Future<void> show(
-          {required BuildContext context,
-          required DynamicUserCode userCode,
-          required CarouselController carouselController}) =>
-      showDialog(
+  static Future<bool> show(
+          {required BuildContext context, required DynamicUserCode userCode, CarouselController? carouselController}) =>
+      showDialog<bool>(
         context: context,
-        builder: (_) => RemoveCardConfirmationDialog(userCode: userCode, carouselController: carouselController),
-      );
+        builder: (_) => RemoveCardConfirmationDialog(userCode: userCode),
+      ).then((removed) => removed ?? false);
 
   @override
   RemoveCardConfirmationDialogState createState() => RemoveCardConfirmationDialogState();
@@ -33,7 +30,6 @@ class RemoveCardConfirmationDialogState extends State<RemoveCardConfirmationDial
       userCodeModel.removeCodes();
     } else {
       userCodeModel.removeCode(widget.userCode);
-      widget.carouselController.previousPage(duration: Duration(milliseconds: 500), curve: Curves.linear);
     }
     Navigator.of(context).pop(true);
   }

@@ -38,6 +38,7 @@
     "headline": "Pass aktivieren",
     "description": "Wollen Sie diesen Pass aktivieren?",
     "limitReached": "Ihr Passlimit wurde erreicht. Bitte entfernen Sie vorher einen Pass, damit Sie einen neuen aktivieren können.",
+    "replaceCard": "Sie haben bereits einen aktivierten Pass auf diesem Gerät. Wenn Sie fortfahren, wird der alte Pass gelöscht.",
     "buttonText": "Pass aktivieren",
     "invalidCode": "Ihr Aktivierungscode ist ungültig.",
     "alreadyExists": "Dieser Pass wurde bereits auf dem Gerät aktiviert.",

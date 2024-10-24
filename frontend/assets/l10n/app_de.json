@@ -73,6 +73,7 @@
     "headline": "Karte aktivieren",
     "description": "Wollen Sie diese Karte aktivieren?",
     "limitReached": "Ihr Kartenlimit wurde erreicht. Bitte entfernen Sie vorher eine Karte, damit Sie eine neue aktivieren können.",
+    "replaceCard": "Sie haben bereits eine aktivierte Karte auf diesem Gerät. Wenn Sie fortfahren, wird die alte Karte gelöscht.",
     "buttonText": "Karte aktivieren",
     "invalidCode": "Ihr Aktivierungscode ist ungültig.",
     "alreadyExists": "Diese Karte wurde bereits auf dem Gerät aktiviert.",

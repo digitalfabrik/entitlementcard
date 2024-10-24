@@ -5,6 +5,7 @@ import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/home/home_page.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_parser.dart';
 import 'package:ehrenamtskarte/identification/id_card/id_card_with_region_query.dart';
+import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/remove_card_confirmation_dialog.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:ehrenamtskarte/identification/util/activate_card.dart';
@@ -18,11 +19,14 @@ enum DeepLinkActivationStatus {
   /// Link is invalid
   invalidLink,
 
-  /// The card already exists on the device.
+  /// The card already exists on the device
   alreadyExists,
 
-  /// The card limit is reached on the device.
+  /// The card limit is reached on the device
   limitReached,
+
+  /// The old card can be removed during the activation
+  validToReplace,
 
   /// The card can be activated
   valid;
@@ -30,13 +34,17 @@ enum DeepLinkActivationStatus {
   factory DeepLinkActivationStatus.from(UserCodeModel userCodeModel, DynamicActivationCode? activationCode) {
     if (activationCode == null) {
       return DeepLinkActivationStatus.invalidLink;
-    } else if (isAlreadyInList(userCodeModel.userCodes, activationCode.info)) {
-      return DeepLinkActivationStatus.alreadyExists;
-    } else if (hasReachedCardLimit(userCodeModel.userCodes)) {
-      return DeepLinkActivationStatus.limitReached;
-    } else {
-      return DeepLinkActivationStatus.valid;
     }
+    if (isAlreadyInList(userCodeModel.userCodes, activationCode.info)) {
+      return DeepLinkActivationStatus.alreadyExists;
+    }
+    final hasReachedLimit = hasReachedCardLimit(userCodeModel.userCodes);
+    if (hasReachedLimit) {
+      return userCodeModel.userCodes.length == 1
+          ? DeepLinkActivationStatus.validToReplace
+          : DeepLinkActivationStatus.limitReached;
+    }
+    return DeepLinkActivationStatus.valid;
   }
 }
 
@@ -103,39 +111,9 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
                 child: Column(mainAxisSize: MainAxisSize.min, children: [
                   if (_state == _State.waiting) _WarningText(status, userCodeModel),
                   ElevatedButton.icon(
-                    onPressed:
-                        activationCode != null && _state == _State.waiting && status == DeepLinkActivationStatus.valid
-                            ? () async {
-                                setState(() {
-                                  _state = _State.loading;
-                                });
-                                try {
-                                  final activated = await activateCard(context, activationCode);
-                                  if (activated) {
-                                    GoRouter.of(context).pushReplacement('$homeRouteName/$identityTabIndex');
-                                    setState(() {
-                                      _state = _State.success;
-                                    });
-                                  } else {
-                                    setState(() {
-                                      _state = _State.waiting;
-                                    });
-                                  }
-                                } catch (_) {
-                                  setState(() {
-                                    _state = _State.waiting;
-                                  });
-                                  // TODO 1656: Improve error handling!!
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      backgroundColor: Theme.of(context).colorScheme.primary,
-                                      content: Text(t.common.unknownError),
-                                    ),
-                                  );
-                                  rethrow;
-                                }
-                              }
-                            : null,
+                    onPressed: _isActivationAllowed(activationCode, status)
+                        ? () async => await _onPressed(activationCode!, status, userCodeModel)
+                        : null,
                     icon: _state != _State.waiting
                         ? Container(
                             width: 24,
@@ -154,6 +132,57 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
           )),
     );
   }
+
+  bool _isActivationAllowed(DynamicActivationCode? activationCode, DeepLinkActivationStatus status) {
+    if (activationCode == null || _state != _State.waiting) {
+      return false;
+    }
+    return status == DeepLinkActivationStatus.valid || status == DeepLinkActivationStatus.validToReplace;
+  }
+
+  Future<void> _onPressed(
+      DynamicActivationCode activationCode, DeepLinkActivationStatus status, UserCodeModel userCodeModel) async {
+    if (status == DeepLinkActivationStatus.validToReplace) {
+      final removed = await _removeOldCard(userCodeModel);
+      if (!removed) return;
+    }
+    await _activateCard(activationCode);
+  }
+
+  Future<bool> _removeOldCard(UserCodeModel userCodeModel) async {
+    return await RemoveCardConfirmationDialog.show(context: context, userCode: userCodeModel.userCodes.single);
+  }
+
+  Future<void> _activateCard(DynamicActivationCode activationCode) async {
+    setState(() {
+      _state = _State.loading;
+    });
+    try {
+      final activated = await activateCard(context, activationCode);
+      if (activated) {
+        GoRouter.of(context).pushReplacement('$homeRouteName/$identityTabIndex');
+        setState(() {
+          _state = _State.success;
+        });
+      } else {
+        setState(() {
+          _state = _State.waiting;
+        });
+      }
+    } catch (_) {
+      setState(() {
+        _state = _State.waiting;
+      });
+      // TODO 1656: Improve error handling!!
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          content: Text(t.common.unknownError),
+        ),
+      );
+      rethrow;
+    }
+  }
 }
 
 class _WarningText extends StatelessWidget {
@@ -168,6 +197,7 @@ class _WarningText extends StatelessWidget {
     final String maxCardAmount = buildConfig.maxCardAmount.toString();
     final text = switch (status) {
       DeepLinkActivationStatus.invalidLink => t.deeplinkActivation.activationInvalid,
+      DeepLinkActivationStatus.validToReplace => t.deeplinkActivation.replaceCard,
       DeepLinkActivationStatus.limitReached => '${t.deeplinkActivation.limitReached} ($cardsInUse/$maxCardAmount)',
       DeepLinkActivationStatus.alreadyExists => t.deeplinkActivation.alreadyExists,
       DeepLinkActivationStatus.valid => '',
