@@ -22,23 +22,25 @@ export type CardBlueprint = {
 
 const createRandomId = () => Math.floor(Math.random() * 1000000)
 
+const getInitialExtensionState = (cardConfig: CardConfig, region: Region | undefined) =>
+  cardConfig.extensions.reduce(
+    (acc, extension) =>
+      Object.assign(acc, extension.getInitialState(extension.name === REGION_EXTENSION_NAME ? region : undefined)),
+    {}
+  )
+
 export const initializeCardBlueprint = (
   cardConfig: CardConfig,
   region: Region | undefined = undefined,
   { id, fullName, expirationDate, extensions }: Partial<CardBlueprint> = {}
 ): CardBlueprint => {
   const defaultExpirationDate = PlainDate.fromLocalDate(new Date()).add(cardConfig.defaultValidity)
-  const defaultExtensions = cardConfig.extensions.reduce(
-    (acc, extension) =>
-      Object.assign(acc, extension.getInitialState(extension.name === REGION_EXTENSION_NAME ? region : undefined)),
-    {}
-  )
 
   return {
     id: id ?? createRandomId(),
     fullName: fullName ?? '',
     extensions: {
-      ...defaultExtensions,
+      ...getInitialExtensionState(cardConfig, region),
       ...(extensions ?? {}),
     },
     expirationDate: expirationDate === undefined ? defaultExpirationDate : expirationDate,
@@ -173,7 +175,10 @@ export const initializeCardFromCSV = (
     id: createRandomId(),
     fullName,
     expirationDate,
-    extensions,
+    extensions: {
+      ...getInitialExtensionState(cardConfig, region),
+      ...extensions,
+    },
   }
 }
 
