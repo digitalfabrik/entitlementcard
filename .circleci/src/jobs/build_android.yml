@@ -4,11 +4,7 @@ parameters:
   buildConfig:
     description: "Name of the build config to use"
     type: enum
-    enum: ['bayern', 'bayern-floss', 'nuernberg', 'koblenz']
-  flutterFlavor:
-    description: "Flutter Flavor to use"
-    type: enum
-    enum: ['Bayern', 'BayernFloss', 'Nuernberg', 'Koblenz']
+    enum: [bayern, bayernFloss, nuernberg, koblenz]
 environment:
   GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m" -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2'
 resource_class: large
@@ -39,17 +35,17 @@ steps:
       working_directory: ~/project/frontend/android
   - run:
       name: '[FL] Build'
-      command: bundle exec fastlane android build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} flavor:<< parameters.flutterFlavor >> build_config_name:<< parameters.buildConfig >>
+      command: bundle exec fastlane android build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} build_config_name:<< parameters.buildConfig >>
       working_directory: ~/project/frontend/android
   - run:
       name: Make attached_workspace dir
       command: mkdir -p attached_workspace
   - run:
       name: Move aab
-      command: mv ~/project/frontend/build/app/outputs/bundle/<< parameters.flutterFlavor >>Release/app-<< parameters.flutterFlavor >>-release.aab ~/attached_workspace/<< parameters.buildConfig >>.aab
+      command: mv ~/project/frontend/build/app/outputs/bundle/<< parameters.buildConfig >>Release/app-<< parameters.buildConfig >>-release.aab ~/attached_workspace/<< parameters.buildConfig >>.aab
   - run:
       name: Move apk
-      command: mv ~/project/frontend/build/app/outputs/apk/<< parameters.flutterFlavor >>/release/app-<< parameters.flutterFlavor >>-release.apk ~/attached_workspace/<< parameters.buildConfig >>.apk
+      command: mv ~/project/frontend/build/app/outputs/apk/<< parameters.buildConfig >>/release/app-<< parameters.buildConfig >>-release.apk ~/attached_workspace/<< parameters.buildConfig >>.apk
   - persist_to_workspace:
       root: ~/attached_workspace
       paths:

@@ -42,7 +42,7 @@
       </BuildActionEntries>
    </BuildAction>
    <TestAction
-      buildConfiguration = "Debug-Nuernberg"
+      buildConfiguration = "Debug-nuernberg"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "NO">
@@ -76,7 +76,7 @@
       </Testables>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Debug-Nuernberg"
+      buildConfiguration = "Debug-nuernberg"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
@@ -97,7 +97,7 @@
       </BuildableProductRunnable>
    </LaunchAction>
    <ProfileAction
-      buildConfiguration = "Release-Nuernberg"
+      buildConfiguration = "Release-nuernberg"
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
@@ -114,10 +114,10 @@
       </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
-      buildConfiguration = "Debug-Nuernberg">
+      buildConfiguration = "Debug-nuernberg">
    </AnalyzeAction>
    <ArchiveAction
-      buildConfiguration = "Release-Nuernberg"
+      buildConfiguration = "Release-nuernberg"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>
