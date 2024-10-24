@@ -6,7 +6,7 @@ import {
   HTTPS_SCHEME,
 } from 'build-configs'
 
-import { generateCardInfo, initializeCardBlueprint } from '../../cards/Card'
+import { generateCardInfo, initializeCard } from '../../cards/Card'
 import { CreateCardsResult } from '../../cards/createCards'
 import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
@@ -36,7 +36,7 @@ describe('DeepLink generation', () => {
     extensions: [BavariaCardTypeExtension, RegionExtension],
   }
 
-  const card = initializeCardBlueprint(cardConfigBayern, region, { fullName: 'Thea Test' })
+  const card = initializeCard(cardConfigBayern, region, { fullName: 'Thea Test' })
   const code: CreateCardsResult = {
     dynamicCardInfoHashBase64: 'rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=',
     dynamicActivationCode: new DynamicActivationCode({ info: generateCardInfo(card) }),

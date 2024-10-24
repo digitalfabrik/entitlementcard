@@ -1,9 +1,9 @@
-import { Button, Card, FormGroup, InputGroup, Intent } from '@blueprintjs/core'
+import { Button, FormGroup, InputGroup, Intent, Card as UiCard } from '@blueprintjs/core'
 import { TextField } from '@mui/material'
 import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
-import { CardBlueprint, hasInfiniteLifetime, isExpirationDateValid, isFullNameValid } from '../../cards/Card'
+import { Card, hasInfiniteLifetime, isExpirationDateValid, isFullNameValid } from '../../cards/Card'
 import PlainDate from '../../util/PlainDate'
 import ExtensionForms from './ExtensionForms'
 
@@ -16,17 +16,17 @@ const CardHeader = styled.div`
 `
 
 type CreateCardsFormProps = {
-  cardBlueprint: CardBlueprint
-  updateCard: (cardBlueprint: Partial<CardBlueprint>) => void
+  card: Card
+  updateCard: (card: Partial<Card>) => void
   onRemove: () => void
 }
 
 export const maxCardValidity = { years: 99 }
 
-const AddCardForm = ({ cardBlueprint, onRemove, updateCard }: CreateCardsFormProps): ReactElement => {
+const AddCardForm = ({ card, onRemove, updateCard }: CreateCardsFormProps): ReactElement => {
   const today = PlainDate.fromLocalDate(new Date())
   return (
-    <Card>
+    <UiCard>
       <CardHeader>
         <Button minimal icon='cross' onClick={() => onRemove()} />
       </CardHeader>
@@ -35,20 +35,20 @@ const AddCardForm = ({ cardBlueprint, onRemove, updateCard }: CreateCardsFormPro
           placeholder='Erika Mustermann'
           autoFocus
           // If the size of the card is too large, show a warning at the name field as it is the only dynamically sized field
-          intent={isFullNameValid(cardBlueprint) ? undefined : Intent.DANGER}
-          value={cardBlueprint.fullName}
+          intent={isFullNameValid(card) ? undefined : Intent.DANGER}
+          value={card.fullName}
           onChange={event => updateCard({ fullName: event.target.value })}
         />
       </FormGroup>
-      {!hasInfiniteLifetime(cardBlueprint) && (
+      {!hasInfiniteLifetime(card) && (
         <FormGroup label='Ablaufdatum'>
           <TextField
             fullWidth
             type='date'
             required
             size='small'
-            error={!isExpirationDateValid(cardBlueprint)}
-            value={cardBlueprint.expirationDate?.toString()}
+            error={!isExpirationDateValid(card)}
+            value={card.expirationDate?.toString()}
             sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' }, '& fieldset': { borderRadius: 0 } }}
             inputProps={{
               style: { fontSize: 14, padding: '6px 10px' },
@@ -59,8 +59,8 @@ const AddCardForm = ({ cardBlueprint, onRemove, updateCard }: CreateCardsFormPro
           />
         </FormGroup>
       )}
-      <ExtensionForms cardBlueprint={cardBlueprint} updateCard={updateCard} />
-    </Card>
+      <ExtensionForms card={card} updateCard={updateCard} />
+    </UiCard>
   )
 }
 

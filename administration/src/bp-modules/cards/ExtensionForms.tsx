@@ -1,15 +1,15 @@
 import React, { ReactElement } from 'react'
 
-import { CardBlueprint, getExtensions } from '../../cards/Card'
+import { Card, getExtensions } from '../../cards/Card'
 
 type ExtensionFormsProps = {
-  cardBlueprint: CardBlueprint
-  updateCard: (cardBlueprint: Partial<CardBlueprint>) => void
+  card: Card
+  updateCard: (card: Partial<Card>) => void
 }
 
-const ExtensionForms = ({ cardBlueprint, updateCard }: ExtensionFormsProps): ReactElement => (
+const ExtensionForms = ({ card, updateCard }: ExtensionFormsProps): ReactElement => (
   <>
-    {getExtensions(cardBlueprint).map(({ extension: { Component, ...extension }, state }) => (
+    {getExtensions(card).map(({ extension: { Component, ...extension }, state }) => (
       <Component
         key={extension.name}
         value={state}

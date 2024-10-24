@@ -2,7 +2,7 @@ import { DynamicActivationCode } from '../../generated/card_pb'
 import { Region } from '../../generated/graphql'
 import bayernConfig from '../../project-configs/bayern/config'
 import nuernbergConfig from '../../project-configs/nuernberg/config'
-import { generateCardInfo, initializeCardBlueprint } from '../Card'
+import { generateCardInfo, initializeCard } from '../Card'
 import { CsvError, generateCsv, getCSVFilename } from '../CsvFactory'
 import { CreateCardsResult } from '../createCards'
 import { NUERNBERG_PASS_ID_EXTENSION_NAME } from '../extensions/NuernbergPassIdExtension'
@@ -27,7 +27,7 @@ describe('CsvFactory', () => {
   it('should use pass id for single cards export', () => {
     const testPassId = 86152
     const cards = [
-      initializeCardBlueprint(nuernbergConfig.card, nuernberg, {
+      initializeCard(nuernbergConfig.card, nuernberg, {
         fullName: 'Thea Test',
         extensions: {
           [NUERNBERG_PASS_ID_EXTENSION_NAME]: testPassId,
@@ -40,15 +40,15 @@ describe('CsvFactory', () => {
 
   it('should use bulkname for multiple cards export', () => {
     const cards = [
-      initializeCardBlueprint(nuernbergConfig.card, nuernberg, { fullName: 'Thea Test' }),
-      initializeCardBlueprint(nuernbergConfig.card, nuernberg, { fullName: 'Theo Test' }),
+      initializeCard(nuernbergConfig.card, nuernberg, { fullName: 'Thea Test' }),
+      initializeCard(nuernbergConfig.card, nuernberg, { fullName: 'Theo Test' }),
     ]
     const filename = getCSVFilename(cards)
     expect(filename).toBe('SozialpassMassExport.csv')
   })
 
   it('should throw error if csv export is disabled', () => {
-    const cards = [initializeCardBlueprint(nuernbergConfig.card, nuernberg, { fullName: 'Thea Test' })]
+    const cards = [initializeCard(nuernbergConfig.card, nuernberg, { fullName: 'Thea Test' })]
 
     const codes: CreateCardsResult[] = [
       {

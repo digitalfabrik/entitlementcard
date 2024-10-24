@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 
 import { FREINET_PARAM } from '../../Router'
 import { WhoAmIContext } from '../../WhoAmIProvider'
-import { CardBlueprint, initializeCardFromCSV } from '../../cards/Card'
+import { Card, initializeCardFromCSV } from '../../cards/Card'
 import { Region } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { ProjectConfig } from '../../project-configs/getProjectConfig'
@@ -23,8 +23,7 @@ export const getHeaders = (projectConfig: ProjectConfig): string[] => [
 ]
 
 const InnerImportCardsController = ({ region }: { region: Region }): ReactElement => {
-  const { state, setState, generateCardsPdf, generateCardsCsv, setCardBlueprints, cardBlueprints } =
-    useCardGenerator(region)
+  const { state, setState, generateCardsPdf, generateCardsCsv, setCards, cards } = useCardGenerator(region)
   const projectConfig = useContext(ProjectConfigContext)
   const headers = useMemo(() => getHeaders(projectConfig), [projectConfig])
   const navigate = useNavigate()
@@ -32,21 +31,21 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
   const isFreinetFormat = new URLSearchParams(useLocation().search).get(FREINET_PARAM) === 'true'
 
   useBlockNavigation({
-    when: cardBlueprints.length > 0,
+    when: cards.length > 0,
     message: 'Falls Sie fortfahren, werden alle Eingaben verworfen.',
   })
 
   const goBack = () => {
-    if (!cardBlueprints.length) {
+    if (!cards.length) {
       navigate('/cards')
     } else {
-      setCardBlueprints([])
+      setCards([])
     }
   }
 
   // TODO headers or csvHeader?
   const lineToBlueprint = useCallback(
-    (line: string[], csvHeader: string[]): CardBlueprint => {
+    (line: string[], csvHeader: string[]): Card => {
       if (isFreinetFormat) {
         convertFreinetImport(line, csvHeader, projectConfig)
       }
@@ -62,7 +61,7 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
     return (
       <GenerationFinished
         reset={() => {
-          setCardBlueprints([])
+          setCards([])
           setState(CardActivationState.input)
         }}
       />
@@ -71,18 +70,18 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
 
   return (
     <>
-      {cardBlueprints.length === 0 ? (
+      {cards.length === 0 ? (
         <ImportCardsInput
-          setCardBlueprints={setCardBlueprints}
-          lineToBlueprint={lineToBlueprint}
+          setCards={setCards}
+          lineToCard={lineToBlueprint}
           headers={headers}
           isFreinetFormat={isFreinetFormat}
         />
       ) : (
-        <CardImportTable cardBlueprints={cardBlueprints} cardConfig={projectConfig.card} headers={headers} />
+        <CardImportTable cards={cards} cardConfig={projectConfig.card} headers={headers} />
       )}
       <CreateCardsButtonBar
-        cardBlueprints={cardBlueprints}
+        cards={cards}
         goBack={goBack}
         generateCardsPdf={() => generateCardsPdf()}
         generateCardsCsv={() => generateCardsCsv()}

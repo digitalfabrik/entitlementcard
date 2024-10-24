@@ -2,7 +2,7 @@ import { NonIdealState } from '@blueprintjs/core'
 import React, { ChangeEventHandler, ReactElement, useCallback, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import { CardBlueprint } from '../../cards/Card'
+import { Card } from '../../cards/Card'
 import { useAppToaster } from '../AppToaster'
 import FileInputStateIcon from '../FileInputStateIcon'
 import ImportCardsRequirementsText from './ImportCardsRequirementsText'
@@ -29,17 +29,12 @@ export const ENTRY_LIMIT = 300
 
 type ImportCardsInputProps = {
   headers: string[]
-  setCardBlueprints: (cardBlueprints: CardBlueprint[]) => void
-  lineToBlueprint: (line: string[], csvHeader: string[]) => CardBlueprint
+  setCards: (cards: Card[]) => void
+  lineToCard: (line: string[], csvHeader: string[]) => Card
   isFreinetFormat: boolean
 }
 
-const ImportCardsInput = ({
-  setCardBlueprints,
-  lineToBlueprint,
-  headers,
-  isFreinetFormat,
-}: ImportCardsInputProps): ReactElement => {
+const ImportCardsInput = ({ setCards, lineToCard, headers, isFreinetFormat }: ImportCardsInputProps): ReactElement => {
   const [inputState, setInputState] = useState<'loading' | 'error' | 'idle'>('idle')
   const fileInput = useRef<HTMLInputElement>(null)
   const appToaster = useAppToaster()
@@ -87,12 +82,12 @@ const ImportCardsInput = ({
       }
 
       const csvHeader = lines.shift() ?? []
-      const blueprints = lines.map(line => lineToBlueprint(line, csvHeader))
+      const blueprints = lines.map(line => lineToCard(line, csvHeader))
 
-      setCardBlueprints(blueprints)
+      setCards(blueprints)
       setInputState('idle')
     },
-    [lineToBlueprint, setCardBlueprints, showInputError]
+    [lineToCard, setCards, showInputError]
   )
 
   const onInputChange: ChangeEventHandler<HTMLInputElement> = event => {

@@ -2,12 +2,12 @@ import { Color, PDFFont, PDFPage, RotationTypes } from 'pdf-lib'
 
 import { CardInfo } from '../../generated/card_pb'
 import { Region } from '../../generated/graphql'
-import { CardBlueprint } from '../Card'
+import { Card } from '../Card'
 import { Coordinates, PdfElement, mmToPt } from './PdfElements'
 
 export type InfoParams = {
   info: CardInfo
-  cardBlueprint: CardBlueprint
+  card: Card
   cardInfoHash: string
   region?: Region
 }
@@ -26,16 +26,16 @@ type PdfTextElementRendererProps = {
   page: PDFPage
   font: PDFFont
   info: CardInfo
-  cardBlueprint: CardBlueprint
+  card: Card
   cardInfoHash: string
   region?: Region
 }
 
 const pdfTextElement: PdfElement<PdfTextElementProps, PdfTextElementRendererProps> = (
   { maxWidth, x, y, fontSize, infoToText, spacing = 1, angle = 0, color = undefined, textAlign = 'left' },
-  { page, font, info, region, cardBlueprint, cardInfoHash }
+  { page, font, info, region, card, cardInfoHash }
 ) => {
-  const text = infoToText({ info, region, cardBlueprint, cardInfoHash })
+  const text = infoToText({ info, region, card, cardInfoHash })
 
   let xPt: number
   switch (textAlign) {

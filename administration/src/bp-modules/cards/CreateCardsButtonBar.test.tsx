@@ -1,7 +1,7 @@
 import { act, fireEvent, render } from '@testing-library/react'
 import React, { ReactNode } from 'react'
 
-import { initializeCardBlueprint } from '../../cards/Card'
+import { initializeCard } from '../../cards/Card'
 import { Region } from '../../generated/graphql'
 import { ProjectConfigProvider } from '../../project-configs/ProjectConfigContext'
 import bayernConfig from '../../project-configs/bayern/config'
@@ -25,7 +25,7 @@ describe('CreateCardsButtonBar', () => {
     const { getByText } = render(
       <CreateCardsButtonBar
         goBack={goBack}
-        cardBlueprints={[]}
+        cards={[]}
         generateCardsPdf={() => Promise.resolve()}
         generateCardsCsv={() => Promise.resolve()}
       />,
@@ -47,7 +47,7 @@ describe('CreateCardsButtonBar', () => {
     const { getByText } = render(
       <CreateCardsButtonBar
         goBack={() => undefined}
-        cardBlueprints={[]}
+        cards={[]}
         generateCardsPdf={generateCardsPdf}
         generateCardsCsv={generateCardsCsv}
       />,
@@ -71,11 +71,11 @@ describe('CreateCardsButtonBar', () => {
   it('Should disable generate button for invalid cards', async () => {
     const generateCardsPdf = jest.fn()
     const generateCardsCsv = jest.fn()
-    const cards = [initializeCardBlueprint(bayernConfig.card, region, { fullName: '' })]
+    const cards = [initializeCard(bayernConfig.card, region, { fullName: '' })]
     const { getByText } = render(
       <CreateCardsButtonBar
         goBack={() => undefined}
-        cardBlueprints={cards}
+        cards={cards}
         generateCardsPdf={generateCardsPdf}
         generateCardsCsv={generateCardsCsv}
       />,
@@ -100,11 +100,11 @@ describe('CreateCardsButtonBar', () => {
   it('Should generate valid cards', async () => {
     const generateCardsPdf = jest.fn()
     const generateCardsCsv = jest.fn()
-    const cards = [initializeCardBlueprint(bayernConfig.card, region, { fullName: 'Thea Test' })]
+    const cards = [initializeCard(bayernConfig.card, region, { fullName: 'Thea Test' })]
     const { getByText } = render(
       <CreateCardsButtonBar
         goBack={() => undefined}
-        cardBlueprints={cards}
+        cards={cards}
         generateCardsPdf={generateCardsPdf}
         generateCardsCsv={generateCardsCsv}
       />,

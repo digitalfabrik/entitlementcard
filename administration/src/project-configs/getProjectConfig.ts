@@ -10,7 +10,7 @@ import { ReactElement, ReactNode } from 'react'
 
 import { JsonField } from '../bp-modules/applications/JsonFieldView'
 import { ActivityLog } from '../bp-modules/user-settings/ActivityLog'
-import { CardBlueprint } from '../cards/Card'
+import { Card } from '../cards/Card'
 import { CreateCardsResult } from '../cards/createCards'
 import { Extension } from '../cards/extensions/extensions'
 import { PdfFormElementProps } from '../cards/pdf/PdfFormElement'
@@ -59,7 +59,7 @@ export type CsvExport =
   | {
       enabled: true
       csvHeader: string[]
-      buildCsvLine: (createCardsResult: CreateCardsResult, cardBlueprint: CardBlueprint) => string
+      buildCsvLine: (createCardsResult: CreateCardsResult, card: Card) => string
     }
   | {
       enabled: false

@@ -1,7 +1,7 @@
 import { ApolloError } from '@apollo/client'
 import { useCallback, useContext, useState } from 'react'
 
-import { CardBlueprint, generateCardInfo, initializeCardBlueprint } from '../../../cards/Card'
+import { Card, generateCardInfo, initializeCard } from '../../../cards/Card'
 import { generatePdf } from '../../../cards/PdfFactory'
 import { CreateCardsError, CreateCardsResult } from '../../../cards/createCards'
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
@@ -25,8 +25,8 @@ type UseCardGeneratorSelfServiceReturn = {
   isLoading: boolean
   deepLink: string
   code: CreateCardsResult | null
-  selfServiceCard: CardBlueprint
-  setSelfServiceCard: (card: CardBlueprint) => void
+  selfServiceCard: Card
+  setSelfServiceCard: (card: Card) => void
   generateCards: () => Promise<void>
   downloadPdf: (code: CreateCardsResult, fileName: string) => Promise<void>
 }
@@ -35,7 +35,7 @@ const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
   const projectConfig = useContext(ProjectConfigContext)
   const appToaster = useAppToaster()
   const [selfServiceCard, setSelfServiceCard] = useState(
-    initializeCardBlueprint(projectConfig.card, undefined, { expirationDate: null })
+    initializeCard(projectConfig.card, undefined, { expirationDate: null })
   )
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [selfServiceState, setSelfServiceState] = useState<CardSelfServiceStep>(CardSelfServiceStep.form)

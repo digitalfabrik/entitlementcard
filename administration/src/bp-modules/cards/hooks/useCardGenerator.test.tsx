@@ -4,7 +4,7 @@ import { act, renderHook } from '@testing-library/react'
 import { mocked } from 'jest-mock'
 import React, { ReactNode } from 'react'
 
-import { generateCardInfo, initializeCardBlueprint } from '../../../cards/Card'
+import { Card, generateCardInfo, initializeCard } from '../../../cards/Card'
 import { PdfError, generatePdf } from '../../../cards/PdfFactory'
 import createCards, { CreateCardsError, CreateCardsResult } from '../../../cards/createCards'
 import deleteCards from '../../../cards/deleteCards'
@@ -46,8 +46,8 @@ describe('useCardGenerator', () => {
   }
 
   const cards = [
-    initializeCardBlueprint(bayernConfig.card, region, { fullName: 'Thea Test' }),
-    initializeCardBlueprint(bayernConfig.card, region, { fullName: 'Thea Test' }),
+    initializeCard(bayernConfig.card, region, { fullName: 'Thea Test' }),
+    initializeCard(bayernConfig.card, region, { fullName: 'Thea Test' }),
   ]
   const codes: CreateCardsResult[] = [
     {
@@ -69,9 +69,9 @@ describe('useCardGenerator', () => {
     mocked(createCards).mockReturnValueOnce(Promise.resolve(codes))
     const { result } = renderHook(() => useCardGenerator(region), { wrapper })
 
-    act(() => result.current.setCardBlueprints(cards))
+    act(() => result.current.setCards(cards))
 
-    expect(result.current.cardBlueprints).toEqual(cards)
+    expect(result.current.cards).toEqual(cards)
     await act(async () => {
       await result.current.generateCardsPdf()
     })
@@ -80,7 +80,7 @@ describe('useCardGenerator', () => {
     expect(createCards).toHaveBeenCalled()
     expect(downloadDataUri).toHaveBeenCalled()
     expect(result.current.state).toBe(CardActivationState.finished)
-    expect(result.current.cardBlueprints).toEqual([])
+    expect(result.current.cards).toEqual([])
   })
 
   it('should show error message for failed card generation', async () => {
@@ -91,9 +91,9 @@ describe('useCardGenerator', () => {
 
     const { result } = renderHook(() => useCardGenerator(region), { wrapper })
 
-    act(() => result.current.setCardBlueprints(cards))
+    act(() => result.current.setCards(cards))
 
-    expect(result.current.cardBlueprints).toEqual(cards)
+    expect(result.current.cards).toEqual(cards)
     await act(async () => {
       await result.current.generateCardsPdf()
     })
@@ -101,7 +101,7 @@ describe('useCardGenerator', () => {
     expect(toasterSpy).toHaveBeenCalledWith({ message: 'error', intent: 'danger' })
     expect(downloadDataUri).not.toHaveBeenCalled()
     expect(result.current.state).toBe(CardActivationState.input)
-    expect(result.current.cardBlueprints).toEqual([])
+    expect(result.current.cards).toEqual([])
   })
 
   it('should show error message and run rollback for failed pdf generation', async () => {
@@ -114,9 +114,9 @@ describe('useCardGenerator', () => {
 
     const { result } = renderHook(() => useCardGenerator(region), { wrapper })
 
-    act(() => result.current.setCardBlueprints(cards))
+    act(() => result.current.setCards(cards))
 
-    expect(result.current.cardBlueprints).toEqual(cards)
+    expect(result.current.cards).toEqual(cards)
     await act(async () => {
       await result.current.generateCardsPdf()
     })
@@ -131,6 +131,6 @@ describe('useCardGenerator', () => {
     expect(deleteCards).toHaveBeenCalledWith(expect.anything(), region.id, codesToDelete)
     expect(downloadDataUri).not.toHaveBeenCalled()
     expect(result.current.state).toBe(CardActivationState.input)
-    expect(result.current.cardBlueprints).toEqual([])
+    expect(result.current.cards).toEqual([])
   })
 })

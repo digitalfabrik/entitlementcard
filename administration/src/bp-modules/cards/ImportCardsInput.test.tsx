@@ -2,7 +2,7 @@ import { OverlayToaster } from '@blueprintjs/core'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import React, { ReactNode } from 'react'
 
-import { CardBlueprint, initializeCardBlueprint } from '../../cards/Card'
+import { Card, initializeCard } from '../../cards/Card'
 import { Region } from '../../generated/graphql'
 import { ProjectConfigProvider } from '../../project-configs/ProjectConfigContext'
 import bayernConfig from '../../project-configs/bayern/config'
@@ -33,8 +33,8 @@ describe('ImportCardsInput', () => {
   const renderAndSubmitCardsInput = async (
     projectConfig: ProjectConfig,
     csv: string,
-    lineToBlueprint: () => CardBlueprint,
-    setCardBlueprints: () => void
+    lineToCard: () => Card,
+    setCards: () => void
   ) => {
     const fileReaderMock = {
       // eslint-disable-next-line func-names
@@ -50,8 +50,8 @@ describe('ImportCardsInput', () => {
     const { getByTestId } = render(
       <ImportCardsInput
         headers={getHeaders(projectConfig)}
-        lineToBlueprint={lineToBlueprint}
-        setCardBlueprints={setCardBlueprints}
+        lineToCard={lineToCard}
+        setCards={setCards}
         isFreinetFormat={false}
       />,
       { wrapper }
@@ -84,14 +84,14 @@ Tilo Traber,03.04.2025,12.01.1984,98765432
     },
   ])(`Correctly import CSV Card for project $projectConfig.name`, async ({ projectConfig, csv }) => {
     const toaster = jest.spyOn(OverlayToaster.prototype, 'show')
-    const lineToBlueprint = jest.fn(() => initializeCardBlueprint(projectConfig.card, region))
-    const setCardBlueprints = jest.fn()
+    const lineToCard = jest.fn(() => initializeCard(projectConfig.card, region))
+    const setCards = jest.fn()
 
-    await renderAndSubmitCardsInput(projectConfig, csv, lineToBlueprint, setCardBlueprints)
+    await renderAndSubmitCardsInput(projectConfig, csv, lineToCard, setCards)
 
     expect(toaster).not.toHaveBeenCalled()
-    expect(setCardBlueprints).toHaveBeenCalledTimes(1)
-    expect(lineToBlueprint).toHaveBeenCalledTimes(2)
+    expect(setCards).toHaveBeenCalledTimes(1)
+    expect(lineToCard).toHaveBeenCalledTimes(2)
   })
 
   it.each([
@@ -120,13 +120,13 @@ ${'Thea Test,03.04.2024,12345678\n'.repeat(ENTRY_LIMIT + 1)}
     },
   ])(`Import CSV Card should fail with error '$error'`, async ({ csv, error }) => {
     const toaster = jest.spyOn(OverlayToaster.prototype, 'show')
-    const lineToBlueprint = jest.fn(() => initializeCardBlueprint(bayernConfig.card, region))
-    const setCardBlueprints = jest.fn()
+    const lineToCard = jest.fn(() => initializeCard(bayernConfig.card, region))
+    const setCards = jest.fn()
 
-    await renderAndSubmitCardsInput(bayernConfig, csv, lineToBlueprint, setCardBlueprints)
+    await renderAndSubmitCardsInput(bayernConfig, csv, lineToCard, setCards)
 
     expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error })
-    expect(setCardBlueprints).not.toHaveBeenCalled()
-    expect(lineToBlueprint).not.toHaveBeenCalled()
+    expect(setCards).not.toHaveBeenCalled()
+    expect(lineToCard).not.toHaveBeenCalled()
   })
 })
