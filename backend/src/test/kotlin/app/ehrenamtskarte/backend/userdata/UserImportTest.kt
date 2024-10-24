@@ -2,6 +2,8 @@ package app.ehrenamtskarte.backend.userdata
 
 import app.ehrenamtskarte.backend.IntegrationTest
 import app.ehrenamtskarte.backend.auth.database.ApiTokens
+import app.ehrenamtskarte.backend.cards.database.CardEntity
+import app.ehrenamtskarte.backend.cards.database.Cards
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestData
 import app.ehrenamtskarte.backend.userdata.database.UserEntitlements
@@ -26,6 +28,7 @@ import java.io.File
 import java.time.LocalDate
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 private const val USER_IMPORT_PATH = "/users/import"
 private const val TEST_CSV_FILE_PATH = "build/tmp/test.csv"
@@ -43,6 +46,7 @@ internal class UserImportTest : IntegrationTest() {
     @AfterEach
     fun cleanUp() {
         transaction {
+            Cards.deleteAll()
             ApiTokens.deleteAll()
             UserEntitlements.deleteAll()
         }
@@ -318,7 +322,7 @@ internal class UserImportTest : IntegrationTest() {
     }
 
     @Test
-    fun `POST returns a successful response and new user entitlements are saved in db`() = JavalinTest.test(app) { _, client ->
+    fun `POST returns a successful response when new user entitlements are saved in db`() = JavalinTest.test(app) { _, client ->
         TestData.createApiToken(creatorId = admin.id)
 
         val csvFile = generateCsvFile(
@@ -378,6 +382,41 @@ internal class UserImportTest : IntegrationTest() {
                 assertEquals(true, it[UserEntitlements.revoked])
                 assertNotNull(it[UserEntitlements.lastUpdated])
             }
+        }
+    }
+
+    @Test
+    fun `POST returns a successful response and existing cards are revoked when the user entitlement has been revoked`() = JavalinTest.test(app) { _, client ->
+        TestData.createApiToken(creatorId = admin.id)
+        val entitlementId = TestData.createUserEntitlements(
+            userHash = TEST_USER_HASH,
+            regionId = 1
+        )
+        val dynamicCardId = TestData.createDynamicCard(
+            regionId = 1,
+            entitlementId = entitlementId
+        )
+        val staticCardId = TestData.createStaticCard(
+            regionId = 1,
+            entitlementId = entitlementId
+        )
+
+        val csvFile = generateCsvFile(
+            TEST_CSV_FILE_PATH,
+            listOf("regionKey", "userHash", "startDate", "endDate", "revoked"),
+            listOf("07111", "\"$TEST_USER_HASH\"", "01.02.2024", "01.02.2025", "true")
+        )
+        val response = importUsers(client, csvFile)
+
+        assertEquals(200, response.code)
+
+        val jsonResponse = jacksonObjectMapper().readTree(response.body?.string())
+
+        assertEquals("Import successfully completed", jsonResponse["message"].asText())
+
+        transaction {
+            assertTrue(CardEntity.find { Cards.id eq dynamicCardId }.single().revoked)
+            assertTrue(CardEntity.find { Cards.id eq staticCardId }.single().revoked)
         }
     }
 
