@@ -1,18 +1,18 @@
 import { useApolloClient } from '@apollo/client'
 import { useCallback, useContext, useState } from 'react'
 
-import { CardBlueprint } from '../../../cards/CardBlueprint'
+import { CardBlueprint, generateCardInfo, updateCard } from '../../../cards/CardBlueprint'
 import { CsvError, generateCsv, getCSVFilename } from '../../../cards/CsvFactory'
 import { PdfError, generatePdf } from '../../../cards/PdfFactory'
 import createCards, { CreateCardsError, CreateCardsResult } from '../../../cards/createCards'
 import deleteCards from '../../../cards/deleteCards'
-import EMailNotificationExtension from '../../../cards/extensions/EMailNotificationExtension'
-import { findExtension } from '../../../cards/extensions/extensions'
+import { EMAIL_NOTIFICATION_EXTENSION_NAME } from '../../../cards/extensions/EMailNotificationExtension'
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
 import { Region, useSendCardCreationConfirmationMailMutation } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import downloadDataUri from '../../../util/downloadDataUri'
 import getDeepLinkFromQrCode from '../../../util/getDeepLinkFromQrCode'
+import { updateArrayItem } from '../../../util/helper'
 import { useAppToaster } from '../../AppToaster'
 import { ActivityLog } from '../../user-settings/ActivityLog'
 
@@ -36,6 +36,7 @@ type UseCardGeneratorReturn = {
   generateCardsPdf: (applicationId?: number) => Promise<void>
   generateCardsCsv: (applicationId?: number) => Promise<void>
   setCardBlueprints: (cardBlueprints: CardBlueprint[]) => void
+  updateCardBlueprint: (updatedCard: Partial<CardBlueprint>, index: number) => void
   cardBlueprints: CardBlueprint[]
   setApplicationIdToMarkAsProcessed: (applicationId: number | undefined) => void
   applicationIdToMarkAsProcessed: number | undefined
@@ -43,6 +44,10 @@ type UseCardGeneratorReturn = {
 
 const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
   const projectConfig = useContext(ProjectConfigContext)
+  const [cardBlueprints, setCardBlueprints] = useState<CardBlueprint[]>([])
+  const [state, setState] = useState(CardActivationState.input)
+  const [applicationIdToMarkAsProcessed, setApplicationIdToMarkAsProcessed] = useState<number>()
+  const client = useApolloClient()
   const appToaster = useAppToaster()
   const [sendMail] = useSendCardCreationConfirmationMailMutation({
     onCompleted: () => {
@@ -57,21 +62,20 @@ const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
       })
     },
   })
-  const [cardBlueprints, setCardBlueprints] = useState<CardBlueprint[]>([])
-  const [state, setState] = useState(CardActivationState.input)
-  const [applicationIdToMarkAsProcessed, setApplicationIdToMarkAsProcessed] = useState<number>()
-  const client = useApolloClient()
+
+  const updateCardBlueprint = useCallback(
+    (updatedCard: Partial<CardBlueprint>, index: number) =>
+      setCardBlueprints(updateArrayItem(cardBlueprints, updateCard(cardBlueprints[index], updatedCard), index)),
+    [cardBlueprints]
+  )
 
   const sendCardConfirmationMails = useCallback(
     async (codes: CreateCardsResult[], cardBlueprints: CardBlueprint[], projectId: string): Promise<void> => {
       for (let k = 0; k < codes.length; k++) {
         const cardBlueprint = cardBlueprints[k]
-        const mailNotificationExtension = findExtension(cardBlueprint.extensions, EMailNotificationExtension)
+        const mailNotificationExtensionState = cardBlueprint.extensions[EMAIL_NOTIFICATION_EXTENSION_NAME]
         const dynamicCode = codes[k].dynamicActivationCode
-        if (
-          !mailNotificationExtension?.state ||
-          dynamicCode.info?.extensions?.extensionRegion?.regionId === undefined
-        ) {
+        if (!mailNotificationExtensionState || dynamicCode.info?.extensions?.extensionRegion?.regionId === undefined) {
           return
         }
         const deepLink = getDeepLinkFromQrCode({
@@ -83,7 +87,7 @@ const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
           variables: {
             project: projectId,
             regionId: dynamicCode.info.extensions.extensionRegion.regionId,
-            recipientAddress: mailNotificationExtension.state,
+            recipientAddress: mailNotificationExtensionState,
             recipientName: cardBlueprint.fullName,
             deepLink,
           },
@@ -139,7 +143,7 @@ const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
       setState(CardActivationState.loading)
 
       try {
-        const cardInfos = cardBlueprints.map(card => card.generateCardInfo())
+        const cardInfos = cardBlueprints.map(generateCardInfo)
         codes = await createCards(
           client,
           projectConfig.projectId,
@@ -204,6 +208,7 @@ const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
     generateCardsCsv,
     setCardBlueprints,
     cardBlueprints,
+    updateCardBlueprint,
     setApplicationIdToMarkAsProcessed,
     applicationIdToMarkAsProcessed,
   }

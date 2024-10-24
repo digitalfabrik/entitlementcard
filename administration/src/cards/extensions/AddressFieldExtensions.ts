@@ -1,46 +1,46 @@
-/* eslint-disable max-classes-per-file */
+import { CardBlueprint } from '../CardBlueprint'
 import { Extension } from './extensions'
 
-abstract class BaseAddressExtension extends Extension<string, null> {
-  setInitialState() {
-    this.state = ''
-  }
-  causesInfiniteLifetime() {
-    return false
-  }
-  createForm() {
-    return null
-  }
-  isValid(): boolean {
-    return this.state !== null
-  }
-  fromString(state: string): void {
-    this.state = state
-  }
-  toString(): string {
-    return this.state ?? ''
-  }
-}
+export const ADDRESS_LINE_1_EXTENSION = 'addressLine1'
+export const ADDRESS_LINE_2_EXTENSION = 'addressLine2'
+export const ADDRESS_PLZ_EXTENSION = 'addressPlz'
+export const ADDRESS_LOCATION_EXTENSION = 'addressLocation'
 
-class AddressLine1Extension extends BaseAddressExtension {
-  public readonly name = AddressLine1Extension.name
-}
+type AddressFieldExtension =
+  | typeof ADDRESS_LINE_1_EXTENSION
+  | typeof ADDRESS_LINE_2_EXTENSION
+  | typeof ADDRESS_PLZ_EXTENSION
+  | typeof ADDRESS_LOCATION_EXTENSION
+type AddressFieldExtensionState<T extends AddressFieldExtension> = Record<T, string>
 
-class AddressLine2Extension extends BaseAddressExtension {
-  public readonly name = AddressLine2Extension.name
-}
+const getAddressFieldExtension = <T extends AddressFieldExtension>(
+  name: T
+): Extension<AddressFieldExtensionState<T>> => ({
+  name,
+  Component: () => null,
+  getInitialState: () => ({ [name]: '' } as AddressFieldExtensionState<T>),
+  causesInfiniteLifetime: () => false,
+  getProtobufData: () => ({}),
+  isValid: () => true,
+  fromString: (value: string) => ({ [name]: value } as AddressFieldExtensionState<T>),
+  toString: (state): string => state[name],
+})
 
-class PlzExtension extends BaseAddressExtension {
-  public readonly name = PlzExtension.name
-  isValid() {
-    return this.state?.length === 0 || (!!this.state && /^\d{5}$/.test(this.state))
-  }
+export const AddressLine1Extension = getAddressFieldExtension(ADDRESS_LINE_1_EXTENSION)
+export const AddressLine2Extension = getAddressFieldExtension(ADDRESS_LINE_2_EXTENSION)
+export const AddressPlzExtension: Extension<AddressFieldExtensionState<typeof ADDRESS_PLZ_EXTENSION>> = {
+  ...getAddressFieldExtension(ADDRESS_PLZ_EXTENSION),
+  isValid: (state): boolean => state.addressPlz.length === 0 || /^\d{5}$/.test(state.addressPlz),
 }
+export const AddressLocationExtension = getAddressFieldExtension(ADDRESS_LOCATION_EXTENSION)
 
-class LocationExtension extends BaseAddressExtension {
-  public readonly name = LocationExtension.name
-}
+const AddressExtensions = [AddressLine1Extension, AddressLine2Extension, AddressPlzExtension, AddressLocationExtension]
 
-const AddressExtensions = [AddressLine1Extension, AddressLine2Extension, PlzExtension, LocationExtension] as const
+export const getAddressFieldExtensionsValues = (cardBlueprint: CardBlueprint): (string | undefined)[] => [
+  cardBlueprint.extensions[ADDRESS_LINE_1_EXTENSION],
+  cardBlueprint.extensions[ADDRESS_LINE_2_EXTENSION],
+  cardBlueprint.extensions[ADDRESS_PLZ_EXTENSION],
+  cardBlueprint.extensions[ADDRESS_LOCATION_EXTENSION],
+]
 
 export default AddressExtensions
