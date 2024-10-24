@@ -87,14 +87,14 @@ platform :android do
 
     case build_config_name
     when 'nuernberg'
-      keystore_key_alias[:KEYSTORE_KEY_ALIAS] = KEYSTORE_KEY_ALIAS_NUERNBERG
-      keystore_key_password[:KEYSTORE_KEY_PASSWORD] = KEYSTORE_KEY_PASSWORD_NUERNBERG
+      keystore_key_alias = KEYSTORE_KEY_ALIAS_NUERNBERG
+      keystore_key_password = KEYSTORE_KEY_PASSWORD_NUERNBERG
     when 'koblenz'
-      keystore_key_alias[:KEYSTORE_KEY_ALIAS] = KEYSTORE_KEY_ALIAS_KOBLENZ
-      keystore_key_password[:KEYSTORE_KEY_PASSWORD] = KEYSTORE_KEY_PASSWORD_KOBLENZ
+      keystore_key_alias = KEYSTORE_KEY_ALIAS_KOBLENZ
+      keystore_key_password = KEYSTORE_KEY_PASSWORD_KOBLENZ
     else
-      keystore_key_alias[:KEYSTORE_KEY_ALIAS] = KEYSTORE_KEY_ALIAS_BAYERN
-      keystore_key_password[:KEYSTORE_KEY_PASSWORD] = KEYSTORE_KEY_PASSWORD_BAYERN
+      keystore_key_alias = KEYSTORE_KEY_ALIAS_BAYERN
+      keystore_key_password = KEYSTORE_KEY_PASSWORD_BAYERN
     end
 
       tasks = ["bundle", "assemble"]
