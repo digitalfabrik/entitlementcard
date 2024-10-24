@@ -4,7 +4,7 @@ import { QrCode } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
 import { PdfConfig } from '../project-configs/getProjectConfig'
 import getDeepLinkFromQrCode from '../util/getDeepLinkFromQrCode'
-import { CardBlueprint } from './CardBlueprint'
+import { Card } from './Card'
 import { CreateCardsResult } from './createCards'
 import pdfFormElement from './pdf/PdfFormElement'
 import pdfLinkArea from './pdf/PdfLinkArea'
@@ -24,7 +24,7 @@ const fillContentAreas = async (
   cardInfoHashBase64: string,
   dynamicCode: Extract<QrCode['qrCode'], { case: 'dynamicActivationCode' }>,
   staticCode: Extract<QrCode['qrCode'], { case: 'staticVerificationCode' }> | null,
-  cardBlueprint: CardBlueprint,
+  card: Card,
   pdfConfig: PdfConfig,
   deepLink: string,
   region?: Region
@@ -59,7 +59,7 @@ const fillContentAreas = async (
       form,
       font: helveticaFont,
       info: dynamicCode.value.info!,
-      cardBlueprint,
+      card,
       cardInfoHash: cardInfoHashBase64,
       region,
     })
@@ -70,7 +70,7 @@ const fillContentAreas = async (
       page: templatePage,
       font: helveticaFont,
       info: dynamicCode.value.info!,
-      cardBlueprint,
+      card,
       cardInfoHash: cardInfoHashBase64,
       region,
     })
@@ -79,7 +79,7 @@ const fillContentAreas = async (
 
 export const generatePdf = async (
   codes: CreateCardsResult[],
-  cardBlueprints: CardBlueprint[],
+  cards: Card[],
   pdfConfig: PdfConfig,
   region?: Region
 ): Promise<Blob> => {
@@ -95,7 +95,7 @@ export const generatePdf = async (
       const dynamicCode = codes[k].dynamicActivationCode
       const staticCode = codes[k].staticVerificationCode
       const cardInfoHashBase64 = codes[k].dynamicCardInfoHashBase64
-      const cardBlueprint = cardBlueprints[k]
+      const card = cards[k]
 
       // eslint-disable-next-line no-await-in-loop
       const [templatePage] = templateDocument ? await doc.copyPages(templateDocument, [0]) : [null]
@@ -118,7 +118,7 @@ export const generatePdf = async (
               value: staticCode,
             }
           : null,
-        cardBlueprint,
+        card,
         pdfConfig,
         getDeepLinkFromQrCode(dynamicPdfQrCode),
         region

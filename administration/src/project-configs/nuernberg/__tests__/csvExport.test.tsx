@@ -1,4 +1,4 @@
-import { generateCardInfo, initializeCardBlueprint } from '../../../cards/CardBlueprint'
+import { generateCardInfo, initializeCard } from '../../../cards/Card'
 import { CreateCardsResult } from '../../../cards/createCards'
 import { DynamicActivationCode } from '../../../generated/card_pb'
 import { Region } from '../../../generated/graphql'
@@ -20,7 +20,7 @@ describe('csvExport', () => {
       activatedForApplication: true,
       activatedForCardConfirmationMail: true,
     }
-    const cards = [initializeCardBlueprint(nuernbergConfig.card, nuernberg, { fullName: 'Thea Test' })]
+    const cards = [initializeCard(nuernbergConfig.card, nuernberg, { fullName: 'Thea Test' })]
 
     const codes: CreateCardsResult[] = [
       {

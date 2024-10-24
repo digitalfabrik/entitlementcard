@@ -2,12 +2,12 @@ import { PDFFont, PDFForm, PDFPage, PDFTextField, grayscale } from 'pdf-lib'
 
 import { CardInfo } from '../../generated/card_pb'
 import { Region } from '../../generated/graphql'
-import { CardBlueprint } from '../CardBlueprint'
+import { Card } from '../Card'
 import { Coordinates, PdfElement, mmToPt } from './PdfElements'
 
 export type InfoParams = {
   info: CardInfo
-  cardBlueprint: CardBlueprint
+  card: Card
   cardInfoHash: string
   region?: Region
 }
@@ -23,17 +23,17 @@ type PdfFormElementRendererProps = {
   form: PDFForm
   font: PDFFont
   info: CardInfo
-  cardBlueprint: CardBlueprint
+  card: Card
   cardInfoHash: string
   region?: Region
 }
 
 const pdfFormElements: PdfElement<PdfFormElementProps, PdfFormElementRendererProps> = (
   { infoToFormFields, fontSize, width, x, y },
-  { page, form, font, info, region, cardBlueprint, cardInfoHash }
+  { page, form, font, info, region, card, cardInfoHash }
 ) => {
   const pageIdx = page.doc.getPageCount()
-  const formFields = infoToFormFields(form, pageIdx, { info, region, cardBlueprint, cardInfoHash })
+  const formFields = infoToFormFields(form, pageIdx, { info, region, card, cardInfoHash })
   const lineHeight = font.heightAtSize(fontSize) + 6
 
   formFields.forEach((formField, index) => {

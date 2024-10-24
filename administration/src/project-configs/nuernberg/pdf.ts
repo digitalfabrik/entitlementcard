@@ -21,12 +21,8 @@ Geburtsdatum: ${birthdayDate.format()}
 Gültig: ${startDate.format()} bis ${expirationDate.format()}`
 }
 
-const createAddressFormFields = (
-  form: PDFForm,
-  pageIdx: number,
-  { info, cardBlueprint }: InfoParams
-): PDFTextField[] => {
-  const [addressLine1, addressLine2, plz, location] = getAddressFieldExtensionsValues(cardBlueprint)
+const createAddressFormFields = (form: PDFForm, pageIdx: number, { info, card }: InfoParams): PDFTextField[] => {
+  const [addressLine1, addressLine2, plz, location] = getAddressFieldExtensionsValues(card)
 
   const nameField = form.createTextField(`${pageIdx}.address.name`)
   const addressLine1Field = form.createTextField(`${pageIdx}.address.line.1`)

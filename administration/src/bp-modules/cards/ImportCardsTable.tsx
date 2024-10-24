@@ -3,12 +3,12 @@ import '@blueprintjs/table/lib/css/table.css'
 import React, { ReactElement, useCallback } from 'react'
 import styled from 'styled-components'
 
-import { CardBlueprint, getValueByCSVHeader, isValueValid } from '../../cards/CardBlueprint'
+import { Card, getValueByCSVHeader, isValueValid } from '../../cards/Card'
 import { CardConfig } from '../../project-configs/getProjectConfig'
 
 type CardImportTableProps = {
   headers: string[]
-  cardBlueprints: CardBlueprint[]
+  cards: Card[]
   cardConfig: CardConfig
 }
 
@@ -25,13 +25,13 @@ const StyledCell = styled(Cell)`
   white-space: break-spaces;
 `
 
-const CardImportTable = ({ headers, cardBlueprints, cardConfig }: CardImportTableProps): ReactElement => {
+const CardImportTable = ({ headers, cards, cardConfig }: CardImportTableProps): ReactElement => {
   const cellRenderer = useCallback(
     (rowIndex: number, columnIndex: number) => {
-      const cardBlueprint = cardBlueprints[rowIndex]
+      const card = cards[rowIndex]
       const header = headers[columnIndex]
-      const valid = isValueValid(cardBlueprint, cardConfig, header)
-      const value = getValueByCSVHeader(cardBlueprint, cardConfig, header)
+      const valid = isValueValid(card, cardConfig, header)
+      const value = getValueByCSVHeader(card, cardConfig, header)
       return (
         <StyledCell
           wrapText
@@ -44,12 +44,12 @@ const CardImportTable = ({ headers, cardBlueprints, cardConfig }: CardImportTabl
         </StyledCell>
       )
     },
-    [cardConfig, cardBlueprints, headers]
+    [cardConfig, cards, headers]
   )
 
   return (
     <TableContainer>
-      <Table2 numRows={cardBlueprints.length} enableGhostCells minRowHeight={16}>
+      <Table2 numRows={cards.length} enableGhostCells minRowHeight={16}>
         {headers.map(name => (
           <Column key={name} name={name} cellRenderer={cellRenderer} />
         ))}
