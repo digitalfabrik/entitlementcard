@@ -197,9 +197,9 @@ const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
     setState,
     generateCardsPdf,
     generateCardsCsv,
-    setCards: setCards,
-    cards: cards,
-    updateCard: updateCard,
+    setCards,
+    cards,
+    updateCard,
     setApplicationIdToMarkAsProcessed,
     applicationIdToMarkAsProcessed,
   }

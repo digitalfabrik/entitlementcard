@@ -4,7 +4,7 @@ import { act, renderHook } from '@testing-library/react'
 import { mocked } from 'jest-mock'
 import React, { ReactNode } from 'react'
 
-import { Card, generateCardInfo, initializeCard } from '../../../cards/Card'
+import { generateCardInfo, initializeCard } from '../../../cards/Card'
 import { PdfError, generatePdf } from '../../../cards/PdfFactory'
 import createCards, { CreateCardsError, CreateCardsResult } from '../../../cards/createCards'
 import deleteCards from '../../../cards/deleteCards'
