@@ -1,4 +1,4 @@
-import { ACTIVATION_FRAGMENT, ACTIVATION_PATH, CUSTOM_SCHEME } from 'build-configs/constants'
+import { ACTIVATION_FRAGMENT, ACTIVATION_PATH } from 'build-configs/constants'
 
 import { PdfQrCode } from '../cards/pdf/PdfQrCodeElement'
 import { QrCode } from '../generated/card_pb'
@@ -7,8 +7,10 @@ import { getBuildConfig } from './getBuildConfig'
 
 const getCustomDeepLinkFromQrCode = (qrCode: PdfQrCode): string => {
   const qrCodeContent = new QrCode({ qrCode }).toBinary()
-  const host = getBuildConfig(window.location.hostname).common.projectId.production
-  return `${CUSTOM_SCHEME}://${host}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}#${encodeURIComponent(
+  const { deepLinking, projectId } = getBuildConfig(window.location.hostname).common
+  const { production: host } = projectId
+  const { customScheme } = deepLinking
+  return `${customScheme}://${host}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}#${encodeURIComponent(
     uint8ArrayToBase64(qrCodeContent)
   )}/`
 }
