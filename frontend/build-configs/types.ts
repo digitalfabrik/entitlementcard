@@ -27,6 +27,7 @@ export type DeeplLinkingConfig = {
 export type ThemeType = {
     primaryLight: string
     primaryDark: string
+    fontFamily: string
 }
 
 export type CommonBuildConfigType = {
