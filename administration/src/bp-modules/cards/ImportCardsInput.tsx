@@ -2,7 +2,7 @@ import { NonIdealState } from '@blueprintjs/core'
 import React, { ChangeEventHandler, ReactElement, useCallback, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import { CardBlueprint } from '../../cards/CardBlueprint'
+import { CardBlueprint } from '../../cards/Card'
 import { useAppToaster } from '../AppToaster'
 import FileInputStateIcon from '../FileInputStateIcon'
 import ImportCardsRequirementsText from './ImportCardsRequirementsText'

@@ -1,6 +1,6 @@
 import { format } from 'date-fns'
 
-import { CardBlueprint } from '../../cards/CardBlueprint'
+import { CardBlueprint } from '../../cards/Card'
 
 const STORAGE_KEY = 'activity-log'
 

@@ -1,7 +1,7 @@
 import { useApolloClient } from '@apollo/client'
 import { useCallback, useContext, useState } from 'react'
 
-import { CardBlueprint, generateCardInfo, updateCard } from '../../../cards/CardBlueprint'
+import { CardBlueprint, generateCardInfo, updateCard } from '../../../cards/Card'
 import { CsvError, generateCsv, getCSVFilename } from '../../../cards/CsvFactory'
 import { PdfError, generatePdf } from '../../../cards/PdfFactory'
 import createCards, { CreateCardsError, CreateCardsResult } from '../../../cards/createCards'

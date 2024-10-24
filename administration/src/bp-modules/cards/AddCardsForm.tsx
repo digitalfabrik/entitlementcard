@@ -3,7 +3,7 @@ import FlipMove from 'react-flip-move'
 import { useSearchParams } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { CardBlueprint, initializeCardBlueprint, initializeCardFromCSV } from '../../cards/CardBlueprint'
+import { CardBlueprint, initializeCardBlueprint, initializeCardFromCSV } from '../../cards/Card'
 import { Region } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import AddCardForm from './AddCardForm'

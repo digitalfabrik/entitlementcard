@@ -1,7 +1,7 @@
 import { stringify } from 'csv-stringify/browser/esm/sync'
 
 import { CsvExport } from '../project-configs/getProjectConfig'
-import { CardBlueprint } from './CardBlueprint'
+import { CardBlueprint } from './Card'
 import { CreateCardsResult } from './createCards'
 import { NUERNBERG_PASS_ID_EXTENSION_NAME } from './extensions/NuernbergPassIdExtension'
 

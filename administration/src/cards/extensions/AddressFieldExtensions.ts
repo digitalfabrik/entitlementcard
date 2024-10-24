@@ -1,4 +1,4 @@
-import { CardBlueprint } from '../CardBlueprint'
+import { CardBlueprint } from '../Card'
 import { Extension } from './extensions'
 
 export const ADDRESS_LINE_1_EXTENSION = 'addressLine1'

@@ -1,7 +1,7 @@
 import { ApolloError } from '@apollo/client'
 import { useCallback, useContext, useState } from 'react'
 
-import { CardBlueprint, generateCardInfo, initializeCardBlueprint } from '../../../cards/CardBlueprint'
+import { CardBlueprint, generateCardInfo, initializeCardBlueprint } from '../../../cards/Card'
 import { generatePdf } from '../../../cards/PdfFactory'
 import { CreateCardsError, CreateCardsResult } from '../../../cards/createCards'
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'

@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 
 import { FREINET_PARAM } from '../../Router'
 import { WhoAmIContext } from '../../WhoAmIProvider'
-import { CardBlueprint, initializeCardFromCSV } from '../../cards/CardBlueprint'
+import { CardBlueprint, initializeCardFromCSV } from '../../cards/Card'
 import { Region } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { ProjectConfig } from '../../project-configs/getProjectConfig'

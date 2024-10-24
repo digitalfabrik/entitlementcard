@@ -2,7 +2,7 @@ import { OverlayToaster } from '@blueprintjs/core'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import React, { ReactNode } from 'react'
 
-import { CardBlueprint, initializeCardBlueprint } from '../../cards/CardBlueprint'
+import { CardBlueprint, initializeCardBlueprint } from '../../cards/Card'
 import { Region } from '../../generated/graphql'
 import { ProjectConfigProvider } from '../../project-configs/ProjectConfigContext'
 import bayernConfig from '../../project-configs/bayern/config'

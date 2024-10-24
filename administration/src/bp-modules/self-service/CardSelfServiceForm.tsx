@@ -3,7 +3,7 @@ import InfoOutlined from '@mui/icons-material/InfoOutlined'
 import { Alert, styled } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
 
-import { CardBlueprint, isFullNameValid, isValid } from '../../cards/CardBlueprint'
+import { CardBlueprint, isFullNameValid, isValid } from '../../cards/Card'
 import ClearInputButton from '../../cards/extensions/components/ClearInputButton'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
 import BasicDialog from '../../mui-modules/application/BasicDialog'

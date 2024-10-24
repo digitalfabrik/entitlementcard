@@ -3,7 +3,7 @@ import { TextField } from '@mui/material'
 import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
-import { CardBlueprint, hasInfiniteLifetime, isExpirationDateValid, isFullNameValid } from '../../cards/CardBlueprint'
+import { CardBlueprint, hasInfiniteLifetime, isExpirationDateValid, isFullNameValid } from '../../cards/Card'
 import PlainDate from '../../util/PlainDate'
 import ExtensionForms from './ExtensionForms'
 

@@ -6,7 +6,7 @@ import {
   HTTPS_SCHEME,
 } from 'build-configs'
 
-import { generateCardInfo, initializeCardBlueprint } from '../../cards/CardBlueprint'
+import { generateCardInfo, initializeCardBlueprint } from '../../cards/Card'
 import { CreateCardsResult } from '../../cards/createCards'
 import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'

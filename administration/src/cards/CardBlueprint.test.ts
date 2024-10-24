@@ -8,7 +8,7 @@ import {
   initializeCardFromCSV,
   isValid,
   isValueValid,
-} from './CardBlueprint'
+} from './Card'
 import BavariaCardTypeExtension, { BAVARIA_CARD_TYPE_EXTENSION_NAME } from './extensions/BavariaCardTypeExtension'
 import BirthdayExtension, { BIRTHDAY_EXTENSION_NAME } from './extensions/BirthdayExtension'
 import KoblenzReferenceNumberExtension, {

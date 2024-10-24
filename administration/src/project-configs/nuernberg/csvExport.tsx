@@ -1,6 +1,6 @@
 import { stringify } from 'csv-stringify/browser/esm/sync'
 
-import { CardBlueprint } from '../../cards/CardBlueprint'
+import { CardBlueprint } from '../../cards/Card'
 import { CreateCardsResult } from '../../cards/createCards'
 import { getAddressFieldExtensionsValues } from '../../cards/extensions/AddressFieldExtensions'
 import { BIRTHDAY_EXTENSION_NAME } from '../../cards/extensions/BirthdayExtension'

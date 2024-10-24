@@ -3,7 +3,7 @@ import '@blueprintjs/table/lib/css/table.css'
 import React, { ReactElement, useCallback } from 'react'
 import styled from 'styled-components'
 
-import { CardBlueprint, getValueByCSVHeader, isValueValid } from '../../cards/CardBlueprint'
+import { CardBlueprint, getValueByCSVHeader, isValueValid } from '../../cards/Card'
 import { CardConfig } from '../../project-configs/getProjectConfig'
 
 type CardImportTableProps = {

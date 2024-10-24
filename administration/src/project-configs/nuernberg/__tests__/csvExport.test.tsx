@@ -1,4 +1,4 @@
-import { generateCardInfo, initializeCardBlueprint } from '../../../cards/CardBlueprint'
+import { generateCardInfo, initializeCardBlueprint } from '../../../cards/Card'
 import { CreateCardsResult } from '../../../cards/createCards'
 import { DynamicActivationCode } from '../../../generated/card_pb'
 import { Region } from '../../../generated/graphql'

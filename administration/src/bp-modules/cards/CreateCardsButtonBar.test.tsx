@@ -1,7 +1,7 @@
 import { act, fireEvent, render } from '@testing-library/react'
 import React, { ReactNode } from 'react'
 
-import { initializeCardBlueprint } from '../../cards/CardBlueprint'
+import { initializeCardBlueprint } from '../../cards/Card'
 import { Region } from '../../generated/graphql'
 import { ProjectConfigProvider } from '../../project-configs/ProjectConfigContext'
 import bayernConfig from '../../project-configs/bayern/config'

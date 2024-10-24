@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 
-import { CardBlueprint, getExtensions } from '../../cards/CardBlueprint'
+import { CardBlueprint, getExtensions } from '../../cards/Card'
 
 type ExtensionFormsProps = {
   cardBlueprint: CardBlueprint
