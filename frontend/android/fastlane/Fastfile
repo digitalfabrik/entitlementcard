@@ -82,18 +82,19 @@ platform :android do
 
     env_prod = sh("echo -n environment=production | base64")
 
-    keystore_options = {}
+    keystore_key_alias = ""
+    keystore_key_password = ""
 
     case build_config_name
     when 'nuernberg'
-      keystore_options[:KEYSTORE_KEY_ALIAS] = KEYSTORE_KEY_ALIAS_NUERNBERG
-      keystore_options[:KEYSTORE_KEY_PASSWORD] = KEYSTORE_KEY_PASSWORD_NUERNBERG
+      keystore_key_alias[:KEYSTORE_KEY_ALIAS] = KEYSTORE_KEY_ALIAS_NUERNBERG
+      keystore_key_password[:KEYSTORE_KEY_PASSWORD] = KEYSTORE_KEY_PASSWORD_NUERNBERG
     when 'koblenz'
-      keystore_options[:KEYSTORE_KEY_ALIAS] = KEYSTORE_KEY_ALIAS_KOBLENZ  # New case for Koblenz
-      keystore_options[:KEYSTORE_KEY_PASSWORD] = KEYSTORE_KEY_PASSWORD_KOBLENZ  # New case for Koblenz
+      keystore_key_alias[:KEYSTORE_KEY_ALIAS] = KEYSTORE_KEY_ALIAS_KOBLENZ
+      keystore_key_password[:KEYSTORE_KEY_PASSWORD] = KEYSTORE_KEY_PASSWORD_KOBLENZ
     else
-      keystore_options[:KEYSTORE_KEY_ALIAS] = KEYSTORE_KEY_ALIAS_BAYERN
-      keystore_options[:KEYSTORE_KEY_PASSWORD] = KEYSTORE_KEY_PASSWORD_BAYERN
+      keystore_key_alias[:KEYSTORE_KEY_ALIAS] = KEYSTORE_KEY_ALIAS_BAYERN
+      keystore_key_password[:KEYSTORE_KEY_PASSWORD] = KEYSTORE_KEY_PASSWORD_BAYERN
     end
 
       tasks = ["bundle", "assemble"]
@@ -109,9 +110,9 @@ platform :android do
           :VERSION_NAME => version_name,
           :BUILD_CONFIG_NAME => build_config_name,
           :KEYSTORE_PATH => KEYSTORE_PATH,
-          :KEYSTORE_KEY_ALIAS => keystore_options[:KEYSTORE_KEY_ALIAS],
+          :KEYSTORE_KEY_ALIAS => keystore_key_alias,
           :KEYSTORE_PASSWORD => KEYSTORE_PASSWORD,
-          :KEYSTORE_KEY_PASSWORD => keystore_options[:KEYSTORE_KEY_PASSWORD],
+          :KEYSTORE_KEY_PASSWORD => keystore_key_password,
         }.compact,
         system_properties: gradle_system_properties,
         print_command: false

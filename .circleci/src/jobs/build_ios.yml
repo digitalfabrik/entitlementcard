@@ -4,7 +4,7 @@ parameters:
   buildConfig:
     description: "Name of the build config to use"
     type: enum
-    enum: ['bayern', 'bayern-floss', 'nuernberg', 'koblenz']
+    enum: [bayern, bayernFloss, nuernberg, koblenz]
 steps:
   - checkout:
       path: ~/project

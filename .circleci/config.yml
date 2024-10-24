@@ -298,7 +298,7 @@ jobs:
                 description: Name of the build config to use
                 enum:
                     - bayern
-                    - bayern-floss
+                    - bayernFloss
                     - nuernberg
                     - koblenz
                 type: enum
@@ -394,7 +394,7 @@ jobs:
                 description: Name of the build config to use
                 enum:
                     - bayern
-                    - bayern-floss
+                    - bayernFloss
                     - nuernberg
                     - koblenz
                 type: enum
@@ -705,7 +705,7 @@ jobs:
             buildConfig:
                 enum:
                     - bayern
-                    - bayern-floss
+                    - bayernFloss
                     - nuernberg
                     - koblenz
                 type: enum
@@ -1703,8 +1703,8 @@ workflows:
         jobs:
             - check_frontend
             - build_android:
-                buildConfig: bayern-floss
-                name: frontend-android-build-bayern-floss
+                buildConfig: bayernFloss
+                name: frontend-android-build-bayernFloss
                 requires:
                     - check_frontend
             - build_android:

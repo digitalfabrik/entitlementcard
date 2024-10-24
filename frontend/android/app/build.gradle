@@ -81,7 +81,7 @@ android {
             setupApplication(flavor, "koblenz")
         }
         bayernFloss { flavor ->
-            setupApplication(flavor, "bayern-floss")
+            setupApplication(flavor, "bayernFloss")
         }
     }
 
@@ -163,7 +163,7 @@ android {
             setupVariant(variant, "koblenz")
         })
         onVariants(selector().withFlavor(new Pair("dummy", "bayernFloss")), { variant ->
-            setupVariant(variant, "bayern-floss")
+            setupVariant(variant, "bayernFloss")
         })
     }
 }
