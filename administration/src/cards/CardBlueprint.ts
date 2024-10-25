@@ -127,8 +127,8 @@ export const isValueValid = (cardBlueprint: CardBlueprint, cardConfig: CardConfi
       return isExpirationDateValid(cardBlueprint) || hasInfiniteLifetime(cardBlueprint)
     default: {
       const extensionName = getExtensionNameByCSVHeader(cardConfig, columnHeader)
-      const extension = getExtensions(cardBlueprint).find(({ extension }) => extension.name === extensionName)
-      return extension?.extension.isValid(extension.state) ?? false
+      const extension = cardConfig.extensions.find(extension => extension.name === extensionName)
+      return extension?.isValid(cardBlueprint.extensions) ?? false
     }
   }
 }
@@ -175,10 +175,7 @@ export const initializeCardFromCSV = (
     id: createRandomId(),
     fullName,
     expirationDate,
-    extensions: {
-      ...getInitialExtensionState(cardConfig, region),
-      ...extensions,
-    },
+    extensions,
   }
 }
 
