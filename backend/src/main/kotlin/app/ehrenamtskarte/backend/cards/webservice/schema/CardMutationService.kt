@@ -147,6 +147,7 @@ class CardMutationService {
 
         val userEntitlements = transaction { UserEntitlementsRepository.findUserEntitlements(userHash.toByteArray()) }
         if (userEntitlements == null || userEntitlements.revoked || userEntitlements.endDate.isBefore(LocalDate.now())) {
+            logger.info("${context.remoteIp} ${userEntitlements?.userHash} failed to create a new card")
             throw InvalidUserEntitlementsException()
         }
 
