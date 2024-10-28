@@ -129,6 +129,5 @@ flutter:
           style: italic
         - asset: assets/koblenz/fonts/texgyreheros-bold.otf
           weight: 700
-          #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
