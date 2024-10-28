@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 ThemeData get lightTheme {
-  final defaultTypography = Typography.blackMountainView.apply(fontFamily: buildConfig.theme.fontFamily);
+  final defaultTypography = Typography.blackMountainView;
   final primaryColor = getColorFromHex(buildConfig.theme.primaryLight);
-  final lightTheme = ThemeData.from(
+  final lightTheme = ThemeData(
+    fontFamily: buildConfig.theme.fontFamily,
     colorScheme: ColorScheme.light(
       primary: primaryColor,
       secondary: primaryColor,
@@ -47,9 +48,10 @@ ThemeData get lightTheme {
 }
 
 ThemeData get darkTheme {
-  final defaultTypography = Typography.whiteMountainView.apply(fontFamily: buildConfig.theme.fontFamily);
+  final defaultTypography = Typography.whiteMountainView;
   final primaryColor = getColorFromHex(buildConfig.theme.primaryDark);
-  final theme = ThemeData.from(
+  final theme = ThemeData(
+    fontFamily: buildConfig.theme.fontFamily,
     colorScheme: ColorScheme.dark(
       primary: primaryColor,
       secondary: primaryColor,
