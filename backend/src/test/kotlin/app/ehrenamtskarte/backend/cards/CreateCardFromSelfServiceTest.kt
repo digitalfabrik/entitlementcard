@@ -114,7 +114,7 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
         val jsonResponse = jacksonObjectMapper().readTree(responseBody)
 
         jsonResponse.apply {
-            assertEquals("Error USER_ENTITLEMENT_NOT_FOUND occurred.", findValuesAsText("message").single())
+            assertEquals("Error USER_ENTITLEMENT_EXPIRED occurred.", findValuesAsText("message").single())
         }
 
         transaction {
@@ -140,7 +140,7 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
         val jsonResponse = jacksonObjectMapper().readTree(responseBody)
 
         jsonResponse.apply {
-            assertEquals("Error USER_ENTITLEMENT_NOT_FOUND occurred.", findPath("message").textValue())
+            assertEquals("Error USER_ENTITLEMENT_EXPIRED occurred.", findPath("message").textValue())
         }
 
         transaction {

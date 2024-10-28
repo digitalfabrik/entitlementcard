@@ -26,6 +26,7 @@ import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidInputEx
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidQrCodeSize
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotActivatedForCardConfirmationMailException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.UserEntitlementExpiredException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.UserEntitlementNotFoundException
 import app.ehrenamtskarte.backend.mail.Mailer
 import app.ehrenamtskarte.backend.matomo.Matomo
@@ -146,8 +147,11 @@ class CardMutationService {
         val userHash = Argon2IdHasher.hashKoblenzUserData(user)
 
         val userEntitlements = transaction { UserEntitlementsRepository.findByUserHash(userHash.toByteArray()) }
-        if (userEntitlements == null || userEntitlements.revoked || userEntitlements.endDate.isBefore(LocalDate.now())) {
+        if (userEntitlements == null) {
             throw UserEntitlementNotFoundException()
+        }
+        if (userEntitlements.revoked || userEntitlements.endDate.isBefore(LocalDate.now())) {
+            throw UserEntitlementExpiredException()
         }
 
         val updatedCardInfo = enrichCardInfo(

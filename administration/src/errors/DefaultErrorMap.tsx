@@ -97,6 +97,10 @@ const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
         title:
           'Wir konnten Ihre Angaben nicht im System finden. Bitte überprüfen Sie Ihre Angaben und versuchen Sie es erneut.',
       }
+    case GraphQlExceptionCode.UserEntitlementExpired:
+      return {
+        title: 'Sie sind nicht mehr berechtigt einen KoblenzPass zu erstellen.',
+      }
     case GraphQlExceptionCode.MailNotSent:
       return {
         title: `Email konnte nicht an ${extensions.recipient} gesendet werden.`,
