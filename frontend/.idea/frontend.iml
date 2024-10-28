@@ -18,6 +18,7 @@
       <excludeFolder url="file://$MODULE_DIR$/pubs/df_protobuf/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/pubs/df_protobuf/build" />
       <excludeFolder url="file://$MODULE_DIR$/vendor" />
+      <excludeFolder url="file://$MODULE_DIR$/.fvm/versions" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Flutter Plugins" level="project" />

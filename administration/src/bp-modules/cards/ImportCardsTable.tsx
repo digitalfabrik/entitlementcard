@@ -3,12 +3,13 @@ import '@blueprintjs/table/lib/css/table.css'
 import React, { ReactElement, useCallback } from 'react'
 import styled from 'styled-components'
 
-import CSVCard from '../../cards/CSVCard'
-import { CardBlueprint } from '../../cards/CardBlueprint'
+import { CardBlueprint, getValueByCSVHeader, isValueValid } from '../../cards/CardBlueprint'
+import { CardConfig } from '../../project-configs/getProjectConfig'
 
 type CardImportTableProps = {
   headers: string[]
   cardBlueprints: CardBlueprint[]
+  cardConfig: CardConfig
 }
 
 const TableContainer = styled.div`
@@ -24,13 +25,13 @@ const StyledCell = styled(Cell)`
   white-space: break-spaces;
 `
 
-const CardImportTable = ({ headers, cardBlueprints }: CardImportTableProps): ReactElement => {
+const CardImportTable = ({ headers, cardBlueprints, cardConfig }: CardImportTableProps): ReactElement => {
   const cellRenderer = useCallback(
     (rowIndex: number, columnIndex: number) => {
-      const cardBlueprint = cardBlueprints[rowIndex] as CSVCard
+      const cardBlueprint = cardBlueprints[rowIndex]
       const header = headers[columnIndex]
-      const valid = cardBlueprint.isValueValid(header)
-      const value = cardBlueprint.getValue(header)
+      const valid = isValueValid(cardBlueprint, cardConfig, header)
+      const value = getValueByCSVHeader(cardBlueprint, cardConfig, header)
       return (
         <StyledCell
           wrapText
@@ -38,12 +39,12 @@ const CardImportTable = ({ headers, cardBlueprints }: CardImportTableProps): Rea
           tooltip={!valid ? 'Validierungsfehler' : undefined}
           intent={!valid ? 'danger' : 'none'}>
           <TruncatedFormat2 detectTruncation preformatted>
-            {value || '-'}
+            {value?.toString() ?? '-'}
           </TruncatedFormat2>
         </StyledCell>
       )
     },
-    [cardBlueprints, headers]
+    [cardConfig, cardBlueprints, headers]
   )
 
   return (
