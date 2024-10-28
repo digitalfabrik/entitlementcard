@@ -1,5 +1,5 @@
 docker:
-  - image: debian:12 # We deploy on debian -> pack on debian
+  - image: debian:12
 working_directory: ~/project/backend
 steps:
   - checkout:
