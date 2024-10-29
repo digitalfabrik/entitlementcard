@@ -44,7 +44,7 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
   }
 
   // TODO headers or csvHeader?
-  const lineToBlueprint = useCallback(
+  const lineToCard = useCallback(
     (line: string[], csvHeader: string[]): Card => {
       if (isFreinetFormat) {
         convertFreinetImport(line, csvHeader, projectConfig)
@@ -73,7 +73,7 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
       {cards.length === 0 ? (
         <ImportCardsInput
           setCards={setCards}
-          lineToCard={lineToBlueprint}
+          lineToCard={lineToCard}
           headers={headers}
           isFreinetFormat={isFreinetFormat}
         />
