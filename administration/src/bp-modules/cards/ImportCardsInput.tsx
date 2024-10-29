@@ -82,9 +82,9 @@ const ImportCardsInput = ({ setCards, lineToCard, headers, isFreinetFormat }: Im
       }
 
       const csvHeader = lines.shift() ?? []
-      const blueprints = lines.map(line => lineToCard(line, csvHeader))
+      const cards = lines.map(line => lineToCard(line, csvHeader))
 
-      setCards(blueprints)
+      setCards(cards)
       setInputState('idle')
     },
     [lineToCard, setCards, showInputError]

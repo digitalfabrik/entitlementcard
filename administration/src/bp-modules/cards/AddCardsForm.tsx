@@ -38,7 +38,7 @@ const FormColumn = styled.div`
 type CreateCardsFormProps = {
   region: Region
   cards: Card[]
-  setCards: (blueprints: Card[]) => void
+  setCards: (cards: Card[]) => void
   updateCard: (updatedCard: Partial<Card>, index: number) => void
   setApplicationIdToMarkAsProcessed: (applicationIdToMarkAsProcessed: number | undefined) => void
 }
@@ -81,8 +81,8 @@ const AddCardsForm = ({
     scrollToBottom()
   }, [cards, projectConfig.card, region, setCards])
 
-  const removeCard = (oldBlueprint: Card) => {
-    setCards(cards.filter(blueprint => blueprint !== oldBlueprint))
+  const removeCard = (oldCard: Card) => {
+    setCards(cards.filter(card => card !== oldCard))
   }
 
   return (
@@ -91,11 +91,11 @@ const AddCardsForm = ({
         onFinishAll={() => {
           scrollToBottom()
         }}>
-        {cards.map((blueprint, index) => (
-          <FormColumn key={blueprint.id}>
+        {cards.map((card, index) => (
+          <FormColumn key={card.id}>
             <AddCardForm
-              card={blueprint}
-              onRemove={() => removeCard(blueprint)}
+              card={card}
+              onRemove={() => removeCard(card)}
               updateCard={updatedCard => updateCard(updatedCard, index)}
             />
           </FormColumn>
