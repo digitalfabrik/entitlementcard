@@ -13,7 +13,7 @@ const CardSelfServiceInformation = ({ goToActivation }: CardSelfServiceInformati
   const { ios, android } = getBuildConfig(window.location.hostname)
   return (
     <>
-      <AppStoreLinks playStoreUrl={android.appStoreLink} appStoreUrl={ios.appStoreLink} />
+      <AppStoreLinks playStoreLink={android.appStoreLink} appStoreLink={ios.appStoreLink} />
       <InfoText>
         <div>
           <b>App bereits installiert?</b>

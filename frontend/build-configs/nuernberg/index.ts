@@ -110,7 +110,7 @@ const nuernberg: BuildConfigType = {
         ...nuernbergCommon,
         bundleIdentifier: IOS_BUNDLE_IDENTIFIER,
         provisioningProfileSpecifier: "match AppStore app.sozialpass.nuernberg",
-        appStoreLink: "https://apps.apple.com/ky/app/n%C3%BCrnberg-pass/id1667599309",
+        appStoreLink: "https://apps.apple.com/de/app/n%C3%BCrnberg-pass/id1667599309",
     },
 }
 
