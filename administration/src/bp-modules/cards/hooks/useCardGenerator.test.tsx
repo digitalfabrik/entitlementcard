@@ -4,7 +4,7 @@ import { act, renderHook } from '@testing-library/react'
 import { mocked } from 'jest-mock'
 import React, { ReactNode } from 'react'
 
-import CardBlueprint from '../../../cards/CardBlueprint'
+import { generateCardInfo, initializeCardBlueprint } from '../../../cards/CardBlueprint'
 import { PdfError, generatePdf } from '../../../cards/PdfFactory'
 import createCards, { CreateCardsError, CreateCardsResult } from '../../../cards/createCards'
 import deleteCards from '../../../cards/deleteCards'
@@ -46,19 +46,19 @@ describe('useCardGenerator', () => {
   }
 
   const cards = [
-    new CardBlueprint('Thea Test', bayernConfig.card, [region]),
-    new CardBlueprint('Thea Test', bayernConfig.card, [region]),
+    initializeCardBlueprint(bayernConfig.card, region, { fullName: 'Thea Test' }),
+    initializeCardBlueprint(bayernConfig.card, region, { fullName: 'Thea Test' }),
   ]
   const codes: CreateCardsResult[] = [
     {
       dynamicCardInfoHashBase64: 'rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=',
-      dynamicActivationCode: new DynamicActivationCode({ info: cards[0].generateCardInfo() }),
+      dynamicActivationCode: new DynamicActivationCode({ info: generateCardInfo(cards[0]) }),
     },
     {
       dynamicCardInfoHashBase64: 'rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=',
-      dynamicActivationCode: new DynamicActivationCode({ info: cards[1].generateCardInfo() }),
+      dynamicActivationCode: new DynamicActivationCode({ info: generateCardInfo(cards[1]) }),
       staticCardInfoHashBase64: 'rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=',
-      staticVerificationCode: new StaticVerificationCode({ info: cards[1].generateCardInfo() }),
+      staticVerificationCode: new StaticVerificationCode({ info: generateCardInfo(cards[1]) }),
     },
   ]
 

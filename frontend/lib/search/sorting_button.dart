@@ -1,10 +1,8 @@
-import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/location/determine_position.dart';
 import 'package:ehrenamtskarte/search/search_page.dart';
 import 'package:ehrenamtskarte/widgets/extended_floating_action_button.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:provider/provider.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
@@ -29,21 +27,19 @@ class _SortingButtonState extends State<SortingButton> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final settings = context.read<SettingsModel>();
-      _determinePosition(false, settings);
+      _determinePosition(false);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final settings = Provider.of<SettingsModel>(context);
     final t = context.t;
     if (widget.sortingMode == SortingMode.alphabetically) {
       return Container(
         alignment: Alignment.bottomCenter,
         padding: const EdgeInsets.all(10),
         child: ExtendedFloatingActionButton(
-          onPressed: () => _sortByDistance(settings),
+          onPressed: () => _sortByDistance(),
           icon: Icons.my_location,
           loading: _locationStatus == LocationRequestStatus.requesting,
           label: t.search.findCloseBy,
@@ -54,7 +50,7 @@ class _SortingButtonState extends State<SortingButton> {
         alignment: Alignment.bottomCenter,
         padding: const EdgeInsets.all(10),
         child: ExtendedFloatingActionButton(
-          onPressed: () => _sortAlphabetically(settings),
+          onPressed: () => _sortAlphabetically(),
           label: t.search.findAlphabetically,
           icon: Icons.sort_by_alpha,
         ),
@@ -79,32 +75,24 @@ class _SortingButtonState extends State<SortingButton> {
     );
   }
 
-  void _sortAlphabetically(SettingsModel settings) async {
+  void _sortAlphabetically() async {
     widget.setSortingMode(SortingMode.alphabetically);
   }
 
-  Future<void> _sortByDistance(SettingsModel settings) async {
-    await _determinePosition(true, settings);
+  Future<void> _sortByDistance() async {
+    await _determinePosition(true);
   }
 
-  Future<void> _determinePosition(bool userInteract, SettingsModel settings) async {
+  Future<void> _determinePosition(bool userInteract) async {
     setState(() => _locationStatus = LocationRequestStatus.requesting);
     final requiredPosition = userInteract
-        ? await determinePosition(
-            context,
-            requestIfNotGranted: true,
-            onDisableFeature: () async {
-              settings.setLocationFeatureEnabled(enabled: false);
-              _showFeatureDisabled();
-            },
-            onEnableFeature: () async => settings.setLocationFeatureEnabled(enabled: true),
-          )
-        : await determinePosition(
-            context,
-            requestIfNotGranted: false,
-            onDisableFeature: () async => settings.setLocationFeatureEnabled(enabled: false),
-            onEnableFeature: () async => settings.setLocationFeatureEnabled(enabled: true),
-          ).timeout(const Duration(milliseconds: 2000), onTimeout: () => RequestedPosition.unknown());
+        ? await determinePosition(context, requestIfNotGranted: true)
+        : await determinePosition(context, requestIfNotGranted: false)
+            .timeout(const Duration(milliseconds: 2000), onTimeout: () => RequestedPosition.unknown());
+
+    if (userInteract && requiredPosition.locationStatus == LocationStatus.deniedForever) {
+      await _showFeatureDisabled();
+    }
 
     final position = requiredPosition.position;
     if (position != null) {

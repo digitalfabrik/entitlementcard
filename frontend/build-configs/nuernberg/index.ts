@@ -19,6 +19,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
     theme: {
         primaryLight: "#D88C51",
         primaryDark: "#F9B787",
+        fontFamily: "Roboto",
     },
     mapStyleUrl: {
         production: "https://api.entitlementcard.app/project/nuernberg.sozialpass.app/map",

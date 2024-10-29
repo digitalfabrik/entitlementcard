@@ -20,6 +20,7 @@ export const koblenzCommon: CommonBuildConfigType = {
     theme: {
         primaryLight: "#d10074",
         primaryDark: "#d10074",
+        fontFamily: "TexGyreHeroes",
     },
     mapStyleUrl: {
         production: "https://api.entitlementcard.app/project/koblenz.sozialpass.app/map",

@@ -3,6 +3,7 @@ import React, { ReactElement, useContext, useState } from 'react'
 import styled from 'styled-components'
 
 import KoblenzLogo from '../../assets/koblenz_logo.svg'
+import { updateCard } from '../../cards/CardBlueprint'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import CardSelfServiceActivation from './CardSelfServiceActivation'
 import CardSelfServiceForm from './CardSelfServiceForm'
@@ -78,17 +79,12 @@ const CardSelfServiceView = (): ReactElement => {
     setSelfServiceState,
     isLoading,
     generateCards,
-    setSelfServiceCards,
-    selfServiceCards,
+    setSelfServiceCard,
+    selfServiceCard,
     deepLink,
     code,
     downloadPdf,
   } = useCardGeneratorSelfService()
-  const card = selfServiceCards[0]
-
-  const notifyUpdate = () => {
-    setSelfServiceCards([...selfServiceCards])
-  }
 
   const onDownloadPdf = async () => {
     if (code) {
@@ -116,10 +112,10 @@ const CardSelfServiceView = (): ReactElement => {
         <Text>{selfServiceStepInfo[selfServiceState].text}</Text>
         {selfServiceState === CardSelfServiceStep.form && (
           <CardSelfServiceForm
-            card={card}
+            card={selfServiceCard}
             dataPrivacyAccepted={dataPrivacyAccepted}
             setDataPrivacyAccepted={setDataPrivacyAccepted}
-            notifyUpdate={notifyUpdate}
+            updateCard={updatedCard => setSelfServiceCard(updateCard(selfServiceCard, updatedCard))}
             generateCards={generateCards}
           />
         )}
