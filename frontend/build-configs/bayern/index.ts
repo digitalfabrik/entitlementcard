@@ -19,6 +19,7 @@ export const bayernCommon: CommonBuildConfigType = {
     theme: {
         primaryLight: "#8377A9",
         primaryDark: "#8377A9",
+        fontFamily: "Roboto",
     },
     mapStyleUrl: {
         production: "https://api.entitlementcard.app/project/bayern.ehrenamtskarte.app/map",
