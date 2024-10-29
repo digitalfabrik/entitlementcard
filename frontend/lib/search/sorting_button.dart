@@ -58,7 +58,7 @@ class _SortingButtonState extends State<SortingButton> {
     }
   }
 
-  Future<void> _showFeatureDisabled() async {
+  void _showFeatureDisabled() {
     final messengerState = ScaffoldMessenger.of(context);
     final t = context.t;
     messengerState.showSnackBar(
@@ -85,16 +85,20 @@ class _SortingButtonState extends State<SortingButton> {
 
   Future<void> _determinePosition(bool userInteract) async {
     setState(() => _locationStatus = LocationRequestStatus.requesting);
-    final requiredPosition = userInteract
-        ? await determinePosition(context, requestIfNotGranted: true)
-        : await determinePosition(context, requestIfNotGranted: false)
-            .timeout(const Duration(milliseconds: 2000), onTimeout: () => RequestedPosition.unknown());
+    final RequestedPosition requestedPosition;
+    if (userInteract) {
+      requestedPosition = await determinePosition(context, requestIfNotGranted: true);
+    } else {
+      requestedPosition = await determinePosition(context, requestIfNotGranted: false)
+          .timeout(const Duration(milliseconds: 2000), onTimeout: () => RequestedPosition.unknown());
+    }
+    if (!mounted) return;
 
-    if (userInteract && requiredPosition.locationStatus == LocationStatus.deniedForever) {
-      await _showFeatureDisabled();
+    if (userInteract && requestedPosition.locationStatus == LocationStatus.deniedForever) {
+      _showFeatureDisabled();
     }
 
-    final position = requiredPosition.position;
+    final position = requestedPosition.position;
     if (position != null) {
       widget.setCoordinates(position);
       setState(() => _locationStatus = LocationRequestStatus.requestSuccessful);

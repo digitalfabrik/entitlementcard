@@ -36,8 +36,11 @@ class ActivationCodeScannerPage extends StatelessWidget {
   }
 
   Future<void> _onCodeScanned(BuildContext context, Uint8List code) async {
-    Future<void> showError(String msg, dynamic stackTrace) async =>
-        [await QrParsingErrorDialog.showErrorDialog(context, msg), await reportError(msg, stackTrace)];
+    Future<void> showError(String msg, dynamic stackTrace) async {
+      reportError(msg, stackTrace);
+      if (!context.mounted) return;
+      await QrParsingErrorDialog.showErrorDialog(context, msg);
+    }
 
     try {
       final activationCode = const ActivationCodeParser().parseQrCodeContent(code);
@@ -51,11 +54,13 @@ class ActivationCodeScannerPage extends StatelessWidget {
     } on QrCodeFieldMissingException catch (e) {
       await showError(t.identification.codeInvalidMissing(missing: e.missingFieldName), null);
     } on QrCodeWrongTypeException catch (_) {
+      if (!context.mounted) return;
       await QrParsingErrorDialog.showErrorDialog(context, t.identification.codeInvalidType);
     } on CardExpiredException catch (e) {
       final expirationDate = DateFormat('dd.MM.yyyy').format(e.expiry);
       await showError(t.identification.codeExpired(expirationDate: expirationDate), null);
     } on ServerCardActivationException catch (_) {
+      if (!context.mounted) return;
       await ConnectionFailedDialog.show(context, t.identification.codeActivationFailedConnection);
     } on Exception catch (e, stacktrace) {
       debugPrintStack(stackTrace: stacktrace, label: e.toString());
