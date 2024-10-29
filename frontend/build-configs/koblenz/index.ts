@@ -19,7 +19,7 @@ export const koblenzCommon: CommonBuildConfigType = {
     categories: [9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
     theme: {
         primaryLight: "#d10074",
-        primaryDark: "#d10074",
+        primaryDark: "#ff68bc",
         fontFamily: "TexGyreHeroes",
     },
     mapStyleUrl: {
