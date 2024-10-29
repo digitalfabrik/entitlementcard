@@ -38,7 +38,7 @@ class VerificationInfoDialog extends StatelessWidget {
           child: Text(t.identification.stopShowing),
           onPressed: () async {
             await settings.setHideVerificationInfo(enabled: true);
-            _onDone(context);
+            if (context.mounted) _onDone(context);
           },
         ),
         TextButton(
