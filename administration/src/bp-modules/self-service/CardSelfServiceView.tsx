@@ -3,7 +3,7 @@ import React, { ReactElement, useContext, useState } from 'react'
 import styled from 'styled-components'
 
 import KoblenzLogo from '../../assets/koblenz_logo.svg'
-import { updateCard } from '../../cards/CardBlueprint'
+import { updateCard } from '../../cards/Card'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import CardSelfServiceActivation from './CardSelfServiceActivation'
 import CardSelfServiceForm from './CardSelfServiceForm'
