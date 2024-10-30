@@ -23,7 +23,7 @@ const selfServiceStepInfo: SelfServiceStepInfo[] = [
   {
     stepNr: 2,
     headline: 'Ihr KoblenzPass wurde erstellt.',
-    subHeadline: 'Nur noch ein paar Klicks, bis Sie alle Vorteile nutzen zu können.',
+    subHeadline: 'Nur noch ein paar Klicks, bis Sie alle Vorteile nutzen können.',
     text: (
       <span>
         Haben Sie die App noch nicht? <b>Laden Sie sie jetzt herunter, um fortzufahren.</b>
