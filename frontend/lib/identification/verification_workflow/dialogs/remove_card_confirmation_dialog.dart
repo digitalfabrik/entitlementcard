@@ -49,7 +49,7 @@ class RemoveCardConfirmationDialogState extends State<RemoveCardConfirmationDial
       actionsPadding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
       title: ListTile(
         leading: Icon(Icons.warning, color: theme.colorScheme.primaryContainer, size: 30),
-        title: Text(t.identification.removeTitle, style: TextStyle(fontSize: 18)),
+        title: Text(t.identification.removeTitle, style: theme.textTheme.titleMedium),
       ),
       content: SingleChildScrollView(
         child: ListBody(
@@ -67,8 +67,16 @@ class RemoveCardConfirmationDialogState extends State<RemoveCardConfirmationDial
         ),
       ),
       actions: <Widget>[
-        TextButton(child: const Text('Abbrechen'), onPressed: () => Navigator.of(context).pop(false)),
-        TextButton(child: const Text('Löschen'), onPressed: () => removeCard(context)),
+        TextButton(
+          child: const Text('Abbrechen'),
+          onPressed: () => Navigator.of(context).pop(false),
+          style: theme.textButtonTheme.style,
+        ),
+        TextButton(
+          child: const Text('Löschen'),
+          onPressed: () => removeCard(context),
+          style: theme.textButtonTheme.style,
+        ),
       ],
     );
   }

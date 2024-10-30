@@ -11,30 +11,32 @@ class VerificationInfoDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsModel>(context);
     final t = context.t;
+    final theme = Theme.of(context);
     return AlertDialog(
-      title: Text(t.identification.verifyInfoTitle),
+      title: Text(t.identification.verifyInfoTitle, style: theme.textTheme.titleLarge),
       content: SingleChildScrollView(
         child: ListBody(
           children: [
             _EnumeratedListItem(
               index: 0,
-              child: Text(t.identification.scanCode),
+              child: Text(t.identification.scanCode, style: theme.textTheme.bodyLarge),
             ),
-            _EnumeratedListItem(index: 1, child: Text(t.identification.checkingCode)),
+            _EnumeratedListItem(index: 1, child: Text(t.identification.checkingCode, style: theme.textTheme.bodyLarge)),
             _EnumeratedListItem(
               index: 2,
-              child: Text(t.identification.compareWithID),
+              child: Text(t.identification.compareWithID, style: theme.textTheme.bodyLarge),
             ),
             SizedBox(height: 12),
             Text(
               t.identification.internetRequired,
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: theme.textTheme.titleSmall,
             ),
           ],
         ),
       ),
       actions: [
         TextButton(
+          style: theme.textButtonTheme.style,
           child: Text(t.identification.stopShowing),
           onPressed: () async {
             await settings.setHideVerificationInfo(enabled: true);
@@ -42,6 +44,7 @@ class VerificationInfoDialog extends StatelessWidget {
           },
         ),
         TextButton(
+          style: theme.textButtonTheme.style,
           child: Text(t.common.next),
           onPressed: () => _onDone(context),
         )
@@ -70,16 +73,17 @@ class _EnumeratedListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         children: [
           CircleAvatar(
-            backgroundColor: Theme.of(context).colorScheme.primary,
+            backgroundColor: theme.colorScheme.primary,
             child: Text(
               '${index + 1}',
               style: TextStyle(
-                color: Theme.of(context).colorScheme.background,
+                color: theme.colorScheme.background,
                 fontWeight: FontWeight.bold,
               ),
             ),

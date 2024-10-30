@@ -63,6 +63,7 @@ class _QRViewState extends State<QrCodeScanner> {
           }
           final controller = hasCameraIssues ? _controllerPredefinedCameraResolution : _controller;
           final t = context.t;
+          final theme = Theme.of(context);
           return Stack(
             children: [
               Column(
@@ -85,7 +86,7 @@ class _QRViewState extends State<QrCodeScanner> {
                           decoration: ShapeDecoration(
                             shape: QrScannerOverlayShape(
                               borderRadius: 10,
-                              borderColor: Theme.of(context).colorScheme.secondary,
+                              borderColor: theme.colorScheme.secondary,
                               borderLength: 30,
                               borderWidth: 10,
                               cutOutSize: _calculateScanArea(context),
@@ -103,7 +104,7 @@ class _QRViewState extends State<QrCodeScanner> {
                         children: [
                           Container(
                             margin: const EdgeInsets.all(8),
-                            child: Text(t.identification.scanQRCode),
+                            child: Text(t.identification.scanQRCode, style: theme.textTheme.bodyLarge),
                           ),
                           QrCodeScannerControls(controller: controller)
                         ],

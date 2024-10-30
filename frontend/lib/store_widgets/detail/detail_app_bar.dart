@@ -60,6 +60,7 @@ class DetailAppBarBottom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       alignment: Alignment.bottomLeft,
@@ -68,13 +69,13 @@ class DetailAppBarBottom extends StatelessWidget {
         children: [
           Text(
             categoryName ?? '',
-            style: Theme.of(context).textTheme.bodyMedium?.apply(color: textColorGrey),
+            style: textTheme.bodyLarge?.apply(color: textColorGrey),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
           Text(
             title ?? '',
-            style: Theme.of(context).textTheme.titleLarge?.apply(color: textColor),
+            style: textTheme.titleLarge?.apply(color: textColor),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           )
@@ -106,8 +107,9 @@ class DetailAppBar extends StatelessWidget {
     final isFavorite = favoritesProvider.isFavorite(storeId);
 
     final accentColor = getDarkenedColorForCategory(context, categoryId);
-    final foregroundColor = Theme.of(context).appBarTheme.foregroundColor;
-    final backgroundColor = accentColor ?? Theme.of(context).colorScheme.primary;
+    final theme = Theme.of(context);
+    final foregroundColor = theme.appBarTheme.foregroundColor;
+    final backgroundColor = accentColor ?? theme.colorScheme.primary;
     final textColor = getReadableOnColor(backgroundColor);
     final textColorGrey = getReadableOnColorSecondary(backgroundColor);
 

@@ -7,13 +7,20 @@ class LocationServiceDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final t = context.t;
     return AlertDialog(
-      title: Text(t.location.activateLocationAccess),
-      content: Text(t.location.activateLocationAccessSettings),
+      title: Text(t.location.activateLocationAccess, style: theme.textTheme.titleLarge),
+      content: Text(t.location.activateLocationAccessSettings, style: theme.textTheme.bodyLarge),
       actions: [
-        TextButton(child: Text(t.common.cancel), onPressed: () => Navigator.of(context).pop(false)),
-        TextButton(child: Text(t.common.openSettings), onPressed: () => Navigator.of(context).pop(true))
+        TextButton(
+            child: Text(t.common.cancel),
+            onPressed: () => Navigator.of(context).pop(false),
+            style: theme.textButtonTheme.style),
+        TextButton(
+            child: Text(t.common.openSettings),
+            onPressed: () => Navigator.of(context).pop(true),
+            style: theme.textButtonTheme.style)
       ],
     );
   }
@@ -27,16 +34,28 @@ class RationaleDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
+    final theme = Theme.of(context);
     return AlertDialog(
-      title: Text(t.location.locationPermission),
+      title: Text(t.location.locationPermission, style: theme.textTheme.titleLarge),
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
-        children: <Widget>[Text(_rationale), Text(t.location.askPermissionsAgain)],
+        children: <Widget>[
+          Text(_rationale, style: theme.textTheme.bodyLarge),
+          Text(t.location.askPermissionsAgain, style: theme.textTheme.bodyLarge)
+        ],
       ),
       actions: [
-        TextButton(child: Text(t.location.grantPermission), onPressed: () => Navigator.of(context).pop(true)),
-        TextButton(child: Text(t.common.cancel), onPressed: () => Navigator.of(context).pop(false))
+        TextButton(
+          child: Text(t.location.grantPermission),
+          onPressed: () => Navigator.of(context).pop(true),
+          style: theme.textButtonTheme.style,
+        ),
+        TextButton(
+          child: Text(t.common.cancel),
+          onPressed: () => Navigator.of(context).pop(false),
+          style: theme.textButtonTheme.style,
+        )
       ],
     );
   }

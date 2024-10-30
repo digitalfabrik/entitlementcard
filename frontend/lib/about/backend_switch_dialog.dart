@@ -20,6 +20,7 @@ class BackendSwitchDialogState extends State<BackendSwitchDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return SimpleDialog(
       children: [
         Padding(
@@ -27,10 +28,10 @@ class BackendSwitchDialogState extends State<BackendSwitchDialog> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Switch Endpoint', style: Theme.of(context).textTheme.headlineMedium),
+              Text('Switch Endpoint', style: theme.textTheme.titleLarge),
               IconButton(
                 icon: const Icon(Icons.close),
-                color: Theme.of(context).appBarTheme.backgroundColor,
+                color: theme.appBarTheme.backgroundColor,
                 alignment: Alignment.topRight,
                 onPressed: () {
                   Navigator.of(context, rootNavigator: true).pop();
@@ -44,7 +45,7 @@ class BackendSwitchDialogState extends State<BackendSwitchDialog> {
           child: Column(
             children: [
               Text('Current Endpoint: \n${Configuration.of(context).graphqlUrl}',
-                  style: Theme.of(context).textTheme.bodyMedium),
+                  style: theme.textTheme.bodyLarge?.apply(color: theme.hintColor)),
               Padding(
                 padding: EdgeInsets.only(top: 10, bottom: 10),
                 child: TextField(
@@ -60,10 +61,8 @@ class BackendSwitchDialogState extends State<BackendSwitchDialog> {
               ),
               password.toLowerCase() == widget.passwordToUnlock
                   ? ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                          textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                      child: const Text('Switch API'),
+                      style: theme.textButtonTheme.style,
+                      child: Text('Switch API'),
                       onPressed: () => switchBackendUrl(context),
                     )
                   : Container(),

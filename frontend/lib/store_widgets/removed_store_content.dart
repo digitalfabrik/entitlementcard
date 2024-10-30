@@ -14,6 +14,7 @@ class RemovedStoreContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final favoritesProvider = Provider.of<FavoritesModel>(context);
     return Expanded(
         child: Scaffold(
@@ -25,17 +26,18 @@ class RemovedStoreContent extends StatelessWidget {
             children: [
               Text(
                 t.store.acceptingStoreNotAvailable,
-                style: Theme.of(context).textTheme.bodyLarge,
+                style: theme.textTheme.bodyLarge,
               ),
               Text(
                 t.store.removeDescription,
-                style: Theme.of(context).textTheme.bodyLarge,
+                style: theme.textTheme.bodyLarge,
               ),
-              Divider(thickness: 0.7, height: 48, color: Theme.of(context).primaryColorLight),
+              Divider(thickness: 0.7, height: 48, color: theme.primaryColorLight),
               ButtonBar(
                 alignment: MainAxisAlignment.center,
                 children: [
                   OutlinedButton(
+                      style: theme.textButtonTheme.style,
                       child: Text(t.store.removeButtonText),
                       onPressed: () async {
                         await _removeFavorite(context, favoritesProvider);

@@ -30,6 +30,8 @@ class AboutPageState extends State<AboutPage> {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorTheme = Theme.of(context).colorScheme;
     final config = Configuration.of(context);
     final t = context.t;
     return FutureBuilder<PackageInfo>(
@@ -58,10 +60,10 @@ class AboutPageState extends State<AboutPage> {
               ),
             ),
             Center(
-              child: Text(packageInfo.appName, style: Theme.of(context).textTheme.headlineSmall),
+              child: Text(packageInfo.appName, style: textTheme.headlineSmall),
             ),
             Center(
-              child: Text(packageInfo.version, style: Theme.of(context).textTheme.bodyMedium),
+              child: Text(packageInfo.version, style: textTheme.bodyLarge?.apply(color: colorTheme.tertiary)),
             ),
             const SizedBox(height: 20),
             const Divider(
@@ -74,18 +76,15 @@ class AboutPageState extends State<AboutPage> {
                 child: Column(
                   children: [
                     Center(
-                      child: Text(t.about.publisher, style: Theme.of(context).textTheme.titleSmall),
+                      child: Text(t.about.publisher, style: textTheme.titleSmall),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 10, right: 10, top: 16, bottom: 16),
-                      child: Text(buildConfig.publisherAddress, style: Theme.of(context).textTheme.bodyLarge),
+                      child: Text(buildConfig.publisherAddress, style: textTheme.bodyLarge),
                     ),
                     Text(
                       t.about.moreInformation,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.merge(TextStyle(color: Theme.of(context).colorScheme.secondary)),
+                      style: textTheme.bodyLarge?.apply(color: colorTheme.secondary),
                     ),
                   ],
                 ),
@@ -119,12 +118,12 @@ class AboutPageState extends State<AboutPage> {
               ContentTile(icon: Icons.copyright, title: t.about.licenses(n: 1), children: getCopyrightText(context)),
               ListTile(
                 leading: const Icon(Icons.privacy_tip_outlined),
-                title: Text(t.about.privacyPolicy),
+                title: Text(t.about.privacyPolicy, style: textTheme.bodyLarge),
                 onTap: () => launchUrlString(buildConfig.dataPrivacyPolicyUrl, mode: LaunchMode.externalApplication),
               ),
               ListTile(
                 leading: const Icon(Icons.accessibility_new_outlined),
-                title: Text(t.about.accessibilityPolicy),
+                title: Text(t.about.accessibilityPolicy, style: textTheme.bodyLarge),
                 onTap: () => launchUrlString(accessibilityPolicyUrl, mode: LaunchMode.externalApplication),
               ),
               ContentTile(
@@ -134,7 +133,7 @@ class AboutPageState extends State<AboutPage> {
               ),
               ListTile(
                 leading: const Icon(Icons.book_outlined),
-                title: Text(t.about.dependencies),
+                title: Text(t.about.dependencies, style: textTheme.bodyLarge),
                 onTap: () {
                   Navigator.of(context, rootNavigator: true).push(
                     AppRoute(
@@ -145,7 +144,7 @@ class AboutPageState extends State<AboutPage> {
               ),
               ListTile(
                 leading: const Icon(Icons.code_outlined),
-                title: Text(t.about.sourceCode),
+                title: Text(t.about.sourceCode, style: textTheme.bodyLarge),
                 onTap: () {
                   launchUrlString(
                     'https://github.com/digitalfabrik/entitlementcard',
@@ -163,11 +162,12 @@ class AboutPageState extends State<AboutPage> {
                   ),
                   ListTile(
                     leading: const Icon(Icons.build),
-                    title: Text(t.about.developmentOptions),
+                    title: Text(t.about.developmentOptions, style: textTheme.bodyLarge),
                     onTap: () => showDialog(
                       context: context,
-                      builder: (context) =>
-                          SimpleDialog(title: Text(t.about.developmentOptions), children: [DevSettingsView()]),
+                      builder: (context) => SimpleDialog(
+                          title: Text(t.about.developmentOptions, style: textTheme.titleLarge),
+                          children: [DevSettingsView()]),
                     ),
                   )
                 ],

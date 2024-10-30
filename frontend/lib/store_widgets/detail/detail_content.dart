@@ -30,6 +30,7 @@ class DetailContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
+    final theme = Theme.of(context);
     final address = acceptingStore.address;
     final street = address.street;
     final location = '${address.postalCode} ${address.location}';
@@ -53,9 +54,9 @@ class DetailContent extends StatelessWidget {
             if (storeDescription != null) ...[
               Text(
                 storeDescription,
-                style: Theme.of(context).textTheme.bodyLarge,
+                style: theme.textTheme.bodyLarge,
               ),
-              Divider(thickness: 0.7, height: 48, color: Theme.of(context).primaryColorLight),
+              Divider(thickness: 0.7, height: 48, color: theme.primaryColorLight),
             ],
             Column(
               children: <Widget>[
@@ -102,12 +103,13 @@ class DetailContent extends StatelessWidget {
               Divider(
                 thickness: 0.7,
                 height: 48,
-                color: Theme.of(context).primaryColorLight,
+                color: theme.primaryColorLight,
               ),
               ButtonBar(
                 alignment: MainAxisAlignment.center,
                 children: [
                   OutlinedButton(
+                    style: theme.textButtonTheme.style,
                     child: Text(t.store.showOnMap),
                     onPressed: () => _showOnMap(context),
                   ),

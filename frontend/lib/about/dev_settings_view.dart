@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:base32/base32.dart';
 import 'package:ehrenamtskarte/app.dart';
-import 'package:ehrenamtskarte/build_config/build_config.dart';
+import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/self_verify_card.dart';
@@ -49,48 +49,50 @@ class DevSettingsView extends StatelessWidget {
     final settings = Provider.of<SettingsModel>(context);
     final client = GraphQLProvider.of(context).value;
     final userCodeModel = Provider.of<UserCodeModel>(context);
+    final textTheme = Theme.of(context).textTheme;
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Column(
         children: [
           ListTile(
-            title: const Text('Reset cards'),
+            title: Text('Reset cards', style: textTheme.bodyLarge),
             onTap: () => _resetEakData(context, userCodeModel),
           ),
           ListTile(
-            title: const Text('Set (invalid) sample card'),
+            title: Text('Set (invalid) sample card', style: textTheme.bodyLarge),
             onTap: () => _setSampleCard(context),
           ),
           ListTile(
-            title: Text('Set base64 card (Limit: ${buildConfig.maxCardAmount})'),
+            title: Text('Set base64 card (Limit: ${buildConfig.maxCardAmount})', style: textTheme.bodyLarge),
             enabled: !hasReachedCardLimit(userCodeModel.userCodes),
             onTap: () => _showRawCardInput(context),
           ),
           ListTile(
-            title: const Text('Show Intro Slides'),
+            title: Text('Show Intro Slides', style: textTheme.bodyLarge),
             onTap: () => _showIntroSlides(context),
           ),
           ListTile(
-            title: const Text('Set expired last card verification'),
+            title: Text('Set expired last card verification', style: textTheme.bodyLarge),
             onTap: () => _setExpiredLastVerifications(context),
           ),
           ListTile(
-              title: const Text('Trigger self-verification'),
+              title: Text('Trigger self-verification', style: textTheme.bodyLarge),
               onTap: () => {
                     for (final userCode in userCodeModel.userCodes)
                       {selfVerifyCard(context, userCode, Configuration.of(context).projectId, client)}
                   }),
           ListTile(
-            title: const Text('Log sample exception'),
+            title: Text('Log sample exception', style: textTheme.bodyLarge),
             onTap: () => log('Sample exception.', error: Exception('Sample exception...')),
           ),
           ListTile(
-            title: const Text('Inspect settings'),
+            title: Text('Inspect settings', style: textTheme.bodyLarge),
             onTap: () {
               showDialog<bool>(
                 context: context,
-                builder: (context) =>
-                    SimpleDialog(title: const Text('Settings'), children: [Text(settings.toString())]),
+                builder: (context) => SimpleDialog(title: Text('Settings', style: textTheme.titleLarge), children: [
+                  Text(settings.toString(), style: textTheme.bodySmall),
+                ]),
               );
             },
           ),
@@ -128,10 +130,11 @@ class DevSettingsView extends StatelessWidget {
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        final theme = Theme.of(context);
         final base64Controller = TextEditingController();
         return AlertDialog(
           scrollable: true,
-          title: const Text('Activate Card from Base64'),
+          title: Text('Activate Card from Base64', style: theme.textTheme.titleLarge),
           content: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Form(
@@ -153,7 +156,8 @@ class DevSettingsView extends StatelessWidget {
           ),
           actions: [
             TextButton(
-              child: const Text('Activate Card'),
+              style: theme.textButtonTheme.style,
+              child: Text('Activate Card'),
               onPressed: () {
                 GoRouter.of(context).push('/$activationRouteName/code#${base64Controller.text}');
               },

@@ -77,13 +77,16 @@ class ConfiguredGraphQlProviderState extends State<ConfiguredGraphQlProvider> {
   }
 
   void _printDebugMessage(BuildContext context, String message) {
+    final theme = Theme.of(context);
     debugPrint(message);
     if (kDebugMode) {
       final messengerState = ScaffoldMessenger.of(context);
       messengerState.showSnackBar(
         SnackBar(
+          backgroundColor: theme.colorScheme.primary,
           behavior: SnackBarBehavior.floating,
-          content: Text('GraphQL Error: $message'),
+          content: Text('GraphQL Error: $message',
+              style: theme.textTheme.bodyLarge?.apply(color: theme.colorScheme.background)),
         ),
       );
     }

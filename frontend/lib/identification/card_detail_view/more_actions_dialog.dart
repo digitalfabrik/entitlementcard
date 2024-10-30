@@ -26,17 +26,18 @@ class MoreActionsDialog extends StatelessWidget {
     final String maxCardAmount = buildConfig.maxCardAmount.toString();
     final bool cardLimitIsReached = hasReachedCardLimit(userCodeModel.userCodes);
     final t = context.t;
+    final theme = Theme.of(context);
 
     return AlertDialog(
       contentPadding: const EdgeInsets.only(top: 12),
-      title: Text(t.common.moreActions),
+      title: Text(t.common.moreActions, style: theme.textTheme.titleLarge),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              title: Text(t.identification.moreActionsApplyTitle),
-              subtitle: Text(t.identification.moreActionsApplyDescription),
+              title: Text(t.identification.moreActionsApplyTitle, style: theme.textTheme.bodyLarge),
+              subtitle: Text(t.identification.moreActionsApplyDescription, style: theme.textTheme.bodySmall),
               leading: const Icon(Icons.assignment, size: 36),
               onTap: () {
                 Navigator.pop(context);
@@ -44,8 +45,8 @@ class MoreActionsDialog extends StatelessWidget {
               },
             ),
             ListTile(
-              title: Text(t.identification.moreActionsVerifyTitle),
-              subtitle: Text(t.identification.moreActionsVerifyDescription),
+              title: Text(t.identification.moreActionsVerifyTitle, style: theme.textTheme.bodyLarge),
+              subtitle: Text(t.identification.moreActionsVerifyDescription, style: theme.textTheme.bodySmall),
               leading: const Icon(Icons.verified, size: 36),
               onTap: () {
                 Navigator.pop(context);
@@ -55,10 +56,14 @@ class MoreActionsDialog extends StatelessWidget {
             ListTile(
               enabled: !cardLimitIsReached,
               title: Text('${t.identification.moreActionsActivateTitle} ($cardsInUse/$maxCardAmount)',
-                  style: TextStyle(color: Theme.of(context).colorScheme.onBackground)),
-              subtitle: Text(cardLimitIsReached
-                  ? t.identification.moreActionsActivateLimitDescription
-                  : t.identification.moreActionsActivateDescription),
+                  style:
+                      theme.textTheme.bodyLarge?.apply(color: cardLimitIsReached ? theme.hintColor : Colors.black87)),
+              subtitle: Text(
+                  cardLimitIsReached
+                      ? t.identification.moreActionsActivateLimitDescription
+                      : t.identification.moreActionsActivateDescription,
+                  style:
+                      theme.textTheme.bodySmall?.apply(color: cardLimitIsReached ? theme.hintColor : Colors.black87)),
               leading: Icon(Icons.add_card, size: 36),
               onTap: () {
                 Navigator.pop(context);
@@ -66,8 +71,8 @@ class MoreActionsDialog extends StatelessWidget {
               },
             ),
             ListTile(
-              title: Text(t.identification.moreActionsRemoveTitle),
-              subtitle: Text(t.identification.moreActionsRemoveDescription),
+              title: Text(t.identification.moreActionsRemoveTitle, style: theme.textTheme.bodyLarge),
+              subtitle: Text(t.identification.moreActionsRemoveDescription, style: theme.textTheme.bodySmall),
               leading: const Icon(Icons.delete, size: 36),
               onTap: () {
                 Navigator.pop(context);
@@ -77,7 +82,10 @@ class MoreActionsDialog extends StatelessWidget {
           ],
         ),
       ),
-      actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text(t.common.cancel))],
+      actions: [
+        TextButton(
+            style: theme.textButtonTheme.style, onPressed: () => Navigator.pop(context), child: Text(t.common.cancel))
+      ],
     );
   }
 }

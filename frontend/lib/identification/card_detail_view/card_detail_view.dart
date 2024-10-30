@@ -163,7 +163,7 @@ class QrCodeAndStatus extends StatelessWidget {
   Widget build(BuildContext context) {
     final CardStatus status = CardStatus.from(userCode);
     final t = context.t;
-
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4),
       child: Column(
@@ -202,10 +202,10 @@ class QrCodeAndStatus extends StatelessWidget {
           Container(
             alignment: Alignment.center,
             child: TextButton(
+              style: theme.textButtonTheme.style,
               onPressed: onMoreActionsPressed,
               child: Text(
                 t.common.moreActions,
-                style: TextStyle(color: Theme.of(context).colorScheme.secondary),
               ),
             ),
           )
@@ -225,7 +225,7 @@ class _PaddedText extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.only(bottom: 4),
       constraints: const BoxConstraints(maxWidth: 300),
-      child: Text(text, textAlign: TextAlign.center),
+      child: Text(text, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyLarge),
     );
   }
 }

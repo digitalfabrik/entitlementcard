@@ -9,18 +9,20 @@ class QrParsingErrorDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final t = context.t;
     return AlertDialog(
-      title: Text(t.identification.scanningFailed),
+      title: Text(t.identification.scanningFailed, style: theme.textTheme.titleLarge),
       content: SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
-            Text(message),
+            Text(message, style: theme.textTheme.bodyLarge),
           ],
         ),
       ),
       actions: <Widget>[
         TextButton(
+          style: theme.textButtonTheme.style,
           child: Text(t.common.ok),
           onPressed: () {
             Navigator.of(context, rootNavigator: true).pop();

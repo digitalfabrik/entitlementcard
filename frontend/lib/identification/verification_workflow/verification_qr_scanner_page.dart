@@ -30,6 +30,7 @@ class VerificationQrScannerPage extends StatelessWidget {
     final config = Configuration.of(context);
     final settings = Provider.of<SettingsModel>(context);
     final currentUserCode = userCode;
+    final theme = Theme.of(context);
     return Column(
       children: [
         CustomAppBar(
@@ -37,7 +38,7 @@ class VerificationQrScannerPage extends StatelessWidget {
           actions: [
             IconButton(
               icon: const Icon(Icons.help),
-              color: Theme.of(context).appBarTheme.foregroundColor,
+              color: theme.appBarTheme.foregroundColor,
               onPressed: () async {
                 await settings.setHideVerificationInfo(enabled: false);
                 await VerificationInfoDialog.show(context);
@@ -52,6 +53,7 @@ class VerificationQrScannerPage extends StatelessWidget {
         ),
         if (config.showDevSettings && currentUserCode != null)
           TextButton(
+            style: theme.textButtonTheme.style,
             onPressed: () async {
               final otp = OTPGenerator(currentUserCode.totpSecret).generateOTP().code;
               final verificationQrCode = QrCode()
