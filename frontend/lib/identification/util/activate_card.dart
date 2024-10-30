@@ -71,6 +71,12 @@ Future<bool> activateCard(
       );
       if (Navigator.canPop(context)) Navigator.maybePop(context);
       return true;
+    case ActivationState.revoked:
+      await QrParsingErrorDialog.showErrorDialog(
+        context,
+        t.identification.codeRevoked,
+      );
+      return false;
     case ActivationState.failed:
       await QrParsingErrorDialog.showErrorDialog(
         context,

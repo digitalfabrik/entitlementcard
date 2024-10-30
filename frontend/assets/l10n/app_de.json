@@ -98,6 +98,7 @@
     "checkRequired": "Prüfung nötig",
     "checkingCode": "Der QR-Code wird durch eine Server-Anfrage geprüft.",
     "codeExpired": "Der eingescannte Code ist bereits am {{expirationDate}} abgelaufen.",
+    "codeRevoked": "Der eingescannte Code konnte nicht aktiviert werden, da er widerrufen wurde.",
     "codeInvalid": "Der Inhalt des eingescannten Codes kann nicht verstanden werden. Vermutlich handelt es sich um einen QR-Code, der nicht für diese App generiert wurde.",
     "codeInvalidMissing": "Der Inhalt des eingescannten Codes ist unvollständig. (Fehlercode: {{missing}}Missing)",
     "codeInvalidType": "Der eingescannte Code ist nicht für die Aktivierung in der App vorgesehen. Bitte verwenden Sie den als Aktivierungscode ausgewiesenen QR-Code.",

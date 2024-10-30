@@ -6,6 +6,7 @@ import java.time.Instant
 enum class ActivationState {
     success,
     did_not_overwrite_existing,
+    revoked,
     failed
 }
 

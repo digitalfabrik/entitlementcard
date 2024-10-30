@@ -98,6 +98,7 @@
     "checkRequired": "Verification necessary",
     "checkingCode": "The QR code is verified by a server request.",
     "codeExpired": "The scanned code has already expired on {{expirationDate}}.",
+    "codeRevoked": "The scanned code could not be activated as it has been revoked.",
     "codeInvalid": "The content of the scanned code cannot be understood. It is probably a QR code that was not generated for this app.",
     "codeInvalidMissing": "The content of the scanned code is incomplete. (Error code: {{missing}}Missing)",
     "codeInvalidType": "The scanned code is not intended for activation in the app. Please use the QR code shown as activation code.",
