@@ -4,11 +4,11 @@ import PlainDate from '../util/PlainDate'
 import {
   generateCardInfo,
   getValueByCSVHeader,
-  initializeCardBlueprint,
+  initializeCard,
   initializeCardFromCSV,
   isValid,
   isValueValid,
-} from './CardBlueprint'
+} from './Card'
 import BavariaCardTypeExtension, { BAVARIA_CARD_TYPE_EXTENSION_NAME } from './extensions/BavariaCardTypeExtension'
 import BirthdayExtension, { BIRTHDAY_EXTENSION_NAME } from './extensions/BirthdayExtension'
 import KoblenzReferenceNumberExtension, {
@@ -18,7 +18,7 @@ import RegionExtension, { REGION_EXTENSION_NAME } from './extensions/RegionExten
 
 jest.useFakeTimers({ now: new Date('2020-01-01') })
 
-describe('CardBlueprint', () => {
+describe('Card', () => {
   const region: Region = {
     id: 6,
     name: 'augsburg',
@@ -35,8 +35,8 @@ describe('CardBlueprint', () => {
     extensions: [BavariaCardTypeExtension, RegionExtension],
   }
 
-  it('should correctly initialize CardBlueprint', () => {
-    const card = initializeCardBlueprint(cardConfig, region, { fullName: 'Thea Test' })
+  it('should correctly initialize Card', () => {
+    const card = initializeCard(cardConfig, region, { fullName: 'Thea Test' })
 
     expect(card.fullName).toBe('Thea Test')
     expect(card.expirationDate).toEqual(PlainDate.from('2023-01-01'))
@@ -45,7 +45,7 @@ describe('CardBlueprint', () => {
   })
 
   it('should generate CardInfo even with invalid expiration date', () => {
-    const card = initializeCardBlueprint(cardConfig, region, {
+    const card = initializeCard(cardConfig, region, {
       fullName: '',
       expirationDate: PlainDate.from('1900-01-01'),
     })
@@ -149,8 +149,8 @@ describe('CardBlueprint', () => {
     }
     const expirationDate = PlainDate.fromLocalDate(new Date()).add(cardConfig.defaultValidity)
 
-    it('should correctly initialize CardBlueprint', () => {
-      const card = initializeCardBlueprint(cardConfig, undefined, { fullName: 'Karla Koblenz' })
+    it('should correctly initialize Card', () => {
+      const card = initializeCard(cardConfig, undefined, { fullName: 'Karla Koblenz' })
 
       expect(card.fullName).toBe('Karla Koblenz')
       expect(card.expirationDate).toEqual(expirationDate)
@@ -161,7 +161,7 @@ describe('CardBlueprint', () => {
     })
 
     it('should generate CardInfo', () => {
-      const card = initializeCardBlueprint(cardConfig, undefined, { fullName: 'Karla Koblenz' })
+      const card = initializeCard(cardConfig, undefined, { fullName: 'Karla Koblenz' })
       expect(generateCardInfo(card).toJson()).toEqual({
         fullName: 'Karla Koblenz',
         expirationDay: expirationDate.toDaysSinceEpoch(),

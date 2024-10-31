@@ -19,6 +19,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
     theme: {
         primaryLight: "#D88C51",
         primaryDark: "#F9B787",
+        fontFamily: "Roboto",
     },
     mapStyleUrl: {
         production: "https://api.entitlementcard.app/project/nuernberg.sozialpass.app/map",
@@ -104,11 +105,13 @@ const nuernberg: BuildConfigType = {
             excludeLocationPlayServices: false,
             excludeX86: false,
         },
+        appStoreLink: `https://play.google.com/store/apps/details?id=${ANDROID_APPLICATION_ID}`,
     },
     ios: {
         ...nuernbergCommon,
         bundleIdentifier: IOS_BUNDLE_IDENTIFIER,
         provisioningProfileSpecifier: "match AppStore app.sozialpass.nuernberg",
+        appStoreLink: "https://apps.apple.com/de/app/n%C3%BCrnberg-pass/id1667599309",
     },
 }
 
