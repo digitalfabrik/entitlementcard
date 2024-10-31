@@ -148,6 +148,9 @@ class CardMutationService {
 
         val userEntitlements = transaction { UserEntitlementsRepository.findByUserHash(userHash.toByteArray()) }
         if (userEntitlements == null) {
+            // This logging is used for rate limiting
+            // See https://git.tuerantuer.org/DF/salt/pulls/187
+            logger.info("${context.remoteIp} failed to create a new card")
             throw UserEntitlementNotFoundException()
         }
         if (userEntitlements.revoked || userEntitlements.endDate.isBefore(LocalDate.now())) {

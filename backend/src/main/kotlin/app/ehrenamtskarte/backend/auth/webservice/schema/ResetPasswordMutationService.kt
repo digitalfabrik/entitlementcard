@@ -38,6 +38,8 @@ class ResetPasswordMutationService {
             }
             if (user == null) {
                 val context = dfe.getContext<GraphQLContext>()
+                // This logging is used for rate limiting
+                // See https://git.tuerantuer.org/DF/salt/pulls/187
                 logger.info("${context.remoteIp} $email failed to request password reset mail")
             }
         }
@@ -64,13 +66,19 @@ class ResetPasswordMutationService {
             val passwordResetKeyHash = user?.passwordResetKeyHash
             // We don't send error messages for empty collection to the user to avoid scraping of mail addresses
             if (user === null || passwordResetKeyHash === null) {
+                // This logging is used for rate limiting
+                // See https://git.tuerantuer.org/DF/salt/pulls/187
                 logger.info("${context.remoteIp} $email failed to reset password (unknown user or no reset mail sent)")
                 return@transaction
             }
             if (user.passwordResetKeyExpiry!!.isBefore(Instant.now())) {
+                // This logging is used for rate limiting
+                // See https://git.tuerantuer.org/DF/salt/pulls/187
                 logger.info("${context.remoteIp} $email failed to reset password (expired reset key)")
                 throw PasswordResetKeyExpiredException()
             } else if (!PasswordCrypto.verifyPasswordResetKey(passwordResetKey, passwordResetKeyHash)) {
+                // This logging is used for rate limiting
+                // See https://git.tuerantuer.org/DF/salt/pulls/187
                 logger.info("${context.remoteIp} $email failed to reset password (invalid reset key)")
                 throw InvalidLinkException()
             }
