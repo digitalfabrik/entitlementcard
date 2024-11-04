@@ -6,7 +6,7 @@ import 'package:ehrenamtskarte/identification/activation_workflow/activate_code.
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_exception.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_existing_card_dialog.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_overwrite_existing_dialog.dart';
-import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_parsing_error_dialog.dart';
+import 'package:ehrenamtskarte/identification/activation_workflow/activation_error_dialog.dart';
 import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
@@ -72,13 +72,13 @@ Future<bool> activateCard(
       if (Navigator.canPop(context)) Navigator.maybePop(context);
       return true;
     case ActivationState.revoked:
-      await QrParsingErrorDialog.showErrorDialog(
+      await ActivationErrorDialog.showErrorDialog(
         context,
         t.identification.codeRevoked,
       );
       return false;
     case ActivationState.failed:
-      await QrParsingErrorDialog.showErrorDialog(
+      await ActivationErrorDialog.showErrorDialog(
         context,
         t.identification.codeInvalid,
       );

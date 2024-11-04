@@ -9,6 +9,7 @@
     "cardInvalid": "Your pass is invalid. It has either been revoked or activated on another device.",
     "cardNotYetValid": "The validity period of your pass has not yet started.",
     "checkFailed": "Your pass could not be verified. Please make sure you have an internet connection and try again.",
+    "codeRevoked": "This pass could not be activated as it has been revoked.",
     "moreActionsActivateDescription": "Your saved passes will be retained. You can remove them manually.",
     "moreActionsActivateLimitDescription": "To add another Nürnberg-Pass, you must first delete an existing Nürnberg-Pass.",
     "moreActionsActivateTitle": "Add another Nürnberg-Pass",
