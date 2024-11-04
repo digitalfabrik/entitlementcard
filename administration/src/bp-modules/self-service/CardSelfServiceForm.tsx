@@ -3,7 +3,7 @@ import InfoOutlined from '@mui/icons-material/InfoOutlined'
 import { Alert, styled } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
 
-import { CardBlueprint, isFullNameValid, isValid } from '../../cards/CardBlueprint'
+import { Card, isFullNameValid, isValid } from '../../cards/Card'
 import ClearInputButton from '../../cards/extensions/components/ClearInputButton'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
 import BasicDialog from '../../mui-modules/application/BasicDialog'
@@ -29,8 +29,8 @@ const Container = styled('div')`
 `
 
 type CardSelfServiceFormProps = {
-  card: CardBlueprint
-  updateCard: (cardBlueprint: Partial<CardBlueprint>) => void
+  card: Card
+  updateCard: (card: Partial<Card>) => void
   dataPrivacyAccepted: boolean
   setDataPrivacyAccepted: (value: boolean) => void
   generateCards: () => Promise<void>
@@ -81,7 +81,7 @@ const CardSelfServiceForm = ({
             onChange={event => updateCard({ fullName: event.target.value })}
           />
         </FormGroup>
-        <ExtensionForms cardBlueprint={card} updateCard={updateCard} />
+        <ExtensionForms card={card} updateCard={updateCard} />
         <IconTextButton onClick={() => setOpenReferenceInformation(true)}>
           <InfoOutlined />
           Informationen zur Referenznummer

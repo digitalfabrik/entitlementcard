@@ -27,6 +27,7 @@ export type DeeplLinkingConfig = {
 export type ThemeType = {
     primaryLight: string
     primaryDark: string
+    fontFamily: string
 }
 
 export type CommonBuildConfigType = {
@@ -109,12 +110,14 @@ export type AndroidBuildConfigType = CommonBuildConfigType & {
         excludeLocationPlayServices: boolean
         excludeX86: boolean
     }
+    appStoreLink: string
 }
 
 export type iOSBuildConfigType = CommonBuildConfigType & {
     // iOS application identifier.
     bundleIdentifier: string
     provisioningProfileSpecifier: string
+    appStoreLink: string
 }
 
 export default BuildConfigType

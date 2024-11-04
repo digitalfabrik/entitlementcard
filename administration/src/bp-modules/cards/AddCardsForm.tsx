@@ -3,7 +3,7 @@ import FlipMove from 'react-flip-move'
 import { useSearchParams } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { CardBlueprint, initializeCardBlueprint, initializeCardFromCSV } from '../../cards/CardBlueprint'
+import { Card, initializeCard, initializeCardFromCSV } from '../../cards/Card'
 import { Region } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import AddCardForm from './AddCardForm'
@@ -37,27 +37,27 @@ const FormColumn = styled.div`
 
 type CreateCardsFormProps = {
   region: Region
-  cardBlueprints: CardBlueprint[]
-  setCardBlueprints: (blueprints: CardBlueprint[]) => void
-  updateCardBlueprint: (updatedCard: Partial<CardBlueprint>, index: number) => void
+  cards: Card[]
+  setCards: (cards: Card[]) => void
+  updateCard: (updatedCard: Partial<Card>, index: number) => void
   setApplicationIdToMarkAsProcessed: (applicationIdToMarkAsProcessed: number | undefined) => void
 }
 
 const AddCardsForm = ({
   region,
-  cardBlueprints,
-  setCardBlueprints,
-  updateCardBlueprint,
+  cards,
+  setCards,
+  updateCard,
   setApplicationIdToMarkAsProcessed,
 }: CreateCardsFormProps): ReactElement => {
   const projectConfig = useContext(ProjectConfigContext)
   const [searchParams, setSearchParams] = useSearchParams()
 
   useEffect(() => {
-    if (cardBlueprints.length === 0) {
+    if (cards.length === 0) {
       const headers = getHeaders(projectConfig)
       const values = headers.map(header => searchParams.get(header))
-      setCardBlueprints([initializeCardFromCSV(projectConfig.card, values, headers, region, true)])
+      setCards([initializeCardFromCSV(projectConfig.card, values, headers, region, true)])
 
       const applicationIdToMarkAsProcessed = searchParams.get('applicationIdToMarkAsProcessed')
       setApplicationIdToMarkAsProcessed(
@@ -66,15 +66,7 @@ const AddCardsForm = ({
 
       setSearchParams(undefined, { replace: true })
     }
-  }, [
-    cardBlueprints.length,
-    projectConfig,
-    region,
-    searchParams,
-    setCardBlueprints,
-    setSearchParams,
-    setApplicationIdToMarkAsProcessed,
-  ])
+  }, [cards.length, projectConfig, region, searchParams, setCards, setSearchParams, setApplicationIdToMarkAsProcessed])
   const bottomRef = useRef<HTMLDivElement>(null)
 
   const scrollToBottom = () => {
@@ -84,13 +76,13 @@ const AddCardsForm = ({
   }
 
   const addForm = useCallback(() => {
-    const cardBlueprint = initializeCardBlueprint(projectConfig.card, region)
-    setCardBlueprints([...cardBlueprints, cardBlueprint])
+    const card = initializeCard(projectConfig.card, region)
+    setCards([...cards, card])
     scrollToBottom()
-  }, [cardBlueprints, projectConfig.card, region, setCardBlueprints])
+  }, [cards, projectConfig.card, region, setCards])
 
-  const removeCardBlueprint = (oldBlueprint: CardBlueprint) => {
-    setCardBlueprints(cardBlueprints.filter(blueprint => blueprint !== oldBlueprint))
+  const removeCard = (oldCard: Card) => {
+    setCards(cards.filter(card => card !== oldCard))
   }
 
   return (
@@ -99,12 +91,12 @@ const AddCardsForm = ({
         onFinishAll={() => {
           scrollToBottom()
         }}>
-        {cardBlueprints.map((blueprint, index) => (
-          <FormColumn key={blueprint.id}>
+        {cards.map((card, index) => (
+          <FormColumn key={card.id}>
             <AddCardForm
-              cardBlueprint={blueprint}
-              onRemove={() => removeCardBlueprint(blueprint)}
-              updateCard={updatedCard => updateCardBlueprint(updatedCard, index)}
+              card={card}
+              onRemove={() => removeCard(card)}
+              updateCard={updatedCard => updateCard(updatedCard, index)}
             />
           </FormColumn>
         ))}

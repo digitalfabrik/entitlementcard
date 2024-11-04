@@ -1,4 +1,4 @@
-import { CardBlueprint } from '../CardBlueprint'
+import { Card } from '../Card'
 import { Extension } from './extensions'
 
 export const ADDRESS_LINE_1_EXTENSION = 'addressLine1'
@@ -39,11 +39,11 @@ export const AddressLocationExtension = getAddressFieldExtension(ADDRESS_LOCATIO
 
 const AddressExtensions = [AddressLine1Extension, AddressLine2Extension, AddressPlzExtension, AddressLocationExtension]
 
-export const getAddressFieldExtensionsValues = (cardBlueprint: CardBlueprint): (string | undefined)[] => [
-  cardBlueprint.extensions[ADDRESS_LINE_1_EXTENSION],
-  cardBlueprint.extensions[ADDRESS_LINE_2_EXTENSION],
-  cardBlueprint.extensions[ADDRESS_PLZ_EXTENSION],
-  cardBlueprint.extensions[ADDRESS_LOCATION_EXTENSION],
+export const getAddressFieldExtensionsValues = (card: Card): (string | undefined)[] => [
+  card.extensions[ADDRESS_LINE_1_EXTENSION],
+  card.extensions[ADDRESS_LINE_2_EXTENSION],
+  card.extensions[ADDRESS_PLZ_EXTENSION],
+  card.extensions[ADDRESS_LOCATION_EXTENSION],
 ]
 
 export default AddressExtensions

@@ -55,29 +55,29 @@ class WebService {
         val healthHandler = HealthHandler(config)
         val userImportHandler = UserImportHandler(config)
 
-        app.post("/") { ctx ->
+        app.post("/") { context ->
             if (!production) {
-                ctx.header("Access-Control-Allow-Headers: Authorization")
-                ctx.header("Access-Control-Allow-Origin: *")
+                context.header("Access-Control-Allow-Headers: Authorization")
+                context.header("Access-Control-Allow-Origin: *")
             }
-            graphQLHandler.handle(ctx, applicationData)
+            graphQLHandler.handle(context, applicationData)
         }
 
-        app.get(mapStyleHandler.getPath()) { ctx ->
+        app.get(mapStyleHandler.getPath()) { context ->
             if (!production) {
-                ctx.header("Access-Control-Allow-Headers: Authorization")
-                ctx.header("Access-Control-Allow-Origin: *")
+                context.header("Access-Control-Allow-Headers: Authorization")
+                context.header("Access-Control-Allow-Origin: *")
             }
-            mapStyleHandler.handle(ctx)
+            mapStyleHandler.handle(context)
         }
 
-        app.get(applicationHandler.getPath()) { ctx ->
-            applicationHandler.handle(ctx)
+        app.get(applicationHandler.getPath()) { context ->
+            applicationHandler.handle(context)
         }
 
-        app.get("/health") { ctx -> healthHandler.handle(ctx) }
+        app.get("/health") { context -> healthHandler.handle(context) }
 
-        app.post("/users/import") { ctx -> userImportHandler.handle(ctx) }
+        app.post("/users/import") { context -> userImportHandler.handle(context) }
 
         app.start(host, port)
         println("Server is running at http://$host:$port")

@@ -7,6 +7,7 @@ import app.ehrenamtskarte.backend.helper.CardInfoTestSample
 import app.ehrenamtskarte.backend.helper.ExampleCardInfo
 import app.ehrenamtskarte.backend.helper.TestData
 import app.ehrenamtskarte.backend.userdata.database.UserEntitlements
+import app.ehrenamtskarte.backend.userdata.database.UserEntitlementsEntity
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.javalin.testtools.JavalinTest
 import io.ktor.util.decodeBase64Bytes
@@ -87,7 +88,7 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
         val jsonResponse = jacksonObjectMapper().readTree(responseBody)
 
         jsonResponse.apply {
-            assertEquals("Error INVALID_USER_ENTITLEMENTS occurred.", findValuesAsText("message").single())
+            assertEquals("Error USER_ENTITLEMENT_NOT_FOUND occurred.", findValuesAsText("message").single())
         }
 
         transaction {
@@ -113,7 +114,7 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
         val jsonResponse = jacksonObjectMapper().readTree(responseBody)
 
         jsonResponse.apply {
-            assertEquals("Error INVALID_USER_ENTITLEMENTS occurred.", findValuesAsText("message").single())
+            assertEquals("Error USER_ENTITLEMENT_EXPIRED occurred.", findValuesAsText("message").single())
         }
 
         transaction {
@@ -139,7 +140,7 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
         val jsonResponse = jacksonObjectMapper().readTree(responseBody)
 
         jsonResponse.apply {
-            assertEquals("Error INVALID_USER_ENTITLEMENTS occurred.", findPath("message").textValue())
+            assertEquals("Error USER_ENTITLEMENT_EXPIRED occurred.", findPath("message").textValue())
         }
 
         transaction {
@@ -150,12 +151,12 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
     @Test
     fun `POST returns a successful response when cards are created`() = JavalinTest.test(app) { _, client ->
         val userRegionId = 95
-        val userEntitlements = TestData.createUserEntitlements(
+        val userEntitlementId = TestData.createUserEntitlements(
             userHash = "\$argon2id\$v=19\$m=19456,t=2,p=1\$cr3lP9IMUKNz4BLfPGlAOHq1z98G5/2tTbhDIko35tY",
             regionId = userRegionId
         )
-        val oldDynamicCard = TestData.createDynamicCard(regionId = userRegionId, entitlementId = userEntitlements.id.value)
-        val oldStaticCard = TestData.createStaticCard(regionId = userRegionId, entitlementId = userEntitlements.id.value)
+        val oldDynamicCardId = TestData.createDynamicCard(regionId = userRegionId, entitlementId = userEntitlementId)
+        val oldStaticCardId = TestData.createStaticCard(regionId = userRegionId, entitlementId = userEntitlementId)
 
         val encodedCardInfo = ExampleCardInfo.getEncoded(CardInfoTestSample.KoblenzPass)
         val mutation = createMutation(encodedCardInfo = encodedCardInfo)
@@ -175,36 +176,33 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
         transaction {
             assertEquals(4, Cards.selectAll().count())
 
-            CardEntity.find { Cards.cardInfoHash eq oldDynamicCard.cardInfoHash }.single().let {
-                assertTrue(it.revoked)
-            }
+            assertTrue(CardEntity.find { Cards.id eq oldDynamicCardId }.single().revoked)
+            assertTrue(CardEntity.find { Cards.id eq oldStaticCardId }.single().revoked)
 
-            CardEntity.find { Cards.cardInfoHash eq oldStaticCard.cardInfoHash }.single().let {
-                assertTrue(it.revoked)
-            }
+            val userEntitlement = UserEntitlementsEntity.find { UserEntitlements.id eq userEntitlementId }.single()
 
             CardEntity.find { Cards.cardInfoHash eq newDynamicActivationCode.decodeBase64Bytes() }.single().let {
                 assertNotNull(it.activationSecretHash)
                 assertNull(it.totpSecret)
-                assertEquals(userEntitlements.endDate.toEpochDay(), it.expirationDay)
+                assertEquals(userEntitlement.endDate.toEpochDay(), it.expirationDay)
                 assertFalse(it.revoked)
                 assertEquals(userRegionId, it.regionId.value)
                 assertNull(it.issuerId)
                 assertNull(it.firstActivationDate)
-                assertEquals(userEntitlements.startDate.toEpochDay(), it.startDay)
-                assertEquals(userEntitlements.id, it.entitlementId)
+                assertEquals(userEntitlement.startDate.toEpochDay(), it.startDay)
+                assertEquals(userEntitlement.id, it.entitlementId)
             }
 
             CardEntity.find { Cards.cardInfoHash eq newStaticVerificationCode.decodeBase64Bytes() }.single().let {
                 assertNull(it.activationSecretHash)
                 assertNull(it.totpSecret)
-                assertEquals(userEntitlements.endDate.toEpochDay(), it.expirationDay)
+                assertEquals(userEntitlement.endDate.toEpochDay(), it.expirationDay)
                 assertFalse(it.revoked)
                 assertEquals(userRegionId, it.regionId.value)
                 assertNull(it.issuerId)
                 assertNull(it.firstActivationDate)
-                assertEquals(userEntitlements.startDate.toEpochDay(), it.startDay)
-                assertEquals(userEntitlements.id, it.entitlementId)
+                assertEquals(userEntitlement.startDate.toEpochDay(), it.startDay)
+                assertEquals(userEntitlement.id, it.entitlementId)
             }
         }
     }
