@@ -32,7 +32,7 @@ export type ExtensionComponentProps<T> = {
 export type Extension<T = Record<string, unknown>> = {
   name: string
   getInitialState(region?: Region): T
-  isValid(state: T): boolean
+  isValid(state: T | undefined | null): boolean
   Component(props: ExtensionComponentProps<T>): ReactElement | null
   causesInfiniteLifetime(state: T): boolean
   getProtobufData(state: T): PartialMessage<CardExtensions>
