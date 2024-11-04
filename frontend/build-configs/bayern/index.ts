@@ -105,11 +105,13 @@ const bayern: BuildConfigType = {
             excludeLocationPlayServices: false,
             excludeX86: false,
         },
+        appStoreLink: `https://play.google.com/store/apps/details?id=${ANDROID_APPLICATION_ID}`,
     },
     ios: {
         ...bayernCommon,
         bundleIdentifier: IOS_BUNDLE_IDENTIFIER,
         provisioningProfileSpecifier: "match AppStore de.nrw.it.ehrensachebayern",
+        appStoreLink: "https://apps.apple.com/de/app/ehrenamtskarte-bayern/id1261285110",
     },
 }
 
