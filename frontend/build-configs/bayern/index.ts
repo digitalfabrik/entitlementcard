@@ -1,4 +1,4 @@
-import { ACTIVATION_PATH, BAYERN_PRODUCTION_ID, BAYERN_STAGING_ID, CUSTOM_SCHEME } from "../constants"
+import { ACTIVATION_PATH, BAYERN_PRODUCTION_ID, BAYERN_STAGING_ID } from "../constants"
 import BuildConfigType, { CommonBuildConfigType } from "../types"
 import disclaimerText from "./disclaimerText"
 import publisherText from "./publisherText"
@@ -81,7 +81,7 @@ export const bayernCommon: CommonBuildConfigType = {
     activationPath: ACTIVATION_PATH,
     deepLinking: {
         projectName: "bayern",
-        customScheme: CUSTOM_SCHEME,
+        customScheme: "ehrenamtbayern",
         android: {
             applicationId: ANDROID_APPLICATION_ID,
             path: `/${ACTIVATION_PATH}/.*`,

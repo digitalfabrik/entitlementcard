@@ -1,4 +1,4 @@
-import { ACTIVATION_PATH, KOBLENZ_PRODUCTION_ID, KOBLENZ_STAGING_ID, CUSTOM_SCHEME } from "../constants"
+import { ACTIVATION_PATH, KOBLENZ_PRODUCTION_ID, KOBLENZ_STAGING_ID } from "../constants"
 import BuildConfigType, { CommonBuildConfigType } from "../types"
 import disclaimerText from "./disclaimerText"
 import publisherText from "./publisherText"
@@ -81,7 +81,7 @@ export const koblenzCommon: CommonBuildConfigType = {
     activationPath: ACTIVATION_PATH,
     deepLinking: {
         projectName: "koblenz",
-        customScheme: CUSTOM_SCHEME,
+        customScheme: "koblenzpass",
         android: {
             applicationId: ANDROID_APPLICATION_ID,
             path: `/${ACTIVATION_PATH}/.*`,
