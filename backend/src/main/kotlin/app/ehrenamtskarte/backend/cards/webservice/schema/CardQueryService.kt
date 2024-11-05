@@ -34,13 +34,14 @@ class CardQueryService {
         val context = dfe.getContext<GraphQLContext>()
         val projectConfig = context.backendConfiguration.getProjectConfig(project)
         val cardHash = Base64.getDecoder().decode(card.cardInfoHashBase64)
-        var verificationResult = CardVerificationResultModel(false)
 
-        if (card.codeType == CodeType.STATIC) {
-            verificationResult = CardVerificationResultModel(card.totp == null && CardVerifier.verifyStaticCard(project, cardHash, projectConfig.timezone))
-        } else if (card.codeType == CodeType.DYNAMIC) {
-            verificationResult = CardVerificationResultModel(card.totp != null && CardVerifier.verifyDynamicCard(project, cardHash, card.totp, projectConfig.timezone))
+        val isValid = when (card.codeType) {
+            CodeType.STATIC -> card.totp == null && CardVerifier.verifyStaticCard(project, cardHash, projectConfig.timezone)
+            CodeType.DYNAMIC -> card.totp != null && CardVerifier.verifyDynamicCard(project, cardHash, card.totp, projectConfig.timezone)
         }
+
+        val verificationResult = CardVerificationResultModel(isValid, CardVerifier.isExtendable(project, cardHash))
+
         Matomo.trackVerification(context.backendConfiguration, projectConfig, context.request, dfe.field.name, cardHash, card.codeType, verificationResult.valid)
         return verificationResult
     }
