@@ -1,7 +1,6 @@
 import { PDFForm, PDFTextField, rgb } from 'pdf-lib'
 
-import AddressExtensions from '../../cards/extensions/AddressFieldExtensions'
-import { findExtension } from '../../cards/extensions/extensions'
+import { getAddressFieldExtensionsValues } from '../../cards/extensions/AddressFieldExtensions'
 import { InfoParams } from '../../cards/pdf/PdfTextElement'
 import PlainDate from '../../util/PlainDate'
 import { PdfConfig } from '../getProjectConfig'
@@ -22,14 +21,8 @@ Geburtsdatum: ${birthdayDate.format()}
 Gültig: ${startDate.format()} bis ${expirationDate.format()}`
 }
 
-const createAddressFormFields = (
-  form: PDFForm,
-  pageIdx: number,
-  { info, cardBlueprint }: InfoParams
-): PDFTextField[] => {
-  const [addressLine1, addressLine2, plz, location] = AddressExtensions.map(
-    ext => findExtension(cardBlueprint.extensions, ext)?.state
-  )
+const createAddressFormFields = (form: PDFForm, pageIdx: number, { info, card }: InfoParams): PDFTextField[] => {
+  const [addressLine1, addressLine2, plz, location] = getAddressFieldExtensionsValues(card)
 
   const nameField = form.createTextField(`${pageIdx}.address.name`)
   const addressLine1Field = form.createTextField(`${pageIdx}.address.line.1`)

@@ -2,18 +2,16 @@ import BavariaCardTypeExtension from './BavariaCardTypeExtension'
 
 describe('BavariaCardTypeExtension', () => {
   it('should correctly set card type', () => {
-    const testPairs = [
+    const testPairs: [string, string | undefined][] = [
       ['Goldkarte', 'Goldkarte'],
       ['Standard', 'Standard'],
       ['gold', 'Goldkarte'],
       ['blau', 'Standard'],
-      ['blaugold', ''],
+      ['blaugold', undefined],
     ]
 
     testPairs.forEach(([input, expected]) => {
-      const extension = new BavariaCardTypeExtension()
-      extension.fromString(input)
-      expect(extension.toString()).toBe(expected)
+      expect(BavariaCardTypeExtension.fromString(input)?.bavariaCardType).toBe(expected)
     })
   })
 })

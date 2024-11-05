@@ -2,6 +2,8 @@ import { add, differenceInCalendarDays, format, isValid, parse } from 'date-fns'
 
 type DateDuration = { years?: number; months?: number; days?: number }
 
+const ISO_8601_DATE_FORMAT = 'yyyy-MM-dd'
+
 /**
  * A PlainDate represents a calendar date.
  * "Calendar date" refers to the concept of a date as expressed in everyday usage, independent of any time zone.
@@ -40,25 +42,39 @@ class PlainDate {
   }
 
   /**
-   * Returns a PlainDate for a given ISO 8601 string.
-   * This function is a subset of Temporal.PlainDate.from.
-   * @param valueISO8601: The date in ISO 8601 format. Must be of the form yyyy-MM-dd
-   * @throws RangeError, if the given value does not represent a valid date.
-   */
-  static from(valueISO8601: string): PlainDate {
-    const date = parse(valueISO8601, 'yyyy-MM-dd', new Date(0))
-    return PlainDate.fromLocalDate(date)
-  }
-
-  /**
    * Returns a PlainDate by parsing a string using some custom format
    * @param value The string to be parsed.
    * @param format A custom format as used by date-fns
    * @example
    */
-  static fromCustomFormat(value: string, format: 'dd.MM.yyyy' = 'dd.MM.yyyy'): PlainDate {
+  static fromCustomFormat(value: string, format: string = 'dd.MM.yyyy'): PlainDate {
     const date = parse(value, format, new Date(0))
     return PlainDate.fromLocalDate(date)
+  }
+
+  /**
+   * Returns a PlainDate for a given ISO 8601 string.
+   * This function is a subset of Temporal.PlainDate.from.
+   * @param valueISO8601 The date in ISO 8601 format. Must be of the form yyyy-MM-dd
+   * @throws RangeError, if the given value does not represent a valid date.
+   */
+  static from(valueISO8601: string): PlainDate {
+    return PlainDate.fromCustomFormat(valueISO8601, ISO_8601_DATE_FORMAT)
+  }
+
+  static safeFromCustomFormat(value: string | null, format: string = 'dd.MM.yyyy'): PlainDate | null {
+    if (value === null) {
+      return null
+    }
+    try {
+      return PlainDate.fromCustomFormat(value, format)
+    } catch {
+      return null
+    }
+  }
+
+  static safeFrom(valueISO8601: string | null): PlainDate | null {
+    return PlainDate.safeFromCustomFormat(valueISO8601, ISO_8601_DATE_FORMAT)
   }
 
   /**

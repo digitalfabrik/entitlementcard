@@ -31,6 +31,7 @@ class HomePageState extends State<HomePage> {
 
   MapPageController? mapPageController;
   int? selectedAcceptingStoreId;
+  bool followUserLocation = true;
 
   @override
   void initState() {
@@ -41,6 +42,7 @@ class HomePageState extends State<HomePage> {
         MapPage(
           onMapCreated: (controller) => setState(() => mapPageController = controller),
           selectAcceptingStore: (id) => setState(() => selectedAcceptingStoreId = id),
+          setFollowUserLocation: (follow) => setState(() => followUserLocation = follow),
         ),
         Icons.map_outlined,
         (BuildContext context) => t.map.title,
@@ -91,8 +93,10 @@ class HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionMapBar(
         bringCameraToUser: (position) async {
           await mapPageController?.bringCameraToUser(position);
+          setState(() => followUserLocation = true);
         },
         selectedAcceptingStoreId: selectedAcceptingStoreId,
+        followUserLocation: followUserLocation,
         currentTabIndex: _currentTabIndex,
       ),
       bottomNavigationBar: _buildBottomNavigationBar(context),

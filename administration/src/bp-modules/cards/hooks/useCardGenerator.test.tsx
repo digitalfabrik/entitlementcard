@@ -4,7 +4,7 @@ import { act, renderHook } from '@testing-library/react'
 import { mocked } from 'jest-mock'
 import React, { ReactNode } from 'react'
 
-import CardBlueprint from '../../../cards/CardBlueprint'
+import { generateCardInfo, initializeCard } from '../../../cards/Card'
 import { PdfError, generatePdf } from '../../../cards/PdfFactory'
 import createCards, { CreateCardsError, CreateCardsResult } from '../../../cards/createCards'
 import deleteCards from '../../../cards/deleteCards'
@@ -46,19 +46,19 @@ describe('useCardGenerator', () => {
   }
 
   const cards = [
-    new CardBlueprint('Thea Test', bayernConfig.card, [region]),
-    new CardBlueprint('Thea Test', bayernConfig.card, [region]),
+    initializeCard(bayernConfig.card, region, { fullName: 'Thea Test' }),
+    initializeCard(bayernConfig.card, region, { fullName: 'Thea Test' }),
   ]
   const codes: CreateCardsResult[] = [
     {
       dynamicCardInfoHashBase64: 'rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=',
-      dynamicActivationCode: new DynamicActivationCode({ info: cards[0].generateCardInfo() }),
+      dynamicActivationCode: new DynamicActivationCode({ info: generateCardInfo(cards[0]) }),
     },
     {
       dynamicCardInfoHashBase64: 'rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=',
-      dynamicActivationCode: new DynamicActivationCode({ info: cards[1].generateCardInfo() }),
+      dynamicActivationCode: new DynamicActivationCode({ info: generateCardInfo(cards[1]) }),
       staticCardInfoHashBase64: 'rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=',
-      staticVerificationCode: new StaticVerificationCode({ info: cards[1].generateCardInfo() }),
+      staticVerificationCode: new StaticVerificationCode({ info: generateCardInfo(cards[1]) }),
     },
   ]
 
@@ -69,9 +69,9 @@ describe('useCardGenerator', () => {
     mocked(createCards).mockReturnValueOnce(Promise.resolve(codes))
     const { result } = renderHook(() => useCardGenerator(region), { wrapper })
 
-    act(() => result.current.setCardBlueprints(cards))
+    act(() => result.current.setCards(cards))
 
-    expect(result.current.cardBlueprints).toEqual(cards)
+    expect(result.current.cards).toEqual(cards)
     await act(async () => {
       await result.current.generateCardsPdf()
     })
@@ -80,7 +80,7 @@ describe('useCardGenerator', () => {
     expect(createCards).toHaveBeenCalled()
     expect(downloadDataUri).toHaveBeenCalled()
     expect(result.current.state).toBe(CardActivationState.finished)
-    expect(result.current.cardBlueprints).toEqual([])
+    expect(result.current.cards).toEqual([])
   })
 
   it('should show error message for failed card generation', async () => {
@@ -91,9 +91,9 @@ describe('useCardGenerator', () => {
 
     const { result } = renderHook(() => useCardGenerator(region), { wrapper })
 
-    act(() => result.current.setCardBlueprints(cards))
+    act(() => result.current.setCards(cards))
 
-    expect(result.current.cardBlueprints).toEqual(cards)
+    expect(result.current.cards).toEqual(cards)
     await act(async () => {
       await result.current.generateCardsPdf()
     })
@@ -101,7 +101,7 @@ describe('useCardGenerator', () => {
     expect(toasterSpy).toHaveBeenCalledWith({ message: 'error', intent: 'danger' })
     expect(downloadDataUri).not.toHaveBeenCalled()
     expect(result.current.state).toBe(CardActivationState.input)
-    expect(result.current.cardBlueprints).toEqual([])
+    expect(result.current.cards).toEqual([])
   })
 
   it('should show error message and run rollback for failed pdf generation', async () => {
@@ -114,9 +114,9 @@ describe('useCardGenerator', () => {
 
     const { result } = renderHook(() => useCardGenerator(region), { wrapper })
 
-    act(() => result.current.setCardBlueprints(cards))
+    act(() => result.current.setCards(cards))
 
-    expect(result.current.cardBlueprints).toEqual(cards)
+    expect(result.current.cards).toEqual(cards)
     await act(async () => {
       await result.current.generateCardsPdf()
     })
@@ -131,6 +131,6 @@ describe('useCardGenerator', () => {
     expect(deleteCards).toHaveBeenCalledWith(expect.anything(), region.id, codesToDelete)
     expect(downloadDataUri).not.toHaveBeenCalled()
     expect(result.current.state).toBe(CardActivationState.input)
-    expect(result.current.cardBlueprints).toEqual([])
+    expect(result.current.cards).toEqual([])
   })
 })

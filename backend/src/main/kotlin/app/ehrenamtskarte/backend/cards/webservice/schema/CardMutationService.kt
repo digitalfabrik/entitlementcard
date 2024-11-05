@@ -24,9 +24,10 @@ import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCardHashException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidQrCodeSize
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidUserEntitlementsException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotActivatedForCardConfirmationMailException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.UserEntitlementExpiredException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.UserEntitlementNotFoundException
 import app.ehrenamtskarte.backend.mail.Mailer
 import app.ehrenamtskarte.backend.matomo.Matomo
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
@@ -145,9 +146,15 @@ class CardMutationService {
         )
         val userHash = Argon2IdHasher.hashKoblenzUserData(user)
 
-        val userEntitlements = transaction { UserEntitlementsRepository.findUserEntitlements(userHash.toByteArray()) }
-        if (userEntitlements == null || userEntitlements.revoked || userEntitlements.endDate.isBefore(LocalDate.now())) {
-            throw InvalidUserEntitlementsException()
+        val userEntitlements = transaction { UserEntitlementsRepository.findByUserHash(userHash.toByteArray()) }
+        if (userEntitlements == null) {
+            // This logging is used for rate limiting
+            // See https://git.tuerantuer.org/DF/salt/pulls/187
+            logger.info("${context.remoteIp} failed to create a new card")
+            throw UserEntitlementNotFoundException()
+        }
+        if (userEntitlements.revoked || userEntitlements.endDate.isBefore(LocalDate.now())) {
+            throw UserEntitlementExpiredException()
         }
 
         val updatedCardInfo = enrichCardInfo(
