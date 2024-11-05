@@ -1,10 +1,9 @@
 import { stringify } from 'csv-stringify/browser/esm/sync'
 
 import { CsvExport } from '../project-configs/getProjectConfig'
-import CardBlueprint from './CardBlueprint'
+import { Card } from './Card'
 import { CreateCardsResult } from './createCards'
-import NuernbergPassIdExtension from './extensions/NuernbergPassIdExtension'
-import { findExtension } from './extensions/extensions'
+import { NUERNBERG_PASS_ID_EXTENSION_NAME } from './extensions/NuernbergPassIdExtension'
 
 export class CsvError extends Error {
   constructor(message: string) {
@@ -13,18 +12,14 @@ export class CsvError extends Error {
   }
 }
 
-export const generateCsv = (
-  codes: CreateCardsResult[],
-  cardBlueprints: CardBlueprint[],
-  csvProjectConfig: CsvExport
-): Blob => {
+export const generateCsv = (codes: CreateCardsResult[], cards: Card[], csvProjectConfig: CsvExport): Blob => {
   if (!csvProjectConfig.enabled) {
     throw new CsvError('CSV Export is disabled for this project')
   }
   try {
     let csvContent = stringify([csvProjectConfig.csvHeader])
     for (let k = 0; k < codes.length; k++) {
-      csvContent += csvProjectConfig.buildCsvLine(codes[k], cardBlueprints[k])
+      csvContent += csvProjectConfig.buildCsvLine(codes[k], cards[k])
     }
     return new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
   } catch (error) {
@@ -35,10 +30,7 @@ export const generateCsv = (
   }
 }
 
-export const getCSVFilename = (cardBlueprints: CardBlueprint[]): string => {
-  const filename =
-    cardBlueprints.length === 1
-      ? findExtension(cardBlueprints[0].extensions, NuernbergPassIdExtension)?.state?.passId
-      : 'Pass-ID[0]mass'
+export const getCSVFilename = (cards: Card[]): string => {
+  const filename = cards.length === 1 ? cards[0].extensions[NUERNBERG_PASS_ID_EXTENSION_NAME] : 'SozialpassMassExport'
   return `${filename}.csv`
 }

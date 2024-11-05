@@ -10,9 +10,9 @@ import { ReactElement, ReactNode } from 'react'
 
 import { JsonField } from '../bp-modules/applications/JsonFieldView'
 import { ActivityLog } from '../bp-modules/user-settings/ActivityLog'
-import CardBlueprint from '../cards/CardBlueprint'
+import { Card } from '../cards/Card'
 import { CreateCardsResult } from '../cards/createCards'
-import { ExtensionClass } from '../cards/extensions/extensions'
+import { Extension } from '../cards/extensions/extensions'
 import { PdfFormElementProps } from '../cards/pdf/PdfFormElement'
 import { PdfLinkAreaProps } from '../cards/pdf/PdfLinkArea'
 import { PdfQrCodeElementProps } from '../cards/pdf/PdfQrCodeElement'
@@ -41,12 +41,13 @@ export type ActivityLogConfig = {
   renderLogEntry: (logEntry: ActivityLog) => ReactNode
 }
 
-export type CardConfig = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type CardConfig<T extends readonly Extension<any>[] = readonly Extension<any>[]> = {
   nameColumnName: string
   expiryColumnName: string
   extensionColumnNames: (string | null)[]
   defaultValidity: Duration
-  extensions: ExtensionClass[]
+  extensions: T
 }
 
 export type ApplicationFeature = {
@@ -58,7 +59,7 @@ export type CsvExport =
   | {
       enabled: true
       csvHeader: string[]
-      buildCsvLine: (createCardsResult: CreateCardsResult, cardBlueprint: CardBlueprint) => string
+      buildCsvLine: (createCardsResult: CreateCardsResult, card: Card) => string
     }
   | {
       enabled: false

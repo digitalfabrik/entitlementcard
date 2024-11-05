@@ -1,7 +1,7 @@
 import { act, fireEvent, render } from '@testing-library/react'
 import React, { ReactNode } from 'react'
 
-import CardBlueprint from '../../cards/CardBlueprint'
+import { initializeCard } from '../../cards/Card'
 import { Region } from '../../generated/graphql'
 import { ProjectConfigProvider } from '../../project-configs/ProjectConfigContext'
 import bayernConfig from '../../project-configs/bayern/config'
@@ -12,12 +12,20 @@ jest.useFakeTimers()
 const wrapper = ({ children }: { children: ReactNode }) => <ProjectConfigProvider>{children}</ProjectConfigProvider>
 
 describe('CreateCardsButtonBar', () => {
+  const region: Region = {
+    id: 0,
+    name: 'augsburg',
+    prefix: 'a',
+    activatedForApplication: true,
+    activatedForCardConfirmationMail: true,
+  }
+
   it('Should goBack when clicking back', async () => {
     const goBack = jest.fn()
     const { getByText } = render(
       <CreateCardsButtonBar
         goBack={goBack}
-        cardBlueprints={[]}
+        cards={[]}
         generateCardsPdf={() => Promise.resolve()}
         generateCardsCsv={() => Promise.resolve()}
       />,
@@ -39,7 +47,7 @@ describe('CreateCardsButtonBar', () => {
     const { getByText } = render(
       <CreateCardsButtonBar
         goBack={() => undefined}
-        cardBlueprints={[]}
+        cards={[]}
         generateCardsPdf={generateCardsPdf}
         generateCardsCsv={generateCardsCsv}
       />,
@@ -63,11 +71,11 @@ describe('CreateCardsButtonBar', () => {
   it('Should disable generate button for invalid cards', async () => {
     const generateCardsPdf = jest.fn()
     const generateCardsCsv = jest.fn()
-    const cards = [new CardBlueprint('Thea Test', bayernConfig.card)]
+    const cards = [initializeCard(bayernConfig.card, region, { fullName: '' })]
     const { getByText } = render(
       <CreateCardsButtonBar
         goBack={() => undefined}
-        cardBlueprints={cards}
+        cards={cards}
         generateCardsPdf={generateCardsPdf}
         generateCardsCsv={generateCardsCsv}
       />,
@@ -92,18 +100,11 @@ describe('CreateCardsButtonBar', () => {
   it('Should generate valid cards', async () => {
     const generateCardsPdf = jest.fn()
     const generateCardsCsv = jest.fn()
-    const region: Region = {
-      id: 0,
-      name: 'augsburg',
-      prefix: 'a',
-      activatedForApplication: true,
-      activatedForCardConfirmationMail: true,
-    }
-    const cards = [new CardBlueprint('Thea Test', bayernConfig.card, [region])]
+    const cards = [initializeCard(bayernConfig.card, region, { fullName: 'Thea Test' })]
     const { getByText } = render(
       <CreateCardsButtonBar
         goBack={() => undefined}
-        cardBlueprints={cards}
+        cards={cards}
         generateCardsPdf={generateCardsPdf}
         generateCardsCsv={generateCardsCsv}
       />,

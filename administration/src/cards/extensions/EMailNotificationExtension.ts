@@ -1,26 +1,17 @@
 import { Extension } from './extensions'
 
-class EMailNotificationExtension extends Extension<string, null> {
-  public readonly name = EMailNotificationExtension.name
+export const EMAIL_NOTIFICATION_EXTENSION_NAME = 'emailNotification'
+type EmailNotificationExtensionState = { [EMAIL_NOTIFICATION_EXTENSION_NAME]: string }
 
-  setInitialState(): void {
-    return undefined
-  }
-  createForm(): null {
-    return null
-  }
-  causesInfiniteLifetime(): boolean {
-    return false
-  }
-  fromString(state: string): void {
-    this.state = state
-  }
-  toString(): string {
-    return this.state ?? ''
-  }
-  isValid(): boolean {
-    return true
-  }
+const EMailNotificationExtension: Extension<EmailNotificationExtensionState> = {
+  name: EMAIL_NOTIFICATION_EXTENSION_NAME,
+  Component: () => null,
+  getInitialState: () => ({ [EMAIL_NOTIFICATION_EXTENSION_NAME]: '' }),
+  causesInfiniteLifetime: () => false,
+  getProtobufData: () => ({}),
+  isValid: () => true,
+  fromString: (value: string) => ({ [EMAIL_NOTIFICATION_EXTENSION_NAME]: value }),
+  toString: (state): string => state[EMAIL_NOTIFICATION_EXTENSION_NAME],
 }
 
 export default EMailNotificationExtension

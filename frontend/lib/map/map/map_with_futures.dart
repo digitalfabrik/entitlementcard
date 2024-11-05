@@ -7,6 +7,7 @@ class MapWithFutures extends StatelessWidget {
   final OnFeatureClickCallback onFeatureClick;
   final OnNoFeatureClickCallback onNoFeatureClick;
   final OnMapCreatedCallback onMapCreated;
+  final void Function(bool followUserLocation) setFollowUserLocation;
   final List<String> onFeatureClickLayerFilter;
 
   const MapWithFutures({
@@ -15,6 +16,7 @@ class MapWithFutures extends StatelessWidget {
     required this.onFeatureClick,
     required this.onFeatureClickLayerFilter,
     required this.onMapCreated,
+    required this.setFollowUserLocation,
   });
 
   @override
@@ -30,13 +32,13 @@ class MapWithFutures extends StatelessWidget {
         final position = snapshot.data;
 
         return MapContainer(
-          onFeatureClick: onFeatureClick,
-          onNoFeatureClick: onNoFeatureClick,
-          locationAvailable: position?.isAvailable() ?? false,
-          userLocation: position?.toLatLng(),
-          onFeatureClickLayerFilter: onFeatureClickLayerFilter,
-          onMapCreated: onMapCreated,
-        );
+            onFeatureClick: onFeatureClick,
+            onNoFeatureClick: onNoFeatureClick,
+            locationAvailable: position?.isAvailable() ?? false,
+            userLocation: position?.toLatLng(),
+            onFeatureClickLayerFilter: onFeatureClickLayerFilter,
+            onMapCreated: onMapCreated,
+            setFollowUserLocation: setFollowUserLocation);
       },
     );
   }

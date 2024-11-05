@@ -17,14 +17,15 @@ const InnerAddCardsController = ({ region }: { region: Region }) => {
     setState,
     generateCardsPdf,
     generateCardsCsv,
-    setCardBlueprints,
-    cardBlueprints,
+    setCards,
+    updateCard,
+    cards,
     applicationIdToMarkAsProcessed,
     setApplicationIdToMarkAsProcessed,
   } = useCardGenerator(region)
 
   useBlockNavigation({
-    when: cardBlueprints.length > 0,
+    when: cards.length > 0,
     message: 'Falls Sie fortfahren, werden alle Eingaben verworfen.',
   })
 
@@ -35,7 +36,7 @@ const InnerAddCardsController = ({ region }: { region: Region }) => {
     return (
       <GenerationFinished
         reset={() => {
-          setCardBlueprints([])
+          setCards([])
           setState(CardActivationState.input)
         }}
       />
@@ -46,12 +47,13 @@ const InnerAddCardsController = ({ region }: { region: Region }) => {
     <>
       <AddCardsForm
         region={region}
-        cardBlueprints={cardBlueprints}
-        setCardBlueprints={setCardBlueprints}
+        cards={cards}
+        setCards={setCards}
+        updateCard={updateCard}
         setApplicationIdToMarkAsProcessed={setApplicationIdToMarkAsProcessed}
       />
       <CreateCardsButtonBar
-        cardBlueprints={cardBlueprints}
+        cards={cards}
         goBack={() => navigate('/cards')}
         generateCardsPdf={() => generateCardsPdf(applicationIdToMarkAsProcessed)}
         generateCardsCsv={() => generateCardsCsv(applicationIdToMarkAsProcessed)}

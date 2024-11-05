@@ -1,84 +1,73 @@
 import { FormGroup, InputGroup, Intent } from '@blueprintjs/core'
-import { PartialMessage } from '@bufbuild/protobuf'
 import React, { ReactElement } from 'react'
 
-import { CardExtensions } from '../../generated/card_pb'
+import useWindowDimensions from '../../hooks/useWindowDimensions'
 import ClearInputButton from './components/ClearInputButton'
-import { Extension } from './extensions'
+import { Extension, ExtensionComponentProps } from './extensions'
 
-type KoblenzReferenceNumberState = { referenceNumber: string }
+export const KOBLENZ_REFERENCE_NUMBER_EXTENSION_NAME = 'koblenzReferenceNumber'
+
+type KoblenzReferenceNumberExtensionState = { [KOBLENZ_REFERENCE_NUMBER_EXTENSION_NAME]: string }
 
 const KoblenzReferenceNumberMinLength = 4
 const KoblenzReferenceNumberMaxLength = 15
 
-class KoblenzReferenceNumberExtension extends Extension<KoblenzReferenceNumberState, null> {
-  public readonly name = KoblenzReferenceNumberExtension.name
+const KoblenzReferenceNumberExtensionForm = ({
+  value,
+  setValue,
+  isValid,
+}: ExtensionComponentProps<KoblenzReferenceNumberExtensionState>): ReactElement => {
+  const { viewportSmall } = useWindowDimensions()
+  const clearInput = () => setValue({ koblenzReferenceNumber: '' })
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setInitialState(): void {}
-  createForm(onUpdate: () => void, viewportSmall = true): ReactElement {
-    const clearInput = () => {
-      this.state = { referenceNumber: '' }
-      onUpdate()
-    }
-
-    return (
-      <FormGroup
-        label='Referenznummer'
-        labelFor='koblenz-reference-number-input'
-        intent={this.isValid() ? undefined : Intent.DANGER}>
-        <InputGroup
-          fill
-          large={viewportSmall}
-          id='koblenz-reference-number-input'
-          placeholder='5.012.067.281, 000D000001, 99478'
-          intent={this.isValid() ? undefined : Intent.DANGER}
-          value={this.state?.referenceNumber ?? ''}
-          minLength={KoblenzReferenceNumberMinLength}
-          maxLength={KoblenzReferenceNumberMaxLength}
-          rightElement={
-            <ClearInputButton viewportSmall={viewportSmall} onClick={clearInput} input={this.state?.referenceNumber} />
+  return (
+    <FormGroup
+      label='Referenznummer'
+      labelFor='koblenz-reference-number-input'
+      intent={isValid ? undefined : Intent.DANGER}>
+      <InputGroup
+        fill
+        large={viewportSmall}
+        id='koblenz-reference-number-input'
+        placeholder='5.012.067.281, 000D000001, 99478'
+        intent={isValid ? undefined : Intent.DANGER}
+        value={value.koblenzReferenceNumber}
+        minLength={KoblenzReferenceNumberMinLength}
+        maxLength={KoblenzReferenceNumberMaxLength}
+        rightElement={
+          <ClearInputButton viewportSmall={viewportSmall} onClick={clearInput} input={value.koblenzReferenceNumber} />
+        }
+        onChange={event => {
+          const value = event.target.value
+          if (value.length <= KoblenzReferenceNumberMaxLength) {
+            setValue({ koblenzReferenceNumber: value })
           }
-          onChange={event => {
-            const value = event.target.value
-            if (value.length > KoblenzReferenceNumberMaxLength) {
-              return
-            }
+        }}
+      />
+    </FormGroup>
+  )
+}
 
-            this.state = {
-              referenceNumber: value,
-            }
-            onUpdate()
-          }}
-        />
-      </FormGroup>
-    )
-  }
-
-  causesInfiniteLifetime(): boolean {
-    return false
-  }
-  setProtobufData(message: PartialMessage<CardExtensions>): void {
-    message.extensionKoblenzReferenceNumber = {
-      referenceNumber: this.state?.referenceNumber,
-    }
-  }
-
-  isValid(): boolean {
+const KoblenzReferenceNumberExtension: Extension<KoblenzReferenceNumberExtensionState> = {
+  name: KOBLENZ_REFERENCE_NUMBER_EXTENSION_NAME,
+  getInitialState: () => ({ koblenzReferenceNumber: '' }),
+  Component: KoblenzReferenceNumberExtensionForm,
+  causesInfiniteLifetime: () => false,
+  getProtobufData: state => ({
+    extensionKoblenzReferenceNumber: {
+      referenceNumber: state.koblenzReferenceNumber,
+    },
+  }),
+  isValid: state => {
+    const koblenzReferenceNumber = state?.koblenzReferenceNumber ?? null
     return (
-      this.state !== null &&
-      this.state.referenceNumber.length >= KoblenzReferenceNumberMinLength &&
-      this.state.referenceNumber.length <= KoblenzReferenceNumberMaxLength
+      koblenzReferenceNumber !== null &&
+      koblenzReferenceNumber.length >= KoblenzReferenceNumberMinLength &&
+      koblenzReferenceNumber.length <= KoblenzReferenceNumberMaxLength
     )
-  }
-
-  fromString(state: string): void {
-    this.state = { referenceNumber: state }
-  }
-
-  toString(): string {
-    return this.state?.referenceNumber ?? ''
-  }
+  },
+  fromString: value => ({ koblenzReferenceNumber: value }),
+  toString: state => state.koblenzReferenceNumber,
 }
 
 export default KoblenzReferenceNumberExtension
