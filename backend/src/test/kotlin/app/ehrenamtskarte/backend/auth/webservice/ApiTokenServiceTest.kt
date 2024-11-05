@@ -101,7 +101,7 @@ internal class ApiTokenServiceTest : IntegrationTest() {
         every { mockJwtPayload.adminId } returns TestAdministrators.KOBLENZ_PROJECT_ADMIN.id
 
         transaction {
-            TestData.createApiToken(creatorId = TestAdministrators.NUERNBERG_PROJECT_ADMIN.id)
+            TestData.createApiToken(creatorId = TestAdministrators.KOBLENZ_PROJECT_ADMIN_2.id)
 
             val tokenExists = ApiTokens.select { ApiTokens.id eq 1 }.count() > 0
             assertTrue(tokenExists)

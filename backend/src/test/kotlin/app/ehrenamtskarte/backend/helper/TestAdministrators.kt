@@ -48,6 +48,12 @@ enum class TestAdministrators(
         project = "koblenz.sozialpass.app",
         email = "project-admin@koblenz.sozialpass.app",
         role = Role.PROJECT_ADMIN
+    ),
+    KOBLENZ_PROJECT_ADMIN_2(
+        id = 5,
+        project = "koblenz.sozialpass.app",
+        email = "project-admin@koblenz.sozialpass.app",
+        role = Role.PROJECT_ADMIN
     );
 
     fun getJwtToken(): String {
