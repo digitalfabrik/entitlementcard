@@ -1,18 +1,20 @@
+package app.ehrenamtskarte.backend.auth.webservice
+
 import app.ehrenamtskarte.backend.IntegrationTest
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.database.Administrators
 import app.ehrenamtskarte.backend.auth.database.ApiTokens
 import app.ehrenamtskarte.backend.auth.service.Authorizer
-import app.ehrenamtskarte.backend.auth.webservice.JwtPayload
+import app.ehrenamtskarte.backend.auth.webservice.schema.ApiTokenQueryService
 import app.ehrenamtskarte.backend.auth.webservice.schema.ApiTokenService
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.helper.TestAdministrators
+import app.ehrenamtskarte.backend.helper.TestData
 import graphql.schema.DataFetchingEnvironment
 import io.mockk.every
 import io.mockk.mockk
 import org.jetbrains.exposed.sql.deleteAll
-import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -83,20 +85,13 @@ internal class ApiTokenServiceTest : IntegrationTest() {
         every { mockJwtPayload.adminId } returns TestAdministrators.KOBLENZ_PROJECT_ADMIN.id
 
         transaction {
-            ApiTokens.insert {
-                it[ApiTokens.id] = 1
-                it[projectId] = 1
-                it[creatorId] = TestAdministrators.KOBLENZ_PROJECT_ADMIN.id
-                it[tokenHash] = ByteArray(1)
-                it[expirationDate] = LocalDate.now()
-            }
-
+            TestData.createApiToken(creatorId = TestAdministrators.KOBLENZ_PROJECT_ADMIN.id)
             val tokenExists = ApiTokens.select { ApiTokens.id eq 1 }.count() > 0
             assertTrue(tokenExists)
 
             ApiTokenService().deleteApiToken(1, mockDfe)
 
-            val tokenNoLongerExists = ApiTokens.select { ApiTokens.id eq 1 }.singleOrNull() != null
+            val tokenNoLongerExists = ApiTokens.select { ApiTokens.id eq 1 }.singleOrNull() == null
             assertTrue(tokenNoLongerExists)
         }
     }
@@ -106,13 +101,7 @@ internal class ApiTokenServiceTest : IntegrationTest() {
         every { mockJwtPayload.adminId } returns TestAdministrators.KOBLENZ_PROJECT_ADMIN.id
 
         transaction {
-            ApiTokens.insert {
-                it[ApiTokens.id] = 1
-                it[projectId] = 1
-                it[creatorId] = TestAdministrators.NUERNBERG_PROJECT_ADMIN.id
-                it[tokenHash] = ByteArray(1)
-                it[expirationDate] = LocalDate.now()
-            }
+            TestData.createApiToken(creatorId = TestAdministrators.NUERNBERG_PROJECT_ADMIN.id)
 
             val tokenExists = ApiTokens.select { ApiTokens.id eq 1 }.count() > 0
             assertTrue(tokenExists)
@@ -128,13 +117,7 @@ internal class ApiTokenServiceTest : IntegrationTest() {
     fun deleteApiToken_deletesNoTokenFormOtherProject() {
         every { mockJwtPayload.adminId } returns TestAdministrators.KOBLENZ_PROJECT_ADMIN.id
         transaction {
-            ApiTokens.insert {
-                it[ApiTokens.id] = 1
-                it[projectId] = 1
-                it[creatorId] = TestAdministrators.NUERNBERG_PROJECT_ADMIN.id
-                it[tokenHash] = ByteArray(1)
-                it[expirationDate] = LocalDate.now()
-            }
+            TestData.createApiToken(creatorId = TestAdministrators.NUERNBERG_PROJECT_ADMIN.id)
 
             val numberOfTokensBefore = ApiTokens.selectAll().count()
             ApiTokenService().deleteApiToken(1, mockDfe)
@@ -167,6 +150,60 @@ internal class ApiTokenServiceTest : IntegrationTest() {
             assertThrows(ForbiddenException::class.java) {
                 ApiTokenService().deleteApiToken(1, mockDfe)
             }
+        }
+    }
+
+    @Test
+    fun getApiTokenMetaData_returnsMetaDataSuccessfully() {
+        every { mockJwtPayload.adminId } returns TestAdministrators.KOBLENZ_PROJECT_ADMIN.id
+
+        transaction {
+            TestData.createApiToken(creatorId = TestAdministrators.KOBLENZ_PROJECT_ADMIN.id)
+
+            val metaData = ApiTokenQueryService().getApiTokenMetaData(mockDfe)
+            assertEquals(1, metaData.size)
+            assertEquals(1, metaData[0].id)
+            assertEquals(TestAdministrators.KOBLENZ_PROJECT_ADMIN.email, metaData[0].creatorEmail)
+            assertEquals(LocalDate.now().plusYears(1).toString(), metaData[0].expirationDate)
+        }
+    }
+
+    @Test
+    fun getApiTokenMetaData_throwsForbiddenExceptionWhenNotAuthorized() {
+        every { mockJwtPayload.adminId } returns TestAdministrators.NUERNBERG_PROJECT_STORE_MANAGER.id
+
+        transaction {
+            assertThrows(ForbiddenException::class.java) {
+                ApiTokenQueryService().getApiTokenMetaData(mockDfe)
+            }
+            assertFalse(
+                Authorizer.mayViewApiMetadataInProject(
+                    AdministratorEntity.find { Administrators.id eq mockJwtPayload.adminId }.single()
+                )
+            )
+        }
+    }
+
+    @Test
+    fun getApiTokenMetaData_throwsExceptionWhenAdminNotFound() {
+        every { mockJwtPayload.adminId } returns 1234
+
+        transaction {
+            assertThrows(ForbiddenException::class.java) {
+                ApiTokenQueryService().getApiTokenMetaData(mockDfe)
+            }
+        }
+    }
+
+    @Test
+    fun getApiTokenMetaData_returnsNoTokensOfOtherProjects() {
+        every { mockJwtPayload.adminId } returns TestAdministrators.KOBLENZ_PROJECT_ADMIN.id
+
+        transaction {
+            TestData.createApiToken(creatorId = TestAdministrators.NUERNBERG_PROJECT_ADMIN.id)
+
+            val metaData = ApiTokenQueryService().getApiTokenMetaData(mockDfe)
+            assertEquals(0, metaData.size)
         }
     }
 }
