@@ -16,6 +16,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: ^0.18.0
+  mutex: ^3.1.0
   maplibre_gl:
     git:
       url: https://github.com/maplibre/flutter-maplibre-gl.git
