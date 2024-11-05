@@ -16,6 +16,7 @@ import DiscardAllInputsButton from './DiscardAllInputsButton'
 import ApplicationForm from './forms/ApplicationForm'
 import useVersionedLocallyStoredState from './hooks/useVersionedLocallyStoredState'
 import { useGarbageCollectArrayBuffers, useInitializeGlobalArrayBuffersManager } from './util/globalArrayBuffersManager'
+import { useTranslation } from 'react-i18next'
 
 // This env variable is determined by '../../../application_commit.sh'. It holds the hash of the last commit to the
 // application form.
@@ -31,6 +32,7 @@ const SuccessContent = styled.div`
 `
 
 const ApplyController = (): React.ReactElement | null => {
+  const { t } = useTranslation('application')
   const [formSubmitted, setFormSubmitted] = useState<boolean>(false)
   const { enqueueSnackbar } = useSnackbar()
   const { status, state, setState } = useVersionedLocallyStoredState(
@@ -94,11 +96,13 @@ const ApplyController = (): React.ReactElement | null => {
     })
   }
 
+
+
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', margin: '16px' }}>
       <div style={{ maxWidth: '1000px', width: '100%' }}>
         <Typography variant='h4' component='h1' style={{ textAlign: 'center', margin: '16px' }}>
-          {formSubmitted ? 'Erfolgreich gesendet' : 'Bayerische Ehrenamtskarte beantragen'}
+          {formSubmitted ? t('sendSuccessfully') : t('title')}
         </Typography>
         {formSubmitted ? (
           <SuccessContent>
