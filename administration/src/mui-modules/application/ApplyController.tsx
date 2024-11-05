@@ -6,6 +6,7 @@ import { CircularProgress, DialogActions, Typography } from '@mui/material'
 import { SnackbarProvider, useSnackbar } from 'notistack'
 import React, { ReactElement, useCallback, useContext, useMemo, useState } from 'react'
 import styled from 'styled-components'
+import { useTranslation } from 'react-i18next'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useAddEakApplicationMutation, useGetRegionsQuery } from '../../generated/graphql'
@@ -16,7 +17,6 @@ import DiscardAllInputsButton from './DiscardAllInputsButton'
 import ApplicationForm from './forms/ApplicationForm'
 import useVersionedLocallyStoredState from './hooks/useVersionedLocallyStoredState'
 import { useGarbageCollectArrayBuffers, useInitializeGlobalArrayBuffersManager } from './util/globalArrayBuffersManager'
-import { useTranslation } from 'react-i18next'
 
 // This env variable is determined by '../../../application_commit.sh'. It holds the hash of the last commit to the
 // application form.
@@ -95,8 +95,6 @@ const ApplyController = (): React.ReactElement | null => {
       variables: { regionId, application, project: projectId },
     })
   }
-
-
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', margin: '16px' }}>
