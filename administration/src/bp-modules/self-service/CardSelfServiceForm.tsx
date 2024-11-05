@@ -1,13 +1,14 @@
 import { Checkbox, FormGroup, InputGroup, Intent } from '@blueprintjs/core'
 import InfoOutlined from '@mui/icons-material/InfoOutlined'
 import { Alert, styled } from '@mui/material'
-import React, { ReactElement, useContext, useState } from 'react'
+import React, { ReactElement, useContext, useEffect, useRef, useState } from 'react'
 
 import { Card, isFullNameValid, isValid } from '../../cards/Card'
 import ClearInputButton from '../../cards/extensions/components/ClearInputButton'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
 import BasicDialog from '../../mui-modules/application/BasicDialog'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import PlainDate from '../../util/PlainDate'
 import ExtensionForms from '../cards/ExtensionForms'
 import { ActionButton } from './components/ActionButton'
 import { IconTextButton } from './components/IconTextButton'
@@ -30,6 +31,7 @@ const Container = styled('div')`
 
 type CardSelfServiceFormProps = {
   card: Card
+  cardQueryParams: URLSearchParams
   updateCard: (card: Partial<Card>) => void
   dataPrivacyAccepted: boolean
   setDataPrivacyAccepted: (value: boolean) => void
@@ -47,8 +49,44 @@ const getTooltipMessage = (cardsValid: boolean, dataPrivacyAccepted: boolean): s
 
   return tooltipMessages.join('\n')
 }
+
+const useInitializeCard = (cardQueryParams: URLSearchParams, updateCard: (card: Partial<Card>) => void) => {
+  const hasInitialized = useRef(false)
+
+  useEffect(() => {
+    if (!hasInitialized.current) {
+      hasInitialized.current = true
+
+      const fullName = cardQueryParams.get('name')
+      const birthday = cardQueryParams.get('geburtsdatum')
+
+      const parsedBirthday: PlainDate | null = (() => {
+        if (!birthday) {
+          return null
+        }
+        try {
+          return PlainDate.from(birthday)
+        } catch {
+          return null
+        }
+      })()
+
+      const referenceNumber = cardQueryParams.get('ref')
+
+      updateCard({
+        ...(fullName !== null && { fullName }),
+        extensions: {
+          ...(referenceNumber !== null && { koblenzReferenceNumber: referenceNumber }),
+          ...(parsedBirthday !== null && { birthday: parsedBirthday }),
+        },
+      })
+    }
+  }, [cardQueryParams, updateCard])
+}
+
 const CardSelfServiceForm = ({
   card,
+  cardQueryParams,
   updateCard,
   dataPrivacyAccepted,
   setDataPrivacyAccepted,
@@ -60,6 +98,8 @@ const CardSelfServiceForm = ({
   const [openReferenceInformation, setOpenReferenceInformation] = useState<boolean>(false)
   const cardValid = isValid(card, { expirationDateNullable: true })
   const cardCreationDisabled = !cardValid || !dataPrivacyAccepted
+
+  useInitializeCard(cardQueryParams, updateCard)
 
   return (
     <>
