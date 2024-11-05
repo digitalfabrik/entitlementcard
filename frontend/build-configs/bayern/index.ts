@@ -47,6 +47,7 @@ export const bayernCommon: CommonBuildConfigType = {
         headerLogo: "assets/bayern/header-logo.png",
         headerLogoPadding: 4,
         headerLogoWidth: 60,
+        headerLogoExtraScale: 1,
         headerContainerPadding: { top: 0, right: 4, bottom: 0, left: 8 },
         bodyContainerPadding: { top: 8, right: 8, bottom: 8, left: 8 },
         bodyLogo: "assets/bayern/body-logo.png",

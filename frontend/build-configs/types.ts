@@ -62,6 +62,7 @@ export type CommonBuildConfigType = {
         headerTitleLeft: string
         headerTitleRight: string
         headerLogo: string
+        headerLogoExtraScale: number
         headerLogoPadding: number
         headerContainerPadding: {
             top: number

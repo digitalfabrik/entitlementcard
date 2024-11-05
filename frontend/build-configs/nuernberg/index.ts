@@ -47,6 +47,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
         headerLogo: "assets/nuernberg/header-logo.png",
         headerLogoPadding: 0,
         headerLogoWidth: 60,
+        headerLogoExtraScale: 1,
         headerContainerPadding: { top: 0, right: 24, bottom: 0, left: 16 },
         bodyContainerPadding: { top: 0, right: 24, bottom: 6, left: 16 },
         bodyLogo: "assets/nuernberg/body-logo.png",
