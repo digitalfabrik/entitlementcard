@@ -97,6 +97,7 @@ type CardStatisticsResultModel {
 }
 
 type CardVerificationResultModel {
+  extendable: Boolean!
   valid: Boolean!
   verificationTimeStamp: String!
 }
