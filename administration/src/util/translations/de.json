@@ -2,5 +2,9 @@
   "application": {
     "title": "Bayerische Ehrenamtskarte beantragen",
     "sendSuccessfully": "Erfolgreich gesendet"
+  },
+  "application2": {
+    "title2": "Bayerische Ehrenamtskarte beantragen",
+    "sendSuccessfully2": "Erfolgreich gesendet"
   }
 }
