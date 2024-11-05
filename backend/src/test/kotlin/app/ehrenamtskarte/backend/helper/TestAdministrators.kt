@@ -50,9 +50,9 @@ enum class TestAdministrators(
         role = Role.PROJECT_ADMIN
     ),
     KOBLENZ_PROJECT_ADMIN_2(
-        id = 5,
+        id = 6,
         project = "koblenz.sozialpass.app",
-        email = "project-admin@koblenz.sozialpass.app",
+        email = "project-admin2@koblenz.sozialpass.app",
         role = Role.PROJECT_ADMIN
     );
 

@@ -20,6 +20,8 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -103,13 +105,13 @@ internal class ApiTokenServiceTest : IntegrationTest() {
         transaction {
             TestData.createApiToken(creatorId = TestAdministrators.KOBLENZ_PROJECT_ADMIN_2.id)
 
-            val tokenExists = ApiTokens.select { ApiTokens.id eq 1 }.count() > 0
-            assertTrue(tokenExists)
+            val tokenBefore = ApiTokens.select { ApiTokens.id eq 1 }.count() > 0
+            assertNotNull(tokenBefore)
 
             ApiTokenService().deleteApiToken(1, mockDfe)
 
-            val tokenNoLongerExists = ApiTokens.select { ApiTokens.id eq 1 }.singleOrNull() != null
-            assertTrue(tokenNoLongerExists)
+            val tokenAfter = ApiTokens.select { ApiTokens.id eq 1 }.singleOrNull()
+            assertNull(tokenAfter)
         }
     }
 
