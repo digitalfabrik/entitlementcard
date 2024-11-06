@@ -9,7 +9,6 @@ jobs:
   - build_android:
       name: build_android_bayern
       buildConfig: "bayern"
-      flutterFlavor: "Bayern"
       requires:
         - bump_version
         - check_frontend
@@ -27,7 +26,6 @@ jobs:
   - build_android:
       name: build_android_nuernberg
       buildConfig: "nuernberg"
-      flutterFlavor: "Nuernberg"
       requires:
         - bump_version
         - check_frontend
@@ -42,10 +40,26 @@ jobs:
       production_delivery: true
       requires:
         - build_android_nuernberg
+#  - build_android:
+#      name: build_android_koblenz
+#      buildConfig: "koblenz"
+#      requires:
+#        - bump_version
+#        - check_frontend
+#      context:
+#        - credentials-repo
+#        - credentials-ehrenamtskarte
+#  - deliver_android:
+#      name: deliver_android_koblenz
+#      buildConfig: "koblenz"
+#      context:
+#        - tuerantuer-google-play
+#      production_delivery: true
+#      requires:
+#        - build_android_koblenz
   - build_ios:
       name: build_ios_bayern
       buildConfig: "bayern"
-      flutterFlavor: "Bayern"
       requires:
         - bump_version
         - check_frontend
@@ -53,7 +67,7 @@ jobs:
         - tuerantuer-apple
         - fastlane-match
   - deliver_ios:
-      name: deliver_bayern_ios
+      name: deliver_ios_bayern
       buildConfig: bayern
       context:
         - tuerantuer-apple
@@ -63,7 +77,6 @@ jobs:
   - build_ios:
       name: build_ios_nuernberg
       buildConfig: "nuernberg"
-      flutterFlavor: "Nuernberg"
       requires:
         - bump_version
         - check_frontend
@@ -71,19 +84,38 @@ jobs:
         - tuerantuer-apple
         - fastlane-match
   - deliver_ios:
-      name: deliver_nuernberg_ios
+      name: deliver_ios_nuernberg
       buildConfig: nuernberg
       context:
         - tuerantuer-apple
       production_delivery: true
       requires:
         - build_ios_nuernberg
+#  - build_ios:
+#      name: build_ios_koblenz
+#      buildConfig: "koblenz"
+#      requires:
+#        - bump_version
+#        - check_frontend
+#      context:
+#        - tuerantuer-apple
+#        - fastlane-match
+#  - deliver_ios:
+#      name: deliver_ios_koblenz
+#      buildConfig: koblenz
+#      context:
+#        - tuerantuer-apple
+#      production_delivery: true
+#      requires:
+#        - build_ios_koblenz
   - notify_release:
       production_delivery: true
       context:
         - deliverino
       requires:
-        - deliver_bayern_ios
-        - deliver_nuernberg_ios
+        - deliver_ios_bayern
+        - deliver_ios_nuernberg
+#        - deliver_ios_koblenz
         - deliver_android_bayern
         - deliver_android_nuernberg
+#        - deliver_android_koblenz

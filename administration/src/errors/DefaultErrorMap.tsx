@@ -99,7 +99,8 @@ const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
       }
     case GraphQlExceptionCode.UserEntitlementExpired:
       return {
-        title: 'Sie sind nicht mehr berechtigt einen KoblenzPass zu erstellen.',
+        title:
+          'Sie sind nicht länger berechtigt einen KoblenzPass zu erstellen. Bitte kontaktieren Sie koblenzpass@stadt.koblenz.de für weitere Informationen.',
       }
     case GraphQlExceptionCode.MailNotSent:
       return {

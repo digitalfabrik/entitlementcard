@@ -111,6 +111,7 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
                                 });
                                 try {
                                   final activated = await activateCard(context, activationCode);
+                                  if (!context.mounted) return;
                                   if (activated) {
                                     GoRouter.of(context).pushReplacement('$homeRouteName/$identityTabIndex');
                                     setState(() {

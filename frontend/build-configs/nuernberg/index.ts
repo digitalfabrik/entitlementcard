@@ -1,4 +1,4 @@
-import { ACTIVATION_PATH, CUSTOM_SCHEME, NUERNBERG_PRODUCTION_ID, NUERNBERG_STAGING_ID } from "../constants"
+import { ACTIVATION_PATH, NUERNBERG_PRODUCTION_ID, NUERNBERG_STAGING_ID } from "../constants"
 import BuildConfigType, { CommonBuildConfigType } from "../types"
 import disclaimerText from "./disclaimerText"
 import publisherText from "./publisherText"
@@ -81,7 +81,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
     activationPath: ACTIVATION_PATH,
     deepLinking: {
         projectName: "nuernberg",
-        customScheme: CUSTOM_SCHEME,
+        customScheme: "nuernbergpass",
         android: {
             applicationId: ANDROID_APPLICATION_ID,
             path: `/${ACTIVATION_PATH}/.*`,
