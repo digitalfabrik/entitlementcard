@@ -72,7 +72,7 @@ export const koblenzCommon: CommonBuildConfigType = {
         verification: true,
         favorites: false,
     },
-    applicationUrl: "https://beantragen.koblenz.sozialpass.app",
+    applicationUrl: "https://koblenz.sozialpass.app/erstellen",
     dataPrivacyPolicyUrl: "https://koblenz.sozialpass.app/data-privacy-policy",
     publisherAddress: "Stadt Koblenz\nWilli-Hörter-Platz 1\n56068 Koblenz",
     publisherText,
