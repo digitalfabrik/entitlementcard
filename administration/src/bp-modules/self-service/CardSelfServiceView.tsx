@@ -70,10 +70,18 @@ const HeaderLogo = styled.img`
   height: 40px;
 `
 
+export enum DataPrivacyAcceptingStatus {
+  untouched,
+  accepted,
+  denied,
+}
+
 // TODO 1646 Add tests for CardSelfService
 const CardSelfServiceView = (): ReactElement => {
   const projectConfig = useContext(ProjectConfigContext)
-  const [dataPrivacyAccepted, setDataPrivacyAccepted] = useState<boolean>(false)
+  const [dataPrivacyCheckbox, setDataPrivacyCheckbox] = useState<DataPrivacyAcceptingStatus>(
+    DataPrivacyAcceptingStatus.untouched
+  )
   const {
     selfServiceState,
     setSelfServiceState,
@@ -113,8 +121,8 @@ const CardSelfServiceView = (): ReactElement => {
         {selfServiceState === CardSelfServiceStep.form && (
           <CardSelfServiceForm
             card={selfServiceCard}
-            dataPrivacyAccepted={dataPrivacyAccepted}
-            setDataPrivacyAccepted={setDataPrivacyAccepted}
+            dataPrivacyAccepted={dataPrivacyCheckbox}
+            setDataPrivacyAccepted={setDataPrivacyCheckbox}
             updateCard={updatedCard => setSelfServiceCard(updateCard(selfServiceCard, updatedCard))}
             generateCards={generateCards}
           />

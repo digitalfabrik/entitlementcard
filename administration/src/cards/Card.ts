@@ -9,7 +9,7 @@ import { REGION_EXTENSION_NAME } from './extensions/RegionExtension'
 import Extensions, { Extension, ExtensionKey, ExtensionState, InferExtensionStateType } from './extensions/extensions'
 
 // Due to limited space on the cards
-const MAX_NAME_LENGTH = 30
+export const MAX_NAME_LENGTH = 40
 // Due to limited space on the qr code
 const MAX_ENCODED_NAME_LENGTH = 50
 
@@ -65,10 +65,21 @@ export const getExtensions = ({ extensions }: Card): ExtensionWithState[] => {
 export const hasInfiniteLifetime = (card: Card): boolean =>
   getExtensions(card).some(({ extension, state }) => extension.causesInfiniteLifetime(state))
 
-export const isFullNameValid = ({ fullName }: Card): boolean => {
+const containsNameSpecialCharacters = (fullName: string): boolean =>
+  /[`!@#$%^&*()_+\-=\]{};':"\\|,.<>?~0123456789]/.test(fullName)
+
+const hasValidNameLength = (fullName: string): boolean => {
   const encodedName = new TextEncoder().encode(fullName)
   return fullName.length > 0 && encodedName.length <= MAX_ENCODED_NAME_LENGTH && fullName.length <= MAX_NAME_LENGTH
 }
+
+const hasNameAndForename = (fullName: string): boolean => {
+  const names = fullName.split(' ')
+  return names.length > 1 && names.every(name => name.length > 1)
+}
+
+export const isFullNameValid = ({ fullName }: Card): boolean =>
+  hasValidNameLength(fullName) && hasNameAndForename(fullName) && !containsNameSpecialCharacters(fullName)
 
 export const isExpirationDateValid = (card: Card, { nullable } = { nullable: false }): boolean => {
   const today = PlainDate.fromLocalDate(new Date())
@@ -180,3 +191,16 @@ export const updateCard = (oldCard: Card, updatedCard: Partial<Card>): Card => (
     ...(updatedCard.extensions ?? {}),
   },
 })
+
+export const getFullNameValidationErrorMessage = (name: string): string | null => {
+  if (containsNameSpecialCharacters(name)) {
+    return 'Der Name darf keine Sonderzeichen oder Zahlen enthalten.'
+  }
+  if (!hasNameAndForename(name)) {
+    return 'Bitte geben Sie Ihren vollständigen Namen ein.'
+  }
+  if (!hasValidNameLength(name)) {
+    return `Der Name darf nicht länger als ${MAX_NAME_LENGTH} Zeichen sein`
+  }
+  return null
+}
