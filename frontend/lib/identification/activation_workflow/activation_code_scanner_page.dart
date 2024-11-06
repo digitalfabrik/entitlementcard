@@ -6,7 +6,7 @@ import 'package:ehrenamtskarte/identification/activation_workflow/activation_exc
 import 'package:ehrenamtskarte/identification/connection_failed_dialog.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_scanner_page.dart';
-import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_parsing_error_dialog.dart';
+import 'package:ehrenamtskarte/identification/activation_workflow/activation_error_dialog.dart';
 import 'package:ehrenamtskarte/identification/util/activate_card.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/verification_qr_code_processor.dart';
 import 'package:ehrenamtskarte/sentry.dart';
@@ -39,7 +39,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
     Future<void> showError(String msg, dynamic stackTrace) async {
       reportError(msg, stackTrace);
       if (!context.mounted) return;
-      await QrParsingErrorDialog.showErrorDialog(context, msg);
+      await ActivationErrorDialog.showErrorDialog(context, msg);
     }
 
     try {
@@ -55,7 +55,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
       await showError(t.identification.codeInvalidMissing(missing: e.missingFieldName), null);
     } on QrCodeWrongTypeException catch (_) {
       if (!context.mounted) return;
-      await QrParsingErrorDialog.showErrorDialog(context, t.identification.codeInvalidType);
+      await ActivationErrorDialog.showErrorDialog(context, t.identification.codeInvalidType);
     } on CardExpiredException catch (e) {
       final expirationDate = DateFormat('dd.MM.yyyy').format(e.expiry);
       await showError(t.identification.codeExpired(expirationDate: expirationDate), null);
