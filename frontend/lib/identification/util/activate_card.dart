@@ -74,10 +74,9 @@ Future<bool> activateCard(
       }
       return true;
     case ActivationState.revoked:
-      await ActivationErrorDialog.showErrorDialog(
-        context,
-        t.identification.codeRevoked,
-      );
+      if (context.mounted) {
+        await ActivationErrorDialog.showErrorDialog(context, t.identification.codeRevoked);
+      }
       return false;
     case ActivationState.failed:
       if (context.mounted) {
