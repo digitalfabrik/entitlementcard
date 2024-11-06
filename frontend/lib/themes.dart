@@ -13,6 +13,7 @@ ThemeData get lightTheme {
       secondary: primaryColor,
       background: Colors.white,
       surfaceVariant: const Color(0xffefefef),
+      surfaceTint: Colors.white54,
       error: const Color(0xffcc0000),
     ),
     textTheme: defaultTypography.copyWith(
@@ -57,6 +58,7 @@ ThemeData get darkTheme {
       secondary: primaryColor,
       background: const Color(0xff121212),
       surfaceVariant: const Color(0xff262626),
+      surfaceTint: Colors.white,
       error: const Color(0xff8b0000),
     ),
     textTheme: defaultTypography.copyWith(

@@ -78,7 +78,7 @@ class DevSettingsView extends StatelessWidget {
               title: const Text('Trigger self-verification'),
               onTap: () => {
                     for (final userCode in userCodeModel.userCodes)
-                      {selfVerifyCard(context, userCode, Configuration.of(context).projectId, client)}
+                      {selfVerifyCard(userCodeModel, userCode, Configuration.of(context).projectId, client)}
                   }),
           ListTile(
             title: const Text('Log sample exception'),

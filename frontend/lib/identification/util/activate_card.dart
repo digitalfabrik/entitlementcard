@@ -61,7 +61,7 @@ Future<bool> activateCard(
           ..cardValid = true
           ..verificationTimeStamp = secondsSinceEpoch(DateTime.parse(activationResult.activationTimeStamp)));
 
-      userCodesModel.insertCode(userCode);
+      await userCodesModel.insertCode(userCode);
       debugPrint('Card Activation: Successfully activated.');
       if (context.mounted) {
         messengerState.showSnackBar(
@@ -88,7 +88,7 @@ Future<bool> activateCard(
       if (overwriteExisting) {
         throw const ActivationDidNotOverwriteExisting();
       }
-      if (isAlreadyInList(userCodesModel.userCodes, activationCode.info)) {
+      if (isAlreadyInList(userCodesModel.userCodes, activationCode.info, activationCode.pepper)) {
         if (context.mounted) {
           await ActivationExistingCardDialog.showExistingCardDialog(context);
         }
