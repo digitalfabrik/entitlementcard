@@ -48,7 +48,6 @@ data class BlueCardWorkAtOrganizationsEntitlement(
     override fun toJsonField() = JsonField(
         name = "blueCardWorkAtOrganizationsEntitlement",
         type = Type.Array,
-        translations = mapOf("de" to "Ich engagiere mich ehrenamtlich seit mindestens zwei Jahren freiwillig mindestens fünf Stunden pro Woche oder bei Projektarbeiten mindestens 250 Stunden jährlich"),
         value = list.map { it.toJsonField() }
     )
 
@@ -65,12 +64,11 @@ data class BlueCardJuleicaEntitlement(
     override fun toJsonField() = JsonField(
         name = "blueCardJuleicaEntitlement",
         type = Type.Array,
-        translations = mapOf("de" to "Ich bin Inhaber:in einer JuLeiCa (Jugendleiter:in-Card)"),
         value = listOfNotNull(
-            juleicaNumber.toJsonField("juleicaNumber", mapOf("de" to "Kartennummer")),
-            juleicaExpirationDate.toJsonField("juleicaExpiration", mapOf("de" to "Karte gültig bis")),
-            copyOfJuleicaFront.toJsonField("copyOfJuleicaFront", mapOf("de" to "Kopie der Karte (1)")),
-            copyOfJuleicaBack?.toJsonField("copyOfJuleicaBack", mapOf("de" to "Kopie der Karte (2)"))
+            juleicaNumber.toJsonField("juleicaNumber"),
+            juleicaExpirationDate.toJsonField("juleicaExpiration"),
+            copyOfJuleicaFront.toJsonField("copyOfJuleicaFront"),
+            copyOfJuleicaBack?.toJsonField("copyOfJuleicaBack")
         )
     )
 }
@@ -84,11 +82,10 @@ data class BlueCardWorkAtDepartmentEntitlement(
         return JsonField(
             name = "blueCardWorkAtDepartmentEntitlement",
             type = Type.Array,
-            translations = mapOf("de" to "Ich bin aktiv in der Freiwilligen Feuerwehr mit abgeschlossener Truppmannausbildung bzw. abgeschlossenem Basis-Modul der Modularen Truppausbildung (MTA), oder im Katastrophenschutz oder im Rettungsdienst mit abgeschlossener Grundausbildung."),
             value = listOfNotNull(
                 organization.toJsonField(),
-                responsibility.toJsonField("responsibility", mapOf("de" to "Funktion")),
-                certificate?.toJsonField("certificate", mapOf("de" to "Tätigkeitsnachweis"))
+                responsibility.toJsonField("responsibility"),
+                certificate?.toJsonField("certificate")
             )
         )
     }
@@ -103,9 +100,8 @@ data class BlueCardMilitaryReserveEntitlement(
         return JsonField(
             name = "blueCardMilitaryReserveEntitlement",
             type = Type.Array,
-            translations = mapOf("de" to "Ich habe in den vergangenen zwei Kalenderjahren als Reservist regelmäßig aktiven Wehrdienst in der Bundeswehr geleistet, indem ich insgesamt mindestens 40 Tage Reservisten-Dienstleistung erbracht habe oder ständige:r Angehörige:r eines Bezirks- oder Kreisverbindungskommandos war."),
             value = listOfNotNull(
-                certificate.toJsonField("certificate", mapOf("de" to "Tätigkeitsnachweis"))
+                certificate.toJsonField("certificate")
             )
         )
     }
@@ -119,10 +115,9 @@ data class BlueCardVolunteerServiceEntitlement(
         return JsonField(
             name = "volunteerServiceEntitlement",
             type = Type.Array,
-            translations = mapOf("de" to "Ich leiste einen Freiwilligendienst ab in einem Freiwilligen Sozialen Jahr (FSJ), einem Freiwilligen Ökologischen Jahr (FÖJ) oder einem Bundesfreiwilligendienst (BFD)."),
             value = listOfNotNull(
-                programName.toJsonField("programName", mapOf("de" to "Name des Programms")),
-                certificate.toJsonField("certificate", mapOf("de" to "Tätigkeitsnachweis"))
+                programName.toJsonField("programName"),
+                certificate.toJsonField("certificate")
             )
         )
     }

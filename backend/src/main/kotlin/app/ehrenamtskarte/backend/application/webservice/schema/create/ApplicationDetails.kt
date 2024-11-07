@@ -43,12 +43,10 @@ data class ApplicationDetails(
     override fun toJsonField(): JsonField {
         return JsonField(
             "applicationDetails",
-            mapOf("de" to "Antragsdetails"),
             Type.Array,
             listOfNotNull(
                 JsonField(
                     name = "cardType",
-                    translations = mapOf("de" to "Antrag auf"),
                     type = Type.String,
                     value = when (cardType) {
                         BavariaCardType.BLUE -> "Blaue Ehrenamtskarte"
@@ -58,7 +56,6 @@ data class ApplicationDetails(
                 applicationType?.let {
                     JsonField(
                         name = "applicationType",
-                        translations = mapOf("de" to "Art des Antrags"),
                         type = Type.String,
                         value = when (applicationType) {
                             ApplicationType.FIRST_APPLICATION -> "Erstantrag"
@@ -68,32 +65,27 @@ data class ApplicationDetails(
                 },
                 JsonField(
                     name = "wantsDigitalCard",
-                    translations = mapOf("de" to "Ich beantrage eine digitale Ehrenamtskarte"),
                     type = Type.Boolean,
                     value = wantsDigitalCard
                 ),
                 JsonField(
                     name = "wantsPhysicalCard",
-                    translations = mapOf("de" to "Ich beantrage eine physische Ehrenamtskarte"),
                     type = Type.Boolean,
                     value = wantsPhysicalCard
                 ),
                 entitlementByCardType[cardType]!!.toJsonField(),
                 JsonField(
                     "hasAcceptedPrivacyPolicy",
-                    mapOf("de" to "Ich erkläre mich damit einverstanden, dass meine Daten zum Zwecke der Antragsverarbeitung gespeichert werden und akzeptiere die Datenschutzerklärung"),
                     Type.Boolean,
                     hasAcceptedPrivacyPolicy
                 ),
                 JsonField(
                     "hasAcceptedEmailUsage",
-                    mapOf("de" to "Ich stimme zu, dass ich von der lokalen Ehrenamtskoordination über Verlosungen und regionale Angebote informiert werden darf"),
                     Type.Boolean,
                     hasAcceptedEmailUsage
                 ),
                 JsonField(
                     "givenInformationIsCorrectAndComplete",
-                    mapOf("de" to "Ich versichere, dass alle angegebenen Informationen korrekt und vollständig sind"),
                     Type.Boolean,
                     givenInformationIsCorrectAndComplete
                 )
