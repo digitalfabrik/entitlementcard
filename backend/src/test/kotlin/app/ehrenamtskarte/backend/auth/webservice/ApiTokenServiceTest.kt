@@ -20,6 +20,7 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
@@ -100,16 +101,15 @@ internal class ApiTokenServiceTest : IntegrationTest() {
     @Test
     fun deleteApiToken_deletesFromOtherAdminTokenSuccessfully() {
         every { mockJwtPayload.adminId } returns TestAdministrators.KOBLENZ_PROJECT_ADMIN.id
+        TestData.createApiToken(creatorId = TestAdministrators.KOBLENZ_PROJECT_ADMIN_2.id)
 
         transaction {
-            TestData.createApiToken(creatorId = TestAdministrators.KOBLENZ_PROJECT_ADMIN_2.id)
+            val tokenBefore = ApiTokens.select { ApiTokens.creatorId eq TestAdministrators.KOBLENZ_PROJECT_ADMIN_2.id }.singleOrNull()
+            assertNotNull(tokenBefore)
 
-            val tokenBefore = ApiTokens.select { ApiTokens.id eq 1 }.count() > 0
-            assertTrue(tokenBefore)
+            ApiTokenService().deleteApiToken(tokenBefore!!.get(ApiTokens.id).value, mockDfe)
 
-            ApiTokenService().deleteApiToken(1, mockDfe)
-
-            val tokenAfter = ApiTokens.select { ApiTokens.id eq 1 }.singleOrNull()
+            val tokenAfter = ApiTokens.select { ApiTokens.creatorId eq TestAdministrators.KOBLENZ_PROJECT_ADMIN_2.id }.singleOrNull()
             assertNull(tokenAfter)
         }
     }
