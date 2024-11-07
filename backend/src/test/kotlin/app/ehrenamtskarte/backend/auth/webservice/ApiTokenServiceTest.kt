@@ -106,7 +106,7 @@ internal class ApiTokenServiceTest : IntegrationTest() {
             TestData.createApiToken(creatorId = TestAdministrators.KOBLENZ_PROJECT_ADMIN_2.id)
 
             val tokenBefore = ApiTokens.select { ApiTokens.id eq 1 }.count() > 0
-            assertNotNull(tokenBefore)
+            assertTrue(tokenBefore)
 
             ApiTokenService().deleteApiToken(1, mockDfe)
 
