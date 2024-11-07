@@ -119,10 +119,10 @@ internal class ApiTokenServiceTest : IntegrationTest() {
     fun deleteApiToken_deletesNoTokenFormOtherProject() {
         every { mockJwtPayload.adminId } returns TestAdministrators.KOBLENZ_PROJECT_ADMIN.id
         transaction {
-            TestData.createApiToken(creatorId = TestAdministrators.NUERNBERG_PROJECT_ADMIN.id)
+            val tokenId = TestData.createApiToken(creatorId = TestAdministrators.NUERNBERG_PROJECT_ADMIN.id)
 
             val numberOfTokensBefore = ApiTokens.selectAll().count()
-            ApiTokenService().deleteApiToken(1, mockDfe)
+            ApiTokenService().deleteApiToken(tokenId, mockDfe)
             val numberOfTokensAfter = ApiTokens.selectAll().count()
             assert(numberOfTokensBefore == numberOfTokensAfter)
         }
