@@ -87,13 +87,13 @@ internal class ApiTokenServiceTest : IntegrationTest() {
         every { mockJwtPayload.adminId } returns TestAdministrators.KOBLENZ_PROJECT_ADMIN.id
 
         transaction {
-            TestData.createApiToken(creatorId = TestAdministrators.KOBLENZ_PROJECT_ADMIN.id)
-            val tokenExists = ApiTokens.select { ApiTokens.id eq 1 }.count() > 0
+            val tokenId = TestData.createApiToken(creatorId = TestAdministrators.KOBLENZ_PROJECT_ADMIN.id)
+            val tokenExists = ApiTokens.select { ApiTokens.id eq tokenId }.count() > 0
             assertTrue(tokenExists)
 
-            ApiTokenService().deleteApiToken(1, mockDfe)
+            ApiTokenService().deleteApiToken(tokenId, mockDfe)
 
-            val tokenNoLongerExists = ApiTokens.select { ApiTokens.id eq 1 }.singleOrNull() == null
+            val tokenNoLongerExists = ApiTokens.select { ApiTokens.id eq tokenId }.singleOrNull() == null
             assertTrue(tokenNoLongerExists)
         }
     }
