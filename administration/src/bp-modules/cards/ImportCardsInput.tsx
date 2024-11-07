@@ -10,7 +10,7 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 import { getCsvHeaders } from '../../project-configs/helper'
 import { useAppToaster } from '../AppToaster'
 import FileInputStateIcon from '../FileInputStateIcon'
-import convertFreinetImport from './ImportCardsFromFreinetController'
+import convertFreinetImport from '../util/convertFreinetImport'
 import ImportCardsRequirementsText from './ImportCardsRequirementsText'
 
 const CardImportInputContainer = styled.div`
