@@ -160,11 +160,11 @@ internal class ApiTokenServiceTest : IntegrationTest() {
         every { mockJwtPayload.adminId } returns TestAdministrators.KOBLENZ_PROJECT_ADMIN.id
 
         transaction {
-            TestData.createApiToken(creatorId = TestAdministrators.KOBLENZ_PROJECT_ADMIN.id)
+            val tokenId = TestData.createApiToken(creatorId = TestAdministrators.KOBLENZ_PROJECT_ADMIN.id)
 
             val metaData = ApiTokenQueryService().getApiTokenMetaData(mockDfe)
             assertEquals(1, metaData.size)
-            assertEquals(1, metaData[0].id)
+            assertEquals(tokenId, metaData[0].id)
             assertEquals(TestAdministrators.KOBLENZ_PROJECT_ADMIN.email, metaData[0].creatorEmail)
             assertEquals(LocalDate.now().plusYears(1).toString(), metaData[0].expirationDate)
         }
