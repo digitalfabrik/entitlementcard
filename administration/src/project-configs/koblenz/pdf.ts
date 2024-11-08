@@ -11,29 +11,20 @@ const renderPdfDetails = ({ info }: InfoParams): string => {
   const expirationDate = PlainDate.fromDaysSinceEpoch(expirationDay)
   const birthdayDate = PlainDate.fromDaysSinceEpoch(info.extensions?.extensionBirthday?.birthday ?? 0)
   const startDate = PlainDate.fromDaysSinceEpoch(info.extensions?.extensionStartDay?.startDay ?? 0)
-  return `${info.fullName}
-Geburtsdatum: ${birthdayDate.format()}
-Gültig: ${startDate.format()} bis ${expirationDate.format()}`
+  return `${startDate.format()} - ${expirationDate.format()}
+${birthdayDate.format()}
+${info.fullName}`
 }
 
-const renderCardHash = ({ cardInfoHash }: InfoParams): string => cardInfoHash
-
-// TODO 1422 Create PDF for koblenz
-
 const pdfConfiguration: PdfConfig = {
-  title: 'KoblenzPässe',
+  title: 'KoblenzPass',
   templatePath: pdfTemplate,
   issuer: 'Stadt Koblenz',
   elements: {
-    staticVerificationQrCodes: [
-      { x: 53, y: 222, size: 47 },
-      { x: 164, y: 243, size: 21 },
-    ],
-    dynamicActivationQrCodes: [{ x: 122, y: 110, size: 63 }],
-    text: [
-      { x: 108, y: 243, maxWidth: 52, fontSize: 9, spacing: 5, infoToText: renderPdfDetails },
-      { x: 153.892, y: 178, fontSize: 6, textAlign: 'center', infoToText: renderCardHash },
-    ],
+    staticVerificationQrCodes: [{ x: 152, y: 230, size: 34 }],
+    dynamicActivationQrCodes: [{ x: 130, y: 103, size: 54 }],
+    text: [{ x: 109, y: 254, maxWidth: 80, fontSize: 9, bold: true, spacing: 14, infoToText: renderPdfDetails }],
+    deepLinkArea: { x: 130, y: 103, size: 54 },
   },
 }
 

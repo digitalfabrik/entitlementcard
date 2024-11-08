@@ -34,8 +34,9 @@ const fillContentAreas = async (
     pdfQrCodeElement(configOptions, { page: templatePage, qrCode: dynamicCode })
   )
 
+  const helveticaBoldFont = await doc.embedFont(StandardFonts.HelveticaBold)
+
   if (pdfConfig.elements?.deepLinkArea) {
-    const helveticaBoldFont = await doc.embedFont(StandardFonts.HelveticaBold)
     pdfLinkArea(pdfConfig.elements.deepLinkArea, {
       doc,
       page: templatePage,
@@ -68,7 +69,7 @@ const fillContentAreas = async (
   pdfConfig.elements?.text.forEach(configOptions =>
     pdfTextElement(configOptions, {
       page: templatePage,
-      font: helveticaFont,
+      font: configOptions.bold ? helveticaBoldFont : helveticaFont,
       info: dynamicCode.value.info!,
       card,
       cardInfoHash: cardInfoHashBase64,
