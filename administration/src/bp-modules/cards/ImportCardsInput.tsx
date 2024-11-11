@@ -88,8 +88,8 @@ const ImportCardsInput = ({ setCards, region }: ImportCardsInputProps): ReactEle
         return
       }
 
-      const [csvHeader, ...entries] = isFreinetFormat ? convertFreinetImport(lines, projectConfig) : lines
-      const cards = entries.map(line => initializeCardFromCSV(projectConfig.card, line, csvHeader, region))
+      const [csvHeaders, ...entries] = isFreinetFormat ? convertFreinetImport(lines, projectConfig) : lines
+      const cards = entries.map(line => initializeCardFromCSV(projectConfig.card, line, csvHeaders, region))
 
       setCards(cards)
       setInputState('idle')
