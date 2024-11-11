@@ -21,14 +21,17 @@ extension Hashing on CardInfo {
 }
 
 bool isCardExpired(CardInfo cardInfo) {
-  final expirationDay = cardInfo.hasExpirationDay() ? cardInfo.expirationDay : null;
-  // Add 24 hours to be valid on the expiration day and 12h to cover UTC+12
-  final int toleranceInHours = 36;
-  return expirationDay == null
-      ? false
-      : DateTime.fromMillisecondsSinceEpoch(0, isUtc: true)
-          .add(Duration(days: expirationDay, hours: toleranceInHours))
-          .isBefore(DateTime.now());
+  final expirationDay = _getExpirationDayWithTolerance(cardInfo);
+  return expirationDay != null && expirationDay.isBefore(DateTime.now());
+}
+
+bool isCardExtendable(CardInfo cardInfo, CardVerification cardVerification) {
+  if (!cardVerification.cardExtendable) return false;
+
+  final expirationDay = _getExpirationDayWithTolerance(cardInfo);
+  if (expirationDay == null) return false;
+
+  return DateTime.now().isAfter(expirationDay.subtract(Duration(days: 90)));
 }
 
 bool cardWasVerifiedLately(CardVerification cardVerification) {
@@ -48,4 +51,14 @@ bool isCardNotYetValid(CardInfo cardInfo) {
       : DateTime.fromMillisecondsSinceEpoch(0, isUtc: true)
           .add(Duration(days: startingDay))
           .isAfter(DateTime.now().toUtc());
+}
+
+DateTime? _getExpirationDayWithTolerance(CardInfo cardInfo) {
+  final expirationDay = cardInfo.hasExpirationDay() ? cardInfo.expirationDay : null;
+  if (expirationDay == null) return null;
+
+  // Add 24 hours to be valid on the expiration day and 12h to cover UTC+12
+  const toleranceInHours = 36;
+  return DateTime.fromMillisecondsSinceEpoch(0, isUtc: true)
+      .add(Duration(days: expirationDay, hours: toleranceInHours));
 }
