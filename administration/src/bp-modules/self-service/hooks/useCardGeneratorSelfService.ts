@@ -58,13 +58,15 @@ const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
       extensions: { birthday, koblenzReferenceNumber },
     })
   )
-  useEffect(() => {
-    setSearchParams(undefined, { replace: true })
-  }, [setSearchParams])
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [selfServiceState, setSelfServiceState] = useState<CardSelfServiceStep>(CardSelfServiceStep.form)
   const [deepLink, setDeepLink] = useState<string>('')
   const [code, setCode] = useState<CreateCardsResult | null>(null)
+
+  useEffect(() => {
+    setSearchParams(undefined, { replace: true })
+  }, [setSearchParams])
+
   const [createCardsSelfService] = useCreateCardsFromSelfServiceMutation()
 
   const handleErrors = useCallback(

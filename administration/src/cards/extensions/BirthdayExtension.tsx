@@ -57,7 +57,7 @@ const BirthdayExtension: Extension<BirthdayExtensionState> = {
     },
   }),
   isValid: ({ birthday }: BirthdayExtensionState) => {
-    if (birthday == null) {
+    if (!birthday) {
       return false
     }
     const today = PlainDate.fromLocalDate(new Date())
