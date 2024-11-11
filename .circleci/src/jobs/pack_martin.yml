@@ -1,5 +1,5 @@
 docker:
-  - image: debian:12
+  - image: debian:12 # We deploy on debian -> pack on debian
 working_directory: ~/project/map-tiles/martin
 steps:
   - checkout:
