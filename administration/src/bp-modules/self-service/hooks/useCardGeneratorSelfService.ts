@@ -1,5 +1,6 @@
 import { ApolloError } from '@apollo/client'
-import { useCallback, useContext, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
 import { Card, generateCardInfo, initializeCard } from '../../../cards/Card'
 import { generatePdf } from '../../../cards/PdfFactory'
@@ -8,6 +9,7 @@ import getMessageFromApolloError from '../../../errors/getMessageFromApolloError
 import { DynamicActivationCode, StaticVerificationCode } from '../../../generated/card_pb'
 import { useCreateCardsFromSelfServiceMutation } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
+import PlainDate from '../../../util/PlainDate'
 import { base64ToUint8Array, uint8ArrayToBase64 } from '../../../util/base64'
 import downloadDataUri from '../../../util/downloadDataUri'
 import getCustomDeepLinkFromQrCode from '../../../util/getCustomDeepLinkFromQrCode'
@@ -31,12 +33,46 @@ type UseCardGeneratorSelfServiceReturn = {
   downloadPdf: (code: CreateCardsResult, fileName: string) => Promise<void>
 }
 
+const parseDate = (dateString: string): PlainDate | undefined => {
+  try {
+    return PlainDate.from(dateString)
+  } catch {
+    return undefined
+  }
+}
+
+const handleQueryParams = (
+  cardQueryParams: URLSearchParams
+): {
+  fullName?: string
+  birthday?: PlainDate
+  koblenzReferenceNumber?: string
+} => {
+  const fullName = cardQueryParams.get('name') ?? undefined
+  const birthday = cardQueryParams.get('geburtsdatum') ?? undefined
+  const referenceNumber = cardQueryParams.get('ref') ?? undefined
+  return {
+    fullName,
+    birthday: birthday ? parseDate(birthday) : undefined,
+    koblenzReferenceNumber: referenceNumber,
+  }
+}
+
 const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
   const projectConfig = useContext(ProjectConfigContext)
   const appToaster = useAppToaster()
+  const [cardQueryParams, setSearchParams] = useSearchParams()
+  const { fullName, birthday, koblenzReferenceNumber } = handleQueryParams(cardQueryParams)
   const [selfServiceCard, setSelfServiceCard] = useState(
-    initializeCard(projectConfig.card, undefined, { expirationDate: null })
+    initializeCard(projectConfig.card, undefined, {
+      fullName,
+      expirationDate: null,
+      extensions: { birthday, koblenzReferenceNumber },
+    })
   )
+  useEffect(() => {
+    setSearchParams(undefined, { replace: true })
+  }, [setSearchParams])
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [selfServiceState, setSelfServiceState] = useState<CardSelfServiceStep>(CardSelfServiceStep.form)
   const [deepLink, setDeepLink] = useState<string>('')

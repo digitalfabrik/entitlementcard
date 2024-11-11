@@ -1,6 +1,5 @@
 import { Spinner } from '@blueprintjs/core'
 import React, { ReactElement, useContext, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
 import styled from 'styled-components'
 
 import KoblenzLogo from '../../assets/koblenz_logo.svg'
@@ -74,7 +73,6 @@ const HeaderLogo = styled.img`
 // TODO 1646 Add tests for CardSelfService
 const CardSelfServiceView = (): ReactElement => {
   const projectConfig = useContext(ProjectConfigContext)
-  const [queryParams] = useSearchParams()
   const [dataPrivacyAccepted, setDataPrivacyAccepted] = useState<boolean>(false)
   const {
     selfServiceState,
@@ -115,7 +113,6 @@ const CardSelfServiceView = (): ReactElement => {
         {selfServiceState === CardSelfServiceStep.form && (
           <CardSelfServiceForm
             card={selfServiceCard}
-            cardQueryParams={queryParams}
             dataPrivacyAccepted={dataPrivacyAccepted}
             setDataPrivacyAccepted={setDataPrivacyAccepted}
             updateCard={updatedCard => setSelfServiceCard(updateCard(selfServiceCard, updatedCard))}
