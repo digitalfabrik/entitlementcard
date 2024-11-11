@@ -1,8 +1,8 @@
-import { Colors, FormGroup } from '@blueprintjs/core'
-import { TextField } from '@mui/material'
+import { FormGroup } from '@blueprintjs/core'
 import React, { ReactElement } from 'react'
 
-import useWindowDimensions from '../../hooks/useWindowDimensions'
+import CustomDatePicker from '../../bp-modules/components/CustomDatePicker'
+import FormErrorMessage from '../../bp-modules/self-service/components/FormErrorMessage'
 import PlainDate from '../../util/PlainDate'
 import { Extension, ExtensionComponentProps } from './extensions'
 
@@ -13,35 +13,38 @@ const minBirthday = new PlainDate(1900, 1, 1)
 const getInitialState = (): BirthdayExtensionState => ({ birthday: null })
 
 const BirthdayForm = ({ value, setValue, isValid }: ExtensionComponentProps<BirthdayExtensionState>): ReactElement => {
-  const { viewportSmall } = useWindowDimensions()
-  const inputColor = value === getInitialState() ? Colors.GRAY1 : Colors.BLACK
-  const formStyle = viewportSmall
-    ? { fontSize: 16, padding: '9px 10px', color: inputColor }
-    : { fontSize: 14, padding: '6px 10px', color: inputColor }
+  const { birthday } = value
+  const getErrorMessage = (): string | null => {
+    if (!birthday) {
+      return 'Bitte geben Sie ein gültiges Geburtsdatum an.'
+    }
+    if (birthday.isAfter(PlainDate.fromLocalDate(new Date()))) {
+      return 'Das Geburtsdatum darf nicht in der Zukunft liegen.'
+    }
+    return null
+  }
 
-  const birthdayDate = value.birthday?.toString() ?? ''
+  const changeBirthday = (date: Date | null) => {
+    if (date) {
+      try {
+        setValue({ birthday: PlainDate.fromLocalDate(date) })
+      } catch {
+        // Couldn't parse date, no need to catch
+      }
+    }
+  }
 
   return (
     <FormGroup label='Geburtsdatum'>
-      <TextField
-        fullWidth
-        type='date'
-        required
-        error={!isValid}
-        value={birthdayDate}
-        sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' }, '& fieldset': { borderRadius: 0 } }}
-        inputProps={{
-          min: minBirthday.toString(),
-          max: PlainDate.fromLocalDate(new Date()).toString(),
-          style: formStyle,
-        }}
-        onChange={event => {
-          const date = PlainDate.safeFrom(event.target.value)
-          if (date !== null) {
-            setValue({ birthday: date })
-          }
-        }}
+      <CustomDatePicker
+        date={birthday ? birthday.toLocalDate() : null}
+        onChange={date => changeBirthday(date)}
+        onClear={() => setValue({ birthday: null })}
+        isValid={isValid}
+        maxDate={new Date()}
+        disableFuture
       />
+      <FormErrorMessage errorMessage={getErrorMessage()} />
     </FormGroup>
   )
 }

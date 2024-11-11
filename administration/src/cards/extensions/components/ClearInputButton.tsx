@@ -1,4 +1,4 @@
-import { Icon } from '@blueprintjs/core'
+import CloseIcon from '@mui/icons-material/Close'
 import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
@@ -12,6 +12,7 @@ const StyledButton = styled.button<{ $viewportSmall: boolean }>`
   flex-direction: column;
   margin-right: 4px;
   cursor: pointer;
+  color: #5f6b7c;
 `
 type ClearInputButtonProps = { viewportSmall: boolean; onClick: () => void; input?: string }
 
@@ -21,7 +22,7 @@ const ClearInputButton = ({ viewportSmall, onClick, input }: ClearInputButtonPro
   }
   return (
     <StyledButton $viewportSmall={viewportSmall} onClick={onClick}>
-      <Icon icon='cross' size={viewportSmall ? 18 : 14} />
+      <CloseIcon fontSize={viewportSmall ? 'medium' : 'small'} />
     </StyledButton>
   )
 }
