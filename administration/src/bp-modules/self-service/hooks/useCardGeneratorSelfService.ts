@@ -33,14 +33,6 @@ type UseCardGeneratorSelfServiceReturn = {
   downloadPdf: (code: CreateCardsResult, fileName: string) => Promise<void>
 }
 
-const parseDate = (dateString: string): PlainDate | undefined => {
-  try {
-    return PlainDate.from(dateString)
-  } catch {
-    return undefined
-  }
-}
-
 const handleQueryParams = (
   cardQueryParams: URLSearchParams
 ): {
@@ -49,13 +41,9 @@ const handleQueryParams = (
   koblenzReferenceNumber?: string
 } => {
   const fullName = cardQueryParams.get('name') ?? undefined
-  const birthday = cardQueryParams.get('geburtsdatum') ?? undefined
-  const referenceNumber = cardQueryParams.get('ref') ?? undefined
-  return {
-    fullName,
-    birthday: birthday ? parseDate(birthday) : undefined,
-    koblenzReferenceNumber: referenceNumber,
-  }
+  const birthday = PlainDate.safeFrom(cardQueryParams.get('geburtsdatum')) ?? undefined
+  const koblenzReferenceNumber = cardQueryParams.get('ref') ?? undefined
+  return { fullName, birthday, koblenzReferenceNumber }
 }
 
 const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
