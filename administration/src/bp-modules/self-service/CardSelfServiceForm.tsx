@@ -106,8 +106,8 @@ const CardSelfServiceForm = ({
         title='Wo finde ich das Aktenzeichen?'
         content={
           <>
-            Das Aktenzeichen finden Sie meist oben rechts auf dem postalischen Bescheid. Weitere Informationen und
-            Beispiele finden Sie unter{' '}
+            Das Aktenzeichen finden Sie meist oben rechts auf dem postalischen Bescheid. <br />
+            Weitere Informationen und Beispiele finden Sie unter{' '}
             <a href='https://www.koblenz.de/koblenzpass' target='_blank' rel='noreferrer'>
               www.koblenz.de/koblenzpass
             </a>

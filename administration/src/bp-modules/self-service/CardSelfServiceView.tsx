@@ -148,8 +148,8 @@ const CardSelfServiceView = (): ReactElement => {
         content={
           <>
             <InfoText>
-              Sie haben ein Problem bei der Aktivierung oder dem Abrufen des KoblenzPass? Dann kontaktieren Sie uns
-              bitte per E-Mail via koblenzpass@stadt.koblenz.de
+              Sie haben ein Problem bei der Aktivierung oder dem Abrufen des KoblenzPass? <br />
+              Dann kontaktieren Sie uns bitte per E-Mail via koblenzpass@stadt.koblenz.de
             </InfoText>
             <ActionButton href='mailto:koblenzpass@stadt.koblenz.de'>E-Mail schreiben</ActionButton>
           </>
