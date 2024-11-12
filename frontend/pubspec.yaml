@@ -16,6 +16,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: ^0.18.0
+  mutex: ^3.1.0
   maplibre_gl:
     git:
       url: https://github.com/maplibre/flutter-maplibre-gl.git
@@ -105,7 +106,6 @@ flutter:
     - assets/koblenz/icon.png
     - assets/koblenz/header-logo.png
     - assets/koblenz/body-logo.png
-    - assets/koblenz/background.png
     - assets/koblenz/intro_slides/
     - assets/koblenz/l10n/
     - assets/ca/

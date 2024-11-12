@@ -39,7 +39,7 @@ const CardImportTable = ({ headers, cards, cardConfig }: CardImportTableProps): 
           tooltip={!valid ? 'Validierungsfehler' : undefined}
           intent={!valid ? 'danger' : 'none'}>
           <TruncatedFormat2 detectTruncation preformatted>
-            {value?.toString() ?? '-'}
+            {value?.toString() || '-'}
           </TruncatedFormat2>
         </StyledCell>
       )

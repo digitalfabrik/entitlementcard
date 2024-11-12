@@ -4,7 +4,7 @@ parameters:
     description: Whether builds are delivered to the production or beta lane of the play store.
     type: boolean
 docker:
-  - image: cimg/node:20.13.1
+  - image: cimg/node:20.18.0
 resource_class: small
 steps:
   - install_app_toolbelt

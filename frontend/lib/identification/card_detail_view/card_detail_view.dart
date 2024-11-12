@@ -2,6 +2,7 @@ import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/more_actions_dialog.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/self_verify_card.dart';
 import 'package:ehrenamtskarte/identification/id_card/id_card_with_region_query.dart';
+import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/verification_code_view.dart';
+import 'package:provider/provider.dart';
 
 class CardDetailView extends StatefulWidget {
   final DynamicUserCode userCode;
@@ -50,7 +52,8 @@ class _CardDetailViewState extends State<CardDetailView> {
   Future<void> _selfVerifyCard(DynamicUserCode userCode) async {
     final projectId = Configuration.of(context).projectId;
     final client = GraphQLProvider.of(context).value;
-    selfVerifyCard(context, userCode, projectId, client);
+    final userCodeModel = Provider.of<UserCodeModel>(context, listen: false);
+    selfVerifyCard(userCodeModel, userCode, projectId, client);
   }
 
   @override

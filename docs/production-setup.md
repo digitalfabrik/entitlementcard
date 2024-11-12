@@ -61,11 +61,11 @@ fvm flutter pub run build_runner build --define df_build_config=name=bayern
 
 ```bash
 # Android
-fvm flutter build appbundle --flavor Bayern --release --dart-define=environment=production
+fvm flutter build appbundle --flavor bayern --release --dart-define=environment=production
 
 # iOS
 # Make sure the correct certificate is selected for the release job in xcode
-fvm flutter build ipa --flavor Bayern --release --dart-define=environment=production
+fvm flutter build ipa --flavor bayern --release --dart-define=environment=production
 # Ensure the correct bundle identifier is used in XCode
 # This will show an error "exportArchive: "Runner.app" requires a provisioning profile."
 # but an xcarchive will still be created which then can be distributed via xcode

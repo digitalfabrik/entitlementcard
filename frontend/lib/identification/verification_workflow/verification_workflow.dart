@@ -15,6 +15,7 @@ class VerificationWorkflow {
     if (settings.hideVerificationInfo != true) {
       // show info dialog and cancel if it is not accepted
       if (await VerificationInfoDialog.show(context) != true) return;
+      if (!context.mounted) return;
     }
 
     // show the QR scanner that will handle the rest

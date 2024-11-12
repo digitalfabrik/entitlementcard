@@ -22,23 +22,25 @@ export type Card = {
 
 const createRandomId = () => Math.floor(Math.random() * 1000000)
 
+const getInitialExtensionState = (cardConfig: CardConfig, region: Region | undefined) =>
+  cardConfig.extensions.reduce(
+    (acc, extension) =>
+      Object.assign(acc, extension.getInitialState(extension.name === REGION_EXTENSION_NAME ? region : undefined)),
+    {}
+  )
+
 export const initializeCard = (
   cardConfig: CardConfig,
   region: Region | undefined = undefined,
   { id, fullName, expirationDate, extensions }: Partial<Card> = {}
 ): Card => {
   const defaultExpirationDate = PlainDate.fromLocalDate(new Date()).add(cardConfig.defaultValidity)
-  const defaultExtensions = cardConfig.extensions.reduce(
-    (acc, extension) =>
-      Object.assign(acc, extension.getInitialState(extension.name === REGION_EXTENSION_NAME ? region : undefined)),
-    {}
-  )
 
   return {
     id: id ?? createRandomId(),
     fullName: fullName ?? '',
     extensions: {
-      ...defaultExtensions,
+      ...getInitialExtensionState(cardConfig, region),
       ...(extensions ?? {}),
     },
     expirationDate: expirationDate === undefined ? defaultExpirationDate : expirationDate,
@@ -137,8 +139,8 @@ export const isValueValid = (card: Card, cardConfig: CardConfig, columnHeader: s
       return isExpirationDateValid(card) || hasInfiniteLifetime(card)
     default: {
       const extensionName = getExtensionNameByCSVHeader(cardConfig, columnHeader)
-      const extension = getExtensions(card).find(({ extension }) => extension.name === extensionName)
-      return extension?.extension.isValid(extension.state) ?? false
+      const extension = cardConfig.extensions.find(extension => extension.name === extensionName)
+      return extension?.isValid(card.extensions) ?? false
     }
   }
 }
