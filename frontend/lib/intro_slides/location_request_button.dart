@@ -40,13 +40,11 @@ class _LocationRequestButtonState extends State<LocationRequestButton> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final t = context.t;
     final settings = Provider.of<SettingsModel>(context);
     final status = _locationPermissionStatus;
     if (status == null) {
       return ElevatedButton(
-        style: theme.textButtonTheme.style,
         onPressed: null,
         child: Text(t.location.checkSettings),
       );
@@ -55,20 +53,17 @@ class _LocationRequestButtonState extends State<LocationRequestButton> {
       case LocationStatus.denied:
       case LocationStatus.notSupported:
         return ElevatedButton(
-          style: theme.textButtonTheme.style,
           onPressed: () => _onLocationButtonClicked(settings),
           child: Text(t.location.grantLocation),
         );
       case LocationStatus.whileInUse:
       case LocationStatus.always:
         return ElevatedButton(
-          style: theme.textButtonTheme.style,
           onPressed: null,
           child: Text(t.location.locationGranted),
         );
       case LocationStatus.deniedForever:
         return ElevatedButton(
-          style: theme.textButtonTheme.style,
           onPressed: null,
           child: Text(t.location.locationAccessDeactivated),
         );

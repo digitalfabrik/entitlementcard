@@ -19,7 +19,7 @@ class CustomAppBar extends StatelessWidget {
     final foregroundColor = theme.appBarTheme.foregroundColor;
     return AppBar(
       leading: BackButton(color: foregroundColor),
-      title: Text(title, style: theme.textTheme.titleMedium?.apply(color: theme.appBarTheme.foregroundColor)),
+      title: Text(title),
       actions: actions,
     );
   }
@@ -104,7 +104,7 @@ class SearchSliverAppBarState extends State<SearchSliverAppBar> {
         focusNode: focusNode,
         decoration: InputDecoration.collapsed(
           hintText: t.search.searchHint,
-          hintStyle: theme.textTheme.bodyLarge?.apply(color: foregroundColor?.withOpacity(0.8)),
+          hintStyle: theme.textTheme.bodyLarge,
         ),
         cursorColor: foregroundColor,
         style: theme.textTheme.bodyLarge?.apply(color: foregroundColor),
@@ -116,7 +116,7 @@ class SearchSliverAppBarState extends State<SearchSliverAppBar> {
           IconButton(icon: const Icon(Icons.clear), onPressed: _clearInput, color: foregroundColor),
         Padding(
           padding: const EdgeInsets.only(right: 15.0),
-          child: Icon(Icons.search, color: foregroundColor?.withOpacity(0.50)),
+          child: Icon(Icons.search, color: foregroundColor?.withOpacity(0.9)),
         ),
       ],
     );

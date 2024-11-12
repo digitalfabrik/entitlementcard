@@ -55,42 +55,42 @@ class DevSettingsView extends StatelessWidget {
       child: Column(
         children: [
           ListTile(
-            title: Text('Reset cards', style: textTheme.bodyLarge),
+            title: Text('Reset cards'),
             onTap: () => _resetEakData(context, userCodeModel),
           ),
           ListTile(
-            title: Text('Set (invalid) sample card', style: textTheme.bodyLarge),
+            title: Text('Set (invalid) sample card'),
             onTap: () => _setSampleCard(context),
           ),
           ListTile(
-            title: Text('Set base64 card (Limit: ${buildConfig.maxCardAmount})', style: textTheme.bodyLarge),
+            title: Text('Set base64 card (Limit: ${buildConfig.maxCardAmount})'),
             enabled: !hasReachedCardLimit(userCodeModel.userCodes),
             onTap: () => _showRawCardInput(context),
           ),
           ListTile(
-            title: Text('Show Intro Slides', style: textTheme.bodyLarge),
+            title: Text('Show Intro Slides'),
             onTap: () => _showIntroSlides(context),
           ),
           ListTile(
-            title: Text('Set expired last card verification', style: textTheme.bodyLarge),
+            title: Text('Set expired last card verification'),
             onTap: () => _setExpiredLastVerifications(context),
           ),
           ListTile(
-              title: Text('Trigger self-verification', style: textTheme.bodyLarge),
+              title: Text('Trigger self-verification'),
               onTap: () => {
                     for (final userCode in userCodeModel.userCodes)
                       {selfVerifyCard(context, userCode, Configuration.of(context).projectId, client)}
                   }),
           ListTile(
-            title: Text('Log sample exception', style: textTheme.bodyLarge),
+            title: Text('Log sample exception'),
             onTap: () => log('Sample exception.', error: Exception('Sample exception...')),
           ),
           ListTile(
-            title: Text('Inspect settings', style: textTheme.bodyLarge),
+            title: Text('Inspect settings'),
             onTap: () {
               showDialog<bool>(
                 context: context,
-                builder: (context) => SimpleDialog(title: Text('Settings', style: textTheme.titleLarge), children: [
+                builder: (context) => SimpleDialog(title: Text('Settings'), children: [
                   Text(settings.toString(), style: textTheme.bodySmall),
                 ]),
               );
@@ -134,7 +134,7 @@ class DevSettingsView extends StatelessWidget {
         final base64Controller = TextEditingController();
         return AlertDialog(
           scrollable: true,
-          title: Text('Activate Card from Base64', style: theme.textTheme.titleLarge),
+          title: Text('Activate Card from Base64'),
           content: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Form(

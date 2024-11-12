@@ -70,12 +70,10 @@ class RemoveCardConfirmationDialogState extends State<RemoveCardConfirmationDial
         TextButton(
           child: const Text('Abbrechen'),
           onPressed: () => Navigator.of(context).pop(false),
-          style: theme.textButtonTheme.style,
         ),
         TextButton(
           child: const Text('Löschen'),
           onPressed: () => removeCard(context),
-          style: theme.textButtonTheme.style,
         ),
       ],
     );

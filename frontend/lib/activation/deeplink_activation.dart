@@ -128,9 +128,7 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
                                   // TODO 1656: Improve error handling!!
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      backgroundColor: theme.colorScheme.primary,
-                                      content: Text(t.common.unknownError,
-                                          style: theme.textTheme.bodyLarge?.apply(color: theme.colorScheme.background)),
+                                      content: Text(t.common.unknownError),
                                     ),
                                   );
                                   rethrow;

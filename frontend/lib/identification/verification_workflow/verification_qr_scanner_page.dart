@@ -53,7 +53,6 @@ class VerificationQrScannerPage extends StatelessWidget {
         ),
         if (config.showDevSettings && currentUserCode != null)
           TextButton(
-            style: theme.textButtonTheme.style,
             onPressed: () async {
               final otp = OTPGenerator(currentUserCode.totpSecret).generateOTP().code;
               final verificationQrCode = QrCode()

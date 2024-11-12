@@ -61,7 +61,6 @@ class BackendSwitchDialogState extends State<BackendSwitchDialog> {
               ),
               password.toLowerCase() == widget.passwordToUnlock
                   ? ElevatedButton(
-                      style: theme.textButtonTheme.style,
                       child: Text('Switch API'),
                       onPressed: () => switchBackendUrl(context),
                     )

@@ -19,7 +19,7 @@ class LanguageChange extends StatelessWidget {
               title: Text(
                 nativeLanguageNames[item]!,
                 textAlign: TextAlign.center,
-                style: theme.textTheme.titleMedium,
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
               onTap: () => switchLanguage(context, item))))
     ]);
@@ -28,15 +28,12 @@ class LanguageChange extends StatelessWidget {
   Future<void> switchLanguage(BuildContext context, String language) async {
     final messengerState = ScaffoldMessenger.of(context);
     final settings = Provider.of<SettingsModel>(context, listen: false);
-    final theme = Theme.of(context);
     LocaleSettings.setLocaleRaw(language);
     await settings.setLanguage(language: language);
     Navigator.pop(context);
     messengerState.showSnackBar(
       SnackBar(
-        backgroundColor: theme.colorScheme.primary,
-        content: Text(t.about.languageChangeSuccessful,
-            style: theme.textTheme.bodyLarge?.apply(color: theme.colorScheme.background)),
+        content: Text(t.about.languageChangeSuccessful),
       ),
     );
   }

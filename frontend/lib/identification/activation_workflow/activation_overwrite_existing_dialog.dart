@@ -7,27 +7,24 @@ class ActivationOverwriteExistingDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final t = context.t;
     return AlertDialog(
-      title: Text(t.identification.activateCurrentDeviceTitle, style: theme.textTheme.titleMedium),
+      title: Text(t.identification.activateCurrentDeviceTitle),
       content: SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
-            Text(t.identification.activateCurrentDeviceDescription, style: theme.textTheme.bodyLarge),
+            Text(t.identification.activateCurrentDeviceDescription),
           ],
         ),
       ),
       actions: <Widget>[
         TextButton(
-          style: theme.textButtonTheme.style,
           child: Text(t.common.cancel),
           onPressed: () {
             Navigator.of(context).pop(false);
           },
         ),
         TextButton(
-          style: theme.textButtonTheme.style,
           child: Text(t.identification.activate),
           onPressed: () {
             Navigator.of(context).pop(true);

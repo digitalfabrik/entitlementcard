@@ -15,7 +15,7 @@ class NegativeVerificationResultDialog extends StatelessWidget {
       title: t.identification.notVerified,
       icon: Icons.error,
       iconColor: Colors.red,
-      child: Text(reason, style: Theme.of(context).textTheme.bodyMedium),
+      child: Text(reason, style: Theme.of(context).textTheme.bodyLarge),
     );
   }
 

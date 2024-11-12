@@ -11,10 +11,7 @@ class ContentTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-        leading: Icon(icon),
-        title: Text(title, style: Theme.of(context).textTheme.bodyLarge),
-        onTap: () => _showContent(context));
+    return ListTile(leading: Icon(icon), title: Text(title), onTap: () => _showContent(context));
   }
 
   void _showContent(BuildContext context) {

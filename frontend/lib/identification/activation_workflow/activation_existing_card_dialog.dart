@@ -9,11 +9,11 @@ class ActivationExistingCardDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AlertDialog(
-      title: Text('Diese Karte existiert bereits', style: theme.textTheme.titleMedium),
+      title: Text('Diese Karte existiert bereits'),
       content: SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
-            Text('Diese Karte ist bereits auf ihrem Gerät aktiv.', style: theme.textTheme.bodyLarge),
+            Text('Diese Karte ist bereits auf ihrem Gerät aktiv.'),
           ],
         ),
       ),

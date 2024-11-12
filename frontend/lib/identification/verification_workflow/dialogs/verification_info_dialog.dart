@@ -13,7 +13,7 @@ class VerificationInfoDialog extends StatelessWidget {
     final t = context.t;
     final theme = Theme.of(context);
     return AlertDialog(
-      title: Text(t.identification.verifyInfoTitle, style: theme.textTheme.titleLarge),
+      title: Text(t.identification.verifyInfoTitle),
       content: SingleChildScrollView(
         child: ListBody(
           children: [
@@ -36,7 +36,6 @@ class VerificationInfoDialog extends StatelessWidget {
       ),
       actions: [
         TextButton(
-          style: theme.textButtonTheme.style,
           child: Text(t.identification.stopShowing),
           onPressed: () async {
             await settings.setHideVerificationInfo(enabled: true);
@@ -44,7 +43,6 @@ class VerificationInfoDialog extends StatelessWidget {
           },
         ),
         TextButton(
-          style: theme.textButtonTheme.style,
           child: Text(t.common.next),
           onPressed: () => _onDone(context),
         )

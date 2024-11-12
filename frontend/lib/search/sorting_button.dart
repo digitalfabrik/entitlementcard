@@ -61,13 +61,10 @@ class _SortingButtonState extends State<SortingButton> {
   Future<void> _showFeatureDisabled() async {
     final messengerState = ScaffoldMessenger.of(context);
     final t = context.t;
-    final theme = Theme.of(context);
     messengerState.showSnackBar(
       SnackBar(
-        backgroundColor: theme.colorScheme.primary,
         behavior: SnackBarBehavior.floating,
-        content: Text(t.location.locationAccessDeactivated,
-            style: theme.textTheme.bodyLarge?.apply(color: theme.colorScheme.background)),
+        content: Text(t.location.locationAccessDeactivated),
         action: SnackBarAction(
           label: t.common.settings,
           onPressed: () async {

@@ -109,7 +109,6 @@ class DetailContent extends StatelessWidget {
                 alignment: MainAxisAlignment.center,
                 children: [
                   OutlinedButton(
-                    style: theme.textButtonTheme.style,
                     child: Text(t.store.showOnMap),
                     onPressed: () => _showOnMap(context),
                   ),

@@ -11,24 +11,22 @@ class QrCodeCameraPermissionDialog extends StatelessWidget {
     final theme = Theme.of(context);
     final t = context.t;
     return AlertDialog(
-      title: Text(t.identification.cameraAccessRequired, style: theme.textTheme.titleMedium),
+      title: Text(t.identification.cameraAccessRequired),
       content: SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
-            Text(t.identification.cameraAccessRequiredSettings, style: theme.textTheme.bodyLarge),
+            Text(t.identification.cameraAccessRequiredSettings, style: theme.textTheme.bodyMedium),
           ],
         ),
       ),
       actions: <Widget>[
         TextButton(
-          style: theme.textButtonTheme.style,
           child: Text(t.common.cancel),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
         TextButton(
-          style: theme.textButtonTheme.style,
           child: Text(t.common.openSettings),
           onPressed: () {
             openAppSettings();

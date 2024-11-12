@@ -34,7 +34,6 @@ Future<bool> activateCard(
   final cardInfoBase64 = activationCode.info.hash(activationCode.pepper);
   final messengerState = ScaffoldMessenger.of(context);
   final t = context.t;
-  final theme = Theme.of(context);
 
   debugPrint('Card Activation: Sending request with overwriteExisting=$overwriteExisting.');
 
@@ -66,9 +65,7 @@ Future<bool> activateCard(
       debugPrint('Card Activation: Successfully activated.');
       messengerState.showSnackBar(
         SnackBar(
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          content: Text(t.deeplinkActivation.activationSuccessful,
-              style: theme.textTheme.bodyLarge?.apply(color: theme.colorScheme.background)),
+          content: Text(t.deeplinkActivation.activationSuccessful),
         ),
       );
       if (Navigator.canPop(context)) Navigator.maybePop(context);

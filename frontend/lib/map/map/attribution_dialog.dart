@@ -12,7 +12,7 @@ class AttributionDialog extends StatelessWidget {
     final color = Theme.of(context).colorScheme.primary;
     final t = context.t;
     return SimpleDialog(
-      title: Text(t.map.mapData, style: Theme.of(context).textTheme.headlineSmall),
+      title: Text(t.map.mapData),
       children: [
         AttributionDialogItem(
           icon: Icons.copyright,

@@ -7,20 +7,19 @@ class LocationServiceDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final t = context.t;
     return AlertDialog(
-      title: Text(t.location.activateLocationAccess, style: theme.textTheme.titleLarge),
-      content: Text(t.location.activateLocationAccessSettings, style: theme.textTheme.bodyLarge),
+      title: Text(t.location.activateLocationAccess),
+      content: Text(t.location.activateLocationAccessSettings),
       actions: [
         TextButton(
-            child: Text(t.common.cancel),
-            onPressed: () => Navigator.of(context).pop(false),
-            style: theme.textButtonTheme.style),
+          child: Text(t.common.cancel),
+          onPressed: () => Navigator.of(context).pop(false),
+        ),
         TextButton(
-            child: Text(t.common.openSettings),
-            onPressed: () => Navigator.of(context).pop(true),
-            style: theme.textButtonTheme.style)
+          child: Text(t.common.openSettings),
+          onPressed: () => Navigator.of(context).pop(true),
+        )
       ],
     );
   }
@@ -36,7 +35,7 @@ class RationaleDialog extends StatelessWidget {
     final t = context.t;
     final theme = Theme.of(context);
     return AlertDialog(
-      title: Text(t.location.locationPermission, style: theme.textTheme.titleLarge),
+      title: Text(t.location.locationPermission),
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -49,12 +48,10 @@ class RationaleDialog extends StatelessWidget {
         TextButton(
           child: Text(t.location.grantPermission),
           onPressed: () => Navigator.of(context).pop(true),
-          style: theme.textButtonTheme.style,
         ),
         TextButton(
           child: Text(t.common.cancel),
           onPressed: () => Navigator.of(context).pop(false),
-          style: theme.textButtonTheme.style,
         )
       ],
     );
