@@ -73,13 +73,19 @@ const hasValidNameLength = (fullName: string): boolean => {
   return fullName.length > 0 && encodedName.length <= MAX_ENCODED_NAME_LENGTH && fullName.length <= MAX_NAME_LENGTH
 }
 
+const multipleSpacePattern = /\s\s+/g
+const containsMultipleSpaces = (fullName: string): boolean => multipleSpacePattern.test(fullName)
+
 const hasNameAndForename = (fullName: string): boolean => {
-  const names = fullName.split(' ')
+  const names = fullName.replace(multipleSpacePattern, ' ').split(' ')
   return names.length > 1 && names.every(name => name.length > 1)
 }
 
 export const isFullNameValid = ({ fullName }: Card): boolean =>
-  hasValidNameLength(fullName) && hasNameAndForename(fullName) && !containsNameSpecialCharacters(fullName)
+  hasValidNameLength(fullName) &&
+  hasNameAndForename(fullName) &&
+  !containsNameSpecialCharacters(fullName) &&
+  !containsMultipleSpaces(fullName)
 
 export const isExpirationDateValid = (card: Card, { nullable } = { nullable: false }): boolean => {
   const today = PlainDate.fromLocalDate(new Date())
@@ -193,14 +199,18 @@ export const updateCard = (oldCard: Card, updatedCard: Partial<Card>): Card => (
 })
 
 export const getFullNameValidationErrorMessage = (name: string): string | null => {
+  const errors: string[] = []
   if (containsNameSpecialCharacters(name)) {
-    return 'Der Name darf keine Sonderzeichen oder Zahlen enthalten.'
+    errors.push('Der Name darf keine Sonderzeichen oder Zahlen enthalten.')
+  }
+  if (containsMultipleSpaces(name)) {
+    errors.push('Der Name darf nicht mehrere aufeinanderfolge Leerzeichen enthalten.')
   }
   if (!hasNameAndForename(name)) {
-    return 'Bitte geben Sie Ihren vollständigen Namen ein.'
+    errors.push('Bitte geben Sie Ihren vollständigen Namen ein.')
   }
   if (!hasValidNameLength(name)) {
-    return `Der Name darf nicht länger als ${MAX_NAME_LENGTH} Zeichen sein`
+    errors.push(`Der Name darf nicht länger als ${MAX_NAME_LENGTH} Zeichen sein`)
   }
-  return null
+  return errors.join(' ')
 }
