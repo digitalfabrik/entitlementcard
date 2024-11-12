@@ -107,7 +107,7 @@ internal class ApiTokenServiceTest : IntegrationTest() {
             val tokenBefore = ApiTokens.select { ApiTokens.creatorId eq TestAdministrators.KOBLENZ_PROJECT_ADMIN_2.id }.singleOrNull()
             assertNotNull(tokenBefore)
 
-            ApiTokenService().deleteApiToken(tokenBefore!!.get(ApiTokens.id).value, mockDfe)
+            ApiTokenService().deleteApiToken(tokenBefore!![ApiTokens.id].value, mockDfe)
 
             val tokenAfter = ApiTokens.select { ApiTokens.creatorId eq TestAdministrators.KOBLENZ_PROJECT_ADMIN_2.id }.singleOrNull()
             assertNull(tokenAfter)
