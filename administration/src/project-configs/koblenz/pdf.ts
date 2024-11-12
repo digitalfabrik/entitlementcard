@@ -19,11 +19,12 @@ ${info.fullName}`
 const pdfConfiguration: PdfConfig = {
   title: 'KoblenzPass',
   templatePath: pdfTemplate,
+  customBoldFont: 'texgyreheros-bold.ttf',
   issuer: 'Stadt Koblenz',
   elements: {
     staticVerificationQrCodes: [{ x: 152, y: 230, size: 34 }],
     dynamicActivationQrCodes: [{ x: 130, y: 103, size: 54 }],
-    text: [{ x: 109, y: 254, maxWidth: 80, fontSize: 9, bold: true, spacing: 14, infoToText: renderPdfDetails }],
+    text: [{ x: 109, y: 254, maxWidth: 80, fontSize: 9, bold: true, spacing: 10, infoToText: renderPdfDetails }],
     deepLinkArea: { x: 130, y: 103, size: 54 },
   },
 }

@@ -1,5 +1,8 @@
-import { PDFDocument, PDFPage, StandardFonts } from 'pdf-lib'
+import fontkit from '@pdf-lib/fontkit'
+import fs from 'fs'
+import { PDFDocument, PDFFont, PDFPage, StandardFonts } from 'pdf-lib'
 
+import { texGyreHerosBoldBase64 } from '../assets/texGyreHeros'
 import { QrCode } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
 import { PdfConfig } from '../project-configs/getProjectConfig'
@@ -18,6 +21,24 @@ export class PdfError extends Error {
   }
 }
 
+const loadCustomFont = async (font: String, doc: PDFDocument): Promise<PDFFont | undefined> => {
+  try {
+    doc.registerFontkit(fontkit)
+    const fontUrl = `${process.env.PUBLIC_URL}/fonts/${font}`
+    const fontBytes = await fetch(fontUrl)
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`Failed to fetch font: ${res.statusText}`)
+        }
+        return res.arrayBuffer()
+      })
+      .catch(error => reportError(error))
+    return fontBytes ? await doc.embedFont(fontBytes) : undefined
+  } catch (error) {
+    reportError(error)
+  }
+}
+
 const fillContentAreas = async (
   doc: PDFDocument,
   templatePage: PDFPage,
@@ -29,18 +50,20 @@ const fillContentAreas = async (
   deepLink: string,
   region?: Region
 ): Promise<void> => {
-  const helveticaFont = await doc.embedFont(StandardFonts.Helvetica)
+  const font = await doc.embedFont(StandardFonts.Helvetica)
   pdfConfig.elements?.dynamicActivationQrCodes.forEach(configOptions =>
     pdfQrCodeElement(configOptions, { page: templatePage, qrCode: dynamicCode })
   )
 
-  const helveticaBoldFont = await doc.embedFont(StandardFonts.HelveticaBold)
+  let fontBold =
+    (pdfConfig.customBoldFont && (await loadCustomFont(pdfConfig.customBoldFont, doc))) ||
+    (await doc.embedFont(StandardFonts.HelveticaBold))
 
   if (pdfConfig.elements?.deepLinkArea) {
     pdfLinkArea(pdfConfig.elements.deepLinkArea, {
       doc,
       page: templatePage,
-      font: helveticaBoldFont,
+      font: fontBold,
       url: deepLink,
     })
   }
@@ -58,7 +81,7 @@ const fillContentAreas = async (
     pdfFormElement(configOptions, {
       page: templatePage,
       form,
-      font: helveticaFont,
+      font: font,
       info: dynamicCode.value.info!,
       card,
       cardInfoHash: cardInfoHashBase64,
@@ -69,7 +92,7 @@ const fillContentAreas = async (
   pdfConfig.elements?.text.forEach(configOptions =>
     pdfTextElement(configOptions, {
       page: templatePage,
-      font: configOptions.bold ? helveticaBoldFont : helveticaFont,
+      font: configOptions.bold ? fontBold : font,
       info: dynamicCode.value.info!,
       card,
       cardInfoHash: cardInfoHashBase64,
