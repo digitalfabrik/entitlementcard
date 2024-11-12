@@ -128,7 +128,7 @@ class CardContent extends StatelessWidget {
                       Flexible(
                         child: CardHeaderLogo(
                           title: buildConfig.cardBranding.headerTitleRight,
-                          scaleFactor: scaleFactor,
+                          scaleFactor: scaleFactor / buildConfig.cardBranding.headerLogoExtraScale,
                           logo: Image(
                             image: AssetImage(buildConfig.cardBranding.headerLogo),
                             width: buildConfig.cardBranding.headerLogoWidth * scaleFactor,

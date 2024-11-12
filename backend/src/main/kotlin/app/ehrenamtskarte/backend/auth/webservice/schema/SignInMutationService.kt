@@ -23,6 +23,8 @@ class SignInMutationService {
         }
         if (administratorEntity == null) {
             val context = dfe.getContext<GraphQLContext>()
+            // This logging is used for rate limiting
+            // See https://git.tuerantuer.org/DF/salt/pulls/187
             logger.info("${context.remoteIp} ${authData.email} failed to log in")
             throw InvalidCredentialsException()
         }

@@ -19,23 +19,17 @@ class _LocationRequestButtonState extends State<LocationRequestButton> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      checkAndRequestLocationPermission(context, requestIfNotGranted: false).then(
-        (LocationStatus permission) => setState(() {
-          _locationPermissionStatus = permission;
-        }),
-      );
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      final permission = await checkAndRequestLocationPermission(context, requestIfNotGranted: false);
+      if (!mounted) return;
+      setState(() => _locationPermissionStatus = permission);
     });
   }
 
   Future<void> _onLocationButtonClicked(SettingsModel settings) async {
-    final permission = await checkAndRequestLocationPermission(
-      context,
-      requestIfNotGranted: true,
-    );
-    setState(() {
-      _locationPermissionStatus = permission;
-    });
+    final permission = await checkAndRequestLocationPermission(context, requestIfNotGranted: true);
+    if (!mounted) return;
+    setState(() => _locationPermissionStatus = permission);
   }
 
   @override

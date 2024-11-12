@@ -1,5 +1,4 @@
-import 'dart:developer';
-
+import 'package:ehrenamtskarte/sentry.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -54,10 +53,12 @@ class RemovedStoreContent extends StatelessWidget {
   Future<void> _removeFavorite(BuildContext context, FavoritesModel model) async {
     try {
       await model.removeFavorite(storeId);
+      if (!context.mounted) return;
       showSnackBar(context, t.favorites.favoriteHasBeenRemoved);
       Navigator.of(context).maybePop();
-    } catch (error) {
-      log('Failed to update favorites', error: error);
+    } catch (error, stackTrace) {
+      reportError(error, stackTrace);
+      if (!context.mounted) return;
       showSnackBar(context, t.favorites.updateFailed, Theme.of(context).colorScheme.error);
     }
   }

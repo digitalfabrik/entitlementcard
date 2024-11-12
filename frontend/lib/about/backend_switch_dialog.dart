@@ -77,7 +77,9 @@ class BackendSwitchDialogState extends State<BackendSwitchDialog> {
     final updatedEnableStaging = !settings.enableStaging;
     await clearData();
     await settings.setEnableStaging(enabled: updatedEnableStaging);
-    Navigator.of(context, rootNavigator: true).pop();
+    if (context.mounted) {
+      Navigator.of(context, rootNavigator: true).pop();
+    }
   }
 
   Future<void> clearData() async {

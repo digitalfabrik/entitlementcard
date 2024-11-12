@@ -1,4 +1,4 @@
-import { ACTIVATION_PATH, BAYERN_PRODUCTION_ID, BAYERN_STAGING_ID, CUSTOM_SCHEME } from "../constants"
+import { ACTIVATION_PATH, BAYERN_PRODUCTION_ID, BAYERN_STAGING_ID } from "../constants"
 import BuildConfigType, { CommonBuildConfigType } from "../types"
 import disclaimerText from "./disclaimerText"
 import publisherText from "./publisherText"
@@ -47,6 +47,7 @@ export const bayernCommon: CommonBuildConfigType = {
         headerLogo: "assets/bayern/header-logo.png",
         headerLogoPadding: 4,
         headerLogoWidth: 60,
+        headerLogoExtraScale: 1,
         headerContainerPadding: { top: 0, right: 4, bottom: 0, left: 8 },
         bodyContainerPadding: { top: 8, right: 8, bottom: 8, left: 8 },
         bodyLogo: "assets/bayern/body-logo.png",
@@ -81,7 +82,7 @@ export const bayernCommon: CommonBuildConfigType = {
     activationPath: ACTIVATION_PATH,
     deepLinking: {
         projectName: "bayern",
-        customScheme: CUSTOM_SCHEME,
+        customScheme: "ehrenamtbayern",
         android: {
             applicationId: ANDROID_APPLICATION_ID,
             path: `/${ACTIVATION_PATH}/.*`,
@@ -105,11 +106,13 @@ const bayern: BuildConfigType = {
             excludeLocationPlayServices: false,
             excludeX86: false,
         },
+        appStoreLink: `https://play.google.com/store/apps/details?id=${ANDROID_APPLICATION_ID}`,
     },
     ios: {
         ...bayernCommon,
         bundleIdentifier: IOS_BUNDLE_IDENTIFIER,
         provisioningProfileSpecifier: "match AppStore de.nrw.it.ehrensachebayern",
+        appStoreLink: "https://apps.apple.com/de/app/ehrenamtskarte-bayern/id1261285110",
     },
 }
 

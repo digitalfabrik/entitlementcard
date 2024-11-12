@@ -8,6 +8,7 @@ Map<String, String> nativeLanguageNames = {'en': 'English', 'de': 'Deutsch'};
 
 class LanguageChange extends StatelessWidget {
   const LanguageChange({super.key});
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -30,6 +31,7 @@ class LanguageChange extends StatelessWidget {
     final settings = Provider.of<SettingsModel>(context, listen: false);
     LocaleSettings.setLocaleRaw(language);
     await settings.setLanguage(language: language);
+    if (!context.mounted) return;
     Navigator.pop(context);
     messengerState.showSnackBar(
       SnackBar(

@@ -1,3 +1,4 @@
+import 'dart:core';
 import 'dart:typed_data';
 
 import 'package:ehrenamtskarte/configuration/configuration.dart';
@@ -22,6 +23,7 @@ import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
 class VerificationQrScannerPage extends StatelessWidget {
   final DynamicUserCode? userCode;
+
   const VerificationQrScannerPage({super.key, this.userCode});
 
   @override
@@ -41,7 +43,7 @@ class VerificationQrScannerPage extends StatelessWidget {
               color: theme.appBarTheme.foregroundColor,
               onPressed: () async {
                 await settings.setHideVerificationInfo(enabled: false);
-                await VerificationInfoDialog.show(context);
+                if (context.mounted) await VerificationInfoDialog.show(context);
               },
             )
           ],
@@ -70,69 +72,57 @@ class VerificationQrScannerPage extends StatelessWidget {
   }
 
   Future<void> _handleQrCode(BuildContext context, Uint8List rawQrContent) async {
+    Future<void> onError(String message, [Exception? exception]) async {
+      if (exception != null) {
+        debugPrint('Verification failed: $exception');
+      }
+      if (context.mounted) {
+        await NegativeVerificationResultDialog.show(context, message);
+      }
+    }
+
+    Future<void> onConnectionError(String message, [Exception? exception]) async {
+      if (exception != null) {
+        debugPrint('Connection failed: $exception');
+      }
+      if (context.mounted) {
+        await ConnectionFailedDialog.show(context, message);
+      }
+    }
+
+    Future<void> onSuccess(CardInfo cardInfo, bool isStaticVerificationCode) async {
+      await PositiveVerificationResultDialog.show(
+          context: context, cardInfo: cardInfo, isStaticVerificationCode: isStaticVerificationCode);
+    }
+
     try {
       final qrcode = rawQrContent.parseQRCodeContent();
 
       final cardInfo = await verifyQrCodeContent(context, qrcode);
       if (cardInfo == null) {
-        await _onError(
-          context,
-          t.identification.codeVerificationFailed,
-        );
-      } else {
-        await _onSuccess(context, cardInfo, qrcode.hasStaticVerificationCode());
-        await Navigator.of(context).maybePop();
+        await onError(t.identification.codeVerificationFailed);
+        return;
       }
+      if (!context.mounted) {
+        return;
+      }
+      await onSuccess(cardInfo, qrcode.hasStaticVerificationCode());
+      if (!context.mounted) {
+        return;
+      }
+      await Navigator.of(context).maybePop();
+      return;
     } on ServerVerificationException catch (e) {
-      await _onConnectionError(
-        context,
-        t.identification.codeVerificationFailedConnection,
-        e,
-      );
+      await onConnectionError(t.identification.codeVerificationFailedConnection, e);
     } on QrCodeFieldMissingException catch (e) {
-      await _onError(
-        context,
-        t.identification.codeInvalidMissing(missing: e.missingFieldName),
-        e,
-      );
+      await onError(t.identification.codeInvalidMissing(missing: e.missingFieldName), e);
     } on CardExpiredException catch (e) {
       final expirationDate = DateFormat('dd.MM.yyyy').format(e.expiry);
-      await _onError(
-        context,
-        t.identification.codeExpired(expirationDate: expirationDate),
-        e,
-      );
+      await onError(t.identification.codeExpired(expirationDate: expirationDate), e);
     } on QrCodeParseException catch (e) {
-      await _onError(
-        context,
-        t.identification.codeInvalid,
-        e,
-      );
+      await onError(t.identification.codeInvalid, e);
     } on Exception catch (e) {
-      await _onError(
-        context,
-        t.identification.codeUnknownType,
-        e,
-      );
+      await onError(t.identification.codeUnknownType, e);
     }
-  }
-
-  Future<void> _onError(BuildContext context, String message, [Exception? exception]) async {
-    if (exception != null) {
-      debugPrint('Verification failed: $exception');
-    }
-    await NegativeVerificationResultDialog.show(context, message);
-  }
-
-  Future<void> _onConnectionError(BuildContext context, String message, [Exception? exception]) async {
-    if (exception != null) {
-      debugPrint('Connection failed: $exception');
-    }
-    await ConnectionFailedDialog.show(context, message);
-  }
-
-  Future<void> _onSuccess(BuildContext context, CardInfo cardInfo, bool isStaticVerificationCode) async {
-    await PositiveVerificationResultDialog.show(
-        context: context, cardInfo: cardInfo, isStaticVerificationCode: isStaticVerificationCode);
   }
 }

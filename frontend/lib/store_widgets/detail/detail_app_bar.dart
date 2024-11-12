@@ -152,13 +152,16 @@ class DetailAppBar extends StatelessWidget {
     try {
       if (model.isFavorite(storeId)) {
         await model.removeFavorite(storeId);
+        if (!context.mounted) return;
         showSnackBar(context, t.favorites.favoriteHasBeenRemoved, categoryColor);
       } else {
         await model.saveFavorite(FavoriteStore(storeId, storeName, categoryId));
+        if (!context.mounted) return;
         showSnackBar(context, t.favorites.favoriteHasBeenAdded, categoryColor);
       }
     } catch (error) {
       log('Failed to update favorites', error: error);
+      if (!context.mounted) return;
       showSnackBar(context, t.favorites.updateFailed, errorColor);
     }
   }

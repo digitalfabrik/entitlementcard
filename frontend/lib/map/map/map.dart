@@ -125,9 +125,10 @@ class _MapContainerState extends State<MapContainer> implements MapController {
   }
 
   void _onMapCreated(MaplibreMapController controller) {
-    _controller = controller;
+    if (!mounted) return;
 
     setState(() {
+      _controller = controller;
       _isMapInitialized = true;
     });
 
@@ -163,6 +164,7 @@ class _MapContainerState extends State<MapContainer> implements MapController {
       return;
     }
     final targetLatLng = await controller.toLatLng(point);
+    if (!mounted) return;
 
     final onFeatureClick = widget.onFeatureClick;
     final onNoFeatureClick = widget.onNoFeatureClick;
@@ -252,8 +254,10 @@ class _MapContainerState extends State<MapContainer> implements MapController {
       ),
     );
     await controller.animateCamera(cameraUpdate);
+    if (!mounted) return;
 
     await controller.updateMyLocationTrackingMode(MyLocationTrackingMode.Tracking);
+    if (!mounted) return;
     if (!_permissionGiven) {
       setState(() => _permissionGiven = true);
     }
