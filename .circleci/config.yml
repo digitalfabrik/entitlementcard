@@ -9,7 +9,7 @@ commands:
                 command: curl -fLSs https://raw.githubusercontent.com/CircleCI-Public/circleci-cli/master/install.sh | sudo bash
                 name: Install CircleCI CLI
             - run:
-                command: ./scripts/circleci-update-config.sh
+                command: ./scripts/circleci-update-config
                 name: Build circle config
             - run:
                 command: |
@@ -23,7 +23,7 @@ commands:
                       echo "The CircleCI config is up to date."
                       exit 0;
                     else
-                      echo "The CircleCI config is not up to date. You can update it by running the `./scripts/circleci-update-config.sh` script."
+                      echo "The CircleCI config is not up to date. You can update it by running the `./scripts/circleci-update-config` script."
                       exit 1;
                     fi
                 name: CircleCI config up to date
@@ -258,7 +258,7 @@ commands:
 jobs:
     build_administration:
         docker:
-            - image: cimg/node:20.13.1
+            - image: cimg/node:20.18.0
         steps:
             - checkout:
                 path: ~/project
@@ -351,7 +351,7 @@ jobs:
             - notify
     build_backend:
         docker:
-            - image: cimg/openjdk:17.0.6-node
+            - image: cimg/openjdk:17.0.13-node
         environment:
             _JAVA_OPTIONS: -Xmx3g
             GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2
@@ -478,7 +478,7 @@ jobs:
         working_directory: ~/martin
     bump_version:
         docker:
-            - image: cimg/node:20.13.1
+            - image: cimg/node:20.18.0
         parameters:
             platforms:
                 default: all
@@ -521,7 +521,7 @@ jobs:
             - notify
     check:
         docker:
-            - image: cimg/node:20.13.1-browsers
+            - image: cimg/node:20.18.0-browsers
         environment:
             TOTAL_CPUS: 1
             TZ: Europe/Berlin
@@ -535,7 +535,7 @@ jobs:
             - notify
     check_administration:
         docker:
-            - image: cimg/node:20.13.1
+            - image: cimg/node:20.18.0
         steps:
             - checkout:
                 path: ~/project
@@ -571,7 +571,7 @@ jobs:
         working_directory: ~/project
     check_backend:
         docker:
-            - image: cimg/openjdk:17.0.6-node
+            - image: cimg/openjdk:17.0.13-node
         environment:
             _JAVA_OPTIONS: -Xmx3g
             GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2
@@ -621,7 +621,7 @@ jobs:
         working_directory: ~/project/backend
     check_frontend:
         docker:
-            - image: cimg/node:20.13.1-browsers
+            - image: cimg/node:20.18.0-browsers
         resource_class: small
         steps:
             - checkout:
@@ -768,7 +768,7 @@ jobs:
             - notify
     install_packages_to_server:
         docker:
-            - image: cimg/node:20.13.1
+            - image: cimg/node:20.18.0
         parameters:
             production:
                 description: Whether builds are delivered to production or beta.
@@ -795,7 +795,7 @@ jobs:
             - notify
     notify_release:
         docker:
-            - image: cimg/node:20.13.1
+            - image: cimg/node:20.18.0
         parameters:
             production_delivery:
                 description: Whether builds are delivered to the production or beta lane of the play store.
@@ -943,7 +943,7 @@ jobs:
             - notify
     promote_github_release:
         docker:
-            - image: cimg/node:20.13.1
+            - image: cimg/node:20.18.0
         steps:
             - install_app_toolbelt
             - run:
@@ -975,7 +975,7 @@ jobs:
             - notify
     promote_to_server:
         docker:
-            - image: cimg/node:20.13.1
+            - image: cimg/node:20.18.0
         steps:
             - checkout:
                 path: ~/project
@@ -998,7 +998,7 @@ jobs:
             - notify
     upload_packages_to_server:
         docker:
-            - image: cimg/node:20.13.1
+            - image: cimg/node:20.18.0
         parameters:
             bundle:
                 description: Defines which bundle should be deployed to the server.

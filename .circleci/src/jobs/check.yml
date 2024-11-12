@@ -1,5 +1,5 @@
 docker:
-  - image: cimg/node:20.13.1-browsers
+  - image: cimg/node:20.18.0-browsers
 resource_class: small
 environment:
   TOTAL_CPUS: 1 # For resource_class small
