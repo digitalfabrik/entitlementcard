@@ -10,6 +10,7 @@ import 'package:ehrenamtskarte/sentry.dart';
 enum _InitializationState { uninitialized, initializing, failed, initialized }
 
 class UserCodeModel extends ChangeNotifier {
+  UserCodeStore store = UserCodeStore();
   List<DynamicUserCode> _userCodes = [];
   _InitializationState _initState = _InitializationState.uninitialized;
 
@@ -37,11 +38,10 @@ class UserCodeModel extends ChangeNotifier {
       return;
     }
     _initState = _InitializationState.initializing;
-    const store = UserCodeStore();
     try {
       DynamicUserCode? legacyCode = await store.loadAndDeleteLegacyCard();
       var userCodes = await store.load();
-      if (legacyCode != null && !isAlreadyInList(userCodes, legacyCode.info)) {
+      if (legacyCode != null && !isAlreadyInList(userCodes, legacyCode.info, legacyCode.pepper)) {
         userCodes.add(legacyCode);
         await store.store(userCodes);
       }
@@ -55,51 +55,47 @@ class UserCodeModel extends ChangeNotifier {
     }
   }
 
-  void insertCode(DynamicUserCode code) {
+  Future<void> insertCode(DynamicUserCode code) async {
     _requireInitialized();
-    List<DynamicUserCode> userCodes = _userCodes;
-    if (isAlreadyInList(userCodes, code.info)) return;
-    userCodes.add(code);
-    const UserCodeStore().store(userCodes);
-    _userCodes = userCodes;
+    if (isAlreadyInList(_userCodes, code.info, code.pepper)) return;
+    _userCodes.add(code);
+    await store.store(_userCodes);
     notifyListeners();
   }
 
-  void updateCode(DynamicUserCode code) {
+  Future<void> updateCode(DynamicUserCode code) async {
     _requireInitialized();
-    List<DynamicUserCode> userCodes = _userCodes;
-    if (isAlreadyInList(userCodes, code.info)) {
-      userCodes = _updateUserCode(userCodes, code);
-      const UserCodeStore().store(userCodes);
-      _userCodes = userCodes;
+    if (isAlreadyInList(_userCodes, code.info, code.pepper)) {
+      _updateUserCode(_userCodes, code);
+      await store.store(_userCodes);
       notifyListeners();
+    } else {
+      reportError('Ignoring update for user code as it is no longer in the list.', StackTrace.current);
     }
   }
 
-  void removeCode(DynamicUserCode code) {
+  Future<void> removeCode(DynamicUserCode code) async {
     _requireInitialized();
-    List<DynamicUserCode> userCodes = _userCodes;
-    userCodes.remove(code);
-    const UserCodeStore().store(userCodes);
-    _userCodes = userCodes;
+    _userCodes.remove(code);
+    await store.store(_userCodes);
     notifyListeners();
   }
 
   Future<void> removeCodes() async {
     _requireInitialized();
-    await const UserCodeStore().remove();
+    await store.remove();
     _userCodes = [];
     notifyListeners();
   }
 }
 
-List<DynamicUserCode> _updateUserCode(List<DynamicUserCode> userCodes, DynamicUserCode userCode) {
-  userCodes[userCodes.indexWhere((code) => code.info == userCode.info)] = userCode;
-  return userCodes;
+void _updateUserCode(List<DynamicUserCode> userCodes, DynamicUserCode userCode) {
+  final index = userCodes.indexWhere((code) => code.info == userCode.info && code.pepper == userCode.pepper);
+  userCodes[index] = userCode;
 }
 
-bool isAlreadyInList(List<DynamicUserCode> userCodes, CardInfo info) {
-  return userCodes.map((userCode) => userCode.info).contains(info);
+bool isAlreadyInList(List<DynamicUserCode> userCodes, CardInfo info, List<int> pepper) {
+  return userCodes.any((userCode) => userCode.info == info && userCode.pepper == pepper);
 }
 
 bool hasReachedCardLimit(List<DynamicUserCode> userCodes) {

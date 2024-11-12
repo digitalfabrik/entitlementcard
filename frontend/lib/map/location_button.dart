@@ -81,7 +81,7 @@ class _LocationButtonState extends State<LocationButton> {
     );
   }
 
-  Future<void> _showFeatureDisabled() async {
+  void _showFeatureDisabled() {
     final messengerState = ScaffoldMessenger.of(context);
     final t = context.t;
     messengerState.showSnackBar(
@@ -101,11 +101,14 @@ class _LocationButtonState extends State<LocationButton> {
   Future<void> _determinePosition() async {
     setState(() => _locationStatus = null);
     final requestedPosition = await determinePosition(context, requestIfNotGranted: true);
+    if (!mounted) return;
+
     if (requestedPosition.locationStatus == LocationStatus.deniedForever) {
-      await _showFeatureDisabled();
+      _showFeatureDisabled();
     }
 
     await widget.bringCameraToUser(requestedPosition);
+    if (!mounted) return;
 
     setState(() => _locationStatus = requestedPosition.locationStatus);
   }

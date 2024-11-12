@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
-class QrParsingErrorDialog extends StatelessWidget {
+class ActivationErrorDialog extends StatelessWidget {
   final String message;
 
-  const QrParsingErrorDialog({super.key, required this.message});
+  const ActivationErrorDialog({super.key, required this.message});
 
   @override
   Widget build(BuildContext context) {
     final t = context.t;
     return AlertDialog(
-      title: Text(t.identification.scanningFailed),
+      title: Text(t.identification.activationError),
       content: SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
@@ -34,7 +34,7 @@ class QrParsingErrorDialog extends StatelessWidget {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
-      builder: (context) => QrParsingErrorDialog(message: message),
+      builder: (context) => ActivationErrorDialog(message: message),
     );
   }
 }

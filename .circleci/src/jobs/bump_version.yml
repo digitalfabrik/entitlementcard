@@ -9,7 +9,7 @@ parameters:
     default: 'all'
     type: string
 docker:
-  - image: cimg/node:20.13.1
+  - image: cimg/node:20.18.0
 resource_class: small
 steps:
   - checkout:

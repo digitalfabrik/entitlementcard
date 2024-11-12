@@ -1,4 +1,4 @@
-import { ACTIVATION_PATH, CUSTOM_SCHEME, NUERNBERG_PRODUCTION_ID, NUERNBERG_STAGING_ID } from "../constants"
+import { ACTIVATION_PATH, NUERNBERG_PRODUCTION_ID, NUERNBERG_STAGING_ID } from "../constants"
 import BuildConfigType, { CommonBuildConfigType } from "../types"
 import disclaimerText from "./disclaimerText"
 import publisherText from "./publisherText"
@@ -47,6 +47,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
         headerLogo: "assets/nuernberg/header-logo.png",
         headerLogoPadding: 0,
         headerLogoWidth: 60,
+        headerLogoExtraScale: 1,
         headerContainerPadding: { top: 0, right: 24, bottom: 0, left: 16 },
         bodyContainerPadding: { top: 0, right: 24, bottom: 6, left: 16 },
         bodyLogo: "assets/nuernberg/body-logo.png",
@@ -81,7 +82,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
     activationPath: ACTIVATION_PATH,
     deepLinking: {
         projectName: "nuernberg",
-        customScheme: CUSTOM_SCHEME,
+        customScheme: "nuernbergpass",
         android: {
             applicationId: ANDROID_APPLICATION_ID,
             path: `/${ACTIVATION_PATH}/.*`,

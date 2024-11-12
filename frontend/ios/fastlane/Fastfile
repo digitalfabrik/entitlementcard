@@ -59,17 +59,12 @@ platform :ios do
     version_code = options[:version_code]
     version_name = options[:version_name]
     build_config_name = options[:build_config_name]
-    flavor = options[:flavor]
 
     puts(version_code)
     puts(version_name)
 
     if [version_code, version_name, build_config_name].include?(nil)
       raise "'nil' passed as parameter! Aborting..."
-    end
-
-    if build_config_name != flavor.downcase
-      raise "flavor and build config not matching! Aborting..."
     end
 
     apple_auth
@@ -94,7 +89,7 @@ platform :ios do
 
     build_app(
        workspace: "Runner.xcworkspace",
-       scheme: flavor,
+       scheme: build_config_name,
        output_directory: "#{ENV['HOME']}",
        output_name: "#{build_config_name}.ipa",
        export_method: "app-store",
@@ -198,7 +193,7 @@ platform :ios do
    bundle_identifier = "de.nrw.it.ehrensachebayern"
     capture_screenshots(
       workspace: "Runner.xcworkspace", 
-      scheme: "Bayern",
+      scheme: "bayern",
       app_identifier: bundle_identifier,
       output_directory: "./fastlane/screenshots/bayern",
       launch_arguments: [bundle_identifier]
@@ -210,9 +205,21 @@ platform :ios do
     bundle_identifier = "app.sozialpass.nuernberg"
     capture_screenshots(
       workspace: "Runner.xcworkspace", 
-      scheme: "Nuernberg", 
+      scheme: "nuernberg",
       app_identifier: bundle_identifier,
       output_directory: "./fastlane/screenshots/nuernberg",
+      launch_arguments: [bundle_identifier]
+    )
+  end
+
+  lane :snap_koblenz do
+    sh "fvm flutter pub run build_runner build --define df_build_config=name=koblenz"
+    bundle_identifier = "app.sozialpass.koblenz"
+    capture_screenshots(
+      workspace: "Runner.xcworkspace",
+      scheme: "koblenz",
+      app_identifier: bundle_identifier,
+      output_directory: "./fastlane/screenshots/koblenz",
       launch_arguments: [bundle_identifier]
     )
   end

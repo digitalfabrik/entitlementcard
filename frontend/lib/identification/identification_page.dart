@@ -75,7 +75,9 @@ class IdentificationPageState extends State<IdentificationPage> {
 
   Future<void> _showVerificationDialog(
       BuildContext context, SettingsModel settings, UserCodeModel userCodeModel) async {
-    if (await Permission.camera.request().isGranted) {
+    final isGranted = await Permission.camera.request().isGranted;
+    if (!context.mounted) return;
+    if (isGranted) {
       DynamicUserCode? userCode = userCodeModel.userCodes.isNotEmpty ? userCodeModel.userCodes[cardIndex] : null;
       await VerificationWorkflow.startWorkflow(context, settings, userCode);
       return;
@@ -90,7 +92,9 @@ class IdentificationPageState extends State<IdentificationPage> {
   }
 
   Future<void> _startActivation(BuildContext context) async {
-    if (await Permission.camera.request().isGranted) {
+    final isGranted = await Permission.camera.request().isGranted;
+    if (!context.mounted) return;
+    if (isGranted) {
       Navigator.of(context, rootNavigator: true)
           .push(AppRoute(builder: (context) => ActivationCodeScannerPage(moveToLastCard: _moveCarouselToLastPosition)));
       return;
