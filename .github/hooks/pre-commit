@@ -5,6 +5,12 @@
 # ln -s ../../.github/hooks/pre-commit .git/hooks/pre-commit
 #
 
+# Regenerate circle-ci config-yml
+CONFIG=$(git diff --cached --name-only .circleci/src)
+
+echo "$CONFIG" | ./scripts/circleci-update-config
+echo "$CONFIG" | xargs git add .circleci/config.yml
+
 REACT_FILES=$(git diff --cached --name-only -- administration/ | sed 's| |\\ |g')
 
 if [ ! -z "$REACT_FILES" ]; then
