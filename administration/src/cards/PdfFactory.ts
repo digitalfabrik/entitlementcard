@@ -1,8 +1,6 @@
 import fontkit from '@pdf-lib/fontkit'
-import fs from 'fs'
 import { PDFDocument, PDFFont, PDFPage, StandardFonts } from 'pdf-lib'
 
-import { texGyreHerosBoldBase64 } from '../assets/texGyreHeros'
 import { QrCode } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
 import { PdfConfig } from '../project-configs/getProjectConfig'
@@ -21,7 +19,7 @@ export class PdfError extends Error {
   }
 }
 
-const loadCustomFont = async (font: String, doc: PDFDocument): Promise<PDFFont | undefined> => {
+const loadCustomFont = async (font: string, doc: PDFDocument): Promise<PDFFont | undefined> => {
   try {
     doc.registerFontkit(fontkit)
     const fontUrl = `${process.env.PUBLIC_URL}/fonts/${font}`
@@ -55,7 +53,7 @@ const fillContentAreas = async (
     pdfQrCodeElement(configOptions, { page: templatePage, qrCode: dynamicCode })
   )
 
-  let fontBold =
+  const fontBold =
     (pdfConfig.customBoldFont && (await loadCustomFont(pdfConfig.customBoldFont, doc))) ||
     (await doc.embedFont(StandardFonts.HelveticaBold))
 
@@ -81,7 +79,7 @@ const fillContentAreas = async (
     pdfFormElement(configOptions, {
       page: templatePage,
       form,
-      font: font,
+      font,
       info: dynamicCode.value.info!,
       card,
       cardInfoHash: cardInfoHashBase64,
