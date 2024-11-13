@@ -43,12 +43,27 @@ const CardSelfServiceForm = ({
 }: CardSelfServiceFormProps): ReactElement => {
   const { viewportSmall } = useWindowDimensions()
   const projectConfig = useContext(ProjectConfigContext)
+  const [formSendAttempt, setFormSendAttempt] = useState(false)
+  const [touchedFullName, setTouchedFullName] = useState(false)
   const [openDataPrivacy, setOpenDataPrivacy] = useState<boolean>(false)
   const [openReferenceInformation, setOpenReferenceInformation] = useState<boolean>(false)
   const cardValid = isValid(card, { expirationDateNullable: true })
   const appToaster = useAppToaster()
 
+  const updateFullName = (fullName: string) => {
+    updateCard({ fullName })
+    if (!touchedFullName) {
+      setTouchedFullName(true)
+    }
+  }
+
   const createKoblenzPass = async () => {
+    if (!formSendAttempt) {
+      setFormSendAttempt(true)
+    }
+    if (!touchedFullName) {
+      setTouchedFullName(true)
+    }
     if (dataPrivacyAccepted === DataPrivacyAcceptingStatus.untouched) {
       setDataPrivacyAccepted(DataPrivacyAcceptingStatus.denied)
     }
@@ -80,13 +95,13 @@ const CardSelfServiceForm = ({
                 input={card.fullName}
               />
             }
-            intent={isFullNameValid(card) ? undefined : Intent.DANGER}
+            intent={isFullNameValid(card) || !touchedFullName ? undefined : Intent.DANGER}
             value={card.fullName}
-            onChange={event => updateCard({ fullName: event.target.value })}
+            onChange={event => updateFullName(event.target.value)}
           />
-          <FormErrorMessage errorMessage={getFullNameValidationErrorMessage(card.fullName)} />
+          {touchedFullName && <FormErrorMessage errorMessage={getFullNameValidationErrorMessage(card.fullName)} />}
         </FormGroup>
-        <ExtensionForms card={card} updateCard={updateCard} />
+        <ExtensionForms card={card} updateCard={updateCard} showRequired={formSendAttempt} />
         <IconTextButton onClick={() => setOpenReferenceInformation(true)}>
           <InfoOutlined />
           Informationen zur Referenznummer
@@ -115,7 +130,7 @@ const CardSelfServiceForm = ({
         maxWidth='lg'
         onUpdateOpen={setOpenReferenceInformation}
         title='Informationen zur Referenznummer'
-        content={<>Noch keine Informationen verfügtbar, bitte wenden Sie sich an den Support.</>}
+        content={<>Noch keine Informationen verfügbar, bitte wenden Sie sich an den Support.</>}
       />
       <BasicDialog
         open={openDataPrivacy}
