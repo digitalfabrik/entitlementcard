@@ -11,7 +11,6 @@ steps:
   - install_app_toolbelt
   - install_dart_mac
   - install_fvm
-  - install_protobuf_mac
   - prepare_workspace
   - restore_environment_variables
   # needed for circle ci mac m1 images

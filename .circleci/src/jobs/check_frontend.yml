@@ -8,8 +8,6 @@ steps:
   - browser-tools/install-chrome
   - install_dart_linux
   - install_fvm
-  - install_protobuf_linux:
-      dart_plugin: true
   - run:
       name: Install Flutter Packages
       command: fvm flutter pub get --enforce-lockfile
@@ -29,13 +27,11 @@ steps:
       command: |
         fvm flutter analyze --fatal-infos --fatal-warnings
         fvm flutter analyze pubs/df_build_config --fatal-infos --fatal-warnings
-        fvm flutter analyze pubs/df_protobuf --fatal-infos --fatal-warnings
       working_directory: ~/project/frontend/
   - run:
       name: Tests
       command: |
         fvm flutter test
         fvm flutter test pubs/df_build_config
-        fvm flutter test pubs/df_protobuf
       working_directory: ~/project/frontend/
   - notify
