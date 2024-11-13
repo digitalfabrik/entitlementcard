@@ -24,21 +24,14 @@ const BirthdayForm = ({ value, setValue, isValid }: ExtensionComponentProps<Birt
     return null
   }
 
-  const changeBirthday = (date: Date | null) => {
-    if (date) {
-      try {
-        setValue({ birthday: PlainDate.fromLocalDate(date) })
-      } catch {
-        // Couldn't parse date, no need to catch
-      }
-    }
-  }
+  const changeBirthday = (date: Date | null) =>
+    setValue({ birthday: PlainDate.safeFromCustomFormat(date?.toLocaleDateString() ?? null) })
 
   return (
     <FormGroup label='Geburtsdatum'>
       <CustomDatePicker
-        date={birthday ? birthday.toLocalDate() : null}
-        onChange={date => changeBirthday(date)}
+        date={birthday?.toLocalDate() ?? null}
+        onChange={changeBirthday}
         onClear={() => setValue({ birthday: null })}
         isValid={isValid}
         maxDate={new Date()}
