@@ -100,7 +100,7 @@ const ApplyController = (): React.ReactElement | null => {
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', margin: '16px' }}>
       <div style={{ maxWidth: '1000px', width: '100%' }}>
         <Typography variant='h4' component='h1' style={{ textAlign: 'center', margin: '16px' }}>
-          {formSubmitted ? t('sendSuccessfully') : t('title')}
+          {formSubmitted ? t('sentSuccessfully') : t('title')}
         </Typography>
         {formSubmitted ? (
           <SuccessContent>

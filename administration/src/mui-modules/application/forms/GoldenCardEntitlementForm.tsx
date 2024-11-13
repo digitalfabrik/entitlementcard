@@ -17,7 +17,7 @@ import MilitaryReserveEntitlementForm from './MilitaryReserveEntitlementForm'
 import WorkAtDepartmentEntitlementForm from './WorkAtDepartmentEntitlementForm'
 import WorkAtOrganizationsEntitlementForm from './WorkAtOrganizationsEntitlementForm'
 
-const entitlementTypeOptions2: { labelByValue: { [K in GoldenCardEntitlementType]: string } } = {
+const entitlementTypeOptions: { labelByValue: { [K in GoldenCardEntitlementType]: string } } = {
   labelByValue: {
     [GoldenCardEntitlementType.WorkAtOrganizations]: i18next.t(
       'application:goldenCardEntitlementType.WorkAtOrganizations'
@@ -47,7 +47,7 @@ type AdditionalProps = { applicantName: string }
 const GoldenCardEntitlementForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
-  validate: createSwitchValidate(SubForms, { entitlementType: entitlementTypeOptions2 }, 'entitlementType', {
+  validate: createSwitchValidate(SubForms, { entitlementType: entitlementTypeOptions }, 'entitlementType', {
     WORK_AT_ORGANIZATIONS: 'workAtOrganizationsEntitlement',
     WORK_AT_DEPARTMENT: 'workAtDepartmentEntitlement',
     MILITARY_RESERVE: 'militaryReserveEntitlement',
@@ -58,7 +58,7 @@ const GoldenCardEntitlementForm: Form<State, ValidatedInput, AdditionalProps, Op
       <SubForms.entitlementType.Component
         state={state.entitlementType}
         setState={useUpdateStateCallback(setState, 'entitlementType')}
-        options={entitlementTypeOptions2}
+        options={entitlementTypeOptions}
         divideItems
         title='Ich erfülle folgende Voraussetzung für die Beantragung einer goldenen Ehrenamtskarte:'
       />

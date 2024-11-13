@@ -100,7 +100,7 @@ const OrganizationForm: Form<State, ValidatedInput, AdditionalProps> = {
           label={t('organization.category')}
           options={organizationCategoryOptions}
         />
-        <h4>Kontaktperson in der Organisation</h4>
+        <h4>{t('organizationContact.title')}</h4>
         <Typography>
           Bitte geben Sie hier die Daten der Person an, die ihr ehrenamtliches Engagement bestätigen kann.
         </Typography>
@@ -118,7 +118,7 @@ const OrganizationForm: Form<State, ValidatedInput, AdditionalProps> = {
         <EmailForm.Component
           state={state.contactEmail}
           setState={useUpdateStateCallback(setState, 'contactEmail')}
-          label={t('emailAddress')}
+          label={t('organizationContact.emailAddress')}
         />
         <ShortTextForm.Component
           state={state.contactPhone}

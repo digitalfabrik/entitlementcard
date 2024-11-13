@@ -56,7 +56,14 @@ const JsonFieldArray = ({
   const { t } = useTranslation('application')
   const [isExpanded, setIsExpanded] = useState(hierarchyIndex !== 1 || expandedRoot)
   const getTranslationKey = () =>
-    ['organizationContact', 'organization'].includes(jsonField.name) ? `${jsonField.name}.title` : jsonField.name
+    [
+      'organizationContact',
+      'organization',
+      'volunteerServiceEntitlement',
+      'honoredByMinisterPresidentEntitlement',
+    ].includes(jsonField.name)
+      ? `${jsonField.name}.title`
+      : jsonField.name
 
   const children = jsonField.value.map((jsonFieldIt, index: number) => (
     <JsonFieldView
