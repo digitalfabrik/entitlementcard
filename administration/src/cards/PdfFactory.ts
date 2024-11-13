@@ -19,22 +19,20 @@ export class PdfError extends Error {
   }
 }
 
-const loadCustomFont = async (font: string, doc: PDFDocument): Promise<PDFFont | undefined> => {
-  try {
-    doc.registerFontkit(fontkit)
-    const fontUrl = `${process.env.PUBLIC_URL}/fonts/${font}`
-    const fontBytes = await fetch(fontUrl)
-      .then(res => {
-        if (!res.ok) {
-          throw new Error(`Failed to fetch font: ${res.statusText}`)
-        }
+const loadCustomFontWithFallback = async (font: string, doc: PDFDocument, fallbackFont: string): Promise<PDFFont> => {
+  doc.registerFontkit(fontkit)
+  const fontUrl = `${process.env.PUBLIC_URL}/fonts/${font}`
+  const fontBytes = await fetch(fontUrl)
+    .then(res => {
+      if (res.ok && res.headers.get('Content-Type')?.includes('font')) {
         return res.arrayBuffer()
-      })
-      .catch(error => reportError(error))
-    return fontBytes ? await doc.embedFont(fontBytes) : undefined
-  } catch (error) {
-    reportError(error)
-  }
+      }
+      reportError(`Couldn't load custom font ${font}. Using fallback font.`)
+    })
+    .catch(error => {
+      reportError(error)
+    })
+  return fontBytes ? doc.embedFont(fontBytes) : doc.embedFont(fallbackFont)
 }
 
 const fillContentAreas = async (
@@ -53,9 +51,9 @@ const fillContentAreas = async (
     pdfQrCodeElement(configOptions, { page: templatePage, qrCode: dynamicCode })
   )
 
-  const fontBold =
-    (pdfConfig.customBoldFont && (await loadCustomFont(pdfConfig.customBoldFont, doc))) ||
-    (await doc.embedFont(StandardFonts.HelveticaBold))
+  const fontBold = pdfConfig.customBoldFont
+    ? await loadCustomFontWithFallback(pdfConfig.customBoldFont, doc, StandardFonts.HelveticaBold)
+    : await doc.embedFont(StandardFonts.HelveticaBold)
 
   if (pdfConfig.elements?.deepLinkArea) {
     pdfLinkArea(pdfConfig.elements.deepLinkArea, {
