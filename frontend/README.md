@@ -10,19 +10,6 @@ To install FVM and the project Flutter version
   notify you if this is the case.
 * Make sure you are located in the `frontend` directory. Run `fvm install` to install the correct Flutter version (as
   specified in `.fvm/fvm_config.json`).
-* Install the protobuf dart generator plugin: `dart pub global activate protoc_plugin` (Use `dart` instead of `fvm flutter pub` here).
-  * After that, when running `build_runner`, you might still encounter the following error:
-
-        Call: "protoc", ["--plugin=protoc-gen-dart=[YOUR_HOME_DIR]/.pub-cache/bin/protoc-gen-dart","--dart_out=lib/proto/","./card.proto"]
-        Standard error output:
-        [YOUR_HOME_DIR]/.pub-cache/bin/protoc-gen-dart: program not found or is not executable
-        Please specify a program using absolute path or make sure the program is available in your PATH system variable
-        --dart_out: protoc-gen-dart: Plugin failed with status code 1.`
-
-    We are unsure why/when this error occurs. Usually, it is solved by a combination of:
-    * Make sure `protoc --plugin=protoc-gen-dart=[YOUR_HOME_DIR]/.pub-cache/bin/protoc-gen-dart --dart_out=lib/proto/ ./card.proto` runs successfully. (Replace `YOUR_HOME_DIR` with your home directory).
-    * Remove the `build` and `build_resolvers` folders of the `(project-directory)/frontend/.dart_tool` folder.
-    * Reboot your system.
 * For IntelliJ support, select the new Flutter Sdk by:
     * Open `Settings > Languages & Frameworks > Flutter`.
     * Change the Flutter Sdk Path to `(project-directory)/frontend/.fvm/flutter_sdk`.

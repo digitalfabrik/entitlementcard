@@ -6,7 +6,7 @@ targets:
       - lib/$lib$
       - graphql_queries/**
       - schema.graphql
-      - card.proto
+      - proto/**
       - lib/build_config/build_config.yaml
       - assets/l10n/*
     builders:
@@ -15,11 +15,17 @@ targets:
           include:
             - "lib/build_config/build_config.yaml"
         enabled: True
-      df_protobuf:
-        generate_for:
-          include:
-            - "card.proto"
-        enabled: True
+      protoc_builder:
+        options:
+          use_installed_protoc: false
+          protobuf_version: "27.5"
+          use_protoc_plugin_from_pubspec: true
+          root_dir: "proto/"
+          proto_paths:
+            - "proto/"
+          out_dir: "lib/proto"
+          grpc: false
+          precompile_protoc_plugin: true
       artemis:
         options:
           schema_mapping:
