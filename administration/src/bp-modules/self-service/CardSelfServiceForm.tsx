@@ -8,6 +8,7 @@ import ClearInputButton from '../../cards/extensions/components/ClearInputButton
 import useWindowDimensions from '../../hooks/useWindowDimensions'
 import BasicDialog from '../../mui-modules/application/BasicDialog'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { removeMultipleSpaces } from '../../util/helper'
 import { useAppToaster } from '../AppToaster'
 import ExtensionForms from '../cards/ExtensionForms'
 import { DataPrivacyAcceptingStatus } from './CardSelfServiceView'
@@ -82,7 +83,7 @@ const CardSelfServiceForm = ({
             }
             intent={isFullNameValid(card) ? undefined : Intent.DANGER}
             value={card.fullName}
-            onChange={event => updateCard({ fullName: event.target.value })}
+            onChange={event => updateCard({ fullName: removeMultipleSpaces(event.target.value) })}
           />
           <FormErrorMessage errorMessage={getFullNameValidationErrorMessage(card.fullName)} />
         </FormGroup>

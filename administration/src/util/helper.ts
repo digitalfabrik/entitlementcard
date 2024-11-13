@@ -10,3 +10,6 @@ export const updateArrayItem = <T>(array: T[], updatedItem: T, index: number): T
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type UnionToIntersection<U> = (U extends any ? (x: U) => void : never) extends (x: infer I) => void ? I : never
+
+const multipleSpacePattern = /\s\s+/g
+export const removeMultipleSpaces = (value: string): string => value.replace(multipleSpacePattern, ' ')

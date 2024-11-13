@@ -5,11 +5,12 @@ import { CardExtensions, CardInfo } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
 import { CardConfig } from '../project-configs/getProjectConfig'
 import PlainDate from '../util/PlainDate'
+import { removeMultipleSpaces } from '../util/helper'
 import { REGION_EXTENSION_NAME } from './extensions/RegionExtension'
 import Extensions, { Extension, ExtensionKey, ExtensionState, InferExtensionStateType } from './extensions/extensions'
 
 // Due to limited space on the cards
-export const MAX_NAME_LENGTH = 40
+export const MAX_NAME_LENGTH = 30
 // Due to limited space on the qr code
 const MAX_ENCODED_NAME_LENGTH = 50
 
@@ -75,19 +76,13 @@ const hasValidNameLength = (fullName: string): boolean => {
   return fullName.length > 0 && encodedName.length <= MAX_ENCODED_NAME_LENGTH && fullName.length <= MAX_NAME_LENGTH
 }
 
-const multipleSpacePattern = /\s\s+/g
-const containsMultipleSpaces = (fullName: string): boolean => multipleSpacePattern.test(fullName)
-
 const hasNameAndForename = (fullName: string): boolean => {
-  const names = fullName.replace(multipleSpacePattern, ' ').split(' ')
+  const names = removeMultipleSpaces(fullName).split(' ')
   return names.length > 1 && names.every(name => name.length > 1)
 }
 
 export const isFullNameValid = ({ fullName }: Card): boolean =>
-  hasValidNameLength(fullName) &&
-  hasNameAndForename(fullName) &&
-  !containsNameSpecialCharacters(fullName) &&
-  !containsMultipleSpaces(fullName)
+  hasValidNameLength(fullName) && hasNameAndForename(fullName) && !containsNameSpecialCharacters(fullName)
 
 export const isExpirationDateValid = (card: Card, { nullable } = { nullable: false }): boolean => {
   const today = PlainDate.fromLocalDate(new Date())
@@ -204,9 +199,6 @@ export const getFullNameValidationErrorMessage = (name: string): string | null =
   const errors: string[] = []
   if (containsNameSpecialCharacters(name)) {
     errors.push('Der Name darf keine Sonderzeichen oder Zahlen enthalten.')
-  }
-  if (containsMultipleSpaces(name)) {
-    errors.push('Der Name darf nicht mehrere aufeinanderfolge Leerzeichen enthalten.')
   }
   if (!hasNameAndForename(name)) {
     errors.push('Bitte geben Sie Ihren vollständigen Namen ein.')
