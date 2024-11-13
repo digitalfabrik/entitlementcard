@@ -140,13 +140,23 @@ describe('Card', () => {
     })
   })
 
-  it.each(['$tefan Mayer', 'Karla K.', 'Karla 1234 '])(
+  it.each(['$tefan Mayer', 'Karla K.', 'Karla Karls😀'])(
     'should correctly identify invalid special characters in fullname',
     fullName => {
       const card = initializeCard(cardConfig, region, { fullName })
       expect(card.fullName).toBe(fullName)
       expect(isValueValid(card, cardConfig, 'Name')).toBeFalsy()
       expect(isValid(card)).toBeFalsy()
+    }
+  )
+
+  it.each([' Karla Koblenz', ' Karla Karl', ' Karla Karls '])(
+    'should correctly create a card even with whitespace in the beginning and end',
+    fullName => {
+      const card = initializeCard(cardConfig, region, { fullName })
+      expect(card.fullName).toBe(fullName)
+      expect(isValueValid(card, cardConfig, 'Name')).toBeTruthy()
+      expect(isValid(card)).toBeTruthy()
     }
   )
 
