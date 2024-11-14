@@ -22,17 +22,18 @@ export class PdfError extends Error {
 const loadCustomFontWithFallback = async (font: string, doc: PDFDocument, fallbackFont: string): Promise<PDFFont> => {
   doc.registerFontkit(fontkit)
   const fontUrl = `${process.env.PUBLIC_URL}/fonts/${font}`
-  const fontBytes = await fetch(fontUrl)
-    .then(res => {
-      if (res.ok && res.headers.get('Content-Type')?.includes('font')) {
-        return res.arrayBuffer()
-      }
-      reportError(`Couldn't load custom font ${font}. Using fallback font.`)
-    })
-    .catch(error => {
-      reportError(error)
-    })
-  return fontBytes ? doc.embedFont(fontBytes) : doc.embedFont(fallbackFont)
+  try {
+    const res = await fetch(fontUrl)
+    if (res.ok && res.headers.get('Content-Type')?.includes('font')) {
+      const fontBytes = await res.arrayBuffer()
+      return doc.embedFont(fontBytes)
+    }
+    reportError(`Couldn't load custom font ${font}. Using fallback font.`)
+    return doc.embedFont(fallbackFont)
+  } catch (error) {
+    reportError(error)
+    return doc.embedFont(fallbackFont)
+  }
 }
 
 const fillContentAreas = async (
