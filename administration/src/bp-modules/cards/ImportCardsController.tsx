@@ -15,6 +15,7 @@ import { convertFreinetImport } from './ImportCardsFromFreinetController'
 import ImportCardsInput from './ImportCardsInput'
 import CardImportTable from './ImportCardsTable'
 import useCardGenerator, { CardActivationState } from './hooks/useCardGenerator'
+import useSupportedPdfCharset from '../../hooks/useSupportedPdfCharset'
 
 export const getHeaders = (projectConfig: ProjectConfig): string[] => [
   projectConfig.card.nameColumnName,
@@ -22,11 +23,12 @@ export const getHeaders = (projectConfig: ProjectConfig): string[] => [
   ...(projectConfig.card.extensionColumnNames.filter(Boolean) as string[]),
 ]
 
-const InnerImportCardsController = ({ region }: { region: Region }): ReactElement => {
+const InnerImportCardsController = ({ region }: { region: Region }): ReactElement | null => {
   const { state, setState, generateCardsPdf, generateCardsCsv, setCards, cards } = useCardGenerator(region)
   const projectConfig = useContext(ProjectConfigContext)
   const headers = useMemo(() => getHeaders(projectConfig), [projectConfig])
   const navigate = useNavigate()
+  const supportedPdfCharset = useSupportedPdfCharset()
 
   const isFreinetFormat = new URLSearchParams(useLocation().search).get(FREINET_PARAM) === 'true'
 
@@ -54,6 +56,10 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
     [projectConfig, region, isFreinetFormat]
   )
 
+  if(!supportedPdfCharset) {
+    return null
+  }
+
   if (state === CardActivationState.loading) {
     return <Spinner />
   }
@@ -78,7 +84,7 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
           isFreinetFormat={isFreinetFormat}
         />
       ) : (
-        <CardImportTable cards={cards} cardConfig={projectConfig.card} headers={headers} />
+        <CardImportTable cards={cards} cardConfig={projectConfig.card} headers={headers} supportedPdfCharset={supportedPdfCharset}/>
       )}
       <CreateCardsButtonBar
         cards={cards}

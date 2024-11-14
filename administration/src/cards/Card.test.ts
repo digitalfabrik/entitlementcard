@@ -20,6 +20,7 @@ import RegionExtension, { REGION_EXTENSION_NAME } from './extensions/RegionExten
 jest.useFakeTimers({ now: new Date('2020-01-01') })
 
 describe('Card', () => {
+  const supportedPdfCharset = new Set<number>()
   const region: Region = {
     id: 6,
     name: 'augsburg',
@@ -65,6 +66,8 @@ describe('Card', () => {
   })
 
   describe('csv', () => {
+    // TODO mock supported charset
+    const supportedPdfCharset = new Set<number>()
     const region: Region = {
       id: 0,
       name: 'augsburg',
@@ -101,10 +104,10 @@ describe('Card', () => {
       expect(card.expirationDate).toEqual(date)
       expect(card.extensions[BAVARIA_CARD_TYPE_EXTENSION_NAME]).toBe('Goldkarte')
 
-      expect(isValueValid(card, cardConfig, 'Name')).toBeTruthy()
-      expect(isValueValid(card, cardConfig, 'Ablaufdatum')).toBeTruthy()
-      expect(isValueValid(card, cardConfig, 'Kartentyp')).toBeTruthy()
-      expect(isValid(card)).toBeTruthy()
+      expect(isValueValid(card, cardConfig, 'Name', supportedPdfCharset)).toBeTruthy()
+      expect(isValueValid(card, cardConfig, 'Ablaufdatum', supportedPdfCharset)).toBeTruthy()
+      expect(isValueValid(card, cardConfig, 'Kartentyp', supportedPdfCharset)).toBeTruthy()
+      expect(isValid(card, supportedPdfCharset)).toBeTruthy()
 
       expect(getValueByCSVHeader(card, cardConfig, 'Name')).toBe('Thea Test')
       expect(getValueByCSVHeader(card, cardConfig, 'Ablaufdatum')).toBe(date.format())
@@ -133,10 +136,10 @@ describe('Card', () => {
       expect(card.extensions[BAVARIA_CARD_TYPE_EXTENSION_NAME]).toBeUndefined()
       expect(getValueByCSVHeader(card, cardConfig, 'Kartentyp')).toBeUndefined()
 
-      expect(isValueValid(card, cardConfig, 'Name')).toBeFalsy()
-      expect(isValueValid(card, cardConfig, 'Ablaufdatum')).toBeFalsy()
-      expect(isValueValid(card, cardConfig, 'Kartentyp')).toBeFalsy()
-      expect(isValid(card)).toBeFalsy()
+      expect(isValueValid(card, cardConfig, 'Name', supportedPdfCharset)).toBeFalsy()
+      expect(isValueValid(card, cardConfig, 'Ablaufdatum', supportedPdfCharset)).toBeFalsy()
+      expect(isValueValid(card, cardConfig, 'Kartentyp',supportedPdfCharset)).toBeFalsy()
+      expect(isValid(card,supportedPdfCharset)).toBeFalsy()
     })
   })
 
@@ -145,8 +148,8 @@ describe('Card', () => {
     fullName => {
       const card = initializeCard(cardConfig, region, { fullName })
       expect(card.fullName).toBe(fullName)
-      expect(isValueValid(card, cardConfig, 'Name')).toBeFalsy()
-      expect(isValid(card)).toBeFalsy()
+      expect(isValueValid(card, cardConfig, 'Name', supportedPdfCharset)).toBeFalsy()
+      expect(isValid(card, supportedPdfCharset)).toBeFalsy()
     }
   )
 
@@ -155,21 +158,21 @@ describe('Card', () => {
     fullName => {
       const card = initializeCard(cardConfig, region, { fullName })
       expect(card.fullName).toBe(fullName)
-      expect(isValueValid(card, cardConfig, 'Name')).toBeTruthy()
-      expect(isValid(card)).toBeTruthy()
+      expect(isValueValid(card, cardConfig, 'Name', supportedPdfCharset)).toBeTruthy()
+      expect(isValid(card, supportedPdfCharset)).toBeTruthy()
     }
   )
 
   it.each(['Karla', 'Karl L'])('should correctly identify invalid fullname that is incomplete', fullName => {
     const card = initializeCard(cardConfig, region, { fullName })
-    expect(isValueValid(card, cardConfig, 'Name')).toBeFalsy()
-    expect(isValid(card)).toBeFalsy()
+    expect(isValueValid(card, cardConfig, 'Name', supportedPdfCharset)).toBeFalsy()
+    expect(isValid(card, supportedPdfCharset)).toBeFalsy()
   })
 
   it(`should correctly identify invalid fullname that exceeds max length (${MAX_NAME_LENGTH} characters)`, () => {
     const card = initializeCard(cardConfig, region, { fullName: 'Karl LauterLauterLauterLauterLauterLauterLauterbach' })
-    expect(isValueValid(card, cardConfig, 'Name')).toBeFalsy()
-    expect(isValid(card)).toBeFalsy()
+    expect(isValueValid(card, cardConfig, 'Name', supportedPdfCharset)).toBeFalsy()
+    expect(isValid(card, supportedPdfCharset)).toBeFalsy()
   })
 
   describe('self service', () => {

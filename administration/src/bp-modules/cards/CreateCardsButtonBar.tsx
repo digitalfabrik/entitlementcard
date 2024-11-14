@@ -18,6 +18,7 @@ const CreateCardsButtonBar = ({
   generateCardsCsv,
   goBack,
 }: CreateCardsButtonBarProps): ReactElement => {
+  // TODO pass supported charset
   const allCardsValid = cards.every(card => isValid(card))
   const { csvExport } = useContext(ProjectConfigContext)
 

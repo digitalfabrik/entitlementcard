@@ -3,6 +3,7 @@ import InfoOutlined from '@mui/icons-material/InfoOutlined'
 import { styled } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
 
+
 import { Card, getFullNameValidationErrorMessage, isFullNameValid, isValid } from '../../cards/Card'
 import ClearInputButton from '../../cards/extensions/components/ClearInputButton'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
@@ -33,7 +34,10 @@ type CardSelfServiceFormProps = {
   dataPrivacyAccepted: DataPrivacyAcceptingStatus
   setDataPrivacyAccepted: (status: DataPrivacyAcceptingStatus) => void
   generateCards: () => Promise<void>
+  supportedPdfCharset: Set<number>
 }
+
+
 
 const CardSelfServiceForm = ({
   card,
@@ -41,12 +45,13 @@ const CardSelfServiceForm = ({
   dataPrivacyAccepted,
   setDataPrivacyAccepted,
   generateCards,
+  supportedPdfCharset
 }: CardSelfServiceFormProps): ReactElement => {
   const { viewportSmall } = useWindowDimensions()
   const projectConfig = useContext(ProjectConfigContext)
   const [openDataPrivacy, setOpenDataPrivacy] = useState<boolean>(false)
   const [openReferenceInformation, setOpenReferenceInformation] = useState<boolean>(false)
-  const cardValid = isValid(card, { expirationDateNullable: true })
+  const cardValid = isValid(card,  supportedPdfCharset,{ expirationDateNullable: true })
   const appToaster = useAppToaster()
 
   const createKoblenzPass = async () => {
@@ -81,11 +86,11 @@ const CardSelfServiceForm = ({
                 input={card.fullName}
               />
             }
-            intent={isFullNameValid(card) ? undefined : Intent.DANGER}
+            intent={isFullNameValid(card, supportedPdfCharset) ? undefined : Intent.DANGER}
             value={card.fullName}
             onChange={event => updateCard({ fullName: removeMultipleSpaces(event.target.value) })}
           />
-          <FormErrorMessage errorMessage={getFullNameValidationErrorMessage(card.fullName)} />
+          <FormErrorMessage errorMessage={getFullNameValidationErrorMessage(card.fullName, supportedPdfCharset)} />
         </FormGroup>
         <ExtensionForms card={card} updateCard={updateCard} />
         <IconTextButton onClick={() => setOpenReferenceInformation(true)}>

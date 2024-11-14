@@ -15,6 +15,7 @@ import { IconTextButton } from './components/IconTextButton'
 import { InfoText } from './components/InfoText'
 import selfServiceStepInfo from './constants/selfServiceStepInfo'
 import useCardGeneratorSelfService, { CardSelfServiceStep } from './hooks/useCardGeneratorSelfService'
+import useSupportedPdfCharset from '../../hooks/useSupportedPdfCharset'
 
 const CenteredSpinner = styled(Spinner)`
   position: absolute;
@@ -85,8 +86,10 @@ export enum DataPrivacyAcceptingStatus {
   denied,
 }
 
+
+
 // TODO 1646 Add tests for CardSelfService
-const CardSelfServiceView = (): ReactElement => {
+const CardSelfServiceView = (): ReactElement | null => {
   const projectConfig = useContext(ProjectConfigContext)
   const [dataPrivacyCheckbox, setDataPrivacyCheckbox] = useState<DataPrivacyAcceptingStatus>(
     DataPrivacyAcceptingStatus.untouched
@@ -103,6 +106,7 @@ const CardSelfServiceView = (): ReactElement => {
     downloadPdf,
   } = useCardGeneratorSelfService()
   const [openHelpDialog, setOpenHelpDialog] = useState(false)
+const supportedPdfCharset= useSupportedPdfCharset()
 
   const onDownloadPdf = async () => {
     if (code) {
@@ -116,6 +120,10 @@ const CardSelfServiceView = (): ReactElement => {
 
   if (isLoading) {
     return <CenteredSpinner />
+  }
+
+  if(!supportedPdfCharset){
+    return null
   }
 
   return (
@@ -134,6 +142,7 @@ const CardSelfServiceView = (): ReactElement => {
         <Text>{selfServiceStepInfo[selfServiceState].text}</Text>
         {selfServiceState === CardSelfServiceStep.form && (
           <CardSelfServiceForm
+            supportedPdfCharset={supportedPdfCharset}
             card={selfServiceCard}
             dataPrivacyAccepted={dataPrivacyCheckbox}
             setDataPrivacyAccepted={setDataPrivacyCheckbox}

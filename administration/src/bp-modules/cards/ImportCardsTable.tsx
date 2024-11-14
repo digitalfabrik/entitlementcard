@@ -10,6 +10,7 @@ type CardImportTableProps = {
   headers: string[]
   cards: Card[]
   cardConfig: CardConfig
+  supportedPdfCharset: Set<number>
 }
 
 const TableContainer = styled.div`
@@ -25,12 +26,12 @@ const StyledCell = styled(Cell)`
   white-space: break-spaces;
 `
 
-const CardImportTable = ({ headers, cards, cardConfig }: CardImportTableProps): ReactElement => {
+const CardImportTable = ({ headers, cards, cardConfig, supportedPdfCharset }: CardImportTableProps): ReactElement => {
   const cellRenderer = useCallback(
     (rowIndex: number, columnIndex: number) => {
       const card = cards[rowIndex]
       const header = headers[columnIndex]
-      const valid = isValueValid(card, cardConfig, header)
+      const valid = isValueValid(card, cardConfig, header, supportedPdfCharset)
       const value = getValueByCSVHeader(card, cardConfig, header)
       return (
         <StyledCell
@@ -44,7 +45,7 @@ const CardImportTable = ({ headers, cards, cardConfig }: CardImportTableProps): 
         </StyledCell>
       )
     },
-    [cardConfig, cards, headers]
+    [cardConfig, cards, headers, supportedPdfCharset]
   )
 
   return (

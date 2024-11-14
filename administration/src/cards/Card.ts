@@ -5,7 +5,11 @@ import { CardExtensions, CardInfo } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
 import { CardConfig } from '../project-configs/getProjectConfig'
 import PlainDate from '../util/PlainDate'
-import { containsNoEmojis, containsSpecialCharacters, removeMultipleSpaces } from '../util/helper'
+import {
+  containsSpecialCharacters,
+  isStringSupportedByFont,
+  removeMultipleSpaces
+} from '../util/helper'
 import { REGION_EXTENSION_NAME } from './extensions/RegionExtension'
 import Extensions, { Extension, ExtensionKey, ExtensionState, InferExtensionStateType } from './extensions/extensions'
 
@@ -77,11 +81,10 @@ const hasNameAndForename = (fullName: string): boolean => {
   return names.length > 1 && names.every(name => name.length > 1)
 }
 
-export const isFullNameValid = ({ fullName }: Card): boolean =>
+export const isFullNameValid = ({ fullName }: Card, supportedCharset: Set<number>): boolean =>
   hasValidNameLength(fullName) &&
   hasNameAndForename(fullName) &&
-  containsNoEmojis(fullName) &&
-  !containsSpecialCharacters(fullName)
+  !containsSpecialCharacters(fullName) && isStringSupportedByFont(fullName, supportedCharset)
 
 export const isExpirationDateValid = (card: Card, { nullable } = { nullable: false }): boolean => {
   const today = PlainDate.fromLocalDate(new Date())
@@ -98,8 +101,8 @@ export const isExpirationDateValid = (card: Card, { nullable } = { nullable: fal
   )
 }
 
-export const isValid = (card: Card, { expirationDateNullable } = { expirationDateNullable: false }): boolean =>
-  isFullNameValid(card) &&
+export const isValid = (card: Card, supportedCharset: Set<number>,{ expirationDateNullable } = { expirationDateNullable: false }): boolean =>
+  isFullNameValid(card,supportedCharset) &&
   getExtensions(card).every(({ extension, state }) => extension.isValid(state)) &&
   (isExpirationDateValid(card, { nullable: expirationDateNullable }) || hasInfiniteLifetime(card))
 
@@ -125,10 +128,10 @@ const getExtensionNameByCSVHeader = (cardConfig: CardConfig, columnHeader: strin
   return (cardConfig.extensions[extensionIndex]?.name as ExtensionKey | undefined) ?? null
 }
 
-export const isValueValid = (card: Card, cardConfig: CardConfig, columnHeader: string): boolean => {
+export const isValueValid = (card: Card, cardConfig: CardConfig, columnHeader: string, supportedPdfCharset: Set<number>): boolean => {
   switch (columnHeader) {
     case cardConfig.nameColumnName:
-      return isFullNameValid(card)
+      return isFullNameValid(card, supportedPdfCharset)
     case cardConfig.expiryColumnName:
       return isExpirationDateValid(card) || hasInfiniteLifetime(card)
     default: {
@@ -194,9 +197,9 @@ export const updateCard = (oldCard: Card, updatedCard: Partial<Card>): Card => (
   },
 })
 
-export const getFullNameValidationErrorMessage = (name: string): string | null => {
+export const getFullNameValidationErrorMessage = (name: string, supportedCharset: Set<number>): string | null => {
   const errors: string[] = []
-  if (!containsNoEmojis(name) || containsSpecialCharacters(name)) {
+  if (!isStringSupportedByFont(name, supportedCharset) || containsSpecialCharacters(name)) {
     errors.push('Der Name darf keine Sonderzeichen oder Zahlen enthalten.')
   }
   if (!hasNameAndForename(name)) {
