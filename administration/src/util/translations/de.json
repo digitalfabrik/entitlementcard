@@ -12,6 +12,7 @@
     "country": "Land",
     "dateOfBirth": "Geburtsdatum",
     "emailAddress": "E-Mail-Adresse",
+    "telephone": "Telefonnummer",
     "region": "Zuständige Behörde",
     "applicationDetails": "Antragsdetails",
     "cardType": "Antrag auf",
