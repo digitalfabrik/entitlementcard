@@ -13,6 +13,7 @@ export type InfoParams = {
 }
 
 export type PdfTextElementProps = {
+  bold?: boolean
   maxWidth?: number | undefined
   fontSize: number
   textAlign?: 'left' | 'right' | 'center'
