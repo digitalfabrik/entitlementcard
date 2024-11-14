@@ -22,7 +22,7 @@ const KoblenzReferenceNumberExtensionForm = ({
 
   return (
     <FormGroup
-      label='Referenznummer'
+      label='Aktenzeichen'
       labelFor='koblenz-reference-number-input'
       intent={isValid ? undefined : Intent.DANGER}>
       <InputGroup

@@ -15,8 +15,8 @@ const selfServiceStepInfo: SelfServiceStepInfo[] = [
     text: (
       <span>
         {' '}
-        Um Ihren Pass zu aktivieren bzw. Ihr Antrags-PDF herunterladen zu können, benötigen wir noch ein paar
-        Informationen von Ihnen.
+        Um Ihren Pass zu aktivieren bzw. herunterladen zu können, benötigen wir noch zusätzliche Informationen von
+        Ihnen.
       </span>
     ),
   },
@@ -26,18 +26,19 @@ const selfServiceStepInfo: SelfServiceStepInfo[] = [
     subHeadline: 'Nur noch ein paar Klicks, bis Sie alle Vorteile nutzen können.',
     text: (
       <span>
-        Haben Sie die App noch nicht? <b>Laden Sie sie jetzt herunter, um fortzufahren.</b>
+        <b>App bereits installiert? </b>Dann klicken Sie auf „Weiter zur Aktivierung“
       </span>
     ),
   },
   {
     stepNr: 3,
-    headline: 'Letzte Schritte',
-    subHeadline: 'AntragsPDF herunterladen und Pass aktivieren.',
+    headline: 'Fast geschafft!',
+    subHeadline: 'KoblenzPass aktivieren und Backup herunterladen',
     text: (
       <span>
-        Laden Sie Ihre Antrags-PDF herunter, um Ihren Pass <b>im Falle eines Verlusts erneut aktivieren</b> zu können.
-        Sie können den Pass so außerdem auch <b>in gedruckter Form nutzen</b>.
+        Laden Sie den KoblenzPass als PDF-Datei herunter, um ihn{' '}
+        <b>notfalls erneut in der App hinterlegen zu können. </b>
+        Sie können den KoblenzPass so außerdem auch <b>ohne mobiles Endgerät nutzen</b>.
       </span>
     ),
   },

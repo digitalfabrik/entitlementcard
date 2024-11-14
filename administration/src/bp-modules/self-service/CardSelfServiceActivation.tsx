@@ -11,6 +11,10 @@ const Container = styled('div')`
   flex-direction: column;
 `
 
+const StyledIconTextButton = styled(IconTextButton)`
+  color: #131314;
+`
+
 type CardSelfServiceActivationProps = {
   deepLink: string
   downloadPdf: () => Promise<void>
@@ -18,13 +22,17 @@ type CardSelfServiceActivationProps = {
 
 const CardSelfServiceActivation = ({ deepLink, downloadPdf }: CardSelfServiceActivationProps): ReactElement => (
   <Container>
-    <IconTextButton onClick={downloadPdf}>
+    <StyledIconTextButton onClick={downloadPdf}>
       <FileDownloadOutlinedIcon />
-      AntragsPDF herunterladen
-    </IconTextButton>
-    <InfoText>Um Ihren Pass zu aktivieren, klicken Sie bitte hier:</InfoText>
+      KoblenzPass PDF
+    </StyledIconTextButton>
+    <InfoText>
+      Um Ihren KoblenzPass auf dem aktuellen Gerät zu aktivieren, klicken Sie bitte auf „Pass jetzt aktivieren“. <br />
+      <br />
+      <b>Wichtig: </b>Die KoblenzPass-App muss dafür installiert sein (siehe Schritt 2 von 3).
+    </InfoText>
     <ActionButton href={deepLink} variant='contained' size='large'>
-      Pass aktivieren
+      KoblenzPass jetzt aktivieren
     </ActionButton>
   </Container>
 )

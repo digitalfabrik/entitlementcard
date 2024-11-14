@@ -64,7 +64,7 @@ const CardSelfServiceForm = ({
   return (
     <>
       <Container key={card.id}>
-        <FormGroup label='Vorname Nachname'>
+        <FormGroup label='Vorname Name'>
           <InputGroup
             large={viewportSmall}
             placeholder='Erika Musterfrau'
@@ -84,7 +84,7 @@ const CardSelfServiceForm = ({
         <ExtensionForms card={card} updateCard={updateCard} />
         <IconTextButton onClick={() => setOpenReferenceInformation(true)}>
           <InfoOutlined />
-          Informationen zur Referenznummer
+          Wo finde ich das Aktenzeichen?
         </IconTextButton>
         <StyledCheckbox checked={dataPrivacyAccepted} onChange={() => setDataPrivacyAccepted(!dataPrivacyAccepted)}>
           Ich akzeptiere die{' '}
@@ -97,14 +97,25 @@ const CardSelfServiceForm = ({
         </StyledAlert>
       )}
       <ActionButton onClick={generateCards} variant='contained' disabled={cardCreationDisabled} size='large'>
-        Pass erstellen
+        KoblenzPass erstellen
       </ActionButton>
       <BasicDialog
         open={openReferenceInformation}
         maxWidth='lg'
         onUpdateOpen={setOpenReferenceInformation}
-        title='Informationen zur Referenznummer'
-        content={<>Noch keine Informationen verfügtbar, bitte wenden Sie sich an den Support.</>}
+        title='Wo finde ich das Aktenzeichen?'
+        content={
+          <>
+            Das Aktenzeichen finden Sie meist oben rechts auf dem postalischen Bescheid. <br />
+            Weitere Informationen und Beispiele finden Sie unter{' '}
+            <a href='https://www.koblenz.de/koblenzpass' target='_blank' rel='noreferrer'>
+              www.koblenz.de/koblenzpass
+            </a>
+            . <br />
+            <br /> Bei Fragen dazu kontaktieren Sie uns bitte via{' '}
+            <a href='mailto:koblenzpass@stadt.koblenz.de'>koblenzpass@stadt.koblenz.de</a>.
+          </>
+        }
       />
       <BasicDialog
         open={openDataPrivacy}
