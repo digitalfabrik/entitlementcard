@@ -3,7 +3,6 @@ import React, { ReactElement } from 'react'
 
 import FormErrorMessage from '../../bp-modules/self-service/components/FormErrorMessage'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
-import { containsNoEmojis } from '../../util/helper'
 import ClearInputButton from './components/ClearInputButton'
 import { Extension, ExtensionComponentProps } from './extensions'
 
@@ -26,7 +25,7 @@ const KoblenzReferenceNumberExtensionForm = ({
   const clearInput = () => setValue({ koblenzReferenceNumber: '' })
 
   const getErrorMessage = (): string | null => {
-    if (hasSpecialChars(value.koblenzReferenceNumber) || !containsNoEmojis(value.koblenzReferenceNumber)) {
+    if (hasSpecialChars(value.koblenzReferenceNumber)) {
       return 'Das Aktenzeichen enthält ungültige Sonderzeichen.'
     }
     if (hasInvalidLength(value.koblenzReferenceNumber.length)) {
@@ -73,8 +72,7 @@ const KoblenzReferenceNumberExtension: Extension<KoblenzReferenceNumberExtension
       koblenzReferenceNumber !== null &&
       koblenzReferenceNumber.length >= KoblenzReferenceNumberMinLength &&
       koblenzReferenceNumber.length <= KoblenzReferenceNumberMaxLength &&
-      !hasSpecialChars(koblenzReferenceNumber) &&
-      containsNoEmojis(koblenzReferenceNumber)
+      !hasSpecialChars(koblenzReferenceNumber)
     )
   },
   fromString: value => ({ koblenzReferenceNumber: value }),

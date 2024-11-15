@@ -5,7 +5,7 @@ import { CardExtensions, CardInfo } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
 import { CardConfig } from '../project-configs/getProjectConfig'
 import PlainDate from '../util/PlainDate'
-import { containsNoEmojis, containsSpecialCharacters, removeMultipleSpaces } from '../util/helper'
+import { containsOnlyLatinAndCommonCharset, containsSpecialCharacters, removeMultipleSpaces } from '../util/helper'
 import { REGION_EXTENSION_NAME } from './extensions/RegionExtension'
 import Extensions, { Extension, ExtensionKey, ExtensionState, InferExtensionStateType } from './extensions/extensions'
 
@@ -80,7 +80,7 @@ const hasNameAndForename = (fullName: string): boolean => {
 export const isFullNameValid = ({ fullName }: Card): boolean =>
   hasValidNameLength(fullName) &&
   hasNameAndForename(fullName) &&
-  containsNoEmojis(fullName) &&
+  containsOnlyLatinAndCommonCharset(fullName) &&
   !containsSpecialCharacters(fullName)
 
 export const isExpirationDateValid = (card: Card, { nullable } = { nullable: false }): boolean => {
@@ -196,7 +196,7 @@ export const updateCard = (oldCard: Card, updatedCard: Partial<Card>): Card => (
 
 export const getFullNameValidationErrorMessage = (name: string): string | null => {
   const errors: string[] = []
-  if (!containsNoEmojis(name) || containsSpecialCharacters(name)) {
+  if (!containsOnlyLatinAndCommonCharset(name) || containsSpecialCharacters(name)) {
     errors.push('Der Name darf keine Sonderzeichen oder Zahlen enthalten.')
   }
   if (!hasNameAndForename(name)) {

@@ -140,7 +140,7 @@ describe('Card', () => {
     })
   })
 
-  it.each(['$tefan Mayer', 'Karla K.', 'Karla Karls😀'])(
+  it.each(['$tefan Mayer', 'Karla K.', 'Karla Karls😀', 'إئبآء؟ؤئحجرزش'])(
     'should correctly identify invalid special characters in fullname',
     fullName => {
       const card = initializeCard(cardConfig, region, { fullName })
