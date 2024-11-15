@@ -174,11 +174,11 @@ const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
     async (applicationIdToMarkAsProcessed?: number) => {
       await generateCards(
         (codes: CreateCardsResult[], cards: Card[]) => generatePdf(codes, cards, projectConfig.pdf, region),
-        'berechtigungskarten.pdf',
+        cards.length === 1 ? `${cards[0].fullName}.pdf` : 'berechtigungskarten.pdf',
         applicationIdToMarkAsProcessed
       )
     },
-    [projectConfig, region, generateCards]
+    [projectConfig, region, generateCards, cards]
   )
 
   const generateCardsCsv = useCallback(
