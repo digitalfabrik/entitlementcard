@@ -33,18 +33,16 @@ const BirthdayForm = ({
 
   const changeBirthday = (date: Date | null) => {
     setValue({ birthday: PlainDate.safeFromCustomFormat(date?.toLocaleDateString() ?? null) })
-    if (!touched) {
-      setTouched(true)
-    }
   }
 
   return (
     <FormGroup label='Geburtsdatum'>
       <CustomDatePicker
         date={birthday?.toLocalDate() ?? null}
+        onBlur={() => setTouched(true)}
         onChange={changeBirthday}
         onClear={() => setValue({ birthday: null })}
-        isValid={isValid || (!touched && !showRequired)}
+        isValid={isValid || !showErrorMessage}
         maxDate={new Date()}
         disableFuture
       />

@@ -49,21 +49,10 @@ const CardSelfServiceForm = ({
   const [openReferenceInformation, setOpenReferenceInformation] = useState<boolean>(false)
   const cardValid = isValid(card, { expirationDateNullable: true })
   const appToaster = useAppToaster()
-
-  const updateFullName = (fullName: string) => {
-    updateCard({ fullName })
-    if (!touchedFullName) {
-      setTouchedFullName(true)
-    }
-  }
+  const showErrorMessage = touchedFullName || formSendAttempt
 
   const createKoblenzPass = async () => {
-    if (!formSendAttempt) {
-      setFormSendAttempt(true)
-    }
-    if (!touchedFullName) {
-      setTouchedFullName(true)
-    }
+    setFormSendAttempt(true)
     if (dataPrivacyAccepted === DataPrivacyAcceptingStatus.untouched) {
       setDataPrivacyAccepted(DataPrivacyAcceptingStatus.denied)
     }
@@ -95,11 +84,12 @@ const CardSelfServiceForm = ({
                 input={card.fullName}
               />
             }
-            intent={isFullNameValid(card) || !touchedFullName ? undefined : Intent.DANGER}
+            intent={isFullNameValid(card) || !showErrorMessage ? undefined : Intent.DANGER}
             value={card.fullName}
-            onChange={event => updateFullName(event.target.value)}
+            onBlur={() => setTouchedFullName(true)}
+            onChange={event => updateCard({ fullName: event.target.value })}
           />
-          {touchedFullName && <FormErrorMessage errorMessage={getFullNameValidationErrorMessage(card.fullName)} />}
+          {showErrorMessage && <FormErrorMessage errorMessage={getFullNameValidationErrorMessage(card.fullName)} />}
         </FormGroup>
         <ExtensionForms card={card} updateCard={updateCard} showRequired={formSendAttempt} />
         <IconTextButton onClick={() => setOpenReferenceInformation(true)}>

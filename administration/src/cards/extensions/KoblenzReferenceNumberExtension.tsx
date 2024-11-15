@@ -41,13 +41,6 @@ const KoblenzReferenceNumberExtensionForm = ({
     return errors.join(' ')
   }
 
-  const updateReferenceNumber = (koblenzReferenceNumber: string) => {
-    setValue({ koblenzReferenceNumber })
-    if (!touched) {
-      setTouched(true)
-    }
-  }
-
   return (
     <FormGroup label='Referenznummer' labelFor='koblenz-reference-number-input'>
       <InputGroup
@@ -55,12 +48,13 @@ const KoblenzReferenceNumberExtensionForm = ({
         large={viewportSmall}
         id='koblenz-reference-number-input'
         placeholder='5.012.067.281, 000D000001, 99478'
-        intent={isValid || (!touched && !showRequired) ? undefined : Intent.DANGER}
+        intent={isValid || !showErrorMessage ? undefined : Intent.DANGER}
+        onBlur={() => setTouched(true)}
         value={koblenzReferenceNumber}
         rightElement={
           <ClearInputButton viewportSmall={viewportSmall} onClick={clearInput} input={koblenzReferenceNumber} />
         }
-        onChange={event => updateReferenceNumber(event.target.value)}
+        onChange={event => setValue({ koblenzReferenceNumber: event.target.value })}
       />
       {showErrorMessage && <FormErrorMessage errorMessage={getErrorMessage()} />}
     </FormGroup>
