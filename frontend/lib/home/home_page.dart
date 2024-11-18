@@ -108,7 +108,7 @@ class HomePageState extends State<HomePage> {
     final theme = Theme.of(context);
     return BottomNavigationBar(
       currentIndex: _currentTabIndex,
-      backgroundColor: theme.colorScheme.surfaceVariant,
+      backgroundColor: theme.colorScheme.surfaceContainerHighest,
       items: appFlows
           .map((appFlow) => BottomNavigationBarItem(icon: Icon(appFlow.iconData), label: appFlow.getTitle(context)))
           .toList(),

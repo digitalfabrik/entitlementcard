@@ -23,8 +23,8 @@ ThemeData get lightTheme {
     colorScheme: ColorScheme.light(
       primary: primaryColor,
       secondary: primaryColor,
-      background: backgroundColor,
-      surfaceVariant: const Color(0xffefefef),
+      surface: backgroundColor,
+      surfaceContainerHighest: const Color(0xffefefef),
       surfaceTint: Colors.white54,
       error: const Color(0xffcc0000),
       tertiary: const Color(0xFF505050),
@@ -63,11 +63,11 @@ ThemeData get lightTheme {
         foregroundColor: backgroundColor,
         titleTextStyle: titleMedium),
     outlinedButtonTheme: OutlinedButtonThemeData(
-      style: ButtonStyle(side: MaterialStatePropertyAll(BorderSide(color: primaryColor, width: 1))),
+      style: ButtonStyle(side: WidgetStatePropertyAll(BorderSide(color: primaryColor, width: 1))),
     ),
     checkboxTheme: CheckboxThemeData(
-      checkColor: MaterialStatePropertyAll(textColor),
-      fillColor: MaterialStatePropertyAll(primaryColor),
+      checkColor: WidgetStatePropertyAll(textColor),
+      fillColor: WidgetStatePropertyAll(primaryColor),
     ),
   );
 }
@@ -82,8 +82,8 @@ ThemeData get darkTheme {
     colorScheme: ColorScheme.dark(
       primary: primaryColor,
       secondary: primaryColor,
-      background: backgroundColor,
-      surfaceVariant: const Color(0xff262626),
+      surface: backgroundColor,
+      surfaceContainerHighest: const Color(0xff262626),
       surfaceTint: Colors.white,
       error: const Color(0xff8b0000),
       tertiary: const Color(0xFFC6C4C4),
@@ -118,11 +118,11 @@ ThemeData get darkTheme {
         foregroundColor: Colors.white,
         titleTextStyle: titleMedium),
     outlinedButtonTheme: OutlinedButtonThemeData(
-      style: ButtonStyle(side: MaterialStatePropertyAll(BorderSide(color: primaryColor, width: 1))),
+      style: ButtonStyle(side: WidgetStatePropertyAll(BorderSide(color: primaryColor, width: 1))),
     ),
     checkboxTheme: CheckboxThemeData(
-      checkColor: const MaterialStatePropertyAll(Colors.white),
-      fillColor: MaterialStatePropertyAll(primaryColor),
+      checkColor: const WidgetStatePropertyAll(Colors.white),
+      fillColor: WidgetStatePropertyAll(primaryColor),
     ),
   );
 }
