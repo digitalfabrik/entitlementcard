@@ -240,7 +240,7 @@ type Query {
   searchAcceptingStoresInProject(params: SearchParamsInput!, project: String!): [AcceptingStore!]!
   "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid and a timestamp of the last check"
   verifyCardInProject(card: CardVerificationModelInput!, project: String!): Boolean! @deprecated(reason : "Deprecated since May 2023 in favor of CardVerificationResultModel that return a current timestamp, replace with verifyCardInProjectV2")
-  "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid and a timestamp of the last check"
+  "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid, extendable and a timestamp of the last check"
   verifyCardInProjectV2(card: CardVerificationModelInput!, project: String!): CardVerificationResultModel!
   "Returns the requesting administrator as retrieved from his JWT token."
   whoAmI(project: String!): Administrator!
