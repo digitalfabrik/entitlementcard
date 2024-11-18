@@ -33,7 +33,7 @@ class ContentPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return DecoratedBox(
-      decoration: BoxDecoration(color: theme.colorScheme.background),
+      decoration: BoxDecoration(color: theme.colorScheme.surface),
       child: CustomScrollView(
         slivers: <Widget>[
           CustomSliverAppBar(title: title),
