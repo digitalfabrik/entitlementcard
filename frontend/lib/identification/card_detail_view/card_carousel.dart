@@ -5,7 +5,7 @@ class CardCarousel extends StatefulWidget {
   final List<Widget> cards;
   final int cardIndex;
   final Function(int index) updateIndex;
-  final CarouselController carouselController;
+  final CarouselSliderController carouselController;
 
   const CardCarousel(
       {super.key,

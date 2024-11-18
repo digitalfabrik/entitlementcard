@@ -28,7 +28,7 @@ class IdentificationPage extends StatefulWidget {
 }
 
 class IdentificationPageState extends State<IdentificationPage> {
-  CarouselController carouselController = CarouselController();
+  CarouselSliderController carouselController = CarouselSliderController();
   int cardIndex = 0;
 
   @override
