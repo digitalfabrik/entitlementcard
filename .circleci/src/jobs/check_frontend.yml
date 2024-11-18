@@ -1,11 +1,10 @@
 docker:
-  - image: cimg/node:20.18.0-browsers
+  - image: cimg/node:20.18.0
 resource_class: small
 steps:
   - checkout:
       path: ~/project
   - install_app_toolbelt
-  - browser-tools/install-chrome
   - install_dart_linux
   - install_fvm
   - run:
