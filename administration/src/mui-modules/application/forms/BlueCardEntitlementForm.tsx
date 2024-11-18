@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { BlueCardEntitlementInput, BlueCardEntitlementType } from '../../../generated/graphql'
+import i18next from '../../../i18n'
 import SwitchComponent from '../SwitchComponent'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
 import { createRadioGroupForm } from '../primitive-inputs/RadioGroupForm'
@@ -20,15 +21,11 @@ import WorkAtOrganizationsEntitlementForm from './WorkAtOrganizationsEntitlement
 const EntitlementTypeRadioGroupForm = createRadioGroupForm<BlueCardEntitlementType>()
 const entitlementTypeOptions: { labelByValue: { [K in BlueCardEntitlementType]: string } } = {
   labelByValue: {
-    [BlueCardEntitlementType.WorkAtOrganizations]:
-      'Ich engagiere mich ehrenamtlich seit mindestens zwei Jahren freiwillig mindestens fünf Stunden pro Woche oder bei Projektarbeiten mindestens 250 Stunden jährlich.',
-    [BlueCardEntitlementType.Juleica]: 'Ich bin Inhaber:in einer JuLeiCa (Jugendleiter:in-Card).',
-    [BlueCardEntitlementType.WorkAtDepartment]:
-      'Ich bin aktiv in der Freiwilligen Feuerwehr mit abgeschlossener Truppmannausbildung bzw. abgeschlossenem Basis-Modul der Modularen Truppausbildung (MTA), oder im Katastrophenschutz oder im Rettungsdienst mit abgeschlossener Grundausbildung.',
-    [BlueCardEntitlementType.MilitaryReserve]:
-      'Ich habe in den vergangenen zwei Kalenderjahren als Reservist regelmäßig aktiven Wehrdienst in der Bundeswehr geleistet, indem ich insgesamt mindestens 40 Tage Reservisten-Dienstleistung erbracht habe oder ständige:r Angehörige:r eines Bezirks- oder Kreisverbindungskommandos war.',
-    [BlueCardEntitlementType.VolunteerService]:
-      'Ich leiste einen Freiwilligendienst ab in einem Freiwilligen Sozialen Jahr (FSJ), einem Freiwilligen Ökologischen Jahr (FÖJ) oder einem Bundesfreiwilligendienst (BFD).',
+    [BlueCardEntitlementType.WorkAtOrganizations]: i18next.t('application:blueCardEntitlementType.WorkAtOrganizations'),
+    [BlueCardEntitlementType.Juleica]: i18next.t('application:blueCardEntitlementType.Juleica'),
+    [BlueCardEntitlementType.WorkAtDepartment]: i18next.t('application:blueCardEntitlementType.WorkAtDepartment'),
+    [BlueCardEntitlementType.MilitaryReserve]: i18next.t('application:blueCardEntitlementType.MilitaryReserve'),
+    [BlueCardEntitlementType.VolunteerService]: i18next.t('application:blueCardEntitlementType.VolunteerService'),
   },
 }
 

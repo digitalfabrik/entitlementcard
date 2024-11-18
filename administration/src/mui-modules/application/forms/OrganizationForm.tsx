@@ -1,5 +1,6 @@
 import { Alert, Typography, styled } from '@mui/material'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { OrganizationInput } from '../../../generated/graphql'
 import { normalizeName } from '../../../util/normalizeString'
@@ -82,54 +83,57 @@ const OrganizationForm: Form<State, ValidatedInput, AdditionalProps> = {
       },
     }
   },
-  Component: ({ state, setState, applicantName }: FormComponentProps<State, AdditionalProps>) => (
-    <>
-      <h4>Angaben zur Organisation</h4>
-      <ShortTextForm.Component
-        state={state.name}
-        setState={useUpdateStateCallback(setState, 'name')}
-        label='Name der Organisation bzw. des Vereins'
-      />
-      <AddressForm.Component state={state.address} setState={useUpdateStateCallback(setState, 'address')} />
-      <SelectForm.Component
-        state={state.category}
-        setState={useUpdateStateCallback(setState, 'category')}
-        label='Einsatzgebiet'
-        options={organizationCategoryOptions}
-      />
-      <h4>Kontaktperson in der Organisation</h4>
-      <Typography>
-        Bitte geben Sie hier die Daten der Person an, die ihr ehrenamtliches Engagement bestätigen kann.
-      </Typography>
-      {normalizeName(applicantName) === normalizeName(state.contactName.shortText) && (
-        <WarningContactPersonSamePerson severity='warning'>
-          Die Kontaktperson der Organisation und die antragsstellende Person scheinen identisch zu sein. Bitte beachten
-          Sie, dass Anträge auf dieser Grundlage nicht bewilligt werden können.
-        </WarningContactPersonSamePerson>
-      )}
-      <ShortTextForm.Component
-        state={state.contactName}
-        setState={useUpdateStateCallback(setState, 'contactName')}
-        label='Vor- und Nachname der Kontaktperson in der Organisation'
-      />
-      <EmailForm.Component
-        state={state.contactEmail}
-        setState={useUpdateStateCallback(setState, 'contactEmail')}
-        label='E-Mail-Adresse'
-      />
-      <ShortTextForm.Component
-        state={state.contactPhone}
-        setState={useUpdateStateCallback(setState, 'contactPhone')}
-        label='Telefon'
-      />
-      <CheckboxForm.Component
-        state={state.contactHasGivenPermission}
-        setState={useUpdateStateCallback(setState, 'contactHasGivenPermission')}
-        label='Die Kontaktperson hat der Weitergabe ihrer Daten zum Zwecke der Antragsverarbeitung zugestimmt und darf zur Überprüfung kontaktiert werden.'
-        options={contactHasGivenPermissionOptions}
-      />
-    </>
-  ),
+  Component: ({ state, setState, applicantName }: FormComponentProps<State, AdditionalProps>) => {
+    const { t } = useTranslation('application')
+    return (
+      <>
+        <h4>Angaben zur Organisation</h4>
+        <ShortTextForm.Component
+          state={state.name}
+          setState={useUpdateStateCallback(setState, 'name')}
+          label={t('organization.name')}
+        />
+        <AddressForm.Component state={state.address} setState={useUpdateStateCallback(setState, 'address')} />
+        <SelectForm.Component
+          state={state.category}
+          setState={useUpdateStateCallback(setState, 'category')}
+          label={t('organization.category')}
+          options={organizationCategoryOptions}
+        />
+        <h4>{t('organizationContact.title')}</h4>
+        <Typography>
+          Bitte geben Sie hier die Daten der Person an, die ihr ehrenamtliches Engagement bestätigen kann.
+        </Typography>
+        {normalizeName(applicantName) === normalizeName(state.contactName.shortText) && (
+          <WarningContactPersonSamePerson severity='warning'>
+            Die Kontaktperson der Organisation und die antragsstellende Person scheinen identisch zu sein. Bitte
+            beachten Sie, dass Anträge auf dieser Grundlage nicht bewilligt werden können.
+          </WarningContactPersonSamePerson>
+        )}
+        <ShortTextForm.Component
+          state={state.contactName}
+          setState={useUpdateStateCallback(setState, 'contactName')}
+          label={t('organizationContact.name')}
+        />
+        <EmailForm.Component
+          state={state.contactEmail}
+          setState={useUpdateStateCallback(setState, 'contactEmail')}
+          label={t('organizationContact.emailAddress')}
+        />
+        <ShortTextForm.Component
+          state={state.contactPhone}
+          setState={useUpdateStateCallback(setState, 'contactPhone')}
+          label={t('organizationContact.telephone')}
+        />
+        <CheckboxForm.Component
+          state={state.contactHasGivenPermission}
+          setState={useUpdateStateCallback(setState, 'contactHasGivenPermission')}
+          label={t('organizationContact.hasGivenPermission')}
+          options={contactHasGivenPermissionOptions}
+        />
+      </>
+    )
+  },
 }
 
 export default OrganizationForm

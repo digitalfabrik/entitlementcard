@@ -15,7 +15,7 @@ data class EmailInput(val email: String) {
         }
     }
 
-    fun toJsonField(fieldName: String, translations: Map<String, String>): JsonField {
-        return JsonField(fieldName, translations, Type.String, email)
+    fun toJsonField(fieldName: String): JsonField {
+        return JsonField(fieldName, Type.String, email)
     }
 }

@@ -23,15 +23,13 @@ data class OrganizationContact(
     override fun toJsonField(): JsonField {
         return JsonField(
             "organizationContact",
-            mapOf("de" to "Kontaktperson der Organisation"),
             Type.Array,
             listOf(
-                name.toJsonField("name", mapOf("de" to "Vor- und Nachname")),
-                telephone.toJsonField("telephone", mapOf("de" to "Telefon")),
-                email.toJsonField("email", mapOf("de" to "E-Mail-Adresse")),
+                name.toJsonField("name"),
+                telephone.toJsonField("telephone"),
+                email.toJsonField("email"),
                 JsonField(
                     "hasGivenPermission",
-                    mapOf("de" to "Die Kontaktperson hat der Weitergabe ihrer Daten zum Zwecke der Antragsverarbeitung zugestimmt und darf zur Überprüfung kontaktiert werden"),
                     Type.Boolean,
                     hasGivenPermission
                 )

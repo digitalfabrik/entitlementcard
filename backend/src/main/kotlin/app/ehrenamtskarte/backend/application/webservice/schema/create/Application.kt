@@ -34,7 +34,6 @@ data class Application(
     override fun toJsonField(): JsonField {
         return JsonField(
             name = "application",
-            translations = mapOf("de" to ""),
             type = Type.Array,
             value = listOfNotNull(
                 personalData.toJsonField(),

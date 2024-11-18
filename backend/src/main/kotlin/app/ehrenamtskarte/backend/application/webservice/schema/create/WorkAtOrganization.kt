@@ -18,20 +18,18 @@ data class WorkAtOrganization(
     override fun toJsonField(): JsonField {
         return JsonField(
             "workAtOrganization",
-            mapOf("de" to "Arbeit bei Organisation oder Verein"),
             Type.Array,
             listOfNotNull(
                 organization.toJsonField(),
-                responsibility.toJsonField("responsibility", mapOf("de" to "Tätigkeit")),
-                JsonField("amountOfWork", mapOf("de" to "Arbeitsaufwand (Stunden/Woche)"), Type.Number, amountOfWork),
-                workSinceDate.toJsonField("workSinceDate", mapOf("de" to "Tätig seit")),
+                responsibility.toJsonField("responsibility"),
+                JsonField("amountOfWork", Type.Number, amountOfWork),
+                workSinceDate.toJsonField("workSinceDate"),
                 JsonField(
                     "payment",
-                    mapOf("de" to "Für diese ehrenamtliche Tätigkeit wurde eine Aufwandsentschädigung gewährt, die über den jährlichen Freibetrag hinaus geht (840 Euro Ehrenamtspauschale bzw. 3000 Euro Übungsleiterpauschale):"),
                     Type.Boolean,
                     payment
                 ),
-                certificate?.toJsonField("certificate", mapOf("de" to "Tätigkeitsnachweis"))
+                certificate?.toJsonField("certificate")
             )
         )
     }

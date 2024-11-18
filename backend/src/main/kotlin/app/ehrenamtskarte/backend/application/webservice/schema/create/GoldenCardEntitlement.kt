@@ -42,7 +42,6 @@ data class GoldenCardWorkAtOrganizationsEntitlement(
     override fun toJsonField() = JsonField(
         name = "goldenCardWorkAtOrganizationsEntitlement",
         type = Type.Array,
-        translations = mapOf("de" to "Ich bin seit seit mindestens 25 Jahren mindestens 5 Stunden pro Woche oder 250 Stunden pro Jahr bei einem Verein oder einer Organisation ehrenamtlich tätig."),
         value = list.map { it.toJsonField() }
     )
 
@@ -56,9 +55,8 @@ data class GoldenCardHonoredByMinisterPresidentEntitlement(
     override fun toJsonField() = JsonField(
         name = "goldenCardHonoredByMinisterPresidentEntitlement",
         type = Type.Array,
-        translations = mapOf("de" to "Ich bin Inhaber:in des Ehrenzeichens für Verdienstete im Ehrenamt des Bayerischen Ministerpräsidenten."),
         value = listOf(
-            certificate.toJsonField("certificate", mapOf("de" to "Kopie der Urkunde"))
+            certificate.toJsonField("certificate")
         )
     )
 }
@@ -71,11 +69,10 @@ data class GoldenCardWorkAtDepartmentEntitlement(
     override fun toJsonField() = JsonField(
         name = "goldenCardWorkAtDepartmentEntitlement",
         type = Type.Array,
-        translations = mapOf("de" to "Ich bin Feuerwehrdienstleistende:r oder Einsatzkraft im Rettungsdienst oder in Einheiten des Katastrophenschutzes und habe eine Dienstzeitauszeichnung nach dem Feuerwehr- und Hilfsorganisationen-Ehrenzeichengesetz (FwHOEzG) erhalten."),
         value = listOfNotNull(
             organization.toJsonField(),
-            responsibility.toJsonField("responsibility", mapOf("de" to "Funktion")),
-            certificate?.toJsonField("certificate", mapOf("de" to "Tätigkeitsnachweis"))
+            responsibility.toJsonField("responsibility"),
+            certificate?.toJsonField("certificate")
         )
     )
 
@@ -88,9 +85,8 @@ data class GoldenCardMilitaryReserveEntitlement(
     override fun toJsonField() = JsonField(
         name = "goldenCardMilitaryReserveEntitlement",
         type = Type.Array,
-        translations = mapOf("de" to "Ich leiste als Reservist:in seit mindestens 25 Jahren regelmäßig aktiven Wehrdienst in der Bundeswehr, indem ich in dieser Zeit entweder insgesamt mindestens 500 Tage Reservisten-Dienstleistung erbracht habe oder in dieser Zeit ständige:r Angehörige:r eines Bezirks- oder Kreisverbindungskommandos war."),
         value = listOf(
-            certificate.toJsonField("certificate", mapOf("de" to "Tätigkeitsnachweis"))
+            certificate.toJsonField("certificate")
         )
     )
 }

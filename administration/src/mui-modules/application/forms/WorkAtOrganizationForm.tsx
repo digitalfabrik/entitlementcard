@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { WorkAtOrganizationInput } from '../../../generated/graphql'
 import ConfirmDialog from '../ConfirmDialog'
@@ -63,56 +64,59 @@ const WorkAtOrganizationForm: Form<State, ValidatedInput, AdditionalProps> = {
     payment: paymentOptions,
     workSinceDate: { maximumDate: null },
   }),
-  Component: ({ state, setState, onDelete, applicantName }: FormComponentProps<State, AdditionalProps>) => (
-    <>
-      <ActivityDivider onDelete={onDelete} />
-      <h4>Angaben zu Ihrer ehrenamtlichen Tätigkeit</h4>
-      <SubForms.responsibility.Component
-        state={state.responsibility}
-        setState={useUpdateStateCallback(setState, 'responsibility')}
-        label='Ehrenamtliche Tätigkeit'
-      />
-      <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
-        <div style={{ flex: '2' }}>
-          <SubForms.workSinceDate.Component
-            label='Tätig seit'
-            state={state.workSinceDate}
-            setState={useUpdateStateCallback(setState, 'workSinceDate')}
-            options={{ maximumDate: null }}
-          />
+  Component: ({ state, setState, onDelete, applicantName }: FormComponentProps<State, AdditionalProps>) => {
+    const { t } = useTranslation('application')
+    return (
+      <>
+        <ActivityDivider onDelete={onDelete} />
+        <h4>Angaben zu Ihrer ehrenamtlichen Tätigkeit</h4>
+        <SubForms.responsibility.Component
+          state={state.responsibility}
+          setState={useUpdateStateCallback(setState, 'responsibility')}
+          label='Ehrenamtliche Tätigkeit'
+        />
+        <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+          <div style={{ flex: '2' }}>
+            <SubForms.workSinceDate.Component
+              label={t('workSinceDate')}
+              state={state.workSinceDate}
+              setState={useUpdateStateCallback(setState, 'workSinceDate')}
+              options={{ maximumDate: null }}
+            />
+          </div>
+          <div style={{ flex: '3' }}>
+            <SubForms.amountOfWork.Component
+              label={t('amountOfWork')}
+              state={state.amountOfWork}
+              setState={useUpdateStateCallback(setState, 'amountOfWork')}
+              options={amountOfWorkOptions}
+              minWidth={250}
+            />
+          </div>
         </div>
-        <div style={{ flex: '3' }}>
-          <SubForms.amountOfWork.Component
-            label='Arbeitsstunden pro Woche (Durchschnitt)'
-            state={state.amountOfWork}
-            setState={useUpdateStateCallback(setState, 'amountOfWork')}
-            options={amountOfWorkOptions}
-            minWidth={250}
-          />
-        </div>
-      </div>
-      <SubForms.organization.Component
-        state={state.organization}
-        setState={useUpdateStateCallback(setState, 'organization')}
-        applicantName={applicantName}
-      />
-      <SubForms.payment.Component
-        state={state.payment}
-        setState={useUpdateStateCallback(setState, 'payment')}
-        label='Für diese ehrenamtliche Tätigkeit wurde eine Aufwandsentschädigung gewährt, die über den jährlichen Freibetrag hinaus geht (840 Euro Ehrenamtspauschale bzw. 3000 Euro Übungsleiterpauschale).'
-        options={paymentOptions}
-      />
-      <h4>Tätigkeitsnachweis</h4>
-      <p>
-        Falls vorhanden, hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an.{' '}
-        {FileRequirementsText}
-      </p>
-      <SubForms.certificate.Component
-        state={state.certificate}
-        setState={useUpdateStateCallback(setState, 'certificate')}
-      />
-    </>
-  ),
+        <SubForms.organization.Component
+          state={state.organization}
+          setState={useUpdateStateCallback(setState, 'organization')}
+          applicantName={applicantName}
+        />
+        <SubForms.payment.Component
+          state={state.payment}
+          setState={useUpdateStateCallback(setState, 'payment')}
+          label={t('payment')}
+          options={paymentOptions}
+        />
+        <h4>Tätigkeitsnachweis</h4>
+        <p>
+          Falls vorhanden, hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an.{' '}
+          {FileRequirementsText}
+        </p>
+        <SubForms.certificate.Component
+          state={state.certificate}
+          setState={useUpdateStateCallback(setState, 'certificate')}
+        />
+      </>
+    )
+  },
 }
 
 export default WorkAtOrganizationForm
