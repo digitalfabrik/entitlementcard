@@ -1,6 +1,7 @@
 import { FormGroup, InputGroup, Intent } from '@blueprintjs/core'
 import React, { ReactElement } from 'react'
 
+import FormErrorMessage from '../../bp-modules/self-service/components/FormErrorMessage'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
 import ClearInputButton from './components/ClearInputButton'
 import { Extension, ExtensionComponentProps } from './extensions'
@@ -11,6 +12,9 @@ type KoblenzReferenceNumberExtensionState = { [KOBLENZ_REFERENCE_NUMBER_EXTENSIO
 
 const KoblenzReferenceNumberMinLength = 4
 const KoblenzReferenceNumberMaxLength = 15
+const hasSpecialChars = (referenceNr: string): boolean => /[`!@#$%^&*()_+\-=\]{};':"\\|,<>?~]/.test(referenceNr)
+const hasInvalidLength = (referenceNumberLength: number): boolean =>
+  referenceNumberLength < KoblenzReferenceNumberMinLength || referenceNumberLength > KoblenzReferenceNumberMaxLength
 
 const KoblenzReferenceNumberExtensionForm = ({
   value,
@@ -19,6 +23,16 @@ const KoblenzReferenceNumberExtensionForm = ({
 }: ExtensionComponentProps<KoblenzReferenceNumberExtensionState>): ReactElement => {
   const { viewportSmall } = useWindowDimensions()
   const clearInput = () => setValue({ koblenzReferenceNumber: '' })
+
+  const getErrorMessage = (): string | null => {
+    if (hasSpecialChars(value.koblenzReferenceNumber)) {
+      return 'Das Aktenzeichen enthält ungültige Sonderzeichen.'
+    }
+    if (hasInvalidLength(value.koblenzReferenceNumber.length)) {
+      return `Das Aktenzeichen muss eine Länge zwischen ${KoblenzReferenceNumberMinLength} und ${KoblenzReferenceNumberMaxLength} haben.`
+    }
+    return null
+  }
 
   return (
     <FormGroup
@@ -32,18 +46,12 @@ const KoblenzReferenceNumberExtensionForm = ({
         placeholder='5.012.067.281, 000D000001, 99478'
         intent={isValid ? undefined : Intent.DANGER}
         value={value.koblenzReferenceNumber}
-        minLength={KoblenzReferenceNumberMinLength}
-        maxLength={KoblenzReferenceNumberMaxLength}
         rightElement={
           <ClearInputButton viewportSmall={viewportSmall} onClick={clearInput} input={value.koblenzReferenceNumber} />
         }
-        onChange={event => {
-          const value = event.target.value
-          if (value.length <= KoblenzReferenceNumberMaxLength) {
-            setValue({ koblenzReferenceNumber: value })
-          }
-        }}
+        onChange={event => setValue({ koblenzReferenceNumber: event.target.value })}
       />
+      <FormErrorMessage errorMessage={getErrorMessage()} />
     </FormGroup>
   )
 }
@@ -63,7 +71,8 @@ const KoblenzReferenceNumberExtension: Extension<KoblenzReferenceNumberExtension
     return (
       koblenzReferenceNumber !== null &&
       koblenzReferenceNumber.length >= KoblenzReferenceNumberMinLength &&
-      koblenzReferenceNumber.length <= KoblenzReferenceNumberMaxLength
+      koblenzReferenceNumber.length <= KoblenzReferenceNumberMaxLength &&
+      !hasSpecialChars(koblenzReferenceNumber)
     )
   },
   fromString: value => ({ koblenzReferenceNumber: value }),

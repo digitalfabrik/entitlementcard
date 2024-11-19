@@ -2,6 +2,7 @@ import { BavariaCardType } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
 import PlainDate from '../util/PlainDate'
 import {
+  MAX_NAME_LENGTH,
   generateCardInfo,
   getValueByCSVHeader,
   initializeCard,
@@ -137,6 +138,38 @@ describe('Card', () => {
       expect(isValueValid(card, cardConfig, 'Kartentyp')).toBeFalsy()
       expect(isValid(card)).toBeFalsy()
     })
+  })
+
+  it.each(['$tefan Mayer', 'Karla K.', 'Karla Karls😀', 'إئبآء؟ؤئحجرزش'])(
+    'should correctly identify invalid special characters in fullname',
+    fullName => {
+      const card = initializeCard(cardConfig, region, { fullName })
+      expect(card.fullName).toBe(fullName)
+      expect(isValueValid(card, cardConfig, 'Name')).toBeFalsy()
+      expect(isValid(card)).toBeFalsy()
+    }
+  )
+
+  it.each([' Karla Koblenz', ' Karla Karl', ' Karla Karls '])(
+    'should correctly create a card even with whitespace in the beginning and end',
+    fullName => {
+      const card = initializeCard(cardConfig, region, { fullName })
+      expect(card.fullName).toBe(fullName)
+      expect(isValueValid(card, cardConfig, 'Name')).toBeTruthy()
+      expect(isValid(card)).toBeTruthy()
+    }
+  )
+
+  it.each(['Karla', 'Karl L'])('should correctly identify invalid fullname that is incomplete', fullName => {
+    const card = initializeCard(cardConfig, region, { fullName })
+    expect(isValueValid(card, cardConfig, 'Name')).toBeFalsy()
+    expect(isValid(card)).toBeFalsy()
+  })
+
+  it(`should correctly identify invalid fullname that exceeds max length (${MAX_NAME_LENGTH} characters)`, () => {
+    const card = initializeCard(cardConfig, region, { fullName: 'Karl LauterLauterLauterLauterLauterLauterLauterbach' })
+    expect(isValueValid(card, cardConfig, 'Name')).toBeFalsy()
+    expect(isValid(card)).toBeFalsy()
   })
 
   describe('self service', () => {

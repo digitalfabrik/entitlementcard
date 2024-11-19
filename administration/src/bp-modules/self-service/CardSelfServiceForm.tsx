@@ -1,15 +1,19 @@
 import { Checkbox, FormGroup, InputGroup, Intent } from '@blueprintjs/core'
 import InfoOutlined from '@mui/icons-material/InfoOutlined'
-import { Alert, styled } from '@mui/material'
+import { styled } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
 
-import { Card, isFullNameValid, isValid } from '../../cards/Card'
+import { Card, getFullNameValidationErrorMessage, isFullNameValid, isValid } from '../../cards/Card'
 import ClearInputButton from '../../cards/extensions/components/ClearInputButton'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
 import BasicDialog from '../../mui-modules/application/BasicDialog'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { removeMultipleSpaces } from '../../util/helper'
+import { useAppToaster } from '../AppToaster'
 import ExtensionForms from '../cards/ExtensionForms'
+import { DataPrivacyAcceptingStatus } from './CardSelfServiceView'
 import { ActionButton } from './components/ActionButton'
+import FormErrorMessage from './components/FormErrorMessage'
 import { IconTextButton } from './components/IconTextButton'
 import { UnderlineTextButton } from './components/UnderlineTextButton'
 
@@ -19,11 +23,6 @@ const StyledCheckbox = styled(Checkbox)`
   margin-left: 4px;
 `
 
-const StyledAlert = styled(Alert)`
-  margin-bottom: 24px;
-  white-space: pre-line;
-`
-
 const Container = styled('div')`
   margin-bottom: 24px;
 `
@@ -31,22 +30,11 @@ const Container = styled('div')`
 type CardSelfServiceFormProps = {
   card: Card
   updateCard: (card: Partial<Card>) => void
-  dataPrivacyAccepted: boolean
-  setDataPrivacyAccepted: (value: boolean) => void
+  dataPrivacyAccepted: DataPrivacyAcceptingStatus
+  setDataPrivacyAccepted: (status: DataPrivacyAcceptingStatus) => void
   generateCards: () => Promise<void>
 }
 
-const getTooltipMessage = (cardsValid: boolean, dataPrivacyAccepted: boolean): string => {
-  const tooltipMessages: string[] = []
-  if (!cardsValid) {
-    tooltipMessages.push('Mindestens eine Ihrer Angaben ist ungültig.')
-  }
-  if (!dataPrivacyAccepted) {
-    tooltipMessages.push('Bitte akzeptieren Sie die Datenschutzerklärung.')
-  }
-
-  return tooltipMessages.join('\n')
-}
 const CardSelfServiceForm = ({
   card,
   updateCard,
@@ -59,7 +47,24 @@ const CardSelfServiceForm = ({
   const [openDataPrivacy, setOpenDataPrivacy] = useState<boolean>(false)
   const [openReferenceInformation, setOpenReferenceInformation] = useState<boolean>(false)
   const cardValid = isValid(card, { expirationDateNullable: true })
-  const cardCreationDisabled = !cardValid || !dataPrivacyAccepted
+  const appToaster = useAppToaster()
+
+  const createKoblenzPass = async () => {
+    if (cardValid && dataPrivacyAccepted === DataPrivacyAcceptingStatus.accepted) {
+      await generateCards()
+      return
+    }
+    if (dataPrivacyAccepted === DataPrivacyAcceptingStatus.untouched) {
+      setDataPrivacyAccepted(DataPrivacyAcceptingStatus.denied)
+    }
+    appToaster?.show({
+      message: (
+        <FormErrorMessage style={{ color: 'white' }} errorMessage='Mindestens eine Ihrer Angaben ist ungültig.' />
+      ),
+      timeout: 0,
+      intent: 'danger',
+    })
+  }
 
   return (
     <>
@@ -78,25 +83,32 @@ const CardSelfServiceForm = ({
             }
             intent={isFullNameValid(card) ? undefined : Intent.DANGER}
             value={card.fullName}
-            onChange={event => updateCard({ fullName: event.target.value })}
+            onChange={event => updateCard({ fullName: removeMultipleSpaces(event.target.value) })}
           />
+          <FormErrorMessage errorMessage={getFullNameValidationErrorMessage(card.fullName)} />
         </FormGroup>
         <ExtensionForms card={card} updateCard={updateCard} />
         <IconTextButton onClick={() => setOpenReferenceInformation(true)}>
           <InfoOutlined />
           Wo finde ich das Aktenzeichen?
         </IconTextButton>
-        <StyledCheckbox checked={dataPrivacyAccepted} onChange={() => setDataPrivacyAccepted(!dataPrivacyAccepted)}>
+        <StyledCheckbox
+          checked={dataPrivacyAccepted === DataPrivacyAcceptingStatus.accepted}
+          onChange={() =>
+            setDataPrivacyAccepted(
+              dataPrivacyAccepted === DataPrivacyAcceptingStatus.accepted
+                ? DataPrivacyAcceptingStatus.denied
+                : DataPrivacyAcceptingStatus.accepted
+            )
+          }>
           Ich akzeptiere die{' '}
           <UnderlineTextButton onClick={() => setOpenDataPrivacy(true)}>Datenschutzerklärung</UnderlineTextButton>.
         </StyledCheckbox>
+        {dataPrivacyAccepted === DataPrivacyAcceptingStatus.denied && (
+          <FormErrorMessage errorMessage='Bitte akzeptieren sie die Datenschutzerklärung' />
+        )}
       </Container>
-      {cardCreationDisabled && (
-        <StyledAlert variant='outlined' severity='warning'>
-          {getTooltipMessage(cardValid, dataPrivacyAccepted)}
-        </StyledAlert>
-      )}
-      <ActionButton onClick={generateCards} variant='contained' disabled={cardCreationDisabled} size='large'>
+      <ActionButton onClick={createKoblenzPass} variant='contained' size='large'>
         KoblenzPass erstellen
       </ActionButton>
       <BasicDialog
