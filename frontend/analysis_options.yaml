@@ -3,7 +3,7 @@ include: package:lints/recommended.yaml
 analyzer:
   exclude:
     - build/**
-    - lib/graphql/graphql_api*.dart
+    - lib/graphql_gen/**
     - lib/build_config/build_config.dart
     - lib/proto/*.dart
     - pubs/**
