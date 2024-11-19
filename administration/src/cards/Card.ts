@@ -73,7 +73,6 @@ const hasValidNameLength = (fullName: string): boolean => {
   return fullName.length > 0 && encodedName.length <= MAX_ENCODED_NAME_LENGTH && fullName.length <= MAX_NAME_LENGTH
 }
 
-
 const hasNameAndForename = (fullName: string): boolean => {
   const names = removeMultipleSpaces(fullName).trim().split(' ')
   return names.length > 1 && names.every(name => name.length > 1)
