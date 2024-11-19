@@ -14,7 +14,8 @@ class _ExtendCardNotificationState extends State<ExtendCardNotification> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context).colorScheme;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     final t = context.t;
 
     return _isVisible
@@ -23,29 +24,32 @@ class _ExtendCardNotificationState extends State<ExtendCardNotification> {
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: theme.primary.withOpacity(0.1),
+                color: colorScheme.primary.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.info, color: theme.primary),
+                  Icon(Icons.info, color: colorScheme.primary),
                   SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(t.identification.extendCardNotificationTitle),
+                        Text(
+                          t.identification.extendCardNotificationTitle,
+                          style: textTheme.bodyLarge,
+                        ),
                         SizedBox(height: 8),
                         Text(
                           t.identification.extendCardNotificationDescription,
-                          textScaler: TextScaler.linear(0.9),
+                          style: textTheme.bodyMedium,
                         ),
                         SizedBox(height: 8),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: theme.primary,
-                            foregroundColor: theme.inversePrimary,
+                            backgroundColor: colorScheme.primary,
+                            foregroundColor: colorScheme.inversePrimary,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(4),
                             ),
@@ -69,7 +73,7 @@ class _ExtendCardNotificationState extends State<ExtendCardNotification> {
               ),
             ),
           )
-        : SizedBox.shrink();
+        : Container();
   }
 
   void _openApplication() {
