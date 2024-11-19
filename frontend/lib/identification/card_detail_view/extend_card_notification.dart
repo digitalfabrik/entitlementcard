@@ -46,14 +46,15 @@ class _ExtendCardNotificationState extends State<ExtendCardNotification> {
                           style: textTheme.bodyMedium,
                         ),
                         SizedBox(height: 8),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: colorScheme.primary,
-                            foregroundColor: colorScheme.inversePrimary,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
+                        FilledButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateColor.resolveWith((states) => colorScheme.primary),
+                              elevation: MaterialStateProperty.resolveWith<double>(
+                                (states) => states.contains(MaterialState.pressed) ? 8 : 2,
+                              ),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4),
+                              ))),
                           onPressed: () => _openApplication(),
                           child: Text(t.identification.extendCard.toUpperCase()),
                         ),
