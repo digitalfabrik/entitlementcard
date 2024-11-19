@@ -5,12 +5,12 @@ import { CardExtensions, CardInfo } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
 import { CardConfig } from '../project-configs/getProjectConfig'
 import PlainDate from '../util/PlainDate'
-import { containsOnlyLatinAndCommonCharset, containsSpecialCharacters, removeMultipleSpaces } from '../util/helper'
+import { containsOnlyLatinAndCommonCharset, containsSpecialCharacters } from '../util/helper'
 import { REGION_EXTENSION_NAME } from './extensions/RegionExtension'
 import Extensions, { Extension, ExtensionKey, ExtensionState, InferExtensionStateType } from './extensions/extensions'
 
 // Due to limited space on the cards
-export const MAX_NAME_LENGTH = 30
+export const MAX_NAME_LENGTH = 40
 // Due to limited space on the qr code
 const MAX_ENCODED_NAME_LENGTH = 50
 
@@ -67,13 +67,17 @@ export const getExtensions = ({ extensions }: Card): ExtensionWithState[] => {
 
 export const hasInfiniteLifetime = (card: Card): boolean =>
   getExtensions(card).some(({ extension, state }) => extension.causesInfiniteLifetime(state))
+
+const containsNameSpecialCharacters = (fullName: string): boolean =>
+  /[`!@#$%^&*()_+\-=\]{};':"\\|,.<>?~0123456789]/.test(fullName)
+
 const hasValidNameLength = (fullName: string): boolean => {
   const encodedName = new TextEncoder().encode(fullName)
   return fullName.length > 0 && encodedName.length <= MAX_ENCODED_NAME_LENGTH && fullName.length <= MAX_NAME_LENGTH
 }
 
 const hasNameAndForename = (fullName: string): boolean => {
-  const names = removeMultipleSpaces(fullName).trim().split(' ')
+  const names = fullName.trim().split(' ')
   return names.length > 1 && names.every(name => name.length > 1)
 }
 
@@ -81,7 +85,7 @@ export const isFullNameValid = ({ fullName }: Card): boolean =>
   hasValidNameLength(fullName) &&
   hasNameAndForename(fullName) &&
   containsOnlyLatinAndCommonCharset(fullName) &&
-  !containsSpecialCharacters(fullName)
+  !containsNameSpecialCharacters(fullName)
 
 export const isExpirationDateValid = (card: Card, { nullable } = { nullable: false }): boolean => {
   const today = PlainDate.fromLocalDate(new Date())
@@ -194,7 +198,7 @@ export const updateCard = (oldCard: Card, updatedCard: Partial<Card>): Card => (
   },
 })
 
-export const getFullNameValidationErrorMessage = (name: string): string | null => {
+export const getFullNameValidationErrorMessage = (name: string): string => {
   const errors: string[] = []
   if (!containsOnlyLatinAndCommonCharset(name) || containsSpecialCharacters(name)) {
     errors.push('Der Name darf keine Sonderzeichen oder Zahlen enthalten.')

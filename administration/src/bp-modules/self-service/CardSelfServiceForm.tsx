@@ -50,20 +50,20 @@ const CardSelfServiceForm = ({
   const appToaster = useAppToaster()
 
   const createKoblenzPass = async () => {
-    if (cardValid && dataPrivacyAccepted === DataPrivacyAcceptingStatus.accepted) {
-      await generateCards()
-      return
-    }
     if (dataPrivacyAccepted === DataPrivacyAcceptingStatus.untouched) {
       setDataPrivacyAccepted(DataPrivacyAcceptingStatus.denied)
     }
-    appToaster?.show({
-      message: (
-        <FormErrorMessage style={{ color: 'white' }} errorMessage='Mindestens eine Ihrer Angaben ist ungültig.' />
-      ),
-      timeout: 0,
-      intent: 'danger',
-    })
+    if (!cardValid || dataPrivacyAccepted !== DataPrivacyAcceptingStatus.accepted) {
+      appToaster?.show({
+        message: (
+          <FormErrorMessage style={{ color: 'white' }} errorMessage='Mindestens eine Ihrer Angaben ist ungültig.' />
+        ),
+        timeout: 0,
+        intent: 'danger',
+      })
+      return
+    }
+    await generateCards()
   }
 
   return (
