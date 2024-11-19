@@ -1,5 +1,6 @@
 import { Colors, Icon, Tag } from '@blueprintjs/core'
 import React, { memo, useContext } from 'react'
+import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import { AuthContext } from '../../AuthProvider'
@@ -29,6 +30,7 @@ const JsonFieldAttachment = memo(
   ({ jsonField, baseUrl, attachmentAccessible }: JsonFieldViewProps<JsonField<'Attachment'>>) => {
     const appToaster = useAppToaster()
     const token = useContext(AuthContext).data?.token
+    const { t } = useTranslation('application')
 
     const attachment = jsonField.value
     if (attachmentAccessible) {
@@ -62,7 +64,7 @@ const JsonFieldAttachment = memo(
       }
       return (
         <p>
-          {jsonField.translations.de}:&nbsp;
+          {t(jsonField.name)}:&nbsp;
           <PrintAwareTag
             round
             rightIcon={<Icon icon='download' color={Colors.GRAY1} />}
@@ -75,7 +77,7 @@ const JsonFieldAttachment = memo(
     }
     return (
       <p>
-        {jsonField.translations.de}:&nbsp;
+        {t(jsonField.name)}:&nbsp;
         <span>eingereicht, nicht sichtbar</span>
       </p>
     )
@@ -84,31 +86,35 @@ const JsonFieldAttachment = memo(
 
 const JsonFieldElemental = ({
   jsonField,
+  parentName,
   ...rest
 }: JsonFieldViewProps<Exclude<GeneralJsonField, JsonField<'Array'>>>) => {
+  const { t } = useTranslation('application')
+  const getTranslationKey = () => (parentName ? `${parentName}.${jsonField.name}` : jsonField.name)
+
   switch (jsonField.type) {
     case 'String':
       return (
         <p>
-          {jsonField.translations.de}: {jsonField.value}
+          {t(getTranslationKey())}: {jsonField.value}
         </p>
       )
     case 'Date':
       return (
         <p>
-          {jsonField.translations.de}: {new Date(jsonField.value).toLocaleDateString('de')}
+          {t(getTranslationKey())}: {new Date(jsonField.value).toLocaleDateString('de')}
         </p>
       )
     case 'Number':
       return (
         <p>
-          {jsonField.translations.de}: {jsonField.value}
+          {t(getTranslationKey())}: {jsonField.value}
         </p>
       )
     case 'Boolean':
       return (
         <p>
-          {jsonField.translations.de}:&nbsp;
+          {t(getTranslationKey())}:&nbsp;
           {jsonField.value ? (
             <>
               <Icon icon='tick' intent='success' /> Ja

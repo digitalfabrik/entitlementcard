@@ -16,15 +16,14 @@ data class Address(
     override fun toJsonField(): JsonField {
         return JsonField(
             "address",
-            mapOf("de" to "Adresse"),
             Type.Array,
             listOfNotNull(
-                street.toJsonField("street", mapOf("de" to "Straße")),
-                houseNumber.toJsonField("houseNumber", mapOf("de" to "Hausnummer")),
-                addressSupplement?.toJsonField("addressSupplement", mapOf("de" to "Adresszusatz")),
-                postalCode.toJsonField("postalCode", mapOf("de" to "Postleitzahl")),
-                location.toJsonField("location", mapOf("de" to "Ort")),
-                country.toJsonField("country", mapOf("de" to "Land"))
+                street.toJsonField("street"),
+                houseNumber.toJsonField("houseNumber"),
+                addressSupplement?.toJsonField("addressSupplement"),
+                postalCode.toJsonField("postalCode"),
+                location.toJsonField("location"),
+                country.toJsonField("country")
             )
         )
     }

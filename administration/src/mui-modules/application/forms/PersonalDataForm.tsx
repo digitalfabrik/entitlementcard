@@ -1,5 +1,6 @@
 import { sub } from 'date-fns'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { PersonalDataInput, Region } from '../../../generated/graphql'
 import CustomDivider from '../CustomDivider'
@@ -41,52 +42,55 @@ const PersonalDataForm: Form<State, ValidatedInput, AdditionalProps, Options> = 
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: (state, options) =>
     createCompoundValidate(SubForms, { dateOfBirth: dateOfBirthOptions, region: options })(state),
-  Component: ({ state, setState, options }: FormComponentProps<State, AdditionalProps, Options>) => (
-    <>
-      <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
-        <div style={{ flex: '1', minWidth: '200px' }}>
-          <SubForms.forenames.Component
-            state={state.forenames}
-            setState={useUpdateStateCallback(setState, 'forenames')}
-            label='Vorname(n)'
-          />
+  Component: ({ state, setState, options }: FormComponentProps<State, AdditionalProps, Options>) => {
+    const { t } = useTranslation('application')
+    return (
+      <>
+        <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+          <div style={{ flex: '1', minWidth: '200px' }}>
+            <SubForms.forenames.Component
+              state={state.forenames}
+              setState={useUpdateStateCallback(setState, 'forenames')}
+              label={t('forenames')}
+            />
+          </div>
+          <div style={{ flex: '1', minWidth: '200px' }}>
+            <SubForms.surname.Component
+              state={state.surname}
+              setState={useUpdateStateCallback(setState, 'surname')}
+              label={t('surname')}
+            />
+          </div>
         </div>
-        <div style={{ flex: '1', minWidth: '200px' }}>
-          <SubForms.surname.Component
-            state={state.surname}
-            setState={useUpdateStateCallback(setState, 'surname')}
-            label='Nachname'
-          />
-        </div>
-      </div>
-      <CustomDivider label='Adresse (Erstwohnsitz)' />
-      <SubForms.address.Component state={state.address} setState={useUpdateStateCallback(setState, 'address')} />
-      <CustomDivider label='Weitere Angaben' />
-      <SubForms.emailAddress.Component
-        state={state.emailAddress}
-        setState={useUpdateStateCallback(setState, 'emailAddress')}
-        label='E-Mail-Adresse'
-      />
-      <SubForms.telephone.Component
-        state={state.telephone}
-        setState={useUpdateStateCallback(setState, 'telephone')}
-        label='Telefon'
-      />
-      <SubForms.dateOfBirth.Component
-        state={state.dateOfBirth}
-        setState={useUpdateStateCallback(setState, 'dateOfBirth')}
-        label='Geburtsdatum'
-        options={dateOfBirthOptions}
-      />
-      <CustomDivider label='Zuständige Behörde' />
-      <SubForms.region.Component
-        state={state.region}
-        setState={useUpdateStateCallback(setState, 'region')}
-        postalCode={state.address.postalCode.shortText}
-        options={{ regions: options.regions }}
-      />
-    </>
-  ),
+        <CustomDivider label='Adresse (Erstwohnsitz)' />
+        <SubForms.address.Component state={state.address} setState={useUpdateStateCallback(setState, 'address')} />
+        <CustomDivider label='Weitere Angaben' />
+        <SubForms.emailAddress.Component
+          state={state.emailAddress}
+          setState={useUpdateStateCallback(setState, 'emailAddress')}
+          label={t('emailAddress')}
+        />
+        <SubForms.telephone.Component
+          state={state.telephone}
+          setState={useUpdateStateCallback(setState, 'telephone')}
+          label={t('telephone')}
+        />
+        <SubForms.dateOfBirth.Component
+          state={state.dateOfBirth}
+          setState={useUpdateStateCallback(setState, 'dateOfBirth')}
+          label={t('dateOfBirth')}
+          options={dateOfBirthOptions}
+        />
+        <CustomDivider label={t('region')} />
+        <SubForms.region.Component
+          state={state.region}
+          setState={useUpdateStateCallback(setState, 'region')}
+          postalCode={state.address.postalCode.shortText}
+          options={{ regions: options.regions }}
+        />
+      </>
+    )
+  },
 }
 
 export default PersonalDataForm

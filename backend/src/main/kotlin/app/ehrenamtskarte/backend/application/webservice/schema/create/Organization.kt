@@ -16,12 +16,11 @@ data class Organization(
     override fun toJsonField(): JsonField {
         return JsonField(
             "organization",
-            mapOf("de" to "Angaben zur Organisation"),
             Type.Array,
             listOfNotNull(
-                name.toJsonField("name", mapOf("de" to "Name")),
+                name.toJsonField("name"),
                 address.toJsonField(),
-                category.toJsonField("category", mapOf("de" to "Einsatzgebiet")),
+                category.toJsonField("category"),
                 contact.toJsonField()
             )
         )

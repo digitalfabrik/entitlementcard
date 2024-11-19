@@ -17,7 +17,7 @@ data class ShortTextInput(val shortText: String) {
         }
     }
 
-    fun toJsonField(fieldName: String, translations: Map<String, String>): JsonField {
-        return JsonField(fieldName, translations, Type.String, shortText)
+    fun toJsonField(fieldName: String): JsonField {
+        return JsonField(fieldName, Type.String, shortText)
     }
 }

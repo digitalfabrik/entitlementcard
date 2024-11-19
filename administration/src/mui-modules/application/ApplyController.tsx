@@ -5,6 +5,7 @@ import '@fontsource/roboto/700.css'
 import { CircularProgress, DialogActions, Typography } from '@mui/material'
 import { SnackbarProvider, useSnackbar } from 'notistack'
 import React, { ReactElement, useCallback, useContext, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
@@ -31,6 +32,7 @@ const SuccessContent = styled.div`
 `
 
 const ApplyController = (): React.ReactElement | null => {
+  const { t } = useTranslation('application')
   const [formSubmitted, setFormSubmitted] = useState<boolean>(false)
   const { enqueueSnackbar } = useSnackbar()
   const { status, state, setState } = useVersionedLocallyStoredState(
@@ -98,7 +100,7 @@ const ApplyController = (): React.ReactElement | null => {
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', margin: '16px' }}>
       <div style={{ maxWidth: '1000px', width: '100%' }}>
         <Typography variant='h4' component='h1' style={{ textAlign: 'center', margin: '16px' }}>
-          {formSubmitted ? 'Erfolgreich gesendet' : 'Bayerische Ehrenamtskarte beantragen'}
+          {formSubmitted ? t('sentSuccessfully') : t('title')}
         </Typography>
         {formSubmitted ? (
           <SuccessContent>
