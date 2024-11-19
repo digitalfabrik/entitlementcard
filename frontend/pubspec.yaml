@@ -74,15 +74,12 @@ dev_dependencies:
     path: ./pubs/df_build_config
   flutter_test:
     sdk: flutter
-  json_serializable: ^6.3.1
   lints: ^4.0.0
   test: '>=1.0.0'
   mocktail: ^1.0.4
 
-  # graphQL type generation
-  artemis: '>=6.0.0' # only if you're using ArtemisClient!
-  json_annotation: ^4.7.0
-  gql: '>=0.12.3 <1.0.0'
+  graphql_codegen: ^1.1.0
+  gql: ^1.0.0+1
 
 
 # For information on the generic Dart part of this file, see the

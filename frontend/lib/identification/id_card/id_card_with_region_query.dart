@@ -1,5 +1,5 @@
 import 'package:ehrenamtskarte/configuration/configuration.dart';
-import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
+import 'package:ehrenamtskarte/graphql_gen/graphql_queries/regions/get_regions_by_id.graphql.dart';
 import 'package:ehrenamtskarte/identification/id_card/id_card.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,23 +23,18 @@ class IdCardWithRegionQuery extends StatelessWidget {
       return IdCard(cardInfo: cardInfo, region: null, isExpired: isExpired, isNotYetValid: isNotYetValid);
     }
 
-    final regionsQuery = GetRegionsByIdQuery(
-      variables: GetRegionsByIdArguments(
-        project: projectId,
-        ids: [regionId],
-      ),
-    );
-    return Query(
-        options: QueryOptions(
-            document: regionsQuery.document,
-            variables: regionsQuery.getVariablesMap(),
-            fetchPolicy: FetchPolicy.cacheFirst),
+    return Query$getRegionsById$Widget(
+        options: Options$Query$getRegionsById(
+          fetchPolicy: FetchPolicy.cacheFirst,
+          variables: Variables$Query$getRegionsById(
+            project: projectId,
+            ids: [regionId],
+          ),
+        ),
         builder: (result, {refetch, fetchMore}) {
-          final fetchedData = result.data;
+          final fetchedData = result.parsedData;
 
-          final region = result.isLoading || result.hasException || fetchedData == null
-              ? null
-              : regionsQuery.parse(fetchedData).regionsByIdInProject[0];
+          final region = result.isLoading || result.hasException || fetchedData == null ? null : fetchedData.regions[0];
           return IdCard(
               cardInfo: cardInfo,
               region: region != null ? Region(region.prefix, region.name) : null,
