@@ -1,5 +1,5 @@
 import { FormGroup } from '@blueprintjs/core'
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useState } from 'react'
 
 import CustomDatePicker from '../../bp-modules/components/CustomDatePicker'
 import FormErrorMessage from '../../bp-modules/self-service/components/FormErrorMessage'
@@ -12,8 +12,15 @@ export type BirthdayExtensionState = { [BIRTHDAY_EXTENSION_NAME]: PlainDate | nu
 const minBirthday = new PlainDate(1900, 1, 1)
 const getInitialState = (): BirthdayExtensionState => ({ birthday: null })
 
-const BirthdayForm = ({ value, setValue, isValid }: ExtensionComponentProps<BirthdayExtensionState>): ReactElement => {
+const BirthdayForm = ({
+  value,
+  setValue,
+  isValid,
+  showRequired,
+}: ExtensionComponentProps<BirthdayExtensionState>): ReactElement => {
+  const [touched, setTouched] = useState(false)
   const { birthday } = value
+  const showErrorMessage = touched || showRequired
   const getErrorMessage = (): string | null => {
     if (!birthday) {
       return 'Bitte geben Sie ein gültiges Geburtsdatum an.'
@@ -24,20 +31,22 @@ const BirthdayForm = ({ value, setValue, isValid }: ExtensionComponentProps<Birt
     return null
   }
 
-  const changeBirthday = (date: Date | null) =>
+  const changeBirthday = (date: Date | null) => {
     setValue({ birthday: PlainDate.safeFromCustomFormat(date?.toLocaleDateString() ?? null) })
+  }
 
   return (
     <FormGroup label='Geburtsdatum'>
       <CustomDatePicker
         date={birthday?.toLocalDate() ?? null}
+        onBlur={() => setTouched(true)}
         onChange={changeBirthday}
         onClear={() => setValue({ birthday: null })}
-        isValid={isValid}
+        isValid={isValid || !showErrorMessage}
         maxDate={new Date()}
         disableFuture
       />
-      <FormErrorMessage errorMessage={getErrorMessage()} />
+      {showErrorMessage && <FormErrorMessage errorMessage={getErrorMessage()} />}
     </FormGroup>
   )
 }

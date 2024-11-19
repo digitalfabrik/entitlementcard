@@ -1,5 +1,5 @@
 import { FormGroup, InputGroup, Intent } from '@blueprintjs/core'
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useState } from 'react'
 
 import FormErrorMessage from '../../bp-modules/self-service/components/FormErrorMessage'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
@@ -20,38 +20,43 @@ const KoblenzReferenceNumberExtensionForm = ({
   value,
   setValue,
   isValid,
+  showRequired,
 }: ExtensionComponentProps<KoblenzReferenceNumberExtensionState>): ReactElement => {
+  const [touched, setTouched] = useState(false)
   const { viewportSmall } = useWindowDimensions()
+  const { koblenzReferenceNumber } = value
+  const showErrorMessage = touched || showRequired
   const clearInput = () => setValue({ koblenzReferenceNumber: '' })
 
   const getErrorMessage = (): string | null => {
+    const errors: string[] = []
     if (hasSpecialChars(value.koblenzReferenceNumber)) {
-      return 'Das Aktenzeichen enthält ungültige Sonderzeichen.'
+      errors.push('Das Aktenzeichen enthält ungültige Sonderzeichen.')
     }
     if (hasInvalidLength(value.koblenzReferenceNumber.length)) {
-      return `Das Aktenzeichen muss eine Länge zwischen ${KoblenzReferenceNumberMinLength} und ${KoblenzReferenceNumberMaxLength} haben.`
+      errors.push(
+        `Das Aktenzeichen muss eine Länge zwischen ${KoblenzReferenceNumberMinLength} und ${KoblenzReferenceNumberMaxLength} haben.`
+      )
     }
-    return null
+    return errors.join(' ')
   }
 
   return (
-    <FormGroup
-      label='Aktenzeichen'
-      labelFor='koblenz-reference-number-input'
-      intent={isValid ? undefined : Intent.DANGER}>
+    <FormGroup label='Aktenzeichen' labelFor='koblenz-reference-number-input'>
       <InputGroup
         fill
         large={viewportSmall}
         id='koblenz-reference-number-input'
         placeholder='5.012.067.281, 000D000001, 99478'
-        intent={isValid ? undefined : Intent.DANGER}
-        value={value.koblenzReferenceNumber}
+        intent={isValid || !showErrorMessage ? undefined : Intent.DANGER}
+        onBlur={() => setTouched(true)}
+        value={koblenzReferenceNumber}
         rightElement={
-          <ClearInputButton viewportSmall={viewportSmall} onClick={clearInput} input={value.koblenzReferenceNumber} />
+          <ClearInputButton viewportSmall={viewportSmall} onClick={clearInput} input={koblenzReferenceNumber} />
         }
         onChange={event => setValue({ koblenzReferenceNumber: event.target.value })}
       />
-      <FormErrorMessage errorMessage={getErrorMessage()} />
+      {showErrorMessage && <FormErrorMessage errorMessage={getErrorMessage()} />}
     </FormGroup>
   )
 }

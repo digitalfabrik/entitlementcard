@@ -44,12 +44,16 @@ const CardSelfServiceForm = ({
 }: CardSelfServiceFormProps): ReactElement => {
   const { viewportSmall } = useWindowDimensions()
   const projectConfig = useContext(ProjectConfigContext)
+  const [formSendAttempt, setFormSendAttempt] = useState(false)
+  const [touchedFullName, setTouchedFullName] = useState(false)
   const [openDataPrivacy, setOpenDataPrivacy] = useState<boolean>(false)
   const [openReferenceInformation, setOpenReferenceInformation] = useState<boolean>(false)
   const cardValid = isValid(card, { expirationDateNullable: true })
   const appToaster = useAppToaster()
+  const showErrorMessage = touchedFullName || formSendAttempt
 
   const createKoblenzPass = async () => {
+    setFormSendAttempt(true)
     if (dataPrivacyAccepted === DataPrivacyAcceptingStatus.untouched) {
       setDataPrivacyAccepted(DataPrivacyAcceptingStatus.denied)
     }
@@ -81,13 +85,14 @@ const CardSelfServiceForm = ({
                 input={card.fullName}
               />
             }
-            intent={isFullNameValid(card) ? undefined : Intent.DANGER}
+            intent={isFullNameValid(card) || !showErrorMessage ? undefined : Intent.DANGER}
             value={card.fullName}
+            onBlur={() => setTouchedFullName(true)}
             onChange={event => updateCard({ fullName: removeMultipleSpaces(event.target.value) })}
           />
-          <FormErrorMessage errorMessage={getFullNameValidationErrorMessage(card.fullName)} />
+          {showErrorMessage && <FormErrorMessage errorMessage={getFullNameValidationErrorMessage(card.fullName)} />}
         </FormGroup>
-        <ExtensionForms card={card} updateCard={updateCard} />
+        <ExtensionForms card={card} updateCard={updateCard} showRequired={formSendAttempt} />
         <IconTextButton onClick={() => setOpenReferenceInformation(true)}>
           <InfoOutlined />
           Wo finde ich das Aktenzeichen?

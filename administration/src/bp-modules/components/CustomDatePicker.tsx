@@ -6,6 +6,7 @@ import useWindowDimensions from '../../hooks/useWindowDimensions'
 
 type CustomDatePickerProps = {
   date: Date | null
+  onBlur: () => void
   onChange: (date: Date | null) => void
   onClear: () => void
   isValid: boolean
@@ -16,6 +17,7 @@ type CustomDatePickerProps = {
 
 const CustomDatePicker = ({
   date,
+  onBlur,
   onChange,
   onClear,
   isValid,
@@ -40,6 +42,7 @@ const CustomDatePicker = ({
           placeholder: 'TT.MM.JJJJ',
           error: !isValid,
           spellCheck: false,
+          onBlur,
           sx: {
             width: '100%',
             input: formStyle,
