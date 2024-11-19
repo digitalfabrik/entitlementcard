@@ -10,7 +10,7 @@ import { REGION_EXTENSION_NAME } from './extensions/RegionExtension'
 import Extensions, { Extension, ExtensionKey, ExtensionState, InferExtensionStateType } from './extensions/extensions'
 
 // Due to limited space on the cards
-const MAX_NAME_LENGTH = 30
+export const MAX_NAME_LENGTH = 30
 // Due to limited space on the qr code
 const MAX_ENCODED_NAME_LENGTH = 50
 
@@ -67,7 +67,6 @@ export const getExtensions = ({ extensions }: Card): ExtensionWithState[] => {
 
 export const hasInfiniteLifetime = (card: Card): boolean =>
   getExtensions(card).some(({ extension, state }) => extension.causesInfiniteLifetime(state))
-
 
 const hasValidNameLength = (fullName: string): boolean => {
   const encodedName = new TextEncoder().encode(fullName)
@@ -198,11 +197,14 @@ export const updateCard = (oldCard: Card, updatedCard: Partial<Card>): Card => (
 
 export const getFullNameValidationErrorMessage = (name: string): string => {
   const errors: string[] = []
+  if (!name) {
+    return 'Bitte geben Sie einen gültigen Namen an.'
+  }
   if (!containsOnlyLatinAndCommonCharset(name) || containsSpecialCharacters(name)) {
     errors.push('Der Name darf keine Sonderzeichen oder Zahlen enthalten.')
   }
   if (!hasNameAndForename(name)) {
-    errors.push('Bitte geben Sie Ihren vollständigen Namen ein.')
+    errors.push('Bitte geben Sie einen vollständigen Namen ein.')
   }
   if (!hasValidNameLength(name)) {
     errors.push(`Der Name darf nicht länger als ${MAX_NAME_LENGTH} Zeichen sein`)
