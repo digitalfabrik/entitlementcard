@@ -30,7 +30,6 @@
     "graphql": "^16.8.1",
     "i18next": "^23.16.4",
     "localforage": "^1.10.0",
-    "normalize-strings": "^1.1.1",
     "normalize.css": "^8.0.1",
     "notistack": "^3.0.1",
     "pdf-lib": "^1.17.1",

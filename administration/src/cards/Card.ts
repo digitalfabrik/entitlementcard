@@ -5,7 +5,7 @@ import { CardExtensions, CardInfo } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
 import { CardConfig } from '../project-configs/getProjectConfig'
 import PlainDate from '../util/PlainDate'
-import { containsOnlyLatinAndCommonCharset, containsSpecialCharacters, removeMultipleSpaces } from '../util/helper'
+import { containsOnlyLatinAndCommonCharset, containsSpecialCharacters } from '../util/helper'
 import { REGION_EXTENSION_NAME } from './extensions/RegionExtension'
 import Extensions, { Extension, ExtensionKey, ExtensionState, InferExtensionStateType } from './extensions/extensions'
 
@@ -82,7 +82,10 @@ const hasNameAndForename = (fullName: string): boolean => {
 }
 
 export const isFullNameValid = ({ fullName }: Card): boolean =>
-  hasValidNameLength(fullName) && hasNameAndForename(fullName) && containsOnlyLatinAndCommonCharset(fullName) && !containsNameSpecialCharacters(fullName)
+  hasValidNameLength(fullName) &&
+  hasNameAndForename(fullName) &&
+  containsOnlyLatinAndCommonCharset(fullName) &&
+  !containsNameSpecialCharacters(fullName)
 
 export const isExpirationDateValid = (card: Card, { nullable } = { nullable: false }): boolean => {
   const today = PlainDate.fromLocalDate(new Date())
