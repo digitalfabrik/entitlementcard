@@ -5,7 +5,6 @@ import JsonFieldElemental from './JsonFieldElemental'
 
 export type JsonField<T extends keyof JsonFieldValueByType> = {
   name: string
-  translations: { de: string }
   type: T
   value: JsonFieldValueByType[T]
 }
@@ -35,6 +34,7 @@ export const findValue = <T extends keyof JsonFieldValueByType>(
 
 export type JsonFieldViewProps<JsonFieldType extends GeneralJsonField> = {
   jsonField: JsonFieldType
+  parentName?: string
   hierarchyIndex: number
   baseUrl: string
   attachmentAccessible: boolean

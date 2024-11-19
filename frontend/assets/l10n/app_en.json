@@ -13,7 +13,7 @@
     "moreInformation": "More information",
     "numberLicenses": {
       "one": "1 license",
-      "other": "$n licenses",
+      "other": "{{n}} licenses",
       "zero": "No licenses"
     },
     "privacyPolicy": "Privacy policy",

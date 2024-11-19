@@ -1,13 +1,18 @@
 import { Spinner } from '@blueprintjs/core'
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import React, { ReactElement, useContext, useState } from 'react'
 import styled from 'styled-components'
 
 import KoblenzLogo from '../../assets/koblenz_logo.svg'
 import { updateCard } from '../../cards/Card'
+import BasicDialog from '../../mui-modules/application/BasicDialog'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import CardSelfServiceActivation from './CardSelfServiceActivation'
 import CardSelfServiceForm from './CardSelfServiceForm'
 import CardSelfServiceInformation from './CardSelfServiceInformation'
+import { ActionButton } from './components/ActionButton'
+import { IconTextButton } from './components/IconTextButton'
+import { InfoText } from './components/InfoText'
 import selfServiceStepInfo from './constants/selfServiceStepInfo'
 import useCardGeneratorSelfService, { CardSelfServiceStep } from './hooks/useCardGeneratorSelfService'
 
@@ -70,6 +75,10 @@ const HeaderLogo = styled.img`
   height: 40px;
 `
 
+const StyledInfoTextButton = styled(IconTextButton)`
+  margin: 0;
+`
+
 export enum DataPrivacyAcceptingStatus {
   untouched,
   accepted,
@@ -93,6 +102,7 @@ const CardSelfServiceView = (): ReactElement => {
     code,
     downloadPdf,
   } = useCardGeneratorSelfService()
+  const [openHelpDialog, setOpenHelpDialog] = useState(false)
 
   const onDownloadPdf = async () => {
     if (code) {
@@ -112,6 +122,10 @@ const CardSelfServiceView = (): ReactElement => {
     <Container>
       <Header>
         <HeaderLogo src={KoblenzLogo} />
+        <StyledInfoTextButton onClick={() => setOpenHelpDialog(true)}>
+          Hilfe
+          <HelpOutlineOutlinedIcon />
+        </StyledInfoTextButton>
       </Header>
       <Body>
         <Step>{`Schritt ${selfServiceStepInfo[selfServiceState].stepNr}/${selfServiceStepInfo.length}`}</Step>
@@ -134,6 +148,21 @@ const CardSelfServiceView = (): ReactElement => {
           <CardSelfServiceActivation downloadPdf={onDownloadPdf} deepLink={deepLink} />
         )}
       </Body>
+      <BasicDialog
+        open={openHelpDialog}
+        maxWidth='lg'
+        onUpdateOpen={setOpenHelpDialog}
+        title='Hilfe'
+        content={
+          <>
+            <InfoText>
+              Sie haben ein Problem bei der Aktivierung oder dem Abrufen des KoblenzPass? <br />
+              Dann kontaktieren Sie uns bitte per E-Mail via koblenzpass@stadt.koblenz.de
+            </InfoText>
+            <ActionButton href='mailto:koblenzpass@stadt.koblenz.de'>E-Mail schreiben</ActionButton>
+          </>
+        }
+      />
     </Container>
   )
 }

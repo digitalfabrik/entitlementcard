@@ -4,18 +4,13 @@ parameters:
   buildConfig:
     description: "Name of the build config to use"
     type: enum
-    enum: ['bayern', 'bayern-floss', 'nuernberg']
-  flutterFlavor:
-    description: "Flutter Flavor to use"
-    type: enum
-    enum: ['Bayern', 'BayernFloss', 'Nuernberg']
+    enum: [bayern, bayernFloss, nuernberg, koblenz]
 steps:
   - checkout:
       path: ~/project
   - install_app_toolbelt
   - install_dart_mac
   - install_fvm
-  - install_protobuf_mac
   - prepare_workspace
   - restore_environment_variables
   # needed for circle ci mac m1 images
@@ -33,7 +28,7 @@ steps:
   - restore_pods
   - run:
       name: '[FL] Build'
-      command: bundle exec fastlane ios build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} flavor:<< parameters.flutterFlavor >> build_config_name:<< parameters.buildConfig >>
+      command: bundle exec fastlane ios build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} build_config_name:<< parameters.buildConfig >>
       working_directory: frontend/ios
   - store_artifacts:
       path: ~/<< parameters.buildConfig >>.ipa

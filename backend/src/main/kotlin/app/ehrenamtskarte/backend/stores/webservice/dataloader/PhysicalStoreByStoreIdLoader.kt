@@ -11,7 +11,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 val physicalStoreByStoreIdLoader = newNamedDataLoader<Int, _>("PHYSICAL_STORE_BY_STORE_ID_LOADER") { ids ->
     transaction {
         PhysicalStoreEntity.find { PhysicalStores.storeId inList ids }
-            .sortByKeys({ it.storeId }, ids)
+            .sortByKeys({ it.storeId.value }, ids)
             .map {
                 it?.let {
                     PhysicalStore(

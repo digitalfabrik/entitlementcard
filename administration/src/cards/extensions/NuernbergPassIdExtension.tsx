@@ -44,8 +44,10 @@ const NuernbergPassIdExtension: Extension<NuernbergPassIdExtensionState> = {
       passId: state.nuernbergPassId ?? undefined,
     },
   }),
-  isValid: ({ nuernbergPassId }) =>
-    nuernbergPassId !== null && nuernbergPassId > 0 && nuernbergPassId < 10 ** nuernbergPassIdLength,
+  isValid: state => {
+    const nuernbergPassId = state?.nuernbergPassId ?? null
+    return nuernbergPassId !== null && nuernbergPassId > 0 && nuernbergPassId < 10 ** nuernbergPassIdLength
+  },
   fromString: value => {
     const nuernbergPassId = parseInt(value, 10)
     return { nuernbergPassId: Number.isNaN(nuernbergPassId) ? null : nuernbergPassId }

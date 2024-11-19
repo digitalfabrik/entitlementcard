@@ -42,7 +42,7 @@ const KoblenzReferenceNumberExtensionForm = ({
   }
 
   return (
-    <FormGroup label='Referenznummer' labelFor='koblenz-reference-number-input'>
+    <FormGroup label='Aktenzeichen' labelFor='koblenz-reference-number-input'>
       <InputGroup
         fill
         large={viewportSmall}
@@ -71,9 +71,15 @@ const KoblenzReferenceNumberExtension: Extension<KoblenzReferenceNumberExtension
       referenceNumber: state.koblenzReferenceNumber,
     },
   }),
-  isValid: state =>
-    state.koblenzReferenceNumber.length >= KoblenzReferenceNumberMinLength &&
-    state.koblenzReferenceNumber.length <= KoblenzReferenceNumberMaxLength,
+  isValid: state => {
+    const koblenzReferenceNumber = state?.koblenzReferenceNumber ?? null
+    return (
+      koblenzReferenceNumber !== null &&
+      koblenzReferenceNumber.length >= KoblenzReferenceNumberMinLength &&
+      koblenzReferenceNumber.length <= KoblenzReferenceNumberMaxLength &&
+      !hasSpecialChars(koblenzReferenceNumber)
+    )
+  },
   fromString: value => ({ koblenzReferenceNumber: value }),
   toString: state => state.koblenzReferenceNumber,
 }

@@ -30,7 +30,10 @@ export const AddressLine1Extension = getAddressFieldExtension(ADDRESS_LINE_1_EXT
 export const AddressLine2Extension = getAddressFieldExtension(ADDRESS_LINE_2_EXTENSION)
 export const AddressPlzExtension: Extension<AddressFieldExtensionState<typeof ADDRESS_PLZ_EXTENSION>> = {
   ...getAddressFieldExtension(ADDRESS_PLZ_EXTENSION),
-  isValid: (state): boolean => state.addressPlz.length === 0 || /^\d{5}$/.test(state.addressPlz),
+  isValid: (state): boolean => {
+    const addressPlz = state?.addressPlz ?? ''
+    return addressPlz.length === 0 || /^\d{5}$/.test(addressPlz)
+  },
 }
 export const AddressLocationExtension = getAddressFieldExtension(ADDRESS_LOCATION_EXTENSION)
 
