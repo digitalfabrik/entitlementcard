@@ -13,7 +13,7 @@
     "moreInformation": "Mehr Informationen",
     "numberLicenses": {
       "one": "1 Lizenz",
-      "other": "$n Lizenzen",
+      "other": "{{n}} Lizenzen",
       "zero": "Keine Lizenzen"
     },
     "privacyPolicy": "Datenschutzerklärung",

@@ -10,6 +10,6 @@ data class UploadKey(
 )
 
 data class Attachment(val data: UploadKey) {
-    fun toJsonField(fieldName: String, translations: Map<String, String>) =
-        JsonField(fieldName, translations, Type.Attachment, AttachmentView.from(this))
+    fun toJsonField(fieldName: String) =
+        JsonField(fieldName, Type.Attachment, AttachmentView.from(this))
 }

@@ -16,16 +16,12 @@ type FormErrorMessageProps = {
   style?: CSSProperties
 }
 
-const FormErrorMessage = ({ errorMessage, style }: FormErrorMessageProps): ReactElement | null => {
-  if (!errorMessage) {
-    return null
-  }
-  return (
+const FormErrorMessage = ({ errorMessage, style }: FormErrorMessageProps): ReactElement | null =>
+  errorMessage ? (
     <Container style={style}>
       <InfoOutlined />
       {errorMessage}
     </Container>
-  )
-}
+  ) : null
 
 export default FormErrorMessage

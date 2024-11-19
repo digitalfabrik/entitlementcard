@@ -30,7 +30,7 @@ enum DeepLinkActivationStatus {
   factory DeepLinkActivationStatus.from(UserCodeModel userCodeModel, DynamicActivationCode? activationCode) {
     if (activationCode == null) {
       return DeepLinkActivationStatus.invalidLink;
-    } else if (isAlreadyInList(userCodeModel.userCodes, activationCode.info)) {
+    } else if (isAlreadyInList(userCodeModel.userCodes, activationCode.info, activationCode.pepper)) {
       return DeepLinkActivationStatus.alreadyExists;
     } else if (hasReachedCardLimit(userCodeModel.userCodes)) {
       return DeepLinkActivationStatus.limitReached;
@@ -111,6 +111,7 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
                                 });
                                 try {
                                   final activated = await activateCard(context, activationCode);
+                                  if (!context.mounted) return;
                                   if (activated) {
                                     GoRouter.of(context).pushReplacement('$homeRouteName/$identityTabIndex');
                                     setState(() {

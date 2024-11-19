@@ -57,7 +57,8 @@ const BavariaCardTypeExtension: Extension<BavariaCardTypeExtensionState> = {
         state.bavariaCardType === BAVARIA_CARD_TYPE_GOLD ? BavariaCardTypeEnum.GOLD : BavariaCardTypeEnum.STANDARD,
     },
   }),
-  isValid: () => true,
+  isValid: state =>
+    state?.bavariaCardType === BAVARIA_CARD_TYPE_STANDARD || state?.bavariaCardType === BAVARIA_CARD_TYPE_GOLD,
   fromString: (state: string) => {
     if (state === BAVARIA_CARD_TYPE_STANDARD || state === BAVARIA_CARD_TYPE_STANDARD_LEGACY) {
       return { bavariaCardType: BAVARIA_CARD_TYPE_STANDARD }

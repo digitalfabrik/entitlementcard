@@ -1,0 +1,75 @@
+{
+  "application": {
+    "personalData": "Persönliche Daten",
+    "forenames": "Vorname(n)",
+    "surname": "Nachname",
+    "address": "Adresse",
+    "street": "Straße",
+    "houseNumber": "Hausnummer",
+    "addressSupplement": "Adresszusatz",
+    "postalCode": "Postleitzahl",
+    "location": "Ort",
+    "country": "Land",
+    "dateOfBirth": "Geburtsdatum",
+    "emailAddress": "E-Mail-Adresse",
+    "telephone": "Telefonnummer",
+    "region": "Zuständige Behörde",
+    "applicationDetails": "Antragsdetails",
+    "cardType": "Antrag auf",
+    "applicationType": "Art des Antrags",
+    "wantsDigitalCard": "Ich beantrage eine digitale Ehrenamtskarte",
+    "wantsPhysicalCard": "Ich beantrage eine physische Ehrenamtskarte",
+    "blueCardJuleicaEntitlement": "Ich bin Inhaber:in einer JuLeiCa (Jugendleiter:in-Card)",
+    "juleicaNumber": "Kartennummer",
+    "juleicaExpiration": "Karte gültig bis",
+    "copyOfJuleicaFront": "Kopie der Karte (1)",
+    "copyOfJuleicaBack": "Kopie der Karte (2)",
+    "blueCardWorkAtOrganizationsEntitlement": "Ich engagiere mich ehrenamtlich seit mindestens zwei Jahren freiwillig mindestens fünf Stunden pro Woche oder bei Projektarbeiten mindestens 250 Stunden jährlich",
+    "workAtOrganization": "Arbeit bei Organisation oder Verein",
+    "organization": {
+      "title": "Angaben zur Organisation",
+      "name": "Name der Organisation bzw. des Vereins",
+      "category": "Einsatzgebiet"
+    },
+    "organizationContact": {
+      "title": "Kontaktperson der Organisation",
+      "name": "Vor- und Nachname der Kontaktperson in der Organisation",
+      "telephone": "Telefon",
+      "email": "E-Mail-Adresse",
+      "hasGivenPermission": "Die Kontaktperson hat der Weitergabe ihrer Daten zum Zwecke der Antragsverarbeitung zugestimmt und darf zur Überprüfung kontaktiert werden"
+    },
+    "responsibility": "Tätigkeit",
+    "amountOfWork": "Arbeitsstunden pro Woche (Durchschnitt)",
+    "workSinceDate": "Tätig seit",
+    "payment": "Für diese ehrenamtliche Tätigkeit wurde eine Aufwandsentschädigung gewährt, die über den jährlichen Freibetrag hinaus geht (840 Euro Ehrenamtspauschale bzw. 3000 Euro Übungsleiterpauschale):",
+    "certificate": "Tätigkeitsnachweis",
+    "hasAcceptedPrivacyPolicy": "Ich erkläre mich damit einverstanden, dass meine Daten zum Zwecke der Antragsverarbeitung gespeichert werden und akzeptiere die Datenschutzerklärung",
+    "hasAcceptedEmailUsage": "Ich stimme zu, dass ich von der lokalen Ehrenamtskoordination über Verlosungen und regionale Angebote informiert werden darf",
+    "givenInformationIsCorrectAndComplete": "Ich versichere, dass alle angegebenen Informationen korrekt und vollständig sind",
+    "title": "Bayerische Ehrenamtskarte beantragen",
+    "sentSuccessfully": "Erfolgreich gesendet",
+    "sentError": "Fehler beim Senden",
+    "blueCardEntitlementType": {
+      "WorkAtOrganizations": "Ich engagiere mich ehrenamtlich seit mindestens zwei Jahren freiwillig mindestens fünf Stunden pro Woche oder bei Projektarbeiten mindestens 250 Stunden jährlich.",
+      "Juleica": "Ich bin Inhaber:in einer JuLeiCa (Jugendleiter:in-Card).",
+      "WorkAtDepartment": "Ich bin aktiv in der Freiwilligen Feuerwehr mit abgeschlossener Truppmannausbildung bzw. abgeschlossenem Basis-Modul der Modularen Truppausbildung (MTA), oder im Katastrophenschutz oder im Rettungsdienst mit abgeschlossener Grundausbildung.",
+      "MilitaryReserve": "Ich habe in den vergangenen zwei Kalenderjahren als Reservist regelmäßig aktiven Wehrdienst in der Bundeswehr geleistet, indem ich insgesamt mindestens 40 Tage Reservisten-Dienstleistung erbracht habe oder ständige:r Angehörige:r eines Bezirks- oder Kreisverbindungskommandos war.",
+      "VolunteerService": "Ich leiste einen Freiwilligendienst ab in einem Freiwilligen Sozialen Jahr (FSJ), einem Freiwilligen Ökologischen Jahr (FÖJ) oder einem Bundesfreiwilligendienst (BFD)."
+    },
+    "goldenCardEntitlementType": {
+      "WorkAtOrganizations": "Ich bin seit mindestens 25 Jahren mindestens 5 Stunden pro Woche oder 250 Stunden pro Jahr bei einem Verein oder einer Organisation ehrenamtlich tätig.",
+      "HonoredByMinisterPresident": "Ich bin Inhaber:in des Ehrenzeichens für Verdienstete im Ehrenamt des Bayerischen Ministerpräsidenten.",
+      "WorkAtDepartment": "Ich bin Feuerwehrdienstleistende:r oder Einsatzkraft im Rettungsdienst oder in Einheiten des Katastrophenschutzes und habe eine Dienstzeitauszeichnung nach dem Feuerwehr- und Hilfsorganisationen-Ehrenzeichengesetz (FwHOEzG) erhalten.",
+      "MilitaryReserve": "Ich leiste als Reservist:in seit mindestens 25 Jahren regelmäßig aktiven Wehrdienst in der Bundeswehr, indem ich in dieser Zeit entweder insgesamt mindestens 500 Tage Reservisten-Dienstleistung erbracht habe oder in dieser Zeit ständige:r Angehörige:r eines Bezirks- oder Kreisverbindungskommandos war."
+    },
+    "volunteerServiceEntitlement": {
+      "title": "Freiwilligendienst",
+      "programName": "Name des Programms",
+      "certificate": "Tätigkeitsnachweis"
+    },
+    "honoredByMinisterPresidentEntitlement": {
+      "title": "Ehrenzeichen des Ministerpräsidenten",
+      "certificate": "Kopie der Urkunde"
+    }
+  }
+}

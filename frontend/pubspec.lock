@@ -272,13 +272,6 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
-  df_protobuf:
-    dependency: "direct dev"
-    description:
-      path: "pubs/df_protobuf"
-      relative: true
-    source: path
-    version: "0.0.1"
   equatable:
     dependency: "direct main"
     description:
@@ -806,6 +799,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
+  mutex:
+    dependency: "direct main"
+    description:
+      name: mutex
+      sha256: "8827da25de792088eb33e572115a5eb0d61d61a3c01acbc8bcbe76ed78f1a1f2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.0"
   nested:
     dependency: transitive
     description:
@@ -1030,6 +1031,23 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.0"
+  protoc_builder:
+    dependency: "direct dev"
+    description:
+      path: "."
+      ref: fb036776680fb11ac01300915663b72d42213a4b
+      resolved-ref: fb036776680fb11ac01300915663b72d42213a4b
+      url: "https://github.com/fischerscode/dart-protoc-builder.git"
+    source: git
+    version: "0.4.1"
+  protoc_plugin:
+    dependency: "direct dev"
+    description:
+      name: protoc_plugin
+      sha256: fb0554851c9eca30bd18405fbbfe81e39166d4a2f0e5b770606fd69da3da0b2f
+      url: "https://pub.dev"
+    source: hosted
+    version: "21.1.2"
   provider:
     dependency: "direct main"
     description:

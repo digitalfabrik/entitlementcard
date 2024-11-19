@@ -61,39 +61,43 @@ Future<bool> activateCard(
           ..cardValid = true
           ..verificationTimeStamp = secondsSinceEpoch(DateTime.parse(activationResult.activationTimeStamp)));
 
-      userCodesModel.insertCode(userCode);
+      await userCodesModel.insertCode(userCode);
       debugPrint('Card Activation: Successfully activated.');
-      messengerState.showSnackBar(
-        SnackBar(
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          content: Text(t.deeplinkActivation.activationSuccessful),
-        ),
-      );
-      if (Navigator.canPop(context)) Navigator.maybePop(context);
+      if (context.mounted) {
+        messengerState.showSnackBar(
+          SnackBar(
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            content: Text(t.deeplinkActivation.activationSuccessful),
+          ),
+        );
+        if (Navigator.canPop(context)) Navigator.maybePop(context);
+      }
       return true;
     case ActivationState.revoked:
-      await ActivationErrorDialog.showErrorDialog(
-        context,
-        t.identification.codeRevoked,
-      );
+      if (context.mounted) {
+        await ActivationErrorDialog.showErrorDialog(context, t.identification.codeRevoked);
+      }
       return false;
     case ActivationState.failed:
-      await ActivationErrorDialog.showErrorDialog(
-        context,
-        t.identification.codeInvalid,
-      );
+      if (context.mounted) {
+        await ActivationErrorDialog.showErrorDialog(context, t.identification.codeInvalid);
+      }
       return false;
     case ActivationState.didNotOverwriteExisting:
       if (overwriteExisting) {
         throw const ActivationDidNotOverwriteExisting();
       }
-      if (isAlreadyInList(userCodesModel.userCodes, activationCode.info)) {
-        await ActivationExistingCardDialog.showExistingCardDialog(context);
+      if (isAlreadyInList(userCodesModel.userCodes, activationCode.info, activationCode.pepper)) {
+        if (context.mounted) {
+          await ActivationExistingCardDialog.showExistingCardDialog(context);
+        }
         return false;
       }
       debugPrint(
           'Card Activation: Card had been activated already and was not overwritten. Waiting for user feedback.');
-      if (await ActivationOverwriteExistingDialog.showActivationOverwriteExistingDialog(context)) {
+      if (context.mounted &&
+          await ActivationOverwriteExistingDialog.showActivationOverwriteExistingDialog(context) &&
+          context.mounted) {
         return await activateCard(context, activationCode, overwriteExisting = true);
       } else {
         return false;
