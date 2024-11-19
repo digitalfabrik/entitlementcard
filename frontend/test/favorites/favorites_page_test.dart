@@ -1,6 +1,7 @@
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/favorites/favorites_model.dart';
 import 'package:ehrenamtskarte/favorites/favorites_page.dart';
+import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/accepting_store_by_id.graphql.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/store_widgets/accepting_store_summary.dart';
 import 'package:ehrenamtskarte/store_widgets/detail/detail_app_bar.dart';
@@ -21,6 +22,8 @@ void main() {
     setUpAll(() {
       registerFallbackValue(FakeQueryOptions());
       registerFallbackValue(FakeRoute());
+      registerFallbackValue(
+          Options$Query$AcceptingStoreById(variables: Variables$Query$AcceptingStoreById(project: '', ids: [])));
     });
 
     final mockClient = MockGraphQLClient();
@@ -53,24 +56,38 @@ void main() {
         'favorites': ['{"storeId":1,"storeName":"Test store","categoryId":9}']
       });
 
-      when(() => mockClient.query(any())).thenAnswer((invocation) async {
-        final options = invocation.positionalArguments.first as QueryOptions;
+      when(() => mockClient.query(any<Options$Query$AcceptingStoreById>())).thenAnswer((invocation) async {
+        final options = invocation.positionalArguments.first as Options$Query$AcceptingStoreById;
         return QueryResult(
           data: {
-            'physicalStoresByIdInProject': [
+            'stores': [
               {
                 'id': 1,
-                'coordinates': {'lat': 48.235256, 'lng': 12.678656},
+                'coordinates': {'lat': 48.235256, 'lng': 12.678656, '__typename': 'Coordinates'},
                 'store': {
                   'id': 1,
                   'name': 'Test store',
                   'description': 'Test description',
-                  'contact': {'id': 1, 'email': null, 'telephone': '08671 95 80 45', 'website': null},
-                  'category': {'id': 9, 'name': 'Sonstiges'}
+                  'contact': {
+                    'id': 1,
+                    'email': null,
+                    'telephone': '08671 95 80 45',
+                    'website': null,
+                    '__typename': 'Contact'
+                  },
+                  'category': {'id': 9, 'name': 'Sonstiges', '__typename': 'Category'},
+                  '__typename': 'AcceptingStore'
                 },
-                'address': {'street': 'Bahnhofstraße 1', 'postalCode': '84503', 'location': 'Altötting'}
+                'address': {
+                  'street': 'Bahnhofstraße 1',
+                  'postalCode': '84503',
+                  'location': 'Altötting',
+                  '__typename': 'Address'
+                },
+                '__typename': 'PhysicalStore'
               }
-            ]
+            ],
+            '__typename': 'Query'
           },
           source: QueryResultSource.network,
           options: options,
@@ -94,11 +111,12 @@ void main() {
         'favorites': ['{"storeId":1,"storeName":"Test store","categoryId":9}']
       });
 
-      when(() => mockClient.query(any())).thenAnswer((invocation) async {
-        final options = invocation.positionalArguments.first as QueryOptions;
+      when(() => mockClient.query(any<Options$Query$AcceptingStoreById>())).thenAnswer((invocation) async {
+        final options = invocation.positionalArguments.first as Options$Query$AcceptingStoreById;
         return QueryResult(
           data: {
-            'physicalStoresByIdInProject': [null]
+            'stores': [null],
+            '__typename': 'Query'
           },
           source: QueryResultSource.network,
           options: options,

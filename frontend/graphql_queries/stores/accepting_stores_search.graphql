@@ -1,5 +1,5 @@
 query AcceptingStoresSearch($project: String!, $params: SearchParamsInput!) {
-    searchAcceptingStoresInProject(project: $project, params: $params) {
+    stores: searchAcceptingStoresInProject(project: $project, params: $params) {
         id
         name
         description

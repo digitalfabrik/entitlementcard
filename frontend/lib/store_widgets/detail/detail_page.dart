@@ -1,6 +1,5 @@
 import 'package:ehrenamtskarte/configuration/configuration.dart';
-import 'package:ehrenamtskarte/graphql/graphql_api.dart';
-import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
+import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/accepting_store_by_id.graphql.dart';
 import 'package:ehrenamtskarte/store_widgets/detail/detail_app_bar.dart';
 import 'package:ehrenamtskarte/store_widgets/detail/detail_content.dart';
 import 'package:ehrenamtskarte/util/color_utils.dart';
@@ -23,18 +22,17 @@ class DetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.t;
     final projectId = Configuration.of(context).projectId;
-    final byIdQuery =
-        AcceptingStoreByIdQuery(variables: AcceptingStoreByIdArguments(project: projectId, ids: [_acceptingStoreId]));
-    return Query(
-      options: QueryOptions(document: byIdQuery.document, variables: byIdQuery.getVariablesMap()),
+    return Query$AcceptingStoreById$Widget(
+      options: Options$Query$AcceptingStoreById(
+          variables: Variables$Query$AcceptingStoreById(project: projectId, ids: [_acceptingStoreId])),
       builder: (result, {refetch, fetchMore}) {
         final exception = result.exception;
-        final data = result.data;
+        final data = result.parsedData;
 
         if (result.hasException && exception != null) {
           return DetailErrorMessage(message: t.store.loadingDataFailed, refetch: refetch);
         } else if (result.isNotLoading && data != null) {
-          final matchingStores = byIdQuery.parse(data).physicalStoresByIdInProject;
+          final matchingStores = data.stores;
           if (matchingStores.length != 1) {
             return DetailErrorMessage(message: t.store.loadingDataFailed, refetch: refetch);
           }
