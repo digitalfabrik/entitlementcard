@@ -37,7 +37,10 @@ class IdentificationPageState extends State<IdentificationPage> {
       builder: (context, userCodeModel, child) {
         if (!userCodeModel.isInitialized) {
           if (userCodeModel.initializationFailed) {
-            return SafeArea(child: Center(child: Text(context.t.common.unknownError, textAlign: TextAlign.center)));
+            return SafeArea(
+                child: Center(
+                    child: Text(context.t.common.unknownError,
+                        textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium)));
           }
           return Container();
         }

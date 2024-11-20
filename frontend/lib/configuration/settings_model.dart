@@ -63,7 +63,7 @@ class SettingsModel extends ChangeNotifier {
   }
 
   String hideVerificationInfoKey = 'hideVerificationInfo';
-  bool get hideVerificationInfo => _getBool(hideVerificationInfoKey) ?? true;
+  bool get hideVerificationInfo => _getBool(hideVerificationInfoKey) ?? false;
 
   Future<void> setHideVerificationInfo({required bool enabled}) async {
     bool? currentlyHideVerificationInfo = hideVerificationInfo;

@@ -23,11 +23,14 @@ class InfoDialog extends StatelessWidget {
     return AlertDialog(
       title: ListTile(
         leading: Icon(icon, color: iconColor ?? theme.colorScheme.primaryContainer, size: 30),
-        title: Text(title, style: theme.textTheme.headlineSmall),
+        title: Text(title),
       ),
       content: child,
       actions: [
-        TextButton(onPressed: () => Navigator.of(context, rootNavigator: true).pop(), child: Text(t.common.ok))
+        TextButton(
+          onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+          child: Text(t.common.ok),
+        ),
       ],
     );
   }

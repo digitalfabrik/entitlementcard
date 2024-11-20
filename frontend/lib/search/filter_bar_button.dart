@@ -87,7 +87,7 @@ class _FilterBarButtonState extends State<FilterBarButton> with SingleTickerProv
       builder: (context, child) {
         final color = Color.lerp(theme.colorScheme.background, selectedColor, colorTween.value);
         return ConstrainedBox(
-          constraints: BoxConstraints.tightFor(width: width, height: 70),
+          constraints: BoxConstraints.tightFor(width: width, height: 74),
           child: Card(
             margin: EdgeInsets.zero,
             color: color,
@@ -102,24 +102,21 @@ class _FilterBarButtonState extends State<FilterBarButton> with SingleTickerProv
                   widget.onCategoryPress(widget.asset, isSelected);
                 });
               },
-              child: Padding(
-                padding: const EdgeInsets.only(top: 4),
-                child: Column(
-                  children: [
-                    SvgPicture.asset(widget.asset.icon, width: 40.0, semanticsLabel: widget.asset.name),
-                    Expanded(
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: Text(
-                          widget.asset.shortName,
-                          maxLines: 2,
-                          style: const TextStyle(fontSize: 10),
-                          textAlign: TextAlign.center,
-                        ),
+              child: Column(
+                children: [
+                  SvgPicture.asset(widget.asset.icon, width: 40.0, semanticsLabel: widget.asset.name),
+                  Expanded(
+                    child: Container(
+                      alignment: Alignment.topCenter,
+                      child: Text(
+                        widget.asset.shortName,
+                        maxLines: 2,
+                        style: theme.textTheme.labelSmall,
+                        textAlign: TextAlign.center,
                       ),
-                    )
-                  ],
-                ),
+                    ),
+                  )
+                ],
               ),
             ),
           ),

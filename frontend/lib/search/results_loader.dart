@@ -151,13 +151,15 @@ class ResultsLoaderState extends State<ResultsLoader> {
 
   Widget _buildErrorWithRetry(BuildContext context) {
     final t = context.t;
+    final theme = Theme.of(context);
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           const Icon(Icons.warning, size: 60, color: Colors.orange),
-          Text(t.common.checkConnection),
+          Text(t.common.checkConnection, style: theme.textTheme.bodyMedium),
           OutlinedButton(
+            style: theme.textButtonTheme.style,
             onPressed: _pagingController.retryLastFailedRequest,
             child: Text(t.common.tryAgain),
           )
@@ -168,12 +170,13 @@ class ResultsLoaderState extends State<ResultsLoader> {
 
   Widget _buildNoItemsFoundIndicator(BuildContext context) {
     final t = context.t;
+    final theme = Theme.of(context);
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.search_off, size: 60, color: Theme.of(context).disabledColor),
-          Text(t.search.noAcceptingStoresFound),
+          Icon(Icons.search_off, size: 60, color: theme.disabledColor),
+          Text(t.search.noAcceptingStoresFound, style: theme.textTheme.bodyMedium),
         ],
       ),
     );

@@ -12,8 +12,9 @@ class ExtendedFloatingActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return FloatingActionButton.extended(
-      backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+      backgroundColor: theme.colorScheme.surfaceVariant,
       elevation: 1,
       onPressed: onPressed,
       icon: AnimatedSwitcher(
@@ -23,12 +24,12 @@ class ExtendedFloatingActionButton extends StatelessWidget {
             : Icon(
                 icon,
                 size: 24,
-                color: Theme.of(context).colorScheme.secondary,
+                color: theme.colorScheme.secondary,
               ),
       ),
       label: Text(
         label,
-        style: TextStyle(color: Theme.of(context).hintColor),
+        style: theme.textTheme.bodyMedium?.apply(color: theme.hintColor),
       ),
     );
   }

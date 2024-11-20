@@ -50,6 +50,7 @@ class VerificationCodeViewState extends State<VerificationCodeView> {
   Widget build(BuildContext context) {
     final otpCode = _otpCode;
     final userCode = widget.userCode;
+    final colorTheme = Theme.of(context).colorScheme;
 
     final time = DateTime.now().millisecondsSinceEpoch;
     final animationDuration = otpCode.validUntilMilliSeconds - time;
@@ -77,10 +78,8 @@ class VerificationCodeViewState extends State<VerificationCodeView> {
                         version: qr.QrVersions.auto,
                         gapless: false,
                         dataModuleStyle: qr.QrDataModuleStyle(
-                            dataModuleShape: qr.QrDataModuleShape.square,
-                            color: Theme.of(context).textTheme.bodyMedium?.color),
-                        eyeStyle: qr.QrEyeStyle(
-                            eyeShape: qr.QrEyeShape.square, color: Theme.of(context).textTheme.bodyMedium?.color),
+                            dataModuleShape: qr.QrDataModuleShape.square, color: colorTheme.tertiary),
+                        eyeStyle: qr.QrEyeStyle(eyeShape: qr.QrEyeShape.square, color: colorTheme.tertiary),
                       ),
                     ),
                     Positioned.fill(
