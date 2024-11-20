@@ -1,5 +1,6 @@
 import { Alert, Typography, styled } from '@mui/material'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { ApplicationType, BavariaCardType } from '../../../generated/graphql'
 import CustomDivider from '../CustomDivider'
@@ -84,6 +85,7 @@ const StepCardTypeForm: Form<State, ValidatedInput> = {
     return { type: 'valid', value: { ...partialValidationResult.value, applicationType: applicationTypeResult.value } }
   },
   Component: ({ state, setState }: FormComponentProps<State>) => {
+    const { t } = useTranslation('application')
     const updateApplicationType = useUpdateStateCallback(setState, 'applicationType')
     const validationResult = StepCardTypeForm.validate(state)
     const isInvalid = validationResult.type === 'error'
@@ -135,13 +137,13 @@ const StepCardTypeForm: Form<State, ValidatedInput> = {
         <SubForms.wantsDigitalCard.Component
           state={state.wantsDigitalCard}
           setState={useUpdateStateCallback(setState, 'wantsDigitalCard')}
-          label='Ich beantrage eine digitale Ehrenamtskarte.'
+          label={t('wantsDigitalCard')}
           options={wantsDigitalCardOptions}
         />
         <SubForms.wantsPhysicalCard.Component
           state={state.wantsPhysicalCard}
           setState={useUpdateStateCallback(setState, 'wantsPhysicalCard')}
-          label='Ich beantrage eine physische Ehrenamtskarte.'
+          label={t('wantsPhysicalCard')}
           options={wantsPhysicalCardOptions}
         />
         {isInvalid && validationResult.message !== undefined && (

@@ -27,6 +27,7 @@ export type ExtensionComponentProps<T> = {
   value: T
   setValue: (value: T) => void
   isValid: boolean
+  showRequired: boolean
 }
 
 export type Extension<T = Record<string, unknown>> = {

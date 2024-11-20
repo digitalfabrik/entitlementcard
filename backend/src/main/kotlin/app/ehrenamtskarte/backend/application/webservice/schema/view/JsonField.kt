@@ -22,7 +22,6 @@ data class AttachmentView(val fileIndex: Int) {
 
 data class JsonField(
     val name: String,
-    val translations: Map<String, String>,
     val type: Type,
     val value: Any
 ) {

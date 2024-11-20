@@ -29,15 +29,14 @@ data class PersonalData(
     override fun toJsonField(): JsonField {
         return JsonField(
             "personalData",
-            mapOf("de" to "Persönliche Daten"),
             Type.Array,
             listOfNotNull(
-                forenames.toJsonField("forenames", mapOf("de" to "Vorname(n)")),
-                surname.toJsonField("surname", mapOf("de" to "Nachname")),
+                forenames.toJsonField("forenames"),
+                surname.toJsonField("surname"),
                 address.toJsonField(),
-                dateOfBirth.toJsonField("dateOfBirth", mapOf("de" to "Geburtsdatum")),
-                telephone?.toJsonField("telephone", mapOf("de" to "Telefonnummer")),
-                emailAddress.toJsonField("emailAddress", mapOf("de" to "Email-Adresse"))
+                dateOfBirth.toJsonField("dateOfBirth"),
+                telephone?.toJsonField("telephone"),
+                emailAddress.toJsonField("emailAddress")
             )
         )
     }

@@ -1,15 +1,19 @@
 import { Checkbox, FormGroup, InputGroup, Intent } from '@blueprintjs/core'
 import InfoOutlined from '@mui/icons-material/InfoOutlined'
-import { Alert, styled } from '@mui/material'
+import { styled } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
 
-import { Card, isFullNameValid, isValid } from '../../cards/Card'
+import { Card, getFullNameValidationErrorMessage, isFullNameValid, isValid } from '../../cards/Card'
 import ClearInputButton from '../../cards/extensions/components/ClearInputButton'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
 import BasicDialog from '../../mui-modules/application/BasicDialog'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { removeMultipleSpaces } from '../../util/helper'
+import { useAppToaster } from '../AppToaster'
 import ExtensionForms from '../cards/ExtensionForms'
+import { DataPrivacyAcceptingStatus } from './CardSelfServiceView'
 import { ActionButton } from './components/ActionButton'
+import FormErrorMessage from './components/FormErrorMessage'
 import { IconTextButton } from './components/IconTextButton'
 import { UnderlineTextButton } from './components/UnderlineTextButton'
 
@@ -19,11 +23,6 @@ const StyledCheckbox = styled(Checkbox)`
   margin-left: 4px;
 `
 
-const StyledAlert = styled(Alert)`
-  margin-bottom: 24px;
-  white-space: pre-line;
-`
-
 const Container = styled('div')`
   margin-bottom: 24px;
 `
@@ -31,21 +30,9 @@ const Container = styled('div')`
 type CardSelfServiceFormProps = {
   card: Card
   updateCard: (card: Partial<Card>) => void
-  dataPrivacyAccepted: boolean
-  setDataPrivacyAccepted: (value: boolean) => void
+  dataPrivacyAccepted: DataPrivacyAcceptingStatus
+  setDataPrivacyAccepted: (status: DataPrivacyAcceptingStatus) => void
   generateCards: () => Promise<void>
-}
-
-const getTooltipMessage = (cardsValid: boolean, dataPrivacyAccepted: boolean): string => {
-  const tooltipMessages: string[] = []
-  if (!cardsValid) {
-    tooltipMessages.push('Mindestens eine Ihrer Angaben ist ungültig.')
-  }
-  if (!dataPrivacyAccepted) {
-    tooltipMessages.push('Bitte akzeptieren Sie die Datenschutzerklärung.')
-  }
-
-  return tooltipMessages.join('\n')
 }
 
 const CardSelfServiceForm = ({
@@ -57,15 +44,36 @@ const CardSelfServiceForm = ({
 }: CardSelfServiceFormProps): ReactElement => {
   const { viewportSmall } = useWindowDimensions()
   const projectConfig = useContext(ProjectConfigContext)
+  const [formSendAttempt, setFormSendAttempt] = useState(false)
+  const [touchedFullName, setTouchedFullName] = useState(false)
   const [openDataPrivacy, setOpenDataPrivacy] = useState<boolean>(false)
   const [openReferenceInformation, setOpenReferenceInformation] = useState<boolean>(false)
   const cardValid = isValid(card, { expirationDateNullable: true })
-  const cardCreationDisabled = !cardValid || !dataPrivacyAccepted
+  const appToaster = useAppToaster()
+  const showErrorMessage = touchedFullName || formSendAttempt
+
+  const createKoblenzPass = async () => {
+    setFormSendAttempt(true)
+    if (dataPrivacyAccepted === DataPrivacyAcceptingStatus.untouched) {
+      setDataPrivacyAccepted(DataPrivacyAcceptingStatus.denied)
+    }
+    if (!cardValid || dataPrivacyAccepted !== DataPrivacyAcceptingStatus.accepted) {
+      appToaster?.show({
+        message: (
+          <FormErrorMessage style={{ color: 'white' }} errorMessage='Mindestens eine Ihrer Angaben ist ungültig.' />
+        ),
+        timeout: 0,
+        intent: 'danger',
+      })
+      return
+    }
+    await generateCards()
+  }
 
   return (
     <>
       <Container key={card.id}>
-        <FormGroup label='Vorname Nachname'>
+        <FormGroup label='Vorname Name'>
           <InputGroup
             large={viewportSmall}
             placeholder='Erika Musterfrau'
@@ -77,35 +85,54 @@ const CardSelfServiceForm = ({
                 input={card.fullName}
               />
             }
-            intent={isFullNameValid(card) ? undefined : Intent.DANGER}
+            intent={isFullNameValid(card) || !showErrorMessage ? undefined : Intent.DANGER}
             value={card.fullName}
-            onChange={event => updateCard({ fullName: event.target.value })}
+            onBlur={() => setTouchedFullName(true)}
+            onChange={event => updateCard({ fullName: removeMultipleSpaces(event.target.value) })}
           />
+          {showErrorMessage && <FormErrorMessage errorMessage={getFullNameValidationErrorMessage(card.fullName)} />}
         </FormGroup>
-        <ExtensionForms card={card} updateCard={updateCard} />
+        <ExtensionForms card={card} updateCard={updateCard} showRequired={formSendAttempt} />
         <IconTextButton onClick={() => setOpenReferenceInformation(true)}>
           <InfoOutlined />
-          Informationen zur Referenznummer
+          Wo finde ich das Aktenzeichen?
         </IconTextButton>
-        <StyledCheckbox checked={dataPrivacyAccepted} onChange={() => setDataPrivacyAccepted(!dataPrivacyAccepted)}>
+        <StyledCheckbox
+          checked={dataPrivacyAccepted === DataPrivacyAcceptingStatus.accepted}
+          onChange={() =>
+            setDataPrivacyAccepted(
+              dataPrivacyAccepted === DataPrivacyAcceptingStatus.accepted
+                ? DataPrivacyAcceptingStatus.denied
+                : DataPrivacyAcceptingStatus.accepted
+            )
+          }>
           Ich akzeptiere die{' '}
           <UnderlineTextButton onClick={() => setOpenDataPrivacy(true)}>Datenschutzerklärung</UnderlineTextButton>.
         </StyledCheckbox>
+        {dataPrivacyAccepted === DataPrivacyAcceptingStatus.denied && (
+          <FormErrorMessage errorMessage='Bitte akzeptieren sie die Datenschutzerklärung' />
+        )}
       </Container>
-      {cardCreationDisabled && (
-        <StyledAlert variant='outlined' severity='warning'>
-          {getTooltipMessage(cardValid, dataPrivacyAccepted)}
-        </StyledAlert>
-      )}
-      <ActionButton onClick={generateCards} variant='contained' disabled={cardCreationDisabled} size='large'>
-        Pass erstellen
+      <ActionButton onClick={createKoblenzPass} variant='contained' size='large'>
+        KoblenzPass erstellen
       </ActionButton>
       <BasicDialog
         open={openReferenceInformation}
         maxWidth='lg'
         onUpdateOpen={setOpenReferenceInformation}
-        title='Informationen zur Referenznummer'
-        content={<>Noch keine Informationen verfügtbar, bitte wenden Sie sich an den Support.</>}
+        title='Wo finde ich das Aktenzeichen?'
+        content={
+          <>
+            Das Aktenzeichen finden Sie meist oben rechts auf dem postalischen Bescheid. <br />
+            Weitere Informationen und Beispiele finden Sie unter{' '}
+            <a href='https://www.koblenz.de/koblenzpass' target='_blank' rel='noreferrer'>
+              www.koblenz.de/koblenzpass
+            </a>
+            . <br />
+            <br /> Bei Fragen dazu kontaktieren Sie uns bitte via{' '}
+            <a href='mailto:koblenzpass@stadt.koblenz.de'>koblenzpass@stadt.koblenz.de</a>.
+          </>
+        }
       />
       <BasicDialog
         open={openDataPrivacy}

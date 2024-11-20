@@ -1,6 +1,5 @@
 import { ApolloError } from '@apollo/client'
-import { useCallback, useContext, useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import React, { useCallback, useContext, useState } from 'react'
 
 import { Card, generateCardInfo, initializeCard } from '../../../cards/Card'
 import { generatePdf } from '../../../cards/PdfFactory'
@@ -9,11 +8,11 @@ import getMessageFromApolloError from '../../../errors/getMessageFromApolloError
 import { DynamicActivationCode, StaticVerificationCode } from '../../../generated/card_pb'
 import { useCreateCardsFromSelfServiceMutation } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
-import PlainDate from '../../../util/PlainDate'
 import { base64ToUint8Array, uint8ArrayToBase64 } from '../../../util/base64'
 import downloadDataUri from '../../../util/downloadDataUri'
 import getCustomDeepLinkFromQrCode from '../../../util/getCustomDeepLinkFromQrCode'
 import { useAppToaster } from '../../AppToaster'
+import FormErrorMessage from '../components/FormErrorMessage'
 
 export enum CardSelfServiceStep {
   form,
@@ -33,40 +32,16 @@ type UseCardGeneratorSelfServiceReturn = {
   downloadPdf: (code: CreateCardsResult, fileName: string) => Promise<void>
 }
 
-const handleQueryParams = (
-  cardQueryParams: URLSearchParams
-): {
-  fullName?: string
-  birthday?: PlainDate
-  koblenzReferenceNumber?: string
-} => {
-  const fullName = cardQueryParams.get('name') ?? undefined
-  const birthday = PlainDate.safeFrom(cardQueryParams.get('geburtsdatum')) ?? undefined
-  const koblenzReferenceNumber = cardQueryParams.get('ref') ?? undefined
-  return { fullName, birthday, koblenzReferenceNumber }
-}
-
 const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
   const projectConfig = useContext(ProjectConfigContext)
   const appToaster = useAppToaster()
-  const [cardQueryParams, setSearchParams] = useSearchParams()
-  const { fullName, birthday, koblenzReferenceNumber } = handleQueryParams(cardQueryParams)
   const [selfServiceCard, setSelfServiceCard] = useState(
-    initializeCard(projectConfig.card, undefined, {
-      fullName,
-      expirationDate: null,
-      extensions: { birthday, koblenzReferenceNumber },
-    })
+    initializeCard(projectConfig.card, undefined, { expirationDate: null })
   )
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [selfServiceState, setSelfServiceState] = useState<CardSelfServiceStep>(CardSelfServiceStep.form)
   const [deepLink, setDeepLink] = useState<string>('')
   const [code, setCode] = useState<CreateCardsResult | null>(null)
-
-  useEffect(() => {
-    setSearchParams(undefined, { replace: true })
-  }, [setSearchParams])
-
   const [createCardsSelfService] = useCreateCardsFromSelfServiceMutation()
 
   const handleErrors = useCallback(
@@ -80,9 +55,9 @@ const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
       if (error instanceof ApolloError) {
         const { title } = getMessageFromApolloError(error)
         appToaster?.show({
-          message: title,
-          intent: 'danger',
+          message: <FormErrorMessage style={{ color: 'white' }} errorMessage={title} />,
           timeout: 0,
+          intent: 'danger',
         })
       } else {
         appToaster?.show({

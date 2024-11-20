@@ -2,7 +2,7 @@ environment:
   _JAVA_OPTIONS: "-Xmx3g"
   GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
 docker:
-  - image: cimg/openjdk:17.0.6-node
+  - image: cimg/openjdk:17.0.13-node
 working_directory: ~/project/backend
 steps:
   - checkout:

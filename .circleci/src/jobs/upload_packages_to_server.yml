@@ -1,5 +1,5 @@
 docker:
-  - image: cimg/node:20.13.1
+  - image: cimg/node:20.18.0
 parameters:
   production:
     description: Whether builds are delivered to production or beta.

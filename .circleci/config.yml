@@ -9,7 +9,7 @@ commands:
                 command: curl -fLSs https://raw.githubusercontent.com/CircleCI-Public/circleci-cli/master/install.sh | sudo bash
                 name: Install CircleCI CLI
             - run:
-                command: ./scripts/circleci-update-config.sh
+                command: ./scripts/circleci-update-config
                 name: Build circle config
             - run:
                 command: |
@@ -23,7 +23,7 @@ commands:
                       echo "The CircleCI config is up to date."
                       exit 0;
                     else
-                      echo "The CircleCI config is not up to date. You can update it by running the `./scripts/circleci-update-config.sh` script."
+                      echo "The CircleCI config is not up to date. You can update it by running the `./scripts/circleci-update-config` script."
                       exit 1;
                     fi
                 name: CircleCI config up to date
@@ -100,12 +100,6 @@ commands:
                     unzip protoc*.zip -d $HOME/.local
                     echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
                 name: Install protobuf from GitHub
-            - when:
-                condition: << parameters.dart_plugin >>
-                steps:
-                    - run:
-                        command: dart pub global activate protoc_plugin
-                        name: Install Flutter plugin
     install_protobuf_mac:
         steps:
             - run:
@@ -114,9 +108,6 @@ commands:
                     unzip protoc*.zip -d $HOME/.local
                     echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
                 name: Install protobuf
-            - run:
-                command: dart pub global activate protoc_plugin
-                name: Install Flutter plugin
     notify:
         description: Send a notification (to Mattermost) at the end of a job, based on success or failure. Must be the last step in a job.
         parameters:
@@ -258,7 +249,7 @@ commands:
 jobs:
     build_administration:
         docker:
-            - image: cimg/node:20.13.1
+            - image: cimg/node:20.18.0
         steps:
             - checkout:
                 path: ~/project
@@ -313,8 +304,6 @@ jobs:
             - prepare_workspace
             - install_dart_linux
             - install_fvm
-            - install_protobuf_linux:
-                dart_plugin: true
             - restore_environment_variables
             - restore_ruby_cache:
                 directory: ~/project/frontend/android
@@ -351,7 +340,7 @@ jobs:
             - notify
     build_backend:
         docker:
-            - image: cimg/openjdk:17.0.6-node
+            - image: cimg/openjdk:17.0.13-node
         environment:
             _JAVA_OPTIONS: -Xmx3g
             GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2
@@ -404,7 +393,6 @@ jobs:
             - install_app_toolbelt
             - install_dart_mac
             - install_fvm
-            - install_protobuf_mac
             - prepare_workspace
             - restore_environment_variables
             - run:
@@ -478,7 +466,7 @@ jobs:
         working_directory: ~/martin
     bump_version:
         docker:
-            - image: cimg/node:20.13.1
+            - image: cimg/node:20.18.0
         parameters:
             platforms:
                 default: all
@@ -521,7 +509,7 @@ jobs:
             - notify
     check:
         docker:
-            - image: cimg/node:20.13.1-browsers
+            - image: cimg/node:20.18.0-browsers
         environment:
             TOTAL_CPUS: 1
             TZ: Europe/Berlin
@@ -535,7 +523,7 @@ jobs:
             - notify
     check_administration:
         docker:
-            - image: cimg/node:20.13.1
+            - image: cimg/node:20.18.0
         steps:
             - checkout:
                 path: ~/project
@@ -571,7 +559,7 @@ jobs:
         working_directory: ~/project
     check_backend:
         docker:
-            - image: cimg/openjdk:17.0.6-node
+            - image: cimg/openjdk:17.0.13-node
         environment:
             _JAVA_OPTIONS: -Xmx3g
             GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2
@@ -621,7 +609,7 @@ jobs:
         working_directory: ~/project/backend
     check_frontend:
         docker:
-            - image: cimg/node:20.13.1-browsers
+            - image: cimg/node:20.18.0-browsers
         resource_class: small
         steps:
             - checkout:
@@ -630,8 +618,6 @@ jobs:
             - browser-tools/install-chrome
             - install_dart_linux
             - install_fvm
-            - install_protobuf_linux:
-                dart_plugin: true
             - run:
                 command: fvm flutter pub get --enforce-lockfile
                 name: Install Flutter Packages
@@ -650,14 +636,12 @@ jobs:
                 command: |
                     fvm flutter analyze --fatal-infos --fatal-warnings
                     fvm flutter analyze pubs/df_build_config --fatal-infos --fatal-warnings
-                    fvm flutter analyze pubs/df_protobuf --fatal-infos --fatal-warnings
                 name: Check Analyzer and Linting
                 working_directory: ~/project/frontend/
             - run:
                 command: |
                     fvm flutter test
                     fvm flutter test pubs/df_build_config
-                    fvm flutter test pubs/df_protobuf
                 name: Tests
                 working_directory: ~/project/frontend/
             - notify
@@ -768,7 +752,7 @@ jobs:
             - notify
     install_packages_to_server:
         docker:
-            - image: cimg/node:20.13.1
+            - image: cimg/node:20.18.0
         parameters:
             production:
                 description: Whether builds are delivered to production or beta.
@@ -795,7 +779,7 @@ jobs:
             - notify
     notify_release:
         docker:
-            - image: cimg/node:20.13.1
+            - image: cimg/node:20.18.0
         parameters:
             production_delivery:
                 description: Whether builds are delivered to the production or beta lane of the play store.
@@ -943,7 +927,7 @@ jobs:
             - notify
     promote_github_release:
         docker:
-            - image: cimg/node:20.13.1
+            - image: cimg/node:20.18.0
         steps:
             - install_app_toolbelt
             - run:
@@ -975,7 +959,7 @@ jobs:
             - notify
     promote_to_server:
         docker:
-            - image: cimg/node:20.13.1
+            - image: cimg/node:20.18.0
         steps:
             - checkout:
                 path: ~/project
@@ -998,7 +982,7 @@ jobs:
             - notify
     upload_packages_to_server:
         docker:
-            - image: cimg/node:20.13.1
+            - image: cimg/node:20.18.0
         parameters:
             bundle:
                 description: Defines which bundle should be deployed to the server.
