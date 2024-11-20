@@ -13,6 +13,7 @@ final bodySmall = const TextStyle(fontSize: 12.0, fontWeight: FontWeight.normal)
 final labelSmall = const TextStyle(fontSize: 10.0, fontWeight: FontWeight.normal);
 
 ThemeData get lightTheme {
+  final textColor = Colors.black87;
   final defaultTypography = Typography.blackMountainView;
   final primaryColor = getColorFromHex(buildConfig.theme.primaryLight);
   final backgroundColor = Colors.white;
@@ -28,15 +29,16 @@ ThemeData get lightTheme {
       error: const Color(0xffcc0000),
       tertiary: const Color(0xFF505050),
     ),
-    dialogTheme: DialogTheme(titleTextStyle: titleLarge, contentTextStyle: bodyLarge),
+    dialogTheme: DialogTheme(
+        titleTextStyle: titleLarge.apply(color: textColor), contentTextStyle: bodyLarge.apply(color: textColor)),
     listTileTheme: ListTileThemeData(
-      titleTextStyle: bodyLarge,
-      subtitleTextStyle: bodySmall,
+      titleTextStyle: bodyLarge.apply(color: textColor),
+      subtitleTextStyle: bodySmall.apply(color: textColor),
     ),
     snackBarTheme:
         SnackBarThemeData(backgroundColor: primaryColor, contentTextStyle: bodyLarge.apply(color: backgroundColor)),
     textTheme: defaultTypography.copyWith(
-      headlineSmall: defaultTypography.headlineSmall?.apply(color: Colors.black87),
+      headlineSmall: defaultTypography.headlineSmall?.apply(color: textColor),
       titleLarge: titleLarge,
       titleMedium: titleMedium,
       titleSmall: titleSmall,
@@ -64,7 +66,7 @@ ThemeData get lightTheme {
       style: ButtonStyle(side: MaterialStatePropertyAll(BorderSide(color: primaryColor, width: 1))),
     ),
     checkboxTheme: CheckboxThemeData(
-      checkColor: const MaterialStatePropertyAll(Colors.black),
+      checkColor: MaterialStatePropertyAll(textColor),
       fillColor: MaterialStatePropertyAll(primaryColor),
     ),
   );

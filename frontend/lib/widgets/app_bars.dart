@@ -104,7 +104,7 @@ class SearchSliverAppBarState extends State<SearchSliverAppBar> {
         focusNode: focusNode,
         decoration: InputDecoration.collapsed(
           hintText: t.search.searchHint,
-          hintStyle: theme.textTheme.bodyLarge,
+          hintStyle: theme.textTheme.bodyLarge?.apply(color: foregroundColor),
         ),
         cursorColor: foregroundColor,
         style: theme.textTheme.bodyLarge?.apply(color: foregroundColor),
