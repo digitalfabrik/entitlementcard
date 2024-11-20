@@ -21,12 +21,11 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertThrows
-import org.junit.Assert.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.MethodSource
 import java.time.LocalDate
 
 internal class ApiTokenServiceTest : IntegrationTest() {
@@ -83,48 +82,35 @@ internal class ApiTokenServiceTest : IntegrationTest() {
         }
     }
 
-    @Test
-    fun deleteApiToken_deletesTokenSuccessfully() {
-        every { mockJwtPayload.adminId } returns TestAdministrators.KOBLENZ_PROJECT_ADMIN.id
+    companion object {
+        @JvmStatic
+        fun provideDeleteTestCases() = listOf(
+            TestCase(TestAdministrators.BAYERN_VEREIN_360.id, TestAdministrators.BAYERN_VEREIN_360.id, ApiTokenType.VERIFIED_APPLICATION, 1),
+            TestCase(TestAdministrators.KOBLENZ_PROJECT_ADMIN.id, TestAdministrators.KOBLENZ_PROJECT_ADMIN.id, ApiTokenType.USER_IMPORT, 1),
+            TestCase(TestAdministrators.KOBLENZ_PROJECT_ADMIN_2.id, TestAdministrators.KOBLENZ_PROJECT_ADMIN.id, ApiTokenType.USER_IMPORT, 1),
+            TestCase(TestAdministrators.KOBLENZ_PROJECT_ADMIN.id, TestAdministrators.NUERNBERG_PROJECT_ADMIN.id, ApiTokenType.USER_IMPORT, 0),
+            TestCase(TestAdministrators.BAYERN_VEREIN_360.id, TestAdministrators.KOBLENZ_PROJECT_ADMIN.id, ApiTokenType.USER_IMPORT, 0),
+            TestCase(TestAdministrators.BAYERN_VEREIN_360.id, TestAdministrators.BAYERN_VEREIN_360.id, ApiTokenType.USER_IMPORT, 0)
+        )
+    }
+
+    data class TestCase(val actingAdmin: Int, val tokenAdmin: Int, val type: ApiTokenType, val expectedDeletedTokens: Int)
+
+    @ParameterizedTest
+    @MethodSource("provideDeleteTestCases")
+    fun test(testCase: TestCase) {
+        val (actingAdmin, tokenAdmin, type, expectedDeletedTokens) = testCase
+        every { mockJwtPayload.adminId } returns actingAdmin
 
         transaction {
-            val tokenId = TestData.createApiToken(creatorId = TestAdministrators.KOBLENZ_PROJECT_ADMIN.id, type = ApiTokenType.USER_IMPORT)
-            val tokenExists = ApiTokens.select { ApiTokens.id eq tokenId }.count() > 0
-            assertTrue(tokenExists)
+            val tokenId = TestData.createApiToken(creatorId = tokenAdmin, type = type)
+            val numberOfTokensBefore = ApiTokens.select { ApiTokens.id eq tokenId }.count()
+            assertEquals(1, numberOfTokensBefore)
 
             ApiTokenService().deleteApiToken(tokenId, mockDfe)
 
-            val tokenNoLongerExists = ApiTokens.select { ApiTokens.id eq tokenId }.singleOrNull() == null
-            assertTrue(tokenNoLongerExists)
-        }
-    }
-
-    @Test
-    fun deleteApiToken_deletesFromOtherAdminTokenSuccessfully() {
-        every { mockJwtPayload.adminId } returns TestAdministrators.KOBLENZ_PROJECT_ADMIN.id
-        TestData.createApiToken(creatorId = TestAdministrators.KOBLENZ_PROJECT_ADMIN_2.id, type = ApiTokenType.USER_IMPORT)
-
-        transaction {
-            val tokenBefore = ApiTokens.select { ApiTokens.creatorId eq TestAdministrators.KOBLENZ_PROJECT_ADMIN_2.id }.singleOrNull()
-            assertNotNull(tokenBefore)
-
-            ApiTokenService().deleteApiToken(tokenBefore!![ApiTokens.id].value, mockDfe)
-
-            val tokenAfter = ApiTokens.select { ApiTokens.creatorId eq TestAdministrators.KOBLENZ_PROJECT_ADMIN_2.id }.singleOrNull()
-            assertNull(tokenAfter)
-        }
-    }
-
-    @Test
-    fun deleteApiToken_deletesNoTokenFormOtherProject() {
-        every { mockJwtPayload.adminId } returns TestAdministrators.KOBLENZ_PROJECT_ADMIN.id
-        transaction {
-            val tokenId = TestData.createApiToken(creatorId = TestAdministrators.NUERNBERG_PROJECT_ADMIN.id, type = ApiTokenType.USER_IMPORT)
-
-            val numberOfTokensBefore = ApiTokens.selectAll().count()
-            ApiTokenService().deleteApiToken(tokenId, mockDfe)
-            val numberOfTokensAfter = ApiTokens.selectAll().count()
-            assert(numberOfTokensBefore == numberOfTokensAfter)
+            val numberOfTokensAfter = ApiTokens.select { ApiTokens.id eq tokenId }.count()
+            assertEquals(numberOfTokensBefore - expectedDeletedTokens, numberOfTokensAfter)
         }
     }
 
@@ -215,40 +201,11 @@ internal class ApiTokenServiceTest : IntegrationTest() {
 
         transaction {
             TestData.createApiToken(creatorId = TestAdministrators.KOBLENZ_PROJECT_ADMIN.id, type = ApiTokenType.USER_IMPORT)
-            TestData.createApiToken(creatorId = TestAdministrators.BAYERN_VEREIN_360.id, type = ApiTokenType.VERIFIED_APPLICATION)
+            TestData.createApiToken(token = "dummy2", creatorId = TestAdministrators.BAYERN_VEREIN_360.id, type = ApiTokenType.VERIFIED_APPLICATION)
 
             val metaData = ApiTokenQueryService().getApiTokenMetaData(mockDfe)
             assertEquals(1, metaData.size)
             assertEquals(ApiTokenType.VERIFIED_APPLICATION, metaData[0].type)
-        }
-    }
-
-    @Test
-    fun deleteApiToken_throwsForbiddenExceptionWhenExternalUserDeletesProjectAdminToken() {
-        every { mockJwtPayload.adminId } returns TestAdministrators.BAYERN_VEREIN_360.id
-
-        transaction {
-            val tokenId = TestData.createApiToken(creatorId = TestAdministrators.KOBLENZ_PROJECT_ADMIN.id, type = ApiTokenType.USER_IMPORT)
-
-            assertThrows(ForbiddenException::class.java) {
-                ApiTokenService().deleteApiToken(tokenId, mockDfe)
-            }
-        }
-    }
-
-    @Test
-    fun deleteApiToken_deletesApiTokenForExternalUserSuccessfully() {
-        every { mockJwtPayload.adminId } returns TestAdministrators.BAYERN_VEREIN_360.id
-
-        transaction {
-            val tokenId = TestData.createApiToken(creatorId = TestAdministrators.BAYERN_VEREIN_360.id, type = ApiTokenType.VERIFIED_APPLICATION)
-            val tokenExists = ApiTokens.select { ApiTokens.id eq tokenId }.count() > 0
-            assertTrue(tokenExists)
-
-            ApiTokenService().deleteApiToken(tokenId, mockDfe)
-
-            val tokenNoLongerExists = ApiTokens.select { ApiTokens.id eq tokenId }.singleOrNull() == null
-            assertTrue(tokenNoLongerExists)
         }
     }
 }
