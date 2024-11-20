@@ -7,9 +7,9 @@ All details about the endpoint can be found in the [API Documentation](../specs/
 
 ## Usage
 
-### Set Authourization Header
+### Authourization Header
 
-Set the HTTP header `Authorization Bearer <api-token>` to access the endpoint.
+Set the HTTP `Authorization` header to `Bearer <api-token>` to access the endpoint.
 
 ### Call GraphQL Mutation to add an application
 
@@ -37,17 +37,17 @@ mutation addEakApplication($regionId: Int!, $application: ApplicationInput!, $pr
         "entitlementType": "WORK_AT_ORGANIZATIONS",   // Must be WORK_AT_ORGANIZATIONS
         "workAtOrganizationsEntitlement": {
           "list": {
-            "amountOfWork": 7.5,
+            "amountOfWork": 7.5,                      // Amount of hours worked per week on average
             "organization": {
               "address": {
                 "country": {
-                  "shortText": "Germany"
+                  "shortText": "Deutschland"
                 },
                 "houseNumber": {
                   "shortText": "123"
                 },
                 "location": {
-                  "shortText": "Munich"
+                  "shortText": "München"
                 },
                 "postalCode": {
                   "shortText": "80331"
@@ -69,7 +69,7 @@ mutation addEakApplication($regionId: Int!, $application: ApplicationInput!, $pr
             },
             "payment": false,                         // Must be false
             "responsibility": {"shortText": "Trainer"},
-            "workSinceDate": {"date": "2020-10-06"},
+            "workSinceDate": {"date": "2020-10-06"},  // ISO8601 date strings YYYY-MM-DD
             "isAlreadyVerified": true                 // Must be true, so that we can mark the application as verified. 
                                                       // If this is set to true, but not valid application token is set 
                                                       // the application is rejected and an error code returned.
@@ -80,13 +80,13 @@ mutation addEakApplication($regionId: Int!, $application: ApplicationInput!, $pr
     "personalData": {
       "address": {
         "country": {
-          "shortText": "Germany"
+          "shortText": "Deutschland"
         },
         "houseNumber": {
           "shortText": "123"
         },
         "location": {
-          "shortText": "Munich"
+          "shortText": "München"
         },
         "postalCode": {
           "shortText": "80331"
@@ -121,7 +121,7 @@ mutation addEakApplication($regionId: Int!, $application: ApplicationInput!, $pr
 
 #### Get all Regions
 
-The region ID can be obtained by calling the following query:
+All available regions and their IDs can be obtained by calling the following graphql endpoint:
 ```graphql
 query getRegions($project: String!) {
   regions: regionsInProject(project: $project) {
