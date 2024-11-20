@@ -61,13 +61,6 @@ class _ExtendCardNotificationState extends State<ExtendCardNotification> {
               ),
               SizedBox(height: 8),
               FilledButton(
-                style: FilledButton.styleFrom(
-                  backgroundColor: colorScheme.primary,
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                ),
                 onPressed: () => _openApplication(),
                 child: Text(t.identification.extendCard.toUpperCase()),
               ),
