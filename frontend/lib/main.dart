@@ -8,7 +8,7 @@ import 'package:ehrenamtskarte/settings_provider.dart';
 import 'package:ehrenamtskarte/util/android_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:slang/builder/model/enums.dart';
+import 'package:slang/overrides.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
