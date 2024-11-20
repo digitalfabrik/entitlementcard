@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:ehrenamtskarte/graphql/graphql_api.dart';
+import 'package:ehrenamtskarte/graphql_gen/schema.graphql.dart';
 import 'package:ehrenamtskarte/map/preview/models.dart';
 import 'package:ehrenamtskarte/routing.dart';
 import 'package:ehrenamtskarte/store_widgets/detail/detail_page.dart';
@@ -14,7 +14,7 @@ import 'package:ehrenamtskarte/map/map_page.dart';
 
 class AcceptingStoreSummary extends StatelessWidget {
   final AcceptingStoreSummaryModel store;
-  final CoordinatesInput? coordinates;
+  final Input$CoordinatesInput? coordinates;
   final double wideDepictionThreshold;
   final void Function(PhysicalStoreFeatureData)? showOnMap;
   final bool showLocation;

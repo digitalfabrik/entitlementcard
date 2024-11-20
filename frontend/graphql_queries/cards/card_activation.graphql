@@ -1,5 +1,5 @@
 mutation ActivateCard($project: String!, $cardInfoHashBase64: String!, $activationSecretBase64: String!, $overwrite: Boolean!) {
-    activateCard(project: $project, cardInfoHashBase64: $cardInfoHashBase64, activationSecretBase64: $activationSecretBase64, overwrite: $overwrite) {
+    activation: activateCard(project: $project, cardInfoHashBase64: $cardInfoHashBase64, activationSecretBase64: $activationSecretBase64, overwrite: $overwrite) {
         activationState,
         totpSecret,
         activationTimeStamp

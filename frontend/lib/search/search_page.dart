@@ -1,11 +1,12 @@
 import 'package:ehrenamtskarte/category_assets.dart';
-import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
 import 'package:ehrenamtskarte/search/filter_bar.dart';
 import 'package:ehrenamtskarte/search/sorting_button.dart';
 import 'package:ehrenamtskarte/search/results_loader.dart';
 import 'package:ehrenamtskarte/widgets/app_bars.dart';
 import 'package:flutter/material.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
+
+import 'package:ehrenamtskarte/graphql_gen/schema.graphql.dart';
 
 enum SortingMode { alphabetically, byDistance }
 
@@ -19,7 +20,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   String? searchFieldText;
   final List<CategoryAsset> _selectedCategories = [];
-  CoordinatesInput? _coordinates;
+  Input$CoordinatesInput? _coordinates;
   SortingMode _sortingMode = SortingMode.alphabetically;
 
   @override
@@ -67,7 +68,7 @@ class _SearchPageState extends State<SearchPage> {
         ),
         SortingButton(
           setCoordinates: (position) => setState(() {
-            _coordinates = CoordinatesInput(lat: position.latitude, lng: position.longitude);
+            _coordinates = Input$CoordinatesInput(lat: position.latitude, lng: position.longitude);
             _sortingMode = SortingMode.byDistance;
           }),
           setSortingMode: (sortingMode) {

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
-import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
 import 'package:ehrenamtskarte/home/home_page.dart';
 import 'package:ehrenamtskarte/favorites/favorites_model.dart';
 import 'package:ehrenamtskarte/favorites/favorite_store.dart';
@@ -14,6 +13,7 @@ import 'package:ehrenamtskarte/store_widgets/removed_store_summary.dart';
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:provider/provider.dart';
+import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/accepting_store_by_id.graphql.dart';
 
 class FavoritesLoader extends StatefulWidget {
   const FavoritesLoader({super.key});
@@ -93,27 +93,26 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
     }
   }
 
-  Future<AcceptingStoreById$Query$PhysicalStore?> _fetchPhysicalStore(int storeId) async {
+  Future<Query$AcceptingStoreById$stores?> _fetchPhysicalStore(int storeId) async {
     final projectId = Configuration.of(context).projectId;
-
-    final query = AcceptingStoreByIdQuery(variables: AcceptingStoreByIdArguments(project: projectId, ids: [storeId]));
 
     final client = _client;
     if (client == null) {
       throw Exception('GraphQL client is not yet initialized!');
     }
 
-    final result = await client.query(QueryOptions(document: query.document, variables: query.getVariablesMap()));
+    final result = await client.query$AcceptingStoreById(Options$Query$AcceptingStoreById(
+        variables: Variables$Query$AcceptingStoreById(project: projectId, ids: [storeId])));
     final exception = result.exception;
     if (result.hasException && exception != null) {
       throw exception;
     }
 
-    final data = result.data;
+    final data = result.parsedData;
     if (data == null) {
       throw Exception('Fetched data is null');
     }
-    return query.parse(data).physicalStoresByIdInProject.firstOrNull;
+    return data.stores.firstOrNull;
   }
 
   @override

@@ -4,8 +4,7 @@ targets:
     sources:
       - $package$
       - lib/$lib$
-      - graphql_queries/**
-      - schema.graphql
+      - "**.graphql"
       - proto/**
       - lib/build_config/build_config.yaml
       - assets/l10n/*
@@ -26,21 +25,18 @@ targets:
           out_dir: "lib/proto"
           grpc: false
           precompile_protoc_plugin: true
-      artemis:
+      graphql_codegen:
         options:
-          schema_mapping:
-            - schema: schema.graphql
-              queries_glob: graphql_queries/**.graphql
-              output: lib/graphql/graphql_api.dart
-          scalar_mapping:
-            - graphql_type: Long
-              dart_type: int
-            - graphql_type: Upload
-              custom_parser_import: 'upload_parser.dart'
-              dart_type:
-                name: MultipartFile
-                imports:
-                  - 'package:http/http.dart'
+          clients:
+            - graphql
+            - graphql_flutter
+          outputDirectory: /lib/graphql_gen/
+          assetsPath: "**.graphql"
+          scalars:
+            Long:
+              type: int
+            Upload: # Not used in flutter frontend.
+              type: String
       slang_build_runner:
         options:
           base_locale: de
