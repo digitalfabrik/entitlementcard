@@ -2,6 +2,7 @@ package app.ehrenamtskarte.backend.auth.service
 
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
+import app.ehrenamtskarte.backend.common.webservice.EAK_BAYERN_PROJECT
 import app.ehrenamtskarte.backend.common.webservice.KOBLENZ_PASS_PROJECT
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import app.ehrenamtskarte.backend.projects.database.Projects
@@ -146,16 +147,22 @@ object Authorizer {
 
     fun mayAddApiTokensInProject(user: AdministratorEntity): Boolean {
         return transaction {
-            user.role == Role.PROJECT_ADMIN.db_value && ProjectEntity.find { Projects.project eq KOBLENZ_PASS_PROJECT }
-                .single().id.value == user.projectId.value
+            (
+                user.role == Role.PROJECT_ADMIN.db_value && ProjectEntity.find { Projects.project eq KOBLENZ_PASS_PROJECT }
+                    .single().id.value == user.projectId.value
+                ) ||
+                (
+                    user.role == Role.EXTERNAL_VERIFIED_API_USER.db_value && ProjectEntity.find { Projects.project eq EAK_BAYERN_PROJECT }
+                        .single().id.value == user.projectId.value
+                    )
         }
     }
 
     fun mayViewApiMetadataInProject(user: AdministratorEntity): Boolean =
-        user.role == Role.PROJECT_ADMIN.db_value
+        user.role == Role.PROJECT_ADMIN.db_value || user.role == Role.EXTERNAL_VERIFIED_API_USER.db_value
 
     fun mayDeleteApiTokensInProject(user: AdministratorEntity): Boolean =
-        user.role == Role.PROJECT_ADMIN.db_value
+        user.role == Role.PROJECT_ADMIN.db_value || user.role == Role.EXTERNAL_VERIFIED_API_USER.db_value
 
     fun maySeeHashingPepper(user: AdministratorEntity): Boolean {
         return transaction {

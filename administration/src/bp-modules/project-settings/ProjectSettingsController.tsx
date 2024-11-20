@@ -19,7 +19,7 @@ const ProjectSettingsController = (): ReactElement => {
   const { userImportApiEnabled } = useContext(ProjectConfigContext)
   const { role } = useContext(WhoAmIContext).me!
 
-  if (role !== Role.ProjectAdmin || !userImportApiEnabled) {
+  if ((role !== Role.ProjectAdmin || !userImportApiEnabled) && role !== Role.ExternalVerifiedApiUser) {
     return (
       <NonIdealState
         icon='cross'
@@ -30,7 +30,7 @@ const ProjectSettingsController = (): ReactElement => {
   }
   return (
     <ProjectSettingsContainer>
-      <UserEndpointSettings />
+      <UserEndpointSettings showPepperSection={role === Role.ProjectAdmin && userImportApiEnabled} />
     </ProjectSettingsContainer>
   )
 }

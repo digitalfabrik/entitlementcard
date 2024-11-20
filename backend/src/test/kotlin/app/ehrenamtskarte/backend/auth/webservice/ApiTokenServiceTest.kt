@@ -3,6 +3,7 @@ package app.ehrenamtskarte.backend.auth.webservice
 import app.ehrenamtskarte.backend.IntegrationTest
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.database.Administrators
+import app.ehrenamtskarte.backend.auth.database.ApiTokenType
 import app.ehrenamtskarte.backend.auth.database.ApiTokens
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.auth.webservice.schema.ApiTokenQueryService
@@ -87,7 +88,7 @@ internal class ApiTokenServiceTest : IntegrationTest() {
         every { mockJwtPayload.adminId } returns TestAdministrators.KOBLENZ_PROJECT_ADMIN.id
 
         transaction {
-            val tokenId = TestData.createApiToken(creatorId = TestAdministrators.KOBLENZ_PROJECT_ADMIN.id)
+            val tokenId = TestData.createApiToken(creatorId = TestAdministrators.KOBLENZ_PROJECT_ADMIN.id, type = ApiTokenType.USER_IMPORT)
             val tokenExists = ApiTokens.select { ApiTokens.id eq tokenId }.count() > 0
             assertTrue(tokenExists)
 
@@ -101,7 +102,7 @@ internal class ApiTokenServiceTest : IntegrationTest() {
     @Test
     fun deleteApiToken_deletesFromOtherAdminTokenSuccessfully() {
         every { mockJwtPayload.adminId } returns TestAdministrators.KOBLENZ_PROJECT_ADMIN.id
-        TestData.createApiToken(creatorId = TestAdministrators.KOBLENZ_PROJECT_ADMIN_2.id)
+        TestData.createApiToken(creatorId = TestAdministrators.KOBLENZ_PROJECT_ADMIN_2.id, type = ApiTokenType.USER_IMPORT)
 
         transaction {
             val tokenBefore = ApiTokens.select { ApiTokens.creatorId eq TestAdministrators.KOBLENZ_PROJECT_ADMIN_2.id }.singleOrNull()
@@ -118,7 +119,7 @@ internal class ApiTokenServiceTest : IntegrationTest() {
     fun deleteApiToken_deletesNoTokenFormOtherProject() {
         every { mockJwtPayload.adminId } returns TestAdministrators.KOBLENZ_PROJECT_ADMIN.id
         transaction {
-            val tokenId = TestData.createApiToken(creatorId = TestAdministrators.NUERNBERG_PROJECT_ADMIN.id)
+            val tokenId = TestData.createApiToken(creatorId = TestAdministrators.NUERNBERG_PROJECT_ADMIN.id, type = ApiTokenType.USER_IMPORT)
 
             val numberOfTokensBefore = ApiTokens.selectAll().count()
             ApiTokenService().deleteApiToken(tokenId, mockDfe)
@@ -159,7 +160,7 @@ internal class ApiTokenServiceTest : IntegrationTest() {
         every { mockJwtPayload.adminId } returns TestAdministrators.KOBLENZ_PROJECT_ADMIN.id
 
         transaction {
-            val tokenId = TestData.createApiToken(creatorId = TestAdministrators.KOBLENZ_PROJECT_ADMIN.id)
+            val tokenId = TestData.createApiToken(creatorId = TestAdministrators.KOBLENZ_PROJECT_ADMIN.id, type = ApiTokenType.USER_IMPORT)
 
             val metaData = ApiTokenQueryService().getApiTokenMetaData(mockDfe)
             assertEquals(1, metaData.size)
@@ -201,10 +202,53 @@ internal class ApiTokenServiceTest : IntegrationTest() {
         every { mockJwtPayload.adminId } returns TestAdministrators.KOBLENZ_PROJECT_ADMIN.id
 
         transaction {
-            TestData.createApiToken(creatorId = TestAdministrators.NUERNBERG_PROJECT_ADMIN.id)
+            TestData.createApiToken(creatorId = TestAdministrators.NUERNBERG_PROJECT_ADMIN.id, type = ApiTokenType.USER_IMPORT)
 
             val metaData = ApiTokenQueryService().getApiTokenMetaData(mockDfe)
             assertEquals(0, metaData.size)
+        }
+    }
+
+    @Test
+    fun getApiTokenMetaData_returnsOnlyVerifiedApplicationTokensForExternalUser() {
+        every { mockJwtPayload.adminId } returns TestAdministrators.BAYERN_VEREIN_360.id
+
+        transaction {
+            TestData.createApiToken(creatorId = TestAdministrators.KOBLENZ_PROJECT_ADMIN.id, type = ApiTokenType.USER_IMPORT)
+            TestData.createApiToken(creatorId = TestAdministrators.BAYERN_VEREIN_360.id, type = ApiTokenType.VERIFIED_APPLICATION)
+
+            val metaData = ApiTokenQueryService().getApiTokenMetaData(mockDfe)
+            assertEquals(1, metaData.size)
+            assertEquals(ApiTokenType.VERIFIED_APPLICATION, metaData[0].type)
+        }
+    }
+
+    @Test
+    fun deleteApiToken_throwsForbiddenExceptionWhenExternalUserDeletesProjectAdminToken() {
+        every { mockJwtPayload.adminId } returns TestAdministrators.BAYERN_VEREIN_360.id
+
+        transaction {
+            val tokenId = TestData.createApiToken(creatorId = TestAdministrators.KOBLENZ_PROJECT_ADMIN.id, type = ApiTokenType.USER_IMPORT)
+
+            assertThrows(ForbiddenException::class.java) {
+                ApiTokenService().deleteApiToken(tokenId, mockDfe)
+            }
+        }
+    }
+
+    @Test
+    fun deleteApiToken_deletesApiTokenForExternalUserSuccessfully() {
+        every { mockJwtPayload.adminId } returns TestAdministrators.BAYERN_VEREIN_360.id
+
+        transaction {
+            val tokenId = TestData.createApiToken(creatorId = TestAdministrators.BAYERN_VEREIN_360.id, type = ApiTokenType.VERIFIED_APPLICATION)
+            val tokenExists = ApiTokens.select { ApiTokens.id eq tokenId }.count() > 0
+            assertTrue(tokenExists)
+
+            ApiTokenService().deleteApiToken(tokenId, mockDfe)
+
+            val tokenNoLongerExists = ApiTokens.select { ApiTokens.id eq tokenId }.singleOrNull() == null
+            assertTrue(tokenNoLongerExists)
         }
     }
 }

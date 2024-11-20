@@ -27,7 +27,7 @@ object Administrators : IntIdTable() {
     val deleted = bool("deleted")
 
     init {
-        val noRegionCompatibleRoles = listOf(Role.PROJECT_ADMIN, Role.NO_RIGHTS, Role.PROJECT_STORE_MANAGER)
+        val noRegionCompatibleRoles = listOf(Role.PROJECT_ADMIN, Role.NO_RIGHTS, Role.PROJECT_STORE_MANAGER, Role.EXTERNAL_VERIFIED_API_USER)
         val regionCompatibleRoles = listOf(Role.REGION_MANAGER, Role.REGION_ADMIN, Role.NO_RIGHTS)
         check("roleRegionCombinationConstraint") {
             regionId.isNull().and(role.inList(noRegionCompatibleRoles.map { it.db_value })) or
@@ -58,11 +58,17 @@ class AdministratorEntity(id: EntityID<Int>) : IntEntity(id) {
 
 const val TOKEN_LENGTH = 60
 
+enum class ApiTokenType {
+    USER_IMPORT,
+    VERIFIED_APPLICATION
+}
+
 object ApiTokens : IntIdTable() {
     val tokenHash = binary("tokenHash").uniqueIndex()
     val creatorId = reference("creatorId", Administrators)
     val projectId = reference("projectId", Projects)
     val expirationDate = date("expirationDate")
+    val type = enumerationByName("type", 50, ApiTokenType::class)
 }
 
 class ApiTokenEntity(id: EntityID<Int>) : IntEntity(id) {
@@ -72,4 +78,5 @@ class ApiTokenEntity(id: EntityID<Int>) : IntEntity(id) {
     var creator by ApiTokens.creatorId
     var projectId by ApiTokens.projectId
     var expirationDate by ApiTokens.expirationDate
+    var type by ApiTokens.type
 }

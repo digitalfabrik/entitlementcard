@@ -58,6 +58,7 @@ type ApiTokenMetaData {
   creatorEmail: String!
   expirationDate: String!
   id: Int!
+  type: ApiTokenType!
 }
 
 type ApplicationVerificationView {
@@ -277,6 +278,11 @@ enum ActivationState {
   success
 }
 
+enum ApiTokenType {
+  USER_IMPORT
+  VERIFIED_APPLICATION
+}
+
 enum ApplicationType {
   FIRST_APPLICATION
   RENEWAL_APPLICATION
@@ -333,6 +339,7 @@ enum GraphQLExceptionCode {
 }
 
 enum Role {
+  EXTERNAL_VERIFIED_API_USER
   NO_RIGHTS
   PROJECT_ADMIN
   PROJECT_STORE_MANAGER

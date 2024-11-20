@@ -69,7 +69,7 @@ const Navigation = ({ onSignOut }: Props): ReactElement => {
             <Button minimal icon='path-search' text='Region verwalten' />
           </NavLink>
         ) : null}
-        {role === Role.ProjectAdmin && config.userImportApiEnabled ? (
+        {(role === Role.ProjectAdmin && config.userImportApiEnabled) || role === Role.ExternalVerifiedApiUser ? (
           <NavLink to='/project'>
             <Button minimal icon='projects' text='Projekt verwalten' />
           </NavLink>
