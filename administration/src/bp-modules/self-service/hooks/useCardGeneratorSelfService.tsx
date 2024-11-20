@@ -2,18 +2,18 @@ import { ApolloError } from '@apollo/client'
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
-import { Card, generateCardInfo, initializeCard } from '../../../cards/Card'
+import { Card, generateCardInfo, initializeCardFromCSV } from '../../../cards/Card'
 import { generatePdf } from '../../../cards/PdfFactory'
 import { CreateCardsError, CreateCardsResult } from '../../../cards/createCards'
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
 import { DynamicActivationCode, StaticVerificationCode } from '../../../generated/card_pb'
 import { useCreateCardsFromSelfServiceMutation } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
-import PlainDate from '../../../util/PlainDate'
 import { base64ToUint8Array, uint8ArrayToBase64 } from '../../../util/base64'
 import downloadDataUri from '../../../util/downloadDataUri'
 import getCustomDeepLinkFromQrCode from '../../../util/getCustomDeepLinkFromQrCode'
 import { useAppToaster } from '../../AppToaster'
+import { getHeaders } from '../../cards/ImportCardsController'
 import FormErrorMessage from '../components/FormErrorMessage'
 
 export enum CardSelfServiceStep {
@@ -34,31 +34,15 @@ type UseCardGeneratorSelfServiceReturn = {
   downloadPdf: (code: CreateCardsResult, fileName: string) => Promise<void>
 }
 
-const handleQueryParams = (
-  cardQueryParams: URLSearchParams
-): {
-  fullName?: string
-  birthday?: PlainDate
-  koblenzReferenceNumber?: string
-} => {
-  const fullName = cardQueryParams.get('name') ?? undefined
-  const birthday = PlainDate.safeFrom(cardQueryParams.get('geburtsdatum')) ?? undefined
-  const koblenzReferenceNumber = cardQueryParams.get('ref') ?? undefined
-  return { fullName, birthday, koblenzReferenceNumber }
-}
-
 const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
   const projectConfig = useContext(ProjectConfigContext)
   const appToaster = useAppToaster()
   const [cardQueryParams, setSearchParams] = useSearchParams()
-  const { fullName, birthday, koblenzReferenceNumber } = handleQueryParams(cardQueryParams)
-  const [selfServiceCard, setSelfServiceCard] = useState(
-    initializeCard(projectConfig.card, undefined, {
-      fullName,
-      expirationDate: null,
-      extensions: { birthday, koblenzReferenceNumber },
-    })
-  )
+  const [selfServiceCard, setSelfServiceCard] = useState(() => {
+    const headers = getHeaders(projectConfig)
+    const values = headers.map(header => cardQueryParams.get(header))
+    return initializeCardFromCSV(projectConfig.card, values, headers, undefined, true)
+  })
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [selfServiceState, setSelfServiceState] = useState<CardSelfServiceStep>(CardSelfServiceStep.form)
   const [deepLink, setDeepLink] = useState<string>('')
