@@ -1,5 +1,6 @@
 import { Classes, Collapse, H6, Icon } from '@blueprintjs/core'
 import React, { memo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import { printAwareCss } from './ApplicationCard'
@@ -52,10 +53,22 @@ const JsonFieldArray = ({
   attachmentAccessible,
   expandedRoot,
 }: JsonFieldViewProps<JsonField<'Array'>>) => {
+  const { t } = useTranslation('application')
   const [isExpanded, setIsExpanded] = useState(hierarchyIndex !== 1 || expandedRoot)
-  const children = jsonField.value.map((jsonField, index: number) => (
+  const getTranslationKey = () =>
+    [
+      'organizationContact',
+      'organization',
+      'volunteerServiceEntitlement',
+      'honoredByMinisterPresidentEntitlement',
+    ].includes(jsonField.name)
+      ? `${jsonField.name}.title`
+      : jsonField.name
+
+  const children = jsonField.value.map((jsonFieldIt, index: number) => (
     <JsonFieldView
-      jsonField={jsonField}
+      jsonField={jsonFieldIt}
+      parentName={['organizationContact', 'organization'].includes(jsonField.name) ? jsonField.name : undefined}
       baseUrl={baseUrl}
       // This is the best key we have as jsonField.name is not unique
       // eslint-disable-next-line react/no-array-index-key
@@ -65,13 +78,13 @@ const JsonFieldArray = ({
       expandedRoot={expandedRoot}
     />
   ))
-  return jsonField.translations.de.length === 0 ? (
+  return jsonField.name === 'application' ? (
     <>{children}</>
   ) : (
     <ParentOfBorder $hierarchyIndex={hierarchyIndex}>
       <CollapsableHeader onClick={() => setIsExpanded(!isExpanded)}>
         <PrintableCaret icon={isExpanded ? 'caret-up' : 'caret-down'} />
-        {jsonField.translations.de}
+        {t(getTranslationKey())}
       </CollapsableHeader>
       <PrintableCollapse keepChildrenMounted isOpen={isExpanded}>
         {children}

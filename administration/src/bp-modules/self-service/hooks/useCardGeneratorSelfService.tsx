@@ -1,5 +1,5 @@
 import { ApolloError } from '@apollo/client'
-import { useCallback, useContext, useState } from 'react'
+import React, { useCallback, useContext, useState } from 'react'
 
 import { Card, generateCardInfo, initializeCard } from '../../../cards/Card'
 import { generatePdf } from '../../../cards/PdfFactory'
@@ -12,6 +12,7 @@ import { base64ToUint8Array, uint8ArrayToBase64 } from '../../../util/base64'
 import downloadDataUri from '../../../util/downloadDataUri'
 import getCustomDeepLinkFromQrCode from '../../../util/getCustomDeepLinkFromQrCode'
 import { useAppToaster } from '../../AppToaster'
+import FormErrorMessage from '../components/FormErrorMessage'
 
 export enum CardSelfServiceStep {
   form,
@@ -54,9 +55,9 @@ const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
       if (error instanceof ApolloError) {
         const { title } = getMessageFromApolloError(error)
         appToaster?.show({
-          message: title,
-          intent: 'danger',
+          message: <FormErrorMessage style={{ color: 'white' }} errorMessage={title} />,
           timeout: 0,
+          intent: 'danger',
         })
       } else {
         appToaster?.show({

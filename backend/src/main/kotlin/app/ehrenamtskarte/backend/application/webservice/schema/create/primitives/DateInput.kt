@@ -22,7 +22,7 @@ data class DateInput(val date: String) {
         return LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE)
     }
 
-    fun toJsonField(fieldName: String, translations: Map<String, String>): JsonField {
-        return JsonField(fieldName, translations, Type.Date, date)
+    fun toJsonField(fieldName: String): JsonField {
+        return JsonField(fieldName, Type.Date, date)
     }
 }

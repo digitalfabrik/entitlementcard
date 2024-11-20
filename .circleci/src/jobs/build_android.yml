@@ -18,8 +18,6 @@ steps:
   - prepare_workspace
   - install_dart_linux
   - install_fvm
-  - install_protobuf_linux:
-      dart_plugin: true
   - restore_environment_variables
   - restore_ruby_cache:
       directory: ~/project/frontend/android
