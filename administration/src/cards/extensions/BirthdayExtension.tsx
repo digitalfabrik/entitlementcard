@@ -32,7 +32,7 @@ const BirthdayForm = ({
   }
 
   const changeBirthday = (date: Date | null) => {
-    setValue({ birthday: PlainDate.safeFromCustomFormat(date?.toLocaleDateString() ?? null) })
+    setValue({ birthday: PlainDate.safeFromLocalDate(date) })
   }
 
   return (

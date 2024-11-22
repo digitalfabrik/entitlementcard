@@ -41,6 +41,17 @@ class PlainDate {
     this.day = day
   }
 
+  static constructSafely<T>(value: T | null, construct: (value: T) => PlainDate | null): PlainDate | null {
+    if (value === null) {
+      return null
+    }
+    try {
+      return construct(value)
+    } catch {
+      return null
+    }
+  }
+
   /**
    * Returns a PlainDate by parsing a string using some custom format
    * @param value The string to be parsed.
@@ -63,14 +74,7 @@ class PlainDate {
   }
 
   static safeFromCustomFormat(value: string | null, format: string = 'dd.MM.yyyy'): PlainDate | null {
-    if (value === null) {
-      return null
-    }
-    try {
-      return PlainDate.fromCustomFormat(value, format)
-    } catch {
-      return null
-    }
+    return PlainDate.constructSafely(value, value => PlainDate.fromCustomFormat(value, format))
   }
 
   static safeFrom(valueISO8601: string | null): PlainDate | null {
@@ -106,6 +110,10 @@ class PlainDate {
 
   static fromLocalDate(date: Date): PlainDate {
     return new PlainDate(date.getFullYear(), date.getMonth() + 1, date.getDate())
+  }
+
+  static safeFromLocalDate(date: Date | null): PlainDate | null {
+    return PlainDate.constructSafely(date, PlainDate.fromLocalDate)
   }
 
   /**
