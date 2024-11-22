@@ -175,7 +175,9 @@ const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
     async (applicationIdToMarkAsProcessed?: number) => {
       await generateCards(
         (codes: CreateCardsResult[], cards: Card[]) => generatePdf(codes, cards, projectConfig.pdf, region),
-        cards.length === 1 ? `${normalizeString(cards[0].fullName)}.pdf` : 'berechtigungskarten.pdf',
+        cards.length === 1
+          ? `${normalizeString(cards[0].fullName)}-${new Date().getFullYear()}.pdf`
+          : 'berechtigungskarten.pdf',
         applicationIdToMarkAsProcessed
       )
     },
