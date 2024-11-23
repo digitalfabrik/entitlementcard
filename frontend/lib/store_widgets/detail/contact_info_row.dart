@@ -20,6 +20,7 @@ class ContactInfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     if (_description.isEmpty) {
       return const SizedBox.shrink();
     }
@@ -31,7 +32,7 @@ class ContactInfoRow extends StatelessWidget {
             child: Container(
               width: 42,
               height: 42,
-              color: iconFillColor ?? Theme.of(context).colorScheme.primary,
+              color: iconFillColor ?? theme.colorScheme.primary,
               child: Icon(
                 _icon,
                 size: 28,
@@ -44,6 +45,7 @@ class ContactInfoRow extends StatelessWidget {
         Expanded(
           child: Text(
             _description,
+            style: theme.textTheme.bodyMedium,
           ),
         ),
       ],

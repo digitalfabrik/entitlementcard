@@ -92,6 +92,7 @@ class StoreTextOverview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final t = context.t;
     final location = store.location;
     return Expanded(
@@ -103,14 +104,14 @@ class StoreTextOverview extends StatelessWidget {
             store.name ?? t.store.acceptingStore,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.bodyLarge,
+            style: theme.textTheme.bodyLarge,
           ),
           const SizedBox(height: 4),
           Text(
             store.description ?? t.store.noDescriptionAvailable,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: theme.textTheme.bodyLarge?.apply(color: theme.hintColor),
           ),
           if (showTownName && location != null) Text(location, maxLines: 1, overflow: TextOverflow.ellipsis)
         ],
@@ -136,8 +137,10 @@ class DistanceText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Center(
-      child: Text(_formatDistance(distance), maxLines: 1, style: Theme.of(context).textTheme.bodyMedium),
+      child:
+          Text(_formatDistance(distance), maxLines: 1, style: theme.textTheme.bodyLarge?.apply(color: theme.hintColor)),
     );
   }
 }

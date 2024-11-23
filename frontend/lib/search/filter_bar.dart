@@ -1,5 +1,5 @@
 import 'package:collection/collection.dart';
-import 'package:ehrenamtskarte/build_config/build_config.dart';
+import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/category_assets.dart';
 import 'package:ehrenamtskarte/search/filter_bar_button.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +14,7 @@ class FilterBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-
+    final theme = Theme.of(context);
     final sortedCategories = [...categoryAssets(context).where((category) => category.id != 9)];
     sortedCategories.sort((a, b) => a.shortName.length.compareTo(b.shortName.length));
     sortedCategories.add(categoryAssets(context).where((category) => category.id == 9).single);
@@ -29,7 +29,7 @@ class FilterBar extends StatelessWidget {
             child: Row(
               children: [
                 Text(t.search.filterByCategories.toUpperCase(),
-                    maxLines: 1, style: const TextStyle(color: Colors.grey)),
+                    maxLines: 1, style: theme.textTheme.bodyMedium?.apply(color: theme.hintColor)),
                 const Expanded(child: Padding(padding: EdgeInsets.only(left: 8), child: Divider(thickness: 0.7)))
               ],
             ),

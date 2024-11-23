@@ -16,6 +16,7 @@ class AttributionDialogItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return SimpleDialogOption(
       onPressed: onPressed,
       child: Row(
@@ -26,7 +27,7 @@ class AttributionDialogItem extends StatelessWidget {
           Flexible(
             child: Container(
               padding: const EdgeInsetsDirectional.only(start: 8.0),
-              child: Text(text, style: TextStyle(color: color)),
+              child: Text(text, style: theme.textTheme.bodySmall?.apply(color: color)),
             ),
           ),
         ],

@@ -38,12 +38,13 @@ class PositiveVerificationResultDialogState extends State<PositiveVerificationRe
   @override
   Widget build(BuildContext context) {
     final t = context.t;
+    final theme = Theme.of(context);
 
     final bool isUncheckedStaticQrCode = !isChecked && widget.isStaticVerificationCode;
     return InfoDialog(
       title: isUncheckedStaticQrCode ? t.identification.checkRequired : t.identification.verificationSuccessful,
       icon: isUncheckedStaticQrCode ? Icons.report : Icons.verified_user,
-      iconColor: isUncheckedStaticQrCode ? Theme.of(context).colorScheme.onBackground : Colors.green,
+      iconColor: isUncheckedStaticQrCode ? theme.colorScheme.onBackground : Colors.green,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -60,7 +61,7 @@ class PositiveVerificationResultDialogState extends State<PositiveVerificationRe
               child: Padding(
                 padding: const EdgeInsets.only(top: 16.0),
                 child: CheckboxListTile(
-                  title: Text(t.identification.comparedWithID),
+                  title: Text(t.identification.comparedWithID, style: theme.textTheme.bodyLarge),
                   controlAffinity: ListTileControlAffinity.leading,
                   value: isChecked,
                   onChanged: (bool? value) {
