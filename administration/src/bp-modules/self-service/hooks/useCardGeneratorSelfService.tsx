@@ -37,20 +37,17 @@ type UseCardGeneratorSelfServiceReturn = {
 const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
   const projectConfig = useContext(ProjectConfigContext)
   const appToaster = useAppToaster()
-  const [cardQueryParams, setSearchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [selfServiceCard, setSelfServiceCard] = useState(() => {
     const headers = getHeaders(projectConfig)
-    const values = headers.map(header => cardQueryParams.get(header))
+    const values = headers.map(header => searchParams.get(header))
+    setSearchParams(undefined, { replace: true })
     return initializeCardFromCSV(projectConfig.card, values, headers, undefined, true)
   })
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [selfServiceState, setSelfServiceState] = useState<CardSelfServiceStep>(CardSelfServiceStep.form)
   const [deepLink, setDeepLink] = useState<string>('')
   const [code, setCode] = useState<CreateCardsResult | null>(null)
-
-  useEffect(() => {
-    setSearchParams(undefined, { replace: true })
-  }, [setSearchParams])
 
   const [createCardsSelfService] = useCreateCardsFromSelfServiceMutation()
 
