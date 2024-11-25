@@ -1,5 +1,5 @@
 import { ApolloError } from '@apollo/client'
-import React, { useCallback, useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import { Card, generateCardInfo, initializeCardFromCSV } from '../../../cards/Card'
@@ -37,18 +37,16 @@ type UseCardGeneratorSelfServiceReturn = {
 const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
   const projectConfig = useContext(ProjectConfigContext)
   const appToaster = useAppToaster()
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
   const [selfServiceCard, setSelfServiceCard] = useState(() => {
     const headers = getHeaders(projectConfig)
     const values = headers.map(header => searchParams.get(header))
-    setSearchParams(undefined, { replace: true })
     return initializeCardFromCSV(projectConfig.card, values, headers, undefined, true)
   })
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [selfServiceState, setSelfServiceState] = useState<CardSelfServiceStep>(CardSelfServiceStep.form)
   const [deepLink, setDeepLink] = useState<string>('')
   const [code, setCode] = useState<CreateCardsResult | null>(null)
-
   const [createCardsSelfService] = useCreateCardsFromSelfServiceMutation()
 
   const handleErrors = useCallback(
