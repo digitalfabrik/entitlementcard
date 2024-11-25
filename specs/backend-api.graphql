@@ -534,6 +534,7 @@ input ShortTextInput {
 input WorkAtOrganizationInput {
   amountOfWork: Float!
   certificate: AttachmentInput
+  isAlreadyVerified: Boolean
   organization: OrganizationInput!
   payment: Boolean!
   responsibility: ShortTextInput!
