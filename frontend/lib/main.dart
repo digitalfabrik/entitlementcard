@@ -51,8 +51,12 @@ Future<String?> loadLocaleOverride(AppLocale locale) async {
   final path = '${buildConfig.localeOverridePath}/override_${locale.languageCode}.json';
   try {
     return await rootBundle.loadString(path);
-  } catch (e) {
-    return null;
+  } on FlutterError catch (e) {
+    if (e.message.contains('Unable to load asset')) {
+      debugPrint('Locale override not found at path: $path. The default translation will be used');
+      return null;
+    }
+    rethrow;
   }
 }
 
