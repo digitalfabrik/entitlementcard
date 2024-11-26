@@ -118,7 +118,7 @@ const UserEndpointSettings = ({ showPepperSection }: UserEndpointSettingsProps):
         <p>Möchten Sie das Token unwiderruflich löschen?</p>
       </Alert>
       <SettingsCard>
-        <H2>User Import Endpunkt</H2>
+        <H2>Api Token</H2>
         {showPepperSection && <PepperSettings />}
         <Container>
           <H4>Neues Token erstellen</H4>

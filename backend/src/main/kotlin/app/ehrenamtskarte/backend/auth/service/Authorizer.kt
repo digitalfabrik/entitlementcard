@@ -8,6 +8,7 @@ import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.RegionEntity
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object Authorizer {
@@ -57,7 +58,7 @@ object Authorizer {
 
     fun mayViewUsersInRegion(user: AdministratorEntity?, region: RegionEntity): Boolean {
         return (user?.role == Role.REGION_ADMIN.db_value && user.regionId == region.id) ||
-            mayViewUsersInProject(user, region.projectId.value)
+                mayViewUsersInProject(user, region.projectId.value)
     }
 
     fun maySendMailsInRegion(user: AdministratorEntity, regionId: Int): Boolean {
@@ -87,6 +88,13 @@ object Authorizer {
             return false
         }
 
+        if (newAdminRole == Role.EXTERNAL_VERIFIED_API_USER) {
+            return transaction {
+                ProjectEntity.find { Projects.project eq EAK_BAYERN_PROJECT }
+                    .single().id.value == actingAdmin.projectId.value
+            }
+        }
+
         if (actingAdmin.role == Role.PROJECT_ADMIN.db_value) {
             return true
         } else if (
@@ -96,6 +104,7 @@ object Authorizer {
         ) {
             return true
         }
+
         return false
     }
 
@@ -148,13 +157,13 @@ object Authorizer {
     fun mayAddApiTokensInProject(user: AdministratorEntity): Boolean {
         return transaction {
             (
-                user.role == Role.PROJECT_ADMIN.db_value && ProjectEntity.find { Projects.project eq KOBLENZ_PASS_PROJECT }
-                    .single().id.value == user.projectId.value
-                ) ||
-                (
-                    user.role == Role.EXTERNAL_VERIFIED_API_USER.db_value && ProjectEntity.find { Projects.project eq EAK_BAYERN_PROJECT }
+                    user.role == Role.PROJECT_ADMIN.db_value && ProjectEntity.find { Projects.project eq KOBLENZ_PASS_PROJECT }
                         .single().id.value == user.projectId.value
-                    )
+                    ) ||
+                    (
+                            user.role == Role.EXTERNAL_VERIFIED_API_USER.db_value && ProjectEntity.find { Projects.project eq EAK_BAYERN_PROJECT }
+                                .single().id.value == user.projectId.value
+                            )
         }
     }
 
@@ -168,7 +177,7 @@ object Authorizer {
         return transaction {
             ProjectEntity.find { Projects.project eq KOBLENZ_PASS_PROJECT }
                 .single().id.value == user.projectId.value &&
-                user.role == Role.PROJECT_ADMIN.db_value
+                    user.role == Role.PROJECT_ADMIN.db_value
         }
     }
 }
