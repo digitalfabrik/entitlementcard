@@ -18,6 +18,9 @@ const RoleSelector = ({
       Auswählen...
     </option>
     {hideProjectAdmin ? null : <option value={Role.ProjectAdmin}>{roleToText(Role.ProjectAdmin)}</option>}
+    {hideProjectAdmin ? null : (
+      <option value={Role.ExternalVerifiedApiUser}>{roleToText(Role.ExternalVerifiedApiUser)}</option>
+    )}
     <option value={Role.RegionAdmin}>{roleToText(Role.RegionAdmin)}</option>
     <option value={Role.RegionManager}>{roleToText(Role.RegionManager)}</option>
   </HTMLSelect>
