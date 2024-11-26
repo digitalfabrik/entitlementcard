@@ -88,11 +88,11 @@ class ApplicationHandler(
     }
 
     fun isValidPreVerifiedApplication(): Boolean {
-        val isAlreadyVerifiedIsSet =
+        val isAlreadyVerifiedSet =
             application.applicationDetails.blueCardEntitlement?.workAtOrganizationsEntitlement?.list?.any {
                 it.isAlreadyVerified == true
             } ?: false
-        if (isAlreadyVerifiedIsSet) {
+        if (isAlreadyVerifiedSet) {
             // check if api token is set and valid, if not throw unauthorized exception
             // Will be done in #1790
             throw UnauthorizedException()
@@ -100,7 +100,7 @@ class ApplicationHandler(
         return false
     }
 
-    fun setApplicationVerificationToVerifiedToday(verificationEntities: List<ApplicationVerificationEntity>) {
+    fun setApplicationVerificationToVerifiedNow(verificationEntities: List<ApplicationVerificationEntity>) {
         transaction {
             verificationEntities.forEach {
                 ApplicationRepository.verifyApplicationVerification(it.accessKey)

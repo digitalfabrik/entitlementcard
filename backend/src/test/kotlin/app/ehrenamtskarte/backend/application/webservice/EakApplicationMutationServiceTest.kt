@@ -51,7 +51,7 @@ internal class EakApplicationMutationServiceTest : IntegrationTest() {
 
         mockkConstructor(ApplicationHandler::class)
         every { anyConstructed<ApplicationHandler>().sendApplicationMails(any(), any(), any()) } returns Unit
-        every { anyConstructed<ApplicationHandler>().setApplicationVerificationToVerifiedToday(any()) } returns Unit
+        every { anyConstructed<ApplicationHandler>().setApplicationVerificationToVerifiedNow(any()) } returns Unit
 
         val application = TestApplicationBuilder.build(false)
 
@@ -64,7 +64,7 @@ internal class EakApplicationMutationServiceTest : IntegrationTest() {
             assertTrue(result.data)
             assertEquals(applicationsBefore + 1, Applications.selectAll().count())
             verify(exactly = 1) { anyConstructed<ApplicationHandler>().sendApplicationMails(any(), any(), any()) }
-            verify(exactly = 0) { anyConstructed<ApplicationHandler>().setApplicationVerificationToVerifiedToday(any()) }
+            verify(exactly = 0) { anyConstructed<ApplicationHandler>().setApplicationVerificationToVerifiedNow(any()) }
         }
     }
 
@@ -91,7 +91,7 @@ internal class EakApplicationMutationServiceTest : IntegrationTest() {
                 assertFalse(result.data)
                 assertEquals(applicationsBefore, Applications.selectAll().count())
                 verify(exactly = 0) { anyConstructed<ApplicationHandler>().sendApplicationMails(any(), any(), any()) }
-                verify(exactly = 0) { anyConstructed<ApplicationHandler>().setApplicationVerificationToVerifiedToday(any()) }
+                verify(exactly = 0) { anyConstructed<ApplicationHandler>().setApplicationVerificationToVerifiedNow(any()) }
             }
         }
     }
