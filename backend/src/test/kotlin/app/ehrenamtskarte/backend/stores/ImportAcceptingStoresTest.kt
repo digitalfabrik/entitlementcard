@@ -11,7 +11,6 @@ import app.ehrenamtskarte.backend.stores.database.ContactEntity
 import app.ehrenamtskarte.backend.stores.database.Contacts
 import app.ehrenamtskarte.backend.stores.database.PhysicalStoreEntity
 import app.ehrenamtskarte.backend.stores.database.PhysicalStores
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.javalin.testtools.JavalinTest
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.selectAll
@@ -21,7 +20,6 @@ import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
-import kotlin.test.fail
 
 internal class ImportAcceptingStoresTest : GraphqlApiTest() {
 
@@ -72,8 +70,7 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
 
         assertEquals(200, response.code)
 
-        val responseBody = response.body?.string() ?: fail("Response body is null")
-        val jsonResponse = jacksonObjectMapper().readTree(responseBody)
+        val jsonResponse = response.json()
 
         jsonResponse.apply {
             assertEquals(0, findValue("storesCreated").intValue())
@@ -104,8 +101,7 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
 
         assertEquals(200, response.code)
 
-        val responseBody = response.body?.string() ?: fail("Response body is null")
-        val jsonResponse = jacksonObjectMapper().readTree(responseBody)
+        val jsonResponse = response.json()
 
         jsonResponse.apply {
             assertEquals(1, findValue("storesCreated").intValue())
@@ -167,8 +163,7 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
 
         assertEquals(200, response.code)
 
-        val responseBody = response.body?.string() ?: fail("Response body is null")
-        val jsonResponse = jacksonObjectMapper().readTree(responseBody)
+        val jsonResponse = response.json()
 
         jsonResponse.apply {
             assertEquals(1, findValue("storesCreated").intValue())
@@ -230,8 +225,7 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
 
         assertEquals(200, response.code)
 
-        val responseBody = response.body?.string() ?: fail("Response body is null")
-        val jsonResponse = jacksonObjectMapper().readTree(responseBody)
+        val jsonResponse = response.json()
 
         jsonResponse.apply {
             assertEquals(1, findValue("storesCreated").intValue())
@@ -270,8 +264,7 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
 
         assertEquals(200, response.code)
 
-        val responseBody = response.body?.string() ?: fail("Response body is null")
-        val jsonResponse = jacksonObjectMapper().readTree(responseBody)
+        val jsonResponse = response.json()
 
         jsonResponse.apply {
             assertEquals(1, findValue("storesCreated").intValue())
@@ -312,8 +305,7 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
 
         assertEquals(200, response.code)
 
-        val responseBody = response.body?.string() ?: fail("Response body is null")
-        val jsonResponse = jacksonObjectMapper().readTree(responseBody)
+        val jsonResponse = response.json()
 
         jsonResponse.apply {
             assertEquals(0, findValue("storesCreated").intValue())

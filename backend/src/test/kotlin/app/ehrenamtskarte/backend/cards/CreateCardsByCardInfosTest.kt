@@ -7,7 +7,6 @@ import app.ehrenamtskarte.backend.cards.database.CodeType
 import app.ehrenamtskarte.backend.helper.CardInfoTestSample
 import app.ehrenamtskarte.backend.helper.ExampleCardInfo
 import app.ehrenamtskarte.backend.helper.TestAdministrators
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.javalin.testtools.JavalinTest
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.selectAll
@@ -19,7 +18,6 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
-import kotlin.test.fail
 
 internal class CreateCardsByCardInfosTest : GraphqlApiTest() {
 
@@ -68,8 +66,7 @@ internal class CreateCardsByCardInfosTest : GraphqlApiTest() {
 
         assertEquals(200, response.code)
 
-        val responseBody = response.body?.string() ?: fail("Response body is null")
-        val jsonResponse = jacksonObjectMapper().readTree(responseBody)
+        val jsonResponse = response.json()
 
         jsonResponse.apply {
             assertEquals("Error INVALID_INPUT occurred.", findValuesAsText("message").single())
@@ -85,8 +82,7 @@ internal class CreateCardsByCardInfosTest : GraphqlApiTest() {
 
         assertEquals(200, response.code)
 
-        val responseBody = response.body?.string() ?: fail("Response body is null")
-        val jsonResponse = jacksonObjectMapper().readTree(responseBody)
+        val jsonResponse = response.json()
 
         jsonResponse.apply {
             assertTrue(path("data").path("createCardsByCardInfos").get(0).has("dynamicActivationCode"))
