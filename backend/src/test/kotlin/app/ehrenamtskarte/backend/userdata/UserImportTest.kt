@@ -354,7 +354,7 @@ internal class UserImportTest : IntegrationTest() {
     @Test
     fun `POST returns a successful response and user entitlements are updated in db`() = JavalinTest.test(app) { _, client ->
         TestData.createApiToken(creatorId = admin.id)
-        TestData.createUserEntitlements(
+        TestData.createUserEntitlement(
             userHash = TEST_USER_HASH,
             regionId = 1
         )
@@ -388,18 +388,12 @@ internal class UserImportTest : IntegrationTest() {
     @Test
     fun `POST returns a successful response and existing cards are revoked when the user entitlement has been revoked`() = JavalinTest.test(app) { _, client ->
         TestData.createApiToken(creatorId = admin.id)
-        val entitlementId = TestData.createUserEntitlements(
+        val entitlementId = TestData.createUserEntitlement(
             userHash = TEST_USER_HASH,
             regionId = 1
         )
-        val dynamicCardId = TestData.createDynamicCard(
-            regionId = 1,
-            entitlementId = entitlementId
-        )
-        val staticCardId = TestData.createStaticCard(
-            regionId = 1,
-            entitlementId = entitlementId
-        )
+        val dynamicCardId = TestData.createDynamicCard(entitlementId = entitlementId)
+        val staticCardId = TestData.createStaticCard(entitlementId = entitlementId)
 
         val csvFile = generateCsvFile(
             TEST_CSV_FILE_PATH,

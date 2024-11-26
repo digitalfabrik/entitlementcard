@@ -94,7 +94,7 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
 
     @Test
     fun `POST returns an error when user entitlements expired`() = JavalinTest.test(app) { _, client ->
-        TestData.createUserEntitlements(
+        TestData.createUserEntitlement(
             userHash = "\$argon2id\$v=19\$m=19456,t=2,p=1\$cr3lP9IMUKNz4BLfPGlAOHq1z98G5/2tTbhDIko35tY",
             endDate = LocalDate.now().minusDays(1L),
             regionId = 95
@@ -119,7 +119,7 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
 
     @Test
     fun `POST returns an error when user entitlements revoked`() = JavalinTest.test(app) { _, client ->
-        TestData.createUserEntitlements(
+        TestData.createUserEntitlement(
             userHash = "\$argon2id\$v=19\$m=19456,t=2,p=1\$cr3lP9IMUKNz4BLfPGlAOHq1z98G5/2tTbhDIko35tY",
             revoked = true,
             regionId = 95
@@ -145,12 +145,12 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
     @Test
     fun `POST returns a successful response when cards are created`() = JavalinTest.test(app) { _, client ->
         val userRegionId = 95
-        val userEntitlementId = TestData.createUserEntitlements(
+        val userEntitlementId = TestData.createUserEntitlement(
             userHash = "\$argon2id\$v=19\$m=19456,t=2,p=1\$cr3lP9IMUKNz4BLfPGlAOHq1z98G5/2tTbhDIko35tY",
             regionId = userRegionId
         )
-        val oldDynamicCardId = TestData.createDynamicCard(regionId = userRegionId, entitlementId = userEntitlementId)
-        val oldStaticCardId = TestData.createStaticCard(regionId = userRegionId, entitlementId = userEntitlementId)
+        val oldDynamicCardId = TestData.createDynamicCard(entitlementId = userEntitlementId)
+        val oldStaticCardId = TestData.createStaticCard(entitlementId = userEntitlementId)
 
         val encodedCardInfo = ExampleCardInfo.getEncoded(CardInfoTestSample.KoblenzPass)
         val mutation = createMutation(encodedCardInfo = encodedCardInfo)
