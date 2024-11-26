@@ -14,6 +14,7 @@ import 'package:ehrenamtskarte/identification/card_detail_view/verification_code
 import 'package:provider/provider.dart';
 
 class CardDetailView extends StatefulWidget {
+  final String applicationUrl;
   final DynamicUserCode userCode;
   final VoidCallback startActivation;
   final VoidCallback startVerification;
@@ -22,6 +23,7 @@ class CardDetailView extends StatefulWidget {
 
   const CardDetailView(
       {super.key,
+      required this.applicationUrl,
       required this.userCode,
       required this.startActivation,
       required this.startVerification,
@@ -91,7 +93,7 @@ class _CardDetailViewState extends State<CardDetailView> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         if (!isCardExpired(cardInfo) && isCardExtendable(cardInfo, cardVerification))
-                          ExtendCardNotification(),
+                          ExtendCardNotification(applicationUrl: widget.applicationUrl),
                         paddedCard,
                       ],
                     )),
@@ -114,7 +116,7 @@ class _CardDetailViewState extends State<CardDetailView> {
               child: Column(
                 children: [
                   if (!isCardExpired(cardInfo) && isCardExtendable(cardInfo, cardVerification))
-                    ExtendCardNotification(),
+                    ExtendCardNotification(applicationUrl: widget.applicationUrl),
                   paddedCard,
                   const SizedBox(height: 16),
                   qrCodeAndStatus,
@@ -227,7 +229,9 @@ class QrCodeAndStatus extends StatelessWidget {
                 t.common.moreActions,
               ),
             ),
-          )
+          ),
+          // TODO fix Button not displayed properly
+          const SizedBox(height: 10),
         ],
       ),
     );

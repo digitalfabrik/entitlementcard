@@ -5,15 +5,16 @@ import { ProjectConfig } from '../getProjectConfig'
 import { storesManagementConfig } from '../storesManagementConfig'
 import { DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
 import pdfConfig from './pdf'
+import { QUERY_PARAM_BIRTHDAY, QUERY_PARAM_KOBLENZ_REFERENCE_NUMBER, QUERY_PARAM_NAME } from 'build-configs'
 
 const config: ProjectConfig = {
   name: 'KoblenzPass',
   projectId: 'koblenz.sozialpass.app',
   staticQrCodesEnabled: true,
   card: {
-    nameColumnName: 'Name',
+    nameColumnName: QUERY_PARAM_NAME,
     expiryColumnName: 'Ablaufdatum',
-    extensionColumnNames: ['Geburtsdatum', 'Referenznummer'],
+    extensionColumnNames: [QUERY_PARAM_BIRTHDAY, QUERY_PARAM_KOBLENZ_REFERENCE_NUMBER],
     defaultValidity: { years: 1 },
     extensions: [BirthdayExtension, KoblenzReferenceNumberExtension],
   },

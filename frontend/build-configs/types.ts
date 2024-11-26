@@ -99,6 +99,9 @@ export type CommonBuildConfigType = {
         production: string
         local: string
     }
+    applicationUrlQueryKeyName: string | null,
+    applicationUrlQueryKeyBirthday: string | null,
+    applicationUrlQueryKeyReferenceNumber: string | null
     dataPrivacyPolicyUrl: string
     publisherAddress: string
     publisherText: string

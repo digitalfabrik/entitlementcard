@@ -81,6 +81,9 @@ export const nuernbergCommon: CommonBuildConfigType = {
         staging: 'https://beantragen.nuernberg.sozialpass.app',
         local : 'https://beantragen.nuernberg.sozialpass.app'
     },
+    applicationUrlQueryKeyName: null,
+    applicationUrlQueryKeyBirthday: null,
+    applicationUrlQueryKeyReferenceNumber: null,
     publisherAddress:
         "Stadt Nürnberg\nAmt für Existenzsicherung\nund soziale Integration - Sozialamt\nDietzstraße 4\n90443 Nürnberg",
     dataPrivacyPolicyUrl: "https://nuernberg.sozialpass.app/data-privacy-policy",

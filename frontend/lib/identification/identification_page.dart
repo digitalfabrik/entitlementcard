@@ -1,6 +1,5 @@
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
-import 'package:ehrenamtskarte/configuration/definitions.dart';
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_scanner_page.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/card_carousel.dart';
@@ -13,6 +12,7 @@ import 'package:ehrenamtskarte/identification/verification_workflow/verification
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/routing.dart';
+import 'package:ehrenamtskarte/util/get_application_url.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -45,14 +45,19 @@ class IdentificationPageState extends State<IdentificationPage> {
           return Container();
         }
 
+        final isStagingEnabled = Provider.of<SettingsModel>(context, listen: false).enableStaging;
+        final applicationUrl = getApplicationUrl(buildConfig, isStagingEnabled);
         if (userCodeModel.userCodes.isNotEmpty) {
           final List<Widget> carouselCards = [];
           for (var code in userCodeModel.userCodes) {
+            final applicationUrlWithParameters =
+                getApplicationUrlWithParameters(applicationUrl, code.info, buildConfig);
             carouselCards.add(CardDetailView(
+              applicationUrl: applicationUrlWithParameters,
               userCode: code,
               startVerification: () => _showVerificationDialog(context, settings, userCodeModel),
               startActivation: () => _startActivation(context),
-              startApplication: _startApplication,
+              startApplication: () => _startApplication(applicationUrlWithParameters),
               openRemoveCardDialog: () => _openRemoveCardDialog(context),
             ));
           }
@@ -67,7 +72,7 @@ class IdentificationPageState extends State<IdentificationPage> {
         return NoCardView(
           startVerification: () => _showVerificationDialog(context, settings, userCodeModel),
           startActivation: () => _startActivation(context),
-          startApplication: _startApplication,
+          startApplication: () => _startApplication(applicationUrl),
         );
       },
     );
@@ -106,13 +111,7 @@ class IdentificationPageState extends State<IdentificationPage> {
     handleDeniedCameraPermission(context);
   }
 
-  Future<bool> _startApplication() {
-    final isStagingEnabled = Provider.of<SettingsModel>(context, listen: false).enableStaging;
-    final applicationUrl = isStagingEnabled
-        ? buildConfig.applicationUrl.staging
-        : isProduction()
-            ? buildConfig.applicationUrl.production
-            : buildConfig.applicationUrl.local;
+  Future<bool> _startApplication(String applicationUrl) {
     return launchUrlString(
       applicationUrl,
       mode: LaunchMode.externalApplication,
