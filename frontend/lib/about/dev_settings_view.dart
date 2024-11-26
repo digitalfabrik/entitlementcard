@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:base32/base32.dart';
 import 'package:ehrenamtskarte/app.dart';
-import 'package:ehrenamtskarte/build_config/build_config.dart';
+import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/self_verify_card.dart';
@@ -49,6 +49,7 @@ class DevSettingsView extends StatelessWidget {
     final settings = Provider.of<SettingsModel>(context);
     final client = GraphQLProvider.of(context).value;
     final userCodeModel = Provider.of<UserCodeModel>(context);
+    final textTheme = Theme.of(context).textTheme;
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Column(
@@ -89,8 +90,9 @@ class DevSettingsView extends StatelessWidget {
             onTap: () {
               showDialog<bool>(
                 context: context,
-                builder: (context) =>
-                    SimpleDialog(title: const Text('Settings'), children: [Text(settings.toString())]),
+                builder: (context) => SimpleDialog(title: const Text('Settings'), children: [
+                  Text(settings.toString(), style: textTheme.bodySmall),
+                ]),
               );
             },
           ),
@@ -128,6 +130,7 @@ class DevSettingsView extends StatelessWidget {
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        final theme = Theme.of(context);
         final base64Controller = TextEditingController();
         return AlertDialog(
           scrollable: true,
@@ -153,6 +156,7 @@ class DevSettingsView extends StatelessWidget {
           ),
           actions: [
             TextButton(
+              style: theme.textButtonTheme.style,
               child: const Text('Activate Card'),
               onPressed: () {
                 GoRouter.of(context).push('/$activationRouteName/code#${base64Controller.text}');

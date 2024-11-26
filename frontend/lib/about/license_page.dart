@@ -21,6 +21,7 @@ class CustomLicensePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
+    final theme = Theme.of(context);
     return FutureBuilder<List<LicenseEntry>>(
       future: LicenseRegistry.licenses.toList(),
       builder: (BuildContext context, AsyncSnapshot<List<LicenseEntry>> snapshot) {
@@ -61,8 +62,8 @@ class CustomLicensePage extends StatelessWidget {
                     final license = result[index];
                     final paragraphs = license.licenseParagraphs;
                     return ListTile(
-                      title: Text(license.packageName),
-                      subtitle: Text(t.about.numberLicenses(n: paragraphs.length)),
+                      title: Text(license.packageName, style: theme.textTheme.titleSmall),
+                      subtitle: Text(t.about.numberLicenses(n: paragraphs.length), style: theme.textTheme.bodyMedium),
                       onTap: () {
                         Navigator.push(
                           context,

@@ -1,7 +1,8 @@
 import { ApolloError } from '@apollo/client'
 import React, { useCallback, useContext, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
-import { Card, generateCardInfo, initializeCard } from '../../../cards/Card'
+import { Card, generateCardInfo, initializeCardFromCSV } from '../../../cards/Card'
 import { generatePdf } from '../../../cards/PdfFactory'
 import { CreateCardsError, CreateCardsResult } from '../../../cards/createCards'
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
@@ -12,6 +13,7 @@ import { base64ToUint8Array, uint8ArrayToBase64 } from '../../../util/base64'
 import downloadDataUri from '../../../util/downloadDataUri'
 import getCustomDeepLinkFromQrCode from '../../../util/getCustomDeepLinkFromQrCode'
 import { useAppToaster } from '../../AppToaster'
+import { getHeaders } from '../../cards/ImportCardsController'
 import FormErrorMessage from '../components/FormErrorMessage'
 
 export enum CardSelfServiceStep {
@@ -35,9 +37,12 @@ type UseCardGeneratorSelfServiceReturn = {
 const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
   const projectConfig = useContext(ProjectConfigContext)
   const appToaster = useAppToaster()
-  const [selfServiceCard, setSelfServiceCard] = useState(
-    initializeCard(projectConfig.card, undefined, { expirationDate: null })
-  )
+  const [searchParams] = useSearchParams()
+  const [selfServiceCard, setSelfServiceCard] = useState(() => {
+    const headers = getHeaders(projectConfig)
+    const values = headers.map(header => searchParams.get(header))
+    return initializeCardFromCSV(projectConfig.card, values, headers, undefined, true)
+  })
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [selfServiceState, setSelfServiceState] = useState<CardSelfServiceStep>(CardSelfServiceStep.form)
   const [deepLink, setDeepLink] = useState<string>('')

@@ -10,6 +10,7 @@ class QrCodeScannerControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final t = context.t;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -23,7 +24,7 @@ class QrCodeScannerControls extends StatelessWidget {
               valueListenable: controller.torchState,
               builder: (ctx, state, child) => Text(
                 state == TorchState.on ? t.identification.flashOff : t.identification.flashOn,
-                style: const TextStyle(fontSize: 16),
+                style: theme.textTheme.titleSmall?.apply(color: theme.colorScheme.primary),
               ),
             ),
           ),
@@ -36,7 +37,7 @@ class QrCodeScannerControls extends StatelessWidget {
               valueListenable: controller.cameraFacingState,
               builder: (ctx, state, child) => Text(
                 state == CameraFacing.back ? t.identification.selfieCamera : t.identification.standardCamera,
-                style: const TextStyle(fontSize: 16),
+                style: theme.textTheme.titleSmall?.apply(color: theme.colorScheme.primary),
               ),
             ),
           ),

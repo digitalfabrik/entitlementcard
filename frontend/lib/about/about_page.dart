@@ -30,6 +30,8 @@ class AboutPageState extends State<AboutPage> {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorTheme = Theme.of(context).colorScheme;
     final config = Configuration.of(context);
     final t = context.t;
     return FutureBuilder<PackageInfo>(
@@ -58,10 +60,10 @@ class AboutPageState extends State<AboutPage> {
               ),
             ),
             Center(
-              child: Text(packageInfo.appName, style: Theme.of(context).textTheme.headlineSmall),
+              child: Text(packageInfo.appName, style: textTheme.headlineSmall),
             ),
             Center(
-              child: Text(packageInfo.version, style: Theme.of(context).textTheme.bodyMedium),
+              child: Text(packageInfo.version, style: TextStyle(color: colorTheme.tertiary)),
             ),
             const SizedBox(height: 20),
             const Divider(
@@ -74,18 +76,15 @@ class AboutPageState extends State<AboutPage> {
                 child: Column(
                   children: [
                     Center(
-                      child: Text(t.about.publisher, style: Theme.of(context).textTheme.titleSmall),
+                      child: Text(t.about.publisher, style: textTheme.titleSmall),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 10, right: 10, top: 16, bottom: 16),
-                      child: Text(buildConfig.publisherAddress, style: Theme.of(context).textTheme.bodyLarge),
+                      child: Text(buildConfig.publisherAddress),
                     ),
                     Text(
                       t.about.moreInformation,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.merge(TextStyle(color: Theme.of(context).colorScheme.secondary)),
+                      style: textTheme.bodyLarge?.apply(color: colorTheme.secondary),
                     ),
                   ],
                 ),

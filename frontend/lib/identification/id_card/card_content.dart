@@ -92,7 +92,9 @@ class CardContent extends StatelessWidget {
     final startDate = _formattedStartDate;
     return LayoutBuilder(
       builder: (context, constraints) {
+        final theme = Theme.of(context);
         final scaleFactor = constraints.maxWidth / 300;
+        final bodyTextStyle = theme.textTheme.bodyMedium?.apply(fontSizeFactor: scaleFactor, color: textColor);
         final currentRegion = region;
         final headerLeftTitle = buildConfig.cardBranding.headerTitleLeft.isEmpty && currentRegion != null
             ? '${currentRegion.prefix} ${currentRegion.name}'
@@ -187,7 +189,7 @@ class CardContent extends StatelessWidget {
                               alignment: Alignment.topLeft,
                               child: Text(
                                 cardInfo.fullName,
-                                style: TextStyle(fontSize: 14 * scaleFactor, color: textColor),
+                                style: bodyTextStyle,
                                 textAlign: TextAlign.start,
                               ),
                             ),
@@ -199,13 +201,13 @@ class CardContent extends StatelessWidget {
                                   if (formattedBirthday != null)
                                     Text(
                                       formattedBirthday,
-                                      style: TextStyle(fontSize: 14 * scaleFactor, color: textColor),
+                                      style: bodyTextStyle,
                                       textAlign: TextAlign.start,
                                     ),
                                   if (passId != null)
                                     Text(
                                       passId,
-                                      style: TextStyle(fontSize: 14 * scaleFactor, color: textColor),
+                                      style: bodyTextStyle,
                                       textAlign: TextAlign.end,
                                     ),
                                 ],
@@ -215,10 +217,9 @@ class CardContent extends StatelessWidget {
                               padding: const EdgeInsets.only(top: 3.0),
                               child: Text(
                                 _getCardValidityDate(context, startDate, _getFormattedExpirationDate(context)),
-                                style: TextStyle(
-                                    fontSize: 14 * scaleFactor,
-                                    color:
-                                        isExpired || isNotYetValid ? Theme.of(context).colorScheme.error : textColor),
+                                style: theme.textTheme.bodyMedium?.apply(
+                                    fontSizeFactor: scaleFactor,
+                                    color: isExpired || isNotYetValid ? theme.colorScheme.error : textColor),
                                 textAlign: TextAlign.start,
                               ),
                             ),

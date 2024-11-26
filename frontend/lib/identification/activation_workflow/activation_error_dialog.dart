@@ -9,13 +9,14 @@ class ActivationErrorDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final t = context.t;
     return AlertDialog(
       title: Text(t.identification.activationError),
       content: SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
-            Text(message),
+            Text(message, style: theme.textTheme.bodyMedium),
           ],
         ),
       ),

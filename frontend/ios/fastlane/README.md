@@ -31,6 +31,22 @@ Create a release build
 
 Deliver iOS App to TestFlight for testers
 
+### ios appstoreconnect_upload
+
+```sh
+[bundle exec] fastlane ios appstoreconnect_upload
+```
+
+Deliver iOS App to production
+
+### ios appstoreconnect_promote
+
+```sh
+[bundle exec] fastlane ios appstoreconnect_promote
+```
+
+Promote the app from testflight to production in App Store Connect.
+
 ### ios snap_bayern
 
 ```sh
@@ -43,6 +59,14 @@ Generate new localized screenshots
 
 ```sh
 [bundle exec] fastlane ios snap_nuernberg
+```
+
+
+
+### ios snap_koblenz
+
+```sh
+[bundle exec] fastlane ios snap_koblenz
 ```
 
 
