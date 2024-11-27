@@ -46,12 +46,16 @@ class IdentificationPageState extends State<IdentificationPage> {
         }
 
         final isStagingEnabled = Provider.of<SettingsModel>(context, listen: false).enableStaging;
-        final applicationUrl = getApplicationUrl(buildConfig, isStagingEnabled);
+        final applicationUrl = getApplicationUrl(buildConfig.applicationUrl, isStagingEnabled);
         if (userCodeModel.userCodes.isNotEmpty) {
           final List<Widget> carouselCards = [];
           for (var code in userCodeModel.userCodes) {
-            final applicationUrlWithParameters =
-                getApplicationUrlWithParameters(applicationUrl, code.info, buildConfig);
+            final applicationUrlWithParameters = getApplicationUrlWithParameters(
+                applicationUrl,
+                code.info,
+                buildConfig.applicationUrlQueryKeyName,
+                buildConfig.applicationUrlQueryKeyBirthday,
+                buildConfig.applicationUrlQueryKeyReferenceNumber);
             carouselCards.add(CardDetailView(
               applicationUrl: applicationUrlWithParameters,
               userCode: code,

@@ -230,8 +230,8 @@ class QrCodeAndStatus extends StatelessWidget {
               ),
             ),
           ),
-          // TODO fix Button not displayed properly
-          const SizedBox(height: 10),
+          // TODO 1802 Fix more actions button not displayed properly
+          const SizedBox(height: 12),
         ],
       ),
     );
