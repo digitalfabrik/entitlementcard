@@ -8,9 +8,9 @@ import { ProjectConfigProvider } from '../../project-configs/ProjectConfigContex
 import bayernConfig from '../../project-configs/bayern/config'
 import { LOCAL_STORAGE_PROJECT_KEY } from '../../project-configs/constants'
 import { ProjectConfig } from '../../project-configs/getProjectConfig'
+import { getCsvHeaders } from '../../project-configs/helper'
 import nuernbergConfig from '../../project-configs/nuernberg/config'
 import { AppToasterProvider } from '../AppToaster'
-import { getHeaders } from './ImportCardsController'
 import ImportCardsInput, { ENTRY_LIMIT } from './ImportCardsInput'
 
 jest.mock('../../Router', () => ({}))
@@ -49,7 +49,7 @@ describe('ImportCardsInput', () => {
 
     const { getByTestId } = render(
       <ImportCardsInput
-        headers={getHeaders(projectConfig)}
+        headers={getCsvHeaders(projectConfig)}
         lineToCard={lineToCard}
         setCards={setCards}
         isFreinetFormat={false}

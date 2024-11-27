@@ -7,7 +7,7 @@ import { WhoAmIContext } from '../../WhoAmIProvider'
 import { Card, initializeCardFromCSV } from '../../cards/Card'
 import { Region } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import { ProjectConfig } from '../../project-configs/getProjectConfig'
+import { getCsvHeaders } from '../../project-configs/helper'
 import useBlockNavigation from '../../util/useBlockNavigation'
 import GenerationFinished from './CardsCreatedMessage'
 import CreateCardsButtonBar from './CreateCardsButtonBar'
@@ -16,16 +16,10 @@ import ImportCardsInput from './ImportCardsInput'
 import CardImportTable from './ImportCardsTable'
 import useCardGenerator, { CardActivationState } from './hooks/useCardGenerator'
 
-export const getHeaders = (projectConfig: ProjectConfig): string[] => [
-  projectConfig.card.nameColumnName,
-  projectConfig.card.expiryColumnName,
-  ...(projectConfig.card.extensionColumnNames.filter(Boolean) as string[]),
-]
-
 const InnerImportCardsController = ({ region }: { region: Region }): ReactElement => {
   const { state, setState, generateCardsPdf, generateCardsCsv, setCards, cards } = useCardGenerator(region)
   const projectConfig = useContext(ProjectConfigContext)
-  const headers = useMemo(() => getHeaders(projectConfig), [projectConfig])
+  const headers = useMemo(() => getCsvHeaders(projectConfig), [projectConfig])
   const navigate = useNavigate()
 
   const isFreinetFormat = new URLSearchParams(useLocation().search).get(FREINET_PARAM) === 'true'

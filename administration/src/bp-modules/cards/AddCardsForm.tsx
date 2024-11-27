@@ -6,9 +6,9 @@ import styled from 'styled-components'
 import { Card, initializeCard, initializeCardFromCSV } from '../../cards/Card'
 import { Region } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { getCsvHeaders } from '../../project-configs/helper'
 import AddCardForm from './AddCardForm'
 import CardFormButton from './CardFormButton'
-import { getHeaders } from './ImportCardsController'
 
 const FormsWrapper = styled(FlipMove)`
   flex-wrap: wrap;
@@ -55,7 +55,7 @@ const AddCardsForm = ({
 
   useEffect(() => {
     if (cards.length === 0) {
-      const headers = getHeaders(projectConfig)
+      const headers = getCsvHeaders(projectConfig)
       const values = headers.map(header => searchParams.get(header))
       setCards([initializeCardFromCSV(projectConfig.card, values, headers, region, true)])
 
