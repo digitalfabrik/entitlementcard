@@ -65,6 +65,17 @@ ThemeData get lightTheme {
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: ButtonStyle(side: MaterialStatePropertyAll(BorderSide(color: primaryColor, width: 1))),
     ),
+    filledButtonTheme: FilledButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: MaterialStatePropertyAll(primaryColor),
+        elevation: MaterialStatePropertyAll(2),
+        shape: MaterialStatePropertyAll(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4),
+          ),
+        ),
+      ),
+    ),
     checkboxTheme: CheckboxThemeData(
       checkColor: MaterialStatePropertyAll(textColor),
       fillColor: MaterialStatePropertyAll(primaryColor),
@@ -119,6 +130,17 @@ ThemeData get darkTheme {
         titleTextStyle: titleMedium),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: ButtonStyle(side: MaterialStatePropertyAll(BorderSide(color: primaryColor, width: 1))),
+    ),
+    filledButtonTheme: FilledButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: MaterialStatePropertyAll(primaryColor),
+        elevation: MaterialStatePropertyAll(2),
+        shape: MaterialStatePropertyAll(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4),
+          ),
+        ),
+      ),
     ),
     checkboxTheme: CheckboxThemeData(
       checkColor: const MaterialStatePropertyAll(Colors.white),
