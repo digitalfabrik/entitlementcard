@@ -53,9 +53,11 @@ class IdentificationPageState extends State<IdentificationPage> {
             final applicationUrlWithParameters = getApplicationUrlWithParameters(
                 applicationUrl,
                 code.info,
+                buildConfig.projectId.production,
                 buildConfig.applicationUrlQueryKeyName,
                 buildConfig.applicationUrlQueryKeyBirthday,
                 buildConfig.applicationUrlQueryKeyReferenceNumber);
+
             carouselCards.add(CardDetailView(
               applicationUrl: applicationUrlWithParameters,
               userCode: code,
