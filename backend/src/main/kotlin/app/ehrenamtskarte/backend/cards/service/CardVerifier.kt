@@ -4,10 +4,12 @@ import app.ehrenamtskarte.backend.cards.ValidityPeriodUtil.Companion.daysSinceEp
 import app.ehrenamtskarte.backend.cards.ValidityPeriodUtil.Companion.isOnOrAfterToday
 import app.ehrenamtskarte.backend.cards.ValidityPeriodUtil.Companion.isOnOrBeforeToday
 import app.ehrenamtskarte.backend.cards.database.repos.CardRepository
+import app.ehrenamtskarte.backend.userdata.database.UserEntitlementsEntity
 import com.eatthepath.otp.TimeBasedOneTimePasswordGenerator
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.Duration
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneId
 import javax.crypto.spec.SecretKeySpec
 
@@ -15,24 +17,34 @@ val TIME_STEP: Duration = Duration.ofSeconds(30)
 const val TOTP_LENGTH = 6
 
 object CardVerifier {
-    public fun verifyStaticCard(project: String, cardHash: ByteArray, timezone: ZoneId): Boolean {
+    fun verifyStaticCard(project: String, cardHash: ByteArray, timezone: ZoneId): Boolean {
         val card = transaction { CardRepository.findByHash(project, cardHash) } ?: return false
         return !isExpired(card.expirationDay, timezone) && isYetValid(card.startDay, timezone) &&
             !card.revoked
     }
 
-    public fun verifyDynamicCard(project: String, cardHash: ByteArray, totp: Int, timezone: ZoneId): Boolean {
+    fun verifyDynamicCard(project: String, cardHash: ByteArray, totp: Int, timezone: ZoneId): Boolean {
         val card = transaction { CardRepository.findByHash(project, cardHash) } ?: return false
         return !isExpired(card.expirationDay, timezone) && isYetValid(card.startDay, timezone) &&
             !card.revoked &&
             isTotpValid(totp, card.totpSecret)
     }
 
-    public fun isExpired(expirationDay: Long?, timezone: ZoneId): Boolean {
+    fun isExpired(expirationDay: Long?, timezone: ZoneId): Boolean {
         return expirationDay != null && !isOnOrBeforeToday(daysSinceEpochToDate(expirationDay), timezone)
     }
 
-    public fun isYetValid(startDay: Long?, timezone: ZoneId): Boolean {
+    fun isExtendable(project: String, cardHash: ByteArray): Boolean {
+        val card = transaction { CardRepository.findByHash(project, cardHash) } ?: return false
+        val expirationDay = card.expirationDay ?: return false
+        val entitlementId = card.entitlementId ?: return false
+
+        val userEntitlement = transaction { UserEntitlementsEntity.findById(entitlementId) } ?: return false
+
+        return LocalDate.ofEpochDay(expirationDay) < userEntitlement.endDate
+    }
+
+    private fun isYetValid(startDay: Long?, timezone: ZoneId): Boolean {
         return startDay === null || isOnOrAfterToday(daysSinceEpochToDate(startDay), timezone)
     }
 

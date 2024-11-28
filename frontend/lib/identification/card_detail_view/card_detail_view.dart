@@ -1,4 +1,5 @@
 import 'package:ehrenamtskarte/configuration/configuration.dart';
+import 'package:ehrenamtskarte/identification/card_detail_view/extend_card_notification.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/more_actions_dialog.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/self_verify_card.dart';
 import 'package:ehrenamtskarte/identification/id_card/id_card_with_region_query.dart';
@@ -60,12 +61,13 @@ class _CardDetailViewState extends State<CardDetailView> {
   Widget build(BuildContext context) {
     final orientation = MediaQuery.of(context).orientation;
 
+    final cardInfo = widget.userCode.info;
+    final cardVerification = widget.userCode.cardVerification;
+
     final paddedCard = Padding(
       padding: const EdgeInsets.all(8),
       child: IdCardWithRegionQuery(
-          cardInfo: widget.userCode.info,
-          isExpired: isCardExpired(widget.userCode.info),
-          isNotYetValid: isCardNotYetValid(widget.userCode.info)),
+          cardInfo: cardInfo, isExpired: isCardExpired(cardInfo), isNotYetValid: isCardNotYetValid(cardInfo)),
     );
     final qrCodeAndStatus = QrCodeAndStatus(
       userCode: widget.userCode,
@@ -83,7 +85,16 @@ class _CardDetailViewState extends State<CardDetailView> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Flexible(child: paddedCard),
+                    Flexible(
+                        child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        if (!isCardExpired(cardInfo) && isCardExtendable(cardInfo, cardVerification))
+                          ExtendCardNotification(),
+                        paddedCard,
+                      ],
+                    )),
                     if (constraints.maxWidth > qrCodeMinWidth * 2)
                       Flexible(child: qrCodeAndStatus)
                     else
@@ -98,12 +109,19 @@ class _CardDetailViewState extends State<CardDetailView> {
           )
         : SingleChildScrollView(
             child: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Column(children: [paddedCard, const SizedBox(height: 16), qrCodeAndStatus]),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Column(
+                children: [
+                  if (!isCardExpired(cardInfo) && isCardExtendable(cardInfo, cardVerification))
+                    ExtendCardNotification(),
+                  paddedCard,
+                  const SizedBox(height: 16),
+                  qrCodeAndStatus,
+                ],
               ),
             ),
-          );
+          ));
   }
 
   void _onMoreActionsPressed(BuildContext context) {
