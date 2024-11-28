@@ -91,6 +91,8 @@ message CardVerification {
 
   // If the verificationTimeStamp was out of sync with the local date time (at time of request) by at least 30 seconds.
   optional bool outOfSync = 3;
+
+  optional bool cardExtendable = 4;
 }
 
 message QrCode {
