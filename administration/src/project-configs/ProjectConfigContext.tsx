@@ -8,5 +8,5 @@ export const ProjectConfigContext = createContext<ProjectConfig>(projectConfig)
 
 export const ProjectConfigProvider = ({ children }: { children: ReactNode }): ReactElement => {
   const Provider = ProjectConfigContext.Provider
-  return <Provider value={projectConfig}>{children}</Provider>
+  return <Provider value={getProjectConfig(window.location.hostname)}>{children}</Provider>
 }

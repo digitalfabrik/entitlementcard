@@ -52,16 +52,25 @@ const setCardType = (line: string[], csvHeader: string[], cardTypeColumnName: st
  * Converts Freinet CSV export data into valid input for CSV import
  * @param line The line of the Freinet CSV export
  * @param csvHeader the header of the Freinet CSV Export
+ * @param projectConfig the config of the current project
  *
  * Format of the input must be:
  *      columns with the header "vorname" and "nachname" must exist
  *      column with the header expiration date must exist and be called "eak_datum"
  *      column with the name "inhaber_ehrenamtskarte" can exist, if so it is used, if not the expiration date is used
  */
-export const convertFreinetImport = (line: string[], csvHeader: string[], projectConfig: ProjectConfig): void => {
+const convertFreinetLineAndHeaders = (line: string[], csvHeader: string[], projectConfig: ProjectConfig): void => {
   mergeFirstAndLastnameIntoNewColumn(line, csvHeader, projectConfig.card.nameColumnName)
   renameExpirationDateHeader(csvHeader, projectConfig.card.expiryColumnName)
   if (projectConfig.card.extensionColumnNames[0]) {
     setCardType(line, csvHeader, projectConfig.card.extensionColumnNames[0], projectConfig.card.expiryColumnName)
   }
 }
+
+const convertFreinetImport = (file: string[][], projectConig: ProjectConfig): string[][] => {
+  const [headers, ...lines] = file
+  lines.forEach(it => convertFreinetLineAndHeaders(it, headers, projectConig))
+  return [headers, ...lines]
+}
+
+export default convertFreinetImport
