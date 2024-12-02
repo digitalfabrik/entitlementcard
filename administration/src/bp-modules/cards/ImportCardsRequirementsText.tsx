@@ -9,12 +9,12 @@ const RequirementsList = styled.ul`
 `
 
 type ImportCardsRequirementsProps = {
-  header: string[]
+  csvHeaders: string[]
   isFreinetFormat: boolean | undefined
 }
 
 const ImportCardsRequirementsText = ({
-  header,
+  csvHeaders,
   isFreinetFormat = false,
 }: ImportCardsRequirementsProps): ReactElement => (
   <RequirementsList>
@@ -24,7 +24,7 @@ const ImportCardsRequirementsText = ({
     <li>
       {isFreinetFormat
         ? 'Es müssen mindestens die Spalten "vorname", "nachname" und "eak_datum" vorhanden sein'
-        : `Spaltenformat:  ${header.join(', ')}`}
+        : `Spaltenformat:  ${csvHeaders.join(', ')}`}
     </li>
     <li>Gültiges Datumsformat: tt.mm.jjjj (Beispiel: 01.01.1970)</li>
   </RequirementsList>
