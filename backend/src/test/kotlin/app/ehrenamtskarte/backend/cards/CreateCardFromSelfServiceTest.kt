@@ -8,13 +8,12 @@ import app.ehrenamtskarte.backend.helper.ExampleCardInfo
 import app.ehrenamtskarte.backend.helper.TestData
 import app.ehrenamtskarte.backend.userdata.database.UserEntitlements
 import app.ehrenamtskarte.backend.userdata.database.UserEntitlementsEntity
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.javalin.testtools.JavalinTest
 import io.ktor.util.decodeBase64Bytes
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import kotlin.test.assertEquals
@@ -22,11 +21,10 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
-import kotlin.test.fail
 
 internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
 
-    @AfterEach
+    @BeforeEach
     fun cleanUp() {
         transaction {
             Cards.deleteAll()
@@ -63,8 +61,7 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
 
         assertEquals(200, response.code)
 
-        val responseBody = response.body?.string() ?: fail("Response body is null")
-        val jsonResponse = jacksonObjectMapper().readTree(responseBody)
+        val jsonResponse = response.json()
 
         jsonResponse.apply {
             assertEquals("Error INVALID_INPUT occurred.", findValuesAsText("message").single())
@@ -84,8 +81,7 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
 
         assertEquals(200, response.code)
 
-        val responseBody = response.body?.string() ?: fail("Response body is null")
-        val jsonResponse = jacksonObjectMapper().readTree(responseBody)
+        val jsonResponse = response.json()
 
         jsonResponse.apply {
             assertEquals("Error USER_ENTITLEMENT_NOT_FOUND occurred.", findValuesAsText("message").single())
@@ -98,7 +94,7 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
 
     @Test
     fun `POST returns an error when user entitlements expired`() = JavalinTest.test(app) { _, client ->
-        TestData.createUserEntitlements(
+        TestData.createUserEntitlement(
             userHash = "\$argon2id\$v=19\$m=19456,t=2,p=1\$cr3lP9IMUKNz4BLfPGlAOHq1z98G5/2tTbhDIko35tY",
             endDate = LocalDate.now().minusDays(1L),
             regionId = 95
@@ -110,8 +106,7 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
 
         assertEquals(200, response.code)
 
-        val responseBody = response.body?.string() ?: fail("Response body is null")
-        val jsonResponse = jacksonObjectMapper().readTree(responseBody)
+        val jsonResponse = response.json()
 
         jsonResponse.apply {
             assertEquals("Error USER_ENTITLEMENT_EXPIRED occurred.", findValuesAsText("message").single())
@@ -124,7 +119,7 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
 
     @Test
     fun `POST returns an error when user entitlements revoked`() = JavalinTest.test(app) { _, client ->
-        TestData.createUserEntitlements(
+        TestData.createUserEntitlement(
             userHash = "\$argon2id\$v=19\$m=19456,t=2,p=1\$cr3lP9IMUKNz4BLfPGlAOHq1z98G5/2tTbhDIko35tY",
             revoked = true,
             regionId = 95
@@ -136,8 +131,7 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
 
         assertEquals(200, response.code)
 
-        val responseBody = response.body?.string() ?: fail("Response body is null")
-        val jsonResponse = jacksonObjectMapper().readTree(responseBody)
+        val jsonResponse = response.json()
 
         jsonResponse.apply {
             assertEquals("Error USER_ENTITLEMENT_EXPIRED occurred.", findPath("message").textValue())
@@ -151,12 +145,12 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
     @Test
     fun `POST returns a successful response when cards are created`() = JavalinTest.test(app) { _, client ->
         val userRegionId = 95
-        val userEntitlementId = TestData.createUserEntitlements(
+        val userEntitlementId = TestData.createUserEntitlement(
             userHash = "\$argon2id\$v=19\$m=19456,t=2,p=1\$cr3lP9IMUKNz4BLfPGlAOHq1z98G5/2tTbhDIko35tY",
             regionId = userRegionId
         )
-        val oldDynamicCardId = TestData.createDynamicCard(regionId = userRegionId, entitlementId = userEntitlementId)
-        val oldStaticCardId = TestData.createStaticCard(regionId = userRegionId, entitlementId = userEntitlementId)
+        val oldDynamicCardId = TestData.createDynamicCard(entitlementId = userEntitlementId)
+        val oldStaticCardId = TestData.createStaticCard(entitlementId = userEntitlementId)
 
         val encodedCardInfo = ExampleCardInfo.getEncoded(CardInfoTestSample.KoblenzPass)
         val mutation = createMutation(encodedCardInfo = encodedCardInfo)
@@ -164,8 +158,7 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
 
         assertEquals(200, response.code)
 
-        val responseBody = response.body?.string() ?: fail("Response body is null")
-        val jsonResponse = jacksonObjectMapper().readTree(responseBody)
+        val jsonResponse = response.json()
 
         val newDynamicActivationCode = jsonResponse.findPath("dynamicActivationCode").path("cardInfoHashBase64").textValue()
         val newStaticVerificationCode = jsonResponse.findPath("staticVerificationCode").path("cardInfoHashBase64").textValue()

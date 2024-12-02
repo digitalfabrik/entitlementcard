@@ -1,13 +1,13 @@
 package app.ehrenamtskarte.backend
 
 import app.ehrenamtskarte.backend.common.webservice.GraphQLHandler
+import app.ehrenamtskarte.backend.helper.GraphqlResponse
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.javalin.Javalin
 import io.javalin.testtools.HttpClient
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.Response
 import java.io.File
 
 open class GraphqlApiTest : IntegrationTest() {
@@ -19,7 +19,7 @@ open class GraphqlApiTest : IntegrationTest() {
         }
     }
 
-    protected fun post(client: HttpClient, mutation: String, token: String? = null): Response {
+    protected fun post(client: HttpClient, mutation: String, token: String? = null): GraphqlResponse {
         val requestBody = jacksonObjectMapper().writeValueAsString(mapOf("query" to mutation))
             .toRequestBody("application/json".toMediaType())
 
@@ -31,6 +31,7 @@ open class GraphqlApiTest : IntegrationTest() {
             requestBuilder.addHeader("Authorization", "Bearer $token")
         }
 
-        return client.request(requestBuilder.build())
+        val response = client.request(requestBuilder.build())
+        return GraphqlResponse(response.code, response.body)
     }
 }
