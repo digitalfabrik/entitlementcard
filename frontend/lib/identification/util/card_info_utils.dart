@@ -4,6 +4,7 @@ import 'package:ehrenamtskarte/identification/util/canonical_json.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/util/date_utils.dart';
 import 'package:ehrenamtskarte/util/json_canonicalizer.dart';
+import 'package:intl/intl.dart';
 
 extension Hashing on CardInfo {
   String hash(List<int> pepper) {
@@ -61,4 +62,11 @@ DateTime? _getExpirationDayWithTolerance(CardInfo cardInfo) {
   const toleranceInHours = 36;
   return DateTime.fromMillisecondsSinceEpoch(0, isUtc: true)
       .add(Duration(days: expirationDay, hours: toleranceInHours));
+}
+
+String? getFormattedBirthday(CardInfo cardInfo) {
+  final birthday = cardInfo.extensions.hasExtensionBirthday() ? cardInfo.extensions.extensionBirthday.birthday : null;
+  return birthday != null
+      ? DateFormat('dd.MM.yyyy').format(DateTime.fromMillisecondsSinceEpoch(0).add(Duration(days: birthday)))
+      : null;
 }
