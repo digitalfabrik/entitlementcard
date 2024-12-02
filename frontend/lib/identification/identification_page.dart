@@ -7,6 +7,7 @@ import 'package:ehrenamtskarte/identification/card_detail_view/card_detail_view.
 import 'package:ehrenamtskarte/identification/no_card_view.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_camera_permission_dialog.dart';
 import 'package:ehrenamtskarte/identification/user_code_model.dart';
+import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/remove_card_confirmation_dialog.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/verification_workflow.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
@@ -45,25 +46,21 @@ class IdentificationPageState extends State<IdentificationPage> {
           return Container();
         }
 
-        final isStagingEnabled = Provider.of<SettingsModel>(context, listen: false).enableStaging;
-        final applicationUrl = getApplicationUrl(buildConfig.applicationUrl, isStagingEnabled);
+        final applicationUrl = getApplicationUrl(context);
         if (userCodeModel.userCodes.isNotEmpty) {
           final List<Widget> carouselCards = [];
           for (var code in userCodeModel.userCodes) {
-            final applicationUrlWithParameters = getApplicationUrlWithParameters(
-                applicationUrl,
-                code.info,
-                buildConfig.projectId.production,
-                buildConfig.applicationUrlQueryKeyName,
-                buildConfig.applicationUrlQueryKeyBirthday,
-                buildConfig.applicationUrlQueryKeyReferenceNumber);
+            final applicationUrlForCardExtension = isCardExtendable(code.info, code.cardVerification)
+                ? getApplicationUrlForCardExtension(applicationUrl, code.info, buildConfig.applicationQueryKeyName,
+                    buildConfig.applicationQueryKeyBirthday, buildConfig.applicationQueryKeyReferenceNumber)
+                : applicationUrl;
 
             carouselCards.add(CardDetailView(
-              applicationUrl: applicationUrlWithParameters,
+              applicationUrl: applicationUrlForCardExtension,
               userCode: code,
               startVerification: () => _showVerificationDialog(context, settings, userCodeModel),
               startActivation: () => _startActivation(context),
-              startApplication: () => _startApplication(applicationUrlWithParameters),
+              startApplication: () => _startApplication(applicationUrlForCardExtension),
               openRemoveCardDialog: () => _openRemoveCardDialog(context),
             ));
           }

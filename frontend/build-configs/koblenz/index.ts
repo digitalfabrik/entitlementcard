@@ -84,9 +84,9 @@ export const koblenzCommon: CommonBuildConfigType = {
         staging: `https://${KOBLENZ_STAGING_ID}/erstellen`,
         local : 'http://localhost:3000/erstellen'
     },
-    applicationUrlQueryKeyName: QUERY_PARAM_NAME,
-    applicationUrlQueryKeyBirthday: QUERY_PARAM_BIRTHDAY,
-    applicationUrlQueryKeyReferenceNumber: QUERY_PARAM_KOBLENZ_REFERENCE_NUMBER,
+    applicationQueryKeyName: QUERY_PARAM_NAME,
+    applicationQueryKeyBirthday: QUERY_PARAM_BIRTHDAY,
+    applicationQueryKeyReferenceNumber: QUERY_PARAM_KOBLENZ_REFERENCE_NUMBER,
     dataPrivacyPolicyUrl: "https://koblenz.sozialpass.app/data-privacy-policy",
     publisherAddress: "Stadt Koblenz\nWilli-Hörter-Platz 1\n56068 Koblenz",
     publisherText,

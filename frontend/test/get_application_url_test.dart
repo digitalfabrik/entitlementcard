@@ -1,10 +1,9 @@
-import 'package:ehrenamtskarte/constants/project_ids.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/util/get_application_url.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('getApplicationUrlWithQueryParams', () {
+  group('getApplicationUrlForCardExtension', () {
     test('results in url with queryParams for koblenz', () {
       final applicationUrl = 'https://koblenz.sozialpass.app/erstellen';
       final applicationUrlQueryKeyName = 'Name';
@@ -16,7 +15,7 @@ void main() {
         ..extensions = (CardExtensions()
           ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
           ..extensionKoblenzReferenceNumber = (KoblenzReferenceNumberExtension()..referenceNumber = '123K'));
-      final applicationUrlWithParameters = getApplicationUrlWithParameters(applicationUrl, cardInfo, koblenzProjectId,
+      final applicationUrlWithParameters = getApplicationUrlForCardExtension(applicationUrl, cardInfo,
           applicationUrlQueryKeyName, applicationUrlQueryKeyBirthday, applicationUrlQueryKeyReferenceNumber);
       expect(applicationUrlWithParameters,
           'https://koblenz.sozialpass.app/erstellen?Name=Karla+Koblenz&Geburtsdatum=04.01.1960&Referenznummer=123K');
@@ -33,7 +32,7 @@ void main() {
         ..extensions = (CardExtensions()
           ..extensionRegion = (RegionExtension()..regionId = 16)
           ..extensionBavariaCardType = (BavariaCardTypeExtension()..cardType = BavariaCardType.STANDARD));
-      final applicationUrlWithParameters = getApplicationUrlWithParameters(applicationUrl, cardInfo, bavariaProjectId,
+      final applicationUrlWithParameters = getApplicationUrlForCardExtension(applicationUrl, cardInfo,
           applicationUrlQueryKeyName, applicationUrlQueryKeyBirthday, applicationUrlQueryKeyReferenceNumber);
       expect(applicationUrlWithParameters, 'https://bayern.ehrenamtskarte.app/beantragen');
     });
@@ -51,7 +50,7 @@ void main() {
           ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
           ..extensionNuernbergPassId = (NuernbergPassIdExtension()..passId = 99999999)
           ..extensionStartDay = (StartDayExtension()..startDay = 365 * 2));
-      final applicationUrlWithParameters = getApplicationUrlWithParameters(applicationUrl, cardInfo, nuernbergProjectId,
+      final applicationUrlWithParameters = getApplicationUrlForCardExtension(applicationUrl, cardInfo,
           applicationUrlQueryKeyName, applicationUrlQueryKeyBirthday, applicationUrlQueryKeyReferenceNumber);
       expect(applicationUrlWithParameters, 'https://beantragen.nuernberg.sozialpass.app');
     });
