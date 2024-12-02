@@ -13,7 +13,7 @@ import io.ktor.util.decodeBase64Bytes
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import kotlin.test.assertEquals
@@ -24,7 +24,7 @@ import kotlin.test.assertTrue
 
 internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
 
-    @AfterEach
+    @BeforeEach
     fun cleanUp() {
         transaction {
             Cards.deleteAll()

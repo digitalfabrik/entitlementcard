@@ -11,7 +11,7 @@ import io.javalin.testtools.JavalinTest
 import io.ktor.util.encodeBase64
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
@@ -100,7 +100,7 @@ internal class VerifyCardTest : GraphqlApiTest() {
         }
     }
 
-    @AfterEach
+    @BeforeEach
     fun cleanUp() {
         transaction {
             Cards.deleteAll()

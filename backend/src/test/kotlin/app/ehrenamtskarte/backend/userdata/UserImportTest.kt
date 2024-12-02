@@ -22,7 +22,7 @@ import okhttp3.Response
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.io.File
 import java.time.LocalDate
@@ -43,7 +43,7 @@ internal class UserImportTest : IntegrationTest() {
 
     private val admin = TestAdministrators.KOBLENZ_PROJECT_ADMIN
 
-    @AfterEach
+    @BeforeEach
     fun cleanUp() {
         transaction {
             Cards.deleteAll()
