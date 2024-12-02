@@ -5,6 +5,7 @@ import app.ehrenamtskarte.backend.application.database.NOTE_MAX_CHARS
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository.getApplicationByApplicationVerificationAccessKey
 import app.ehrenamtskarte.backend.application.webservice.schema.create.Application
+import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationHandler
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.service.Authorizer.mayDeleteApplicationsInRegion
 import app.ehrenamtskarte.backend.auth.service.Authorizer.mayUpdateApplicationsInRegion
@@ -12,14 +13,8 @@ import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidFileSizeException
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidFileTypeException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidNoteSizeException
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.MailNotSentException
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotActivatedForApplicationException
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.mail.Mailer
-import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.execution.DataFetcherResult
 import graphql.schema.DataFetchingEnvironment
@@ -35,47 +30,20 @@ class EakApplicationMutationService {
         project: String,
         dfe: DataFetchingEnvironment
     ): DataFetcherResult<Boolean> {
-        val context = dfe.getContext<GraphQLContext>()
-        val backendConfig = context.backendConfiguration
-        val projectConfig = backendConfig.projects.first { it.id == project }
-
-        val region = transaction { RegionsRepository.findByIdInProject(project, regionId) } ?: throw RegionNotFoundException()
-        if (!region.activatedForApplication) {
-            throw RegionNotActivatedForApplicationException()
-        }
-        // Validate that all files are png, jpeg or pdf files and at most 5MB.
-        val allowedContentTypes = setOf("application/pdf", "image/png", "image/jpeg")
-        val maxFileSizeBytes = 5 * 1000 * 1000
-        if (!context.files.all { it.contentType in allowedContentTypes }) {
-            throw InvalidFileTypeException()
-        }
-        if (!context.files.all { it.size <= maxFileSizeBytes }) {
-            throw InvalidFileSizeException()
-        }
-
-        val (applicationEntity, verificationEntities) = transaction {
-            ApplicationRepository.persistApplication(
-                application.toJsonField(),
-                application.extractApplicationVerifications(),
-                regionId,
-                context.applicationData,
-                context.files
-            )
-        }
-
-        Mailer.sendApplicationApplicantMail(backendConfig, projectConfig, application.personalData, applicationEntity.accessKey)
-
+        val applicationHandler = ApplicationHandler(dfe.getContext<GraphQLContext>(), application, regionId, project)
         val dataFetcherResultBuilder = DataFetcherResult.newResult<Boolean>()
-        for (applicationVerification in verificationEntities) {
-            try {
-                val applicantName = "${application.personalData.forenames.shortText} ${application.personalData.surname.shortText}"
-                Mailer.sendApplicationVerificationMail(backendConfig, applicantName, projectConfig, applicationVerification)
-            } catch (exception: MailNotSentException) {
-                dataFetcherResultBuilder.error(exception.toError())
-            }
-        }
-        Mailer.sendNotificationForApplicationMails(project, backendConfig, projectConfig, regionId)
 
+        applicationHandler.validateRegion()
+        applicationHandler.validateAttachmentTypes()
+        val isPreVerified = applicationHandler.isValidPreVerifiedApplication()
+
+        val (applicationEntity, verificationEntities) = applicationHandler.saveApplication()
+
+        if (isPreVerified) {
+            applicationHandler.setApplicationVerificationToVerifiedNow(verificationEntities)
+        }
+
+        applicationHandler.sendApplicationMails(applicationEntity, verificationEntities, dataFetcherResultBuilder)
         return dataFetcherResultBuilder.data(true).build()
     }
 
@@ -88,7 +56,8 @@ class EakApplicationMutationService {
         val jwtPayload = context.enforceSignedIn()
 
         return transaction {
-            val application = ApplicationEntity.findById(applicationId) ?: throw NotFoundException("Application not found")
+            val application =
+                ApplicationEntity.findById(applicationId) ?: throw NotFoundException("Application not found")
             val user = AdministratorEntity.findById(jwtPayload.adminId)
                 ?: throw UnauthorizedException()
 
@@ -140,7 +109,8 @@ class EakApplicationMutationService {
         val jwtPayload = context.enforceSignedIn()
 
         return transaction {
-            val application = ApplicationEntity.findById(applicationId) ?: throw NotFoundException("Application not found")
+            val application =
+                ApplicationEntity.findById(applicationId) ?: throw NotFoundException("Application not found")
             if (noteText.length > NOTE_MAX_CHARS) {
                 throw InvalidNoteSizeException(NOTE_MAX_CHARS)
             }
