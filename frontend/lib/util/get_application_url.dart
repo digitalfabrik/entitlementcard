@@ -20,19 +20,15 @@ String getApplicationUrlForCardExtension(String applicationUrl, CardInfo cardInf
   if (applicationQueryKeyName != null &&
       applicationQueryKeyBirthday != null &&
       applicationQueryKeyReferenceNumber != null) {
-    final parsedApplicationUrl = Uri.parse(applicationUrl);
-    return Uri(
-        scheme: parsedApplicationUrl.scheme,
-        host: parsedApplicationUrl.host,
-        port: parsedApplicationUrl.port,
-        path: parsedApplicationUrl.path,
-        queryParameters: {
-          applicationQueryKeyName: cardInfo.fullName,
-          applicationQueryKeyBirthday: getFormattedBirthday(cardInfo),
-          applicationQueryKeyReferenceNumber: cardInfo.extensions.hasExtensionKoblenzReferenceNumber()
-              ? cardInfo.extensions.extensionKoblenzReferenceNumber.referenceNumber
-              : null
-        }).toString();
+    final parsedUrl = Uri.parse(applicationUrl);
+    final queryParams = {
+      applicationQueryKeyName: cardInfo.fullName,
+      applicationQueryKeyBirthday: getFormattedBirthday(cardInfo),
+      applicationQueryKeyReferenceNumber: cardInfo.extensions.hasExtensionKoblenzReferenceNumber()
+          ? cardInfo.extensions.extensionKoblenzReferenceNumber.referenceNumber
+          : null,
+    };
+    return parsedUrl.replace(queryParameters: queryParams).toString();
   }
   return applicationUrl;
 }

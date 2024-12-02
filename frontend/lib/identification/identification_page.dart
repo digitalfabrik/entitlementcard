@@ -46,21 +46,24 @@ class IdentificationPageState extends State<IdentificationPage> {
           return Container();
         }
 
-        final applicationUrl = getApplicationUrl(context);
         if (userCodeModel.userCodes.isNotEmpty) {
           final List<Widget> carouselCards = [];
           for (var code in userCodeModel.userCodes) {
-            final applicationUrlForCardExtension = isCardExtendable(code.info, code.cardVerification)
-                ? getApplicationUrlForCardExtension(applicationUrl, code.info, buildConfig.applicationQueryKeyName,
-                    buildConfig.applicationQueryKeyBirthday, buildConfig.applicationQueryKeyReferenceNumber)
-                : applicationUrl;
+            final applicationUrl = isCardExtendable(code.info, code.cardVerification)
+                ? getApplicationUrlForCardExtension(
+                    getApplicationUrl(context),
+                    code.info,
+                    buildConfig.applicationQueryKeyName,
+                    buildConfig.applicationQueryKeyBirthday,
+                    buildConfig.applicationQueryKeyReferenceNumber)
+                : getApplicationUrl(context);
 
             carouselCards.add(CardDetailView(
-              applicationUrl: applicationUrlForCardExtension,
+              applicationUrl: applicationUrl,
               userCode: code,
               startVerification: () => _showVerificationDialog(context, settings, userCodeModel),
               startActivation: () => _startActivation(context),
-              startApplication: () => _startApplication(applicationUrlForCardExtension),
+              startApplication: () => _startApplication(applicationUrl),
               openRemoveCardDialog: () => _openRemoveCardDialog(context),
             ));
           }
@@ -75,7 +78,7 @@ class IdentificationPageState extends State<IdentificationPage> {
         return NoCardView(
           startVerification: () => _showVerificationDialog(context, settings, userCodeModel),
           startActivation: () => _startActivation(context),
-          startApplication: () => _startApplication(applicationUrl),
+          startApplication: () => _startApplication(getApplicationUrl(context)),
         );
       },
     );
