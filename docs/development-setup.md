@@ -37,9 +37,9 @@
 cd frontend && fvm flutter pub get
 ```
 4. Open IntelliJ settings and
-   - Install the Android extension and set the Android SDK path
-   - Install the Dart extension in IntelliJ and set the Dart SDK path
-   - Install the Flutter extension in IntelliJ and set the Flutter SDK path
+   - Install the Android plugin and set the Android SDK path
+   - Install the Dart plugin and set the Dart SDK path
+   - Install the Flutter plugin and set the Flutter SDK path
 5. Install app-toolbelt
 ```shell
 npm install --unsafe-perm -g https://github.com/digitalfabrik/app-toolbelt/archive/refs/heads/main.tar.gz
