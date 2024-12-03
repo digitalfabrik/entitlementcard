@@ -4,8 +4,9 @@ import app.ehrenamtskarte.backend.application.database.ApplicationEntity
 import app.ehrenamtskarte.backend.application.database.ApplicationVerificationEntity
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
 import app.ehrenamtskarte.backend.application.webservice.schema.create.Application
+import app.ehrenamtskarte.backend.auth.database.ApiTokenType
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
-import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
+import app.ehrenamtskarte.backend.common.webservice.Utils
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidFileSizeException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidFileTypeException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.MailNotSentException
@@ -95,7 +96,8 @@ class ApplicationHandler(
         return when {
             isAlreadyVerifiedList.all { it == false || it == null } -> false
             isAlreadyVerifiedList.all { it == true } -> {
-                throw UnauthorizedException()
+                Utils.authenticate(context.request, ApiTokenType.VERIFIED_APPLICATION)
+                return true
             }
             else -> throw BadRequestResponse("isAlreadyVerified must be the same for all entries")
         }
