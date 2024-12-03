@@ -118,7 +118,7 @@ const OrganizationForm: Form<State, ValidatedInput, AdditionalProps> = {
         <EmailForm.Component
           state={state.contactEmail}
           setState={useUpdateStateCallback(setState, 'contactEmail')}
-          label={t('organizationContact.emailAddress')}
+          label={t('organizationContact.email')}
         />
         <ShortTextForm.Component
           state={state.contactPhone}
