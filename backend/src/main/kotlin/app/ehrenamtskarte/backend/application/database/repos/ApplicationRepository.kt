@@ -2,6 +2,7 @@ package app.ehrenamtskarte.backend.application.database.repos
 
 import app.ehrenamtskarte.backend.application.database.ApplicationEntity
 import app.ehrenamtskarte.backend.application.database.ApplicationVerificationEntity
+import app.ehrenamtskarte.backend.application.database.ApplicationVerificationExternalSource
 import app.ehrenamtskarte.backend.application.database.ApplicationVerifications
 import app.ehrenamtskarte.backend.application.database.Applications
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationView
@@ -60,6 +61,7 @@ object ApplicationRepository {
                     this.contactName = it.contactName
                     this.organizationName = it.organizationName
                     this.contactEmailAddress = it.contactEmailAddress
+                    this.automaticSource = ApplicationVerificationExternalSource.NONE
                 }
             }
 
@@ -151,6 +153,7 @@ object ApplicationRepository {
                 false
             } else {
                 applicationVerification.verifiedDate = Instant.now()
+                applicationVerification.automaticSource = ApplicationVerificationExternalSource.VEREIN360
                 true
             }
         }

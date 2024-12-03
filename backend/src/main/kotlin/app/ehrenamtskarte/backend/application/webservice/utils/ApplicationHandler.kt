@@ -14,6 +14,7 @@ import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFound
 import app.ehrenamtskarte.backend.mail.Mailer
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import graphql.execution.DataFetcherResult
+import io.javalin.http.BadRequestResponse
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class ApplicationHandler(
@@ -88,16 +89,16 @@ class ApplicationHandler(
     }
 
     fun isValidPreVerifiedApplication(): Boolean {
-        val isAlreadyVerifiedSet =
-            application.applicationDetails.blueCardEntitlement?.workAtOrganizationsEntitlement?.list?.any {
-                it.isAlreadyVerified == true
-            } ?: false
-        if (isAlreadyVerifiedSet) {
-            // check if api token is set and valid, if not throw unauthorized exception
-            // Will be done in #1790
-            throw UnauthorizedException()
+        val isAlreadyVerifiedList =
+            application.applicationDetails.blueCardEntitlement?.workAtOrganizationsEntitlement?.list?.map { it.isAlreadyVerified }
+                ?: emptyList()
+        return when {
+            isAlreadyVerifiedList.all { it == false || it == null } -> false
+            isAlreadyVerifiedList.all { it == true } -> {
+                throw UnauthorizedException()
+            }
+            else -> throw BadRequestResponse("isAlreadyVerified must be the same for all entries")
         }
-        return false
     }
 
     fun setApplicationVerificationToVerifiedNow(verificationEntities: List<ApplicationVerificationEntity>) {
