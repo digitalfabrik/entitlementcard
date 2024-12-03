@@ -1,4 +1,8 @@
-import { ACTIVATION_PATH, BAYERN_PRODUCTION_ID, BAYERN_STAGING_ID } from "../constants"
+import {
+    ACTIVATION_PATH,
+    BAYERN_PRODUCTION_ID,
+    BAYERN_STAGING_ID,
+} from '../constants'
 import BuildConfigType, { CommonBuildConfigType } from "../types"
 import disclaimerText from "./disclaimerText"
 import publisherText from "./publisherText"
@@ -72,7 +76,14 @@ export const bayernCommon: CommonBuildConfigType = {
         verification: true,
         favorites: false,
     },
-    applicationUrl: "https://bayern.ehrenamtskarte.app/beantragen",
+    applicationUrl: {
+        production: `https://${BAYERN_PRODUCTION_ID}/beantragen`,
+        staging: `https://${BAYERN_STAGING_ID}/beantragen`,
+        local : 'http://localhost:3000/beantragen'
+    },
+    applicationQueryKeyName: null,
+    applicationQueryKeyBirthday: null,
+    applicationQueryKeyReferenceNumber: null,
     dataPrivacyPolicyUrl: "https://bayern.ehrenamtskarte.app/data-privacy-policy",
     publisherAddress:
         "Bayerisches Staatsministerium\nfür Familie, Arbeit und Soziales\nWinzererstraße 9\n80797 München",

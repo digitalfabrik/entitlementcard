@@ -7,11 +7,13 @@ import 'package:ehrenamtskarte/identification/card_detail_view/card_detail_view.
 import 'package:ehrenamtskarte/identification/no_card_view.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_camera_permission_dialog.dart';
 import 'package:ehrenamtskarte/identification/user_code_model.dart';
+import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/dialogs/remove_card_confirmation_dialog.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/verification_workflow.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/routing.dart';
+import 'package:ehrenamtskarte/util/get_application_url.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +38,10 @@ class IdentificationPageState extends State<IdentificationPage> {
       builder: (context, userCodeModel, child) {
         if (!userCodeModel.isInitialized) {
           if (userCodeModel.initializationFailed) {
-            return SafeArea(child: Center(child: Text(context.t.common.unknownError, textAlign: TextAlign.center)));
+            return SafeArea(
+                child: Center(
+                    child: Text(context.t.common.unknownError,
+                        textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium)));
           }
           return Container();
         }
@@ -44,11 +49,21 @@ class IdentificationPageState extends State<IdentificationPage> {
         if (userCodeModel.userCodes.isNotEmpty) {
           final List<Widget> carouselCards = [];
           for (var code in userCodeModel.userCodes) {
+            final applicationUrl = isCardExtendable(code.info, code.cardVerification)
+                ? getApplicationUrlForCardExtension(
+                    getApplicationUrl(context),
+                    code.info,
+                    buildConfig.applicationQueryKeyName,
+                    buildConfig.applicationQueryKeyBirthday,
+                    buildConfig.applicationQueryKeyReferenceNumber)
+                : getApplicationUrl(context);
+
             carouselCards.add(CardDetailView(
+              applicationUrl: applicationUrl,
               userCode: code,
               startVerification: () => _showVerificationDialog(context, settings, userCodeModel),
               startActivation: () => _startActivation(context),
-              startApplication: _startApplication,
+              startApplication: () => _startApplication(applicationUrl),
               openRemoveCardDialog: () => _openRemoveCardDialog(context),
             ));
           }
@@ -63,7 +78,7 @@ class IdentificationPageState extends State<IdentificationPage> {
         return NoCardView(
           startVerification: () => _showVerificationDialog(context, settings, userCodeModel),
           startActivation: () => _startActivation(context),
-          startApplication: _startApplication,
+          startApplication: () => _startApplication(getApplicationUrl(context)),
         );
       },
     );
@@ -102,9 +117,9 @@ class IdentificationPageState extends State<IdentificationPage> {
     handleDeniedCameraPermission(context);
   }
 
-  Future<bool> _startApplication() {
+  Future<bool> _startApplication(String applicationUrl) {
     return launchUrlString(
-      buildConfig.applicationUrl,
+      applicationUrl,
       mode: LaunchMode.externalApplication,
     );
   }

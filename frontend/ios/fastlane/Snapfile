@@ -1,10 +1,8 @@
 devices([
 # https://stackoverflow.com/a/52311326
-"iPhone 8 Plus", # 5.5"
-"iPhone 11 Pro Max", # 6.5"  
-"iPhone 14 Pro Max", # 6.7 iOS 16.4"
-"iPad Pro (12.9-inch) (6th generation)", #iOS 16.4
-"iPad Pro (12.9-inch) (2nd generation)"
+"iPhone 15 Pro Max", # 6.5"
+"iPhone 16 Pro Max", # 6.9
+"iPad Pro 13-inch (M4)", # 13"
 ])
 
 languages([

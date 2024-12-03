@@ -162,15 +162,17 @@ export const initializeCardFromCSV = (
   cardConfig: CardConfig,
   line: (string | null)[],
   headers: string[],
-  region: Region,
+  region: Region | undefined,
   withDefaults = false
 ): Card => {
   const defaultCard = withDefaults
     ? initializeCard(cardConfig, region)
-    : { fullName: '', expirationDate: null, extensions: { [REGION_EXTENSION_NAME]: region.id } }
+    : { fullName: '', expirationDate: null, extensions: region ? { [REGION_EXTENSION_NAME]: region.id } : {} }
   const extensions = headers.reduce((acc, header, index) => {
     const value = line[index]
-    const extension = Extensions.find(extension => extension.name === getExtensionNameByCSVHeader(cardConfig, header))
+    const extension = cardConfig.extensions.find(
+      extension => extension.name === getExtensionNameByCSVHeader(cardConfig, header)
+    )
     return extension && value != null ? Object.assign(acc, extension.fromString(value)) : acc
   }, defaultCard.extensions)
 

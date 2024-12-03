@@ -94,7 +94,14 @@ export type CommonBuildConfigType = {
     theme: ThemeType
     categories: number[]
     featureFlags: FeatureFlagsType
-    applicationUrl: string
+    applicationUrl: {
+        staging: string
+        production: string
+        local: string
+    }
+    applicationQueryKeyName: string | null,
+    applicationQueryKeyBirthday: string | null,
+    applicationQueryKeyReferenceNumber: string | null
     dataPrivacyPolicyUrl: string
     publisherAddress: string
     publisherText: string

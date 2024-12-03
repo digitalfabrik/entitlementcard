@@ -2,6 +2,7 @@ import { Checkbox, FormGroup, InputGroup, Intent } from '@blueprintjs/core'
 import InfoOutlined from '@mui/icons-material/InfoOutlined'
 import { styled } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
 import { Card, getFullNameValidationErrorMessage, isFullNameValid, isValid } from '../../cards/Card'
 import ClearInputButton from '../../cards/extensions/components/ClearInputButton'
@@ -48,6 +49,7 @@ const CardSelfServiceForm = ({
   const [touchedFullName, setTouchedFullName] = useState(false)
   const [openDataPrivacy, setOpenDataPrivacy] = useState<boolean>(false)
   const [openReferenceInformation, setOpenReferenceInformation] = useState<boolean>(false)
+  const [_, setSearchParams] = useSearchParams()
   const cardValid = isValid(card, { expirationDateNullable: true })
   const appToaster = useAppToaster()
   const showErrorMessage = touchedFullName || formSendAttempt
@@ -68,6 +70,7 @@ const CardSelfServiceForm = ({
       return
     }
     await generateCards()
+    setSearchParams(undefined, { replace: true })
   }
 
   return (

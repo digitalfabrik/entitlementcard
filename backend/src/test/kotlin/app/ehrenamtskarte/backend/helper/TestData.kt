@@ -12,6 +12,7 @@ import app.ehrenamtskarte.backend.stores.database.Addresses
 import app.ehrenamtskarte.backend.stores.database.Contacts
 import app.ehrenamtskarte.backend.stores.database.PhysicalStores
 import app.ehrenamtskarte.backend.userdata.database.UserEntitlements
+import app.ehrenamtskarte.backend.userdata.database.UserEntitlementsEntity
 import net.postgis.jdbc.geometry.Point
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.insertAndGetId
@@ -32,13 +33,13 @@ object TestData {
         type: ApiTokenType
     ): Int {
         val tokenHash = PasswordCrypto.hashWithSHA256(token.toByteArray())
+        val projectId = findAdmin(creatorId).projectId
         return transaction {
-            val admin = AdministratorEntity.findById(creatorId) ?: throw Exception("Test admin $creatorId not found")
             ApiTokens.insertAndGetId {
                 it[ApiTokens.tokenHash] = tokenHash
                 it[ApiTokens.creatorId] = creatorId
                 it[ApiTokens.expirationDate] = expirationDate
-                it[projectId] = admin.projectId
+                it[ApiTokens.projectId] = projectId
                 it[ApiTokens.type] = type
             }.value
         }
@@ -87,8 +88,8 @@ object TestData {
         }
     }
 
-    fun createUserEntitlements(
-        userHash: String,
+    fun createUserEntitlement(
+        userHash: String = "dummy",
         startDate: LocalDate = LocalDate.now().minusDays(1L),
         endDate: LocalDate = LocalDate.now().plusYears(1L),
         revoked: Boolean = false,
@@ -110,7 +111,6 @@ object TestData {
         expirationDay: Long? = null,
         issueDate: Instant = Instant.now(),
         revoked: Boolean = false,
-        regionId: Int,
         issuerId: Int? = null,
         firstActivationDate: Instant? = null,
         entitlementId: Int? = null,
@@ -123,7 +123,6 @@ object TestData {
             expirationDay,
             issueDate,
             revoked,
-            regionId,
             issuerId,
             CodeType.DYNAMIC,
             firstActivationDate,
@@ -136,7 +135,6 @@ object TestData {
         expirationDay: Long? = null,
         issueDate: Instant = Instant.now(),
         revoked: Boolean = false,
-        regionId: Int,
         issuerId: Int? = null,
         firstActivationDate: Instant? = null,
         entitlementId: Int? = null,
@@ -148,7 +146,6 @@ object TestData {
             expirationDay,
             issueDate,
             revoked,
-            regionId,
             issuerId,
             CodeType.STATIC,
             firstActivationDate,
@@ -163,7 +160,6 @@ object TestData {
         expirationDay: Long? = null,
         issueDate: Instant = Instant.now(),
         revoked: Boolean = false,
-        regionId: Int,
         issuerId: Int? = null,
         codeType: CodeType,
         firstActivationDate: Instant? = null,
@@ -171,6 +167,12 @@ object TestData {
         startDay: Long? = null
     ): Int {
         val fakeCardInfoHash = Random.nextBytes(20)
+        val regionId = when {
+            issuerId != null -> findAdmin(issuerId).regionId
+                ?: throw IllegalStateException("Admin $issuerId must have a region to create a card")
+            entitlementId != null -> findUserEntitlement(entitlementId).regionId
+            else -> throw Exception("Either issuerId or entitlementId must be provided to create a card")
+        }
         return transaction {
             Cards.insertAndGetId {
                 it[Cards.activationSecretHash] = activationSecretHash
@@ -187,5 +189,13 @@ object TestData {
                 it[Cards.startDay] = startDay
             }.value
         }
+    }
+
+    private fun findAdmin(adminId: Int): AdministratorEntity {
+        return transaction { AdministratorEntity.findById(adminId) ?: throw Exception("Test admin $adminId not found") }
+    }
+
+    private fun findUserEntitlement(entitlementId: Int): UserEntitlementsEntity {
+        return transaction { UserEntitlementsEntity.findById(entitlementId) ?: throw Exception("User entitlement $entitlementId not found") }
     }
 }

@@ -66,7 +66,6 @@ Future<bool> activateCard(
       if (context.mounted) {
         messengerState.showSnackBar(
           SnackBar(
-            backgroundColor: Theme.of(context).colorScheme.primary,
             content: Text(t.deeplinkActivation.activationSuccessful),
           ),
         );

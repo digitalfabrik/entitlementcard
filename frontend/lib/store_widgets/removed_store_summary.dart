@@ -20,6 +20,7 @@ class RemovedStoreSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final t = context.t;
     return SafeArea(
       bottom: false,
@@ -42,14 +43,14 @@ class RemovedStoreSummary extends StatelessWidget {
                       storeName,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.bodyLarge,
+                      style: theme.textTheme.bodyLarge,
                     ),
                     const SizedBox(height: 4),
                     Text(
                       t.store.acceptingStoreNotAvailable,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.redAccent),
+                      style: theme.textTheme.bodyLarge?.apply(color: Colors.redAccent),
                     ),
                   ],
                 ),
@@ -58,7 +59,7 @@ class RemovedStoreSummary extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: SizedBox(
                   height: double.infinity,
-                  child: Icon(Icons.keyboard_arrow_right, size: 30.0, color: Theme.of(context).disabledColor),
+                  child: Icon(Icons.keyboard_arrow_right, size: 30.0, color: theme.disabledColor),
                 ),
               ),
             ],

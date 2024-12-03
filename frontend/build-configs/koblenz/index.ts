@@ -1,4 +1,10 @@
-import { ACTIVATION_PATH, KOBLENZ_PRODUCTION_ID, KOBLENZ_STAGING_ID } from "../constants"
+import {
+    ACTIVATION_PATH,
+    KOBLENZ_PRODUCTION_ID,
+    KOBLENZ_STAGING_ID,
+    QUERY_PARAM_BIRTHDAY, QUERY_PARAM_KOBLENZ_REFERENCE_NUMBER,
+    QUERY_PARAM_NAME
+} from '../constants'
 import BuildConfigType, { CommonBuildConfigType } from "../types"
 import disclaimerText from "./disclaimerText"
 import publisherText from "./publisherText"
@@ -73,7 +79,14 @@ export const koblenzCommon: CommonBuildConfigType = {
         verification: true,
         favorites: false,
     },
-    applicationUrl: "https://koblenz.sozialpass.app/erstellen",
+    applicationUrl: {
+       production: `https://${KOBLENZ_PRODUCTION_ID}/erstellen`,
+        staging: `https://${KOBLENZ_STAGING_ID}/erstellen`,
+        local : 'http://localhost:3000/erstellen'
+    },
+    applicationQueryKeyName: QUERY_PARAM_NAME,
+    applicationQueryKeyBirthday: QUERY_PARAM_BIRTHDAY,
+    applicationQueryKeyReferenceNumber: QUERY_PARAM_KOBLENZ_REFERENCE_NUMBER,
     dataPrivacyPolicyUrl: "https://koblenz.sozialpass.app/data-privacy-policy",
     publisherAddress: "Stadt Koblenz\nWilli-Hörter-Platz 1\n56068 Koblenz",
     publisherText,

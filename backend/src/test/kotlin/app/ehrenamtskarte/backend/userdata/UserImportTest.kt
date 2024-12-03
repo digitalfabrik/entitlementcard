@@ -23,7 +23,7 @@ import okhttp3.Response
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.io.File
 import java.time.LocalDate
@@ -44,7 +44,7 @@ internal class UserImportTest : IntegrationTest() {
 
     private val admin = TestAdministrators.KOBLENZ_PROJECT_ADMIN
 
-    @AfterEach
+    @BeforeEach
     fun cleanUp() {
         transaction {
             Cards.deleteAll()
@@ -368,7 +368,7 @@ internal class UserImportTest : IntegrationTest() {
     @Test
     fun `POST returns a successful response and user entitlements are updated in db`() = JavalinTest.test(app) { _, client ->
         TestData.createApiToken(creatorId = admin.id, type = ApiTokenType.USER_IMPORT)
-        TestData.createUserEntitlements(
+        TestData.createUserEntitlement(
             userHash = TEST_USER_HASH,
             regionId = 1
         )
@@ -402,18 +402,12 @@ internal class UserImportTest : IntegrationTest() {
     @Test
     fun `POST returns a successful response and existing cards are revoked when the user entitlement has been revoked`() = JavalinTest.test(app) { _, client ->
         TestData.createApiToken(creatorId = admin.id, type = ApiTokenType.USER_IMPORT)
-        val entitlementId = TestData.createUserEntitlements(
+        val entitlementId = TestData.createUserEntitlement(
             userHash = TEST_USER_HASH,
             regionId = 1
         )
-        val dynamicCardId = TestData.createDynamicCard(
-            regionId = 1,
-            entitlementId = entitlementId
-        )
-        val staticCardId = TestData.createStaticCard(
-            regionId = 1,
-            entitlementId = entitlementId
-        )
+        val dynamicCardId = TestData.createDynamicCard(entitlementId = entitlementId)
+        val staticCardId = TestData.createStaticCard(entitlementId = entitlementId)
 
         val csvFile = generateCsvFile(
             TEST_CSV_FILE_PATH,

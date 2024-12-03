@@ -32,7 +32,7 @@ const BirthdayForm = ({
   }
 
   const changeBirthday = (date: Date | null) => {
-    setValue({ birthday: PlainDate.safeFromCustomFormat(date?.toLocaleDateString() ?? null) })
+    setValue({ birthday: PlainDate.safeFromLocalDate(date) })
   }
 
   return (
@@ -62,7 +62,7 @@ const BirthdayExtension: Extension<BirthdayExtensionState> = {
     },
   }),
   isValid: ({ birthday }: BirthdayExtensionState) => {
-    if (birthday === null) {
+    if (!birthday) {
       return false
     }
     const today = PlainDate.fromLocalDate(new Date())

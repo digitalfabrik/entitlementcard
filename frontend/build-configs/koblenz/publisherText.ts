@@ -1,5 +1,4 @@
-export default `
-Herausgegeben von:
+export default `Herausgegeben von:
 
 Stadt Koblenz
 

@@ -33,6 +33,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
+    final theme = Theme.of(context);
     return Stack(
       children: [
         CustomScrollView(
@@ -50,7 +51,7 @@ class _SearchPageState extends State<SearchPage> {
                   children: [
                     Text(
                       '${t.search.searchResults.toUpperCase()} ${_sortingMode == SortingMode.byDistance ? t.search.nearby : t.search.alphabetically}',
-                      style: const TextStyle(color: Colors.grey),
+                      style: theme.textTheme.bodyMedium?.apply(color: theme.hintColor),
                     ),
                     const Expanded(child: Padding(padding: EdgeInsets.only(left: 8), child: Divider()))
                   ],

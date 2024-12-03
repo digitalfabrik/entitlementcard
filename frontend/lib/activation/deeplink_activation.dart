@@ -129,7 +129,6 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
                                   // TODO 1656: Improve error handling!!
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      backgroundColor: Theme.of(context).colorScheme.primary,
                                       content: Text(t.common.unknownError),
                                     ),
                                   );
@@ -165,6 +164,7 @@ class _WarningText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final String cardsInUse = userCodeModel.userCodes.length.toString();
     final String maxCardAmount = buildConfig.maxCardAmount.toString();
     final text = switch (status) {
@@ -180,8 +180,8 @@ class _WarningText extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 8),
         child: Column(
           children: [
-            Icon(Icons.warning, color: Theme.of(context).colorScheme.secondary),
-            Text(text, textAlign: TextAlign.center)
+            Icon(Icons.warning, color: theme.colorScheme.secondary),
+            Text(text, textAlign: TextAlign.center, style: theme.textTheme.bodyMedium)
           ],
         ));
   }
