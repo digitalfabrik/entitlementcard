@@ -12,7 +12,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.LocalDate
 
 class Utils {
-    companion object utils {
+    companion object Utils {
         private fun authenticateToken(header: String?, neededType: ApiTokenType): ApiTokenEntity {
             val authHeader = header?.takeIf { it.startsWith("Bearer ") }
                 ?: throw UnauthorizedException()
