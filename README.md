@@ -14,7 +14,8 @@
 
 ## Documentation
 
-* [Production Setup](./docs/production-setup.md)
+* [Manual Releases](./docs/manual-release)
+* [CI/CD](./docs/cicd.md)
 * [GraphQL Code Generation](./docs/graphql_generation.md)
 * [Protobuf Code Generation](./docs/protobuf-generation.md)
 * [Migrations](./docs/migrations.md)
