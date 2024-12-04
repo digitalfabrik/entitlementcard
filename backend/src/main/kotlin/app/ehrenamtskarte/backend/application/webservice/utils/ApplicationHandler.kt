@@ -2,6 +2,7 @@ package app.ehrenamtskarte.backend.application.webservice.utils
 
 import app.ehrenamtskarte.backend.application.database.ApplicationEntity
 import app.ehrenamtskarte.backend.application.database.ApplicationVerificationEntity
+import app.ehrenamtskarte.backend.application.database.ApplicationVerificationExternalSource
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
 import app.ehrenamtskarte.backend.application.webservice.schema.create.Application
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
@@ -101,10 +102,13 @@ class ApplicationHandler(
         }
     }
 
-    fun setApplicationVerificationToVerifiedNow(verificationEntities: List<ApplicationVerificationEntity>) {
+    fun setApplicationVerificationToPreVerifiedNow(verificationEntities: List<ApplicationVerificationEntity>) {
         transaction {
             verificationEntities.forEach {
-                ApplicationRepository.verifyApplicationVerification(it.accessKey)
+                ApplicationRepository.verifyApplicationVerification(
+                    it.accessKey,
+                    ApplicationVerificationExternalSource.VEREIN360
+                )
             }
         }
     }
