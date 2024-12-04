@@ -11,22 +11,23 @@ export enum PreVerifiedQuickIndicatorType {
   Verein360,
 }
 
-const PreVerifiedQuickIndicator = memo(({type}: {type: PreVerifiedQuickIndicatorType}) => {
-  const logo = type == PreVerifiedQuickIndicatorType.Juleica ? JuleicaLogo : Verein360Logo
+const PreVerifiedQuickIndicator = memo(({ type }: { type: PreVerifiedQuickIndicatorType }) => {
+  const logo = type === PreVerifiedQuickIndicatorType.Juleica ? JuleicaLogo : Verein360Logo
   return (
-  <Tooltip
-    content={
-      <div>
-        <b>Bestätigung(en) durch Organisationen:</b>
-        <br />
-        Bestätigung ist nicht erforderlich
-      </div>
-    }>
-    <UnFocusedDiv>
-      <Indicator status={VerificationStatus.Verified} />
-      <img src={logo} alt={type.toString()} height='100%' />
-    </UnFocusedDiv>
-  </Tooltip>
-)})
+    <Tooltip
+      content={
+        <div>
+          <b>Bestätigung(en) durch Organisationen:</b>
+          <br />
+          Bestätigung ist nicht erforderlich
+        </div>
+      }>
+      <UnFocusedDiv>
+        <Indicator status={VerificationStatus.Verified} />
+        <img src={logo} alt={type.toString()} height='100%' />
+      </UnFocusedDiv>
+    </Tooltip>
+  )
+})
 
 export default memo(PreVerifiedQuickIndicator)

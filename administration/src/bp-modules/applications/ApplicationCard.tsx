@@ -8,7 +8,7 @@ import {
   Icon,
   Section,
   SectionCard,
-  Tooltip
+  Tooltip,
 } from '@blueprintjs/core'
 import React, { ReactElement, memo, useContext, useMemo, useState } from 'react'
 import styled, { css } from 'styled-components'
@@ -20,11 +20,11 @@ import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { useAppToaster } from '../AppToaster'
 import { Application } from './ApplicationsOverview'
-import JsonFieldView, { JsonField, findValue } from './JsonFieldView'
+import JsonFieldView, { GeneralJsonField, JsonField, findValue } from './JsonFieldView'
 import NoteDialogController from './NoteDialogController'
+import PreVerifiedQuickIndicator, { PreVerifiedQuickIndicatorType } from './PreVerifiedQuickIndicator'
 import VerificationsQuickIndicator from './VerificationsQuickIndicator'
 import VerificationsView from './VerificationsView'
-import PreVerifiedQuickIndicator, { PreVerifiedQuickIndicatorType } from './PreVerifiedQuickIndicator'
 
 export const printAwareCss = css`
   @media print {
@@ -114,30 +114,34 @@ const RightElement = ({ jsonField, application }: RightElementProps): ReactEleme
     return !!blueCardJuleicaEntitlement
   }
 
-  const isPreverified = (): boolean => {
-    const applicationDetails = findValue(jsonField, 'applicationDetails', 'Array') ?? jsonField;
-    const workAtOrganizationsEntitlement = findValue(applicationDetails, 'blueCardWorkAtOrganizationsEntitlement', 'Array')?.value ?? [];
+  const isPreVerified = (): boolean => {
+    const applicationDetails = findValue(jsonField, 'applicationDetails', 'Array') ?? jsonField
+    const workAtOrganizationsEntitlement =
+      findValue(applicationDetails, 'blueCardWorkAtOrganizationsEntitlement', 'Array')?.value ?? []
 
-    const isAlreadyVerified = workAtOrganizationsEntitlement.some((entitlement: any) =>
-      entitlement.value.some((organization: any) =>
-        organization.name === 'isAlreadyVerified' && organization.value === true
-      )
+    const isAlreadyVerified = workAtOrganizationsEntitlement.some(
+      (entitlement: GeneralJsonField) =>
+        Array.isArray(entitlement.value) &&
+        entitlement.value.some(
+          (organizationField: GeneralJsonField) =>
+            organizationField.name === 'isAlreadyVerified' && organizationField.value === true
+        )
     )
     return isAlreadyVerified
   }
 
-  let quickIndicator;
+  let quickIndicator
   if (isJuleicaEntitlementType()) {
-    quickIndicator = <PreVerifiedQuickIndicator type={PreVerifiedQuickIndicatorType.Juleica} />;
-  } else if (isPreverified()) {
-    quickIndicator = <PreVerifiedQuickIndicator type={PreVerifiedQuickIndicatorType.Verein360} />;
+    quickIndicator = <PreVerifiedQuickIndicator type={PreVerifiedQuickIndicatorType.Juleica} />
+  } else if (isPreVerified()) {
+    quickIndicator = <PreVerifiedQuickIndicator type={PreVerifiedQuickIndicatorType.Verein360} />
   } else {
-    quickIndicator = <VerificationsQuickIndicator verifications={application.verifications} />;
+    quickIndicator = <VerificationsQuickIndicator verifications={application.verifications} />
   }
 
   return (
     <RightElementContainer>
-      {!!application.note && application.note.trim() && <Icon icon="annotation" intent="none" />}
+      {!!application.note && application.note.trim() && <Icon icon='annotation' intent='none' />}
       {quickIndicator}
     </RightElementContainer>
   )
@@ -152,12 +156,12 @@ export type ApplicationCardProps = {
 }
 
 const ApplicationCard = ({
-                           application,
-                           onDelete,
-                           printApplicationById,
-                           isSelectedForPrint,
-                           onChange
-                         }: ApplicationCardProps) => {
+  application,
+  onDelete,
+  printApplicationById,
+  isSelectedForPrint,
+  onChange,
+}: ApplicationCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const { createdDate: createdDateString, jsonValue, id, withdrawalDate, cardCreated } = application
   const jsonField: JsonField<'Array'> = JSON.parse(jsonValue)
@@ -178,7 +182,7 @@ const ApplicationCard = ({
         console.error('Delete operation returned false.')
         appToaster?.show({ intent: 'danger', message: 'Etwas ist schief gelaufen.' })
       }
-    }
+    },
   })
 
   const createCardQuery = useMemo(
@@ -205,7 +209,7 @@ const ApplicationCard = ({
       }
       rightElement={<RightElement jsonField={jsonField} application={application} />}
       elevation={1}
-      icon={withdrawalDate ? <Icon icon="warning-sign" intent="warning" /> : undefined}
+      icon={withdrawalDate ? <Icon icon='warning-sign' intent='warning' /> : undefined}
       collapseProps={{ isOpen: isExpanded, onToggle: () => setIsExpanded(!isExpanded), keepChildrenMounted: true }}
       collapsible={!isSelectedForPrint}
       $hideInPrintMode={!isSelectedForPrint}>
@@ -219,7 +223,7 @@ const ApplicationCard = ({
           />
 
           {!!withdrawalDate && (
-            <WithdrawAlert intent="warning">
+            <WithdrawAlert intent='warning'>
               Der Antrag wurde vom Antragsteller am {formatDateWithTimezone(withdrawalDate, config.timezone)}{' '}
               zurückgezogen. <br />
               Bitte löschen Sie den Antrag zeitnah.
@@ -242,28 +246,28 @@ const ApplicationCard = ({
         <ButtonContainer>
           <Tooltip
             disabled={!!createCardQuery}
-            content="Es existiert kein passendes Mapping, um aus diesem Antrag das Kartenformular vollständig auszufüllen.">
+            content='Es existiert kein passendes Mapping, um aus diesem Antrag das Kartenformular vollständig auszufüllen.'>
             <PrintAwareAnchorButton
               disabled={!createCardQuery}
               href={createCardQuery ? `./cards/add${createCardQuery}` : undefined}
-              icon="id-number"
-              intent="primary">
+              icon='id-number'
+              intent='primary'>
               {cardCreated ? 'Karte erneut erstellen' : 'Karte erstellen'}
             </PrintAwareAnchorButton>
           </Tooltip>
-          <PrintAwareButton onClick={() => setDeleteDialogOpen(true)} intent="danger" icon="trash">
+          <PrintAwareButton onClick={() => setDeleteDialogOpen(true)} intent='danger' icon='trash'>
             Antrag löschen
           </PrintAwareButton>
-          <PrintAwareButton onClick={() => printApplicationById(id)} intent="none" icon="print">
+          <PrintAwareButton onClick={() => printApplicationById(id)} intent='none' icon='print'>
             PDF exportieren
           </PrintAwareButton>
-          <CollapseIcon icon="chevron-up" onClick={() => setIsExpanded(!isExpanded)} style={{ marginLeft: 'auto' }} />
+          <CollapseIcon icon='chevron-up' onClick={() => setIsExpanded(!isExpanded)} style={{ marginLeft: 'auto' }} />
         </ButtonContainer>
         <Alert
-          cancelButtonText="Abbrechen"
-          confirmButtonText="Antrag löschen"
-          icon="trash"
-          intent="danger"
+          cancelButtonText='Abbrechen'
+          confirmButtonText='Antrag löschen'
+          icon='trash'
+          intent='danger'
           isOpen={deleteDialogOpen}
           loading={loading}
           onCancel={() => setDeleteDialogOpen(false)}
