@@ -30,6 +30,11 @@ export type ThemeType = {
     fontFamily: string
 }
 
+export type MapAttribution = {
+    text: string
+    url: string
+}
+
 export type CommonBuildConfigType = {
     appName: string
     appIcon: string
@@ -48,6 +53,7 @@ export type CommonBuildConfigType = {
     mapInitialCoordinatesLat: number
     mapInitialCoordinatesLng: number
     mapInitialZoomLevel: number
+    mapAttribution: MapAttribution,
     backendUrl: {
         showcase: string
         staging: string
