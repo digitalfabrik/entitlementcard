@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import { Role } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import UserEndpointSettings from './UserEndpointSettings'
+import ApiTokenSettings from './ApiTokenSettings'
 
 const ProjectSettingsContainer = styled.div`
   display: flex;
@@ -30,7 +30,7 @@ const ProjectSettingsController = (): ReactElement => {
   }
   return (
     <ProjectSettingsContainer>
-      <UserEndpointSettings showPepperSection={role === Role.ProjectAdmin && userImportApiEnabled} />
+      <ApiTokenSettings showPepperSection={role === Role.ProjectAdmin && userImportApiEnabled} />
     </ProjectSettingsContainer>
   )
 }

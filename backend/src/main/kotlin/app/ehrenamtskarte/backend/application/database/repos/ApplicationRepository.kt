@@ -116,7 +116,10 @@ object ApplicationRepository {
         }
     }
 
-    fun getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey: String, dfe: DataFetchingEnvironment): ApplicationView {
+    fun getApplicationByApplicationVerificationAccessKey(
+        applicationVerificationAccessKey: String,
+        dfe: DataFetchingEnvironment
+    ): ApplicationView {
         val logger = LoggerFactory.getLogger(ApplicationRepository::class.java)
         val context = dfe.getContext<GraphQLContext>()
         return transaction {
@@ -146,14 +149,17 @@ object ApplicationRepository {
         return applicationVerification.verifiedDate != null || applicationVerification.rejectedDate != null
     }
 
-    fun verifyApplicationVerification(accessKey: String): Boolean {
+    fun verifyApplicationVerification(
+        accessKey: String,
+        automaticSource: ApplicationVerificationExternalSource = ApplicationVerificationExternalSource.NONE
+    ): Boolean {
         return transaction {
             val applicationVerification = getApplicationVerification(accessKey)
             if (isAlreadyVerified(applicationVerification)) {
                 false
             } else {
                 applicationVerification.verifiedDate = Instant.now()
-                applicationVerification.automaticSource = ApplicationVerificationExternalSource.VEREIN360
+                applicationVerification.automaticSource = automaticSource
                 true
             }
         }

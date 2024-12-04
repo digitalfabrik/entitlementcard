@@ -40,11 +40,10 @@ class EakApplicationMutationService {
         val (applicationEntity, verificationEntities) = applicationHandler.saveApplication()
 
         if (isPreVerified) {
-            applicationHandler.setApplicationVerificationToVerifiedNow(verificationEntities)
+            applicationHandler.setApplicationVerificationToPreVerifiedNow(verificationEntities)
         } else {
             applicationHandler.sendApplicationMails(applicationEntity, verificationEntities, dataFetcherResultBuilder)
         }
-
         return dataFetcherResultBuilder.data(true).build()
     }
 
