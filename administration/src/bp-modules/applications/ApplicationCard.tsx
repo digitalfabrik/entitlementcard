@@ -114,7 +114,7 @@ const RightElement = ({ jsonField, application }: RightElementProps): ReactEleme
     return !!blueCardJuleicaEntitlement
   }
 
-  const isPreVerified = (): boolean => {
+  const isPreVerifiedByOrganization = (): boolean => {
     const applicationDetails = findValue(jsonField, 'applicationDetails', 'Array') ?? jsonField
     const workAtOrganizationsEntitlement =
       findValue(applicationDetails, 'blueCardWorkAtOrganizationsEntitlement', 'Array')?.value ?? []
@@ -130,19 +130,20 @@ const RightElement = ({ jsonField, application }: RightElementProps): ReactEleme
     return isAlreadyVerified
   }
 
-  let quickIndicator
-  if (isJuleicaEntitlementType()) {
-    quickIndicator = <PreVerifiedQuickIndicator type={PreVerifiedQuickIndicatorType.Juleica} />
-  } else if (isPreVerified()) {
-    quickIndicator = <PreVerifiedQuickIndicator type={PreVerifiedQuickIndicatorType.Verein360} />
-  } else {
-    quickIndicator = <VerificationsQuickIndicator verifications={application.verifications} />
-  }
+  const isPreVerified = isJuleicaEntitlementType() || isPreVerifiedByOrganization()
 
   return (
     <RightElementContainer>
       {!!application.note && application.note.trim() && <Icon icon='annotation' intent='none' />}
-      {quickIndicator}
+      {isPreVerified ? (
+        <PreVerifiedQuickIndicator
+          type={
+            isJuleicaEntitlementType() ? PreVerifiedQuickIndicatorType.Juleica : PreVerifiedQuickIndicatorType.Verein360
+          }
+        />
+      ) : (
+        <VerificationsQuickIndicator verifications={application.verifications} />
+      )}
     </RightElementContainer>
   )
 }
