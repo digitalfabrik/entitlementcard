@@ -42,6 +42,8 @@ export const roleToText = (role: Role): string => {
       return 'Regionsadministrator'
     case Role.RegionManager:
       return 'Regionsverwalter'
+    case Role.ExternalVerifiedApiUser:
+      return 'Externer API-Nutzer'
     default:
       return role
   }

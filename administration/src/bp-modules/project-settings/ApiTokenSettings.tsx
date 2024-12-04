@@ -49,7 +49,10 @@ const DeleteIcon = styled(Delete)`
   cursor: pointer;
 `
 
-const UserEndpointSettings = (): ReactElement => {
+type ApiTokenSettingsProps = {
+  showPepperSection: boolean
+}
+const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactElement => {
   const metaDataQuery = useGetApiTokenMetaDataQuery({})
 
   const appToaster = useAppToaster()
@@ -115,8 +118,8 @@ const UserEndpointSettings = (): ReactElement => {
         <p>Möchten Sie das Token unwiderruflich löschen?</p>
       </Alert>
       <SettingsCard>
-        <H2>User Import Endpunkt</H2>
-        <PepperSettings />
+        <H2>Api Token</H2>
+        {showPepperSection && <PepperSettings />}
         <Container>
           <H4>Neues Token erstellen</H4>
           <p>
@@ -174,4 +177,4 @@ const UserEndpointSettings = (): ReactElement => {
   )
 }
 
-export default UserEndpointSettings
+export default ApiTokenSettings

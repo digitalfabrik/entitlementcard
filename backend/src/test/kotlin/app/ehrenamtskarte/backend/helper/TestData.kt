@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.helper
 
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
+import app.ehrenamtskarte.backend.auth.database.ApiTokenType
 import app.ehrenamtskarte.backend.auth.database.ApiTokens
 import app.ehrenamtskarte.backend.auth.database.PasswordCrypto
 import app.ehrenamtskarte.backend.cards.database.Cards
@@ -28,7 +29,8 @@ object TestData {
     fun createApiToken(
         token: String = "dummy",
         creatorId: Int,
-        expirationDate: LocalDate = LocalDate.now().plusYears(1)
+        expirationDate: LocalDate = LocalDate.now().plusYears(1),
+        type: ApiTokenType
     ): Int {
         val tokenHash = PasswordCrypto.hashWithSHA256(token.toByteArray())
         val projectId = findAdmin(creatorId).projectId
@@ -38,6 +40,7 @@ object TestData {
                 it[ApiTokens.creatorId] = creatorId
                 it[ApiTokens.expirationDate] = expirationDate
                 it[ApiTokens.projectId] = projectId
+                it[ApiTokens.type] = type
             }.value
         }
     }

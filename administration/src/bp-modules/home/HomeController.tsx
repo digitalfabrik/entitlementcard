@@ -55,7 +55,7 @@ const HomeController = (): ReactElement => {
           <StyledButton icon='path-search' text='Region verwalten' />
         </NavLink>
       ) : null}
-      {role === Role.ProjectAdmin && userImportApiEnabled ? (
+      {(role === Role.ProjectAdmin && userImportApiEnabled) || role === Role.ExternalVerifiedApiUser ? (
         <NavLink to='/project'>
           <StyledButton icon='projects' text='Projekt verwalten' />
         </NavLink>

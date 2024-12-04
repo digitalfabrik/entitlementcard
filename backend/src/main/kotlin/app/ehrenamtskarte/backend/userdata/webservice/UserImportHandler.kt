@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.userdata.webservice
 
 import app.ehrenamtskarte.backend.auth.database.ApiTokenEntity
+import app.ehrenamtskarte.backend.auth.database.ApiTokenType
 import app.ehrenamtskarte.backend.auth.database.PasswordCrypto
 import app.ehrenamtskarte.backend.auth.database.repos.ApiTokensRepository
 import app.ehrenamtskarte.backend.cards.Argon2IdHasher
@@ -34,6 +35,9 @@ class UserImportHandler(
     fun handle(context: Context) {
         try {
             val apiToken = authenticate(context)
+            if (apiToken.type != ApiTokenType.USER_IMPORT) {
+                throw ForbiddenException()
+            }
 
             val project = transaction { ProjectEntity.find { Projects.id eq apiToken.projectId }.single() }
             val projectConfig = backendConfiguration.getProjectConfig(project.project)
@@ -109,7 +113,10 @@ class UserImportHandler(
                 }
 
                 val region = regionsByProject.singleOrNull { it.regionIdentifier == entry.get("regionKey") }
-                    ?: throw UserImportException(entry.recordNumber, "Specified region not found for the current project")
+                    ?: throw UserImportException(
+                        entry.recordNumber,
+                        "Specified region not found for the current project"
+                    )
 
                 val userHash = entry.get("userHash")
                 if (!Argon2IdHasher.isValidUserHash(userHash)) {
@@ -142,7 +149,13 @@ class UserImportHandler(
             ?: throw UserImportException(lineNumber, "Revoked must be a boolean value")
     }
 
-    private fun upsertUserEntitlement(userHash: String, startDate: LocalDate, endDate: LocalDate, revoked: Boolean, regionId: Int) {
+    private fun upsertUserEntitlement(
+        userHash: String,
+        startDate: LocalDate,
+        endDate: LocalDate,
+        revoked: Boolean,
+        regionId: Int
+    ) {
         val userEntitlement = UserEntitlementsRepository.findByUserHash(userHash.toByteArray())
         if (userEntitlement == null) {
             UserEntitlementsRepository.insert(userHash.toByteArray(), startDate, endDate, revoked, regionId)
