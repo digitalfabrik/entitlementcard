@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.common.webservice
+package app.ehrenamtskarte.backend.auth.webservice
 
 import app.ehrenamtskarte.backend.auth.database.ApiTokenEntity
 import app.ehrenamtskarte.backend.auth.database.ApiTokenType
@@ -11,8 +11,8 @@ import jakarta.servlet.http.HttpServletRequest
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.LocalDate
 
-class Utils {
-    companion object Utils {
+class TokenAuthenticator {
+    companion object TokenAuthenticator {
         private fun authenticateToken(header: String?, neededType: ApiTokenType): ApiTokenEntity {
             val authHeader = header?.takeIf { it.startsWith("Bearer ") }
                 ?: throw UnauthorizedException()

@@ -1,9 +1,9 @@
 package app.ehrenamtskarte.backend.userdata.webservice
 
 import app.ehrenamtskarte.backend.auth.database.ApiTokenType
+import app.ehrenamtskarte.backend.auth.webservice.TokenAuthenticator
 import app.ehrenamtskarte.backend.cards.Argon2IdHasher
 import app.ehrenamtskarte.backend.cards.database.repos.CardRepository
-import app.ehrenamtskarte.backend.common.webservice.Utils
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
@@ -32,7 +32,7 @@ class UserImportHandler(
 
     fun handle(context: Context) {
         try {
-            val apiToken = Utils.authenticate(context, ApiTokenType.USER_IMPORT)
+            val apiToken = TokenAuthenticator.authenticate(context, ApiTokenType.USER_IMPORT)
 
             val project = transaction { ProjectEntity.find { Projects.id eq apiToken.projectId }.single() }
             val projectConfig = backendConfiguration.getProjectConfig(project.project)
