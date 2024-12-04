@@ -14,7 +14,7 @@ class ConnectionFailedDialog extends StatelessWidget {
     return InfoDialog(
       title: t.common.connectionFailed,
       icon: Icons.signal_cellular_connected_no_internet_4_bar,
-      iconColor: Theme.of(context).colorScheme.onBackground,
+      iconColor: Theme.of(context).colorScheme.onSurface,
       child: Text(reason, style: Theme.of(context).textTheme.bodyMedium),
     );
   }
