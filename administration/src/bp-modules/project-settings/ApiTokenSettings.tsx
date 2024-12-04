@@ -49,10 +49,10 @@ const DeleteIcon = styled(Delete)`
   cursor: pointer;
 `
 
-type UserEndpointSettingsProps = {
+type ApiTokenSettingsProps = {
   showPepperSection: boolean
 }
-const UserEndpointSettings = ({ showPepperSection }: UserEndpointSettingsProps): ReactElement => {
+const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactElement => {
   const metaDataQuery = useGetApiTokenMetaDataQuery({})
 
   const appToaster = useAppToaster()
@@ -177,4 +177,4 @@ const UserEndpointSettings = ({ showPepperSection }: UserEndpointSettingsProps):
   )
 }
 
-export default UserEndpointSettings
+export default ApiTokenSettings

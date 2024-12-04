@@ -86,7 +86,7 @@ object Authorizer {
             return false
         }
 
-        if (newAdminRole == Role.EXTERNAL_VERIFIED_API_USER) {
+        if (actingAdmin.role == Role.PROJECT_ADMIN.db_value && newAdminRole == Role.EXTERNAL_VERIFIED_API_USER) {
             return transaction {
                 ProjectEntity.find { Projects.project eq EAK_BAYERN_PROJECT }
                     .single().id.value == actingAdmin.projectId.value
