@@ -21,6 +21,7 @@ const initialRouteName = '/';
 const activationRouteCodeParamName = 'base64qrcode';
 const activationRouteName = 'activation';
 const homeRouteParamTabIndexName = 'tabIndex';
+const homeRouteParamCardIndexName = 'cardIndex';
 const homeRouteName = '/home';
 const introRouteName = '/intro';
 
@@ -40,7 +41,6 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: '$activationRouteName/:$activationRouteCodeParamName',
           builder: (BuildContext context, GoRouterState state) {
-            print(state.uri.fragment);
             return DeepLinkActivation(base64qrcode: Uri.decodeFull(state.uri.fragment));
           },
         ),
@@ -52,9 +52,11 @@ final GoRouter router = GoRouter(
           return HomePage();
         }),
     GoRoute(
-      path: '$homeRouteName/:$homeRouteParamTabIndexName',
+      path: '$homeRouteName/:$homeRouteParamTabIndexName/:$homeRouteParamCardIndexName',
       builder: (BuildContext context, GoRouterState state) {
-        return HomePage(initialTabIndex: int.parse(state.pathParameters[homeRouteParamTabIndexName]!));
+        return HomePage(
+            initialTabIndex: int.parse(state.pathParameters[homeRouteParamTabIndexName]!),
+            initialCardIndex: int.parse(state.pathParameters[homeRouteParamCardIndexName]!));
       },
     ),
     GoRoute(
