@@ -5,8 +5,12 @@ import app.ehrenamtskarte.backend.application.database.ApplicationVerificationEn
 import app.ehrenamtskarte.backend.application.database.ApplicationVerificationExternalSource
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
 import app.ehrenamtskarte.backend.application.webservice.schema.create.Application
+import app.ehrenamtskarte.backend.application.webservice.schema.create.ApplicationType
+import app.ehrenamtskarte.backend.application.webservice.schema.create.BavariaCardType
+import app.ehrenamtskarte.backend.application.webservice.schema.create.BlueCardEntitlementType
+import app.ehrenamtskarte.backend.auth.database.ApiTokenType
+import app.ehrenamtskarte.backend.auth.webservice.TokenAuthenticator
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
-import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidFileSizeException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidFileTypeException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.MailNotSentException
@@ -93,12 +97,55 @@ class ApplicationHandler(
         val isAlreadyVerifiedList =
             application.applicationDetails.blueCardEntitlement?.workAtOrganizationsEntitlement?.list?.map { it.isAlreadyVerified }
                 ?: emptyList()
-        return when {
+        val allAlreadyVerifiedWithToken = when {
             isAlreadyVerifiedList.all { it == false || it == null } -> false
             isAlreadyVerifiedList.all { it == true } -> {
-                throw UnauthorizedException()
+                TokenAuthenticator.authenticate(context.request, ApiTokenType.VERIFIED_APPLICATION)
+                true
             }
+
             else -> throw BadRequestResponse("isAlreadyVerified must be the same for all entries")
+        }
+        if (!allAlreadyVerifiedWithToken) return false
+        validateAllAttributesForPreVerifiedApplication()
+        return true
+    }
+
+    private fun validateAllAttributesForPreVerifiedApplication() {
+        try {
+            val applicationDetails = application.applicationDetails
+
+            require(applicationDetails.applicationType == ApplicationType.FIRST_APPLICATION) {
+                "Application type must be FIRST_APPLICATION if application is already verified"
+            }
+            require(applicationDetails.cardType == BavariaCardType.BLUE) {
+                "Card type must be BLUE if application is already verified"
+            }
+            require(applicationDetails.wantsDigitalCard) {
+                "Digital card must be true if application is already verified"
+            }
+            require(!applicationDetails.wantsPhysicalCard) {
+                "Physical card must be false if application is already verified"
+            }
+            val blueCardEntitlement = applicationDetails.blueCardEntitlement
+                ?: throw IllegalArgumentException("Blue card entitlement must be set if application is already verified")
+
+            val workAtOrganizationsEntitlement = blueCardEntitlement.workAtOrganizationsEntitlement
+                ?: throw IllegalArgumentException("Work at organizations entitlement must be set if application is already verified")
+
+            require(blueCardEntitlement.entitlementType == BlueCardEntitlementType.WORK_AT_ORGANIZATIONS) {
+                "Entitlement type must be WORK_AT_ORGANIZATIONS if application is already verified"
+            }
+
+            val organizations = workAtOrganizationsEntitlement.list
+            require(!organizations.isNullOrEmpty()) {
+                "Work at organizations list cannot be empty if application is already verified"
+            }
+            require(organizations.all { it.organization.category.shortText == "Sport" }) {
+                "All organizations must be of category Sport if application is already verified"
+            }
+        } catch (e: IllegalArgumentException) {
+            throw BadRequestResponse(e.message!!)
         }
     }
 

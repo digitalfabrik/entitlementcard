@@ -13,6 +13,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkConstructor
 import io.mockk.verify
+import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.Part
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.selectAll
@@ -38,6 +39,7 @@ internal class EakApplicationMutationServiceTest : IntegrationTest() {
     private val mockDfe = mockk<DataFetchingEnvironment>()
     private val mockContext = mockk<GraphQLContext>()
     private val mockJwtPayload = mockk<JwtPayload>()
+    private val mockRequest = mockk<HttpServletRequest>()
     private val mockApplicationData = File("mockFile1")
     private val mockFiles = listOf<Part>()
 
@@ -71,9 +73,11 @@ internal class EakApplicationMutationServiceTest : IntegrationTest() {
     fun addEakApplication_storesNoApplicationIfIsVerifiedButNoToken() {
         every { mockDfe.getContext<GraphQLContext>() } returns mockContext
         every { mockContext.enforceSignedIn() } returns mockJwtPayload
+        every { mockContext.request } returns mockRequest
         every { mockContext.backendConfiguration } returns loadTestConfig()
         every { mockContext.applicationData } returns mockApplicationData
         every { mockContext.files } returns mockFiles
+        every { mockRequest.getHeader("Authorization") } returns null
 
         mockkConstructor(ApplicationHandler::class)
         every { anyConstructed<ApplicationHandler>().sendApplicationMails(any(), any(), any()) } returns Unit

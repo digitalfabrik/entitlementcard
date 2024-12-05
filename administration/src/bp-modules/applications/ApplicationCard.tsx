@@ -20,9 +20,9 @@ import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { useAppToaster } from '../AppToaster'
 import { Application } from './ApplicationsOverview'
-import JsonFieldView, { JsonField, findValue } from './JsonFieldView'
-import JuleicaVerificationQuickIndicator from './JuleicaVerificationQuickIndicator'
+import JsonFieldView, { GeneralJsonField, JsonField, findValue } from './JsonFieldView'
 import NoteDialogController from './NoteDialogController'
+import PreVerifiedQuickIndicator, { PreVerifiedQuickIndicatorType } from './PreVerifiedQuickIndicator'
 import VerificationsQuickIndicator from './VerificationsQuickIndicator'
 import VerificationsView from './VerificationsView'
 
@@ -58,6 +58,7 @@ export const CollapseIcon = styled(Icon)`
   align-self: center;
   padding: 2px;
   ${printAwareCss};
+
   :hover {
     cursor: pointer;
     color: ${Colors.GRAY1};
@@ -113,11 +114,33 @@ const RightElement = ({ jsonField, application }: RightElementProps): ReactEleme
     return !!blueCardJuleicaEntitlement
   }
 
+  const isPreVerifiedByOrganization = (): boolean => {
+    const applicationDetails = findValue(jsonField, 'applicationDetails', 'Array') ?? jsonField
+    const workAtOrganizationsEntitlement =
+      findValue(applicationDetails, 'blueCardWorkAtOrganizationsEntitlement', 'Array')?.value ?? []
+
+    const isAlreadyVerified = workAtOrganizationsEntitlement.some(
+      (entitlement: GeneralJsonField) =>
+        Array.isArray(entitlement.value) &&
+        entitlement.value.some(
+          (organizationField: GeneralJsonField) =>
+            organizationField.name === 'isAlreadyVerified' && organizationField.value === true
+        )
+    )
+    return isAlreadyVerified
+  }
+
+  const isPreVerified = isJuleicaEntitlementType() || isPreVerifiedByOrganization()
+
   return (
     <RightElementContainer>
       {!!application.note && application.note.trim() && <Icon icon='annotation' intent='none' />}
-      {isJuleicaEntitlementType() ? (
-        <JuleicaVerificationQuickIndicator />
+      {isPreVerified ? (
+        <PreVerifiedQuickIndicator
+          type={
+            isJuleicaEntitlementType() ? PreVerifiedQuickIndicatorType.Juleica : PreVerifiedQuickIndicatorType.Verein360
+          }
+        />
       ) : (
         <VerificationsQuickIndicator verifications={application.verifications} />
       )}

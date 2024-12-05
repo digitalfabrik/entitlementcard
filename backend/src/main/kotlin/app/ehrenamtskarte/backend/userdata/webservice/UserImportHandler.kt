@@ -1,9 +1,7 @@
 package app.ehrenamtskarte.backend.userdata.webservice
 
-import app.ehrenamtskarte.backend.auth.database.ApiTokenEntity
 import app.ehrenamtskarte.backend.auth.database.ApiTokenType
-import app.ehrenamtskarte.backend.auth.database.PasswordCrypto
-import app.ehrenamtskarte.backend.auth.database.repos.ApiTokensRepository
+import app.ehrenamtskarte.backend.auth.webservice.TokenAuthenticator
 import app.ehrenamtskarte.backend.cards.Argon2IdHasher
 import app.ehrenamtskarte.backend.cards.database.repos.CardRepository
 import app.ehrenamtskarte.backend.config.BackendConfiguration
@@ -34,10 +32,7 @@ class UserImportHandler(
 
     fun handle(context: Context) {
         try {
-            val apiToken = authenticate(context)
-            if (apiToken.type != ApiTokenType.USER_IMPORT) {
-                throw ForbiddenException()
-            }
+            val apiToken = TokenAuthenticator.authenticate(context, ApiTokenType.USER_IMPORT)
 
             val project = transaction { ProjectEntity.find { Projects.id eq apiToken.projectId }.single() }
             val projectConfig = backendConfiguration.getProjectConfig(project.project)
@@ -71,17 +66,6 @@ class UserImportHandler(
         } catch (exception: Exception) {
             logger.error("Failed to perform user import", exception)
             context.status(500).json(mapOf("message" to "Internal error occurred"))
-        }
-    }
-
-    private fun authenticate(context: Context): ApiTokenEntity {
-        val authHeader = context.header("Authorization")?.takeIf { it.startsWith("Bearer ") }
-            ?: throw UnauthorizedException()
-        val tokenHash = PasswordCrypto.hashWithSHA256(authHeader.substring(7).toByteArray())
-
-        return transaction {
-            ApiTokensRepository.findByTokenHash(tokenHash)?.takeIf { it.expirationDate > LocalDate.now() }
-                ?: throw ForbiddenException()
         }
     }
 
