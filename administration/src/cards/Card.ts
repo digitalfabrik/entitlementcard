@@ -75,7 +75,7 @@ const hasValidNameLength = (fullName: string): boolean => {
 
 const hasNameAndForename = (fullName: string): boolean => {
   const names = fullName.trim().split(' ')
-  return names.length > 1 && names.every(name => name.length > 1)
+  return names.length > 1 && names.every(name => name.length > 0)
 }
 
 export const isFullNameValid = ({ fullName }: Card): boolean =>
