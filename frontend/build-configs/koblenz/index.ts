@@ -34,6 +34,10 @@ export const koblenzCommon: CommonBuildConfigType = {
         showcase: "https://api.entitlementcard.app/project/showcase.entitlementcard.app/map",
         local: "http://localhost:8000/project/koblenz.sozialpass.app/map",
     },
+    mapAttribution: {
+        text: 'Stadt Koblenz',
+        url: 'https://koblenz.de/',
+    },
     mapInitialCoordinatesLat: 50.3575886,
     mapInitialCoordinatesLng: 7.5846829,
     mapInitialZoomLevel: 10,

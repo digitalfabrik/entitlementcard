@@ -31,6 +31,10 @@ export const nuernbergCommon: CommonBuildConfigType = {
         showcase: "https://api.entitlementcard.app/project/showcase.entitlementcard.app/map",
         local: "http://localhost:8000/project/nuernberg.sozialpass.app/map",
     },
+    mapAttribution: {
+        text: 'Stadt Nürnberg',
+        url: 'https://nuernberg.de',
+    },
     mapInitialCoordinatesLat: 49.460983,
     mapInitialCoordinatesLng: 11.061859,
     mapInitialZoomLevel: 10,
