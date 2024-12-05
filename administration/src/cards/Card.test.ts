@@ -160,7 +160,7 @@ describe('Card', () => {
     }
   )
 
-  it.each(['Karla', 'Karl L'])('should correctly identify invalid fullname that is incomplete', fullName => {
+  it.each(['Karla', 'Peter'])('should correctly identify invalid fullname that is incomplete', fullName => {
     const card = initializeCard(cardConfig, region, { fullName })
     expect(isValueValid(card, cardConfig, 'Name')).toBeFalsy()
     expect(isValid(card)).toBeFalsy()
