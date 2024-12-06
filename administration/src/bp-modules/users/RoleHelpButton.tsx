@@ -36,6 +36,16 @@ const RoleHelpButton = (): ReactElement => (
               <li>Kann Anträge in seiner Region verwalten.</li>
             </ul>
           </li>
+          <li>
+            <b>{roleToText(Role.ExternalVerifiedApiUser)}:</b>
+            <ul>
+              <li>
+                Externer Nutzer (z.B. Verein360) kann Anträge erstellen,
+                <br />
+                die bereits beim Anlegen automatisch durch die Organisation verifiziert sind.
+              </li>
+            </ul>
+          </li>
         </ul>
       </div>
     }>

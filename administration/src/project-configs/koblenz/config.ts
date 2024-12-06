@@ -1,3 +1,5 @@
+import { QUERY_PARAM_BIRTHDAY, QUERY_PARAM_KOBLENZ_REFERENCE_NUMBER, QUERY_PARAM_NAME } from 'build-configs'
+
 import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
 import KoblenzReferenceNumberExtension from '../../cards/extensions/KoblenzReferenceNumberExtension'
 import { ActivationText } from '../common/ActivationText'
@@ -11,9 +13,9 @@ const config: ProjectConfig = {
   projectId: 'koblenz.sozialpass.app',
   staticQrCodesEnabled: true,
   card: {
-    nameColumnName: 'Name',
+    nameColumnName: QUERY_PARAM_NAME,
     expiryColumnName: 'Ablaufdatum',
-    extensionColumnNames: ['Geburtsdatum', 'Referenznummer'],
+    extensionColumnNames: [QUERY_PARAM_BIRTHDAY, QUERY_PARAM_KOBLENZ_REFERENCE_NUMBER],
     defaultValidity: { years: 1 },
     extensions: [BirthdayExtension, KoblenzReferenceNumberExtension],
   },

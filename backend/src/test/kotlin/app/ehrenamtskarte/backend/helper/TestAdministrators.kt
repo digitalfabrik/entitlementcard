@@ -54,6 +54,12 @@ enum class TestAdministrators(
         project = "koblenz.sozialpass.app",
         email = "project-admin2@koblenz.sozialpass.app",
         role = Role.PROJECT_ADMIN
+    ),
+    BAYERN_VEREIN_360(
+        id = 7,
+        project = "bayern.ehrenamtskarte.app",
+        email = "verein360@bayern.ehrenamtskarte.app",
+        role = Role.EXTERNAL_VERIFIED_API_USER
     );
 
     fun getJwtToken(): String {

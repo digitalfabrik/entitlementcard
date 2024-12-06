@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.userdata
 
 import app.ehrenamtskarte.backend.IntegrationTest
+import app.ehrenamtskarte.backend.auth.database.ApiTokenType
 import app.ehrenamtskarte.backend.auth.database.ApiTokens
 import app.ehrenamtskarte.backend.cards.database.CardEntity
 import app.ehrenamtskarte.backend.cards.database.Cards
@@ -65,7 +66,20 @@ internal class UserImportTest : IntegrationTest() {
 
     @Test
     fun `POST returns an error response when the auth token is expired`() = JavalinTest.test(app) { _, client ->
-        TestData.createApiToken(creatorId = admin.id, expirationDate = LocalDate.now())
+        TestData.createApiToken(creatorId = admin.id, expirationDate = LocalDate.now(), type = ApiTokenType.USER_IMPORT)
+
+        val response = importUsers(client, csvFile = null)
+
+        assertEquals(403, response.code)
+
+        val jsonResponse = jacksonObjectMapper().readTree(response.body?.string())
+
+        assertEquals("Insufficient access rights", jsonResponse["message"].asText())
+    }
+
+    @Test
+    fun `POST returns an error response when the auth token has wrong type`() = JavalinTest.test(app) { _, client ->
+        TestData.createApiToken(creatorId = admin.id, expirationDate = LocalDate.now(), type = ApiTokenType.VERIFIED_APPLICATION)
 
         val response = importUsers(client, csvFile = null)
 
@@ -78,7 +92,7 @@ internal class UserImportTest : IntegrationTest() {
 
     @Test
     fun `POST returns an error response when self-service is not enabled in the project`() = JavalinTest.test(app) { _, client ->
-        TestData.createApiToken(creatorId = TestAdministrators.EAK_PROJECT_ADMIN.id)
+        TestData.createApiToken(creatorId = TestAdministrators.EAK_PROJECT_ADMIN.id, type = ApiTokenType.USER_IMPORT)
 
         val response = importUsers(client, csvFile = null)
 
@@ -91,7 +105,7 @@ internal class UserImportTest : IntegrationTest() {
 
     @Test
     fun `POST returns an error response when no file uploaded`() = JavalinTest.test(app) { _, client ->
-        TestData.createApiToken(creatorId = admin.id)
+        TestData.createApiToken(creatorId = admin.id, type = ApiTokenType.USER_IMPORT)
 
         val response = importUsers(client, csvFile = null)
 
@@ -104,7 +118,7 @@ internal class UserImportTest : IntegrationTest() {
 
     @Test
     fun `POST returns an error response when multiple files uploaded`() = JavalinTest.test(app) { _, client ->
-        TestData.createApiToken(creatorId = admin.id)
+        TestData.createApiToken(creatorId = admin.id, type = ApiTokenType.USER_IMPORT)
 
         val csvFile = generateCsvFile(TEST_CSV_FILE_PATH, listOf("dummy"))
 
@@ -139,7 +153,7 @@ internal class UserImportTest : IntegrationTest() {
 
     @Test
     fun `POST returns an error response when required columns are missing`() = JavalinTest.test(app) { _, client ->
-        TestData.createApiToken(creatorId = admin.id)
+        TestData.createApiToken(creatorId = admin.id, type = ApiTokenType.USER_IMPORT)
 
         val csvFile = generateCsvFile(TEST_CSV_FILE_PATH, listOf("regionKey", "revoked"))
         val response = importUsers(client, csvFile)
@@ -157,7 +171,7 @@ internal class UserImportTest : IntegrationTest() {
 
     @Test
     fun `POST returns an error response when some data is missing`() = JavalinTest.test(app) { _, client ->
-        TestData.createApiToken(creatorId = admin.id)
+        TestData.createApiToken(creatorId = admin.id, type = ApiTokenType.USER_IMPORT)
 
         val csvFile = generateCsvFile(
             TEST_CSV_FILE_PATH,
@@ -179,7 +193,7 @@ internal class UserImportTest : IntegrationTest() {
 
     @Test
     fun `POST returns an error response when region not found`() = JavalinTest.test(app) { _, client ->
-        TestData.createApiToken(creatorId = admin.id)
+        TestData.createApiToken(creatorId = admin.id, type = ApiTokenType.USER_IMPORT)
 
         val csvFile = generateCsvFile(
             TEST_CSV_FILE_PATH,
@@ -201,7 +215,7 @@ internal class UserImportTest : IntegrationTest() {
 
     @Test
     fun `POST returns an error response when userHash is not valid`() = JavalinTest.test(app) { _, client ->
-        TestData.createApiToken(creatorId = admin.id)
+        TestData.createApiToken(creatorId = admin.id, type = ApiTokenType.USER_IMPORT)
 
         val csvFile = generateCsvFile(
             TEST_CSV_FILE_PATH,
@@ -223,7 +237,7 @@ internal class UserImportTest : IntegrationTest() {
 
     @Test
     fun `POST returns an error response when startDate has incorrect format`() = JavalinTest.test(app) { _, client ->
-        TestData.createApiToken(creatorId = admin.id)
+        TestData.createApiToken(creatorId = admin.id, type = ApiTokenType.USER_IMPORT)
 
         val csvFile = generateCsvFile(
             TEST_CSV_FILE_PATH,
@@ -248,7 +262,7 @@ internal class UserImportTest : IntegrationTest() {
 
     @Test
     fun `POST returns an error response when endDate has incorrect format`() = JavalinTest.test(app) { _, client ->
-        TestData.createApiToken(creatorId = admin.id)
+        TestData.createApiToken(creatorId = admin.id, type = ApiTokenType.USER_IMPORT)
 
         val csvFile = generateCsvFile(
             TEST_CSV_FILE_PATH,
@@ -273,7 +287,7 @@ internal class UserImportTest : IntegrationTest() {
 
     @Test
     fun `POST returns an error response when startDate is after endDate`() = JavalinTest.test(app) { _, client ->
-        TestData.createApiToken(creatorId = admin.id)
+        TestData.createApiToken(creatorId = admin.id, type = ApiTokenType.USER_IMPORT)
 
         val csvFile = generateCsvFile(
             TEST_CSV_FILE_PATH,
@@ -298,7 +312,7 @@ internal class UserImportTest : IntegrationTest() {
 
     @Test
     fun `POST returns an error response when revoked is not boolean`() = JavalinTest.test(app) { _, client ->
-        TestData.createApiToken(creatorId = admin.id)
+        TestData.createApiToken(creatorId = admin.id, type = ApiTokenType.USER_IMPORT)
 
         val csvFile = generateCsvFile(
             TEST_CSV_FILE_PATH,
@@ -323,7 +337,7 @@ internal class UserImportTest : IntegrationTest() {
 
     @Test
     fun `POST returns a successful response when new user entitlements are saved in db`() = JavalinTest.test(app) { _, client ->
-        TestData.createApiToken(creatorId = admin.id)
+        TestData.createApiToken(creatorId = admin.id, type = ApiTokenType.USER_IMPORT)
 
         val csvFile = generateCsvFile(
             TEST_CSV_FILE_PATH,
@@ -353,7 +367,7 @@ internal class UserImportTest : IntegrationTest() {
 
     @Test
     fun `POST returns a successful response and user entitlements are updated in db`() = JavalinTest.test(app) { _, client ->
-        TestData.createApiToken(creatorId = admin.id)
+        TestData.createApiToken(creatorId = admin.id, type = ApiTokenType.USER_IMPORT)
         TestData.createUserEntitlement(
             userHash = TEST_USER_HASH,
             regionId = 1
@@ -387,7 +401,7 @@ internal class UserImportTest : IntegrationTest() {
 
     @Test
     fun `POST returns a successful response and existing cards are revoked when the user entitlement has been revoked`() = JavalinTest.test(app) { _, client ->
-        TestData.createApiToken(creatorId = admin.id)
+        TestData.createApiToken(creatorId = admin.id, type = ApiTokenType.USER_IMPORT)
         val entitlementId = TestData.createUserEntitlement(
             userHash = TEST_USER_HASH,
             regionId = 1

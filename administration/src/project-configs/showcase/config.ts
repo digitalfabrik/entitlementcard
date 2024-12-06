@@ -11,6 +11,7 @@ const config: ProjectConfig = {
   applicationFeature: {
     applicationJsonToPersonalData,
     applicationJsonToCardQuery,
+    applicationUsableWithApiToken: true,
   },
   staticQrCodesEnabled: false,
   card: {

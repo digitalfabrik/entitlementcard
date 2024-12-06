@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
-import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
-import 'package:ehrenamtskarte/configuration/definitions.dart';
-import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
-import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class ExtendCardNotification extends StatefulWidget {
+  final String applicationUrl;
+
+  const ExtendCardNotification({super.key, required this.applicationUrl});
   @override
   State<ExtendCardNotification> createState() => _ExtendCardNotificationState();
 }
@@ -83,17 +82,7 @@ class _ExtendCardNotificationState extends State<ExtendCardNotification> {
     );
   }
 
-  Future<bool> _openApplication() {
-    // TODO add query params with card info
-    final isStagingEnabled = Provider.of<SettingsModel>(context, listen: false).enableStaging;
-    final applicationUrl = isStagingEnabled
-        ? buildConfig.applicationUrl.staging
-        : isProduction()
-            ? buildConfig.applicationUrl.production
-            : buildConfig.applicationUrl.local;
-    return launchUrlString(
-      applicationUrl,
-      mode: LaunchMode.externalApplication,
-    );
+  void _openApplication() {
+    launchUrlString(widget.applicationUrl, mode: LaunchMode.externalApplication);
   }
 }

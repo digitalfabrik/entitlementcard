@@ -23,6 +23,8 @@ type Props = {
 const Navigation = ({ onSignOut }: Props): ReactElement => {
   const config = useContext(ProjectConfigContext)
   const { region, role } = useContext(WhoAmIContext).me!
+  const canSeeProjectSettings =
+    (role === Role.ProjectAdmin && config.userImportApiEnabled) || role === Role.ExternalVerifiedApiUser
 
   return (
     <PrintAwareNavbar style={{ height: 'auto' }}>
@@ -69,7 +71,7 @@ const Navigation = ({ onSignOut }: Props): ReactElement => {
             <Button minimal icon='path-search' text='Region verwalten' />
           </NavLink>
         ) : null}
-        {role === Role.ProjectAdmin && config.userImportApiEnabled ? (
+        {canSeeProjectSettings ? (
           <NavLink to='/project'>
             <Button minimal icon='projects' text='Projekt verwalten' />
           </NavLink>
