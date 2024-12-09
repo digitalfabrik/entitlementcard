@@ -7,6 +7,11 @@ All details about the endpoint can be found in the [API Documentation](../specs/
 
 ## Usage
 
+### Endpoint
+
+for testing use only the staging system: https://api.staging.entitlementcard.app
+for produciton use: https://api.entitlementcard.app
+
 ### Authourization Header
 
 Set the HTTP `Authorization` header to `Bearer <api-token>` to access the endpoint.
