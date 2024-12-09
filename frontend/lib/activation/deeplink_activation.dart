@@ -103,39 +103,41 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
                 child: Column(mainAxisSize: MainAxisSize.min, children: [
                   if (_state == _State.waiting) _WarningText(status, userCodeModel),
                   ElevatedButton.icon(
-                    onPressed:
-                        activationCode != null && _state == _State.waiting && status == DeepLinkActivationStatus.valid
-                            ? () async {
+                    onPressed: activationCode != null &&
+                            _state == _State.waiting &&
+                            status == DeepLinkActivationStatus.valid
+                        ? () async {
+                            setState(() {
+                              _state = _State.loading;
+                            });
+                            try {
+                              final activated = await activateCard(context, activationCode);
+                              if (!context.mounted) return;
+                              if (activated) {
+                                final cardAmount = Provider.of<UserCodeModel>(context, listen: false).userCodes.length;
+                                GoRouter.of(context).pushReplacement('$homeRouteName/$identityTabIndex/$cardAmount');
                                 setState(() {
-                                  _state = _State.loading;
+                                  _state = _State.success;
                                 });
-                                try {
-                                  final activated = await activateCard(context, activationCode);
-                                  if (!context.mounted) return;
-                                  if (activated) {
-                                    GoRouter.of(context).pushReplacement('$homeRouteName/$identityTabIndex');
-                                    setState(() {
-                                      _state = _State.success;
-                                    });
-                                  } else {
-                                    setState(() {
-                                      _state = _State.waiting;
-                                    });
-                                  }
-                                } catch (_) {
-                                  setState(() {
-                                    _state = _State.waiting;
-                                  });
-                                  // TODO 1656: Improve error handling!!
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(t.common.unknownError),
-                                    ),
-                                  );
-                                  rethrow;
-                                }
+                              } else {
+                                setState(() {
+                                  _state = _State.waiting;
+                                });
                               }
-                            : null,
+                            } catch (_) {
+                              setState(() {
+                                _state = _State.waiting;
+                              });
+                              // TODO 1656: Improve error handling!!
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(t.common.unknownError),
+                                ),
+                              );
+                              rethrow;
+                            }
+                          }
+                        : null,
                     icon: _state != _State.waiting
                         ? Container(
                             width: 24,
