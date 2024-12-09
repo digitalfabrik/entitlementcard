@@ -20,7 +20,8 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class IdentificationPage extends StatefulWidget {
-  const IdentificationPage({super.key});
+  final int? initialCardIndex;
+  const IdentificationPage({super.key, this.initialCardIndex});
 
   @override
   IdentificationPageState createState() => IdentificationPageState();
@@ -29,6 +30,15 @@ class IdentificationPage extends StatefulWidget {
 class IdentificationPageState extends State<IdentificationPage> {
   CarouselController carouselController = CarouselController();
   int cardIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    cardIndex = widget.initialCardIndex ?? 0;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      carouselController.jumpToPage(cardIndex);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
