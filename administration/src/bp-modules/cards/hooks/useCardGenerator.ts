@@ -173,10 +173,11 @@ const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
 
   const generateCardsPdf = useCallback(
     async (applicationIdToMarkAsProcessed?: number) => {
+      // "Berechtigungskarte_" prefix needs to always be in the filename to ensure Nuernberg automation will not break
       await generateCards(
         (codes: CreateCardsResult[], cards: Card[]) => generatePdf(codes, cards, projectConfig.pdf, region),
         cards.length === 1
-          ? `${normalizeString(cards[0].fullName)}-${new Date().getFullYear()}.pdf`
+          ? `Berechtigungskarte_${normalizeString(cards[0].fullName)}-${new Date().getFullYear()}.pdf`
           : 'berechtigungskarten.pdf',
         applicationIdToMarkAsProcessed
       )
