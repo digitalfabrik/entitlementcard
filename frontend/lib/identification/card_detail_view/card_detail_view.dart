@@ -92,7 +92,7 @@ class _CardDetailViewState extends State<CardDetailView> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        if (!isCardExpired(cardInfo) && isCardExtendable(cardInfo, cardVerification))
+                        if (cardVerification.cardValid && isCardExtendable(cardInfo, cardVerification))
                           ExtendCardNotification(applicationUrl: widget.applicationUrl),
                         paddedCard,
                       ],
@@ -115,7 +115,7 @@ class _CardDetailViewState extends State<CardDetailView> {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Column(
                 children: [
-                  if (!isCardExpired(cardInfo) && isCardExtendable(cardInfo, cardVerification))
+                  if (cardVerification.cardValid && isCardExtendable(cardInfo, cardVerification))
                     ExtendCardNotification(applicationUrl: widget.applicationUrl),
                   paddedCard,
                   const SizedBox(height: 16),
