@@ -37,7 +37,7 @@ class CardCarouselState extends State<CardCarousel> {
               carouselController: widget.carouselController,
               options: CarouselOptions(
                   enableInfiniteScroll: false,
-                  viewportFraction: 0.96,
+                  viewportFraction: 0.9,
                   height: MediaQuery.of(context).size.height - bottomNavigationBarHeight - indicatorHeight,
                   onPageChanged: (index, reason) {
                     setState(() {

@@ -67,7 +67,7 @@ class _CardDetailViewState extends State<CardDetailView> {
     final cardVerification = widget.userCode.cardVerification;
 
     final paddedCard = Padding(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(4),
       child: IdCardWithRegionQuery(
           cardInfo: cardInfo, isExpired: isCardExpired(cardInfo), isNotYetValid: isCardNotYetValid(cardInfo)),
     );
@@ -112,7 +112,7 @@ class _CardDetailViewState extends State<CardDetailView> {
         : SingleChildScrollView(
             child: SafeArea(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
               child: Column(
                 children: [
                   if (cardVerification.cardValid && isCardExtendable(cardInfo, cardVerification))
