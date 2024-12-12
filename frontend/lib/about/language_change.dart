@@ -15,7 +15,8 @@ class LanguageChange extends StatelessWidget {
     return Column(children: [
       ...buildConfig.appLocales.map((item) => DecoratedBox(
           decoration: BoxDecoration(
-              color: LocaleSettings.currentLocale.languageCode == item ? theme.colorScheme.surfaceVariant : null),
+              color:
+                  LocaleSettings.currentLocale.languageCode == item ? theme.colorScheme.surfaceContainerHighest : null),
           child: ListTile(
               title: Text(
                 nativeLanguageNames[item]!,

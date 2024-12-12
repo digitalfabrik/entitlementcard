@@ -71,7 +71,7 @@ class _TapableCardWithArea extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 24),
       clipBehavior: Clip.hardEdge,
-      color: theme.colorScheme.surfaceVariant,
+      color: theme.colorScheme.surfaceContainerHighest,
       elevation: 0,
       child: InkWell(
         onTap: onTap,
@@ -84,7 +84,7 @@ class _TapableCardWithArea extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 24,
-                    backgroundColor: theme.colorScheme.background,
+                    backgroundColor: theme.colorScheme.surface,
                     child: Icon(icon, size: 24, color: theme.colorScheme.primary),
                   ),
                   const SizedBox(width: 12),

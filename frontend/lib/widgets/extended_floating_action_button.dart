@@ -14,7 +14,7 @@ class ExtendedFloatingActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return FloatingActionButton.extended(
-      backgroundColor: theme.colorScheme.surfaceVariant,
+      backgroundColor: theme.colorScheme.surfaceContainerHighest,
       elevation: 1,
       onPressed: onPressed,
       icon: AnimatedSwitcher(

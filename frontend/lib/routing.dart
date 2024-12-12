@@ -5,7 +5,7 @@ class AppRoute extends MaterialPageRoute {
       : super(
           builder: (BuildContext context) {
             final theme = Theme.of(context);
-            return Material(color: theme.colorScheme.background, child: builder(context));
+            return Material(color: theme.colorScheme.surface, child: builder(context));
           },
         );
 }
