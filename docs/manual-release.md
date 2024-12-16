@@ -37,9 +37,11 @@ In `frontend/iOS`  run `bundle exec fastlane match appstore` .
 
 ## Create beta release
 
-- Create a release branch on current main: `release-<version> f.e. "release-2024.11.1`  (check out the `version.json` in root folder and increment it)
+- Create a release branch on current main: `release-<version> f.e. "release-2024.11.1`  (check out how to determine next version [here](./cicd.md#determining-the-next-version))
 - Create PR to main branch
-- Trigger `delivery_beta_all` workflow or `delivery_beta_natve` or `delivery_beta_backend_administration` if you just want to create a release artifact for a particular platform
+- Trigger `delivery_beta_all` workflow or `delivery_beta_natve` or `delivery_beta_backend_administration` if you just want to create a release artifact for a particular platform.
+
+Hint: Since we want to keep all our platforms on the same version, try to avoid single platform releases.
 
 ### Frontend
 

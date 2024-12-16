@@ -9,49 +9,57 @@
 - [Fastlane](#fastlane)
 - [Determining the next version](#determining-the-next-version)
 - [Environment variables](#environment-variables-and-dependencies)
-- [Hints and quirks](#hints-and-quirks)
-- [Troubleshooting](#troubleshooting)
 ## Workflows
 
 Several workflows exist for different purposes:
 
-| Workflow                                   | Schedule/Trigger | Checks             | native delivery | backend_administration delivery | Version bump       |
-|--------------------------------------------|------------------|--------------------|-----------------|---------------------------------|--------------------|
-| commit                                     | commits of PRs   | :heavy_check_mark: | :x:             | :x:                             | :x:                |
-| commit_main                                | commits on main  | :x:                | :x:             | :x:                             | :x:                |
-| delivery_beta_all                          | script           | :heavy_check_mark: | beta            | beta                            | :heavy_check_mark: |
-| promote_all                                | script           | :x:                | promotion       | promotion                       | :x:                |
-| delivery_beta_backend_administration       | script           | :heavy_check_mark: | :x:             | beta                            | :heavy_check_mark: |
-| promote_backend_administration             | script           | :x:                | :x:             | promotion                       | :x:                |
-| delivery_beta_native                       | script           | :heavy_check_mark: | beta            | :x:                             | :heavy_check_mark: |
-| promote_native                             | script           | :x:                | production      | :x:                             | :x:                |
-| delivery_native_production                 | script           | :heavy_check_mark: | production      | :x:                             | :heavy_check_mark: |
-| delivery_production_backend_administration | script           | :heavy_check_mark: | :x:             | production                      | :heavy_check_mark: |
-| frontend                                   | script (testing) | :x:                | :x:             | :x:                             | :x:                |
+| Workflow                                   | Schedule/Trigger | Checks              | native delivery | backend_administration delivery | Version bump       |
+|--------------------------------------------|------------------|---------------------|-----------------|---------------------------------|--------------------|
+| commit                                     | commits of PRs   | :heavy_check_mark:  | :x:             | :x:                             | :x:                |
+| commit_main                                | commits on main  | :heavy_check_mark:  | :x:             | :x:                             | :x:                |
+| delivery_beta_all                          | manual           | :heavy_check_mark:  | beta            | beta                            | :heavy_check_mark: |
+| promote_all                                | manual           | :x:                 | promotion       | promotion                       | :x:                |
+| delivery_beta_backend_administration       | manual           | :heavy_check_mark:  | :x:             | beta                            | :heavy_check_mark: |
+| promote_backend_administration             | manual           | :x:                 | :x:             | promotion                       | :x:                |
+| delivery_beta_native                       | manual           | :heavy_check_mark:  | beta            | :x:                             | :heavy_check_mark: |
+| promote_native                             | manual           | :x:                 | production      | :x:                             | :x:                |
+| delivery_native_production                 | manual           | :heavy_check_mark:  | production      | :x:                             | :heavy_check_mark: |
+| delivery_production_backend_administration | manual           | :heavy_check_mark:  | :x:             | production                      | :heavy_check_mark: |
+| frontend                                   | manual (testing) | :x:                 | :x:             | :x:                             | :x:                |
 
 Steps executed if _Checks_ is checked :heavy_check_mark::
 
-- Linting
+### General
+- Check CircleCi config
+
+### Administration
+- Lint Administration
+- GraphQL scheme
 - Prettier formatting
 - TypeScript checks
 - Unit testing with jest
-- Building the app
+
+### Backend
+- KLint
+- Integration & Unit tests
+- GraphQL scheme
 - Backend health
+
+### Frontend
+- Dart formatting
+- Build runner
+- Check Analyzer and linting
+- Unit tests
+
+For `commit_main` additionally all packages will be build and and backend health check will be done
 
 Steps executed if _Version bump_ is checked :heavy_check_mark::
 
-- Bump version: Bump the version(s) and create a tag and release on github
-
 ## Failed Delivery
 
-Sometimes it happens that one or multiple steps of our CI delivery workflow fail. In that case,
-you should **not** use the `Restart Workflow from Start` (as this will lead to just another failure since the version number
-was bumped before but not in the state of the failed delivery workflow such that it attempts to create the same releases again).
+In case a delivery fails, please do not restart the workflow, but trigger a fresh release, to avoid another failure and version inconsistencies.
 
-If the reason for a delivery to fail was just a transient error that was fixed in the meantime and doesn't require a code change
-(e.g. network error, API down, problems in the stores), you can use the `Restart Workflow from Failed` and in the best case the workflow should finish now.
-
-In all other cases you can add a bugfix on the release branch or base a hotfix branch on the release branch and commit your fix there.
+In that case you can add a bugfix on the release branch or base a hotfix branch on the release branch and commit your fix there.
 Then you can [trigger a delivery](#triggering-a-delivery). It is possible to either just execute `delivery_beta_native` or
 `delivery_beta_backend_administration` or just run the whole `delivery_beta_all` workflow again.
 
@@ -74,7 +82,7 @@ curl -X POST https://circleci.com/api/v2/project/github/digitalfabrik/entitlemen
   --data '{"branch":"<your branch>", "parameters":{"run_delivery_beta_all":true, "run_commit": true}}'
 ```
 
-If you are facing issues with the new release version, you can find help in the [Troubleshooting](#troubleshooting) section.
+If you are facing issues with the new release version, you can find help in the [Troubleshooting](./troubleshooting.md) section.
 
 ## Services
 
@@ -95,8 +103,7 @@ The Play Store has the concept of tracks to manage released versions of the app.
 
 #### Metadata
 
-The CI/CD pipeline uploads and overwrites metadata during the delivery step.
-You can read more about managing metadata for Android [here](https://docs.fastlane.tools/actions/supply/).
+Currently, we maintain metadata for the apps manually in Google Play Console.
 
 ### App Store Connect
 
@@ -112,17 +119,17 @@ In order to add someone as "App Store Connect User" you have to add the Apple Ac
 
 #### Metadata
 
-The CI/CD pipeline uploads and overwrites metadata during the delivery step.
-You can read more about managing metadata for iOS [here](https://docs.fastlane.tools/actions/deliver/).
+Currently, we only set `release_notes`, everything else is maintained manually.
 
 #### Authenticating
 
-Authentication happens by setting the `APP_STORE_CONNECT_API_KEY_CONTENT` environment variable as documented [above](#ios-variables). For more information visit the documentation [here](https://docs.fastlane.tools/app-store-connect-api/).
+Authentication happens by setting the `APP_STORE_CONNECT_API_KEY_CONTENT` environment variable as documented [below](#ios-variables). For more information visit the documentation [here](https://docs.fastlane.tools/app-store-connect-api/).
 
 ### BrowserStack
 
 We are using BrowserStack to test ios and android apps on different mobile devices.
 Currently, we upload builds manually.
+Checkout passbold for credentials to log in.
 
 ## Fastlane
 
@@ -130,18 +137,11 @@ Fastlane is a task-runner for triggering build relevant tasks. It offers integra
 
 ### Fastlane Setup
 
-- Install [Ruby >= 2.6.5](https://www.ruby-lang.org/en/documentation/installation/)
-    - The preferred and tested way is to use the [Ruby Version Manager (RVM)](https://rvm.io/).
-    - If using RVM you have to run: `rvm use ruby-2.6.5`.
-- Make sure `ruby --version` reports the correct version.
-- Run `bundle install --path vendor/bundle` in the project root **AND** in `./android/` **AND** in `./ios/`.
-- Run `bundle exec fastlane --version`.
-
-_Hint: You can run `export FASTLANE_SKIP_UPDATE_CHECK=true` to skip the changelog output._
+You can find the official documentation [here](https://docs.fastlane.tools/)
 
 ### Lanes
 
-Lanes for Android live in [../frontend/android/fastlane](../frontend/android/fastlane) and for iOS in [../native/ios/fastlane](../frontend/ios/fastlane).
+Lanes for Android live in [../frontend/android/fastlane](../frontend/android/fastlane) and for iOS in [../frontend/ios/fastlane](../frontend/ios/fastlane).
 
 An overview about FL lanes is available in several documents:
 
@@ -162,24 +162,27 @@ The next version of the app must be determined programmatically.
 
 ## Environment Variables and Dependencies
 
-| Variable                | Description                                                                       | Where do I get it from?                                                                                                                     | Example                                                                                    | Reference                                                                                |
-| ----------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |
-| DELIVERINO_PRIVATE_KEY  | Base64 encoded PEM private key                                                    | Password Manager                                                                                                                            | [Deliverino Settings](https://github.com/organizations/Integreat/settings/apps/deliverino) | [Deliverino](https://github.com/apps/deliverino)                                         |
-| MM_WEBHOOK              | URL which can be used to send notifications to our mattermost. Keep this private! | Mattermost server settings                                                                                                                  | https://chat.tuerantuer.org/hooks/...                                                      | [Mattermost Documentation](https://docs.mattermost.com/developer/webhooks-incoming.html) |
+| Variable                        | Description                                                                       | Where do I get it from?                    | Example                                                                                    | Reference                                                                                |
+|---------------------------------|-----------------------------------------------------------------------------------|--------------------------------------------|--------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
+| DELIVERINO_PRIVATE_KEY          | Base64 encoded PEM private key                                                    | Password Manager                           | [Deliverino Settings](https://github.com/organizations/Integreat/settings/apps/deliverino) | [Deliverino](https://github.com/apps/deliverino)                                         |
+| MM_WEBHOOK                      | URL which can be used to send notifications to our mattermost. Keep this private! | Mattermost server settings                 | https://chat.tuerantuer.org/hooks/...                                                      | [Mattermost Documentation](https://docs.mattermost.com/developer/webhooks-incoming.html) |
+| CREDENTIALS_GIT_REPOSITORY_URL  | Git remote URL to the credentials repository which contains the Java Keystore     | Ask the team about this secret repository  | git@github.com:digitalfabrik/app-credentials.git                                           | -                                                                                        |
 
 ### Android Variables
 
-| Variable                       | Description                                                                                                | Where do I get it from?                                                  | Example                                 | Reference                                                                                              |
-| ------------------------------ | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ | --------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| GOOGLE_SERVICE_ACCOUNT_JSON    | JSON for authentication in the Google Play Console as Release Manager. This should expire after two years. | Password Manager                                                         | {...}                                   | [Service Account Docu](https://cloud.google.com/iam/docs/creating-managing-service-account-keys?hl=de) |
-| CREDENTIALS_GIT_REPOSITORY_URL | Git remote URL to the credentials repository which contains the Java Keystore                              | Ask the team about this secret repository                                | git@github.com:User/credentials.git     | -                                                                                                      |
-| CREDENTIALS_DIRECTORY_PATH     | Path where the credentials Git repository cloned to automatically by FL                                    | The developer can choose this freely                                     | /home/circleci/credentials              | -                                                                                                      |
-| CREDENTIALS_KEYSTORE_PATH      | Path to the OpenSSL AES256-CBC encrypted Java Keystore file                                                | -                                                                        | /home/circleci/credentials/<secret>.enc | Look for the `openssl enc` command in the Android Fastlane file for more information                   |
-| KEYSTORE_PATH                  | Path to the decrypted Java Keystore file                                                                   | -                                                                        | /home/circleci/keystore.jks             | -                                                                                                      |
-| CREDENTIALS_KEYSTORE_PASSWORD  | Password for decrypting the keystore using OpenSSL                                                         |                                                                          | password                                | -                                                                                                      |
-| KEYSTORE_KEY_ALIAS             | Alias of the key within the Java Keystore                                                                  | You should look in the JKS file using `keytool -list -v -keystore <jks>` | my-key                                  | -                                                                                                      |
-| KEYSTORE_KEY_PASSWORD          | Password of the key within the Java Keystore                                                               | Password Manager                                                         | 123456                                  | -                                                                                                      |
-| KEYSTORE_PASSWORD              | Password of the JKS which can contain multiple keys                                                        | Password Manager                                                         | 123456                                  | -                                                                                                      |
+| Variable                        | Description                                                                                                | Where do I get it from?                                                  | Example                                           | Reference                                                                                              |
+|---------------------------------|------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------|---------------------------------------------------| ------------------------------------------------------------------------------------------------------ |
+| GOOGLE_SERVICE_ACCOUNT_JSON     | JSON for authentication in the Google Play Console as Release Manager. This should expire after two years. | Password Manager                                                         | {...}                                             | [Service Account Docu](https://cloud.google.com/iam/docs/creating-managing-service-account-keys?hl=de) |
+| CREDENTIALS_DIRECTORY_PATH      | Path where the credentials Git repository cloned to automatically by FL                                    | The developer can choose this freely                                     | /home/circleci/credentials                        | -                                                                                                      |
+| CREDENTIALS_KEYSTORE_PATH       | Path to the OpenSSL AES256-CBC encrypted Java Keystore file                                                | -                                                                        | /home/circleci/credentials/<secret>.enc           | Look for the `openssl enc` command in the Android Fastlane file for more information                   |
+| KEYSTORE_PATH                   | Path to the decrypted Java Keystore file                                                                   | -                                                                        | /home/circleci/keystore.jks                       | -                                                                                                      |
+| CREDENTIALS_KEYSTORE_PASSWORD   | Password for decrypting the keystore using OpenSSL                                                         |                                                                          | password                                          | -                                                                                                      |
+| KEYSTORE_KEY_ALIAS_BAYERN       | Alias of the key within the Java Keystore                                                                  | You should look in the JKS file using `keytool -list -v -keystore <jks>` |                                                   |                                                                                                        |
+| KEYSTORE_KEY_ALIAS_NUERNBERG    | Alias of the key within the Java Keystore                                                                  | You should look in the JKS file using `keytool -list -v -keystore <jks>` |                                                   |                                                                                                        |
+| KEYSTORE_KEY_ALIAS_KOBLENZ      | Alias of the key within the Java Keystore                                                                  | You should look in the JKS file using `keytool -list -v -keystore <jks>` |                                                   |                                                                                                        |
+| KEYSTORE_KEY_PASSWORD_BAYERN    | Password of the key within the Java Keystore                                                               | Password Manager                                                         |                                                   |                                                                                                        |
+| KEYSTORE_KEY_PASSWORD_NUERNBERG | Password of the key within the Java Keystore                                                               | Password Manager                                                         |                                                   |                                                                                                        |
+| KEYSTORE_KEY_PASSWORD_KOBLENZ   | Password of the key within the Java Keystore                                                               | Password Manager                                                         |                                                   |                                                                                                        |
 
 ### iOS Variables
 
@@ -189,26 +192,3 @@ The next version of the app must be determined programmatically.
 | APP_STORE_CONNECT_API_ISSUER_ID   | Issuer ID for App Store Connect API                                                                                        | Password Manager        | 227b0bbf-ada8-458c-9d62-3d8022b7d07f                                       | [app_store_connect_api_key](https://docs.fastlane.tools/actions/app_store_connect_api_key/) |
 | APP_STORE_CONNECT_API_KEY_CONTENT | Key content for App Store Connect API                                                                                      | Password Manager        | -----BEGIN EC PRIVATE KEY-----\nfewfawefawfe\n-----END EC PRIVATE KEY----- | [app_store_connect_api_key](https://docs.fastlane.tools/actions/app_store_connect_api_key/) |
 | MATCH_PASSWORD                    | Password for accessing the certificates for the iOS app using [Fastlane Match](https://docs.fastlane.tools/actions/match/) | Password Manager        | 123456                                                                     | [Using a Git Repo](https://docs.fastlane.tools/actions/match/#git-repo-encryption-password) |
-
-
-## Hints and Quirks
-
-### CPU count aka. \$TOTAL_CPUS
-
-There is no obvious way for an application to know how many cores it has available in a CircleCI docker container. The usual ways of getting the CPU count reports the CPU count of the host. This causes out-of-memory issues as the host has a lot of cores.
-Therefore, all tools must set the worker limit to `$TOTAL_CPUS`. Set this variable in the `.circleci/config.yml`.
-
-## Troubleshooting
-
-This section lists some commands that may help you to find and solve issues in a new deployment on staging or production server.
-To connect on our servers you need a working yubikey.
-- connect via ssh `ssh <username>@entitlementcard.tuerantuer.org` or (`entitlementcard-test.tuerantuer.org`)
-- switch to root user `sudo -i` or `sudo - u <user>` to a particular user.
-
-1) Check backend health log: `journalctl -u eak-backend.service --since "1h ago"`
-2) Check backend log for particular message: `journalctl -u eak-backend.service --since "1h ago" | grep "<your message>"`
-3) Restart backend service: `systemctl restart eak-backend.service`
-4) Check installed version of particular debian package: `apt-cache policy eak-administration` same works for backend with `eak-backend`
-5) Check available debian package versions: `ll -trh /srv/local-apt-repository`
-6) Check if latest database migration was applied: `sudo -u backend psql entitlementcard` then `SELECT * from migrations;`
-7) Create admin/store manager accounts: `sudo -u backend /opt/ehrenamtskarte/backend/bin/backend create-admin <command>`. You can find example in [runConfigs](../.idea/runConfigurations)
