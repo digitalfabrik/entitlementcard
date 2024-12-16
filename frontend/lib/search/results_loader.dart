@@ -136,6 +136,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
             ),
           );
         },
+        noMoreItemsIndicatorBuilder: _buildNoMoreItemsSpacer,
         noItemsFoundIndicatorBuilder: _buildNoItemsFoundIndicator,
         firstPageErrorIndicatorBuilder: _buildErrorWithRetry,
         newPageErrorIndicatorBuilder: _buildErrorWithRetry,
@@ -148,6 +149,8 @@ class ResultsLoaderState extends State<ResultsLoader> {
 
   Widget _buildProgressIndicator(BuildContext context) =>
       const Center(child: Padding(padding: EdgeInsets.all(5), child: CircularProgressIndicator()));
+
+  Widget _buildNoMoreItemsSpacer(BuildContext context) => const SizedBox(height: 80);
 
   Widget _buildErrorWithRetry(BuildContext context) {
     final t = context.t;
