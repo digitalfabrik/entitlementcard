@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import { Role } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import UserEndpointSettings from './UserEndpointSettings'
+import ApiTokenSettings from './ApiTokenSettings'
 
 const ProjectSettingsContainer = styled.div`
   display: flex;
@@ -19,7 +19,7 @@ const ProjectSettingsController = (): ReactElement => {
   const { userImportApiEnabled } = useContext(ProjectConfigContext)
   const { role } = useContext(WhoAmIContext).me!
 
-  if (role !== Role.ProjectAdmin || !userImportApiEnabled) {
+  if ((role !== Role.ProjectAdmin || !userImportApiEnabled) && role !== Role.ExternalVerifiedApiUser) {
     return (
       <NonIdealState
         icon='cross'
@@ -30,7 +30,7 @@ const ProjectSettingsController = (): ReactElement => {
   }
   return (
     <ProjectSettingsContainer>
-      <UserEndpointSettings />
+      <ApiTokenSettings showPepperSection={role === Role.ProjectAdmin && userImportApiEnabled} />
     </ProjectSettingsContainer>
   )
 }

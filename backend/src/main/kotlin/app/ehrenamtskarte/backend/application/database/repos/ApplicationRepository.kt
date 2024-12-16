@@ -2,6 +2,7 @@ package app.ehrenamtskarte.backend.application.database.repos
 
 import app.ehrenamtskarte.backend.application.database.ApplicationEntity
 import app.ehrenamtskarte.backend.application.database.ApplicationVerificationEntity
+import app.ehrenamtskarte.backend.application.database.ApplicationVerificationExternalSource
 import app.ehrenamtskarte.backend.application.database.ApplicationVerifications
 import app.ehrenamtskarte.backend.application.database.Applications
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationView
@@ -60,6 +61,7 @@ object ApplicationRepository {
                     this.contactName = it.contactName
                     this.organizationName = it.organizationName
                     this.contactEmailAddress = it.contactEmailAddress
+                    this.automaticSource = ApplicationVerificationExternalSource.NONE
                 }
             }
 
@@ -114,7 +116,10 @@ object ApplicationRepository {
         }
     }
 
-    fun getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey: String, dfe: DataFetchingEnvironment): ApplicationView {
+    fun getApplicationByApplicationVerificationAccessKey(
+        applicationVerificationAccessKey: String,
+        dfe: DataFetchingEnvironment
+    ): ApplicationView {
         val logger = LoggerFactory.getLogger(ApplicationRepository::class.java)
         val context = dfe.getContext<GraphQLContext>()
         return transaction {
@@ -144,13 +149,17 @@ object ApplicationRepository {
         return applicationVerification.verifiedDate != null || applicationVerification.rejectedDate != null
     }
 
-    fun verifyApplicationVerification(accessKey: String): Boolean {
+    fun verifyApplicationVerification(
+        accessKey: String,
+        automaticSource: ApplicationVerificationExternalSource = ApplicationVerificationExternalSource.NONE
+    ): Boolean {
         return transaction {
             val applicationVerification = getApplicationVerification(accessKey)
             if (isAlreadyVerified(applicationVerification)) {
                 false
             } else {
                 applicationVerification.verifiedDate = Instant.now()
+                applicationVerification.automaticSource = automaticSource
                 true
             }
         }

@@ -91,7 +91,7 @@ class _TapableCardWithArea extends StatelessWidget {
                   Expanded(
                     child: Text(
                       title,
-                      style: Theme.of(context).textTheme.titleLarge,
+                      style: theme.textTheme.titleLarge,
                       textAlign: TextAlign.left,
                     ),
                   ),
@@ -100,7 +100,7 @@ class _TapableCardWithArea extends StatelessWidget {
               const SizedBox(height: 16),
               Text(
                 description,
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: theme.textTheme.bodyLarge?.apply(color: theme.hintColor),
                 textAlign: TextAlign.left,
               ),
               Align(

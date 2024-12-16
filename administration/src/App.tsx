@@ -1,3 +1,5 @@
+import { LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import React, { ReactElement } from 'react'
 
 import AppApolloProvider from './AppApolloProvider'
@@ -14,13 +16,14 @@ if (!process.env.REACT_APP_API_BASE_URL) {
 
 const App = (): ReactElement => {
   useMetaTags()
-
   return (
     <ProjectConfigProvider>
       <AppToasterProvider>
         <AuthProvider>
           <AppApolloProvider>
-            <Router />
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <Router />
+            </LocalizationProvider>
           </AppApolloProvider>
         </AuthProvider>
       </AppToasterProvider>

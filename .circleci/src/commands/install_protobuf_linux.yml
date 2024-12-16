@@ -9,12 +9,3 @@ steps:
         curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v21.11/protoc-21.11-linux-x86_64.zip"
         unzip protoc*.zip -d $HOME/.local
         echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
-  - when:
-      condition: << parameters.dart_plugin >>
-      steps:
-        - run:
-            name: Install Flutter plugin
-            # Do not use the dart from fvm here for installing protoc_plugin.
-            # Else we might get a "Can't load Kernel binary: Invalid kernel binary format version" because the dart
-            # versions do not match.
-            command: dart pub global activate protoc_plugin

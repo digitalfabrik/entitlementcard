@@ -35,6 +35,11 @@ class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
     var cardCreated by Applications.cardCreated
 }
 
+enum class ApplicationVerificationExternalSource {
+    VEREIN360,
+    NONE
+}
+
 object ApplicationVerifications : IntIdTable() {
     val applicationId = reference("applicationId", Applications)
     val contactEmailAddress = varchar("contactEmailAddress", 300)
@@ -43,6 +48,8 @@ object ApplicationVerifications : IntIdTable() {
     val verifiedDate = timestamp("verifiedDate").nullable()
     val rejectedDate = timestamp("rejectedDate").nullable()
     val accessKey = varchar("accessKey", 100).uniqueIndex()
+    val automaticSource = enumerationByName("automaticSource", 20, ApplicationVerificationExternalSource::class)
+        .default(ApplicationVerificationExternalSource.NONE)
 
     init {
         check("notVerifiedAndRejected") {
@@ -63,4 +70,5 @@ class ApplicationVerificationEntity(id: EntityID<Int>) : IntEntity(id) {
     var verifiedDate by ApplicationVerifications.verifiedDate
     var rejectedDate by ApplicationVerifications.rejectedDate
     var accessKey by ApplicationVerifications.accessKey
+    var automaticSource by ApplicationVerifications.automaticSource
 }

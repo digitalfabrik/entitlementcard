@@ -1,16 +1,11 @@
-import { Cell, Column, Table2, TruncatedFormat2 } from '@blueprintjs/table'
+import { Cell, Column, Table2, TruncatedFormat } from '@blueprintjs/table'
 import '@blueprintjs/table/lib/css/table.css'
-import React, { ReactElement, useCallback } from 'react'
+import React, { ReactElement, useCallback, useContext } from 'react'
 import styled from 'styled-components'
 
 import { Card, getValueByCSVHeader, isValueValid } from '../../cards/Card'
-import { CardConfig } from '../../project-configs/getProjectConfig'
-
-type CardImportTableProps = {
-  headers: string[]
-  cards: Card[]
-  cardConfig: CardConfig
-}
+import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { getCsvHeaders } from '../../project-configs/helper'
 
 const TableContainer = styled.div`
   overflow: auto;
@@ -25,11 +20,19 @@ const StyledCell = styled(Cell)`
   white-space: break-spaces;
 `
 
-const CardImportTable = ({ headers, cards, cardConfig }: CardImportTableProps): ReactElement => {
+type CardImportTableProps = {
+  cards: Card[]
+}
+
+const CardImportTable = ({ cards }: CardImportTableProps): ReactElement => {
+  const projectConfig = useContext(ProjectConfigContext)
+  const { card: cardConfig } = projectConfig
+  const csvHeaders = getCsvHeaders(projectConfig)
+
   const cellRenderer = useCallback(
     (rowIndex: number, columnIndex: number) => {
       const card = cards[rowIndex]
-      const header = headers[columnIndex]
+      const header = csvHeaders[columnIndex]
       const valid = isValueValid(card, cardConfig, header)
       const value = getValueByCSVHeader(card, cardConfig, header)
       return (
@@ -38,19 +41,19 @@ const CardImportTable = ({ headers, cards, cardConfig }: CardImportTableProps): 
           key={`${rowIndex}-${columnIndex}`}
           tooltip={!valid ? 'Validierungsfehler' : undefined}
           intent={!valid ? 'danger' : 'none'}>
-          <TruncatedFormat2 detectTruncation preformatted>
+          <TruncatedFormat detectTruncation preformatted>
             {value?.toString() || '-'}
-          </TruncatedFormat2>
+          </TruncatedFormat>
         </StyledCell>
       )
     },
-    [cardConfig, cards, headers]
+    [cardConfig, cards, csvHeaders]
   )
 
   return (
     <TableContainer>
       <Table2 numRows={cards.length} enableGhostCells minRowHeight={16}>
-        {headers.map(name => (
+        {csvHeaders.map(name => (
           <Column key={name} name={name} cellRenderer={cellRenderer} />
         ))}
       </Table2>

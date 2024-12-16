@@ -7,19 +7,19 @@ class ActivationExistingCardDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return AlertDialog(
-      title: const Text('Diese Karte existiert bereits', style: TextStyle(fontSize: 18)),
+      title: Text('Diese Karte existiert bereits'),
       content: SingleChildScrollView(
         child: ListBody(
-          children: const <Widget>[
-            Text(
-              'Diese Karte ist bereits auf ihrem Gerät aktiv.',
-            ),
+          children: <Widget>[
+            Text('Diese Karte ist bereits auf ihrem Gerät aktiv.'),
           ],
         ),
       ),
       actions: <Widget>[
         TextButton(
+          style: theme.textButtonTheme.style,
           child: Text(context.t.common.ok),
           onPressed: () {
             Navigator.of(context).pop();

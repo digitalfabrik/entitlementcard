@@ -3,5 +3,6 @@ query getApiTokenMetaData {
     id
     creatorEmail
     expirationDate
+    type
   }
 }

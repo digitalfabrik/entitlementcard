@@ -10,7 +10,7 @@
 
 ## Getting Started
 
-* [Setup documentation](./docs/development-setup.md)
+* [Development Setup](./docs/development-setup.md)
 
 ## Documentation
 

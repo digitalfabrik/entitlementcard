@@ -13,7 +13,7 @@
     "moreInformation": "Mehr Informationen",
     "numberLicenses": {
       "one": "1 Lizenz",
-      "other": "$n Lizenzen",
+      "other": "{{n}} Lizenzen",
       "zero": "Keine Lizenzen"
     },
     "privacyPolicy": "Datenschutzerklärung",
@@ -109,6 +109,9 @@
     "codeVerificationFailedConnection": "Der eingescannte Code konnte nicht verifiziert werden. Bitte stellen Sie sicher, dass eine Internetverbindung besteht und prüfen Sie erneut.",
     "compareWithID": "Gleichen Sie die angezeigten Daten mit einem amtlichen Lichtbildausweis ab.",
     "comparedWithID": "Ich habe die Daten mit einem amtlichen Lichtbildausweis abgeglichen.",
+    "extendCard": "Karte verlängern",
+    "extendCardNotificationTitle": "Hinweis zum Ablauf der Karte",
+    "extendCardNotificationDescription": "Ihre Karte läuft demnächst ab.\nVerlängern Sie sie jetzt, um Ihre Vorteile weiterhin nutzen zu können.",
     "flashOff": "Blitz aus",
     "flashOn": "Blitz an",
     "internetRequired": "Eine Internetverbindung wird benötigt.",

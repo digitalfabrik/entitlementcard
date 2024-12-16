@@ -1,4 +1,8 @@
-import { ACTIVATION_PATH, NUERNBERG_PRODUCTION_ID, NUERNBERG_STAGING_ID } from "../constants"
+import {
+    ACTIVATION_PATH,
+    NUERNBERG_PRODUCTION_ID,
+    NUERNBERG_STAGING_ID
+} from '../constants'
 import BuildConfigType, { CommonBuildConfigType } from "../types"
 import disclaimerText from "./disclaimerText"
 import publisherText from "./publisherText"
@@ -26,6 +30,10 @@ export const nuernbergCommon: CommonBuildConfigType = {
         staging: "https://api.staging.entitlementcard.app/project/nuernberg.sozialpass.app/map",
         showcase: "https://api.entitlementcard.app/project/showcase.entitlementcard.app/map",
         local: "http://localhost:8000/project/nuernberg.sozialpass.app/map",
+    },
+    mapAttribution: {
+        text: 'Stadt Nürnberg',
+        url: 'https://nuernberg.de',
     },
     mapInitialCoordinatesLat: 49.460983,
     mapInitialCoordinatesLng: 11.061859,
@@ -72,7 +80,14 @@ export const nuernbergCommon: CommonBuildConfigType = {
         verification: true,
         favorites: false,
     },
-    applicationUrl: "https://beantragen.nuernberg.sozialpass.app",
+    applicationUrl: {
+        production: 'https://beantragen.nuernberg.sozialpass.app',
+        staging: 'https://beantragen.nuernberg.sozialpass.app',
+        local : 'https://beantragen.nuernberg.sozialpass.app'
+    },
+    applicationQueryKeyName: null,
+    applicationQueryKeyBirthday: null,
+    applicationQueryKeyReferenceNumber: null,
     publisherAddress:
         "Stadt Nürnberg\nAmt für Existenzsicherung\nund soziale Integration - Sozialamt\nDietzstraße 4\n90443 Nürnberg",
     dataPrivacyPolicyUrl: "https://nuernberg.sozialpass.app/data-privacy-policy",

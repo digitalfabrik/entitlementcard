@@ -1,6 +1,6 @@
 import 'package:ehrenamtskarte/build_config/build_config.dart';
 import 'package:ehrenamtskarte/util/color_utils.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 Color textColor = getColorFromHex(buildConfig.cardBranding.headerTextColor);
 int fontSize = buildConfig.cardBranding.headerTextFontSize;
@@ -33,7 +33,8 @@ class CardHeaderLogo extends StatelessWidget {
           Text(
             title,
             maxLines: 3,
-            style: TextStyle(fontSize: fontSize * scaleFactor, color: textColor),
+            style:
+                TextStyle(fontSize: fontSize * scaleFactor, color: textColor, fontFamily: buildConfig.theme.fontFamily),
             textAlign: TextAlign.start,
           )
         ],

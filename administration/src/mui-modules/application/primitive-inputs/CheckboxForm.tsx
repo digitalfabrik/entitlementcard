@@ -39,12 +39,7 @@ const CheckboxForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
                 }}
               />
             }
-            label={
-              <>
-                {label}
-                {options.required ? ' *' : ''}
-              </>
-            }
+            label={label}
           />
           {(showAllErrors || touched) && isInvalid ? <FormHelperText>{validationResult.message}</FormHelperText> : null}
         </FormControl>

@@ -1,0 +1,29 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Create verein360 admin (env:local+buildConfig:bayern)" type="GradleRunConfiguration" factoryName="Gradle" folderName="Backend Commands">
+    <ExternalSystemSettings>
+      <option name="env">
+        <map>
+          <entry key="JWT_SECRET" value="&quot;Hello world!&quot;" />
+        </map>
+      </option>
+      <option name="executionName" />
+      <option name="externalProjectPath" value="$PROJECT_DIR$/backend" />
+      <option name="externalSystemIdString" value="GRADLE" />
+      <option name="scriptParameters" value="" />
+      <option name="taskDescriptions">
+        <list />
+      </option>
+      <option name="taskNames">
+        <list>
+          <option value="run" />
+          <option value="--args=&quot;create-admin bayern.ehrenamtskarte.app EXTERNAL_VERIFIED_API_USER verein360@bayern.ehrenamtskarte.app Administrator!&quot;" />
+        </list>
+      </option>
+      <option name="vmOptions" value="" />
+    </ExternalSystemSettings>
+    <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+    <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+    <DebugAllEnabled>false</DebugAllEnabled>
+    <method v="2" />
+  </configuration>
+</component>

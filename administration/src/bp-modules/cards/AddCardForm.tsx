@@ -59,7 +59,7 @@ const AddCardForm = ({ card, onRemove, updateCard }: CreateCardsFormProps): Reac
           />
         </FormGroup>
       )}
-      <ExtensionForms card={card} updateCard={updateCard} />
+      <ExtensionForms card={card} updateCard={updateCard} showRequired />
     </UiCard>
   )
 }

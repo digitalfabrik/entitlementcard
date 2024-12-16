@@ -15,7 +15,8 @@ class CustomAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final foregroundColor = Theme.of(context).appBarTheme.foregroundColor;
+    final theme = Theme.of(context);
+    final foregroundColor = theme.appBarTheme.foregroundColor;
     return AppBar(
       leading: BackButton(color: foregroundColor),
       title: Text(title),
@@ -63,11 +64,12 @@ class CustomSliverAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final foregroundColor = Theme.of(context).appBarTheme.foregroundColor;
+    final theme = Theme.of(context);
+    final foregroundColor = theme.appBarTheme.foregroundColor;
     return SliverAppBar(
       leading: BackButton(color: foregroundColor),
       iconTheme: IconThemeData(color: foregroundColor),
-      title: Text(title),
+      title: Text(title, style: theme.textTheme.titleMedium?.apply(color: theme.appBarTheme.foregroundColor)),
       pinned: true,
     );
   }
@@ -90,7 +92,8 @@ class SearchSliverAppBarState extends State<SearchSliverAppBar> {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    final foregroundColor = Theme.of(context).appBarTheme.foregroundColor;
+    final theme = Theme.of(context);
+    final foregroundColor = theme.appBarTheme.foregroundColor;
     return SliverAppBar(
       title: TextField(
         onTapOutside: (PointerDownEvent event) {
@@ -101,10 +104,10 @@ class SearchSliverAppBarState extends State<SearchSliverAppBar> {
         focusNode: focusNode,
         decoration: InputDecoration.collapsed(
           hintText: t.search.searchHint,
-          hintStyle: TextStyle(color: foregroundColor?.withOpacity(0.8)),
+          hintStyle: theme.textTheme.bodyLarge?.apply(color: foregroundColor),
         ),
         cursorColor: foregroundColor,
-        style: TextStyle(color: foregroundColor),
+        style: theme.textTheme.bodyLarge?.apply(color: foregroundColor),
       ),
       pinned: true,
       actionsIconTheme: IconThemeData(color: foregroundColor),
@@ -113,7 +116,7 @@ class SearchSliverAppBarState extends State<SearchSliverAppBar> {
           IconButton(icon: const Icon(Icons.clear), onPressed: _clearInput, color: foregroundColor),
         Padding(
           padding: const EdgeInsets.only(right: 15.0),
-          child: Icon(Icons.search, color: foregroundColor?.withOpacity(0.50)),
+          child: Icon(Icons.search, color: foregroundColor?.withOpacity(0.9)),
         ),
       ],
     );

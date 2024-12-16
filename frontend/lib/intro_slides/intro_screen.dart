@@ -29,7 +29,6 @@ class IntroScreen extends StatelessWidget {
       renderDoneBtn: Text(t.common.done),
       renderNextBtn: Text(t.common.next),
       renderPrevBtn: Text(t.common.previous),
-      doneButtonStyle: Theme.of(context).textButtonTheme.style,
       indicatorConfig: IndicatorConfig(
         colorActiveIndicator: theme.colorScheme.primary,
         colorIndicator: Colors.grey,

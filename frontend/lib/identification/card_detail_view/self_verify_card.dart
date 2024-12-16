@@ -30,6 +30,7 @@ Future<void> selfVerifyCard(
     ..totpSecret = userCode.totpSecret
     ..cardVerification = (CardVerification()
       ..cardValid = cardVerification.valid
+      ..cardExtendable = cardVerification.extendable
       ..verificationTimeStamp = secondsSinceEpoch(DateTime.parse(cardVerification.verificationTimeStamp))
       ..outOfSync = outOfSync));
 }

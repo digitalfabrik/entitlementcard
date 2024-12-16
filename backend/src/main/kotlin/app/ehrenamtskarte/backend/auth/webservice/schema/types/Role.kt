@@ -16,6 +16,9 @@ enum class Role(val db_value: String) {
     // A Region Manager has the right to create cards and manage applications in his project.
     REGION_MANAGER("REGION_MANAGER"),
 
+    // EXTERNAL_VERIFIED_API_USER
+    EXTERNAL_VERIFIED_API_USER("EXTERNAL_VERIFIED_API_USER"),
+
     // Users with this role do not have any rights.
     NO_RIGHTS("NO_RIGHTS");
 

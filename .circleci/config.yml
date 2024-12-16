@@ -100,12 +100,6 @@ commands:
                     unzip protoc*.zip -d $HOME/.local
                     echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
                 name: Install protobuf from GitHub
-            - when:
-                condition: << parameters.dart_plugin >>
-                steps:
-                    - run:
-                        command: dart pub global activate protoc_plugin
-                        name: Install Flutter plugin
     install_protobuf_mac:
         steps:
             - run:
@@ -114,9 +108,6 @@ commands:
                     unzip protoc*.zip -d $HOME/.local
                     echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
                 name: Install protobuf
-            - run:
-                command: dart pub global activate protoc_plugin
-                name: Install Flutter plugin
     notify:
         description: Send a notification (to Mattermost) at the end of a job, based on success or failure. Must be the last step in a job.
         parameters:
@@ -313,8 +304,6 @@ jobs:
             - prepare_workspace
             - install_dart_linux
             - install_fvm
-            - install_protobuf_linux:
-                dart_plugin: true
             - restore_environment_variables
             - restore_ruby_cache:
                 directory: ~/project/frontend/android
@@ -404,7 +393,6 @@ jobs:
             - install_app_toolbelt
             - install_dart_mac
             - install_fvm
-            - install_protobuf_mac
             - prepare_workspace
             - restore_environment_variables
             - run:
@@ -630,8 +618,6 @@ jobs:
             - browser-tools/install-chrome
             - install_dart_linux
             - install_fvm
-            - install_protobuf_linux:
-                dart_plugin: true
             - run:
                 command: fvm flutter pub get --enforce-lockfile
                 name: Install Flutter Packages
@@ -650,14 +636,12 @@ jobs:
                 command: |
                     fvm flutter analyze --fatal-infos --fatal-warnings
                     fvm flutter analyze pubs/df_build_config --fatal-infos --fatal-warnings
-                    fvm flutter analyze pubs/df_protobuf --fatal-infos --fatal-warnings
                 name: Check Analyzer and Linting
                 working_directory: ~/project/frontend/
             - run:
                 command: |
                     fvm flutter test
                     fvm flutter test pubs/df_build_config
-                    fvm flutter test pubs/df_protobuf
                 name: Tests
                 working_directory: ~/project/frontend/
             - notify
@@ -1347,16 +1331,6 @@ workflows:
                 production_delivery: false
                 requires:
                     - build_ios_koblenz
-            - notify_release:
-                context:
-                    - deliverino
-                production_delivery: false
-                requires:
-                    - deliver_android_bayern
-                    - deliver_android_nuernberg
-                    - deliver_ios_bayern
-                    - deliver_ios_nuernberg
-                    - install_packages_to_server_staging
             - check_administration
             - build_administration:
                 requires:
@@ -1414,6 +1388,18 @@ workflows:
                 requires:
                     - upload_administration_packages_to_server_staging
                     - upload_backend_packages_to_server_staging
+            - notify_release:
+                context:
+                    - deliverino
+                production_delivery: false
+                requires:
+                    - deliver_android_bayern
+                    - deliver_android_nuernberg
+                    - deliver_android_koblenz
+                    - deliver_ios_bayern
+                    - deliver_ios_nuernberg
+                    - deliver_ios_koblenz
+                    - install_packages_to_server_staging
         when: << pipeline.parameters.run_delivery_beta_all >>
     delivery_beta_backend_administration:
         jobs:

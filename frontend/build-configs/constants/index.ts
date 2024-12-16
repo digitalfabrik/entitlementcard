@@ -8,3 +8,7 @@ export const NUERNBERG_PRODUCTION_ID = 'nuernberg.sozialpass.app'
 export const NUERNBERG_STAGING_ID = 'staging.nuernberg.sozialpass.app'
 export const KOBLENZ_PRODUCTION_ID = 'koblenz.sozialpass.app'
 export const KOBLENZ_STAGING_ID = 'staging.koblenz.sozialpass.app'
+
+export const QUERY_PARAM_NAME = 'Name'
+export const QUERY_PARAM_BIRTHDAY = 'Geburtsdatum'
+export const QUERY_PARAM_KOBLENZ_REFERENCE_NUMBER = 'Referenznummer'

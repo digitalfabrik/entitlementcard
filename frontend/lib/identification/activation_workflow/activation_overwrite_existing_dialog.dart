@@ -9,7 +9,7 @@ class ActivationOverwriteExistingDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.t;
     return AlertDialog(
-      title: Text(t.identification.activateCurrentDeviceTitle, style: TextStyle(fontSize: 18)),
+      title: Text(t.identification.activateCurrentDeviceTitle),
       content: SingleChildScrollView(
         child: ListBody(
           children: <Widget>[

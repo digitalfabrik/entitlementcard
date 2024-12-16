@@ -13,6 +13,7 @@ import { ProjectConfigContext } from '../../../project-configs/ProjectConfigCont
 import downloadDataUri from '../../../util/downloadDataUri'
 import getDeepLinkFromQrCode from '../../../util/getDeepLinkFromQrCode'
 import { updateArrayItem } from '../../../util/helper'
+import normalizeString from '../../../util/normalizeString'
 import { useAppToaster } from '../../AppToaster'
 import { ActivityLog } from '../../user-settings/ActivityLog'
 
@@ -172,13 +173,16 @@ const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
 
   const generateCardsPdf = useCallback(
     async (applicationIdToMarkAsProcessed?: number) => {
+      // "Berechtigungskarte_" prefix needs to always be in the filename to ensure Nuernberg automation will not break
       await generateCards(
         (codes: CreateCardsResult[], cards: Card[]) => generatePdf(codes, cards, projectConfig.pdf, region),
-        'berechtigungskarten.pdf',
+        cards.length === 1
+          ? `Berechtigungskarte_${normalizeString(cards[0].fullName)}-${new Date().getFullYear()}.pdf`
+          : 'berechtigungskarten.pdf',
         applicationIdToMarkAsProcessed
       )
     },
-    [projectConfig, region, generateCards]
+    [projectConfig, region, generateCards, cards]
   )
 
   const generateCardsCsv = useCallback(
