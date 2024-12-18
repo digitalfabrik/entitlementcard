@@ -1,10 +1,11 @@
-import { act, fireEvent, render } from '@testing-library/react'
+import { act, fireEvent } from '@testing-library/react'
 import React, { ReactNode } from 'react'
 
 import { ProjectConfigProvider } from '../../../project-configs/ProjectConfigContext'
 import { LOCAL_STORAGE_PROJECT_KEY } from '../../../project-configs/constants'
 import koblenzConfig from '../../../project-configs/koblenz/config'
 import nuernbergConfig from '../../../project-configs/nuernberg/config'
+import { renderWithTranslation } from '../../../testing/render'
 import { AcceptingStoresEntry } from '../AcceptingStoresEntry'
 import StoresButtonBar from '../StoresButtonBar'
 import { invalidStoreData, validStoreData } from '../__mock__/mockStoreEntry'
@@ -23,7 +24,7 @@ describe('StoresButtonBar', () => {
     `should goBack when clicking back for $projectConfig.name`,
     async ({ projectConfig }) => {
       localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, projectConfig.projectId)
-      const { getByText } = render(
+      const { getByText } = renderWithTranslation(
         <StoresButtonBar
           dryRun
           setDryRun={setDryRun}
@@ -50,7 +51,7 @@ describe('StoresButtonBar', () => {
     `should disable import button for no stores for $projectConfig.name`,
     async ({ projectConfig }) => {
       localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, projectConfig.projectId)
-      const { getByText } = render(
+      const { getByText } = renderWithTranslation(
         <StoresButtonBar
           dryRun
           setDryRun={setDryRun}
@@ -83,7 +84,7 @@ describe('StoresButtonBar', () => {
       localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, projectConfig.projectId)
       const fields = projectConfig.storesManagement.enabled ? projectConfig.storesManagement.fields : []
       const stores = [new AcceptingStoresEntry(invalidStoreData, fields)]
-      const { getByText } = render(
+      const { getByText } = renderWithTranslation(
         <StoresButtonBar
           dryRun
           setDryRun={setDryRun}
@@ -115,7 +116,7 @@ describe('StoresButtonBar', () => {
       localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, projectConfig.projectId)
       const fields = projectConfig.storesManagement.enabled ? projectConfig.storesManagement.fields : []
       const stores = [new AcceptingStoresEntry(validStoreData, fields)]
-      const { getByText } = render(
+      const { getByText } = renderWithTranslation(
         <StoresButtonBar
           dryRun
           setDryRun={setDryRun}
