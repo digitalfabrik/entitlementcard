@@ -3,7 +3,6 @@ import { TextField } from '@mui/material'
 import React, { ReactElement } from 'react'
 
 import PlainDate from '../../util/PlainDate'
-import { BirthdayExtensionState } from './BirthdayExtension'
 import { Extension, ExtensionComponentProps } from './extensions'
 
 export const START_DAY_EXTENSION_NAME = 'startDay'

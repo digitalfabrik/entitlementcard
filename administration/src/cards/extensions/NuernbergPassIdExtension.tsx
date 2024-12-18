@@ -37,7 +37,7 @@ const fromString = (value: string): NuernbergPassIdExtensionState => {
   const nuernbergPassId = parseInt(value, 10)
   return { nuernbergPassId: Number.isNaN(nuernbergPassId) ? null : nuernbergPassId }
 }
-const toString = ({ nuernbergPassId }: NuernbergPassIdExtensionState) => nuernbergPassId?.toString() ?? ''
+const toString = ({ nuernbergPassId }: NuernbergPassIdExtensionState): string => nuernbergPassId?.toString() ?? ''
 
 const NuernbergPassIdExtension: Extension<NuernbergPassIdExtensionState> = {
   name: NUERNBERG_PASS_ID_EXTENSION_NAME,
