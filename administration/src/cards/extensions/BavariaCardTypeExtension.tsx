@@ -46,6 +46,18 @@ const StartDayForm = ({ value, setValue }: ExtensionComponentProps<BavariaCardTy
   )
 }
 
+const fromString = (state: string): BavariaCardTypeExtensionState | null => {
+  if (state === BAVARIA_CARD_TYPE_STANDARD || state === BAVARIA_CARD_TYPE_STANDARD_LEGACY) {
+    return { bavariaCardType: BAVARIA_CARD_TYPE_STANDARD }
+  }
+  if (state === BAVARIA_CARD_TYPE_GOLD || state === BAVARIA_CARD_TYPE_GOLD_LEGACY) {
+    return { bavariaCardType: BAVARIA_CARD_TYPE_GOLD }
+  }
+  return null
+}
+
+const toString = ({ bavariaCardType }: BavariaCardTypeExtensionState): string => bavariaCardType
+
 const BavariaCardTypeExtension: Extension<BavariaCardTypeExtensionState> = {
   name: BAVARIA_CARD_TYPE_EXTENSION_NAME,
   Component: StartDayForm,
@@ -59,16 +71,10 @@ const BavariaCardTypeExtension: Extension<BavariaCardTypeExtensionState> = {
   }),
   isValid: state =>
     state?.bavariaCardType === BAVARIA_CARD_TYPE_STANDARD || state?.bavariaCardType === BAVARIA_CARD_TYPE_GOLD,
-  fromString: (state: string) => {
-    if (state === BAVARIA_CARD_TYPE_STANDARD || state === BAVARIA_CARD_TYPE_STANDARD_LEGACY) {
-      return { bavariaCardType: BAVARIA_CARD_TYPE_STANDARD }
-    }
-    if (state === BAVARIA_CARD_TYPE_GOLD || state === BAVARIA_CARD_TYPE_GOLD_LEGACY) {
-      return { bavariaCardType: BAVARIA_CARD_TYPE_GOLD }
-    }
-    return null
-  },
-  toString: state => state.bavariaCardType,
+  fromString,
+  toString,
+  fromSerialized: fromString,
+  serialize: toString,
 }
 
 export default BavariaCardTypeExtension

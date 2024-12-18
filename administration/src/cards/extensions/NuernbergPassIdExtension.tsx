@@ -33,6 +33,12 @@ const NuernbergPassIdForm = ({
   </FormGroup>
 )
 
+const fromString = (value: string): NuernbergPassIdExtensionState => {
+  const nuernbergPassId = parseInt(value, 10)
+  return { nuernbergPassId: Number.isNaN(nuernbergPassId) ? null : nuernbergPassId }
+}
+const toString = ({ nuernbergPassId }: NuernbergPassIdExtensionState) => nuernbergPassId?.toString() ?? ''
+
 const NuernbergPassIdExtension: Extension<NuernbergPassIdExtensionState> = {
   name: NUERNBERG_PASS_ID_EXTENSION_NAME,
   getInitialState: () => ({ nuernbergPassId: null }),
@@ -48,11 +54,10 @@ const NuernbergPassIdExtension: Extension<NuernbergPassIdExtensionState> = {
     const nuernbergPassId = state?.nuernbergPassId ?? null
     return nuernbergPassId !== null && nuernbergPassId > 0 && nuernbergPassId < 10 ** nuernbergPassIdLength
   },
-  fromString: value => {
-    const nuernbergPassId = parseInt(value, 10)
-    return { nuernbergPassId: Number.isNaN(nuernbergPassId) ? null : nuernbergPassId }
-  },
-  toString: state => state.nuernbergPassId?.toString() ?? '',
+  fromString,
+  toString,
+  fromSerialized: fromString,
+  serialize: toString,
 }
 
 export default NuernbergPassIdExtension

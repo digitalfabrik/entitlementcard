@@ -3,6 +3,7 @@ import { TextField } from '@mui/material'
 import React, { ReactElement } from 'react'
 
 import PlainDate from '../../util/PlainDate'
+import { BirthdayExtensionState } from './BirthdayExtension'
 import { Extension, ExtensionComponentProps } from './extensions'
 
 export const START_DAY_EXTENSION_NAME = 'startDay'
@@ -53,6 +54,11 @@ const StartDayExtension: Extension<StartDayExtensionState> = {
     return startDay === null ? null : { startDay }
   },
   toString: ({ startDay }: StartDayExtensionState) => startDay.format(),
+  fromSerialized: (value: string) => {
+    const startDay = PlainDate.safeFrom(value)
+    return startDay === null ? null : { startDay }
+  },
+  serialize: ({ startDay }: StartDayExtensionState) => startDay.formatISO(),
 }
 
 export default StartDayExtension
