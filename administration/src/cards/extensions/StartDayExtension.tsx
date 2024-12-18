@@ -53,6 +53,11 @@ const StartDayExtension: Extension<StartDayExtensionState> = {
     return startDay === null ? null : { startDay }
   },
   toString: ({ startDay }: StartDayExtensionState) => startDay.format(),
+  fromSerialized: (value: string) => {
+    const startDay = PlainDate.safeFrom(value)
+    return startDay === null ? null : { startDay }
+  },
+  serialize: ({ startDay }: StartDayExtensionState) => startDay.formatISO(),
 }
 
 export default StartDayExtension

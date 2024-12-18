@@ -73,6 +73,11 @@ const BirthdayExtension: Extension<BirthdayExtensionState> = {
     return birthday === null ? null : { birthday }
   },
   toString: ({ birthday }: BirthdayExtensionState) => birthday?.format() ?? '',
+  fromSerialized: (value: string) => {
+    const birthday = PlainDate.safeFrom(value)
+    return birthday === null ? null : { birthday }
+  },
+  serialize: ({ birthday }: BirthdayExtensionState) => birthday?.formatISO() ?? '',
 }
 
 export default BirthdayExtension

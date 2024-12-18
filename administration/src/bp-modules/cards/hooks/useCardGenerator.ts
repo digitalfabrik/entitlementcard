@@ -15,7 +15,7 @@ import getDeepLinkFromQrCode from '../../../util/getDeepLinkFromQrCode'
 import { updateArrayItem } from '../../../util/helper'
 import normalizeString from '../../../util/normalizeString'
 import { useAppToaster } from '../../AppToaster'
-import { ActivityLog } from '../../user-settings/ActivityLog'
+import { saveActivityLog } from '../../user-settings/ActivityLog'
 
 export enum CardActivationState {
   input,
@@ -155,7 +155,7 @@ const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
 
         const dataUri = await generateFunction(codes, cards)
 
-        cards.forEach(card => new ActivityLog(card).saveToSessionStorage())
+        cards.forEach(saveActivityLog)
 
         downloadDataUri(dataUri, filename)
         if (region.activatedForCardConfirmationMail) {

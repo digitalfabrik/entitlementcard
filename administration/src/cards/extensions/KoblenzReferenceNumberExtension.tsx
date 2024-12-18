@@ -61,6 +61,9 @@ const KoblenzReferenceNumberExtensionForm = ({
   )
 }
 
+const fromString = (value: string): KoblenzReferenceNumberExtensionState => ({ koblenzReferenceNumber: value })
+const toString = ({ koblenzReferenceNumber }: KoblenzReferenceNumberExtensionState): string => koblenzReferenceNumber
+
 const KoblenzReferenceNumberExtension: Extension<KoblenzReferenceNumberExtensionState> = {
   name: KOBLENZ_REFERENCE_NUMBER_EXTENSION_NAME,
   getInitialState: () => ({ koblenzReferenceNumber: '' }),
@@ -80,8 +83,10 @@ const KoblenzReferenceNumberExtension: Extension<KoblenzReferenceNumberExtension
       !hasSpecialChars(koblenzReferenceNumber)
     )
   },
-  fromString: value => ({ koblenzReferenceNumber: value }),
-  toString: state => state.koblenzReferenceNumber,
+  fromString,
+  toString,
+  fromSerialized: fromString,
+  serialize: toString,
 }
 
 export default KoblenzReferenceNumberExtension

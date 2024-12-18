@@ -1,23 +1,30 @@
-import { format } from 'date-fns'
+import { formatISO, parseISO } from 'date-fns'
 
-import { Card } from '../../cards/Card'
+import { Card, SerializedCard, deserializeCard, serializeCard } from '../../cards/Card'
+import { CardConfig } from '../../project-configs/getProjectConfig'
 
 const STORAGE_KEY = 'activity-log'
 
-export const loadActivityLog = (): ActivityLog[] => JSON.parse(sessionStorage.getItem(STORAGE_KEY)!) ?? []
+type JsonActivityLogEntry = { timestamp: string; card: SerializedCard }
 
-export class ActivityLog {
+export type ActivityLogEntryType = {
+  timestamp: Date
   card: Card
-  timestamp: string
+}
 
-  constructor(card: Card) {
-    this.card = card
-    this.timestamp = format(Date.now(), 'dd.MM.yyyy kk:mm:ss')
-  }
+const getActivityLog = (): JsonActivityLogEntry[] => JSON.parse(sessionStorage.getItem(STORAGE_KEY) ?? '[]')
 
-  saveToSessionStorage = (): void => {
-    const logEntries = loadActivityLog()
-    logEntries.push(this)
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(logEntries))
+export const loadActivityLog = (cardConfig: CardConfig): ActivityLogEntryType[] =>
+  getActivityLog().map(entry => ({
+    card: deserializeCard(entry.card, cardConfig),
+    timestamp: parseISO(entry.timestamp),
+  }))
+
+export const saveActivityLog = (card: Card): void => {
+  const logEntries = getActivityLog()
+  const jsonLogEntry: JsonActivityLogEntry = {
+    timestamp: formatISO(Date.now()),
+    card: serializeCard(card),
   }
+  sessionStorage.setItem(STORAGE_KEY, JSON.stringify([...logEntries, jsonLogEntry]))
 }
