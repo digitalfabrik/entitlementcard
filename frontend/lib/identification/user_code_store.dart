@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/sentry.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:ehrenamtskarte/util/read_write_lock.dart';
@@ -27,21 +28,7 @@ class UserCodeStore {
 
   Future<List<DynamicUserCode>> load() async {
     String? userCodesBase64 = await _storage.use((storage) async {
-      // make fake read on android - workaround for https://github.com/mogol/flutter_secure_storage/issues/653
-      if (Platform.isAndroid) {
-        String? userCodesBase64FirstRead = await storage.read(key: _userCodesBase64Key);
-        final userCodesBase64 = await storage.read(key: _userCodesBase64Key);
-        // report error if first read is null but second read contains data to collect sentry data for reproduction
-        if (userCodesBase64FirstRead != userCodesBase64) {
-          bool firstIsNull = userCodesBase64FirstRead == null;
-          bool secondIsNull = userCodesBase64 == null;
-          reportError(
-              'First read from secure storage differs from second: firstNull=$firstIsNull, secondNull=$secondIsNull',
-              null);
-        }
-        return userCodesBase64;
-      }
-      return await storage.read(key: _userCodesBase64Key);
+      return await _safeRead(storage, _userCodesBase64Key);
     });
 
     if (userCodesBase64 == null) return [];
@@ -54,11 +41,31 @@ class UserCodeStore {
   // legacy import of existing card to keep them in storage after update
   Future<DynamicUserCode?> loadAndDeleteLegacyCard() async {
     return await _storage.use((storage) async {
-      final String? userCodeBase64 = await storage.read(key: _legacyUserCodeBase64Key);
+      final String? userCodeBase64 = await _safeRead(storage, _legacyUserCodeBase64Key);
       if (userCodeBase64 == null) return null;
       DynamicUserCode importedLegacyCard = DynamicUserCode.fromBuffer(const Base64Decoder().convert(userCodeBase64));
       await storage.delete(key: _legacyUserCodeBase64Key);
       return importedLegacyCard;
     });
+  }
+}
+
+/// This function deletes the secure storage in the situation that the app data was backed up (e.g. on a new device),
+/// but the secret is no longer available.
+/// Upstream issue: https://github.com/juliansteenbakker/flutter_secure_storage/issues/354
+Future<String?> _safeRead(FlutterSecureStorage storage, String key) async {
+  try {
+    return await storage.read(key: key);
+  } on PlatformException catch (e, stackTrace) {
+    if (Platform.isAndroid && e.toString().contains('javax.crypto.BadPaddingException')) {
+      reportError(
+          'Could not read the key $key from secure storage probably due to wrong or missing secret caused by a backup. '
+          'Deleting secure storage on purpose to resolve the situation and trying again. Original Error: $e',
+          stackTrace);
+      await storage.deleteAll();
+      return await storage.read(key: key);
+    } else {
+      rethrow;
+    }
   }
 }
