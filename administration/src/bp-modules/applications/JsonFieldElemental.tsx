@@ -26,8 +26,12 @@ const PrintOnlySpan = styled.span`
   }
 `
 
+// Some fields name are equals therefore the parents is needed for resolving the label
+const getTranslationKey = (fieldName: string, parentName?: string) =>
+  parentName ? `${parentName}.${fieldName}` : fieldName
+
 const JsonFieldAttachment = memo(
-  ({ jsonField, baseUrl, attachmentAccessible }: JsonFieldViewProps<JsonField<'Attachment'>>) => {
+  ({ jsonField, baseUrl, attachmentAccessible, parentName }: JsonFieldViewProps<JsonField<'Attachment'>>) => {
     const appToaster = useAppToaster()
     const token = useContext(AuthContext).data?.token
     const { t } = useTranslation('application')
@@ -64,7 +68,7 @@ const JsonFieldAttachment = memo(
       }
       return (
         <p>
-          {t(jsonField.name)}:&nbsp;
+          {t(getTranslationKey(jsonField.name, parentName))}:&nbsp;
           <PrintAwareTag
             round
             rightIcon={<Icon icon='download' color={Colors.GRAY1} />}
@@ -77,7 +81,7 @@ const JsonFieldAttachment = memo(
     }
     return (
       <p>
-        {t(jsonField.name)}:&nbsp;
+        {t(getTranslationKey(jsonField.name, parentName))}:&nbsp;
         <span>eingereicht, nicht sichtbar</span>
       </p>
     )
@@ -90,31 +94,30 @@ const JsonFieldElemental = ({
   ...rest
 }: JsonFieldViewProps<Exclude<GeneralJsonField, JsonField<'Array'>>>) => {
   const { t } = useTranslation('application')
-  const getTranslationKey = () => (parentName ? `${parentName}.${jsonField.name}` : jsonField.name)
 
   switch (jsonField.type) {
     case 'String':
       return (
         <p>
-          {t(getTranslationKey())}: {jsonField.value}
+          {t(getTranslationKey(jsonField.name, parentName))}: {jsonField.value}
         </p>
       )
     case 'Date':
       return (
         <p>
-          {t(getTranslationKey())}: {new Date(jsonField.value).toLocaleDateString('de')}
+          {t(getTranslationKey(jsonField.name, parentName))}: {new Date(jsonField.value).toLocaleDateString('de')}
         </p>
       )
     case 'Number':
       return (
         <p>
-          {t(getTranslationKey())}: {jsonField.value}
+          {t(getTranslationKey(jsonField.name, parentName))}: {jsonField.value}
         </p>
       )
     case 'Boolean':
       return (
         <p>
-          {t(getTranslationKey())}:&nbsp;
+          {t(getTranslationKey(jsonField.name, parentName))}:&nbsp;
           {jsonField.value ? (
             <>
               <Icon icon='tick' intent='success' /> Ja
@@ -127,7 +130,7 @@ const JsonFieldElemental = ({
         </p>
       )
     case 'Attachment':
-      return <JsonFieldAttachment jsonField={jsonField} {...rest} />
+      return <JsonFieldAttachment jsonField={jsonField} parentName={parentName} {...rest} />
   }
 }
 

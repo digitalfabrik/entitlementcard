@@ -16,7 +16,7 @@ export type JsonFieldValueByType = {
   String: string
   Number: number
   Boolean: boolean
-  Attachment: { fileIndex: number }
+  Attachment: { fileIndex: number; parentName?: string }
   Date: string
 }
 
