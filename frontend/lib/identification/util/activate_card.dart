@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:ehrenamtskarte/configuration/configuration.dart';
-import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
+import 'package:ehrenamtskarte/graphql_gen/schema.graphql.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activate_code.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_exception.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_existing_card_dialog.dart';
@@ -46,7 +46,7 @@ Future<bool> activateCard(
   );
 
   switch (activationResult.activationState) {
-    case ActivationState.success:
+    case Enum$ActivationState.success:
       if (activationResult.totpSecret == null) {
         await reportError('TotpSecret is null during activation', null);
         throw const ActivationInvalidTotpSecretException();
@@ -72,17 +72,17 @@ Future<bool> activateCard(
         if (Navigator.canPop(context)) Navigator.maybePop(context);
       }
       return true;
-    case ActivationState.revoked:
+    case Enum$ActivationState.revoked:
       if (context.mounted) {
         await ActivationErrorDialog.showErrorDialog(context, t.identification.codeRevoked);
       }
       return false;
-    case ActivationState.failed:
+    case Enum$ActivationState.failed:
       if (context.mounted) {
         await ActivationErrorDialog.showErrorDialog(context, t.identification.codeInvalid);
       }
       return false;
-    case ActivationState.didNotOverwriteExisting:
+    case Enum$ActivationState.did_not_overwrite_existing:
       if (overwriteExisting) {
         throw const ActivationDidNotOverwriteExisting();
       }

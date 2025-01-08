@@ -71,7 +71,7 @@ class _LocationButtonState extends State<LocationButton> {
       child: FloatingActionButton(
         heroTag: 'fab_map_view',
         elevation: 1,
-        backgroundColor: theme.colorScheme.surfaceVariant,
+        backgroundColor: theme.colorScheme.surfaceContainerHighest,
         onPressed: _locationStatus != null ? () => _determinePosition() : null,
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 200),

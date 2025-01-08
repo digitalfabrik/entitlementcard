@@ -1,10 +1,10 @@
-import 'package:ehrenamtskarte/graphql/graphql_api.dart';
+import 'package:ehrenamtskarte/graphql_gen/graphql_queries/cards/card_verification_by_hash.graphql.dart';
+import 'package:ehrenamtskarte/graphql_gen/schema.graphql.dart';
 import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-Future<({bool outOfSync, CardVerificationByHash$Query$CardVerificationResultModel result})>
-    queryDynamicServerVerification(
+Future<({bool outOfSync, Query$CardVerificationByHash$verification result})> queryDynamicServerVerification(
   GraphQLClient client,
   String projectId,
   DynamicVerificationCode verificationCode,
@@ -17,7 +17,7 @@ Future<({bool outOfSync, CardVerificationByHash$Query$CardVerificationResultMode
     projectId,
     hash,
     verificationCode.otp,
-    CodeType.kw$DYNAMIC,
+    Enum$CodeType.DYNAMIC,
   );
   stopWatch.stop();
   // We assume that the server captured the verificationTimeStamp in the middle of the request:
@@ -32,7 +32,7 @@ Future<({bool outOfSync, CardVerificationByHash$Query$CardVerificationResultMode
   return (outOfSync: outOfSync, result: result);
 }
 
-Future<CardVerificationByHash$Query$CardVerificationResultModel> queryStaticServerVerification(
+Future<Query$CardVerificationByHash$verification> queryStaticServerVerification(
   GraphQLClient client,
   String projectId,
   StaticVerificationCode verificationCode,
@@ -43,47 +43,42 @@ Future<CardVerificationByHash$Query$CardVerificationResultModel> queryStaticServ
     projectId,
     hash,
     null,
-    CodeType.kw$STATIC,
+    Enum$CodeType.STATIC,
   );
 }
 
-Future<CardVerificationByHash$Query$CardVerificationResultModel> _queryServerVerification(
+Future<Query$CardVerificationByHash$verification> _queryServerVerification(
   GraphQLClient client,
   String projectId,
   String verificationHash,
   int? totp,
-  CodeType codeType,
+  Enum$CodeType codeType,
 ) async {
-  final byCardDetailsHash = CardVerificationByHashQuery(
-    variables: CardVerificationByHashArguments(
+  final options = Options$Query$CardVerificationByHash(
+    fetchPolicy: FetchPolicy.noCache,
+    variables: Variables$Query$CardVerificationByHash(
       project: projectId,
-      card: CardVerificationModelInput(
+      card: Input$CardVerificationModelInput(
         cardInfoHashBase64: verificationHash,
         totp: totp,
         codeType: codeType,
       ),
     ),
   );
-  final queryOptions = QueryOptions(
-    fetchPolicy: FetchPolicy.noCache,
-    document: byCardDetailsHash.document,
-    variables: byCardDetailsHash.getVariablesMap(),
-  );
 
   try {
-    final queryResult = await client.query(queryOptions);
+    final queryResult = await client.query$CardVerificationByHash(options);
     final exception = queryResult.exception;
     if (exception != null) {
       throw exception;
     }
-    final data = queryResult.data;
+    final data = queryResult.parsedData;
 
     if (data == null) {
       throw ServerVerificationException('Returned data is null.');
     }
 
-    final parsedResult = byCardDetailsHash.parse(data);
-    return parsedResult.verifyCardInProjectV2;
+    return data.verification;
   } on Object catch (e) {
     throw ServerVerificationException(e);
   }

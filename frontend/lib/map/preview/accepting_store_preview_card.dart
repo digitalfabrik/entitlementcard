@@ -39,7 +39,7 @@ class AcceptingStorePreviewCard extends StatelessWidget {
       child: Card(
         clipBehavior: Clip.hardEdge,
         margin: EdgeInsets.zero,
-        color: Theme.of(context).colorScheme.surfaceVariant,
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
         surfaceTintColor: Colors.transparent,
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 200),

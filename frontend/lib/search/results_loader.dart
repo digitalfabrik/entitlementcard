@@ -1,17 +1,17 @@
 import 'package:ehrenamtskarte/configuration/configuration.dart';
-import 'package:ehrenamtskarte/graphql/graphql_api.dart';
+import 'package:ehrenamtskarte/graphql_gen/schema.graphql.dart';
 import 'package:ehrenamtskarte/map/preview/models.dart';
 import 'package:ehrenamtskarte/store_widgets/accepting_store_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-
+import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/accepting_stores_search.graphql.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
 import 'package:ehrenamtskarte/home/home_page.dart';
 
 class ResultsLoader extends StatefulWidget {
-  final CoordinatesInput? coordinates;
+  final Input$CoordinatesInput? coordinates;
   final String? searchText;
   final List<int> categoryIds;
 
@@ -25,8 +25,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
   static const _pageSize = 20;
   GraphQLClient? _client;
 
-  final PagingController<int, AcceptingStoresSearch$Query$AcceptingStore> _pagingController =
-      PagingController(firstPageKey: 0);
+  final PagingController<int, Query$AcceptingStoresSearch$stores> _pagingController = PagingController(firstPageKey: 0);
 
   @override
   void initState() {
@@ -53,24 +52,23 @@ class ResultsLoaderState extends State<ResultsLoader> {
     final oldWidget = widget;
     final projectId = Configuration.of(context).projectId;
     try {
-      final arguments = AcceptingStoresSearchArguments(
+      final client = _client;
+      if (client == null) {
+        throw Exception('GraqhQL client is not yet initialized!');
+      }
+
+      final result = await client.query$AcceptingStoresSearch(Options$Query$AcceptingStoresSearch(
+          variables: Variables$Query$AcceptingStoresSearch(
         project: projectId,
-        params: SearchParamsInput(
+        params: Input$SearchParamsInput(
           categoryIds: widget.categoryIds.isEmpty ? null : widget.categoryIds,
           coordinates: widget.coordinates,
           searchText: widget.searchText,
           limit: _pageSize,
           offset: pageKey,
         ),
-      );
-      final query = AcceptingStoresSearchQuery(variables: arguments);
+      )));
 
-      final client = _client;
-      if (client == null) {
-        throw Exception('GraqhQL client is not yet initialized!');
-      }
-
-      final result = await client.query(QueryOptions(document: query.document, variables: query.getVariablesMap()));
       if (!mounted) return;
 
       final exception = result.exception;
@@ -85,13 +83,13 @@ class ResultsLoaderState extends State<ResultsLoader> {
           return await _fetchPage(pageKey);
         }
       }
-      final newData = result.data;
+      final newData = result.parsedData;
 
       if (newData == null) {
         throw Exception('Fetched data is null.');
       }
 
-      final newItems = query.parse(newData).searchAcceptingStoresInProject;
+      final newItems = newData.stores;
 
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
@@ -115,9 +113,9 @@ class ResultsLoaderState extends State<ResultsLoader> {
 
   @override
   Widget build(BuildContext context) {
-    return PagedSliverList<int, AcceptingStoresSearch$Query$AcceptingStore>.separated(
+    return PagedSliverList<int, Query$AcceptingStoresSearch$stores>.separated(
       pagingController: _pagingController,
-      builderDelegate: PagedChildBuilderDelegate<AcceptingStoresSearch$Query$AcceptingStore>(
+      builderDelegate: PagedChildBuilderDelegate<Query$AcceptingStoresSearch$stores>(
         itemBuilder: (context, item, index) {
           final storeCoordinates = item.physicalStore?.coordinates;
           return IntrinsicHeight(
@@ -136,6 +134,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
             ),
           );
         },
+        noMoreItemsIndicatorBuilder: _buildNoMoreItemsSpacer,
         noItemsFoundIndicatorBuilder: _buildNoItemsFoundIndicator,
         firstPageErrorIndicatorBuilder: _buildErrorWithRetry,
         newPageErrorIndicatorBuilder: _buildErrorWithRetry,
@@ -148,6 +147,8 @@ class ResultsLoaderState extends State<ResultsLoader> {
 
   Widget _buildProgressIndicator(BuildContext context) =>
       const Center(child: Padding(padding: EdgeInsets.all(5), child: CircularProgressIndicator()));
+
+  Widget _buildNoMoreItemsSpacer(BuildContext context) => const SizedBox(height: 80);
 
   Widget _buildErrorWithRetry(BuildContext context) {
     final t = context.t;

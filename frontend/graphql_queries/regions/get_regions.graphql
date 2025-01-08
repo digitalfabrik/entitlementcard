@@ -1,5 +1,5 @@
 query getRegions($project: String!) {
-    regionsInProject(project: $project) {
+    regions: regionsInProject(project: $project) {
         id,
         prefix,
         name

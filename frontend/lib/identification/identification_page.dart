@@ -28,16 +28,14 @@ class IdentificationPage extends StatefulWidget {
 }
 
 class IdentificationPageState extends State<IdentificationPage> {
-  CarouselController carouselController = CarouselController();
+  CarouselSliderController carouselController = CarouselSliderController();
   int cardIndex = 0;
 
   @override
   void initState() {
     super.initState();
     cardIndex = widget.initialCardIndex ?? 0;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      carouselController.jumpToPage(cardIndex);
-    });
+    carouselController.onReady.then((_) => carouselController.jumpToPage(cardIndex));
   }
 
   @override
