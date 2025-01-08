@@ -4,7 +4,6 @@ import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activate_code.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_exception.dart';
-import 'package:ehrenamtskarte/identification/activation_workflow/activation_existing_card_dialog.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_overwrite_existing_dialog.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_error_dialog.dart';
 import 'package:ehrenamtskarte/identification/user_code_model.dart';
@@ -88,7 +87,7 @@ Future<bool> activateCard(
       }
       if (isAlreadyInList(userCodesModel.userCodes, activationCode.info, activationCode.pepper)) {
         if (context.mounted) {
-          await ActivationExistingCardDialog.showExistingCardDialog(context);
+          await ActivationErrorDialog.showErrorDialog(context, t.deeplinkActivation.alreadyExists);
         }
         return false;
       }
