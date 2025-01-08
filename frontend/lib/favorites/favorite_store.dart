@@ -1,11 +1,11 @@
-import 'package:ehrenamtskarte/graphql/graphql_api.graphql.dart';
+import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/accepting_store_by_id.graphql.dart';
 
 class FavoriteStore {
   final int storeId;
   final String storeName;
   final int categoryId;
 
-  AcceptingStoreById$Query$PhysicalStore? physicalStore;
+  Query$AcceptingStoreById$stores? physicalStore;
 
   FavoriteStore(this.storeId, this.storeName, this.categoryId);
 
