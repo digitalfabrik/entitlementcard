@@ -20,16 +20,25 @@
     "wantsDigitalCard": "Ich beantrage eine digitale Ehrenamtskarte",
     "wantsPhysicalCard": "Ich beantrage eine physische Ehrenamtskarte",
     "blueCardJuleicaEntitlement": "Ich bin Inhaber:in einer JuLeiCa (Jugendleiter:in-Card)",
-    "blueCardWorkAtDepartmentEntitlement": "Ich bin aktiv in der Freiwilligen Feuerwehr mit abgeschlossener Truppmannausbildung bzw. abgeschlossenem Basis-Modul der Modularen Truppausbildung (MTA), oder im Katastrophenschutz oder im Rettungsdienst mit abgeschlossener Grundausbildung",
-    "blueCardMilitaryReserveEntitlement": "Ich habe in den vergangenen zwei Kalenderjahren als Reservist regelmäßig aktiven Wehrdienst in der Bundeswehr geleistet, indem ich insgesamt mindestens 40 Tage Reservisten-Dienstleistung erbracht habe oder ständige:r Angehörige:r eines Bezirks- oder Kreisverbindungskommandos war",
-    "blueCardWorkAtOrganizationsEntitlement": "Ich engagiere mich ehrenamtlich seit mindestens zwei Jahren freiwillig mindestens fünf Stunden pro Woche oder bei Projektarbeiten mindestens 250 Stunden jährlich",
+    "blueCardWorkAtDepartmentEntitlement": "Ich bin aktiv in der Freiwilligen Feuerwehr mit abgeschlossener Truppmannausbildung bzw. abgeschlossenem Basis-Modul der Modularen Truppausbildung (MTA), oder im Katastrophenschutz oder im Rettungsdienst mit abgeschlossener Grundausbildung.",
+    "blueCardMilitaryReserveEntitlement": "Ich habe in den vergangenen zwei Kalenderjahren als Reservist regelmäßig aktiven Wehrdienst in der Bundeswehr geleistet, indem ich insgesamt mindestens 40 Tage Reservisten-Dienstleistung erbracht habe oder ständige:r Angehörige:r eines Bezirks- oder Kreisverbindungskommandos war.",
+    "blueCardWorkAtOrganizationsEntitlement": "Ich engagiere mich ehrenamtlich seit mindestens zwei Jahren freiwillig mindestens fünf Stunden pro Woche oder bei Projektarbeiten mindestens 250 Stunden jährlich.",
+    "volunteerServiceEntitlement": {
+      "title": "Ich leiste einen Freiwilligendienst ab in einem Freiwilligen Sozialen Jahr (FSJ), einem Freiwilligen Ökologischen Jahr (FÖJ) oder einem Bundesfreiwilligendienst (BFD).",
+      "programName": "Name des Programms",
+      "certificate": "Tätigkeitsnachweis"
+    },
     "juleicaNumber": "Kartennummer",
     "juleicaExpiration": "Karte gültig bis",
     "copyOfJuleicaFront": "Kopie der Karte (1)",
     "copyOfJuleicaBack": "Kopie der Karte (2)",
-    "goldenCardWorkAtOrganizationsEntitlement": "Ich bin seit mindestens 25 Jahren mindestens 5 Stunden pro Woche oder 250 Stunden pro Jahr bei einem Verein oder einer Organisation ehrenamtlich tätig",
-    "goldenCardWorkAtDepartmentEntitlement": "Ich bin Feuerwehrdienstleistende:r oder Einsatzkraft im Rettungsdienst oder in Einheiten des Katastrophenschutzes und habe eine Dienstzeitauszeichnung nach dem Feuerwehr- und Hilfsorganisationen-Ehrenzeichengesetz (FwHOEzG) erhalten",
+    "goldenCardWorkAtOrganizationsEntitlement": "Ich bin seit mindestens 25 Jahren mindestens 5 Stunden pro Woche oder 250 Stunden pro Jahr bei einem Verein oder einer Organisation ehrenamtlich tätig.",
+    "goldenCardWorkAtDepartmentEntitlement": "Ich bin Feuerwehrdienstleistende:r oder Einsatzkraft im Rettungsdienst oder in Einheiten des Katastrophenschutzes und habe eine Dienstzeitauszeichnung nach dem Feuerwehr- und Hilfsorganisationen-Ehrenzeichengesetz (FwHOEzG) erhalten.",
     "goldenCardMilitaryReserveEntitlement": "Ich leiste als Reservist:in seit mindestens 25 Jahren regelmäßig aktiven Wehrdienst in der Bundeswehr, indem ich in dieser Zeit entweder insgesamt mindestens 500 Tage Reservisten-Dienstleistung erbracht habe oder in dieser Zeit ständige:r Angehörige:r eines Bezirks- oder Kreisverbindungskommandos war.",
+    "goldenCardHonoredByMinisterPresidentEntitlement": {
+      "title": "Ich bin Inhaber:in des Ehrenzeichens für Verdienste im Ehrenamt des Bayerischen Ministerpräsidenten",
+      "certificate": "Kopie der Urkunde"
+    },
     "workAtOrganization": "Arbeit bei Organisation oder Verein",
     "organization": {
       "title": "Angaben zur Organisation",
@@ -54,28 +63,6 @@
     "givenInformationIsCorrectAndComplete": "Ich versichere, dass alle angegebenen Informationen korrekt und vollständig sind",
     "title": "Bayerische Ehrenamtskarte beantragen",
     "sentSuccessfully": "Erfolgreich gesendet",
-    "sentError": "Fehler beim Senden",
-    "blueCardEntitlementType": {
-      "WorkAtOrganizations": "Ich engagiere mich ehrenamtlich seit mindestens zwei Jahren freiwillig mindestens fünf Stunden pro Woche oder bei Projektarbeiten mindestens 250 Stunden jährlich.",
-      "Juleica": "Ich bin Inhaber:in einer JuLeiCa (Jugendleiter:in-Card).",
-      "WorkAtDepartment": "Ich bin aktiv in der Freiwilligen Feuerwehr mit abgeschlossener Truppmannausbildung bzw. abgeschlossenem Basis-Modul der Modularen Truppausbildung (MTA), oder im Katastrophenschutz oder im Rettungsdienst mit abgeschlossener Grundausbildung.",
-      "MilitaryReserve": "Ich habe in den vergangenen zwei Kalenderjahren als Reservist regelmäßig aktiven Wehrdienst in der Bundeswehr geleistet, indem ich insgesamt mindestens 40 Tage Reservisten-Dienstleistung erbracht habe oder ständige:r Angehörige:r eines Bezirks- oder Kreisverbindungskommandos war.",
-      "VolunteerService": "Ich leiste einen Freiwilligendienst ab in einem Freiwilligen Sozialen Jahr (FSJ), einem Freiwilligen Ökologischen Jahr (FÖJ) oder einem Bundesfreiwilligendienst (BFD)."
-    },
-    "goldenCardEntitlementType": {
-      "WorkAtOrganizations": "Ich bin seit mindestens 25 Jahren mindestens 5 Stunden pro Woche oder 250 Stunden pro Jahr bei einem Verein oder einer Organisation ehrenamtlich tätig.",
-      "HonoredByMinisterPresident": "Ich bin Inhaber:in des Ehrenzeichens für Verdienste im Ehrenamt des Bayerischen Ministerpräsidenten.",
-      "WorkAtDepartment": "Ich bin Feuerwehrdienstleistende:r oder Einsatzkraft im Rettungsdienst oder in Einheiten des Katastrophenschutzes und habe eine Dienstzeitauszeichnung nach dem Feuerwehr- und Hilfsorganisationen-Ehrenzeichengesetz (FwHOEzG) erhalten.",
-      "MilitaryReserve": "Ich leiste als Reservist:in seit mindestens 25 Jahren regelmäßig aktiven Wehrdienst in der Bundeswehr, indem ich in dieser Zeit entweder insgesamt mindestens 500 Tage Reservisten-Dienstleistung erbracht habe oder in dieser Zeit ständige:r Angehörige:r eines Bezirks- oder Kreisverbindungskommandos war."
-    },
-    "volunteerServiceEntitlement": {
-      "title": "Ich leiste einen Freiwilligendienst ab in einem Freiwilligen Sozialen Jahr (FSJ), einem Freiwilligen Ökologischen Jahr (FÖJ) oder einem Bundesfreiwilligendienst (BFD)",
-      "programName": "Name des Programms",
-      "certificate": "Tätigkeitsnachweis"
-    },
-    "goldenCardHonoredByMinisterPresidentEntitlement": {
-      "title": "Ich bin Inhaber:in des Ehrenzeichens für Verdienste im Ehrenamt des Bayerischen Ministerpräsidenten",
-      "certificate": "Kopie der Urkunde"
-    }
+    "sentError": "Fehler beim Senden"
   }
 }
