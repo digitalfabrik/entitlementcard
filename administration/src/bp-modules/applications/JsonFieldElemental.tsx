@@ -6,9 +6,9 @@ import styled from 'styled-components'
 import { AuthContext } from '../../AuthProvider'
 import downloadDataUri from '../../util/downloadDataUri'
 import { useAppToaster } from '../AppToaster'
+import { EmailLink } from '../EmailLink'
 import { printAwareCss } from './ApplicationCard'
 import { GeneralJsonField, JsonField, JsonFieldViewProps } from './JsonFieldView'
-import { isEmailValid } from './utils/verificationHelper'
 
 const extensionByContentType = new Map([
   ['application/pdf', 'pdf'],
@@ -97,12 +97,7 @@ const JsonFieldElemental = ({
     case 'String':
       return (
         <p>
-          {t(getTranslationKey())}:
-          {isEmailValid(jsonField.value) ? (
-            <a href={`mailto:${jsonField.value}`}> {jsonField.value}</a>
-          ) : (
-            jsonField.value
-          )}
+          {t(getTranslationKey())}:{EmailLink(jsonField.value)}
         </p>
       )
     case 'Date':
