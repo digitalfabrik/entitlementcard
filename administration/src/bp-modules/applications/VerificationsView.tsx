@@ -3,6 +3,7 @@ import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
 import { GetApplicationsQuery } from '../../generated/graphql'
+import { isEmailValid } from './utils/verificationHelper'
 
 const StyledIndicator = styled.span`
   display: inline-block;
@@ -99,7 +100,11 @@ const VerificationsView = ({ verifications }: { verifications: Application['veri
                 </tr>
                 <tr>
                   <td>Email:</td>
-                  <td>{verification.contactEmailAddress}</td>
+                  {isEmailValid(verification.contactEmailAddress) ? (
+                    <a href={`mailto:${verification.contactEmailAddress}`}>{verification.contactEmailAddress}</a>
+                  ) : (
+                    <td>{verification.contactEmailAddress}</td>
+                  )}
                 </tr>
                 <tr>
                   <td>Status:</td>

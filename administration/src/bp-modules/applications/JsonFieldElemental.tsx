@@ -99,7 +99,7 @@ const JsonFieldElemental = ({
         <p>
           {t(getTranslationKey())}:
           {isEmailValid(jsonField.value) ? (
-            <a href={`mailto:${jsonField.value}`}>{jsonField.value}</a>
+            <a href={`mailto:${jsonField.value}`}> {jsonField.value}</a>
           ) : (
             jsonField.value
           )}
