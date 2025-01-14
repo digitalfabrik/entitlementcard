@@ -26,7 +26,7 @@ const PrintOnlySpan = styled.span`
   }
 `
 
-// Some fields name are equals therefore the parents is needed for resolving the label
+// Some field names are equal therefore the parents are needed for resolving the label
 const getTranslationKey = (fieldName: string, parentName?: string) =>
   parentName ? `${parentName}.${fieldName}` : fieldName
 
