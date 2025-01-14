@@ -60,7 +60,7 @@ const JsonFieldArray = ({
       'organizationContact',
       'organization',
       'volunteerServiceEntitlement',
-      'honoredByMinisterPresidentEntitlement',
+      'goldenCardHonoredByMinisterPresidentEntitlement',
     ].includes(jsonField.name)
       ? `${jsonField.name}.title`
       : jsonField.name
@@ -68,7 +68,16 @@ const JsonFieldArray = ({
   const children = jsonField.value.map((jsonFieldIt, index: number) => (
     <JsonFieldView
       jsonField={jsonFieldIt}
-      parentName={['organizationContact', 'organization'].includes(jsonField.name) ? jsonField.name : undefined}
+      parentName={
+        [
+          'organizationContact',
+          'organization',
+          'volunteerServiceEntitlement',
+          'goldenCardHonoredByMinisterPresidentEntitlement',
+        ].includes(jsonField.name)
+          ? jsonField.name
+          : undefined
+      }
       baseUrl={baseUrl}
       // This is the best key we have as jsonField.name is not unique
       // eslint-disable-next-line react/no-array-index-key
