@@ -1,6 +1,5 @@
 import React, { ReactElement } from 'react'
 
-import { isEmailValid } from './applications/utils/verificationHelper'
+const EmailLink = ({ email }: { email: string }): ReactElement => <a href={`mailto:${email}`}>{email}</a>
 
-export const EmailLink = (email: string): ReactElement =>
-  isEmailValid(email) ? <a href={`mailto:${email}`}> {email}</a> : <span>{email}</span>
+export default EmailLink
