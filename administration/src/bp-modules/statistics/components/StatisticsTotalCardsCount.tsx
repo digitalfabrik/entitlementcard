@@ -38,7 +38,7 @@ const StatisticsTotalCardsCount = ({ statistics }: StatisticsTotalCountProps): R
   return (
     <Container>
       <Headline>Alle Regionen:</Headline>
-      <span data-testid='totalCardsCreated'> {sumTotalAmounts(statistics).totalCardsCreated}</span>{' '}
+      <span data-testid='totalCardsCreated'> {sumTotalAmounts(statistics).totalCardsCreated} </span>{' '}
       {toLowerCaseFirstLetter(t('cardsCreated'))} /{' '}
       <span data-testid='totalCardsActivated'>
         {sumTotalAmounts(statistics).totalCardsActivated} {toLowerCaseFirstLetter(t('cardsActivated'))}{' '}

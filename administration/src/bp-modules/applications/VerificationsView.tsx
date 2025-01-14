@@ -71,7 +71,7 @@ const VerificationListItem = styled.li<{ $color: string }>`
 
 const VerificationContainer = styled.ul`
   list-style-type: none;
-  padding-left: 0px;
+  padding-left: 0;
   li:not(:last-child) {
     margin-bottom: 15px;
   }
@@ -105,12 +105,12 @@ const VerificationsView = ({ verifications }: { verifications: Application['veri
                   <tr>
                     <td>{t('eMail')}:</td>
                     <td>
-                    {isEmailValid(verification.contactEmailAddress) ? (
-                      <EmailLink email={verification.contactEmailAddress} />
-                    ) : (
-                      <span>{verification.contactEmailAddress}</span>
-                    )}
-                  </td>
+                      {isEmailValid(verification.contactEmailAddress) ? (
+                        <EmailLink email={verification.contactEmailAddress} />
+                      ) : (
+                        <span>{verification.contactEmailAddress}</span>
+                      )}
+                    </td>
                   </tr>
                   <tr>
                     <td>{t('status')}:</td>
