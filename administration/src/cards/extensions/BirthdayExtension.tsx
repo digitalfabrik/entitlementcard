@@ -11,12 +11,11 @@ import { Extension, ExtensionComponentProps } from './extensions'
 
 const StyledToolTip = styled(Tooltip)`
   border: 0;
+  width: 20px;
+  margin-left: 16px;
 `
 
 const StyledHelpOutlineIcon = styled(HelpOutlineIcon)`
-  width: 20px;
-  height: auto;
-  margin-left: 16px;
   color: #595959;
 `
 
@@ -63,7 +62,7 @@ const BirthdayForm = ({
         disableFuture
         sideComponent={
           <>
-            {projectConfig.projectId.includes('koblenz') && (
+            {projectConfig.showBirthdayMinorHint && (
               <StyledToolTip
                 className={Classes.TOOLTIP_INDICATOR}
                 content='Bei Minderjährigen unter 16 Jahren darf der KoblenzPass nur mit Einverständnis der Erziehungsberechtigten abgerufen werden.'>
