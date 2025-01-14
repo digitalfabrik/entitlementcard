@@ -6,8 +6,10 @@ import styled from 'styled-components'
 import { AuthContext } from '../../AuthProvider'
 import downloadDataUri from '../../util/downloadDataUri'
 import { useAppToaster } from '../AppToaster'
+import EmailLink from '../EmailLink'
 import { printAwareCss } from './ApplicationCard'
 import { GeneralJsonField, JsonField, JsonFieldViewProps } from './JsonFieldView'
+import { isEmailValid } from './utils/verificationHelper'
 
 const extensionByContentType = new Map([
   ['application/pdf', 'pdf'],
@@ -99,7 +101,8 @@ const JsonFieldElemental = ({
     case 'String':
       return (
         <p>
-          {t(getTranslationKey(jsonField.name, parentName))}: {jsonField.value}
+          {t(getTranslationKey(jsonField.name, parentName))}:{' '}
+          {isEmailValid(jsonField.value) ? <EmailLink email={jsonField.value} /> : <span>{jsonField.value}</span>}
         </p>
       )
     case 'Date':
