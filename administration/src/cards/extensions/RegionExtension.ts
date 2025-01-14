@@ -4,6 +4,9 @@ import { Extension } from './extensions'
 export const REGION_EXTENSION_NAME = 'regionId'
 export type RegionExtensionState = { [REGION_EXTENSION_NAME]: number }
 
+const fromString = (value: string): RegionExtensionState => ({ regionId: parseInt(value, 10) })
+const toString = ({ regionId }: RegionExtensionState): string => regionId.toString()
+
 const RegionExtension: Extension<RegionExtensionState> = {
   name: REGION_EXTENSION_NAME,
   Component: () => null,
@@ -15,8 +18,9 @@ const RegionExtension: Extension<RegionExtensionState> = {
     },
   }),
   isValid: () => true,
-  fromString: (value: string) => ({ regionId: parseInt(value, 10) }),
-  toString: ({ regionId }: RegionExtensionState) => regionId.toString(),
+  fromString,
+  fromSerialized: fromString,
+  serialize: toString,
 }
 
 export default RegionExtension

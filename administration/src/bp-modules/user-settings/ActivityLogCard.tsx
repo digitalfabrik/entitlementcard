@@ -1,8 +1,9 @@
 import { Button, Card, Dialog, DialogBody, H2 } from '@blueprintjs/core'
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
+import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { ActivityLogConfig } from '../../project-configs/getProjectConfig'
 import { loadActivityLog } from './ActivityLog'
 
@@ -54,7 +55,8 @@ const StyledTable = styled.table`
 const ActivityLogCard = ({ activityLogConfig }: { activityLogConfig: ActivityLogConfig }): ReactElement => {
   const { t } = useTranslation('userSettings')
   const [openLog, setOpenLog] = useState<boolean>(false)
-  const activityLogSorted = loadActivityLog().sort((a, b) => (new Date(a.timestamp) < new Date(b.timestamp) ? 1 : -1))
+  const { card: cardConfig } = useContext(ProjectConfigContext)
+  const activityLogSorted = loadActivityLog(cardConfig).sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1))
 
   return (
     <>
@@ -79,7 +81,7 @@ const ActivityLogCard = ({ activityLogConfig }: { activityLogConfig: ActivityLog
             </StickyTableHeader>
             <tbody>
               {activityLogSorted.length > 0 ? (
-                activityLogSorted.map(logEntry => activityLogConfig.renderLogEntry(logEntry))
+                activityLogSorted.map(activityLogConfig.renderLogEntry)
               ) : (
                 <EmptyLog>{t('noEntries')}</EmptyLog>
               )}

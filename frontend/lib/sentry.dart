@@ -8,9 +8,14 @@ Future<void> runAppWithSentry(void Function() runApp) async {
 }
 
 Future<void> reportError(dynamic exception, dynamic stackTrace) async {
+  _printError(exception, stackTrace);
   if (Sentry.isEnabled) {
     await Sentry.captureException(exception, stackTrace: stackTrace);
-  } else if (stackTrace is StackTrace) {
+  }
+}
+
+void _printError(dynamic exception, dynamic stackTrace) async {
+  if (stackTrace is StackTrace) {
     debugPrintStack(stackTrace: stackTrace, label: exception.toString());
   } else {
     debugPrint(exception.toString());

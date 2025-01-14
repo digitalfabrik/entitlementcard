@@ -103,41 +103,41 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
                 child: Column(mainAxisSize: MainAxisSize.min, children: [
                   if (_state == _State.waiting) _WarningText(status, userCodeModel),
                   ElevatedButton.icon(
-                    onPressed: activationCode != null &&
-                            _state == _State.waiting &&
-                            status == DeepLinkActivationStatus.valid
-                        ? () async {
-                            setState(() {
-                              _state = _State.loading;
-                            });
-                            try {
-                              final activated = await activateCard(context, activationCode);
-                              if (!context.mounted) return;
-                              if (activated) {
-                                final cardAmount = Provider.of<UserCodeModel>(context, listen: false).userCodes.length;
-                                GoRouter.of(context).pushReplacement('$homeRouteName/$identityTabIndex/$cardAmount');
+                    onPressed:
+                        activationCode != null && _state == _State.waiting && status == DeepLinkActivationStatus.valid
+                            ? () async {
                                 setState(() {
-                                  _state = _State.success;
+                                  _state = _State.loading;
                                 });
-                              } else {
-                                setState(() {
-                                  _state = _State.waiting;
-                                });
+                                try {
+                                  final activated = await activateCard(context, activationCode);
+                                  if (!context.mounted) return;
+                                  if (activated) {
+                                    final cardIndex =
+                                        Provider.of<UserCodeModel>(context, listen: false).userCodes.length - 1;
+                                    GoRouter.of(context).pushReplacement('$homeRouteName/$identityTabIndex/$cardIndex');
+                                    setState(() {
+                                      _state = _State.success;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      _state = _State.waiting;
+                                    });
+                                  }
+                                } catch (_) {
+                                  setState(() {
+                                    _state = _State.waiting;
+                                  });
+                                  // TODO 1656: Improve error handling!!
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(t.common.unknownError),
+                                    ),
+                                  );
+                                  rethrow;
+                                }
                               }
-                            } catch (_) {
-                              setState(() {
-                                _state = _State.waiting;
-                              });
-                              // TODO 1656: Improve error handling!!
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(t.common.unknownError),
-                                ),
-                              );
-                              rethrow;
-                            }
-                          }
-                        : null,
+                            : null,
                     icon: _state != _State.waiting
                         ? Container(
                             width: 24,

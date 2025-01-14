@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import { GetApplicationsQuery } from '../../generated/graphql'
+import EmailLink from '../EmailLink'
+import { isEmailValid } from './utils/verificationHelper'
 
 const StyledIndicator = styled.span`
   display: inline-block;
@@ -102,7 +104,13 @@ const VerificationsView = ({ verifications }: { verifications: Application['veri
                   </tr>
                   <tr>
                     <td>{t('eMail')}:</td>
-                    <td>{verification.contactEmailAddress}</td>
+                    <td>
+                    {isEmailValid(verification.contactEmailAddress) ? (
+                      <EmailLink email={verification.contactEmailAddress} />
+                    ) : (
+                      <span>{verification.contactEmailAddress}</span>
+                    )}
+                  </td>
                   </tr>
                   <tr>
                     <td>{t('status')}:</td>

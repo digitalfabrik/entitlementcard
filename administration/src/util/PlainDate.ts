@@ -141,18 +141,22 @@ class PlainDate {
   }
 
   /**
-   * Formats the date in ISO 8601 format yyyy-MM-dd (without time part).
-   */
-  toString(): string {
-    return format(this.toLocalDate(), 'yyyy-MM-dd')
-  }
-
-  /**
    * Formats the date in a custom format. `formatString` must comply to date-fns requirements.
    * @param formatString
    */
-  format(formatString: 'dd.MM.yyyy' = 'dd.MM.yyyy'): string {
+  format(formatString: string = 'dd.MM.yyyy'): string {
     return format(this.toLocalDate(), formatString)
+  }
+
+  formatISO(): string {
+    return this.format(ISO_8601_DATE_FORMAT)
+  }
+
+  /**
+   * Formats the date in ISO 8601 format yyyy-MM-dd (without time part).
+   */
+  toString(): string {
+    return this.formatISO()
   }
 
   /**

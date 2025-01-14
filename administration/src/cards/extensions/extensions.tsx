@@ -39,6 +39,8 @@ export type Extension<T = Record<string, unknown>> = {
   getProtobufData(state: T): PartialMessage<CardExtensions>
   fromString(value: string): T | null
   toString(state: T): string
+  fromSerialized(value: string): T | null
+  serialize(state: T): string
 }
 
 const Extensions = [
