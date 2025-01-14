@@ -19,14 +19,12 @@ import WorkAtOrganizationsEntitlementForm from './WorkAtOrganizationsEntitlement
 
 const entitlementTypeOptions: { labelByValue: { [K in GoldenCardEntitlementType]: string } } = {
   labelByValue: {
-    [GoldenCardEntitlementType.WorkAtOrganizations]: i18next.t(
-      'application:goldenCardEntitlementType.WorkAtOrganizations'
-    ),
+    [GoldenCardEntitlementType.WorkAtOrganizations]: i18next.t('application:goldenCardWorkAtOrganizationsEntitlement'),
     [GoldenCardEntitlementType.HonoredByMinisterPresident]: i18next.t(
-      'application:goldenCardEntitlementType.HonoredByMinisterPresident'
+      'application:goldenCardHonoredByMinisterPresidentEntitlement:title'
     ),
-    [GoldenCardEntitlementType.WorkAtDepartment]: i18next.t('application:goldenCardEntitlementType.WorkAtDepartment'),
-    [GoldenCardEntitlementType.MilitaryReserve]: i18next.t('application:goldenCardEntitlementType.MilitaryReserve'),
+    [GoldenCardEntitlementType.WorkAtDepartment]: i18next.t('application:goldenCardWorkAtDepartmentEntitlement'),
+    [GoldenCardEntitlementType.MilitaryReserve]: i18next.t('application:goldenCardMilitaryReserveEntitlement'),
   },
 }
 
