@@ -8,16 +8,12 @@ type ErrorHandlerProps = {
   refetch: () => void
 }
 
-const ErrorHandler = ({
-  refetch,
-  title = 'Ein Fehler ist aufgetreten.',
-  description,
-}: ErrorHandlerProps): ReactElement => {
+const ErrorHandler = ({ refetch, title, description }: ErrorHandlerProps): ReactElement => {
   const { t } = useTranslation('errors')
   return (
     <NonIdealState
       icon='error'
-      title={title}
+      title={title ?? t('unknownError')}
       description={description}
       action={<Button onClick={() => refetch()}>{t('retry')}</Button>}
     />

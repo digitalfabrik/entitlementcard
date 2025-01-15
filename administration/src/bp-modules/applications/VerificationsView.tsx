@@ -81,7 +81,7 @@ const VerificationsView = ({ verifications }: { verifications: Application['veri
   const { t } = useTranslation('applications')
   return (
     <>
-      <H5>Bestätigung(en) durch Organisationen</H5>
+      <H5>{t('confirmationsByOrganizations')}</H5>
       <VerificationContainer>
         {verifications.map(verification => {
           const status = getStatus(verification)

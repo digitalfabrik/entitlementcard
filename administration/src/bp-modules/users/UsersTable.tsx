@@ -77,7 +77,7 @@ const UsersTable = ({
             <th>{t('eMail')}</th>
             {selectedRegionId !== null ? null : <th>{t('role')}</th>}
             <th>
-              Rolle <RoleHelpButton />
+              {t('role')} <RoleHelpButton />
             </th>
             <th>{/* Action Buttons */}</th>
           </tr>

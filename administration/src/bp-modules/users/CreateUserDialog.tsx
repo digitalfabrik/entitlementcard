@@ -79,7 +79,7 @@ const CreateUserDialog = ({
           })
         }}>
         <div className={Classes.DIALOG_BODY}>
-          <FormGroup label='Email-Adresse'>
+          <FormGroup label={t('createUserEmailLabel')}>
             <InputGroup
               value={email}
               required

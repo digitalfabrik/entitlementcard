@@ -54,7 +54,7 @@ const EditUserDialog = ({
       appToaster?.show({ intent: 'danger', message: title })
     },
     onCompleted: () => {
-      appToaster?.show({ intent: 'success', message: 'Benutzer erfolgreich bearbeitet.' })
+      appToaster?.show({ intent: 'success', message: t('editUserSuccess') })
       onClose()
       if (me?.id === selectedUser?.id) {
         refetchMe()
@@ -141,9 +141,7 @@ const EditUserDialog = ({
             <Callout intent='danger' style={{ marginTop: '16px' }}>
               <b>{t('youEditYourOwnAccount')} </b>
               {t('youMayCannotUndoThis')}
-              <Checkbox required>
-                {t('ownAccountWarningConfirmation')}Ich bestätige, dass ich diesen Warnhinweis gelesen habe.
-              </Checkbox>
+              <Checkbox required>{t('ownAccountWarningConfirmation')}</Checkbox>
             </Callout>
           )}
         </div>

@@ -125,11 +125,11 @@ const JsonFieldElemental = ({
           {t(getTranslationKey(jsonField.name, parentName))}:&nbsp;
           {jsonField.value ? (
             <>
-              <Icon icon='tick' intent='success' /> Ja
+              <Icon icon='tick' intent='success' /> {t('positiveAnswer')}
             </>
           ) : (
             <>
-              <Icon icon='cross' intent='danger' /> Nein
+              <Icon icon='cross' intent='danger' /> {t('negativeAnswer')}
             </>
           )}
         </p>

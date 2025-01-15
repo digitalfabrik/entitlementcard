@@ -59,7 +59,7 @@ const StoresButtonBar = ({
       </Tooltip>
       <Alert
         cancelButtonText={t('cancel')}
-        confirmButtonText={t('storesImport')}
+        confirmButtonText={t('importStores')}
         icon='upload'
         intent='warning'
         isOpen={importDialogIsOpen}

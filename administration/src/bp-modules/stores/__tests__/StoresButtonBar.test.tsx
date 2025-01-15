@@ -64,7 +64,7 @@ describe('StoresButtonBar', () => {
         }
       )
 
-      const importButton = getByText('Import Stores').closest('button') as HTMLButtonElement
+      const importButton = getByText('Importiere Akzeptanzpartner').closest('button') as HTMLButtonElement
       expect(importButton).toBeTruthy()
       expect(importButton.disabled).toBeTruthy()
       fireEvent.mouseOver(importButton)
@@ -95,7 +95,7 @@ describe('StoresButtonBar', () => {
         { wrapper }
       )
 
-      const importButton = getByText('Import Stores').closest('button') as HTMLButtonElement
+      const importButton = getByText('Importiere Akzeptanzpartner').closest('button') as HTMLButtonElement
       expect(importButton).toBeTruthy()
       fireEvent.mouseOver(importButton)
       fireEvent.click(importButton)
@@ -116,7 +116,7 @@ describe('StoresButtonBar', () => {
       localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, projectConfig.projectId)
       const fields = projectConfig.storesManagement.enabled ? projectConfig.storesManagement.fields : []
       const stores = [new AcceptingStoresEntry(validStoreData, fields)]
-      const { getByText } = renderWithTranslation(
+      const { getAllByText } = renderWithTranslation(
         <StoresButtonBar
           dryRun
           setDryRun={setDryRun}
@@ -127,10 +127,12 @@ describe('StoresButtonBar', () => {
         { wrapper }
       )
 
-      const importButton = getByText('Import Stores').closest('button') as HTMLButtonElement
+      const importButton = getAllByText('Importiere Akzeptanzpartner')[0].closest('button') as HTMLButtonElement
       expect(importButton).toBeTruthy()
       fireEvent.click(importButton)
-      const importConfirmationButton = getByText('Stores importieren').closest('button') as HTMLButtonElement
+      const importConfirmationButton = getAllByText('Importiere Akzeptanzpartner')[1].closest(
+        'button'
+      ) as HTMLButtonElement
       fireEvent.click(importConfirmationButton)
       await act(async () => null) // Popper update() - https://github.com/popperjs/react-popper/issues/350
 

@@ -63,7 +63,9 @@
     "givenInformationIsCorrectAndComplete": "Ich versichere, dass alle angegebenen Informationen korrekt und vollständig sind",
     "title": "Bayerische Ehrenamtskarte beantragen",
     "sentSuccessfully": "Erfolgreich gesendet",
-    "sentError": "Fehler beim Senden"
+    "sentError": "Fehler beim Senden",
+    "positiveAnswer": "Ja",
+    "negativeAnswer": "Nein"
   },
   "applications": {
     "allApplications": "Alle Anträge",
@@ -132,6 +134,7 @@
     "passwordValidationMustBeEqual": "Die Passwörter stimmen nicht überein."
   },
   "cards": {
+    "backToSelection": "Zurück zur Auswahl",
     "name": "Name",
     "expirationDate": "Ablaufdatum",
     "dataWillBeLostWarning": "Falls Sie fortfahren, werden alle Eingaben verworfen.",
@@ -157,6 +160,7 @@
     "importFileTooManyEntries": "Die Datei hat mehr als {{limit}} Einträge.",
     "importFileWrongFormat": "Die gewählte Datei hat einen unzulässigen Dateityp.",
     "importFileTooBig": "Die ausgewählte Datei ist zu groß.",
+    "printQRCodes": "QR-Codes drucken",
     "validationError": "Validierungsfehler"
   },
   "misc": {
@@ -260,6 +264,7 @@
     "sendMail": "E-Mail schreiben"
   },
   "statistics": {
+    "allRegions": "Alle Regionen:",
     "noStatisticsAvailable": "Keine Statistiken vorhanden",
     "noStatisticsAvailableDescription": "Es wurden keine Statistiken für Sie gefunden.",
     "count": "Anzahl",
@@ -285,7 +290,6 @@
     "importStores": "Importiere Akzeptanzpartner",
     "backToSelection": "Zurück zur Auswahl",
     "cancel": "Abbrechen",
-    "storesImport": "Stores importieren",
     "storesCsvImport": "Akzeptanzpartner CSV Import",
     "selectAFile": "Wählen Sie eine Datei",
     "dryRun": "Testlauf",
@@ -343,6 +347,7 @@
   "users": {
     "addUserSuccess": "Benutzer erfolgreich erstellt.",
     "addUser": "Benutzer hinzufügen",
+    "createUserEmailLabel": "Email-Adresse",
     "eMail": "Email-Adresse",
     "role": "Rolle",
     "region": "Region",
@@ -358,6 +363,7 @@
     "ownAccountWarningConfirmation": "Ich bestätige, dass ich diesen Warnhinweis gelesen habe.",
     "editUserWithMail": "Benutzer '{{mail}}' bearbeiten",
     "editUser": "Benutzer bearbeiten",
+    "editUserSuccess": "Benutzer erfolgreich bearbeitet.",
     "edit": "Bearbeiten",
     "youCanChangeYourOwnPassword": "Sie können Ihr eigenes Passwort in den",
     "userSettings": "Benutzereinstellungen",
@@ -392,6 +398,7 @@
   "errors": {
     "retry": "Erneut Versuchen",
     "unknown": "Etwas ist schief gelaufen.",
+    "unknownError": "Ein Fehler ist aufgetreten.",
     "notAuthorized": "Fehlende Berechtigung",
     "notAuthorizedToSeeApplications": "Sie sind nicht berechtigt, Anträge einzusehen.",
     "notAuthorizedToCreateCards": "Sie sind nicht berechtigt, Karten auszustellen.",

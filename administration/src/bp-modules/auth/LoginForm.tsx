@@ -40,7 +40,7 @@ const LoginForm = ({ loading, email, password, setEmail, setPassword, onSubmit }
         <div
           className={Classes.DIALOG_FOOTER_ACTIONS}
           style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Link to='/forgot-password'>Passwort vergessen</Link>
+          <Link to='/forgot-password'>{t('forgotPassword')}</Link>
           <Button text='Anmelden' type='submit' intent='primary' loading={!!loading} />
         </div>
       </form>
