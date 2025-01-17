@@ -24,8 +24,8 @@ class CustomAlertDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       titlePadding: EdgeInsets.all(4),
-      contentPadding: EdgeInsets.only(left: 20, right: 20),
-      actionsPadding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+      contentPadding: EdgeInsets.symmetric(horizontal: 20),
+      actionsPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       title: _buildTitle(context),
       content: _buildContent(context),
       actions: _buildActions(context),
