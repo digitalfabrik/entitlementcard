@@ -6,8 +6,10 @@ import styled from 'styled-components'
 import { AuthContext } from '../../AuthProvider'
 import downloadDataUri from '../../util/downloadDataUri'
 import { useAppToaster } from '../AppToaster'
+import EmailLink from '../EmailLink'
 import { printAwareCss } from './ApplicationCard'
 import { GeneralJsonField, JsonField, JsonFieldViewProps } from './JsonFieldView'
+import { isEmailValid } from './utils/verificationHelper'
 
 const extensionByContentType = new Map([
   ['application/pdf', 'pdf'],
@@ -26,8 +28,12 @@ const PrintOnlySpan = styled.span`
   }
 `
 
+// Some field names are equal therefore the parents are needed for resolving the label
+const getTranslationKey = (fieldName: string, parentName?: string) =>
+  parentName ? `${parentName}.${fieldName}` : fieldName
+
 const JsonFieldAttachment = memo(
-  ({ jsonField, baseUrl, attachmentAccessible }: JsonFieldViewProps<JsonField<'Attachment'>>) => {
+  ({ jsonField, baseUrl, attachmentAccessible, parentName }: JsonFieldViewProps<JsonField<'Attachment'>>) => {
     const appToaster = useAppToaster()
     const token = useContext(AuthContext).data?.token
     const { t } = useTranslation('application')
@@ -64,7 +70,7 @@ const JsonFieldAttachment = memo(
       }
       return (
         <p>
-          {t(jsonField.name)}:&nbsp;
+          {t(getTranslationKey(jsonField.name, parentName))}:&nbsp;
           <PrintAwareTag
             round
             rightIcon={<Icon icon='download' color={Colors.GRAY1} />}
@@ -77,7 +83,7 @@ const JsonFieldAttachment = memo(
     }
     return (
       <p>
-        {t(jsonField.name)}:&nbsp;
+        {t(getTranslationKey(jsonField.name, parentName))}:&nbsp;
         <span>eingereicht, nicht sichtbar</span>
       </p>
     )
@@ -90,31 +96,31 @@ const JsonFieldElemental = ({
   ...rest
 }: JsonFieldViewProps<Exclude<GeneralJsonField, JsonField<'Array'>>>) => {
   const { t } = useTranslation('application')
-  const getTranslationKey = () => (parentName ? `${parentName}.${jsonField.name}` : jsonField.name)
 
   switch (jsonField.type) {
     case 'String':
       return (
         <p>
-          {t(getTranslationKey())}: {jsonField.value}
+          {t(getTranslationKey(jsonField.name, parentName))}:{' '}
+          {isEmailValid(jsonField.value) ? <EmailLink email={jsonField.value} /> : <span>{jsonField.value}</span>}
         </p>
       )
     case 'Date':
       return (
         <p>
-          {t(getTranslationKey())}: {new Date(jsonField.value).toLocaleDateString('de')}
+          {t(getTranslationKey(jsonField.name, parentName))}: {new Date(jsonField.value).toLocaleDateString('de')}
         </p>
       )
     case 'Number':
       return (
         <p>
-          {t(getTranslationKey())}: {jsonField.value}
+          {t(getTranslationKey(jsonField.name, parentName))}: {jsonField.value}
         </p>
       )
     case 'Boolean':
       return (
         <p>
-          {t(getTranslationKey())}:&nbsp;
+          {t(getTranslationKey(jsonField.name, parentName))}:&nbsp;
           {jsonField.value ? (
             <>
               <Icon icon='tick' intent='success' /> Ja
@@ -127,7 +133,7 @@ const JsonFieldElemental = ({
         </p>
       )
     case 'Attachment':
-      return <JsonFieldAttachment jsonField={jsonField} {...rest} />
+      return <JsonFieldAttachment jsonField={jsonField} parentName={parentName} {...rest} />
   }
 }
 

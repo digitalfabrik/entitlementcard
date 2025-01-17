@@ -65,6 +65,38 @@ export const getExtensions = ({ extensions }: Card): ExtensionWithState[] => {
   })
 }
 
+export type SerializedCard = {
+  id: number
+  fullName: string
+  expirationDate: string | null
+  extensions: { [key: string]: string }
+}
+export const serializeCard = (card: Card): SerializedCard => ({
+  id: card.id,
+  fullName: card.fullName,
+  expirationDate: card.expirationDate?.formatISO() ?? null,
+  extensions: getExtensions(card).reduce(
+    (acc, extension) => ({
+      ...acc,
+      [extension.extension.name]: extension.extension.serialize(extension.state),
+    }),
+    {}
+  ),
+})
+
+export const deserializeCard = (serializedCard: SerializedCard, cardConfig: CardConfig): Card => ({
+  id: serializedCard.id,
+  fullName: serializedCard.fullName,
+  expirationDate: PlainDate.safeFrom(serializedCard.expirationDate),
+  extensions: Object.entries(serializedCard.extensions).reduce(
+    (acc, [key, value]) => ({
+      ...acc,
+      ...cardConfig.extensions.find(it => it.name === key)!.fromSerialized(value),
+    }),
+    {}
+  ),
+})
+
 export const hasInfiniteLifetime = (card: Card): boolean =>
   getExtensions(card).some(({ extension, state }) => extension.causesInfiniteLifetime(state))
 

@@ -9,14 +9,14 @@ import 'package:provider/provider.dart';
 
 class RemoveCardConfirmationDialog extends StatefulWidget {
   final DynamicUserCode userCode;
-  final CarouselController carouselController;
+  final CarouselSliderController carouselController;
 
   const RemoveCardConfirmationDialog({super.key, required this.userCode, required this.carouselController});
 
   static Future<void> show(
           {required BuildContext context,
           required DynamicUserCode userCode,
-          required CarouselController carouselController}) =>
+          required CarouselSliderController carouselController}) =>
       showDialog(
         context: context,
         builder: (_) => RemoveCardConfirmationDialog(userCode: userCode, carouselController: carouselController),

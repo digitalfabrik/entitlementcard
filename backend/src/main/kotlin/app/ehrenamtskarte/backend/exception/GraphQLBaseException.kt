@@ -13,16 +13,17 @@ import graphql.language.SourceLocation
  */
 open class GraphQLBaseException(
     val code: GraphQLExceptionCode,
-    extraExtensions: Map<String, Any> = emptyMap()
+    extraExtensions: Map<String, Any> = emptyMap(),
+    private val errorType: ErrorType = ErrorType.DataFetchingException
 ) : Exception() {
 
     override val message: String? = "Exception for GraphQL error $code was thrown."
 
-    val extensions: Map<String, Any> = extraExtensions.plus("code" to code)
+    private val extensions: Map<String, Any> = extraExtensions.plus("code" to code)
 
     fun toError(path: ResultPath? = null, location: SourceLocation? = null): GraphQLError {
         return GraphQLError.newError()
-            .errorType(ErrorType.DataFetchingException)
+            .errorType(errorType)
             .message("Error $code occurred.")
             .extensions(extensions)
             .path(path)
