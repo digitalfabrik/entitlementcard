@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/widgets/custom_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -8,17 +9,11 @@ class QrCodeCameraPermissionDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final t = context.t;
-    return AlertDialog(
-      title: Text(t.identification.cameraAccessRequired),
-      content: SingleChildScrollView(
-        child: ListBody(
-          children: <Widget>[
-            Text(t.identification.cameraAccessRequiredSettings, style: theme.textTheme.bodyMedium),
-          ],
-        ),
-      ),
+
+    return CustomAlertDialog(
+      title: t.identification.cameraAccessRequired,
+      message: t.identification.cameraAccessRequiredSettings,
       actions: <Widget>[
         TextButton(
           child: Text(t.common.cancel),

@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/widgets/custom_alert_dialog.dart';
 import 'package:flutter/material.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
@@ -8,15 +9,9 @@ class ActivationOverwriteExistingDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    return AlertDialog(
-      title: Text(t.identification.activateCurrentDeviceTitle),
-      content: SingleChildScrollView(
-        child: ListBody(
-          children: <Widget>[
-            Text(t.identification.activateCurrentDeviceDescription),
-          ],
-        ),
-      ),
+    return CustomAlertDialog(
+      title: t.identification.activateCurrentDeviceTitle,
+      message: t.identification.activateCurrentDeviceDescription,
       actions: <Widget>[
         TextButton(
           child: Text(t.common.cancel),
