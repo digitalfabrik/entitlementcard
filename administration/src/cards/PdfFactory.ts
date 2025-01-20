@@ -47,10 +47,13 @@ const fillContentAreas = async (
   deepLink: string,
   region?: Region
 ): Promise<void> => {
-  const font = await doc.embedFont(StandardFonts.Helvetica)
   pdfConfig.elements?.dynamicActivationQrCodes.forEach(configOptions =>
     pdfQrCodeElement(configOptions, { page: templatePage, qrCode: dynamicCode })
   )
+
+  const fontRegular = pdfConfig.customRegularFont
+    ? await loadCustomFontWithFallback(pdfConfig.customRegularFont, doc, StandardFonts.Helvetica)
+    : await doc.embedFont(StandardFonts.Helvetica)
 
   const fontBold = pdfConfig.customBoldFont
     ? await loadCustomFontWithFallback(pdfConfig.customBoldFont, doc, StandardFonts.HelveticaBold)
@@ -78,7 +81,7 @@ const fillContentAreas = async (
     pdfFormElement(configOptions, {
       page: templatePage,
       form,
-      font,
+      font: fontRegular,
       info: dynamicCode.value.info!,
       card,
       cardInfoHash: cardInfoHashBase64,
@@ -89,7 +92,7 @@ const fillContentAreas = async (
   pdfConfig.elements?.text.forEach(configOptions =>
     pdfTextElement(configOptions, {
       page: templatePage,
-      font: configOptions.bold ? fontBold : font,
+      font: configOptions.bold ? fontBold : fontRegular,
       info: dynamicCode.value.info!,
       card,
       cardInfoHash: cardInfoHashBase64,

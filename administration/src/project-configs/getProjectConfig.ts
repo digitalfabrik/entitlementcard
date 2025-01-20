@@ -28,6 +28,7 @@ export type PdfConfig = {
   templatePath: string | null
   issuer: string
   customBoldFont?: string
+  customRegularFont?: string
   elements?: {
     staticVerificationQrCodes?: PdfQrCodeElementProps[]
     dynamicActivationQrCodes: PdfQrCodeElementProps[]
