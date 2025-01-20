@@ -18,24 +18,24 @@ parameters:
   run_delivery_production_backend_administration:
     default: false
     type: boolean
-  run_frontend:
+  run_build_frontend:
     default: false
     type: boolean
-  run_delivery_beta_native:
+  run_delivery_beta_frontend:
     default: false
     type: boolean
-  run_delivery_production_native:
+  run_delivery_production_frontend:
     default: false
     type: boolean
-  run_promote_native:
+  run_promotion_frontend:
     default: false
     type: boolean
-  run_promote_backend_administration:
+  run_promotion_backend_administration:
     default: false
     type: boolean
   run_delivery_beta_all:
     default: false
     type: boolean
-  run_promote_all:
+  run_promotion_all:
     default: false
     type: boolean

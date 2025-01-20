@@ -1,7 +1,7 @@
 # Manual releases
 
 > The deployment is done by the [Digitalfabrik](https://github.com/digitalfabrik/) and restricted by permissions.
-> Reach out to [@maxammann](https://github.com/maxammann/) or [@ztefanie](https://github.com/ztefanie/) or [@f1sh1918](https://github.com/f1sh1918/) for more information and insights.
+> Reach out to [@seluianova](https://github.com/seluianova/) or [@steffenkleinle](https://github.com/steffenkleinle/) or [@f1sh1918](https://github.com/f1sh1918/) for more information and insights.
 > This article is about manual releases.
 > Further information to our release workflows can be found [CI/CD](./cicd.md)
 ## Certificates and Signing

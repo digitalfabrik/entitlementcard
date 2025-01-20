@@ -1,4 +1,4 @@
-when: << pipeline.parameters.run_promote_native >>
+when: << pipeline.parameters.run_promotion_all >>
 jobs:
   - promote_android:
       name: promote_bayern_android
@@ -24,3 +24,10 @@ jobs:
       context:
         - mattermost
         - tuerantuer-apple
+  - promote_to_server:
+      name: promote_backend_administration
+      context:
+        - credentials-ehrenamtskarte
+  - promote_github_release:
+      context:
+        - deliverino

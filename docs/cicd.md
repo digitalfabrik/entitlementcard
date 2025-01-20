@@ -13,19 +13,19 @@
 
 Several workflows exist for different purposes:
 
-| Workflow                                   | Schedule/Trigger | Checks              | native delivery | backend_administration delivery | Version bump       |
-|--------------------------------------------|------------------|---------------------|-----------------|---------------------------------|--------------------|
-| commit                                     | commits of PRs   | :heavy_check_mark:  | :x:             | :x:                             | :x:                |
-| commit_main                                | commits on main  | :heavy_check_mark:  | :x:             | :x:                             | :x:                |
-| delivery_beta_all                          | manual           | :heavy_check_mark:  | beta            | beta                            | :heavy_check_mark: |
-| promote_all                                | manual           | :x:                 | promotion       | promotion                       | :x:                |
-| delivery_beta_backend_administration       | manual           | :heavy_check_mark:  | :x:             | beta                            | :heavy_check_mark: |
-| promote_backend_administration             | manual           | :x:                 | :x:             | promotion                       | :x:                |
-| delivery_beta_native                       | manual           | :heavy_check_mark:  | beta            | :x:                             | :heavy_check_mark: |
-| promote_native                             | manual           | :x:                 | production      | :x:                             | :x:                |
-| delivery_native_production                 | manual           | :heavy_check_mark:  | production      | :x:                             | :heavy_check_mark: |
-| delivery_production_backend_administration | manual           | :heavy_check_mark:  | :x:             | production                      | :heavy_check_mark: |
-| frontend                                   | manual (testing) | :x:                 | :x:             | :x:                             | :x:                |
+| Workflow                                   | Schedule/Trigger | Checks              | frontend delivery | backend_administration delivery | Version bump       |
+|--------------------------------------------|------------------|---------------------|-------------------|---------------------------------|--------------------|
+| commit                                     | commits of PRs   | :heavy_check_mark:  | :x:               | :x:                             | :x:                |
+| commit_main                                | commits on main  | :heavy_check_mark:  | :x:               | :x:                             | :x:                |
+| delivery_beta_all                          | manual           | :heavy_check_mark:  | beta              | beta                            | :heavy_check_mark: |
+| promotion_all                              | manual           | :x:                 | promotion         | promotion                       | :x:                |
+| delivery_beta_backend_administration       | manual           | :heavy_check_mark:  | :x:               | beta                            | :heavy_check_mark: |
+| promotion_backend_administration           | manual           | :x:                 | :x:               | promotion                       | :x:                |
+| delivery_beta_frontend                     | manual           | :heavy_check_mark:  | beta              | :x:                             | :heavy_check_mark: |
+| promotion_frontend                         | manual           | :x:                 | production        | :x:                             | :x:                |
+| delivery_production_frontend               | manual           | :heavy_check_mark:  | production        | :x:                             | :heavy_check_mark: |
+| delivery_production_backend_administration | manual           | :heavy_check_mark:  | :x:               | production                      | :heavy_check_mark: |
+| build_frontend                             | manual (testing) | :x:                 | :x:               | :x:                             | :x:                |
 
 Steps executed if _Checks_ is checked :heavy_check_mark::
 
@@ -53,14 +53,14 @@ Steps executed if _Checks_ is checked :heavy_check_mark::
 
 For `commit_main` additionally all packages will be build and and backend health check will be done
 
-Steps executed if _Version bump_ is checked :heavy_check_mark::
-
 ## Failed Delivery
+If the reason for a delivery to fail was just a transient error that was fixed in the meantime and doesn't require a code change
+(e.g. network error, API down, problems in the stores), you can use the `Restart Workflow from Failed` and in the best case the workflow should finish now.
 
-In case a delivery fails, please do not restart the workflow, but trigger a fresh release, to avoid another failure and version inconsistencies.
+In other cases, please do not restart the workflow, but trigger a fresh release, to avoid another failure and version inconsistencies.
 
 In that case you can add a bugfix on the release branch or base a hotfix branch on the release branch and commit your fix there.
-Then you can [trigger a delivery](#triggering-a-delivery). It is possible to either just execute `delivery_beta_native` or
+Then you can [trigger a delivery](#triggering-a-delivery). It is possible to either just execute `delivery_beta_frontend` or
 `delivery_beta_backend_administration` or just run the whole `delivery_beta_all` workflow again.
 
 ## Triggering a Delivery
@@ -113,7 +113,7 @@ For delivery an [account without 2FA](https://github.com/fastlane/fastlane/blob/
 
 #### Adding Testers to TestFlight
 
-The [beta_native](#workflows) makes the builds directly available to TestFlights "App Store Connect Users". Those should not be confused with "External Tests" which require an approval by apple. Therefore, we currently only use "App Store Connect Users" as testers.
+The [beta_frontend](#workflows) makes the builds directly available to TestFlights "App Store Connect Users". Those should not be confused with "External Tests" which require an approval by apple. Therefore, we currently only use "App Store Connect Users" as testers.
 
 In order to add someone as "App Store Connect User" you have to add the Apple Account to App Store Connect and to TestFlight. This is a two-step process.
 
@@ -129,7 +129,7 @@ Authentication happens by setting the `APP_STORE_CONNECT_API_KEY_CONTENT` enviro
 
 We are using BrowserStack to test ios and android apps on different mobile devices.
 Currently, we upload builds manually.
-Checkout passbold for credentials to log in.
+Checkout passbolt for credentials to log in.
 
 ## Fastlane
 
@@ -171,15 +171,15 @@ The next version of the app must be determined programmatically.
 ### Android Variables
 
 | Variable                        | Description                                                                                                | Where do I get it from?                                                  | Example                                           | Reference                                                                                              |
-|---------------------------------|------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------|---------------------------------------------------| ------------------------------------------------------------------------------------------------------ |
+|---------------------------------|------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------|---------------------------------------------------|--------------------------------------------------------------------------------------------------------|
 | GOOGLE_SERVICE_ACCOUNT_JSON     | JSON for authentication in the Google Play Console as Release Manager. This should expire after two years. | Password Manager                                                         | {...}                                             | [Service Account Docu](https://cloud.google.com/iam/docs/creating-managing-service-account-keys?hl=de) |
 | CREDENTIALS_DIRECTORY_PATH      | Path where the credentials Git repository cloned to automatically by FL                                    | The developer can choose this freely                                     | /home/circleci/credentials                        | -                                                                                                      |
 | CREDENTIALS_KEYSTORE_PATH       | Path to the OpenSSL AES256-CBC encrypted Java Keystore file                                                | -                                                                        | /home/circleci/credentials/<secret>.enc           | Look for the `openssl enc` command in the Android Fastlane file for more information                   |
 | KEYSTORE_PATH                   | Path to the decrypted Java Keystore file                                                                   | -                                                                        | /home/circleci/keystore.jks                       | -                                                                                                      |
 | CREDENTIALS_KEYSTORE_PASSWORD   | Password for decrypting the keystore using OpenSSL                                                         |                                                                          | password                                          | -                                                                                                      |
-| KEYSTORE_KEY_ALIAS_BAYERN       | Alias of the key within the Java Keystore                                                                  | You should look in the JKS file using `keytool -list -v -keystore <jks>` |                                                   |                                                                                                        |
-| KEYSTORE_KEY_ALIAS_NUERNBERG    | Alias of the key within the Java Keystore                                                                  | You should look in the JKS file using `keytool -list -v -keystore <jks>` |                                                   |                                                                                                        |
-| KEYSTORE_KEY_ALIAS_KOBLENZ      | Alias of the key within the Java Keystore                                                                  | You should look in the JKS file using `keytool -list -v -keystore <jks>` |                                                   |                                                                                                        |
+| KEYSTORE_KEY_ALIAS_BAYERN       | Alias of the key within the Java Keystore                                                                  | You should look in the JKS file using `keytool -list -v -keystore <jks>` |                                                   | [App credentials](https://github.com/digitalfabrik/app-credentials/blob/main/README.md)                |
+| KEYSTORE_KEY_ALIAS_NUERNBERG    | Alias of the key within the Java Keystore                                                                  | You should look in the JKS file using `keytool -list -v -keystore <jks>` |                                                   | [App credentials](https://github.com/digitalfabrik/app-credentials/blob/main/README.md)                |
+| KEYSTORE_KEY_ALIAS_KOBLENZ      | Alias of the key within the Java Keystore                                                                  | You should look in the JKS file using `keytool -list -v -keystore <jks>` |                                                   | [App credentials](https://github.com/digitalfabrik/app-credentials/blob/main/README.md)                |
 | KEYSTORE_KEY_PASSWORD_BAYERN    | Password of the key within the Java Keystore                                                               | Password Manager                                                         |                                                   |                                                                                                        |
 | KEYSTORE_KEY_PASSWORD_NUERNBERG | Password of the key within the Java Keystore                                                               | Password Manager                                                         |                                                   |                                                                                                        |
 | KEYSTORE_KEY_PASSWORD_KOBLENZ   | Password of the key within the Java Keystore                                                               | Password Manager                                                         |                                                   |                                                                                                        |
