@@ -19,7 +19,7 @@ import java.nio.charset.StandardCharsets
 
 object Mailer {
     private const val DO_NOT_ANSWER_MESSAGE =
-        "Dies ist eine automatisierte Nachricht. Bitte antworten Sie nicht auf diese Email."
+        "Bitte beachten Sie, dass dies eine automatisierte Nachricht ist. Antworten auf diese E-Mail werden nicht gelesen."
 
     private fun EmailBody.adjustNotificationsParagraph(projectConfig: ProjectConfig) {
         p {
@@ -199,6 +199,36 @@ object Mailer {
                 link(URL("${projectConfig.administrationBaseUrl}/antrag-einsehen/${urlEncode(accessKey)}"))
             }
             p { +"Bei Rückfragen zum Bearbeitungsstand wenden Sie sich bitte an Ihr örtliches Landratsamt bzw. die Verwaltung Ihrer kreisfreien Stadt." }
+            p { +DO_NOT_ANSWER_MESSAGE }
+            p { +"- ${projectConfig.administrationName}" }
+        }
+        sendMail(
+            backendConfig,
+            projectConfig.smtp,
+            projectConfig.administrationName,
+            personalData.emailAddress.email,
+            subject,
+            message
+        )
+    }
+
+    fun sendApplicationMailToContactPerson(
+        backendConfig: BackendConfiguration,
+        projectConfig: ProjectConfig,
+        contactPerson: String,
+        personalData: PersonalData,
+        accessKey: String
+    ) {
+        val subject = "Antrag erfolgreich eingereicht"
+        val message = emailBody {
+            p { +"Sehr geehrte/r $contactPerson," }
+            p { +"Ihr Antrag auf die Bayerische Ehrenamtskarte für ${personalData.forenames.shortText} ${personalData.surname.shortText} wurde erfolgreich eingereicht." }
+            p {
+                +"Den aktuellen Status Ihres Antrags können sie jederzeit unter folgendem Link einsehen. Dort haben Sie auch die Möglichkeit, Ihren Antrag bei Bedarf zurückzuziehen:"
+                br()
+                link(URL("${projectConfig.administrationBaseUrl}/antrag-einsehen/${urlEncode(accessKey)}"))
+            }
+            p { +"Bei Rückfragen wenden Sie sich bitte direkt an Ihr zuständiges Landratsamt oder die Verwaltung Ihrer kreisfreien Stadt." }
             p { +DO_NOT_ANSWER_MESSAGE }
             p { +"- ${projectConfig.administrationName}" }
         }
