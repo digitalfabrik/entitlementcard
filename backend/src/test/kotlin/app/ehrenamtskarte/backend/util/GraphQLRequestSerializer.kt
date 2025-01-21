@@ -9,7 +9,7 @@ object GraphQLRequestSerializer {
 
     /**
      * Serialize object into graphql request format
-     * e.g. { property: "value" }
+     * e.g. { stringProperty: "value", intProperty: 123, objectProperty: { booleanProperty: true } }
      */
     fun serializeObject(obj: Any): String {
         return obj::class.declaredMemberProperties.filter { it.visibility == KVisibility.PUBLIC }
