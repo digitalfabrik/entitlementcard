@@ -75,7 +75,7 @@
     "limitReached": "Ihr Kartenlimit wurde erreicht. Bitte entfernen Sie vorher eine Karte, damit Sie eine neue aktivieren können.",
     "buttonText": "Karte aktivieren",
     "invalidCode": "Ihr Aktivierungscode ist ungültig.",
-    "alreadyExists": "Diese Karte wurde bereits auf dem Gerät aktiviert.",
+    "alreadyExists": "Diese Karte wurde bereits auf diesem Gerät aktiviert.",
     "activationSuccessful": "Die Aktivierung war erfolgreich.",
     "activationInvalid": "Die Aktivierung befindet sich in einem ungültigen Zustand."
   },
