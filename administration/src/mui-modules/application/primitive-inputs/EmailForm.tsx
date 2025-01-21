@@ -26,7 +26,7 @@ const EmailForm: Form<State, ValidatedInput, AdditionalProps> = {
     if (!isEmailValid(email)) {
       return {
         type: 'error',
-        message: `Ungültige E-Mail.`,
+        message: `E-Mail-Adresse ist ungültig.`,
       }
     }
     return { type: 'valid', value: { email } }
