@@ -20,7 +20,7 @@ type ErrorExtensions = {
   [key: string]: unknown
 }
 
-const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
+const graphQlErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
   const defaultError = { title: 'Etwas ist schief gelaufen.' }
 
   if (!extensions || extensions.code === undefined) {
@@ -128,4 +128,4 @@ const defaultErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
   }
 }
 
-export default defaultErrorMap
+export default graphQlErrorMap
