@@ -1,5 +1,7 @@
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 @immutable
 class Paragraph {
@@ -47,9 +49,22 @@ List<Widget> getDisclaimerText(BuildContext context) {
 }
 
 List<Widget> getPublisherText(BuildContext context) {
-  return toWidgets(Theme.of(context), [
-    Paragraph(
-      content: buildConfig.publisherText,
-    )
-  ]);
+  return [
+    Html(
+      data: buildConfig.publisherText,
+      style: {
+        'li': Style(
+          padding: HtmlPaddings.only(left: 10),
+        ),
+        'ul': Style(
+          padding: HtmlPaddings.only(left: 20),
+        ),
+      },
+      onLinkTap: (url, attributes, element) {
+        if (url != null) {
+          launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+        }
+      },
+    ),
+  ];
 }
