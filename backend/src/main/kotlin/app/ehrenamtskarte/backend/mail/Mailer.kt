@@ -18,8 +18,16 @@ import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 object Mailer {
-    private const val DO_NOT_ANSWER_MESSAGE =
-        "Bitte beachten Sie, dass dies eine automatisierte Nachricht ist. Antworten auf diese E-Mail werden nicht gelesen."
+    private fun EmailBody.finalInformationParagraph(projectConfig: ProjectConfig) {
+        p {
+            +"Bitte beachten Sie, dass dies eine automatisierte Nachricht ist. Antworten auf diese E-Mail werden nicht gelesen."
+            br()
+            br()
+            +"Mit freundlichen Grüßen"
+            br()
+            +"- ${projectConfig.administrationName}"
+        }
+    }
 
     private fun EmailBody.adjustNotificationsParagraph(projectConfig: ProjectConfig) {
         p {
@@ -98,8 +106,7 @@ object Mailer {
             p { +"ein neuer Antrag liegt in ${projectConfig.administrationName} vor." }
             viewApplicationsParagraph(projectConfig)
             adjustNotificationsParagraph(projectConfig)
-            p { +DO_NOT_ANSWER_MESSAGE }
-            p { +"- ${projectConfig.administrationName}" }
+            finalInformationParagraph(projectConfig)
         }
 
         for (recipient: AdministratorEntity in recipients) {
@@ -129,8 +136,7 @@ object Mailer {
             p { +"ein Antrag wurde verifiziert." }
             viewApplicationsParagraph(projectConfig)
             adjustNotificationsParagraph(projectConfig)
-            p { +DO_NOT_ANSWER_MESSAGE }
-            p { +"- ${projectConfig.administrationName}" }
+            finalInformationParagraph(projectConfig)
         }
 
         for (recipient: AdministratorEntity in recipients) {
@@ -169,8 +175,7 @@ object Mailer {
                 br()
                 link(verificationLink)
             }
-            p { +DO_NOT_ANSWER_MESSAGE }
-            p { +"- ${projectConfig.administrationName}" }
+            finalInformationParagraph(projectConfig)
         }
 
         sendMail(
@@ -199,8 +204,7 @@ object Mailer {
                 link(URL("${projectConfig.administrationBaseUrl}/antrag-einsehen/${urlEncode(accessKey)}"))
             }
             p { +"Bei Rückfragen zum Bearbeitungsstand wenden Sie sich bitte an Ihr örtliches Landratsamt bzw. die Verwaltung Ihrer kreisfreien Stadt." }
-            p { +DO_NOT_ANSWER_MESSAGE }
-            p { +"- ${projectConfig.administrationName}" }
+            finalInformationParagraph(projectConfig)
         }
         sendMail(
             backendConfig,
@@ -229,8 +233,7 @@ object Mailer {
                 link(URL("${projectConfig.administrationBaseUrl}/antrag-einsehen/${urlEncode(accessKey)}"))
             }
             p { +"Bei Rückfragen wenden Sie sich bitte direkt an Ihr zuständiges Landratsamt oder die Verwaltung Ihrer kreisfreien Stadt." }
-            p { +DO_NOT_ANSWER_MESSAGE }
-            p { +"- ${projectConfig.administrationName}" }
+            finalInformationParagraph(projectConfig)
         }
         sendMail(
             backendConfig,
@@ -260,8 +263,7 @@ object Mailer {
                 link(URL("${projectConfig.administrationBaseUrl}/reset-password?email=$encodedRecipient&token=$encodedResetKey"))
             }
             p { +"Dieser Link ist 24 Stunden gültig." }
-            p { +DO_NOT_ANSWER_MESSAGE }
-            p { +"- ${projectConfig.administrationName}" }
+            finalInformationParagraph(projectConfig)
         }
 
         sendMail(
@@ -296,8 +298,7 @@ object Mailer {
                 link(URL(passwordResetLink))
             }
             p { +"Dieser Link ist 24 Stunden gültig." }
-            p { +DO_NOT_ANSWER_MESSAGE }
-            p { +"- ${projectConfig.administrationName}" }
+            finalInformationParagraph(projectConfig)
         }
 
         sendMail(
@@ -334,8 +335,7 @@ object Mailer {
                 +"Hinweis: Die Vorab-Aktivierung wird nicht von allen Endgeräten unterstützt. "
                 +"Falls der Vorgang fehlschlägt, warten Sie bitte auf das offizielle Schreiben."
             }
-            p { +DO_NOT_ANSWER_MESSAGE }
-            p { +"- ${projectConfig.administrationName}" }
+            finalInformationParagraph(projectConfig)
         }
 
         sendMail(
