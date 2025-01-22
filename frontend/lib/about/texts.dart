@@ -53,12 +53,10 @@ List<Widget> getPublisherText(BuildContext context) {
     Html(
       data: buildConfig.publisherText,
       style: {
-        'li': Style(
-          padding: HtmlPaddings.only(left: 10),
-        ),
-        'ul': Style(
-          padding: HtmlPaddings.only(left: 20),
-        ),
+        'p': Style(margin: Margins.only(bottom: 10)),
+        'h4': Style(margin: Margins.only(bottom: 10)),
+        'li': Style(padding: HtmlPaddings.only(left: 10)),
+        'ul': Style(padding: HtmlPaddings.only(left: 20)),
       },
       onLinkTap: (url, attributes, element) {
         if (url != null) {
