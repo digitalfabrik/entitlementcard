@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/map/map/attribution_dialog_item.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -41,9 +42,9 @@ class AttributionDialog extends StatelessWidget {
         AttributionDialogItem(
           icon: Icons.copyright,
           color: color,
-          text: 'LBE Bayern',
+          text: buildConfig.mapAttribution.text,
           onPressed: () {
-            launchUrlString('https://www.lbe.bayern.de/', mode: LaunchMode.externalApplication);
+            launchUrlString(buildConfig.mapAttribution.url, mode: LaunchMode.externalApplication);
           },
         )
       ],

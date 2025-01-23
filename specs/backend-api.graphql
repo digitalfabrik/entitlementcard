@@ -58,6 +58,7 @@ type ApiTokenMetaData {
   creatorEmail: String!
   expirationDate: String!
   id: Int!
+  type: ApiTokenType!
 }
 
 type ApplicationVerificationView {
@@ -97,6 +98,7 @@ type CardStatisticsResultModel {
 }
 
 type CardVerificationResultModel {
+  extendable: Boolean!
   valid: Boolean!
   verificationTimeStamp: String!
 }
@@ -239,7 +241,7 @@ type Query {
   searchAcceptingStoresInProject(params: SearchParamsInput!, project: String!): [AcceptingStore!]!
   "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid and a timestamp of the last check"
   verifyCardInProject(card: CardVerificationModelInput!, project: String!): Boolean! @deprecated(reason : "Deprecated since May 2023 in favor of CardVerificationResultModel that return a current timestamp, replace with verifyCardInProjectV2")
-  "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid and a timestamp of the last check"
+  "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid, extendable and a timestamp of the last check"
   verifyCardInProjectV2(card: CardVerificationModelInput!, project: String!): CardVerificationResultModel!
   "Returns the requesting administrator as retrieved from his JWT token."
   whoAmI(project: String!): Administrator!
@@ -275,6 +277,11 @@ enum ActivationState {
   failed
   revoked
   success
+}
+
+enum ApiTokenType {
+  USER_IMPORT
+  VERIFIED_APPLICATION
 }
 
 enum ApplicationType {
@@ -333,6 +340,7 @@ enum GraphQLExceptionCode {
 }
 
 enum Role {
+  EXTERNAL_VERIFIED_API_USER
   NO_RIGHTS
   PROJECT_ADMIN
   PROJECT_STORE_MANAGER
@@ -534,6 +542,7 @@ input ShortTextInput {
 input WorkAtOrganizationInput {
   amountOfWork: Float!
   certificate: AttachmentInput
+  isAlreadyVerified: Boolean
   organization: OrganizationInput!
   payment: Boolean!
   responsibility: ShortTextInput!

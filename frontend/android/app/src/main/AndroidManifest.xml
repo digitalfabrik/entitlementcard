@@ -9,7 +9,10 @@
   <application
           android:label="@string/BUILD_CONFIG_APP_NAME"
           android:icon="@mipmap/${icon}"
-          android:roundIcon="@mipmap/${icon}_round">
+          android:roundIcon="@mipmap/${icon}_round"
+          android:allowBackup="true"
+          android:fullBackupContent="@xml/full_backup_content"
+          android:dataExtractionRules="@xml/data_extraction_rules">
     <activity android:exported="true"
               android:name=".MainActivity"
               android:theme="@style/LaunchTheme"

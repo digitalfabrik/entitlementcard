@@ -10,11 +10,13 @@
 
 ## Getting Started
 
-* [Setup documentation](./docs/development-setup.md)
+* [Development Setup](./docs/development-setup.md)
 
 ## Documentation
 
-* [Production Setup](./docs/production-setup.md)
+* [Manual Releases](./docs/manual-release)
+* [CI/CD](./docs/cicd.md)
+* [Troubleshooting](./docs/troubleshooting.md)
 * [GraphQL Code Generation](./docs/graphql_generation.md)
 * [Protobuf Code Generation](./docs/protobuf-generation.md)
 * [Migrations](./docs/migrations.md)

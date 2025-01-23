@@ -15,32 +15,22 @@ class CardQueryService {
     @Deprecated("Deprecated since May 2023 in favor of CardVerificationResultModel that return a current timestamp", ReplaceWith("verifyCardInProjectV2"))
     @GraphQLDescription("Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid and a timestamp of the last check")
     fun verifyCardInProject(project: String, card: CardVerificationModel, dfe: DataFetchingEnvironment): Boolean {
-        val context = dfe.getContext<GraphQLContext>()
-        val projectConfig = context.backendConfiguration.getProjectConfig(project)
-        val cardHash = Base64.getDecoder().decode(card.cardInfoHashBase64)
-        var verificationResult = false
-
-        if (card.codeType == CodeType.STATIC) {
-            verificationResult = card.totp == null && CardVerifier.verifyStaticCard(project, cardHash, projectConfig.timezone)
-        } else if (card.codeType == CodeType.DYNAMIC) {
-            verificationResult = card.totp != null && CardVerifier.verifyDynamicCard(project, cardHash, card.totp, projectConfig.timezone)
-        }
-        Matomo.trackVerification(context.backendConfiguration, projectConfig, context.request, dfe.field.name, cardHash, card.codeType, verificationResult)
-        return false
+        return verifyCardInProjectV2(project, card, dfe).valid
     }
 
-    @GraphQLDescription("Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid and a timestamp of the last check")
+    @GraphQLDescription("Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid, extendable and a timestamp of the last check")
     fun verifyCardInProjectV2(project: String, card: CardVerificationModel, dfe: DataFetchingEnvironment): CardVerificationResultModel {
         val context = dfe.getContext<GraphQLContext>()
         val projectConfig = context.backendConfiguration.getProjectConfig(project)
         val cardHash = Base64.getDecoder().decode(card.cardInfoHashBase64)
-        var verificationResult = CardVerificationResultModel(false)
 
-        if (card.codeType == CodeType.STATIC) {
-            verificationResult = CardVerificationResultModel(card.totp == null && CardVerifier.verifyStaticCard(project, cardHash, projectConfig.timezone))
-        } else if (card.codeType == CodeType.DYNAMIC) {
-            verificationResult = CardVerificationResultModel(card.totp != null && CardVerifier.verifyDynamicCard(project, cardHash, card.totp, projectConfig.timezone))
+        val isValid = when (card.codeType) {
+            CodeType.STATIC -> card.totp == null && CardVerifier.verifyStaticCard(project, cardHash, projectConfig.timezone)
+            CodeType.DYNAMIC -> card.totp != null && CardVerifier.verifyDynamicCard(project, cardHash, card.totp, projectConfig.timezone)
         }
+
+        val verificationResult = CardVerificationResultModel(isValid, CardVerifier.isExtendable(project, cardHash))
+
         Matomo.trackVerification(context.backendConfiguration, projectConfig, context.request, dfe.field.name, cardHash, card.codeType, verificationResult.valid)
         return verificationResult
     }

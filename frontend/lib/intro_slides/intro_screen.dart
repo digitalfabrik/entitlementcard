@@ -39,8 +39,7 @@ class IntroScreen extends StatelessWidget {
           title: t.intro.welcomeTitle,
           description: t.intro.welcomeDescription,
           pathImage: buildConfig.introSlidesImages[0],
-          backgroundColor:
-              theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.colorScheme.background,
+          backgroundColor: theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.colorScheme.surface,
           maxLineTitle: 3,
           styleTitle: theme.textTheme.headlineSmall,
           styleDescription: theme.textTheme.bodyLarge?.apply(fontSizeFactor: 1.2),
@@ -49,8 +48,7 @@ class IntroScreen extends StatelessWidget {
           title: t.intro.applyTitle,
           description: t.intro.applyDescription,
           pathImage: buildConfig.introSlidesImages[1],
-          backgroundColor:
-              theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.colorScheme.background,
+          backgroundColor: theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.colorScheme.surface,
           maxLineTitle: 3,
           styleTitle: theme.textTheme.headlineSmall,
           styleDescription: theme.textTheme.bodyLarge?.apply(fontSizeFactor: 1.2),
@@ -59,16 +57,14 @@ class IntroScreen extends StatelessWidget {
           title: t.intro.usageTitle,
           description: t.intro.usageDescription,
           pathImage: buildConfig.introSlidesImages[2],
-          backgroundColor:
-              theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.colorScheme.background,
+          backgroundColor: theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.colorScheme.surface,
           maxLineTitle: 3,
           styleTitle: theme.textTheme.headlineSmall,
           styleDescription: theme.textTheme.bodyLarge?.apply(fontSizeFactor: 1.2),
         ),
         ContentConfig(
           title: t.intro.locationTitle,
-          backgroundColor:
-              theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.colorScheme.background,
+          backgroundColor: theme.brightness == Brightness.light ? const Color(0xffECECEC) : theme.colorScheme.surface,
           maxLineTitle: 3,
           styleTitle: theme.textTheme.headlineSmall,
           pathImage: buildConfig.introSlidesImages[3],

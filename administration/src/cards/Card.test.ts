@@ -140,13 +140,23 @@ describe('Card', () => {
     })
   })
 
-  it.each(['$tefan Mayer', 'Karla K.', 'Karla Karls😀', 'إئبآء؟ؤئحجرزش'])(
+  it.each(['$tefan Mayer', 'Karla Karls😀', 'إئبآء؟ؤئحجرزش'])(
     'should correctly identify invalid special characters in fullname',
     fullName => {
       const card = initializeCard(cardConfig, region, { fullName })
       expect(card.fullName).toBe(fullName)
       expect(isValueValid(card, cardConfig, 'Name')).toBeFalsy()
       expect(isValid(card)).toBeFalsy()
+    }
+  )
+
+  it.each(['Dr. Karl Lauterbach', " Mac O'Connor", 'Hans-Wilhelm Müller-Wohlfahrt'])(
+    'should correctly create a cards that contain some certain special characters in the name',
+    fullName => {
+      const card = initializeCard(cardConfig, region, { fullName })
+      expect(card.fullName).toBe(fullName)
+      expect(isValueValid(card, cardConfig, 'Name')).toBeTruthy()
+      expect(isValid(card)).toBeTruthy()
     }
   )
 
@@ -160,7 +170,7 @@ describe('Card', () => {
     }
   )
 
-  it.each(['Karla', 'Karl L'])('should correctly identify invalid fullname that is incomplete', fullName => {
+  it.each(['Karla', 'Peter'])('should correctly identify invalid fullname that is incomplete', fullName => {
     const card = initializeCard(cardConfig, region, { fullName })
     expect(isValueValid(card, cardConfig, 'Name')).toBeFalsy()
     expect(isValid(card)).toBeFalsy()

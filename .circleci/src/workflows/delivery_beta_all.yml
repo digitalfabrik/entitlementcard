@@ -110,16 +110,6 @@ jobs:
       production_delivery: false
       requires:
         - build_ios_koblenz
-  - notify_release:
-      production_delivery: false
-      context:
-        - deliverino
-      requires:
-        - deliver_android_bayern
-        - deliver_android_nuernberg
-        - deliver_ios_bayern
-        - deliver_ios_nuernberg
-        - install_packages_to_server_staging
   - check_administration
   - build_administration:
       requires:
@@ -177,3 +167,15 @@ jobs:
       requires:
         - upload_administration_packages_to_server_staging
         - upload_backend_packages_to_server_staging
+  - notify_release:
+      production_delivery: false
+      context:
+        - deliverino
+      requires:
+        - deliver_android_bayern
+        - deliver_android_nuernberg
+        - deliver_android_koblenz
+        - deliver_ios_bayern
+        - deliver_ios_nuernberg
+        - deliver_ios_koblenz
+        - install_packages_to_server_staging

@@ -1,4 +1,5 @@
 import 'package:ehrenamtskarte/configuration/configuration.dart';
+import 'package:ehrenamtskarte/identification/card_detail_view/extend_card_notification.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/more_actions_dialog.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/self_verify_card.dart';
 import 'package:ehrenamtskarte/identification/id_card/id_card_with_region_query.dart';
@@ -13,6 +14,7 @@ import 'package:ehrenamtskarte/identification/card_detail_view/verification_code
 import 'package:provider/provider.dart';
 
 class CardDetailView extends StatefulWidget {
+  final String applicationUrl;
   final DynamicUserCode userCode;
   final VoidCallback startActivation;
   final VoidCallback startVerification;
@@ -21,6 +23,7 @@ class CardDetailView extends StatefulWidget {
 
   const CardDetailView(
       {super.key,
+      required this.applicationUrl,
       required this.userCode,
       required this.startActivation,
       required this.startVerification,
@@ -60,12 +63,13 @@ class _CardDetailViewState extends State<CardDetailView> {
   Widget build(BuildContext context) {
     final orientation = MediaQuery.of(context).orientation;
 
+    final cardInfo = widget.userCode.info;
+    final cardVerification = widget.userCode.cardVerification;
+
     final paddedCard = Padding(
       padding: const EdgeInsets.all(8),
       child: IdCardWithRegionQuery(
-          cardInfo: widget.userCode.info,
-          isExpired: isCardExpired(widget.userCode.info),
-          isNotYetValid: isCardNotYetValid(widget.userCode.info)),
+          cardInfo: cardInfo, isExpired: isCardExpired(cardInfo), isNotYetValid: isCardNotYetValid(cardInfo)),
     );
     final qrCodeAndStatus = QrCodeAndStatus(
       userCode: widget.userCode,
@@ -83,7 +87,16 @@ class _CardDetailViewState extends State<CardDetailView> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Flexible(child: paddedCard),
+                    Flexible(
+                        child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        if (cardVerification.cardValid && isCardExtendable(cardInfo, cardVerification))
+                          ExtendCardNotification(applicationUrl: widget.applicationUrl),
+                        paddedCard,
+                      ],
+                    )),
                     if (constraints.maxWidth > qrCodeMinWidth * 2)
                       Flexible(child: qrCodeAndStatus)
                     else
@@ -98,12 +111,19 @@ class _CardDetailViewState extends State<CardDetailView> {
           )
         : SingleChildScrollView(
             child: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Column(children: [paddedCard, const SizedBox(height: 16), qrCodeAndStatus]),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Column(
+                children: [
+                  if (cardVerification.cardValid && isCardExtendable(cardInfo, cardVerification))
+                    ExtendCardNotification(applicationUrl: widget.applicationUrl),
+                  paddedCard,
+                  const SizedBox(height: 16),
+                  qrCodeAndStatus,
+                ],
               ),
             ),
-          );
+          ));
   }
 
   void _onMoreActionsPressed(BuildContext context) {
@@ -209,7 +229,9 @@ class QrCodeAndStatus extends StatelessWidget {
                 t.common.moreActions,
               ),
             ),
-          )
+          ),
+          // TODO 1802 Fix more actions button not displayed properly
+          const SizedBox(height: 12),
         ],
       ),
     );

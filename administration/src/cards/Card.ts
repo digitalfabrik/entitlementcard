@@ -65,6 +65,38 @@ export const getExtensions = ({ extensions }: Card): ExtensionWithState[] => {
   })
 }
 
+export type SerializedCard = {
+  id: number
+  fullName: string
+  expirationDate: string | null
+  extensions: { [key: string]: string }
+}
+export const serializeCard = (card: Card): SerializedCard => ({
+  id: card.id,
+  fullName: card.fullName,
+  expirationDate: card.expirationDate?.formatISO() ?? null,
+  extensions: getExtensions(card).reduce(
+    (acc, extension) => ({
+      ...acc,
+      [extension.extension.name]: extension.extension.serialize(extension.state),
+    }),
+    {}
+  ),
+})
+
+export const deserializeCard = (serializedCard: SerializedCard, cardConfig: CardConfig): Card => ({
+  id: serializedCard.id,
+  fullName: serializedCard.fullName,
+  expirationDate: PlainDate.safeFrom(serializedCard.expirationDate),
+  extensions: Object.entries(serializedCard.extensions).reduce(
+    (acc, [key, value]) => ({
+      ...acc,
+      ...cardConfig.extensions.find(it => it.name === key)!.fromSerialized(value),
+    }),
+    {}
+  ),
+})
+
 export const hasInfiniteLifetime = (card: Card): boolean =>
   getExtensions(card).some(({ extension, state }) => extension.causesInfiniteLifetime(state))
 
@@ -75,7 +107,7 @@ const hasValidNameLength = (fullName: string): boolean => {
 
 const hasNameAndForename = (fullName: string): boolean => {
   const names = fullName.trim().split(' ')
-  return names.length > 1 && names.every(name => name.length > 1)
+  return names.length > 1 && names.every(name => name.length > 0)
 }
 
 export const isFullNameValid = ({ fullName }: Card): boolean =>
@@ -170,7 +202,9 @@ export const initializeCardFromCSV = (
     : { fullName: '', expirationDate: null, extensions: region ? { [REGION_EXTENSION_NAME]: region.id } : {} }
   const extensions = headers.reduce((acc, header, index) => {
     const value = line[index]
-    const extension = Extensions.find(extension => extension.name === getExtensionNameByCSVHeader(cardConfig, header))
+    const extension = cardConfig.extensions.find(
+      extension => extension.name === getExtensionNameByCSVHeader(cardConfig, header)
+    )
     return extension && value != null ? Object.assign(acc, extension.fromString(value)) : acc
   }, defaultCard.extensions)
 

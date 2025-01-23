@@ -9,7 +9,7 @@ import {
 import { ReactElement, ReactNode } from 'react'
 
 import { JsonField } from '../bp-modules/applications/JsonFieldView'
-import { ActivityLog } from '../bp-modules/user-settings/ActivityLog'
+import { ActivityLogEntryType } from '../bp-modules/user-settings/ActivityLog'
 import { Card } from '../cards/Card'
 import { CreateCardsResult } from '../cards/createCards'
 import { Extension } from '../cards/extensions/extensions'
@@ -39,7 +39,7 @@ export type PdfConfig = {
 
 export type ActivityLogConfig = {
   columnNames: string[]
-  renderLogEntry: (logEntry: ActivityLog) => ReactNode
+  renderLogEntry: (logEntry: ActivityLogEntryType) => ReactNode
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -54,6 +54,7 @@ export type CardConfig<T extends readonly Extension<any>[] = readonly Extension<
 export type ApplicationFeature = {
   applicationJsonToPersonalData: (json: JsonField<'Array'>) => { forenames?: string; surname?: string } | null
   applicationJsonToCardQuery: (json: JsonField<'Array'>) => string | null
+  applicationUsableWithApiToken: boolean
 }
 
 export type CsvExport =

@@ -1,32 +1,25 @@
 import { NonIdealState, Spinner } from '@blueprintjs/core'
-import React, { ReactElement, useCallback, useContext, useMemo } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import React, { ReactElement, useContext } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 
-import { FREINET_PARAM } from '../../Router'
 import { WhoAmIContext } from '../../WhoAmIProvider'
-import { Card, initializeCardFromCSV } from '../../cards/Card'
 import { Region } from '../../generated/graphql'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import { getCsvHeaders } from '../../project-configs/helper'
 import useBlockNavigation from '../../util/useBlockNavigation'
 import GenerationFinished from './CardsCreatedMessage'
 import CreateCardsButtonBar from './CreateCardsButtonBar'
-import { convertFreinetImport } from './ImportCardsFromFreinetController'
 import ImportCardsInput from './ImportCardsInput'
 import CardImportTable from './ImportCardsTable'
 import useCardGenerator, { CardActivationState } from './hooks/useCardGenerator'
 
 const InnerImportCardsController = ({ region }: { region: Region }): ReactElement => {
   const { state, setState, generateCardsPdf, generateCardsCsv, setCards, cards } = useCardGenerator(region)
-  const projectConfig = useContext(ProjectConfigContext)
-  const headers = useMemo(() => getCsvHeaders(projectConfig), [projectConfig])
   const navigate = useNavigate()
-
-  const isFreinetFormat = new URLSearchParams(useLocation().search).get(FREINET_PARAM) === 'true'
+  const { t } = useTranslation('cards')
 
   useBlockNavigation({
     when: cards.length > 0,
-    message: 'Falls Sie fortfahren, werden alle Eingaben verworfen.',
+    message: t('dataWillBeLostWarning'),
   })
 
   const goBack = () => {
@@ -37,20 +30,10 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
     }
   }
 
-  // TODO headers or csvHeader?
-  const lineToCard = useCallback(
-    (line: string[], csvHeader: string[]): Card => {
-      if (isFreinetFormat) {
-        convertFreinetImport(line, csvHeader, projectConfig)
-      }
-      return initializeCardFromCSV(projectConfig.card, line, csvHeader, region)
-    },
-    [projectConfig, region, isFreinetFormat]
-  )
-
   if (state === CardActivationState.loading) {
     return <Spinner />
   }
+
   if (state === CardActivationState.finished) {
     return (
       <GenerationFinished
@@ -65,14 +48,9 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
   return (
     <>
       {cards.length === 0 ? (
-        <ImportCardsInput
-          setCards={setCards}
-          lineToCard={lineToCard}
-          headers={headers}
-          isFreinetFormat={isFreinetFormat}
-        />
+        <ImportCardsInput setCards={setCards} region={region} />
       ) : (
-        <CardImportTable cards={cards} cardConfig={projectConfig.card} headers={headers} />
+        <CardImportTable cards={cards} />
       )}
       <CreateCardsButtonBar
         cards={cards}
@@ -86,14 +64,9 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
 
 const ImportCardsController = (): ReactElement => {
   const { region } = useContext(WhoAmIContext).me!
+  const { t } = useTranslation('errors')
   if (!region) {
-    return (
-      <NonIdealState
-        icon='cross'
-        title='Fehlende Berechtigung'
-        description='Sie sind nicht berechtigt, Karten auszustellen.'
-      />
-    )
+    return <NonIdealState icon='cross' title={t('notAuthorized')} description={t('notAuthorizedToCreateCards')} />
   }
 
   return <InnerImportCardsController region={region} />

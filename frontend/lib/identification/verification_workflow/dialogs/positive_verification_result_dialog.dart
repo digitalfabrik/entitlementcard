@@ -1,6 +1,6 @@
 import 'package:ehrenamtskarte/identification/id_card/id_card_with_region_query.dart';
-import 'package:ehrenamtskarte/identification/info_dialog.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
+import 'package:ehrenamtskarte/widgets/custom_alert_dialog.dart';
 import 'package:flutter/material.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
@@ -41,11 +41,12 @@ class PositiveVerificationResultDialogState extends State<PositiveVerificationRe
     final theme = Theme.of(context);
 
     final bool isUncheckedStaticQrCode = !isChecked && widget.isStaticVerificationCode;
-    return InfoDialog(
+
+    return CustomAlertDialog(
       title: isUncheckedStaticQrCode ? t.identification.checkRequired : t.identification.verificationSuccessful,
       icon: isUncheckedStaticQrCode ? Icons.report : Icons.verified_user,
-      iconColor: isUncheckedStaticQrCode ? theme.colorScheme.onBackground : Colors.green,
-      child: Column(
+      iconColor: isUncheckedStaticQrCode ? theme.colorScheme.onSurface : Colors.green,
+      customContent: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Flexible(
@@ -59,10 +60,12 @@ class PositiveVerificationResultDialogState extends State<PositiveVerificationRe
           if (widget.isStaticVerificationCode)
             Flexible(
               child: Padding(
-                padding: const EdgeInsets.only(top: 16.0),
+                padding: const EdgeInsets.only(top: 8.0),
                 child: CheckboxListTile(
-                  title: Text(t.identification.comparedWithID, style: theme.textTheme.bodyLarge),
+                  title: Text(t.identification.comparedWithID, style: theme.textTheme.bodySmall),
                   controlAffinity: ListTileControlAffinity.leading,
+                  contentPadding: EdgeInsets.zero,
+                  visualDensity: VisualDensity.compact,
                   value: isChecked,
                   onChanged: (bool? value) {
                     setState(() {

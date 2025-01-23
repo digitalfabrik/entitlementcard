@@ -1,4 +1,10 @@
-import { ACTIVATION_PATH, KOBLENZ_PRODUCTION_ID, KOBLENZ_STAGING_ID } from "../constants"
+import {
+    ACTIVATION_PATH,
+    KOBLENZ_PRODUCTION_ID,
+    KOBLENZ_STAGING_ID,
+    QUERY_PARAM_BIRTHDAY, QUERY_PARAM_KOBLENZ_REFERENCE_NUMBER,
+    QUERY_PARAM_NAME
+} from '../constants'
 import BuildConfigType, { CommonBuildConfigType } from "../types"
 import disclaimerText from "./disclaimerText"
 import publisherText from "./publisherText"
@@ -27,6 +33,10 @@ export const koblenzCommon: CommonBuildConfigType = {
         staging: "https://api.staging.entitlementcard.app/project/koblenz.sozialpass.app/map",
         showcase: "https://api.entitlementcard.app/project/showcase.entitlementcard.app/map",
         local: "http://localhost:8000/project/koblenz.sozialpass.app/map",
+    },
+    mapAttribution: {
+        text: 'Stadt Koblenz',
+        url: 'https://koblenz.de/',
     },
     mapInitialCoordinatesLat: 50.3575886,
     mapInitialCoordinatesLng: 7.5846829,
@@ -78,6 +88,9 @@ export const koblenzCommon: CommonBuildConfigType = {
         staging: `https://${KOBLENZ_STAGING_ID}/erstellen`,
         local : 'http://localhost:3000/erstellen'
     },
+    applicationQueryKeyName: QUERY_PARAM_NAME,
+    applicationQueryKeyBirthday: QUERY_PARAM_BIRTHDAY,
+    applicationQueryKeyReferenceNumber: QUERY_PARAM_KOBLENZ_REFERENCE_NUMBER,
     dataPrivacyPolicyUrl: "https://koblenz.sozialpass.app/data-privacy-policy",
     publisherAddress: "Stadt Koblenz\nWilli-Hörter-Platz 1\n56068 Koblenz",
     publisherText,

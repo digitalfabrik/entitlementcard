@@ -1,6 +1,7 @@
 import { Alert, Button, H2, H4, HTMLSelect, HTMLTable } from '@blueprintjs/core'
 import Delete from '@mui/icons-material/Delete'
 import React, { ReactElement, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
@@ -49,10 +50,14 @@ const DeleteIcon = styled(Delete)`
   cursor: pointer;
 `
 
-const UserEndpointSettings = (): ReactElement => {
+type ApiTokenSettingsProps = {
+  showPepperSection: boolean
+}
+const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactElement => {
   const metaDataQuery = useGetApiTokenMetaDataQuery({})
 
   const appToaster = useAppToaster()
+  const { t } = useTranslation('projectSettings')
 
   const [tokenMetaData, setTokenMetadata] = useState<Array<ApiTokenMetaData>>([])
   const [createdToken, setCreatedToken] = useState<string | null>(null)
@@ -70,7 +75,7 @@ const UserEndpointSettings = (): ReactElement => {
 
   const [createToken] = useCreateApiTokenMutation({
     onCompleted: result => {
-      appToaster?.show({ intent: 'success', message: 'Token wurde erfolgreich erzeugt.' })
+      appToaster?.show({ intent: 'success', message: t('tokenCreateSuccessMessage') })
       setCreatedToken(result.createApiTokenPayload)
       metaDataQuery.refetch()
     },
@@ -85,7 +90,7 @@ const UserEndpointSettings = (): ReactElement => {
 
   const [deleteToken] = useDeleteApiTokenMutation({
     onCompleted: () => {
-      appToaster?.show({ intent: 'success', message: 'Token wurde erfolgreich gelöscht.' })
+      appToaster?.show({ intent: 'success', message: t('tokenDeleteSuccessMessage') })
       metaDataQuery.refetch()
     },
     onError: error => {
@@ -100,8 +105,8 @@ const UserEndpointSettings = (): ReactElement => {
   return (
     <>
       <Alert
-        cancelButtonText='Abbrechen'
-        confirmButtonText='Token löschen'
+        cancelButtonText={t('cancel')}
+        confirmButtonText={t('deleteToken')}
         icon='trash'
         intent='danger'
         isOpen={tokenToDelete !== null}
@@ -112,36 +117,33 @@ const UserEndpointSettings = (): ReactElement => {
             setTokenToDelete(null)
           }
         }}>
-        <p>Möchten Sie das Token unwiderruflich löschen?</p>
+        <p>{t('deleteTokenConfirmationPrompt')}</p>
       </Alert>
       <SettingsCard>
-        <H2>User Import Endpunkt</H2>
-        <PepperSettings />
+        <H2>{t('apiToken')}</H2>
+        {showPepperSection && <PepperSettings />}
         <Container>
-          <H4>Neues Token erstellen</H4>
-          <p>
-            Ein neu erzeugtes Token wir nur einmalig angezeigt und kann danach nicht wieder abgerufen werden. Bitte
-            speichern Sie dieses Token an einem sicheren Ort.
-          </p>
+          <H4>{t('createNewToken')}</H4>
+          <p>{t('tokenOnlyShowedOnceHint')}</p>
           <Row>
-            <label htmlFor='expiresIn'>Gültigkeitsdauer:</label>
+            <label htmlFor='expiresIn'>{t('validPeriod')}:</label>
             <HTMLSelect
               name='expiresIn'
               id='expiresIn'
               value={expiresIn}
               onChange={e => setExpiresIn(parseInt(e.target.value, 10))}>
-              <option value='1'>1 Monat</option>
-              <option value='3'>3 Monate</option>
-              <option value='12'>1 Jahr</option>
-              <option value='36'>3 Jahre</option>
+              <option value='1'>1 {t('month')}</option>
+              <option value='3'>3 {t('months')}</option>
+              <option value='12'>1 {t('year')}</option>
+              <option value='36'>3 {t('years')}</option>
             </HTMLSelect>
             <Button intent='primary' onClick={() => createToken({ variables: { expiresIn } })}>
-              Erstellen
+              {t('create')}
             </Button>
           </Row>
           {createdToken !== null && (
             <>
-              <p>Neues Token:</p>
+              <p>{t('newToken')}:</p>
               <NewTokenText> {createdToken}</NewTokenText>
             </>
           )}
@@ -151,8 +153,8 @@ const UserEndpointSettings = (): ReactElement => {
           <HTMLTable>
             <thead>
               <tr>
-                <th>E-Mail des Erstellers</th>
-                <th>Ablaufdatum</th>
+                <th>{t('eMailOfCreator')}</th>
+                <th>{t('expirationDate')}</th>
                 <th aria-label='Delete' />
               </tr>
             </thead>
@@ -174,4 +176,4 @@ const UserEndpointSettings = (): ReactElement => {
   )
 }
 
-export default UserEndpointSettings
+export default ApiTokenSettings

@@ -21,11 +21,11 @@ import WorkAtOrganizationsEntitlementForm from './WorkAtOrganizationsEntitlement
 const EntitlementTypeRadioGroupForm = createRadioGroupForm<BlueCardEntitlementType>()
 const entitlementTypeOptions: { labelByValue: { [K in BlueCardEntitlementType]: string } } = {
   labelByValue: {
-    [BlueCardEntitlementType.WorkAtOrganizations]: i18next.t('application:blueCardEntitlementType.WorkAtOrganizations'),
-    [BlueCardEntitlementType.Juleica]: i18next.t('application:blueCardEntitlementType.Juleica'),
-    [BlueCardEntitlementType.WorkAtDepartment]: i18next.t('application:blueCardEntitlementType.WorkAtDepartment'),
-    [BlueCardEntitlementType.MilitaryReserve]: i18next.t('application:blueCardEntitlementType.MilitaryReserve'),
-    [BlueCardEntitlementType.VolunteerService]: i18next.t('application:blueCardEntitlementType.VolunteerService'),
+    [BlueCardEntitlementType.WorkAtOrganizations]: i18next.t('application:blueCardWorkAtOrganizationsEntitlement'),
+    [BlueCardEntitlementType.Juleica]: i18next.t('application:blueCardJuleicaEntitlement'),
+    [BlueCardEntitlementType.WorkAtDepartment]: i18next.t('application:blueCardWorkAtDepartmentEntitlement'),
+    [BlueCardEntitlementType.MilitaryReserve]: i18next.t('application:blueCardMilitaryReserveEntitlement'),
+    [BlueCardEntitlementType.VolunteerService]: i18next.t('application:volunteerServiceEntitlement:title'),
   },
 }
 

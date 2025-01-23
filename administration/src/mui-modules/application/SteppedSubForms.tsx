@@ -115,7 +115,7 @@ const SteppedSubForms = ({
     for (let i = 0; i < index; i++) {
       if (subForms[i].validate().type === 'error') {
         setActiveStep(() => i)
-        break
+        return
       }
     }
     setActiveStep(() => index)

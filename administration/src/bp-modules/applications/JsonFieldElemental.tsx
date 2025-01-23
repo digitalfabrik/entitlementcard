@@ -6,8 +6,10 @@ import styled from 'styled-components'
 import { AuthContext } from '../../AuthProvider'
 import downloadDataUri from '../../util/downloadDataUri'
 import { useAppToaster } from '../AppToaster'
+import EmailLink from '../EmailLink'
 import { printAwareCss } from './ApplicationCard'
 import { GeneralJsonField, JsonField, JsonFieldViewProps } from './JsonFieldView'
+import { isEmailValid } from './utils/verificationHelper'
 
 const extensionByContentType = new Map([
   ['application/pdf', 'pdf'],
@@ -26,8 +28,12 @@ const PrintOnlySpan = styled.span`
   }
 `
 
+// Some field names are equal therefore the parents are needed for resolving the label
+const getTranslationKey = (fieldName: string, parentName?: string) =>
+  parentName ? `${parentName}.${fieldName}` : fieldName
+
 const JsonFieldAttachment = memo(
-  ({ jsonField, baseUrl, attachmentAccessible }: JsonFieldViewProps<JsonField<'Attachment'>>) => {
+  ({ jsonField, baseUrl, attachmentAccessible, parentName }: JsonFieldViewProps<JsonField<'Attachment'>>) => {
     const appToaster = useAppToaster()
     const token = useContext(AuthContext).data?.token
     const { t } = useTranslation('application')
@@ -37,7 +43,7 @@ const JsonFieldAttachment = memo(
       const downloadUrl = `${baseUrl}/file/${attachment.fileIndex}`
       const onClick = async () => {
         const loadingToastKey = appToaster?.show({
-          message: `Lade Anhang ${attachment.fileIndex + 1}...`,
+          message: `${t('applications:loadAttachment')} ${attachment.fileIndex + 1}...`,
           intent: 'primary',
           isCloseButtonShown: false,
         })
@@ -49,13 +55,15 @@ const JsonFieldAttachment = memo(
           } else if (contentType === null || !extensionByContentType.has(contentType)) {
             throw Error('Invalid Content Type')
           }
-          const filename = `anhang${attachment.fileIndex + 1}.${extensionByContentType.get(contentType)}`
+          const filename = `${t('applications:attachment')}${attachment.fileIndex + 1}.${extensionByContentType.get(
+            contentType
+          )}`
           const arrayBuffer = await result.arrayBuffer()
           const file = new File([arrayBuffer], filename, { type: contentType })
           downloadDataUri(file, filename)
         } catch (e) {
           console.error(e)
-          appToaster?.show({ message: 'Etwas ist schiefgelaufen.', intent: 'danger' })
+          appToaster?.show({ message: t('errors:unknown'), intent: 'danger' })
         } finally {
           if (loadingToastKey !== undefined) {
             appToaster?.dismiss(loadingToastKey)
@@ -64,21 +72,21 @@ const JsonFieldAttachment = memo(
       }
       return (
         <p>
-          {t(jsonField.name)}:&nbsp;
+          {t(getTranslationKey(jsonField.name, parentName))}:&nbsp;
           <PrintAwareTag
             round
             rightIcon={<Icon icon='download' color={Colors.GRAY1} />}
             interactive
             minimal
-            onClick={onClick}>{`Anhang ${jsonField.value.fileIndex + 1}`}</PrintAwareTag>
-          <PrintOnlySpan>{`(siehe Anhang ${jsonField.value.fileIndex + 1})`}</PrintOnlySpan>
+            onClick={onClick}>{`${t('applications:attachment')} ${jsonField.value.fileIndex + 1}`}</PrintAwareTag>
+          <PrintOnlySpan>{`(${t('applications:seeAttachment')} ${jsonField.value.fileIndex + 1})`}</PrintOnlySpan>
         </p>
       )
     }
     return (
       <p>
-        {t(jsonField.name)}:&nbsp;
-        <span>eingereicht, nicht sichtbar</span>
+        {t(getTranslationKey(jsonField.name, parentName))}:&nbsp;
+        <span>{t('applications:submittedButNotVisible')}</span>
       </p>
     )
   }
@@ -90,44 +98,44 @@ const JsonFieldElemental = ({
   ...rest
 }: JsonFieldViewProps<Exclude<GeneralJsonField, JsonField<'Array'>>>) => {
   const { t } = useTranslation('application')
-  const getTranslationKey = () => (parentName ? `${parentName}.${jsonField.name}` : jsonField.name)
 
   switch (jsonField.type) {
     case 'String':
       return (
         <p>
-          {t(getTranslationKey())}: {jsonField.value}
+          {t(getTranslationKey(jsonField.name, parentName))}:{' '}
+          {isEmailValid(jsonField.value) ? <EmailLink email={jsonField.value} /> : <span>{jsonField.value}</span>}
         </p>
       )
     case 'Date':
       return (
         <p>
-          {t(getTranslationKey())}: {new Date(jsonField.value).toLocaleDateString('de')}
+          {t(getTranslationKey(jsonField.name, parentName))}: {new Date(jsonField.value).toLocaleDateString('de')}
         </p>
       )
     case 'Number':
       return (
         <p>
-          {t(getTranslationKey())}: {jsonField.value}
+          {t(getTranslationKey(jsonField.name, parentName))}: {jsonField.value}
         </p>
       )
     case 'Boolean':
       return (
         <p>
-          {t(getTranslationKey())}:&nbsp;
+          {t(getTranslationKey(jsonField.name, parentName))}:&nbsp;
           {jsonField.value ? (
             <>
-              <Icon icon='tick' intent='success' /> Ja
+              <Icon icon='tick' intent='success' /> {t('positiveAnswer')}
             </>
           ) : (
             <>
-              <Icon icon='cross' intent='danger' /> Nein
+              <Icon icon='cross' intent='danger' /> {t('negativeAnswer')}
             </>
           )}
         </p>
       )
     case 'Attachment':
-      return <JsonFieldAttachment jsonField={jsonField} {...rest} />
+      return <JsonFieldAttachment jsonField={jsonField} parentName={parentName} {...rest} />
   }
 }
 

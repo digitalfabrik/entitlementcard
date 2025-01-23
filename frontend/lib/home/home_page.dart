@@ -18,8 +18,9 @@ const identityTabIndex = 2;
 
 class HomePage extends StatefulWidget {
   final int? initialTabIndex;
+  final int? initialCardIndex;
 
-  const HomePage({super.key, this.initialTabIndex});
+  const HomePage({super.key, this.initialTabIndex, this.initialCardIndex});
 
   @override
   HomePageState createState() => HomePageState();
@@ -63,7 +64,7 @@ class HomePageState extends State<HomePage> {
         ),
       if (buildConfig.featureFlags.verification)
         AppFlow(
-          IdentificationPage(),
+          IdentificationPage(initialCardIndex: widget.initialCardIndex),
           Icons.credit_card,
           (BuildContext context) => t.identification.title,
           GlobalKey<NavigatorState>(debugLabel: 'Auth tab key'),
@@ -108,7 +109,7 @@ class HomePageState extends State<HomePage> {
     final theme = Theme.of(context);
     return BottomNavigationBar(
       currentIndex: _currentTabIndex,
-      backgroundColor: theme.colorScheme.surfaceVariant,
+      backgroundColor: theme.colorScheme.surfaceContainerHighest,
       items: appFlows
           .map((appFlow) => BottomNavigationBarItem(icon: Icon(appFlow.iconData), label: appFlow.getTitle(context)))
           .toList(),
