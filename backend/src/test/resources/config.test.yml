@@ -19,7 +19,7 @@ projects:
   - id: bayern.ehrenamtskarte.app
     importUrl: dummy
     pipelineName: dummy
-    administrationBaseUrl: dummy
+    administrationBaseUrl: https://test.app
     administrationName: dummy
     timezone: "Europe/Berlin"
     selfServiceEnabled: false

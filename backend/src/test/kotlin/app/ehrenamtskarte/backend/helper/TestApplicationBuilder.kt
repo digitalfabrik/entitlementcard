@@ -18,7 +18,14 @@ import app.ehrenamtskarte.backend.application.webservice.schema.create.primitive
 
 class TestApplicationBuilder {
     companion object {
-        fun build(isAlreadyVerified: Boolean): Application {
+        fun build(
+            isAlreadyVerified: Boolean,
+            applicationType: ApplicationType = ApplicationType.FIRST_APPLICATION,
+            cardType: BavariaCardType = BavariaCardType.BLUE,
+            wantsDigitalCard: Boolean = true,
+            wantsPhysicalCard: Boolean = false,
+            category: String = "Sport"
+        ): Application {
             return Application(
                 personalData = PersonalData(
                     forenames = ShortTextInput("John"),
@@ -36,13 +43,13 @@ class TestApplicationBuilder {
                     emailAddress = EmailInput("johndoe@example.com")
                 ),
                 applicationDetails = ApplicationDetails(
-                    applicationType = ApplicationType.FIRST_APPLICATION,
-                    cardType = BavariaCardType.BLUE,
+                    applicationType = applicationType,
+                    cardType = cardType,
                     givenInformationIsCorrectAndComplete = true,
                     hasAcceptedEmailUsage = true,
                     hasAcceptedPrivacyPolicy = true,
-                    wantsDigitalCard = true,
-                    wantsPhysicalCard = false,
+                    wantsDigitalCard = wantsDigitalCard,
+                    wantsPhysicalCard = wantsPhysicalCard,
                     blueCardEntitlement = BlueCardEntitlement(
                         juleicaEntitlement = null,
                         militaryReserveEntitlement = null,
@@ -61,7 +68,7 @@ class TestApplicationBuilder {
                                             country = ShortTextInput("Deutschland"),
                                             addressSupplement = null
                                         ),
-                                        category = ShortTextInput("Sport"),
+                                        category = ShortTextInput(category),
                                         contact = OrganizationContact(
                                             name = ShortTextInput("Jane Doe"),
                                             email = EmailInput("jane.doe@sportverein.de"),
