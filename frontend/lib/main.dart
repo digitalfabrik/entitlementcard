@@ -31,7 +31,9 @@ Future<void> main() async {
   // Use override locales for whitelabels (e.g. nuernberg)
   // ignore: unnecessary_null_comparison
   if (buildConfig.localeOverridePath != null) {
-    AppLocale.values.forEach(overrideLocale);
+    await Future.forEach(AppLocale.values, (locale) async {
+      await overrideLocale(locale);
+    });
   }
 
   debugPrint('Environment: $appEnvironment');
