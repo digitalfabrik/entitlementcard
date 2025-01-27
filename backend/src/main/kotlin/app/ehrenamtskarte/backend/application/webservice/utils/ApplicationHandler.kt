@@ -62,6 +62,30 @@ class ApplicationHandler(
         Mailer.sendNotificationForApplicationMails(project, backendConfig, projectConfig, regionId)
     }
 
+    fun sendPreVerifiedApplicationMails(
+        applicationEntity: ApplicationEntity,
+        verificationEntities: List<ApplicationVerificationEntity>,
+        dataFetcherResultBuilder: DataFetcherResult.Builder<Boolean>
+    ) {
+        val backendConfig = context.backendConfiguration
+        val projectConfig = backendConfig.projects.first { it.id == project }
+
+        for (applicationVerification in verificationEntities) {
+            try {
+                Mailer.sendApplicationMailToContactPerson(
+                    backendConfig,
+                    projectConfig,
+                    applicationVerification.contactName,
+                    application.personalData,
+                    applicationEntity.accessKey
+                )
+            } catch (exception: MailNotSentException) {
+                dataFetcherResultBuilder.error(exception.toError())
+            }
+        }
+        Mailer.sendNotificationForApplicationMails(project, backendConfig, projectConfig, regionId)
+    }
+
     fun validateAttachmentTypes() {
         val allowedContentTypes = setOf("application/pdf", "image/png", "image/jpeg")
         val maxFileSizeBytes = 5 * 1000 * 1000
