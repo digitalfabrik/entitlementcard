@@ -68,7 +68,6 @@ describe('useCardGenerator', () => {
     const toasterSpy = jest.spyOn(OverlayToaster.prototype, 'show')
     mocked(createCards).mockReturnValueOnce(Promise.resolve(codes))
     const { result } = renderHook(() => useCardGenerator(region), { wrapper })
-
     act(() => result.current.setCards(cards))
 
     expect(result.current.cards).toEqual(cards)
