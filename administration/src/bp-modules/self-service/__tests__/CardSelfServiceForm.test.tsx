@@ -57,7 +57,7 @@ describe('CardSelfServiceForm', () => {
     expect(createPassButton).toBeEnabled()
   })
 
-  it('should show an error message if card creation button is pressed without needed information', () => {
+  it('should show an error message if card creation button is pressed without needed information', async () => {
     const toasterSpy = jest.spyOn(OverlayToaster.prototype, 'show')
     localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, koblenzConfig.projectId)
     const { getByText } = renderWithTranslation(
@@ -74,7 +74,9 @@ describe('CardSelfServiceForm', () => {
     const createPassButton = getByText('KoblenzPass erstellen')
     expect(createPassButton).toBeTruthy()
     expect(createPassButton).toBeEnabled()
-    fireEvent.click(createPassButton)
+    await act(async () => {
+      fireEvent.click(createPassButton)
+    })
     expect(toasterSpy).toHaveBeenCalledWith({
       intent: 'danger',
       message: (
@@ -84,7 +86,7 @@ describe('CardSelfServiceForm', () => {
     })
   })
 
-  it('should no show an error message if all fields are filled correctly', async () => {
+  it('shouldn\'t show an error message if all fields are filled correctly', async () => {
     const toasterSpy = jest.spyOn(OverlayToaster.prototype, 'show')
     localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, koblenzConfig.projectId)
     const { getByText } = renderWithTranslation(
