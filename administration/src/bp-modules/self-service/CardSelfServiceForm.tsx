@@ -76,9 +76,10 @@ const CardSelfServiceForm = ({
   return (
     <>
       <Container key={card.id}>
-        <FormGroup label={t('firstNameLastName')}>
+        <FormGroup label={t('firstNameLastName')} labelFor='name-input'>
           <InputGroup
             large={viewportSmall}
+            id='name-input'
             placeholder='Erika Musterfrau'
             autoFocus
             rightElement={
@@ -101,6 +102,7 @@ const CardSelfServiceForm = ({
           {t('whereToFindReferenceNumber')}
         </IconTextButton>
         <StyledCheckbox
+          data-testid='data-privacy-checkbox'
           checked={dataPrivacyAccepted === DataPrivacyAcceptingStatus.accepted}
           onChange={() =>
             setDataPrivacyAccepted(

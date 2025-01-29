@@ -1,8 +1,8 @@
 import { act, fireEvent } from '@testing-library/react'
 import React from 'react'
 
-import { renderWithTranslation } from '../../testing/render'
-import TextAreaDialog from './TextAreaDialog'
+import { renderWithTranslation } from '../../../testing/render'
+import TextAreaDialog from '../TextAreaDialog'
 
 describe('TextAreaDialog', () => {
   const onClose = jest.fn()

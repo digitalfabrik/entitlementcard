@@ -7,7 +7,6 @@ import { ProjectConfigProvider } from '../../project-configs/ProjectConfigContex
 import bayernConfig from '../../project-configs/bayern/config'
 import { ProjectConfig, setProjectConfigOverride } from '../../project-configs/getProjectConfig'
 import koblenzConfig from '../../project-configs/koblenz/config'
-import { getCsvHeaders } from '../../project-configs/helper'
 import nuernbergConfig from '../../project-configs/nuernberg/config'
 import { renderWithRouter } from '../../testing/render'
 import PlainDate from '../../util/PlainDate'
