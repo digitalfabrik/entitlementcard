@@ -40,6 +40,7 @@ jest.mock('../../../../cards/PdfFactory', () => ({
 }))
 
 jest.mock('../../../../util/downloadDataUri')
+
 describe('useCardGeneratorSelfService', () => {
   it('should successfully create a card', async () => {
     const toasterSpy = jest.spyOn(OverlayToaster.prototype, 'show')

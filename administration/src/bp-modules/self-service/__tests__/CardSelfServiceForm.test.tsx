@@ -86,7 +86,7 @@ describe('CardSelfServiceForm', () => {
     })
   })
 
-  it('shouldn\'t show an error message if all fields are filled correctly', async () => {
+  it('should not show an error message if all fields are filled correctly', async () => {
     const toasterSpy = jest.spyOn(OverlayToaster.prototype, 'show')
     localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, koblenzConfig.projectId)
     const { getByText } = renderWithTranslation(
