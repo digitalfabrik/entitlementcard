@@ -13,7 +13,7 @@ describe('VerificationListItem', () => {
     expect(getByTestId('item-mail-label').textContent).toBe('E-Mail:')
     expect(getByTestId('item-mail-content').textContent).toBe('erika.musterfrau@posteo.de')
     expect(getByTestId('item-status-label').textContent).toBe('Status:')
-    expect(getByTestId('item-status-content').textContent).toBe(' Widersprochen am 16.1.2025, 17:22:52')
+    expect(getByTestId('item-status-content').textContent).toBe(' Widersprochen am 16.1.2025, 16:22:52')
   })
 
   it('should show a awaiting verification list item with correct content', async () => {
@@ -35,6 +35,6 @@ describe('VerificationListItem', () => {
     expect(getByTestId('item-mail-label').textContent).toBe('E-Mail:')
     expect(getByTestId('item-mail-content').textContent).toBe('erika.musterfrau@posteo.de')
     expect(getByTestId('item-status-label').textContent).toBe('Status:')
-    expect(getByTestId('item-status-content').textContent).toBe(' Bestätigt am 16.1.2025, 17:22:52')
+    expect(getByTestId('item-status-content').textContent).toBe(' Bestätigt am 16.1.2025, 16:22:52')
   })
 })
