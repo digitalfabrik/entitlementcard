@@ -12,26 +12,11 @@ import 'package:slang/overrides.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeTranslations();
 
   // support android version < 7.1.1 by adding a valid certificate - https://stackoverflow.com/questions/69511057
   if (Platform.isAndroid && await certificateIsRequired()) {
     loadCertificate();
-  }
-
-  // Only use device locale if set as available in build config, otherwise fallback to de
-  final locale = Platform.localeName.split('_')[0];
-  if (buildConfig.appLocales.contains(locale)) {
-    LocaleSettings.useDeviceLocale();
-  } else if (buildConfig.appLocales.contains('en')) {
-    LocaleSettings.setLocale(AppLocale.en);
-  } else {
-    LocaleSettings.setLocale(AppLocale.de);
-  }
-
-  // Use override locales for whitelabels (e.g. nuernberg)
-  // ignore: unnecessary_null_comparison
-  if (buildConfig.localeOverridePath != null) {
-    AppLocale.values.forEach(overrideLocale);
   }
 
   debugPrint('Environment: $appEnvironment');
@@ -44,6 +29,26 @@ Future<void> main() async {
     runAppWithSentry(run);
   } else {
     run();
+  }
+}
+
+Future<void> initializeTranslations() async {
+  // Only use device locale if set as available in build config, otherwise fallback to de
+  final locale = Platform.localeName.split('_')[0];
+  if (buildConfig.appLocales.contains(locale)) {
+    await LocaleSettings.useDeviceLocale();
+  } else if (buildConfig.appLocales.contains('en')) {
+    await LocaleSettings.setLocale(AppLocale.en);
+  } else {
+    await LocaleSettings.setLocale(AppLocale.de);
+  }
+
+  // Use override locales for whitelabels (e.g. nuernberg)
+  // ignore: unnecessary_null_comparison
+  if (buildConfig.localeOverridePath != null) {
+    Future.forEach(AppLocale.values, (locale) async {
+      await overrideLocale(locale);
+    });
   }
 }
 
