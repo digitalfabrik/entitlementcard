@@ -28,7 +28,7 @@ const VerificationQuickIndicator = memo(({ verifications }: { verifications: App
           {t('verified/pending/rejected')}
         </div>
       }>
-      <UnFocusedDiv>
+      <UnFocusedDiv data-testid='indicator-container'>
         <Indicator
           status={VerificationStatus.Verified}
           text={`: ${verificationStati.filter(v => v === VerificationStatus.Verified).length}`}

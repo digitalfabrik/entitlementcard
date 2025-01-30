@@ -26,7 +26,7 @@ const PreVerifiedQuickIndicator = memo(({ type }: { type: PreVerifiedQuickIndica
       }>
       <UnFocusedDiv>
         <Indicator status={VerificationStatus.Verified} />
-        <img src={logo} alt={type.toString()} height='100%' />
+        <img data-testid='quick-indicator-logo' src={logo} alt={type.toString()} height='100%' />
       </UnFocusedDiv>
     </Tooltip>
   )
