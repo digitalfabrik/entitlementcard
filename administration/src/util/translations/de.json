@@ -10,6 +10,7 @@
     "downloadApp": "Laden Sie sich die App <strong>{{applicationName}}</strong> im App- oder PlayStore auf Ihrem Smartphone herunter."
   },
   "application": {
+    "_comment": "!Important! These keys should not be edited, since they are stored in the database and have to remain resolvable. If you change these keys, labels of old applications can not be resolved anymore.",
     "personalData": "Persönliche Daten",
     "forenames": "Vorname(n)",
     "surname": "Nachname",
@@ -130,7 +131,6 @@
     "applicationStepSubmit": "Antrag Senden"
   },
   "applications": {
-    "_comment": "!Important! These keys should not be edited, since they are stored in the database and have to remain resolvable. If you change these keys, labels of old applications can not be resolved anymore.",
     "allApplications": "Alle Anträge",
     "accepted": "Akzeptiert",
     "rejected": "Abgelehnt",
