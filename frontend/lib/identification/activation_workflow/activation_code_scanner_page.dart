@@ -45,7 +45,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
     try {
       final activationCode = const ActivationCodeParser().parseQrCodeContent(code);
 
-      final activated = await activateCard(context, activationCode);
+      final activated = await activateCard(context, ActivationSource.qr, activationCode);
       if (activated) {
         moveToLastCard();
       }

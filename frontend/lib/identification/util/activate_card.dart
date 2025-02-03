@@ -21,8 +21,11 @@ import 'package:ehrenamtskarte/l10n/translations.g.dart';
 /// - `true`, if the activation was successful,
 /// - `false`, if the activation was not successful, but feedback was given to the user,
 /// Throws an error otherwise.
+enum ActivationSource { qr, deeplink }
+
 Future<bool> activateCard(
   BuildContext context,
+  ActivationSource source,
   DynamicActivationCode activationCode, [
   bool overwriteExisting = false,
 ]) async {
@@ -78,7 +81,15 @@ Future<bool> activateCard(
       return false;
     case Enum$ActivationState.failed:
       if (context.mounted) {
-        await ActivationErrorDialog.showErrorDialog(context, t.identification.codeInvalid);
+        String errorMessage;
+        if (isCardExpired(activationCode.info)) {
+          errorMessage = t.identification.cardExpired;
+        } else {
+          errorMessage = (source == ActivationSource.deeplink)
+              ? t.deeplinkActivation.invalidCode
+              : t.identification.codeInvalid;
+        }
+        await ActivationErrorDialog.showErrorDialog(context, errorMessage);
       }
       return false;
     case Enum$ActivationState.did_not_overwrite_existing:
@@ -96,7 +107,7 @@ Future<bool> activateCard(
       if (context.mounted &&
           await ActivationOverwriteExistingDialog.showActivationOverwriteExistingDialog(context) &&
           context.mounted) {
-        return await activateCard(context, activationCode, overwriteExisting = true);
+        return await activateCard(context,source, activationCode, overwriteExisting = true);
       } else {
         return false;
       }

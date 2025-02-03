@@ -110,7 +110,7 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
                                   _state = _State.loading;
                                 });
                                 try {
-                                  final activated = await activateCard(context, activationCode);
+                                  final activated = await activateCard(context,ActivationSource.deeplink, activationCode);
                                   if (!context.mounted) return;
                                   if (activated) {
                                     final cardIndex =
