@@ -3,6 +3,7 @@ import 'package:ehrenamtskarte/identification/id_card/id_card_with_region_query.
 import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
+import 'package:ehrenamtskarte/widgets/custom_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -42,31 +43,17 @@ class RemoveCardConfirmationDialogState extends State<RemoveCardConfirmationDial
   Widget build(BuildContext context) {
     final t = context.t;
 
-    final theme = Theme.of(context);
-    return AlertDialog(
-      titlePadding: EdgeInsets.all(4),
-      contentPadding: EdgeInsets.only(left: 20, right: 20),
-      actionsPadding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-      title: ListTile(
-        leading: Icon(Icons.warning, color: theme.colorScheme.primaryContainer, size: 30),
-        title: Text(t.identification.removeTitle, style: theme.textTheme.titleMedium),
+    return CustomAlertDialog(
+      icon: Icons.warning,
+      title: t.identification.removeTitle,
+      message: t.identification.removeDescription,
+      customContent: IdCardWithRegionQuery(
+        cardInfo: widget.userCode.info,
+        // We trust the backend to have checked for expiration.
+        isExpired: false,
+        isNotYetValid: false,
       ),
-      content: SingleChildScrollView(
-        child: ListBody(
-          children: <Widget>[
-            Padding(
-                padding: EdgeInsets.only(bottom: 20),
-                child: Text(t.identification.removeDescription, style: TextStyle(fontSize: 14))),
-            IdCardWithRegionQuery(
-              cardInfo: widget.userCode.info,
-              // We trust the backend to have checked for expiration.
-              isExpired: false,
-              isNotYetValid: false,
-            ),
-          ],
-        ),
-      ),
-      actions: <Widget>[
+      actions: [
         TextButton(
           child: const Text('Abbrechen'),
           onPressed: () => Navigator.of(context).pop(false),

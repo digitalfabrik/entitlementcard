@@ -1,7 +1,8 @@
-import { act, fireEvent, render } from '@testing-library/react'
+import { act, fireEvent } from '@testing-library/react'
 import React from 'react'
 
-import TextAreaDialog from './TextAreaDialog'
+import { renderWithTranslation } from '../../../testing/render'
+import TextAreaDialog from '../TextAreaDialog'
 
 describe('TextAreaDialog', () => {
   const onClose = jest.fn()
@@ -9,7 +10,7 @@ describe('TextAreaDialog', () => {
   const defaultText = 'Hallo'
   const placeholderText = 'Hier kann ein Text stehen...'
   const renderTextDialog = ({ maxChars, defaultText }: { maxChars?: number; defaultText: string | null }) =>
-    render(
+    renderWithTranslation(
       <TextAreaDialog
         loading={false}
         maxChars={maxChars}

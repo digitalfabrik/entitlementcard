@@ -13,6 +13,7 @@ import app.ehrenamtskarte.backend.auth.webservice.TokenAuthenticator
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidFileSizeException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidFileTypeException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidJsonException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.MailNotSentException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotActivatedForApplicationException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
@@ -53,6 +54,30 @@ class ApplicationHandler(
                     applicantName,
                     projectConfig,
                     applicationVerification
+                )
+            } catch (exception: MailNotSentException) {
+                dataFetcherResultBuilder.error(exception.toError())
+            }
+        }
+        Mailer.sendNotificationForApplicationMails(project, backendConfig, projectConfig, regionId)
+    }
+
+    fun sendPreVerifiedApplicationMails(
+        applicationEntity: ApplicationEntity,
+        verificationEntities: List<ApplicationVerificationEntity>,
+        dataFetcherResultBuilder: DataFetcherResult.Builder<Boolean>
+    ) {
+        val backendConfig = context.backendConfiguration
+        val projectConfig = backendConfig.projects.first { it.id == project }
+
+        for (applicationVerification in verificationEntities) {
+            try {
+                Mailer.sendApplicationMailToContactPerson(
+                    backendConfig,
+                    projectConfig,
+                    applicationVerification.contactName,
+                    application.personalData,
+                    applicationEntity.accessKey
                 )
             } catch (exception: MailNotSentException) {
                 dataFetcherResultBuilder.error(exception.toError())
@@ -128,24 +153,24 @@ class ApplicationHandler(
                 "Physical card must be false if application is already verified"
             }
             val blueCardEntitlement = applicationDetails.blueCardEntitlement
-                ?: throw IllegalArgumentException("Blue card entitlement must be set if application is already verified")
+                ?: throw InvalidJsonException("Blue card entitlement must be set if application is already verified")
 
             val workAtOrganizationsEntitlement = blueCardEntitlement.workAtOrganizationsEntitlement
-                ?: throw IllegalArgumentException("Work at organizations entitlement must be set if application is already verified")
+                ?: throw InvalidJsonException("Work at organizations entitlement must be set if application is already verified")
 
             require(blueCardEntitlement.entitlementType == BlueCardEntitlementType.WORK_AT_ORGANIZATIONS) {
                 "Entitlement type must be WORK_AT_ORGANIZATIONS if application is already verified"
             }
 
             val organizations = workAtOrganizationsEntitlement.list
-            require(!organizations.isNullOrEmpty()) {
+            require(organizations.isNotEmpty()) {
                 "Work at organizations list cannot be empty if application is already verified"
             }
             require(organizations.all { it.organization.category.shortText == "Sport" }) {
                 "All organizations must be of category Sport if application is already verified"
             }
         } catch (e: IllegalArgumentException) {
-            throw BadRequestResponse(e.message!!)
+            throw InvalidJsonException(e.message!!)
         }
     }
 
