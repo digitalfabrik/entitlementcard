@@ -75,6 +75,7 @@ const BavariaCardTypeExtension: Extension<BavariaCardTypeExtensionState> = {
   toString,
   fromSerialized: fromString,
   serialize: toString,
+  isMandatory: true,
 }
 
 export default BavariaCardTypeExtension

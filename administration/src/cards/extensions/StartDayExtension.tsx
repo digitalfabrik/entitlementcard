@@ -58,6 +58,7 @@ const StartDayExtension: Extension<StartDayExtensionState> = {
     return startDay === null ? null : { startDay }
   },
   serialize: ({ startDay }: StartDayExtensionState) => startDay.formatISO(),
+  isMandatory: true,
 }
 
 export default StartDayExtension
