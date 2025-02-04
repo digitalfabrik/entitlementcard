@@ -63,6 +63,9 @@
     "givenInformationIsCorrectAndComplete": "Ich versichere, dass alle angegebenen Informationen korrekt und vollständig sind",
     "title": "Bayerische Ehrenamtskarte beantragen",
     "sentSuccessfully": "Erfolgreich gesendet",
-    "sentError": "Fehler beim Senden"
+    "sentError": "Fehler beim Senden",
+    "extensions": {
+      "birthdayHint": "Bei Minderjährigen unter 16 Jahren darf der KoblenzPass nur mit Einverständnis der Erziehungsberechtigten abgerufen werden."
+    }
   }
 }

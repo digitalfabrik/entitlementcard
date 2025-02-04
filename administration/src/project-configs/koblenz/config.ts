@@ -36,7 +36,7 @@ const config: ProjectConfig = {
   selfServiceEnabled: true,
   storesManagement: storesManagementConfig,
   userImportApiEnabled: true,
-  showBirthdayMinorHint: true,
+  showBirthdayExtensionHint: true,
 }
 
 export default config

@@ -1,4 +1,4 @@
-import { add, differenceInCalendarDays, format, isValid, parse } from 'date-fns'
+import { add, differenceInCalendarDays, format, isValid, parse, sub } from 'date-fns'
 
 type DateDuration = { years?: number; months?: number; days?: number }
 
@@ -123,6 +123,15 @@ class PlainDate {
   add(duration: DateDuration): PlainDate {
     // date-fns/add alters the date in local time zone.
     return PlainDate.fromLocalDate(add(this.toLocalDate(), duration))
+  }
+
+  /**
+   * Returns a new PlainDate corresponding to `this` minus `duration`.
+   * @param duration
+   */
+  subtract(duration: DateDuration): PlainDate {
+    // Mirror the add() method but use date-fns/sub
+    return PlainDate.fromLocalDate(sub(this.toLocalDate(), duration))
   }
 
   /**

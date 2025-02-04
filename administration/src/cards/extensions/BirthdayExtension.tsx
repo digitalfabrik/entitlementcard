@@ -1,7 +1,6 @@
-import { Classes, FormGroup, Tooltip } from '@blueprintjs/core'
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
+import { FormGroup } from '@blueprintjs/core'
 import React, { ReactElement, useContext, useState } from 'react'
-import styled from 'styled-components'
+import { useTranslation } from 'react-i18next'
 
 import CustomDatePicker from '../../bp-modules/components/CustomDatePicker'
 import FormErrorMessage from '../../bp-modules/self-service/components/FormErrorMessage'
@@ -9,21 +8,12 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 import PlainDate from '../../util/PlainDate'
 import { Extension, ExtensionComponentProps } from './extensions'
 
-const StyledToolTip = styled(Tooltip)`
-  border: 0;
-  width: 20px;
-  margin-left: 16px;
-`
-
-const StyledHelpOutlineIcon = styled(HelpOutlineIcon)`
-  color: #595959;
-`
-
 export const BIRTHDAY_EXTENSION_NAME = 'birthday'
 export type BirthdayExtensionState = { [BIRTHDAY_EXTENSION_NAME]: PlainDate | null }
 
 const minBirthday = new PlainDate(1900, 1, 1)
 const getInitialState = (): BirthdayExtensionState => ({ birthday: null })
+let validateUnderAge: boolean
 
 const BirthdayForm = ({
   value,
@@ -35,14 +25,23 @@ const BirthdayForm = ({
   const { birthday } = value
   const showErrorMessage = touched || showRequired
   const projectConfig = useContext(ProjectConfigContext)
+  validateUnderAge = projectConfig.showBirthdayExtensionHint
+  const { t } = useTranslation('application')
 
   const getErrorMessage = (): string | null => {
+    const today = PlainDate.fromLocalDate(new Date())
+    const underAge = today.subtract({ years: 16 })
+
     if (!birthday) {
       return 'Bitte geben Sie ein gültiges Geburtsdatum an.'
     }
-    if (birthday.isAfter(PlainDate.fromLocalDate(new Date()))) {
+    if (birthday.isAfter(today)) {
       return 'Das Geburtsdatum darf nicht in der Zukunft liegen.'
     }
+    if (birthday.isAfter(underAge) && projectConfig.showBirthdayExtensionHint) {
+      return t('extensions.birthdayHint')
+    }
+
     return null
   }
 
@@ -60,17 +59,6 @@ const BirthdayForm = ({
         isValid={isValid || !showErrorMessage}
         maxDate={new Date()}
         disableFuture
-        sideComponent={
-          <>
-            {projectConfig.showBirthdayMinorHint && (
-              <StyledToolTip
-                className={Classes.TOOLTIP_INDICATOR}
-                content='Bei Minderjährigen unter 16 Jahren darf der KoblenzPass nur mit Einverständnis der Erziehungsberechtigten abgerufen werden.'>
-                <StyledHelpOutlineIcon fontSize='small' />
-              </StyledToolTip>
-            )}
-          </>
-        }
       />
       {showErrorMessage && <FormErrorMessage errorMessage={getErrorMessage()} />}
     </FormGroup>
@@ -92,7 +80,9 @@ const BirthdayExtension: Extension<BirthdayExtensionState> = {
       return false
     }
     const today = PlainDate.fromLocalDate(new Date())
-    return !birthday.isBefore(minBirthday) && !birthday.isAfter(today)
+    const underAge = today.subtract({ years: 16 })
+    const underAgeCheck = birthday.isAfter(underAge) && validateUnderAge
+    return !birthday.isBefore(minBirthday) && !birthday.isAfter(today) && !underAgeCheck
   },
   fromString: (value: string) => {
     const birthday = PlainDate.safeFromCustomFormat(value)
