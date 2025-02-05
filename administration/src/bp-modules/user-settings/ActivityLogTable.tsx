@@ -12,8 +12,14 @@ const StickyTableHeader = styled.thead`
   z-index: 2;
 `
 
-const EmptyLog = styled.tr`
-  margin: 12px;
+const EmptyLogColumn = styled.td`
+  padding: 12px;
+`
+
+const EmptyLogRow = styled.tr`
+  &:hover {
+    background-color: transparent !important;
+  }
 `
 
 const StyledTable = styled.table`
@@ -61,9 +67,9 @@ const ActivityLogTable = ({ activityLog, activityLogConfig }: ActivityLogTablePr
         {activityLog.length > 0 ? (
           activityLog.map(activityLogConfig.renderLogEntry)
         ) : (
-          <EmptyLog>
-            <td>{t('noEntries')}</td>
-          </EmptyLog>
+          <EmptyLogRow>
+            <EmptyLogColumn colSpan={999}>{t('noEntries')}</EmptyLogColumn>
+          </EmptyLogRow>
         )}
       </tbody>
     </StyledTable>
