@@ -1,36 +1,30 @@
 ---
-name: "Bug report \U0001F41B"
-about: Create a report to help us improve
+name: "Bug Report \U0001F41B"
+about: Report a bug to help us to fix and improve the app
 labels: Bug
 ---
 
+### Describe the Bug
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+<!-- A clear and concise description of what the bug is. -->
 
-**To Reproduce**
-Steps to reproduce the behavior:
+### Steps to Reproduce
+
+<!-- Describe the specific steps on how to reproduce the issue. -->
+
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
 4. See error
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+### Expected Behavior
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+<!-- A clear and concise description of what you expected to happen. -->
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+### Related Issues
 
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
+<!-- Link all related issues which are e.g. CMS issues or otherwise related, blocking, duplicating issues, ... -->
 
-**Additional context**
-Add any other context about the problem here.
+### Additional Information
+
+<!-- Add any other context (e.g. logs, screenshots, environment, related issues etc.) about the problem here. -->
