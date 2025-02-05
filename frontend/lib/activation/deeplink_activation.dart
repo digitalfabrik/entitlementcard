@@ -14,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../identification/util/card_info_utils.dart';
+
 enum DeepLinkActivationStatus {
   /// Link is invalid
   invalidLink,
@@ -25,7 +27,10 @@ enum DeepLinkActivationStatus {
   limitReached,
 
   /// The card can be activated
-  valid;
+  valid,
+
+  /// The card is expired
+  cardExpired;
 
   factory DeepLinkActivationStatus.from(UserCodeModel userCodeModel, DynamicActivationCode? activationCode) {
     if (activationCode == null) {
@@ -34,6 +39,8 @@ enum DeepLinkActivationStatus {
       return DeepLinkActivationStatus.alreadyExists;
     } else if (hasReachedCardLimit(userCodeModel.userCodes)) {
       return DeepLinkActivationStatus.limitReached;
+    } else if(isCardExpired(activationCode.info)){
+      return DeepLinkActivationStatus.cardExpired;
     } else {
       return DeepLinkActivationStatus.valid;
     }
@@ -110,7 +117,7 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
                                   _state = _State.loading;
                                 });
                                 try {
-                                  final activated = await activateCard(context,ActivationSource.deeplink, activationCode);
+                                  final activated = await activateCard(context, activationCode);
                                   if (!context.mounted) return;
                                   if (activated) {
                                     final cardIndex =
@@ -173,6 +180,7 @@ class _WarningText extends StatelessWidget {
       DeepLinkActivationStatus.invalidLink => t.deeplinkActivation.activationInvalid,
       DeepLinkActivationStatus.limitReached => '${t.deeplinkActivation.limitReached} ($cardsInUse/$maxCardAmount)',
       DeepLinkActivationStatus.alreadyExists => t.deeplinkActivation.alreadyExists,
+      DeepLinkActivationStatus.cardExpired => t.identification.cardExpired,
       DeepLinkActivationStatus.valid => '',
     };
     if (status == DeepLinkActivationStatus.valid) {
