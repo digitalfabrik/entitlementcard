@@ -220,4 +220,79 @@ ${'Thea Test,03.04.2024,12345678\n'.repeat(ENTRY_LIMIT + 1)}
     expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error })
     expect(setCards).not.toHaveBeenCalled()
   })
+
+  it.each([
+    {
+      csv: `
+  Name,Ablaufdatum
+  Thea Test,03.04.2024
+  Tilo Traber,
+  `,
+      error: 'Die Datei verfügt nicht über das gültige Spaltenformat. Es fehlen notwendige Spalten.',
+      project: bayernConfig,
+      missingColumn: 'Kartentyp',
+    },
+    {
+      csv: `
+Name,Ablaufdatum,Geburtsdatum,Pass-ID
+Thea Test,03.04.2024,10.10.2000,12345678
+Tilo Traber,03.04.2025,12.01.1984,98765432
+  `,
+      error: 'Die Datei verfügt nicht über das gültige Spaltenformat. Es fehlen notwendige Spalten.',
+      project: nuernbergConfig,
+      missingColumn: 'Startdatum',
+    },
+    {
+      csv: `
+Name,Ablaufdatum,Startdatum,Geburtsdatum
+Thea Test,03.04.2024,01.01.2026,10.10.2000
+Tilo Traber,03.04.2025,01.01.2026,12.01.1984
+  `,
+      error: 'Die Datei verfügt nicht über das gültige Spaltenformat. Es fehlen notwendige Spalten.',
+      project: nuernbergConfig,
+      missingColumn: 'Pass-ID',
+    },
+    {
+      csv: `
+Name,Ablaufdatum,Startdatum,Pass-ID
+Thea Test,03.04.2024,01.01.2026,12345678
+Tilo Traber,03.04.2025,01.01.2026,98765432
+  `,
+      error: 'Die Datei verfügt nicht über das gültige Spaltenformat. Es fehlen notwendige Spalten.',
+      project: nuernbergConfig,
+      missingColumn: 'Geburtsdatum',
+    },
+
+    {
+      csv: `
+Name,Ablaufdatum,Geburtsdatum
+Thea Test,03.04.2024,10.10.2000
+Tilo Traber,03.04.2025,12.01.1984
+  `,
+      error: 'Die Datei verfügt nicht über das gültige Spaltenformat. Es fehlen notwendige Spalten.',
+      project: koblenzConfig,
+      missingColumn: 'Referenznummer',
+    },
+    {
+      csv: `
+Name,Ablaufdatum,Referenznummer
+Thea Test,03.04.2024,123k
+Tilo Traber,03.04.2025,98765432
+  `,
+      error: 'Die Datei verfügt nicht über das gültige Spaltenformat. Es fehlen notwendige Spalten.',
+      project: koblenzConfig,
+      missingColumn: 'Geburtsdatum',
+    },
+  ])(
+    `import CSV Card should fail if '$missingColumn' is not provided for '$project.name'`,
+    async ({ csv, error, project }) => {
+      const toaster = jest.spyOn(OverlayToaster.prototype, 'show')
+      const setCards = jest.fn()
+
+      await renderAndSubmitCardsInput(project, csv, setCards)
+
+      expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error })
+      expect(setCards).not.toHaveBeenCalled()
+    }
+  )
 })
