@@ -7,6 +7,7 @@ import app.ehrenamtskarte.backend.migration.assertDatabaseIsInSync
 import app.ehrenamtskarte.backend.projects.database.insertOrUpdateProjects
 import app.ehrenamtskarte.backend.regions.database.insertOrUpdateRegions
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
+import app.ehrenamtskarte.backend.regions.utils.FreinetAgenciesLoader
 import app.ehrenamtskarte.backend.stores.database.createOrReplaceStoreFunctions
 import app.ehrenamtskarte.backend.stores.database.insertOrUpdateCategories
 import org.jetbrains.exposed.sql.Database.Companion.connect
@@ -61,10 +62,11 @@ class Database {
         }
 
         fun setupInitialData(config: BackendConfiguration) {
+            val agencies = FreinetAgenciesLoader().loadAgenciesFromXml(config.projects)
             transaction {
                 assertDatabaseIsInSync()
                 insertOrUpdateProjects(config)
-                insertOrUpdateRegions()
+                insertOrUpdateRegions(agencies)
                 insertOrUpdateCategories(Companion::executeScript)
                 createOrReplaceStoreFunctions(Companion::executeScript)
             }

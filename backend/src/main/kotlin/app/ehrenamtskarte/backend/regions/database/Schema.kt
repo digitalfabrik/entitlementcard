@@ -35,3 +35,17 @@ class RegionEntity(id: EntityID<Int>) : IntEntity(id) {
     var activatedForApplication by Regions.activatedForApplication
     var activatedForCardConfirmationMail by Regions.activatedForCardConfirmationMail
 }
+
+object FreinetAgencies : IntIdTable() {
+    val regionId = reference("regionId", Regions)
+    val agencyId = integer("agencyId").uniqueIndex()
+    val apiAccessKey = varchar("apiAccessKey", 10)
+}
+
+class FreinetAgenciesEntity(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<FreinetAgenciesEntity>(FreinetAgencies)
+
+    var regionId by FreinetAgencies.regionId
+    var agencyId by FreinetAgencies.agencyId
+    var apiAccessKey by FreinetAgencies.apiAccessKey
+}
