@@ -3,7 +3,7 @@ import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
-import defaultErrorMap from '../../errors/DefaultErrorMap'
+import graphQlErrorMap from '../../errors/GraphQlErrorMap'
 import { GraphQlExceptionCode } from '../../generated/graphql'
 
 const CharacterCounter = styled.div<{ $hasError: boolean }>`
@@ -39,7 +39,7 @@ const TextAreaDialog = ({
   const { t } = useTranslation('misc')
   const [text, setText] = useState<string>(defaultText ?? '')
   const maxCharsExceeded = maxChars === undefined ? false : text.length > maxChars
-  const { title: errorMessage } = defaultErrorMap({
+  const { title: errorMessage } = graphQlErrorMap({
     code: GraphQlExceptionCode.InvalidNoteSize,
     maxSize: maxChars,
   })
