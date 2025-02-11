@@ -160,7 +160,6 @@
     "importFileTooManyEntries": "Die Datei hat mehr als {{limit}} Einträge.",
     "importFileWrongFormat": "Die gewählte Datei hat einen unzulässigen Dateityp.",
     "importFileTooBig": "Die ausgewählte Datei ist zu groß.",
-    "importFileMissingData": "Die Datei verfügt nicht über das gültige Spaltenformat. Es fehlen notwendige Spalten.",
     "printQRCodes": "QR-Codes drucken",
     "validationError": "Validierungsfehler"
   },

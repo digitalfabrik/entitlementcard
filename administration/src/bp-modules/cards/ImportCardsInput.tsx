@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { FREINET_PARAM } from '../../Router'
-import { Card, cardHasAllMandatoryExtensions, initializeCardFromCSV } from '../../cards/Card'
+import { Card, initializeCardFromCSV } from '../../cards/Card'
 import { Region } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { getCsvHeaders } from '../../project-configs/helper'
@@ -92,14 +92,6 @@ const ImportCardsInput = ({ setCards, region }: ImportCardsInputProps): ReactEle
 
       const [csvHeaders, ...entries] = isFreinetFormat ? convertFreinetImport(lines, projectConfig) : lines
       const cards = entries.map(line => initializeCardFromCSV(projectConfig.card, line, csvHeaders, region))
-      const cardsHaveAllMandatoryExtensions = cards.every(card =>
-        cardHasAllMandatoryExtensions(card, projectConfig.card)
-      )
-
-      if (!cardsHaveAllMandatoryExtensions) {
-        showInputError(t('importFileMissingData'))
-        return
-      }
 
       setCards(cards)
       setInputState('idle')
