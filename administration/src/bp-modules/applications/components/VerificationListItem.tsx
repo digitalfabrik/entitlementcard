@@ -37,12 +37,12 @@ const VerificationListItem = ({ verification }: VerificationListItemProps): Reac
       <table cellPadding='2px'>
         <tbody>
           <tr>
-            <td data-testid='item-organisation-label'>{t('organization')}:</td>
-            <td data-testid='item-organisation-content'>{verification.organizationName}</td>
+            <td>{t('organization')}:</td>
+            <td>{verification.organizationName}</td>
           </tr>
           <tr>
-            <td data-testid='item-mail-label'>{t('eMail')}:</td>
-            <td data-testid='item-mail-content'>
+            <td>{t('eMail')}:</td>
+            <td>
               {isEmailValid(verification.contactEmailAddress) ? (
                 <EmailLink email={verification.contactEmailAddress} />
               ) : (
@@ -51,8 +51,8 @@ const VerificationListItem = ({ verification }: VerificationListItemProps): Reac
             </td>
           </tr>
           <tr>
-            <td data-testid='item-status-label'>{t('status')}:</td>
-            <td data-testid='item-status-content'>
+            <td>{t('status')}:</td>
+            <td>
               <Indicator status={status} text={` ${text}`} />
             </td>
           </tr>

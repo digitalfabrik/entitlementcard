@@ -81,7 +81,7 @@ const VerificationsView = ({ verifications }: { verifications: Application['veri
           return <VerificationListItem verification={verification} key={key} />
         })}
       </VerificationContainer>
-      {verifications.length === 0 ? <i data-testid='no-verifications-hint'>({t('none')})</i> : null}
+      {verifications.length === 0 ? <i role='note'>({t('none')})</i> : null}
     </>
   )
 }

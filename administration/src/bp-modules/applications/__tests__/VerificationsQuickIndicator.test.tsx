@@ -1,4 +1,4 @@
-import React, { act } from 'react'
+import React from 'react'
 
 import { renderWithTranslation } from '../../../testing/render'
 import VerificationQuickIndicator from '../VerificationsQuickIndicator'
@@ -10,36 +10,37 @@ import {
   verificationsVerified,
 } from '../__mocks__/verificationData'
 
-describe('VerificiationQuickIndicator', () => {
-  it('should show only awaiting verifications', async () => {
+jest.mock('@blueprintjs/core', () => ({
+  ...jest.requireActual('@blueprintjs/core'),
+  Icon: () => 'icon',
+}))
+
+describe('VerificationQuickIndicator', () => {
+  it('should show only awaiting verifications', () => {
     const { getByTestId } = renderWithTranslation(<VerificationQuickIndicator verifications={verificationsAwaiting} />)
-    await act(async () => null) // Blueprint5.Icon update
-    expect(getByTestId(`indicator-${VerificationStatus.Verified}`).textContent).toBe(': 0')
-    expect(getByTestId(`indicator-${VerificationStatus.Awaiting}`).textContent).toBe(': 2')
-    expect(getByTestId(`indicator-${VerificationStatus.Rejected}`).textContent).toBe(': 0')
+    expect(getByTestId(`indicator-${VerificationStatus.Verified}`).textContent).toBe('icon: 0')
+    expect(getByTestId(`indicator-${VerificationStatus.Awaiting}`).textContent).toBe('icon: 2')
+    expect(getByTestId(`indicator-${VerificationStatus.Rejected}`).textContent).toBe('icon: 0')
   })
 
-  it('should show only mixed verifications', async () => {
+  it('should show mixed verifications', () => {
     const { getByTestId } = renderWithTranslation(<VerificationQuickIndicator verifications={verificationsMixed} />)
-    await act(async () => null) // Blueprint5.Icon update
-    expect(getByTestId(`indicator-${VerificationStatus.Verified}`).textContent).toBe(': 1')
-    expect(getByTestId(`indicator-${VerificationStatus.Awaiting}`).textContent).toBe(': 1')
-    expect(getByTestId(`indicator-${VerificationStatus.Rejected}`).textContent).toBe(': 1')
+    expect(getByTestId(`indicator-${VerificationStatus.Verified}`).textContent).toBe('icon: 1')
+    expect(getByTestId(`indicator-${VerificationStatus.Awaiting}`).textContent).toBe('icon: 1')
+    expect(getByTestId(`indicator-${VerificationStatus.Rejected}`).textContent).toBe('icon: 1')
   })
 
-  it('should show only rejected verifications', async () => {
+  it('should show only rejected verifications', () => {
     const { getByTestId } = renderWithTranslation(<VerificationQuickIndicator verifications={verificationsRejected} />)
-    await act(async () => null) // Blueprint5.Icon update
-    expect(getByTestId(`indicator-${VerificationStatus.Verified}`).textContent).toBe(': 0')
-    expect(getByTestId(`indicator-${VerificationStatus.Awaiting}`).textContent).toBe(': 0')
-    expect(getByTestId(`indicator-${VerificationStatus.Rejected}`).textContent).toBe(': 2')
+    expect(getByTestId(`indicator-${VerificationStatus.Verified}`).textContent).toBe('icon: 0')
+    expect(getByTestId(`indicator-${VerificationStatus.Awaiting}`).textContent).toBe('icon: 0')
+    expect(getByTestId(`indicator-${VerificationStatus.Rejected}`).textContent).toBe('icon: 2')
   })
 
-  it('should show only verified verifications', async () => {
+  it('should show only verified verifications', () => {
     const { getByTestId } = renderWithTranslation(<VerificationQuickIndicator verifications={verificationsVerified} />)
-    await act(async () => null) // Blueprint5.Icon update
-    expect(getByTestId(`indicator-${VerificationStatus.Verified}`).textContent).toBe(': 2')
-    expect(getByTestId(`indicator-${VerificationStatus.Awaiting}`).textContent).toBe(': 0')
-    expect(getByTestId(`indicator-${VerificationStatus.Rejected}`).textContent).toBe(': 0')
+    expect(getByTestId(`indicator-${VerificationStatus.Verified}`).textContent).toBe('icon: 2')
+    expect(getByTestId(`indicator-${VerificationStatus.Awaiting}`).textContent).toBe('icon: 0')
+    expect(getByTestId(`indicator-${VerificationStatus.Rejected}`).textContent).toBe('icon: 0')
   })
 })

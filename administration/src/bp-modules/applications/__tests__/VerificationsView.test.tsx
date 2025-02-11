@@ -1,23 +1,26 @@
-import React, { act } from 'react'
+import React from 'react'
 
 import { renderWithTranslation } from '../../../testing/render'
 import VerificationsView from '../VerificationsView'
 import { verificationsMixed } from '../__mocks__/verificationData'
 
+jest.mock('@blueprintjs/core', () => ({
+  ...jest.requireActual('@blueprintjs/core'),
+  Icon: () => 'icon',
+}))
+
 describe('VerificationsView', () => {
-  it('should show a hint if there are no verifications', async () => {
-    const { getByTestId, getByText } = renderWithTranslation(<VerificationsView verifications={[]} />)
-    await act(async () => null) // Blueprint5.Icon update
+  it('should show a hint if there are no verifications', () => {
+    const { getByText, getByRole } = renderWithTranslation(<VerificationsView verifications={[]} />)
     expect(getByText('Bestätigung(en) durch Organisationen:')).toBeTruthy()
-    expect(getByTestId('no-verifications-hint').textContent).toBe('(keine)')
+    expect(getByRole('note').textContent).toBe('(keine)')
   })
 
-  it('should render a list of verification items', async () => {
-    const { getAllByTestId, getByText } = renderWithTranslation(
+  it('should render a list of verification items', () => {
+    const { getByText, queryAllByRole } = renderWithTranslation(
       <VerificationsView verifications={verificationsMixed} />
     )
-    await act(async () => null) // Blueprint5.Icon update
     expect(getByText('Bestätigung(en) durch Organisationen:')).toBeTruthy()
-    expect(getAllByTestId('verification-list-item')).toHaveLength(3)
+    expect(queryAllByRole('listitem')).toHaveLength(3)
   })
 })
