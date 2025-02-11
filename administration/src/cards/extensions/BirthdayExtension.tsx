@@ -13,7 +13,6 @@ export type BirthdayExtensionState = { [BIRTHDAY_EXTENSION_NAME]: PlainDate | nu
 
 const minBirthday = new PlainDate(1900, 1, 1)
 const getInitialState = (): BirthdayExtensionState => ({ birthday: null })
-let validateUnderAge: boolean
 
 const BirthdayForm = ({
   value,
@@ -25,12 +24,16 @@ const BirthdayForm = ({
   const { birthday } = value
   const showErrorMessage = touched || showRequired
   const projectConfig = useContext(ProjectConfigContext)
-  validateUnderAge = projectConfig.showBirthdayExtensionHint
   const { t } = useTranslation('application')
+
+  const isBirthdayHintEnabled = (): boolean => {
+    const today = PlainDate.fromLocalDate(new Date())
+    const underAge = today.subtract({ years: 16 })
+    return !!(birthday?.isAfter(underAge) && projectConfig.showBirthdayExtensionHint && !birthday.isAfter(today))
+  }
 
   const getErrorMessage = (): string | null => {
     const today = PlainDate.fromLocalDate(new Date())
-    const underAge = today.subtract({ years: 16 })
 
     if (!birthday) {
       return 'Bitte geben Sie ein gültiges Geburtsdatum an.'
@@ -38,7 +41,7 @@ const BirthdayForm = ({
     if (birthday.isAfter(today)) {
       return 'Das Geburtsdatum darf nicht in der Zukunft liegen.'
     }
-    if (birthday.isAfter(underAge) && projectConfig.showBirthdayExtensionHint) {
+    if (isBirthdayHintEnabled()) {
       return t('extensions.birthdayHint')
     }
 
@@ -57,10 +60,16 @@ const BirthdayForm = ({
         onChange={changeBirthday}
         onClear={() => setValue({ birthday: null })}
         isValid={isValid || !showErrorMessage}
+        isHint={isBirthdayHintEnabled()}
         maxDate={new Date()}
         disableFuture
       />
-      {showErrorMessage && <FormErrorMessage errorMessage={getErrorMessage()} />}
+      {showErrorMessage && (
+        <FormErrorMessage
+          style={{ color: isBirthdayHintEnabled() ? 'black' : undefined }}
+          errorMessage={getErrorMessage()}
+        />
+      )}
     </FormGroup>
   )
 }
@@ -80,9 +89,7 @@ const BirthdayExtension: Extension<BirthdayExtensionState> = {
       return false
     }
     const today = PlainDate.fromLocalDate(new Date())
-    const underAge = today.subtract({ years: 16 })
-    const underAgeCheck = birthday.isAfter(underAge) && validateUnderAge
-    return !birthday.isBefore(minBirthday) && !birthday.isAfter(today) && !underAgeCheck
+    return !birthday.isBefore(minBirthday) && !birthday.isAfter(today)
   },
   fromString: (value: string) => {
     const birthday = PlainDate.safeFromCustomFormat(value)
