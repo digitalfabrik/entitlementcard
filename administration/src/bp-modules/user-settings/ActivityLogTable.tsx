@@ -57,13 +57,13 @@ const ActivityLogTable = ({ activityLog, activityLogConfig }: ActivityLogTablePr
   return (
     <StyledTable>
       <StickyTableHeader>
-        <tr data-testid='activity-log-column-names'>
+        <tr>
           {activityLogConfig.columnNames.map(columnName => (
             <th key={columnName}>{columnName}</th>
           ))}
         </tr>
       </StickyTableHeader>
-      <tbody data-testid='activity-log-table-body'>
+      <tbody>
         {activityLog.length > 0 ? (
           activityLog.map(activityLogConfig.renderLogEntry)
         ) : (

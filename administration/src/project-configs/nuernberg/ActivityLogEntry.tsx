@@ -12,11 +12,11 @@ const ActivityLogEntry = (logEntry: ActivityLogEntryType): ReactElement => {
 
   return (
     <tr key={card.id}>
-      <td data-testid='activity-log-entry-timestamp'>{timestamp.toLocaleString()}</td>
-      <td data-testid='activity-log-entry-fullname'>{card.fullName}</td>
-      {passIdExtension !== null && <td data-testid='activity-log-entry-pass-id'>{passIdExtension}</td>}
-      {birthdayExtension !== null && <td data-testid='activity-log-entry-birthday'>{birthdayExtension.format()}</td>}
-      {card.expirationDate !== null && <td data-testid='activity-log-entry-expiry'>{card.expirationDate.format()}</td>}
+      <td>{timestamp.toLocaleString()}</td>
+      <td>{card.fullName}</td>
+      {passIdExtension !== null && <td>{passIdExtension}</td>}
+      {birthdayExtension !== null && <td>{birthdayExtension.format()}</td>}
+      {card.expirationDate !== null && <td>{card.expirationDate.format()}</td>}
     </tr>
   )
 }
