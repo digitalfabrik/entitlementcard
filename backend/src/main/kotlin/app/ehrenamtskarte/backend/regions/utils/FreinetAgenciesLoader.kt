@@ -10,9 +10,11 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpRequestRetry
+import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.request.request
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.URLProtocol
 import io.ktor.http.path
 import kotlinx.coroutines.runBlocking
@@ -22,9 +24,16 @@ class FreinetAgenciesLoader {
     private val logger = LoggerFactory.getLogger(FreinetAgenciesLoader::class.java)
     private val httpClient = HttpClient() {
         install(HttpRequestRetry) {
-            retryOnServerErrors(maxRetries = 5)
-            retryOnException(maxRetries = 5, retryOnTimeout = true)
+            retryOnServerErrors(maxRetries = 3)
+            retryOnException(maxRetries = 3, retryOnTimeout = false)
             exponentialDelay()
+        }
+        HttpResponseValidator {
+            validateResponse { response ->
+                if (response.status != HttpStatusCode.OK) {
+                    throw Exception(response.status.toString())
+                }
+            }
         }
     }
 
@@ -50,6 +59,8 @@ class FreinetAgenciesLoader {
                     method = HttpMethod.Get
                 }.bodyAsText()
             }
+            // check for 404 before reading xml get response.status
+            print(response)
             val xmlMapper = XmlMapper()
             xmlMapper.registerModule(KotlinModule.Builder().build())
             xmlMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
