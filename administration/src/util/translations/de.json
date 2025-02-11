@@ -65,7 +65,10 @@
     "sentSuccessfully": "Erfolgreich gesendet",
     "sentError": "Fehler beim Senden",
     "positiveAnswer": "Ja",
-    "negativeAnswer": "Nein"
+    "negativeAnswer": "Nein",
+    "extensions": {
+      "birthdayHint": "Bei Minderjährigen unter 16 Jahren darf der KoblenzPass nur mit Einverständnis der Erziehungsberechtigten abgerufen werden."
+    }
   },
   "applications": {
     "allApplications": "Alle Anträge",

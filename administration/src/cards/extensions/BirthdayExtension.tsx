@@ -1,8 +1,10 @@
 import { FormGroup } from '@blueprintjs/core'
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useContext, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import CustomDatePicker from '../../bp-modules/components/CustomDatePicker'
 import FormErrorMessage from '../../bp-modules/self-service/components/FormErrorMessage'
+import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import PlainDate from '../../util/PlainDate'
 import { Extension, ExtensionComponentProps } from './extensions'
 
@@ -21,13 +23,28 @@ const BirthdayForm = ({
   const [touched, setTouched] = useState(false)
   const { birthday } = value
   const showErrorMessage = touched || showRequired
+  const projectConfig = useContext(ProjectConfigContext)
+  const { t } = useTranslation('application')
+
+  const isBirthdayHintEnabled = (): boolean => {
+    const today = PlainDate.fromLocalDate(new Date())
+    const underAge = today.subtract({ years: 16 })
+    return !!(birthday?.isAfter(underAge) && projectConfig.showBirthdayExtensionHint && !birthday.isAfter(today))
+  }
+
   const getErrorMessage = (): string | null => {
+    const today = PlainDate.fromLocalDate(new Date())
+
     if (!birthday) {
       return 'Bitte geben Sie ein gültiges Geburtsdatum an.'
     }
-    if (birthday.isAfter(PlainDate.fromLocalDate(new Date()))) {
+    if (birthday.isAfter(today)) {
       return 'Das Geburtsdatum darf nicht in der Zukunft liegen.'
     }
+    if (isBirthdayHintEnabled()) {
+      return t('extensions.birthdayHint')
+    }
+
     return null
   }
 
@@ -43,10 +60,16 @@ const BirthdayForm = ({
         onChange={changeBirthday}
         onClear={() => setValue({ birthday: null })}
         isValid={isValid || !showErrorMessage}
+        isHint={isBirthdayHintEnabled()}
         maxDate={new Date()}
         disableFuture
       />
-      {showErrorMessage && <FormErrorMessage errorMessage={getErrorMessage()} />}
+      {showErrorMessage && (
+        <FormErrorMessage
+          style={{ color: isBirthdayHintEnabled() ? 'black' : undefined }}
+          errorMessage={getErrorMessage()}
+        />
+      )}
     </FormGroup>
   )
 }
