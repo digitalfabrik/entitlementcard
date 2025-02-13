@@ -33,7 +33,7 @@ const VerificationListItem = ({ verification }: VerificationListItemProps): Reac
   const color = verification.verifiedDate ? Colors.GREEN2 : unverifiedColor
 
   return (
-    <ListItem $color={color} data-testid='verification-list-item'>
+    <ListItem $color={color}>
       <table cellPadding='2px'>
         <tbody>
           <tr>
