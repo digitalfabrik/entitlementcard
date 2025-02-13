@@ -9,7 +9,7 @@ import app.ehrenamtskarte.backend.freinet.webservice.schema.types.FreinetApiAgen
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import org.jetbrains.exposed.sql.transactions.transaction
 
-fun insertOrUpdateRegions(agencies: List<FreinetApiAgency>?) {
+fun insertOrUpdateRegions(agencies: List<FreinetApiAgency>) {
     val projects = ProjectEntity.all()
     val dbRegions = RegionEntity.all()
     val dbFreinetRegionInformation = FreinetAgenciesEntity.all()
@@ -66,7 +66,7 @@ fun insertOrUpdateRegions(agencies: List<FreinetApiAgency>?) {
                 dbRegion.prefix = eakRegion[0]
                 dbRegion.website = eakRegion[3]
             }
-            val agency = agencies?.find { it -> it.arsList.any { it.startsWith(eakRegion[2]) } }
+            val agency = agencies.find { it -> it.arsList.any { it.startsWith(eakRegion[2]) } }
             if (agency != null) {
                 insertOrUpdateFreinetRegionInformation(agency, dbFreinetRegionInformation, regionEntity)
             }

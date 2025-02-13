@@ -10,7 +10,7 @@ object FreinetAgencies : IntIdTable() {
     val regionId = reference("regionId", Regions)
     val agencyId = integer("agencyId").uniqueIndex()
     val apiAccessKey = varchar("apiAccessKey", 10)
-    val activated = bool("activated").default(false)
+    val dataTransferActivated = bool("dataTransferActivated").default(false)
 }
 
 class FreinetAgenciesEntity(id: EntityID<Int>) : IntEntity(id) {
@@ -19,5 +19,5 @@ class FreinetAgenciesEntity(id: EntityID<Int>) : IntEntity(id) {
     var regionId by FreinetAgencies.regionId
     var agencyId by FreinetAgencies.agencyId
     var apiAccessKey by FreinetAgencies.apiAccessKey
-    var activated by FreinetAgencies.activated
+    var dataTransferActivated by FreinetAgencies.dataTransferActivated
 }

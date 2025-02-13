@@ -34,8 +34,7 @@ class FreinetAgencyQueryService {
         if (!Authorizer.mayViewFreinetAgencyInformationInRegion(admin, regionId)) {
             throw ForbiddenException()
         }
-
         val agency = FreinetAgencyRepository.getFreinetAgencyByRegionId(regionId)
-        agency?.let { FreinetAgency(agencyId = it.agencyId, apiAccessKey = agency.apiAccessKey, activated = agency.activated) }
+        agency?.let { FreinetAgency(agencyId = it.agencyId, apiAccessKey = agency.apiAccessKey, dataTransferActivated = agency.dataTransferActivated) }
     }
 }

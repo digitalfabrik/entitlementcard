@@ -126,9 +126,9 @@ type DynamicActivationCodeResult {
 }
 
 type FreinetAgency {
-  activated: Boolean!
   agencyId: Int!
   apiAccessKey: String!
+  dataTransferActivated: Boolean!
 }
 
 type Mutation {
