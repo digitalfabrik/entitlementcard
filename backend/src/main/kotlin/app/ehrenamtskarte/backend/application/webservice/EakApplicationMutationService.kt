@@ -84,7 +84,7 @@ class EakApplicationMutationService {
         verified: Boolean,
         dfe: DataFetchingEnvironment
     ): Boolean {
-        val application = transaction { getApplicationByApplicationVerificationAccessKey(accessKey, dfe) }
+        val application = transaction { getApplicationByApplicationVerificationAccessKey(accessKey) }
         return transaction {
             if (verified) {
                 val context = dfe.getContext<GraphQLContext>()

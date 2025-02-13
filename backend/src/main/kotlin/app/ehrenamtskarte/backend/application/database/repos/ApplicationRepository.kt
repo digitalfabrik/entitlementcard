@@ -16,7 +16,6 @@ import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.Regions
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import graphql.schema.DataFetchingEnvironment
 import io.javalin.util.FileUtil
 import jakarta.servlet.http.Part
 import org.jetbrains.exposed.dao.id.EntityID
@@ -25,7 +24,6 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.slf4j.LoggerFactory
 import java.io.File
 import java.nio.file.Paths
 import java.security.SecureRandom
@@ -101,40 +99,25 @@ object ApplicationRepository {
         }
     }
 
-    fun getApplicationByApplicant(accessKey: String, dfe: DataFetchingEnvironment): ApplicationView {
-        val logger = LoggerFactory.getLogger(ApplicationRepository::class.java)
-        val context = dfe.getContext<GraphQLContext>()
+    fun getApplicationByApplicant(accessKey: String): ApplicationView {
         return transaction {
             val application = ApplicationEntity.find { Applications.accessKey eq accessKey }
                 .singleOrNull()
-            if (application == null) {
-                logger.info("applicant with ${context.remoteIp} and accessKey:$accessKey failed to open application")
-                throw InvalidLinkException()
-            } else {
-                application.let { ApplicationView.fromDbEntity(it) }
-            }
+            application?.let { ApplicationView.fromDbEntity(it) } ?: throw InvalidLinkException()
         }
     }
 
     fun getApplicationByApplicationVerificationAccessKey(
-        applicationVerificationAccessKey: String,
-        dfe: DataFetchingEnvironment
+        applicationVerificationAccessKey: String
     ): ApplicationView {
-        val logger = LoggerFactory.getLogger(ApplicationRepository::class.java)
-        val context = dfe.getContext<GraphQLContext>()
         return transaction {
             val application = (Applications innerJoin ApplicationVerifications)
                 .slice(Applications.columns)
                 .select { ApplicationVerifications.accessKey eq applicationVerificationAccessKey }
                 .singleOrNull()
-            if (application == null) {
-                logger.info("verifier with ${context.remoteIp} and accessKey:$applicationVerificationAccessKey failed to open application")
-                throw InvalidLinkException()
-            } else {
-                application.let {
-                    ApplicationView.fromDbEntity(ApplicationEntity.wrapRow(it))
-                }
-            }
+            application?.let {
+                ApplicationView.fromDbEntity(ApplicationEntity.wrapRow(it))
+            } ?: throw InvalidLinkException()
         }
     }
 
