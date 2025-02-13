@@ -63,14 +63,14 @@ void assertConsistentCardInfo(CardInfo cardInfo) {
   if (!cardInfo.hasExpirationDay() && cardInfo.extensions.extensionBavariaCardType.cardType != BavariaCardType.GOLD) {
     throw QRCodeMissingExpiryException();
   }
-  final expirationDate = cardInfo.hasExpirationDay()
-      ? DateTime.fromMicrosecondsSinceEpoch(0).add(Duration(days: cardInfo.expirationDay))
-      : null;
-  if (expirationDate != null) {
-    if (DateTime.now().isAfterDate(expirationDate)) {
-      throw CardExpiredException(expirationDate);
-    }
-  }
+  // final expirationDate = cardInfo.hasExpirationDay()
+  //     ? DateTime.fromMicrosecondsSinceEpoch(0).add(Duration(days: cardInfo.expirationDay))
+  //     : null;
+  // if (expirationDate != null) {
+  //   if (DateTime.now().isAfterDate(expirationDate)) {
+  //     throw CardExpiredException(expirationDate);
+  //   }
+  // }
 }
 
 void _assertConsistentDynamicVerificationCode(DynamicVerificationCode verificationCode) {
