@@ -140,19 +140,11 @@ export const isValid = (
   card: Card,
   cardConfig: CardConfig,
   { expirationDateNullable } = { expirationDateNullable: false }
-): boolean => {
-  console.log('fullname:', isFullNameValid(card))
-  console.log(
-    'expirationDate:',
-    isExpirationDateValid(card, { nullable: expirationDateNullable }) || hasInfiniteLifetime(card)
-  )
-  return (
-    isFullNameValid(card) &&
-    getExtensions(card).every(({ extension, state }) => extension.isValid(state)) &&
-    (isExpirationDateValid(card, { nullable: expirationDateNullable }) || hasInfiniteLifetime(card)) &&
-    cardHasAllMandatoryExtensions(card, cardConfig)
-  )
-}
+): boolean =>
+  isFullNameValid(card) &&
+  getExtensions(card).every(({ extension, state }) => extension.isValid(state)) &&
+  (isExpirationDateValid(card, { nullable: expirationDateNullable }) || hasInfiniteLifetime(card)) &&
+  cardHasAllMandatoryExtensions(card, cardConfig)
 
 export const generateCardInfo = (card: Card): CardInfo => {
   const extensionsMessage: PartialMessage<CardExtensions> = getExtensions(card).reduce(

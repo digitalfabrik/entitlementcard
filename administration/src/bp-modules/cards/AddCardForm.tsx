@@ -28,8 +28,6 @@ const AddCardForm = ({ card, onRemove, updateCard }: CreateCardsFormProps): Reac
   const today = PlainDate.fromLocalDate(new Date())
   const { t } = useTranslation('cards')
 
-  console.log(card)
-
   return (
     <UiCard>
       <CardHeader>
