@@ -1,28 +1,24 @@
 import { ApolloError } from '@apollo/client'
+import { TFunction } from 'i18next'
 import { ReactElement } from 'react'
 
 import defaultErrorMap from './DefaultErrorMap'
+import graphQlErrorMap from './GraphQlErrorMap'
 
-type GraphQLErrorMessage = {
+export type GraphQLErrorMessage = {
   title: string
   description?: string | ReactElement
 }
 
-const getMessageFromApolloError = (error: ApolloError): GraphQLErrorMessage => {
-  const defaultMessage = 'Etwas ist schief gelaufen.'
-
-  if (error.networkError) {
-    return { title: 'Server nicht erreichbar.' }
-  }
-
+const getMessageFromApolloError = (error: ApolloError, t: TFunction): GraphQLErrorMessage => {
   const codesEqual = error.graphQLErrors.every(
     (value, index, array) => value.extensions!.code === array[0].extensions!.code
   )
   if (error.graphQLErrors.length < 1 || (error.graphQLErrors.length > 1 && !codesEqual)) {
-    return { title: defaultMessage }
+    return defaultErrorMap(error)
   }
 
-  return defaultErrorMap(error.graphQLErrors[0].extensions)
+  return graphQlErrorMap(t, error.graphQLErrors[0].extensions)
 }
 
 export default getMessageFromApolloError
