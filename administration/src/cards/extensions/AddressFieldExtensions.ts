@@ -26,6 +26,7 @@ const getAddressFieldExtension = <T extends AddressFieldExtension>(
   toString: (state): string => state[name],
   fromSerialized: (value: string) => ({ [name]: value } as AddressFieldExtensionState<T>),
   serialize: (state): string => state[name],
+  isMandatory: false,
 })
 
 export const AddressLine1Extension = getAddressFieldExtension(ADDRESS_LINE_1_EXTENSION)

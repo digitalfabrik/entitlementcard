@@ -1,5 +1,8 @@
 import { BavariaCardType } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
+import bayernConfig from '../project-configs/bayern/config'
+import koblenzConfig from '../project-configs/koblenz/config'
+import nuernbergConfig from '../project-configs/nuernberg/config'
 import PlainDate from '../util/PlainDate'
 import {
   MAX_NAME_LENGTH,
@@ -104,7 +107,7 @@ describe('Card', () => {
       expect(isValueValid(card, cardConfig, 'Name')).toBeTruthy()
       expect(isValueValid(card, cardConfig, 'Ablaufdatum')).toBeTruthy()
       expect(isValueValid(card, cardConfig, 'Kartentyp')).toBeTruthy()
-      expect(isValid(card)).toBeTruthy()
+      expect(isValid(card, cardConfig)).toBeTruthy()
 
       expect(getValueByCSVHeader(card, cardConfig, 'Name')).toBe('Thea Test')
       expect(getValueByCSVHeader(card, cardConfig, 'Ablaufdatum')).toBe(date.format())
@@ -136,7 +139,7 @@ describe('Card', () => {
       expect(isValueValid(card, cardConfig, 'Name')).toBeFalsy()
       expect(isValueValid(card, cardConfig, 'Ablaufdatum')).toBeFalsy()
       expect(isValueValid(card, cardConfig, 'Kartentyp')).toBeFalsy()
-      expect(isValid(card)).toBeFalsy()
+      expect(isValid(card, cardConfig)).toBeFalsy()
     })
   })
 
@@ -146,7 +149,7 @@ describe('Card', () => {
       const card = initializeCard(cardConfig, region, { fullName })
       expect(card.fullName).toBe(fullName)
       expect(isValueValid(card, cardConfig, 'Name')).toBeFalsy()
-      expect(isValid(card)).toBeFalsy()
+      expect(isValid(card, cardConfig)).toBeFalsy()
     }
   )
 
@@ -156,7 +159,7 @@ describe('Card', () => {
       const card = initializeCard(cardConfig, region, { fullName })
       expect(card.fullName).toBe(fullName)
       expect(isValueValid(card, cardConfig, 'Name')).toBeTruthy()
-      expect(isValid(card)).toBeTruthy()
+      expect(isValid(card, cardConfig)).toBeTruthy()
     }
   )
 
@@ -166,21 +169,67 @@ describe('Card', () => {
       const card = initializeCard(cardConfig, region, { fullName })
       expect(card.fullName).toBe(fullName)
       expect(isValueValid(card, cardConfig, 'Name')).toBeTruthy()
-      expect(isValid(card)).toBeTruthy()
+      expect(isValid(card, cardConfig)).toBeTruthy()
     }
   )
 
   it.each(['Karla', 'Peter'])('should correctly identify invalid fullname that is incomplete', fullName => {
     const card = initializeCard(cardConfig, region, { fullName })
     expect(isValueValid(card, cardConfig, 'Name')).toBeFalsy()
-    expect(isValid(card)).toBeFalsy()
+    expect(isValid(card, cardConfig)).toBeFalsy()
   })
 
   it(`should correctly identify invalid fullname that exceeds max length (${MAX_NAME_LENGTH} characters)`, () => {
     const card = initializeCard(cardConfig, region, { fullName: 'Karl LauterLauterLauterLauterLauterLauterLauterbach' })
     expect(isValueValid(card, cardConfig, 'Name')).toBeFalsy()
-    expect(isValid(card)).toBeFalsy()
+    expect(isValid(card, cardConfig)).toBeFalsy()
   })
+
+  it.each([
+    {
+      projectConfig: bayernConfig,
+      line: ['Thea Test', '03.03.2026'],
+      headers: ['Name', 'Ablaufdatum'],
+      missingExtension: 'Kartentyp',
+    },
+    {
+      projectConfig: nuernbergConfig,
+      line: ['Thea Test', '03.04.2024', '10.10.2000', '12345678'],
+      headers: ['Name', 'Ablaufdatum', 'Geburtsdatum', 'Pass-ID'],
+      missingExtension: 'Startdatum',
+    },
+    {
+      projectConfig: nuernbergConfig,
+      line: ['Thea Test', '03.04.2024', '10.10.2000', '10.12.2024'],
+      headers: ['Name', 'Ablaufdatum', 'Geburtsdatum', 'Startdatum'],
+      missingExtension: 'Pass-ID',
+    },
+    {
+      projectConfig: nuernbergConfig,
+      line: ['Thea Test', '03.04.2027', '12345678', '10.12.2024'],
+      headers: ['Name', 'Ablaufdatum', 'Pass-ID', 'Startdatum'],
+      missingExtension: 'Geburtsdatum',
+    },
+    {
+      projectConfig: koblenzConfig,
+      line: ['Thea Test', '03.03.2026', '12.12.2000'],
+      headers: ['Name', 'Ablaufdatum', 'Geburtsdatum'],
+      missingExtension: 'Referenznummer',
+    },
+    {
+      projectConfig: koblenzConfig,
+      line: ['Thea Test', '03.03.2026', '123K'],
+      headers: ['Name', 'Ablaufdatum', 'Referenznummer'],
+      missingExtension: 'Geburtsdatum',
+    },
+  ])(
+    `should invalidate card if '$missingExtension' is not provided for '$projectConfig.name'`,
+    ({ projectConfig, line, headers, missingExtension }) => {
+      const card = initializeCardFromCSV(projectConfig.card, line, headers, region)
+      expect(isValueValid(card, projectConfig.card, missingExtension)).toBeFalsy()
+      expect(isValid(card, cardConfig)).toBeFalsy()
+    }
+  )
 
   describe('self service', () => {
     const cardConfig = {

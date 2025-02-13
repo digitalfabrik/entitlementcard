@@ -21,6 +21,7 @@ const RegionExtension: Extension<RegionExtensionState> = {
   fromString,
   fromSerialized: fromString,
   serialize: toString,
+  isMandatory: true,
 }
 
 export default RegionExtension

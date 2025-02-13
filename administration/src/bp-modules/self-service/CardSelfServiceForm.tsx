@@ -52,7 +52,7 @@ const CardSelfServiceForm = ({
   const [openDataPrivacy, setOpenDataPrivacy] = useState<boolean>(false)
   const [openReferenceInformation, setOpenReferenceInformation] = useState<boolean>(false)
   const [_, setSearchParams] = useSearchParams()
-  const cardValid = isValid(card, { expirationDateNullable: true })
+  const cardValid = isValid(card, projectConfig.card, { expirationDateNullable: true })
   const appToaster = useAppToaster()
   const showErrorMessage = touchedFullName || formSendAttempt
 

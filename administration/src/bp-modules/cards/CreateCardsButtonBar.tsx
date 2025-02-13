@@ -19,8 +19,8 @@ const CreateCardsButtonBar = ({
   generateCardsCsv,
   goBack,
 }: CreateCardsButtonBarProps): ReactElement => {
-  const allCardsValid = cards.every(card => isValid(card))
-  const { csvExport } = useContext(ProjectConfigContext)
+  const { csvExport, card: cardConfig } = useContext(ProjectConfigContext)
+  const allCardsValid = cards.every(card => isValid(card, cardConfig))
   const { t } = useTranslation('cards')
 
   return (

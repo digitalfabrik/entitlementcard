@@ -41,6 +41,7 @@ export type Extension<T = Record<string, unknown>> = {
   toString(state: T): string
   fromSerialized(value: string): T | null
   serialize(state: T): string
+  isMandatory: boolean
 }
 
 const Extensions = [
