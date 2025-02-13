@@ -21,7 +21,7 @@ type ErrorExtensions = {
   [key: string]: unknown
 }
 
-const defaultErrorMap = (t: TFunction, extensions?: ErrorExtensions): GraphQLErrorMessage => {
+const graphQlErrorMap = (t: TFunction, extensions?: ErrorExtensions): GraphQLErrorMessage => {
   const defaultError = { title: t('errors:unknown') }
 
   if (!extensions || extensions.code === undefined) {
@@ -128,4 +128,4 @@ const defaultErrorMap = (t: TFunction, extensions?: ErrorExtensions): GraphQLErr
   }
 }
 
-export default defaultErrorMap
+export default graphQlErrorMap

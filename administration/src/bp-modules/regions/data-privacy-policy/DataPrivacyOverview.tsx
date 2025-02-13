@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
-import defaultErrorMap from '../../../errors/DefaultErrorMap'
+import graphQlErrorMap from '../../../errors/GraphQlErrorMap'
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
 import { GraphQlExceptionCode, useUpdateDataPolicyMutation } from '../../../generated/graphql'
 import { useAppToaster } from '../../AppToaster'
@@ -56,7 +56,7 @@ const DataPrivacyOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProp
 
   const onSave = () => updateDataPrivacy({ variables: { regionId, text: dataPrivacyText } })
 
-  const { title: errorMessage } = defaultErrorMap(t, {
+  const { title: errorMessage } = graphQlErrorMap(t, {
     code: GraphQlExceptionCode.InvalidDataPolicySize,
     maxSize: MAX_CHARS,
   })

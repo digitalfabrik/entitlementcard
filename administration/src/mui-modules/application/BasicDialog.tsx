@@ -51,7 +51,7 @@ const BasicDialog = ({
         {!viewportSmall && <CloseButtonDesktop onClick={() => onUpdateOpen(false)} />}
       </StyledDialogTitle>
       <DialogContent>
-        <StyledDialogText>{content}</StyledDialogText>
+        <StyledDialogText as='div'>{content}</StyledDialogText>
       </DialogContent>
       {viewportSmall && (
         <ButtonContainer>

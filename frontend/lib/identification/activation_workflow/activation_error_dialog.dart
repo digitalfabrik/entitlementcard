@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/widgets/custom_alert_dialog.dart';
 import 'package:flutter/material.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
@@ -9,26 +10,8 @@ class ActivationErrorDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final t = context.t;
-    return AlertDialog(
-      title: Text(t.identification.activationError),
-      content: SingleChildScrollView(
-        child: ListBody(
-          children: <Widget>[
-            Text(message, style: theme.textTheme.bodyMedium),
-          ],
-        ),
-      ),
-      actions: <Widget>[
-        TextButton(
-          child: Text(t.common.ok),
-          onPressed: () {
-            Navigator.of(context, rootNavigator: true).pop();
-          },
-        ),
-      ],
-    );
+    return CustomAlertDialog(title: t.identification.activationError, message: message);
   }
 
   static Future<void> showErrorDialog(BuildContext context, String message) async {

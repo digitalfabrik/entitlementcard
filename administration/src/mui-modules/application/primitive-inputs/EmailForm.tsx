@@ -1,6 +1,7 @@
 import { TextField } from '@mui/material'
 import React, { useContext, useState } from 'react'
 
+import { isEmailValid } from '../../../bp-modules/applications/utils/verificationHelper'
 import { EmailInput } from '../../../generated/graphql'
 import { FormContext } from '../SteppedSubForms'
 import { Form, FormComponentProps } from '../util/FormType'
@@ -20,6 +21,12 @@ const EmailForm: Form<State, ValidatedInput, AdditionalProps> = {
       return {
         type: 'error',
         message: `Text überschreitet die maximal erlaubten ${MAX_SHORT_TEXT_LENGTH} Zeichen.`,
+      }
+    }
+    if (!isEmailValid(email)) {
+      return {
+        type: 'error',
+        message: `E-Mail-Adresse ist ungültig.`,
       }
     }
     return { type: 'valid', value: { email } }

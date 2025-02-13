@@ -95,7 +95,7 @@ void _updateUserCode(List<DynamicUserCode> userCodes, DynamicUserCode userCode) 
 }
 
 bool isAlreadyInList(List<DynamicUserCode> userCodes, CardInfo info, List<int> pepper) {
-  return userCodes.any((userCode) => userCode.info == info && userCode.pepper == pepper);
+  return userCodes.any((userCode) => userCode.info == info && listEquals(userCode.pepper, pepper));
 }
 
 bool hasReachedCardLimit(List<DynamicUserCode> userCodes) {

@@ -1,4 +1,4 @@
-when: << pipeline.parameters.run_frontend >>
+when: << pipeline.parameters.run_build_frontend >>
 jobs:
   - check_frontend
   - build_android:
