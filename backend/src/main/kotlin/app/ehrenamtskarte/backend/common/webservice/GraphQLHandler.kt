@@ -10,6 +10,7 @@ import app.ehrenamtskarte.backend.exception.service.NotFoundException
 import app.ehrenamtskarte.backend.exception.service.NotImplementedException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.ExceptionSchemaConfig
+import app.ehrenamtskarte.backend.freinet.webservice.freinetGraphQlParams
 import app.ehrenamtskarte.backend.regions.utils.PostalCodesLoader
 import app.ehrenamtskarte.backend.regions.webservice.regionsGraphQlParams
 import app.ehrenamtskarte.backend.stores.webservice.storesGraphQlParams
@@ -37,7 +38,7 @@ class GraphQLHandler(
     private val backendConfiguration: BackendConfiguration,
     private val graphQLParams: GraphQLParams =
         storesGraphQlParams stitch cardsGraphQlParams
-            stitch applicationGraphQlParams stitch regionsGraphQlParams stitch authGraphQlParams,
+            stitch applicationGraphQlParams stitch regionsGraphQlParams stitch authGraphQlParams stitch freinetGraphQlParams,
     private val regionIdentifierByPostalCode: List<Pair<String, String>> = PostalCodesLoader.loadRegionIdentifierByPostalCodeMap()
 ) {
     val config: SchemaGeneratorConfig = graphQLParams.config

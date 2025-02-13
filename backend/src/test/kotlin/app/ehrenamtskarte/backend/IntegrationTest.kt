@@ -4,6 +4,7 @@ import app.ehrenamtskarte.backend.common.database.Database
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.PostgresConfig
 import app.ehrenamtskarte.backend.helper.TestAdministrators
+import app.ehrenamtskarte.backend.helper.TestFreinetAgencies
 import app.ehrenamtskarte.backend.migration.MigrationUtils
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
@@ -28,6 +29,7 @@ open class IntegrationTest {
             MigrationUtils.applyRequiredMigrations(database)
             Database.setupInitialData(config)
             TestAdministrators.createAll()
+            TestFreinetAgencies.create()
         }
 
         @JvmStatic

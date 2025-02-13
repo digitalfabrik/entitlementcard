@@ -67,7 +67,6 @@ internal class CreateCardsByCardInfosTest : GraphqlApiTest() {
         assertEquals(200, response.code)
 
         val jsonResponse = response.json()
-
         jsonResponse.apply {
             assertEquals("Error INVALID_INPUT occurred.", findValuesAsText("message").single())
             assertEquals("Failed to parse encodedCardInfo", findValuesAsText("reason").single())

@@ -60,6 +60,13 @@ enum class TestAdministrators(
         project = "bayern.ehrenamtskarte.app",
         email = "verein360@bayern.ehrenamtskarte.app",
         role = Role.EXTERNAL_VERIFIED_API_USER
+    ),
+    EAK_REGION_ADMIN_FREINET(
+        id = 8,
+        project = "bayern.ehrenamtskarte.app",
+        email = "region-admin+freinet@bayern.ehrenamtskarte.app",
+        role = Role.REGION_ADMIN,
+        regionId = 9
     );
 
     fun getJwtToken(): String {
