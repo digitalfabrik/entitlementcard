@@ -110,14 +110,14 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
             houseNumber = "10",
             postalCode = "90408",
             location = "Nürnberg",
-            latitude = "0",
-            longitude = "0",
+            latitude = 0.0,
+            longitude = 0.0,
             telephone = "0911/123456",
             email = "info@test.de",
             homepage = "https://www.test.de/kontakt/",
             discountDE = "20% Ermäßigung",
             discountEN = "20% discount",
-            categoryId = "17"
+            categoryId = 17
         )
         val mutation = createMutation(stores = listOf(csvStore))
         val response = post(client, mutation, projectStoreManager.getJwtToken())
@@ -172,14 +172,14 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
             houseNumber = "10",
             postalCode = "90408",
             location = "Nürnberg",
-            latitude = "0",
-            longitude = "0",
+            latitude = 0.0,
+            longitude = 0.0,
             telephone = "",
             email = "",
             homepage = "",
             discountDE = "",
             discountEN = "",
-            categoryId = "17"
+            categoryId = 17
         )
         val mutation = createMutation(stores = listOf(csvStore))
         val response = post(client, mutation, projectStoreManager.getJwtToken())
@@ -234,14 +234,14 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
             houseNumber = "10",
             postalCode = "90408",
             location = "Nürnberg",
-            latitude = "0",
-            longitude = "0",
+            latitude = 0.0,
+            longitude = 0.0,
             telephone = "0911/123456",
             email = "info@test.de",
             homepage = "https://www.test.de/kontakt/",
             discountDE = "20% Ermäßigung",
             discountEN = "20% discount",
-            categoryId = "17"
+            categoryId = 17
         )
         val mutation = createMutation(stores = listOf(csvStore, csvStore))
         val response = post(client, mutation, projectStoreManager.getJwtToken())
@@ -273,14 +273,14 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
             houseNumber = "10",
             postalCode = "90408",
             location = "Nürnberg",
-            latitude = "0",
-            longitude = "0",
+            latitude = 0.0,
+            longitude = 0.0,
             telephone = "0911/123456",
             email = "info@test.de",
             homepage = "https://www.test.de/kontakt/",
             discountDE = "20% Ermäßigung",
             discountEN = "20% discount",
-            categoryId = "17"
+            categoryId = 17
         )
         val mutation = createMutation(stores = listOf(newStore))
         val response = post(client, mutation, projectStoreManager.getJwtToken())
@@ -314,14 +314,14 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
             houseNumber = "10",
             postalCode = "90408",
             location = "Nürnberg",
-            latitude = "0",
-            longitude = "0",
+            latitude = 0.0,
+            longitude = 0.0,
             telephone = "0911/123456",
             email = "info@test.de",
             homepage = "https://www.test.de",
             discountDE = "100% Ermäßigung",
             discountEN = "100% discount",
-            categoryId = "17"
+            categoryId = 17
         )
         val mutation = createMutation(stores = listOf(newStore))
         val response = post(client, mutation, projectStoreManager.getJwtToken())
@@ -361,15 +361,15 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
     }
 
     private fun createAcceptingStoreInput(
-        categoryId: String,
+        categoryId: Int,
         discountDE: String,
         discountEN: String,
         email: String,
         homepage: String,
         houseNumber: String,
-        latitude: String,
+        latitude: Double,
         location: String,
-        longitude: String,
+        longitude: Double,
         name: String,
         postalCode: String,
         street: String,
@@ -377,15 +377,15 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
     ): String {
         return """
         {
-            categoryId: "$categoryId",
+            categoryId: $categoryId,
             discountDE: "$discountDE",
             discountEN: "$discountEN",
             email: "$email"
             homepage: "$homepage"
             houseNumber: "$houseNumber"
-            latitude: "$latitude"
+            latitude: $latitude
             location: "$location"
-            longitude: "$longitude"
+            longitude: $longitude
             name: "$name"
             postalCode: "$postalCode"
             street: "$street"

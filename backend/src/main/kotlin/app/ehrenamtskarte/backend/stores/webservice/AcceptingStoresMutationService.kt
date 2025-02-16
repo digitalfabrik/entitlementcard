@@ -30,9 +30,9 @@ class AcceptingStoresMutationService {
                 throw ForbiddenException()
             }
 
-            val (storesCreated, storesToDelete, storesUntouched) = AcceptingStoresRepository.importAcceptingStores(stores, projectEntity, dryRun)
+            val (storesCreated, storesDeleted, storesUntouched) = AcceptingStoresRepository.importAcceptingStores(stores, projectEntity, dryRun)
 
-            return@transaction StoreImportReturnResultModel(storesCreated, storesToDelete, storesUntouched)
+            return@transaction StoreImportReturnResultModel(storesCreated, storesDeleted, storesUntouched)
         }
     }
 }
