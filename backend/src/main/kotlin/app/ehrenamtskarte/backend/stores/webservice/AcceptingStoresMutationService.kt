@@ -34,9 +34,9 @@ class AcceptingStoresMutationService {
             }
 
             val projectId = projectEntity.id
-            val (storesCreated, storesToDelete, storesUntouched) = AcceptingStoresRepository.importAcceptingStores(stores, projectId, dryRun)
+            val (storesCreated, storesDeleted, storesUntouched) = AcceptingStoresRepository.importAcceptingStores(stores, projectId, dryRun)
 
-            return@transaction StoreImportReturnResultModel(storesCreated, storesToDelete, storesUntouched)
+            return@transaction StoreImportReturnResultModel(storesCreated, storesDeleted, storesUntouched)
         }
     }
 }
