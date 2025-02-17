@@ -2,12 +2,12 @@ import { Button } from '@blueprintjs/core'
 import React, { ReactElement } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { setProjectConfigOverride } from '../../project-configs/getProjectConfig'
+import { LOCAL_STORAGE_PROJECT_KEY } from '../../project-configs/constants'
 
 const ProjectSwitcher = (): ReactElement | null => {
   const navigate = useNavigate()
   const switchProject = (project: string) => {
-    setProjectConfigOverride(project)
+    window.localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, project)
     navigate(0)
   }
 

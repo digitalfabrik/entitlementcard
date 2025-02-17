@@ -10,7 +10,6 @@ import createCards, { CreateCardsError, CreateCardsResult } from '../../../cards
 import deleteCards from '../../../cards/deleteCards'
 import { DynamicActivationCode, StaticVerificationCode } from '../../../generated/card_pb'
 import { Region } from '../../../generated/graphql'
-import { ProjectConfigProvider } from '../../../project-configs/ProjectConfigContext'
 import bayernConfig from '../../../project-configs/bayern/config'
 import downloadDataUri from '../../../util/downloadDataUri'
 import { AppToasterProvider } from '../../AppToaster'
@@ -18,9 +17,7 @@ import useCardGenerator, { CardActivationState } from './useCardGenerator'
 
 const wrapper = ({ children }: { children: ReactNode }) => (
   <AppToasterProvider>
-    <ApolloProvider>
-      <ProjectConfigProvider>{children}</ProjectConfigProvider>
-    </ApolloProvider>
+    <ApolloProvider>{children}</ApolloProvider>
   </AppToasterProvider>
 )
 

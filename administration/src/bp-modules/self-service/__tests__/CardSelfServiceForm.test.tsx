@@ -6,7 +6,6 @@ import React, { ReactNode, act } from 'react'
 import { MemoryRouter } from 'react-router-dom'
 
 import { initializeCardFromCSV } from '../../../cards/Card'
-import { ProjectConfigProvider } from '../../../project-configs/ProjectConfigContext'
 import { LOCAL_STORAGE_PROJECT_KEY } from '../../../project-configs/constants'
 import koblenzConfig from '../../../project-configs/koblenz/config'
 import { renderWithTranslation } from '../../../testing/render'
@@ -19,9 +18,7 @@ import FormErrorMessage from '../components/FormErrorMessage'
 const wrapper = ({ children }: { children: ReactNode }) => (
   <LocalizationProvider dateAdapter={AdapterDateFns}>
     <MemoryRouter>
-      <AppToasterProvider>
-        <ProjectConfigProvider>{children}</ProjectConfigProvider>
-      </AppToasterProvider>
+      <AppToasterProvider>{children}</AppToasterProvider>
     </MemoryRouter>
   </LocalizationProvider>
 )
