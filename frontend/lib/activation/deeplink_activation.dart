@@ -8,6 +8,7 @@ import 'package:ehrenamtskarte/identification/id_card/id_card_with_region_query.
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:ehrenamtskarte/identification/util/activate_card.dart';
+import 'package:ehrenamtskarte/identification/verification_workflow/verification_qr_code_processor.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ import '../identification/util/card_info_utils.dart';
 
 enum DeepLinkActivationStatus {
   /// Link is invalid
-  invalidLink,
+  invalidCardInfo,
 
   /// The card already exists on the device.
   alreadyExists,
@@ -34,7 +35,7 @@ enum DeepLinkActivationStatus {
 
   factory DeepLinkActivationStatus.from(UserCodeModel userCodeModel, DynamicActivationCode? activationCode) {
     if (activationCode == null) {
-      return DeepLinkActivationStatus.invalidLink;
+      return DeepLinkActivationStatus.invalidCardInfo;
     } else if (isAlreadyInList(userCodeModel.userCodes, activationCode.info, activationCode.pepper)) {
       return DeepLinkActivationStatus.alreadyExists;
     } else if (hasReachedCardLimit(userCodeModel.userCodes)) {
@@ -91,7 +92,7 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              if (status != DeepLinkActivationStatus.invalidLink)
+              if (status != DeepLinkActivationStatus.invalidCardInfo)
                 Padding(
                   padding: const EdgeInsets.all(20),
                   child: Text(t.deeplinkActivation.description,
@@ -177,7 +178,7 @@ class _WarningText extends StatelessWidget {
     final String cardsInUse = userCodeModel.userCodes.length.toString();
     final String maxCardAmount = buildConfig.maxCardAmount.toString();
     final text = switch (status) {
-      DeepLinkActivationStatus.invalidLink => t.deeplinkActivation.activationInvalid,
+      DeepLinkActivationStatus.invalidCardInfo => t.deeplinkActivation.activationInvalid,
       DeepLinkActivationStatus.limitReached => '${t.deeplinkActivation.limitReached} ($cardsInUse/$maxCardAmount)',
       DeepLinkActivationStatus.alreadyExists => t.deeplinkActivation.alreadyExists,
       DeepLinkActivationStatus.cardExpired => t.identification.cardExpired,
@@ -200,6 +201,11 @@ class _WarningText extends StatelessWidget {
 DynamicActivationCode? getActivationCode(BuildContext context, String base64qrcode) {
   try {
     final activationCode = const ActivationCodeParser().parseQrCodeContent(const Base64Decoder().convert(base64qrcode));
+    return activationCode;
+  } on CardExpiredException catch (e,_){
+    debugPrint('Die Karte ist abgelaufen: ${e.expiry}');
+    final expirationDate = DateTime.utc(e.expiry.year, e.expiry.month, e.expiry.day).millisecondsSinceEpoch ~/1000;
+    final activationCode = DynamicActivationCode(info: CardInfo(fullName: e.fullName,expirationDay:expirationDate));
     return activationCode;
   } on QrCodeParseException catch (e, _) {
     debugPrint('Der Aktivierungscode ist ungültig.');
