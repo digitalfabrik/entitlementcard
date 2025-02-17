@@ -20,6 +20,7 @@ const BirthdayForm = ({
   isValid,
   showRequired,
 }: ExtensionComponentProps<BirthdayExtensionState>): ReactElement => {
+  const { t } = useTranslation('extensions')
   const [touched, setTouched] = useState(false)
   const { birthday } = value
   const showErrorMessage = touched || showRequired
@@ -36,10 +37,10 @@ const BirthdayForm = ({
     const today = PlainDate.fromLocalDate(new Date())
 
     if (!birthday) {
-      return 'Bitte geben Sie ein gültiges Geburtsdatum an.'
+      return t('birthdayMissingError')
     }
     if (birthday.isAfter(today)) {
-      return 'Das Geburtsdatum darf nicht in der Zukunft liegen.'
+      return t('birthdayFutureError')
     }
     if (isBirthdayHintEnabled()) {
       return t('extensions.birthdayHint')
@@ -53,7 +54,7 @@ const BirthdayForm = ({
   }
 
   return (
-    <FormGroup label='Geburtsdatum'>
+    <FormGroup label={t('birthdayLabel')}>
       <CustomDatePicker
         date={birthday?.toLocalDate() ?? null}
         onBlur={() => setTouched(true)}

@@ -1,4 +1,5 @@
 import { ApolloError } from '@apollo/client'
+import { TFunction } from 'i18next'
 import { ReactElement } from 'react'
 
 import defaultErrorMap from './DefaultErrorMap'
@@ -9,7 +10,7 @@ export type GraphQLErrorMessage = {
   description?: string | ReactElement
 }
 
-const getMessageFromApolloError = (error: ApolloError): GraphQLErrorMessage => {
+const getMessageFromApolloError = (error: ApolloError, t: TFunction): GraphQLErrorMessage => {
   const codesEqual = error.graphQLErrors.every(
     (value, index, array) => value.extensions!.code === array[0].extensions!.code
   )
@@ -17,7 +18,7 @@ const getMessageFromApolloError = (error: ApolloError): GraphQLErrorMessage => {
     return defaultErrorMap(error)
   }
 
-  return graphQlErrorMap(error.graphQLErrors[0].extensions)
+  return graphQlErrorMap(t, error.graphQLErrors[0].extensions)
 }
 
 export default getMessageFromApolloError
