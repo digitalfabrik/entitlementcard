@@ -25,7 +25,6 @@ const BirthdayForm = ({
   const { birthday } = value
   const showErrorMessage = touched || showRequired
   const projectConfig = useContext(ProjectConfigContext)
-  const { t } = useTranslation('application')
 
   const isBirthdayHintEnabled = (): boolean => {
     const today = PlainDate.fromLocalDate(new Date())
@@ -43,7 +42,7 @@ const BirthdayForm = ({
       return t('birthdayFutureError')
     }
     if (isBirthdayHintEnabled()) {
-      return t('extensions.birthdayHint')
+      return t('birthdayHint')
     }
 
     return null

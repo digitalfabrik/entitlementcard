@@ -130,7 +130,6 @@ class PlainDate {
    * @param duration
    */
   subtract(duration: DateDuration): PlainDate {
-    // Mirror the add() method but use date-fns/sub
     return PlainDate.fromLocalDate(sub(this.toLocalDate(), duration))
   }
 
