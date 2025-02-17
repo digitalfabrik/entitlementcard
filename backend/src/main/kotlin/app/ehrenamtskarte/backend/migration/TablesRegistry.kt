@@ -5,9 +5,9 @@ import app.ehrenamtskarte.backend.application.database.Applications
 import app.ehrenamtskarte.backend.auth.database.Administrators
 import app.ehrenamtskarte.backend.auth.database.ApiTokens
 import app.ehrenamtskarte.backend.cards.database.Cards
+import app.ehrenamtskarte.backend.freinet.database.FreinetAgencies
 import app.ehrenamtskarte.backend.migration.database.Migrations
 import app.ehrenamtskarte.backend.projects.database.Projects
-import app.ehrenamtskarte.backend.regions.database.FreinetAgencies
 import app.ehrenamtskarte.backend.regions.database.Regions
 import app.ehrenamtskarte.backend.stores.database.AcceptingStores
 import app.ehrenamtskarte.backend.stores.database.Addresses

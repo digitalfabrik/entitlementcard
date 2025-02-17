@@ -3,11 +3,11 @@ package app.ehrenamtskarte.backend.common.database
 import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
 import app.ehrenamtskarte.backend.config.BackendConfiguration
+import app.ehrenamtskarte.backend.freinet.util.FreinetAgenciesLoader
 import app.ehrenamtskarte.backend.migration.assertDatabaseIsInSync
 import app.ehrenamtskarte.backend.projects.database.insertOrUpdateProjects
 import app.ehrenamtskarte.backend.regions.database.insertOrUpdateRegions
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
-import app.ehrenamtskarte.backend.regions.utils.FreinetAgenciesLoader
 import app.ehrenamtskarte.backend.stores.database.createOrReplaceStoreFunctions
 import app.ehrenamtskarte.backend.stores.database.insertOrUpdateCategories
 import org.jetbrains.exposed.sql.Database.Companion.connect

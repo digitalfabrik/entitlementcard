@@ -1,10 +1,10 @@
-package app.ehrenamtskarte.backend.regions.utils
+package app.ehrenamtskarte.backend.freinet.util
 
 import app.ehrenamtskarte.backend.common.webservice.EAK_BAYERN_PROJECT
 import app.ehrenamtskarte.backend.config.ProjectConfig
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
-import app.ehrenamtskarte.backend.regions.webservice.schema.types.FreinetAgency
-import app.ehrenamtskarte.backend.regions.webservice.schema.types.XMLAgencies
+import app.ehrenamtskarte.backend.freinet.webservice.schema.types.FreinetApiAgency
+import app.ehrenamtskarte.backend.freinet.webservice.schema.types.XMLAgencies
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory
 
 class FreinetAgenciesLoader {
     private val logger = LoggerFactory.getLogger(FreinetAgenciesLoader::class.java)
-    private val httpClient = HttpClient() {
+    private val httpClient = HttpClient {
         install(HttpRequestRetry) {
             retryOnServerErrors(maxRetries = 3)
             retryOnException(maxRetries = 3, retryOnTimeout = false)
@@ -37,7 +37,7 @@ class FreinetAgenciesLoader {
         }
     }
 
-    fun loadAgenciesFromXml(projectConfigs: List<ProjectConfig>): List<FreinetAgency> {
+    fun loadAgenciesFromXml(projectConfigs: List<ProjectConfig>): List<FreinetApiAgency> {
         val bayernConfig =
             projectConfigs.find { it.id == EAK_BAYERN_PROJECT } ?: throw NotFoundException("Project config not found")
         if (bayernConfig.freinetAgencies == null) {
@@ -59,8 +59,7 @@ class FreinetAgenciesLoader {
                     method = HttpMethod.Get
                 }.bodyAsText()
             }
-            // check for 404 before reading xml get response.status
-            print(response)
+
             val xmlMapper = XmlMapper()
             xmlMapper.registerModule(KotlinModule.Builder().build())
             xmlMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
@@ -73,10 +72,11 @@ class FreinetAgenciesLoader {
         }
     }
 
-    private fun transformAndFilterAgencyData(agencies: XMLAgencies): List<FreinetAgency> {
-        return agencies.agencies.filter { it.agencyId != null && it.ars != null && it.accessKey != null }.map {
-            FreinetAgency(
+    private fun transformAndFilterAgencyData(agencies: XMLAgencies): List<FreinetApiAgency> {
+        return agencies.agencies.filter { it.agencyId != null && it.ars != null && it.accessKey != null && it.agencyName !== null }.map {
+            FreinetApiAgency(
                 agencyId = it.agencyId!!.toInt(),
+                agencyName = it.agencyName!!,
                 apiAccessKey = it.accessKey!!,
                 arsList = it.ars?.split(",") ?: emptyList()
             )

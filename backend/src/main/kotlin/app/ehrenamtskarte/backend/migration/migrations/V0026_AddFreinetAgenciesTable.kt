@@ -15,7 +15,9 @@ internal class V0026_AddFreinetAgenciesTable : Migration() {
                     id SERIAL PRIMARY KEY ,
                     "regionId" INTEGER NOT NULL,
                     "agencyId" INTEGER NOT NULL,
-                    "apiAccessKey" character varying(10) NOT NULL 
+                    "agencyName" character varying(255) NOT NULL,
+                    "apiAccessKey" character varying(10) NOT NULL,
+                    "dataTransferActivated" BOOLEAN NOT NULL default false
                 );
              ALTER TABLE freinetagencies ADD CONSTRAINT fk_freinetagencies_regionid__id FOREIGN KEY ("regionId") REFERENCES regions(id) ON DELETE RESTRICT ON UPDATE RESTRICT;
              ALTER TABLE freinetagencies ADD CONSTRAINT freinetagencies_agencyid_unique UNIQUE ("agencyId");

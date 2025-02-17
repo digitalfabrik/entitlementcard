@@ -3,12 +3,13 @@ package app.ehrenamtskarte.backend.regions.database
 import app.ehrenamtskarte.backend.common.webservice.EAK_BAYERN_PROJECT
 import app.ehrenamtskarte.backend.common.webservice.KOBLENZ_PASS_PROJECT
 import app.ehrenamtskarte.backend.common.webservice.NUERNBERG_PASS_PROJECT
+import app.ehrenamtskarte.backend.freinet.database.FreinetAgenciesEntity
+import app.ehrenamtskarte.backend.freinet.database.insertOrUpdateFreinetRegionInformation
+import app.ehrenamtskarte.backend.freinet.webservice.schema.types.FreinetApiAgency
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
-import app.ehrenamtskarte.backend.regions.webservice.schema.types.FreinetAgency
-import org.jetbrains.exposed.sql.SizedIterable
 import org.jetbrains.exposed.sql.transactions.transaction
 
-fun insertOrUpdateRegions(agencies: List<FreinetAgency>?) {
+fun insertOrUpdateRegions(agencies: List<FreinetApiAgency>) {
     val projects = ProjectEntity.all()
     val dbRegions = RegionEntity.all()
     val dbFreinetRegionInformation = FreinetAgenciesEntity.all()
@@ -65,30 +66,12 @@ fun insertOrUpdateRegions(agencies: List<FreinetAgency>?) {
                 dbRegion.prefix = eakRegion[0]
                 dbRegion.website = eakRegion[3]
             }
-            val agency = agencies?.find { it -> it.arsList.any { it.startsWith(eakRegion[2]) } }
+            val agency = agencies.find { it -> it.arsList.any { it.startsWith(eakRegion[2]) } }
             if (agency != null) {
                 insertOrUpdateFreinetRegionInformation(agency, dbFreinetRegionInformation, regionEntity)
             }
         }
         createOrUpdateRegion(NUERNBERG_PASS_PROJECT, "Nürnberg", "Stadt", "09564", "https://nuernberg.de", false)
         createOrUpdateRegion(KOBLENZ_PASS_PROJECT, "Koblenz", "Stadt", "07111", "https://koblenz.de/", false)
-    }
-}
-
-fun insertOrUpdateFreinetRegionInformation(
-    agency: FreinetAgency,
-    dbFreinetRegionInformation: SizedIterable<FreinetAgenciesEntity>,
-    regionEntity: RegionEntity
-) {
-    val dbAgency = dbFreinetRegionInformation.find { it.agencyId == agency.agencyId }
-    if (dbAgency == null) {
-        FreinetAgenciesEntity.new {
-            regionId = regionEntity.id
-            agencyId = agency.agencyId
-            apiAccessKey = agency.apiAccessKey
-        }
-    } else {
-        dbAgency.agencyId = agency.agencyId
-        dbAgency.apiAccessKey = agency.apiAccessKey
     }
 }
