@@ -50,7 +50,6 @@ const Login = ({ onSignIn }: { onSignIn: (payload: SignInPayload) => void }): Re
           loading={mutationState.loading}
         />
         <ProjectSwitcher />
-        <button type="button" onClick={() => {throw new Error("This is your first error!");}}>Break the world</button>
       </Card>
     </StandaloneCenter>
   )

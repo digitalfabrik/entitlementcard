@@ -6,9 +6,10 @@ import { createRoot } from 'react-dom/client'
 
 import App from './App'
 import './index.css'
-import initSentry from './util/initSentry'
+import { isProductionEnvironment } from './util/helper'
+import { initSentry } from './util/sentry'
 
-if (process.env.REACT_APP_IS_PRODUCTION === "true") {
+if (isProductionEnvironment()) {
   initSentry()
 }
 

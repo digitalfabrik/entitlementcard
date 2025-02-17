@@ -15,6 +15,7 @@ import downloadDataUri from '../../../util/downloadDataUri'
 import getDeepLinkFromQrCode from '../../../util/getDeepLinkFromQrCode'
 import { updateArrayItem } from '../../../util/helper'
 import normalizeString from '../../../util/normalizeString'
+import { reportError } from '../../../util/sentry'
 import { useAppToaster } from '../../AppToaster'
 import { saveActivityLog } from '../../user-settings/ActivityLog'
 
@@ -107,7 +108,7 @@ const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
         try {
           await deleteCards(client, region.id, extractCardInfoHashes(codes), t)
         } catch (e) {
-          console.log(e)
+          reportError(e)
         }
       }
       if (error instanceof CreateCardsError) {
@@ -130,6 +131,7 @@ const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
           message: t('unknownError'),
           intent: 'danger',
         })
+        reportError(error)
       }
       setState(CardActivationState.input)
     },
