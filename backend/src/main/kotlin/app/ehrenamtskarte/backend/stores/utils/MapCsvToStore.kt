@@ -8,15 +8,16 @@ fun getDiscount(discounts: MutableList<String?>): String {
     discounts.removeIf { it.isNullOrEmpty() }
     return discounts.joinToString("\n\n")
 }
+
 fun mapCsvToStore(csvStore: CSVAcceptingStore): AcceptingStore {
     val discount = getDiscount(mutableListOf(csvStore.discountDE, csvStore.discountEN))
     return AcceptingStore(
-        csvStore.name,
+        csvStore.name.clean()!!,
         COUNTRY_CODE,
-        csvStore.location,
-        csvStore.postalCode,
-        csvStore.street,
-        csvStore.houseNumber,
+        csvStore.location.clean()!!,
+        csvStore.postalCode.clean(),
+        csvStore.street.clean(),
+        csvStore.houseNumber.clean(),
         additionalAddressInformation = "",
         csvStore.longitude,
         csvStore.latitude,
