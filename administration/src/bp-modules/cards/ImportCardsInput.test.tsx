@@ -11,7 +11,8 @@ import nuernbergConfig from '../../project-configs/nuernberg/config'
 import { renderWithRouter } from '../../testing/render'
 import PlainDate from '../../util/PlainDate'
 import { AppToasterProvider } from '../AppToaster'
-import ImportCardsInput, { ENTRY_LIMIT } from './ImportCardsInput'
+import ImportCardsInput from './ImportCardsInput'
+import { ENTRY_LIMIT } from './constants'
 
 jest.mock('../../Router', () => ({}))
 

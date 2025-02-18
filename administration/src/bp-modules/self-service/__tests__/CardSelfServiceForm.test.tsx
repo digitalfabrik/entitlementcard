@@ -12,9 +12,9 @@ import koblenzConfig from '../../../project-configs/koblenz/config'
 import { renderWithTranslation } from '../../../testing/render'
 import { AppToasterProvider } from '../../AppToaster'
 import CardSelfServiceForm from '../CardSelfServiceForm'
-import { DataPrivacyAcceptingStatus } from '../CardSelfServiceView'
 import { exampleCard } from '../__mock__/mockSelfServiceCard'
 import FormErrorMessage from '../components/FormErrorMessage'
+import { DataPrivacyAcceptingStatus } from '../constants'
 
 const wrapper = ({ children }: { children: ReactNode }) => (
   <LocalizationProvider dateAdapter={AdapterDateFns}>

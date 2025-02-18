@@ -4,7 +4,7 @@ import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import PlainDate from '../../util/PlainDate'
-import { Extension, ExtensionComponentProps } from './extensions'
+import type { Extension, ExtensionComponentProps } from './extensions'
 
 export const START_DAY_EXTENSION_NAME = 'startDay'
 export type StartDayExtensionState = { [START_DAY_EXTENSION_NAME]: PlainDate }

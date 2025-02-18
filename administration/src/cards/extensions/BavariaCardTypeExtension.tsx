@@ -4,7 +4,7 @@ import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { BavariaCardType as BavariaCardTypeEnum } from '../../generated/card_pb'
-import { Extension, ExtensionComponentProps } from './extensions'
+import type { Extension, ExtensionComponentProps } from './extensions'
 
 export const BAVARIA_CARD_TYPE_EXTENSION_NAME = 'bavariaCardType'
 

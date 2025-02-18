@@ -3,7 +3,7 @@ import RegionExtension from '../../cards/extensions/RegionExtension'
 import { applicationJsonToCardQuery, applicationJsonToPersonalData } from '../bayern/config'
 import { DataPrivacyBaseText, dataPrivacyBaseHeadline } from '../bayern/dataPrivacyBase'
 import pdfConfiguration from '../bayern/pdf'
-import { ProjectConfig } from '../getProjectConfig'
+import type { ProjectConfig } from '../getProjectConfig'
 
 const config: ProjectConfig = {
   name: 'Showcase Berechtigungskarte',

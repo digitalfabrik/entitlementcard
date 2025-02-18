@@ -91,6 +91,7 @@
     "html-webpack-plugin": "^5.6.0",
     "jest": "^29.6.2",
     "jest-environment-jsdom": "^29.6.2",
+    "madge": "^8.0.0",
     "mini-css-extract-plugin": "^2.7.6",
     "prettier": "^2.8.8",
     "react-dev-utils": "^12.0.1",
@@ -117,7 +118,8 @@
     "format": "NODE_ENV=test eslint . --fix && prettier . --write",
     "generate-graphql": "graphql-codegen --config graphql-codegen.yml",
     "generate-protobuf": "protoc -I ../specs --es_out=src/generated --es_opt=target=ts --plugin=protoc-gen-es=../node_modules/.bin/protoc-gen-es ../specs/card.proto",
-    "postinstall": "npm run generate-protobuf && npm run generate-graphql"
+    "postinstall": "npm run generate-protobuf && npm run generate-graphql",
+    "check-circular-deps": "bash ./scripts/check_circular_deps.sh"
   },
   "browserslist": {
     "production": [
@@ -133,5 +135,15 @@
     "presets": [
       "react-app"
     ]
+  },
+  "madge": {
+    "detectiveOptions": {
+      "ts": {
+        "skipTypeImports": true
+      },
+      "tsx": {
+        "skipTypeImports": true
+      }
+    }
   }
 }

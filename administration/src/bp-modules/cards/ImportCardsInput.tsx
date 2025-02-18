@@ -4,15 +4,16 @@ import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { FREINET_PARAM } from '../../Router'
 import { Card, initializeCardFromCSV } from '../../cards/Card'
 import { Region } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { getCsvHeaders } from '../../project-configs/helper'
 import { useAppToaster } from '../AppToaster'
 import FileInputStateIcon from '../FileInputStateIcon'
+import { FREINET_PARAM } from '../constants'
 import convertFreinetImport from '../util/convertFreinetImport'
 import ImportCardsRequirementsText from './ImportCardsRequirementsText'
+import { ENTRY_LIMIT, FILE_SIZE_LIMIT_MEGA_BYTES } from './constants'
 
 const CardImportInputContainer = styled.div`
   display: flex;
@@ -30,9 +31,7 @@ const defaultExtensionsByMIMEType = {
   'text/csv': '.csv',
 }
 
-export const FILE_SIZE_LIMIT_MEGA_BYTES = 2
 const FILE_SIZE_LIMIT_BYTES = FILE_SIZE_LIMIT_MEGA_BYTES * 1000 * 1000
-export const ENTRY_LIMIT = 300
 
 type ImportCardsInputProps = {
   setCards: (cards: Card[]) => void

@@ -1,13 +1,14 @@
 import { PartialMessage } from '@bufbuild/protobuf'
 
-import { maxCardValidity } from '../bp-modules/cards/AddCardForm'
 import { CardExtensions, CardInfo } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
-import { CardConfig } from '../project-configs/getProjectConfig'
+import type { CardConfig } from '../project-configs/getProjectConfig'
 import PlainDate from '../util/PlainDate'
 import { containsOnlyLatinAndCommonCharset, containsSpecialCharacters } from '../util/helper'
+import { maxCardValidity } from './constants'
 import { REGION_EXTENSION_NAME } from './extensions/RegionExtension'
-import Extensions, { Extension, ExtensionKey, ExtensionState, InferExtensionStateType } from './extensions/extensions'
+import Extensions from './extensions/extensions'
+import type { Extension, ExtensionKey, ExtensionState, InferExtensionStateType } from './extensions/extensions'
 
 // Due to limited space on the cards
 export const MAX_NAME_LENGTH = 30

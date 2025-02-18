@@ -545,6 +545,10 @@ jobs:
                 name: Lint
                 working_directory: ~/project/administration
             - run:
+                command: npm run check-circular-deps
+                name: Check circular dependencies
+                working_directory: ~/project/administration
+            - run:
                 command: npm run test:coverage -- --maxWorkers=2
                 name: Run tests and generate coverage report
                 working_directory: ~/project/administration
