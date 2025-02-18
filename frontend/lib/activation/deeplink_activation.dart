@@ -214,7 +214,7 @@ DynamicActivationCode? getActivationCode(BuildContext context, String base64qrco
     updateErrorMessage(t.deeplinkActivation.qrCodeParseExceptionMessage);
     return null;
   } on FormatException catch (e, _) {
-    debugPrint(t.deeplinkActivation.qrCodeParseExceptionMessage);
+    debugPrint(t.deeplinkActivation.formatExceptionMessage);
     updateErrorMessage(t.deeplinkActivation.formatExceptionMessage);
     return null;
   }
