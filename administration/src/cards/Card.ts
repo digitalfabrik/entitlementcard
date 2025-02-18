@@ -132,10 +132,20 @@ export const isExpirationDateValid = (card: Card, { nullable } = { nullable: fal
   )
 }
 
-export const isValid = (card: Card, { expirationDateNullable } = { expirationDateNullable: false }): boolean =>
+export const cardHasAllMandatoryExtensions = (card: Card, cardConfig: CardConfig): boolean => {
+  const mandatoryExtensions = cardConfig.extensions.filter(extension => extension.isMandatory)
+  return mandatoryExtensions.every(extension => Object.keys(card.extensions).includes(extension.name))
+}
+
+export const isValid = (
+  card: Card,
+  cardConfig: CardConfig,
+  { expirationDateNullable } = { expirationDateNullable: false }
+): boolean =>
   isFullNameValid(card) &&
   getExtensions(card).every(({ extension, state }) => extension.isValid(state)) &&
-  (isExpirationDateValid(card, { nullable: expirationDateNullable }) || hasInfiniteLifetime(card))
+  (isExpirationDateValid(card, { nullable: expirationDateNullable }) || hasInfiniteLifetime(card)) &&
+  cardHasAllMandatoryExtensions(card, cardConfig)
 
 export const generateCardInfo = (card: Card): CardInfo => {
   const extensionsMessage: PartialMessage<CardExtensions> = getExtensions(card).reduce(

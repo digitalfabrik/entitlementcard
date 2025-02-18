@@ -17,6 +17,7 @@ const EMailNotificationExtension: Extension<EmailNotificationExtensionState> = {
   toString,
   fromSerialized: fromString,
   serialize: toString,
+  isMandatory: false,
 }
 
 export default EMailNotificationExtension

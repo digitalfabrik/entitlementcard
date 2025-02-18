@@ -58,6 +58,7 @@ const NuernbergPassIdExtension: Extension<NuernbergPassIdExtensionState> = {
   toString,
   fromSerialized: fromString,
   serialize: toString,
+  isMandatory: true,
 }
 
 export default NuernbergPassIdExtension
