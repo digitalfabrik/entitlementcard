@@ -5,6 +5,7 @@ import { QrCode } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
 import { PdfConfig } from '../project-configs/getProjectConfig'
 import getDeepLinkFromQrCode from '../util/getDeepLinkFromQrCode'
+import { reportErrorToSentry } from '../util/sentry'
 import { Card } from './Card'
 import { CreateCardsResult } from './createCards'
 import pdfFormElement from './pdf/PdfFormElement'
@@ -28,10 +29,10 @@ const loadCustomFontWithFallback = async (font: string, doc: PDFDocument, fallba
       const fontBytes = await res.arrayBuffer()
       return doc.embedFont(fontBytes)
     }
-    reportError(`Couldn't load custom font ${font}. Using fallback font.`)
+    reportErrorToSentry(`Couldn't load custom font ${font}. Using fallback font.`)
     return doc.embedFont(fallbackFont)
   } catch (error) {
-    reportError(error)
+    reportErrorToSentry(error)
     return doc.embedFont(fallbackFont)
   }
 }

@@ -9,7 +9,7 @@ export const initSentry = (): void => {
   })
 }
 
-export const reportError = (error: unknown): void => {
+export const reportErrorToSentry = (error: unknown): void => {
   if (isProductionEnvironment()) {
     Sentry.captureException(error)
   } else {
