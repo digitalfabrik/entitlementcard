@@ -227,7 +227,7 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
     }
 
     @Test
-    fun `POST returns a successful response if two duplicate acceptance stores are submitted`() = JavalinTest.test(app) { _, client ->
+    fun `POST returns an error if two duplicate acceptance stores are submitted`() = JavalinTest.test(app) { _, client ->
         val csvStore = createAcceptingStoreInput(
             name = "Test store",
             street = "Teststr.",
@@ -250,18 +250,8 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
 
         val jsonResponse = response.json()
 
-        jsonResponse.apply {
-            assertEquals(1, findValue("storesCreated").intValue())
-            assertEquals(0, findValue("storesDeleted").intValue())
-            assertEquals(1, findValue("storesUntouched").intValue())
-        }
-
-        transaction {
-            assertEquals(1, AcceptingStores.selectAll().count())
-            assertEquals(1, Contacts.selectAll().count())
-            assertEquals(1, Addresses.selectAll().count())
-            assertEquals(1, PhysicalStores.selectAll().count())
-        }
+        assertEquals("Error INVALID_JSON occurred.", jsonResponse.findValue("message").textValue())
+        assertEquals("Duplicate store found: Test store Teststr. 10 90408 Nürnberg", jsonResponse.findValue("reason").textValue())
     }
 
     @Test
