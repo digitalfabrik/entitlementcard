@@ -1,7 +1,6 @@
 import { act, fireEvent } from '@testing-library/react'
-import React, { ReactNode } from 'react'
+import React from 'react'
 
-import { ProjectConfigProvider } from '../../../project-configs/ProjectConfigContext'
 import { LOCAL_STORAGE_PROJECT_KEY } from '../../../project-configs/constants'
 import koblenzConfig from '../../../project-configs/koblenz/config'
 import nuernbergConfig from '../../../project-configs/nuernberg/config'
@@ -16,7 +15,6 @@ const setDryRun = jest.fn()
 
 const goBack = jest.fn()
 const importStores = jest.fn()
-const wrapper = ({ children }: { children: ReactNode }) => <ProjectConfigProvider>{children}</ProjectConfigProvider>
 
 describe('StoresButtonBar', () => {
   const projectConfigsWithStoreUpload = [{ projectConfig: nuernbergConfig }, { projectConfig: koblenzConfig }]
@@ -31,10 +29,7 @@ describe('StoresButtonBar', () => {
           goBack={goBack}
           acceptingStores={[]}
           importStores={importStores}
-        />,
-        {
-          wrapper,
-        }
+        />
       )
 
       const backButton = getByText('Zurück zur Auswahl')
@@ -58,10 +53,7 @@ describe('StoresButtonBar', () => {
           goBack={goBack}
           acceptingStores={[]}
           importStores={importStores}
-        />,
-        {
-          wrapper,
-        }
+        />
       )
 
       const importButton = getByText('Importiere Akzeptanzpartner').closest('button') as HTMLButtonElement
@@ -91,8 +83,7 @@ describe('StoresButtonBar', () => {
           goBack={goBack}
           acceptingStores={stores}
           importStores={importStores}
-        />,
-        { wrapper }
+        />
       )
 
       const importButton = getByText('Importiere Akzeptanzpartner').closest('button') as HTMLButtonElement
@@ -123,8 +114,7 @@ describe('StoresButtonBar', () => {
           goBack={goBack}
           acceptingStores={stores}
           importStores={importStores}
-        />,
-        { wrapper }
+        />
       )
 
       const importButton = getAllByText('Importiere Akzeptanzpartner')[0].closest('button') as HTMLButtonElement

@@ -115,7 +115,7 @@ const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
       }
       setCode(code)
       setDeepLink(
-        getCustomDeepLinkFromQrCode({
+        getCustomDeepLinkFromQrCode(projectConfig, {
           case: 'dynamicActivationCode',
           value: code.dynamicActivationCode,
         })

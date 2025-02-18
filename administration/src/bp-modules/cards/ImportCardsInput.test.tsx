@@ -2,10 +2,11 @@ import { OverlayToaster } from '@blueprintjs/core'
 import { fireEvent, waitFor } from '@testing-library/react'
 import React from 'react'
 
+import { BAVARIA_CARD_TYPE_GOLD, BAVARIA_CARD_TYPE_STANDARD } from '../../cards/extensions/BavariaCardTypeExtension'
 import { Region } from '../../generated/graphql'
 import { ProjectConfigProvider } from '../../project-configs/ProjectConfigContext'
 import bayernConfig from '../../project-configs/bayern/config'
-import { ProjectConfig, setProjectConfigOverride } from '../../project-configs/getProjectConfig'
+import { ProjectConfig } from '../../project-configs/getProjectConfig'
 import koblenzConfig from '../../project-configs/koblenz/config'
 import nuernbergConfig from '../../project-configs/nuernberg/config'
 import { renderWithRouter } from '../../testing/render'
@@ -38,11 +39,10 @@ describe('ImportCardsInput', () => {
     } as unknown as FileReader
     jest.spyOn(global, 'FileReader').mockReturnValue(fileReaderMock)
     const file = new File([csv], `${projectConfig.name}.csv`, { type: 'text/csv' })
-    setProjectConfigOverride(projectConfig.projectId)
 
     const { getByTestId } = renderWithRouter(
       <AppToasterProvider>
-        <ProjectConfigProvider>
+        <ProjectConfigProvider projectConfig={projectConfig}>
           <ImportCardsInput setCards={setCards} region={region} />
         </ProjectConfigProvider>
       </AppToasterProvider>
@@ -61,7 +61,7 @@ describe('ImportCardsInput', () => {
     const csv = `
 Name,Ablaufdatum,Kartentyp
 Thea Test,03.04.2024,Standard
-Tilo Traber,,Gold
+Tilo Traber,,gold
 `
     await renderAndSubmitCardsInput(projectConfig, csv, setCards)
 
@@ -70,20 +70,54 @@ Tilo Traber,,Gold
     expect(setCards).toHaveBeenCalledWith([
       {
         expirationDate: PlainDate.fromCustomFormat('03.04.2024'),
-        extensions: { bavariaCardType: 'Standard', regionId: 0 },
+        extensions: { bavariaCardType: BAVARIA_CARD_TYPE_STANDARD, regionId: 0 },
         fullName: 'Thea Test',
         id: expect.any(Number),
       },
-      { expirationDate: null, extensions: { regionId: 0 }, fullName: 'Tilo Traber', id: expect.any(Number) },
+      {
+        expirationDate: null,
+        extensions: { regionId: 0, bavariaCardType: BAVARIA_CARD_TYPE_GOLD },
+        fullName: 'Tilo Traber',
+        id: expect.any(Number),
+      },
+    ])
+  })
+
+  it('should correctly import CSV Card for bayern freinet', async () => {
+    jest.spyOn(URLSearchParams.prototype, 'get').mockReturnValue('true')
+
+    const projectConfig = bayernConfig
+    const csv = `
+inhaber_ehrenamtskarte;eak_datum;eak_karten_status;co_name;anrede;titel;vorname;nachname;strasse;plz;ort
+�Blau�;01.12.2029;Karte abgelaufen;;Herr;;Maxim;Musterin;Kirchgasse 30;97346;Iphofen
+�Gold�;;Karte an EA verschickt;;Herr;;Max;Muster;Kleinlangheimer Stra�e 12;97355;Kleinlangheim
+`
+    await renderAndSubmitCardsInput(projectConfig, csv, setCards)
+
+    expect(toaster).not.toHaveBeenCalled()
+    expect(setCards).toHaveBeenCalledTimes(1)
+    expect(setCards).toHaveBeenCalledWith([
+      {
+        expirationDate: PlainDate.fromCustomFormat('01.12.2029'),
+        extensions: { bavariaCardType: BAVARIA_CARD_TYPE_STANDARD, regionId: 0 },
+        fullName: 'Maxim Musterin',
+        id: expect.any(Number),
+      },
+      {
+        expirationDate: null,
+        extensions: { regionId: 0, bavariaCardType: BAVARIA_CARD_TYPE_GOLD },
+        fullName: 'Max Muster',
+        id: expect.any(Number),
+      },
     ])
   })
 
   it('should correctly import CSV Card for nuernberg', async () => {
     const projectConfig = nuernbergConfig
     const csv = `
-Name,Ablaufdatum,Geburtsdatum,Pass-ID
-Thea Test,03.04.2024,10.10.2000,12345678
-Tilo Traber,03.04.2025,12.01.1984,98765432
+Name,Ablaufdatum,Startdatum,Geburtsdatum,Pass-ID
+Thea Test,03.04.2024,01.01.2026,10.10.2000,12345678
+Tilo Traber,03.04.2025,01.01.2026,12.01.1984,98765432
 `
 
     await renderAndSubmitCardsInput(projectConfig, csv, setCards)
@@ -93,13 +127,23 @@ Tilo Traber,03.04.2025,12.01.1984,98765432
     expect(setCards).toHaveBeenCalledWith([
       {
         expirationDate: PlainDate.fromCustomFormat('03.04.2024'),
-        extensions: { birthday: PlainDate.fromCustomFormat('10.10.2000'), regionId: 0, nuernbergPassId: 12345678 },
+        extensions: {
+          birthday: PlainDate.fromCustomFormat('10.10.2000'),
+          regionId: 0,
+          nuernbergPassId: 12345678,
+          startDay: PlainDate.fromCustomFormat('01.01.2026'),
+        },
         fullName: 'Thea Test',
         id: expect.any(Number),
       },
       {
         expirationDate: PlainDate.fromCustomFormat('03.04.2025'),
-        extensions: { birthday: PlainDate.fromCustomFormat('12.01.1984'), regionId: 0, nuernbergPassId: 98765432 },
+        extensions: {
+          birthday: PlainDate.fromCustomFormat('12.01.1984'),
+          regionId: 0,
+          nuernbergPassId: 98765432,
+          startDay: PlainDate.fromCustomFormat('01.01.2026'),
+        },
         fullName: 'Tilo Traber',
         id: expect.any(Number),
       },
