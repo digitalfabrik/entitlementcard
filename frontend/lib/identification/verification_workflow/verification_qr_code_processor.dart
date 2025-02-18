@@ -68,7 +68,7 @@ void assertConsistentCardInfo(CardInfo cardInfo) {
       : null;
   if (expirationDate != null) {
     if (DateTime.now().isAfterDate(expirationDate)) {
-      throw CardExpiredException(expirationDate,cardInfo.fullName);
+      throw CardExpiredException(expirationDate, cardInfo.fullName);
     }
   }
 }
@@ -99,5 +99,5 @@ class CardExpiredException extends QrCodeParseException {
   final DateTime expiry;
   final String fullName;
 
-  CardExpiredException(this.expiry,this.fullName) : super('card already expired');
+  CardExpiredException(this.expiry, this.fullName) : super('card already expired');
 }

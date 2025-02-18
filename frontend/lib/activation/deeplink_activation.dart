@@ -72,7 +72,7 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    DynamicActivationCode? activationCode = getActivationCode(context, widget.base64qrcode,updateErrorMessage);
+    DynamicActivationCode? activationCode = getActivationCode(context, widget.base64qrcode, updateErrorMessage);
     CardInfo? cardInfo = activationCode?.info;
     final userCodeModel = Provider.of<UserCodeModel>(context);
 
@@ -112,7 +112,7 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
               Padding(
                 padding: const EdgeInsets.all(32),
                 child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  if (_state == _State.waiting) _WarningText(status, userCodeModel,errorMessage),
+                  if (_state == _State.waiting) _WarningText(status, userCodeModel, errorMessage),
                   ElevatedButton.icon(
                     onPressed:
                         activationCode != null && _state == _State.waiting && status == DeepLinkActivationStatus.valid
@@ -174,7 +174,7 @@ class _WarningText extends StatelessWidget {
   final UserCodeModel userCodeModel;
   final String? errorMessage;
 
-  const _WarningText(this.status, this.userCodeModel,this.errorMessage);
+  const _WarningText(this.status, this.userCodeModel, this.errorMessage);
 
   @override
   Widget build(BuildContext context) {
@@ -201,13 +201,15 @@ class _WarningText extends StatelessWidget {
   }
 }
 
-DynamicActivationCode? getActivationCode(BuildContext context, String base64qrcode, Function(String message) updateErrorMessage) {
+DynamicActivationCode? getActivationCode(
+    BuildContext context, String base64qrcode, Function(String message) updateErrorMessage) {
   try {
     final activationCode = const ActivationCodeParser().parseQrCodeContent(const Base64Decoder().convert(base64qrcode));
     return activationCode;
-  } on CardExpiredException catch (e,_){
+  } on CardExpiredException catch (e, _) {
     debugPrint('Die Karte ist abgelaufen: ${e.expiry}');
-    updateErrorMessage('${t.deeplinkActivation.cardExpiredExceptionMessage} ${DateFormat('dd.MM.yyyy').format(e.expiry)}');
+    updateErrorMessage(
+        '${t.deeplinkActivation.cardExpiredExceptionMessage} ${DateFormat('dd.MM.yyyy').format(e.expiry)}');
     return null;
   } on QrCodeParseException catch (e, _) {
     debugPrint(t.deeplinkActivation.qrCodeParseExceptionMessage);
