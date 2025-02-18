@@ -89,6 +89,7 @@ const KoblenzReferenceNumberExtension: Extension<KoblenzReferenceNumberExtension
   toString,
   fromSerialized: fromString,
   serialize: toString,
+  isMandatory: true,
 }
 
 export default KoblenzReferenceNumberExtension
