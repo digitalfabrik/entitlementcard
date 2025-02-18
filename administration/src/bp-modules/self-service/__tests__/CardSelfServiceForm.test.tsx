@@ -6,7 +6,7 @@ import React, { ReactNode, act } from 'react'
 import { MemoryRouter } from 'react-router-dom'
 
 import { initializeCardFromCSV } from '../../../cards/Card'
-import { LOCAL_STORAGE_PROJECT_KEY } from '../../../project-configs/constants'
+import { ProjectConfigProvider } from '../../../project-configs/ProjectConfigContext'
 import koblenzConfig from '../../../project-configs/koblenz/config'
 import { renderWithTranslation } from '../../../testing/render'
 import { AppToasterProvider } from '../../AppToaster'
@@ -16,11 +16,13 @@ import { exampleCard } from '../__mock__/mockSelfServiceCard'
 import FormErrorMessage from '../components/FormErrorMessage'
 
 const wrapper = ({ children }: { children: ReactNode }) => (
-  <LocalizationProvider dateAdapter={AdapterDateFns}>
-    <MemoryRouter>
-      <AppToasterProvider>{children}</AppToasterProvider>
-    </MemoryRouter>
-  </LocalizationProvider>
+  <ProjectConfigProvider projectConfig={koblenzConfig}>
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <MemoryRouter>
+        <AppToasterProvider>{children}</AppToasterProvider>
+      </MemoryRouter>
+    </LocalizationProvider>
+  </ProjectConfigProvider>
 )
 
 const setDataPrivacyAccepted = jest.fn()
@@ -28,7 +30,6 @@ const updateCard = jest.fn()
 const generateCards = jest.fn()
 describe('CardSelfServiceForm', () => {
   it('should display all elements in initial state', () => {
-    localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, koblenzConfig.projectId)
     const { getByLabelText, getByPlaceholderText, getByTestId, getByText } = renderWithTranslation(
       <CardSelfServiceForm
         updateCard={updateCard}
@@ -56,7 +57,6 @@ describe('CardSelfServiceForm', () => {
 
   it('should show an error message if card creation button is pressed without needed information', async () => {
     const toasterSpy = jest.spyOn(OverlayToaster.prototype, 'show')
-    localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, koblenzConfig.projectId)
     const { getByText } = renderWithTranslation(
       <CardSelfServiceForm
         updateCard={updateCard}
@@ -85,7 +85,6 @@ describe('CardSelfServiceForm', () => {
 
   it('should not show an error message if all fields are filled correctly', async () => {
     const toasterSpy = jest.spyOn(OverlayToaster.prototype, 'show')
-    localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, koblenzConfig.projectId)
     const { getByText } = renderWithTranslation(
       <CardSelfServiceForm
         updateCard={updateCard}
