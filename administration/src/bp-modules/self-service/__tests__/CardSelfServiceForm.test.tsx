@@ -6,7 +6,6 @@ import React, { ReactNode, act } from 'react'
 import { MemoryRouter } from 'react-router-dom'
 
 import { initializeCardFromCSV } from '../../../cards/Card'
-import { ProjectConfigProvider } from '../../../project-configs/ProjectConfigContext'
 import koblenzConfig from '../../../project-configs/koblenz/config'
 import { renderWithTranslation } from '../../../testing/render'
 import { AppToasterProvider } from '../../AppToaster'
@@ -16,13 +15,11 @@ import { exampleCard } from '../__mock__/mockSelfServiceCard'
 import FormErrorMessage from '../components/FormErrorMessage'
 
 const wrapper = ({ children }: { children: ReactNode }) => (
-  <ProjectConfigProvider projectConfig={koblenzConfig}>
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <MemoryRouter>
-        <AppToasterProvider>{children}</AppToasterProvider>
-      </MemoryRouter>
-    </LocalizationProvider>
-  </ProjectConfigProvider>
+  <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <MemoryRouter>
+      <AppToasterProvider>{children}</AppToasterProvider>
+    </MemoryRouter>
+  </LocalizationProvider>
 )
 
 const setDataPrivacyAccepted = jest.fn()
@@ -38,7 +35,7 @@ describe('CardSelfServiceForm', () => {
         dataPrivacyAccepted={DataPrivacyAcceptingStatus.untouched}
         setDataPrivacyAccepted={setDataPrivacyAccepted}
       />,
-      { wrapper }
+      { wrapper, projectConfig: koblenzConfig }
     )
 
     expect(getByLabelText('Vorname Name').closest('input')).toBeTruthy()
@@ -65,7 +62,7 @@ describe('CardSelfServiceForm', () => {
         dataPrivacyAccepted={DataPrivacyAcceptingStatus.accepted}
         setDataPrivacyAccepted={setDataPrivacyAccepted}
       />,
-      { wrapper }
+      { wrapper, projectConfig: koblenzConfig }
     )
 
     const createPassButton = getByText('KoblenzPass erstellen')
@@ -93,7 +90,7 @@ describe('CardSelfServiceForm', () => {
         dataPrivacyAccepted={DataPrivacyAcceptingStatus.accepted}
         setDataPrivacyAccepted={setDataPrivacyAccepted}
       />,
-      { wrapper }
+      { wrapper, projectConfig: koblenzConfig }
     )
 
     const createPassButton = getByText('KoblenzPass erstellen')
