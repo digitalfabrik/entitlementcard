@@ -1,12 +1,16 @@
 import React, { ReactElement, ReactNode, createContext } from 'react'
 
-import getProjectConfig, { ProjectConfig } from './getProjectConfig'
+import { ProjectConfig } from './getProjectConfig'
+import showcaseConfig from './showcase/config'
 
-const projectConfig = getProjectConfig(window.location.hostname)
+export const ProjectConfigContext = createContext<ProjectConfig>(showcaseConfig)
 
-export const ProjectConfigContext = createContext<ProjectConfig>(projectConfig)
+type ProjectConfigProviderProps = {
+  children: ReactNode
+  projectConfig: ProjectConfig
+}
 
-export const ProjectConfigProvider = ({ children }: { children: ReactNode }): ReactElement => {
+export const ProjectConfigProvider = ({ children, projectConfig }: ProjectConfigProviderProps): ReactElement => {
   const Provider = ProjectConfigContext.Provider
-  return <Provider value={getProjectConfig(window.location.hostname)}>{children}</Provider>
+  return <Provider value={projectConfig}>{children}</Provider>
 }

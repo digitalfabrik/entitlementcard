@@ -6,7 +6,7 @@ import { BAVARIA_CARD_TYPE_GOLD, BAVARIA_CARD_TYPE_STANDARD } from '../../cards/
 import { Region } from '../../generated/graphql'
 import { ProjectConfigProvider } from '../../project-configs/ProjectConfigContext'
 import bayernConfig from '../../project-configs/bayern/config'
-import { ProjectConfig, setProjectConfigOverride } from '../../project-configs/getProjectConfig'
+import { ProjectConfig } from '../../project-configs/getProjectConfig'
 import koblenzConfig from '../../project-configs/koblenz/config'
 import nuernbergConfig from '../../project-configs/nuernberg/config'
 import { renderWithRouter } from '../../testing/render'
@@ -39,11 +39,10 @@ describe('ImportCardsInput', () => {
     } as unknown as FileReader
     jest.spyOn(global, 'FileReader').mockReturnValue(fileReaderMock)
     const file = new File([csv], `${projectConfig.name}.csv`, { type: 'text/csv' })
-    setProjectConfigOverride(projectConfig.projectId)
 
     const { getByTestId } = renderWithRouter(
       <AppToasterProvider>
-        <ProjectConfigProvider>
+        <ProjectConfigProvider projectConfig={projectConfig}>
           <ImportCardsInput setCards={setCards} region={region} />
         </ProjectConfigProvider>
       </AppToasterProvider>
