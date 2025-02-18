@@ -6,8 +6,6 @@ import React, { ReactNode, act } from 'react'
 import { MemoryRouter } from 'react-router-dom'
 
 import { initializeCardFromCSV } from '../../../cards/Card'
-import { ProjectConfigProvider } from '../../../project-configs/ProjectConfigContext'
-import { LOCAL_STORAGE_PROJECT_KEY } from '../../../project-configs/constants'
 import koblenzConfig from '../../../project-configs/koblenz/config'
 import { renderWithTranslation } from '../../../testing/render'
 import { AppToasterProvider } from '../../AppToaster'
@@ -19,9 +17,7 @@ import FormErrorMessage from '../components/FormErrorMessage'
 const wrapper = ({ children }: { children: ReactNode }) => (
   <LocalizationProvider dateAdapter={AdapterDateFns}>
     <MemoryRouter>
-      <AppToasterProvider>
-        <ProjectConfigProvider>{children}</ProjectConfigProvider>
-      </AppToasterProvider>
+      <AppToasterProvider>{children}</AppToasterProvider>
     </MemoryRouter>
   </LocalizationProvider>
 )
@@ -31,7 +27,6 @@ const updateCard = jest.fn()
 const generateCards = jest.fn()
 describe('CardSelfServiceForm', () => {
   it('should display all elements in initial state', () => {
-    localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, koblenzConfig.projectId)
     const { getByLabelText, getByPlaceholderText, getByTestId, getByText } = renderWithTranslation(
       <CardSelfServiceForm
         updateCard={updateCard}
@@ -40,7 +35,7 @@ describe('CardSelfServiceForm', () => {
         dataPrivacyAccepted={DataPrivacyAcceptingStatus.untouched}
         setDataPrivacyAccepted={setDataPrivacyAccepted}
       />,
-      { wrapper }
+      { wrapper, projectConfig: koblenzConfig }
     )
 
     expect(getByLabelText('Vorname Name').closest('input')).toBeTruthy()
@@ -59,7 +54,6 @@ describe('CardSelfServiceForm', () => {
 
   it('should show an error message if card creation button is pressed without needed information', async () => {
     const toasterSpy = jest.spyOn(OverlayToaster.prototype, 'show')
-    localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, koblenzConfig.projectId)
     const { getByText } = renderWithTranslation(
       <CardSelfServiceForm
         updateCard={updateCard}
@@ -68,7 +62,7 @@ describe('CardSelfServiceForm', () => {
         dataPrivacyAccepted={DataPrivacyAcceptingStatus.accepted}
         setDataPrivacyAccepted={setDataPrivacyAccepted}
       />,
-      { wrapper }
+      { wrapper, projectConfig: koblenzConfig }
     )
 
     const createPassButton = getByText('KoblenzPass erstellen')
@@ -88,7 +82,6 @@ describe('CardSelfServiceForm', () => {
 
   it('should not show an error message if all fields are filled correctly', async () => {
     const toasterSpy = jest.spyOn(OverlayToaster.prototype, 'show')
-    localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, koblenzConfig.projectId)
     const { getByText } = renderWithTranslation(
       <CardSelfServiceForm
         updateCard={updateCard}
@@ -97,7 +90,7 @@ describe('CardSelfServiceForm', () => {
         dataPrivacyAccepted={DataPrivacyAcceptingStatus.accepted}
         setDataPrivacyAccepted={setDataPrivacyAccepted}
       />,
-      { wrapper }
+      { wrapper, projectConfig: koblenzConfig }
     )
 
     const createPassButton = getByText('KoblenzPass erstellen')

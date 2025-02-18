@@ -4,7 +4,6 @@ import { parse } from 'csv-parse/browser/esm/sync'
 import { mocked } from 'jest-mock'
 import React, { ReactNode } from 'react'
 
-import { ProjectConfigProvider } from '../../../project-configs/ProjectConfigContext'
 import nuernbergConfig from '../../../project-configs/nuernberg/config'
 import { renderWithTranslation } from '../../../testing/render'
 import { AppToasterProvider } from '../../AppToaster'
@@ -19,11 +18,7 @@ const fieldNames = nuernbergConfig.storesManagement.enabled
 jest.mock('csv-parse/browser/esm/sync', () => ({
   parse: jest.fn(),
 }))
-const wrapper = ({ children }: { children: ReactNode }) => (
-  <AppToasterProvider>
-    <ProjectConfigProvider>{children}</ProjectConfigProvider>
-  </AppToasterProvider>
-)
+const wrapper = ({ children }: { children: ReactNode }) => <AppToasterProvider>{children}</AppToasterProvider>
 const setAcceptingStores = jest.fn()
 const setIsLoadingCoordinates = jest.fn()
 

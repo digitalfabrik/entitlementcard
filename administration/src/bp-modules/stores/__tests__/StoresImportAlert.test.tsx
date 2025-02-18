@@ -1,19 +1,13 @@
-import React, { ReactNode } from 'react'
+import React from 'react'
 
-import { ProjectConfigProvider } from '../../../project-configs/ProjectConfigContext'
 import { renderWithTranslation } from '../../../testing/render'
 import StoresImportAlert from '../StoresImportAlert'
-
-const wrapper = ({ children }: { children: ReactNode }) => <ProjectConfigProvider>{children}</ProjectConfigProvider>
 
 const setDryRun = jest.fn()
 describe('StoresImportAlert', () => {
   it('should show the correct alert information for dry run', () => {
     const { getByTestId, queryByTestId, getByText } = renderWithTranslation(
-      <StoresImportAlert dryRun setDryRun={setDryRun} storesCount={100} />,
-      {
-        wrapper,
-      }
+      <StoresImportAlert dryRun setDryRun={setDryRun} storesCount={100} />
     )
     const infoSpanElement = getByTestId('dry-run-alert')
     expect(infoSpanElement).toBeTruthy()
@@ -32,10 +26,7 @@ describe('StoresImportAlert', () => {
 
   it('should show the correct alert information for production run', () => {
     const { getByTestId, queryByTestId } = renderWithTranslation(
-      <StoresImportAlert dryRun={false} setDryRun={setDryRun} storesCount={100} />,
-      {
-        wrapper,
-      }
+      <StoresImportAlert dryRun={false} setDryRun={setDryRun} storesCount={100} />
     )
     const infoSpanElement = getByTestId('prod-run-alert')
     expect(infoSpanElement).toBeTruthy()
@@ -48,10 +39,7 @@ describe('StoresImportAlert', () => {
 
   it('should show the correct alert information including approximate duration for production run', () => {
     const { getByTestId } = renderWithTranslation(
-      <StoresImportAlert dryRun={false} setDryRun={setDryRun} storesCount={10000} />,
-      {
-        wrapper,
-      }
+      <StoresImportAlert dryRun={false} setDryRun={setDryRun} storesCount={10000} />
     )
     const infoSpanElement = getByTestId('prod-run-alert')
     expect(infoSpanElement).toBeTruthy()

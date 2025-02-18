@@ -1,5 +1,6 @@
 import XRegExp from 'xregexp'
 
+export const isProductionEnvironment = (): boolean => process.env.REACT_APP_IS_PRODUCTION === 'true'
 export const isDevMode = (): boolean => window.location.hostname === 'localhost'
 export const isStagingMode = (): boolean => !!window.location.hostname.match(/staging./)
 

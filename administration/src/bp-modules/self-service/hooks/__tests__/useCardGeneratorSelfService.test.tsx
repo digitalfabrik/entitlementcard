@@ -5,7 +5,6 @@ import React, { ReactNode } from 'react'
 import { MemoryRouter } from 'react-router-dom'
 
 import { ProjectConfigProvider } from '../../../../project-configs/ProjectConfigContext'
-import { LOCAL_STORAGE_PROJECT_KEY } from '../../../../project-configs/constants'
 import koblenzConfig from '../../../../project-configs/koblenz/config'
 import downloadDataUri from '../../../../util/downloadDataUri'
 import { AppToasterProvider } from '../../../AppToaster'
@@ -18,7 +17,7 @@ const wrapper = ({ children }: { children: ReactNode }) => (
   <MemoryRouter>
     <AppToasterProvider>
       <MockedProvider mocks={mocks} addTypename={false}>
-        <ProjectConfigProvider>{children}</ProjectConfigProvider>
+        <ProjectConfigProvider projectConfig={koblenzConfig}>{children}</ProjectConfigProvider>
       </MockedProvider>
     </AppToasterProvider>
   </MemoryRouter>
@@ -44,7 +43,6 @@ jest.mock('../../../../util/downloadDataUri')
 describe('useCardGeneratorSelfService', () => {
   it('should successfully create a card', async () => {
     const toasterSpy = jest.spyOn(OverlayToaster.prototype, 'show')
-    localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, koblenzConfig.projectId)
     mocks.push(mockedCardMutation)
 
     const { result } = renderHook(() => useCardGeneratorSelfService(), { wrapper })

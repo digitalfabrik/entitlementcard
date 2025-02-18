@@ -1,16 +1,13 @@
 import { act, fireEvent, render } from '@testing-library/react'
-import React, { ReactNode } from 'react'
+import React from 'react'
 
 import { initializeCard } from '../../cards/Card'
 import { Region } from '../../generated/graphql'
-import { ProjectConfigProvider } from '../../project-configs/ProjectConfigContext'
 import bayernConfig from '../../project-configs/bayern/config'
 import { renderWithTranslation } from '../../testing/render'
 import CreateCardsButtonBar from './CreateCardsButtonBar'
 
 jest.useFakeTimers()
-
-const wrapper = ({ children }: { children: ReactNode }) => <ProjectConfigProvider>{children}</ProjectConfigProvider>
 
 describe('CreateCardsButtonBar', () => {
   const region: Region = {
@@ -29,8 +26,7 @@ describe('CreateCardsButtonBar', () => {
         cards={[]}
         generateCardsPdf={() => Promise.resolve()}
         generateCardsCsv={() => Promise.resolve()}
-      />,
-      { wrapper }
+      />
     )
 
     const backButton = getByText('Zurück zur Auswahl')
@@ -51,8 +47,7 @@ describe('CreateCardsButtonBar', () => {
         cards={[]}
         generateCardsPdf={generateCardsPdf}
         generateCardsCsv={generateCardsCsv}
-      />,
-      { wrapper }
+      />
     )
 
     const generateButton = getByText('QR-Codes drucken').closest('button') as HTMLButtonElement
@@ -79,8 +74,7 @@ describe('CreateCardsButtonBar', () => {
         cards={cards}
         generateCardsPdf={generateCardsPdf}
         generateCardsCsv={generateCardsCsv}
-      />,
-      { wrapper }
+      />
     )
 
     const generateButton = getByText('QR-Codes drucken').closest('button') as HTMLButtonElement
@@ -108,8 +102,7 @@ describe('CreateCardsButtonBar', () => {
         cards={cards}
         generateCardsPdf={generateCardsPdf}
         generateCardsCsv={generateCardsCsv}
-      />,
-      { wrapper }
+      />
     )
 
     const generateButton = getByText('QR-Codes drucken').closest('button') as HTMLButtonElement
