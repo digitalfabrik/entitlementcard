@@ -57,7 +57,7 @@ const createCards = async (
   projectConfig: ProjectConfig,
   cards: Card[],
   t: TFunction,
-  applicationIdToMarkAsProcessed?: number
+  applicationIdToMarkAsProcessed: number | null
 ): Promise<CreateCardsResult[]> => {
   const { projectId, staticQrCodesEnabled: generateStaticCodes } = projectConfig
   const encodedCardInfos = cards.map(generateCardInfo).map(cardInfo => uint8ArrayToBase64(cardInfo.toBinary()))

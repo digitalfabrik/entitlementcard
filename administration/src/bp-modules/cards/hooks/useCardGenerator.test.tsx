@@ -3,6 +3,7 @@ import { OverlayToaster } from '@blueprintjs/core'
 import { act, renderHook } from '@testing-library/react'
 import { mocked } from 'jest-mock'
 import React, { ReactNode } from 'react'
+import { MemoryRouter } from 'react-router-dom'
 
 import { generateCardInfo, initializeCard } from '../../../cards/Card'
 import { PdfError, generatePdf } from '../../../cards/PdfFactory'
@@ -16,9 +17,11 @@ import { AppToasterProvider } from '../../AppToaster'
 import useCardGenerator, { CardActivationState } from './useCardGenerator'
 
 const wrapper = ({ children }: { children: ReactNode }) => (
-  <AppToasterProvider>
-    <ApolloProvider>{children}</ApolloProvider>
-  </AppToasterProvider>
+  <MemoryRouter>
+    <AppToasterProvider>
+      <ApolloProvider>{children}</ApolloProvider>
+    </AppToasterProvider>
+  </MemoryRouter>
 )
 
 jest.mock('../../../cards/PdfFactory', () => ({

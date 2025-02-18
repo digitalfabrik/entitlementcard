@@ -1,7 +1,8 @@
 import { useCallback, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSearchParams } from 'react-router-dom'
 
-import { Card, updateCard as updateCardObject } from '../../../cards/Card'
+import { Card, initializeCardFromCSV, updateCard as updateCardObject } from '../../../cards/Card'
 import { generateCsv, getCSVFilename } from '../../../cards/CsvFactory'
 import { generatePdf, getPdfFilename } from '../../../cards/PdfFactory'
 import createCards, { CreateCardsResult } from '../../../cards/createCards'
@@ -9,6 +10,7 @@ import deleteCards from '../../../cards/deleteCards'
 import { Region, useCreateCardsMutation, useDeleteCardsMutation } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import { ProjectConfig } from '../../../project-configs/getProjectConfig'
+import { getCsvHeaders } from '../../../project-configs/helper'
 import downloadDataUri from '../../../util/downloadDataUri'
 import { updateArrayItem } from '../../../util/helper'
 import { reportErrorToSentry } from '../../../util/sentry'
@@ -38,20 +40,24 @@ type UseCardGeneratorReturn = {
   setCards: (cards: Card[]) => void
   updateCard: (updatedCard: Partial<Card>, index: number) => void
   cards: Card[]
-  setApplicationIdToMarkAsProcessed: (applicationId: number | undefined) => void
-  applicationIdToMarkAsProcessed: number | undefined
 }
 
 const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
-  const { t } = useTranslation('errors')
   const projectConfig = useContext(ProjectConfigContext)
-  const [cards, setCards] = useState<Card[]>([])
+  const [searchParams] = useSearchParams()
   const [state, setState] = useState(CardActivationState.input)
-  const [applicationIdToMarkAsProcessed, setApplicationIdToMarkAsProcessed] = useState<number>()
   const [createCardsService] = useCreateCardsMutation()
   const [deleteCardsService] = useDeleteCardsMutation()
   const appToaster = useAppToaster()
   const sendCardConfirmationMails = useSendCardConfirmationMails()
+  const { t } = useTranslation('errors')
+  const [cards, setCards] = useState<Card[]>(() => {
+    const headers = getCsvHeaders(projectConfig)
+    const values = headers.map(header => searchParams.get(header))
+    return [initializeCardFromCSV(projectConfig.card, values, headers, region, true)]
+  })
+  const rawApplicationId = searchParams.get('applicationIdToMarkAsProcessed')
+  const applicationId = rawApplicationId ? parseInt(rawApplicationId, 10) : null
 
   const updateCard = useCallback(
     (updatedCard: Partial<Card>, index: number) =>
@@ -65,7 +71,7 @@ const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
       setState(CardActivationState.loading)
 
       try {
-        codes = await createCards(createCardsService, projectConfig, cards, t, applicationIdToMarkAsProcessed)
+        codes = await createCards(createCardsService, projectConfig, cards, t, applicationId)
         const dataUri = await generateFunction(codes, cards, projectConfig, region)
         downloadDataUri(dataUri, filename)
         cards.forEach(saveActivityLog)
@@ -96,7 +102,7 @@ const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
       appToaster,
       sendCardConfirmationMails,
       region,
-      applicationIdToMarkAsProcessed,
+      applicationId,
       t,
     ]
   )
@@ -119,8 +125,6 @@ const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
     setCards,
     cards,
     updateCard,
-    setApplicationIdToMarkAsProcessed,
-    applicationIdToMarkAsProcessed,
   }
 }
 

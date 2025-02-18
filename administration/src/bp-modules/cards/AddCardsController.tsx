@@ -14,16 +14,7 @@ import useCardGenerator, { CardActivationState } from './hooks/useCardGenerator'
 const InnerAddCardsController = ({ region }: { region: Region }) => {
   const navigate = useNavigate()
   const { t } = useTranslation('cards')
-  const {
-    state,
-    setState,
-    generateCardsPdf,
-    generateCardsCsv,
-    setCards,
-    updateCard,
-    cards,
-    setApplicationIdToMarkAsProcessed,
-  } = useCardGenerator(region)
+  const { state, setState, generateCardsPdf, generateCardsCsv, setCards, updateCard, cards } = useCardGenerator(region)
 
   useBlockNavigation({
     when: cards.length > 0,
@@ -46,13 +37,7 @@ const InnerAddCardsController = ({ region }: { region: Region }) => {
 
   return (
     <>
-      <AddCardsForm
-        region={region}
-        cards={cards}
-        setCards={setCards}
-        updateCard={updateCard}
-        setApplicationIdToMarkAsProcessed={setApplicationIdToMarkAsProcessed}
-      />
+      <AddCardsForm region={region} cards={cards} setCards={setCards} updateCard={updateCard} />
       <CreateCardsButtonBar
         cards={cards}
         goBack={() => navigate('/cards')}
