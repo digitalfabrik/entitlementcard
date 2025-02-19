@@ -21,7 +21,7 @@ data class PersonalData(
 
     init {
         val maximumBirthDate = LocalDate.now(ZoneId.of("Europe/Berlin")).minusYears(16)
-        if (maximumBirthDate.isBefore(dateOfBirth.getDate())) {
+        if (maximumBirthDate.isBefore(dateOfBirth.getLocalDate())) {
             throw InvalidJsonException("Date of birth must be at least 16 years ago.")
         }
     }

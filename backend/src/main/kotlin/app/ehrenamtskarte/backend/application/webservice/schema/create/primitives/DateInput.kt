@@ -18,7 +18,7 @@ data class DateInput(val date: String) {
         }
     }
 
-    fun getDate(): LocalDate {
+    fun getLocalDate(): LocalDate {
         return LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE)
     }
 
