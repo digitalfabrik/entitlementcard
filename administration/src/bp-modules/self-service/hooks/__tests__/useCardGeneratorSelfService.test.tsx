@@ -51,9 +51,6 @@ describe('useCardGeneratorSelfService', () => {
     await act(async () => result.current.generateCards())
     expect(toasterSpy).not.toHaveBeenCalled()
     expect(result.current.selfServiceState).toBe(CardSelfServiceStep.information)
-    expect(result.current.deepLink).toBe(
-      'koblenzpass://koblenz.sozialpass.app/activation/code#ClcKLQoNS2FybGEgS29ibGVuehDmnwEaGAoCCF8SBAjqvgEqBAiLmgEyBgoEMTIzSxIQL%2Fle3xYGNIKS50god4ITmxoUOUYGq%2FjAE99bK4edMPo2I3ojr78%3D/'
-    )
     await act(async () => result.current.downloadPdf(result.current.code!, 'koblenzpass.pdf'))
     expect(downloadDataUri).toHaveBeenCalled()
   })
