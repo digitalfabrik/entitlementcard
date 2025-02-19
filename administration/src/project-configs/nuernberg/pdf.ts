@@ -1,4 +1,4 @@
-import { PDFForm, PDFTextField, rgb } from 'pdf-lib'
+import { PDFForm, PDFTextField, rgb } from '@cantoo/pdf-lib'
 
 import { getAddressFieldExtensionsValues } from '../../cards/extensions/AddressFieldExtensions'
 import { InfoParams } from '../../cards/pdf/PdfTextElement'

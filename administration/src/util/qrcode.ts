@@ -1,3 +1,4 @@
+import { PDFPage, rgb } from '@cantoo/pdf-lib'
 import {
   BitArray,
   IllegalStateException,
@@ -12,7 +13,6 @@ import {
 import ECBlocks from '@zxing/library/cjs/core/qrcode/decoder/ECBlocks'
 import MaskUtil from '@zxing/library/cjs/core/qrcode/encoder/MaskUtil'
 import MatrixUtil from '@zxing/library/cjs/core/qrcode/encoder/MatrixUtil'
-import { PDFPage, rgb } from 'pdf-lib'
 
 import { QrCode } from '../generated/card_pb'
 

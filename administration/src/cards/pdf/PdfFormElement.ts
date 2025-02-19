@@ -1,4 +1,4 @@
-import { PDFFont, PDFForm, PDFPage, PDFTextField, grayscale } from 'pdf-lib'
+import { PDFFont, PDFForm, PDFPage, PDFTextField, grayscale } from '@cantoo/pdf-lib'
 
 import { CardInfo } from '../../generated/card_pb'
 import { Region } from '../../generated/graphql'

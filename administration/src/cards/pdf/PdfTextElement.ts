@@ -1,4 +1,4 @@
-import { Color, PDFFont, PDFPage, RotationTypes } from 'pdf-lib'
+import { Color, PDFFont, PDFPage, RotationTypes } from '@cantoo/pdf-lib'
 
 import { CardInfo } from '../../generated/card_pb'
 import { Region } from '../../generated/graphql'
