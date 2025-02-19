@@ -1,5 +1,5 @@
-import fontkit from '@pdf-lib/fontkit'
 import { PDFDocument, PDFFont, PDFPage, StandardFonts } from '@cantoo/pdf-lib'
+import fontkit from '@pdf-lib/fontkit'
 
 import { QrCode } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
