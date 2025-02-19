@@ -1,5 +1,5 @@
 import { Region } from '../../generated/graphql'
-import { Extension } from './extensions'
+import type { Extension } from './extensions'
 
 export const REGION_EXTENSION_NAME = 'regionId'
 export type RegionExtensionState = { [REGION_EXTENSION_NAME]: number }

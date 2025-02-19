@@ -3,7 +3,7 @@ import { QUERY_PARAM_BIRTHDAY, QUERY_PARAM_KOBLENZ_REFERENCE_NUMBER, QUERY_PARAM
 import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
 import KoblenzReferenceNumberExtension from '../../cards/extensions/KoblenzReferenceNumberExtension'
 import { ActivationText } from '../common/ActivationText'
-import { ProjectConfig } from '../getProjectConfig'
+import type { ProjectConfig } from '../getProjectConfig'
 import { storesManagementConfig } from '../storesManagementConfig'
 import { DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
 import pdfConfig from './pdf'

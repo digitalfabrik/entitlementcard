@@ -1,7 +1,8 @@
 import { formatISO, parseISO } from 'date-fns'
 
-import { Card, SerializedCard, deserializeCard, serializeCard } from '../../cards/Card'
-import { CardConfig } from '../../project-configs/getProjectConfig'
+import { deserializeCard, serializeCard } from '../../cards/Card'
+import type { Card, SerializedCard } from '../../cards/Card'
+import type { CardConfig } from '../../project-configs/getProjectConfig'
 
 export const STORAGE_KEY = 'activity-log'
 

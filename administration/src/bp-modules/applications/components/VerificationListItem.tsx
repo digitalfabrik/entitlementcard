@@ -5,8 +5,9 @@ import styled from 'styled-components'
 
 import { ApplicationVerificationView } from '../../../generated/graphql'
 import EmailLink from '../../EmailLink'
-import { Indicator, getStatus } from '../VerificationsView'
+import { getVerificationStatus } from '../utils'
 import { isEmailValid } from '../utils/verificationHelper'
+import VerificationIndicator from './VerificationIndicator'
 
 const ListItem = styled.li<{ $color: string }>`
   position: relative;
@@ -22,7 +23,7 @@ type VerificationListItemProps = {
 
 const VerificationListItem = ({ verification }: VerificationListItemProps): ReactElement => {
   const { t } = useTranslation('applications')
-  const status = getStatus(verification)
+  const status = getVerificationStatus(verification)
   const unverifiedText = verification.rejectedDate
     ? `${t('rejectedOn')} ${new Date(verification.rejectedDate).toLocaleString('de')}`
     : t('pending')
@@ -53,7 +54,7 @@ const VerificationListItem = ({ verification }: VerificationListItemProps): Reac
           <tr>
             <td>{t('status')}:</td>
             <td>
-              <Indicator status={status} text={` ${text}`} />
+              <VerificationIndicator status={status} text={` ${text}`} />
             </td>
           </tr>
         </tbody>

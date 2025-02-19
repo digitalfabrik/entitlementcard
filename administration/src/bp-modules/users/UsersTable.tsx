@@ -1,14 +1,14 @@
 import { Button } from '@blueprintjs/core'
-import i18next from 'i18next'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
-import { Administrator, Region, Role } from '../../generated/graphql'
+import { Administrator, Region } from '../../generated/graphql'
 import CreateUserDialog from './CreateUserDialog'
 import DeleteUserDialog from './DeleteUserDialog'
 import EditUserDialog from './EditUserDialog'
 import RoleHelpButton from './RoleHelpButton'
+import roleToText from './utils/roleToText'
 
 const StyledTable = styled.table`
   border-spacing: 0;
@@ -31,25 +31,6 @@ const StyledTable = styled.table`
     border-bottom: 1px solid lightgray;
   }
 `
-
-export const roleToText = (role: Role): string => {
-  switch (role) {
-    case Role.NoRights:
-      return i18next.t('users:noRights')
-    case Role.ProjectAdmin:
-      return i18next.t('users:projectAdmin')
-    case Role.ProjectStoreManager:
-      return i18next.t('users:projectStoreManager')
-    case Role.RegionAdmin:
-      return i18next.t('users:regionAdmin')
-    case Role.RegionManager:
-      return i18next.t('users:regionManager')
-    case Role.ExternalVerifiedApiUser:
-      return i18next.t('users:externalVerifiedApiUser')
-    default:
-      return role
-  }
-}
 
 const UsersTable = ({
   users,

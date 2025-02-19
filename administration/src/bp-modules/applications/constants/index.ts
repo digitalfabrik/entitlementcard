@@ -1,3 +1,5 @@
+import { css } from 'styled-components'
+
 export enum ApplicationStatus {
   fullyVerified,
   fullyRejected,
@@ -32,3 +34,15 @@ export const barItems: ApplicationStatusBarItemType[] = [
     status: ApplicationStatus.ambiguous,
   },
 ]
+
+export enum VerificationStatus {
+  Verified,
+  Rejected,
+  Awaiting,
+}
+
+export const printAwareCss = css`
+  @media print {
+    display: none;
+  }
+`

@@ -1,0 +1,3 @@
+export const DEFAULT_ERROR_TIMEOUT = 3000
+export const LONG_ERROR_TIMEOUT = 10000
+export const FILE_SIZE_LIMIT_MEGA_BYTES = 2

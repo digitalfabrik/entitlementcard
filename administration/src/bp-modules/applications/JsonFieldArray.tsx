@@ -3,8 +3,9 @@ import React, { memo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
-import { printAwareCss } from './ApplicationCard'
-import JsonFieldView, { JsonField, JsonFieldViewProps } from './JsonFieldView'
+import JsonFieldView from './JsonFieldView'
+import type { JsonField, JsonFieldViewProps } from './JsonFieldView'
+import { printAwareCss } from './constants'
 
 const ParentOfBorder = styled.div<{ $hierarchyIndex: number }>`
   border-color: #ddd;

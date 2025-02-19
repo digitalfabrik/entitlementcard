@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Check circular dependencies" type="js.build_tools.npm">
+    <package-json value="$PROJECT_DIR$/administration/package.json" />
+    <command value="run" />
+    <scripts>
+      <script value="check-circular-deps" />
+    </scripts>
+    <node-interpreter value="project" />
+    <envs />
+    <method v="2" />
+  </configuration>
+</component>

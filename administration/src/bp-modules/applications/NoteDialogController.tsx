@@ -7,7 +7,7 @@ import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useUpdateApplicationNoteMutation } from '../../generated/graphql'
 import { useAppToaster } from '../AppToaster'
 import TextAreaDialog from '../components/TextAreaDialog'
-import { Application } from './ApplicationsOverview'
+import type { Application } from './ApplicationsOverview'
 
 const NoteButton = styled(Button)`
   margin-right: 10px;

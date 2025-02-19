@@ -8,7 +8,7 @@ import {
   FIELD_POSTAL_CODE,
   FIELD_STREET,
 } from './constants'
-import { StoresManagementConfig } from './getProjectConfig'
+import type { StoresManagementConfig } from './getProjectConfig'
 import {
   hasMandatoryValue,
   hasValidCategoryId,

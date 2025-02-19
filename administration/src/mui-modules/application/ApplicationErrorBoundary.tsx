@@ -1,7 +1,7 @@
 import localforage from 'localforage'
 import { Component, ReactNode } from 'react'
 
-import { applicationStorageKey } from './ApplyController'
+import { applicationStorageKey } from './constants'
 import { globalArrayBuffersKey } from './util/globalArrayBuffersManager'
 
 class ApplicationErrorBoundary extends Component<{ children: ReactNode }, { resetting: boolean }> {

@@ -1,5 +1,5 @@
-import { VerificationStatus } from '../VerificationsView'
-import { ApplicationStatus } from '../constants'
+import type { Application } from '../ApplicationsOverview'
+import { ApplicationStatus, VerificationStatus } from '../constants'
 
 export const getApplicationStatus = (status: number[], isWithdrawed: boolean): ApplicationStatus => {
   if (isWithdrawed) {
@@ -12,4 +12,14 @@ export const getApplicationStatus = (status: number[], isWithdrawed: boolean): A
     return ApplicationStatus.fullyRejected
   }
   return ApplicationStatus.ambiguous
+}
+
+export const getVerificationStatus = (verification: Application['verifications'][number]): VerificationStatus => {
+  if (verification.verifiedDate) {
+    return VerificationStatus.Verified
+  }
+  if (verification.rejectedDate) {
+    return VerificationStatus.Rejected
+  }
+  return VerificationStatus.Awaiting
 }

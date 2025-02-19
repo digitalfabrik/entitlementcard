@@ -1,6 +1,6 @@
 import { ApolloError } from '@apollo/client'
 
-import { GraphQLErrorMessage } from './getMessageFromApolloError'
+import type { GraphQLErrorMessage } from './getMessageFromApolloError'
 
 const defaultErrorMap = (error: ApolloError): GraphQLErrorMessage => {
   if (error.message.includes('401')) {

@@ -4,7 +4,9 @@ import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
-import { Card, hasInfiniteLifetime, isExpirationDateValid, isFullNameValid } from '../../cards/Card'
+import { hasInfiniteLifetime, isExpirationDateValid, isFullNameValid } from '../../cards/Card'
+import type { Card } from '../../cards/Card'
+import { maxCardValidity } from '../../cards/constants'
 import PlainDate from '../../util/PlainDate'
 import ExtensionForms from './ExtensionForms'
 
@@ -21,8 +23,6 @@ type CreateCardsFormProps = {
   updateCard: (card: Partial<Card>) => void
   onRemove: () => void
 }
-
-export const maxCardValidity = { years: 99 }
 
 const AddCardForm = ({ card, onRemove, updateCard }: CreateCardsFormProps): ReactElement => {
   const today = PlainDate.fromLocalDate(new Date())

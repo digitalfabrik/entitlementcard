@@ -3,7 +3,7 @@ import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Role } from '../../generated/graphql'
-import { roleToText } from './UsersTable'
+import roleToText from './utils/roleToText'
 
 const RoleHelpButton = (): ReactElement => {
   const { t } = useTranslation('users')

@@ -9,6 +9,7 @@ import { useAppToaster } from '../AppToaster'
 import { AcceptingStoresEntry } from './AcceptingStoresEntry'
 import StoresImportDuplicates from './StoresImportDuplicates'
 import StoresRequirementsText from './StoresRequirementsText'
+import { DEFAULT_ERROR_TIMEOUT, FILE_SIZE_LIMIT_MEGA_BYTES, LONG_ERROR_TIMEOUT } from './constants'
 import { getStoresWithCoordinates } from './util/storeGeoDataService'
 
 const StoreImportInputContainer = styled.div`
@@ -28,9 +29,6 @@ type StoresCsvInputProps = {
   setIsLoadingCoordinates: (value: boolean) => void
 }
 
-export const DEFAULT_ERROR_TIMEOUT = 3000
-export const LONG_ERROR_TIMEOUT = 10000
-export const FILE_SIZE_LIMIT_MEGA_BYTES = 2
 const defaultExtensionsByMIMEType = {
   'text/csv': '.csv',
 }

@@ -1,10 +1,10 @@
-import { Card } from '../Card'
-import { Extension } from './extensions'
+import type { Card } from '../Card'
+import type { Extension } from './extensions'
 
-export const ADDRESS_LINE_1_EXTENSION = 'addressLine1'
-export const ADDRESS_LINE_2_EXTENSION = 'addressLine2'
-export const ADDRESS_PLZ_EXTENSION = 'addressPlz'
-export const ADDRESS_LOCATION_EXTENSION = 'addressLocation'
+const ADDRESS_LINE_1_EXTENSION = 'addressLine1'
+const ADDRESS_LINE_2_EXTENSION = 'addressLine2'
+const ADDRESS_PLZ_EXTENSION = 'addressPlz'
+const ADDRESS_LOCATION_EXTENSION = 'addressLocation'
 
 type AddressFieldExtension =
   | typeof ADDRESS_LINE_1_EXTENSION

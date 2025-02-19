@@ -2,13 +2,13 @@ import React from 'react'
 
 import { renderWithTranslation } from '../../../testing/render'
 import VerificationQuickIndicator from '../VerificationsQuickIndicator'
-import { VerificationStatus } from '../VerificationsView'
 import {
   verificationsAwaiting,
   verificationsMixed,
   verificationsRejected,
   verificationsVerified,
 } from '../__mocks__/verificationData'
+import { VerificationStatus } from '../constants'
 
 jest.mock('@blueprintjs/core', () => ({
   ...jest.requireActual('@blueprintjs/core'),
