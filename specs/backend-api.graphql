@@ -125,6 +125,13 @@ type DynamicActivationCodeResult {
   codeBase64: String!
 }
 
+type FreinetAgency {
+  agencyId: Int!
+  agencyName: String!
+  apiAccessKey: String!
+  dataTransferActivated: Boolean!
+}
+
 type Mutation {
   "Activate a dynamic entitlement card"
   activateCard(activationSecretBase64: String!, cardInfoHashBase64: String!, overwrite: Boolean!, project: String!): CardActivationResultModel!
@@ -207,6 +214,8 @@ type Query {
   getCardStatisticsInProject(dateEnd: String!, dateStart: String!, project: String!): [CardStatisticsResultModel!]!
   "Returns card statistics for region. Start and end dates are inclusive."
   getCardStatisticsInRegion(dateEnd: String!, dateStart: String!, project: String!, regionId: Int!): [CardStatisticsResultModel!]!
+  "Returns freinet agency information for a particular region. Works only for the EAK project."
+  getFreinetAgencyByRegionId(project: String!, regionId: Int!): FreinetAgency
   "Get the pepper for Koblenz user hashing"
   getHashingPepper: String!
   "Get the notification settings of the authenticated administrator"
