@@ -123,10 +123,6 @@ export type ProjectConfig = {
   showBirthdayExtensionHint: boolean
 }
 
-export const setProjectConfigOverride = (hostname: string): void => {
-  window.localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, hostname)
-}
-
 const getProjectConfig = (hostname: string): ProjectConfig => {
   switch (window.localStorage.getItem(LOCAL_STORAGE_PROJECT_KEY) ?? hostname) {
     case BAYERN_PRODUCTION_ID:

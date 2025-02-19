@@ -101,6 +101,7 @@ const BirthdayExtension: Extension<BirthdayExtensionState> = {
     return birthday === null ? null : { birthday }
   },
   serialize: ({ birthday }: BirthdayExtensionState) => birthday?.formatISO() ?? '',
+  isMandatory: true,
 }
 
 export default BirthdayExtension

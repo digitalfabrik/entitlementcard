@@ -14,6 +14,7 @@ import { getCsvHeaders } from '../../../project-configs/helper'
 import { base64ToUint8Array, uint8ArrayToBase64 } from '../../../util/base64'
 import downloadDataUri from '../../../util/downloadDataUri'
 import getCustomDeepLinkFromQrCode from '../../../util/getCustomDeepLinkFromQrCode'
+import { reportErrorToSentry } from '../../../util/sentry'
 import { useAppToaster } from '../../AppToaster'
 import FormErrorMessage from '../components/FormErrorMessage'
 
@@ -71,6 +72,7 @@ const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
           message: t('unknown'),
           intent: 'danger',
         })
+        reportErrorToSentry(error)
       }
       setSelfServiceState(CardSelfServiceStep.form)
       setIsLoading(false)
@@ -113,7 +115,7 @@ const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
       }
       setCode(code)
       setDeepLink(
-        getCustomDeepLinkFromQrCode({
+        getCustomDeepLinkFromQrCode(projectConfig, {
           case: 'dynamicActivationCode',
           value: code.dynamicActivationCode,
         })
