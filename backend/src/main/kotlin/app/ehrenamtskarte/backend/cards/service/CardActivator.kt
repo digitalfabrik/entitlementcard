@@ -6,7 +6,7 @@ import com.eatthepath.otp.TimeBasedOneTimePasswordGenerator
 import javax.crypto.KeyGenerator
 
 object CardActivator {
-    private const val cost = 11
+    private const val cost = 10
 
     @Synchronized
     fun generateTotpSecret(): ByteArray {
