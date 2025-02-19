@@ -97,7 +97,6 @@ extension DateComparison on DateTime {
 
 class CardExpiredException extends QrCodeParseException {
   final DateTime expiry;
-  final String fullName;
 
   CardExpiredException(this.expiry) : super('card already expired');
 }

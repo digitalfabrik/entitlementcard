@@ -32,7 +32,7 @@
     "alreadyExists": "This card has already been activated on this device.",
     "activationSuccessful": "The activation was successful.",
     "activationInvalid": "The activation is in an invalid state.",
-    "cardExpiredExceptionMessage": "Your card cannot be activated because it has already expired on",
+    "cardExpiredExceptionMessage": "Your card cannot be activated because it has already expired on {{expiryDate}}",
     "qrCodeParseExceptionMessage": "The activation code is invalid.",
     "formatExceptionMessage": "The format of the activation code is invalid."
   },

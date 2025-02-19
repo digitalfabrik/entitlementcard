@@ -205,16 +205,13 @@ DynamicActivationCode? getActivationCode(
     final activationCode = const ActivationCodeParser().parseQrCodeContent(const Base64Decoder().convert(base64qrcode));
     return activationCode;
   } on CardExpiredException catch (e, _) {
-    debugPrint('Die Karte ist abgelaufen: ${e.expiry}');
     updateErrorMessage(
-        '${t.deeplinkActivation.cardExpiredExceptionMessage} ${DateFormat('dd.MM.yyyy').format(e.expiry)}');
+        t.deeplinkActivation.cardExpiredExceptionMessage(expiryDate: DateFormat('dd.MM.yyyy').format(e.expiry)));
     return null;
   } on QrCodeParseException catch (e, _) {
-    debugPrint(t.deeplinkActivation.qrCodeParseExceptionMessage);
     updateErrorMessage(t.deeplinkActivation.qrCodeParseExceptionMessage);
     return null;
   } on FormatException catch (e, _) {
-    debugPrint(t.deeplinkActivation.formatExceptionMessage);
     updateErrorMessage(t.deeplinkActivation.formatExceptionMessage);
     return null;
   }
