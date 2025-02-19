@@ -171,6 +171,8 @@ type Mutation {
   updateApplicationNote(applicationId: Int!, noteText: String!): Boolean!
   "Updates the data privacy policy of a region"
   updateDataPrivacy(dataPrivacyText: String!, regionId: Int!): Boolean!
+  "Updates the data transfer to freinet. Works only for the EAK project."
+  updateDataTransferToFreinet(dataTransferActivated: Boolean!, project: String!, regionId: Int!): Boolean!
   "Updates the notification settings"
   updateNotificationSettings(notificationSettings: NotificationSettingsInput!, project: String!): Boolean!
   "Updates the region specific settings"
@@ -325,6 +327,7 @@ enum GoldenCardEntitlementType {
 
 enum GraphQLExceptionCode {
   EMAIL_ALREADY_EXISTS
+  FREINET_AGENCY_NOT_FOUND
   INVALID_CARD_HASH
   INVALID_CODE_TYPE
   INVALID_CREDENTIALS

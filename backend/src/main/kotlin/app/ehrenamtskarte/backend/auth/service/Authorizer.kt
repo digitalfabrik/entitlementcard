@@ -156,6 +156,10 @@ object Authorizer {
         return user.role == Role.REGION_ADMIN.db_value && ProjectEntity.find { Projects.project eq EAK_BAYERN_PROJECT }
             .single().id.value == user.projectId.value && user.regionId?.value == regionId
     }
+    fun mayUpdateFreinetAgencyInformationInRegion(user: AdministratorEntity, regionId: Int): Boolean {
+        return user.role == Role.REGION_ADMIN.db_value && ProjectEntity.find { Projects.project eq EAK_BAYERN_PROJECT }
+            .single().id.value == user.projectId.value && user.regionId?.value == regionId
+    }
 
     fun mayAddApiTokensInProject(user: AdministratorEntity): Boolean {
         return transaction {
