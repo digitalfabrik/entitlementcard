@@ -11,12 +11,12 @@ const extractCardInfoHashes = (codes: CreateCardsResult[]) =>
   )
 
 const deleteCards = async (
-  deleteCardsService: DeleteCardsMutationFn,
+  deleteCardsMutation: DeleteCardsMutationFn,
   regionId: number,
   codes: CreateCardsResult[],
   t: TFunction
 ): Promise<void> => {
-  const result = await deleteCardsService({
+  const result = await deleteCardsMutation({
     variables: { regionId, cardInfoHashBase64List: extractCardInfoHashes(codes) },
   })
   if (result.errors) {

@@ -80,7 +80,6 @@ const StyledInfoTextButton = styled(IconTextButton)`
   margin: 0;
 `
 
-// TODO 1646 Add tests for CardSelfService
 const CardSelfServiceView = (): ReactElement => {
   const { t } = useTranslation('selfService')
   const [dataPrivacyCheckbox, setDataPrivacyCheckbox] = useState(DataPrivacyAcceptingStatus.untouched)

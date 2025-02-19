@@ -53,7 +53,7 @@ export const createSelfServiceCard = async (
 }
 
 const createCards = async (
-  createCardsService: CreateCardsMutationFn,
+  createCardsMutation: CreateCardsMutationFn,
   projectConfig: ProjectConfig,
   cards: Card[],
   t: TFunction,
@@ -61,7 +61,7 @@ const createCards = async (
 ): Promise<CreateCardsResult[]> => {
   const { projectId, staticQrCodesEnabled: generateStaticCodes } = projectConfig
   const encodedCardInfos = cards.map(generateCardInfo).map(cardInfo => uint8ArrayToBase64(cardInfo.toBinary()))
-  const result = await createCardsService({
+  const result = await createCardsMutation({
     variables: { project: projectId, encodedCardInfos, generateStaticCodes, applicationIdToMarkAsProcessed },
   })
   const data = mapGraphqlRequestResult(result, message => new CreateCardsError(message), t)
