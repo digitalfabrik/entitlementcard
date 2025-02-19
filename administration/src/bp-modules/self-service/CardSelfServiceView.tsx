@@ -85,7 +85,6 @@ export enum DataPrivacyAcceptingStatus {
   denied,
 }
 
-// TODO 1646 Add tests for CardSelfService
 const CardSelfServiceView = (): ReactElement => {
   const { t } = useTranslation('selfService')
   const [dataPrivacyCheckbox, setDataPrivacyCheckbox] = useState(DataPrivacyAcceptingStatus.untouched)

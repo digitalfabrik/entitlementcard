@@ -46,10 +46,10 @@ const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
   const projectConfig = useContext(ProjectConfigContext)
   const [searchParams] = useSearchParams()
   const [state, setState] = useState(CardActivationState.input)
-  const [createCardsService] = useCreateCardsMutation()
-  const [deleteCardsService] = useDeleteCardsMutation()
+  const [createCardsMutation] = useCreateCardsMutation()
+  const [deleteCardsMutation] = useDeleteCardsMutation()
   const appToaster = useAppToaster()
-  const sendCardConfirmationMails = useSendCardConfirmationMails()
+  const sendConfirmationMails = useSendCardConfirmationMails()
   const { t } = useTranslation('errors')
   const [cards, setCards] = useState<Card[]>(() => {
     const headers = getCsvHeaders(projectConfig)
@@ -71,20 +71,20 @@ const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
       setState(CardActivationState.loading)
 
       try {
-        codes = await createCards(createCardsService, projectConfig, cards, t, applicationId)
+        codes = await createCards(createCardsMutation, projectConfig, cards, t, applicationId)
         const dataUri = await generateFunction(codes, cards, projectConfig, region)
         downloadDataUri(dataUri, filename)
         cards.forEach(saveActivityLog)
 
         if (region.activatedForCardConfirmationMail) {
-          await sendCardConfirmationMails(codes, cards)
+          await sendConfirmationMails(codes, cards)
         }
 
         setState(CardActivationState.finished)
       } catch (error) {
         if (codes) {
           // Rollback
-          await deleteCards(deleteCardsService, region.id, codes, t).catch(reportErrorToSentry)
+          await deleteCards(deleteCardsMutation, region.id, codes, t).catch(reportErrorToSentry)
         }
         if (appToaster) {
           showCardGenerationError(appToaster, error, t)
@@ -96,11 +96,11 @@ const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
     },
     [
       cards,
-      createCardsService,
-      deleteCardsService,
+      createCardsMutation,
+      deleteCardsMutation,
       projectConfig,
       appToaster,
-      sendCardConfirmationMails,
+      sendConfirmationMails,
       region,
       applicationId,
       t,
