@@ -16,8 +16,6 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../identification/util/card_info_utils.dart';
-
 enum DeepLinkActivationStatus {
   /// Link is invalid
   invalidCardInfo,
