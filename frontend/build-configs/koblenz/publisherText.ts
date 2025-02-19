@@ -1,11 +1,11 @@
 export default `<p>Die App „KoblenzPass“ ist eine Kooperation zwischen der Stadt Koblenz und der Tür an Tür - Digitalfabrik gGmbH. Die Bereiche teilen sich wie folgt auf:</p>
 <ul>
-<li>Inhalte: Amt für Jugend, Familie, Senioren und Soziales der Stadt Koblenz</li>
+<li>Inhalte: Sozialamt der Stadt Koblenz</li>
 <li>Applikation und Betrieb: Tür an Tür - Digitalfabrik gemeinnützige GmbH</li>
 </ul>
 <br>
 <br>
-<h4>Stadt Koblenz, Amt für Jugend, Familie, Senioren und Soziales</h4>
+<h4>Stadt Koblenz, Sozialamt</h4>
 <p>Die Stadt Koblenz ist eine Körperschaft des Öffentlichen Rechts. Sie wird vertreten durch den Oberbürgermeister.</p>
 <p>Rathauspassage 2<br>
 56068 Koblenz</p>

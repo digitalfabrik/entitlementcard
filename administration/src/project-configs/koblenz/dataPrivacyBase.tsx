@@ -84,7 +84,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
       <br />
       Stadt Koblenz
       <br />
-      Amt für Jugend, Familie, Senioren und Soziales
+      Sozialamt
       <span>
         <br />
         Telefon:{' '}

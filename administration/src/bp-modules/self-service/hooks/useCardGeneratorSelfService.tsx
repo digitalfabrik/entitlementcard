@@ -14,6 +14,7 @@ import { getCsvHeaders } from '../../../project-configs/helper'
 import { base64ToUint8Array, uint8ArrayToBase64 } from '../../../util/base64'
 import downloadDataUri from '../../../util/downloadDataUri'
 import getCustomDeepLinkFromQrCode from '../../../util/getCustomDeepLinkFromQrCode'
+import { reportErrorToSentry } from '../../../util/sentry'
 import { useAppToaster } from '../../AppToaster'
 import FormErrorMessage from '../components/FormErrorMessage'
 
@@ -60,7 +61,7 @@ const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
         })
       }
       if (error instanceof ApolloError) {
-        const { title } = getMessageFromApolloError(error)
+        const { title } = getMessageFromApolloError(error, t)
         appToaster?.show({
           message: <FormErrorMessage style={{ color: 'white' }} errorMessage={title} />,
           timeout: 0,
@@ -71,6 +72,7 @@ const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
           message: t('unknown'),
           intent: 'danger',
         })
+        reportErrorToSentry(error)
       }
       setSelfServiceState(CardSelfServiceStep.form)
       setIsLoading(false)
@@ -92,7 +94,7 @@ const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
       })
 
       if (result.errors) {
-        const { title } = getMessageFromApolloError(new ApolloError({ graphQLErrors: result.errors }))
+        const { title } = getMessageFromApolloError(new ApolloError({ graphQLErrors: result.errors }), t)
         return Promise.reject(new CreateCardsError(title))
       }
       if (!result.data) {
@@ -113,7 +115,7 @@ const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
       }
       setCode(code)
       setDeepLink(
-        getCustomDeepLinkFromQrCode({
+        getCustomDeepLinkFromQrCode(projectConfig, {
           case: 'dynamicActivationCode',
           value: code.dynamicActivationCode,
         })

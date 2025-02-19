@@ -1,6 +1,8 @@
 import type { JestConfigWithTsJest } from 'ts-jest'
 import { defaults as tsjPreset } from 'ts-jest/presets'
 
+process.env.TZ = 'GMT'
+
 const config: JestConfigWithTsJest = {
   ...tsjPreset,
   rootDir: 'src',

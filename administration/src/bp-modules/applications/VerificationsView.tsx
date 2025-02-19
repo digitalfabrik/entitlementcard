@@ -1,11 +1,10 @@
-import { Colors, H5, Icon, Intent } from '@blueprintjs/core'
+import { H5, Icon, Intent } from '@blueprintjs/core'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import { GetApplicationsQuery } from '../../generated/graphql'
-import EmailLink from '../EmailLink'
-import { isEmailValid } from './utils/verificationHelper'
+import VerificationListItem from './components/VerificationListItem'
 
 const StyledIndicator = styled.span`
   display: inline-block;
@@ -47,7 +46,7 @@ export const getIntentByStatus = (status: VerificationStatus): Intent => {
 }
 
 export const Indicator = ({ status, text }: { status: VerificationStatus; text?: string }): ReactElement => (
-  <StyledIndicator>
+  <StyledIndicator data-testid={`indicator-${status}`}>
     <Icon icon={getIconByStatus(status)} intent={getIntentByStatus(status)} />
     {text}
   </StyledIndicator>
@@ -62,12 +61,6 @@ export const getStatus = (verification: Application['verifications'][number]): V
   }
   return VerificationStatus.Awaiting
 }
-
-const VerificationListItem = styled.li<{ $color: string }>`
-  position: relative;
-  padding-left: 10px;
-  border-left: 2px solid ${props => props.$color};
-`
 
 const VerificationContainer = styled.ul`
   list-style-type: none;
@@ -84,47 +77,11 @@ const VerificationsView = ({ verifications }: { verifications: Application['veri
       <H5>{t('confirmationsByOrganizations')}</H5>
       <VerificationContainer>
         {verifications.map(verification => {
-          const status = getStatus(verification)
-          const unverifiedText = verification.rejectedDate
-            ? `${t('rejectedOn')} ${new Date(verification.rejectedDate).toLocaleString('de')}`
-            : t('pending')
-          const text = verification.verifiedDate
-            ? `${t('verifiedOn')} ${new Date(verification.verifiedDate).toLocaleString('de')}`
-            : unverifiedText
-          const unverifiedColor = verification.rejectedDate ? Colors.RED2 : Colors.ORANGE2
-          const color = verification.verifiedDate ? Colors.GREEN2 : unverifiedColor
           const key = verification.organizationName + verification.contactEmailAddress
-          return (
-            <VerificationListItem key={key} $color={color}>
-              <table cellPadding='2px'>
-                <tbody>
-                  <tr>
-                    <td>{t('organization')}:</td>
-                    <td>{verification.organizationName}</td>
-                  </tr>
-                  <tr>
-                    <td>{t('eMail')}:</td>
-                    <td>
-                      {isEmailValid(verification.contactEmailAddress) ? (
-                        <EmailLink email={verification.contactEmailAddress} />
-                      ) : (
-                        <span>{verification.contactEmailAddress}</span>
-                      )}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>{t('status')}:</td>
-                    <td>
-                      <Indicator status={status} text={` ${text}`} />
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </VerificationListItem>
-          )
+          return <VerificationListItem verification={verification} key={key} />
         })}
       </VerificationContainer>
-      {verifications.length === 0 ? <i>({t('none')})</i> : null}
+      {verifications.length === 0 ? <i role='note'>({t('none')})</i> : null}
     </>
   )
 }

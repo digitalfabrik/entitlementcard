@@ -3,7 +3,7 @@ import { formatISO, parseISO } from 'date-fns'
 import { Card, SerializedCard, deserializeCard, serializeCard } from '../../cards/Card'
 import { CardConfig } from '../../project-configs/getProjectConfig'
 
-const STORAGE_KEY = 'activity-log'
+export const STORAGE_KEY = 'activity-log'
 
 type JsonActivityLogEntry = { timestamp: string; card: SerializedCard }
 

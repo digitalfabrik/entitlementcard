@@ -1,11 +1,1 @@
 blank_issues_enabled: false
-contact_links:
-  - name: Bug report (and add to project)
-    url: https://github.com/digitalfabrik/ehrenamtskarte/issues/new?template=bug_report.md&projects=ehrenamtskarte%2Fehrenamtskarte%2F1&assignees=&labels=bug&title=
-    about: Create a report to help us improve
-  - name: Technical Task (and add to project)
-    url: https://github.com/digitalfabrik/ehrenamtskarte/issues/new?template=technical-task.md&projects=ehrenamtskarte%2Fehrenamtskarte%2F1&assignees=&labels=technical+task&title=
-    about: Suggest an idea for this project
-  - name: User Story (and add to project)
-    url: https://github.com/digitalfabrik/ehrenamtskarte/issues/new?template=user-story.md&projects=ehrenamtskarte%2Fehrenamtskarte%2F1&assignees=&labels=user+story&title=
-    about: This a user story
