@@ -120,6 +120,7 @@ export type ProjectConfig = {
   selfServiceEnabled: boolean
   storesManagement: StoresManagementConfig
   userImportApiEnabled: boolean
+  showBirthdayExtensionHint: boolean
 }
 
 const getProjectConfig = (hostname: string): ProjectConfig => {
