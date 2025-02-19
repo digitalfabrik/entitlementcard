@@ -19,11 +19,17 @@ import { saveActivityLog } from '../../user-settings/ActivityLog'
 import { showCardGenerationError } from '../../util/cardGenerationError'
 import useSendCardConfirmationMails from './useSendCardConfirmationMails'
 
-export enum CardActivationState {
-  input,
-  loading,
-  finished,
+const initializeCardsFromQueryParams = (
+  projectConfig: ProjectConfig,
+  searchParams: URLSearchParams,
+  region: Region
+) => {
+  const headers = getCsvHeaders(projectConfig)
+  const values = headers.map(header => searchParams.get(header))
+  return [initializeCardFromCSV(projectConfig.card, values, headers, region, true)]
 }
+
+type CardGenerationStep = 'input' | 'loading' | 'finished'
 
 type GenerateCardFunction = (
   codes: CreateCardsResult[],
@@ -32,9 +38,14 @@ type GenerateCardFunction = (
   region?: Region
 ) => Promise<Blob> | Blob
 
+type UseCardGeneratorProps = {
+  region: Region
+  initializeCards?: boolean
+}
+
 type UseCardGeneratorReturn = {
-  state: CardActivationState
-  setState: (state: CardActivationState) => void
+  cardGenerationStep: CardGenerationStep
+  setCardGenerationStep: (state: CardGenerationStep) => void
   generateCardsPdf: () => Promise<void>
   generateCardsCsv: () => Promise<void>
   setCards: (cards: Card[]) => void
@@ -42,20 +53,17 @@ type UseCardGeneratorReturn = {
   cards: Card[]
 }
 
-const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
+const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorProps): UseCardGeneratorReturn => {
   const projectConfig = useContext(ProjectConfigContext)
   const [searchParams] = useSearchParams()
-  const [state, setState] = useState(CardActivationState.input)
+  const [cardGenerationStep, setCardGenerationStep] = useState<CardGenerationStep>('input')
   const [createCardsMutation] = useCreateCardsMutation()
   const [deleteCardsMutation] = useDeleteCardsMutation()
   const appToaster = useAppToaster()
   const sendConfirmationMails = useSendCardConfirmationMails()
   const { t } = useTranslation('errors')
-  const [cards, setCards] = useState<Card[]>(() => {
-    const headers = getCsvHeaders(projectConfig)
-    const values = headers.map(header => searchParams.get(header))
-    return [initializeCardFromCSV(projectConfig.card, values, headers, region, true)]
-  })
+  const initializedCards = initializeCards ? initializeCardsFromQueryParams(projectConfig, searchParams, region) : []
+  const [cards, setCards] = useState<Card[]>(initializedCards)
   const rawApplicationId = searchParams.get('applicationIdToMarkAsProcessed')
   const applicationId = rawApplicationId ? parseInt(rawApplicationId, 10) : null
 
@@ -68,7 +76,7 @@ const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
   const generateCards = useCallback(
     async (generateFunction: GenerateCardFunction, filename: string): Promise<void> => {
       let codes: CreateCardsResult[] | undefined
-      setState(CardActivationState.loading)
+      setCardGenerationStep('loading')
 
       try {
         codes = await createCards(createCardsMutation, projectConfig, cards, t, applicationId)
@@ -80,7 +88,7 @@ const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
           await sendConfirmationMails(codes, cards)
         }
 
-        setState(CardActivationState.finished)
+        setCardGenerationStep('finished')
       } catch (error) {
         if (codes) {
           // Rollback
@@ -89,7 +97,7 @@ const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
         if (appToaster) {
           showCardGenerationError(appToaster, error, t)
         }
-        setState(CardActivationState.input)
+        setCardGenerationStep('input')
       } finally {
         setCards([])
       }
@@ -118,8 +126,8 @@ const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
   )
 
   return {
-    state,
-    setState,
+    cardGenerationStep,
+    setCardGenerationStep,
     generateCardsPdf,
     generateCardsCsv,
     setCards,

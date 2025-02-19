@@ -12,16 +12,11 @@ import downloadDataUri from '../../../util/downloadDataUri'
 import { useAppToaster } from '../../AppToaster'
 import { showCardGenerationError } from '../../util/cardGenerationError'
 
-export enum CardSelfServiceStep {
-  form,
-  loading,
-  information,
-  activation,
-}
+export type SelfServiceCardGenerationStep = 'input' | 'loading' | 'information' | 'activation'
 
 type UseCardGeneratorSelfServiceReturn = {
-  selfServiceState: CardSelfServiceStep
-  setSelfServiceState: (step: CardSelfServiceStep) => void
+  cardGenerationStep: SelfServiceCardGenerationStep
+  setCardGenerationStep: (step: SelfServiceCardGenerationStep) => void
   code: CreateCardsResult | null
   selfServiceCard: Card
   setSelfServiceCard: (card: Card) => void
@@ -34,7 +29,7 @@ const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
   const appToaster = useAppToaster()
   const { t } = useTranslation('errors')
   const [searchParams] = useSearchParams()
-  const [selfServiceState, setSelfServiceState] = useState(CardSelfServiceStep.form)
+  const [cardGenerationStep, setCardGenerationStep] = useState<SelfServiceCardGenerationStep>('input')
   const [code, setCode] = useState<CreateCardsResult | null>(null)
   const [createCardsSelfService] = useCreateCardsFromSelfServiceMutation()
   const [selfServiceCard, setSelfServiceCard] = useState(() => {
@@ -44,16 +39,16 @@ const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
   })
 
   const generateCards = useCallback(async (): Promise<void> => {
-    setSelfServiceState(CardSelfServiceStep.loading)
+    setCardGenerationStep('loading')
     try {
       const code = await createSelfServiceCard(createCardsSelfService, projectConfig, selfServiceCard, t)
       setCode(code)
-      setSelfServiceState(CardSelfServiceStep.information)
+      setCardGenerationStep('information')
     } catch (error) {
       if (appToaster) {
         showCardGenerationError(appToaster, error, t)
       }
-      setSelfServiceState(CardSelfServiceStep.form)
+      setCardGenerationStep('input')
     }
   }, [projectConfig, setCode, createCardsSelfService, appToaster, selfServiceCard, t])
 
@@ -63,8 +58,8 @@ const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
   }
 
   return {
-    selfServiceState,
-    setSelfServiceState,
+    cardGenerationStep,
+    setCardGenerationStep,
     code,
     selfServiceCard,
     setSelfServiceCard,

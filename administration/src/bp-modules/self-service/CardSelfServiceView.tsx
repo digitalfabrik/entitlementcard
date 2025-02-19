@@ -14,7 +14,7 @@ import { ActionButton } from './components/ActionButton'
 import { IconTextButton } from './components/IconTextButton'
 import { InfoText } from './components/InfoText'
 import selfServiceStepInfo from './constants/selfServiceStepInfo'
-import useCardGeneratorSelfService, { CardSelfServiceStep } from './hooks/useCardGeneratorSelfService'
+import useCardGeneratorSelfService from './hooks/useCardGeneratorSelfService'
 
 const CenteredSpinner = styled(Spinner)`
   position: absolute;
@@ -90,8 +90,8 @@ const CardSelfServiceView = (): ReactElement => {
   const [dataPrivacyCheckbox, setDataPrivacyCheckbox] = useState(DataPrivacyAcceptingStatus.untouched)
   const [openHelpDialog, setOpenHelpDialog] = useState(false)
   const {
-    selfServiceState,
-    setSelfServiceState,
+    cardGenerationStep,
+    setCardGenerationStep,
     generateCards,
     setSelfServiceCard,
     selfServiceCard,
@@ -99,9 +99,11 @@ const CardSelfServiceView = (): ReactElement => {
     downloadPdf,
   } = useCardGeneratorSelfService()
 
-  if (selfServiceState === CardSelfServiceStep.loading) {
+  if (cardGenerationStep === 'loading') {
     return <CenteredSpinner />
   }
+
+  const totalSteps = Object.keys(selfServiceStepInfo).length
 
   return (
     <Container>
@@ -113,11 +115,11 @@ const CardSelfServiceView = (): ReactElement => {
         </StyledInfoTextButton>
       </Header>
       <Body>
-        <Step>{`${t('step')} ${selfServiceStepInfo[selfServiceState].stepNr}/${selfServiceStepInfo.length}`}</Step>
-        <Headline>{selfServiceStepInfo[selfServiceState].headline}</Headline>
-        <SubHeadline>{selfServiceStepInfo[selfServiceState].subHeadline}</SubHeadline>
-        <Text>{selfServiceStepInfo[selfServiceState].text}</Text>
-        {selfServiceState === CardSelfServiceStep.form && (
+        <Step>{`${t('step')} ${selfServiceStepInfo[cardGenerationStep].stepNr}/${totalSteps}`}</Step>
+        <Headline>{selfServiceStepInfo[cardGenerationStep].headline}</Headline>
+        <SubHeadline>{selfServiceStepInfo[cardGenerationStep].subHeadline}</SubHeadline>
+        <Text>{selfServiceStepInfo[cardGenerationStep].text}</Text>
+        {cardGenerationStep === 'input' && (
           <CardSelfServiceForm
             card={selfServiceCard}
             dataPrivacyAccepted={dataPrivacyCheckbox}
@@ -126,10 +128,10 @@ const CardSelfServiceView = (): ReactElement => {
             generateCards={generateCards}
           />
         )}
-        {selfServiceState === CardSelfServiceStep.information && (
-          <CardSelfServiceInformation goToActivation={() => setSelfServiceState(CardSelfServiceStep.activation)} />
+        {cardGenerationStep === 'information' && (
+          <CardSelfServiceInformation goToActivation={() => setCardGenerationStep('activation')} />
         )}
-        {selfServiceState === CardSelfServiceStep.activation && code && (
+        {cardGenerationStep === 'activation' && code && (
           <CardSelfServiceActivation downloadPdf={downloadPdf} code={code} />
         )}
       </Body>

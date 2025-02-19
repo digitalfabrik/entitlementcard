@@ -114,10 +114,10 @@ export const generatePdf = async (
   try {
     const doc = await PDFDocument.create()
     const templateDocument = await PDFDocument.load(await fetch(pdfConfig.templatePath).then(res => res.arrayBuffer()))
-    const [templatePage] = await doc.copyPages(templateDocument, [0])
 
     await Promise.all(
       codes.map(async (code, index) => {
+        const [templatePage] = await doc.copyPages(templateDocument, [0])
         const page = doc.addPage(templatePage)
         await fillContentAreas(doc, page, code, cards[index], pdfConfig, region)
       })
