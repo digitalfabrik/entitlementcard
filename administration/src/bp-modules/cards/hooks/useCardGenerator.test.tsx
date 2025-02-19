@@ -14,7 +14,7 @@ import { Region } from '../../../generated/graphql'
 import bayernConfig from '../../../project-configs/bayern/config'
 import downloadDataUri from '../../../util/downloadDataUri'
 import { AppToasterProvider } from '../../AppToaster'
-import useCardGenerator, { CardActivationState } from './useCardGenerator'
+import useCardGenerator from './useCardGenerator'
 
 const wrapper = ({ children }: { children: ReactNode }) => (
   <MemoryRouter>
@@ -67,7 +67,7 @@ describe('useCardGenerator', () => {
   it('should successfully create multiple cards', async () => {
     const toasterSpy = jest.spyOn(OverlayToaster.prototype, 'show')
     mocked(createCards).mockReturnValueOnce(Promise.resolve(codes))
-    const { result } = renderHook(() => useCardGenerator(region), { wrapper })
+    const { result } = renderHook(() => useCardGenerator({ region }), { wrapper })
     act(() => result.current.setCards(cards))
 
     expect(result.current.cards).toEqual(cards)
@@ -78,7 +78,7 @@ describe('useCardGenerator', () => {
     expect(toasterSpy).not.toHaveBeenCalled()
     expect(createCards).toHaveBeenCalled()
     expect(downloadDataUri).toHaveBeenCalled()
-    expect(result.current.state).toBe(CardActivationState.finished)
+    expect(result.current.cardGenerationStep).toBe('finished')
     expect(result.current.cards).toEqual([])
   })
 
@@ -88,7 +88,7 @@ describe('useCardGenerator', () => {
       throw new CreateCardsError('error')
     })
 
-    const { result } = renderHook(() => useCardGenerator(region), { wrapper })
+    const { result } = renderHook(() => useCardGenerator({ region }), { wrapper })
 
     act(() => result.current.setCards(cards))
 
@@ -99,7 +99,7 @@ describe('useCardGenerator', () => {
 
     expect(toasterSpy).toHaveBeenCalledWith({ message: 'error', intent: 'danger' })
     expect(downloadDataUri).not.toHaveBeenCalled()
-    expect(result.current.state).toBe(CardActivationState.input)
+    expect(result.current.cardGenerationStep).toBe('input')
     expect(result.current.cards).toEqual([])
   })
 
@@ -111,7 +111,7 @@ describe('useCardGenerator', () => {
     })
     const toasterSpy = jest.spyOn(OverlayToaster.prototype, 'show')
 
-    const { result } = renderHook(() => useCardGenerator(region), { wrapper })
+    const { result } = renderHook(() => useCardGenerator({ region }), { wrapper })
 
     act(() => result.current.setCards(cards))
 
@@ -131,7 +131,7 @@ describe('useCardGenerator', () => {
     // TODO 1869 Finalize translations - fix test to call delete cards with parameters
     // expect(deleteCards).toHaveBeenCalledWith(expect.anything(), region.id, codesToDelete)
     expect(downloadDataUri).not.toHaveBeenCalled()
-    expect(result.current.state).toBe(CardActivationState.input)
+    expect(result.current.cardGenerationStep).toBe('input')
     expect(result.current.cards).toEqual([])
   })
 })
