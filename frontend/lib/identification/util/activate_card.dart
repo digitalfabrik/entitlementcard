@@ -21,7 +21,6 @@ import 'package:ehrenamtskarte/l10n/translations.g.dart';
 /// - `true`, if the activation was successful,
 /// - `false`, if the activation was not successful, but feedback was given to the user,
 /// Throws an error otherwise.
-
 Future<bool> activateCard(
   BuildContext context,
   DynamicActivationCode activationCode, [
