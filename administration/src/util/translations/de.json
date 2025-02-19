@@ -300,7 +300,14 @@
     "regionSettings": "Regionsspezifische Einstellungen",
     "activatedForApplication": "Region ist für den neuen Beantragungsprozess freigeschaltet",
     "activatedForCardConfirmationMail": "Nach der Erstellung einer Karte verschickt das System eine E-Mail-Bestätigung an den Antragsstellenden mit einem Link zur Vorab-Aktivierung",
-    "savedSettingsSuccessful": "Einstellungen wurden erfolgreich geändert."
+    "savedSettingsSuccessful": "Einstellungen wurden erfolgreich geändert.",
+    "freinetHeadline": "Freinet Datenübermittlung",
+    "freinetExplanation": "Hier können Sie die automatische Übermittlung von Personen- und Kartendaten für Ihre Region verwalten. <br/><br/> Die untenstehenden Freinet Informationen wurden automatisch ermittelt, bitte prüfen Sie ob diese korrekt sind, bevor Sie die Übermittlung aktivieren.",
+    "freinetAgencyName": "Agenturname",
+    "freinetAgencyId": "AgenturId",
+    "freinetAgencyAccessKey": "Zugangsschlüssel",
+    "freinetActivateDataTransferCheckbox": "Personen- und Kartendaten an Freinet übermitteln",
+    "freinetActivateDataTransferSuccessful": "Ihre Einstellungen zur Datenübermittlung wurden erfolgreich gespeichert."
   },
   "selfService": {
     "welcome": "Herzlich Willkommen!",
@@ -515,7 +522,8 @@
     "regionNotActivatedForApplication": "Für diese Region kann der zentrale Beantragungsprozess noch nicht genutzt werden, kontaktieren Sie bitte Ihre zuständige Behörde direkt.",
     "regionNotActivatedForConfirmationMail": "Für diese Region ist das Senden von Bestätigungsmails gesperrt. Dies kann in den regionsspezifischen Einstellungen geändert werden.",
     "pdfCreationError": "Etwas ist schiefgegangen beim Erstellen der PDF.",
-    "csvCreationError": "Etwas ist schiefgegangen beim Erstellen der CSV."
+    "csvCreationError": "Etwas ist schiefgegangen beim Erstellen der CSV.",
+    "freinetAgencyNotFound": "Diese Freinetagentur existiert nicht."
   },
   "applicationVerification": {
     "withdrawMessageForVerifier": "Der Antrag wurde vom Antragsteller am {{date}} zurückgezogen.",
