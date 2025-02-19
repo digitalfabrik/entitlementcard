@@ -57,7 +57,7 @@ describe('CsvFactory', () => {
       },
     ]
 
-    expect(() => generateCsv(codes, cards, bayernConfig.csvExport)).toThrow(
+    expect(() => generateCsv(codes, cards, bayernConfig)).toThrow(
       new CsvError('CSV Export is disabled for this project')
     )
   })
@@ -73,7 +73,7 @@ describe('CsvFactory', () => {
     if (!nuernbergConfig.csvExport.enabled) {
       throw Error('test failed')
     }
-    generateCsv([], [], nuernbergConfig.csvExport)
+    generateCsv([], [], nuernbergConfig)
     expect(TEST_BLOB_CONSTRUCTOR).toHaveBeenCalledWith([nuernbergConfig.csvExport.csvHeader.join(',')], {
       type: 'text/csv;charset=utf-8;',
     })

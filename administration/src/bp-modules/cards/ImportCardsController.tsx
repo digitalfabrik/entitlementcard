@@ -10,10 +10,11 @@ import GenerationFinished from './CardsCreatedMessage'
 import CreateCardsButtonBar from './CreateCardsButtonBar'
 import ImportCardsInput from './ImportCardsInput'
 import CardImportTable from './ImportCardsTable'
-import useCardGenerator, { CardActivationState } from './hooks/useCardGenerator'
+import useCardGenerator from './hooks/useCardGenerator'
 
 const InnerImportCardsController = ({ region }: { region: Region }): ReactElement => {
-  const { state, setState, generateCardsPdf, generateCardsCsv, setCards, cards } = useCardGenerator(region)
+  const { cardGenerationStep, setCardGenerationStep, generateCardsPdf, generateCardsCsv, setCards, cards } =
+    useCardGenerator({ region, initializeCards: false })
   const navigate = useNavigate()
   const { t } = useTranslation('cards')
 
@@ -30,16 +31,16 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
     }
   }
 
-  if (state === CardActivationState.loading) {
+  if (cardGenerationStep === 'loading') {
     return <Spinner />
   }
 
-  if (state === CardActivationState.finished) {
+  if (cardGenerationStep === 'finished') {
     return (
       <GenerationFinished
         reset={() => {
           setCards([])
-          setState(CardActivationState.input)
+          setCardGenerationStep('input')
         }}
       />
     )

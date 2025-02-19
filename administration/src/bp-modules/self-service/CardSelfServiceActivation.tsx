@@ -1,8 +1,11 @@
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined'
 import { styled } from '@mui/material'
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { CreateCardsResult } from '../../cards/createCards'
+import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import getCustomDeepLinkFromQrCode from '../../util/getCustomDeepLinkFromQrCode'
 import { ActionButton } from './components/ActionButton'
 import { IconTextButton } from './components/IconTextButton'
 import { InfoText } from './components/InfoText'
@@ -17,15 +20,21 @@ const StyledIconTextButton = styled(IconTextButton)`
 `
 
 type CardSelfServiceActivationProps = {
-  deepLink: string
-  downloadPdf: () => Promise<void>
+  code: CreateCardsResult
+  downloadPdf: (code: CreateCardsResult, fileName: string) => Promise<void>
 }
 
-const CardSelfServiceActivation = ({ deepLink, downloadPdf }: CardSelfServiceActivationProps): ReactElement => {
+const CardSelfServiceActivation = ({ code, downloadPdf }: CardSelfServiceActivationProps): ReactElement => {
+  const projectConfig = useContext(ProjectConfigContext)
   const { t } = useTranslation('selfService')
+  const deepLink = getCustomDeepLinkFromQrCode(projectConfig, {
+    case: 'dynamicActivationCode',
+    value: code.dynamicActivationCode,
+  })
+
   return (
     <Container>
-      <StyledIconTextButton onClick={downloadPdf}>
+      <StyledIconTextButton onClick={() => downloadPdf(code, `${projectConfig.name}.pdf`)}>
         <FileDownloadOutlinedIcon />
         {t('koblenzPassPdf')}
       </StyledIconTextButton>

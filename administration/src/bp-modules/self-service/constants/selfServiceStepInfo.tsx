@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react'
 
 import i18next from '../../../i18n'
+import { SelfServiceCardGenerationStep } from '../hooks/useCardGeneratorSelfService'
 
 type SelfServiceStepInfo = {
   stepNr: number
@@ -9,14 +10,14 @@ type SelfServiceStepInfo = {
   text: ReactElement
 }
 
-const selfServiceStepInfo: SelfServiceStepInfo[] = [
-  {
+const selfServiceStepInfo: { [step in Exclude<SelfServiceCardGenerationStep, 'loading'>]: SelfServiceStepInfo } = {
+  input: {
     stepNr: 1,
     headline: i18next.t('selfService:welcome'),
     subHeadline: i18next.t('selfService:fewStepsNeeded'),
     text: <span>{i18next.t('selfService:explanation')}</span>,
   },
-  {
+  information: {
     stepNr: 2,
     headline: i18next.t('selfService:createdPassSuccessfully'),
     subHeadline: i18next.t('selfService:fewMoreStepsNeeded'),
@@ -27,7 +28,7 @@ const selfServiceStepInfo: SelfServiceStepInfo[] = [
       </span>
     ),
   },
-  {
+  activation: {
     stepNr: 3,
     headline: i18next.t('selfService:almostThere'),
     subHeadline: i18next.t('selfService:activateAndDownloadPrompt'),
@@ -39,6 +40,6 @@ const selfServiceStepInfo: SelfServiceStepInfo[] = [
       </span>
     ),
   },
-]
+}
 
 export default selfServiceStepInfo

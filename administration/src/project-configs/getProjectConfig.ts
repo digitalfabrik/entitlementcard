@@ -26,7 +26,7 @@ import showcaseConfig from './showcase/config'
 
 export type PdfConfig = {
   title: string
-  templatePath: string | null
+  templatePath: string
   issuer: string
   customBoldFont?: string
   elements?: {
