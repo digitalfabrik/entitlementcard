@@ -3,7 +3,6 @@ import XRegExp from 'xregexp'
 export const isStagingEnvironment = (): boolean => !!window.location.hostname.match(/staging./)
 export const isProductionEnvironment = (): boolean =>
   process.env.REACT_APP_IS_PRODUCTION === 'true' && !isStagingEnvironment()
-export const isDevEnvironment = (): boolean => window.location.hostname === 'localhost'
 
 export const updateArrayItem = <T>(array: T[], updatedItem: T, index: number): T[] => {
   if (index >= array.length || index < 0) {
