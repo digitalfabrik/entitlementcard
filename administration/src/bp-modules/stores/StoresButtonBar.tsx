@@ -1,5 +1,4 @@
 import { Alert, Button, Tooltip } from '@blueprintjs/core'
-import { TFunction } from 'i18next'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -13,16 +12,6 @@ type UploadStoresButtonBarProps = {
   importStores: () => void
   dryRun: boolean
   setDryRun: (value: boolean) => void
-}
-
-const getToolTipMessage = (hasNoAcceptingStores: boolean, hasInvalidStores: boolean, t: TFunction): string => {
-  if (hasNoAcceptingStores) {
-    return t('hasNoAcceptingStores')
-  }
-  if (hasInvalidStores) {
-    return t('hasInvalidStores')
-  }
-  return t('importStores')
 }
 
 const StoresButtonBar = ({
@@ -46,8 +35,8 @@ const StoresButtonBar = ({
       <Button icon='arrow-left' text={t('backToSelection')} onClick={goBack} />
       <Tooltip
         placement='top'
-        content={getToolTipMessage(hasNoAcceptingStores, hasInvalidStores, t)}
-        disabled={false}
+        content={hasNoAcceptingStores ? t('hasNoAcceptingStores') : t('hasInvalidStores')}
+        disabled={!hasNoAcceptingStores && !hasInvalidStores}
         openOnTargetFocus={false}>
         <Button
           icon='upload'
