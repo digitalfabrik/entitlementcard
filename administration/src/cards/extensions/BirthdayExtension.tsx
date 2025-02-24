@@ -3,7 +3,7 @@ import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import CustomDatePicker from '../../bp-modules/components/CustomDatePicker'
-import FormErrorMessage from '../../bp-modules/self-service/components/FormErrorMessage'
+import FormAlert from '../../bp-modules/self-service/components/FormAlert'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import PlainDate from '../../util/PlainDate'
 import { Extension, ExtensionComponentProps } from './extensions'
@@ -41,10 +41,14 @@ const BirthdayForm = ({
     if (birthday.isAfter(today)) {
       return t('birthdayFutureError')
     }
+
+    return null
+  }
+
+  const getHintMessage = (): string | null => {
     if (isBirthdayHintEnabled()) {
       return t('birthdayHint')
     }
-
     return null
   }
 
@@ -60,16 +64,11 @@ const BirthdayForm = ({
         onChange={changeBirthday}
         onClear={() => setValue({ birthday: null })}
         isValid={isValid || !showErrorMessage}
-        isHint={isBirthdayHintEnabled()}
         maxDate={new Date()}
         disableFuture
       />
-      {showErrorMessage && (
-        <FormErrorMessage
-          style={{ color: isBirthdayHintEnabled() ? 'black' : undefined }}
-          errorMessage={getErrorMessage()}
-        />
-      )}
+      {showErrorMessage && <FormAlert severity='error' errorMessage={getErrorMessage()} />}
+      {getHintMessage() && <FormAlert severity='info' errorMessage={getHintMessage()} />}
     </FormGroup>
   )
 }

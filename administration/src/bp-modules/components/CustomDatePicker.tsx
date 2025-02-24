@@ -10,7 +10,6 @@ type CustomDatePickerProps = {
   onChange: (date: Date | null) => void
   onClear: () => void
   isValid: boolean
-  isHint?: boolean
   minDate?: Date
   maxDate?: Date
   disableFuture: boolean
@@ -22,7 +21,6 @@ const CustomDatePicker = ({
   onChange,
   onClear,
   isValid,
-  isHint,
   minDate,
   maxDate,
   disableFuture,
@@ -48,7 +46,7 @@ const CustomDatePicker = ({
           sx: {
             width: '100%',
             input: formStyle,
-            boxShadow: !isValid && !isHint ? textFieldBoxShadow : undefined,
+            boxShadow: !isValid ? textFieldBoxShadow : undefined,
           },
         },
       }}

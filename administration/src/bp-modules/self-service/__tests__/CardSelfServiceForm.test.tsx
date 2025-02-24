@@ -12,7 +12,7 @@ import { AppToasterProvider } from '../../AppToaster'
 import CardSelfServiceForm from '../CardSelfServiceForm'
 import { DataPrivacyAcceptingStatus } from '../CardSelfServiceView'
 import { exampleCard } from '../__mock__/mockSelfServiceCard'
-import FormErrorMessage from '../components/FormErrorMessage'
+import FormAlert from '../components/FormAlert'
 
 const wrapper = ({ children }: { children: ReactNode }) => (
   <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -73,9 +73,7 @@ describe('CardSelfServiceForm', () => {
     })
     expect(toasterSpy).toHaveBeenCalledWith({
       intent: 'danger',
-      message: (
-        <FormErrorMessage errorMessage='Mindestens eine Ihrer Angaben ist ungültig.' style={{ color: 'white' }} />
-      ),
+      message: <FormAlert errorMessage='Mindestens eine Ihrer Angaben ist ungültig.' style={{ color: 'white' }} />,
       timeout: 0,
     })
   })
