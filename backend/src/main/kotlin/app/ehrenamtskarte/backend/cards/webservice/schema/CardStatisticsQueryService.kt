@@ -35,7 +35,7 @@ class CardStatisticsQueryService {
                 ?: throw ProjectNotFoundException(project)
             val projectConfig = context.backendConfiguration.getProjectConfig(project)
             val projectId = projectEntity.id.value
-            if (!Authorizer.mayViewCardStatisticsInProject(admin, projectId)) {
+            if (admin == null || !Authorizer.mayViewCardStatisticsInProject(admin, projectId)) {
                 throw ForbiddenException()
             }
 
@@ -65,7 +65,7 @@ class CardStatisticsQueryService {
             val projectConfig = context.backendConfiguration.getProjectConfig(project)
             val region = RegionEntity.findById(regionId) ?: throw RegionNotFoundException()
 
-            if (!Authorizer.mayViewCardStatisticsInRegion(admin, region)) {
+            if (admin == null || !Authorizer.mayViewCardStatisticsInRegion(admin, region.id.value)) {
                 throw ForbiddenException()
             }
 

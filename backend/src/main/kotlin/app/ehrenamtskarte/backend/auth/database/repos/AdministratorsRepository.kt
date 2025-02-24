@@ -100,7 +100,7 @@ object AdministratorsRepository {
     fun deleteAdministrator(administrator: AdministratorEntity) {
         administrator.deleted = true
         administrator.email = UUID.randomUUID().toString() + "@entitlementcard.app"
-        administrator.role = Role.NO_RIGHTS.db_value
+        administrator.isRole(Role.NO_RIGHTS)
     }
 
     fun setNewPasswordResetKey(administrator: AdministratorEntity): String {
