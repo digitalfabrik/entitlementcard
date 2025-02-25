@@ -68,7 +68,7 @@ const BirthdayForm = ({
         disableFuture
       />
       {showErrorMessage && <FormAlert severity='error' errorMessage={getErrorMessage()} />}
-      {getHintMessage() && <FormAlert severity='info' errorMessage={getHintMessage()} />}
+      {!!getHintMessage() && <FormAlert severity='info' errorMessage={getHintMessage()} />}
     </FormGroup>
   )
 }
