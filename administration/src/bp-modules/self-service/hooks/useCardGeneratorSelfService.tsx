@@ -63,7 +63,7 @@ const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
       if (error instanceof ApolloError) {
         const { title } = getMessageFromApolloError(error, t)
         appToaster?.show({
-          message: <FormAlert style={{ color: 'white' }} errorMessage={title} />,
+          message: <FormAlert isToast errorMessage={title} />,
           timeout: 0,
           intent: 'danger',
         })

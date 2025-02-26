@@ -73,7 +73,7 @@ describe('CardSelfServiceForm', () => {
     })
     expect(toasterSpy).toHaveBeenCalledWith({
       intent: 'danger',
-      message: <FormAlert errorMessage='Mindestens eine Ihrer Angaben ist ungültig.' style={{ color: 'white' }} />,
+      message: <FormAlert isToast errorMessage='Mindestens eine Ihrer Angaben ist ungültig.' />,
       timeout: 0,
     })
   })

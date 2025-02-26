@@ -26,7 +26,7 @@ const BirthdayForm = ({
   const showErrorMessage = touched || showRequired
   const projectConfig = useContext(ProjectConfigContext)
 
-  const isBirthdayHintEnabled = (): boolean => {
+  const showBirthdayHint = (): boolean => {
     const today = PlainDate.fromLocalDate(new Date())
     const underAge = today.subtract({ years: 16 })
     return !!(birthday?.isAfter(underAge) && projectConfig.showBirthdayExtensionHint && !birthday.isAfter(today))
@@ -42,13 +42,6 @@ const BirthdayForm = ({
       return t('birthdayFutureError')
     }
 
-    return null
-  }
-
-  const getHintMessage = (): string | null => {
-    if (isBirthdayHintEnabled()) {
-      return t('birthdayHint')
-    }
     return null
   }
 
@@ -68,7 +61,7 @@ const BirthdayForm = ({
         disableFuture
       />
       {showErrorMessage && <FormAlert severity='error' errorMessage={getErrorMessage()} />}
-      {!!getHintMessage() && <FormAlert severity='info' errorMessage={getHintMessage()} />}
+      {showBirthdayHint() && <FormAlert severity='info' errorMessage={t('birthdayHint')} />}
     </FormGroup>
   )
 }
