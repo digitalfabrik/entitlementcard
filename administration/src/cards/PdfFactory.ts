@@ -115,13 +115,13 @@ export const generatePdf = async (
     const doc = await PDFDocument.create()
     const templateDocument = await PDFDocument.load(await fetch(pdfConfig.templatePath).then(res => res.arrayBuffer()))
 
-    await Promise.all(
-      codes.map(async (code, index) => {
-        const [templatePage] = await doc.copyPages(templateDocument, [0])
-        const page = doc.addPage(templatePage)
-        await fillContentAreas(doc, page, code, cards[index], pdfConfig, region)
-      })
-    )
+    for (let index = 0; index < codes.length; index++) {
+      // eslint-disable-next-line no-await-in-loop
+      const [templatePage] = await doc.copyPages(templateDocument, [0])
+      const page = doc.addPage(templatePage)
+      // eslint-disable-next-line no-await-in-loop
+      await fillContentAreas(doc, page, codes[index], cards[index], pdfConfig, region)
+    }
 
     doc.setTitle(pdfConfig.title)
     doc.setAuthor(pdfConfig.issuer)
