@@ -25,14 +25,14 @@ class FreinetAgencyQueryService {
         val admin =
             AdministratorEntity.findById(jwtPayload.adminId)
                 ?: throw UnauthorizedException()
+        if (!Authorizer.mayViewFreinetAgencyInformationInRegion(admin, regionId)) {
+            throw ForbiddenException()
+        }
         val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
             ?: throw ProjectNotFoundException(project)
 
         if (projectEntity.project != EAK_BAYERN_PROJECT) {
             throw NotEakProjectException()
-        }
-        if (!Authorizer.mayViewFreinetAgencyInformationInRegion(admin, regionId)) {
-            throw ForbiddenException()
         }
         val agency = FreinetAgencyRepository.getFreinetAgencyByRegionId(regionId)
         agency?.let { FreinetAgency(agencyId = it.agencyId, apiAccessKey = agency.apiAccessKey, agencyName = agency.agencyName, dataTransferActivated = agency.dataTransferActivated) }

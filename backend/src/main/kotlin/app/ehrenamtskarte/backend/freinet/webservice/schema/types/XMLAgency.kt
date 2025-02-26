@@ -12,7 +12,7 @@ data class XMLAgency(
     var accessKey: String?,
     @JsonProperty("ars")
     @JacksonXmlCData
-    var ars: String?,
+    var officialRegionalKeys: String?,
     @JsonProperty("agenturname")
     @JacksonXmlCData
     var agencyName: String?

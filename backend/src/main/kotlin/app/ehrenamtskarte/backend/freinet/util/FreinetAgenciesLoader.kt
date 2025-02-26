@@ -40,20 +40,20 @@ class FreinetAgenciesLoader {
     fun loadAgenciesFromXml(projectConfigs: List<ProjectConfig>): List<FreinetApiAgency> {
         val bayernConfig =
             projectConfigs.find { it.id == EAK_BAYERN_PROJECT } ?: throw NotFoundException("Project config not found")
-        if (bayernConfig.freinetAgencies == null) {
+        if (bayernConfig.freinet == null) {
             logger.error("Couldn't find required freinet api parameters in backend config.")
             return emptyList()
         }
-        val freinetAgencyConfig = bayernConfig.freinetAgencies
+        val freinetConfig = bayernConfig.freinet
         try {
             val response = runBlocking {
                 httpClient.request {
                     url {
                         protocol = URLProtocol.HTTP
-                        host = freinetAgencyConfig.host
-                        path(freinetAgencyConfig.path)
-                        parameters.append("accessKey", freinetAgencyConfig.accessToken)
-                        parameters.append("portalId", freinetAgencyConfig.portalId)
+                        host = freinetConfig.host
+                        path(freinetConfig.path)
+                        parameters.append("accessKey", freinetConfig.accessToken)
+                        parameters.append("portalId", freinetConfig.portalId)
                         parameters.append("limit", "1000")
                     }
                     method = HttpMethod.Get
@@ -73,12 +73,12 @@ class FreinetAgenciesLoader {
     }
 
     private fun transformAndFilterAgencyData(agencies: XMLAgencies): List<FreinetApiAgency> {
-        return agencies.agencies.filter { it.agencyId != null && it.ars != null && it.accessKey != null && it.agencyName !== null }.map {
+        return agencies.agencies.mapNotNull {
             FreinetApiAgency(
                 agencyId = it.agencyId!!.toInt(),
                 agencyName = it.agencyName!!,
                 apiAccessKey = it.accessKey!!,
-                arsList = it.ars?.split(",") ?: emptyList()
+                officialRegionalKeys = it.officialRegionalKeys?.split(",") ?: emptyList()
             )
         }.distinctBy { it.agencyId }
     }
