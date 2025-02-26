@@ -10,5 +10,6 @@ val freinetGraphQlParams = GraphQLParams(
     dataLoaderRegistry = createRegistryFromNamedDataLoaders(),
     queries = listOf(
         TopLevelObject(FreinetAgencyQueryService())
-    )
+    ),
+    mutations = listOf(TopLevelObject(FreinetAgencyMutationService()))
 )

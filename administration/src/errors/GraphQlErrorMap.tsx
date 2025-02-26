@@ -32,6 +32,10 @@ const graphQlErrorMap = (t: TFunction, extensions?: ErrorExtensions): GraphQLErr
       return {
         title: t('errors:mailAddressAlreadyUsed'),
       }
+    case GraphQlExceptionCode.FreinetAgencyNotFound:
+      return {
+        title: t('errors:freinetAgencyNotFound'),
+      }
     case GraphQlExceptionCode.InvalidLink:
       return {
         title: t('errors:invalidLink'),
@@ -124,6 +128,10 @@ const graphQlErrorMap = (t: TFunction, extensions?: ErrorExtensions): GraphQLErr
     case GraphQlExceptionCode.RegionNotActivatedCardConfirmationMail:
       return {
         title: t('errors:regionNotActivatedForConfirmationMail'),
+      }
+    default:
+      return {
+        title: defaultError.title,
       }
   }
 }

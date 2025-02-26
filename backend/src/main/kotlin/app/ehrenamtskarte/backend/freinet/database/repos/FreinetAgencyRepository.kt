@@ -7,4 +7,8 @@ object FreinetAgencyRepository {
     fun getFreinetAgencyByRegionId(regionId: Int): FreinetAgenciesEntity? {
         return FreinetAgenciesEntity.find { FreinetAgencies.regionId eq regionId }.singleOrNull()
     }
+
+    fun updateFreinetDataTransfer(freinetAgency: FreinetAgenciesEntity, dataTransferActivated: Boolean) {
+        freinetAgency.dataTransferActivated = dataTransferActivated
+    }
 }
