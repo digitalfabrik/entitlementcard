@@ -74,12 +74,16 @@ class FreinetAgenciesLoader {
 
     private fun transformAndFilterAgencyData(agencies: XMLAgencies): List<FreinetApiAgency> {
         return agencies.agencies.mapNotNull {
-            FreinetApiAgency(
-                agencyId = it.agencyId!!.toInt(),
-                agencyName = it.agencyName!!,
-                apiAccessKey = it.accessKey!!,
-                officialRegionalKeys = it.officialRegionalKeys?.split(",") ?: emptyList()
-            )
+            return@mapNotNull if (it.agencyId != null && it.agencyName != null && it.accessKey != null) {
+                FreinetApiAgency(
+                    agencyId = it.agencyId.toInt(),
+                    agencyName = it.agencyName,
+                    apiAccessKey = it.accessKey,
+                    officialRegionalKeys = it.officialRegionalKeys?.split(",") ?: emptyList()
+                )
+            } else {
+                null
+            }
         }.distinctBy { it.agencyId }
     }
 }
