@@ -19,6 +19,7 @@
     "@mui/x-date-pickers": "^7.22.2",
     "@nivo/bar": "^0.85.1",
     "@pdf-lib/fontkit": "^1.1.1",
+    "@sentry/react": "^8.55.0",
     "@types/geojson": "^7946.0.14",
     "@zxing/library": "^0.20.0",
     "apollo-upload-client": "^17.0.0",
