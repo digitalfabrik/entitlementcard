@@ -1,4 +1,4 @@
-import { Extension } from './extensions'
+import type { Extension } from './extensions'
 
 export const EMAIL_NOTIFICATION_EXTENSION_NAME = 'emailNotification'
 type EmailNotificationExtensionState = { [EMAIL_NOTIFICATION_EXTENSION_NAME]: string }

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import FormAlert from '../../bp-modules/self-service/components/FormAlert'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
 import ClearInputButton from './components/ClearInputButton'
-import { Extension, ExtensionComponentProps } from './extensions'
+import type { Extension, ExtensionComponentProps } from './extensions'
 
 export const KOBLENZ_REFERENCE_NUMBER_EXTENSION_NAME = 'koblenzReferenceNumber'
 

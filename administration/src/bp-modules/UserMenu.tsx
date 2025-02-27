@@ -5,7 +5,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { WhoAmIContext } from '../WhoAmIProvider'
-import { roleToText } from './users/UsersTable'
+import roleToText from './users/utils/roleToText'
 
 type UserMenuProps = {
   onSignOut: () => void

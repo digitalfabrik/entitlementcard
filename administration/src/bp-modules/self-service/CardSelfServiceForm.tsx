@@ -13,11 +13,11 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 import { removeMultipleSpaces } from '../../util/helper'
 import { useAppToaster } from '../AppToaster'
 import ExtensionForms from '../cards/ExtensionForms'
-import { DataPrivacyAcceptingStatus } from './CardSelfServiceView'
 import { ActionButton } from './components/ActionButton'
 import FormAlert from './components/FormAlert'
 import { IconTextButton } from './components/IconTextButton'
 import { UnderlineTextButton } from './components/UnderlineTextButton'
+import { DataPrivacyAcceptingStatus } from './constants'
 
 const StyledCheckbox = styled(Checkbox)`
   margin-top: 24px;
