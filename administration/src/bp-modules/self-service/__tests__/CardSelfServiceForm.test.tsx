@@ -40,7 +40,7 @@ describe('CardSelfServiceForm', () => {
 
     expect(getByLabelText('Vorname Name').closest('input')).toBeTruthy()
     expect(getByPlaceholderText('Erika Musterfrau')).toBeTruthy()
-    expect(getByPlaceholderText('5.012.067.281, 000D000001, 99478')).toBeTruthy()
+    expect(getByPlaceholderText('5.031.025.281, 000D000001, 91459')).toBeTruthy()
     expect(getByLabelText('Aktenzeichen').closest('input')).toBeTruthy()
     expect(getByPlaceholderText('TT.MM.JJJJ')).toBeTruthy()
     const dataPrivacyCheckbox = getByTestId('data-privacy-checkbox')

@@ -49,7 +49,7 @@ const KoblenzReferenceNumberExtensionForm = ({
         fill
         large={viewportSmall}
         id='koblenz-reference-number-input'
-        placeholder='5.012.067.281, 000D000001, 99478'
+        placeholder='5.031.025.281, 000D000001, 91459'
         intent={isValid || !showErrorMessage ? undefined : Intent.DANGER}
         onBlur={() => setTouched(true)}
         value={koblenzReferenceNumber}
