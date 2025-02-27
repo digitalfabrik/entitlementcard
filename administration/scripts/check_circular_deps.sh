@@ -1,3 +1,4 @@
+# Source from https://dev.to/greenroach/detecting-circular-dependencies-in-a-reacttypescript-app-using-madge-229
 #!/bin/bash
 
 if ! command -v madge &> /dev/null
