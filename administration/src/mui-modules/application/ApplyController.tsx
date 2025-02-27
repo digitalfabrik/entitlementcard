@@ -14,6 +14,7 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 import getQueryResult from '../util/getQueryResult'
 import ApplicationErrorBoundary from './ApplicationErrorBoundary'
 import DiscardAllInputsButton from './DiscardAllInputsButton'
+import { applicationStorageKey } from './constants'
 import ApplicationForm from './forms/ApplicationForm'
 import useVersionedLocallyStoredState from './hooks/useVersionedLocallyStoredState'
 import { useGarbageCollectArrayBuffers, useInitializeGlobalArrayBuffersManager } from './util/globalArrayBuffersManager'
@@ -21,8 +22,6 @@ import { useGarbageCollectArrayBuffers, useInitializeGlobalArrayBuffersManager }
 // This env variable is determined by '../../../application_commit.sh'. It holds the hash of the last commit to the
 // application form.
 const lastCommitForApplicationForm = process.env.REACT_APP_APPLICATION_COMMIT as string
-
-export const applicationStorageKey = 'applicationState'
 
 const SuccessContent = styled.div`
   white-space: pre-line;

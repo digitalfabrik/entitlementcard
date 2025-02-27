@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import CustomDatePicker from '../../bp-modules/components/CustomDatePicker'
 import FormErrorMessage from '../../bp-modules/self-service/components/FormErrorMessage'
 import PlainDate from '../../util/PlainDate'
-import { Extension, ExtensionComponentProps } from './extensions'
+import type { Extension, ExtensionComponentProps } from './extensions'
 
 export const BIRTHDAY_EXTENSION_NAME = 'birthday'
 export type BirthdayExtensionState = { [BIRTHDAY_EXTENSION_NAME]: PlainDate | null }

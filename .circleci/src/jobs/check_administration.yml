@@ -22,6 +22,10 @@ steps:
       command: npm run lint
       working_directory: ~/project/administration
   - run:
+      name: Check circular dependencies
+      command: npm run check-circular-deps
+      working_directory: ~/project/administration
+  - run:
       name: Run tests and generate coverage report
       command: npm run test:coverage -- --maxWorkers=2
       working_directory: ~/project/administration

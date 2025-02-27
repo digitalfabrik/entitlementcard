@@ -4,10 +4,10 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { FREINET_PARAM } from '../../Router'
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import StandaloneCenter from '../StandaloneCenter'
+import { FREINET_PARAM } from '../constants'
 import CardFormButton from './CardFormButton'
 
 const Buttons = styled(ButtonGroup)`
