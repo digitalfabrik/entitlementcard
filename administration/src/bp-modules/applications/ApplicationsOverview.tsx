@@ -68,7 +68,7 @@ const ApplicationsOverview = ({ applications }: { applications: Application[] })
     () =>
       sortedApplications.filter(application => {
         if (activeBarItem.status === undefined) {
-          return application
+          return Boolean(application)
         }
         return (
           getApplicationStatus(application.verifications.map(getVerificationStatus), !!application.withdrawalDate) ===
