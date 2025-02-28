@@ -26,6 +26,7 @@ object MigrationsRegistry {
         V0022_AddTypeToApiToken(),
         V0023_DropTypeDefaultOfApiToken(),
         V0024_AddNewRoleToRoleRegionCombinationConstraint(),
-        V0025_AddSourceFieldToApplicationVerifications()
+        V0025_AddSourceFieldToApplicationVerifications(),
+        V0026_AddFreinetAgenciesTable()
     )
 }
