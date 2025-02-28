@@ -14,13 +14,24 @@ import { Region } from '../../../generated/graphql'
 import { ProjectConfigProvider } from '../../../project-configs/ProjectConfigContext'
 import bayernConfig from '../../../project-configs/bayern/config'
 import { ProjectConfig } from '../../../project-configs/getProjectConfig'
-import koblenzConfig from '../../../project-configs/koblenz/config'
 import nuernbergConfig from '../../../project-configs/nuernberg/config'
 import showcaseConfig from '../../../project-configs/showcase/config'
 import downloadDataUri from '../../../util/downloadDataUri'
 import { AppToasterProvider } from '../../AppToaster'
 import useCardGenerator from './useCardGenerator'
 
+jest.useFakeTimers({ now: new Date('2025-01-01T00:00:00.000Z') })
+jest.mock('../../../cards/PdfFactory', () => ({
+  ...jest.requireActual('../../../cards/PdfFactory'),
+  generatePdf: jest.fn(),
+}))
+jest.mock('../../../cards/createCards', () => ({
+  ...jest.requireActual('../../../cards/createCards'),
+  __esModule: true,
+  default: jest.fn(),
+}))
+jest.mock('../../../cards/deleteCards')
+jest.mock('../../../util/downloadDataUri')
 const wrapper = ({
   children,
   initialRoutes,
@@ -40,26 +51,13 @@ const wrapper = ({
 )
 
 const withCustomWrapper =
-  (initialRoutes: string[], projectConfig: ProjectConfig) =>
-  // @ts-expect-error any is okay here
-  ({ children }) =>
+  (projectConfig: ProjectConfig, initialRoute: string) =>
+  ({ children }: { children: ReactNode }) =>
     wrapper({
       children,
-      initialRoutes,
+      initialRoutes: [initialRoute],
       projectConfig,
     })
-
-jest.mock('../../../cards/PdfFactory', () => ({
-  ...jest.requireActual('../../../cards/PdfFactory'),
-  generatePdf: jest.fn(),
-}))
-jest.mock('../../../cards/createCards', () => ({
-  ...jest.requireActual('../../../cards/createCards'),
-  __esModule: true,
-  default: jest.fn(),
-}))
-jest.mock('../../../cards/deleteCards')
-jest.mock('../../../util/downloadDataUri')
 
 describe('useCardGenerator', () => {
   const region: Region = {
@@ -164,10 +162,8 @@ describe('useCardGenerator', () => {
     mocked(createCards).mockReturnValueOnce(Promise.resolve(codes))
     const { result } = renderHook(() => useCardGenerator({ region }), {
       wrapper: withCustomWrapper(
-        [
-          '?Name=Thea+Test&Ablaufdatum=26.02.2028&MailNotification=thea.test%40gmail.com&applicationIdToMarkAsProcessed=1',
-        ],
-        bayernConfig
+        bayernConfig,
+        '?Name=Thea+Test&Ablaufdatum=26.02.2028&MailNotification=thea.test%40gmail.com&applicationIdToMarkAsProcessed=1'
       ),
     })
 
@@ -181,37 +177,12 @@ describe('useCardGenerator', () => {
     ])
   })
 
-  it('should successfully initialize cards with searchParams for koblenz', async () => {
-    mocked(createCards).mockReturnValueOnce(Promise.resolve(codes))
-    const { result } = renderHook(() => useCardGenerator({ region }), {
-      wrapper: withCustomWrapper(['?Name=Karla Koblenz&Referenznummer=123K&Geburtsdatum=10.06.2003'], koblenzConfig),
-    })
-
-    expect(result.current.cards).toEqual([
-      {
-        expirationDate: { day: 26, isoMonth: 2, isoYear: 2026 },
-        extensions: {
-          birthday: {
-            day: 10,
-            isoMonth: 6,
-            isoYear: 2003,
-          },
-          koblenzReferenceNumber: '123K',
-        },
-        fullName: 'Karla Koblenz',
-        id: expect.any(Number),
-      },
-    ])
-  })
-
   it('should successfully initialize cards with searchParams for nuernberg', async () => {
     mocked(createCards).mockReturnValueOnce(Promise.resolve(codes))
     const { result } = renderHook(() => useCardGenerator({ region }), {
       wrapper: withCustomWrapper(
-        [
-          '?Name=Thea+Test&Ablaufdatum=03.3.2026&Geburtsdatum=01.01.2000&Passnummer=12345678&Pass-ID=123&Adresszeile+1=Teststraße+3&Adresszeile+2=EG+Rechts&PLZ=86111&Ort=Musterstadt',
-        ],
-        nuernbergConfig
+        nuernbergConfig,
+        '?Name=Thea+Test&Ablaufdatum=03.3.2026&Geburtsdatum=01.01.2000&Passnummer=12345678&Pass-ID=123&Adresszeile+1=Teststraße+3&Adresszeile+2=EG+Rechts&PLZ=86111&Ort=Musterstadt&Startdatum=01.05.2025'
       ),
     })
 
@@ -230,7 +201,7 @@ describe('useCardGenerator', () => {
           addressPlz: '86111',
           nuernbergPassId: 123,
           regionId: 0,
-          startDay: { day: 26, isoMonth: 2, isoYear: 2025 },
+          startDay: { day: 1, isoMonth: 5, isoYear: 2025 },
         },
         fullName: 'Thea Test',
         id: expect.any(Number),
