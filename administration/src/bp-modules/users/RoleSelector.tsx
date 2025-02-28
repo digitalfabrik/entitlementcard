@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import { Role } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import { roleToText } from './UsersTable'
+import roleToText from './utils/roleToText'
 
 const RoleSelector = ({
   role,

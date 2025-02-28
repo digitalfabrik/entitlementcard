@@ -3,8 +3,10 @@ import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
-import { Application } from './ApplicationsOverview'
-import { Indicator, VerificationStatus, getStatus } from './VerificationsView'
+import type { Application } from './ApplicationsOverview'
+import VerificationIndicator from './components/VerificationIndicator'
+import { VerificationStatus } from './constants'
+import { getVerificationStatus } from './utils'
 
 export const UnFocusedDiv = styled.div`
   display: flex;
@@ -17,7 +19,7 @@ export const UnFocusedDiv = styled.div`
 `
 
 const VerificationQuickIndicator = memo(({ verifications }: { verifications: Application['verifications'] }) => {
-  const verificationStati = verifications.map(getStatus)
+  const verificationStati = verifications.map(getVerificationStatus)
   const { t } = useTranslation('applications')
   return (
     <Tooltip
@@ -29,15 +31,15 @@ const VerificationQuickIndicator = memo(({ verifications }: { verifications: App
         </div>
       }>
       <UnFocusedDiv>
-        <Indicator
+        <VerificationIndicator
           status={VerificationStatus.Verified}
           text={`: ${verificationStati.filter(v => v === VerificationStatus.Verified).length}`}
         />
-        <Indicator
+        <VerificationIndicator
           status={VerificationStatus.Awaiting}
           text={`: ${verificationStati.filter(v => v === VerificationStatus.Awaiting).length}`}
         />
-        <Indicator
+        <VerificationIndicator
           status={VerificationStatus.Rejected}
           text={`: ${verificationStati.filter(v => v === VerificationStatus.Rejected).length}`}
         />
