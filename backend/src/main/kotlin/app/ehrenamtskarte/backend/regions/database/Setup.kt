@@ -51,22 +51,21 @@ fun insertOrUpdateRegions(agencies: List<FreinetApiAgency>) {
                 ?: throw Error("Required project '$EAK_BAYERN_PROJECT' not found!")
         EAK_BAYERN_REGIONS.forEach { eakRegion ->
             val dbRegion = dbRegions.find { it.regionIdentifier == eakRegion[2] && it.projectId == eakProject.id }
-            val regionEntity: RegionEntity = if (dbRegion == null) {
-                RegionEntity.new {
+            val regionEntity: RegionEntity = dbRegion
+                ?.apply {
+                    name = eakRegion[1]
+                    prefix = eakRegion[0]
+                    website = eakRegion[3]
+                }
+                ?: RegionEntity.new {
                     projectId = eakProject.id
                     name = eakRegion[1]
                     prefix = eakRegion[0]
                     regionIdentifier = eakRegion[2]
                     website = eakRegion[3]
                 }
-            } else {
-                dbRegion.name = eakRegion[1]
-                dbRegion.prefix = eakRegion[0]
-                dbRegion.website = eakRegion[3]
-                dbRegion
-            }
-            val agency = agencies.find { agency -> agency.officialRegionalKeys.any { it.startsWith(eakRegion[2]) } }
-            if (agency != null) {
+            agencies.find { agency -> agency.officialRegionalKeys.any { it.startsWith(eakRegion[2]) } }?.let {
+                    agency ->
                 insertOrUpdateFreinetRegionInformation(agency, dbFreinetRegionInformation, regionEntity)
             }
         }
