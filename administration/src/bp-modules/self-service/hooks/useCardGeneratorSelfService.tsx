@@ -16,7 +16,7 @@ import downloadDataUri from '../../../util/downloadDataUri'
 import getCustomDeepLinkFromQrCode from '../../../util/getCustomDeepLinkFromQrCode'
 import { reportErrorToSentry } from '../../../util/sentry'
 import { useAppToaster } from '../../AppToaster'
-import FormErrorMessage from '../components/FormErrorMessage'
+import FormAlert from '../components/FormAlert'
 
 export enum CardSelfServiceStep {
   form,
@@ -63,7 +63,7 @@ const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
       if (error instanceof ApolloError) {
         const { title } = getMessageFromApolloError(error, t)
         appToaster?.show({
-          message: <FormErrorMessage style={{ color: 'white' }} errorMessage={title} />,
+          message: <FormAlert isToast errorMessage={title} />,
           timeout: 0,
           intent: 'danger',
         })
