@@ -49,7 +49,7 @@ class MapContainer extends StatefulWidget {
 const mapboxColor = Color(0xFF979897);
 
 class _MapContainerState extends State<MapContainer> implements MapController {
-  MaplibreMapController? _controller;
+  MapLibreMapController? _controller;
   Symbol? _symbol;
   bool _permissionGiven = false;
   bool _isMapInitialized = false;
@@ -75,7 +75,7 @@ class _MapContainerState extends State<MapContainer> implements MapController {
 
     final mapLibreView = Stack(
       children: [
-        MaplibreMap(
+        MapLibreMap(
           initialCameraPosition: cameraPosition,
           styleString: config.mapStyleUrl,
           // We provide our own attribution menu
@@ -83,15 +83,15 @@ class _MapContainerState extends State<MapContainer> implements MapController {
           // There is no way to remove the logo, so set the margins to a really large value to hide it
           logoViewMargins: const math.Point(double.maxFinite, double.maxFinite),
           myLocationEnabled: _permissionGiven,
-          myLocationTrackingMode: _permissionGiven ? MyLocationTrackingMode.Tracking : MyLocationTrackingMode.None,
+          myLocationTrackingMode: _permissionGiven ? MyLocationTrackingMode.tracking : MyLocationTrackingMode.none,
           // required to prevent mapbox iOS from requesting location
           // permissions on startup, as discussed in #249
-          myLocationRenderMode: MyLocationRenderMode.NORMAL,
+          myLocationRenderMode: MyLocationRenderMode.normal,
           onMapCreated: _onMapCreated,
           onMapClick: _onMapClick,
           onStyleLoadedCallback: () {},
           compassViewMargins: math.Point(Platform.isIOS ? compassMargin : 0, compassMargin),
-          compassViewPosition: CompassViewPosition.TopRight,
+          compassViewPosition: CompassViewPosition.topRight,
           minMaxZoomPreference: const MinMaxZoomPreference(4.0, 18.0),
           onCameraTrackingDismissed: () => widget.setFollowUserLocation(false),
         ),
@@ -124,7 +124,7 @@ class _MapContainerState extends State<MapContainer> implements MapController {
         : mapLibreView;
   }
 
-  void _onMapCreated(MaplibreMapController controller) {
+  void _onMapCreated(MapLibreMapController controller) {
     if (!mounted) return;
 
     setState(() {
@@ -234,7 +234,7 @@ class _MapContainerState extends State<MapContainer> implements MapController {
 
     final update =
         zoomLevel != null ? CameraUpdate.newLatLngZoom(location, zoomLevel) : CameraUpdate.newLatLng(location);
-    await controller.updateMyLocationTrackingMode(MyLocationTrackingMode.None);
+    await controller.updateMyLocationTrackingMode(MyLocationTrackingMode.none);
     await controller.animateCamera(update);
   }
 
@@ -256,7 +256,7 @@ class _MapContainerState extends State<MapContainer> implements MapController {
     await controller.animateCamera(cameraUpdate);
     if (!mounted) return;
 
-    await controller.updateMyLocationTrackingMode(MyLocationTrackingMode.Tracking);
+    await controller.updateMyLocationTrackingMode(MyLocationTrackingMode.tracking);
     if (!mounted) return;
     if (!_permissionGiven) {
       setState(() => _permissionGiven = true);

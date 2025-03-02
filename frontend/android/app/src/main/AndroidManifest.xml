@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-          package="app.ehrenamtskarte">
+          package="app.entitlementcard">
   <!-- io.flutter.app.FlutterApplication is an android.app.Application that
        calls FlutterMain.startInitialization(this); in its onCreate method.
        In most cases you can leave this as-is, but you if you want to provide
@@ -8,13 +8,14 @@
        FlutterApplication and put your custom class here. -->
   <application
           android:label="${appName}${appNameSuffix}"
+          android:name="${applicationName}"
           android:icon="@mipmap/${icon}"
           android:roundIcon="@mipmap/${icon}_round"
           android:allowBackup="true"
           android:fullBackupContent="@xml/full_backup_content"
           android:dataExtractionRules="@xml/data_extraction_rules">
     <activity android:exported="true"
-              android:name=".MainActivity"
+              android:name="app.entitlementcard.MainActivity"
               android:theme="@style/LaunchTheme"
               android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
               android:hardwareAccelerated="true"
