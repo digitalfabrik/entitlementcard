@@ -37,6 +37,7 @@ const StepRequirementsForm: Form<StepRequirementsFormState, ValidatedInput, Addi
         }
         return { type: 'valid', value: { type: BavariaCardType.Golden, value: goldenCardEntitlement.value } }
       }
+      case null:
       default:
         return { type: 'error' }
     }

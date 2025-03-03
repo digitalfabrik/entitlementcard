@@ -1,12 +1,12 @@
 {
-  "name": "build-configs",
-  "version": "0.0.1",
-  "private": true,
-  "main": "dist/index.js",
-  "scripts": {
-    "prepare": "tsc --build"
-  },
-  "devDependencies": {
-    "typescript": "~5.0.4"
-  }
+    "name": "build-configs",
+    "version": "0.0.1",
+    "private": true,
+    "main": "dist/index.js",
+    "scripts": {
+        "prepare": "tsc --build"
+    },
+    "devDependencies": {
+        "typescript": "~5.8.2"
+    }
 }
