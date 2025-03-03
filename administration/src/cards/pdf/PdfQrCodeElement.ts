@@ -1,4 +1,4 @@
-import { PDFPage } from 'pdf-lib'
+import { PDFPage } from '@cantoo/pdf-lib'
 
 import { QrCode } from '../../generated/card_pb'
 import { drawQRCode } from '../../util/qrcode'

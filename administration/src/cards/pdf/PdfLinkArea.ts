@@ -1,4 +1,4 @@
-import { PDFDocument, PDFFont, PDFPage, PDFRef, PDFString } from 'pdf-lib'
+import { PDFDocument, PDFFont, PDFPage, PDFRef, PDFString } from '@cantoo/pdf-lib'
 
 import { Coordinates, PdfElement, mmToPt } from './PdfElements'
 
