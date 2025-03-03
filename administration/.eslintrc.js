@@ -99,6 +99,7 @@ module.exports = {
     'jsx-expressions/strict-logical-expressions': 'error',
 
     'prefer-arrow/prefer-arrow-functions': 'error',
+    'import/no-cycle': ['error', { maxDepth: '∞' }],
   },
   parserOptions: {
     project: true,

@@ -12,7 +12,7 @@ import {
 } from '@blueprintjs/core'
 import React, { ReactElement, memo, useContext, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useDeleteApplicationMutation } from '../../generated/graphql'
@@ -20,18 +20,14 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { useAppToaster } from '../AppToaster'
-import { Application } from './ApplicationsOverview'
-import JsonFieldView, { GeneralJsonField, JsonField, findValue } from './JsonFieldView'
+import type { Application } from './ApplicationsOverview'
+import JsonFieldView, { findValue } from './JsonFieldView'
+import type { GeneralJsonField, JsonField } from './JsonFieldView'
 import NoteDialogController from './NoteDialogController'
 import PreVerifiedQuickIndicator, { PreVerifiedQuickIndicatorType } from './PreVerifiedQuickIndicator'
 import VerificationsQuickIndicator from './VerificationsQuickIndicator'
 import VerificationsView from './VerificationsView'
-
-export const printAwareCss = css`
-  @media print {
-    display: none;
-  }
-`
+import { printAwareCss } from './constants'
 
 const ApplicationViewCard = styled(Section)<{ $hideInPrintMode?: boolean }>`
   width: 1000px;
