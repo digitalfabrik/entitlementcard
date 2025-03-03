@@ -55,10 +55,13 @@ def setupResourceValues(buildConfigName, resValue) {
     }
 }
 
+def determineAppName(buildConfig) {
+    return [appName: "${buildConfig.appName}"]
+}
+
 def determineIcon(buildConfig) {
     return [icon: "${buildConfig.appIcon}"]
 }
-
 
 def determineBuildConfigName() {
     if (project.hasProperty('BUILD_CONFIG_NAME')) {
@@ -76,6 +79,7 @@ ext {
     // setupGoogleServices = this.&setupGoogleServices
     setupResourceValues = this.&setupResourceValues
     // determineTheme = this.&determineTheme
+    determineAppName = this.&determineAppName
     determineIcon = this.&determineIcon
     determineBuildConfigName = this.&determineBuildConfigName
 }

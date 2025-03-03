@@ -38,7 +38,7 @@ idea {
 ext.setupApplication = { ApplicationProductFlavor flavor, buildConfigName ->
     var buildConfig = createBuildConfig(buildConfigName)
     flavor.applicationId buildConfig.applicationId
-    flavor.manifestPlaceholders = [*:determineIcon(buildConfig)]
+    flavor.manifestPlaceholders = [*:determineAppName(buildConfig), *:determineIcon(buildConfig)]
 
     setupResourceValues(buildConfigName, {
         String type, String name, String value -> flavor.resValue(type, name, value)
@@ -112,7 +112,14 @@ android {
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix = ".development"
+            manifestPlaceholders.appNameSuffix = " DEV"
+        }
+
         release {
+            manifestPlaceholders.appNameSuffix = ""
+
             ndk {
                 // Flutter does not support x86, so we exclude it in the following list: https://github.com/flutter/flutter/issues/9253
                 abiFilters 'armeabi-v7a','arm64-v8a','x86_64'
