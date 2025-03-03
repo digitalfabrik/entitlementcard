@@ -53,7 +53,7 @@ class ViewAdministratorsQueryService {
             val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
                 ?: throw ProjectNotFoundException(project)
             val projectId = projectEntity.id.value
-            if (!Authorizer.mayViewUsersInProject(admin, projectId)) {
+            if (admin == null || !Authorizer.mayViewUsersInProject(admin, projectId)) {
                 throw ForbiddenException()
             }
             val administrators = (Administrators leftJoin Regions)
@@ -76,7 +76,7 @@ class ViewAdministratorsQueryService {
         return transaction {
             val admin = AdministratorEntity.findById(jwtPayload.adminId)
             val region = RegionEntity.findById(regionId) ?: throw RegionNotFoundException()
-            if (!Authorizer.mayViewUsersInRegion(admin, region)) {
+            if (admin == null || !Authorizer.mayViewUsersInRegion(admin, region)) {
                 throw ForbiddenException()
             }
             val administrators = AdministratorEntity

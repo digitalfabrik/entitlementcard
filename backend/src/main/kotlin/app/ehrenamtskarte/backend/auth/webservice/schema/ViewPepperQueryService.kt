@@ -22,7 +22,7 @@ class ViewPepperQueryService {
 
         return transaction {
             val admin = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
-            if (!Authorizer.maySeeHashingPepper(admin)) {
+            if (!Authorizer.mayViewHashingPepper(admin)) {
                 throw ForbiddenException()
             }
             Environment.getVariable(KOBLENZ_PEPPER_SYS_ENV) ?: throw NotImplementedException("Koblenz pepper is not set properly in this environment")
