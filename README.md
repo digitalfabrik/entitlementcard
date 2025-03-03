@@ -11,6 +11,7 @@
 ## Getting Started
 
 * [Development Setup](./docs/development-setup.md)
+* [Conventions](./docs/conventions.md)
 
 ## Documentation
 
