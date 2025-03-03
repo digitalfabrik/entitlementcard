@@ -1,10 +1,10 @@
 import { Button, Divider, Menu, Popover } from '@blueprintjs/core'
-import React, { ReactElement, useContext, useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { WhoAmIContext } from '../WhoAmIProvider'
+import { useWhoAmI } from '../WhoAmIProvider'
 import roleToText from './users/utils/roleToText'
 
 type UserMenuProps = {
@@ -41,7 +41,7 @@ const RoleInfo = styled.span`
 `
 
 const UserMenu = ({ onSignOut }: UserMenuProps): ReactElement => {
-  const { role, email } = useContext(WhoAmIContext).me!
+  const { role, email } = useWhoAmI().me
   const { t } = useTranslation('misc')
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const navigate = useNavigate()

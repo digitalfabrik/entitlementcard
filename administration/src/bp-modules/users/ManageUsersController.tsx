@@ -2,7 +2,7 @@ import { Card, H3, NonIdealState } from '@blueprintjs/core'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { WhoAmIContext } from '../../WhoAmIProvider'
+import { useWhoAmI } from '../../WhoAmIProvider'
 import {
   Region,
   Role,
@@ -78,7 +78,7 @@ const ManageRegionUsers = ({ region }: { region: Region }) => {
 
 const ManageUsersController = (): ReactElement => {
   const { t } = useTranslation('errors')
-  const { role, region } = useContext(WhoAmIContext).me!
+  const { role, region } = useWhoAmI().me
   if (role === Role.RegionAdmin && region) {
     return <ManageRegionUsers region={region} />
   }

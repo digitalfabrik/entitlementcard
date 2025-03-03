@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { WhoAmIContext } from '../../WhoAmIProvider'
+import { useWhoAmI } from '../../WhoAmIProvider'
 import { Role } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 
@@ -20,7 +20,7 @@ const Container = styled.div`
 
 const HomeController = (): ReactElement => {
   const { applicationFeature, cardStatistics, cardCreation, userImportApiEnabled } = useContext(ProjectConfigContext)
-  const { role } = useContext(WhoAmIContext).me!
+  const { role } = useWhoAmI().me
   const { t } = useTranslation('home')
 
   return (

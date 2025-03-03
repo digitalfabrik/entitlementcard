@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { WhoAmIContext } from '../../WhoAmIProvider'
+import { useWhoAmI } from '../../WhoAmIProvider'
 import { Role } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import StandaloneCenter from '../StandaloneCenter'
@@ -16,7 +16,7 @@ const Buttons = styled(ButtonGroup)`
 
 const StoresController = (): ReactElement => {
   const navigate = useNavigate()
-  const { role } = useContext(WhoAmIContext).me!
+  const { role } = useWhoAmI().me
   const storesManagement = useContext(ProjectConfigContext).storesManagement
   const { t } = useTranslation('stores')
 

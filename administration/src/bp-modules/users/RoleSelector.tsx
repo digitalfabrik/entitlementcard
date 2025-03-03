@@ -2,7 +2,7 @@ import { HTMLSelect } from '@blueprintjs/core'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { WhoAmIContext } from '../../WhoAmIProvider'
+import { useWhoAmI } from '../../WhoAmIProvider'
 import { Role } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import roleToText from './utils/roleToText'
@@ -18,7 +18,7 @@ const RoleSelector = ({
 }): ReactElement => {
   const { t } = useTranslation('users')
   const config = useContext(ProjectConfigContext)
-  const { role: currentUserRole } = useContext(WhoAmIContext).me!
+  const { role: currentUserRole } = useWhoAmI().me
 
   return (
     <HTMLSelect fill onChange={e => onChange((e.target.value as Role | null) ?? null)} value={role ?? ''} required>
