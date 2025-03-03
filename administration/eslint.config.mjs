@@ -1,6 +1,5 @@
 import { fixupConfigRules, fixupPluginRules } from '@eslint/compat'
 import { FlatCompat } from '@eslint/eslintrc'
-import js from '@eslint/js'
 import typescriptEslint from '@typescript-eslint/eslint-plugin'
 import tsParser from '@typescript-eslint/parser'
 import jest from 'eslint-plugin-jest'
@@ -19,8 +18,6 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const compat = new FlatCompat({
   baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all,
 })
 
 export default [
@@ -66,11 +63,14 @@ export default [
 
     settings: {
       jest: {
+        // Since eslint is installed in a different directory than jest, the jest eslint plugin fails to automatically detect the version of jest//
+        // https://github.com/digitalfabrik/entitlementcard/issues/1659
         version: require('jest/package.json').version,
       },
     },
 
     rules: {
+      // Overly strict rules (for now)
       'class-methods-use-this': 'off',
       'no-console': 'off',
       'no-magic-numbers': 'off',
@@ -82,6 +82,8 @@ export default [
       'jest/no-mocks-import': 'off',
       'react/display-name': 'off',
       'react/jsx-props-no-spreading': 'off',
+
+      // Unwanted
       'lines-between-class-members': 'off',
       'import/extensions': 'off',
       'import/named': 'off',
@@ -97,7 +99,7 @@ export default [
           controlComponents: ['HTMLSelect'],
         },
       ],
-
+      // Disabling since better @typescript-eslint rules available or they make no sense for ts projects
       'consistent-return': 'off',
       'default-case': 'off',
       'no-use-before-define': 'off',
