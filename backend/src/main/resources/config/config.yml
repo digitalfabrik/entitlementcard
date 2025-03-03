@@ -39,7 +39,7 @@ projects:
       accessToken: OVERRIDE_IN_LOCAL_CONFIG
   - id: nuernberg.sozialpass.app
     importUrl: https://data.entitlementcard.app/nuernberg-akzeptanzstellen.csv
-    pipelineName: SozialpassNuernberg
+    pipelineName:
     administrationBaseUrl: https://nuernberg.sozialpass.app
     administrationName: Nürnberg-Pass-Verwaltung
     timezone: "Europe/Berlin"

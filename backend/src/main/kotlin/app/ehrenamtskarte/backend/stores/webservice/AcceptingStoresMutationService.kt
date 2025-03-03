@@ -6,6 +6,7 @@ import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidJsonException
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.stores.database.repos.AcceptingStoresRepository
@@ -22,10 +23,8 @@ class AcceptingStoresMutationService {
         val context = dfe.getContext<GraphQLContext>()
         val jwtPayload = context.enforceSignedIn()
         return transaction {
-            val projectEntity =
-                ProjectEntity.find { Projects.project eq project }.firstOrNull() ?: throw ProjectNotFoundException(
-                    project
-                )
+            val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
+                ?: throw ProjectNotFoundException(project)
             val user = AdministratorEntity.findById(jwtPayload.adminId)
                 ?: throw UnauthorizedException()
 
@@ -33,10 +32,21 @@ class AcceptingStoresMutationService {
                 throw ForbiddenException()
             }
 
-            val projectId = projectEntity.id
-            val (storesCreated, storesToDelete, storesUntouched) = AcceptingStoresRepository.importAcceptingStores(stores, projectId, dryRun)
+            checkForDuplicates(stores)
 
-            return@transaction StoreImportReturnResultModel(storesCreated, storesToDelete, storesUntouched)
+            val projectId = projectEntity.id
+            val (storesCreated, storesDeleted, storesUntouched) = AcceptingStoresRepository.importAcceptingStores(stores, projectId, dryRun)
+
+            return@transaction StoreImportReturnResultModel(storesCreated, storesDeleted, storesUntouched)
+        }
+    }
+
+    private fun checkForDuplicates(stores: List<CSVAcceptingStore>) {
+        val seen = mutableSetOf<String>()
+        stores.firstOrNull {
+            !seen.add(it.name + it.street + it.houseNumber + it.postalCode + it.location)
+        }?.let { store ->
+            throw InvalidJsonException("Duplicate store found: ${store.name} ${store.street} ${store.houseNumber} ${store.postalCode} ${store.location}")
         }
     }
 }
