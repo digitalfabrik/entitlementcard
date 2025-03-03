@@ -7,13 +7,25 @@ import StandaloneCenter from './bp-modules/StandaloneCenter'
 import { WhoAmIQuery, useWhoAmIQuery } from './generated/graphql'
 import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
 
-export const WhoAmIContext = createContext<{
+type WhoAmIContextType = {
   me: WhoAmIQuery['me'] | null
   refetch: () => void
-}>({
+}
+
+export const WhoAmIContext = createContext<WhoAmIContextType>({
   me: null,
   refetch: () => undefined,
 })
+
+type UseWhoAmIReturn = WhoAmIContextType & { me: WhoAmIQuery['me'] }
+
+export const useWhoAmI = (): UseWhoAmIReturn => {
+  const { me, ...context } = useContext(WhoAmIContext)
+  if (!me) {
+    throw new Error('WhoAmI context is not available')
+  }
+  return { me, ...context }
+}
 
 const WhoAmIProvider = ({ children }: { children: ReactNode }): ReactElement => {
   const { t } = useTranslation('auth')
