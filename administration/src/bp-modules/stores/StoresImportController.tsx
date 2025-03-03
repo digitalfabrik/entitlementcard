@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { WhoAmIContext } from '../../WhoAmIProvider'
+import { useWhoAmI } from '../../WhoAmIProvider'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { Role, useImportAcceptingStoresMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
@@ -95,7 +95,7 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
 }
 
 const StoresImportController = (): ReactElement => {
-  const { role } = useContext(WhoAmIContext).me!
+  const { role } = useWhoAmI().me
   const storesManagement = useContext(ProjectConfigContext).storesManagement
   const { t } = useTranslation('errors')
   if (role !== Role.ProjectStoreManager || !storesManagement.enabled) {
