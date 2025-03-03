@@ -2,7 +2,7 @@ import { FormGroup, InputGroup, Intent } from '@blueprintjs/core'
 import React, { ReactElement } from 'react'
 
 import { NuernergPassIdentifier } from '../../generated/card_pb'
-import { Extension, ExtensionComponentProps } from './extensions'
+import type { Extension, ExtensionComponentProps } from './extensions'
 
 export const NUERNBERG_PASS_ID_EXTENSION_NAME = 'nuernbergPassId'
 

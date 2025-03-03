@@ -1,9 +1,9 @@
 import { PDFForm, PDFTextField, rgb } from '@cantoo/pdf-lib'
 
 import { getAddressFieldExtensionsValues } from '../../cards/extensions/AddressFieldExtensions'
-import { InfoParams } from '../../cards/pdf/PdfTextElement'
+import type { InfoParams } from '../../cards/pdf/PdfTextElement'
 import PlainDate from '../../util/PlainDate'
-import { PdfConfig } from '../getProjectConfig'
+import type { PdfConfig } from '../getProjectConfig'
 import pdfTemplate from './pdf-template.pdf'
 
 const renderPdfDetails = ({ info }: InfoParams): string => {
