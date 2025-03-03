@@ -17,8 +17,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 enum DeepLinkActivationStatus {
-  /// Link is invalid
-  invalidCardInfo,
+  // Activation is invalid
+  invalid,
 
   /// The card already exists on the device.
   alreadyExists,
@@ -31,7 +31,7 @@ enum DeepLinkActivationStatus {
 
   factory DeepLinkActivationStatus.from(UserCodeModel userCodeModel, DynamicActivationCode? activationCode) {
     if (activationCode == null) {
-      return DeepLinkActivationStatus.invalidCardInfo;
+      return DeepLinkActivationStatus.invalid;
     } else if (isAlreadyInList(userCodeModel.userCodes, activationCode.info, activationCode.pepper)) {
       return DeepLinkActivationStatus.alreadyExists;
     } else if (hasReachedCardLimit(userCodeModel.userCodes)) {
@@ -93,7 +93,7 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              if (status != DeepLinkActivationStatus.invalidCardInfo)
+              if (status != DeepLinkActivationStatus.invalid)
                 Padding(
                   padding: const EdgeInsets.all(20),
                   child: Text(t.deeplinkActivation.description,
@@ -180,7 +180,7 @@ class _WarningText extends StatelessWidget {
     final String cardsInUse = userCodeModel.userCodes.length.toString();
     final String maxCardAmount = buildConfig.maxCardAmount.toString();
     final text = switch (status) {
-      DeepLinkActivationStatus.invalidCardInfo => errorMessage ?? t.deeplinkActivation.activationInvalid,
+      DeepLinkActivationStatus.invalid => errorMessage ?? t.deeplinkActivation.activationInvalid,
       DeepLinkActivationStatus.limitReached => '${t.deeplinkActivation.limitReached} ($cardsInUse/$maxCardAmount)',
       DeepLinkActivationStatus.alreadyExists => t.deeplinkActivation.alreadyExists,
       DeepLinkActivationStatus.valid => '',
