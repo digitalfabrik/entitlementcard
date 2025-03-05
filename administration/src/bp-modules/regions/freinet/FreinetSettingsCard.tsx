@@ -12,7 +12,7 @@ const Headline = styled(H2)`
 
 const ButtonContainer = styled.div`
   text-align: right;
-  padding: 10px 0;
+  padding: 8px 0;
 `
 
 const Table = styled.table`
