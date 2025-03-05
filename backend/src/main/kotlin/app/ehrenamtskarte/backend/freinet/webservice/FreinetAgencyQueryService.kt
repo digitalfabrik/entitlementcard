@@ -22,19 +22,24 @@ class FreinetAgencyQueryService {
     fun getFreinetAgencyByRegionId(dfe: DataFetchingEnvironment, regionId: Int, project: String): FreinetAgency? = transaction {
         val context = dfe.getContext<GraphQLContext>()
         val jwtPayload = context.enforceSignedIn()
-        val admin =
-            AdministratorEntity.findById(jwtPayload.adminId)
-                ?: throw UnauthorizedException()
-        val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
-            ?: throw ProjectNotFoundException(project)
-
-        if (projectEntity.project != EAK_BAYERN_PROJECT) {
-            throw NotEakProjectException()
-        }
+        val admin = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
         if (!Authorizer.mayViewFreinetAgencyInformationInRegion(admin, regionId)) {
             throw ForbiddenException()
         }
-        val agency = FreinetAgencyRepository.getFreinetAgencyByRegionId(regionId)
-        agency?.let { FreinetAgency(agencyId = it.agencyId, apiAccessKey = agency.apiAccessKey, agencyName = agency.agencyName, dataTransferActivated = agency.dataTransferActivated) }
+        ProjectEntity.find { Projects.project eq project }.firstOrNull()
+            ?.let {
+                if (it.project != EAK_BAYERN_PROJECT) {
+                    throw NotEakProjectException()
+                }
+            }
+            ?: throw ProjectNotFoundException(project)
+        FreinetAgencyRepository.getFreinetAgencyByRegionId(regionId)?.let {
+            FreinetAgency(
+                agencyId = it.agencyId,
+                apiAccessKey = it.apiAccessKey,
+                agencyName = it.agencyName,
+                dataTransferActivated = it.dataTransferActivated
+            )
+        }
     }
 }

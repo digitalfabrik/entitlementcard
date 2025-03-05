@@ -10,7 +10,7 @@ object FreinetAgencies : IntIdTable() {
     val regionId = reference("regionId", Regions)
     val agencyId = integer("agencyId").uniqueIndex()
     val agencyName = varchar("agencyName", 255)
-    val apiAccessKey = varchar("apiAccessKey", 10)
+    val apiAccessKey = varchar("apiAccessKey", 100)
     val dataTransferActivated = bool("dataTransferActivated").default(false)
 }
 

@@ -3,7 +3,7 @@ import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExte
 import EMailNotificationExtension from '../../cards/extensions/EMailNotificationExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
 import { ActivationText } from '../common/ActivationText'
-import { CardConfig, ProjectConfig } from '../getProjectConfig'
+import type { CardConfig, ProjectConfig } from '../getProjectConfig'
 import { DataPrivacyAdditionalBaseText, DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
 import pdfConfiguration from './pdf'
 
@@ -94,6 +94,7 @@ const config: ProjectConfig = {
     enabled: false,
   },
   userImportApiEnabled: false,
+  showBirthdayExtensionHint: false,
 }
 
 export default config

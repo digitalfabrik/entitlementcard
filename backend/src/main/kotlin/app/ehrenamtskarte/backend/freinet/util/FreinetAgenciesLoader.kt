@@ -38,34 +38,34 @@ class FreinetAgenciesLoader {
     }
 
     fun loadAgenciesFromXml(projectConfigs: List<ProjectConfig>): List<FreinetApiAgency> {
-        val bayernConfig =
-            projectConfigs.find { it.id == EAK_BAYERN_PROJECT } ?: throw NotFoundException("Project config not found")
-        if (bayernConfig.freinetAgencies == null) {
+        val bayernConfig = projectConfigs.find { it.id == EAK_BAYERN_PROJECT } ?: throw NotFoundException("Project config not found")
+        if (bayernConfig.freinet == null) {
             logger.error("Couldn't find required freinet api parameters in backend config.")
             return emptyList()
         }
-        val freinetAgencyConfig = bayernConfig.freinetAgencies
+        val freinetConfig = bayernConfig.freinet
         try {
             val response = runBlocking {
                 httpClient.request {
                     url {
                         protocol = URLProtocol.HTTP
-                        host = freinetAgencyConfig.host
-                        path(freinetAgencyConfig.path)
-                        parameters.append("accessKey", freinetAgencyConfig.accessToken)
-                        parameters.append("portalId", freinetAgencyConfig.portalId)
+                        host = freinetConfig.host
+                        path(freinetConfig.path)
+                        parameters.append("accessKey", freinetConfig.accessToken)
+                        parameters.append("portalId", freinetConfig.portalId)
                         parameters.append("limit", "1000")
                     }
                     method = HttpMethod.Get
                 }.bodyAsText()
             }
 
-            val xmlMapper = XmlMapper()
-            xmlMapper.registerModule(KotlinModule.Builder().build())
-            xmlMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
-            xmlMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-
-            return transformAndFilterAgencyData(xmlMapper.readValue(response, XMLAgencies::class.java))
+            return transformAndFilterAgencyData(
+                XmlMapper().apply {
+                    registerModule(KotlinModule.Builder().build())
+                    enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
+                    disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                }.readValue(response, XMLAgencies::class.java)
+            )
         } catch (e: Exception) {
             logger.error("Couldn't fetch agency information: ", e)
             return emptyList()
@@ -73,13 +73,17 @@ class FreinetAgenciesLoader {
     }
 
     private fun transformAndFilterAgencyData(agencies: XMLAgencies): List<FreinetApiAgency> {
-        return agencies.agencies.filter { it.agencyId != null && it.ars != null && it.accessKey != null && it.agencyName !== null }.map {
-            FreinetApiAgency(
-                agencyId = it.agencyId!!.toInt(),
-                agencyName = it.agencyName!!,
-                apiAccessKey = it.accessKey!!,
-                arsList = it.ars?.split(",") ?: emptyList()
-            )
+        return agencies.agencies.mapNotNull {
+            return@mapNotNull if (it.agencyId != null && it.agencyName != null && it.accessKey != null) {
+                FreinetApiAgency(
+                    agencyId = it.agencyId.toInt(),
+                    agencyName = it.agencyName,
+                    apiAccessKey = it.accessKey,
+                    officialRegionalKeys = it.officialRegionalKeys?.split(",") ?: emptyList()
+                )
+            } else {
+                null
+            }
         }.distinctBy { it.agencyId }
     }
 }

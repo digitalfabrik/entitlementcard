@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 
 export const dataPrivacyBaseHeadline =
-  'Datenschutzerklärung für die Nutzung und Beantragung des digitalen KoblenzPasses'
+  'Datenschutzerklärung für die Nutzung und Aktivierung des digitalen KoblenzPasses'
 
 /* Generated using https://magic.reactjs.net/htmltojsx.htm
 Instructions:

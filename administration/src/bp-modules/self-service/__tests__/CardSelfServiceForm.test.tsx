@@ -10,9 +10,9 @@ import koblenzConfig from '../../../project-configs/koblenz/config'
 import { renderWithTranslation } from '../../../testing/render'
 import { AppToasterProvider } from '../../AppToaster'
 import CardSelfServiceForm from '../CardSelfServiceForm'
-import { DataPrivacyAcceptingStatus } from '../CardSelfServiceView'
 import { exampleCard } from '../__mock__/mockSelfServiceCard'
-import FormErrorMessage from '../components/FormErrorMessage'
+import FormAlert from '../components/FormAlert'
+import { DataPrivacyAcceptingStatus } from '../constants'
 
 const wrapper = ({ children }: { children: ReactNode }) => (
   <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -40,7 +40,7 @@ describe('CardSelfServiceForm', () => {
 
     expect(getByLabelText('Vorname Name').closest('input')).toBeTruthy()
     expect(getByPlaceholderText('Erika Musterfrau')).toBeTruthy()
-    expect(getByPlaceholderText('5.012.067.281, 000D000001, 99478')).toBeTruthy()
+    expect(getByPlaceholderText('5.031.025.281, 000D000001, 91459')).toBeTruthy()
     expect(getByLabelText('Aktenzeichen').closest('input')).toBeTruthy()
     expect(getByPlaceholderText('TT.MM.JJJJ')).toBeTruthy()
     const dataPrivacyCheckbox = getByTestId('data-privacy-checkbox')
@@ -73,9 +73,7 @@ describe('CardSelfServiceForm', () => {
     })
     expect(toasterSpy).toHaveBeenCalledWith({
       intent: 'danger',
-      message: (
-        <FormErrorMessage errorMessage='Mindestens eine Ihrer Angaben ist ungültig.' style={{ color: 'white' }} />
-      ),
+      message: <FormAlert isToast errorMessage='Mindestens eine Ihrer Angaben ist ungültig.' />,
       timeout: 0,
     })
   })

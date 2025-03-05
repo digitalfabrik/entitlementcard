@@ -6,14 +6,14 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData
 data class XMLAgency(
     @JsonProperty("agenturid")
     @JacksonXmlCData
-    var agencyId: String?,
+    val agencyId: String?,
     @JsonProperty("accessKey")
     @JacksonXmlCData
-    var accessKey: String?,
+    val accessKey: String?,
     @JsonProperty("ars")
     @JacksonXmlCData
-    var ars: String?,
+    val officialRegionalKeys: String?,
     @JsonProperty("agenturname")
     @JacksonXmlCData
-    var agencyName: String?
+    val agencyName: String?
 )

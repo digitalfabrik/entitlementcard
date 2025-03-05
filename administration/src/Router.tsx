@@ -40,8 +40,6 @@ const Main = styled.div`
   }
 `
 
-export const FREINET_PARAM = 'freinet'
-
 const Router = (): ReactElement => {
   const { data: authData, signIn, signOut } = useContext(AuthContext)
   const projectConfig = useContext(ProjectConfigContext)

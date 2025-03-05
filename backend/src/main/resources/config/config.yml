@@ -32,7 +32,7 @@ projects:
       port: 587
       username: OVERRIDE_IN_LOCAL_CONFIG
       password: OVERRIDE_IN_LOCAL_CONFIG
-    freinetAgencies:
+    freinet:
       host: freinet-online.de
       path: /query/api/portal/v1/MandantenMatchingServiceEndpoint.php
       portalId: 102

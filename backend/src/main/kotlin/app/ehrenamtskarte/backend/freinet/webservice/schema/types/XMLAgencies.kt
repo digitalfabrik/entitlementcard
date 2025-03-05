@@ -8,5 +8,5 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
 data class XMLAgencies(
     @JsonProperty("mandant")
     @JacksonXmlElementWrapper(useWrapping = false)
-    var agencies: ArrayList<XMLAgency> = ArrayList()
+    val agencies: ArrayList<XMLAgency> = ArrayList()
 )

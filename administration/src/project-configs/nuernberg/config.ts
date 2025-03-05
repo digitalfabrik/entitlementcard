@@ -3,7 +3,7 @@ import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
 import NuernbergPassIdExtension from '../../cards/extensions/NuernbergPassIdExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
 import StartDayExtension from '../../cards/extensions/StartDayExtension'
-import { ProjectConfig } from '../getProjectConfig'
+import type { ProjectConfig } from '../getProjectConfig'
 import { storesManagementConfig } from '../storesManagementConfig'
 import ActivityLogEntry from './ActivityLogEntry'
 import { buildCsvLine } from './csvExport'
@@ -62,6 +62,7 @@ const config: ProjectConfig = {
   selfServiceEnabled: false,
   storesManagement: storesManagementConfig,
   userImportApiEnabled: false,
+  showBirthdayExtensionHint: false,
 }
 
 export default config
