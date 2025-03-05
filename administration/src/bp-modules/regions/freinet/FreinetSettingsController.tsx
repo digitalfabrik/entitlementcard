@@ -18,7 +18,7 @@ const FreinetSettingsController = ({ regionId, project }: FreinetSettingsControl
   const freinetQuery = useGetFreinetAgencyByRegionIdQuery({
     variables: { regionId, project },
   })
-  const [updateFreinetDataTransfer, { loading }] = useUpdateDataTransferToFreinetMutation({
+  const [updateFreinetDataTransfer] = useUpdateDataTransferToFreinetMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error, t)
       appToaster?.show({ intent: 'danger', message: title })
@@ -47,7 +47,7 @@ const FreinetSettingsController = ({ regionId, project }: FreinetSettingsControl
     })
   }
 
-  return <FreinetSettingsCard agencyInformation={freinetQueryResult.data.agency} loading={loading} onSave={onSave} />
+  return <FreinetSettingsCard agencyInformation={freinetQueryResult.data.agency} onSave={onSave} />
 }
 
 export default FreinetSettingsController

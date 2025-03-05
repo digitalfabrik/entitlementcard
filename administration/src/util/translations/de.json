@@ -302,7 +302,7 @@
     "activatedForCardConfirmationMail": "Nach der Erstellung einer Karte verschickt das System eine E-Mail-Bestätigung an den Antragsstellenden mit einem Link zur Vorab-Aktivierung",
     "savedSettingsSuccessful": "Einstellungen wurden erfolgreich geändert.",
     "freinetHeadline": "Freinet Datenübermittlung",
-    "freinetExplanation": "Hier können Sie die automatische Übermittlung von Personen- und Kartendaten für Ihre Region verwalten. <br/><br/> Die untenstehenden Freinet Informationen wurden automatisch ermittelt, bitte prüfen Sie ob diese korrekt sind, bevor Sie die Übermittlung aktivieren.",
+    "freinetExplanation": "Hier können Sie die automatische Übermittlung von Personen- und Kartendaten für Ihre Region verwalten. <br/><br/> Die Freinet-Informationen wurden automatisch ermittelt. Bitte überprüfen Sie diese, bevor Sie die Übermittlung aktivieren.",
     "freinetAgencyName": "Agenturname",
     "freinetAgencyId": "AgenturId",
     "freinetAgencyAccessKey": "Zugangsschlüssel",

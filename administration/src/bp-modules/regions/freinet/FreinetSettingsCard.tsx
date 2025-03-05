@@ -15,52 +15,54 @@ const ButtonContainer = styled.div`
   padding: 10px 0;
 `
 
-const Label = styled.span`
-  font-weight: bold;
-`
+const Table = styled.table`
+  margin: 32px 0;
+  width: 100%;
 
-const InformationContainer = styled.div`
-  margin: 16px 0;
+  & th {
+    text-align: start;
+    min-width: 80px;
+  }
 `
 
 type FreinetSettingsCardProps = {
   agencyInformation: FreinetAgency
   onSave: (dataTransferActivated: boolean) => void
-  loading: boolean
 }
 
-const FreinetSettingsCard = ({ agencyInformation, onSave, loading }: FreinetSettingsCardProps): ReactElement => {
+const FreinetSettingsCard = ({ agencyInformation, onSave }: FreinetSettingsCardProps): ReactElement => {
   const { t } = useTranslation('regionSettings')
-  const { agencyId, apiAccessKey, agencyName, dataTransferActivated: dbDataTransferActivated } = agencyInformation
-  const [dataTransferActivated, setDataTransferActivated] = useState(dbDataTransferActivated)
+  const { agencyId, apiAccessKey, agencyName, dataTransferActivated: initialDataTransferActivated } = agencyInformation
+  const [dataTransferActivated, setDataTransferActivated] = useState(initialDataTransferActivated)
   return (
     <SettingsCard>
       <Headline>{t('freinetHeadline')}</Headline>
       <p>
         <Trans i18nKey='regionSettings:freinetExplanation' />
       </p>
-      <InformationContainer>
-        <div>
-          <Label>{t('freinetAgencyName')}: </Label>
-          <span>{agencyName}</span>
-        </div>
-        <div>
-          <Label>{t('freinetAgencyId')}: </Label>
-          <span>{agencyId}</span>
-        </div>
-        <div>
-          <Label>{t('freinetAgencyAccessKey')}: </Label>
-          <span>{apiAccessKey}</span>
-        </div>
-      </InformationContainer>
+      <Table>
+        <thead>
+          <tr>
+            <th>{t('freinetAgencyName')}</th>
+            <th>{t('freinetAgencyId')}</th>
+            <th>{t('freinetAgencyAccessKey')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{agencyName}</td>
+            <td>{agencyId}</td>
+            <td>{apiAccessKey}</td>
+          </tr>
+        </tbody>
+      </Table>
       <Checkbox
         checked={dataTransferActivated}
         onChange={e => setDataTransferActivated(e.currentTarget.checked)}
         label={t('freinetActivateDataTransferCheckbox')}
       />
-
       <ButtonContainer>
-        <Button text={t('save')} intent='primary' onClick={() => onSave(dataTransferActivated)} loading={loading} />
+        <Button text={t('save')} intent='primary' onClick={() => onSave(dataTransferActivated)} />
       </ButtonContainer>
     </SettingsCard>
   )
