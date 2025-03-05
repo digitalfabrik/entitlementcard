@@ -6,9 +6,9 @@ import useWindowDimensions from '../../hooks/useWindowDimensions'
 
 type CustomDatePickerProps = {
   date: Date | null
-  onBlur: () => void
-  onChange: (date: Date | null) => void
-  onClear: () => void
+  onBlur?: () => void
+  onChange?: (date: Date | null) => void
+  onClear?: () => void
   isValid: boolean
   minDate?: Date
   maxDate?: Date
