@@ -62,10 +62,7 @@ const AddCardsForm = ({
       setCards([initializeCardFromCSV(projectConfig.card, values, headers, region, true)])
 
       const applicationIdToMarkAsProcessed = searchParams.get('applicationIdToMarkAsProcessed')
-      setApplicationIdToMarkAsProcessed(
-        applicationIdToMarkAsProcessed == null ? undefined : +applicationIdToMarkAsProcessed
-      )
-
+      setApplicationIdToMarkAsProcessed(applicationIdToMarkAsProcessed ? +applicationIdToMarkAsProcessed : undefined)
       setSearchParams(undefined, { replace: true })
     }
   }, [cards.length, projectConfig, region, searchParams, setCards, setSearchParams, setApplicationIdToMarkAsProcessed])

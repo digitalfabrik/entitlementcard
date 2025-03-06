@@ -1,6 +1,6 @@
 import { stringify } from 'csv-stringify/browser/esm/sync'
 
-import { CsvExport } from '../project-configs/getProjectConfig'
+import { ProjectConfig } from '../project-configs/getProjectConfig'
 import { Card } from './Card'
 import { CreateCardsResult } from './createCards'
 import { NUERNBERG_PASS_ID_EXTENSION_NAME } from './extensions/NuernbergPassIdExtension'
@@ -12,14 +12,15 @@ export class CsvError extends Error {
   }
 }
 
-export const generateCsv = (codes: CreateCardsResult[], cards: Card[], csvProjectConfig: CsvExport): Blob => {
-  if (!csvProjectConfig.enabled) {
+export const generateCsv = (codes: CreateCardsResult[], cards: Card[], projectConfig: ProjectConfig): Blob => {
+  const csvConfig = projectConfig.csvExport
+  if (!csvConfig.enabled) {
     throw new CsvError('CSV Export is disabled for this project')
   }
   try {
-    let csvContent = stringify([csvProjectConfig.csvHeader])
+    let csvContent = stringify([csvConfig.csvHeader])
     for (let k = 0; k < codes.length; k++) {
-      csvContent += csvProjectConfig.buildCsvLine(codes[k], cards[k])
+      csvContent += csvConfig.buildCsvLine(codes[k], cards[k])
     }
     return new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
   } catch (error) {

@@ -22,7 +22,6 @@ const InnerAddCardsController = ({ region }: { region: Region }) => {
     setCards,
     updateCard,
     cards,
-    applicationIdToMarkAsProcessed,
     setApplicationIdToMarkAsProcessed,
   } = useCardGenerator(region)
 
@@ -57,8 +56,8 @@ const InnerAddCardsController = ({ region }: { region: Region }) => {
       <CreateCardsButtonBar
         cards={cards}
         goBack={() => navigate('/cards')}
-        generateCardsPdf={() => generateCardsPdf(applicationIdToMarkAsProcessed)}
-        generateCardsCsv={() => generateCardsCsv(applicationIdToMarkAsProcessed)}
+        generateCardsPdf={() => generateCardsPdf()}
+        generateCardsCsv={() => generateCardsCsv()}
       />
     </>
   )

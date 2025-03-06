@@ -1,13 +1,12 @@
 import { Spinner } from '@blueprintjs/core'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
-import React, { ReactElement, useContext, useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import KoblenzLogo from '../../assets/koblenz_logo.svg'
 import { updateCard } from '../../cards/Card'
 import BasicDialog from '../../mui-modules/application/BasicDialog'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import CardSelfServiceActivation from './CardSelfServiceActivation'
 import CardSelfServiceForm from './CardSelfServiceForm'
 import CardSelfServiceInformation from './CardSelfServiceInformation'
@@ -83,35 +82,20 @@ const StyledInfoTextButton = styled(IconTextButton)`
 
 // TODO 1646 Add tests for CardSelfService
 const CardSelfServiceView = (): ReactElement => {
-  const projectConfig = useContext(ProjectConfigContext)
   const { t } = useTranslation('selfService')
-  const [dataPrivacyCheckbox, setDataPrivacyCheckbox] = useState<DataPrivacyAcceptingStatus>(
-    DataPrivacyAcceptingStatus.untouched
-  )
+  const [dataPrivacyCheckbox, setDataPrivacyCheckbox] = useState(DataPrivacyAcceptingStatus.untouched)
+  const [openHelpDialog, setOpenHelpDialog] = useState(false)
   const {
     selfServiceState,
     setSelfServiceState,
-    isLoading,
     generateCards,
     setSelfServiceCard,
     selfServiceCard,
-    deepLink,
     code,
     downloadPdf,
   } = useCardGeneratorSelfService()
-  const [openHelpDialog, setOpenHelpDialog] = useState(false)
 
-  const onDownloadPdf = async () => {
-    if (code) {
-      await downloadPdf(code, projectConfig.name)
-    }
-  }
-
-  const goToActivation = () => {
-    setSelfServiceState(CardSelfServiceStep.activation)
-  }
-
-  if (isLoading) {
+  if (selfServiceState === CardSelfServiceStep.loading) {
     return <CenteredSpinner />
   }
 
@@ -139,10 +123,10 @@ const CardSelfServiceView = (): ReactElement => {
           />
         )}
         {selfServiceState === CardSelfServiceStep.information && (
-          <CardSelfServiceInformation goToActivation={goToActivation} />
+          <CardSelfServiceInformation goToActivation={() => setSelfServiceState(CardSelfServiceStep.activation)} />
         )}
-        {selfServiceState === CardSelfServiceStep.activation && (
-          <CardSelfServiceActivation downloadPdf={onDownloadPdf} deepLink={deepLink} />
+        {selfServiceState === CardSelfServiceStep.activation && code && (
+          <CardSelfServiceActivation downloadPdf={downloadPdf} code={code} />
         )}
       </Body>
       <BasicDialog
