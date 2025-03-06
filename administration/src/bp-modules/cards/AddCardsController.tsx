@@ -9,37 +9,28 @@ import useBlockNavigation from '../../util/useBlockNavigation'
 import AddCardsForm from './AddCardsForm'
 import GenerationFinished from './CardsCreatedMessage'
 import CreateCardsButtonBar from './CreateCardsButtonBar'
-import useCardGenerator, { CardActivationState } from './hooks/useCardGenerator'
+import useCardGenerator from './hooks/useCardGenerator'
 
 const InnerAddCardsController = ({ region }: { region: Region }) => {
   const navigate = useNavigate()
   const { t } = useTranslation('cards')
-  const {
-    state,
-    setState,
-    generateCardsPdf,
-    generateCardsCsv,
-    setCards,
-    updateCard,
-    cards,
-    applicationIdToMarkAsProcessed,
-    setApplicationIdToMarkAsProcessed,
-  } = useCardGenerator(region)
+  const { cardGenerationStep, setCardGenerationStep, generateCardsPdf, generateCardsCsv, setCards, updateCard, cards } =
+    useCardGenerator({ region })
 
   useBlockNavigation({
     when: cards.length > 0,
     message: t('dataWillBeLostWarning'),
   })
 
-  if (state === CardActivationState.loading) {
+  if (cardGenerationStep === 'loading') {
     return <Spinner />
   }
-  if (state === CardActivationState.finished) {
+  if (cardGenerationStep === 'finished') {
     return (
       <GenerationFinished
         reset={() => {
           setCards([])
-          setState(CardActivationState.input)
+          setCardGenerationStep('input')
         }}
       />
     )
@@ -47,18 +38,12 @@ const InnerAddCardsController = ({ region }: { region: Region }) => {
 
   return (
     <>
-      <AddCardsForm
-        region={region}
-        cards={cards}
-        setCards={setCards}
-        updateCard={updateCard}
-        setApplicationIdToMarkAsProcessed={setApplicationIdToMarkAsProcessed}
-      />
+      <AddCardsForm region={region} cards={cards} setCards={setCards} updateCard={updateCard} />
       <CreateCardsButtonBar
         cards={cards}
         goBack={() => navigate('/cards')}
-        generateCardsPdf={() => generateCardsPdf(applicationIdToMarkAsProcessed)}
-        generateCardsCsv={() => generateCardsCsv(applicationIdToMarkAsProcessed)}
+        generateCardsPdf={() => generateCardsPdf()}
+        generateCardsCsv={() => generateCardsCsv()}
       />
     </>
   )
