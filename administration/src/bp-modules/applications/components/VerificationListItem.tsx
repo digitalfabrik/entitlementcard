@@ -22,7 +22,7 @@ type VerificationListItemProps = {
 }
 
 const VerificationListItem = ({ verification }: VerificationListItemProps): ReactElement => {
-  const { t } = useTranslation('applications')
+  const { t } = useTranslation('applicationCard')
   const status = getVerificationStatus(verification)
   const unverifiedText = verification.rejectedDate
     ? `${t('rejectedOn')} ${new Date(verification.rejectedDate).toLocaleString('de')}`

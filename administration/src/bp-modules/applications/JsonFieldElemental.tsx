@@ -43,7 +43,7 @@ const JsonFieldAttachment = memo(
       const downloadUrl = `${baseUrl}/file/${attachment.fileIndex}`
       const onClick = async () => {
         const loadingToastKey = appToaster?.show({
-          message: `${t('applications:loadAttachment')} ${attachment.fileIndex + 1}...`,
+          message: `${t('applicationCard:loadAttachment')} ${attachment.fileIndex + 1}...`,
           intent: 'primary',
           isCloseButtonShown: false,
         })
@@ -55,7 +55,7 @@ const JsonFieldAttachment = memo(
           } else if (contentType === null || !extensionByContentType.has(contentType)) {
             throw Error('Invalid Content Type')
           }
-          const filename = `${t('applications:attachment')}${attachment.fileIndex + 1}.${extensionByContentType.get(
+          const filename = `${t('applicationCard:attachment')}${attachment.fileIndex + 1}.${extensionByContentType.get(
             contentType
           )}`
           const arrayBuffer = await result.arrayBuffer()
@@ -78,15 +78,15 @@ const JsonFieldAttachment = memo(
             rightIcon={<Icon icon='download' color={Colors.GRAY1} />}
             interactive
             minimal
-            onClick={onClick}>{`${t('applications:attachment')} ${jsonField.value.fileIndex + 1}`}</PrintAwareTag>
-          <PrintOnlySpan>{`(${t('applications:seeAttachment')} ${jsonField.value.fileIndex + 1})`}</PrintOnlySpan>
+            onClick={onClick}>{`${t('applicationCard:attachment')} ${jsonField.value.fileIndex + 1}`}</PrintAwareTag>
+          <PrintOnlySpan>{`(${t('applicationCard:seeAttachment')} ${jsonField.value.fileIndex + 1})`}</PrintOnlySpan>
         </p>
       )
     }
     return (
       <p>
         {t(getTranslationKey(jsonField.name, parentName))}:&nbsp;
-        <span>{t('applications:submittedButNotVisible')}</span>
+        <span>{t('applicationCard:submittedButNotVisible')}</span>
       </p>
     )
   }
