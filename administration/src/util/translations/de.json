@@ -154,7 +154,7 @@
     "invalidDateError": "Eingabe ist kein gültiges Datum.",
     "invalidMailError": "E-Mail-Adresse ist ungültig.",
     "maxShortTextLengthError": "Text überschreitet die maximal erlaubten {{maxLength}} Zeichen.",
-    "fileRequirementsError": "Die Datei darf maximal ${fileSizeLimit} MB groß sein und muss im JPG, PNG oder PDF Format sein.",
+    "fileRequirementsError": "Die Datei darf maximal {{fileSizeLimit}} MB groß sein und muss im JPG, PNG oder PDF Format sein.",
     "noValidNumberError": "Eingabe ist keine Zahl.",
     "minMaxNumberError": "Wert muss zwischen {{min}} und {{max}} liegen.",
     "valueHasToBeSelectableOptionError": "Wert muss einer der auswählbaren Optionen entsprechen.",
