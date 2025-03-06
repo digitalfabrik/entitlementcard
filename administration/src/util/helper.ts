@@ -46,3 +46,8 @@ export const mapGraphqlRequestResult = <T>(
   }
   return result.data
 }
+
+export const hasProp = <P extends PropertyKey, O extends { [p in P]: unknown }>(
+  obj: O,
+  p: P
+): obj is O & { [p in P]: NonNullable<unknown> } => obj[p] !== undefined && obj[p] !== null

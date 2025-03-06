@@ -3,7 +3,7 @@ import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
-import { WhoAmIContext } from '../../WhoAmIProvider'
+import { useWhoAmI } from '../../WhoAmIProvider'
 import { Role } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import ApiTokenSettings from './ApiTokenSettings'
@@ -18,7 +18,7 @@ const ProjectSettingsContainer = styled.div`
 
 const ProjectSettingsController = (): ReactElement => {
   const { userImportApiEnabled } = useContext(ProjectConfigContext)
-  const { role } = useContext(WhoAmIContext).me!
+  const { role } = useWhoAmI().me
   const { t } = useTranslation('errors')
 
   if ((role !== Role.ProjectAdmin || !userImportApiEnabled) && role !== Role.ExternalVerifiedApiUser) {

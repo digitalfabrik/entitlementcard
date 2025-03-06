@@ -1,9 +1,9 @@
 import { NonIdealState, Spinner } from '@blueprintjs/core'
-import React, { ReactElement, useContext } from 'react'
+import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
-import { WhoAmIContext } from '../../WhoAmIProvider'
+import { useWhoAmI } from '../../WhoAmIProvider'
 import { Region } from '../../generated/graphql'
 import useBlockNavigation from '../../util/useBlockNavigation'
 import AddCardsForm from './AddCardsForm'
@@ -50,7 +50,7 @@ const InnerAddCardsController = ({ region }: { region: Region }) => {
 }
 
 const AddCardsController = (): ReactElement => {
-  const { region } = useContext(WhoAmIContext).me!
+  const { region } = useWhoAmI().me
   const { t } = useTranslation('cards')
 
   if (!region) {
