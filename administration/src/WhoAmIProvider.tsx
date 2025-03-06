@@ -6,6 +6,7 @@ import { AuthContext } from './AuthProvider'
 import StandaloneCenter from './bp-modules/StandaloneCenter'
 import { WhoAmIQuery, useWhoAmIQuery } from './generated/graphql'
 import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
+import { hasProp } from './util/helper'
 
 type WhoAmIContextType = {
   me: WhoAmIQuery['me'] | null
@@ -20,11 +21,11 @@ export const WhoAmIContext = createContext<WhoAmIContextType>({
 type UseWhoAmIReturn = WhoAmIContextType & { me: WhoAmIQuery['me'] }
 
 export const useWhoAmI = (): UseWhoAmIReturn => {
-  const { me, ...context } = useContext(WhoAmIContext)
-  if (!me) {
+  const context = useContext(WhoAmIContext)
+  if (!hasProp(context, 'me')) {
     throw new Error('WhoAmI context is not available')
   }
-  return { me, ...context }
+  return context
 }
 
 const WhoAmIProvider = ({ children }: { children: ReactNode }): ReactElement => {
@@ -38,14 +39,14 @@ const WhoAmIProvider = ({ children }: { children: ReactNode }): ReactElement => 
   const dataForContext = data ?? previousData
   const context = useMemo(() => ({ me: dataForContext?.me, refetch }), [dataForContext, refetch])
 
-  if (!context.me && loading) {
+  if (!hasProp(context, 'me') && loading) {
     return (
       <StandaloneCenter>
         <Spinner />
       </StandaloneCenter>
     )
   }
-  if (!context.me || error) {
+  if (!hasProp(context, 'me') || error) {
     return (
       <StandaloneCenter>
         <p>{t('accountInformationNotAvailable')}</p>
@@ -58,7 +59,7 @@ const WhoAmIProvider = ({ children }: { children: ReactNode }): ReactElement => 
       </StandaloneCenter>
     )
   }
-  // @ts-expect-error we checked above that context.me is not undefined
+
   return <WhoAmIContext.Provider value={context}>{children}</WhoAmIContext.Provider>
 }
 
