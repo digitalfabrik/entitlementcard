@@ -4,6 +4,7 @@ import { useSnackbar } from 'notistack'
 import React, { ChangeEventHandler, useContext, useEffect, useRef } from 'react'
 
 import { AttachmentInput } from '../../../generated/graphql'
+import i18next from '../../../i18n'
 import { FormContext } from '../SteppedSubForms'
 import { Form, FormComponentProps, ValidationResult } from '../util/FormType'
 import globalArrayBuffersManager from '../util/globalArrayBuffersManager'
@@ -17,7 +18,9 @@ const defaultExtensionsByMIMEType = {
 const FILE_SIZE_LIMIT_MEGA_BYTES = 5
 const FILE_SIZE_LIMIT_BYTES = FILE_SIZE_LIMIT_MEGA_BYTES * 1000 * 1000
 
-export const FileRequirementsText = `Die Datei darf maximal ${FILE_SIZE_LIMIT_MEGA_BYTES} MB groß sein und muss im JPG, PNG oder PDF Format sein.`
+export const FileRequirementsText = i18next.t('applicationForms:fileRequirementsError', {
+  fileSizeLimit: FILE_SIZE_LIMIT_MEGA_BYTES,
+})
 
 const FileInputButton = ({
   onChange,

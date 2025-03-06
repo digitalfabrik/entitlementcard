@@ -53,7 +53,7 @@ const ApplicationApplicantView = ({
 
   const [withdrawApplication, { loading: withdrawalLoading }] = useWithdrawApplicationMutation({
     onError: error => {
-      const { title } = getMessageFromApolloError(error, t)
+      const { title } = getMessageFromApolloError(error)
       enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: ({ isWithdrawed }: { isWithdrawed: boolean }) => {

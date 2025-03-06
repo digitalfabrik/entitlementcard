@@ -58,7 +58,7 @@ const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
       appToaster?.show({ intent: 'success', message: t('cards:cardCreationConfirmationMessage') })
     },
     onError: error => {
-      const { title } = getMessageFromApolloError(error, t)
+      const { title } = getMessageFromApolloError(error)
       appToaster?.show({
         intent: 'danger',
         message: title,
@@ -106,7 +106,7 @@ const useCardGenerator = (region: Region): UseCardGeneratorReturn => {
       if (codes !== undefined) {
         // try rollback
         try {
-          await deleteCards(client, region.id, extractCardInfoHashes(codes), t)
+          await deleteCards(client, region.id, extractCardInfoHashes(codes))
         } catch (e) {
           reportErrorToSentry(e)
         }

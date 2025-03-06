@@ -3,6 +3,7 @@ import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { OrganizationInput } from '../../../generated/graphql'
+import i18next from '../../../i18n'
 import { normalizeName } from '../../../util/normalizeString'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
 import CheckboxForm from '../primitive-inputs/CheckboxForm'
@@ -24,22 +25,22 @@ const WarningContactPersonSamePerson = styled(Alert)`
 
 const organizationCategoryOptions = {
   items: [
-    'Soziales/Jugend/Senioren',
-    'Tierschutz',
-    'Sport',
-    'Bildung',
-    'Umwelt-/Naturschutz',
-    'Kultur',
-    'Gesundheit',
-    'Katastrophenschutz/Feuerwehr/Rettungsdienst',
-    'Kirchen',
-    'Andere',
+    i18next.t('applicationForms:organizationCategories:social'),
+    i18next.t('applicationForms:organizationCategories:animalWelfare'),
+    i18next.t('applicationForms:organizationCategories:sports'),
+    i18next.t('applicationForms:organizationCategories:education'),
+    i18next.t('applicationForms:organizationCategories:conservation'),
+    i18next.t('applicationForms:organizationCategories:culture'),
+    i18next.t('applicationForms:organizationCategories:health'),
+    i18next.t('applicationForms:organizationCategories:civilProtection'),
+    i18next.t('applicationForms:organizationCategories:church'),
+    i18next.t('applicationForms:organizationCategories:others'),
   ].map(item => ({ label: item, value: item })),
 }
 
 const contactHasGivenPermissionOptions = {
   required: true,
-  notCheckedErrorMessage: 'Die Kontaktperson muss zugestimmt haben, damit Sie Ihren Antrag senden können.',
+  notCheckedErrorMessage: i18next.t('applicationForms:contactHasGivenPermissionNotCheckedError'),
 } as const
 
 const SubForms = {

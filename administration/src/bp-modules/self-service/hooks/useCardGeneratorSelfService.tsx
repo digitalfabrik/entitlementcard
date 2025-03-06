@@ -61,7 +61,7 @@ const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
         })
       }
       if (error instanceof ApolloError) {
-        const { title } = getMessageFromApolloError(error, t)
+        const { title } = getMessageFromApolloError(error)
         appToaster?.show({
           message: <FormAlert isToast errorMessage={title} />,
           timeout: 0,
@@ -94,7 +94,7 @@ const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
       })
 
       if (result.errors) {
-        const { title } = getMessageFromApolloError(new ApolloError({ graphQLErrors: result.errors }), t)
+        const { title } = getMessageFromApolloError(new ApolloError({ graphQLErrors: result.errors }))
         return Promise.reject(new CreateCardsError(title))
       }
       if (!result.data) {

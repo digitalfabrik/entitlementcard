@@ -2,6 +2,7 @@ import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/
 import React, { useContext, useState } from 'react'
 
 import { ShortTextInput } from '../../../generated/graphql'
+import i18next from '../../../i18n'
 import { FormContext } from '../SteppedSubForms'
 import { Form, FormComponentProps } from '../util/FormType'
 
@@ -18,12 +19,12 @@ const SelectForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
   getArrayBufferKeys: () => [],
   validate: ({ selectedValue }, options) => {
     if (selectedValue.length === 0) {
-      return { type: 'error', message: 'Feld ist erforderlich.' }
+      return { type: 'error', message: i18next.t('applicationForms:fieldRequiredError') }
     }
     if (!options.items.map(item => item.value).includes(selectedValue)) {
       return {
         type: 'error',
-        message: `Wert muss einer der auswählbaren Optionen entsprechen.`,
+        message: i18next.t('applicationForms:valueHasToBeSelectableOptionError'),
       }
     }
     return { type: 'valid', value: { shortText: selectedValue } }

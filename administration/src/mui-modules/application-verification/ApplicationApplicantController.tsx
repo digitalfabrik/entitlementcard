@@ -19,7 +19,7 @@ const ApplicationApplicantController = ({ providedKey }: { providedKey: string }
   const applicationQuery = useGetApplicationByApplicantQuery({
     variables: { accessKey: providedKey },
   })
-  const applicationQueryHandler = getQueryResult(applicationQuery, t)
+  const applicationQueryHandler = getQueryResult(applicationQuery)
   if (!applicationQueryHandler.successful) {
     return applicationQueryHandler.component
   }

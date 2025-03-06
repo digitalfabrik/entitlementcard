@@ -45,7 +45,7 @@ const RegionSelector = ({
   const regionsQuery = useGetRegionsQuery({
     variables: { project: projectId },
   })
-  const regionsQueryResult = getQueryResult(regionsQuery, t)
+  const regionsQueryResult = getQueryResult(regionsQuery)
 
   const regions = useMemo(
     () =>

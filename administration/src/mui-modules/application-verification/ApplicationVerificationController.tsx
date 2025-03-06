@@ -48,7 +48,7 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
   const { enqueueSnackbar } = useSnackbar()
   const [verifyOrRejectApplicationVerification] = useVerifyOrRejectApplicationVerificationMutation({
     onError: error => {
-      const { title } = getMessageFromApolloError(error, t)
+      const { title } = getMessageFromApolloError(error)
       enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: ({ result }) => {
@@ -75,7 +75,7 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
     variables: { applicationVerificationAccessKey },
   })
 
-  const applicationQueryHandler = getQueryResult(applicationQuery, t)
+  const applicationQueryHandler = getQueryResult(applicationQuery)
   if (!applicationQueryHandler.successful) {
     return applicationQueryHandler.component
   }
