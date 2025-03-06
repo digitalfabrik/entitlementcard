@@ -3,6 +3,7 @@ import { formatISO, parseISO } from 'date-fns'
 import React, { useContext, useState } from 'react'
 
 import { DateInput } from '../../../generated/graphql'
+import i18next from '../../../i18n'
 import { FormContext } from '../SteppedSubForms'
 import { Form, FormComponentProps } from '../util/FormType'
 
@@ -15,11 +16,11 @@ const DateForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
   getArrayBufferKeys: () => [],
   validate: ({ value }, options) => {
     if (value === '') {
-      return { type: 'error', message: 'Feld ist erforderlich.' }
+      return { type: 'error', message: i18next.t('applicationForms:fieldRequiredError') }
     }
     const date = parseISO(value)
     if (Number.isNaN(date.valueOf())) {
-      return { type: 'error', message: 'Eingabe ist kein gültiges Datum.' }
+      return { type: 'error', message: i18next.t('applicationForms:invalidDateError') }
     }
 
     if (options.maximumDate !== null) {

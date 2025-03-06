@@ -49,7 +49,7 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props): Rea
       setPassword('')
     },
     onError: error => {
-      const { title } = getMessageFromApolloError(error, t)
+      const { title } = getMessageFromApolloError(error)
       appToaster?.show({ intent: 'danger', message: title })
     },
   })

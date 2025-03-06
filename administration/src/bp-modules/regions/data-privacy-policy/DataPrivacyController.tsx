@@ -8,12 +8,11 @@ import getQueryResult from '../../util/getQueryResult'
 import DataPrivacyOverview from './DataPrivacyOverview'
 
 const DataPrivacyController = ({ regionId }: { regionId: number }) => {
-  const { t } = useTranslation('errors')
   const dataPolicyQuery = useGetDataPolicyQuery({
     variables: { regionId },
     onError: error => console.error(error),
   })
-  const dataPolicyQueryResult = getQueryResult(dataPolicyQuery, t)
+  const dataPolicyQueryResult = getQueryResult(dataPolicyQuery)
   if (!dataPolicyQueryResult.successful) {
     return dataPolicyQueryResult.component
   }

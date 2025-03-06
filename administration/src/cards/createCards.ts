@@ -35,7 +35,7 @@ const createCards = async (
   })
 
   if (result.errors) {
-    const { title } = getMessageFromApolloError(new ApolloError({ graphQLErrors: result.errors }), t)
+    const { title } = getMessageFromApolloError(new ApolloError({ graphQLErrors: result.errors }))
     throw new CreateCardsError(title)
   }
   if (!result.data) {

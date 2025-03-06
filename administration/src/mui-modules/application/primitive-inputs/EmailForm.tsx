@@ -3,6 +3,7 @@ import React, { useContext, useState } from 'react'
 
 import { isEmailValid } from '../../../bp-modules/applications/utils/verificationHelper'
 import { EmailInput } from '../../../generated/graphql'
+import i18next from '../../../i18n'
 import { FormContext } from '../SteppedSubForms'
 import { Form, FormComponentProps } from '../util/FormType'
 import { MAX_SHORT_TEXT_LENGTH } from './ShortTextForm'
@@ -15,18 +16,18 @@ const EmailForm: Form<State, ValidatedInput, AdditionalProps> = {
   getArrayBufferKeys: () => [],
   validate: ({ email }) => {
     if (email === '') {
-      return { type: 'error', message: 'Feld ist erforderlich.' }
+      return { type: 'error', message: i18next.t('applicationForms:fieldRequiredError') }
     }
     if (email.length > MAX_SHORT_TEXT_LENGTH) {
       return {
         type: 'error',
-        message: `Text überschreitet die maximal erlaubten ${MAX_SHORT_TEXT_LENGTH} Zeichen.`,
+        message: i18next.t('applicationForms:maxShortTextLengthError', { maxLength: MAX_SHORT_TEXT_LENGTH }),
       }
     }
     if (!isEmailValid(email)) {
       return {
         type: 'error',
-        message: `E-Mail-Adresse ist ungültig.`,
+        message: i18next.t('applicationForms:invalidMailError'),
       }
     }
     return { type: 'valid', value: { email } }

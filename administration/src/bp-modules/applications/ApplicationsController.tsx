@@ -8,12 +8,11 @@ import getQueryResult from '../util/getQueryResult'
 import ApplicationsOverview from './ApplicationsOverview'
 
 const ApplicationsController = ({ region }: { region: Region }) => {
-  const { t } = useTranslation('errors')
   const applicationsQuery = useGetApplicationsQuery({
     variables: { regionId: region.id },
     onError: error => console.error(error),
   })
-  const applicationsQueryResult = getQueryResult(applicationsQuery, t)
+  const applicationsQueryResult = getQueryResult(applicationsQuery)
   if (!applicationsQueryResult.successful) {
     return applicationsQueryResult.component
   }
