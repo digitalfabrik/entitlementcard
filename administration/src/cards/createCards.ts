@@ -2,7 +2,7 @@ import { TFunction } from 'i18next'
 
 import { DynamicActivationCode, StaticVerificationCode } from '../generated/card_pb'
 import { CreateCardsFromSelfServiceMutationFn, CreateCardsMutation, CreateCardsMutationFn } from '../generated/graphql'
-import { ProjectConfig } from '../project-configs/getProjectConfig'
+import type { ProjectConfig } from '../project-configs/getProjectConfig'
 import { base64ToUint8Array, uint8ArrayToBase64 } from '../util/base64'
 import { mapGraphqlRequestResult } from '../util/helper'
 import { Card, generateCardInfo } from './Card'
