@@ -56,15 +56,15 @@ class AdministratorEntity(id: EntityID<Int>) : IntEntity(id) {
     var notificationOnVerification by Administrators.notificationOnVerification
     var deleted by Administrators.deleted
 
-    fun isProject(project: String): Boolean =
+    fun isInProject(project: String): Boolean =
         this.projectId == ProjectEntity.find { Projects.project eq project }.single().id
 
-    fun isProject(projectId: Int): Boolean = this.projectId.value == projectId
+    fun isInProject(projectId: Int): Boolean = this.projectId.value == projectId
 
-    fun isRole(role: Role, vararg other: Role): Boolean =
+    fun hasRole(role: Role, vararg other: Role): Boolean =
         this.role == role.db_value || other.any { this.role == it.db_value }
 
-    fun isRegion(regionId: Int): Boolean = this.regionId?.value == regionId
+    fun isInRegion(regionId: Int): Boolean = this.regionId?.value == regionId
 }
 
 const val TOKEN_LENGTH = 60

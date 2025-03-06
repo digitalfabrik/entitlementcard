@@ -10,48 +10,48 @@ import org.jetbrains.exposed.sql.transactions.transaction
 object Authorizer {
 
     fun mayCreateCardInRegion(user: AdministratorEntity, regionId: Int): Boolean {
-        return user.isRegion(regionId) && user.isRole(Role.REGION_MANAGER, Role.REGION_ADMIN)
+        return user.isInRegion(regionId) && user.hasRole(Role.REGION_MANAGER, Role.REGION_ADMIN)
     }
 
     fun mayDeleteCardInRegion(user: AdministratorEntity, regionId: Int): Boolean {
-        return user.isRegion(regionId) && user.isRole(Role.REGION_MANAGER, Role.REGION_ADMIN)
+        return user.isInRegion(regionId) && user.hasRole(Role.REGION_MANAGER, Role.REGION_ADMIN)
     }
 
     fun mayViewApplicationsInRegion(user: AdministratorEntity, regionId: Int): Boolean {
-        return user.isRegion(regionId) && user.isRole(Role.REGION_MANAGER, Role.REGION_ADMIN)
+        return user.isInRegion(regionId) && user.hasRole(Role.REGION_MANAGER, Role.REGION_ADMIN)
     }
 
     fun mayUpdateApplicationsInRegion(user: AdministratorEntity, regionId: Int): Boolean {
-        return user.isRegion(regionId) && user.isRole(Role.REGION_MANAGER, Role.REGION_ADMIN)
+        return user.isInRegion(regionId) && user.hasRole(Role.REGION_MANAGER, Role.REGION_ADMIN)
     }
 
     fun mayDeleteApplicationsInRegion(user: AdministratorEntity, regionId: Int): Boolean {
-        return user.isRegion(regionId) && user.isRole(Role.REGION_MANAGER, Role.REGION_ADMIN)
+        return user.isInRegion(regionId) && user.hasRole(Role.REGION_MANAGER, Role.REGION_ADMIN)
     }
 
     fun mayUpdateSettingsInRegion(user: AdministratorEntity, regionId: Int): Boolean {
-        return user.isRegion(regionId) && user.isRole(Role.REGION_ADMIN)
+        return user.isInRegion(regionId) && user.hasRole(Role.REGION_ADMIN)
     }
 
     fun mayViewUsersInProject(user: AdministratorEntity, projectId: Int): Boolean {
-        return user.isProject(projectId) && user.isRole(Role.PROJECT_ADMIN)
+        return user.isInProject(projectId) && user.hasRole(Role.PROJECT_ADMIN)
     }
 
     fun mayViewUsersInRegion(user: AdministratorEntity, region: RegionEntity): Boolean {
         return mayViewUsersInProject(user, region.projectId.value) ||
-            (user.isRole(Role.REGION_ADMIN) && user.isRegion(region.id.value))
+            (user.hasRole(Role.REGION_ADMIN) && user.isInRegion(region.id.value))
     }
 
     fun maySendMailsInRegion(user: AdministratorEntity, regionId: Int): Boolean {
-        return user.isRegion(regionId) && user.isRole(Role.REGION_MANAGER, Role.REGION_ADMIN)
+        return user.isInRegion(regionId) && user.hasRole(Role.REGION_MANAGER, Role.REGION_ADMIN)
     }
 
     fun mayViewCardStatisticsInProject(user: AdministratorEntity, projectId: Int): Boolean {
-        return user.isProject(projectId) && user.isRole(Role.PROJECT_ADMIN)
+        return user.isInProject(projectId) && user.hasRole(Role.PROJECT_ADMIN)
     }
 
     fun mayViewCardStatisticsInRegion(user: AdministratorEntity, regionId: Int): Boolean {
-        return user.isRole(Role.REGION_ADMIN) && user.isRegion(regionId)
+        return user.hasRole(Role.REGION_ADMIN) && user.isInRegion(regionId)
     }
 
     fun mayCreateUser(
@@ -63,14 +63,13 @@ object Authorizer {
         if (actingAdmin.projectId.value != newAdminProjectId || newAdminRole == Role.NO_RIGHTS) {
             return false
         }
-        if (actingAdmin.isRole(Role.PROJECT_ADMIN)) {
-            return newAdminRole != Role.EXTERNAL_VERIFIED_API_USER || transaction {
-                actingAdmin.isProject(
-                    EAK_BAYERN_PROJECT
-                )
+        if (actingAdmin.hasRole(Role.PROJECT_ADMIN)) {
+            if (newAdminRole == Role.EXTERNAL_VERIFIED_API_USER) {
+                return transaction { actingAdmin.isInProject(EAK_BAYERN_PROJECT) }
             }
+            return true
         }
-        return actingAdmin.isRole(Role.REGION_ADMIN) &&
+        return actingAdmin.hasRole(Role.REGION_ADMIN) &&
             newAdminRegion != null && actingAdmin.regionId == newAdminRegion.id &&
             newAdminRole in setOf(Role.REGION_ADMIN, Role.REGION_MANAGER)
     }
@@ -82,17 +81,16 @@ object Authorizer {
         newAdminRole: Role,
         newAdminRegion: RegionEntity?
     ): Boolean {
-        if (!actingAdmin.isProject(newAdminProjectId) || !existingAdmin.isProject(newAdminProjectId) || newAdminRole == Role.NO_RIGHTS) {
+        if (!actingAdmin.isInProject(newAdminProjectId) || !existingAdmin.isInProject(newAdminProjectId) || newAdminRole == Role.NO_RIGHTS) {
             return false
         }
-        if (actingAdmin.isRole(Role.PROJECT_ADMIN)) {
-            return newAdminRole != Role.EXTERNAL_VERIFIED_API_USER || transaction {
-                actingAdmin.isProject(
-                    EAK_BAYERN_PROJECT
-                )
+        if (actingAdmin.hasRole(Role.PROJECT_ADMIN)) {
+            if (newAdminRole == Role.EXTERNAL_VERIFIED_API_USER) {
+                return transaction { actingAdmin.isInProject(EAK_BAYERN_PROJECT) }
             }
+            return true
         }
-        return actingAdmin.isRole(Role.REGION_ADMIN) &&
+        return actingAdmin.hasRole(Role.REGION_ADMIN) &&
             existingAdmin.regionId == actingAdmin.regionId &&
             newAdminRegion != null && actingAdmin.regionId == newAdminRegion.id &&
             newAdminRole in setOf(Role.REGION_ADMIN, Role.REGION_MANAGER)
@@ -102,34 +100,34 @@ object Authorizer {
         if (actingAdmin.projectId != existingAdmin.projectId) {
             return false
         }
-        if (actingAdmin.isRole(Role.PROJECT_ADMIN)) {
+        if (actingAdmin.hasRole(Role.PROJECT_ADMIN)) {
             return true
         }
-        return actingAdmin.isRole(Role.REGION_ADMIN) && existingAdmin.regionId == actingAdmin.regionId
+        return actingAdmin.hasRole(Role.REGION_ADMIN) && existingAdmin.regionId == actingAdmin.regionId
     }
 
     fun mayUpdateStoresInProject(user: AdministratorEntity, projectId: Int): Boolean {
-        return user.projectId.value == projectId && user.isRole(Role.PROJECT_STORE_MANAGER)
+        return user.projectId.value == projectId && user.hasRole(Role.PROJECT_STORE_MANAGER)
     }
 
     fun mayViewFreinetAgencyInformationInRegion(user: AdministratorEntity, regionId: Int): Boolean {
-        return user.isRole(Role.REGION_ADMIN) && user.isProject(EAK_BAYERN_PROJECT) && user.isRegion(regionId)
+        return user.hasRole(Role.REGION_ADMIN) && user.isInProject(EAK_BAYERN_PROJECT) && user.isInRegion(regionId)
     }
 
     fun mayAddApiTokensInProject(user: AdministratorEntity): Boolean {
         return transaction {
-            (user.isRole(Role.PROJECT_ADMIN) && user.isProject(KOBLENZ_PASS_PROJECT)) ||
-                (user.isRole(Role.EXTERNAL_VERIFIED_API_USER) && user.isProject(EAK_BAYERN_PROJECT))
+            (user.hasRole(Role.PROJECT_ADMIN) && user.isInProject(KOBLENZ_PASS_PROJECT)) ||
+                (user.hasRole(Role.EXTERNAL_VERIFIED_API_USER) && user.isInProject(EAK_BAYERN_PROJECT))
         }
     }
 
     fun mayViewApiMetadataInProject(user: AdministratorEntity): Boolean =
-        user.isRole(Role.PROJECT_ADMIN) || user.isRole(Role.EXTERNAL_VERIFIED_API_USER)
+        user.hasRole(Role.PROJECT_ADMIN) || user.hasRole(Role.EXTERNAL_VERIFIED_API_USER)
 
     fun mayDeleteApiTokensInProject(user: AdministratorEntity): Boolean =
-        user.isRole(Role.PROJECT_ADMIN) || user.isRole(Role.EXTERNAL_VERIFIED_API_USER)
+        user.hasRole(Role.PROJECT_ADMIN) || user.hasRole(Role.EXTERNAL_VERIFIED_API_USER)
 
     fun mayViewHashingPepper(user: AdministratorEntity): Boolean {
-        return transaction { user.isProject(KOBLENZ_PASS_PROJECT) && user.isRole(Role.PROJECT_ADMIN) }
+        return transaction { user.isInProject(KOBLENZ_PASS_PROJECT) && user.hasRole(Role.PROJECT_ADMIN) }
     }
 }
