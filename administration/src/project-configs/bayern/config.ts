@@ -88,6 +88,7 @@ const config: ProjectConfig = {
     },
   },
   freinetCSVImportEnabled: true,
+  // TODO #1751 has to be implemented, before we ship it to production
   freinetDataTransferEnabled: !isProductionEnvironment(),
   cardCreation: true,
   selfServiceEnabled: false,
