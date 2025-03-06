@@ -6,6 +6,7 @@ import { ActivationText } from '../common/ActivationText'
 import type { CardConfig, ProjectConfig } from '../getProjectConfig'
 import { DataPrivacyAdditionalBaseText, DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
 import pdfConfiguration from './pdf'
+import { isProductionEnvironment } from '../../util/helper'
 
 export const applicationJsonToPersonalData = (
   json: JsonField<'Array'>
@@ -87,7 +88,7 @@ const config: ProjectConfig = {
     },
   },
   freinetCSVImportEnabled: true,
-  freinetDataTransferEnabled: true,
+  freinetDataTransferEnabled: !isProductionEnvironment(),
   cardCreation: true,
   selfServiceEnabled: false,
   storesManagement: {
