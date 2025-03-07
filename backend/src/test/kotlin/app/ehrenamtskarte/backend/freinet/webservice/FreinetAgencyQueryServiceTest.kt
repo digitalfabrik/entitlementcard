@@ -21,10 +21,10 @@ internal class FreinetAgencyQueryServiceTest : GraphqlApiTest() {
     }
 
     @Test
-    fun `POST returns an internal error when project is not EAK Bayern`() = JavalinTest.test(app) { _, client ->
+    fun `POST returns not implemented error if freinet is not configured`() = JavalinTest.test(app) { _, client ->
         val query = createQuery(16, "koblenz.sozialpass.app")
         val response = post(client, query, regionAdmin.getJwtToken())
-        assertEquals(500, response.code)
+        assertEquals(501, response.code)
     }
 
     @Test

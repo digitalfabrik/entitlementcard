@@ -57,6 +57,7 @@ const config: ProjectConfig = {
   },
   cardStatistics: { enabled: false },
   freinetCSVImportEnabled: false,
+  freinetDataTransferEnabled: false,
   cardCreation: true,
   selfServiceEnabled: false,
   storesManagement: storesManagementConfig,

@@ -9,7 +9,7 @@ import PasswordInput from '../PasswordInput'
 import getQueryResult from '../util/getQueryResult'
 
 const Container = styled.div`
-  padding: 10px 0;
+  padding: 8px 0;
 `
 
 const PepperSettingsView = ({ pepper, t }: { pepper: string; t: TFunction }) => (
