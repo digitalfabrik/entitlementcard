@@ -1,7 +1,7 @@
 import React, { ReactElement, useContext } from 'react'
 import styled from 'styled-components'
 
-import { WhoAmIContext } from '../../WhoAmIProvider'
+import { useWhoAmI } from '../../WhoAmIProvider'
 import { Role } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import ActivityLogCard from './ActivityLogCard'
@@ -18,7 +18,7 @@ const UserSettingsContainer = styled.div`
 
 const UserSettingsController = (): ReactElement => {
   const { applicationFeature, activityLogConfig, projectId } = useContext(ProjectConfigContext)
-  const { role } = useContext(WhoAmIContext).me!
+  const { role } = useWhoAmI().me
   return (
     <UserSettingsContainer>
       {applicationFeature && role !== Role.ProjectAdmin && <NotificationSettings projectId={projectId} />}
