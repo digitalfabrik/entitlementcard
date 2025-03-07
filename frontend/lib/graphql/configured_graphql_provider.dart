@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/sentry.dart';
-import 'package:fk_user_agent/fk_user_agent.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class ConfiguredGraphQlProvider extends StatefulWidget {
   final Widget child;
@@ -18,36 +18,32 @@ class ConfiguredGraphQlProvider extends StatefulWidget {
 }
 
 class ConfiguredGraphQlProviderState extends State<ConfiguredGraphQlProvider> {
-  String _platformVersion = 'Unknown';
+  String _userAgent = '';
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      await FkUserAgent.init();
-      initPlatformState();
-    });
+    _initUserAgent();
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      platformVersion = FkUserAgent.userAgent!;
-      print(platformVersion);
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
+  Future<void> _initUserAgent() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    final productString = '${packageInfo.packageName}/${packageInfo.version} (${packageInfo.buildNumber})';
+
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    var deviceString = '';
+    if (Platform.isAndroid) {
+      final androidInfo = await deviceInfo.androidInfo;
+      deviceString = 'Android/${androidInfo.version.sdkInt} ${androidInfo.brand} ${androidInfo.model}';
+    }
+    if (Platform.isIOS) {
+      final iosInfo = await deviceInfo.iosInfo;
+      deviceString = 'iOS/${iosInfo.systemVersion} Apple ${iosInfo.model}';
     }
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
     if (!mounted) return;
 
-    setState(() {
-      _platformVersion = platformVersion;
-    });
+    setState(() => _userAgent = '$productString $deviceString');
   }
 
   @override
@@ -68,8 +64,7 @@ class ConfiguredGraphQlProviderState extends State<ConfiguredGraphQlProvider> {
               return null;
             },
           ),
-          HttpLink(Configuration.of(context).graphqlUrl,
-              defaultHeaders: {HttpHeaders.userAgentHeader: _platformVersion})
+          HttpLink(Configuration.of(context).graphqlUrl, defaultHeaders: {HttpHeaders.userAgentHeader: _userAgent})
         ]),
       ),
     );
