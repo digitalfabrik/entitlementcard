@@ -2,11 +2,11 @@ import { JsonField, findValue } from '../../bp-modules/applications/JsonFieldVie
 import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
 import EMailNotificationExtension from '../../cards/extensions/EMailNotificationExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
+import { isProductionEnvironment } from '../../util/helper'
 import { ActivationText } from '../common/ActivationText'
 import type { CardConfig, ProjectConfig } from '../getProjectConfig'
 import { DataPrivacyAdditionalBaseText, DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
 import pdfConfiguration from './pdf'
-import { isProductionEnvironment } from '../../util/helper'
 
 export const applicationJsonToPersonalData = (
   json: JsonField<'Array'>
