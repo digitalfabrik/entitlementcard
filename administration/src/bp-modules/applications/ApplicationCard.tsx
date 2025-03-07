@@ -160,7 +160,7 @@ const ApplicationCard = ({
   onChange,
 }: ApplicationCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false)
-  const { t } = useTranslation('applications')
+  const { t } = useTranslation('applicationCard')
   const { createdDate: createdDateString, jsonValue, id, withdrawalDate, cardCreated } = application
   const jsonField: JsonField<'Array'> = JSON.parse(jsonValue)
   const config = useContext(ProjectConfigContext)

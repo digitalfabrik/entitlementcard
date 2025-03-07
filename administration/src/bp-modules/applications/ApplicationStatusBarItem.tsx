@@ -34,7 +34,7 @@ const ApplicationStatusBarItem = ({
   count,
 }: ApplicationStatusBarItemProps): ReactElement => {
   const { title } = item
-  const { t } = useTranslation('applications')
+  const { t } = useTranslation('applicationsOverview')
 
   return (
     <ItemContainer onClick={() => setActiveBarItem(item)} id={title} $active={active}>

@@ -20,7 +20,7 @@ export const UnFocusedDiv = styled.div`
 
 const VerificationQuickIndicator = memo(({ verifications }: { verifications: Application['verifications'] }) => {
   const verificationStati = verifications.map(getVerificationStatus)
-  const { t } = useTranslation('applications')
+  const { t } = useTranslation('applicationCard')
   return (
     <Tooltip
       content={
