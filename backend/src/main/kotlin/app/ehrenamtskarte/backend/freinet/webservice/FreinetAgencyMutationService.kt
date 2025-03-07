@@ -2,10 +2,9 @@ package app.ehrenamtskarte.backend.freinet.webservice
 
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.service.Authorizer
-import app.ehrenamtskarte.backend.common.webservice.EAK_BAYERN_PROJECT
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
-import app.ehrenamtskarte.backend.exception.service.NotEakProjectException
+import app.ehrenamtskarte.backend.exception.service.NotImplementedException
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetAgencyNotFoundException
@@ -22,16 +21,16 @@ class FreinetAgencyMutationService {
     fun updateDataTransferToFreinet(dfe: DataFetchingEnvironment, regionId: Int, project: String, dataTransferActivated: Boolean): Boolean {
         val context = dfe.getContext<GraphQLContext>()
         val jwtPayload = context.enforceSignedIn()
+        val projectConfig = dfe.getContext<GraphQLContext>().backendConfiguration.getProjectConfig(project)
+        if (projectConfig.freinet == null) {
+            throw NotImplementedException()
+        }
         transaction {
             val admin =
                 AdministratorEntity.findById(jwtPayload.adminId)
                     ?: throw UnauthorizedException()
-            val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
+            ProjectEntity.find { Projects.project eq project }.firstOrNull()
                 ?: throw ProjectNotFoundException(project)
-
-            if (projectEntity.project != EAK_BAYERN_PROJECT) {
-                throw NotEakProjectException()
-            }
             if (!Authorizer.mayUpdateFreinetAgencyInformationInRegion(admin, regionId)) {
                 throw ForbiddenException()
             }

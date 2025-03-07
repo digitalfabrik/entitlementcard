@@ -25,10 +25,10 @@ internal class FreinetAgencyMutationServiceTest : GraphqlApiTest() {
     }
 
     @Test
-    fun `POST returns an internal error when project is not EAK Bayern`() = JavalinTest.test(app) { _, client ->
+    fun `POST returns not implemented error if freinet is not configured`() = JavalinTest.test(app) { _, client ->
         val mutation = createMutation(16, "koblenz.sozialpass.app", true)
         val response = post(client, mutation, regionAdmin.getJwtToken())
-        assertEquals(500, response.code)
+        assertEquals(501, response.code)
     }
 
     @Test
