@@ -1,7 +1,5 @@
-import { fixupConfigRules, fixupPluginRules } from '@eslint/compat'
+import { fixupPluginRules } from '@eslint/compat'
 import { FlatCompat } from '@eslint/eslintrc'
-import typescriptEslint from '@typescript-eslint/eslint-plugin'
-import tsParser from '@typescript-eslint/parser'
 import jest from 'eslint-plugin-jest'
 import jsxA11Y from 'eslint-plugin-jsx-a11y'
 import jsxExpressions from 'eslint-plugin-jsx-expressions'
@@ -11,6 +9,7 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import { createRequire } from 'module'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { parser, plugin } from 'typescript-eslint'
 
 const require = createRequire(import.meta.url)
 
@@ -24,27 +23,25 @@ export default [
   {
     ignores: ['src/generated/**/*', 'src/coverage/**/*', 'build/**/*', '**eslint.config.mjs'],
   },
-  ...fixupConfigRules(
-    compat.extends(
-      'airbnb',
-      'airbnb/hooks',
-      'plugin:@typescript-eslint/recommended',
-      'plugin:react/recommended',
-      'plugin:react-hooks/recommended',
-      'prettier',
-      'plugin:jest/recommended',
-      'plugin:jest/style'
-    )
+  ...compat.extends(
+    'airbnb',
+    'airbnb/hooks',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
+    'prettier',
+    'plugin:jest/recommended',
+    'plugin:jest/style'
   ),
   {
     plugins: {
-      '@typescript-eslint': fixupPluginRules(typescriptEslint),
-      jest: fixupPluginRules(jest),
-      'jsx-a11y': fixupPluginRules(jsxA11Y),
+      '@typescript-eslint': plugin,
+      jest: jest,
+      'jsx-a11y': jsxA11Y,
       'jsx-expressions': fixupPluginRules(jsxExpressions),
       'prefer-arrow': preferArrow,
-      react: fixupPluginRules(react),
-      'react-hooks': fixupPluginRules(reactHooks),
+      react: react,
+      'react-hooks': reactHooks,
     },
 
     linterOptions: {
@@ -52,7 +49,7 @@ export default [
     },
 
     languageOptions: {
-      parser: tsParser,
+      parser: parser,
       ecmaVersion: 5,
       sourceType: 'script',
 
