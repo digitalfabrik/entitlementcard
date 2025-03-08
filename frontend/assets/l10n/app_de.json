@@ -77,7 +77,10 @@
     "invalidCode": "Ihr Aktivierungscode ist ungültig.",
     "alreadyExists": "Diese Karte wurde bereits auf diesem Gerät aktiviert.",
     "activationSuccessful": "Die Aktivierung war erfolgreich.",
-    "activationInvalid": "Die Aktivierung befindet sich in einem ungültigen Zustand."
+    "activationInvalid": "Die Aktivierung befindet sich in einem ungültigen Zustand.",
+    "cardExpiredExceptionMessage": "Ihre Karte kann nicht aktiviert werden, weil sie bereits am {{expiryDate}} abgelaufen ist",
+    "qrCodeParseExceptionMessage": "Der Aktivierungscode ist ungültig.",
+    "formatExceptionMessage": "Das Format des Aktivierungscodes ist ungültig."
   },
   "identification": {
     "activate": "Aktivieren",
