@@ -66,15 +66,12 @@ const ApplicationsOverview = ({ applications }: { applications: Application[] })
   const sortedApplications: Application[] = useMemo(() => sortApplications(updatedApplications), [updatedApplications])
   const filteredApplications: Application[] = useMemo(
     () =>
-      sortedApplications.filter(application => {
-        if (activeBarItem.status === undefined) {
-          return application
-        }
-        return (
+      sortedApplications.filter(
+        application =>
+          activeBarItem.status === undefined ||
           getApplicationStatus(application.verifications.map(getVerificationStatus), !!application.withdrawalDate) ===
-          activeBarItem.status
-        )
-      }),
+            activeBarItem.status
+      ),
     [activeBarItem, sortedApplications]
   )
 

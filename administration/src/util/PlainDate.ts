@@ -27,14 +27,12 @@ class PlainDate {
    * @param day A day of the month, ranging between 1 and 31 inclusive.
    */
   constructor(isoYear: number, isoMonth: number, day: number) {
-    {
-      // Check if parameters are valid, otherwise throw RangeError
-      const date = new Date(Date.UTC(isoYear, isoMonth - 1, day))
-      // We need to setUTCFullYear, as Date.UTC adds 1900 years if year is between 0 and 99 inclusive.
-      date.setUTCFullYear(isoYear)
-      if (!isValid(date)) {
-        throw RangeError('Parameters do not form a valid PlainDate.')
-      }
+    // Check if parameters are valid, otherwise throw RangeError
+    const date = new Date(Date.UTC(isoYear, isoMonth - 1, day))
+    // We need to setUTCFullYear, as Date.UTC adds 1900 years if year is between 0 and 99 inclusive.
+    date.setUTCFullYear(isoYear)
+    if (!isValid(date)) {
+      throw RangeError('Parameters do not form a valid PlainDate.')
     }
     this.isoYear = isoYear
     this.isoMonth = isoMonth
