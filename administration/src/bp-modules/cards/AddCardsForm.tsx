@@ -1,13 +1,11 @@
-import React, { ReactElement, useCallback, useContext, useEffect, useRef } from 'react'
+import React, { ReactElement, useCallback, useContext, useRef } from 'react'
 import FlipMove from 'react-flip-move'
 import { useTranslation } from 'react-i18next'
-import { useSearchParams } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { Card, initializeCard, initializeCardFromCSV } from '../../cards/Card'
+import { Card, initializeCard } from '../../cards/Card'
 import { Region } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import { getCsvHeaders } from '../../project-configs/helper'
 import AddCardForm from './AddCardForm'
 import CardFormButton from './CardFormButton'
 
@@ -41,34 +39,11 @@ type CreateCardsFormProps = {
   cards: Card[]
   setCards: (cards: Card[]) => void
   updateCard: (updatedCard: Partial<Card>, index: number) => void
-  setApplicationIdToMarkAsProcessed: (applicationIdToMarkAsProcessed: number | undefined) => void
 }
 
-const AddCardsForm = ({
-  region,
-  cards,
-  setCards,
-  updateCard,
-  setApplicationIdToMarkAsProcessed,
-}: CreateCardsFormProps): ReactElement => {
+const AddCardsForm = ({ region, cards, setCards, updateCard }: CreateCardsFormProps): ReactElement => {
   const projectConfig = useContext(ProjectConfigContext)
   const { t } = useTranslation('cards')
-  const [searchParams, setSearchParams] = useSearchParams()
-
-  useEffect(() => {
-    if (cards.length === 0) {
-      const headers = getCsvHeaders(projectConfig)
-      const values = headers.map(header => searchParams.get(header))
-      setCards([initializeCardFromCSV(projectConfig.card, values, headers, region, true)])
-
-      const applicationIdToMarkAsProcessed = searchParams.get('applicationIdToMarkAsProcessed')
-      setApplicationIdToMarkAsProcessed(
-        applicationIdToMarkAsProcessed == null ? undefined : +applicationIdToMarkAsProcessed
-      )
-
-      setSearchParams(undefined, { replace: true })
-    }
-  }, [cards.length, projectConfig, region, searchParams, setCards, setSearchParams, setApplicationIdToMarkAsProcessed])
   const bottomRef = useRef<HTMLDivElement>(null)
 
   const scrollToBottom = () => {

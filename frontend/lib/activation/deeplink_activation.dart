@@ -8,15 +8,17 @@ import 'package:ehrenamtskarte/identification/id_card/id_card_with_region_query.
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:ehrenamtskarte/identification/util/activate_card.dart';
+import 'package:ehrenamtskarte/identification/verification_workflow/verification_qr_code_processor.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 enum DeepLinkActivationStatus {
-  /// Link is invalid
-  invalidLink,
+  // Activation is invalid
+  invalid,
 
   /// The card already exists on the device.
   alreadyExists,
@@ -29,7 +31,7 @@ enum DeepLinkActivationStatus {
 
   factory DeepLinkActivationStatus.from(UserCodeModel userCodeModel, DynamicActivationCode? activationCode) {
     if (activationCode == null) {
-      return DeepLinkActivationStatus.invalidLink;
+      return DeepLinkActivationStatus.invalid;
     } else if (isAlreadyInList(userCodeModel.userCodes, activationCode.info, activationCode.pepper)) {
       return DeepLinkActivationStatus.alreadyExists;
     } else if (hasReachedCardLimit(userCodeModel.userCodes)) {
@@ -57,11 +59,18 @@ enum _State {
 
 class _DeepLinkActivationState extends State<DeepLinkActivation> {
   _State _state = _State.waiting;
+  String? errorMessage;
+
+  void updateErrorMessage(String message) {
+    setState(() {
+      errorMessage = message;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    DynamicActivationCode? activationCode = getActivationCode(context, widget.base64qrcode);
+    DynamicActivationCode? activationCode = getActivationCode(context, widget.base64qrcode, updateErrorMessage);
     CardInfo? cardInfo = activationCode?.info;
     final userCodeModel = Provider.of<UserCodeModel>(context);
 
@@ -84,7 +93,7 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              if (status != DeepLinkActivationStatus.invalidLink)
+              if (status != DeepLinkActivationStatus.invalid)
                 Padding(
                   padding: const EdgeInsets.all(20),
                   child: Text(t.deeplinkActivation.description,
@@ -101,7 +110,7 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
               Padding(
                 padding: const EdgeInsets.all(32),
                 child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  if (_state == _State.waiting) _WarningText(status, userCodeModel),
+                  if (_state == _State.waiting) _WarningText(status, userCodeModel, errorMessage),
                   ElevatedButton.icon(
                     onPressed:
                         activationCode != null && _state == _State.waiting && status == DeepLinkActivationStatus.valid
@@ -161,8 +170,9 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
 class _WarningText extends StatelessWidget {
   final DeepLinkActivationStatus status;
   final UserCodeModel userCodeModel;
+  final String? errorMessage;
 
-  const _WarningText(this.status, this.userCodeModel);
+  const _WarningText(this.status, this.userCodeModel, this.errorMessage);
 
   @override
   Widget build(BuildContext context) {
@@ -170,7 +180,7 @@ class _WarningText extends StatelessWidget {
     final String cardsInUse = userCodeModel.userCodes.length.toString();
     final String maxCardAmount = buildConfig.maxCardAmount.toString();
     final text = switch (status) {
-      DeepLinkActivationStatus.invalidLink => t.deeplinkActivation.activationInvalid,
+      DeepLinkActivationStatus.invalid => errorMessage ?? t.deeplinkActivation.activationInvalid,
       DeepLinkActivationStatus.limitReached => '${t.deeplinkActivation.limitReached} ($cardsInUse/$maxCardAmount)',
       DeepLinkActivationStatus.alreadyExists => t.deeplinkActivation.alreadyExists,
       DeepLinkActivationStatus.valid => '',
@@ -189,15 +199,20 @@ class _WarningText extends StatelessWidget {
   }
 }
 
-DynamicActivationCode? getActivationCode(BuildContext context, String base64qrcode) {
+DynamicActivationCode? getActivationCode(
+    BuildContext context, String base64qrcode, Function(String message) updateErrorMessage) {
   try {
     final activationCode = const ActivationCodeParser().parseQrCodeContent(const Base64Decoder().convert(base64qrcode));
     return activationCode;
+  } on CardExpiredException catch (e, _) {
+    updateErrorMessage(
+        t.deeplinkActivation.cardExpiredExceptionMessage(expiryDate: DateFormat('dd.MM.yyyy').format(e.expiry)));
+    return null;
   } on QrCodeParseException catch (e, _) {
-    debugPrint('Der Aktivierungscode ist ungültig.');
+    updateErrorMessage(t.deeplinkActivation.qrCodeParseExceptionMessage);
     return null;
   } on FormatException catch (e, _) {
-    debugPrint('Das Format des Aktivierungscodes ist ungültig.');
+    updateErrorMessage(t.deeplinkActivation.formatExceptionMessage);
     return null;
   }
 }

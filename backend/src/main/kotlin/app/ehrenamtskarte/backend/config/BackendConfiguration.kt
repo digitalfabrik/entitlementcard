@@ -26,7 +26,7 @@ data class GeocodingConfig(val enabled: Boolean, val host: String)
 data class CsvWriterConfig(val enabled: Boolean)
 data class SmtpConfig(val host: String, val port: Int, val username: String, val password: String)
 data class MatomoConfig(val siteId: Int, val accessToken: String)
-data class FreinetAgencies(val host: String, val path: String, val portalId: String, val accessToken: String)
+data class FreinetConfig(val host: String, val path: String, val portalId: String, val accessToken: String)
 data class ProjectConfig(
     val id: String,
     val importUrl: String,
@@ -37,7 +37,7 @@ data class ProjectConfig(
     val selfServiceEnabled: Boolean,
     val smtp: SmtpConfig,
     val matomo: MatomoConfig?,
-    val freinetAgencies: FreinetAgencies?
+    val freinet: FreinetConfig?
 )
 
 data class ServerConfig(val dataDirectory: String, val host: String, val port: String)

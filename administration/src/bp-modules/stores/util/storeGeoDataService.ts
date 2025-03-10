@@ -2,7 +2,7 @@ import { FeatureCollection, GeoJSON, Point } from 'geojson'
 import i18next from 'i18next'
 
 import { AcceptingStoresEntry } from '../AcceptingStoresEntry'
-import { LONG_ERROR_TIMEOUT } from '../StoresCSVInput'
+import { LONG_ERROR_TIMEOUT } from '../constants'
 
 const GEO_SERVICE_URL = 'https://nominatim.maps.tuerantuer.org/nominatim/search'
 
