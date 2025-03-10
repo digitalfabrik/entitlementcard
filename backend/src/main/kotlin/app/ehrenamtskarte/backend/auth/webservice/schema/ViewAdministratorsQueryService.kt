@@ -2,6 +2,7 @@ package app.ehrenamtskarte.backend.auth.webservice.schema
 
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.database.Administrators
+import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Administrator
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
@@ -27,13 +28,12 @@ class ViewAdministratorsQueryService {
     @GraphQLDescription("Returns the requesting administrator as retrieved from his JWT token.")
     fun whoAmI(project: String, dfe: DataFetchingEnvironment): Administrator {
         val context = dfe.getContext<GraphQLContext>()
-        val jwtPayload = context.enforceSignedIn()
+        val admin = context.getAdministrator()
 
         return transaction {
-            val admin = AdministratorEntity.findById(jwtPayload.adminId)
             val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
                 ?: throw ProjectNotFoundException(project)
-            if (admin == null || admin.deleted || admin.projectId != projectEntity.id) {
+            if (admin.deleted || admin.projectId != projectEntity.id) {
                 throw UnauthorizedException()
             }
             Administrator.fromDbEntity(admin)
@@ -46,14 +46,13 @@ class ViewAdministratorsQueryService {
         dfe: DataFetchingEnvironment
     ): List<Administrator> {
         val context = dfe.getContext<GraphQLContext>()
-        val jwtPayload = context.enforceSignedIn()
+        val admin = context.getAdministrator()
 
         return transaction {
-            val admin = AdministratorEntity.findById(jwtPayload.adminId)
             val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
                 ?: throw ProjectNotFoundException(project)
             val projectId = projectEntity.id.value
-            if (admin == null || !Authorizer.mayViewUsersInProject(admin, projectId)) {
+            if (!Authorizer.mayViewUsersInProject(admin, projectId)) {
                 throw ForbiddenException()
             }
             val administrators = (Administrators leftJoin Regions)
@@ -71,12 +70,11 @@ class ViewAdministratorsQueryService {
         dfe: DataFetchingEnvironment
     ): List<Administrator> {
         val context = dfe.getContext<GraphQLContext>()
-        val jwtPayload = context.enforceSignedIn()
+        val admin = context.getAdministrator()
 
         return transaction {
-            val admin = AdministratorEntity.findById(jwtPayload.adminId)
             val region = RegionEntity.findById(regionId) ?: throw RegionNotFoundException()
-            if (admin == null || !Authorizer.mayViewUsersInRegion(admin, region)) {
+            if (!Authorizer.mayViewUsersInRegion(admin, region)) {
                 throw ForbiddenException()
             }
             val administrators = AdministratorEntity
