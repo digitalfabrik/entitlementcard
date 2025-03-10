@@ -1,16 +1,24 @@
-import { TextField } from '@mui/material'
 import { formatISO, parseISO } from 'date-fns'
 import React, { useContext, useState } from 'react'
 
+import CustomDatePicker from '../../../bp-modules/components/CustomDatePicker'
 import { DateInput } from '../../../generated/graphql'
 import i18next from '../../../i18n'
 import { FormContext } from '../SteppedSubForms'
-import { Form, FormComponentProps } from '../util/FormType'
+import type { Form, FormComponentProps } from '../util/FormType'
 
 type State = { type: 'DateForm'; value: string }
 type ValidatedInput = DateInput
 type Options = { maximumDate: Date; maximumDateErrorMessage: string } | { maximumDate: null }
 type AdditionalProps = { label: string; minWidth?: number }
+
+const minDate = new Date('1900-01-01')
+
+const parseDateFromState = (state: string): Date | null => {
+  const date = new Date(state)
+  return !Number.isNaN(date.valueOf()) ? date : null
+}
+
 const DateForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
   initialState: { type: 'DateForm', value: '' },
   getArrayBufferKeys: () => [],
@@ -41,28 +49,26 @@ const DateForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
     const [touched, setTouched] = useState(false)
     const { showAllErrors, disableAllInputs } = useContext(FormContext)
     const validationResult = DateForm.validate(state, options)
-
     const isInvalid = validationResult.type === 'error'
 
     return (
-      <TextField
-        variant='standard'
-        fullWidth
-        style={{ margin: '4px 0', minWidth }}
-        type='date'
-        label={label}
-        required
-        inputProps={{
-          max: options.maximumDate ? formatISO(options.maximumDate, { representation: 'date' }) : undefined,
-          min: '1900-01-01',
-        }}
+      <CustomDatePicker
+        value={parseDateFromState(state.value)}
         disabled={disableAllInputs}
-        error={touched && isInvalid}
-        value={state.value}
-        sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' } }}
+        isValid={!touched || !isInvalid}
+        label={label}
+        minDate={minDate}
+        maxDate={options.maximumDate ? options.maximumDate : undefined}
         onBlur={() => setTouched(true)}
-        onChange={e => setState(() => ({ type: 'DateForm', value: e.target.value }))}
-        helperText={(showAllErrors || touched) && isInvalid ? validationResult.message : ''}
+        onChange={date => {
+          setState(() => ({
+            type: 'DateForm',
+            // Catch invalid dates: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#the_epoch_timestamps_and_invalid_date
+            value: date && !Number.isNaN(date.valueOf()) ? date.toISOString() : '',
+          }))
+        }}
+        textFieldHelperText={(showAllErrors || touched) && isInvalid ? validationResult.message : undefined}
+        textFieldStyle={{ marginTop: '12px', minWidth }}
       />
     )
   },
