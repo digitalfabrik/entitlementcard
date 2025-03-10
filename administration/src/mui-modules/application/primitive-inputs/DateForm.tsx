@@ -26,18 +26,16 @@ const DateForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
     if (value === '') {
       return { type: 'error', message: i18next.t('applicationForms:fieldRequiredError') }
     }
+
     const date = parseISO(value)
+
     if (Number.isNaN(date.valueOf())) {
       return { type: 'error', message: i18next.t('applicationForms:invalidDateError') }
     }
-
-    if (options.maximumDate) {
-      if (date > options.maximumDate) {
-        return { type: 'error', message: options.maximumDateErrorMessage }
-      }
+    if (options.maximumDate && date > options.maximumDate) {
+      return { type: 'error', message: options.maximumDateErrorMessage }
     }
-    const localISODate = formatISO(date, { representation: 'date' })
-    return { type: 'valid', value: { date: localISODate } }
+    return { type: 'valid', value: { date: formatISO(date, { representation: 'date' }) } }
   },
   Component: ({
     state,
