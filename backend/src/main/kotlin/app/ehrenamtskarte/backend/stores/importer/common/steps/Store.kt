@@ -7,6 +7,7 @@ import app.ehrenamtskarte.backend.stores.database.repos.AcceptingStoresRepositor
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
+import app.ehrenamtskarte.backend.stores.utils.getRegionIdFromFreinetIdOrDistrictName
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.Logger
@@ -30,17 +31,18 @@ class Store(config: ImportConfig, private val logger: Logger) :
                 var numStoresUntouched = 0
 
                 for (acceptingStore in input) {
+                    val region = getRegionIdFromFreinetIdOrDistrictName(acceptingStore.freinetId, acceptingStore.districtName)
                     // If an exact duplicate is found in the DB, we do not recreate it and instead
                     // remove the id from `acceptingStoreIdsToRemove`.
                     val idInDb: Int? =
-                        AcceptingStoresRepository.getIdIfExists(acceptingStore, project.id)
+                        AcceptingStoresRepository.getIdIfExists(acceptingStore, project.id, region?.id)
                     if (idInDb != null) {
                         acceptingStoreIdsToRemove.remove(idInDb)
                         numStoresUntouched += 1
                         continue
                     }
 
-                    AcceptingStoresRepository.createStore(acceptingStore, project.id)
+                    AcceptingStoresRepository.createStore(acceptingStore, project.id, region)
                     numStoresCreated += 1
                 }
 

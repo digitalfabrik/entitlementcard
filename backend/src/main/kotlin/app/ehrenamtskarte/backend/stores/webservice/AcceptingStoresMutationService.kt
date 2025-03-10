@@ -33,8 +33,7 @@ class AcceptingStoresMutationService {
                 throw ForbiddenException()
             }
 
-            val projectId = projectEntity.id
-            val (storesCreated, storesToDelete, storesUntouched) = AcceptingStoresRepository.importAcceptingStores(stores, projectId, dryRun)
+            val (storesCreated, storesToDelete, storesUntouched) = AcceptingStoresRepository.importAcceptingStores(stores, projectEntity, dryRun)
 
             return@transaction StoreImportReturnResultModel(storesCreated, storesToDelete, storesUntouched)
         }
