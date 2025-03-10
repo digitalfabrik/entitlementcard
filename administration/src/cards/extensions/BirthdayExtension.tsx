@@ -57,7 +57,6 @@ const BirthdayForm = ({
         onChange={changeBirthday}
         onClear={() => setValue({ birthday: null })}
         isValid={isValid || !showErrorMessage}
-        maxDate={new Date()}
         disableFuture
       />
       {showErrorMessage && <FormAlert severity='error' errorMessage={getErrorMessage()} />}
