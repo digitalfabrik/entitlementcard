@@ -36,9 +36,7 @@ const CustomDatePicker = ({
   textFieldStyle,
 }: CustomDatePickerProps): ReactElement => {
   const { viewportSmall } = useWindowDimensions()
-  const formStyle = viewportSmall ? { fontSize: 16, padding: '9px 10px' } : { fontSize: 14, padding: '6px 10px' }
-  const textFieldBoxShadow =
-    '0 0 0 0 rgba(205, 66, 70, 0), 0 0 0 0 rgba(205, 66, 70, 0), inset 0 0 0 1px #cd4246, inset 0 0 0 1px rgba(17, 20, 24, 0.2), inset 0 1px 1px rgba(17, 20, 24, 0.3)'
+
   return (
     <DesktopDatePicker
       disabled={disabled}
@@ -46,10 +44,13 @@ const CustomDatePicker = ({
       views={['year', 'month', 'day']}
       value={value}
       format='dd.MM.yyyy'
+      sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' } }}
       slotProps={{
-        clearIcon: { fontSize: viewportSmall ? 'medium' : 'small' },
         openPickerIcon: { fontSize: 'small' },
-        field: { clearable: true, onClear },
+        field: {
+          clearable: true,
+          onClear,
+        },
         textField: {
           helperText: textFieldHelperText,
           placeholder: 'TT.MM.JJJJ',
@@ -57,10 +58,21 @@ const CustomDatePicker = ({
           spellCheck: false,
           onBlur,
           style: textFieldStyle,
+          size: 'small',
           sx: {
             width: '100%',
-            input: formStyle,
-            boxShadow: !isValid ? textFieldBoxShadow : undefined,
+            boxShadow: !isValid
+              ? `
+                0 0 0 0 rgba(205, 66, 70, 0),
+                inset 0 0 0 1px #cd4246,
+                inset 0 0 0 1px rgba(17, 20, 24, 0.2),
+                inset 0 1px 1px rgba(17, 20, 24, 0.3),
+              `
+              : undefined,
+            '.MuiPickersInputBase-root': {
+              fontSize: viewportSmall ? '16px' : '14px',
+              borderRadius: '2px',
+            },
           },
         },
       }}
