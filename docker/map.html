@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
 <head>
     <meta charset="utf-8"/>
     <title>Display a map</title>
@@ -28,11 +28,13 @@
 <body>
 <div id="map"></div>
 <button onclick="localStorage.setItem('style-url', BAYERN_URL); location.reload()">Switch to Bayern</button>
-<button onclick="localStorage.setItem('style-url', NUERNBERG_URL); location.reload()">Switch to Nuernberg</button>
+<button onclick="localStorage.setItem('style-url', NUERNBERG_URL); location.reload()">Switch to Nürnberg</button>
+<button onclick="localStorage.setItem('style-url', KOBLENZ_URL); location.reload()">Switch to Koblenz</button>
 <script>
-  const BAYERN_URL = 'http://localhost:8000/project/bayern.ehrenamtskarte.app/map'
-  const NUERNBERG_URL = 'http://localhost:8000/project/nuernberg.sozialpass.app/map'
-  const styleUrl = localStorage.getItem("style-url") ?? BAYERN_URL
+    const BAYERN_URL = 'http://localhost:8000/project/bayern.ehrenamtskarte.app/map'
+    const NUERNBERG_URL = 'http://localhost:8000/project/nuernberg.sozialpass.app/map'
+    const KOBLENZ_URL = 'http://localhost:8000/project/koblenz.sozialpass.app/map'
+    const styleUrl = localStorage.getItem("style-url") ?? BAYERN_URL
   new maplibregl.Map({
     container: 'map', // container id
     style: styleUrl, // style URL
