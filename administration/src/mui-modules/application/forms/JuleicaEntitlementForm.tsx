@@ -26,7 +26,7 @@ type ValidatedInput = BlueCardJuleicaEntitlementInput
 const JuleicaEntitlementForm: Form<State, ValidatedInput> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
-  validate: createCompoundValidate(SubForms, { juleicaExpirationDate: { maximumDate: null } }),
+  validate: createCompoundValidate(SubForms, { juleicaExpirationDate: { maximumDate: undefined } }),
   Component: ({ state, setState }: FormComponentProps<State>) => {
     const { t } = useTranslation('application')
     const juleicaBackSetState = useUpdateStateCallback(setState, 'copyOfJuleicaBack')
@@ -42,7 +42,7 @@ const JuleicaEntitlementForm: Form<State, ValidatedInput> = {
           label={t('juleicaExpiration')}
           state={state.juleicaExpirationDate}
           setState={useUpdateStateCallback(setState, 'juleicaExpirationDate')}
-          options={{ maximumDate: null }}
+          options={{ maximumDate: undefined }}
         />
         <h4>{t('applicationForms:juleicaCardAttachmentTitle')}</h4>
         <p>

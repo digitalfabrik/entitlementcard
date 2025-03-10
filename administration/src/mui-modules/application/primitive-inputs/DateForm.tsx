@@ -9,7 +9,7 @@ import type { Form, FormComponentProps } from '../util/FormType'
 
 type State = { type: 'DateForm'; value: string }
 type ValidatedInput = DateInput
-type Options = { maximumDate: Date; maximumDateErrorMessage: string } | { maximumDate: null }
+type Options = { maximumDate: Date; maximumDateErrorMessage: string } | { maximumDate: undefined }
 type AdditionalProps = { label: string; minWidth?: number }
 
 const minDate = new Date('1900-01-01')
@@ -31,7 +31,7 @@ const DateForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
       return { type: 'error', message: i18next.t('applicationForms:invalidDateError') }
     }
 
-    if (options.maximumDate !== null) {
+    if (options.maximumDate) {
       if (date > options.maximumDate) {
         return { type: 'error', message: options.maximumDateErrorMessage }
       }
@@ -58,7 +58,7 @@ const DateForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
         isValid={!touched || !isInvalid}
         label={label}
         minDate={minDate}
-        maxDate={options.maximumDate ? options.maximumDate : undefined}
+        maxDate={options.maximumDate}
         onBlur={() => setTouched(true)}
         onChange={date => {
           setState(() => ({
