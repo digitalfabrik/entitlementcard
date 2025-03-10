@@ -1,6 +1,6 @@
 import { DesktopDatePicker } from '@mui/x-date-pickers'
 import { deDE } from '@mui/x-date-pickers/locales'
-import React, { ReactElement, CSSProperties } from 'react'
+import React, { CSSProperties, ReactElement } from 'react'
 
 import useWindowDimensions from '../../hooks/useWindowDimensions'
 
@@ -34,16 +34,20 @@ const CustomDatePicker = ({
   textFieldStyle,
 }: CustomDatePickerProps): ReactElement => {
   const { viewportSmall } = useWindowDimensions()
-  const formStyle = viewportSmall ? { fontSize: 16, padding: '9px 10px' } : { fontSize: 14, padding: '6px 10px' }
-  const textFieldBoxShadow =
-    '0 0 0 0 rgba(205, 66, 70, 0), 0 0 0 0 rgba(205, 66, 70, 0), inset 0 0 0 1px #cd4246, inset 0 0 0 1px rgba(17, 20, 24, 0.2), inset 0 1px 1px rgba(17, 20, 24, 0.3)'
+  const textFieldBoxShadow = `
+    0 0 0 0 rgba(205, 66, 70, 0),
+    inset 0 0 0 1px rgba(17, 20, 24, 0.2),
+  `
+
   return (
     <DesktopDatePicker
       disabled={disabled}
       label={label}
       views={['year', 'month', 'day']}
+      openTo='year'
       value={date}
       format='dd.MM.yyyy'
+      sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' } }}
       slotProps={{
         clearIcon: { fontSize: viewportSmall ? 'medium' : 'small' },
         openPickerIcon: { fontSize: 'small' },
@@ -57,7 +61,6 @@ const CustomDatePicker = ({
           style: textFieldStyle,
           sx: {
             width: '100%',
-            input: formStyle,
             boxShadow: !isValid ? textFieldBoxShadow : undefined,
           },
         },
