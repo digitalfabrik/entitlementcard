@@ -1,12 +1,12 @@
 package app.ehrenamtskarte.backend.auth.webservice.schema
 
-import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.database.Administrators
 import app.ehrenamtskarte.backend.auth.database.ApiTokenType
 import app.ehrenamtskarte.backend.auth.database.ApiTokens
 import app.ehrenamtskarte.backend.auth.database.PasswordCrypto
 import app.ehrenamtskarte.backend.auth.database.TOKEN_LENGTH
 import app.ehrenamtskarte.backend.auth.database.repos.ApiTokensRepository
+import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.ApiTokenMetaData
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
@@ -31,10 +31,9 @@ class ApiTokenService {
     @GraphQLDescription("Creates a new api token for user import endpoint")
     fun createApiToken(expiresIn: Int, dfe: DataFetchingEnvironment): String {
         val context = dfe.getContext<GraphQLContext>()
-        val jwtPayload = context.enforceSignedIn()
-        val admin = transaction { AdministratorEntity.findById(jwtPayload.adminId) }
+        val admin = context.getAdministrator()
 
-        admin?.takeIf { Authorizer.mayAddApiTokensInProject(it) } ?: throw ForbiddenException()
+        admin.takeIf { Authorizer.mayAddApiTokensInProject(it) } ?: throw ForbiddenException()
 
         val type = if (admin.role == Role.PROJECT_ADMIN.db_value) ApiTokenType.USER_IMPORT else ApiTokenType.VERIFIED_APPLICATION
 
@@ -55,9 +54,8 @@ class ApiTokenService {
     @GraphQLDescription("Deletes a selected API token")
     fun deleteApiToken(id: Int, dfe: DataFetchingEnvironment): Int {
         val context = dfe.getContext<GraphQLContext>()
-        val jwtPayload = context.enforceSignedIn()
-        val admin = transaction { AdministratorEntity.findById(jwtPayload.adminId) }
-        admin?.takeIf { Authorizer.mayDeleteApiTokensInProject(it) } ?: throw ForbiddenException()
+        val admin = context.getAdministrator()
+        admin.takeIf { Authorizer.mayDeleteApiTokensInProject(it) } ?: throw ForbiddenException()
 
         transaction {
             if (admin.role == Role.PROJECT_ADMIN.db_value) {
@@ -81,10 +79,8 @@ class ApiTokenQueryService {
     @GraphQLDescription("Gets metadata of all api tokens for a project")
     fun getApiTokenMetaData(dfe: DataFetchingEnvironment): List<ApiTokenMetaData> {
         val context = dfe.getContext<GraphQLContext>()
-        val jwtPayload = context.enforceSignedIn()
-
-        val admin = transaction { AdministratorEntity.findById(jwtPayload.adminId) }
-        admin?.takeIf { Authorizer.mayViewApiMetadataInProject(it) } ?: throw ForbiddenException()
+        val admin = context.getAdministrator()
+        admin.takeIf { Authorizer.mayViewApiMetadataInProject(it) } ?: throw ForbiddenException()
 
         return transaction {
             (ApiTokens leftJoin Administrators)

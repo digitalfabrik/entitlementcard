@@ -1,12 +1,11 @@
 package app.ehrenamtskarte.backend.freinet.webservice
 
-import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
+import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.NotImplementedException
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
-import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.freinet.database.repos.FreinetAgencyRepository
 import app.ehrenamtskarte.backend.freinet.webservice.schema.types.FreinetAgency
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
@@ -20,12 +19,11 @@ class FreinetAgencyQueryService {
     @GraphQLDescription("Returns freinet agency information for a particular region. Works only for the EAK project.")
     fun getFreinetAgencyByRegionId(dfe: DataFetchingEnvironment, regionId: Int, project: String): FreinetAgency? = transaction {
         val context = dfe.getContext<GraphQLContext>()
-        val jwtPayload = context.enforceSignedIn()
+        val admin = context.getAdministrator()
         val projectConfig = dfe.getContext<GraphQLContext>().backendConfiguration.getProjectConfig(project)
         if (projectConfig.freinet == null) {
             throw NotImplementedException()
         }
-        val admin = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
         if (!Authorizer.mayViewFreinetAgencyInformationInRegion(admin, regionId)) {
             throw ForbiddenException()
         }
