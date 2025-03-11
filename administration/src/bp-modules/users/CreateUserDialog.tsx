@@ -41,7 +41,7 @@ const CreateUserDialog = ({
 
   const [createAdministrator, { loading }] = useCreateAdministratorMutation({
     onError: error => {
-      const { title } = getMessageFromApolloError(error, t)
+      const { title } = getMessageFromApolloError(error)
       appToaster?.show({ intent: 'danger', message: title })
     },
     onCompleted: () => {

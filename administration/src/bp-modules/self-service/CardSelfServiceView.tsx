@@ -81,7 +81,6 @@ const StyledInfoTextButton = styled(IconTextButton)`
   margin: 0;
 `
 
-// TODO 1646 Add tests for CardSelfService
 const CardSelfServiceView = (): ReactElement => {
   const projectConfig = useContext(ProjectConfigContext)
   const { t } = useTranslation('selfService')

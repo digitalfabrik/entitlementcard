@@ -107,6 +107,13 @@ const JsonFieldElemental = ({
           {isEmailValid(jsonField.value) ? <EmailLink email={jsonField.value} /> : <span>{jsonField.value}</span>}
         </p>
       )
+    case 'TranslatableString':
+      return (
+        <p>
+          {t(getTranslationKey(jsonField.name, parentName))}:{' '}
+          <span>{t(getTranslationKey(jsonField.value, parentName))}</span>
+        </p>
+      )
     case 'Date':
       return (
         <p>

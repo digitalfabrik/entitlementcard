@@ -1,6 +1,7 @@
 import { Divider, FormControl, FormControlLabel, FormHelperText, FormLabel, Radio, RadioGroup } from '@mui/material'
 import React, { useContext, useState } from 'react'
 
+import i18next from '../../../i18n'
 import { FormContext } from '../SteppedSubForms'
 import { Form, FormComponentProps, ValidationResult } from '../util/FormType'
 
@@ -13,12 +14,12 @@ type RadioGroupForm<T extends string> = Form<State<T>, ValidatedInput<T>, Additi
 export const createRadioGroupForm = <T extends string>(): RadioGroupForm<T> => {
   const validate = ({ selectedValue }: State<T>, options: Options<T>): ValidationResult<T> => {
     if (selectedValue === null) {
-      return { type: 'error', message: 'Feld ist erforderlich.' }
+      return { type: 'error', message: i18next.t('applicationForms:fieldRequiredError') }
     }
     if (!Object.keys(options.labelByValue).includes(selectedValue)) {
       return {
         type: 'error',
-        message: `Wert muss einer der auswählbaren Optionen entsprechen.`,
+        message: i18next.t('applicationForms:valueHasToBeSelectableOptionError'),
       }
     }
     return { type: 'valid', value: selectedValue }

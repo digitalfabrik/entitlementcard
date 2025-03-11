@@ -41,7 +41,7 @@ const ApplyController = (): React.ReactElement | null => {
   )
   const [addEakApplication, { loading: loadingSubmit }] = useAddEakApplicationMutation({
     onError: error => {
-      const { title } = getMessageFromApolloError(error, t)
+      const { title } = getMessageFromApolloError(error)
       enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: ({ result }) => {
@@ -56,7 +56,7 @@ const ApplyController = (): React.ReactElement | null => {
   const regionsQuery = useGetRegionsQuery({
     variables: { project: projectId },
   })
-  const regionsQueryResult = getQueryResult(regionsQuery, t)
+  const regionsQueryResult = getQueryResult(regionsQuery)
   const arrayBufferManagerInitialized = useInitializeGlobalArrayBuffersManager()
   const getArrayBufferKeys = useMemo(
     () => (status === 'loading' ? null : () => ApplicationForm.getArrayBufferKeys(state)),

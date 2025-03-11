@@ -35,7 +35,7 @@ const ResetPasswordController = (): ReactElement => {
       navigate('/')
     },
     onError: error => {
-      const { title } = getMessageFromApolloError(error, t)
+      const { title } = getMessageFromApolloError(error)
       appToaster?.show({
         intent: 'danger',
         message: title,
@@ -56,7 +56,7 @@ const ResetPasswordController = (): ReactElement => {
   const warnMessage = validateNewPasswordInput(newPassword, repeatNewPassword, t)
   const isDirty = newPassword !== '' || repeatNewPassword !== ''
 
-  const checkPasswordResetLinkQueryResult = getQueryResult(checkPasswordResetLinkQuery, t)
+  const checkPasswordResetLinkQueryResult = getQueryResult(checkPasswordResetLinkQuery)
 
   if (!checkPasswordResetLinkQueryResult.successful) {
     return checkPasswordResetLinkQueryResult.component

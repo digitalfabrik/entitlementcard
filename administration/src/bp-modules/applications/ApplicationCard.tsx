@@ -170,7 +170,7 @@ const ApplicationCard = ({
   const [openNoteDialog, setOpenNoteDialog] = useState(false)
   const [deleteApplication, { loading }] = useDeleteApplicationMutation({
     onError: error => {
-      const { title } = getMessageFromApolloError(error, t)
+      const { title } = getMessageFromApolloError(error)
       appToaster?.show({ intent: 'danger', message: title })
     },
     onCompleted: ({ deleted }: { deleted: boolean }) => {
