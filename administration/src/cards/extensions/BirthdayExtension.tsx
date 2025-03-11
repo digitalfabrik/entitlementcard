@@ -12,7 +12,6 @@ export const BIRTHDAY_EXTENSION_NAME = 'birthday'
 export type BirthdayExtensionState = { [BIRTHDAY_EXTENSION_NAME]: PlainDate | null }
 
 const minBirthday = new PlainDate(1900, 1, 1)
-const getInitialState = (): BirthdayExtensionState => ({ birthday: null })
 
 const BirthdayForm = ({
   value,
@@ -66,7 +65,7 @@ const BirthdayForm = ({
 const BirthdayExtension: Extension<BirthdayExtensionState> = {
   name: BIRTHDAY_EXTENSION_NAME,
   Component: BirthdayForm,
-  getInitialState,
+  getInitialState: (): BirthdayExtensionState => ({ birthday: null }),
   causesInfiniteLifetime: () => false,
   getProtobufData: ({ birthday }: BirthdayExtensionState) => ({
     extensionBirthday: {
