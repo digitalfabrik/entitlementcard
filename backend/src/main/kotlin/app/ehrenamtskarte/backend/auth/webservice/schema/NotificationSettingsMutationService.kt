@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.auth.webservice.schema
 
-import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
+import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.NotificationSettings
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
@@ -21,10 +21,9 @@ class NotificationSettingsMutationService {
         dfe: DataFetchingEnvironment
     ): Boolean {
         val context = dfe.getContext<GraphQLContext>()
-        val jwtPayload = context.enforceSignedIn()
+        val admin = context.getAdministrator()
 
         transaction {
-            val admin = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
             val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull() ?: throw ProjectNotFoundException(project)
 
             if (admin.projectId != projectEntity.id) throw UnauthorizedException()
