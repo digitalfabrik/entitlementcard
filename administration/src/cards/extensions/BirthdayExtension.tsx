@@ -45,16 +45,14 @@ const BirthdayForm = ({
     return null
   }
 
-  const changeBirthday = (date: Date | null) => {
-    setValue({ birthday: PlainDate.safeFromLocalDate(date) })
-  }
-
   return (
     <FormGroup label={t('birthdayLabel')}>
       <CustomDatePicker
         value={birthday?.toLocalDate() ?? null}
         onBlur={() => setTouched(true)}
-        onChange={changeBirthday}
+        onChange={date => {
+          setValue({ birthday: PlainDate.safeFromLocalDate(date) })
+        }}
         onClear={() => setValue({ birthday: null })}
         isValid={isValid || !showErrorMessage}
         disableFuture
