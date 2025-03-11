@@ -61,13 +61,13 @@ object RegionsRepository {
         return RegionEntity[regionId]
     }
 
-    fun findRegionByNameAndPrefix(name: String, prefix: String): RegionEntity? =
-        RegionEntity.find { (Regions.name eq name) and (Regions.prefix eq prefix) }.singleOrNull()
+    fun findRegionByNameAndPrefix(name: String, prefix: String, projectId: EntityID<Int>): RegionEntity? =
+        RegionEntity.find { (Regions.name eq name) and (Regions.prefix eq prefix) and (Regions.projectId eq projectId) }.singleOrNull()
 
-    fun findRegionByFreinetId(freinetId: Int): RegionEntity? =
+    fun findRegionByFreinetId(freinetId: Int, projectId: EntityID<Int>): RegionEntity? =
         (FreinetAgencies innerJoin Regions)
             .slice(Regions.columns)
-            .select { FreinetAgencies.agencyId eq freinetId }
+            .select { FreinetAgencies.agencyId eq freinetId and (Regions.projectId eq projectId) }
             .singleOrNull()?.let {
                 RegionEntity.wrapRow(it)
             }

@@ -31,7 +31,7 @@ class Store(config: ImportConfig, private val logger: Logger) :
                 var numStoresUntouched = 0
 
                 for (acceptingStore in input) {
-                    val region = getRegionIdFromFreinetIdOrDistrictName(acceptingStore.freinetId, acceptingStore.districtName)
+                    val region = getRegionIdFromFreinetIdOrDistrictName(project.id, acceptingStore.freinetId, acceptingStore.districtName)
                     // If an exact duplicate is found in the DB, we do not recreate it and instead
                     // remove the id from `acceptingStoreIdsToRemove`.
                     val idInDb: Int? =
