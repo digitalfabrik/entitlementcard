@@ -65,6 +65,7 @@ const CustomDatePicker = ({
           },
         },
       }}
+      enableAccessibleFieldDOMStructure
       localeText={deDE.components.MuiLocalizationProvider.defaultProps.localeText}
       disableFuture={disableFuture}
       minDate={minDate}
