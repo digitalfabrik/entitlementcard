@@ -54,7 +54,17 @@
     "organization": {
       "title": "Angaben zur Organisation",
       "name": "Name der Organisation bzw. des Vereins",
-      "category": "Einsatzgebiet"
+      "category": "Einsatzgebiet",
+      "social": "Soziales/Jugend/Senioren",
+      "animalWelfare": "Tierschutz",
+      "sports": "Sport",
+      "education": "Bildung",
+      "conservation": "Umwelt-/Naturschutz",
+      "culture": "Kultur",
+      "health": "Gesundheit",
+      "civilProtection": "Katastrophenschutz/Feuerwehr/Rettungsdienst",
+      "church": "Kirchen",
+      "others": "Andere"
     },
     "organizationContact": {
       "title": "Kontaktperson der Organisation",
@@ -129,18 +139,6 @@
     "discardInputsContent": "Wollen Sie wirklich alle Eingaben unwiderruflich löschen?",
     "submitSuccessText": "Ihr Antrag für die Ehrenamtskarte wurde erfolgreich übermittelt.<br/>Über den Fortschritt Ihres Antrags werden Sie per E-Mail informiert.<br/>Sie können das Fenster jetzt schließen.",
     "invalidInputError": "Ungültige bzw. fehlende Eingaben entdeckt. Bitte prüfen Sie die rot markierten Felder.",
-    "organizationCategories": {
-      "social": "Soziales/Jugend/Senioren",
-      "animalWelfare": "Tierschutz",
-      "sports": "Sport",
-      "education": "Bildung",
-      "conservation": "Umwelt-/Naturschutz",
-      "culture": "Kultur",
-      "health": "Gesundheit",
-      "civilProtection": "Katastrophenschutz/Feuerwehr/Rettungsdienst",
-      "church": "Kirchen",
-      "others": "Andere"
-    },
     "contactHasGivenPermissionNotCheckedError": "Die Kontaktperson muss zugestimmt haben, damit Sie Ihren Antrag senden können.",
     "maximumDateErrorMessage": "Sie müssen mindestens 16 Jahre alt sein, um eine Ehrenamtskarte beantragen zu können.",
     "blueCardType": "Blaue Ehrenamtskarte",

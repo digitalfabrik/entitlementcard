@@ -25,17 +25,17 @@ const WarningContactPersonSamePerson = styled(Alert)`
 
 const organizationCategoryOptions = {
   items: [
-    i18next.t('applicationForms:organizationCategories:social'),
-    i18next.t('applicationForms:organizationCategories:animalWelfare'),
-    i18next.t('applicationForms:organizationCategories:sports'),
-    i18next.t('applicationForms:organizationCategories:education'),
-    i18next.t('applicationForms:organizationCategories:conservation'),
-    i18next.t('applicationForms:organizationCategories:culture'),
-    i18next.t('applicationForms:organizationCategories:health'),
-    i18next.t('applicationForms:organizationCategories:civilProtection'),
-    i18next.t('applicationForms:organizationCategories:church'),
-    i18next.t('applicationForms:organizationCategories:others'),
-  ].map(item => ({ label: item, value: item })),
+    'social',
+    'animalWelfare',
+    'sports',
+    'education',
+    'conservation',
+    'culture',
+    'health',
+    'civilProtection',
+    'church',
+    'others',
+  ].map(item => ({ label: i18next.t(`application:organization:${item}`), value: item })),
 }
 
 const contactHasGivenPermissionOptions = {

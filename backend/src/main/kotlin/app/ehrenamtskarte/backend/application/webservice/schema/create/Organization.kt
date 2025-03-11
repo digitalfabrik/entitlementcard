@@ -20,7 +20,7 @@ data class Organization(
             listOfNotNull(
                 name.toJsonField("name"),
                 address.toJsonField(),
-                category.toJsonField("category"),
+                category.toJsonField("category", true),
                 contact.toJsonField()
             )
         )
