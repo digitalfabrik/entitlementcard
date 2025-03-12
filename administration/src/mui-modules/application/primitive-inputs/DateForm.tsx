@@ -66,7 +66,15 @@ const DateForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
           }))
         }}
         textFieldHelperText={(showAllErrors || touched) && isInvalid ? validationResult.message : undefined}
-        textFieldStyle={{ marginTop: '12px', minWidth }}
+        textFieldSlotProps={{
+          required: true,
+          variant: 'standard',
+          style: { margin: '4px 0', minWidth },
+          sx: {
+            input: { paddingTop: '4px' },
+            '.MuiInputAdornment-root': { transform: 'translateX(-8px)' },
+          },
+        }}
       />
     )
   },
