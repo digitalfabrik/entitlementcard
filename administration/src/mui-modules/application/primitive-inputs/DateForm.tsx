@@ -66,7 +66,27 @@ const DateForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
           }))
         }}
         textFieldHelperText={(showAllErrors || touched) && isInvalid ? validationResult.message : undefined}
-        textFieldStyle={{ marginTop: '12px', minWidth }}
+        textFieldSlotProps={{
+          variant: 'filled',
+          style: { marginTop: '12px', minWidth },
+          sx: {
+            '.MuiPickersInputBase-root': {
+              backgroundColor: 'transparent',
+            },
+            '.MuiPickersSectionList-root': {
+              paddingLeft: 0,
+            },
+            '.MuiInputLabel-root': {
+              transform: 'translate(0px, 13px) scale(1)',
+            },
+            '.MuiInputLabel-shrink': {
+              transform: 'translate(0px, -1.5px) scale(0.75)',
+            },
+            '.MuiFormHelperText-root': {
+              marginLeft: 0,
+            },
+          },
+        }}
       />
     )
   },
