@@ -1,6 +1,8 @@
+import { deepmerge } from '@mui/utils'
 import { DesktopDatePicker } from '@mui/x-date-pickers'
+import type { DesktopDatePickerSlotProps } from '@mui/x-date-pickers/DesktopDatePicker/DesktopDatePicker.types'
 import { deDE } from '@mui/x-date-pickers/locales'
-import React, { CSSProperties, ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 
 import useWindowDimensions from '../../hooks/useWindowDimensions'
 
@@ -17,7 +19,7 @@ type CustomDatePickerProps = {
   disableFuture?: boolean
   disablePast?: boolean
   textFieldHelperText?: string
-  textFieldStyle?: CSSProperties
+  textFieldSlotProps?: DesktopDatePickerSlotProps<Date, true>['textField']
 }
 
 const CustomDatePicker = ({
@@ -33,7 +35,7 @@ const CustomDatePicker = ({
   disableFuture,
   disablePast,
   textFieldHelperText,
-  textFieldStyle,
+  textFieldSlotProps,
 }: CustomDatePickerProps): ReactElement => {
   const { viewportSmall } = useWindowDimensions()
 
@@ -52,30 +54,32 @@ const CustomDatePicker = ({
           clearable: true,
           onClear,
         },
-        textField: {
-          helperText: textFieldHelperText,
-          placeholder: 'TT.MM.JJJJ',
-          error: !isValid,
-          spellCheck: false,
-          onBlur,
-          style: textFieldStyle,
-          size: 'small',
-          sx: {
-            width: '100%',
-            boxShadow: !isValid
-              ? `
+        textField: deepmerge(
+          {
+            helperText: textFieldHelperText,
+            placeholder: 'TT.MM.JJJJ',
+            error: !isValid,
+            spellCheck: false,
+            onBlur,
+            size: 'small',
+            sx: {
+              width: '100%',
+              boxShadow: !isValid
+                ? `
                 0 0 0 0 rgba(205, 66, 70, 0),
                 inset 0 0 0 1px #cd4246,
                 inset 0 0 0 1px rgba(17, 20, 24, 0.2),
                 inset 0 1px 1px rgba(17, 20, 24, 0.3),
               `
-              : undefined,
-            '.MuiPickersInputBase-root': {
-              fontSize: viewportSmall ? '16px' : '14px',
-              borderRadius: '2px',
+                : undefined,
+              '.MuiPickersInputBase-root': {
+                fontSize: viewportSmall ? '16px' : '14px',
+                borderRadius: '2px',
+              },
             },
           },
-        },
+          textFieldSlotProps
+        ),
       }}
       enableAccessibleFieldDOMStructure
       localeText={deDE.components.MuiLocalizationProvider.defaultProps.localeText}
