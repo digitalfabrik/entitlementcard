@@ -1,5 +1,5 @@
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
-import 'package:ehrenamtskarte/intro_slides/location_request_button.dart';
+import 'package:ehrenamtskarte/location/determine_position.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intro_slider/intro_slider.dart';
@@ -15,9 +15,10 @@ class IntroScreen extends StatelessWidget {
 
   const IntroScreen({super.key, this.onFinishedCallback});
 
-  void onDonePress(BuildContext context) {
+  void onDonePress(BuildContext context) async {
     onFinishedCallback?.call();
     GoRouter.of(context).pushReplacement(homeRouteName);
+    await checkAndRequestLocationPermission(context, requestIfNotGranted: true);
   }
 
   @override
@@ -26,7 +27,7 @@ class IntroScreen extends StatelessWidget {
     final theme = Theme.of(context);
     return IntroSlider(
       onDonePress: () => onDonePress(context),
-      renderDoneBtn: Text(t.common.done),
+      renderDoneBtn: Text(t.common.next),
       renderNextBtn: Text(t.common.next),
       renderPrevBtn: Text(t.common.previous),
       indicatorConfig: IndicatorConfig(
@@ -69,20 +70,12 @@ class IntroScreen extends StatelessWidget {
           styleTitle: theme.textTheme.headlineSmall,
           pathImage: buildConfig.introSlidesImages[3],
           widgetDescription: Center(
-            child: Column(
-              children: [
-                Text(
-                  t.intro.locationDescription,
-                  style: theme.textTheme.bodyLarge?.apply(fontSizeFactor: 1.2),
-                  textAlign: TextAlign.center,
-                  maxLines: 100,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(15),
-                  child: LocationRequestButton(),
-                )
-              ],
+            child: Text(
+              t.intro.locationDescription,
+              style: theme.textTheme.bodyLarge?.apply(fontSizeFactor: 1.2),
+              textAlign: TextAlign.center,
+              maxLines: 100,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ),
