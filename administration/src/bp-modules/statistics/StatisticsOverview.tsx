@@ -1,7 +1,7 @@
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { WhoAmIContext } from '../../WhoAmIProvider'
+import { useWhoAmI } from '../../WhoAmIProvider'
 import { CardStatisticsResultModel, Region, Role } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import downloadDataUri from '../../util/downloadDataUri'
@@ -18,7 +18,7 @@ type StatisticsOverviewProps = {
 }
 
 const StatisticsOverview = ({ statistics, onApplyFilter, region }: StatisticsOverviewProps): ReactElement => {
-  const { role } = useContext(WhoAmIContext).me!
+  const { role } = useWhoAmI().me
   const appToaster = useAppToaster()
   const { cardStatistics } = useContext(ProjectConfigContext)
   const { t } = useTranslation('statistics')

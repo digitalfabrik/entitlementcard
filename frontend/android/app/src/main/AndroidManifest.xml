@@ -7,7 +7,7 @@
        additional functionality it is fine to subclass or reimplement
        FlutterApplication and put your custom class here. -->
   <application
-          android:label="@string/BUILD_CONFIG_APP_NAME"
+          android:label="${appName}${appNameSuffix}"
           android:icon="@mipmap/${icon}"
           android:roundIcon="@mipmap/${icon}_round"
           android:allowBackup="true"

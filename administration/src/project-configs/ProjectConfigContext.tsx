@@ -1,6 +1,6 @@
 import React, { ReactElement, ReactNode, createContext } from 'react'
 
-import { ProjectConfig } from './getProjectConfig'
+import type { ProjectConfig } from './getProjectConfig'
 import showcaseConfig from './showcase/config'
 
 export const ProjectConfigContext = createContext<ProjectConfig>(showcaseConfig)

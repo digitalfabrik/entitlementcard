@@ -5,11 +5,10 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/lib" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/android/app/src/main/res" type="java-resource" />
       <excludeFolder url="file://$MODULE_DIR$/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/.pub" />
-      <excludeFolder url="file://$MODULE_DIR$/android" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
-      <excludeFolder url="file://$MODULE_DIR$/ios" />
       <excludeFolder url="file://$MODULE_DIR$/.fvm/flutter_sdk" />
       <excludeFolder url="file://$MODULE_DIR$/pubs/df_build_config/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/pubs/df_build_config/build" />
@@ -19,6 +18,11 @@
       <excludeFolder url="file://$MODULE_DIR$/pubs/df_protobuf/build" />
       <excludeFolder url="file://$MODULE_DIR$/vendor" />
       <excludeFolder url="file://$MODULE_DIR$/.fvm/versions" />
+      <excludeFolder url="file://$MODULE_DIR$/android/.gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/android/build" />
+      <excludeFolder url="file://$MODULE_DIR$/android/app/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks" />
+      <excludeFolder url="file://$MODULE_DIR$/ios/build" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Flutter Plugins" level="project" />

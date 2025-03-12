@@ -13,6 +13,7 @@ import CardSelfServiceInformation from './CardSelfServiceInformation'
 import { ActionButton } from './components/ActionButton'
 import { IconTextButton } from './components/IconTextButton'
 import { InfoText } from './components/InfoText'
+import { DataPrivacyAcceptingStatus } from './constants'
 import selfServiceStepInfo from './constants/selfServiceStepInfo'
 import useCardGeneratorSelfService from './hooks/useCardGeneratorSelfService'
 
@@ -78,12 +79,6 @@ const HeaderLogo = styled.img`
 const StyledInfoTextButton = styled(IconTextButton)`
   margin: 0;
 `
-
-export enum DataPrivacyAcceptingStatus {
-  untouched,
-  accepted,
-  denied,
-}
 
 const CardSelfServiceView = (): ReactElement => {
   const { t } = useTranslation('selfService')

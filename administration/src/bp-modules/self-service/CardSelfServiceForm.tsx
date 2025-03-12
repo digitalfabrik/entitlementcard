@@ -13,11 +13,11 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 import { removeMultipleSpaces } from '../../util/helper'
 import { useAppToaster } from '../AppToaster'
 import ExtensionForms from '../cards/ExtensionForms'
-import { DataPrivacyAcceptingStatus } from './CardSelfServiceView'
 import { ActionButton } from './components/ActionButton'
-import FormErrorMessage from './components/FormErrorMessage'
+import FormAlert from './components/FormAlert'
 import { IconTextButton } from './components/IconTextButton'
 import { UnderlineTextButton } from './components/UnderlineTextButton'
+import { DataPrivacyAcceptingStatus } from './constants'
 
 const StyledCheckbox = styled(Checkbox)`
   margin-top: 24px;
@@ -63,7 +63,7 @@ const CardSelfServiceForm = ({
     }
     if (!cardValid || dataPrivacyAccepted !== DataPrivacyAcceptingStatus.accepted) {
       appToaster?.show({
-        message: <FormErrorMessage style={{ color: 'white' }} errorMessage={t('atLeastOneInputIsInvalid')} />,
+        message: <FormAlert isToast errorMessage={t('atLeastOneInputIsInvalid')} />,
         timeout: 0,
         intent: 'danger',
       })
@@ -94,7 +94,7 @@ const CardSelfServiceForm = ({
             onBlur={() => setTouchedFullName(true)}
             onChange={event => updateCard({ fullName: removeMultipleSpaces(event.target.value) })}
           />
-          {showErrorMessage && <FormErrorMessage errorMessage={getFullNameValidationErrorMessage(card.fullName)} />}
+          {showErrorMessage && <FormAlert errorMessage={getFullNameValidationErrorMessage(card.fullName)} />}
         </FormGroup>
         <ExtensionForms card={card} updateCard={updateCard} showRequired={formSendAttempt} />
         <IconTextButton onClick={() => setOpenReferenceInformation(true)}>
@@ -118,7 +118,7 @@ const CardSelfServiceForm = ({
           .
         </StyledCheckbox>
         {dataPrivacyAccepted === DataPrivacyAcceptingStatus.denied && (
-          <FormErrorMessage errorMessage={t('pleaseAcceptPrivacyPolicy')} />
+          <FormAlert errorMessage={t('pleaseAcceptPrivacyPolicy')} />
         )}
       </Container>
       <ActionButton onClick={createKoblenzPass} variant='contained' size='large'>

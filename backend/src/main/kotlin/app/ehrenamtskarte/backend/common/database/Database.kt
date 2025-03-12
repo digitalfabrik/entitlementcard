@@ -3,6 +3,7 @@ package app.ehrenamtskarte.backend.common.database
 import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
 import app.ehrenamtskarte.backend.config.BackendConfiguration
+import app.ehrenamtskarte.backend.freinet.util.FreinetAgenciesLoader
 import app.ehrenamtskarte.backend.migration.assertDatabaseIsInSync
 import app.ehrenamtskarte.backend.projects.database.insertOrUpdateProjects
 import app.ehrenamtskarte.backend.regions.database.insertOrUpdateRegions
@@ -61,10 +62,11 @@ class Database {
         }
 
         fun setupInitialData(config: BackendConfiguration) {
+            val agencies = FreinetAgenciesLoader().loadAgenciesFromXml(config.projects)
             transaction {
                 assertDatabaseIsInSync()
                 insertOrUpdateProjects(config)
-                insertOrUpdateRegions()
+                insertOrUpdateRegions(agencies)
                 insertOrUpdateCategories(Companion::executeScript)
                 createOrReplaceStoreFunctions(Companion::executeScript)
             }

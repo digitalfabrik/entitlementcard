@@ -4,9 +4,9 @@ import XRegExp from 'xregexp'
 
 import getMessageFromApolloError from '../errors/getMessageFromApolloError'
 
-export const isProductionEnvironment = (): boolean => process.env.REACT_APP_IS_PRODUCTION === 'true'
-export const isDevMode = (): boolean => window.location.hostname === 'localhost'
-export const isStagingMode = (): boolean => !!window.location.hostname.match(/staging./)
+export const isStagingEnvironment = (): boolean => !!window.location.hostname.match(/staging./)
+export const isProductionEnvironment = (): boolean =>
+  process.env.REACT_APP_IS_PRODUCTION === 'true' && !isStagingEnvironment()
 
 export const updateArrayItem = <T>(array: T[], updatedItem: T, index: number): T[] => {
   if (index >= array.length || index < 0) {
@@ -46,3 +46,8 @@ export const mapGraphqlRequestResult = <T>(
   }
   return result.data
 }
+
+export const hasProp = <P extends PropertyKey, O extends { [p in P]: unknown }>(
+  obj: O,
+  p: P
+): obj is O & { [p in P]: NonNullable<unknown> } => obj[p] !== undefined && obj[p] !== null

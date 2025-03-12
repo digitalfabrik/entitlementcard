@@ -545,6 +545,10 @@ jobs:
                 name: Lint
                 working_directory: ~/project/administration
             - run:
+                command: npm run check-circular-deps
+                name: Check circular dependencies
+                working_directory: ~/project/administration
+            - run:
                 command: npm run test:coverage -- --maxWorkers=2
                 name: Run tests and generate coverage report
                 working_directory: ~/project/administration
@@ -803,7 +807,7 @@ jobs:
             - notify:
                 allow-all-branches: false
                 channel: releases
-                success_message: <<^ parameters.production_delivery >>[Beta] <</ parameters.production_delivery >>Ehrenamtskarte Bayern und Sozialpass Nürnberg ${NEW_VERSION_NAME} have been released successfully! https://github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/tag/${NEW_VERSION_NAME}-all
+                success_message: <<^ parameters.production_delivery >>[Beta] <</ parameters.production_delivery >>Ehrenamtskarte Bayern, Sozialpass Nürnberg und Sozialpass Koblenz ${NEW_VERSION_NAME} have been released successfully! https://github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/tag/${NEW_VERSION_NAME}-all
     pack_administration:
         docker:
             - image: debian:12

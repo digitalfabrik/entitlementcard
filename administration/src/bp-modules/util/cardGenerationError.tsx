@@ -8,7 +8,7 @@ import { PdfError } from '../../cards/PdfFactory'
 import { CreateCardsError } from '../../cards/createCards'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { reportErrorToSentry } from '../../util/sentry'
-import FormErrorMessage from '../self-service/components/FormErrorMessage'
+import FormAlert from '../self-service/components/FormAlert'
 
 export const showCardGenerationError = (appToaster: Toaster, error: unknown, t: TFunction<'errors'>): void => {
   if (error instanceof CreateCardsError) {
@@ -19,7 +19,7 @@ export const showCardGenerationError = (appToaster: Toaster, error: unknown, t: 
   } else if (error instanceof ApolloError) {
     const { title } = getMessageFromApolloError(error, t)
     appToaster.show({
-      message: <FormErrorMessage style={{ color: 'white' }} errorMessage={title} />,
+      message: <FormAlert isToast errorMessage={title} />,
       timeout: 0,
       intent: 'danger',
     })

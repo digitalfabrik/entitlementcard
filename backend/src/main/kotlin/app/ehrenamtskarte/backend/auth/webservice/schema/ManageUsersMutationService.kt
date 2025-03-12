@@ -2,6 +2,7 @@ package app.ehrenamtskarte.backend.auth.webservice.schema
 
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
+import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
@@ -31,13 +32,11 @@ class ManageUsersMutationService {
         dfe: DataFetchingEnvironment
     ): Boolean {
         val context = dfe.getContext<GraphQLContext>()
-        val jwtPayload = context.enforceSignedIn()
+        val actingAdmin = context.getAdministrator()
         val backendConfig = context.backendConfiguration
         val projectConfig = backendConfig.projects.first { it.id == project }
 
         transaction {
-            val actingAdmin = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
-
             val projectEntity = ProjectEntity.find { Projects.project eq project }.singleOrNull() ?: throw ProjectNotFoundException(project)
             val region = regionId?.let { RegionsRepository.findByIdInProject(project, it) ?: throw RegionNotFoundException() }
 
@@ -74,10 +73,9 @@ class ManageUsersMutationService {
         dfe: DataFetchingEnvironment
     ): Boolean {
         val context = dfe.getContext<GraphQLContext>()
-        val jwtPayload = context.enforceSignedIn()
+        val actingAdmin = context.getAdministrator()
 
         transaction {
-            val actingAdmin = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
             val existingAdmin = AdministratorEntity.findById(adminId) ?: throw UnauthorizedException()
 
             val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
@@ -109,10 +107,9 @@ class ManageUsersMutationService {
         dfe: DataFetchingEnvironment
     ): Boolean {
         val context = dfe.getContext<GraphQLContext>()
-        val jwtPayload = context.enforceSignedIn()
+        val actingAdmin = context.getAdministrator()
 
         transaction {
-            val actingAdmin = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
             val existingAdmin = AdministratorEntity.findById(adminId) ?: throw UnauthorizedException()
             val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull() ?: throw ProjectNotFoundException(project)
 

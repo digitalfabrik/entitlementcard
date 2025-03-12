@@ -25,6 +25,13 @@ enum class TestAdministrators(
         role = Role.REGION_ADMIN,
         regionId = 16
     ),
+    EAK_REGION_MANAGER(
+        id = 9,
+        project = "bayern.ehrenamtskarte.app",
+        email = "region-manager@bayern.ehrenamtskarte.app",
+        role = Role.REGION_MANAGER,
+        regionId = 16
+    ),
     EAK_PROJECT_ADMIN(
         id = 2,
         project = "bayern.ehrenamtskarte.app",
@@ -55,11 +62,32 @@ enum class TestAdministrators(
         email = "project-admin2@koblenz.sozialpass.app",
         role = Role.PROJECT_ADMIN
     ),
+    KOBLENZ_REGION_ADMIN(
+        id = 10,
+        project = "koblenz.sozialpass.app",
+        email = "region-admin@koblenz.sozialpass.app",
+        role = Role.REGION_ADMIN,
+        regionId = 95
+    ),
+    KOBLENZ_REGION_MANAGER(
+        id = 11,
+        project = "koblenz.sozialpass.app",
+        email = "region-manager@koblenz.sozialpass.app",
+        role = Role.REGION_MANAGER,
+        regionId = 95
+    ),
     BAYERN_VEREIN_360(
         id = 7,
         project = "bayern.ehrenamtskarte.app",
         email = "verein360@bayern.ehrenamtskarte.app",
         role = Role.EXTERNAL_VERIFIED_API_USER
+    ),
+    EAK_REGION_ADMIN_FREINET(
+        id = 8,
+        project = "bayern.ehrenamtskarte.app",
+        email = "region-admin+freinet@bayern.ehrenamtskarte.app",
+        role = Role.REGION_ADMIN,
+        regionId = 9
     );
 
     fun getJwtToken(): String {

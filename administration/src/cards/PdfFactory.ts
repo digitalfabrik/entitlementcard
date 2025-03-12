@@ -1,5 +1,5 @@
+import { PDFDocument, PDFFont, PDFPage, StandardFonts } from '@cantoo/pdf-lib'
 import fontkit from '@pdf-lib/fontkit'
-import { PDFDocument, PDFFont, PDFPage, StandardFonts } from 'pdf-lib'
 
 import { Region } from '../generated/graphql'
 import { PdfConfig, ProjectConfig } from '../project-configs/getProjectConfig'
