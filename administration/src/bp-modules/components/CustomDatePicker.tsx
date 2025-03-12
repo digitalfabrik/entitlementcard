@@ -5,7 +5,7 @@ import React, { CSSProperties, ReactElement } from 'react'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
 
 type CustomDatePickerProps = {
-  date: Date | null
+  value: Date | null
   disabled?: boolean
   label?: string
   onBlur?: () => void
@@ -20,7 +20,7 @@ type CustomDatePickerProps = {
 }
 
 const CustomDatePicker = ({
-  date,
+  value,
   disabled,
   label,
   onBlur,
@@ -41,7 +41,7 @@ const CustomDatePicker = ({
       label={label}
       views={['year', 'month', 'day']}
       openTo='year'
-      value={date}
+      value={value}
       format='dd.MM.yyyy'
       sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' } }}
       slotProps={{

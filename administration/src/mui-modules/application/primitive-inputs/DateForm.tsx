@@ -50,7 +50,7 @@ const DateForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
 
     return (
       <CustomDatePicker
-        date={parseDateFromState(state.value)}
+        value={parseDateFromState(state.value)}
         disabled={disableAllInputs}
         isValid={!touched || !isInvalid}
         label={label}
@@ -64,7 +64,6 @@ const DateForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
             value: date && !Number.isNaN(date.valueOf()) ? date.toISOString() : '',
           }))
         }}
-        disableFuture
         textFieldHelperText={(showAllErrors || touched) && isInvalid ? validationResult.message : undefined}
         textFieldStyle={{ marginTop: '12px', minWidth }}
       />
