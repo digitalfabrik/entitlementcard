@@ -6,10 +6,11 @@ import app.ehrenamtskarte.backend.application.database.ApplicationVerificationEn
 import app.ehrenamtskarte.backend.application.database.ApplicationVerificationExternalSource
 import app.ehrenamtskarte.backend.application.database.ApplicationVerifications
 import app.ehrenamtskarte.backend.application.database.Applications
-import app.ehrenamtskarte.backend.application.webservice.schema.create.Application
-import app.ehrenamtskarte.backend.application.webservice.schema.create.ApplicationType
 import app.ehrenamtskarte.backend.auth.database.ApiTokenType
 import app.ehrenamtskarte.backend.auth.database.ApiTokens
+import app.ehrenamtskarte.backend.generated.AddEakApplication
+import app.ehrenamtskarte.backend.generated.enums.ApplicationType
+import app.ehrenamtskarte.backend.generated.inputs.ApplicationInput
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestApplicationBuilder
 import app.ehrenamtskarte.backend.helper.TestData
@@ -28,7 +29,7 @@ import kotlin.test.assertNull
 
 internal class Verein360ApplicationTest : GraphqlApiTest() {
 
-    data class ValidationErrorTestCase(val application: Application, val error: String)
+    data class ValidationErrorTestCase(val application: ApplicationInput, val error: String)
 
     companion object {
         @JvmStatic
@@ -192,17 +193,14 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
     private fun createMutation(
         project: String = "bayern.ehrenamtskarte.app",
         regionId: Int = 1,
-        application: Application
+        application: ApplicationInput
     ): String {
-        val applicationJson = GraphQLRequestSerializer.serializeObject(application)
-        return """
-        mutation AddEakApplication {
-            addEakApplication(
-                project: "$project"
-                regionId: $regionId
-                application: $applicationJson
-            )
-        }
-        """.trimIndent()
+        val variables = AddEakApplication.Variables(
+            application = application,
+            regionId = regionId,
+            project = project
+        )
+        val mutation = AddEakApplication(variables)
+        return GraphQLRequestSerializer.serializeMutation(mutation)
     }
 }

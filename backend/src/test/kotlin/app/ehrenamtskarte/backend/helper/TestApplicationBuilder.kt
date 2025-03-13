@@ -1,20 +1,20 @@
 package app.ehrenamtskarte.backend.helper
 
-import app.ehrenamtskarte.backend.application.webservice.schema.create.Address
-import app.ehrenamtskarte.backend.application.webservice.schema.create.Application
-import app.ehrenamtskarte.backend.application.webservice.schema.create.ApplicationDetails
-import app.ehrenamtskarte.backend.application.webservice.schema.create.ApplicationType
-import app.ehrenamtskarte.backend.application.webservice.schema.create.BavariaCardType
-import app.ehrenamtskarte.backend.application.webservice.schema.create.BlueCardEntitlement
-import app.ehrenamtskarte.backend.application.webservice.schema.create.BlueCardEntitlementType
-import app.ehrenamtskarte.backend.application.webservice.schema.create.BlueCardWorkAtOrganizationsEntitlement
-import app.ehrenamtskarte.backend.application.webservice.schema.create.Organization
-import app.ehrenamtskarte.backend.application.webservice.schema.create.OrganizationContact
-import app.ehrenamtskarte.backend.application.webservice.schema.create.PersonalData
-import app.ehrenamtskarte.backend.application.webservice.schema.create.WorkAtOrganization
-import app.ehrenamtskarte.backend.application.webservice.schema.create.primitives.DateInput
-import app.ehrenamtskarte.backend.application.webservice.schema.create.primitives.EmailInput
-import app.ehrenamtskarte.backend.application.webservice.schema.create.primitives.ShortTextInput
+import app.ehrenamtskarte.backend.generated.enums.ApplicationType
+import app.ehrenamtskarte.backend.generated.enums.BavariaCardType
+import app.ehrenamtskarte.backend.generated.enums.BlueCardEntitlementType
+import app.ehrenamtskarte.backend.generated.inputs.AddressInput
+import app.ehrenamtskarte.backend.generated.inputs.ApplicationDetailsInput
+import app.ehrenamtskarte.backend.generated.inputs.ApplicationInput
+import app.ehrenamtskarte.backend.generated.inputs.BlueCardEntitlementInput
+import app.ehrenamtskarte.backend.generated.inputs.BlueCardWorkAtOrganizationsEntitlementInput
+import app.ehrenamtskarte.backend.generated.inputs.DateInput
+import app.ehrenamtskarte.backend.generated.inputs.EmailInput
+import app.ehrenamtskarte.backend.generated.inputs.OrganizationContactInput
+import app.ehrenamtskarte.backend.generated.inputs.OrganizationInput
+import app.ehrenamtskarte.backend.generated.inputs.PersonalDataInput
+import app.ehrenamtskarte.backend.generated.inputs.ShortTextInput
+import app.ehrenamtskarte.backend.generated.inputs.WorkAtOrganizationInput
 
 class TestApplicationBuilder {
     companion object {
@@ -25,13 +25,13 @@ class TestApplicationBuilder {
             wantsDigitalCard: Boolean = true,
             wantsPhysicalCard: Boolean = false,
             category: String = "Sport"
-        ): Application {
-            return Application(
-                personalData = PersonalData(
+        ): ApplicationInput {
+            return ApplicationInput(
+                personalData = PersonalDataInput(
                     forenames = ShortTextInput("John"),
                     surname = ShortTextInput("Doe"),
                     dateOfBirth = DateInput("1990-01-01"),
-                    address = Address(
+                    address = AddressInput(
                         street = ShortTextInput("Example Street"),
                         houseNumber = ShortTextInput("123"),
                         postalCode = ShortTextInput("80331"),
@@ -42,7 +42,7 @@ class TestApplicationBuilder {
                     telephone = ShortTextInput("123456789"),
                     emailAddress = EmailInput("johndoe@example.com")
                 ),
-                applicationDetails = ApplicationDetails(
+                applicationDetails = ApplicationDetailsInput(
                     applicationType = applicationType,
                     cardType = cardType,
                     givenInformationIsCorrectAndComplete = true,
@@ -50,17 +50,17 @@ class TestApplicationBuilder {
                     hasAcceptedPrivacyPolicy = true,
                     wantsDigitalCard = wantsDigitalCard,
                     wantsPhysicalCard = wantsPhysicalCard,
-                    blueCardEntitlement = BlueCardEntitlement(
+                    blueCardEntitlement = BlueCardEntitlementInput(
                         juleicaEntitlement = null,
                         militaryReserveEntitlement = null,
                         workAtDepartmentEntitlement = null,
                         volunteerServiceEntitlement = null,
                         entitlementType = BlueCardEntitlementType.WORK_AT_ORGANIZATIONS,
-                        workAtOrganizationsEntitlement = BlueCardWorkAtOrganizationsEntitlement(
+                        workAtOrganizationsEntitlement = BlueCardWorkAtOrganizationsEntitlementInput(
                             list = listOf(
-                                WorkAtOrganization(
-                                    organization = Organization(
-                                        address = Address(
+                                WorkAtOrganizationInput(
+                                    organization = OrganizationInput(
+                                        address = AddressInput(
                                             street = ShortTextInput("Example Street"),
                                             houseNumber = ShortTextInput("123"),
                                             postalCode = ShortTextInput("80331"),
@@ -69,7 +69,7 @@ class TestApplicationBuilder {
                                             addressSupplement = null
                                         ),
                                         category = ShortTextInput(category),
-                                        contact = OrganizationContact(
+                                        contact = OrganizationContactInput(
                                             name = ShortTextInput("Jane Doe"),
                                             email = EmailInput("jane.doe@sportverein.de"),
                                             telephone = ShortTextInput("0150123456789"),
