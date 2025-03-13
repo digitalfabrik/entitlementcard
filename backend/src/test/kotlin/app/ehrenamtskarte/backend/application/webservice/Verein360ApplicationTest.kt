@@ -67,6 +67,27 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
                         category = "Other"
                     ),
                     error = "All organizations must be of category Sport if application is already verified"
+                ),
+                ValidationErrorTestCase(
+                    application = TestApplicationBuilder.build(
+                        isAlreadyVerified = true,
+                        givenInformationIsCorrectAndComplete = false
+                    ),
+                    error = "Has not confirmed that information is correct and complete."
+                ),
+                ValidationErrorTestCase(
+                    application = TestApplicationBuilder.build(
+                        isAlreadyVerified = true,
+                        forenames = ""
+                    ),
+                    error = "Value of ShortTextInput should not be empty."
+                ),
+                ValidationErrorTestCase(
+                    application = TestApplicationBuilder.build(
+                        isAlreadyVerified = true,
+                        contactName = ""
+                    ),
+                    error = "Value of ShortTextInput should not be empty."
                 )
             )
         }

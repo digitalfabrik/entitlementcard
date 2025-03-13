@@ -10,7 +10,7 @@ object GraphQLRequestSerializer {
 
     fun serializeMutation(request: GraphQLClientRequest<*>): String {
         return """
-        mutation ${request.javaClass.simpleName} {
+        mutation {
             ${request.operationName}(
                 ${serializeObject(request.variables!!)}
             )

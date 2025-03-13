@@ -24,12 +24,16 @@ class TestApplicationBuilder {
             cardType: BavariaCardType = BavariaCardType.BLUE,
             wantsDigitalCard: Boolean = true,
             wantsPhysicalCard: Boolean = false,
-            category: String = "Sport"
+            category: String = "Sport",
+            forenames: String = "John",
+            surname: String = "Doe",
+            givenInformationIsCorrectAndComplete: Boolean = true,
+            contactName: String = "Jane Doe"
         ): ApplicationInput {
             return ApplicationInput(
                 personalData = PersonalDataInput(
-                    forenames = ShortTextInput("John"),
-                    surname = ShortTextInput("Doe"),
+                    forenames = ShortTextInput(forenames),
+                    surname = ShortTextInput(surname),
                     dateOfBirth = DateInput("1990-01-01"),
                     address = AddressInput(
                         street = ShortTextInput("Example Street"),
@@ -45,7 +49,7 @@ class TestApplicationBuilder {
                 applicationDetails = ApplicationDetailsInput(
                     applicationType = applicationType,
                     cardType = cardType,
-                    givenInformationIsCorrectAndComplete = true,
+                    givenInformationIsCorrectAndComplete = givenInformationIsCorrectAndComplete,
                     hasAcceptedEmailUsage = true,
                     hasAcceptedPrivacyPolicy = true,
                     wantsDigitalCard = wantsDigitalCard,
@@ -70,7 +74,7 @@ class TestApplicationBuilder {
                                         ),
                                         category = ShortTextInput(category),
                                         contact = OrganizationContactInput(
-                                            name = ShortTextInput("Jane Doe"),
+                                            name = ShortTextInput(contactName),
                                             email = EmailInput("jane.doe@sportverein.de"),
                                             telephone = ShortTextInput("0150123456789"),
                                             hasGivenPermission = true
