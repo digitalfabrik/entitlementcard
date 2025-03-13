@@ -1,9 +1,8 @@
 package app.ehrenamtskarte.backend.util
 
-import kotlin.reflect.KProperty1
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.declaredMemberProperties
-import kotlin.reflect.full.declaredMembers
+import kotlin.reflect.full.memberProperties
 
 object GraphQLRequestSerializer {
 
@@ -14,7 +13,7 @@ object GraphQLRequestSerializer {
     fun serializeObject(obj: Any): String {
         return obj::class.declaredMemberProperties.filter { it.visibility == KVisibility.PUBLIC }
             .joinToString(", ") { property ->
-                val value = readInstanceProperty<Any>(obj, property.name)
+                val value = readInstanceField<Any>(obj, property.name)
                 val serializedValue = "${property.name}: ${
                 when (value) {
                     is String -> "\"$value\""
@@ -35,8 +34,11 @@ object GraphQLRequestSerializer {
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun <R> readInstanceProperty(instance: Any, propertyName: String): R? {
-        val property = instance::class.declaredMembers.first { it.name == propertyName } as KProperty1<Any, *>
-        return property.get(instance) as R?
+    private fun <R> readInstanceField(instance: Any, fieldName: String): R? {
+        val field = instance::class.memberProperties.find { it.name == fieldName }
+        return field?.getter?.call(instance) as R?
+
+//        val property = instance::class.declaredMembers.first { it.name == fieldName } as KProperty1<Any, *>
+//        return property.get(instance) as R?
     }
 }

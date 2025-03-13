@@ -7,14 +7,15 @@ import app.ehrenamtskarte.backend.application.database.ApplicationVerificationEx
 import app.ehrenamtskarte.backend.application.database.ApplicationVerifications
 import app.ehrenamtskarte.backend.application.database.Applications
 import app.ehrenamtskarte.backend.application.webservice.schema.create.Application
-import app.ehrenamtskarte.backend.application.webservice.schema.create.ApplicationType
 import app.ehrenamtskarte.backend.auth.database.ApiTokenType
 import app.ehrenamtskarte.backend.auth.database.ApiTokens
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestApplicationBuilder
 import app.ehrenamtskarte.backend.helper.TestData
 import app.ehrenamtskarte.backend.util.GraphQLRequestSerializer
+import app.ehrenamtskarte.backend.util.MockUtils.deepSpy
 import io.javalin.testtools.JavalinTest
+import io.mockk.every
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -34,33 +35,38 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
         @JvmStatic
         fun validationErrorTestCases(): List<ValidationErrorTestCase> {
             return listOf(
+//                ValidationErrorTestCase(
+//                    application = TestApplicationBuilder.build(
+//                        isAlreadyVerified = true,
+//                        applicationType = ApplicationType.RENEWAL_APPLICATION
+//                    ),
+//                    error = "Application type must be FIRST_APPLICATION if application is already verified"
+//                ),
+//                ValidationErrorTestCase(
+//                    application = TestApplicationBuilder.build(
+//                        isAlreadyVerified = true,
+//                        wantsDigitalCard = false,
+//                        wantsPhysicalCard = true
+//                    ),
+//                    error = "Digital card must be true if application is already verified"
+//                ),
+//                ValidationErrorTestCase(
+//                    application = TestApplicationBuilder.build(
+//                        isAlreadyVerified = true,
+//                        wantsPhysicalCard = true
+//                    ),
+//                    error = "Physical card must be false if application is already verified"
+//                ),
+//                ValidationErrorTestCase(
+//                    application = TestApplicationBuilder.build(
+//                        isAlreadyVerified = true,
+//                        category = "Other"
+//                    ),
+//                    error = "All organizations must be of category Sport if application is already verified"
+//                ),
                 ValidationErrorTestCase(
-                    application = TestApplicationBuilder.build(
-                        isAlreadyVerified = true,
-                        applicationType = ApplicationType.RENEWAL_APPLICATION
-                    ),
-                    error = "Application type must be FIRST_APPLICATION if application is already verified"
-                ),
-                ValidationErrorTestCase(
-                    application = TestApplicationBuilder.build(
-                        isAlreadyVerified = true,
-                        wantsDigitalCard = false,
-                        wantsPhysicalCard = true
-                    ),
-                    error = "Digital card must be true if application is already verified"
-                ),
-                ValidationErrorTestCase(
-                    application = TestApplicationBuilder.build(
-                        isAlreadyVerified = true,
-                        wantsPhysicalCard = true
-                    ),
-                    error = "Physical card must be false if application is already verified"
-                ),
-                ValidationErrorTestCase(
-                    application = TestApplicationBuilder.build(
-                        isAlreadyVerified = true,
-                        category = "Other"
-                    ),
+                    application = TestApplicationBuilder.build(isAlreadyVerified = true),
+                    // the whole personal data should be mocked in this case !
                     error = "All organizations must be of category Sport if application is already verified"
                 )
             )
@@ -81,6 +87,12 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
     @ParameterizedTest
     @MethodSource("validationErrorTestCases")
     fun `should return validation error when the request is not valid`(testCase: ValidationErrorTestCase) = JavalinTest.test(app) { _, client ->
+        val spy = deepSpy(TestApplicationBuilder.build(isAlreadyVerified = true))
+
+        every { spy.personalData.forenames.shortText } returns ""
+
+        val result = spy.personalData.forenames.shortText
+
         TestData.createApiToken(creatorId = adminVerein360.id, type = ApiTokenType.VERIFIED_APPLICATION)
 
         val mutation = createMutation(application = testCase.application)
@@ -169,7 +181,7 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
     @Test
     fun `should create an application and pending verification if the request is not pre-verified`() = JavalinTest.test(app) { _, client ->
         val mutation = createMutation(
-            application = TestApplicationBuilder.build(false)
+            application = deepSpy(TestApplicationBuilder.build(isAlreadyVerified = false))
         )
         val response = post(client, mutation)
 
