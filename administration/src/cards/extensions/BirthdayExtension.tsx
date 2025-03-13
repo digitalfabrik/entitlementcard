@@ -55,6 +55,13 @@ const BirthdayForm = ({
         onClear={() => setValue({ birthday: null })}
         isValid={isValid || !showErrorMessage}
         disableFuture
+        textFieldSlotProps={{
+          sx: {
+            '.MuiPickersSectionList-root': {
+              padding: '5px 0',
+            },
+          },
+        }}
       />
       {showErrorMessage && <FormAlert severity='error' errorMessage={getErrorMessage()} />}
       {showBirthdayHint() && <FormAlert severity='info' errorMessage={t('birthdayHint')} />}
