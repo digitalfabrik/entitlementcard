@@ -6,6 +6,7 @@ import app.ehrenamtskarte.backend.application.database.ApplicationVerificationEn
 import app.ehrenamtskarte.backend.application.database.ApplicationVerificationExternalSource
 import app.ehrenamtskarte.backend.application.database.ApplicationVerifications
 import app.ehrenamtskarte.backend.application.database.Applications
+import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationHandler
 import app.ehrenamtskarte.backend.auth.database.ApiTokenType
 import app.ehrenamtskarte.backend.auth.database.ApiTokens
 import app.ehrenamtskarte.backend.generated.AddEakApplication
@@ -16,6 +17,9 @@ import app.ehrenamtskarte.backend.helper.TestApplicationBuilder
 import app.ehrenamtskarte.backend.helper.TestData
 import app.ehrenamtskarte.backend.util.GraphQLRequestSerializer
 import io.javalin.testtools.JavalinTest
+import io.mockk.every
+import io.mockk.mockkConstructor
+import io.mockk.verify
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -77,6 +81,16 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
             Applications.deleteAll()
             ApiTokens.deleteAll()
         }
+    }
+
+    /**
+     * Set up a mock to be able to verify sending emails
+     */
+    @BeforeEach
+    fun mockApplicationHandler() {
+        mockkConstructor(ApplicationHandler::class)
+        every { anyConstructed<ApplicationHandler>().sendApplicationMails(any(), any(), any()) } returns Unit
+        every { anyConstructed<ApplicationHandler>().sendPreVerifiedApplicationMails(any(), any(), any()) } returns Unit
     }
 
     @ParameterizedTest
@@ -165,6 +179,9 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
                 assertEquals(ApplicationVerificationExternalSource.VEREIN360, it.automaticSource)
             }
         }
+
+        verify(exactly = 0) { anyConstructed<ApplicationHandler>().sendApplicationMails(any(), any(), any()) }
+        verify(exactly = 1) { anyConstructed<ApplicationHandler>().sendPreVerifiedApplicationMails(any(), any(), any()) }
     }
 
     @Test
@@ -188,6 +205,9 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
                 assertEquals(ApplicationVerificationExternalSource.NONE, it.automaticSource)
             }
         }
+
+        verify(exactly = 1) { anyConstructed<ApplicationHandler>().sendApplicationMails(any(), any(), any()) }
+        verify(exactly = 0) { anyConstructed<ApplicationHandler>().sendPreVerifiedApplicationMails(any(), any(), any()) }
     }
 
     private fun createMutation(
