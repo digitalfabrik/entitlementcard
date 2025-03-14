@@ -141,7 +141,6 @@
     "deleteApplication": "Antrag löschen",
     "deleteApplicationConfirmationPrompt": "Möchten Sie den Antrag unwiderruflich löschen?",
     "exportPdf": "PDF exportieren",
-    "cancel": "Abbrechen",
     "status": "Status",
     "loadAttachment": "Lade Anhang",
     "attachment": "Anhang",
@@ -243,6 +242,7 @@
   "misc": {
     "openAppStore": "AppStore öffnen",
     "openPlayStore": "Google Play öffnen",
+    "cancel": "Abbrechen",
     "save": "Speichern",
     "close": "Schließen",
     "administration": "Verwaltung",
@@ -273,7 +273,6 @@
   "projectSettings": {
     "tokenCreateSuccessMessage": "Token wurde erfolgreich erzeugt.",
     "tokenDeleteSuccessMessage": "Token wurde erfolgreich gelöscht.",
-    "cancel": "Abbrechen",
     "deleteToken": "Token löschen",
     "apiToken": "Api Token",
     "deleteTokenConfirmationPrompt": "Möchten Sie das Token unwiderruflich löschen?",
@@ -369,7 +368,6 @@
     "hasInvalidStores": "Fehlerhafte Einträge. Bitte prüfen sie die rot markierten Felder.",
     "importStores": "Importiere Akzeptanzpartner",
     "backToSelection": "Zurück zur Auswahl",
-    "cancel": "Abbrechen",
     "storesCsvImport": "Akzeptanzpartner CSV Import",
     "selectAFile": "Wählen Sie eine Datei",
     "dryRun": "Testlauf",

@@ -262,7 +262,7 @@ const ApplicationCard = ({
           <CollapseIcon icon='chevron-up' onClick={() => setIsExpanded(!isExpanded)} style={{ marginLeft: 'auto' }} />
         </ButtonContainer>
         <Alert
-          cancelButtonText={t('cancel')}
+          cancelButtonText={t('misc:cancel')}
           confirmButtonText={t('deleteApplication')}
           icon='trash'
           intent='danger'
