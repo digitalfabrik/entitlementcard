@@ -116,6 +116,7 @@ export type ProjectConfig = {
   csvExport: CsvExport
   cardStatistics: CardStatistics
   freinetCSVImportEnabled: boolean
+  freinetDataTransferEnabled: boolean
   cardCreation: boolean
   selfServiceEnabled: boolean
   storesManagement: StoresManagementConfig
