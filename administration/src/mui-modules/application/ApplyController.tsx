@@ -31,7 +31,7 @@ const SuccessContent = styled.div`
 `
 
 const ApplyController = (): React.ReactElement | null => {
-  const { t } = useTranslation('application')
+  const { t } = useTranslation('applicationForms')
   const [formSubmitted, setFormSubmitted] = useState<boolean>(false)
   const { enqueueSnackbar } = useSnackbar()
   const { status, state, setState } = useVersionedLocallyStoredState(
@@ -100,7 +100,7 @@ const ApplyController = (): React.ReactElement | null => {
         {formSubmitted ? (
           <SuccessContent>
             <Typography>
-              <Trans i18nKey='application:submitSuccessText' />
+              <Trans i18nKey='applicationForms:submitSuccessText' />
             </Typography>
           </SuccessContent>
         ) : (

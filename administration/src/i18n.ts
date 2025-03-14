@@ -13,7 +13,8 @@ export const loadTranslations = (): Translations => ({
   de: {
     activation: deTranslations.activation,
     application: deTranslations.application,
-    applications: deTranslations.applications,
+    applicationCard: deTranslations.applicationCard,
+    applicationsOverview: deTranslations.applicationsOverview,
     applicationForms: deTranslations.applicationForms,
     applicationVerification: deTranslations.applicationVerification,
     applicationApplicant: deTranslations.applicationApplicant,

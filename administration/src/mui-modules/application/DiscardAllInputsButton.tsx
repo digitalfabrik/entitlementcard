@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import ConfirmDialog from './ConfirmDialog'
 
 const DiscardAllInputsButton = ({ discardAll }: { discardAll: () => void }): ReactElement => {
-  const { t } = useTranslation('application')
+  const { t } = useTranslation('applicationForms')
   const [dialogOpen, setDialogOpen] = useState(false)
   return (
     <>

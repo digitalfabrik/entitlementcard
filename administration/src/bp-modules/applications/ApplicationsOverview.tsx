@@ -62,7 +62,7 @@ const ApplicationsOverview = ({ applications }: { applications: Application[] })
   const [updatedApplications, setUpdatedApplications] = useState(applications)
   const { applicationIdForPrint, printApplicationById } = usePrintApplication()
   const [activeBarItem, setActiveBarItem] = useState<ApplicationStatusBarItemType>(barItems[0])
-  const { t } = useTranslation('applications')
+  const { t } = useTranslation('applicationsOverview')
   const sortedApplications: Application[] = useMemo(() => sortApplications(updatedApplications), [updatedApplications])
   const filteredApplications: Application[] = useMemo(
     () =>

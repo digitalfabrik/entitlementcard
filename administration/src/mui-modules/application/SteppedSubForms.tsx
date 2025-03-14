@@ -30,7 +30,7 @@ const SubForm = ({
   onSubmit?: () => void
   loading: boolean
 }) => {
-  const { t } = useTranslation('application')
+  const { t } = useTranslation('applicationForms')
   const [formContext, setFormContxt] = useState<FormContextType>(initialFormContext)
   const { enqueueSnackbar } = useSnackbar()
   useEffect(() => setFormContxt(state => ({ ...state, disableAllInputs: loading })), [loading])

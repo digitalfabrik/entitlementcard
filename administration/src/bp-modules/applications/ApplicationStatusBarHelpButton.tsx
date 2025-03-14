@@ -20,7 +20,7 @@ const PopoverContent = styled.div`
 `
 
 const ApplicationStatusHelpButton = (): ReactElement => {
-  const { t } = useTranslation('applications')
+  const { t } = useTranslation('applicationsOverview')
   return (
     <Popover
       content={

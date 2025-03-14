@@ -105,7 +105,7 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
   return (
     <>
       <Alert
-        cancelButtonText={t('cancel')}
+        cancelButtonText={t('misc:cancel')}
         confirmButtonText={t('deleteToken')}
         icon='trash'
         intent='danger'
