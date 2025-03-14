@@ -15,7 +15,6 @@ import app.ehrenamtskarte.backend.generated.inputs.ApplicationInput
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestApplicationBuilder
 import app.ehrenamtskarte.backend.helper.TestData
-import app.ehrenamtskarte.backend.util.GraphQLRequestSerializer
 import io.javalin.testtools.JavalinTest
 import io.mockk.every
 import io.mockk.mockkConstructor
@@ -235,13 +234,12 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
         project: String = "bayern.ehrenamtskarte.app",
         regionId: Int = 1,
         application: ApplicationInput
-    ): String {
+    ): AddEakApplication {
         val variables = AddEakApplication.Variables(
             application = application,
             regionId = regionId,
             project = project
         )
-        val mutation = AddEakApplication(variables)
-        return GraphQLRequestSerializer.serializeMutation(mutation)
+        return AddEakApplication(variables)
     }
 }
