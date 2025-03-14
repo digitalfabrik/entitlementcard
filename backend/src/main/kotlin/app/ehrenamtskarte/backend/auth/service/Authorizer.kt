@@ -111,7 +111,11 @@ object Authorizer {
     }
 
     fun mayViewFreinetAgencyInformationInRegion(user: AdministratorEntity, regionId: Int): Boolean {
-        return user.hasRole(Role.REGION_ADMIN) && user.isInProject(EAK_BAYERN_PROJECT) && user.isInRegion(regionId)
+        return user.hasRole(Role.REGION_ADMIN) && user.isInRegion(regionId) && user.isInProject(EAK_BAYERN_PROJECT)
+    }
+
+    fun mayUpdateFreinetAgencyInformationInRegion(user: AdministratorEntity, regionId: Int): Boolean {
+        return user.hasRole(Role.REGION_ADMIN) && user.isInRegion(regionId) && user.isInProject(EAK_BAYERN_PROJECT)
     }
 
     fun mayAddApiTokensInProject(user: AdministratorEntity): Boolean {

@@ -342,7 +342,25 @@ internal class AuthorizerTest : IntegrationTest() {
     fun testMayViewFreinetAgencyInformationInRegion() {
         transaction {
             assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(bayernRegionAdmin, bayernRegionId), true)
+            assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(bayernProjectAdmin, 16), false)
+            assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(bayernRegionAdmin, 5), false)
+            assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(bayernRegionManager, bayernRegionId), false)
+            assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(bayernRegionManager, 5), false)
+            assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(koblenzProjectAdmin, 2), false)
+            assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(koblenzRegionAdmin, koblenzRegionId), false)
+            assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(koblenzRegionManager, 2), false)
+            assertEquals(
+                Authorizer.mayViewFreinetAgencyInformationInRegion(koblenzRegionManager, koblenzRegionId),
+                false
+            )
+            assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(nuernbergStoreManager, 5), false)
+        }
+    }
 
+    @Test
+    fun testMayUpdateFreinetAgencyInformationInRegion() {
+        transaction {
+            assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(bayernRegionAdmin, bayernRegionId), true)
             assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(bayernProjectAdmin, 16), false)
             assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(bayernRegionAdmin, 5), false)
             assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(bayernRegionManager, bayernRegionId), false)
