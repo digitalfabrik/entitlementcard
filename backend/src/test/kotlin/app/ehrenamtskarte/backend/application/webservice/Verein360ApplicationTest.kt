@@ -84,6 +84,13 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
                 ValidationErrorTestCase(
                     application = TestApplicationBuilder.build(
                         isAlreadyVerified = true,
+                        surname = ""
+                    ),
+                    error = "Value of ShortTextInput should not be empty."
+                ),
+                ValidationErrorTestCase(
+                    application = TestApplicationBuilder.build(
+                        isAlreadyVerified = true,
                         contactName = ""
                     ),
                     error = "Value of ShortTextInput should not be empty."
@@ -133,7 +140,7 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
     fun `should return an error when region not found`() = JavalinTest.test(app) { _, client ->
         val mutation = createMutation(
             regionId = 99,
-            application = TestApplicationBuilder.build(true)
+            application = TestApplicationBuilder.defaultVerified()
         )
         val response = post(client, mutation)
 
@@ -146,9 +153,7 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
 
     @Test
     fun `should return an error when the application is pre-verified but auth token is missing`() = JavalinTest.test(app) { _, client ->
-        val mutation = createMutation(
-            application = TestApplicationBuilder.build(true)
-        )
+        val mutation = createMutation(application = TestApplicationBuilder.defaultVerified())
         val response = post(client, mutation)
 
         assertEquals(401, response.code)
@@ -156,9 +161,7 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
 
     @Test
     fun `should return an error when api token not found`() = JavalinTest.test(app) { _, client ->
-        val mutation = createMutation(
-            application = TestApplicationBuilder.build(true)
-        )
+        val mutation = createMutation(application = TestApplicationBuilder.defaultVerified())
         val response = post(client, mutation, token = "non-existent")
 
         assertEquals(403, response.code)
@@ -168,9 +171,7 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
     fun `should return an error when api token has wrong type`() = JavalinTest.test(app) { _, client ->
         TestData.createApiToken(creatorId = adminVerein360.id, type = ApiTokenType.USER_IMPORT)
 
-        val mutation = createMutation(
-            application = TestApplicationBuilder.build(true)
-        )
+        val mutation = createMutation(application = TestApplicationBuilder.defaultVerified())
         val response = post(client, mutation, token = "dummy")
 
         assertEquals(403, response.code)
@@ -180,9 +181,7 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
     fun `should create an application and approved verification if the request is pre-verified and valid`() = JavalinTest.test(app) { _, client ->
         TestData.createApiToken(creatorId = adminVerein360.id, type = ApiTokenType.VERIFIED_APPLICATION)
 
-        val mutation = createMutation(
-            application = TestApplicationBuilder.build(true)
-        )
+        val mutation = createMutation(application = TestApplicationBuilder.defaultVerified())
         val response = post(client, mutation, token = "dummy")
 
         assertEquals(200, response.code)
@@ -206,9 +205,7 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
 
     @Test
     fun `should create an application and pending verification if the request is not pre-verified`() = JavalinTest.test(app) { _, client ->
-        val mutation = createMutation(
-            application = TestApplicationBuilder.build(false)
-        )
+        val mutation = createMutation(application = TestApplicationBuilder.default())
         val response = post(client, mutation)
 
         assertEquals(200, response.code)
