@@ -3,6 +3,7 @@ package app.ehrenamtskarte.backend.cards
 import app.ehrenamtskarte.backend.GraphqlApiTest
 import app.ehrenamtskarte.backend.cards.database.CardEntity
 import app.ehrenamtskarte.backend.cards.database.Cards
+import app.ehrenamtskarte.backend.generated.CreateCardFromSelfService
 import app.ehrenamtskarte.backend.helper.CardInfoTestSample
 import app.ehrenamtskarte.backend.helper.ExampleCardInfo
 import app.ehrenamtskarte.backend.helper.TestData
@@ -200,24 +201,16 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
         }
     }
 
-    private fun createMutation(project: String = "koblenz.sozialpass.app", encodedCardInfo: String, generateStaticCode: Boolean = true): String {
-        return """
-        mutation {
-            createCardFromSelfService(
-                project: "$project"
-                encodedCardInfo: "$encodedCardInfo"
-                generateStaticCode: $generateStaticCode
-            ) {
-                dynamicActivationCode {
-                    cardInfoHashBase64
-                    codeBase64
-                }
-                staticVerificationCode {
-                    cardInfoHashBase64
-                    codeBase64
-                }
-            }
-        }
-        """.trimIndent()
+    private fun createMutation(
+        project: String = "koblenz.sozialpass.app",
+        encodedCardInfo: String,
+        generateStaticCode: Boolean = true
+    ): CreateCardFromSelfService {
+        val variables = CreateCardFromSelfService.Variables(
+            project = project,
+            encodedCardInfo = encodedCardInfo,
+            generateStaticCode = generateStaticCode
+        )
+        return CreateCardFromSelfService(variables)
     }
 }

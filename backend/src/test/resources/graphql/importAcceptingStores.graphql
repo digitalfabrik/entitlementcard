@@ -1,0 +1,7 @@
+mutation ImportAcceptingStores($stores: [CSVAcceptingStoreInput!]!, $project: String!, $dryRun: Boolean!) {
+    result: importAcceptingStores(stores: $stores, project: $project, dryRun: $dryRun) {
+        storesCreated
+        storesDeleted
+        storesUntouched
+    }
+}
