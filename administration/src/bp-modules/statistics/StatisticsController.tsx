@@ -17,7 +17,7 @@ import { defaultEndDate, defaultStartDate } from './constants'
 const ViewProjectStatistics = () => {
   const { projectId } = useContext(ProjectConfigContext)
   const cardStatisticsQuery = useGetCardStatisticsInProjectQuery({
-    variables: { projectId, dateEnd: defaultEndDate, dateStart: defaultStartDate },
+    variables: { projectId, dateEnd: defaultEndDate.toString(), dateStart: defaultStartDate.toString() },
   })
   const cardStatisticsQueryResult = getQueryResult(cardStatisticsQuery)
 
@@ -36,8 +36,8 @@ const ViewRegionStatistics = ({ region }: { region: Region }) => {
   const cardStatisticsQuery = useGetCardStatisticsInRegionQuery({
     variables: {
       projectId,
-      dateEnd: defaultEndDate,
-      dateStart: defaultStartDate,
+      dateEnd: defaultEndDate.toString(),
+      dateStart: defaultStartDate.toString(),
       regionId: region.id,
     },
   })
