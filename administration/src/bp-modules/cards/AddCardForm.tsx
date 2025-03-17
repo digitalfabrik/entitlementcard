@@ -1,5 +1,4 @@
 import { Button, FormGroup, InputGroup, Intent, Card as UiCard } from '@blueprintjs/core'
-import { TextField } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -8,6 +7,7 @@ import { hasInfiniteLifetime, isExpirationDateValid, isFullNameValid } from '../
 import type { Card } from '../../cards/Card'
 import { maxCardValidity } from '../../cards/constants'
 import PlainDate from '../../util/PlainDate'
+import CustomDatePicker from '../components/CustomDatePicker'
 import ExtensionForms from './ExtensionForms'
 
 const CardHeader = styled.div`
@@ -45,20 +45,21 @@ const AddCardForm = ({ card, onRemove, updateCard }: CreateCardsFormProps): Reac
       </FormGroup>
       {!hasInfiniteLifetime(card) && (
         <FormGroup label={t('expirationDate')}>
-          <TextField
-            fullWidth
-            type='date'
-            required
-            size='small'
-            error={!isExpirationDateValid(card)}
-            value={card.expirationDate?.toString()}
-            sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' }, '& fieldset': { borderRadius: 0 } }}
-            inputProps={{
-              style: { fontSize: 14, padding: '6px 10px' },
-              min: today.toString(),
-              max: today.add(maxCardValidity).toString(),
+          <CustomDatePicker
+            value={card.expirationDate?.toLocalDate() ?? null}
+            isValid={!isExpirationDateValid(card)}
+            minDate={today.toLocalDate()}
+            maxDate={today.add(maxCardValidity).toLocalDate()}
+            onChange={date => {
+              updateCard({ expirationDate: PlainDate.constructSafely(date, PlainDate.fromLocalDate) })
             }}
-            onChange={event => updateCard({ expirationDate: PlainDate.safeFrom(event.target.value) })}
+            textFieldSlotProps={{
+              sx: {
+                '.MuiPickersSectionList-root': {
+                  padding: '5px 0',
+                },
+              },
+            }}
           />
         </FormGroup>
       )}
