@@ -10,11 +10,11 @@
 val exposedVersion: String by project
 
 plugins {
+    id("com.google.protobuf") version "0.9.4"
     // Apply the Kotlin JVM plugin to add support for Kotlin.
     id("org.jetbrains.kotlin.jvm") version "1.9.10"
-    id("org.jlleitschuh.gradle.ktlint") version "11.5.1"
-    id("com.google.protobuf") version "0.9.4"
     id("org.jetbrains.kotlinx.kover") version "0.8.3"
+    id("org.jlleitschuh.gradle.ktlint") version "12.2.0"
 
     // Apply the application plugin to add support for building a CLI application.
     application
