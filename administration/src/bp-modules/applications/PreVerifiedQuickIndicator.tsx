@@ -15,7 +15,7 @@ export enum PreVerifiedQuickIndicatorType {
 
 const PreVerifiedQuickIndicator = memo(({ type }: { type: PreVerifiedQuickIndicatorType }) => {
   const logo = type === PreVerifiedQuickIndicatorType.Juleica ? JuleicaLogo : Verein360Logo
-  const { t } = useTranslation('applicationCard')
+  const { t } = useTranslation('applicationsOverview')
   return (
     <Tooltip
       content={

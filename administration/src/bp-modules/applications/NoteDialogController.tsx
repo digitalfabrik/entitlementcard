@@ -37,7 +37,7 @@ const NoteDialogController = ({
   onChange,
 }: NoteDialogControllerProps): ReactElement | null => {
   const appToaster = useAppToaster()
-  const { t } = useTranslation('applicationCard')
+  const { t } = useTranslation('applicationsOverview')
   const [updateApplicationNote, { loading }] = useUpdateApplicationNoteMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error, t)
