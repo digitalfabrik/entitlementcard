@@ -21,7 +21,7 @@ const useSendCardConfirmationMails = (): SendCardConfirmationMail => {
       appToaster?.show({ intent: 'success', message: t('cards:cardCreationConfirmationMessage') })
     },
     onError: error => {
-      const { title } = getMessageFromApolloError(error, t)
+      const { title } = getMessageFromApolloError(error)
       appToaster?.show({
         intent: 'danger',
         message: title,

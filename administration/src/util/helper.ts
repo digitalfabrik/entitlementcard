@@ -1,8 +1,8 @@
 import { ApolloError, FetchResult } from '@apollo/client'
-import { TFunction } from 'i18next'
 import XRegExp from 'xregexp'
 
 import getMessageFromApolloError from '../errors/getMessageFromApolloError'
+import i18next from '../i18n'
 
 export const isStagingEnvironment = (): boolean => !!window.location.hostname.match(/staging./)
 export const isProductionEnvironment = (): boolean =>
@@ -34,15 +34,14 @@ export const toLowerCaseFirstLetter = (value: string): string => value.charAt(0)
 
 export const mapGraphqlRequestResult = <T>(
   result: FetchResult<T>,
-  createError: (message: string) => Error,
-  t: TFunction<'errors'>
+  createError: (message: string) => Error
 ): Exclude<FetchResult['data'], null | undefined> => {
   if (result.errors) {
-    const { title } = getMessageFromApolloError(new ApolloError({ graphQLErrors: result.errors }), t)
+    const { title } = getMessageFromApolloError(new ApolloError({ graphQLErrors: result.errors }))
     throw createError(title)
   }
   if (result.data === null || result.data === undefined) {
-    throw createError(t('unknownError'))
+    throw createError(i18next.t('errors:unknownError'))
   }
   return result.data
 }

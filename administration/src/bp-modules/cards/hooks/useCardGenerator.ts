@@ -1,5 +1,4 @@
 import { useCallback, useContext, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 
 import { Card, initializeCardFromCSV, updateCard as updateCardObject } from '../../../cards/Card'
@@ -61,7 +60,6 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
   const [deleteCardsMutation] = useDeleteCardsMutation()
   const appToaster = useAppToaster()
   const sendConfirmationMails = useSendCardConfirmationMails()
-  const { t } = useTranslation('errors')
   const initializedCards = initializeCards ? initializeCardsFromQueryParams(projectConfig, searchParams, region) : []
   const [cards, setCards] = useState<Card[]>(initializedCards)
   const rawApplicationId = searchParams.get('applicationIdToMarkAsProcessed')
@@ -79,7 +77,7 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
       setCardGenerationStep('loading')
 
       try {
-        codes = await createCards(createCardsMutation, projectConfig, cards, t, applicationId)
+        codes = await createCards(createCardsMutation, projectConfig, cards, applicationId)
         const dataUri = await generateFunction(codes, cards, projectConfig, region)
         downloadDataUri(dataUri, filename)
         cards.forEach(saveActivityLog)
@@ -95,7 +93,7 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
           await deleteCards(deleteCardsMutation, region.id, codes).catch(reportErrorToSentry)
         }
         if (appToaster) {
-          showCardGenerationError(appToaster, error, t)
+          showCardGenerationError(appToaster, error)
         }
         setCardGenerationStep('input')
       } finally {
@@ -111,7 +109,6 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
       sendConfirmationMails,
       region,
       applicationId,
-      t,
     ]
   )
 

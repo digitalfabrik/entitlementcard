@@ -34,7 +34,7 @@ const graphQlErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
       }
     case GraphQlExceptionCode.FreinetAgencyNotFound:
       return {
-        title: t('errors:freinetAgencyNotFound'),
+        title: i18next.t('errors:freinetAgencyNotFound'),
       }
     case GraphQlExceptionCode.InvalidLink:
       return {
