@@ -52,7 +52,7 @@ const BirthdayForm = ({
   return (
     <FormGroup label={t('birthdayLabel')}>
       <CustomDatePicker
-        date={birthday?.toLocalDate() ?? null}
+        value={birthday?.toLocalDate() ?? null}
         onBlur={() => setTouched(true)}
         onChange={changeBirthday}
         onClear={() => setValue({ birthday: null })}
