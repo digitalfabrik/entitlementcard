@@ -61,7 +61,7 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
                         isAlreadyVerified = true,
                         category = "Other"
                     ),
-                    error = "All organizations must be of category Sport if application is already verified"
+                    error = "All organizations must be of category 'sports' if application is already verified"
                 )
             )
         }

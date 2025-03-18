@@ -61,7 +61,7 @@ mutation addEakApplication($regionId: Int!, $application: ApplicationInput!, $pr
                   "shortText": "Example Street"
                 }
               },
-              "category": {"shortText": "Sport"},     // Must be Sport
+              "category": {"shortText": "sports"},     // Must be sports
               "contact": {
                 "email": {"email": "jane.doe@sportverein.de"},
                 "hasGivenPermission": true,           // Must be true
