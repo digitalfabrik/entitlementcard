@@ -1,8 +1,8 @@
 import { FormGroup } from '@blueprintjs/core'
-import { TextField } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import CustomDatePicker from '../../bp-modules/components/CustomDatePicker'
 import PlainDate from '../../util/PlainDate'
 import type { Extension, ExtensionComponentProps } from './extensions'
 
@@ -16,23 +16,21 @@ const StartDayForm = ({ value, setValue, isValid }: ExtensionComponentProps<Star
   const { t } = useTranslation('extensions')
   return (
     <FormGroup label={t('startDayLabel')}>
-      <TextField
-        fullWidth
-        type='date'
-        required
-        size='small'
-        error={!isValid}
-        value={value.startDay?.toString() ?? null}
-        sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' }, '& fieldset': { borderRadius: 0 } }}
-        inputProps={{
-          min: minStartDay.toString(),
-          style: { fontSize: 14, padding: '6px 10px' },
-        }}
-        onChange={event => {
-          const date = PlainDate.safeFrom(event.target.value)
+      <CustomDatePicker
+        value={value.startDay?.toLocalDate()}
+        onChange={date => {
           if (date !== null) {
-            setValue({ startDay: date })
+            setValue({ startDay: PlainDate.fromLocalDate(date) })
           }
+        }}
+        isValid={isValid}
+        minDate={minStartDay.toLocalDate()}
+        textFieldSlotProps={{
+          sx: {
+            '.MuiPickersSectionList-root': {
+              padding: '5px 0',
+            },
+          },
         }}
       />
     </FormGroup>
