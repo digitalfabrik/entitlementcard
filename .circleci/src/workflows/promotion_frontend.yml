@@ -12,6 +12,12 @@ jobs:
       context:
         - mattermost
         - tuerantuer-google-play
+  - promote_android:
+      name: promote_koblenz_android
+      build_config_name: koblenz
+      context:
+        - mattermost
+        - tuerantuer-google-play
   - promote_ios:
       name: promote_bayern_ios
       build_config_name: bayern
@@ -21,6 +27,12 @@ jobs:
   - promote_ios:
       name: promote_nuernberg_ios
       build_config_name: nuernberg
+      context:
+        - mattermost
+        - tuerantuer-apple
+  - promote_ios:
+      name: promote_koblenz_ios
+      build_config_name: koblenz
       context:
         - mattermost
         - tuerantuer-apple
