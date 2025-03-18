@@ -42,6 +42,7 @@ const CustomDatePicker = ({
       disabled={disabled}
       label={label}
       views={['year', 'month', 'day']}
+      openTo='year'
       value={value}
       format='dd.MM.yyyy'
       sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' } }}
