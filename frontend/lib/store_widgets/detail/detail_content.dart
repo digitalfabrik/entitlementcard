@@ -125,7 +125,7 @@ class DetailContent extends StatelessWidget {
     if (Platform.isAndroid) {
       await launchUrl(Uri(scheme: 'geo', host: '0,0', queryParameters: {'q': query}));
     } else if (Platform.isIOS) {
-      await launchUrl(Uri.https('maps.apple.com', '/', {'q': query}));
+      await launchUrl(Uri.https('maps.apple.com', '/', {'q': query}), mode: LaunchMode.externalNonBrowserApplication);
     } else {
       await launchUrl(Uri.https('www.google.com', '/maps/search/', {'api': '1', 'query': query}));
     }

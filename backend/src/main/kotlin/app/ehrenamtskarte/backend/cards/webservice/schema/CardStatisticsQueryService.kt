@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.cards.webservice.schema
 
-import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
+import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.cards.database.repos.CardRepository
 import app.ehrenamtskarte.backend.cards.webservice.schema.types.CardStatisticsResultModel
@@ -28,9 +28,9 @@ class CardStatisticsQueryService {
         dfe: DataFetchingEnvironment
     ): List<CardStatisticsResultModel> {
         val context = dfe.getContext<GraphQLContext>()
-        val jwtPayload = context.enforceSignedIn()
+        val admin = context.getAdministrator()
+
         return transaction {
-            val admin = AdministratorEntity.findById(jwtPayload.adminId)
             val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
                 ?: throw ProjectNotFoundException(project)
             val projectConfig = context.backendConfiguration.getProjectConfig(project)
@@ -57,15 +57,15 @@ class CardStatisticsQueryService {
         dfe: DataFetchingEnvironment
     ): List<CardStatisticsResultModel> {
         val context = dfe.getContext<GraphQLContext>()
-        val jwtPayload = context.enforceSignedIn()
+        val admin = context.getAdministrator()
+
         return transaction {
-            val admin = AdministratorEntity.findById(jwtPayload.adminId)
             val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
                 ?: throw ProjectNotFoundException(project)
             val projectConfig = context.backendConfiguration.getProjectConfig(project)
             val region = RegionEntity.findById(regionId) ?: throw RegionNotFoundException()
 
-            if (!Authorizer.mayViewCardStatisticsInRegion(admin, region)) {
+            if (!Authorizer.mayViewCardStatisticsInRegion(admin, region.id.value)) {
                 throw ForbiddenException()
             }
 

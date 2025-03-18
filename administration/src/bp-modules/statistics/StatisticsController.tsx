@@ -2,7 +2,7 @@ import { NonIdealState } from '@blueprintjs/core'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { WhoAmIContext } from '../../WhoAmIProvider'
+import { useWhoAmI } from '../../WhoAmIProvider'
 import {
   Region,
   Role,
@@ -59,7 +59,7 @@ const ViewRegionStatistics = ({ region }: { region: Region }) => {
   )
 }
 const StatisticsController = (): ReactElement => {
-  const { role, region } = useContext(WhoAmIContext).me!
+  const { role, region } = useWhoAmI().me
   const { cardStatistics } = useContext(ProjectConfigContext)
   const { t } = useTranslation('errors')
 

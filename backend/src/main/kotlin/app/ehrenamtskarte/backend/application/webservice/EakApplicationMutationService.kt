@@ -6,13 +6,12 @@ import app.ehrenamtskarte.backend.application.database.repos.ApplicationReposito
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository.getApplicationByApplicationVerificationAccessKey
 import app.ehrenamtskarte.backend.application.webservice.schema.create.Application
 import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationHandler
-import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
+import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.service.Authorizer.mayDeleteApplicationsInRegion
 import app.ehrenamtskarte.backend.auth.service.Authorizer.mayUpdateApplicationsInRegion
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
-import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidNoteSizeException
 import app.ehrenamtskarte.backend.mail.Mailer
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
@@ -54,15 +53,13 @@ class EakApplicationMutationService {
         dfe: DataFetchingEnvironment
     ): Boolean {
         val context = dfe.getContext<GraphQLContext>()
-        val jwtPayload = context.enforceSignedIn()
+        val admin = context.getAdministrator()
 
         return transaction {
             val application =
                 ApplicationEntity.findById(applicationId) ?: throw NotFoundException("Application not found")
-            val user = AdministratorEntity.findById(jwtPayload.adminId)
-                ?: throw UnauthorizedException()
 
-            if (!mayDeleteApplicationsInRegion(user, application.regionId.value)) {
+            if (!mayDeleteApplicationsInRegion(admin, application.regionId.value)) {
                 throw ForbiddenException()
             }
 
@@ -107,7 +104,7 @@ class EakApplicationMutationService {
         dfe: DataFetchingEnvironment
     ): Boolean {
         val context = dfe.getContext<GraphQLContext>()
-        val jwtPayload = context.enforceSignedIn()
+        val admin = context.getAdministrator()
 
         return transaction {
             val application =
@@ -115,10 +112,8 @@ class EakApplicationMutationService {
             if (noteText.length > NOTE_MAX_CHARS) {
                 throw InvalidNoteSizeException(NOTE_MAX_CHARS)
             }
-            val user = AdministratorEntity.findById(jwtPayload.adminId)
-                ?: throw UnauthorizedException()
 
-            if (!mayUpdateApplicationsInRegion(user, application.regionId.value)) {
+            if (!mayUpdateApplicationsInRegion(admin, application.regionId.value)) {
                 throw ForbiddenException()
             }
 

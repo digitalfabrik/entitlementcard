@@ -1,19 +1,20 @@
 import { NonIdealState, Spinner } from '@blueprintjs/core'
-import React, { ReactElement, useContext } from 'react'
+import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
-import { WhoAmIContext } from '../../WhoAmIProvider'
+import { useWhoAmI } from '../../WhoAmIProvider'
 import { Region } from '../../generated/graphql'
 import useBlockNavigation from '../../util/useBlockNavigation'
 import GenerationFinished from './CardsCreatedMessage'
 import CreateCardsButtonBar from './CreateCardsButtonBar'
 import ImportCardsInput from './ImportCardsInput'
 import CardImportTable from './ImportCardsTable'
-import useCardGenerator, { CardActivationState } from './hooks/useCardGenerator'
+import useCardGenerator from './hooks/useCardGenerator'
 
 const InnerImportCardsController = ({ region }: { region: Region }): ReactElement => {
-  const { state, setState, generateCardsPdf, generateCardsCsv, setCards, cards } = useCardGenerator(region)
+  const { cardGenerationStep, setCardGenerationStep, generateCardsPdf, generateCardsCsv, setCards, cards } =
+    useCardGenerator({ region, initializeCards: false })
   const navigate = useNavigate()
   const { t } = useTranslation('cards')
 
@@ -30,16 +31,16 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
     }
   }
 
-  if (state === CardActivationState.loading) {
+  if (cardGenerationStep === 'loading') {
     return <Spinner />
   }
 
-  if (state === CardActivationState.finished) {
+  if (cardGenerationStep === 'finished') {
     return (
       <GenerationFinished
         reset={() => {
           setCards([])
-          setState(CardActivationState.input)
+          setCardGenerationStep('input')
         }}
       />
     )
@@ -63,7 +64,7 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
 }
 
 const ImportCardsController = (): ReactElement => {
-  const { region } = useContext(WhoAmIContext).me!
+  const { region } = useWhoAmI().me
   const { t } = useTranslation('errors')
   if (!region) {
     return <NonIdealState icon='cross' title={t('notAuthorized')} description={t('notAuthorizedToCreateCards')} />

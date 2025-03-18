@@ -17,7 +17,7 @@ const VerificationContainer = styled.ul`
 `
 
 const VerificationsView = ({ verifications }: { verifications: Application['verifications'] }): ReactElement => {
-  const { t } = useTranslation('applicationCard')
+  const { t } = useTranslation('applicationsOverview')
   return (
     <>
       <H5>{t('confirmationsByOrganizations')}</H5>

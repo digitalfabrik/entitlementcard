@@ -26,7 +26,7 @@ import showcaseConfig from './showcase/config'
 
 export type PdfConfig = {
   title: string
-  templatePath: string | null
+  templatePath: string
   issuer: string
   customBoldFont?: string
   elements?: {
@@ -116,6 +116,7 @@ export type ProjectConfig = {
   csvExport: CsvExport
   cardStatistics: CardStatistics
   freinetCSVImportEnabled: boolean
+  freinetDataTransferEnabled: boolean
   cardCreation: boolean
   selfServiceEnabled: boolean
   storesManagement: StoresManagementConfig

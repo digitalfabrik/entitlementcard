@@ -32,6 +32,10 @@ const graphQlErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
       return {
         title: i18next.t('errors:mailAddressAlreadyUsed'),
       }
+    case GraphQlExceptionCode.FreinetAgencyNotFound:
+      return {
+        title: t('errors:freinetAgencyNotFound'),
+      }
     case GraphQlExceptionCode.InvalidLink:
       return {
         title: i18next.t('errors:invalidLink'),
@@ -124,6 +128,10 @@ const graphQlErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
     case GraphQlExceptionCode.RegionNotActivatedCardConfirmationMail:
       return {
         title: i18next.t('errors:regionNotActivatedForConfirmationMail'),
+      }
+    default:
+      return {
+        title: defaultError.title,
       }
   }
 }

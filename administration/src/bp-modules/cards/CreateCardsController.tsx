@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { WhoAmIContext } from '../../WhoAmIProvider'
+import { useWhoAmI } from '../../WhoAmIProvider'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import StandaloneCenter from '../StandaloneCenter'
 import { FREINET_PARAM } from '../constants'
@@ -15,7 +15,7 @@ const Buttons = styled(ButtonGroup)`
 `
 
 const CreateCardsController = (): ReactElement => {
-  const { region } = useContext(WhoAmIContext).me!
+  const { region } = useWhoAmI().me
   const { freinetCSVImportEnabled } = useContext(ProjectConfigContext)
   const { t } = useTranslation('cards')
 

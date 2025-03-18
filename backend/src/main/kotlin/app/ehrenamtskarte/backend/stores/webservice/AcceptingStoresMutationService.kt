@@ -1,11 +1,10 @@
 package app.ehrenamtskarte.backend.stores.webservice
 
-import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
+import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
-import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.stores.database.repos.AcceptingStoresRepository
@@ -20,16 +19,14 @@ class AcceptingStoresMutationService {
     @GraphQLDescription("Import accepting stores via csv")
     fun importAcceptingStores(stores: List<CSVAcceptingStore>, project: String, dryRun: Boolean, dfe: DataFetchingEnvironment): StoreImportReturnResultModel {
         val context = dfe.getContext<GraphQLContext>()
-        val jwtPayload = context.enforceSignedIn()
+        val admin = context.getAdministrator()
         return transaction {
             val projectEntity =
                 ProjectEntity.find { Projects.project eq project }.firstOrNull() ?: throw ProjectNotFoundException(
                     project
                 )
-            val user = AdministratorEntity.findById(jwtPayload.adminId)
-                ?: throw UnauthorizedException()
 
-            if (!Authorizer.mayUpdateStoresInProject(user, projectEntity.id.value)) {
+            if (!Authorizer.mayUpdateStoresInProject(admin, projectEntity.id.value)) {
                 throw ForbiddenException()
             }
 

@@ -43,7 +43,7 @@ const JsonFieldAttachment = memo(
       const downloadUrl = `${baseUrl}/file/${attachment.fileIndex}`
       const onClick = async () => {
         const loadingToastKey = appToaster?.show({
-          message: `${t('applicationCard:loadAttachment')} ${attachment.fileIndex + 1}...`,
+          message: `${t('applicationsOverview:loadAttachment')} ${attachment.fileIndex + 1}...`,
           intent: 'primary',
           isCloseButtonShown: false,
         })
@@ -55,9 +55,9 @@ const JsonFieldAttachment = memo(
           } else if (contentType === null || !extensionByContentType.has(contentType)) {
             throw Error('Invalid Content Type')
           }
-          const filename = `${t('applicationCard:attachment')}${attachment.fileIndex + 1}.${extensionByContentType.get(
-            contentType
-          )}`
+          const filename = `${t('applicationsOverview:attachment')}${
+            attachment.fileIndex + 1
+          }.${extensionByContentType.get(contentType)}`
           const arrayBuffer = await result.arrayBuffer()
           const file = new File([arrayBuffer], filename, { type: contentType })
           downloadDataUri(file, filename)
@@ -78,15 +78,19 @@ const JsonFieldAttachment = memo(
             rightIcon={<Icon icon='download' color={Colors.GRAY1} />}
             interactive
             minimal
-            onClick={onClick}>{`${t('applicationCard:attachment')} ${jsonField.value.fileIndex + 1}`}</PrintAwareTag>
-          <PrintOnlySpan>{`(${t('applicationCard:seeAttachment')} ${jsonField.value.fileIndex + 1})`}</PrintOnlySpan>
+            onClick={onClick}>{`${t('applicationsOverview:attachment')} ${
+            jsonField.value.fileIndex + 1
+          }`}</PrintAwareTag>
+          <PrintOnlySpan>{`(${t('applicationsOverview:seeAttachment')} ${
+            jsonField.value.fileIndex + 1
+          })`}</PrintOnlySpan>
         </p>
       )
     }
     return (
       <p>
         {t(getTranslationKey(jsonField.name, parentName))}:&nbsp;
-        <span>{t('applicationCard:submittedButNotVisible')}</span>
+        <span>{t('applicationsOverview:submittedButNotVisible')}</span>
       </p>
     )
   }

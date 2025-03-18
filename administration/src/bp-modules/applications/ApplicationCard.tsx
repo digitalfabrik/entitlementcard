@@ -160,7 +160,7 @@ const ApplicationCard = ({
   onChange,
 }: ApplicationCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false)
-  const { t } = useTranslation('applicationCard')
+  const { t } = useTranslation('applicationsOverview')
   const { createdDate: createdDateString, jsonValue, id, withdrawalDate, cardCreated } = application
   const jsonField: JsonField<'Array'> = JSON.parse(jsonValue)
   const config = useContext(ProjectConfigContext)
@@ -262,7 +262,7 @@ const ApplicationCard = ({
           <CollapseIcon icon='chevron-up' onClick={() => setIsExpanded(!isExpanded)} style={{ marginLeft: 'auto' }} />
         </ButtonContainer>
         <Alert
-          cancelButtonText={t('cancel')}
+          cancelButtonText={t('misc:cancel')}
           confirmButtonText={t('deleteApplication')}
           icon='trash'
           intent='danger'

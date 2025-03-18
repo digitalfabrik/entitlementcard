@@ -21,6 +21,10 @@
       <excludeFolder url="file://$MODULE_DIR$/android/.gradle" />
       <excludeFolder url="file://$MODULE_DIR$/android/build" />
       <excludeFolder url="file://$MODULE_DIR$/android/app/build" />
+      <excludeFolder url="file://$MODULE_DIR$/android/buildSrc/.gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/android/buildSrc/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks" />
+      <excludeFolder url="file://$MODULE_DIR$/ios/build" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Flutter Plugins" level="project" />

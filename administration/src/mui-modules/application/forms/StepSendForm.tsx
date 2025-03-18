@@ -41,7 +41,7 @@ type ValidatedInput = {
   givenInformationIsCorrectAndComplete: boolean
   hasAcceptedEmailUsage: boolean
 }
-type AdditionalProps = { regionId: number }
+type AdditionalProps = { regionId: string }
 
 const StepSendForm: Form<State, ValidatedInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
@@ -59,7 +59,10 @@ const StepSendForm: Form<State, ValidatedInput, AdditionalProps> = {
       'givenInformationIsCorrectAndComplete'
     )
     const setHasAcceptedEmailUsage = useUpdateStateCallback(setState, 'hasAcceptedEmailUsage')
-    const policyQuery = useGetDataPolicyQuery({ variables: { regionId } })
+    const policyQuery = useGetDataPolicyQuery({
+      variables: { regionId: Number(regionId) },
+      skip: regionId.length === 0 || Number.isNaN(regionId),
+    })
     const config = useContext(ProjectConfigContext)
     const [openPrivacyPolicy, setOpenPrivacyPolicy] = useState<boolean>(false)
     const PrivacyLabel = (

@@ -1,17 +1,21 @@
-import { ApolloClient, ApolloError } from '@apollo/client'
+import { ApolloError } from '@apollo/client'
 
 import getMessageFromApolloError from '../errors/getMessageFromApolloError'
-import { DeleteCardsDocument, DeleteCardsMutation, DeleteCardsMutationVariables } from '../generated/graphql'
-import { CreateCardsError } from './createCards'
+import { DeleteCardsMutationFn } from '../generated/graphql'
+import { CreateCardsError, CreateCardsResult } from './createCards'
+
+const extractCardInfoHashes = (codes: CreateCardsResult[]) =>
+  codes.flatMap(({ dynamicCardInfoHashBase64, staticCardInfoHashBase64 }) =>
+    staticCardInfoHashBase64 ? [dynamicCardInfoHashBase64, staticCardInfoHashBase64] : dynamicCardInfoHashBase64
+  )
 
 const deleteCards = async (
-  client: ApolloClient<object>,
+  deleteCardsMutation: DeleteCardsMutationFn,
   regionId: number,
-  cardInfoHashesBase64: string[]
+  codes: CreateCardsResult[]
 ): Promise<void> => {
-  const result = await client.mutate<DeleteCardsMutation, DeleteCardsMutationVariables>({
-    mutation: DeleteCardsDocument,
-    variables: { regionId, cardInfoHashBase64List: cardInfoHashesBase64 },
+  const result = await deleteCardsMutation({
+    variables: { regionId, cardInfoHashBase64List: extractCardInfoHashes(codes) },
   })
   if (result.errors) {
     const { title } = getMessageFromApolloError(new ApolloError({ graphQLErrors: result.errors }))
