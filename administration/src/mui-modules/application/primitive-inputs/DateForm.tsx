@@ -31,6 +31,9 @@ const DateForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
     if (Number.isNaN(date.valueOf())) {
       return { type: 'error', message: 'Eingabe ist kein gültiges Datum.' }
     }
+    if (date <= minDate) {
+      return { type: 'error', message: 'Das Datum muss nach dem 1.1.1900 liegen' }
+    }
     if (options.maximumDate && date > options.maximumDate) {
       return { type: 'error', message: options.maximumDateErrorMessage }
     }
