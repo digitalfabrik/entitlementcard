@@ -20,7 +20,7 @@ const FreinetSettingsController = ({ regionId, project }: FreinetSettingsControl
   })
   const [updateFreinetDataTransfer] = useUpdateDataTransferToFreinetMutation({
     onError: error => {
-      const { title } = getMessageFromApolloError(error, t)
+      const { title } = getMessageFromApolloError(error)
       appToaster?.show({ intent: 'danger', message: title })
     },
     onCompleted: () => {
@@ -28,7 +28,7 @@ const FreinetSettingsController = ({ regionId, project }: FreinetSettingsControl
     },
   })
 
-  const freinetQueryResult = getQueryResult(freinetQuery, t)
+  const freinetQueryResult = getQueryResult(freinetQuery)
   if (!freinetQueryResult.successful) {
     return freinetQueryResult.component
   }

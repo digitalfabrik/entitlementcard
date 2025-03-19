@@ -1,6 +1,7 @@
 import { TextField } from '@mui/material'
 import React, { useContext, useState } from 'react'
 
+import i18next from '../../../i18n'
 import { FormContext } from '../SteppedSubForms'
 import { Form, FormComponentProps } from '../util/FormType'
 
@@ -13,11 +14,12 @@ const NumberForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
   getArrayBufferKeys: () => [],
   validate: ({ value }, options) => {
     const number = parseFloat(value)
+    const { min, max } = options
     if (Number.isNaN(number)) {
-      return { type: 'error', message: 'Eingabe ist keine Zahl.' }
+      return { type: 'error', message: i18next.t('applicationForms:noValidNumberError') }
     }
-    if (number < options.min || number > options.max) {
-      return { type: 'error', message: `Wert muss zwischen ${options.min} und ${options.max} liegen.` }
+    if (number < min || number > max) {
+      return { type: 'error', message: i18next.t('applicationForms:minMaxNumberError', { min, max }) }
     }
     return { type: 'valid', value: number }
   },

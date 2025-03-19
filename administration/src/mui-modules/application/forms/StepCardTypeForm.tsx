@@ -3,6 +3,7 @@ import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { ApplicationType, BavariaCardType } from '../../../generated/graphql'
+import i18next from '../../../i18n'
 import CustomDivider from '../CustomDivider'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
 import CheckboxForm from '../primitive-inputs/CheckboxForm'
@@ -22,16 +23,16 @@ const CardTypeAlert = styled(Alert)`
 const CardTypeForm = createRadioGroupForm<BavariaCardType>()
 const cardTypeOptions = {
   labelByValue: {
-    [BavariaCardType.Blue]: 'Blaue Ehrenamtskarte',
-    [BavariaCardType.Golden]: 'Goldene Ehrenamtskarte',
+    [BavariaCardType.Blue]: i18next.t('applicationForms:blueCardType'),
+    [BavariaCardType.Golden]: i18next.t('applicationForms:goldenCardType'),
   },
 }
 
 const ApplicationTypeForm = createRadioGroupForm<ApplicationType>()
 const applicationTypeOptions = {
   labelByValue: {
-    [ApplicationType.FirstApplication]: 'Erstantrag',
-    [ApplicationType.RenewalApplication]: 'Verlängerungsantrag',
+    [ApplicationType.FirstApplication]: i18next.t('applicationForms:initialApplication'),
+    [ApplicationType.RenewalApplication]: i18next.t('applicationForms:renewalApplication'),
   },
 }
 
@@ -76,7 +77,7 @@ const StepCardTypeForm: Form<State, ValidatedInput> = {
       return { type: 'valid', value: { ...partialValidationResult.value, applicationType: null } }
     }
     if (!partialValidationResult.value.wantsPhysicalCard && !partialValidationResult.value.wantsDigitalCard) {
-      return { type: 'error', message: 'Es muss mindestens ein Kartentyp ausgewählt sein.' }
+      return { type: 'error', message: i18next.t('applicationForms:cardTypeNotChosenError') }
     }
     const applicationTypeResult = ApplicationTypeForm.validate(state.applicationType, applicationTypeOptions)
     if (applicationTypeResult.type === 'error') {

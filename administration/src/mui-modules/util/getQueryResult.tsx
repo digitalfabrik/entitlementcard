@@ -1,6 +1,5 @@
 import { OperationVariables, QueryResult } from '@apollo/client'
 import { CircularProgress, styled } from '@mui/material'
-import { TFunction } from 'i18next'
 import React, { ReactElement } from 'react'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
@@ -23,8 +22,7 @@ type QueryHandlerResult<Data> =
     }
 
 const getQueryResult = <Data, Variables extends OperationVariables>(
-  queryResult: QueryResult<Data, Variables>,
-  t: TFunction
+  queryResult: QueryResult<Data, Variables>
 ): QueryHandlerResult<Data> => {
   const { error, loading, data, refetch } = queryResult
 
@@ -32,7 +30,7 @@ const getQueryResult = <Data, Variables extends OperationVariables>(
     return { successful: false, component: <LoadingSpinner /> }
   }
   if (error) {
-    const { title, description } = getMessageFromApolloError(error, t)
+    const { title, description } = getMessageFromApolloError(error)
     return { successful: false, component: <ErrorHandler title={title} description={description} refetch={refetch} /> }
   }
   if (data === undefined) {

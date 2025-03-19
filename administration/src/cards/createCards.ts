@@ -1,5 +1,3 @@
-import { TFunction } from 'i18next'
-
 import { DynamicActivationCode, StaticVerificationCode } from '../generated/card_pb'
 import { CreateCardsFromSelfServiceMutationFn, CreateCardsMutation, CreateCardsMutationFn } from '../generated/graphql'
 import type { ProjectConfig } from '../project-configs/getProjectConfig'
@@ -41,14 +39,13 @@ const mapCardCreationResult = (card: RawCreateCardsResult): CreateCardsResult =>
 export const createSelfServiceCard = async (
   createCardsSelfService: CreateCardsFromSelfServiceMutationFn,
   projectConfig: ProjectConfig,
-  selfServiceCard: Card,
-  t: TFunction
+  selfServiceCard: Card
 ): Promise<CreateCardsResult> => {
   const cardInfo = uint8ArrayToBase64(generateCardInfo(selfServiceCard).toBinary())
   const result = await createCardsSelfService({
     variables: { project: projectConfig.projectId, generateStaticCodes: true, encodedCardInfo: cardInfo },
   })
-  const data = mapGraphqlRequestResult(result, message => new CreateCardsError(message), t)
+  const data = mapGraphqlRequestResult(result, message => new CreateCardsError(message))
   return mapCardCreationResult(data.card)
 }
 
@@ -56,7 +53,6 @@ const createCards = async (
   createCardsMutation: CreateCardsMutationFn,
   projectConfig: ProjectConfig,
   cards: Card[],
-  t: TFunction,
   applicationIdToMarkAsProcessed: number | null
 ): Promise<CreateCardsResult[]> => {
   const { projectId, staticQrCodesEnabled: generateStaticCodes } = projectConfig
@@ -64,7 +60,7 @@ const createCards = async (
   const result = await createCardsMutation({
     variables: { project: projectId, encodedCardInfos, generateStaticCodes, applicationIdToMarkAsProcessed },
   })
-  const data = mapGraphqlRequestResult(result, message => new CreateCardsError(message), t)
+  const data = mapGraphqlRequestResult(result, message => new CreateCardsError(message))
   return data.cards.map(mapCardCreationResult)
 }
 

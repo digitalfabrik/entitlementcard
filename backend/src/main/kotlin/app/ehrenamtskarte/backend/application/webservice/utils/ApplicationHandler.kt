@@ -166,8 +166,8 @@ class ApplicationHandler(
             require(organizations.isNotEmpty()) {
                 "Work at organizations list cannot be empty if application is already verified"
             }
-            require(organizations.all { it.organization.category.shortText == "Sport" }) {
-                "All organizations must be of category Sport if application is already verified"
+            require(organizations.all { it.organization.category.shortText == "sports" }) {
+                "All organizations must be of category 'sports' if application is already verified"
             }
         } catch (e: IllegalArgumentException) {
             throw InvalidJsonException(e.message!!)

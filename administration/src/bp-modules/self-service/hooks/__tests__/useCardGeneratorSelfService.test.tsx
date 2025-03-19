@@ -17,11 +17,6 @@ jest.mock('../../../../generated/graphql', () => ({
   ...jest.requireActual('../../../../generated/graphql'),
   generatePdf: jest.fn(),
 }))
-jest.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key: string) => key,
-  }),
-}))
 
 jest.mock('../../../../cards/PdfFactory', () => ({
   ...jest.requireActual('../../../../cards/PdfFactory'),
