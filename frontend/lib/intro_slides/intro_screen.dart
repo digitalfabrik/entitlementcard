@@ -1,32 +1,37 @@
+import 'package:ehrenamtskarte/app.dart';
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
-import 'package:ehrenamtskarte/intro_slides/location_request_button.dart';
+import 'package:ehrenamtskarte/configuration/settings_model.dart';
+import 'package:ehrenamtskarte/location/determine_position.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intro_slider/intro_slider.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
+import 'package:provider/provider.dart';
 
-import 'package:ehrenamtskarte/app.dart';
+class IntroScreen extends StatefulWidget {
+  const IntroScreen({super.key});
 
-typedef OnFinishedCallback = void Function();
+  @override
+  State<StatefulWidget> createState() => _IntroScreenState();
+}
 
-class IntroScreen extends StatelessWidget {
-  final OnFinishedCallback? onFinishedCallback;
-
-  const IntroScreen({super.key, this.onFinishedCallback});
-
-  void onDonePress(BuildContext context) {
-    onFinishedCallback?.call();
+class _IntroScreenState extends State<IntroScreen> {
+  Future<void> _onDonePress(SettingsModel settings) async {
+    await checkAndRequestLocationPermission(context, requestIfNotGranted: true);
+    settings.setFirstStart(enabled: false);
+    if (!mounted) return;
     GoRouter.of(context).pushReplacement(homeRouteName);
   }
 
   @override
   Widget build(BuildContext context) {
     final t = context.t;
+    final settings = Provider.of<SettingsModel>(context);
     final theme = Theme.of(context);
     return IntroSlider(
-      onDonePress: () => onDonePress(context),
-      renderDoneBtn: Text(t.common.done),
+      onDonePress: () => _onDonePress(settings),
+      renderDoneBtn: Text(t.common.next),
       renderNextBtn: Text(t.common.next),
       renderPrevBtn: Text(t.common.previous),
       indicatorConfig: IndicatorConfig(
@@ -69,20 +74,12 @@ class IntroScreen extends StatelessWidget {
           styleTitle: theme.textTheme.headlineSmall,
           pathImage: buildConfig.introSlidesImages[3],
           widgetDescription: Center(
-            child: Column(
-              children: [
-                Text(
-                  t.intro.locationDescription,
-                  style: theme.textTheme.bodyLarge?.apply(fontSizeFactor: 1.2),
-                  textAlign: TextAlign.center,
-                  maxLines: 100,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(15),
-                  child: LocationRequestButton(),
-                )
-              ],
+            child: Text(
+              t.intro.locationDescription,
+              style: theme.textTheme.bodyLarge?.apply(fontSizeFactor: 1.2),
+              textAlign: TextAlign.center,
+              maxLines: 100,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ),

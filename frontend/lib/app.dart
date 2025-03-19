@@ -31,11 +31,7 @@ final GoRouter router = GoRouter(
       path: initialRouteName,
       builder: (BuildContext context, GoRouterState state) {
         final settings = Provider.of<SettingsModel>(context);
-        return settings.firstStart
-            ? IntroScreen(
-                onFinishedCallback: () => settings.setFirstStart(enabled: false),
-              )
-            : HomePage();
+        return settings.firstStart ? IntroScreen() : HomePage();
       },
       routes: [
         GoRoute(
@@ -62,10 +58,7 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: introRouteName,
       builder: (BuildContext context, GoRouterState state) {
-        final settings = Provider.of<SettingsModel>(context, listen: false);
-        return IntroScreen(
-          onFinishedCallback: () => settings.setFirstStart(enabled: false),
-        );
+        return IntroScreen();
       },
     ),
   ],
