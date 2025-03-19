@@ -4,6 +4,7 @@ import app.ehrenamtskarte.backend.GraphqlApiTest
 import app.ehrenamtskarte.backend.common.webservice.EAK_BAYERN_PROJECT
 import app.ehrenamtskarte.backend.freinet.database.FreinetAgencies
 import app.ehrenamtskarte.backend.freinet.database.FreinetAgenciesEntity
+import app.ehrenamtskarte.backend.generated.UpdateDataTransferToFreinet
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import io.javalin.testtools.JavalinTest
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
@@ -51,15 +52,12 @@ internal class FreinetAgencyMutationServiceTest : GraphqlApiTest() {
         }
     }
 
-    private fun createMutation(regionId: Int, project: String, dataTransferActivated: Boolean): String {
-        return """
-        mutation updateDataTransferToFreinet {
-            result: updateDataTransferToFreinet(
-              regionId: $regionId
-              project: "$project"
-              dataTransferActivated: $dataTransferActivated
-              )
-        }
-        """.trimIndent()
+    private fun createMutation(regionId: Int, project: String, dataTransferActivated: Boolean): UpdateDataTransferToFreinet {
+        val variables = UpdateDataTransferToFreinet.Variables(
+            project = project,
+            regionId = regionId,
+            dataTransferActivated = dataTransferActivated
+        )
+        return UpdateDataTransferToFreinet(variables)
     }
 }

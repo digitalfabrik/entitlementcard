@@ -4,6 +4,7 @@ import app.ehrenamtskarte.backend.GraphqlApiTest
 import app.ehrenamtskarte.backend.cards.database.CardEntity
 import app.ehrenamtskarte.backend.cards.database.Cards
 import app.ehrenamtskarte.backend.cards.database.CodeType
+import app.ehrenamtskarte.backend.generated.CreateCardsByCardInfos
 import app.ehrenamtskarte.backend.helper.CardInfoTestSample
 import app.ehrenamtskarte.backend.helper.ExampleCardInfo
 import app.ehrenamtskarte.backend.helper.TestAdministrators
@@ -17,7 +18,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
-import kotlin.test.assertTrue
 
 internal class CreateCardsByCardInfosTest : GraphqlApiTest() {
 
@@ -85,8 +85,8 @@ internal class CreateCardsByCardInfosTest : GraphqlApiTest() {
         val jsonResponse = response.json()
 
         jsonResponse.apply {
-            assertTrue(path("data").path("createCardsByCardInfos").get(0).has("dynamicActivationCode"))
-            assertTrue(path("data").path("createCardsByCardInfos").get(0).has("staticVerificationCode"))
+            assertNotNull(findValue("dynamicActivationCode"))
+            assertNotNull(findValue("staticVerificationCode"))
         }
 
         transaction {
@@ -125,25 +125,13 @@ internal class CreateCardsByCardInfosTest : GraphqlApiTest() {
         encodedCardInfo: String,
         generateStaticCode: Boolean = true,
         applicationIdToMarkAsProcessed: Int? = null
-    ): String {
-        return """
-        mutation CreateCardsByCardInfos {
-            createCardsByCardInfos(
-                project: "$project"
-                encodedCardInfos: "$encodedCardInfo"
-                generateStaticCodes: $generateStaticCode
-                applicationIdToMarkAsProcessed: $applicationIdToMarkAsProcessed
-            ) {
-                dynamicActivationCode {
-                    cardInfoHashBase64
-                    codeBase64
-                }
-                staticVerificationCode {
-                    cardInfoHashBase64
-                    codeBase64
-                }
-            }
-        }
-        """.trimIndent()
+    ): CreateCardsByCardInfos {
+        val variables = CreateCardsByCardInfos.Variables(
+            project = project,
+            encodedCardInfos = listOf(encodedCardInfo),
+            generateStaticCodes = generateStaticCode,
+            applicationIdToMarkAsProcessed = applicationIdToMarkAsProcessed
+        )
+        return CreateCardsByCardInfos(variables)
     }
 }
