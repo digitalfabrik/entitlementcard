@@ -185,7 +185,6 @@
     "deleteApplication": "Antrag löschen",
     "deleteApplicationConfirmationPrompt": "Möchten Sie den Antrag unwiderruflich löschen?",
     "exportPdf": "PDF exportieren",
-    "status": "Status",
     "loadAttachment": "Lade Anhang",
     "attachment": "Anhang",
     "seeAttachment": "siehe Anhang",
@@ -507,6 +506,9 @@
     "none": "Keine"
   },
   "errors": {
+    "functionNotAvailable": "Funktion nicht verfügbar",
+    "internalError": "Interner Fehler aufgetreten",
+    "pageNotFound": "Seite nicht gefunden",
     "retry": "Erneut Versuchen",
     "serverNotAvailable": "Server nicht erreichbar.",
     "unknown": "Etwas ist schief gelaufen.",
