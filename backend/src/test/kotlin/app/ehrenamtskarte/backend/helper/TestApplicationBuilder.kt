@@ -24,7 +24,7 @@ class TestApplicationBuilder {
             cardType: BavariaCardType = BavariaCardType.BLUE,
             wantsDigitalCard: Boolean = true,
             wantsPhysicalCard: Boolean = false,
-            category: String = "Sport"
+            category: String = "sports"
         ): Application {
             return Application(
                 personalData = PersonalData(

@@ -40,7 +40,7 @@ const NoteDialogController = ({
   const { t } = useTranslation('applicationsOverview')
   const [updateApplicationNote, { loading }] = useUpdateApplicationNoteMutation({
     onError: error => {
-      const { title } = getMessageFromApolloError(error, t)
+      const { title } = getMessageFromApolloError(error)
       appToaster?.show({ intent: 'danger', message: title })
     },
     onCompleted: () => {
