@@ -1,23 +1,17 @@
 docker:
-  - image: rust:bookworm
+  - image: cimg/node:20.18.0
 working_directory: ~/martin
 steps:
-  - checkout:
-      path: ~/project
-  - run: apt update -y && apt install -y nodejs npm
   - install_app_toolbelt
   - run:
       name: "Download martin"
       command: |
           curl -LO "https://github.com/maplibre/martin/releases/download/v0.13.0/martin-x86_64-unknown-linux-gnu.tar.gz"
-  - prepare_workspace
   - run:
       name: "Prepare storing"
       command: |
         mkdir -p ~/attached_workspace/artifacts/martin
         tar -xvzf martin-x86_64-unknown-linux-gnu.tar.gz -C ~/attached_workspace/artifacts/martin martin
-  - store_artifacts:
-      path: ~/attached_workspace/artifacts
   - persist_to_workspace:
       root: ~/attached_workspace/artifacts
       paths:
