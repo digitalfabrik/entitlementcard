@@ -3,7 +3,7 @@ when:
     - equal: [<< pipeline.parameters.run_commit_main >>, "run"]
     - and:
       - equal: [<< pipeline.parameters.run_commit_main >>, "run_if_on_main"]
-      - equal: [main, << pipeline.git.branch >>]
+      - equal: ["1229-finalize-ci", << pipeline.git.branch >>]
 jobs:
   - bump_version:
         prepare_delivery: false

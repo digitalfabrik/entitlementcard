@@ -1050,7 +1050,7 @@ workflows:
                         - << pipeline.parameters.run_commit_main >>
                         - run_if_on_main
                     - equal:
-                        - main
+                        - 1229-finalize-ci
                         - << pipeline.git.branch >>
     delivery_beta_all:
         jobs:
