@@ -105,7 +105,7 @@ class DetailContent extends StatelessWidget {
                 height: 48,
                 color: theme.primaryColorLight,
               ),
-              ButtonBar(
+              OverflowBar(
                 alignment: MainAxisAlignment.center,
                 children: [
                   OutlinedButton(

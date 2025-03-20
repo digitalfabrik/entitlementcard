@@ -32,7 +32,7 @@ class RemovedStoreContent extends StatelessWidget {
                 style: theme.textTheme.bodyLarge,
               ),
               Divider(thickness: 0.7, height: 48, color: theme.primaryColorLight),
-              ButtonBar(
+              OverflowBar(
                 alignment: MainAxisAlignment.center,
                 children: [
                   OutlinedButton(
