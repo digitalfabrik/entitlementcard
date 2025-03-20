@@ -7,7 +7,6 @@ when:
 jobs:
   - bump_version:
         prepare_delivery: false
-  - check
   - check_administration
   - check_backend
   - build_administration:

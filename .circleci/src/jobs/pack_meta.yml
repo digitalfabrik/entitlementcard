@@ -1,16 +1,15 @@
 docker:
   - image: debian:12 # We deploy on debian -> pack on debian
 steps:
-  - checkout:
-      path: ~/project
-  - run: apt update -y && apt install -y nodejs npm
-  - install_app_toolbelt
   - prepare_workspace
-  - restore_environment_variables
-  - run: ~/project/scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -d "Meta package for the Ehrenamtskarte app" -n "eak" -c "eak-backend, eak-administration, eak-martin"
-  - run: |
-      mkdir -p ~/attached_workspace/debs/backend
-      cp *.deb ~/attached_workspace/debs/backend
+  - run:
+      name: Pack meta
+      command: scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -d "Meta package for the Ehrenamtskarte app" -n "eak" -c "eak-backend, eak-administration, eak-martin"
+  - run:
+      name: Move package
+      command: |
+        mkdir -p ~/attached_workspace/debs/backend
+        cp *.deb ~/attached_workspace/debs/backend
   - store_artifacts:
       path: ~/attached_workspace
   - persist_to_workspace:

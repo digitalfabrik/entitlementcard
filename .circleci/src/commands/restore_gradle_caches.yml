@@ -1,6 +1,0 @@
-description: Restores and saves the gradle caches for backend.
-steps:
-  - restore_cache:
-      key: v3-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
-  - restore_cache:
-      key: v3-gradle-cache-{{ checksum "build.gradle.kts" }}

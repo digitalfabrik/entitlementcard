@@ -1,17 +1,15 @@
 docker:
   - image: debian:12 # We deploy on debian -> pack on debian
-working_directory: ~/project/backend
 steps:
-  - checkout:
-      path: ~/project
-  - run: apt update -y && apt install -y nodejs npm
-  - install_app_toolbelt
   - prepare_workspace
-  - restore_environment_variables
-  - run: ~/project/scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -t ~/attached_workspace/backend/build/distributions/*.tar -s ~/project/scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "openjdk-17-jre-headless"
-  - run: |
-      mkdir -p ~/attached_workspace/debs/backend
-      mv *.deb ~/attached_workspace/debs/backend
+  - run:
+      name: Pack backend
+      command: scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -t ~/attached_workspace/backend/build/distributions/*.tar -s scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "openjdk-17-jre-headless"
+  - run:
+      name: Move package
+      command: |
+        mkdir -p ~/attached_workspace/debs/backend
+        mv *.deb ~/attached_workspace/debs/backend
   - store_artifacts:
       path: ~/attached_workspace
   - persist_to_workspace:

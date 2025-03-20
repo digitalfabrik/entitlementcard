@@ -1,36 +1,27 @@
 docker:
   - image: cimg/node:20.18.0
 resource_class: small
+working_directory: ~/project/frontend
 steps:
-  - checkout:
-      path: ~/project
+  - prepare_workspace
+  - check_circleci_config
   - install_app_toolbelt
-  - install_dart_linux
-  - install_fvm
+  - install_flutter
   - run:
-      name: Install Flutter Packages
-      command: fvm flutter pub get --enforce-lockfile
-      working_directory: ~/project/frontend/
-  - run:
-      name: Check Formatting
+      name: Check formatting
       command: fvm dart format -l 120 -o none --set-exit-if-changed .
-      working_directory: ~/project/frontend/
   - run:
-      name: Build Runner
-      command: |
-        # Statically use "bayern" build config for analyzing here
-        fvm flutter pub run build_runner build --define "df_build_config=name=bayern"
-      working_directory: ~/project/frontend/
+      name: Setup build config
+      # Statically use "bayern" build config for analyzing
+      command: fvm flutter pub run build_runner build --define "df_build_config=name=bayern"
   - run:
-      name: Check Analyzer and Linting
+      name: Analyze and lint
       command: |
         fvm flutter analyze --fatal-infos --fatal-warnings
         fvm flutter analyze pubs/df_build_config --fatal-infos --fatal-warnings
-      working_directory: ~/project/frontend/
   - run:
-      name: Tests
+      name: Test
       command: |
         fvm flutter test
         fvm flutter test pubs/df_build_config
-      working_directory: ~/project/frontend/
   - notify

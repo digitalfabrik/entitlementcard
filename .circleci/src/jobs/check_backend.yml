@@ -5,21 +5,21 @@ docker:
   - image: cimg/openjdk:17.0.13-node
 working_directory: ~/project/backend
 steps:
-  - checkout:
-      path: ~/project
+  - prepare_workspace
+  - check_circleci_config
+  - install_protobuf_linux
   - setup_remote_docker:
       docker_layer_caching: true
-  - run: git submodule sync
-  - run: git submodule update --init
-  - install_app_toolbelt
-  - install_protobuf_linux
-  - prepare_workspace
-  - restore_cache:
-      key: v3-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
-  - restore_cache:
-      key: v3-gradle-cache-{{ checksum "build.gradle.kts" }}
   - run:
-      name: Check that GraphQL scheme is stable
+      name: Setup submodules
+      command: |
+        git submodule sync
+        git submodule update --init
+  - restore_cache:
+      keys:
+        - v1-gradle-{{ checksum "build.gradle.kts" }}
+  - run:
+      name: Check GraphQL scheme stability
       command: |
         ./gradlew run --args="graphql-export ../specs/backend-api.graphql"
         git diff --exit-code
@@ -28,8 +28,7 @@ steps:
       command: ./gradlew ktlintCheck
   - run:
       name: Test
-      command: |
-        ./gradlew test
+      command: ./gradlew test
   - store_test_results:
       path: ./build/test-results
   - run:
@@ -39,11 +38,8 @@ steps:
       path: ./build/reports/kover/html
       destination: test-coverage-report
   - save_cache:
-      paths:
-        - ~/.gradle/wrapper
-      key: v3-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
-  - save_cache:
+      key: v1-gradle-{{ checksum "build.gradle.kts" }}
       paths:
         - ~/.gradle/caches
-      key: v3-gradle-cache-{{ checksum "build.gradle.kts" }}
+        - ~/.gradle/wrapper
   - notify

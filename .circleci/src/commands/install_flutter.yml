@@ -1,0 +1,39 @@
+parameters:
+  precache:
+    type: enum
+    default: none
+    enum: [none, android, ios]
+steps:
+  - run:
+      name: Install fvm
+      command: |
+        curl -fsSL https://raw.githubusercontent.com/leoafarias/fvm/refs/heads/main/scripts/install.sh | bash
+        curl -sL https://raw.githubusercontent.com/leoafarias/fvm/refs/heads/main/scripts/install.sh | shasum -a 256
+  - restore_cache:
+      name: Restore flutter
+      keys:
+        - v1-fvm-{{ arch }}-{{ checksum ".fvmrc" }}-{{ checksum "pubspec.yaml" }}-{{ checksum "pubspec.lock"  }}
+        - v1-fvm-{{ arch }}-
+  - run:
+      name: Install flutter
+      command: |
+        fvm install
+        fvm flutter config --no-analytics
+        fvm flutter --version
+  - run:
+      name: Install flutter packages
+      command: fvm flutter pub get --enforce-lockfile
+  - unless:
+      condition:
+        equal: [<< parameters.precache >>, none]
+      steps:
+        - run:
+            name: Precache flutter binary artifacts
+            command: fvm flutter precache --<< parameters.precache >>
+            working_directory: << parameters.precache >>
+  - save_cache:
+      name: Save flutter
+      key: v1-fvm-{{ arch }}-{{ checksum ".fvmrc" }}-{{ checksum "pubspec.yaml" }}-{{ checksum "pubspec.lock"  }}
+      paths:
+        - .fvm
+        - ~/fvm

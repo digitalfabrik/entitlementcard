@@ -5,30 +5,26 @@ docker:
   - image: cimg/openjdk:17.0.13-node
 working_directory: ~/project/backend
 steps:
-  - checkout:
-      path: ~/project
+  - prepare_workspace
+  - install_protobuf_linux
   - setup_remote_docker:
       docker_layer_caching: true
-  - run: git submodule sync
-  - run: git submodule update --init
-  - install_app_toolbelt
-  - install_protobuf_linux
-  - prepare_workspace
+  - run:
+      name: Setup submodules
+      command: |
+          git submodule sync
+          git submodule update --init
   - restore_cache:
-      key: v3-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
-  - restore_cache:
-      key: v3-gradle-cache-{{ checksum "build.gradle.kts" }}
-  - run: ./gradlew build
+      keys:
+        - v1-gradle-{{ checksum "build.gradle.kts" }}
+  - run:
+      name: Build backend
+      command: ./gradlew build
   - save_cache:
-      paths:
-        - ~/gradle/wrapper
-      key: v3-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
-  - save_cache:
+      key: v1-gradle-{{ checksum "build.gradle.kts" }}
       paths:
         - ~/.gradle/caches
-      key: v3-gradle-cache-{{ checksum "build.gradle.kts" }}
-  - store_artifacts:
-      path: ~/attached_workspace/build/libs
+        - ~/.gradle/wrapper
   - persist_to_workspace:
       root: ~/project
       paths:
