@@ -10,11 +10,12 @@
 val exposedVersion: String by project
 
 plugins {
+    id("com.google.protobuf") version "0.9.4"
+    id("io.gitlab.arturbosch.detekt") version "1.23.8"
     // Apply the Kotlin JVM plugin to add support for Kotlin.
     id("org.jetbrains.kotlin.jvm") version "1.9.10"
-    id("org.jlleitschuh.gradle.ktlint") version "11.5.1"
-    id("com.google.protobuf") version "0.9.4"
     id("org.jetbrains.kotlinx.kover") version "0.8.3"
+    id("org.jlleitschuh.gradle.ktlint") version "12.2.0"
 
     // Apply the application plugin to add support for building a CLI application.
     application
@@ -85,6 +86,14 @@ dependencies {
     testImplementation("org.testcontainers:postgresql")
     // Replace the library version used in testcontainers to avoid vulnerability
     testImplementation("org.apache.commons:commons-compress:1.26.2")
+}
+
+detekt {
+    // https://detekt.dev/docs/gettingstarted/gradle
+    toolVersion = "1.23.8"
+    config.setFrom(file("../detekt.yml"))
+    buildUponDefaultConfig = true
+    basePath = project.layout.projectDirectory.toString()
 }
 
 ktlint {
