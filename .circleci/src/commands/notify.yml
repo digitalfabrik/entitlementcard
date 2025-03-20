@@ -4,12 +4,12 @@ parameters:
     default: ''
     type: string
   failure_mentions:
-    default: '@stefanie.metzger @andreas.fischer'
+    default: '@andreas.fischer @viktoria.seluianova @bahaa.tuffaha @andre.wachter @steffen.kleinle'
     type: string
   success_mentions:
     default: ''
     type: string
-  allow-all-branches:
+  allow_all_branches:
     default: false
     type: boolean
   channel:
@@ -18,16 +18,15 @@ parameters:
 steps:
   - run:
       command: |
-        echo 'export MM_MESSAGE=":fire: The [${CIRCLE_JOB}](${CIRCLE_BUILD_URL}) job has failed on the ${CIRCLE_BRANCH} branch! :fire: << parameters.failure_mentions >>"' >> $BASH_ENV
+        echo 'export MM_MESSAGE=":fire: [${CIRCLE_JOB}](${CIRCLE_BUILD_URL}) failed on branch ${CIRCLE_BRANCH}! :fire: << parameters.failure_mentions >>"' >> $BASH_ENV
       name: Mattermost - Prepare failure message
       when: on_fail
   - run:
-      command: |
-        echo 'export MM_MESSAGE="<< parameters.success_message >>"' >> $BASH_ENV
+      command: echo 'export MM_MESSAGE="<< parameters.success_message >>"' >> $BASH_ENV
       name: Mattermost - Prepare success message
       when: on_success
   - run:
-      command: |
-        app-toolbelt v0 notify mattermost --message "${MM_MESSAGE}" --channel << parameters.channel >> <<#parameters.allow-all-branches>>--allow-all-branches<</parameters.allow-all-branches>>
+      command: scripts/notify-mattermost << parameters.channel >> << parameters.allow_all_branches >>
       name: Mattermost Status Alert
       when: always
+      working_directory: ~/project

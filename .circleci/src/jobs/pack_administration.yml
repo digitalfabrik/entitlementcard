@@ -1,16 +1,15 @@
 docker:
   - image: debian:12 # We deploy on debian -> pack on debian
 steps:
-  - checkout:
-      path: ~/project
-  - run: apt update -y && apt install -y nodejs npm
-  - install_app_toolbelt
   - prepare_workspace
-  - restore_environment_variables
-  - run: ~/project/scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -f ~/attached_workspace/administration/build -d "Administration backend for the Ehrenamtskarte app" -n "eak-administration"
-  - run: |
-      mkdir -p ~/attached_workspace/debs/administration
-      mv *.deb ~/attached_workspace/debs/administration
+  - run:
+      name: Pack administration
+      command: scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -f ~/attached_workspace/administration/build -d "Administration backend for the Ehrenamtskarte app" -n "eak-administration"
+  - run:
+      name: Move package
+      command: |
+        mkdir -p ~/attached_workspace/debs/administration
+        mv *.deb ~/attached_workspace/debs/administration
   - store_artifacts:
       path: ~/attached_workspace
   - persist_to_workspace:

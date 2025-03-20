@@ -1,10 +1,6 @@
-parameters:
-  dart_plugin:
-    type: boolean
-    default: false
 steps:
   - run:
-      name: Install protobuf from GitHub
+      name: Install protobuf
       command: |
         curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v21.11/protoc-21.11-linux-x86_64.zip"
         unzip protoc*.zip -d $HOME/.local

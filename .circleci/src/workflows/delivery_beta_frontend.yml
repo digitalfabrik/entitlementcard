@@ -5,10 +5,7 @@ jobs:
       platforms: native
       context:
         - deliverino
-  - check
-  - check_frontend:
-      requires:
-        - check
+  - check_frontend
   - build_android:
       name: build_android_bayern
       buildConfig: "bayern"

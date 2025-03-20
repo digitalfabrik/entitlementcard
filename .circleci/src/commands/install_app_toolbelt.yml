@@ -1,5 +1,10 @@
 steps:
-  - setup_npm_global
+  - run:
+      name: Setup npm global
+      command: |
+        mkdir -p ~/.npm-global
+        npm config set prefix '~/.npm-global'
+        echo 'export PATH=~/.npm-global/bin:"$PATH"' >> "$BASH_ENV"
   - run:
       name: Install app-toolbelt
       command: npm install --unsafe-perm -g https://github.com/digitalfabrik/app-toolbelt/archive/refs/heads/main.tar.gz
