@@ -202,7 +202,7 @@ val EAK_BAYERN_REGIONS = listOf(
     ),
     listOf(
         "Stadt",
-        "München, Landeshauptstadt",
+        "München",
         "09162",
         "https://www.muenchen.de/rathaus/Stadtverwaltung/Direktorium/Engagiert-Leben/engagement_anerkennen.html"
     ),
