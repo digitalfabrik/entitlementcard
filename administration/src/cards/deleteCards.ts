@@ -1,5 +1,4 @@
 import { ApolloError } from '@apollo/client'
-import { TFunction } from 'i18next'
 
 import getMessageFromApolloError from '../errors/getMessageFromApolloError'
 import { DeleteCardsMutationFn } from '../generated/graphql'
@@ -13,14 +12,13 @@ const extractCardInfoHashes = (codes: CreateCardsResult[]) =>
 const deleteCards = async (
   deleteCardsMutation: DeleteCardsMutationFn,
   regionId: number,
-  codes: CreateCardsResult[],
-  t: TFunction
+  codes: CreateCardsResult[]
 ): Promise<void> => {
   const result = await deleteCardsMutation({
     variables: { regionId, cardInfoHashBase64List: extractCardInfoHashes(codes) },
   })
   if (result.errors) {
-    const { title } = getMessageFromApolloError(new ApolloError({ graphQLErrors: result.errors }), t)
+    const { title } = getMessageFromApolloError(new ApolloError({ graphQLErrors: result.errors }))
     throw new CreateCardsError(title)
   }
 }

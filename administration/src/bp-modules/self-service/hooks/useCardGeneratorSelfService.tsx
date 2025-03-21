@@ -1,5 +1,4 @@
 import { useCallback, useContext, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 
 import { Card, initializeCardFromCSV } from '../../../cards/Card'
@@ -27,7 +26,6 @@ type UseCardGeneratorSelfServiceReturn = {
 const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
   const projectConfig = useContext(ProjectConfigContext)
   const appToaster = useAppToaster()
-  const { t } = useTranslation('errors')
   const [searchParams] = useSearchParams()
   const [cardGenerationStep, setCardGenerationStep] = useState<SelfServiceCardGenerationStep>('input')
   const [code, setCode] = useState<CreateCardsResult | null>(null)
@@ -41,16 +39,16 @@ const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
   const generateCards = useCallback(async (): Promise<void> => {
     setCardGenerationStep('loading')
     try {
-      const code = await createSelfServiceCard(createCardsSelfService, projectConfig, selfServiceCard, t)
+      const code = await createSelfServiceCard(createCardsSelfService, projectConfig, selfServiceCard)
       setCode(code)
       setCardGenerationStep('information')
     } catch (error) {
       if (appToaster) {
-        showCardGenerationError(appToaster, error, t)
+        showCardGenerationError(appToaster, error)
       }
       setCardGenerationStep('input')
     }
-  }, [projectConfig, setCode, createCardsSelfService, appToaster, selfServiceCard, t])
+  }, [projectConfig, setCode, createCardsSelfService, appToaster, selfServiceCard])
 
   const downloadPdf = async (code: CreateCardsResult, fileName: string): Promise<void> => {
     const blob = await generatePdf([code], [selfServiceCard], projectConfig)

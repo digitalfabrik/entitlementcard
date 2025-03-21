@@ -1,4 +1,4 @@
-package app.ehrenamtskarte
+package app.entitlementcard
 
 import android.content.pm.PackageManager
 import android.location.LocationManager
@@ -11,12 +11,11 @@ import io.flutter.plugin.common.MethodChannel
 import java.io.File
 
 class MainActivity : FlutterActivity() {
-    private val CHANNEL = "app.ehrenamtskarte/location"
+    private val CHANNEL = "app.entitlementcard/location"
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
-                call, result ->
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
             if (call.method == "isLocationServiceEnabled") {
                 val locationManager = context.getSystemService(LOCATION_SERVICE) as LocationManager
                 val gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
@@ -32,7 +31,9 @@ class MainActivity : FlutterActivity() {
         val m = packageManager
         try {
             val info = m.getPackageInfo(packageName, 0)
-            deleteRecursive(File(info.applicationInfo.dataDir))
+            val dataDir = info.applicationInfo?.dataDir
+            if (dataDir != null)
+                deleteRecursive(File(dataDir))
         } catch (e: PackageManager.NameNotFoundException) {
             Log.e("WRAPPER", "Failed to get data directory!", e)
         }
@@ -40,7 +41,7 @@ class MainActivity : FlutterActivity() {
 
     private fun deleteRecursive(fileOrDirectory: File) {
         if (fileOrDirectory.isDirectory) {
-            for (child in fileOrDirectory.listFiles()) {
+            for (child in fileOrDirectory.listFiles() ?: emptyArray()) {
                 deleteRecursive(child)
             }
         }
@@ -50,9 +51,9 @@ class MainActivity : FlutterActivity() {
     private fun cleanITNRWData() {
         val m = packageManager
         try {
-            val info = m.getPackageInfo(packageName, 0)
+            val info = m.getPackageInfo(packageName, 0).applicationInfo ?: return
             val arcgisfile =
-                File(info.applicationInfo.dataDir + File.separatorChar + "shared_prefs" + File.separatorChar + "com.esri.arcgisruntime.settings.xml")
+                File(info.dataDir + File.separatorChar + "shared_prefs" + File.separatorChar + "com.esri.arcgisruntime.settings.xml")
             if (arcgisfile.exists()) {
                 resetApp()
             }

@@ -10,7 +10,8 @@ enum class Type {
     Array,
     Attachment,
     Boolean,
-    Date
+    Date,
+    TranslatableString
 }
 
 data class AttachmentView(val fileIndex: Int) {
@@ -33,6 +34,7 @@ data class JsonField(
             Type.Attachment -> if (value !is AttachmentView) throw InvalidJsonException("Expected AttachmentView.")
             Type.Boolean -> if (value !is Boolean) throw InvalidJsonException("Expected Boolean.")
             Type.Date -> if (value !is String) throw InvalidJsonException("Expected String for Date.")
+            Type.TranslatableString -> if (value !is String) throw InvalidJsonException("Expected TranslatableString.")
         }
     }
 }

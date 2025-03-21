@@ -1,8 +1,8 @@
-import { TFunction } from 'i18next'
 import React, { ReactElement } from 'react'
 
 import { CardInfo } from '../generated/card_pb'
 import { CodeType, GraphQlExceptionCode } from '../generated/graphql'
+import i18next from '../i18n'
 import { base64ToUint8Array } from '../util/base64'
 import InvalidLink from './templates/InvalidLink'
 import InvalidPasswordResetLink from './templates/InvalidPasswordResetLink'
@@ -21,8 +21,8 @@ type ErrorExtensions = {
   [key: string]: unknown
 }
 
-const graphQlErrorMap = (t: TFunction, extensions?: ErrorExtensions): GraphQLErrorMessage => {
-  const defaultError = { title: t('errors:unknown') }
+const graphQlErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
+  const defaultError = { title: i18next.t('errors:unknown') }
 
   if (!extensions || extensions.code === undefined) {
     return defaultError
@@ -30,100 +30,108 @@ const graphQlErrorMap = (t: TFunction, extensions?: ErrorExtensions): GraphQLErr
   switch (extensions.code) {
     case GraphQlExceptionCode.EmailAlreadyExists:
       return {
-        title: t('errors:mailAddressAlreadyUsed'),
+        title: i18next.t('errors:mailAddressAlreadyUsed'),
+      }
+    case GraphQlExceptionCode.FreinetAgencyNotFound:
+      return {
+        title: i18next.t('errors:freinetAgencyNotFound'),
       }
     case GraphQlExceptionCode.InvalidLink:
       return {
-        title: t('errors:invalidLink'),
+        title: i18next.t('errors:invalidLink'),
         description: <InvalidLink />,
       }
     case GraphQlExceptionCode.InvalidCardHash:
       return {
-        title: t('errors:invalidFormat'),
+        title: i18next.t('errors:invalidFormat'),
       }
     case GraphQlExceptionCode.InvalidCodeType:
       return {
-        title: t('errors:invalidCodeType'),
+        title: i18next.t('errors:invalidCodeType'),
       }
     case GraphQlExceptionCode.InvalidCredentials:
       return {
-        title: t('errors:invalidCredentials'),
+        title: i18next.t('errors:invalidCredentials'),
       }
     case GraphQlExceptionCode.InvalidFileType:
       return {
-        title: t('errors:invalidFileType'),
+        title: i18next.t('errors:invalidFileType'),
       }
     case GraphQlExceptionCode.InvalidInput:
       return {
-        title: t('errors:invalidInput'),
+        title: i18next.t('errors:invalidInput'),
       }
     case GraphQlExceptionCode.InvalidFileSize:
       return {
-        title: t('errors:invalidFileSize'),
+        title: i18next.t('errors:invalidFileSize'),
       }
     case GraphQlExceptionCode.InvalidDataPolicySize:
       return {
-        title: t('errors:invalidDataPolicySize', { maxSize: extensions.maxSize }),
+        title: i18next.t('errors:invalidDataPolicySize', { maxSize: extensions.maxSize }),
       }
     case GraphQlExceptionCode.InvalidJson:
       return {
-        title: t('errors:invalidJson'),
+        title: i18next.t('errors:invalidJson'),
       }
     case GraphQlExceptionCode.InvalidNoteSize:
       return {
-        title: t('errors:invalidNoteSize', { maxSize: extensions.maxSize }),
+        title: i18next.t('errors:invalidNoteSize', { maxSize: extensions.maxSize }),
       }
     case GraphQlExceptionCode.InvalidPassword:
       return {
-        title: t('errors:invalidPassword'),
+        title: i18next.t('errors:invalidPassword'),
       }
     case GraphQlExceptionCode.InvalidPasswordResetLink:
       return {
-        title: t('errors:invalidPasswordResetLink'),
+        title: i18next.t('errors:invalidPasswordResetLink'),
         description: <InvalidPasswordResetLink />,
       }
     case GraphQlExceptionCode.InvalidQrCodeSize: {
       const cardInfo = CardInfo.fromBinary(base64ToUint8Array(extensions.encodedCardInfoBase64!))
       const codeTypeText =
         extensions.codeType === CodeType.Dynamic
-          ? t('errors:invalidQrCodeSize:dynamicType')
-          : t('errors:invalidQrCodeSize:staticType')
+          ? i18next.t('errors:invalidQrCodeSize:dynamicType')
+          : i18next.t('errors:invalidQrCodeSize:staticType')
       return {
-        title: t('errors:invalidQrCodeSize:title', { codeType: codeTypeText, fullName: cardInfo.fullName }),
+        title: i18next.t('errors:invalidQrCodeSize:title', { codeType: codeTypeText, fullName: cardInfo.fullName }),
       }
     }
     case GraphQlExceptionCode.InvalidRole:
       return {
-        title: t('errors:invalidRole'),
+        title: i18next.t('errors:invalidRole'),
       }
     case GraphQlExceptionCode.UserEntitlementNotFound:
       return {
-        title: t('errors:entitlementNotFound'),
+        title: i18next.t('errors:entitlementNotFound'),
       }
     case GraphQlExceptionCode.UserEntitlementExpired:
       return {
-        title: t('errors:entitlementExpired'),
+        title: i18next.t('errors:entitlementExpired'),
       }
     case GraphQlExceptionCode.MailNotSent:
       return {
-        title: t('errors:mailNotSend', { recipient: extensions.recipient }),
+        title: i18next.t('errors:mailNotSend', { recipient: extensions.recipient }),
       }
     case GraphQlExceptionCode.PasswordResetKeyExpired:
       return {
-        title: t('errors:passwordResetKeyExpired'),
+        title: i18next.t('errors:passwordResetKeyExpired'),
         description: <PasswordResetKeyExpired />,
       }
     case GraphQlExceptionCode.RegionNotFound:
       return {
-        title: t('errors:regionNotFound'),
+        title: i18next.t('errors:regionNotFound'),
       }
     case GraphQlExceptionCode.RegionNotActivatedForApplication:
       return {
-        title: t('errors:regionNotActivatedForApplication'),
+        title: i18next.t('errors:regionNotActivatedForApplication'),
       }
     case GraphQlExceptionCode.RegionNotActivatedCardConfirmationMail:
       return {
-        title: t('errors:regionNotActivatedForConfirmationMail'),
+        title: i18next.t('errors:regionNotActivatedForConfirmationMail'),
+      }
+    default:
+      return {
+        title: defaultError.title,
       }
   }
 }

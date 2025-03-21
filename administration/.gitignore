@@ -26,5 +26,6 @@ yarn-error.log*
 
 #eslint
 .eslintcache
+tsconfig.tsbuildinfo
 
 src/generated/
