@@ -1,17 +1,19 @@
 import { Button, FormGroup, Tooltip } from '@blueprintjs/core'
-import { TextField } from '@mui/material'
+import formatDate from 'date-fns/format'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
-import PlainDate from '../../../util/PlainDate'
 import StickyBottomBar from '../../StickyBottomBar'
+import CustomDatePicker from '../../components/CustomDatePicker'
 import { defaultEndDate, defaultStartDate } from '../constants'
 
 const StyledFormGroup = styled(FormGroup)`
   margin: 0 16px 0 0;
   align-self: center;
 `
+
+const filterDateFormat = 'yyyy-MM-dd'
 
 const InputContainer = styled.div`
   flex-direction: row;
@@ -26,21 +28,10 @@ type StatisticsFilterBarProps = {
   onExportCsv: (dateStart: string, dateEnd: string) => void
 }
 
-const isValidDateString = (value: string): boolean => {
-  try {
-    PlainDate.from(value)
-    return true
-  } catch (error) {
-    console.error(`Could not parse date from string '${value}'.`, error)
-    return false
-  }
-}
-const IsValidDateTimePeriod = (dateStart: string, dateEnd: string): boolean => {
-  if (!isValidDateString(dateStart) || !isValidDateString(dateEnd)) {
-    return false
-  }
-  return PlainDate.compare(PlainDate.from(dateStart), PlainDate.from(dateEnd)) <= 0
-}
+const isValidDate = (value: Date | null): value is Date => value !== null && !Number.isNaN(value.valueOf())
+
+const isValidDateTimePeriod = (dateStart: Date | null, dateEnd: Date | null): boolean =>
+  isValidDate(dateStart) && isValidDate(dateEnd) && dateStart.valueOf() <= dateEnd.valueOf()
 
 const StatisticsFilterBar = ({
   onApplyFilter,
@@ -48,51 +39,59 @@ const StatisticsFilterBar = ({
   onExportCsv,
 }: StatisticsFilterBarProps): ReactElement => {
   const { t } = useTranslation('statistics')
-  const [dateStart, setDateStart] = useState(defaultStartDate)
-  const [dateEnd, setDateEnd] = useState(defaultEndDate)
+  const [dateStart, setDateStart] = useState<Date | null>(defaultStartDate.toLocalDate())
+  const [dateEnd, setDateEnd] = useState<Date | null>(defaultEndDate.toLocalDate())
 
   return (
     <StickyBottomBar>
       <InputContainer>
         <StyledFormGroup label={t('start')} inline>
-          <TextField
-            fullWidth
-            type='date'
-            required
-            size='small'
-            error={!isValidDateString(dateStart)}
+          <CustomDatePicker
             value={dateStart}
-            sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' }, '& fieldset': { borderRadius: 0 } }}
-            inputProps={{
-              max: dateEnd,
-              style: { fontSize: 14, padding: '6px 10px' },
+            isValid={isValidDate(dateStart)}
+            maxDate={dateEnd ?? defaultStartDate.toLocalDate()}
+            textFieldSlotProps={{
+              size: 'small',
+              sx: {
+                '.MuiPickersSectionList-root': {
+                  padding: '5px 0',
+                },
+              },
             }}
-            onChange={e => setDateStart(e.target.value)}
+            onChange={date => {
+              setDateStart(date)
+            }}
           />
         </StyledFormGroup>
         <StyledFormGroup label={t('end')} inline>
-          <TextField
-            fullWidth
-            type='date'
-            required
-            size='small'
-            error={!isValidDateString(dateEnd)}
+          <CustomDatePicker
             value={dateEnd}
-            sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' }, '& fieldset': { borderRadius: 0 } }}
-            inputProps={{
-              max: PlainDate.fromLocalDate(new Date()).toString(),
-              style: { fontSize: 14, padding: '6px 10px' },
+            isValid={isValidDate(dateEnd)}
+            textFieldSlotProps={{
+              size: 'small',
+              sx: {
+                '.MuiPickersSectionList-root': {
+                  padding: '5px 0',
+                },
+              },
             }}
-            onChange={e => setDateEnd(e.target.value)}
+            maxDate={new Date()}
+            onChange={date => {
+              setDateEnd(date)
+            }}
           />
         </StyledFormGroup>
-        <Tooltip disabled={IsValidDateTimePeriod(dateStart, dateEnd)} content={t('invalidStartOrEnd')}>
+        <Tooltip disabled={isValidDateTimePeriod(dateStart, dateEnd)} content={t('invalidStartOrEnd')}>
           <Button
             icon='tick'
             text={t('applyFilter')}
             intent='success'
-            onClick={() => onApplyFilter(dateStart, dateEnd)}
-            disabled={!IsValidDateTimePeriod(dateStart, dateEnd)}
+            onClick={() => {
+              if (isValidDate(dateStart) && isValidDate(dateEnd)) {
+                onApplyFilter(formatDate(dateStart, filterDateFormat), formatDate(dateEnd, filterDateFormat))
+              }
+            }}
+            disabled={!isValidDateTimePeriod(dateStart, dateEnd)}
           />
         </Tooltip>
       </InputContainer>
@@ -101,7 +100,11 @@ const StatisticsFilterBar = ({
           icon='floppy-disk'
           text={t('exportToCsv')}
           intent='primary'
-          onClick={() => onExportCsv(dateStart, dateEnd)}
+          onClick={() => {
+            if (isValidDate(dateStart) && isValidDate(dateEnd)) {
+              onExportCsv(dateStart.toLocaleDateString(), dateEnd.toLocaleDateString())
+            }
+          }}
           disabled={!isDataAvailable}
         />
       </Tooltip>
