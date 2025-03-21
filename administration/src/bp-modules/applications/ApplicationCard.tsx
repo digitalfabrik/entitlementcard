@@ -12,7 +12,7 @@ import {
 } from '@blueprintjs/core'
 import React, { ReactElement, memo, useContext, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useDeleteApplicationMutation } from '../../generated/graphql'
@@ -20,18 +20,14 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { useAppToaster } from '../AppToaster'
-import { Application } from './ApplicationsOverview'
-import JsonFieldView, { GeneralJsonField, JsonField, findValue } from './JsonFieldView'
+import type { Application } from './ApplicationsOverview'
+import JsonFieldView, { findValue } from './JsonFieldView'
+import type { GeneralJsonField, JsonField } from './JsonFieldView'
 import NoteDialogController from './NoteDialogController'
 import PreVerifiedQuickIndicator, { PreVerifiedQuickIndicatorType } from './PreVerifiedQuickIndicator'
 import VerificationsQuickIndicator from './VerificationsQuickIndicator'
 import VerificationsView from './VerificationsView'
-
-export const printAwareCss = css`
-  @media print {
-    display: none;
-  }
-`
+import { printAwareCss } from './constants'
 
 const ApplicationViewCard = styled(Section)<{ $hideInPrintMode?: boolean }>`
   width: 1000px;
@@ -164,7 +160,7 @@ const ApplicationCard = ({
   onChange,
 }: ApplicationCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false)
-  const { t } = useTranslation('applications')
+  const { t } = useTranslation('applicationsOverview')
   const { createdDate: createdDateString, jsonValue, id, withdrawalDate, cardCreated } = application
   const jsonField: JsonField<'Array'> = JSON.parse(jsonValue)
   const config = useContext(ProjectConfigContext)
@@ -174,7 +170,7 @@ const ApplicationCard = ({
   const [openNoteDialog, setOpenNoteDialog] = useState(false)
   const [deleteApplication, { loading }] = useDeleteApplicationMutation({
     onError: error => {
-      const { title } = getMessageFromApolloError(error, t)
+      const { title } = getMessageFromApolloError(error)
       appToaster?.show({ intent: 'danger', message: title })
     },
     onCompleted: ({ deleted }: { deleted: boolean }) => {
@@ -266,7 +262,7 @@ const ApplicationCard = ({
           <CollapseIcon icon='chevron-up' onClick={() => setIsExpanded(!isExpanded)} style={{ marginLeft: 'auto' }} />
         </ButtonContainer>
         <Alert
-          cancelButtonText={t('cancel')}
+          cancelButtonText={t('misc:cancel')}
           confirmButtonText={t('deleteApplication')}
           icon='trash'
           intent='danger'

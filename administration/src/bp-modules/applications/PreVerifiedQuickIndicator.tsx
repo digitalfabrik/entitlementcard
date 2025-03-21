@@ -5,7 +5,8 @@ import { useTranslation } from 'react-i18next'
 import JuleicaLogo from '../../assets/juleica.svg'
 import Verein360Logo from '../../assets/verein360.svg'
 import { UnFocusedDiv } from './VerificationsQuickIndicator'
-import { Indicator, VerificationStatus } from './VerificationsView'
+import VerificationIndicator from './components/VerificationIndicator'
+import { VerificationStatus } from './constants'
 
 export enum PreVerifiedQuickIndicatorType {
   Juleica,
@@ -14,7 +15,7 @@ export enum PreVerifiedQuickIndicatorType {
 
 const PreVerifiedQuickIndicator = memo(({ type }: { type: PreVerifiedQuickIndicatorType }) => {
   const logo = type === PreVerifiedQuickIndicatorType.Juleica ? JuleicaLogo : Verein360Logo
-  const { t } = useTranslation('applications')
+  const { t } = useTranslation('applicationsOverview')
   return (
     <Tooltip
       content={
@@ -25,7 +26,7 @@ const PreVerifiedQuickIndicator = memo(({ type }: { type: PreVerifiedQuickIndica
         </div>
       }>
       <UnFocusedDiv>
-        <Indicator status={VerificationStatus.Verified} />
+        <VerificationIndicator status={VerificationStatus.Verified} />
         <img src={logo} alt={type.toString()} height='100%' />
       </UnFocusedDiv>
     </Tooltip>

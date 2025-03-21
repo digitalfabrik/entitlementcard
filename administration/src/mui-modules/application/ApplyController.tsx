@@ -14,6 +14,7 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 import getQueryResult from '../util/getQueryResult'
 import ApplicationErrorBoundary from './ApplicationErrorBoundary'
 import DiscardAllInputsButton from './DiscardAllInputsButton'
+import { applicationStorageKey } from './constants'
 import ApplicationForm from './forms/ApplicationForm'
 import useVersionedLocallyStoredState from './hooks/useVersionedLocallyStoredState'
 import { useGarbageCollectArrayBuffers, useInitializeGlobalArrayBuffersManager } from './util/globalArrayBuffersManager'
@@ -21,8 +22,6 @@ import { useGarbageCollectArrayBuffers, useInitializeGlobalArrayBuffersManager }
 // This env variable is determined by '../../../application_commit.sh'. It holds the hash of the last commit to the
 // application form.
 const lastCommitForApplicationForm = process.env.REACT_APP_APPLICATION_COMMIT as string
-
-export const applicationStorageKey = 'applicationState'
 
 const SuccessContent = styled.div`
   white-space: pre-line;
@@ -32,7 +31,7 @@ const SuccessContent = styled.div`
 `
 
 const ApplyController = (): React.ReactElement | null => {
-  const { t } = useTranslation('application')
+  const { t } = useTranslation('applicationForms')
   const [formSubmitted, setFormSubmitted] = useState<boolean>(false)
   const { enqueueSnackbar } = useSnackbar()
   const { status, state, setState } = useVersionedLocallyStoredState(
@@ -42,7 +41,7 @@ const ApplyController = (): React.ReactElement | null => {
   )
   const [addEakApplication, { loading: loadingSubmit }] = useAddEakApplicationMutation({
     onError: error => {
-      const { title } = getMessageFromApolloError(error, t)
+      const { title } = getMessageFromApolloError(error)
       enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: ({ result }) => {
@@ -57,7 +56,7 @@ const ApplyController = (): React.ReactElement | null => {
   const regionsQuery = useGetRegionsQuery({
     variables: { project: projectId },
   })
-  const regionsQueryResult = getQueryResult(regionsQuery, t)
+  const regionsQueryResult = getQueryResult(regionsQuery)
   const arrayBufferManagerInitialized = useInitializeGlobalArrayBuffersManager()
   const getArrayBufferKeys = useMemo(
     () => (status === 'loading' ? null : () => ApplicationForm.getArrayBufferKeys(state)),
@@ -101,7 +100,7 @@ const ApplyController = (): React.ReactElement | null => {
         {formSubmitted ? (
           <SuccessContent>
             <Typography>
-              <Trans i18nKey='application:submitSuccessText' />
+              <Trans i18nKey='applicationForms:submitSuccessText' />
             </Typography>
           </SuccessContent>
         ) : (

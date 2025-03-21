@@ -1,21 +1,21 @@
 import { Spinner } from '@blueprintjs/core'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
-import React, { ReactElement, useContext, useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import KoblenzLogo from '../../assets/koblenz_logo.svg'
 import { updateCard } from '../../cards/Card'
 import BasicDialog from '../../mui-modules/application/BasicDialog'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import CardSelfServiceActivation from './CardSelfServiceActivation'
 import CardSelfServiceForm from './CardSelfServiceForm'
 import CardSelfServiceInformation from './CardSelfServiceInformation'
 import { ActionButton } from './components/ActionButton'
 import { IconTextButton } from './components/IconTextButton'
 import { InfoText } from './components/InfoText'
+import { DataPrivacyAcceptingStatus } from './constants'
 import selfServiceStepInfo from './constants/selfServiceStepInfo'
-import useCardGeneratorSelfService, { CardSelfServiceStep } from './hooks/useCardGeneratorSelfService'
+import useCardGeneratorSelfService from './hooks/useCardGeneratorSelfService'
 
 const CenteredSpinner = styled(Spinner)`
   position: absolute;
@@ -80,45 +80,25 @@ const StyledInfoTextButton = styled(IconTextButton)`
   margin: 0;
 `
 
-export enum DataPrivacyAcceptingStatus {
-  untouched,
-  accepted,
-  denied,
-}
-
-// TODO 1646 Add tests for CardSelfService
 const CardSelfServiceView = (): ReactElement => {
-  const projectConfig = useContext(ProjectConfigContext)
   const { t } = useTranslation('selfService')
-  const [dataPrivacyCheckbox, setDataPrivacyCheckbox] = useState<DataPrivacyAcceptingStatus>(
-    DataPrivacyAcceptingStatus.untouched
-  )
+  const [dataPrivacyCheckbox, setDataPrivacyCheckbox] = useState(DataPrivacyAcceptingStatus.untouched)
+  const [openHelpDialog, setOpenHelpDialog] = useState(false)
   const {
-    selfServiceState,
-    setSelfServiceState,
-    isLoading,
+    cardGenerationStep,
+    setCardGenerationStep,
     generateCards,
     setSelfServiceCard,
     selfServiceCard,
-    deepLink,
     code,
     downloadPdf,
   } = useCardGeneratorSelfService()
-  const [openHelpDialog, setOpenHelpDialog] = useState(false)
 
-  const onDownloadPdf = async () => {
-    if (code) {
-      await downloadPdf(code, projectConfig.name)
-    }
-  }
-
-  const goToActivation = () => {
-    setSelfServiceState(CardSelfServiceStep.activation)
-  }
-
-  if (isLoading) {
+  if (cardGenerationStep === 'loading') {
     return <CenteredSpinner />
   }
+
+  const totalSteps = Object.keys(selfServiceStepInfo).length
 
   return (
     <Container>
@@ -130,11 +110,11 @@ const CardSelfServiceView = (): ReactElement => {
         </StyledInfoTextButton>
       </Header>
       <Body>
-        <Step>{`${t('step')} ${selfServiceStepInfo[selfServiceState].stepNr}/${selfServiceStepInfo.length}`}</Step>
-        <Headline>{selfServiceStepInfo[selfServiceState].headline}</Headline>
-        <SubHeadline>{selfServiceStepInfo[selfServiceState].subHeadline}</SubHeadline>
-        <Text>{selfServiceStepInfo[selfServiceState].text}</Text>
-        {selfServiceState === CardSelfServiceStep.form && (
+        <Step>{`${t('step')} ${selfServiceStepInfo[cardGenerationStep].stepNr}/${totalSteps}`}</Step>
+        <Headline>{selfServiceStepInfo[cardGenerationStep].headline}</Headline>
+        <SubHeadline>{selfServiceStepInfo[cardGenerationStep].subHeadline}</SubHeadline>
+        <Text>{selfServiceStepInfo[cardGenerationStep].text}</Text>
+        {cardGenerationStep === 'input' && (
           <CardSelfServiceForm
             card={selfServiceCard}
             dataPrivacyAccepted={dataPrivacyCheckbox}
@@ -143,11 +123,11 @@ const CardSelfServiceView = (): ReactElement => {
             generateCards={generateCards}
           />
         )}
-        {selfServiceState === CardSelfServiceStep.information && (
-          <CardSelfServiceInformation goToActivation={goToActivation} />
+        {cardGenerationStep === 'information' && (
+          <CardSelfServiceInformation goToActivation={() => setCardGenerationStep('activation')} />
         )}
-        {selfServiceState === CardSelfServiceStep.activation && (
-          <CardSelfServiceActivation downloadPdf={onDownloadPdf} deepLink={deepLink} />
+        {cardGenerationStep === 'activation' && code && (
+          <CardSelfServiceActivation downloadPdf={downloadPdf} code={code} />
         )}
       </Body>
       <BasicDialog

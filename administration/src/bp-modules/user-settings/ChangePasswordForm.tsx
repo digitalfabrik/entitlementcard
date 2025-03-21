@@ -2,7 +2,7 @@ import { Button, Callout, H2 } from '@blueprintjs/core'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { WhoAmIContext } from '../../WhoAmIProvider'
+import { useWhoAmI } from '../../WhoAmIProvider'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useChangePasswordMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
@@ -21,7 +21,7 @@ const ChangePasswordForm = (): ReactElement => {
   const appToaster = useAppToaster()
   const [changePassword, { loading }] = useChangePasswordMutation({
     onError: error => {
-      const { title } = getMessageFromApolloError(error, t)
+      const { title } = getMessageFromApolloError(error)
       appToaster?.show({ intent: 'danger', message: title })
     },
     onCompleted: () => {
@@ -36,7 +36,7 @@ const ChangePasswordForm = (): ReactElement => {
   })
 
   const project = useContext(ProjectConfigContext).projectId
-  const email = useContext(WhoAmIContext).me!.email
+  const email = useWhoAmI().me.email
 
   const isDirty = newPassword !== '' || repeatNewPassword !== ''
 

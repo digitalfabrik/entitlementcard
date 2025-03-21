@@ -1,4 +1,4 @@
-import { add, differenceInCalendarDays, format, isValid, parse } from 'date-fns'
+import { add, differenceInCalendarDays, format, isValid, parse, sub } from 'date-fns'
 
 type DateDuration = { years?: number; months?: number; days?: number }
 
@@ -27,14 +27,12 @@ class PlainDate {
    * @param day A day of the month, ranging between 1 and 31 inclusive.
    */
   constructor(isoYear: number, isoMonth: number, day: number) {
-    {
-      // Check if parameters are valid, otherwise throw RangeError
-      const date = new Date(Date.UTC(isoYear, isoMonth - 1, day))
-      // We need to setUTCFullYear, as Date.UTC adds 1900 years if year is between 0 and 99 inclusive.
-      date.setUTCFullYear(isoYear)
-      if (!isValid(date)) {
-        throw RangeError('Parameters do not form a valid PlainDate.')
-      }
+    // Check if parameters are valid, otherwise throw RangeError
+    const date = new Date(Date.UTC(isoYear, isoMonth - 1, day))
+    // We need to setUTCFullYear, as Date.UTC adds 1900 years if year is between 0 and 99 inclusive.
+    date.setUTCFullYear(isoYear)
+    if (!isValid(date)) {
+      throw RangeError('Parameters do not form a valid PlainDate.')
     }
     this.isoYear = isoYear
     this.isoMonth = isoMonth
@@ -123,6 +121,14 @@ class PlainDate {
   add(duration: DateDuration): PlainDate {
     // date-fns/add alters the date in local time zone.
     return PlainDate.fromLocalDate(add(this.toLocalDate(), duration))
+  }
+
+  /**
+   * Returns a new PlainDate corresponding to `this` minus `duration`.
+   * @param duration
+   */
+  subtract(duration: DateDuration): PlainDate {
+    return PlainDate.fromLocalDate(sub(this.toLocalDate(), duration))
   }
 
   /**

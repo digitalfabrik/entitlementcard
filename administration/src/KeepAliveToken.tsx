@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { TokenPayload } from './AuthProvider'
-import { WhoAmIContext } from './WhoAmIProvider'
+import { useWhoAmI } from './WhoAmIProvider'
 import { useAppToaster } from './bp-modules/AppToaster'
 import PasswordInput from './bp-modules/PasswordInput'
 import getMessageFromApolloError from './errors/getMessageFromApolloError'
@@ -24,7 +24,7 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props): Rea
   const { t } = useTranslation('auth')
   const navigate = useNavigate()
   const projectId = useContext(ProjectConfigContext).projectId
-  const email = useContext(WhoAmIContext).me!.email
+  const email = useWhoAmI().me.email
   const [secondsLeft, setSecondsLeft] = useState(computeSecondsLeft(authData))
   useEffect(() => {
     setSecondsLeft(computeSecondsLeft(authData))
@@ -49,7 +49,7 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props): Rea
       setPassword('')
     },
     onError: error => {
-      const { title } = getMessageFromApolloError(error, t)
+      const { title } = getMessageFromApolloError(error)
       appToaster?.show({ intent: 'danger', message: title })
     },
   })

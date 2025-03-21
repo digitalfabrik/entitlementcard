@@ -10,6 +10,7 @@ import app.ehrenamtskarte.backend.auth.webservice.schema.ApiTokenQueryService
 import app.ehrenamtskarte.backend.auth.webservice.schema.ApiTokenService
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
+import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestData
 import graphql.schema.DataFetchingEnvironment
@@ -76,7 +77,7 @@ internal class ApiTokenServiceTest : IntegrationTest() {
         every { mockJwtPayload.adminId } returns 1234
 
         transaction {
-            assertThrows(ForbiddenException::class.java) {
+            assertThrows(UnauthorizedException::class.java) {
                 ApiTokenService().createApiToken(1, mockDfe)
             }
         }
@@ -135,7 +136,7 @@ internal class ApiTokenServiceTest : IntegrationTest() {
         every { mockJwtPayload.adminId } returns 1234
 
         transaction {
-            assertThrows(ForbiddenException::class.java) {
+            assertThrows(UnauthorizedException::class.java) {
                 ApiTokenService().deleteApiToken(1, mockDfe)
             }
         }
@@ -177,7 +178,7 @@ internal class ApiTokenServiceTest : IntegrationTest() {
         every { mockJwtPayload.adminId } returns 1234
 
         transaction {
-            assertThrows(ForbiddenException::class.java) {
+            assertThrows(UnauthorizedException::class.java) {
                 ApiTokenQueryService().getApiTokenMetaData(mockDfe)
             }
         }

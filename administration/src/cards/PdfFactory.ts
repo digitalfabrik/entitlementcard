@@ -1,10 +1,10 @@
+import { PDFDocument, PDFFont, PDFPage, StandardFonts } from '@cantoo/pdf-lib'
 import fontkit from '@pdf-lib/fontkit'
-import { PDFDocument, PDFFont, PDFPage, StandardFonts } from 'pdf-lib'
 
-import { QrCode } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
-import { PdfConfig } from '../project-configs/getProjectConfig'
+import { PdfConfig, ProjectConfig } from '../project-configs/getProjectConfig'
 import getDeepLinkFromQrCode from '../util/getDeepLinkFromQrCode'
+import normalizeString from '../util/normalizeString'
 import { reportErrorToSentry } from '../util/sentry'
 import { Card } from './Card'
 import { CreateCardsResult } from './createCards'
@@ -40,14 +40,19 @@ const loadCustomFontWithFallback = async (font: string, doc: PDFDocument, fallba
 const fillContentAreas = async (
   doc: PDFDocument,
   templatePage: PDFPage,
-  cardInfoHashBase64: string,
-  dynamicCode: Extract<QrCode['qrCode'], { case: 'dynamicActivationCode' }>,
-  staticCode: Extract<QrCode['qrCode'], { case: 'staticVerificationCode' }> | null,
+  code: CreateCardsResult,
   card: Card,
   pdfConfig: PdfConfig,
-  deepLink: string,
   region?: Region
 ): Promise<void> => {
+  const { dynamicActivationCode, staticVerificationCode, dynamicCardInfoHashBase64 } = code
+  const dynamicCode: PdfQrCode = { case: 'dynamicActivationCode', value: dynamicActivationCode }
+  const staticCode: PdfQrCode | null = staticVerificationCode
+    ? {
+        case: 'staticVerificationCode',
+        value: staticVerificationCode,
+      }
+    : null
   const font = await doc.embedFont(StandardFonts.Helvetica)
   pdfConfig.elements?.dynamicActivationQrCodes.forEach(configOptions =>
     pdfQrCodeElement(configOptions, { page: templatePage, qrCode: dynamicCode })
@@ -62,7 +67,7 @@ const fillContentAreas = async (
       doc,
       page: templatePage,
       font: fontBold,
-      url: deepLink,
+      url: getDeepLinkFromQrCode(dynamicCode),
     })
   }
 
@@ -82,7 +87,7 @@ const fillContentAreas = async (
       font,
       info: dynamicCode.value.info!,
       card,
-      cardInfoHash: cardInfoHashBase64,
+      cardInfoHash: dynamicCardInfoHashBase64,
       region,
     })
   )
@@ -93,7 +98,7 @@ const fillContentAreas = async (
       font: configOptions.bold ? fontBold : font,
       info: dynamicCode.value.info!,
       card,
-      cardInfoHash: cardInfoHashBase64,
+      cardInfoHash: dynamicCardInfoHashBase64,
       region,
     })
   )
@@ -102,49 +107,20 @@ const fillContentAreas = async (
 export const generatePdf = async (
   codes: CreateCardsResult[],
   cards: Card[],
-  pdfConfig: PdfConfig,
+  projectConfig: ProjectConfig,
   region?: Region
 ): Promise<Blob> => {
+  const pdfConfig = projectConfig.pdf
   try {
     const doc = await PDFDocument.create()
+    const templateDocument = await PDFDocument.load(await fetch(pdfConfig.templatePath).then(res => res.arrayBuffer()))
 
-    const templateDocument =
-      pdfConfig.templatePath != null
-        ? await PDFDocument.load(await fetch(pdfConfig.templatePath).then(res => res.arrayBuffer()))
-        : null
-
-    for (let k = 0; k < codes.length; k++) {
-      const dynamicCode = codes[k].dynamicActivationCode
-      const staticCode = codes[k].staticVerificationCode
-      const cardInfoHashBase64 = codes[k].dynamicCardInfoHashBase64
-      const card = cards[k]
-
+    for (let index = 0; index < codes.length; index++) {
       // eslint-disable-next-line no-await-in-loop
-      const [templatePage] = templateDocument ? await doc.copyPages(templateDocument, [0]) : [null]
-
-      const page = doc.addPage(templatePage || undefined)
-      const dynamicPdfQrCode: PdfQrCode = {
-        case: 'dynamicActivationCode',
-        value: dynamicCode,
-      }
-
+      const [templatePage] = await doc.copyPages(templateDocument, [0])
+      const page = doc.addPage(templatePage)
       // eslint-disable-next-line no-await-in-loop
-      await fillContentAreas(
-        doc,
-        page,
-        cardInfoHashBase64,
-        dynamicPdfQrCode,
-        staticCode
-          ? {
-              case: 'staticVerificationCode',
-              value: staticCode,
-            }
-          : null,
-        card,
-        pdfConfig,
-        getDeepLinkFromQrCode(dynamicPdfQrCode),
-        region
-      )
+      await fillContentAreas(doc, page, codes[index], cards[index], pdfConfig, region)
     }
 
     doc.setTitle(pdfConfig.title)
@@ -158,4 +134,13 @@ export const generatePdf = async (
     }
     throw error
   }
+}
+
+export const getPdfFilename = (cards: Card[]): string => {
+  // "Berechtigungskarte_" prefix needs to always be in the filename to ensure Nuernberg automation will not break
+  const filename =
+    cards.length === 1
+      ? `Berechtigungskarte_${normalizeString(cards[0].fullName)}-${new Date().getFullYear()}`
+      : 'berechtigungskarten'
+  return `${filename}.pdf`
 }

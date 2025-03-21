@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
-import { FILE_SIZE_LIMIT_MEGA_BYTES } from './StoresCSVInput'
+import { FILE_SIZE_LIMIT_MEGA_BYTES } from './constants'
 
 const RequirementsList = styled.ul`
   text-align: left;

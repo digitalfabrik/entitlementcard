@@ -44,7 +44,7 @@ const JuleicaEntitlementForm: Form<State, ValidatedInput> = {
           setState={useUpdateStateCallback(setState, 'juleicaExpirationDate')}
           options={{ maximumDate: null }}
         />
-        <h4>{t('applicationForms:juleicaCardAttachment')}</h4>
+        <h4>{t('applicationForms:juleicaCardAttachmentTitle')}</h4>
         <p>
           {t('applicationForms:juleicaCardAttachmentDescription')} {FileRequirementsText}
         </p>

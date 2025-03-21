@@ -52,6 +52,8 @@
 	<string>Standort auf der Karte und Akzeptanzstellen in der Umgebung anzeigen.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Standort auf der Karte und Akzeptanzstellen in der Umgebung anzeigen.</string>
+	<key>NSLocationUsageDescription</key>
+    <string>Standort auf der Karte und Akzeptanzstellen in der Umgebung anzeigen.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Standort auf der Karte und Akzeptanzstellen in der Umgebung anzeigen.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>

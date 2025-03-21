@@ -66,7 +66,7 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
   const [tokenToDelete, setTokenToDelete] = useState<number | null>(null)
 
   useEffect(() => {
-    const metaDataQueryResult = getQueryResult(metaDataQuery, t)
+    const metaDataQueryResult = getQueryResult(metaDataQuery)
     if (metaDataQueryResult.successful) {
       const { tokenMetaData } = metaDataQueryResult.data
       setTokenMetadata(tokenMetaData)
@@ -80,7 +80,7 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
       metaDataQuery.refetch()
     },
     onError: error => {
-      const { title } = getMessageFromApolloError(error, t)
+      const { title } = getMessageFromApolloError(error)
       appToaster?.show({
         intent: 'danger',
         message: title,
@@ -94,7 +94,7 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
       metaDataQuery.refetch()
     },
     onError: error => {
-      const { title } = getMessageFromApolloError(error, t)
+      const { title } = getMessageFromApolloError(error)
       appToaster?.show({
         intent: 'danger',
         message: title,
@@ -105,7 +105,7 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
   return (
     <>
       <Alert
-        cancelButtonText={t('cancel')}
+        cancelButtonText={t('misc:cancel')}
         confirmButtonText={t('deleteToken')}
         icon='trash'
         intent='danger'

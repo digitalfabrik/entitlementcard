@@ -2,7 +2,7 @@ import { NonIdealState } from '@blueprintjs/core'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { WhoAmIContext } from '../../WhoAmIProvider'
+import { useWhoAmI } from '../../WhoAmIProvider'
 import {
   Region,
   Role,
@@ -15,12 +15,11 @@ import StatisticsOverview from './StatisticsOverview'
 import { defaultEndDate, defaultStartDate } from './constants'
 
 const ViewProjectStatistics = () => {
-  const { t } = useTranslation('errors')
   const { projectId } = useContext(ProjectConfigContext)
   const cardStatisticsQuery = useGetCardStatisticsInProjectQuery({
     variables: { projectId, dateEnd: defaultEndDate, dateStart: defaultStartDate },
   })
-  const cardStatisticsQueryResult = getQueryResult(cardStatisticsQuery, t)
+  const cardStatisticsQueryResult = getQueryResult(cardStatisticsQuery)
 
   const applyFilter = (dateStart: string, dateEnd: string) => {
     cardStatisticsQuery.refetch({ projectId, dateEnd, dateStart })
@@ -33,7 +32,6 @@ const ViewProjectStatistics = () => {
 }
 
 const ViewRegionStatistics = ({ region }: { region: Region }) => {
-  const { t } = useTranslation('errors')
   const { projectId } = useContext(ProjectConfigContext)
   const cardStatisticsQuery = useGetCardStatisticsInRegionQuery({
     variables: {
@@ -43,7 +41,7 @@ const ViewRegionStatistics = ({ region }: { region: Region }) => {
       regionId: region.id,
     },
   })
-  const cardStatisticsQueryResult = getQueryResult(cardStatisticsQuery, t)
+  const cardStatisticsQueryResult = getQueryResult(cardStatisticsQuery)
 
   const applyFilter = (dateStart: string, dateEnd: string) => {
     cardStatisticsQuery.refetch({ projectId, dateEnd, dateStart, regionId: region.id })
@@ -61,7 +59,7 @@ const ViewRegionStatistics = ({ region }: { region: Region }) => {
   )
 }
 const StatisticsController = (): ReactElement => {
-  const { role, region } = useContext(WhoAmIContext).me!
+  const { role, region } = useWhoAmI().me
   const { cardStatistics } = useContext(ProjectConfigContext)
   const { t } = useTranslation('errors')
 

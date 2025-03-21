@@ -4,10 +4,9 @@ import styled from 'styled-components'
 
 import ApplicationStatusHelpButton from './ApplicationStatusBarHelpButton'
 import ApplicationStatusBarItem from './ApplicationStatusBarItem'
-import { Application } from './ApplicationsOverview'
-import { getStatus } from './VerificationsView'
+import type { Application } from './ApplicationsOverview'
 import { ApplicationStatus, ApplicationStatusBarItemType } from './constants'
-import { getApplicationStatus } from './utils'
+import { getApplicationStatus, getVerificationStatus } from './utils'
 
 const Container = styled.div`
   display: flex;
@@ -52,7 +51,8 @@ const getApplicationCount = (applications: Application[], status?: ApplicationSt
   }
   return applications.filter(
     application =>
-      getApplicationStatus(application.verifications.map(getStatus), !!application.withdrawalDate) === status
+      getApplicationStatus(application.verifications.map(getVerificationStatus), !!application.withdrawalDate) ===
+      status
   ).length
 }
 
@@ -62,7 +62,7 @@ const ApplicationStatusBar = ({
   barItems,
   setActiveBarItem,
 }: ApplicationStatusBarProps): ReactElement => {
-  const { t } = useTranslation('applications')
+  const { t } = useTranslation('applicationsOverview')
   return (
     <Container>
       <Title>{t('status')}</Title>

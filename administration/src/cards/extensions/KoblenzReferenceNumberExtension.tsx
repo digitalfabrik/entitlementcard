@@ -2,10 +2,10 @@ import { FormGroup, InputGroup, Intent } from '@blueprintjs/core'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import FormErrorMessage from '../../bp-modules/self-service/components/FormErrorMessage'
+import FormAlert from '../../bp-modules/self-service/components/FormAlert'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
 import ClearInputButton from './components/ClearInputButton'
-import { Extension, ExtensionComponentProps } from './extensions'
+import type { Extension, ExtensionComponentProps } from './extensions'
 
 export const KOBLENZ_REFERENCE_NUMBER_EXTENSION_NAME = 'koblenzReferenceNumber'
 
@@ -49,7 +49,7 @@ const KoblenzReferenceNumberExtensionForm = ({
         fill
         large={viewportSmall}
         id='koblenz-reference-number-input'
-        placeholder='5.012.067.281, 000D000001, 99478'
+        placeholder='5.031.025.281, 000D000001, 91459'
         intent={isValid || !showErrorMessage ? undefined : Intent.DANGER}
         onBlur={() => setTouched(true)}
         value={koblenzReferenceNumber}
@@ -58,7 +58,7 @@ const KoblenzReferenceNumberExtensionForm = ({
         }
         onChange={event => setValue({ koblenzReferenceNumber: event.target.value })}
       />
-      {showErrorMessage && <FormErrorMessage errorMessage={getErrorMessage()} />}
+      {showErrorMessage && <FormAlert errorMessage={getErrorMessage()} />}
     </FormGroup>
   )
 }

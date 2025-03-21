@@ -7,12 +7,12 @@ import styled from 'styled-components'
 
 import { GetApplicationsQuery } from '../../generated/graphql'
 import StandaloneCenter from '../StandaloneCenter'
-import ApplicationCard, { ApplicationCardProps } from './ApplicationCard'
+import ApplicationCard from './ApplicationCard'
+import type { ApplicationCardProps } from './ApplicationCard'
 import ApplicationStatusBar from './ApplicationStatusBar'
-import { getStatus } from './VerificationsView'
 import { ApplicationStatusBarItemType, barItems } from './constants'
 import usePrintApplication from './hooks/usePrintApplication'
-import { getApplicationStatus } from './utils'
+import { getApplicationStatus, getVerificationStatus } from './utils'
 
 const ApplicationListCard = styled.li`
   display: flex;
@@ -51,7 +51,7 @@ const sortApplications = (applications: Application[]): Application[] =>
   applications
     .map(application => ({
       ...application,
-      status: getApplicationStatus(application.verifications.map(getStatus), !!application.withdrawalDate),
+      status: getApplicationStatus(application.verifications.map(getVerificationStatus), !!application.withdrawalDate),
     }))
     .sort((a, b) => sortByStatus(a.status, b.status) || sortByDateAsc(new Date(a.createdDate), new Date(b.createdDate)))
 
@@ -62,19 +62,16 @@ const ApplicationsOverview = ({ applications }: { applications: Application[] })
   const [updatedApplications, setUpdatedApplications] = useState(applications)
   const { applicationIdForPrint, printApplicationById } = usePrintApplication()
   const [activeBarItem, setActiveBarItem] = useState<ApplicationStatusBarItemType>(barItems[0])
-  const { t } = useTranslation('applications')
+  const { t } = useTranslation('applicationsOverview')
   const sortedApplications: Application[] = useMemo(() => sortApplications(updatedApplications), [updatedApplications])
   const filteredApplications: Application[] = useMemo(
     () =>
-      sortedApplications.filter(application => {
-        if (activeBarItem.status === undefined) {
-          return application
-        }
-        return (
-          getApplicationStatus(application.verifications.map(getStatus), !!application.withdrawalDate) ===
-          activeBarItem.status
-        )
-      }),
+      sortedApplications.filter(
+        application =>
+          activeBarItem.status === undefined ||
+          getApplicationStatus(application.verifications.map(getVerificationStatus), !!application.withdrawalDate) ===
+            activeBarItem.status
+      ),
     [activeBarItem, sortedApplications]
   )
 

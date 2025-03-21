@@ -7,7 +7,7 @@ import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useUpdateApplicationNoteMutation } from '../../generated/graphql'
 import { useAppToaster } from '../AppToaster'
 import TextAreaDialog from '../components/TextAreaDialog'
-import { Application } from './ApplicationsOverview'
+import type { Application } from './ApplicationsOverview'
 
 const NoteButton = styled(Button)`
   margin-right: 10px;
@@ -37,10 +37,10 @@ const NoteDialogController = ({
   onChange,
 }: NoteDialogControllerProps): ReactElement | null => {
   const appToaster = useAppToaster()
-  const { t } = useTranslation('applications')
+  const { t } = useTranslation('applicationsOverview')
   const [updateApplicationNote, { loading }] = useUpdateApplicationNoteMutation({
     onError: error => {
-      const { title } = getMessageFromApolloError(error, t)
+      const { title } = getMessageFromApolloError(error)
       appToaster?.show({ intent: 'danger', message: title })
     },
     onCompleted: () => {

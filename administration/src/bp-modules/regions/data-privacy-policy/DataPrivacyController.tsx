@@ -1,19 +1,18 @@
 import { NonIdealState } from '@blueprintjs/core'
-import React, { ReactElement, useContext } from 'react'
+import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { WhoAmIContext } from '../../../WhoAmIProvider'
+import { useWhoAmI } from '../../../WhoAmIProvider'
 import { Role, useGetDataPolicyQuery } from '../../../generated/graphql'
 import getQueryResult from '../../util/getQueryResult'
 import DataPrivacyOverview from './DataPrivacyOverview'
 
 const DataPrivacyController = ({ regionId }: { regionId: number }) => {
-  const { t } = useTranslation('errors')
   const dataPolicyQuery = useGetDataPolicyQuery({
     variables: { regionId },
     onError: error => console.error(error),
   })
-  const dataPolicyQueryResult = getQueryResult(dataPolicyQuery, t)
+  const dataPolicyQueryResult = getQueryResult(dataPolicyQuery)
   if (!dataPolicyQueryResult.successful) {
     return dataPolicyQueryResult.component
   }
@@ -24,7 +23,7 @@ const DataPrivacyController = ({ regionId }: { regionId: number }) => {
 }
 
 const DataPrivacyWithRegion = (): ReactElement => {
-  const { region, role } = useContext(WhoAmIContext).me!
+  const { region, role } = useWhoAmI().me
   const { t } = useTranslation('errors')
   if (!region || role !== Role.RegionAdmin) {
     return <NonIdealState icon='cross' title={t('notAuthorized')} description={t('notAuthorizedForDataPrivacy')} />

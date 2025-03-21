@@ -9,28 +9,13 @@ import koblenzConfig from '../../../../project-configs/koblenz/config'
 import downloadDataUri from '../../../../util/downloadDataUri'
 import { AppToasterProvider } from '../../../AppToaster'
 import { exampleCard, mockedCardMutation } from '../../__mock__/mockSelfServiceCard'
-import useCardGeneratorSelfService, { CardSelfServiceStep } from '../useCardGeneratorSelfService'
+import useCardGeneratorSelfService from '../useCardGeneratorSelfService'
 
 const mocks: MockedResponse[] = []
-
-const wrapper = ({ children }: { children: ReactNode }) => (
-  <MemoryRouter>
-    <AppToasterProvider>
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <ProjectConfigProvider projectConfig={koblenzConfig}>{children}</ProjectConfigProvider>
-      </MockedProvider>
-    </AppToasterProvider>
-  </MemoryRouter>
-)
 
 jest.mock('../../../../generated/graphql', () => ({
   ...jest.requireActual('../../../../generated/graphql'),
   generatePdf: jest.fn(),
-}))
-jest.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key: string) => key,
-  }),
 }))
 
 jest.mock('../../../../cards/PdfFactory', () => ({
@@ -39,6 +24,24 @@ jest.mock('../../../../cards/PdfFactory', () => ({
 }))
 
 jest.mock('../../../../util/downloadDataUri')
+
+const wrapper = ({ children, initialRoutes }: { children: ReactNode; initialRoutes?: string[] }) => (
+  <MemoryRouter initialEntries={initialRoutes}>
+    <AppToasterProvider>
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <ProjectConfigProvider projectConfig={koblenzConfig}>{children}</ProjectConfigProvider>
+      </MockedProvider>
+    </AppToasterProvider>
+  </MemoryRouter>
+)
+
+const withCustomWrapper =
+  (initialRoute: string) =>
+  ({ children }: { children: ReactNode }) =>
+    wrapper({
+      children,
+      initialRoutes: [initialRoute],
+    })
 
 describe('useCardGeneratorSelfService', () => {
   it('should successfully create a card', async () => {
@@ -50,11 +53,29 @@ describe('useCardGeneratorSelfService', () => {
     expect(result.current.selfServiceCard).toEqual(exampleCard)
     await act(async () => result.current.generateCards())
     expect(toasterSpy).not.toHaveBeenCalled()
-    expect(result.current.selfServiceState).toBe(CardSelfServiceStep.information)
-    expect(result.current.deepLink).toBe(
-      'koblenzpass://koblenz.sozialpass.app/activation/code#ClcKLQoNS2FybGEgS29ibGVuehDmnwEaGAoCCF8SBAjqvgEqBAiLmgEyBgoEMTIzSxIQL%2Fle3xYGNIKS50god4ITmxoUOUYGq%2FjAE99bK4edMPo2I3ojr78%3D/'
-    )
+    expect(result.current.cardGenerationStep).toBe('information')
     await act(async () => result.current.downloadPdf(result.current.code!, 'koblenzpass.pdf'))
     expect(downloadDataUri).toHaveBeenCalled()
+  })
+
+  it('should successfully initialize cards with searchParams for koblenz', async () => {
+    jest.useFakeTimers({ now: new Date('2025-01-01T00:00:00.000Z') })
+    const { result } = renderHook(() => useCardGeneratorSelfService(), {
+      wrapper: withCustomWrapper('?Name=Karla Koblenz&Referenznummer=123K&Geburtsdatum=10.06.2003'),
+    })
+
+    expect(result.current.selfServiceCard).toEqual({
+      expirationDate: { day: 1, isoMonth: 1, isoYear: 2026 },
+      extensions: {
+        birthday: {
+          day: 10,
+          isoMonth: 6,
+          isoYear: 2003,
+        },
+        koblenzReferenceNumber: '123K',
+      },
+      fullName: 'Karla Koblenz',
+      id: expect.any(Number),
+    })
   })
 })

@@ -9,15 +9,15 @@ import {
 import { TFunction } from 'i18next'
 import { ReactElement, ReactNode } from 'react'
 
-import { JsonField } from '../bp-modules/applications/JsonFieldView'
-import { ActivityLogEntryType } from '../bp-modules/user-settings/ActivityLog'
-import { Card } from '../cards/Card'
-import { CreateCardsResult } from '../cards/createCards'
-import { Extension } from '../cards/extensions/extensions'
-import { PdfFormElementProps } from '../cards/pdf/PdfFormElement'
-import { PdfLinkAreaProps } from '../cards/pdf/PdfLinkArea'
-import { PdfQrCodeElementProps } from '../cards/pdf/PdfQrCodeElement'
-import { PdfTextElementProps } from '../cards/pdf/PdfTextElement'
+import type { JsonField } from '../bp-modules/applications/JsonFieldView'
+import type { ActivityLogEntryType } from '../bp-modules/user-settings/ActivityLog'
+import type { Card } from '../cards/Card'
+import type { CreateCardsResult } from '../cards/createCards'
+import type { Extension } from '../cards/extensions/extensions'
+import type { PdfFormElementProps } from '../cards/pdf/PdfFormElement'
+import type { PdfLinkAreaProps } from '../cards/pdf/PdfLinkArea'
+import type { PdfQrCodeElementProps } from '../cards/pdf/PdfQrCodeElement'
+import type { PdfTextElementProps } from '../cards/pdf/PdfTextElement'
 import bayernConfig from './bayern/config'
 import { LOCAL_STORAGE_PROJECT_KEY } from './constants'
 import koblenzConfig from './koblenz/config'
@@ -26,7 +26,7 @@ import showcaseConfig from './showcase/config'
 
 export type PdfConfig = {
   title: string
-  templatePath: string | null
+  templatePath: string
   issuer: string
   customBoldFont?: string
   elements?: {
@@ -116,10 +116,12 @@ export type ProjectConfig = {
   csvExport: CsvExport
   cardStatistics: CardStatistics
   freinetCSVImportEnabled: boolean
+  freinetDataTransferEnabled: boolean
   cardCreation: boolean
   selfServiceEnabled: boolean
   storesManagement: StoresManagementConfig
   userImportApiEnabled: boolean
+  showBirthdayExtensionHint: boolean
 }
 
 const getProjectConfig = (hostname: string): ProjectConfig => {

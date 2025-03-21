@@ -2,8 +2,9 @@ import { JsonField, findValue } from '../../bp-modules/applications/JsonFieldVie
 import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
 import EMailNotificationExtension from '../../cards/extensions/EMailNotificationExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
+import { isProductionEnvironment } from '../../util/helper'
 import { ActivationText } from '../common/ActivationText'
-import { CardConfig, ProjectConfig } from '../getProjectConfig'
+import type { CardConfig, ProjectConfig } from '../getProjectConfig'
 import { DataPrivacyAdditionalBaseText, DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
 import pdfConfiguration from './pdf'
 
@@ -87,12 +88,15 @@ const config: ProjectConfig = {
     },
   },
   freinetCSVImportEnabled: true,
+  // TODO #1751 has to be implemented, before we ship it to production
+  freinetDataTransferEnabled: !isProductionEnvironment(),
   cardCreation: true,
   selfServiceEnabled: false,
   storesManagement: {
     enabled: false,
   },
   userImportApiEnabled: false,
+  showBirthdayExtensionHint: false,
 }
 
 export default config

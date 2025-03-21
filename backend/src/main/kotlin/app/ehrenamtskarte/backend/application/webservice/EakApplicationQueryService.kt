@@ -3,11 +3,10 @@ package app.ehrenamtskarte.backend.application.webservice
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationVerificationView
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationView
-import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
+import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
-import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -21,11 +20,9 @@ class EakApplicationQueryService {
         regionId: Int
     ): List<ApplicationView> {
         val context = dfe.getContext<GraphQLContext>()
-        val jwtPayload = context.enforceSignedIn()
+        val admin = context.getAdministrator()
         return transaction {
-            val user = AdministratorEntity.findById(jwtPayload.adminId)
-                ?: throw UnauthorizedException()
-            if (!Authorizer.mayViewApplicationsInRegion(user, regionId)) {
+            if (!Authorizer.mayViewApplicationsInRegion(admin, regionId)) {
                 throw ForbiddenException()
             }
 
