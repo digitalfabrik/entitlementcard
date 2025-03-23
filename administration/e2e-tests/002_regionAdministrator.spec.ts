@@ -116,10 +116,7 @@ test.describe('Bayern regional admin', () => {
       if (!data.includes(`Name: Doe, ${browserName}`)) {
         continue
       }
-      if (visitedCases.size === casesToVisit.size) {
-        console.log('deal')
-        break
-      }
+      if (visitedCases.size === casesToVisit.size) break
 
       await item.click()
       // Testing Notes for each could increase about 20% time.
