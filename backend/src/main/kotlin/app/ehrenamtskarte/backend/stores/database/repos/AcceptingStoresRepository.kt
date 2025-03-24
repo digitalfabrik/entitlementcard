@@ -121,13 +121,7 @@ object AcceptingStoresRepository {
         var numStoresCreated = 0
         var numStoresUntouched = 0
         val projectId = project.id
-        val region = RegionsRepository.findAllInProject(project.project).let {
-            if (it.size == 1) {
-                it.first()
-            } else {
-                null
-            }
-        }
+        val region = RegionsRepository.findAllInProject(project.project).singleOrNull()
         val acceptingStoreIdsToRemove =
             AcceptingStores.slice(AcceptingStores.id).select { AcceptingStores.projectId eq projectId }
                 .map { it[AcceptingStores.id].value }.toMutableSet()
