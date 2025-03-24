@@ -12,18 +12,18 @@ object ApiTokensRepository {
         adminId: EntityID<Int>,
         expirationDate: LocalDate,
         projectId: EntityID<Int>,
-        type: ApiTokenType
-    ): ApiTokenEntity {
-        return ApiTokenEntity.new {
+        type: ApiTokenType,
+    ): ApiTokenEntity =
+        ApiTokenEntity.new {
             this.tokenHash = tokenHash
             this.creator = adminId
             this.expirationDate = expirationDate
             this.projectId = projectId
             this.type = type
         }
-    }
 
-    fun findByTokenHash(tokenHash: ByteArray): ApiTokenEntity? {
-        return ApiTokenEntity.find { (ApiTokens.tokenHash eq tokenHash) }.singleOrNull()
-    }
+    fun findByTokenHash(tokenHash: ByteArray): ApiTokenEntity? =
+        ApiTokenEntity.find {
+            (ApiTokens.tokenHash eq tokenHash)
+        }.singleOrNull()
 }

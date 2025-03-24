@@ -14,7 +14,7 @@ internal class V0005_AddRegionApplicationActivation() : Migration() {
             """
             ALTER TABLE regions 
             ADD "activatedForApplication" BOOLEAN NOT NULL DEFAULT true;
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 }

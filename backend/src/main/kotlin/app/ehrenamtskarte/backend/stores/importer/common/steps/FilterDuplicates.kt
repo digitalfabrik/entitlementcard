@@ -12,8 +12,10 @@ import java.util.Locale
  * For duplicates to be detected an exact match of name, postal code and street is necessary.
  * The properties of the last accepting store are used if there are multiple valid properties.
  */
-class FilterDuplicates(config: ImportConfig, private val logger: Logger) : PipelineStep<List<AcceptingStore>, List<AcceptingStore>>(config) {
-
+class FilterDuplicates(
+    config: ImportConfig,
+    private val logger: Logger,
+) : PipelineStep<List<AcceptingStore>, List<AcceptingStore>>(config) {
     override fun execute(input: List<AcceptingStore>): List<AcceptingStore> {
         // Group by name + postal code + street to detect duplicates
         val groups = input.groupBy {
@@ -39,7 +41,9 @@ class FilterDuplicates(config: ImportConfig, private val logger: Logger) : Pipel
         val website = lastValue("websites") { it.website }
         val email = lastValue("emails") { it.email }
         val telephone = lastValue("telephones") { it.telephone }
-        val additionalAddressInformation = lastValue("additional address information") { it.additionalAddressInformation }
+        val additionalAddressInformation = lastValue("additional address information") {
+            it.additionalAddressInformation
+        }
 
         // The coordinates are often just cut after some digits so use the one with the best precision
         val longitude = mapNotNull { it.longitude }.maxBy { it.toString().length }
@@ -64,11 +68,14 @@ class FilterDuplicates(config: ImportConfig, private val logger: Logger) : Pipel
             website,
             discounts,
             store.freinetId,
-            store.districtName
+            store.districtName,
         )
     }
 
-    private fun <T : Any> List<AcceptingStore>.lastValue(property: String, transform: (AcceptingStore) -> T?): T? {
+    private fun <T : Any> List<AcceptingStore>.lastValue(
+        property: String,
+        transform: (AcceptingStore) -> T?,
+    ): T? {
         val uniqueValues = mapNotNull { transform(it) }.toSet()
 
         if (uniqueValues.size > 1) {

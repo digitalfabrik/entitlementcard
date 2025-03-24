@@ -15,7 +15,7 @@ internal class V0004_AddNotificationSettings() : Migration() {
             ALTER TABLE administrators 
             ADD "notificationOnApplication" BOOLEAN NOT NULL DEFAULT false,
             ADD "notificationOnVerification" BOOLEAN NOT NULL DEFAULT false;
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 }

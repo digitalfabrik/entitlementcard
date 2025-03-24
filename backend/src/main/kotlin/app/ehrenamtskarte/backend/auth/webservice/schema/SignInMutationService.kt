@@ -15,7 +15,11 @@ import org.slf4j.LoggerFactory
 @Suppress("unused")
 class SignInMutationService {
     @GraphQLDescription("Signs in an administrator")
-    fun signIn(project: String, authData: AuthData, dfe: DataFetchingEnvironment): SignInPayload {
+    fun signIn(
+        project: String,
+        authData: AuthData,
+        dfe: DataFetchingEnvironment,
+    ): SignInPayload {
         val logger = LoggerFactory.getLogger(SignInMutationService::class.java)
 
         val administratorEntity = transaction {

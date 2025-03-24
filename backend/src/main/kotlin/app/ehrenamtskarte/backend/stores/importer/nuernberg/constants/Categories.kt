@@ -11,5 +11,5 @@ val categoryMapping =
         "16" to 16,
         "17" to 17,
         "18" to 18,
-        "9" to 9
+        "9" to 9,
     ).withDefault { 9 }

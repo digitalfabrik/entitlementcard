@@ -8,7 +8,10 @@ package app.ehrenamtskarte.backend.common.database
  * If there was exactly one value present with the i-th key, this value will be in `result[i]`.
  * Otherwise, if there are multiple values with the i-th key, then the method will throw.
  */
-fun <TValue, TKey> Iterable<TValue>.sortByKeys(keySelector: (TValue) -> TKey, keys: Iterable<TKey>): List<TValue?> {
+fun <TValue, TKey> Iterable<TValue>.sortByKeys(
+    keySelector: (TValue) -> TKey,
+    keys: Iterable<TKey>,
+): List<TValue?> {
     val valuesByKey = groupBy(keySelector)
     return keys.map { valuesByKey[it]?.single() }
 }

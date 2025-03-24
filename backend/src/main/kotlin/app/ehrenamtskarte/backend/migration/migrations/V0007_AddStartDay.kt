@@ -12,7 +12,7 @@ internal class V0007_AddStartDay() : Migration() {
         exec(
             """
             ALTER TABLE cards ADD "startDay" BIGINT NULL;
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 }

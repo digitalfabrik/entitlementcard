@@ -18,7 +18,7 @@ const val ACTIVATION_SECRET_HASH_LENGTH = 70
 
 enum class CodeType {
     STATIC,
-    DYNAMIC
+    DYNAMIC,
 }
 
 object Cards : IntIdTable() {
@@ -50,14 +50,14 @@ object Cards : IntIdTable() {
                 (activationSecretHash eq null) and
                     (totpSecret eq null) and
                     (codeType eq CodeType.STATIC)
-                ) or
+            ) or
                 ((activationSecretHash neq null) and (codeType eq CodeType.DYNAMIC))
         }
         check("issuerid_or_entitlementid_not_null") {
             (
                 ((issuerId neq null) and (entitlementId eq null))
                     or ((issuerId eq null) and (entitlementId neq null))
-                )
+            )
         }
     }
 }

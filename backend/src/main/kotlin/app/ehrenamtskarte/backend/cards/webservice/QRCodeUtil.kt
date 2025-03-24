@@ -18,7 +18,11 @@ class QRCodeUtil {
         val DEFAULT_ERROR_CORRECTION = ErrorCorrectionLevel.M
         val DEFAULT_MODE = Mode.BYTE
 
-        private fun willFit(numInputBits: Int, version: Version, ecLevel: ErrorCorrectionLevel?): Boolean {
+        private fun willFit(
+            numInputBits: Int,
+            version: Version,
+            ecLevel: ErrorCorrectionLevel?,
+        ): Boolean {
             // In the following comments, we use numbers of Version 7-H.
             // numBytes = 196
             val numBytes = version.totalCodewords
@@ -31,7 +35,10 @@ class QRCodeUtil {
             return numDataBytes >= totalInputBytes
         }
 
-        private fun appendModeInfo(mode: Mode, bits: BitArray) {
+        private fun appendModeInfo(
+            mode: Mode,
+            bits: BitArray,
+        ) {
             bits.appendBits(mode.bits, 4)
         }
 
@@ -47,16 +54,17 @@ class QRCodeUtil {
             return headerBits.size + DEFAULT_MODE.getCharacterCountBits(DEFAULT_VERSION) + content.count() * 8
         }
 
-        private fun isContentLengthValid(content: ByteArray): Boolean {
-            return willFit(calculateBitsNeeded(content), DEFAULT_VERSION, DEFAULT_ERROR_CORRECTION)
-        }
+        private fun isContentLengthValid(content: ByteArray): Boolean =
+            willFit(calculateBitsNeeded(content), DEFAULT_VERSION, DEFAULT_ERROR_CORRECTION)
 
-        fun isContentLengthValid(card: Card.DynamicActivationCode): Boolean {
-            return isContentLengthValid(Card.QrCode.newBuilder().setDynamicActivationCode(card).build().toByteArray())
-        }
+        fun isContentLengthValid(card: Card.DynamicActivationCode): Boolean =
+            isContentLengthValid(
+                Card.QrCode.newBuilder().setDynamicActivationCode(card).build().toByteArray(),
+            )
 
-        fun isContentLengthValid(card: Card.StaticVerificationCode): Boolean {
-            return isContentLengthValid(Card.QrCode.newBuilder().setStaticVerificationCode(card).build().toByteArray())
-        }
+        fun isContentLengthValid(card: Card.StaticVerificationCode): Boolean =
+            isContentLengthValid(
+                Card.QrCode.newBuilder().setStaticVerificationCode(card).build().toByteArray(),
+            )
     }
 }

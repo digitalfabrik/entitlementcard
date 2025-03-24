@@ -13,13 +13,15 @@ interface NamedDataLoader<K, V> {
     val loader: DataLoader<K, V>
 }
 
-fun <K, V> NamedDataLoader<K, V>.fromEnvironment(environment: DataFetchingEnvironment): DataLoader<K, V> {
-    return environment.getDataLoader(name)
+fun <K, V> NamedDataLoader<K, V>.fromEnvironment(environment: DataFetchingEnvironment): DataLoader<K, V> =
+    environment.getDataLoader(name)
         ?: throw IllegalArgumentException("Registry does not have a DataLoader named $name")
-}
 
-fun <K, V> newNamedDataLoader(name: String, loadBatch: suspend (ids: List<K>) -> List<V>): NamedDataLoader<K, V> {
-    return object : NamedDataLoader<K, V> {
+fun <K, V> newNamedDataLoader(
+    name: String,
+    loadBatch: suspend (ids: List<K>) -> List<V>,
+): NamedDataLoader<K, V> =
+    object : NamedDataLoader<K, V> {
         override val name = name
         override val loader = DataLoaderFactory.newDataLoader(
             { ids ->
@@ -27,10 +29,9 @@ fun <K, V> newNamedDataLoader(name: String, loadBatch: suspend (ids: List<K>) ->
                     runBlocking { loadBatch(ids) }
                 }
             },
-            DataLoaderOptions.newOptions().setCachingEnabled(false)
+            DataLoaderOptions.newOptions().setCachingEnabled(false),
         )
     }
-}
 
 fun createRegistryFromNamedDataLoaders(vararg loaders: NamedDataLoader<*, *>): DataLoaderRegistry {
     val registry = DataLoaderRegistry()

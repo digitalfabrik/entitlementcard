@@ -31,72 +31,70 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 internal class Verein360ApplicationTest : GraphqlApiTest() {
-
     data class ValidationErrorTestCase(val application: ApplicationInput, val error: String)
 
     companion object {
         @JvmStatic
-        fun validationErrorTestCases(): List<ValidationErrorTestCase> {
-            return listOf(
+        fun validationErrorTestCases(): List<ValidationErrorTestCase> =
+            listOf(
                 ValidationErrorTestCase(
                     application = TestApplicationBuilder.build(
                         isAlreadyVerified = true,
-                        applicationType = ApplicationType.RENEWAL_APPLICATION
+                        applicationType = ApplicationType.RENEWAL_APPLICATION,
                     ),
-                    error = "Application type must be FIRST_APPLICATION if application is already verified"
+                    error = "Application type must be FIRST_APPLICATION if application is already verified",
                 ),
                 ValidationErrorTestCase(
                     application = TestApplicationBuilder.build(
                         isAlreadyVerified = true,
                         wantsDigitalCard = false,
-                        wantsPhysicalCard = true
+                        wantsPhysicalCard = true,
                     ),
-                    error = "Digital card must be true if application is already verified"
+                    error = "Digital card must be true if application is already verified",
                 ),
                 ValidationErrorTestCase(
                     application = TestApplicationBuilder.build(
                         isAlreadyVerified = true,
-                        wantsPhysicalCard = true
+                        wantsPhysicalCard = true,
                     ),
-                    error = "Physical card must be false if application is already verified"
+                    error = "Physical card must be false if application is already verified",
                 ),
                 ValidationErrorTestCase(
                     application = TestApplicationBuilder.build(
                         isAlreadyVerified = true,
-                        category = "Other"
+                        category = "Other",
                     ),
-                    error = "All organizations must be of category 'sports' if application is already verified"
+                    error = "All organizations must be of category 'sports' if application is already verified",
                 ),
                 ValidationErrorTestCase(
                     application = TestApplicationBuilder.build(
                         isAlreadyVerified = true,
-                        givenInformationIsCorrectAndComplete = false
+                        givenInformationIsCorrectAndComplete = false,
                     ),
-                    error = "Has not confirmed that information is correct and complete."
+                    error = "Has not confirmed that information is correct and complete.",
                 ),
                 ValidationErrorTestCase(
                     application = TestApplicationBuilder.build(
                         isAlreadyVerified = true,
-                        forenames = ""
+                        forenames = "",
                     ),
-                    error = "Value of ShortTextInput should not be empty."
+                    error = "Value of ShortTextInput should not be empty.",
                 ),
                 ValidationErrorTestCase(
                     application = TestApplicationBuilder.build(
                         isAlreadyVerified = true,
-                        surname = ""
+                        surname = "",
                     ),
-                    error = "Value of ShortTextInput should not be empty."
+                    error = "Value of ShortTextInput should not be empty.",
                 ),
                 ValidationErrorTestCase(
                     application = TestApplicationBuilder.build(
                         isAlreadyVerified = true,
-                        contactName = ""
+                        contactName = "",
                     ),
-                    error = "Value of ShortTextInput should not be empty."
-                )
+                    error = "Value of ShortTextInput should not be empty.",
+                ),
             )
-        }
     }
 
     private val adminVerein360 = TestAdministrators.BAYERN_VEREIN_360
@@ -122,120 +120,144 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
 
     @ParameterizedTest
     @MethodSource("validationErrorTestCases")
-    fun `should return validation error when the request is not valid`(testCase: ValidationErrorTestCase) = JavalinTest.test(app) { _, client ->
-        TestData.createApiToken(creatorId = adminVerein360.id, type = ApiTokenType.VERIFIED_APPLICATION)
+    fun `should return validation error when the request is not valid`(testCase: ValidationErrorTestCase) =
+        JavalinTest.test(app) { _, client ->
+            TestData.createApiToken(creatorId = adminVerein360.id, type = ApiTokenType.VERIFIED_APPLICATION)
 
-        val mutation = createMutation(application = testCase.application)
-        val response = post(client, mutation, token = "dummy")
+            val mutation = createMutation(application = testCase.application)
+            val response = post(client, mutation, token = "dummy")
 
-        assertEquals(200, response.code)
+            assertEquals(200, response.code)
 
-        val jsonResponse = response.json()
+            val jsonResponse = response.json()
 
-        assertEquals("Error INVALID_JSON occurred.", jsonResponse.findValue("message").textValue())
-        assertEquals(testCase.error, jsonResponse.findValue("reason").textValue())
-    }
-
-    @Test
-    fun `should return an error when region not found`() = JavalinTest.test(app) { _, client ->
-        val mutation = createMutation(
-            regionId = 99,
-            application = TestApplicationBuilder.defaultVerified()
-        )
-        val response = post(client, mutation)
-
-        assertEquals(200, response.code)
-
-        val jsonResponse = response.json()
-
-        assertEquals("Error REGION_NOT_FOUND occurred.", jsonResponse.findValue("message").textValue())
-    }
+            assertEquals("Error INVALID_JSON occurred.", jsonResponse.findValue("message").textValue())
+            assertEquals(testCase.error, jsonResponse.findValue("reason").textValue())
+        }
 
     @Test
-    fun `should return an error when the application is pre-verified but auth token is missing`() = JavalinTest.test(app) { _, client ->
-        val mutation = createMutation(application = TestApplicationBuilder.defaultVerified())
-        val response = post(client, mutation)
+    fun `should return an error when region not found`() =
+        JavalinTest.test(app) { _, client ->
+            val mutation = createMutation(
+                regionId = 99,
+                application = TestApplicationBuilder.defaultVerified(),
+            )
+            val response = post(client, mutation)
 
-        assertEquals(401, response.code)
-    }
+            assertEquals(200, response.code)
 
-    @Test
-    fun `should return an error when api token not found`() = JavalinTest.test(app) { _, client ->
-        val mutation = createMutation(application = TestApplicationBuilder.defaultVerified())
-        val response = post(client, mutation, token = "non-existent")
+            val jsonResponse = response.json()
 
-        assertEquals(403, response.code)
-    }
-
-    @Test
-    fun `should return an error when api token has wrong type`() = JavalinTest.test(app) { _, client ->
-        TestData.createApiToken(creatorId = adminVerein360.id, type = ApiTokenType.USER_IMPORT)
-
-        val mutation = createMutation(application = TestApplicationBuilder.defaultVerified())
-        val response = post(client, mutation, token = "dummy")
-
-        assertEquals(403, response.code)
-    }
+            assertEquals("Error REGION_NOT_FOUND occurred.", jsonResponse.findValue("message").textValue())
+        }
 
     @Test
-    fun `should create an application and approved verification if the request is pre-verified and valid`() = JavalinTest.test(app) { _, client ->
-        TestData.createApiToken(creatorId = adminVerein360.id, type = ApiTokenType.VERIFIED_APPLICATION)
+    fun `should return an error when the application is pre-verified but auth token is missing`() =
+        JavalinTest.test(app) {
+            _,
+            client,
+            ->
+            val mutation = createMutation(application = TestApplicationBuilder.defaultVerified())
+            val response = post(client, mutation)
 
-        val mutation = createMutation(application = TestApplicationBuilder.defaultVerified())
-        val response = post(client, mutation, token = "dummy")
+            assertEquals(401, response.code)
+        }
 
-        assertEquals(200, response.code)
+    @Test
+    fun `should return an error when api token not found`() =
+        JavalinTest.test(app) { _, client ->
+            val mutation = createMutation(application = TestApplicationBuilder.defaultVerified())
+            val response = post(client, mutation, token = "non-existent")
 
-        transaction {
-            assertEquals(1, Applications.selectAll().count())
-            assertEquals(1, ApplicationVerifications.selectAll().count())
+            assertEquals(403, response.code)
+        }
 
-            val application = ApplicationEntity.all().single()
+    @Test
+    fun `should return an error when api token has wrong type`() =
+        JavalinTest.test(app) { _, client ->
+            TestData.createApiToken(creatorId = adminVerein360.id, type = ApiTokenType.USER_IMPORT)
 
-            ApplicationVerificationEntity.find { ApplicationVerifications.applicationId eq application.id }.single().let {
-                assertNotNull(it.verifiedDate)
-                assertNull(it.rejectedDate)
-                assertEquals(ApplicationVerificationExternalSource.VEREIN360, it.automaticSource)
+            val mutation = createMutation(application = TestApplicationBuilder.defaultVerified())
+            val response = post(client, mutation, token = "dummy")
+
+            assertEquals(403, response.code)
+        }
+
+    @Test
+    fun `should create an application and approved verification if the request is pre-verified and valid`() =
+        JavalinTest.test(app) {
+            _,
+            client,
+            ->
+            TestData.createApiToken(creatorId = adminVerein360.id, type = ApiTokenType.VERIFIED_APPLICATION)
+
+            val mutation = createMutation(application = TestApplicationBuilder.defaultVerified())
+            val response = post(client, mutation, token = "dummy")
+
+            assertEquals(200, response.code)
+
+            transaction {
+                assertEquals(1, Applications.selectAll().count())
+                assertEquals(1, ApplicationVerifications.selectAll().count())
+
+                val application = ApplicationEntity.all().single()
+
+                ApplicationVerificationEntity.find {
+                    ApplicationVerifications.applicationId eq application.id
+                }.single().let {
+                    assertNotNull(it.verifiedDate)
+                    assertNull(it.rejectedDate)
+                    assertEquals(ApplicationVerificationExternalSource.VEREIN360, it.automaticSource)
+                }
+            }
+
+            verify(exactly = 0) { anyConstructed<ApplicationHandler>().sendApplicationMails(any(), any(), any()) }
+            verify(exactly = 1) {
+                anyConstructed<ApplicationHandler>().sendPreVerifiedApplicationMails(any(), any(), any())
             }
         }
 
-        verify(exactly = 0) { anyConstructed<ApplicationHandler>().sendApplicationMails(any(), any(), any()) }
-        verify(exactly = 1) { anyConstructed<ApplicationHandler>().sendPreVerifiedApplicationMails(any(), any(), any()) }
-    }
-
     @Test
-    fun `should create an application and pending verification if the request is not pre-verified`() = JavalinTest.test(app) { _, client ->
-        val mutation = createMutation(application = TestApplicationBuilder.default())
-        val response = post(client, mutation)
+    fun `should create an application and pending verification if the request is not pre-verified`() =
+        JavalinTest.test(app) {
+            _,
+            client,
+            ->
+            val mutation = createMutation(application = TestApplicationBuilder.default())
+            val response = post(client, mutation)
 
-        assertEquals(200, response.code)
+            assertEquals(200, response.code)
 
-        transaction {
-            assertEquals(1, Applications.selectAll().count())
-            assertEquals(1, ApplicationVerifications.selectAll().count())
+            transaction {
+                assertEquals(1, Applications.selectAll().count())
+                assertEquals(1, ApplicationVerifications.selectAll().count())
 
-            val application = ApplicationEntity.all().single()
+                val application = ApplicationEntity.all().single()
 
-            ApplicationVerificationEntity.find { ApplicationVerifications.applicationId eq application.id }.single().let {
-                assertNull(it.verifiedDate)
-                assertNull(it.rejectedDate)
-                assertEquals(ApplicationVerificationExternalSource.NONE, it.automaticSource)
+                ApplicationVerificationEntity.find {
+                    ApplicationVerifications.applicationId eq application.id
+                }.single().let {
+                    assertNull(it.verifiedDate)
+                    assertNull(it.rejectedDate)
+                    assertEquals(ApplicationVerificationExternalSource.NONE, it.automaticSource)
+                }
+            }
+
+            verify(exactly = 1) { anyConstructed<ApplicationHandler>().sendApplicationMails(any(), any(), any()) }
+            verify(exactly = 0) {
+                anyConstructed<ApplicationHandler>().sendPreVerifiedApplicationMails(any(), any(), any())
             }
         }
-
-        verify(exactly = 1) { anyConstructed<ApplicationHandler>().sendApplicationMails(any(), any(), any()) }
-        verify(exactly = 0) { anyConstructed<ApplicationHandler>().sendPreVerifiedApplicationMails(any(), any(), any()) }
-    }
 
     private fun createMutation(
         project: String = "bayern.ehrenamtskarte.app",
         regionId: Int = 1,
-        application: ApplicationInput
+        application: ApplicationInput,
     ): AddEakApplication {
         val variables = AddEakApplication.Variables(
             application = application,
             regionId = regionId,
-            project = project
+            project = project,
         )
         return AddEakApplication(variables)
     }

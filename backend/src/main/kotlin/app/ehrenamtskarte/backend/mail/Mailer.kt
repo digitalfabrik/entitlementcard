@@ -53,7 +53,7 @@ object Mailer {
         fromName: String,
         to: String,
         subject: String,
-        message: EmailBody
+        message: EmailBody,
     ) {
         val logger = LoggerFactory.getLogger(Mailer::class.java)
 
@@ -66,7 +66,7 @@ object Mailer {
                 Subject: $subject
                 -----------------------
                 
-                """.trimIndent() + message.renderPlain()
+                """.trimIndent() + message.renderPlain(),
             )
 
             if (!JMail.isValid(smtpConfig.username)) {
@@ -75,7 +75,12 @@ object Mailer {
             }
         }
         try {
-            MailerBuilder.withSMTPServer(smtpConfig.host, smtpConfig.port, smtpConfig.username, smtpConfig.password)
+            MailerBuilder.withSMTPServer(
+                smtpConfig.host,
+                smtpConfig.port,
+                smtpConfig.username,
+                smtpConfig.password,
+            )
                 .buildMailer()
                 .sendMail(
                     EmailBuilder
@@ -85,7 +90,7 @@ object Mailer {
                         .withSubject(subject)
                         .withPlainText(message.renderPlain())
                         .withHTMLText(message.renderHtml())
-                        .buildEmail()
+                        .buildEmail(),
                 ).join()
         } catch (exception: MailException) {
             logger.error(exception.message)
@@ -97,9 +102,12 @@ object Mailer {
         project: String,
         backendConfig: BackendConfiguration,
         projectConfig: ProjectConfig,
-        regionId: Int
+        regionId: Int,
     ) {
-        val recipients = AdministratorsRepository.getNotificationRecipientsForApplication(project, regionId)
+        val recipients = AdministratorsRepository.getNotificationRecipientsForApplication(
+            project,
+            regionId,
+        )
         val subject = "Ein neuer Antrag ist eingegangen"
         val message = emailBody {
             p { +"Guten Tag," }
@@ -117,9 +125,10 @@ object Mailer {
                     projectConfig.administrationName,
                     recipient.email,
                     subject,
-                    message
+                    message,
                 )
-            } catch (_: MailNotSentException) {}
+            } catch (_: MailNotSentException) {
+            }
         }
     }
 
@@ -127,9 +136,12 @@ object Mailer {
         project: String,
         backendConfig: BackendConfiguration,
         projectConfig: ProjectConfig,
-        regionId: Int
+        regionId: Int,
     ) {
-        val recipients = AdministratorsRepository.getNotificationRecipientsForVerification(project, regionId)
+        val recipients = AdministratorsRepository.getNotificationRecipientsForVerification(
+            project,
+            regionId,
+        )
         val subject = "Ein Antrag wurde verifiziert"
         val message = emailBody {
             p { +"Guten Tag," }
@@ -147,7 +159,7 @@ object Mailer {
                     projectConfig.administrationName,
                     recipient.email,
                     subject,
-                    message
+                    message,
                 )
             } catch (_: MailNotSentException) {
             }
@@ -158,11 +170,15 @@ object Mailer {
         backendConfig: BackendConfiguration,
         applicantName: String,
         projectConfig: ProjectConfig,
-        applicationVerification: ApplicationVerificationEntity
+        applicationVerification: ApplicationVerificationEntity,
     ) {
         val subject = "Bestätigung notwendig: Antrag auf Bayerische Ehrenamtskarte [$applicantName]"
         val verificationLink =
-            URL("${projectConfig.administrationBaseUrl}/antrag-verifizieren/${urlEncode(applicationVerification.accessKey)}")
+            URL(
+                "${projectConfig.administrationBaseUrl}/antrag-verifizieren/${urlEncode(
+                    applicationVerification.accessKey,
+                )}",
+            )
 
         val message = emailBody {
             p { +"Guten Tag ${applicationVerification.contactName}" }
@@ -184,7 +200,7 @@ object Mailer {
             projectConfig.administrationName,
             applicationVerification.contactEmailAddress,
             subject,
-            message
+            message,
         )
     }
 
@@ -192,7 +208,7 @@ object Mailer {
         backendConfig: BackendConfiguration,
         projectConfig: ProjectConfig,
         personalData: PersonalData,
-        accessKey: String
+        accessKey: String,
     ) {
         val subject = "Antrag erfolgreich eingereicht"
         val message = emailBody {
@@ -201,9 +217,17 @@ object Mailer {
             p {
                 +"Sie können den Status Ihres Antrags unter folgendem Link einsehen. Falls gewünscht, können Sie Ihren Antrag dort auch zurückziehen:"
                 br()
-                link(URL("${projectConfig.administrationBaseUrl}/antrag-einsehen/${urlEncode(accessKey)}"))
+                link(
+                    URL(
+                        "${projectConfig.administrationBaseUrl}/antrag-einsehen/${urlEncode(
+                            accessKey,
+                        )}",
+                    ),
+                )
             }
-            p { +"Bei Rückfragen zum Bearbeitungsstand wenden Sie sich bitte an Ihr örtliches Landratsamt bzw. die Verwaltung Ihrer kreisfreien Stadt." }
+            p {
+                +"Bei Rückfragen zum Bearbeitungsstand wenden Sie sich bitte an Ihr örtliches Landratsamt bzw. die Verwaltung Ihrer kreisfreien Stadt."
+            }
             finalInformationParagraph(projectConfig)
         }
         sendMail(
@@ -212,7 +236,7 @@ object Mailer {
             projectConfig.administrationName,
             personalData.emailAddress.email,
             subject,
-            message
+            message,
         )
     }
 
@@ -221,18 +245,28 @@ object Mailer {
         projectConfig: ProjectConfig,
         contactPerson: String,
         personalData: PersonalData,
-        accessKey: String
+        accessKey: String,
     ) {
         val subject = "Antrag erfolgreich eingereicht"
         val message = emailBody {
             p { +"Sehr geehrte/r $contactPerson," }
-            p { +"Ihr Antrag auf die Bayerische Ehrenamtskarte für ${personalData.forenames.shortText} ${personalData.surname.shortText} wurde erfolgreich eingereicht." }
+            p {
+                +"Ihr Antrag auf die Bayerische Ehrenamtskarte für ${personalData.forenames.shortText} ${personalData.surname.shortText} wurde erfolgreich eingereicht."
+            }
             p {
                 +"Den aktuellen Status Ihres Antrags können sie jederzeit unter folgendem Link einsehen. Dort haben Sie auch die Möglichkeit, Ihren Antrag bei Bedarf zurückzuziehen:"
                 br()
-                link(URL("${projectConfig.administrationBaseUrl}/antrag-einsehen/${urlEncode(accessKey)}"))
+                link(
+                    URL(
+                        "${projectConfig.administrationBaseUrl}/antrag-einsehen/${urlEncode(
+                            accessKey,
+                        )}",
+                    ),
+                )
             }
-            p { +"Bei Rückfragen wenden Sie sich bitte direkt an Ihr zuständiges Landratsamt oder die Verwaltung Ihrer kreisfreien Stadt." }
+            p {
+                +"Bei Rückfragen wenden Sie sich bitte direkt an Ihr zuständiges Landratsamt oder die Verwaltung Ihrer kreisfreien Stadt."
+            }
             finalInformationParagraph(projectConfig)
         }
         sendMail(
@@ -241,7 +275,7 @@ object Mailer {
             projectConfig.administrationName,
             personalData.emailAddress.email,
             subject,
-            message
+            message,
         )
     }
 
@@ -249,7 +283,7 @@ object Mailer {
         backendConfig: BackendConfiguration,
         projectConfig: ProjectConfig,
         passwortResetKey: String,
-        recipient: String
+        recipient: String,
     ) {
         val subject = "Passwort Zurücksetzen"
         val encodedRecipient = urlEncode(recipient)
@@ -260,7 +294,11 @@ object Mailer {
             p {
                 +"Sie können Ihr Passwort unter dem folgenden Link zurücksetzen:"
                 br()
-                link(URL("${projectConfig.administrationBaseUrl}/reset-password?email=$encodedRecipient&token=$encodedResetKey"))
+                link(
+                    URL(
+                        "${projectConfig.administrationBaseUrl}/reset-password?email=$encodedRecipient&token=$encodedResetKey",
+                    ),
+                )
             }
             p { +"Dieser Link ist 24 Stunden gültig." }
             finalInformationParagraph(projectConfig)
@@ -272,7 +310,7 @@ object Mailer {
             projectConfig.administrationName,
             recipient,
             subject,
-            message
+            message,
         )
     }
 
@@ -280,13 +318,15 @@ object Mailer {
         backendConfig: BackendConfiguration,
         projectConfig: ProjectConfig,
         passwordResetKey: String,
-        recipient: String
+        recipient: String,
     ) {
         val passwordResetLink =
-            "${projectConfig.administrationBaseUrl}/reset-password?email=${urlEncode(recipient)}&token=${
-            urlEncode(
-                passwordResetKey
-            )
+            "${projectConfig.administrationBaseUrl}/reset-password?email=${urlEncode(
+                recipient,
+            )}&token=${
+                urlEncode(
+                    passwordResetKey,
+                )
             }"
         val subject = "Kontoerstellung"
         val message = emailBody {
@@ -307,7 +347,7 @@ object Mailer {
             projectConfig.administrationName,
             recipient,
             subject,
-            message
+            message,
         )
     }
 
@@ -316,7 +356,7 @@ object Mailer {
         projectConfig: ProjectConfig,
         deepLink: String,
         recipientAddress: String,
-        recipientName: String
+        recipientName: String,
     ) {
         val subject = "Kartenerstellung erfolgreich"
         val message = emailBody {
@@ -344,7 +384,7 @@ object Mailer {
             projectConfig.administrationName,
             recipientAddress,
             subject,
-            message
+            message,
         )
     }
 }

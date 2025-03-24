@@ -3,7 +3,12 @@ package app.ehrenamtskarte.backend.stores.importer
 import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
 import org.slf4j.Logger
 
-fun Logger.logChange(storeInfo: String, property: String, oldValue: String?, newValue: String?) {
+fun Logger.logChange(
+    storeInfo: String,
+    property: String,
+    oldValue: String?,
+    newValue: String?,
+) {
     if (oldValue == newValue) {
         info("$property of '$storeInfo' could not be improved, keeping '$oldValue'")
     } else {
@@ -11,14 +16,21 @@ fun Logger.logChange(storeInfo: String, property: String, oldValue: String?, new
     }
 }
 
-fun Logger.logChange(store: AcceptingStore, property: String, oldValue: String?, newValue: String?) {
+fun Logger.logChange(
+    store: AcceptingStore,
+    property: String,
+    oldValue: String?,
+    newValue: String?,
+) {
     logChange(storeInfo(store), property, oldValue, newValue)
 }
 
-fun Logger.logRemoveDuplicates(store: AcceptingStore, count: Int) {
+fun Logger.logRemoveDuplicates(
+    store: AcceptingStore,
+    count: Int,
+) {
     info("Removed duplicates ($count) of '${storeInfo(store)}'")
 }
 
-private fun storeInfo(store: AcceptingStore): String {
-    return listOfNotNull(store.name, store.location, store.street, store.houseNumber).joinToString()
-}
+private fun storeInfo(store: AcceptingStore): String =
+    listOfNotNull(store.name, store.location, store.street, store.houseNumber).joinToString()

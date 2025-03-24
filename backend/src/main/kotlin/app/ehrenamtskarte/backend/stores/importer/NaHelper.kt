@@ -13,6 +13,4 @@ fun matchesNa(needle: String) = unspecifiedNoteRegex.matches(needle)
  * @return `null` if `text` is a "unspecified note", `text` otherwise
  * @see String.trim
  */
-fun String.replaceNa(): String? {
-    return if (matchesNa(this)) null else this
-}
+fun String.replaceNa(): String? = if (matchesNa(this)) null else this

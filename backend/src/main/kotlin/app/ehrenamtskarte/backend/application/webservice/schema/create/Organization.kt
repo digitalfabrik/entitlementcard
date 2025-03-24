@@ -11,26 +11,26 @@ data class Organization(
     val name: ShortTextInput,
     val address: Address,
     val contact: OrganizationContact,
-    val category: ShortTextInput
+    val category: ShortTextInput,
 ) : JsonFieldSerializable, ApplicationVerificationsHolder {
-    override fun toJsonField(): JsonField {
-        return JsonField(
+    override fun toJsonField(): JsonField =
+        JsonField(
             "organization",
             Type.Array,
             listOfNotNull(
                 name.toJsonField("name"),
                 address.toJsonField(),
                 category.toJsonField("category", true),
-                contact.toJsonField()
-            )
+                contact.toJsonField(),
+            ),
         )
-    }
 
-    override fun extractApplicationVerifications() = listOf(
-        ExtractedApplicationVerification(
-            contactName = contact.name.shortText,
-            contactEmailAddress = contact.email.email,
-            organizationName = name.shortText
+    override fun extractApplicationVerifications() =
+        listOf(
+            ExtractedApplicationVerification(
+                contactName = contact.name.shortText,
+                contactEmailAddress = contact.email.email,
+                organizationName = name.shortText,
+            ),
         )
-    )
 }

@@ -9,7 +9,6 @@ import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
 
 object PhysicalStoresRepository {
-
     fun findAllInProject(project: String): List<PhysicalStoreEntity> {
         val query = (Projects innerJoin AcceptingStores innerJoin PhysicalStores)
             .slice(PhysicalStores.columns)
@@ -17,7 +16,10 @@ object PhysicalStoresRepository {
         return PhysicalStoreEntity.wrapRows(query).toList()
     }
 
-    fun findByIdsInProject(project: String, ids: List<Int>): List<PhysicalStoreEntity?> {
+    fun findByIdsInProject(
+        project: String,
+        ids: List<Int>,
+    ): List<PhysicalStoreEntity?> {
         val query = (Projects innerJoin AcceptingStores innerJoin PhysicalStores)
             .slice(PhysicalStores.columns)
             .select { Projects.project eq project and (PhysicalStores.id inList ids) }

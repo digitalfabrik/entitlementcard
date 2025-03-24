@@ -22,30 +22,27 @@ val Upload: GraphQLScalarType = GraphQLScalarType.newScalar()
     .description("A file part in a multipart request")
     .coercing(object : Coercing<UploadKey?, Void?> {
         @Deprecated("Deprecated in Java")
-        override fun serialize(dataFetcherResult: Any): Void? {
+        override fun serialize(dataFetcherResult: Any): Void? =
             throw CoercingSerializeException("Upload is an input-only type")
-        }
 
         @Deprecated("Deprecated in Java")
-        override fun parseValue(input: Any): UploadKey {
-            return if (input is Int) {
+        override fun parseValue(input: Any): UploadKey =
+            if (input is Int) {
                 UploadKey(index = input)
             } else {
                 throw CoercingParseValueException(
                     "Expected type " +
                         Int::class.java.name +
                         " but was " +
-                        input.javaClass.name
+                        input.javaClass.name,
                 )
             }
-        }
 
         @Deprecated("Deprecated in Java")
-        override fun parseLiteral(input: Any): UploadKey {
+        override fun parseLiteral(input: Any): UploadKey =
             throw CoercingParseLiteralException(
-                "Must use variables to specify Upload values"
+                "Must use variables to specify Upload values",
             )
-        }
     })
     .build()
 
@@ -59,16 +56,16 @@ val applicationGraphQlParams = GraphQLParams(
                     Long::class -> GraphQLLong
                     else -> null
                 }
-        }
+        },
     ),
     dataLoaderRegistry = createRegistryFromNamedDataLoaders(
         applicationLoader,
-        verificationsByApplicationLoader
+        verificationsByApplicationLoader,
     ),
     queries = listOf(
-        TopLevelObject(EakApplicationQueryService())
+        TopLevelObject(EakApplicationQueryService()),
     ),
     mutations = listOf(
-        TopLevelObject(EakApplicationMutationService())
-    )
+        TopLevelObject(EakApplicationMutationService()),
+    ),
 )

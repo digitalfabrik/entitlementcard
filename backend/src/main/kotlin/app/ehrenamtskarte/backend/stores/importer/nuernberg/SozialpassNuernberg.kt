@@ -17,7 +17,7 @@ import io.ktor.client.plugins.HttpRequestRetry
 import org.slf4j.Logger
 
 object SozialpassNuernberg : Pipeline {
-    private val httpClient = HttpClient() {
+    private val httpClient = HttpClient {
         install(HttpRequestRetry) {
             retryOnServerErrors(maxRetries = 5)
             retryOnException(maxRetries = 5, retryOnTimeout = true)
@@ -25,7 +25,10 @@ object SozialpassNuernberg : Pipeline {
         }
     }
 
-    override fun import(config: ImportConfig, logger: Logger) {
+    override fun import(
+        config: ImportConfig,
+        logger: Logger,
+    ) {
         val csvStores = Unit
             .addStep(DownloadCsv(config, logger), logger) { logger.info("== Download csv data ==") }
         val geocoded = csvStores

@@ -26,13 +26,19 @@ import org.jetbrains.exposed.sql.update
 import java.time.Instant
 
 object CardRepository {
-    fun deleteInactiveCardsByHash(regionId: Int, cardInfoHashList: List<ByteArray>) {
+    fun deleteInactiveCardsByHash(
+        regionId: Int,
+        cardInfoHashList: List<ByteArray>,
+    ) {
         Cards.deleteWhere {
             firstActivationDate.isNull() and (cardInfoHash inList cardInfoHashList) and (Cards.regionId eq regionId)
         }
     }
 
-    fun findByHash(project: String, cardInfoHash: ByteArray): CardEntity? {
+    fun findByHash(
+        project: String,
+        cardInfoHash: ByteArray,
+    ): CardEntity? {
         val query =
             (Projects innerJoin Regions innerJoin Cards)
                 .slice(Cards.columns)
@@ -51,23 +57,25 @@ object CardRepository {
         issuerId: Int?,
         entitlementId: Int?,
         codeType: CodeType,
-        startDay: Long?
-    ) =
-        CardEntity.new {
-            this.cardInfoHash = cardInfoHash
-            this.activationSecretHash = activationSecretHash
-            this.totpSecret = null
-            this.expirationDay = expirationDay
-            this.issueDate = Instant.now()
-            this.regionId = EntityID(regionId, Regions)
-            this.issuerId = if (issuerId != null) EntityID(issuerId, Administrators) else null
-            this.entitlementId = if (entitlementId != null) EntityID(entitlementId, UserEntitlements) else null
-            this.revoked = false
-            this.codeType = codeType
-            this.startDay = startDay
-        }
+        startDay: Long?,
+    ) = CardEntity.new {
+        this.cardInfoHash = cardInfoHash
+        this.activationSecretHash = activationSecretHash
+        this.totpSecret = null
+        this.expirationDay = expirationDay
+        this.issueDate = Instant.now()
+        this.regionId = EntityID(regionId, Regions)
+        this.issuerId = if (issuerId != null) EntityID(issuerId, Administrators) else null
+        this.entitlementId = if (entitlementId != null) EntityID(entitlementId, UserEntitlements) else null
+        this.revoked = false
+        this.codeType = codeType
+        this.startDay = startDay
+    }
 
-    fun activate(card: CardEntity, totpSecret: ByteArray) {
+    fun activate(
+        card: CardEntity,
+        totpSecret: ByteArray,
+    ) {
         if (card.codeType != CodeType.DYNAMIC) {
             throw InvalidCodeTypeException()
         }
@@ -81,7 +89,7 @@ object CardRepository {
         projectId: Int,
         from: Instant,
         until: Instant,
-        regionId: Int?
+        regionId: Int?,
     ): List<CardStatisticsResultModel> {
         val numAlias = Coalesce(Cards.id.count(), intLiteral(0)).alias("numCards")
         val cardsCreated = (Regions leftJoin Cards leftJoin Projects)
@@ -107,7 +115,7 @@ object CardRepository {
                     Regions.projectId eq projectId
                 } else {
                     Regions.id eq regionId
-                }
+                },
             )
             .orderBy(Regions.name, SortOrder.ASC)
             .orderBy(Regions.prefix, SortOrder.ASC)
@@ -116,15 +124,16 @@ object CardRepository {
                 CardStatisticsResultModel(
                     region = it[Regions.prefix] + ' ' + it[Regions.name],
                     cardsCreated = (it.getOrNull(cardsCreated[numAlias]) ?: 0).toInt(),
-                    cardsActivated = (it.getOrNull(activeCards[numAlias]) ?: 0).toInt()
+                    cardsActivated = (it.getOrNull(activeCards[numAlias]) ?: 0).toInt(),
                 )
             }
             .toList()
     }
 
-    fun revokeByEntitlementId(entitlementId: Int): Int {
-        return Cards.update({ Cards.entitlementId eq entitlementId and (Cards.revoked eq false) }) {
+    fun revokeByEntitlementId(entitlementId: Int): Int =
+        Cards.update({
+            Cards.entitlementId eq entitlementId and (Cards.revoked eq false)
+        }) {
             it[revoked] = true
         }
-    }
 }

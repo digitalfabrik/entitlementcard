@@ -14,7 +14,7 @@ internal class V0011_AddRegionCardConfirmationMailActivation() : Migration() {
             """
             ALTER TABLE regions 
             ADD "activatedForCardConfirmationMail" BOOLEAN NOT NULL DEFAULT false;
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 }

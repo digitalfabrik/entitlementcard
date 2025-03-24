@@ -20,7 +20,6 @@ import java.io.InputStreamReader
 import java.util.stream.Collectors
 
 class Database {
-
     companion object {
         private fun executeScript(path: String) {
             val java = Database::class.java
@@ -38,13 +37,13 @@ class Database {
             project: String,
             email: String,
             password: String,
-            roleDbValue: String
+            roleDbValue: String,
         ) {
             val role = Role.fromDbValue(roleDbValue)
             transaction {
                 val testRegionId = if (role in setOf(
                         Role.REGION_MANAGER,
-                        Role.REGION_ADMIN
+                        Role.REGION_ADMIN,
                     )
                 ) {
                     RegionsRepository.findAllInProject(project).first().id.value
@@ -89,7 +88,7 @@ class Database {
                     if (!config.production) {
                         this.sqlLogger = StdOutSqlLogger
                     }
-                }
+                },
             )
             return database
         }

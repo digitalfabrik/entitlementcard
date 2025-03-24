@@ -15,7 +15,7 @@ internal class V0006_AddStoreCreatedDate() : Migration() {
             """
             ALTER TABLE acceptingstores
             ADD "createdDate" TIMESTAMP DEFAULT (CURRENT_TIMESTAMP) NOT NULL;
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 }

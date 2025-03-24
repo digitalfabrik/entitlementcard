@@ -12,7 +12,7 @@ internal class V0002_DropCaseSensitiveEmailConstraint() : Migration() {
         exec(
             """
             ALTER TABLE administrators DROP CONSTRAINT administrators_email_unique;
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 }

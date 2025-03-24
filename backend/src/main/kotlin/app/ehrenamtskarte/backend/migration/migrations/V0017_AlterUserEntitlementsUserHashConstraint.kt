@@ -13,7 +13,7 @@ internal class V0017_AlterUserEntitlementsUserHashConstraint() : Migration() {
             """
             ALTER TABLE userentitlements DROP CONSTRAINT unique_userhash_regionid;
             ALTER TABLE userentitlements ADD CONSTRAINT userentitlements_userhash_unique UNIQUE ("userHash");
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 }

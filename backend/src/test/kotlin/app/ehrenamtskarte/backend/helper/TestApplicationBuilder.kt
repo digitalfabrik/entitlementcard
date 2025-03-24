@@ -17,7 +17,6 @@ import app.ehrenamtskarte.backend.generated.inputs.ShortTextInput
 import app.ehrenamtskarte.backend.generated.inputs.WorkAtOrganizationInput
 
 object TestApplicationBuilder {
-
     fun default() = build(isAlreadyVerified = false)
 
     fun defaultVerified() = build(isAlreadyVerified = true)
@@ -32,7 +31,7 @@ object TestApplicationBuilder {
         forenames: String = "John",
         surname: String = "Doe",
         givenInformationIsCorrectAndComplete: Boolean = true,
-        contactName: String = "Jane Doe"
+        contactName: String = "Jane Doe",
     ) = ApplicationInput(
         personalData = createPersonalData(forenames, surname),
         applicationDetails = createApplicationDetails(
@@ -43,17 +42,20 @@ object TestApplicationBuilder {
             wantsPhysicalCard,
             category,
             givenInformationIsCorrectAndComplete,
-            contactName
-        )
+            contactName,
+        ),
     )
 
-    private fun createPersonalData(forenames: String, surname: String) = PersonalDataInput(
+    private fun createPersonalData(
+        forenames: String,
+        surname: String,
+    ) = PersonalDataInput(
         forenames = ShortTextInput(forenames),
         surname = ShortTextInput(surname),
         dateOfBirth = DateInput("1990-01-01"),
         address = createAddress(),
         telephone = ShortTextInput("123456789"),
-        emailAddress = EmailInput("johndoe@example.com")
+        emailAddress = EmailInput("johndoe@example.com"),
     )
 
     private fun createApplicationDetails(
@@ -64,7 +66,7 @@ object TestApplicationBuilder {
         wantsPhysicalCard: Boolean,
         category: String,
         givenInformationIsCorrectAndComplete: Boolean,
-        contactName: String
+        contactName: String,
     ) = ApplicationDetailsInput(
         applicationType = applicationType,
         cardType = cardType,
@@ -73,47 +75,55 @@ object TestApplicationBuilder {
         hasAcceptedPrivacyPolicy = true,
         wantsDigitalCard = wantsDigitalCard,
         wantsPhysicalCard = wantsPhysicalCard,
-        blueCardEntitlement = createBlueCardEntitlement(isAlreadyVerified, category, contactName)
+        blueCardEntitlement = createBlueCardEntitlement(isAlreadyVerified, category, contactName),
     )
 
-    private fun createBlueCardEntitlement(isAlreadyVerified: Boolean, category: String, contactName: String) =
-        BlueCardEntitlementInput(
-            entitlementType = BlueCardEntitlementType.WORK_AT_ORGANIZATIONS,
-            workAtOrganizationsEntitlement = BlueCardWorkAtOrganizationsEntitlementInput(
-                list = listOf(
-                    WorkAtOrganizationInput(
-                        organization = createOrganization(category, contactName),
-                        amountOfWork = 7.5,
-                        responsibility = ShortTextInput("Trainer"),
-                        workSinceDate = DateInput("2020-10-06"),
-                        payment = false,
-                        certificate = null,
-                        isAlreadyVerified = isAlreadyVerified
-                    )
-                )
-            )
-        )
+    private fun createBlueCardEntitlement(
+        isAlreadyVerified: Boolean,
+        category: String,
+        contactName: String,
+    ) = BlueCardEntitlementInput(
+        entitlementType = BlueCardEntitlementType.WORK_AT_ORGANIZATIONS,
+        workAtOrganizationsEntitlement = BlueCardWorkAtOrganizationsEntitlementInput(
+            list = listOf(
+                WorkAtOrganizationInput(
+                    organization = createOrganization(category, contactName),
+                    amountOfWork = 7.5,
+                    responsibility = ShortTextInput("Trainer"),
+                    workSinceDate = DateInput("2020-10-06"),
+                    payment = false,
+                    certificate = null,
+                    isAlreadyVerified = isAlreadyVerified,
+                ),
+            ),
+        ),
+    )
 
-    private fun createOrganization(category: String, contactName: String) = OrganizationInput(
+    private fun createOrganization(
+        category: String,
+        contactName: String,
+    ) = OrganizationInput(
         address = createAddress(),
         category = ShortTextInput(category),
         contact = createContact(contactName),
-        name = ShortTextInput("Sportverein Augsburg-Nord")
+        name = ShortTextInput("Sportverein Augsburg-Nord"),
     )
 
-    private fun createContact(name: String) = OrganizationContactInput(
-        name = ShortTextInput(name),
-        email = EmailInput("jane.doe@sportverein.de"),
-        telephone = ShortTextInput("0150123456789"),
-        hasGivenPermission = true
-    )
+    private fun createContact(name: String) =
+        OrganizationContactInput(
+            name = ShortTextInput(name),
+            email = EmailInput("jane.doe@sportverein.de"),
+            telephone = ShortTextInput("0150123456789"),
+            hasGivenPermission = true,
+        )
 
-    private fun createAddress() = AddressInput(
-        street = ShortTextInput("Example Street"),
-        houseNumber = ShortTextInput("123"),
-        postalCode = ShortTextInput("80331"),
-        addressSupplement = null,
-        location = ShortTextInput("München"),
-        country = ShortTextInput("Deutschland")
-    )
+    private fun createAddress() =
+        AddressInput(
+            street = ShortTextInput("Example Street"),
+            houseNumber = ShortTextInput("123"),
+            postalCode = ShortTextInput("80331"),
+            addressSupplement = null,
+            location = ShortTextInput("München"),
+            country = ShortTextInput("Deutschland"),
+        )
 }
