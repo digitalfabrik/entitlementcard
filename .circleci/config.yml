@@ -418,52 +418,6 @@ jobs:
                     - << parameters.buildConfig >>.ipa
                 root: ~/
             - notify
-    build_martin:
-        docker:
-            - image: rust:bookworm
-        steps:
-            - checkout:
-                path: ~/project
-            - run: apt update -y && apt install -y nodejs npm
-            - install_app_toolbelt
-            - run:
-                command: |
-                    mkdir -p ~/.ssh
-                    touch ~/.ssh/known_hosts
-                    echo "github.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCj7ndNxQowgcQnjshcLrqPEiiphnt+VTTvDP6mHBL9j1aNUkY4Ue1gvwnGLVlOhGeYrnZaMgRK6+PKCUXaDbC7qtbW8gIkhL7aGCsOr/C56SJMy/BCZfxd1nWzAOxSDPgVsmerOBYfNqltV9/hWCqBywINIR+5dIg6JTJ72pcEpEjcYgXkE2YEFXV1JHnsKgbLWNlhScqb2UmyRkQyytRLtL+38TGxkxCflmO+5Z8CSSNY7GidjMIZ7Q4zMjA2n1nGrlTDkzwDCsw+wqFPGQA179cnfGWOWRVruj16z6XyvxvjJwbz0wQZ75XK5tKSb7FNyeIEs4TT4jk+S4dhPeAUC5y+bDYirYgM4GC7uEnztnZyaVWQ7B381AK4Qdrwt51ZqExKbQpTUNn+EjqoTwvqNj4kqx5QUCI0ThS/YkOxJCXmPUWZbhjpCg56i+2aB6CmK2JGhn57K5mj0MNdBXA4/WnwH6XoPWJzK5Nyu2zB3nAZp+S5hpQs+p1vN1/wsjk=" >> ~/.ssh/known_hosts
-                    git clone git@github.com:urbica/martin.git ~/martin
-                    git config advice.detachedHead false
-                    git checkout ed14582a8f5c3e11bfb165f3b012edccd929b479
-                name: Checkout
-            - restore_cache:
-                keys:
-                    - v1-cargo-{{ checksum "Cargo.toml" }}-{{ checksum "Cargo.lock" }}
-            - prepare_workspace
-            - run:
-                command: cargo update openssl --precise 0.10.64
-                name: Update OpenSSL library due to failed compilation
-            - run:
-                command: |
-                    cargo build --release --target x86_64-unknown-linux-gnu
-                name: Build
-            - save_cache:
-                key: v1-cargo-{{ checksum "Cargo.toml" }}-{{ checksum "Cargo.lock" }}
-                paths:
-                    - ~/.cargo
-                    - target
-            - run:
-                command: |
-                    mkdir -p ~/attached_workspace/artifacts/martin
-                    cp target/x86_64-unknown-linux-gnu/release/martin ~/attached_workspace/artifacts/martin
-                name: Prepare storing
-            - store_artifacts:
-                path: ~/attached_workspace/artifacts
-            - persist_to_workspace:
-                paths:
-                    - martin/martin
-                root: ~/attached_workspace/artifacts
-            - notify
-        working_directory: ~/martin
     bump_version:
         docker:
             - image: cimg/node:20.18.0
@@ -753,6 +707,26 @@ jobs:
                         name: '[FL] TestFlight Upload'
                         working_directory: frontend/ios
             - notify
+    download_martin:
+        docker:
+            - image: cimg/node:20.18.0
+        steps:
+            - install_app_toolbelt
+            - run:
+                command: |
+                    curl -LO "https://github.com/maplibre/martin/releases/download/v0.13.0/martin-x86_64-unknown-linux-gnu.tar.gz"
+                name: Download martin
+            - run:
+                command: |
+                    mkdir -p ~/attached_workspace/artifacts/martin
+                    tar -xvzf martin-x86_64-unknown-linux-gnu.tar.gz -C ~/attached_workspace/artifacts/martin martin
+                name: Prepare storing
+            - persist_to_workspace:
+                paths:
+                    - martin/martin
+                root: ~/attached_workspace/artifacts
+            - notify
+        working_directory: ~/martin
     install_packages_to_server:
         docker:
             - image: cimg/node:20.18.0
@@ -1141,7 +1115,7 @@ workflows:
             - pack_administration:
                 requires:
                     - build_administration
-            - build_martin
+            - download_martin
             - build_backend:
                 requires:
                     - check_backend
@@ -1154,7 +1128,7 @@ workflows:
                     - pack_backend
             - pack_martin:
                 requires:
-                    - build_martin
+                    - download_martin
                     - bump_version
             - pack_meta:
                 requires:
@@ -1310,7 +1284,7 @@ workflows:
             - pack_administration:
                 requires:
                     - build_administration
-            - build_martin
+            - download_martin
             - check_backend
             - build_backend:
                 requires:
@@ -1324,7 +1298,7 @@ workflows:
                     - pack_backend
             - pack_martin:
                 requires:
-                    - build_martin
+                    - download_martin
                     - bump_version
             - pack_meta:
                 requires:
@@ -1387,7 +1361,7 @@ workflows:
             - pack_administration:
                 requires:
                     - build_administration
-            - build_martin
+            - download_martin
             - check_backend
             - build_backend:
                 requires:
@@ -1401,7 +1375,7 @@ workflows:
                     - pack_backend
             - pack_martin:
                 requires:
-                    - build_martin
+                    - download_martin
                     - bump_version
             - pack_meta:
                 requires:
@@ -1583,7 +1557,7 @@ workflows:
             - pack_administration:
                 requires:
                     - build_administration
-            - build_martin
+            - download_martin
             - check_backend
             - build_backend:
                 requires:
@@ -1597,7 +1571,7 @@ workflows:
                     - pack_backend
             - pack_martin:
                 requires:
-                    - build_martin
+                    - download_martin
                     - bump_version
             - pack_meta:
                 requires:

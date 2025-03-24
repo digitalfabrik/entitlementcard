@@ -1,0 +1,19 @@
+docker:
+  - image: cimg/node:20.18.0
+working_directory: ~/martin
+steps:
+  - install_app_toolbelt
+  - run:
+      name: "Download martin"
+      command: |
+          curl -LO "https://github.com/maplibre/martin/releases/download/v0.13.0/martin-x86_64-unknown-linux-gnu.tar.gz"
+  - run:
+      name: "Prepare storing"
+      command: |
+        mkdir -p ~/attached_workspace/artifacts/martin
+        tar -xvzf martin-x86_64-unknown-linux-gnu.tar.gz -C ~/attached_workspace/artifacts/martin martin
+  - persist_to_workspace:
+      root: ~/attached_workspace/artifacts
+      paths:
+        - martin/martin
+  - notify

@@ -7,7 +7,7 @@ import SettingsCard from '../user-settings/SettingsCard'
 
 const ButtonContainer = styled.div`
   text-align: right;
-  padding: 10px 0;
+  padding: 8px 0;
 `
 
 const Headline = styled(H2)`

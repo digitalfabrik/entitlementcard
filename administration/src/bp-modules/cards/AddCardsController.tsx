@@ -55,7 +55,11 @@ const AddCardsController = (): ReactElement => {
 
   if (!region) {
     return (
-      <NonIdealState icon='cross' title={t('error:SnotAuthorized')} description={t('notAuthorizedToCreateCards')} />
+      <NonIdealState
+        icon='cross'
+        title={t('errors:notAuthorized')}
+        description={t('errors:notAuthorizedToCreateCards')}
+      />
     )
   }
 

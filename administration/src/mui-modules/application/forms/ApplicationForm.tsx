@@ -98,7 +98,7 @@ const ApplicationForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
       setState,
       'stepSend',
       {},
-      { regionId: Number(state.stepPersonalData.region.region.selectedValue) }
+      { regionId: state.stepPersonalData.region.region.selectedValue }
     )
     return (
       <SteppedSubForms

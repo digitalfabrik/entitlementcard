@@ -2,7 +2,7 @@ package app.ehrenamtskarte.backend.cards.webservice.schema
 
 import Card
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
-import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
+import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.cards.Argon2IdHasher
 import app.ehrenamtskarte.backend.cards.PEPPER_LENGTH
@@ -20,7 +20,6 @@ import app.ehrenamtskarte.backend.cards.webservice.schema.types.StaticVerificati
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
-import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCardHashException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidQrCodeSize
@@ -227,24 +226,23 @@ class CardMutationService {
     ): List<CardCreationResultModel> {
         val context = dfe.getContext<GraphQLContext>()
         val projectConfig = context.backendConfiguration.getProjectConfig(project)
-        val jwtPayload = context.enforceSignedIn()
-        val user = transaction { AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException() }
+        val admin = context.getAdministrator()
         val activationCodes = transaction {
             encodedCardInfos.map { encodedCardInfo ->
                 val cardInfo = parseEncodedCardInfo(encodedCardInfo)
 
-                if (!Authorizer.mayCreateCardInRegion(user, cardInfo.extensions.extensionRegion.regionId)) {
+                if (!Authorizer.mayCreateCardInRegion(admin, cardInfo.extensions.extensionRegion.regionId)) {
                     throw ForbiddenException()
                 }
 
                 return@map CardCreationResultModel(
-                    createDynamicActivationCode(cardInfo, userId = user.id.value),
-                    if (generateStaticCodes) createStaticVerificationCode(cardInfo, userId = user.id.value) else null
+                    createDynamicActivationCode(cardInfo, userId = admin.id.value),
+                    if (generateStaticCodes) createStaticVerificationCode(cardInfo, userId = admin.id.value) else null
                 )
             }
         }
 
-        val regionId = user.regionId?.value
+        val regionId = admin.regionId?.value
         if (regionId != null) {
             Matomo.trackCreateCards(
                 context.backendConfiguration,
@@ -328,12 +326,11 @@ class CardMutationService {
     @GraphQLDescription("Deletes a batch of cards (that have not yet been activated)")
     fun deleteInactiveCards(dfe: DataFetchingEnvironment, regionId: Int, cardInfoHashBase64List: List<String>): Boolean {
         val context = dfe.getContext<GraphQLContext>()
-        val jwtPayload = context.enforceSignedIn()
-        val user = transaction { AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException() }
+        val admin = context.getAdministrator()
 
         val cardInfoHashList = cardInfoHashBase64List.map { it.decodeBase64Bytes() }
         transaction {
-            if (!Authorizer.mayDeleteCardInRegion(user, regionId)) {
+            if (!Authorizer.mayDeleteCardInRegion(admin, regionId)) {
                 throw ForbiddenException()
             }
             CardRepository.deleteInactiveCardsByHash(regionId, cardInfoHashList)
@@ -344,14 +341,13 @@ class CardMutationService {
     @GraphQLDescription("Sends a confirmation mail to the user when the card creation was successful")
     fun sendCardCreationConfirmationMail(dfe: DataFetchingEnvironment, project: String, regionId: Int, recipientAddress: String, recipientName: String, deepLink: String): Boolean {
         val context = dfe.getContext<GraphQLContext>()
-        val jwtPayload = context.enforceSignedIn()
+        val admin = context.getAdministrator()
         transaction {
-            val user = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
-            val region = user.regionId?.value?.let { RegionsRepository.findByIdInProject(project, it) ?: throw RegionNotFoundException() }
+            val region = admin.regionId?.value?.let { RegionsRepository.findByIdInProject(project, it) ?: throw RegionNotFoundException() }
             if (region != null && !region.activatedForCardConfirmationMail) {
                 throw RegionNotActivatedForCardConfirmationMailException()
             }
-            if (!Authorizer.maySendMailsInRegion(user, regionId)) {
+            if (!Authorizer.maySendMailsInRegion(admin, regionId)) {
                 throw ForbiddenException()
             }
             val backendConfig = dfe.getContext<GraphQLContext>().backendConfiguration

@@ -24,6 +24,7 @@ import StoresController from './bp-modules/stores/StoresController'
 import StoresImportController from './bp-modules/stores/StoresImportController'
 import UserSettingsController from './bp-modules/user-settings/UserSettingsController'
 import ManageUsersController from './bp-modules/users/ManageUsersController'
+import useMetaTags from './hooks/useMetaTags'
 import ActivationPage from './mui-modules/activation/ActivationPage'
 import ApplicationApplicantController from './mui-modules/application-verification/ApplicationApplicantController'
 import ApplicationVerificationController from './mui-modules/application-verification/ApplicationVerificationController'
@@ -43,6 +44,7 @@ const Main = styled.div`
 const Router = (): ReactElement => {
   const { data: authData, signIn, signOut } = useContext(AuthContext)
   const projectConfig = useContext(ProjectConfigContext)
+  useMetaTags()
   const router = useMemo(() => {
     const isLoggedIn = authData !== null && authData.expiry > new Date()
     const routes: (RouteObject | null)[] = [
