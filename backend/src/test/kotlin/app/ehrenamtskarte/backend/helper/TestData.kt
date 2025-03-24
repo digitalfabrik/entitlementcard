@@ -56,7 +56,8 @@ object TestData {
         website: String? = "https://www.test.de",
         telephone: String? = "0911/123456",
         projectId: Int = 2,
-        categoryId: Int = 17
+        categoryId: Int = 17,
+        regionId: Int = 94
     ): AcceptingStoreEntity {
         return transaction {
             val addressId = Addresses.insertAndGetId {
@@ -75,7 +76,7 @@ object TestData {
                 it[AcceptingStores.description] = description
                 it[AcceptingStores.contactId] = contactId
                 it[AcceptingStores.categoryId] = categoryId
-                it[AcceptingStores.regionId] = null
+                it[AcceptingStores.regionId] = regionId
                 it[AcceptingStores.projectId] = projectId
             }.resultedValues!!.first()
             val acceptingStoreEntity = AcceptingStoreEntity.wrapRow(acceptingStoreRow)

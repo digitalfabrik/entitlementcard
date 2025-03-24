@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.regions.database.repos
 
 import app.ehrenamtskarte.backend.common.database.sortByKeys
+import app.ehrenamtskarte.backend.freinet.database.FreinetAgencies
 import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.RegionEntity
 import app.ehrenamtskarte.backend.regions.database.Regions
@@ -59,4 +60,15 @@ object RegionsRepository {
             .single().id
         return RegionEntity[regionId]
     }
+
+    fun findRegionByNameAndPrefix(name: String, prefix: String, projectId: EntityID<Int>): RegionEntity? =
+        RegionEntity.find { (Regions.name eq name) and (Regions.prefix eq prefix) and (Regions.projectId eq projectId) }.singleOrNull()
+
+    fun findRegionByFreinetId(freinetId: Int, projectId: EntityID<Int>): RegionEntity? =
+        (FreinetAgencies innerJoin Regions)
+            .slice(Regions.columns)
+            .select { FreinetAgencies.agencyId eq freinetId and (Regions.projectId eq projectId) }
+            .singleOrNull()?.let {
+                RegionEntity.wrapRow(it)
+            }
 }

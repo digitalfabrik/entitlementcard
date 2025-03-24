@@ -550,6 +550,7 @@
     "regionNotFound": "Diese Region existiert nicht.",
     "regionNotActivatedForApplication": "Für diese Region kann der zentrale Beantragungsprozess noch nicht genutzt werden, kontaktieren Sie bitte Ihre zuständige Behörde direkt.",
     "regionNotActivatedForConfirmationMail": "Für diese Region ist das Senden von Bestätigungsmails gesperrt. Dies kann in den regionsspezifischen Einstellungen geändert werden.",
+    "regionNotUnique": "Den Akzeptanzstellen konnte keine eindeutige Region zugewiesen werden. Bitte wenden Sie sich an den IT-Support",
     "pdfCreationError": "Etwas ist schiefgegangen beim Erstellen der PDF.",
     "csvCreationError": "Etwas ist schiefgegangen beim Erstellen der CSV.",
     "freinetAgencyNotFound": "Diese Freinetagentur existiert nicht."
