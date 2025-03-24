@@ -1,10 +1,18 @@
-description: Attach the workspace at ~/attached_workspace and list its contents
+description: Checkout repository, attach the workspace at ~/attached_workspace and restore environment variables
 steps:
+  - checkout:
+      # We always want to checkout in the home directory no matter the current working directory
+      path: ~/project
   - attach_workspace:
       at: ~/attached_workspace
   - run:
       name: Attached workspace contents
-      command: ls -A ~/attached_workspace
+      command: |
+        ls -A ~/attached_workspace
+        ls -AR ~/attached_workspace
   - run:
-      name: Recursively list attached workspace contents
-      command: ls -AR ~/attached_workspace
+      name: Restore environment variables
+      command: |
+        touch ~/attached_workspace/environment_variables 
+        cat ~/attached_workspace/environment_variables >> ${BASH_ENV}
+        cat ~/attached_workspace/environment_variables

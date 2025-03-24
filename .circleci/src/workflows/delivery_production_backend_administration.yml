@@ -14,7 +14,6 @@ jobs:
   - pack_administration:
       requires:
         - build_administration
-  - download_martin
   - check_backend
   - build_backend:
       requires:
@@ -28,7 +27,6 @@ jobs:
         - pack_backend
   - pack_martin:
       requires:
-        - download_martin
         - bump_version
   - pack_meta:
       requires:

@@ -9,8 +9,9 @@ commands:
                 command: curl -fLSs https://raw.githubusercontent.com/CircleCI-Public/circleci-cli/master/install.sh | sudo bash
                 name: Install CircleCI CLI
             - run:
-                command: ./scripts/circleci-update-config
+                command: scripts/circleci-update-config
                 name: Build circle config
+                working_directory: ~/project
             - run:
                 command: |
                     FILES_MODIFIED=""
@@ -30,76 +31,127 @@ commands:
             - run:
                 command: circleci config validate
                 name: Validate circle config
+                working_directory: ~/project
     install_app_toolbelt:
         steps:
-            - setup_npm_global
+            - run:
+                command: |
+                    mkdir -p ~/.npm-global
+                    npm config set prefix '~/.npm-global'
+                    echo 'export PATH=~/.npm-global/bin:"$PATH"' >> "$BASH_ENV"
+                name: Setup npm global
             - run:
                 command: npm install --unsafe-perm -g https://github.com/digitalfabrik/app-toolbelt/archive/refs/heads/main.tar.gz
                 name: Install app-toolbelt
-    install_dart_linux:
-        steps:
-            - run:
-                command: |-
-                    curl -o dart.deb https://storage.googleapis.com/dart-archive/channels/stable/release/3.3.1/linux_packages/dart_3.3.1-1_amd64.deb
-                    sudo dpkg -i dart.deb
-                name: Install Dart
-    install_dart_mac:
+    install_fastlane:
+        description: Restores and saves fastlane cache of the current directory.
+        parameters:
+            directory:
+                default: .
+                type: string
         steps:
             - restore_cache:
                 keys:
-                    - brew-dart-4
+                    - v1-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
+                    - v1-gems-{{ arch }}-
+                name: Restore gems
             - run:
                 command: |
-                    brew tap dart-lang/dart
-                    brew install dart@3.3.1
-                    brew link dart@3.3.1
-                name: Install Dart
+                    bundle config set path '~/.bundle'
+                    bundle check || bundle install
+                name: Install fastlane
+                working_directory: << parameters.directory >>
             - save_cache:
-                key: brew-dart-4
+                key: v1-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
+                name: Save gems
                 paths:
-                    - /usr/local/Cellar/dart/
-                    - /usr/local/Homebrew/Library/Taps/dart-lang/homebrew-dart
-                    - ~/Library/Caches/Homebrew
-    install_fvm:
+                    - ~/.bundle
+    install_flutter:
+        parameters:
+            precache:
+                default: none
+                enum:
+                    - none
+                    - android
+                    - ios
+                type: enum
         steps:
             - run:
                 command: |
-                    dart pub global activate fvm
-                    echo 'export PATH=$HOME/.pub-cache/bin:$PATH' >> $BASH_ENV
-                    export PATH="$PATH":"$HOME/.pub-cache/bin"
-                name: Install FVM
+                    curl -fsSL https://raw.githubusercontent.com/leoafarias/fvm/refs/heads/main/scripts/install.sh | bash
+                    curl -sL https://raw.githubusercontent.com/leoafarias/fvm/refs/heads/main/scripts/install.sh | shasum -a 256
+                name: Install fvm
             - restore_cache:
                 keys:
-                    - fvm-0-{{ checksum "frontend/.fvmrc" }}-{{ arch }}
+                    - v1-fvm-{{ arch }}-{{ checksum ".fvmrc" }}-{{ checksum "pubspec.yaml" }}-{{ checksum "pubspec.lock"  }}
+                    - v1-fvm-{{ arch }}-
+                name: Restore flutter
             - run:
-                command: fvm install
-                name: Install Flutter
-                working_directory: ~/project/frontend/
+                command: |
+                    fvm install
+                    fvm flutter config --no-analytics
+                    fvm flutter --version
+                name: Install flutter
+            - run:
+                command: fvm flutter pub get --enforce-lockfile
+                name: Install flutter packages
+            - unless:
+                condition:
+                    equal:
+                        - << parameters.precache >>
+                        - none
+                steps:
+                    - run:
+                        command: fvm flutter precache --<< parameters.precache >>
+                        name: Precache flutter binary artifacts
+                        working_directory: << parameters.precache >>
             - save_cache:
-                key: fvm-0-{{ checksum "frontend/.fvmrc" }}-{{ arch }}
+                key: v1-fvm-{{ arch }}-{{ checksum ".fvmrc" }}-{{ checksum "pubspec.yaml" }}-{{ checksum "pubspec.lock"  }}
+                name: Save flutter
                 paths:
                     - .fvm
-                    - ~/fvm/
+                    - ~/fvm
+    install_node_modules:
+        description: Restores and saves the node_modules directories of the npm workspaces.
+        steps:
+            - restore_cache:
+                keys:
+                    - v1-node-modules-{{checksum "~/project/package-lock.json" }}
             - run:
-                command: fvm flutter --version
-                name: Show Flutter version
-                working_directory: ~/project/frontend/
+                command: '[ ! -d node_modules ] && npm ci --ignore-scripts --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache.'
+                name: Install node dependencies for npm workspaces
+            - save_cache:
+                key: v1-node-modules-{{checksum "~/project/package-lock.json" }}
+                paths:
+                    - ~/project/node_modules
+                    - ~/project/administration/node_modules
+                    - ~/project/frontend/build-configs/node_modules
+    install_pods:
+        description: Restores and saves the cocoa pods cache.
+        steps:
+            - restore_cache:
+                keys:
+                    - v1-pods-{{ checksum "ios/Podfile.lock" }}
+                name: Restore pods
             - run:
-                command: fvm flutter config --no-analytics
-                name: Configure Flutter
-                working_directory: ~/project/frontend/
+                command: |
+                    bundle exec pod update
+                    bundle exec pod install
+                name: Install pods
+                working_directory: ios
+            - save_cache:
+                key: v1-pods-{{ checksum "ios/Podfile.lock" }}
+                name: Save pods
+                paths:
+                    - ~/Library/Caches/CocoaPods
     install_protobuf_linux:
-        parameters:
-            dart_plugin:
-                default: false
-                type: boolean
         steps:
             - run:
                 command: |
                     curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v21.11/protoc-21.11-linux-x86_64.zip"
                     unzip protoc*.zip -d $HOME/.local
                     echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
-                name: Install protobuf from GitHub
+                name: Install protobuf
     install_protobuf_mac:
         steps:
             - run:
@@ -111,14 +163,14 @@ commands:
     notify:
         description: Send a notification (to Mattermost) at the end of a job, based on success or failure. Must be the last step in a job.
         parameters:
-            allow-all-branches:
+            allow_all_branches:
                 default: false
                 type: boolean
             channel:
                 default: entitlementcard-notifications
                 type: string
             failure_mentions:
-                default: '@stefanie.metzger @andreas.fischer'
+                default: '@andreas.fischer @viktoria.seluianova @bahaa.tuffaha @andre.wachter @steffen.kleinle'
                 type: string
             success_mentions:
                 default: ""
@@ -129,215 +181,120 @@ commands:
         steps:
             - run:
                 command: |
-                    echo 'export MM_MESSAGE=":fire: The [${CIRCLE_JOB}](${CIRCLE_BUILD_URL}) job has failed on the ${CIRCLE_BRANCH} branch! :fire: << parameters.failure_mentions >>"' >> $BASH_ENV
+                    echo 'export MM_MESSAGE=":fire: [${CIRCLE_JOB}](${CIRCLE_BUILD_URL}) failed on branch ${CIRCLE_BRANCH}! :fire: << parameters.failure_mentions >>"' >> $BASH_ENV
                 name: Mattermost - Prepare failure message
                 when: on_fail
             - run:
-                command: |
-                    echo 'export MM_MESSAGE="<< parameters.success_message >>"' >> $BASH_ENV
+                command: echo 'export MM_MESSAGE="<< parameters.success_message >>"' >> $BASH_ENV
                 name: Mattermost - Prepare success message
                 when: on_success
             - run:
-                command: |
-                    app-toolbelt v0 notify mattermost --message "${MM_MESSAGE}" --channel << parameters.channel >> <<#parameters.allow-all-branches>>--allow-all-branches<</parameters.allow-all-branches>>
+                command: scripts/notify-mattermost << parameters.channel >> << parameters.allow_all_branches >>
                 name: Mattermost Status Alert
                 when: always
+                working_directory: ~/project
     persist_environment_variables:
         description: Sets the environment variables specified in the file 'environment_variables'. Make sure the file is persisted and has been attached.
         steps:
             - run:
-                command: cat ${BASH_ENV}
-                name: List environment variables
-            - run:
-                command: cat ${BASH_ENV} >> environment_variables
-                name: Save environment variables to file
+                command: |
+                    cat ${BASH_ENV} >> environment_variables
+                    cat ${BASH_ENV}
+                name: Save environment variables
             - persist_to_workspace:
                 paths:
                     - environment_variables
                 root: ./
     prepare_workspace:
-        description: Attach the workspace at ~/attached_workspace and list its contents
+        description: Checkout repository, attach the workspace at ~/attached_workspace and restore environment variables
         steps:
+            - checkout:
+                path: ~/project
             - attach_workspace:
                 at: ~/attached_workspace
             - run:
-                command: ls -A ~/attached_workspace
+                command: |
+                    ls -A ~/attached_workspace
+                    ls -AR ~/attached_workspace
                 name: Attached workspace contents
             - run:
-                command: ls -AR ~/attached_workspace
-                name: Recursively list attached workspace contents
-    restore_environment_variables:
-        description: Sets the environment variables specified in the file 'environment_variables'. Make sure the file is persisted and has been attached.
-        steps:
-            - run:
-                command: cat ~/attached_workspace/environment_variables
-                name: List environment variables
-            - run:
-                command: cat ~/attached_workspace/environment_variables >> ${BASH_ENV}
+                command: "touch ~/attached_workspace/environment_variables \ncat ~/attached_workspace/environment_variables >> ${BASH_ENV}\ncat ~/attached_workspace/environment_variables\n"
                 name: Restore environment variables
-    restore_gradle_caches:
-        description: Restores and saves the gradle caches for backend.
-        steps:
-            - restore_cache:
-                key: v3-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
-            - restore_cache:
-                key: v3-gradle-cache-{{ checksum "build.gradle.kts" }}
-    restore_npm_cache:
-        description: Restores and saves the node_modules directories of the npm workspaces.
-        steps:
-            - restore_cache:
-                keys:
-                    - v2-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}-{{ checksum "administration/package.json" }}-{{ checksum "frontend/build-configs/package.json" }}
-            - run:
-                command: '[ ! -d node_modules ] && npm ci --ignore-scripts --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache.'
-                name: Install node dependencies for npm workspaces
-            - save_cache:
-                key: v2-node-modules-{{ checksum "package.json" }}-{{checksum "package-lock.json" }}-{{ checksum "administration/package.json" }}-{{ checksum "frontend/build-configs/package.json" }}
-                paths:
-                    - ~/node_modules
-                    - ~/administration/node_modules
-                    - ~/frontend/build-configs/node_modules
-    restore_pods:
-        description: Restores and saves the cocoa pods cache.
-        steps:
-            - restore_cache:
-                keys:
-                    - 1-pods-{{ arch }}-{{ checksum "frontend/ios/Podfile.lock" }}
-                name: Restore CocoaPods Cache
-            - run:
-                command: |
-                    pod update
-                    pod install
-                name: '[CP] Install CocoaPods'
-                working_directory: frontend/ios
-            - save_cache:
-                key: 1-pods-{{ arch }}-{{ checksum "frontend/ios/Podfile.lock" }}
-                name: Save CocoaPods Cache
-                paths:
-                    - ~/Library/Caches/CocoaPods/
-    restore_ruby_cache:
-        description: Restores and saves fastlane cache of the passed directory.
-        parameters:
-            directory:
-                default: native
-                type: string
-        steps:
-            - run:
-                command: sudo bundle update --bundler
-                name: Install bundler
-                working_directory: ~/project/frontend/android
-            - restore_cache:
-                keys:
-                    - 2-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
-                    - 2-gems-{{ arch }}-
-            - run:
-                command: sudo bundle check || sudo bundle install
-                name: '[FL] install'
-                working_directory: << parameters.directory >>
-            - save_cache:
-                key: 2-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
-                paths:
-                    - << parameters.directory >>/vendor/bundle
-    setup_npm_global:
-        steps:
-            - run:
-                command: |-
-                    mkdir -p ~/.npm-global
-                    npm config set prefix '~/.npm-global'
-                    echo 'export PATH=~/.npm-global/bin:"$PATH"' >> "$BASH_ENV"
-                name: Setup npm
 jobs:
     build_administration:
         docker:
             - image: cimg/node:20.18.0
         steps:
-            - checkout:
-                path: ~/project
-            - install_app_toolbelt
-            - install_dart_linux
-            - install_protobuf_linux
             - prepare_workspace
-            - restore_environment_variables
-            - restore_npm_cache
+            - install_protobuf_linux
+            - install_node_modules
             - run:
                 command: npm run generate-graphql
                 name: Generate GraphQL
-                working_directory: ~/project/administration
             - run:
                 command: npm run generate-protobuf
                 name: Generate Protobuf
-                working_directory: ~/project/administration
             - run:
                 command: npm run build --version_name=${NEW_VERSION_NAME}
                 name: Build
-                working_directory: ~/project/administration
-            - store_artifacts:
-                path: ~/attached_workspace/build
             - persist_to_workspace:
                 paths:
                     - administration/build
                 root: ~/project
             - notify
-        working_directory: ~/project
+        working_directory: ~/project/administration
     build_android:
         docker:
             - image: cimg/android:2024.01.1-node
         environment:
+            FASTLANE_SKIP_UPDATE_CHECK: true
             GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx2048m" -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2
         parameters:
             buildConfig:
                 description: Name of the build config to use
                 enum:
                     - bayern
-                    - bayernFloss
                     - nuernberg
                     - koblenz
                 type: enum
         resource_class: large
         steps:
-            - checkout:
-                path: ~/project
-            - add_ssh_keys:
-                fingerprints:
-                    - 24:1d:3b:b7:b3:49:69:d7:54:c3:93:a5:a2:d1:71:db
-            - install_app_toolbelt
             - prepare_workspace
-            - install_dart_linux
-            - install_fvm
-            - restore_environment_variables
-            - restore_ruby_cache:
-                directory: ~/project/frontend/android
-            - run:
-                command: |
-                    fvm flutter pub get --enforce-lockfile
-                    fvm flutter precache --android
-                name: Install Flutter Packages
-                working_directory: ~/project/frontend/android
+            - install_app_toolbelt
+            - install_flutter:
+                precache: android
+            - install_fastlane:
+                directory: android
+            - restore_cache:
+                keys:
+                    - v1-gradle-{{ checksum "android/build.gradle.kts" }}-{{ checksum "android/app/build.gradle.kts" }}-{{ checksum "android/settings.gradle.kts" }}
             - run:
                 command: bundle exec fastlane keystore
                 name: '[FL] Prepare Android Keystore'
-                working_directory: ~/project/frontend/android
+                working_directory: android
             - run:
                 command: bundle exec fastlane android build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} build_config_name:<< parameters.buildConfig >>
                 name: '[FL] Build'
-                working_directory: ~/project/frontend/android
+                working_directory: android
+            - save_cache:
+                key: v1-gradle-{{ checksum "android/build.gradle.kts" }}-{{ checksum "android/app/build.gradle.kts" }}-{{ checksum "android/settings.gradle.kts" }}
+                paths:
+                    - ~/.gradle/caches
+                    - ~/.gradle/wrapper
             - run:
-                command: mkdir -p attached_workspace
-                name: Make attached_workspace dir
-            - run:
-                command: mv ~/project/frontend/build/app/outputs/bundle/<< parameters.buildConfig >>Release/app-<< parameters.buildConfig >>-release.aab ~/attached_workspace/<< parameters.buildConfig >>.aab
-                name: Move aab
-            - run:
-                command: mv ~/project/frontend/build/app/outputs/apk/<< parameters.buildConfig >>/release/app-<< parameters.buildConfig >>-release.apk ~/attached_workspace/<< parameters.buildConfig >>.apk
-                name: Move apk
+                command: |
+                    mv build/app/outputs/bundle/<< parameters.buildConfig >>Release/app-<< parameters.buildConfig >>-release.aab ~/attached_workspace/<< parameters.buildConfig >>.aab
+                    mv build/app/outputs/apk/<< parameters.buildConfig >>/release/app-<< parameters.buildConfig >>-release.apk ~/attached_workspace/<< parameters.buildConfig >>.apk
+                name: Move artifacts
             - persist_to_workspace:
                 paths:
                     - << parameters.buildConfig >>.aab
                     - << parameters.buildConfig >>.apk
                 root: ~/attached_workspace
             - store_artifacts:
-                path: ~/attached_workspace/
+                path: ~/attached_workspace
             - notify
+        working_directory: ~/project/frontend
     build_backend:
         docker:
             - image: cimg/openjdk:17.0.13-node
@@ -345,30 +302,26 @@ jobs:
             _JAVA_OPTIONS: -Xmx3g
             GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2
         steps:
-            - checkout:
-                path: ~/project
+            - prepare_workspace
+            - install_protobuf_linux
             - setup_remote_docker:
                 docker_layer_caching: true
-            - run: git submodule sync
-            - run: git submodule update --init
-            - install_app_toolbelt
-            - install_protobuf_linux
-            - prepare_workspace
+            - run:
+                command: |
+                    git submodule sync
+                    git submodule update --init
+                name: Setup submodules
             - restore_cache:
-                key: v3-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
-            - restore_cache:
-                key: v3-gradle-cache-{{ checksum "build.gradle.kts" }}
-            - run: ./gradlew build
+                keys:
+                    - v1-gradle-{{ checksum "build.gradle.kts" }}
+            - run:
+                command: ./gradlew build
+                name: Build backend
             - save_cache:
-                key: v3-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
-                paths:
-                    - ~/gradle/wrapper
-            - save_cache:
-                key: v3-gradle-cache-{{ checksum "build.gradle.kts" }}
+                key: v1-gradle-{{ checksum "build.gradle.kts" }}
                 paths:
                     - ~/.gradle/caches
-            - store_artifacts:
-                path: ~/attached_workspace/build/libs
+                    - ~/.gradle/wrapper
             - persist_to_workspace:
                 paths:
                     - backend/build/distributions/*
@@ -376,6 +329,8 @@ jobs:
             - notify
         working_directory: ~/project/backend
     build_ios:
+        environment:
+            FASTLANE_SKIP_UPDATE_CHECK: true
         macos:
             xcode: 15.2.0
         parameters:
@@ -383,34 +338,24 @@ jobs:
                 description: Name of the build config to use
                 enum:
                     - bayern
-                    - bayernFloss
                     - nuernberg
                     - koblenz
                 type: enum
         steps:
-            - checkout:
-                path: ~/project
-            - install_app_toolbelt
-            - install_dart_mac
-            - install_fvm
             - prepare_workspace
-            - restore_environment_variables
+            - install_app_toolbelt
             - run:
                 command: softwareupdate --install-rosetta --agree-to-license
                 name: Install rosetta
-            - restore_ruby_cache:
-                directory: frontend/ios
-            - run:
-                command: |
-                    fvm flutter pub get --enforce-lockfile
-                    fvm flutter precache --ios
-                name: Install Flutter Packages
-                working_directory: frontend/
-            - restore_pods
+            - install_flutter:
+                precache: ios
+            - install_fastlane:
+                directory: ios
+            - install_pods
             - run:
                 command: bundle exec fastlane ios build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} build_config_name:<< parameters.buildConfig >>
                 name: '[FL] Build'
-                working_directory: frontend/ios
+                working_directory: ios
             - store_artifacts:
                 path: ~/<< parameters.buildConfig >>.ipa
             - persist_to_workspace:
@@ -418,6 +363,7 @@ jobs:
                     - << parameters.buildConfig >>.ipa
                 root: ~/
             - notify
+        working_directory: ~/project/frontend
     bump_version:
         docker:
             - image: cimg/node:20.18.0
@@ -432,8 +378,7 @@ jobs:
                 type: boolean
         resource_class: small
         steps:
-            - checkout:
-                path: ~/project
+            - prepare_workspace
             - install_app_toolbelt
             - run:
                 command: echo "export NEW_VERSION_NAME=$(app-toolbelt v0 version calc | jq .versionName)" >> ${BASH_ENV}
@@ -457,64 +402,41 @@ jobs:
                                 - << pipeline.git.branch >>
                 steps:
                     - notify:
-                        allow-all-branches: true
+                        allow_all_branches: true
                         success_message: Delivery was made on branch << pipeline.git.branch >>. Make sure to merge this branch before next delivery.
             - persist_environment_variables
-            - notify
-    check:
-        docker:
-            - image: cimg/node:20.18.0-browsers
-        environment:
-            TOTAL_CPUS: 1
-            TZ: Europe/Berlin
-        resource_class: small
-        shell: /bin/bash -eo pipefail
-        steps:
-            - checkout:
-                path: ~/project
-            - install_app_toolbelt
-            - check_circleci_config
             - notify
     check_administration:
         docker:
             - image: cimg/node:20.18.0
         steps:
-            - checkout:
-                path: ~/project
-            - install_app_toolbelt
-            - install_dart_linux
-            - install_protobuf_linux
             - prepare_workspace
-            - restore_npm_cache
+            - check_circleci_config
+            - install_protobuf_linux
+            - install_node_modules
             - run:
                 command: npm run generate-graphql
                 name: Generate GraphQL
-                working_directory: ~/project/administration
             - run:
                 command: npm run generate-protobuf
                 name: Generate Protobuf
-                working_directory: ~/project/administration
-            - run:
-                command: npm run lint
-                name: Lint
-                working_directory: ~/project/administration
-            - run:
-                command: npm run check-circular-deps
-                name: Check circular dependencies
-                working_directory: ~/project/administration
-            - run:
-                command: npm run test:coverage -- --maxWorkers=2
-                name: Run tests and generate coverage report
-                working_directory: ~/project/administration
-            - store_artifacts:
-                destination: ~/attached_workspace/coverage
-                path: ~/project/administration/src/coverage
             - run:
                 command: npm run ts:check
                 name: Typescript
-                working_directory: ~/project/administration
+            - run:
+                command: npm run lint
+                name: Lint
+            - run:
+                command: npm run check-circular-deps
+                name: Check circular dependencies
+            - run:
+                command: npm run test:coverage -- --maxWorkers=2
+                name: Run tests and generate coverage report
+            - store_artifacts:
+                destination: ~/attached_workspace/coverage
+                path: src/coverage
             - notify
-        working_directory: ~/project
+        working_directory: ~/project/administration
     check_backend:
         docker:
             - image: cimg/openjdk:17.0.13-node
@@ -522,30 +444,29 @@ jobs:
             _JAVA_OPTIONS: -Xmx3g
             GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2
         steps:
-            - checkout:
-                path: ~/project
+            - prepare_workspace
+            - check_circleci_config
+            - install_protobuf_linux
             - setup_remote_docker:
                 docker_layer_caching: true
-            - run: git submodule sync
-            - run: git submodule update --init
-            - install_app_toolbelt
-            - install_protobuf_linux
-            - prepare_workspace
+            - run:
+                command: |
+                    git submodule sync
+                    git submodule update --init
+                name: Setup submodules
             - restore_cache:
-                key: v3-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
-            - restore_cache:
-                key: v3-gradle-cache-{{ checksum "build.gradle.kts" }}
+                keys:
+                    - v1-gradle-{{ checksum "build.gradle.kts" }}
             - run:
                 command: |
                     ./gradlew run --args="graphql-export ../specs/backend-api.graphql"
                     git diff --exit-code
-                name: Check that GraphQL scheme is stable
+                name: Check GraphQL scheme stability
             - run:
                 command: ./gradlew ktlintCheck
                 name: Check backend formatting
             - run:
-                command: |
-                    ./gradlew test
+                command: ./gradlew test
                 name: Test
             - store_test_results:
                 path: ./build/test-results
@@ -556,13 +477,10 @@ jobs:
                 destination: test-coverage-report
                 path: ./build/reports/kover/html
             - save_cache:
-                key: v3-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
-                paths:
-                    - ~/.gradle/wrapper
-            - save_cache:
-                key: v3-gradle-cache-{{ checksum "build.gradle.kts" }}
+                key: v1-gradle-{{ checksum "build.gradle.kts" }}
                 paths:
                     - ~/.gradle/caches
+                    - ~/.gradle/wrapper
             - notify
         working_directory: ~/project/backend
     check_frontend:
@@ -570,38 +488,28 @@ jobs:
             - image: cimg/node:20.18.0
         resource_class: small
         steps:
-            - checkout:
-                path: ~/project
+            - prepare_workspace
+            - check_circleci_config
             - install_app_toolbelt
-            - install_dart_linux
-            - install_fvm
-            - run:
-                command: fvm flutter pub get --enforce-lockfile
-                name: Install Flutter Packages
-                working_directory: ~/project/frontend/
+            - install_flutter
             - run:
                 command: fvm dart format -l 120 -o none --set-exit-if-changed .
-                name: Check Formatting
-                working_directory: ~/project/frontend/
+                name: Check formatting
             - run:
-                command: |
-                    # Statically use "bayern" build config for analyzing here
-                    fvm flutter pub run build_runner build --define "df_build_config=name=bayern"
-                name: Build Runner
-                working_directory: ~/project/frontend/
+                command: fvm flutter pub run build_runner build --define "df_build_config=name=bayern"
+                name: Setup build config
             - run:
                 command: |
                     fvm flutter analyze --fatal-infos --fatal-warnings
                     fvm flutter analyze pubs/df_build_config --fatal-infos --fatal-warnings
-                name: Check Analyzer and Linting
-                working_directory: ~/project/frontend/
+                name: Analyze and lint
             - run:
                 command: |
                     fvm flutter test
                     fvm flutter test pubs/df_build_config
-                name: Tests
-                working_directory: ~/project/frontend/
+                name: Test
             - notify
+        working_directory: ~/project/frontend
     check_health_backend:
         docker:
             - image: debian:12
@@ -611,12 +519,10 @@ jobs:
                 - POSTGRES_PASSWORD=postgres
               image: postgis/postgis:13-3.0
         steps:
-            - checkout:
-                path: ~/project
-            - attach_workspace:
-                at: /tmp/workspace
-            - run: apt update -y && apt install -y nodejs npm curl sudo
-            - install_app_toolbelt
+            - prepare_workspace
+            - run:
+                command: apt update -y && apt install -y curl sudo
+                name: Install curl and sudo
             - run:
                 command: apt install ca-certificates-java -y
                 name: Install ca-certificates-java
@@ -624,7 +530,7 @@ jobs:
                 command: apt install openjdk-17-jre-headless -y
                 name: Install openjdk-17-jre-headless
             - run:
-                command: dpkg -i /tmp/workspace/debs/backend/eak-backend*.deb
+                command: dpkg -i ~/attached_workspace/debs/backend/eak-backend*.deb
                 name: Install backend
             - run:
                 command: /opt/ehrenamtskarte/backend/bin/backend migrate
@@ -646,7 +552,6 @@ jobs:
             buildConfig:
                 enum:
                     - bayern
-                    - bayernFloss
                     - nuernberg
                     - koblenz
                 type: enum
@@ -654,20 +559,15 @@ jobs:
                 description: Whether to deliver the build to production.
                 type: boolean
         resource_class: small
-        shell: /bin/bash -eo pipefail
         steps:
-            - checkout:
-                path: ~/project
-            - install_app_toolbelt
             - prepare_workspace
-            - restore_ruby_cache:
-                directory: ~/project/frontend/android
-            - restore_environment_variables
+            - install_app_toolbelt
+            - install_fastlane
             - run:
                 command: bundle exec fastlane android upload_to_playstore build_config_name:<< parameters.buildConfig >> production_delivery:"<< parameters.production_delivery >>" version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE}
                 name: '[FL] Play Store Upload'
-                working_directory: ~/project/frontend/android
             - notify
+        working_directory: ~/project/frontend/android
     deliver_ios:
         environment:
             FASTLANE_SKIP_UPDATE_CHECK: true
@@ -683,50 +583,24 @@ jobs:
             production_delivery:
                 description: Whether to deliver the build to production.
                 type: boolean
-        shell: /bin/bash --login -o pipefail
         steps:
-            - checkout:
-                path: ~/project
-            - install_app_toolbelt
             - prepare_workspace
-            - restore_environment_variables
-            - restore_ruby_cache:
-                directory: ~/project/frontend/ios
+            - install_app_toolbelt
+            - install_fastlane
             - when:
                 condition: << parameters.production_delivery >>
                 steps:
                     - run:
                         command: bundle exec fastlane ios appstoreconnect_upload build_config_name:<< parameters.buildConfig >> ipa_path:attached_workspace/<< parameters.buildConfig >>.ipa version_name:${NEW_VERSION_NAME}
                         name: '[FL] App Store Connect Upload'
-                        working_directory: frontend/ios
             - unless:
                 condition: << parameters.production_delivery >>
                 steps:
                     - run:
                         command: bundle exec fastlane ios upload_to_test_flight build_config_name:<< parameters.buildConfig >> ipa_path:attached_workspace/<< parameters.buildConfig >>.ipa
                         name: '[FL] TestFlight Upload'
-                        working_directory: frontend/ios
             - notify
-    download_martin:
-        docker:
-            - image: cimg/node:20.18.0
-        steps:
-            - install_app_toolbelt
-            - run:
-                command: |
-                    curl -LO "https://github.com/maplibre/martin/releases/download/v0.13.0/martin-x86_64-unknown-linux-gnu.tar.gz"
-                name: Download martin
-            - run:
-                command: |
-                    mkdir -p ~/attached_workspace/artifacts/martin
-                    tar -xvzf martin-x86_64-unknown-linux-gnu.tar.gz -C ~/attached_workspace/artifacts/martin martin
-                name: Prepare storing
-            - persist_to_workspace:
-                paths:
-                    - martin/martin
-                root: ~/attached_workspace/artifacts
-            - notify
-        working_directory: ~/martin
+        working_directory: ~/project/frontend/ios
     install_packages_to_server:
         docker:
             - image: cimg/node:20.18.0
@@ -735,10 +609,6 @@ jobs:
                 description: Whether builds are delivered to production or beta.
                 type: boolean
         steps:
-            - checkout:
-                path: ~/project
-            - install_app_toolbelt
-            - prepare_workspace
             - when:
                 condition: << parameters.production >>
                 steps:
@@ -763,9 +633,8 @@ jobs:
                 type: boolean
         resource_class: small
         steps:
-            - install_app_toolbelt
             - prepare_workspace
-            - restore_environment_variables
+            - install_app_toolbelt
             - run:
                 command: echo "export RELEASE_ID='$(app-toolbelt v0 release create all ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} <<# parameters.production_delivery >>--production-release<</ parameters.production_delivery >>)'" >> ${BASH_ENV}
                 name: Create github release
@@ -779,23 +648,22 @@ jobs:
                 command: app-toolbelt v0 release upload --releaseId ${RELEASE_ID} --files "$(ls ~/attached_workspace/debs/backend/*.deb)" --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
                 name: Upload backend debian packages to github release
             - notify:
-                allow-all-branches: false
+                allow_all_branches: true
                 channel: releases
                 success_message: <<^ parameters.production_delivery >>[Beta] <</ parameters.production_delivery >>Ehrenamtskarte Bayern, Sozialpass Nürnberg und Sozialpass Koblenz ${NEW_VERSION_NAME} have been released successfully! https://github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/tag/${NEW_VERSION_NAME}-all
     pack_administration:
         docker:
             - image: debian:12
         steps:
-            - checkout:
-                path: ~/project
-            - run: apt update -y && apt install -y nodejs npm
-            - install_app_toolbelt
             - prepare_workspace
-            - restore_environment_variables
-            - run: ~/project/scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -f ~/attached_workspace/administration/build -d "Administration backend for the Ehrenamtskarte app" -n "eak-administration"
-            - run: |
-                mkdir -p ~/attached_workspace/debs/administration
-                mv *.deb ~/attached_workspace/debs/administration
+            - run:
+                command: scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -f ~/attached_workspace/administration/build -d "Administration backend for the Ehrenamtskarte app" -n "eak-administration"
+                name: Pack administration
+            - run:
+                command: |
+                    mkdir -p ~/attached_workspace/debs/administration
+                    mv *.deb ~/attached_workspace/debs/administration
+                name: Move package
             - store_artifacts:
                 path: ~/attached_workspace
             - persist_to_workspace:
@@ -807,47 +675,15 @@ jobs:
         docker:
             - image: debian:12
         steps:
-            - checkout:
-                path: ~/project
-            - run: apt update -y && apt install -y nodejs npm
-            - install_app_toolbelt
             - prepare_workspace
-            - restore_environment_variables
-            - run: ~/project/scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -t ~/attached_workspace/backend/build/distributions/*.tar -s ~/project/scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "openjdk-17-jre-headless"
-            - run: |
-                mkdir -p ~/attached_workspace/debs/backend
-                mv *.deb ~/attached_workspace/debs/backend
-            - store_artifacts:
-                path: ~/attached_workspace
-            - persist_to_workspace:
-                paths:
-                    - debs/backend/*.deb
-                root: ~/attached_workspace
-            - notify
-        working_directory: ~/project/backend
-    pack_martin:
-        docker:
-            - image: debian:12
-        steps:
-            - checkout:
-                path: ~/project
-            - run: apt update -y && apt install -y nodejs npm
-            - install_app_toolbelt
-            - prepare_workspace
-            - restore_environment_variables
-            - attach_workspace:
-                at: /tmp/workspace
             - run:
-                command: |
-                    cp ~/project/docker/martin-config.yaml config.yaml
-                    cp ~/attached_workspace/martin/martin .
-                    ~/project/scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -d "Martin tile server for the Ehrenamtskarte app" -n "eak-martin" -s ~/project/scripts/eak-martin.service -C "/opt/ehrenamtskarte/martin/config.yaml" -M .
-                name: Build .deb
+                command: scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -t ~/attached_workspace/backend/build/distributions/*.tar -s scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "openjdk-17-jre-headless"
+                name: Pack backend
             - run:
                 command: |
                     mkdir -p ~/attached_workspace/debs/backend
                     mv *.deb ~/attached_workspace/debs/backend
-                name: Move .deb to artifacts folder
+                name: Move package
             - store_artifacts:
                 path: ~/attached_workspace
             - persist_to_workspace:
@@ -855,21 +691,48 @@ jobs:
                     - debs/backend/*.deb
                 root: ~/attached_workspace
             - notify
-        working_directory: ~/project/map-tiles/martin
+    pack_martin:
+        docker:
+            - image: debian:12
+        steps:
+            - prepare_workspace
+            - run:
+                command: apt update -y && apt install -y curl
+                name: Install curl
+            - run:
+                command: curl -LO "https://github.com/maplibre/martin/releases/download/v0.13.0/martin-x86_64-unknown-linux-gnu.tar.gz"
+                name: Download martin
+            - run:
+                command: |
+                    cp docker/martin-config.yaml config.yaml
+                    tar -xvzf martin-x86_64-unknown-linux-gnu.tar.gz -C . martin
+                    scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -d "Martin tile server for the Ehrenamtskarte app" -n "eak-martin" -s scripts/eak-martin.service -C "/opt/ehrenamtskarte/martin/config.yaml" -M .
+                name: Pack martin
+            - run:
+                command: |
+                    mkdir -p ~/attached_workspace/debs/backend
+                    mv *.deb ~/attached_workspace/debs/backend
+                name: Move package
+            - store_artifacts:
+                path: ~/attached_workspace
+            - persist_to_workspace:
+                paths:
+                    - debs/backend/*.deb
+                root: ~/attached_workspace
+            - notify
     pack_meta:
         docker:
             - image: debian:12
         steps:
-            - checkout:
-                path: ~/project
-            - run: apt update -y && apt install -y nodejs npm
-            - install_app_toolbelt
             - prepare_workspace
-            - restore_environment_variables
-            - run: ~/project/scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -d "Meta package for the Ehrenamtskarte app" -n "eak" -c "eak-backend, eak-administration, eak-martin"
-            - run: |
-                mkdir -p ~/attached_workspace/debs/backend
-                cp *.deb ~/attached_workspace/debs/backend
+            - run:
+                command: scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -d "Meta package for the Ehrenamtskarte app" -n "eak" -c "eak-backend, eak-administration, eak-martin"
+                name: Pack meta
+            - run:
+                command: |
+                    mkdir -p ~/attached_workspace/debs/backend
+                    cp *.deb ~/attached_workspace/debs/backend
+                name: Move package
             - store_artifacts:
                 path: ~/attached_workspace
             - persist_to_workspace:
@@ -890,18 +753,15 @@ jobs:
                     - nuernberg
                 type: enum
         resource_class: small
-        shell: /bin/bash -eo pipefail
         steps:
-            - checkout:
-                path: ~/project
+            - prepare_workspace
             - install_app_toolbelt
-            - restore_ruby_cache:
-                directory: ~/project/frontend/android
+            - install_fastlane
             - run:
                 command: bundle exec fastlane android playstore_promote build_config_name:<< parameters.build_config_name >>
                 name: '[FL] Play Store Promotion'
-                working_directory: frontend/android
             - notify
+        working_directory: ~/project/frontend/android
     promote_github_release:
         docker:
             - image: cimg/node:20.18.0
@@ -923,33 +783,27 @@ jobs:
                     - bayern
                     - nuernberg
                 type: enum
-        shell: /bin/bash --login -o pipefail
         steps:
-            - checkout
+            - prepare_workspace
             - install_app_toolbelt
-            - restore_ruby_cache:
-                directory: ~/project/frontend/ios
+            - install_fastlane
             - run:
                 command: bundle exec fastlane ios appstoreconnect_promote build_config_name:<< parameters.build_config_name >>
                 name: '[FL] Appstore Connect Store Promotion'
-                working_directory: frontend/ios
             - notify
+        working_directory: ~/project/frontend/ios
     promote_to_server:
         docker:
             - image: cimg/node:20.18.0
         steps:
-            - checkout:
-                path: ~/project
-            - install_app_toolbelt
-            - prepare_workspace
             - add_ssh_keys:
                 fingerprints:
                     - a1:3f:a7:c3:ff:12:40:1d:85:de:a7:ab:12:3f:cc:05
             - run:
                 command: |
-                    mkdir -p /home/circleci/.ssh
-                    echo ${APT_FINGERPRINT_STAGING} >> /home/circleci/.ssh/known_hosts
-                    echo ${APT_FINGERPRINT_PRODUCTION} >> /home/circleci/.ssh/known_hosts
+                    mkdir -p ~/.ssh
+                    echo ${APT_FINGERPRINT_STAGING} >> ~/.ssh/known_hosts
+                    echo ${APT_FINGERPRINT_PRODUCTION} >> ~/.ssh/known_hosts
                     scp ci@entitlementcard-test.tuerantuer.org:/srv/local-apt-repository/eak*.deb ci@entitlementcard.tuerantuer.org:/srv/local-apt-repository/
                 name: Transfer artifacts to production
             - run:
@@ -971,9 +825,6 @@ jobs:
                 description: Whether builds are delivered to production or beta.
                 type: boolean
         steps:
-            - checkout:
-                path: ~/project
-            - install_app_toolbelt
             - prepare_workspace
             - add_ssh_keys:
                 fingerprints:
@@ -983,27 +834,27 @@ jobs:
                 steps:
                     - run:
                         command: |
-                            mkdir -p /home/circleci/.ssh
-                            echo ${APT_FINGERPRINT_PRODUCTION} >> /home/circleci/.ssh/known_hosts
+                            mkdir -p ~/.ssh
+                            echo ${APT_FINGERPRINT_PRODUCTION} >> ~/.ssh/known_hosts
                             echo "Uploading: " ~/attached_workspace/debs/<< parameters.bundle >>/*.deb
-                            sftp -b - ci@entitlementcard.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
+                            sftp -b - ci@entitlementcard.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r ~/attached_workspace/debs/<< parameters.bundle >>/*.deb"
                         name: SFTP upload package
                     - run:
                         command: |
-                            mkdir -p /home/circleci/.ssh
-                            echo ${APT_FINGERPRINT_PRODUCTION} >> /home/circleci/.ssh/known_hosts
+                            mkdir -p ~/.ssh
+                            echo ${APT_FINGERPRINT_PRODUCTION} >> ~/.ssh/known_hosts
                             echo "Uploading: " ~/attached_workspace/debs/<< parameters.bundle >>/*.deb
-                            sftp -b - ci@entitlementcard.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
+                            sftp -b - ci@entitlementcard.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r ~/attached_workspace/debs/<< parameters.bundle >>/*.deb"
                         name: SFTP upload package
             - unless:
                 condition: << parameters.production >>
                 steps:
                     - run:
                         command: |
-                            mkdir -p /home/circleci/.ssh
-                            echo ${APT_FINGERPRINT_STAGING} >> /home/circleci/.ssh/known_hosts
-                            echo "Uploading: " /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb
-                            sftp -b - ci@entitlementcard-test.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
+                            mkdir -p ~/.ssh
+                            echo ${APT_FINGERPRINT_STAGING} >> ~/.ssh/known_hosts
+                            echo "Uploading: " ~/attached_workspace/debs/<< parameters.bundle >>/*.deb
+                            sftp -b - ci@entitlementcard-test.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r ~/attached_workspace/debs/<< parameters.bundle >>/*.deb"
                         name: SFTP upload package
             - notify
 orbs:
@@ -1047,16 +898,12 @@ parameters:
     run_promotion_frontend:
         default: false
         type: boolean
+shell: /bin/bash -eo pipefail
 version: 2.1
 workflows:
     build_frontend:
         jobs:
             - check_frontend
-            - build_android:
-                buildConfig: bayernFloss
-                name: frontend-android-build-bayernFloss
-                requires:
-                    - check_frontend
             - build_android:
                 buildConfig: bayern
                 name: frontend-android-build-bayern
@@ -1090,7 +937,6 @@ workflows:
         when: << pipeline.parameters.run_build_frontend >>
     commit:
         jobs:
-            - check
             - check_backend
             - check_administration
             - check_frontend
@@ -1105,7 +951,6 @@ workflows:
         jobs:
             - bump_version:
                 prepare_delivery: false
-            - check
             - check_administration
             - check_backend
             - build_administration:
@@ -1115,7 +960,6 @@ workflows:
             - pack_administration:
                 requires:
                     - build_administration
-            - download_martin
             - build_backend:
                 requires:
                     - check_backend
@@ -1128,7 +972,6 @@ workflows:
                     - pack_backend
             - pack_martin:
                 requires:
-                    - download_martin
                     - bump_version
             - pack_meta:
                 requires:
@@ -1170,10 +1013,7 @@ workflows:
                 context:
                     - deliverino
                 prepare_delivery: true
-            - check
-            - check_frontend:
-                requires:
-                    - check
+            - check_frontend
             - build_android:
                 buildConfig: bayern
                 context:
@@ -1284,7 +1124,6 @@ workflows:
             - pack_administration:
                 requires:
                     - build_administration
-            - download_martin
             - check_backend
             - build_backend:
                 requires:
@@ -1298,7 +1137,6 @@ workflows:
                     - pack_backend
             - pack_martin:
                 requires:
-                    - download_martin
                     - bump_version
             - pack_meta:
                 requires:
@@ -1361,7 +1199,6 @@ workflows:
             - pack_administration:
                 requires:
                     - build_administration
-            - download_martin
             - check_backend
             - build_backend:
                 requires:
@@ -1375,7 +1212,6 @@ workflows:
                     - pack_backend
             - pack_martin:
                 requires:
-                    - download_martin
                     - bump_version
             - pack_meta:
                 requires:
@@ -1424,10 +1260,7 @@ workflows:
                     - deliverino
                 platforms: native
                 prepare_delivery: true
-            - check
-            - check_frontend:
-                requires:
-                    - check
+            - check_frontend
             - build_android:
                 buildConfig: bayern
                 context:
@@ -1557,7 +1390,6 @@ workflows:
             - pack_administration:
                 requires:
                     - build_administration
-            - download_martin
             - check_backend
             - build_backend:
                 requires:
@@ -1571,7 +1403,6 @@ workflows:
                     - pack_backend
             - pack_martin:
                 requires:
-                    - download_martin
                     - bump_version
             - pack_meta:
                 requires:

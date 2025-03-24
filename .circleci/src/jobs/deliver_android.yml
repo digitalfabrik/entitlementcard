@@ -2,26 +2,21 @@
 parameters:
   buildConfig:
     type: enum
-    enum: [bayern, bayernFloss, nuernberg, koblenz]
+    enum: [bayern, nuernberg, koblenz]
   production_delivery:
     description: Whether to deliver the build to production.
     type: boolean
 docker:
   - image: cimg/android:2024.01.1-node
 resource_class: small
-shell: /bin/bash -eo pipefail
 environment:
   FASTLANE_SKIP_UPDATE_CHECK: true
+working_directory: ~/project/frontend/android
 steps:
-  - checkout:
-      path: ~/project
-  - install_app_toolbelt
   - prepare_workspace
-  - restore_ruby_cache:
-      directory: ~/project/frontend/android
-  - restore_environment_variables
+  - install_app_toolbelt
+  - install_fastlane
   - run:
       name: '[FL] Play Store Upload'
       command: bundle exec fastlane android upload_to_playstore build_config_name:<< parameters.buildConfig >> production_delivery:"<< parameters.production_delivery >>" version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE}
-      working_directory: ~/project/frontend/android
   - notify
