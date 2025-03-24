@@ -64,6 +64,29 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
     }
 
     @Test
+    fun `POST returns an error response if no unique region can be found for a project`() = JavalinTest.test(app) { _, client ->
+        val csvStore = createAcceptingStoreInput(
+            name = "Test store",
+            street = "Teststr.",
+            houseNumber = "10",
+            postalCode = "90408",
+            location = "Nürnberg",
+            latitude = "0",
+            longitude = "0",
+            telephone = "0911/123456",
+            email = "info@test.de",
+            homepage = "https://www.test.de/kontakt/",
+            discountDE = "20% Ermäßigung",
+            discountEN = "20% discount",
+            categoryId = "17"
+        )
+        val mutation = createMutation(project = "bayern.ehrenamtskarte.app", stores = listOf(csvStore))
+        val response = post(client, mutation, projectStoreManager.getJwtToken())
+
+        assertEquals(403, response.code)
+    }
+
+    @Test
     fun `POST returns a successful response if the list of accepting stores is empty`() = JavalinTest.test(app) { _, client ->
         val mutation = createMutation(stores = emptyList())
         val response = post(client, mutation, projectStoreManager.getJwtToken())
