@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.stores.database.repos
 
 import app.ehrenamtskarte.backend.common.database.sortByKeys
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotUniqueException
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.RegionEntity
@@ -121,12 +122,13 @@ object AcceptingStoresRepository {
         var numStoresCreated = 0
         var numStoresUntouched = 0
         val projectId = project.id
-        val region = RegionsRepository.findAllInProject(project.project).singleOrNull()
+        // TODO 2012 provide region ars
+        val region = RegionsRepository.findAllInProject(project.project).singleOrNull() ?: throw RegionNotUniqueException()
         val acceptingStoreIdsToRemove =
             AcceptingStores.slice(AcceptingStores.id).select { AcceptingStores.projectId eq projectId }
                 .map { it[AcceptingStores.id].value }.toMutableSet()
         stores.map { mapCsvToStore(it) }.forEach {
-            val existingStoreId = getIdIfExists(it, projectId, region?.id)
+            val existingStoreId = getIdIfExists(it, projectId, region.id)
             if (existingStoreId == null) {
                 if (!dryRun) {
                     createStore(it, projectId, region)
