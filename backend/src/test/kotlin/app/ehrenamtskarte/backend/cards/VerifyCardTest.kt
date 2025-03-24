@@ -21,81 +21,95 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 
 internal class VerifyCardTest : GraphqlApiTest() {
-
-    data class VerifyCardTestCase(val createCard: () -> Int, val valid: Boolean, val extendable: Boolean)
+    data class VerifyCardTestCase(
+        val createCard: () -> Int,
+        val valid: Boolean,
+        val extendable: Boolean,
+    )
 
     companion object {
         @JvmStatic
-        fun verifyCardTestCases(): List<VerifyCardTestCase> {
-            return listOf(
+        fun verifyCardTestCases(): List<VerifyCardTestCase> =
+            listOf(
                 VerifyCardTestCase(
                     createCard = ::staticValidCardWithoutExpirationDay,
                     valid = true,
-                    extendable = false
+                    extendable = false,
                 ),
                 VerifyCardTestCase(
                     createCard = ::staticExpiredExtendableCard,
                     valid = false,
-                    extendable = true
+                    extendable = true,
                 ),
                 VerifyCardTestCase(
                     createCard = ::staticFutureNonExtendableCard,
                     valid = false,
-                    extendable = false
+                    extendable = false,
                 ),
                 VerifyCardTestCase(
                     createCard = ::staticRevokedExtendableCard,
                     valid = false,
-                    extendable = true
+                    extendable = true,
                 ),
                 VerifyCardTestCase(
                     createCard = ::dynamicExtendableCardWithoutTotpSecret,
                     valid = false,
-                    extendable = true
-                )
+                    extendable = true,
+                ),
             )
-        }
 
         private fun staticValidCardWithoutExpirationDay(): Int {
             val userId = TestData.createUserEntitlement(regionId = 95)
             return TestData.createStaticCard(
                 entitlementId = userId,
-                expirationDay = null
+                expirationDay = null,
             )
         }
 
         private fun staticExpiredExtendableCard(): Int {
-            val userId = TestData.createUserEntitlement(regionId = 95, endDate = LocalDate.now().plusMonths(2L))
+            val userId = TestData.createUserEntitlement(
+                regionId = 95,
+                endDate = LocalDate.now().plusMonths(2L),
+            )
             return TestData.createStaticCard(
                 entitlementId = userId,
-                expirationDay = LocalDate.now().minusMonths(1L).toEpochDay()
+                expirationDay = LocalDate.now().minusMonths(1L).toEpochDay(),
             )
         }
 
         private fun staticFutureNonExtendableCard(): Int {
-            val userId = TestData.createUserEntitlement(regionId = 95, endDate = LocalDate.now().plusMonths(1L))
+            val userId = TestData.createUserEntitlement(
+                regionId = 95,
+                endDate = LocalDate.now().plusMonths(1L),
+            )
             return TestData.createStaticCard(
                 entitlementId = userId,
                 startDay = LocalDate.now().plusMonths(1L).toEpochDay(),
-                expirationDay = LocalDate.now().plusMonths(2L).toEpochDay()
+                expirationDay = LocalDate.now().plusMonths(2L).toEpochDay(),
             )
         }
 
         private fun staticRevokedExtendableCard(): Int {
-            val userId = TestData.createUserEntitlement(regionId = 95, endDate = LocalDate.now().plusMonths(2L))
+            val userId = TestData.createUserEntitlement(
+                regionId = 95,
+                endDate = LocalDate.now().plusMonths(2L),
+            )
             return TestData.createStaticCard(
                 entitlementId = userId,
                 expirationDay = LocalDate.now().plusMonths(1L).toEpochDay(),
-                revoked = true
+                revoked = true,
             )
         }
 
         private fun dynamicExtendableCardWithoutTotpSecret(): Int {
-            val userId = TestData.createUserEntitlement(regionId = 95, endDate = LocalDate.now().plusMonths(2L))
+            val userId = TestData.createUserEntitlement(
+                regionId = 95,
+                endDate = LocalDate.now().plusMonths(2L),
+            )
             return TestData.createDynamicCard(
                 entitlementId = userId,
                 expirationDay = LocalDate.now().plusMonths(1L).toEpochDay(),
-                totpSecret = null
+                totpSecret = null,
             )
         }
     }
@@ -110,54 +124,66 @@ internal class VerifyCardTest : GraphqlApiTest() {
 
     @ParameterizedTest
     @MethodSource("verifyCardTestCases")
-    fun `should return whether the card is valid and extendable`(testCase: VerifyCardTestCase) = JavalinTest.test(app) { _, client ->
-        val card = transaction { CardEntity.findById(testCase.createCard()) ?: error("Test card has not been created") }
-        val query = createQuery(
-            cardInfoHash = card.cardInfoHash.encodeBase64(),
-            codeType = card.codeType
-        )
+    fun `should return whether the card is valid and extendable`(testCase: VerifyCardTestCase) =
+        JavalinTest.test(app) { _, client ->
+            val card = transaction {
+                CardEntity.findById(testCase.createCard()) ?: error("Test card has not been created")
+            }
+            val query = createQuery(
+                cardInfoHash = card.cardInfoHash.encodeBase64(),
+                codeType = card.codeType,
+            )
 
-        val response = post(client, query)
+            val response = post(client, query)
 
-        assertEquals(200, response.code)
+            assertEquals(200, response.code)
 
-        val verificationResult = response.toDataObject<CardVerificationResultModel>()
+            val verificationResult = response.toDataObject<CardVerificationResultModel>()
 
-        assertEquals(testCase.valid, verificationResult.valid)
-        assertEquals(testCase.extendable, verificationResult.extendable)
-    }
-
-    @Test
-    fun `should return valid = false and extendable = false when the card doesn't exist`() = JavalinTest.test(app) { _, client ->
-        val query = createQuery(
-            cardInfoHash = Random.nextBytes(20).encodeBase64(),
-            codeType = CodeType.STATIC
-        )
-
-        val response = post(client, query)
-
-        assertEquals(200, response.code)
-
-        val verificationResult = response.toDataObject<CardVerificationResultModel>()
-
-        assertFalse(verificationResult.valid)
-        assertFalse(verificationResult.extendable)
-    }
+            assertEquals(testCase.valid, verificationResult.valid)
+            assertEquals(testCase.extendable, verificationResult.extendable)
+        }
 
     @Test
-    fun `should return an error when project does not exist`() = JavalinTest.test(app) { _, client ->
-        val query = createQuery(
-            project = "non-existent.sozialpass.app",
-            cardInfoHash = "qwerty",
-            codeType = CodeType.STATIC
-        )
-        val response = post(client, query)
+    fun `should return valid = false and extendable = false when the card doesn't exist`() =
+        JavalinTest.test(
+            app,
+        ) { _, client ->
+            val query = createQuery(
+                cardInfoHash = Random.nextBytes(20).encodeBase64(),
+                codeType = CodeType.STATIC,
+            )
 
-        assertEquals(404, response.code)
-    }
+            val response = post(client, query)
 
-    private fun createQuery(project: String = "koblenz.sozialpass.app", cardInfoHash: String, codeType: CodeType, totp: String? = null): String {
-        return """
+            assertEquals(200, response.code)
+
+            val verificationResult = response.toDataObject<CardVerificationResultModel>()
+
+            assertFalse(verificationResult.valid)
+            assertFalse(verificationResult.extendable)
+        }
+
+    @Test
+    fun `should return an error when project does not exist`() =
+        JavalinTest.test(app) { _, client ->
+            val query = createQuery(
+                project = "non-existent.sozialpass.app",
+                cardInfoHash = "qwerty",
+                codeType = CodeType.STATIC,
+            )
+            val response = post(client, query)
+
+            assertEquals(404, response.code)
+        }
+
+    private fun createQuery(
+        project: String = "koblenz.sozialpass.app",
+        cardInfoHash: String,
+        codeType: CodeType,
+        totp: String? = null,
+    ): String =
+        """
         query VerifyCardInProjectV2 {
             verifyCardInProjectV2(
                 project: "$project"
@@ -169,5 +195,4 @@ internal class VerifyCardTest : GraphqlApiTest() {
             }
         }
         """.trimIndent()
-    }
 }

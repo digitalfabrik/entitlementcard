@@ -39,9 +39,9 @@ internal class CanonicalJsonTest {
                 "3" to
                     mapOf(
                         "1" to mapOf("1" to "16"), // extensionRegion
-                        "4" to mapOf("1" to "0") // extensionBavariaCardType
-                    )
-            )
+                        "4" to mapOf("1" to "0"), // extensionBavariaCardType
+                    ),
+            ),
         )
     }
 
@@ -55,9 +55,9 @@ internal class CanonicalJsonTest {
                 "3" to
                     mapOf(
                         "1" to mapOf("1" to "16"), // extensionRegion
-                        "4" to mapOf("1" to "1") // extensionBavariaCardType
-                    )
-            )
+                        "4" to mapOf("1" to "1"), // extensionBavariaCardType
+                    ),
+            ),
         )
     }
 
@@ -73,9 +73,9 @@ internal class CanonicalJsonTest {
                     mapOf(
                         "1" to mapOf("1" to "93"), // extensionRegion
                         "2" to mapOf("1" to "-3650"), // extensionBirthday
-                        "3" to mapOf("1" to "99999999") // extensionNuernbergPassId
-                    )
-            )
+                        "3" to mapOf("1" to "99999999"), // extensionNuernbergPassId
+                    ),
+            ),
         )
     }
 
@@ -92,9 +92,9 @@ internal class CanonicalJsonTest {
                         "1" to mapOf("1" to "93"), // extensionRegion
                         "2" to mapOf("1" to "-3650"), // extensionBirthday
                         "3" to mapOf("1" to "99999999"), // extensionNuernbergPassId
-                        "5" to mapOf("1" to "730") // extensionStartDay
-                    )
-            )
+                        "5" to mapOf("1" to "730"), // extensionStartDay
+                    ),
+            ),
         )
     }
 
@@ -203,7 +203,7 @@ internal class CanonicalJsonTest {
                 "1" to "One",
                 "\ud83d\ude00" to "Emoji to Grinning Face",
                 "\u0080" to "Control",
-                "\u00f6" to "Latin Small Letter O With Diaeresis"
+                "\u00f6" to "Latin Small Letter O With Diaeresis",
             )
         val expected =
             """{

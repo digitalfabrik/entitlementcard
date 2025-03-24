@@ -20,7 +20,9 @@ val applicationLoader = newNamedDataLoader("APPLICATION_LOADER") { ids ->
     }
 }
 
-val verificationsByApplicationLoader = newNamedDataLoader<Int, _>("VERIFICATIONS_BY_APPLICATION_LOADER") { ids ->
+val verificationsByApplicationLoader = newNamedDataLoader<Int, _>(
+    "VERIFICATIONS_BY_APPLICATION_LOADER",
+) { ids ->
     transaction {
         val list = (Applications leftJoin ApplicationVerifications)
             .slice(listOf(Applications.id).plus(ApplicationVerifications.columns))

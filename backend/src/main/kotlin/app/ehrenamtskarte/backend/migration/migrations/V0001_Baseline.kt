@@ -450,7 +450,7 @@ internal class V0001_Baseline() : Migration() {
             
             ALTER TABLE ONLY regions
                 ADD CONSTRAINT fk_regions_projectid__id FOREIGN KEY ("projectId") REFERENCES projects(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 }

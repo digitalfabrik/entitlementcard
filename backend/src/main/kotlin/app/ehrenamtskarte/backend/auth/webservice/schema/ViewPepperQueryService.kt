@@ -13,7 +13,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 @Suppress("unused")
 class ViewPepperQueryService {
-
     @GraphQLDescription("Get the pepper for Koblenz user hashing")
     fun getHashingPepper(dfe: DataFetchingEnvironment): String {
         val context = dfe.getContext<GraphQLContext>()

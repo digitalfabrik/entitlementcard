@@ -17,7 +17,7 @@ internal class V0003_AddFirstActivationDate() : Migration() {
             UPDATE cards
             SET "firstActivationDate" = CURRENT_TIMESTAMP
             WHERE "totpSecret" IS NOT NULL;
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 }

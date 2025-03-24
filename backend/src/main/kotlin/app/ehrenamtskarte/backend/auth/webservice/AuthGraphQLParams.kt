@@ -18,7 +18,9 @@ import com.expediagroup.graphql.generator.SchemaGeneratorConfig
 import com.expediagroup.graphql.generator.TopLevelObject
 
 val authGraphQlParams = GraphQLParams(
-    config = SchemaGeneratorConfig(supportedPackages = listOf("app.ehrenamtskarte.backend.auth.webservice.schema")),
+    config = SchemaGeneratorConfig(
+        supportedPackages = listOf("app.ehrenamtskarte.backend.auth.webservice.schema"),
+    ),
     dataLoaderRegistry = createRegistryFromNamedDataLoaders(administratorLoader),
     mutations = listOf(
         TopLevelObject(SignInMutationService()),
@@ -26,13 +28,13 @@ val authGraphQlParams = GraphQLParams(
         TopLevelObject(ResetPasswordMutationService()),
         TopLevelObject(ManageUsersMutationService()),
         TopLevelObject(NotificationSettingsMutationService()),
-        TopLevelObject(ApiTokenService())
+        TopLevelObject(ApiTokenService()),
     ),
     queries = listOf(
         TopLevelObject(ViewAdministratorsQueryService()),
         TopLevelObject(ResetPasswordQueryService()),
         TopLevelObject(NotificationSettingsQueryService()),
         TopLevelObject(ApiTokenQueryService()),
-        TopLevelObject(ViewPepperQueryService())
-    )
+        TopLevelObject(ViewPepperQueryService()),
+    ),
 )

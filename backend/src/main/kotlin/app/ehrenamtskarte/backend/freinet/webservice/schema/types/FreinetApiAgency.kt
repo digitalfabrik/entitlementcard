@@ -4,5 +4,5 @@ data class FreinetApiAgency(
     val officialRegionalKeys: List<String>,
     val agencyId: Int,
     val agencyName: String,
-    val apiAccessKey: String
+    val apiAccessKey: String,
 )

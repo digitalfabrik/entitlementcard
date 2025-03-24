@@ -18,34 +18,31 @@ class FilterLbe(config: ImportConfig, private val logger: Logger) :
 
     override fun execute(input: List<LbeAcceptingStore>): List<LbeAcceptingStore> = input.filter { filterLbe(it) }
 
-    private fun filterLbe(store: LbeAcceptingStore) = try {
-        store.isValidName() && store.isValidCategory() && store.isValidLocation()
-    } catch (e: Exception) {
-        logger.error("$store was filtered out because of an unknown exception while filtering", e)
-        false
-    }
+    private fun filterLbe(store: LbeAcceptingStore) =
+        try {
+            store.isValidName() && store.isValidCategory() && store.isValidLocation()
+        } catch (e: Exception) {
+            logger.error("$store was filtered out because of an unknown exception while filtering", e)
+            false
+        }
 
-    private fun String?.isUnavailable(): Boolean {
-        return this.isNullOrBlank() || matchesNa(this)
-    }
+    private fun String?.isUnavailable(): Boolean = this.isNullOrBlank() || matchesNa(this)
 
-    private fun LbeAcceptingStore.isValidName(): Boolean {
-        return if (name.isUnavailable()) {
+    private fun LbeAcceptingStore.isValidName(): Boolean =
+        if (name.isUnavailable()) {
             logger.info("'$this' was filtered out because name '$name' is invalid")
             false
         } else {
             true
         }
-    }
 
-    private fun LbeAcceptingStore.isValidLocation(): Boolean {
-        return if (location.isUnavailable() || invalidLocations.contains(location)) {
+    private fun LbeAcceptingStore.isValidLocation(): Boolean =
+        if (location.isUnavailable() || invalidLocations.contains(location)) {
             logger.info("'$name' was filtered out because location '$location' is invalid")
             false
         } else {
             true
         }
-    }
 
     private fun LbeAcceptingStore.isValidCategory(): Boolean {
         val validCategories = (0..MISCELLANEOUS_CATEGORY_ID) + listOf(ALTERNATIVE_MISCELLANEOUS_CATEGORY_ID)

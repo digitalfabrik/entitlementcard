@@ -7,11 +7,11 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 @Suppress("unused")
 class CategoriesQueryService {
-
     @GraphQLDescription("Return list of all categories.")
-    fun categories(): List<Category> = transaction {
-        CategoriesRepository.findAll().map {
-            Category(it.id.value, it.name)
+    fun categories(): List<Category> =
+        transaction {
+            CategoriesRepository.findAll().map {
+                Category(it.id.value, it.name)
+            }
         }
-    }
 }

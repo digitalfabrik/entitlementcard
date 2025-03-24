@@ -12,11 +12,10 @@ enum class PasswordValidationResult {
     TOO_FEW_LOWERCASE_CHARS,
     TOO_FEW_UPPERCASE_CHARS,
     TOO_FEW_NUMERIC_CHARS,
-    TOO_FEW_SPECIAL_CHARS
+    TOO_FEW_SPECIAL_CHARS,
 }
 
 object PasswordValidator {
-
     fun validatePassword(password: String): PasswordValidationResult {
         if (password.length < minPasswordLength) {
             return PasswordValidationResult.NOT_LONG_ENOUGH

@@ -12,7 +12,7 @@ internal class V0016_MakeCardIssuerIdColumnNullable() : Migration() {
         exec(
             """
             ALTER TABLE cards ALTER COLUMN "issuerId" TYPE INT, ALTER COLUMN "issuerId" DROP NOT NULL;
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 }

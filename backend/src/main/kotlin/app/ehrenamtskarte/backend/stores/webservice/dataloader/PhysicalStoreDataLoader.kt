@@ -14,7 +14,7 @@ val physicalStoreLoader = newNamedDataLoader("PHYSICAL_STORE_LOADER") { ids ->
                     it.id.value,
                     it.storeId.value,
                     it.addressId.value,
-                    Coordinates(it.coordinates.x, it.coordinates.y)
+                    Coordinates(it.coordinates.x, it.coordinates.y),
                 )
             }
         }

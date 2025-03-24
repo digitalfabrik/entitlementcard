@@ -9,7 +9,7 @@ internal class V0021_AlterTokenHashColumn : Migration() {
             """
                 ALTER TABLE apitokens RENAME COLUMN "token" TO "tokenHash";
                 ALTER TABLE ONLY apitokens ADD CONSTRAINT apitokens_tokenhash_unique UNIQUE ("tokenHash");
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 }

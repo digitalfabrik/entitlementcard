@@ -12,7 +12,7 @@ internal class V0010_ApplicationNote : Migration() {
         exec(
             """
             ALTER TABLE applications ADD "note" varchar(1000) NULL;
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 }

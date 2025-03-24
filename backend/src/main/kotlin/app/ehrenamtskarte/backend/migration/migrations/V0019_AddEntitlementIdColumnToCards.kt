@@ -18,7 +18,7 @@ internal class V0019_AddEntitlementIdColumnToCards : Migration() {
             
             ALTER TABLE cards ADD CONSTRAINT issuerid_or_entitlementid_not_null 
             CHECK ((("issuerId" IS NOT NULL) AND ("entitlementId" IS NULL)) OR (("issuerId" IS NULL) AND ("entitlementId" IS NOT NULL)))
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 }

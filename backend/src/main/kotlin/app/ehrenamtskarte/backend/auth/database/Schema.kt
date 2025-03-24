@@ -28,7 +28,12 @@ object Administrators : IntIdTable() {
     val deleted = bool("deleted")
 
     init {
-        val noRegionCompatibleRoles = listOf(Role.PROJECT_ADMIN, Role.NO_RIGHTS, Role.PROJECT_STORE_MANAGER, Role.EXTERNAL_VERIFIED_API_USER)
+        val noRegionCompatibleRoles = listOf(
+            Role.PROJECT_ADMIN,
+            Role.NO_RIGHTS,
+            Role.PROJECT_STORE_MANAGER,
+            Role.EXTERNAL_VERIFIED_API_USER,
+        )
         val regionCompatibleRoles = listOf(Role.REGION_MANAGER, Role.REGION_ADMIN, Role.NO_RIGHTS)
         check("roleRegionCombinationConstraint") {
             regionId.isNull().and(role.inList(noRegionCompatibleRoles.map { it.db_value })) or
@@ -61,8 +66,10 @@ class AdministratorEntity(id: EntityID<Int>) : IntEntity(id) {
 
     fun isInProject(projectId: Int): Boolean = this.projectId.value == projectId
 
-    fun hasRole(role: Role, vararg other: Role): Boolean =
-        this.role == role.db_value || other.any { this.role == it.db_value }
+    fun hasRole(
+        role: Role,
+        vararg other: Role,
+    ): Boolean = this.role == role.db_value || other.any { this.role == it.db_value }
 
     fun isInRegion(regionId: Int): Boolean = this.regionId?.value == regionId
 }
@@ -71,7 +78,7 @@ const val TOKEN_LENGTH = 60
 
 enum class ApiTokenType {
     USER_IMPORT,
-    VERIFIED_APPLICATION
+    VERIFIED_APPLICATION,
 }
 
 object ApiTokens : IntIdTable() {

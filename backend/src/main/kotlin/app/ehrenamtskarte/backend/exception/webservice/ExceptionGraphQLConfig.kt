@@ -13,11 +13,11 @@ val codeEnumType = GraphQLEnumType.newEnum()
                 .name(it.name)
                 .value(it.name)
                 .build()
-        }
+        },
     )
     .build()
 
 val ExceptionSchemaConfig = SchemaGeneratorConfig(
     listOf("app.ehrenamtskarte.backend.exception.webservice.schema"),
-    additionalTypes = setOf(codeEnumType)
+    additionalTypes = setOf(codeEnumType),
 )

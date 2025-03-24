@@ -27,7 +27,6 @@ import java.io.File
 import kotlin.test.assertFailsWith
 
 internal class EakApplicationMutationServiceTest : IntegrationTest() {
-
     @BeforeEach
     fun setUp() {
         transaction {
@@ -52,7 +51,9 @@ internal class EakApplicationMutationServiceTest : IntegrationTest() {
         every { mockContext.files } returns mockFiles
 
         mockkConstructor(ApplicationHandler::class)
-        every { anyConstructed<ApplicationHandler>().sendApplicationMails(any(), any(), any()) } returns Unit
+        every {
+            anyConstructed<ApplicationHandler>().sendApplicationMails(any(), any(), any())
+        } returns Unit
 
         val application = TestApplicationBuilder.build(false)
 
@@ -60,12 +61,19 @@ internal class EakApplicationMutationServiceTest : IntegrationTest() {
         transaction {
             val applicationsBefore = Applications.selectAll().count()
 
-            val result = service.addEakApplication(1, application, "bayern.ehrenamtskarte.app", mockDfe)
+            val result = service.addEakApplication(
+                1,
+                application,
+                "bayern.ehrenamtskarte.app",
+                mockDfe,
+            )
 
             assertTrue(result.data)
             assertEquals(applicationsBefore + 1, Applications.selectAll().count())
             verify(exactly = 1) { anyConstructed<ApplicationHandler>().sendApplicationMails(any(), any(), any()) }
-            verify(exactly = 0) { anyConstructed<ApplicationHandler>().setApplicationVerificationToPreVerifiedNow(any()) }
+            verify(exactly = 0) {
+                anyConstructed<ApplicationHandler>().setApplicationVerificationToPreVerifiedNow(any())
+            }
         }
     }
 
@@ -80,7 +88,9 @@ internal class EakApplicationMutationServiceTest : IntegrationTest() {
         every { mockRequest.getHeader("Authorization") } returns null
 
         mockkConstructor(ApplicationHandler::class)
-        every { anyConstructed<ApplicationHandler>().sendApplicationMails(any(), any(), any()) } returns Unit
+        every {
+            anyConstructed<ApplicationHandler>().sendApplicationMails(any(), any(), any())
+        } returns Unit
 
         val application = TestApplicationBuilder.build(true)
 
@@ -89,12 +99,19 @@ internal class EakApplicationMutationServiceTest : IntegrationTest() {
             transaction {
                 val applicationsBefore = Applications.selectAll().count()
 
-                val result = service.addEakApplication(1, application, "bayern.ehrenamtskarte.app", mockDfe)
+                val result = service.addEakApplication(
+                    1,
+                    application,
+                    "bayern.ehrenamtskarte.app",
+                    mockDfe,
+                )
 
                 assertFalse(result.data)
                 assertEquals(applicationsBefore, Applications.selectAll().count())
                 verify(exactly = 0) { anyConstructed<ApplicationHandler>().sendApplicationMails(any(), any(), any()) }
-                verify(exactly = 0) { anyConstructed<ApplicationHandler>().setApplicationVerificationToPreVerifiedNow(any()) }
+                verify(exactly = 0) {
+                    anyConstructed<ApplicationHandler>().setApplicationVerificationToPreVerifiedNow(any())
+                }
             }
         }
     }

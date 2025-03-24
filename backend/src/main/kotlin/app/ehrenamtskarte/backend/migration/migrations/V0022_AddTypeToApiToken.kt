@@ -9,7 +9,7 @@ internal class V0022_AddTypeToApiToken : Migration() {
             """
                 ALTER TABLE apitokens
                 ADD COLUMN type VARCHAR(50) NOT NULL DEFAULT 'USER_IMPORT' CHECK (type IN ('USER_IMPORT', 'VERIFIED_APPLICATION'));
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 }

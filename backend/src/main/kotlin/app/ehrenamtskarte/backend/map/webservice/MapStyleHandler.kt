@@ -45,7 +45,7 @@ class MapStyleHandler(config: BackendConfiguration) {
 
     private fun patchStyle(
         style: JsonNode,
-        patcher: (id: String, source: JsonNode) -> Pair<String, JsonNode>
+        patcher: (id: String, source: JsonNode) -> Pair<String, JsonNode>,
     ): JsonNode? {
         val sources = style["sources"] ?: return null
 
@@ -72,9 +72,7 @@ class MapStyleHandler(config: BackendConfiguration) {
         return mapper.readTree(text)
     }
 
-    fun getPath(): String {
-        return "/project/{project_id}/map"
-    }
+    fun getPath(): String = "/project/{project_id}/map"
 
     fun handle(context: Context) {
         try {

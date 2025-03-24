@@ -24,9 +24,9 @@ class TestApplicationBuilder {
             cardType: BavariaCardType = BavariaCardType.BLUE,
             wantsDigitalCard: Boolean = true,
             wantsPhysicalCard: Boolean = false,
-            category: String = "sports"
-        ): Application {
-            return Application(
+            category: String = "sports",
+        ): Application =
+            Application(
                 personalData = PersonalData(
                     forenames = ShortTextInput("John"),
                     surname = ShortTextInput("Doe"),
@@ -37,10 +37,10 @@ class TestApplicationBuilder {
                         postalCode = ShortTextInput("80331"),
                         addressSupplement = null,
                         location = ShortTextInput("München"),
-                        country = ShortTextInput("Deutschland")
+                        country = ShortTextInput("Deutschland"),
                     ),
                     telephone = ShortTextInput("123456789"),
-                    emailAddress = EmailInput("johndoe@example.com")
+                    emailAddress = EmailInput("johndoe@example.com"),
                 ),
                 applicationDetails = ApplicationDetails(
                     applicationType = applicationType,
@@ -66,30 +66,29 @@ class TestApplicationBuilder {
                                             postalCode = ShortTextInput("80331"),
                                             location = ShortTextInput("München"),
                                             country = ShortTextInput("Deutschland"),
-                                            addressSupplement = null
+                                            addressSupplement = null,
                                         ),
                                         category = ShortTextInput(category),
                                         contact = OrganizationContact(
                                             name = ShortTextInput("Jane Doe"),
                                             email = EmailInput("jane.doe@sportverein.de"),
                                             telephone = ShortTextInput("0150123456789"),
-                                            hasGivenPermission = true
+                                            hasGivenPermission = true,
                                         ),
-                                        name = ShortTextInput("Sportverein Augsburg-Nord")
+                                        name = ShortTextInput("Sportverein Augsburg-Nord"),
                                     ),
                                     amountOfWork = 7.5,
                                     responsibility = ShortTextInput("Trainer"),
                                     workSinceDate = DateInput("2020-10-06"),
                                     payment = false,
                                     certificate = null,
-                                    isAlreadyVerified = isAlreadyVerified
-                                )
-                            )
-                        )
+                                    isAlreadyVerified = isAlreadyVerified,
+                                ),
+                            ),
+                        ),
                     ),
-                    goldenCardEntitlement = null
-                )
+                    goldenCardEntitlement = null,
+                ),
             )
-        }
     }
 }

@@ -11,13 +11,14 @@ import org.slf4j.Logger
  */
 class FilterData(config: ImportConfig, private val logger: Logger) :
     PipelineStep<List<CSVAcceptingStore>, List<CSVAcceptingStore>>(config) {
-    override fun execute(input: List<CSVAcceptingStore>): List<CSVAcceptingStore> = runBlocking {
-        input.filter {
-            if (it.postalCode?.isEmpty()!! || it.houseNumber?.isEmpty()!! || it.location?.isEmpty()!!) {
-                logger.info("'${it.name}' was filtered out because location info is insufficient")
-                return@filter false
+    override fun execute(input: List<CSVAcceptingStore>): List<CSVAcceptingStore> =
+        runBlocking {
+            input.filter {
+                if (it.postalCode?.isEmpty()!! || it.houseNumber?.isEmpty()!! || it.location?.isEmpty()!!) {
+                    logger.info("'${it.name}' was filtered out because location info is insufficient")
+                    return@filter false
+                }
+                true
             }
-            true
         }
-    }
 }

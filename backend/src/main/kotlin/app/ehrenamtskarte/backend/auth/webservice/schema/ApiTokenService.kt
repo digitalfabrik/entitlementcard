@@ -29,7 +29,10 @@ fun getByteArrayLength() = 3 * TOKEN_LENGTH / 4 // 4*(n/3) chars are needed to r
 @Suppress("unused")
 class ApiTokenService {
     @GraphQLDescription("Creates a new api token for user import endpoint")
-    fun createApiToken(expiresIn: Int, dfe: DataFetchingEnvironment): String {
+    fun createApiToken(
+        expiresIn: Int,
+        dfe: DataFetchingEnvironment,
+    ): String {
         val context = dfe.getContext<GraphQLContext>()
         val admin = context.getAdministrator()
 
@@ -52,7 +55,10 @@ class ApiTokenService {
     }
 
     @GraphQLDescription("Deletes a selected API token")
-    fun deleteApiToken(id: Int, dfe: DataFetchingEnvironment): Int {
+    fun deleteApiToken(
+        id: Int,
+        dfe: DataFetchingEnvironment,
+    ): Int {
         val context = dfe.getContext<GraphQLContext>()
         val admin = context.getAdministrator()
         admin.takeIf { Authorizer.mayDeleteApiTokensInProject(it) } ?: throw ForbiddenException()
@@ -96,7 +102,7 @@ class ApiTokenQueryService {
                         it[ApiTokens.id].value,
                         it[Administrators.email],
                         it[ApiTokens.expirationDate].toString(),
-                        it[ApiTokens.type]
+                        it[ApiTokens.type],
                     )
                 }
         }

@@ -24,7 +24,9 @@ class WebService {
 
         if (applicationData.exists()) {
             if (!applicationData.isDirectory) {
-                throw Error("${applicationData.absolutePath} is not a directory. Set the property app.application-data correctly!")
+                throw Error(
+                    "${applicationData.absolutePath} is not a directory. Set the property app.application-data correctly!",
+                )
             }
         } else {
             if (!applicationData.mkdirs()) {

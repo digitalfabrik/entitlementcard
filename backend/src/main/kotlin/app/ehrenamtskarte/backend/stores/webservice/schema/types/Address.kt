@@ -5,5 +5,5 @@ data class Address(
     val street: String?,
     val postalCode: String?,
     val location: String?,
-    val state: String?
+    val state: String?,
 )

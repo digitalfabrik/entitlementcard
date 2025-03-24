@@ -14,7 +14,7 @@ internal class V0013_FixExpirationDateGoldCard() : Migration() {
             UPDATE cards
             SET "expirationDay" = null
             WHERE "expirationDay" = 0;
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 }
