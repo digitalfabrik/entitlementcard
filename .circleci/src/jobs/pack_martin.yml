@@ -1,23 +1,21 @@
 docker:
   - image: debian:12 # We deploy on debian -> pack on debian
-working_directory: ~/project/map-tiles/martin
 steps:
-  - checkout:
-      path: ~/project
-  - run: apt update -y && apt install -y nodejs npm
-  - install_app_toolbelt
   - prepare_workspace
-  - restore_environment_variables
-  - attach_workspace:
-      at: /tmp/workspace
   - run:
-      name: "Build .deb"
+      name: Install curl
+      command: apt update -y && apt install -y curl
+  - run:
+      name: Download martin
+      command: curl -LO "https://github.com/maplibre/martin/releases/download/v0.13.0/martin-x86_64-unknown-linux-gnu.tar.gz"
+  - run:
+      name: Pack martin
       command: |
-        cp ~/project/docker/martin-config.yaml config.yaml
-        cp ~/attached_workspace/martin/martin .
-        ~/project/scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -d "Martin tile server for the Ehrenamtskarte app" -n "eak-martin" -s ~/project/scripts/eak-martin.service -C "/opt/ehrenamtskarte/martin/config.yaml" -M .
+        cp docker/martin-config.yaml config.yaml
+        tar -xvzf martin-x86_64-unknown-linux-gnu.tar.gz -C . martin
+        scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -d "Martin tile server for the Ehrenamtskarte app" -n "eak-martin" -s scripts/eak-martin.service -C "/opt/ehrenamtskarte/martin/config.yaml" -M .
   - run:
-      name: "Move .deb to artifacts folder"
+      name: Move package
       command: |
         mkdir -p ~/attached_workspace/debs/backend
         mv *.deb ~/attached_workspace/debs/backend
