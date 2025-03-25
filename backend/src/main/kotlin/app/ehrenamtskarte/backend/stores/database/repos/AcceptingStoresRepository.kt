@@ -1,11 +1,7 @@
 package app.ehrenamtskarte.backend.stores.database.repos
 
 import app.ehrenamtskarte.backend.common.database.sortByKeys
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotUniqueException
-import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import app.ehrenamtskarte.backend.projects.database.Projects
-import app.ehrenamtskarte.backend.regions.database.RegionEntity
-import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import app.ehrenamtskarte.backend.stores.COUNTRY_CODE
 import app.ehrenamtskarte.backend.stores.database.AcceptingStoreEntity
 import app.ehrenamtskarte.backend.stores.database.AcceptingStores
@@ -17,10 +13,7 @@ import app.ehrenamtskarte.backend.stores.database.Contacts
 import app.ehrenamtskarte.backend.stores.database.PhysicalStoreEntity
 import app.ehrenamtskarte.backend.stores.database.PhysicalStores
 import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
-import app.ehrenamtskarte.backend.stores.utils.mapCsvToStore
-import app.ehrenamtskarte.backend.stores.webservice.schema.types.CSVAcceptingStore
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.Coordinates
-import app.ehrenamtskarte.backend.stores.webservice.schema.types.StoreImportReturnResultModel
 import net.postgis.jdbc.geometry.Point
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.ComparisonOp
@@ -118,35 +111,12 @@ object AcceptingStoresRepository {
             }.firstOrNull()?.let { it[AcceptingStores.id].value }
     }
 
-    fun importAcceptingStores(stores: List<CSVAcceptingStore>, project: ProjectEntity, dryRun: Boolean): StoreImportReturnResultModel {
-        var numStoresCreated = 0
-        var numStoresUntouched = 0
-        val projectId = project.id
-        // TODO 2012 provide region ars
-        val region = RegionsRepository.findAllInProject(project.project).singleOrNull() ?: throw RegionNotUniqueException()
-        val acceptingStoreIdsToRemove =
-            AcceptingStores.slice(AcceptingStores.id).select { AcceptingStores.projectId eq projectId }
-                .map { it[AcceptingStores.id].value }.toMutableSet()
-        stores.map { mapCsvToStore(it) }.forEach {
-            val existingStoreId = getIdIfExists(it, projectId, region.id)
-            if (existingStoreId == null) {
-                if (!dryRun) {
-                    createStore(it, projectId, region)
-                }
-                numStoresCreated += 1
-            } else {
-                acceptingStoreIdsToRemove.remove(existingStoreId)
-                numStoresUntouched += 1
-            }
-        }
-        if (!dryRun) {
-            deleteStores(acceptingStoreIdsToRemove)
-        }
-
-        return StoreImportReturnResultModel(numStoresCreated, acceptingStoreIdsToRemove.size, numStoresUntouched)
+    fun getAllIdsInProject(projectId: EntityID<Int>): MutableSet<Int> {
+        return AcceptingStores.slice(AcceptingStores.id).select { AcceptingStores.projectId eq projectId }
+            .map { it[AcceptingStores.id].value }.toMutableSet()
     }
 
-    fun createStore(acceptingStore: AcceptingStore, currentProjectId: EntityID<Int>, region: RegionEntity?) {
+    fun createStore(acceptingStore: AcceptingStore, projectId: EntityID<Int>, regionId: EntityID<Int>?) {
         val address = AddressEntity.new {
             street = acceptingStore.streetWithHouseNumber
             postalCode = acceptingStore.postalCode!!
@@ -163,8 +133,8 @@ object AcceptingStoresRepository {
             description = acceptingStore.discount
             contactId = contact.id
             categoryId = EntityID(acceptingStore.categoryId, Categories)
-            regionId = region?.id
-            projectId = currentProjectId
+            this.regionId = regionId
+            this.projectId = projectId
         }
         PhysicalStoreEntity.new {
             storeId = storeEntity.id

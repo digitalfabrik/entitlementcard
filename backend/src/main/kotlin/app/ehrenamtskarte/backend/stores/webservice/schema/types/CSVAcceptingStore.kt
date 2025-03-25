@@ -18,20 +18,14 @@ data class CSVAcceptingStore(
     var categoryId: Int
 ) {
     init {
-        if (name.isBlank()) {
-            throw InvalidJsonException("Name cannot be empty")
-        }
-        if (location.isBlank()) {
-            throw InvalidJsonException("Location cannot be empty")
-        }
-        if (street.isBlank()) {
-            throw InvalidJsonException("Street cannot be empty")
-        }
-        if (houseNumber.isBlank()) {
-            throw InvalidJsonException("House number cannot be empty")
-        }
-        if (postalCode.isBlank()) {
-            throw InvalidJsonException("Postal code cannot be empty")
-        }
+        validate()
+    }
+
+    private fun validate() {
+        if (name.isBlank()) throw InvalidJsonException("Name cannot be empty")
+        if (location.isBlank()) throw InvalidJsonException("Location cannot be empty")
+        if (street.isBlank()) throw InvalidJsonException("Street cannot be empty")
+        if (houseNumber.isBlank()) throw InvalidJsonException("House number cannot be empty")
+        if (postalCode.isBlank()) throw InvalidJsonException("Postal code cannot be empty")
     }
 }

@@ -71,14 +71,14 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
             houseNumber = "10",
             postalCode = "90408",
             location = "Nürnberg",
-            latitude = "0",
-            longitude = "0",
+            latitude = 0.0,
+            longitude = 0.0,
             telephone = "0911/123456",
             email = "info@test.de",
             homepage = "https://www.test.de/kontakt/",
             discountDE = "20% Ermäßigung",
             discountEN = "20% discount",
-            categoryId = "17"
+            categoryId = 17
         )
         val mutation = createMutation(project = "bayern.ehrenamtskarte.app", stores = listOf(csvStore))
         val response = post(client, mutation, projectStoreManager.getJwtToken())
@@ -251,7 +251,7 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
         val jsonResponse = response.json()
 
         assertEquals("Error INVALID_JSON occurred.", jsonResponse.findValue("message").textValue())
-        assertEquals("Duplicate store found: Test store Teststr. 10 90408 Nürnberg", jsonResponse.findValue("reason").textValue())
+        assertEquals("Duplicate store(s) found: Test store Teststr. 10 90408 Nürnberg", jsonResponse.findValue("reason").textValue())
     }
 
     @Test

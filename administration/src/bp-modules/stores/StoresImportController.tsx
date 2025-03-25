@@ -67,8 +67,34 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
     }
   }
 
-  const onImportStores = () =>
-    importStores({ variables: { stores: acceptingStores.map(store => store.data), project: projectId, dryRun } })
+  const onImportStores = () => {
+    const storesToImport = acceptingStores.map(store => {
+      const storeData = store.data;
+      return {
+        name: storeData.name,
+        categoryId: Number(storeData.categoryId),
+        discountDE: storeData.discountDE,
+        discountEN: storeData.discountEN,
+        email: storeData.email,
+        homepage: storeData.homepage,
+        houseNumber: storeData.houseNumber,
+        latitude: Number(storeData.latitude),
+        longitude: Number(storeData.longitude),
+        location: storeData.location,
+        postalCode: storeData.postalCode,
+        street: storeData.street,
+        telephone: storeData.telephone,
+      };
+    });
+
+    importStores({
+      variables: {
+        stores: storesToImport,
+        project: projectId,
+        dryRun,
+      },
+    });
+  };
 
   return (
     <>
