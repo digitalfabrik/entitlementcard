@@ -81,7 +81,8 @@ object Authorizer {
             return true
         }
         return actingAdmin.hasRole(Role.REGION_ADMIN) &&
-            newAdminRegion != null && actingAdmin.regionId == newAdminRegion.id &&
+            newAdminRegion != null &&
+            actingAdmin.regionId == newAdminRegion.id &&
             newAdminRole in setOf(Role.REGION_ADMIN, Role.REGION_MANAGER)
     }
 
@@ -92,7 +93,11 @@ object Authorizer {
         newAdminRole: Role,
         newAdminRegion: RegionEntity?,
     ): Boolean {
-        if (!actingAdmin.isInProject(newAdminProjectId) || !existingAdmin.isInProject(newAdminProjectId) || newAdminRole == Role.NO_RIGHTS) {
+        if (
+            !actingAdmin.isInProject(newAdminProjectId) ||
+            !existingAdmin.isInProject(newAdminProjectId) ||
+            newAdminRole == Role.NO_RIGHTS
+        ) {
             return false
         }
         if (actingAdmin.hasRole(Role.PROJECT_ADMIN)) {
@@ -103,7 +108,8 @@ object Authorizer {
         }
         return actingAdmin.hasRole(Role.REGION_ADMIN) &&
             existingAdmin.regionId == actingAdmin.regionId &&
-            newAdminRegion != null && actingAdmin.regionId == newAdminRegion.id &&
+            newAdminRegion != null &&
+            actingAdmin.regionId == newAdminRegion.id &&
             newAdminRole in setOf(Role.REGION_ADMIN, Role.REGION_MANAGER)
     }
 

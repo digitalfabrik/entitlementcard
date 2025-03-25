@@ -38,9 +38,7 @@ object AdministratorsRepository {
     ): AdministratorEntity? {
         val resultRow = (Administrators innerJoin Projects)
             .slice(Administrators.columns)
-            .select(
-                (Projects.project eq project) and (LowerCase(Administrators.email) eq email.lowercase()),
-            )
+            .select((Projects.project eq project) and (LowerCase(Administrators.email) eq email.lowercase()))
             .firstOrNull()
         return resultRow?.let {
             val user = AdministratorEntity.wrapRow(it)
@@ -132,7 +130,10 @@ object AdministratorsRepository {
     ): List<AdministratorEntity> =
         transaction {
             (Administrators innerJoin Projects).select {
-                (Projects.project eq project) and (Administrators.notificationOnApplication eq true) and (Administrators.regionId eq regionId) and (Administrators.deleted eq false)
+                (Projects.project eq project) and
+                    (Administrators.notificationOnApplication eq true) and
+                    (Administrators.regionId eq regionId) and
+                    (Administrators.deleted eq false)
             }.let { AdministratorEntity.wrapRows(it) }.toList()
         }
 
@@ -142,7 +143,10 @@ object AdministratorsRepository {
     ): List<AdministratorEntity> =
         transaction {
             (Administrators innerJoin Projects).select {
-                (Projects.project eq project) and (Administrators.notificationOnVerification eq true) and (Administrators.regionId eq regionId) and (Administrators.deleted eq false)
+                (Projects.project eq project) and
+                    (Administrators.notificationOnVerification eq true) and
+                    (Administrators.regionId eq regionId) and
+                    (Administrators.deleted eq false)
             }.let { AdministratorEntity.wrapRows(it) }.toList()
         }
 }

@@ -329,14 +329,16 @@ class CardMutationService {
 
             if (CardVerifier.isExpired(card.expirationDay, projectConfig.timezone)) {
                 logger.info(
-                    "${context.remoteIp} failed to activate card with id:${card.id} and overwrite: $overwrite because card is expired",
+                    "${context.remoteIp} failed to activate card with id:${card.id} and overwrite: " +
+                        "$overwrite because card is expired",
                 )
                 return@t CardActivationResultModel(ActivationState.failed)
             }
 
             if (card.revoked) {
                 logger.info(
-                    "${context.remoteIp} failed to activate card with id:${card.id} and overwrite: $overwrite because card is revoked",
+                    "${context.remoteIp} failed to activate card with id:${card.id} and overwrite: " +
+                        "$overwrite because card is revoked",
                 )
                 return@t CardActivationResultModel(ActivationState.revoked)
             }

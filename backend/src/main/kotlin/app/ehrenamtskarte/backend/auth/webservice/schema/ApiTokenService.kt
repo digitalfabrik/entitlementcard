@@ -38,7 +38,11 @@ class ApiTokenService {
 
         admin.takeIf { Authorizer.mayAddApiTokensInProject(it) } ?: throw ForbiddenException()
 
-        val type = if (admin.role == Role.PROJECT_ADMIN.db_value) ApiTokenType.USER_IMPORT else ApiTokenType.VERIFIED_APPLICATION
+        val type = if (admin.role == Role.PROJECT_ADMIN.db_value) {
+            ApiTokenType.USER_IMPORT
+        } else {
+            ApiTokenType.VERIFIED_APPLICATION
+        }
 
         val bytes = ByteArray(getByteArrayLength())
         SecureRandom().nextBytes(bytes)
@@ -71,7 +75,9 @@ class ApiTokenService {
             }
             if (admin.role == Role.EXTERNAL_VERIFIED_API_USER.db_value) {
                 ApiTokens.deleteWhere {
-                    (ApiTokens.id eq id) and (projectId eq admin.projectId) and (type eq ApiTokenType.VERIFIED_APPLICATION)
+                    (ApiTokens.id eq id) and
+                        (projectId eq admin.projectId) and
+                        (type eq ApiTokenType.VERIFIED_APPLICATION)
                 }
             }
         }
@@ -92,7 +98,8 @@ class ApiTokenQueryService {
             (ApiTokens leftJoin Administrators)
                 .select {
                     when (admin.role) {
-                        Role.EXTERNAL_VERIFIED_API_USER.db_value -> (Administrators.email eq admin.email) and (ApiTokens.type eq ApiTokenType.VERIFIED_APPLICATION)
+                        Role.EXTERNAL_VERIFIED_API_USER.db_value -> (Administrators.email eq admin.email) and
+                            (ApiTokens.type eq ApiTokenType.VERIFIED_APPLICATION)
                         Role.PROJECT_ADMIN.db_value -> ApiTokens.projectId eq admin.projectId
                         else -> Op.FALSE
                     }

@@ -156,7 +156,9 @@ class ApplicationHandler(
                 ?: throw InvalidJsonException("Blue card entitlement must be set if application is already verified")
 
             val workAtOrganizationsEntitlement = blueCardEntitlement.workAtOrganizationsEntitlement
-                ?: throw InvalidJsonException("Work at organizations entitlement must be set if application is already verified")
+                ?: throw InvalidJsonException(
+                    "Work at organizations entitlement must be set if application is already verified",
+                )
 
             require(
                 blueCardEntitlement.entitlementType == BlueCardEntitlementType.WORK_AT_ORGANIZATIONS,

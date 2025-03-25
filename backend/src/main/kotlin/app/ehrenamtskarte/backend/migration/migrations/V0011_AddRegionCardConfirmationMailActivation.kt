@@ -8,7 +8,7 @@ import app.ehrenamtskarte.backend.migration.Statement
  * Set default to false.
  */
 @Suppress("ClassName")
-internal class V0011_AddRegionCardConfirmationMailActivation() : Migration() {
+internal class V0011_AddRegionCardConfirmationMailActivation : Migration() {
     override val migrate: Statement = {
         exec(
             """

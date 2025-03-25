@@ -17,7 +17,8 @@ class CardQueryService {
         ReplaceWith("verifyCardInProjectV2"),
     )
     @GraphQLDescription(
-        "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid and a timestamp of the last check",
+        "Returns whether there is a card in the given project with that hash registered for that this " +
+            "TOTP is currently valid and a timestamp of the last check",
     )
     fun verifyCardInProject(
         project: String,
@@ -26,7 +27,8 @@ class CardQueryService {
     ): Boolean = verifyCardInProjectV2(project, card, dfe).valid
 
     @GraphQLDescription(
-        "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid, extendable and a timestamp of the last check",
+        "Returns whether there is a card in the given project with that hash registered for that " +
+            "this TOTP is currently valid, extendable and a timestamp of the last check",
     )
     fun verifyCardInProjectV2(
         project: String,
@@ -38,8 +40,11 @@ class CardQueryService {
         val cardHash = Base64.getDecoder().decode(card.cardInfoHashBase64)
 
         val isValid = when (card.codeType) {
-            CodeType.STATIC -> card.totp == null && CardVerifier.verifyStaticCard(project, cardHash, projectConfig.timezone)
-            CodeType.DYNAMIC -> card.totp != null && CardVerifier.verifyDynamicCard(project, cardHash, card.totp, projectConfig.timezone)
+            CodeType.STATIC ->
+                card.totp == null && CardVerifier.verifyStaticCard(project, cardHash, projectConfig.timezone)
+            CodeType.DYNAMIC ->
+                card.totp != null &&
+                    CardVerifier.verifyDynamicCard(project, cardHash, card.totp, projectConfig.timezone)
         }
 
         val verificationResult = CardVerificationResultModel(

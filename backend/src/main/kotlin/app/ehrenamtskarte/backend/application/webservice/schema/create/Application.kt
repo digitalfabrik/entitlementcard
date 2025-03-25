@@ -18,7 +18,8 @@ enum class BavariaCardType {
 
 @GraphQLDescription(
     "An application for the Bayerische Ehrenamtskarte.\n" +
-        "The field `cardType` specifies whether `blueCardEntitlement` or `goldenCardEntitlement` must be present/null.\n" +
+        "The field `cardType` specifies whether `blueCardEntitlement` or " +
+        "`goldenCardEntitlement` must be present/null.\n" +
         "The field `applicationType` must not be null if and only if `cardType` is BavariaCardType.BLUE.",
 )
 data class Application(

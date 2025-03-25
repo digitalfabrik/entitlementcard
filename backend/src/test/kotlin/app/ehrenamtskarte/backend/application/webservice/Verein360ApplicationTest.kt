@@ -78,27 +78,26 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
 
     @ParameterizedTest
     @MethodSource("validationErrorTestCases")
-    fun `should return validation error when the request is not valid`(
-        testCase: ValidationErrorTestCase,
-    ) = JavalinTest.test(app) { _, client ->
-        TestData.createApiToken(
-            creatorId = adminVerein360.id,
-            type = ApiTokenType.VERIFIED_APPLICATION,
-        )
+    fun `should return validation error when the request is not valid`(testCase: ValidationErrorTestCase) =
+        JavalinTest.test(app) { _, client ->
+            TestData.createApiToken(
+                creatorId = adminVerein360.id,
+                type = ApiTokenType.VERIFIED_APPLICATION,
+            )
 
-        val mutation = createMutation(application = testCase.application)
-        val response = post(client, mutation, token = "dummy")
+            val mutation = createMutation(application = testCase.application)
+            val response = post(client, mutation, token = "dummy")
 
-        assertEquals(200, response.code)
+            assertEquals(200, response.code)
 
-        val jsonResponse = response.json()
+            val jsonResponse = response.json()
 
-        assertEquals(
-            "Error INVALID_JSON occurred.",
-            jsonResponse.findValue("message").textValue(),
-        )
-        assertEquals(testCase.error, jsonResponse.findValue("reason").textValue())
-    }
+            assertEquals(
+                "Error INVALID_JSON occurred.",
+                jsonResponse.findValue("message").textValue(),
+            )
+            assertEquals(testCase.error, jsonResponse.findValue("reason").textValue())
+        }
 
     @Test
     fun `should return an error when region not found`() =

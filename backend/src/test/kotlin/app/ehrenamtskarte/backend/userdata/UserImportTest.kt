@@ -105,9 +105,7 @@ internal class UserImportTest : IntegrationTest() {
 
     @Test
     fun `POST returns an error response when self-service is not enabled in the project`() =
-        JavalinTest.test(
-            app,
-        ) { _, client ->
+        JavalinTest.test(app) { _, client ->
             TestData.createApiToken(
                 creatorId = TestAdministrators.EAK_PROJECT_ADMIN.id,
                 type = ApiTokenType.USER_IMPORT,
@@ -378,9 +376,7 @@ internal class UserImportTest : IntegrationTest() {
 
     @Test
     fun `POST returns a successful response when new user entitlements are saved in db`() =
-        JavalinTest.test(
-            app,
-        ) { _, client ->
+        JavalinTest.test(app) { _, client ->
             TestData.createApiToken(creatorId = admin.id, type = ApiTokenType.USER_IMPORT)
 
             val csvFile = generateCsvFile(
@@ -411,9 +407,7 @@ internal class UserImportTest : IntegrationTest() {
 
     @Test
     fun `POST returns a successful response and user entitlements are updated in db`() =
-        JavalinTest.test(
-            app,
-        ) { _, client ->
+        JavalinTest.test(app) { _, client ->
             TestData.createApiToken(creatorId = admin.id, type = ApiTokenType.USER_IMPORT)
             TestData.createUserEntitlement(
                 userHash = TEST_USER_HASH,
@@ -447,10 +441,9 @@ internal class UserImportTest : IntegrationTest() {
         }
 
     @Test
+    @Suppress("ktlint:standard:max-line-length", "MaxLineLength")
     fun `POST returns a successful response and existing cards are revoked when the user entitlement has been revoked`() =
-        JavalinTest.test(
-            app,
-        ) { _, client ->
+        JavalinTest.test(app) { _, client ->
             TestData.createApiToken(creatorId = admin.id, type = ApiTokenType.USER_IMPORT)
             val entitlementId = TestData.createUserEntitlement(
                 userHash = TEST_USER_HASH,

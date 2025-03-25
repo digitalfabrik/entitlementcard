@@ -125,7 +125,12 @@ internal class ApiTokenServiceTest : IntegrationTest() {
             )
     }
 
-    data class TestCase(val actingAdmin: Int, val tokenAdmin: Int, val type: ApiTokenType, val expectedDeletedTokens: Int)
+    data class TestCase(
+        val actingAdmin: Int,
+        val tokenAdmin: Int,
+        val type: ApiTokenType,
+        val expectedDeletedTokens: Int,
+    )
 
     @ParameterizedTest
     @MethodSource("provideDeleteTestCases")

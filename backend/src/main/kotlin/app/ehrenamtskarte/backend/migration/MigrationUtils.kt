@@ -89,7 +89,8 @@ object MigrationUtils {
             )
         } catch (exception: ExposedSQLException) {
             throw MigrationException(
-                "The above SQL error occuring during attempted migration. Hence, NO CHANGES were committed onto the DB.",
+                "The above SQL error occuring during attempted migration. " +
+                    "Hence, NO CHANGES were committed onto the DB.",
                 exception,
             )
         }

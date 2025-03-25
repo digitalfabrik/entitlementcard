@@ -7,7 +7,7 @@ import app.ehrenamtskarte.backend.migration.Statement
  * Make the issuerId column in the cards table nullable for cards created through the self-service portal
  */
 @Suppress("ClassName")
-internal class V0016_MakeCardIssuerIdColumnNullable() : Migration() {
+internal class V0016_MakeCardIssuerIdColumnNullable : Migration() {
     override val migrate: Statement = {
         exec(
             """

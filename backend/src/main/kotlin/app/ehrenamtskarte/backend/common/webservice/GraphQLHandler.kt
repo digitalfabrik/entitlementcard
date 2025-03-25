@@ -36,10 +36,14 @@ import java.util.concurrent.ExecutionException
 
 class GraphQLHandler(
     private val backendConfiguration: BackendConfiguration,
-    private val graphQLParams: GraphQLParams =
-        storesGraphQlParams stitch cardsGraphQlParams
-            stitch applicationGraphQlParams stitch regionsGraphQlParams stitch authGraphQlParams stitch freinetGraphQlParams,
-    private val regionIdentifierByPostalCode: List<Pair<String, String>> = PostalCodesLoader.loadRegionIdentifierByPostalCodeMap(),
+    private val graphQLParams: GraphQLParams = storesGraphQlParams stitch
+        cardsGraphQlParams stitch
+        applicationGraphQlParams stitch
+        regionsGraphQlParams stitch
+        authGraphQlParams stitch
+        freinetGraphQlParams,
+    private val regionIdentifierByPostalCode: List<Pair<String, String>> =
+        PostalCodesLoader.loadRegionIdentifierByPostalCodeMap(),
 ) {
     val config: SchemaGeneratorConfig = graphQLParams.config
         .plus(SchemaGeneratorConfig(listOf("app.ehrenamtskarte.backend.common.webservice.schema")))
@@ -174,13 +178,12 @@ class GraphQLHandler(
                 "variables",
                 emptyMap<String, Any>(),
             ) as Map<String, Any>?
-            val executionInput =
-                ExecutionInput.Builder()
-                    .context(graphQLContext)
-                    .query(payload["query"].toString())
-                    .variables(variables ?: emptyMap<String, Any>())
-                    .dataLoaderRegistry(graphQLParams.dataLoaderRegistry)
-                    .build()
+            val executionInput = ExecutionInput.Builder()
+                .context(graphQLContext)
+                .query(payload["query"].toString())
+                .variables(variables ?: emptyMap<String, Any>())
+                .dataLoaderRegistry(graphQLParams.dataLoaderRegistry)
+                .build()
 
             val executionResult = graphQL.executeAsync(executionInput).get()
             val result = getResult(executionResult)

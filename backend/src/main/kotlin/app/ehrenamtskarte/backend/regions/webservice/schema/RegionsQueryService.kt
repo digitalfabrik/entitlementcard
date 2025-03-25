@@ -71,7 +71,10 @@ class RegionsQueryService {
             )
         }
 
-    @GraphQLDescription("Returns regions by postal code. Works only for the EAK project in which each region has an appropriate regionIdentifier.")
+    @GraphQLDescription(
+        "Returns regions by postal code. Works only for the EAK project in which each " +
+            "region has an appropriate regionIdentifier.",
+    )
     fun regionsByPostalCode(
         dfe: DataFetchingEnvironment,
         postalCode: String,
