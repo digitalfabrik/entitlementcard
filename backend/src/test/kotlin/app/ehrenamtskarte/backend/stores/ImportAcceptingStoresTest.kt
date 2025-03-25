@@ -67,12 +67,12 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
 
     @Test
     fun `POST returns an error response if no unique region can be found for a project`() = JavalinTest.test(app) { _, client ->
-        val csvStore = createAcceptingStoreInput(
+        val csvStore = CSVAcceptingStoreInput(
             name = "Test store",
             street = "Teststr.",
             houseNumber = "10",
             postalCode = "90408",
-            location = "Nürnberg",
+            location = "München",
             latitude = "0",
             longitude = "0",
             telephone = "0911/123456",
@@ -83,9 +83,13 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
             categoryId = "17"
         )
         val mutation = createMutation(project = "bayern.ehrenamtskarte.app", stores = listOf(csvStore))
-        val response = post(client, mutation, projectStoreManager.getJwtToken())
+        val response = post(client, mutation, TestAdministrators.EAK_PROJECT_STORE_MANAGER.getJwtToken())
 
-        assertEquals(403, response.code)
+        assertEquals(200, response.code)
+
+        val jsonResponse = response.json()
+
+        assertEquals("Error REGION_NOT_UNIQUE occurred.", jsonResponse.findValue("message").textValue())
     }
 
     @Test
