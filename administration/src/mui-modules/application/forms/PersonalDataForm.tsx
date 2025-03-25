@@ -3,6 +3,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { PersonalDataInput, Region } from '../../../generated/graphql'
+import i18next from '../../../i18n'
 import CustomDivider from '../CustomDivider'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
 import DateForm from '../primitive-inputs/DateForm'
@@ -30,7 +31,7 @@ const SubForms = {
 
 const dateOfBirthOptions = {
   maximumDate: sub(Date.now(), { years: 16 }),
-  maximumDateErrorMessage: 'Sie müssen mindestens 16 Jahre alt sein, um eine Ehrenamtskarte beantragen zu können.',
+  maximumDateErrorMessage: i18next.t('applicationForms:maximumDateErrorMessage'),
 } as const
 
 type State = CompoundState<typeof SubForms>

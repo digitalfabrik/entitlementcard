@@ -15,12 +15,11 @@ import StatisticsOverview from './StatisticsOverview'
 import { defaultEndDate, defaultStartDate } from './constants'
 
 const ViewProjectStatistics = () => {
-  const { t } = useTranslation('errors')
   const { projectId } = useContext(ProjectConfigContext)
   const cardStatisticsQuery = useGetCardStatisticsInProjectQuery({
     variables: { projectId, dateEnd: defaultEndDate, dateStart: defaultStartDate },
   })
-  const cardStatisticsQueryResult = getQueryResult(cardStatisticsQuery, t)
+  const cardStatisticsQueryResult = getQueryResult(cardStatisticsQuery)
 
   const applyFilter = (dateStart: string, dateEnd: string) => {
     cardStatisticsQuery.refetch({ projectId, dateEnd, dateStart })
@@ -33,7 +32,6 @@ const ViewProjectStatistics = () => {
 }
 
 const ViewRegionStatistics = ({ region }: { region: Region }) => {
-  const { t } = useTranslation('errors')
   const { projectId } = useContext(ProjectConfigContext)
   const cardStatisticsQuery = useGetCardStatisticsInRegionQuery({
     variables: {
@@ -43,7 +41,7 @@ const ViewRegionStatistics = ({ region }: { region: Region }) => {
       regionId: region.id,
     },
   })
-  const cardStatisticsQueryResult = getQueryResult(cardStatisticsQuery, t)
+  const cardStatisticsQueryResult = getQueryResult(cardStatisticsQuery)
 
   const applyFilter = (dateStart: string, dateEnd: string) => {
     cardStatisticsQuery.refetch({ projectId, dateEnd, dateStart, regionId: region.id })

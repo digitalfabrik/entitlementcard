@@ -160,7 +160,7 @@ const ApplicationCard = ({
   onChange,
 }: ApplicationCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false)
-  const { t } = useTranslation('applications')
+  const { t } = useTranslation('applicationsOverview')
   const { createdDate: createdDateString, jsonValue, id, withdrawalDate, cardCreated } = application
   const jsonField: JsonField<'Array'> = JSON.parse(jsonValue)
   const config = useContext(ProjectConfigContext)
@@ -170,7 +170,7 @@ const ApplicationCard = ({
   const [openNoteDialog, setOpenNoteDialog] = useState(false)
   const [deleteApplication, { loading }] = useDeleteApplicationMutation({
     onError: error => {
-      const { title } = getMessageFromApolloError(error, t)
+      const { title } = getMessageFromApolloError(error)
       appToaster?.show({ intent: 'danger', message: title })
     },
     onCompleted: ({ deleted }: { deleted: boolean }) => {
@@ -262,7 +262,7 @@ const ApplicationCard = ({
           <CollapseIcon icon='chevron-up' onClick={() => setIsExpanded(!isExpanded)} style={{ marginLeft: 'auto' }} />
         </ButtonContainer>
         <Alert
-          cancelButtonText={t('cancel')}
+          cancelButtonText={t('misc:cancel')}
           confirmButtonText={t('deleteApplication')}
           icon='trash'
           intent='danger'

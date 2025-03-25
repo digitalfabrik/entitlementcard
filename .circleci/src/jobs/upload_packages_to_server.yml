@@ -9,9 +9,6 @@ parameters:
     enum: ["administration" , "backend"]
     type: enum
 steps:
-  - checkout:
-      path: ~/project
-  - install_app_toolbelt
   - prepare_workspace
   - add_ssh_keys:
       fingerprints:
@@ -22,25 +19,25 @@ steps:
         - run:
             name: SFTP upload package
             command: |
-              mkdir -p /home/circleci/.ssh
-              echo ${APT_FINGERPRINT_PRODUCTION} >> /home/circleci/.ssh/known_hosts
+              mkdir -p ~/.ssh
+              echo ${APT_FINGERPRINT_PRODUCTION} >> ~/.ssh/known_hosts
               echo "Uploading: " ~/attached_workspace/debs/<< parameters.bundle >>/*.deb
-              sftp -b - ci@entitlementcard.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
+              sftp -b - ci@entitlementcard.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r ~/attached_workspace/debs/<< parameters.bundle >>/*.deb"
         - run:
             name: SFTP upload package
             command: |
-              mkdir -p /home/circleci/.ssh
-              echo ${APT_FINGERPRINT_PRODUCTION} >> /home/circleci/.ssh/known_hosts
+              mkdir -p ~/.ssh
+              echo ${APT_FINGERPRINT_PRODUCTION} >> ~/.ssh/known_hosts
               echo "Uploading: " ~/attached_workspace/debs/<< parameters.bundle >>/*.deb
-              sftp -b - ci@entitlementcard.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
+              sftp -b - ci@entitlementcard.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r ~/attached_workspace/debs/<< parameters.bundle >>/*.deb"
   - unless:
       condition: << parameters.production >>
       steps:
         - run:
             name: SFTP upload package
             command: |
-              mkdir -p /home/circleci/.ssh
-              echo ${APT_FINGERPRINT_STAGING} >> /home/circleci/.ssh/known_hosts
-              echo "Uploading: " /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb
-              sftp -b - ci@entitlementcard-test.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/<< parameters.bundle >>/*.deb"
+              mkdir -p ~/.ssh
+              echo ${APT_FINGERPRINT_STAGING} >> ~/.ssh/known_hosts
+              echo "Uploading: " ~/attached_workspace/debs/<< parameters.bundle >>/*.deb
+              sftp -b - ci@entitlementcard-test.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r ~/attached_workspace/debs/<< parameters.bundle >>/*.deb"
   - notify

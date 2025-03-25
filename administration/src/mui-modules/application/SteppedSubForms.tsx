@@ -4,6 +4,7 @@ import { useSnackbar } from 'notistack'
 import React, { ReactElement, ReactNode, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import i18next from '../../i18n'
 import { SetState, useUpdateStateCallback } from './hooks/useUpdateStateCallback'
 import { Form, ValidationResult } from './util/FormType'
 
@@ -30,7 +31,7 @@ const SubForm = ({
   onSubmit?: () => void
   loading: boolean
 }) => {
-  const { t } = useTranslation('application')
+  const { t } = useTranslation('applicationForms')
   const [formContext, setFormContxt] = useState<FormContextType>(initialFormContext)
   const { enqueueSnackbar } = useSnackbar()
   useEffect(() => setFormContxt(state => ({ ...state, disableAllInputs: loading })), [loading])
@@ -39,7 +40,7 @@ const SubForm = ({
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
       if (validate().type === 'error') {
-        enqueueSnackbar('Ihre Eingaben sind ungültig oder nicht vollständig.', { variant: 'error' })
+        enqueueSnackbar(i18next.t('applicationForms:invalidDataError'), { variant: 'error' })
         setFormContxt(state => ({ ...state, showAllErrors: true }))
       } else if (onSubmit === undefined) {
         setActiveStep(() => index + 1)

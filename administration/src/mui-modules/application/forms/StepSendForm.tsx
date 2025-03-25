@@ -3,6 +3,7 @@ import React, { useContext, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { useGetDataPolicyQuery } from '../../../generated/graphql'
+import i18next from '../../../i18n'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import getQueryResult from '../../util/getQueryResult'
 import BasicDialog from '../BasicDialog'
@@ -18,11 +19,11 @@ import {
 
 const hasAcceptedDatePrivacyOptions: { required: boolean; notCheckedErrorMessage: string } = {
   required: true,
-  notCheckedErrorMessage: 'Um den Antrag zu senden, müssen Sie der Datenschutzverarbeitung zustimmen.',
+  notCheckedErrorMessage: i18next.t('applicationForms:uncheckedDataPrivacyError'),
 }
 const givenInformationIsCorrectAndCompleteOptions: { required: boolean; notCheckedErrorMessage: string } = {
   required: true,
-  notCheckedErrorMessage: 'Diese Erklärung ist erforderlich.',
+  notCheckedErrorMessage: i18next.t('applicationForms:uncheckedCorrectAndCompleteError'),
 }
 const hasAcceptedEmailUsageOptions: { required: false } = {
   required: false,
@@ -77,7 +78,7 @@ const StepSendForm: Form<State, ValidatedInput, AdditionalProps> = {
       </span>
     )
 
-    const policyQueryHandler = getQueryResult(policyQuery, t)
+    const policyQueryHandler = getQueryResult(policyQuery)
     if (!policyQueryHandler.successful) {
       return policyQueryHandler.component
     }

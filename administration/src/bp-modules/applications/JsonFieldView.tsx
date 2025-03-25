@@ -18,6 +18,7 @@ export type JsonFieldValueByType = {
   Boolean: boolean
   Attachment: { fileIndex: number }
   Date: string
+  TranslatableString: string
 }
 
 export const findValue = <T extends keyof JsonFieldValueByType>(

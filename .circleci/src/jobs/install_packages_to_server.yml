@@ -5,10 +5,6 @@ parameters:
     description: Whether builds are delivered to production or beta.
     type: boolean
 steps:
-  - checkout:
-      path: ~/project
-  - install_app_toolbelt
-  - prepare_workspace
   - when:
       condition: << parameters.production >>
       steps:

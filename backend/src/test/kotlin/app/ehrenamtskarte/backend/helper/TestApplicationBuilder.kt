@@ -28,7 +28,7 @@ object TestApplicationBuilder {
         cardType: BavariaCardType = BavariaCardType.BLUE,
         wantsDigitalCard: Boolean = true,
         wantsPhysicalCard: Boolean = false,
-        category: String = "Sport",
+        category: String = "sports",
         forenames: String = "John",
         surname: String = "Doe",
         givenInformationIsCorrectAndComplete: Boolean = true,

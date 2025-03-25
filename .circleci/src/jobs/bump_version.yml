@@ -12,8 +12,7 @@ docker:
   - image: cimg/node:20.18.0
 resource_class: small
 steps:
-  - checkout:
-      path: ~/project
+  - prepare_workspace
   - install_app_toolbelt
   - run:
       name: Calculate next version name
@@ -36,6 +35,6 @@ steps:
       steps:
         - notify:
             success_message: Delivery was made on branch << pipeline.git.branch >>. Make sure to merge this branch before next delivery.
-            allow-all-branches: true
+            allow_all_branches: true
   - persist_environment_variables
   - notify

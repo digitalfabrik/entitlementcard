@@ -4,10 +4,8 @@ jobs:
       prepare_delivery: true
       context:
         - deliverino
-  - check
-  - check_frontend:
-      requires:
-        - check
+
+  - check_frontend
   - build_android:
       name: build_android_bayern
       buildConfig: "bayern"
@@ -118,7 +116,6 @@ jobs:
   - pack_administration:
       requires:
         - build_administration
-  - build_martin
   - check_backend
   - build_backend:
       requires:
@@ -132,7 +129,6 @@ jobs:
         - pack_backend
   - pack_martin:
       requires:
-        - build_martin
         - bump_version
   - pack_meta:
       requires:

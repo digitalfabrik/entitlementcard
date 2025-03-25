@@ -31,7 +31,7 @@ const SuccessContent = styled.div`
 `
 
 const ApplyController = (): React.ReactElement | null => {
-  const { t } = useTranslation('application')
+  const { t } = useTranslation('applicationForms')
   const [formSubmitted, setFormSubmitted] = useState<boolean>(false)
   const { enqueueSnackbar } = useSnackbar()
   const { status, state, setState } = useVersionedLocallyStoredState(
@@ -41,7 +41,7 @@ const ApplyController = (): React.ReactElement | null => {
   )
   const [addEakApplication, { loading: loadingSubmit }] = useAddEakApplicationMutation({
     onError: error => {
-      const { title } = getMessageFromApolloError(error, t)
+      const { title } = getMessageFromApolloError(error)
       enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: ({ result }) => {
@@ -56,7 +56,7 @@ const ApplyController = (): React.ReactElement | null => {
   const regionsQuery = useGetRegionsQuery({
     variables: { project: projectId },
   })
-  const regionsQueryResult = getQueryResult(regionsQuery, t)
+  const regionsQueryResult = getQueryResult(regionsQuery)
   const arrayBufferManagerInitialized = useInitializeGlobalArrayBuffersManager()
   const getArrayBufferKeys = useMemo(
     () => (status === 'loading' ? null : () => ApplicationForm.getArrayBufferKeys(state)),
@@ -100,7 +100,7 @@ const ApplyController = (): React.ReactElement | null => {
         {formSubmitted ? (
           <SuccessContent>
             <Typography>
-              <Trans i18nKey='application:submitSuccessText' />
+              <Trans i18nKey='applicationForms:submitSuccessText' />
             </Typography>
           </SuccessContent>
         ) : (

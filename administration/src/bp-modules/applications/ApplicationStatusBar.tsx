@@ -62,7 +62,7 @@ const ApplicationStatusBar = ({
   barItems,
   setActiveBarItem,
 }: ApplicationStatusBarProps): ReactElement => {
-  const { t } = useTranslation('applications')
+  const { t } = useTranslation('applicationsOverview')
   return (
     <Container>
       <Title>{t('status')}</Title>
