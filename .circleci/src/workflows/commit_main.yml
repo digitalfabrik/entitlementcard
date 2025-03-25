@@ -23,9 +23,6 @@ jobs:
       requires:
         - build_backend
         - bump_version
-  - check_health_backend:
-      requires:
-        - pack_backend
   - pack_martin:
       requires:
         - bump_version
