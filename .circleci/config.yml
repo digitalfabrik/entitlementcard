@@ -820,13 +820,6 @@ jobs:
                             echo "Uploading: " ~/attached_workspace/debs/<< parameters.bundle >>/*.deb
                             sftp -b - ci@entitlementcard.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r ~/attached_workspace/debs/<< parameters.bundle >>/*.deb"
                         name: SFTP upload package
-                    - run:
-                        command: |
-                            mkdir -p ~/.ssh
-                            echo ${APT_FINGERPRINT_PRODUCTION} >> ~/.ssh/known_hosts
-                            echo "Uploading: " ~/attached_workspace/debs/<< parameters.bundle >>/*.deb
-                            sftp -b - ci@entitlementcard.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r ~/attached_workspace/debs/<< parameters.bundle >>/*.deb"
-                        name: SFTP upload package
             - unless:
                 condition: << parameters.production >>
                 steps:
