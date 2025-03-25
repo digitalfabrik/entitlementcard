@@ -1,33 +1,26 @@
 when: << pipeline.parameters.run_promotion_all >>
 jobs:
   - promote_android:
-      name: promote_bayern_android
-      build_config_name: bayern
-      context:
-        - mattermost
-        - tuerantuer-google-play
-  - promote_android:
-      name: promote_nuernberg_android
-      build_config_name: nuernberg
+      matrix:
+        parameters:
+          build_config_name: [bayern, nuernberg]
       context:
         - mattermost
         - tuerantuer-google-play
   - promote_ios:
-      name: promote_bayern_ios
-      build_config_name: bayern
-      context:
-        - mattermost
-        - tuerantuer-apple
-  - promote_ios:
-      name: promote_nuernberg_ios
-      build_config_name: nuernberg
+      matrix:
+        parameters:
+          build_config_name: [bayern, nuernberg]
       context:
         - mattermost
         - tuerantuer-apple
   - promote_to_server:
-      name: promote_backend_administration
       context:
         - credentials-ehrenamtskarte
   - promote_github_release:
       context:
         - deliverino
+      requires:
+        - promote_android
+        - promote_ios
+        - promote_to_server
