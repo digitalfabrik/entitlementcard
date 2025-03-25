@@ -7,37 +7,40 @@ when:
 jobs:
   - bump_version:
       prepare_delivery: false
-  - check_administration
-  - check_backend
-  - build_administration:
-      requires:
-        - check_administration
-        - bump_version
-  - pack_administration:
-      requires:
-        - build_administration
-  - build_backend:
-      requires:
-        - check_backend
-  - pack_backend:
-      requires:
-        - build_backend
-        - bump_version
   - pack_martin:
       requires:
         - bump_version
   - pack_meta:
       requires:
         - bump_version
+
+  - check_administration
+  - build_administration:
+      requires:
+        - bump_version
+        - check_administration
+  - pack_administration:
+      requires:
+        - build_administration
+
+  - check_backend
+  - build_backend:
+      requires:
+        - check_backend
+  - pack_backend:
+      requires:
+        - bump_version
+        - build_backend
+
   - check_frontend
   - build_android:
       build_config: bayern
-      requires:
-        - bump_version
-        - check_frontend
       context:
         - credentials-repo
         - credentials-ehrenamtskarte
+      requires:
+        - bump_version
+        - check_frontend
   - build_ios:
       build_config: bayern
       requires:

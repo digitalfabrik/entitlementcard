@@ -828,9 +828,6 @@ orbs:
     browser-tools: circleci/browser-tools@1.4.1
     gradle: circleci/gradle@2.2.0
 parameters:
-    run_build_frontend:
-        default: false
-        type: boolean
     run_commit:
         default: true
         type: boolean
@@ -868,28 +865,6 @@ parameters:
 shell: /bin/bash -eo pipefail
 version: 2.1
 workflows:
-    build_frontend:
-        jobs:
-            - check_frontend
-            - build_android:
-                matrix:
-                    parameters:
-                        build_config:
-                            - bayern
-                            - nuernberg
-                            - koblenz
-                requires:
-                    - check_frontend
-            - build_ios:
-                matrix:
-                    parameters:
-                        build_config:
-                            - bayern
-                            - nuernberg
-                            - koblenz
-                requires:
-                    - check_frontend
-        when: << pipeline.parameters.run_build_frontend >>
     commit:
         jobs:
             - check_backend
@@ -906,28 +881,28 @@ workflows:
         jobs:
             - bump_version:
                 prepare_delivery: false
-            - check_administration
-            - check_backend
-            - build_administration:
-                requires:
-                    - check_administration
-                    - bump_version
-            - pack_administration:
-                requires:
-                    - build_administration
-            - build_backend:
-                requires:
-                    - check_backend
-            - pack_backend:
-                requires:
-                    - build_backend
-                    - bump_version
             - pack_martin:
                 requires:
                     - bump_version
             - pack_meta:
                 requires:
                     - bump_version
+            - check_administration
+            - build_administration:
+                requires:
+                    - bump_version
+                    - check_administration
+            - pack_administration:
+                requires:
+                    - build_administration
+            - check_backend
+            - build_backend:
+                requires:
+                    - check_backend
+            - pack_backend:
+                requires:
+                    - bump_version
+                    - build_backend
             - check_frontend
             - build_android:
                 build_config: bayern
@@ -1025,8 +1000,8 @@ workflows:
             - check_administration
             - build_administration:
                 requires:
-                    - check_administration
                     - bump_version
+                    - check_administration
             - pack_administration:
                 requires:
                     - build_administration
@@ -1036,8 +1011,8 @@ workflows:
                     - check_backend
             - pack_backend:
                 requires:
-                    - build_backend
                     - bump_version
+                    - build_backend
             - deliver_server:
                 context:
                     - credentials-ehrenamtskarte
@@ -1072,8 +1047,8 @@ workflows:
             - check_administration
             - build_administration:
                 requires:
-                    - check_administration
                     - bump_version
+                    - check_administration
             - pack_administration:
                 requires:
                     - build_administration
@@ -1083,8 +1058,8 @@ workflows:
                     - check_backend
             - pack_backend:
                 requires:
-                    - build_backend
                     - bump_version
+                    - build_backend
             - deliver_server:
                 context:
                     - credentials-ehrenamtskarte
@@ -1185,8 +1160,8 @@ workflows:
             - check_administration
             - build_administration:
                 requires:
-                    - check_administration
                     - bump_version
+                    - check_administration
             - pack_administration:
                 requires:
                     - build_administration
@@ -1196,8 +1171,8 @@ workflows:
                     - check_backend
             - pack_backend:
                 requires:
-                    - build_backend
                     - bump_version
+                    - build_backend
             - deliver_server:
                 context:
                     - credentials-ehrenamtskarte
