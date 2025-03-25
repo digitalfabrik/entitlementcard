@@ -41,7 +41,7 @@ commands:
                     echo 'export PATH=~/.npm-global/bin:"$PATH"' >> "$BASH_ENV"
                 name: Setup npm global
             - run:
-                command: npm install --unsafe-perm -g https://github.com/digitalfabrik/app-toolbelt/archive/refs/heads/main.tar.gz
+                command: npm install --unsafe-perm -g https://github.com/digitalfabrik/app-toolbelt/archive/refs/tags/v0.2.tar.gz
                 name: Install app-toolbelt
     install_fastlane:
         description: Restores and saves fastlane cache of the current directory.

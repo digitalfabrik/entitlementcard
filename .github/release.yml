@@ -1,0 +1,15 @@
+changelog:
+  categories:
+    - title: Testable features, fixes, enhancements 🎉
+      labels:
+        - '*'
+      exclude:
+        labels:
+        - not-testable
+        - Nuernberg
+    - title: Testable features for nuernberg 🎉
+      labels:
+        - Nuernberg
+    - title: Not testable for end users 🛠
+      labels:
+        - not-testable
