@@ -962,7 +962,6 @@ workflows:
                             - bayern
                             - nuernberg
                             - koblenz
-                name: build_android_<< matrix.build_config >>
                 requires:
                     - bump_version
                     - check_frontend
@@ -977,7 +976,7 @@ workflows:
                             - koblenz
                 production_delivery: false
                 requires:
-                    - build_android_<< matrix.build_config >>
+                    - build_android-<< matrix.build_config >>
             - build_ios:
                 context:
                     - tuerantuer-apple
@@ -988,7 +987,6 @@ workflows:
                             - bayern
                             - nuernberg
                             - koblenz
-                name: build_ios_<< matrix.build_config >>
                 requires:
                     - bump_version
                     - check_frontend
@@ -1003,7 +1001,7 @@ workflows:
                             - koblenz
                 production_delivery: false
                 requires:
-                    - build_ios_<< matrix.build_config >>
+                    - build_ios-<< matrix.build_config >>
             - pack_martin:
                 requires:
                     - bump_version
@@ -1107,7 +1105,6 @@ workflows:
                             - bayern
                             - nuernberg
                             - koblenz
-                name: build_android_<< matrix.build_config >>
                 requires:
                     - bump_version
                     - check_frontend
@@ -1122,7 +1119,7 @@ workflows:
                             - koblenz
                 production_delivery: false
                 requires:
-                    - build_android_<< matrix.build_config >>
+                    - build_android-<< matrix.build_config >>
             - build_ios:
                 context:
                     - tuerantuer-apple
@@ -1133,7 +1130,6 @@ workflows:
                             - bayern
                             - nuernberg
                             - koblenz
-                name: build_ios_<< matrix.build_config >>
                 requires:
                     - bump_version
                     - check_frontend
@@ -1148,7 +1144,7 @@ workflows:
                             - koblenz
                 production_delivery: false
                 requires:
-                    - build_ios_<< matrix.build_config >>
+                    - build_ios-<< matrix.build_config >>
             - notify_release:
                 context:
                     - deliverino
@@ -1219,7 +1215,6 @@ workflows:
                         build_config:
                             - bayern
                             - nuernberg
-                name: build_android_<< matrix.build_config >>
                 requires:
                     - bump_version
                     - check_frontend
@@ -1233,7 +1228,7 @@ workflows:
                             - nuernberg
                 production_delivery: true
                 requires:
-                    - build_android_<< matrix.build_config >>
+                    - build_android-<< matrix.build_config >>
             - build_ios:
                 context:
                     - tuerantuer-apple
@@ -1243,7 +1238,6 @@ workflows:
                         build_config:
                             - bayern
                             - nuernberg
-                name: build_ios_<< matrix.build_config >>
                 requires:
                     - bump_version
                     - check_frontend
@@ -1257,7 +1251,7 @@ workflows:
                             - nuernberg
                 production_delivery: true
                 requires:
-                    - build_ios_<< matrix.build_config >>
+                    - build_ios-<< matrix.build_config >>
             - notify_release:
                 context:
                     - deliverino
