@@ -824,9 +824,6 @@ jobs:
                     curl https://webhook.entitlementcard.tuerantuer.org/hooks/install-backend-admin-$EAK_WEBHOOK
                 name: Install administration & backend packages via webhook
             - notify
-orbs:
-    browser-tools: circleci/browser-tools@1.4.1
-    gradle: circleci/gradle@2.2.0
 parameters:
     run_commit:
         default: true
