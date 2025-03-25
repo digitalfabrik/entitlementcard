@@ -6,7 +6,7 @@ parameters:
     type: boolean
   bundle:
     description: Defines which bundle should be deployed to the server.
-    enum: ["administration" , "backend"]
+    enum: [administration , backend]
     type: enum
 steps:
   - prepare_workspace

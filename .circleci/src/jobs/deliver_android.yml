@@ -1,6 +1,6 @@
 # Deliver the app to the Google Play Store.
 parameters:
-  buildConfig:
+  build_config:
     type: enum
     enum: [bayern, nuernberg, koblenz]
   production_delivery:
@@ -18,5 +18,5 @@ steps:
   - install_fastlane
   - run:
       name: '[FL] Play Store Upload'
-      command: bundle exec fastlane android upload_to_playstore build_config_name:<< parameters.buildConfig >> production_delivery:"<< parameters.production_delivery >>" version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE}
+      command: bundle exec fastlane android upload_to_playstore build_config_name:<< parameters.build_config >> production_delivery:"<< parameters.production_delivery >>" version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE}
   - notify
