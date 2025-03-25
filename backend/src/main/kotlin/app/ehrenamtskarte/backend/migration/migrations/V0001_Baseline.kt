@@ -4,7 +4,7 @@ import app.ehrenamtskarte.backend.migration.Migration
 import app.ehrenamtskarte.backend.migration.Statement
 
 @Suppress("ClassName")
-internal class V0001_Baseline() : Migration() {
+internal class V0001_Baseline : Migration() {
     override val migrate: Statement = {
         exec(
             """

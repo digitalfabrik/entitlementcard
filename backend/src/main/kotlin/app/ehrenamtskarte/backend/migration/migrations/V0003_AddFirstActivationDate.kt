@@ -8,7 +8,7 @@ import app.ehrenamtskarte.backend.migration.Statement
  * Set current_timestamp for firstActivationDate for existing active cards since we have no firstActivationDate for them.
  */
 @Suppress("ClassName")
-internal class V0003_AddFirstActivationDate() : Migration() {
+internal class V0003_AddFirstActivationDate : Migration() {
     override val migrate: Statement = {
         exec(
             """

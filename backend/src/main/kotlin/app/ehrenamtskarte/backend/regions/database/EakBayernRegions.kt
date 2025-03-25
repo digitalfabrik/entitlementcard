@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:max-line-length", "MaxLineLength")
+
 package app.ehrenamtskarte.backend.regions.database
 
 // TODO #538: The regions should be dynamically fetched instead of being hardcoded here

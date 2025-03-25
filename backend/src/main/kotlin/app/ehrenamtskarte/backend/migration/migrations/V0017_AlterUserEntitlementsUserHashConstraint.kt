@@ -7,7 +7,7 @@ import app.ehrenamtskarte.backend.migration.Statement
  * Alter unique constraint for the userHash column in the userentitlements table
  */
 @Suppress("ClassName")
-internal class V0017_AlterUserEntitlementsUserHashConstraint() : Migration() {
+internal class V0017_AlterUserEntitlementsUserHashConstraint : Migration() {
     override val migrate: Statement = {
         exec(
             """

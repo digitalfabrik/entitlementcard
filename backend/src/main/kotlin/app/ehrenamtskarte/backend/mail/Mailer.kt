@@ -20,7 +20,8 @@ import java.nio.charset.StandardCharsets
 object Mailer {
     private fun EmailBody.finalInformationParagraph(projectConfig: ProjectConfig) {
         p {
-            +"Bitte beachten Sie, dass dies eine automatisierte Nachricht ist. Antworten auf diese E-Mail werden nicht gelesen."
+            +"Bitte beachten Sie, dass dies eine automatisierte Nachricht ist. "
+            +"Antworten auf diese E-Mail werden nicht gelesen."
             br()
             br()
             +"Mit freundlichen Grüßen"
@@ -184,10 +185,12 @@ object Mailer {
             p { +"Guten Tag ${applicationVerification.contactName}" }
             p {
                 +"Sie wurden gebeten, die Angaben eines Antrags auf eine Ehrenamtskarte zu bestätigen. "
-                +"Die Antragstellerin oder der Antragsteller hat Sie als Kontaktperson der Organisation ${applicationVerification.organizationName} angegeben."
+                +"Die Antragstellerin oder der Antragsteller hat Sie als Kontaktperson der Organisation "
+                +"${applicationVerification.organizationName} angegeben."
             }
             p {
-                +"Sie können den Antrag unter folgendem Link einsehen und die Angaben bestätigen oder ihnen widersprechen:"
+                +"Sie können den Antrag unter folgendem Link einsehen und die Angaben bestätigen oder "
+                +"ihnen widersprechen:"
                 br()
                 link(verificationLink)
             }
@@ -215,18 +218,14 @@ object Mailer {
             p { +"Guten Tag ${personalData.forenames.shortText} ${personalData.surname.shortText}," }
             p { +"Ihr Antrag zur Bayerischen Ehrenamtskarte wurde erfolgreich eingereicht." }
             p {
-                +"Sie können den Status Ihres Antrags unter folgendem Link einsehen. Falls gewünscht, können Sie Ihren Antrag dort auch zurückziehen:"
+                +"Sie können den Status Ihres Antrags unter folgendem Link einsehen. "
+                +"Falls gewünscht, können Sie Ihren Antrag dort auch zurückziehen:"
                 br()
-                link(
-                    URL(
-                        "${projectConfig.administrationBaseUrl}/antrag-einsehen/${urlEncode(
-                            accessKey,
-                        )}",
-                    ),
-                )
+                link(URL("${projectConfig.administrationBaseUrl}/antrag-einsehen/${urlEncode(accessKey)}"))
             }
             p {
-                +"Bei Rückfragen zum Bearbeitungsstand wenden Sie sich bitte an Ihr örtliches Landratsamt bzw. die Verwaltung Ihrer kreisfreien Stadt."
+                +"Bei Rückfragen zum Bearbeitungsstand wenden Sie sich bitte an Ihr örtliches "
+                +"Landratsamt bzw. die Verwaltung Ihrer kreisfreien Stadt."
             }
             finalInformationParagraph(projectConfig)
         }
@@ -251,21 +250,18 @@ object Mailer {
         val message = emailBody {
             p { +"Sehr geehrte/r $contactPerson," }
             p {
-                +"Ihr Antrag auf die Bayerische Ehrenamtskarte für ${personalData.forenames.shortText} ${personalData.surname.shortText} wurde erfolgreich eingereicht."
+                +"Ihr Antrag auf die Bayerische Ehrenamtskarte für ${personalData.forenames.shortText} "
+                +"${personalData.surname.shortText} wurde erfolgreich eingereicht."
             }
             p {
-                +"Den aktuellen Status Ihres Antrags können sie jederzeit unter folgendem Link einsehen. Dort haben Sie auch die Möglichkeit, Ihren Antrag bei Bedarf zurückzuziehen:"
+                +"Den aktuellen Status Ihres Antrags können sie jederzeit unter folgendem Link einsehen. "
+                +"Dort haben Sie auch die Möglichkeit, Ihren Antrag bei Bedarf zurückzuziehen:"
                 br()
-                link(
-                    URL(
-                        "${projectConfig.administrationBaseUrl}/antrag-einsehen/${urlEncode(
-                            accessKey,
-                        )}",
-                    ),
-                )
+                link(URL("${projectConfig.administrationBaseUrl}/antrag-einsehen/${urlEncode(accessKey)}"))
             }
             p {
-                +"Bei Rückfragen wenden Sie sich bitte direkt an Ihr zuständiges Landratsamt oder die Verwaltung Ihrer kreisfreien Stadt."
+                +"Bei Rückfragen wenden Sie sich bitte direkt an Ihr zuständiges Landratsamt oder die "
+                +"Verwaltung Ihrer kreisfreien Stadt."
             }
             finalInformationParagraph(projectConfig)
         }
@@ -296,7 +292,8 @@ object Mailer {
                 br()
                 link(
                     URL(
-                        "${projectConfig.administrationBaseUrl}/reset-password?email=$encodedRecipient&token=$encodedResetKey",
+                        "${projectConfig.administrationBaseUrl}/reset-password?" +
+                            "email=$encodedRecipient&token=$encodedResetKey",
                     ),
                 )
             }
@@ -321,13 +318,8 @@ object Mailer {
         recipient: String,
     ) {
         val passwordResetLink =
-            "${projectConfig.administrationBaseUrl}/reset-password?email=${urlEncode(
-                recipient,
-            )}&token=${
-                urlEncode(
-                    passwordResetKey,
-                )
-            }"
+            "${projectConfig.administrationBaseUrl}/reset-password?" +
+                "email=${urlEncode(recipient)}&token=${urlEncode(passwordResetKey)}"
         val subject = "Kontoerstellung"
         val message = emailBody {
             p { +"Guten Tag," }
@@ -363,10 +355,12 @@ object Mailer {
             p { +"Guten Tag $recipientName," }
             p {
                 +"Ihr Antrag zur Bayerischen Ehrenamtskarte wurde bewilligt. "
-                +"Die Bayerische Ehrenamtskarte wird Ihnen in den nächsten Tagen zusammen mit einer Anleitung zur Einrichtung der digitalen Karte zugestellt."
+                +"Die Bayerische Ehrenamtskarte wird Ihnen in den nächsten Tagen "
+                +"zusammen mit einer Anleitung zur Einrichtung der digitalen Karte zugestellt."
             }
             p {
-                +"Falls Sie die App „Ehrenamtskarte Bayern“ auf Ihrem Smartphone bereits installiert haben, können Sie in vielen Fällen die digitale Karte auch vorab aktivieren. "
+                +"Falls Sie die App „Ehrenamtskarte Bayern“ auf Ihrem Smartphone bereits "
+                +"installiert haben, können Sie in vielen Fällen die digitale Karte auch vorab aktivieren. "
                 +"Klicken Sie dazu von Ihrem Smartphone, auf dem die App installiert ist, auf den folgenden Link:"
                 br()
                 link(URL(deepLink))

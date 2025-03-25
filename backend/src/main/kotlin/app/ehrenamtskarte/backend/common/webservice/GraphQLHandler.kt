@@ -40,7 +40,8 @@ class GraphQLHandler(
         storesGraphQlParams stitch cardsGraphQlParams
             stitch applicationGraphQlParams stitch regionsGraphQlParams stitch authGraphQlParams stitch
             freinetGraphQlParams,
-    private val regionIdentifierByPostalCode: List<Pair<String, String>> = PostalCodesLoader.loadRegionIdentifierByPostalCodeMap(),
+    private val regionIdentifierByPostalCode: List<Pair<String, String>> =
+        PostalCodesLoader.loadRegionIdentifierByPostalCodeMap(),
 ) {
     val config: SchemaGeneratorConfig = graphQLParams.config
         .plus(SchemaGeneratorConfig(listOf("app.ehrenamtskarte.backend.common.webservice.schema")))

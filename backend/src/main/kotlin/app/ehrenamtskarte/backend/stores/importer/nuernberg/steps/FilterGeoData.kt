@@ -14,7 +14,8 @@ class FilterGeoData(config: ImportConfig, private val logger: Logger) :
             input.filter {
                 if (it.longitude == null || it.latitude == null) {
                     logger.error(
-                        "'${it.name} (${it.streetWithHouseNumber}, ${it.postalCode} ${it.location})' couldn't get proper geoInfo",
+                        "'${it.name} (${it.streetWithHouseNumber}, ${it.postalCode} ${it.location})' " +
+                            "couldn't get proper geoInfo",
                     )
                     return@filter false
                 }
