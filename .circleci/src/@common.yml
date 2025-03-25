@@ -20,9 +20,6 @@ parameters:
   run_delivery_production_backend_administration:
     default: false
     type: boolean
-  run_build_frontend:
-    default: false
-    type: boolean
   run_delivery_beta_frontend:
     default: false
     type: boolean
