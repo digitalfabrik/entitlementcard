@@ -4,12 +4,12 @@ jobs:
   - build_android:
       matrix:
         parameters:
-          buildConfig: [bayern, nuernberg, koblenz]
+          build_config: [bayern, nuernberg, koblenz]
       requires:
         - check_frontend
   - build_ios:
       matrix:
         parameters:
-          buildConfig: [bayern, nuernberg, koblenz]
+          build_config: [bayern, nuernberg, koblenz]
       requires:
         - check_frontend
