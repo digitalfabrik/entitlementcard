@@ -8,7 +8,6 @@ jobs:
   - check_frontend
 
   - build_android:
-      name: build_android_<< matrix.build_config >>
       matrix:
         parameters:
           build_config: [bayern, nuernberg]
@@ -26,10 +25,9 @@ jobs:
       context:
         - tuerantuer-google-play
       requires:
-        - build_android_<< matrix.build_config >>
+        - build_android-<< matrix.build_config >>
 
   - build_ios:
-      name: build_ios_<< matrix.build_config >>
       matrix:
         parameters:
           build_config: [bayern, nuernberg]
@@ -47,7 +45,7 @@ jobs:
       context:
         - tuerantuer-apple
       requires:
-        - build_ios_<< matrix.build_config >>
+        - build_ios-<< matrix.build_config >>
 
   - notify_release:
       production_delivery: true
