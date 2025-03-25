@@ -3,14 +3,14 @@ jobs:
   - promote_android:
       matrix:
         parameters:
-          build_config_name: [bayern, nuernberg]
+          build_config: [bayern, nuernberg]
       context:
         - mattermost
         - tuerantuer-google-play
   - promote_ios:
       matrix:
         parameters:
-          build_config_name: [bayern, nuernberg]
+          build_config: [bayern, nuernberg]
       context:
         - mattermost
         - tuerantuer-apple

@@ -264,7 +264,7 @@ jobs:
             FASTLANE_SKIP_UPDATE_CHECK: true
             GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx2048m" -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2
         parameters:
-            buildConfig:
+            build_config:
                 description: Name of the build config to use
                 enum:
                     - bayern
@@ -287,7 +287,7 @@ jobs:
                 name: '[FL] Prepare Android Keystore'
                 working_directory: android
             - run:
-                command: bundle exec fastlane android build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} build_config_name:<< parameters.buildConfig >>
+                command: bundle exec fastlane android build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} build_config_name:<< parameters.build_config >>
                 name: '[FL] Build'
                 working_directory: android
             - save_cache:
@@ -297,13 +297,13 @@ jobs:
                     - ~/.gradle/wrapper
             - run:
                 command: |
-                    mv build/app/outputs/bundle/<< parameters.buildConfig >>Release/app-<< parameters.buildConfig >>-release.aab ~/attached_workspace/<< parameters.buildConfig >>.aab
-                    mv build/app/outputs/apk/<< parameters.buildConfig >>/release/app-<< parameters.buildConfig >>-release.apk ~/attached_workspace/<< parameters.buildConfig >>.apk
+                    mv build/app/outputs/bundle/<< parameters.build_config >>Release/app-<< parameters.build_config >>-release.aab ~/attached_workspace/<< parameters.build_config >>.aab
+                    mv build/app/outputs/apk/<< parameters.build_config >>/release/app-<< parameters.build_config >>-release.apk ~/attached_workspace/<< parameters.build_config >>.apk
                 name: Move artifacts
             - persist_to_workspace:
                 paths:
-                    - << parameters.buildConfig >>.aab
-                    - << parameters.buildConfig >>.apk
+                    - << parameters.build_config >>.aab
+                    - << parameters.build_config >>.apk
                 root: ~/attached_workspace
             - store_artifacts:
                 path: ~/attached_workspace
@@ -348,7 +348,7 @@ jobs:
         macos:
             xcode: 15.2.0
         parameters:
-            buildConfig:
+            build_config:
                 description: Name of the build config to use
                 enum:
                     - bayern
@@ -367,14 +367,14 @@ jobs:
                 directory: ios
             - install_pods
             - run:
-                command: bundle exec fastlane ios build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} build_config_name:<< parameters.buildConfig >>
+                command: bundle exec fastlane ios build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} build_config_name:<< parameters.build_config >>
                 name: '[FL] Build'
                 working_directory: ios
             - store_artifacts:
-                path: ~/<< parameters.buildConfig >>.ipa
+                path: ~/<< parameters.build_config >>.ipa
             - persist_to_workspace:
                 paths:
-                    - << parameters.buildConfig >>.ipa
+                    - << parameters.build_config >>.ipa
                 root: ~/
             - notify
         working_directory: ~/project/frontend
@@ -524,7 +524,7 @@ jobs:
         environment:
             FASTLANE_SKIP_UPDATE_CHECK: true
         parameters:
-            buildConfig:
+            build_config:
                 enum:
                     - bayern
                     - nuernberg
@@ -539,7 +539,7 @@ jobs:
             - install_app_toolbelt
             - install_fastlane
             - run:
-                command: bundle exec fastlane android upload_to_playstore build_config_name:<< parameters.buildConfig >> production_delivery:"<< parameters.production_delivery >>" version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE}
+                command: bundle exec fastlane android upload_to_playstore build_config_name:<< parameters.build_config >> production_delivery:"<< parameters.production_delivery >>" version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE}
                 name: '[FL] Play Store Upload'
             - notify
         working_directory: ~/project/frontend/android
@@ -549,7 +549,7 @@ jobs:
         macos:
             xcode: 15.2.0
         parameters:
-            buildConfig:
+            build_config:
                 enum:
                     - bayern
                     - nuernberg
@@ -566,13 +566,13 @@ jobs:
                 condition: << parameters.production_delivery >>
                 steps:
                     - run:
-                        command: bundle exec fastlane ios appstoreconnect_upload build_config_name:<< parameters.buildConfig >> ipa_path:attached_workspace/<< parameters.buildConfig >>.ipa version_name:${NEW_VERSION_NAME}
+                        command: bundle exec fastlane ios appstoreconnect_upload build_config_name:<< parameters.build_config >> ipa_path:attached_workspace/<< parameters.build_config >>.ipa version_name:${NEW_VERSION_NAME}
                         name: '[FL] App Store Connect Upload'
             - unless:
                 condition: << parameters.production_delivery >>
                 steps:
                     - run:
-                        command: bundle exec fastlane ios upload_to_test_flight build_config_name:<< parameters.buildConfig >> ipa_path:attached_workspace/<< parameters.buildConfig >>.ipa
+                        command: bundle exec fastlane ios upload_to_test_flight build_config_name:<< parameters.build_config >> ipa_path:attached_workspace/<< parameters.build_config >>.ipa
                         name: '[FL] TestFlight Upload'
             - notify
         working_directory: ~/project/frontend/ios
@@ -727,7 +727,7 @@ jobs:
         environment:
             FASTLANE_SKIP_UPDATE_CHECK: true
         parameters:
-            build_config_name:
+            build_config:
                 default: bayern
                 enum:
                     - bayern
@@ -739,7 +739,7 @@ jobs:
             - install_app_toolbelt
             - install_fastlane
             - run:
-                command: bundle exec fastlane android playstore_promote build_config_name:<< parameters.build_config_name >>
+                command: bundle exec fastlane android playstore_promote build_config_name:<< parameters.build_config >>
                 name: '[FL] Play Store Promotion'
             - notify
         working_directory: ~/project/frontend/android
@@ -758,7 +758,7 @@ jobs:
         macos:
             xcode: 15.2.0
         parameters:
-            build_config_name:
+            build_config:
                 default: bayern
                 enum:
                     - bayern
@@ -769,7 +769,7 @@ jobs:
             - install_app_toolbelt
             - install_fastlane
             - run:
-                command: bundle exec fastlane ios appstoreconnect_promote build_config_name:<< parameters.build_config_name >>
+                command: bundle exec fastlane ios appstoreconnect_promote build_config_name:<< parameters.build_config >>
                 name: '[FL] Appstore Connect Store Promotion'
             - notify
         working_directory: ~/project/frontend/ios
@@ -881,7 +881,7 @@ workflows:
             - build_android:
                 matrix:
                     parameters:
-                        buildConfig:
+                        build_config:
                             - bayern
                             - nuernberg
                             - koblenz
@@ -890,7 +890,7 @@ workflows:
             - build_ios:
                 matrix:
                     parameters:
-                        buildConfig:
+                        build_config:
                             - bayern
                             - nuernberg
                             - koblenz
@@ -937,20 +937,18 @@ workflows:
                     - bump_version
             - check_frontend
             - build_android:
-                buildConfig: bayern
+                build_config: bayern
                 context:
                     - credentials-repo
                     - credentials-ehrenamtskarte
-                name: build_android_bayern
                 requires:
                     - bump_version
                     - check_frontend
             - build_ios:
-                buildConfig: bayern
+                build_config: bayern
                 context:
                     - tuerantuer-apple
                     - fastlane-match
-                name: build_ios_bayern
                 requires:
                     - bump_version
                     - check_frontend
@@ -979,11 +977,11 @@ workflows:
                     - credentials-ehrenamtskarte
                 matrix:
                     parameters:
-                        buildConfig:
+                        build_config:
                             - bayern
                             - nuernberg
                             - koblenz
-                name: build_android_<< matrix.buildConfig >>
+                name: build_android_<< matrix.build_config >>
                 requires:
                     - bump_version
                     - check_frontend
@@ -992,24 +990,24 @@ workflows:
                     - tuerantuer-google-play
                 matrix:
                     parameters:
-                        buildConfig:
+                        build_config:
                             - bayern
                             - nuernberg
                             - koblenz
                 production_delivery: false
                 requires:
-                    - build_android_<< matrix.buildConfig >>
+                    - build_android_<< matrix.build_config >>
             - build_ios:
                 context:
                     - tuerantuer-apple
                     - fastlane-match
                 matrix:
                     parameters:
-                        buildConfig:
+                        build_config:
                             - bayern
                             - nuernberg
                             - koblenz
-                name: build_ios_<< matrix.buildConfig >>
+                name: build_ios_<< matrix.build_config >>
                 requires:
                     - bump_version
                     - check_frontend
@@ -1018,13 +1016,13 @@ workflows:
                     - tuerantuer-apple
                 matrix:
                     parameters:
-                        buildConfig:
+                        build_config:
                             - bayern
                             - nuernberg
                             - koblenz
                 production_delivery: false
                 requires:
-                    - build_ios_<< matrix.buildConfig >>
+                    - build_ios_<< matrix.build_config >>
             - pack_martin:
                 requires:
                     - bump_version
@@ -1146,11 +1144,11 @@ workflows:
                     - credentials-ehrenamtskarte
                 matrix:
                     parameters:
-                        buildConfig:
+                        build_config:
                             - bayern
                             - nuernberg
                             - koblenz
-                name: build_android_<< matrix.buildConfig >>
+                name: build_android_<< matrix.build_config >>
                 requires:
                     - bump_version
                     - check_frontend
@@ -1159,24 +1157,24 @@ workflows:
                     - tuerantuer-google-play
                 matrix:
                     parameters:
-                        buildConfig:
+                        build_config:
                             - bayern
                             - nuernberg
                             - koblenz
                 production_delivery: false
                 requires:
-                    - build_android_<< matrix.buildConfig >>
+                    - build_android_<< matrix.build_config >>
             - build_ios:
                 context:
                     - tuerantuer-apple
                     - fastlane-match
                 matrix:
                     parameters:
-                        buildConfig:
+                        build_config:
                             - bayern
                             - nuernberg
                             - koblenz
-                name: build_ios_<< matrix.buildConfig >>
+                name: build_ios_<< matrix.build_config >>
                 requires:
                     - bump_version
                     - check_frontend
@@ -1185,13 +1183,13 @@ workflows:
                     - tuerantuer-apple
                 matrix:
                     parameters:
-                        buildConfig:
+                        build_config:
                             - bayern
                             - nuernberg
                             - koblenz
                 production_delivery: false
                 requires:
-                    - build_ios_<< matrix.buildConfig >>
+                    - build_ios_<< matrix.build_config >>
             - notify_release:
                 context:
                     - deliverino
@@ -1270,10 +1268,10 @@ workflows:
                     - credentials-ehrenamtskarte
                 matrix:
                     parameters:
-                        buildConfig:
+                        build_config:
                             - bayern
                             - nuernberg
-                name: build_android_<< matrix.buildConfig >>
+                name: build_android_<< matrix.build_config >>
                 requires:
                     - bump_version
                     - check_frontend
@@ -1282,22 +1280,22 @@ workflows:
                     - tuerantuer-google-play
                 matrix:
                     parameters:
-                        buildConfig:
+                        build_config:
                             - bayern
                             - nuernberg
                 production_delivery: true
                 requires:
-                    - build_android_<< matrix.buildConfig >>
+                    - build_android_<< matrix.build_config >>
             - build_ios:
                 context:
                     - tuerantuer-apple
                     - fastlane-match
                 matrix:
                     parameters:
-                        buildConfig:
+                        build_config:
                             - bayern
                             - nuernberg
-                name: build_ios_<< matrix.buildConfig >>
+                name: build_ios_<< matrix.build_config >>
                 requires:
                     - bump_version
                     - check_frontend
@@ -1306,12 +1304,12 @@ workflows:
                     - tuerantuer-apple
                 matrix:
                     parameters:
-                        buildConfig:
+                        build_config:
                             - bayern
                             - nuernberg
                 production_delivery: true
                 requires:
-                    - build_ios_<< matrix.buildConfig >>
+                    - build_ios_<< matrix.build_config >>
             - notify_release:
                 context:
                     - deliverino
@@ -1328,7 +1326,7 @@ workflows:
                     - tuerantuer-google-play
                 matrix:
                     parameters:
-                        build_config_name:
+                        build_config:
                             - bayern
                             - nuernberg
             - promote_ios:
@@ -1337,7 +1335,7 @@ workflows:
                     - tuerantuer-apple
                 matrix:
                     parameters:
-                        build_config_name:
+                        build_config:
                             - bayern
                             - nuernberg
             - promote_to_server:
@@ -1365,7 +1363,7 @@ workflows:
                     - tuerantuer-google-play
                 matrix:
                     parameters:
-                        build_config_name:
+                        build_config:
                             - bayern
                             - nuernberg
             - promote_ios:
@@ -1374,7 +1372,7 @@ workflows:
                     - tuerantuer-apple
                 matrix:
                     parameters:
-                        build_config_name:
+                        build_config:
                             - bayern
                             - nuernberg
         when: << pipeline.parameters.run_promotion_frontend >>

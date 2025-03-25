@@ -31,8 +31,7 @@ jobs:
         - bump_version
   - check_frontend
   - build_android:
-      name: build_android_bayern
-      buildConfig: "bayern"
+      build_config: bayern
       requires:
         - bump_version
         - check_frontend
@@ -40,8 +39,7 @@ jobs:
         - credentials-repo
         - credentials-ehrenamtskarte
   - build_ios:
-      name: build_ios_bayern
-      buildConfig: "bayern"
+      build_config: bayern
       requires:
         - bump_version
         - check_frontend

@@ -8,10 +8,10 @@ jobs:
   - check_frontend
 
   - build_android:
-      name: build_android_<< matrix.buildConfig >>
+      name: build_android_<< matrix.build_config >>
       matrix:
         parameters:
-          buildConfig: [bayern, nuernberg]
+          build_config: [bayern, nuernberg]
       context:
         - credentials-repo
         - credentials-ehrenamtskarte
@@ -22,17 +22,17 @@ jobs:
       production_delivery: true
       matrix:
         parameters:
-          buildConfig: [bayern, nuernberg]
+          build_config: [bayern, nuernberg]
       context:
         - tuerantuer-google-play
       requires:
-        - build_android_<< matrix.buildConfig >>
+        - build_android_<< matrix.build_config >>
 
   - build_ios:
-      name: build_ios_<< matrix.buildConfig >>
+      name: build_ios_<< matrix.build_config >>
       matrix:
         parameters:
-          buildConfig: [bayern, nuernberg]
+          build_config: [bayern, nuernberg]
       context:
         - tuerantuer-apple
         - fastlane-match
@@ -43,11 +43,11 @@ jobs:
       production_delivery: true
       matrix:
         parameters:
-          buildConfig: [bayern, nuernberg]
+          build_config: [bayern, nuernberg]
       context:
         - tuerantuer-apple
       requires:
-        - build_ios_<< matrix.buildConfig >>
+        - build_ios_<< matrix.build_config >>
 
   - notify_release:
       production_delivery: true
