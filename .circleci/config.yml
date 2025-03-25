@@ -886,33 +886,21 @@ workflows:
         jobs:
             - check_frontend
             - build_android:
-                buildConfig: bayern
-                name: frontend-android-build-bayern
+                matrix:
+                    parameters:
+                        buildConfig:
+                            - bayern
+                            - nuernberg
+                            - koblenz
                 requires:
                     - check_frontend
             - build_ios:
-                buildConfig: bayern
-                name: frontend-ios-build-bayern
-                requires:
-                    - check_frontend
-            - build_android:
-                buildConfig: nuernberg
-                name: frontend-android-build-nuernberg
-                requires:
-                    - check_frontend
-            - build_ios:
-                buildConfig: nuernberg
-                name: frontend-ios-build-nuernberg
-                requires:
-                    - check_frontend
-            - build_android:
-                buildConfig: koblenz
-                name: frontend-android-build-koblenz
-                requires:
-                    - check_frontend
-            - build_ios:
-                buildConfig: koblenz
-                name: frontend-ios-build-koblenz
+                matrix:
+                    parameters:
+                        buildConfig:
+                            - bayern
+                            - nuernberg
+                            - koblenz
                 requires:
                     - check_frontend
         when: << pipeline.parameters.run_build_frontend >>
@@ -993,107 +981,63 @@ workflows:
                 prepare_delivery: true
             - check_frontend
             - build_android:
-                buildConfig: bayern
                 context:
                     - credentials-repo
                     - credentials-ehrenamtskarte
-                name: build_android_bayern
+                matrix:
+                    parameters:
+                        buildConfig:
+                            - bayern
+                            - nuernberg
+                            - koblenz
+                name: build_android_<< matrix.buildConfig >>
                 requires:
                     - bump_version
                     - check_frontend
             - deliver_android:
-                buildConfig: bayern
                 context:
                     - tuerantuer-google-play
-                name: deliver_android_bayern
+                matrix:
+                    parameters:
+                        buildConfig:
+                            - bayern
+                            - nuernberg
+                            - koblenz
                 production_delivery: false
                 requires:
-                    - build_android_bayern
-            - build_android:
-                buildConfig: nuernberg
-                context:
-                    - credentials-repo
-                    - credentials-ehrenamtskarte
-                name: build_android_nuernberg
-                requires:
-                    - bump_version
-                    - check_frontend
-            - deliver_android:
-                buildConfig: nuernberg
-                context:
-                    - tuerantuer-google-play
-                name: deliver_android_nuernberg
-                production_delivery: false
-                requires:
-                    - build_android_nuernberg
-            - build_android:
-                buildConfig: koblenz
-                context:
-                    - credentials-repo
-                    - credentials-ehrenamtskarte
-                name: build_android_koblenz
-                requires:
-                    - bump_version
-                    - check_frontend
-            - deliver_android:
-                buildConfig: koblenz
-                context:
-                    - tuerantuer-google-play
-                name: deliver_android_koblenz
-                production_delivery: false
-                requires:
-                    - build_android_koblenz
+                    - build_android_<< matrix.buildConfig >>
             - build_ios:
-                buildConfig: bayern
                 context:
                     - tuerantuer-apple
                     - fastlane-match
-                name: build_ios_bayern
+                matrix:
+                    parameters:
+                        buildConfig:
+                            - bayern
+                            - nuernberg
+                            - koblenz
+                name: build_ios_<< matrix.buildConfig >>
                 requires:
                     - bump_version
                     - check_frontend
             - deliver_ios:
-                buildConfig: bayern
                 context:
                     - tuerantuer-apple
-                name: deliver_ios_bayern
+                matrix:
+                    parameters:
+                        buildConfig:
+                            - bayern
+                            - nuernberg
+                            - koblenz
                 production_delivery: false
                 requires:
-                    - build_ios_bayern
-            - build_ios:
-                buildConfig: nuernberg
-                context:
-                    - tuerantuer-apple
-                    - fastlane-match
-                name: build_ios_nuernberg
+                    - build_ios_<< matrix.buildConfig >>
+            - pack_martin:
                 requires:
                     - bump_version
-                    - check_frontend
-            - deliver_ios:
-                buildConfig: nuernberg
-                context:
-                    - tuerantuer-apple
-                name: deliver_ios_nuernberg
-                production_delivery: false
-                requires:
-                    - build_ios_nuernberg
-            - build_ios:
-                buildConfig: koblenz
-                context:
-                    - tuerantuer-apple
-                    - fastlane-match
-                name: build_ios_koblenz
+            - pack_meta:
                 requires:
                     - bump_version
-                    - check_frontend
-            - deliver_ios:
-                buildConfig: koblenz
-                context:
-                    - tuerantuer-apple
-                name: deliver_ios_koblenz
-                production_delivery: false
-                requires:
-                    - build_ios_koblenz
             - check_administration
             - build_administration:
                 requires:
@@ -1110,28 +1054,14 @@ workflows:
                 requires:
                     - build_backend
                     - bump_version
-            - pack_martin:
-                requires:
-                    - bump_version
-            - pack_meta:
-                requires:
-                    - bump_version
             - upload_packages_to_server:
-                bundle: administration
                 context:
                     - credentials-ehrenamtskarte
-                name: upload_administration_packages_to_server_staging
-                production: false
-                requires:
-                    - pack_administration
-                    - pack_backend
-                    - pack_martin
-                    - pack_meta
-            - upload_packages_to_server:
-                bundle: backend
-                context:
-                    - credentials-ehrenamtskarte
-                name: upload_backend_packages_to_server_staging
+                matrix:
+                    parameters:
+                        bundle:
+                            - administration
+                            - backend
                 production: false
                 requires:
                     - pack_administration
@@ -1141,23 +1071,17 @@ workflows:
             - install_packages_to_server:
                 context:
                     - credentials-ehrenamtskarte
-                name: install_packages_to_server_staging
                 production: false
                 requires:
-                    - upload_administration_packages_to_server_staging
-                    - upload_backend_packages_to_server_staging
+                    - upload_packages_to_server
             - notify_release:
                 context:
                     - deliverino
                 production_delivery: false
                 requires:
-                    - deliver_android_bayern
-                    - deliver_android_nuernberg
-                    - deliver_android_koblenz
-                    - deliver_ios_bayern
-                    - deliver_ios_nuernberg
-                    - deliver_ios_koblenz
-                    - install_packages_to_server_staging
+                    - deliver_android
+                    - deliver_ios
+                    - install_packages_to_server
         when: << pipeline.parameters.run_delivery_beta_all >>
     delivery_beta_backend_administration:
         jobs:
@@ -1166,6 +1090,12 @@ workflows:
                     - deliverino
                 platforms: web
                 prepare_delivery: true
+            - pack_martin:
+                requires:
+                    - bump_version
+            - pack_meta:
+                requires:
+                    - bump_version
             - check_administration
             - build_administration:
                 requires:
@@ -1182,28 +1112,14 @@ workflows:
                 requires:
                     - build_backend
                     - bump_version
-            - pack_martin:
-                requires:
-                    - bump_version
-            - pack_meta:
-                requires:
-                    - bump_version
             - upload_packages_to_server:
-                bundle: administration
                 context:
                     - credentials-ehrenamtskarte
-                name: upload_administration_packages_to_server_staging
-                production: false
-                requires:
-                    - pack_administration
-                    - pack_backend
-                    - pack_martin
-                    - pack_meta
-            - upload_packages_to_server:
-                bundle: backend
-                context:
-                    - credentials-ehrenamtskarte
-                name: upload_backend_packages_to_server_staging
+                matrix:
+                    parameters:
+                        bundle:
+                            - administration
+                            - backend
                 production: false
                 requires:
                     - pack_administration
@@ -1213,17 +1129,15 @@ workflows:
             - install_packages_to_server:
                 context:
                     - credentials-ehrenamtskarte
-                name: install_packages_to_server_staging
                 production: false
                 requires:
-                    - upload_administration_packages_to_server_staging
-                    - upload_backend_packages_to_server_staging
+                    - upload_packages_to_server
             - notify_release:
                 context:
                     - deliverino
                 production_delivery: false
                 requires:
-                    - install_packages_to_server_staging
+                    - install_packages_to_server
         when: << pipeline.parameters.run_delivery_beta_backend_administration >>
     delivery_beta_frontend:
         jobs:
@@ -1234,118 +1148,64 @@ workflows:
                 prepare_delivery: true
             - check_frontend
             - build_android:
-                buildConfig: bayern
                 context:
                     - credentials-repo
                     - credentials-ehrenamtskarte
-                name: build_android_bayern
+                matrix:
+                    parameters:
+                        buildConfig:
+                            - bayern
+                            - nuernberg
+                            - koblenz
+                name: build_android_<< matrix.buildConfig >>
                 requires:
                     - bump_version
                     - check_frontend
             - deliver_android:
-                buildConfig: bayern
                 context:
                     - tuerantuer-google-play
-                name: deliver_android_bayern
+                matrix:
+                    parameters:
+                        buildConfig:
+                            - bayern
+                            - nuernberg
+                            - koblenz
                 production_delivery: false
                 requires:
-                    - build_android_bayern
-            - build_android:
-                buildConfig: nuernberg
-                context:
-                    - credentials-repo
-                    - credentials-ehrenamtskarte
-                name: build_android_nuernberg
-                requires:
-                    - bump_version
-                    - check_frontend
-            - deliver_android:
-                buildConfig: nuernberg
-                context:
-                    - tuerantuer-google-play
-                name: deliver_android_nuernberg
-                production_delivery: false
-                requires:
-                    - build_android_nuernberg
-            - build_android:
-                buildConfig: koblenz
-                context:
-                    - credentials-repo
-                    - credentials-ehrenamtskarte
-                name: build_android_koblenz
-                requires:
-                    - bump_version
-                    - check_frontend
-            - deliver_android:
-                buildConfig: koblenz
-                context:
-                    - tuerantuer-google-play
-                name: deliver_android_koblenz
-                production_delivery: false
-                requires:
-                    - build_android_koblenz
+                    - build_android_<< matrix.buildConfig >>
             - build_ios:
-                buildConfig: bayern
                 context:
                     - tuerantuer-apple
                     - fastlane-match
-                name: build_ios_bayern
+                matrix:
+                    parameters:
+                        buildConfig:
+                            - bayern
+                            - nuernberg
+                            - koblenz
+                name: build_ios_<< matrix.buildConfig >>
                 requires:
                     - bump_version
                     - check_frontend
             - deliver_ios:
-                buildConfig: bayern
                 context:
                     - tuerantuer-apple
-                name: deliver_ios_bayern
+                matrix:
+                    parameters:
+                        buildConfig:
+                            - bayern
+                            - nuernberg
+                            - koblenz
                 production_delivery: false
                 requires:
-                    - build_ios_bayern
-            - build_ios:
-                buildConfig: nuernberg
-                context:
-                    - tuerantuer-apple
-                    - fastlane-match
-                name: build_ios_nuernberg
-                requires:
-                    - bump_version
-                    - check_frontend
-            - deliver_ios:
-                buildConfig: nuernberg
-                context:
-                    - tuerantuer-apple
-                name: deliver_ios_nuernberg
-                production_delivery: false
-                requires:
-                    - build_ios_nuernberg
-            - build_ios:
-                buildConfig: koblenz
-                context:
-                    - tuerantuer-apple
-                    - fastlane-match
-                name: build_ios_koblenz
-                requires:
-                    - bump_version
-                    - check_frontend
-            - deliver_ios:
-                buildConfig: koblenz
-                context:
-                    - tuerantuer-apple
-                name: deliver_ios_koblenz
-                production_delivery: false
-                requires:
-                    - build_ios_koblenz
+                    - build_ios_<< matrix.buildConfig >>
             - notify_release:
                 context:
                     - deliverino
                 production_delivery: false
                 requires:
-                    - deliver_android_bayern
-                    - deliver_android_nuernberg
-                    - deliver_android_koblenz
-                    - deliver_ios_bayern
-                    - deliver_ios_nuernberg
-                    - deliver_ios_koblenz
+                    - deliver_android
+                    - deliver_ios
         when: << pipeline.parameters.run_delivery_beta_frontend >>
     delivery_production_backend_administration:
         jobs:
@@ -1354,6 +1214,12 @@ workflows:
                     - deliverino
                 platforms: web
                 prepare_delivery: true
+            - pack_martin:
+                requires:
+                    - bump_version
+            - pack_meta:
+                requires:
+                    - bump_version
             - check_administration
             - build_administration:
                 requires:
@@ -1370,28 +1236,14 @@ workflows:
                 requires:
                     - build_backend
                     - bump_version
-            - pack_martin:
-                requires:
-                    - bump_version
-            - pack_meta:
-                requires:
-                    - bump_version
             - upload_packages_to_server:
-                bundle: administration
                 context:
                     - credentials-ehrenamtskarte
-                name: upload_administration_packages_to_server_production
-                production: true
-                requires:
-                    - pack_administration
-                    - pack_backend
-                    - pack_martin
-                    - pack_meta
-            - upload_packages_to_server:
-                bundle: backend
-                context:
-                    - credentials-ehrenamtskarte
-                name: upload_backend_packages_to_server_production
+                matrix:
+                    parameters:
+                        bundle:
+                            - administration
+                            - backend
                 production: true
                 requires:
                     - pack_administration
@@ -1401,17 +1253,15 @@ workflows:
             - install_packages_to_server:
                 context:
                     - credentials-ehrenamtskarte
-                name: install_packages_to_server_production
                 production: true
                 requires:
-                    - upload_administration_packages_to_server_production
-                    - upload_backend_packages_to_server_production
+                    - upload_packages_to_server
             - notify_release:
                 context:
                     - deliverino
                 production_delivery: true
                 requires:
-                    - install_packages_to_server_production
+                    - install_packages_to_server
         when: << pipeline.parameters.run_delivery_production_backend_administration >>
     delivery_production_frontend:
         jobs:
@@ -1422,149 +1272,117 @@ workflows:
                 prepare_delivery: true
             - check_frontend
             - build_android:
-                buildConfig: bayern
                 context:
                     - credentials-repo
                     - credentials-ehrenamtskarte
-                name: build_android_bayern
+                matrix:
+                    parameters:
+                        buildConfig:
+                            - bayern
+                            - nuernberg
+                name: build_android_<< matrix.buildConfig >>
                 requires:
                     - bump_version
                     - check_frontend
             - deliver_android:
-                buildConfig: bayern
                 context:
                     - tuerantuer-google-play
-                name: deliver_android_bayern
+                matrix:
+                    parameters:
+                        buildConfig:
+                            - bayern
+                            - nuernberg
                 production_delivery: true
                 requires:
-                    - build_android_bayern
-            - build_android:
-                buildConfig: nuernberg
-                context:
-                    - credentials-repo
-                    - credentials-ehrenamtskarte
-                name: build_android_nuernberg
-                requires:
-                    - bump_version
-                    - check_frontend
-            - deliver_android:
-                buildConfig: nuernberg
-                context:
-                    - tuerantuer-google-play
-                name: deliver_android_nuernberg
-                production_delivery: true
-                requires:
-                    - build_android_nuernberg
+                    - build_android_<< matrix.buildConfig >>
             - build_ios:
-                buildConfig: bayern
                 context:
                     - tuerantuer-apple
                     - fastlane-match
-                name: build_ios_bayern
+                matrix:
+                    parameters:
+                        buildConfig:
+                            - bayern
+                            - nuernberg
+                name: build_ios_<< matrix.buildConfig >>
                 requires:
                     - bump_version
                     - check_frontend
             - deliver_ios:
-                buildConfig: bayern
                 context:
                     - tuerantuer-apple
-                name: deliver_ios_bayern
+                matrix:
+                    parameters:
+                        buildConfig:
+                            - bayern
+                            - nuernberg
                 production_delivery: true
                 requires:
-                    - build_ios_bayern
-            - build_ios:
-                buildConfig: nuernberg
-                context:
-                    - tuerantuer-apple
-                    - fastlane-match
-                name: build_ios_nuernberg
-                requires:
-                    - bump_version
-                    - check_frontend
-            - deliver_ios:
-                buildConfig: nuernberg
-                context:
-                    - tuerantuer-apple
-                name: deliver_ios_nuernberg
-                production_delivery: true
-                requires:
-                    - build_ios_nuernberg
+                    - build_ios_<< matrix.buildConfig >>
             - notify_release:
                 context:
                     - deliverino
                 production_delivery: true
                 requires:
-                    - deliver_ios_bayern
-                    - deliver_ios_nuernberg
-                    - deliver_android_bayern
-                    - deliver_android_nuernberg
+                    - deliver_android
+                    - deliver_ios
         when: << pipeline.parameters.run_delivery_production_frontend >>
     promotion_all:
         jobs:
             - promote_android:
-                build_config_name: bayern
                 context:
                     - mattermost
                     - tuerantuer-google-play
-                name: promote_bayern_android
-            - promote_android:
-                build_config_name: nuernberg
-                context:
-                    - mattermost
-                    - tuerantuer-google-play
-                name: promote_nuernberg_android
+                matrix:
+                    parameters:
+                        build_config_name:
+                            - bayern
+                            - nuernberg
             - promote_ios:
-                build_config_name: bayern
                 context:
                     - mattermost
                     - tuerantuer-apple
-                name: promote_bayern_ios
-            - promote_ios:
-                build_config_name: nuernberg
-                context:
-                    - mattermost
-                    - tuerantuer-apple
-                name: promote_nuernberg_ios
+                matrix:
+                    parameters:
+                        build_config_name:
+                            - bayern
+                            - nuernberg
             - promote_to_server:
                 context:
                     - credentials-ehrenamtskarte
-                name: promote_backend_administration
             - promote_github_release:
                 context:
                     - deliverino
+                requires:
+                    - promote_android
+                    - promote_ios
+                    - promote_to_server
         when: << pipeline.parameters.run_promotion_all >>
     promotion_backend_administration:
         jobs:
             - promote_to_server:
                 context:
                     - credentials-ehrenamtskarte
-                name: promote_backend_administration
         when: << pipeline.parameters.run_promotion_backend_administration >>
     promotion_frontend:
         jobs:
             - promote_android:
-                build_config_name: bayern
                 context:
                     - mattermost
                     - tuerantuer-google-play
-                name: promote_bayern_android
-            - promote_android:
-                build_config_name: nuernberg
-                context:
-                    - mattermost
-                    - tuerantuer-google-play
-                name: promote_nuernberg_android
+                matrix:
+                    parameters:
+                        build_config_name:
+                            - bayern
+                            - nuernberg
             - promote_ios:
-                build_config_name: bayern
                 context:
                     - mattermost
                     - tuerantuer-apple
-                name: promote_bayern_ios
-            - promote_ios:
-                build_config_name: nuernberg
-                context:
-                    - mattermost
-                    - tuerantuer-apple
-                name: promote_nuernberg_ios
+                matrix:
+                    parameters:
+                        build_config_name:
+                            - bayern
+                            - nuernberg
         when: << pipeline.parameters.run_promotion_frontend >>
 

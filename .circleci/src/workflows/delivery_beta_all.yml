@@ -7,59 +7,31 @@ jobs:
 
   - check_frontend
   - build_android:
-      name: build_android_bayern
-      buildConfig: "bayern"
-      requires:
-        - bump_version
-        - check_frontend
+      name: build_android_<< matrix.buildConfig >>
+      matrix:
+        parameters:
+          buildConfig: [bayern, nuernberg, koblenz]
       context:
         - credentials-repo
         - credentials-ehrenamtskarte
-  - deliver_android:
-      name: deliver_android_bayern
-      buildConfig: "bayern"
-      context:
-        - tuerantuer-google-play
-      production_delivery: false
-      requires:
-        - build_android_bayern
-  - build_android:
-      name: build_android_nuernberg
-      buildConfig: "nuernberg"
       requires:
         - bump_version
         - check_frontend
-      context:
-        - credentials-repo
-        - credentials-ehrenamtskarte
   - deliver_android:
-      name: deliver_android_nuernberg
-      buildConfig: "nuernberg"
+      production_delivery: false
+      matrix:
+        parameters:
+          buildConfig: [bayern, nuernberg, koblenz]
       context:
         - tuerantuer-google-play
-      production_delivery: false
       requires:
-        - build_android_nuernberg
-  - build_android:
-      name: build_android_koblenz
-      buildConfig: "koblenz"
-      requires:
-        - bump_version
-        - check_frontend
-      context:
-        - credentials-repo
-        - credentials-ehrenamtskarte
-  - deliver_android:
-      name: deliver_android_koblenz
-      buildConfig: "koblenz"
-      context:
-        - tuerantuer-google-play
-      production_delivery: false
-      requires:
-        - build_android_koblenz
+        - build_android_<< matrix.buildConfig >>
+
   - build_ios:
-      name: build_ios_bayern
-      buildConfig: "bayern"
+      name: build_ios_<< matrix.buildConfig >>
+      matrix:
+        parameters:
+          buildConfig: [bayern, nuernberg, koblenz]
       requires:
         - bump_version
         - check_frontend
@@ -67,47 +39,22 @@ jobs:
         - tuerantuer-apple
         - fastlane-match
   - deliver_ios:
-      name: deliver_ios_bayern
-      buildConfig: bayern
+      production_delivery: false
+      matrix:
+        parameters:
+          buildConfig: [bayern, nuernberg, koblenz]
       context:
         - tuerantuer-apple
-      production_delivery: false
       requires:
-        - build_ios_bayern
-  - build_ios:
-      name: build_ios_nuernberg
-      buildConfig: "nuernberg"
+        - build_ios_<< matrix.buildConfig >>
+
+  - pack_martin:
       requires:
         - bump_version
-        - check_frontend
-      context:
-        - tuerantuer-apple
-        - fastlane-match
-  - deliver_ios:
-      name: deliver_ios_nuernberg
-      buildConfig: nuernberg
-      context:
-        - tuerantuer-apple
-      production_delivery: false
-      requires:
-        - build_ios_nuernberg
-  - build_ios:
-      name: build_ios_koblenz
-      buildConfig: "koblenz"
+  - pack_meta:
       requires:
         - bump_version
-        - check_frontend
-      context:
-        - tuerantuer-apple
-        - fastlane-match
-  - deliver_ios:
-      name: deliver_ios_koblenz
-      buildConfig: koblenz
-      context:
-        - tuerantuer-apple
-      production_delivery: false
-      requires:
-        - build_ios_koblenz
+
   - check_administration
   - build_administration:
       requires:
@@ -116,6 +63,7 @@ jobs:
   - pack_administration:
       requires:
         - build_administration
+
   - check_backend
   - build_backend:
       requires:
@@ -124,27 +72,12 @@ jobs:
       requires:
         - build_backend
         - bump_version
-  - pack_martin:
-      requires:
-        - bump_version
-  - pack_meta:
-      requires:
-        - bump_version
+
   - upload_packages_to_server:
-      name: upload_administration_packages_to_server_staging
       production: false
-      bundle: administration
-      context:
-        - credentials-ehrenamtskarte
-      requires:
-        - pack_administration
-        - pack_backend
-        - pack_martin
-        - pack_meta
-  - upload_packages_to_server:
-      name: upload_backend_packages_to_server_staging
-      production: false
-      bundle: backend
+      matrix:
+        parameters:
+          bundle: [administration, backend]
       context:
         - credentials-ehrenamtskarte
       requires:
@@ -153,22 +86,17 @@ jobs:
         - pack_martin
         - pack_meta
   - install_packages_to_server:
-      name: install_packages_to_server_staging
       production: false
       context:
         - credentials-ehrenamtskarte
       requires:
-        - upload_administration_packages_to_server_staging
-        - upload_backend_packages_to_server_staging
+        - upload_packages_to_server
+
   - notify_release:
       production_delivery: false
       context:
         - deliverino
       requires:
-        - deliver_android_bayern
-        - deliver_android_nuernberg
-        - deliver_android_koblenz
-        - deliver_ios_bayern
-        - deliver_ios_nuernberg
-        - deliver_ios_koblenz
-        - install_packages_to_server_staging
+        - deliver_android
+        - deliver_ios
+        - install_packages_to_server

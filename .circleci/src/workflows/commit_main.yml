@@ -6,7 +6,7 @@ when:
       - equal: [main, << pipeline.git.branch >>]
 jobs:
   - bump_version:
-        prepare_delivery: false
+      prepare_delivery: false
   - check_administration
   - check_backend
   - build_administration:

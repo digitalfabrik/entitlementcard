@@ -1,6 +1,5 @@
 when: << pipeline.parameters.run_promotion_backend_administration >>
 jobs:
   - promote_to_server:
-      name: promote_backend_administration
       context:
         - credentials-ehrenamtskarte
