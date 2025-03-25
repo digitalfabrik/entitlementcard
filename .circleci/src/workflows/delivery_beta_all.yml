@@ -124,9 +124,6 @@ jobs:
       requires:
         - build_backend
         - bump_version
-  - check_health_backend:
-      requires:
-        - pack_backend
   - pack_martin:
       requires:
         - bump_version
@@ -141,7 +138,7 @@ jobs:
         - credentials-ehrenamtskarte
       requires:
         - pack_administration
-        - check_health_backend
+        - pack_backend
         - pack_martin
         - pack_meta
   - upload_packages_to_server:
@@ -152,7 +149,7 @@ jobs:
         - credentials-ehrenamtskarte
       requires:
         - pack_administration
-        - check_health_backend
+        - pack_backend
         - pack_martin
         - pack_meta
   - install_packages_to_server:
