@@ -16,8 +16,8 @@ jobs:
   - check_administration
   - build_administration:
       requires:
-        - check_administration
         - bump_version
+        - check_administration
   - pack_administration:
       requires:
         - build_administration
@@ -28,8 +28,8 @@ jobs:
         - check_backend
   - pack_backend:
       requires:
-        - build_backend
         - bump_version
+        - build_backend
 
   - deliver_server:
       production: true
