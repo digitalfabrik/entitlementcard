@@ -11,7 +11,7 @@ enum class Type {
     Attachment,
     Boolean,
     Date,
-    TranslatableString
+    TranslatableString,
 }
 
 data class AttachmentView(val fileIndex: Int) {
@@ -24,17 +24,25 @@ data class AttachmentView(val fileIndex: Int) {
 data class JsonField(
     val name: String,
     val type: Type,
-    val value: Any
+    val value: Any,
 ) {
     init {
         when (type) {
             Type.String -> if (value !is String) throw InvalidJsonException("Expected String.")
             Type.Number -> if (value !is Number) throw InvalidJsonException("Expected Number.")
-            Type.Array -> if (!isListOfJsonFields(value)) throw InvalidJsonException("Expected List of JsonFields.")
-            Type.Attachment -> if (value !is AttachmentView) throw InvalidJsonException("Expected AttachmentView.")
+            Type.Array -> if (!isListOfJsonFields(value)) {
+                throw InvalidJsonException("Expected List of JsonFields.")
+            }
+            Type.Attachment -> if (value !is AttachmentView) {
+                throw InvalidJsonException("Expected AttachmentView.")
+            }
             Type.Boolean -> if (value !is Boolean) throw InvalidJsonException("Expected Boolean.")
-            Type.Date -> if (value !is String) throw InvalidJsonException("Expected String for Date.")
-            Type.TranslatableString -> if (value !is String) throw InvalidJsonException("Expected TranslatableString.")
+            Type.Date -> if (value !is String) {
+                throw InvalidJsonException("Expected String for Date.")
+            }
+            Type.TranslatableString -> if (value !is String) {
+                throw InvalidJsonException("Expected TranslatableString.")
+            }
         }
     }
 }

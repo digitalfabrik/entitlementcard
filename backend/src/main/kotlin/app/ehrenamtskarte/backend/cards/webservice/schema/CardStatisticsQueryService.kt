@@ -19,13 +19,12 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 @Suppress("unused")
 class CardStatisticsQueryService {
-
     @GraphQLDescription("Returns card statistics for project. Start and end dates are inclusive.")
     fun getCardStatisticsInProject(
         project: String,
         dateStart: String,
         dateEnd: String,
-        dfe: DataFetchingEnvironment
+        dfe: DataFetchingEnvironment,
     ): List<CardStatisticsResultModel> {
         val context = dfe.getContext<GraphQLContext>()
         val admin = context.getAdministrator()
@@ -43,7 +42,7 @@ class CardStatisticsQueryService {
                 projectId,
                 dateStringToStartOfDayInstant(dateStart, projectConfig.timezone),
                 dateStringToEndOfDayInstant(dateEnd, projectConfig.timezone),
-                null
+                null,
             )
         }
     }
@@ -54,7 +53,7 @@ class CardStatisticsQueryService {
         regionId: Int,
         dateStart: String,
         dateEnd: String,
-        dfe: DataFetchingEnvironment
+        dfe: DataFetchingEnvironment,
     ): List<CardStatisticsResultModel> {
         val context = dfe.getContext<GraphQLContext>()
         val admin = context.getAdministrator()
@@ -73,7 +72,7 @@ class CardStatisticsQueryService {
                 projectEntity.id.value,
                 dateStringToStartOfDayInstant(dateStart, projectConfig.timezone),
                 dateStringToEndOfDayInstant(dateEnd, projectConfig.timezone),
-                regionId
+                regionId,
             )
         }
     }

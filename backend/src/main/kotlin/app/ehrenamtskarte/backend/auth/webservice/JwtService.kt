@@ -32,9 +32,12 @@ object JwtService {
         return File(fileName).readText(Charsets.UTF_8)
     }
 
-    private fun verifyToken(token: String) = JWT.require(algorithm).build().verify(token).claims.let {
-        JwtPayload(it[JwtPayload::adminId.name]!!.asInt())
-    }
+    private fun verifyToken(token: String) =
+        JWT.require(algorithm)
+            .build()
+            .verify(token).claims.let {
+                JwtPayload(it[JwtPayload::adminId.name]!!.asInt())
+            }
 
     fun verifyRequest(context: Context): JwtPayload? {
         val header = context.header("Authorization") ?: return null

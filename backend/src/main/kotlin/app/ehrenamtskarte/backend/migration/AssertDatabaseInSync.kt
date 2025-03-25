@@ -20,7 +20,7 @@ class DatabaseOutOfSyncException(suggestedMigrationStatements: List<String>? = n
                     "\n--- END OF SUGGESTED MIGRATIONS"
             }
             message
-        }
+        },
     )
 
 fun assertDatabaseIsInSync() {
@@ -29,7 +29,9 @@ fun assertDatabaseIsInSync() {
     val versionDb = Migrations.getCurrentVersionOrNull()
     val versionCode = allMigrations.maxOfOrNull { it.version }
     if (versionCode != versionDb) {
-        throw DatabaseOutOfSyncException(comment = "Latest migration versions do not match: Version on DB $versionDb - Code Version $versionCode")
+        throw DatabaseOutOfSyncException(
+            comment = "Latest migration versions do not match: Version on DB $versionDb - Code Version $versionCode",
+        )
     }
 
     var outOfSyncComment: String? = null

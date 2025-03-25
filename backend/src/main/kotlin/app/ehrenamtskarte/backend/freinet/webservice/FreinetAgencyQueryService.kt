@@ -16,26 +16,35 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 @Suppress("unused")
 class FreinetAgencyQueryService {
-    @GraphQLDescription("Returns freinet agency information for a particular region. Works only for the EAK project.")
-    fun getFreinetAgencyByRegionId(dfe: DataFetchingEnvironment, regionId: Int, project: String): FreinetAgency? = transaction {
-        val context = dfe.getContext<GraphQLContext>()
-        val admin = context.getAdministrator()
-        val projectConfig = dfe.getContext<GraphQLContext>().backendConfiguration.getProjectConfig(project)
-        if (projectConfig.freinet == null) {
-            throw NotImplementedException()
-        }
-        if (!Authorizer.mayViewFreinetAgencyInformationInRegion(admin, regionId)) {
-            throw ForbiddenException()
-        }
-        ProjectEntity.find { Projects.project eq project }.firstOrNull()
-            ?: throw ProjectNotFoundException(project)
-        FreinetAgencyRepository.getFreinetAgencyByRegionId(regionId)?.let {
-            FreinetAgency(
-                agencyId = it.agencyId,
-                apiAccessKey = it.apiAccessKey,
-                agencyName = it.agencyName,
-                dataTransferActivated = it.dataTransferActivated
+    @GraphQLDescription(
+        "Returns freinet agency information for a particular region. Works only for the EAK project.",
+    )
+    fun getFreinetAgencyByRegionId(
+        dfe: DataFetchingEnvironment,
+        regionId: Int,
+        project: String,
+    ): FreinetAgency? =
+        transaction {
+            val context = dfe.getContext<GraphQLContext>()
+            val admin = context.getAdministrator()
+            val projectConfig = dfe.getContext<GraphQLContext>().backendConfiguration.getProjectConfig(
+                project,
             )
+            if (projectConfig.freinet == null) {
+                throw NotImplementedException()
+            }
+            if (!Authorizer.mayViewFreinetAgencyInformationInRegion(admin, regionId)) {
+                throw ForbiddenException()
+            }
+            ProjectEntity.find { Projects.project eq project }.firstOrNull()
+                ?: throw ProjectNotFoundException(project)
+            FreinetAgencyRepository.getFreinetAgencyByRegionId(regionId)?.let {
+                FreinetAgency(
+                    agencyId = it.agencyId,
+                    apiAccessKey = it.apiAccessKey,
+                    agencyName = it.agencyName,
+                    dataTransferActivated = it.dataTransferActivated,
+                )
+            }
         }
-    }
 }

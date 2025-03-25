@@ -8,9 +8,12 @@ import app.ehrenamtskarte.backend.stores.webservice.schema.types.Coordinates
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.PhysicalStore
 import org.jetbrains.exposed.sql.transactions.transaction
 
-val physicalStoreByStoreIdLoader = newNamedDataLoader<Int, _>("PHYSICAL_STORE_BY_STORE_ID_LOADER") { ids ->
+val physicalStoreByStoreIdLoader = newNamedDataLoader<Int, _>(
+    "PHYSICAL_STORE_BY_STORE_ID_LOADER",
+) { ids ->
     transaction {
-        PhysicalStoreEntity.find { PhysicalStores.storeId inList ids }
+        PhysicalStoreEntity
+            .find { PhysicalStores.storeId inList ids }
             .sortByKeys({ it.storeId.value }, ids)
             .map {
                 it?.let {
@@ -18,7 +21,7 @@ val physicalStoreByStoreIdLoader = newNamedDataLoader<Int, _>("PHYSICAL_STORE_BY
                         it.id.value,
                         it.storeId.value,
                         it.addressId.value,
-                        Coordinates(it.coordinates.x, it.coordinates.y)
+                        Coordinates(it.coordinates.x, it.coordinates.y),
                     )
                 }
             }

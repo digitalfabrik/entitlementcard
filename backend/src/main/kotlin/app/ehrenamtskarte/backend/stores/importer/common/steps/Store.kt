@@ -18,20 +18,25 @@ import org.slf4j.Logger
  */
 class Store(config: ImportConfig, private val logger: Logger) :
     PipelineStep<List<AcceptingStore>, Unit>(config) {
-
     override fun execute(input: List<AcceptingStore>) {
         transaction {
             val project = ProjectEntity.find { Projects.project eq config.findProject().id }.single()
             try {
                 val acceptingStoreIdsToRemove =
-                    AcceptingStores.slice(AcceptingStores.id).select { AcceptingStores.projectId eq project.id }
-                        .map { it[AcceptingStores.id].value }.toMutableSet()
+                    AcceptingStores.slice(AcceptingStores.id)
+                        .select { AcceptingStores.projectId eq project.id }
+                        .map { it[AcceptingStores.id].value }
+                        .toMutableSet()
 
                 var numStoresCreated = 0
                 var numStoresUntouched = 0
 
                 for (acceptingStore in input) {
-                    val region = getRegionFromAcceptingStore(project.id, acceptingStore.freinetId, acceptingStore.districtName)
+                    val region = getRegionFromAcceptingStore(
+                        project.id,
+                        acceptingStore.freinetId,
+                        acceptingStore.districtName,
+                    )
                     // If an exact duplicate is found in the DB, we do not recreate it and instead
                     // remove the id from `acceptingStoreIdsToRemove`.
                     val idInDb: Int? =
@@ -53,7 +58,7 @@ class Store(config: ImportConfig, private val logger: Logger) :
                         Count stores deleted:   ${acceptingStoreIdsToRemove.size}
                         Count stores created:   $numStoresCreated
                         Count stores untouched: $numStoresUntouched
-                    """.trimIndent()
+                    """.trimIndent(),
                 )
             } catch (e: Exception) {
                 logger.error("Unknown exception while storing to db", e)

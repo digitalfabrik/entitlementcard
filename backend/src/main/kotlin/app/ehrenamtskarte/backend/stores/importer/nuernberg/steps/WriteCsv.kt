@@ -24,7 +24,10 @@ class WriteCsv(config: ImportConfig) :
      * Writes a CSV file in the same format as the input CSV to the resources folder.
      * This is used to complement the input file with missing geoinformation.
      */
-    private fun writeCsvWithGeoInformation(csvStores: List<CSVAcceptingStore>, geocodedStores: List<AcceptingStore>) {
+    private fun writeCsvWithGeoInformation(
+        csvStores: List<CSVAcceptingStore>,
+        geocodedStores: List<AcceptingStore>,
+    ) {
         val writer: BufferedWriter =
             Files.newBufferedWriter(Paths.get("src/main/resources/import/nuernberg-akzeptanzstellen_geoinfo.csv"))
 
@@ -34,7 +37,7 @@ class WriteCsv(config: ImportConfig) :
 
         data class Col(
             val name: String,
-            val fromRecord: (store: Pair<CSVAcceptingStore, AcceptingStore>) -> String?
+            val fromRecord: (store: Pair<CSVAcceptingStore, AcceptingStore>) -> String?,
         )
 
         val columns = listOf(
@@ -50,11 +53,13 @@ class WriteCsv(config: ImportConfig) :
             Col("Website") { it.second.website },
             Col("RabattDE") { it.first.discountDE?.trim() },
             Col("RabattEN") { it.first.discountEN?.trim() },
-            Col("Kategorie") { it.second.categoryId.toString() }
+            Col("Kategorie") { it.second.categoryId.toString() },
         )
 
-        val printer =
-            CSVFormat.RFC4180.builder().setHeader(*columns.map { it.name }.toTypedArray()).build().print(writer)
+        val printer = CSVFormat.RFC4180.builder()
+            .setHeader(*columns.map { it.name }.toTypedArray())
+            .build()
+            .print(writer)
         csvStores.zip(geocodedStores).forEach { record ->
             printer.printRecord(*(columns.map { it.fromRecord(record) }.toTypedArray()))
         }

@@ -15,5 +15,5 @@ data class XMLAgency(
     val officialRegionalKeys: String?,
     @JsonProperty("agenturname")
     @JacksonXmlCData
-    val agencyName: String?
+    val agencyName: String?,
 )

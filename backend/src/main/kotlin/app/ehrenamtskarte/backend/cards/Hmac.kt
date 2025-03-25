@@ -7,7 +7,7 @@ object Hmac {
     fun digest(
         msg: ByteArray,
         key: ByteArray,
-        alg: String = "HmacSHA256"
+        alg: String = "HmacSHA256",
     ): ByteArray {
         val signingKey = SecretKeySpec(key, alg)
         val mac = Mac.getInstance(alg)

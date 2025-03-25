@@ -10,14 +10,13 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 @Suppress("unused")
 class ChangePasswordMutationService {
-
     @GraphQLDescription("Changes an administrator's password")
     fun changePassword(
         project: String,
         email: String,
         currentPassword: String,
         newPassword: String,
-        dfe: DataFetchingEnvironment
+        dfe: DataFetchingEnvironment,
     ): Boolean {
         val context = dfe.getContext<GraphQLContext>()
         val jwtPayload = context.enforceSignedIn()

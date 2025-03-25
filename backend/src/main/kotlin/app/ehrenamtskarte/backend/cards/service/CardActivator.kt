@@ -27,6 +27,6 @@ object CardActivator {
 
     fun verifyActivationSecret(
         rawActivationSecret: ByteArray,
-        activationSecretHash: ByteArray
+        activationSecretHash: ByteArray,
     ): Boolean = BCrypt.verifyer().verify(rawActivationSecret, activationSecretHash).verified
 }

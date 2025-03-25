@@ -17,14 +17,22 @@ import org.testcontainers.utility.DockerImageName
 open class IntegrationTest {
     companion object {
         private var postgisImage = DockerImageName.parse("postgis/postgis:13-3.0-alpine")
-        private var postgisContainer = PostgreSQLContainer(postgisImage.asCompatibleSubstituteFor("postgres"))
+        private var postgisContainer = PostgreSQLContainer(
+            postgisImage.asCompatibleSubstituteFor("postgres"),
+        )
 
         @JvmStatic
         @BeforeAll
         fun setupDatabase() {
             postgisContainer.start()
             val config = loadTestConfig()
-                .copy(postgres = PostgresConfig(postgisContainer.jdbcUrl, postgisContainer.username, postgisContainer.password))
+                .copy(
+                    postgres = PostgresConfig(
+                        postgisContainer.jdbcUrl,
+                        postgisContainer.username,
+                        postgisContainer.password,
+                    ),
+                )
             val database = Database.setupWithoutMigrationCheck(config)
             MigrationUtils.applyRequiredMigrations(database)
             Database.setupInitialData(config)

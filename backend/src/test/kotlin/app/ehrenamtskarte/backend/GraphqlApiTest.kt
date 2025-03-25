@@ -11,7 +11,6 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
 open class GraphqlApiTest : IntegrationTest() {
-
     protected val app: Javalin = Javalin.create().apply {
         val backendConfiguration = loadTestConfig()
         post("/") { ctx ->
@@ -19,7 +18,11 @@ open class GraphqlApiTest : IntegrationTest() {
         }
     }
 
-    protected fun post(client: HttpClient, mutation: String, token: String? = null): GraphqlResponse {
+    protected fun post(
+        client: HttpClient,
+        mutation: String,
+        token: String? = null,
+    ): GraphqlResponse {
         val requestBody = jacksonObjectMapper().writeValueAsString(mapOf("query" to mutation))
             .toRequestBody("application/json".toMediaType())
 

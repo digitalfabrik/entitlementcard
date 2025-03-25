@@ -10,25 +10,33 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
-val bayernProjectAdmin =
-    AdministratorEntity.find { Administrators.email eq TestAdministrators.EAK_PROJECT_ADMIN.email }.single()
-val bayernRegionAdmin =
-    AdministratorEntity.find { Administrators.email eq TestAdministrators.EAK_REGION_ADMIN.email }.single()
-val bayernRegionManager =
-    AdministratorEntity.find { Administrators.email eq TestAdministrators.EAK_REGION_MANAGER.email }.single()
-val bayernExternalUser =
-    AdministratorEntity.find { Administrators.email eq TestAdministrators.BAYERN_VEREIN_360.email }.single()
-val nuernbergProjectAdmin =
-    AdministratorEntity.find { Administrators.email eq TestAdministrators.NUERNBERG_PROJECT_ADMIN.email }.single()
-val nuernbergStoreManager =
-    AdministratorEntity.find { Administrators.email eq TestAdministrators.NUERNBERG_PROJECT_STORE_MANAGER.email }
-        .single()
-val koblenzProjectAdmin =
-    AdministratorEntity.find { Administrators.email eq TestAdministrators.KOBLENZ_PROJECT_ADMIN.email }.single()
-val koblenzRegionAdmin =
-    AdministratorEntity.find { Administrators.email eq TestAdministrators.KOBLENZ_REGION_ADMIN.email }.single()
-val koblenzRegionManager =
-    AdministratorEntity.find { Administrators.email eq TestAdministrators.KOBLENZ_REGION_MANAGER.email }.single()
+val bayernProjectAdmin = AdministratorEntity
+    .find { Administrators.email eq TestAdministrators.EAK_PROJECT_ADMIN.email }
+    .single()
+val bayernRegionAdmin = AdministratorEntity
+    .find { Administrators.email eq TestAdministrators.EAK_REGION_ADMIN.email }
+    .single()
+val bayernRegionManager = AdministratorEntity
+    .find { Administrators.email eq TestAdministrators.EAK_REGION_MANAGER.email }
+    .single()
+val bayernExternalUser = AdministratorEntity
+    .find { Administrators.email eq TestAdministrators.BAYERN_VEREIN_360.email }
+    .single()
+val nuernbergProjectAdmin = AdministratorEntity
+    .find { Administrators.email eq TestAdministrators.NUERNBERG_PROJECT_ADMIN.email }
+    .single()
+val nuernbergStoreManager = AdministratorEntity
+    .find { Administrators.email eq TestAdministrators.NUERNBERG_PROJECT_STORE_MANAGER.email }
+    .single()
+val koblenzProjectAdmin = AdministratorEntity
+    .find { Administrators.email eq TestAdministrators.KOBLENZ_PROJECT_ADMIN.email }
+    .single()
+val koblenzRegionAdmin = AdministratorEntity
+    .find { Administrators.email eq TestAdministrators.KOBLENZ_REGION_ADMIN.email }
+    .single()
+val koblenzRegionManager = AdministratorEntity
+    .find { Administrators.email eq TestAdministrators.KOBLENZ_REGION_MANAGER.email }
+    .single()
 val bayernId = bayernProjectAdmin.projectId.value
 val koblenzId = koblenzProjectAdmin.projectId.value
 val nuernbergId = nuernbergProjectAdmin.projectId.value
@@ -40,7 +48,6 @@ val koblenzRegionId = TestAdministrators.KOBLENZ_REGION_ADMIN.regionId!!
 private fun AdministratorEntity.region() = RegionEntity.findById(this.regionId!!)!!
 
 internal class AuthorizerTest : IntegrationTest() {
-
     @Test
     fun testMayCreateCardInRegion() {
         transaction {
@@ -234,11 +241,23 @@ internal class AuthorizerTest : IntegrationTest() {
     @Test
     fun testMayCreateUser() {
         transaction {
-            assertEquals(Authorizer.mayCreateUser(bayernProjectAdmin, bayernId, Role.PROJECT_ADMIN, null), true)
+            assertEquals(
+                Authorizer.mayCreateUser(bayernProjectAdmin, bayernId, Role.PROJECT_ADMIN, null),
+                true,
+            )
             assertEquals(Authorizer.mayCreateUser(bayernProjectAdmin, bayernId, Role.REGION_ADMIN, bayernRegion), true)
-            assertEquals(Authorizer.mayCreateUser(bayernProjectAdmin, bayernId, Role.REGION_MANAGER, bayernRegion), true)
-            assertEquals(Authorizer.mayCreateUser(bayernProjectAdmin, bayernId, Role.EXTERNAL_VERIFIED_API_USER, null), true)
-            assertEquals(Authorizer.mayCreateUser(bayernProjectAdmin, koblenzId, Role.REGION_ADMIN, bayernRegion), false)
+            assertEquals(
+                Authorizer.mayCreateUser(bayernProjectAdmin, bayernId, Role.REGION_MANAGER, bayernRegion),
+                true,
+            )
+            assertEquals(
+                Authorizer.mayCreateUser(bayernProjectAdmin, bayernId, Role.EXTERNAL_VERIFIED_API_USER, null),
+                true,
+            )
+            assertEquals(
+                Authorizer.mayCreateUser(bayernProjectAdmin, koblenzId, Role.REGION_ADMIN, bayernRegion),
+                false,
+            )
             assertEquals(Authorizer.mayCreateUser(bayernProjectAdmin, bayernId, Role.NO_RIGHTS, bayernRegion), false)
 
             assertEquals(Authorizer.mayCreateUser(bayernRegionAdmin, bayernId, Role.PROJECT_ADMIN, null), false)
@@ -246,65 +265,293 @@ internal class AuthorizerTest : IntegrationTest() {
             assertEquals(Authorizer.mayCreateUser(bayernRegionAdmin, bayernId, Role.REGION_ADMIN, null), false)
             assertEquals(Authorizer.mayCreateUser(bayernRegionAdmin, bayernId, Role.REGION_MANAGER, bayernRegion), true)
             assertEquals(Authorizer.mayCreateUser(bayernRegionAdmin, bayernId, Role.REGION_MANAGER, null), false)
-            assertEquals(Authorizer.mayCreateUser(bayernRegionAdmin, bayernId, Role.EXTERNAL_VERIFIED_API_USER, null), false)
+            assertEquals(
+                Authorizer.mayCreateUser(bayernRegionAdmin, bayernId, Role.EXTERNAL_VERIFIED_API_USER, null),
+                false,
+            )
             assertEquals(Authorizer.mayCreateUser(bayernRegionAdmin, koblenzId, Role.REGION_ADMIN, bayernRegion), false)
             assertEquals(Authorizer.mayCreateUser(bayernRegionAdmin, bayernId, Role.NO_RIGHTS, bayernRegion), false)
 
-            assertEquals(Authorizer.mayCreateUser(bayernRegionManager, bayernId, Role.REGION_MANAGER, bayernRegion), false)
-            assertEquals(Authorizer.mayCreateUser(bayernRegionManager, bayernId, Role.REGION_MANAGER, bayernRegion), false)
-            assertEquals(Authorizer.mayCreateUser(bayernExternalUser, bayernId, Role.REGION_MANAGER, bayernRegion), false)
+            assertEquals(
+                Authorizer.mayCreateUser(bayernRegionManager, bayernId, Role.REGION_MANAGER, bayernRegion),
+                false,
+            )
+            assertEquals(
+                Authorizer.mayCreateUser(bayernRegionManager, bayernId, Role.REGION_MANAGER, bayernRegion),
+                false,
+            )
+            assertEquals(
+                Authorizer.mayCreateUser(bayernExternalUser, bayernId, Role.REGION_MANAGER, bayernRegion),
+                false,
+            )
 
             assertEquals(Authorizer.mayCreateUser(koblenzProjectAdmin, koblenzId, Role.PROJECT_ADMIN, null), true)
-            assertEquals(Authorizer.mayCreateUser(koblenzProjectAdmin, koblenzId, Role.REGION_ADMIN, koblenzRegion), true)
-            assertEquals(Authorizer.mayCreateUser(koblenzProjectAdmin, koblenzId, Role.REGION_MANAGER, koblenzRegion), true)
+            assertEquals(
+                Authorizer.mayCreateUser(koblenzProjectAdmin, koblenzId, Role.REGION_ADMIN, koblenzRegion),
+                true,
+            )
+            assertEquals(
+                Authorizer.mayCreateUser(koblenzProjectAdmin, koblenzId, Role.REGION_MANAGER, koblenzRegion),
+                true,
+            )
             assertEquals(Authorizer.mayCreateUser(koblenzProjectAdmin, nuernbergId, Role.PROJECT_ADMIN, null), false)
             assertEquals(Authorizer.mayCreateUser(koblenzProjectAdmin, koblenzId, Role.NO_RIGHTS, null), false)
-            assertEquals(Authorizer.mayCreateUser(koblenzProjectAdmin, koblenzId, Role.EXTERNAL_VERIFIED_API_USER, null), false)
+            assertEquals(
+                Authorizer.mayCreateUser(koblenzProjectAdmin, koblenzId, Role.EXTERNAL_VERIFIED_API_USER, null),
+                false,
+            )
 
             assertEquals(Authorizer.mayCreateUser(nuernbergProjectAdmin, nuernbergId, Role.PROJECT_ADMIN, null), true)
             assertEquals(Authorizer.mayCreateUser(nuernbergProjectAdmin, koblenzId, Role.PROJECT_ADMIN, null), false)
             assertEquals(Authorizer.mayCreateUser(nuernbergProjectAdmin, nuernbergId, Role.NO_RIGHTS, null), false)
-            assertEquals(Authorizer.mayCreateUser(nuernbergProjectAdmin, nuernbergId, Role.EXTERNAL_VERIFIED_API_USER, null), false)
+            assertEquals(
+                Authorizer.mayCreateUser(nuernbergProjectAdmin, nuernbergId, Role.EXTERNAL_VERIFIED_API_USER, null),
+                false,
+            )
         }
     }
 
     @Test
     fun testMayEditUser() {
         transaction {
-            assertEquals(Authorizer.mayEditUser(bayernProjectAdmin, bayernRegionAdmin, bayernId, Role.PROJECT_ADMIN, null), true)
-            assertEquals(Authorizer.mayEditUser(bayernProjectAdmin, bayernProjectAdmin, bayernId, Role.REGION_ADMIN, bayernRegion), true)
-            assertEquals(Authorizer.mayEditUser(bayernProjectAdmin, bayernProjectAdmin, bayernId, Role.REGION_MANAGER, bayernRegion), true)
-            assertEquals(Authorizer.mayEditUser(bayernProjectAdmin, bayernProjectAdmin, bayernId, Role.EXTERNAL_VERIFIED_API_USER, null), true)
-            assertEquals(Authorizer.mayEditUser(bayernProjectAdmin, bayernProjectAdmin, koblenzId, Role.REGION_ADMIN, bayernRegion), false)
-            assertEquals(Authorizer.mayEditUser(bayernProjectAdmin, koblenzProjectAdmin, koblenzId, Role.REGION_ADMIN, bayernRegion), false)
-            assertEquals(Authorizer.mayEditUser(bayernProjectAdmin, bayernProjectAdmin, bayernId, Role.NO_RIGHTS, bayernRegion), false)
-            assertEquals(Authorizer.mayEditUser(bayernProjectAdmin, bayernProjectAdmin, bayernId, Role.NO_RIGHTS, bayernRegion), false)
+            assertEquals(
+                Authorizer.mayEditUser(bayernProjectAdmin, bayernRegionAdmin, bayernId, Role.PROJECT_ADMIN, null),
+                true,
+            )
+            assertEquals(
+                Authorizer.mayEditUser(
+                    bayernProjectAdmin,
+                    bayernProjectAdmin,
+                    bayernId,
+                    Role.REGION_ADMIN,
+                    bayernRegion,
+                ),
+                true,
+            )
+            assertEquals(
+                Authorizer.mayEditUser(
+                    bayernProjectAdmin,
+                    bayernProjectAdmin,
+                    bayernId,
+                    Role.REGION_MANAGER,
+                    bayernRegion,
+                ),
+                true,
+            )
+            assertEquals(
+                Authorizer.mayEditUser(
+                    bayernProjectAdmin,
+                    bayernProjectAdmin,
+                    bayernId,
+                    Role.EXTERNAL_VERIFIED_API_USER,
+                    null,
+                ),
+                true,
+            )
+            assertEquals(
+                Authorizer.mayEditUser(
+                    bayernProjectAdmin,
+                    bayernProjectAdmin,
+                    koblenzId,
+                    Role.REGION_ADMIN,
+                    bayernRegion,
+                ),
+                false,
+            )
+            assertEquals(
+                Authorizer.mayEditUser(
+                    bayernProjectAdmin,
+                    koblenzProjectAdmin,
+                    koblenzId,
+                    Role.REGION_ADMIN,
+                    bayernRegion,
+                ),
+                false,
+            )
+            assertEquals(
+                Authorizer.mayEditUser(bayernProjectAdmin, bayernProjectAdmin, bayernId, Role.NO_RIGHTS, bayernRegion),
+                false,
+            )
+            assertEquals(
+                Authorizer.mayEditUser(bayernProjectAdmin, bayernProjectAdmin, bayernId, Role.NO_RIGHTS, bayernRegion),
+                false,
+            )
 
-            assertEquals(Authorizer.mayEditUser(bayernRegionAdmin, bayernRegionManager, bayernId, Role.PROJECT_ADMIN, null), false)
-            assertEquals(Authorizer.mayEditUser(bayernRegionAdmin, bayernRegionManager, bayernId, Role.REGION_ADMIN, bayernRegion), true)
-            assertEquals(Authorizer.mayEditUser(bayernRegionAdmin, bayernRegionAdmin, bayernId, Role.REGION_MANAGER, bayernRegion), true)
-            assertEquals(Authorizer.mayEditUser(bayernRegionAdmin, bayernProjectAdmin, koblenzId, Role.REGION_ADMIN, bayernRegion), false)
-            assertEquals(Authorizer.mayEditUser(bayernRegionAdmin, koblenzProjectAdmin, koblenzId, Role.REGION_ADMIN, bayernRegion), false)
-            assertEquals(Authorizer.mayEditUser(bayernRegionAdmin, bayernProjectAdmin, bayernId, Role.NO_RIGHTS, bayernRegion), false)
-            assertEquals(Authorizer.mayEditUser(bayernRegionAdmin, bayernProjectAdmin, bayernId, Role.NO_RIGHTS, bayernRegion), false)
+            assertEquals(
+                Authorizer.mayEditUser(bayernRegionAdmin, bayernRegionManager, bayernId, Role.PROJECT_ADMIN, null),
+                false,
+            )
+            assertEquals(
+                Authorizer.mayEditUser(
+                    bayernRegionAdmin,
+                    bayernRegionManager,
+                    bayernId,
+                    Role.REGION_ADMIN,
+                    bayernRegion,
+                ),
+                true,
+            )
+            assertEquals(
+                Authorizer.mayEditUser(
+                    bayernRegionAdmin,
+                    bayernRegionAdmin,
+                    bayernId,
+                    Role.REGION_MANAGER,
+                    bayernRegion,
+                ),
+                true,
+            )
+            assertEquals(
+                Authorizer.mayEditUser(
+                    bayernRegionAdmin,
+                    bayernProjectAdmin,
+                    koblenzId,
+                    Role.REGION_ADMIN,
+                    bayernRegion,
+                ),
+                false,
+            )
+            assertEquals(
+                Authorizer.mayEditUser(
+                    bayernRegionAdmin,
+                    koblenzProjectAdmin,
+                    koblenzId,
+                    Role.REGION_ADMIN,
+                    bayernRegion,
+                ),
+                false,
+            )
+            assertEquals(
+                Authorizer.mayEditUser(bayernRegionAdmin, bayernProjectAdmin, bayernId, Role.NO_RIGHTS, bayernRegion),
+                false,
+            )
+            assertEquals(
+                Authorizer.mayEditUser(bayernRegionAdmin, bayernProjectAdmin, bayernId, Role.NO_RIGHTS, bayernRegion),
+                false,
+            )
 
-            assertEquals(Authorizer.mayEditUser(bayernExternalUser, bayernProjectAdmin, bayernId, Role.REGION_MANAGER, bayernRegion), false)
-            assertEquals(Authorizer.mayEditUser(bayernRegionManager, bayernRegionAdmin, bayernId, Role.REGION_MANAGER, bayernRegion), false)
-            assertEquals(Authorizer.mayEditUser(bayernRegionManager, bayernRegionManager, bayernId, Role.REGION_MANAGER, bayernRegion), false)
+            assertEquals(
+                Authorizer.mayEditUser(
+                    bayernExternalUser,
+                    bayernProjectAdmin,
+                    bayernId,
+                    Role.REGION_MANAGER,
+                    bayernRegion,
+                ),
+                false,
+            )
+            assertEquals(
+                Authorizer.mayEditUser(
+                    bayernRegionManager,
+                    bayernRegionAdmin,
+                    bayernId,
+                    Role.REGION_MANAGER,
+                    bayernRegion,
+                ),
+                false,
+            )
+            assertEquals(
+                Authorizer.mayEditUser(
+                    bayernRegionManager,
+                    bayernRegionManager,
+                    bayernId,
+                    Role.REGION_MANAGER,
+                    bayernRegion,
+                ),
+                false,
+            )
 
-            assertEquals(Authorizer.mayEditUser(koblenzProjectAdmin, koblenzProjectAdmin, koblenzId, Role.PROJECT_ADMIN, null), true)
-            assertEquals(Authorizer.mayEditUser(koblenzProjectAdmin, koblenzRegionAdmin, koblenzId, Role.PROJECT_ADMIN, null), true)
-            assertEquals(Authorizer.mayEditUser(koblenzProjectAdmin, koblenzRegionAdmin, koblenzId, Role.REGION_ADMIN, koblenzRegion), true)
-            assertEquals(Authorizer.mayEditUser(koblenzProjectAdmin, koblenzRegionManager, koblenzId, Role.REGION_MANAGER, koblenzRegion), true)
-            assertEquals(Authorizer.mayEditUser(koblenzProjectAdmin, bayernRegionManager, koblenzId, Role.REGION_MANAGER, koblenzRegion), false)
-            assertEquals(Authorizer.mayEditUser(koblenzProjectAdmin, koblenzRegionAdmin, nuernbergId, Role.PROJECT_ADMIN, null), false)
-            assertEquals(Authorizer.mayEditUser(koblenzProjectAdmin, koblenzRegionAdmin, koblenzId, Role.NO_RIGHTS, null), false)
-            assertEquals(Authorizer.mayEditUser(koblenzProjectAdmin, koblenzRegionAdmin, koblenzId, Role.EXTERNAL_VERIFIED_API_USER, null), false)
+            assertEquals(
+                Authorizer.mayEditUser(koblenzProjectAdmin, koblenzProjectAdmin, koblenzId, Role.PROJECT_ADMIN, null),
+                true,
+            )
+            assertEquals(
+                Authorizer.mayEditUser(koblenzProjectAdmin, koblenzRegionAdmin, koblenzId, Role.PROJECT_ADMIN, null),
+                true,
+            )
+            assertEquals(
+                Authorizer.mayEditUser(
+                    koblenzProjectAdmin,
+                    koblenzRegionAdmin,
+                    koblenzId,
+                    Role.REGION_ADMIN,
+                    koblenzRegion,
+                ),
+                true,
+            )
+            assertEquals(
+                Authorizer.mayEditUser(
+                    koblenzProjectAdmin,
+                    koblenzRegionManager,
+                    koblenzId,
+                    Role.REGION_MANAGER,
+                    koblenzRegion,
+                ),
+                true,
+            )
+            assertEquals(
+                Authorizer.mayEditUser(
+                    koblenzProjectAdmin,
+                    bayernRegionManager,
+                    koblenzId,
+                    Role.REGION_MANAGER,
+                    koblenzRegion,
+                ),
+                false,
+            )
+            assertEquals(
+                Authorizer.mayEditUser(koblenzProjectAdmin, koblenzRegionAdmin, nuernbergId, Role.PROJECT_ADMIN, null),
+                false,
+            )
+            assertEquals(
+                Authorizer.mayEditUser(koblenzProjectAdmin, koblenzRegionAdmin, koblenzId, Role.NO_RIGHTS, null),
+                false,
+            )
+            assertEquals(
+                Authorizer.mayEditUser(
+                    koblenzProjectAdmin,
+                    koblenzRegionAdmin,
+                    koblenzId,
+                    Role.EXTERNAL_VERIFIED_API_USER,
+                    null,
+                ),
+                false,
+            )
 
-            assertEquals(Authorizer.mayEditUser(nuernbergProjectAdmin, nuernbergProjectAdmin, nuernbergId, Role.PROJECT_ADMIN, null), true)
-            assertEquals(Authorizer.mayEditUser(nuernbergProjectAdmin, nuernbergProjectAdmin, koblenzId, Role.PROJECT_ADMIN, null), false)
-            assertEquals(Authorizer.mayEditUser(nuernbergProjectAdmin, nuernbergProjectAdmin, nuernbergId, Role.NO_RIGHTS, null), false)
-            assertEquals(Authorizer.mayEditUser(nuernbergProjectAdmin, nuernbergProjectAdmin, nuernbergId, Role.EXTERNAL_VERIFIED_API_USER, null), false)
+            assertEquals(
+                Authorizer.mayEditUser(
+                    nuernbergProjectAdmin,
+                    nuernbergProjectAdmin,
+                    nuernbergId,
+                    Role.PROJECT_ADMIN,
+                    null,
+                ),
+                true,
+            )
+            assertEquals(
+                Authorizer.mayEditUser(
+                    nuernbergProjectAdmin,
+                    nuernbergProjectAdmin,
+                    koblenzId,
+                    Role.PROJECT_ADMIN,
+                    null,
+                ),
+                false,
+            )
+            assertEquals(
+                Authorizer.mayEditUser(nuernbergProjectAdmin, nuernbergProjectAdmin, nuernbergId, Role.NO_RIGHTS, null),
+                false,
+            )
+            assertEquals(
+                Authorizer.mayEditUser(
+                    nuernbergProjectAdmin,
+                    nuernbergProjectAdmin,
+                    nuernbergId,
+                    Role.EXTERNAL_VERIFIED_API_USER,
+                    null,
+                ),
+                false,
+            )
         }
     }
 
@@ -351,7 +598,7 @@ internal class AuthorizerTest : IntegrationTest() {
             assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(koblenzRegionManager, 2), false)
             assertEquals(
                 Authorizer.mayViewFreinetAgencyInformationInRegion(koblenzRegionManager, koblenzRegionId),
-                false
+                false,
             )
             assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(nuernbergStoreManager, 5), false)
         }
@@ -370,7 +617,7 @@ internal class AuthorizerTest : IntegrationTest() {
             assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(koblenzRegionManager, 2), false)
             assertEquals(
                 Authorizer.mayViewFreinetAgencyInformationInRegion(koblenzRegionManager, koblenzRegionId),
-                false
+                false,
             )
             assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(nuernbergStoreManager, 5), false)
         }

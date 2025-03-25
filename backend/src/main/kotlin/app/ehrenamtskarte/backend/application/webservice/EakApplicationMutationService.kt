@@ -21,15 +21,19 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 @Suppress("unused")
 class EakApplicationMutationService {
-
     @GraphQLDescription("Stores a new application for an EAK")
     fun addEakApplication(
         regionId: Int,
         application: Application,
         project: String,
-        dfe: DataFetchingEnvironment
+        dfe: DataFetchingEnvironment,
     ): DataFetcherResult<Boolean> {
-        val applicationHandler = ApplicationHandler(dfe.getContext<GraphQLContext>(), application, regionId, project)
+        val applicationHandler = ApplicationHandler(
+            dfe.getContext<GraphQLContext>(),
+            application,
+            regionId,
+            project,
+        )
         val dataFetcherResultBuilder = DataFetcherResult.newResult<Boolean>()
 
         applicationHandler.validateRegion()
@@ -40,9 +44,17 @@ class EakApplicationMutationService {
 
         if (isPreVerified) {
             applicationHandler.setApplicationVerificationToPreVerifiedNow(verificationEntities)
-            applicationHandler.sendPreVerifiedApplicationMails(applicationEntity, verificationEntities, dataFetcherResultBuilder)
+            applicationHandler.sendPreVerifiedApplicationMails(
+                applicationEntity,
+                verificationEntities,
+                dataFetcherResultBuilder,
+            )
         } else {
-            applicationHandler.sendApplicationMails(applicationEntity, verificationEntities, dataFetcherResultBuilder)
+            applicationHandler.sendApplicationMails(
+                applicationEntity,
+                verificationEntities,
+                dataFetcherResultBuilder,
+            )
         }
         return dataFetcherResultBuilder.data(true).build()
     }
@@ -50,14 +62,15 @@ class EakApplicationMutationService {
     @GraphQLDescription("Deletes the application with specified id")
     fun deleteApplication(
         applicationId: Int,
-        dfe: DataFetchingEnvironment
+        dfe: DataFetchingEnvironment,
     ): Boolean {
         val context = dfe.getContext<GraphQLContext>()
         val admin = context.getAdministrator()
 
         return transaction {
-            val application =
-                ApplicationEntity.findById(applicationId) ?: throw NotFoundException("Application not found")
+            val application = ApplicationEntity
+                .findById(applicationId)
+                ?: throw NotFoundException("Application not found")
 
             if (!mayDeleteApplicationsInRegion(admin, application.regionId.value)) {
                 throw ForbiddenException()
@@ -68,27 +81,33 @@ class EakApplicationMutationService {
     }
 
     @GraphQLDescription("Withdraws the application")
-    fun withdrawApplication(accessKey: String): Boolean {
-        return transaction {
+    fun withdrawApplication(accessKey: String): Boolean =
+        transaction {
             ApplicationRepository.withdrawApplication(accessKey)
         }
-    }
 
     @GraphQLDescription("Verifies or rejects an application verification")
     fun verifyOrRejectApplicationVerification(
         project: String,
         accessKey: String,
         verified: Boolean,
-        dfe: DataFetchingEnvironment
+        dfe: DataFetchingEnvironment,
     ): Boolean {
-        val application = transaction { getApplicationByApplicationVerificationAccessKey(accessKey) }
+        val application = transaction {
+            getApplicationByApplicationVerificationAccessKey(accessKey)
+        }
         return transaction {
             if (verified) {
                 val context = dfe.getContext<GraphQLContext>()
                 val backendConfig = context.backendConfiguration
                 val projectConfig = backendConfig.projects.first { it.id == project }
                 val successful = ApplicationRepository.verifyApplicationVerification(accessKey)
-                Mailer.sendNotificationForVerificationMails(project, backendConfig, projectConfig, application.regionId)
+                Mailer.sendNotificationForVerificationMails(
+                    project,
+                    backendConfig,
+                    projectConfig,
+                    application.regionId,
+                )
 
                 successful
             } else {
@@ -101,7 +120,7 @@ class EakApplicationMutationService {
     fun updateApplicationNote(
         applicationId: Int,
         noteText: String,
-        dfe: DataFetchingEnvironment
+        dfe: DataFetchingEnvironment,
     ): Boolean {
         val context = dfe.getContext<GraphQLContext>()
         val admin = context.getAdministrator()

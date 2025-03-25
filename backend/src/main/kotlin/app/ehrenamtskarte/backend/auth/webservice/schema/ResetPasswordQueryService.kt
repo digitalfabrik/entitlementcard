@@ -17,19 +17,27 @@ import java.time.Instant
 @Suppress("unused")
 class ResetPasswordQueryService {
     @GraphQLDescription("Verify password reset link")
-    fun checkPasswordResetLink(project: String, resetKey: String): Boolean {
-        return transaction {
+    fun checkPasswordResetLink(
+        project: String,
+        resetKey: String,
+    ): Boolean =
+        transaction {
             val projectEntity =
                 ProjectEntity.find { Projects.project eq project }.firstOrNull() ?: throw ProjectNotFoundException(
-                    project
+                    project,
                 )
             val projectId = projectEntity.id.value
             val admin = AdministratorEntity
                 .find {
                     Administrators.passwordResetKeyHash.isNotNull() and (Administrators.projectId eq projectId) and not(
-                        Administrators.deleted
+                        Administrators.deleted,
                     )
-                }.firstOrNull { PasswordCrypto.verifyPasswordResetKey(resetKey, it.passwordResetKeyHash!!) }
+                }.firstOrNull {
+                    PasswordCrypto.verifyPasswordResetKey(
+                        resetKey,
+                        it.passwordResetKeyHash!!,
+                    )
+                }
             if (admin == null) {
                 throw InvalidPasswordResetLinkException()
             } else if (admin.passwordResetKeyExpiry!!.isBefore(Instant.now())) {
@@ -37,5 +45,4 @@ class ResetPasswordQueryService {
             }
             true
         }
-    }
 }

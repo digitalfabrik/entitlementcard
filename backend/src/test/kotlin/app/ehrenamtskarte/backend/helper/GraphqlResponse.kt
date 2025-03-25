@@ -7,7 +7,7 @@ import kotlin.test.fail
 
 data class GraphqlResponse(
     val code: Int,
-    val body: ResponseBody?
+    val body: ResponseBody?,
 ) {
     val objectMapper = jacksonObjectMapper()
 

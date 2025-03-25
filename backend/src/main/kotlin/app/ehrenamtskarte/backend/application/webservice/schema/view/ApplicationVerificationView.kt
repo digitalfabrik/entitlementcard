@@ -7,17 +7,16 @@ data class ApplicationVerificationView(
     val contactEmailAddress: String,
     val organizationName: String,
     val verifiedDate: String?,
-    val rejectedDate: String?
+    val rejectedDate: String?,
 ) {
     companion object {
-        fun fromDbEntity(entity: ApplicationVerificationEntity): ApplicationVerificationView {
-            return ApplicationVerificationView(
+        fun fromDbEntity(entity: ApplicationVerificationEntity): ApplicationVerificationView =
+            ApplicationVerificationView(
                 entity.contactName,
                 entity.contactEmailAddress,
                 entity.organizationName,
                 entity.verifiedDate?.toString(),
-                entity.rejectedDate?.toString()
+                entity.rejectedDate?.toString(),
             )
-        }
     }
 }

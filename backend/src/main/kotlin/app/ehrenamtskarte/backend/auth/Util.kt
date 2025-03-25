@@ -7,5 +7,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 fun GraphQLContext.getAdministrator(): AdministratorEntity {
     val jwtPayload = this.enforceSignedIn()
-    return transaction { AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException() }
+    return transaction {
+        AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
+    }
 }

@@ -20,11 +20,11 @@ fun insertOrUpdateRegions(agencies: List<FreinetApiAgency>) {
         regionPrefix: String,
         regionKey: String,
         regionWebsite: String,
-        regionActivatedForApplication: Boolean
+        regionActivatedForApplication: Boolean,
     ) {
-        val project =
-            projects.firstOrNull { it.project == regionProjectId }
-                ?: throw Error("Required project '$regionProjectId' not found!")
+        val project = projects
+            .firstOrNull { it.project == regionProjectId }
+            ?: throw Error("Required project '$regionProjectId' not found!")
         val region = dbRegions.singleOrNull { it.projectId == project.id }
         if (region == null) {
             RegionEntity.new {
@@ -46,11 +46,13 @@ fun insertOrUpdateRegions(agencies: List<FreinetApiAgency>) {
 
     transaction {
         // Create or update eak regions in database
-        val eakProject =
-            projects.firstOrNull { it.project == EAK_BAYERN_PROJECT }
-                ?: throw Error("Required project '$EAK_BAYERN_PROJECT' not found!")
+        val eakProject = projects
+            .firstOrNull { it.project == EAK_BAYERN_PROJECT }
+            ?: throw Error("Required project '$EAK_BAYERN_PROJECT' not found!")
         EAK_BAYERN_REGIONS.forEach { eakRegion ->
-            val dbRegion = dbRegions.find { it.regionIdentifier == eakRegion[2] && it.projectId == eakProject.id }
+            val dbRegion = dbRegions.find {
+                it.regionIdentifier == eakRegion[2] && it.projectId == eakProject.id
+            }
             val regionEntity: RegionEntity = dbRegion
                 ?.apply {
                     name = eakRegion[1]
@@ -64,12 +66,30 @@ fun insertOrUpdateRegions(agencies: List<FreinetApiAgency>) {
                     regionIdentifier = eakRegion[2]
                     website = eakRegion[3]
                 }
-            agencies.find { agency -> agency.officialRegionalKeys.any { it.startsWith(eakRegion[2]) } }?.let {
-                    agency ->
-                insertOrUpdateFreinetRegionInformation(agency, dbFreinetRegionInformation, regionEntity)
-            }
+            agencies.find { agency -> agency.officialRegionalKeys.any { it.startsWith(eakRegion[2]) } }
+                ?.let { agency ->
+                    insertOrUpdateFreinetRegionInformation(
+                        agency,
+                        dbFreinetRegionInformation,
+                        regionEntity,
+                    )
+                }
         }
-        createOrUpdateRegion(NUERNBERG_PASS_PROJECT, "Nürnberg", "Stadt", "09564", "https://nuernberg.de", false)
-        createOrUpdateRegion(KOBLENZ_PASS_PROJECT, "Koblenz", "Stadt", "07111", "https://koblenz.de/", false)
+        createOrUpdateRegion(
+            NUERNBERG_PASS_PROJECT,
+            "Nürnberg",
+            "Stadt",
+            "09564",
+            "https://nuernberg.de",
+            false,
+        )
+        createOrUpdateRegion(
+            KOBLENZ_PASS_PROJECT,
+            "Koblenz",
+            "Stadt",
+            "07111",
+            "https://koblenz.de/",
+            false,
+        )
     }
 }
