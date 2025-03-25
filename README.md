@@ -22,7 +22,6 @@
 * [Protobuf Code Generation](./docs/protobuf-generation.md)
 * [Migrations](./docs/migrations.md)
 * [Deep Linking](./docs/deep-linking.md)
-* [Socialpass Stores import](./docs/sozialpass-stores-import.md)
 * [Domains & Projects](./docs/domains-projects.md)
 
 ## What is a "entitlementcard"
