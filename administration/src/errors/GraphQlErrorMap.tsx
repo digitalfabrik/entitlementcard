@@ -129,6 +129,10 @@ const graphQlErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
       return {
         title: i18next.t('errors:regionNotActivatedForConfirmationMail'),
       }
+    case GraphQlExceptionCode.RegionNotUnique:
+      return {
+        title: i18next.t('errors:regionNotUnique'),
+      }
     default:
       return {
         title: defaultError.title,

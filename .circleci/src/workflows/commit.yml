@@ -4,7 +4,6 @@ when:
     - not:
         equal: [ main, << pipeline.git.branch >> ]
 jobs:
-  - check
   - check_backend
   - check_administration
   - check_frontend

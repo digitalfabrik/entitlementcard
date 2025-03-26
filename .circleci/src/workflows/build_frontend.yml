@@ -2,11 +2,6 @@ when: << pipeline.parameters.run_build_frontend >>
 jobs:
   - check_frontend
   - build_android:
-      name: frontend-android-build-bayernFloss
-      buildConfig: "bayernFloss"
-      requires:
-        - check_frontend
-  - build_android:
       name: frontend-android-build-bayern
       buildConfig: "bayern"
       requires:

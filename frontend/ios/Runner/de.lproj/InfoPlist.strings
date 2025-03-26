@@ -2,3 +2,4 @@ NSCameraUsageDescription="Einlesen von QR-Codes";
 NSLocationAlwaysUsageDescription="Standort auf der Karte und Akzeptanzstellen in der Umgebung anzeigen";
 NSLocationWhenInUseUsageDescription="Standort auf der Karte und Akzeptanzstellen in der Umgebung anzeigen";
 NSLocationAlwaysAndWhenInUseUsageDescription="Standort auf der Karte und Akzeptanzstellen in der Umgebung anzeigen";
+NSLocationUsageDescription="Standort auf der Karte und Akzeptanzstellen in der Umgebung anzeigen";

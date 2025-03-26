@@ -4,32 +4,27 @@ parameters:
   buildConfig:
     description: "Name of the build config to use"
     type: enum
-    enum: [bayern, bayernFloss, nuernberg, koblenz]
+    enum: [bayern, nuernberg, koblenz]
+environment:
+  FASTLANE_SKIP_UPDATE_CHECK: true
+working_directory: ~/project/frontend
 steps:
-  - checkout:
-      path: ~/project
-  - install_app_toolbelt
-  - install_dart_mac
-  - install_fvm
   - prepare_workspace
-  - restore_environment_variables
-  # needed for circle ci mac m1 images
+  - install_app_toolbelt
   - run:
+      # Rosetta is necessary to build flutter apps on circleci mac m1 images
+      # https://github.com/digitalfabrik/entitlementcard/pull/2001#discussion_r2010122708
       name: Install rosetta
       command: softwareupdate --install-rosetta --agree-to-license
-  - restore_ruby_cache:
-      directory: frontend/ios
-  - run:
-      name: Install Flutter Packages
-      command: |
-        fvm flutter pub get --enforce-lockfile
-        fvm flutter precache --ios
-      working_directory: frontend/
-  - restore_pods
+  - install_flutter:
+      precache: ios
+  - install_fastlane:
+      directory: ios
+  - install_pods
   - run:
       name: '[FL] Build'
       command: bundle exec fastlane ios build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} build_config_name:<< parameters.buildConfig >>
-      working_directory: frontend/ios
+      working_directory: ios
   - store_artifacts:
       path: ~/<< parameters.buildConfig >>.ipa
   - persist_to_workspace:

@@ -6,15 +6,19 @@ import app.ehrenamtskarte.backend.application.database.ApplicationVerificationEn
 import app.ehrenamtskarte.backend.application.database.ApplicationVerificationExternalSource
 import app.ehrenamtskarte.backend.application.database.ApplicationVerifications
 import app.ehrenamtskarte.backend.application.database.Applications
-import app.ehrenamtskarte.backend.application.webservice.schema.create.Application
-import app.ehrenamtskarte.backend.application.webservice.schema.create.ApplicationType
+import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationHandler
 import app.ehrenamtskarte.backend.auth.database.ApiTokenType
 import app.ehrenamtskarte.backend.auth.database.ApiTokens
+import app.ehrenamtskarte.backend.generated.AddEakApplication
+import app.ehrenamtskarte.backend.generated.enums.ApplicationType
+import app.ehrenamtskarte.backend.generated.inputs.ApplicationInput
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestApplicationBuilder
 import app.ehrenamtskarte.backend.helper.TestData
-import app.ehrenamtskarte.backend.util.GraphQLRequestSerializer
 import io.javalin.testtools.JavalinTest
+import io.mockk.every
+import io.mockk.mockkConstructor
+import io.mockk.verify
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -28,7 +32,7 @@ import kotlin.test.assertNull
 
 internal class Verein360ApplicationTest : GraphqlApiTest() {
 
-    data class ValidationErrorTestCase(val application: Application, val error: String)
+    data class ValidationErrorTestCase(val application: ApplicationInput, val error: String)
 
     companion object {
         @JvmStatic
@@ -62,6 +66,34 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
                         category = "Other"
                     ),
                     error = "All organizations must be of category 'sports' if application is already verified"
+                ),
+                ValidationErrorTestCase(
+                    application = TestApplicationBuilder.build(
+                        isAlreadyVerified = true,
+                        givenInformationIsCorrectAndComplete = false
+                    ),
+                    error = "Has not confirmed that information is correct and complete."
+                ),
+                ValidationErrorTestCase(
+                    application = TestApplicationBuilder.build(
+                        isAlreadyVerified = true,
+                        forenames = ""
+                    ),
+                    error = "Value of ShortTextInput should not be empty."
+                ),
+                ValidationErrorTestCase(
+                    application = TestApplicationBuilder.build(
+                        isAlreadyVerified = true,
+                        surname = ""
+                    ),
+                    error = "Value of ShortTextInput should not be empty."
+                ),
+                ValidationErrorTestCase(
+                    application = TestApplicationBuilder.build(
+                        isAlreadyVerified = true,
+                        contactName = ""
+                    ),
+                    error = "Value of ShortTextInput should not be empty."
                 )
             )
         }
@@ -76,6 +108,16 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
             Applications.deleteAll()
             ApiTokens.deleteAll()
         }
+    }
+
+    /**
+     * Set up a mock to be able to verify sending emails
+     */
+    @BeforeEach
+    fun mockApplicationHandler() {
+        mockkConstructor(ApplicationHandler::class)
+        every { anyConstructed<ApplicationHandler>().sendApplicationMails(any(), any(), any()) } returns Unit
+        every { anyConstructed<ApplicationHandler>().sendPreVerifiedApplicationMails(any(), any(), any()) } returns Unit
     }
 
     @ParameterizedTest
@@ -98,7 +140,7 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
     fun `should return an error when region not found`() = JavalinTest.test(app) { _, client ->
         val mutation = createMutation(
             regionId = 99,
-            application = TestApplicationBuilder.build(true)
+            application = TestApplicationBuilder.defaultVerified()
         )
         val response = post(client, mutation)
 
@@ -111,9 +153,7 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
 
     @Test
     fun `should return an error when the application is pre-verified but auth token is missing`() = JavalinTest.test(app) { _, client ->
-        val mutation = createMutation(
-            application = TestApplicationBuilder.build(true)
-        )
+        val mutation = createMutation(application = TestApplicationBuilder.defaultVerified())
         val response = post(client, mutation)
 
         assertEquals(401, response.code)
@@ -121,9 +161,7 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
 
     @Test
     fun `should return an error when api token not found`() = JavalinTest.test(app) { _, client ->
-        val mutation = createMutation(
-            application = TestApplicationBuilder.build(true)
-        )
+        val mutation = createMutation(application = TestApplicationBuilder.defaultVerified())
         val response = post(client, mutation, token = "non-existent")
 
         assertEquals(403, response.code)
@@ -133,9 +171,7 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
     fun `should return an error when api token has wrong type`() = JavalinTest.test(app) { _, client ->
         TestData.createApiToken(creatorId = adminVerein360.id, type = ApiTokenType.USER_IMPORT)
 
-        val mutation = createMutation(
-            application = TestApplicationBuilder.build(true)
-        )
+        val mutation = createMutation(application = TestApplicationBuilder.defaultVerified())
         val response = post(client, mutation, token = "dummy")
 
         assertEquals(403, response.code)
@@ -145,9 +181,7 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
     fun `should create an application and approved verification if the request is pre-verified and valid`() = JavalinTest.test(app) { _, client ->
         TestData.createApiToken(creatorId = adminVerein360.id, type = ApiTokenType.VERIFIED_APPLICATION)
 
-        val mutation = createMutation(
-            application = TestApplicationBuilder.build(true)
-        )
+        val mutation = createMutation(application = TestApplicationBuilder.defaultVerified())
         val response = post(client, mutation, token = "dummy")
 
         assertEquals(200, response.code)
@@ -164,13 +198,14 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
                 assertEquals(ApplicationVerificationExternalSource.VEREIN360, it.automaticSource)
             }
         }
+
+        verify(exactly = 0) { anyConstructed<ApplicationHandler>().sendApplicationMails(any(), any(), any()) }
+        verify(exactly = 1) { anyConstructed<ApplicationHandler>().sendPreVerifiedApplicationMails(any(), any(), any()) }
     }
 
     @Test
     fun `should create an application and pending verification if the request is not pre-verified`() = JavalinTest.test(app) { _, client ->
-        val mutation = createMutation(
-            application = TestApplicationBuilder.build(false)
-        )
+        val mutation = createMutation(application = TestApplicationBuilder.default())
         val response = post(client, mutation)
 
         assertEquals(200, response.code)
@@ -187,22 +222,21 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
                 assertEquals(ApplicationVerificationExternalSource.NONE, it.automaticSource)
             }
         }
+
+        verify(exactly = 1) { anyConstructed<ApplicationHandler>().sendApplicationMails(any(), any(), any()) }
+        verify(exactly = 0) { anyConstructed<ApplicationHandler>().sendPreVerifiedApplicationMails(any(), any(), any()) }
     }
 
     private fun createMutation(
         project: String = "bayern.ehrenamtskarte.app",
         regionId: Int = 1,
-        application: Application
-    ): String {
-        val applicationJson = GraphQLRequestSerializer.serializeObject(application)
-        return """
-        mutation AddEakApplication {
-            addEakApplication(
-                project: "$project"
-                regionId: $regionId
-                application: $applicationJson
-            )
-        }
-        """.trimIndent()
+        application: ApplicationInput
+    ): AddEakApplication {
+        val variables = AddEakApplication.Variables(
+            application = application,
+            regionId = regionId,
+            project = project
+        )
+        return AddEakApplication(variables)
     }
 }

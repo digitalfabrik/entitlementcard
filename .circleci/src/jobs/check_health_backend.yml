@@ -6,12 +6,10 @@ docker:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
 steps:
-  - checkout:
-      path: ~/project
-  - attach_workspace:
-      at: /tmp/workspace
-  - run: apt update -y && apt install -y nodejs npm curl sudo
-  - install_app_toolbelt
+  - prepare_workspace
+  - run:
+      name: Install curl and sudo
+      command: apt update -y && apt install -y curl sudo
   - run:
       name: Install ca-certificates-java # workaround for current issue: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1030129
       command: apt install ca-certificates-java -y
@@ -20,7 +18,7 @@ steps:
       command: apt install openjdk-17-jre-headless -y
   - run:
       name: Install backend
-      command: dpkg -i /tmp/workspace/debs/backend/eak-backend*.deb
+      command: dpkg -i ~/attached_workspace/debs/backend/eak-backend*.deb
   - run:
       name: Run migrate
       command: /opt/ehrenamtskarte/backend/bin/backend migrate
