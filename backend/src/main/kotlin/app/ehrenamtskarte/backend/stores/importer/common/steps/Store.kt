@@ -42,7 +42,7 @@ class Store(config: ImportConfig, private val logger: Logger) :
                         continue
                     }
 
-                    AcceptingStoresRepository.createStore(acceptingStore, project.id, region)
+                    AcceptingStoresRepository.createStore(acceptingStore, project.id, region?.id)
                     numStoresCreated += 1
                 }
 

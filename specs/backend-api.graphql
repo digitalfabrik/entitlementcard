@@ -444,18 +444,18 @@ input BlueCardWorkAtOrganizationsEntitlementInput {
 }
 
 input CSVAcceptingStoreInput {
-  categoryId: String
+  categoryId: Int!
   discountDE: String
   discountEN: String
   email: String
   homepage: String
-  houseNumber: String
-  latitude: String
-  location: String
-  longitude: String
-  name: String
-  postalCode: String
-  street: String
+  houseNumber: String!
+  latitude: Float!
+  location: String!
+  longitude: Float!
+  name: String!
+  postalCode: String!
+  street: String!
   telephone: String
 }
 
