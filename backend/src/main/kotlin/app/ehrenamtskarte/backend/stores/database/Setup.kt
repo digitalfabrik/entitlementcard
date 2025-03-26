@@ -1,9 +1,11 @@
 package app.ehrenamtskarte.backend.stores.database
 
-fun insertOrUpdateCategories(executeScript: (path: String) -> Unit) {
-    executeScript("sql/create_categories.sql")
+import app.ehrenamtskarte.backend.common.database.Database
+
+fun insertOrUpdateCategories() {
+    Database.executeSqlResource("sql/create_categories.sql")
 }
 
-fun createOrReplaceStoreFunctions(executeScript: (path: String) -> Unit) {
-    executeScript("sql/martin_setup.sql")
+fun createOrReplaceStoreFunctions() {
+    Database.executeSqlResource("sql/martin_setup.sql")
 }
