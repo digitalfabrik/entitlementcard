@@ -1,6 +1,6 @@
 changelog:
   categories:
-    - title: Testable features, fixes, enhancements 🎉
+    - title: Features, fixes, enhancements 🎉
       labels:
         - '*'
       exclude:
