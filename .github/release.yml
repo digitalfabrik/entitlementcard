@@ -10,6 +10,6 @@ changelog:
     - title: Testable features for nuernberg 🎉
       labels:
         - Nuernberg
-    - title: Not testable for end users 🛠
+    - title: Maintenance 🛠
       labels:
         - not-testable
