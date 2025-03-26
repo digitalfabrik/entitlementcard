@@ -24,8 +24,25 @@ import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.clikt.parameters.types.file
 import org.jetbrains.exposed.sql.exists
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.slf4j.LoggerFactory
 import java.io.File
+import java.nio.file.Path
+import java.nio.file.Paths
 import java.util.TimeZone
+import kotlin.io.path.exists
+
+private val logger = LoggerFactory.getLogger("EntryPoint")
+
+private val defaultConfigFilePaths: List<Path> = listOf(
+    Paths.get(System.getProperty("user.dir"), "config.yml"),
+    Paths.get(System.getProperty("user.home"), ".config", "entitlementcard", "config.yml"),
+    Paths.get("/etc/entitlementcard/config.yml"),
+)
+
+private val defaultConfigResourceUrls: List<String> = listOf(
+    "config/config.local.yml",
+    "config/config.yml",
+)
 
 class Entry : CliktCommand() {
     private val config by option().file(canBeDir = false, mustBeReadable = true)
@@ -40,7 +57,29 @@ class Entry : CliktCommand() {
     private val geocodingHost by option()
 
     override fun run() {
-        val backendConfiguration = BackendConfiguration.load(config?.toURI()?.toURL())
+        val backendConfiguration = BackendConfiguration.load(
+            config?.let {
+                logger.info("Load backend configuration from explicit config file '$it'.")
+                it.toURI().toURL()
+            }
+                ?: defaultConfigFilePaths.firstNotNullOfOrNull {
+                    if (it.exists()) {
+                        logger.info("Load backend configuration from implicit config file '$it'.")
+                        it.toUri().toURL()
+                    } else {
+                        null
+                    }
+                }
+                ?: defaultConfigResourceUrls.firstNotNullOfOrNull {
+                    ClassLoader.getSystemResource(it)?.also { url ->
+                        logger.info("Load default backend configuration from resource '$url'.")
+                    }
+                }
+                ?: run {
+                    logger.error("No backend configuration found, this is a build error.")
+                    throw ProgramResult(statusCode = 4)
+                },
+        )
 
         currentContext.obj = backendConfiguration.copy(
             environment = environment ?: backendConfiguration.environment,
