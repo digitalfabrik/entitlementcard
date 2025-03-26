@@ -6,45 +6,43 @@ when:
       - equal: [main, << pipeline.git.branch >>]
 jobs:
   - bump_version:
-        prepare_delivery: false
-  - check_administration
-  - check_backend
-  - build_administration:
-      requires:
-        - check_administration
-        - bump_version
-  - pack_administration:
-      requires:
-        - build_administration
-  - build_backend:
-      requires:
-        - check_backend
-  - pack_backend:
-      requires:
-        - build_backend
-        - bump_version
-  - check_health_backend:
-      requires:
-        - pack_backend
+      prepare_delivery: false
   - pack_martin:
       requires:
         - bump_version
   - pack_meta:
       requires:
         - bump_version
-  - check_frontend
-  - build_android:
-      name: build_android_bayern
-      buildConfig: "bayern"
+
+  - check_administration
+  - build_administration:
       requires:
         - bump_version
-        - check_frontend
+        - check_administration
+  - pack_administration:
+      requires:
+        - build_administration
+
+  - check_backend
+  - build_backend:
+      requires:
+        - check_backend
+  - pack_backend:
+      requires:
+        - bump_version
+        - build_backend
+
+  - check_frontend
+  - build_android:
+      build_config: bayern
       context:
         - credentials-repo
         - credentials-ehrenamtskarte
+      requires:
+        - bump_version
+        - check_frontend
   - build_ios:
-      name: build_ios_bayern
-      buildConfig: "bayern"
+      build_config: bayern
       requires:
         - bump_version
         - check_frontend
