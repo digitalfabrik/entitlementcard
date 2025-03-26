@@ -2,6 +2,7 @@ package app.ehrenamtskarte.backend.freinet.webservice
 
 import app.ehrenamtskarte.backend.GraphqlApiTest
 import app.ehrenamtskarte.backend.common.webservice.EAK_BAYERN_PROJECT
+import app.ehrenamtskarte.backend.generated.GetFreinetAgencyByRegionId
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import io.javalin.testtools.JavalinTest
 import org.junit.jupiter.api.Test
@@ -59,16 +60,11 @@ internal class FreinetAgencyQueryServiceTest : GraphqlApiTest() {
         }
     }
 
-    private fun createQuery(regionId: Int, project: String): String {
-        return """
-        query {
-              agency: getFreinetAgencyByRegionId(regionId: $regionId, project: "$project") {
-                agencyId
-                agencyName
-                apiAccessKey
-                dataTransferActivated
-              }
-        }
-        """.trimIndent()
+    private fun createQuery(regionId: Int, project: String): GetFreinetAgencyByRegionId {
+        val variables = GetFreinetAgencyByRegionId.Variables(
+            project = project,
+            regionId = regionId
+        )
+        return GetFreinetAgencyByRegionId(variables)
     }
 }
