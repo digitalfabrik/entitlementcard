@@ -51,7 +51,10 @@ class Entry : CliktCommand() {
     }
 }
 
-class GraphQLExport : CliktCommand(name = "graphql-export") {
+class GraphQLExport : CliktCommand(
+    name = "graphql-export",
+    help = "Exports the GraphQL schema into the directory given by '--path'",
+) {
     private val config by requireObject<BackendConfiguration>()
     private val path by argument(help = "Export GraphQL schema. Given ")
 
@@ -62,7 +65,10 @@ class GraphQLExport : CliktCommand(name = "graphql-export") {
     }
 }
 
-class ImportSingle : CliktCommand(help = "Imports stores for single project.") {
+class ImportSingle : CliktCommand(
+    name = "import-single",
+    help = "Imports stores for single project.",
+) {
     private val config by requireObject<BackendConfiguration>()
     private val projectId by argument()
     private val importUrl by option()
@@ -85,7 +91,10 @@ class ImportSingle : CliktCommand(help = "Imports stores for single project.") {
     }
 }
 
-class Import : CliktCommand(help = "Imports stores for all projects.") {
+class Import : CliktCommand(
+    name = "import",
+    help = "Imports stores for all projects.",
+) {
     private val config by requireObject<BackendConfiguration>()
 
     override fun run() {
@@ -98,6 +107,7 @@ class Import : CliktCommand(help = "Imports stores for all projects.") {
 }
 
 class CreateAdmin : CliktCommand(
+    name = "create-admin",
     help = "Creates an admin account with the specified email and password",
 ) {
     private val config by requireObject<BackendConfiguration>()
@@ -113,7 +123,10 @@ class CreateAdmin : CliktCommand(
     }
 }
 
-class Execute : CliktCommand(help = "Starts the webserver") {
+class Execute : CliktCommand(
+    name = "execute",
+    help = "Starts the webserver",
+) {
     private val config by requireObject<BackendConfiguration>()
 
     override fun run() {
@@ -122,7 +135,10 @@ class Execute : CliktCommand(help = "Starts the webserver") {
     }
 }
 
-class Migrate : CliktCommand(help = "Migrates the database") {
+class Migrate : CliktCommand(
+    name = "migrate",
+    help = "Migrates the database",
+) {
     private val config by requireObject<BackendConfiguration>()
 
     override fun run() {
@@ -131,7 +147,9 @@ class Migrate : CliktCommand(help = "Migrates the database") {
     }
 }
 
+// TODO This might be realized as an option to "migrate"
 class MigrateSkipBaseline : CliktCommand(
+    name = "migrate-skip-baseline",
     help = """
     Applies all migrations except for the baseline step.
     
