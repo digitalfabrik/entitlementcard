@@ -17,19 +17,15 @@ import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.util.stream.Collectors
 
 class Database {
     companion object {
-        private fun executeScript(path: String) {
-            val java = Database::class.java
-            val resource = java.classLoader.getResource(path) ?: throw Exception("Failed to find script")
-            val stream = resource.openStream()
-            val sql = BufferedReader(InputStreamReader(stream))
-                .lines().collect(Collectors.joining("\n"))
-            stream.close()
+        private fun executeSqlResource(path: String) {
+            val resource = Database::class.java.classLoader.getResource(path)
+                ?: throw Exception("Failed to find script")
+
             with(TransactionManager.current()) {
-                exec(sql)
+                exec(resource.openStream().use { BufferedReader(InputStreamReader(it)).readText() })
             }
         }
 
@@ -60,9 +56,10 @@ class Database {
             transaction {
                 assertDatabaseIsInSync()
                 insertOrUpdateProjects(config)
+
                 insertOrUpdateRegions(agencies, config)
-                insertOrUpdateCategories(Companion::executeScript)
-                createOrReplaceStoreFunctions(Companion::executeScript)
+                insertOrUpdateCategories(Companion::executeSqlResource)
+                createOrReplaceStoreFunctions(Companion::executeSqlResource)
             }
         }
 
