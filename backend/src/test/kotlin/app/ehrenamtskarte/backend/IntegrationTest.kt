@@ -48,7 +48,7 @@ open class IntegrationTest {
 
         fun loadTestConfig(): BackendConfiguration {
             val resource = ClassLoader.getSystemResource("config.test.yml")
-                ?: throw Exception("Configuration file 'config.test.yml' not found")
+                ?: throw Exception("Configuration resource 'src/test/resources/config.test.yml' not found")
             return BackendConfiguration.load(resource)
         }
     }
