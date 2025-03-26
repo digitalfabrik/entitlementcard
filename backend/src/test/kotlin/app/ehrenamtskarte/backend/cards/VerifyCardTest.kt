@@ -3,8 +3,10 @@ package app.ehrenamtskarte.backend.cards
 import app.ehrenamtskarte.backend.GraphqlApiTest
 import app.ehrenamtskarte.backend.cards.database.CardEntity
 import app.ehrenamtskarte.backend.cards.database.Cards
-import app.ehrenamtskarte.backend.cards.database.CodeType
 import app.ehrenamtskarte.backend.cards.webservice.schema.types.CardVerificationResultModel
+import app.ehrenamtskarte.backend.generated.VerifyCardInProjectV2
+import app.ehrenamtskarte.backend.generated.enums.CodeType
+import app.ehrenamtskarte.backend.generated.inputs.CardVerificationModelInput
 import app.ehrenamtskarte.backend.helper.TestData
 import app.ehrenamtskarte.backend.userdata.database.UserEntitlements
 import io.javalin.testtools.JavalinTest
@@ -114,7 +116,7 @@ internal class VerifyCardTest : GraphqlApiTest() {
         val card = transaction { CardEntity.findById(testCase.createCard()) ?: error("Test card has not been created") }
         val query = createQuery(
             cardInfoHash = card.cardInfoHash.encodeBase64(),
-            codeType = card.codeType
+            codeType = CodeType.valueOf(card.codeType.name)
         )
 
         val response = post(client, query)
@@ -156,18 +158,16 @@ internal class VerifyCardTest : GraphqlApiTest() {
         assertEquals(404, response.code)
     }
 
-    private fun createQuery(project: String = "koblenz.sozialpass.app", cardInfoHash: String, codeType: CodeType, totp: String? = null): String {
-        return """
-        query VerifyCardInProjectV2 {
-            verifyCardInProjectV2(
-                project: "$project"
-                card: { cardInfoHashBase64: "$cardInfoHash", codeType: ${codeType.name}, totp: $totp }
-            ) {
-                extendable
-                valid
-                verificationTimeStamp
-            }
-        }
-        """.trimIndent()
+    private fun createQuery(
+        project: String = "koblenz.sozialpass.app",
+        cardInfoHash: String,
+        codeType: CodeType,
+        totp: Int? = null
+    ): VerifyCardInProjectV2 {
+        val variables = VerifyCardInProjectV2.Variables(
+            project = project,
+            card = CardVerificationModelInput(cardInfoHash, codeType, totp)
+        )
+        return VerifyCardInProjectV2(variables)
     }
 }

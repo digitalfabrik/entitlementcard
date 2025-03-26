@@ -38,6 +38,14 @@ enum class TestAdministrators(
         email = "project-admin@bayern.ehrenamtskarte.app",
         role = Role.PROJECT_ADMIN
     ),
+
+    /** Special admin for negative tests, because CSV store import is not actually supported in EAK */
+    EAK_PROJECT_STORE_MANAGER(
+        id = 12,
+        project = "bayern.ehrenamtskarte.app",
+        email = "project-store-manager@bayern.ehrenamtskarte.app",
+        role = Role.PROJECT_STORE_MANAGER
+    ),
     NUERNBERG_PROJECT_STORE_MANAGER(
         id = 3,
         project = "nuernberg.sozialpass.app",

@@ -2,12 +2,11 @@ package app.ehrenamtskarte.backend
 
 import app.ehrenamtskarte.backend.common.webservice.GraphQLHandler
 import app.ehrenamtskarte.backend.helper.GraphqlResponse
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.expediagroup.graphql.client.types.GraphQLClientRequest
 import io.javalin.Javalin
+import io.javalin.json.JavalinJackson
+import io.javalin.json.toJsonString
 import io.javalin.testtools.HttpClient
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.Request
-import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
 open class GraphqlApiTest : IntegrationTest() {
@@ -19,19 +18,15 @@ open class GraphqlApiTest : IntegrationTest() {
         }
     }
 
-    protected fun post(client: HttpClient, mutation: String, token: String? = null): GraphqlResponse {
-        val requestBody = jacksonObjectMapper().writeValueAsString(mapOf("query" to mutation))
-            .toRequestBody("application/json".toMediaType())
-
-        val requestBuilder = Request.Builder()
-            .url(client.origin + "/")
-            .post(requestBody)
-
-        if (token != null) {
-            requestBuilder.addHeader("Authorization", "Bearer $token")
+    protected fun post(
+        client: HttpClient,
+        mutation: GraphQLClientRequest<*>,
+        token: String? = null
+    ): GraphqlResponse {
+        val response = client.post("/", JavalinJackson().toJsonString(mutation)) {
+                request ->
+            token?.let { request.header("Authorization", "Bearer $it") }
         }
-
-        val response = client.request(requestBuilder.build())
         return GraphqlResponse(response.code, response.body)
     }
 }

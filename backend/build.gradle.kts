@@ -15,7 +15,7 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint") version "11.5.1"
     id("com.google.protobuf") version "0.9.4"
     id("org.jetbrains.kotlinx.kover") version "0.8.3"
-
+    id("com.expediagroup.graphql") version "8.3.0"
     // Apply the application plugin to add support for building a CLI application.
     application
 }
@@ -37,6 +37,8 @@ dependencies {
     implementation("org.piwik.java.tracking:matomo-java-tracker:3.4.0")
 
     implementation("com.expediagroup:graphql-kotlin-schema-generator:6.5.3")
+    testImplementation("com.expediagroup:graphql-kotlin-client:6.5.3")
+
     implementation("com.graphql-java:graphql-java-extended-scalars:20.2")
     // Align versions of all Kotlin components
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
@@ -147,7 +149,14 @@ tasks.named("classes") {
 }
 
 tasks.test {
+    dependsOn("graphqlGenerateTestClient")
     useJUnitPlatform()
     environment("JWT_SECRET", "HelloWorld")
     environment("KOBLENZ_PEPPER", "123456789ABC")
+}
+
+tasks.graphqlGenerateTestClient {
+    schemaFile.set(rootDir.parentFile.resolve("specs/backend-api.graphql"))
+    packageName.set("app.ehrenamtskarte.backend.generated")
+    queryFiles.setFrom(fileTree("src/test/resources/graphql"))
 }

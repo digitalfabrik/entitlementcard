@@ -1,6 +1,8 @@
 package app.ehrenamtskarte.backend.stores
 
 import app.ehrenamtskarte.backend.GraphqlApiTest
+import app.ehrenamtskarte.backend.generated.ImportAcceptingStores
+import app.ehrenamtskarte.backend.generated.inputs.CSVAcceptingStoreInput
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestData
 import app.ehrenamtskarte.backend.stores.database.AcceptingStoreEntity
@@ -65,12 +67,12 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
 
     @Test
     fun `POST returns an error response if no unique region can be found for a project`() = JavalinTest.test(app) { _, client ->
-        val csvStore = createAcceptingStoreInput(
+        val csvStore = CSVAcceptingStoreInput(
             name = "Test store",
             street = "Teststr.",
             houseNumber = "10",
             postalCode = "90408",
-            location = "Nürnberg",
+            location = "München",
             latitude = "0",
             longitude = "0",
             telephone = "0911/123456",
@@ -81,9 +83,13 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
             categoryId = "17"
         )
         val mutation = createMutation(project = "bayern.ehrenamtskarte.app", stores = listOf(csvStore))
-        val response = post(client, mutation, projectStoreManager.getJwtToken())
+        val response = post(client, mutation, TestAdministrators.EAK_PROJECT_STORE_MANAGER.getJwtToken())
 
-        assertEquals(403, response.code)
+        assertEquals(200, response.code)
+
+        val jsonResponse = response.json()
+
+        assertEquals("Error REGION_NOT_UNIQUE occurred.", jsonResponse.findValue("message").textValue())
     }
 
     @Test
@@ -104,7 +110,7 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
 
     @Test
     fun `POST returns a successful response if one accepting store with all fields has been created`() = JavalinTest.test(app) { _, client ->
-        val csvStore = createAcceptingStoreInput(
+        val csvStore = CSVAcceptingStoreInput(
             name = "Test store",
             street = "Teststr.",
             houseNumber = "10",
@@ -166,7 +172,7 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
 
     @Test
     fun `POST returns a successful response if one accepting store with only mandatory fields has been created`() = JavalinTest.test(app) { _, client ->
-        val csvStore = createAcceptingStoreInput(
+        val csvStore = CSVAcceptingStoreInput(
             name = "Test store",
             street = "Teststr.",
             houseNumber = "10",
@@ -228,7 +234,7 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
 
     @Test
     fun `POST returns a successful response if two duplicate acceptance stores are submitted`() = JavalinTest.test(app) { _, client ->
-        val csvStore = createAcceptingStoreInput(
+        val csvStore = CSVAcceptingStoreInput(
             name = "Test store",
             street = "Teststr.",
             houseNumber = "10",
@@ -267,7 +273,7 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
     @Test
     fun `POST returns a successful response if one store has been created and another one has been deleted`() = JavalinTest.test(app) { _, client ->
         TestData.createAcceptingStore()
-        val newStore = createAcceptingStoreInput(
+        val newStore = CSVAcceptingStoreInput(
             name = "Test store 2",
             street = "Teststr.",
             houseNumber = "10",
@@ -308,7 +314,7 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
     @Test
     fun `POST returns a successful response if nothing has changed`() = JavalinTest.test(app) { _, client ->
         val oldStore = TestData.createAcceptingStore()
-        val newStore = createAcceptingStoreInput(
+        val newStore = CSVAcceptingStoreInput(
             name = oldStore.name,
             street = "Teststr.",
             houseNumber = "10",
@@ -344,53 +350,16 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
         }
     }
 
-    private fun createMutation(project: String = "nuernberg.sozialpass.app", dryRun: Boolean = false, stores: List<String>): String {
-        return """
-        mutation ImportAcceptingStores {
-            importAcceptingStores(
-                project: "$project"
-                dryRun: $dryRun
-                stores: $stores
-            ) {
-            storesCreated
-            storesDeleted
-            storesUntouched
-            }
-        }
-        """.trimIndent()
-    }
-
-    private fun createAcceptingStoreInput(
-        categoryId: String,
-        discountDE: String,
-        discountEN: String,
-        email: String,
-        homepage: String,
-        houseNumber: String,
-        latitude: String,
-        location: String,
-        longitude: String,
-        name: String,
-        postalCode: String,
-        street: String,
-        telephone: String
-    ): String {
-        return """
-        {
-            categoryId: "$categoryId",
-            discountDE: "$discountDE",
-            discountEN: "$discountEN",
-            email: "$email"
-            homepage: "$homepage"
-            houseNumber: "$houseNumber"
-            latitude: "$latitude"
-            location: "$location"
-            longitude: "$longitude"
-            name: "$name"
-            postalCode: "$postalCode"
-            street: "$street"
-            telephone: "$telephone"
-        }
-        """.trimIndent()
+    private fun createMutation(
+        project: String = "nuernberg.sozialpass.app",
+        dryRun: Boolean = false,
+        stores: List<CSVAcceptingStoreInput>
+    ): ImportAcceptingStores {
+        val variables = ImportAcceptingStores.Variables(
+            project = project,
+            dryRun = dryRun,
+            stores = stores
+        )
+        return ImportAcceptingStores(variables)
     }
 }
