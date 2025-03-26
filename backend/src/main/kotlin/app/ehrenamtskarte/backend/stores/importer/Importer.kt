@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory
 object Importer {
     fun import(config: ImportConfig): Boolean {
         val logger = LoggerFactory.getLogger(Importer::class.java)
-        val project = config.findProject()
+        val project = config.project
 
         if (project.pipelineName == null) {
             logger.info("There is no store import pipeline for ${project.id}")

@@ -18,7 +18,7 @@ class DownloadLbe(config: ImportConfig, private val logger: Logger, private val 
     PipelineStep<Unit, List<LbeAcceptingStore>>(config) {
     override fun execute(input: Unit): List<LbeAcceptingStore> {
         try {
-            val url = config.findProject().importUrl
+            val url = config.project.importUrl
 
             val response = runBlocking {
                 httpClient.request(url) {

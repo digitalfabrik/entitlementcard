@@ -1,7 +1,6 @@
 package app.ehrenamtskarte.backend.config
 
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
-import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
@@ -68,8 +67,6 @@ data class BackendConfiguration(
         }
         return this
     }
-
-    fun toImportConfig(projectId: String): ImportConfig = ImportConfig(this.copy(), projectId)
 
     companion object {
         private val mapper = ObjectMapper(YAMLFactory())
