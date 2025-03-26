@@ -1,0 +1,18 @@
+changelog:
+  exclude:
+    labels:
+      - exclude-changelog
+  categories:
+    - title: Features, fixes, enhancements 🎉
+      labels:
+        - '*'
+      exclude:
+        labels:
+        - not-testable
+        - Nuernberg
+    - title: Features, fixes, enhancements that also affect nuernberg 🎉
+      labels:
+        - Nuernberg
+    - title: Maintenance 🛠
+      labels:
+        - not-testable
