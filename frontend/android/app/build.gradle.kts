@@ -19,7 +19,6 @@ idea {
 
 val buildConfigs = listOf(
     "bayern",
-    "bayernFloss",
     "nuernberg",
     "koblenz"
 )
