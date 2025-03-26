@@ -8,6 +8,7 @@ import app.ehrenamtskarte.backend.config.Environment
 import app.ehrenamtskarte.backend.migration.MigrationUtils
 import app.ehrenamtskarte.backend.migration.database.Migrations
 import app.ehrenamtskarte.backend.stores.importer.Importer
+import app.ehrenamtskarte.backend.stores.importer.toImportConfig
 import com.expediagroup.graphql.generator.extensions.print
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.Context
@@ -75,17 +76,13 @@ class ImportSingle : CliktCommand(name = "import-single") {
     override fun help(context: Context): String = "Imports stores for single project."
 
     override fun run() {
-        val projects =
-            config.projects.map {
-                if (it.id == projectId && importUrl != null) {
-                    it.copy(importUrl = importUrl!!)
-                } else {
-                    it
-                }
-            }
+        val projects = config.projects.map {
+            if (it.id == projectId && importUrl != null) it.copy(importUrl = importUrl!!) else it
+        }
         val newConfig = config.copy(projects = projects)
 
         Database.setup(newConfig)
+
         if (!Importer.import(newConfig.toImportConfig(projectId))) {
             throw ProgramResult(statusCode = 5)
         }

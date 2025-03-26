@@ -20,7 +20,7 @@ class Store(config: ImportConfig, private val logger: Logger) :
     PipelineStep<List<AcceptingStore>, Unit>(config) {
     override fun execute(input: List<AcceptingStore>) {
         transaction {
-            val project = ProjectEntity.find { Projects.project eq config.findProject().id }.single()
+            val project = ProjectEntity.find { Projects.project eq config.project.id }.single()
             try {
                 val acceptingStoreIdsToRemove = AcceptingStores
                     .select(AcceptingStores.id)
