@@ -7,9 +7,13 @@ changelog:
         labels:
         - not-testable
         - Nuernberg
+        - Koblenz
     - title: Nuernberg 🎉
       labels:
         - Nuernberg
+    - title: Koblenz 🎉
+      labels:
+        - Koblenz
     - title: Maintenance 🛠
       labels:
         - not-testable
