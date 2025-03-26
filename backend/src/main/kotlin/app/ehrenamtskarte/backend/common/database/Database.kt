@@ -20,7 +20,7 @@ import java.io.InputStreamReader
 
 class Database {
     companion object {
-        private fun executeSqlResource(path: String) {
+        fun executeSqlResource(path: String) {
             val resource = Database::class.java.classLoader.getResource(path)
                 ?: throw Exception("Failed to find script")
 
@@ -58,8 +58,8 @@ class Database {
                 insertOrUpdateProjects(config)
 
                 insertOrUpdateRegions(agencies, config)
-                insertOrUpdateCategories(Companion::executeSqlResource)
-                createOrReplaceStoreFunctions(Companion::executeSqlResource)
+                insertOrUpdateCategories()
+                createOrReplaceStoreFunctions()
             }
         }
 
