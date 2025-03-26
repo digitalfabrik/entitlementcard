@@ -7,7 +7,7 @@ changelog:
         labels:
         - not-testable
         - Nuernberg
-    - title: Testable features for nuernberg 🎉
+    - title: Nuernberg :tada: 
       labels:
         - Nuernberg
     - title: Maintenance 🛠
