@@ -6,8 +6,8 @@ import kotlin.test.assertEquals
 object JsonAssertion {
 
     /**
-     * Asserts that the value of the JSON field matches the expected value
-     * and produces a more precise error message tailored for JSON data
+     * This function can be used for JSON fields validation instead of `assertEquals(expected, actual)`
+     * to improve debugging efficiency. It produces more precise error messages tailored for JSON data.
      */
     fun <T> assertJsonValue(json: JsonNode, expected: T, key: String) {
         val actualNode = json.findValue(key) ?: throw AssertionError("Key '$key' not found in JSON")
