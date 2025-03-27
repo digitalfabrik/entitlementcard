@@ -4,5 +4,5 @@ steps:
   - install_app_toolbelt
   - run:
       name: Remove prerelease flag from github release
-      command: app-toolbelt v0 release promote --platform all --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
+      command: npx app-toolbelt v0 release promote --platform all --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
   - notify
