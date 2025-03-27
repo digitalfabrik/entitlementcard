@@ -751,6 +751,7 @@ jobs:
                 enum:
                     - bayern
                     - nuernberg
+                    - koblenz
                 type: enum
         resource_class: small
         steps:
@@ -782,6 +783,7 @@ jobs:
                 enum:
                     - bayern
                     - nuernberg
+                    - koblenz
                 type: enum
         steps:
             - prepare_workspace
@@ -1486,6 +1488,23 @@ workflows:
                 production_delivery: true
                 requires:
                     - build_android_nuernberg
+            - build_android:
+                buildConfig: koblenz
+                context:
+                    - credentials-repo
+                    - credentials-ehrenamtskarte
+                name: build_android_koblenz
+                requires:
+                    - bump_version
+                    - check_frontend
+            - deliver_android:
+                buildConfig: koblenz
+                context:
+                    - tuerantuer-google-play
+                name: deliver_android_koblenz
+                production_delivery: true
+                requires:
+                    - build_android_koblenz
             - build_ios:
                 buildConfig: bayern
                 context:
@@ -1520,6 +1539,23 @@ workflows:
                 production_delivery: true
                 requires:
                     - build_ios_nuernberg
+            - build_ios:
+                buildConfig: koblenz
+                context:
+                    - tuerantuer-apple
+                    - fastlane-match
+                name: build_ios_koblenz
+                requires:
+                    - bump_version
+                    - check_frontend
+            - deliver_ios:
+                buildConfig: koblenz
+                context:
+                    - tuerantuer-apple
+                name: deliver_ios_koblenz
+                production_delivery: true
+                requires:
+                    - build_ios_koblenz
             - notify_release:
                 context:
                     - deliverino
@@ -1527,8 +1563,10 @@ workflows:
                 requires:
                     - deliver_ios_bayern
                     - deliver_ios_nuernberg
+                    - deliver_ios_koblenz
                     - deliver_android_bayern
                     - deliver_android_nuernberg
+                    - deliver_android_koblenz
         when: << pipeline.parameters.run_delivery_production_frontend >>
     promotion_all:
         jobs:
@@ -1544,6 +1582,12 @@ workflows:
                     - mattermost
                     - tuerantuer-google-play
                 name: promote_nuernberg_android
+            - promote_android:
+                build_config_name: koblenz
+                context:
+                    - mattermost
+                    - tuerantuer-google-play
+                name: promote_koblenz_android
             - promote_ios:
                 build_config_name: bayern
                 context:
@@ -1556,6 +1600,12 @@ workflows:
                     - mattermost
                     - tuerantuer-apple
                 name: promote_nuernberg_ios
+            - promote_ios:
+                build_config_name: koblenz
+                context:
+                    - mattermost
+                    - tuerantuer-apple
+                name: promote_koblenz_ios
             - promote_to_server:
                 context:
                     - credentials-ehrenamtskarte
@@ -1585,6 +1635,12 @@ workflows:
                     - mattermost
                     - tuerantuer-google-play
                 name: promote_nuernberg_android
+            - promote_android:
+                build_config_name: koblenz
+                context:
+                    - mattermost
+                    - tuerantuer-google-play
+                name: promote_koblenz_android
             - promote_ios:
                 build_config_name: bayern
                 context:
@@ -1597,5 +1653,11 @@ workflows:
                     - mattermost
                     - tuerantuer-apple
                 name: promote_nuernberg_ios
+            - promote_ios:
+                build_config_name: koblenz
+                context:
+                    - mattermost
+                    - tuerantuer-apple
+                name: promote_koblenz_ios
         when: << pipeline.parameters.run_promotion_frontend >>
 
