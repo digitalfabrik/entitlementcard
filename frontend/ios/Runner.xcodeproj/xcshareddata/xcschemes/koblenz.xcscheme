@@ -10,7 +10,7 @@
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
                title = "Run Script"
-               scriptText = "source $HOME/.bashrc&#10;cd &quot;$SRCROOT&quot; &amp;&amp; app-toolbelt v0 build-config write-xcconfig koblenz ios --directory &quot;$SRCROOT&quot;&#10;"
+               scriptText = "source $HOME/.bashrc&#10;cd &quot;$SRCROOT&quot; &amp;&amp; npx app-toolbelt v0 build-config write-xcconfig koblenz ios --directory &quot;$SRCROOT&quot;&#10;"
                shellToInvoke = "/bin/bash">
                <EnvironmentBuildable>
                   <BuildableReference

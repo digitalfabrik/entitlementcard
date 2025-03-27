@@ -45,7 +45,7 @@ platform :ios do
       raise "'nil' passed as parameter! Aborting..."
     end
 
-    bundleIdentifier = sh("app-toolbelt v0 build-config to-json #{build_config_name} ios | jq -rj .bundleIdentifier")
+    bundleIdentifier = sh("npx app-toolbelt v0 build-config to-json #{build_config_name} ios | jq -rj .bundleIdentifier")
 
     match(type: "appstore", app_identifier: bundleIdentifier, readonly: true)
   end
@@ -158,7 +158,7 @@ platform :ios do
       raise "'nil' passed as parameter! Aborting..."
     end
 
-    bundle_identifier = sh("app-toolbelt v0 build-config to-json #{build_config_name} ios | jq -rj .bundleIdentifier ")
+    bundle_identifier = sh("npx app-toolbelt v0 build-config to-json #{build_config_name} ios | jq -rj .bundleIdentifier ")
 
     testflight_build_number = latest_testflight_build_number(app_identifier: bundle_identifier)
     testflight_version = lane_context[SharedValues::LATEST_TESTFLIGHT_VERSION]
