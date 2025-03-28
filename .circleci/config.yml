@@ -111,12 +111,13 @@ commands:
         steps:
             - restore_cache:
                 keys:
-                    - v1-node-modules-{{checksum "~/project/package-lock.json" }}
+                    - v1-node-modules-{{ checksum "~/project/package-lock.json" }}
+                    - v1-node-modules
             - run:
-                command: '[ ! -d node_modules ] && npm ci --ignore-scripts --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache.'
+                command: npm ci --ignore-scripts
                 name: Install node dependencies for npm workspaces
             - save_cache:
-                key: v1-node-modules-{{checksum "~/project/package-lock.json" }}
+                key: v1-node-modules-{{ checksum "~/project/package-lock.json" }}
                 paths:
                     - ~/project/node_modules
                     - ~/project/administration/node_modules
