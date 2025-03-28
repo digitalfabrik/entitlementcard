@@ -16,16 +16,16 @@ steps:
   - install_app_toolbelt
   - run:
       name: Calculate next version name
-      command: echo "export NEW_VERSION_NAME=$(npx app-toolbelt v0 version calc | jq .versionName)" >> ${BASH_ENV}
+      command: echo "export NEW_VERSION_NAME=$(npx --no app-toolbelt v0 version calc | jq .versionName)" >> ${BASH_ENV}
   - run:
       name: Calculate next version code
-      command: echo "export NEW_VERSION_CODE=$(npx app-toolbelt v0 version calc | jq .versionCode)" >> ${BASH_ENV}
+      command: echo "export NEW_VERSION_CODE=$(npx --no app-toolbelt v0 version calc | jq .versionCode)" >> ${BASH_ENV}
   - when:
       condition: << parameters.prepare_delivery >>
       steps:
         - run:
             name: Bump git version
-            command: npx app-toolbelt v0 release bump-to ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} --branch ${CIRCLE_BRANCH} --platforms << parameters.platforms >>
+            command: npx --no app-toolbelt v0 release bump-to ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} --branch ${CIRCLE_BRANCH} --platforms << parameters.platforms >>
   - when:
       condition:
         and:

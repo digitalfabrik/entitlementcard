@@ -43,7 +43,7 @@ private val json = Json { ignoreUnknownKeys = true }
 
 fun readBuildConfig(buildConfigName: String): BuildConfig {
     val jsonString = CommandLine.execute(
-        listOf("npx", "app-toolbelt", "v0", "build-config", "to-json", buildConfigName, "android"),
+        listOf("npx", "--no", "app-toolbelt", "v0", "build-config", "to-json", buildConfigName, "android"),
         File(System.getProperty("user.dir"))
     )
     return json.decodeFromString(jsonString)
@@ -53,7 +53,7 @@ data class ResValue(val type: String, val name: String, val value: String)
 
 fun readResValues(buildConfigName: String): List<ResValue> {
     val resString = CommandLine.execute(
-        listOf("npx", "app-toolbelt", "v0", "build-config", "to-properties", buildConfigName, "android"),
+        listOf("npx", "--no", "app-toolbelt", "v0", "build-config", "to-properties", buildConfigName, "android"),
         File(System.getProperty("user.dir"))
     )
     val props = Properties()
