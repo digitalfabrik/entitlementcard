@@ -135,7 +135,7 @@ platform :android do
       raise "'nil' passed as parameter! Aborting..."
     end
 
-    application_id = sh("npx app-toolbelt v0 build-config to-json #{build_config_name} android | jq -rj .applicationId ")
+    application_id = sh("npx --no app-toolbelt v0 build-config to-json #{build_config_name} android | jq -rj .applicationId ")
 
     beta_track = application_id == 'de.nrw.it.giz.ehrensache.bayern.android' ? "open-testing" : "beta" # bayern beta track has been renamed to open-testing, which cannot be undone
     track = production_delivery === true ? "production" : beta_track
@@ -169,7 +169,7 @@ platform :android do
       raise "'nil' passed as parameter! Aborting..."
     end
 
-    application_id = sh("npx app-toolbelt v0 build-config to-json #{build_config_name} android | jq -rj .applicationId ")
+    application_id = sh("npx --no app-toolbelt v0 build-config to-json #{build_config_name} android | jq -rj .applicationId ")
 
     # Someone managed to rename the beta track of the bayern-entitlementcard, unfortunately this cannot be undone
     beta_track = application_id == 'de.nrw.it.giz.ehrensache.bayern.android' ? "open-testing" : "beta"

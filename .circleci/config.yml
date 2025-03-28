@@ -376,16 +376,16 @@ jobs:
             - prepare_workspace
             - install_app_toolbelt
             - run:
-                command: echo "export NEW_VERSION_NAME=$(npx app-toolbelt v0 version calc | jq .versionName)" >> ${BASH_ENV}
+                command: echo "export NEW_VERSION_NAME=$(npx --no app-toolbelt v0 version calc | jq .versionName)" >> ${BASH_ENV}
                 name: Calculate next version name
             - run:
-                command: echo "export NEW_VERSION_CODE=$(npx app-toolbelt v0 version calc | jq .versionCode)" >> ${BASH_ENV}
+                command: echo "export NEW_VERSION_CODE=$(npx --no app-toolbelt v0 version calc | jq .versionCode)" >> ${BASH_ENV}
                 name: Calculate next version code
             - when:
                 condition: << parameters.prepare_delivery >>
                 steps:
                     - run:
-                        command: npx app-toolbelt v0 release bump-to ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} --branch ${CIRCLE_BRANCH} --platforms << parameters.platforms >>
+                        command: npx --no app-toolbelt v0 release bump-to ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} --branch ${CIRCLE_BRANCH} --platforms << parameters.platforms >>
                         name: Bump git version
             - when:
                 condition:
@@ -631,16 +631,16 @@ jobs:
             - prepare_workspace
             - install_app_toolbelt
             - run:
-                command: echo "export RELEASE_ID='$(npx app-toolbelt v0 release create all ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} <<# parameters.production_delivery >>--production-release<</ parameters.production_delivery >>)'" >> ${BASH_ENV}
+                command: echo "export RELEASE_ID='$(npx --no app-toolbelt v0 release create all ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} <<# parameters.production_delivery >>--production-release<</ parameters.production_delivery >>)'" >> ${BASH_ENV}
                 name: Create github release
             - run:
-                command: npx app-toolbelt v0 release upload --releaseId ${RELEASE_ID} --files "$(ls ~/attached_workspace/*.apk)" --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
+                command: npx --no app-toolbelt v0 release upload --releaseId ${RELEASE_ID} --files "$(ls ~/attached_workspace/*.apk)" --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
                 name: Upload android apks to github release
             - run:
-                command: npx app-toolbelt v0 release upload --releaseId ${RELEASE_ID} --files "$(ls ~/attached_workspace/debs/administration/*.deb)" --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
+                command: npx --no app-toolbelt v0 release upload --releaseId ${RELEASE_ID} --files "$(ls ~/attached_workspace/debs/administration/*.deb)" --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
                 name: Upload administration debian package to github release
             - run:
-                command: npx app-toolbelt v0 release upload --releaseId ${RELEASE_ID} --files "$(ls ~/attached_workspace/debs/backend/*.deb)" --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
+                command: npx --no app-toolbelt v0 release upload --releaseId ${RELEASE_ID} --files "$(ls ~/attached_workspace/debs/backend/*.deb)" --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
                 name: Upload backend debian packages to github release
             - notify:
                 allow_all_branches: true
@@ -763,7 +763,7 @@ jobs:
         steps:
             - install_app_toolbelt
             - run:
-                command: npx app-toolbelt v0 release promote --platform all --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
+                command: npx --no app-toolbelt v0 release promote --platform all --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
                 name: Remove prerelease flag from github release
             - notify
     promote_ios:
