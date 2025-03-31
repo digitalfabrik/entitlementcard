@@ -49,7 +49,7 @@ const StatisticsFilterBar = ({
         <StyledFormGroup label={t('start')} inline>
           <CustomDatePicker
             value={dateStart}
-            isValid={isValidDate(dateStart)}
+            error={!isValidDate(dateStart)}
             maxDate={dateEnd ?? defaultStartDate.toLocalDate()}
             textFieldSlotProps={{
               size: 'small',
@@ -67,7 +67,7 @@ const StatisticsFilterBar = ({
         <StyledFormGroup label={t('end')} inline>
           <CustomDatePicker
             value={dateEnd}
-            isValid={isValidDate(dateEnd)}
+            error={!isValidDate(dateEnd)}
             textFieldSlotProps={{
               size: 'small',
               sx: {

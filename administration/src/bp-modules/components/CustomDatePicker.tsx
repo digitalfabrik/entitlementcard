@@ -12,7 +12,7 @@ type CustomDatePickerProps = {
   onBlur?: () => void
   onChange?: (date: Date | null) => void
   onClear?: () => void
-  isValid: boolean
+  error: boolean
   minDate?: Date
   maxDate?: Date
   disableFuture?: boolean
@@ -28,7 +28,7 @@ const CustomDatePicker = ({
   onBlur,
   onChange,
   onClear,
-  isValid,
+  error,
   minDate,
   maxDate,
   disableFuture,
@@ -57,13 +57,13 @@ const CustomDatePicker = ({
           {
             helperText: textFieldHelperText,
             placeholder: 'TT.MM.JJJJ',
-            error: !isValid,
+            error,
             spellCheck: false,
             onBlur,
             size: 'small',
             sx: {
               width: '100%',
-              boxShadow: !isValid
+              boxShadow: error
                 ? `
                   0 0 0 0 rgba(205, 66, 70, 0),
                   inset 0 0 0 1px #cd4246,

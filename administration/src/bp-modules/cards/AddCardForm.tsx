@@ -47,7 +47,7 @@ const AddCardForm = ({ card, onRemove, updateCard }: CreateCardsFormProps): Reac
         <FormGroup label={t('expirationDate')}>
           <CustomDatePicker
             value={card.expirationDate?.toLocalDate() ?? null}
-            isValid={isExpirationDateValid(card)}
+            error={!isExpirationDateValid(card)}
             minDate={today.toLocalDate()}
             maxDate={today.add(maxCardValidity).toLocalDate()}
             onChange={date => {

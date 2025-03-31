@@ -53,7 +53,7 @@ const BirthdayForm = ({
           setValue({ birthday: PlainDate.safeFromLocalDate(date) })
         }}
         onClear={() => setValue({ birthday: null })}
-        isValid={isValid || !showErrorMessage}
+        error={!isValid && showErrorMessage}
         disableFuture
         textFieldSlotProps={{
           sx: {

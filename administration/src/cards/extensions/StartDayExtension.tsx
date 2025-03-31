@@ -23,7 +23,7 @@ const StartDayForm = ({ value, setValue, isValid }: ExtensionComponentProps<Star
             setValue({ startDay: PlainDate.fromLocalDate(date) })
           }
         }}
-        isValid={isValid}
+        error={!isValid}
         minDate={minStartDay.toLocalDate()}
         textFieldSlotProps={{
           sx: {
