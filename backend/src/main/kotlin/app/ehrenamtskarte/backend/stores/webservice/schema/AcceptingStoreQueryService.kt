@@ -29,10 +29,7 @@ class AcceptingStoreQueryService {
         }
 
     @GraphQLDescription("Returns list of all accepting stores in the given project queried by ids.")
-    fun physicalStoresByIdInProject(
-        project: String,
-        ids: List<Int>,
-    ): List<PhysicalStore?> =
+    fun physicalStoresByIdInProject(project: String, ids: List<Int>): List<PhysicalStore?> =
         transaction {
             PhysicalStoresRepository.findByIdsInProject(project, ids).map {
                 if (it == null) {
@@ -110,10 +107,8 @@ class AcceptingStoreQueryService {
     @GraphQLDescription(
         "Search for accepting stores using searchText and categoryIds in the eak bayern project.",
     )
-    fun searchAcceptingStores(
-        params: SearchParams,
-        dfe: DataFetchingEnvironment,
-    ): List<AcceptingStore> = searchAcceptingStoresInProject(DEFAULT_PROJECT, params, dfe)
+    fun searchAcceptingStores(params: SearchParams, dfe: DataFetchingEnvironment): List<AcceptingStore> =
+        searchAcceptingStoresInProject(DEFAULT_PROJECT, params, dfe)
 }
 
 data class SearchParams(

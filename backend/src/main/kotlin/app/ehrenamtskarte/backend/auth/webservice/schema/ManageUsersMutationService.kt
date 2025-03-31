@@ -112,11 +112,7 @@ class ManageUsersMutationService {
     }
 
     @GraphQLDescription("Deletes an existing administrator")
-    fun deleteAdministrator(
-        project: String,
-        adminId: Int,
-        dfe: DataFetchingEnvironment,
-    ): Boolean {
+    fun deleteAdministrator(project: String, adminId: Int, dfe: DataFetchingEnvironment): Boolean {
         val context = dfe.getContext<GraphQLContext>()
         val actingAdmin = context.getAdministrator()
 

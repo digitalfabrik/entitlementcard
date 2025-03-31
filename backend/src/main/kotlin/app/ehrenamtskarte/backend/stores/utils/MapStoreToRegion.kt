@@ -4,11 +4,7 @@ import app.ehrenamtskarte.backend.regions.database.RegionEntity
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import org.jetbrains.exposed.dao.id.EntityID
 
-fun getRegionFromAcceptingStore(
-    projectId: EntityID<Int>,
-    freinetId: Int?,
-    districtName: String?,
-): RegionEntity? {
+fun getRegionFromAcceptingStore(projectId: EntityID<Int>, freinetId: Int?, districtName: String?): RegionEntity? {
     if (freinetId != null) {
         return RegionsRepository.findRegionByFreinetId(freinetId, projectId)
     } else if (!districtName.isNullOrEmpty()) {

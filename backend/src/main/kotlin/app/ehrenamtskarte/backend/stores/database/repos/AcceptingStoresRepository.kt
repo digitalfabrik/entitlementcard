@@ -89,11 +89,7 @@ object AcceptingStoresRepository {
             .limit(limit, offset)
     }
 
-    fun getIdIfExists(
-        acceptingStore: AcceptingStore,
-        projectId: EntityID<Int>,
-        regionId: EntityID<Int>?,
-    ): Int? =
+    fun getIdIfExists(acceptingStore: AcceptingStore, projectId: EntityID<Int>, regionId: EntityID<Int>?): Int? =
         AcceptingStores.innerJoin(PhysicalStores).innerJoin(Addresses).innerJoin(Contacts)
             .slice(AcceptingStores.id).select {
                 (Addresses.street eq acceptingStore.streetWithHouseNumber) and
@@ -149,11 +145,7 @@ object AcceptingStoresRepository {
         return StoreImportReturnResultModel(numStoresCreated, acceptingStoreIdsToRemove.size, numStoresUntouched)
     }
 
-    fun createStore(
-        acceptingStore: AcceptingStore,
-        currentProjectId: EntityID<Int>,
-        region: RegionEntity?,
-    ) {
+    fun createStore(acceptingStore: AcceptingStore, currentProjectId: EntityID<Int>, region: RegionEntity?) {
         val address = AddressEntity.new {
             street = acceptingStore.streetWithHouseNumber
             postalCode = acceptingStore.postalCode!!

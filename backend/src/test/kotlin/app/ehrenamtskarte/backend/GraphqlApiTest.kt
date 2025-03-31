@@ -17,11 +17,7 @@ open class GraphqlApiTest : IntegrationTest() {
         }
     }
 
-    protected fun post(
-        client: HttpClient,
-        mutation: GraphQLClientRequest<*>,
-        token: String? = null,
-    ): GraphqlResponse {
+    protected fun post(client: HttpClient, mutation: GraphQLClientRequest<*>, token: String? = null): GraphqlResponse {
         val response = client.post("/", JavalinJackson().toJsonString(mutation)) { request ->
             token?.let { request.header("Authorization", "Bearer $it") }
         }

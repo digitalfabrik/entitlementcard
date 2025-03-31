@@ -17,10 +17,7 @@ fun <K, V> NamedDataLoader<K, V>.fromEnvironment(environment: DataFetchingEnviro
     environment.getDataLoader(name)
         ?: throw IllegalArgumentException("Registry does not have a DataLoader named $name")
 
-fun <K, V> newNamedDataLoader(
-    name: String,
-    loadBatch: suspend (ids: List<K>) -> List<V>,
-): NamedDataLoader<K, V> =
+fun <K, V> newNamedDataLoader(name: String, loadBatch: suspend (ids: List<K>) -> List<V>): NamedDataLoader<K, V> =
     object : NamedDataLoader<K, V> {
         override val name = name
         override val loader = DataLoaderFactory.newDataLoader(

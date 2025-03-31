@@ -19,11 +19,8 @@ class CardQueryService {
     @GraphQLDescription(
         "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid and a timestamp of the last check",
     )
-    fun verifyCardInProject(
-        project: String,
-        card: CardVerificationModel,
-        dfe: DataFetchingEnvironment,
-    ): Boolean = verifyCardInProjectV2(project, card, dfe).valid
+    fun verifyCardInProject(project: String, card: CardVerificationModel, dfe: DataFetchingEnvironment): Boolean =
+        verifyCardInProjectV2(project, card, dfe).valid
 
     @GraphQLDescription(
         "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid, extendable and a timestamp of the last check",

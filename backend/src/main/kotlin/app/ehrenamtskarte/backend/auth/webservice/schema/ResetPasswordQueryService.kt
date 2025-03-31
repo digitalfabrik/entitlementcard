@@ -17,10 +17,7 @@ import java.time.Instant
 @Suppress("unused")
 class ResetPasswordQueryService {
     @GraphQLDescription("Verify password reset link")
-    fun checkPasswordResetLink(
-        project: String,
-        resetKey: String,
-    ): Boolean =
+    fun checkPasswordResetLink(project: String, resetKey: String): Boolean =
         transaction {
             val projectEntity =
                 ProjectEntity.find { Projects.project eq project }.firstOrNull() ?: throw ProjectNotFoundException(

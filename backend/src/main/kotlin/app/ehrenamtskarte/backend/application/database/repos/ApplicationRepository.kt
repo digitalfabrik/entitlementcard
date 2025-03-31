@@ -155,10 +155,7 @@ object ApplicationRepository {
             }
         }
 
-    fun delete(
-        applicationId: Int,
-        graphQLContext: GraphQLContext,
-    ): Boolean =
+    fun delete(applicationId: Int, graphQLContext: GraphQLContext): Boolean =
         transaction {
             val application = ApplicationEntity.findById(applicationId)
             if (application != null) {
@@ -199,10 +196,7 @@ object ApplicationRepository {
                 .sortByKeys({ it.id.value }, ids)
         }
 
-    fun updateApplicationNote(
-        applicationId: Int,
-        note: String,
-    ): Boolean =
+    fun updateApplicationNote(applicationId: Int, note: String): Boolean =
         transaction {
             val application = ApplicationEntity.findById(applicationId)
             if (application != null) {
@@ -213,10 +207,7 @@ object ApplicationRepository {
             }
         }
 
-    fun updateCardCreated(
-        applicationId: Int,
-        cardCreated: Boolean,
-    ): Boolean =
+    fun updateCardCreated(applicationId: Int, cardCreated: Boolean): Boolean =
         transaction {
             val application = ApplicationEntity.findById(applicationId)
             if (application != null) {

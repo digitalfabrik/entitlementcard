@@ -126,46 +126,39 @@ class GraphQLHandler(
         return result
     }
 
-    private fun getGraphQLContext(
-        context: Context,
-        files: List<Part>,
-        remoteIp: String,
-        applicationData: File,
-    ) = try {
-        GraphQLContext(
-            applicationData,
-            JwtService.verifyRequest(context),
-            files,
-            remoteIp,
-            backendConfiguration,
-            regionIdentifierByPostalCode,
-            context.req(),
-        )
-    } catch (e: Exception) {
-        when (e) {
-            is JWTDecodeException, is AlgorithmMismatchException, is SignatureVerificationException,
-            is InvalidClaimException, is TokenExpiredException,
-            -> GraphQLContext(
+    private fun getGraphQLContext(context: Context, files: List<Part>, remoteIp: String, applicationData: File) =
+        try {
+            GraphQLContext(
                 applicationData,
-                null,
+                JwtService.verifyRequest(context),
                 files,
                 remoteIp,
                 backendConfiguration,
                 regionIdentifierByPostalCode,
                 context.req(),
             )
+        } catch (e: Exception) {
+            when (e) {
+                is JWTDecodeException, is AlgorithmMismatchException, is SignatureVerificationException,
+                is InvalidClaimException, is TokenExpiredException,
+                -> GraphQLContext(
+                    applicationData,
+                    null,
+                    files,
+                    remoteIp,
+                    backendConfiguration,
+                    regionIdentifierByPostalCode,
+                    context.req(),
+                )
 
-            else -> throw e
+                else -> throw e
+            }
         }
-    }
 
     /**
      * Execute a query against schema
      */
-    fun handle(
-        context: Context,
-        applicationData: File,
-    ) {
+    fun handle(context: Context, applicationData: File) {
         // Execute the query against the schema
         try {
             val (payload, files) = getPayload(context)

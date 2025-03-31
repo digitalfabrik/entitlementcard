@@ -33,12 +33,7 @@ class Database {
             }
         }
 
-        fun createAccount(
-            project: String,
-            email: String,
-            password: String,
-            roleDbValue: String,
-        ) {
+        fun createAccount(project: String, email: String, password: String, roleDbValue: String) {
             val role = Role.fromDbValue(roleDbValue)
             transaction {
                 val testRegionId = if (role in setOf(

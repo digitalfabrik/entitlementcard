@@ -22,10 +22,7 @@ object MigrationUtils {
     /**
      * @throws MigrationException
      */
-    fun applyRequiredMigrations(
-        database: Database,
-        skipBaseline: Boolean = false,
-    ) {
+    fun applyRequiredMigrations(database: Database, skipBaseline: Boolean = false) {
         val migrations = MigrationsRegistry.getAllMigrations()
 
         if (migrations.map { it.version } != (1..migrations.size).toList()) {

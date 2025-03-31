@@ -23,11 +23,7 @@ import java.time.Instant
 @Suppress("unused")
 class ResetPasswordMutationService {
     @GraphQLDescription("Sends a mail that allows the administrator to reset their password.")
-    fun sendResetMail(
-        dfe: DataFetchingEnvironment,
-        project: String,
-        email: String,
-    ): Boolean {
+    fun sendResetMail(dfe: DataFetchingEnvironment, project: String, email: String): Boolean {
         val logger = LoggerFactory.getLogger(ResetPasswordMutationService::class.java)
         val backendConfig = dfe.getContext<GraphQLContext>().backendConfiguration
         val projectConfig = backendConfig.getProjectConfig(project)

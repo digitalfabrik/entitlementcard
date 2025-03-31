@@ -20,10 +20,7 @@ open class GraphQLBaseException(
 
     private val extensions: Map<String, Any> = extraExtensions.plus("code" to code)
 
-    fun toError(
-        path: ResultPath? = null,
-        location: SourceLocation? = null,
-    ): GraphQLError =
+    fun toError(path: ResultPath? = null, location: SourceLocation? = null): GraphQLError =
         GraphQLError.newError()
             .errorType(errorType)
             .message("Error $code occurred.")

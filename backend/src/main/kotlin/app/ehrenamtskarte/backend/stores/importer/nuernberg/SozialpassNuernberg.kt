@@ -25,10 +25,7 @@ object SozialpassNuernberg : Pipeline {
         }
     }
 
-    override fun import(
-        config: ImportConfig,
-        logger: Logger,
-    ) {
+    override fun import(config: ImportConfig, logger: Logger) {
         val csvStores = Unit
             .addStep(DownloadCsv(config, logger), logger) { logger.info("== Download csv data ==") }
         val geocoded = csvStores

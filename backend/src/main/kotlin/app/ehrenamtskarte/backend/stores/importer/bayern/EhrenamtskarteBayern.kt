@@ -24,10 +24,7 @@ object EhrenamtskarteBayern : Pipeline {
         }
     }
 
-    override fun import(
-        config: ImportConfig,
-        logger: Logger,
-    ) {
+    override fun import(config: ImportConfig, logger: Logger) {
         // to speedup testing and creating csv import files for nuernberg, the bavaria import will only be executed if csvWriter is not enabled.
         if (!config.backendConfig.csvWriter.enabled) {
             Unit

@@ -86,10 +86,7 @@ class UserImportHandler(
         }
     }
 
-    private fun importData(
-        csvParser: CSVParser,
-        project: String,
-    ) {
+    private fun importData(csvParser: CSVParser, project: String) {
         transaction {
             val regionsByProject = RegionsRepository.findAllInProject(project)
 
@@ -125,10 +122,7 @@ class UserImportHandler(
         }
     }
 
-    private fun parseDate(
-        dateString: String,
-        lineNumber: Long,
-    ): LocalDate {
+    private fun parseDate(dateString: String, lineNumber: Long): LocalDate {
         try {
             return LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd.MM.yyyy"))
         } catch (exception: DateTimeParseException) {
@@ -139,10 +133,7 @@ class UserImportHandler(
         }
     }
 
-    private fun parseRevoked(
-        revokedString: String,
-        lineNumber: Long,
-    ): Boolean =
+    private fun parseRevoked(revokedString: String, lineNumber: Long): Boolean =
         revokedString.toBooleanStrictOrNull()
             ?: throw UserImportException(lineNumber, "Revoked must be a boolean value")
 

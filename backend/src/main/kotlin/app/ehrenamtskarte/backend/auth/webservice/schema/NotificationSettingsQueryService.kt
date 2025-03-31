@@ -14,10 +14,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 @Suppress("unused")
 class NotificationSettingsQueryService {
     @GraphQLDescription("Get the notification settings of the authenticated administrator")
-    fun getNotificationSettings(
-        project: String,
-        dfe: DataFetchingEnvironment,
-    ): NotificationSettings {
+    fun getNotificationSettings(project: String, dfe: DataFetchingEnvironment): NotificationSettings {
         val context = dfe.getContext<GraphQLContext>()
         val admin = context.getAdministrator()
 

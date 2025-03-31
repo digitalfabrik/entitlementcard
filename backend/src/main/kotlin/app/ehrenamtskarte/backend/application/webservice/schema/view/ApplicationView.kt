@@ -17,10 +17,7 @@ data class ApplicationView(
     val cardCreated: Boolean?,
 ) {
     companion object {
-        fun fromDbEntity(
-            entity: ApplicationEntity,
-            includePrivateInformation: Boolean = false,
-        ): ApplicationView {
+        fun fromDbEntity(entity: ApplicationEntity, includePrivateInformation: Boolean = false): ApplicationView {
             if (includePrivateInformation) {
                 return ApplicationView(
                     entity.id.value,

@@ -25,10 +25,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 @Suppress("unused")
 class ViewAdministratorsQueryService {
     @GraphQLDescription("Returns the requesting administrator as retrieved from his JWT token.")
-    fun whoAmI(
-        project: String,
-        dfe: DataFetchingEnvironment,
-    ): Administrator {
+    fun whoAmI(project: String, dfe: DataFetchingEnvironment): Administrator {
         val context = dfe.getContext<GraphQLContext>()
         val admin = context.getAdministrator()
 
@@ -45,10 +42,7 @@ class ViewAdministratorsQueryService {
     @GraphQLDescription(
         "Returns all administrators in a project. This query requires the role PROJECT_ADMIN.",
     )
-    fun getUsersInProject(
-        project: String,
-        dfe: DataFetchingEnvironment,
-    ): List<Administrator> {
+    fun getUsersInProject(project: String, dfe: DataFetchingEnvironment): List<Administrator> {
         val context = dfe.getContext<GraphQLContext>()
         val admin = context.getAdministrator()
 
@@ -71,10 +65,7 @@ class ViewAdministratorsQueryService {
     @GraphQLDescription(
         "Returns all administrators in a region. This query requires the role REGION_ADMIN or PROJECT_ADMIN.",
     )
-    fun getUsersInRegion(
-        regionId: Int,
-        dfe: DataFetchingEnvironment,
-    ): List<Administrator> {
+    fun getUsersInRegion(regionId: Int, dfe: DataFetchingEnvironment): List<Administrator> {
         val context = dfe.getContext<GraphQLContext>()
         val admin = context.getAdministrator()
 

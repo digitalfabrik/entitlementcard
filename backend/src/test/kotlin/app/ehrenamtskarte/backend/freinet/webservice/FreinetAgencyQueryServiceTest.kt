@@ -71,10 +71,7 @@ internal class FreinetAgencyQueryServiceTest : GraphqlApiTest() {
             }
         }
 
-    private fun createQuery(
-        regionId: Int,
-        project: String,
-    ): GetFreinetAgencyByRegionId {
+    private fun createQuery(regionId: Int, project: String): GetFreinetAgencyByRegionId {
         val variables = GetFreinetAgencyByRegionId.Variables(
             project = project,
             regionId = regionId,

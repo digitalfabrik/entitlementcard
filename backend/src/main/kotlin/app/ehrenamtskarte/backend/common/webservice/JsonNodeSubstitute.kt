@@ -6,11 +6,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode
 import com.fasterxml.jackson.databind.node.IntNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 
-fun JsonNode.substitute(
-    path: String,
-    value: Int,
-    mapper: ObjectMapper,
-) {
+fun JsonNode.substitute(path: String, value: Int, mapper: ObjectMapper) {
     val paths = path.split(".")
     var node = this
 

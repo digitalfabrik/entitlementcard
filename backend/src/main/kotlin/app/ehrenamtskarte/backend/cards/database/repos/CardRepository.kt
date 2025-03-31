@@ -26,19 +26,13 @@ import org.jetbrains.exposed.sql.update
 import java.time.Instant
 
 object CardRepository {
-    fun deleteInactiveCardsByHash(
-        regionId: Int,
-        cardInfoHashList: List<ByteArray>,
-    ) {
+    fun deleteInactiveCardsByHash(regionId: Int, cardInfoHashList: List<ByteArray>) {
         Cards.deleteWhere {
             firstActivationDate.isNull() and (cardInfoHash inList cardInfoHashList) and (Cards.regionId eq regionId)
         }
     }
 
-    fun findByHash(
-        project: String,
-        cardInfoHash: ByteArray,
-    ): CardEntity? {
+    fun findByHash(project: String, cardInfoHash: ByteArray): CardEntity? {
         val query =
             (Projects innerJoin Regions innerJoin Cards)
                 .slice(Cards.columns)
@@ -72,10 +66,7 @@ object CardRepository {
         this.startDay = startDay
     }
 
-    fun activate(
-        card: CardEntity,
-        totpSecret: ByteArray,
-    ) {
+    fun activate(card: CardEntity, totpSecret: ByteArray) {
         if (card.codeType != CodeType.DYNAMIC) {
             throw InvalidCodeTypeException()
         }

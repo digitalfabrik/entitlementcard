@@ -60,10 +60,7 @@ class EakApplicationMutationService {
     }
 
     @GraphQLDescription("Deletes the application with specified id")
-    fun deleteApplication(
-        applicationId: Int,
-        dfe: DataFetchingEnvironment,
-    ): Boolean {
+    fun deleteApplication(applicationId: Int, dfe: DataFetchingEnvironment): Boolean {
         val context = dfe.getContext<GraphQLContext>()
         val admin = context.getAdministrator()
 
@@ -117,11 +114,7 @@ class EakApplicationMutationService {
     }
 
     @GraphQLDescription("Updates a note of an application")
-    fun updateApplicationNote(
-        applicationId: Int,
-        noteText: String,
-        dfe: DataFetchingEnvironment,
-    ): Boolean {
+    fun updateApplicationNote(applicationId: Int, noteText: String, dfe: DataFetchingEnvironment): Boolean {
         val context = dfe.getContext<GraphQLContext>()
         val admin = context.getAdministrator()
 

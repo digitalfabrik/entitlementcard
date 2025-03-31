@@ -11,13 +11,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 internal class ValidityPeriodUtilTest {
-    private fun clockWithTime(
-        year: Int,
-        month: Int,
-        dayOfMonth: Int,
-        hour: Int,
-        minute: Int,
-    ): Clock =
+    private fun clockWithTime(year: Int, month: Int, dayOfMonth: Int, hour: Int, minute: Int): Clock =
         Clock.fixed(
             // Europe/Berlin == +1 Offset
             LocalDateTime.of(year, month, dayOfMonth, hour, minute).toInstant(ZoneOffset.ofHours(1)),

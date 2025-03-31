@@ -38,10 +38,7 @@ internal class Argon2IdHasherTest {
         "false, \'\$argon2id\$v=19\$t=2,p=1\$57YPIKvU/XE9h7/JA0tZFT2TzpwBQfYAW6K+ojXBh5w\'",
         "false, \'\$argon2id\$m=19456,t=2,p=1\$v=19\$57YPIKvU/XE9h7/JA0tZFT2TzpwBQfYAW6K+ojXBh5w\'",
     )
-    fun testUserHashValidation(
-        isValid: Boolean,
-        userHash: String,
-    ) {
+    fun testUserHashValidation(isValid: Boolean, userHash: String) {
         assertEquals(isValid, Argon2IdHasher.isValidUserHash(userHash))
     }
 }

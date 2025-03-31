@@ -34,10 +34,7 @@ class RegionsQueryService {
         }
 
     @GraphQLDescription("Returns regions queried by ids in the given project.")
-    fun regionsByIdInProject(
-        project: String,
-        ids: List<Int>,
-    ): List<Region?> =
+    fun regionsByIdInProject(project: String, ids: List<Int>): List<Region?> =
         transaction {
             RegionsRepository.findByIdsInProject(project, ids).map {
                 if (it == null) {
@@ -74,11 +71,7 @@ class RegionsQueryService {
     @GraphQLDescription(
         "Returns regions by postal code. Works only for the EAK project in which each region has an appropriate regionIdentifier.",
     )
-    fun regionsByPostalCode(
-        dfe: DataFetchingEnvironment,
-        postalCode: String,
-        project: String,
-    ): List<Region> =
+    fun regionsByPostalCode(dfe: DataFetchingEnvironment, postalCode: String, project: String): List<Region> =
         transaction {
             val regions = dfe.getContext<GraphQLContext>().regionIdentifierByPostalCode
                 .filter { pair -> pair.first.equals(postalCode) }

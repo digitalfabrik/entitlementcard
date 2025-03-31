@@ -26,12 +26,7 @@ fun AcceptingStore.isInBoundingBox(bbox: DoubleArray): Boolean {
 /**
  * Returns whether [latitude] and [longitude] are closer than [thresholdInKm] to the bounding box [bbox]
  */
-fun isCloseTo(
-    bbox: DoubleArray,
-    latitude: Double,
-    longitude: Double,
-    thresholdInKm: Double,
-): Boolean {
+fun isCloseTo(bbox: DoubleArray, latitude: Double, longitude: Double, thresholdInKm: Double): Boolean {
     // Constants taken from https://stackoverflow.com/a/1253545/3245533
     val kmPerLatitudeDegree = 110.574
     val kmPerLongitudeDegree = 111.320 * cos(latitude.degreesToRadians())

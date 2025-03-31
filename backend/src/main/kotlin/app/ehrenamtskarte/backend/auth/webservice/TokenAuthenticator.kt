@@ -13,10 +13,7 @@ import java.time.LocalDate
 
 class TokenAuthenticator {
     companion object TokenAuthenticator {
-        private fun authenticateToken(
-            header: String?,
-            neededType: ApiTokenType,
-        ): ApiTokenEntity {
+        private fun authenticateToken(header: String?, neededType: ApiTokenType): ApiTokenEntity {
             val authHeader = header?.takeIf { it.startsWith("Bearer ") }
                 ?: throw UnauthorizedException()
 
@@ -29,14 +26,10 @@ class TokenAuthenticator {
             }
         }
 
-        fun authenticate(
-            context: Context,
-            neededType: ApiTokenType,
-        ): ApiTokenEntity = authenticateToken(context.header("Authorization"), neededType)
+        fun authenticate(context: Context, neededType: ApiTokenType): ApiTokenEntity =
+            authenticateToken(context.header("Authorization"), neededType)
 
-        fun authenticate(
-            request: HttpServletRequest,
-            neededType: ApiTokenType,
-        ): ApiTokenEntity = authenticateToken(request.getHeader("Authorization"), neededType)
+        fun authenticate(request: HttpServletRequest, neededType: ApiTokenType): ApiTokenEntity =
+            authenticateToken(request.getHeader("Authorization"), neededType)
     }
 }

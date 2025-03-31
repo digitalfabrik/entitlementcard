@@ -15,11 +15,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 @Suppress("unused")
 class RegionsMutationService {
     @GraphQLDescription("Updates the data privacy policy of a region")
-    fun updateDataPrivacy(
-        dfe: DataFetchingEnvironment,
-        regionId: Int,
-        dataPrivacyText: String,
-    ): Boolean {
+    fun updateDataPrivacy(dfe: DataFetchingEnvironment, regionId: Int, dataPrivacyText: String): Boolean {
         val jwtPayload = dfe.getContext<GraphQLContext>().enforceSignedIn()
         transaction {
             val user = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()

@@ -46,17 +46,15 @@ object TestApplicationBuilder {
         ),
     )
 
-    private fun createPersonalData(
-        forenames: String,
-        surname: String,
-    ) = PersonalDataInput(
-        forenames = ShortTextInput(forenames),
-        surname = ShortTextInput(surname),
-        dateOfBirth = DateInput("1990-01-01"),
-        address = createAddress(),
-        telephone = ShortTextInput("123456789"),
-        emailAddress = EmailInput("johndoe@example.com"),
-    )
+    private fun createPersonalData(forenames: String, surname: String) =
+        PersonalDataInput(
+            forenames = ShortTextInput(forenames),
+            surname = ShortTextInput(surname),
+            dateOfBirth = DateInput("1990-01-01"),
+            address = createAddress(),
+            telephone = ShortTextInput("123456789"),
+            emailAddress = EmailInput("johndoe@example.com"),
+        )
 
     private fun createApplicationDetails(
         isAlreadyVerified: Boolean,
@@ -78,36 +76,31 @@ object TestApplicationBuilder {
         blueCardEntitlement = createBlueCardEntitlement(isAlreadyVerified, category, contactName),
     )
 
-    private fun createBlueCardEntitlement(
-        isAlreadyVerified: Boolean,
-        category: String,
-        contactName: String,
-    ) = BlueCardEntitlementInput(
-        entitlementType = BlueCardEntitlementType.WORK_AT_ORGANIZATIONS,
-        workAtOrganizationsEntitlement = BlueCardWorkAtOrganizationsEntitlementInput(
-            list = listOf(
-                WorkAtOrganizationInput(
-                    organization = createOrganization(category, contactName),
-                    amountOfWork = 7.5,
-                    responsibility = ShortTextInput("Trainer"),
-                    workSinceDate = DateInput("2020-10-06"),
-                    payment = false,
-                    certificate = null,
-                    isAlreadyVerified = isAlreadyVerified,
+    private fun createBlueCardEntitlement(isAlreadyVerified: Boolean, category: String, contactName: String) =
+        BlueCardEntitlementInput(
+            entitlementType = BlueCardEntitlementType.WORK_AT_ORGANIZATIONS,
+            workAtOrganizationsEntitlement = BlueCardWorkAtOrganizationsEntitlementInput(
+                list = listOf(
+                    WorkAtOrganizationInput(
+                        organization = createOrganization(category, contactName),
+                        amountOfWork = 7.5,
+                        responsibility = ShortTextInput("Trainer"),
+                        workSinceDate = DateInput("2020-10-06"),
+                        payment = false,
+                        certificate = null,
+                        isAlreadyVerified = isAlreadyVerified,
+                    ),
                 ),
             ),
-        ),
-    )
+        )
 
-    private fun createOrganization(
-        category: String,
-        contactName: String,
-    ) = OrganizationInput(
-        address = createAddress(),
-        category = ShortTextInput(category),
-        contact = createContact(contactName),
-        name = ShortTextInput("Sportverein Augsburg-Nord"),
-    )
+    private fun createOrganization(category: String, contactName: String) =
+        OrganizationInput(
+            address = createAddress(),
+            category = ShortTextInput(category),
+            contact = createContact(contactName),
+            name = ShortTextInput("Sportverein Augsburg-Nord"),
+        )
 
     private fun createContact(name: String) =
         OrganizationContactInput(

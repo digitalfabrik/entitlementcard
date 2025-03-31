@@ -31,11 +31,7 @@ object AdministratorsRepository {
     fun emailAlreadyExists(email: String) =
         !AdministratorEntity.find { LowerCase(Administrators.email) eq email.lowercase() }.empty()
 
-    fun findByAuthData(
-        project: String,
-        email: String,
-        password: String,
-    ): AdministratorEntity? {
+    fun findByAuthData(project: String, email: String, password: String): AdministratorEntity? {
         val resultRow = (Administrators innerJoin Projects)
             .slice(Administrators.columns)
             .select(
@@ -91,10 +87,7 @@ object AdministratorsRepository {
         }
     }
 
-    fun changePassword(
-        administrator: AdministratorEntity,
-        newPassword: String,
-    ) {
+    fun changePassword(administrator: AdministratorEntity, newPassword: String) {
         val passwordValidationResult = PasswordValidator.validatePassword(newPassword)
         if (passwordValidationResult != PasswordValidationResult.VALID) {
             throw InvalidPasswordException()
@@ -118,18 +111,12 @@ object AdministratorsRepository {
         return passwordResetKey
     }
 
-    fun updateNotificationSettings(
-        administrator: AdministratorEntity,
-        notificationSettings: NotificationSettings,
-    ) {
+    fun updateNotificationSettings(administrator: AdministratorEntity, notificationSettings: NotificationSettings) {
         administrator.notificationOnApplication = notificationSettings.notificationOnApplication
         administrator.notificationOnVerification = notificationSettings.notificationOnVerification
     }
 
-    fun getNotificationRecipientsForApplication(
-        project: String,
-        regionId: Int,
-    ): List<AdministratorEntity> =
+    fun getNotificationRecipientsForApplication(project: String, regionId: Int): List<AdministratorEntity> =
         transaction {
             (Administrators innerJoin Projects).select {
                 (Projects.project eq project) and (Administrators.notificationOnApplication eq true) and
@@ -138,10 +125,7 @@ object AdministratorsRepository {
             }.let { AdministratorEntity.wrapRows(it) }.toList()
         }
 
-    fun getNotificationRecipientsForVerification(
-        project: String,
-        regionId: Int,
-    ): List<AdministratorEntity> =
+    fun getNotificationRecipientsForVerification(project: String, regionId: Int): List<AdministratorEntity> =
         transaction {
             (Administrators innerJoin Projects).select {
                 (Projects.project eq project) and (Administrators.notificationOnVerification eq true) and

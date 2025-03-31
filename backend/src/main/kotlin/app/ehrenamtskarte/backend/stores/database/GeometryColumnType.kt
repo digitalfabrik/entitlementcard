@@ -20,7 +20,4 @@ class GeometryColumnType(val srid: Int = 4326) : ColumnType() {
     }
 }
 
-fun Table.point(
-    name: String,
-    srid: Int = 4326,
-): Column<Point> = registerColumn(name, GeometryColumnType(srid))
+fun Table.point(name: String, srid: Int = 4326): Column<Point> = registerColumn(name, GeometryColumnType(srid))

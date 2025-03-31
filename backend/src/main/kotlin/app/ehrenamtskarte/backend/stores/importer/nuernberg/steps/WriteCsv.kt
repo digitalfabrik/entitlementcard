@@ -24,10 +24,7 @@ class WriteCsv(config: ImportConfig) :
      * Writes a CSV file in the same format as the input CSV to the resources folder.
      * This is used to complement the input file with missing geoinformation.
      */
-    private fun writeCsvWithGeoInformation(
-        csvStores: List<CSVAcceptingStore>,
-        geocodedStores: List<AcceptingStore>,
-    ) {
+    private fun writeCsvWithGeoInformation(csvStores: List<CSVAcceptingStore>, geocodedStores: List<AcceptingStore>) {
         val writer: BufferedWriter =
             Files.newBufferedWriter(Paths.get("src/main/resources/import/nuernberg-akzeptanzstellen_geoinfo.csv"))
 

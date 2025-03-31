@@ -18,11 +18,7 @@ class QRCodeUtil {
         val DEFAULT_ERROR_CORRECTION = ErrorCorrectionLevel.M
         val DEFAULT_MODE = Mode.BYTE
 
-        private fun willFit(
-            numInputBits: Int,
-            version: Version,
-            ecLevel: ErrorCorrectionLevel?,
-        ): Boolean {
+        private fun willFit(numInputBits: Int, version: Version, ecLevel: ErrorCorrectionLevel?): Boolean {
             // In the following comments, we use numbers of Version 7-H.
             // numBytes = 196
             val numBytes = version.totalCodewords
@@ -35,10 +31,7 @@ class QRCodeUtil {
             return numDataBytes >= totalInputBytes
         }
 
-        private fun appendModeInfo(
-            mode: Mode,
-            bits: BitArray,
-        ) {
+        private fun appendModeInfo(mode: Mode, bits: BitArray) {
             bits.appendBits(mode.bits, 4)
         }
 

@@ -72,10 +72,7 @@ class FilterDuplicates(
         )
     }
 
-    private fun <T : Any> List<AcceptingStore>.lastValue(
-        property: String,
-        transform: (AcceptingStore) -> T?,
-    ): T? {
+    private fun <T : Any> List<AcceptingStore>.lastValue(property: String, transform: (AcceptingStore) -> T?): T? {
         val uniqueValues = mapNotNull { transform(it) }.toSet()
 
         if (uniqueValues.size > 1) {

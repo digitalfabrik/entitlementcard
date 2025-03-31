@@ -478,11 +478,7 @@ internal class UserImportTest : IntegrationTest() {
             }
         }
 
-    private fun importUsers(
-        client: HttpClient,
-        csvFile: File?,
-        token: String? = "dummy",
-    ): Response {
+    private fun importUsers(client: HttpClient, csvFile: File?, token: String? = "dummy"): Response {
         val requestBuilder = Request.Builder().url(client.origin + USER_IMPORT_PATH)
         if (token != null) {
             requestBuilder.addHeader("Authorization", "Bearer $token")

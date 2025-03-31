@@ -66,10 +66,8 @@ class AdministratorEntity(id: EntityID<Int>) : IntEntity(id) {
 
     fun isInProject(projectId: Int): Boolean = this.projectId.value == projectId
 
-    fun hasRole(
-        role: Role,
-        vararg other: Role,
-    ): Boolean = this.role == role.db_value || other.any { this.role == it.db_value }
+    fun hasRole(role: Role, vararg other: Role): Boolean =
+        this.role == role.db_value || other.any { this.role == it.db_value }
 
     fun isInRegion(regionId: Int): Boolean = this.regionId?.value == regionId
 }

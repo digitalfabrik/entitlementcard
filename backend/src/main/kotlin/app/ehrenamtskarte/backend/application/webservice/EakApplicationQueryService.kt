@@ -14,10 +14,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 @Suppress("unused")
 class EakApplicationQueryService {
     @GraphQLDescription("Queries all applications for a specific region")
-    fun getApplications(
-        dfe: DataFetchingEnvironment,
-        regionId: Int,
-    ): List<ApplicationView> {
+    fun getApplications(dfe: DataFetchingEnvironment, regionId: Int): List<ApplicationView> {
         val context = dfe.getContext<GraphQLContext>()
         val admin = context.getAdministrator()
         return transaction {

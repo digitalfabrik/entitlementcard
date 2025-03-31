@@ -8,62 +8,39 @@ import app.ehrenamtskarte.backend.regions.database.RegionEntity
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object Authorizer {
-    fun mayCreateCardInRegion(
-        user: AdministratorEntity,
-        regionId: Int,
-    ): Boolean = user.isInRegion(regionId) && user.hasRole(Role.REGION_MANAGER, Role.REGION_ADMIN)
+    fun mayCreateCardInRegion(user: AdministratorEntity, regionId: Int): Boolean =
+        user.isInRegion(regionId) && user.hasRole(Role.REGION_MANAGER, Role.REGION_ADMIN)
 
-    fun mayDeleteCardInRegion(
-        user: AdministratorEntity,
-        regionId: Int,
-    ): Boolean = user.isInRegion(regionId) && user.hasRole(Role.REGION_MANAGER, Role.REGION_ADMIN)
+    fun mayDeleteCardInRegion(user: AdministratorEntity, regionId: Int): Boolean =
+        user.isInRegion(regionId) && user.hasRole(Role.REGION_MANAGER, Role.REGION_ADMIN)
 
-    fun mayViewApplicationsInRegion(
-        user: AdministratorEntity,
-        regionId: Int,
-    ): Boolean = user.isInRegion(regionId) && user.hasRole(Role.REGION_MANAGER, Role.REGION_ADMIN)
+    fun mayViewApplicationsInRegion(user: AdministratorEntity, regionId: Int): Boolean =
+        user.isInRegion(regionId) && user.hasRole(Role.REGION_MANAGER, Role.REGION_ADMIN)
 
-    fun mayUpdateApplicationsInRegion(
-        user: AdministratorEntity,
-        regionId: Int,
-    ): Boolean = user.isInRegion(regionId) && user.hasRole(Role.REGION_MANAGER, Role.REGION_ADMIN)
+    fun mayUpdateApplicationsInRegion(user: AdministratorEntity, regionId: Int): Boolean =
+        user.isInRegion(regionId) && user.hasRole(Role.REGION_MANAGER, Role.REGION_ADMIN)
 
-    fun mayDeleteApplicationsInRegion(
-        user: AdministratorEntity,
-        regionId: Int,
-    ): Boolean = user.isInRegion(regionId) && user.hasRole(Role.REGION_MANAGER, Role.REGION_ADMIN)
+    fun mayDeleteApplicationsInRegion(user: AdministratorEntity, regionId: Int): Boolean =
+        user.isInRegion(regionId) && user.hasRole(Role.REGION_MANAGER, Role.REGION_ADMIN)
 
-    fun mayUpdateSettingsInRegion(
-        user: AdministratorEntity,
-        regionId: Int,
-    ): Boolean = user.isInRegion(regionId) && user.hasRole(Role.REGION_ADMIN)
+    fun mayUpdateSettingsInRegion(user: AdministratorEntity, regionId: Int): Boolean =
+        user.isInRegion(regionId) && user.hasRole(Role.REGION_ADMIN)
 
-    fun mayViewUsersInProject(
-        user: AdministratorEntity,
-        projectId: Int,
-    ): Boolean = user.isInProject(projectId) && user.hasRole(Role.PROJECT_ADMIN)
+    fun mayViewUsersInProject(user: AdministratorEntity, projectId: Int): Boolean =
+        user.isInProject(projectId) && user.hasRole(Role.PROJECT_ADMIN)
 
-    fun mayViewUsersInRegion(
-        user: AdministratorEntity,
-        region: RegionEntity,
-    ): Boolean =
+    fun mayViewUsersInRegion(user: AdministratorEntity, region: RegionEntity): Boolean =
         mayViewUsersInProject(user, region.projectId.value) ||
             (user.hasRole(Role.REGION_ADMIN) && user.isInRegion(region.id.value))
 
-    fun maySendMailsInRegion(
-        user: AdministratorEntity,
-        regionId: Int,
-    ): Boolean = user.isInRegion(regionId) && user.hasRole(Role.REGION_MANAGER, Role.REGION_ADMIN)
+    fun maySendMailsInRegion(user: AdministratorEntity, regionId: Int): Boolean =
+        user.isInRegion(regionId) && user.hasRole(Role.REGION_MANAGER, Role.REGION_ADMIN)
 
-    fun mayViewCardStatisticsInProject(
-        user: AdministratorEntity,
-        projectId: Int,
-    ): Boolean = user.isInProject(projectId) && user.hasRole(Role.PROJECT_ADMIN)
+    fun mayViewCardStatisticsInProject(user: AdministratorEntity, projectId: Int): Boolean =
+        user.isInProject(projectId) && user.hasRole(Role.PROJECT_ADMIN)
 
-    fun mayViewCardStatisticsInRegion(
-        user: AdministratorEntity,
-        regionId: Int,
-    ): Boolean = user.hasRole(Role.REGION_ADMIN) && user.isInRegion(regionId)
+    fun mayViewCardStatisticsInRegion(user: AdministratorEntity, regionId: Int): Boolean =
+        user.hasRole(Role.REGION_ADMIN) && user.isInRegion(regionId)
 
     fun mayCreateUser(
         actingAdmin: AdministratorEntity,
@@ -112,10 +89,7 @@ object Authorizer {
             newAdminRole in setOf(Role.REGION_ADMIN, Role.REGION_MANAGER)
     }
 
-    fun mayDeleteUser(
-        actingAdmin: AdministratorEntity,
-        existingAdmin: AdministratorEntity,
-    ): Boolean {
+    fun mayDeleteUser(actingAdmin: AdministratorEntity, existingAdmin: AdministratorEntity): Boolean {
         if (actingAdmin.projectId != existingAdmin.projectId) {
             return false
         }
@@ -125,20 +99,14 @@ object Authorizer {
         return actingAdmin.hasRole(Role.REGION_ADMIN) && existingAdmin.regionId == actingAdmin.regionId
     }
 
-    fun mayUpdateStoresInProject(
-        user: AdministratorEntity,
-        projectId: Int,
-    ): Boolean = user.projectId.value == projectId && user.hasRole(Role.PROJECT_STORE_MANAGER)
+    fun mayUpdateStoresInProject(user: AdministratorEntity, projectId: Int): Boolean =
+        user.projectId.value == projectId && user.hasRole(Role.PROJECT_STORE_MANAGER)
 
-    fun mayViewFreinetAgencyInformationInRegion(
-        user: AdministratorEntity,
-        regionId: Int,
-    ): Boolean = user.hasRole(Role.REGION_ADMIN) && user.isInRegion(regionId) && user.isInProject(EAK_BAYERN_PROJECT)
+    fun mayViewFreinetAgencyInformationInRegion(user: AdministratorEntity, regionId: Int): Boolean =
+        user.hasRole(Role.REGION_ADMIN) && user.isInRegion(regionId) && user.isInProject(EAK_BAYERN_PROJECT)
 
-    fun mayUpdateFreinetAgencyInformationInRegion(
-        user: AdministratorEntity,
-        regionId: Int,
-    ): Boolean = user.hasRole(Role.REGION_ADMIN) && user.isInRegion(regionId) && user.isInProject(EAK_BAYERN_PROJECT)
+    fun mayUpdateFreinetAgencyInformationInRegion(user: AdministratorEntity, regionId: Int): Boolean =
+        user.hasRole(Role.REGION_ADMIN) && user.isInRegion(regionId) && user.isInProject(EAK_BAYERN_PROJECT)
 
     fun mayAddApiTokensInProject(user: AdministratorEntity): Boolean =
         transaction {

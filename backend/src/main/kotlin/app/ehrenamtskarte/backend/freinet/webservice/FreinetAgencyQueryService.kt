@@ -19,11 +19,7 @@ class FreinetAgencyQueryService {
     @GraphQLDescription(
         "Returns freinet agency information for a particular region. Works only for the EAK project.",
     )
-    fun getFreinetAgencyByRegionId(
-        dfe: DataFetchingEnvironment,
-        regionId: Int,
-        project: String,
-    ): FreinetAgency? =
+    fun getFreinetAgencyByRegionId(dfe: DataFetchingEnvironment, regionId: Int, project: String): FreinetAgency? =
         transaction {
             val context = dfe.getContext<GraphQLContext>()
             val admin = context.getAdministrator()

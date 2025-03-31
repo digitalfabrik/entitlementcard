@@ -19,20 +19,14 @@ object RegionsRepository {
         return RegionEntity.wrapRows(query).toList()
     }
 
-    fun findByIdsInProject(
-        project: String,
-        ids: List<Int>,
-    ): List<RegionEntity?> {
+    fun findByIdsInProject(project: String, ids: List<Int>): List<RegionEntity?> {
         val query = (Projects innerJoin Regions)
             .slice(Regions.columns)
             .select { Projects.project eq project and (Regions.id inList ids) }
         return RegionEntity.wrapRows(query).sortByKeys({ it.id.value }, ids)
     }
 
-    fun findByIdInProject(
-        project: String,
-        id: Int,
-    ): RegionEntity? =
+    fun findByIdInProject(project: String, id: Int): RegionEntity? =
         (Projects innerJoin Regions)
             .slice(Regions.columns)
             .select { Projects.project eq project and (Regions.id eq id) }
@@ -43,10 +37,7 @@ object RegionsRepository {
 
     fun findRegionById(regionId: Int): RegionEntity = RegionEntity[regionId]
 
-    fun updateDataPolicy(
-        region: RegionEntity,
-        dataPrivacyText: String,
-    ) {
+    fun updateDataPolicy(region: RegionEntity, dataPrivacyText: String) {
         region.dataPrivacyPolicy = dataPrivacyText
     }
 
@@ -59,10 +50,7 @@ object RegionsRepository {
         region.activatedForCardConfirmationMail = activatedForConfirmationMail
     }
 
-    fun findRegionByRegionIdentifier(
-        regionIdentifier: String,
-        projectId: EntityID<Int>,
-    ): RegionEntity {
+    fun findRegionByRegionIdentifier(regionIdentifier: String, projectId: EntityID<Int>): RegionEntity {
         val regionId = RegionEntity
             .find {
                 Regions.regionIdentifier eq regionIdentifier and (Regions.projectId eq projectId) and
@@ -72,19 +60,12 @@ object RegionsRepository {
         return RegionEntity[regionId]
     }
 
-    fun findRegionByNameAndPrefix(
-        name: String,
-        prefix: String,
-        projectId: EntityID<Int>,
-    ): RegionEntity? =
+    fun findRegionByNameAndPrefix(name: String, prefix: String, projectId: EntityID<Int>): RegionEntity? =
         RegionEntity.find {
             (Regions.name eq name) and (Regions.prefix eq prefix) and (Regions.projectId eq projectId)
         }.singleOrNull()
 
-    fun findRegionByFreinetId(
-        freinetId: Int,
-        projectId: EntityID<Int>,
-    ): RegionEntity? =
+    fun findRegionByFreinetId(freinetId: Int, projectId: EntityID<Int>): RegionEntity? =
         (FreinetAgencies innerJoin Regions)
             .slice(Regions.columns)
             .select { FreinetAgencies.agencyId eq freinetId and (Regions.projectId eq projectId) }

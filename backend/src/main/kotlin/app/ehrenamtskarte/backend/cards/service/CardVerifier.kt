@@ -17,23 +17,14 @@ val TIME_STEP: Duration = Duration.ofSeconds(30)
 const val TOTP_LENGTH = 6
 
 object CardVerifier {
-    fun verifyStaticCard(
-        project: String,
-        cardHash: ByteArray,
-        timezone: ZoneId,
-    ): Boolean {
+    fun verifyStaticCard(project: String, cardHash: ByteArray, timezone: ZoneId): Boolean {
         val card = transaction { CardRepository.findByHash(project, cardHash) } ?: return false
         return !isExpired(card.expirationDay, timezone) &&
             isYetValid(card.startDay, timezone) &&
             !card.revoked
     }
 
-    fun verifyDynamicCard(
-        project: String,
-        cardHash: ByteArray,
-        totp: Int,
-        timezone: ZoneId,
-    ): Boolean {
+    fun verifyDynamicCard(project: String, cardHash: ByteArray, totp: Int, timezone: ZoneId): Boolean {
         val card = transaction { CardRepository.findByHash(project, cardHash) } ?: return false
         return !isExpired(card.expirationDay, timezone) &&
             isYetValid(card.startDay, timezone) &&
@@ -41,15 +32,10 @@ object CardVerifier {
             isTotpValid(totp, card.totpSecret)
     }
 
-    fun isExpired(
-        expirationDay: Long?,
-        timezone: ZoneId,
-    ): Boolean = expirationDay != null && !isOnOrBeforeToday(daysSinceEpochToDate(expirationDay), timezone)
+    fun isExpired(expirationDay: Long?, timezone: ZoneId): Boolean =
+        expirationDay != null && !isOnOrBeforeToday(daysSinceEpochToDate(expirationDay), timezone)
 
-    fun isExtendable(
-        project: String,
-        cardHash: ByteArray,
-    ): Boolean {
+    fun isExtendable(project: String, cardHash: ByteArray): Boolean {
         val card = transaction { CardRepository.findByHash(project, cardHash) } ?: return false
         val expirationDay = card.expirationDay ?: return false
         val entitlementId = card.entitlementId ?: return false
@@ -59,15 +45,10 @@ object CardVerifier {
         return LocalDate.ofEpochDay(expirationDay) < userEntitlement.endDate
     }
 
-    private fun isYetValid(
-        startDay: Long?,
-        timezone: ZoneId,
-    ): Boolean = startDay === null || isOnOrAfterToday(daysSinceEpochToDate(startDay), timezone)
+    private fun isYetValid(startDay: Long?, timezone: ZoneId): Boolean =
+        startDay === null || isOnOrAfterToday(daysSinceEpochToDate(startDay), timezone)
 
-    private fun isTotpValid(
-        totp: Int,
-        secret: ByteArray?,
-    ): Boolean {
+    private fun isTotpValid(totp: Int, secret: ByteArray?): Boolean {
         if (secret == null) return false
         if (generateTotp(secret) == totp) return true
 
@@ -81,10 +62,7 @@ object CardVerifier {
         return false
     }
 
-    private fun generateTotp(
-        secret: ByteArray,
-        timestamp: Instant = Instant.now(),
-    ): Int {
+    private fun generateTotp(secret: ByteArray, timestamp: Instant = Instant.now()): Int {
         val totpGenerator = TimeBasedOneTimePasswordGenerator(
             TIME_STEP,
             TOTP_LENGTH,

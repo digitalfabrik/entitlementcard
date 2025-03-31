@@ -21,10 +21,7 @@ data class ShortTextInput(val shortText: String) {
         }
     }
 
-    fun toJsonField(
-        fieldName: String,
-        translatable: Boolean = false,
-    ): JsonField {
+    fun toJsonField(fieldName: String, translatable: Boolean = false): JsonField {
         if (translatable) {
             return JsonField(fieldName, Type.TranslatableString, shortText)
         }
