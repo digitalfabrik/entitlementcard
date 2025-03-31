@@ -119,7 +119,7 @@ class ImportSingle : CliktCommand(
         }
         val newConfig = config.copy(projects = projects)
 
-        Database.setup(newConfig)
+        Database.setupWithInitialDataAndMigrationChecks(newConfig)
 
         if (!Importer.import(newConfig.toImportConfig(projectId))) {
             throw ProgramResult(statusCode = 5)
@@ -134,7 +134,7 @@ class Import : CliktCommand(
     private val config by requireObject<BackendConfiguration>()
 
     override fun run() {
-        Database.setup(config)
+        Database.setupWithInitialDataAndMigrationChecks(config)
         // Run import for all projects and exit with status code if one import failed
         config.projects
             .map { Importer.import(config.toImportConfig(it.id)) }
@@ -154,7 +154,7 @@ class CreateAdmin : CliktCommand(
     private val password by argument()
 
     override fun run() {
-        Database.setup(config)
+        Database.setupWithInitialDataAndMigrationChecks(config)
         Database.createAccount(project, email, password, role)
     }
 }
@@ -166,7 +166,7 @@ class Execute : CliktCommand(
     private val config by requireObject<BackendConfiguration>()
 
     override fun run() {
-        Database.setup(config)
+        Database.setupWithInitialDataAndMigrationChecks(config)
         WebService().start(config)
     }
 }
