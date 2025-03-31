@@ -56,7 +56,7 @@ const DateForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
       <CustomDatePicker
         value={parseDateFromState(state.value)}
         disabled={disableAllInputs}
-        error={touched && isInvalid}
+        error={(showAllErrors || touched) && isInvalid}
         label={label}
         minDate={minDate}
         maxDate={options.maximumDate}
