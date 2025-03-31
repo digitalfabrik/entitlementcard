@@ -45,7 +45,7 @@ class Database {
             }
         }
 
-        fun setup(config: BackendConfiguration): org.jetbrains.exposed.sql.Database {
+        fun setupWithInitialDataAndMigrationChecks(config: BackendConfiguration): org.jetbrains.exposed.sql.Database {
             val database = setupWithoutMigrationCheck(config)
             setupInitialData(config)
             return database
