@@ -35,7 +35,7 @@ open class IntegrationTest {
                 )
             val database = Database.setupWithoutMigrationCheck(config)
             MigrationUtils.applyRequiredMigrations(database)
-            Database.setupInitialData(config)
+            Database.setupWithInitialDataAndMigrationChecks(config)
             TestAdministrators.createAll()
             TestFreinetAgencies.create()
         }

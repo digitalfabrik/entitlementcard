@@ -120,7 +120,7 @@ class ImportSingle : CliktCommand(name = "import-single") {
         }
         val newConfig = config.copy(projects = projects)
 
-        Database.setup(newConfig)
+        Database.setupWithInitialDataAndMigrationChecks(newConfig)
 
         if (!Importer.import(newConfig.toImportConfig(projectId))) {
             throw ProgramResult(statusCode = 5)
@@ -134,7 +134,7 @@ class Import : CliktCommand(name = "import") {
     override fun help(context: Context): String = "Imports stores for all projects."
 
     override fun run() {
-        Database.setup(config)
+        Database.setupWithInitialDataAndMigrationChecks(config)
         // Run import for all projects and exit with status code if one import failed
         config.projects
             .map { Importer.import(config.toImportConfig(it.id)) }
@@ -153,7 +153,7 @@ class CreateAdmin : CliktCommand(name = "create-admin") {
     override fun help(context: Context): String = "Creates an admin account with the specified email and password"
 
     override fun run() {
-        Database.setup(config)
+        Database.setupWithInitialDataAndMigrationChecks(config)
         Database.createAccount(project, email, password, role)
     }
 }
@@ -164,7 +164,7 @@ class Execute : CliktCommand() {
     override fun help(context: Context): String = "Starts the webserver"
 
     override fun run() {
-        Database.setup(config)
+        Database.setupWithInitialDataAndMigrationChecks(config)
         WebService().start(config)
     }
 }
