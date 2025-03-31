@@ -28,12 +28,7 @@ class EakApplicationMutationService {
         project: String,
         dfe: DataFetchingEnvironment,
     ): DataFetcherResult<Boolean> {
-        val applicationHandler = ApplicationHandler(
-            dfe.getContext<GraphQLContext>(),
-            application,
-            regionId,
-            project,
-        )
+        val applicationHandler = ApplicationHandler(dfe.getContext<GraphQLContext>(), application, regionId, project)
         val dataFetcherResultBuilder = DataFetcherResult.newResult<Boolean>()
 
         applicationHandler.validateRegion()
