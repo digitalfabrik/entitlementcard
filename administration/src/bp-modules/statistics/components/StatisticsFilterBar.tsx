@@ -11,6 +11,7 @@ import { defaultEndDate, defaultStartDate } from '../constants'
 const StyledFormGroup = styled(FormGroup)`
   margin: 0 16px 0 0;
   align-self: center;
+  align-items: center;
 `
 
 const filterDateFormat = 'yyyy-MM-dd'
