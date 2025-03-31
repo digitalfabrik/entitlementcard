@@ -47,16 +47,17 @@ class QRCodeUtil {
             return headerBits.size + DEFAULT_MODE.getCharacterCountBits(DEFAULT_VERSION) + content.count() * 8
         }
 
-        private fun isContentLengthValid(content: ByteArray): Boolean {
-            return willFit(calculateBitsNeeded(content), DEFAULT_VERSION, DEFAULT_ERROR_CORRECTION)
-        }
+        private fun isContentLengthValid(content: ByteArray): Boolean =
+            willFit(calculateBitsNeeded(content), DEFAULT_VERSION, DEFAULT_ERROR_CORRECTION)
 
-        fun isContentLengthValid(card: Card.DynamicActivationCode): Boolean {
-            return isContentLengthValid(Card.QrCode.newBuilder().setDynamicActivationCode(card).build().toByteArray())
-        }
+        fun isContentLengthValid(card: Card.DynamicActivationCode): Boolean =
+            isContentLengthValid(
+                Card.QrCode.newBuilder().setDynamicActivationCode(card).build().toByteArray(),
+            )
 
-        fun isContentLengthValid(card: Card.StaticVerificationCode): Boolean {
-            return isContentLengthValid(Card.QrCode.newBuilder().setStaticVerificationCode(card).build().toByteArray())
-        }
+        fun isContentLengthValid(card: Card.StaticVerificationCode): Boolean =
+            isContentLengthValid(
+                Card.QrCode.newBuilder().setStaticVerificationCode(card).build().toByteArray(),
+            )
     }
 }

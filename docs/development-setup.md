@@ -82,6 +82,19 @@ Run `Start administration (env:local+buildConfig:all)` from Intellij run configu
 
 ## Backend
 
+### Recommended IDE set up
+
+For IntelliJ, the following plugins are recomended:
+
+- [detekt](https://plugins.jetbrains.com/plugin/10761-detekt)
+- [Ktlint](https://plugins.jetbrains.com/plugin/15057-ktlint)
+
+### Common development tasks
+
+- Run Ktlint diagnostic: `./gradlew ktlintCheck`
+- Run Ktlint formatter: `./gradlew ktlintFormat`
+- Run Detekt diagnostic: `./gradlew detekt`
+
 ### Backend Setup
 
 1. Install docker and docker-compose

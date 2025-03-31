@@ -9,13 +9,13 @@ import app.ehrenamtskarte.backend.migration.Statement
  * (instead of deleting & reinserting all every time).
  */
 @Suppress("ClassName")
-internal class V0006_AddStoreCreatedDate() : Migration() {
+internal class V0006_AddStoreCreatedDate : Migration() {
     override val migrate: Statement = {
         exec(
             """
             ALTER TABLE acceptingstores
             ADD "createdDate" TIMESTAMP DEFAULT (CURRENT_TIMESTAMP) NOT NULL;
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 }

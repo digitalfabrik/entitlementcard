@@ -15,11 +15,11 @@ data class ApplicationDetails(
     val goldenCardEntitlement: GoldenCardEntitlement?,
     val hasAcceptedPrivacyPolicy: Boolean,
     val hasAcceptedEmailUsage: Boolean,
-    val givenInformationIsCorrectAndComplete: Boolean
+    val givenInformationIsCorrectAndComplete: Boolean,
 ) : JsonFieldSerializable {
     private val entitlementByCardType: Map<BavariaCardType, JsonFieldSerializable?> = mapOf(
         BavariaCardType.BLUE to blueCardEntitlement,
-        BavariaCardType.GOLDEN to goldenCardEntitlement
+        BavariaCardType.GOLDEN to goldenCardEntitlement,
     )
 
     init {
@@ -27,7 +27,9 @@ data class ApplicationDetails(
             throw InvalidJsonException("The specified entitlement(s) do not match card type.")
         }
         if ((applicationType != null) != (cardType == BavariaCardType.BLUE)) {
-            throw InvalidJsonException("Application type must not be null if and only if card type is blue.")
+            throw InvalidJsonException(
+                "Application type must not be null if and only if card type is blue.",
+            )
         }
         if (!wantsPhysicalCard && !wantsDigitalCard) {
             throw InvalidJsonException("Does not apply for a physical nor for a digital card.")
@@ -36,12 +38,14 @@ data class ApplicationDetails(
             throw InvalidJsonException("Has not accepted privacy policy.")
         }
         if (!givenInformationIsCorrectAndComplete) {
-            throw InvalidJsonException("Has not confirmed that information is correct and complete.")
+            throw InvalidJsonException(
+                "Has not confirmed that information is correct and complete.",
+            )
         }
     }
 
-    override fun toJsonField(): JsonField {
-        return JsonField(
+    override fun toJsonField(): JsonField =
+        JsonField(
             "applicationDetails",
             Type.Array,
             listOfNotNull(
@@ -51,7 +55,7 @@ data class ApplicationDetails(
                     value = when (cardType) {
                         BavariaCardType.BLUE -> "Blaue Ehrenamtskarte"
                         BavariaCardType.GOLDEN -> "Goldene Ehrenamtskarte"
-                    }
+                    },
                 ),
                 applicationType?.let {
                     JsonField(
@@ -60,36 +64,35 @@ data class ApplicationDetails(
                         value = when (applicationType) {
                             ApplicationType.FIRST_APPLICATION -> "Erstantrag"
                             ApplicationType.RENEWAL_APPLICATION -> "Verlängerungsantrag"
-                        }
+                        },
                     )
                 },
                 JsonField(
                     name = "wantsDigitalCard",
                     type = Type.Boolean,
-                    value = wantsDigitalCard
+                    value = wantsDigitalCard,
                 ),
                 JsonField(
                     name = "wantsPhysicalCard",
                     type = Type.Boolean,
-                    value = wantsPhysicalCard
+                    value = wantsPhysicalCard,
                 ),
                 entitlementByCardType[cardType]!!.toJsonField(),
                 JsonField(
                     "hasAcceptedPrivacyPolicy",
                     Type.Boolean,
-                    hasAcceptedPrivacyPolicy
+                    hasAcceptedPrivacyPolicy,
                 ),
                 JsonField(
                     "hasAcceptedEmailUsage",
                     Type.Boolean,
-                    hasAcceptedEmailUsage
+                    hasAcceptedEmailUsage,
                 ),
                 JsonField(
                     "givenInformationIsCorrectAndComplete",
                     Type.Boolean,
-                    givenInformationIsCorrectAndComplete
-                )
-            )
+                    givenInformationIsCorrectAndComplete,
+                ),
+            ),
         )
-    }
 }

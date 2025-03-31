@@ -17,10 +17,17 @@ import org.jetbrains.exposed.sql.transactions.transaction
 @Suppress("unused")
 class FreinetAgencyMutationService {
     @GraphQLDescription("Updates the data transfer to freinet. Works only for the EAK project.")
-    fun updateDataTransferToFreinet(dfe: DataFetchingEnvironment, regionId: Int, project: String, dataTransferActivated: Boolean): Boolean {
+    fun updateDataTransferToFreinet(
+        dfe: DataFetchingEnvironment,
+        regionId: Int,
+        project: String,
+        dataTransferActivated: Boolean,
+    ): Boolean {
         val context = dfe.getContext<GraphQLContext>()
         val admin = context.getAdministrator()
-        val projectConfig = dfe.getContext<GraphQLContext>().backendConfiguration.getProjectConfig(project)
+        val projectConfig = dfe.getContext<GraphQLContext>().backendConfiguration.getProjectConfig(
+            project,
+        )
         if (projectConfig.freinet == null) {
             throw NotImplementedException()
         }
@@ -30,7 +37,9 @@ class FreinetAgencyMutationService {
             if (!Authorizer.mayUpdateFreinetAgencyInformationInRegion(admin, regionId)) {
                 throw ForbiddenException()
             }
-            val freinetAgency = FreinetAgencyRepository.getFreinetAgencyByRegionId(regionId) ?: throw FreinetAgencyNotFoundException()
+            val freinetAgency = FreinetAgencyRepository
+                .getFreinetAgencyByRegionId(regionId)
+                ?: throw FreinetAgencyNotFoundException()
             FreinetAgencyRepository.updateFreinetDataTransfer(freinetAgency, dataTransferActivated)
         }
         return true

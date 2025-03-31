@@ -11,11 +11,11 @@ data class EmailInput(val email: String) {
         if (email.isEmpty()) {
             throw InvalidJsonException("Value of EmailInput should not be empty.")
         } else if (email.length > MAX_SHORT_TEXT_LENGTH) {
-            throw InvalidJsonException("Value of EmailInput should have at most $MAX_SHORT_TEXT_LENGTH characters.")
+            throw InvalidJsonException(
+                "Value of EmailInput should have at most $MAX_SHORT_TEXT_LENGTH characters.",
+            )
         }
     }
 
-    fun toJsonField(fieldName: String): JsonField {
-        return JsonField(fieldName, Type.String, email)
-    }
+    fun toJsonField(fieldName: String): JsonField = JsonField(fieldName, Type.String, email)
 }

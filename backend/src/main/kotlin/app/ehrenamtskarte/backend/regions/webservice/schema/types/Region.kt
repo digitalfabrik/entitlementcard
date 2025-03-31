@@ -7,5 +7,5 @@ data class Region(
     val regionIdentifier: String?,
     val dataPrivacyPolicy: String?,
     val activatedForApplication: Boolean,
-    val activatedForCardConfirmationMail: Boolean
+    val activatedForCardConfirmationMail: Boolean,
 )

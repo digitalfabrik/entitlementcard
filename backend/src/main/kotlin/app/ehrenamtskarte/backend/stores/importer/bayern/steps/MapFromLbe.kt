@@ -15,37 +15,38 @@ import org.slf4j.Logger
  * Maps [LbeAcceptingStore] to [AcceptingStore].
  * Properties are cleaned, decoded and converted to the correct types.
  */
-class MapFromLbe(config: ImportConfig, private val logger: Logger) : PipelineStep<List<LbeAcceptingStore>, List<AcceptingStore>>(config) {
-
-    override fun execute(input: List<LbeAcceptingStore>) = input.mapNotNull {
-        try {
-            AcceptingStore(
-                it.name.clean()!!,
-                COUNTRY_CODE,
-                it.location.clean()!!,
-                it.postalCode.clean(),
-                it.street.clean(),
-                it.houseNumber.clean(),
-                null,
-                it.longitude.safeToDouble(),
-                it.latitude.safeToDouble(),
-                categoryId(it.category!!),
-                it.email.clean(),
-                it.telephone.clean(),
-                it.homepage.clean(),
-                it.discount.clean(false),
-                it.freinetId.clean()?.toInt(),
-                it.districtName.clean()
-            )
-        } catch (e: Exception) {
-            logger.error("Exception occurred while mapping $it", e)
-            null
+class MapFromLbe(
+    config: ImportConfig,
+    private val logger: Logger,
+) : PipelineStep<List<LbeAcceptingStore>, List<AcceptingStore>>(config) {
+    override fun execute(input: List<LbeAcceptingStore>) =
+        input.mapNotNull {
+            try {
+                AcceptingStore(
+                    it.name.clean()!!,
+                    COUNTRY_CODE,
+                    it.location.clean()!!,
+                    it.postalCode.clean(),
+                    it.street.clean(),
+                    it.houseNumber.clean(),
+                    null,
+                    it.longitude.safeToDouble(),
+                    it.latitude.safeToDouble(),
+                    categoryId(it.category!!),
+                    it.email.clean(),
+                    it.telephone.clean(),
+                    it.homepage.clean(),
+                    it.discount.clean(false),
+                    it.freinetId.clean()?.toInt(),
+                    it.districtName.clean(),
+                )
+            } catch (e: Exception) {
+                logger.error("Exception occurred while mapping $it", e)
+                null
+            }
         }
-    }
 
-    private fun String?.safeToDouble(): Double? {
-        return this?.clean()?.replace(",", ".")?.toDouble()
-    }
+    private fun String?.safeToDouble(): Double? = this?.clean()?.replace(",", ".")?.toDouble()
 
     private fun categoryId(category: String): Int {
         val int = category.toInt()
