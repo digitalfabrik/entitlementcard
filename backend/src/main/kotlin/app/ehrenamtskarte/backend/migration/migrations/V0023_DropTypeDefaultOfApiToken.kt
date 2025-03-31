@@ -8,7 +8,7 @@ internal class V0023_DropTypeDefaultOfApiToken : Migration() {
         exec(
             """
                 ALTER TABLE apitokens ALTER COLUMN type DROP DEFAULT;
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 }

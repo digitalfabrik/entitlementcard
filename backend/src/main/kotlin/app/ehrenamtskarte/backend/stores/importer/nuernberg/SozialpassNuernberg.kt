@@ -17,7 +17,7 @@ import io.ktor.client.plugins.HttpRequestRetry
 import org.slf4j.Logger
 
 object SozialpassNuernberg : Pipeline {
-    private val httpClient = HttpClient() {
+    private val httpClient = HttpClient {
         install(HttpRequestRetry) {
             retryOnServerErrors(maxRetries = 5)
             retryOnException(maxRetries = 5, retryOnTimeout = true)

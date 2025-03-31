@@ -8,6 +8,6 @@ class InvalidQrCodeSize(encodedCardInfoBase64: String, codeType: CodeType) : Gra
     GraphQLExceptionCode.INVALID_QR_CODE_SIZE,
     mapOf(
         "encodedCardInfoBase64" to encodedCardInfoBase64,
-        "codeType" to codeType
-    )
+        "codeType" to codeType,
+    ),
 )

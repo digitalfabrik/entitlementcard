@@ -38,8 +38,10 @@ class GraphQLHandler(
     private val backendConfiguration: BackendConfiguration,
     private val graphQLParams: GraphQLParams =
         storesGraphQlParams stitch cardsGraphQlParams
-            stitch applicationGraphQlParams stitch regionsGraphQlParams stitch authGraphQlParams stitch freinetGraphQlParams,
-    private val regionIdentifierByPostalCode: List<Pair<String, String>> = PostalCodesLoader.loadRegionIdentifierByPostalCodeMap()
+            stitch applicationGraphQlParams stitch regionsGraphQlParams stitch authGraphQlParams stitch
+            freinetGraphQlParams,
+    private val regionIdentifierByPostalCode: List<Pair<String, String>> =
+        PostalCodesLoader.loadRegionIdentifierByPostalCodeMap(),
 ) {
     val config: SchemaGeneratorConfig = graphQLParams.config
         .plus(SchemaGeneratorConfig(listOf("app.ehrenamtskarte.backend.common.webservice.schema")))
@@ -49,7 +51,7 @@ class GraphQLHandler(
         config,
         graphQLParams.queries,
         graphQLParams.mutations,
-        graphQLParams.subscriptions
+        graphQLParams.subscriptions,
     )
     private val graphQL = GraphQL.newGraphQL(graphQLSchema)
         .defaultDataFetcherExceptionHandler(CustomDataFetcherExceptionHandler()).build()!!
@@ -118,7 +120,8 @@ class GraphQLHandler(
 
         try {
             result["data"] = executionResult.getData<Any?>()
-        } catch (_: NullPointerException) {}
+        } catch (_: NullPointerException) {
+        }
 
         return result
     }
@@ -132,12 +135,12 @@ class GraphQLHandler(
                 remoteIp,
                 backendConfiguration,
                 regionIdentifierByPostalCode,
-                context.req()
+                context.req(),
             )
         } catch (e: Exception) {
             when (e) {
                 is JWTDecodeException, is AlgorithmMismatchException, is SignatureVerificationException,
-                is InvalidClaimException, is TokenExpiredException
+                is InvalidClaimException, is TokenExpiredException,
                 -> GraphQLContext(
                     applicationData,
                     null,
@@ -145,7 +148,7 @@ class GraphQLHandler(
                     remoteIp,
                     backendConfiguration,
                     regionIdentifierByPostalCode,
-                    context.req()
+                    context.req(),
                 )
 
                 else -> throw e
@@ -162,7 +165,10 @@ class GraphQLHandler(
             val remoteIp = getIpAddress(context)
             val graphQLContext = getGraphQLContext(context, files, remoteIp, applicationData)
 
-            val variables = payload.getOrDefault("variables", emptyMap<String, Any>()) as Map<String, Any>?
+            val variables = payload.getOrDefault(
+                "variables",
+                emptyMap<String, Any>(),
+            ) as Map<String, Any>?
             val executionInput =
                 ExecutionInput.Builder()
                     .context(graphQLContext)

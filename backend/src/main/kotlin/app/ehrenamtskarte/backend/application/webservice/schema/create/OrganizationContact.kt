@@ -11,17 +11,16 @@ data class OrganizationContact(
     val name: ShortTextInput,
     val telephone: ShortTextInput,
     val email: EmailInput,
-    val hasGivenPermission: Boolean
+    val hasGivenPermission: Boolean,
 ) : JsonFieldSerializable {
-
     init {
         if (!hasGivenPermission) {
             throw InvalidJsonException("Contact person did not accept data transmission.")
         }
     }
 
-    override fun toJsonField(): JsonField {
-        return JsonField(
+    override fun toJsonField(): JsonField =
+        JsonField(
             "organizationContact",
             Type.Array,
             listOf(
@@ -31,9 +30,8 @@ data class OrganizationContact(
                 JsonField(
                     "hasGivenPermission",
                     Type.Boolean,
-                    hasGivenPermission
-                )
-            )
+                    hasGivenPermission,
+                ),
+            ),
         )
-    }
 }

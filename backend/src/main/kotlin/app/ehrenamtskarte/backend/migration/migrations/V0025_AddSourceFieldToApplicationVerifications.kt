@@ -13,7 +13,7 @@ internal class V0025_AddSourceFieldToApplicationVerifications : Migration() {
             """
                 ALTER TABLE applicationverifications
                 ADD COLUMN "automaticSource" VARCHAR(20) NOT NULL DEFAULT 'NONE' CHECK ("automaticSource" IN ('VEREIN360', 'NONE'));
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 }

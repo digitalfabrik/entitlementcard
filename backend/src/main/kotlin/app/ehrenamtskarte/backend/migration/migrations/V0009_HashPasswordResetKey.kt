@@ -14,7 +14,7 @@ internal class V0009_HashPasswordResetKey : Migration() {
             UPDATE administrators SET "passwordResetKeyExpiry" = null WHERE "passwordResetKey" IS NOT NULL;
             ALTER TABLE administrators ALTER COLUMN "passwordResetKey" TYPE bytea USING NULL;
             ALTER TABLE administrators RENAME COLUMN "passwordResetKey" TO "passwordResetKeyHash";
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 }

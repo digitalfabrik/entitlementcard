@@ -16,14 +16,14 @@ import java.net.URL
  */
 class DownloadCsv(config: ImportConfig, private val logger: Logger) :
     PipelineStep<Unit, List<CSVAcceptingStore>>(config) {
-
     override fun execute(input: Unit): List<CSVAcceptingStore> {
         try {
-            val inputCSV = InputStreamReader(
-                getCSVInputStream(),
-                Charsets.UTF_8
-            )
-            val parser = CSVFormat.RFC4180.builder().setHeader().setSkipHeaderRecord(true).build().parse(inputCSV)
+            val inputCSV = InputStreamReader(getCSVInputStream(), Charsets.UTF_8)
+            val parser = CSVFormat.RFC4180.builder()
+                .setHeader()
+                .setSkipHeaderRecord(true)
+                .build()
+                .parse(inputCSV)
 
             return getCSVAcceptingStores(parser)
         } catch (e: Exception) {
@@ -62,8 +62,8 @@ class DownloadCsv(config: ImportConfig, private val logger: Logger) :
                     homepage = record.get("Website"),
                     discountDE = discountDE,
                     discountEN = discountEN,
-                    categoryId = record.get("Kategorie")
-                )
+                    categoryId = record.get("Kategorie"),
+                ),
             )
         }
         return stores

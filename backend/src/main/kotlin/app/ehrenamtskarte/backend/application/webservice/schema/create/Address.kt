@@ -11,10 +11,10 @@ data class Address(
     val addressSupplement: ShortTextInput?,
     val postalCode: ShortTextInput,
     val location: ShortTextInput,
-    val country: ShortTextInput
+    val country: ShortTextInput,
 ) : JsonFieldSerializable {
-    override fun toJsonField(): JsonField {
-        return JsonField(
+    override fun toJsonField(): JsonField =
+        JsonField(
             "address",
             Type.Array,
             listOfNotNull(
@@ -23,8 +23,7 @@ data class Address(
                 addressSupplement?.toJsonField("addressSupplement"),
                 postalCode.toJsonField("postalCode"),
                 location.toJsonField("location"),
-                country.toJsonField("country")
-            )
+                country.toJsonField("country"),
+            ),
         )
-    }
 }

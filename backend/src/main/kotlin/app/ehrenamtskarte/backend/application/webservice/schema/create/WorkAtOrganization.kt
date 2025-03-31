@@ -14,10 +14,10 @@ data class WorkAtOrganization(
     val workSinceDate: DateInput,
     val payment: Boolean,
     val certificate: Attachment?,
-    val isAlreadyVerified: Boolean?
+    val isAlreadyVerified: Boolean?,
 ) : JsonFieldSerializable {
-    override fun toJsonField(): JsonField {
-        return JsonField(
+    override fun toJsonField(): JsonField =
+        JsonField(
             "workAtOrganization",
             Type.Array,
             listOfNotNull(
@@ -28,15 +28,14 @@ data class WorkAtOrganization(
                 JsonField(
                     "payment",
                     Type.Boolean,
-                    payment
+                    payment,
                 ),
                 certificate?.toJsonField("certificate"),
                 JsonField(
                     "isAlreadyVerified",
                     Type.Boolean,
-                    isAlreadyVerified ?: false
-                )
-            )
+                    isAlreadyVerified ?: false,
+                ),
+            ),
         )
-    }
 }

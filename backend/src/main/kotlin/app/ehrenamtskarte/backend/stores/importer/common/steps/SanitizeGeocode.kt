@@ -68,8 +68,11 @@ class SanitizeGeocode(config: ImportConfig, private val logger: Logger, httpClie
     }
 
     private fun Feature.latitude(): Double = (geometry as Point).coordinates.latitude
+
     private fun Feature.longitude(): Double = (geometry as Point).coordinates.longitude
+
     private fun Feature.postalCode(): String? = address()["postcode"]
+
     private fun Feature.address(): LinkedHashMap<String, String> =
         this.getProperty<LinkedHashMap<String, String>>("address")
 }

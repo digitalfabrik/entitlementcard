@@ -15,9 +15,8 @@ data class GraphQLContext(
     val remoteIp: String,
     val backendConfiguration: BackendConfiguration,
     val regionIdentifierByPostalCode: List<Pair<String, String>>,
-    val request: HttpServletRequest
+    val request: HttpServletRequest,
 ) : GraphQLContext {
-
     fun enforceSignedIn(): JwtPayload {
         val isSignedIn = jwtPayload != null
         if (!isSignedIn) throw UnauthorizedException()
