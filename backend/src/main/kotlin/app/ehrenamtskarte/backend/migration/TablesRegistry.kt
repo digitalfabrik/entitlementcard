@@ -17,21 +17,22 @@ import app.ehrenamtskarte.backend.stores.database.PhysicalStores
 import app.ehrenamtskarte.backend.userdata.database.UserEntitlements
 
 object TablesRegistry {
-    fun getAllTables() = arrayOf(
-        Cards,
-        Applications,
-        ApplicationVerifications,
-        Administrators,
-        Migrations,
-        Projects,
-        Regions,
-        PhysicalStores,
-        AcceptingStores,
-        Addresses,
-        Contacts,
-        Categories,
-        UserEntitlements,
-        ApiTokens,
-        FreinetAgencies
-    )
+    fun getAllTables() =
+        arrayOf(
+            Cards,
+            Applications,
+            ApplicationVerifications,
+            Administrators,
+            Migrations,
+            Projects,
+            Regions,
+            PhysicalStores,
+            AcceptingStores,
+            Addresses,
+            Contacts,
+            Categories,
+            UserEntitlements,
+            ApiTokens,
+            FreinetAgencies,
+        )
 }

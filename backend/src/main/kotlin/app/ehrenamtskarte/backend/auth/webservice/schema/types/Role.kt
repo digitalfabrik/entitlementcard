@@ -20,11 +20,11 @@ enum class Role(val db_value: String) {
     EXTERNAL_VERIFIED_API_USER("EXTERNAL_VERIFIED_API_USER"),
 
     // Users with this role do not have any rights.
-    NO_RIGHTS("NO_RIGHTS");
+    NO_RIGHTS("NO_RIGHTS"),
+    ;
 
     companion object {
-        fun fromDbValue(db_value: String): Role {
-            return values().find { it.db_value == db_value } ?: throw InvalidRoleException()
-        }
+        fun fromDbValue(db_value: String): Role =
+            values().find { it.db_value == db_value } ?: throw InvalidRoleException()
     }
 }

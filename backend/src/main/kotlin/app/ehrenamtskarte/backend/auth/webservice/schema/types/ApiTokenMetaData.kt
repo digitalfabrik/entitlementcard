@@ -6,5 +6,5 @@ class ApiTokenMetaData(
     val id: Int,
     val creatorEmail: String,
     val expirationDate: String,
-    val type: ApiTokenType
+    val type: ApiTokenType,
 )

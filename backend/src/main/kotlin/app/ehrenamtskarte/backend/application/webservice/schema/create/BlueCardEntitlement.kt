@@ -31,11 +31,11 @@ enum class BlueCardEntitlementType {
 
     // einen Freiwilligendienst ableisten in einem Freiwilligen Sozialen Jahr (FSJ), einem Freiwilligen ökologischem
     // Jahr (FÖJ) oder einem Bundesfreiwilligendienst (BFD).
-    VOLUNTEER_SERVICE
+    VOLUNTEER_SERVICE,
 }
 
 data class BlueCardWorkAtOrganizationsEntitlement(
-    val list: List<WorkAtOrganization>
+    val list: List<WorkAtOrganization>,
 ) : JsonFieldSerializable, ApplicationVerificationsHolder {
     init {
         if (list.isEmpty()) {
@@ -45,11 +45,12 @@ data class BlueCardWorkAtOrganizationsEntitlement(
         }
     }
 
-    override fun toJsonField() = JsonField(
-        name = "blueCardWorkAtOrganizationsEntitlement",
-        type = Type.Array,
-        value = list.map { it.toJsonField() }
-    )
+    override fun toJsonField() =
+        JsonField(
+            name = "blueCardWorkAtOrganizationsEntitlement",
+            type = Type.Array,
+            value = list.map { it.toJsonField() },
+        )
 
     override fun extractApplicationVerifications() =
         list.map { it.organization.extractApplicationVerifications() }.flatten()
@@ -59,72 +60,70 @@ data class BlueCardJuleicaEntitlement(
     val juleicaNumber: ShortTextInput,
     val juleicaExpirationDate: DateInput,
     val copyOfJuleicaFront: Attachment,
-    val copyOfJuleicaBack: Attachment?
+    val copyOfJuleicaBack: Attachment?,
 ) : JsonFieldSerializable {
-    override fun toJsonField() = JsonField(
-        name = "blueCardJuleicaEntitlement",
-        type = Type.Array,
-        value = listOfNotNull(
-            juleicaNumber.toJsonField("juleicaNumber"),
-            juleicaExpirationDate.toJsonField("juleicaExpiration"),
-            copyOfJuleicaFront.toJsonField("copyOfJuleicaFront"),
-            copyOfJuleicaBack?.toJsonField("copyOfJuleicaBack")
+    override fun toJsonField() =
+        JsonField(
+            name = "blueCardJuleicaEntitlement",
+            type = Type.Array,
+            value = listOfNotNull(
+                juleicaNumber.toJsonField("juleicaNumber"),
+                juleicaExpirationDate.toJsonField("juleicaExpiration"),
+                copyOfJuleicaFront.toJsonField("copyOfJuleicaFront"),
+                copyOfJuleicaBack?.toJsonField("copyOfJuleicaBack"),
+            ),
         )
-    )
 }
 
 data class BlueCardWorkAtDepartmentEntitlement(
     val organization: Organization,
     val responsibility: ShortTextInput,
-    val certificate: Attachment?
+    val certificate: Attachment?,
 ) : JsonFieldSerializable, ApplicationVerificationsHolder {
-    override fun toJsonField(): JsonField {
-        return JsonField(
+    override fun toJsonField(): JsonField =
+        JsonField(
             name = "blueCardWorkAtDepartmentEntitlement",
             type = Type.Array,
             value = listOfNotNull(
                 organization.toJsonField(),
                 responsibility.toJsonField("responsibility"),
-                certificate?.toJsonField("certificate")
-            )
+                certificate?.toJsonField("certificate"),
+            ),
         )
-    }
 
     override fun extractApplicationVerifications() = organization.extractApplicationVerifications()
 }
 
 data class BlueCardMilitaryReserveEntitlement(
-    val certificate: Attachment
+    val certificate: Attachment,
 ) : JsonFieldSerializable {
-    override fun toJsonField(): JsonField {
-        return JsonField(
+    override fun toJsonField(): JsonField =
+        JsonField(
             name = "blueCardMilitaryReserveEntitlement",
             type = Type.Array,
             value = listOfNotNull(
-                certificate.toJsonField("certificate")
-            )
+                certificate.toJsonField("certificate"),
+            ),
         )
-    }
 }
 
 data class BlueCardVolunteerServiceEntitlement(
     val programName: ShortTextInput,
-    val certificate: Attachment
+    val certificate: Attachment,
 ) : JsonFieldSerializable {
-    override fun toJsonField(): JsonField {
-        return JsonField(
+    override fun toJsonField(): JsonField =
+        JsonField(
             name = "volunteerServiceEntitlement",
             type = Type.Array,
             value = listOfNotNull(
                 programName.toJsonField("programName"),
-                certificate.toJsonField("certificate")
-            )
+                certificate.toJsonField("certificate"),
+            ),
         )
-    }
 }
 
 @GraphQLDescription(
-    "Entitlement for a blue EAK. The field selected by entitlementType must not be null; all others must be null."
+    "Entitlement for a blue EAK. The field selected by entitlementType must not be null; all others must be null.",
 )
 data class BlueCardEntitlement(
     val entitlementType: BlueCardEntitlementType,
@@ -132,14 +131,14 @@ data class BlueCardEntitlement(
     val juleicaEntitlement: BlueCardJuleicaEntitlement?,
     val workAtDepartmentEntitlement: BlueCardWorkAtDepartmentEntitlement?,
     val militaryReserveEntitlement: BlueCardMilitaryReserveEntitlement?,
-    val volunteerServiceEntitlement: BlueCardVolunteerServiceEntitlement?
+    val volunteerServiceEntitlement: BlueCardVolunteerServiceEntitlement?,
 ) : JsonFieldSerializable, ApplicationVerificationsHolder {
     private val entitlementByEntitlementType = mapOf(
         BlueCardEntitlementType.WORK_AT_ORGANIZATIONS to workAtOrganizationsEntitlement,
         BlueCardEntitlementType.JULEICA to juleicaEntitlement,
         BlueCardEntitlementType.WORK_AT_DEPARTMENT to workAtDepartmentEntitlement,
         BlueCardEntitlementType.MILITARY_RESERVE to militaryReserveEntitlement,
-        BlueCardEntitlementType.VOLUNTEER_SERVICE to volunteerServiceEntitlement
+        BlueCardEntitlementType.VOLUNTEER_SERVICE to volunteerServiceEntitlement,
     )
 
     init {
@@ -148,12 +147,11 @@ data class BlueCardEntitlement(
         }
     }
 
-    override fun toJsonField(): JsonField {
-        return entitlementByEntitlementType[entitlementType]!!.toJsonField()
-    }
+    override fun toJsonField(): JsonField = entitlementByEntitlementType[entitlementType]!!.toJsonField()
 
-    override fun extractApplicationVerifications() = listOfNotNull(
-        workAtOrganizationsEntitlement?.extractApplicationVerifications(),
-        workAtDepartmentEntitlement?.extractApplicationVerifications()
-    ).flatten()
+    override fun extractApplicationVerifications() =
+        listOfNotNull(
+            workAtOrganizationsEntitlement?.extractApplicationVerifications(),
+            workAtDepartmentEntitlement?.extractApplicationVerifications(),
+        ).flatten()
 }

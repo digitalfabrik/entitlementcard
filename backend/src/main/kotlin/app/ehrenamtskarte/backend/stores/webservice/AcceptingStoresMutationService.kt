@@ -17,20 +17,29 @@ import org.jetbrains.exposed.sql.transactions.transaction
 @Suppress("unused")
 class AcceptingStoresMutationService {
     @GraphQLDescription("Import accepting stores via csv")
-    fun importAcceptingStores(stores: List<CSVAcceptingStore>, project: String, dryRun: Boolean, dfe: DataFetchingEnvironment): StoreImportReturnResultModel {
+    fun importAcceptingStores(
+        stores: List<CSVAcceptingStore>,
+        project: String,
+        dryRun: Boolean,
+        dfe: DataFetchingEnvironment,
+    ): StoreImportReturnResultModel {
         val context = dfe.getContext<GraphQLContext>()
         val admin = context.getAdministrator()
         return transaction {
             val projectEntity =
                 ProjectEntity.find { Projects.project eq project }.firstOrNull() ?: throw ProjectNotFoundException(
-                    project
+                    project,
                 )
 
             if (!Authorizer.mayUpdateStoresInProject(admin, projectEntity.id.value)) {
                 throw ForbiddenException()
             }
 
-            val (storesCreated, storesToDelete, storesUntouched) = AcceptingStoresRepository.importAcceptingStores(stores, projectEntity, dryRun)
+            val (storesCreated, storesToDelete, storesUntouched) = AcceptingStoresRepository.importAcceptingStores(
+                stores,
+                projectEntity,
+                dryRun,
+            )
 
             return@transaction StoreImportReturnResultModel(storesCreated, storesToDelete, storesUntouched)
         }

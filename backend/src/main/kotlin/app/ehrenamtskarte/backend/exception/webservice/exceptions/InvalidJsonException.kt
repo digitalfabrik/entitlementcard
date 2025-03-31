@@ -7,5 +7,5 @@ import graphql.ErrorType
 open class InvalidJsonException(reason: String) : GraphQLBaseException(
     GraphQLExceptionCode.INVALID_JSON,
     mapOf("reason" to reason),
-    ErrorType.ValidationError
+    ErrorType.ValidationError,
 )

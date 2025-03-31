@@ -18,13 +18,16 @@ class NotificationSettingsMutationService {
     fun updateNotificationSettings(
         project: String,
         notificationSettings: NotificationSettings,
-        dfe: DataFetchingEnvironment
+        dfe: DataFetchingEnvironment,
     ): Boolean {
         val context = dfe.getContext<GraphQLContext>()
         val admin = context.getAdministrator()
 
         transaction {
-            val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull() ?: throw ProjectNotFoundException(project)
+            val projectEntity = ProjectEntity
+                .find { Projects.project eq project }
+                .firstOrNull()
+                ?: throw ProjectNotFoundException(project)
 
             if (admin.projectId != projectEntity.id) throw UnauthorizedException()
 

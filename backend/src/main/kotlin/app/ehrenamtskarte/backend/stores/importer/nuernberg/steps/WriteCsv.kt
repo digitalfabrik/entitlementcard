@@ -34,7 +34,7 @@ class WriteCsv(config: ImportConfig) :
 
         data class Col(
             val name: String,
-            val fromRecord: (store: Pair<CSVAcceptingStore, AcceptingStore>) -> String?
+            val fromRecord: (store: Pair<CSVAcceptingStore, AcceptingStore>) -> String?,
         )
 
         val columns = listOf(
@@ -50,11 +50,13 @@ class WriteCsv(config: ImportConfig) :
             Col("Website") { it.second.website },
             Col("RabattDE") { it.first.discountDE?.trim() },
             Col("RabattEN") { it.first.discountEN?.trim() },
-            Col("Kategorie") { it.second.categoryId.toString() }
+            Col("Kategorie") { it.second.categoryId.toString() },
         )
 
-        val printer =
-            CSVFormat.RFC4180.builder().setHeader(*columns.map { it.name }.toTypedArray()).build().print(writer)
+        val printer = CSVFormat.RFC4180.builder()
+            .setHeader(*columns.map { it.name }.toTypedArray())
+            .build()
+            .print(writer)
         csvStores.zip(geocodedStores).forEach { record ->
             printer.printRecord(*(columns.map { it.fromRecord(record) }.toTypedArray()))
         }

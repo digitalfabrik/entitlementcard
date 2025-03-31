@@ -15,42 +15,42 @@ import org.slf4j.Logger
  */
 class MapFromCsv(config: ImportConfig, private val logger: Logger) :
     PipelineStep<List<CSVAcceptingStore>, List<AcceptingStore>>(config) {
-
-    override fun execute(input: List<CSVAcceptingStore>) = input.mapNotNull {
-        val longitude = if (it.longitude?.isNotEmpty()!!) {
-            it.longitude!!.toDouble()
-        } else {
-            null
-        }
-
-        val latitude = if (it.latitude?.isNotEmpty()!!) {
-            it.latitude!!.toDouble()
-        } else {
-            null
-        }
-
-        try {
-            AcceptingStore(
-                it.name.clean()!!,
-                COUNTRY_CODE,
-                it.location.clean()!!,
-                it.postalCode.clean()!!,
-                it.street.clean()!!,
-                it.houseNumber.clean()!!,
-                null,
-                longitude,
-                latitude,
-                categoryMapping.getValue(it.categoryId!!),
-                it.email.clean(),
-                it.telephone.clean(),
-                it.homepage.clean(),
-                (it.discountDE.orEmpty() + "\n\n" + it.discountEN.orEmpty()).clean(false),
-                null,
+    override fun execute(input: List<CSVAcceptingStore>) =
+        input.mapNotNull {
+            val longitude = if (it.longitude?.isNotEmpty()!!) {
+                it.longitude!!.toDouble()
+            } else {
                 null
-            )
-        } catch (e: Exception) {
-            logger.error("Exception occurred while mapping $it", e)
-            null
+            }
+
+            val latitude = if (it.latitude?.isNotEmpty()!!) {
+                it.latitude!!.toDouble()
+            } else {
+                null
+            }
+
+            try {
+                AcceptingStore(
+                    it.name.clean()!!,
+                    COUNTRY_CODE,
+                    it.location.clean()!!,
+                    it.postalCode.clean()!!,
+                    it.street.clean()!!,
+                    it.houseNumber.clean()!!,
+                    null,
+                    longitude,
+                    latitude,
+                    categoryMapping.getValue(it.categoryId!!),
+                    it.email.clean(),
+                    it.telephone.clean(),
+                    it.homepage.clean(),
+                    (it.discountDE.orEmpty() + "\n\n" + it.discountEN.orEmpty()).clean(false),
+                    null,
+                    null,
+                )
+            } catch (e: Exception) {
+                logger.error("Exception occurred while mapping $it", e)
+                null
+            }
         }
-    }
 }
