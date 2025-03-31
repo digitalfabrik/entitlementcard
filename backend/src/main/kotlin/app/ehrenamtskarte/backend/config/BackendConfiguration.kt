@@ -31,8 +31,6 @@ data class MapConfig(val baseUrl: String)
 
 data class GeocodingConfig(val enabled: Boolean, val host: String)
 
-data class CsvWriterConfig(val enabled: Boolean)
-
 data class SmtpConfig(val host: String, val port: Int, val username: String, val password: String)
 
 data class MatomoConfig(val siteId: Int, val accessToken: String)
@@ -61,7 +59,6 @@ data class BackendConfiguration(
     val postgres: PostgresConfig,
     val geocoding: GeocodingConfig,
     val projects: List<ProjectConfig>,
-    val csvWriter: CsvWriterConfig,
     val matomoUrl: String,
 ) {
     fun getProjectConfig(project: String): ProjectConfig =

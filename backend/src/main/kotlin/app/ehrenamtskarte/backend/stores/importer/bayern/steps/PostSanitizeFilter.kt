@@ -1,6 +1,5 @@
 package app.ehrenamtskarte.backend.stores.importer.bayern.steps
 
-import app.ehrenamtskarte.backend.stores.geocoding.FeatureFetcher
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
@@ -14,8 +13,6 @@ import org.slf4j.Logger
  */
 class PostSanitizeFilter(config: ImportConfig, private val logger: Logger, httpClient: HttpClient) :
     PipelineStep<List<AcceptingStore>, List<AcceptingStore>>(config) {
-    private val featureFetcher = FeatureFetcher(config, httpClient)
-
     override fun execute(input: List<AcceptingStore>): List<AcceptingStore> =
         runBlocking {
             input.filter {
