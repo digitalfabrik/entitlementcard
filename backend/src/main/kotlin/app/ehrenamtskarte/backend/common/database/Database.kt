@@ -3,6 +3,7 @@ package app.ehrenamtskarte.backend.common.database
 import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
 import app.ehrenamtskarte.backend.config.BackendConfiguration
+import app.ehrenamtskarte.backend.config.Environment
 import app.ehrenamtskarte.backend.freinet.util.FreinetAgenciesLoader
 import app.ehrenamtskarte.backend.migration.assertDatabaseIsInSync
 import app.ehrenamtskarte.backend.projects.database.insertOrUpdateProjects
@@ -57,7 +58,10 @@ class Database {
                 }
             }
 
-        fun setupWithoutMigrationCheck(config: BackendConfiguration): org.jetbrains.exposed.sql.Database =
+        fun setupWithoutMigrationCheck(
+            config: BackendConfiguration,
+            log: Boolean = true,
+        ): org.jetbrains.exposed.sql.Database =
             connect(
                 config.postgres.url,
                 driver = "org.postgresql.Driver",
@@ -71,7 +75,8 @@ class Database {
                 databaseConfig = DatabaseConfig.invoke {
                     // Nested transactions are helpful for applying migrations in subtransactions.
                     useNestedTransactions = true
-                    if (config.isDevelopment()) {
+
+                    if (config.environment == Environment.DEVELOPMENT && log) {
                         this.sqlLogger = StdOutSqlLogger
                     }
                 },
