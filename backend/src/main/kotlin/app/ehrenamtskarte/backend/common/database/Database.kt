@@ -57,8 +57,8 @@ class Database {
                 }
             }
 
-        fun setupWithoutMigrationCheck(config: BackendConfiguration): org.jetbrains.exposed.sql.Database {
-            val database = connect(
+        fun setupWithoutMigrationCheck(config: BackendConfiguration): org.jetbrains.exposed.sql.Database =
+            connect(
                 config.postgres.url,
                 driver = "org.postgresql.Driver",
                 user = config.postgres.user,
@@ -76,7 +76,5 @@ class Database {
                     }
                 },
             )
-            return database
-        }
     }
 }
