@@ -57,7 +57,10 @@ class Database {
                 }
             }
 
-        fun setupWithoutMigrationCheck(config: BackendConfiguration): org.jetbrains.exposed.sql.Database =
+        fun setupWithoutMigrationCheck(
+            config: BackendConfiguration,
+            log: Boolean = true,
+        ): org.jetbrains.exposed.sql.Database =
             connect(
                 config.postgres.url,
                 driver = "org.postgresql.Driver",
@@ -71,7 +74,7 @@ class Database {
                 databaseConfig = DatabaseConfig.invoke {
                     // Nested transactions are helpful for applying migrations in subtransactions.
                     useNestedTransactions = true
-                    if (!config.production) {
+                    if (!config.production && log) {
                         this.sqlLogger = StdOutSqlLogger
                     }
                 },
