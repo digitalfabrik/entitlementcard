@@ -45,23 +45,17 @@ class Database {
             }
         }
 
-        fun setupWithInitialDataAndMigrationChecks(config: BackendConfiguration): org.jetbrains.exposed.sql.Database {
-            val database = setupWithoutMigrationCheck(config)
-            setupInitialData(config)
-            return database
-        }
-
-        fun setupInitialData(config: BackendConfiguration) {
-            val agencies = FreinetAgenciesLoader().loadAgenciesFromXml(config.projects)
-            transaction {
-                assertDatabaseIsInSync()
-                insertOrUpdateProjects(config)
-
-                insertOrUpdateRegions(agencies, config)
-                insertOrUpdateCategories()
-                createOrReplaceStoreFunctions()
+        fun setupWithInitialDataAndMigrationChecks(config: BackendConfiguration): org.jetbrains.exposed.sql.Database =
+            setupWithoutMigrationCheck(config).apply {
+                val agencies = FreinetAgenciesLoader().loadAgenciesFromXml(config.projects)
+                transaction {
+                    assertDatabaseIsInSync()
+                    insertOrUpdateProjects(config)
+                    insertOrUpdateRegions(agencies, config)
+                    insertOrUpdateCategories()
+                    createOrReplaceStoreFunctions()
+                }
             }
-        }
 
         fun setupWithoutMigrationCheck(config: BackendConfiguration): org.jetbrains.exposed.sql.Database {
             val database = connect(
