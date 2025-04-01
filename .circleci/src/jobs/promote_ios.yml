@@ -2,7 +2,7 @@
 parameters:
   build_config:
     type: enum
-    enum: [bayern, nuernberg]
+    enum: [bayern, nuernberg, koblenz]
     default: bayern
 macos:
   xcode: 15.2.0

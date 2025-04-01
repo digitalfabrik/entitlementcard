@@ -764,6 +764,7 @@ jobs:
                 enum:
                     - bayern
                     - nuernberg
+                    - koblenz
                 type: enum
         resource_class: small
         steps:
@@ -795,6 +796,7 @@ jobs:
                 enum:
                     - bayern
                     - nuernberg
+                    - koblenz
                 type: enum
         steps:
             - prepare_workspace
@@ -1199,6 +1201,7 @@ workflows:
                         build_config:
                             - bayern
                             - nuernberg
+                            - koblenz
                 requires:
                     - bump_version
                     - check_frontend
@@ -1210,6 +1213,7 @@ workflows:
                         build_config:
                             - bayern
                             - nuernberg
+                            - koblenz
                 production_delivery: true
                 requires:
                     - build_android-<< matrix.build_config >>
@@ -1222,6 +1226,7 @@ workflows:
                         build_config:
                             - bayern
                             - nuernberg
+                            - koblenz
                 requires:
                     - bump_version
                     - check_frontend
@@ -1233,6 +1238,7 @@ workflows:
                         build_config:
                             - bayern
                             - nuernberg
+                            - koblenz
                 production_delivery: true
                 requires:
                     - build_ios-<< matrix.build_config >>
@@ -1255,6 +1261,7 @@ workflows:
                         build_config:
                             - bayern
                             - nuernberg
+                            - koblenz
             - promote_ios:
                 context:
                     - mattermost
@@ -1264,6 +1271,7 @@ workflows:
                         build_config:
                             - bayern
                             - nuernberg
+                            - koblenz
             - promote_server:
                 context:
                     - credentials-ehrenamtskarte
@@ -1292,6 +1300,7 @@ workflows:
                         build_config:
                             - bayern
                             - nuernberg
+                            - koblenz
             - promote_ios:
                 context:
                     - mattermost
@@ -1301,5 +1310,6 @@ workflows:
                         build_config:
                             - bayern
                             - nuernberg
+                            - koblenz
         when: << pipeline.parameters.run_promotion_frontend >>
 
