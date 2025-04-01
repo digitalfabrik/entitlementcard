@@ -8,7 +8,7 @@ steps:
       name: Restore gems
       keys:
         - v1-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
-        - v1-gems-{{ arch }}-
+        - v1-gems-{{ arch }}
   - run:
       name: Install fastlane
       command: |
