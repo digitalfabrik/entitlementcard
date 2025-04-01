@@ -1,6 +1,7 @@
 docker:
   - image: cimg/node:20.18.0
 steps:
+  - prepare_workspace
   - add_ssh_keys:
       fingerprints:
         - a1:3f:a7:c3:ff:12:40:1d:85:de:a7:ab:12:3f:cc:05
