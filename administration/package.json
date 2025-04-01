@@ -119,7 +119,7 @@
     "ts:check": "tsc --build",
     "format": "NODE_ENV=test eslint . --fix && prettier . --write",
     "generate-graphql": "graphql-codegen --config graphql-codegen.yml",
-    "generate-protobuf": "protoc -I ../specs --es_out=src/generated --es_opt=target=ts --plugin=protoc-gen-es=../node_modules/.bin/protoc-gen-es ../specs/card.proto",
+    "generate-protobuf": "mkdir -p src/generated && protoc -I ../specs --es_out=src/generated --es_opt=target=ts --plugin=protoc-gen-es=../node_modules/.bin/protoc-gen-es ../specs/card.proto",
     "postinstall": "npm run generate-protobuf && npm run generate-graphql",
     "check-circular-deps": "bash ./scripts/check_circular_deps.sh"
   },

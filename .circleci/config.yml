@@ -35,14 +35,9 @@ commands:
     install_app_toolbelt:
         steps:
             - run:
-                command: |
-                    mkdir -p ~/.npm-global
-                    npm config set prefix '~/.npm-global'
-                    echo 'export PATH=~/.npm-global/bin:"$PATH"' >> "$BASH_ENV"
-                name: Setup npm global
-            - run:
-                command: npm install --unsafe-perm -g https://github.com/digitalfabrik/app-toolbelt/archive/refs/tags/v0.2.tar.gz
+                command: npm ci --workspaces=false
                 name: Install app-toolbelt
+                working_directory: ~/project
     install_fastlane:
         description: Restores and saves fastlane cache of the current directory.
         parameters:
@@ -116,12 +111,13 @@ commands:
         steps:
             - restore_cache:
                 keys:
-                    - v1-node-modules-{{checksum "~/project/package-lock.json" }}
+                    - v1-node-modules-{{ checksum "~/project/package-lock.json" }}
+                    - v1-node-modules
             - run:
-                command: '[ ! -d node_modules ] && npm ci --ignore-scripts --loglevel warn --yes || echo package.json and package-lock.json unchanged. Using cache.'
+                command: npm ci
                 name: Install node dependencies for npm workspaces
             - save_cache:
-                key: v1-node-modules-{{checksum "~/project/package-lock.json" }}
+                key: v1-node-modules-{{ checksum "~/project/package-lock.json" }}
                 paths:
                     - ~/project/node_modules
                     - ~/project/administration/node_modules
@@ -228,12 +224,6 @@ jobs:
             - prepare_workspace
             - install_protobuf_linux
             - install_node_modules
-            - run:
-                command: npm run generate-graphql
-                name: Generate GraphQL
-            - run:
-                command: npm run generate-protobuf
-                name: Generate Protobuf
             - run:
                 command: npm run build --version_name=${NEW_VERSION_NAME}
                 name: Build
@@ -381,16 +371,16 @@ jobs:
             - prepare_workspace
             - install_app_toolbelt
             - run:
-                command: echo "export NEW_VERSION_NAME=$(app-toolbelt v0 version calc | jq .versionName)" >> ${BASH_ENV}
+                command: echo "export NEW_VERSION_NAME=$(npx --no app-toolbelt v0 version calc | jq .versionName)" >> ${BASH_ENV}
                 name: Calculate next version name
             - run:
-                command: echo "export NEW_VERSION_CODE=$(app-toolbelt v0 version calc | jq .versionCode)" >> ${BASH_ENV}
+                command: echo "export NEW_VERSION_CODE=$(npx --no app-toolbelt v0 version calc | jq .versionCode)" >> ${BASH_ENV}
                 name: Calculate next version code
             - when:
                 condition: << parameters.prepare_delivery >>
                 steps:
                     - run:
-                        command: app-toolbelt v0 release bump-to ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} --branch ${CIRCLE_BRANCH} --platforms << parameters.platforms >>
+                        command: npx --no app-toolbelt v0 release bump-to ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} --branch ${CIRCLE_BRANCH} --platforms << parameters.platforms >>
                         name: Bump git version
             - when:
                 condition:
@@ -414,12 +404,6 @@ jobs:
             - check_circleci_config
             - install_protobuf_linux
             - install_node_modules
-            - run:
-                command: npm run generate-graphql
-                name: Generate GraphQL
-            - run:
-                command: npm run generate-protobuf
-                name: Generate Protobuf
             - run:
                 command: npm run ts:check
                 name: Typescript
@@ -636,16 +620,16 @@ jobs:
             - prepare_workspace
             - install_app_toolbelt
             - run:
-                command: echo "export RELEASE_ID='$(app-toolbelt v0 release create all ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} <<# parameters.production_delivery >>--production-release<</ parameters.production_delivery >>)'" >> ${BASH_ENV}
+                command: echo "export RELEASE_ID='$(npx --no app-toolbelt v0 release create all ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} <<# parameters.production_delivery >>--production-release<</ parameters.production_delivery >>)'" >> ${BASH_ENV}
                 name: Create github release
             - run:
-                command: app-toolbelt v0 release upload --releaseId ${RELEASE_ID} --files "$(ls ~/attached_workspace/*.apk)" --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
+                command: npx --no app-toolbelt v0 release upload --releaseId ${RELEASE_ID} --files "$(ls ~/attached_workspace/*.apk)" --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
                 name: Upload android apks to github release
             - run:
-                command: app-toolbelt v0 release upload --releaseId ${RELEASE_ID} --files "$(ls ~/attached_workspace/debs/administration/*.deb)" --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
+                command: npx --no app-toolbelt v0 release upload --releaseId ${RELEASE_ID} --files "$(ls ~/attached_workspace/debs/administration/*.deb)" --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
                 name: Upload administration debian package to github release
             - run:
-                command: app-toolbelt v0 release upload --releaseId ${RELEASE_ID} --files "$(ls ~/attached_workspace/debs/backend/*.deb)" --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
+                command: npx --no app-toolbelt v0 release upload --releaseId ${RELEASE_ID} --files "$(ls ~/attached_workspace/debs/backend/*.deb)" --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
                 name: Upload backend debian packages to github release
             - notify:
                 allow_all_branches: true
@@ -768,7 +752,7 @@ jobs:
         steps:
             - install_app_toolbelt
             - run:
-                command: app-toolbelt v0 release promote --platform all --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
+                command: npx --no app-toolbelt v0 release promote --platform all --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
                 name: Remove prerelease flag from github release
             - notify
     promote_ios:
