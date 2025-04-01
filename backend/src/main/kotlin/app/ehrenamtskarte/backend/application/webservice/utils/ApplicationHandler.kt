@@ -27,13 +27,12 @@ class ApplicationHandler(
     private val context: GraphQLContext,
     private val application: Application,
     private val regionId: Int,
-    private val project: String
+    private val project: String,
 ) {
-
     fun sendApplicationMails(
         applicationEntity: ApplicationEntity,
         verificationEntities: List<ApplicationVerificationEntity>,
-        dataFetcherResultBuilder: DataFetcherResult.Builder<Boolean>
+        dataFetcherResultBuilder: DataFetcherResult.Builder<Boolean>,
     ) {
         val backendConfig = context.backendConfiguration
         val projectConfig = backendConfig.projects.first { it.id == project }
@@ -42,7 +41,7 @@ class ApplicationHandler(
             backendConfig,
             projectConfig,
             application.personalData,
-            applicationEntity.accessKey
+            applicationEntity.accessKey,
         )
 
         for (applicationVerification in verificationEntities) {
@@ -53,7 +52,7 @@ class ApplicationHandler(
                     backendConfig,
                     applicantName,
                     projectConfig,
-                    applicationVerification
+                    applicationVerification,
                 )
             } catch (exception: MailNotSentException) {
                 dataFetcherResultBuilder.error(exception.toError())
@@ -65,7 +64,7 @@ class ApplicationHandler(
     fun sendPreVerifiedApplicationMails(
         applicationEntity: ApplicationEntity,
         verificationEntities: List<ApplicationVerificationEntity>,
-        dataFetcherResultBuilder: DataFetcherResult.Builder<Boolean>
+        dataFetcherResultBuilder: DataFetcherResult.Builder<Boolean>,
     ) {
         val backendConfig = context.backendConfiguration
         val projectConfig = backendConfig.projects.first { it.id == project }
@@ -77,7 +76,7 @@ class ApplicationHandler(
                     projectConfig,
                     applicationVerification.contactName,
                     application.personalData,
-                    applicationEntity.accessKey
+                    applicationEntity.accessKey,
                 )
             } catch (exception: MailNotSentException) {
                 dataFetcherResultBuilder.error(exception.toError())
@@ -112,7 +111,7 @@ class ApplicationHandler(
                 application.extractApplicationVerifications(),
                 regionId,
                 context.applicationData,
-                context.files
+                context.files,
             )
         }
         return Pair(applicationEntity, verificationEntities)
@@ -120,7 +119,8 @@ class ApplicationHandler(
 
     fun isValidPreVerifiedApplication(): Boolean {
         val isAlreadyVerifiedList =
-            application.applicationDetails.blueCardEntitlement?.workAtOrganizationsEntitlement?.list?.map { it.isAlreadyVerified }
+            application.applicationDetails.blueCardEntitlement?.workAtOrganizationsEntitlement?.list
+                ?.map { it.isAlreadyVerified }
                 ?: emptyList()
         val allAlreadyVerifiedWithToken = when {
             isAlreadyVerifiedList.all { it == false || it == null } -> false
@@ -156,9 +156,13 @@ class ApplicationHandler(
                 ?: throw InvalidJsonException("Blue card entitlement must be set if application is already verified")
 
             val workAtOrganizationsEntitlement = blueCardEntitlement.workAtOrganizationsEntitlement
-                ?: throw InvalidJsonException("Work at organizations entitlement must be set if application is already verified")
+                ?: throw InvalidJsonException(
+                    "Work at organizations entitlement must be set if application is already verified",
+                )
 
-            require(blueCardEntitlement.entitlementType == BlueCardEntitlementType.WORK_AT_ORGANIZATIONS) {
+            require(
+                blueCardEntitlement.entitlementType == BlueCardEntitlementType.WORK_AT_ORGANIZATIONS,
+            ) {
                 "Entitlement type must be WORK_AT_ORGANIZATIONS if application is already verified"
             }
 
@@ -179,7 +183,7 @@ class ApplicationHandler(
             verificationEntities.forEach {
                 ApplicationRepository.verifyApplicationVerification(
                     it.accessKey,
-                    ApplicationVerificationExternalSource.VEREIN360
+                    ApplicationVerificationExternalSource.VEREIN360,
                 )
             }
         }

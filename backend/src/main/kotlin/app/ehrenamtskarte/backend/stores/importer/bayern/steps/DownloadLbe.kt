@@ -16,7 +16,6 @@ import org.slf4j.Logger
 
 class DownloadLbe(config: ImportConfig, private val logger: Logger, private val httpClient: HttpClient) :
     PipelineStep<Unit, List<LbeAcceptingStore>>(config) {
-
     override fun execute(input: Unit): List<LbeAcceptingStore> {
         try {
             val url = config.findProject().importUrl

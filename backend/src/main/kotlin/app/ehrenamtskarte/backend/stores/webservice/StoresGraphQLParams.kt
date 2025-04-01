@@ -14,20 +14,22 @@ import com.expediagroup.graphql.generator.SchemaGeneratorConfig
 import com.expediagroup.graphql.generator.TopLevelObject
 
 val storesGraphQlParams = GraphQLParams(
-    config = SchemaGeneratorConfig(supportedPackages = listOf("app.ehrenamtskarte.backend.stores.webservice.schema")),
+    config = SchemaGeneratorConfig(
+        supportedPackages = listOf("app.ehrenamtskarte.backend.stores.webservice.schema"),
+    ),
     dataLoaderRegistry = createRegistryFromNamedDataLoaders(
         contactLoader,
         acceptingStoreLoader,
         categoryLoader,
         physicalStoreLoader,
         physicalStoreByStoreIdLoader,
-        addressLoader
+        addressLoader,
     ),
     queries = listOf(
         TopLevelObject(AcceptingStoreQueryService()),
-        TopLevelObject(CategoriesQueryService())
+        TopLevelObject(CategoriesQueryService()),
     ),
     mutations = listOf(
-        TopLevelObject(AcceptingStoresMutationService())
-    )
+        TopLevelObject(AcceptingStoresMutationService()),
+    ),
 )

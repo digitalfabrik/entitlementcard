@@ -26,7 +26,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
 class UserImportHandler(
-    private val backendConfiguration: BackendConfiguration
+    private val backendConfiguration: BackendConfiguration,
 ) {
     private val logger: Logger = LoggerFactory.getLogger(UserImportHandler::class.java)
 
@@ -69,16 +69,15 @@ class UserImportHandler(
         }
     }
 
-    private fun getCSVParser(reader: BufferedReader): CSVParser {
-        return CSVParser(
+    private fun getCSVParser(reader: BufferedReader): CSVParser =
+        CSVParser(
             reader,
             CSVFormat.DEFAULT.builder()
                 .setHeader()
                 .setTrim(true)
                 .setSkipHeaderRecord(true)
-                .build()
+                .build(),
         )
-    }
 
     private fun validateHeaders(headers: List<String>) {
         val requiredColumns = setOf("regionKey", "userHash", "startDate", "endDate", "revoked")
@@ -99,7 +98,7 @@ class UserImportHandler(
                 val region = regionsByProject.singleOrNull { it.regionIdentifier == entry.get("regionKey") }
                     ?: throw UserImportException(
                         entry.recordNumber,
-                        "Specified region not found for the current project"
+                        "Specified region not found for the current project",
                     )
 
                 val userHash = entry.get("userHash")
@@ -110,7 +109,10 @@ class UserImportHandler(
                 val startDate = parseDate(entry.get("startDate"), entry.recordNumber)
                 val endDate = parseDate(entry.get("endDate"), entry.recordNumber)
                 if (startDate.isAfter(endDate)) {
-                    throw UserImportException(entry.recordNumber, "Start date cannot be after end date")
+                    throw UserImportException(
+                        entry.recordNumber,
+                        "Start date cannot be after end date",
+                    )
                 }
 
                 val revoked = parseRevoked(entry.get("revoked"), entry.recordNumber)
@@ -124,27 +126,41 @@ class UserImportHandler(
         try {
             return LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd.MM.yyyy"))
         } catch (exception: DateTimeParseException) {
-            throw UserImportException(lineNumber, "Failed to parse date [$dateString]. Expected format: dd.MM.yyyy")
+            throw UserImportException(
+                lineNumber,
+                "Failed to parse date [$dateString]. Expected format: dd.MM.yyyy",
+            )
         }
     }
 
-    private fun parseRevoked(revokedString: String, lineNumber: Long): Boolean {
-        return revokedString.toBooleanStrictOrNull()
+    private fun parseRevoked(revokedString: String, lineNumber: Long): Boolean =
+        revokedString.toBooleanStrictOrNull()
             ?: throw UserImportException(lineNumber, "Revoked must be a boolean value")
-    }
 
     private fun upsertUserEntitlement(
         userHash: String,
         startDate: LocalDate,
         endDate: LocalDate,
         revoked: Boolean,
-        regionId: Int
+        regionId: Int,
     ) {
         val userEntitlement = UserEntitlementsRepository.findByUserHash(userHash.toByteArray())
         if (userEntitlement == null) {
-            UserEntitlementsRepository.insert(userHash.toByteArray(), startDate, endDate, revoked, regionId)
+            UserEntitlementsRepository.insert(
+                userHash.toByteArray(),
+                startDate,
+                endDate,
+                revoked,
+                regionId,
+            )
         } else {
-            UserEntitlementsRepository.update(userHash.toByteArray(), startDate, endDate, revoked, regionId)
+            UserEntitlementsRepository.update(
+                userHash.toByteArray(),
+                startDate,
+                endDate,
+                revoked,
+                regionId,
+            )
             if (revoked) {
                 CardRepository.revokeByEntitlementId(userEntitlement.id.value)
             }
