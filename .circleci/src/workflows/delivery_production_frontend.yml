@@ -10,7 +10,7 @@ jobs:
   - build_android:
       matrix:
         parameters:
-          build_config: [bayern, nuernberg]
+          build_config: [bayern, nuernberg, koblenz]
       context:
         - credentials-repo
         - credentials-ehrenamtskarte
@@ -21,7 +21,7 @@ jobs:
       production_delivery: true
       matrix:
         parameters:
-          build_config: [bayern, nuernberg]
+          build_config: [bayern, nuernberg, koblenz]
       context:
         - tuerantuer-google-play
       requires:
@@ -30,7 +30,7 @@ jobs:
   - build_ios:
       matrix:
         parameters:
-          build_config: [bayern, nuernberg]
+          build_config: [bayern, nuernberg, koblenz]
       context:
         - tuerantuer-apple
         - fastlane-match
@@ -41,7 +41,7 @@ jobs:
       production_delivery: true
       matrix:
         parameters:
-          build_config: [bayern, nuernberg]
+          build_config: [bayern, nuernberg, koblenz]
       context:
         - tuerantuer-apple
       requires:
