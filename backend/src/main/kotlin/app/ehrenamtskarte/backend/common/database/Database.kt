@@ -16,6 +16,7 @@ import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.BufferedReader
+import java.io.File
 import java.io.InputStreamReader
 
 object Database {
@@ -25,6 +26,12 @@ object Database {
 
         with(TransactionManager.current()) {
             exec(resource.openStream().use { BufferedReader(InputStreamReader(it)).readText() })
+        }
+    }
+
+    fun executeSqlFile(file: File) {
+        transaction {
+            exec(file.bufferedReader().use { it.readText() })
         }
     }
 
