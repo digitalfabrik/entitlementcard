@@ -929,7 +929,7 @@ workflows:
                         - << pipeline.parameters.run_commit_main >>
                         - run_if_on_main
                     - equal:
-                        - main
+                        - 1994-frozen-lockfiles
                         - << pipeline.git.branch >>
     delivery_beta_all:
         jobs:
