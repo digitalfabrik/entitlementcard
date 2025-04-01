@@ -15,7 +15,6 @@ import kotlin.math.pow
 
 class CanonicalJson {
     companion object {
-
         private fun GeneratedMessage.assertOnlyKnownFields() {
             if (this.unknownFields.serializedSize > 0) {
                 throw Error("Message has unknown fields. You might be running on an outdated proto definition.")
@@ -31,7 +30,7 @@ class CanonicalJson {
                     Note that, 'optional' in proto3 only means explicit presence, i.e. it can be determined if a field marked
                     as optional is actually present in an instance of a proto. Using only fields with explicit presence
                     enables us to remove fields from the proto in the future.
-                        """.trimIndent()
+                        """.trimIndent(),
                     )
                 }
             }
@@ -68,13 +67,15 @@ class CanonicalJson {
                 return@associate when (it.key.type) {
                     Type.STRING, Type.BOOL, Type.SINT32, Type.INT32, Type.UINT32, Type.UINT64 -> Pair(
                         it.key.number.toString(),
-                        it.value.toString()
+                        it.value.toString(),
                     )
 
                     Type.ENUM -> {
                         val enumValue = it.value
                         if (enumValue !is Descriptors.EnumValueDescriptor) {
-                            throw Error("Field ${it.key.name} is not an instance of Enum despite its kind is 'enum'.")
+                            throw Error(
+                                "Field ${it.key.name} is not an instance of Enum despite its kind is 'enum'.",
+                            )
                         }
                         Pair(it.key.number.toString(), enumValue.number.toString())
                     }
@@ -82,18 +83,25 @@ class CanonicalJson {
                     Type.MESSAGE -> {
                         val subMessage = it.value
                         if (subMessage !is GeneratedMessage) {
-                            throw Error("Field ${it.key.name} is not an instance of Message despite its kind is 'message'.")
+                            throw Error(
+                                "Field ${it.key.name} is not an instance of Message despite its kind is 'message'.",
+                            )
                         }
                         Pair(it.key.number.toString(), messageToMap(subMessage))
                     }
 
-                    else -> throw Error("Field ${it.key.name} has an unsupported type of ${it.key.type}")
+                    else -> throw Error(
+                        "Field ${it.key.name} has an unsupported type of ${it.key.type}",
+                    )
                 }
             }
         }
 
         fun koblenzUserToString(koblenzUser: KoblenzUser): String {
-            val map = ObjectMapper().convertValue(koblenzUser, object : TypeReference<Map<String, Any>>() {})
+            val map = ObjectMapper().convertValue(
+                koblenzUser,
+                object : TypeReference<Map<String, Any>>() {},
+            )
             return serializeToString(map)
         }
 
@@ -119,12 +127,16 @@ class CanonicalJson {
          * Especially, in the case of NaN or infinite number values.
          */
         fun serializeToString(o: Any?): String {
-            fun buildJson(json: Any?): JsonElement {
-                return when (json) {
+            fun buildJson(json: Any?): JsonElement =
+                when (json) {
                     null -> JsonNull
                     is String -> JsonPrimitive(json)
                     is Boolean -> JsonPrimitive(json)
-                    is Int -> if (json.isSafeInteger()) JsonPrimitive(json) else throw Error("Number cannot safely parsed to JS Integer")
+                    is Int -> if (json.isSafeInteger()) {
+                        JsonPrimitive(json)
+                    } else {
+                        throw Error("Number cannot safely parsed to JS Integer")
+                    }
                     is Collection<*> -> buildJsonArray { json.forEach { add(buildJson(it)) } }
                     is Map<*, *> -> {
                         buildJsonObject {
@@ -138,9 +150,10 @@ class CanonicalJson {
                         }
                     }
 
-                    else -> throw Error("Invalid argument of type ${json::class.simpleName} passed to serializeToCanonicalJson.")
+                    else -> throw Error(
+                        "Invalid argument of type ${json::class.simpleName} passed to serializeToCanonicalJson.",
+                    )
                 }
-            }
             return buildJson(o).toString()
         }
     }

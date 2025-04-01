@@ -2,8 +2,7 @@ package app.ehrenamtskarte.backend.stores.importer
 
 import org.slf4j.Logger
 
-abstract class PipelineStep<In, Out> (protected val config: ImportConfig) {
-
+abstract class PipelineStep<In, Out>(protected val config: ImportConfig) {
     fun execute(input: In, logger: Logger): Out {
         val inputSize = if (input is List<*>) input.size else null
         val output = execute(input)

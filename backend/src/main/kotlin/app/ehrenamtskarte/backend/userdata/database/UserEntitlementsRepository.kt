@@ -6,7 +6,6 @@ import java.time.Instant
 import java.time.LocalDate
 
 object UserEntitlementsRepository {
-
     fun insert(userHash: ByteArray, startDate: LocalDate, endDate: LocalDate, revoked: Boolean, regionId: Int) {
         UserEntitlements.insert {
             it[UserEntitlements.userHash] = userHash
@@ -28,7 +27,8 @@ object UserEntitlementsRepository {
         }
     }
 
-    fun findByUserHash(userHash: ByteArray): UserEntitlementsEntity? {
-        return UserEntitlementsEntity.find { UserEntitlements.userHash eq userHash }.firstOrNull()
-    }
+    fun findByUserHash(userHash: ByteArray): UserEntitlementsEntity? =
+        UserEntitlementsEntity.find {
+            UserEntitlements.userHash eq userHash
+        }.firstOrNull()
 }

@@ -18,11 +18,12 @@ object Migrations : IdTable<Int>() {
     val name = varchar("name", length = 400)
     val executedAt = timestamp("executed_at")
 
-    fun getCurrentVersionOrNull() = if (Migrations.exists()) {
-        Migrations.slice(version.max()).selectAll().singleOrNull()?.get(version.max())?.value
-    } else {
-        null
-    }
+    fun getCurrentVersionOrNull() =
+        if (Migrations.exists()) {
+            Migrations.slice(version.max()).selectAll().singleOrNull()?.get(version.max())?.value
+        } else {
+            null
+        }
 }
 
 class MigrationEntity(version: EntityID<Int>) : IntEntity(version) {

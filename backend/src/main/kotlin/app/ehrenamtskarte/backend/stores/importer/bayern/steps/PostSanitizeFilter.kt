@@ -13,19 +13,19 @@ import org.slf4j.Logger
  */
 class PostSanitizeFilter(config: ImportConfig, private val logger: Logger, httpClient: HttpClient) :
     PipelineStep<List<AcceptingStore>, List<AcceptingStore>>(config) {
-
-    override fun execute(input: List<AcceptingStore>): List<AcceptingStore> = runBlocking {
-        input.filter {
-            if (it.longitude == null || it.latitude == null) {
-                logger.info("'${it.name}, ${it.location}' was filtered out because longitude or latitude are null")
-                return@filter false
+    override fun execute(input: List<AcceptingStore>): List<AcceptingStore> =
+        runBlocking {
+            input.filter {
+                if (it.longitude == null || it.latitude == null) {
+                    logger.info("'${it.name}, ${it.location}' was filtered out because longitude or latitude are null")
+                    return@filter false
+                }
+                if (it.postalCode == null) {
+                    // Probably because it is outside of the state but inside the bounding box of the state
+                    logger.info("'${it.name}, ${it.location}' was filtered out because its postal code is null")
+                    return@filter false
+                }
+                true
             }
-            if (it.postalCode == null) {
-                // Probably because it is outside of the state but inside the bounding box of the state
-                logger.info("'${it.name}, ${it.location}' was filtered out because its postal code is null")
-                return@filter false
-            }
-            true
         }
-    }
 }

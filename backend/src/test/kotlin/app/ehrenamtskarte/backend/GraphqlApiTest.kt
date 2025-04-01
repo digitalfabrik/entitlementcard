@@ -10,7 +10,6 @@ import io.javalin.testtools.HttpClient
 import java.io.File
 
 open class GraphqlApiTest : IntegrationTest() {
-
     protected val app: Javalin = Javalin.create().apply {
         val backendConfiguration = loadTestConfig()
         post("/") { ctx ->
@@ -18,13 +17,8 @@ open class GraphqlApiTest : IntegrationTest() {
         }
     }
 
-    protected fun post(
-        client: HttpClient,
-        mutation: GraphQLClientRequest<*>,
-        token: String? = null
-    ): GraphqlResponse {
-        val response = client.post("/", JavalinJackson().toJsonString(mutation)) {
-                request ->
+    protected fun post(client: HttpClient, mutation: GraphQLClientRequest<*>, token: String? = null): GraphqlResponse {
+        val response = client.post("/", JavalinJackson().toJsonString(mutation)) { request ->
             token?.let { request.header("Authorization", "Bearer $it") }
         }
         return GraphqlResponse(response.code, response.body)
