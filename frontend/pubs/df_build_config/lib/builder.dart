@@ -79,7 +79,7 @@ class BuildConfigBuilder extends Builder {
   @override
   FutureOr<void> build(BuildStep buildStep) async {
     final arguments = ["--no", "app-toolbelt", "v0", "build-config", "to-json", name, "common"];
-    final process = await Process.run("npx", arguments, runInShell: true);
+    final process = await Process.run("npx", arguments);
     final exitCode = process.exitCode;
     final stdErr = process.stderr.toString();
 
