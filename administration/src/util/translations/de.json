@@ -407,7 +407,7 @@
     "caution": "Achtung",
     "cautionDescription": "Akzeptanzpartner, welche aktuell in der Datenbank gespeichert, aber nicht in der Tabelle vorhanden sind, werden gelöscht!",
     "timeForImport": "Geschätzte Dauer des Imports",
-    "minutes": "Minuten",
+    "minutes": "Minute(n)",
     "pleaseDoNotCloseTheWindow": "Bitte schließen sie das Browserfenster nicht!",
     "articleMale": "Der",
     "dryRunImport": "Testimport",

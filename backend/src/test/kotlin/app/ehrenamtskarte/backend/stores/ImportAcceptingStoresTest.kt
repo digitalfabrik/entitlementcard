@@ -73,10 +73,7 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
 
     @Test
     fun `POST returns an error response if no unique region can be found for a project`() =
-        JavalinTest.test(app) {
-            _,
-            client,
-            ->
+        JavalinTest.test(app) { _, client ->
             val mutation = createMutation(
                 project = "bayern.ehrenamtskarte.app",
                 stores = listOf(CSVAcceptanceStoreBuilder.build()),
@@ -92,10 +89,7 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
 
     @Test
     fun `POST returns a successful response if the list of accepting stores is empty`() =
-        JavalinTest.test(app) {
-            _,
-            client,
-            ->
+        JavalinTest.test(app) { _, client ->
             val mutation = createMutation(stores = emptyList())
             val response = post(client, mutation, projectStoreManager.getJwtToken())
 
@@ -112,10 +106,7 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
 
     @Test
     fun `POST returns a successful response if one accepting store with all fields has been created`() =
-        JavalinTest.test(app) {
-            _,
-            client,
-            ->
+        JavalinTest.test(app) { _, client ->
             val mutation = createMutation(
                 stores = listOf(CSVAcceptanceStoreBuilder.build()),
             )
@@ -165,10 +156,7 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
 
     @Test
     fun `POST returns a successful response if one accepting store with only mandatory fields has been created`() =
-        JavalinTest.test(app) {
-            _,
-            client,
-            ->
+        JavalinTest.test(app) { _, client ->
             val mutation = createMutation(
                 stores = listOf(
                     CSVAcceptanceStoreBuilder.build(
@@ -226,10 +214,7 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
 
     @Test
     fun `POST returns an error if two duplicate acceptance stores are submitted`() =
-        JavalinTest.test(app) {
-            _,
-            client,
-            ->
+        JavalinTest.test(app) { _, client ->
             val mutation = createMutation(
                 stores = listOf(CSVAcceptanceStoreBuilder.build(), CSVAcceptanceStoreBuilder.build()),
             )
@@ -247,10 +232,7 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
 
     @Test
     fun `POST returns a successful response if one store has been created and another one has been deleted`() =
-        JavalinTest.test(app) {
-            _,
-            client,
-            ->
+        JavalinTest.test(app) { _, client ->
             TestData.createAcceptingStore()
 
             val mutation = createMutation(

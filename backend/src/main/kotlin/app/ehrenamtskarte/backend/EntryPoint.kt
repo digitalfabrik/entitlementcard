@@ -70,9 +70,7 @@ class ImportSingle : CliktCommand(help = "Imports stores for single project.") {
     override fun run() {
         val projects =
             config.projects.map {
-                if (it.id == projectId &&
-                    importUrl != null
-                ) {
+                if (it.id == projectId && importUrl != null) {
                     it.copy(importUrl = importUrl!!)
                 } else {
                     it

@@ -139,20 +139,20 @@ object AcceptingStoresRepository {
     }
 
     fun deleteStores(acceptingStoreIds: Iterable<Int>) {
-        val contactsDelete =
-            (AcceptingStores innerJoin Contacts).slice(Contacts.id)
-                .select { AcceptingStores.id inList acceptingStoreIds }
-                .map { it[Contacts.id] }
+        val contactsDelete = (AcceptingStores innerJoin Contacts)
+            .slice(Contacts.id)
+            .select { AcceptingStores.id inList acceptingStoreIds }
+            .map { it[Contacts.id] }
 
-        val physicalStoresDelete =
-            (PhysicalStores innerJoin AcceptingStores).slice(PhysicalStores.id)
-                .select { AcceptingStores.id inList acceptingStoreIds }
-                .map { it[PhysicalStores.id] }
+        val physicalStoresDelete = (PhysicalStores innerJoin AcceptingStores)
+            .slice(PhysicalStores.id)
+            .select { AcceptingStores.id inList acceptingStoreIds }
+            .map { it[PhysicalStores.id] }
 
-        val addressesDelete =
-            ((PhysicalStores innerJoin Addresses) innerJoin AcceptingStores).slice(Addresses.id)
-                .select { AcceptingStores.id inList acceptingStoreIds }
-                .map { it[Addresses.id] }
+        val addressesDelete = ((PhysicalStores innerJoin Addresses) innerJoin AcceptingStores)
+            .slice(Addresses.id)
+            .select { AcceptingStores.id inList acceptingStoreIds }
+            .map { it[Addresses.id] }
 
         PhysicalStores.deleteWhere {
             id inList physicalStoresDelete
