@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory
 import java.io.File
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.sql.SQLException
 import java.util.TimeZone
 import kotlin.io.path.exists
 
@@ -96,9 +97,45 @@ class Entry : CliktCommand() {
     }
 }
 
-class GraphQLExport : CliktCommand(name = "graphql-export") {
+class DbImportDev : CliktCommand("db-import-dev") {
+    private val directoryPath by argument(
+        name = "directory",
+        help = "Directory to load the SQL files from.",
+    )
+    private val config by requireObject<BackendConfiguration>()
+    private val sqlFilePattern = Regex("""\.sql$""")
+
+    override fun help(context: Context): String = "Import dummy developer data."
+
+    override fun run() {
+        val dir = File(directoryPath).absoluteFile
+
+        if (dir.exists() && dir.isDirectory) {
+            Database.setupWithoutMigrationCheck(config, log = false)
+
+            dir.walk().forEach {
+                if (it.isFile && sqlFilePattern.containsMatchIn(it.path)) {
+                    logger.info("Loading SQL file: ${it.absolutePath.substring(dir.absolutePath.length + 1)}")
+                    try {
+                        Database.executeSqlFile(it)
+                    } catch (err: SQLException) {
+                        logger.error("Error in SQL file (code = ${err.errorCode}):\n${err.message}")
+                        throw ProgramResult(statusCode = 4)
+                    }
+                }
+            }
+        } else {
+            logger.error("Path '$dir' does not exist or is not a directory.")
+            throw ProgramResult(statusCode = 4)
+        }
+    }
+}
+
+class GraphQLExport : CliktCommand("graphql-export") {
     private val config by requireObject<BackendConfiguration>()
     private val path by argument(help = "Export GraphQL schema. Given ")
+
+    override fun help(context: Context): String = "Exports the GraphQL schema into the directory given by '--path'"
 
     override fun run() {
         val schema = GraphQLHandler(config).graphQLSchema.print()
@@ -236,6 +273,7 @@ fun main(args: Array<String>) {
         Execute(),
         Import(),
         ImportSingle(),
+        DbImportDev(),
         Migrate(),
         MigrateSkipBaseline(),
         DbClear(),
