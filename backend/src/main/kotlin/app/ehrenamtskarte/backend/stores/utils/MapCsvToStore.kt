@@ -4,8 +4,7 @@ import app.ehrenamtskarte.backend.stores.COUNTRY_CODE
 import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.CSVAcceptingStore
 
-fun getDiscount(discounts: List<String?>): String =
-    discounts.filterNot { it.isNullOrEmpty() }.joinToString("\n\n")
+fun getDiscount(discounts: List<String?>): String = discounts.filterNot { it.isNullOrEmpty() }.joinToString("\n\n")
 
 fun mapCsvToStore(csvStore: CSVAcceptingStore): AcceptingStore {
     val discount = getDiscount(listOf(csvStore.discountDE, csvStore.discountEN))
@@ -25,6 +24,6 @@ fun mapCsvToStore(csvStore: CSVAcceptingStore): AcceptingStore {
         csvStore.homepage.clean(false),
         discount.clean(false),
         freinetId = null,
-        districtName = null
+        districtName = null,
     )
 }

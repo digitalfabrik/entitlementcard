@@ -32,7 +32,6 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.stringParam
 
 object AcceptingStoresRepository {
-
     // TODO would be great to support combinations like "Tür an Tür Augsburg"
     // TODO Fulltext search is possible with tsvector in postgres: https://www.compose.com/articles/mastering-postgresql-tools-full-text-search-and-phrase-search/
     // TODO Probably not relevant right now
@@ -42,7 +41,7 @@ object AcceptingStoresRepository {
         categoryIds: List<Int>?,
         coordinates: Coordinates?,
         limit: Int,
-        offset: Long
+        offset: Long,
     ): SizedIterable<AcceptingStoreEntity> {
         val categoryMatcher =
             if (categoryIds == null) {
@@ -61,15 +60,15 @@ object AcceptingStoresRepository {
                         AcceptingStores.description ilike "%$searchText%",
                         Addresses.location ilike "%$searchText%",
                         Addresses.postalCode ilike "%$searchText%",
-                        Addresses.street ilike "%$searchText%"
-                    )
+                        Addresses.street ilike "%$searchText%",
+                    ),
                 )
             }
 
         val sortExpression = if (coordinates != null) {
             DistanceFunction(
                 PhysicalStores.coordinates,
-                MakePointFunction(doubleParam(coordinates.lng), doubleParam(coordinates.lat))
+                MakePointFunction(doubleParam(coordinates.lng), doubleParam(coordinates.lat)),
             )
         } else {
             AcceptingStores.name
@@ -83,12 +82,8 @@ object AcceptingStoresRepository {
             .limit(limit, offset)
     }
 
-    fun getIdIfExists(
-        acceptingStore: AcceptingStore,
-        projectId: EntityID<Int>,
-        regionId: EntityID<Int>?
-    ): Int? {
-        return AcceptingStores.innerJoin(PhysicalStores).innerJoin(Addresses).innerJoin(Contacts)
+    fun getIdIfExists(acceptingStore: AcceptingStore, projectId: EntityID<Int>, regionId: EntityID<Int>?): Int? =
+        AcceptingStores.innerJoin(PhysicalStores).innerJoin(Addresses).innerJoin(Contacts)
             .slice(AcceptingStores.id).select {
                 (Addresses.street eq acceptingStore.streetWithHouseNumber) and
                     (Addresses.postalCode eq acceptingStore.postalCode!!) and
@@ -105,16 +100,16 @@ object AcceptingStoresRepository {
                     (
                         PhysicalStores.coordinates eq Point(
                             acceptingStore.longitude!!,
-                            acceptingStore.latitude!!
+                            acceptingStore.latitude!!,
                         )
-                        )
+                    )
             }.firstOrNull()?.let { it[AcceptingStores.id].value }
-    }
 
-    fun getAllIdsInProject(projectId: EntityID<Int>): MutableSet<Int> {
-        return AcceptingStores.slice(AcceptingStores.id).select { AcceptingStores.projectId eq projectId }
+    fun getAllIdsInProject(projectId: EntityID<Int>): MutableSet<Int> =
+        AcceptingStores.slice(AcceptingStores.id).select {
+            AcceptingStores.projectId eq projectId
+        }
             .map { it[AcceptingStores.id].value }.toMutableSet()
-    }
 
     fun createStore(acceptingStore: AcceptingStore, projectId: EntityID<Int>, regionId: EntityID<Int>?) {
         val address = AddressEntity.new {

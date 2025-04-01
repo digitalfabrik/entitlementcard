@@ -28,7 +28,6 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 internal class ImportAcceptingStoresTest : GraphqlApiTest() {
-
     private val projectStoreManager = TestAdministrators.NUERNBERG_PROJECT_STORE_MANAGER
     private val projectAdmin = TestAdministrators.NUERNBERG_PROJECT_ADMIN
 
@@ -43,311 +42,347 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
     }
 
     @Test
-    fun `POST returns an error when project does not exist`() = JavalinTest.test(app) { _, client ->
-        val mutation = createMutation(
-            project = "non-existent.ehrenamtskarte.app",
-            stores = emptyList()
-        )
-        val response = post(client, mutation, projectStoreManager.getJwtToken())
+    fun `POST returns an error when project does not exist`() =
+        JavalinTest.test(app) { _, client ->
+            val mutation = createMutation(
+                project = "non-existent.ehrenamtskarte.app",
+                stores = emptyList(),
+            )
+            val response = post(client, mutation, projectStoreManager.getJwtToken())
 
-        assertEquals(404, response.code)
-    }
-
-    @Test
-    fun `POST returns an error when the auth token is missing`() = JavalinTest.test(app) { _, client ->
-        val mutation = createMutation(stores = emptyList())
-        val response = post(client, mutation)
-
-        assertEquals(401, response.code)
-    }
-
-    @Test
-    fun `POST returns an error when the user is not allowed to import stores`() = JavalinTest.test(app) { _, client ->
-        val mutation = createMutation(stores = emptyList())
-        val response = post(client, mutation, projectAdmin.getJwtToken())
-
-        assertEquals(403, response.code)
-    }
-
-    @Test
-    fun `POST returns an error response if no unique region can be found for a project`() = JavalinTest.test(app) { _, client ->
-        val mutation = createMutation(
-            project = "bayern.ehrenamtskarte.app",
-            stores = listOf(CSVAcceptanceStoreBuilder.build())
-        )
-        val response = post(client, mutation, TestAdministrators.EAK_PROJECT_STORE_MANAGER.getJwtToken())
-
-        assertEquals(200, response.code)
-
-        val jsonResponse = response.json()
-
-        assertJsonValue(jsonResponse, "Error REGION_NOT_UNIQUE occurred.", "message")
-    }
-
-    @Test
-    fun `POST returns a successful response if the list of accepting stores is empty`() = JavalinTest.test(app) { _, client ->
-        val mutation = createMutation(stores = emptyList())
-        val response = post(client, mutation, projectStoreManager.getJwtToken())
-
-        assertEquals(200, response.code)
-
-        val jsonResponse = response.json()
-
-        jsonResponse.apply {
-            assertJsonValue(this, 0, "storesCreated")
-            assertJsonValue(this, 0, "storesDeleted")
-            assertJsonValue(this, 0, "storesUntouched")
-        }
-    }
-
-    @Test
-    fun `POST returns a successful response if one accepting store with all fields has been created`() = JavalinTest.test(app) { _, client ->
-        val mutation = createMutation(
-            stores = listOf(CSVAcceptanceStoreBuilder.build())
-        )
-        val response = post(client, mutation, projectStoreManager.getJwtToken())
-
-        assertEquals(200, response.code)
-
-        val jsonResponse = response.json()
-
-        jsonResponse.apply {
-            assertJsonValue(this, 1, "storesCreated")
-            assertJsonValue(this, 0, "storesDeleted")
-            assertJsonValue(this, 0, "storesUntouched")
+            assertEquals(404, response.code)
         }
 
-        transaction {
-            val acceptanceStore = AcceptingStoreEntity.all().single()
+    @Test
+    fun `POST returns an error when the auth token is missing`() =
+        JavalinTest.test(app) { _, client ->
+            val mutation = createMutation(stores = emptyList())
+            val response = post(client, mutation)
 
-            assertEquals("Test store", acceptanceStore.name)
-            assertEquals("100% Ermäßigung\n\n100% discount", acceptanceStore.description)
-            assertEquals(17, acceptanceStore.categoryId.value)
-            assertEquals(2, acceptanceStore.projectId.value)
-            assertEquals(94, acceptanceStore.regionId?.value)
-            assertNotNull(acceptanceStore.createdDate)
-
-            val contact = ContactEntity.all().single()
-
-            assertEquals(acceptanceStore.contactId, contact.id)
-            assertEquals("info@test.de", contact.email)
-            assertEquals("0911/123456", contact.telephone)
-            assertEquals("https://www.test.de", contact.website)
-
-            val address = AddressEntity.all().single()
-
-            assertEquals("Teststr. 10", address.street)
-            assertEquals("90408", address.postalCode)
-            assertEquals("Nürnberg", address.location)
-            assertEquals("de", address.countryCode)
-
-            val physicalStore = PhysicalStoreEntity.all().single()
-
-            assertEquals("(0 0)", physicalStore.coordinates.value)
-            assertEquals(address.id, physicalStore.addressId)
-            assertEquals(acceptanceStore.id, physicalStore.storeId)
+            assertEquals(401, response.code)
         }
-    }
 
     @Test
-    fun `POST returns a successful response if one accepting store with only mandatory fields has been created`() = JavalinTest.test(app) { _, client ->
-        val mutation = createMutation(
-            stores = listOf(CSVAcceptanceStoreBuilder.build(telephone = "", email = "", homepage = "", discountDE = "", discountEN = ""))
-        )
-        val response = post(client, mutation, projectStoreManager.getJwtToken())
+    fun `POST returns an error when the user is not allowed to import stores`() =
+        JavalinTest.test(app) { _, client ->
+            val mutation = createMutation(stores = emptyList())
+            val response = post(client, mutation, projectAdmin.getJwtToken())
 
-        assertEquals(200, response.code)
-
-        val jsonResponse = response.json()
-
-        jsonResponse.apply {
-            assertJsonValue(this, 1, "storesCreated")
-            assertJsonValue(this, 0, "storesDeleted")
-            assertJsonValue(this, 0, "storesUntouched")
+            assertEquals(403, response.code)
         }
-
-        transaction {
-            val acceptanceStore = AcceptingStoreEntity.all().single()
-
-            assertEquals("Test store", acceptanceStore.name)
-            assertNull(acceptanceStore.description)
-            assertEquals(17, acceptanceStore.categoryId.value)
-            assertEquals(2, acceptanceStore.projectId.value)
-            assertEquals(94, acceptanceStore.regionId?.value)
-            assertNotNull(acceptanceStore.createdDate)
-
-            val contact = ContactEntity.all().single()
-
-            assertEquals(acceptanceStore.contactId, contact.id)
-            assertNull(contact.email)
-            assertNull(contact.telephone)
-            assertNull(contact.website)
-
-            val address = AddressEntity.all().single()
-
-            assertEquals("Teststr. 10", address.street)
-            assertEquals("90408", address.postalCode)
-            assertEquals("Nürnberg", address.location)
-            assertEquals("de", address.countryCode)
-
-            val physicalStore = PhysicalStoreEntity.all().single()
-
-            assertEquals("(0 0)", physicalStore.coordinates.value)
-            assertEquals(address.id, physicalStore.addressId)
-            assertEquals(acceptanceStore.id, physicalStore.storeId)
-        }
-    }
 
     @Test
-    fun `POST returns an error if two duplicate acceptance stores are submitted`() = JavalinTest.test(app) { _, client ->
-        val mutation = createMutation(
-            stores = listOf(CSVAcceptanceStoreBuilder.build(), CSVAcceptanceStoreBuilder.build())
-        )
-        val response = post(client, mutation, projectStoreManager.getJwtToken())
+    fun `POST returns an error response if no unique region can be found for a project`() =
+        JavalinTest.test(app) {
+            _,
+            client,
+            ->
+            val mutation = createMutation(
+                project = "bayern.ehrenamtskarte.app",
+                stores = listOf(CSVAcceptanceStoreBuilder.build()),
+            )
+            val response = post(client, mutation, TestAdministrators.EAK_PROJECT_STORE_MANAGER.getJwtToken())
 
-        assertEquals(200, response.code)
+            assertEquals(200, response.code)
 
-        val jsonResponse = response.json()
+            val jsonResponse = response.json()
 
-        jsonResponse.apply {
-            assertJsonValue(this, "Error INVALID_JSON occurred.", key = "message")
-            assertJsonValue(this, "Duplicate store(s) found: Test store Teststr. 10 90408 Nürnberg", key = "reason")
+            assertJsonValue(jsonResponse, "Error REGION_NOT_UNIQUE occurred.", "message")
         }
-    }
 
     @Test
-    fun `POST returns a successful response if one store has been created and another one has been deleted`() = JavalinTest.test(app) { _, client ->
-        TestData.createAcceptingStore()
+    fun `POST returns a successful response if the list of accepting stores is empty`() =
+        JavalinTest.test(app) {
+            _,
+            client,
+            ->
+            val mutation = createMutation(stores = emptyList())
+            val response = post(client, mutation, projectStoreManager.getJwtToken())
 
-        val mutation = createMutation(
-            stores = listOf(CSVAcceptanceStoreBuilder.build(name = "Test store 2"))
-        )
-        val response = post(client, mutation, projectStoreManager.getJwtToken())
+            assertEquals(200, response.code)
 
-        assertEquals(200, response.code)
+            val jsonResponse = response.json()
 
-        val jsonResponse = response.json()
-
-        jsonResponse.apply {
-            assertJsonValue(this, 1, "storesCreated")
-            assertJsonValue(this, 1, "storesDeleted")
-            assertJsonValue(this, 0, "storesUntouched")
-        }
-
-        transaction {
-            AcceptingStores.selectAll().single().let {
-                assertEquals("Test store 2", it[AcceptingStores.name])
+            jsonResponse.apply {
+                assertJsonValue(this, 0, "storesCreated")
+                assertJsonValue(this, 0, "storesDeleted")
+                assertJsonValue(this, 0, "storesUntouched")
             }
-            assertEquals(1, Contacts.selectAll().count())
-            assertEquals(1, Addresses.selectAll().count())
-            assertEquals(1, PhysicalStores.selectAll().count())
         }
-    }
 
     @Test
-    fun `POST returns a successful response if nothing has changed`() = JavalinTest.test(app) { _, client ->
-        TestData.createAcceptingStore()
+    fun `POST returns a successful response if one accepting store with all fields has been created`() =
+        JavalinTest.test(app) {
+            _,
+            client,
+            ->
+            val mutation = createMutation(
+                stores = listOf(CSVAcceptanceStoreBuilder.build()),
+            )
+            val response = post(client, mutation, projectStoreManager.getJwtToken())
 
-        val mutation = createMutation(
-            stores = listOf(CSVAcceptanceStoreBuilder.build())
-        )
-        val response = post(client, mutation, projectStoreManager.getJwtToken())
+            assertEquals(200, response.code)
 
-        assertEquals(200, response.code)
+            val jsonResponse = response.json()
 
-        val jsonResponse = response.json()
+            jsonResponse.apply {
+                assertJsonValue(this, 1, "storesCreated")
+                assertJsonValue(this, 0, "storesDeleted")
+                assertJsonValue(this, 0, "storesUntouched")
+            }
 
-        jsonResponse.apply {
-            assertJsonValue(this, 0, "storesCreated")
-            assertJsonValue(this, 0, "storesDeleted")
-            assertJsonValue(this, 1, "storesUntouched")
+            transaction {
+                val acceptanceStore = AcceptingStoreEntity.all().single()
+
+                assertEquals("Test store", acceptanceStore.name)
+                assertEquals("100% Ermäßigung\n\n100% discount", acceptanceStore.description)
+                assertEquals(17, acceptanceStore.categoryId.value)
+                assertEquals(2, acceptanceStore.projectId.value)
+                assertEquals(94, acceptanceStore.regionId?.value)
+                assertNotNull(acceptanceStore.createdDate)
+
+                val contact = ContactEntity.all().single()
+
+                assertEquals(acceptanceStore.contactId, contact.id)
+                assertEquals("info@test.de", contact.email)
+                assertEquals("0911/123456", contact.telephone)
+                assertEquals("https://www.test.de", contact.website)
+
+                val address = AddressEntity.all().single()
+
+                assertEquals("Teststr. 10", address.street)
+                assertEquals("90408", address.postalCode)
+                assertEquals("Nürnberg", address.location)
+                assertEquals("de", address.countryCode)
+
+                val physicalStore = PhysicalStoreEntity.all().single()
+
+                assertEquals("(0 0)", physicalStore.coordinates.value)
+                assertEquals(address.id, physicalStore.addressId)
+                assertEquals(acceptanceStore.id, physicalStore.storeId)
+            }
         }
 
-        transaction {
-            assertEquals(1, AcceptingStores.selectAll().count())
-            assertEquals(1, Contacts.selectAll().count())
-            assertEquals(1, Addresses.selectAll().count())
-            assertEquals(1, PhysicalStores.selectAll().count())
+    @Test
+    fun `POST returns a successful response if one accepting store with only mandatory fields has been created`() =
+        JavalinTest.test(app) {
+            _,
+            client,
+            ->
+            val mutation = createMutation(
+                stores = listOf(
+                    CSVAcceptanceStoreBuilder.build(
+                        telephone = "",
+                        email = "",
+                        homepage = "",
+                        discountDE = "",
+                        discountEN = "",
+                    ),
+                ),
+            )
+            val response = post(client, mutation, projectStoreManager.getJwtToken())
+
+            assertEquals(200, response.code)
+
+            val jsonResponse = response.json()
+
+            jsonResponse.apply {
+                assertJsonValue(this, 1, "storesCreated")
+                assertJsonValue(this, 0, "storesDeleted")
+                assertJsonValue(this, 0, "storesUntouched")
+            }
+
+            transaction {
+                val acceptanceStore = AcceptingStoreEntity.all().single()
+
+                assertEquals("Test store", acceptanceStore.name)
+                assertNull(acceptanceStore.description)
+                assertEquals(17, acceptanceStore.categoryId.value)
+                assertEquals(2, acceptanceStore.projectId.value)
+                assertEquals(94, acceptanceStore.regionId?.value)
+                assertNotNull(acceptanceStore.createdDate)
+
+                val contact = ContactEntity.all().single()
+
+                assertEquals(acceptanceStore.contactId, contact.id)
+                assertNull(contact.email)
+                assertNull(contact.telephone)
+                assertNull(contact.website)
+
+                val address = AddressEntity.all().single()
+
+                assertEquals("Teststr. 10", address.street)
+                assertEquals("90408", address.postalCode)
+                assertEquals("Nürnberg", address.location)
+                assertEquals("de", address.countryCode)
+
+                val physicalStore = PhysicalStoreEntity.all().single()
+
+                assertEquals("(0 0)", physicalStore.coordinates.value)
+                assertEquals(address.id, physicalStore.addressId)
+                assertEquals(acceptanceStore.id, physicalStore.storeId)
+            }
         }
-    }
+
+    @Test
+    fun `POST returns an error if two duplicate acceptance stores are submitted`() =
+        JavalinTest.test(app) {
+            _,
+            client,
+            ->
+            val mutation = createMutation(
+                stores = listOf(CSVAcceptanceStoreBuilder.build(), CSVAcceptanceStoreBuilder.build()),
+            )
+            val response = post(client, mutation, projectStoreManager.getJwtToken())
+
+            assertEquals(200, response.code)
+
+            val jsonResponse = response.json()
+
+            jsonResponse.apply {
+                assertJsonValue(this, "Error INVALID_JSON occurred.", key = "message")
+                assertJsonValue(this, "Duplicate store(s) found: Test store Teststr. 10 90408 Nürnberg", key = "reason")
+            }
+        }
+
+    @Test
+    fun `POST returns a successful response if one store has been created and another one has been deleted`() =
+        JavalinTest.test(app) {
+            _,
+            client,
+            ->
+            TestData.createAcceptingStore()
+
+            val mutation = createMutation(
+                stores = listOf(CSVAcceptanceStoreBuilder.build(name = "Test store 2")),
+            )
+            val response = post(client, mutation, projectStoreManager.getJwtToken())
+
+            assertEquals(200, response.code)
+
+            val jsonResponse = response.json()
+
+            jsonResponse.apply {
+                assertJsonValue(this, 1, "storesCreated")
+                assertJsonValue(this, 1, "storesDeleted")
+                assertJsonValue(this, 0, "storesUntouched")
+            }
+
+            transaction {
+                AcceptingStores.selectAll().single().let {
+                    assertEquals("Test store 2", it[AcceptingStores.name])
+                }
+                assertEquals(1, Contacts.selectAll().count())
+                assertEquals(1, Addresses.selectAll().count())
+                assertEquals(1, PhysicalStores.selectAll().count())
+            }
+        }
+
+    @Test
+    fun `POST returns a successful response if nothing has changed`() =
+        JavalinTest.test(app) { _, client ->
+            TestData.createAcceptingStore()
+
+            val mutation = createMutation(
+                stores = listOf(CSVAcceptanceStoreBuilder.build()),
+            )
+            val response = post(client, mutation, projectStoreManager.getJwtToken())
+
+            assertEquals(200, response.code)
+
+            val jsonResponse = response.json()
+
+            jsonResponse.apply {
+                assertJsonValue(this, 0, "storesCreated")
+                assertJsonValue(this, 0, "storesDeleted")
+                assertJsonValue(this, 1, "storesUntouched")
+            }
+
+            transaction {
+                assertEquals(1, AcceptingStores.selectAll().count())
+                assertEquals(1, Contacts.selectAll().count())
+                assertEquals(1, Addresses.selectAll().count())
+                assertEquals(1, PhysicalStores.selectAll().count())
+            }
+        }
 
     data class ValidationErrorTestCase(val csvStore: CSVAcceptingStoreInput, val error: String)
 
     companion object {
         @JvmStatic
-        fun validationErrorTestCases(): List<ValidationErrorTestCase> {
-            return listOf(
+        fun validationErrorTestCases(): List<ValidationErrorTestCase> =
+            listOf(
                 ValidationErrorTestCase(
                     csvStore = CSVAcceptanceStoreBuilder.build(name = ""),
-                    error = "Name cannot be empty"
+                    error = "Name cannot be empty",
                 ),
                 ValidationErrorTestCase(
                     csvStore = CSVAcceptanceStoreBuilder.build(name = " "),
-                    error = "Name cannot be empty"
+                    error = "Name cannot be empty",
                 ),
                 ValidationErrorTestCase(
                     csvStore = CSVAcceptanceStoreBuilder.build(location = ""),
-                    error = "Location cannot be empty"
+                    error = "Location cannot be empty",
                 ),
                 ValidationErrorTestCase(
                     csvStore = CSVAcceptanceStoreBuilder.build(location = " "),
-                    error = "Location cannot be empty"
+                    error = "Location cannot be empty",
                 ),
                 ValidationErrorTestCase(
                     csvStore = CSVAcceptanceStoreBuilder.build(street = ""),
-                    error = "Street cannot be empty"
+                    error = "Street cannot be empty",
                 ),
                 ValidationErrorTestCase(
                     csvStore = CSVAcceptanceStoreBuilder.build(street = " "),
-                    error = "Street cannot be empty"
+                    error = "Street cannot be empty",
                 ),
                 ValidationErrorTestCase(
                     csvStore = CSVAcceptanceStoreBuilder.build(houseNumber = ""),
-                    error = "House number cannot be empty"
+                    error = "House number cannot be empty",
                 ),
                 ValidationErrorTestCase(
                     csvStore = CSVAcceptanceStoreBuilder.build(houseNumber = " "),
-                    error = "House number cannot be empty"
+                    error = "House number cannot be empty",
                 ),
                 ValidationErrorTestCase(
                     csvStore = CSVAcceptanceStoreBuilder.build(postalCode = ""),
-                    error = "Postal code cannot be empty"
+                    error = "Postal code cannot be empty",
                 ),
                 ValidationErrorTestCase(
                     csvStore = CSVAcceptanceStoreBuilder.build(postalCode = " "),
-                    error = "Postal code cannot be empty"
-                )
+                    error = "Postal code cannot be empty",
+                ),
             )
-        }
     }
 
     @ParameterizedTest
     @MethodSource("validationErrorTestCases")
-    fun `POST returns validation error when the csv store input is not valid`(testCase: ValidationErrorTestCase) = JavalinTest.test(app) { _, client ->
-        val mutation = createMutation(
-            stores = listOf(testCase.csvStore)
-        )
-        val response = post(client, mutation, projectStoreManager.getJwtToken())
+    fun `POST returns validation error when the csv store input is not valid`(testCase: ValidationErrorTestCase) =
+        JavalinTest.test(app) { _, client ->
+            val mutation = createMutation(
+                stores = listOf(testCase.csvStore),
+            )
+            val response = post(client, mutation, projectStoreManager.getJwtToken())
 
-        assertEquals(200, response.code)
+            assertEquals(200, response.code)
 
-        val jsonResponse = response.json()
+            val jsonResponse = response.json()
 
-        jsonResponse.apply {
-            assertJsonValue(this, "Error INVALID_JSON occurred.", key = "message")
-            assertJsonValue(this, testCase.error, key = "reason")
+            jsonResponse.apply {
+                assertJsonValue(this, "Error INVALID_JSON occurred.", key = "message")
+                assertJsonValue(this, testCase.error, key = "reason")
+            }
         }
-    }
 
     private fun createMutation(
         project: String = "nuernberg.sozialpass.app",
         dryRun: Boolean = false,
-        stores: List<CSVAcceptingStoreInput>
+        stores: List<CSVAcceptingStoreInput>,
     ): ImportAcceptingStores {
         val variables = ImportAcceptingStores.Variables(
             project = project,
             dryRun = dryRun,
-            stores = stores
+            stores = stores,
         )
         return ImportAcceptingStores(variables)
     }

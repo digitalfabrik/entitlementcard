@@ -8,7 +8,6 @@ import org.junit.jupiter.api.TestFactory
 import kotlin.test.assertEquals
 
 internal class MapCsvToStoreTest {
-
     private val mapCsvToStoreTestData = listOf(
         CSVAcceptingStore(
             " Test  store with trailing  spaces ",
@@ -23,7 +22,7 @@ internal class MapCsvToStoreTest {
             " https://www.test.de/kontakt/ ",
             "20% Ermäßigung für Erwachsene",
             "20% discount for adults",
-            17
+            17,
         ) to AcceptingStore(
             "Test store with trailing spaces",
             "de",
@@ -41,7 +40,7 @@ internal class MapCsvToStoreTest {
             "20% Ermäßigung für Erwachsene\n\n20% discount for adults",
             null,
             null,
-            "Teststr. 10"
+            "Teststr. 10",
         ),
         CSVAcceptingStore(
             "Test store with empty optional fields",
@@ -56,7 +55,7 @@ internal class MapCsvToStoreTest {
             "",
             "",
             "",
-            17
+            17,
         ) to AcceptingStore(
             "Test store with empty optional fields",
             "de",
@@ -74,7 +73,7 @@ internal class MapCsvToStoreTest {
             null,
             null,
             null,
-            "Teststr. 10"
+            "Teststr. 10",
         ),
         CSVAcceptingStore(
             "Test store with german-only description",
@@ -89,7 +88,7 @@ internal class MapCsvToStoreTest {
             "",
             "20% Ermäßigung für Erwachsene",
             "",
-            17
+            17,
         ) to AcceptingStore(
             "Test store with german-only description",
             "de",
@@ -107,15 +106,16 @@ internal class MapCsvToStoreTest {
             "20% Ermäßigung für Erwachsene",
             null,
             null,
-            "Teststr. 10"
-        )
+            "Teststr. 10",
+        ),
     )
 
     @TestFactory
-    fun testCsvToStoreMapping() = mapCsvToStoreTestData.map { (csvStore, expectedStore) ->
-        DynamicTest.dynamicTest("should clean the data and convert csv input to the accepting store object") {
-            val mappedStore = mapCsvToStore(csvStore)
-            assertEquals(expectedStore, mappedStore)
+    fun testCsvToStoreMapping() =
+        mapCsvToStoreTestData.map { (csvStore, expectedStore) ->
+            DynamicTest.dynamicTest("should clean the data and convert csv input to the accepting store object") {
+                val mappedStore = mapCsvToStore(csvStore)
+                assertEquals(expectedStore, mappedStore)
+            }
         }
-    }
 }

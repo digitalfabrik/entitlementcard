@@ -32,6 +32,7 @@ class Entry : CliktCommand() {
     private val postgresPassword by option()
     private val geocoding by option().choice("true", "false").convert { it.toBoolean() }
     private val geocodingHost by option()
+
     override fun run() {
         val backendConfiguration = BackendConfiguration.load(config?.toURI()?.toURL())
 
@@ -40,12 +41,12 @@ class Entry : CliktCommand() {
             postgres = backendConfiguration.postgres.copy(
                 url = postgresUrl ?: backendConfiguration.postgres.url,
                 user = postgresUser ?: backendConfiguration.postgres.user,
-                password = postgresPassword ?: backendConfiguration.postgres.password
+                password = postgresPassword ?: backendConfiguration.postgres.password,
             ),
             geocoding = backendConfiguration.geocoding.copy(
                 enabled = geocoding ?: backendConfiguration.geocoding.enabled,
-                host = geocodingHost ?: backendConfiguration.geocoding.host
-            )
+                host = geocodingHost ?: backendConfiguration.geocoding.host,
+            ),
         )
     }
 }
@@ -68,7 +69,15 @@ class ImportSingle : CliktCommand(help = "Imports stores for single project.") {
 
     override fun run() {
         val projects =
-            config.projects.map { if (it.id == projectId && importUrl != null) it.copy(importUrl = importUrl!!) else it }
+            config.projects.map {
+                if (it.id == projectId &&
+                    importUrl != null
+                ) {
+                    it.copy(importUrl = importUrl!!)
+                } else {
+                    it
+                }
+            }
         val newConfig = config.copy(projects = projects)
 
         Database.setup(newConfig)
@@ -130,14 +139,16 @@ class MigrateSkipBaseline : CliktCommand(
     It adds the migrations table without applying the baseline migration step.
     It should be used only once when introducing the new DB migration system on the production server.
     Once this is done, this command can be safely removed.
-    """.trimIndent()
+    """.trimIndent(),
 ) {
     private val config by requireObject<BackendConfiguration>()
 
     override fun run() {
         val db = Database.setupWithoutMigrationCheck(config)
         if (transaction { Migrations.exists() }) {
-            throw IllegalArgumentException("The migrations table has already been created. Use the migrate command instead.")
+            throw IllegalArgumentException(
+                "The migrations table has already been created. Use the migrate command instead.",
+            )
         }
         MigrationUtils.applyRequiredMigrations(db, skipBaseline = true)
     }
@@ -154,6 +165,6 @@ fun main(args: Array<String>) {
         Migrate(),
         MigrateSkipBaseline(),
         CreateAdmin(),
-        GraphQLExport()
+        GraphQLExport(),
     ).main(args)
 }

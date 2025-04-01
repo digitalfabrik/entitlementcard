@@ -31,11 +31,11 @@ object EhrenamtskarteBayern : Pipeline {
             .addStep(SanitizeAddress(config, logger), logger) { logger.info("== Sanitize address ==") }
             .addStep(
                 SanitizeGeocode(config, logger, httpClient),
-                logger
+                logger,
             ) { logger.info("== Sanitize data with geocoding ==") }
             .addStep(
                 PostSanitizeFilter(config, logger, httpClient),
-                logger
+                logger,
             ) { logger.info("== Filter sanitized data ==") }
             .addStep(FilterDuplicates(config, logger), logger) { logger.info("== Filter duplicated data ==") }
             .addStep(Store(config, logger), logger) { logger.info("== Store remaining data to db ==") }

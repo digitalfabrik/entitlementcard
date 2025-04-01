@@ -3,7 +3,6 @@ package app.ehrenamtskarte.backend.helper
 import app.ehrenamtskarte.backend.generated.inputs.CSVAcceptingStoreInput
 
 object CSVAcceptanceStoreBuilder {
-
     fun build(
         name: String = "Test store",
         street: String = "Teststr.",
@@ -17,7 +16,7 @@ object CSVAcceptanceStoreBuilder {
         homepage: String? = "https://www.test.de",
         discountDE: String? = "100% Ermäßigung",
         discountEN: String? = "100% discount",
-        categoryId: Int = 17
+        categoryId: Int = 17,
     ) = CSVAcceptingStoreInput(
         name = name,
         street = street,
@@ -31,6 +30,6 @@ object CSVAcceptanceStoreBuilder {
         homepage = homepage,
         discountDE = discountDE,
         discountEN = discountEN,
-        categoryId = categoryId
+        categoryId = categoryId,
     )
 }

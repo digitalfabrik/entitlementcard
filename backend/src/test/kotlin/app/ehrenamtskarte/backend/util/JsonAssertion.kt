@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode
 import kotlin.test.assertEquals
 
 object JsonAssertion {
-
     /**
      * This function can be used for JSON fields validation instead of `assertEquals(expected, actual)`
      * to improve debugging efficiency. It produces more precise error messages tailored for JSON data.

@@ -15,7 +15,7 @@ data class CSVAcceptingStore(
     var homepage: String?,
     var discountDE: String?,
     var discountEN: String?,
-    var categoryId: Int
+    var categoryId: Int,
 ) {
     init {
         validate()
