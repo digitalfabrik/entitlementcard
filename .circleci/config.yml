@@ -114,7 +114,7 @@ commands:
                     - v1-node-modules-{{ checksum "~/project/package-lock.json" }}
                     - v1-node-modules
             - run:
-                command: npm ci --ignore-scripts
+                command: npm ci
                 name: Install node dependencies for npm workspaces
             - save_cache:
                 key: v1-node-modules-{{ checksum "~/project/package-lock.json" }}
@@ -224,12 +224,6 @@ jobs:
             - prepare_workspace
             - install_protobuf_linux
             - install_node_modules
-            - run:
-                command: npm run generate-graphql
-                name: Generate GraphQL
-            - run:
-                command: npm run generate-protobuf
-                name: Generate Protobuf
             - run:
                 command: npm run build --version_name=${NEW_VERSION_NAME}
                 name: Build
@@ -410,12 +404,6 @@ jobs:
             - check_circleci_config
             - install_protobuf_linux
             - install_node_modules
-            - run:
-                command: npm run generate-graphql
-                name: Generate GraphQL
-            - run:
-                command: npm run generate-protobuf
-                name: Generate Protobuf
             - run:
                 command: npm run ts:check
                 name: Typescript

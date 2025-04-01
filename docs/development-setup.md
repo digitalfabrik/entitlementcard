@@ -62,11 +62,7 @@ adb reverse tcp:8081 tcp:8081 && adb reverse tcp:8000 tcp:8000 && adb reverse tc
 
 ### Administration Setup
 
-1. Create directory `administration/src/generated`
-```shell
-mkdir administration/src/generated
-```
-2. Install node_modules
+1. Install node_modules
 ```shell
 npm install
 ```
