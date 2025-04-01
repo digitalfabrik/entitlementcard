@@ -72,7 +72,7 @@ commands:
             - restore_cache:
                 keys:
                     - v1-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
-                    - v1-gems-{{ arch }}-
+                    - v1-gems-{{ arch }}
                 name: Restore gems
             - run:
                 command: |
@@ -104,7 +104,7 @@ commands:
             - restore_cache:
                 keys:
                     - v1-fvm-{{ arch }}-{{ checksum ".fvmrc" }}-{{ checksum "pubspec.yaml" }}-{{ checksum "pubspec.lock"  }}
-                    - v1-fvm-{{ arch }}-
+                    - v1-fvm-{{ arch }}
                 name: Restore flutter
             - run:
                 command: |
