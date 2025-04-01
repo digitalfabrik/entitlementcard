@@ -4,6 +4,7 @@ steps:
       name: Restore pods
       keys:
         - v1-pods-{{ checksum "ios/Podfile.lock" }}
+        - v1-pods
   - run:
       name: Install pods
       command: |
