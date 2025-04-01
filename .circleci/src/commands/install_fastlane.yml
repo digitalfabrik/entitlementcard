@@ -13,6 +13,7 @@ steps:
       name: Install fastlane
       command: |
         bundle config set path '~/.bundle'
+        bundle config set frozen true
         bundle check || bundle install
       working_directory: << parameters.directory >>
   - save_cache:
