@@ -2,7 +2,7 @@
 parameters:
   build_config:
     type: enum
-    enum: [bayern, nuernberg]
+    enum: [bayern, nuernberg, koblenz]
     default: bayern
 docker:
   - image: cimg/android:2024.01.1-node
