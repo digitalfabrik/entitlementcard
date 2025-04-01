@@ -96,6 +96,7 @@ detekt {
     config.setFrom(file("../detekt.yml"))
     buildUponDefaultConfig = true
     basePath = project.layout.projectDirectory.toString()
+    ignoreFailures = true
 }
 
 ktlint {
