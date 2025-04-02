@@ -51,7 +51,7 @@ const AddCardForm = ({ card, onRemove, updateCard }: CreateCardsFormProps): Reac
             minDate={today.toLocalDate()}
             maxDate={today.add(maxCardValidity).toLocalDate()}
             onChange={date => {
-              updateCard({ expirationDate: PlainDate.constructSafely(date, PlainDate.fromLocalDate) })
+              updateCard({ expirationDate: PlainDate.safeFromLocalDate(date) })
             }}
             textFieldSlotProps={{
               sx: {
