@@ -4,6 +4,8 @@
   "private": true,
   "main": "dist/index.js",
   "scripts": {
+    "format": "eslint . --fix && prettier . --write",
+    "lint": "eslint . && prettier . --check",
     "prepare": "tsc --build"
   },
   "devDependencies": {
