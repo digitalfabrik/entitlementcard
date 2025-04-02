@@ -5,6 +5,8 @@ import type { DesktopDatePickerSlotProps } from '@mui/x-date-pickers/DesktopDate
 import { deDE } from '@mui/x-date-pickers/locales'
 import React, { ReactElement } from 'react'
 
+export type CustomDatePickerTextFieldProps = DesktopDatePickerSlotProps<Date, true>['textField']
+
 type CustomDatePickerProps = {
   value?: Date | null
   disabled?: boolean
@@ -18,7 +20,7 @@ type CustomDatePickerProps = {
   disableFuture?: boolean
   disablePast?: boolean
   textFieldHelperText?: string
-  textFieldSlotProps?: DesktopDatePickerSlotProps<Date, true>['textField']
+  textFieldSlotProps?: CustomDatePickerTextFieldProps
 }
 
 const CustomDatePicker = ({
