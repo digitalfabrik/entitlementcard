@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 
-import { ActivityLogEntryType } from '../../bp-modules/user-settings/ActivityLog'
+import { ActivityLogEntryType } from '../../bp-modules/activity-log/ActivityLog'
 import { BIRTHDAY_EXTENSION_NAME } from '../../cards/extensions/BirthdayExtension'
 import { NUERNBERG_PASS_ID_EXTENSION_NAME } from '../../cards/extensions/NuernbergPassIdExtension'
 
