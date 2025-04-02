@@ -167,7 +167,7 @@ type Mutation {
   sendResetMail(email: String!, project: String!): Boolean!
   "Signs in an administrator"
   signIn(authData: AuthDataInput!, project: String!): SignInPayload!
-  "Updates application confirmation mail additional note"
+  "Updates application confirmation mail note"
   updateApplicationConfirmationNote(applicationConfirmationNote: String!, applicationConfirmationNoteActivated: Boolean!, regionId: Int!): Boolean!
   "Updates a note of an application"
   updateApplicationNote(applicationId: Int!, noteText: String!): Boolean!
