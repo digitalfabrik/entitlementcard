@@ -20,14 +20,6 @@ const compat = new FlatCompat({
 })
 
 export default [
-  {
-    ignores: [
-      'administration/src/generated/**/*',
-      'administration/src/coverage/**/*',
-      'administration/build/**/*',
-      '**eslint.config.mjs',
-    ],
-  },
   ...compat.extends(
     'airbnb',
     'airbnb/hooks',
@@ -198,24 +190,6 @@ export default [
       'jsx-a11y/click-events-have-key-events': 'off',
       'jsx-a11y/no-static-element-interactions': 'off',
       'react/jsx-no-constructed-context-values': 'off',
-    },
-  },
-  {
-    files: ['**/scripts/**', '**/config/**'],
-
-    rules: {
-      'global-require': 'off',
-      '@typescript-eslint/no-var-requires': 'off',
-      '@typescript-eslint/no-require-imports': 'off',
-      'import/no-extraneous-dependencies': 'off',
-      'import/no-dynamic-require': 'off',
-    },
-  },
-  {
-    files: ['**/src/mui-modules/application/forms/**'],
-
-    rules: {
-      'react/jsx-pascal-case': 'off',
     },
   },
 ]
