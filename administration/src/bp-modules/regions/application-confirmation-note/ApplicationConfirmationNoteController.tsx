@@ -57,7 +57,7 @@ const ApplicationConfirmationNoteController = ({
       defaultConfirmationNote={applicationConfirmationMailNote}
       defaultConfirmationNoteActivated={applicationConfirmationMailNoteActivated}
       saveApplicationConfirmationNote={saveApplicationConfirmationNote}
-      loadingSaveApplicationConfirmationNote={loading}
+      isSavingApplicationConfirmationNote={loading}
     />
   )
 }

@@ -21,6 +21,7 @@ type NoteProps = {
   loading: boolean
   defaultText?: string | null
   maxChars?: number
+  additionalContent?: ReactElement
 }
 
 const TextAreaDialog = ({
@@ -31,6 +32,7 @@ const TextAreaDialog = ({
   placeholder,
   defaultText,
   maxChars,
+  additionalContent,
 }: NoteProps): ReactElement => {
   const { t } = useTranslation('misc')
   const [text, setText] = useState<string>(defaultText ?? '')
@@ -58,15 +60,18 @@ const TextAreaDialog = ({
 
   return (
     <Dialog isOpen={isOpen} onClose={onClose}>
-      <TextArea
-        fill
-        onChange={e => setText(e.target.value)}
-        value={text}
-        readOnly={loading}
-        large
-        rows={20}
-        placeholder={placeholder}
-      />
+      <>
+        <TextArea
+          fill
+          onChange={e => setText(e.target.value)}
+          value={text}
+          readOnly={loading}
+          large
+          rows={20}
+          placeholder={placeholder}
+        />
+        {additionalContent}
+      </>
       <DialogFooter actions={actions}>
         {maxChars !== undefined && <CharacterCounter text={text} maxChars={maxChars} />}
       </DialogFooter>

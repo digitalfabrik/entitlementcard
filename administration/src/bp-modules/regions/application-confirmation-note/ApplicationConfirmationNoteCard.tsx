@@ -15,17 +15,17 @@ type ApplicationConfirmationNoteCardProps = {
   defaultConfirmationNote: string | null | undefined
   defaultConfirmationNoteActivated: boolean
   saveApplicationConfirmationNote: (text: string, activated: boolean) => void
-  loadingSaveApplicationConfirmationNote: boolean
+  isSavingApplicationConfirmationNote: boolean
 }
 
 const ApplicationConfirmationNoteCard = ({
   saveApplicationConfirmationNote,
   defaultConfirmationNote,
   defaultConfirmationNoteActivated,
-  loadingSaveApplicationConfirmationNote,
+  isSavingApplicationConfirmationNote,
 }: ApplicationConfirmationNoteCardProps): ReactElement => {
   const [openApplicationConfirmationNote, setOpenApplicationConfirmationNote] = useState(false)
-  // TODO check if notes are activated and add headline to mail template part
+  // TODO check if notes are activated and add headline to mail template part, add tests
 
   const { t } = useTranslation('regionSettings')
   return (
@@ -33,12 +33,7 @@ const ApplicationConfirmationNoteCard = ({
       <H2>{t('applicationConfirmationMailNoteHeadline')}</H2>
       <p>{t('applicationConfirmationMailNoteExplanation')}</p>
       <ButtonContainer>
-        <Button
-          text={t('open')}
-          intent='primary'
-          onClick={() => setOpenApplicationConfirmationNote(true)}
-          loading={loadingSaveApplicationConfirmationNote}
-        />
+        <Button text={t('open')} intent='primary' onClick={() => setOpenApplicationConfirmationNote(true)} />
       </ButtonContainer>
       {openApplicationConfirmationNote && (
         <ApplicationConfirmationNote
@@ -47,6 +42,7 @@ const ApplicationConfirmationNoteCard = ({
           isOpen={openApplicationConfirmationNote}
           defaultConfirmationNote={defaultConfirmationNote}
           defaultConfirmationNoteActivated={defaultConfirmationNoteActivated}
+          isSavingApplicationConfirmationNote={isSavingApplicationConfirmationNote}
         />
       )}
     </SettingsCard>
