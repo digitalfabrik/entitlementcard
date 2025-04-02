@@ -29,3 +29,10 @@ yarn-error.log*
 tsconfig.tsbuildinfo
 
 src/generated/
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
