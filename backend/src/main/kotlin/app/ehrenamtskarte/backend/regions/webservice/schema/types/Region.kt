@@ -8,4 +8,6 @@ data class Region(
     val dataPrivacyPolicy: String?,
     val activatedForApplication: Boolean,
     val activatedForCardConfirmationMail: Boolean,
+    val applicationConfirmationMailNoteActivated: Boolean,
+    val applicationConfirmationMailNote: String?,
 )
