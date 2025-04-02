@@ -5,11 +5,7 @@ import styled from 'styled-components'
 
 import graphQlErrorMap from '../../errors/GraphQlErrorMap'
 import { GraphQlExceptionCode } from '../../generated/graphql'
-
-const CharacterCounter = styled.div<{ $hasError: boolean }>`
-  align-self: center;
-  color: ${props => (props.$hasError ? 'red' : 'black')};
-`
+import CharacterCounter from './CharacterCounter'
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -72,11 +68,7 @@ const TextAreaDialog = ({
         placeholder={placeholder}
       />
       <DialogFooter actions={actions}>
-        {maxChars !== undefined && (
-          <CharacterCounter $hasError={maxCharsExceeded} aria-label='Character Counter'>
-            {text.length}/{maxChars}
-          </CharacterCounter>
-        )}
+        {maxChars !== undefined && <CharacterCounter text={text} maxChars={maxChars} />}
       </DialogFooter>
     </Dialog>
   )

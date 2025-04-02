@@ -334,7 +334,13 @@
     "freinetAgencyId": "AgenturId",
     "freinetAgencyAccessKey": "Zugangsschlüssel",
     "freinetActivateDataTransferCheckbox": "Personen- und Kartendaten an Freinet übermitteln",
-    "freinetActivateDataTransferSuccessful": "Ihre Einstellungen zur Datenübermittlung wurden erfolgreich gespeichert."
+    "freinetActivateDataTransferSuccessful": "Ihre Einstellungen zur Datenübermittlung wurden erfolgreich gespeichert.",
+    "applicationConfirmationMailNoteHeadline": "Eingangsbestätigung Antrag",
+    "applicationConfirmationMailNoteDialogHeadline": "Notiz erstellen",
+    "applicationConfirmationMailNoteDialogPlaceholder": "Fügen Sie hier Ihre Notiz ein...",
+    "applicationConfirmationMailNoteExplanation": "Hier können Sie eine allgemeine Notiz hinterlegen, welche dem Antragssteller in der Eingangsbestätigungsmail des Antrags zusätzlich angezeigt wird.",
+    "applicationConfirmationMailNoteActivated": "Notiz an Antragssteller senden",
+    "applicationConfirmationMailNoteSavedSuccessful": "Ihre Notizeinstellungen wurden erfolgreich geändert."
   },
   "selfService": {
     "welcome": "Herzlich Willkommen!",
@@ -543,6 +549,7 @@
       "title": "Der {{codeType}} für {{fullName}} kann nicht generiert werden, da er zu viele Daten enthält."
     },
     "invalidRole": "Diese Rolle kann nicht zugewiesen werden.",
+    "invalidApplicationConfirmationNoteSize": "Unzulässige Zeichenlänge der Notiz erreicht. Maximal sind {{maxSize}} Zeichen erlaubt.",
     "entitlementNotFound": "Wir konnten Ihre Angaben nicht im System finden. Bitte überprüfen Sie Ihre Angaben und versuchen Sie es erneut.",
     "entitlementExpired": "Sie sind nicht länger berechtigt, einen KoblenzPass zu erstellen. Bitte kontaktieren Sie koblenzpass@stadt.koblenz.de für weitere Informationen.",
     "mailNotSend": "Email konnte nicht an {{recipient}} gesendet werden.",
