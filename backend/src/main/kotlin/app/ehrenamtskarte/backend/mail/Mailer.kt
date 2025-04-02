@@ -46,6 +46,14 @@ object Mailer {
         }
     }
 
+    private fun EmailBody.applicationConfirmationNoteParagraph(note: String?) {
+        if (!note.isNullOrEmpty()) {
+            p {
+                +"$note"
+            }
+        }
+    }
+
     private fun urlEncode(str: String) = URLEncoder.encode(str, StandardCharsets.UTF_8)
 
     private fun sendMail(
@@ -212,6 +220,7 @@ object Mailer {
         projectConfig: ProjectConfig,
         personalData: PersonalData,
         accessKey: String,
+        applicationConfirmationNote: String?,
     ) {
         val subject = "Antrag erfolgreich eingereicht"
         val message = emailBody {
@@ -223,6 +232,7 @@ object Mailer {
                 br()
                 link(URL("${projectConfig.administrationBaseUrl}/antrag-einsehen/${urlEncode(accessKey)}"))
             }
+            applicationConfirmationNoteParagraph(applicationConfirmationNote)
             p {
                 +"Bei Rückfragen zum Bearbeitungsstand wenden Sie sich bitte an Ihr örtliches "
                 +"Landratsamt bzw. die Verwaltung Ihrer kreisfreien Stadt."
@@ -245,6 +255,7 @@ object Mailer {
         contactPerson: String,
         personalData: PersonalData,
         accessKey: String,
+        applicationConfirmationNote: String?,
     ) {
         val subject = "Antrag erfolgreich eingereicht"
         val message = emailBody {
@@ -259,6 +270,7 @@ object Mailer {
                 br()
                 link(URL("${projectConfig.administrationBaseUrl}/antrag-einsehen/${urlEncode(accessKey)}"))
             }
+            applicationConfirmationNoteParagraph(applicationConfirmationNote)
             p {
                 +"Bei Rückfragen wenden Sie sich bitte direkt an Ihr zuständiges Landratsamt oder die "
                 +"Verwaltung Ihrer kreisfreien Stadt."

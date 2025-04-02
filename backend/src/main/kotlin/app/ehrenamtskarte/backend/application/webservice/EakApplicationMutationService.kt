@@ -14,6 +14,7 @@ import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidNoteSizeException
 import app.ehrenamtskarte.backend.mail.Mailer
+import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.execution.DataFetcherResult
 import graphql.schema.DataFetchingEnvironment
@@ -32,6 +33,16 @@ class EakApplicationMutationService {
         val dataFetcherResultBuilder = DataFetcherResult.newResult<Boolean>()
 
         applicationHandler.validateRegion()
+        val region = transaction {
+            RegionsRepository.findRegionById(regionId)
+        }
+        val applicationConfirmationNote = if (region.applicationConfirmationMailNoteActivated &&
+            !region.applicationConfirmationMailNote.isNullOrEmpty()
+        ) {
+            region.applicationConfirmationMailNote
+        } else {
+            null
+        }
         applicationHandler.validateAttachmentTypes()
         val isPreVerified = applicationHandler.isValidPreVerifiedApplication()
 
@@ -43,12 +54,16 @@ class EakApplicationMutationService {
                 applicationEntity,
                 verificationEntities,
                 dataFetcherResultBuilder,
+                applicationConfirmationNote,
             )
         } else {
+            // add confirmationMailAdditionalNote only if activated
+
             applicationHandler.sendApplicationMails(
                 applicationEntity,
                 verificationEntities,
                 dataFetcherResultBuilder,
+                applicationConfirmationNote,
             )
         }
         return dataFetcherResultBuilder.data(true).build()

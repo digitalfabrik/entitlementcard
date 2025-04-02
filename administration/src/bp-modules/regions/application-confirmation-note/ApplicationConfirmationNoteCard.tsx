@@ -25,7 +25,6 @@ const ApplicationConfirmationNoteCard = ({
   isSavingApplicationConfirmationNote,
 }: ApplicationConfirmationNoteCardProps): ReactElement => {
   const [openApplicationConfirmationNote, setOpenApplicationConfirmationNote] = useState(false)
-  // TODO check if notes are activated and add headline to mail template part, add tests
 
   const { t } = useTranslation('regionSettings')
   return (
