@@ -167,6 +167,8 @@ type Mutation {
   sendResetMail(email: String!, project: String!): Boolean!
   "Signs in an administrator"
   signIn(authData: AuthDataInput!, project: String!): SignInPayload!
+  "Updates application confirmation mail note"
+  updateApplicationConfirmationNote(applicationConfirmationNote: String!, applicationConfirmationNoteActivated: Boolean!, regionId: Int!): Boolean!
   "Updates a note of an application"
   updateApplicationNote(applicationId: Int!, noteText: String!): Boolean!
   "Updates the data privacy policy of a region"
@@ -261,6 +263,8 @@ type Query {
 type Region {
   activatedForApplication: Boolean!
   activatedForCardConfirmationMail: Boolean!
+  applicationConfirmationMailNote: String
+  applicationConfirmationMailNoteActivated: Boolean!
   dataPrivacyPolicy: String
   id: Int!
   name: String!
@@ -328,6 +332,7 @@ enum GoldenCardEntitlementType {
 enum GraphQLExceptionCode {
   EMAIL_ALREADY_EXISTS
   FREINET_AGENCY_NOT_FOUND
+  INVALID_APPLICATION_CONFIRMATION_NOTE_SIZE
   INVALID_CARD_HASH
   INVALID_CODE_TYPE
   INVALID_CREDENTIALS

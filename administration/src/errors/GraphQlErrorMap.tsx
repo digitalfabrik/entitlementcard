@@ -133,6 +133,10 @@ const graphQlErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
       return {
         title: i18next.t('errors:regionNotUnique'),
       }
+    case GraphQlExceptionCode.InvalidApplicationConfirmationNoteSize:
+      return {
+        title: i18next.t('errors:invalidApplicationConfirmationNoteSize', { maxSize: extensions.maxSize }),
+      }
     default:
       return {
         title: defaultError.title,

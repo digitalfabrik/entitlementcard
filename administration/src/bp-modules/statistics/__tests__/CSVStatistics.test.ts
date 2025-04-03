@@ -1,8 +1,9 @@
 import i18next from 'i18next'
 
-import { CardStatisticsResultModel, Region } from '../../../generated/graphql'
+import { CardStatisticsResultModel } from '../../../generated/graphql'
 import bayernConfig from '../../../project-configs/bayern/config'
 import nuernbergConfig from '../../../project-configs/nuernberg/config'
+import { getTestRegion } from '../../user-settings/__mocks__/Region'
 import { CsvStatisticsError, generateCsv, getCsvFileName } from '../CSVStatistics'
 
 jest.mock('csv-stringify/browser/esm/sync', () => ({
@@ -12,13 +13,7 @@ jest.mock('csv-stringify/browser/esm/sync', () => ({
 jest.mock('../../../project-configs/showcase/config')
 const TEST_BLOB_CONSTRUCTOR = jest.fn()
 describe('CSVStatistics', () => {
-  const region: Region = {
-    id: 0,
-    name: 'Augsburg',
-    prefix: 'Stadt',
-    activatedForApplication: true,
-    activatedForCardConfirmationMail: true,
-  }
+  const region = getTestRegion({ prefix: 'Stadt' })
   const dateString = '2023-02-01_2024-03-01'
 
   const statisticsData: CardStatisticsResultModel[] = [

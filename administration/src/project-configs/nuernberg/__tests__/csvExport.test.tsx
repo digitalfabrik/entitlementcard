@@ -1,7 +1,7 @@
+import { getTestRegion } from '../../../bp-modules/user-settings/__mocks__/Region'
 import { generateCardInfo, initializeCard } from '../../../cards/Card'
 import { CreateCardsResult } from '../../../cards/createCards'
 import { DynamicActivationCode } from '../../../generated/card_pb'
-import { Region } from '../../../generated/graphql'
 import nuernbergConfig from '../config'
 import { buildCsvLine } from '../csvExport'
 
@@ -16,13 +16,8 @@ jest.mock('../../getProjectConfig', () => ({
 
 describe('csvExport', () => {
   it('header should have same length as line', () => {
-    const nuernberg: Region = {
-      id: 0,
-      name: 'augsburg',
-      prefix: 'a',
-      activatedForApplication: true,
-      activatedForCardConfirmationMail: true,
-    }
+    const nuernberg = getTestRegion({})
+
     const cards = [initializeCard(nuernbergConfig.card, nuernberg, { fullName: 'Thea Test' })]
 
     const codes: CreateCardsResult[] = [

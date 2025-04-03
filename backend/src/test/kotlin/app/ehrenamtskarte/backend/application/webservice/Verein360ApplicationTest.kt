@@ -114,8 +114,11 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
     @BeforeEach
     fun mockApplicationHandler() {
         mockkConstructor(ApplicationHandler::class)
-        every { anyConstructed<ApplicationHandler>().sendApplicationMails(any(), any(), any()) } returns Unit
-        every { anyConstructed<ApplicationHandler>().sendPreVerifiedApplicationMails(any(), any(), any()) } returns Unit
+        every { anyConstructed<ApplicationHandler>().sendApplicationMails(any(), any(), any(), any()) } returns Unit
+        every {
+            anyConstructed<ApplicationHandler>().sendPreVerifiedApplicationMails(any(), any(), any(), any())
+        } returns
+            Unit
     }
 
     @ParameterizedTest
@@ -211,9 +214,11 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
                 }
             }
 
-            verify(exactly = 0) { anyConstructed<ApplicationHandler>().sendApplicationMails(any(), any(), any()) }
+            verify(exactly = 0) {
+                anyConstructed<ApplicationHandler>().sendApplicationMails(any(), any(), any(), any())
+            }
             verify(exactly = 1) {
-                anyConstructed<ApplicationHandler>().sendPreVerifiedApplicationMails(any(), any(), any())
+                anyConstructed<ApplicationHandler>().sendPreVerifiedApplicationMails(any(), any(), any(), any())
             }
         }
 
@@ -243,9 +248,11 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
                 }
             }
 
-            verify(exactly = 1) { anyConstructed<ApplicationHandler>().sendApplicationMails(any(), any(), any()) }
+            verify(exactly = 1) {
+                anyConstructed<ApplicationHandler>().sendApplicationMails(any(), any(), any(), any())
+            }
             verify(exactly = 0) {
-                anyConstructed<ApplicationHandler>().sendPreVerifiedApplicationMails(any(), any(), any())
+                anyConstructed<ApplicationHandler>().sendPreVerifiedApplicationMails(any(), any(), any(), any())
             }
         }
 

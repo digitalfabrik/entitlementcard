@@ -1,16 +1,16 @@
 import { initializeCard } from '../../../cards/Card'
-import { Region } from '../../../generated/graphql'
 import nuernbergConfig from '../../../project-configs/nuernberg/config'
 import PlainDate from '../../../util/PlainDate'
 import { ActivityLogEntryType } from '../ActivityLog'
+import { getTestRegion } from './Region'
 
-const region: Region = {
+const region = getTestRegion({
   id: 93,
   name: 'Stadt Nürnberg',
   prefix: 'nbg',
   activatedForApplication: false,
   activatedForCardConfirmationMail: false,
-}
+})
 export const activityLogCardExample = initializeCard(nuernbergConfig.card, region, {
   id: 732401,
   fullName: 'Thea Test',

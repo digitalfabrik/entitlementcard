@@ -1,3 +1,4 @@
+import { getTestRegion } from '../bp-modules/user-settings/__mocks__/Region'
 import { BavariaCardType } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
 import bayernConfig from '../project-configs/bayern/config'
@@ -23,13 +24,7 @@ import RegionExtension, { REGION_EXTENSION_NAME } from './extensions/RegionExten
 jest.useFakeTimers({ now: new Date('2020-01-01') })
 
 describe('Card', () => {
-  const region: Region = {
-    id: 6,
-    name: 'augsburg',
-    prefix: 'a',
-    activatedForApplication: true,
-    activatedForCardConfirmationMail: true,
-  }
+  const region = getTestRegion({})
 
   const cardConfig = {
     defaultValidity: { years: 3 },
@@ -74,6 +69,8 @@ describe('Card', () => {
       prefix: 'a',
       activatedForApplication: true,
       activatedForCardConfirmationMail: true,
+      applicationConfirmationMailNoteActivated: false,
+      applicationConfirmationMailNote: null,
     }
 
     const cardConfig = {
