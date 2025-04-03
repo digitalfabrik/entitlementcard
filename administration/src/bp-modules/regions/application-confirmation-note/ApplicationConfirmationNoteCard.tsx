@@ -25,8 +25,8 @@ const ApplicationConfirmationNoteCard = ({
   isSavingApplicationConfirmationNote,
 }: ApplicationConfirmationNoteCardProps): ReactElement => {
   const [openApplicationConfirmationNote, setOpenApplicationConfirmationNote] = useState(false)
-
   const { t } = useTranslation('regionSettings')
+
   return (
     <SettingsCard>
       <H2>{t('applicationConfirmationMailNoteHeadline')}</H2>

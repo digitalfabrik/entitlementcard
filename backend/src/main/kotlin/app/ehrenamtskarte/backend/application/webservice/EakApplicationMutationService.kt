@@ -36,13 +36,10 @@ class EakApplicationMutationService {
         val region = transaction {
             RegionsRepository.findRegionById(regionId)
         }
-        val applicationConfirmationNote = if (region.applicationConfirmationMailNoteActivated &&
-            !region.applicationConfirmationMailNote.isNullOrEmpty()
-        ) {
-            region.applicationConfirmationMailNote
-        } else {
-            null
-        }
+        val applicationConfirmationNote = takeIf {
+            region.applicationConfirmationMailNoteActivated &&
+                !region.applicationConfirmationMailNote.isNullOrEmpty()
+        }.let { region.applicationConfirmationMailNote }
         applicationHandler.validateAttachmentTypes()
         val isPreVerified = applicationHandler.isValidPreVerifiedApplication()
 

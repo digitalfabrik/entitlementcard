@@ -336,9 +336,8 @@
     "freinetActivateDataTransferCheckbox": "Personen- und Kartendaten an Freinet übermitteln",
     "freinetActivateDataTransferSuccessful": "Ihre Einstellungen zur Datenübermittlung wurden erfolgreich gespeichert.",
     "applicationConfirmationMailNoteHeadline": "Eingangsbestätigung Antrag",
-    "applicationConfirmationMailNoteDialogHeadline": "Notiz erstellen",
     "applicationConfirmationMailNoteDialogPlaceholder": "Fügen Sie hier Ihre Notiz ein...",
-    "applicationConfirmationMailNoteExplanation": "Hier können Sie eine allgemeine Notiz hinterlegen, welche dem Antragssteller in der Eingangsbestätigungsmail des Antrags zusätzlich angezeigt wird.",
+    "applicationConfirmationMailNoteExplanation": "Hier können Sie eine allgemeine Notiz hinterlegen, welche dem Antragssteller in der Eingangsbestätigungsmail des Antrags zusätzlich angezeigt wird. Sie können die Notiz jederzeit aktivieren oder deaktivieren.",
     "applicationConfirmationMailNoteActivated": "Notiz bei Antragsbestätigung an Antragssteller:in senden",
     "applicationConfirmationMailNoteSavedSuccessful": "Ihre Notizeinstellungen wurden erfolgreich geändert."
   },

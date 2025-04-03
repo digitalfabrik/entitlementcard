@@ -55,10 +55,10 @@ interface InlineRenderable {
 }
 
 private val multipleWhiteSpaces = Regex("\\s+")
-private val newLines = Regex("\\n+")
+private val newLine = Regex("\\n+")
 
 private fun handleNewLines(text: String, children: ArrayList<InlineRenderable>) {
-    val sentences = text.split(newLines)
+    val sentences = text.split(newLine)
     sentences.forEach {
         children.add(Text(it))
         children.add(LineBreak())
@@ -69,7 +69,7 @@ class Paragraph {
     private val children: ArrayList<InlineRenderable> = ArrayList(0)
 
     operator fun String.unaryPlus() {
-        if (this.contains(newLines)) {
+        if (this.contains(newLine)) {
             handleNewLines(this, children)
         } else {
             children.add(Text(this))
