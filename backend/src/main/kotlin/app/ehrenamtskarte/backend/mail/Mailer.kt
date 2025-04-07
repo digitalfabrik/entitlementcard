@@ -49,7 +49,7 @@ object Mailer {
     private fun EmailBody.applicationConfirmationNoteParagraph(note: String?) {
         if (!note.isNullOrEmpty()) {
             p {
-                +"$note"
+                plain(note)
             }
         }
     }

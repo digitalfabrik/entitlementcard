@@ -54,8 +54,6 @@ class EakApplicationMutationService {
                 applicationConfirmationNote,
             )
         } else {
-            // add confirmationMailAdditionalNote only if activated
-
             applicationHandler.sendApplicationMails(
                 applicationEntity,
                 verificationEntities,
