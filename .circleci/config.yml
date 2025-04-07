@@ -505,6 +505,10 @@ jobs:
             - install_app_toolbelt
             - install_flutter
             - run:
+                command: npm run lint
+                name: Lint build config
+                working_directory: build-configs
+            - run:
                 command: fvm dart format -l 120 -o none --set-exit-if-changed .
                 name: Check formatting
             - run:
