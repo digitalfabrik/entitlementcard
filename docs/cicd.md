@@ -156,9 +156,8 @@ Therefore, you can follow the documentation for Manual Builds to set up [certifi
 ## Determining the Next Version
 
 The next version of the app must be determined programmatically.
-- Install app-toolbelt: `npm install --unsafe-perm -g https://github.com/digitalfabrik/app-toolbelt/archive/refs/heads/main.tar.gz`
 - Go to the root folder
-- run: `app-toolbelt v0 version calc | jq .versionName`
+- run: `npx --no app-toolbelt v0 version calc | jq .versionName`
 
 ## Environment Variables and Dependencies
 

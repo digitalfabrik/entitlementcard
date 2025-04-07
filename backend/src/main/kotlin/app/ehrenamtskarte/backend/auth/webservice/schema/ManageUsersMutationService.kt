@@ -21,7 +21,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 @Suppress("unused")
 class ManageUsersMutationService {
-
     @GraphQLDescription("Creates a new administrator")
     fun createAdministrator(
         project: String,
@@ -29,7 +28,7 @@ class ManageUsersMutationService {
         role: Role,
         regionId: Int?,
         sendWelcomeMail: Boolean,
-        dfe: DataFetchingEnvironment
+        dfe: DataFetchingEnvironment,
     ): Boolean {
         val context = dfe.getContext<GraphQLContext>()
         val actingAdmin = context.getAdministrator()
@@ -37,8 +36,13 @@ class ManageUsersMutationService {
         val projectConfig = backendConfig.projects.first { it.id == project }
 
         transaction {
-            val projectEntity = ProjectEntity.find { Projects.project eq project }.singleOrNull() ?: throw ProjectNotFoundException(project)
-            val region = regionId?.let { RegionsRepository.findByIdInProject(project, it) ?: throw RegionNotFoundException() }
+            val projectEntity = ProjectEntity
+                .find { Projects.project eq project }
+                .singleOrNull()
+                ?: throw ProjectNotFoundException(project)
+            val region = regionId?.let {
+                RegionsRepository.findByIdInProject(project, it) ?: throw RegionNotFoundException()
+            }
 
             if (!Authorizer.mayCreateUser(actingAdmin, projectEntity.id.value, role, region)) {
                 throw ForbiddenException()
@@ -56,7 +60,7 @@ class ManageUsersMutationService {
                     backendConfig,
                     projectConfig,
                     key,
-                    email
+                    email,
                 )
             }
         }
@@ -70,7 +74,7 @@ class ManageUsersMutationService {
         newEmail: String,
         newRole: Role,
         newRegionId: Int?,
-        dfe: DataFetchingEnvironment
+        dfe: DataFetchingEnvironment,
     ): Boolean {
         val context = dfe.getContext<GraphQLContext>()
         val actingAdmin = context.getAdministrator()
@@ -82,7 +86,14 @@ class ManageUsersMutationService {
                 ?: throw ProjectNotFoundException(project)
             val newRegion = newRegionId?.let { RegionsRepository.findByIdInProject(project, it) }
 
-            if (!Authorizer.mayEditUser(actingAdmin, existingAdmin, projectEntity.id.value, newRole, newRegion)) {
+            if (!Authorizer.mayEditUser(
+                    actingAdmin,
+                    existingAdmin,
+                    projectEntity.id.value,
+                    newRole,
+                    newRegion,
+                )
+            ) {
                 throw ForbiddenException()
             }
 
@@ -101,17 +112,15 @@ class ManageUsersMutationService {
     }
 
     @GraphQLDescription("Deletes an existing administrator")
-    fun deleteAdministrator(
-        project: String,
-        adminId: Int,
-        dfe: DataFetchingEnvironment
-    ): Boolean {
+    fun deleteAdministrator(project: String, adminId: Int, dfe: DataFetchingEnvironment): Boolean {
         val context = dfe.getContext<GraphQLContext>()
         val actingAdmin = context.getAdministrator()
 
         transaction {
             val existingAdmin = AdministratorEntity.findById(adminId) ?: throw UnauthorizedException()
-            val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull() ?: throw ProjectNotFoundException(project)
+            val projectEntity = ProjectEntity.find {
+                Projects.project eq project
+            }.firstOrNull() ?: throw ProjectNotFoundException(project)
 
             if (existingAdmin.projectId != projectEntity.id) throw UnauthorizedException()
 

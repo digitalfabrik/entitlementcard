@@ -18,11 +18,7 @@ data class DateInput(val date: String) {
         }
     }
 
-    fun getDate(): LocalDate {
-        return LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE)
-    }
+    fun getDate(): LocalDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE)
 
-    fun toJsonField(fieldName: String): JsonField {
-        return JsonField(fieldName, Type.Date, date)
-    }
+    fun toJsonField(fieldName: String): JsonField = JsonField(fieldName, Type.Date, date)
 }

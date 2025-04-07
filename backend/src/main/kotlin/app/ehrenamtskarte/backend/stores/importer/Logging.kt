@@ -19,6 +19,5 @@ fun Logger.logRemoveDuplicates(store: AcceptingStore, count: Int) {
     info("Removed duplicates ($count) of '${storeInfo(store)}'")
 }
 
-private fun storeInfo(store: AcceptingStore): String {
-    return listOfNotNull(store.name, store.location, store.street, store.houseNumber).joinToString()
-}
+private fun storeInfo(store: AcceptingStore): String =
+    listOfNotNull(store.name, store.location, store.street, store.houseNumber).joinToString()

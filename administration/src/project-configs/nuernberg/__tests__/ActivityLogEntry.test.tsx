@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react'
 import React from 'react'
 
-import { activityLogCardExample } from '../../../bp-modules/user-settings/__mocks__/ActivityLogData'
+import { activityLogCardExample } from '../../../bp-modules/activity-log/__mocks__/ActivityLogData'
 import ActivityLogEntry from '../ActivityLogEntry'
 
 jest.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })

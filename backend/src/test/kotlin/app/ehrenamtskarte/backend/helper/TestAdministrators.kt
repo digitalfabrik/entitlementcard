@@ -16,79 +16,88 @@ enum class TestAdministrators(
     val email: String,
     val password: String = "Administrator!",
     val role: Role,
-    val regionId: Int? = null
+    val regionId: Int? = null,
 ) {
     EAK_REGION_ADMIN(
         id = 1,
         project = "bayern.ehrenamtskarte.app",
         email = "region-admin@bayern.ehrenamtskarte.app",
         role = Role.REGION_ADMIN,
-        regionId = 16
+        regionId = 16,
     ),
     EAK_REGION_MANAGER(
         id = 9,
         project = "bayern.ehrenamtskarte.app",
         email = "region-manager@bayern.ehrenamtskarte.app",
         role = Role.REGION_MANAGER,
-        regionId = 16
+        regionId = 16,
     ),
     EAK_PROJECT_ADMIN(
         id = 2,
         project = "bayern.ehrenamtskarte.app",
         email = "project-admin@bayern.ehrenamtskarte.app",
-        role = Role.PROJECT_ADMIN
+        role = Role.PROJECT_ADMIN,
+    ),
+
+    /** Special admin for negative tests, because CSV store import is not actually supported in EAK */
+    EAK_PROJECT_STORE_MANAGER(
+        id = 12,
+        project = "bayern.ehrenamtskarte.app",
+        email = "project-store-manager@bayern.ehrenamtskarte.app",
+        role = Role.PROJECT_STORE_MANAGER,
     ),
     NUERNBERG_PROJECT_STORE_MANAGER(
         id = 3,
         project = "nuernberg.sozialpass.app",
         email = "project-store-manager@nuernberg.sozialpass.app",
-        role = Role.PROJECT_STORE_MANAGER
+        role = Role.PROJECT_STORE_MANAGER,
     ),
     NUERNBERG_PROJECT_ADMIN(
         id = 4,
         project = "nuernberg.sozialpass.app",
         email = "project-admin@nuernberg.sozialpass.app",
-        role = Role.PROJECT_ADMIN
+        role = Role.PROJECT_ADMIN,
     ),
     KOBLENZ_PROJECT_ADMIN(
         id = 5,
         project = "koblenz.sozialpass.app",
         email = "project-admin@koblenz.sozialpass.app",
-        role = Role.PROJECT_ADMIN
+        role = Role.PROJECT_ADMIN,
     ),
     KOBLENZ_PROJECT_ADMIN_2(
         id = 6,
         project = "koblenz.sozialpass.app",
         email = "project-admin2@koblenz.sozialpass.app",
-        role = Role.PROJECT_ADMIN
+        role = Role.PROJECT_ADMIN,
     ),
     KOBLENZ_REGION_ADMIN(
         id = 10,
         project = "koblenz.sozialpass.app",
         email = "region-admin@koblenz.sozialpass.app",
         role = Role.REGION_ADMIN,
-        regionId = 95
+        regionId = 95,
     ),
     KOBLENZ_REGION_MANAGER(
         id = 11,
         project = "koblenz.sozialpass.app",
         email = "region-manager@koblenz.sozialpass.app",
         role = Role.REGION_MANAGER,
-        regionId = 95
+        regionId = 95,
     ),
     BAYERN_VEREIN_360(
         id = 7,
         project = "bayern.ehrenamtskarte.app",
         email = "verein360@bayern.ehrenamtskarte.app",
-        role = Role.EXTERNAL_VERIFIED_API_USER
+        role = Role.EXTERNAL_VERIFIED_API_USER,
     ),
     EAK_REGION_ADMIN_FREINET(
         id = 8,
         project = "bayern.ehrenamtskarte.app",
         email = "region-admin+freinet@bayern.ehrenamtskarte.app",
         role = Role.REGION_ADMIN,
-        regionId = 9
-    );
+        regionId = 9,
+    ),
+    ;
 
     fun getJwtToken(): String {
         val adminEntity = transaction { AdministratorsRepository.findByAuthData(project, email, password) }

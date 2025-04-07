@@ -63,7 +63,7 @@ const WorkAtOrganizationForm: Form<State, ValidatedInput, AdditionalProps> = {
   validate: createCompoundValidate(SubForms, {
     amountOfWork: amountOfWorkOptions,
     payment: paymentOptions,
-    workSinceDate: { maximumDate: null },
+    workSinceDate: { maximumDate: undefined },
   }),
   Component: ({ state, setState, onDelete, applicantName }: FormComponentProps<State, AdditionalProps>) => {
     const { t } = useTranslation('application')
@@ -82,7 +82,7 @@ const WorkAtOrganizationForm: Form<State, ValidatedInput, AdditionalProps> = {
               label={t('workSinceDate')}
               state={state.workSinceDate}
               setState={useUpdateStateCallback(setState, 'workSinceDate')}
-              options={{ maximumDate: null }}
+              options={{ maximumDate: undefined }}
             />
           </div>
           <div style={{ flex: '3' }}>

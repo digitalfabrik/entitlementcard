@@ -12,7 +12,7 @@ internal class V0012_AddApplicationCardCreated : Migration() {
         exec(
             """
             ALTER TABLE applications ADD "cardCreated" BOOLEAN NOT NULL DEFAULT false;
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 }

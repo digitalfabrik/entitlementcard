@@ -16,17 +16,27 @@ import java.time.ZoneId
 val possibleBackendConfigurationFiles =
     listOf<File>(
         Paths.get(System.getProperty("user.dir"), "config.yml").toFile(),
-        Paths.get(System.getProperty("user.home"), ".config", "entitlementcard", "config.yml").toFile(),
-        Paths.get("/etc/entitlementcard/config.yml").toFile()
+        Paths.get(
+            System.getProperty("user.home"),
+            ".config",
+            "entitlementcard",
+            "config.yml",
+        ).toFile(),
+        Paths.get("/etc/entitlementcard/config.yml").toFile(),
     )
 
 data class PostgresConfig(val url: String, val user: String, val password: String)
+
 data class MapConfig(val baseUrl: String)
+
 data class GeocodingConfig(val enabled: Boolean, val host: String)
-data class CsvWriterConfig(val enabled: Boolean)
+
 data class SmtpConfig(val host: String, val port: Int, val username: String, val password: String)
+
 data class MatomoConfig(val siteId: Int, val accessToken: String)
+
 data class FreinetConfig(val host: String, val path: String, val portalId: String, val accessToken: String)
+
 data class ProjectConfig(
     val id: String,
     val importUrl: String,
@@ -37,7 +47,7 @@ data class ProjectConfig(
     val selfServiceEnabled: Boolean,
     val smtp: SmtpConfig,
     val matomo: MatomoConfig?,
-    val freinet: FreinetConfig?
+    val freinet: FreinetConfig?,
 )
 
 data class ServerConfig(val dataDirectory: String, val host: String, val port: String)
@@ -49,29 +59,27 @@ data class BackendConfiguration(
     val postgres: PostgresConfig,
     val geocoding: GeocodingConfig,
     val projects: List<ProjectConfig>,
-    val csvWriter: CsvWriterConfig,
-    val matomoUrl: String
+    val matomoUrl: String,
 ) {
-    fun getProjectConfig(project: String): ProjectConfig {
-        return projects.find { it.id == project } ?: throw ProjectNotFoundException(project)
-    }
+    fun getProjectConfig(project: String): ProjectConfig =
+        projects.find { it.id == project } ?: throw ProjectNotFoundException(project)
 
     fun sanityCheckMatomoConfig(): BackendConfiguration {
         val matomoConfig = projects.mapNotNull { it.matomo }
         if (matomoConfig.size != matomoConfig.distinctBy { it.siteId }.count()) {
-            throw Error("There are at least two matomo configs with the same siteId. This seems to be a copy/paste error.")
+            throw Error(
+                "There are at least two matomo configs with the same siteId. This seems to be a copy/paste error.",
+            )
         }
         return this
     }
 
-    fun toImportConfig(projectId: String): ImportConfig {
-        return ImportConfig(this.copy(), projectId)
-    }
+    fun toImportConfig(projectId: String): ImportConfig = ImportConfig(this.copy(), projectId)
 
     companion object {
         private val mapper = ObjectMapper(YAMLFactory())
             .registerModule(
-                KotlinModule.Builder().build()
+                KotlinModule.Builder().build(),
             ).registerModule(JavaTimeModule())
             // Allows unknown (potentially future) config options.
             // Without this parsing a config fails if a property is defined that is missing
@@ -84,7 +92,7 @@ data class BackendConfiguration(
         fun load(configFile: URL?): BackendConfiguration {
             val fallbacks = listOfNotNull(
                 ClassLoader.getSystemResource("config/config.local.yml"),
-                ClassLoader.getSystemResource("config/config.yml")
+                ClassLoader.getSystemResource("config/config.yml"),
             )
             if (fallbacks.isEmpty()) {
                 throw Error("Fallback backend configuration resource 'config/config.yml' missing!")
@@ -100,7 +108,6 @@ data class BackendConfiguration(
             return from(url).sanityCheckMatomoConfig()
         }
 
-        private fun from(url: URL): BackendConfiguration =
-            mapper.readValue(url, BackendConfiguration::class.java)
+        private fun from(url: URL): BackendConfiguration = mapper.readValue(url, BackendConfiguration::class.java)
     }
 }

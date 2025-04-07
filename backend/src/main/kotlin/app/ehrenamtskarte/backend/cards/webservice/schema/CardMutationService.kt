@@ -53,7 +53,11 @@ class CardMutationService {
 
     private val activationSecretLength = 20
 
-    private fun createDynamicActivationCode(cardInfo: Card.CardInfo, userId: Int? = null, entitlementId: Int? = null): DynamicActivationCodeResult {
+    private fun createDynamicActivationCode(
+        cardInfo: Card.CardInfo,
+        userId: Int? = null,
+        entitlementId: Int? = null,
+    ): DynamicActivationCodeResult {
         val secureRandom = SecureRandom.getInstanceStrong()
         val pepper = ByteArray(PEPPER_LENGTH)
         secureRandom.nextBytes(pepper)
@@ -85,16 +89,20 @@ class CardMutationService {
             userId,
             entitlementId,
             CodeType.DYNAMIC,
-            cardInfo.extensions.extensionStartDayOrNull?.startDay?.toLong()
+            cardInfo.extensions.extensionStartDayOrNull?.startDay?.toLong(),
         )
 
         return DynamicActivationCodeResult(
             cardInfoHashBase64 = hashedCardInfo.encodeBase64(),
-            codeBase64 = dynamicActivationCode.toByteArray().encodeBase64()
+            codeBase64 = dynamicActivationCode.toByteArray().encodeBase64(),
         )
     }
 
-    private fun createStaticVerificationCode(cardInfo: Card.CardInfo, userId: Int? = null, entitlementId: Int? = null): StaticVerificationCodeResult {
+    private fun createStaticVerificationCode(
+        cardInfo: Card.CardInfo,
+        userId: Int? = null,
+        entitlementId: Int? = null,
+    ): StaticVerificationCodeResult {
         val pepper = ByteArray(PEPPER_LENGTH)
         SecureRandom.getInstanceStrong().nextBytes(pepper)
 
@@ -116,12 +124,12 @@ class CardMutationService {
             userId,
             entitlementId,
             CodeType.STATIC,
-            cardInfo.extensions.extensionStartDayOrNull?.startDay?.toLong()
+            cardInfo.extensions.extensionStartDayOrNull?.startDay?.toLong(),
         )
 
         return StaticVerificationCodeResult(
             cardInfoHashBase64 = hashedCardInfo.encodeBase64(),
-            codeBase64 = staticVerificationCode.toByteArray().encodeBase64()
+            codeBase64 = staticVerificationCode.toByteArray().encodeBase64(),
         )
     }
 
@@ -130,7 +138,7 @@ class CardMutationService {
         dfe: DataFetchingEnvironment,
         project: String,
         encodedCardInfo: String,
-        generateStaticCode: Boolean
+        generateStaticCode: Boolean,
     ): CardCreationResultModel {
         val context = dfe.getContext<GraphQLContext>()
         val config = context.backendConfiguration.getProjectConfig(project)
@@ -141,11 +149,13 @@ class CardMutationService {
         val cardInfo = parseEncodedCardInfo(encodedCardInfo)
         val user = KoblenzUser(
             cardInfo.extensions.extensionBirthday.birthday,
-            cardInfo.extensions.extensionKoblenzReferenceNumber.referenceNumber
+            cardInfo.extensions.extensionKoblenzReferenceNumber.referenceNumber,
         )
         val userHash = Argon2IdHasher.hashKoblenzUserData(user)
 
-        val userEntitlements = transaction { UserEntitlementsRepository.findByUserHash(userHash.toByteArray()) }
+        val userEntitlements = transaction {
+            UserEntitlementsRepository.findByUserHash(userHash.toByteArray())
+        }
         if (userEntitlements == null) {
             // This logging is used for rate limiting
             // See https://git.tuerantuer.org/DF/salt/pulls/187
@@ -160,17 +170,31 @@ class CardMutationService {
             cardInfo,
             userEntitlements.endDate.toEpochDay().toInt(),
             userEntitlements.startDate.toEpochDay().toInt(),
-            userEntitlements.regionId.value
+            userEntitlements.regionId.value,
         )
 
         val activationCode = transaction {
             val revokedCount = CardRepository.revokeByEntitlementId(userEntitlements.id.value)
             if (revokedCount > 0) {
-                logger.info("Revoked {} cards associated with the user entitlements {}", revokedCount, userEntitlements.id.value)
+                logger.info(
+                    "Revoked {} cards associated with the user entitlements {}",
+                    revokedCount,
+                    userEntitlements.id.value,
+                )
             }
             CardCreationResultModel(
-                createDynamicActivationCode(updatedCardInfo, entitlementId = userEntitlements.id.value),
-                if (generateStaticCode) createStaticVerificationCode(updatedCardInfo, entitlementId = userEntitlements.id.value) else null
+                createDynamicActivationCode(
+                    updatedCardInfo,
+                    entitlementId = userEntitlements.id.value,
+                ),
+                if (generateStaticCode) {
+                    createStaticVerificationCode(
+                        updatedCardInfo,
+                        entitlementId = userEntitlements.id.value,
+                    )
+                } else {
+                    null
+                },
             )
         }
 
@@ -181,31 +205,35 @@ class CardMutationService {
             dfe.field.name,
             userEntitlements.regionId.value,
             numberOfDynamicCards = 1,
-            numberOfStaticCards = if (generateStaticCode) 1 else 0
+            numberOfStaticCards = if (generateStaticCode) 1 else 0,
         )
 
         return activationCode
     }
 
-    private fun enrichCardInfo(cardInfo: Card.CardInfo, expirationDay: Int, startDay: Int, regionId: Int): Card.CardInfo {
-        return cardInfo.toBuilder()
+    private fun enrichCardInfo(
+        cardInfo: Card.CardInfo,
+        expirationDay: Int,
+        startDay: Int,
+        regionId: Int,
+    ): Card.CardInfo =
+        cardInfo.toBuilder()
             .setExpirationDay(expirationDay)
             .setExtensions(
                 cardInfo.extensions.toBuilder()
                     .setExtensionStartDay(
                         cardInfo.extensions.extensionStartDay.toBuilder()
                             .setStartDay(startDay)
-                            .build()
+                            .build(),
                     )
                     .setExtensionRegion(
                         cardInfo.extensions.extensionRegion.toBuilder()
                             .setRegionId(regionId)
-                            .build()
+                            .build(),
                     )
-                    .build()
+                    .build(),
             )
             .build()
-    }
 
     private fun parseEncodedCardInfo(encodedCardInfo: String): Card.CardInfo {
         val cardInfoBytes = encodedCardInfo.decodeBase64Bytes()
@@ -222,7 +250,7 @@ class CardMutationService {
         project: String,
         encodedCardInfos: List<String>,
         generateStaticCodes: Boolean,
-        applicationIdToMarkAsProcessed: Int? = null
+        applicationIdToMarkAsProcessed: Int? = null,
     ): List<CardCreationResultModel> {
         val context = dfe.getContext<GraphQLContext>()
         val projectConfig = context.backendConfiguration.getProjectConfig(project)
@@ -237,7 +265,11 @@ class CardMutationService {
 
                 return@map CardCreationResultModel(
                     createDynamicActivationCode(cardInfo, userId = admin.id.value),
-                    if (generateStaticCodes) createStaticVerificationCode(cardInfo, userId = admin.id.value) else null
+                    if (generateStaticCodes) {
+                        createStaticVerificationCode(cardInfo, userId = admin.id.value)
+                    } else {
+                        null
+                    },
                 )
             }
         }
@@ -251,7 +283,7 @@ class CardMutationService {
                 dfe.field.name,
                 regionId,
                 numberOfDynamicCards = encodedCardInfos.size,
-                numberOfStaticCards = if (generateStaticCodes) encodedCardInfos.size else 0
+                numberOfStaticCards = if (generateStaticCodes) encodedCardInfos.size else 0,
             )
         }
 
@@ -267,7 +299,7 @@ class CardMutationService {
         cardInfoHashBase64: String,
         activationSecretBase64: String,
         overwrite: Boolean,
-        dfe: DataFetchingEnvironment
+        dfe: DataFetchingEnvironment,
     ): CardActivationResultModel {
         val logger = LoggerFactory.getLogger(CardMutationService::class.java)
         val context = dfe.getContext<GraphQLContext>()
@@ -282,34 +314,48 @@ class CardMutationService {
             val activationSecretHash = card?.activationSecretHash
 
             if (card == null || activationSecretHash == null) {
-                logger.info("${context.remoteIp} failed to activate card, card not found with cardHash:$cardInfoHashBase64")
+                logger.info(
+                    "${context.remoteIp} failed to activate card, card not found with cardHash:$cardInfoHashBase64",
+                )
                 return@t CardActivationResultModel(ActivationState.failed)
             }
 
             if (!CardActivator.verifyActivationSecret(rawActivationSecret, activationSecretHash)) {
-                logger.info("${context.remoteIp} failed to activate card with id:${card.id} and overwrite: $overwrite")
+                logger.info(
+                    "${context.remoteIp} failed to activate card with id:${card.id} and overwrite: $overwrite",
+                )
                 return@t CardActivationResultModel(ActivationState.failed)
             }
 
             if (CardVerifier.isExpired(card.expirationDay, projectConfig.timezone)) {
-                logger.info("${context.remoteIp} failed to activate card with id:${card.id} and overwrite: $overwrite because card is expired")
+                logger.info(
+                    "${context.remoteIp} failed to activate card with id:${card.id} and overwrite: " +
+                        "$overwrite because card is expired",
+                )
                 return@t CardActivationResultModel(ActivationState.failed)
             }
 
             if (card.revoked) {
-                logger.info("${context.remoteIp} failed to activate card with id:${card.id} and overwrite: $overwrite because card is revoked")
+                logger.info(
+                    "${context.remoteIp} failed to activate card with id:${card.id} and overwrite: " +
+                        "$overwrite because card is revoked",
+                )
                 return@t CardActivationResultModel(ActivationState.revoked)
             }
 
             if (!overwrite && card.totpSecret != null) {
-                logger.info("Card with id:${card.id} did not overwrite card from ${context.remoteIp}")
+                logger.info(
+                    "Card with id:${card.id} did not overwrite card from ${context.remoteIp}",
+                )
                 return@t CardActivationResultModel(ActivationState.did_not_overwrite_existing)
             }
 
             val totpSecret = CardActivator.generateTotpSecret()
             val encodedTotpSecret = Base64.getEncoder().encodeToString(totpSecret)
             CardRepository.activate(card, totpSecret)
-            logger.info("Card with id:${card.id} and overwrite: $overwrite was activated from ${context.remoteIp}")
+            logger.info(
+                "Card with id:${card.id} and overwrite: $overwrite was activated from ${context.remoteIp}",
+            )
             return@t CardActivationResultModel(ActivationState.success, encodedTotpSecret)
         }
         Matomo.trackActivation(
@@ -318,13 +364,17 @@ class CardMutationService {
             context.request,
             dfe.field.name,
             cardHash,
-            activationResult.activationState != ActivationState.failed
+            activationResult.activationState != ActivationState.failed,
         )
         return activationResult
     }
 
     @GraphQLDescription("Deletes a batch of cards (that have not yet been activated)")
-    fun deleteInactiveCards(dfe: DataFetchingEnvironment, regionId: Int, cardInfoHashBase64List: List<String>): Boolean {
+    fun deleteInactiveCards(
+        dfe: DataFetchingEnvironment,
+        regionId: Int,
+        cardInfoHashBase64List: List<String>,
+    ): Boolean {
         val context = dfe.getContext<GraphQLContext>()
         val admin = context.getAdministrator()
 
@@ -338,12 +388,23 @@ class CardMutationService {
         return true
     }
 
-    @GraphQLDescription("Sends a confirmation mail to the user when the card creation was successful")
-    fun sendCardCreationConfirmationMail(dfe: DataFetchingEnvironment, project: String, regionId: Int, recipientAddress: String, recipientName: String, deepLink: String): Boolean {
+    @GraphQLDescription(
+        "Sends a confirmation mail to the user when the card creation was successful",
+    )
+    fun sendCardCreationConfirmationMail(
+        dfe: DataFetchingEnvironment,
+        project: String,
+        regionId: Int,
+        recipientAddress: String,
+        recipientName: String,
+        deepLink: String,
+    ): Boolean {
         val context = dfe.getContext<GraphQLContext>()
         val admin = context.getAdministrator()
         transaction {
-            val region = admin.regionId?.value?.let { RegionsRepository.findByIdInProject(project, it) ?: throw RegionNotFoundException() }
+            val region = admin.regionId?.value?.let {
+                RegionsRepository.findByIdInProject(project, it) ?: throw RegionNotFoundException()
+            }
             if (region != null && !region.activatedForCardConfirmationMail) {
                 throw RegionNotActivatedForCardConfirmationMailException()
             }
@@ -352,7 +413,13 @@ class CardMutationService {
             }
             val backendConfig = dfe.getContext<GraphQLContext>().backendConfiguration
             val projectConfig = context.backendConfiguration.getProjectConfig(project)
-            Mailer.sendCardCreationConfirmationMail(backendConfig, projectConfig, deepLink, recipientAddress, recipientName)
+            Mailer.sendCardCreationConfirmationMail(
+                backendConfig,
+                projectConfig,
+                deepLink,
+                recipientAddress,
+                recipientName,
+            )
         }
         return true
     }
