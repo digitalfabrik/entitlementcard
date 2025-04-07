@@ -9,10 +9,6 @@ changelog:
       exclude:
         labels:
         - not-testable
-        - Nuernberg
-    - title: Features, fixes, enhancements that also affect nuernberg 🎉
-      labels:
-        - Nuernberg
     - title: Maintenance 🛠
       labels:
         - not-testable
