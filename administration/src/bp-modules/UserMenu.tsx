@@ -1,10 +1,11 @@
 import { Button, Divider, Menu, Popover } from '@blueprintjs/core'
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { useWhoAmI } from '../WhoAmIProvider'
+import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
 import roleToText from './users/utils/roleToText'
 
 type UserMenuProps = {
@@ -43,6 +44,7 @@ const RoleInfo = styled.span`
 const UserMenu = ({ onSignOut }: UserMenuProps): ReactElement => {
   const { role, email } = useWhoAmI().me
   const { t } = useTranslation('misc')
+  const projectConfig = useContext(ProjectConfigContext)
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const navigate = useNavigate()
   const signOutAndRedirect = () => {
@@ -56,6 +58,11 @@ const UserMenu = ({ onSignOut }: UserMenuProps): ReactElement => {
       <NavLink to='/user-settings'>
         <MenuItem minimal icon='settings' text={t('userSettings')} />
       </NavLink>
+      {projectConfig.activityLogConfig && (
+        <NavLink to='/activity-log'>
+          <MenuItem minimal icon='manually-entered-data' text={t('activityLog')} />
+        </NavLink>
+      )}
       <MenuItem minimal icon='log-out' text={t('logout')} onClick={signOutAndRedirect} />
     </MenuContent>
   )
