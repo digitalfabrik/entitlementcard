@@ -292,49 +292,24 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
 
     companion object {
         @JvmStatic
-        fun validationErrorTestCases(): List<ValidationErrorTestCase> =
-            listOf(
-                ValidationErrorTestCase(
-                    csvStore = CSVAcceptanceStoreBuilder.build(name = ""),
-                    error = "Name cannot be empty",
-                ),
-                ValidationErrorTestCase(
-                    csvStore = CSVAcceptanceStoreBuilder.build(name = " "),
-                    error = "Name cannot be empty",
-                ),
-                ValidationErrorTestCase(
-                    csvStore = CSVAcceptanceStoreBuilder.build(location = ""),
-                    error = "Location cannot be empty",
-                ),
-                ValidationErrorTestCase(
-                    csvStore = CSVAcceptanceStoreBuilder.build(location = " "),
-                    error = "Location cannot be empty",
-                ),
-                ValidationErrorTestCase(
-                    csvStore = CSVAcceptanceStoreBuilder.build(street = ""),
-                    error = "Street cannot be empty",
-                ),
-                ValidationErrorTestCase(
-                    csvStore = CSVAcceptanceStoreBuilder.build(street = " "),
-                    error = "Street cannot be empty",
-                ),
-                ValidationErrorTestCase(
-                    csvStore = CSVAcceptanceStoreBuilder.build(houseNumber = ""),
-                    error = "House number cannot be empty",
-                ),
-                ValidationErrorTestCase(
-                    csvStore = CSVAcceptanceStoreBuilder.build(houseNumber = " "),
-                    error = "House number cannot be empty",
-                ),
-                ValidationErrorTestCase(
-                    csvStore = CSVAcceptanceStoreBuilder.build(postalCode = ""),
-                    error = "Postal code cannot be empty",
-                ),
-                ValidationErrorTestCase(
-                    csvStore = CSVAcceptanceStoreBuilder.build(postalCode = " "),
-                    error = "Postal code cannot be empty",
-                ),
+        fun validationErrorTestCases(): List<ValidationErrorTestCase> {
+            val blankValues = listOf("", " ")
+            val builders: Map<String, (String) -> CSVAcceptingStoreInput> = mapOf(
+                "name" to { value -> CSVAcceptanceStoreBuilder.build(name = value) },
+                "location" to { value -> CSVAcceptanceStoreBuilder.build(location = value) },
+                "street" to { value -> CSVAcceptanceStoreBuilder.build(street = value) },
+                "houseNumber" to { value -> CSVAcceptanceStoreBuilder.build(houseNumber = value) },
+                "postalCode" to { value -> CSVAcceptanceStoreBuilder.build(postalCode = value) },
             )
+            return builders.flatMap { (fieldName, builder) ->
+                blankValues.map { value ->
+                    ValidationErrorTestCase(
+                        csvStore = builder(value),
+                        error = "Empty string passed for required property: $fieldName",
+                    )
+                }
+            }
+        }
     }
 
     @ParameterizedTest

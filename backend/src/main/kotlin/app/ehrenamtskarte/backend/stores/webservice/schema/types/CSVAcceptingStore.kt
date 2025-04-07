@@ -22,10 +22,15 @@ data class CSVAcceptingStore(
     }
 
     private fun validate() {
-        if (name.isBlank()) throw InvalidJsonException("Name cannot be empty")
-        if (location.isBlank()) throw InvalidJsonException("Location cannot be empty")
-        if (street.isBlank()) throw InvalidJsonException("Street cannot be empty")
-        if (houseNumber.isBlank()) throw InvalidJsonException("House number cannot be empty")
-        if (postalCode.isBlank()) throw InvalidJsonException("Postal code cannot be empty")
+        val requiredNotEmpty = listOf(
+            "name" to name,
+            "location" to location,
+            "street" to street,
+            "houseNumber" to houseNumber,
+            "postalCode" to postalCode,
+        )
+        requiredNotEmpty.firstOrNull { it.second.isBlank() }?.let { (fieldName, _) ->
+            throw InvalidJsonException("Empty string passed for required property: $fieldName")
+        }
     }
 }
