@@ -36,13 +36,38 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
+      testMatch: '001_bayern.spec.ts',
       use: {
         ...devices['Desktop Chrome'],
       },
     },
+    {
+      name: 'firefox',
+      testMatch: '001_bayern.spec.ts',
+      use: {
+        ...devices['Desktop Firefox'],
+      },
+    },
+    {
+      name: 'chromium',
+      testMatch: '002_regionAdministrator.spec.ts',
+      use: { ...devices['Desktop Chrome'] },
+    },
 
     {
       name: 'firefox',
+      testMatch: '002_regionAdministrator.spec.ts',
+      use: { ...devices['Desktop Firefox'] },
+    },
+    {
+      name: 'chromium',
+      testMatch: '003_deleteBayernTests.spec.ts',
+      use: { ...devices['Desktop Chrome'] },
+    },
+
+    {
+      name: 'firefox',
+      testMatch: '003_deleteBayernTests.spec.ts',
       use: { ...devices['Desktop Firefox'] },
     },
 
