@@ -7,9 +7,7 @@ steps:
         - v1-pods
   - run:
       name: Install pods
-      command: |
-        bundle exec pod update
-        bundle exec pod install --deployment
+      command: bundle exec pod install --deployment
       working_directory: ios
   - save_cache:
       name: Save pods
