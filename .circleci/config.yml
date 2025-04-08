@@ -499,7 +499,11 @@ jobs:
             - prepare_workspace
             - check_circleci_config
             - install_app_toolbelt
+            - install_fastlane: null
+              working_directory: ios
             - install_flutter
+            - install_pods: null
+              working_directory: ios
             - run:
                 command: fvm dart format -l 120 -o none --set-exit-if-changed .
                 name: Check formatting

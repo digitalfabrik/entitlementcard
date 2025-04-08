@@ -6,7 +6,11 @@ steps:
   - prepare_workspace
   - check_circleci_config
   - install_app_toolbelt
+  - install_fastlane:
+    working_directory: ios
   - install_flutter
+  - install_pods:
+    working_directory: ios
   - run:
       name: Check formatting
       command: fvm dart format -l 120 -o none --set-exit-if-changed .
