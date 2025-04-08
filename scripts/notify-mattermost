@@ -1,0 +1,48 @@
+#!/bin/bash
+
+begins_with() { case $1 in "$2"*) true;; *) false;; esac; }
+
+send_notification() {
+    channel=$1
+    allow_all_branches=$2
+
+    echo $MM_MESSAGE
+
+    if ! ($allow_all_branches || [ "$CIRCLE_BRANCH" = "main" ] || begins_with $CIRCLE_BRANCH "release"); then
+        echo "Not on main or release branch. Skipping."
+        exit 0
+    fi
+
+    if [ -z "$MM_MESSAGE" ]; then
+        echo "No message set. Skipping."
+        exit 0
+    fi
+
+    if [ -z "$channel" ]; then
+        echo "No channel set. Skipping."
+        exit 1
+    fi
+
+    if [ -z "${MM_WEBHOOK}" ]; then
+        echo "No mattermost webhook set. Please add the environment variable \"MM_WEBHOOK\" in the settings for this project."
+        exit 1
+    fi
+
+    STATUS=$(curl -o /dev/null -s -w "%{http_code}\n" -X POST -H 'Content-type: application/json' \
+        --data \
+        "{
+          \"channel\": \"$channel\",
+          \"username\": \"circleci\",
+          \"text\": \"$MM_MESSAGE\"
+        }" "${MM_WEBHOOK}")
+
+    if [ "$STATUS" -ne "200" ]; then
+        echo "Notification not sent due to an error. Status: $STATUS. Please check the webhook URL"
+        exit 1
+    fi
+
+    echo "Notification sent!"
+    exit 0
+  }
+
+send_notification $1 $2 "$3"

@@ -6,10 +6,12 @@ import com.expediagroup.graphql.generator.SchemaGeneratorConfig
 import com.expediagroup.graphql.generator.TopLevelObject
 
 val freinetGraphQlParams = GraphQLParams(
-    config = SchemaGeneratorConfig(supportedPackages = listOf("app.ehrenamtskarte.backend.freinet.webservice.schema")),
+    config = SchemaGeneratorConfig(
+        supportedPackages = listOf("app.ehrenamtskarte.backend.freinet.webservice.schema"),
+    ),
     dataLoaderRegistry = createRegistryFromNamedDataLoaders(),
     queries = listOf(
-        TopLevelObject(FreinetAgencyQueryService())
+        TopLevelObject(FreinetAgencyQueryService()),
     ),
-    mutations = listOf(TopLevelObject(FreinetAgencyMutationService()))
+    mutations = listOf(TopLevelObject(FreinetAgencyMutationService())),
 )

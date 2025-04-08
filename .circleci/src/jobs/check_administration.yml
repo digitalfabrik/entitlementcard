@@ -1,39 +1,24 @@
 docker:
   - image: cimg/node:20.18.0
-working_directory: ~/project
+working_directory: ~/project/administration
 steps:
-  - checkout:
-      path: ~/project
-  - install_app_toolbelt
-  - install_dart_linux
-  - install_protobuf_linux
   - prepare_workspace
-  - restore_npm_cache
-  - run:
-      name: Generate GraphQL
-      command: npm run generate-graphql
-      working_directory: ~/project/administration
-  - run:
-      name: Generate Protobuf
-      command: npm run generate-protobuf
-      working_directory: ~/project/administration
-  - run:
-      name: Lint
-      command: npm run lint
-      working_directory: ~/project/administration
-  - run:
-      name: Check circular dependencies
-      command: npm run check-circular-deps
-      working_directory: ~/project/administration
-  - run:
-      name: Run tests and generate coverage report
-      command: npm run test:coverage -- --maxWorkers=2
-      working_directory: ~/project/administration
-  - store_artifacts:
-      path: ~/project/administration/src/coverage
-      destination: ~/attached_workspace/coverage
+  - check_circleci_config
+  - install_protobuf_linux
+  - install_node_modules
   - run:
       name: Typescript
       command: npm run ts:check
-      working_directory: ~/project/administration
+  - run:
+      name: Lint
+      command: npm run lint
+  - run:
+      name: Check circular dependencies
+      command: npm run check-circular-deps
+  - run:
+      name: Run tests and generate coverage report
+      command: npm run test:coverage -- --maxWorkers=2
+  - store_artifacts:
+      path: src/coverage
+      destination: ~/attached_workspace/coverage
   - notify

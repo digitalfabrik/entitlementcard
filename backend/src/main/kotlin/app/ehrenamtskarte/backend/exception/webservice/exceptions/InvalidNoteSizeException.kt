@@ -5,5 +5,5 @@ import app.ehrenamtskarte.backend.exception.webservice.schema.GraphQLExceptionCo
 
 open class InvalidNoteSizeException(maxSize: Int) : GraphQLBaseException(
     GraphQLExceptionCode.INVALID_NOTE_SIZE,
-    mapOf("maxSize" to maxSize)
+    mapOf("maxSize" to maxSize),
 )

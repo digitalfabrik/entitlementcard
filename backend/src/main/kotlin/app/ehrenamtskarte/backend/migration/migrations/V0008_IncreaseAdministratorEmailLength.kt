@@ -12,7 +12,7 @@ internal class V0008_IncreaseAdministratorEmailLength : Migration() {
         exec(
             """
             ALTER TABLE administrators ALTER COLUMN "email" TYPE character varying(254);
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 }

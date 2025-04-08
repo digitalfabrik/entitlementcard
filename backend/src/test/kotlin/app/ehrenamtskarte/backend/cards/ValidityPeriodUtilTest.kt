@@ -11,12 +11,12 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 internal class ValidityPeriodUtilTest {
-    private fun clockWithTime(year: Int, month: Int, dayOfMonth: Int, hour: Int, minute: Int): Clock {
-        return Clock.fixed(
-            LocalDateTime.of(year, month, dayOfMonth, hour, minute).toInstant(ZoneOffset.ofHours(1)), // Europe/Berlin == +1 Offset
-            ZoneId.of("Europe/Berlin")
+    private fun clockWithTime(year: Int, month: Int, dayOfMonth: Int, hour: Int, minute: Int): Clock =
+        Clock.fixed(
+            // Europe/Berlin == +1 Offset
+            LocalDateTime.of(year, month, dayOfMonth, hour, minute).toInstant(ZoneOffset.ofHours(1)),
+            ZoneId.of("Europe/Berlin"),
         )
-    }
 
     @Test
     fun epochWithEpochExpiration() {
@@ -88,21 +88,15 @@ internal class ValidityPeriodUtilTest {
         val someDayDate = LocalDateTime.ofEpochSecond(
             epochZero + dayCount * 24L * 60L * 60L,
             0,
-            ZoneOffset.UTC
+            ZoneOffset.UTC,
         )
 
         val someDayDateAlternative = epochZeroDate.plusDays(dayCount)
 
-        assertEquals(
-            someDayDate,
-            someDayDateAlternative
-        )
+        assertEquals(someDayDate, someDayDateAlternative)
 
         val zone = ZoneId.of("Europe/Berlin")
 
-        assertEquals(
-            ZonedDateTime.of(someDayDate, zone),
-            ZonedDateTime.of(someDayDateAlternative, zone)
-        )
+        assertEquals(ZonedDateTime.of(someDayDate, zone), ZonedDateTime.of(someDayDateAlternative, zone))
     }
 }

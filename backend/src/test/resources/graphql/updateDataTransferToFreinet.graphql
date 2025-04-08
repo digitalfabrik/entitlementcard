@@ -1,0 +1,7 @@
+mutation UpdateDataTransferToFreinet($regionId: Int!, $project: String!, $dataTransferActivated: Boolean!) {
+    result: updateDataTransferToFreinet(
+        regionId: $regionId
+        project: $project
+        dataTransferActivated: $dataTransferActivated
+    )
+}

@@ -8,8 +8,6 @@ map:
 geocoding:
   enabled: false
   host: dummy
-csvWriter:
-  enabled: false
 server:
   host: 0.0.0.0
   port: 8000
@@ -35,7 +33,6 @@ projects:
       accessToken: OVERRIDE_IN_LOCAL_CONFIG
   - id: nuernberg.sozialpass.app
     importUrl: dummy
-    pipelineName: dummy
     administrationBaseUrl: dummy
     administrationName: dummy
     timezone: "Europe/Berlin"
@@ -47,7 +44,6 @@ projects:
       password: OVERRIDE_IN_LOCAL_CONFIG
   - id: koblenz.sozialpass.app
     importUrl: dummy
-    pipelineName: dummy
     administrationBaseUrl: dummy
     administrationName: dummy
     timezone: "Europe/Berlin"

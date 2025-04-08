@@ -1,23 +1,20 @@
 # Promote the app from the beta to the production track in the Google Play Store.
 parameters:
-  build_config_name:
+  build_config:
     type: enum
-    enum: [bayern, nuernberg]
+    enum: [bayern, nuernberg, koblenz]
     default: bayern
 docker:
   - image: cimg/android:2024.01.1-node
 resource_class: small
-shell: /bin/bash -eo pipefail
 environment:
   FASTLANE_SKIP_UPDATE_CHECK: true
+working_directory: ~/project/frontend/android
 steps:
-  - checkout:
-      path: ~/project
+  - prepare_workspace
   - install_app_toolbelt
-  - restore_ruby_cache:
-      directory: ~/project/frontend/android
+  - install_fastlane
   - run:
       name: '[FL] Play Store Promotion'
-      command: bundle exec fastlane android playstore_promote build_config_name:<< parameters.build_config_name >>
-      working_directory: frontend/android
+      command: bundle exec fastlane android playstore_promote build_config_name:<< parameters.build_config >>
   - notify

@@ -38,7 +38,9 @@ class FreinetAgenciesLoader {
     }
 
     fun loadAgenciesFromXml(projectConfigs: List<ProjectConfig>): List<FreinetApiAgency> {
-        val bayernConfig = projectConfigs.find { it.id == EAK_BAYERN_PROJECT } ?: throw NotFoundException("Project config not found")
+        val bayernConfig = projectConfigs
+            .find { it.id == EAK_BAYERN_PROJECT }
+            ?: throw NotFoundException("Project config not found")
         if (bayernConfig.freinet == null) {
             logger.error("Couldn't find required freinet api parameters in backend config.")
             return emptyList()
@@ -64,7 +66,7 @@ class FreinetAgenciesLoader {
                     registerModule(KotlinModule.Builder().build())
                     enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
                     disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-                }.readValue(response, XMLAgencies::class.java)
+                }.readValue(response, XMLAgencies::class.java),
             )
         } catch (e: Exception) {
             logger.error("Couldn't fetch agency information: ", e)
@@ -79,7 +81,7 @@ class FreinetAgenciesLoader {
                     agencyId = it.agencyId.toInt(),
                     agencyName = it.agencyName,
                     apiAccessKey = it.accessKey,
-                    officialRegionalKeys = it.officialRegionalKeys?.split(",") ?: emptyList()
+                    officialRegionalKeys = it.officialRegionalKeys?.split(",") ?: emptyList(),
                 )
             } else {
                 null

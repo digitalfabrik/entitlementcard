@@ -17,10 +17,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
 
 class ApplicationAttachmentHandler(private val applicationData: File) {
-
-    fun getPath(): String {
-        return "/application/{project}/{applicationId}/file/{fileIndex}"
-    }
+    fun getPath(): String = "/application/{project}/{applicationId}/file/{fileIndex}"
 
     fun handle(context: Context) {
         val jwtPayload = JwtService.verifyRequest(context)
@@ -32,14 +29,21 @@ class ApplicationAttachmentHandler(private val applicationData: File) {
         val applicationId = context.pathParam("applicationId").toInt()
         val projectId = context.pathParam("project")
         val (admin, application) = transaction {
-            val project = ProjectEntity.find { Projects.project eq projectId }.singleOrNull() ?: throw ProjectNotFoundException(projectId)
-            val admin =
-                AdministratorEntity.findById(jwtPayload.adminId)
-                    ?: throw UnauthorizedException()
+            val project = ProjectEntity
+                .find { Projects.project eq projectId }
+                .singleOrNull()
+                ?: throw ProjectNotFoundException(projectId)
+            val admin = AdministratorEntity
+                .findById(jwtPayload.adminId)
+                ?: throw UnauthorizedException()
+
             if (admin.projectId != project.id) throw UnauthorizedException()
             val application = ApplicationEntity.findById(applicationId) ?: throw NotFoundException()
 
-            RegionsRepository.findByIdInProject(project.project, application.regionId.value) ?: throw RegionNotFoundException()
+            RegionsRepository
+                .findByIdInProject(project.project, application.regionId.value)
+                ?: throw RegionNotFoundException()
+
             Pair(admin, application)
         }
 
@@ -53,7 +57,10 @@ class ApplicationAttachmentHandler(private val applicationData: File) {
             throw NotFoundException()
         } else {
             val contentType =
-                File(this.applicationData, "$projectId/$applicationId/$fileIndex.contentType").readLines()[0]
+                File(
+                    this.applicationData,
+                    "$projectId/$applicationId/$fileIndex.contentType",
+                ).readLines()[0]
             context.contentType(contentType)
             context.result(file.inputStream())
         }

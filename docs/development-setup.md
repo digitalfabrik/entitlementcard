@@ -40,10 +40,6 @@ cd frontend && fvm flutter pub get
    - Install the Android plugin and set the Android SDK path
    - Install the Dart plugin and set the Dart SDK path
    - Install the Flutter plugin and set the Flutter SDK path
-5. Install app-toolbelt
-```shell
-npm install --unsafe-perm -g https://github.com/digitalfabrik/app-toolbelt/archive/refs/heads/main.tar.gz
-```
 
 *Note: IntelliJ needs access to environment variables to run these commands successfully.*
 
@@ -66,11 +62,7 @@ adb reverse tcp:8081 tcp:8081 && adb reverse tcp:8000 tcp:8000 && adb reverse tc
 
 ### Administration Setup
 
-1. Create directory `administration/src/generated`
-```shell
-mkdir administration/src/generated
-```
-2. Install node_modules
+1. Install node_modules
 ```shell
 npm install
 ```
@@ -81,6 +73,19 @@ Run `Start administration (env:local+buildConfig:all)` from Intellij run configu
 
 
 ## Backend
+
+### Recommended IDE set up
+
+For IntelliJ, the following plugins are recomended:
+
+- [detekt](https://plugins.jetbrains.com/plugin/10761-detekt)
+- [Ktlint](https://plugins.jetbrains.com/plugin/15057-ktlint)
+
+### Common development tasks
+
+- Run Ktlint diagnostic: `./gradlew ktlintCheck`
+- Run Ktlint formatter: `./gradlew ktlintFormat`
+- Run Detekt diagnostic: `./gradlew detekt`
 
 ### Backend Setup
 

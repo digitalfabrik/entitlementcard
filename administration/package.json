@@ -17,7 +17,8 @@
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.13.6",
     "@mui/system": "^5.13.6",
-    "@mui/x-date-pickers": "^7.22.2",
+    "@mui/utils": "^6.4.6",
+    "@mui/x-date-pickers": "^7.28.2",
     "@nivo/bar": "^0.85.1",
     "@pdf-lib/fontkit": "^1.1.1",
     "@sentry/react": "^8.55.0",
@@ -120,7 +121,7 @@
     "ts:check": "tsc --build",
     "format": "NODE_ENV=test eslint . --fix && prettier . --write",
     "generate-graphql": "graphql-codegen --config graphql-codegen.yml",
-    "generate-protobuf": "protoc -I ../specs --es_out=src/generated --es_opt=target=ts --plugin=protoc-gen-es=../node_modules/.bin/protoc-gen-es ../specs/card.proto",
+    "generate-protobuf": "mkdir -p src/generated && protoc -I ../specs --es_out=src/generated --es_opt=target=ts --plugin=protoc-gen-es=../node_modules/.bin/protoc-gen-es ../specs/card.proto",
     "postinstall": "npm run generate-protobuf && npm run generate-graphql",
     "check-circular-deps": "bash ./scripts/check_circular_deps.sh",
     "test:e2e": "npx playwright test"

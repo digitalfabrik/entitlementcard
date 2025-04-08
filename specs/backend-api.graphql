@@ -347,6 +347,7 @@ enum GraphQLExceptionCode {
   REGION_NOT_ACTIVATED_CARD_CONFIRMATION_MAIL
   REGION_NOT_ACTIVATED_FOR_APPLICATION
   REGION_NOT_FOUND
+  REGION_NOT_UNIQUE
   USER_ENTITLEMENT_EXPIRED
   USER_ENTITLEMENT_NOT_FOUND
 }
@@ -443,18 +444,18 @@ input BlueCardWorkAtOrganizationsEntitlementInput {
 }
 
 input CSVAcceptingStoreInput {
-  categoryId: String
+  categoryId: Int!
   discountDE: String
   discountEN: String
   email: String
   homepage: String
-  houseNumber: String
-  latitude: String
-  location: String
-  longitude: String
-  name: String
-  postalCode: String
-  street: String
+  houseNumber: String!
+  latitude: Float!
+  location: String!
+  longitude: Float!
+  name: String!
+  postalCode: String!
+  street: String!
   telephone: String
 }
 

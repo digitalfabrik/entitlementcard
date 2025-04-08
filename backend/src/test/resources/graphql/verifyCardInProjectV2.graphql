@@ -1,0 +1,7 @@
+query VerifyCardInProjectV2($project: String!, $card: CardVerificationModelInput!) {
+    verification: verifyCardInProjectV2(project: $project, card: $card){
+        valid,
+        extendable,
+        verificationTimeStamp
+    }
+}

@@ -10,12 +10,13 @@
 val exposedVersion: String by project
 
 plugins {
+    id("com.google.protobuf") version "0.9.4"
+    id("com.expediagroup.graphql") version "8.3.0"
+    id("io.gitlab.arturbosch.detekt") version "1.23.8"
     // Apply the Kotlin JVM plugin to add support for Kotlin.
     id("org.jetbrains.kotlin.jvm") version "1.9.10"
-    id("org.jlleitschuh.gradle.ktlint") version "11.5.1"
-    id("com.google.protobuf") version "0.9.4"
     id("org.jetbrains.kotlinx.kover") version "0.8.3"
-
+    id("org.jlleitschuh.gradle.ktlint") version "12.2.0"
     // Apply the application plugin to add support for building a CLI application.
     application
 }
@@ -37,6 +38,8 @@ dependencies {
     implementation("org.piwik.java.tracking:matomo-java-tracker:3.4.0")
 
     implementation("com.expediagroup:graphql-kotlin-schema-generator:6.5.3")
+    testImplementation("com.expediagroup:graphql-kotlin-client:6.5.3")
+
     implementation("com.graphql-java:graphql-java-extended-scalars:20.2")
     // Align versions of all Kotlin components
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
@@ -87,7 +90,17 @@ dependencies {
     testImplementation("org.apache.commons:commons-compress:1.26.2")
 }
 
+detekt {
+    // https://detekt.dev/docs/gettingstarted/gradle
+    toolVersion = "1.23.8"
+    config.setFrom(file("../detekt.yml"))
+    buildUponDefaultConfig = true
+    basePath = project.layout.projectDirectory.toString()
+    ignoreFailures = true
+}
+
 ktlint {
+    version.set("1.5.0")
     filter {
         exclude { it.file.path.contains("$buildDir/generated/") }
     }
@@ -147,7 +160,14 @@ tasks.named("classes") {
 }
 
 tasks.test {
+    dependsOn("graphqlGenerateTestClient")
     useJUnitPlatform()
     environment("JWT_SECRET", "HelloWorld")
     environment("KOBLENZ_PEPPER", "123456789ABC")
+}
+
+tasks.graphqlGenerateTestClient {
+    schemaFile.set(rootDir.parentFile.resolve("specs/backend-api.graphql"))
+    packageName.set("app.ehrenamtskarte.backend.generated")
+    queryFiles.setFrom(fileTree("src/test/resources/graphql"))
 }

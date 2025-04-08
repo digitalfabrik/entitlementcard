@@ -13,10 +13,7 @@ import app.ehrenamtskarte.backend.stores.database.Contacts
 import app.ehrenamtskarte.backend.stores.database.PhysicalStoreEntity
 import app.ehrenamtskarte.backend.stores.database.PhysicalStores
 import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
-import app.ehrenamtskarte.backend.stores.utils.mapCsvToStore
-import app.ehrenamtskarte.backend.stores.webservice.schema.types.CSVAcceptingStore
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.Coordinates
-import app.ehrenamtskarte.backend.stores.webservice.schema.types.StoreImportReturnResultModel
 import net.postgis.jdbc.geometry.Point
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.ComparisonOp
@@ -35,7 +32,6 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.stringParam
 
 object AcceptingStoresRepository {
-
     // TODO would be great to support combinations like "Tür an Tür Augsburg"
     // TODO Fulltext search is possible with tsvector in postgres: https://www.compose.com/articles/mastering-postgresql-tools-full-text-search-and-phrase-search/
     // TODO Probably not relevant right now
@@ -45,7 +41,7 @@ object AcceptingStoresRepository {
         categoryIds: List<Int>?,
         coordinates: Coordinates?,
         limit: Int,
-        offset: Long
+        offset: Long,
     ): SizedIterable<AcceptingStoreEntity> {
         val categoryMatcher =
             if (categoryIds == null) {
@@ -64,15 +60,15 @@ object AcceptingStoresRepository {
                         AcceptingStores.description ilike "%$searchText%",
                         Addresses.location ilike "%$searchText%",
                         Addresses.postalCode ilike "%$searchText%",
-                        Addresses.street ilike "%$searchText%"
-                    )
+                        Addresses.street ilike "%$searchText%",
+                    ),
                 )
             }
 
         val sortExpression = if (coordinates != null) {
             DistanceFunction(
                 PhysicalStores.coordinates,
-                MakePointFunction(doubleParam(coordinates.lng), doubleParam(coordinates.lat))
+                MakePointFunction(doubleParam(coordinates.lng), doubleParam(coordinates.lat)),
             )
         } else {
             AcceptingStores.name
@@ -86,12 +82,8 @@ object AcceptingStoresRepository {
             .limit(limit, offset)
     }
 
-    fun getIdIfExists(
-        acceptingStore: AcceptingStore,
-        projectId:
-            EntityID<Int>
-    ): Int? {
-        return AcceptingStores.innerJoin(PhysicalStores).innerJoin(Addresses).innerJoin(Contacts)
+    fun getIdIfExists(acceptingStore: AcceptingStore, projectId: EntityID<Int>, regionId: EntityID<Int>?): Int? =
+        AcceptingStores.innerJoin(PhysicalStores).innerJoin(Addresses).innerJoin(Contacts)
             .slice(AcceptingStores.id).select {
                 (Addresses.street eq acceptingStore.streetWithHouseNumber) and
                     (Addresses.postalCode eq acceptingStore.postalCode!!) and
@@ -103,43 +95,23 @@ object AcceptingStoresRepository {
                     (AcceptingStores.name eq acceptingStore.name) and
                     (AcceptingStores.description eq acceptingStore.discount) and
                     (AcceptingStores.categoryId eq acceptingStore.categoryId) and
-                    (AcceptingStores.regionId.isNull()) and // TODO #538: For now the region is always null
+                    (AcceptingStores.regionId eq regionId) and
                     (AcceptingStores.projectId eq projectId) and
                     (
                         PhysicalStores.coordinates eq Point(
                             acceptingStore.longitude!!,
-                            acceptingStore.latitude!!
+                            acceptingStore.latitude!!,
                         )
-                        )
+                    )
             }.firstOrNull()?.let { it[AcceptingStores.id].value }
-    }
 
-    fun importAcceptingStores(stores: List<CSVAcceptingStore>, projectId: EntityID<Int>, dryRun: Boolean): StoreImportReturnResultModel {
-        var numStoresCreated = 0
-        var numStoresUntouched = 0
-        val acceptingStoreIdsToRemove =
-            AcceptingStores.slice(AcceptingStores.id).select { AcceptingStores.projectId eq projectId }
-                .map { it[AcceptingStores.id].value }.toMutableSet()
-        stores.map { mapCsvToStore(it) }.forEach {
-            val existingStoreId = getIdIfExists(it, projectId)
-            if (existingStoreId == null) {
-                if (!dryRun) {
-                    createStore(it, projectId)
-                }
-                numStoresCreated += 1
-            } else {
-                acceptingStoreIdsToRemove.remove(existingStoreId)
-                numStoresUntouched += 1
-            }
+    fun getAllIdsInProject(projectId: EntityID<Int>): MutableSet<Int> =
+        AcceptingStores.slice(AcceptingStores.id).select {
+            AcceptingStores.projectId eq projectId
         }
-        if (!dryRun) {
-            deleteStores(acceptingStoreIdsToRemove)
-        }
+            .map { it[AcceptingStores.id].value }.toMutableSet()
 
-        return StoreImportReturnResultModel(numStoresCreated, acceptingStoreIdsToRemove.size, numStoresUntouched)
-    }
-
-    fun createStore(acceptingStore: AcceptingStore, currentProjectId: EntityID<Int>) {
+    fun createStore(acceptingStore: AcceptingStore, projectId: EntityID<Int>, regionId: EntityID<Int>?) {
         val address = AddressEntity.new {
             street = acceptingStore.streetWithHouseNumber
             postalCode = acceptingStore.postalCode!!
@@ -156,8 +128,8 @@ object AcceptingStoresRepository {
             description = acceptingStore.discount
             contactId = contact.id
             categoryId = EntityID(acceptingStore.categoryId, Categories)
-            regionId = null // TODO #538: For now the region is always null
-            projectId = currentProjectId
+            this.regionId = regionId
+            this.projectId = projectId
         }
         PhysicalStoreEntity.new {
             storeId = storeEntity.id
@@ -167,20 +139,20 @@ object AcceptingStoresRepository {
     }
 
     fun deleteStores(acceptingStoreIds: Iterable<Int>) {
-        val contactsDelete =
-            (AcceptingStores innerJoin Contacts).slice(Contacts.id)
-                .select { AcceptingStores.id inList acceptingStoreIds }
-                .map { it[Contacts.id] }
+        val contactsDelete = (AcceptingStores innerJoin Contacts)
+            .slice(Contacts.id)
+            .select { AcceptingStores.id inList acceptingStoreIds }
+            .map { it[Contacts.id] }
 
-        val physicalStoresDelete =
-            (PhysicalStores innerJoin AcceptingStores).slice(PhysicalStores.id)
-                .select { AcceptingStores.id inList acceptingStoreIds }
-                .map { it[PhysicalStores.id] }
+        val physicalStoresDelete = (PhysicalStores innerJoin AcceptingStores)
+            .slice(PhysicalStores.id)
+            .select { AcceptingStores.id inList acceptingStoreIds }
+            .map { it[PhysicalStores.id] }
 
-        val addressesDelete =
-            ((PhysicalStores innerJoin Addresses) innerJoin AcceptingStores).slice(Addresses.id)
-                .select { AcceptingStores.id inList acceptingStoreIds }
-                .map { it[Addresses.id] }
+        val addressesDelete = ((PhysicalStores innerJoin Addresses) innerJoin AcceptingStores)
+            .slice(Addresses.id)
+            .select { AcceptingStores.id inList acceptingStoreIds }
+            .map { it[Addresses.id] }
 
         PhysicalStores.deleteWhere {
             id inList physicalStoresDelete

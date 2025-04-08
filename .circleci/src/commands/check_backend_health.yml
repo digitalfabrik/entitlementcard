@@ -1,0 +1,23 @@
+steps:
+  - run:
+      name: Install curl and sudo
+      command: apt update -y && apt install -y curl sudo
+  - run:
+      name: Install ca-certificates-java # workaround for current issue: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1030129
+      command: apt install ca-certificates-java -y
+  - run:
+      name: Install openjdk-17-jre-headless
+      command: apt install openjdk-17-jre-headless -y
+  - run:
+      name: Install backend
+      command: dpkg -i ~/attached_workspace/debs/backend/eak-backend*.deb
+  - run:
+      name: Run migrate
+      command: /opt/ehrenamtskarte/backend/bin/backend migrate
+  - run:
+      name: Start backend
+      command: /opt/ehrenamtskarte/backend/bin/backend execute
+      background: true
+  - run:
+      name: Check health
+      command: curl --retry 120 --retry-delay 1 --retry-all-errors http://0.0.0.0:8000/health

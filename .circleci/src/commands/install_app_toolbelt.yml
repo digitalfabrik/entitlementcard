@@ -1,5 +1,5 @@
 steps:
-  - setup_npm_global
   - run:
       name: Install app-toolbelt
-      command: npm install --unsafe-perm -g https://github.com/digitalfabrik/app-toolbelt/archive/refs/heads/main.tar.gz
+      command: npm ci --workspaces=false
+      working_directory: ~/project

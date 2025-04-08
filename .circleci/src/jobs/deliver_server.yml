@@ -1,0 +1,54 @@
+docker:
+  - image: cimg/node:20.18.0
+parameters:
+  production:
+    description: Whether builds are delivered to production or beta.
+    type: boolean
+steps:
+  - prepare_workspace
+  - add_ssh_keys:
+      fingerprints:
+        - a1:3f:a7:c3:ff:12:40:1d:85:de:a7:ab:12:3f:cc:05
+  - when:
+      condition: << parameters.production >>
+      steps:
+        - run:
+            name: Add ssh fingerprint
+            command: |
+              mkdir -p ~/.ssh
+              echo ${APT_FINGERPRINT_PRODUCTION} >> ~/.ssh/known_hosts
+        - run:
+            name: Upload administration
+            command: |
+              echo "Uploading:" ~/attached_workspace/debs/administration/*.deb
+              sftp -b - ci@entitlementcard.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/administration/*.deb"
+        - run:
+            name: Upload backend
+            command: |
+              echo "Uploading:" ~/attached_workspace/debs/backend/*.deb
+              sftp -b - ci@entitlementcard.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/backend/*.deb"
+        - run:
+            name: Install packages
+            command: curl https://webhook.entitlementcard.tuerantuer.org/hooks/install-backend-admin-$EAK_WEBHOOK
+  - unless:
+      condition: << parameters.production >>
+      steps:
+        - run:
+            name: Add ssh fingerprint
+            command: |
+              mkdir -p ~/.ssh
+              echo ${APT_FINGERPRINT_STAGING} >> ~/.ssh/known_hosts
+        - run:
+            name: Upload administration
+            command: |
+              echo "Uploading:" ~/attached_workspace/debs/administration/*.deb
+              sftp -b - ci@entitlementcard-test.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/administration/*.deb"
+        - run:
+            name: Upload backend
+            command: |
+              echo "Uploading:" ~/attached_workspace/debs/backend/*.deb
+              sftp -b - ci@entitlementcard-test.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/backend/*.deb"
+        - run:
+            name: Install packages
+            command: curl https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-backend-admin-$EAK_WEBHOOK
+  - notify

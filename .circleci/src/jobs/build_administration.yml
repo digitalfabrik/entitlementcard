@@ -1,29 +1,13 @@
 docker:
   - image: cimg/node:20.18.0
-working_directory: ~/project
+working_directory: ~/project/administration
 steps:
-  - checkout:
-      path: ~/project
-  - install_app_toolbelt
-  - install_dart_linux
-  - install_protobuf_linux
   - prepare_workspace
-  - restore_environment_variables
-  - restore_npm_cache
-  - run:
-      name: Generate GraphQL
-      command: npm run generate-graphql
-      working_directory: ~/project/administration
-  - run:
-      name: Generate Protobuf
-      command: npm run generate-protobuf
-      working_directory: ~/project/administration
+  - install_protobuf_linux
+  - install_node_modules
   - run:
       name: Build
       command: npm run build --version_name=${NEW_VERSION_NAME}
-      working_directory: ~/project/administration
-  - store_artifacts:
-      path: ~/attached_workspace/build
   - persist_to_workspace:
       root: ~/project
       paths:

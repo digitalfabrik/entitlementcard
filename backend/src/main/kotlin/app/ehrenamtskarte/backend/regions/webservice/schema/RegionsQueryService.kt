@@ -17,70 +17,92 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 @Suppress("unused")
 class RegionsQueryService {
-
     @GraphQLDescription("Return list of all regions in the given project.")
-    fun regionsInProject(project: String): List<Region> = transaction {
-        RegionsRepository.findAllInProject(project).map {
-            Region(it.id.value, it.prefix, it.name, it.regionIdentifier, it.dataPrivacyPolicy, it.activatedForApplication, it.activatedForCardConfirmationMail)
-        }
-    }
-
-    @GraphQLDescription("Returns regions queried by ids in the given project.")
-    fun regionsByIdInProject(project: String, ids: List<Int>): List<Region?> = transaction {
-        RegionsRepository.findByIdsInProject(project, ids).map {
-            if (it == null) {
-                null
-            } else {
-                Region(it.id.value, it.prefix, it.name, it.regionIdentifier, it.dataPrivacyPolicy, it.activatedForApplication, it.activatedForCardConfirmationMail)
+    fun regionsInProject(project: String): List<Region> =
+        transaction {
+            RegionsRepository.findAllInProject(project).map {
+                Region(
+                    it.id.value,
+                    it.prefix,
+                    it.name,
+                    it.regionIdentifier,
+                    it.dataPrivacyPolicy,
+                    it.activatedForApplication,
+                    it.activatedForCardConfirmationMail,
+                )
             }
         }
-    }
+
+    @GraphQLDescription("Returns regions queried by ids in the given project.")
+    fun regionsByIdInProject(project: String, ids: List<Int>): List<Region?> =
+        transaction {
+            RegionsRepository.findByIdsInProject(project, ids).map {
+                if (it == null) {
+                    null
+                } else {
+                    Region(
+                        it.id.value,
+                        it.prefix,
+                        it.name,
+                        it.regionIdentifier,
+                        it.dataPrivacyPolicy,
+                        it.activatedForApplication,
+                        it.activatedForCardConfirmationMail,
+                    )
+                }
+            }
+        }
 
     @GraphQLDescription("Returns region data for specific region.")
-    fun regionByRegionId(regionId: Int): Region = transaction {
-        val regionEntity = RegionsRepository.findRegionById(regionId)
-        Region(
-            regionEntity.id.value,
-            regionEntity.prefix,
-            regionEntity.name,
-            regionEntity.regionIdentifier,
-            regionEntity.dataPrivacyPolicy,
-            regionEntity.activatedForApplication,
-            regionEntity.activatedForCardConfirmationMail
-        )
-    }
-
-    @GraphQLDescription("Returns regions by postal code. Works only for the EAK project in which each region has an appropriate regionIdentifier.")
-    fun regionsByPostalCode(dfe: DataFetchingEnvironment, postalCode: String, project: String): List<Region> = transaction {
-        val regions = dfe.getContext<GraphQLContext>().regionIdentifierByPostalCode.filter { pair -> pair.first.equals(postalCode) }
-        if (regions.isEmpty()) {
-            throw RegionNotFoundException()
-        }
-
-        val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
-            ?: throw ProjectNotFoundException(project)
-
-        if (projectEntity.project != EAK_BAYERN_PROJECT) {
-            throw NotEakProjectException()
-        }
-
-        val regionEntities = regions.map {
-                region ->
-            RegionsRepository.findRegionByRegionIdentifier(region.second, projectEntity.id)
-        }
-
-        regionEntities.map {
+    fun regionByRegionId(regionId: Int): Region =
+        transaction {
+            val regionEntity = RegionsRepository.findRegionById(regionId)
             Region(
-                it.id.value,
-                it.prefix,
-                it.name,
-                it.regionIdentifier,
-                it.dataPrivacyPolicy,
-                it.activatedForApplication,
-                it.activatedForCardConfirmationMail
+                regionEntity.id.value,
+                regionEntity.prefix,
+                regionEntity.name,
+                regionEntity.regionIdentifier,
+                regionEntity.dataPrivacyPolicy,
+                regionEntity.activatedForApplication,
+                regionEntity.activatedForCardConfirmationMail,
             )
         }
-    }
+
+    @GraphQLDescription(
+        "Returns regions by postal code. Works only for the EAK project in which each region has an appropriate regionIdentifier.",
+    )
+    fun regionsByPostalCode(dfe: DataFetchingEnvironment, postalCode: String, project: String): List<Region> =
+        transaction {
+            val regions = dfe.getContext<GraphQLContext>().regionIdentifierByPostalCode
+                .filter { pair -> pair.first.equals(postalCode) }
+
+            if (regions.isEmpty()) {
+                throw RegionNotFoundException()
+            }
+
+            val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
+                ?: throw ProjectNotFoundException(project)
+
+            if (projectEntity.project != EAK_BAYERN_PROJECT) {
+                throw NotEakProjectException()
+            }
+
+            val regionEntities = regions.map { region ->
+                RegionsRepository.findRegionByRegionIdentifier(region.second, projectEntity.id)
+            }
+
+            regionEntities.map {
+                Region(
+                    it.id.value,
+                    it.prefix,
+                    it.name,
+                    it.regionIdentifier,
+                    it.dataPrivacyPolicy,
+                    it.activatedForApplication,
+                    it.activatedForCardConfirmationMail,
+                )
+            }
+        }
 
     @Deprecated("Deprecated in favor of project specific query", ReplaceWith("regionsInProject"))
     @GraphQLDescription("Return list of all regions in the eak bayern project.")

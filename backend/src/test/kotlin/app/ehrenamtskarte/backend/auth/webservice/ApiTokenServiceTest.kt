@@ -30,7 +30,6 @@ import org.junit.jupiter.params.provider.MethodSource
 import java.time.LocalDate
 
 internal class ApiTokenServiceTest : IntegrationTest() {
-
     private val mockDfe = mockk<DataFetchingEnvironment>()
     private val mockContext = mockk<GraphQLContext>()
     private val mockJwtPayload = mockk<JwtPayload>()
@@ -66,8 +65,8 @@ internal class ApiTokenServiceTest : IntegrationTest() {
             }
             assertFalse(
                 Authorizer.mayAddApiTokensInProject(
-                    AdministratorEntity.find { Administrators.id eq mockJwtPayload.adminId }.single()
-                )
+                    AdministratorEntity.find { Administrators.id eq mockJwtPayload.adminId }.single(),
+                ),
             )
         }
     }
@@ -85,17 +84,53 @@ internal class ApiTokenServiceTest : IntegrationTest() {
 
     companion object {
         @JvmStatic
-        fun provideDeleteTestCases() = listOf(
-            TestCase(TestAdministrators.BAYERN_VEREIN_360.id, TestAdministrators.BAYERN_VEREIN_360.id, ApiTokenType.VERIFIED_APPLICATION, 1),
-            TestCase(TestAdministrators.KOBLENZ_PROJECT_ADMIN.id, TestAdministrators.KOBLENZ_PROJECT_ADMIN.id, ApiTokenType.USER_IMPORT, 1),
-            TestCase(TestAdministrators.KOBLENZ_PROJECT_ADMIN_2.id, TestAdministrators.KOBLENZ_PROJECT_ADMIN.id, ApiTokenType.USER_IMPORT, 1),
-            TestCase(TestAdministrators.KOBLENZ_PROJECT_ADMIN.id, TestAdministrators.NUERNBERG_PROJECT_ADMIN.id, ApiTokenType.USER_IMPORT, 0),
-            TestCase(TestAdministrators.BAYERN_VEREIN_360.id, TestAdministrators.KOBLENZ_PROJECT_ADMIN.id, ApiTokenType.USER_IMPORT, 0),
-            TestCase(TestAdministrators.BAYERN_VEREIN_360.id, TestAdministrators.BAYERN_VEREIN_360.id, ApiTokenType.USER_IMPORT, 0)
-        )
+        fun provideDeleteTestCases() =
+            listOf(
+                TestCase(
+                    TestAdministrators.BAYERN_VEREIN_360.id,
+                    TestAdministrators.BAYERN_VEREIN_360.id,
+                    ApiTokenType.VERIFIED_APPLICATION,
+                    1,
+                ),
+                TestCase(
+                    TestAdministrators.KOBLENZ_PROJECT_ADMIN.id,
+                    TestAdministrators.KOBLENZ_PROJECT_ADMIN.id,
+                    ApiTokenType.USER_IMPORT,
+                    1,
+                ),
+                TestCase(
+                    TestAdministrators.KOBLENZ_PROJECT_ADMIN_2.id,
+                    TestAdministrators.KOBLENZ_PROJECT_ADMIN.id,
+                    ApiTokenType.USER_IMPORT,
+                    1,
+                ),
+                TestCase(
+                    TestAdministrators.KOBLENZ_PROJECT_ADMIN.id,
+                    TestAdministrators.NUERNBERG_PROJECT_ADMIN.id,
+                    ApiTokenType.USER_IMPORT,
+                    0,
+                ),
+                TestCase(
+                    TestAdministrators.BAYERN_VEREIN_360.id,
+                    TestAdministrators.KOBLENZ_PROJECT_ADMIN.id,
+                    ApiTokenType.USER_IMPORT,
+                    0,
+                ),
+                TestCase(
+                    TestAdministrators.BAYERN_VEREIN_360.id,
+                    TestAdministrators.BAYERN_VEREIN_360.id,
+                    ApiTokenType.USER_IMPORT,
+                    0,
+                ),
+            )
     }
 
-    data class TestCase(val actingAdmin: Int, val tokenAdmin: Int, val type: ApiTokenType, val expectedDeletedTokens: Int)
+    data class TestCase(
+        val actingAdmin: Int,
+        val tokenAdmin: Int,
+        val type: ApiTokenType,
+        val expectedDeletedTokens: Int,
+    )
 
     @ParameterizedTest
     @MethodSource("provideDeleteTestCases")
@@ -125,8 +160,8 @@ internal class ApiTokenServiceTest : IntegrationTest() {
             }
             assertFalse(
                 Authorizer.mayAddApiTokensInProject(
-                    AdministratorEntity.find { Administrators.id eq mockJwtPayload.adminId }.single()
-                )
+                    AdministratorEntity.find { Administrators.id eq mockJwtPayload.adminId }.single(),
+                ),
             )
         }
     }
@@ -147,7 +182,10 @@ internal class ApiTokenServiceTest : IntegrationTest() {
         every { mockJwtPayload.adminId } returns TestAdministrators.KOBLENZ_PROJECT_ADMIN.id
 
         transaction {
-            val tokenId = TestData.createApiToken(creatorId = TestAdministrators.KOBLENZ_PROJECT_ADMIN.id, type = ApiTokenType.USER_IMPORT)
+            val tokenId = TestData.createApiToken(
+                creatorId = TestAdministrators.KOBLENZ_PROJECT_ADMIN.id,
+                type = ApiTokenType.USER_IMPORT,
+            )
 
             val metaData = ApiTokenQueryService().getApiTokenMetaData(mockDfe)
             assertEquals(1, metaData.size)
@@ -167,8 +205,8 @@ internal class ApiTokenServiceTest : IntegrationTest() {
             }
             assertFalse(
                 Authorizer.mayViewApiMetadataInProject(
-                    AdministratorEntity.find { Administrators.id eq mockJwtPayload.adminId }.single()
-                )
+                    AdministratorEntity.find { Administrators.id eq mockJwtPayload.adminId }.single(),
+                ),
             )
         }
     }
@@ -189,7 +227,10 @@ internal class ApiTokenServiceTest : IntegrationTest() {
         every { mockJwtPayload.adminId } returns TestAdministrators.KOBLENZ_PROJECT_ADMIN.id
 
         transaction {
-            TestData.createApiToken(creatorId = TestAdministrators.NUERNBERG_PROJECT_ADMIN.id, type = ApiTokenType.USER_IMPORT)
+            TestData.createApiToken(
+                creatorId = TestAdministrators.NUERNBERG_PROJECT_ADMIN.id,
+                type = ApiTokenType.USER_IMPORT,
+            )
 
             val metaData = ApiTokenQueryService().getApiTokenMetaData(mockDfe)
             assertEquals(0, metaData.size)
@@ -201,8 +242,15 @@ internal class ApiTokenServiceTest : IntegrationTest() {
         every { mockJwtPayload.adminId } returns TestAdministrators.BAYERN_VEREIN_360.id
 
         transaction {
-            TestData.createApiToken(creatorId = TestAdministrators.KOBLENZ_PROJECT_ADMIN.id, type = ApiTokenType.USER_IMPORT)
-            TestData.createApiToken(token = "dummy2", creatorId = TestAdministrators.BAYERN_VEREIN_360.id, type = ApiTokenType.VERIFIED_APPLICATION)
+            TestData.createApiToken(
+                creatorId = TestAdministrators.KOBLENZ_PROJECT_ADMIN.id,
+                type = ApiTokenType.USER_IMPORT,
+            )
+            TestData.createApiToken(
+                token = "dummy2",
+                creatorId = TestAdministrators.BAYERN_VEREIN_360.id,
+                type = ApiTokenType.VERIFIED_APPLICATION,
+            )
 
             val metaData = ApiTokenQueryService().getApiTokenMetaData(mockDfe)
             assertEquals(1, metaData.size)

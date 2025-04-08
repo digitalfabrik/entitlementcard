@@ -5,5 +5,5 @@ import app.ehrenamtskarte.backend.exception.webservice.schema.GraphQLExceptionCo
 
 open class InvalidDataPolicySizeException(maxSize: Int) : GraphQLBaseException(
     GraphQLExceptionCode.INVALID_DATA_POLICY_SIZE,
-    mapOf("maxSize" to maxSize)
+    mapOf("maxSize" to maxSize),
 )

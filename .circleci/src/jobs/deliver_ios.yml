@@ -1,6 +1,6 @@
 # Deliver the app to the Apple App Store or Testflight.
 parameters:
-  buildConfig:
+  build_config:
     type: enum
     enum: [bayern, nuernberg, koblenz]
   production_delivery:
@@ -10,27 +10,21 @@ macos:
   xcode: 15.2.0
 environment:
   FASTLANE_SKIP_UPDATE_CHECK: true
-shell: /bin/bash --login -o pipefail
+working_directory: ~/project/frontend/ios
 steps:
-  - checkout:
-      path: ~/project
-  - install_app_toolbelt
   - prepare_workspace
-  - restore_environment_variables
-  - restore_ruby_cache:
-      directory:  ~/project/frontend/ios
+  - install_app_toolbelt
+  - install_fastlane
   - when:
       condition: << parameters.production_delivery >>
       steps:
         - run:
             name: '[FL] App Store Connect Upload'
-            command: bundle exec fastlane ios appstoreconnect_upload build_config_name:<< parameters.buildConfig >> ipa_path:attached_workspace/<< parameters.buildConfig >>.ipa version_name:${NEW_VERSION_NAME}
-            working_directory: frontend/ios
+            command: bundle exec fastlane ios appstoreconnect_upload build_config_name:<< parameters.build_config >> ipa_path:attached_workspace/<< parameters.build_config >>.ipa version_name:${NEW_VERSION_NAME}
   - unless:
       condition: << parameters.production_delivery >>
       steps:
         - run:
             name: '[FL] TestFlight Upload'
-            command: bundle exec fastlane ios upload_to_test_flight build_config_name:<< parameters.buildConfig >> ipa_path:attached_workspace/<< parameters.buildConfig >>.ipa
-            working_directory: frontend/ios
+            command: bundle exec fastlane ios upload_to_test_flight build_config_name:<< parameters.build_config >> ipa_path:attached_workspace/<< parameters.build_config >>.ipa
   - notify

@@ -1,54 +1,48 @@
 docker:
   - image: cimg/android:2024.01.1-node
 parameters:
-  buildConfig:
+  build_config:
     description: "Name of the build config to use"
     type: enum
-    enum: [bayern, bayernFloss, nuernberg, koblenz]
+    enum: [bayern, nuernberg, koblenz]
 environment:
+  FASTLANE_SKIP_UPDATE_CHECK: true
   GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m" -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2'
 resource_class: large
+working_directory: ~/project/frontend
 steps:
-  - checkout:
-      path: ~/project
-  - add_ssh_keys: # Needed for credentials repo
-      fingerprints:
-        - 24:1d:3b:b7:b3:49:69:d7:54:c3:93:a5:a2:d1:71:db
-  - install_app_toolbelt
   - prepare_workspace
-  - install_dart_linux
-  - install_fvm
-  - restore_environment_variables
-  - restore_ruby_cache:
-      directory: ~/project/frontend/android
-  - run:
-      name: Install Flutter Packages
-      command: |
-        fvm flutter pub get --enforce-lockfile
-        fvm flutter precache --android
-      working_directory: ~/project/frontend/android
+  - install_app_toolbelt
+  - install_flutter:
+      precache: android
+  - install_fastlane:
+      directory: android
+  - restore_cache:
+      keys:
+        - v1-gradle-{{ checksum "android/build.gradle.kts" }}-{{ checksum "android/app/build.gradle.kts" }}-{{ checksum "android/settings.gradle.kts" }}
   - run:
       name: '[FL] Prepare Android Keystore'
       command: bundle exec fastlane keystore
-      working_directory: ~/project/frontend/android
+      working_directory: android
   - run:
       name: '[FL] Build'
-      command: bundle exec fastlane android build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} build_config_name:<< parameters.buildConfig >>
-      working_directory: ~/project/frontend/android
+      command: bundle exec fastlane android build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} build_config_name:<< parameters.build_config >>
+      working_directory: android
+  - save_cache:
+      key: v1-gradle-{{ checksum "android/build.gradle.kts" }}-{{ checksum "android/app/build.gradle.kts" }}-{{ checksum "android/settings.gradle.kts" }}
+      paths:
+        - ~/.gradle/caches
+        - ~/.gradle/wrapper
   - run:
-      name: Make attached_workspace dir
-      command: mkdir -p attached_workspace
-  - run:
-      name: Move aab
-      command: mv ~/project/frontend/build/app/outputs/bundle/<< parameters.buildConfig >>Release/app-<< parameters.buildConfig >>-release.aab ~/attached_workspace/<< parameters.buildConfig >>.aab
-  - run:
-      name: Move apk
-      command: mv ~/project/frontend/build/app/outputs/apk/<< parameters.buildConfig >>/release/app-<< parameters.buildConfig >>-release.apk ~/attached_workspace/<< parameters.buildConfig >>.apk
+      name: Move artifacts
+      command: |
+          mv build/app/outputs/bundle/<< parameters.build_config >>Release/app-<< parameters.build_config >>-release.aab ~/attached_workspace/<< parameters.build_config >>.aab
+          mv build/app/outputs/apk/<< parameters.build_config >>/release/app-<< parameters.build_config >>-release.apk ~/attached_workspace/<< parameters.build_config >>.apk
   - persist_to_workspace:
       root: ~/attached_workspace
       paths:
-        - << parameters.buildConfig >>.aab
-        - << parameters.buildConfig >>.apk
+        - << parameters.build_config >>.aab
+        - << parameters.build_config >>.apk
   - store_artifacts:
-      path: ~/attached_workspace/
+      path: ~/attached_workspace
   - notify

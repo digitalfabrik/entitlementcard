@@ -25,12 +25,11 @@ import kotlin.random.Random
  * Helper object for creating test data in the database
  */
 object TestData {
-
     fun createApiToken(
         token: String = "dummy",
         creatorId: Int,
         expirationDate: LocalDate = LocalDate.now().plusYears(1),
-        type: ApiTokenType
+        type: ApiTokenType,
     ): Int {
         val tokenHash = PasswordCrypto.hashWithSHA256(token.toByteArray())
         val projectId = findAdmin(creatorId).projectId
@@ -56,9 +55,10 @@ object TestData {
         website: String? = "https://www.test.de",
         telephone: String? = "0911/123456",
         projectId: Int = 2,
-        categoryId: Int = 17
-    ): AcceptingStoreEntity {
-        return transaction {
+        categoryId: Int = 17,
+        regionId: Int = 94,
+    ): AcceptingStoreEntity =
+        transaction {
             val addressId = Addresses.insertAndGetId {
                 it[Addresses.street] = street
                 it[Addresses.postalCode] = postalCode
@@ -75,7 +75,7 @@ object TestData {
                 it[AcceptingStores.description] = description
                 it[AcceptingStores.contactId] = contactId
                 it[AcceptingStores.categoryId] = categoryId
-                it[AcceptingStores.regionId] = null
+                it[AcceptingStores.regionId] = regionId
                 it[AcceptingStores.projectId] = projectId
             }.resultedValues!!.first()
             val acceptingStoreEntity = AcceptingStoreEntity.wrapRow(acceptingStoreRow)
@@ -86,16 +86,15 @@ object TestData {
             }
             acceptingStoreEntity
         }
-    }
 
     fun createUserEntitlement(
         userHash: String = "dummy",
         startDate: LocalDate = LocalDate.now().minusDays(1L),
         endDate: LocalDate = LocalDate.now().plusYears(1L),
         revoked: Boolean = false,
-        regionId: Int
-    ): Int {
-        return transaction {
+        regionId: Int,
+    ): Int =
+        transaction {
             UserEntitlements.insertAndGetId {
                 it[UserEntitlements.userHash] = userHash.toByteArray()
                 it[UserEntitlements.startDate] = startDate
@@ -104,7 +103,6 @@ object TestData {
                 it[UserEntitlements.regionId] = regionId
             }.value
         }
-    }
 
     fun createDynamicCard(
         totpSecret: ByteArray? = null,
@@ -114,7 +112,7 @@ object TestData {
         issuerId: Int? = null,
         firstActivationDate: Instant? = null,
         entitlementId: Int? = null,
-        startDay: Long? = null
+        startDay: Long? = null,
     ): Int {
         val fakeActivationSecretHash = Random.nextBytes(20)
         return createCard(
@@ -127,7 +125,7 @@ object TestData {
             CodeType.DYNAMIC,
             firstActivationDate,
             entitlementId,
-            startDay
+            startDay,
         )
     }
 
@@ -138,9 +136,9 @@ object TestData {
         issuerId: Int? = null,
         firstActivationDate: Instant? = null,
         entitlementId: Int? = null,
-        startDay: Long? = null
-    ): Int {
-        return createCard(
+        startDay: Long? = null,
+    ): Int =
+        createCard(
             activationSecretHash = null,
             totpSecret = null,
             expirationDay,
@@ -150,9 +148,8 @@ object TestData {
             CodeType.STATIC,
             firstActivationDate,
             entitlementId,
-            startDay
+            startDay,
         )
-    }
 
     private fun createCard(
         activationSecretHash: ByteArray? = null,
@@ -164,7 +161,7 @@ object TestData {
         codeType: CodeType,
         firstActivationDate: Instant? = null,
         entitlementId: Int? = null,
-        startDay: Long? = null
+        startDay: Long? = null,
     ): Int {
         val fakeCardInfoHash = Random.nextBytes(20)
         val regionId = when {
@@ -191,11 +188,14 @@ object TestData {
         }
     }
 
-    private fun findAdmin(adminId: Int): AdministratorEntity {
-        return transaction { AdministratorEntity.findById(adminId) ?: throw Exception("Test admin $adminId not found") }
-    }
+    private fun findAdmin(adminId: Int): AdministratorEntity =
+        transaction {
+            AdministratorEntity.findById(adminId) ?: throw Exception("Test admin $adminId not found")
+        }
 
-    private fun findUserEntitlement(entitlementId: Int): UserEntitlementsEntity {
-        return transaction { UserEntitlementsEntity.findById(entitlementId) ?: throw Exception("User entitlement $entitlementId not found") }
-    }
+    private fun findUserEntitlement(entitlementId: Int): UserEntitlementsEntity =
+        transaction {
+            UserEntitlementsEntity.findById(entitlementId)
+                ?: throw Exception("User entitlement $entitlementId not found")
+        }
 }
