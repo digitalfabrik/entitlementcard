@@ -1,6 +1,6 @@
 # Promote the app from the beta to the production track in the Google Play Store.
 parameters:
-  build_config_name:
+  build_config:
     type: enum
     enum: [bayern, nuernberg]
     default: bayern
@@ -16,5 +16,5 @@ steps:
   - install_fastlane
   - run:
       name: '[FL] Play Store Promotion'
-      command: bundle exec fastlane android playstore_promote build_config_name:<< parameters.build_config_name >>
+      command: bundle exec fastlane android playstore_promote build_config_name:<< parameters.build_config >>
   - notify
