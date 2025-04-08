@@ -21,12 +21,12 @@ steps:
             name: Upload administration
             command: |
               echo "Uploading:" ~/attached_workspace/debs/administration/*.deb
-              sftp -b - ci@entitlementcard.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r ~/attached_workspace/debs/administration/*.deb"
+              sftp -b - ci@entitlementcard.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/administration/*.deb"
         - run:
             name: Upload backend
             command: |
               echo "Uploading:" ~/attached_workspace/debs/backend/*.deb
-              sftp -b - ci@entitlementcard.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r ~/attached_workspace/debs/backend/*.deb"
+              sftp -b - ci@entitlementcard.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/backend/*.deb"
         - run:
             name: Install packages
             command: curl https://webhook.entitlementcard.tuerantuer.org/hooks/install-backend-admin-$EAK_WEBHOOK
@@ -42,12 +42,12 @@ steps:
             name: Upload administration
             command: |
               echo "Uploading:" ~/attached_workspace/debs/administration/*.deb
-              sftp -b - ci@entitlementcard-test.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r ~/attached_workspace/debs/administration/*.deb"
+              sftp -b - ci@entitlementcard-test.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/administration/*.deb"
         - run:
             name: Upload backend
             command: |
               echo "Uploading:" ~/attached_workspace/debs/backend/*.deb
-              sftp -b - ci@entitlementcard-test.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r ~/attached_workspace/debs/backend/*.deb"
+              sftp -b - ci@entitlementcard-test.tuerantuer.org:/srv/local-apt-repository/ \<<< "put -r /home/circleci/attached_workspace/debs/backend/*.deb"
         - run:
             name: Install packages
             command: curl https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-backend-admin-$EAK_WEBHOOK
