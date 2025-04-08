@@ -156,9 +156,7 @@ commands:
                     - v1-pods
                 name: Restore pods
             - run:
-                command: |
-                    bundle exec pod update
-                    bundle exec pod install --deployment
+                command: bundle exec pod install --deployment
                 name: Install pods
                 working_directory: ios
             - save_cache:
