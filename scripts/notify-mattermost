@@ -33,7 +33,7 @@ send_notification() {
         "{
           \"channel\": \"$channel\",
           \"username\": \"circleci\",
-          \"text\": \"$message\"
+          \"text\": \"$MM_MESSAGE\"
         }" "${MM_WEBHOOK}")
 
     if [ "$STATUS" -ne "200" ]; then
