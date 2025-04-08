@@ -9,5 +9,8 @@
   },
   "overrides": {
     "@typescript-eslint/parser": "8.25.0"
+  },
+  "devDependencies": {
+    "app-toolbelt": "github:digitalfabrik/app-toolbelt#semver:0.2.0"
   }
 }

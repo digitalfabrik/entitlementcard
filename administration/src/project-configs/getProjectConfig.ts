@@ -9,8 +9,8 @@ import {
 import { TFunction } from 'i18next'
 import { ReactElement, ReactNode } from 'react'
 
+import type { ActivityLogEntryType } from '../bp-modules/activity-log/ActivityLog'
 import type { JsonField } from '../bp-modules/applications/JsonFieldView'
-import type { ActivityLogEntryType } from '../bp-modules/user-settings/ActivityLog'
 import type { Card } from '../cards/Card'
 import type { CreateCardsResult } from '../cards/createCards'
 import type { Extension } from '../cards/extensions/extensions'
