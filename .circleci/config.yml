@@ -780,6 +780,7 @@ jobs:
         docker:
             - image: cimg/node:20.18.0
         steps:
+            - prepare_workspace
             - install_app_toolbelt
             - run:
                 command: npx --no app-toolbelt v0 release promote --platform all --deliverino-private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
@@ -811,6 +812,7 @@ jobs:
         docker:
             - image: cimg/node:20.18.0
         steps:
+            - prepare_workspace
             - add_ssh_keys:
                 fingerprints:
                     - a1:3f:a7:c3:ff:12:40:1d:85:de:a7:ab:12:3f:cc:05
