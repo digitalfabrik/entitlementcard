@@ -55,10 +55,6 @@ interface InlineRenderable {
 }
 
 private val multipleWhiteSpaces = Regex("\\s+")
-private val newLine = Regex("\\n+")
-
-// regex pattern with positive lookahead and lookbehind to keep the delimiter in list of strings
-private val keepNewLine = Regex("((?=\n)|(?<=\n))")
 
 class Paragraph {
     private val children: ArrayList<InlineRenderable> = ArrayList(0)
@@ -68,13 +64,11 @@ class Paragraph {
     }
 
     fun plain(plainText: String) {
-        val sentences = plainText.split(keepNewLine)
-        sentences.forEach {
-            if (it.matches(newLine)) {
+        plainText.trim().split("\n").forEachIndexed { index, text ->
+            if (index != 0) {
                 children.add(LineBreak())
-            } else {
-                children.add(Text(it))
             }
+            children.add(Text(text))
         }
     }
 

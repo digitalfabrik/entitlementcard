@@ -47,7 +47,7 @@ object Mailer {
     }
 
     private fun EmailBody.applicationConfirmationNoteParagraph(note: String?) {
-        if (!note.isNullOrEmpty()) {
+        if (!note.isNullOrBlank()) {
             p {
                 plain(note)
             }
