@@ -140,7 +140,7 @@ test.describe('Bayern regional admin', () => {
       await expectVisible(item, 'Postleitzahl: 123456789')
       await expectVisible(item, 'Ort: my place')
       await expect(await item.getByText('Land: Deutschland').first()).toBeVisible()
-      await expectVisible(item, 'Geburtsdatum: 2.12.1990')
+      await expectVisible(item, 'Geburtsdatum: 10.10.1999')
       await expectVisible(item, 'Telefonnummer: 02312312')
       await expectVisible(item, 'E-Mail-Adresse: example@gmail.com')
 

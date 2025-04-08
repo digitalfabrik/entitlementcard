@@ -21,7 +21,7 @@ test.describe('Bayern testing', () => {
   const voluntaryWorkForm = async (page: Page) => {
     await expect(page.locator('form')).toContainText('EHRENAMTLICHE TÄTIGKEIT')
     await page.getByRole('textbox', { name: 'Ehrenamtliche Tätigkeit' }).fill('activity 1')
-    await page.getByRole('textbox', { name: 'Tätig seit' }).fill('2010-10-10')
+    await page.getByRole('textbox', { name: 'Tätig seit' }).fill('10.10.2010')
     await page.getByRole('spinbutton', { name: 'Arbeitsstunden pro Woche (' }).fill('56')
     await expect(page.locator('form')).toContainText('Angaben zur Organisation')
     await page.getByRole('textbox', { name: 'Name der Organisation bzw.' }).fill('organization')
@@ -95,7 +95,7 @@ test.describe('Bayern testing', () => {
     await page.getByRole('textbox', { name: 'E-Mail-Adresse' }).fill('example@gmail.com')
     await page.getByRole('textbox', { name: 'Telefonnummer' }).click()
     await page.getByRole('textbox', { name: 'Telefonnummer' }).fill('02312312')
-    await page.getByRole('textbox', { name: 'Geburtsdatum' }).fill('1990-12-02')
+    await page.getByRole('textbox', { name: 'Geburtsdatum' }).fill('10.10.1999')
     await page.getByRole('combobox', { expanded: false }).click()
     await page.getByRole('option', { name: 'Augsburg (Stadt)' }).click()
     await page.getByRole('button', { name: 'Nächster Schritt' }).click()
@@ -168,7 +168,7 @@ test.describe('Bayern testing', () => {
           await page.getByRole('radio', { name: 'Ich bin Inhaber:in einer' }).check()
           await expect(page.locator('form')).toContainText('ANGABEN ZUR JULEICA')
           await page.getByRole('textbox', { name: 'Kartennummer' }).fill('123456789')
-          await page.getByRole('textbox', { name: 'Karte gültig bis' }).fill('2029-12-12')
+          await page.getByRole('textbox', { name: 'Karte gültig bis' }).fill('12.12.2029')
           await expect(page.locator('h4')).toContainText('Kopie der JuLeiCa')
           await expect(page.getByRole('paragraph')).toContainText(
             'Hängen Sie hier bitte Ihre eingescannte oder abfotografierte JuLeiCa an. Die Datei darf maximal 5 MB groß sein und muss im JPG, PNG oder PDF Format sein.'
