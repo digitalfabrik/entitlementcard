@@ -1,8 +1,8 @@
 import { initializeCard } from '../../../cards/Card'
 import nuernbergConfig from '../../../project-configs/nuernberg/config'
 import PlainDate from '../../../util/PlainDate'
+import { getTestRegion } from '../../user-settings/__mocks__/Region'
 import { ActivityLogEntryType } from '../ActivityLog'
-import { getTestRegion } from './Region'
 
 const region = getTestRegion({
   id: 93,
