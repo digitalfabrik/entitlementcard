@@ -8,6 +8,7 @@ services:
       - db-postgis
     networks:
       - network
+    restart: on-failure
   db-postgis:
     image:  postgis/postgis:13-3.0-alpine
     command: [ "postgres", "-c", "log_statement=all", "-c", "log_destination=stderr" ]
