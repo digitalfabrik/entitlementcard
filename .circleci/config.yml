@@ -59,7 +59,7 @@ commands:
     install_app_toolbelt:
         steps:
             - run:
-                command: npm install --unsafe-perm -g https://github.com/digitalfabrik/app-toolbelt/archive/refs/heads/mm-2.tar.gz
+                command: npm ci --workspaces=false
                 name: Install app-toolbelt
                 working_directory: ~/project
     install_fastlane:
