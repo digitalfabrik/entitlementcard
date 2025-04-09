@@ -1,0 +1,10 @@
+docker:
+  - image: cimg/node:20.18.0
+resource_class: small
+working_directory: ~/project/frontend/build-configs
+steps:
+  - prepare_workspace
+  - install_node_modules
+  - run:
+      name: Lint build config
+      command: npm run lint
