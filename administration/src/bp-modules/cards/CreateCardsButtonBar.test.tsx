@@ -2,21 +2,15 @@ import { act, fireEvent, render } from '@testing-library/react'
 import React from 'react'
 
 import { initializeCard } from '../../cards/Card'
-import { Region } from '../../generated/graphql'
 import bayernConfig from '../../project-configs/bayern/config'
 import { renderWithTranslation } from '../../testing/render'
+import { getTestRegion } from '../user-settings/__mocks__/Region'
 import CreateCardsButtonBar from './CreateCardsButtonBar'
 
 jest.useFakeTimers()
 
 describe('CreateCardsButtonBar', () => {
-  const region: Region = {
-    id: 0,
-    name: 'augsburg',
-    prefix: 'a',
-    activatedForApplication: true,
-    activatedForCardConfirmationMail: true,
-  }
+  const region = getTestRegion({})
 
   it('Should goBack when clicking back', async () => {
     const goBack = jest.fn()

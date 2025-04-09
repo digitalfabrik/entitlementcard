@@ -33,6 +33,7 @@ class ApplicationHandler(
         applicationEntity: ApplicationEntity,
         verificationEntities: List<ApplicationVerificationEntity>,
         dataFetcherResultBuilder: DataFetcherResult.Builder<Boolean>,
+        applicationConfirmationNote: String?,
     ) {
         val backendConfig = context.backendConfiguration
         val projectConfig = backendConfig.projects.first { it.id == project }
@@ -42,6 +43,7 @@ class ApplicationHandler(
             projectConfig,
             application.personalData,
             applicationEntity.accessKey,
+            applicationConfirmationNote,
         )
 
         for (applicationVerification in verificationEntities) {
@@ -65,6 +67,7 @@ class ApplicationHandler(
         applicationEntity: ApplicationEntity,
         verificationEntities: List<ApplicationVerificationEntity>,
         dataFetcherResultBuilder: DataFetcherResult.Builder<Boolean>,
+        applicationConfirmationNote: String?,
     ) {
         val backendConfig = context.backendConfiguration
         val projectConfig = backendConfig.projects.first { it.id == project }
@@ -77,6 +80,7 @@ class ApplicationHandler(
                     applicationVerification.contactName,
                     application.personalData,
                     applicationEntity.accessKey,
+                    applicationConfirmationNote,
                 )
             } catch (exception: MailNotSentException) {
                 dataFetcherResultBuilder.error(exception.toError())

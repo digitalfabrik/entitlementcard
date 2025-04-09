@@ -29,6 +29,8 @@ class RegionsQueryService {
                     it.dataPrivacyPolicy,
                     it.activatedForApplication,
                     it.activatedForCardConfirmationMail,
+                    it.applicationConfirmationMailNoteActivated,
+                    it.applicationConfirmationMailNote,
                 )
             }
         }
@@ -48,6 +50,8 @@ class RegionsQueryService {
                         it.dataPrivacyPolicy,
                         it.activatedForApplication,
                         it.activatedForCardConfirmationMail,
+                        it.applicationConfirmationMailNoteActivated,
+                        it.applicationConfirmationMailNote,
                     )
                 }
             }
@@ -65,6 +69,8 @@ class RegionsQueryService {
                 regionEntity.dataPrivacyPolicy,
                 regionEntity.activatedForApplication,
                 regionEntity.activatedForCardConfirmationMail,
+                regionEntity.applicationConfirmationMailNoteActivated,
+                regionEntity.applicationConfirmationMailNote,
             )
         }
 
@@ -100,6 +106,8 @@ class RegionsQueryService {
                     it.dataPrivacyPolicy,
                     it.activatedForApplication,
                     it.activatedForCardConfirmationMail,
+                    it.applicationConfirmationMailNoteActivated,
+                    it.applicationConfirmationMailNote,
                 )
             }
         }
