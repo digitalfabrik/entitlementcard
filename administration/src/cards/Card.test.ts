@@ -13,12 +13,15 @@ import {
   isValid,
   isValueValid,
 } from './Card'
+import AddressExtensions from './extensions/AddressFieldExtensions'
 import BavariaCardTypeExtension, { BAVARIA_CARD_TYPE_EXTENSION_NAME } from './extensions/BavariaCardTypeExtension'
 import BirthdayExtension, { BIRTHDAY_EXTENSION_NAME } from './extensions/BirthdayExtension'
 import KoblenzReferenceNumberExtension, {
   KOBLENZ_REFERENCE_NUMBER_EXTENSION_NAME,
 } from './extensions/KoblenzReferenceNumberExtension'
+import NuernbergPassIdExtension from './extensions/NuernbergPassIdExtension'
 import RegionExtension, { REGION_EXTENSION_NAME } from './extensions/RegionExtension'
+import StartDayExtension from './extensions/StartDayExtension'
 
 jest.useFakeTimers({ now: new Date('2020-01-01') })
 
@@ -139,6 +142,45 @@ describe('Card', () => {
       expect(isValueValid(card, cardConfig, 'Name')).toBeFalsy()
       expect(isValueValid(card, cardConfig, 'Ablaufdatum')).toBeFalsy()
       expect(isValueValid(card, cardConfig, 'Kartentyp')).toBeFalsy()
+      expect(isValid(card, cardConfig)).toBeFalsy()
+    })
+
+    it('should correctly identify invalid arabic characters in name and address fields', () => {
+      const cardConfig = {
+        defaultValidity: { years: 3 },
+        nameColumnName: 'Name',
+        expiryColumnName: 'Ablaufdatum',
+        extensionColumnNames: ['Startdatum', 'Geburtsdatum', 'Pass-ID', 'Adresszeile 1', 'Adresszeile 2', 'PLZ', 'Ort'],
+        extensions: [StartDayExtension, BirthdayExtension, NuernbergPassIdExtension, ...AddressExtensions],
+      }
+      const line = [
+        'Torben عربيزي Trost',
+        '03.3.2026',
+        '03.9.2024',
+        '15.03.2010',
+        '54216782',
+        'عربيزي',
+        'ربي',
+        '',
+        'عربيزي',
+      ]
+      const headers = [
+        'Name',
+        'Ablaufdatum',
+        'Startdatum',
+        'Geburtsdatum',
+        'Pass-ID',
+        'Adresszeile 1',
+        'Adresszeile 2',
+        'PLZ',
+        'Ort',
+      ]
+      const card = initializeCardFromCSV(cardConfig, line, headers, region)
+
+      expect(isValueValid(card, cardConfig, 'Name')).toBeFalsy()
+      expect(isValueValid(card, cardConfig, 'Adresszeile 1')).toBeFalsy()
+      expect(isValueValid(card, cardConfig, 'Adresszeile 2')).toBeFalsy()
+      expect(isValueValid(card, cardConfig, 'Ort')).toBeFalsy()
       expect(isValid(card, cardConfig)).toBeFalsy()
     })
   })
