@@ -13,12 +13,8 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 @Suppress("unused")
 class EakApplicationQueryService {
-
     @GraphQLDescription("Queries all applications for a specific region")
-    fun getApplications(
-        dfe: DataFetchingEnvironment,
-        regionId: Int
-    ): List<ApplicationView> {
+    fun getApplications(dfe: DataFetchingEnvironment, regionId: Int): List<ApplicationView> {
         val context = dfe.getContext<GraphQLContext>()
         val admin = context.getAdministrator()
         return transaction {
@@ -31,31 +27,24 @@ class EakApplicationQueryService {
     }
 
     @GraphQLDescription("Queries an application by application accessKey")
-    fun getApplicationByApplicant(
-        accessKey: String
-    ): ApplicationView {
-        return transaction {
+    fun getApplicationByApplicant(accessKey: String): ApplicationView =
+        transaction {
             ApplicationRepository.getApplicationByApplicant(accessKey)
         }
-    }
 
     @GraphQLDescription("Queries an application by application verification accessKey")
-    fun getApplicationByApplicationVerificationAccessKey(
-        applicationVerificationAccessKey: String
-    ): ApplicationView {
-        return transaction {
-            ApplicationRepository.getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey)
+    fun getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey: String): ApplicationView =
+        transaction {
+            ApplicationRepository.getApplicationByApplicationVerificationAccessKey(
+                applicationVerificationAccessKey,
+            )
         }
-    }
 
     @GraphQLDescription("Queries an application verification by application verification accessKey")
-    fun getApplicationVerification(
-        applicationVerificationAccessKey: String
-    ): ApplicationVerificationView {
-        return transaction {
+    fun getApplicationVerification(applicationVerificationAccessKey: String): ApplicationVerificationView =
+        transaction {
             ApplicationRepository.getApplicationVerification(applicationVerificationAccessKey).let {
                 ApplicationVerificationView.fromDbEntity(it)
             }
         }
-    }
 }

@@ -10,19 +10,23 @@ data class GraphQLParams(
     val dataLoaderRegistry: DataLoaderRegistry,
     val queries: List<TopLevelObject>,
     val mutations: List<TopLevelObject> = emptyList(),
-    val subscriptions: List<TopLevelObject> = emptyList()
+    val subscriptions: List<TopLevelObject> = emptyList(),
 ) {
     infix fun stitch(other: GraphQLParams): GraphQLParams {
-        val duplicateDataLoaderNames = dataLoaderRegistry.keys.intersect(other.dataLoaderRegistry.keys)
+        val duplicateDataLoaderNames = dataLoaderRegistry.keys.intersect(
+            other.dataLoaderRegistry.keys,
+        )
         if (duplicateDataLoaderNames.isNotEmpty()) {
-            throw IllegalArgumentException("Duplicate names for data loaders found: $duplicateDataLoaderNames")
+            throw IllegalArgumentException(
+                "Duplicate names for data loaders found: $duplicateDataLoaderNames",
+            )
         }
         return GraphQLParams(
             config + other.config,
             dataLoaderRegistry.combine(other.dataLoaderRegistry),
             queries + other.queries,
             mutations + other.mutations,
-            subscriptions + other.subscriptions
+            subscriptions + other.subscriptions,
         )
     }
 }
@@ -35,6 +39,6 @@ infix operator fun SchemaGeneratorConfig.plus(other: SchemaGeneratorConfig): Sch
     return SchemaGeneratorConfig(
         this.supportedPackages + other.supportedPackages,
         hooks = hooks,
-        additionalTypes = this.additionalTypes + other.additionalTypes
+        additionalTypes = this.additionalTypes + other.additionalTypes,
     )
 }

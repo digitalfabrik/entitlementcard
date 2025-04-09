@@ -10,9 +10,8 @@ data class PhysicalStore(
     val id: Int,
     val storeId: Int,
     val addressId: Int,
-    val coordinates: Coordinates
+    val coordinates: Coordinates,
 ) {
-
     fun store(environment: DataFetchingEnvironment): CompletableFuture<AcceptingStore> =
         acceptingStoreLoader.fromEnvironment(environment).load(storeId).thenApply { it!! }
 

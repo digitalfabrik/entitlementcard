@@ -21,7 +21,7 @@ internal class V0026_AddFreinetAgenciesTable : Migration() {
                 );
              ALTER TABLE freinetagencies ADD CONSTRAINT fk_freinetagencies_regionid__id FOREIGN KEY ("regionId") REFERENCES regions(id) ON DELETE RESTRICT ON UPDATE RESTRICT;
              ALTER TABLE freinetagencies ADD CONSTRAINT freinetagencies_agencyid_unique UNIQUE ("agencyId");
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 }

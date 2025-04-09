@@ -16,9 +16,8 @@ data class PersonalData(
     val address: Address,
     val dateOfBirth: DateInput,
     val telephone: ShortTextInput?,
-    val emailAddress: EmailInput
+    val emailAddress: EmailInput,
 ) : JsonFieldSerializable {
-
     init {
         val maximumBirthDate = LocalDate.now(ZoneId.of("Europe/Berlin")).minusYears(16)
         if (maximumBirthDate.isBefore(dateOfBirth.getDate())) {
@@ -26,8 +25,8 @@ data class PersonalData(
         }
     }
 
-    override fun toJsonField(): JsonField {
-        return JsonField(
+    override fun toJsonField(): JsonField =
+        JsonField(
             "personalData",
             Type.Array,
             listOfNotNull(
@@ -36,8 +35,7 @@ data class PersonalData(
                 address.toJsonField(),
                 dateOfBirth.toJsonField("dateOfBirth"),
                 telephone?.toJsonField("telephone"),
-                emailAddress.toJsonField("emailAddress")
-            )
+                emailAddress.toJsonField("emailAddress"),
+            ),
         )
-    }
 }

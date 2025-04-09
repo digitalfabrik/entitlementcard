@@ -11,9 +11,8 @@ const StickyBottomBar = styled(Card)`
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  & button {
-    margin: 5px;
-  }
+  align-items: center;
+  gap: 16px;
 `
 
 export default StickyBottomBar

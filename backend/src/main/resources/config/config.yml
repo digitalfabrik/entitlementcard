@@ -12,8 +12,6 @@ map:
 geocoding:
   enabled: false
   host: nominatim.maps.tuerantuer.org
-csvWriter:
-  enabled: false
 server:
   host: 0.0.0.0
   port: 8000
@@ -38,8 +36,7 @@ projects:
       portalId: 102
       accessToken: OVERRIDE_IN_LOCAL_CONFIG
   - id: nuernberg.sozialpass.app
-    importUrl: https://data.entitlementcard.app/nuernberg-akzeptanzstellen.csv
-    pipelineName: SozialpassNuernberg
+    importUrl: ""
     administrationBaseUrl: https://nuernberg.sozialpass.app
     administrationName: Nürnberg-Pass-Verwaltung
     timezone: "Europe/Berlin"

@@ -4,7 +4,7 @@ import app.ehrenamtskarte.backend.migration.Migration
 import app.ehrenamtskarte.backend.migration.Statement
 
 @Suppress("ClassName")
-internal class V0001_Baseline() : Migration() {
+internal class V0001_Baseline : Migration() {
     override val migrate: Statement = {
         exec(
             """
@@ -450,7 +450,7 @@ internal class V0001_Baseline() : Migration() {
             
             ALTER TABLE ONLY regions
                 ADD CONSTRAINT fk_regions_projectid__id FOREIGN KEY ("projectId") REFERENCES projects(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 }

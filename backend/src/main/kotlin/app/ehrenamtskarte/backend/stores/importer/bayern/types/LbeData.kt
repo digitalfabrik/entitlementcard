@@ -8,5 +8,5 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
 data class LbeData(
     @JsonProperty("anbieter")
     @JacksonXmlElementWrapper(useWrapping = false)
-    var acceptingStores: ArrayList<LbeAcceptingStore> = ArrayList()
+    var acceptingStores: ArrayList<LbeAcceptingStore> = ArrayList(),
 )

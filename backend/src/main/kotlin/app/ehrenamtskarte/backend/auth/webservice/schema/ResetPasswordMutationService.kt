@@ -29,7 +29,11 @@ class ResetPasswordMutationService {
         val projectConfig = backendConfig.getProjectConfig(project)
         transaction {
             val user = Administrators.innerJoin(Projects).slice(Administrators.columns)
-                .select((Projects.project eq project) and (LowerCase(Administrators.email) eq email.lowercase()) and (Administrators.deleted eq false))
+                .select(
+                    (Projects.project eq project) and
+                        (LowerCase(Administrators.email) eq email.lowercase()) and
+                        (Administrators.deleted eq false),
+                )
                 .singleOrNull()?.let { AdministratorEntity.wrapRow(it) }
             // We don't send error messages for empty collection to the user to avoid scraping of mail addresses
             if (user != null) {
@@ -52,23 +56,34 @@ class ResetPasswordMutationService {
         project: String,
         email: String,
         passwordResetKey: String,
-        newPassword: String
+        newPassword: String,
     ): Boolean {
         val logger = LoggerFactory.getLogger(ResetPasswordMutationService::class.java)
         val backendConfig = dfe.getContext<GraphQLContext>().backendConfiguration
         val context = dfe.getContext<GraphQLContext>()
-        if (!backendConfig.projects.any { it.id == project }) throw ProjectNotFoundException(project)
+        if (!backendConfig.projects.any { it.id == project }) {
+            throw ProjectNotFoundException(
+                project,
+            )
+        }
         transaction {
             val user = Administrators.innerJoin(Projects).slice(Administrators.columns)
-                .select((Projects.project eq project) and (LowerCase(Administrators.email) eq email.lowercase()) and (Administrators.deleted eq false))
-                .singleOrNull()?.let { AdministratorEntity.wrapRow(it) }
+                .select(
+                    (Projects.project eq project) and
+                        (LowerCase(Administrators.email) eq email.lowercase()) and
+                        (Administrators.deleted eq false),
+                )
+                .singleOrNull()
+                ?.let { AdministratorEntity.wrapRow(it) }
 
             val passwordResetKeyHash = user?.passwordResetKeyHash
             // We don't send error messages for empty collection to the user to avoid scraping of mail addresses
             if (user === null || passwordResetKeyHash === null) {
                 // This logging is used for rate limiting
                 // See https://git.tuerantuer.org/DF/salt/pulls/187
-                logger.info("${context.remoteIp} $email failed to reset password (unknown user or no reset mail sent)")
+                logger.info(
+                    "${context.remoteIp} $email failed to reset password (unknown user or no reset mail sent)",
+                )
                 return@transaction
             }
             if (user.passwordResetKeyExpiry!!.isBefore(Instant.now())) {
@@ -76,7 +91,11 @@ class ResetPasswordMutationService {
                 // See https://git.tuerantuer.org/DF/salt/pulls/187
                 logger.info("${context.remoteIp} $email failed to reset password (expired reset key)")
                 throw PasswordResetKeyExpiredException()
-            } else if (!PasswordCrypto.verifyPasswordResetKey(passwordResetKey, passwordResetKeyHash)) {
+            } else if (!PasswordCrypto.verifyPasswordResetKey(
+                    passwordResetKey,
+                    passwordResetKeyHash,
+                )
+            ) {
                 // This logging is used for rate limiting
                 // See https://git.tuerantuer.org/DF/salt/pulls/187
                 logger.info("${context.remoteIp} $email failed to reset password (invalid reset key)")

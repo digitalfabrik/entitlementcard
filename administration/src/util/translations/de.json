@@ -281,6 +281,7 @@
     "showPassword": "Passwort anzeigen",
     "hidePassword": "Passwort verstecken",
     "userSettings": "Benutzereinstellungen",
+    "activityLog": "Aktivitätsprotokoll",
     "logout": "Logout",
     "confirm": "Bestätigen",
     "delete": "Löschen",
@@ -407,7 +408,7 @@
     "caution": "Achtung",
     "cautionDescription": "Akzeptanzpartner, welche aktuell in der Datenbank gespeichert, aber nicht in der Tabelle vorhanden sind, werden gelöscht!",
     "timeForImport": "Geschätzte Dauer des Imports",
-    "minutes": "Minuten",
+    "minutes": "Minute(n)",
     "pleaseDoNotCloseTheWindow": "Bitte schließen sie das Browserfenster nicht!",
     "articleMale": "Der",
     "dryRunImport": "Testimport",
@@ -437,10 +438,6 @@
     "csvImportUnknownError": "Beim Verarbeiten der Datei ist ein unbekannter Fehler aufgetreten"
   },
   "userSettings": {
-    "activityLog": "Aktivitätsprotokoll",
-    "viewActivity": "Aktivitäten ansehen",
-    "activityLogDescription": "Hier können sie den Verlauf ihrer Aktivitäten einsehen.",
-    "noEntries": "Keine Einträge vorhanden",
     "passwordChangeSuccessful": "Passwort erfolgreich geändert.",
     "changePassword": "Passwort ändern",
     "changePasswordExplanation": "Ein gültiges Passwort ist mindestens zwölf Zeichen lang, enthält mindestens einen Klein- und einen Großbuchstaben sowie mindestens ein Sonderzeichen.",
@@ -453,6 +450,11 @@
     "newApplications": "Neue Anträge",
     "newVerifications": "Antragsverifizierungen",
     "save": "Speichern"
+  },
+  "activityLog": {
+    "viewActivity": "Aktivitäten ansehen",
+    "activityLogDescription": "Hier können Sie den Verlauf der erstellten Karten einsehen. Bitte beachten Sie, dass diese Informationen nur innerhalb der aktuellen Sitzung verfügbar sind - sobald Sie den Tab schließen, werden die Daten gelöscht.",
+    "noEntries": "Keine Einträge vorhanden"
   },
   "users": {
     "addUserSuccess": "Benutzer erfolgreich erstellt.",

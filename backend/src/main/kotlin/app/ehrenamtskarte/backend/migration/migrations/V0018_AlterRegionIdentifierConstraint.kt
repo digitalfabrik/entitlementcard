@@ -15,7 +15,7 @@ internal class V0018_AlterRegionIdentifierConstraint : Migration() {
             UPDATE regions SET "regionIdentifier" = '00000' WHERE "regionIdentifier" IS NULL;
             ALTER TABLE regions ALTER COLUMN "regionIdentifier" SET NOT NULL;
             ALTER TABLE regions ADD CONSTRAINT unique_projectid_regionidentifier UNIQUE ("projectId", "regionIdentifier");
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 }

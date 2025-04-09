@@ -9,7 +9,6 @@ import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
 
 object PhysicalStoresRepository {
-
     fun findAllInProject(project: String): List<PhysicalStoreEntity> {
         val query = (Projects innerJoin AcceptingStores innerJoin PhysicalStores)
             .slice(PhysicalStores.columns)

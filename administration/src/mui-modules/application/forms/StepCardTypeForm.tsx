@@ -72,12 +72,12 @@ const StepCardTypeForm: Form<State, ValidatedInput> = {
     if (partialValidationResult.type === 'error') {
       return { type: 'error' }
     }
+    if (!partialValidationResult.value.wantsPhysicalCard && !partialValidationResult.value.wantsDigitalCard) {
+      return { type: 'error', message: i18next.t('applicationForms:cardTypeNotChosenError') }
+    }
     // Application type must not be null if and only if card type is blue
     if (partialValidationResult.value.cardType !== BavariaCardType.Blue) {
       return { type: 'valid', value: { ...partialValidationResult.value, applicationType: null } }
-    }
-    if (!partialValidationResult.value.wantsPhysicalCard && !partialValidationResult.value.wantsDigitalCard) {
-      return { type: 'error', message: i18next.t('applicationForms:cardTypeNotChosenError') }
     }
     const applicationTypeResult = ApplicationTypeForm.validate(state.applicationType, applicationTypeOptions)
     if (applicationTypeResult.type === 'error') {

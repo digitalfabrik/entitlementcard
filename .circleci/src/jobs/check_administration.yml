@@ -7,12 +7,6 @@ steps:
   - install_protobuf_linux
   - install_node_modules
   - run:
-      name: Generate GraphQL
-      command: npm run generate-graphql
-  - run:
-      name: Generate Protobuf
-      command: npm run generate-protobuf
-  - run:
       name: Typescript
       command: npm run ts:check
   - run:

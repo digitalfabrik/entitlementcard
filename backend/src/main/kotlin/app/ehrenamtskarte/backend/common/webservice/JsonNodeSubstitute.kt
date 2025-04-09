@@ -13,14 +13,15 @@ fun JsonNode.substitute(path: String, value: Int, mapper: ObjectMapper) {
     for (fieldOrIndex in paths.subList(0, paths.size - 1)) {
         node = when (node) {
             is ArrayNode -> node.path(
-                fieldOrIndex.toIntOrNull() ?: throw IllegalArgumentException(
-                    "Expecting array index, but could not convert to integer."
-                )
+                fieldOrIndex.toIntOrNull()
+                    ?: throw IllegalArgumentException("Expecting array index, but could not convert to integer."),
             )
             is ObjectNode -> node.path(fieldOrIndex)
             else -> throw IllegalStateException("Expected ArrayNode or ObjectNode.")
         }
-        if (node.isMissingNode || node.isNull) throw IllegalArgumentException("Accessing unavailable field")
+        if (node.isMissingNode || node.isNull) {
+            throw IllegalArgumentException("Accessing unavailable field")
+        }
     }
 
     val lastPath = paths.last()
@@ -28,7 +29,7 @@ fun JsonNode.substitute(path: String, value: Int, mapper: ObjectMapper) {
     when (node) {
         is ArrayNode -> node[
             lastPath.toIntOrNull()
-                ?: throw IllegalArgumentException("Expecting array index, but could not convert to integer.")
+                ?: throw IllegalArgumentException("Expecting array index, but could not convert to integer."),
         ] =
             replaceWith
 

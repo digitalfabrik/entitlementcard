@@ -49,7 +49,7 @@ describe('StoresImportAlert', () => {
     const durationSpanElement = getByTestId('duration-alert')
     expect(durationSpanElement).toBeTruthy()
     expect(durationSpanElement.textContent).toBe(
-      'Geschätzte Dauer des Imports: 2 Minuten. Bitte schließen sie das Browserfenster nicht!'
+      'Geschätzte Dauer des Imports: 2 Minute(n). Bitte schließen sie das Browserfenster nicht!'
     )
   })
 })

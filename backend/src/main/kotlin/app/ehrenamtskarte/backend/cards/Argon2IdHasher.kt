@@ -25,10 +25,7 @@ class Argon2IdHasher {
          * {@code $argon2<T>[$v=<num>]$m=<num>,t=<num>,p=<num>$<bin>}
          **/
         @Throws(IllegalArgumentException::class)
-        private fun encodeWithoutSalt(
-            hash: ByteArray?,
-            parameters: Argon2Parameters
-        ): String {
+        private fun encodeWithoutSalt(hash: ByteArray?, parameters: Argon2Parameters): String {
             val b64encoder: Base64.Encoder = Base64.getEncoder().withoutPadding()
             val stringBuilder = StringBuilder()
             val type =

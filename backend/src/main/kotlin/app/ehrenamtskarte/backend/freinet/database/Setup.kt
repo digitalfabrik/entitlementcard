@@ -7,7 +7,7 @@ import org.jetbrains.exposed.sql.SizedIterable
 fun insertOrUpdateFreinetRegionInformation(
     agency: FreinetApiAgency,
     dbFreinetRegionInformation: SizedIterable<FreinetAgenciesEntity>,
-    regionEntity: RegionEntity
+    regionEntity: RegionEntity,
 ) {
     val dbAgency = dbFreinetRegionInformation.find { it.agencyId == agency.agencyId }
     if (dbAgency == null) {

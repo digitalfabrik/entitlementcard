@@ -12,6 +12,7 @@ type Translations = {
 export const loadTranslations = (): Translations => ({
   de: {
     activation: deTranslations.activation,
+    activityLog: deTranslations.activityLog,
     application: deTranslations.application,
     applicationsOverview: deTranslations.applicationsOverview,
     applicationForms: deTranslations.applicationForms,

@@ -5,5 +5,5 @@ import app.ehrenamtskarte.backend.exception.webservice.schema.GraphQLExceptionCo
 
 class MailNotSentException(mailAddress: String) : GraphQLBaseException(
     GraphQLExceptionCode.MAIL_NOT_SENT,
-    mapOf("recipient" to mailAddress)
+    mapOf("recipient" to mailAddress),
 )

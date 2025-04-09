@@ -36,9 +36,9 @@ object ApplicationRepository {
         applicationVerifications: List<ExtractedApplicationVerification>,
         regionId: Int,
         applicationData: File,
-        files: List<Part>
-    ): Pair<ApplicationEntity, List<ApplicationVerificationEntity>> {
-        return transaction {
+        files: List<Part>,
+    ): Pair<ApplicationEntity, List<ApplicationVerificationEntity>> =
+        transaction {
             val random = SecureRandom.getInstanceStrong()
             val byteArray = ByteArray(64)
             random.nextBytes(byteArray)
@@ -63,8 +63,11 @@ object ApplicationRepository {
                 }
             }
 
-            val project = (Projects innerJoin Regions).slice(Projects.columns).select { Regions.id eq regionId }
-                .single().let { ProjectEntity.wrapRow(it) }
+            val project = (Projects innerJoin Regions)
+                .slice(Projects.columns)
+                .select { Regions.id eq regionId }
+                .single()
+                .let { ProjectEntity.wrapRow(it) }
 
             val projectDirectory = File(applicationData, project.project)
             val applicationDirectory = File(projectDirectory, newApplication.id.toString())
@@ -73,7 +76,7 @@ object ApplicationRepository {
                 files.forEachIndexed { index, part ->
                     FileUtil.streamToFile(
                         part.inputStream,
-                        File(applicationDirectory, "$index").absolutePath
+                        File(applicationDirectory, "$index").absolutePath,
                     )
                     File(applicationDirectory, "$index.contentType").writeText(part.contentType)
                 }
@@ -83,7 +86,6 @@ object ApplicationRepository {
                 throw e
             }
         }
-    }
 
     private fun toString(obj: JsonField): String {
         val mapper = JsonMapper()
@@ -91,26 +93,22 @@ object ApplicationRepository {
         return mapper.writeValueAsString(obj)
     }
 
-    fun getApplicationsByAdmin(regionId: Int): List<ApplicationView> {
-        return transaction {
+    fun getApplicationsByAdmin(regionId: Int): List<ApplicationView> =
+        transaction {
             ApplicationEntity.find { Applications.regionId eq regionId }
                 .orderBy(Applications.createdDate to SortOrder.ASC)
                 .map { ApplicationView.fromDbEntity(it, true) }
         }
-    }
 
-    fun getApplicationByApplicant(accessKey: String): ApplicationView {
-        return transaction {
+    fun getApplicationByApplicant(accessKey: String): ApplicationView =
+        transaction {
             val application = ApplicationEntity.find { Applications.accessKey eq accessKey }
                 .singleOrNull()
             application?.let { ApplicationView.fromDbEntity(it) } ?: throw InvalidLinkException()
         }
-    }
 
-    fun getApplicationByApplicationVerificationAccessKey(
-        applicationVerificationAccessKey: String
-    ): ApplicationView {
-        return transaction {
+    fun getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey: String): ApplicationView =
+        transaction {
             val application = (Applications innerJoin ApplicationVerifications)
                 .slice(Applications.columns)
                 .select { ApplicationVerifications.accessKey eq applicationVerificationAccessKey }
@@ -119,24 +117,23 @@ object ApplicationRepository {
                 ApplicationView.fromDbEntity(ApplicationEntity.wrapRow(it))
             } ?: throw InvalidLinkException()
         }
-    }
 
-    fun getApplicationVerification(applicationVerificationAccessKey: String): ApplicationVerificationEntity {
-        return transaction {
-            ApplicationVerificationEntity.find { ApplicationVerifications.accessKey eq applicationVerificationAccessKey }
-                .singleOrNull() ?: throw InvalidLinkException()
+    fun getApplicationVerification(applicationVerificationAccessKey: String): ApplicationVerificationEntity =
+        transaction {
+            ApplicationVerificationEntity
+                .find { ApplicationVerifications.accessKey eq applicationVerificationAccessKey }
+                .singleOrNull()
+                ?: throw InvalidLinkException()
         }
-    }
 
-    private fun isAlreadyVerified(applicationVerification: ApplicationVerificationEntity): Boolean {
-        return applicationVerification.verifiedDate != null || applicationVerification.rejectedDate != null
-    }
+    private fun isAlreadyVerified(applicationVerification: ApplicationVerificationEntity): Boolean =
+        applicationVerification.verifiedDate != null || applicationVerification.rejectedDate != null
 
     fun verifyApplicationVerification(
         accessKey: String,
-        automaticSource: ApplicationVerificationExternalSource = ApplicationVerificationExternalSource.NONE
-    ): Boolean {
-        return transaction {
+        automaticSource: ApplicationVerificationExternalSource = ApplicationVerificationExternalSource.NONE,
+    ): Boolean =
+        transaction {
             val applicationVerification = getApplicationVerification(accessKey)
             if (isAlreadyVerified(applicationVerification)) {
                 false
@@ -146,10 +143,9 @@ object ApplicationRepository {
                 true
             }
         }
-    }
 
-    fun rejectApplicationVerification(accessKey: String): Boolean {
-        return transaction {
+    fun rejectApplicationVerification(accessKey: String): Boolean =
+        transaction {
             val applicationVerification = getApplicationVerification(accessKey)
             if (isAlreadyVerified(applicationVerification)) {
                 false
@@ -158,10 +154,9 @@ object ApplicationRepository {
                 true
             }
         }
-    }
 
-    fun delete(applicationId: Int, graphQLContext: GraphQLContext): Boolean {
-        return transaction {
+    fun delete(applicationId: Int, graphQLContext: GraphQLContext): Boolean =
+        transaction {
             val application = ApplicationEntity.findById(applicationId)
             if (application != null) {
                 val project =
@@ -170,7 +165,11 @@ object ApplicationRepository {
                         .single()
                         .let { ProjectEntity.wrapRow(it) }
                 val applicationDirectory =
-                    Paths.get(graphQLContext.applicationData.absolutePath, project.project, application.id.toString())
+                    Paths.get(
+                        graphQLContext.applicationData.absolutePath,
+                        project.project,
+                        application.id.toString(),
+                    )
                 ApplicationVerifications.deleteWhere { ApplicationVerifications.applicationId eq applicationId }
                 application.delete()
                 applicationDirectory.toFile().deleteRecursively()
@@ -178,10 +177,9 @@ object ApplicationRepository {
                 false
             }
         }
-    }
 
-    fun withdrawApplication(accessKey: String): Boolean {
-        return transaction {
+    fun withdrawApplication(accessKey: String): Boolean =
+        transaction {
             val application = ApplicationEntity.find { Applications.accessKey eq accessKey }.single()
             if (application.withdrawalDate == null) {
                 application.withdrawalDate = Instant.now()
@@ -190,18 +188,16 @@ object ApplicationRepository {
                 false
             }
         }
-    }
 
-    fun findByIds(ids: List<Int>): List<ApplicationEntity?> {
-        return transaction {
+    fun findByIds(ids: List<Int>): List<ApplicationEntity?> =
+        transaction {
             ApplicationEntity
                 .find { Applications.id inList ids }
                 .sortByKeys({ it.id.value }, ids)
         }
-    }
 
-    fun updateApplicationNote(applicationId: Int, note: String): Boolean {
-        return transaction {
+    fun updateApplicationNote(applicationId: Int, note: String): Boolean =
+        transaction {
             val application = ApplicationEntity.findById(applicationId)
             if (application != null) {
                 application.note = note
@@ -210,10 +206,9 @@ object ApplicationRepository {
                 false
             }
         }
-    }
 
-    fun updateCardCreated(applicationId: Int, cardCreated: Boolean): Boolean {
-        return transaction {
+    fun updateCardCreated(applicationId: Int, cardCreated: Boolean): Boolean =
+        transaction {
             val application = ApplicationEntity.findById(applicationId)
             if (application != null) {
                 application.cardCreated = cardCreated
@@ -222,5 +217,4 @@ object ApplicationRepository {
                 false
             }
         }
-    }
 }

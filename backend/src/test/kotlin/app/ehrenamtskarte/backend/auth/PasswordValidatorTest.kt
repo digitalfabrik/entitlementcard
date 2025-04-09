@@ -4,13 +4,12 @@ import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 internal class PasswordValidatorTest {
-
     @Test
     fun invalidatesPasswordIfTooShort() {
         val password = "a!Bcrf83592"
         assertEquals(
             PasswordValidator.validatePassword(password),
-            PasswordValidationResult.NOT_LONG_ENOUGH
+            PasswordValidationResult.NOT_LONG_ENOUGH,
         )
     }
 
@@ -19,7 +18,7 @@ internal class PasswordValidatorTest {
         val password = "A!BCRF835921"
         assertEquals(
             PasswordValidator.validatePassword(password),
-            PasswordValidationResult.TOO_FEW_LOWERCASE_CHARS
+            PasswordValidationResult.TOO_FEW_LOWERCASE_CHARS,
         )
     }
 
@@ -28,7 +27,7 @@ internal class PasswordValidatorTest {
         val password = "a!bcrf835921"
         assertEquals(
             PasswordValidator.validatePassword(password),
-            PasswordValidationResult.TOO_FEW_UPPERCASE_CHARS
+            PasswordValidationResult.TOO_FEW_UPPERCASE_CHARS,
         )
     }
 
@@ -37,7 +36,7 @@ internal class PasswordValidatorTest {
         val password = "a1Bcrf835921"
         assertEquals(
             PasswordValidator.validatePassword(password),
-            PasswordValidationResult.TOO_FEW_SPECIAL_CHARS
+            PasswordValidationResult.TOO_FEW_SPECIAL_CHARS,
         )
     }
 
@@ -46,7 +45,7 @@ internal class PasswordValidatorTest {
         val password = "a!Bcrf835921"
         assertEquals(
             PasswordValidator.validatePassword(password),
-            PasswordValidationResult.VALID
+            PasswordValidationResult.VALID,
         )
     }
 
@@ -55,7 +54,7 @@ internal class PasswordValidatorTest {
         val password = "a!Bcrf835921"
         assertEquals(
             PasswordValidator.validatePassword(password),
-            PasswordValidationResult.VALID
+            PasswordValidationResult.VALID,
         )
     }
 
@@ -65,7 +64,7 @@ internal class PasswordValidatorTest {
         assertEquals(
             // Valid because all arabic characters are special-characters
             PasswordValidator.validatePassword(password),
-            PasswordValidationResult.VALID
+            PasswordValidationResult.VALID,
         )
     }
 }

@@ -9,13 +9,15 @@ import com.expediagroup.graphql.generator.SchemaGeneratorConfig
 import com.expediagroup.graphql.generator.TopLevelObject
 
 val cardsGraphQlParams = GraphQLParams(
-    config = SchemaGeneratorConfig(supportedPackages = listOf("app.ehrenamtskarte.backend.cards.webservice.schema")),
+    config = SchemaGeneratorConfig(
+        supportedPackages = listOf("app.ehrenamtskarte.backend.cards.webservice.schema"),
+    ),
     dataLoaderRegistry = createRegistryFromNamedDataLoaders(),
     queries = listOf(
         TopLevelObject(CardQueryService()),
-        TopLevelObject(CardStatisticsQueryService())
+        TopLevelObject(CardStatisticsQueryService()),
     ),
     mutations = listOf(
-        TopLevelObject(CardMutationService())
-    )
+        TopLevelObject(CardMutationService()),
+    ),
 )

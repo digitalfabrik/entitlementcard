@@ -26,7 +26,9 @@ object MigrationUtils {
         val migrations = MigrationsRegistry.getAllMigrations()
 
         if (migrations.map { it.version } != (1..migrations.size).toList()) {
-            throw MigrationException("List of versions is not consecutive: ${migrations.map { it.version }}")
+            throw MigrationException(
+                "List of versions is not consecutive: ${migrations.map { it.version }}",
+            )
         }
 
         logger.info("Running migrations on database ${database.url}")
@@ -35,8 +37,12 @@ object MigrationUtils {
             transaction {
                 val versionBeforeMigration = transaction { Migrations.getCurrentVersionOrNull() }
 
-                logger.info("Database version before migrations: ${versionBeforeMigration ?: "(none)"}")
-                logger.info("Latest migration version:           ${migrations.maxOfOrNull { it.version } ?: "(none)"}")
+                logger.info(
+                    "Database version before migrations: ${versionBeforeMigration ?: "(none)"}",
+                )
+                logger.info(
+                    "Latest migration version:           ${migrations.maxOfOrNull { it.version } ?: "(none)"}",
+                )
 
                 if (!Migrations.exists()) {
                     logger.info("Migrations table did not exist. Creating it.")
@@ -76,12 +82,13 @@ object MigrationUtils {
         } catch (exception: DatabaseOutOfSyncException) {
             throw MigrationException(
                 "Database was still out sync after attempted migration. Hence, NO CHANGES were committed onto the DB.",
-                exception
+                exception,
             )
         } catch (exception: ExposedSQLException) {
             throw MigrationException(
-                "The above SQL error occuring during attempted migration. Hence, NO CHANGES were committed onto the DB.",
-                exception
+                "The above SQL error occuring during attempted migration. " +
+                    "Hence, NO CHANGES were committed onto the DB.",
+                exception,
             )
         }
         logger.info("Migrations finished successfully")

@@ -25,7 +25,6 @@ import java.time.Period
 import java.util.UUID
 
 object AdministratorsRepository {
-
     fun findByIds(ids: List<Int>) =
         AdministratorEntity.find { Administrators.id inList ids }.sortByKeys({ it.id.value }, ids)
 
@@ -36,7 +35,7 @@ object AdministratorsRepository {
         val resultRow = (Administrators innerJoin Projects)
             .slice(Administrators.columns)
             .select(
-                (Projects.project eq project) and (LowerCase(Administrators.email) eq email.lowercase())
+                (Projects.project eq project) and (LowerCase(Administrators.email) eq email.lowercase()),
             )
             .firstOrNull()
         return resultRow?.let {
@@ -55,12 +54,14 @@ object AdministratorsRepository {
         email: String,
         password: String?,
         role: Role,
-        regionId: Int? = null
+        regionId: Int? = null,
     ): AdministratorEntity {
         val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
             ?: throw ProjectNotFoundException(project)
 
-        val region = regionId?.let { RegionsRepository.findByIdInProject(project, it) ?: throw RegionNotFoundException() }
+        val region = regionId?.let {
+            RegionsRepository.findByIdInProject(project, it) ?: throw RegionNotFoundException()
+        }
 
         if (role in setOf(Role.REGION_ADMIN, Role.REGION_MANAGER) && region == null) {
             throw InvalidRoleException()
@@ -110,10 +111,7 @@ object AdministratorsRepository {
         return passwordResetKey
     }
 
-    fun updateNotificationSettings(
-        administrator: AdministratorEntity,
-        notificationSettings: NotificationSettings
-    ) {
+    fun updateNotificationSettings(administrator: AdministratorEntity, notificationSettings: NotificationSettings) {
         administrator.notificationOnApplication = notificationSettings.notificationOnApplication
         administrator.notificationOnVerification = notificationSettings.notificationOnVerification
     }
@@ -121,14 +119,18 @@ object AdministratorsRepository {
     fun getNotificationRecipientsForApplication(project: String, regionId: Int): List<AdministratorEntity> =
         transaction {
             (Administrators innerJoin Projects).select {
-                (Projects.project eq project) and (Administrators.notificationOnApplication eq true) and (Administrators.regionId eq regionId) and (Administrators.deleted eq false)
+                (Projects.project eq project) and (Administrators.notificationOnApplication eq true) and
+                    (Administrators.regionId eq regionId) and
+                    (Administrators.deleted eq false)
             }.let { AdministratorEntity.wrapRows(it) }.toList()
         }
 
     fun getNotificationRecipientsForVerification(project: String, regionId: Int): List<AdministratorEntity> =
         transaction {
             (Administrators innerJoin Projects).select {
-                (Projects.project eq project) and (Administrators.notificationOnVerification eq true) and (Administrators.regionId eq regionId) and (Administrators.deleted eq false)
+                (Projects.project eq project) and (Administrators.notificationOnVerification eq true) and
+                    (Administrators.regionId eq regionId) and
+                    (Administrators.deleted eq false)
             }.let { AdministratorEntity.wrapRows(it) }.toList()
         }
 }

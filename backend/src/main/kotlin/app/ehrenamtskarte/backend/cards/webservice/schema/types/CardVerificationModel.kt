@@ -5,5 +5,5 @@ import app.ehrenamtskarte.backend.cards.database.CodeType
 data class CardVerificationModel(
     val cardInfoHashBase64: String,
     val totp: Int?,
-    val codeType: CodeType
+    val codeType: CodeType,
 )

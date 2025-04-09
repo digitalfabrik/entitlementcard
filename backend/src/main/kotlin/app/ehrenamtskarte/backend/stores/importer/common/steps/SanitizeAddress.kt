@@ -14,20 +14,24 @@ import java.util.Locale
  * Postal codes are mapped to either the first five digits (german postcode format) or null.
  * Street and house numbers are correctly separated.
  */
-class SanitizeAddress(config: ImportConfig, private val logger: Logger) : PipelineStep<List<AcceptingStore>, List<AcceptingStore>>(config) {
+class SanitizeAddress(
+    config: ImportConfig,
+    private val logger: Logger,
+) : PipelineStep<List<AcceptingStore>, List<AcceptingStore>>(config) {
     private val houseNumberRegex = houseNumberRegex()
     private val postalCodeRegex = Regex("""[0-9]{5}""")
 
-    override fun execute(input: List<AcceptingStore>) = input.mapNotNull {
-        try {
-            if (it.street?.contains(STREET_EXCLUDE_PATTERN) == true) return@mapNotNull it
+    override fun execute(input: List<AcceptingStore>) =
+        input.mapNotNull {
+            try {
+                if (it.street?.contains(STREET_EXCLUDE_PATTERN) == true) return@mapNotNull it
 
-            it.sanitizePostalCode().sanitizeStreetHouseNumber()
-        } catch (e: Exception) {
-            logger.error("Exception occurred while sanitizing the address of $it", e)
-            null
+                it.sanitizePostalCode().sanitizeStreetHouseNumber()
+            } catch (e: Exception) {
+                logger.error("Exception occurred while sanitizing the address of $it", e)
+                null
+            }
         }
-    }
 
     private fun houseNumberRegex(): Regex {
         // E.g. "B[200]", "H[7]" (mostly in industrial parks)
@@ -80,10 +84,16 @@ class SanitizeAddress(config: ImportConfig, private val logger: Logger) : Pipeli
                 null
             }
 
-            val newAddress = listOfNotNull(cleanStreet, cleanHouseNumber, residue).filterNot { it.isEmpty() }.joinToString("|")
+            val newAddress = listOfNotNull(cleanStreet, cleanHouseNumber, residue)
+                .filterNot { it.isEmpty() }
+                .joinToString("|")
             logger.logChange("$name, $location", "Address", "$street|$houseNumber", newAddress)
 
-            return copy(street = cleanStreet, houseNumber = cleanHouseNumber, additionalAddressInformation = residue)
+            return copy(
+                street = cleanStreet,
+                houseNumber = cleanHouseNumber,
+                additionalAddressInformation = residue,
+            )
         }
         return this
     }

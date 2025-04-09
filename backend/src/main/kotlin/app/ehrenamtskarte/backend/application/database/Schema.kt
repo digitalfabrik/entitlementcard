@@ -11,6 +11,7 @@ import org.jetbrains.exposed.sql.javatime.timestamp
 import org.jetbrains.exposed.sql.not
 
 const val NOTE_MAX_CHARS = 1000
+
 object Applications : IntIdTable() {
     val regionId = reference("regionId", Regions)
     val jsonValue = text("jsonValue")
@@ -23,7 +24,7 @@ object Applications : IntIdTable() {
 
 class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<ApplicationEntity>(
-        Applications
+        Applications,
     )
 
     var regionId by Applications.regionId
@@ -37,7 +38,7 @@ class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
 
 enum class ApplicationVerificationExternalSource {
     VEREIN360,
-    NONE
+    NONE,
 }
 
 object ApplicationVerifications : IntIdTable() {
@@ -48,7 +49,11 @@ object ApplicationVerifications : IntIdTable() {
     val verifiedDate = timestamp("verifiedDate").nullable()
     val rejectedDate = timestamp("rejectedDate").nullable()
     val accessKey = varchar("accessKey", 100).uniqueIndex()
-    val automaticSource = enumerationByName("automaticSource", 20, ApplicationVerificationExternalSource::class)
+    val automaticSource = enumerationByName(
+        "automaticSource",
+        20,
+        ApplicationVerificationExternalSource::class,
+    )
         .default(ApplicationVerificationExternalSource.NONE)
 
     init {
@@ -60,7 +65,7 @@ object ApplicationVerifications : IntIdTable() {
 
 class ApplicationVerificationEntity(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<ApplicationVerificationEntity>(
-        ApplicationVerifications
+        ApplicationVerifications,
     )
 
     var applicationId by ApplicationVerifications.applicationId

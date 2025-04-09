@@ -9,12 +9,14 @@ import com.expediagroup.graphql.generator.SchemaGeneratorConfig
 import com.expediagroup.graphql.generator.TopLevelObject
 
 val regionsGraphQlParams = GraphQLParams(
-    config = SchemaGeneratorConfig(supportedPackages = listOf("app.ehrenamtskarte.backend.regions.webservice.schema")),
+    config = SchemaGeneratorConfig(
+        supportedPackages = listOf("app.ehrenamtskarte.backend.regions.webservice.schema"),
+    ),
     dataLoaderRegistry = createRegistryFromNamedDataLoaders(regionLoader),
     queries = listOf(
-        TopLevelObject(RegionsQueryService())
+        TopLevelObject(RegionsQueryService()),
     ),
     mutations = listOf(
-        TopLevelObject(RegionsMutationService())
-    )
+        TopLevelObject(RegionsMutationService()),
+    ),
 )
