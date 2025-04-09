@@ -9,6 +9,10 @@ import { SetState, useUpdateStateCallback } from './hooks/useUpdateStateCallback
 import { Form, ValidationResult } from './util/FormType'
 
 type FormContextType = {
+  /**
+   * When submitting the form, this property is true and all form elements
+   * must display their error status when their data is invalid.
+   */
   showAllErrors: boolean
   disableAllInputs: boolean
 }
