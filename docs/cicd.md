@@ -25,7 +25,6 @@ Several workflows exist for different purposes:
 | promotion_frontend                         | manual           | :x:                 | production        | :x:                             | :x:                |
 | delivery_production_frontend               | manual           | :heavy_check_mark:  | production        | :x:                             | :heavy_check_mark: |
 | delivery_production_backend_administration | manual           | :heavy_check_mark:  | :x:               | production                      | :heavy_check_mark: |
-| build_frontend                             | manual (testing) | :x:                 | :x:               | :x:                             | :x:                |
 
 Steps executed if _Checks_ is checked :heavy_check_mark::
 
@@ -156,9 +155,8 @@ Therefore, you can follow the documentation for Manual Builds to set up [certifi
 ## Determining the Next Version
 
 The next version of the app must be determined programmatically.
-- Install app-toolbelt: `npm install --unsafe-perm -g https://github.com/digitalfabrik/app-toolbelt/archive/refs/heads/main.tar.gz`
 - Go to the root folder
-- run: `app-toolbelt v0 version calc | jq .versionName`
+- run: `npx --no app-toolbelt v0 version calc | jq .versionName`
 
 ## Environment Variables and Dependencies
 

@@ -53,7 +53,7 @@ type ActivityLogTableProps = {
 }
 
 const ActivityLogTable = ({ activityLog, activityLogConfig }: ActivityLogTableProps): ReactElement => {
-  const { t } = useTranslation('userSettings')
+  const { t } = useTranslation('activityLog')
   return (
     <StyledTable>
       <StickyTableHeader>

@@ -1,24 +1,25 @@
-import { Button, FormGroup, Tooltip } from '@blueprintjs/core'
-import { TextField } from '@mui/material'
+import { Button, Tooltip } from '@blueprintjs/core'
+import { FormControlLabel } from '@mui/material'
+import type { FormControlLabelProps } from '@mui/material'
+import formatDate from 'date-fns/format'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
-import PlainDate from '../../../util/PlainDate'
 import StickyBottomBar from '../../StickyBottomBar'
+import CustomDatePicker from '../../components/CustomDatePicker'
+import type { CustomDatePickerTextFieldProps } from '../../components/CustomDatePicker'
 import { defaultEndDate, defaultStartDate } from '../constants'
 
-const StyledFormGroup = styled(FormGroup)`
-  margin: 0 16px 0 0;
-  align-self: center;
-`
+const filterDateFormat = 'yyyy-MM-dd'
 
 const InputContainer = styled.div`
   flex-direction: row;
   display: flex;
-  justify-content: flex-start;
+  justify-content: start;
+  align-items: center;
   flex: 1;
-  padding: 0 20px;
+  gap: 16px;
 `
 type StatisticsFilterBarProps = {
   onApplyFilter: (dateStart: string, dateEnd: string) => void
@@ -26,20 +27,22 @@ type StatisticsFilterBarProps = {
   onExportCsv: (dateStart: string, dateEnd: string) => void
 }
 
-const isValidDateString = (value: string): boolean => {
-  try {
-    PlainDate.from(value)
-    return true
-  } catch (error) {
-    console.error(`Could not parse date from string '${value}'.`, error)
-    return false
-  }
+const isValidDate = (value: Date | null): value is Date => value !== null && !Number.isNaN(value.valueOf())
+
+const isValidDateTimePeriod = (dateStart: Date | null, dateEnd: Date | null): boolean =>
+  isValidDate(dateStart) && isValidDate(dateEnd) && dateStart.valueOf() <= dateEnd.valueOf()
+
+const formControlStyle: FormControlLabelProps['sx'] = {
+  marginLeft: 0,
+  marginRight: 0,
+  gap: '8px',
 }
-const IsValidDateTimePeriod = (dateStart: string, dateEnd: string): boolean => {
-  if (!isValidDateString(dateStart) || !isValidDateString(dateEnd)) {
-    return false
-  }
-  return PlainDate.compare(PlainDate.from(dateStart), PlainDate.from(dateEnd)) <= 0
+
+const datePickerTextFieldProps: CustomDatePickerTextFieldProps = {
+  size: 'small',
+  sx: {
+    width: '180px',
+  },
 }
 
 const StatisticsFilterBar = ({
@@ -48,51 +51,55 @@ const StatisticsFilterBar = ({
   onExportCsv,
 }: StatisticsFilterBarProps): ReactElement => {
   const { t } = useTranslation('statistics')
-  const [dateStart, setDateStart] = useState(defaultStartDate)
-  const [dateEnd, setDateEnd] = useState(defaultEndDate)
+  const [dateStart, setDateStart] = useState<Date | null>(defaultStartDate.toLocalDate())
+  const [dateEnd, setDateEnd] = useState<Date | null>(defaultEndDate.toLocalDate())
 
   return (
     <StickyBottomBar>
       <InputContainer>
-        <StyledFormGroup label={t('start')} inline>
-          <TextField
-            fullWidth
-            type='date'
-            required
-            size='small'
-            error={!isValidDateString(dateStart)}
-            value={dateStart}
-            sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' }, '& fieldset': { borderRadius: 0 } }}
-            inputProps={{
-              max: dateEnd,
-              style: { fontSize: 14, padding: '6px 10px' },
-            }}
-            onChange={e => setDateStart(e.target.value)}
-          />
-        </StyledFormGroup>
-        <StyledFormGroup label={t('end')} inline>
-          <TextField
-            fullWidth
-            type='date'
-            required
-            size='small'
-            error={!isValidDateString(dateEnd)}
-            value={dateEnd}
-            sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' }, '& fieldset': { borderRadius: 0 } }}
-            inputProps={{
-              max: PlainDate.fromLocalDate(new Date()).toString(),
-              style: { fontSize: 14, padding: '6px 10px' },
-            }}
-            onChange={e => setDateEnd(e.target.value)}
-          />
-        </StyledFormGroup>
-        <Tooltip disabled={IsValidDateTimePeriod(dateStart, dateEnd)} content={t('invalidStartOrEnd')}>
+        <FormControlLabel
+          label={t('start')}
+          labelPlacement='start'
+          sx={formControlStyle}
+          control={
+            <CustomDatePicker
+              value={dateStart}
+              error={!isValidDate(dateStart)}
+              maxDate={dateEnd ?? defaultStartDate.toLocalDate()}
+              textFieldSlotProps={datePickerTextFieldProps}
+              onChange={date => {
+                setDateStart(date)
+              }}
+            />
+          }
+        />
+        <FormControlLabel
+          label={t('end')}
+          labelPlacement='start'
+          sx={formControlStyle}
+          control={
+            <CustomDatePicker
+              value={dateEnd}
+              error={!isValidDate(dateEnd)}
+              textFieldSlotProps={datePickerTextFieldProps}
+              maxDate={new Date()}
+              onChange={date => {
+                setDateEnd(date)
+              }}
+            />
+          }
+        />
+        <Tooltip disabled={isValidDateTimePeriod(dateStart, dateEnd)} content={t('invalidStartOrEnd')}>
           <Button
             icon='tick'
             text={t('applyFilter')}
             intent='success'
-            onClick={() => onApplyFilter(dateStart, dateEnd)}
-            disabled={!IsValidDateTimePeriod(dateStart, dateEnd)}
+            onClick={() => {
+              if (isValidDate(dateStart) && isValidDate(dateEnd)) {
+                onApplyFilter(formatDate(dateStart, filterDateFormat), formatDate(dateEnd, filterDateFormat))
+              }
+            }}
+            disabled={!isValidDateTimePeriod(dateStart, dateEnd)}
           />
         </Tooltip>
       </InputContainer>
@@ -101,7 +108,11 @@ const StatisticsFilterBar = ({
           icon='floppy-disk'
           text={t('exportToCsv')}
           intent='primary'
-          onClick={() => onExportCsv(dateStart, dateEnd)}
+          onClick={() => {
+            if (isValidDate(dateStart) && isValidDate(dateEnd)) {
+              onExportCsv(dateStart.toLocaleDateString(), dateEnd.toLocaleDateString())
+            }
+          }}
           disabled={!isDataAvailable}
         />
       </Tooltip>

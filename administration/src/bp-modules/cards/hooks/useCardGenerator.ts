@@ -14,7 +14,7 @@ import downloadDataUri from '../../../util/downloadDataUri'
 import { updateArrayItem } from '../../../util/helper'
 import { reportErrorToSentry } from '../../../util/sentry'
 import { useAppToaster } from '../../AppToaster'
-import { saveActivityLog } from '../../user-settings/ActivityLog'
+import { saveActivityLog } from '../../activity-log/ActivityLog'
 import { showCardGenerationError } from '../../util/cardGenerationError'
 import useSendCardConfirmationMails from './useSendCardConfirmationMails'
 

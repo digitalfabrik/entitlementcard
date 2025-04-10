@@ -1,12 +1,4 @@
-docker:
-  - image: debian:12
-  - image: postgis/postgis:13-3.0
-    environment:
-      - POSTGRES_DB=ehrenamtskarte
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
 steps:
-  - prepare_workspace
   - run:
       name: Install curl and sudo
       command: apt update -y && apt install -y curl sudo
@@ -29,4 +21,3 @@ steps:
   - run:
       name: Check health
       command: curl --retry 120 --retry-delay 1 --retry-all-errors http://0.0.0.0:8000/health
-  - notify

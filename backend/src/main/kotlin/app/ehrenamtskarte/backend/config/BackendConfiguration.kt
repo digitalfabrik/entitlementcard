@@ -16,12 +16,7 @@ import java.time.ZoneId
 val possibleBackendConfigurationFiles =
     listOf<File>(
         Paths.get(System.getProperty("user.dir"), "config.yml").toFile(),
-        Paths.get(
-            System.getProperty("user.home"),
-            ".config",
-            "entitlementcard",
-            "config.yml",
-        ).toFile(),
+        Paths.get(System.getProperty("user.home"), ".config", "entitlementcard", "config.yml").toFile(),
         Paths.get("/etc/entitlementcard/config.yml").toFile(),
     )
 
@@ -30,8 +25,6 @@ data class PostgresConfig(val url: String, val user: String, val password: Strin
 data class MapConfig(val baseUrl: String)
 
 data class GeocodingConfig(val enabled: Boolean, val host: String)
-
-data class CsvWriterConfig(val enabled: Boolean)
 
 data class SmtpConfig(val host: String, val port: Int, val username: String, val password: String)
 
@@ -61,7 +54,6 @@ data class BackendConfiguration(
     val postgres: PostgresConfig,
     val geocoding: GeocodingConfig,
     val projects: List<ProjectConfig>,
-    val csvWriter: CsvWriterConfig,
     val matomoUrl: String,
 ) {
     fun getProjectConfig(project: String): ProjectConfig =

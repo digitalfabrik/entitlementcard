@@ -6,6 +6,7 @@ import { AuthContext } from './AuthProvider'
 import KeepAliveToken from './KeepAliveToken'
 import WhoAmIProvider from './WhoAmIProvider'
 import Navigation from './bp-modules/NavigationBar'
+import ActivityLogController from './bp-modules/activity-log/ActivityLogController'
 import ApplicationsController from './bp-modules/applications/ApplicationsController'
 import ForgotPasswordController from './bp-modules/auth/ForgotPasswordController'
 import Login from './bp-modules/auth/Login'
@@ -96,6 +97,14 @@ const Router = (): ReactElement => {
             : []),
           { path: 'users', element: <ManageUsersController /> },
           { path: 'user-settings', element: <UserSettingsController /> },
+          ...(projectConfig.activityLogConfig
+            ? [
+                {
+                  path: 'activity-log',
+                  element: <ActivityLogController activityLogConfig={projectConfig.activityLogConfig} />,
+                },
+              ]
+            : []),
           { path: 'stores', element: <StoresController /> },
           { path: 'stores/import', element: <StoresImportController /> },
           { path: 'project', element: <ProjectSettingsController /> },

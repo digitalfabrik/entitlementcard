@@ -1,7 +1,7 @@
 docker:
   - image: cimg/android:2024.01.1-node
 parameters:
-  buildConfig:
+  build_config:
     description: "Name of the build config to use"
     type: enum
     enum: [bayern, nuernberg, koblenz]
@@ -26,7 +26,7 @@ steps:
       working_directory: android
   - run:
       name: '[FL] Build'
-      command: bundle exec fastlane android build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} build_config_name:<< parameters.buildConfig >>
+      command: bundle exec fastlane android build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} build_config_name:<< parameters.build_config >>
       working_directory: android
   - save_cache:
       key: v1-gradle-{{ checksum "android/build.gradle.kts" }}-{{ checksum "android/app/build.gradle.kts" }}-{{ checksum "android/settings.gradle.kts" }}
@@ -36,13 +36,13 @@ steps:
   - run:
       name: Move artifacts
       command: |
-          mv build/app/outputs/bundle/<< parameters.buildConfig >>Release/app-<< parameters.buildConfig >>-release.aab ~/attached_workspace/<< parameters.buildConfig >>.aab
-          mv build/app/outputs/apk/<< parameters.buildConfig >>/release/app-<< parameters.buildConfig >>-release.apk ~/attached_workspace/<< parameters.buildConfig >>.apk
+          mv build/app/outputs/bundle/<< parameters.build_config >>Release/app-<< parameters.build_config >>-release.aab ~/attached_workspace/<< parameters.build_config >>.aab
+          mv build/app/outputs/apk/<< parameters.build_config >>/release/app-<< parameters.build_config >>-release.apk ~/attached_workspace/<< parameters.build_config >>.apk
   - persist_to_workspace:
       root: ~/attached_workspace
       paths:
-        - << parameters.buildConfig >>.aab
-        - << parameters.buildConfig >>.apk
+        - << parameters.build_config >>.aab
+        - << parameters.build_config >>.apk
   - store_artifacts:
       path: ~/attached_workspace
   - notify
