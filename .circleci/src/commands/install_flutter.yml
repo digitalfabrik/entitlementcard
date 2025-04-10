@@ -13,7 +13,7 @@ steps:
       name: Restore flutter
       keys:
         - v1-fvm-{{ arch }}-{{ checksum ".fvmrc" }}-{{ checksum "pubspec.yaml" }}-{{ checksum "pubspec.lock"  }}
-        - v1-fvm-{{ arch }}-
+        - v1-fvm-{{ arch }}
   - run:
       name: Install flutter
       command: |

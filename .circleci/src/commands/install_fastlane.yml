@@ -8,11 +8,12 @@ steps:
       name: Restore gems
       keys:
         - v1-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
-        - v1-gems-{{ arch }}-
+        - v1-gems-{{ arch }}
   - run:
       name: Install fastlane
       command: |
         bundle config set path '~/.bundle'
+        bundle config set frozen true
         bundle check || bundle install
       working_directory: << parameters.directory >>
   - save_cache:
