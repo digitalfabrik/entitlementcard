@@ -93,21 +93,31 @@ flutter:
   assets:
     - assets/category_icons/
     - assets/detail_headers/
-    - assets/bayern/intro_slides/
-    - assets/bayern/header-logo.png
-    - assets/bayern/body-logo.png
-    - assets/bayern/icon.png
-    - assets/nuernberg/header-logo.png
-    - assets/nuernberg/body-logo.png
-    - assets/nuernberg/background.png
-    - assets/nuernberg/intro_slides/
-    - assets/nuernberg/l10n/
-    - assets/koblenz/icon.png
-    - assets/koblenz/header-logo.png
-    - assets/koblenz/body-logo.png
-    - assets/koblenz/intro_slides/
-    - assets/koblenz/l10n/
     - assets/ca/
+    - path: assets/bayern/
+      flavors:
+        - bayern
+    - path: assets/bayern/intro_slides/
+      flavors:
+        - bayern
+    - path: assets/nuernberg/
+      flavors:
+        - nuernberg
+    - path: assets/nuernberg/intro_slides/
+      flavors:
+        - nuernberg
+    - path: assets/nuernberg/l10n/
+      flavors:
+        - nuernberg
+    - path: assets/koblenz/
+      flavors:
+        - koblenz
+    - path: assets/koblenz/intro_slides/
+      flavors:
+        - koblenz
+    - path: assets/koblenz/l10n/
+      flavors:
+        - koblenz
 
   # An image asset can refer to one or more resolution-specific 'variants', see
   # https://flutter.dev/assets-and-images/#resolution-aware.
