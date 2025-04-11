@@ -154,115 +154,121 @@ test.describe('Bayern testing', () => {
 
   const requirements = async (page: Page, cardType, requirement: number, browser: string) => {
     if (cardType == 'blue') {
-      await expect(page.locator('form').first()).toContainText(
-        'Ich erfülle folgende Voraussetzung für die Beantragung einer blauen Ehrenamtskarte: *'
-      )
-      await expect(page.getByRole('radiogroup')).toContainText(
-        'Ich engagiere mich ehrenamtlich seit mindestens zwei Jahren freiwillig mindestens fünf Stunden pro Woche oder bei Projektarbeiten mindestens 250 Stunden jährlich.'
-      )
-      await expect(page.getByRole('radiogroup')).toContainText(
-        'Ich bin Inhaber:in einer JuLeiCa (Jugendleiter:in-Card).'
-      )
-      await expect(page.getByRole('radiogroup')).toContainText(
-        'Ich bin aktiv in der Freiwilligen Feuerwehr mit abgeschlossener Truppmannausbildung bzw. abgeschlossenem Basis-Modul der Modularen Truppausbildung (MTA), oder im Katastrophenschutz oder im Rettungsdienst mit abgeschlossener Grundausbildung.'
-      )
-      await expect(page.getByRole('radiogroup')).toContainText(
-        'Ich habe in den vergangenen zwei Kalenderjahren als Reservist regelmäßig aktiven Wehrdienst in der Bundeswehr geleistet, indem ich insgesamt mindestens 40 Tage Reservisten-Dienstleistung erbracht habe oder ständige:r Angehörige:r eines Bezirks- oder Kreisverbindungskommandos war.'
-      )
-      await expect(page.getByRole('radiogroup')).toContainText(
-        'Ich leiste einen Freiwilligendienst ab in einem Freiwilligen Sozialen Jahr (FSJ), einem Freiwilligen Ökologischen Jahr (FÖJ) oder einem Bundesfreiwilligendienst (BFD).'
-      )
-
-      switch (requirement) {
-        case 1:
-          await page.getByRole('radio', { name: 'Ich engagiere mich' }).check()
-          await voluntaryWorkForm(page, browser)
-          break
-        case 2:
-          await page.getByRole('radio', { name: 'Ich bin Inhaber:in einer' }).check()
-          await expect(page.locator('form')).toContainText('ANGABEN ZUR JULEICA')
-          await page.getByRole('textbox', { name: 'Kartennummer' }).fill('123456789')
-          await fillDateInput(page, 'Karte gültig bis', '10.10.1999', browser)
-          await expect(page.locator('h4')).toContainText('Kopie der JuLeiCa')
-          await expect(page.getByRole('paragraph')).toContainText(
-            'Hängen Sie hier bitte Ihre eingescannte oder abfotografierte JuLeiCa an. Die Datei darf maximal 5 MB groß sein und muss im JPG, PNG oder PDF Format sein.'
-          )
-          await testImageFileSelection(page, 'Datei Anhängen *')
-          break
-        case 3:
-          await page.getByRole('radio', { name: 'Ich bin aktiv in der' }).check()
-          await organizationInfo(page)
-          break
-        case 4:
-          await page.getByRole('radio', { name: 'Ich habe in den vergangenen' }).check()
-          await expect(page.locator('form')).toContainText('ANGABEN ZUR TÄTIGKEIT')
-          await expect(page.locator('h4')).toContainText('Tätigkeitsnachweis')
-          await expect(page.getByRole('paragraph')).toContainText(
-            'Falls vorhanden, hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. Die Datei darf maximal 5 MB groß sein und muss im JPG, PNG oder PDF Format sein.'
-          )
-          await testImageFileSelection(page, 'Datei Anhängen *')
-          break
-        case 5:
-          await page.getByRole('radio', { name: 'Ich leiste einen' }).check()
-          await expect(page.locator('form')).toContainText('ANGABEN ZUR TÄTIGKEIT')
-          await page.getByRole('textbox', { name: 'Name des Programms' }).fill('the program')
-          await expect(page.locator('form')).toContainText(
-            'Falls vorhanden, hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. Die Datei darf maximal 5 MB groß sein und muss im JPG, PNG oder PDF Format sein.'
-          )
-          await testImageFileSelection(page, 'Datei Anhängen *')
-          break
-      }
+      await handleBlueCardRequirements(page, requirement, browser)
     } else {
-      await expect(page.locator('form').first()).toContainText(
-        'Ich erfülle folgende Voraussetzung für die Beantragung einer goldenen Ehrenamtskarte: *'
-      )
-      await expect(page.getByRole('radiogroup')).toContainText(
-        'Ich bin seit mindestens 25 Jahren mindestens 5 Stunden pro Woche oder 250 Stunden pro Jahr bei einem Verein oder einer Organisation ehrenamtlich tätig.'
-      )
-      await expect(page.getByRole('radiogroup')).toContainText(
-        'Ich bin Inhaber:in des Ehrenzeichens für Verdienste im Ehrenamt des Bayerischen Ministerpräsidenten.'
-      )
-      await expect(page.getByRole('radiogroup')).toContainText(
-        'Ich bin Feuerwehrdienstleistende:r oder Einsatzkraft im Rettungsdienst oder in Einheiten des Katastrophenschutzes und habe eine Dienstzeitauszeichnung nach dem Feuerwehr- und Hilfsorganisationen-Ehrenzeichengesetz (FwHOEzG) erhalten.'
-      )
-      await expect(page.getByRole('radiogroup')).toContainText(
-        'Ich leiste als Reservist:in seit mindestens 25 Jahren regelmäßig aktiven Wehrdienst in der Bundeswehr, indem ich in dieser Zeit entweder insgesamt mindestens 500 Tage Reservisten-Dienstleistung erbracht habe oder in dieser Zeit ständige:r Angehörige:r eines Bezirks- oder Kreisverbindungskommandos war. *'
-      )
-      switch (requirement) {
-        case 1:
-          await page.getByRole('radio', { name: 'Ich bin seit mindestens 25' }).check()
-          await voluntaryWorkForm(page, browser)
-          break
-        case 2:
-          await page.getByRole('radio', { name: 'Ich bin Inhaber:in des' }).check()
-          await expect(page.locator('form')).toContainText('ANGABEN ZUM EHRENZEICHEN')
-          await expect(page.locator('h4')).toContainText('Urkunde')
-          await expect(page.getByRole('paragraph')).toContainText(
-            'Hängen Sie hier bitte Ihre eingescannte oder abfotografierte Urkunde an. Die Datei darf maximal 5 MB groß sein und muss im JPG, PNG oder PDF Format sein.'
-          )
-          await testImageFileSelection(page, 'Datei Anhängen *')
-          break
-        case 3:
-          await page
-            .getByRole('radio', {
-              name: 'Ich bin Feuerwehrdienstleistende:r oder Einsatzkraft im Rettungsdienst oder in',
-            })
-            .check()
-          await organizationInfo(page)
-          break
-        case 4:
-          await page.getByRole('radio', { name: 'Ich leiste als Reservist:in' }).check()
-          await expect(page.locator('form')).toContainText('ANGABEN ZUR TÄTIGKEIT')
-          await expect(page.locator('h4')).toContainText('Tätigkeitsnachweis')
-          await expect(page.getByRole('paragraph')).toContainText(
-            'Falls vorhanden, hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. Die Datei darf maximal 5 MB groß sein und muss im JPG, PNG oder PDF Format sein.'
-          )
-          await testImageFileSelection(page, 'Datei Anhängen *')
-          break
-      }
+      await handleGoldCardRequirements(page, requirement, browser)
     }
     await expect(page.getByRole('button', { name: 'Nächster Schritt' })).toBeVisible()
     await page.getByRole('button', { name: 'Nächster Schritt' }).click()
+  }
+
+  const handleBlueCardRequirements = async (page: Page, requirement: number, browser: string) => {
+    await expect(page.locator('form').first()).toContainText(
+      'Ich erfülle folgende Voraussetzung für die Beantragung einer blauen Ehrenamtskarte: *'
+    )
+    await expect(page.getByRole('radiogroup')).toContainText(
+      'Ich engagiere mich ehrenamtlich seit mindestens zwei Jahren freiwillig mindestens fünf Stunden pro Woche oder bei Projektarbeiten mindestens 250 Stunden jährlich.'
+    )
+    await expect(page.getByRole('radiogroup')).toContainText('Ich bin Inhaber:in einer JuLeiCa (Jugendleiter:in-Card).')
+    await expect(page.getByRole('radiogroup')).toContainText(
+      'Ich bin aktiv in der Freiwilligen Feuerwehr mit abgeschlossener Truppmannausbildung bzw. abgeschlossenem Basis-Modul der Modularen Truppausbildung (MTA), oder im Katastrophenschutz oder im Rettungsdienst mit abgeschlossener Grundausbildung.'
+    )
+    await expect(page.getByRole('radiogroup')).toContainText(
+      'Ich habe in den vergangenen zwei Kalenderjahren als Reservist regelmäßig aktiven Wehrdienst in der Bundeswehr geleistet, indem ich insgesamt mindestens 40 Tage Reservisten-Dienstleistung erbracht habe oder ständige:r Angehörige:r eines Bezirks- oder Kreisverbindungskommandos war.'
+    )
+    await expect(page.getByRole('radiogroup')).toContainText(
+      'Ich leiste einen Freiwilligendienst ab in einem Freiwilligen Sozialen Jahr (FSJ), einem Freiwilligen Ökologischen Jahr (FÖJ) oder einem Bundesfreiwilligendienst (BFD).'
+    )
+
+    switch (requirement) {
+      case 1:
+        await page.getByRole('radio', { name: 'Ich engagiere mich' }).check()
+        await voluntaryWorkForm(page, browser)
+        break
+      case 2:
+        await page.getByRole('radio', { name: 'Ich bin Inhaber:in einer' }).check()
+        await expect(page.locator('form')).toContainText('ANGABEN ZUR JULEICA')
+        await page.getByRole('textbox', { name: 'Kartennummer' }).fill('123456789')
+        await fillDateInput(page, 'Karte gültig bis', '10.10.1999', browser)
+        await expect(page.locator('h4')).toContainText('Kopie der JuLeiCa')
+        await expect(page.getByRole('paragraph')).toContainText(
+          'Hängen Sie hier bitte Ihre eingescannte oder abfotografierte JuLeiCa an. Die Datei darf maximal 5 MB groß sein und muss im JPG, PNG oder PDF Format sein.'
+        )
+        await testImageFileSelection(page, 'Datei Anhängen *')
+        break
+      case 3:
+        await page.getByRole('radio', { name: 'Ich bin aktiv in der' }).check()
+        await organizationInfo(page)
+        break
+      case 4:
+        await page.getByRole('radio', { name: 'Ich habe in den vergangenen' }).check()
+        await expect(page.locator('form')).toContainText('ANGABEN ZUR TÄTIGKEIT')
+        await expect(page.locator('h4')).toContainText('Tätigkeitsnachweis')
+        await expect(page.getByRole('paragraph')).toContainText(
+          'Falls vorhanden, hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. Die Datei darf maximal 5 MB groß sein und muss im JPG, PNG oder PDF Format sein.'
+        )
+        await testImageFileSelection(page, 'Datei Anhängen *')
+        break
+      case 5:
+        await page.getByRole('radio', { name: 'Ich leiste einen' }).check()
+        await expect(page.locator('form')).toContainText('ANGABEN ZUR TÄTIGKEIT')
+        await page.getByRole('textbox', { name: 'Name des Programms' }).fill('the program')
+        await expect(page.locator('form')).toContainText(
+          'Falls vorhanden, hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. Die Datei darf maximal 5 MB groß sein und muss im JPG, PNG oder PDF Format sein.'
+        )
+        await testImageFileSelection(page, 'Datei Anhängen *')
+        break
+    }
+  }
+
+  const handleGoldCardRequirements = async (page: Page, requirement: number, browser: string) => {
+    await expect(page.locator('form').first()).toContainText(
+      'Ich erfülle folgende Voraussetzung für die Beantragung einer goldenen Ehrenamtskarte: *'
+    )
+    await expect(page.getByRole('radiogroup')).toContainText(
+      'Ich bin seit mindestens 25 Jahren mindestens 5 Stunden pro Woche oder 250 Stunden pro Jahr bei einem Verein oder einer Organisation ehrenamtlich tätig.'
+    )
+    await expect(page.getByRole('radiogroup')).toContainText(
+      'Ich bin Inhaber:in des Ehrenzeichens für Verdienste im Ehrenamt des Bayerischen Ministerpräsidenten.'
+    )
+    await expect(page.getByRole('radiogroup')).toContainText(
+      'Ich bin Feuerwehrdienstleistende:r oder Einsatzkraft im Rettungsdienst oder in Einheiten des Katastrophenschutzes und habe eine Dienstzeitauszeichnung nach dem Feuerwehr- und Hilfsorganisationen-Ehrenzeichengesetz (FwHOEzG) erhalten.'
+    )
+    await expect(page.getByRole('radiogroup')).toContainText(
+      'Ich leiste als Reservist:in seit mindestens 25 Jahren regelmäßig aktiven Wehrdienst in der Bundeswehr, indem ich in dieser Zeit entweder insgesamt mindestens 500 Tage Reservisten-Dienstleistung erbracht habe oder in dieser Zeit ständige:r Angehörige:r eines Bezirks- oder Kreisverbindungskommandos war. *'
+    )
+    switch (requirement) {
+      case 1:
+        await page.getByRole('radio', { name: 'Ich bin seit mindestens 25' }).check()
+        await voluntaryWorkForm(page, browser)
+        break
+      case 2:
+        await page.getByRole('radio', { name: 'Ich bin Inhaber:in des' }).check()
+        await expect(page.locator('form')).toContainText('ANGABEN ZUM EHRENZEICHEN')
+        await expect(page.locator('h4')).toContainText('Urkunde')
+        await expect(page.getByRole('paragraph')).toContainText(
+          'Hängen Sie hier bitte Ihre eingescannte oder abfotografierte Urkunde an. Die Datei darf maximal 5 MB groß sein und muss im JPG, PNG oder PDF Format sein.'
+        )
+        await testImageFileSelection(page, 'Datei Anhängen *')
+        break
+      case 3:
+        await page
+          .getByRole('radio', {
+            name: 'Ich bin Feuerwehrdienstleistende:r oder Einsatzkraft im Rettungsdienst oder in',
+          })
+          .check()
+        await organizationInfo(page)
+        break
+      case 4:
+        await page.getByRole('radio', { name: 'Ich leiste als Reservist:in' }).check()
+        await expect(page.locator('form')).toContainText('ANGABEN ZUR TÄTIGKEIT')
+        await expect(page.locator('h4')).toContainText('Tätigkeitsnachweis')
+        await expect(page.getByRole('paragraph')).toContainText(
+          'Falls vorhanden, hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. Die Datei darf maximal 5 MB groß sein und muss im JPG, PNG oder PDF Format sein.'
+        )
+        await testImageFileSelection(page, 'Datei Anhängen *')
+        break
+    }
   }
 
   const sendRequest = async (page: Page) => {
