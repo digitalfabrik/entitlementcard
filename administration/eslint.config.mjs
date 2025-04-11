@@ -21,7 +21,14 @@ const compat = new FlatCompat({
 
 export default [
   {
-    ignores: ['src/generated/**/*', 'src/coverage/**/*', 'build/**/*', '**eslint.config.mjs'],
+    ignores: [
+      'src/generated/**/*',
+      'src/coverage/**/*',
+      'build/**/*',
+      '**eslint.config.mjs',
+      'e2e-tests/',
+      'playwright.config.ts',
+    ],
   },
   ...compat.extends(
     'airbnb',

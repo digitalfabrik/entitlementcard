@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-const expectVisible = async (item, text) => {
+export const expectVisible = async (item, text) => {
   await expect(await item.getByText(text, { exact: true }).last()).toBeVisible()
 }
 
@@ -43,7 +43,6 @@ test.describe('Bayern regional admin', () => {
   }
 
   const organizationInfoTest2 = async item => {
-    // await item.getByRole('heading', { name: h6Element }).click()
     await expectVisible(item, 'Arbeit bei Organisation oder Verein')
     await expectVisible(item, 'Angaben zur Organisation')
     await expectVisible(item, 'Name der Organisation bzw. des Vereins: organization')
@@ -65,7 +64,7 @@ test.describe('Bayern regional admin', () => {
     )
     await expectVisible(item, 'Tätigkeit: activity 1')
     await expectVisible(item, 'Arbeitsstunden pro Woche (Durchschnitt): 56')
-    await expectVisible(item, 'Tätig seit: 10.10.2010')
+    await expectVisible(item, 'Tätig seit: 10.10.1999')
     await expectVisible(
       item,
       'Für diese ehrenamtliche Tätigkeit wurde eine Aufwandsentschädigung gewährt, die über den jährlichen Freibetrag hinaus geht (840 Euro Ehrenamtspauschale bzw. 3000 Euro Übungsleiterpauschale): Nein'
@@ -213,7 +212,7 @@ test.describe('Bayern regional admin', () => {
             await expect(imageLocator).toBeVisible()
 
             await expectVisible(item, 'Kartennummer: 123456789')
-            await expectVisible(item, 'Karte gültig bis: 12.12.2029')
+            await expectVisible(item, 'Karte gültig bis: 10.10.1999')
             await expectVisible(item, 'Kopie der Karte (1): Anhang 1(siehe Anhang 1)')
             await expectVisible(item, 'Bestätigung(en) durch Organisationen:')
             await expectVisible(item, '(keine)')

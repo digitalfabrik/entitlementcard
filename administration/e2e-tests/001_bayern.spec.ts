@@ -18,10 +18,22 @@ test.describe('Bayern testing', () => {
     })
   }
 
-  const voluntaryWorkForm = async (page: Page) => {
+  const fillDateInput = async (page, inputName, dateValue, browserName) => {
+    // Firefox can't fill date input in headless mode so it uses the calender as workaround
+    if (browserName.toLowerCase() === 'firefox') {
+      await page.getByRole('button', { name: 'Datum auswählen' }).click()
+      await page.getByRole('radio', { name: '1999' }).click()
+      await page.getByRole('radio', { name: 'October' }).click()
+      await page.getByRole('gridcell', { name: '10' }).click()
+    } else {
+      await page.getByRole('textbox', { name: inputName }).fill(dateValue)
+    }
+  }
+
+  const voluntaryWorkForm = async (page: Page, browser: string) => {
     await expect(page.locator('form')).toContainText('EHRENAMTLICHE TÄTIGKEIT')
     await page.getByRole('textbox', { name: 'Ehrenamtliche Tätigkeit' }).fill('activity 1')
-    await page.getByRole('textbox', { name: 'Tätig seit' }).fill('10.10.2010')
+    await fillDateInput(page, 'Tätig seit', '10.10.1999', browser)
     await page.getByRole('spinbutton', { name: 'Arbeitsstunden pro Woche (' }).fill('56')
     await expect(page.locator('form')).toContainText('Angaben zur Organisation')
     await page.getByRole('textbox', { name: 'Name der Organisation bzw.' }).fill('organization')
@@ -95,32 +107,34 @@ test.describe('Bayern testing', () => {
     await page.getByRole('textbox', { name: 'E-Mail-Adresse' }).fill('example@gmail.com')
     await page.getByRole('textbox', { name: 'Telefonnummer' }).click()
     await page.getByRole('textbox', { name: 'Telefonnummer' }).fill('02312312')
-    await page.getByRole('textbox', { name: 'Geburtsdatum' }).fill('10.10.1999')
+    await fillDateInput(page, 'Geburtsdatum', '10.10.1999', browserName)
     await page.getByRole('combobox', { expanded: false }).click()
     await page.getByRole('option', { name: 'Augsburg (Stadt)' }).click()
     await page.getByRole('button', { name: 'Nächster Schritt' }).click()
   }
 
   const cardType = async (page: Page, cardType, applicationType = 'initial') => {
-    await expect(page.getByText('Die Bayerische Ehrenamtskarte')).toBeVisible()
-    await expect(page.locator('form').first()).toContainText(
+    await expect(page.locator('form').last()).toContainText(
       'Die Bayerische Ehrenamtskarte gibt es in zwei Varianten: Die blaue Ehrenamtskarte, welche für drei Jahre gültig ist, und die goldene Ehrenamtskarte, welche unbegrenzt gültig ist. Für die blaue Ehrenamtskarte ist beispielsweise berechtigt, wer sich seit mindestens zwei Jahren mindestens fünf Stunden pro Woche ehrenamtlich engagiert. Für die goldene Ehrenamtskarte ist beispielsweise berechtigt, wer sich seit mindestens 25 Jahren mindestens fünf Stunden pro Woche ehrenamtlich engagiert.'
     )
-    await expect(page.locator('form')).toContainText('Antrag auf: *')
+    await expect(page.locator('form').last()).toContainText(
+      'Die Erfüllung der Voraussetzungen wird im nächsten Schritt des Antrags abgefragt. Weitere Informationen können Sie hier einsehen.'
+    )
+    await expect(page.locator('form').last()).toContainText('Antrag auf: *')
     await expect(page.getByRole('radio', { name: 'Blaue Ehrenamtskarte' })).toBeVisible()
     await expect(page.getByRole('radio', { name: 'Goldene Ehrenamtskarte' })).toBeVisible()
     await expect(page.getByRole('radiogroup')).toContainText('Blaue Ehrenamtskarte')
     await expect(page.getByRole('radiogroup')).toContainText('Goldene Ehrenamtskarte')
-    await expect(page.locator('form')).toContainText(
+    await expect(page.locator('form').last()).toContainText(
       'Die Ehrenamtskarte ist als physische Karte und als digitale Version für Ihr Smartphone oder Tablet erhältlich.Hier können Sie auswählen, welche Kartentypen Sie beantragen möchten.'
     )
     await page
       .getByRole('radio', { name: cardType == 'blue' ? 'Blaue Ehrenamtskarte' : 'Goldene Ehrenamtskarte' })
       .check()
     if (cardType == 'blue') {
-      await expect(page.locator('form')).toContainText('Art des Antrags: *')
-      await expect(page.locator('form')).toContainText('Erstantrag *')
-      await expect(page.locator('form')).toContainText('Verlängerungsantrag *')
+      await expect(page.locator('form').last()).toContainText('Art des Antrags: *')
+      await expect(page.locator('form').last()).toContainText('Erstantrag *')
+      await expect(page.locator('form').last()).toContainText('Verlängerungsantrag *')
       await page
         .getByRole('radio', { name: applicationType == 'initial' ? 'Erstantrag' : 'Verlängerungsantrag' })
         .check()
@@ -138,7 +152,7 @@ test.describe('Bayern testing', () => {
     await page.getByRole('button', { name: 'Nächster Schritt' }).click()
   }
 
-  const requirements = async (page: Page, cardType, requirement: number) => {
+  const requirements = async (page: Page, cardType, requirement: number, browser: string) => {
     if (cardType == 'blue') {
       await expect(page.locator('form').first()).toContainText(
         'Ich erfülle folgende Voraussetzung für die Beantragung einer blauen Ehrenamtskarte: *'
@@ -162,13 +176,13 @@ test.describe('Bayern testing', () => {
       switch (requirement) {
         case 1:
           await page.getByRole('radio', { name: 'Ich engagiere mich' }).check()
-          await voluntaryWorkForm(page)
+          await voluntaryWorkForm(page, browser)
           break
         case 2:
           await page.getByRole('radio', { name: 'Ich bin Inhaber:in einer' }).check()
           await expect(page.locator('form')).toContainText('ANGABEN ZUR JULEICA')
           await page.getByRole('textbox', { name: 'Kartennummer' }).fill('123456789')
-          await page.getByRole('textbox', { name: 'Karte gültig bis' }).fill('12.12.2029')
+          await fillDateInput(page, 'Karte gültig bis', '10.10.1999', browser)
           await expect(page.locator('h4')).toContainText('Kopie der JuLeiCa')
           await expect(page.getByRole('paragraph')).toContainText(
             'Hängen Sie hier bitte Ihre eingescannte oder abfotografierte JuLeiCa an. Die Datei darf maximal 5 MB groß sein und muss im JPG, PNG oder PDF Format sein.'
@@ -217,7 +231,7 @@ test.describe('Bayern testing', () => {
       switch (requirement) {
         case 1:
           await page.getByRole('radio', { name: 'Ich bin seit mindestens 25' }).check()
-          await voluntaryWorkForm(page)
+          await voluntaryWorkForm(page, browser)
           break
         case 2:
           await page.getByRole('radio', { name: 'Ich bin Inhaber:in des' }).check()
@@ -284,7 +298,7 @@ test.describe('Bayern testing', () => {
 
     await cardType(page, 'blue', 'initial')
 
-    await requirements(page, 'blue', 1)
+    await requirements(page, 'blue', 1, browserName)
 
     await sendRequest(page)
 
@@ -296,7 +310,7 @@ test.describe('Bayern testing', () => {
 
     await cardType(page, 'blue', 'extension')
 
-    await requirements(page, 'blue', 1)
+    await requirements(page, 'blue', 1, browserName)
 
     await sendRequest(page)
 
@@ -308,7 +322,7 @@ test.describe('Bayern testing', () => {
 
     await cardType(page, 'blue', 'initial')
 
-    await requirements(page, 'blue', 2)
+    await requirements(page, 'blue', 2, browserName)
 
     await sendRequest(page)
 
@@ -320,7 +334,7 @@ test.describe('Bayern testing', () => {
 
     await cardType(page, 'blue', 'initial')
 
-    await requirements(page, 'blue', 3)
+    await requirements(page, 'blue', 3, browserName)
 
     await sendRequest(page)
 
@@ -332,7 +346,7 @@ test.describe('Bayern testing', () => {
 
     await cardType(page, 'blue', 'initial')
 
-    await requirements(page, 'blue', 4)
+    await requirements(page, 'blue', 4, browserName)
 
     await sendRequest(page)
 
@@ -344,7 +358,7 @@ test.describe('Bayern testing', () => {
 
     await cardType(page, 'blue', 'initial')
 
-    await requirements(page, 'blue', 5)
+    await requirements(page, 'blue', 5, browserName)
 
     await sendRequest(page)
 
@@ -356,7 +370,7 @@ test.describe('Bayern testing', () => {
 
     await cardType(page, 'gold')
 
-    await requirements(page, 'gold', 1)
+    await requirements(page, 'gold', 1, browserName)
 
     await sendRequest(page)
 
@@ -368,7 +382,7 @@ test.describe('Bayern testing', () => {
 
     await cardType(page, 'gold')
 
-    await requirements(page, 'gold', 2)
+    await requirements(page, 'gold', 2, browserName)
 
     await sendRequest(page)
 
@@ -380,7 +394,7 @@ test.describe('Bayern testing', () => {
 
     await cardType(page, 'gold')
 
-    await requirements(page, 'gold', 3)
+    await requirements(page, 'gold', 3, browserName)
 
     await sendRequest(page)
 
@@ -392,7 +406,7 @@ test.describe('Bayern testing', () => {
 
     await cardType(page, 'gold')
 
-    await requirements(page, 'gold', 4)
+    await requirements(page, 'gold', 4, browserName)
 
     await sendRequest(page)
 
