@@ -51,7 +51,7 @@ export default defineConfig({
     {
       name: 'chromium',
       testMatch: '002_regionAdministrator.spec.ts',
-      use: { ...devices['Desktop Chrome'], headless: false },
+      use: { ...devices['Desktop Chrome'] },
     },
 
     {
