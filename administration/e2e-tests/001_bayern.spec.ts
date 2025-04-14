@@ -141,7 +141,7 @@ test.describe('Bayern testing', () => {
     }
 
     await page.getByRole('checkbox', { name: 'Ich beantrage eine physische' }).check()
-    await expect(page.locator('form')).toContainText(
+    await expect(page.locator('form').last()).toContainText(
       'Die Ehrenamtskarte ist als physische Karte und als digitale Version für Ihr Smartphone oder Tablet erhältlich.Hier können Sie auswählen, welche Kartentypen Sie beantragen möchten.'
     )
     await expect(page.locator('form')).toContainText('Ich beantrage eine digitale Ehrenamtskarte')
