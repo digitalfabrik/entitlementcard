@@ -71,13 +71,18 @@ class SettingsModel extends ChangeNotifier {
     _notifyChange(currentlyHideVerificationInfo, enabled);
   }
 
-  String languageKey = 'language';
+  static String languageKey = 'language';
   String? get language => _getString(languageKey);
 
   Future<void> setLanguage({required String language}) async {
     String? currentLanguage = language;
     await _preferences?.setString(languageKey, language);
     _notifyChange(currentLanguage, language);
+  }
+
+  static Future<String?> getLanguage() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(languageKey);
   }
 
   @override
