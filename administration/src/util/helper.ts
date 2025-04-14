@@ -28,7 +28,7 @@ export const containsSpecialCharacters = (value: string): boolean =>
  * Checking for latin charset should be fine because all fonts we're going to use for pdf generation should be latin based.
  * */
 export const containsOnlyLatinAndCommonCharset = (value: string): boolean =>
-  XRegExp('^[\\p{Latin}\\p{Common}]+$').test(value)
+  XRegExp('^[\\p{Latin}\\p{Common}]*$').test(value)
 
 export const toLowerCaseFirstLetter = (value: string): string => value.charAt(0).toLowerCase() + value.slice(1)
 

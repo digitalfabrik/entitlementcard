@@ -22,8 +22,7 @@ const getAddressFieldExtension = <T extends AddressFieldExtension>(
   getInitialState: () => ({ [name]: '' } as AddressFieldExtensionState<T>),
   causesInfiniteLifetime: () => false,
   getProtobufData: () => ({}),
-  isValid: (state): boolean =>
-    !state || state[name].length === 0 ? true : containsOnlyLatinAndCommonCharset(state[name]),
+  isValid: (state): boolean => !state || containsOnlyLatinAndCommonCharset(state[name]),
   fromString: (value: string) => ({ [name]: value } as AddressFieldExtensionState<T>),
   toString: (state): string => state[name],
   fromSerialized: (value: string) => ({ [name]: value } as AddressFieldExtensionState<T>),
