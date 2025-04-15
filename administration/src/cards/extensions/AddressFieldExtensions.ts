@@ -1,3 +1,4 @@
+import { containsOnlyLatinAndCommonCharset } from '../../util/helper'
 import type { Card } from '../Card'
 import type { Extension } from './extensions'
 
@@ -21,7 +22,7 @@ const getAddressFieldExtension = <T extends AddressFieldExtension>(
   getInitialState: () => ({ [name]: '' } as AddressFieldExtensionState<T>),
   causesInfiniteLifetime: () => false,
   getProtobufData: () => ({}),
-  isValid: () => true,
+  isValid: (state): boolean => !state || containsOnlyLatinAndCommonCharset(state[name]),
   fromString: (value: string) => ({ [name]: value } as AddressFieldExtensionState<T>),
   toString: (state): string => state[name],
   fromSerialized: (value: string) => ({ [name]: value } as AddressFieldExtensionState<T>),
