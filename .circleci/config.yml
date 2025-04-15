@@ -72,11 +72,12 @@ commands:
             - restore_cache:
                 keys:
                     - v1-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
-                    - v1-gems-{{ arch }}-
+                    - v1-gems-{{ arch }}
                 name: Restore gems
             - run:
                 command: |
                     bundle config set path '~/.bundle'
+                    bundle config set frozen true
                     bundle check || bundle install
                 name: Install fastlane
                 working_directory: << parameters.directory >>
@@ -103,7 +104,7 @@ commands:
             - restore_cache:
                 keys:
                     - v1-fvm-{{ arch }}-{{ checksum ".fvmrc" }}-{{ checksum "pubspec.yaml" }}-{{ checksum "pubspec.lock"  }}
-                    - v1-fvm-{{ arch }}-
+                    - v1-fvm-{{ arch }}
                 name: Restore flutter
             - run:
                 command: |
@@ -152,11 +153,10 @@ commands:
             - restore_cache:
                 keys:
                     - v1-pods-{{ checksum "ios/Podfile.lock" }}
+                    - v1-pods
                 name: Restore pods
             - run:
-                command: |
-                    bundle exec pod update
-                    bundle exec pod install
+                command: bundle exec pod install --deployment
                 name: Install pods
                 working_directory: ios
             - save_cache:
