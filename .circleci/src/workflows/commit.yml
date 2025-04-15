@@ -7,3 +7,4 @@ jobs:
   - check_backend
   - check_administration
   - check_frontend
+  - check_frontend_build_configs
