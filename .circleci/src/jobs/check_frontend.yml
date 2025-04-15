@@ -13,7 +13,7 @@ steps:
   - run:
       name: Setup build config
       # Statically use "bayern" build config for analyzing
-      command: fvm flutter pub run build_runner build --define "df_build_config=name=bayern"
+      command: fvm flutter pub run build_runner build --define "df_build_config=name=nuernberg"
   - run:
       name: Analyze and lint
       command: |
