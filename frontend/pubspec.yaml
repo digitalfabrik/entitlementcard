@@ -102,13 +102,13 @@ flutter:
         - bayern
     - path: assets/nuernberg/
       flavors:
-        - nuernberg
+        - Nuernberg
     - path: assets/nuernberg/intro_slides/
       flavors:
-        - nuernberg
+        - Nuernberg
     - path: assets/nuernberg/l10n/
       flavors:
-        - nuernberg
+        - Nuernberg
     - path: assets/koblenz/
       flavors:
         - koblenz
