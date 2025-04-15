@@ -34,7 +34,7 @@ jobs:
 
   - check_frontend
   - build_android:
-      build_config: bayern
+      build_config: nuernberg
       context:
         - credentials-repo
         - credentials-ehrenamtskarte
@@ -42,7 +42,7 @@ jobs:
         - bump_version
         - check_frontend
   - build_ios:
-      build_config: bayern
+      build_config: nuernberg
       requires:
         - bump_version
         - check_frontend
