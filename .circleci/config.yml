@@ -504,7 +504,7 @@ jobs:
                 command: fvm dart format -l 120 -o none --set-exit-if-changed .
                 name: Check formatting
             - run:
-                command: fvm flutter pub run build_runner build --define "df_build_config=name=bayern"
+                command: fvm flutter pub run build_runner build --define "df_build_config=name=nuernberg"
                 name: Setup build config
             - run:
                 command: |
@@ -906,7 +906,7 @@ workflows:
                     - build_backend
             - check_frontend
             - build_android:
-                build_config: bayern
+                build_config: nuernberg
                 context:
                     - credentials-repo
                     - credentials-ehrenamtskarte
@@ -914,7 +914,7 @@ workflows:
                     - bump_version
                     - check_frontend
             - build_ios:
-                build_config: bayern
+                build_config: nuernberg
                 context:
                     - tuerantuer-apple
                     - fastlane-match
