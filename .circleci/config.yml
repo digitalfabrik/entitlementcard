@@ -906,7 +906,7 @@ workflows:
                     - build_backend
             - check_frontend
             - build_android:
-                build_config: bayern
+                build_config: nuernberg
                 context:
                     - credentials-repo
                     - credentials-ehrenamtskarte
@@ -914,7 +914,7 @@ workflows:
                     - bump_version
                     - check_frontend
             - build_ios:
-                build_config: bayern
+                build_config: nuernberg
                 context:
                     - tuerantuer-apple
                     - fastlane-match
