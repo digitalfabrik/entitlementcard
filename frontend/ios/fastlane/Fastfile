@@ -93,7 +93,7 @@ platform :ios do
        output_directory: "#{ENV['HOME']}",
        output_name: "#{build_config_name}.ipa",
        export_method: "app-store",
-       xcargs: "DART_DEFINES='#{env_prod_base64}'"
+       xcargs: "DART_DEFINES='#{env_prod_base64}' FLAVOR='#{build_config_name}'"
      )
   end
 
