@@ -1,5 +1,6 @@
 docker:
   - image: debian:12 # We deploy on debian -> pack on debian
+resource_class: small
 steps:
   - prepare_workspace
   - run:

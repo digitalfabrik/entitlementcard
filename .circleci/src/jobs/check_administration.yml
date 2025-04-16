@@ -1,5 +1,6 @@
 docker:
   - image: cimg/node:20.18.0
+resource_class: small
 working_directory: ~/project/administration
 steps:
   - prepare_workspace

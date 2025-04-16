@@ -5,6 +5,7 @@ docker:
       - POSTGRES_DB=ehrenamtskarte
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+resource_class: small
 steps:
   - prepare_workspace
   - run:
