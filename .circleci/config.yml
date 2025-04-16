@@ -438,6 +438,10 @@ jobs:
                 command: npm run lint
                 name: Lint
             - run:
+                command: npm run lint
+                name: Lint frontend build config
+                working_directory: ~/project/frontend/build-configs
+            - run:
                 command: npm run check-circular-deps
                 name: Check circular dependencies
             - run:
@@ -522,17 +526,6 @@ jobs:
                 name: Test
             - notify
         working_directory: ~/project/frontend
-    check_frontend_build_configs:
-        docker:
-            - image: cimg/node:20.18.0
-        resource_class: small
-        steps:
-            - prepare_workspace
-            - install_node_modules
-            - run:
-                command: npm run lint
-                name: Lint build config
-        working_directory: ~/project/frontend/build-configs
     deliver_android:
         docker:
             - image: cimg/android:2024.01.1-node
@@ -893,7 +886,6 @@ workflows:
             - check_backend
             - check_administration
             - check_frontend
-            - check_frontend_build_configs
         when:
             and:
                 - << pipeline.parameters.run_commit >>

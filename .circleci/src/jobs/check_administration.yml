@@ -14,6 +14,10 @@ steps:
       name: Lint
       command: npm run lint
   - run:
+      name: Lint frontend build config
+      command: npm run lint
+      working_directory: ~/project/frontend/build-configs
+  - run:
       name: Check circular dependencies
       command: npm run check-circular-deps
   - run:
