@@ -40,7 +40,7 @@ object AcceptingStores : IntIdTable() {
     val categoryId = reference("categoryId", Categories)
     val projectId = reference("projectId", Projects)
     val regionId = reference("regionId", Regions).nullable()
-    val createdAt = timestamp("createdDate").defaultExpression(CurrentTimestamp())
+    val createdAt = timestamp("createdDate").defaultExpression(CurrentTimestamp)
 }
 
 class AcceptingStoreEntity(id: EntityID<Int>) : IntEntity(id) {

@@ -6,11 +6,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
  * This generated file contains a sample Kotlin application project to get you started.
  */
 
-/**
- * The exposed_version (taken from gradle.properties)
- */
-val exposedVersion: String by project
-
 plugins {
     id("com.google.protobuf") version "0.9.5"
     id("com.expediagroup.graphql") version "8.6.0"
@@ -59,6 +54,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.0")
     testImplementation("io.mockk:mockk:1.13.11")
 
+    val exposedVersion = "0.60.0"
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")

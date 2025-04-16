@@ -7,29 +7,30 @@ import app.ehrenamtskarte.backend.regions.database.RegionEntity
 import app.ehrenamtskarte.backend.regions.database.Regions
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.SortOrder
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.select
 
 object RegionsRepository {
-    fun findAllInProject(project: String): List<RegionEntity> {
-        val query = (Projects innerJoin Regions)
-            .slice(Regions.columns)
-            .select { Projects.project eq project }
-            .orderBy(Regions.name to SortOrder.ASC)
-        return RegionEntity.wrapRows(query).toList()
-    }
+    fun findAllInProject(project: String): List<RegionEntity> =
+        RegionEntity.wrapRows(
+            (Projects innerJoin Regions)
+                .select(Regions.columns)
+                .where(Projects.project eq project)
+                .orderBy(Regions.name to SortOrder.ASC),
+        ).toList()
 
-    fun findByIdsInProject(project: String, ids: List<Int>): List<RegionEntity?> {
-        val query = (Projects innerJoin Regions)
-            .slice(Regions.columns)
-            .select { Projects.project eq project and (Regions.id inList ids) }
-        return RegionEntity.wrapRows(query).sortByKeys({ it.id.value }, ids)
-    }
+    fun findByIdsInProject(project: String, ids: List<Int>): List<RegionEntity?> =
+        RegionEntity.wrapRows(
+            (Projects innerJoin Regions)
+                .select(Regions.columns)
+                .where(Projects.project eq project and (Regions.id inList ids))
+        ).sortByKeys({ it.id.value }, ids)
 
     fun findByIdInProject(project: String, id: Int): RegionEntity? =
         (Projects innerJoin Regions)
-            .slice(Regions.columns)
-            .select { Projects.project eq project and (Regions.id eq id) }
+            .select(Regions.columns)
+            .where(Projects.project eq project and (Regions.id eq id))
             .singleOrNull()
             ?.let { RegionEntity.wrapRow(it) }
 
@@ -70,9 +71,8 @@ object RegionsRepository {
 
     fun findRegionByFreinetId(freinetId: Int, projectId: EntityID<Int>): RegionEntity? =
         (FreinetAgencies innerJoin Regions)
-            .slice(Regions.columns)
-            .select { FreinetAgencies.agencyId eq freinetId and (Regions.projectId eq projectId) }
-            .singleOrNull()?.let {
-                RegionEntity.wrapRow(it)
-            }
+            .select(Regions.columns)
+            .where(FreinetAgencies.agencyId eq freinetId and (Regions.projectId eq projectId))
+            .singleOrNull()
+            ?.let { RegionEntity.wrapRow(it) }
 }

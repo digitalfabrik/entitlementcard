@@ -12,6 +12,7 @@ import app.ehrenamtskarte.backend.stores.database.ContactEntity
 import app.ehrenamtskarte.backend.stores.database.Contacts
 import app.ehrenamtskarte.backend.stores.database.PhysicalStoreEntity
 import app.ehrenamtskarte.backend.stores.database.PhysicalStores
+import app.ehrenamtskarte.backend.stores.database.PointColumnType
 import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.Coordinates
 import net.postgis.jdbc.geometry.Point
@@ -28,7 +29,6 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.doubleParam
-import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.stringParam
 
 object AcceptingStoresRepository {
@@ -75,16 +75,18 @@ object AcceptingStoresRepository {
         }
 
         return (Projects innerJoin (AcceptingStores leftJoin PhysicalStores leftJoin Addresses))
-            .slice(AcceptingStores.columns)
-            .select(Projects.project eq project and categoryMatcher and textMatcher)
+            .select(AcceptingStores.columns)
+            .where(Projects.project eq project and categoryMatcher and textMatcher)
             .orderBy(sortExpression)
+            .limit(limit)
+            .offset(offset)
             .let { AcceptingStoreEntity.wrapRows(it) }
-            .limit(limit, offset)
     }
 
     fun getIdIfExists(acceptingStore: AcceptingStore, projectId: EntityID<Int>, regionId: EntityID<Int>?): Int? =
         AcceptingStores.innerJoin(PhysicalStores).innerJoin(Addresses).innerJoin(Contacts)
-            .slice(AcceptingStores.id).select {
+            .select(AcceptingStores.id)
+            .where(
                 (Addresses.street eq acceptingStore.streetWithHouseNumber) and
                     (Addresses.postalCode eq acceptingStore.postalCode!!) and
                     (Addresses.location eq acceptingStore.location) and
@@ -97,18 +99,14 @@ object AcceptingStoresRepository {
                     (AcceptingStores.categoryId eq acceptingStore.categoryId) and
                     (AcceptingStores.regionId eq regionId) and
                     (AcceptingStores.projectId eq projectId) and
-                    (
-                        PhysicalStores.coordinates eq Point(
-                            acceptingStore.longitude!!,
-                            acceptingStore.latitude!!,
-                        )
-                    )
-            }.firstOrNull()?.let { it[AcceptingStores.id].value }
+                    (PhysicalStores.coordinates eq Point(acceptingStore.longitude!!, acceptingStore.latitude!!))
+            )
+            .firstOrNull()?.let { it[AcceptingStores.id].value }
 
     fun getAllIdsInProject(projectId: EntityID<Int>): MutableSet<Int> =
-        AcceptingStores.slice(AcceptingStores.id).select {
-            AcceptingStores.projectId eq projectId
-        }
+        AcceptingStores
+            .select(AcceptingStores.id)
+            .where(AcceptingStores.projectId eq projectId)
             .map { it[AcceptingStores.id].value }.toMutableSet()
 
     fun createStore(acceptingStore: AcceptingStore, projectId: EntityID<Int>, regionId: EntityID<Int>?) {
@@ -140,18 +138,18 @@ object AcceptingStoresRepository {
 
     fun deleteStores(acceptingStoreIds: Iterable<Int>) {
         val contactsDelete = (AcceptingStores innerJoin Contacts)
-            .slice(Contacts.id)
-            .select { AcceptingStores.id inList acceptingStoreIds }
+            .select(Contacts.id)
+            .where { AcceptingStores.id inList acceptingStoreIds }
             .map { it[Contacts.id] }
 
         val physicalStoresDelete = (PhysicalStores innerJoin AcceptingStores)
-            .slice(PhysicalStores.id)
-            .select { AcceptingStores.id inList acceptingStoreIds }
+            .select(PhysicalStores.id)
+            .where { AcceptingStores.id inList acceptingStoreIds }
             .map { it[PhysicalStores.id] }
 
         val addressesDelete = ((PhysicalStores innerJoin Addresses) innerJoin AcceptingStores)
-            .slice(Addresses.id)
-            .select { AcceptingStores.id inList acceptingStoreIds }
+            .select(Addresses.id)
+            .where { AcceptingStores.id inList acceptingStoreIds }
             .map { it[Addresses.id] }
 
         PhysicalStores.deleteWhere {
@@ -175,8 +173,8 @@ object AcceptingStoresRepository {
         AcceptingStoreEntity.find { AcceptingStores.id inList ids }.sortByKeys({ it.id.value }, ids)
 }
 
-// Postgres' "like" operation uses case sensitive comparison by default.
-// Postgres has a builtin "ilike" operation which does case sensitive comparison.
+// Postgres' "like" operation uses case-sensitive comparison by default.
+// Postgres has a builtin "ilike" operation which does case-sensitive comparison.
 class InsensitiveLikeOp(expr1: Expression<*>, expr2: Expression<*>) : ComparisonOp(expr1, expr2, "ILIKE")
 
 infix fun <T : String?> Expression<T>.ilike(pattern: String): InsensitiveLikeOp =
@@ -185,5 +183,6 @@ infix fun <T : String?> Expression<T>.ilike(pattern: String): InsensitiveLikeOp 
 class DistanceFunction(expr1: Expression<Point>, expr2: Expression<Point>) :
     CustomFunction<Double>("ST_DistanceSphere", DoubleColumnType(), expr1, expr2)
 
+// https://postgis.net/docs/ST_MakePoint.html
 class MakePointFunction(expr1: Expression<Double>, expr2: Expression<Double>) :
-    CustomFunction<Point>("ST_MakePoint", DoubleColumnType(), expr1, expr2)
+    CustomFunction<Point>("ST_MakePoint", PointColumnType(), expr1, expr2)

@@ -18,7 +18,6 @@ import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import org.jetbrains.exposed.sql.LowerCase
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.Instant
 import java.time.Period
@@ -31,23 +30,17 @@ object AdministratorsRepository {
     fun emailAlreadyExists(email: String) =
         !AdministratorEntity.find { LowerCase(Administrators.email) eq email.lowercase() }.empty()
 
-    fun findByAuthData(project: String, email: String, password: String): AdministratorEntity? {
-        val resultRow = (Administrators innerJoin Projects)
-            .slice(Administrators.columns)
-            .select(
-                (Projects.project eq project) and (LowerCase(Administrators.email) eq email.lowercase()),
-            )
+    fun findByAuthData(project: String, email: String, password: String): AdministratorEntity? =
+        (Administrators innerJoin Projects)
+            .select(Administrators.columns)
+            .where((Projects.project eq project) and (LowerCase(Administrators.email) eq email.lowercase()))
             .firstOrNull()
-        return resultRow?.let {
-            val user = AdministratorEntity.wrapRow(it)
-            val passwordHash = user.passwordHash
-            if (passwordHash != null && PasswordCrypto.verifyPassword(password, passwordHash)) {
-                user
-            } else {
-                null
+            ?.let {
+                val user = AdministratorEntity.wrapRow(it)
+                val passwordHash = user.passwordHash
+
+                user.takeIf { passwordHash != null && PasswordCrypto.verifyPassword(password, passwordHash) }
             }
-        }
-    }
 
     fun insert(
         project: String,
@@ -118,19 +111,27 @@ object AdministratorsRepository {
 
     fun getNotificationRecipientsForApplication(project: String, regionId: Int): List<AdministratorEntity> =
         transaction {
-            (Administrators innerJoin Projects).select {
-                (Projects.project eq project) and (Administrators.notificationOnApplication eq true) and
-                    (Administrators.regionId eq regionId) and
-                    (Administrators.deleted eq false)
-            }.let { AdministratorEntity.wrapRows(it) }.toList()
+            (Administrators innerJoin Projects)
+                .select(Administrators.columns)
+                .where {
+                    (Projects.project eq project) and (Administrators.notificationOnApplication eq true) and
+                        (Administrators.regionId eq regionId) and
+                        (Administrators.deleted eq false)
+                }
+                .let { AdministratorEntity.wrapRows(it) }
+                .toList()
         }
 
     fun getNotificationRecipientsForVerification(project: String, regionId: Int): List<AdministratorEntity> =
         transaction {
-            (Administrators innerJoin Projects).select {
-                (Projects.project eq project) and (Administrators.notificationOnVerification eq true) and
-                    (Administrators.regionId eq regionId) and
-                    (Administrators.deleted eq false)
-            }.let { AdministratorEntity.wrapRows(it) }.toList()
+            (Administrators innerJoin Projects)
+                .select(Administrators.columns)
+                .where {
+                    (Projects.project eq project) and (Administrators.notificationOnVerification eq true) and
+                        (Administrators.regionId eq regionId) and
+                        (Administrators.deleted eq false)
+                }
+                .let { AdministratorEntity.wrapRows(it) }
+                .toList()
         }
 }

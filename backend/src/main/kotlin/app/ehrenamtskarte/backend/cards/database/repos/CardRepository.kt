@@ -14,14 +14,16 @@ import org.jetbrains.exposed.sql.Coalesce
 import org.jetbrains.exposed.sql.JoinType
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.greaterEq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.isNotNull
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.isNull
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.less
 import org.jetbrains.exposed.sql.alias
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.count
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.intLiteral
-import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.update
 import java.time.Instant
 
@@ -33,13 +35,10 @@ object CardRepository {
     }
 
     fun findByHash(project: String, cardInfoHash: ByteArray): CardEntity? {
-        val query =
-            (Projects innerJoin Regions innerJoin Cards)
-                .slice(Cards.columns)
-                .select {
-                    Projects.project eq project and (Cards.cardInfoHash eq cardInfoHash)
-                }
-                .singleOrNull()
+        val query = (Projects innerJoin Regions innerJoin Cards)
+            .select(Cards.columns)
+            .where(Projects.project eq project and (Cards.cardInfoHash eq cardInfoHash))
+            .singleOrNull()
         return if (query == null) null else CardEntity.wrapRow(query)
     }
 
@@ -84,30 +83,24 @@ object CardRepository {
     ): List<CardStatisticsResultModel> {
         val numAlias = Coalesce(Cards.id.count(), intLiteral(0)).alias("numCards")
         val cardsCreated = (Regions leftJoin Cards leftJoin Projects)
-            .slice(Regions.id, numAlias)
-            .select { Cards.issueDate.greaterEq(from) and Cards.issueDate.less(until) }
+            .select(Regions.id, numAlias)
+            .where(Cards.issueDate.greaterEq(from) and Cards.issueDate.less(until))
             .groupBy(Regions.id)
             .alias("AllCards")
         val activeCards = (Regions leftJoin Cards)
-            .slice(Regions.id, numAlias)
-            .select {
+            .select(Regions.id, numAlias)
+            .where(
                 Cards.firstActivationDate.isNotNull() and
                     Cards.issueDate.greaterEq(from) and
                     Cards.issueDate.less(until)
-            }
+            )
             .groupBy(Regions.id)
             .alias("ActiveCards")
         val query = Regions
             .join(cardsCreated, JoinType.LEFT, Regions.id, cardsCreated[Regions.id])
             .join(activeCards, JoinType.LEFT, Regions.id, activeCards[Regions.id])
-            .slice(Regions.name, Regions.prefix, cardsCreated[numAlias], activeCards[numAlias])
-            .select(
-                if (regionId == null) {
-                    Regions.projectId eq projectId
-                } else {
-                    Regions.id eq regionId
-                },
-            )
+            .select(Regions.name, Regions.prefix, cardsCreated[numAlias], activeCards[numAlias])
+            .where(if (regionId == null) { Regions.projectId eq projectId } else { Regions.id eq regionId })
             .orderBy(Regions.name, SortOrder.ASC)
             .orderBy(Regions.prefix, SortOrder.ASC)
         return query
@@ -128,3 +121,4 @@ object CardRepository {
             it[revoked] = true
         }
 }
+
