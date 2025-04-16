@@ -887,7 +887,7 @@ workflows:
                 - << pipeline.parameters.run_commit >>
                 - not:
                     equal:
-                        - main
+                        - fix-resource-class
                         - << pipeline.git.branch >>
     commit_main:
         jobs:
@@ -942,7 +942,7 @@ workflows:
                         - << pipeline.parameters.run_commit_main >>
                         - run_if_on_main
                     - equal:
-                        - main
+                        - fix-resource-class
                         - << pipeline.git.branch >>
     delivery_beta_all:
         jobs:
