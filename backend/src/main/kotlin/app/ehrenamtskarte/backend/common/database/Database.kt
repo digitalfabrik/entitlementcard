@@ -60,7 +60,7 @@ class Database {
             transaction {
                 assertDatabaseIsInSync()
                 insertOrUpdateProjects(config)
-                insertOrUpdateRegions(agencies)
+                insertOrUpdateRegions(agencies, config)
                 insertOrUpdateCategories(Companion::executeScript)
                 createOrReplaceStoreFunctions(Companion::executeScript)
             }
