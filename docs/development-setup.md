@@ -30,18 +30,38 @@
 
 ### Frontend Setup
 
-1. Install Android SDK via the [Android plugin](https://www.jetbrains.com/help/idea/create-your-first-android-application.html#754fd) or Android Studio
-2. Install [fvm](https://fvm.app/documentation/getting-started/installation) (flutter version manager)
-3. Install flutter dependencies
+1. Install [fvm](https://fvm.app/documentation/getting-started/installation) (flutter version manager)
+2. Install flutter dependencies
 ``` shell
 cd frontend && fvm flutter pub get
 ```
-4. Open IntelliJ settings and
+3. Open IntelliJ settings and
    - Install the Android plugin and set the Android SDK path
    - Install the Dart plugin and set the Dart SDK path
    - Install the Flutter plugin and set the Flutter SDK path
 
 *Note: IntelliJ needs access to environment variables to run these commands successfully.*
+
+#### Android
+
+1. Install Android SDK via Android Studio
+
+#### iOS
+
+1. Install XCode
+2. Install ruby bundler
+3. Install gems
+``` shell
+cd frontend/ios && bundle install
+```
+4. Install cocoapods
+``` shell
+cd frontend/ios && bundle exec pod install --repo-update
+```
+5. [Optional] Install cocoapods globally (only necessary if using IntelliJ run configurations to run on iOS)
+``` shell
+brew install cocoapods
+```
 
 ### Run Frontend
 
@@ -89,12 +109,11 @@ For IntelliJ, the following plugins are recomended:
 
 ### Backend Setup
 
-1. Install docker and docker-compose
-2. Setup docker-compose
+1. Install podman and podman-compose
+2. Setup podman-compose
 ```shell
-docker-compose rm
-docker-compose build
-docker-compose up --force-recreate
+podman machine init
+podman machine start && podman-compose up
 ```
 3. Open the IntelliJ "Project Structure" and set up the required SDK called "entitlementcard-jdk" and point it to your JDK installation.
    ![SDK/JDK setup](./img/intellij-sdk-setup.png)
@@ -109,9 +128,14 @@ cd backend && ./gradlew run --args "migrate"
 
 ### Run Backend
 
+0. [Optional] Set environment variables (not necessary if using intellij run configurations):
+``` shell
+KOBLENZ_PEPPER=123456789ABC
+JWT_SECRET=HelloWorld
+```
 1. Start `docker-compose`
 ```shell
-sudo docker-compose up --force-recreate
+podman machine start && podman-compose up
 ```
 2. Run the backend (`Run backend (env:local+buildConfig:all)`)
 ```shell
