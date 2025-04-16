@@ -28,13 +28,15 @@ class ResetPasswordMutationService {
         val backendConfig = dfe.getContext<GraphQLContext>().backendConfiguration
         val projectConfig = backendConfig.getProjectConfig(project)
         transaction {
-            val user = Administrators.innerJoin(Projects).slice(Administrators.columns)
-                .select(
+            val user = Administrators.innerJoin(Projects)
+                .select(Administrators.columns)
+                .where(
                     (Projects.project eq project) and
                         (LowerCase(Administrators.email) eq email.lowercase()) and
                         (Administrators.deleted eq false),
                 )
-                .singleOrNull()?.let { AdministratorEntity.wrapRow(it) }
+                .singleOrNull()
+                ?.let { AdministratorEntity.wrapRow(it) }
             // We don't send error messages for empty collection to the user to avoid scraping of mail addresses
             if (user != null) {
                 val key = AdministratorsRepository.setNewPasswordResetKey(user)
@@ -67,8 +69,9 @@ class ResetPasswordMutationService {
             )
         }
         transaction {
-            val user = Administrators.innerJoin(Projects).slice(Administrators.columns)
-                .select(
+            val user = Administrators.innerJoin(Projects)
+                .select(Administrators.columns)
+                .where(
                     (Projects.project eq project) and
                         (LowerCase(Administrators.email) eq email.lowercase()) and
                         (Administrators.deleted eq false),

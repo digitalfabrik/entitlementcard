@@ -17,9 +17,9 @@ import app.ehrenamtskarte.backend.regions.database.Regions
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.SortOrder
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.not
-import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
 @Suppress("unused")
@@ -54,8 +54,8 @@ class ViewAdministratorsQueryService {
                 throw ForbiddenException()
             }
             val administrators = (Administrators leftJoin Regions)
-                .slice(Administrators.columns)
-                .select { Administrators.projectId eq projectId and not(Administrators.deleted) }
+                .select(Administrators.columns)
+                .where(Administrators.projectId eq projectId and not(Administrators.deleted))
                 .orderBy(Regions.name to SortOrder.ASC, Administrators.email to SortOrder.ASC)
                 .let { AdministratorEntity.wrapRows(it) }
             administrators.map { Administrator.fromDbEntity(it) }
