@@ -91,7 +91,8 @@ class ApiTokenQueryService {
 
         return transaction {
             (ApiTokens leftJoin Administrators)
-                .select {
+                .select(ApiTokens.columns + Administrators.email)
+                .where {
                     when (admin.role) {
                         Role.EXTERNAL_VERIFIED_API_USER.db_value -> (Administrators.email eq admin.email) and
                             (ApiTokens.type eq ApiTokenType.VERIFIED_APPLICATION)

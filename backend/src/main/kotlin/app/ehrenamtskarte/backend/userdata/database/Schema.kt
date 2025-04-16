@@ -15,7 +15,7 @@ object UserEntitlements : IntIdTable() {
     val endDate = date("endDate")
     val revoked = bool("revoked")
     val regionId = reference("regionId", Regions)
-    val lastUpdated = timestamp("lastUpdated").defaultExpression(CurrentTimestamp())
+    val lastUpdated = timestamp("lastUpdated").defaultExpression(CurrentTimestamp)
 }
 
 class UserEntitlementsEntity(id: EntityID<Int>) : IntEntity(id) {
