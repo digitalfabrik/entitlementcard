@@ -244,7 +244,7 @@ jobs:
     build_administration:
         docker:
             - image: cimg/node:20.18.0
-        resource_class: small
+        resource_class: medium
         steps:
             - prepare_workspace
             - install_protobuf_linux
