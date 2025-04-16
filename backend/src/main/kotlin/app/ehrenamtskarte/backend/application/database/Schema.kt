@@ -23,9 +23,7 @@ object Applications : IntIdTable() {
 }
 
 class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<ApplicationEntity>(
-        Applications,
-    )
+    companion object : IntEntityClass<ApplicationEntity>(Applications)
 
     var regionId by Applications.regionId
     var jsonValue by Applications.jsonValue
@@ -64,9 +62,7 @@ object ApplicationVerifications : IntIdTable() {
 }
 
 class ApplicationVerificationEntity(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<ApplicationVerificationEntity>(
-        ApplicationVerifications,
-    )
+    companion object : IntEntityClass<ApplicationVerificationEntity>(ApplicationVerifications)
 
     var applicationId by ApplicationVerifications.applicationId
     var contactEmailAddress by ApplicationVerifications.contactEmailAddress
