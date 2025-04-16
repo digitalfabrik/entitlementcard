@@ -208,6 +208,31 @@ class MigrateSkipBaseline : CliktCommand(
     }
 }
 
+class DbClear : CliktCommand(
+    name = "db-clear",
+    help = "Recreate the DB",
+) {
+    private val config by requireObject<BackendConfiguration>()
+
+    override fun run() {
+        val db = Database.setupWithoutMigrationCheck(config)
+
+        transaction {
+            // See also https://github.com/postgis/docker-postgis/blob/master/17-master/initdb-postgis.sh
+            exec(
+                """
+                drop schema "public" cascade ;
+                create schema "public";
+                create extension if not exists "postgis" schema "public";
+                create extension if not exists "postgis_topology" ;
+                create extension if not exists "fuzzystrmatch" ;
+                create extension if not exists "postgis_tiger_geocoder" ;
+                """
+            )
+        }
+    }
+}
+
 fun main(args: Array<String>) {
     // Set the default time zone to UTC in order to make timestamps work properly in every configuration.
     TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
@@ -218,6 +243,7 @@ fun main(args: Array<String>) {
         ImportSingle(),
         Migrate(),
         MigrateSkipBaseline(),
+        DbClear(),
         CreateAdmin(),
         GraphQLExport(),
     ).main(args)
