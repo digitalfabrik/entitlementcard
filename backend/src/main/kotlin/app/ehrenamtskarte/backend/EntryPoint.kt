@@ -144,7 +144,7 @@ class GraphQLExport : CliktCommand("graphql-export") {
     }
 }
 
-class ImportSingle : CliktCommand(name = "import-single") {
+class ImportSingle : CliktCommand("import-single") {
     private val config by requireObject<BackendConfiguration>()
     private val projectId by argument()
     private val importUrl by option()
@@ -165,7 +165,7 @@ class ImportSingle : CliktCommand(name = "import-single") {
     }
 }
 
-class Import : CliktCommand(name = "import") {
+class Import : CliktCommand("import") {
     private val config by requireObject<BackendConfiguration>()
 
     override fun help(context: Context): String = "Imports stores for all projects."
@@ -179,7 +179,7 @@ class Import : CliktCommand(name = "import") {
     }
 }
 
-class CreateAdmin : CliktCommand(name = "create-admin") {
+class CreateAdmin : CliktCommand("create-admin") {
     private val config by requireObject<BackendConfiguration>()
 
     private val project by argument()
@@ -206,7 +206,7 @@ class Execute : CliktCommand() {
     }
 }
 
-class Migrate : CliktCommand(name = "migrate") {
+class Migrate : CliktCommand("migrate") {
     private val config by requireObject<BackendConfiguration>()
 
     override fun help(context: Context): String = "Migrates the database"
