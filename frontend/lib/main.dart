@@ -33,6 +33,9 @@ Future<void> main() async {
 }
 
 Future<void> initializeTranslations() async {
+  // This is a workaround for not properly overriding translations on ios, find the issue here: https://github.com/slang-i18n/slang/issues/294
+  // This workaround should be removed when slang v.4.6.1 is available (#2061)
+  await LocaleSettings.instance.loadAllLocales();
   // Only use device locale if set as available in build config, otherwise fallback to de
   final locale = Platform.localeName.split('_')[0];
   if (buildConfig.appLocales.contains(locale)) {
