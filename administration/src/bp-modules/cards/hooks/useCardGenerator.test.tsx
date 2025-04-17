@@ -10,7 +10,6 @@ import { PdfError, generatePdf } from '../../../cards/PdfFactory'
 import createCards, { CreateCardsError, CreateCardsResult } from '../../../cards/createCards'
 import deleteCards from '../../../cards/deleteCards'
 import { DynamicActivationCode, StaticVerificationCode } from '../../../generated/card_pb'
-import { Region } from '../../../generated/graphql'
 import { ProjectConfigProvider } from '../../../project-configs/ProjectConfigContext'
 import bayernConfig from '../../../project-configs/bayern/config'
 import { ProjectConfig } from '../../../project-configs/getProjectConfig'
@@ -18,6 +17,7 @@ import nuernbergConfig from '../../../project-configs/nuernberg/config'
 import showcaseConfig from '../../../project-configs/showcase/config'
 import downloadDataUri from '../../../util/downloadDataUri'
 import { AppToasterProvider } from '../../AppToaster'
+import { getTestRegion } from '../../user-settings/__mocks__/Region'
 import useCardGenerator from './useCardGenerator'
 
 jest.useFakeTimers({ now: new Date('2025-01-01T00:00:00.000Z') })
@@ -60,13 +60,7 @@ const withCustomWrapper =
     })
 
 describe('useCardGenerator', () => {
-  const region: Region = {
-    id: 0,
-    name: 'augsburg',
-    prefix: 'a',
-    activatedForApplication: true,
-    activatedForCardConfirmationMail: true,
-  }
+  const region = getTestRegion({})
 
   const cards = [
     initializeCard(bayernConfig.card, region, { fullName: 'Thea Test' }),

@@ -1,0 +1,7 @@
+mutation updateApplicationConfirmationNote($regionId: Int!, $note: String!, $activated: Boolean!) {
+  success: updateApplicationConfirmationNote(
+    regionId: $regionId
+    applicationConfirmationNote: $note
+    applicationConfirmationNoteActivated: $activated
+  )
+}

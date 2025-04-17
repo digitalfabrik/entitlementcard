@@ -5,7 +5,9 @@ import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidApplicationConfirmationNoteSizeException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidDataPolicySizeException
+import app.ehrenamtskarte.backend.regions.database.APPLICATION_CONFIRMATION_MAIL_NOTE_MAX_CHARS
 import app.ehrenamtskarte.backend.regions.database.PRIVACY_POLICY_MAX_CHARS
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
@@ -49,6 +51,32 @@ class RegionsMutationService {
                 region,
                 activatedForApplication,
                 activatedForConfirmationMail,
+            )
+        }
+        return true
+    }
+
+    @GraphQLDescription("Updates application confirmation mail note")
+    fun updateApplicationConfirmationNote(
+        dfe: DataFetchingEnvironment,
+        regionId: Int,
+        applicationConfirmationNote: String,
+        applicationConfirmationNoteActivated: Boolean,
+    ): Boolean {
+        val jwtPayload = dfe.getContext<GraphQLContext>().enforceSignedIn()
+        transaction {
+            val user = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
+            if (applicationConfirmationNote.length > APPLICATION_CONFIRMATION_MAIL_NOTE_MAX_CHARS) {
+                throw InvalidApplicationConfirmationNoteSizeException(APPLICATION_CONFIRMATION_MAIL_NOTE_MAX_CHARS)
+            }
+            if (!Authorizer.mayUpdateSettingsInRegion(user, regionId)) {
+                throw ForbiddenException()
+            }
+            val region = RegionsRepository.findRegionById(regionId)
+            RegionsRepository.updateApplicationConfirmationNote(
+                region,
+                applicationConfirmationNote,
+                applicationConfirmationNoteActivated,
             )
         }
         return true
