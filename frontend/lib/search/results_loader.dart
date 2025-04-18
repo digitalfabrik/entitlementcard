@@ -122,7 +122,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
             child: AcceptingStoreSummary(
               key: ValueKey(item.id),
               store: AcceptingStoreSummaryModel(
-                item.id,
+                item.physicalStore?.id,
                 item.name,
                 item.description,
                 item.categoryId,
