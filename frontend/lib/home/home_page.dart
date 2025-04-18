@@ -31,7 +31,7 @@ class HomePageState extends State<HomePage> {
   int _currentTabIndex = mapTabIndex;
 
   MapPageController? mapPageController;
-  int? selectedAcceptingStoreId;
+  int? selectedPhysicalStoreId;
   bool followUserLocation = true;
 
   @override
@@ -42,7 +42,7 @@ class HomePageState extends State<HomePage> {
       AppFlow(
         MapPage(
           onMapCreated: (controller) => setState(() => mapPageController = controller),
-          selectAcceptingStore: (id) => setState(() => selectedAcceptingStoreId = id),
+          selectAcceptingStore: (id) => setState(() => selectedPhysicalStoreId = id),
           setFollowUserLocation: (follow) => setState(() => followUserLocation = follow),
         ),
         Icons.map_outlined,
@@ -97,7 +97,7 @@ class HomePageState extends State<HomePage> {
           if (!mounted) return;
           setState(() => followUserLocation = true);
         },
-        selectedAcceptingStoreId: selectedAcceptingStoreId,
+        selectedPhysicalStoreId: selectedPhysicalStoreId,
         followUserLocation: followUserLocation,
         currentTabIndex: _currentTabIndex,
       ),

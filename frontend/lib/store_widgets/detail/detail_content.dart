@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'dart:io' show Platform;
 
-import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/accepting_store_by_id.graphql.dart';
+import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/physical_store_by_id.graphql.dart';
 import 'package:ehrenamtskarte/map/map_page.dart';
 import 'package:ehrenamtskarte/store_widgets/detail/contact_info_row.dart';
 import 'package:ehrenamtskarte/util/color_utils.dart';
@@ -14,7 +14,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
 class DetailContent extends StatelessWidget {
-  final Query$AcceptingStoreById$stores acceptingStore;
+  final Query$PhysicalStoreById$stores acceptingStore;
   final void Function(PhysicalStoreFeatureData)? showOnMap;
   final Color? accentColor;
   final Color? readableOnAccentColor;

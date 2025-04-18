@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:ehrenamtskarte/graphql_gen/schema.graphql.dart';
 import 'package:ehrenamtskarte/map/preview/models.dart';
 import 'package:ehrenamtskarte/routing.dart';
+import 'package:ehrenamtskarte/sentry.dart';
 import 'package:ehrenamtskarte/store_widgets/detail/detail_page.dart';
 import 'package:ehrenamtskarte/store_widgets/category_indicator.dart';
 import 'package:flutter/material.dart';
@@ -76,9 +77,14 @@ class AcceptingStoreSummary extends StatelessWidget {
   }
 
   void _openDetailView(BuildContext context) {
+    final physicalStoreId = store.physicalStoreId;
+    if (physicalStoreId == null) {
+      reportError('Store "${store.name}" has no physical store id', StackTrace.current);
+      return;
+    }
     Navigator.of(context, rootNavigator: true).push(
       AppRoute(
-        builder: (context) => DetailPage(store.id, showOnMap: showOnMap),
+        builder: (context) => DetailPage(physicalStoreId: physicalStoreId, showOnMap: showOnMap),
       ),
     );
   }

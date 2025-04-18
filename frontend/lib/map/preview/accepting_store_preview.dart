@@ -1,20 +1,23 @@
 import 'package:ehrenamtskarte/configuration/configuration.dart';
-import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/accepting_store_summary_by_id.graphql.dart';
+import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/physical_store_summary_by_id.graphql.dart';
 import 'package:ehrenamtskarte/map/preview/accepting_store_preview_card.dart';
 import 'package:ehrenamtskarte/map/preview/models.dart';
 import 'package:flutter/material.dart';
 
 class AcceptingStorePreview extends StatelessWidget {
-  final int acceptingStoreId;
+  final int physicalStoreId;
 
-  const AcceptingStorePreview(this.acceptingStoreId, {super.key});
+  const AcceptingStorePreview({
+    super.key,
+    required this.physicalStoreId,
+  });
 
   @override
   Widget build(BuildContext context) {
     final projectId = Configuration.of(context).projectId;
-    return Query$AcceptingStoreSummaryById$Widget(
-      options: Options$Query$AcceptingStoreSummaryById(
-          variables: Variables$Query$AcceptingStoreSummaryById(project: projectId, ids: [acceptingStoreId])),
+    return Query$PhysicalStoreSummaryById$Widget(
+      options: Options$Query$PhysicalStoreSummaryById(
+          variables: Variables$Query$PhysicalStoreSummaryById(project: projectId, ids: [physicalStoreId])),
       builder: (result, {refetch, fetchMore}) {
         try {
           final exception = result.exception;
@@ -49,7 +52,7 @@ class AcceptingStorePreview extends StatelessWidget {
     );
   }
 
-  AcceptingStoreSummaryModel _convertToAcceptingStoreSummary(Query$AcceptingStoreSummaryById$stores item) {
+  AcceptingStoreSummaryModel _convertToAcceptingStoreSummary(Query$PhysicalStoreSummaryById$stores item) {
     return AcceptingStoreSummaryModel(
       item.id,
       item.store.name,

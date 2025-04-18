@@ -13,7 +13,7 @@ import 'package:ehrenamtskarte/store_widgets/removed_store_summary.dart';
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:provider/provider.dart';
-import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/accepting_store_by_id.graphql.dart';
+import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/physical_store_by_id.graphql.dart';
 
 class FavoritesLoader extends StatefulWidget {
   const FavoritesLoader({super.key});
@@ -93,7 +93,7 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
     }
   }
 
-  Future<Query$AcceptingStoreById$stores?> _fetchPhysicalStore(int storeId) async {
+  Future<Query$PhysicalStoreById$stores?> _fetchPhysicalStore(int storeId) async {
     final projectId = Configuration.of(context).projectId;
 
     final client = _client;
@@ -101,8 +101,8 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
       throw Exception('GraphQL client is not yet initialized!');
     }
 
-    final result = await client.query$AcceptingStoreById(Options$Query$AcceptingStoreById(
-        variables: Variables$Query$AcceptingStoreById(project: projectId, ids: [storeId])));
+    final result = await client.query$PhysicalStoreById(Options$Query$PhysicalStoreById(
+        variables: Variables$Query$PhysicalStoreById(project: projectId, ids: [storeId])));
     final exception = result.exception;
     if (result.hasException && exception != null) {
       throw exception;
