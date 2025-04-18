@@ -1,5 +1,5 @@
 import 'package:ehrenamtskarte/configuration/configuration.dart';
-import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/accepting_store_by_id.graphql.dart';
+import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/physical_store_by_id.graphql.dart';
 import 'package:ehrenamtskarte/store_widgets/detail/detail_app_bar.dart';
 import 'package:ehrenamtskarte/store_widgets/detail/detail_content.dart';
 import 'package:ehrenamtskarte/util/color_utils.dart';
@@ -13,18 +13,18 @@ import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/map/map_page.dart';
 
 class DetailPage extends StatelessWidget {
-  final int _acceptingStoreId;
+  final int physicalStoreId;
   final void Function(PhysicalStoreFeatureData)? showOnMap;
 
-  const DetailPage(this._acceptingStoreId, {super.key, this.showOnMap});
+  const DetailPage({super.key, required this.physicalStoreId, this.showOnMap});
 
   @override
   Widget build(BuildContext context) {
     final t = context.t;
     final projectId = Configuration.of(context).projectId;
-    return Query$AcceptingStoreById$Widget(
-      options: Options$Query$AcceptingStoreById(
-          variables: Variables$Query$AcceptingStoreById(project: projectId, ids: [_acceptingStoreId])),
+    return Query$PhysicalStoreById$Widget(
+      options: Options$Query$PhysicalStoreById(
+          variables: Variables$Query$PhysicalStoreById(project: projectId, ids: [physicalStoreId])),
       builder: (result, {refetch, fetchMore}) {
         final exception = result.exception;
         final data = result.parsedData;

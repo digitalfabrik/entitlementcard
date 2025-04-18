@@ -1,7 +1,7 @@
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/favorites/favorites_model.dart';
 import 'package:ehrenamtskarte/favorites/favorites_page.dart';
-import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/accepting_store_by_id.graphql.dart';
+import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/physical_store_by_id.graphql.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/store_widgets/accepting_store_summary.dart';
 import 'package:ehrenamtskarte/store_widgets/detail/detail_app_bar.dart';
@@ -23,7 +23,7 @@ void main() {
       registerFallbackValue(FakeQueryOptions());
       registerFallbackValue(FakeRoute());
       registerFallbackValue(
-          Options$Query$AcceptingStoreById(variables: Variables$Query$AcceptingStoreById(project: '', ids: [])));
+          Options$Query$PhysicalStoreById(variables: Variables$Query$PhysicalStoreById(project: '', ids: [])));
     });
 
     final mockClient = MockGraphQLClient();
@@ -56,8 +56,8 @@ void main() {
         'favorites': ['{"storeId":1,"storeName":"Test store","categoryId":9}']
       });
 
-      when(() => mockClient.query(any<Options$Query$AcceptingStoreById>())).thenAnswer((invocation) async {
-        final options = invocation.positionalArguments.first as Options$Query$AcceptingStoreById;
+      when(() => mockClient.query(any<Options$Query$PhysicalStoreById>())).thenAnswer((invocation) async {
+        final options = invocation.positionalArguments.first as Options$Query$PhysicalStoreById;
         return QueryResult(
           data: {
             'stores': [
@@ -111,8 +111,8 @@ void main() {
         'favorites': ['{"storeId":1,"storeName":"Test store","categoryId":9}']
       });
 
-      when(() => mockClient.query(any<Options$Query$AcceptingStoreById>())).thenAnswer((invocation) async {
-        final options = invocation.positionalArguments.first as Options$Query$AcceptingStoreById;
+      when(() => mockClient.query(any<Options$Query$PhysicalStoreById>())).thenAnswer((invocation) async {
+        final options = invocation.positionalArguments.first as Options$Query$PhysicalStoreById;
         return QueryResult(
           data: {
             'stores': [null],
