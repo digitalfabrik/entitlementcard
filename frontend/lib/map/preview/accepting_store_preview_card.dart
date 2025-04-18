@@ -53,7 +53,7 @@ class AcceptingStorePreviewCard extends StatelessWidget {
                   : AcceptingStoreSummary(
                       store: currentAcceptingStore,
                       showLocation: false,
-                      key: ValueKey(currentAcceptingStore.id),
+                      key: ValueKey(currentAcceptingStore.physicalStoreId),
                       showOnMap: null,
                     ),
         ),
