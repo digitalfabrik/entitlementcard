@@ -14,25 +14,19 @@ jobs:
       requires:
         - bump_version
 
-  - check_administration
   - build_administration:
       requires:
         - bump_version
-        - check_administration
   - pack_administration:
       requires:
         - build_administration
 
-  - check_backend
-  - build_backend:
-      requires:
-        - check_backend
+  - build_backend
   - pack_backend:
       requires:
         - bump_version
         - build_backend
 
-  - check_frontend
   - build_android:
       build_config: bayern
       context:
@@ -40,12 +34,10 @@ jobs:
         - credentials-ehrenamtskarte
       requires:
         - bump_version
-        - check_frontend
   - build_ios:
       build_config: bayern
       requires:
         - bump_version
-        - check_frontend
       context:
         - tuerantuer-apple
         - fastlane-match
