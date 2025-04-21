@@ -3,6 +3,7 @@ environment:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
 docker:
   - image: cimg/openjdk:17.0.13-node
+resource_class: small
 working_directory: ~/project/backend
 steps:
   - prepare_workspace

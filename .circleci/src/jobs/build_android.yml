@@ -1,5 +1,6 @@
 docker:
   - image: cimg/android:2024.01.1-node
+resource_class: large
 parameters:
   build_config:
     description: "Name of the build config to use"
@@ -8,7 +9,6 @@ parameters:
 environment:
   FASTLANE_SKIP_UPDATE_CHECK: true
   GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m" -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2'
-resource_class: large
 working_directory: ~/project/frontend
 steps:
   - prepare_workspace

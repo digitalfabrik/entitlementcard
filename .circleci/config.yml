@@ -244,6 +244,7 @@ jobs:
     build_administration:
         docker:
             - image: cimg/node:20.18.0
+        resource_class: medium
         steps:
             - prepare_workspace
             - install_protobuf_linux
@@ -315,6 +316,7 @@ jobs:
         environment:
             _JAVA_OPTIONS: -Xmx3g
             GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2
+        resource_class: small
         steps:
             - prepare_workspace
             - install_protobuf_linux
@@ -423,6 +425,7 @@ jobs:
     check_administration:
         docker:
             - image: cimg/node:20.18.0
+        resource_class: small
         steps:
             - prepare_workspace
             - check_circleci_config
@@ -451,6 +454,7 @@ jobs:
         environment:
             _JAVA_OPTIONS: -Xmx3g
             GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2
+        resource_class: small
         steps:
             - prepare_workspace
             - check_circleci_config
@@ -583,6 +587,7 @@ jobs:
             production:
                 description: Whether builds are delivered to production or beta.
                 type: boolean
+        resource_class: small
         steps:
             - prepare_workspace
             - add_ssh_keys:
@@ -661,6 +666,7 @@ jobs:
     pack_administration:
         docker:
             - image: debian:12
+        resource_class: small
         steps:
             - prepare_workspace
             - run:
@@ -686,6 +692,7 @@ jobs:
                 - POSTGRES_USER=postgres
                 - POSTGRES_PASSWORD=postgres
               image: postgis/postgis:13-3.0
+        resource_class: small
         steps:
             - prepare_workspace
             - run:
@@ -707,6 +714,7 @@ jobs:
     pack_martin:
         docker:
             - image: debian:12
+        resource_class: small
         steps:
             - prepare_workspace
             - run:
@@ -736,6 +744,7 @@ jobs:
     pack_meta:
         docker:
             - image: debian:12
+        resource_class: small
         steps:
             - prepare_workspace
             - run:
@@ -779,6 +788,7 @@ jobs:
     promote_github_release:
         docker:
             - image: cimg/node:20.18.0
+        resource_class: small
         steps:
             - prepare_workspace
             - install_app_toolbelt
@@ -811,6 +821,7 @@ jobs:
     promote_server:
         docker:
             - image: cimg/node:20.18.0
+        resource_class: small
         steps:
             - prepare_workspace
             - add_ssh_keys:
