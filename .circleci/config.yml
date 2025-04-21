@@ -136,17 +136,15 @@ commands:
         steps:
             - restore_cache:
                 keys:
-                    - v1-node-modules-{{ checksum "~/project/package-lock.json" }}
-                    - v1-node-modules
+                    - v1-npm-{{ checksum "~/project/package-lock.json" }}
+                    - v1-npm
             - run:
-                command: npm ci
+                command: npm ci --cache ~/.npm --prefer-offline
                 name: Install node dependencies for npm workspaces
             - save_cache:
-                key: v1-node-modules-{{ checksum "~/project/package-lock.json" }}
+                key: v1-npm-{{ checksum "~/project/package-lock.json" }}
                 paths:
-                    - ~/project/node_modules
-                    - ~/project/administration/node_modules
-                    - ~/project/frontend/build-configs/node_modules
+                    - ~/.npm
     install_pods:
         description: Restores and saves the cocoa pods cache.
         steps:
