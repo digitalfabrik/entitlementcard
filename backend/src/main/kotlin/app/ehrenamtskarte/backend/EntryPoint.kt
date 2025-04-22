@@ -99,9 +99,7 @@ class Import : CliktCommand(help = "Imports stores for all projects.") {
     }
 }
 
-class CreateAdmin : CliktCommand(
-    help = "Creates an admin account with the specified email and password",
-) {
+class CreateAdmin : CliktCommand(help = "Creates an admin account with the specified email and password") {
     private val config by requireObject<BackendConfiguration>()
 
     private val project by argument()

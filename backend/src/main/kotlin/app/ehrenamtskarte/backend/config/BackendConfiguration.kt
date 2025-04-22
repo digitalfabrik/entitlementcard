@@ -17,12 +17,7 @@ import java.time.ZoneId
 val possibleBackendConfigurationFiles =
     listOf<File>(
         Paths.get(System.getProperty("user.dir"), "config.yml").toFile(),
-        Paths.get(
-            System.getProperty("user.home"),
-            ".config",
-            "entitlementcard",
-            "config.yml",
-        ).toFile(),
+        Paths.get(System.getProperty("user.home"), ".config", "entitlementcard", "config.yml").toFile(),
         Paths.get("/etc/entitlementcard/config.yml").toFile(),
     )
 

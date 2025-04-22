@@ -18,39 +18,34 @@ class CardCarousel extends StatefulWidget {
   CardCarouselState createState() => CardCarouselState();
 }
 
-// Default bottomNavigationBarHeight in flutter
-// https://api.flutter.dev/flutter/material/NavigationBar/height.html
-final double bottomNavigationBarHeight = 80;
-
 class CardCarouselState extends State<CardCarousel> {
   @override
   Widget build(BuildContext context) {
     final int cardAmount = widget.cards.length;
-    final double indicatorHeight = cardAmount > 1 ? 16 : 0;
+    final double indicatorHeight = cardAmount > 1 ? 32 : 0;
 
-    return Column(
-      children: [
-        Expanded(
-          child: SingleChildScrollView(
-            child: CarouselSlider(
-              items: widget.cards,
-              carouselController: widget.carouselController,
-              options: CarouselOptions(
-                  enableInfiniteScroll: false,
-                  viewportFraction: 0.96,
-                  height: MediaQuery.of(context).size.height - bottomNavigationBarHeight - indicatorHeight,
-                  onPageChanged: (index, reason) {
-                    setState(() {
-                      widget.updateIndex(index);
-                    });
-                  }),
+    return LayoutBuilder(builder: (context, constraints) {
+      return Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: CarouselSlider(
+                items: widget.cards,
+                carouselController: widget.carouselController,
+                options: CarouselOptions(
+                    enableInfiniteScroll: false,
+                    viewportFraction: 0.96,
+                    height: constraints.maxHeight - indicatorHeight,
+                    onPageChanged: (index, reason) {
+                      setState(() {
+                        widget.updateIndex(index);
+                      });
+                    }),
+              ),
             ),
           ),
-        ),
-        if (cardAmount > 1)
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 12),
-            child: Container(
+          if (cardAmount > 1)
+            Container(
               height: indicatorHeight,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -70,8 +65,8 @@ class CardCarouselState extends State<CardCarousel> {
                 }).toList(),
               ),
             ),
-          ),
-      ],
-    );
+        ],
+      );
+    });
   }
 }
