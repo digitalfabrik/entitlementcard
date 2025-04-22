@@ -57,7 +57,7 @@ internal class VerifyCardTest : GraphqlApiTest() {
             )
 
         private fun staticValidCardWithoutExpirationDay(): Int {
-            val userId = TestData.createUserEntitlement(regionId = 95)
+            val userId = TestData.createUserEntitlement()
             return TestData.createStaticCard(
                 entitlementId = userId,
                 expirationDay = null,
@@ -65,7 +65,7 @@ internal class VerifyCardTest : GraphqlApiTest() {
         }
 
         private fun staticExpiredExtendableCard(): Int {
-            val userId = TestData.createUserEntitlement(regionId = 95, endDate = LocalDate.now().plusMonths(2L))
+            val userId = TestData.createUserEntitlement(endDate = LocalDate.now().plusMonths(2L))
             return TestData.createStaticCard(
                 entitlementId = userId,
                 expirationDay = LocalDate.now().minusMonths(1L).toEpochDay(),
@@ -73,7 +73,7 @@ internal class VerifyCardTest : GraphqlApiTest() {
         }
 
         private fun staticFutureNonExtendableCard(): Int {
-            val userId = TestData.createUserEntitlement(regionId = 95, endDate = LocalDate.now().plusMonths(1L))
+            val userId = TestData.createUserEntitlement(endDate = LocalDate.now().plusMonths(1L))
             return TestData.createStaticCard(
                 entitlementId = userId,
                 startDay = LocalDate.now().plusMonths(1L).toEpochDay(),
@@ -82,7 +82,7 @@ internal class VerifyCardTest : GraphqlApiTest() {
         }
 
         private fun staticRevokedExtendableCard(): Int {
-            val userId = TestData.createUserEntitlement(regionId = 95, endDate = LocalDate.now().plusMonths(2L))
+            val userId = TestData.createUserEntitlement(endDate = LocalDate.now().plusMonths(2L))
             return TestData.createStaticCard(
                 entitlementId = userId,
                 expirationDay = LocalDate.now().plusMonths(1L).toEpochDay(),
@@ -91,7 +91,7 @@ internal class VerifyCardTest : GraphqlApiTest() {
         }
 
         private fun dynamicExtendableCardWithoutTotpSecret(): Int {
-            val userId = TestData.createUserEntitlement(regionId = 95, endDate = LocalDate.now().plusMonths(2L))
+            val userId = TestData.createUserEntitlement(endDate = LocalDate.now().plusMonths(2L))
             return TestData.createDynamicCard(
                 entitlementId = userId,
                 expirationDay = LocalDate.now().plusMonths(1L).toEpochDay(),

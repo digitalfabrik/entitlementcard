@@ -75,14 +75,14 @@ enum class TestAdministrators(
         project = "koblenz.sozialpass.app",
         email = "region-admin@koblenz.sozialpass.app",
         role = Role.REGION_ADMIN,
-        regionId = 95,
+        regionId = 96,
     ),
     KOBLENZ_REGION_MANAGER(
         id = 11,
         project = "koblenz.sozialpass.app",
         email = "region-manager@koblenz.sozialpass.app",
         role = Role.REGION_MANAGER,
-        regionId = 95,
+        regionId = 96,
     ),
     BAYERN_VEREIN_360(
         id = 7,

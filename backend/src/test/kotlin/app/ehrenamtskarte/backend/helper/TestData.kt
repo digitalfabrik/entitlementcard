@@ -92,7 +92,7 @@ object TestData {
         startDate: LocalDate = LocalDate.now().minusDays(1L),
         endDate: LocalDate = LocalDate.now().plusYears(1L),
         revoked: Boolean = false,
-        regionId: Int,
+        regionId: Int = 96,
     ): Int =
         transaction {
             UserEntitlements.insertAndGetId {

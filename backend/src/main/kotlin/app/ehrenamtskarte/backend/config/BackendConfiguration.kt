@@ -62,14 +62,13 @@ enum class Environment {
     companion object {
         @JvmStatic
         @JsonCreator
-        fun fromString(value: String): Environment {
-            return when (value.lowercase()) {
+        fun fromString(value: String): Environment =
+            when (value.lowercase()) {
                 "prod", "production" -> PRODUCTION
                 "staging" -> STAGING
                 "dev", "development" -> DEVELOPMENT
                 else -> throw IllegalArgumentException("Invalid environment: $value")
             }
-        }
     }
 }
 
