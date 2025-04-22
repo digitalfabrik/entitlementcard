@@ -1,15 +1,12 @@
-# Default ignored files
-/shelf/
-/workspace.xml
-# Editor-based HTTP Client requests
-/httpRequests/
+# Ignore all files by default
+/*
 
-libraries/*
-
-# Ignore data base configurations
-dataSources
-dataSources.xml
-# Datasource local storage ignored files
-/dataSources.local.xml
-
-misc.xml
+# Whitelist project config
+!/codeStyles
+!/runConfigurations
+!/detekt.xml
+!/entitlementcard.iml
+!/ktlint-plugin.xml
+!/modules.xml
+!/prettier.xml
+!/vcs.xml
