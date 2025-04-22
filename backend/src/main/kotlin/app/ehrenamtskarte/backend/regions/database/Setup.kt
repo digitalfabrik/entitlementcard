@@ -4,6 +4,7 @@ import app.ehrenamtskarte.backend.common.webservice.EAK_BAYERN_PROJECT
 import app.ehrenamtskarte.backend.common.webservice.KOBLENZ_PASS_PROJECT
 import app.ehrenamtskarte.backend.common.webservice.NUERNBERG_PASS_PROJECT
 import app.ehrenamtskarte.backend.config.BackendConfiguration
+import app.ehrenamtskarte.backend.config.Environment
 import app.ehrenamtskarte.backend.freinet.database.FreinetAgenciesEntity
 import app.ehrenamtskarte.backend.freinet.database.insertOrUpdateFreinetRegionInformation
 import app.ehrenamtskarte.backend.freinet.webservice.schema.types.FreinetApiAgency
@@ -48,7 +49,7 @@ fun insertOrUpdateRegions(agencies: List<FreinetApiAgency>, config: BackendConfi
         val eakProject = projects.firstOrNull { it.project == EAK_BAYERN_PROJECT }
             ?: throw Error("Required project '$EAK_BAYERN_PROJECT' not found!")
         val eakRegions = EAK_BAYERN_REGIONS.toMutableList()
-        if (!config.production) {
+        if (config.environment != Environment.PRODUCTION) {
             eakRegions.add(listOf("Stadt", "Freinet Demo", "00000", "https://dummy"))
         }
         eakRegions.forEach { (prefix, name, regionIdentifier, website) ->

@@ -80,7 +80,7 @@ class Database {
                 databaseConfig = DatabaseConfig.invoke {
                     // Nested transactions are helpful for applying migrations in subtransactions.
                     useNestedTransactions = true
-                    if (!config.production) {
+                    if (config.isDevelopment()) {
                         this.sqlLogger = StdOutSqlLogger
                     }
                 },

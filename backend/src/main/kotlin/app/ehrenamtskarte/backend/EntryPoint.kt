@@ -4,6 +4,7 @@ import app.ehrenamtskarte.backend.common.database.Database
 import app.ehrenamtskarte.backend.common.webservice.GraphQLHandler
 import app.ehrenamtskarte.backend.common.webservice.WebService
 import app.ehrenamtskarte.backend.config.BackendConfiguration
+import app.ehrenamtskarte.backend.config.Environment
 import app.ehrenamtskarte.backend.migration.MigrationUtils
 import app.ehrenamtskarte.backend.migration.database.Migrations
 import app.ehrenamtskarte.backend.stores.importer.Importer
@@ -26,7 +27,8 @@ class Entry : CliktCommand() {
     private val config by option().file(canBeDir = false, mustBeReadable = true)
 
     // Options to overwrite single properties of the config
-    private val production by option().choice("true", "false").convert { it.toBoolean() }
+    private val environment by option().choice("dev", "staging", "prod")
+        .convert { Environment.fromString(it) }
     private val postgresUrl by option()
     private val postgresUser by option()
     private val postgresPassword by option()
@@ -37,7 +39,7 @@ class Entry : CliktCommand() {
         val backendConfiguration = BackendConfiguration.load(config?.toURI()?.toURL())
 
         currentContext.obj = backendConfiguration.copy(
-            production = production ?: backendConfiguration.production,
+            environment = environment ?: backendConfiguration.environment,
             postgres = backendConfiguration.postgres.copy(
                 url = postgresUrl ?: backendConfiguration.postgres.url,
                 user = postgresUser ?: backendConfiguration.postgres.user,

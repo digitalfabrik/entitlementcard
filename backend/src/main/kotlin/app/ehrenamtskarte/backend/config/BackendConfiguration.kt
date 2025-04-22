@@ -2,6 +2,7 @@ package app.ehrenamtskarte.backend.config
 
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
@@ -52,8 +53,28 @@ data class ProjectConfig(
 
 data class ServerConfig(val dataDirectory: String, val host: String, val port: String)
 
+enum class Environment {
+    PRODUCTION,
+    STAGING,
+    DEVELOPMENT,
+    ;
+
+    companion object {
+        @JvmStatic
+        @JsonCreator
+        fun fromString(value: String): Environment {
+            return when (value.lowercase()) {
+                "prod", "production" -> PRODUCTION
+                "staging" -> STAGING
+                "dev", "development" -> DEVELOPMENT
+                else -> throw IllegalArgumentException("Invalid environment: $value")
+            }
+        }
+    }
+}
+
 data class BackendConfiguration(
-    val production: Boolean,
+    val environment: Environment,
     val server: ServerConfig,
     val map: MapConfig,
     val postgres: PostgresConfig,
@@ -61,6 +82,8 @@ data class BackendConfiguration(
     val projects: List<ProjectConfig>,
     val matomoUrl: String,
 ) {
+    fun isDevelopment(): Boolean = environment == Environment.DEVELOPMENT
+
     fun getProjectConfig(project: String): ProjectConfig =
         projects.find { it.id == project } ?: throw ProjectNotFoundException(project)
 
