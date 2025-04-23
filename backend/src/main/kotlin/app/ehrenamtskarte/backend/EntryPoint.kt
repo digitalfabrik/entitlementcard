@@ -9,7 +9,10 @@ import app.ehrenamtskarte.backend.migration.database.Migrations
 import app.ehrenamtskarte.backend.stores.importer.Importer
 import com.expediagroup.graphql.generator.extensions.print
 import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.core.Context
 import com.github.ajalt.clikt.core.ProgramResult
+import com.github.ajalt.clikt.core.main
+import com.github.ajalt.clikt.core.obj
 import com.github.ajalt.clikt.core.requireObject
 import com.github.ajalt.clikt.core.subcommands
 import com.github.ajalt.clikt.parameters.arguments.argument
@@ -62,10 +65,12 @@ class GraphQLExport : CliktCommand(name = "graphql-export") {
     }
 }
 
-class ImportSingle : CliktCommand(help = "Imports stores for single project.") {
+class ImportSingle : CliktCommand(name = "import-single") {
     private val config by requireObject<BackendConfiguration>()
     private val projectId by argument()
     private val importUrl by option()
+
+    override fun help(context: Context): String = "Imports stores for single project."
 
     override fun run() {
         val projects =
@@ -85,8 +90,10 @@ class ImportSingle : CliktCommand(help = "Imports stores for single project.") {
     }
 }
 
-class Import : CliktCommand(help = "Imports stores for all projects.") {
+class Import : CliktCommand(name = "import") {
     private val config by requireObject<BackendConfiguration>()
+
+    override fun help(context: Context): String = "Imports stores for all projects."
 
     override fun run() {
         Database.setup(config)
@@ -97,7 +104,7 @@ class Import : CliktCommand(help = "Imports stores for all projects.") {
     }
 }
 
-class CreateAdmin : CliktCommand(help = "Creates an admin account with the specified email and password") {
+class CreateAdmin : CliktCommand(name = "create-admin") {
     private val config by requireObject<BackendConfiguration>()
 
     private val project by argument()
@@ -105,14 +112,18 @@ class CreateAdmin : CliktCommand(help = "Creates an admin account with the speci
     private val email by argument()
     private val password by argument()
 
+    override fun help(context: Context): String = "Creates an admin account with the specified email and password"
+
     override fun run() {
         Database.setup(config)
         Database.createAccount(project, email, password, role)
     }
 }
 
-class Execute : CliktCommand(help = "Starts the webserver") {
+class Execute : CliktCommand() {
     private val config by requireObject<BackendConfiguration>()
+
+    override fun help(context: Context): String = "Starts the webserver"
 
     override fun run() {
         Database.setup(config)
@@ -120,8 +131,10 @@ class Execute : CliktCommand(help = "Starts the webserver") {
     }
 }
 
-class Migrate : CliktCommand(help = "Migrates the database") {
+class Migrate : CliktCommand(name = "migrate") {
     private val config by requireObject<BackendConfiguration>()
+
+    override fun help(context: Context): String = "Migrates the database"
 
     override fun run() {
         val db = Database.setupWithoutMigrationCheck(config)
@@ -129,17 +142,18 @@ class Migrate : CliktCommand(help = "Migrates the database") {
     }
 }
 
-class MigrateSkipBaseline : CliktCommand(
-    help = """
-    Applies all migrations except for the baseline step.
-    
-    This command allows the production system to be upgraded to the new DB migration system.
-    It adds the migrations table without applying the baseline migration step.
-    It should be used only once when introducing the new DB migration system on the production server.
-    Once this is done, this command can be safely removed.
-    """.trimIndent(),
-) {
+class MigrateSkipBaseline : CliktCommand() {
     private val config by requireObject<BackendConfiguration>()
+
+    override fun help(context: Context): String =
+        """
+        Applies all migrations except for the baseline step.
+        
+        This command allows the production system to be upgraded to the new DB migration system.
+        It adds the migrations table without applying the baseline migration step.
+        It should be used only once when introducing the new DB migration system on the production server.
+        Once this is done, this command can be safely removed.
+        """.trimIndent()
 
     override fun run() {
         val db = Database.setupWithoutMigrationCheck(config)
