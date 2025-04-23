@@ -5,7 +5,7 @@ import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
 import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
-import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
+import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
@@ -30,7 +30,7 @@ class ManageUsersMutationService {
         sendWelcomeMail: Boolean,
         dfe: DataFetchingEnvironment,
     ): Boolean {
-        val context = dfe.getContext<GraphQLContext>()
+        val context = dfe.graphQlContext.context
         val actingAdmin = context.getAdministrator()
         val backendConfig = context.backendConfiguration
         val projectConfig = backendConfig.projects.first { it.id == project }
@@ -76,7 +76,7 @@ class ManageUsersMutationService {
         newRegionId: Int?,
         dfe: DataFetchingEnvironment,
     ): Boolean {
-        val context = dfe.getContext<GraphQLContext>()
+        val context = dfe.graphQlContext.context
         val actingAdmin = context.getAdministrator()
 
         transaction {
@@ -113,7 +113,7 @@ class ManageUsersMutationService {
 
     @GraphQLDescription("Deletes an existing administrator")
     fun deleteAdministrator(project: String, adminId: Int, dfe: DataFetchingEnvironment): Boolean {
-        val context = dfe.getContext<GraphQLContext>()
+        val context = dfe.graphQlContext.context
         val actingAdmin = context.getAdministrator()
 
         transaction {

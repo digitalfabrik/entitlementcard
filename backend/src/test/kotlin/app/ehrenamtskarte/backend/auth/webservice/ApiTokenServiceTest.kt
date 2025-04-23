@@ -9,6 +9,7 @@ import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.auth.webservice.schema.ApiTokenQueryService
 import app.ehrenamtskarte.backend.auth.webservice.schema.ApiTokenService
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
+import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.helper.TestAdministrators
@@ -36,7 +37,7 @@ internal class ApiTokenServiceTest : IntegrationTest() {
 
     @BeforeEach
     fun setUp() {
-        every { mockDfe.getContext<GraphQLContext>() } returns mockContext
+        every { mockDfe.graphQlContext.context } returns mockContext
         every { mockContext.enforceSignedIn() } returns mockJwtPayload
         transaction {
             ApiTokens.deleteAll()

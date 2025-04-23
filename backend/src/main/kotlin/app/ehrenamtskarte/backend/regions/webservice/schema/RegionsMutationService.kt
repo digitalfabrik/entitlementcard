@@ -2,7 +2,7 @@ package app.ehrenamtskarte.backend.regions.webservice.schema
 
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.service.Authorizer
-import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
+import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidApplicationConfirmationNoteSizeException
@@ -18,7 +18,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 class RegionsMutationService {
     @GraphQLDescription("Updates the data privacy policy of a region")
     fun updateDataPrivacy(dfe: DataFetchingEnvironment, regionId: Int, dataPrivacyText: String): Boolean {
-        val jwtPayload = dfe.getContext<GraphQLContext>().enforceSignedIn()
+        val jwtPayload = dfe.graphQlContext.context.enforceSignedIn()
         transaction {
             val user = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
             if (dataPrivacyText.length > PRIVACY_POLICY_MAX_CHARS) {
@@ -40,7 +40,7 @@ class RegionsMutationService {
         activatedForApplication: Boolean,
         activatedForConfirmationMail: Boolean,
     ): Boolean {
-        val jwtPayload = dfe.getContext<GraphQLContext>().enforceSignedIn()
+        val jwtPayload = dfe.graphQlContext.context.enforceSignedIn()
         transaction {
             val user = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
             if (!Authorizer.mayUpdateSettingsInRegion(user, regionId)) {
@@ -63,7 +63,7 @@ class RegionsMutationService {
         applicationConfirmationNote: String,
         applicationConfirmationNoteActivated: Boolean,
     ): Boolean {
-        val jwtPayload = dfe.getContext<GraphQLContext>().enforceSignedIn()
+        val jwtPayload = dfe.graphQlContext.context.enforceSignedIn()
         transaction {
             val user = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
             if (applicationConfirmationNote.length > APPLICATION_CONFIRMATION_MAIL_NOTE_MAX_CHARS) {

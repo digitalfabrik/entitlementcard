@@ -5,7 +5,7 @@ import app.ehrenamtskarte.backend.auth.webservice.JwtService
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Administrator
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.AuthData
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.SignInPayload
-import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
+import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCredentialsException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
@@ -22,7 +22,7 @@ class SignInMutationService {
             AdministratorsRepository.findByAuthData(project, authData.email, authData.password)
         }
         if (administratorEntity == null) {
-            val context = dfe.getContext<GraphQLContext>()
+            val context = dfe.graphQlContext.context
             // This logging is used for rate limiting
             // See https://git.tuerantuer.org/DF/salt/pulls/187
             logger.info("${context.remoteIp} ${authData.email} failed to log in")

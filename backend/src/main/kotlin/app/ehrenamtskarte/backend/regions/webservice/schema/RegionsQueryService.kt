@@ -2,7 +2,7 @@ package app.ehrenamtskarte.backend.regions.webservice.schema
 
 import app.ehrenamtskarte.backend.common.webservice.DEFAULT_PROJECT
 import app.ehrenamtskarte.backend.common.webservice.EAK_BAYERN_PROJECT
-import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
+import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.common.webservice.schema.IdsParams
 import app.ehrenamtskarte.backend.exception.service.NotEakProjectException
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
@@ -79,7 +79,7 @@ class RegionsQueryService {
     )
     fun regionsByPostalCode(dfe: DataFetchingEnvironment, postalCode: String, project: String): List<Region> =
         transaction {
-            val regions = dfe.getContext<GraphQLContext>().regionIdentifierByPostalCode
+            val regions = dfe.graphQlContext.context.regionIdentifierByPostalCode
                 .filter { pair -> pair.first.equals(postalCode) }
 
             if (regions.isEmpty()) {

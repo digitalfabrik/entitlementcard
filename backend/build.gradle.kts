@@ -33,8 +33,9 @@ dependencies {
     implementation("org.simplejavamail:simple-java-mail:8.1.3")
     implementation("org.piwik.java.tracking:matomo-java-tracker:3.4.0")
 
-    implementation("com.expediagroup:graphql-kotlin-schema-generator:6.5.3")
-    testImplementation("com.expediagroup:graphql-kotlin-client:6.5.3")
+    val graphQlGeneratorVersion = "8.6.0"
+    implementation("com.expediagroup:graphql-kotlin-schema-generator:$graphQlGeneratorVersion")
+    testImplementation("com.expediagroup:graphql-kotlin-client:$graphQlGeneratorVersion")
 
     implementation("com.graphql-java:graphql-java-extended-scalars:20.2")
     // Align versions of all Kotlin components

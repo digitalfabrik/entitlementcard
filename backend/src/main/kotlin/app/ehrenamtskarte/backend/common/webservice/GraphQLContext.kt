@@ -3,7 +3,7 @@ package app.ehrenamtskarte.backend.common.webservice
 import app.ehrenamtskarte.backend.auth.webservice.JwtPayload
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
-import com.expediagroup.graphql.generator.execution.GraphQLContext
+import graphql.GraphQLContext
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.Part
 import java.io.File
@@ -16,10 +16,15 @@ data class GraphQLContext(
     val backendConfiguration: BackendConfiguration,
     val regionIdentifierByPostalCode: List<Pair<String, String>>,
     val request: HttpServletRequest,
-) : GraphQLContext {
-    fun enforceSignedIn(): JwtPayload {
-        val isSignedIn = jwtPayload != null
-        if (!isSignedIn) throw UnauthorizedException()
-        return jwtPayload!!
-    }
+) {
+    fun enforceSignedIn(): JwtPayload = jwtPayload ?: throw UnauthorizedException()
 }
+
+private const val ID = "context"
+
+fun GraphQLContext.Builder.put(context: app.ehrenamtskarte.backend.common.webservice.GraphQLContext) {
+    put(ID, context)
+}
+
+val GraphQLContext.context: app.ehrenamtskarte.backend.common.webservice.GraphQLContext
+    get() = get(ID)
