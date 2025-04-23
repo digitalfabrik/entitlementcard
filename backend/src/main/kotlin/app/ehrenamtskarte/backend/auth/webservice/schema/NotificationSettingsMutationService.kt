@@ -3,7 +3,7 @@ package app.ehrenamtskarte.backend.auth.webservice.schema
 import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
 import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.NotificationSettings
-import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
+import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
@@ -20,7 +20,7 @@ class NotificationSettingsMutationService {
         notificationSettings: NotificationSettings,
         dfe: DataFetchingEnvironment,
     ): Boolean {
-        val context = dfe.getContext<GraphQLContext>()
+        val context = dfe.graphQlContext.context
         val admin = context.getAdministrator()
 
         transaction {
