@@ -4,7 +4,7 @@ import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.database.Administrators
 import app.ehrenamtskarte.backend.auth.database.PasswordCrypto
 import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
-import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
+import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidLinkException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.PasswordResetKeyExpiredException
@@ -15,7 +15,6 @@ import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.LowerCase
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
 import java.time.Instant
@@ -25,7 +24,7 @@ class ResetPasswordMutationService {
     @GraphQLDescription("Sends a mail that allows the administrator to reset their password.")
     fun sendResetMail(dfe: DataFetchingEnvironment, project: String, email: String): Boolean {
         val logger = LoggerFactory.getLogger(ResetPasswordMutationService::class.java)
-        val backendConfig = dfe.getContext<GraphQLContext>().backendConfiguration
+        val backendConfig = dfe.graphQlContext.context.backendConfiguration
         val projectConfig = backendConfig.getProjectConfig(project)
         transaction {
             val user = Administrators.innerJoin(Projects)
@@ -43,7 +42,7 @@ class ResetPasswordMutationService {
                 Mailer.sendResetPasswordMail(backendConfig, projectConfig, key, email)
             }
             if (user == null) {
-                val context = dfe.getContext<GraphQLContext>()
+                val context = dfe.graphQlContext.context
                 // This logging is used for rate limiting
                 // See https://git.tuerantuer.org/DF/salt/pulls/187
                 logger.info("${context.remoteIp} $email failed to request password reset mail")
@@ -61,12 +60,10 @@ class ResetPasswordMutationService {
         newPassword: String,
     ): Boolean {
         val logger = LoggerFactory.getLogger(ResetPasswordMutationService::class.java)
-        val backendConfig = dfe.getContext<GraphQLContext>().backendConfiguration
-        val context = dfe.getContext<GraphQLContext>()
+        val backendConfig = dfe.graphQlContext.context.backendConfiguration
+        val context = dfe.graphQlContext.context
         if (!backendConfig.projects.any { it.id == project }) {
-            throw ProjectNotFoundException(
-                project,
-            )
+            throw ProjectNotFoundException(project)
         }
         transaction {
             val user = Administrators.innerJoin(Projects)

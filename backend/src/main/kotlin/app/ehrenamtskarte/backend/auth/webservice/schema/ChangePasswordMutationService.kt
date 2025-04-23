@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.auth.webservice.schema
 
 import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
-import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
+import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCredentialsException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
@@ -18,7 +18,7 @@ class ChangePasswordMutationService {
         newPassword: String,
         dfe: DataFetchingEnvironment,
     ): Boolean {
-        val context = dfe.getContext<GraphQLContext>()
+        val context = dfe.graphQlContext.context
         val jwtPayload = context.enforceSignedIn()
         transaction {
             val administratorEntity =

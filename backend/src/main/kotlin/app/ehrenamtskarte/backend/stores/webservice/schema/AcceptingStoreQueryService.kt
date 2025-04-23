@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.stores.webservice.schema
 
 import app.ehrenamtskarte.backend.common.webservice.DEFAULT_PROJECT
-import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
+import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.common.webservice.schema.IdsParams
 import app.ehrenamtskarte.backend.matomo.Matomo
 import app.ehrenamtskarte.backend.stores.database.repos.AcceptingStoresRepository
@@ -53,7 +53,7 @@ class AcceptingStoreQueryService {
         params: SearchParams,
         dfe: DataFetchingEnvironment,
     ): List<AcceptingStore> {
-        val context = dfe.getContext<GraphQLContext>()
+        val context = dfe.graphQlContext.context
         val projectConfig = context.backendConfiguration.getProjectConfig(project)
         val filteredStores = transaction {
             AcceptingStoresRepository.findBySearch(
