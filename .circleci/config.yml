@@ -331,7 +331,7 @@ jobs:
                 keys:
                     - v1-gradle-{{ checksum "build.gradle.kts" }}
             - run:
-                command: ./gradlew build
+                command: ./gradlew assemble
                 name: Build backend
             - save_cache:
                 key: v1-gradle-{{ checksum "build.gradle.kts" }}
