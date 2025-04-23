@@ -133,10 +133,7 @@ internal class VerifyCardTest : GraphqlApiTest() {
 
     @Test
     fun `should return valid = false and extendable = false when the card doesn't exist`() =
-        JavalinTest.test(app) {
-            _,
-            client,
-            ->
+        JavalinTest.test(app) { _, client ->
             val query = createQuery(
                 cardInfoHash = Random.nextBytes(20).encodeBase64(),
                 codeType = CodeType.STATIC,

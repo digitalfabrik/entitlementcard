@@ -56,7 +56,7 @@ object TestData {
         telephone: String? = "0911/123456",
         projectId: Int = 2,
         categoryId: Int = 17,
-        regionId: Int = 94,
+        regionId: Int = 95,
     ): AcceptingStoreEntity =
         transaction {
             val addressId = Addresses.insertAndGetId {
