@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.helper
 
+import Card
 import java.util.Base64
 
 enum class CardInfoTestSample {
