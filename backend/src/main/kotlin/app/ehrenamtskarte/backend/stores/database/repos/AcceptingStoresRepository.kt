@@ -99,7 +99,7 @@ object AcceptingStoresRepository {
                     (AcceptingStores.categoryId eq acceptingStore.categoryId) and
                     (AcceptingStores.regionId eq regionId) and
                     (AcceptingStores.projectId eq projectId) and
-                    (PhysicalStores.coordinates eq Point(acceptingStore.longitude!!, acceptingStore.latitude!!))
+                    (PhysicalStores.coordinates eq Point(acceptingStore.longitude!!, acceptingStore.latitude!!)),
             )
             .firstOrNull()?.let { it[AcceptingStores.id].value }
 

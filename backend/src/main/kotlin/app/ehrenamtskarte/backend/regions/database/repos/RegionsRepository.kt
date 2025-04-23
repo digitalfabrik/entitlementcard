@@ -24,7 +24,7 @@ object RegionsRepository {
         RegionEntity.wrapRows(
             (Projects innerJoin Regions)
                 .select(Regions.columns)
-                .where(Projects.project eq project and (Regions.id inList ids))
+                .where(Projects.project eq project and (Regions.id inList ids)),
         ).sortByKeys({ it.id.value }, ids)
 
     fun findByIdInProject(project: String, id: Int): RegionEntity? =

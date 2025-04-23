@@ -92,7 +92,7 @@ object CardRepository {
             .where(
                 Cards.firstActivationDate.isNotNull() and
                     Cards.issueDate.greaterEq(from) and
-                    Cards.issueDate.less(until)
+                    Cards.issueDate.less(until),
             )
             .groupBy(Regions.id)
             .alias("ActiveCards")
@@ -100,7 +100,7 @@ object CardRepository {
             .join(cardsCreated, JoinType.LEFT, Regions.id, cardsCreated[Regions.id])
             .join(activeCards, JoinType.LEFT, Regions.id, activeCards[Regions.id])
             .select(Regions.name, Regions.prefix, cardsCreated[numAlias], activeCards[numAlias])
-            .where(if (regionId == null) { Regions.projectId eq projectId } else { Regions.id eq regionId })
+            .where(if (regionId == null) Regions.projectId eq projectId else Regions.id eq regionId)
             .orderBy(Regions.name, SortOrder.ASC)
             .orderBy(Regions.prefix, SortOrder.ASC)
         return query
@@ -121,4 +121,3 @@ object CardRepository {
             it[revoked] = true
         }
 }
-
