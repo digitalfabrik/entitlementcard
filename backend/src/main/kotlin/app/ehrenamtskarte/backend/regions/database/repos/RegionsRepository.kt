@@ -41,6 +41,11 @@ object RegionsRepository {
         region.dataPrivacyPolicy = dataPrivacyText
     }
 
+    fun updateApplicationConfirmationNote(region: RegionEntity, note: String, activated: Boolean) {
+        region.applicationConfirmationMailNote = note
+        region.applicationConfirmationMailNoteActivated = activated
+    }
+
     fun updateRegionSettings(
         region: RegionEntity,
         activatedForApplication: Boolean,

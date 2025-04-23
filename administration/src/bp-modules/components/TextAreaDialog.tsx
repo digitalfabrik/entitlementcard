@@ -5,11 +5,7 @@ import styled from 'styled-components'
 
 import graphQlErrorMap from '../../errors/GraphQlErrorMap'
 import { GraphQlExceptionCode } from '../../generated/graphql'
-
-const CharacterCounter = styled.div<{ $hasError: boolean }>`
-  align-self: center;
-  color: ${props => (props.$hasError ? 'red' : 'black')};
-`
+import CharacterCounter from './CharacterCounter'
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -25,6 +21,7 @@ type NoteProps = {
   loading: boolean
   defaultText?: string | null
   maxChars?: number
+  additionalContent?: ReactElement
 }
 
 const TextAreaDialog = ({
@@ -35,6 +32,7 @@ const TextAreaDialog = ({
   placeholder,
   defaultText,
   maxChars,
+  additionalContent,
 }: NoteProps): ReactElement => {
   const { t } = useTranslation('misc')
   const [text, setText] = useState<string>(defaultText ?? '')
@@ -62,21 +60,19 @@ const TextAreaDialog = ({
 
   return (
     <Dialog isOpen={isOpen} onClose={onClose}>
-      <TextArea
-        fill
-        onChange={e => setText(e.target.value)}
-        value={text}
-        readOnly={loading}
-        large
-        rows={20}
-        placeholder={placeholder}
-      />
+      <>
+        <TextArea
+          fill
+          onChange={e => setText(e.target.value)}
+          value={text}
+          readOnly={loading}
+          rows={20}
+          placeholder={placeholder}
+        />
+        {additionalContent}
+      </>
       <DialogFooter actions={actions}>
-        {maxChars !== undefined && (
-          <CharacterCounter $hasError={maxCharsExceeded} aria-label='Character Counter'>
-            {text.length}/{maxChars}
-          </CharacterCounter>
-        )}
+        {maxChars !== undefined && <CharacterCounter text={text} maxChars={maxChars} />}
       </DialogFooter>
     </Dialog>
   )

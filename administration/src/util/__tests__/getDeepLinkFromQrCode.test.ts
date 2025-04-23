@@ -6,13 +6,13 @@ import {
   HTTPS_SCHEME,
 } from 'build-configs'
 
+import { getTestRegion } from '../../bp-modules/user-settings/__mocks__/Region'
 import { generateCardInfo, initializeCard } from '../../cards/Card'
 import { CreateCardsResult } from '../../cards/createCards'
 import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
 import { PdfQrCode } from '../../cards/pdf/PdfQrCodeElement'
 import { DynamicActivationCode } from '../../generated/card_pb'
-import { Region } from '../../generated/graphql'
 import { LOCAL_STORAGE_PROJECT_KEY } from '../../project-configs/constants'
 import { getBuildConfig } from '../getBuildConfig'
 import getDeepLinkFromQrCode from '../getDeepLinkFromQrCode'
@@ -20,13 +20,7 @@ import getDeepLinkFromQrCode from '../getDeepLinkFromQrCode'
 jest.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
 
 describe('DeepLink generation', () => {
-  const region: Region = {
-    id: 0,
-    name: 'augsburg',
-    prefix: 'a',
-    activatedForApplication: true,
-    activatedForCardConfirmationMail: true,
-  }
+  const region = getTestRegion({})
 
   const cardConfigBayern = {
     defaultValidity: { years: 3 },

@@ -9,6 +9,8 @@ query whoAmI($project: String!) {
       prefix
       activatedForApplication
       activatedForCardConfirmationMail
+      applicationConfirmationMailNote
+      applicationConfirmationMailNoteActivated
     }
   }
 }
