@@ -12,11 +12,11 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 val exposedVersion: String by project
 
 plugins {
-    id("com.google.protobuf") version "0.9.4"
-    id("com.expediagroup.graphql") version "8.3.0"
+    id("com.google.protobuf") version "0.9.5"
+    id("com.expediagroup.graphql") version "8.6.0"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
-    id("org.jetbrains.kotlinx.kover") version "0.8.3"
     id("org.jetbrains.kotlin.jvm") version "2.1.20"
+    id("org.jetbrains.kotlinx.kover") version "0.9.1"
     id("org.jlleitschuh.gradle.ktlint") version "12.2.0"
     // Apply the application plugin to add support for building a CLI application.
     application
@@ -119,6 +119,11 @@ sourceSets {
             srcDir("../specs")
         }
     }
+    test {
+        kotlin {
+            srcDir("${layout.buildDirectory.get()}/generated/source/graphql")
+        }
+    }
 }
 
 java {
@@ -127,8 +132,8 @@ java {
 
 protobuf {
     generateProtoTasks {
-        all().forEach {
-            it.builtins {
+        all().configureEach {
+            builtins {
                 create("kotlin")
             }
         }
