@@ -1,6 +1,8 @@
 docker:
   - image: cimg/node:20.18.0
+resource_class: small
 steps:
+  - prepare_workspace
   - install_app_toolbelt
   - run:
       name: Remove prerelease flag from github release

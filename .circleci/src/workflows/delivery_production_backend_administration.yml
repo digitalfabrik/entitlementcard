@@ -6,65 +6,44 @@ jobs:
       platforms: web
       context:
         - deliverino
-  - check_administration
-  - build_administration:
-      requires:
-        - check_administration
-        - bump_version
-  - pack_administration:
-      requires:
-        - build_administration
-  - check_backend
-  - build_backend:
-      requires:
-        - check_backend
-  - pack_backend:
-      requires:
-        - build_backend
-        - bump_version
-  - check_health_backend:
-      requires:
-        - pack_backend
   - pack_martin:
       requires:
         - bump_version
   - pack_meta:
       requires:
         - bump_version
-  - upload_packages_to_server:
-      name: upload_administration_packages_to_server_production
+
+  - check_administration
+  - build_administration:
+      requires:
+        - bump_version
+        - check_administration
+  - pack_administration:
+      requires:
+        - build_administration
+
+  - check_backend
+  - build_backend:
+      requires:
+        - check_backend
+  - pack_backend:
+      requires:
+        - bump_version
+        - build_backend
+
+  - deliver_server:
       production: true
-      bundle: administration
       context:
         - credentials-ehrenamtskarte
       requires:
         - pack_administration
-        - check_health_backend
+        - pack_backend
         - pack_martin
         - pack_meta
-  - upload_packages_to_server:
-      name: upload_backend_packages_to_server_production
-      production: true
-      bundle: backend
-      context:
-        - credentials-ehrenamtskarte
-      requires:
-        - pack_administration
-        - check_health_backend
-        - pack_martin
-        - pack_meta
-  - install_packages_to_server:
-      name: install_packages_to_server_production
-      production: true
-      context:
-        - credentials-ehrenamtskarte
-      requires:
-        - upload_administration_packages_to_server_production
-        - upload_backend_packages_to_server_production
   - notify_release:
       production_delivery: true
       context:
         - deliverino
       requires:
-        - install_packages_to_server_production
+        - deliver_server
 

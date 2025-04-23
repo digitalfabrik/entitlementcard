@@ -1,5 +1,11 @@
 docker:
   - image: debian:12 # We deploy on debian -> pack on debian
+  - image: postgis/postgis:13-3.0 # For check_backend_health
+    environment:
+      - POSTGRES_DB=ehrenamtskarte
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+resource_class: small
 steps:
   - prepare_workspace
   - run:
@@ -10,6 +16,7 @@ steps:
       command: |
         mkdir -p ~/attached_workspace/debs/backend
         mv *.deb ~/attached_workspace/debs/backend
+  - check_backend_health
   - store_artifacts:
       path: ~/attached_workspace
   - persist_to_workspace:
