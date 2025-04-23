@@ -27,7 +27,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.11.0")
     implementation("io.javalin:javalin:6.3.0")
     testImplementation("io.javalin:javalin-testtools:6.3.0")
-    implementation("com.google.code.gson:gson:2.10.1")
     implementation("org.slf4j:slf4j-simple:2.0.7")
     implementation("org.apache.commons:commons-text:1.10.0")
     implementation("org.simplejavamail:simple-java-mail:8.1.3")
