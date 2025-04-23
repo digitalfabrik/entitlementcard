@@ -70,6 +70,7 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
+    print(widget.base64qrcode);
     DynamicActivationCode? activationCode = getActivationCode(context, widget.base64qrcode, updateErrorMessage);
     CardInfo? cardInfo = activationCode?.info;
     final userCodeModel = Provider.of<UserCodeModel>(context);
