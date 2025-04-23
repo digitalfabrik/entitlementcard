@@ -104,7 +104,7 @@ detekt {
 ktlint {
     version.set("1.5.0")
     filter {
-        exclude { it.file.path.contains("$buildDir/generated/") }
+        exclude { it.file.path.contains("${layout.buildDirectory.get()}/generated/") }
     }
 }
 
@@ -156,7 +156,7 @@ tasks.withType<JavaExec>().configureEach {
 
 tasks.register<Copy>("copyStyle") {
     from("$rootDir/ehrenamtskarte-maplibre-style/style.json")
-    into("$buildDir/resources/main/styles")
+    into("${layout.buildDirectory.get()}/resources/main/styles")
 }
 
 tasks.named("classes") {
