@@ -339,7 +339,7 @@
     "applicationConfirmationMailNoteHeadline": "Eingangsbestätigung Antrag",
     "applicationConfirmationMailNoteDialogPlaceholder": "Fügen Sie hier Ihre Notiz ein...",
     "applicationConfirmationMailNoteExplanation": "Hier können Sie eine allgemeine Notiz hinterlegen, welche dem Antragssteller in der Eingangsbestätigungsmail des Antrags zusätzlich angezeigt wird. Sie können die Notiz jederzeit aktivieren oder deaktivieren.",
-    "applicationConfirmationMailNoteActivated": "Notiz bei Antragsbestätigung an Antragssteller:in senden",
+    "applicationConfirmationMailNoteActivated": "Notiz aktivieren",
     "applicationConfirmationMailNoteSavedSuccessful": "Ihre Notizeinstellungen wurden erfolgreich geändert."
   },
   "selfService": {

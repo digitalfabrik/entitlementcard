@@ -66,7 +66,6 @@ const TextAreaDialog = ({
           onChange={e => setText(e.target.value)}
           value={text}
           readOnly={loading}
-          large
           rows={20}
           placeholder={placeholder}
         />

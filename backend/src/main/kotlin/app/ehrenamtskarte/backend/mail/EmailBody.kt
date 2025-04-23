@@ -64,7 +64,7 @@ class Paragraph {
     }
 
     fun plain(plainText: String) {
-        plainText.trim().split("\n").forEachIndexed { index, text ->
+        plainText.trim().lines().forEachIndexed { index, text ->
             if (index != 0) {
                 children.add(LineBreak())
             }
