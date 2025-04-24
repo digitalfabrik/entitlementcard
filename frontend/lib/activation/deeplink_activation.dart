@@ -11,6 +11,7 @@ import 'package:ehrenamtskarte/identification/util/activate_card.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/verification_qr_code_processor.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
+import 'package:ehrenamtskarte/util/string_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -43,9 +44,9 @@ enum DeepLinkActivationStatus {
 }
 
 class DeepLinkActivation extends StatefulWidget {
-  final String base64qrcode;
+  final String encodedBase64qrcode;
 
-  const DeepLinkActivation({super.key, required this.base64qrcode});
+  const DeepLinkActivation({super.key, required this.encodedBase64qrcode});
 
   @override
   State<DeepLinkActivation> createState() => _DeepLinkActivationState();
@@ -70,8 +71,7 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    print(widget.base64qrcode);
-    DynamicActivationCode? activationCode = getActivationCode(context, widget.base64qrcode, updateErrorMessage);
+    DynamicActivationCode? activationCode = getActivationCode(context, widget.encodedBase64qrcode, updateErrorMessage);
     CardInfo? cardInfo = activationCode?.info;
     final userCodeModel = Provider.of<UserCodeModel>(context);
 
@@ -201,9 +201,13 @@ class _WarningText extends StatelessWidget {
 }
 
 DynamicActivationCode? getActivationCode(
-    BuildContext context, String base64qrcode, Function(String message) updateErrorMessage) {
+    BuildContext context, String encodedBase64qrcode, Function(String message) updateErrorMessage) {
+  // GoRouter >= 13.x did not handle uri fragments properly without trailing slash. After the package update to recent version this was fixed.
+  // Though we need legacy support for old deep links that have a trailing slash.
+  final sanitizedBase64qrcode = removeTrailingSlash(encodedBase64qrcode);
   try {
-    final activationCode = const ActivationCodeParser().parseQrCodeContent(const Base64Decoder().convert(base64qrcode));
+    final activationCode = const ActivationCodeParser()
+        .parseQrCodeContent(const Base64Decoder().convert(Uri.decodeComponent(sanitizedBase64qrcode)));
     return activationCode;
   } on CardExpiredException catch (e, _) {
     updateErrorMessage(
