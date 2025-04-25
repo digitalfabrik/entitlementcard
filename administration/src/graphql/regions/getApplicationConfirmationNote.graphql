@@ -1,0 +1,6 @@
+query getApplicationConfirmationNoteInformation($regionId: Int!) {
+  region: regionByRegionId(regionId: $regionId) {
+    applicationConfirmationMailNoteActivated
+    applicationConfirmationMailNote
+  }
+}

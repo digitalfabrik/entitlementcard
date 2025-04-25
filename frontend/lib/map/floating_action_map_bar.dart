@@ -10,20 +10,20 @@ const mapTabIndex = 0;
 /// of an accepting store as well as to navigate to the current user position.
 class FloatingActionMapBar extends StatelessWidget {
   final Future<void> Function(RequestedPosition) bringCameraToUser;
-  final int? selectedAcceptingStoreId;
+  final int? selectedPhysicalStoreId;
   final bool followUserLocation;
   final int currentTabIndex;
 
   const FloatingActionMapBar(
       {super.key,
       required this.bringCameraToUser,
-      required this.selectedAcceptingStoreId,
+      required this.selectedPhysicalStoreId,
       required this.currentTabIndex,
       required this.followUserLocation});
 
   @override
   Widget build(BuildContext context) {
-    final finalSelectedAcceptingStoreId = selectedAcceptingStoreId;
+    final physicalStoreId = selectedPhysicalStoreId;
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -41,10 +41,10 @@ class FloatingActionMapBar extends StatelessWidget {
                 child: IntrinsicHeight(
                   child: AnimatedSwitcher(
                     duration: const Duration(milliseconds: 200),
-                    child: finalSelectedAcceptingStoreId != null
+                    child: physicalStoreId != null
                         ? Container(
                             padding: EdgeInsets.only(top: fabPadding.toDouble()),
-                            child: AcceptingStorePreview(finalSelectedAcceptingStoreId),
+                            child: AcceptingStorePreview(physicalStoreId: physicalStoreId),
                           )
                         : null,
                   ),

@@ -4,6 +4,7 @@ query AcceptingStoresSearch($project: String!, $params: SearchParamsInput!) {
         name
         description
         physicalStore {
+            id
             address {
                 location
             }

@@ -19,6 +19,8 @@ val regionLoader = newNamedDataLoader("REGION_LOADER") { ids ->
                     it.dataPrivacyPolicy,
                     it.activatedForApplication,
                     it.activatedForCardConfirmationMail,
+                    it.applicationConfirmationMailNoteActivated,
+                    it.applicationConfirmationMailNote,
                 )
             }
         }

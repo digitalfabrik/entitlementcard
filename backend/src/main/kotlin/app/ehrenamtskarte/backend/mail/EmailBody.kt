@@ -63,6 +63,15 @@ class Paragraph {
         children.add(Text(this))
     }
 
+    fun plain(plainText: String) {
+        plainText.trim().lines().forEachIndexed { index, text ->
+            if (index != 0) {
+                children.add(LineBreak())
+            }
+            children.add(Text(text))
+        }
+    }
+
     fun link(url: URL) {
         children.add(Link(url))
     }

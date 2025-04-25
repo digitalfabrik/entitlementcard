@@ -8,6 +8,7 @@ import { Role } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import DataPrivacyCard from './DataPrivacyCard'
 import RegionSettingsController from './RegionSettingsController'
+import ApplicationConfirmationNoteController from './application-confirmation-note/ApplicationConfirmationNoteController'
 import FreinetSettingsController from './freinet/FreinetSettingsController'
 
 const RegionSettingsContainer = styled.div`
@@ -29,6 +30,7 @@ const RegionController = (): ReactElement => {
     <RegionSettingsContainer>
       <DataPrivacyCard />
       <RegionSettingsController regionId={region.id} />
+      <ApplicationConfirmationNoteController regionId={region.id} />
       {freinetDataTransferEnabled && <FreinetSettingsController regionId={region.id} project={projectId} />}
     </RegionSettingsContainer>
   )

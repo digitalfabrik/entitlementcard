@@ -1,5 +1,5 @@
+import { getTestRegion } from '../../bp-modules/user-settings/__mocks__/Region'
 import { DynamicActivationCode } from '../../generated/card_pb'
-import { Region } from '../../generated/graphql'
 import bayernConfig from '../../project-configs/bayern/config'
 import nuernbergConfig from '../../project-configs/nuernberg/config'
 import { generateCardInfo, initializeCard } from '../Card'
@@ -16,13 +16,7 @@ jest.mock('../../project-configs/showcase/config')
 const TEST_BLOB_CONSTRUCTOR = jest.fn()
 
 describe('CsvFactory', () => {
-  const nuernberg: Region = {
-    id: 0,
-    name: 'augsburg',
-    prefix: 'a',
-    activatedForApplication: true,
-    activatedForCardConfirmationMail: true,
-  }
+  const nuernberg = getTestRegion({})
 
   it('should use pass id for single cards export', () => {
     const testPassId = 86152
