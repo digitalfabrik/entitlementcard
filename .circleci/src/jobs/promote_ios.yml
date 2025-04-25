@@ -5,7 +5,7 @@ parameters:
     enum: [bayern, nuernberg, koblenz]
     default: bayern
 macos:
-  xcode: 15.2.0
+  xcode: 16.1.0
 environment:
   FASTLANE_SKIP_UPDATE_CHECK: true
 working_directory: ~/project/frontend/ios

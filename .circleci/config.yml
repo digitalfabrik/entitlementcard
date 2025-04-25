@@ -72,11 +72,12 @@ commands:
             - restore_cache:
                 keys:
                     - v1-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
-                    - v1-gems-{{ arch }}-
+                    - v1-gems-{{ arch }}
                 name: Restore gems
             - run:
                 command: |
                     bundle config set path '~/.bundle'
+                    bundle config set frozen true
                     bundle check || bundle install
                 name: Install fastlane
                 working_directory: << parameters.directory >>
@@ -103,7 +104,7 @@ commands:
             - restore_cache:
                 keys:
                     - v1-fvm-{{ arch }}-{{ checksum ".fvmrc" }}-{{ checksum "pubspec.yaml" }}-{{ checksum "pubspec.lock"  }}
-                    - v1-fvm-{{ arch }}-
+                    - v1-fvm-{{ arch }}
                 name: Restore flutter
             - run:
                 command: |
@@ -152,11 +153,10 @@ commands:
             - restore_cache:
                 keys:
                     - v1-pods-{{ checksum "ios/Podfile.lock" }}
+                    - v1-pods
                 name: Restore pods
             - run:
-                command: |
-                    bundle exec pod update
-                    bundle exec pod install
+                command: bundle exec pod install --deployment
                 name: Install pods
                 working_directory: ios
             - save_cache:
@@ -244,6 +244,7 @@ jobs:
     build_administration:
         docker:
             - image: cimg/node:20.18.0
+        resource_class: medium
         steps:
             - prepare_workspace
             - install_protobuf_linux
@@ -315,6 +316,7 @@ jobs:
         environment:
             _JAVA_OPTIONS: -Xmx3g
             GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2
+        resource_class: small
         steps:
             - prepare_workspace
             - install_protobuf_linux
@@ -346,7 +348,7 @@ jobs:
         environment:
             FASTLANE_SKIP_UPDATE_CHECK: true
         macos:
-            xcode: 15.2.0
+            xcode: 16.1.0
         parameters:
             build_config:
                 description: Name of the build config to use
@@ -423,6 +425,7 @@ jobs:
     check_administration:
         docker:
             - image: cimg/node:20.18.0
+        resource_class: small
         steps:
             - prepare_workspace
             - check_circleci_config
@@ -451,6 +454,7 @@ jobs:
         environment:
             _JAVA_OPTIONS: -Xmx3g
             GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2
+        resource_class: small
         steps:
             - prepare_workspace
             - check_circleci_config
@@ -547,7 +551,7 @@ jobs:
         environment:
             FASTLANE_SKIP_UPDATE_CHECK: true
         macos:
-            xcode: 15.2.0
+            xcode: 16.1.0
         parameters:
             build_config:
                 enum:
@@ -583,6 +587,7 @@ jobs:
             production:
                 description: Whether builds are delivered to production or beta.
                 type: boolean
+        resource_class: small
         steps:
             - prepare_workspace
             - add_ssh_keys:
@@ -661,6 +666,7 @@ jobs:
     pack_administration:
         docker:
             - image: debian:12
+        resource_class: small
         steps:
             - prepare_workspace
             - run:
@@ -686,6 +692,7 @@ jobs:
                 - POSTGRES_USER=postgres
                 - POSTGRES_PASSWORD=postgres
               image: postgis/postgis:13-3.0
+        resource_class: small
         steps:
             - prepare_workspace
             - run:
@@ -707,6 +714,7 @@ jobs:
     pack_martin:
         docker:
             - image: debian:12
+        resource_class: small
         steps:
             - prepare_workspace
             - run:
@@ -736,6 +744,7 @@ jobs:
     pack_meta:
         docker:
             - image: debian:12
+        resource_class: small
         steps:
             - prepare_workspace
             - run:
@@ -779,6 +788,7 @@ jobs:
     promote_github_release:
         docker:
             - image: cimg/node:20.18.0
+        resource_class: small
         steps:
             - prepare_workspace
             - install_app_toolbelt
@@ -790,7 +800,7 @@ jobs:
         environment:
             FASTLANE_SKIP_UPDATE_CHECK: true
         macos:
-            xcode: 15.2.0
+            xcode: 16.1.0
         parameters:
             build_config:
                 default: bayern
@@ -811,6 +821,7 @@ jobs:
     promote_server:
         docker:
             - image: cimg/node:20.18.0
+        resource_class: small
         steps:
             - prepare_workspace
             - add_ssh_keys:

@@ -106,25 +106,30 @@ class App extends StatelessWidget {
       showDevSettings: kDebugMode,
       child: ConfiguredGraphQlProvider(
         child: MultiProvider(
-          providers: [
-            ChangeNotifierProvider<UserCodeModel>(create: (_) => UserCodeModel()..initialize()),
-            ChangeNotifierProvider<FavoritesModel>(create: (_) => FavoritesModel()..initialize())
-          ],
-          child: MaterialApp.router(
-            theme: lightTheme,
-            darkTheme: darkTheme,
-            themeMode: ThemeMode.system,
-            debugShowCheckedModeBanner: false,
-            localizationsDelegates: [
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
+            providers: [
+              ChangeNotifierProvider<UserCodeModel>(create: (_) => UserCodeModel()..initialize()),
+              ChangeNotifierProvider<FavoritesModel>(create: (_) => FavoritesModel()..initialize())
             ],
-            supportedLocales: buildConfig.appLocales.map((locale) => Locale(locale)),
-            locale: TranslationProvider.of(context).flutterLocale,
-            routerConfig: router,
-          ),
-        ),
+            child: SafeArea(
+              bottom: true,
+              top: false,
+              left: false,
+              right: false,
+              child: MaterialApp.router(
+                theme: lightTheme,
+                darkTheme: darkTheme,
+                themeMode: ThemeMode.system,
+                debugShowCheckedModeBanner: false,
+                localizationsDelegates: [
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                supportedLocales: buildConfig.appLocales.map((locale) => Locale(locale)),
+                locale: TranslationProvider.of(context).flutterLocale,
+                routerConfig: router,
+              ),
+            )),
       ),
     );
   }

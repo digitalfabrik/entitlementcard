@@ -7,6 +7,7 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 
 const val PRIVACY_POLICY_MAX_CHARS = 20000
+const val APPLICATION_CONFIRMATION_MAIL_NOTE_MAX_CHARS = 1000
 
 object Regions : IntIdTable() {
     val projectId = reference("projectId", Projects)
@@ -17,6 +18,11 @@ object Regions : IntIdTable() {
     val dataPrivacyPolicy = varchar("dataPrivacyPolicy", PRIVACY_POLICY_MAX_CHARS).nullable()
     val activatedForApplication = bool("activatedForApplication").default(true)
     val activatedForCardConfirmationMail = bool("activatedForCardConfirmationMail").default(false)
+    val applicationConfirmationMailNoteActivated = bool("applicationConfirmationMailNoteActivated").default(false)
+    val applicationConfirmationMailNote = varchar(
+        "applicationConfirmationMailNote",
+        APPLICATION_CONFIRMATION_MAIL_NOTE_MAX_CHARS,
+    ).nullable()
 
     init {
         uniqueIndex("unique_projectid_regionidentifier", projectId, regionIdentifier)
@@ -34,4 +40,6 @@ class RegionEntity(id: EntityID<Int>) : IntEntity(id) {
     var dataPrivacyPolicy by Regions.dataPrivacyPolicy
     var activatedForApplication by Regions.activatedForApplication
     var activatedForCardConfirmationMail by Regions.activatedForCardConfirmationMail
+    var applicationConfirmationMailNoteActivated by Regions.applicationConfirmationMailNoteActivated
+    var applicationConfirmationMailNote by Regions.applicationConfirmationMailNote
 }

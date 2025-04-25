@@ -29,5 +29,6 @@ object MigrationsRegistry {
             V0024_AddNewRoleToRoleRegionCombinationConstraint(),
             V0025_AddSourceFieldToApplicationVerifications(),
             V0026_AddFreinetAgenciesTable(),
+            V0027_Region_Application_Confirmation_Mail_Note(),
         )
 }

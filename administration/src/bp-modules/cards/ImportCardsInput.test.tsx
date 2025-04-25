@@ -3,7 +3,6 @@ import { fireEvent, waitFor } from '@testing-library/react'
 import React from 'react'
 
 import { BAVARIA_CARD_TYPE_GOLD, BAVARIA_CARD_TYPE_STANDARD } from '../../cards/extensions/BavariaCardTypeExtension'
-import { Region } from '../../generated/graphql'
 import { ProjectConfigProvider } from '../../project-configs/ProjectConfigContext'
 import bayernConfig from '../../project-configs/bayern/config'
 import { ProjectConfig } from '../../project-configs/getProjectConfig'
@@ -12,6 +11,7 @@ import nuernbergConfig from '../../project-configs/nuernberg/config'
 import { renderWithRouter } from '../../testing/render'
 import PlainDate from '../../util/PlainDate'
 import { AppToasterProvider } from '../AppToaster'
+import { getTestRegion } from '../user-settings/__mocks__/Region'
 import ImportCardsInput from './ImportCardsInput'
 import { ENTRY_LIMIT } from './constants'
 
@@ -19,14 +19,7 @@ jest.mock('../../Router', () => ({}))
 
 describe('ImportCardsInput', () => {
   beforeEach(jest.clearAllMocks)
-
-  const region: Region = {
-    id: 0,
-    name: 'augsburg',
-    prefix: 'a',
-    activatedForApplication: true,
-    activatedForCardConfirmationMail: true,
-  }
+  const region = getTestRegion({})
 
   const toaster = jest.spyOn(OverlayToaster.prototype, 'show')
   const setCards = jest.fn()

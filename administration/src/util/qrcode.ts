@@ -1,3 +1,4 @@
+// Most of the functions are from https://github.com/zxing-js/library
 import { PDFPage, rgb } from '@cantoo/pdf-lib'
 import {
   BitArray,
@@ -25,6 +26,7 @@ export const DEFAULT_VERSION: QRCodeVersion = QRCodeVersion.getVersionForNumber(
 // From EC L to M we have a double of EC capability: 7% -> 15%
 export const DEFAULT_ERROR_CORRECTION: QRCodeDecoderErrorCorrectionLevel = QRCodeDecoderErrorCorrectionLevel.M
 
+// Adapted and modified from https://github.com/zxing-js/library/blob/5719e939f2fc513f71627c3f37c227e26efe06c1/src/core/qrcode/encoder/Encoder.ts#L189
 const calculateBitsNeeded = (
   mode: QRCodeMode,
   headerBitsSize: number,
@@ -32,6 +34,7 @@ const calculateBitsNeeded = (
   version: QRCodeVersion
 ): number => headerBitsSize + mode.getCharacterCountBits(version) + dataBitsSize
 
+// Adapted and modified from https://github.com/zxing-js/library/blob/5719e939f2fc513f71627c3f37c227e26efe06c1/src/core/qrcode/encoder/Encoder.ts#L294
 const willFit = (
   mode: QRCodeMode,
   headerBitsSize: number,
@@ -53,12 +56,14 @@ const willFit = (
 
 // The mask penalty calculation is complicated.  See Table 21 of JISX0510:2004 (p.45) for details.
 // Basically it applies four rules and summate all penalties.
+// Adapted from https://github.com/zxing-js/library/blob/5719e939f2fc513f71627c3f37c227e26efe06c1/src/core/qrcode/encoder/Encoder.ts#L65
 const calculateMaskPenalty = (matrix: QRCodeByteMatrix): number =>
   MaskUtil.applyMaskPenaltyRule1(matrix) +
   MaskUtil.applyMaskPenaltyRule2(matrix) +
   MaskUtil.applyMaskPenaltyRule3(matrix) +
   MaskUtil.applyMaskPenaltyRule4(matrix)
 
+// Adapted from https://github.com/zxing-js/library/blob/5719e939f2fc513f71627c3f37c227e26efe06c1/src/core/qrcode/encoder/Encoder.ts#L261
 const chooseMaskPattern = (
   bits: BitArray,
   ecLevel: QRCodeDecoderErrorCorrectionLevel,
@@ -251,6 +256,5 @@ export const convertProtobufToHexCode = (qrCode: QrCode): string => {
 export const convertHexmapToUInt8Array = (hexmap: string): Uint8Array[] => {
   const hexRows = hexmap.split('-')
   const binaryStringMatrix = hexRows.map(hex => BigInt(`0x${hex}`).toString(2).padStart(hexRows.length, '0'))
-  const binaryUInt8Matrix = binaryStringMatrix.map(stringRow => Uint8Array.from(stringRow.split(''), x => Number(x)))
-  return binaryUInt8Matrix
+  return binaryStringMatrix.map(stringRow => Uint8Array.from(stringRow.split(''), x => Number(x)))
 }
