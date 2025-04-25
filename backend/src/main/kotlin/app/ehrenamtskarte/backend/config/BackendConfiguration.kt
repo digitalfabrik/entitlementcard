@@ -58,12 +58,8 @@ enum class Environment {
         @JvmStatic
         @JsonCreator
         fun fromString(value: String): Environment =
-            when (value.lowercase()) {
-                "prod", "production" -> PRODUCTION
-                "staging" -> STAGING
-                "dev", "development" -> DEVELOPMENT
-                else -> throw IllegalArgumentException("Invalid environment: $value")
-            }
+            entries.find { it.name.equals(value, ignoreCase = true) }
+                ?: throw IllegalArgumentException("Invalid environment: $value")
     }
 }
 

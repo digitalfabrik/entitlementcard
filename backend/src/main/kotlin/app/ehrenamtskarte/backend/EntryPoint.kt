@@ -27,7 +27,7 @@ class Entry : CliktCommand() {
     private val config by option().file(canBeDir = false, mustBeReadable = true)
 
     // Options to overwrite single properties of the config
-    private val environment by option().choice("dev", "staging", "prod")
+    private val environment by option().choice("development", "staging", "production")
         .convert { Environment.fromString(it) }
     private val postgresUrl by option()
     private val postgresUser by option()
