@@ -14,7 +14,7 @@ import { defineConfig, devices } from '@playwright/test'
 export default defineConfig({
   testDir: './e2e-tests',
   /* Run tests in files in parallel */
-  fullyParallel: true,
+  fullyParallel: false,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
@@ -36,38 +36,38 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      testMatch: '001_bayern.spec.ts',
+      testMatch: 'create_applications.spec.ts',
       use: {
         ...devices['Desktop Chrome'],
       },
     },
     {
       name: 'firefox',
-      testMatch: '001_bayern.spec.ts',
+      testMatch: 'create_applications.spec.ts',
       use: {
         ...devices['Desktop Firefox'],
       },
     },
     {
       name: 'chromium',
-      testMatch: '002_regionAdministrator.spec.ts',
+      testMatch: 'check_applications.spec.ts',
       use: { ...devices['Desktop Chrome'] },
     },
 
     {
       name: 'firefox',
-      testMatch: '002_regionAdministrator.spec.ts',
+      testMatch: 'check_applications.spec.ts',
       use: { ...devices['Desktop Firefox'] },
     },
     {
       name: 'chromium',
-      testMatch: '003_deleteBayernTests.spec.ts',
+      testMatch: 'delete_applications.spec.ts',
       use: { ...devices['Desktop Chrome'] },
     },
 
     {
       name: 'firefox',
-      testMatch: '003_deleteBayernTests.spec.ts',
+      testMatch: 'delete_applications.spec.ts',
       use: { ...devices['Desktop Firefox'] },
     },
 
@@ -98,9 +98,40 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://127.0.0.1:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
+  webServer: [
+    {
+      command: 'docker compose -p entitlementcard up',
+      name: 'Running docker container',
+      reuseExistingServer: !process.env.CI,
+      stdout: 'ignore',
+      stderr: 'ignore',
+    },
+    {
+      command: 'podman compose -p entitlementcard up',
+      name: 'Running podman container',
+      reuseExistingServer: !process.env.CI,
+      stdout: 'ignore',
+      stderr: 'ignore',
+    },
+    {
+      command: 'npm run start',
+      name: 'Administration',
+      url: 'http://localhost:3000',
+      reuseExistingServer: !process.env.CI,
+      stdout: 'ignore',
+      stderr: 'ignore',
+    },
+    {
+      command: './run-backend.sh',
+      env: {
+        JWT_SECRET: 'HelloWorld',
+        KOBLENZ_PEPPER: '123456789ABC',
+      },
+      timeout: 120 * 1000,
+      port: 8000,
+      stdout: 'ignore',
+      stderr: 'ignore',
+      reuseExistingServer: !process.env.CI,
+    },
+  ],
 })

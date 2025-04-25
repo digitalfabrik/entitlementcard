@@ -76,6 +76,8 @@ test.describe('Bayern regional admin', () => {
     )
   }
 
+  test.describe.configure({ mode: 'parallel' })
+
   test('should assert all test applications', async ({ page, browserName }) => {
     test.setTimeout(200_000)
     const casesToVisit = new Set(['blue1', 'blue2', 'blue3', 'blue4', 'blue5', 'gold1', 'gold2', 'gold3', 'gold4'])

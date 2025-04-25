@@ -114,42 +114,46 @@ test.describe('Bayern testing', () => {
   }
 
   const cardType = async (page: Page, cardType, applicationType = 'initial') => {
-    await expect(page.locator('form').last()).toContainText(
+    const form = page.locator('form').last()
+    await expect(form).toContainText(
       'Die Bayerische Ehrenamtskarte gibt es in zwei Varianten: Die blaue Ehrenamtskarte, welche für drei Jahre gültig ist, und die goldene Ehrenamtskarte, welche unbegrenzt gültig ist. Für die blaue Ehrenamtskarte ist beispielsweise berechtigt, wer sich seit mindestens zwei Jahren mindestens fünf Stunden pro Woche ehrenamtlich engagiert. Für die goldene Ehrenamtskarte ist beispielsweise berechtigt, wer sich seit mindestens 25 Jahren mindestens fünf Stunden pro Woche ehrenamtlich engagiert.'
     )
-    await expect(page.locator('form').last()).toContainText(
+    await expect(form).toContainText(
       'Die Erfüllung der Voraussetzungen wird im nächsten Schritt des Antrags abgefragt. Weitere Informationen können Sie hier einsehen.'
     )
-    await expect(page.locator('form').last()).toContainText('Antrag auf: *')
+    await expect(form).toContainText('Antrag auf: *')
     await expect(page.getByRole('radio', { name: 'Blaue Ehrenamtskarte' })).toBeVisible()
     await expect(page.getByRole('radio', { name: 'Goldene Ehrenamtskarte' })).toBeVisible()
     await expect(page.getByRole('radiogroup')).toContainText('Blaue Ehrenamtskarte')
     await expect(page.getByRole('radiogroup')).toContainText('Goldene Ehrenamtskarte')
-    await expect(page.locator('form').last()).toContainText(
+    await expect(form).toContainText(
       'Die Ehrenamtskarte ist als physische Karte und als digitale Version für Ihr Smartphone oder Tablet erhältlich.Hier können Sie auswählen, welche Kartentypen Sie beantragen möchten.'
     )
     await page
       .getByRole('radio', { name: cardType == 'blue' ? 'Blaue Ehrenamtskarte' : 'Goldene Ehrenamtskarte' })
+      .dispatchEvent('click')
+    await page
+      .getByRole('radio', { name: cardType == 'blue' ? 'Blaue Ehrenamtskarte' : 'Goldene Ehrenamtskarte' })
       .check()
     if (cardType == 'blue') {
-      await expect(page.locator('form').last()).toContainText('Art des Antrags: *')
-      await expect(page.locator('form').last()).toContainText('Erstantrag *')
-      await expect(page.locator('form').last()).toContainText('Verlängerungsantrag *')
+      await expect(form).toContainText('Art des Antrags: *')
+      await expect(form).toContainText('Erstantrag *')
+      await expect(form).toContainText('Verlängerungsantrag *')
       await page
         .getByRole('radio', { name: applicationType == 'initial' ? 'Erstantrag' : 'Verlängerungsantrag' })
         .check()
     }
 
     await page.getByRole('checkbox', { name: 'Ich beantrage eine physische' }).check()
-    await expect(page.locator('form').last()).toContainText(
+    await expect(form).toContainText(
       'Die Ehrenamtskarte ist als physische Karte und als digitale Version für Ihr Smartphone oder Tablet erhältlich.Hier können Sie auswählen, welche Kartentypen Sie beantragen möchten.'
     )
-    await expect(page.locator('form')).toContainText('Ich beantrage eine digitale Ehrenamtskarte')
-    await expect(page.locator('form')).toContainText('Ich beantrage eine physische Ehrenamtskarte')
-    await expect(page.getByRole('button', { name: 'Nächster Schritt' })).toBeVisible()
+    await expect(form).toContainText('Ich beantrage eine digitale Ehrenamtskarte')
+    await expect(form).toContainText('Ich beantrage eine physische Ehrenamtskarte')
+    await expect(page.getByRole('button', { name: 'Nächster Schritt' }).last()).toBeVisible()
     await expect(page.getByRole('button', { name: 'Zurück' })).toBeVisible()
     await expect(page.getByRole('button', { name: 'Alle Eingaben verwerfen' })).toBeVisible()
-    await page.getByRole('button', { name: 'Nächster Schritt' }).click()
+    await page.getByRole('button', { name: 'Nächster Schritt' }).last().click()
   }
 
   const requirements = async (page: Page, cardType, requirement: number, browser: string) => {
@@ -298,6 +302,8 @@ test.describe('Bayern testing', () => {
     await page.getByText('Ihr Antrag für die').click()
     await page.close()
   }
+
+  test.describe.configure({ mode: 'parallel' })
 
   test('blue_initial_volunteer', async ({ page, browserName }) => {
     await personalInfo(page, browserName)

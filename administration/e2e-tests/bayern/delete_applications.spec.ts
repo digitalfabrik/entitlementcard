@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-test.describe('DeleteForms', () => {
+test.describe('DeleteApplications', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('http://localhost:3000/')
     await page.getByRole('button', { name: 'Switch to Ehrenamtskarte' }).click()
