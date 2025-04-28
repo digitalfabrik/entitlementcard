@@ -19,6 +19,8 @@ updates:
 
   - package-ecosystem: pub
     directory: "/frontend"
+    schedule:
+      interval: daily
     open-pull-requests-limit: 2
     ignore:
       - dependency-name: "*"
@@ -27,10 +29,14 @@ updates:
 
   - package-ecosystem: gradle
     directory: "/frontend/android"
+    schedule:
+      interval: daily
     open-pull-requests-limit: 2
 
   - package-ecosystem: bundler
     directory: "/frontend/ios"
+    schedule:
+      interval: daily
     open-pull-requests-limit: 2
     ignore:
       - dependency-name: "*"
@@ -39,4 +45,6 @@ updates:
 
   - package-ecosystem: docker-compose
     directory: "/"
+    schedule:
+      interval: daily
     open-pull-requests-limit: 2
