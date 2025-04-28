@@ -8,7 +8,7 @@ export const NUERNBERG_PASS_ID_EXTENSION_NAME = 'nuernbergPassId'
 
 type NuernbergPassIdExtensionState = { [NUERNBERG_PASS_ID_EXTENSION_NAME]: number | null }
 
-const nuernbergPassIdLength = 10
+const nuernbergPassIdLength = 9
 
 const NuernbergPassIdForm = ({
   value,
