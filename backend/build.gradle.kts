@@ -87,7 +87,7 @@ dependencies {
     testImplementation("org.testcontainers:testcontainers")
     testImplementation("org.testcontainers:postgresql")
     // Replace the library version used in testcontainers to avoid vulnerability
-    testImplementation("org.apache.commons:commons-compress:1.26.2")
+    testImplementation("org.apache.commons:commons-compress:1.27.1")
 }
 
 detekt {
