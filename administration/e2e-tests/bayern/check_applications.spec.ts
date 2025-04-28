@@ -84,7 +84,7 @@ test.describe('Bayern regional admin', () => {
     const visitedCases = new Set()
 
     await page.getByRole('button', { name: 'Eingehende Anträge' }).nth(1).click()
-    await expect(page.locator('#root')).toContainText('Status')
+    await expect(page.getByText('Status', { exact: true })).toBeVisible()
     await expect(page.getByRole('button').filter({ hasText: /^$/ })).toBeVisible()
     await expect(page.locator('#allApplications')).toContainText('Alle Anträge')
     await expect(page.locator('#accepted')).toContainText('Akzeptiert')
