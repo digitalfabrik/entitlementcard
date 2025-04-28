@@ -42,7 +42,7 @@ dependencies:
   sentry_flutter: ^8.14.1
   carousel_slider: ^5.0.0
   slang: ^4.2.1
-  slang_flutter: ^4.2.0
+  slang_flutter: ^4.7.0
   flutter_html: ^3.0.0-beta.2
 
   # The following adds the Cupertino Icons font to your application.
