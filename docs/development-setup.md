@@ -120,16 +120,13 @@ docker-compose rm
 docker-compose build
 docker-compose up --force-recreate
 ```
-
 3. Open the IntelliJ "Project Structure" and set up the required SDK called "entitlementcard-jdk" and point it to your JDK installation.
    ![SDK/JDK setup](./img/intellij-sdk-setup.png)
 4. Run the backend migration (`Migrate DB`)
 ```shell
 cd backend && ./gradlew run --args "migrate"
 ```
-
 5. Create a backend account with one of the run configurations or the following command:
-
 ```shell
 ./gradlew run --args="create-admin <project> <role> <email> <password> <region>"`
 ```
@@ -137,13 +134,10 @@ cd backend && ./gradlew run --args "migrate"
 ### Run Backend
 
 1. Start `docker-compose`
-
 ```shell
 sudo docker-compose up --force-recreate
 ```
-
 2. Run the backend (`Run backend (env:local+buildConfig:all)`)
-
 ```shell
 ./gradlew run --args="execute"
 ```
@@ -175,11 +169,10 @@ cp backend/src/main/resources/config/config.yml ~/.config/entitlementcard
 
 0. Use the docker desktop client
 1. Set up the matomo instance [http://localhost:5003](http://localhost:5003).
-   The public version is available at https://matomo-entitlementcard.tuerantuer.org
+ The public version is available at https://matomo-entitlementcard.tuerantuer.org
 1. Create an access token at [localhost:5003/settings](http://localhost:5003/settings)
-1. Add `localhost:5003` to `matomos trusted_hosts` at `/var/www/html/config/config.ini.php`
-1. Add your matomo config for each project as described in [Local Backend Configuration](#local-backend-configuration)
-
+2. Add `localhost:5003` to `matomos trusted_hosts` at `/var/www/html/config/config.ini.php`
+3. Add your matomo config for each project as described in [Local Backend Configuration](#local-backend-configuration)
 ```yaml
 projects:
   - id: ...
@@ -193,13 +186,13 @@ projects:
 #### Inspecting Services
 
 - Adminer: [http://localhost:5001](http://127.0.0.1:5001/?pgsql=db-postgis&username=postgres&db=ehrenamtskarte)
-  The credentials are:
-  |Property|Value|
-  |---|---|
-  |Host (within Docker)|db-postgis|
-  |Username|postgres|
-  |Password|postgres|
-  |Database|ehrenamtskarte|
+   The credentials are:
+   |Property|Value|
+   |---|---|
+   |Host (within Docker)|db-postgis|
+   |Username|postgres|
+   |Password|postgres|
+   |Database|ehrenamtskarte|
 - Martin endpoints: [http://localhost:5002/tiles/accepting_stores/index.json](http://localhost:5002/tiles/accepting_stores/index.json) and [http://localhost:5002/tiles/accepting_stores/rpc/index.json](http://localhost:5002/tiles/accepting_stores/rpc/index.json). *The data shown on the map is fetched from a hardcoded url and is not using the data from the local martin!*
 - Map styles: [http://localhost:5002/map.html](http://localhost:5002)
 
