@@ -5,8 +5,6 @@ import 'package:ehrenamtskarte/build_config/build_config.dart';
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/map/map/attribution_dialog.dart';
 import 'package:ehrenamtskarte/map/map/map_controller.dart';
-import 'package:ehrenamtskarte/map/map/screen_parent_resizer.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
@@ -52,11 +50,10 @@ class _MapContainerState extends State<MapContainer> implements MapController {
   MapLibreMapController? _controller;
   Symbol? _symbol;
   bool _permissionGiven = false;
-  bool _isMapInitialized = false;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
     _permissionGiven = widget.locationAvailable;
   }
 
@@ -73,7 +70,7 @@ class _MapContainerState extends State<MapContainer> implements MapController {
         ? CameraPosition(target: userLocation, zoom: MapContainer.zoomLevelUserLocation)
         : CameraPosition(target: MapContainer.centerOfProject, zoom: MapContainer.zoomLevelOverview);
 
-    final mapLibreView = Stack(
+    return Stack(
       children: [
         MapLibreMap(
           initialCameraPosition: cameraPosition,
@@ -113,15 +110,6 @@ class _MapContainerState extends State<MapContainer> implements MapController {
         ),
       ],
     );
-
-    // Apply ScreenParentResizer only on android
-    // https://github.com/flutter-mapbox-gl/maps/issues/195
-    return defaultTargetPlatform == TargetPlatform.android
-        ? ScreenParentResizer(
-            childInitialized: _isMapInitialized,
-            child: mapLibreView,
-          )
-        : mapLibreView;
   }
 
   void _onMapCreated(MapLibreMapController controller) {
@@ -129,7 +117,6 @@ class _MapContainerState extends State<MapContainer> implements MapController {
 
     setState(() {
       _controller = controller;
-      _isMapInitialized = true;
     });
 
     final onMapCreated = widget.onMapCreated;

@@ -3,7 +3,7 @@ import 'package:ehrenamtskarte/map/map/map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class MapWithFutures extends StatelessWidget {
+class MapWithFutures extends StatefulWidget {
   final OnFeatureClickCallback onFeatureClick;
   final OnNoFeatureClickCallback onNoFeatureClick;
   final OnMapCreatedCallback onMapCreated;
@@ -20,10 +20,23 @@ class MapWithFutures extends StatelessWidget {
   });
 
   @override
+  State<MapWithFutures> createState() => _MapWithFuturesState();
+}
+
+class _MapWithFuturesState extends State<MapWithFutures> {
+  late Future<RequestedPosition> positionFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    positionFuture = determinePosition(context, requestIfNotGranted: false)
+        .timeout(const Duration(milliseconds: 400), onTimeout: () => RequestedPosition.unknown());
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: determinePosition(context, requestIfNotGranted: false)
-          .timeout(const Duration(milliseconds: 400), onTimeout: () => RequestedPosition.unknown()),
+      future: positionFuture,
       builder: (context, AsyncSnapshot<RequestedPosition> snapshot) {
         if (!snapshot.hasData && !snapshot.hasError) {
           return const Center();
@@ -32,13 +45,13 @@ class MapWithFutures extends StatelessWidget {
         final position = snapshot.data;
 
         return MapContainer(
-            onFeatureClick: onFeatureClick,
-            onNoFeatureClick: onNoFeatureClick,
+            onFeatureClick: widget.onFeatureClick,
+            onNoFeatureClick: widget.onNoFeatureClick,
             locationAvailable: position?.isAvailable() ?? false,
             userLocation: position?.toLatLng(),
-            onFeatureClickLayerFilter: onFeatureClickLayerFilter,
-            onMapCreated: onMapCreated,
-            setFollowUserLocation: setFollowUserLocation);
+            onFeatureClickLayerFilter: widget.onFeatureClickLayerFilter,
+            onMapCreated: widget.onMapCreated,
+            setFollowUserLocation: widget.setFollowUserLocation);
       },
     );
   }
