@@ -1,0 +1,60 @@
+version: 2
+updates:
+
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    ignore:
+      - dependency-name: "*"
+        # Ignore major updates for all dependencies
+        update-types: [ "version-update:semver-major" ]
+    open-pull-requests-limit: 2
+
+  - package-ecosystem: gradle
+    directory: "/backend"
+    schedule:
+      interval: daily
+    labels:
+      - "not-testable"
+    open-pull-requests-limit: 2
+
+  - package-ecosystem: pub
+    directory: "/frontend"
+    schedule:
+      interval: daily
+    labels:
+      - "not-testable"
+    open-pull-requests-limit: 2
+    ignore:
+      - dependency-name: "*"
+        # Ignore major updates for all dependencies
+        update-types: [ "version-update:semver-major" ]
+
+  - package-ecosystem: gradle
+    directory: "/frontend/android"
+    schedule:
+      interval: daily
+    labels:
+      - "not-testable"
+    open-pull-requests-limit: 2
+
+  - package-ecosystem: bundler
+    directory: "/frontend/ios"
+    schedule:
+      interval: daily
+    labels:
+      - "not-testable"
+    open-pull-requests-limit: 2
+    ignore:
+      - dependency-name: "*"
+        # Ignore major updates for all dependencies
+        update-types: [ "version-update:semver-major" ]
+
+  - package-ecosystem: docker-compose
+    directory: "/"
+    schedule:
+      interval: daily
+    labels:
+      - "not-testable"
+    open-pull-requests-limit: 2

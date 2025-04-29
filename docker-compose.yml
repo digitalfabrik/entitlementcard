@@ -26,7 +26,7 @@ services:
     networks:
       - network
   reverse_proxy:
-    image: "nginx:1.19.5"
+    image: "nginx:1.27.5"
     ports:
       - 127.0.0.1:5002:80
     volumes:
