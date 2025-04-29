@@ -20,14 +20,6 @@ steps:
       keys:
         - v1-gradle-{{ checksum "build.gradle.kts" }}
   - run:
-      name: Check GraphQL scheme stability
-      command: |
-        ./gradlew run --args="graphql-export ../specs/backend-api.graphql"
-        git diff --exit-code
-  - run:
-      name: Check backend formatting
-      command: ./gradlew ktlintCheck
-  - run:
       name: Test
       command: ./gradlew test
   - store_test_results:

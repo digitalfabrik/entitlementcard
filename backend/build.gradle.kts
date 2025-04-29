@@ -36,17 +36,15 @@ dependencies {
     implementation("com.expediagroup:graphql-kotlin-schema-generator:$graphQlGeneratorVersion")
     testImplementation("com.expediagroup:graphql-kotlin-client:$graphQlGeneratorVersion")
 
-    implementation("com.graphql-java:graphql-java-extended-scalars:20.2")
-    // Align versions of all Kotlin components
+    implementation("com.graphql-java:graphql-java-extended-scalars:22.0")
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
-
-    // Use the Kotlin JDK 8 standard library.
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("io.ktor:ktor-client-core-jvm:2.3.9")
-    implementation("io.ktor:ktor-client-cio-jvm:2.3.9")
 
-    // Use the Kotlin json serialisation library
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
+    val ktorVersion = "3.1.2"
+    implementation("io.ktor:ktor-client-core-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-client-cio-jvm:$ktorVersion")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
 
     // Use the Kotlin test library.
     testImplementation("org.jetbrains.kotlin:kotlin-test")
@@ -59,33 +57,37 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
-    implementation("org.postgresql:postgresql:42.7.3")
-    implementation("com.kohlschutter.junixsocket:junixsocket-core:2.7.0")
-    implementation("com.kohlschutter.junixsocket:junixsocket-common:2.7.0")
+    implementation("org.postgresql:postgresql:42.7.5")
 
-    implementation("net.postgis:postgis-jdbc:2021.1.0")
+    val unixSocketVersion = "2.10.1"
+    implementation("com.kohlschutter.junixsocket:junixsocket-core:$unixSocketVersion")
+    implementation("com.kohlschutter.junixsocket:junixsocket-common:$unixSocketVersion")
+
+    implementation("net.postgis:postgis-jdbc:2024.1.0")
 
     implementation("org.apache.commons:commons-csv:1.14.0")
 
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.15.2")
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.2")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.2")
+    val jacksonVersion = "2.18.3"
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jacksonVersion")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jacksonVersion")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
+
     implementation("de.grundid.opendatalab:geojson-jackson:1.14")
 
     implementation("com.eatthepath:java-otp:0.4.0") // dynamic card verification
-    implementation("com.auth0:java-jwt:4.4.0") // JSON web tokens
+    implementation("com.auth0:java-jwt:4.5.0") // JSON web tokens
     implementation("at.favre.lib:bcrypt:0.10.2")
 
-    implementation("org.bouncycastle:bcpkix-jdk18on:1.78.1")
+    implementation("org.bouncycastle:bcpkix-jdk18on:1.80")
 
-    implementation("com.google.zxing:core:3.5.2") // QR-Codes
+    implementation("com.google.zxing:core:3.5.3") // QR-Codes
 
-    testImplementation(platform("org.testcontainers:testcontainers-bom:1.19.8"))
+    testImplementation(platform("org.testcontainers:testcontainers-bom:1.20.6"))
     testImplementation("org.testcontainers:testcontainers")
     testImplementation("org.testcontainers:postgresql")
     // Replace the library version used in testcontainers to avoid vulnerability
-    testImplementation("org.apache.commons:commons-compress:1.26.2")
+    testImplementation("org.apache.commons:commons-compress:1.27.1")
 }
 
 kotlin {

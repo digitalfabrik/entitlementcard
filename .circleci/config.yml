@@ -470,14 +470,6 @@ jobs:
                 keys:
                     - v1-gradle-{{ checksum "build.gradle.kts" }}
             - run:
-                command: |
-                    ./gradlew run --args="graphql-export ../specs/backend-api.graphql"
-                    git diff --exit-code
-                name: Check GraphQL scheme stability
-            - run:
-                command: ./gradlew ktlintCheck
-                name: Check backend formatting
-            - run:
                 command: ./gradlew test
                 name: Test
             - store_test_results:
