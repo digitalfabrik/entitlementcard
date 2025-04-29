@@ -59,8 +59,6 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
     implementation("org.postgresql:postgresql:42.7.3")
-    implementation("com.kohlschutter.junixsocket:junixsocket-core:2.7.0")
-    implementation("com.kohlschutter.junixsocket:junixsocket-common:2.7.0")
 
     implementation("net.postgis:postgis-jdbc:2021.1.0")
 
