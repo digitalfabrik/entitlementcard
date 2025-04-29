@@ -43,6 +43,7 @@ data class ProjectConfig(
     val smtp: SmtpConfig,
     val matomo: MatomoConfig?,
     val freinet: FreinetConfig?,
+    val filteredStoresOutput: String?,
 )
 
 data class ServerConfig(val dataDirectory: String, val host: String, val port: String)

@@ -6,12 +6,12 @@ import app.ehrenamtskarte.backend.stores.importer.bayern.steps.DownloadLbe
 import app.ehrenamtskarte.backend.stores.importer.bayern.steps.FilterLbe
 import app.ehrenamtskarte.backend.stores.importer.bayern.steps.MapFromLbe
 import app.ehrenamtskarte.backend.stores.importer.bayern.steps.PostSanitizeFilter
+import app.ehrenamtskarte.backend.stores.importer.bayern.steps.WriteCsv
 import app.ehrenamtskarte.backend.stores.importer.bayern.types.FilteredStore
 import app.ehrenamtskarte.backend.stores.importer.common.steps.FilterDuplicates
 import app.ehrenamtskarte.backend.stores.importer.common.steps.SanitizeAddress
 import app.ehrenamtskarte.backend.stores.importer.common.steps.SanitizeGeocode
 import app.ehrenamtskarte.backend.stores.importer.common.steps.Store
-import app.ehrenamtskarte.backend.stores.importer.nuernberg.steps.WriteCsv
 import app.ehrenamtskarte.backend.stores.importer.pipelines.Pipeline
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpRequestRetry
