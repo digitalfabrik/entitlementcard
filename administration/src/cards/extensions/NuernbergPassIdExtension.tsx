@@ -15,7 +15,11 @@ const NuernbergPassIdForm = ({
   setValue,
   isValid,
 }: ExtensionComponentProps<NuernbergPassIdExtensionState>): ReactElement => (
-  <FormGroup label='Nürnberg-Pass-ID' labelFor='nuernberg-pass-id-input' intent={isValid ? undefined : Intent.DANGER}>
+  <FormGroup
+    style={{ marginTop: 15 }}
+    label='Nürnberg-Pass-ID'
+    labelFor='nuernberg-pass-id-input'
+    intent={isValid ? undefined : Intent.DANGER}>
     <InputGroup
       id='nuernberg-pass-id-input'
       placeholder='12345678'

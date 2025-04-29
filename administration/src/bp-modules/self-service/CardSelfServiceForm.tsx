@@ -1,6 +1,6 @@
-import { Checkbox, FormGroup, InputGroup, Intent } from '@blueprintjs/core'
+import { Checkbox } from '@blueprintjs/core'
 import InfoOutlined from '@mui/icons-material/InfoOutlined'
-import { styled } from '@mui/material'
+import { FormGroup, TextField, styled } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
@@ -14,6 +14,7 @@ import { removeMultipleSpaces } from '../../util/helper'
 import { useAppToaster } from '../AppToaster'
 import ExtensionForms from '../cards/ExtensionForms'
 import { ActionButton } from './components/ActionButton'
+import CustomFormLabel from './components/CustomFormLabel'
 import FormAlert from './components/FormAlert'
 import { IconTextButton } from './components/IconTextButton'
 import { UnderlineTextButton } from './components/UnderlineTextButton'
@@ -27,6 +28,9 @@ const StyledCheckbox = styled(Checkbox)`
 
 const Container = styled('div')`
   margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 `
 
 type CardSelfServiceFormProps = {
@@ -73,28 +77,38 @@ const CardSelfServiceForm = ({
     setSearchParams(undefined, { replace: true })
   }
 
+  const removeEndAdornmentMargin = { '& .MuiFormHelperText-root': { margin: '0px' } }
+
   return (
     <>
       <Container key={card.id}>
-        <FormGroup label={t('firstNameLastName')} labelFor='name-input'>
-          <InputGroup
-            large={viewportSmall}
+        <FormGroup>
+          <CustomFormLabel htmlFor='name-input' label={t('firstNameLastName')} />
+          <TextField
             id='name-input'
             placeholder='Erika Musterfrau'
             autoFocus
-            rightElement={
-              <ClearInputButton
-                viewportSmall={viewportSmall}
-                onClick={() => updateCard({ fullName: '' })}
-                input={card.fullName}
-              />
-            }
-            intent={isFullNameValid(card) || !showErrorMessage ? undefined : Intent.DANGER}
             value={card.fullName}
             onBlur={() => setTouchedFullName(true)}
             onChange={event => updateCard({ fullName: removeMultipleSpaces(event.target.value) })}
+            error={!isFullNameValid(card) && showErrorMessage}
+            helperText={
+              showErrorMessage ? <FormAlert errorMessage={getFullNameValidationErrorMessage(card.fullName)} /> : null
+            }
+            fullWidth
+            size='small'
+            sx={removeEndAdornmentMargin}
+            InputProps={{
+              sx: { paddingRight: 0 },
+              endAdornment: (
+                <ClearInputButton
+                  viewportSmall={viewportSmall}
+                  onClick={() => updateCard({ fullName: '' })}
+                  input={card.fullName}
+                />
+              ),
+            }}
           />
-          {showErrorMessage && <FormAlert errorMessage={getFullNameValidationErrorMessage(card.fullName)} />}
         </FormGroup>
         <ExtensionForms card={card} updateCard={updateCard} showRequired={formSendAttempt} />
         <IconTextButton onClick={() => setOpenReferenceInformation(true)}>

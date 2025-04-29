@@ -1,8 +1,9 @@
-import { FormGroup } from '@blueprintjs/core'
+import { FormGroup } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import CustomDatePicker from '../../bp-modules/components/CustomDatePicker'
+import CustomFormLabel from '../../bp-modules/self-service/components/CustomFormLabel'
 import FormAlert from '../../bp-modules/self-service/components/FormAlert'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import PlainDate from '../../util/PlainDate'
@@ -45,7 +46,8 @@ const BirthdayForm = ({
   }
 
   return (
-    <FormGroup label={t('birthdayLabel')}>
+    <FormGroup>
+      <CustomFormLabel htmlFor='name-input' label={t('birthdayLabel')} />
       <CustomDatePicker
         value={birthday?.toLocalDate() ?? null}
         onBlur={() => setTouched(true)}
