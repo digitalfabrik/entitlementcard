@@ -317,7 +317,7 @@ PLATFORMS
 
 DEPENDENCIES
   cocoapods (~> 1.16.2)
-  fastlane (>= 2.221.1)
+  fastlane (>= 2.227.1)
   rb-readline
 
 BUNDLED WITH
