@@ -15,12 +15,16 @@ updates:
     directory: "/backend"
     schedule:
       interval: daily
+    labels:
+      - "not-testable"
     open-pull-requests-limit: 2
 
   - package-ecosystem: pub
     directory: "/frontend"
     schedule:
       interval: daily
+    labels:
+      - "not-testable"
     open-pull-requests-limit: 2
     ignore:
       - dependency-name: "*"
@@ -31,12 +35,16 @@ updates:
     directory: "/frontend/android"
     schedule:
       interval: daily
+    labels:
+      - "not-testable"
     open-pull-requests-limit: 2
 
   - package-ecosystem: bundler
     directory: "/frontend/ios"
     schedule:
       interval: daily
+    labels:
+      - "not-testable"
     open-pull-requests-limit: 2
     ignore:
       - dependency-name: "*"
@@ -47,4 +55,6 @@ updates:
     directory: "/"
     schedule:
       interval: daily
+    labels:
+      - "not-testable"
     open-pull-requests-limit: 2
