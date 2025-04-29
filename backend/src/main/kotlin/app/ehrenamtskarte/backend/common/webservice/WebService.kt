@@ -16,7 +16,6 @@ class WebService {
     }
 
     fun start(config: BackendConfiguration) {
-        val production = config.production
         val host = config.server.host
         val port = Integer.parseInt(config.server.port)
         val dataDirectory = config.server.dataDirectory
@@ -40,7 +39,7 @@ class WebService {
         }
 
         val app = Javalin.create { cfg ->
-            if (!production) {
+            if (config.isDevelopment()) {
                 cfg.bundledPlugins.enableDevLogging()
                 cfg.bundledPlugins.enableCors { cors -> cors.addRule { it.anyHost() } }
             }
@@ -59,7 +58,7 @@ class WebService {
         val userImportHandler = UserImportHandler(config)
 
         app.post("/") { context ->
-            if (!production) {
+            if (config.isDevelopment()) {
                 context.header("Access-Control-Allow-Headers: Authorization")
                 context.header("Access-Control-Allow-Origin: *")
             }
@@ -67,7 +66,7 @@ class WebService {
         }
 
         app.get(mapStyleHandler.getPath()) { context ->
-            if (!production) {
+            if (config.isDevelopment()) {
                 context.header("Access-Control-Allow-Headers: Authorization")
                 context.header("Access-Control-Allow-Origin: *")
             }
