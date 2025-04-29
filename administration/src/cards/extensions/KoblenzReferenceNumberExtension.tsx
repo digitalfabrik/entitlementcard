@@ -43,7 +43,7 @@ const KoblenzReferenceNumberExtensionForm = ({
     }
     return errors.join(' ')
   }
-  const removeEndAdornmentPadding = { '& .MuiFormHelperText-root': { margin: '0px' } }
+  const removeEndAdornmentMargin = { '& .MuiFormHelperText-root': { margin: '0px' } }
 
   return (
     <FormGroup>
@@ -58,7 +58,7 @@ const KoblenzReferenceNumberExtensionForm = ({
         onChange={e => setValue({ koblenzReferenceNumber: e.target.value })}
         error={!isValid && showErrorMessage}
         helperText={showErrorMessage ? <FormAlert errorMessage={getErrorMessage()} /> : null}
-        sx={removeEndAdornmentPadding}
+        sx={removeEndAdornmentMargin}
         InputProps={{
           sx: { paddingRight: 0 },
           endAdornment: (
