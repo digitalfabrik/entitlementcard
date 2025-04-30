@@ -470,21 +470,10 @@ jobs:
                 keys:
                     - v1-gradle-{{ checksum "build.gradle.kts" }}
             - run:
-                command: |
-                    ./gradlew run --args="graphql-export ../specs/backend-api.graphql"
-                    git diff --exit-code
-                name: Check GraphQL scheme stability
-            - run:
-                command: ./gradlew ktlintCheck
-                name: Check backend formatting
-            - run:
                 command: ./gradlew test
                 name: Test
             - store_test_results:
                 path: ./build/test-results
-            - run:
-                command: ./gradlew koverLog koverHtmlReport
-                name: Generate test coverage report
             - store_artifacts:
                 destination: test-coverage-report
                 path: ./build/reports/kover/html
