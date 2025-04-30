@@ -21,7 +21,7 @@ dependencies:
   provider: ^6.0.3
   graphql_flutter: ^5.1.2
   url_launcher: ^6.2.5
-  flutter_svg: ^2.0.9
+  flutter_svg: ^2.1.0
   permission_handler: ^11.3.0
   package_info_plus: ^8.1.1 # for about dialog
   mobile_scanner: ^4.0.1
@@ -50,7 +50,7 @@ dependencies:
   cupertino_icons: ^1.0.5
   collection: ^1.18.0
   meta: ^1.8.0
-  http: ^0.13.5
+  http: ^1.3.0
   equatable: ^2.0.5
   tuple: ^2.0.1
   # Locking GoRouter version until #1679 Update GoRouter to recent
