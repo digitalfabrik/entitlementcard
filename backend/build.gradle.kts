@@ -6,9 +6,11 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
  * This generated file contains a sample Kotlin application project to get you started.
  */
 
+val graphQlGeneratorVersion = "7.0.0"
+
 plugins {
     id("com.google.protobuf") version "0.9.5"
-    id("com.expediagroup.graphql") version "8.6.0"
+    id("com.expediagroup.graphql") version "7.0.0"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
     id("org.jetbrains.kotlin.jvm") version "2.1.20"
     id("org.jetbrains.kotlinx.kover") version "0.9.1"
@@ -22,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.google.protobuf:protobuf-kotlin:4.27.5")
+    implementation("com.google.protobuf:protobuf-kotlin:4.30.2")
     implementation("com.github.ajalt.clikt:clikt:5.0.3")
     implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.11.0")
     implementation("io.javalin:javalin:6.3.0")
@@ -33,18 +35,18 @@ dependencies {
     implementation("org.simplejavamail:simple-java-mail:8.1.3")
     implementation("org.piwik.java.tracking:matomo-java-tracker:3.4.0")
 
-    val graphQlGeneratorVersion = "8.6.0"
     implementation("com.expediagroup:graphql-kotlin-schema-generator:$graphQlGeneratorVersion")
-    testImplementation("com.expediagroup:graphql-kotlin-client:$graphQlGeneratorVersion")
+    testImplementation("com.expediagroup:graphql-kotlin-ktor-client:$graphQlGeneratorVersion")
 
     implementation("com.graphql-java:graphql-java-extended-scalars:20.2")
     // Align versions of all Kotlin components
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
 
     // Use the Kotlin JDK 8 standard library.
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("io.ktor:ktor-client-core-jvm:2.3.9")
-    implementation("io.ktor:ktor-client-cio-jvm:2.3.9")
+    val ktor = "3.1.2"
+    implementation("org.jetbrains.kotlin:kotlin-stdlib")
+    implementation("io.ktor:ktor-client-core-jvm:$ktor")
+    implementation("io.ktor:ktor-client-cio-jvm:$ktor")
 
     // Use the Kotlin json serialisation library
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
@@ -119,6 +121,7 @@ sourceSets {
     test {
         kotlin {
             srcDir("${layout.buildDirectory.get()}/generated/source/graphql")
+            srcDir("${layout.buildDirectory.get()}/generated/sources/proto")
         }
     }
 }

@@ -141,11 +141,13 @@ internal class Verein360ApplicationTest : GraphqlApiTest() {
     @Test
     fun `should return an error when region not found`() =
         JavalinTest.test(app) { _, client ->
+            TestData.createApiToken(creatorId = adminVerein360.id, type = ApiTokenType.VERIFIED_APPLICATION)
+
             val mutation = createMutation(
                 regionId = 99,
                 application = TestApplicationBuilder.defaultVerified(),
             )
-            val response = post(client, mutation)
+            val response = post(client, mutation, token = "dummy")
 
             assertEquals(200, response.code)
 
