@@ -7,12 +7,12 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
  */
 
 plugins {
-    id("com.google.protobuf") version "0.9.5"
-    id("com.expediagroup.graphql") version "8.6.0"
-    id("io.gitlab.arturbosch.detekt") version "1.23.8"
-    id("org.jetbrains.kotlin.jvm") version "2.1.20"
-    id("org.jetbrains.kotlinx.kover") version "0.9.1"
-    id("org.jlleitschuh.gradle.ktlint") version "12.2.0"
+    alias(libs.plugins.com.google.protobuf)
+    alias(libs.plugins.com.expediagroup.graphql)
+    alias(libs.plugins.io.gitlab.arturbosch.detekt)
+    alias(libs.plugins.org.jetbrains.kotlin.jvm)
+    alias(libs.plugins.org.jetbrains.kotlinx.kover)
+    alias(libs.plugins.org.jlleitschuh.gradle.ktlint)
     // Apply the application plugin to add support for building a CLI application.
     application
 }
@@ -22,75 +22,45 @@ repositories {
 }
 
 dependencies {
-    implementation("com.google.protobuf:protobuf-kotlin:4.30.2")
-    implementation("com.github.ajalt.clikt:clikt:5.0.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.12.0")
-
-    val javalinVersion = "6.6.0"
-    implementation("io.javalin:javalin:$javalinVersion")
-    testImplementation("io.javalin:javalin-testtools:$javalinVersion")
-
-    implementation("org.slf4j:slf4j-simple:2.0.17")
-    implementation("org.apache.commons:commons-text:1.13.1")
-    implementation("org.simplejavamail:simple-java-mail:8.12.6")
-    implementation("org.piwik.java.tracking:matomo-java-tracker:3.4.0")
-
-    val graphQlGeneratorVersion = "8.6.0"
-    implementation("com.expediagroup:graphql-kotlin-schema-generator:$graphQlGeneratorVersion")
-    testImplementation("com.expediagroup:graphql-kotlin-client:$graphQlGeneratorVersion")
-
-    implementation("com.graphql-java:graphql-java-extended-scalars:22.0")
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-
-    val ktorVersion = "3.1.2"
-    implementation("io.ktor:ktor-client-core-jvm:$ktorVersion")
-    implementation("io.ktor:ktor-client-cio-jvm:$ktorVersion")
-
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
-
-    // Use the Kotlin test library.
-    testImplementation("org.jetbrains.kotlin:kotlin-test")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.0")
-    testImplementation("io.mockk:mockk:1.13.11")
-
-    val exposedVersion = "0.60.0"
-    implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
-    implementation("org.postgresql:postgresql:42.7.5")
-
-    val unixSocketVersion = "2.10.1"
-    implementation("com.kohlschutter.junixsocket:junixsocket-core:$unixSocketVersion")
-    implementation("com.kohlschutter.junixsocket:junixsocket-common:$unixSocketVersion")
-
-    implementation("net.postgis:postgis-jdbc:2024.1.0")
-
-    implementation("org.apache.commons:commons-csv:1.14.0")
-
-    val jacksonVersion = "2.18.3"
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jacksonVersion")
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jacksonVersion")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
-
-    implementation("de.grundid.opendatalab:geojson-jackson:1.14")
-
-    implementation("com.eatthepath:java-otp:0.4.0") // dynamic card verification
-    implementation("com.auth0:java-jwt:4.5.0") // JSON web tokens
-    implementation("at.favre.lib:bcrypt:0.10.2")
-
-    implementation("org.bouncycastle:bcpkix-jdk18on:1.80")
-
-    implementation("com.google.zxing:core:3.5.3") // QR-Codes
-
-    testImplementation(platform("org.testcontainers:testcontainers-bom:1.20.6"))
-    testImplementation("org.testcontainers:testcontainers")
-    testImplementation("org.testcontainers:postgresql")
-    // Replace the library version used in testcontainers to avoid vulnerability
-    testImplementation("org.apache.commons:commons-compress:1.27.1")
+    implementation(libs.at.favre.lib.bcrypt)
+    implementation(libs.com.auth0.java.jwt) // JSON web tokens
+    implementation(libs.com.eatthepath.java.otp) // dynamic card verification
+    implementation(libs.com.expediagroup.graphql.kotlin.schema.generator)
+    testImplementation(libs.com.expediagroup.graphql.kotlin.client)
+    implementation(libs.com.fasterxml.jackson.dataformat.xml)
+    implementation(libs.com.fasterxml.jackson.dataformat.yaml)
+    implementation(libs.com.fasterxml.jackson.datatype.jsr310)
+    implementation(libs.com.fasterxml.jackson.module.kotlin)
+    implementation(libs.com.google.zxing.core) // QR-Codes
+    implementation(libs.com.github.ajalt.clikt)
+    implementation(libs.com.google.protobuf.kotlin)
+    implementation(libs.com.graphql.java.extended.scalars)
+    implementation(libs.de.grundig.geojson.jackson)
+    implementation(libs.io.javalin)
+    testImplementation(libs.io.javalin.testtools)
+    implementation(libs.io.ktor.client.core.jvm)
+    implementation(libs.io.ktor.client.cio.jvm)
+    testImplementation(libs.io.mockk)
+    implementation(libs.net.postgis.jdbc)
+    implementation(libs.org.apache.commons.text)
+    implementation(libs.org.apache.commons.csv)
+    implementation(libs.org.bouncycastle.bcpkix.jdk18on)
+    implementation(libs.org.jetbrains.exposed.core)
+    implementation(libs.org.jetbrains.exposed.dao)
+    implementation(libs.org.jetbrains.exposed.jdbc)
+    implementation(libs.org.jetbrains.exposed.java.time)
+    testImplementation(libs.org.jetbrains.kotlin.test)
+    implementation(libs.org.jetbrains.kotlin.stdlib)
+    implementation(libs.org.jetbrains.kotlinx.html.jvm)
+    implementation(libs.org.jetbrains.kotlinx.serialization.json)
+    testImplementation(libs.org.junit.jupiter)
+    testImplementation(libs.org.junit.jupiter.params)
+    implementation(libs.org.piwik.java.tracking.matomo.java.tracker)
+    implementation(libs.org.postgresql.postgresql)
+    implementation(libs.org.slf4j.simple)
+    implementation(libs.org.simplejavamail)
+    testImplementation(libs.org.testcontainers)
+    testImplementation(libs.org.testcontainers.postgresql)
 }
 
 kotlin {
