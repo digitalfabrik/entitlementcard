@@ -4,7 +4,7 @@ import app.ehrenamtskarte.backend.cards.database.CodeType
 import app.ehrenamtskarte.backend.cards.service.CardVerifier
 import app.ehrenamtskarte.backend.cards.webservice.schema.types.CardVerificationModel
 import app.ehrenamtskarte.backend.cards.webservice.schema.types.CardVerificationResultModel
-import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
+import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.matomo.Matomo
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
@@ -30,7 +30,7 @@ class CardQueryService {
         card: CardVerificationModel,
         dfe: DataFetchingEnvironment,
     ): CardVerificationResultModel {
-        val context = dfe.getContext<GraphQLContext>()
+        val context = dfe.graphQlContext.context
         val projectConfig = context.backendConfiguration.getProjectConfig(project)
         val cardHash = Base64.getDecoder().decode(card.cardInfoHashBase64)
 

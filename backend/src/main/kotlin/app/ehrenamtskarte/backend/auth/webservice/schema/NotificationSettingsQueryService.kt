@@ -2,7 +2,7 @@ package app.ehrenamtskarte.backend.auth.webservice.schema
 
 import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.NotificationSettings
-import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
+import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
@@ -15,7 +15,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 class NotificationSettingsQueryService {
     @GraphQLDescription("Get the notification settings of the authenticated administrator")
     fun getNotificationSettings(project: String, dfe: DataFetchingEnvironment): NotificationSettings {
-        val context = dfe.getContext<GraphQLContext>()
+        val context = dfe.graphQlContext.context
         val admin = context.getAdministrator()
 
         return transaction {

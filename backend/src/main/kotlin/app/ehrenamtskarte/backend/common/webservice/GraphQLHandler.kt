@@ -126,7 +126,12 @@ class GraphQLHandler(
         return result
     }
 
-    private fun getGraphQLContext(context: Context, files: List<Part>, remoteIp: String, applicationData: File) =
+    private fun getGraphQLContext(
+        context: Context,
+        files: List<Part>,
+        remoteIp: String,
+        applicationData: File,
+    ): GraphQLContext =
         try {
             GraphQLContext(
                 applicationData,
@@ -150,7 +155,6 @@ class GraphQLHandler(
                     regionIdentifierByPostalCode,
                     context.req(),
                 )
-
                 else -> throw e
             }
         }
@@ -171,7 +175,7 @@ class GraphQLHandler(
             ) as Map<String, Any>?
             val executionInput =
                 ExecutionInput.Builder()
-                    .context(graphQLContext)
+                    .graphQLContext { it.put(graphQLContext) }
                     .query(payload["query"].toString())
                     .variables(variables ?: emptyMap<String, Any>())
                     .dataLoaderRegistry(graphQLParams.dataLoaderRegistry)
