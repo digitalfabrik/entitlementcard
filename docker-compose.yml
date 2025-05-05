@@ -29,12 +29,6 @@ services:
       interval: 10s
       start_period: 10s
       start_interval: 1s
-  adminer:
-    image: "adminer:4.8.1-standalone"
-    ports:
-      - 127.0.0.1:5001:8080
-    networks:
-      - network
   reverse_proxy:
     image: "nginx:1.27.5"
     ports:
