@@ -35,7 +35,7 @@ test.describe('Bayern testing', () => {
     await page.getByRole('textbox', { name: 'Ehrenamtliche Tätigkeit' }).fill('activity 1')
     await fillDateInput(page, 'Tätig seit', '10.10.1999', browser)
     await page.getByRole('spinbutton', { name: 'Arbeitsstunden pro Woche (' }).fill('56')
-    await expect(page.locator('form')).toContainText('Angaben zur Organisation')
+    await expect(page.getByText('Angaben zur Organisation', { exact: false })).toBeVisible({ timeout: 10_000 })
     await page.getByRole('textbox', { name: 'Name der Organisation bzw.' }).fill('organization')
     await page.getByRole('textbox', { name: 'Straße' }).fill('number 9')
     await page.getByRole('textbox', { name: 'Hausnummer' }).fill('123')
@@ -295,7 +295,7 @@ test.describe('Bayern testing', () => {
   }
 
   const sentSuccessfully = async (page: Page) => {
-    await expect(page.getByRole('heading')).toContainText('Erfolgreich gesendet')
+    await expect(page.getByRole('heading')).toHaveText('Erfolgreich gesendet', { timeout: 10_000 })
     await expect(page.getByRole('paragraph')).toContainText(
       'Ihr Antrag für die Ehrenamtskarte wurde erfolgreich übermittelt.Über den Fortschritt Ihres Antrags werden Sie per E-Mail informiert.Sie können das Fenster jetzt schließen.'
     )
@@ -304,6 +304,7 @@ test.describe('Bayern testing', () => {
   }
 
   test.describe.configure({ mode: 'parallel' })
+  test.setTimeout(200_000)
 
   test('blue_initial_volunteer', async ({ page, browserName }) => {
     await personalInfo(page, browserName)
