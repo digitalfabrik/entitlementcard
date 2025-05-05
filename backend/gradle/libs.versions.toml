@@ -9,13 +9,7 @@ org-jlleitschuh-gradle-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version 
 
 [versions]
 
-# FIXME: Keeping this at 6.10.2 since all versions from 7.0.0 onwards produce an error on tests
-# running in CircleCI (running tests on a local machine works though):
-#
-# Verein360ApplicationTest > should return an error when region not found() FAILED
-#    java.net.SocketTimeoutException at Verein360ApplicationTest.kt:148
-#        Caused by: java.net.SocketException at Verein360ApplicationTest.kt:148
-graphql = "6.10.2"
+graphql = "8.7.0"
 jackson = "2.19.0"
 javalin = "6.6.0"
 jetbrains-exposed = "0.61.0"
