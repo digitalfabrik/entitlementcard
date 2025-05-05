@@ -5,8 +5,6 @@ import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import app.ehrenamtskarte.backend.regions.webservice.schema.types.Region
 import org.jetbrains.exposed.sql.transactions.transaction
 
-const val REGION_LOADER_NAME = "REGION_LOADER"
-
 val regionLoader = newNamedDataLoader("REGION_LOADER") { ids ->
     transaction {
         RegionsRepository.findByIds(ids).map {
