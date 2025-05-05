@@ -55,15 +55,13 @@ object RegionsRepository {
         region.activatedForCardConfirmationMail = activatedForConfirmationMail
     }
 
-    fun findRegionByRegionIdentifier(regionIdentifier: String, projectId: EntityID<Int>): RegionEntity {
-        val regionId = RegionEntity
+    fun findRegionByRegionIdentifier(regionIdentifier: String, projectId: EntityID<Int>): RegionEntity? =
+        RegionEntity
             .find {
                 Regions.regionIdentifier eq regionIdentifier and (Regions.projectId eq projectId) and
                     Regions.activatedForApplication
             }
-            .single().id
-        return RegionEntity[regionId]
-    }
+            .singleOrNull()
 
     fun findRegionByNameAndPrefix(name: String, prefix: String, projectId: EntityID<Int>): RegionEntity? =
         RegionEntity.find {

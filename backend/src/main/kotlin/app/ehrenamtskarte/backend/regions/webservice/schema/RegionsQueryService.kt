@@ -79,23 +79,19 @@ class RegionsQueryService {
     )
     fun regionsByPostalCode(dfe: DataFetchingEnvironment, postalCode: String, project: String): List<Region> =
         transaction {
-            val regions = dfe.getContext<GraphQLContext>().regionIdentifierByPostalCode
-                .filter { pair -> pair.first.equals(postalCode) }
-
-            if (regions.isEmpty()) {
-                throw RegionNotFoundException()
-            }
-
             val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
                 ?: throw ProjectNotFoundException(project)
 
             if (projectEntity.project != EAK_BAYERN_PROJECT) {
                 throw NotEakProjectException()
             }
-
-            val regionEntities = regions.map { region ->
-                RegionsRepository.findRegionByRegionIdentifier(region.second, projectEntity.id)
-            }
+            val regionEntities = dfe.getContext<GraphQLContext>().regionIdentifierByPostalCode
+                .filter { pair -> pair.first == postalCode }
+                .mapNotNull { region ->
+                    RegionsRepository.findRegionByRegionIdentifier(region.second, projectEntity.id)
+                }
+                .takeIf { it.isNotEmpty() }
+                ?: throw RegionNotFoundException()
 
             regionEntities.map {
                 Region(
