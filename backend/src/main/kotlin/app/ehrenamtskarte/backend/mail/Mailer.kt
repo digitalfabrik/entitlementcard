@@ -66,7 +66,7 @@ object Mailer {
     ) {
         val logger = LoggerFactory.getLogger(Mailer::class.java)
 
-        if (!backendConfig.production) {
+        if (backendConfig.isDevelopment()) {
             logger.info(
                 """
                 Sending Email:

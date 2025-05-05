@@ -5,4 +5,6 @@ data class FreinetApiAgency(
     val agencyId: Int,
     val agencyName: String,
     val apiAccessKey: String,
-)
+) {
+    fun hasRegionKey(regionKey: String): Boolean = officialRegionalKeys.any { it.startsWith(regionKey) }
+}
