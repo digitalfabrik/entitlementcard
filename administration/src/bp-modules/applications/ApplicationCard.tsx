@@ -1,6 +1,6 @@
-import { Alert, Callout, Colors, H4, Icon, Section, SectionCard, Tooltip } from '@blueprintjs/core'
+import { Alert, Callout, Colors, H4, Icon, Section, SectionCard } from '@blueprintjs/core'
 import { CreditScore, Delete, Print } from '@mui/icons-material'
-import { Button, Stack } from '@mui/material'
+import { Button, Stack, Tooltip } from '@mui/material'
 import React, { ReactElement, memo, useContext, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -210,15 +210,18 @@ const ApplicationCard = ({
       </SectionCard>
       <SectionCard>
         <Stack spacing={2} direction='row'>
-          <Tooltip disabled={!!createCardQuery} content={t('incompleteMappingTooltip')}>
-            <PrintAwarePrimaryButton
-              disabled={!createCardQuery}
-              variant='contained'
-              color='primary'
-              href={createCardQuery ? `./cards/add${createCardQuery}` : undefined}
-              startIcon={<CreditScore />}>
-              {cardCreated ? t('createCardAgain') : t('createCard')}
-            </PrintAwarePrimaryButton>
+          <Tooltip title={createCardQuery ? undefined : t('incompleteMappingTooltip')}>
+            {/* Make the outer Tooltip independent of the button's disabled state */}
+            <span>
+              <PrintAwarePrimaryButton
+                disabled={!createCardQuery}
+                variant='contained'
+                color='primary'
+                href={createCardQuery ? `./cards/add${createCardQuery}` : undefined}
+                startIcon={<CreditScore />}>
+                {cardCreated ? t('createCardAgain') : t('createCard')}
+              </PrintAwarePrimaryButton>
+            </span>
           </Tooltip>
           <PrintAwareButton
             onClick={() => setDeleteDialogOpen(true)}
