@@ -63,7 +63,6 @@ class GraphQLExport : CliktCommand(name = "graphql-export") {
     override fun run() {
         val schema = GraphQLHandler(config).graphQLSchema.print()
         val file = File(path)
-
         if (file.exists() && file.readText() == schema) {
             echo("Schema has not changed")
         } else {
