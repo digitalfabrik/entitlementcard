@@ -11,6 +11,6 @@
     "@typescript-eslint/parser": "8.25.0"
   },
   "devDependencies": {
-    "app-toolbelt": "github:digitalfabrik/app-toolbelt#semver:0.4.0"
+    "app-toolbelt": "github:digitalfabrik/app-toolbelt#semver:0.5.1"
   }
 }
