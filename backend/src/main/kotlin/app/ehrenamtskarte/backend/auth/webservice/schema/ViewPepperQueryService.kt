@@ -3,8 +3,8 @@ package app.ehrenamtskarte.backend.auth.webservice.schema
 import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.common.utils.Environment
-import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.common.webservice.KOBLENZ_PEPPER_SYS_ENV
+import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.NotImplementedException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
@@ -15,7 +15,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 class ViewPepperQueryService {
     @GraphQLDescription("Get the pepper for Koblenz user hashing")
     fun getHashingPepper(dfe: DataFetchingEnvironment): String {
-        val context = dfe.getContext<GraphQLContext>()
+        val context = dfe.graphQlContext.context
         val admin = context.getAdministrator()
 
         return transaction {

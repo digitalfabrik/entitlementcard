@@ -331,7 +331,7 @@ jobs:
                 keys:
                     - v1-gradle-{{ checksum "build.gradle.kts" }}
             - run:
-                command: ./gradlew build
+                command: ./gradlew assemble
                 name: Build backend
             - save_cache:
                 key: v1-gradle-{{ checksum "build.gradle.kts" }}
@@ -450,7 +450,7 @@ jobs:
         working_directory: ~/project/administration
     check_backend:
         docker:
-            - image: cimg/openjdk:17.0.13-node
+            - image: cimg/openjdk:17.0.14-node
         environment:
             _JAVA_OPTIONS: -Xmx3g
             GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2
@@ -504,6 +504,10 @@ jobs:
             - check_circleci_config
             - install_app_toolbelt
             - install_flutter
+            - run:
+                command: npm run lint
+                name: Lint build config
+                working_directory: build-configs
             - run:
                 command: fvm dart format -l 120 -o none --set-exit-if-changed .
                 name: Check formatting

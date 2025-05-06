@@ -17,7 +17,7 @@ import app.ehrenamtskarte.backend.cards.webservice.schema.types.CardActivationRe
 import app.ehrenamtskarte.backend.cards.webservice.schema.types.CardCreationResultModel
 import app.ehrenamtskarte.backend.cards.webservice.schema.types.DynamicActivationCodeResult
 import app.ehrenamtskarte.backend.cards.webservice.schema.types.StaticVerificationCodeResult
-import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
+import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCardHashException
@@ -140,7 +140,7 @@ class CardMutationService {
         encodedCardInfo: String,
         generateStaticCode: Boolean,
     ): CardCreationResultModel {
-        val context = dfe.getContext<GraphQLContext>()
+        val context = dfe.graphQlContext.context
         val config = context.backendConfiguration.getProjectConfig(project)
         if (!config.selfServiceEnabled) {
             throw NotFoundException()
@@ -252,7 +252,7 @@ class CardMutationService {
         generateStaticCodes: Boolean,
         applicationIdToMarkAsProcessed: Int? = null,
     ): List<CardCreationResultModel> {
-        val context = dfe.getContext<GraphQLContext>()
+        val context = dfe.graphQlContext.context
         val projectConfig = context.backendConfiguration.getProjectConfig(project)
         val admin = context.getAdministrator()
         val activationCodes = transaction {
@@ -302,14 +302,15 @@ class CardMutationService {
         dfe: DataFetchingEnvironment,
     ): CardActivationResultModel {
         val logger = LoggerFactory.getLogger(CardMutationService::class.java)
-        val context = dfe.getContext<GraphQLContext>()
+        val context = dfe.graphQlContext.context
         val projectConfig = context.backendConfiguration.getProjectConfig(project)
         val cardHash = Base64.getDecoder().decode(cardInfoHashBase64)
         val rawActivationSecret = Base64.getDecoder().decode(activationSecretBase64)
 
         // Avoid race conditions when activating a card.
         val activationResult = transaction(TRANSACTION_REPEATABLE_READ) t@{
-            repetitionAttempts = 0
+            this.maxAttempts = 0
+
             val card = CardRepository.findByHash(project, cardHash)
             val activationSecretHash = card?.activationSecretHash
 
@@ -375,7 +376,7 @@ class CardMutationService {
         regionId: Int,
         cardInfoHashBase64List: List<String>,
     ): Boolean {
-        val context = dfe.getContext<GraphQLContext>()
+        val context = dfe.graphQlContext.context
         val admin = context.getAdministrator()
 
         val cardInfoHashList = cardInfoHashBase64List.map { it.decodeBase64Bytes() }
@@ -399,7 +400,7 @@ class CardMutationService {
         recipientName: String,
         deepLink: String,
     ): Boolean {
-        val context = dfe.getContext<GraphQLContext>()
+        val context = dfe.graphQlContext.context
         val admin = context.getAdministrator()
         transaction {
             val region = admin.regionId?.value?.let {
@@ -411,7 +412,7 @@ class CardMutationService {
             if (!Authorizer.maySendMailsInRegion(admin, regionId)) {
                 throw ForbiddenException()
             }
-            val backendConfig = dfe.getContext<GraphQLContext>().backendConfiguration
+            val backendConfig = dfe.graphQlContext.context.backendConfiguration
             val projectConfig = context.backendConfiguration.getProjectConfig(project)
             Mailer.sendCardCreationConfirmationMail(
                 backendConfig,

@@ -2,7 +2,7 @@ package app.ehrenamtskarte.backend.freinet.webservice
 
 import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.service.Authorizer
-import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
+import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.NotImplementedException
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
@@ -23,9 +23,9 @@ class FreinetAgencyMutationService {
         project: String,
         dataTransferActivated: Boolean,
     ): Boolean {
-        val context = dfe.getContext<GraphQLContext>()
+        val context = dfe.graphQlContext.context
         val admin = context.getAdministrator()
-        val projectConfig = dfe.getContext<GraphQLContext>().backendConfiguration.getProjectConfig(
+        val projectConfig = dfe.graphQlContext.context.backendConfiguration.getProjectConfig(
             project,
         )
         if (projectConfig.freinet == null) {

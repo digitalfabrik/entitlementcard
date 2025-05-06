@@ -22,7 +22,6 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
 import java.nio.file.Paths
@@ -64,8 +63,8 @@ object ApplicationRepository {
             }
 
             val project = (Projects innerJoin Regions)
-                .slice(Projects.columns)
-                .select { Regions.id eq regionId }
+                .select(Projects.columns)
+                .where { Regions.id eq regionId }
                 .single()
                 .let { ProjectEntity.wrapRow(it) }
 
@@ -110,8 +109,8 @@ object ApplicationRepository {
     fun getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey: String): ApplicationView =
         transaction {
             val application = (Applications innerJoin ApplicationVerifications)
-                .slice(Applications.columns)
-                .select { ApplicationVerifications.accessKey eq applicationVerificationAccessKey }
+                .select(Applications.columns)
+                .where { ApplicationVerifications.accessKey eq applicationVerificationAccessKey }
                 .singleOrNull()
             application?.let {
                 ApplicationView.fromDbEntity(ApplicationEntity.wrapRow(it))
@@ -159,11 +158,11 @@ object ApplicationRepository {
         transaction {
             val application = ApplicationEntity.findById(applicationId)
             if (application != null) {
-                val project =
-                    (Projects innerJoin Regions)
-                        .select { Regions.id eq application.regionId }
-                        .single()
-                        .let { ProjectEntity.wrapRow(it) }
+                val project = (Projects innerJoin Regions)
+                    .select(Projects.columns)
+                    .where { Regions.id eq application.regionId }
+                    .single()
+                    .let { ProjectEntity.wrapRow(it) }
                 val applicationDirectory =
                     Paths.get(
                         graphQLContext.applicationData.absolutePath,

@@ -60,7 +60,7 @@ class Database {
             transaction {
                 assertDatabaseIsInSync()
                 insertOrUpdateProjects(config)
-                insertOrUpdateRegions(agencies)
+                insertOrUpdateRegions(agencies, config)
                 insertOrUpdateCategories(Companion::executeScript)
                 createOrReplaceStoreFunctions(Companion::executeScript)
             }
@@ -80,7 +80,7 @@ class Database {
                 databaseConfig = DatabaseConfig.invoke {
                     // Nested transactions are helpful for applying migrations in subtransactions.
                     useNestedTransactions = true
-                    if (!config.production) {
+                    if (config.isDevelopment()) {
                         this.sqlLogger = StdOutSqlLogger
                     }
                 },

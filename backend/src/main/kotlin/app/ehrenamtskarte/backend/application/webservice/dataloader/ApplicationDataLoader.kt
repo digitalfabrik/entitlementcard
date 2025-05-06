@@ -9,7 +9,6 @@ import app.ehrenamtskarte.backend.application.webservice.schema.view.Application
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationView
 import app.ehrenamtskarte.backend.common.webservice.newNamedDataLoader
 import org.jetbrains.exposed.sql.SortOrder
-import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
 val applicationLoader = newNamedDataLoader("APPLICATION_LOADER") { ids ->
@@ -25,8 +24,8 @@ val verificationsByApplicationLoader = newNamedDataLoader<Int, _>(
 ) { ids ->
     transaction {
         val list = (Applications leftJoin ApplicationVerifications)
-            .slice(listOf(Applications.id).plus(ApplicationVerifications.columns))
-            .select { Applications.id inList ids }
+            .select(ApplicationVerifications.columns + Applications.id)
+            .where { Applications.id inList ids }
             .orderBy(Applications.id to SortOrder.ASC, ApplicationVerifications.id to SortOrder.ASC)
             .toList()
         val groupedByApplication = list.groupBy { row -> row[Applications.id].value }
