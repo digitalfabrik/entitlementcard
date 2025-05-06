@@ -26,9 +26,7 @@ open class GraphqlApiTest : IntegrationTest() {
             post("/") { ctx ->
                 graphQLHandler.handle(ctx, applicationData = File("dummy"))
             }
-            post("/users/import") { ctx ->
-                userImportHandler.handle(ctx)
-            }
+            post("/users/import") { ctx -> userImportHandler.handle(ctx) }
         }
         app.start(backendConfiguration.server.port.toInt())
     }

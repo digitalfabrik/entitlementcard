@@ -47,7 +47,7 @@ open class IntegrationTest {
         postgisContainer.stop()
     }
 
-    fun loadTestConfig(): BackendConfiguration {
+    private fun loadTestConfig(): BackendConfiguration {
         val resource = ClassLoader.getSystemResource("config.test.yml")
             ?: throw Exception("Configuration file 'config.test.yml' not found")
         return BackendConfiguration.load(resource)
