@@ -1,15 +1,6 @@
-import {
-  Alert,
-  AnchorButton,
-  Button,
-  Callout,
-  Colors,
-  H4,
-  Icon,
-  Section,
-  SectionCard,
-  Tooltip,
-} from '@blueprintjs/core'
+import { Alert, Callout, Colors, H4, Icon, Section, SectionCard, Tooltip } from '@blueprintjs/core'
+import { CreditScore, Delete, Print } from '@mui/icons-material'
+import { Button } from '@mui/material'
 import React, { ReactElement, memo, useContext, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -67,12 +58,16 @@ const WithdrawAlert = styled(Callout)`
   margin-bottom: 16px;
 `
 
-const PrintAwareButton = styled(Button)`
+const PrintAwarePrimaryButton = styled(Button)`
   margin-right: 10px;
   ${printAwareCss};
+  // TODO: Remove this style after blueprint.js is completely removed
+  &:hover {
+    color: white;
+  }
 `
 
-const PrintAwareAnchorButton = styled(AnchorButton)`
+const PrintAwareButton = styled(Button)`
   margin-right: 10px;
   ${printAwareCss};
 `
@@ -222,18 +217,27 @@ const ApplicationCard = ({
       <SectionCard>
         <ButtonContainer>
           <Tooltip disabled={!!createCardQuery} content={t('incompleteMappingTooltip')}>
-            <PrintAwareAnchorButton
+            <PrintAwarePrimaryButton
               disabled={!createCardQuery}
+              variant='contained'
+              color='primary'
               href={createCardQuery ? `./cards/add${createCardQuery}` : undefined}
-              icon='id-number'
-              intent='primary'>
+              startIcon={<CreditScore />}>
               {cardCreated ? t('createCardAgain') : t('createCard')}
-            </PrintAwareAnchorButton>
+            </PrintAwarePrimaryButton>
           </Tooltip>
-          <PrintAwareButton onClick={() => setDeleteDialogOpen(true)} intent='danger' icon='trash'>
+          <PrintAwareButton
+            onClick={() => setDeleteDialogOpen(true)}
+            startIcon={<Delete />}
+            variant='outlined'
+            color='error'>
             {t('deleteApplication')}
           </PrintAwareButton>
-          <PrintAwareButton onClick={() => printApplicationById(id)} intent='none' icon='print'>
+          <PrintAwareButton
+            onClick={() => printApplicationById(id)}
+            startIcon={<Print />}
+            variant='outlined'
+            color='inherit'>
             {t('exportPdf')}
           </PrintAwareButton>
           <CollapseIcon icon='chevron-up' onClick={() => setIsExpanded(!isExpanded)} style={{ marginLeft: 'auto' }} />
