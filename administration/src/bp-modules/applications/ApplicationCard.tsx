@@ -1,6 +1,6 @@
 import { Alert, Callout, Colors, H4, Icon, Section, SectionCard, Tooltip } from '@blueprintjs/core'
 import { CreditScore, Delete, Print } from '@mui/icons-material'
-import { Button } from '@mui/material'
+import { Button, Stack } from '@mui/material'
 import React, { ReactElement, memo, useContext, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -33,12 +33,6 @@ const ApplicationViewCard = styled(Section)<{ $hideInPrintMode?: boolean }>`
     box-shadow: none;
   }
   ${props => props.$hideInPrintMode && printAwareCss};
-`
-
-const ButtonContainer = styled.div`
-  display: flex;
-  flex-grow: 1;
-  margin-top: 10px;
 `
 
 export const CollapseIcon = styled(Icon)`
@@ -215,7 +209,7 @@ const ApplicationCard = ({
         <VerificationsView verifications={application.verifications} />
       </SectionCard>
       <SectionCard>
-        <ButtonContainer>
+        <Stack spacing={2} direction='row'>
           <Tooltip disabled={!!createCardQuery} content={t('incompleteMappingTooltip')}>
             <PrintAwarePrimaryButton
               disabled={!createCardQuery}
@@ -241,7 +235,7 @@ const ApplicationCard = ({
             {t('exportPdf')}
           </PrintAwareButton>
           <CollapseIcon icon='chevron-up' onClick={() => setIsExpanded(!isExpanded)} style={{ marginLeft: 'auto' }} />
-        </ButtonContainer>
+        </Stack>
         <Alert
           cancelButtonText={t('misc:cancel')}
           confirmButtonText={t('deleteApplication')}
