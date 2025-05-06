@@ -18,7 +18,7 @@
   "devDependencies": {
     "@eslint/compat": "^1.2.7",
     "@eslint/eslintrc": "^3.3.0",
-    "app-toolbelt": "github:digitalfabrik/app-toolbelt#semver:0.4.0",
+    "app-toolbelt": "github:digitalfabrik/app-toolbelt#semver:0.5.1",
     "eslint": "^9.21.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.8.0",
