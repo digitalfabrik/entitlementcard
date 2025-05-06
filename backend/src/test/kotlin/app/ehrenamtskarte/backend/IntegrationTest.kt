@@ -6,7 +6,6 @@ import app.ehrenamtskarte.backend.config.PostgresConfig
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestFreinetAgencies
 import app.ehrenamtskarte.backend.migration.MigrationUtils
-import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.utility.DockerImageName
@@ -16,37 +15,45 @@ import org.testcontainers.utility.DockerImageName
  */
 open class IntegrationTest {
     companion object {
-        private var postgisImage = DockerImageName.parse("postgis/postgis:13-3.0-alpine")
-        private var postgisContainer = PostgreSQLContainer(
+        @JvmStatic
+        protected val config = loadTestConfig()
+
+        private val postgisImage = DockerImageName.parse("postgis/postgis:13-3.0-alpine")
+        private val postgisContainer = PostgreSQLContainer(
             postgisImage.asCompatibleSubstituteFor("postgres"),
         )
 
         @JvmStatic
         @BeforeAll
         fun setupDatabase() {
+            if (postgisContainer.isRunning) {
+                createTestData()
+                return
+            }
             postgisContainer.start()
-            val config = loadTestConfig()
-                .copy(
-                    postgres = PostgresConfig(
-                        postgisContainer.jdbcUrl,
-                        postgisContainer.username,
-                        postgisContainer.password,
-                    ),
-                )
-            val database = Database.setupWithoutMigrationCheck(config)
-            MigrationUtils.applyRequiredMigrations(database)
-            Database.setupInitialData(config)
+            val configOverride = config.copy(
+                postgres = postgisContainer.asPostgresConfig(),
+            )
+            Database.setupWithoutMigrationCheck(configOverride).also {
+                MigrationUtils.applyRequiredMigrations(it)
+                Database.setupInitialData(configOverride)
+            }
+            createTestData()
+        }
+
+        private fun createTestData() {
             TestAdministrators.createAll()
             TestFreinetAgencies.create()
         }
 
-        @JvmStatic
-        @AfterAll
-        fun tearDownDatabase() {
-            postgisContainer.stop()
-        }
+        private fun PostgreSQLContainer<*>.asPostgresConfig() =
+            PostgresConfig(
+                url = jdbcUrl,
+                user = username,
+                password = password,
+            )
 
-        fun loadTestConfig(): BackendConfiguration {
+        private fun loadTestConfig(): BackendConfiguration {
             val resource = ClassLoader.getSystemResource("config.test.yml")
                 ?: throw Exception("Configuration file 'config.test.yml' not found")
             return BackendConfiguration.load(resource)

@@ -7,8 +7,8 @@ import app.ehrenamtskarte.backend.auth.webservice.JwtService
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Administrator
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
-import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.upsert
 
 enum class TestAdministrators(
     val id: Int,
@@ -112,7 +112,7 @@ enum class TestAdministrators(
                 val projectMap = ProjectEntity.all().associateBy { it.project }
                 TestAdministrators.entries.forEach { admin ->
                     val project = projectMap[admin.project] ?: throw Exception("Project ${admin.project} not found!")
-                    Administrators.insert {
+                    Administrators.upsert(Administrators.id) {
                         it[Administrators.id] = admin.id
                         it[projectId] = project.id
                         it[email] = admin.email

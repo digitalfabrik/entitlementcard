@@ -40,10 +40,7 @@ internal class FreinetAgencyQueryServiceTest : GraphqlApiTest() {
 
     @Test
     fun `POST returns a successful response without information if a region has no agency information`() =
-        JavalinTest.test(app) {
-            _,
-            client,
-            ->
+        JavalinTest.test(app) { _, client ->
             val query = createQuery(16, projectId)
             val response = post(client, query, regionAdmin.getJwtToken())
             assertEquals(200, response.code)
@@ -55,10 +52,7 @@ internal class FreinetAgencyQueryServiceTest : GraphqlApiTest() {
 
     @Test
     fun `POST returns a successful response with agency information if region has information`() =
-        JavalinTest.test(app) {
-            _,
-            client,
-            ->
+        JavalinTest.test(app) { _, client ->
             val query = createQuery(9, projectId)
             val response = post(client, query, regionAdminFreinet.getJwtToken())
             assertEquals(200, response.code)
