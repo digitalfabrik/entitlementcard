@@ -37,7 +37,7 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: '$activationRouteName/:$activationRouteCodeParamName',
           builder: (BuildContext context, GoRouterState state) {
-            return DeepLinkActivation(encodedBase64qrcode: state.uri.fragment);
+            return DeepLinkActivation(encodedBase64QrCode: state.uri.fragment);
           },
         ),
       ],
