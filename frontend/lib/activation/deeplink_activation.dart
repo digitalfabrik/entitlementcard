@@ -202,8 +202,8 @@ class _WarningText extends StatelessWidget {
 
 DynamicActivationCode? getActivationCode(
     BuildContext context, String encodedBase64qrcode, Function(String message) updateErrorMessage) {
-  // GoRouter >= 13.x did not handle uri fragments properly without trailing slash. After the package update to recent version this was fixed.
-  // Though we need legacy support for old deep links that have a trailing slash.
+  // GoRouter 13.x did not handle uri fragments properly without trailing slash.
+  // Therefore we need legacy support for old deep links that have a trailing slash.
   final sanitizedBase64qrcode = removeTrailingSlash(encodedBase64qrcode);
   try {
     final activationCode = const ActivationCodeParser()
