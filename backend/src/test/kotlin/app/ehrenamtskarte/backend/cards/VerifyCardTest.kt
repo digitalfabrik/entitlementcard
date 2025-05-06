@@ -9,7 +9,6 @@ import app.ehrenamtskarte.backend.generated.enums.CodeType
 import app.ehrenamtskarte.backend.generated.inputs.CardVerificationModelInput
 import app.ehrenamtskarte.backend.helper.TestData
 import app.ehrenamtskarte.backend.userdata.database.UserEntitlements
-import io.javalin.testtools.JavalinTest
 import io.ktor.util.encodeBase64
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -110,57 +109,54 @@ internal class VerifyCardTest : GraphqlApiTest() {
 
     @ParameterizedTest
     @MethodSource("verifyCardTestCases")
-    fun `should return whether the card is valid and extendable`(testCase: VerifyCardTestCase) =
-        JavalinTest.test(app) { _, client ->
-            val card = transaction {
-                CardEntity.findById(testCase.createCard())
-                    ?: error("Test card has not been created")
-            }
-            val query = createQuery(
-                cardInfoHash = card.cardInfoHash.encodeBase64(),
-                codeType = CodeType.valueOf(card.codeType.name),
-            )
-
-            val response = post(client, query)
-
-            assertEquals(200, response.code)
-
-            val verificationResult = response.toDataObject<CardVerificationResultModel>()
-
-            assertEquals(testCase.valid, verificationResult.valid)
-            assertEquals(testCase.extendable, verificationResult.extendable)
+    fun `should return whether the card is valid and extendable`(testCase: VerifyCardTestCase) {
+        val card = transaction {
+            CardEntity.findById(testCase.createCard())
+                ?: error("Test card has not been created")
         }
+        val query = createQuery(
+            cardInfoHash = card.cardInfoHash.encodeBase64(),
+            codeType = CodeType.valueOf(card.codeType.name),
+        )
+
+        val response = post(query)
+
+        assertEquals(200, response.code)
+
+        val verificationResult = response.toDataObject<CardVerificationResultModel>()
+
+        assertEquals(testCase.valid, verificationResult.valid)
+        assertEquals(testCase.extendable, verificationResult.extendable)
+    }
 
     @Test
-    fun `should return valid = false and extendable = false when the card doesn't exist`() =
-        JavalinTest.test(app) { _, client ->
-            val query = createQuery(
-                cardInfoHash = Random.nextBytes(20).encodeBase64(),
-                codeType = CodeType.STATIC,
-            )
+    fun `should return valid = false and extendable = false when the card doesn't exist`() {
+        val query = createQuery(
+            cardInfoHash = Random.nextBytes(20).encodeBase64(),
+            codeType = CodeType.STATIC,
+        )
 
-            val response = post(client, query)
+        val response = post(query)
 
-            assertEquals(200, response.code)
+        assertEquals(200, response.code)
 
-            val verificationResult = response.toDataObject<CardVerificationResultModel>()
+        val verificationResult = response.toDataObject<CardVerificationResultModel>()
 
-            assertFalse(verificationResult.valid)
-            assertFalse(verificationResult.extendable)
-        }
+        assertFalse(verificationResult.valid)
+        assertFalse(verificationResult.extendable)
+    }
 
     @Test
-    fun `should return an error when project does not exist`() =
-        JavalinTest.test(app) { _, client ->
-            val query = createQuery(
-                project = "non-existent.sozialpass.app",
-                cardInfoHash = "qwerty",
-                codeType = CodeType.STATIC,
-            )
-            val response = post(client, query)
+    fun `should return an error when project does not exist`() {
+        val query = createQuery(
+            project = "non-existent.sozialpass.app",
+            cardInfoHash = "qwerty",
+            codeType = CodeType.STATIC,
+        )
+        val response = post(query)
 
-            assertEquals(404, response.code)
-        }
+        assertEquals(404, response.code)
+    }
 
     private fun createQuery(
         project: String = "koblenz.sozialpass.app",
