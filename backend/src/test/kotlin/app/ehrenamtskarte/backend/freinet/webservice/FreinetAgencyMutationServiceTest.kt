@@ -7,7 +7,6 @@ import app.ehrenamtskarte.backend.freinet.database.FreinetAgenciesEntity
 import app.ehrenamtskarte.backend.generated.UpdateDataTransferToFreinet
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import io.javalin.testtools.JavalinTest
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals

@@ -1,5 +1,5 @@
-export { default as buildConfigNuernberg } from "./nuernberg"
-export { default as buildConfigBayern } from "./bayern"
-export { default as buildConfigKoblenz } from "./koblenz"
-export type { DeeplLinkingConfig, BuildConfigType } from "./types"
-export * from "./constants"
+export { default as buildConfigNuernberg } from './nuernberg'
+export { default as buildConfigBayern } from './bayern'
+export { default as buildConfigKoblenz } from './koblenz'
+export type { DeeplLinkingConfig, BuildConfigType } from './types'
+export * from './constants'

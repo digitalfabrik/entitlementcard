@@ -2,7 +2,7 @@ package app.ehrenamtskarte.backend.stores.webservice
 
 import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.service.Authorizer
-import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
+import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidJsonException
@@ -28,7 +28,7 @@ class AcceptingStoresMutationService {
         dryRun: Boolean,
         dfe: DataFetchingEnvironment,
     ): StoreImportReturnResultModel {
-        val context = dfe.getContext<GraphQLContext>()
+        val context = dfe.graphQlContext.context
         val admin = context.getAdministrator()
 
         return transaction {
