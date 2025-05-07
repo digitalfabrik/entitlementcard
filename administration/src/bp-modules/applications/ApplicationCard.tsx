@@ -1,6 +1,18 @@
-import { Alert, Callout, Colors, H4, Icon, Section } from '@blueprintjs/core'
+/* eslint-disable react/destructuring-assignment */
+import { MutationResult } from '@apollo/client'
+import { Callout, Colors, H4, Icon, Section } from '@blueprintjs/core'
 import { CreditScore, Delete, Print } from '@mui/icons-material'
-import { Box, Button, Divider, Stack, Tooltip } from '@mui/material'
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  Divider,
+  Stack,
+  Tooltip,
+} from '@mui/material'
 import React, { ReactElement, memo, useContext, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -108,6 +120,38 @@ const RightElement = ({ jsonField, application }: RightElementProps): ReactEleme
   )
 }
 
+const DeleteDialog = (p: {
+  isOpen: boolean
+  deleteResult: MutationResult
+  onConfirm: () => void
+  onCancel: () => void
+}) => {
+  const { t } = useTranslation('applicationsOverview')
+
+  return (
+    <Dialog open={p.isOpen} aria-describedby='alert-dialog-description'>
+      <DialogContent id='alert-dialog-description'>
+        <Stack direction='row' gap={2} alignItems='center'>
+          {p.deleteResult.loading || p.deleteResult.called ? (
+            <CircularProgress size={64} />
+          ) : (
+            <Delete sx={{ fontSize: '64px' }} color='error' />
+          )}
+          {t('deleteApplicationConfirmationPrompt')}
+        </Stack>
+      </DialogContent>
+      <DialogActions>
+        <Button disabled={p.deleteResult.loading || p.deleteResult.called} onClick={p.onCancel}>
+          {t('misc:cancel')}
+        </Button>
+        <Button color='error' disabled={p.deleteResult.loading || p.deleteResult.called} onClick={p.onConfirm}>
+          {t('deleteApplication')}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  )
+}
+
 export type ApplicationCardProps = {
   application: Application
   onDelete: () => void
@@ -132,7 +176,7 @@ const ApplicationCard = ({
   const appToaster = useAppToaster()
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [openNoteDialog, setOpenNoteDialog] = useState(false)
-  const [deleteApplication, { loading }] = useDeleteApplicationMutation({
+  const [deleteApplication, deleteResult] = useDeleteApplicationMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
       appToaster?.show({ intent: 'danger', message: title })
@@ -247,17 +291,13 @@ const ApplicationCard = ({
         </PrintAwareButton>
         <CollapseIcon icon='chevron-up' onClick={() => setIsExpanded(!isExpanded)} style={{ marginLeft: 'auto' }} />
       </Stack>
-      <Alert
-        cancelButtonText={t('misc:cancel')}
-        confirmButtonText={t('deleteApplication')}
-        icon='trash'
-        intent='danger'
+
+      <DeleteDialog
         isOpen={deleteDialogOpen}
-        loading={loading}
+        deleteResult={deleteResult}
+        onConfirm={() => deleteApplication({ variables: { applicationId: application.id } })}
         onCancel={() => setDeleteDialogOpen(false)}
-        onConfirm={() => deleteApplication({ variables: { applicationId: application.id } })}>
-        <p>{t('deleteApplicationConfirmationPrompt')}</p>
-      </Alert>
+      />
     </ApplicationViewCard>
   )
 }
