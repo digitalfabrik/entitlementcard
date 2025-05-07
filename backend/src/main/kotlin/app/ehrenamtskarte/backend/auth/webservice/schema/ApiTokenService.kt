@@ -10,7 +10,7 @@ import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.ApiTokenMetaData
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
-import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
+import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
@@ -18,7 +18,6 @@ import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.security.SecureRandom
 import java.time.LocalDate
@@ -30,7 +29,7 @@ fun getByteArrayLength() = 3 * TOKEN_LENGTH / 4 // 4*(n/3) chars are needed to r
 class ApiTokenService {
     @GraphQLDescription("Creates a new api token for user import endpoint")
     fun createApiToken(expiresIn: Int, dfe: DataFetchingEnvironment): String {
-        val context = dfe.getContext<GraphQLContext>()
+        val context = dfe.graphQlContext.context
         val admin = context.getAdministrator()
 
         admin.takeIf { Authorizer.mayAddApiTokensInProject(it) } ?: throw ForbiddenException()
@@ -59,7 +58,7 @@ class ApiTokenService {
 
     @GraphQLDescription("Deletes a selected API token")
     fun deleteApiToken(id: Int, dfe: DataFetchingEnvironment): Int {
-        val context = dfe.getContext<GraphQLContext>()
+        val context = dfe.graphQlContext.context
         val admin = context.getAdministrator()
         admin.takeIf { Authorizer.mayDeleteApiTokensInProject(it) } ?: throw ForbiddenException()
 
@@ -85,13 +84,14 @@ class ApiTokenService {
 class ApiTokenQueryService {
     @GraphQLDescription("Gets metadata of all api tokens for a project")
     fun getApiTokenMetaData(dfe: DataFetchingEnvironment): List<ApiTokenMetaData> {
-        val context = dfe.getContext<GraphQLContext>()
+        val context = dfe.graphQlContext.context
         val admin = context.getAdministrator()
         admin.takeIf { Authorizer.mayViewApiMetadataInProject(it) } ?: throw ForbiddenException()
 
         return transaction {
             (ApiTokens leftJoin Administrators)
-                .select {
+                .select(ApiTokens.columns + Administrators.email)
+                .where {
                     when (admin.role) {
                         Role.EXTERNAL_VERIFIED_API_USER.db_value -> (Administrators.email eq admin.email) and
                             (ApiTokens.type eq ApiTokenType.VERIFIED_APPLICATION)

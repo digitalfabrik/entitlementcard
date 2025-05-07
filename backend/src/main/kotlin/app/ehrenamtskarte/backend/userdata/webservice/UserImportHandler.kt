@@ -70,14 +70,16 @@ class UserImportHandler(
     }
 
     private fun getCSVParser(reader: BufferedReader): CSVParser =
-        CSVParser(
-            reader,
-            CSVFormat.DEFAULT.builder()
-                .setHeader()
-                .setTrim(true)
-                .setSkipHeaderRecord(true)
-                .build(),
-        )
+        CSVParser.builder().apply {
+            this.reader = reader
+            this.setFormat(
+                CSVFormat.DEFAULT.builder()
+                    .setHeader()
+                    .setTrim(true)
+                    .setSkipHeaderRecord(true)
+                    .get(),
+            )
+        }.get()
 
     private fun validateHeaders(headers: List<String>) {
         val requiredColumns = setOf("regionKey", "userHash", "startDate", "endDate", "revoked")

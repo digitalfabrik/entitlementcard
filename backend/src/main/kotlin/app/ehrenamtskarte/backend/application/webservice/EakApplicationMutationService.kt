@@ -9,7 +9,7 @@ import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationHandle
 import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.service.Authorizer.mayDeleteApplicationsInRegion
 import app.ehrenamtskarte.backend.auth.service.Authorizer.mayUpdateApplicationsInRegion
-import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
+import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidNoteSizeException
@@ -29,7 +29,7 @@ class EakApplicationMutationService {
         project: String,
         dfe: DataFetchingEnvironment,
     ): DataFetcherResult<Boolean> {
-        val applicationHandler = ApplicationHandler(dfe.getContext<GraphQLContext>(), application, regionId, project)
+        val applicationHandler = ApplicationHandler(dfe.graphQlContext.context, application, regionId, project)
         val dataFetcherResultBuilder = DataFetcherResult.newResult<Boolean>()
 
         applicationHandler.validateRegion()
@@ -64,7 +64,7 @@ class EakApplicationMutationService {
 
     @GraphQLDescription("Deletes the application with specified id")
     fun deleteApplication(applicationId: Int, dfe: DataFetchingEnvironment): Boolean {
-        val context = dfe.getContext<GraphQLContext>()
+        val context = dfe.graphQlContext.context
         val admin = context.getAdministrator()
 
         return transaction {
@@ -98,7 +98,7 @@ class EakApplicationMutationService {
         }
         return transaction {
             if (verified) {
-                val context = dfe.getContext<GraphQLContext>()
+                val context = dfe.graphQlContext.context
                 val backendConfig = context.backendConfiguration
                 val projectConfig = backendConfig.projects.first { it.id == project }
                 val successful = ApplicationRepository.verifyApplicationVerification(accessKey)
@@ -118,7 +118,7 @@ class EakApplicationMutationService {
 
     @GraphQLDescription("Updates a note of an application")
     fun updateApplicationNote(applicationId: Int, noteText: String, dfe: DataFetchingEnvironment): Boolean {
-        val context = dfe.getContext<GraphQLContext>()
+        val context = dfe.graphQlContext.context
         val admin = context.getAdministrator()
 
         return transaction {

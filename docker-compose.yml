@@ -5,11 +5,13 @@ services:
     volumes:
       - ./docker/martin-config.yaml:/app/config.yaml
     depends_on:
-      - db-postgis
+      db-postgis:
+        condition: service_healthy
+        restart: true
     networks:
       - network
   db-postgis:
-    image:  postgis/postgis:13-3.0-alpine
+    image:  postgis/postgis:17-3.5-alpine
     command: [ "postgres", "-c", "log_statement=all", "-c", "log_destination=stderr" ]
     environment:
       - POSTGRES_DB=ehrenamtskarte
@@ -19,12 +21,14 @@ services:
       - 127.0.0.1:5432:5432
     networks:
       - network
-  adminer:
-    image: "adminer:4.8.1-standalone"
-    ports:
-      - 127.0.0.1:5001:8080
-    networks:
-      - network
+    healthcheck:
+      # We use pg_isready to check whether the DB is up and running.
+      # We need to specify the hostname, otherwise pg_isready only checks whether connections via the local loopback
+      # work, which is also the case if the database is still in the process of initialization.
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB} -h db-postgis" ]
+      interval: 10s
+      start_period: 10s
+      start_interval: 1s
   reverse_proxy:
     image: "nginx:1.27.5"
     ports:

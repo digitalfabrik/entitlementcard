@@ -12,8 +12,9 @@ import java.io.File
 open class GraphqlApiTest : IntegrationTest() {
     protected val app: Javalin = Javalin.create().apply {
         val backendConfiguration = loadTestConfig()
+        val graphQLHandler = GraphQLHandler(backendConfiguration)
         post("/") { ctx ->
-            GraphQLHandler(backendConfiguration).handle(ctx, applicationData = File("dummy"))
+            graphQLHandler.handle(ctx, applicationData = File("dummy"))
         }
     }
 
