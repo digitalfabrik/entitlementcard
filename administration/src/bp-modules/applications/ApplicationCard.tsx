@@ -1,7 +1,7 @@
 /* eslint-disable react/destructuring-assignment */
 import { MutationResult } from '@apollo/client'
 import { Colors, H4, Icon, Section } from '@blueprintjs/core'
-import { CreditScore, Delete, Print } from '@mui/icons-material'
+import { CreditScore, Delete, EditNote, Print } from '@mui/icons-material'
 import {
   Box,
   Button,
@@ -14,7 +14,7 @@ import {
   Tooltip,
   useTheme,
 } from '@mui/material'
-import React, { ReactElement, memo, useContext, useMemo, useState } from 'react'
+import React, { memo, useContext, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
@@ -71,35 +71,30 @@ const CardContentHint = styled(Title)`
   color: ${Colors.GRAY1};
 `
 
-const RightElementContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 32px;
-`
-
 const Spacer = styled.div`
   flex-grow: 1;
 `
 
-type RightElementProps = {
-  jsonField: JsonField<'Array'>
+const ApplicationIndicators = ({
+  application,
+  applicationJsonData,
+}: {
   application: Application
-}
-
-const RightElement = ({ jsonField, application }: RightElementProps): ReactElement => {
-  const applicationDetails = findValue(jsonField, 'applicationDetails', 'Array') ?? jsonField
-  const preVerifiedEntitlementType = getPreVerifiedEntitlementType(applicationDetails)
+  applicationJsonData: JsonField<'Array'>
+}) => {
+  const preVerifiedEntitlementType = getPreVerifiedEntitlementType(
+    findValue(applicationJsonData, 'applicationDetails', 'Array') ?? applicationJsonData
+  )
 
   return (
-    <RightElementContainer>
-      {!!application.note && application.note.trim() && <Icon icon='annotation' intent='none' />}
+    <Stack direction='row' spacing={2}>
+      {(application.note ?? '').trim().length > 0 && <EditNote />}
       {preVerifiedEntitlementType !== undefined ? (
         <PreVerifiedQuickIndicator type={preVerifiedEntitlementType} />
       ) : (
         <VerificationsQuickIndicator verifications={application.verifications} />
       )}
-    </RightElementContainer>
+    </Stack>
   )
 }
 
@@ -153,8 +148,8 @@ const ApplicationCard = ({
   const [isExpanded, setIsExpanded] = useState(false)
   const { t } = useTranslation('applicationsOverview')
   const theme = useTheme()
-  const { createdDate: createdDateString, jsonValue, id, withdrawalDate, cardCreated } = application
-  const jsonField: JsonField<'Array'> = JSON.parse(jsonValue)
+  const { createdDate: createdDateString, id, withdrawalDate, cardCreated } = application
+  const jsonValueParsed: JsonField<'Array'> = JSON.parse(application.jsonValue)
   const config = useContext(ProjectConfigContext)
   const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${id}`
   const appToaster = useAppToaster()
@@ -176,13 +171,14 @@ const ApplicationCard = ({
   })
 
   const createCardQuery = useMemo(
-    () => `${config.applicationFeature?.applicationJsonToCardQuery(jsonField)}&applicationIdToMarkAsProcessed=${id}`,
-    [config.applicationFeature, jsonField, id]
+    () =>
+      `${config.applicationFeature?.applicationJsonToCardQuery(jsonValueParsed)}&applicationIdToMarkAsProcessed=${id}`,
+    [config.applicationFeature, jsonValueParsed, id]
   )
 
   const personalData = useMemo(
-    () => config.applicationFeature?.applicationJsonToPersonalData(jsonField),
-    [config.applicationFeature, jsonField]
+    () => config.applicationFeature?.applicationJsonToPersonalData(jsonValueParsed),
+    [config.applicationFeature, jsonValueParsed]
   )
 
   return (
@@ -199,7 +195,7 @@ const ApplicationCard = ({
           )}
         </div>
       }
-      rightElement={<RightElement jsonField={jsonField} application={application} />}
+      rightElement={<ApplicationIndicators application={application} applicationJsonData={jsonValueParsed} />}
       elevation={1}
       icon={withdrawalDate ? <Icon icon='warning-sign' intent='warning' /> : undefined}
       collapseProps={{ isOpen: isExpanded, onToggle: () => setIsExpanded(!isExpanded), keepChildrenMounted: true }}
@@ -227,7 +223,7 @@ const ApplicationCard = ({
         {/* TODO: <JsonFieldView> does not emit a root element and thus, <Stack> would insert a gap here */}
         <div>
           <JsonFieldView
-            jsonField={jsonField}
+            jsonField={jsonValueParsed}
             baseUrl={baseUrl}
             key={0}
             hierarchyIndex={0}
