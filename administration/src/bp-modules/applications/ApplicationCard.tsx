@@ -1,6 +1,6 @@
-import { Alert, Callout, Colors, H4, Icon, Section, SectionCard } from '@blueprintjs/core'
+import { Alert, Callout, Colors, H4, Icon, Section } from '@blueprintjs/core'
 import { CreditScore, Delete, Print } from '@mui/icons-material'
-import { Button, Stack, Tooltip } from '@mui/material'
+import { Box, Button, Divider, Stack, Tooltip } from '@mui/material'
 import React, { ReactElement, memo, useContext, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -50,6 +50,7 @@ export const CollapseIcon = styled(Icon)`
 
 const WithdrawAlert = styled(Callout)`
   margin-bottom: 16px;
+  flex-flow: 1;
 `
 
 const PrintAwarePrimaryButton = styled(Button)`
@@ -75,18 +76,15 @@ const CardContentHint = styled(Title)`
   color: ${Colors.GRAY1};
 `
 
-const SectionCardHeader = styled.div`
-  display: flex;
-  gap: 20px;
-  align-items: baseline;
-  flex-direction: row-reverse;
-`
-
 const RightElementContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 32px;
+`
+
+const Spacer = styled.div`
+  flex-grow: 1;
 `
 
 type RightElementProps = {
@@ -179,78 +177,87 @@ const ApplicationCard = ({
       collapseProps={{ isOpen: isExpanded, onToggle: () => setIsExpanded(!isExpanded), keepChildrenMounted: true }}
       collapsible={!isSelectedForPrint}
       $hideInPrintMode={!isSelectedForPrint}>
-      <SectionCard>
-        <SectionCardHeader>
+      <Stack sx={{ p: 2 }} gap={2}>
+        <Stack direction='row' spacing={2} alignItems='flex-start'>
+          {withdrawalDate ? (
+            <WithdrawAlert intent='warning'>
+              {t('withdrawalMessage', { withdrawalDate: formatDateWithTimezone(withdrawalDate, config.timezone) })}
+              <br />
+              {t('deleteApplicationSoonPrompt')}
+            </WithdrawAlert>
+          ) : (
+            <Spacer />
+          )}
           <NoteDialogController
             application={application}
             isOpen={openNoteDialog}
             onOpenNoteDialog={setOpenNoteDialog}
             onChange={onChange}
           />
-
-          {!!withdrawalDate && (
-            <WithdrawAlert intent='warning'>
-              {t('withdrawalMessage', { withdrawalDate: formatDateWithTimezone(withdrawalDate, config.timezone) })}
-              <br />
-              {t('deleteApplicationSoonPrompt')}
-            </WithdrawAlert>
-          )}
-        </SectionCardHeader>
-        <JsonFieldView
-          jsonField={jsonField}
-          baseUrl={baseUrl}
-          key={0}
-          hierarchyIndex={0}
-          attachmentAccessible
-          expandedRoot={false}
-        />
-      </SectionCard>
-      <SectionCard>
-        <VerificationsView verifications={application.verifications} />
-      </SectionCard>
-      <SectionCard>
-        <Stack spacing={2} direction='row'>
-          <Tooltip title={createCardQuery ? undefined : t('incompleteMappingTooltip')}>
-            {/* Make the outer Tooltip independent of the button's disabled state */}
-            <span>
-              <PrintAwarePrimaryButton
-                disabled={!createCardQuery}
-                variant='contained'
-                color='primary'
-                href={createCardQuery ? `./cards/add${createCardQuery}` : undefined}
-                startIcon={<CreditScore />}>
-                {cardCreated ? t('createCardAgain') : t('createCard')}
-              </PrintAwarePrimaryButton>
-            </span>
-          </Tooltip>
-          <PrintAwareButton
-            onClick={() => setDeleteDialogOpen(true)}
-            startIcon={<Delete />}
-            variant='outlined'
-            color='error'>
-            {t('deleteApplication')}
-          </PrintAwareButton>
-          <PrintAwareButton
-            onClick={() => printApplicationById(id)}
-            startIcon={<Print />}
-            variant='outlined'
-            color='inherit'>
-            {t('exportPdf')}
-          </PrintAwareButton>
-          <CollapseIcon icon='chevron-up' onClick={() => setIsExpanded(!isExpanded)} style={{ marginLeft: 'auto' }} />
         </Stack>
-        <Alert
-          cancelButtonText={t('misc:cancel')}
-          confirmButtonText={t('deleteApplication')}
-          icon='trash'
-          intent='danger'
-          isOpen={deleteDialogOpen}
-          loading={loading}
-          onCancel={() => setDeleteDialogOpen(false)}
-          onConfirm={() => deleteApplication({ variables: { applicationId: application.id } })}>
-          <p>{t('deleteApplicationConfirmationPrompt')}</p>
-        </Alert>
-      </SectionCard>
+
+        {/* TODO: <JsonFieldView> does not emit a root element and thus, <Stack> would insert a gap here */}
+        <div>
+          <JsonFieldView
+            jsonField={jsonField}
+            baseUrl={baseUrl}
+            key={0}
+            hierarchyIndex={0}
+            attachmentAccessible
+            expandedRoot={false}
+          />
+        </div>
+      </Stack>
+
+      <Divider />
+
+      <Box sx={{ p: 2 }}>
+        <VerificationsView verifications={application.verifications} />
+      </Box>
+
+      <Divider />
+
+      <Stack sx={{ p: 2 }} spacing={2} direction='row'>
+        <Tooltip title={createCardQuery ? undefined : t('incompleteMappingTooltip')}>
+          {/* Make the outer Tooltip independent of the button's disabled state */}
+          <span>
+            <PrintAwarePrimaryButton
+              disabled={!createCardQuery}
+              variant='contained'
+              color='primary'
+              href={createCardQuery ? `./cards/add${createCardQuery}` : undefined}
+              startIcon={<CreditScore />}>
+              {cardCreated ? t('createCardAgain') : t('createCard')}
+            </PrintAwarePrimaryButton>
+          </span>
+        </Tooltip>
+        <PrintAwareButton
+          onClick={() => setDeleteDialogOpen(true)}
+          startIcon={<Delete />}
+          variant='outlined'
+          color='error'>
+          {t('deleteApplication')}
+        </PrintAwareButton>
+        <PrintAwareButton
+          onClick={() => printApplicationById(id)}
+          startIcon={<Print />}
+          variant='outlined'
+          color='inherit'>
+          {t('exportPdf')}
+        </PrintAwareButton>
+        <CollapseIcon icon='chevron-up' onClick={() => setIsExpanded(!isExpanded)} style={{ marginLeft: 'auto' }} />
+      </Stack>
+      <Alert
+        cancelButtonText={t('misc:cancel')}
+        confirmButtonText={t('deleteApplication')}
+        icon='trash'
+        intent='danger'
+        isOpen={deleteDialogOpen}
+        loading={loading}
+        onCancel={() => setDeleteDialogOpen(false)}
+        onConfirm={() => deleteApplication({ variables: { applicationId: application.id } })}>
+        <p>{t('deleteApplicationConfirmationPrompt')}</p>
+      </Alert>
     </ApplicationViewCard>
   )
 }
