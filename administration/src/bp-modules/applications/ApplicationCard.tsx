@@ -1,6 +1,6 @@
 /* eslint-disable react/destructuring-assignment */
 import { MutationResult } from '@apollo/client'
-import { Callout, Colors, H4, Icon, Section } from '@blueprintjs/core'
+import { Colors, H4, Icon, Section } from '@blueprintjs/core'
 import { CreditScore, Delete, Print } from '@mui/icons-material'
 import {
   Box,
@@ -12,6 +12,7 @@ import {
   Divider,
   Stack,
   Tooltip,
+  useTheme,
 } from '@mui/material'
 import React, { ReactElement, memo, useContext, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -58,11 +59,6 @@ export const CollapseIcon = styled(Icon)`
     cursor: pointer;
     color: ${Colors.GRAY1};
   }
-`
-
-const WithdrawAlert = styled(Callout)`
-  margin-bottom: 16px;
-  flex-flow: 1;
 `
 
 const PrintAwarePrimaryButton = styled(Button)`
@@ -169,6 +165,7 @@ const ApplicationCard = ({
 }: ApplicationCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const { t } = useTranslation('applicationsOverview')
+  const theme = useTheme()
   const { createdDate: createdDateString, jsonValue, id, withdrawalDate, cardCreated } = application
   const jsonField: JsonField<'Array'> = JSON.parse(jsonValue)
   const config = useContext(ProjectConfigContext)
@@ -224,11 +221,11 @@ const ApplicationCard = ({
       <Stack sx={{ p: 2 }} gap={2}>
         <Stack direction='row' spacing={2} alignItems='flex-start'>
           {withdrawalDate ? (
-            <WithdrawAlert intent='warning'>
+            <Box sx={{ bgcolor: theme.palette.warning.light, p: 2, flexGrow: 1 }}>
               {t('withdrawalMessage', { withdrawalDate: formatDateWithTimezone(withdrawalDate, config.timezone) })}
               <br />
               {t('deleteApplicationSoonPrompt')}
-            </WithdrawAlert>
+            </Box>
           ) : (
             <Spacer />
           )}
