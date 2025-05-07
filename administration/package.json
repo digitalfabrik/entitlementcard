@@ -39,7 +39,7 @@
     "react-dom": "^18.2.0",
     "react-flip-move": "^3.0.5",
     "react-i18next": "^15.1.0",
-    "react-router-dom": "^6.30.0",
+    "react-router-dom": "6.26.0",
     "styled-components": "^5.3.11",
     "xregexp": "^5.1.1"
   },
@@ -53,6 +53,7 @@
     "@graphql-codegen/typescript": "^4.0.1",
     "@graphql-codegen/typescript-operations": "^4.0.1",
     "@graphql-codegen/typescript-react-apollo": "^3.3.7",
+    "@playwright/test": "^1.52.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
     "@svgr/webpack": "^8.0.1",
     "@testing-library/jest-dom": "^6.6.3",
@@ -122,7 +123,8 @@
     "generate-graphql": "graphql-codegen --config graphql-codegen.yml",
     "generate-protobuf": "mkdir -p src/generated && protoc -I ../specs --es_out=src/generated --es_opt=target=ts --plugin=protoc-gen-es=../node_modules/.bin/protoc-gen-es ../specs/card.proto",
     "postinstall": "npm run generate-protobuf && npm run generate-graphql",
-    "check-circular-deps": "bash ./scripts/check_circular_deps.sh"
+    "check-circular-deps": "bash ./scripts/check_circular_deps.sh",
+    "test:e2e": "npx playwright test"
   },
   "browserslist": {
     "production": [
