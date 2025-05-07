@@ -48,19 +48,6 @@ const ApplicationViewCard = styled(Section)<{ $hideInPrintMode?: boolean }>`
   ${props => props.$hideInPrintMode && printAwareCss};
 `
 
-export const CollapseIcon = styled(Icon)`
-  display: block;
-  margin-left: auto;
-  align-self: center;
-  padding: 2px;
-  ${printAwareCss};
-
-  :hover {
-    cursor: pointer;
-    color: ${Colors.GRAY1};
-  }
-`
-
 const PrintAwarePrimaryButton = styled(Button)`
   margin-right: 10px;
   ${printAwareCss};
@@ -286,7 +273,6 @@ const ApplicationCard = ({
           color='inherit'>
           {t('exportPdf')}
         </PrintAwareButton>
-        <CollapseIcon icon='chevron-up' onClick={() => setIsExpanded(!isExpanded)} style={{ marginLeft: 'auto' }} />
       </Stack>
 
       <DeleteDialog
