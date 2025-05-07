@@ -1,7 +1,7 @@
 /* eslint-disable react/destructuring-assignment */
 import { MutationResult } from '@apollo/client'
 import { Colors, H4, Icon, Section } from '@blueprintjs/core'
-import { CreditScore, Delete, Print } from '@mui/icons-material'
+import { CreditScore, Delete, EditNote, Print } from '@mui/icons-material'
 import {
   Box,
   Button,
@@ -14,21 +14,22 @@ import {
   Tooltip,
   useTheme,
 } from '@mui/material'
-import React, { ReactElement, memo, useContext, useMemo, useState } from 'react'
+import React, { memo, useContext, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useDeleteApplicationMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { applicationIsPreVerified, applicationPreVerificationType } from '../../util/applications'
 import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { useAppToaster } from '../AppToaster'
 import type { Application } from './ApplicationsOverview'
-import JsonFieldView, { findValue } from './JsonFieldView'
-import type { GeneralJsonField, JsonField } from './JsonFieldView'
+import JsonFieldView from './JsonFieldView'
+import type { JsonField } from './JsonFieldView'
 import NoteDialogController from './NoteDialogController'
-import PreVerifiedQuickIndicator, { PreVerifiedQuickIndicatorType } from './PreVerifiedQuickIndicator'
+import PreVerifiedQuickIndicator from './PreVerifiedQuickIndicator'
 import VerificationsQuickIndicator from './VerificationsQuickIndicator'
 import VerificationsView from './VerificationsView'
 import { printAwareCss } from './constants'
@@ -70,61 +71,20 @@ const CardContentHint = styled(Title)`
   color: ${Colors.GRAY1};
 `
 
-const RightElementContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 32px;
-`
-
 const Spacer = styled.div`
   flex-grow: 1;
 `
 
-type RightElementProps = {
-  jsonField: JsonField<'Array'>
-  application: Application
-}
-
-const RightElement = ({ jsonField, application }: RightElementProps): ReactElement => {
-  const isJuleicaEntitlementType = (): boolean => {
-    const applicationDetails = findValue(jsonField, 'applicationDetails', 'Array') ?? jsonField
-    const blueCardJuleicaEntitlement = findValue(applicationDetails, 'blueCardJuleicaEntitlement', 'Array')
-    return !!blueCardJuleicaEntitlement
-  }
-
-  const isPreVerifiedByOrganization = (): boolean => {
-    const applicationDetails = findValue(jsonField, 'applicationDetails', 'Array') ?? jsonField
-    const workAtOrganizationsEntitlement =
-      findValue(applicationDetails, 'blueCardWorkAtOrganizationsEntitlement', 'Array')?.value ?? []
-
-    return workAtOrganizationsEntitlement.some(
-      (entitlement: GeneralJsonField) =>
-        Array.isArray(entitlement.value) &&
-        entitlement.value.some(
-          (organizationField: GeneralJsonField) =>
-            organizationField.name === 'isAlreadyVerified' && organizationField.value === true
-        )
-    )
-  }
-
-  const isPreVerified = isJuleicaEntitlementType() || isPreVerifiedByOrganization()
-
-  return (
-    <RightElementContainer>
-      {!!application.note && application.note.trim() && <Icon icon='annotation' intent='none' />}
-      {isPreVerified ? (
-        <PreVerifiedQuickIndicator
-          type={
-            isJuleicaEntitlementType() ? PreVerifiedQuickIndicatorType.Juleica : PreVerifiedQuickIndicatorType.Verein360
-          }
-        />
-      ) : (
-        <VerificationsQuickIndicator verifications={application.verifications} />
-      )}
-    </RightElementContainer>
-  )
-}
+const ApplicationIndicators = (p: { application: Application; applicationJsonData: JsonField<'Array'> }) => (
+  <Stack direction='row' spacing={2}>
+    {(p.application.note ?? '').trim().length > 0 && <EditNote />}
+    {applicationIsPreVerified(p.applicationJsonData) ? (
+      <PreVerifiedQuickIndicator type={applicationPreVerificationType(p.applicationJsonData)} />
+    ) : (
+      <VerificationsQuickIndicator verifications={p.application.verifications} />
+    )}
+  </Stack>
+)
 
 const DeleteDialog = (p: {
   isOpen: boolean
@@ -176,8 +136,8 @@ const ApplicationCard = ({
   const [isExpanded, setIsExpanded] = useState(false)
   const { t } = useTranslation('applicationsOverview')
   const theme = useTheme()
-  const { createdDate: createdDateString, jsonValue, id, withdrawalDate, cardCreated } = application
-  const jsonField: JsonField<'Array'> = JSON.parse(jsonValue)
+  const { createdDate: createdDateString, id, withdrawalDate, cardCreated } = application
+  const jsonValueParsed: JsonField<'Array'> = JSON.parse(application.jsonValue)
   const config = useContext(ProjectConfigContext)
   const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${id}`
   const appToaster = useAppToaster()
@@ -199,13 +159,14 @@ const ApplicationCard = ({
   })
 
   const createCardQuery = useMemo(
-    () => `${config.applicationFeature?.applicationJsonToCardQuery(jsonField)}&applicationIdToMarkAsProcessed=${id}`,
-    [config.applicationFeature, jsonField, id]
+    () =>
+      `${config.applicationFeature?.applicationJsonToCardQuery(jsonValueParsed)}&applicationIdToMarkAsProcessed=${id}`,
+    [config.applicationFeature, jsonValueParsed, id]
   )
 
   const personalData = useMemo(
-    () => config.applicationFeature?.applicationJsonToPersonalData(jsonField),
-    [config.applicationFeature, jsonField]
+    () => config.applicationFeature?.applicationJsonToPersonalData(jsonValueParsed),
+    [config.applicationFeature, jsonValueParsed]
   )
 
   return (
@@ -222,7 +183,7 @@ const ApplicationCard = ({
           )}
         </div>
       }
-      rightElement={<RightElement jsonField={jsonField} application={application} />}
+      rightElement={<ApplicationIndicators application={application} applicationJsonData={jsonValueParsed} />}
       elevation={1}
       icon={withdrawalDate ? <Icon icon='warning-sign' intent='warning' /> : undefined}
       collapseProps={{ isOpen: isExpanded, onToggle: () => setIsExpanded(!isExpanded), keepChildrenMounted: true }}
@@ -250,7 +211,7 @@ const ApplicationCard = ({
         {/* TODO: <JsonFieldView> does not emit a root element and thus, <Stack> would insert a gap here */}
         <div>
           <JsonFieldView
-            jsonField={jsonField}
+            jsonField={jsonValueParsed}
             baseUrl={baseUrl}
             key={0}
             hierarchyIndex={0}
