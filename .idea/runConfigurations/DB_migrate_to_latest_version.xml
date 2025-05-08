@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Migrate DB" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="DB migrate to latest version" type="GradleRunConfiguration" factoryName="Gradle" folderName="Backend Commands">
     <ExternalSystemSettings>
       <option name="executionName" />
       <option name="externalProjectPath" value="$PROJECT_DIR$/backend" />
@@ -20,7 +20,7 @@
     <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
     <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
     <DebugAllEnabled>false</DebugAllEnabled>
-    <ForceTestExec>false</ForceTestExec>
+    <RunAsTest>false</RunAsTest>
     <method v="2" />
   </configuration>
 </component>
