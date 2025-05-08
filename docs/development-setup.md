@@ -2,19 +2,28 @@
 
 ## Contents
 
-- [Prerequisites](#prerequisites)
-- [Frontend](#frontend)
-   - [Setup](#frontend-setup)
-   - [Run](#run-frontend)
-- [Backend](#backend)
-  - [Setup](#backend-setup)
-  - [Run](#run-backend)
-  - [Optional Setup](#optional-backend-setup)
-  - [Dumping and Restoring the Database](#dumping-and-restoring-the-database)
-  - [Using ehrenamtskarte.app as Database](#using-ehrenamtskarteapp-as-database)
-- [Administration](#administration)
-   - [Setup](#administration-setup)
-   - [Run](#run-administration)
+- [Development Setup](#development-setup)
+  - [Contents](#contents)
+  - [Prerequisites](#prerequisites)
+  - [Frontend](#frontend)
+    - [Frontend Setup](#frontend-setup)
+    - [Run Frontend](#run-frontend)
+  - [Administration](#administration)
+    - [Administration Setup](#administration-setup)
+    - [Run Administration](#run-administration)
+    - [Run e2e-tests for Administration](#run-e2e-tests-for-administration)
+  - [Backend](#backend)
+    - [Recommended IDE set up](#recommended-ide-set-up)
+    - [Common development tasks](#common-development-tasks)
+    - [Backend Setup](#backend-setup)
+    - [Run Backend](#run-backend)
+    - [Optional Backend Setup](#optional-backend-setup)
+      - [Local Backend Configuration](#local-backend-configuration)
+      - [Map Styles](#map-styles)
+      - [Matomo](#matomo)
+      - [Inspecting Services](#inspecting-services)
+    - [Dumping and Restoring the Database](#dumping-and-restoring-the-database)
+    - [Using ehrenamtskarte.app as Database](#using-ehrenamtskarteapp-as-database)
 
 ## Prerequisites
 
@@ -33,9 +42,10 @@
 1. Install Android SDK via the [Android plugin](https://www.jetbrains.com/help/idea/create-your-first-android-application.html#754fd) or Android Studio
 2. Install [fvm](https://fvm.app/documentation/getting-started/installation) (flutter version manager)
 3. Install flutter dependencies
-``` shell
+```shell
 cd frontend && fvm flutter pub get
 ```
+
 4. Open IntelliJ settings and
    - Install the Android plugin and set the Android SDK path
    - Install the Dart plugin and set the Dart SDK path
@@ -63,6 +73,7 @@ adb reverse tcp:8081 tcp:8081 && adb reverse tcp:8000 tcp:8000 && adb reverse tc
 ### Administration Setup
 
 1. Install node_modules
+
 ```shell
 npm install
 ```
@@ -71,6 +82,19 @@ npm install
 
 Run `Start administration (env:local+buildConfig:all)` from Intellij run configurations
 
+### Run e2e-tests for Administration
+
+1. Run [backend](#run-backend) and start the [administration](#run-administration).
+2. install supported browsers for [Playwright](https://playwright.dev/docs/browsers#install-browsers):
+   ```shell
+   npx playwright install
+   ```
+3. Run Playwright at `/administration`:
+   ```shell
+   npm test:e2e
+   ```
+
+- You can run individual tests by `npm test:e2e [file name]`
 
 ## Backend
 
@@ -128,10 +152,12 @@ The backend configuration file [config.yml](../backend/src/main/resources/config
 Instead, you can create your own local copy:
 
 1. Copy [config.yml](../backend/src/main/resources/config/config.yml) to `~/.config/entitlementcard/config.yml`
+
 ```shell
 mkdir ~/.config/entitlementcard
 cp backend/src/main/resources/config/config.yml ~/.config/entitlementcard
 ```
+
 2. Adjust config
 
 #### Map Styles

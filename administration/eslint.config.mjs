@@ -3,7 +3,14 @@ import baseConfig from '../eslint.config-base.mjs'
 export default [
   ...baseConfig,
   {
-    ignores: ['src/generated/**/*', 'src/coverage/**/*', 'build/**/*', '**eslint.config.mjs'],
+    ignores: [
+      'src/generated/**/*',
+      'src/coverage/**/*',
+      'build/**/*',
+      '**eslint.config.mjs',
+      'e2e-tests/',
+      'playwright.config.ts',
+    ],
   },
   {
     files: ['scripts/**', 'config/**'],
