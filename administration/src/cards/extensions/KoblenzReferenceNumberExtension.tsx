@@ -1,4 +1,4 @@
-import { FormGroup, InputGroup, Intent } from '@blueprintjs/core'
+import { FormGroup, TextField } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -42,23 +42,29 @@ const KoblenzReferenceNumberExtensionForm = ({
     }
     return errors.join(' ')
   }
+  const removeEndAdornmentMargin = { '& .MuiFormHelperText-root': { margin: '0px' } }
 
   return (
-    <FormGroup label={t('referenceNrLabel')} labelFor='koblenz-reference-number-input'>
-      <InputGroup
-        fill
-        large={viewportSmall}
+    <FormGroup>
+      <TextField
         id='koblenz-reference-number-input'
         placeholder='5.031.025.281, 000D000001, 91459'
-        intent={isValid || !showErrorMessage ? undefined : Intent.DANGER}
-        onBlur={() => setTouched(true)}
+        label={t('referenceNrLabel')}
+        fullWidth
+        size='small'
         value={koblenzReferenceNumber}
-        rightElement={
-          <ClearInputButton viewportSmall={viewportSmall} onClick={clearInput} input={koblenzReferenceNumber} />
-        }
-        onChange={event => setValue({ koblenzReferenceNumber: event.target.value })}
+        onBlur={() => setTouched(true)}
+        onChange={e => setValue({ koblenzReferenceNumber: e.target.value })}
+        error={!isValid && showErrorMessage}
+        helperText={showErrorMessage ? <FormAlert errorMessage={getErrorMessage()} /> : null}
+        sx={removeEndAdornmentMargin}
+        InputProps={{
+          sx: { paddingRight: 0 },
+          endAdornment: (
+            <ClearInputButton viewportSmall={viewportSmall} onClick={clearInput} input={koblenzReferenceNumber} />
+          ),
+        }}
       />
-      {showErrorMessage && <FormAlert errorMessage={getErrorMessage()} />}
     </FormGroup>
   )
 }
