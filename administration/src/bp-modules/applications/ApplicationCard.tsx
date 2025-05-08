@@ -21,13 +21,14 @@ import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { useAppToaster } from '../AppToaster'
 import type { Application } from './ApplicationsOverview'
+import type { JsonField } from './JsonFieldView'
 import JsonFieldView, { findValue } from './JsonFieldView'
-import type { GeneralJsonField, JsonField } from './JsonFieldView'
 import NoteDialogController from './NoteDialogController'
-import PreVerifiedQuickIndicator, { PreVerifiedQuickIndicatorType } from './PreVerifiedQuickIndicator'
+import PreVerifiedQuickIndicator from './PreVerifiedQuickIndicator'
 import VerificationsQuickIndicator from './VerificationsQuickIndicator'
 import VerificationsView from './VerificationsView'
 import { printAwareCss } from './constants'
+import { getPreVerifiedEntitlementType } from './PreVerifiedEntitlementType'
 
 const ApplicationViewCard = styled(Section)<{ $hideInPrintMode?: boolean }>`
   width: 1000px;
@@ -105,38 +106,14 @@ type RightElementProps = {
 }
 
 const RightElement = ({ jsonField, application }: RightElementProps): ReactElement => {
-  const isJuleicaEntitlementType = (): boolean => {
-    const applicationDetails = findValue(jsonField, 'applicationDetails', 'Array') ?? jsonField
-    const blueCardJuleicaEntitlement = findValue(applicationDetails, 'blueCardJuleicaEntitlement', 'Array')
-    return !!blueCardJuleicaEntitlement
-  }
-
-  const isPreVerifiedByOrganization = (): boolean => {
-    const applicationDetails = findValue(jsonField, 'applicationDetails', 'Array') ?? jsonField
-    const workAtOrganizationsEntitlement =
-      findValue(applicationDetails, 'blueCardWorkAtOrganizationsEntitlement', 'Array')?.value ?? []
-
-    return workAtOrganizationsEntitlement.some(
-      (entitlement: GeneralJsonField) =>
-        Array.isArray(entitlement.value) &&
-        entitlement.value.some(
-          (organizationField: GeneralJsonField) =>
-            organizationField.name === 'isAlreadyVerified' && organizationField.value === true
-        )
-    )
-  }
-
-  const isPreVerified = isJuleicaEntitlementType() || isPreVerifiedByOrganization()
+  const applicationDetails = findValue(jsonField, 'applicationDetails', 'Array') ?? jsonField
+  const preVerifiedEntitlementType = getPreVerifiedEntitlementType(applicationDetails)
 
   return (
     <RightElementContainer>
       {!!application.note && application.note.trim() && <Icon icon='annotation' intent='none' />}
-      {isPreVerified ? (
-        <PreVerifiedQuickIndicator
-          type={
-            isJuleicaEntitlementType() ? PreVerifiedQuickIndicatorType.Juleica : PreVerifiedQuickIndicatorType.Verein360
-          }
-        />
+      {preVerifiedEntitlementType !== undefined ? (
+        <PreVerifiedQuickIndicator type={preVerifiedEntitlementType} />
       ) : (
         <VerificationsQuickIndicator verifications={application.verifications} />
       )}

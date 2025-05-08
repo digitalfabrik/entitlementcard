@@ -6,11 +6,7 @@ import styled from 'styled-components'
 import { UnFocusedDiv } from './VerificationsQuickIndicator'
 import VerificationIndicator from './components/VerificationIndicator'
 import { VerificationStatus } from './constants'
-
-export enum PreVerifiedQuickIndicatorType {
-  Juleica,
-  Verein360,
-}
+import { PreVerifiedEntitlementType } from './PreVerifiedEntitlementType'
 
 type PreVerifiedLabelMetaData = {
   backgroundColor: string
@@ -18,20 +14,25 @@ type PreVerifiedLabelMetaData = {
   labelText: string
 }
 
-const preVerifiedLabelMetaData: Record<PreVerifiedQuickIndicatorType, PreVerifiedLabelMetaData> = {
-  [PreVerifiedQuickIndicatorType.Juleica]: {
+const preVerifiedLabelMetaData: Record<PreVerifiedEntitlementType, PreVerifiedLabelMetaData> = {
+  [PreVerifiedEntitlementType.Juleica]: {
     backgroundColor: '#bfd4f2',
     fontColor: '#000000',
     labelText: 'Juleica',
   },
-  [PreVerifiedQuickIndicatorType.Verein360]: {
+  [PreVerifiedEntitlementType.Verein360]: {
     backgroundColor: '#0366D6',
     fontColor: '#ffffff',
     labelText: 'Verein360',
   },
+  [PreVerifiedEntitlementType.HonoredByMinisterPresident]: {
+    backgroundColor: '#FBCA01',
+    fontColor: '#000000',
+    labelText: 'Ehrenzeichen',
+  },
 }
 
-const PreVerifiedLabel = styled.span<{ type: PreVerifiedQuickIndicatorType }>`
+const PreVerifiedLabel = styled.span<{ type: PreVerifiedEntitlementType }>`
   padding: 6px 12px;
   font-size: 14px;
   font-weight: 600;
@@ -44,7 +45,7 @@ const PreVerifiedLabel = styled.span<{ type: PreVerifiedQuickIndicatorType }>`
   white-space: nowrap;
 `
 
-const PreVerifiedQuickIndicator = memo(({ type }: { type: PreVerifiedQuickIndicatorType }) => {
+const PreVerifiedQuickIndicator = memo(({ type }: { type: PreVerifiedEntitlementType }) => {
   const { t } = useTranslation('applicationsOverview')
   return (
     <Tooltip
