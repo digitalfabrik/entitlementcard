@@ -14,7 +14,6 @@ import { removeMultipleSpaces } from '../../util/helper'
 import { useAppToaster } from '../AppToaster'
 import ExtensionForms from '../cards/ExtensionForms'
 import { ActionButton } from './components/ActionButton'
-import CustomFormLabel from './components/CustomFormLabel'
 import FormAlert from './components/FormAlert'
 import { IconTextButton } from './components/IconTextButton'
 import { UnderlineTextButton } from './components/UnderlineTextButton'
@@ -83,9 +82,9 @@ const CardSelfServiceForm = ({
     <>
       <Container key={card.id}>
         <FormGroup>
-          <CustomFormLabel htmlFor='name-input' label={t('firstNameLastName')} />
           <TextField
             id='name-input'
+            label={t('firstNameLastName')}
             placeholder='Erika Musterfrau'
             autoFocus
             value={card.fullName}

@@ -1,9 +1,10 @@
-import { FormGroup } from '@mui/material'
+import { FormGroup } from '@blueprintjs/core'
+import { FormGroup as MuiFormGroup } from '@mui/material'
+import { KOBLENZ_PRODUCTION_ID, KOBLENZ_STAGING_ID } from 'build-configs/constants'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import CustomDatePicker from '../../bp-modules/components/CustomDatePicker'
-import CustomFormLabel from '../../bp-modules/self-service/components/CustomFormLabel'
 import FormAlert from '../../bp-modules/self-service/components/FormAlert'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import PlainDate from '../../util/PlainDate'
@@ -44,10 +45,34 @@ const BirthdayForm = ({
 
     return null
   }
+  const { projectId } = projectConfig
+  const isKoblenz = projectId === KOBLENZ_PRODUCTION_ID || projectId === KOBLENZ_STAGING_ID
 
-  return (
-    <FormGroup>
-      <CustomFormLabel htmlFor='name-input' label={t('birthdayLabel')} />
+  return isKoblenz ? (
+    <MuiFormGroup>
+      <CustomDatePicker
+        label={t('birthdayLabel')}
+        value={birthday?.toLocalDate() ?? null}
+        onBlur={() => setTouched(true)}
+        onChange={date => {
+          setValue({ birthday: PlainDate.safeFromLocalDate(date) })
+        }}
+        onClear={() => setValue({ birthday: null })}
+        error={!isValid && showErrorMessage}
+        disableFuture
+        textFieldSlotProps={{
+          sx: {
+            '.MuiPickersSectionList-root': {
+              padding: '5px 0',
+            },
+          },
+        }}
+      />
+      {showErrorMessage && <FormAlert severity='error' errorMessage={getErrorMessage()} />}
+      {showBirthdayHint() && <FormAlert severity='info' errorMessage={t('birthdayHint')} />}
+    </MuiFormGroup>
+  ) : (
+    <FormGroup label={t('birthdayLabel')}>
       <CustomDatePicker
         value={birthday?.toLocalDate() ?? null}
         onBlur={() => setTouched(true)}

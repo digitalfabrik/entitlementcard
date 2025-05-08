@@ -2,7 +2,6 @@ import { FormGroup, TextField } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import CustomFormLabel from '../../bp-modules/self-service/components/CustomFormLabel'
 import FormAlert from '../../bp-modules/self-service/components/FormAlert'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
 import ClearInputButton from './components/ClearInputButton'
@@ -47,10 +46,10 @@ const KoblenzReferenceNumberExtensionForm = ({
 
   return (
     <FormGroup>
-      <CustomFormLabel htmlFor='koblenz-reference-number-input' label={t('referenceNrLabel')} />
       <TextField
         id='koblenz-reference-number-input'
         placeholder='5.031.025.281, 000D000001, 91459'
+        label={t('referenceNrLabel')}
         fullWidth
         size='small'
         value={koblenzReferenceNumber}
