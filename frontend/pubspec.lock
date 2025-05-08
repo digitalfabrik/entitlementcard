@@ -485,10 +485,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: "7ecb2f391edbca5473db591b48555a8912dde60edd0fb3013bd6743033b2d3f8"
+      sha256: "2b9ba6d4c247457c35a6622f1dee6aab6694a4e15237ff7c32320345044112b6"
       url: "https://pub.dev"
     source: hosted
-    version: "13.2.1"
+    version: "15.1.1"
   gql:
     dependency: "direct dev"
     description:
