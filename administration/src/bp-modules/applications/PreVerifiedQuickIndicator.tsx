@@ -3,10 +3,10 @@ import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
+import { PreVerifiedEntitlementType } from './PreVerifiedEntitlementType'
 import { UnFocusedDiv } from './VerificationsQuickIndicator'
 import VerificationIndicator from './components/VerificationIndicator'
 import { VerificationStatus } from './constants'
-import { PreVerifiedEntitlementType } from './PreVerifiedEntitlementType'
 
 type PreVerifiedLabelMetaData = {
   backgroundColor: string

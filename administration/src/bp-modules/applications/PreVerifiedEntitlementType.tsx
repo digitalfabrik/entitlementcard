@@ -6,7 +6,10 @@ export const enum PreVerifiedEntitlementType {
   HonoredByMinisterPresident = 'goldenCardHonoredByMinisterPresidentEntitlement',
 }
 
-const hasPreVerifiedEntitlement = (applicationDetails: JsonField<'Array'>, field: PreVerifiedEntitlementType): boolean => {
+const hasPreVerifiedEntitlement = (
+  applicationDetails: JsonField<'Array'>,
+  field: PreVerifiedEntitlementType
+): boolean => {
   const entitlement = findValue(applicationDetails, field, 'Array')
   if (field === PreVerifiedEntitlementType.Verein360) {
     const entitlements = entitlement?.value ?? []

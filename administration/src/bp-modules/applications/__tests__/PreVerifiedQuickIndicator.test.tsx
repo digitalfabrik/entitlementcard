@@ -1,7 +1,8 @@
 import React from 'react'
 
 import { renderWithTranslation } from '../../../testing/render'
-import PreVerifiedQuickIndicator, { PreVerifiedQuickIndicatorType } from '../PreVerifiedQuickIndicator'
+import { PreVerifiedEntitlementType } from '../PreVerifiedEntitlementType'
+import PreVerifiedQuickIndicator from '../PreVerifiedQuickIndicator'
 
 jest.mock('@blueprintjs/core', () => ({
   ...jest.requireActual('@blueprintjs/core'),
@@ -9,18 +10,14 @@ jest.mock('@blueprintjs/core', () => ({
 }))
 
 describe('PreVerifiedQuickIndicator', () => {
-  it('should show juleica label if the particular type was set', async () => {
-    const { getByText } = renderWithTranslation(
-      <PreVerifiedQuickIndicator type={PreVerifiedQuickIndicatorType.Juleica} />
-    )
-    expect(getByText('Juleica')).toBeTruthy()
-  })
+  const cases: [string, PreVerifiedEntitlementType][] = [
+    ['Juleica', PreVerifiedEntitlementType.Juleica],
+    ['Verein360', PreVerifiedEntitlementType.Verein360],
+    ['Ehrenzeichen', PreVerifiedEntitlementType.HonoredByMinisterPresident],
+  ]
 
-  it('should show verein360 label if the particular type was set', async () => {
-    const { getByText } = renderWithTranslation(
-      <PreVerifiedQuickIndicator type={PreVerifiedQuickIndicatorType.Verein360} />
-    )
-
-    expect(getByText('Verein360')).toBeTruthy()
+  it.each(cases)('should show %s label when type is %s', (expectedLabel, type) => {
+    const { getByText } = renderWithTranslation(<PreVerifiedQuickIndicator type={type} />)
+    expect(getByText(expectedLabel)).toBeInTheDocument()
   })
 })

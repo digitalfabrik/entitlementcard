@@ -24,11 +24,11 @@ import type { Application } from './ApplicationsOverview'
 import type { JsonField } from './JsonFieldView'
 import JsonFieldView, { findValue } from './JsonFieldView'
 import NoteDialogController from './NoteDialogController'
+import { getPreVerifiedEntitlementType } from './PreVerifiedEntitlementType'
 import PreVerifiedQuickIndicator from './PreVerifiedQuickIndicator'
 import VerificationsQuickIndicator from './VerificationsQuickIndicator'
 import VerificationsView from './VerificationsView'
 import { printAwareCss } from './constants'
-import { getPreVerifiedEntitlementType } from './PreVerifiedEntitlementType'
 
 const ApplicationViewCard = styled(Section)<{ $hideInPrintMode?: boolean }>`
   width: 1000px;
