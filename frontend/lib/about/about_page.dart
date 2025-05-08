@@ -27,6 +27,13 @@ class AboutPage extends StatefulWidget {
 
 class AboutPageState extends State<AboutPage> {
   int clickCount = 0;
+  late Future<PackageInfo> packageInfo;
+
+  @override
+  void initState() {
+    super.initState();
+    packageInfo = PackageInfo.fromPlatform();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +42,7 @@ class AboutPageState extends State<AboutPage> {
     final config = Configuration.of(context);
     final t = context.t;
     return FutureBuilder<PackageInfo>(
-      future: PackageInfo.fromPlatform(),
+      future: packageInfo,
       builder: (context, snapshot) {
         List<Widget> children;
         final packageInfo = snapshot.data;

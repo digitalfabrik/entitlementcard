@@ -1,3 +1,5 @@
 src/generated
 src/coverage
 build
+playwright-report
+test-results

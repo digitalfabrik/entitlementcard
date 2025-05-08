@@ -16,11 +16,18 @@ class SettingsProvider extends StatefulWidget {
 
 class SettingsProviderState extends State<SettingsProvider> {
   final settings = SettingsModel();
+  late Future<void> settingsInitialization;
+
+  @override
+  void initState() {
+    super.initState();
+    settingsInitialization = settings.initialize();
+  }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: settings.initialize(),
+        future: settingsInitialization,
         builder: (context, snapshot) {
           final error = snapshot.error;
           if (error != null) {
