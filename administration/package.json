@@ -2,7 +2,8 @@
   "name": "administration",
   "private": true,
   "dependenciesComments": {
-    "typescript": "Keeping on 5.0.x because of current incompatibility of 5.1.x with @typescript-eslint"
+    "typescript": "Keeping on 5.0.x because of current incompatibility of 5.1.x with @typescript-eslint",
+    "react-router-dom": "Keep 6.26.2 since 6.30.0 breaks redirect for login and logout, update to v7 and fix the issue in #2161"
   },
   "dependencies": {
     "@apollo/client": "^3.7.16",
@@ -39,7 +40,7 @@
     "react-dom": "^18.2.0",
     "react-flip-move": "^3.0.5",
     "react-i18next": "^15.1.0",
-    "react-router-dom": "6.26.0",
+    "react-router-dom": "6.26.2",
     "styled-components": "^5.3.11",
     "xregexp": "^5.1.1"
   },
