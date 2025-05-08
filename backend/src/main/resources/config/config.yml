@@ -20,6 +20,7 @@ matomoUrl: http://localhost:5003/matomo.php
 projects:
   - id: bayern.ehrenamtskarte.app
     importUrl: https://www.ehrenamt.bayern.de/xml-json/app-daten.xml
+    filteredStoresOutput: /var/archive-data/filtered_stores.csv
     pipelineName: EhrenamtskarteBayern
     administrationBaseUrl: https://bayern.ehrenamtskarte.app
     administrationName: Ehrenamtskarte-Bayern-Verwaltung

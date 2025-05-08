@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.stores.importer
 
 import app.ehrenamtskarte.backend.stores.importer.bayern.EhrenamtskarteBayern
+import app.ehrenamtskarte.backend.stores.importer.bayern.types.FilteredStore
 import app.ehrenamtskarte.backend.stores.importer.pipelines.BerechtigungskarteShowcase
 import org.slf4j.LoggerFactory
 
@@ -8,6 +9,7 @@ object Importer {
     fun import(config: ImportConfig): Boolean {
         val logger = LoggerFactory.getLogger(Importer::class.java)
         val project = config.findProject()
+        val filteredStores: MutableList<FilteredStore> = mutableListOf()
 
         if (project.pipelineName == null) {
             logger.info("There is no store import pipeline for ${project.id}")
@@ -17,8 +19,8 @@ object Importer {
         return try {
             logger.info("== Pipeline ${project.pipelineName} started ==")
             when (project.pipelineName) {
-                "EhrenamtskarteBayern" -> EhrenamtskarteBayern.import(config, logger)
-                "BerechtigungskarteShowcase" -> BerechtigungskarteShowcase.import(config, logger)
+                "EhrenamtskarteBayern" -> EhrenamtskarteBayern.import(config, logger, filteredStores)
+                "BerechtigungskarteShowcase" -> BerechtigungskarteShowcase.import(config, logger, filteredStores)
                 else -> throw Error("Invalid pipeline name '${project.pipelineName}'!")
             }
             logger.info("== Pipeline ${project.pipelineName} successfully finished ==")
