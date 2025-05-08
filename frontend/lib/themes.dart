@@ -12,6 +12,10 @@ final bodyMedium = const TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal
 final bodySmall = const TextStyle(fontSize: 12.0, fontWeight: FontWeight.normal);
 final labelSmall = const TextStyle(fontSize: 10.0, fontWeight: FontWeight.normal);
 
+SystemUiOverlayStyle systemOverlayStyleFromAppBarBackgroundColor(Color color) {
+  return color.computeLuminance() > 0.5 ? SystemUiOverlayStyle.dark : SystemUiOverlayStyle.light;
+}
+
 ThemeData get lightTheme {
   final textColor = Colors.black87;
   final defaultTypography = Typography.blackMountainView;
@@ -58,7 +62,7 @@ ThemeData get lightTheme {
       color: Color(0xffeeeeee),
     ),
     appBarTheme: AppBarTheme(
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
+        systemOverlayStyle: SystemUiOverlayStyle.light,
         backgroundColor: lightTheme.colorScheme.primary,
         foregroundColor: backgroundColor,
         titleTextStyle: titleMedium),

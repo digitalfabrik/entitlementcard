@@ -6,6 +6,8 @@ import 'package:ehrenamtskarte/debouncer.dart';
 import 'package:flutter/material.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
+import 'package:ehrenamtskarte/themes.dart';
+import 'package:flutter/rendering.dart';
 
 class CustomAppBar extends StatelessWidget {
   final String title;
@@ -71,6 +73,90 @@ class CustomSliverAppBar extends StatelessWidget {
       iconTheme: IconThemeData(color: foregroundColor),
       title: Text(title, style: theme.textTheme.titleMedium?.apply(color: theme.appBarTheme.foregroundColor)),
       pinned: true,
+    );
+  }
+}
+
+// This gradient is translated over from the [Android GradientProtection](https://cs.android.com/androidx/platform/frameworks/support/+/androidx-main:core/core/src/main/java/androidx/core/view/insets/GradientProtection.java)
+const _path = Cubic(0.24, 0.0, 0.58, 1);
+const _steps = 100;
+final _stops = List.generate(_steps, (index) => index.toDouble() / (_steps - 1).toDouble(), growable: false);
+final _alphas = _stops.map((stop) => _path.transform(stop)).toList(growable: false);
+
+class StatusBarProtectorFlexibleSpace extends StatelessWidget {
+  final Color backgroundColor;
+
+  const StatusBarProtectorFlexibleSpace({super.key, required this.backgroundColor});
+
+  @override
+  Widget build(BuildContext context) {
+    final originalOpacity = backgroundColor.opacity;
+    return LayoutBuilder(
+      builder: (context, constraints) => OverflowBox(
+          fit: OverflowBoxFit.max,
+          alignment: Alignment.topCenter,
+          // Just like Android's GradientProtection overdraw by a factor of 1.2.
+          maxHeight: constraints.maxHeight * 1.2,
+          maxWidth: constraints.maxWidth,
+          child: Container(
+              decoration: BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+                colors: _alphas
+                    .map((alpha) => backgroundColor.withOpacity(originalOpacity * alpha))
+                    .toList(growable: false)),
+          ))),
+    );
+  }
+}
+
+/// Applies an appropriate system overlay style, protects the system status bar with a transparency gradient,
+/// and takes care of the top unsafe area.
+class StatusBarProtector extends StatelessWidget implements PreferredSizeWidget {
+  /// As per [Android documentation](https://developer.android.com/develop/ui/views/layout/edge-to-edge), this
+  /// is ideally, the pane's background color with 80% opacity.
+  /// If unset, `colorScheme.surface.withOpacity(0.8)` is used.
+  final Color? backgroundColor;
+
+  const StatusBarProtector({super.key, this.backgroundColor});
+
+  @override
+  Widget build(BuildContext context) {
+    final backgroundColor = this.backgroundColor ?? Theme.of(context).colorScheme.surface.withOpacity(0.8);
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      toolbarHeight: 0.0,
+      flexibleSpace: StatusBarProtectorFlexibleSpace(backgroundColor: backgroundColor),
+      systemOverlayStyle: systemOverlayStyleFromAppBarBackgroundColor(backgroundColor),
+    );
+  }
+
+  @override
+  Size get preferredSize => AppBar(toolbarHeight: 0).preferredSize;
+}
+
+/// Applies an appropriate system overlay style, protects the system status bar with a transparency gradient,
+/// and fills the unsafe top area of a sliver scroller.
+class SliverStatusBarProtector extends StatelessWidget {
+  /// As per [Android documentation](https://developer.android.com/develop/ui/views/layout/edge-to-edge), this
+  /// is ideally, the pane's background color with 80% opacity.
+  /// If unset, `colorScheme.surface.withOpacity(0.8)` is used.
+  final Color? backgroundColor;
+
+  const SliverStatusBarProtector({super.key, this.backgroundColor});
+
+  @override
+  Widget build(BuildContext context) {
+    final backgroundColor = this.backgroundColor ?? Theme.of(context).colorScheme.surface.withOpacity(0.8);
+    return SliverAppBar(
+      backgroundColor: Colors.transparent,
+      toolbarHeight: 0.0,
+      pinned: true,
+      stretch: false,
+      surfaceTintColor: Colors.transparent,
+      flexibleSpace: StatusBarProtectorFlexibleSpace(backgroundColor: backgroundColor),
+      systemOverlayStyle: systemOverlayStyleFromAppBarBackgroundColor(backgroundColor),
     );
   }
 }

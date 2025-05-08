@@ -2,6 +2,7 @@ import 'package:ehrenamtskarte/location/determine_position.dart';
 import 'package:ehrenamtskarte/map/map/map_controller.dart';
 import 'package:ehrenamtskarte/map/map/map_with_futures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 
 class PhysicalStoreFeatureData {
@@ -41,16 +42,22 @@ class _MapPageState extends State<MapPage> implements MapPageController {
 
   @override
   Widget build(BuildContext context) {
-    return MapWithFutures(
-      onFeatureClick: _onFeatureClick,
-      onNoFeatureClick: stopShowingAcceptingStore,
-      onFeatureClickLayerFilter: const ['physical_stores'],
-      setFollowUserLocation: widget.setFollowUserLocation,
-      onMapCreated: (controller) {
-        controller.setTelemetryEnabled(enabled: false);
-        setState(() => _controller = controller);
-        widget.onMapCreated(this);
-      },
+    // Until we have a (dark) map style for dark theme, the system overlay should always use dark fonts
+    // on the bright map. See #613.
+    // Just as Google Maps, we do NOT protect the system status bar with a gradient.
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.dark,
+      child: MapWithFutures(
+        onFeatureClick: _onFeatureClick,
+        onNoFeatureClick: stopShowingAcceptingStore,
+        onFeatureClickLayerFilter: const ['physical_stores'],
+        setFollowUserLocation: widget.setFollowUserLocation,
+        onMapCreated: (controller) {
+          controller.setTelemetryEnabled(enabled: false);
+          setState(() => _controller = controller);
+          widget.onMapCreated(this);
+        },
+      ),
     );
   }
 
