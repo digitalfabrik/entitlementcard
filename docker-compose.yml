@@ -42,7 +42,7 @@ services:
     networks:
       - network
   matomo_db:
-    image: "mariadb:11.1"
+    image: "mariadb:11.7"
     command: --max-allowed-packet=64MB
     volumes:
       - matomo_db_volume:/var/lib/mysql:Z
