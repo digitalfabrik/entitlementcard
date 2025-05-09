@@ -1,7 +1,7 @@
 import { Button, Classes, Dialog } from '@blueprintjs/core'
 import React, { ReactElement, ReactNode, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 
 import { TokenPayload } from './AuthProvider'
 import { useWhoAmI } from './WhoAmIProvider'

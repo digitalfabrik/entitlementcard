@@ -2,7 +2,7 @@ import { MockedProvider, MockedResponse } from '@apollo/client/testing'
 import { OverlayToaster } from '@blueprintjs/core'
 import { act, renderHook } from '@testing-library/react'
 import React, { ReactNode } from 'react'
-import { MemoryRouter } from 'react-router-dom'
+import { MemoryRouter } from 'react-router'
 
 import { ProjectConfigProvider } from '../../../../project-configs/ProjectConfigContext'
 import koblenzConfig from '../../../../project-configs/koblenz/config'

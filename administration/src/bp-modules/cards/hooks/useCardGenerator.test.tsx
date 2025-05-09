@@ -3,7 +3,7 @@ import { OverlayToaster } from '@blueprintjs/core'
 import { act, renderHook } from '@testing-library/react'
 import { mocked } from 'jest-mock'
 import React, { ReactNode } from 'react'
-import { MemoryRouter } from 'react-router-dom'
+import { MemoryRouter } from 'react-router'
 
 import { generateCardInfo, initializeCard } from '../../../cards/Card'
 import { PdfError, generatePdf } from '../../../cards/PdfFactory'

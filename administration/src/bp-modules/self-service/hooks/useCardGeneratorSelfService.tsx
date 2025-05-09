@@ -1,5 +1,5 @@
 import { useCallback, useContext, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router'
 
 import { Card, initializeCardFromCSV } from '../../../cards/Card'
 import { generatePdf } from '../../../cards/PdfFactory'

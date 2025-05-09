@@ -1,7 +1,7 @@
 import { Button, Divider, Menu, Popover } from '@blueprintjs/core'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router'
 import styled from 'styled-components'
 
 import { useWhoAmI } from '../WhoAmIProvider'
