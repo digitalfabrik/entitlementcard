@@ -1,6 +1,5 @@
 import React, { ReactElement, useContext, useMemo } from 'react'
-import { Outlet, Route, createBrowserRouter, createRoutesFromElements } from 'react-router'
-import { RouterProvider } from 'react-router/dom'
+import { Outlet, Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router'
 import styled from 'styled-components'
 
 import { AuthContext } from './AuthProvider'
