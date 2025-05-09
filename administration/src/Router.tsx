@@ -52,7 +52,7 @@ const AuthLayout = (): ReactElement => {
 
   return (
     <WhoAmIProvider>
-      <KeepAliveToken authData={authData!} onSignIn={signIn} onSignOut={signOut}>
+      <KeepAliveToken authData={authData} onSignIn={signIn} onSignOut={signOut}>
         <Navigation onSignOut={signOut} />
         <Main>
           <Outlet />
