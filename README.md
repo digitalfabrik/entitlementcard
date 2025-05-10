@@ -12,6 +12,7 @@
 
 * [Development Setup](./docs/development-setup.md)
 * [Conventions](./docs/conventions.md)
+* [Backend First Steps](./docs/backend-first-steps.md)
 
 ## Documentation
 
