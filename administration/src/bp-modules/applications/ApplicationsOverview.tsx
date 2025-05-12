@@ -19,6 +19,7 @@ const ApplicationList = styled(FlipMove)`
   display: flex;
   flex-grow: 1;
   flex-direction: column;
+  height: '100%;
 `
 export type Application = GetApplicationsQuery['applications'][number]
 
@@ -83,7 +84,7 @@ const ApplicationsOverview = ({ applications }: { applications: Application[] })
           {filteredApplications.map(application => (
             <ApplicationViewComponent
               isSelectedForPrint={application.id === applicationIdForPrint}
-              printApplicationById={printApplicationById}
+              onPrintApplicationById={printApplicationById}
               key={application.id}
               application={application}
               onDelete={() => setUpdatedApplications(sortedApplications.filter(a => a !== application))}

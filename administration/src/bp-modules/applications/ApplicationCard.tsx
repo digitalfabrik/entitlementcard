@@ -112,17 +112,17 @@ const DeleteDialog = (p: {
 
 export type ApplicationCardProps = {
   application: Application
-  onDelete: () => void
-  printApplicationById: (applicationId: number) => void
   isSelectedForPrint: boolean
+  onDelete: () => void
+  onPrintApplicationById: (applicationId: number) => void
   onChange: (application: Application) => void
 }
 
 const ApplicationCard = ({
   application,
-  onDelete,
-  printApplicationById,
   isSelectedForPrint,
+  onDelete,
+  onPrintApplicationById,
   onChange,
 }: ApplicationCardProps) => {
   const { t } = useTranslation('applicationsOverview')
@@ -245,7 +245,7 @@ const ApplicationCard = ({
             {t('deleteApplication')}
           </PrintAwareButton>
           <PrintAwareButton
-            onClick={() => printApplicationById(id)}
+            onClick={() => onPrintApplicationById(id)}
             startIcon={<Print />}
             variant='outlined'
             color='inherit'>
