@@ -133,7 +133,10 @@ const CardSelfServiceForm = ({
           <>
             {t('whereToFindReferenceNumberExplanation')} <br />
             {t('moreInformationAndExamples')}
-            <a href='https://www.koblenz.de/koblenzpass' target='_blank' rel='noreferrer'>
+            <a
+              href='https://www.koblenz.de/leben-in-koblenz/soziales/koblenzpass/#accordion-2-4'
+              target='_blank'
+              rel='noreferrer'>
               www.koblenz.de/koblenzpass
             </a>
             . <br />
