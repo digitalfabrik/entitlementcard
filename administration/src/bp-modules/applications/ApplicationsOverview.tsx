@@ -1,4 +1,5 @@
 import { NonIdealState } from '@blueprintjs/core'
+import { Container } from '@mui/material'
 import { TFunction } from 'i18next'
 import React, { ReactElement, useMemo, useState } from 'react'
 import FlipMove from 'react-flip-move'
@@ -14,20 +15,11 @@ import { ApplicationStatusBarItemType, barItems } from './constants'
 import usePrintApplication from './hooks/usePrintApplication'
 import { getApplicationStatus, getVerificationStatus } from './utils'
 
-const ApplicationListCard = styled.li`
-  display: flex;
-  width: 100%;
-  justify-content: center;
-  list-style-type: none;
-`
-
 const ApplicationList = styled(FlipMove)`
   display: flex;
   flex-grow: 1;
   flex-direction: column;
-  align-items: center;
 `
-
 export type Application = GetApplicationsQuery['applications'][number]
 
 // Necessary for FlipMove, as it cannot handle functional components
@@ -35,11 +27,7 @@ export type Application = GetApplicationsQuery['applications'][number]
 export class ApplicationViewComponent extends React.Component<ApplicationCardProps> {
   render(): ReactElement {
     const { application } = this.props
-    return (
-      <ApplicationListCard key={application.id}>
-        <ApplicationCard {...this.props} />
-      </ApplicationListCard>
-    )
+    return <ApplicationCard key={application.id} {...this.props} />
   }
 }
 
@@ -76,7 +64,14 @@ const ApplicationsOverview = ({ applications }: { applications: Application[] })
   )
 
   return (
-    <>
+    <Container
+      sx={{
+        flexGrow: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        maxWidth: '90%',
+        width: '1000px',
+      }}>
       <ApplicationStatusBar
         applications={updatedApplications}
         activeBarItem={activeBarItem}
@@ -109,7 +104,7 @@ const ApplicationsOverview = ({ applications }: { applications: Application[] })
           />
         </StandaloneCenter>
       )}
-    </>
+    </Container>
   )
 }
 
