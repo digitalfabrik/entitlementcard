@@ -18,7 +18,7 @@ import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 object Mailer {
-    private fun EmailBody.finalInformationParagraph(projectConfig: ProjectConfig) {
+    private fun EmailBody.finalInformationParagraph() {
         p {
             +"Bitte beachten Sie, dass dies eine automatisierte Nachricht ist. "
             +"Antworten auf diese E-Mail werden nicht gelesen."
@@ -26,7 +26,7 @@ object Mailer {
             br()
             +"Mit freundlichen Grüßen"
             br()
-            +"- ${projectConfig.administrationName}"
+            +"Ihr Team der Ehrenamtskarte Bayern"
         }
     }
 
@@ -123,7 +123,7 @@ object Mailer {
             p { +"ein neuer Antrag liegt in ${projectConfig.administrationName} vor." }
             viewApplicationsParagraph(projectConfig)
             adjustNotificationsParagraph(projectConfig)
-            finalInformationParagraph(projectConfig)
+            finalInformationParagraph()
         }
 
         for (recipient: AdministratorEntity in recipients) {
@@ -157,7 +157,7 @@ object Mailer {
             p { +"ein Antrag wurde verifiziert." }
             viewApplicationsParagraph(projectConfig)
             adjustNotificationsParagraph(projectConfig)
-            finalInformationParagraph(projectConfig)
+            finalInformationParagraph()
         }
 
         for (recipient: AdministratorEntity in recipients) {
@@ -181,7 +181,7 @@ object Mailer {
         projectConfig: ProjectConfig,
         applicationVerification: ApplicationVerificationEntity,
     ) {
-        val subject = "Bestätigung notwendig: Antrag auf Bayerische Ehrenamtskarte [$applicantName]"
+        val subject = "Bestätigung der Angaben für den Antrag auf eine Ehrenamtskarte von $applicantName"
         val verificationLink =
             URL(
                 "${projectConfig.administrationBaseUrl}/antrag-verifizieren/${urlEncode(
@@ -190,19 +190,23 @@ object Mailer {
             )
 
         val message = emailBody {
-            p { +"Guten Tag ${applicationVerification.contactName}" }
+            p { +"Sehr geehrte/r ${applicationVerification.contactName}" }
             p {
-                +"Sie wurden gebeten, die Angaben eines Antrags auf eine Ehrenamtskarte zu bestätigen. "
-                +"Die Antragstellerin oder der Antragsteller hat Sie als Kontaktperson der Organisation "
-                +"${applicationVerification.organizationName} angegeben."
+                +"im Rahmen des Antrags auf eine Ehrenamtskarte wurden Sie als Kontaktperson der Organisation "
+                +"${applicationVerification.organizationName} angegeben. "
+                +"Wir möchten Sie daher bitten, die im Antrag gemachten Angaben zu überprüfen und zu bestätigen."
             }
             p {
-                +"Sie können den Antrag unter folgendem Link einsehen und die Angaben bestätigen oder "
-                +"ihnen widersprechen:"
+                +"Unter dem folgenden Link können Sie den Antrag einsehen und die Angaben entweder bestätigen "
+                +"oder ihnen widersprechen:"
                 br()
                 link(verificationLink)
             }
-            finalInformationParagraph(projectConfig)
+            p {
+                +"Hinweis: Die Website ist durch eine sichere Verbindung geschützt. "
+                +"Sie müssen keine persönlichen Daten eingeben."
+            }
+            finalInformationParagraph()
         }
 
         sendMail(
@@ -222,22 +226,26 @@ object Mailer {
         accessKey: String,
         applicationConfirmationNote: String?,
     ) {
-        val subject = "Antrag erfolgreich eingereicht"
+        val subject = "Ihr Antrag für die Ehrenamtskarte Bayern ist eingegangen"
         val message = emailBody {
-            p { +"Guten Tag ${personalData.forenames.shortText} ${personalData.surname.shortText}," }
-            p { +"Ihr Antrag zur Bayerischen Ehrenamtskarte wurde erfolgreich eingereicht." }
+            p { +"Sehr geehrte/r ${personalData.forenames.shortText} ${personalData.surname.shortText}," }
             p {
-                +"Sie können den Status Ihres Antrags unter folgendem Link einsehen. "
-                +"Falls gewünscht, können Sie Ihren Antrag dort auch zurückziehen:"
+                +"vielen Dank für Ihren Antrag und Ihr Interesse an der Bayerischen Ehrenamtskarte. "
+                +"Wir danken Ihnen für das Engagement und die Zeit, die Sie zum Wohle der Gemeinschaft einbringen."
+            }
+            p {
+                +"Wir möchten Sie darüber informieren, dass Ihr Antrag derzeit bearbeitet wird. "
+                +"Unter folgendem Link können Sie den aktuellen Status Ihres Antrags einsehen oder den Antrag "
+                +"bei Bedarf zurückziehen:"
                 br()
                 link(URL("${projectConfig.administrationBaseUrl}/antrag-einsehen/${urlEncode(accessKey)}"))
             }
             applicationConfirmationNoteParagraph(applicationConfirmationNote)
             p {
-                +"Bei Rückfragen zum Bearbeitungsstand wenden Sie sich bitte an Ihr örtliches "
-                +"Landratsamt bzw. die Verwaltung Ihrer kreisfreien Stadt."
+                +"Falls Sie Fragen zu Ihrem Antrag haben oder Unterstützung benötigen, "
+                +"wenden Sie sich bitte direkt an das örtliche Landratsamt bzw. die Verwaltung Ihrer kreisfreien Stadt."
             }
-            finalInformationParagraph(projectConfig)
+            finalInformationParagraph()
         }
         sendMail(
             backendConfig,
@@ -275,7 +283,7 @@ object Mailer {
                 +"Bei Rückfragen wenden Sie sich bitte direkt an Ihr zuständiges Landratsamt oder die "
                 +"Verwaltung Ihrer kreisfreien Stadt."
             }
-            finalInformationParagraph(projectConfig)
+            finalInformationParagraph()
         }
         sendMail(
             backendConfig,
@@ -310,7 +318,7 @@ object Mailer {
                 )
             }
             p { +"Dieser Link ist 24 Stunden gültig." }
-            finalInformationParagraph(projectConfig)
+            finalInformationParagraph()
         }
 
         sendMail(
@@ -342,7 +350,7 @@ object Mailer {
                 link(URL(passwordResetLink))
             }
             p { +"Dieser Link ist 24 Stunden gültig." }
-            finalInformationParagraph(projectConfig)
+            finalInformationParagraph()
         }
 
         sendMail(
@@ -362,26 +370,30 @@ object Mailer {
         recipientAddress: String,
         recipientName: String,
     ) {
-        val subject = "Kartenerstellung erfolgreich"
+        val subject = "Ihr Antrag für die Ehrenamtskarte Bayern wurde bewilligt"
         val message = emailBody {
-            p { +"Guten Tag $recipientName," }
+            p { +"Sehr geehrte/r $recipientName," }
             p {
-                +"Ihr Antrag zur Bayerischen Ehrenamtskarte wurde bewilligt. "
-                +"Die Bayerische Ehrenamtskarte wird Ihnen in den nächsten Tagen "
-                +"zusammen mit einer Anleitung zur Einrichtung der digitalen Karte zugestellt."
+                +"wir freuen uns, Ihnen mitteilen zu können, "
+                +"dass Ihr Antrag auf die Bayerische Ehrenamtskarte bewilligt wurde!"
             }
             p {
-                +"Falls Sie die App „Ehrenamtskarte Bayern“ auf Ihrem Smartphone bereits "
-                +"installiert haben, können Sie in vielen Fällen die digitale Karte auch vorab aktivieren. "
-                +"Klicken Sie dazu von Ihrem Smartphone, auf dem die App installiert ist, auf den folgenden Link:"
+                +"In den kommenden Tagen erhalten Sie Ihre persönliche Ehrenamtskarte "
+                +"zusammen mit einer Anleitung, wie Sie die digitale Version einrichten können."
+            }
+            p {
+                +"Falls Sie bereits die App „Ehrenamtskarte Bayern“ auf Ihrem Smartphone installiert haben, "
+                +"können Sie in vielen Fällen die digitale Karte schon jetzt aktivieren. "
+                +"Klicken Sie dazu einfach auf den folgenden Link von Ihrem Smartphone aus: "
                 br()
                 link(URL(deepLink))
             }
             p {
-                +"Hinweis: Die Vorab-Aktivierung wird nicht von allen Endgeräten unterstützt. "
-                +"Falls der Vorgang fehlschlägt, warten Sie bitte auf das offizielle Schreiben."
+                +"Hinweis: Die Vorab-Aktivierung wird nicht auf allen Endgeräten unterstützt. "
+                +"Sollte der Vorgang also nicht erfolgreich sein, "
+                +"warten Sie bitte auf das offizielle Schreiben, das alle notwendigen Informationen enthält."
             }
-            finalInformationParagraph(projectConfig)
+            finalInformationParagraph()
         }
 
         sendMail(
