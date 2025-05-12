@@ -1,7 +1,7 @@
 /* eslint-disable react/destructuring-assignment */
 import { MutationResult } from '@apollo/client'
-import { Colors, H4, Icon, Section } from '@blueprintjs/core'
-import { CreditScore, Delete, EditNote, Print } from '@mui/icons-material'
+import { Colors, H4, Section } from '@blueprintjs/core'
+import { CreditScore, Delete, EditNote, Print, Warning } from '@mui/icons-material'
 import {
   Box,
   Button,
@@ -197,7 +197,7 @@ const ApplicationCard = ({
       }
       rightElement={<ApplicationIndicators application={application} applicationJsonData={jsonValueParsed} />}
       elevation={1}
-      icon={withdrawalDate ? <Icon icon='warning-sign' intent='warning' /> : undefined}
+      icon={withdrawalDate ? <Warning color='warning' /> : undefined}
       collapseProps={{ isOpen: isExpanded, onToggle: () => setIsExpanded(!isExpanded), keepChildrenMounted: true }}
       collapsible={!isSelectedForPrint}
       $hideInPrintMode={!isSelectedForPrint}>
