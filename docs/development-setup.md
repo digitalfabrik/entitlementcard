@@ -105,12 +105,6 @@ For IntelliJ, the following plugins are recomended:
 - [detekt](https://plugins.jetbrains.com/plugin/10761-detekt)
 - [Ktlint](https://plugins.jetbrains.com/plugin/15057-ktlint)
 
-### Common development tasks
-
-- Run Ktlint diagnostic: `./gradlew ktlintCheck`
-- Run Ktlint formatter: `./gradlew ktlintFormat`
-- Run Detekt diagnostic: `./gradlew detekt`
-
 ### Backend Setup
 
 1. Install docker and docker-compose
@@ -195,6 +189,12 @@ projects:
    |Database|ehrenamtskarte|
 - Martin endpoints: [http://localhost:5002/tiles/accepting_stores/index.json](http://localhost:5002/tiles/accepting_stores/index.json) and [http://localhost:5002/tiles/accepting_stores/rpc/index.json](http://localhost:5002/tiles/accepting_stores/rpc/index.json). *The data shown on the map is fetched from a hardcoded url and is not using the data from the local martin!*
 - Map styles: [http://localhost:5002/map.html](http://localhost:5002)
+
+### Common development tasks
+
+- Run Ktlint diagnostic: `./gradlew ktlintCheck`
+- Run Ktlint formatter: `./gradlew ktlintFormat`
+- Run Detekt diagnostic: `./gradlew detekt`
 
 ### Dumping and Restoring the Database
 
