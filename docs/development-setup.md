@@ -22,7 +22,7 @@
       - [Map Styles](#map-styles)
       - [Matomo](#matomo)
       - [Inspecting Services](#inspecting-services)
-    - [Dumping and Restoring the Database](#dumping-and-restoring-the-database)
+    - [DB tasks](#db-tasks)
     - [Using ehrenamtskarte.app as Database](#using-ehrenamtskarteapp-as-database)
 
 ## Prerequisites
@@ -196,22 +196,25 @@ projects:
 - Run Ktlint formatter: `./gradlew ktlintFormat`
 - Run Detekt diagnostic: `./gradlew detekt`
 
-### Dumping and Restoring the Database
+### DB tasks
 
-```shell
-docker exec -ti <container_id> pg_dump -c -U postgres ehrenamtskarte > dump-$(date +%F).sql
-```
-
-To copy the dump to your local machine:
-
-```shell
-rsync root@ehrenamtskarte.app:dump-2020-12-23.sql .
-```
-
-To restore the dump
-```shell
-docker exec -i <container_id> psql ehrenamtskarte postgres < dump-$(date +%F).sql
-```
+- Clear the DB's contents: `./gradlew db-clear`
+- Run all migrations: `./gradlew db-migrate`
+- Import data from online stores: `./gradlew db-import`
+- Load developer sample data: `./gradlew db-import-dev`
+- Create a clean DB with sample data (all of the above steps): `./gradlew db-recreate`
+- Dump the DB
+    ```shell
+    docker exec -ti entitlementcard-db-postgis-1 pg_dump -c -U postgres ehrenamtskarte > dump-$(date +%F).sql
+    ```
+- Copy the dump to your local machine:
+    ```shell
+    rsync root@ehrenamtskarte.app:dump-2020-12-23.sql .
+    ```
+- Restore the dump
+    ```shell
+    docker exec -i entitlementcard-db-postgis-1 psql ehrenamtskarte postgres < dump-$(date +%F).sql
+    ```
 
 ### Using ehrenamtskarte.app as Database
 
