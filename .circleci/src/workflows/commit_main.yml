@@ -7,26 +7,13 @@ when:
 jobs:
   - bump_version:
       prepare_delivery: false
-  - pack_martin:
-      requires:
-        - bump_version
-  - pack_meta:
-      requires:
-        - bump_version
 
   - build_administration:
       requires:
         - bump_version
-  - pack_administration:
-      requires:
-        - build_administration
-
-  - build_backend
-  - pack_backend:
+  - build_backend:
       requires:
         - bump_version
-        - build_backend
-
   - build_android:
       build_config: bayern
       context:
