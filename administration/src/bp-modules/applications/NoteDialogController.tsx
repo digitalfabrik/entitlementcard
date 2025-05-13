@@ -1,4 +1,6 @@
-import { Button, Tooltip } from '@blueprintjs/core'
+import { Tooltip } from '@blueprintjs/core'
+import { EditNote } from '@mui/icons-material'
+import { Button } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -10,7 +12,6 @@ import TextAreaDialog from '../components/TextAreaDialog'
 import type { Application } from './ApplicationsOverview'
 
 const NoteButton = styled(Button)`
-  margin-right: 10px;
   align-self: flex-start;
   @media print {
     display: none;
@@ -67,7 +68,7 @@ const NoteDialogController = ({
   return (
     <>
       <Tooltip content={toolTipContent}>
-        <NoteButton onClick={() => onOpenNoteDialog(true)} intent='none' icon='annotation'>
+        <NoteButton variant='contained' color='inherit' onClick={() => onOpenNoteDialog(true)} startIcon={<EditNote />}>
           Notiz anzeigen
         </NoteButton>
       </Tooltip>
