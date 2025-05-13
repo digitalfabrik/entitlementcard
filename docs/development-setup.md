@@ -39,19 +39,39 @@
 
 ### Frontend Setup
 
-1. Install Android SDK via the [Android plugin](https://www.jetbrains.com/help/idea/create-your-first-android-application.html#754fd) or Android Studio
-2. Install [fvm](https://fvm.app/documentation/getting-started/installation) (flutter version manager)
-3. Install flutter dependencies
+1. Install [fvm](https://fvm.app/documentation/getting-started/installation) (flutter version manager)
+2. Install flutter dependencies
 ```shell
 cd frontend && fvm flutter pub get
 ```
 
-4. Open IntelliJ settings and
+3. Open IntelliJ settings and
    - Install the Android plugin and set the Android SDK path
    - Install the Dart plugin and set the Dart SDK path
    - Install the Flutter plugin and set the Flutter SDK path
 
 *Note: IntelliJ needs access to environment variables to run these commands successfully.*
+
+#### Android
+
+1. Install Android SDK via Android Studio
+
+#### iOS
+
+1. Install XCode
+2. Install ruby bundler
+3. Install gems
+``` shell
+cd frontend/ios && bundle install
+```
+4. Install cocoapods
+``` shell
+cd frontend/ios && bundle exec pod install --repo-update
+```
+5. [Optional] Install cocoapods globally (only necessary if using IntelliJ run configurations to run on iOS)
+``` shell
+brew install cocoapods
+```
 
 ### Run Frontend
 
@@ -98,6 +118,29 @@ Run `Start administration (env:local+buildConfig:all)` from Intellij run configu
 
 ## Backend
 
+### Prerequisites
+
+You can either use the open-source docker replacement podman/podman-compose or classic docker/docker-compose.
+
+#### Podman
+
+1. Install podman and podman-compose
+2. Setup podman-compose
+```shell
+podman machine init
+podman machine start && podman-compose up
+```
+
+#### Docker
+
+1. Install docker and docker-compose
+2. Setup docker-compose
+```shell
+docker-compose rm
+docker-compose build
+docker-compose up --force-recreate
+```
+
 ### Recommended IDE set up
 
 For IntelliJ, the following plugins are recomended:
@@ -113,27 +156,24 @@ For IntelliJ, the following plugins are recomended:
 
 ### Backend Setup
 
-1. Install docker and docker-compose
-2. Setup docker-compose
-```shell
-docker-compose rm
-docker-compose build
-docker-compose up --force-recreate
-```
-3. Open the IntelliJ "Project Structure" and set up the required SDK called "entitlementcard-jdk" and point it to your JDK installation.
+1. Open the IntelliJ "Project Structure" and set up the required SDK called "entitlementcard-jdk" and point it to your JDK installation.
    ![SDK/JDK setup](./img/intellij-sdk-setup.png)
-4. Run the backend migration (`Migrate DB`)
+2. Run the backend migration (`Migrate DB`)
 ```shell
 cd backend && ./gradlew run --args "migrate"
 ```
-5. Create a backend account with one of the run configurations or the following command:
+3. Create a backend account with one of the run configurations or the following command:
 ```shell
 ./gradlew run --args="create-admin <project> <role> <email> <password> <region>"`
 ```
 
 ### Run Backend
 
-1. Start `docker-compose`
+1. Start `podman-compose`
+```shell
+podman machine start && podman-compose up
+```
+or `docker-compose`
 ```shell
 sudo docker-compose up --force-recreate
 ```
