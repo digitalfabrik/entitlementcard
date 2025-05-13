@@ -84,9 +84,9 @@ const ApplicationsOverview = ({ applications }: { applications: Application[] })
           {filteredApplications.map(application => (
             <ApplicationViewComponent
               isSelectedForPrint={application.id === applicationIdForPrint}
-              onPrintApplicationById={printApplicationById}
               key={application.id}
               application={application}
+              onPrintApplicationById={printApplicationById}
               onDelete={() => setUpdatedApplications(sortedApplications.filter(a => a !== application))}
               onChange={application =>
                 setUpdatedApplications(sortedApplications.map(a => (a.id === application.id ? application : a)))

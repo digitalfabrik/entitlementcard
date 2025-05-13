@@ -35,20 +35,13 @@ import { getPreVerifiedEntitlementType } from './PreVerifiedEntitlementType'
 import PreVerifiedQuickIndicator from './PreVerifiedQuickIndicator'
 import VerificationsQuickIndicator from './VerificationsQuickIndicator'
 import VerificationsView from './VerificationsView'
-import { printAwareCss } from './constants'
+import { disableInPrintMuiSx } from './constants'
 
-const PrintAwarePrimaryButton = styled(Button)`
-  margin-right: 10px;
-  ${printAwareCss};
+const PrimaryButton = styled(Button)`
   // TODO: Remove this style after blueprint.js is completely removed
   &:hover {
     color: white;
   }
-`
-
-const PrintAwareButton = styled(Button)`
-  margin-right: 10px;
-  ${printAwareCss};
 `
 
 const Spacer = styled.div`
@@ -223,34 +216,26 @@ const ApplicationCard = ({
 
         <Divider />
 
-        <Stack sx={{ p: 2 }} spacing={2} direction='row'>
+        <Stack sx={{ p: 2, ...disableInPrintMuiSx }} spacing={2} direction='row'>
           <Tooltip title={createCardQuery ? undefined : t('incompleteMappingTooltip')}>
             {/* Make the outer Tooltip independent of the button's disabled state */}
             <span>
-              <PrintAwarePrimaryButton
+              <PrimaryButton
                 disabled={!createCardQuery}
                 variant='contained'
                 color='primary'
                 href={createCardQuery ? `./cards/add${createCardQuery}` : undefined}
                 startIcon={<CreditScore />}>
                 {cardCreated ? t('createCardAgain') : t('createCard')}
-              </PrintAwarePrimaryButton>
+              </PrimaryButton>
             </span>
           </Tooltip>
-          <PrintAwareButton
-            onClick={() => setDeleteDialogOpen(true)}
-            startIcon={<Delete />}
-            variant='outlined'
-            color='error'>
+          <Button onClick={() => setDeleteDialogOpen(true)} startIcon={<Delete />} variant='outlined' color='error'>
             {t('deleteApplication')}
-          </PrintAwareButton>
-          <PrintAwareButton
-            onClick={() => onPrintApplicationById(id)}
-            startIcon={<Print />}
-            variant='outlined'
-            color='inherit'>
+          </Button>
+          <Button onClick={() => onPrintApplicationById(id)} startIcon={<Print />} variant='outlined' color='inherit'>
             {t('exportPdf')}
-          </PrintAwareButton>
+          </Button>
         </Stack>
 
         <DeleteDialog

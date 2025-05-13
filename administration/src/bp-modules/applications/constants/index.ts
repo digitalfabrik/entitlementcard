@@ -46,3 +46,6 @@ export const printAwareCss = css`
     display: none;
   }
 `
+export const disableInPrintMuiSx: SxProps = {
+  displayPrint: 'none',
+}

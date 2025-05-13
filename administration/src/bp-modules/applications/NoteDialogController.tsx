@@ -10,6 +10,7 @@ import { useUpdateApplicationNoteMutation } from '../../generated/graphql'
 import { useAppToaster } from '../AppToaster'
 import TextAreaDialog from '../components/TextAreaDialog'
 import type { Application } from './ApplicationsOverview'
+import { disableInPrintMuiSx } from './constants'
 
 const NoteButton = styled(Button)`
   align-self: flex-start;
@@ -24,8 +25,8 @@ const MultilineContent = styled(Tooltip)`
 
 type NoteDialogControllerProps = {
   application: Application
-  onOpenNoteDialog: (value: boolean) => void
   isOpen: boolean
+  onOpenNoteDialog: (value: boolean) => void
   onChange: (application: Application) => void
 }
 
@@ -33,8 +34,8 @@ const EXCERPT_LENGTH = 80
 
 const NoteDialogController = ({
   application,
-  onOpenNoteDialog,
   isOpen,
+  onOpenNoteDialog,
   onChange,
 }: NoteDialogControllerProps): ReactElement | null => {
   const appToaster = useAppToaster()
@@ -68,7 +69,12 @@ const NoteDialogController = ({
   return (
     <>
       <Tooltip content={toolTipContent}>
-        <NoteButton variant='contained' color='inherit' onClick={() => onOpenNoteDialog(true)} startIcon={<EditNote />}>
+        <NoteButton
+          variant='contained'
+          color='default'
+          onClick={() => onOpenNoteDialog(true)}
+          startIcon={<EditNote />}
+          sx={disableInPrintMuiSx}>
           Notiz anzeigen
         </NoteButton>
       </Tooltip>
