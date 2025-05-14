@@ -1,3 +1,4 @@
+import { Intent } from '@blueprintjs/core'
 import { useCallback, useContext, useState } from 'react'
 import { useSearchParams } from 'react-router'
 
@@ -6,12 +7,17 @@ import { generateCsv, getCSVFilename } from '../../../cards/CsvFactory'
 import { generatePdf, getPdfFilename } from '../../../cards/PdfFactory'
 import createCards, { CreateCardsResult } from '../../../cards/createCards'
 import deleteCards from '../../../cards/deleteCards'
-import { Region, useCreateCardsMutation, useDeleteCardsMutation } from '../../../generated/graphql'
+import {
+  Region,
+  useCreateCardsMutation,
+  useDeleteCardsMutation,
+  useSendApplicationDataToFreinetMutation,
+} from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import { ProjectConfig } from '../../../project-configs/getProjectConfig'
 import { getCsvHeaders } from '../../../project-configs/helper'
 import downloadDataUri from '../../../util/downloadDataUri'
-import { updateArrayItem } from '../../../util/helper'
+import { isProductionEnvironment, updateArrayItem } from '../../../util/helper'
 import { reportErrorToSentry } from '../../../util/sentry'
 import { useAppToaster } from '../../AppToaster'
 import { saveActivityLog } from '../../activity-log/ActivityLog'
@@ -59,6 +65,20 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
   const [createCardsMutation] = useCreateCardsMutation()
   const [deleteCardsMutation] = useDeleteCardsMutation()
   const appToaster = useAppToaster()
+  const [sendToFreinet] = useSendApplicationDataToFreinetMutation({
+    onCompleted: data => {
+      if (appToaster && data.result.errorMessage !== 'disabled for region') {
+        appToaster.show({
+          intent: data.result.success === true ? Intent.SUCCESS : Intent.DANGER,
+          message:
+            data.result.success === true
+              ? 'Bewerbung erfolgreich an Freinet gesendet'
+              : String(data.result.errorMessage),
+          icon: data.result.success === true ? 'tick' : 'error',
+        })
+      }
+    },
+  })
   const sendConfirmationMails = useSendCardConfirmationMails()
   const initializedCards = initializeCards ? initializeCardsFromQueryParams(projectConfig, searchParams, region) : []
   const [cards, setCards] = useState<Card[]>(initializedCards)
@@ -82,6 +102,16 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
         downloadDataUri(dataUri, filename)
         cards.forEach(saveActivityLog)
 
+        if (!isProductionEnvironment() && applicationId != null) {
+          const { projectId } = projectConfig
+          sendToFreinet({
+            variables: {
+              applicationId,
+              project: projectId,
+            },
+          })
+        }
+
         if (region.activatedForCardConfirmationMail) {
           await sendConfirmationMails(codes, cards)
         }
@@ -101,14 +131,15 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
       }
     },
     [
-      cards,
       createCardsMutation,
-      deleteCardsMutation,
       projectConfig,
-      appToaster,
-      sendConfirmationMails,
-      region,
+      cards,
       applicationId,
+      region,
+      sendToFreinet,
+      sendConfirmationMails,
+      appToaster,
+      deleteCardsMutation,
     ]
   )
 
