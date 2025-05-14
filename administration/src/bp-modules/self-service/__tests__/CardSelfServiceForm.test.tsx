@@ -3,7 +3,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { fireEvent } from '@testing-library/react'
 import React, { ReactNode, act } from 'react'
-import { MemoryRouter } from 'react-router-dom'
+import { MemoryRouter } from 'react-router'
 
 import { initializeCardFromCSV } from '../../../cards/Card'
 import koblenzConfig from '../../../project-configs/koblenz/config'

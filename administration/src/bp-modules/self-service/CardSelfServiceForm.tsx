@@ -3,7 +3,7 @@ import InfoOutlined from '@mui/icons-material/InfoOutlined'
 import { styled } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router'
 
 import { Card, getFullNameValidationErrorMessage, isFullNameValid, isValid } from '../../cards/Card'
 import ClearInputButton from '../../cards/extensions/components/ClearInputButton'

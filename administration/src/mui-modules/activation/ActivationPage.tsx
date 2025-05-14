@@ -2,7 +2,7 @@ import { Alert, Card } from '@mui/material'
 import { styled } from '@mui/system'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router'
 
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import ActivationPageContent from './components/ActivationPageContent'

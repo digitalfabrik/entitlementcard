@@ -1,7 +1,7 @@
 import { Button, H3 } from '@blueprintjs/core'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NavLink } from 'react-router-dom'
+import { NavLink } from 'react-router'
 import styled from 'styled-components'
 
 import { useWhoAmI } from '../../WhoAmIProvider'
