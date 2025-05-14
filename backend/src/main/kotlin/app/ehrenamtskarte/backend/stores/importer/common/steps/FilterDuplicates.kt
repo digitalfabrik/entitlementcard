@@ -2,6 +2,7 @@ package app.ehrenamtskarte.backend.stores.importer.common.steps
 
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
+import app.ehrenamtskarte.backend.stores.importer.bayern.types.FilteredStore
 import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
 import app.ehrenamtskarte.backend.stores.importer.logRemoveDuplicates
 import org.slf4j.Logger
@@ -15,6 +16,7 @@ import java.util.Locale
 class FilterDuplicates(
     config: ImportConfig,
     private val logger: Logger,
+    private val filteredStores: MutableList<FilteredStore>,
 ) : PipelineStep<List<AcceptingStore>, List<AcceptingStore>>(config) {
     override fun execute(input: List<AcceptingStore>): List<AcceptingStore> {
         // Group by name + postal code + street to detect duplicates
@@ -31,7 +33,7 @@ class FilterDuplicates(
         // Use the last as that is perhaps the last updated/created one
         val store = last()
 
-        logger.logRemoveDuplicates(store, size - 1)
+        logger.logRemoveDuplicates(store, size - 1, filteredStores)
         val issuers = map { "'${it.districtName ?: it.freinetId.toString()}'" }.toSet().joinToString()
         logger.info("Duplicates issued by $issuers")
 

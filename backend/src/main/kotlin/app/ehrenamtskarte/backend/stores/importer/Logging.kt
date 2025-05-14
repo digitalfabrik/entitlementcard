@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.stores.importer
 
+import app.ehrenamtskarte.backend.stores.importer.bayern.types.FilteredStore
 import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
 import org.slf4j.Logger
 
@@ -15,8 +16,10 @@ fun Logger.logChange(store: AcceptingStore, property: String, oldValue: String?,
     logChange(storeInfo(store), property, oldValue, newValue)
 }
 
-fun Logger.logRemoveDuplicates(store: AcceptingStore, count: Int) {
-    info("Removed duplicates ($count) of '${storeInfo(store)}'")
+fun Logger.logRemoveDuplicates(store: AcceptingStore, count: Int, filteredStores: MutableList<FilteredStore>) {
+    val reason = "Removed duplicates ($count) of '${storeInfo(store)}'"
+    info(reason)
+    filteredStores.add(FilteredStore(store, reason))
 }
 
 private fun storeInfo(store: AcceptingStore): String =
