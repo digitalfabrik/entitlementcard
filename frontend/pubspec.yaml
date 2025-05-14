@@ -23,7 +23,7 @@ dependencies:
   url_launcher: ^6.2.5
   flutter_svg: ^2.1.0
   permission_handler: ^11.3.0
-  package_info_plus: ^8.1.1 # for about dialog
+  package_info_plus: ^8.3.0 # for about dialog
   mobile_scanner: ^4.0.1
   fixnum: ^1.1.0
   # Locking this version due to this issue https://github.com/mogol/flutter_secure_storage/issues/762
