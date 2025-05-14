@@ -12,6 +12,7 @@ services:
       - network
   db-postgis:
     image:  postgis/postgis:17-3.5-alpine
+    platform: linux/amd64
     command: [ "postgres", "-c", "log_statement=all", "-c", "log_destination=stderr" ]
     environment:
       - POSTGRES_DB=ehrenamtskarte
