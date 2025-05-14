@@ -15,6 +15,7 @@ import graphql.schema.DataFetchingEnvironment
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.HttpRequestRetry
+import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.request.request
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpMethod
@@ -25,7 +26,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
-import io.ktor.client.plugins.HttpResponseValidator
 
 @Suppress("unused")
 class FreinetSendApplicationData {
@@ -79,7 +79,7 @@ class FreinetSendApplicationData {
 
             if (!freinetAgency.dataTransferActivated) {
                 logger.info("Freinet is disabled for region $regionId")
-                return@transaction SendToFreinetResponse(false ,"disabled for region" )
+                return@transaction SendToFreinetResponse(false, "disabled for region")
             }
 
             try {
@@ -101,32 +101,32 @@ class FreinetSendApplicationData {
 
                 val responseBody = runBlocking {
                     try {
-                    httpClient.request {
-                        url {
-                            protocol = URLProtocol.HTTP
-                            host = projectConfig.freinet.host
-                            path("/api/input/v3/personen/suche")
-                            parameters.append("vorname", firstName)
-                            parameters.append("nachname", lastName)
-                            parameters.append("geburtstag", birthDateStr)
-                            parameters.append("accessKey", freinetAgency.apiAccessKey)
-                            parameters.append("agencyID", freinetAgency.agencyId.toString())
-                        }
-                        method = HttpMethod.Get
-                    }.bodyAsText()
+                        httpClient.request {
+                            url {
+                                protocol = URLProtocol.HTTP
+                                host = projectConfig.freinet.host
+                                path("/api/input/v3/personen/suche")
+                                parameters.append("vorname", firstName)
+                                parameters.append("nachname", lastName)
+                                parameters.append("geburtstag", birthDateStr)
+                                parameters.append("accessKey", freinetAgency.apiAccessKey)
+                                parameters.append("agencyID", freinetAgency.agencyId.toString())
+                            }
+                            method = HttpMethod.Get
+                        }.bodyAsText()
                     } catch (e: ClientRequestException) {
                         val res = e.response
                         val body = res.bodyAsText()
                         logger.warn("Freinet erorr: ${res.status} – body:\n$body")
                         null
-                }
+                    }
                 }
 
                 if (responseBody == null) {
                     logger.warn("Freinet rejected the request")
                     return@transaction SendToFreinetResponse(
                         success = false,
-                        errorMessage = userErrorMessage
+                        errorMessage = userErrorMessage,
                     )
                 }
 
