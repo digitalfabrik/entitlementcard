@@ -17,6 +17,8 @@ services:
       - POSTGRES_DB=ehrenamtskarte
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+    volumes:
+      - db:/var/lib/postgresql/data
     ports:
       - 127.0.0.1:5432:5432
     networks:
@@ -70,5 +72,6 @@ networks:
   network:
     name: network
 volumes:
+  db:
   matomo:
   matomo_db_volume:
