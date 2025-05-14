@@ -78,7 +78,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
         <u>Verantwortlich für den Inhalt:</u>
       </span>
       <br />
-      Referat Öffentlichkeitsarbeit
+      Referat III 3
       <br />
       Telefon: 089 1261-01
       <br />

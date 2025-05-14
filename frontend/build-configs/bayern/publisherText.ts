@@ -8,7 +8,7 @@ E-Mail: <a href="mailto:poststelle@stmas.bayern.de">poststelle@stmas.bayern.de</
 <br>
 <br>
 <h4>Verantwortlich für den Inhalt:</h4>
-<p>Referat Öffentlichkeitsarbeit<br>
+<p>Referat III 3<br>
 Telefon: 089 1261-01<br>
 E-Mail: <a href="mailto:poststelle@stmas.bayern.de">poststelle@stmas.bayern.de</a></p>
 <p>E-Mail zur Ehrenamtskarte: <a href="mailto:ehrenamtskarte@stmas.bayern.de">ehrenamtskarte@stmas.bayern.de</a></p>

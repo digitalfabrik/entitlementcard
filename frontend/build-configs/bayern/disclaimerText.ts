@@ -1,5 +1,5 @@
 export default `<p>Verantwortlich im Sinne § 7 TMG:</p>
-<p>Referat Öffentlichkeitsarbeit<br>
+<p>Referat III 3<br>
 Telefon: 089 1261-01<br>
 E-Mail: <a href="mailto:poststelle@stmas.bayern.de">poststelle@stmas.bayern.de</a><br>
 Haftung im Sinne §§ 7 - 10 TMG</p>
