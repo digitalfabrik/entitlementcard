@@ -5,30 +5,21 @@ schema {
 
 "Marks the field, argument, input field or enum value as deprecated"
 directive @deprecated(
-    "The reason for the deprecation"
-    reason: String = "No longer supported"
-  ) on FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM_VALUE | INPUT_FIELD_DEFINITION
+  "The reason for the deprecation"
+  reason: String = "No longer supported"
+) on FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM_VALUE | INPUT_FIELD_DEFINITION
 
 "Directs the executor to include this field or fragment only when the `if` argument is true"
-directive @include(
-    "Included when true."
-    if: Boolean!
-  ) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
+directive @include("Included when true." if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
 
 "Indicates an Input Object is a OneOf Input Object."
 directive @oneOf on INPUT_OBJECT
 
 "Directs the executor to skip this field or fragment when the `if` argument is true."
-directive @skip(
-    "Skipped when true."
-    if: Boolean!
-  ) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
+directive @skip("Skipped when true." if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
 
 "Exposes a URL that specifies the behaviour of this scalar."
-directive @specifiedBy(
-    "The URL that specifies the behaviour of this scalar."
-    url: String!
-  ) on SCALAR
+directive @specifiedBy("The URL that specifies the behaviour of this scalar." url: String!) on SCALAR
 
 type AcceptingStore {
   category: Category!
@@ -135,9 +126,19 @@ type FreinetAgency {
   dataTransferActivated: Boolean!
 }
 
+type FreinetResponse {
+  success: Boolean!
+  errorMessage: String
+}
+
 type Mutation {
   "Activate a dynamic entitlement card"
-  activateCard(activationSecretBase64: String!, cardInfoHashBase64: String!, overwrite: Boolean!, project: String!): CardActivationResultModel!
+  activateCard(
+    activationSecretBase64: String!
+    cardInfoHashBase64: String!
+    overwrite: Boolean!
+    project: String!
+  ): CardActivationResultModel!
   "Stores a new application for an EAK"
   addEakApplication(application: ApplicationInput!, project: String!, regionId: Int!): Boolean!
   "Changes an administrator's password"
@@ -147,9 +148,18 @@ type Mutation {
   "Creates a new api token for user import endpoint"
   createApiToken(expiresIn: Int!): String!
   "Creates a new digital entitlementcard from self-service portal"
-  createCardFromSelfService(encodedCardInfo: String!, generateStaticCode: Boolean!, project: String!): CardCreationResultModel!
+  createCardFromSelfService(
+    encodedCardInfo: String!
+    generateStaticCode: Boolean!
+    project: String!
+  ): CardCreationResultModel!
   "Creates a new digital entitlementcard and returns it"
-  createCardsByCardInfos(applicationIdToMarkAsProcessed: Int, encodedCardInfos: [String!]!, generateStaticCodes: Boolean!, project: String!): [CardCreationResultModel!]!
+  createCardsByCardInfos(
+    applicationIdToMarkAsProcessed: Int
+    encodedCardInfos: [String!]!
+    generateStaticCodes: Boolean!
+    project: String!
+  ): [CardCreationResultModel!]!
   "Deletes an existing administrator"
   deleteAdministrator(adminId: Int!, project: String!): Boolean!
   "Deletes a selected API token"
@@ -161,17 +171,31 @@ type Mutation {
   "Edits an existing administrator"
   editAdministrator(adminId: Int!, newEmail: String!, newRegionId: Int, newRole: Role!, project: String!): Boolean!
   "Import accepting stores via csv"
-  importAcceptingStores(dryRun: Boolean!, project: String!, stores: [CSVAcceptingStoreInput!]!): StoreImportReturnResultModel!
+  importAcceptingStores(
+    dryRun: Boolean!
+    project: String!
+    stores: [CSVAcceptingStoreInput!]!
+  ): StoreImportReturnResultModel!
   "Reset the administrator's password"
   resetPassword(email: String!, newPassword: String!, passwordResetKey: String!, project: String!): Boolean!
   "Sends a confirmation mail to the user when the card creation was successful"
-  sendCardCreationConfirmationMail(deepLink: String!, project: String!, recipientAddress: String!, recipientName: String!, regionId: Int!): Boolean!
+  sendCardCreationConfirmationMail(
+    deepLink: String!
+    project: String!
+    recipientAddress: String!
+    recipientName: String!
+    regionId: Int!
+  ): Boolean!
   "Sends a mail that allows the administrator to reset their password."
   sendResetMail(email: String!, project: String!): Boolean!
   "Signs in an administrator"
   signIn(authData: AuthDataInput!, project: String!): SignInPayload!
   "Updates application confirmation mail note"
-  updateApplicationConfirmationNote(applicationConfirmationNote: String!, applicationConfirmationNoteActivated: Boolean!, regionId: Int!): Boolean!
+  updateApplicationConfirmationNote(
+    applicationConfirmationNote: String!
+    applicationConfirmationNoteActivated: Boolean!
+    regionId: Int!
+  ): Boolean!
   "Updates a note of an application"
   updateApplicationNote(applicationId: Int!, noteText: String!): Boolean!
   "Updates the data privacy policy of a region"
@@ -181,11 +205,17 @@ type Mutation {
   "Updates the notification settings"
   updateNotificationSettings(notificationSettings: NotificationSettingsInput!, project: String!): Boolean!
   "Updates the region specific settings"
-  updateRegionSettings(activatedForApplication: Boolean!, activatedForConfirmationMail: Boolean!, regionId: Int!): Boolean!
+  updateRegionSettings(
+    activatedForApplication: Boolean!
+    activatedForConfirmationMail: Boolean!
+    regionId: Int!
+  ): Boolean!
   "Verifies or rejects an application verification"
   verifyOrRejectApplicationVerification(accessKey: String!, project: String!, verified: Boolean!): Boolean!
   "Withdraws the application"
   withdrawApplication(accessKey: String!): Boolean!
+  "Sends the application to freinet"
+  sendApplicationDataToFreinet(applicationId: Int!, project: String!): FreinetResponse!
 }
 
 type NotificationSettings {
@@ -220,7 +250,12 @@ type Query {
   "Returns card statistics for project. Start and end dates are inclusive."
   getCardStatisticsInProject(dateEnd: String!, dateStart: String!, project: String!): [CardStatisticsResultModel!]!
   "Returns card statistics for region. Start and end dates are inclusive."
-  getCardStatisticsInRegion(dateEnd: String!, dateStart: String!, project: String!, regionId: Int!): [CardStatisticsResultModel!]!
+  getCardStatisticsInRegion(
+    dateEnd: String!
+    dateStart: String!
+    project: String!
+    regionId: Int!
+  ): [CardStatisticsResultModel!]!
   "Returns freinet agency information for a particular region. Works only for the EAK project."
   getFreinetAgencyByRegionId(project: String!, regionId: Int!): FreinetAgency
   "Get the pepper for Koblenz user hashing"
@@ -232,9 +267,11 @@ type Query {
   "Returns all administrators in a region. This query requires the role REGION_ADMIN or PROJECT_ADMIN."
   getUsersInRegion(regionId: Int!): [Administrator!]!
   "Return list of all accepting stores in the eak bayern project."
-  physicalStores: [PhysicalStore!]! @deprecated(reason : "Deprecated in favor of project specific query, replace with physicalStoresInProject")
+  physicalStores: [PhysicalStore!]!
+    @deprecated(reason: "Deprecated in favor of project specific query, replace with physicalStoresInProject")
   "Returns list of all accepting stores queried by ids in the eak bayern project."
-  physicalStoresById(params: IdsParamsInput!): [PhysicalStore]! @deprecated(reason : "Deprecated in favor of project specific query, replace with physicalStoresByIdInProject")
+  physicalStoresById(params: IdsParamsInput!): [PhysicalStore]!
+    @deprecated(reason: "Deprecated in favor of project specific query, replace with physicalStoresByIdInProject")
   "Returns list of all accepting stores in the given project queried by ids."
   physicalStoresByIdInProject(ids: [Int!]!, project: String!): [PhysicalStore]!
   "Returns list of all accepting stores in the given project."
@@ -242,9 +279,11 @@ type Query {
   "Returns region data for specific region."
   regionByRegionId(regionId: Int!): Region!
   "Return list of all regions in the eak bayern project."
-  regions: [Region!]! @deprecated(reason : "Deprecated in favor of project specific query, replace with regionsInProject")
+  regions: [Region!]!
+    @deprecated(reason: "Deprecated in favor of project specific query, replace with regionsInProject")
   "Returns regions queried by ids in the eak bayern project."
-  regionsById(params: IdsParamsInput!): [Region]! @deprecated(reason : "Deprecated in favor of project specific query, replace with regionsByIdInProject")
+  regionsById(params: IdsParamsInput!): [Region]!
+    @deprecated(reason: "Deprecated in favor of project specific query, replace with regionsByIdInProject")
   "Returns regions queried by ids in the given project."
   regionsByIdInProject(ids: [Int!]!, project: String!): [Region]!
   "Returns regions by postal code. Works only for the EAK project in which each region has an appropriate regionIdentifier."
@@ -252,11 +291,15 @@ type Query {
   "Return list of all regions in the given project."
   regionsInProject(project: String!): [Region!]!
   "Search for accepting stores using searchText and categoryIds in the eak bayern project."
-  searchAcceptingStores(params: SearchParamsInput!): [AcceptingStore!]! @deprecated(reason : "Deprecated in favor of project specific query, replace with searchAcceptingStoresInProject")
+  searchAcceptingStores(params: SearchParamsInput!): [AcceptingStore!]!
+    @deprecated(reason: "Deprecated in favor of project specific query, replace with searchAcceptingStoresInProject")
   "Search for accepting stores in the given project using searchText and categoryIds."
   searchAcceptingStoresInProject(params: SearchParamsInput!, project: String!): [AcceptingStore!]!
   "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid and a timestamp of the last check"
-  verifyCardInProject(card: CardVerificationModelInput!, project: String!): Boolean! @deprecated(reason : "Deprecated since May 2023 in favor of CardVerificationResultModel that return a current timestamp, replace with verifyCardInProjectV2")
+  verifyCardInProject(card: CardVerificationModelInput!, project: String!): Boolean!
+    @deprecated(
+      reason: "Deprecated since May 2023 in favor of CardVerificationResultModel that return a current timestamp, replace with verifyCardInProjectV2"
+    )
   "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid, extendable and a timestamp of the last check"
   verifyCardInProjectV2(card: CardVerificationModelInput!, project: String!): CardVerificationResultModel!
   "Returns the requesting administrator as retrieved from his JWT token."
