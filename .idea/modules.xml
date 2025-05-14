@@ -3,6 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/administration/administration.iml" filepath="$PROJECT_DIR$/administration/administration.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/backend.iml" filepath="$PROJECT_DIR$/.idea/modules/backend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/backend.main.iml" filepath="$PROJECT_DIR$/.idea/modules/backend.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/backend.test.iml" filepath="$PROJECT_DIR$/.idea/modules/backend.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/entitlementcard.iml" filepath="$PROJECT_DIR$/.idea/entitlementcard.iml" />
       <module fileurl="file://$PROJECT_DIR$/frontend/.idea/frontend.iml" filepath="$PROJECT_DIR$/frontend/.idea/frontend.iml" />
     </modules>
