@@ -10,7 +10,6 @@ import { useUpdateApplicationNoteMutation } from '../../generated/graphql'
 import { useAppToaster } from '../AppToaster'
 import TextAreaDialog from '../components/TextAreaDialog'
 import type { Application } from './ApplicationsOverview'
-import { disableInPrintMuiSx } from './constants'
 
 const NoteButton = styled(Button)`
   align-self: flex-start;
@@ -74,7 +73,7 @@ const NoteDialogController = ({
           color='default'
           onClick={() => onOpenNoteDialog(true)}
           startIcon={<EditNote />}
-          sx={disableInPrintMuiSx}>
+          sx={{ displayPrint: 'none' }}>
           Notiz anzeigen
         </NoteButton>
       </Tooltip>

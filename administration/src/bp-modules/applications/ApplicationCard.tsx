@@ -1,6 +1,6 @@
 /* eslint-disable react/destructuring-assignment */
 import { MutationResult } from '@apollo/client'
-import { ArrowDropDown, CreditScore, Delete, EditNote, Print, Warning } from '@mui/icons-material'
+import { CreditScore, Delete, EditNote, ExpandMore, Print, Warning } from '@mui/icons-material'
 import {
   Accordion,
   AccordionDetails,
@@ -35,7 +35,6 @@ import { getPreVerifiedEntitlementType } from './PreVerifiedEntitlementType'
 import PreVerifiedQuickIndicator from './PreVerifiedQuickIndicator'
 import VerificationsQuickIndicator from './VerificationsQuickIndicator'
 import VerificationsView from './VerificationsView'
-import { disableInPrintMuiSx } from './constants'
 
 const PrimaryButton = styled(Button)`
   // TODO: Remove this style after blueprint.js is completely removed
@@ -103,6 +102,29 @@ const DeleteDialog = (p: {
   )
 }
 
+const AccordionExpandButton = (p: { expanded: boolean }) => {
+  const { t } = useTranslation('shared')
+
+  return (
+    <Stack sx={{ displayPrint: 'none' }}>
+      <Divider />
+      <Stack direction='row' sx={{ p: 1, alignItems: 'center' }}>
+        <ExpandMore
+          sx={{
+            transform: 'rotate(0deg)',
+            transition: 'transform 0.3s',
+            'button[aria-expanded=true] &': {
+              transform: 'rotate(180deg)',
+            },
+          }}
+        />
+        &ensp;
+        {t(p.expanded ? 'accordionShowLess' : 'accordionShowMore')}
+      </Stack>
+    </Stack>
+  )
+}
+
 export type ApplicationCardProps = {
   application: Application
   isSelectedForPrint: boolean
@@ -127,6 +149,7 @@ const ApplicationCard = ({
   const appToaster = useAppToaster()
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [openNoteDialog, setOpenNoteDialog] = useState(false)
+  const [accordionExpanded, accordionExpandedSet] = useState(false)
   const [deleteApplication, deleteResult] = useDeleteApplicationMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
@@ -141,35 +164,60 @@ const ApplicationCard = ({
       }
     },
   })
-
   const createCardQuery = useMemo(
     () =>
       `${config.applicationFeature?.applicationJsonToCardQuery(jsonValueParsed)}&applicationIdToMarkAsProcessed=${id}`,
     [config.applicationFeature, jsonValueParsed, id]
   )
-
   const personalData = useMemo(
     () => config.applicationFeature?.applicationJsonToPersonalData(jsonValueParsed),
     [config.applicationFeature, jsonValueParsed]
   )
-
   return (
     <Accordion
       sx={{
         displayPrint: isSelectedForPrint ? 'block' : 'none',
       }}
-      aria-controls='panel-content'>
-      <AccordionSummary expandIcon={<ArrowDropDown />}>
-        <Stack direction='row' spacing={2} width='100%'>
-          {withdrawalDate ? <Warning color='warning' /> : undefined}
-          <Typography variant='h4' sx={{ flexGrow: 1 }}>
+      disableGutters
+      aria-controls='panel-content'
+      onChange={(_, expanded) => accordionExpandedSet(expanded)}>
+      <AccordionSummary
+        // Need this to display the `expandIconWrapper` slot, even if this is not directly used.
+        expandIcon={<ExpandMore />}
+        slots={{
+          expandIconWrapper: AccordionExpandButton,
+        }}
+        slotProps={{
+          expandIconWrapper: {
+            // @ts-expect-error Currently, MUI apparently cannot properly forward prop types from the slots
+            expanded: accordionExpanded,
+          },
+        }}
+        sx={{
+          flexDirection: 'column',
+          alignItems: 'stretch',
+          padding: 0,
+        }}>
+        <Stack direction='row' sx={{ width: '100%', gap: 2, paddingLeft: 2, paddingRight: 2 }}>
+          <Typography variant='h4' sx={{ minWidth: '250px' }}>
             {t('applicationFrom')} {formatDateWithTimezone(createdDateString, config.timezone)}
-            {personalData && personalData.forenames !== undefined && personalData.surname !== undefined && (
-              <Box component='span' sx={{ color: theme.palette.text.secondary }}>
-                &emsp;&emsp;&emsp;&emsp;
-                {t('name')}: {personalData.surname}, {personalData.forenames}
-              </Box>
-            )}
+          </Typography>
+          <Warning color='warning' visibility={application.withdrawalDate !== null ? 'visible' : 'hidden'} />
+          <Typography
+            variant='h4'
+            sx={{
+              flexGrow: 1,
+              flexShrink: 1,
+              color: theme.palette.text.secondary,
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              displayPrint: 'none',
+            }}>
+            {personalData &&
+              personalData.forenames !== undefined &&
+              personalData.surname !== undefined &&
+              `${t('name')}: ${personalData.surname}, ${personalData.forenames}`}
           </Typography>
           <ApplicationIndicators application={application} applicationJsonData={jsonValueParsed} />
         </Stack>
@@ -216,7 +264,7 @@ const ApplicationCard = ({
 
         <Divider />
 
-        <Stack sx={{ p: 2, ...disableInPrintMuiSx }} spacing={2} direction='row'>
+        <Stack sx={{ p: 2, displayPrint: 'none' }} spacing={2} direction='row'>
           <Tooltip title={createCardQuery ? undefined : t('incompleteMappingTooltip')}>
             {/* Make the outer Tooltip independent of the button's disabled state */}
             <span>

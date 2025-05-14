@@ -606,5 +606,9 @@
     "referenceNrInvalidLengthError": "Das Aktenzeichen muss eine Länge zwischen {{KoblenzReferenceNumberMinLength}} und {{KoblenzReferenceNumberMaxLength}} haben.",
     "referenceNrLabel": "Aktenzeichen",
     "startDayLabel": "Startdatum"
+  },
+  "shared": {
+    "accordionShowLess": "Weniger anzeigen",
+    "accordionShowMore": "Mehr anzeigen"
   }
 }
