@@ -19,7 +19,8 @@ const ApplicationList = styled(FlipMove)`
   display: flex;
   flex-grow: 1;
   flex-direction: column;
-  height: '100%;
+  height: 100%;
+  gap: 16px;
 `
 export type Application = GetApplicationsQuery['applications'][number]
 
