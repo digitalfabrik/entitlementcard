@@ -1,12 +1,13 @@
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
+import 'package:ehrenamtskarte/widgets/app_bars.dart';
 import 'package:flutter/material.dart';
 
-class NoCardView extends StatelessWidget {
+class NoCardPage extends StatelessWidget {
   final VoidCallback startVerification;
   final VoidCallback startActivation;
   final VoidCallback startApplication;
 
-  const NoCardView({
+  const NoCardPage({
     super.key,
     required this.startVerification,
     required this.startActivation,
@@ -16,39 +17,45 @@ class NoCardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints viewportConstraints) => SingleChildScrollView(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(minHeight: viewportConstraints.maxHeight),
-          child: SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _TapableCardWithArea(
-                  onTap: startApplication,
-                  title: t.identification.applyTitle,
-                  description: t.identification.applyDescription,
-                  icon: Icons.assignment,
-                ),
-                _TapableCardWithArea(
-                  onTap: startActivation,
-                  title: t.identification.activateTitle,
-                  description: t.identification.activateDescription,
-                  icon: Icons.add_card,
-                ),
-                _TapableCardWithArea(
-                  onTap: startVerification,
-                  title: t.identification.verifyTitle,
-                  description: t.identification.verifyDescription,
-                  icon: Icons.verified,
-                ),
-              ].wrapWithSpacers(height: 24),
+    return CustomScrollView(slivers: [
+      SliverStatusBarProtector(),
+      SliverLayoutBuilder(builder: (context, constraints) {
+        final remainingExtent = constraints.viewportMainAxisExtent - constraints.precedingScrollExtent;
+        return SliverToBoxAdapter(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: remainingExtent),
+            child: SafeArea(
+              top: false,
+              bottom: false,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _TapableCardWithArea(
+                    onTap: startApplication,
+                    title: t.identification.applyTitle,
+                    description: t.identification.applyDescription,
+                    icon: Icons.assignment,
+                  ),
+                  _TapableCardWithArea(
+                    onTap: startActivation,
+                    title: t.identification.activateTitle,
+                    description: t.identification.activateDescription,
+                    icon: Icons.add_card,
+                  ),
+                  _TapableCardWithArea(
+                    onTap: startVerification,
+                    title: t.identification.verifyTitle,
+                    description: t.identification.verifyDescription,
+                    icon: Icons.verified,
+                  ),
+                ].wrapWithSpacers(height: 24),
+              ),
             ),
           ),
-        ),
-      ),
-    );
+        );
+      }),
+    ]);
   }
 }
 

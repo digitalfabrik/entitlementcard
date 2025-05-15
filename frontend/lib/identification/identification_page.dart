@@ -4,7 +4,7 @@ import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_scanner_page.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/card_carousel.dart';
 import 'package:ehrenamtskarte/identification/card_detail_view/card_detail_view.dart';
-import 'package:ehrenamtskarte/identification/no_card_view.dart';
+import 'package:ehrenamtskarte/identification/no_card_page.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_camera_permission_dialog.dart';
 import 'package:ehrenamtskarte/identification/user_code_model.dart';
 import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
@@ -14,6 +14,7 @@ import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/routing.dart';
 import 'package:ehrenamtskarte/util/get_application_url.dart';
+import 'package:ehrenamtskarte/widgets/app_bars.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -76,14 +77,17 @@ class IdentificationPageState extends State<IdentificationPage> {
             ));
           }
 
-          return CardCarousel(
-              cards: carouselCards,
-              cardIndex: cardIndex,
-              updateIndex: _updateCardIndex,
-              carouselController: carouselController);
+          return Scaffold(
+            appBar: StatusBarProtector(),
+            body: CardCarousel(
+                cards: carouselCards,
+                cardIndex: cardIndex,
+                updateIndex: _updateCardIndex,
+                carouselController: carouselController),
+          );
         }
 
-        return NoCardView(
+        return NoCardPage(
           startVerification: () => _showVerificationDialog(context, settings, userCodeModel),
           startActivation: () => _startActivation(context),
           startApplication: () => _startApplication(getApplicationUrl(context)),
