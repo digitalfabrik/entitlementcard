@@ -12,6 +12,7 @@ import {
 } from './AddressFieldExtensions'
 import BavariaCardTypeExtension from './BavariaCardTypeExtension'
 import BirthdayExtension from './BirthdayExtension'
+import BirthdayExtensionMui from './BirthdayExtensionMui'
 import EMailNotificationExtension from './EMailNotificationExtension'
 import KoblenzReferenceNumberExtension from './KoblenzReferenceNumberExtension'
 import NuernbergPassIdExtension from './NuernbergPassIdExtension'
@@ -46,6 +47,7 @@ export type Extension<T = Record<string, unknown>> = {
 
 const Extensions = [
   BirthdayExtension,
+  BirthdayExtensionMui,
   RegionExtension,
   StartDayExtension,
   BavariaCardTypeExtension,

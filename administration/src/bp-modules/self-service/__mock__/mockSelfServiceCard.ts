@@ -6,7 +6,7 @@ import { uint8ArrayToBase64 } from '../../../util/base64'
 
 export const exampleCard = initializeCard(koblenzConfig.card, undefined, {
   fullName: 'Karla Koblenz',
-  extensions: { birthday: PlainDate.safeFromCustomFormat('10.06.2003'), koblenzReferenceNumber: '123K' },
+  extensions: { birthdayMui: PlainDate.safeFromCustomFormat('10.06.2003'), koblenzReferenceNumber: '123K' },
 })
 export const mockedCardMutation = {
   request: {
