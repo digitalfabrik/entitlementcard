@@ -1,6 +1,6 @@
 import { Checkbox } from '@blueprintjs/core'
 import InfoOutlined from '@mui/icons-material/InfoOutlined'
-import { FormGroup, TextField, styled } from '@mui/material'
+import { FormGroup, Stack, TextField, styled } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
@@ -23,13 +23,6 @@ const StyledCheckbox = styled(Checkbox)`
   margin-top: 24px;
   font-size: 16px;
   margin-left: 4px;
-`
-
-const Container = styled('div')`
-  margin-bottom: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
 `
 
 type CardSelfServiceFormProps = {
@@ -76,11 +69,9 @@ const CardSelfServiceForm = ({
     setSearchParams(undefined, { replace: true })
   }
 
-  const removeEndAdornmentMargin = { '& .MuiFormHelperText-root': { margin: '0px' } }
-
   return (
     <>
-      <Container key={card.id}>
+      <Stack key={card.id} sx={{ marginBottom: 3, gap: 2 }}>
         <FormGroup>
           <TextField
             id='name-input'
@@ -96,7 +87,7 @@ const CardSelfServiceForm = ({
             }
             fullWidth
             size='small'
-            sx={removeEndAdornmentMargin}
+            sx={{ '& .MuiFormHelperText-root': { margin: '0px' } }}
             InputProps={{
               sx: { paddingRight: 0 },
               endAdornment: (
@@ -133,7 +124,7 @@ const CardSelfServiceForm = ({
         {dataPrivacyAccepted === DataPrivacyAcceptingStatus.denied && (
           <FormAlert errorMessage={t('pleaseAcceptPrivacyPolicy')} />
         )}
-      </Container>
+      </Stack>
       <ActionButton onClick={createKoblenzPass} variant='contained' size='large'>
         {t('createKoblenzPass')}
       </ActionButton>
