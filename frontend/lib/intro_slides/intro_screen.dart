@@ -17,11 +17,22 @@ class IntroScreen extends StatefulWidget {
 }
 
 class _IntroScreenState extends State<IntroScreen> {
+  bool _isProcessing = false;
+
   Future<void> _onDonePress(SettingsModel settings) async {
-    await checkAndRequestLocationPermission(context, requestIfNotGranted: true);
-    settings.setFirstStart(enabled: false);
-    if (!mounted) return;
-    GoRouter.of(context).pushReplacement(homeRouteName);
+    if (_isProcessing) return;
+    setState(() => _isProcessing = true);
+
+    try {
+      await checkAndRequestLocationPermission(context, requestIfNotGranted: true);
+      if (!mounted) return;
+      settings.setFirstStart(enabled: false);
+      GoRouter.of(context).pushReplacement(homeRouteName);
+    } catch (e, stacktrace) {
+      debugPrintStack(stackTrace: stacktrace, label: e.toString());
+    } finally {
+      if (mounted) setState(() => _isProcessing = false);
+    }
   }
 
   @override
@@ -30,7 +41,7 @@ class _IntroScreenState extends State<IntroScreen> {
     final settings = Provider.of<SettingsModel>(context);
     final theme = Theme.of(context);
     return IntroSlider(
-      onDonePress: () => _onDonePress(settings),
+      onDonePress: () async => await _onDonePress(settings),
       renderDoneBtn: Text(t.common.next),
       renderNextBtn: Text(t.common.next),
       renderPrevBtn: Text(t.common.previous),
