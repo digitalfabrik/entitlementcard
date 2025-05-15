@@ -8,7 +8,7 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 import PlainDate from '../../util/PlainDate'
 import type { Extension, ExtensionComponentProps } from './extensions'
 
-export const BIRTHDAY_EXTENSION_MUI_NAME = 'birthday-mui'
+export const BIRTHDAY_EXTENSION_MUI_NAME = 'birthdayMui'
 export type BirthdayExtensionMuiState = { [BIRTHDAY_EXTENSION_MUI_NAME]: PlainDate | null }
 
 const minBirthday = new PlainDate(1900, 1, 1)
@@ -21,7 +21,7 @@ const BirthdayMuiForm = ({
 }: ExtensionComponentProps<BirthdayExtensionMuiState>): ReactElement => {
   const { t } = useTranslation('extensions')
   const [touched, setTouched] = useState(false)
-  const { [BIRTHDAY_EXTENSION_MUI_NAME]: birthday } = value
+  const { birthdayMui: birthday } = value
   const showErrorMessage = touched || showRequired
   const projectConfig = useContext(ProjectConfigContext)
 
@@ -51,9 +51,9 @@ const BirthdayMuiForm = ({
         value={birthday?.toLocalDate() ?? null}
         onBlur={() => setTouched(true)}
         onChange={date => {
-          setValue({ [BIRTHDAY_EXTENSION_MUI_NAME]: PlainDate.safeFromLocalDate(date) })
+          setValue({ birthdayMui: PlainDate.safeFromLocalDate(date) })
         }}
-        onClear={() => setValue({ [BIRTHDAY_EXTENSION_MUI_NAME]: null })}
+        onClear={() => setValue({ birthdayMui: null })}
         error={!isValid && showErrorMessage}
         disableFuture
         textFieldSlotProps={{
@@ -73,31 +73,30 @@ const BirthdayMuiForm = ({
 const BirthdayExtensionMui: Extension<BirthdayExtensionMuiState> = {
   name: BIRTHDAY_EXTENSION_MUI_NAME,
   Component: BirthdayMuiForm,
-  getInitialState: (): BirthdayExtensionMuiState => ({ [BIRTHDAY_EXTENSION_MUI_NAME]: null }),
+  getInitialState: (): BirthdayExtensionMuiState => ({ birthdayMui: null }),
   causesInfiniteLifetime: () => false,
-  getProtobufData: (state: BirthdayExtensionMuiState) => ({
+  getProtobufData: ({ birthdayMui }: BirthdayExtensionMuiState) => ({
     extensionBirthday: {
-      birthday: state[BIRTHDAY_EXTENSION_MUI_NAME]?.toDaysSinceEpoch() ?? undefined,
+      birthday: birthdayMui?.toDaysSinceEpoch() ?? undefined,
     },
   }),
-  isValid: (state: BirthdayExtensionMuiState) => {
-    const birthday = state[BIRTHDAY_EXTENSION_MUI_NAME]
-    if (!birthday) {
+  isValid: ({ birthdayMui }: BirthdayExtensionMuiState) => {
+    if (!birthdayMui) {
       return false
     }
     const today = PlainDate.fromLocalDate(new Date())
-    return !birthday.isBefore(minBirthday) && !birthday.isAfter(today)
+    return !birthdayMui.isBefore(minBirthday) && !birthdayMui.isAfter(today)
   },
   fromString: (value: string) => {
     const birthday = PlainDate.safeFromCustomFormat(value)
-    return birthday === null ? null : { [BIRTHDAY_EXTENSION_MUI_NAME]: birthday }
+    return birthday === null ? null : { birthdayMui: birthday }
   },
-  toString: (state: BirthdayExtensionMuiState) => state[BIRTHDAY_EXTENSION_MUI_NAME]?.format() ?? '',
+  toString: ({ birthdayMui }: BirthdayExtensionMuiState) => birthdayMui?.format() ?? '',
   fromSerialized: (value: string) => {
     const birthday = PlainDate.safeFrom(value)
-    return birthday === null ? null : { [BIRTHDAY_EXTENSION_MUI_NAME]: birthday }
+    return birthday === null ? null : { birthdayMui: birthday }
   },
-  serialize: (state: BirthdayExtensionMuiState) => state[BIRTHDAY_EXTENSION_MUI_NAME]?.formatISO() ?? '',
+  serialize: ({ birthdayMui }: BirthdayExtensionMuiState) => birthdayMui?.formatISO() ?? '',
   isMandatory: true,
 }
 
