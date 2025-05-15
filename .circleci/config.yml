@@ -136,17 +136,15 @@ commands:
         steps:
             - restore_cache:
                 keys:
-                    - v1-node-modules-{{ checksum "~/project/package-lock.json" }}
-                    - v1-node-modules
+                    - v1-npm-{{ checksum "~/project/package-lock.json" }}
+                    - v1-npm
             - run:
-                command: npm ci
+                command: npm ci --cache ~/.npm --prefer-offline
                 name: Install node dependencies for npm workspaces
             - save_cache:
-                key: v1-node-modules-{{ checksum "~/project/package-lock.json" }}
+                key: v1-npm-{{ checksum "~/project/package-lock.json" }}
                 paths:
-                    - ~/project/node_modules
-                    - ~/project/administration/node_modules
-                    - ~/project/frontend/build-configs/node_modules
+                    - ~/.npm
     install_pods:
         description: Restores and saves the cocoa pods cache.
         steps:
@@ -897,29 +895,12 @@ workflows:
         jobs:
             - bump_version:
                 prepare_delivery: false
-            - pack_martin:
-                requires:
-                    - bump_version
-            - pack_meta:
-                requires:
-                    - bump_version
-            - check_administration
             - build_administration:
                 requires:
                     - bump_version
-                    - check_administration
-            - pack_administration:
-                requires:
-                    - build_administration
-            - check_backend
             - build_backend:
                 requires:
-                    - check_backend
-            - pack_backend:
-                requires:
                     - bump_version
-                    - build_backend
-            - check_frontend
             - build_android:
                 build_config: bayern
                 context:
@@ -927,7 +908,6 @@ workflows:
                     - credentials-ehrenamtskarte
                 requires:
                     - bump_version
-                    - check_frontend
             - build_ios:
                 build_config: bayern
                 context:
@@ -935,7 +915,6 @@ workflows:
                     - fastlane-match
                 requires:
                     - bump_version
-                    - check_frontend
         when:
             or:
                 - equal:
