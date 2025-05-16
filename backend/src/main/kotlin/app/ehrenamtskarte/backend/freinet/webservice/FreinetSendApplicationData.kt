@@ -6,6 +6,7 @@ import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
 import app.ehrenamtskarte.backend.exception.service.NotImplementedException
 import app.ehrenamtskarte.backend.freinet.database.repos.FreinetAgencyRepository
+import app.ehrenamtskarte.backend.freinet.util.createPersonInFreinet
 import app.ehrenamtskarte.backend.freinet.webservice.schema.types.SendToFreinetResponse
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
@@ -140,8 +141,23 @@ class FreinetSendApplicationData {
                         )
                     }
                     persons.isEmpty() -> {
-                        // TODO: #2142 - Create person for Freinet
-                        logger.warn("create person for freinet")
+                        val personCreationResult = createPersonInFreinet(
+                            firstName,
+                            lastName,
+                            birthDateStr,
+                            personalDataNode,
+                            admin.email,
+                            freinetAgency.agencyId.toString(),
+                            freinetAgency.apiAccessKey,
+                            projectConfig.freinet.host,
+                            project
+                        )
+                        if (!personCreationResult) {
+                            return@transaction SendToFreinetResponse(
+                                false,
+                                userErrorMessage
+                            )
+                        }
                     }
                     persons.size() == 1 -> {
                         // TODO: #2143 - Update existing person
@@ -156,4 +172,6 @@ class FreinetSendApplicationData {
             }
         }
     }
+
+
 }
