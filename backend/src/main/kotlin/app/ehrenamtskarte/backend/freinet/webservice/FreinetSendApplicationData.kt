@@ -46,7 +46,8 @@ class FreinetSendApplicationData {
     }
 
     private val jsonParser = Json { ignoreUnknownKeys = true }
-    val userErrorMessage = "Die Daten konnten nicht mit Freinet-Online synchronisiert werden. Bitte aktualisieren Sie die Daten in Freinet-Online manuell."
+    val userErrorMessage = "Die Daten konnten nicht mit Freinet-Online synchronisiert werden. " +
+        "Bitte aktualisieren Sie die Daten in Freinet-Online manuell."
 
     @GraphQLDescription("Send application info to Freinet")
     fun sendApplicationDataToFreinet(
