@@ -22,7 +22,7 @@
       - [Map Styles](#map-styles)
       - [Matomo](#matomo)
       - [Inspecting Services](#inspecting-services)
-    - [Dumping and Restoring the Database](#dumping-and-restoring-the-database)
+    - [DB tasks](#db-tasks)
     - [Using ehrenamtskarte.app as Database](#using-ehrenamtskarteapp-as-database)
 
 ## Prerequisites
@@ -148,12 +148,6 @@ For IntelliJ, the following plugins are recomended:
 - [detekt](https://plugins.jetbrains.com/plugin/10761-detekt)
 - [Ktlint](https://plugins.jetbrains.com/plugin/15057-ktlint)
 
-### Common development tasks
-
-- Run Ktlint diagnostic: `./gradlew ktlintCheck`
-- Run Ktlint formatter: `./gradlew ktlintFormat`
-- Run Detekt diagnostic: `./gradlew detekt`
-
 ### Backend Setup
 
 1. Open the IntelliJ "Project Structure" and set up the required SDK called "entitlementcard-jdk" and point it to your JDK installation.
@@ -236,22 +230,31 @@ projects:
 - Martin endpoints: [http://localhost:5002/tiles/accepting_stores/index.json](http://localhost:5002/tiles/accepting_stores/index.json) and [http://localhost:5002/tiles/accepting_stores/rpc/index.json](http://localhost:5002/tiles/accepting_stores/rpc/index.json). *The data shown on the map is fetched from a hardcoded url and is not using the data from the local martin!*
 - Map styles: [http://localhost:5002/map.html](http://localhost:5002)
 
-### Dumping and Restoring the Database
+### Common development tasks
 
-```shell
-docker exec -ti <container_id> pg_dump -c -U postgres ehrenamtskarte > dump-$(date +%F).sql
-```
+- Run Ktlint diagnostic: `./gradlew ktlintCheck`
+- Run Ktlint formatter: `./gradlew ktlintFormat`
+- Run Detekt diagnostic: `./gradlew detekt`
 
-To copy the dump to your local machine:
+### DB tasks
 
-```shell
-rsync root@ehrenamtskarte.app:dump-2020-12-23.sql .
-```
-
-To restore the dump
-```shell
-docker exec -i <container_id> psql ehrenamtskarte postgres < dump-$(date +%F).sql
-```
+- Clear the DB's contents: `./gradlew db-clear`
+- Run all migrations: `./gradlew db-migrate`
+- Import data from online stores: `./gradlew db-import`
+- Load developer sample data: `./gradlew db-import-dev`
+- Create a clean DB with sample data (all of the above steps): `./gradlew db-recreate`
+- Dump the DB
+    ```shell
+    docker exec -ti entitlementcard-db-postgis-1 pg_dump -c -U postgres ehrenamtskarte > dump-$(date +%F).sql
+    ```
+- Copy the dump to your local machine:
+    ```shell
+    rsync root@ehrenamtskarte.app:dump-2020-12-23.sql .
+    ```
+- Restore the dump
+    ```shell
+    docker exec -i entitlementcard-db-postgis-1 psql ehrenamtskarte postgres < dump-$(date +%F).sql
+    ```
 
 ### Using ehrenamtskarte.app as Database
 
