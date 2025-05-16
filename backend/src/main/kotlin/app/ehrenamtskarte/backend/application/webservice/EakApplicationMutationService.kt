@@ -92,29 +92,27 @@ class EakApplicationMutationService {
         accessKey: String,
         verified: Boolean,
         dfe: DataFetchingEnvironment,
-    ): Boolean {
-        val application = transaction {
-            getApplicationByApplicationVerificationAccessKey(accessKey)
-        }
-        return transaction {
+    ): Boolean =
+        transaction {
+            val application = getApplicationByApplicationVerificationAccessKey(accessKey)
+
             if (verified) {
                 val context = dfe.graphQlContext.context
                 val backendConfig = context.backendConfiguration
                 val projectConfig = backendConfig.projects.first { it.id == project }
-                val successful = ApplicationRepository.verifyApplicationVerification(accessKey)
-                Mailer.sendNotificationForVerificationMails(
-                    project,
-                    backendConfig,
-                    projectConfig,
-                    application.regionId,
-                )
 
-                successful
+                ApplicationRepository.verifyApplicationVerification(accessKey).also {
+                    Mailer.sendNotificationForVerificationMails(
+                        project,
+                        backendConfig,
+                        projectConfig,
+                        application.regionId,
+                    )
+                }
             } else {
                 ApplicationRepository.rejectApplicationVerification(accessKey)
             }
         }
-    }
 
     @GraphQLDescription("Updates a note of an application")
     fun updateApplicationNote(applicationId: Int, noteText: String, dfe: DataFetchingEnvironment): Boolean {
