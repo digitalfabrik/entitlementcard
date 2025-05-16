@@ -1,0 +1,6 @@
+mutation sendApplicationDataToFreinet($applicationId: Int!, $project: String!) {
+  result: sendApplicationDataToFreinet(applicationId: $applicationId, project: $project) {
+    success
+    errorMessage
+  }
+}
