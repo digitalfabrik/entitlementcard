@@ -129,7 +129,7 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
                 assertEquals("100% Ermäßigung\n\n100% discount", acceptanceStore.description)
                 assertEquals(17, acceptanceStore.categoryId.value)
                 assertEquals(2, acceptanceStore.projectId.value)
-                assertEquals(94, acceptanceStore.regionId?.value)
+                assertEquals(95, acceptanceStore.regionId?.value)
                 assertNotNull(acceptanceStore.createdDate)
 
                 val contact = ContactEntity.all().single()
@@ -187,7 +187,7 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
                 assertNull(acceptanceStore.description)
                 assertEquals(17, acceptanceStore.categoryId.value)
                 assertEquals(2, acceptanceStore.projectId.value)
-                assertEquals(94, acceptanceStore.regionId?.value)
+                assertEquals(95, acceptanceStore.regionId?.value)
                 assertNotNull(acceptanceStore.createdDate)
 
                 val contact = ContactEntity.all().single()

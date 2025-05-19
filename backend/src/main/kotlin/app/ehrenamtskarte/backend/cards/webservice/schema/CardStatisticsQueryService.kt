@@ -6,7 +6,7 @@ import app.ehrenamtskarte.backend.cards.database.repos.CardRepository
 import app.ehrenamtskarte.backend.cards.webservice.schema.types.CardStatisticsResultModel
 import app.ehrenamtskarte.backend.common.utils.dateStringToEndOfDayInstant
 import app.ehrenamtskarte.backend.common.utils.dateStringToStartOfDayInstant
-import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
+import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
@@ -26,7 +26,7 @@ class CardStatisticsQueryService {
         dateEnd: String,
         dfe: DataFetchingEnvironment,
     ): List<CardStatisticsResultModel> {
-        val context = dfe.getContext<GraphQLContext>()
+        val context = dfe.graphQlContext.context
         val admin = context.getAdministrator()
 
         return transaction {
@@ -55,7 +55,7 @@ class CardStatisticsQueryService {
         dateEnd: String,
         dfe: DataFetchingEnvironment,
     ): List<CardStatisticsResultModel> {
-        val context = dfe.getContext<GraphQLContext>()
+        val context = dfe.graphQlContext.context
         val admin = context.getAdministrator()
 
         return transaction {

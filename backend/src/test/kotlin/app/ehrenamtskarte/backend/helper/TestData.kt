@@ -56,7 +56,7 @@ object TestData {
         telephone: String? = "0911/123456",
         projectId: Int = 2,
         categoryId: Int = 17,
-        regionId: Int = 94,
+        regionId: Int = 95,
     ): AcceptingStoreEntity =
         transaction {
             val addressId = Addresses.insertAndGetId {
@@ -92,7 +92,7 @@ object TestData {
         startDate: LocalDate = LocalDate.now().minusDays(1L),
         endDate: LocalDate = LocalDate.now().plusYears(1L),
         revoked: Boolean = false,
-        regionId: Int,
+        regionId: Int = 96,
     ): Int =
         transaction {
             UserEntitlements.insertAndGetId {

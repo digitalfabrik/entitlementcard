@@ -1,13 +1,12 @@
 package app.ehrenamtskarte.backend.config
 
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
-import app.ehrenamtskarte.backend.stores.importer.ImportConfig
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import org.slf4j.LoggerFactory
 import java.io.File
 import java.net.URL
 import java.nio.file.Paths
@@ -48,8 +47,23 @@ data class ProjectConfig(
 
 data class ServerConfig(val dataDirectory: String, val host: String, val port: String)
 
+enum class Environment {
+    PRODUCTION,
+    STAGING,
+    DEVELOPMENT,
+    ;
+
+    companion object {
+        @JvmStatic
+        @JsonCreator
+        fun fromString(value: String): Environment =
+            entries.find { it.name.equals(value, ignoreCase = true) }
+                ?: throw IllegalArgumentException("Invalid environment: $value")
+    }
+}
+
 data class BackendConfiguration(
-    val production: Boolean,
+    val environment: Environment,
     val server: ServerConfig,
     val map: MapConfig,
     val postgres: PostgresConfig,
@@ -57,6 +71,8 @@ data class BackendConfiguration(
     val projects: List<ProjectConfig>,
     val matomoUrl: String,
 ) {
+    fun isDevelopment(): Boolean = environment == Environment.DEVELOPMENT
+
     fun getProjectConfig(project: String): ProjectConfig =
         projects.find { it.id == project } ?: throw ProjectNotFoundException(project)
 
@@ -70,40 +86,18 @@ data class BackendConfiguration(
         return this
     }
 
-    fun toImportConfig(projectId: String): ImportConfig = ImportConfig(this.copy(), projectId)
-
     companion object {
         private val mapper = ObjectMapper(YAMLFactory())
-            .registerModule(
-                KotlinModule.Builder().build(),
-            ).registerModule(JavaTimeModule())
+            .registerModule(KotlinModule.Builder().build())
+            .registerModule(JavaTimeModule())
             // Allows unknown (potentially future) config options.
             // Without this parsing a config fails if a property is defined that is missing
             // from the BackendConfiguration class. We might want to be able to load configs that contain configuration
             // for future features, therefore we want to allow unknown properties.
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-        private val logger = LoggerFactory.getLogger(BackendConfiguration::class.java)
-
-        fun load(configFile: URL?): BackendConfiguration {
-            val fallbacks = listOfNotNull(
-                ClassLoader.getSystemResource("config/config.local.yml"),
-                ClassLoader.getSystemResource("config/config.yml"),
-            )
-            if (fallbacks.isEmpty()) {
-                throw Error("Fallback backend configuration resource 'config/config.yml' missing!")
-            }
-
-            val url =
-                configFile
-                    ?: possibleBackendConfigurationFiles.find { it.exists() }?.toURI()?.toURL()
-                    ?: fallbacks[0]
-
-            logger.info("Loading backend configuration from $url.")
-
-            return from(url).sanityCheckMatomoConfig()
-        }
-
-        private fun from(url: URL): BackendConfiguration = mapper.readValue(url, BackendConfiguration::class.java)
+        fun load(url: URL): BackendConfiguration =
+            mapper.readValue(url, BackendConfiguration::class.java)
+                .sanityCheckMatomoConfig()
     }
 }

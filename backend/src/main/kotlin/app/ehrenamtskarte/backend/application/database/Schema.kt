@@ -15,7 +15,7 @@ const val NOTE_MAX_CHARS = 1000
 object Applications : IntIdTable() {
     val regionId = reference("regionId", Regions)
     val jsonValue = text("jsonValue")
-    val createdDate = timestamp("createdDate").defaultExpression(CurrentTimestamp())
+    val createdDate = timestamp("createdDate").defaultExpression(CurrentTimestamp)
     val accessKey = varchar("accessKey", 100).uniqueIndex()
     val withdrawalDate = timestamp("withdrawalDate").nullable()
     val note = varchar("note", NOTE_MAX_CHARS).nullable()
@@ -23,9 +23,7 @@ object Applications : IntIdTable() {
 }
 
 class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<ApplicationEntity>(
-        Applications,
-    )
+    companion object : IntEntityClass<ApplicationEntity>(Applications)
 
     var regionId by Applications.regionId
     var jsonValue by Applications.jsonValue
@@ -64,9 +62,7 @@ object ApplicationVerifications : IntIdTable() {
 }
 
 class ApplicationVerificationEntity(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<ApplicationVerificationEntity>(
-        ApplicationVerifications,
-    )
+    companion object : IntEntityClass<ApplicationVerificationEntity>(ApplicationVerifications)
 
     var applicationId by ApplicationVerifications.applicationId
     var contactEmailAddress by ApplicationVerifications.contactEmailAddress

@@ -9,6 +9,7 @@ import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.auth.webservice.schema.ApiTokenQueryService
 import app.ehrenamtskarte.backend.auth.webservice.schema.ApiTokenService
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
+import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.helper.TestAdministrators
@@ -16,8 +17,8 @@ import app.ehrenamtskarte.backend.helper.TestData
 import graphql.schema.DataFetchingEnvironment
 import io.mockk.every
 import io.mockk.mockk
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteAll
-import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.Assert.assertEquals
@@ -36,7 +37,7 @@ internal class ApiTokenServiceTest : IntegrationTest() {
 
     @BeforeEach
     fun setUp() {
-        every { mockDfe.getContext<GraphQLContext>() } returns mockContext
+        every { mockDfe.graphQlContext.context } returns mockContext
         every { mockContext.enforceSignedIn() } returns mockJwtPayload
         transaction {
             ApiTokens.deleteAll()
@@ -140,12 +141,12 @@ internal class ApiTokenServiceTest : IntegrationTest() {
 
         transaction {
             val tokenId = TestData.createApiToken(creatorId = tokenAdmin, type = type)
-            val numberOfTokensBefore = ApiTokens.select { ApiTokens.id eq tokenId }.count()
+            val numberOfTokensBefore = ApiTokens.selectAll().where(ApiTokens.id eq tokenId).count()
             assertEquals(1, numberOfTokensBefore)
 
             ApiTokenService().deleteApiToken(tokenId, mockDfe)
 
-            val numberOfTokensAfter = ApiTokens.select { ApiTokens.id eq tokenId }.count()
+            val numberOfTokensAfter = ApiTokens.selectAll().where(ApiTokens.id eq tokenId).count()
             assertEquals(numberOfTokensBefore - expectedDeletedTokens, numberOfTokensAfter)
         }
     }

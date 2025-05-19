@@ -1,4 +1,4 @@
-production: false
+environment: development
 postgres:
   url: dummy
   user: test

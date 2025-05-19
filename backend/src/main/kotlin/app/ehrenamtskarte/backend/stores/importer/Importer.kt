@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory
 object Importer {
     fun import(config: ImportConfig): Boolean {
         val logger = LoggerFactory.getLogger(Importer::class.java)
-        val project = config.findProject()
+        val project = config.project
         val filteredStores: MutableList<FilteredStore> = mutableListOf()
 
         if (project.pipelineName == null) {

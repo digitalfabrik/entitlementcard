@@ -28,6 +28,7 @@ fun assertDatabaseIsInSync() {
     val allMigrations = MigrationsRegistry.getAllMigrations()
     val versionDb = Migrations.getCurrentVersionOrNull()
     val versionCode = allMigrations.maxOfOrNull { it.version }
+
     if (versionCode != versionDb) {
         throw DatabaseOutOfSyncException(
             comment = "Latest migration versions do not match: Version on DB $versionDb - Code Version $versionCode",
@@ -36,16 +37,19 @@ fun assertDatabaseIsInSync() {
 
     var outOfSyncComment: String? = null
 
-    // Check if all tables in the DB appear in `allTables` and vice versa.
-    // We ignore spatial_ref_sys.
-    val tablesInDb =
-        currentDialect.allTablesNames().map { it.substringAfter(".") }
-            .filter { it != "spatial_ref_sys" }.toSet()
+    // Check if all tables in the DB appear in `allTables` and vice versa. We ignore spatial_ref_sys.
+    val tablesInDb = currentDialect
+        .allTablesNames().map { it.substringAfter(".") }
+        .filter { it != "spatial_ref_sys" }
+        .toSet()
     val tablesInCode = allTables.map { it.nameInDatabaseCase() }.toSet()
+
     if (tablesInDb != tablesInCode) {
         val tablesNotInCode = tablesInDb - tablesInCode
         val tablesNotInDb = tablesInCode - tablesInDb
+
         outOfSyncComment = "List of tables is out sync with database:"
+
         if (tablesNotInCode.isNotEmpty()) {
             outOfSyncComment += "\nUnknown tables found in DB: $tablesNotInCode"
         }

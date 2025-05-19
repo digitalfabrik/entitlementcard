@@ -8,7 +8,7 @@ import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
 import app.ehrenamtskarte.backend.stores.utils.getRegionFromAcceptingStore
-import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.Logger
 
@@ -20,14 +20,13 @@ class Store(config: ImportConfig, private val logger: Logger) :
     PipelineStep<List<AcceptingStore>, Unit>(config) {
     override fun execute(input: List<AcceptingStore>) {
         transaction {
-            val project = ProjectEntity.find { Projects.project eq config.findProject().id }.single()
+            val project = ProjectEntity.find { Projects.project eq config.project.id }.single()
             try {
-                val acceptingStoreIdsToRemove =
-                    AcceptingStores.slice(AcceptingStores.id)
-                        .select { AcceptingStores.projectId eq project.id }
-                        .map { it[AcceptingStores.id].value }
-                        .toMutableSet()
-
+                val acceptingStoreIdsToRemove = AcceptingStores
+                    .select(AcceptingStores.id)
+                    .where(AcceptingStores.projectId eq project.id)
+                    .map { it[AcceptingStores.id].value }
+                    .toMutableSet()
                 var numStoresCreated = 0
                 var numStoresUntouched = 0
 
@@ -39,8 +38,8 @@ class Store(config: ImportConfig, private val logger: Logger) :
                     )
                     // If an exact duplicate is found in the DB, we do not recreate it and instead
                     // remove the id from `acceptingStoreIdsToRemove`.
-                    val idInDb: Int? =
-                        AcceptingStoresRepository.getIdIfExists(acceptingStore, project.id, region?.id)
+                    val idInDb = AcceptingStoresRepository.getIdIfExists(acceptingStore, project.id, region?.id)
+
                     if (idInDb != null) {
                         acceptingStoreIdsToRemove.remove(idInDb)
                         numStoresUntouched += 1
@@ -52,6 +51,7 @@ class Store(config: ImportConfig, private val logger: Logger) :
                 }
 
                 AcceptingStoresRepository.deleteStores(acceptingStoreIdsToRemove)
+
                 logger.info(
                     """
                         The following changes were made to the database:
