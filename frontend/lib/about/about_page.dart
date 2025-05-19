@@ -14,6 +14,8 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
+import 'package:ehrenamtskarte/widgets/app_bars.dart';
+
 const String accessibilityPolicyUrl = 'https://berechtigungskarte.app/barrierefreiheit/';
 
 class AboutPage extends StatefulWidget {
@@ -27,6 +29,13 @@ class AboutPage extends StatefulWidget {
 
 class AboutPageState extends State<AboutPage> {
   int clickCount = 0;
+  late Future<PackageInfo> packageInfo;
+
+  @override
+  void initState() {
+    super.initState();
+    packageInfo = PackageInfo.fromPlatform();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,13 +44,13 @@ class AboutPageState extends State<AboutPage> {
     final config = Configuration.of(context);
     final t = context.t;
     return FutureBuilder<PackageInfo>(
-      future: PackageInfo.fromPlatform(),
+      future: packageInfo,
       builder: (context, snapshot) {
         List<Widget> children;
         final packageInfo = snapshot.data;
         if (snapshot.hasData && packageInfo != null) {
           children = [
-            Container(height: 20),
+            SizedBox(height: 20),
             Center(
               child: Padding(
                 padding: const EdgeInsets.all(10),
@@ -175,7 +184,7 @@ class AboutPageState extends State<AboutPage> {
         } else {
           children = [];
         }
-        return ListView(children: children);
+        return CustomScrollView(slivers: [SliverStatusBarProtector(), SliverList.list(children: children)]);
       },
     );
   }

@@ -27,10 +27,10 @@ The card activation links will be printed on the pdf,send via mail or accessible
 ### Examples:
 
 ```
-https://staging.bayern.ehrenamtskarte.app/activation/code#ClcKLQoNRGVlcGxpbmsgVGVzdBCWnQEaGAoCCF0SAwiIORoHCLPPvgEQASoECKiaARIQBuTHyi60o6UC2U439XGLMRoUBzxIAa%2BPG%2Bj%2FIrBzJVTJACh21KA%3D/
+https://staging.bayern.ehrenamtskarte.app/activation/code#ClcKLQoNRGVlcGxpbmsgVGVzdBCWnQEaGAoCCF0SAwiIORoHCLPPvgEQASoECKiaARIQBuTHyi60o6UC2U439XGLMRoUBzxIAa%2BPG%2Bj%2FIrBzJVTJACh21KA%3D
 
-ehrenamtbayern://bayern.ehrenamtskarte.app/activation/code#ClcKLQoNRGVlcGxpbmsgVGVzdBCWnQEaGAoCCF0SAwiIORoHCLPPvgEQASoECKiaARIQBuTHyi60o6UC2U439XGLMRoUBzxIAa%2BPG%2Bj%2FIrBzJVTJACh21KA%3D/
-koblenzpass://koblenz.sozialpass.app/activation/code#ClcKLQoNRGVlcGxpbmsgVGVzdBCWnQEaGAoCCF0SAwiIORoHCLPPvgEQASoECKiaARIQBuTHyi60o6UC2U439XGLMRoUBzxIAa%2BPG%2Bj%2FIrBzJVTJACh21KA%3D/
+ehrenamtbayern://bayern.ehrenamtskarte.app/activation/code#ClcKLQoNRGVlcGxpbmsgVGVzdBCWnQEaGAoCCF0SAwiIORoHCLPPvgEQASoECKiaARIQBuTHyi60o6UC2U439XGLMRoUBzxIAa%2BPG%2Bj%2FIrBzJVTJACh21KA%3D
+koblenzpass://koblenz.sozialpass.app/activation/code#ClcKLQoNRGVlcGxpbmsgVGVzdBCWnQEaGAoCCF0SAwiIORoHCLPPvgEQASoECKiaARIQBuTHyi60o6UC2U439XGLMRoUBzxIAa%2BPG%2Bj%2FIrBzJVTJACh21KA%3D
 ```
 
 #### Note
@@ -49,13 +49,13 @@ For local testing you have to install the app and add these domains manually.
 - AppSettings -> OpenByDefault -> AddLinks -> enable supported links
 
 ```
-npx uri-scheme open https://staging.nuernberg.sozialpass.app/activation/code#<activationCode>/ --android
+npx uri-scheme open https://staging.nuernberg.sozialpass.app/activation/code#<activationCode> --android
 ```
 
 
 ### b) iOS
 ```
-npx uri-scheme open https://staging.nuernberg.sozialpass.app/activation/code#<activationCode>/ --ios
+npx uri-scheme open https://staging.nuernberg.sozialpass.app/activation/code#<activationCode> --ios
 ```
 
 

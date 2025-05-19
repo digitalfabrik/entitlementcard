@@ -8,7 +8,7 @@ and [administration/src/graphql](../administration/src/graphql).
 ## Generate API Files
 
 1. If schema changed: Generate updated GraphQL schema into [schema.graphql](../frontend/schema.graphql)
-   Run "Generate GraphQL" in Intellij (or `./gradlew run --args="graphql-export ../specs/backend-api.graphql"` in the
+   Run "Generate GraphQL specs" in Intellij (or `./gradlew run --args="graphql-export ../specs/backend-api.graphql"` in the
    backend folder)
 2. Run any "Set build config" configuration in IntelliJ e.g. "Set build config bayern" (
    or `flutter pub run build_runner build` in the `frontend` directory)

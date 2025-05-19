@@ -15,15 +15,28 @@ class CustomLicenseEntry {
   CustomLicenseEntry(this.packageName, this.licenseParagraphs);
 }
 
-class CustomLicensePage extends StatelessWidget {
+class CustomLicensePage extends StatefulWidget {
   const CustomLicensePage({super.key});
+
+  @override
+  State<CustomLicensePage> createState() => _CustomLicensePageState();
+}
+
+class _CustomLicensePageState extends State<CustomLicensePage> {
+  late Future<List<LicenseEntry>> licenses;
+
+  @override
+  void initState() {
+    super.initState();
+    licenses = LicenseRegistry.licenses.toList();
+  }
 
   @override
   Widget build(BuildContext context) {
     final t = context.t;
     final theme = Theme.of(context);
     return FutureBuilder<List<LicenseEntry>>(
-      future: LicenseRegistry.licenses.toList(),
+      future: licenses,
       builder: (BuildContext context, AsyncSnapshot<List<LicenseEntry>> snapshot) {
         final licenses = snapshot.data;
         final error = snapshot.error;

@@ -9,17 +9,18 @@ jest.mock('@blueprintjs/core', () => ({
 }))
 
 describe('PreVerifiedQuickIndicator', () => {
-  it('should show juleica logo if the particular type was set', async () => {
-    const { getByAltText } = renderWithTranslation(
+  it('should show juleica label if the particular type was set', async () => {
+    const { getByText } = renderWithTranslation(
       <PreVerifiedQuickIndicator type={PreVerifiedQuickIndicatorType.Juleica} />
     )
-    expect(getByAltText(PreVerifiedQuickIndicatorType.Juleica.toString())).toBeTruthy()
+    expect(getByText('Juleica')).toBeTruthy()
   })
 
-  it('should show verein360 logo if the particular type was set', async () => {
-    const { getByAltText } = renderWithTranslation(
+  it('should show verein360 label if the particular type was set', async () => {
+    const { getByText } = renderWithTranslation(
       <PreVerifiedQuickIndicator type={PreVerifiedQuickIndicatorType.Verein360} />
     )
-    expect(getByAltText(PreVerifiedQuickIndicatorType.Verein360.toString())).toBeTruthy()
+
+    expect(getByText('Verein360')).toBeTruthy()
   })
 })
