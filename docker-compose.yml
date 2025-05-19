@@ -12,11 +12,14 @@ services:
       - network
   db-postgis:
     image:  postgis/postgis:17-3.5-alpine
+    platform: linux/amd64
     command: [ "postgres", "-c", "log_statement=all", "-c", "log_destination=stderr" ]
     environment:
       - POSTGRES_DB=ehrenamtskarte
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+    volumes:
+      - db:/var/lib/postgresql/data
     ports:
       - 127.0.0.1:5432:5432
     networks:
@@ -42,7 +45,7 @@ services:
     networks:
       - network
   matomo_db:
-    image: "mariadb:11.1"
+    image: "mariadb:11.7"
     command: --max-allowed-packet=64MB
     volumes:
       - matomo_db_volume:/var/lib/mysql:Z
@@ -70,5 +73,6 @@ networks:
   network:
     name: network
 volumes:
+  db:
   matomo:
   matomo_db_volume:
