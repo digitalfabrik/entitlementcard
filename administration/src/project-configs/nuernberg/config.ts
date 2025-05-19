@@ -1,5 +1,5 @@
 import AddressExtensions from '../../cards/extensions/AddressFieldExtensions'
-import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
+import BirthdayExtensionLegacy from '../../cards/extensions/BirthdayExtensionLegacy'
 import NuernbergPassIdExtension from '../../cards/extensions/NuernbergPassIdExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
 import StartDayExtension from '../../cards/extensions/StartDayExtension'
@@ -28,7 +28,13 @@ const config: ProjectConfig = {
       null,
     ],
     defaultValidity: { years: 1 },
-    extensions: [StartDayExtension, BirthdayExtension, NuernbergPassIdExtension, ...AddressExtensions, RegionExtension],
+    extensions: [
+      StartDayExtension,
+      BirthdayExtensionLegacy,
+      NuernbergPassIdExtension,
+      ...AddressExtensions,
+      RegionExtension,
+    ],
   },
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
   dataPrivacyContent: DataPrivacyBaseText,

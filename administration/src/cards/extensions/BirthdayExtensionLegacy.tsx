@@ -1,4 +1,4 @@
-import { FormGroup as MuiFormGroup } from '@mui/material'
+import { FormGroup } from '@blueprintjs/core'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -8,20 +8,20 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 import PlainDate from '../../util/PlainDate'
 import type { Extension, ExtensionComponentProps } from './extensions'
 
-export const BIRTHDAY_EXTENSION_MUI_NAME = 'birthdayMui'
-export type BirthdayExtensionMuiState = { [BIRTHDAY_EXTENSION_MUI_NAME]: PlainDate | null }
+export const BIRTHDAY_EXTENSION_NAME = 'birthday'
+export type BirthdayExtensionState = { [BIRTHDAY_EXTENSION_NAME]: PlainDate | null }
 
 const minBirthday = new PlainDate(1900, 1, 1)
 
-const BirthdayMuiForm = ({
+const BirthdayForm = ({
   value,
   setValue,
   isValid,
   showRequired,
-}: ExtensionComponentProps<BirthdayExtensionMuiState>): ReactElement => {
+}: ExtensionComponentProps<BirthdayExtensionState>): ReactElement => {
   const { t } = useTranslation('extensions')
   const [touched, setTouched] = useState(false)
-  const { birthdayMui: birthday } = value
+  const { birthday } = value
   const showErrorMessage = touched || showRequired
   const projectConfig = useContext(ProjectConfigContext)
 
@@ -45,15 +45,14 @@ const BirthdayMuiForm = ({
   }
 
   return (
-    <MuiFormGroup>
+    <FormGroup label={t('birthdayLabel')}>
       <CustomDatePicker
-        label={t('birthdayLabel')}
         value={birthday?.toLocalDate() ?? null}
         onBlur={() => setTouched(true)}
         onChange={date => {
-          setValue({ birthdayMui: PlainDate.safeFromLocalDate(date) })
+          setValue({ birthday: PlainDate.safeFromLocalDate(date) })
         }}
-        onClear={() => setValue({ birthdayMui: null })}
+        onClear={() => setValue({ birthday: null })}
         error={!isValid && showErrorMessage}
         disableFuture
         textFieldSlotProps={{
@@ -66,38 +65,38 @@ const BirthdayMuiForm = ({
       />
       {showErrorMessage && <FormAlert severity='error' errorMessage={getErrorMessage()} />}
       {showBirthdayHint() && <FormAlert severity='info' errorMessage={t('birthdayHint')} />}
-    </MuiFormGroup>
+    </FormGroup>
   )
 }
 
-const BirthdayExtensionMui: Extension<BirthdayExtensionMuiState> = {
-  name: BIRTHDAY_EXTENSION_MUI_NAME,
-  Component: BirthdayMuiForm,
-  getInitialState: (): BirthdayExtensionMuiState => ({ birthdayMui: null }),
+const BirthdayExtensionLegacy: Extension<BirthdayExtensionState> = {
+  name: BIRTHDAY_EXTENSION_NAME,
+  Component: BirthdayForm,
+  getInitialState: (): BirthdayExtensionState => ({ birthday: null }),
   causesInfiniteLifetime: () => false,
-  getProtobufData: ({ birthdayMui }: BirthdayExtensionMuiState) => ({
+  getProtobufData: ({ birthday }: BirthdayExtensionState) => ({
     extensionBirthday: {
-      birthday: birthdayMui?.toDaysSinceEpoch() ?? undefined,
+      birthday: birthday?.toDaysSinceEpoch() ?? undefined,
     },
   }),
-  isValid: ({ birthdayMui }: BirthdayExtensionMuiState) => {
-    if (!birthdayMui) {
+  isValid: ({ birthday }: BirthdayExtensionState) => {
+    if (!birthday) {
       return false
     }
     const today = PlainDate.fromLocalDate(new Date())
-    return !birthdayMui.isBefore(minBirthday) && !birthdayMui.isAfter(today)
+    return !birthday.isBefore(minBirthday) && !birthday.isAfter(today)
   },
   fromString: (value: string) => {
     const birthday = PlainDate.safeFromCustomFormat(value)
-    return birthday === null ? null : { birthdayMui: birthday }
+    return birthday === null ? null : { birthday }
   },
-  toString: ({ birthdayMui }: BirthdayExtensionMuiState) => birthdayMui?.format() ?? '',
+  toString: ({ birthday }: BirthdayExtensionState) => birthday?.format() ?? '',
   fromSerialized: (value: string) => {
     const birthday = PlainDate.safeFrom(value)
-    return birthday === null ? null : { birthdayMui: birthday }
+    return birthday === null ? null : { birthday }
   },
-  serialize: ({ birthdayMui }: BirthdayExtensionMuiState) => birthdayMui?.formatISO() ?? '',
+  serialize: ({ birthday }: BirthdayExtensionState) => birthday?.formatISO() ?? '',
   isMandatory: true,
 }
 
-export default BirthdayExtensionMui
+export default BirthdayExtensionLegacy

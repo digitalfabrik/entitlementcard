@@ -67,7 +67,7 @@ describe('useCardGeneratorSelfService', () => {
     expect(result.current.selfServiceCard).toEqual({
       expirationDate: { day: 1, isoMonth: 1, isoYear: 2026 },
       extensions: {
-        birthdayMui: {
+        birthday: {
           day: 10,
           isoMonth: 6,
           isoYear: 2003,

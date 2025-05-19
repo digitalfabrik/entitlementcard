@@ -1,4 +1,4 @@
-import { FormGroup } from '@blueprintjs/core'
+import { FormGroup as MuiFormGroup } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -45,8 +45,9 @@ const BirthdayForm = ({
   }
 
   return (
-    <FormGroup label={t('birthdayLabel')}>
+    <MuiFormGroup>
       <CustomDatePicker
+        label={t('birthdayLabel')}
         value={birthday?.toLocalDate() ?? null}
         onBlur={() => setTouched(true)}
         onChange={date => {
@@ -65,7 +66,7 @@ const BirthdayForm = ({
       />
       {showErrorMessage && <FormAlert severity='error' errorMessage={getErrorMessage()} />}
       {showBirthdayHint() && <FormAlert severity='info' errorMessage={t('birthdayHint')} />}
-    </FormGroup>
+    </MuiFormGroup>
   )
 }
 

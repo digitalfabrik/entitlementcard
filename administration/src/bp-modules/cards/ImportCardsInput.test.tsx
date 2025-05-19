@@ -160,7 +160,7 @@ Tilo Traber,03.04.2025,12.01.1984,98765432
       {
         expirationDate: PlainDate.fromCustomFormat('03.04.2024'),
         extensions: {
-          birthdayMui: PlainDate.fromCustomFormat('10.10.2000'),
+          birthday: PlainDate.fromCustomFormat('10.10.2000'),
           regionId: 0,
           koblenzReferenceNumber: '123k',
         },
@@ -170,7 +170,7 @@ Tilo Traber,03.04.2025,12.01.1984,98765432
       {
         expirationDate: PlainDate.fromCustomFormat('03.04.2025'),
         extensions: {
-          birthdayMui: PlainDate.fromCustomFormat('12.01.1984'),
+          birthday: PlainDate.fromCustomFormat('12.01.1984'),
           regionId: 0,
           koblenzReferenceNumber: '98765432',
         },
