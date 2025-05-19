@@ -1,4 +1,4 @@
-# Backend First Steps
+# Working with the GraphQL API
 
 > This article is about how to create your first query in the backend and use it in the web frontend.
 > In this case you want to create a simple graphql query that fetches applications for a region.

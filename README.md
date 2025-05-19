@@ -12,7 +12,7 @@
 
 * [Development Setup](./docs/development-setup.md)
 * [Conventions](./docs/conventions.md)
-* [Backend First Steps](./docs/backend-first-steps.md)
+* [Working with the GraphQL API](./docs/working-with-graphql-api)
 
 ## Documentation
 
