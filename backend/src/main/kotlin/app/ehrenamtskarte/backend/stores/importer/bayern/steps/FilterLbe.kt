@@ -37,9 +37,7 @@ class FilterLbe(
     private fun LbeAcceptingStore.isValidName(): Boolean =
         if (name.isUnavailable()) {
             logger.info("'$this' was filtered out because name '$name' is invalid")
-            filteredStores.add(
-                FilteredStore(this, "Name is invalid"),
-            )
+            filteredStores.add(FilteredStore(this, "Name is invalid"))
             false
         } else {
             true
