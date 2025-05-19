@@ -69,6 +69,7 @@ const BirthdayForm = ({
   )
 }
 
+// This component is deprecated and only used for nuernberg until we refactored the card creation form.
 const BirthdayExtensionLegacy: Extension<BirthdayExtensionState> = {
   name: BIRTHDAY_EXTENSION_NAME,
   Component: BirthdayForm,
