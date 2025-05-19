@@ -1,9 +1,10 @@
-import { NonIdealState } from '@blueprintjs/core'
+import { Clear } from '@mui/icons-material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useWhoAmI } from '../../WhoAmIProvider'
 import { Region, useGetApplicationsQuery } from '../../generated/graphql'
+import NonIdealState from '../../mui-modules/NonIdealState'
 import getQueryResult from '../util/getQueryResult'
 import ApplicationsOverview from './ApplicationsOverview'
 
@@ -24,7 +25,13 @@ const ControllerWithRegion = (): ReactElement => {
   const { t } = useTranslation('errors')
 
   if (!region) {
-    return <NonIdealState icon='cross' title={t('notAuthorized')} description={t('notAuthorizedToSeeApplications')} />
+    return (
+      <NonIdealState
+        icon={<Clear fontSize='large' />}
+        title={t('notAuthorized')}
+        description={t('notAuthorizedToSeeApplications')}
+      />
+    )
   }
   return <ApplicationsController region={region} />
 }
