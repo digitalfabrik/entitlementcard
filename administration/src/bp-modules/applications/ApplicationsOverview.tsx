@@ -1,4 +1,4 @@
-import { NonIdealState } from '@blueprintjs/core'
+import { AutoAwesome } from '@mui/icons-material'
 import { Container } from '@mui/material'
 import { TFunction } from 'i18next'
 import React, { ReactElement, useMemo, useState } from 'react'
@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import { GetApplicationsQuery } from '../../generated/graphql'
+import NonIdealState from '../../mui-modules/NonIdealState'
 import StandaloneCenter from '../StandaloneCenter'
 import ApplicationCard from './ApplicationCard'
 import type { ApplicationCardProps } from './ApplicationCard'
@@ -99,7 +100,7 @@ const ApplicationsOverview = ({ applications }: { applications: Application[] })
         <StandaloneCenter>
           <NonIdealState
             title={t('noApplicationsOfType', { status: getEmptyApplicationsListStatusDescription(activeBarItem, t) })}
-            icon='clean'
+            icon={<AutoAwesome fontSize='large' />}
             description={t('noApplicationsOfTypeDescription', {
               status: getEmptyApplicationsListStatusDescription(activeBarItem, t),
             })}
