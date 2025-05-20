@@ -1,4 +1,6 @@
+import { FormGroup } from '@blueprintjs/core'
 import { FormGroup as MuiFormGroup } from '@mui/material'
+import { KOBLENZ_PRODUCTION_ID, KOBLENZ_STAGING_ID } from 'build-configs/constants'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -24,6 +26,8 @@ const BirthdayForm = ({
   const { birthday } = value
   const showErrorMessage = touched || showRequired
   const projectConfig = useContext(ProjectConfigContext)
+  const { projectId } = projectConfig
+  const isKoblenz = projectId === KOBLENZ_PRODUCTION_ID || projectId === KOBLENZ_STAGING_ID
 
   const showBirthdayHint = (): boolean => {
     const today = PlainDate.fromLocalDate(new Date())
@@ -44,8 +48,8 @@ const BirthdayForm = ({
     return null
   }
 
-  return (
-    <MuiFormGroup>
+  const datePickerElement = (
+    <>
       <CustomDatePicker
         label={t('birthdayLabel')}
         value={birthday?.toLocalDate() ?? null}
@@ -63,10 +67,18 @@ const BirthdayForm = ({
             },
           },
         }}
+        {...(isKoblenz && { label: t('birthdayLabel'), textFieldSlotProps: {} })}
       />
       {showErrorMessage && <FormAlert severity='error' errorMessage={getErrorMessage()} />}
       {showBirthdayHint() && <FormAlert severity='info' errorMessage={t('birthdayHint')} />}
-    </MuiFormGroup>
+    </>
+  )
+
+  return isKoblenz ? (
+    <MuiFormGroup>{datePickerElement}</MuiFormGroup>
+  ) : (
+    // This component is deprecated and only used for nuernberg until we refactored the card creation form.
+    <FormGroup label={t('birthdayLabel')}>{datePickerElement}</FormGroup>
   )
 }
 

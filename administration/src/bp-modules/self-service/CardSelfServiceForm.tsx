@@ -20,7 +20,7 @@ import { UnderlineTextButton } from './components/UnderlineTextButton'
 import { DataPrivacyAcceptingStatus } from './constants'
 
 const StyledCheckbox = styled(Checkbox)`
-  margin-top: 24px;
+  margin-bottom: 12px;
   font-size: 16px;
   margin-left: 4px;
 `
