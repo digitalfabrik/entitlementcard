@@ -137,6 +137,21 @@ const graphQlErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
       return {
         title: i18next.t('errors:invalidApplicationConfirmationNoteSize', { maxSize: extensions.maxSize }),
       }
+    case GraphQlExceptionCode.FreinetDataTransferApiNotReachable: {
+      return {
+        title: i18next.t('errors:freinetApiNotReachableError'),
+      }
+    }
+    case GraphQlExceptionCode.FreinetDataTransferNotActivated: {
+      return {
+        title: i18next.t('errors:freinetDataSyncError'),
+      }
+    }
+    case GraphQlExceptionCode.FreinetFoundMultiplePersons: {
+      return {
+        title: i18next.t('errors:freinetMultiplePersonError'),
+      }
+    }
     default:
       return {
         title: defaultError.title,

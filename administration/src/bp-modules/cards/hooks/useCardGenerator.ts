@@ -1,4 +1,5 @@
 import { useCallback, useContext, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 
 import { Card, initializeCardFromCSV, updateCard as updateCardObject } from '../../../cards/Card'
@@ -6,12 +7,18 @@ import { generateCsv, getCSVFilename } from '../../../cards/CsvFactory'
 import { generatePdf, getPdfFilename } from '../../../cards/PdfFactory'
 import createCards, { CreateCardsResult } from '../../../cards/createCards'
 import deleteCards from '../../../cards/deleteCards'
-import { Region, useCreateCardsMutation, useDeleteCardsMutation } from '../../../generated/graphql'
+import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
+import {
+  Region,
+  useCreateCardsMutation,
+  useDeleteCardsMutation,
+  useSendApplicationDataToFreinetMutation,
+} from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import { ProjectConfig } from '../../../project-configs/getProjectConfig'
 import { getCsvHeaders } from '../../../project-configs/helper'
 import downloadDataUri from '../../../util/downloadDataUri'
-import { updateArrayItem } from '../../../util/helper'
+import { isProductionEnvironment, updateArrayItem } from '../../../util/helper'
 import { reportErrorToSentry } from '../../../util/sentry'
 import { useAppToaster } from '../../AppToaster'
 import { saveActivityLog } from '../../activity-log/ActivityLog'
@@ -59,6 +66,23 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
   const [createCardsMutation] = useCreateCardsMutation()
   const [deleteCardsMutation] = useDeleteCardsMutation()
   const appToaster = useAppToaster()
+  const { t } = useTranslation('cards')
+
+  const [sendToFreinet] = useSendApplicationDataToFreinetMutation({
+    onCompleted: data => {
+      if (data.sendApplicationDataToFreinet === true) {
+        appToaster?.show({ intent: 'success', message: t('freinetDataSyncSuccessMessage') })
+      } else {
+        appToaster?.show({ intent: 'danger', message: t('errors:freinetDataSyncError') })
+      }
+    },
+    onError: error => {
+      if (error.message.includes('FREINET_DATA_TRANSFER_NOT_ACTIVATED') === false) {
+        const { title } = getMessageFromApolloError(error)
+        appToaster?.show({ intent: 'danger', message: title })
+      }
+    },
+  })
   const sendConfirmationMails = useSendCardConfirmationMails()
   const initializedCards = initializeCards ? initializeCardsFromQueryParams(projectConfig, searchParams, region) : []
   const [cards, setCards] = useState<Card[]>(initializedCards)
@@ -82,6 +106,16 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
         downloadDataUri(dataUri, filename)
         cards.forEach(saveActivityLog)
 
+        if (!isProductionEnvironment() && applicationId != null) {
+          const { projectId } = projectConfig
+          sendToFreinet({
+            variables: {
+              applicationId,
+              project: projectId,
+            },
+          })
+        }
+
         if (region.activatedForCardConfirmationMail) {
           await sendConfirmationMails(codes, cards)
         }
@@ -101,14 +135,15 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
       }
     },
     [
-      cards,
       createCardsMutation,
-      deleteCardsMutation,
       projectConfig,
-      appToaster,
-      sendConfirmationMails,
-      region,
+      cards,
       applicationId,
+      region,
+      sendToFreinet,
+      sendConfirmationMails,
+      appToaster,
+      deleteCardsMutation,
     ]
   )
 
