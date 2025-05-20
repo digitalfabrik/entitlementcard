@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { renderWithTranslation } from '../../../testing/render'
-import { PreVerifiedEntitlementType } from '../PreVerifiedEntitlementType'
+import { PreVerifiedEntitlementType, preVerifiedEntitlements } from '../PreVerifiedEntitlementType'
 import PreVerifiedQuickIndicator from '../PreVerifiedQuickIndicator'
 
 jest.mock('@blueprintjs/core', () => ({
@@ -11,9 +11,9 @@ jest.mock('@blueprintjs/core', () => ({
 
 describe('PreVerifiedQuickIndicator', () => {
   const cases: [string, PreVerifiedEntitlementType][] = [
-    ['Juleica', PreVerifiedEntitlementType.Juleica],
-    ['Verein360', PreVerifiedEntitlementType.Verein360],
-    ['Ehrenzeichen', PreVerifiedEntitlementType.HonoredByMinisterPresident],
+    ['Juleica', preVerifiedEntitlements.Juleica],
+    ['Verein360', preVerifiedEntitlements.Verein360],
+    ['Ehrenzeichen', preVerifiedEntitlements.HonoredByMinisterPresident],
   ]
 
   it.each(cases)('should show %s label when type is %s', (expectedLabel, type) => {

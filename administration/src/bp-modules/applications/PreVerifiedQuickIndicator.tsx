@@ -3,7 +3,7 @@ import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
-import { PreVerifiedEntitlementType } from './PreVerifiedEntitlementType'
+import { PreVerifiedEntitlementType, preVerifiedEntitlements } from './PreVerifiedEntitlementType'
 import { UnFocusedDiv } from './VerificationsQuickIndicator'
 import VerificationIndicator from './components/VerificationIndicator'
 import { VerificationStatus } from './constants'
@@ -15,17 +15,17 @@ type PreVerifiedLabelMetaData = {
 }
 
 const preVerifiedLabelMetaData: Record<PreVerifiedEntitlementType, PreVerifiedLabelMetaData> = {
-  [PreVerifiedEntitlementType.Juleica]: {
+  [preVerifiedEntitlements.Juleica]: {
     backgroundColor: '#bfd4f2',
     fontColor: '#000000',
     labelText: 'Juleica',
   },
-  [PreVerifiedEntitlementType.Verein360]: {
+  [preVerifiedEntitlements.Verein360]: {
     backgroundColor: '#0366D6',
     fontColor: '#ffffff',
     labelText: 'Verein360',
   },
-  [PreVerifiedEntitlementType.HonoredByMinisterPresident]: {
+  [preVerifiedEntitlements.HonoredByMinisterPresident]: {
     backgroundColor: '#FBCA01',
     fontColor: '#000000',
     labelText: 'Ehrenzeichen',

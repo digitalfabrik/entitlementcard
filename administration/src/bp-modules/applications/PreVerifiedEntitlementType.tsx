@@ -1,9 +1,24 @@
 import { GeneralJsonField, type JsonField, findValue } from './JsonFieldView'
 
-export const enum PreVerifiedEntitlementType {
-  Juleica = 'blueCardJuleicaEntitlement',
-  Verein360 = 'blueCardWorkAtOrganizationsEntitlement',
-  HonoredByMinisterPresident = 'goldenCardHonoredByMinisterPresidentEntitlement',
+export const preVerifiedEntitlements = {
+  Juleica: 'blueCardJuleicaEntitlement',
+  Verein360: 'blueCardWorkAtOrganizationsEntitlement',
+  HonoredByMinisterPresident: 'goldenCardHonoredByMinisterPresidentEntitlement',
+} as const
+
+export type PreVerifiedEntitlementType = (typeof preVerifiedEntitlements)[keyof typeof preVerifiedEntitlements]
+
+type MatcherFn = (entitlement?: GeneralJsonField) => boolean
+
+const defaultMatcher: MatcherFn = entitlement => entitlement !== undefined
+
+const verein360Matcher: MatcherFn = entitlement => {
+  const entitlements = Array.isArray(entitlement?.value) ? entitlement.value : []
+  return entitlements.some(
+    (item: GeneralJsonField) =>
+      Array.isArray(item.value) &&
+      item.value.some((subItem: GeneralJsonField) => subItem.name === 'isAlreadyVerified' && subItem.value === true)
+  )
 }
 
 const hasPreVerifiedEntitlement = (
@@ -11,24 +26,11 @@ const hasPreVerifiedEntitlement = (
   field: PreVerifiedEntitlementType
 ): boolean => {
   const entitlement = findValue(applicationDetails, field, 'Array')
-  if (field === PreVerifiedEntitlementType.Verein360) {
-    const entitlements = entitlement?.value ?? []
-    return entitlements.some(
-      (item: GeneralJsonField) =>
-        Array.isArray(item.value) &&
-        item.value.some((subItem: GeneralJsonField) => subItem.name === 'isAlreadyVerified' && subItem.value === true)
-    )
-  }
-  return !!entitlement
+  const matcher = field === preVerifiedEntitlements.Verein360 ? verein360Matcher : defaultMatcher
+  return matcher(entitlement)
 }
 
 export const getPreVerifiedEntitlementType = (
   applicationDetails: JsonField<'Array'>
-): PreVerifiedEntitlementType | undefined => {
-  const entitlementTypes: PreVerifiedEntitlementType[] = [
-    PreVerifiedEntitlementType.Juleica,
-    PreVerifiedEntitlementType.Verein360,
-    PreVerifiedEntitlementType.HonoredByMinisterPresident,
-  ]
-  return entitlementTypes.find(type => hasPreVerifiedEntitlement(applicationDetails, type))
-}
+): PreVerifiedEntitlementType | undefined =>
+  Object.values(preVerifiedEntitlements).find(type => hasPreVerifiedEntitlement(applicationDetails, type))
