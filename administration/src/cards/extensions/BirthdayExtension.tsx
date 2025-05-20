@@ -51,7 +51,6 @@ const BirthdayForm = ({
   const datePickerElement = (
     <>
       <CustomDatePicker
-        label={t('birthdayLabel')}
         value={birthday?.toLocalDate() ?? null}
         onBlur={() => setTouched(true)}
         onChange={date => {
