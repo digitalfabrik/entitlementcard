@@ -15,7 +15,7 @@ const getDeepLinkFromQrCode = (qrCode: PdfQrCode): string => {
   const host = isProductionEnvironment() ? buildConfigProjectId.production : buildConfigProjectId.staging
   const deepLink = `${HTTPS_SCHEME}://${host}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}#${encodeURIComponent(
     uint8ArrayToBase64(qrCodeContent)
-  )}/`
+  )}`
   if (!isProductionEnvironment()) {
     console.log(deepLink)
   }

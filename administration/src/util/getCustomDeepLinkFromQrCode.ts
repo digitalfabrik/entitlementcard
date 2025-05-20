@@ -13,6 +13,6 @@ const getCustomDeepLinkFromQrCode = (projectConfig: ProjectConfig, qrCode: PdfQr
   const { customScheme } = deepLinking
   return `${customScheme}://${host}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}#${encodeURIComponent(
     uint8ArrayToBase64(qrCodeContent)
-  )}/`
+  )}`
 }
 export default getCustomDeepLinkFromQrCode

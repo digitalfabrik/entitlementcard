@@ -1,5 +1,5 @@
 import React, { ReactElement, useContext, useMemo } from 'react'
-import { Outlet, RouteObject, RouterProvider, createBrowserRouter } from 'react-router-dom'
+import { Outlet, Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router'
 import styled from 'styled-components'
 
 import { AuthContext } from './AuthProvider'
@@ -42,78 +42,93 @@ const Main = styled.div`
   }
 `
 
-const Router = (): ReactElement => {
+const AuthLayout = (): ReactElement => {
   const { data: authData, signIn, signOut } = useContext(AuthContext)
+  const isLoggedIn = authData !== null && authData.expiry > new Date()
+
+  if (!isLoggedIn) {
+    return <Login onSignIn={signIn} />
+  }
+
+  return (
+    <WhoAmIProvider>
+      <KeepAliveToken authData={authData} onSignIn={signIn} onSignOut={signOut}>
+        <Navigation onSignOut={signOut} />
+        <Main>
+          <Outlet />
+        </Main>
+      </KeepAliveToken>
+    </WhoAmIProvider>
+  )
+}
+
+const Router = (): ReactElement => {
   const projectConfig = useContext(ProjectConfigContext)
   useMetaTags()
-  const router = useMemo(() => {
-    const isLoggedIn = authData !== null && authData.expiry > new Date()
-    const routes: (RouteObject | null)[] = [
-      { path: '/forgot-password', element: <ForgotPasswordController /> },
-      { path: '/reset-password/', element: <ResetPasswordController /> },
-      { path: '/data-privacy-policy', element: <DataPrivacyPolicy /> },
-      { path: '/activation/:activationCode', element: <ActivationPage /> },
-      ...(projectConfig.applicationFeature
-        ? [
-            { path: '/beantragen', element: <ApplyController /> },
-            {
-              path: '/antrag-verifizieren/:applicationVerificationAccessKey',
-              element: <ApplicationVerificationController />,
-            },
-            { path: '/antrag-einsehen/:accessKey', element: <ApplicationApplicantController /> },
-          ]
-        : []),
-      ...(projectConfig.selfServiceEnabled ? [{ path: '/erstellen', element: <CardSelfServiceView /> }] : []),
-      {
-        path: '*',
-        element: !isLoggedIn ? (
-          <Login onSignIn={signIn} />
-        ) : (
-          <WhoAmIProvider>
-            <KeepAliveToken authData={authData} onSignIn={signIn} onSignOut={signOut}>
-              <Navigation onSignOut={signOut} />
-              <Main>
-                <Outlet />
-              </Main>
-            </KeepAliveToken>
-          </WhoAmIProvider>
-        ),
-        children: [
-          ...(projectConfig.applicationFeature
-            ? [
-                { path: 'applications', element: <ApplicationsController /> },
-                { path: 'region/data-privacy-policy', element: <DataPrivacyController /> },
-                // Currently, '/region' only allows to set the data privacy text for the application form
-                { path: 'region', element: <RegionsController /> },
-              ]
-            : []),
-          ...(projectConfig.cardStatistics.enabled ? [{ path: 'statistics', element: <StatisticsController /> }] : []),
-          ...(projectConfig.cardCreation
-            ? [
-                { path: 'cards', element: <CreateCardsController /> },
-                { path: 'cards/add', element: <AddCardsController /> },
-                { path: 'cards/import', element: <ImportCardsController /> },
-              ]
-            : []),
-          { path: 'users', element: <ManageUsersController /> },
-          { path: 'user-settings', element: <UserSettingsController /> },
-          ...(projectConfig.activityLogConfig
-            ? [
-                {
-                  path: 'activity-log',
-                  element: <ActivityLogController activityLogConfig={projectConfig.activityLogConfig} />,
-                },
-              ]
-            : []),
-          { path: 'stores', element: <StoresController /> },
-          { path: 'stores/import', element: <StoresImportController /> },
-          { path: 'project', element: <ProjectSettingsController /> },
-          { path: '*', element: <HomeController /> },
-        ],
-      },
-    ]
-    return createBrowserRouter(routes.filter((element): element is RouteObject => element !== null))
-  }, [authData, signIn, signOut, projectConfig])
+
+  const router = useMemo(
+    () =>
+      createBrowserRouter(
+        createRoutesFromElements(
+          <>
+            <Route path='/forgot-password' element={<ForgotPasswordController />} />
+            <Route path='/reset-password/' element={<ResetPasswordController />} />
+            <Route path='/data-privacy-policy' element={<DataPrivacyPolicy />} />
+            <Route path='/activation/:activationCode' element={<ActivationPage />} />
+
+            {projectConfig.applicationFeature && (
+              <>
+                <Route path='/beantragen' element={<ApplyController />} />
+                <Route
+                  path='/antrag-verifizieren/:applicationVerificationAccessKey'
+                  element={<ApplicationVerificationController />}
+                />
+                <Route path='/antrag-einsehen/:accessKey' element={<ApplicationApplicantController />} />
+              </>
+            )}
+
+            {projectConfig.selfServiceEnabled && <Route path='/erstellen' element={<CardSelfServiceView />} />}
+
+            <Route path='*' element={<AuthLayout />}>
+              {projectConfig.applicationFeature && (
+                <>
+                  <Route path='applications' element={<ApplicationsController />} />
+                  <Route path='region/data-privacy-policy' element={<DataPrivacyController />} />
+                  {/* Currently, '/region' only allows to set the data privacy text for the application form */}
+                  <Route path='region' element={<RegionsController />} />
+                </>
+              )}
+
+              {projectConfig.cardStatistics.enabled && <Route path='statistics' element={<StatisticsController />} />}
+
+              {projectConfig.cardCreation && (
+                <>
+                  <Route path='cards' element={<CreateCardsController />} />
+                  <Route path='cards/add' element={<AddCardsController />} />
+                  <Route path='cards/import' element={<ImportCardsController />} />
+                </>
+              )}
+
+              <Route path='users' element={<ManageUsersController />} />
+              <Route path='user-settings' element={<UserSettingsController />} />
+
+              {projectConfig.activityLogConfig && (
+                <Route
+                  path='activity-log'
+                  element={<ActivityLogController activityLogConfig={projectConfig.activityLogConfig} />}
+                />
+              )}
+
+              <Route path='stores' element={<StoresController />} />
+              <Route path='stores/import' element={<StoresImportController />} />
+              <Route path='project' element={<ProjectSettingsController />} />
+              <Route path='*' element={<HomeController />} />
+            </Route>
+          </>
+        )
+      ),
+    [projectConfig]
+  )
 
   return <RouterProvider router={router} />
 }

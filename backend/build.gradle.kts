@@ -129,6 +129,8 @@ kover {
 
 tasks.withType<JavaExec>().configureEach {
     systemProperties = properties
+    environment("JWT_SECRET", "HelloWorld")
+    environment("KOBLENZ_PEPPER", "123456789ABC")
 }
 
 tasks.register<Copy>("copyStyle") {
@@ -151,4 +153,44 @@ tasks.graphqlGenerateTestClient {
     schemaFile.set(rootDir.parentFile.resolve("specs/backend-api.graphql"))
     packageName.set("app.ehrenamtskarte.backend.generated")
     queryFiles.setFrom(fileTree("src/test/resources/graphql"))
+}
+
+tasks.register<JavaExec>("db-clear") {
+    group = "application"
+    mainClass = application.mainClass.get()
+    classpath = sourceSets.main.get().runtimeClasspath
+    args("db-clear")
+}
+
+tasks.register<JavaExec>("db-migrate") {
+    group = "application"
+    mainClass = application.mainClass.get()
+    classpath = sourceSets.main.get().runtimeClasspath
+    args("migrate")
+}
+
+tasks.register<JavaExec>("db-import-online") {
+    group = "application"
+    mainClass = application.mainClass.get()
+    classpath = sourceSets.main.get().runtimeClasspath
+    args("import")
+}
+
+tasks.register<JavaExec>("db-import-dev") {
+    group = "application"
+    mainClass = application.mainClass.get()
+    classpath = sourceSets.main.get().runtimeClasspath
+    args("db-import-dev", "src/dev/sql")
+}
+
+tasks.register("db-recreate") {
+    group = "application"
+    val dbClear = tasks.getByName("db-clear")
+    val dbMigrate = tasks.getByName("db-migrate")
+    val dbImportOnline = tasks.getByName("db-import-online")
+    val dbImportDev = tasks.getByName("db-import-dev")
+    dbMigrate.dependsOn(dbClear)
+    dbImportOnline.dependsOn(dbMigrate)
+    dbImportDev.dependsOn(dbImportOnline)
+    this.dependsOn(dbImportDev)
 }

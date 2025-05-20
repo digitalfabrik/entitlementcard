@@ -1,7 +1,7 @@
 import { NonIdealState } from '@blueprintjs/core'
 import React, { ChangeEvent, ReactElement, useCallback, useContext, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router'
 import styled from 'styled-components'
 
 import { Card, initializeCardFromCSV } from '../../cards/Card'
