@@ -262,7 +262,9 @@
     "importFileTooBig": "Die ausgewählte Datei ist zu groß.",
     "printQRCodes": "QR-Codes drucken",
     "validationError": "Validierungsfehler",
-    "cardCreationConfirmationMessage": "Bestätigungsmail wurde versendet."
+    "cardCreationConfirmationMessage": "Bestätigungsmail wurde versendet.",
+    "freinetDataSyncError": "Die Daten konnten nicht mit Freinet-Online synchronisiert werden. Bitte aktualisieren Sie die Daten in Freinet-Online manuell.",
+    "freinetDataSyncSuccessMessage": "Bewerbung erfolgreich an Freinet gesendet."
   },
   "misc": {
     "openAppStore": "AppStore öffnen",

@@ -1,5 +1,5 @@
-import { Intent } from '@blueprintjs/core'
 import { useCallback, useContext, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 
 import { Card, initializeCardFromCSV, updateCard as updateCardObject } from '../../../cards/Card'
@@ -65,17 +65,20 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
   const [createCardsMutation] = useCreateCardsMutation()
   const [deleteCardsMutation] = useDeleteCardsMutation()
   const appToaster = useAppToaster()
+  const { t } = useTranslation('cards')
+
   const [sendToFreinet] = useSendApplicationDataToFreinetMutation({
     onCompleted: data => {
-      if (appToaster && data.result.errorMessage !== 'disabled for region') {
-        appToaster.show({
-          intent: data.result.success === true ? Intent.SUCCESS : Intent.DANGER,
-          message:
-            data.result.success === true
-              ? 'Bewerbung erfolgreich an Freinet gesendet'
-              : String(data.result.errorMessage),
-          icon: data.result.success === true ? 'tick' : 'error',
-        })
+      if (data.sendApplicationDataToFreinet === true) {
+        appToaster?.show({ intent: 'success', message: t('freinetDataSyncSuccessMessage') })
+      } else {
+        appToaster?.show({ intent: 'danger', message: t('freinetDataSyncError') })
+      }
+    },
+    onError: error => {
+      if (error.message.includes('FREINET_DATA_TRANSFER_NOT_ACTIVATED') === false) {
+        appToaster?.show({ intent: 'danger', message: t('freinetDataSyncError') })
+        console.error(error.message)
       }
     },
   })

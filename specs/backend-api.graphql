@@ -165,7 +165,7 @@ type Mutation {
   "Reset the administrator's password"
   resetPassword(email: String!, newPassword: String!, passwordResetKey: String!, project: String!): Boolean!
   "Send application info to Freinet"
-  sendApplicationDataToFreinet(applicationId: Int!, project: String!): SendToFreinetResponse!
+  sendApplicationDataToFreinet(applicationId: Int!, project: String!): Boolean!
   "Sends a confirmation mail to the user when the card creation was successful"
   sendCardCreationConfirmationMail(deepLink: String!, project: String!, recipientAddress: String!, recipientName: String!, regionId: Int!): Boolean!
   "Sends a mail that allows the administrator to reset their password."
@@ -277,11 +277,6 @@ type Region {
   regionIdentifier: String
 }
 
-type SendToFreinetResponse {
-  errorMessage: String
-  success: Boolean!
-}
-
 type SignInPayload {
   token: String!
 }
@@ -342,6 +337,10 @@ enum GoldenCardEntitlementType {
 enum GraphQLExceptionCode {
   EMAIL_ALREADY_EXISTS
   FREINET_AGENCY_NOT_FOUND
+  FREINET_APPLICATION_SYNC_FAILED
+  FREINET_DATA_TRANSFER_API_NOT_REACHABLE
+  FREINET_DATA_TRANSFER_NOT_ACTIVATED
+  FREINET_FOUND_MULTIPLE_PERSONS
   INVALID_APPLICATION_CONFIRMATION_NOTE_SIZE
   INVALID_CARD_HASH
   INVALID_CODE_TYPE
