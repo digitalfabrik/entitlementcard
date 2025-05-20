@@ -130,7 +130,7 @@ kover {
 tasks.withType<JavaExec>().configureEach {
     systemProperties = properties
     environment("JWT_SECRET", "HelloWorld")
-    environment("KOBLENZ_PEPPER", "testasdf")
+    environment("KOBLENZ_PEPPER", "123456789ABC")
 }
 
 tasks.register<Copy>("copyStyle") {

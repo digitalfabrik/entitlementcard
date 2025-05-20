@@ -2,7 +2,7 @@ import { Alert } from '@mui/material'
 import { SnackbarProvider } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import styled from 'styled-components'
 
 import { useGetApplicationByApplicantQuery } from '../../generated/graphql'
