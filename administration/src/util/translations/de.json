@@ -262,7 +262,8 @@
     "importFileTooBig": "Die ausgewählte Datei ist zu groß.",
     "printQRCodes": "QR-Codes drucken",
     "validationError": "Validierungsfehler",
-    "cardCreationConfirmationMessage": "Bestätigungsmail wurde versendet."
+    "cardCreationConfirmationMessage": "Bestätigungsmail wurde versendet.",
+    "freinetDataSyncSuccessMessage": "Bewerbung erfolgreich an Freinet gesendet."
   },
   "misc": {
     "openAppStore": "AppStore öffnen",
@@ -561,7 +562,10 @@
     "regionNotUnique": "Den Akzeptanzstellen konnte keine eindeutige Region zugewiesen werden. Bitte wenden Sie sich an den IT-Support",
     "pdfCreationError": "Etwas ist schiefgegangen beim Erstellen der PDF.",
     "csvCreationError": "Etwas ist schiefgegangen beim Erstellen der CSV.",
-    "freinetAgencyNotFound": "Diese Freinetagentur existiert nicht."
+    "freinetAgencyNotFound": "Diese Freinetagentur existiert nicht.",
+    "freinetDataSyncError": "Die Daten konnten nicht mit Freinet-Online synchronisiert werden. Bitte aktualisieren Sie die Daten in Freinet-Online manuell.",
+    "freinetMultiplePersonError": "Es wurden mehrere Personen mit diesen Daten gefunden. Bitte aktualisieren Sie die Daten in Freinet-Online manuell.",
+    "freinetApiNotReachableError": "Die Freinet-Online-Schnittstelle konnte nicht erreicht werden."
   },
   "applicationVerification": {
     "withdrawMessageForVerifier": "Der Antrag wurde vom Antragsteller am {{date}} zurückgezogen.",
