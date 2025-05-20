@@ -1,7 +1,7 @@
 import { Button, Callout, Card, Classes, FormGroup, H2, H3, H4, InputGroup } from '@blueprintjs/core'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useCheckPasswordResetLinkQuery, useResetPasswordMutation } from '../../generated/graphql'

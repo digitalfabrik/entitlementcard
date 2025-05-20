@@ -1,6 +1,6 @@
 import { Button } from '@blueprintjs/core'
 import React, { ReactElement } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 
 import { LOCAL_STORAGE_PROJECT_KEY } from '../../project-configs/constants'
 

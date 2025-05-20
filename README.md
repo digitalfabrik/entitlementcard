@@ -12,6 +12,7 @@
 
 * [Development Setup](./docs/development-setup.md)
 * [Conventions](./docs/conventions.md)
+* [Working with the GraphQL API](./docs/working-with-graphql-api)
 
 ## Documentation
 

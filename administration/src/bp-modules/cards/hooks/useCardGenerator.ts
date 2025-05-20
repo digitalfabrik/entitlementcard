@@ -1,6 +1,6 @@
 import { useCallback, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router'
 
 import { Card, initializeCardFromCSV, updateCard as updateCardObject } from '../../../cards/Card'
 import { generateCsv, getCSVFilename } from '../../../cards/CsvFactory'
