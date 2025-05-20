@@ -3,7 +3,7 @@ import InfoOutlined from '@mui/icons-material/InfoOutlined'
 import { FormGroup, Stack, TextField, styled } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router'
 
 import { Card, getFullNameValidationErrorMessage, isFullNameValid, isValid } from '../../cards/Card'
 import ClearInputButton from '../../cards/extensions/components/ClearInputButton'
@@ -137,7 +137,10 @@ const CardSelfServiceForm = ({
           <>
             {t('whereToFindReferenceNumberExplanation')} <br />
             {t('moreInformationAndExamples')}
-            <a href='https://www.koblenz.de/koblenzpass' target='_blank' rel='noreferrer'>
+            <a
+              href='https://www.koblenz.de/leben-in-koblenz/soziales/koblenzpass/#accordion-2-4'
+              target='_blank'
+              rel='noreferrer'>
               www.koblenz.de/koblenzpass
             </a>
             . <br />

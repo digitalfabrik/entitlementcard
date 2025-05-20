@@ -1,7 +1,7 @@
 import { Button, Classes, FormGroup, InputGroup } from '@blueprintjs/core'
 import React, { ChangeEvent, ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 
 import PasswordInput from '../PasswordInput'
 
