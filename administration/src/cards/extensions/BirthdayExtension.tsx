@@ -66,6 +66,7 @@ const BirthdayForm = ({
             },
           },
         }}
+        // this condition will be removed with #2059
         {...(isKoblenz && { label: t('birthdayLabel'), textFieldSlotProps: {} })}
       />
       {showErrorMessage && <FormAlert severity='error' errorMessage={getErrorMessage()} />}
@@ -76,7 +77,7 @@ const BirthdayForm = ({
   return isKoblenz ? (
     <MuiFormGroup>{datePickerElement}</MuiFormGroup>
   ) : (
-    // This component is deprecated and only used for nuernberg until we refactored the card creation form.
+    // This component is deprecated and only used for nuernberg until we migrate completely at #2059.
     <FormGroup label={t('birthdayLabel')}>{datePickerElement}</FormGroup>
   )
 }
