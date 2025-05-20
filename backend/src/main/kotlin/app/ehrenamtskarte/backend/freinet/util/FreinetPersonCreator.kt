@@ -34,31 +34,34 @@ private val httpClient = HttpClient {
         }
     }
 }
+
 @Suppress("unused")
 fun createPersonInFreinet(
     firstName: String,
     lastName: String,
     birthDate: String,
     personalDataNode: JsonNode?,
-    userEmail:String,
+    userEmail: String,
     agencyId: String,
     accessKey: String,
     host: String,
     project: String,
 ): Boolean {
     fun JsonNode.findValueByName(fieldName: String): JsonNode? =
-            this.firstOrNull { it["name"].asText() == fieldName }
+        this.firstOrNull { it["name"].asText() == fieldName }
             ?.get("value")
 
     val addressArrayNode = personalDataNode?.get("value")?.findValueByName("address")
     val street = addressArrayNode?.findValueByName("street")?.asText()
     val postalCode = addressArrayNode?.findValueByName("postalCode")?.asText()
-    val regionId = addressArrayNode?.findValueByName("location")?.asText()?.toIntOrNull()?: throw Exception("Failed to get regionId")
+    val regionId =
+        addressArrayNode?.findValueByName(
+            "location",
+        )?.asText()?.toIntOrNull() ?: throw RegionNotFoundException()
     val email = personalDataNode?.get("value")?.findValueByName("emailAddress")?.asText()
     val phone = personalDataNode?.get("value")?.findValueByName("telephone")?.asText()
     val region = RegionsRepository.findByIdInProject(project, regionId)
         ?: throw RegionNotFoundException()
-
 
     val currentDateTime = LocalDateTime
         .now()
@@ -91,7 +94,7 @@ fun createPersonInFreinet(
         },
         "protokoll": {
           "1": {
-            "title": "Erstellung des Nutzers durch Ehrenamtskarte Bayern von ${userEmail}",
+            "title": "Erstellung des Nutzers durch Ehrenamtskarte Bayern von $userEmail",
             "date": "$currentDateTime"
           }
         }

@@ -11,6 +11,7 @@ import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetDataTra
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetDataTransfernApiNotReachableException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetFoundMultiplePersonsException
 import app.ehrenamtskarte.backend.freinet.database.repos.FreinetAgencyRepository
+import app.ehrenamtskarte.backend.freinet.util.createPersonInFreinet
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -130,8 +131,20 @@ class FreinetApplicationMutationService {
                     throw FreinetFoundMultiplePersonsException()
                 }
                 persons.isEmpty() -> {
-                    // TODO: #2142 - Create person for Freinet
-                    logger.warn("create person for freinet")
+                    val personCreationResult = createPersonInFreinet(
+                        firstName,
+                        lastName,
+                        dateOfBirth,
+                        personalDataNode,
+                        admin.email,
+                        freinetAgency.agencyId.toString(),
+                        freinetAgency.apiAccessKey,
+                        projectConfig.freinet.host,
+                        project,
+                    )
+                    if (!personCreationResult) {
+                        throw FreinetDataTransfernApiNotReachableException()
+                    }
                 }
                 persons.size() == 1 -> {
                     // TODO: #2143 - Update existing person
