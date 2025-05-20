@@ -309,7 +309,7 @@ class CardMutationService {
 
         // Avoid race conditions when activating a card.
         val activationResult = transaction(TRANSACTION_REPEATABLE_READ) t@{
-            this.maxAttempts = 0
+            this.maxAttempts = 1
 
             val card = CardRepository.findByHash(project, cardHash)
             val activationSecretHash = card?.activationSecretHash
