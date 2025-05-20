@@ -7,6 +7,7 @@ import { generateCsv, getCSVFilename } from '../../../cards/CsvFactory'
 import { generatePdf, getPdfFilename } from '../../../cards/PdfFactory'
 import createCards, { CreateCardsResult } from '../../../cards/createCards'
 import deleteCards from '../../../cards/deleteCards'
+import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
 import {
   Region,
   useCreateCardsMutation,
@@ -72,13 +73,13 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
       if (data.sendApplicationDataToFreinet === true) {
         appToaster?.show({ intent: 'success', message: t('freinetDataSyncSuccessMessage') })
       } else {
-        appToaster?.show({ intent: 'danger', message: t('freinetDataSyncError') })
+        appToaster?.show({ intent: 'danger', message: t('errors:freinetDataSyncError') })
       }
     },
     onError: error => {
       if (error.message.includes('FREINET_DATA_TRANSFER_NOT_ACTIVATED') === false) {
-        appToaster?.show({ intent: 'danger', message: t('freinetDataSyncError') })
-        console.error(error.message)
+        const { title } = getMessageFromApolloError(error)
+        appToaster?.show({ intent: 'danger', message: title })
       }
     },
   })
