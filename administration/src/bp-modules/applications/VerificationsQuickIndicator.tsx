@@ -1,51 +1,57 @@
-import { Tooltip } from '@blueprintjs/core'
-import React, { memo } from 'react'
+import { Stack, Tooltip, useTheme } from '@mui/material'
+import React, { forwardRef, memo } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
 import type { Application } from './ApplicationsOverview'
 import VerificationIndicator from './components/VerificationIndicator'
 import { VerificationStatus } from './constants'
 import { getVerificationStatus } from './utils'
 
-export const UnFocusedDiv = styled.div`
-  display: flex;
-  align-items: center;
-  flex: 1;
-  :focus {
-    outline: none;
-  }
-  height: 25px;
-`
-
-const VerificationQuickIndicator = memo(({ verifications }: { verifications: Application['verifications'] }) => {
-  const verificationStati = verifications.map(getVerificationStatus)
+const ToolTipContent = forwardRef<HTMLDivElement, unknown>((p, ref) => {
   const { t } = useTranslation('applicationsOverview')
+  const theme = useTheme()
+
+  return (
+    <Stack
+      ref={ref}
+      sx={{
+        backgroundColor: theme.palette.defaultInverted.main,
+        color: theme.palette.defaultInverted.contrastText,
+        padding: 2,
+        borderRadius: 2,
+      }}>
+      <b>{t('confirmationsByOrganizations')}</b>
+      <br />
+      {t('verified/pending/rejected')}
+    </Stack>
+  )
+})
+
+const VerificationQuickIndicator = ({ verifications }: { verifications: Application['verifications'] }) => {
+  const verificationStatuses = verifications.map(getVerificationStatus)
+
   return (
     <Tooltip
-      content={
-        <div>
-          <b>{t('confirmationsByOrganizations')}</b>
-          <br />
-          {t('verified/pending/rejected')}
-        </div>
-      }>
-      <UnFocusedDiv>
+      title='title'
+      slots={{
+        tooltip: ToolTipContent,
+      }}>
+      <Stack direction='row' sx={{ height: '25px', alignItems: 'center', '&:focus': { outline: 'none' } }}>
         <VerificationIndicator
           status={VerificationStatus.Verified}
-          text={`: ${verificationStati.filter(v => v === VerificationStatus.Verified).length}`}
+          text={`: ${verificationStatuses.filter(v => v === VerificationStatus.Verified).length}`}
         />
         <VerificationIndicator
           status={VerificationStatus.Awaiting}
-          text={`: ${verificationStati.filter(v => v === VerificationStatus.Awaiting).length}`}
+          text={`: ${verificationStatuses.filter(v => v === VerificationStatus.Awaiting).length}`}
         />
         <VerificationIndicator
           status={VerificationStatus.Rejected}
-          text={`: ${verificationStati.filter(v => v === VerificationStatus.Rejected).length}`}
+          text={`: ${verificationStatuses.filter(v => v === VerificationStatus.Rejected).length}`}
         />
-      </UnFocusedDiv>
+      </Stack>
     </Tooltip>
   )
-})
+}
 
 export default memo(VerificationQuickIndicator)
