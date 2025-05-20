@@ -45,7 +45,7 @@ const BasicDialog = ({
   const { t } = useTranslation('application')
   const { viewportSmall } = useWindowDimensions()
   return (
-    <Dialog open={open} onBackdropClick={() => onUpdateOpen(false)} maxWidth={maxWidth}>
+    <Dialog open={open} onClose={() => onUpdateOpen(false)} maxWidth={maxWidth}>
       <StyledDialogTitle>
         {title}
         {!viewportSmall && <CloseButtonDesktop onClick={() => onUpdateOpen(false)} />}
