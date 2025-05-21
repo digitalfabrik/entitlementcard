@@ -48,7 +48,7 @@ const Spacer = styled.div`
 `
 
 const ApplicationIndicators = (p: { application: Application; applicationJsonData: JsonField<'Array'> }) => (
-  <Stack direction='row' spacing={2}>
+  <Stack direction='row' spacing={2} sx={{ displayPrint: 'none' }}>
     {(p.application.note ?? '').trim().length > 0 && <EditNote />}
     {applicationIsPreVerified(p.applicationJsonData) ? (
       <PreVerifiedQuickIndicator type={applicationPreVerificationType(p.applicationJsonData)} />
