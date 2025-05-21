@@ -50,7 +50,7 @@ object EhrenamtskarteBayern : Pipeline {
                 logger.info("== Filter duplicated data ==")
             }
             .addStep(FilteredStoresCsvOutput(config, filteredStores), logger) {
-                logger.info("== Write CSV Filtered Stores")
+                logger.info("== Write CSV Filtered Stores ==")
             }
             .addStep(Store(config, logger), logger) {
                 logger.info("== Store remaining data to db ==")
