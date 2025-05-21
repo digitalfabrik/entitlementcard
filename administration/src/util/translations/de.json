@@ -562,10 +562,9 @@
     "regionNotUnique": "Den Akzeptanzstellen konnte keine eindeutige Region zugewiesen werden. Bitte wenden Sie sich an den IT-Support",
     "pdfCreationError": "Etwas ist schiefgegangen beim Erstellen der PDF.",
     "csvCreationError": "Etwas ist schiefgegangen beim Erstellen der CSV.",
-    "freinetAgencyNotFound": "Diese Freinetagentur existiert nicht.",
-    "freinetDataSyncError": "Die Daten konnten nicht mit Freinet-Online synchronisiert werden. Bitte aktualisieren Sie die Daten in Freinet-Online manuell.",
+    "freinetAgencyNotFound": "Diese Agentur konnte in Freinet nicht gefunden werden.",
     "freinetMultiplePersonError": "Es wurden mehrere Personen mit diesen Daten gefunden. Bitte aktualisieren Sie die Daten in Freinet-Online manuell.",
-    "freinetApiNotReachableError": "Die Freinet-Online-Schnittstelle konnte nicht erreicht werden."
+    "freinetApiNotReachableError": "Es ist keine Verbindung zu Freinet-Online möglich. Bitte versuchen Sie es zu einem späteren Zeitpunkt erneut. Bitte aktualisieren Sie die Daten in Freinet-Online manuell."
   },
   "applicationVerification": {
     "withdrawMessageForVerifier": "Der Antrag wurde vom Antragsteller am {{date}} zurückgezogen.",
