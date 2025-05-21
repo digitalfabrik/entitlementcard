@@ -9,8 +9,8 @@ import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetDataTransfernApiNotReachableException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetFoundMultiplePersonsException
 import app.ehrenamtskarte.backend.freinet.database.repos.FreinetAgencyRepository
+import app.ehrenamtskarte.backend.freinet.util.FreinetCreatePersonApi
 import app.ehrenamtskarte.backend.freinet.util.FreinetSearchPersonApi
-import app.ehrenamtskarte.backend.freinet.util.createPersonInFreinet
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory
 class FreinetApplicationMutationService {
     private val logger = LoggerFactory.getLogger(FreinetApplicationMutationService::class.java)
     private val FreinetSearchPersonApi = FreinetSearchPersonApi()
+    private val FreinetCreatePersonApi = FreinetCreatePersonApi()
 
     @GraphQLDescription("Send application info to Freinet")
     fun sendApplicationDataToFreinet(applicationId: Int, project: String, dfe: DataFetchingEnvironment): Boolean {
@@ -83,7 +84,7 @@ class FreinetApplicationMutationService {
                     throw FreinetFoundMultiplePersonsException()
                 }
                 persons.isEmpty() -> {
-                    val personCreationResult = createPersonInFreinet(
+                    val personCreationResult = FreinetCreatePersonApi.createPerson(
                         firstName,
                         lastName,
                         dateOfBirth,
