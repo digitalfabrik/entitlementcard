@@ -1,9 +1,8 @@
-import { FormGroup, TextField } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import FormAlert from '../../bp-modules/self-service/components/FormAlert'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
+import CardTextField from './components/CardTextField'
 import ClearInputButton from './components/ClearInputButton'
 import type { Extension, ExtensionComponentProps } from './extensions'
 
@@ -42,30 +41,30 @@ const KoblenzReferenceNumberExtensionForm = ({
     }
     return errors.join(' ')
   }
-  const removeEndAdornmentMargin = { '& .MuiFormHelperText-root': { margin: '0px' } }
 
   return (
-    <FormGroup>
-      <TextField
-        id='koblenz-reference-number-input'
-        placeholder='5.031.025.281, 000D000001, 91459'
-        label={t('referenceNrLabel')}
-        fullWidth
-        size='small'
-        value={koblenzReferenceNumber}
-        onBlur={() => setTouched(true)}
-        onChange={e => setValue({ koblenzReferenceNumber: e.target.value })}
-        error={!isValid && showErrorMessage}
-        helperText={showErrorMessage ? <FormAlert errorMessage={getErrorMessage()} /> : null}
-        sx={removeEndAdornmentMargin}
-        InputProps={{
-          sx: { paddingRight: 0 },
-          endAdornment: (
-            <ClearInputButton viewportSmall={viewportSmall} onClick={clearInput} input={koblenzReferenceNumber} />
-          ),
-        }}
-      />
-    </FormGroup>
+    <CardTextField
+      id='koblenz-reference-number-input'
+      placeholder='5.031.025.281, 000D000001, 91459'
+      label={t('referenceNrLabel')}
+      value={koblenzReferenceNumber}
+      onChange={value => setValue({ koblenzReferenceNumber: value })}
+      hasError={!isValid && showErrorMessage}
+      touched={touched}
+      autoFocus={false}
+      setTouched={setTouched}
+      inputProps={{
+        sx: { paddingRight: 0 },
+        endAdornment: (
+          <ClearInputButton viewportSmall={viewportSmall} onClick={clearInput} input={koblenzReferenceNumber} />
+        ),
+        inputProps: {
+          max: KoblenzReferenceNumberMaxLength,
+          min: KoblenzReferenceNumberMinLength,
+        },
+      }}
+      errorMessage={getErrorMessage()}
+    />
   )
 }
 

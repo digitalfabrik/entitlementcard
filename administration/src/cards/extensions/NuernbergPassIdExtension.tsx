@@ -1,7 +1,10 @@
-import { FormGroup, InputGroup, Intent } from '@blueprintjs/core'
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { NuernergPassIdentifier } from '../../generated/card_pb'
+import useWindowDimensions from '../../hooks/useWindowDimensions'
+import CardTextField from './components/CardTextField'
+import ClearInputButton from './components/ClearInputButton'
 import type { Extension, ExtensionComponentProps } from './extensions'
 
 export const NUERNBERG_PASS_ID_EXTENSION_NAME = 'nuernbergPassId'
@@ -14,24 +17,43 @@ const NuernbergPassIdForm = ({
   value,
   setValue,
   isValid,
-}: ExtensionComponentProps<NuernbergPassIdExtensionState>): ReactElement => (
-  <FormGroup label='Nürnberg-Pass-ID' labelFor='nuernberg-pass-id-input' intent={isValid ? undefined : Intent.DANGER}>
-    <InputGroup
+}: ExtensionComponentProps<NuernbergPassIdExtensionState>): ReactElement => {
+  const { t } = useTranslation('extensions')
+  const [touched, setTouched] = useState(false)
+  const { viewportSmall } = useWindowDimensions()
+  const { nuernbergPassId } = value
+  const showError = !isValid && touched
+  const clearInput = () => setValue({ nuernbergPassId: null })
+
+  return (
+    <CardTextField
       id='nuernberg-pass-id-input'
       placeholder='12345678'
-      intent={isValid ? undefined : Intent.DANGER}
+      label='Nürnberg-Pass-ID'
       value={value.nuernbergPassId?.toString() ?? ''}
-      maxLength={nuernbergPassIdLength}
-      onChange={event => {
-        const value = event.target.value
+      onChange={value => {
         if (value.length <= nuernbergPassIdLength) {
           const parsedNumber = Number.parseInt(value, 10)
           setValue({ nuernbergPassId: Number.isNaN(parsedNumber) ? null : parsedNumber })
         }
       }}
+      autoFocus={false}
+      hasError={showError}
+      touched={touched}
+      setTouched={setTouched}
+      inputProps={{
+        sx: { paddingRight: 0 },
+        endAdornment: (
+          <ClearInputButton viewportSmall={viewportSmall} onClick={clearInput} input={nuernbergPassId?.toString()} />
+        ),
+        inputProps: {
+          max: nuernbergPassIdLength,
+        },
+      }}
+      errorMessage={t('nuernbergPassIdError')}
     />
-  </FormGroup>
-)
+  )
+}
 
 const fromString = (value: string): NuernbergPassIdExtensionState => {
   const nuernbergPassId = parseInt(value, 10)

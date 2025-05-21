@@ -237,6 +237,7 @@
     "backToSelection": "Zurück zur Auswahl",
     "name": "Name",
     "expirationDate": "Ablaufdatum",
+    "expirationDateError": "Bitte geben Sie ein gültiges Ablaufdatum ein, das in der Zukunft liegt.",
     "dataWillBeLostWarning": "Falls Sie fortfahren, werden alle Eingaben verworfen.",
     "addCard": "Karte hinzufügen",
     "addCardSuccessMessage": "Die Karten wurden erstellt.",
@@ -602,9 +603,11 @@
     "birthdayFutureError": "Das Geburtsdatum darf nicht in der Zukunft liegen.",
     "birthdayLabel": "Geburtsdatum",
     "birthdayHint": "Bei Minderjährigen unter 16 Jahren darf der KoblenzPass nur mit Einverständnis der Erziehungsberechtigten abgerufen werden.",
+    "nuernbergPassIdError": "Bitte geben sie eine gültige Nürnberg-Pass-ID ein.",
     "referenceNrSpecialCharactersError": "Das Aktenzeichen enthält ungültige Sonderzeichen.",
     "referenceNrInvalidLengthError": "Das Aktenzeichen muss eine Länge zwischen {{KoblenzReferenceNumberMinLength}} und {{KoblenzReferenceNumberMaxLength}} haben.",
     "referenceNrLabel": "Aktenzeichen",
-    "startDayLabel": "Startdatum"
+    "startDayLabel": "Startdatum",
+    "startDayError": "Bitte geben Sie ein gültiges Startdatum ein, das in der Vergangenheit liegt."
   }
 }

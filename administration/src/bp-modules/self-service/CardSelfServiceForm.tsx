@@ -1,11 +1,12 @@
 import { Checkbox } from '@blueprintjs/core'
 import InfoOutlined from '@mui/icons-material/InfoOutlined'
-import { FormGroup, Stack, TextField, styled } from '@mui/material'
+import { Stack, styled } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 
 import { Card, getFullNameValidationErrorMessage, isFullNameValid, isValid } from '../../cards/Card'
+import CardTextField from '../../cards/extensions/components/CardTextField'
 import ClearInputButton from '../../cards/extensions/components/ClearInputButton'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
 import BasicDialog from '../../mui-modules/application/BasicDialog'
@@ -40,7 +41,6 @@ const CardSelfServiceForm = ({
   setDataPrivacyAccepted,
   generateCards,
 }: CardSelfServiceFormProps): ReactElement => {
-  const { viewportSmall } = useWindowDimensions()
   const projectConfig = useContext(ProjectConfigContext)
   const { t } = useTranslation('selfService')
   const [formSendAttempt, setFormSendAttempt] = useState(false)
@@ -51,6 +51,7 @@ const CardSelfServiceForm = ({
   const cardValid = isValid(card, projectConfig.card, { expirationDateNullable: true })
   const appToaster = useAppToaster()
   const showErrorMessage = touchedFullName || formSendAttempt
+  const { viewportSmall } = useWindowDimensions()
 
   const createKoblenzPass = async () => {
     setFormSendAttempt(true)
@@ -72,34 +73,28 @@ const CardSelfServiceForm = ({
   return (
     <>
       <Stack key={card.id} sx={{ marginBottom: 3, gap: 2 }}>
-        <FormGroup>
-          <TextField
-            id='name-input'
-            label={t('firstNameLastName')}
-            placeholder='Erika Musterfrau'
-            autoFocus
-            value={card.fullName}
-            onBlur={() => setTouchedFullName(true)}
-            onChange={event => updateCard({ fullName: removeMultipleSpaces(event.target.value) })}
-            error={!isFullNameValid(card) && showErrorMessage}
-            helperText={
-              showErrorMessage ? <FormAlert errorMessage={getFullNameValidationErrorMessage(card.fullName)} /> : null
-            }
-            fullWidth
-            size='small'
-            sx={{ '& .MuiFormHelperText-root': { margin: '0px' } }}
-            InputProps={{
-              sx: { paddingRight: 0 },
-              endAdornment: (
-                <ClearInputButton
-                  viewportSmall={viewportSmall}
-                  onClick={() => updateCard({ fullName: '' })}
-                  input={card.fullName}
-                />
-              ),
-            }}
-          />
-        </FormGroup>
+        <CardTextField
+          id='name-input'
+          label={t('firstNameLastName')}
+          placeholder='Erika Musterfrau'
+          autoFocus
+          value={card.fullName}
+          onChange={value => updateCard({ fullName: removeMultipleSpaces(value) })}
+          hasError={!isFullNameValid(card) && showErrorMessage}
+          touched={touchedFullName}
+          setTouched={setTouchedFullName}
+          inputProps={{
+            sx: { paddingRight: 0 },
+            endAdornment: (
+              <ClearInputButton
+                viewportSmall={viewportSmall}
+                onClick={() => updateCard({ fullName: '' })}
+                input={card.fullName}
+              />
+            ),
+          }}
+          errorMessage={getFullNameValidationErrorMessage(card.fullName)}
+        />
         <ExtensionForms card={card} updateCard={updateCard} showRequired={formSendAttempt} />
         <IconTextButton onClick={() => setOpenReferenceInformation(true)}>
           <InfoOutlined />

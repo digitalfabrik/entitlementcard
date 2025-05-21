@@ -1,8 +1,9 @@
-import { FormGroup } from '@blueprintjs/core'
-import React, { ReactElement } from 'react'
+import { FormGroup } from '@mui/material'
+import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import CustomDatePicker from '../../bp-modules/components/CustomDatePicker'
+import FormAlert from '../../bp-modules/self-service/components/FormAlert'
 import PlainDate from '../../util/PlainDate'
 import type { Extension, ExtensionComponentProps } from './extensions'
 
@@ -14,16 +15,23 @@ const minStartDay = new PlainDate(2020, 1, 1)
 
 const StartDayForm = ({ value, setValue, isValid }: ExtensionComponentProps<StartDayExtensionState>): ReactElement => {
   const { t } = useTranslation('extensions')
+  const [touched, setTouched] = useState(false)
+  const showError = !isValid && touched
+
   return (
-    <FormGroup label={t('startDayLabel')}>
+    <FormGroup>
       <CustomDatePicker
-        value={value.startDay?.toLocalDate()}
+        label={t('startDayLabel')}
+        onBlur={() => setTouched(true)}
+        value={value.startDay?.toLocalDate() ?? null}
         onChange={date => {
           if (date !== null) {
             setValue({ startDay: PlainDate.fromLocalDate(date) })
+          } else {
+            setValue({ startDay: null })
           }
         }}
-        error={!isValid}
+        error={showError}
         minDate={minStartDay.toLocalDate()}
         textFieldSlotProps={{
           sx: {
@@ -33,6 +41,7 @@ const StartDayForm = ({ value, setValue, isValid }: ExtensionComponentProps<Star
           },
         }}
       />
+      {showError && <FormAlert severity='error' errorMessage={t('startDayError')} />}
     </FormGroup>
   )
 }

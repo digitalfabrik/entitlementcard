@@ -1,13 +1,22 @@
-import { Button, FormGroup, InputGroup, Intent, Card as UiCard } from '@blueprintjs/core'
-import React, { ReactElement } from 'react'
+import { Button, Card as UiCard } from '@blueprintjs/core'
+import { FormGroup, Stack } from '@mui/material'
+import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
-import { hasInfiniteLifetime, isExpirationDateValid, isFullNameValid } from '../../cards/Card'
+import {
+  MAX_NAME_LENGTH,
+  getFullNameValidationErrorMessage,
+  hasInfiniteLifetime,
+  isExpirationDateValid,
+  isFullNameValid,
+} from '../../cards/Card'
 import type { Card } from '../../cards/Card'
 import { maxCardValidity } from '../../cards/constants'
+import CardTextField from '../../cards/extensions/components/CardTextField'
 import PlainDate from '../../util/PlainDate'
 import CustomDatePicker from '../components/CustomDatePicker'
+import FormAlert from '../self-service/components/FormAlert'
 import ExtensionForms from './ExtensionForms'
 
 const CardHeader = styled.div`
@@ -27,43 +36,59 @@ type CreateCardsFormProps = {
 const AddCardForm = ({ card, onRemove, updateCard }: CreateCardsFormProps): ReactElement => {
   const today = PlainDate.fromLocalDate(new Date())
   const { t } = useTranslation('cards')
+  const [touched, setTouched] = useState(false)
+  const [touchedValidationDate, setTouchedValidationDate] = useState(false)
+  const showError = !isFullNameValid(card) && touched
+  const showValidationDateError = !isExpirationDateValid(card) && touchedValidationDate
 
   return (
     <UiCard>
       <CardHeader>
         <Button minimal icon='cross' onClick={() => onRemove()} />
       </CardHeader>
-      <FormGroup label={t('name')}>
-        <InputGroup
-          placeholder='Erika Mustermann'
+      <Stack key={card.id} sx={{ my: 1, gap: 3 }}>
+        <CardTextField
+          id='name-input'
+          label={t('name')}
+          placeholder='Erika Musterfrau'
           autoFocus
-          // If the size of the card is too large, show a warning at the name field as it is the only dynamically sized field
-          intent={isFullNameValid(card) ? undefined : Intent.DANGER}
           value={card.fullName}
-          onChange={event => updateCard({ fullName: event.target.value })}
+          onChange={value => updateCard({ fullName: value })}
+          hasError={showError}
+          touched={touched}
+          setTouched={setTouched}
+          inputProps={{
+            inputProps: {
+              max: MAX_NAME_LENGTH,
+            },
+          }}
+          errorMessage={getFullNameValidationErrorMessage(card.fullName)}
         />
-      </FormGroup>
-      {!hasInfiniteLifetime(card) && (
-        <FormGroup label={t('expirationDate')}>
-          <CustomDatePicker
-            value={card.expirationDate?.toLocalDate() ?? null}
-            error={!isExpirationDateValid(card)}
-            minDate={today.toLocalDate()}
-            maxDate={today.add(maxCardValidity).toLocalDate()}
-            onChange={date => {
-              updateCard({ expirationDate: PlainDate.safeFromLocalDate(date) })
-            }}
-            textFieldSlotProps={{
-              sx: {
-                '.MuiPickersSectionList-root': {
-                  padding: '5px 0',
+        {!hasInfiniteLifetime(card) && (
+          <FormGroup>
+            <CustomDatePicker
+              onBlur={() => setTouchedValidationDate(true)}
+              label={t('expirationDate')}
+              value={card.expirationDate?.toLocalDate() ?? null}
+              error={showValidationDateError}
+              minDate={today.toLocalDate()}
+              maxDate={today.add(maxCardValidity).toLocalDate()}
+              onChange={date => {
+                updateCard({ expirationDate: PlainDate.safeFromLocalDate(date) })
+              }}
+              textFieldSlotProps={{
+                sx: {
+                  '.MuiPickersSectionList-root': {
+                    padding: '5px 0',
+                  },
                 },
-              },
-            }}
-          />
-        </FormGroup>
-      )}
-      <ExtensionForms card={card} updateCard={updateCard} showRequired />
+              }}
+            />
+            {showValidationDateError && <FormAlert severity='error' errorMessage={t('expirationDateError')} />}
+          </FormGroup>
+        )}
+        <ExtensionForms card={card} updateCard={updateCard} showRequired={false} />
+      </Stack>
     </UiCard>
   )
 }
