@@ -30,5 +30,6 @@ object MigrationsRegistry {
             V0025_AddSourceFieldToApplicationVerifications(),
             V0026_AddFreinetAgenciesTable(),
             V0027_Region_Application_Confirmation_Mail_Note(),
+            V0028_Add_Application_Status(),
         )
 }
