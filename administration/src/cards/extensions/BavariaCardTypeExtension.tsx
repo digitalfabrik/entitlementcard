@@ -14,22 +14,22 @@ const BAVARIA_CARD_TYPE_GOLD_LEGACY = 'gold'
 type BavariaCardTypeState = typeof BAVARIA_CARD_TYPE_STANDARD | typeof BAVARIA_CARD_TYPE_GOLD
 export type BavariaCardTypeExtensionState = { [BAVARIA_CARD_TYPE_EXTENSION_NAME]: BavariaCardTypeState }
 
-const StartDayForm = ({ value, setValue }: ExtensionComponentProps<BavariaCardTypeExtensionState>): ReactElement => {
+const BavarianCardTypeForm = ({
+  value,
+  setValue,
+}: ExtensionComponentProps<BavariaCardTypeExtensionState>): ReactElement => {
   const { t } = useTranslation('extensions')
 
   const items = [BAVARIA_CARD_TYPE_STANDARD, BAVARIA_CARD_TYPE_GOLD]
   return (
     <FormControl>
       <InputLabel id='eak-card-type-select-label'>{t('bavariaCardTypeLabel')}</InputLabel>
-      <Select
+      <Select<BavariaCardTypeState>
         size='small'
         labelId='eak-card-type-select-label'
         value={value.bavariaCardType}
         label={t('bavariaCardTypeLabel')}
-        onChange={event => {
-          const cardType = event.target.value as BavariaCardTypeState
-          setValue({ bavariaCardType: cardType })
-        }}>
+        onChange={event => setValue({ bavariaCardType: event.target.value })}>
         {items.map(item => (
           <MenuItem key={item} value={item}>
             {item}
@@ -54,7 +54,7 @@ const toString = ({ bavariaCardType }: BavariaCardTypeExtensionState): string =>
 
 const BavariaCardTypeExtension: Extension<BavariaCardTypeExtensionState> = {
   name: BAVARIA_CARD_TYPE_EXTENSION_NAME,
-  Component: StartDayForm,
+  Component: BavarianCardTypeForm,
   getInitialState: () => ({ bavariaCardType: BAVARIA_CARD_TYPE_STANDARD }),
   causesInfiniteLifetime: state => state.bavariaCardType === BAVARIA_CARD_TYPE_GOLD,
   getProtobufData: state => ({
