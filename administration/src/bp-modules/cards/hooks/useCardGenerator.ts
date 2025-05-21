@@ -72,15 +72,11 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
     onCompleted: data => {
       if (data.sendApplicationDataToFreinet === true) {
         appToaster?.show({ intent: 'success', message: t('freinetDataSyncSuccessMessage') })
-      } else {
-        appToaster?.show({ intent: 'danger', message: t('errors:freinetDataSyncError') })
       }
     },
     onError: error => {
-      if (error.message.includes('FREINET_DATA_TRANSFER_NOT_ACTIVATED') === false) {
-        const { title } = getMessageFromApolloError(error)
-        appToaster?.show({ intent: 'danger', message: title })
-      }
+      const { title } = getMessageFromApolloError(error)
+      appToaster?.show({ intent: 'danger', message: title })
     },
   })
   const sendConfirmationMails = useSendCardConfirmationMails()

@@ -142,11 +142,6 @@ const graphQlErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
         title: i18next.t('errors:freinetApiNotReachableError'),
       }
     }
-    case GraphQlExceptionCode.FreinetDataTransferNotActivated: {
-      return {
-        title: i18next.t('errors:freinetDataSyncError'),
-      }
-    }
     case GraphQlExceptionCode.FreinetFoundMultiplePersons: {
       return {
         title: i18next.t('errors:freinetMultiplePersonError'),
