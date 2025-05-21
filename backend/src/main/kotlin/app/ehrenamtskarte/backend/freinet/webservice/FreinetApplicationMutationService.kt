@@ -6,8 +6,10 @@ import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
 import app.ehrenamtskarte.backend.exception.service.NotImplementedException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetDataTransfernApiNotReachableException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetFoundMultiplePersonsException
 import app.ehrenamtskarte.backend.freinet.database.repos.FreinetAgencyRepository
+import app.ehrenamtskarte.backend.freinet.util.FreinetCreatePersonApi
 import app.ehrenamtskarte.backend.freinet.util.FreinetSearchPersonApi
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.fasterxml.jackson.databind.JsonNode
@@ -20,6 +22,7 @@ import org.slf4j.LoggerFactory
 class FreinetApplicationMutationService {
     private val logger = LoggerFactory.getLogger(FreinetApplicationMutationService::class.java)
     private val FreinetSearchPersonApi = FreinetSearchPersonApi()
+    private val FreinetCreatePersonApi = FreinetCreatePersonApi()
 
     @GraphQLDescription("Send application info to Freinet")
     fun sendApplicationDataToFreinet(applicationId: Int, project: String, dfe: DataFetchingEnvironment): Boolean {
@@ -81,8 +84,20 @@ class FreinetApplicationMutationService {
                     throw FreinetFoundMultiplePersonsException()
                 }
                 persons.isEmpty() -> {
-                    // TODO: #2142 - Create person for Freinet
-                    logger.warn("create person for freinet")
+                    val personCreationResult = FreinetCreatePersonApi.createPerson(
+                        firstName,
+                        lastName,
+                        dateOfBirth,
+                        personalDataNode,
+                        admin.email,
+                        freinetAgency.agencyId.toString(),
+                        freinetAgency.apiAccessKey,
+                        projectConfig.freinet.host,
+                        project,
+                    )
+                    if (!personCreationResult) {
+                        throw FreinetDataTransfernApiNotReachableException()
+                    }
                 }
                 persons.size() == 1 -> {
                     // TODO: #2143 - Update existing person
