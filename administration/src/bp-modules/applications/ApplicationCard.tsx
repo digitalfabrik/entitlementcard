@@ -59,7 +59,7 @@ const ApplicationIndicators = ({
   )
 
   return (
-    <Stack direction='row' spacing={2}>
+    <Stack direction='row' spacing={2} sx={{ displayPrint: 'none' }}>
       {(application.note ?? '').trim().length > 0 && <EditNote />}
       {preVerifiedEntitlementType !== undefined ? (
         <PreVerifiedQuickIndicator type={preVerifiedEntitlementType} />
