@@ -48,7 +48,7 @@ class FilteredStoresCsvOutput(config: ImportConfig, private val filteredStores: 
                     }
             }
         } catch (e: Exception) {
-            logger.info("Fehler beim Schreiben der CSV:", e)
+            logger.error("Fehler beim Schreiben der CSV:", e)
         }
     }
 }
