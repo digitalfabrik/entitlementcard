@@ -8,6 +8,7 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.javatime.CurrentTimestamp
 import org.jetbrains.exposed.sql.javatime.timestamp
+import org.jetbrains.exposed.sql.javatime.timestampWithTimeZone
 import org.jetbrains.exposed.sql.not
 
 const val NOTE_MAX_CHARS = 1000
@@ -19,11 +20,20 @@ object Applications : IntIdTable() {
     val accessKey = varchar("accessKey", 100).uniqueIndex()
     val withdrawalDate = timestamp("withdrawalDate").nullable()
     val note = varchar("note", NOTE_MAX_CHARS).nullable()
-    val cardCreated = bool("cardCreated").default(false)
+    val status = enumerationByName<ApplicationEntity.Status>("status", length = 32)
+        .default(ApplicationEntity.Status.Pending)
+    val statusResolvedDate = timestampWithTimeZone("statusResolvedDate").nullable()
 }
 
 class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<ApplicationEntity>(Applications)
+
+    enum class Status {
+        Pending,
+        Rejected,
+        Approved,
+        ApprovedCardCreated,
+    }
 
     var regionId by Applications.regionId
     var jsonValue by Applications.jsonValue
@@ -31,7 +41,17 @@ class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
     var accessKey by Applications.accessKey
     var withdrawalDate by Applications.withdrawalDate
     var note by Applications.note
-    var cardCreated by Applications.cardCreated
+    var status by Applications.status
+
+    /** Captures the instant that state changes from [Status.Pending] to [Status.Approved] or [Status.Rejected]. */
+    var statusResolvedDate by Applications.statusResolvedDate
+
+    @Deprecated("Use status instead")
+    var cardCreated
+        get() = status == Status.ApprovedCardCreated
+        set(value) {
+            status = Status.ApprovedCardCreated
+        }
 }
 
 enum class ApplicationVerificationExternalSource {

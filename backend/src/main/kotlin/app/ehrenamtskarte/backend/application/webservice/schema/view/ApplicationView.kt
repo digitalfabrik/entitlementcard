@@ -25,7 +25,8 @@ data class ApplicationView(
                 jsonValue = entity.jsonValue,
                 withdrawalDate = entity.withdrawalDate?.toString(),
                 note = entity.note.takeIf { includePrivateInformation },
-                cardCreated = entity.cardCreated.takeIf { includePrivateInformation },
+                cardCreated = (entity.status == ApplicationEntity.Status.ApprovedCardCreated)
+                    .takeIf { includePrivateInformation },
             )
     }
 
