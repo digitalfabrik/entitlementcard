@@ -41,11 +41,10 @@ class FilteredStoresCsvOutput(config: ImportConfig, private val filteredStores: 
                 CSVFormat.RFC4180.builder()
                     .setHeader(*columns.map { it.name }.toTypedArray())
                     .get()
-                    .print(writer).let { printer ->
+                    .print(writer).use { printer ->
                         filteredStores.forEach { record ->
-                            printer.printRecord(*(columns.map { it.fromRecord(record) }.toTypedArray()))
+                            printer.printRecord(columns.map { it.fromRecord(record) })
                         }
-                        printer.flush()
                     }
             }
         } catch (e: Exception) {
