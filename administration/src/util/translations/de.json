@@ -603,7 +603,7 @@
     "birthdayFutureError": "Das Geburtsdatum darf nicht in der Zukunft liegen.",
     "birthdayLabel": "Geburtsdatum",
     "birthdayHint": "Bei Minderjährigen unter 16 Jahren darf der KoblenzPass nur mit Einverständnis der Erziehungsberechtigten abgerufen werden.",
-    "nuernbergPassIdError": "Bitte geben sie eine gültige Nürnberg-Pass-ID ein.",
+    "nuernbergPassIdError": "Bitte geben Sie eine gültige Nürnberg-Pass-ID ein.",
     "referenceNrSpecialCharactersError": "Das Aktenzeichen enthält ungültige Sonderzeichen.",
     "referenceNrInvalidLengthError": "Das Aktenzeichen muss eine Länge zwischen {{KoblenzReferenceNumberMinLength}} und {{KoblenzReferenceNumberMaxLength}} haben.",
     "referenceNrLabel": "Aktenzeichen",

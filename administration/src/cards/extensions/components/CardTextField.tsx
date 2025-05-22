@@ -7,7 +7,7 @@ type CardTextFieldProps = {
   id: string
   label: string
   placeholder: string
-  autoFocus: boolean
+  autoFocus?: boolean
   value: string
   onChange: (value: string) => void
   hasError: boolean
@@ -21,7 +21,7 @@ const CardTextField = ({
   id,
   label,
   placeholder,
-  autoFocus,
+  autoFocus = false,
   value,
   onChange,
   hasError,

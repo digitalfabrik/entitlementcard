@@ -53,7 +53,7 @@ const AddCardForm = ({ card, onRemove, updateCard }: CreateCardsFormProps): Reac
           placeholder='Erika Musterfrau'
           autoFocus
           value={card.fullName}
-          onChange={value => updateCard({ fullName: value })}
+          onChange={fullName => updateCard({ fullName })}
           hasError={showError}
           touched={touched}
           setTouched={setTouched}

@@ -24,12 +24,12 @@ const BavarianCardTypeForm = ({
   return (
     <FormControl>
       <InputLabel id='eak-card-type-select-label'>{t('bavariaCardTypeLabel')}</InputLabel>
-      <Select<BavariaCardTypeState>
+      <Select
         size='small'
         labelId='eak-card-type-select-label'
         value={value.bavariaCardType}
         label={t('bavariaCardTypeLabel')}
-        onChange={event => setValue({ bavariaCardType: event.target.value })}>
+        onChange={event => setValue({ bavariaCardType: event.target.value as BavariaCardTypeState })}>
         {items.map(item => (
           <MenuItem key={item} value={item}>
             {item}

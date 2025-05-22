@@ -79,7 +79,7 @@ const CardSelfServiceForm = ({
           placeholder='Erika Musterfrau'
           autoFocus
           value={card.fullName}
-          onChange={value => updateCard({ fullName: removeMultipleSpaces(value) })}
+          onChange={fullName => updateCard({ fullName: removeMultipleSpaces(fullName) })}
           hasError={!isFullNameValid(card) && showErrorMessage}
           touched={touchedFullName}
           setTouched={setTouchedFullName}

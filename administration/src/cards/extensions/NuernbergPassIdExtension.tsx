@@ -37,7 +37,6 @@ const NuernbergPassIdForm = ({
           setValue({ nuernbergPassId: Number.isNaN(parsedNumber) ? null : parsedNumber })
         }
       }}
-      autoFocus={false}
       hasError={showError}
       touched={touched}
       setTouched={setTouched}

@@ -48,10 +48,9 @@ const KoblenzReferenceNumberExtensionForm = ({
       placeholder='5.031.025.281, 000D000001, 91459'
       label={t('referenceNrLabel')}
       value={koblenzReferenceNumber}
-      onChange={value => setValue({ koblenzReferenceNumber: value })}
+      onChange={koblenzReferenceNumber => setValue({ koblenzReferenceNumber })}
       hasError={!isValid && showErrorMessage}
       touched={touched}
-      autoFocus={false}
       setTouched={setTouched}
       inputProps={{
         sx: { paddingRight: 0 },
