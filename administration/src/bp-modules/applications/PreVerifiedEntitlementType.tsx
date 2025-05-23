@@ -8,10 +8,6 @@ export const preVerifiedEntitlements = {
 
 export type PreVerifiedEntitlementType = (typeof preVerifiedEntitlements)[keyof typeof preVerifiedEntitlements]
 
-type MatcherFn = (entitlement?: GeneralJsonField) => boolean
-
-const defaultMatcher: MatcherFn = entitlement => entitlement !== undefined
-
 const verein360Matcher = (entitlement?: GeneralJsonField): boolean => {
   const entitlements = entitlement !== undefined && Array.isArray(entitlement.value) ? entitlement.value : []
   return entitlements.some(
@@ -26,8 +22,7 @@ const hasPreVerifiedEntitlement = (
   field: PreVerifiedEntitlementType
 ): boolean => {
   const entitlement = findValue(applicationDetails, field, 'Array')
-  const matcher = field === preVerifiedEntitlements.Verein360 ? verein360Matcher : defaultMatcher
-  return matcher(entitlement)
+  return field === preVerifiedEntitlements.Verein360 ? verein360Matcher(entitlement) : entitlement !== undefined
 }
 
 export const getPreVerifiedEntitlementType = (
