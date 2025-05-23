@@ -30,7 +30,7 @@ com-fasterxml-jackson-dataformat-yaml = { module = "com.fasterxml.jackson.datafo
 com-fasterxml-jackson-datatype-jsr310 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version.ref = "jackson" }
 com-fasterxml-jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
 com-github-ajalt-clikt = "com.github.ajalt.clikt:clikt:5.0.3"
-com-google-protobuf-kotlin = "com.google.protobuf:protobuf-kotlin:4.30.2"
+com-google-protobuf-kotlin = "com.google.protobuf:protobuf-kotlin:4.31.0"
 com-google-zxing-core = "com.google.zxing:core:3.5.3"
 com-kohlschutter-junixsocket-common = { module = "com.kohlschutter.junixsocket:junixsocket-common", version.ref = "junixsocket" }
 com-kohlschutter-junixsocket-core = { module = "com.kohlschutter.junixsocket:junixsocket-core", version.ref = "junixsocket" }
