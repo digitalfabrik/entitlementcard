@@ -13,7 +13,7 @@ type MatcherFn = (entitlement?: GeneralJsonField) => boolean
 const defaultMatcher: MatcherFn = entitlement => entitlement !== undefined
 
 const verein360Matcher: MatcherFn = entitlement => {
-  const entitlements = Array.isArray(entitlement?.value) ? entitlement.value : []
+  const entitlements = entitlement !== undefined && Array.isArray(entitlement.value) ? entitlement.value : []
   return entitlements.some(
     (item: GeneralJsonField) =>
       Array.isArray(item.value) &&
