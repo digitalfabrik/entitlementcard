@@ -1,7 +1,7 @@
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { act, fireEvent } from '@testing-library/react'
-import formatDate from 'date-fns/format'
+import { formatDate } from 'date-fns/format'
 import React from 'react'
 
 import { renderWithTranslation } from '../../../testing/render'
