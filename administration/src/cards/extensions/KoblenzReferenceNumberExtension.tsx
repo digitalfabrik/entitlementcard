@@ -2,8 +2,8 @@ import { FormGroup, TextField } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import FormAlert from '../../bp-modules/self-service/components/FormAlert'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
+import FormAlert from '../../mui-modules/base/FormAlert'
 import ClearInputButton from './components/ClearInputButton'
 import type { Extension, ExtensionComponentProps } from './extensions'
 
