@@ -190,7 +190,7 @@ object Mailer {
             )
 
         val message = emailBody {
-            p { +"Sehr geehrte/r ${applicationVerification.contactName}" }
+            p { +"Sehr geehrte/r ${applicationVerification.contactName}," }
             p {
                 +"im Rahmen des Antrags auf eine Ehrenamtskarte wurden Sie als Kontaktperson der Organisation "
                 +"${applicationVerification.organizationName} angegeben. "
