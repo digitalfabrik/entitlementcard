@@ -18,7 +18,7 @@ import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 object Mailer {
-    private fun EmailBody.finalInformationParagraph() {
+    private fun EmailBody.finalInformationParagraph(projectConfig: ProjectConfig) {
         p {
             +"Bitte beachten Sie, dass dies eine automatisierte Nachricht ist. "
             +"Antworten auf diese E-Mail werden nicht gelesen."
@@ -26,7 +26,7 @@ object Mailer {
             br()
             +"Mit freundlichen Grüßen"
             br()
-            +"Ihr Team der Ehrenamtskarte Bayern"
+            +projectConfig.emailSignature
         }
     }
 
@@ -123,7 +123,7 @@ object Mailer {
             p { +"ein neuer Antrag liegt in ${projectConfig.administrationName} vor." }
             viewApplicationsParagraph(projectConfig)
             adjustNotificationsParagraph(projectConfig)
-            finalInformationParagraph()
+            finalInformationParagraph(projectConfig)
         }
 
         for (recipient: AdministratorEntity in recipients) {
@@ -157,7 +157,7 @@ object Mailer {
             p { +"ein Antrag wurde verifiziert." }
             viewApplicationsParagraph(projectConfig)
             adjustNotificationsParagraph(projectConfig)
-            finalInformationParagraph()
+            finalInformationParagraph(projectConfig)
         }
 
         for (recipient: AdministratorEntity in recipients) {
@@ -206,7 +206,7 @@ object Mailer {
                 +"Hinweis: Die Website ist durch eine sichere Verbindung geschützt. "
                 +"Sie müssen keine persönlichen Daten eingeben."
             }
-            finalInformationParagraph()
+            finalInformationParagraph(projectConfig)
         }
 
         sendMail(
@@ -245,7 +245,7 @@ object Mailer {
                 +"Falls Sie Fragen zu Ihrem Antrag haben oder Unterstützung benötigen, "
                 +"wenden Sie sich bitte direkt an das örtliche Landratsamt bzw. die Verwaltung Ihrer kreisfreien Stadt."
             }
-            finalInformationParagraph()
+            finalInformationParagraph(projectConfig)
         }
         sendMail(
             backendConfig,
@@ -283,7 +283,7 @@ object Mailer {
                 +"Bei Rückfragen wenden Sie sich bitte direkt an Ihr zuständiges Landratsamt oder die "
                 +"Verwaltung Ihrer kreisfreien Stadt."
             }
-            finalInformationParagraph()
+            finalInformationParagraph(projectConfig)
         }
         sendMail(
             backendConfig,
@@ -318,7 +318,7 @@ object Mailer {
                 )
             }
             p { +"Dieser Link ist 24 Stunden gültig." }
-            finalInformationParagraph()
+            finalInformationParagraph(projectConfig)
         }
 
         sendMail(
@@ -350,7 +350,7 @@ object Mailer {
                 link(URL(passwordResetLink))
             }
             p { +"Dieser Link ist 24 Stunden gültig." }
-            finalInformationParagraph()
+            finalInformationParagraph(projectConfig)
         }
 
         sendMail(
@@ -393,7 +393,7 @@ object Mailer {
                 +"Sollte der Vorgang also nicht erfolgreich sein, "
                 +"warten Sie bitte auf das offizielle Schreiben, das alle notwendigen Informationen enthält."
             }
-            finalInformationParagraph()
+            finalInformationParagraph(projectConfig)
         }
 
         sendMail(
