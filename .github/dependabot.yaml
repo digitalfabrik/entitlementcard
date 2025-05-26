@@ -70,6 +70,7 @@ updates:
 
   # single updates for minor version
   - package-ecosystem: "npm"
+    target-branch: main # see https://github.com/dependabot/dependabot-core/issues/1778#issuecomment-1988140219
     directory: "/"
     schedule:
       interval: "daily"
@@ -80,6 +81,7 @@ updates:
     open-pull-requests-limit: 2
 
   - package-ecosystem: gradle
+    target-branch: main # see https://github.com/dependabot/dependabot-core/issues/1778#issuecomment-1988140219
     directory: "/backend"
     schedule:
       interval: daily
@@ -93,6 +95,7 @@ updates:
     open-pull-requests-limit: 2
 
   - package-ecosystem: pub
+    target-branch: main # see https://github.com/dependabot/dependabot-core/issues/1778#issuecomment-1988140219
     directory: "/frontend"
     schedule:
       interval: daily
@@ -105,6 +108,7 @@ updates:
         update-types: ["version-update:semver-major", "version-update:semver-patch"]
 
   - package-ecosystem: bundler
+    target-branch: main # see https://github.com/dependabot/dependabot-core/issues/1778#issuecomment-1988140219
     directory: "/frontend/ios"
     schedule:
       interval: daily
