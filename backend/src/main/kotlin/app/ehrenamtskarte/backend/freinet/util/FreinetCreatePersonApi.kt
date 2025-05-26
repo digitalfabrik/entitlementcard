@@ -17,9 +17,9 @@ import io.ktor.http.path
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
-    import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatter
 
-class FreinetCreatePersonApi {
+class FreinetCreatePersonApi(private val host: String) {
     private val logger = LoggerFactory.getLogger(FreinetCreatePersonApi::class.java)
     private val httpClient = HttpClient {
         install(HttpRequestRetry) {
@@ -44,7 +44,6 @@ class FreinetCreatePersonApi {
         userEmail: String,
         agencyId: String,
         accessKey: String,
-        host: String,
         project: String,
     ): Boolean {
         fun JsonNode.findValueByName(fieldName: String): JsonNode? =
@@ -106,7 +105,7 @@ class FreinetCreatePersonApi {
                 val response = httpClient.request {
                     url {
                         protocol = URLProtocol.HTTPS
-                        this.host = host
+                        this.host = this@FreinetCreatePersonApi.host
                         path("/api/input/v3/personen")
                     }
                     method = HttpMethod.Post

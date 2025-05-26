@@ -7,7 +7,7 @@ import app.ehrenamtskarte.backend.common.webservice.findValueByName
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
 import app.ehrenamtskarte.backend.exception.service.NotImplementedException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetDataTransfernApiNotReachableException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetApiNotReachableException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetFoundMultiplePersonsException
 import app.ehrenamtskarte.backend.freinet.database.repos.FreinetAgencyRepository
 import app.ehrenamtskarte.backend.freinet.util.FreinetCreatePersonApi
@@ -73,7 +73,7 @@ class FreinetApplicationMutationService {
                     throw FreinetFoundMultiplePersonsException()
                 }
                 persons.isEmpty() -> {
-                    val personCreationResult = FreinetCreatePersonApi.createPerson(
+                    val personCreationResult = FreinetCreatePersonApi(projectConfig.freinet.host).createPerson(
                         firstName,
                         lastName,
                         dateOfBirth,
@@ -81,11 +81,10 @@ class FreinetApplicationMutationService {
                         admin.email,
                         freinetAgency.agencyId.toString(),
                         freinetAgency.apiAccessKey,
-                        projectConfig.freinet.host,
                         project,
                     )
                     if (!personCreationResult) {
-                        throw FreinetDataTransfernApiNotReachableException()
+                        throw FreinetApiNotReachableException()
                     }
                 }
                 persons.size() == 1 -> {
