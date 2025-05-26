@@ -118,8 +118,6 @@ const CardSelfServiceForm = ({
             )
           }
           hasError={dataPrivacyAccepted === DataPrivacyAcceptingStatus.denied}
-          touched
-          setTouched={() => undefined}
           errorMessage={t('pleaseAcceptPrivacyPolicy')}
         />
       </Stack>

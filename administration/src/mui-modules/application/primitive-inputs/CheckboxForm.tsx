@@ -33,8 +33,7 @@ const CheckboxForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
         onChange={checked => setState(() => ({ checked }))}
         hasError={(showAllErrors || touched) && isInvalid}
         errorMessage={isInvalid ? validationResult.message : null}
-        touched={touched}
-        setTouched={setTouched}
+        onBlur={() => setTouched(true)}
       />
     )
   },

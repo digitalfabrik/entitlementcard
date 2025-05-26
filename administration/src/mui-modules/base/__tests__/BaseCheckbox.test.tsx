@@ -1,4 +1,3 @@
-import '@testing-library/jest-dom'
 import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 
@@ -11,13 +10,7 @@ describe('BaseCheckbox', () => {
     onChange: jest.fn(),
     hasError: false,
     errorMessage: null,
-    touched: false,
-    setTouched: jest.fn(),
   }
-
-  beforeEach(() => {
-    jest.clearAllMocks()
-  })
 
   it('should render checkbox with label', () => {
     const { getByLabelText } = render(<BaseCheckbox {...defaultProps} />)
@@ -25,7 +18,7 @@ describe('BaseCheckbox', () => {
     expect(checkbox).toBeTruthy()
   })
 
-  it('should handle onChange event', () => {
+  it('should call onChange when clicked', () => {
     const onChange = jest.fn()
     const { getByLabelText } = render(<BaseCheckbox {...defaultProps} onChange={onChange} />)
 
@@ -35,53 +28,39 @@ describe('BaseCheckbox', () => {
     expect(onChange).toHaveBeenCalledWith(true)
   })
 
-  it('should display error message when touched and has error', () => {
-    const { getByText } = render(<BaseCheckbox {...defaultProps} touched hasError errorMessage='Error message' />)
+  it('should display error message when hasError is true', () => {
+    const { getByText } = render(<BaseCheckbox {...defaultProps} hasError errorMessage='Error occurred' />)
 
-    expect(getByText('Error message')).toBeTruthy()
+    expect(getByText('Error occurred')).toBeTruthy()
   })
 
-  it('should not display error message when not touched', () => {
-    const { queryByText } = render(
-      <BaseCheckbox {...defaultProps} touched={false} hasError errorMessage='Error message' />
-    )
+  it('should not display error message when hasError is false', () => {
+    const { queryByText } = render(<BaseCheckbox {...defaultProps} hasError={false} errorMessage='Error occurred' />)
 
-    expect(queryByText('Error message')).not.toBeTruthy()
+    expect(queryByText('Error occurred')).toBeNull()
   })
 
-  it('should set touched on blur', () => {
-    const setTouched = jest.fn()
-    const { container } = render(<BaseCheckbox {...defaultProps} setTouched={setTouched} />)
-
-    const formGroup = container.firstChild
-    fireEvent.blur(formGroup as HTMLElement)
-
-    expect(setTouched).toHaveBeenCalledWith(true)
-  })
-
-  it('should render with disabled state', () => {
+  it('should be disabled when disabled prop is true', () => {
     const { getByLabelText } = render(<BaseCheckbox {...defaultProps} disabled />)
 
     const checkbox = getByLabelText('Test Checkbox')
-    expect(checkbox).toBeDisabled()
+    expect(checkbox).toHaveAttribute('disabled')
   })
 
-  it('should render with required state', () => {
+  it('should call onBlur when focus is lost', () => {
+    const onBlur = jest.fn()
+    const { getByLabelText } = render(<BaseCheckbox {...defaultProps} onBlur={onBlur} />)
+
+    const checkbox = getByLabelText('Test Checkbox')
+    fireEvent.blur(checkbox)
+
+    expect(onBlur).toHaveBeenCalled()
+  })
+
+  it('should render with required attribute when required prop is true', () => {
     const { getByLabelText } = render(<BaseCheckbox {...defaultProps} required />)
 
     const checkbox = getByLabelText('Test Checkbox *')
     expect(checkbox).toHaveAttribute('required')
-  })
-
-  it('should set touched and call onChange when checkbox is clicked', () => {
-    const onChange = jest.fn()
-    const setTouched = jest.fn()
-    const { getByLabelText } = render(<BaseCheckbox {...defaultProps} onChange={onChange} setTouched={setTouched} />)
-
-    const checkbox = getByLabelText('Test Checkbox')
-    fireEvent.click(checkbox)
-
-    expect(setTouched).toHaveBeenCalledWith(true)
-    expect(onChange).toHaveBeenCalledWith(true)
   })
 })

@@ -1,7 +1,11 @@
-import { Checkbox, FormControl, FormControlLabel, FormGroup } from '@mui/material'
+import { Checkbox, FormControl, FormControlLabel, FormGroup, styled } from '@mui/material'
 import React, { ReactElement } from 'react'
 
 import FormAlert from './FormAlert'
+
+const StyledFormControlLabel = styled(FormControlLabel)`
+  margin: 8px 0;
+`
 
 type BaseCheckboxProps = {
   disabled?: boolean
@@ -9,10 +13,9 @@ type BaseCheckboxProps = {
   checked: boolean
   label: string | ReactElement
   onChange: (checked: boolean) => void
+  onBlur?: () => void
   hasError: boolean
   errorMessage: string | null | undefined
-  touched: boolean
-  setTouched: (touched: boolean) => void | undefined
 }
 
 const BaseCheckbox = ({
@@ -20,35 +23,30 @@ const BaseCheckbox = ({
   disabled = false,
   checked,
   required = false,
-  touched,
-  setTouched,
+  onBlur,
   onChange,
   hasError,
   errorMessage,
-}: BaseCheckboxProps): ReactElement => {
-  const showErrorMessage = touched && hasError
-  return (
-    <FormGroup onBlur={() => setTouched(true)}>
-      <FormControl required={required} error={hasError} disabled={disabled}>
-        <FormControlLabel
-          style={{ margin: '8px 0' }}
-          control={
-            <Checkbox
-              sx={{ pl: 0 }}
-              required={required}
-              checked={checked}
-              onChange={e => {
-                setTouched(true)
-                onChange(e.target.checked)
-              }}
-            />
-          }
-          label={label}
-        />
-        {showErrorMessage && <FormAlert errorMessage={errorMessage} />}
-      </FormControl>
-    </FormGroup>
-  )
-}
+}: BaseCheckboxProps): ReactElement => (
+  <FormGroup>
+    <FormControl required={required} error={hasError} disabled={disabled}>
+      <StyledFormControlLabel
+        control={
+          <Checkbox
+            sx={{ pl: 0 }}
+            required={required}
+            checked={checked}
+            onBlur={onBlur}
+            onChange={e => {
+              onChange(e.target.checked)
+            }}
+          />
+        }
+        label={label}
+      />
+      {hasError && <FormAlert errorMessage={errorMessage} />}
+    </FormControl>
+  </FormGroup>
+)
 
 export default BaseCheckbox
