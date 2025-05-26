@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.freinet.util
 
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetDataTransfernApiNotReachableException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetApiNotReachableException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.ktor.client.HttpClient
@@ -16,7 +16,7 @@ import io.ktor.http.path
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 
-class FreinetSearchPersonApi {
+class FreinetSearchPersonApi(private val host: String) {
     private val logger = LoggerFactory.getLogger(FreinetSearchPersonApi::class.java)
     private val httpClient = HttpClient {
         install(HttpRequestRetry) {
@@ -35,8 +35,7 @@ class FreinetSearchPersonApi {
 
     private val objectMapper = jacksonObjectMapper()
 
-    fun searchPerson(
-        host: String,
+    fun searchPersons(
         firstName: String,
         lastName: String,
         dateOfBirth: String,
@@ -48,7 +47,7 @@ class FreinetSearchPersonApi {
                 httpClient.request {
                     url {
                         protocol = URLProtocol.HTTP
-                        this.host = host
+                        this.host = this@FreinetSearchPersonApi.host
                         path("/api/input/v3/personen/suche")
                         parameters.append("vorname", firstName)
                         parameters.append("nachname", lastName)
@@ -67,7 +66,7 @@ class FreinetSearchPersonApi {
         }
 
         if (responseBody == null) {
-            throw FreinetDataTransfernApiNotReachableException()
+            throw FreinetApiNotReachableException()
         }
 
         return objectMapper.readTree(responseBody)
