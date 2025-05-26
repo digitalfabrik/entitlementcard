@@ -57,7 +57,7 @@ class _LocationButtonState extends State<LocationButton> {
 
   Future<void> initializeLocationStatus() async {
     LocationStatus status = await checkAndRequestLocationPermission(context, requestIfNotGranted: false);
-    if (context.mounted) {
+    if (mounted) {
       setState(() {
         _locationStatus = status;
       });
