@@ -3,6 +3,6 @@ package app.ehrenamtskarte.backend.exception.webservice.exceptions
 import app.ehrenamtskarte.backend.exception.GraphQLBaseException
 import app.ehrenamtskarte.backend.exception.webservice.schema.GraphQLExceptionCode
 
-class FreinetDataTransfernApiNotReachableException : GraphQLBaseException(
-    GraphQLExceptionCode.FREINET_DATA_TRANSFER_API_NOT_REACHABLE,
+class FreinetApiNotReachableException : GraphQLBaseException(
+    GraphQLExceptionCode.FREINET_API_NOT_REACHABLE,
 )

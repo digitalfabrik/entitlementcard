@@ -137,7 +137,7 @@ const graphQlErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
       return {
         title: i18next.t('errors:invalidApplicationConfirmationNoteSize', { maxSize: extensions.maxSize }),
       }
-    case GraphQlExceptionCode.FreinetDataTransferApiNotReachable: {
+    case GraphQlExceptionCode.FreinetApiNotReachable: {
       return {
         title: i18next.t('errors:freinetApiNotReachableError'),
       }
