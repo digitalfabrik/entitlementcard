@@ -3,6 +3,7 @@ import app.ehrenamtskarte.backend.application.database.repos.ApplicationReposito
 import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.common.webservice.context
+import app.ehrenamtskarte.backend.common.webservice.findValueByName
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
 import app.ehrenamtskarte.backend.exception.service.NotImplementedException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
@@ -12,7 +13,6 @@ import app.ehrenamtskarte.backend.freinet.database.repos.FreinetAgencyRepository
 import app.ehrenamtskarte.backend.freinet.util.FreinetCreatePersonApi
 import app.ehrenamtskarte.backend.freinet.util.FreinetSearchPersonApi
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -21,19 +21,19 @@ import org.slf4j.LoggerFactory
 @Suppress("unused")
 class FreinetApplicationMutationService {
     private val logger = LoggerFactory.getLogger(FreinetApplicationMutationService::class.java)
-    private val FreinetSearchPersonApi = FreinetSearchPersonApi()
-    private val FreinetCreatePersonApi = FreinetCreatePersonApi()
 
     @GraphQLDescription("Send application info to Freinet")
     fun sendApplicationDataToFreinet(applicationId: Int, project: String, dfe: DataFetchingEnvironment): Boolean {
         val context = dfe.graphQlContext.context
         val admin = context.getAdministrator()
-        val projectConfig = dfe.graphQlContext.context.backendConfiguration.getProjectConfig(
+        val projectConfig = context.backendConfiguration.getProjectConfig(
             project,
         )
+
         if (projectConfig.freinet == null) {
             throw NotImplementedException()
         }
+        val freinetSearchPersonApi = FreinetSearchPersonApi(projectConfig.freinet.host)
 
         return transaction {
             val application = ApplicationRepository.findByIds(listOf(applicationId)).firstOrNull()
@@ -47,31 +47,20 @@ class FreinetApplicationMutationService {
             }
 
             val freinetAgency = FreinetAgencyRepository.getFreinetAgencyByRegionId(regionId)
+                // Freinet is enabled for this region if dataTransferActivated is true
+                ?.takeIf { it.dataTransferActivated }
                 ?: return@transaction false
 
-            if (!freinetAgency.dataTransferActivated) {
-                // Freinet is disabled for this region
-                return@transaction false
-            }
-
-            val applicationData = application.jsonValue
             val objectMapper = jacksonObjectMapper()
-            val jsonNode = objectMapper.readTree(applicationData)
-
+            val jsonNode = objectMapper.readTree(application.jsonValue)
             val personalDataNode = jsonNode
                 .path("value").firstOrNull { it["name"].asText() == "personalData" }
-
-            fun JsonNode.findValueByName(fieldName: String): String? =
-                this.firstOrNull { it["name"].asText() == fieldName }
-                    ?.get("value")
-                    ?.asText()
 
             val firstName = personalDataNode?.get("value")?.findValueByName("forenames").orEmpty()
             val lastName = personalDataNode?.get("value")?.findValueByName("surname").orEmpty()
             val dateOfBirth = personalDataNode?.get("value")?.findValueByName("dateOfBirth").orEmpty()
 
-            val persons = FreinetSearchPersonApi.searchPerson(
-                host = projectConfig.freinet.host,
+            val persons = freinetSearchPersonApi.searchPersons(
                 firstName = firstName,
                 lastName = lastName,
                 dateOfBirth = dateOfBirth,

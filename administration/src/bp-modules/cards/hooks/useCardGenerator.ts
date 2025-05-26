@@ -102,6 +102,7 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
         downloadDataUri(dataUri, filename)
         cards.forEach(saveActivityLog)
 
+        // This is a temporary condition from #2141
         if (!isProductionEnvironment() && applicationId != null) {
           const { projectId } = projectConfig
           sendToFreinet({
