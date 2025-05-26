@@ -49,9 +49,8 @@ const KoblenzReferenceNumberExtensionForm = ({
       label={t('referenceNrLabel')}
       value={koblenzReferenceNumber}
       onChange={koblenzReferenceNumber => setValue({ koblenzReferenceNumber })}
-      hasError={!isValid && showErrorMessage}
-      touched={touched}
-      setTouched={setTouched}
+      onBlur={() => setTouched(true)}
+      showError={!isValid && showErrorMessage}
       inputProps={{
         sx: { paddingRight: 0 },
         endAdornment: (

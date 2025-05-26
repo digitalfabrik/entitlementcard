@@ -79,10 +79,9 @@ const CardSelfServiceForm = ({
           placeholder='Erika Musterfrau'
           autoFocus
           value={card.fullName}
+          onBlur={() => setTouchedFullName(true)}
           onChange={fullName => updateCard({ fullName: removeMultipleSpaces(fullName) })}
-          hasError={!isFullNameValid(card) && showErrorMessage}
-          touched={touchedFullName}
-          setTouched={setTouchedFullName}
+          showError={!isFullNameValid(card) && showErrorMessage}
           inputProps={{
             sx: { paddingRight: 0 },
             endAdornment: (

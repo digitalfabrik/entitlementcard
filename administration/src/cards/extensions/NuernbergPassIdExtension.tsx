@@ -37,9 +37,8 @@ const NuernbergPassIdForm = ({
           setValue({ nuernbergPassId: Number.isNaN(parsedNumber) ? null : parsedNumber })
         }
       }}
-      hasError={showError}
-      touched={touched}
-      setTouched={setTouched}
+      onBlur={() => setTouched(true)}
+      showError={showError}
       inputProps={{
         sx: { paddingRight: 0 },
         endAdornment: (

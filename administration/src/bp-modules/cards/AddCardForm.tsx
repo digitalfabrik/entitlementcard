@@ -54,9 +54,8 @@ const AddCardForm = ({ card, onRemove, updateCard }: CreateCardsFormProps): Reac
           autoFocus
           value={card.fullName}
           onChange={fullName => updateCard({ fullName })}
-          hasError={showError}
-          touched={touched}
-          setTouched={setTouched}
+          showError={showError}
+          onBlur={() => setTouched(true)}
           inputProps={{
             inputProps: {
               max: MAX_NAME_LENGTH,

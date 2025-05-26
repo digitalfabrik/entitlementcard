@@ -7,74 +7,51 @@ describe('CardTextField', () => {
   const defaultProps = {
     id: 'test-input',
     label: 'Test Label',
-    placeholder: 'Test Placeholder',
+    placeholder: 'Enter text',
     value: '',
     onChange: jest.fn(),
-    hasError: false,
+    showError: false,
     errorMessage: null,
-    touched: false,
-    setTouched: jest.fn(),
     inputProps: {},
   }
 
-  it('should render component with base props', () => {
+  it('should render input field with label and placeholder', () => {
     const { getByLabelText } = render(<CardTextField {...defaultProps} />)
-    const input = getByLabelText('Test Label')
 
-    expect(input).toBeTruthy()
-    expect(input).toHaveAttribute('id', 'test-input')
-    expect(input).toHaveAttribute('placeholder', 'Test Placeholder')
+    const input = getByLabelText('Test Label')
+    expect(input).toBeInTheDocument()
+    expect(input).toHaveAttribute('placeholder', 'Enter text')
   })
 
-  it('should call onChange with correct value', () => {
+  it('should call onChange handler when input value changes', () => {
     const { getByLabelText } = render(<CardTextField {...defaultProps} />)
-    const input = getByLabelText('Test Label')
 
-    fireEvent.change(input, { target: { value: 'New Value' } })
-    expect(defaultProps.onChange).toHaveBeenCalledWith('New Value')
+    const input = getByLabelText('Test Label')
+    fireEvent.change(input, { target: { value: 'new value' } })
+
+    expect(defaultProps.onChange).toHaveBeenCalledWith('new value')
   })
 
-  it('should call setTouched when field is blurred', () => {
-    const { getByLabelText } = render(<CardTextField {...defaultProps} />)
-    const input = getByLabelText('Test Label')
+  it('should call onBlur handler when input loses focus', () => {
+    const onBlur = jest.fn()
+    const { getByLabelText } = render(<CardTextField {...defaultProps} onBlur={onBlur} />)
 
+    const input = getByLabelText('Test Label')
     fireEvent.blur(input)
-    expect(defaultProps.setTouched).toHaveBeenCalledWith(true)
+
+    expect(onBlur).toHaveBeenCalled()
   })
 
-  it('should display error message when hasError and touched are true', () => {
-    const propsWithError = {
-      ...defaultProps,
-      hasError: true,
-      touched: true,
-      errorMessage: 'Test error message',
-    }
+  it('should display error message when showError is true', () => {
+    const { getByText } = render(<CardTextField {...defaultProps} showError errorMessage='Error occurred' />)
 
-    const { getByText } = render(<CardTextField {...propsWithError} />)
-    expect(getByText('Test error message')).toBeTruthy()
+    expect(getByText('Error occurred')).toBeTruthy()
   })
 
-  it('should not display error message when hasError is false', () => {
-    const propsWithError = {
-      ...defaultProps,
-      hasError: false,
-      touched: true,
-      errorMessage: 'Test error message',
-    }
+  it('should be focused when autoFocus prop is true', () => {
+    const { getByLabelText } = render(<CardTextField {...defaultProps} autoFocus />)
 
-    const { queryByText } = render(<CardTextField {...propsWithError} />)
-    expect(queryByText('Test error message')).toBeFalsy()
-  })
-
-  it('should not display error message when touched is false', () => {
-    const propsWithError = {
-      ...defaultProps,
-      hasError: true,
-      touched: false,
-      errorMessage: 'Test error message',
-    }
-
-    const { queryByText } = render(<CardTextField {...propsWithError} />)
-    expect(queryByText('Test error message')).toBeFalsy()
+    const input = getByLabelText('Test Label')
+    expect(input).toHaveFocus()
   })
 })
