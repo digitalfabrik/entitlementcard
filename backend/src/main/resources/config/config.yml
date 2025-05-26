@@ -24,6 +24,7 @@ projects:
     pipelineName: EhrenamtskarteBayern
     administrationBaseUrl: https://bayern.ehrenamtskarte.app
     administrationName: Ehrenamtskarte-Bayern-Verwaltung
+    emailSignature: Ihr Team der Ehrenamtskarte Bayern
     timezone: "Europe/Berlin"
     selfServiceEnabled: false
     smtp:
@@ -40,6 +41,7 @@ projects:
     importUrl: ""
     administrationBaseUrl: https://nuernberg.sozialpass.app
     administrationName: Nürnberg-Pass-Verwaltung
+    emailSignature: Ihr Team des Nürnberg-Passes
     timezone: "Europe/Berlin"
     selfServiceEnabled: false
     smtp:
@@ -51,6 +53,7 @@ projects:
     importUrl: ""
     administrationBaseUrl: https://koblenz.sozialpass.app
     administrationName: Koblenz-Pass-Verwaltung
+    emailSignature: Ihr Team des KoblenzPasses
     timezone: "Europe/Berlin"
     selfServiceEnabled: true
     smtp:
@@ -62,6 +65,7 @@ projects:
     importUrl: https://example.com
     administrationBaseUrl: https://showcase.entitlementcard.app
     administrationName: Showcase-Entitlementcard-Verwaltung
+    emailSignature: Ihr Team der Ehrenamtskarte
     timezone: "Europe/Berlin"
     selfServiceEnabled: false
     smtp:
