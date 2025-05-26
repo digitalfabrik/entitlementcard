@@ -71,7 +71,16 @@ const CardSelfServiceForm = ({
 
   return (
     <>
-      <Stack key={card.id} sx={{ marginBottom: 3, gap: 2 }}>
+      <Stack
+        key={card.id}
+        sx={{
+          marginBottom: 3,
+          gap: 2,
+          '& *': {
+            fontFamily: 'inherit',
+            letterSpacing: 'normal',
+          },
+        }}>
         <FormGroup>
           <TextField
             id='name-input'
