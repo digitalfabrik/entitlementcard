@@ -1,4 +1,4 @@
-import { Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText } from '@mui/material'
+import { Checkbox, FormControl, FormControlLabel, FormGroup } from '@mui/material'
 import React, { ReactElement } from 'react'
 
 import FormAlert from './FormAlert'
@@ -45,11 +45,7 @@ const BaseCheckbox = ({
           }
           label={label}
         />
-        {showErrorMessage && (
-          <FormHelperText component='div' sx={{ margin: 0 }}>
-            <FormAlert errorMessage={errorMessage} />
-          </FormHelperText>
-        )}
+        {showErrorMessage && <FormAlert errorMessage={errorMessage} />}
       </FormControl>
     </FormGroup>
   )
