@@ -1,4 +1,4 @@
-import { FormGroup, InputProps, TextField } from '@mui/material'
+import { InputProps, TextField } from '@mui/material'
 import React, { ReactElement } from 'react'
 
 import FormAlert from '../../../bp-modules/self-service/components/FormAlert'
@@ -28,22 +28,21 @@ const CardTextField = ({
   errorMessage,
   inputProps,
 }: CardTextFieldProps): ReactElement => (
-  <FormGroup>
-    <TextField
-      id={id}
-      label={label}
-      placeholder={placeholder}
-      autoFocus={autoFocus}
-      value={value}
-      onBlur={onBlur}
-      onChange={event => onChange(event.target.value)}
-      error={showError}
-      fullWidth
-      size='small'
-      InputProps={inputProps}
-    />
-    {showError && <FormAlert errorMessage={errorMessage} />}
-  </FormGroup>
+  <TextField
+    id={id}
+    label={label}
+    placeholder={placeholder}
+    autoFocus={autoFocus}
+    value={value}
+    onBlur={onBlur}
+    FormHelperTextProps={{ sx: { margin: 0 } }}
+    onChange={event => onChange(event.target.value)}
+    error={showError}
+    fullWidth
+    size='small'
+    InputProps={inputProps}
+    helperText={showError && <FormAlert errorMessage={errorMessage} />}
+  />
 )
 
 export default CardTextField
