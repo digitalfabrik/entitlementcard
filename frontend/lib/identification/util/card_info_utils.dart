@@ -1,10 +1,14 @@
 import 'dart:convert';
+import 'package:clock/clock.dart';
 import 'package:crypto/crypto.dart';
 import 'package:ehrenamtskarte/identification/util/canonical_json.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/util/date_utils.dart';
 import 'package:ehrenamtskarte/util/json_canonicalizer.dart';
 import 'package:intl/intl.dart';
+import 'package:timezone/timezone.dart' as tz;
+
+final currentTimezone = tz.getLocation('Europe/Berlin');
 
 extension Hashing on CardInfo {
   String hash(List<int> pepper) {
@@ -45,13 +49,20 @@ bool cardWasVerifiedLately(CardVerification cardVerification) {
 }
 
 bool isCardNotYetValid(CardInfo cardInfo) {
-  final startingDay =
-      cardInfo.extensions.hasExtensionStartDay() ? cardInfo.extensions.extensionStartDay.startDay : null;
-  return startingDay == null
-      ? false
-      : DateTime.fromMillisecondsSinceEpoch(0, isUtc: true)
-          .add(Duration(days: startingDay))
-          .isAfter(DateTime.now().toUtc());
+  final startDay = _getStartDay(cardInfo);
+  if (startDay == null) return false;
+  return startDay.isAfter(_getCurrentDateTime());
+}
+
+DateTime _getCurrentDateTime() {
+  return tz.TZDateTime.from(clock.now(), currentTimezone);
+}
+
+DateTime? _getStartDay(CardInfo cardInfo) {
+  if (!cardInfo.extensions.hasExtensionStartDay()) return null;
+  final epochStartDay = cardInfo.extensions.extensionStartDay.startDay;
+  final date = DateTime.fromMillisecondsSinceEpoch(0).add(Duration(days: epochStartDay));
+  return tz.TZDateTime(currentTimezone, date.year, date.month, date.day);
 }
 
 DateTime? _getExpirationDayWithTolerance(CardInfo cardInfo) {

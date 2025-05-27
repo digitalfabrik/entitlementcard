@@ -9,6 +9,7 @@ import 'package:ehrenamtskarte/util/android_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:slang/overrides.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +19,8 @@ Future<void> main() async {
   if (Platform.isAndroid && await certificateIsRequired()) {
     loadCertificate();
   }
+
+  tz.initializeTimeZones();
 
   debugPrint('Environment: $appEnvironment');
 

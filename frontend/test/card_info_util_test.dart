@@ -3,8 +3,15 @@ import 'dart:convert';
 import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:test/test.dart';
+import 'package:clock/clock.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 void main() {
+  setUpAll(() {
+    tz.initializeTimeZones();
+  });
+
   group('hashCardInfo', () {
     // Equivalent tests exist in administration to ensure that the algorithms produce the same hashes.
     test('should be stable for a Bavarian Blue EAK', () {
@@ -85,8 +92,23 @@ void main() {
     });
   });
 
+  /// Returns the number of days since the Unix epoch (1970-01-01 UTC)
+  /// for the date that is [days] offset from today (UTC).
+  ///
+  /// Examples:
+  /// ```dart
+  /// getUtcDateWithOffset(0);  // today
+  /// getUtcDateWithOffset(1);  // tomorrow
+  /// getUtcDateWithOffset(-1); // yesterday
+  /// ```
+  int getEpochDaysFromUtcOffset(int days) {
+    final now = DateTime.now().toUtc();
+    final target = DateTime.utc(now.year, now.month, now.day + days);
+    return target.difference(DateTime.utc(1970, 1, 1)).inDays;
+  }
+
   group('isCardNotYetValid', () {
-    test('should return true if startDay is in the future', () {
+    test('should return true if startDay is tomorrow', () {
       final cardInfo = CardInfo()
         ..fullName = 'Max Mustermann'
         ..expirationDay = 365 * 40 // Equals 14.600
@@ -94,11 +116,11 @@ void main() {
           ..extensionRegion = (RegionExtension()..regionId = 93)
           ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
           ..extensionNuernbergPassId = (NuernbergPassIdExtension()..passId = 99999999)
-          ..extensionStartDay = (StartDayExtension()..startDay = 365 * 70));
+          ..extensionStartDay = (StartDayExtension()..startDay = getEpochDaysFromUtcOffset(1)));
       expect(isCardNotYetValid(cardInfo), true);
     });
 
-    test('should return false if startDay is in the past', () {
+    test('should return false if startDay is today', () {
       final cardInfo = CardInfo()
         ..fullName = 'Max Mustermann'
         ..expirationDay = 365 * 40 // Equals 14.600
@@ -106,11 +128,23 @@ void main() {
           ..extensionRegion = (RegionExtension()..regionId = 93)
           ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
           ..extensionNuernbergPassId = (NuernbergPassIdExtension()..passId = 99999999)
-          ..extensionStartDay = (StartDayExtension()..startDay = 365 * 30));
+          ..extensionStartDay = (StartDayExtension()..startDay = getEpochDaysFromUtcOffset(0)));
       expect(isCardNotYetValid(cardInfo), false);
     });
 
-    test('should be return false if no startDay was set', () {
+    test('should return false if startDay is yesterday', () {
+      final cardInfo = CardInfo()
+        ..fullName = 'Max Mustermann'
+        ..expirationDay = 365 * 40 // Equals 14.600
+        ..extensions = (CardExtensions()
+          ..extensionRegion = (RegionExtension()..regionId = 93)
+          ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
+          ..extensionNuernbergPassId = (NuernbergPassIdExtension()..passId = 99999999)
+          ..extensionStartDay = (StartDayExtension()..startDay = getEpochDaysFromUtcOffset(-1)));
+      expect(isCardNotYetValid(cardInfo), false);
+    });
+
+    test('should return false if startDay is not set', () {
       final cardInfo = CardInfo()
         ..fullName = 'Max Mustermann'
         ..expirationDay = 365 * 40 // Equals 14.600
@@ -119,6 +153,27 @@ void main() {
           ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
           ..extensionNuernbergPassId = (NuernbergPassIdExtension()..passId = 99999999));
       expect(isCardNotYetValid(cardInfo), false);
+    });
+
+    test('should return false if startDay is today and current time is 00:01 (still previous day in UTC)', () {
+      final berlinTimezone = tz.getLocation('Europe/Berlin');
+
+      // Fake current time: 2025-06-06 00:01 in Berlin (2025-06-05 22:01 UTC)
+      withClock(Clock.fixed(tz.TZDateTime(berlinTimezone, 2025, 6, 6, 0, 1)), () {
+        final startDay = DateTime.utc(2025, 6, 6);
+        final startDayEpoch = startDay.difference(DateTime.utc(1970, 1, 1)).inDays;
+
+        final cardInfo = CardInfo()
+          ..fullName = 'Max Mustermann'
+          ..expirationDay = 365 * 40
+          ..extensions = (CardExtensions()
+            ..extensionRegion = (RegionExtension()..regionId = 93)
+            ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
+            ..extensionNuernbergPassId = (NuernbergPassIdExtension()..passId = 99999999)
+            ..extensionStartDay = (StartDayExtension()..startDay = startDayEpoch));
+
+        expect(isCardNotYetValid(cardInfo), false);
+      });
     });
   });
 }
