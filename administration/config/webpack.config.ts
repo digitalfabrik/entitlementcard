@@ -234,10 +234,9 @@ const createWebpackConfig = (webpackEnv: 'development' | 'production'): Configur
               include: paths.appSrc,
               loader: require.resolve('babel-loader'),
               options: {
-                customize: require.resolve('babel-preset-react-app/webpack-overrides'),
                 presets: [
                   [
-                    require.resolve('babel-preset-react-app'),
+                    require.resolve('./babel.config.ts'),
                     {
                       runtime: 'automatic',
                     },
@@ -265,7 +264,7 @@ const createWebpackConfig = (webpackEnv: 'development' | 'production'): Configur
                 babelrc: false,
                 configFile: false,
                 compact: false,
-                presets: [[require.resolve('babel-preset-react-app/dependencies'), { helpers: true }]],
+                presets: [[require.resolve('./babel-dependencies.config.ts'), { helpers: true }]],
                 cacheDirectory: true,
                 // See #6846 for context on why cacheCompression is disabled
                 cacheCompression: false,
