@@ -14,6 +14,7 @@ const Container = styled('div')<{ $severity: 'info' | 'error'; $isToast: boolean
   gap: 8px;
   align-items: center;
   font-size: 14px;
+  white-space: pre-line;
 `
 
 type FormAlertProps = {
