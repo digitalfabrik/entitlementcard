@@ -76,10 +76,6 @@ const CardSelfServiceForm = ({
         sx={{
           marginBottom: 3,
           gap: 2,
-          '& *': {
-            fontFamily: 'inherit',
-            letterSpacing: 'normal',
-          },
         }}>
         <FormGroup>
           <TextField
