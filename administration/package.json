@@ -44,6 +44,9 @@
     "xregexp": "^5.1.1"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.27.1",
+    "@babel/plugin-transform-runtime": "^7.27.3",
+    "@babel/runtime": "^7.27.3",
     "@bufbuild/protoc-gen-es": "^1.2.1",
     "@eslint/compat": "^1.2.9",
     "@eslint/eslintrc": "^3.3.1",
@@ -65,7 +68,7 @@
     "@types/resolve": "^1.20.2",
     "@types/styled-components": "^5.1.26",
     "babel-loader": "^10.0.0",
-    "babel-preset-react-app": "^10.1.0",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "bfj": "^7.0.2",
     "browserslist": "^4.21.9",
     "copy-webpack-plugin": "^13.0.0",
@@ -127,11 +130,6 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
-    ]
-  },
-  "babel": {
-    "presets": [
-      "react-app"
     ]
   },
   "madge": {
