@@ -5,7 +5,6 @@ import app.ehrenamtskarte.backend.application.database.ApplicationVerificationEn
 import app.ehrenamtskarte.backend.application.database.ApplicationVerificationExternalSource
 import app.ehrenamtskarte.backend.application.database.ApplicationVerifications
 import app.ehrenamtskarte.backend.application.database.Applications
-import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationView
 import app.ehrenamtskarte.backend.application.webservice.schema.view.JsonField
 import app.ehrenamtskarte.backend.application.webservice.utils.ExtractedApplicationVerification
 import app.ehrenamtskarte.backend.common.database.sortByKeys
@@ -106,15 +105,13 @@ object ApplicationRepository {
                 .singleOrNull()
         }
 
-    fun getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey: String): ApplicationView =
+    fun getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey: String): ApplicationEntity? =
         transaction {
-            val application = (Applications innerJoin ApplicationVerifications)
+            (Applications innerJoin ApplicationVerifications)
                 .select(Applications.columns)
                 .where { ApplicationVerifications.accessKey eq applicationVerificationAccessKey }
                 .singleOrNull()
-            application?.let {
-                ApplicationView.fromDbEntity(ApplicationEntity.wrapRow(it))
-            } ?: throw InvalidLinkException()
+                ?.let { ApplicationEntity.wrapRow(it) }
         }
 
     fun getApplicationVerification(applicationVerificationAccessKey: String): ApplicationVerificationEntity =
