@@ -7,6 +7,7 @@ import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidLinkException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -31,6 +32,8 @@ class EakApplicationQueryService {
     fun getApplicationByApplicant(accessKey: String): ApplicationView =
         transaction {
             ApplicationRepository.getApplicationByApplicant(accessKey)
+                ?.let { ApplicationView.fromDbEntity(it) }
+                ?: throw InvalidLinkException()
         }
 
     @GraphQLDescription("Queries an application by application verification accessKey")

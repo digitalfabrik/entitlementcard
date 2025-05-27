@@ -99,13 +99,11 @@ object ApplicationRepository {
                 .orderBy(Applications.createdDate to SortOrder.ASC)
         }
 
-    fun getApplicationByApplicant(accessKey: String): ApplicationView =
+    fun getApplicationByApplicant(accessKey: String): ApplicationEntity? =
         transaction {
             ApplicationEntity
                 .find { Applications.accessKey eq accessKey }
                 .singleOrNull()
-                ?.let { ApplicationView.fromDbEntity(it) }
-                ?: throw InvalidLinkException()
         }
 
     fun getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey: String): ApplicationView =
