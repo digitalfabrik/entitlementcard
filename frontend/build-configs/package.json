@@ -11,7 +11,7 @@
   "devDependencies": {
     "@eslint/compat": "^1.2.9",
     "@eslint/eslintrc": "^3.3.1",
-    "eslint": "^9.21.0",
+    "eslint": "^9.27.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-import": "^2.31.0",
@@ -24,6 +24,6 @@
     "eslint-plugin-unicorn": "^59.0.1",
     "prettier": "^2.8.8",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.32.1"
+    "typescript-eslint": "^8.33.0"
   }
 }
