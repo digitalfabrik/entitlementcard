@@ -1,6 +1,5 @@
 package app.ehrenamtskarte.backend.freinet.util
 
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetApiNotReachableException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.ktor.client.HttpClient
@@ -8,12 +7,13 @@ import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.request.request
+import io.ktor.client.statement.bodyAsChannel
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.URLProtocol
 import io.ktor.http.path
-import kotlinx.coroutines.runBlocking
+import io.ktor.utils.io.jvm.javaio.toInputStream
 import org.slf4j.LoggerFactory
 
 class FreinetSearchPersonApi(private val host: String) {
@@ -35,40 +35,31 @@ class FreinetSearchPersonApi(private val host: String) {
 
     private val objectMapper = jacksonObjectMapper()
 
-    fun searchPersons(
+    suspend fun searchPersons(
         firstName: String,
         lastName: String,
         dateOfBirth: String,
         accessKey: String,
         agencyId: Int,
-    ): JsonNode {
-        val responseBody = runBlocking {
-            try {
-                httpClient.request {
-                    url {
-                        protocol = URLProtocol.HTTP
-                        this.host = this@FreinetSearchPersonApi.host
-                        path("/api/input/v3/personen/suche")
-                        parameters.append("vorname", firstName)
-                        parameters.append("nachname", lastName)
-                        parameters.append("geburtstag", dateOfBirth)
-                        parameters.append("accessKey", accessKey)
-                        parameters.append("agencyID", agencyId.toString())
-                    }
-                    method = HttpMethod.Get
-                }.bodyAsText()
-            } catch (e: ClientRequestException) {
-                val res = e.response
-                val body = res.bodyAsText()
-                logger.warn("Freinet error: ${res.status} – body:\n$body")
-                null
+    ): JsonNode =
+        try {
+            httpClient.request {
+                url {
+                    protocol = URLProtocol.HTTP
+                    this.host = this@FreinetSearchPersonApi.host
+                    path("/api/input/v3/personen/suche")
+                    parameters.append("vorname", firstName)
+                    parameters.append("nachname", lastName)
+                    parameters.append("geburtstag", dateOfBirth)
+                    parameters.append("accessKey", accessKey)
+                    parameters.append("agencyID", agencyId.toString())
+                }
+                method = HttpMethod.Get
+            }.bodyAsChannel().toInputStream().use { inputStream ->
+                objectMapper.readTree(inputStream)
             }
+        } catch (e: ClientRequestException) {
+            logger.error("Freinet error: ${e.response.status} – body:\n${e.response.bodyAsText()}")
+            throw e
         }
-
-        if (responseBody == null) {
-            throw FreinetApiNotReachableException()
-        }
-
-        return objectMapper.readTree(responseBody)
-    }
 }

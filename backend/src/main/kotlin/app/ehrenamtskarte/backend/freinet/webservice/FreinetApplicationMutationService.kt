@@ -13,6 +13,7 @@ import app.ehrenamtskarte.backend.freinet.util.FreinetSearchPersonApi
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import graphql.schema.DataFetchingEnvironment
+import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
 
@@ -58,13 +59,15 @@ class FreinetApplicationMutationService {
             val lastName = personalDataNode?.get("value")?.findValueByName("surname").orEmpty()
             val dateOfBirth = personalDataNode?.get("value")?.findValueByName("dateOfBirth").orEmpty()
 
-            val persons = freinetSearchPersonApi.searchPersons(
-                firstName = firstName,
-                lastName = lastName,
-                dateOfBirth = dateOfBirth,
-                accessKey = freinetAgency.apiAccessKey,
-                agencyId = freinetAgency.agencyId,
-            )
+            val persons = runBlocking {
+                freinetSearchPersonApi.searchPersons(
+                    firstName = firstName,
+                    lastName = lastName,
+                    dateOfBirth = dateOfBirth,
+                    accessKey = freinetAgency.apiAccessKey,
+                    agencyId = freinetAgency.agencyId,
+                )
+            }
             when {
                 persons.size() > 1 -> {
                     logger.warn("Multiple persons found in Freinet for $firstName $lastName, born $dateOfBirth")
