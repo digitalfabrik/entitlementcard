@@ -17,6 +17,8 @@ data class ApplicationView(
     val note: String?,
     @GraphQLDeprecated("Use 'status' instead")
     val cardCreated: Boolean?,
+    val status: ApplicationStatus?,
+    val statusResolvedDate: String? = null,
 ) {
     companion object {
         fun fromDbEntity(entity: ApplicationEntity, includePrivateInformation: Boolean = false): ApplicationView =
@@ -29,7 +31,16 @@ data class ApplicationView(
                 note = entity.note.takeIf { includePrivateInformation },
                 cardCreated = (entity.status == ApplicationEntity.Status.ApprovedCardCreated)
                     .takeIf { includePrivateInformation },
+                status = entity.status.takeIf { includePrivateInformation }?.let { ApplicationStatus.valueOf(it.name) },
+                statusResolvedDate = entity.statusResolvedDate?.takeIf { includePrivateInformation }?.toString(),
             )
+    }
+
+    enum class ApplicationStatus {
+        Pending,
+        Rejected,
+        Approved,
+        ApprovedCardCreated,
     }
 
     fun verifications(environment: DataFetchingEnvironment): CompletableFuture<List<ApplicationVerificationView>> =

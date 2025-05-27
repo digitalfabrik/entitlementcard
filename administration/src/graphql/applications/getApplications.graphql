@@ -6,6 +6,8 @@ query getApplications($regionId: Int!) {
     withdrawalDate
     note
     cardCreated
+    status
+    statusResolvedDate
     verifications {
       contactEmailAddress
       organizationName

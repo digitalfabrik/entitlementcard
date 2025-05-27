@@ -79,6 +79,8 @@ type ApplicationView {
   jsonValue: String!
   note: String
   regionId: Int!
+  status: ApplicationStatus
+  statusResolvedDate: String
   verifications: [ApplicationVerificationView!]!
   withdrawalDate: String
 }
@@ -300,6 +302,13 @@ enum ActivationState {
 enum ApiTokenType {
   USER_IMPORT
   VERIFIED_APPLICATION
+}
+
+enum ApplicationStatus {
+  Approved
+  ApprovedCardCreated
+  Pending
+  Rejected
 }
 
 enum ApplicationType {
