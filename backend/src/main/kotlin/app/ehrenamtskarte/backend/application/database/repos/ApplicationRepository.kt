@@ -112,16 +112,13 @@ object ApplicationRepository {
             .singleOrNull()
             ?: throw InvalidLinkException()
 
-    private fun isAlreadyVerified(applicationVerification: ApplicationVerificationEntity): Boolean =
-        applicationVerification.verifiedDate != null || applicationVerification.rejectedDate != null
-
     fun verifyApplicationVerification(
         accessKey: String,
         automaticSource: ApplicationVerificationExternalSource = ApplicationVerificationExternalSource.NONE,
     ): Boolean {
         val applicationVerification = getApplicationVerification(accessKey)
 
-        return if (!isAlreadyVerified(applicationVerification)) {
+        return if (!applicationVerification.isVerified) {
             applicationVerification.verifiedDate = Instant.now()
             applicationVerification.automaticSource = automaticSource
             true
@@ -132,7 +129,7 @@ object ApplicationRepository {
 
     fun rejectApplicationVerification(accessKey: String): Boolean =
         getApplicationVerification(accessKey).let {
-            if (!isAlreadyVerified(it)) {
+            if (!it.isVerified) {
                 it.rejectedDate = Instant.now()
                 true
             } else {
