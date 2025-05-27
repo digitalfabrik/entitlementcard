@@ -9,7 +9,7 @@
 
 Example:
 ```kotlin
-     @GraphQLDescription("Queries all applications for a specific region")
+    @GraphQLDescription("Queries all applications for a specific region")
     fun getApplications(dfe: DataFetchingEnvironment, regionId: Int): List<ApplicationView> {
         val context = dfe.graphQlContext.context
         val admin = context.getAdministrator()
