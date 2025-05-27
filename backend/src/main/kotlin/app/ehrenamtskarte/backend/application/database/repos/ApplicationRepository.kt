@@ -101,9 +101,11 @@ object ApplicationRepository {
 
     fun getApplicationByApplicant(accessKey: String): ApplicationView =
         transaction {
-            val application = ApplicationEntity.find { Applications.accessKey eq accessKey }
+            ApplicationEntity
+                .find { Applications.accessKey eq accessKey }
                 .singleOrNull()
-            application?.let { ApplicationView.fromDbEntity(it) } ?: throw InvalidLinkException()
+                ?.let { ApplicationView.fromDbEntity(it) }
+                ?: throw InvalidLinkException()
         }
 
     fun getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey: String): ApplicationView =
