@@ -1,7 +1,7 @@
 import { Button, Tooltip } from '@blueprintjs/core'
 import { FormControlLabel } from '@mui/material'
 import type { FormControlLabelProps } from '@mui/material'
-import formatDate from 'date-fns/format'
+import { formatDate } from 'date-fns/format'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'

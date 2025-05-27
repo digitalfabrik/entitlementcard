@@ -1,10 +1,10 @@
 import { Tooltip } from '@blueprintjs/core'
+import { Stack } from '@mui/material'
 import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import { PreVerifiedEntitlementType, preVerifiedEntitlements } from './PreVerifiedEntitlementType'
-import { UnFocusedDiv } from './VerificationsQuickIndicator'
 import VerificationIndicator from './components/VerificationIndicator'
 import { VerificationStatus } from './constants'
 
@@ -56,10 +56,10 @@ const PreVerifiedQuickIndicator = memo(({ type }: { type: PreVerifiedEntitlement
           {t('noConfirmationNeeded')}
         </div>
       }>
-      <UnFocusedDiv>
+      <Stack direction='row' sx={{ height: '25px', alignItems: 'center', '&:focus': { outline: 'none' } }}>
         <PreVerifiedLabel type={type}>{preVerifiedLabelMetaData[type].labelText}</PreVerifiedLabel>
         <VerificationIndicator status={VerificationStatus.Verified} />
-      </UnFocusedDiv>
+      </Stack>
     </Tooltip>
   )
 })
