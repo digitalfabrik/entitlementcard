@@ -17,28 +17,16 @@ data class ApplicationView(
     val cardCreated: Boolean?,
 ) {
     companion object {
-        fun fromDbEntity(entity: ApplicationEntity, includePrivateInformation: Boolean = false): ApplicationView {
-            if (includePrivateInformation) {
-                return ApplicationView(
-                    entity.id.value,
-                    entity.regionId.value,
-                    entity.createdDate.toString(),
-                    entity.jsonValue,
-                    entity.withdrawalDate?.toString(),
-                    entity.note,
-                    entity.cardCreated,
-                )
-            }
-            return ApplicationView(
-                entity.id.value,
-                entity.regionId.value,
-                entity.createdDate.toString(),
-                entity.jsonValue,
-                entity.withdrawalDate?.toString(),
-                null,
-                false,
+        fun fromDbEntity(entity: ApplicationEntity, includePrivateInformation: Boolean = false): ApplicationView =
+            ApplicationView(
+                id = entity.id.value,
+                regionId = entity.regionId.value,
+                createdDate = entity.createdDate.toString(),
+                jsonValue = entity.jsonValue,
+                withdrawalDate = entity.withdrawalDate?.toString(),
+                note = entity.note.takeIf { includePrivateInformation },
+                cardCreated = entity.cardCreated.takeIf { includePrivateInformation },
             )
-        }
     }
 
     fun verifications(environment: DataFetchingEnvironment): CompletableFuture<List<ApplicationVerificationView>> =
