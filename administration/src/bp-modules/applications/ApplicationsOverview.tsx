@@ -42,9 +42,16 @@ const sortApplications = (applications: Application[]): Application[] =>
   applications
     .map(application => ({
       ...application,
-      status: getApplicationStatus(application.verifications.map(getVerificationStatus), !!application.withdrawalDate),
+      applicationStatus: getApplicationStatus(
+        application.verifications.map(getVerificationStatus),
+        !!application.withdrawalDate
+      ),
     }))
-    .sort((a, b) => sortByStatus(a.status, b.status) || sortByDateAsc(new Date(a.createdDate), new Date(b.createdDate)))
+    .sort(
+      (a, b) =>
+        sortByStatus(a.applicationStatus, b.applicationStatus) ||
+        sortByDateAsc(new Date(a.createdDate), new Date(b.createdDate))
+    )
 
 const getEmptyApplicationsListStatusDescription = (activeBarItem: ApplicationStatusBarItemType, t: TFunction): string =>
   activeBarItem.status !== undefined ? `${t(activeBarItem.title).toLowerCase()}en` : ''
