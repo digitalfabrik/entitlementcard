@@ -10,19 +10,20 @@ import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
+import kotlin.collections.map
 
 @Suppress("unused")
 class EakApplicationQueryService {
     @GraphQLDescription("Queries all applications for a specific region")
     fun getApplications(dfe: DataFetchingEnvironment, regionId: Int): List<ApplicationView> {
-        val context = dfe.graphQlContext.context
-        val admin = context.getAdministrator()
+        val admin = dfe.graphQlContext.context.getAdministrator()
+
         return transaction {
-            if (!Authorizer.mayViewApplicationsInRegion(admin, regionId)) {
+            if (Authorizer.mayViewApplicationsInRegion(admin, regionId)) {
+                ApplicationRepository.getApplicationsByAdmin(regionId).map { ApplicationView.fromDbEntity(it, true) }
+            } else {
                 throw ForbiddenException()
             }
-
-            ApplicationRepository.getApplicationsByAdmin(regionId)
         }
     }
 
