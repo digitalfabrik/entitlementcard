@@ -11,7 +11,6 @@ import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidLinkExc
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
-import kotlin.collections.map
 
 @Suppress("unused")
 class EakApplicationQueryService {
@@ -39,9 +38,10 @@ class EakApplicationQueryService {
     @GraphQLDescription("Queries an application by application verification accessKey")
     fun getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey: String): ApplicationView =
         transaction {
-            ApplicationRepository.getApplicationByApplicationVerificationAccessKey(
-                applicationVerificationAccessKey,
-            )
+            ApplicationRepository
+                .getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey)
+                ?.let { ApplicationView.fromDbEntity(it) }
+                ?: throw InvalidLinkException()
         }
 
     @GraphQLDescription("Queries an application verification by application verification accessKey")
