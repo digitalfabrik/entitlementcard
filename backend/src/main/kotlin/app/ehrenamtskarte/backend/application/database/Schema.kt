@@ -72,4 +72,6 @@ class ApplicationVerificationEntity(id: EntityID<Int>) : IntEntity(id) {
     var rejectedDate by ApplicationVerifications.rejectedDate
     var accessKey by ApplicationVerifications.accessKey
     var automaticSource by ApplicationVerifications.automaticSource
+
+    val isVerified: Boolean get() = verifiedDate != null || rejectedDate != null
 }
