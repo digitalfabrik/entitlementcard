@@ -14,6 +14,7 @@ const Container = styled('span')<{ $severity: 'info' | 'error'; $isToast: boolea
   gap: 8px;
   align-items: center;
   font-size: 14px;
+  white-space: pre-line;
 `
 
 type FormAlertProps = {

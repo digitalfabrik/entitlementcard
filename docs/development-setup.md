@@ -105,16 +105,10 @@ Run `Start administration (env:local+buildConfig:all)` from Intellij run configu
 ### Run e2e-tests for Administration
 
 1. Run [backend](#run-backend) and start the [administration](#run-administration).
-2. install supported browsers for [Playwright](https://playwright.dev/docs/browsers#install-browsers):
-   ```shell
-   npx playwright install
-   ```
-3. Run Playwright at `/administration`:
-   ```shell
-   npm test:e2e
-   ```
-
-- You can run individual tests by `npm test:e2e [file name]`
+2. install supported browsers for [Playwright](https://playwright.dev/docs/browsers#install-browsers): `npx playwright install`
+3. Run Playwright tests:
+   - All tests: `/administration`: `npm run test:e2e`
+   - You can run individual tests by `npm run test:e2e [file name]`
 
 ## Backend
 
@@ -143,7 +137,7 @@ docker-compose up --force-recreate
 
 ### Recommended IDE set up
 
-For IntelliJ, the following plugins are recomended:
+For IntelliJ, the following plugins are recommended:
 
 - [detekt](https://plugins.jetbrains.com/plugin/10761-detekt)
 - [Ktlint](https://plugins.jetbrains.com/plugin/15057-ktlint)
