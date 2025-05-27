@@ -19,6 +19,7 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.javalin.util.FileUtil
 import jakarta.servlet.http.Part
 import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.sql.SizedIterable
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
@@ -92,11 +93,10 @@ object ApplicationRepository {
         return mapper.writeValueAsString(obj)
     }
 
-    fun getApplicationsByAdmin(regionId: Int): List<ApplicationView> =
+    fun getApplicationsByAdmin(regionId: Int): SizedIterable<ApplicationEntity> =
         transaction {
             ApplicationEntity.find { Applications.regionId eq regionId }
                 .orderBy(Applications.createdDate to SortOrder.ASC)
-                .map { ApplicationView.fromDbEntity(it, true) }
         }
 
     fun getApplicationByApplicant(accessKey: String): ApplicationView =
