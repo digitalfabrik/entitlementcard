@@ -8,9 +8,10 @@ import HtmlWebpackPlugin from 'html-webpack-plugin'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import path from 'path'
 import TerserPlugin from 'terser-webpack-plugin'
-import webpack, { Configuration as WebpackConfiguration } from 'webpack'
+import webpack from 'webpack'
 import { Configuration as DevServerConfiguration } from 'webpack-dev-server'
 import { WebpackManifestPlugin } from 'webpack-manifest-plugin'
+import type { Configuration as WebpackConfiguration } from 'webpack/types'
 
 import getDeepLinkingConfigs from '../src/project-configs/getDeeplinkingConfigs'
 import getClientEnvironment from './env'
@@ -18,7 +19,7 @@ import getPaths, { moduleFileExtensions } from './getPaths'
 import modules from './modules'
 import createEnvironmentHash from './webpack/persistentCache/createEnvironmentHash'
 
-type Configuration = WebpackConfiguration & DevServerConfiguration
+type Configuration = WebpackConfiguration & { devServer: DevServerConfiguration }
 
 const imageInlineSizeLimit = parseInt(process.env.IMAGE_INLINE_SIZE_LIMIT || '10000', 10)
 
