@@ -49,5 +49,12 @@ export const theme = createTheme({
         },
       },
     },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          color: '#0000008a',
+        },
+      },
+    },
   },
 })
