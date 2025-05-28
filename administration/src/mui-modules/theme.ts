@@ -49,5 +49,15 @@ export const theme = createTheme({
         },
       },
     },
+    MuiStack: {
+      styleOverrides: {
+        root: {
+          '& *': {
+            fontFamily: 'inherit',
+            letterSpacing: 'normal',
+          },
+        },
+      },
+    },
   },
 })
