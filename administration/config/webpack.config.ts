@@ -224,7 +224,6 @@ const createWebpackConfig = (webpackEnv: 'development' | 'production'): Configur
                   },
                 },
               ],
-              type: 'asset',
               issuer: {
                 and: [/\.(ts|tsx|js|jsx|md|mdx)$/],
               },
