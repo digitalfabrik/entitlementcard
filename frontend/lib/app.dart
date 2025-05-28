@@ -6,7 +6,7 @@ import 'package:ehrenamtskarte/configuration/settings_model.dart';
 import 'package:ehrenamtskarte/favorites/favorites_model.dart';
 import 'package:ehrenamtskarte/graphql/configured_graphql_provider.dart';
 import 'package:ehrenamtskarte/identification/user_code_model.dart';
-import 'package:ehrenamtskarte/intro_slides/intro_screen.dart';
+import 'package:ehrenamtskarte/intro_slides/intro_page.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/themes.dart';
 import 'package:flutter/foundation.dart';
@@ -31,7 +31,7 @@ final GoRouter router = GoRouter(
       path: initialRouteName,
       builder: (BuildContext context, GoRouterState state) {
         final settings = Provider.of<SettingsModel>(context);
-        return settings.firstStart ? IntroScreen() : HomePage();
+        return settings.firstStart ? IntroPage() : HomePage();
       },
       routes: [
         GoRoute(
@@ -58,7 +58,7 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: introRouteName,
       builder: (BuildContext context, GoRouterState state) {
-        return IntroScreen();
+        return IntroPage();
       },
     ),
   ],

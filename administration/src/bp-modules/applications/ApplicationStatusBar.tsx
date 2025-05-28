@@ -10,11 +10,10 @@ import { getApplicationStatus, getVerificationStatus } from './utils'
 
 const Container = styled.div`
   display: flex;
-  align-items: center;
+  width: 100%;
   margin-top: 10px;
-  max-width: 90%;
-  width: 1000px;
-  align-self: center;
+  margin-bottom: 10px;
+  align-items: center;
   @media print {
     display: none;
   }
