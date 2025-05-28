@@ -14,11 +14,6 @@ const StoreLink = styled('a')`
   margin: 24px 0;
 `
 
-const StoreIcon = styled('img')`
-  height: 40px;
-  width: 130px;
-`
-
 const LinkContainer = styled('div')`
   margin-bottom: 8px;
   font-size: 16px;
@@ -32,11 +27,11 @@ const AppStoreLinks = ({ appStoreLink, playStoreLink }: AppStoreLinksProps): Rea
   return (
     <LinkContainer>
       <StoreLink href={appStoreLink} target='_blank' rel='noreferrer'>
-        <StoreIcon src={AppStoreIcon} alt='App Store öffnen' />
+        <AppStoreIcon height='40px' width='130px' aria-hidden />
         {t('openAppStore')}
       </StoreLink>
       <StoreLink href={playStoreLink} target='_blank' rel='noreferrer'>
-        <StoreIcon src={AndroidStoreIcon} alt='Google Play öffnen' />
+        <AndroidStoreIcon height='40px' width='130px' aria-hidden />
         {t('openPlayStore')}
       </StoreLink>
     </LinkContainer>
