@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.freinet.util
 
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetApiNotReachableException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.ktor.client.HttpClient
@@ -57,8 +58,8 @@ class FreinetSearchPersonApi(private val host: String) {
                     method = HttpMethod.Get
                 }.bodyAsChannel().toInputStream().use { objectMapper.readTree(it) }
             } catch (e: Exception) {
-                logger.error("FreinetSearchPersonApi error: $e")
-                throw e
+                logger.error("Freinet search person API error: $e")
+                throw FreinetApiNotReachableException()
             }
         }
 }
