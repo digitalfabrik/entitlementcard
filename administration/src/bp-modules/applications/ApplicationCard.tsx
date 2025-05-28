@@ -142,10 +142,9 @@ const ApplicationCard = ({
 }: ApplicationCardProps) => {
   const { t } = useTranslation('applicationsOverview')
   const theme = useTheme()
-  const { createdDate: createdDateString, id, withdrawalDate, cardCreated } = application
   const jsonValueParsed: JsonField<'Array'> = JSON.parse(application.jsonValue)
   const config = useContext(ProjectConfigContext)
-  const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${id}`
+  const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${application.id}`
   const appToaster = useAppToaster()
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [openNoteDialog, setOpenNoteDialog] = useState(false)
@@ -166,8 +165,10 @@ const ApplicationCard = ({
   })
   const createCardQuery = useMemo(
     () =>
-      `${config.applicationFeature?.applicationJsonToCardQuery(jsonValueParsed)}&applicationIdToMarkAsProcessed=${id}`,
-    [config.applicationFeature, jsonValueParsed, id]
+      `${config.applicationFeature?.applicationJsonToCardQuery(jsonValueParsed)}&applicationIdToMarkAsProcessed=${
+        application.id
+      }`,
+    [config.applicationFeature, jsonValueParsed, application.id]
   )
   const personalData = useMemo(
     () => config.applicationFeature?.applicationJsonToPersonalData(jsonValueParsed),
@@ -200,7 +201,7 @@ const ApplicationCard = ({
         }}>
         <Stack direction='row' sx={{ width: '100%', gap: 2, paddingLeft: 2, paddingRight: 2 }}>
           <Typography variant='h4' sx={{ minWidth: '250px' }}>
-            {t('applicationFrom')} {formatDateWithTimezone(createdDateString, config.timezone)}
+            {t('applicationFrom')} {formatDateWithTimezone(application.createdDate, config.timezone)}
           </Typography>
           <Warning color='warning' visibility={application.withdrawalDate !== null ? 'visible' : 'hidden'} />
           <Typography
@@ -226,9 +227,11 @@ const ApplicationCard = ({
       <AccordionDetails>
         <Stack sx={{ p: 2, gap: 2 }}>
           <Stack direction='row' spacing={2} alignItems='flex-start'>
-            {withdrawalDate ? (
+            {application.withdrawalDate ? (
               <Box sx={{ bgcolor: theme.palette.warning.light, p: 2, flexGrow: 1 }}>
-                {t('withdrawalMessage', { withdrawalDate: formatDateWithTimezone(withdrawalDate, config.timezone) })}
+                {t('withdrawalMessage', {
+                  withdrawalDate: formatDateWithTimezone(application.withdrawalDate, config.timezone),
+                })}
                 <br />
                 {t('deleteApplicationSoonPrompt')}
               </Box>
@@ -274,14 +277,18 @@ const ApplicationCard = ({
                 color='primary'
                 href={createCardQuery ? `./cards/add${createCardQuery}` : undefined}
                 startIcon={<CreditScore />}>
-                {cardCreated ? t('createCardAgain') : t('createCard')}
+                {application.cardCreated ? t('createCardAgain') : t('createCard')}
               </PrimaryButton>
             </span>
           </Tooltip>
           <Button onClick={() => setDeleteDialogOpen(true)} startIcon={<Delete />} variant='outlined' color='error'>
             {t('deleteApplication')}
           </Button>
-          <Button onClick={() => onPrintApplicationById(id)} startIcon={<Print />} variant='outlined' color='inherit'>
+          <Button
+            onClick={() => onPrintApplicationById(application.id)}
+            startIcon={<Print />}
+            variant='outlined'
+            color='inherit'>
             {t('exportPdf')}
           </Button>
         </Stack>
