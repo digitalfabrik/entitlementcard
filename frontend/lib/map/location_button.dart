@@ -50,13 +50,18 @@ class _LocationButtonState extends State<LocationButton> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      checkAndRequestLocationPermission(context, requestIfNotGranted: false).then(
-        (status) => setState(() {
-          _locationStatus = status;
-        }),
-      );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      initializeLocationStatus();
     });
+  }
+
+  Future<void> initializeLocationStatus() async {
+    LocationStatus status = await checkAndRequestLocationPermission(context, requestIfNotGranted: false);
+    if (mounted) {
+      setState(() {
+        _locationStatus = status;
+      });
+    }
   }
 
   @override
