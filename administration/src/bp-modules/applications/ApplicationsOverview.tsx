@@ -74,14 +74,7 @@ const ApplicationsOverview = ({ applications }: { applications: Application[] })
   )
 
   return (
-    <Container
-      sx={{
-        flexGrow: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        maxWidth: '90%',
-        width: '1000px',
-      }}>
+    <Container sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', maxWidth: '90%', width: '1000px' }}>
       <ApplicationStatusBar
         applications={updatedApplications}
         activeBarItem={activeBarItem}
