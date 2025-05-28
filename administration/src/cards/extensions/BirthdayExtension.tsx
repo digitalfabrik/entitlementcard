@@ -14,11 +14,11 @@ export type BirthdayExtensionState = { [BIRTHDAY_EXTENSION_NAME]: PlainDate | nu
 const minBirthday = new PlainDate(1900, 1, 1)
 
 const BirthdayForm = ({
-                        value,
-                        setValue,
-                        isValid,
-                        showRequired,
-                      }: ExtensionComponentProps<BirthdayExtensionState>): ReactElement => {
+  value,
+  setValue,
+  isValid,
+  showRequired,
+}: ExtensionComponentProps<BirthdayExtensionState>): ReactElement => {
   const { t } = useTranslation('extensions')
   const [touched, setTouched] = useState(false)
   const { birthday } = value
