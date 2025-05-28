@@ -551,7 +551,7 @@
     },
     "invalidRole": "Diese Rolle kann nicht zugewiesen werden.",
     "invalidApplicationConfirmationNoteSize": "Unzulässige Zeichenlänge der Notiz erreicht. Maximal sind {{maxSize}} Zeichen erlaubt.",
-    "entitlementNotFound": "Wir konnten Ihre Angaben nicht im System finden. Bitte überprüfen Sie Ihre Angaben und versuchen Sie es erneut.",
+    "entitlementNotFound": "Wir konnten Ihre Angaben nicht im System finden.\nAus technischen Gründen stehen die Daten des Jobcenters Koblenz ab Mitte des folgenden Monats zur Verfügung.\nBitte überprüfen Sie Ihre Angaben und versuchen Sie es erneut.",
     "entitlementExpired": "Sie sind nicht länger berechtigt, einen KoblenzPass zu erstellen. Bitte kontaktieren Sie koblenzpass@stadt.koblenz.de für weitere Informationen.",
     "mailNotSend": "Email konnte nicht an {{recipient}} gesendet werden.",
     "passwordResetKeyExpired": "Die Gültigkeit ihres Links ist abgelaufen",
@@ -606,5 +606,9 @@
     "referenceNrInvalidLengthError": "Das Aktenzeichen muss eine Länge zwischen {{KoblenzReferenceNumberMinLength}} und {{KoblenzReferenceNumberMaxLength}} haben.",
     "referenceNrLabel": "Aktenzeichen",
     "startDayLabel": "Startdatum"
+  },
+  "shared": {
+    "accordionShowLess": "Weniger anzeigen",
+    "accordionShowMore": "Mehr anzeigen"
   }
 }

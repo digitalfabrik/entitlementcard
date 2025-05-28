@@ -1,3 +1,4 @@
+import { ThemeProvider } from '@mui/material'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import React, { ReactElement } from 'react'
@@ -7,6 +8,7 @@ import AuthProvider from './AuthProvider'
 import Router from './Router'
 import { AppToasterProvider } from './bp-modules/AppToaster'
 import './i18n'
+import { theme } from './mui-modules/theme'
 import { ProjectConfigProvider } from './project-configs/ProjectConfigContext'
 import getProjectConfig from './project-configs/getProjectConfig'
 
@@ -20,7 +22,9 @@ const App = (): ReactElement => (
       <AuthProvider>
         <AppApolloProvider>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <Router />
+            <ThemeProvider theme={theme}>
+              <Router />
+            </ThemeProvider>
           </LocalizationProvider>
         </AppApolloProvider>
       </AuthProvider>
