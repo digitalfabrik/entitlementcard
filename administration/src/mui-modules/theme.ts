@@ -40,6 +40,12 @@ export const theme = createTheme({
         root: {
           textTransform: 'none',
         },
+        contained: {
+          color: 'white',
+          '&:hover': {
+            color: 'white',
+          },
+        },
       },
     },
     MuiAccordion: {
