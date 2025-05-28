@@ -174,29 +174,19 @@ const ApplicationCard = ({
   )
   return (
     <Accordion
-      sx={{
-        displayPrint: isSelectedForPrint ? 'block' : 'none',
-      }}
+      sx={{ displayPrint: isSelectedForPrint ? 'block' : 'none' }}
       disableGutters
       aria-controls='panel-content'
       onChange={(_, expanded) => accordionExpandedSet(expanded)}>
       <AccordionSummary
         // Need this to display the `expandIconWrapper` slot, even if this is not directly used.
         expandIcon={<ExpandMore />}
-        slots={{
-          expandIconWrapper: AccordionExpandButton,
-        }}
+        slots={{ expandIconWrapper: AccordionExpandButton }}
         slotProps={{
-          expandIconWrapper: {
-            // @ts-expect-error Currently, MUI apparently cannot properly forward prop types from the slots
-            expanded: accordionExpanded,
-          },
+          // @ts-expect-error Currently, MUI apparently cannot properly forward prop types from the slots
+          expandIconWrapper: { expanded: accordionExpanded },
         }}
-        sx={{
-          flexDirection: 'column',
-          alignItems: 'stretch',
-          padding: 0,
-        }}>
+        sx={{ flexDirection: 'column', alignItems: 'stretch', padding: 0 }}>
         <Stack direction='row' sx={{ width: '100%', gap: 2, paddingLeft: 2, paddingRight: 2 }}>
           <Typography variant='h4' sx={{ minWidth: '250px' }}>
             {t('applicationFrom')} {formatDateWithTimezone(application.createdDate, config.timezone)}
