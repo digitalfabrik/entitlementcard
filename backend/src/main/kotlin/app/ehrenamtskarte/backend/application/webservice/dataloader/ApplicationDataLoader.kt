@@ -2,7 +2,6 @@ package app.ehrenamtskarte.backend.application.webservice.dataloader
 
 import app.ehrenamtskarte.backend.application.database.ApplicationVerificationEntity
 import app.ehrenamtskarte.backend.application.database.ApplicationVerifications
-import app.ehrenamtskarte.backend.application.database.ApplicationVerifications.nullable
 import app.ehrenamtskarte.backend.application.database.Applications
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationVerificationView
@@ -32,7 +31,7 @@ val verificationsByApplicationLoader = newNamedDataLoader<Int, _>(
         val entities = ids.map { id ->
             groupedByApplication[id]?.let { list ->
                 val verificationEntities = list.mapNotNull {
-                    if (it[ApplicationVerifications.id.nullable()] == null) {
+                    if (it.getOrNull(ApplicationVerifications.id) == null) {
                         null
                     } else {
                         ApplicationVerificationEntity.wrapRow(it)

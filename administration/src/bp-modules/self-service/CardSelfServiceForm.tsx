@@ -1,6 +1,6 @@
-import { Checkbox, FormGroup, InputGroup, Intent } from '@blueprintjs/core'
+import { Checkbox } from '@blueprintjs/core'
 import InfoOutlined from '@mui/icons-material/InfoOutlined'
-import { styled } from '@mui/material'
+import { FormGroup, Stack, TextField, styled } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
@@ -20,13 +20,9 @@ import { UnderlineTextButton } from './components/UnderlineTextButton'
 import { DataPrivacyAcceptingStatus } from './constants'
 
 const StyledCheckbox = styled(Checkbox)`
-  margin-top: 24px;
+  margin-bottom: 12px;
   font-size: 16px;
   margin-left: 4px;
-`
-
-const Container = styled('div')`
-  margin-bottom: 24px;
 `
 
 type CardSelfServiceFormProps = {
@@ -75,26 +71,39 @@ const CardSelfServiceForm = ({
 
   return (
     <>
-      <Container key={card.id}>
-        <FormGroup label={t('firstNameLastName')} labelFor='name-input'>
-          <InputGroup
-            large={viewportSmall}
+      <Stack
+        key={card.id}
+        sx={{
+          marginBottom: 3,
+          gap: 2,
+        }}>
+        <FormGroup>
+          <TextField
             id='name-input'
+            label={t('firstNameLastName')}
             placeholder='Erika Musterfrau'
             autoFocus
-            rightElement={
-              <ClearInputButton
-                viewportSmall={viewportSmall}
-                onClick={() => updateCard({ fullName: '' })}
-                input={card.fullName}
-              />
-            }
-            intent={isFullNameValid(card) || !showErrorMessage ? undefined : Intent.DANGER}
             value={card.fullName}
             onBlur={() => setTouchedFullName(true)}
             onChange={event => updateCard({ fullName: removeMultipleSpaces(event.target.value) })}
+            error={!isFullNameValid(card) && showErrorMessage}
+            helperText={
+              showErrorMessage ? <FormAlert errorMessage={getFullNameValidationErrorMessage(card.fullName)} /> : null
+            }
+            fullWidth
+            size='small'
+            sx={{ '& .MuiFormHelperText-root': { margin: '0px' } }}
+            InputProps={{
+              sx: { paddingRight: 0 },
+              endAdornment: (
+                <ClearInputButton
+                  viewportSmall={viewportSmall}
+                  onClick={() => updateCard({ fullName: '' })}
+                  input={card.fullName}
+                />
+              ),
+            }}
           />
-          {showErrorMessage && <FormAlert errorMessage={getFullNameValidationErrorMessage(card.fullName)} />}
         </FormGroup>
         <ExtensionForms card={card} updateCard={updateCard} showRequired={formSendAttempt} />
         <IconTextButton onClick={() => setOpenReferenceInformation(true)}>
@@ -120,7 +129,7 @@ const CardSelfServiceForm = ({
         {dataPrivacyAccepted === DataPrivacyAcceptingStatus.denied && (
           <FormAlert errorMessage={t('pleaseAcceptPrivacyPolicy')} />
         )}
-      </Container>
+      </Stack>
       <ActionButton onClick={createKoblenzPass} variant='contained' size='large'>
         {t('createKoblenzPass')}
       </ActionButton>
