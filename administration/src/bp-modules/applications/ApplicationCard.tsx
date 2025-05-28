@@ -7,6 +7,7 @@ import {
   AccordionSummary,
   Box,
   Button,
+  ButtonProps,
   CircularProgress,
   Dialog,
   DialogActions,
@@ -15,11 +16,11 @@ import {
   Stack,
   Tooltip,
   Typography,
+  styled,
   useTheme,
 } from '@mui/material'
 import React, { memo, useContext, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useDeleteApplicationMutation } from '../../generated/graphql'
@@ -36,14 +37,14 @@ import PreVerifiedQuickIndicator from './PreVerifiedQuickIndicator'
 import VerificationsQuickIndicator from './VerificationsQuickIndicator'
 import VerificationsView from './VerificationsView'
 
-const PrimaryButton = styled(Button)`
+const PrimaryButton = styled(Button)<ButtonProps>(({ theme }) => ({
   // TODO: Remove this style after blueprint.js is completely removed
-  &:hover {
-    color: white;
-  }
-`
+  '&:hover': {
+    color: 'white',
+  },
+}))
 
-const Spacer = styled.div`
+const Spacer = styled('div')`
   flex-grow: 1;
 `
 
