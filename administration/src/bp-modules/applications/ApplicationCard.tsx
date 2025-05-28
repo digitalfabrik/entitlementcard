@@ -37,12 +37,9 @@ import PreVerifiedQuickIndicator from './PreVerifiedQuickIndicator'
 import VerificationsQuickIndicator from './VerificationsQuickIndicator'
 import VerificationsView from './VerificationsView'
 
-const PrimaryButton = styled(Button)<ButtonProps>(({ theme }) => ({
-  // TODO: Remove this style after blueprint.js is completely removed
-  '&:hover': {
-    color: 'white',
-  },
-}))
+const PrimaryButton = styled(Button, { name: 'contained' })<ButtonProps>`
+  color: 'primary';
+`
 
 const Spacer = styled('div')`
   flex-grow: 1;
@@ -273,9 +270,8 @@ const ApplicationCard = ({
             {/* Make the outer Tooltip independent of the button's disabled state */}
             <span>
               <PrimaryButton
-                disabled={!createCardQuery}
                 variant='contained'
-                color='primary'
+                disabled={!createCardQuery}
                 href={createCardQuery ? `./cards/add${createCardQuery}` : undefined}
                 startIcon={<CreditScore />}>
                 {application.cardCreated ? t('createCardAgain') : t('createCard')}
