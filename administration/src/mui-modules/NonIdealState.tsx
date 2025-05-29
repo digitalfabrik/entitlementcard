@@ -14,7 +14,11 @@ const NonIdealState = ({
 
   return (
     <Container sx={{ color: theme.palette.text.disabled }} maxWidth='sm'>
-      <Stack alignItems='center' gap={2}>
+      <Stack
+        sx={{
+          alignItems: 'center',
+          gap: 2,
+        }}>
         {icon}
         <Typography variant='h4'>{title}</Typography>
         {description}

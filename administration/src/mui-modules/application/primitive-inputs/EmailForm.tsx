@@ -50,10 +50,12 @@ const EmailForm: Form<State, ValidatedInput, AdditionalProps> = {
         error={touched && isInvalid}
         value={state.email}
         disabled={disableAllInputs}
-        inputProps={{ maxLength: MAX_SHORT_TEXT_LENGTH }}
         onBlur={() => setTouched(true)}
         onChange={e => setState(() => ({ email: e.target.value }))}
         helperText={(showAllErrors || touched) && isInvalid ? validationResult.message : ''}
+        slotProps={{
+          htmlInput: { maxLength: MAX_SHORT_TEXT_LENGTH },
+        }}
       />
     )
   },

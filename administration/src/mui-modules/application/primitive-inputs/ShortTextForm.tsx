@@ -34,13 +34,15 @@ const Component = <I,>({
       style={{ margin: '4px 0', minWidth }}
       label={label}
       required={required}
-      inputProps={{ maxLength: MAX_SHORT_TEXT_LENGTH }}
       disabled={disableAllInputs}
       error={touched && isInvalid}
       onBlur={() => setTouched(true)}
       value={state.shortText}
       onChange={e => setState(() => ({ shortText: e.target.value }))}
       helperText={(showAllErrors || touched) && isInvalid ? validationResult.message : ''}
+      slotProps={{
+        htmlInput: { maxLength: MAX_SHORT_TEXT_LENGTH },
+      }}
     />
   )
 }
