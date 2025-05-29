@@ -23,6 +23,7 @@
     "@types",
     "src",
     "scripts",
+    "config",
     "jest.config.ts",
     "jest.setup.ts",
     "src/**/*.d.ts",

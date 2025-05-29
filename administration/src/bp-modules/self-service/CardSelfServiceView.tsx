@@ -72,10 +72,6 @@ const Text = styled.div`
   font-size: 16px;
 `
 
-const HeaderLogo = styled.img`
-  height: 40px;
-`
-
 const StyledInfoTextButton = styled(IconTextButton)`
   margin: 0;
 `
@@ -103,7 +99,7 @@ const CardSelfServiceView = (): ReactElement => {
   return (
     <Container>
       <Header>
-        <HeaderLogo src={KoblenzLogo} />
+        <KoblenzLogo height='40px' />
         <StyledInfoTextButton onClick={() => setOpenHelpDialog(true)}>
           {t('help')}
           <HelpOutlineOutlinedIcon />
