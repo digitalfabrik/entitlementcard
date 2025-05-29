@@ -49,7 +49,9 @@ const NumberForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
         onBlur={() => setTouched(true)}
         onChange={e => setState(() => ({ type: 'NumberForm', value: e.target.value }))}
         helperText={touched && isInvalid ? validationResult.message : ''}
-        inputProps={{ inputMode: 'numeric', min: options.min, max: options.max }}
+        slotProps={{
+          htmlInput: { inputMode: 'numeric', min: options.min, max: options.max },
+        }}
       />
     )
   },

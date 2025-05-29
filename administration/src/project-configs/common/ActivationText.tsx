@@ -17,7 +17,7 @@ export const ActivationText = (
   t: TFunction
 ): ReactElement => (
   <div>
-    <Typography variant='h6' mb='8px'>
+    <Typography variant='h6' sx={{ mb: '8px' }}>
       {t('headline')}
     </Typography>
     <span>
