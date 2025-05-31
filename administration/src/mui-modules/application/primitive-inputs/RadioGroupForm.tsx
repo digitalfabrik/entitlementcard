@@ -1,7 +1,8 @@
-import { Divider, FormControl, FormControlLabel, FormHelperText, FormLabel, Radio, RadioGroup } from '@mui/material'
+import { Divider, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material'
 import React, { useContext, useState } from 'react'
 
 import i18next from '../../../i18n'
+import FormAlert from '../../base/FormAlert'
 import { FormContext } from '../SteppedSubForms'
 import { Form, FormComponentProps, ValidationResult } from '../util/FormType'
 
@@ -60,7 +61,7 @@ export const createRadioGroupForm = <T extends string>(): RadioGroupForm<T> => {
               </React.Fragment>
             ))}
           </RadioGroup>
-          {(showAllErrors || touched) && isInvalid ? <FormHelperText>{validationResult.message}</FormHelperText> : null}
+          {(showAllErrors || touched) && isInvalid && <FormAlert errorMessage={validationResult.message} />}
         </FormControl>
       )
     },

@@ -4,6 +4,7 @@ import React, { useContext, useState } from 'react'
 import { isEmailValid } from '../../../bp-modules/applications/utils/verificationHelper'
 import { EmailInput } from '../../../generated/graphql'
 import i18next from '../../../i18n'
+import FormAlert from '../../base/FormAlert'
 import { FormContext } from '../SteppedSubForms'
 import { Form, FormComponentProps } from '../util/FormType'
 import { MAX_SHORT_TEXT_LENGTH } from './ShortTextForm'
@@ -53,7 +54,7 @@ const EmailForm: Form<State, ValidatedInput, AdditionalProps> = {
         inputProps={{ maxLength: MAX_SHORT_TEXT_LENGTH }}
         onBlur={() => setTouched(true)}
         onChange={e => setState(() => ({ email: e.target.value }))}
-        helperText={(showAllErrors || touched) && isInvalid ? validationResult.message : ''}
+        helperText={(showAllErrors || touched) && isInvalid && <FormAlert errorMessage={validationResult.message} />}
       />
     )
   },

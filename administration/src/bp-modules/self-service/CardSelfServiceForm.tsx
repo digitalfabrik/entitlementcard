@@ -1,6 +1,5 @@
-import { Checkbox } from '@blueprintjs/core'
 import InfoOutlined from '@mui/icons-material/InfoOutlined'
-import { FormGroup, Stack, TextField, styled } from '@mui/material'
+import { FormGroup, Stack, TextField } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
@@ -9,21 +8,16 @@ import { Card, getFullNameValidationErrorMessage, isFullNameValid, isValid } fro
 import ClearInputButton from '../../cards/extensions/components/ClearInputButton'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
 import BasicDialog from '../../mui-modules/application/BasicDialog'
+import BaseCheckbox from '../../mui-modules/base/BaseCheckbox'
+import FormAlert from '../../mui-modules/base/FormAlert'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { removeMultipleSpaces } from '../../util/helper'
 import { useAppToaster } from '../AppToaster'
 import ExtensionForms from '../cards/ExtensionForms'
 import { ActionButton } from './components/ActionButton'
-import FormAlert from './components/FormAlert'
 import { IconTextButton } from './components/IconTextButton'
 import { UnderlineTextButton } from './components/UnderlineTextButton'
 import { DataPrivacyAcceptingStatus } from './constants'
-
-const StyledCheckbox = styled(Checkbox)`
-  margin-bottom: 12px;
-  font-size: 16px;
-  margin-left: 4px;
-`
 
 type CardSelfServiceFormProps = {
   card: Card
@@ -71,12 +65,7 @@ const CardSelfServiceForm = ({
 
   return (
     <>
-      <Stack
-        key={card.id}
-        sx={{
-          marginBottom: 3,
-          gap: 2,
-        }}>
+      <Stack key={card.id} sx={{ marginBottom: 3, gap: 2 }}>
         <FormGroup>
           <TextField
             id='name-input'
@@ -110,25 +99,27 @@ const CardSelfServiceForm = ({
           <InfoOutlined />
           {t('whereToFindReferenceNumber')}
         </IconTextButton>
-        <StyledCheckbox
-          data-testid='data-privacy-checkbox'
+        <BaseCheckbox
           checked={dataPrivacyAccepted === DataPrivacyAcceptingStatus.accepted}
+          label={
+            <>
+              {t('iAccept')}
+              <UnderlineTextButton onClick={() => setOpenDataPrivacy(true)}>
+                {t('datePrivacyAgreement')}
+              </UnderlineTextButton>
+              .
+            </>
+          }
           onChange={() =>
             setDataPrivacyAccepted(
               dataPrivacyAccepted === DataPrivacyAcceptingStatus.accepted
                 ? DataPrivacyAcceptingStatus.denied
                 : DataPrivacyAcceptingStatus.accepted
             )
-          }>
-          {t('iAccept')}
-          <UnderlineTextButton onClick={() => setOpenDataPrivacy(true)}>
-            {t('datePrivacyAgreement')}
-          </UnderlineTextButton>
-          .
-        </StyledCheckbox>
-        {dataPrivacyAccepted === DataPrivacyAcceptingStatus.denied && (
-          <FormAlert errorMessage={t('pleaseAcceptPrivacyPolicy')} />
-        )}
+          }
+          hasError={dataPrivacyAccepted === DataPrivacyAcceptingStatus.denied}
+          errorMessage={t('pleaseAcceptPrivacyPolicy')}
+        />
       </Stack>
       <ActionButton onClick={createKoblenzPass} variant='contained' size='large'>
         {t('createKoblenzPass')}
