@@ -1,60 +1,89 @@
+# yaml-language-server: $schema=https://json.schemastore.org/dependabot-2.0.json
+
 version: 2
 updates:
-
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: monthly
     ignore:
       - dependency-name: "*"
         # Ignore major updates for all dependencies
-        update-types: [ "version-update:semver-major" ]
-    open-pull-requests-limit: 2
+        update-types: ["version-update:semver-major"]
+    groups:
+      minor:
+        patterns: ["*"]
+        update-types: [minor]
+    open-pull-requests-limit: 1
 
   - package-ecosystem: gradle
     directory: "/backend"
     schedule:
-      interval: daily
+      interval: monthly
     labels:
       - "not-testable"
-    open-pull-requests-limit: 2
+      - "dependencies"
+    ignore:
+      - dependency-name: "*"
+        # Ignore major updates for all dependencies
+        update-types: ["version-update:semver-major"]
+    groups:
+      minor:
+        patterns: ["*"]
+        update-types: [minor]
+    open-pull-requests-limit: 1
 
   - package-ecosystem: pub
     directory: "/frontend"
     schedule:
-      interval: daily
+      interval: monthly
     labels:
       - "not-testable"
-    open-pull-requests-limit: 2
+      - "dependencies"
+    open-pull-requests-limit: 1
     ignore:
       - dependency-name: "*"
         # Ignore major updates for all dependencies
-        update-types: [ "version-update:semver-major" ]
+        update-types: ["version-update:semver-major"]
+    groups:
+      minor:
+        patterns: ["*"]
+        update-types: [minor]
 
   - package-ecosystem: gradle
     directory: "/frontend/android"
     schedule:
-      interval: daily
+      interval: monthly
     labels:
       - "not-testable"
-    open-pull-requests-limit: 2
+      - "dependencies"
+    open-pull-requests-limit: 1
 
   - package-ecosystem: bundler
     directory: "/frontend/ios"
     schedule:
-      interval: daily
+      interval: monthly
     labels:
       - "not-testable"
-    open-pull-requests-limit: 2
+      - "dependencies"
+    open-pull-requests-limit: 1
     ignore:
       - dependency-name: "*"
         # Ignore major updates for all dependencies
-        update-types: [ "version-update:semver-major" ]
+        update-types: ["version-update:semver-major"]
+    groups:
+      minor:
+        patterns: ["*"]
+        update-types: [minor]
 
   - package-ecosystem: docker-compose
     directory: "/"
     schedule:
-      interval: daily
+      interval: monthly
     labels:
       - "not-testable"
-    open-pull-requests-limit: 2
+      - "dependencies"
+    open-pull-requests-limit: 1
+    groups:
+      all:
+        patterns: ["*"]

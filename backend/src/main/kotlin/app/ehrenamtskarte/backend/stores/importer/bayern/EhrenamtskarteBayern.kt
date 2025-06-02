@@ -4,8 +4,10 @@ import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.addStep
 import app.ehrenamtskarte.backend.stores.importer.bayern.steps.DownloadLbe
 import app.ehrenamtskarte.backend.stores.importer.bayern.steps.FilterLbe
+import app.ehrenamtskarte.backend.stores.importer.bayern.steps.FilteredStoresCsvOutput
 import app.ehrenamtskarte.backend.stores.importer.bayern.steps.MapFromLbe
 import app.ehrenamtskarte.backend.stores.importer.bayern.steps.PostSanitizeFilter
+import app.ehrenamtskarte.backend.stores.importer.bayern.types.FilteredStore
 import app.ehrenamtskarte.backend.stores.importer.common.steps.FilterDuplicates
 import app.ehrenamtskarte.backend.stores.importer.common.steps.SanitizeAddress
 import app.ehrenamtskarte.backend.stores.importer.common.steps.SanitizeGeocode
@@ -24,12 +26,12 @@ object EhrenamtskarteBayern : Pipeline {
         }
     }
 
-    override fun import(config: ImportConfig, logger: Logger) {
+    override fun import(config: ImportConfig, logger: Logger, filteredStores: MutableList<FilteredStore>) {
         Unit
             .addStep(DownloadLbe(config, logger, httpClient), logger) {
                 logger.info("== Download lbe data ==")
             }
-            .addStep(FilterLbe(config, logger), logger) {
+            .addStep(FilterLbe(config, logger, filteredStores), logger) {
                 logger.info("== Filter lbe data ==")
             }
             .addStep(MapFromLbe(config, logger), logger) {
@@ -41,11 +43,14 @@ object EhrenamtskarteBayern : Pipeline {
             .addStep(SanitizeGeocode(config, logger, httpClient), logger) {
                 logger.info("== Sanitize data with geocoding ==")
             }
-            .addStep(PostSanitizeFilter(config, logger, httpClient), logger) {
+            .addStep(PostSanitizeFilter(config, logger, filteredStores), logger) {
                 logger.info("== Filter sanitized data ==")
             }
-            .addStep(FilterDuplicates(config, logger), logger) {
+            .addStep(FilterDuplicates(config, logger, filteredStores), logger) {
                 logger.info("== Filter duplicated data ==")
+            }
+            .addStep(FilteredStoresCsvOutput(config, filteredStores), logger) {
+                logger.info("== Write CSV Filtered Stores ==")
             }
             .addStep(Store(config, logger), logger) {
                 logger.info("== Store remaining data to db ==")

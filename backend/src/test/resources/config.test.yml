@@ -19,6 +19,7 @@ projects:
     pipelineName: dummy
     administrationBaseUrl: https://test.app
     administrationName: dummy
+    emailSignature: Ihr Team der Ehrenamtskarte Bayern
     timezone: "Europe/Berlin"
     selfServiceEnabled: false
     smtp:
@@ -35,6 +36,7 @@ projects:
     importUrl: dummy
     administrationBaseUrl: dummy
     administrationName: dummy
+    emailSignature: Ihr Team des Nürnberg-Passes
     timezone: "Europe/Berlin"
     selfServiceEnabled: false
     smtp:
@@ -46,6 +48,7 @@ projects:
     importUrl: dummy
     administrationBaseUrl: dummy
     administrationName: dummy
+    emailSignature: Ihr Team des KoblenzPasses
     timezone: "Europe/Berlin"
     selfServiceEnabled: true
     smtp:
