@@ -117,6 +117,7 @@
     "regionSelectionLabel": "Empfänger des Antrags",
     "personalAddress": "Adresse (Erstwohnsitz)",
     "personalFurtherInformation": "Weitere Angaben",
+    "attachFileButton": "Datei anhängen",
     "organizationContactPersonDescription": "Bitte geben Sie hier die Daten der Person an, die ihr ehrenamtliches Engagement bestätigen kann.",
     "organizationContactPersonAlert": "Die Kontaktperson der Organisation und die antragsstellende Person scheinen identisch zu sein. <br/>Bitte beachten Sie, dass Anträge auf dieser Grundlage nicht bewilligt werden können.",
     "juleicaCardAttachmentTitle": "Kopie der JuLeiCa",
