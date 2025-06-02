@@ -37,13 +37,6 @@ const Title = styled.span`
   font-weight: bold;
 `
 
-type ApplicationStatusBarProps = {
-  applications: GetApplicationsType[]
-  setActiveBarItem: (item: ApplicationStatusBarItemType) => void
-  activeBarItem: ApplicationStatusBarItemType
-  barItems: ApplicationStatusBarItemType[]
-}
-
 const getApplicationCount = (applications: GetApplicationsType[], status?: ApplicationStatus): number => {
   if (status === undefined) {
     return applications.length
@@ -53,6 +46,13 @@ const getApplicationCount = (applications: GetApplicationsType[], status?: Appli
       getApplicationStatus(application.verifications.map(getVerificationStatus), !!application.withdrawalDate) ===
       status
   ).length
+}
+
+type ApplicationStatusBarProps = {
+  applications: GetApplicationsType[]
+  barItems: ApplicationStatusBarItemType[]
+  activeBarItem: ApplicationStatusBarItemType
+  setActiveBarItem: (item: ApplicationStatusBarItemType) => void
 }
 
 const ApplicationStatusBar = ({

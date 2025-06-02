@@ -2,7 +2,7 @@ import React from 'react'
 
 import { renderWithTranslation } from '../../../testing/render'
 import ApplicationStatusBar from '../ApplicationStatusBar'
-import { barItems } from '../constants'
+import { barItems } from '../ApplicationsOverview'
 import { GetApplicationsType } from '../types'
 
 const applications: GetApplicationsType[] = [

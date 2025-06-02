@@ -11,10 +11,33 @@ import StandaloneCenter from '../StandaloneCenter'
 import ApplicationCard from './ApplicationCard'
 import type { ApplicationCardProps } from './ApplicationCard'
 import ApplicationStatusBar from './ApplicationStatusBar'
-import { ApplicationStatusBarItemType, barItems } from './constants'
+import { ApplicationStatus, ApplicationStatusBarItemType } from './constants'
 import usePrintApplication from './hooks/usePrintApplication'
 import { GetApplicationsType } from './types'
 import { getApplicationStatus, getVerificationStatus } from './utils'
+
+export const barItems: ApplicationStatusBarItemType[] = [
+  {
+    title: 'allApplications',
+    status: undefined,
+  },
+  {
+    title: 'accepted',
+    status: ApplicationStatus.fullyVerified,
+  },
+  {
+    title: 'rejected',
+    status: ApplicationStatus.fullyRejected,
+  },
+  {
+    title: 'withdrawed',
+    status: ApplicationStatus.withdrawed,
+  },
+  {
+    title: 'open',
+    status: ApplicationStatus.ambiguous,
+  },
+]
 
 const ApplicationList = styled(FlipMove)`
   display: flex;
