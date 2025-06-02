@@ -2,10 +2,10 @@ import React from 'react'
 
 import { renderWithTranslation } from '../../../testing/render'
 import ApplicationStatusBar from '../ApplicationStatusBar'
-import { Application } from '../ApplicationsOverview'
 import { barItems } from '../constants'
+import { GetApplicationsType } from '../types'
 
-const applications: Application[] = [
+const applications: GetApplicationsType[] = [
   {
     createdDate: '2024-05-15T09:20:23.350015Z',
     id: 1,

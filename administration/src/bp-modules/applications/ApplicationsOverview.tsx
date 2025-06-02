@@ -6,7 +6,6 @@ import FlipMove from 'react-flip-move'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
-import { GetApplicationsQuery } from '../../generated/graphql'
 import NonIdealState from '../../mui-modules/NonIdealState'
 import StandaloneCenter from '../StandaloneCenter'
 import ApplicationCard from './ApplicationCard'
@@ -14,6 +13,7 @@ import type { ApplicationCardProps } from './ApplicationCard'
 import ApplicationStatusBar from './ApplicationStatusBar'
 import { ApplicationStatusBarItemType, barItems } from './constants'
 import usePrintApplication from './hooks/usePrintApplication'
+import { GetApplicationsType } from './types'
 import { getApplicationStatus, getVerificationStatus } from './utils'
 
 const ApplicationList = styled(FlipMove)`
@@ -23,7 +23,6 @@ const ApplicationList = styled(FlipMove)`
   height: 100%;
   gap: 16px;
 `
-export type Application = GetApplicationsQuery['applications'][number]
 
 // Necessary for FlipMove, as it cannot handle functional components
 // eslint-disable-next-line react/prefer-stateless-function
@@ -38,7 +37,7 @@ const sortByStatus = (a: number, b: number): number => a - b
 const sortByDateAsc = (a: Date, b: Date): number => a.getTime() - b.getTime()
 
 // Applications will be sorted by status f.e. fullyVerified/fullyRejected/withdrawed/ambiguous and within this status by creation date asc
-const sortApplications = (applications: Application[]): Application[] =>
+const sortApplications = (applications: GetApplicationsType[]): GetApplicationsType[] =>
   applications
     .map(application => ({
       ...application,
@@ -56,13 +55,16 @@ const sortApplications = (applications: Application[]): Application[] =>
 const getEmptyApplicationsListStatusDescription = (activeBarItem: ApplicationStatusBarItemType, t: TFunction): string =>
   activeBarItem.status !== undefined ? `${t(activeBarItem.title).toLowerCase()}en` : ''
 
-const ApplicationsOverview = ({ applications }: { applications: Application[] }): ReactElement => {
+const ApplicationsOverview = ({ applications }: { applications: GetApplicationsType[] }): ReactElement => {
   const [updatedApplications, setUpdatedApplications] = useState(applications)
   const { applicationIdForPrint, printApplicationById } = usePrintApplication()
   const [activeBarItem, setActiveBarItem] = useState<ApplicationStatusBarItemType>(barItems[0])
   const { t } = useTranslation('applicationsOverview')
-  const sortedApplications: Application[] = useMemo(() => sortApplications(updatedApplications), [updatedApplications])
-  const filteredApplications: Application[] = useMemo(
+  const sortedApplications: GetApplicationsType[] = useMemo(
+    () => sortApplications(updatedApplications),
+    [updatedApplications]
+  )
+  const filteredApplications: GetApplicationsType[] = useMemo(
     () =>
       sortedApplications.filter(
         application =>

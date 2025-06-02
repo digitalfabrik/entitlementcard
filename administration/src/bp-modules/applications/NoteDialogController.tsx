@@ -9,7 +9,7 @@ import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useUpdateApplicationNoteMutation } from '../../generated/graphql'
 import { useAppToaster } from '../AppToaster'
 import TextAreaDialog from '../components/TextAreaDialog'
-import type { Application } from './ApplicationsOverview'
+import { GetApplicationsType } from './types'
 
 const NoteButton = styled(Button)`
   align-self: flex-start;
@@ -23,10 +23,10 @@ const MultilineContent = styled(Tooltip)`
 `
 
 type NoteDialogControllerProps = {
-  application: Application
+  application: GetApplicationsType
   isOpen: boolean
   onOpenNoteDialog: (value: boolean) => void
-  onChange: (application: Application) => void
+  onChange: (application: GetApplicationsType) => void
 }
 
 const EXCERPT_LENGTH = 80
