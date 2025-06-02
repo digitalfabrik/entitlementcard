@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import VerificationIndicator from './components/VerificationIndicator'
 import { VerificationStatus } from './constants'
-import { GetApplicationsType } from './types'
+import { GetApplicationsVerificationType } from './types'
 import { getVerificationStatus } from './utils'
 
 const ToolTipContent = forwardRef<HTMLDivElement, unknown>((p, ref) => {
@@ -27,7 +27,7 @@ const ToolTipContent = forwardRef<HTMLDivElement, unknown>((p, ref) => {
   )
 })
 
-const VerificationQuickIndicator = ({ verifications }: { verifications: GetApplicationsType['verifications'] }) => {
+const VerificationQuickIndicator = ({ verifications }: { verifications: GetApplicationsVerificationType[] }) => {
   const verificationStatuses = verifications.map(getVerificationStatus)
 
   return (
