@@ -1,5 +1,4 @@
-import { ApplicationStatus, VerificationStatus } from '../constants'
-import { GetApplicationsVerificationType } from '../types'
+import { ApplicationStatus, GetApplicationsVerificationType, VerificationStatus } from '../types'
 
 export const getApplicationStatus = (status: number[], isWithdrawed: boolean): ApplicationStatus => {
   if (isWithdrawed) {
