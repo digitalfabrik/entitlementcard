@@ -1,6 +1,6 @@
-import { GetApplicationsType } from '../types'
+import { GetApplicationsVerificationType } from '../types'
 
-export const verificationsAwaiting: GetApplicationsType['verifications'] = [
+export const verificationsAwaiting: GetApplicationsVerificationType[] = [
   {
     contactEmailAddress: 'erika.musterfrau@posteo.de',
     organizationName: 'Verein420',
@@ -15,7 +15,7 @@ export const verificationsAwaiting: GetApplicationsType['verifications'] = [
   },
 ]
 
-export const verificationsMixed: GetApplicationsType['verifications'] = [
+export const verificationsMixed: GetApplicationsVerificationType[] = [
   {
     contactEmailAddress: 'erika.musterfrau@posteo.de',
     organizationName: 'Verein420',
@@ -36,7 +36,7 @@ export const verificationsMixed: GetApplicationsType['verifications'] = [
   },
 ]
 
-export const verificationsRejected: GetApplicationsType['verifications'] = [
+export const verificationsRejected: GetApplicationsVerificationType[] = [
   {
     contactEmailAddress: 'erika.musterfrau@posteo.de',
     organizationName: 'Verein420',
@@ -50,7 +50,7 @@ export const verificationsRejected: GetApplicationsType['verifications'] = [
     verifiedDate: null,
   },
 ]
-export const verificationsVerified: GetApplicationsType['verifications'] = [
+export const verificationsVerified: GetApplicationsVerificationType[] = [
   {
     contactEmailAddress: 'erika.musterfrau@posteo.de',
     organizationName: 'Verein420',
