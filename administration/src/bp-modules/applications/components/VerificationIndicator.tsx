@@ -2,7 +2,7 @@ import { Icon, Intent } from '@blueprintjs/core'
 import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
-import { VerificationStatus } from '../constants'
+import { VerificationStatus } from '../types'
 
 const StyledIndicator = styled.span`
   display: inline-block;

@@ -3,8 +3,7 @@ import React, { forwardRef, memo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import VerificationIndicator from './components/VerificationIndicator'
-import { VerificationStatus } from './constants'
-import { GetApplicationsVerificationType } from './types'
+import { GetApplicationsVerificationType, VerificationStatus } from './types'
 import { getVerificationStatus } from './utils'
 
 const ToolTipContent = forwardRef<HTMLDivElement, unknown>((p, ref) => {

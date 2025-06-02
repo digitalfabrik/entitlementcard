@@ -4,8 +4,7 @@ import styled from 'styled-components'
 
 import ApplicationStatusHelpButton from './ApplicationStatusBarHelpButton'
 import ApplicationStatusBarItem from './ApplicationStatusBarItem'
-import { ApplicationStatus, ApplicationStatusBarItemType } from './constants'
-import { GetApplicationsType } from './types'
+import { ApplicationStatus, ApplicationStatusBarItemType, GetApplicationsType } from './types'
 import { getApplicationStatus, getVerificationStatus } from './utils'
 
 const Container = styled.div`
