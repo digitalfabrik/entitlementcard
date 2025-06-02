@@ -2,18 +2,22 @@
 
 version: 2
 updates:
+  # group updates for patch version
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: monthly
+    labels:
+      - "not-testable"
+      - "dependencies"
     ignore:
       - dependency-name: "*"
-        # Ignore major updates for all dependencies
-        update-types: ["version-update:semver-major"]
+        # Ignore major and minor updates for all dependencies
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
     groups:
-      minor:
+      patch:
         patterns: ["*"]
-        update-types: [minor]
+        update-types: [patch]
     open-pull-requests-limit: 1
 
   - package-ecosystem: gradle
@@ -25,12 +29,12 @@ updates:
       - "dependencies"
     ignore:
       - dependency-name: "*"
-        # Ignore major updates for all dependencies
-        update-types: ["version-update:semver-major"]
+        # Ignore major and minor updates for all dependencies
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
     groups:
-      minor:
+      patch:
         patterns: ["*"]
-        update-types: [minor]
+        update-types: [patch]
     open-pull-requests-limit: 1
 
   - package-ecosystem: pub
@@ -43,21 +47,12 @@ updates:
     open-pull-requests-limit: 1
     ignore:
       - dependency-name: "*"
-        # Ignore major updates for all dependencies
-        update-types: ["version-update:semver-major"]
+        # Ignore major and minor updates for all dependencies
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
     groups:
-      minor:
+      patch:
         patterns: ["*"]
-        update-types: [minor]
-
-  - package-ecosystem: gradle
-    directory: "/frontend/android"
-    schedule:
-      interval: monthly
-    labels:
-      - "not-testable"
-      - "dependencies"
-    open-pull-requests-limit: 1
+        update-types: [patch]
 
   - package-ecosystem: bundler
     directory: "/frontend/ios"
@@ -69,21 +64,85 @@ updates:
     open-pull-requests-limit: 1
     ignore:
       - dependency-name: "*"
-        # Ignore major updates for all dependencies
-        update-types: ["version-update:semver-major"]
+        # Ignore major and minor updates for all dependencies
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
     groups:
-      minor:
+      patch:
         patterns: ["*"]
-        update-types: [minor]
+        update-types: [patch]
+
+  # single updates for minor version
+  - package-ecosystem: "npm"
+    target-branch: main # see https://github.com/dependabot/dependabot-core/issues/1778#issuecomment-1988140219
+    directory: "/"
+    schedule:
+      interval: "daily"
+    labels:
+      - "not-testable"
+      - "dependencies"
+    ignore:
+      - dependency-name: "*"
+        # Ignore major and patch updates for all dependencies
+        update-types: ["version-update:semver-major", "version-update:semver-patch"]
+    open-pull-requests-limit: 2
+
+  - package-ecosystem: gradle
+    target-branch: main # see https://github.com/dependabot/dependabot-core/issues/1778#issuecomment-1988140219
+    directory: "/backend"
+    schedule:
+      interval: daily
+    labels:
+      - "not-testable"
+      - "dependencies"
+    ignore:
+      - dependency-name: "*"
+        # Ignore major and patch updates for all dependencies
+        update-types: ["version-update:semver-major", "version-update:semver-patch"]
+    open-pull-requests-limit: 2
+
+  - package-ecosystem: pub
+    target-branch: main # see https://github.com/dependabot/dependabot-core/issues/1778#issuecomment-1988140219
+    directory: "/frontend"
+    schedule:
+      interval: daily
+    labels:
+      - "not-testable"
+      - "dependencies"
+    open-pull-requests-limit: 2
+    ignore:
+      - dependency-name: "*"
+        # Ignore major and patch updates for all dependencies
+        update-types: ["version-update:semver-major", "version-update:semver-patch"]
+
+  - package-ecosystem: bundler
+    target-branch: main # see https://github.com/dependabot/dependabot-core/issues/1778#issuecomment-1988140219
+    directory: "/frontend/ios"
+    schedule:
+      interval: daily
+    labels:
+      - "not-testable"
+      - "dependencies"
+    open-pull-requests-limit: 2
+    ignore:
+      - dependency-name: "*"
+        # Ignore major and patch updates for all dependencies
+        update-types: ["version-update:semver-major", "version-update:semver-patch"]
+
+  # Single weekly updates for other ecosystems with few dependencies including all update types
+  - package-ecosystem: gradle
+    directory: "/frontend/android"
+    schedule:
+      interval: weekly
+    labels:
+      - "not-testable"
+      - "dependencies"
+    open-pull-requests-limit: 2
 
   - package-ecosystem: docker-compose
     directory: "/"
     schedule:
-      interval: monthly
+      interval: weekly
     labels:
       - "not-testable"
       - "dependencies"
-    open-pull-requests-limit: 1
-    groups:
-      all:
-        patterns: ["*"]
+    open-pull-requests-limit: 2
