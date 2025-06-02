@@ -7,6 +7,9 @@ updates:
     directory: "/"
     schedule:
       interval: monthly
+    labels:
+      - "not-testable"
+      - "dependencies"
     ignore:
       - dependency-name: "*"
         # Ignore major and minor updates for all dependencies
@@ -74,6 +77,9 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    labels:
+      - "not-testable"
+      - "dependencies"
     ignore:
       - dependency-name: "*"
         # Ignore major and patch updates for all dependencies
@@ -85,13 +91,13 @@ updates:
     directory: "/backend"
     schedule:
       interval: daily
+    labels:
+      - "not-testable"
+      - "dependencies"
     ignore:
       - dependency-name: "*"
         # Ignore major and patch updates for all dependencies
         update-types: ["version-update:semver-major", "version-update:semver-patch"]
-    labels:
-      - "not-testable"
-      - "dependencies"
     open-pull-requests-limit: 2
 
   - package-ecosystem: pub
@@ -101,6 +107,7 @@ updates:
       interval: daily
     labels:
       - "not-testable"
+      - "dependencies"
     open-pull-requests-limit: 2
     ignore:
       - dependency-name: "*"
