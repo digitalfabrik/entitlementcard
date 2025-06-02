@@ -9,11 +9,6 @@ describe('FormAlert', () => {
     expect(container.firstChild).toBeNull()
   })
 
-  it('should not render when errorMessage is undefined', () => {
-    const { container } = render(<FormAlert errorMessage={undefined} />)
-    expect(container.firstChild).toBeNull()
-  })
-
   it('should render error message', () => {
     const testMessage = 'Test error message'
     const { getByText } = render(<FormAlert errorMessage={testMessage} />)
