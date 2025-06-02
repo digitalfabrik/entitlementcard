@@ -4,8 +4,8 @@ import styled from 'styled-components'
 
 import ApplicationStatusHelpButton from './ApplicationStatusBarHelpButton'
 import ApplicationStatusBarItem from './ApplicationStatusBarItem'
-import type { Application } from './ApplicationsOverview'
 import { ApplicationStatus, ApplicationStatusBarItemType } from './constants'
+import { GetApplicationsType } from './types'
 import { getApplicationStatus, getVerificationStatus } from './utils'
 
 const Container = styled.div`
@@ -38,13 +38,13 @@ const Title = styled.span`
 `
 
 type ApplicationStatusBarProps = {
-  applications: Application[]
+  applications: GetApplicationsType[]
   setActiveBarItem: (item: ApplicationStatusBarItemType) => void
   activeBarItem: ApplicationStatusBarItemType
   barItems: ApplicationStatusBarItemType[]
 }
 
-const getApplicationCount = (applications: Application[], status?: ApplicationStatus): number => {
+const getApplicationCount = (applications: GetApplicationsType[], status?: ApplicationStatus): number => {
   if (status === undefined) {
     return applications.length
   }

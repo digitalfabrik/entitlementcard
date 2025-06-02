@@ -1,5 +1,5 @@
-import type { Application } from '../ApplicationsOverview'
 import { ApplicationStatus, VerificationStatus } from '../constants'
+import { GetApplicationsType } from '../types'
 
 export const getApplicationStatus = (status: number[], isWithdrawed: boolean): ApplicationStatus => {
   if (isWithdrawed) {
@@ -14,7 +14,9 @@ export const getApplicationStatus = (status: number[], isWithdrawed: boolean): A
   return ApplicationStatus.ambiguous
 }
 
-export const getVerificationStatus = (verification: Application['verifications'][number]): VerificationStatus => {
+export const getVerificationStatus = (
+  verification: GetApplicationsType['verifications'][number]
+): VerificationStatus => {
   if (verification.verifiedDate) {
     return VerificationStatus.Verified
   }
