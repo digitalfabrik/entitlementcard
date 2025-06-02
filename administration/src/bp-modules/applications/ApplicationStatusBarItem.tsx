@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
-import { ApplicationStatusBarItemType } from './constants'
+import { ApplicationStatusBarItemType } from './types'
 
 const ItemContainer = styled.button<{ $active: boolean }>`
   display: flex;

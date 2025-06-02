@@ -6,7 +6,7 @@ import styled from 'styled-components'
 
 import { PreVerifiedEntitlementType, preVerifiedEntitlements } from './PreVerifiedEntitlementType'
 import VerificationIndicator from './components/VerificationIndicator'
-import { VerificationStatus } from './constants'
+import { VerificationStatus } from './types'
 
 type PreVerifiedLabelMetaData = {
   backgroundColor: string

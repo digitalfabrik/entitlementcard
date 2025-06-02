@@ -11,9 +11,8 @@ import StandaloneCenter from '../StandaloneCenter'
 import ApplicationCard from './ApplicationCard'
 import type { ApplicationCardProps } from './ApplicationCard'
 import ApplicationStatusBar from './ApplicationStatusBar'
-import { ApplicationStatus, ApplicationStatusBarItemType } from './constants'
 import usePrintApplication from './hooks/usePrintApplication'
-import { GetApplicationsType } from './types'
+import { ApplicationStatus, ApplicationStatusBarItemType, GetApplicationsType } from './types'
 import { getApplicationStatus, getVerificationStatus } from './utils'
 
 export const barItems: ApplicationStatusBarItemType[] = [

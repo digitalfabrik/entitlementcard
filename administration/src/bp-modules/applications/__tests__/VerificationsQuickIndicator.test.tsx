@@ -8,7 +8,7 @@ import {
   verificationsRejected,
   verificationsVerified,
 } from '../__mocks__/verificationData'
-import { VerificationStatus } from '../constants'
+import { VerificationStatus } from '../types'
 
 jest.mock('@blueprintjs/core', () => ({
   ...jest.requireActual('@blueprintjs/core'),
