@@ -263,7 +263,7 @@
     "printQRCodes": "QR-Codes drucken",
     "validationError": "Validierungsfehler",
     "cardCreationConfirmationMessage": "Bestätigungsmail wurde versendet.",
-    "freinetDataSyncSuccessMessage": "Bewerbung erfolgreich an Freinet gesendet."
+    "freinetDataSyncSuccessMessage": "Antragsdaten wurden erfolgreich an Freinet gesendet."
   },
   "misc": {
     "openAppStore": "AppStore öffnen",
@@ -563,7 +563,7 @@
     "pdfCreationError": "Etwas ist schiefgegangen beim Erstellen der PDF.",
     "csvCreationError": "Etwas ist schiefgegangen beim Erstellen der CSV.",
     "freinetAgencyNotFound": "Diese Agentur konnte in Freinet nicht gefunden werden.",
-    "freinetMultiplePersonError": "Der antragstellenden Person konnte keine Person in Freinet-Online zugeordnet werden. Bitte aktualisieren Sie die Daten in Freinet-Online manuell.",
+    "freinetMultiplePersonError": "Der antragstellenden Person konnte keine Person in Freinet-Online eindeutig zugeordnet werden. Bitte aktualisieren Sie die Daten in Freinet-Online manuell.",
     "freinetApiNotReachableError": "Die eingegebenen Daten stimmen nicht eindeutig mit einer Person in Freinet-Online überein. Bitte prüfen Sie die Angaben oder nehmen Sie die Aktualisierung direkt in Freinet-Online vor."
   },
   "applicationVerification": {

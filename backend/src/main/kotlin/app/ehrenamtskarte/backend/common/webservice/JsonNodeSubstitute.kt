@@ -37,8 +37,3 @@ fun JsonNode.substitute(path: String, value: Int, mapper: ObjectMapper) {
         else -> throw IllegalStateException("Expected ArrayNode or ObjectNode.")
     }
 }
-
-fun JsonNode.findValueByName(fieldName: String): String? =
-    this.firstOrNull { it["name"].asText() == fieldName }
-        ?.get("value")
-        ?.asText()
