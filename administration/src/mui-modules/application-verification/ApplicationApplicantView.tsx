@@ -5,9 +5,9 @@ import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Application } from '../../bp-modules/applications/ApplicationsOverview'
 import JsonFieldView, { GeneralJsonField } from '../../bp-modules/applications/JsonFieldView'
 import VerificationsView from '../../bp-modules/applications/VerificationsView'
+import { GetApplicationsType } from '../../bp-modules/applications/types'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useWithdrawApplicationMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
@@ -33,7 +33,7 @@ const StyledDivider = styled(Divider)`
 `
 
 type ApplicationApplicantViewProps = {
-  application: Application
+  application: GetApplicationsType
   providedKey: string
   gotWithdrawed: () => void
 }

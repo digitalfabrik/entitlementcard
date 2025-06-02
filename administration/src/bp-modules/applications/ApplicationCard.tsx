@@ -28,7 +28,6 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { useAppToaster } from '../AppToaster'
-import type { Application } from './ApplicationsOverview'
 import type { JsonField } from './JsonFieldView'
 import JsonFieldView, { findValue } from './JsonFieldView'
 import NoteDialogController from './NoteDialogController'
@@ -36,6 +35,7 @@ import { getPreVerifiedEntitlementType } from './PreVerifiedEntitlementType'
 import PreVerifiedQuickIndicator from './PreVerifiedQuickIndicator'
 import VerificationsQuickIndicator from './VerificationsQuickIndicator'
 import VerificationsView from './VerificationsView'
+import { GetApplicationsType } from './types'
 
 const PrimaryButton = styled(Button, { name: 'contained' })<ButtonProps>`
   color: 'primary';
@@ -49,7 +49,7 @@ const ApplicationIndicators = ({
   application,
   applicationJsonData,
 }: {
-  application: Application
+  application: GetApplicationsType
   applicationJsonData: JsonField<'Array'>
 }) => {
   const preVerifiedEntitlementType = getPreVerifiedEntitlementType(
@@ -124,11 +124,11 @@ const AccordionExpandButton = (p: { expanded: boolean }) => {
 }
 
 export type ApplicationCardProps = {
-  application: Application
+  application: GetApplicationsType
   isSelectedForPrint: boolean
   onDelete: () => void
   onPrintApplicationById: (applicationId: number) => void
-  onChange: (application: Application) => void
+  onChange: (application: GetApplicationsType) => void
 }
 
 const ApplicationCard = ({

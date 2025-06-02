@@ -2,9 +2,9 @@ import { Stack, Tooltip, useTheme } from '@mui/material'
 import React, { forwardRef, memo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import type { Application } from './ApplicationsOverview'
 import VerificationIndicator from './components/VerificationIndicator'
 import { VerificationStatus } from './constants'
+import { GetApplicationsType } from './types'
 import { getVerificationStatus } from './utils'
 
 const ToolTipContent = forwardRef<HTMLDivElement, unknown>((p, ref) => {
@@ -27,7 +27,7 @@ const ToolTipContent = forwardRef<HTMLDivElement, unknown>((p, ref) => {
   )
 })
 
-const VerificationQuickIndicator = ({ verifications }: { verifications: Application['verifications'] }) => {
+const VerificationQuickIndicator = ({ verifications }: { verifications: GetApplicationsType['verifications'] }) => {
   const verificationStatuses = verifications.map(getVerificationStatus)
 
   return (
