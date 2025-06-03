@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import ApplicationStatusHelpButton from './ApplicationStatusBarHelpButton'
 import ApplicationStatusBarItem from './ApplicationStatusBarItem'
 import { ApplicationStatus, ApplicationStatusBarItemType, GetApplicationsType } from './types'
-import { getApplicationStatus, getVerificationStatus } from './utils'
+import { getApplicationStatus } from './utils'
 
 const Container = styled.div`
   display: flex;
@@ -40,11 +40,7 @@ const getApplicationCount = (applications: GetApplicationsType[], status?: Appli
   if (status === undefined) {
     return applications.length
   }
-  return applications.filter(
-    application =>
-      getApplicationStatus(application.verifications.map(getVerificationStatus), !!application.withdrawalDate) ===
-      status
-  ).length
+  return applications.filter(application => getApplicationStatus(application) === status).length
 }
 
 type ApplicationStatusBarProps = {
