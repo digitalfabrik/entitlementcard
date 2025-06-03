@@ -1,28 +1,33 @@
-import { ApplicationStatus, GetApplicationsType, GetApplicationsVerificationType, VerificationStatus } from '../types'
+import {
+  ApplicationVerificationStatus,
+  GetApplicationsType,
+  GetApplicationsVerificationType,
+  VerificationStatus,
+} from '../types'
 
-export const getVerificationStatus = (verification: GetApplicationsVerificationType): VerificationStatus => {
+export const verificationStatus = (verification: GetApplicationsVerificationType): VerificationStatus => {
   if (verification.verifiedDate) {
     return VerificationStatus.Verified
   }
   if (verification.rejectedDate) {
     return VerificationStatus.Rejected
   }
-  return VerificationStatus.Awaiting
+  return VerificationStatus.Pending
 }
 
-export const getApplicationStatus = (application: GetApplicationsType): ApplicationStatus => {
+export const applicationEffectiveStatus = (application: GetApplicationsType): ApplicationVerificationStatus => {
   if (application.withdrawalDate) {
-    return ApplicationStatus.withdrawed
+    return ApplicationVerificationStatus.Withdrawn
   }
   if (
-    application.verifications.every(verification => getVerificationStatus(verification) === VerificationStatus.Verified)
+    application.verifications.every(verification => verificationStatus(verification) === VerificationStatus.Verified)
   ) {
-    return ApplicationStatus.fullyVerified
+    return ApplicationVerificationStatus.Approved
   }
   if (
-    application.verifications.every(verification => getVerificationStatus(verification) === VerificationStatus.Rejected)
+    application.verifications.every(verification => verificationStatus(verification) === VerificationStatus.Rejected)
   ) {
-    return ApplicationStatus.fullyRejected
+    return ApplicationVerificationStatus.Rejected
   }
-  return ApplicationStatus.ambiguous
+  return ApplicationVerificationStatus.Ambiguous
 }
