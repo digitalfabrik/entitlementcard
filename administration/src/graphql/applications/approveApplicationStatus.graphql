@@ -1,0 +1,6 @@
+mutation approveApplicationStatus($applicationId: Int!) {
+  updates: approveApplicationStatus(applicationId: $applicationId) {
+    status
+    statusResolvedDate
+  }
+}

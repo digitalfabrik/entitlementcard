@@ -1,9 +1,11 @@
 package app.ehrenamtskarte.backend.application.webservice
 
 import app.ehrenamtskarte.backend.application.database.ApplicationEntity
+import app.ehrenamtskarte.backend.application.database.ApplicationEntity.Status
 import app.ehrenamtskarte.backend.application.database.NOTE_MAX_CHARS
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
 import app.ehrenamtskarte.backend.application.webservice.schema.create.Application
+import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationView
 import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationHandler
 import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.service.Authorizer.mayDeleteApplicationsInRegion
@@ -115,6 +117,34 @@ class EakApplicationMutationService {
                 ApplicationRepository.rejectApplicationVerification(accessKey)
             }
         }
+
+    /**
+     * Approves an application if it is in the Pending status.
+     *
+     * @return The updated ApplicationView.
+     * @throws NotFoundException If an application with the specified accessKey is not found.
+     */
+    @GraphQLDescription("Approve an application")
+    fun approveApplicationStatus(applicationId: Int, dfe: DataFetchingEnvironment): ApplicationView {
+        dfe.graphQlContext.context.enforceSignedIn()
+
+        return transaction {
+            val applicationEntity = ApplicationEntity.findById(applicationId)
+                ?.let {
+                    it.tryChangeStatus(Status.Approved)
+                    ApplicationView.fromDbEntity(it, true)
+                }
+                ?: throw NotFoundException("Application not found")
+
+            if (
+                mayUpdateApplicationsInRegion(dfe.graphQlContext.context.getAdministrator(), applicationEntity.regionId)
+            ) {
+                applicationEntity
+            } else {
+                throw ForbiddenException()
+            }
+        }
+    }
 
     @GraphQLDescription("Updates a note of an application")
     fun updateApplicationNote(applicationId: Int, noteText: String, dfe: DataFetchingEnvironment): Boolean {
