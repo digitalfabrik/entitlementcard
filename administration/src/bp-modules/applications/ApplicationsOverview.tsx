@@ -13,7 +13,7 @@ import type { ApplicationCardProps } from './ApplicationCard'
 import ApplicationStatusBar from './ApplicationStatusBar'
 import usePrintApplication from './hooks/usePrintApplication'
 import { ApplicationStatus, ApplicationStatusBarItemType, GetApplicationsType } from './types'
-import { getApplicationStatus, getVerificationStatus } from './utils'
+import { getApplicationStatus } from './utils'
 
 export const barItems: ApplicationStatusBarItemType[] = [
   {
@@ -55,24 +55,12 @@ export class ApplicationViewComponent extends React.Component<ApplicationCardPro
   }
 }
 
-const sortByStatus = (a: number, b: number): number => a - b
-const sortByDateAsc = (a: Date, b: Date): number => a.getTime() - b.getTime()
-
-// Applications will be sorted by status f.e. fullyVerified/fullyRejected/withdrawed/ambiguous and within this status by creation date asc
-const sortApplications = (applications: GetApplicationsType[]): GetApplicationsType[] =>
-  applications
-    .map(application => ({
-      ...application,
-      applicationStatus: getApplicationStatus(
-        application.verifications.map(getVerificationStatus),
-        !!application.withdrawalDate
-      ),
-    }))
-    .sort(
-      (a, b) =>
-        sortByStatus(a.applicationStatus, b.applicationStatus) ||
-        sortByDateAsc(new Date(a.createdDate), new Date(b.createdDate))
-    )
+/** Sort Applications by status creation date ascending. */
+const sortApplications = (a: GetApplicationsType, b: GetApplicationsType): number =>
+  // Sort by status
+  getApplicationStatus(a) - getApplicationStatus(b) ||
+  // If status is equal, sort by date
+  new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime()
 
 const getEmptyApplicationsListStatusDescription = (activeBarItem: ApplicationStatusBarItemType, t: TFunction): string =>
   activeBarItem.status !== undefined ? `${t(activeBarItem.title).toLowerCase()}en` : ''
@@ -83,16 +71,13 @@ const ApplicationsOverview = ({ applications }: { applications: GetApplicationsT
   const [activeBarItem, setActiveBarItem] = useState<ApplicationStatusBarItemType>(barItems[0])
   const { t } = useTranslation('applicationsOverview')
   const sortedApplications: GetApplicationsType[] = useMemo(
-    () => sortApplications(updatedApplications),
+    () => updatedApplications.toSorted(sortApplications),
     [updatedApplications]
   )
   const filteredApplications: GetApplicationsType[] = useMemo(
     () =>
       sortedApplications.filter(
-        application =>
-          activeBarItem.status === undefined ||
-          getApplicationStatus(application.verifications.map(getVerificationStatus), !!application.withdrawalDate) ===
-            activeBarItem.status
+        application => activeBarItem.status === undefined || getApplicationStatus(application) === activeBarItem.status
       ),
     [activeBarItem, sortedApplications]
   )
