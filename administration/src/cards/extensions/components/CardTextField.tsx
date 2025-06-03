@@ -35,13 +35,15 @@ const CardTextField = ({
     autoFocus={autoFocus}
     value={value}
     onBlur={onBlur}
-    FormHelperTextProps={{ sx: { margin: 0 } }}
     onChange={event => onChange(event.target.value)}
     error={showError}
     fullWidth
     size='small'
-    InputProps={inputProps}
     helperText={showError && <FormAlert errorMessage={errorMessage} />}
+    slotProps={{
+      input: inputProps,
+      formHelperText: { sx: { margin: 0 } },
+    }}
   />
 )
 
