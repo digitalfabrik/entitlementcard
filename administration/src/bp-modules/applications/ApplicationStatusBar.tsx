@@ -4,8 +4,8 @@ import styled from 'styled-components'
 
 import ApplicationStatusHelpButton from './ApplicationStatusBarHelpButton'
 import ApplicationStatusBarItem from './ApplicationStatusBarItem'
-import { ApplicationStatus, ApplicationStatusBarItemType, GetApplicationsType } from './types'
-import { getApplicationStatus } from './utils'
+import { ApplicationStatusBarItemType, ApplicationVerificationStatus, GetApplicationsType } from './types'
+import { applicationEffectiveStatus } from './utils'
 
 const Container = styled.div`
   display: flex;
@@ -36,11 +36,11 @@ const Title = styled.span`
   font-weight: bold;
 `
 
-const getApplicationCount = (applications: GetApplicationsType[], status?: ApplicationStatus): number => {
+const getApplicationCount = (applications: GetApplicationsType[], status?: ApplicationVerificationStatus): number => {
   if (status === undefined) {
     return applications.length
   }
-  return applications.filter(application => getApplicationStatus(application) === status).length
+  return applications.filter(application => applicationEffectiveStatus(application) === status).length
 }
 
 type ApplicationStatusBarProps = {

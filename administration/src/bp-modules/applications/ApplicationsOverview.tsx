@@ -12,8 +12,8 @@ import ApplicationCard from './ApplicationCard'
 import type { ApplicationCardProps } from './ApplicationCard'
 import ApplicationStatusBar from './ApplicationStatusBar'
 import usePrintApplication from './hooks/usePrintApplication'
-import { ApplicationStatus, ApplicationStatusBarItemType, GetApplicationsType } from './types'
-import { getApplicationStatus } from './utils'
+import { ApplicationStatusBarItemType, ApplicationVerificationStatus, GetApplicationsType } from './types'
+import { applicationEffectiveStatus } from './utils'
 
 export const barItems: ApplicationStatusBarItemType[] = [
   {
@@ -22,19 +22,19 @@ export const barItems: ApplicationStatusBarItemType[] = [
   },
   {
     title: 'accepted',
-    status: ApplicationStatus.fullyVerified,
+    status: ApplicationVerificationStatus.Approved,
   },
   {
     title: 'rejected',
-    status: ApplicationStatus.fullyRejected,
+    status: ApplicationVerificationStatus.Rejected,
   },
   {
     title: 'withdrawed',
-    status: ApplicationStatus.withdrawed,
+    status: ApplicationVerificationStatus.Withdrawn,
   },
   {
     title: 'open',
-    status: ApplicationStatus.ambiguous,
+    status: ApplicationVerificationStatus.Ambiguous,
   },
 ]
 
@@ -66,12 +66,12 @@ const ApplicationsOverview = ({ applications }: { applications: GetApplicationsT
   const filteredApplications: GetApplicationsType[] = useMemo(
     () =>
       updatedApplications
-        .filter(a => activeBarItem.status === undefined || getApplicationStatus(a) === activeBarItem.status)
+        .filter(a => activeBarItem.status === undefined || applicationEffectiveStatus(a) === activeBarItem.status)
         // Sort by status and within this status by creation date ascending
         .sort(
           (a, b): number =>
             // Sort by status
-            getApplicationStatus(a) - getApplicationStatus(b) ||
+            applicationEffectiveStatus(a) - applicationEffectiveStatus(b) ||
             // If status is equal, sort by date
             new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime()
         ),

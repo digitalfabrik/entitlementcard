@@ -22,7 +22,7 @@ const getIconByStatus = (status: VerificationStatus): 'tick-circle' | 'cross-cir
   switch (status) {
     case VerificationStatus.Verified:
       return verifiedIcon
-    case VerificationStatus.Awaiting:
+    case VerificationStatus.Pending:
       return awaitingIcon
     case VerificationStatus.Rejected:
       return rejectedIcon
@@ -33,7 +33,7 @@ const getIntentByStatus = (status: VerificationStatus): Intent => {
   switch (status) {
     case VerificationStatus.Verified:
       return 'success'
-    case VerificationStatus.Awaiting:
+    case VerificationStatus.Pending:
       return 'warning'
     case VerificationStatus.Rejected:
       return 'danger'

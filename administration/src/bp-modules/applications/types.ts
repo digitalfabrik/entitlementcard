@@ -6,18 +6,21 @@ export type GetApplicationsVerificationType = GetApplicationsType['verifications
 
 export type ApplicationStatusBarItemType = {
   title: string
-  status?: ApplicationStatus
+  status?: ApplicationVerificationStatus
 }
 
-export enum ApplicationStatus {
-  fullyVerified,
-  fullyRejected,
-  withdrawed,
-  ambiguous,
+/**
+ * The application status, taking into account its verifications, and `application.withdrawalDate`.
+ */
+export enum ApplicationVerificationStatus {
+  Approved,
+  Rejected,
+  Ambiguous,
+  Withdrawn,
 }
 
 export enum VerificationStatus {
   Verified,
   Rejected,
-  Awaiting,
+  Pending,
 }
