@@ -73,4 +73,18 @@ describe('BavariaCardTypeExtension', () => {
     expect(BavariaCardTypeExtension.isValid({ bavariaCardType: BAVARIA_CARD_TYPE_STANDARD })).toBe(true)
     expect(BavariaCardTypeExtension.isValid({ bavariaCardType: BAVARIA_CARD_TYPE_GOLD })).toBe(true)
   })
+
+  it('should correctly set card type', () => {
+    const testPairs: [string, string | undefined][] = [
+      ['Goldkarte', 'Goldkarte'],
+      ['Standard', 'Standard'],
+      ['gold', 'Goldkarte'],
+      ['blau', 'Standard'],
+      ['blaugold', undefined],
+    ]
+
+    testPairs.forEach(([input, expected]) => {
+      expect(BavariaCardTypeExtension.fromString(input)?.bavariaCardType).toBe(expected)
+    })
+  })
 })

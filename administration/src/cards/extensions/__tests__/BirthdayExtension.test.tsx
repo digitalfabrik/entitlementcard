@@ -1,5 +1,6 @@
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import { fireEvent } from '@testing-library/react'
 import React, { ReactNode } from 'react'
 
 import { AppToasterProvider } from '../../../bp-modules/AppToaster'
@@ -15,10 +16,11 @@ const wrapper = ({ children }: { children: ReactNode }) => (
 )
 
 jest.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
+const setValue = jest.fn()
+
 describe('BirthdayExtension', () => {
   describe('Component', () => {
     it('should display correct placeholder if no birthday is provided', () => {
-      const setValue = jest.fn()
       const { getByPlaceholderText } = renderWithTranslation(
         <BirthdayExtension.Component showRequired setValue={setValue} isValid={false} value={{ birthday: null }} />,
         { wrapper }
@@ -27,7 +29,6 @@ describe('BirthdayExtension', () => {
     })
 
     it('should show error if no birthday is provided', () => {
-      const setValue = jest.fn()
       const { getByText } = renderWithTranslation(
         <BirthdayExtension.Component showRequired setValue={setValue} isValid={false} value={{ birthday: null }} />,
         { wrapper }
@@ -36,7 +37,6 @@ describe('BirthdayExtension', () => {
     })
 
     it('should show error if provided birthday is in the future', () => {
-      const setValue = jest.fn()
       const tomorrow = new Date()
       tomorrow.setDate(tomorrow.getDate() + 1)
       const { getByText } = renderWithTranslation(
@@ -52,7 +52,6 @@ describe('BirthdayExtension', () => {
     })
 
     it('should show an hint if provided birthday is underage', () => {
-      const setValue = jest.fn()
       const tomorrow = new Date()
       tomorrow.setDate(tomorrow.getDate() + 1)
       const { getByText } = renderWithTranslation(
@@ -69,6 +68,19 @@ describe('BirthdayExtension', () => {
           'Bei Minderjährigen unter 16 Jahren darf der KoblenzPass nur mit Einverständnis der Erziehungsberechtigten abgerufen werden.'
         )
       ).toBeTruthy()
+    })
+
+    it('should call setValue when date is changed', () => {
+      const { getByPlaceholderText } = renderWithTranslation(
+        <BirthdayExtension.Component showRequired setValue={setValue} isValid={false} value={{ birthday: null }} />,
+        {
+          wrapper,
+        }
+      )
+      const datePicker = getByPlaceholderText('TT.MM.JJJJ')
+
+      fireEvent.change(datePicker, { target: { value: '02.01.2025' } })
+      expect(setValue).toHaveBeenCalledWith({ birthday: { day: 2, isoMonth: 1, isoYear: 2025 } })
     })
   })
 

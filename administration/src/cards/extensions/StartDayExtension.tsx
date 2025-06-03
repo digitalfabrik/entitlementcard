@@ -24,13 +24,7 @@ const StartDayForm = ({ value, setValue, isValid }: ExtensionComponentProps<Star
         label={t('startDayLabel')}
         onBlur={() => setTouched(true)}
         value={value.startDay?.toLocalDate() ?? null}
-        onChange={date => {
-          if (date !== null) {
-            setValue({ startDay: PlainDate.fromLocalDate(date) })
-          } else {
-            setValue({ startDay: null })
-          }
-        }}
+        onChange={date => setValue({ startDay: PlainDate.safeFromLocalDate(date) })}
         error={showError}
         minDate={minStartDay.toLocalDate()}
         textFieldSlotProps={{
