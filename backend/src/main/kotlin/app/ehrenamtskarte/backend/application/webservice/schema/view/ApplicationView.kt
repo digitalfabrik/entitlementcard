@@ -3,6 +3,7 @@ package app.ehrenamtskarte.backend.application.webservice.schema.view
 import app.ehrenamtskarte.backend.application.database.ApplicationEntity
 import app.ehrenamtskarte.backend.application.webservice.dataloader.verificationsByApplicationLoader
 import app.ehrenamtskarte.backend.common.webservice.fromEnvironment
+import com.expediagroup.graphql.generator.annotations.GraphQLDeprecated
 import graphql.schema.DataFetchingEnvironment
 import java.util.concurrent.CompletableFuture
 
@@ -14,6 +15,7 @@ data class ApplicationView(
     val jsonValue: String,
     val withdrawalDate: String?,
     val note: String?,
+    @GraphQLDeprecated("Use 'status' instead")
     val cardCreated: Boolean?,
 ) {
     companion object {
