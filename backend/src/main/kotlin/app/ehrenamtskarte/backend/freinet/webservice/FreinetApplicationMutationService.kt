@@ -10,8 +10,7 @@ import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetApiNotReachableException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetFoundMultiplePersonsException
 import app.ehrenamtskarte.backend.freinet.database.repos.FreinetAgencyRepository
-import app.ehrenamtskarte.backend.freinet.util.FreinetCreatePersonApi
-import app.ehrenamtskarte.backend.freinet.util.FreinetSearchPersonApi
+import app.ehrenamtskarte.backend.freinet.util.FreinetApi
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import graphql.schema.DataFetchingEnvironment
@@ -33,7 +32,6 @@ class FreinetApplicationMutationService {
         if (projectConfig.freinet == null) {
             throw NotImplementedException()
         }
-        val freinetSearchPersonApi = FreinetSearchPersonApi(projectConfig.freinet.host)
 
         return transaction {
             val application = ApplicationRepository.findByIds(listOf(applicationId)).firstOrNull()
@@ -59,12 +57,12 @@ class FreinetApplicationMutationService {
             val lastName = personalDataNode?.get("value")?.findValueByName("surname").orEmpty()
             val dateOfBirth = personalDataNode?.get("value")?.findValueByName("dateOfBirth").orEmpty()
 
-            val persons = freinetSearchPersonApi.searchPersons(
-                firstName = firstName,
-                lastName = lastName,
-                dateOfBirth = dateOfBirth,
-                accessKey = freinetAgency.apiAccessKey,
-                agencyId = freinetAgency.agencyId,
+            val freinetApi = FreinetApi(projectConfig.freinet.host, freinetAgency.apiAccessKey, freinetAgency.agencyId)
+
+            val persons = freinetApi.searchPersons(
+                firstName,
+                lastName,
+                dateOfBirth,
             )
             when {
                 persons.size() > 1 -> {
@@ -72,14 +70,12 @@ class FreinetApplicationMutationService {
                     throw FreinetFoundMultiplePersonsException()
                 }
                 persons.isEmpty() -> {
-                    val personCreationResult = FreinetCreatePersonApi(projectConfig.freinet.host).createPerson(
+                    val personCreationResult = freinetApi.createPerson(
                         firstName,
                         lastName,
                         dateOfBirth,
                         personalDataNode,
                         admin.email,
-                        freinetAgency.agencyId.toString(),
-                        freinetAgency.apiAccessKey,
                         project,
                     )
                     if (!personCreationResult) {
