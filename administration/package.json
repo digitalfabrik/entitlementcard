@@ -100,8 +100,8 @@
     "webpack-manifest-plugin": "^5.0.1"
   },
   "scripts": {
-    "start": "set -ae; REACT_APP_APPLICATION_COMMIT=$(./application_commit.sh); NODE_ENV=development webpack serve --config config/webpack.config.ts",
-    "build": "set -ae; REACT_APP_APPLICATION_COMMIT=$(./application_commit.sh); NODE_ENV=production webpack --config config/webpack.config.ts",
+    "start": "set -ae; REACT_APP_APPLICATION_COMMIT=$(./application_commit.sh); NODE_OPTIONS='--require ts-node/register' NODE_ENV=development webpack serve --config config/webpack.config.ts",
+    "build": "set -ae; REACT_APP_APPLICATION_COMMIT=$(./application_commit.sh); NODE_OPTIONS='--require ts-node/register' NODE_ENV=production webpack --config config/webpack.config.ts",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watchAll",
