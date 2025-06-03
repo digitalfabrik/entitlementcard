@@ -36,12 +36,13 @@ const Title = styled.span`
   font-weight: bold;
 `
 
-const getApplicationCount = (applications: GetApplicationsType[], status?: ApplicationVerificationStatus): number => {
-  if (status === undefined) {
-    return applications.length
-  }
-  return applications.filter(application => applicationEffectiveStatus(application) === status).length
-}
+const applicationsWithStatusCount = (
+  applications: GetApplicationsType[],
+  status?: ApplicationVerificationStatus
+): number =>
+  status === undefined
+    ? applications.length
+    : applications.reduce((count, a) => count + (applicationEffectiveStatus(a) === status ? 1 : 0), 0)
 
 type ApplicationStatusBarProps = {
   applications: GetApplicationsType[]
@@ -65,7 +66,7 @@ const ApplicationStatusBar = ({
         {barItems.map(item => (
           <ApplicationStatusBarItem
             key={item.title}
-            count={getApplicationCount(applications, item.status)}
+            count={applicationsWithStatusCount(applications, item.status)}
             item={item}
             setActiveBarItem={setActiveBarItem}
             active={item === activeBarItem}
