@@ -11,7 +11,7 @@ jest.mock('csv-stringify/browser/esm/sync', () => ({
   stringify: jest.fn(),
 }))
 
-// disable enableAccessibleFieldDOMStructure for testing
+// disable enableAccessibleFieldDOMStructure for testing to ensure CustomDatePicker can be left via onBlur()
 jest.mock('@mui/system', () => ({
   ...jest.requireActual('@mui/system'),
   useMediaQuery: jest.fn().mockReturnValue(true),

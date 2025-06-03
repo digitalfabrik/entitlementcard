@@ -1,18 +1,12 @@
-import { fireEvent, render } from '@testing-library/react'
+import { fireEvent } from '@testing-library/react'
 import React from 'react'
 
+import { renderWithTranslation } from '../../../testing/render'
 import BavariaCardTypeExtension, {
   BAVARIA_CARD_TYPE_GOLD,
   BAVARIA_CARD_TYPE_STANDARD,
   BavariaCardTypeExtensionState,
 } from '../BavariaCardTypeExtension'
-
-jest.mock('react-i18next', () => ({
-  ...jest.requireActual('react-i18next'),
-  useTranslation: () => ({
-    t: (key: string) => key,
-  }),
-}))
 
 describe('BavariaCardTypeExtension', () => {
   const mockSetValue = jest.fn()
@@ -24,16 +18,18 @@ describe('BavariaCardTypeExtension', () => {
   }
 
   it('should render the component with default value', () => {
-    const { getByLabelText } = render(<BavariaCardTypeExtension.Component {...defaultProps} />)
+    const { getByLabelText } = renderWithTranslation(<BavariaCardTypeExtension.Component {...defaultProps} />)
 
-    const select = getByLabelText('bavariaCardTypeLabel')
-    expect(select).toBeInTheDocument()
+    const select = getByLabelText('Kartentyp')
+    expect(select).toBeTruthy()
   })
 
   it('should display both card type options', () => {
-    const { getByLabelText, getAllByRole } = render(<BavariaCardTypeExtension.Component {...defaultProps} />)
+    const { getByLabelText, getAllByRole } = renderWithTranslation(
+      <BavariaCardTypeExtension.Component {...defaultProps} />
+    )
 
-    const select = getByLabelText('bavariaCardTypeLabel')
+    const select = getByLabelText('Kartentyp')
     fireEvent.mouseDown(select)
 
     const options = getAllByRole('option')
@@ -43,9 +39,11 @@ describe('BavariaCardTypeExtension', () => {
   })
 
   it('should call setValue with correct value when an option is selected', () => {
-    const { getByLabelText, getByText } = render(<BavariaCardTypeExtension.Component {...defaultProps} />)
+    const { getByLabelText, getByText } = renderWithTranslation(
+      <BavariaCardTypeExtension.Component {...defaultProps} />
+    )
 
-    const select = getByLabelText('bavariaCardTypeLabel')
+    const select = getByLabelText('Kartentyp')
     fireEvent.mouseDown(select)
     const goldOption = getByText(BAVARIA_CARD_TYPE_GOLD)
     fireEvent.click(goldOption)
