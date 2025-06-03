@@ -55,13 +55,6 @@ export class ApplicationViewComponent extends React.Component<ApplicationCardPro
   }
 }
 
-/** Sort Applications by status creation date ascending. */
-const sortApplications = (a: GetApplicationsType, b: GetApplicationsType): number =>
-  // Sort by status
-  getApplicationStatus(a) - getApplicationStatus(b) ||
-  // If status is equal, sort by date
-  new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime()
-
 const getEmptyApplicationsListStatusDescription = (activeBarItem: ApplicationStatusBarItemType, t: TFunction): string =>
   activeBarItem.status !== undefined ? `${t(activeBarItem.title).toLowerCase()}en` : ''
 
@@ -70,16 +63,19 @@ const ApplicationsOverview = ({ applications }: { applications: GetApplicationsT
   const { applicationIdForPrint, printApplicationById } = usePrintApplication()
   const [activeBarItem, setActiveBarItem] = useState<ApplicationStatusBarItemType>(barItems[0])
   const { t } = useTranslation('applicationsOverview')
-  const sortedApplications: GetApplicationsType[] = useMemo(
-    () => updatedApplications.toSorted(sortApplications),
-    [updatedApplications]
-  )
   const filteredApplications: GetApplicationsType[] = useMemo(
     () =>
-      sortedApplications.filter(
-        application => activeBarItem.status === undefined || getApplicationStatus(application) === activeBarItem.status
-      ),
-    [activeBarItem, sortedApplications]
+      updatedApplications
+        .filter(a => activeBarItem.status === undefined || getApplicationStatus(a) === activeBarItem.status)
+        // Sort by status and within this status by creation date ascending
+        .sort(
+          (a, b): number =>
+            // Sort by status
+            getApplicationStatus(a) - getApplicationStatus(b) ||
+            // If status is equal, sort by date
+            new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime()
+        ),
+    [activeBarItem, updatedApplications]
   )
 
   return (
@@ -98,9 +94,11 @@ const ApplicationsOverview = ({ applications }: { applications: GetApplicationsT
               key={application.id}
               application={application}
               onPrintApplicationById={printApplicationById}
-              onDelete={() => setUpdatedApplications(sortedApplications.filter(a => a !== application))}
-              onChange={application =>
-                setUpdatedApplications(sortedApplications.map(a => (a.id === application.id ? application : a)))
+              onDelete={() => setUpdatedApplications(updatedApplications.filter(a => a !== application))}
+              onChange={changed =>
+                setUpdatedApplications(
+                  updatedApplications.map(original => (original.id === changed.id ? changed : original))
+                )
               }
             />
           ))}
