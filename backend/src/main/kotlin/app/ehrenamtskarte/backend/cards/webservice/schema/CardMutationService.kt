@@ -1,7 +1,9 @@
 package app.ehrenamtskarte.backend.cards.webservice.schema
 
 import Card
+import app.ehrenamtskarte.backend.application.database.ApplicationEntity
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
+import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationView
 import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.cards.Argon2IdHasher
@@ -288,7 +290,11 @@ class CardMutationService {
         }
 
         if (applicationIdToMarkAsProcessed != null) {
-            ApplicationRepository.updateCardCreated(applicationIdToMarkAsProcessed, true)
+            transaction {
+                ApplicationEntity.findByIdAndUpdate(applicationIdToMarkAsProcessed) {
+                    it.status = ApplicationEntity.Status.ApprovedCardCreated
+                }
+            }
         }
         return activationCodes
     }
