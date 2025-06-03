@@ -56,13 +56,6 @@ class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
         }
     var statusResolvedDate by Applications.statusResolvedDate
 
-    @Deprecated("Use status instead")
-    var cardCreated
-        get() = status == Status.ApprovedCardCreated
-        set(value) {
-            status = Status.ApprovedCardCreated
-        }
-
     /** Try to change the status to the given value. Returns true if successful, false otherwise. */
     fun tryChangeStatus(status: Status): Boolean =
         try {
