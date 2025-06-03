@@ -123,6 +123,34 @@ const AccordionExpandButton = (p: { expanded: boolean }) => {
   )
 }
 
+const ButtonsCardApproved = ({
+  application,
+  primaryButtonHref,
+  onSecondaryButtonClick,
+}: {
+  application: GetApplicationsType
+  primaryButtonHref: string
+  onSecondaryButtonClick: () => void
+}) => {
+  const { t } = useTranslation('applicationsOverview')
+
+  return (
+    <>
+      <Tooltip title={t('incompleteMappingTooltip')}>
+        {/* Make the outer Tooltip independent of the button's disabled state */}
+        <span>
+          <PrimaryButton variant='contained' href={primaryButtonHref} startIcon={<CreditScore />}>
+            {application.cardCreated ? t('createCardAgain') : t('createCard')}
+          </PrimaryButton>
+        </span>
+      </Tooltip>
+      <Button onClick={onSecondaryButtonClick} startIcon={<Delete />} variant='outlined' color='error'>
+        {t('deleteApplication')}
+      </Button>
+    </>
+  )
+}
+
 export type ApplicationCardProps = {
   application: GetApplicationsType
   isSelectedForPrint: boolean
@@ -163,9 +191,8 @@ const ApplicationCard = ({
   })
   const createCardQuery = useMemo(
     () =>
-      `${config.applicationFeature?.applicationJsonToCardQuery(jsonValueParsed)}&applicationIdToMarkAsProcessed=${
-        application.id
-      }`,
+      `./cards/add${config.applicationFeature?.applicationJsonToCardQuery(jsonValueParsed)}` +
+      `&applicationIdToMarkAsProcessed=${application.id}`,
     [config.applicationFeature, jsonValueParsed, application.id]
   )
   const personalData = useMemo(
@@ -256,21 +283,11 @@ const ApplicationCard = ({
         <Divider />
 
         <Stack sx={{ p: 2, displayPrint: 'none' }} spacing={2} direction='row'>
-          <Tooltip title={createCardQuery ? undefined : t('incompleteMappingTooltip')}>
-            {/* Make the outer Tooltip independent of the button's disabled state */}
-            <span>
-              <PrimaryButton
-                variant='contained'
-                disabled={!createCardQuery}
-                href={createCardQuery ? `./cards/add${createCardQuery}` : undefined}
-                startIcon={<CreditScore />}>
-                {application.cardCreated ? t('createCardAgain') : t('createCard')}
-              </PrimaryButton>
-            </span>
-          </Tooltip>
-          <Button onClick={() => setDeleteDialogOpen(true)} startIcon={<Delete />} variant='outlined' color='error'>
-            {t('deleteApplication')}
-          </Button>
+          <ButtonsCardApproved
+            application={application}
+            primaryButtonHref={createCardQuery}
+            onSecondaryButtonClick={() => setDeleteDialogOpen(true)}
+          />
           <Button
             onClick={() => onPrintApplicationById(application.id)}
             startIcon={<Print />}
