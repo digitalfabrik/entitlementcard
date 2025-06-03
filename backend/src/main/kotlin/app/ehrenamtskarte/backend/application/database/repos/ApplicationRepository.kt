@@ -187,15 +187,4 @@ object ApplicationRepository {
             false
         }
     }
-
-    fun updateCardCreated(applicationId: Int, cardCreated: Boolean): Boolean {
-        val application = ApplicationEntity.findById(applicationId)
-
-        return if (application != null) {
-            application.cardCreated = cardCreated
-            true
-        } else {
-            false
-        }
-    }
 }
