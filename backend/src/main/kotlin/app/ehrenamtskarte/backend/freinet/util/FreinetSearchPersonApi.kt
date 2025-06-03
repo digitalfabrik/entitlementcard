@@ -4,15 +4,15 @@ import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetApiNotR
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.ktor.client.HttpClient
-import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.request.request
-import io.ktor.client.statement.bodyAsText
+import io.ktor.client.statement.bodyAsChannel
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.URLProtocol
 import io.ktor.http.path
+import io.ktor.utils.io.jvm.javaio.toInputStream
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 
@@ -41,8 +41,8 @@ class FreinetSearchPersonApi(private val host: String) {
         dateOfBirth: String,
         accessKey: String,
         agencyId: Int,
-    ): JsonNode {
-        val responseBody = runBlocking {
+    ): JsonNode =
+        runBlocking {
             try {
                 httpClient.request {
                     url {
@@ -56,19 +56,10 @@ class FreinetSearchPersonApi(private val host: String) {
                         parameters.append("agencyID", agencyId.toString())
                     }
                     method = HttpMethod.Get
-                }.bodyAsText()
-            } catch (e: ClientRequestException) {
-                val res = e.response
-                val body = res.bodyAsText()
-                logger.warn("Freinet error: ${res.status} – body:\n$body")
-                null
+                }.bodyAsChannel().toInputStream().use { objectMapper.readTree(it) }
+            } catch (e: Exception) {
+                logger.error("Freinet search person API error: $e")
+                throw FreinetApiNotReachableException()
             }
         }
-
-        if (responseBody == null) {
-            throw FreinetApiNotReachableException()
-        }
-
-        return objectMapper.readTree(responseBody)
-    }
 }

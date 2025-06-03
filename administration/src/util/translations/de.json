@@ -263,7 +263,7 @@
     "printQRCodes": "QR-Codes drucken",
     "validationError": "Validierungsfehler",
     "cardCreationConfirmationMessage": "Bestätigungsmail wurde versendet.",
-    "freinetDataSyncSuccessMessage": "Bewerbung erfolgreich an Freinet gesendet."
+    "freinetDataSyncSuccessMessage": "Antragsdaten wurden erfolgreich an Freinet gesendet."
   },
   "misc": {
     "openAppStore": "AppStore öffnen",
@@ -552,7 +552,7 @@
     },
     "invalidRole": "Diese Rolle kann nicht zugewiesen werden.",
     "invalidApplicationConfirmationNoteSize": "Unzulässige Zeichenlänge der Notiz erreicht. Maximal sind {{maxSize}} Zeichen erlaubt.",
-    "entitlementNotFound": "Wir konnten Ihre Angaben nicht im System finden. Bitte überprüfen Sie Ihre Angaben und versuchen Sie es erneut.",
+    "entitlementNotFound": "Wir konnten Ihre Angaben nicht im System finden.\nAus technischen Gründen stehen die Daten des Jobcenters Koblenz ab Mitte des folgenden Monats zur Verfügung.\nBitte überprüfen Sie Ihre Angaben und versuchen Sie es erneut.",
     "entitlementExpired": "Sie sind nicht länger berechtigt, einen KoblenzPass zu erstellen. Bitte kontaktieren Sie koblenzpass@stadt.koblenz.de für weitere Informationen.",
     "mailNotSend": "Email konnte nicht an {{recipient}} gesendet werden.",
     "passwordResetKeyExpired": "Die Gültigkeit ihres Links ist abgelaufen",
@@ -563,8 +563,8 @@
     "pdfCreationError": "Etwas ist schiefgegangen beim Erstellen der PDF.",
     "csvCreationError": "Etwas ist schiefgegangen beim Erstellen der CSV.",
     "freinetAgencyNotFound": "Diese Agentur konnte in Freinet nicht gefunden werden.",
-    "freinetMultiplePersonError": "Es wurden mehrere Personen mit diesen Daten gefunden. Bitte aktualisieren Sie die Daten in Freinet-Online manuell.",
-    "freinetApiNotReachableError": "Es ist keine Verbindung zu Freinet-Online möglich. Bitte versuchen Sie es zu einem späteren Zeitpunkt erneut. Bitte aktualisieren Sie die Daten in Freinet-Online manuell."
+    "freinetMultiplePersonError": "Der antragstellenden Person konnte keine Person in Freinet-Online eindeutig zugeordnet werden. Bitte aktualisieren Sie die Daten in Freinet-Online manuell.",
+    "freinetApiNotReachableError": "Die eingegebenen Daten stimmen nicht eindeutig mit einer Person in Freinet-Online überein. Bitte prüfen Sie die Angaben oder nehmen Sie die Aktualisierung direkt in Freinet-Online vor."
   },
   "applicationVerification": {
     "withdrawMessageForVerifier": "Der Antrag wurde vom Antragsteller am {{date}} zurückgezogen.",
@@ -609,5 +609,9 @@
     "referenceNrInvalidLengthError": "Das Aktenzeichen muss eine Länge zwischen {{KoblenzReferenceNumberMinLength}} und {{KoblenzReferenceNumberMaxLength}} haben.",
     "referenceNrLabel": "Aktenzeichen",
     "startDayLabel": "Startdatum"
+  },
+  "shared": {
+    "accordionShowLess": "Weniger anzeigen",
+    "accordionShowMore": "Mehr anzeigen"
   }
 }

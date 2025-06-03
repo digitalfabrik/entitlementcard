@@ -9,7 +9,6 @@ export const IconTextButton = styled('button')`
   cursor: pointer;
   font-size: 14px;
   align-items: center;
-  margin-bottom: 12px;
   color: #595959;
   font-weight: 600;
 `

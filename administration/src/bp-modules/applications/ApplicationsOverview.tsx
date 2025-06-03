@@ -1,4 +1,5 @@
-import { NonIdealState } from '@blueprintjs/core'
+import { AutoAwesome } from '@mui/icons-material'
+import { Container } from '@mui/material'
 import { TFunction } from 'i18next'
 import React, { ReactElement, useMemo, useState } from 'react'
 import FlipMove from 'react-flip-move'
@@ -6,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import { GetApplicationsQuery } from '../../generated/graphql'
+import NonIdealState from '../../mui-modules/NonIdealState'
 import StandaloneCenter from '../StandaloneCenter'
 import ApplicationCard from './ApplicationCard'
 import type { ApplicationCardProps } from './ApplicationCard'
@@ -14,20 +16,13 @@ import { ApplicationStatusBarItemType, barItems } from './constants'
 import usePrintApplication from './hooks/usePrintApplication'
 import { getApplicationStatus, getVerificationStatus } from './utils'
 
-const ApplicationListCard = styled.li`
-  display: flex;
-  width: 100%;
-  justify-content: center;
-  list-style-type: none;
-`
-
 const ApplicationList = styled(FlipMove)`
   display: flex;
   flex-grow: 1;
   flex-direction: column;
-  align-items: center;
+  height: 100%;
+  gap: 16px;
 `
-
 export type Application = GetApplicationsQuery['applications'][number]
 
 // Necessary for FlipMove, as it cannot handle functional components
@@ -35,11 +30,7 @@ export type Application = GetApplicationsQuery['applications'][number]
 export class ApplicationViewComponent extends React.Component<ApplicationCardProps> {
   render(): ReactElement {
     const { application } = this.props
-    return (
-      <ApplicationListCard key={application.id}>
-        <ApplicationCard {...this.props} />
-      </ApplicationListCard>
-    )
+    return <ApplicationCard key={application.id} {...this.props} />
   }
 }
 
@@ -76,7 +67,14 @@ const ApplicationsOverview = ({ applications }: { applications: Application[] })
   )
 
   return (
-    <>
+    <Container
+      sx={{
+        flexGrow: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        maxWidth: '90%',
+        width: '1000px',
+      }}>
       <ApplicationStatusBar
         applications={updatedApplications}
         activeBarItem={activeBarItem}
@@ -88,9 +86,9 @@ const ApplicationsOverview = ({ applications }: { applications: Application[] })
           {filteredApplications.map(application => (
             <ApplicationViewComponent
               isSelectedForPrint={application.id === applicationIdForPrint}
-              printApplicationById={printApplicationById}
               key={application.id}
               application={application}
+              onPrintApplicationById={printApplicationById}
               onDelete={() => setUpdatedApplications(sortedApplications.filter(a => a !== application))}
               onChange={application =>
                 setUpdatedApplications(sortedApplications.map(a => (a.id === application.id ? application : a)))
@@ -102,14 +100,14 @@ const ApplicationsOverview = ({ applications }: { applications: Application[] })
         <StandaloneCenter>
           <NonIdealState
             title={t('noApplicationsOfType', { status: getEmptyApplicationsListStatusDescription(activeBarItem, t) })}
-            icon='clean'
+            icon={<AutoAwesome fontSize='large' />}
             description={t('noApplicationsOfTypeDescription', {
               status: getEmptyApplicationsListStatusDescription(activeBarItem, t),
             })}
           />
         </StandaloneCenter>
       )}
-    </>
+    </Container>
   )
 }
 

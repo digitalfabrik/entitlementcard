@@ -2,8 +2,8 @@ package app.ehrenamtskarte.backend.freinet.webservice
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
 import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.service.Authorizer
+import app.ehrenamtskarte.backend.common.utils.findValueByName
 import app.ehrenamtskarte.backend.common.webservice.context
-import app.ehrenamtskarte.backend.common.webservice.findValueByName
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
 import app.ehrenamtskarte.backend.exception.service.NotImplementedException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
@@ -42,7 +42,6 @@ class FreinetApplicationMutationService {
             val regionId = application.regionId.value
 
             if (!Authorizer.mayViewApplicationsInRegion(admin, regionId)) {
-                logger.warn("unauthorized access")
                 throw UnauthorizedException()
             }
 
