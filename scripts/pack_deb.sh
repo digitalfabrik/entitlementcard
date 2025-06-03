@@ -70,7 +70,7 @@ if [[ -n "$tarfile" ]]; then
     chmod 0755 "$postinstfile"
     echo "useradd -r backend" >> "$postinstfile"
     echo "sudo -u backend /opt/ehrenamtskarte/backend/bin/backend migrate" >> "$postinstfile"
-    echo "systemctl restart eak-backend.service"
+    echo "systemctl restart eak-backend.service" >> "$postinstfile"
 fi
 if [[ -n "$servicefile" ]]; then
     echo "Copying $servicefile …"
