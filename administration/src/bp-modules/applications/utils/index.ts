@@ -1,17 +1,4 @@
-import { ApplicationStatus, GetApplicationsVerificationType, VerificationStatus } from '../types'
-
-export const getApplicationStatus = (status: number[], isWithdrawed: boolean): ApplicationStatus => {
-  if (isWithdrawed) {
-    return ApplicationStatus.withdrawed
-  }
-  if (status.every(val => val === VerificationStatus.Verified)) {
-    return ApplicationStatus.fullyVerified
-  }
-  if (status.every(val => val === VerificationStatus.Rejected)) {
-    return ApplicationStatus.fullyRejected
-  }
-  return ApplicationStatus.ambiguous
-}
+import { ApplicationStatus, GetApplicationsType, GetApplicationsVerificationType, VerificationStatus } from '../types'
 
 export const getVerificationStatus = (verification: GetApplicationsVerificationType): VerificationStatus => {
   if (verification.verifiedDate) {
@@ -21,4 +8,21 @@ export const getVerificationStatus = (verification: GetApplicationsVerificationT
     return VerificationStatus.Rejected
   }
   return VerificationStatus.Awaiting
+}
+
+export const getApplicationStatus = (application: GetApplicationsType): ApplicationStatus => {
+  if (application.withdrawalDate) {
+    return ApplicationStatus.withdrawed
+  }
+  if (
+    application.verifications.every(verification => getVerificationStatus(verification) === VerificationStatus.Verified)
+  ) {
+    return ApplicationStatus.fullyVerified
+  }
+  if (
+    application.verifications.every(verification => getVerificationStatus(verification) === VerificationStatus.Rejected)
+  ) {
+    return ApplicationStatus.fullyRejected
+  }
+  return ApplicationStatus.ambiguous
 }
