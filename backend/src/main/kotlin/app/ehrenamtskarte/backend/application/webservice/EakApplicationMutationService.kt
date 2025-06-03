@@ -1,9 +1,11 @@
 package app.ehrenamtskarte.backend.application.webservice
 
 import app.ehrenamtskarte.backend.application.database.ApplicationEntity
+import app.ehrenamtskarte.backend.application.database.ApplicationEntity.Status
 import app.ehrenamtskarte.backend.application.database.NOTE_MAX_CHARS
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
 import app.ehrenamtskarte.backend.application.webservice.schema.create.Application
+import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationView.ApplicationStatus
 import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationHandler
 import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.service.Authorizer.mayDeleteApplicationsInRegion
@@ -115,6 +117,30 @@ class EakApplicationMutationService {
                 ApplicationRepository.rejectApplicationVerification(accessKey)
             }
         }
+
+    /**
+     * Approves or rejects an application if it is in the Pending status.
+     *
+     * @return The new status of the application. The status might be unchanged if the status change was not permitted.
+     * @throws NotFoundException If an application with the specified accessKey is not found.
+     */
+    @GraphQLDescription("Approve or reject an application")
+    fun resolveApplicationStatus(
+        applicationId: Int,
+        approve: Boolean,
+        dfe: DataFetchingEnvironment,
+    ): ApplicationStatus {
+        dfe.graphQlContext.context.enforceSignedIn()
+
+        return transaction {
+            ApplicationEntity.findById(applicationId)
+                ?.let {
+                    it.tryChangeStatus(if (approve) Status.Approved else Status.Rejected)
+                    ApplicationStatus.valueOf(it.status.name)
+                }
+                ?: throw NotFoundException("Application not found")
+        }
+    }
 
     @GraphQLDescription("Updates a note of an application")
     fun updateApplicationNote(applicationId: Int, noteText: String, dfe: DataFetchingEnvironment): Boolean {
