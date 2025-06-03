@@ -142,6 +142,8 @@ type Mutation {
   activateCard(activationSecretBase64: String!, cardInfoHashBase64: String!, overwrite: Boolean!, project: String!): CardActivationResultModel!
   "Stores a new application for an EAK"
   addEakApplication(application: ApplicationInput!, project: String!, regionId: Int!): Boolean!
+  "Approve an application"
+  approveApplicationStatus(applicationId: Int!): ApplicationView!
   "Changes an administrator's password"
   changePassword(currentPassword: String!, email: String!, newPassword: String!, project: String!): Boolean!
   "Creates a new administrator"
