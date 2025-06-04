@@ -1,6 +1,6 @@
 /* eslint-disable react/destructuring-assignment */
 import { MutationResult } from '@apollo/client'
-import { CreditScore, Delete, EditNote, ExpandMore, Print, Warning } from '@mui/icons-material'
+import { CreditScore, Delete, EditNote, ExpandMore, InfoOutline, Print, Warning } from '@mui/icons-material'
 import {
   Accordion,
   AccordionDetails,
@@ -19,6 +19,8 @@ import {
   styled,
   useTheme,
 } from '@mui/material'
+import { format } from 'date-fns'
+import { de } from 'date-fns/locale'
 import React, { memo, useContext, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -183,6 +185,28 @@ const ButtonsCardApproved = ({
   )
 }
 
+const StatusNote = ({ statusResolvedDate, status }: { statusResolvedDate: Date; status: ApplicationStatus }) => {
+  const { t } = useTranslation('applicationsOverview')
+
+  const isApproved = [ApplicationStatus.Approved, ApplicationStatus.ApprovedCardCreated].includes(status)
+
+  return (
+    <Stack direction='row' sx={{ padding: 2, alignItems: 'center' }}>
+      <InfoOutline />
+      &ensp;
+      {t('applicationResolveNotice', {
+        date: format(statusResolvedDate, 'dd MMMM', { locale: de }),
+        time: format(statusResolvedDate, 'HH:mm', { locale: de }),
+      })}
+      &ensp;
+      <Typography sx={{ fontWeight: 'bold' }} color={isApproved ? 'success' : 'error'}>
+        {t(isApproved ? 'applicationResolveApproved' : 'applicationResolveRejected')}
+      </Typography>
+      .
+    </Stack>
+  )
+}
+
 export type ApplicationCardProps = {
   application: GetApplicationsType
   isSelectedForPrint: boolean
@@ -328,6 +352,10 @@ const ApplicationCard = ({
         </Box>
 
         <Divider />
+
+        {application.status != null && application.statusResolvedDate != null && (
+          <StatusNote statusResolvedDate={new Date(application.statusResolvedDate)} status={application.status} />
+        )}
 
         <Stack sx={{ p: 2, displayPrint: 'none' }} spacing={2} direction='row'>
           {application.status === ApplicationStatus.Pending ? (

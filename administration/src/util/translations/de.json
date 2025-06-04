@@ -203,7 +203,10 @@
     "none": "keine",
     "applicationApprove": "Antrag bestätigen",
     "applicationReject": "Antrag ablehnen",
-    "applicationApprovedToastMessage": "Der Antrag wurde genehmigt."
+    "applicationApprovedToastMessage": "Der Antrag wurde genehmigt.",
+    "applicationResolveNotice": "Dieser Antrag wurde am {{date}} um {{time}}",
+    "applicationResolveApproved": "genehmigt",
+    "applicationResolveRejected": "abgelehnt"
   },
   "auth": {
     "administration": "Verwaltung",
