@@ -2,8 +2,6 @@ package app.ehrenamtskarte.backend.cards.webservice.schema
 
 import Card
 import app.ehrenamtskarte.backend.application.database.ApplicationEntity
-import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
-import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationView
 import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.cards.Argon2IdHasher
@@ -241,7 +239,7 @@ class CardMutationService {
         val cardInfoBytes = encodedCardInfo.decodeBase64Bytes()
         try {
             return Card.CardInfo.parseFrom(cardInfoBytes)
-        } catch (e: InvalidProtocolBufferException) {
+        } catch (_: InvalidProtocolBufferException) {
             throw InvalidInputException("Failed to parse encodedCardInfo")
         }
     }
@@ -257,26 +255,34 @@ class CardMutationService {
         val context = dfe.graphQlContext.context
         val projectConfig = context.backendConfiguration.getProjectConfig(project)
         val admin = context.getAdministrator()
+
         val activationCodes = transaction {
             encodedCardInfos.map { encodedCardInfo ->
                 val cardInfo = parseEncodedCardInfo(encodedCardInfo)
 
                 if (!Authorizer.mayCreateCardInRegion(admin, cardInfo.extensions.extensionRegion.regionId)) {
                     throw ForbiddenException()
+                } else {
+                    CardCreationResultModel(
+                        dynamicActivationCode = createDynamicActivationCode(cardInfo, userId = admin.id.value),
+                        staticVerificationCode = if (generateStaticCodes) {
+                            createStaticVerificationCode(cardInfo, userId = admin.id.value)
+                        } else {
+                            null
+                        },
+                    )
                 }
-
-                return@map CardCreationResultModel(
-                    createDynamicActivationCode(cardInfo, userId = admin.id.value),
-                    if (generateStaticCodes) {
-                        createStaticVerificationCode(cardInfo, userId = admin.id.value)
-                    } else {
-                        null
-                    },
-                )
+            }.also {
+                if (applicationIdToMarkAsProcessed != null) {
+                    ApplicationEntity.findByIdAndUpdate(applicationIdToMarkAsProcessed) {
+                        it.status = ApplicationEntity.Status.ApprovedCardCreated
+                    }
+                }
             }
         }
 
         val regionId = admin.regionId?.value
+
         if (regionId != null) {
             Matomo.trackCreateCards(
                 context.backendConfiguration,
@@ -289,13 +295,6 @@ class CardMutationService {
             )
         }
 
-        if (applicationIdToMarkAsProcessed != null) {
-            transaction {
-                ApplicationEntity.findByIdAndUpdate(applicationIdToMarkAsProcessed) {
-                    it.status = ApplicationEntity.Status.ApprovedCardCreated
-                }
-            }
-        }
         return activationCodes
     }
 
