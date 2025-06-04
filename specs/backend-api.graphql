@@ -73,12 +73,14 @@ type ApplicationVerificationView {
 }
 
 type ApplicationView {
-  cardCreated: Boolean
+  cardCreated: Boolean @deprecated(reason : "Use 'status' instead")
   createdDate: String!
   id: Int!
   jsonValue: String!
   note: String
   regionId: Int!
+  status: ApplicationStatus
+  statusResolvedDate: String
   verifications: [ApplicationVerificationView!]!
   withdrawalDate: String
 }
@@ -164,6 +166,8 @@ type Mutation {
   importAcceptingStores(dryRun: Boolean!, project: String!, stores: [CSVAcceptingStoreInput!]!): StoreImportReturnResultModel!
   "Reset the administrator's password"
   resetPassword(email: String!, newPassword: String!, passwordResetKey: String!, project: String!): Boolean!
+  "Approve or reject an application"
+  resolveApplicationStatus(applicationId: Int!, approve: Boolean!): ApplicationStatus!
   "Sends a confirmation mail to the user when the card creation was successful"
   sendCardCreationConfirmationMail(deepLink: String!, project: String!, recipientAddress: String!, recipientName: String!, regionId: Int!): Boolean!
   "Sends a mail that allows the administrator to reset their password."
@@ -300,6 +304,13 @@ enum ActivationState {
 enum ApiTokenType {
   USER_IMPORT
   VERIFIED_APPLICATION
+}
+
+enum ApplicationStatus {
+  Approved
+  ApprovedCardCreated
+  Pending
+  Rejected
 }
 
 enum ApplicationType {

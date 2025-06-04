@@ -1,0 +1,3 @@
+mutation resolveApplicationStatus($applicationId: Int!, $approve: Boolean!) {
+  status: resolveApplicationStatus(applicationId: $applicationId, approve: $approve)
+}

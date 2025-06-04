@@ -2,7 +2,7 @@ import { Icon, Intent } from '@blueprintjs/core'
 import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
-import { VerificationStatus } from '../constants'
+import { VerificationStatus } from '../types'
 
 const StyledIndicator = styled.span`
   display: inline-block;
@@ -22,7 +22,7 @@ const getIconByStatus = (status: VerificationStatus): 'tick-circle' | 'cross-cir
   switch (status) {
     case VerificationStatus.Verified:
       return verifiedIcon
-    case VerificationStatus.Awaiting:
+    case VerificationStatus.Pending:
       return awaitingIcon
     case VerificationStatus.Rejected:
       return rejectedIcon
@@ -33,7 +33,7 @@ const getIntentByStatus = (status: VerificationStatus): Intent => {
   switch (status) {
     case VerificationStatus.Verified:
       return 'success'
-    case VerificationStatus.Awaiting:
+    case VerificationStatus.Pending:
       return 'warning'
     case VerificationStatus.Rejected:
       return 'danger'

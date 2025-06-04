@@ -1,12 +1,13 @@
 /* eslint-disable react/destructuring-assignment */
 import { MutationResult } from '@apollo/client'
-import { CreditScore, Delete, EditNote, ExpandMore, Print, Warning } from '@mui/icons-material'
+import { CreditScore, Delete, EditNote, ExpandMore, InfoOutline, Print, Warning } from '@mui/icons-material'
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Box,
   Button,
+  ButtonProps,
   CircularProgress,
   Dialog,
   DialogActions,
@@ -15,19 +16,24 @@ import {
   Stack,
   Tooltip,
   Typography,
+  styled,
   useTheme,
 } from '@mui/material'
+import { format } from 'date-fns'
+import { de } from 'date-fns/locale'
 import React, { memo, useContext, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
-import { useDeleteApplicationMutation } from '../../generated/graphql'
+import {
+  ApplicationStatus,
+  useDeleteApplicationMutation,
+  useResolveApplicationStatusMutation,
+} from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { useAppToaster } from '../AppToaster'
-import type { Application } from './ApplicationsOverview'
 import type { JsonField } from './JsonFieldView'
 import JsonFieldView, { findValue } from './JsonFieldView'
 import NoteDialogController from './NoteDialogController'
@@ -35,15 +41,13 @@ import { getPreVerifiedEntitlementType } from './PreVerifiedEntitlementType'
 import PreVerifiedQuickIndicator from './PreVerifiedQuickIndicator'
 import VerificationsQuickIndicator from './VerificationsQuickIndicator'
 import VerificationsView from './VerificationsView'
+import { GetApplicationsType } from './types'
 
-const PrimaryButton = styled(Button)`
-  // TODO: Remove this style after blueprint.js is completely removed
-  &:hover {
-    color: white;
-  }
+const PrimaryButton = styled(Button, { name: 'contained' })<ButtonProps>`
+  color: 'primary';
 `
 
-const Spacer = styled.div`
+const Spacer = styled('div')`
   flex-grow: 1;
 `
 
@@ -51,7 +55,7 @@ const ApplicationIndicators = ({
   application,
   applicationJsonData,
 }: {
-  application: Application
+  application: GetApplicationsType
   applicationJsonData: JsonField<'Array'>
 }) => {
   const preVerifiedEntitlementType = getPreVerifiedEntitlementType(
@@ -125,27 +129,104 @@ const AccordionExpandButton = (p: { expanded: boolean }) => {
   )
 }
 
+const ButtonsCardPending = ({
+  disabled,
+  onPrimaryButtonClick,
+  onSecondaryButtonClick,
+}: {
+  disabled: boolean
+  onPrimaryButtonClick: () => void
+  onSecondaryButtonClick: () => void
+}) => {
+  const { t } = useTranslation('applicationsOverview')
+
+  return (
+    <>
+      <PrimaryButton variant='contained' startIcon={<CreditScore />} disabled={disabled} onClick={onPrimaryButtonClick}>
+        {t('applicationApprove')}
+      </PrimaryButton>
+      <Button
+        variant='outlined'
+        startIcon={<Delete />}
+        color='error'
+        disabled={disabled}
+        onClick={onSecondaryButtonClick}>
+        {t('applicationReject')}
+      </Button>
+    </>
+  )
+}
+
+const ButtonsCardApproved = ({
+  cardAlreadyCreated,
+  primaryButtonHref,
+  onSecondaryButtonClick,
+}: {
+  cardAlreadyCreated: boolean
+  primaryButtonHref: string
+  onSecondaryButtonClick: () => void
+}) => {
+  const { t } = useTranslation('applicationsOverview')
+
+  return (
+    <>
+      <Tooltip title={t('incompleteMappingTooltip')}>
+        {/* Make the outer Tooltip independent of the button's disabled state */}
+        <span>
+          <PrimaryButton variant='contained' href={primaryButtonHref} startIcon={<CreditScore />}>
+            {cardAlreadyCreated ? t('createCardAgain') : t('createCard')}
+          </PrimaryButton>
+        </span>
+      </Tooltip>
+      <Button onClick={onSecondaryButtonClick} startIcon={<Delete />} variant='outlined' color='error'>
+        {t('deleteApplication')}
+      </Button>
+    </>
+  )
+}
+
+const StatusNote = ({ statusResolvedDate, status }: { statusResolvedDate: Date; status: ApplicationStatus }) => {
+  const { t } = useTranslation('applicationsOverview')
+
+  const isApproved = [ApplicationStatus.Approved, ApplicationStatus.ApprovedCardCreated].includes(status)
+
+  return (
+    <Stack direction='row' sx={{ padding: 2, alignItems: 'center' }}>
+      <InfoOutline />
+      &ensp;
+      {t('applicationResolveNotice', {
+        date: format(statusResolvedDate, 'dd MMMM', { locale: de }),
+        time: format(statusResolvedDate, 'HH:mm', { locale: de }),
+      })}
+      &ensp;
+      <Typography sx={{ fontWeight: 'bold' }} color={isApproved ? 'success' : 'error'}>
+        {t(isApproved ? 'applicationResolveApproved' : 'applicationResolveRejected')}
+      </Typography>
+      .
+    </Stack>
+  )
+}
+
 export type ApplicationCardProps = {
-  application: Application
+  application: GetApplicationsType
   isSelectedForPrint: boolean
   onDelete: () => void
+  onChange: (application: GetApplicationsType) => void
   onPrintApplicationById: (applicationId: number) => void
-  onChange: (application: Application) => void
 }
 
 const ApplicationCard = ({
   application,
   isSelectedForPrint,
   onDelete,
-  onPrintApplicationById,
   onChange,
+  onPrintApplicationById,
 }: ApplicationCardProps) => {
   const { t } = useTranslation('applicationsOverview')
   const theme = useTheme()
-  const { createdDate: createdDateString, id, withdrawalDate, cardCreated } = application
   const jsonValueParsed: JsonField<'Array'> = JSON.parse(application.jsonValue)
   const config = useContext(ProjectConfigContext)
-  const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${id}`
+  const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${application.id}`
   const appToaster = useAppToaster()
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [openNoteDialog, setOpenNoteDialog] = useState(false)
@@ -164,10 +245,21 @@ const ApplicationCard = ({
       }
     },
   })
+  const [resolveStatus, resolveStatusResult] = useResolveApplicationStatusMutation({
+    onError: error => {
+      const { title } = getMessageFromApolloError(error)
+      appToaster?.show({ intent: 'danger', message: title })
+    },
+    onCompleted: result => {
+      onChange({ ...application, status: result.status })
+    },
+  })
+
   const createCardQuery = useMemo(
     () =>
-      `${config.applicationFeature?.applicationJsonToCardQuery(jsonValueParsed)}&applicationIdToMarkAsProcessed=${id}`,
-    [config.applicationFeature, jsonValueParsed, id]
+      `./cards/add${config.applicationFeature?.applicationJsonToCardQuery(jsonValueParsed)}` +
+      `&applicationIdToMarkAsProcessed=${application.id}`,
+    [config.applicationFeature, jsonValueParsed, application.id]
   )
   const personalData = useMemo(
     () => config.applicationFeature?.applicationJsonToPersonalData(jsonValueParsed),
@@ -175,32 +267,22 @@ const ApplicationCard = ({
   )
   return (
     <Accordion
-      sx={{
-        displayPrint: isSelectedForPrint ? 'block' : 'none',
-      }}
+      sx={{ displayPrint: isSelectedForPrint ? 'block' : 'none' }}
       disableGutters
       aria-controls='panel-content'
       onChange={(_, expanded) => accordionExpandedSet(expanded)}>
       <AccordionSummary
         // Need this to display the `expandIconWrapper` slot, even if this is not directly used.
         expandIcon={<ExpandMore />}
-        slots={{
-          expandIconWrapper: AccordionExpandButton,
-        }}
+        slots={{ expandIconWrapper: AccordionExpandButton }}
         slotProps={{
-          expandIconWrapper: {
-            // @ts-expect-error Currently, MUI apparently cannot properly forward prop types from the slots
-            expanded: accordionExpanded,
-          },
+          // @ts-expect-error Currently, MUI apparently cannot properly forward prop types from the slots
+          expandIconWrapper: { expanded: accordionExpanded },
         }}
-        sx={{
-          flexDirection: 'column',
-          alignItems: 'stretch',
-          padding: 0,
-        }}>
+        sx={{ flexDirection: 'column', alignItems: 'stretch', padding: 0 }}>
         <Stack direction='row' sx={{ width: '100%', gap: 2, paddingLeft: 2, paddingRight: 2 }}>
           <Typography variant='h4' sx={{ minWidth: '250px' }}>
-            {t('applicationFrom')} {formatDateWithTimezone(createdDateString, config.timezone)}
+            {t('applicationFrom')} {formatDateWithTimezone(application.createdDate, config.timezone)}
           </Typography>
           <Warning color='warning' visibility={application.withdrawalDate !== null ? 'visible' : 'hidden'} />
           <Typography
@@ -226,9 +308,11 @@ const ApplicationCard = ({
       <AccordionDetails>
         <Stack sx={{ p: 2 }} gap={2}>
           <Stack direction='row' spacing={2} alignItems='flex-start'>
-            {withdrawalDate ? (
+            {application.withdrawalDate ? (
               <Box sx={{ bgcolor: theme.palette.warning.light, p: 2, flexGrow: 1 }}>
-                {t('withdrawalMessage', { withdrawalDate: formatDateWithTimezone(withdrawalDate, config.timezone) })}
+                {t('withdrawalMessage', {
+                  withdrawalDate: formatDateWithTimezone(application.withdrawalDate, config.timezone),
+                })}
                 <br />
                 {t('deleteApplicationSoonPrompt')}
               </Box>
@@ -264,24 +348,38 @@ const ApplicationCard = ({
 
         <Divider />
 
+        {application.status != null && application.statusResolvedDate != null && (
+          <StatusNote statusResolvedDate={new Date(application.statusResolvedDate)} status={application.status} />
+        )}
+
         <Stack sx={{ p: 2, displayPrint: 'none' }} spacing={2} direction='row'>
-          <Tooltip title={createCardQuery ? undefined : t('incompleteMappingTooltip')}>
-            {/* Make the outer Tooltip independent of the button's disabled state */}
-            <span>
-              <PrimaryButton
-                disabled={!createCardQuery}
-                variant='contained'
-                color='primary'
-                href={createCardQuery ? `./cards/add${createCardQuery}` : undefined}
-                startIcon={<CreditScore />}>
-                {cardCreated ? t('createCardAgain') : t('createCard')}
-              </PrimaryButton>
-            </span>
-          </Tooltip>
-          <Button onClick={() => setDeleteDialogOpen(true)} startIcon={<Delete />} variant='outlined' color='error'>
-            {t('deleteApplication')}
-          </Button>
-          <Button onClick={() => onPrintApplicationById(id)} startIcon={<Print />} variant='outlined' color='inherit'>
+          {application.status === ApplicationStatus.Pending ? (
+            <ButtonsCardPending
+              disabled={resolveStatusResult.loading}
+              onPrimaryButtonClick={() => {
+                resolveStatus({ variables: { applicationId: application.id, approve: true } })
+              }}
+              onSecondaryButtonClick={() => {
+                // TODO: #1982
+                // resolveStatus({ variables: { applicationId: application.id, approve: false } })
+              }}
+            />
+          ) : undefined}
+
+          {application.status === ApplicationStatus.Approved ||
+          application.status === ApplicationStatus.ApprovedCardCreated ? (
+            <ButtonsCardApproved
+              cardAlreadyCreated={application.status === ApplicationStatus.ApprovedCardCreated}
+              primaryButtonHref={createCardQuery}
+              onSecondaryButtonClick={() => setDeleteDialogOpen(true)}
+            />
+          ) : undefined}
+
+          <Button
+            onClick={() => onPrintApplicationById(application.id)}
+            startIcon={<Print />}
+            variant='outlined'
+            color='inherit'>
             {t('exportPdf')}
           </Button>
         </Stack>

@@ -7,6 +7,7 @@ import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidLinkException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -15,14 +16,14 @@ import org.jetbrains.exposed.sql.transactions.transaction
 class EakApplicationQueryService {
     @GraphQLDescription("Queries all applications for a specific region")
     fun getApplications(dfe: DataFetchingEnvironment, regionId: Int): List<ApplicationView> {
-        val context = dfe.graphQlContext.context
-        val admin = context.getAdministrator()
+        val admin = dfe.graphQlContext.context.getAdministrator()
+
         return transaction {
-            if (!Authorizer.mayViewApplicationsInRegion(admin, regionId)) {
+            if (Authorizer.mayViewApplicationsInRegion(admin, regionId)) {
+                ApplicationRepository.getApplicationsByAdmin(regionId).map { ApplicationView.fromDbEntity(it, true) }
+            } else {
                 throw ForbiddenException()
             }
-
-            ApplicationRepository.getApplicationsByAdmin(regionId)
         }
     }
 
@@ -30,14 +31,17 @@ class EakApplicationQueryService {
     fun getApplicationByApplicant(accessKey: String): ApplicationView =
         transaction {
             ApplicationRepository.getApplicationByApplicant(accessKey)
+                ?.let { ApplicationView.fromDbEntity(it) }
+                ?: throw InvalidLinkException()
         }
 
     @GraphQLDescription("Queries an application by application verification accessKey")
     fun getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey: String): ApplicationView =
         transaction {
-            ApplicationRepository.getApplicationByApplicationVerificationAccessKey(
-                applicationVerificationAccessKey,
-            )
+            ApplicationRepository
+                .getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey)
+                ?.let { ApplicationView.fromDbEntity(it) }
+                ?: throw InvalidLinkException()
         }
 
     @GraphQLDescription("Queries an application verification by application verification accessKey")

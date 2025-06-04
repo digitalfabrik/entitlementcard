@@ -2,10 +2,9 @@ import { Stack, Tooltip, useTheme } from '@mui/material'
 import React, { forwardRef, memo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import type { Application } from './ApplicationsOverview'
 import VerificationIndicator from './components/VerificationIndicator'
-import { VerificationStatus } from './constants'
-import { getVerificationStatus } from './utils'
+import { GetApplicationsVerificationType, VerificationStatus } from './types'
+import { verificationStatus } from './utils'
 
 const ToolTipContent = forwardRef<HTMLDivElement, unknown>((p, ref) => {
   const { t } = useTranslation('applicationsOverview')
@@ -27,8 +26,8 @@ const ToolTipContent = forwardRef<HTMLDivElement, unknown>((p, ref) => {
   )
 })
 
-const VerificationQuickIndicator = ({ verifications }: { verifications: Application['verifications'] }) => {
-  const verificationStatuses = verifications.map(getVerificationStatus)
+const VerificationQuickIndicator = ({ verifications }: { verifications: GetApplicationsVerificationType[] }) => {
+  const verificationStatuses = verifications.map(verificationStatus)
 
   return (
     <Tooltip
@@ -42,8 +41,8 @@ const VerificationQuickIndicator = ({ verifications }: { verifications: Applicat
           text={`: ${verificationStatuses.filter(v => v === VerificationStatus.Verified).length}`}
         />
         <VerificationIndicator
-          status={VerificationStatus.Awaiting}
-          text={`: ${verificationStatuses.filter(v => v === VerificationStatus.Awaiting).length}`}
+          status={VerificationStatus.Pending}
+          text={`: ${verificationStatuses.filter(v => v === VerificationStatus.Pending).length}`}
         />
         <VerificationIndicator
           status={VerificationStatus.Rejected}
