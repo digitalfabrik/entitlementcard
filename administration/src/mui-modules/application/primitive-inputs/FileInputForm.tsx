@@ -101,7 +101,7 @@ const Component = <I,>({
       <>
         <FileInputButton
           onChange={onInputChange}
-          label={`Datei Anhängen${required ? ' *' : ''}`}
+          label={`${i18next.t('applicationForms:attachFileButton')}${required ? ' *' : ''}`}
           disabled={disableAllInputs}
         />
         {showAllErrors && validationResult.type === 'error' ? (

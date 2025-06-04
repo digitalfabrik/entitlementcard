@@ -58,7 +58,7 @@ test.describe('Bayern testing', () => {
 
     await expect(page.locator('form').first()).toContainText('Tätigkeitsnachweis')
     await expect(page.locator('form')).toContainText(
-      'Tätigkeitsnachweis Die Datei darf maximal 5 MB groß sein und muss im JPG, PNG oder PDF Format sein.'
+      'Falls vorhanden, hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. Die Datei darf maximal 5 MB groß sein und muss im JPG, PNG oder PDF Format sein.'
     )
     await testImageFileSelection(page, 'Datei Anhängen')
     await expect(page.getByRole('button', { name: 'Weitere Tätigkeit hinzufügen' })).toBeVisible()

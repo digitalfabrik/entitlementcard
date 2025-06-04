@@ -17,12 +17,8 @@ const StartDayForm = ({ value, setValue, isValid }: ExtensionComponentProps<Star
   return (
     <FormGroup label={t('startDayLabel')}>
       <CustomDatePicker
-        value={value.startDay?.toLocalDate()}
-        onChange={date => {
-          if (date !== null) {
-            setValue({ startDay: PlainDate.fromLocalDate(date) })
-          }
-        }}
+        value={value.startDay?.toLocalDate() ?? null}
+        onChange={date => setValue({ startDay: PlainDate.safeFromLocalDate(date) })}
         error={!isValid}
         minDate={minStartDay.toLocalDate()}
         textFieldSlotProps={{
