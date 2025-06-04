@@ -200,7 +200,10 @@
     "rejectedOn": "Widersprochen am",
     "organization": "Organisation",
     "eMail": "E-Mail",
-    "none": "keine"
+    "none": "keine",
+    "applicationApprove": "Antrag bestätigen",
+    "applicationReject": "Antrag ablehnen",
+    "applicationApprovedToastMessage": "Der Antrag wurde genehmigt."
   },
   "auth": {
     "administration": "Verwaltung",
