@@ -107,5 +107,11 @@ describe('KoblenzReferenceNumberExtension', () => {
         expect(KoblenzReferenceNumberExtension.getInitialState()).toEqual({ koblenzReferenceNumber: '' })
       })
     })
+
+    describe('Extension name', () => {
+      it('should not change to ensure correct user hashes', () => {
+        expect(KoblenzReferenceNumberExtension.name).toBe('koblenzReferenceNumber')
+      })
+    })
   })
 })

@@ -157,4 +157,10 @@ describe('BirthdayExtension', () => {
       expect(BirthdayExtension.getInitialState()).toEqual({ birthday: null })
     })
   })
+
+  describe('Extension name', () => {
+    it('should not change to ensure correct user hashes', () => {
+      expect(BirthdayExtension.name).toBe('birthday')
+    })
+  })
 })
