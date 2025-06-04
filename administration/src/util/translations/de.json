@@ -202,7 +202,10 @@
     "eMail": "E-Mail",
     "none": "keine",
     "applicationApprove": "Antrag bestätigen",
-    "applicationReject": "Antrag ablehnen"
+    "applicationReject": "Antrag ablehnen",
+    "applicationResolveNotice": "Dieser Antrag wurde am {{date}} um {{time}}",
+    "applicationResolveApproved": "genehmigt",
+    "applicationResolveRejected": "abgelehnt"
   },
   "auth": {
     "administration": "Verwaltung",
