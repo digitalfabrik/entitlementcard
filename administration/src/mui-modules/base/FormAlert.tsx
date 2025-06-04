@@ -18,7 +18,7 @@ const Container = styled('span')<{ $severity: 'info' | 'error'; $isToast: boolea
 `
 
 type FormAlertProps = {
-  errorMessage: string | null
+  errorMessage: string | null | undefined
   isToast?: boolean
   style?: CSSProperties
   severity?: 'info' | 'error'
