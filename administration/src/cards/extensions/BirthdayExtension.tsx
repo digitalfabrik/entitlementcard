@@ -44,6 +44,10 @@ const BirthdayForm = ({
       return t('birthdayFutureError')
     }
 
+    if (birthday.isBefore(minBirthday)) {
+      return t('birthdayBeforeMinBirthdayError', { minBirthday: minBirthday.format() })
+    }
+
     return null
   }
 
@@ -52,6 +56,7 @@ const BirthdayForm = ({
       <CustomDatePicker
         value={birthday?.toLocalDate() ?? null}
         onBlur={() => setTouched(true)}
+        onClose={() => setTouched(true)}
         onChange={date => {
           setValue({ birthday: PlainDate.safeFromLocalDate(date) })
         }}
@@ -81,7 +86,7 @@ const BirthdayExtension: Extension<BirthdayExtensionState> = {
       return false
     }
     const today = PlainDate.fromLocalDate(new Date())
-    return !birthday.isBeforeOrEqual(minBirthday) && !birthday.isAfter(today)
+    return birthday.isAfterOrEqual(minBirthday) && birthday.isBeforeOrEqual(today)
   },
   fromString: (value: string) => {
     const birthday = PlainDate.safeFromCustomFormat(value)

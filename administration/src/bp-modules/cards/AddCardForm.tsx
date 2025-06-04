@@ -6,6 +6,7 @@ import styled from 'styled-components'
 
 import {
   MAX_NAME_LENGTH,
+  getExpirationDateErrorMessage,
   getFullNameValidationErrorMessage,
   hasInfiniteLifetime,
   isExpirationDateValid,
@@ -66,6 +67,7 @@ const AddCardForm = ({ card, onRemove, updateCard }: CreateCardsFormProps): Reac
         {!hasInfiniteLifetime(card) && (
           <FormGroup>
             <CustomDatePicker
+              onClose={() => setTouchedValidationDate(true)}
               onBlur={() => setTouchedValidationDate(true)}
               label={t('expirationDate')}
               value={card.expirationDate?.toLocalDate() ?? null}
@@ -84,10 +86,7 @@ const AddCardForm = ({ card, onRemove, updateCard }: CreateCardsFormProps): Reac
               }}
             />
             {showValidationDateError && (
-              <FormAlert
-                severity='error'
-                errorMessage={t('expirationDateError', { maxValidationDate: today.add(maxCardValidity).format() })}
-              />
+              <FormAlert severity='error' errorMessage={getExpirationDateErrorMessage(card)} />
             )}
           </FormGroup>
         )}

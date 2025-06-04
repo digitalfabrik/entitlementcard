@@ -19,11 +19,23 @@ const StartDayForm = ({ value, setValue, isValid }: ExtensionComponentProps<Star
   const [touched, setTouched] = useState(false)
   const showError = !isValid && touched
 
+  const getStartDayErrorMessage = (): string | null => {
+    const startDay = value.startDay
+    if (!startDay) {
+      return t('startDayError')
+    }
+    if (startDay.isBefore(minStartDay)) {
+      return t('startDayPastError', { minStartDay: minStartDay.format() })
+    }
+    return null
+  }
+
   return (
     <FormGroup>
       <CustomDatePicker
         label={t('startDayLabel')}
         onBlur={() => setTouched(true)}
+        onClose={() => setTouched(true)}
         value={value.startDay?.toLocalDate() ?? null}
         onChange={date => setValue({ startDay: PlainDate.safeFromLocalDate(date) })}
         error={showError}
@@ -36,9 +48,7 @@ const StartDayForm = ({ value, setValue, isValid }: ExtensionComponentProps<Star
           },
         }}
       />
-      {showError && (
-        <FormAlert severity='error' errorMessage={t('startDayError', { minStartDay: minStartDay.format() })} />
-      )}
+      {showError && <FormAlert severity='error' errorMessage={getStartDayErrorMessage()} />}
     </FormGroup>
   )
 }
