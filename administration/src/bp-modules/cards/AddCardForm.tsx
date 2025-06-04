@@ -44,7 +44,7 @@ const AddCardForm = ({ card, onRemove, updateCard }: CreateCardsFormProps): Reac
   return (
     <UiCard>
       <CardHeader>
-        <Button minimal icon='cross' onClick={() => onRemove()} />
+        <Button variant='minimal' icon='cross' onClick={() => onRemove()} />
       </CardHeader>
       <Stack key={card.id} sx={{ my: 1, gap: 3 }}>
         <CardTextField
@@ -83,7 +83,12 @@ const AddCardForm = ({ card, onRemove, updateCard }: CreateCardsFormProps): Reac
                 },
               }}
             />
-            {showValidationDateError && <FormAlert severity='error' errorMessage={t('expirationDateError')} />}
+            {showValidationDateError && (
+              <FormAlert
+                severity='error'
+                errorMessage={t('expirationDateError', { maxValidationDate: today.add(maxCardValidity).format() })}
+              />
+            )}
           </FormGroup>
         )}
         <ExtensionForms card={card} updateCard={updateCard} showRequired={false} />

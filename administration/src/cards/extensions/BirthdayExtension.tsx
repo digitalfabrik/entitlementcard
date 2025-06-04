@@ -26,9 +26,12 @@ const BirthdayForm = ({
   const projectConfig = useContext(ProjectConfigContext)
 
   const showBirthdayHint = (): boolean => {
+    if (!projectConfig.showBirthdayExtensionHint || !birthday) {
+      return false
+    }
     const today = PlainDate.fromLocalDate(new Date())
     const underAge = today.subtract({ years: 16 })
-    return !!(birthday?.isAfter(underAge) && projectConfig.showBirthdayExtensionHint && !birthday.isAfter(today))
+    return birthday.isAfter(underAge) && birthday.isBefore(today)
   }
 
   const getErrorMessage = (): string | null => {
@@ -78,7 +81,7 @@ const BirthdayExtension: Extension<BirthdayExtensionState> = {
       return false
     }
     const today = PlainDate.fromLocalDate(new Date())
-    return !birthday.isBefore(minBirthday) && !birthday.isAfter(today)
+    return !birthday.isBeforeOrEqual(minBirthday) && !birthday.isAfter(today)
   },
   fromString: (value: string) => {
     const birthday = PlainDate.safeFromCustomFormat(value)

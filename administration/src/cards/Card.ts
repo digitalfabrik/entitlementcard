@@ -127,7 +127,7 @@ export const isExpirationDateValid = (card: Card, { nullable } = { nullable: fal
 
   return (
     card.expirationDate.isAfter(today) &&
-    card.expirationDate.isBefore(today.add(maxCardValidity)) &&
+    card.expirationDate.isBeforeOrEqual(today.add(maxCardValidity)) &&
     (startDay?.isBefore(card.expirationDate) ?? true)
   )
 }
