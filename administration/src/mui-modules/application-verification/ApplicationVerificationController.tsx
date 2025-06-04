@@ -107,17 +107,17 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
   return (
     <ApplicationViewCard elevation={2}>
       <div style={{ overflow: 'visible', padding: '20px' }}>
-        <Typography mb='12px' variant='h4'>
+        <Typography sx={{ mb: '12px' }} variant='h4'>
           {config.name}
         </Typography>
-        <Typography my='8px' variant='body1'>
+        <Typography sx={{ my: '8px' }} variant='body1'>
           {t('greeting', { contactName: verification.contactName })}
           <br />
           <br />
           <Trans i18nKey='applicationVerification:text' values={{ organizationName: verification.organizationName }} />
         </Typography>
         <Divider style={{ margin: '24px 0px' }} />
-        <Typography variant='h6' mb='8px'>
+        <Typography variant='h6' sx={{ mb: '8px' }}>
           Antrag vom {formatDateWithTimezone(createdDateString, config.timezone)}
         </Typography>
         <JsonFieldView
@@ -128,7 +128,7 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
           expandedRoot
         />
         <Divider style={{ margin: '24px 0px' }} />
-        <Typography mt='8px' variant='body1'>
+        <Typography sx={{ mt: '8px' }} variant='body1'>
           <Trans
             i18nKey='applicationVerification:confirmationMessage'
             values={{ organizationName: verification.organizationName }}

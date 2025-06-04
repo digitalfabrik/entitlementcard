@@ -58,11 +58,13 @@ const KoblenzReferenceNumberExtensionForm = ({
         error={!isValid && showErrorMessage}
         helperText={showErrorMessage ? <FormAlert errorMessage={getErrorMessage()} /> : null}
         sx={removeEndAdornmentMargin}
-        InputProps={{
-          sx: { paddingRight: 0 },
-          endAdornment: (
-            <ClearInputButton viewportSmall={viewportSmall} onClick={clearInput} input={koblenzReferenceNumber} />
-          ),
+        slotProps={{
+          input: {
+            sx: { paddingRight: 0 },
+            endAdornment: (
+              <ClearInputButton viewportSmall={viewportSmall} onClick={clearInput} input={koblenzReferenceNumber} />
+            ),
+          },
         }}
       />
     </FormGroup>

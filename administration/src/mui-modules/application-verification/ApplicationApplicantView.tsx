@@ -81,7 +81,7 @@ const ApplicationApplicantView = ({
   return (
     <ApplicationViewCard elevation={2}>
       <ApplicationViewCardContent>
-        <Typography mb='8px' variant='h6'>
+        <Typography sx={{ mb: '8px' }} variant='h6'>
           {`${t('headline')} ${formatDateWithTimezone(createdDateString, config.timezone)}`}
         </Typography>
         <JsonFieldView
@@ -97,7 +97,7 @@ const ApplicationApplicantView = ({
         {!application.withdrawalDate && (
           <>
             <StyledDivider />
-            <Typography mt='8px' mb='16px' variant='body2'>
+            <Typography sx={{ mt: '8px', mb: '16px' }} variant='body2'>
               {t('withdrawInformation')}
             </Typography>
             <Button variant='contained' endIcon={<Delete />} onClick={() => setDialogOpen(true)}>
