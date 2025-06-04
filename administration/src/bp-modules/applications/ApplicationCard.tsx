@@ -23,7 +23,11 @@ import React, { memo, useContext, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
-import { useDeleteApplicationMutation } from '../../generated/graphql'
+import {
+  ApplicationStatus,
+  useDeleteApplicationMutation,
+  useResolveApplicationStatusMutation,
+} from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
@@ -123,12 +127,40 @@ const AccordionExpandButton = (p: { expanded: boolean }) => {
   )
 }
 
+const ButtonsCardPending = ({
+  disabled,
+  onPrimaryButtonClick,
+  onSecondaryButtonClick,
+}: {
+  disabled: boolean
+  onPrimaryButtonClick: () => void
+  onSecondaryButtonClick: () => void
+}) => {
+  const { t } = useTranslation('applicationsOverview')
+
+  return (
+    <>
+      <PrimaryButton variant='contained' startIcon={<CreditScore />} disabled={disabled} onClick={onPrimaryButtonClick}>
+        {t('applicationApprove')}
+      </PrimaryButton>
+      <Button
+        variant='outlined'
+        startIcon={<Delete />}
+        color='error'
+        disabled={disabled}
+        onClick={onSecondaryButtonClick}>
+        {t('applicationReject')}
+      </Button>
+    </>
+  )
+}
+
 const ButtonsCardApproved = ({
-  application,
+  cardAlreadyCreated,
   primaryButtonHref,
   onSecondaryButtonClick,
 }: {
-  application: GetApplicationsType
+  cardAlreadyCreated: boolean
   primaryButtonHref: string
   onSecondaryButtonClick: () => void
 }) => {
@@ -140,7 +172,7 @@ const ButtonsCardApproved = ({
         {/* Make the outer Tooltip independent of the button's disabled state */}
         <span>
           <PrimaryButton variant='contained' href={primaryButtonHref} startIcon={<CreditScore />}>
-            {application.cardCreated ? t('createCardAgain') : t('createCard')}
+            {cardAlreadyCreated ? t('createCardAgain') : t('createCard')}
           </PrimaryButton>
         </span>
       </Tooltip>
@@ -155,16 +187,16 @@ export type ApplicationCardProps = {
   application: GetApplicationsType
   isSelectedForPrint: boolean
   onDelete: () => void
-  onPrintApplicationById: (applicationId: number) => void
   onChange: (application: GetApplicationsType) => void
+  onPrintApplicationById: (applicationId: number) => void
 }
 
 const ApplicationCard = ({
   application,
   isSelectedForPrint,
   onDelete,
-  onPrintApplicationById,
   onChange,
+  onPrintApplicationById,
 }: ApplicationCardProps) => {
   const { t } = useTranslation('applicationsOverview')
   const theme = useTheme()
@@ -189,6 +221,16 @@ const ApplicationCard = ({
       }
     },
   })
+  const [resolveStatus, resolveStatusResult] = useResolveApplicationStatusMutation({
+    onError: error => {
+      const { title } = getMessageFromApolloError(error)
+      appToaster?.show({ intent: 'danger', message: title })
+    },
+    onCompleted: result => {
+      onChange({ ...application, status: result.status })
+    },
+  })
+
   const createCardQuery = useMemo(
     () =>
       `./cards/add${config.applicationFeature?.applicationJsonToCardQuery(jsonValueParsed)}` +
@@ -283,11 +325,28 @@ const ApplicationCard = ({
         <Divider />
 
         <Stack sx={{ p: 2, displayPrint: 'none' }} spacing={2} direction='row'>
-          <ButtonsCardApproved
-            application={application}
-            primaryButtonHref={createCardQuery}
-            onSecondaryButtonClick={() => setDeleteDialogOpen(true)}
-          />
+          {application.status === ApplicationStatus.Pending ? (
+            <ButtonsCardPending
+              disabled={resolveStatusResult.loading}
+              onPrimaryButtonClick={() => {
+                resolveStatus({ variables: { applicationId: application.id, approve: true } })
+              }}
+              onSecondaryButtonClick={() => {
+                // TODO: #1982
+                // resolveStatus({ variables: { applicationId: application.id, approve: false } })
+              }}
+            />
+          ) : undefined}
+
+          {application.status === ApplicationStatus.Approved ||
+          application.status === ApplicationStatus.ApprovedCardCreated ? (
+            <ButtonsCardApproved
+              cardAlreadyCreated={application.status === ApplicationStatus.ApprovedCardCreated}
+              primaryButtonHref={createCardQuery}
+              onSecondaryButtonClick={() => setDeleteDialogOpen(true)}
+            />
+          ) : undefined}
+
           <Button
             onClick={() => onPrintApplicationById(application.id)}
             startIcon={<Print />}
