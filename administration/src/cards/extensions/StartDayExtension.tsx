@@ -35,7 +35,9 @@ const StartDayForm = ({ value, setValue, isValid }: ExtensionComponentProps<Star
           },
         }}
       />
-      {showError && <FormAlert severity='error' errorMessage={t('startDayError')} />}
+      {showError && (
+        <FormAlert severity='error' errorMessage={t('startDayError', { minStartDay: minStartDay.format() })} />
+      )}
     </FormGroup>
   )
 }

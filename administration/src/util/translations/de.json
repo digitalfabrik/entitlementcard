@@ -608,7 +608,7 @@
     "referenceNrInvalidLengthError": "Das Aktenzeichen muss eine Länge zwischen {{KoblenzReferenceNumberMinLength}} und {{KoblenzReferenceNumberMaxLength}} haben.",
     "referenceNrLabel": "Aktenzeichen",
     "startDayLabel": "Startdatum",
-    "startDayError": "Bitte geben Sie ein gültiges Startdatum ein, das in der Vergangenheit liegt."
+    "startDayError": "Bitte geben Sie ein gültiges Startdatum ein, das in der Vergangenheit liegt, aber nach dem {{minStartDay}}."
   },
   "shared": {
     "accordionShowLess": "Weniger anzeigen",
