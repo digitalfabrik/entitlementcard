@@ -31,7 +31,7 @@ const BirthdayForm = ({
     }
     const today = PlainDate.fromLocalDate(new Date())
     const underAge = today.subtract({ years: 16 })
-    return birthday.isAfter(underAge) && birthday.isBefore(today)
+    return birthday.isAfter(underAge) && birthday.isBeforeOrEqual(today)
   }
 
   const getErrorMessage = (): string | null => {
