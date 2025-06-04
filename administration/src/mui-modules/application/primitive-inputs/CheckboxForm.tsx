@@ -1,6 +1,6 @@
-import { Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
 
+import BaseCheckbox from '../../base/BaseCheckbox'
 import { FormContext } from '../SteppedSubForms'
 import { Form, FormComponentProps } from '../util/FormType'
 
@@ -25,25 +25,16 @@ const CheckboxForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
     const isInvalid = validationResult.type === 'error'
 
     return (
-      <FormGroup onBlur={() => setTouched(true)}>
-        <FormControl required={options.required} error={touched && isInvalid} disabled={disableAllInputs}>
-          <FormControlLabel
-            style={{ margin: '8px 0' }}
-            control={
-              <Checkbox
-                required={options.required}
-                checked={state.checked}
-                onChange={e => {
-                  setTouched(true)
-                  setState(() => ({ checked: e.target.checked }))
-                }}
-              />
-            }
-            label={label}
-          />
-          {(showAllErrors || touched) && isInvalid ? <FormHelperText>{validationResult.message}</FormHelperText> : null}
-        </FormControl>
-      </FormGroup>
+      <BaseCheckbox
+        disabled={disableAllInputs}
+        required={options.required}
+        checked={state.checked}
+        label={label}
+        onChange={checked => setState(() => ({ checked }))}
+        hasError={(showAllErrors || touched) && isInvalid}
+        errorMessage={isInvalid ? validationResult.message : null}
+        onBlur={() => setTouched(true)}
+      />
     )
   },
 }

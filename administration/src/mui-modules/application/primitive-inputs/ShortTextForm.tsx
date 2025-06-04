@@ -2,6 +2,7 @@ import { TextField } from '@mui/material'
 import React, { useContext, useState } from 'react'
 
 import { ShortTextInput } from '../../../generated/graphql'
+import FormAlert from '../../base/FormAlert'
 import { FormContext } from '../SteppedSubForms'
 import { Form, FormComponentProps, ValidationResult } from '../util/FormType'
 
@@ -40,7 +41,7 @@ const Component = <I,>({
       onBlur={() => setTouched(true)}
       value={state.shortText}
       onChange={e => setState(() => ({ shortText: e.target.value }))}
-      helperText={(showAllErrors || touched) && isInvalid ? validationResult.message : ''}
+      helperText={(showAllErrors || touched) && isInvalid && <FormAlert errorMessage={validationResult.message} />}
     />
   )
 }
