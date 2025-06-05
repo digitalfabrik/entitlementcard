@@ -3,7 +3,7 @@ import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import CustomDatePicker from '../../bp-modules/components/CustomDatePicker'
-import FormAlert from '../../bp-modules/self-service/components/FormAlert'
+import FormAlert from '../../mui-modules/base/FormAlert'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import PlainDate from '../../util/PlainDate'
 import type { Extension, ExtensionComponentProps } from './extensions'

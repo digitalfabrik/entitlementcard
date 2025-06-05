@@ -108,7 +108,7 @@ const WorkAtOrganizationForm: Form<State, ValidatedInput, AdditionalProps> = {
         />
         <h4>{t('applicationForms:certificateHeadline')}</h4>
         <p>
-          {t('certificate')} {FileRequirementsText}
+          {t('applicationForms:certificateDescription')} {FileRequirementsText}
         </p>
         <SubForms.certificate.Component
           state={state.certificate}
