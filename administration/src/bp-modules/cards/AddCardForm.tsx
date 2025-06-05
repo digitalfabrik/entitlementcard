@@ -15,9 +15,9 @@ import {
 import type { Card } from '../../cards/Card'
 import { maxCardValidity } from '../../cards/constants'
 import CardTextField from '../../cards/extensions/components/CardTextField'
+import FormAlert from '../../mui-modules/base/FormAlert'
 import PlainDate from '../../util/PlainDate'
 import CustomDatePicker from '../components/CustomDatePicker'
-import FormAlert from '../self-service/components/FormAlert'
 import ExtensionForms from './ExtensionForms'
 
 const CardHeader = styled.div`
