@@ -7,7 +7,7 @@ const create = () => {
     throw Error(`Environment not specified. Received ${env}. Expected one of: development, production`)
   }
 
-  const absoluteRuntimePath = path.dirname(require.resolve('@babel/runtime/package.json '))
+  const absoluteRuntimePath = path.dirname(require.resolve('@babel/runtime/package.json'))
 
   return {
     // Babel assumes ES Modules, which isn't safe until CommonJS

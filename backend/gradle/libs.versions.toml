@@ -9,7 +9,7 @@ org-jlleitschuh-gradle-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version 
 
 [versions]
 
-graphql = "8.7.0"
+graphql = "8.8.0"
 jackson = "2.19.0"
 javalin = "6.6.0"
 jetbrains-exposed = "0.61.0"
