@@ -19,7 +19,7 @@ describe('CardTextField', () => {
     const { getByLabelText } = render(<CardTextField {...defaultProps} />)
 
     const input = getByLabelText('Test Label')
-    expect(input).toBeInTheDocument()
+    expect(input).toBeTruthy()
     expect(input).toHaveAttribute('placeholder', 'Enter text')
   })
 

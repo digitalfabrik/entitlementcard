@@ -12,7 +12,7 @@ export type StartDayExtensionState = { [START_DAY_EXTENSION_NAME]: PlainDate | n
 
 // Some minimum start day after 1970 is necessary, as we use an uint32 in the protobuf.
 // We also have to provide some minStartDay in the past for csv cards imports that may contain startDay in the past.
-const minStartDay = PlainDate.fromLocalDate(new Date()).subtract({ years: 5 })
+export const minStartDay = PlainDate.fromLocalDate(new Date()).subtract({ years: 5 })
 
 const StartDayForm = ({ value, setValue, isValid }: ExtensionComponentProps<StartDayExtensionState>): ReactElement => {
   const { t } = useTranslation('extensions')
