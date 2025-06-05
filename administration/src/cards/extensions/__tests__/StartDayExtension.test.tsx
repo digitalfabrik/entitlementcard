@@ -6,15 +6,13 @@ import React, { ReactNode } from 'react'
 import { AppToasterProvider } from '../../../bp-modules/AppToaster'
 import { renderWithTranslation } from '../../../testing/render'
 import PlainDate from '../../../util/PlainDate'
-import StartDayExtension from '../StartDayExtension'
+import StartDayExtension, { minStartDay } from '../StartDayExtension'
 
 const wrapper = ({ children }: { children: ReactNode }) => (
   <LocalizationProvider dateAdapter={AdapterDateFns}>
     <AppToasterProvider>{children}</AppToasterProvider>
   </LocalizationProvider>
 )
-
-jest.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
 
 describe('StartDayExtension', () => {
   describe('Component', () => {
@@ -23,34 +21,55 @@ describe('StartDayExtension', () => {
       value: { startDay: new PlainDate(2024, 1, 1) },
       setValue: mockSetValue,
       isValid: true,
-      showRequired: true,
+      showRequired: false,
     }
 
     it('should render date picker with correct initial value', () => {
       const { getByDisplayValue } = renderWithTranslation(<StartDayExtension.Component {...defaultProps} />, {
         wrapper,
       })
-
       expect(getByDisplayValue('01.01.2024')).toBeTruthy()
     })
 
-    it('should show error message when form is invalid and touched', () => {
-      const { getByText, getByDisplayValue, getByTitle } = renderWithTranslation(
-        <StartDayExtension.Component {...defaultProps} isValid={false} />,
+    it('should clear input when clear button is clicked', () => {
+      const { getByTitle } = renderWithTranslation(<StartDayExtension.Component {...defaultProps} />, {
+        wrapper,
+      })
+      const clearButton = getByTitle('Wert leeren')
+      fireEvent.click(clearButton)
+      expect(mockSetValue).toHaveBeenCalledWith({ startDay: null })
+    })
+
+    it('should show error message when startDay is empty and field was touched', () => {
+      const { getByText, getByPlaceholderText } = renderWithTranslation(
+        <StartDayExtension.Component {...defaultProps} isValid={false} value={{ startDay: null }} />,
         { wrapper }
       )
-      const clearButton = getByTitle('Wert leeren')
-      const datePicker = getByDisplayValue('01.01.2024')
-      fireEvent.click(clearButton)
+      const datePicker = getByPlaceholderText('TT.MM.JJJJ')
       fireEvent.blur(datePicker)
-      expect(getByText('Bitte geben Sie ein gültiges Startdatum ein, das in der Vergangenheit liegt.')).toBeTruthy()
+      expect(getByText('Bitte geben Sie ein gültiges Startdatum ein.')).toBeTruthy()
+    })
+
+    it('should show error message when form is invalid and touched', () => {
+      const { getByText, getByDisplayValue } = renderWithTranslation(
+        <StartDayExtension.Component
+          {...defaultProps}
+          isValid={false}
+          value={{ startDay: new PlainDate(2005, 1, 1) }}
+        />,
+        { wrapper }
+      )
+      const datePicker = getByDisplayValue('01.01.2005')
+      fireEvent.blur(datePicker)
+      expect(
+        getByText(`Das Startdatum darf nicht weiter als ${minStartDay.format()} in der Vergangenheit liegen.`)
+      ).toBeTruthy()
     })
 
     it('should not show error message when form is invalid but untouched', () => {
       const { queryByText } = renderWithTranslation(<StartDayExtension.Component {...defaultProps} isValid={false} />, {
         wrapper,
       })
-
       const errorMessage = queryByText('Bitte geben Sie ein gültiges Startdatum ein, das in der Vergangenheit liegt.')
       expect(errorMessage).toBeNull()
     })
@@ -60,7 +79,6 @@ describe('StartDayExtension', () => {
         wrapper,
       })
       const datePicker = getByDisplayValue('01.01.2024')
-
       fireEvent.change(datePicker, { target: { value: '02.01.2025' } })
       expect(mockSetValue).toHaveBeenCalledWith({ startDay: { day: 2, isoMonth: 1, isoYear: 2025 } })
     })
@@ -70,7 +88,6 @@ describe('StartDayExtension', () => {
         wrapper,
       })
       const datePicker = getByDisplayValue('01.01.2024')
-
       fireEvent.change(datePicker, { target: { value: '02' } })
       expect(mockSetValue).toHaveBeenCalledWith({ startDay: null })
     })
@@ -84,14 +101,14 @@ describe('StartDayExtension', () => {
 
       it('should result in minStartDay if no startDay is provided', () => {
         expect(StartDayExtension.getProtobufData({ startDay: null })).toEqual({
-          extensionStartDay: { startDay: 18262 },
+          extensionStartDay: { startDay: 18418 },
         })
       })
     })
 
     describe('isValid', () => {
       it('should be true if a valid startDay after minStartDay was provided', () => {
-        expect(StartDayExtension.isValid({ startDay: new PlainDate(2020, 1, 2) })).toBeTruthy()
+        expect(StartDayExtension.isValid({ startDay: minStartDay })).toBeTruthy()
       })
 
       it('should be invalid if the provided startDay is before 1900', () => {
@@ -151,7 +168,7 @@ describe('StartDayExtension', () => {
 
     describe('getInitializeState', () => {
       it('should initialize startDay state with today', () => {
-        expect(StartDayExtension.getInitialState()).toEqual({ startDay: new PlainDate(2024, 1, 1) })
+        expect(StartDayExtension.getInitialState()).toEqual({ startDay: PlainDate.fromLocalDate(new Date()) })
       })
     })
   })

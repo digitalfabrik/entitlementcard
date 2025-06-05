@@ -20,6 +20,18 @@ describe('KoblenzReferenceNumberExtension', () => {
       expect(getByLabelText('Aktenzeichen')).toBeTruthy()
     })
 
+    it('should render the correct placeholder', () => {
+      const { getByPlaceholderText } = renderWithTranslation(
+        <KoblenzReferenceNumberExtension.Component
+          value={{ koblenzReferenceNumber: '' }}
+          setValue={mockSetValue}
+          isValid
+          showRequired={false}
+        />
+      )
+      expect(getByPlaceholderText('5.031.025.281, 000D000001, 91459')).toBeTruthy()
+    })
+
     it('should update value when user types', () => {
       const { getByLabelText } = renderWithTranslation(
         <KoblenzReferenceNumberExtension.Component
@@ -32,6 +44,19 @@ describe('KoblenzReferenceNumberExtension', () => {
       const input = getByLabelText('Aktenzeichen')
       fireEvent.change(input, { target: { value: '12345' } })
       expect(mockSetValue).toHaveBeenCalledWith({ koblenzReferenceNumber: '12345' })
+    })
+
+    it('should not show error message if field was not left and required is false', () => {
+      const initialValue = '123@45'
+      const { queryByText } = renderWithTranslation(
+        <KoblenzReferenceNumberExtension.Component
+          value={{ koblenzReferenceNumber: initialValue }}
+          setValue={mockSetValue}
+          isValid={false}
+          showRequired={false}
+        />
+      )
+      expect(queryByText('Das Aktenzeichen enthält ungültige Sonderzeichen.')).toBeNull()
     })
 
     it('should show error for special characters', () => {
