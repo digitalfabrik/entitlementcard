@@ -198,8 +198,16 @@ class PlainDate {
     return PlainDate.compare(this, other) < 0
   }
 
+  isBeforeOrEqual(other: PlainDate): boolean {
+    return PlainDate.compare(this, other) <= 0
+  }
+
   isAfter(other: PlainDate): boolean {
     return PlainDate.compare(this, other) > 0
+  }
+
+  isAfterOrEqual(other: PlainDate): boolean {
+    return PlainDate.compare(this, other) >= 0
   }
 
   equals(other: PlainDate): boolean {
