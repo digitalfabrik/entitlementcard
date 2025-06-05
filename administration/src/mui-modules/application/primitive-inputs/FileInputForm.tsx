@@ -1,10 +1,11 @@
 import { AttachFile, Attachment } from '@mui/icons-material'
-import { Button, Chip, FormHelperText } from '@mui/material'
+import { Button, Chip } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ChangeEventHandler, useContext, useEffect, useRef } from 'react'
 
 import { AttachmentInput } from '../../../generated/graphql'
 import i18next from '../../../i18n'
+import FormAlert from '../../base/FormAlert'
 import { FormContext } from '../SteppedSubForms'
 import { Form, FormComponentProps, ValidationResult } from '../util/FormType'
 import globalArrayBuffersManager from '../util/globalArrayBuffersManager'
@@ -101,12 +102,10 @@ const Component = <I,>({
       <>
         <FileInputButton
           onChange={onInputChange}
-          label={`Datei Anhängen${required ? ' *' : ''}`}
+          label={`${i18next.t('applicationForms:attachFileButton')}${required ? ' *' : ''}`}
           disabled={disableAllInputs}
         />
-        {showAllErrors && validationResult.type === 'error' ? (
-          <FormHelperText error>{validationResult.message}</FormHelperText>
-        ) : null}
+        {showAllErrors && validationResult.type === 'error' && <FormAlert errorMessage={validationResult.message} />}
       </>
     )
   }

@@ -3,7 +3,7 @@ import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import CustomDatePicker from '../../bp-modules/components/CustomDatePicker'
-import FormAlert from '../../bp-modules/self-service/components/FormAlert'
+import FormAlert from '../../mui-modules/base/FormAlert'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import PlainDate from '../../util/PlainDate'
 import type { Extension, ExtensionComponentProps } from './extensions'
@@ -26,9 +26,12 @@ const BirthdayForm = ({
   const projectConfig = useContext(ProjectConfigContext)
 
   const showBirthdayHint = (): boolean => {
+    if (!projectConfig.showBirthdayExtensionHint || !birthday) {
+      return false
+    }
     const today = PlainDate.fromLocalDate(new Date())
     const underAge = today.subtract({ years: 16 })
-    return !!(birthday?.isAfter(underAge) && projectConfig.showBirthdayExtensionHint && !birthday.isAfter(today))
+    return birthday.isAfter(underAge) && birthday.isBeforeOrEqual(today)
   }
 
   const getErrorMessage = (): string | null => {
@@ -41,6 +44,10 @@ const BirthdayForm = ({
       return t('birthdayFutureError')
     }
 
+    if (birthday.isBefore(minBirthday)) {
+      return t('birthdayBeforeMinBirthdayError', { minBirthday: minBirthday.format() })
+    }
+
     return null
   }
 
@@ -49,6 +56,7 @@ const BirthdayForm = ({
       <CustomDatePicker
         value={birthday?.toLocalDate() ?? null}
         onBlur={() => setTouched(true)}
+        onClose={() => setTouched(true)}
         onChange={date => {
           setValue({ birthday: PlainDate.safeFromLocalDate(date) })
         }}
@@ -78,7 +86,7 @@ const BirthdayExtension: Extension<BirthdayExtensionState> = {
       return false
     }
     const today = PlainDate.fromLocalDate(new Date())
-    return !birthday.isBefore(minBirthday) && !birthday.isAfter(today)
+    return birthday.isAfterOrEqual(minBirthday) && birthday.isBeforeOrEqual(today)
   },
   fromString: (value: string) => {
     const birthday = PlainDate.safeFromCustomFormat(value)

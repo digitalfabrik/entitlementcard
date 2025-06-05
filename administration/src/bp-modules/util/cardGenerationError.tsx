@@ -7,8 +7,8 @@ import { PdfError } from '../../cards/PdfFactory'
 import { CreateCardsError } from '../../cards/createCards'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import i18next from '../../i18n'
+import FormAlert from '../../mui-modules/base/FormAlert'
 import { reportErrorToSentry } from '../../util/sentry'
-import FormAlert from '../self-service/components/FormAlert'
 
 export const showCardGenerationError = (appToaster: Toaster, error: unknown): void => {
   if (error instanceof CreateCardsError) {

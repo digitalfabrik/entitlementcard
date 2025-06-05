@@ -1,7 +1,7 @@
 import { InputProps, TextField } from '@mui/material'
 import React, { ReactElement } from 'react'
 
-import FormAlert from '../../../bp-modules/self-service/components/FormAlert'
+import FormAlert from '../../../mui-modules/base/FormAlert'
 
 type CardTextFieldProps = {
   id: string

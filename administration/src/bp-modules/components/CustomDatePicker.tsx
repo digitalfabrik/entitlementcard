@@ -12,6 +12,7 @@ type CustomDatePickerProps = {
   disabled?: boolean
   label?: string
   onBlur?: () => void
+  onClose?: () => void
   onChange?: (date: Date | null) => void
   onClear?: () => void
   error: boolean
@@ -30,6 +31,7 @@ const CustomDatePicker = ({
   onBlur,
   onChange,
   onClear,
+  onClose,
   error,
   minDate,
   maxDate,
@@ -93,6 +95,7 @@ const CustomDatePicker = ({
       minDate={minDate}
       maxDate={maxDate}
       onChange={onChange}
+      onClose={onClose}
     />
   )
 }

@@ -6,6 +6,7 @@ import styled from 'styled-components'
 
 import {
   MAX_NAME_LENGTH,
+  getExpirationDateErrorMessage,
   getFullNameValidationErrorMessage,
   hasInfiniteLifetime,
   isExpirationDateValid,
@@ -14,9 +15,9 @@ import {
 import type { Card } from '../../cards/Card'
 import { maxCardValidity } from '../../cards/constants'
 import CardTextField from '../../cards/extensions/components/CardTextField'
+import FormAlert from '../../mui-modules/base/FormAlert'
 import PlainDate from '../../util/PlainDate'
 import CustomDatePicker from '../components/CustomDatePicker'
-import FormAlert from '../self-service/components/FormAlert'
 import ExtensionForms from './ExtensionForms'
 
 const CardHeader = styled.div`
@@ -44,7 +45,7 @@ const AddCardForm = ({ card, onRemove, updateCard }: CreateCardsFormProps): Reac
   return (
     <UiCard>
       <CardHeader>
-        <Button minimal icon='cross' onClick={() => onRemove()} />
+        <Button variant='minimal' icon='cross' onClick={() => onRemove()} />
       </CardHeader>
       <Stack key={card.id} sx={{ my: 1, gap: 3 }}>
         <CardTextField
@@ -66,6 +67,7 @@ const AddCardForm = ({ card, onRemove, updateCard }: CreateCardsFormProps): Reac
         {!hasInfiniteLifetime(card) && (
           <FormGroup>
             <CustomDatePicker
+              onClose={() => setTouchedValidationDate(true)}
               onBlur={() => setTouchedValidationDate(true)}
               label={t('expirationDate')}
               value={card.expirationDate?.toLocalDate() ?? null}
@@ -83,7 +85,9 @@ const AddCardForm = ({ card, onRemove, updateCard }: CreateCardsFormProps): Reac
                 },
               }}
             />
-            {showValidationDateError && <FormAlert severity='error' errorMessage={t('expirationDateError')} />}
+            {showValidationDateError && (
+              <FormAlert severity='error' errorMessage={getExpirationDateErrorMessage(card)} />
+            )}
           </FormGroup>
         )}
         <ExtensionForms card={card} updateCard={updateCard} showRequired={false} />
