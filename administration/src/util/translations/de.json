@@ -117,6 +117,7 @@
     "regionSelectionLabel": "Empfänger des Antrags",
     "personalAddress": "Adresse (Erstwohnsitz)",
     "personalFurtherInformation": "Weitere Angaben",
+    "attachFileButton": "Datei anhängen",
     "organizationContactPersonDescription": "Bitte geben Sie hier die Daten der Person an, die ihr ehrenamtliches Engagement bestätigen kann.",
     "organizationContactPersonAlert": "Die Kontaktperson der Organisation und die antragsstellende Person scheinen identisch zu sein. <br/>Bitte beachten Sie, dass Anträge auf dieser Grundlage nicht bewilligt werden können.",
     "juleicaCardAttachmentTitle": "Kopie der JuLeiCa",
@@ -128,13 +129,13 @@
     "blueCardRequirementsTitle": "Ich erfülle folgende Voraussetzung für die Beantragung einer blauen Ehrenamtskarte:",
     "applicationStepPersonalData": "Persönliche Angaben",
     "applicationStepRequirements": "Voraussetzungen",
-    "applicationStepSubmit": "Antrag Senden",
+    "applicationStepSubmit": "Antrag senden",
     "title": "Bayerische Ehrenamtskarte beantragen",
     "sentSuccessfully": "Erfolgreich gesendet",
     "sentError": "Fehler beim Senden",
     "nextStepButton": "Nächster Schritt",
     "backButton": "Zurück",
-    "submitApplicationButton": "Antrag Abschicken",
+    "submitApplicationButton": "Antrag abschicken",
     "discardInputsTitle": "Alle Eingaben verwerfen?",
     "discardInputsContent": "Wollen Sie wirklich alle Eingaben unwiderruflich löschen?",
     "submitSuccessText": "Ihr Antrag für die Ehrenamtskarte wurde erfolgreich übermittelt.<br/>Über den Fortschritt Ihres Antrags werden Sie per E-Mail informiert.<br/>Sie können das Fenster jetzt schließen.",
@@ -551,7 +552,7 @@
     },
     "invalidRole": "Diese Rolle kann nicht zugewiesen werden.",
     "invalidApplicationConfirmationNoteSize": "Unzulässige Zeichenlänge der Notiz erreicht. Maximal sind {{maxSize}} Zeichen erlaubt.",
-    "entitlementNotFound": "Wir konnten Ihre Angaben nicht im System finden. Bitte überprüfen Sie Ihre Angaben und versuchen Sie es erneut.",
+    "entitlementNotFound": "Wir konnten Ihre Angaben nicht im System finden.\nAus technischen Gründen stehen die Daten des Jobcenters Koblenz ab Mitte des folgenden Monats zur Verfügung.\nBitte überprüfen Sie Ihre Angaben und versuchen Sie es erneut.",
     "entitlementExpired": "Sie sind nicht länger berechtigt, einen KoblenzPass zu erstellen. Bitte kontaktieren Sie koblenzpass@stadt.koblenz.de für weitere Informationen.",
     "mailNotSend": "Email konnte nicht an {{recipient}} gesendet werden.",
     "passwordResetKeyExpired": "Die Gültigkeit ihres Links ist abgelaufen",
@@ -606,5 +607,9 @@
     "referenceNrInvalidLengthError": "Das Aktenzeichen muss eine Länge zwischen {{KoblenzReferenceNumberMinLength}} und {{KoblenzReferenceNumberMaxLength}} haben.",
     "referenceNrLabel": "Aktenzeichen",
     "startDayLabel": "Startdatum"
+  },
+  "shared": {
+    "accordionShowLess": "Weniger anzeigen",
+    "accordionShowMore": "Mehr anzeigen"
   }
 }

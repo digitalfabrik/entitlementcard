@@ -7,17 +7,18 @@ const severityColors = {
   error: '#ba1a1a',
 }
 
-const Container = styled('div')<{ $severity: 'info' | 'error'; $isToast: boolean }>`
+const Container = styled('span')<{ $severity: 'info' | 'error'; $isToast: boolean }>`
   margin: 6px 0;
   color: ${props => (props.$isToast ? '#fff' : severityColors[props.$severity])};
   display: flex;
   gap: 8px;
   align-items: center;
   font-size: 14px;
+  white-space: pre-line;
 `
 
 type FormAlertProps = {
-  errorMessage: string | null
+  errorMessage: string | null | undefined
   isToast?: boolean
   style?: CSSProperties
   severity?: 'info' | 'error'

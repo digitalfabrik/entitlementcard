@@ -1,7 +1,6 @@
 // This file originally stems from a CRA-eject.
 import fs from 'fs'
 import path from 'path'
-import getPublicUrlOrPath from 'react-dev-utils/getPublicUrlOrPath'
 
 export const moduleFileExtensions = [
   'web.mjs',
@@ -28,23 +27,20 @@ const resolveModule = (resolveFn: (path: string) => string, filePath: string) =>
   return resolveFn(`${filePath}.js`)
 }
 
-const getPaths = (): Record<string, string> => {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const getPaths = () => {
   // Make sure any symlinks in the project folder are resolved:
   // https://github.com/facebook/create-react-app/issues/637
   const appDirectory = fs.realpathSync(process.cwd())
   const resolveApp = (relativePath: string) => path.resolve(appDirectory, relativePath)
 
-  // We use `PUBLIC_URL` environment variable or "homepage" field to infer
+  // We use the ` PUBLIC_URL ` environment variable or "homepage" field to infer
   // "public path" at which the app is served.
-  // webpack needs to know it to put the right <script> hrefs into HTML even in
+  // Webpack needs to know it to put the right <script> hrefs into HTML even in
   // single-page apps that may serve index.html for nested URLs like /todos/42.
   // We can't use a relative path in HTML because we don't want to load something
   // like /todos/42/static/js/bundle.7289d.js. We have to know the root.
-  const publicUrlOrPath = getPublicUrlOrPath(
-    process.env.NODE_ENV === 'development',
-    require(resolveApp('package.json')).homepage,
-    process.env.PUBLIC_URL
-  )
+  const publicUrlOrPath = process.env.PUBLIC_URL || 'http://localhost:3000/'
 
   const buildPath = process.env.BUILD_PATH || 'build'
   return {

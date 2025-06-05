@@ -1,5 +1,5 @@
-import { Spinner } from '@blueprintjs/core'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
+import { CircularProgress } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -16,12 +16,6 @@ import { InfoText } from './components/InfoText'
 import { DataPrivacyAcceptingStatus } from './constants'
 import selfServiceStepInfo from './constants/selfServiceStepInfo'
 import useCardGeneratorSelfService from './hooks/useCardGeneratorSelfService'
-
-const CenteredSpinner = styled(Spinner)`
-  position: absolute;
-  top: 45vh;
-  left: 45vw;
-`
 
 const Header = styled.div`
   background-color: #f7f7f7;
@@ -72,10 +66,6 @@ const Text = styled.div`
   font-size: 16px;
 `
 
-const HeaderLogo = styled.img`
-  height: 40px;
-`
-
 const StyledInfoTextButton = styled(IconTextButton)`
   margin: 0;
 `
@@ -95,7 +85,7 @@ const CardSelfServiceView = (): ReactElement => {
   } = useCardGeneratorSelfService()
 
   if (cardGenerationStep === 'loading') {
-    return <CenteredSpinner />
+    return <CircularProgress style={{ margin: 'auto' }} />
   }
 
   const totalSteps = Object.keys(selfServiceStepInfo).length
@@ -103,7 +93,7 @@ const CardSelfServiceView = (): ReactElement => {
   return (
     <Container>
       <Header>
-        <HeaderLogo src={KoblenzLogo} />
+        <KoblenzLogo height='40px' />
         <StyledInfoTextButton onClick={() => setOpenHelpDialog(true)}>
           {t('help')}
           <HelpOutlineOutlinedIcon />
