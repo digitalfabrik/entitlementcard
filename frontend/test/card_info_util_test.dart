@@ -4,12 +4,12 @@ import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:test/test.dart';
 import 'package:clock/clock.dart';
-import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart';
+import 'package:timezone/timezone.dart';
 
 void main() {
   setUpAll(() {
-    tz.initializeTimeZones();
+    initializeTimeZones();
   });
 
   group('hashCardInfo', () {
@@ -156,10 +156,10 @@ void main() {
     });
 
     test('should return false if startDay is today and current time is 00:01 (still previous day in UTC)', () {
-      final berlinTimezone = tz.getLocation('Europe/Berlin');
+      final berlinTimezone = getLocation('Europe/Berlin');
 
       // Fake current time: 2025-06-06 00:01 in Berlin (2025-06-05 22:01 UTC)
-      withClock(Clock.fixed(tz.TZDateTime(berlinTimezone, 2025, 6, 6, 0, 1)), () {
+      withClock(Clock.fixed(TZDateTime(berlinTimezone, 2025, 6, 6, 0, 1)), () {
         final startDay = DateTime.utc(2025, 6, 6);
         final startDayEpoch = startDay.difference(DateTime.utc(1970, 1, 1)).inDays;
 
@@ -174,6 +174,93 @@ void main() {
 
         expect(isCardNotYetValid(cardInfo), false);
       });
+    });
+  });
+
+  group('isCardExpired', () {
+    test('should return false if expirationDay is tomorrow', () {
+      final cardInfo = CardInfo()
+        ..fullName = 'Max Mustermann'
+        ..expirationDay = getEpochDaysFromUtcOffset(1)
+        ..extensions = (CardExtensions()
+          ..extensionRegion = (RegionExtension()..regionId = 93)
+          ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
+          ..extensionNuernbergPassId = (NuernbergPassIdExtension()..passId = 99999999));
+      expect(isCardExpired(cardInfo), false);
+    });
+
+    test('should return true if expirationDay is today', () {
+      final cardInfo = CardInfo()
+        ..fullName = 'Max Mustermann'
+        ..expirationDay = getEpochDaysFromUtcOffset(0)
+        ..extensions = (CardExtensions()
+          ..extensionRegion = (RegionExtension()..regionId = 93)
+          ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
+          ..extensionNuernbergPassId = (NuernbergPassIdExtension()..passId = 99999999));
+      expect(isCardExpired(cardInfo), true);
+    });
+
+    test('should return true if expirationDay is yesterday', () {
+      final cardInfo = CardInfo()
+        ..fullName = 'Max Mustermann'
+        ..expirationDay = getEpochDaysFromUtcOffset(-1)
+        ..extensions = (CardExtensions()
+          ..extensionRegion = (RegionExtension()..regionId = 93)
+          ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
+          ..extensionNuernbergPassId = (NuernbergPassIdExtension()..passId = 99999999));
+      expect(isCardExpired(cardInfo), true);
+    });
+
+    test('should return false if expirationDay is not set', () {
+      final cardInfo = CardInfo()
+        ..fullName = 'Max Mustermann'
+        ..extensions = (CardExtensions()
+          ..extensionRegion = (RegionExtension()..regionId = 93)
+          ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
+          ..extensionNuernbergPassId = (NuernbergPassIdExtension()..passId = 99999999));
+      expect(isCardExpired(cardInfo), false);
+    });
+
+    test('should return true if expirationDay is today and current time is 00:01 (still previous day in UTC)', () {
+      final berlinTimezone = getLocation('Europe/Berlin');
+
+      // Fake current time: 2025-06-06 00:01 in Berlin (2025-06-05 22:01 UTC)
+      withClock(Clock.fixed(TZDateTime(berlinTimezone, 2025, 6, 6, 0, 1)), () {
+        final expirationDay = DateTime.utc(2025, 6, 6);
+        final expirationDayEpoch = expirationDay.difference(DateTime.utc(1970, 1, 1)).inDays;
+
+        final cardInfo = CardInfo()
+          ..fullName = 'Max Mustermann'
+          ..expirationDay = expirationDayEpoch
+          ..extensions = (CardExtensions()
+            ..extensionRegion = (RegionExtension()..regionId = 93)
+            ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
+            ..extensionNuernbergPassId = (NuernbergPassIdExtension()..passId = 99999999));
+        expect(isCardExpired(cardInfo), true);
+      });
+    });
+  });
+
+  group('getFormattedBirthday', () {
+    test('should return null if birthday is not set', () {
+      final cardInfo = CardInfo()
+        ..fullName = 'Max Mustermann'
+        ..expirationDay = getEpochDaysFromUtcOffset(1)
+        ..extensions = (CardExtensions()
+          ..extensionRegion = (RegionExtension()..regionId = 93)
+          ..extensionNuernbergPassId = (NuernbergPassIdExtension()..passId = 99999999));
+      expect(getFormattedBirthday(cardInfo), null);
+    });
+
+    test('should return correctly formatted date if birthday is present', () {
+      final cardInfo = CardInfo()
+        ..fullName = 'Max Mustermann'
+        ..expirationDay = getEpochDaysFromUtcOffset(1)
+        ..extensions = (CardExtensions()
+          ..extensionRegion = (RegionExtension()..regionId = 93)
+          ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
+          ..extensionNuernbergPassId = (NuernbergPassIdExtension()..passId = 99999999));
+      expect(getFormattedBirthday(cardInfo), '04.01.1960');
     });
   });
 }

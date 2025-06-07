@@ -9,7 +9,7 @@ import 'package:ehrenamtskarte/util/android_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:slang/overrides.dart';
-import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/data/latest.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +20,7 @@ Future<void> main() async {
     loadCertificate();
   }
 
-  tz.initializeTimeZones();
+  initializeTimeZones();
 
   debugPrint('Environment: $appEnvironment');
 
