@@ -33,6 +33,7 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { useAppToaster } from '../AppToaster'
+import { AccordionExpandButton } from '../components/AccordionExpandButton'
 import type { JsonField } from './JsonFieldView'
 import JsonFieldView, { findValue } from './JsonFieldView'
 import NoteDialogController from './NoteDialogController'
@@ -98,29 +99,6 @@ const DeleteDialog = (p: {
         </Button>
       </DialogActions>
     </Dialog>
-  )
-}
-
-const AccordionExpandButton = (p: { expanded: boolean }) => {
-  const { t } = useTranslation('shared')
-
-  return (
-    <Stack sx={{ displayPrint: 'none' }}>
-      <Divider />
-      <Stack direction='row' sx={{ p: 1, alignItems: 'center' }}>
-        <ExpandMore
-          sx={{
-            transform: 'rotate(0deg)',
-            transition: 'transform 0.3s',
-            'button[aria-expanded=true] &': {
-              transform: 'rotate(180deg)',
-            },
-          }}
-        />
-        &ensp;
-        {t(p.expanded ? 'accordionShowLess' : 'accordionShowMore')}
-      </Stack>
-    </Stack>
   )
 }
 
