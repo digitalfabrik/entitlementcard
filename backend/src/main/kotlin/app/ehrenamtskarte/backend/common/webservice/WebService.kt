@@ -85,7 +85,7 @@ class WebService {
 
         app.start(host, port)
 
-        if (config.environment == Environment.DEVELOPMENT) {
+        if (config.environment == Environment.PRODUCTION) {
             initializeSentry()
             println("Init Sentry for production environment")
         }
