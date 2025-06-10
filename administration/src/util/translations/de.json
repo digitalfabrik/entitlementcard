@@ -117,6 +117,7 @@
     "regionSelectionLabel": "Empfänger des Antrags",
     "personalAddress": "Adresse (Erstwohnsitz)",
     "personalFurtherInformation": "Weitere Angaben",
+    "attachFileButton": "Datei anhängen",
     "organizationContactPersonDescription": "Bitte geben Sie hier die Daten der Person an, die ihr ehrenamtliches Engagement bestätigen kann.",
     "organizationContactPersonAlert": "Die Kontaktperson der Organisation und die antragsstellende Person scheinen identisch zu sein. <br/>Bitte beachten Sie, dass Anträge auf dieser Grundlage nicht bewilligt werden können.",
     "juleicaCardAttachmentTitle": "Kopie der JuLeiCa",
@@ -128,13 +129,13 @@
     "blueCardRequirementsTitle": "Ich erfülle folgende Voraussetzung für die Beantragung einer blauen Ehrenamtskarte:",
     "applicationStepPersonalData": "Persönliche Angaben",
     "applicationStepRequirements": "Voraussetzungen",
-    "applicationStepSubmit": "Antrag Senden",
+    "applicationStepSubmit": "Antrag senden",
     "title": "Bayerische Ehrenamtskarte beantragen",
     "sentSuccessfully": "Erfolgreich gesendet",
     "sentError": "Fehler beim Senden",
     "nextStepButton": "Nächster Schritt",
     "backButton": "Zurück",
-    "submitApplicationButton": "Antrag Abschicken",
+    "submitApplicationButton": "Antrag abschicken",
     "discardInputsTitle": "Alle Eingaben verwerfen?",
     "discardInputsContent": "Wollen Sie wirklich alle Eingaben unwiderruflich löschen?",
     "submitSuccessText": "Ihr Antrag für die Ehrenamtskarte wurde erfolgreich übermittelt.<br/>Über den Fortschritt Ihres Antrags werden Sie per E-Mail informiert.<br/>Sie können das Fenster jetzt schließen.",
@@ -262,7 +263,8 @@
     "importFileTooBig": "Die ausgewählte Datei ist zu groß.",
     "printQRCodes": "QR-Codes drucken",
     "validationError": "Validierungsfehler",
-    "cardCreationConfirmationMessage": "Bestätigungsmail wurde versendet."
+    "cardCreationConfirmationMessage": "Bestätigungsmail wurde versendet.",
+    "freinetDataSyncSuccessMessage": "Antragsdaten wurden erfolgreich an Freinet gesendet."
   },
   "misc": {
     "openAppStore": "AppStore öffnen",
@@ -561,7 +563,9 @@
     "regionNotUnique": "Den Akzeptanzstellen konnte keine eindeutige Region zugewiesen werden. Bitte wenden Sie sich an den IT-Support",
     "pdfCreationError": "Etwas ist schiefgegangen beim Erstellen der PDF.",
     "csvCreationError": "Etwas ist schiefgegangen beim Erstellen der CSV.",
-    "freinetAgencyNotFound": "Diese Freinetagentur existiert nicht."
+    "freinetAgencyNotFound": "Diese Agentur konnte in Freinet nicht gefunden werden.",
+    "freinetMultiplePersonError": "Der antragstellenden Person konnte keine Person in Freinet-Online eindeutig zugeordnet werden. Bitte aktualisieren Sie die Daten in Freinet-Online manuell.",
+    "freinetApiNotReachableError": "Die eingegebenen Daten stimmen nicht eindeutig mit einer Person in Freinet-Online überein. Bitte prüfen Sie die Angaben oder nehmen Sie die Aktualisierung direkt in Freinet-Online vor."
   },
   "applicationVerification": {
     "withdrawMessageForVerifier": "Der Antrag wurde vom Antragsteller am {{date}} zurückgezogen.",

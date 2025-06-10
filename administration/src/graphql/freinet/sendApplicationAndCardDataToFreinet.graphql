@@ -1,0 +1,3 @@
+mutation sendApplicationDataToFreinet($applicationId: Int!, $project: String!) {
+  sendApplicationDataToFreinet(applicationId: $applicationId, project: $project)
+}
