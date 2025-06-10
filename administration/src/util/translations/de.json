@@ -180,7 +180,6 @@
     "applicationFrom": "Antrag vom",
     "withdrawalMessage": "Der Antrag wurde vom Antragsteller am {{withdrawalDate}} zurückgezogen.",
     "deleteApplicationSoonPrompt": "Bitte löschen Sie den Antrag zeitnah.",
-    "incompleteMappingTooltip": "Es existiert kein passendes Mapping, um aus diesem Antrag das Kartenformular vollständig auszufüllen.",
     "createCard": "Karte erstellen",
     "createCardAgain": "Karte erneut erstellen",
     "deleteApplication": "Antrag löschen",
