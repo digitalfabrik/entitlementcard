@@ -1,9 +1,8 @@
 import { Tooltip } from '@blueprintjs/core'
 import { EditNote } from '@mui/icons-material'
-import { Button } from '@mui/material'
+import { Button, styled } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useUpdateApplicationNoteMutation } from '../../generated/graphql'
