@@ -10,13 +10,6 @@ import { useAppToaster } from '../AppToaster'
 import TextAreaDialog from '../components/TextAreaDialog'
 import { GetApplicationsType } from './types'
 
-const NoteButton = styled(Button)`
-  align-self: flex-start;
-  @media print {
-    display: none;
-  }
-`
-
 const MultilineContent = styled(Tooltip)`
   white-space: pre-wrap;
 `
@@ -67,14 +60,14 @@ const NoteDialogController = ({
   return (
     <>
       <Tooltip content={toolTipContent}>
-        <NoteButton
+        <Button
           variant='contained'
           color='default'
           onClick={() => onOpenNoteDialog(true)}
           startIcon={<EditNote />}
           sx={{ displayPrint: 'none' }}>
           Notiz anzeigen
-        </NoteButton>
+        </Button>
       </Tooltip>
       {isOpen && (
         <TextAreaDialog
