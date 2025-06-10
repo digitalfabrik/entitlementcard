@@ -124,6 +124,7 @@ const ButtonsCardPending = ({
         {t('applicationApprove')}
       </Button>
       <Button
+        hidden // TODO: #1982
         variant='outlined'
         startIcon={<Delete />}
         color='error'
@@ -165,7 +166,6 @@ const ButtonsCardApproved = ({
 
 const StatusNote = ({ statusResolvedDate, status }: { statusResolvedDate: Date; status: ApplicationStatus }) => {
   const { t } = useTranslation('applicationsOverview')
-
   const isApproved = [ApplicationStatus.Approved, ApplicationStatus.ApprovedCardCreated].includes(status)
 
   return (
