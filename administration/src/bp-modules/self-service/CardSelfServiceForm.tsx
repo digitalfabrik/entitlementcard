@@ -82,15 +82,17 @@ const CardSelfServiceForm = ({
             fullWidth
             size='small'
             sx={{ '& .MuiFormHelperText-root': { margin: '0px' } }}
-            InputProps={{
-              sx: { paddingRight: 0 },
-              endAdornment: (
-                <ClearInputButton
-                  viewportSmall={viewportSmall}
-                  onClick={() => updateCard({ fullName: '' })}
-                  input={card.fullName}
-                />
-              ),
+            slotProps={{
+              input: {
+                sx: { paddingRight: 0 },
+                endAdornment: (
+                  <ClearInputButton
+                    viewportSmall={viewportSmall}
+                    onClick={() => updateCard({ fullName: '' })}
+                    input={card.fullName}
+                  />
+                ),
+              },
             }}
           />
         </FormGroup>
