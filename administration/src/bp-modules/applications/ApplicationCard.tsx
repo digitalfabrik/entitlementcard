@@ -1,6 +1,6 @@
 /* eslint-disable react/destructuring-assignment */
 import { MutationResult } from '@apollo/client'
-import { CreditScore, Delete, EditNote, ExpandMore, InfoOutline, Print, Warning } from '@mui/icons-material'
+import { CreditScore, Delete, ExpandMore, InfoOutline, Print, Warning } from '@mui/icons-material'
 import {
   Accordion,
   AccordionDetails,
@@ -35,40 +35,15 @@ import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { useAppToaster } from '../AppToaster'
 import { AccordionExpandButton } from '../components/AccordionExpandButton'
 import type { JsonField } from './JsonFieldView'
-import JsonFieldView, { findValue } from './JsonFieldView'
+import JsonFieldView from './JsonFieldView'
 import NoteDialogController from './NoteDialogController'
-import { getPreVerifiedEntitlementType } from './PreVerifiedEntitlementType'
-import PreVerifiedQuickIndicator from './PreVerifiedQuickIndicator'
-import VerificationsQuickIndicator from './VerificationsQuickIndicator'
+import { ApplicationIndicators } from './VerificationsIndicator'
 import VerificationsView from './VerificationsView'
 import { GetApplicationsType } from './types'
 
 const Spacer = styled('div')`
   flex-grow: 1;
 `
-
-const ApplicationIndicators = ({
-  application,
-  applicationJsonData,
-}: {
-  application: GetApplicationsType
-  applicationJsonData: JsonField<'Array'>
-}) => {
-  const preVerifiedEntitlementType = getPreVerifiedEntitlementType(
-    findValue(applicationJsonData, 'applicationDetails', 'Array') ?? applicationJsonData
-  )
-
-  return (
-    <Stack direction='row' spacing={2} sx={{ displayPrint: 'none' }}>
-      {(application.note ?? '').trim().length > 0 && <EditNote />}
-      {preVerifiedEntitlementType !== undefined ? (
-        <PreVerifiedQuickIndicator type={preVerifiedEntitlementType} />
-      ) : (
-        <VerificationsQuickIndicator verifications={application.verifications} />
-      )}
-    </Stack>
-  )
-}
 
 const DeleteDialog = (p: {
   isOpen: boolean
