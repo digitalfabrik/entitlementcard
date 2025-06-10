@@ -1,5 +1,5 @@
 import { Stack, Tooltip, useTheme } from '@mui/material'
-import React, { forwardRef, memo } from 'react'
+import React, { forwardRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import VerificationIndicator from './components/VerificationIndicator'

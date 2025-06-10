@@ -45,7 +45,7 @@ const PreVerifiedLabel = styled.span<{ type: PreVerifiedEntitlementType }>`
   white-space: nowrap;
 `
 
-const PreVerifiedQuickIndicator = memo(({ type }: { type: PreVerifiedEntitlementType }) => {
+const PreVerifiedQuickIndicator = ({ type }: { type: PreVerifiedEntitlementType }) => {
   const { t } = useTranslation('applicationsOverview')
   return (
     <Tooltip
@@ -62,6 +62,6 @@ const PreVerifiedQuickIndicator = memo(({ type }: { type: PreVerifiedEntitlement
       </Stack>
     </Tooltip>
   )
-})
+}
 
 export default memo(PreVerifiedQuickIndicator)
