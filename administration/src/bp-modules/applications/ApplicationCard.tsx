@@ -13,7 +13,6 @@ import {
   DialogContent,
   Divider,
   Stack,
-  Tooltip,
   Typography,
   styled,
   useTheme,
@@ -124,14 +123,9 @@ const ButtonsCardApproved = ({
 
   return (
     <>
-      <Tooltip title={t('incompleteMappingTooltip')}>
-        {/* Make the outer Tooltip independent of the button's disabled state */}
-        <span>
-          <Button color='primary' variant='contained' href={primaryButtonHref} startIcon={<CreditScore />}>
-            {cardAlreadyCreated ? t('createCardAgain') : t('createCard')}
-          </Button>
-        </span>
-      </Tooltip>
+      <Button color='primary' variant='contained' href={primaryButtonHref} startIcon={<CreditScore />}>
+        {cardAlreadyCreated ? t('createCardAgain') : t('createCard')}
+      </Button>
       <Button onClick={onSecondaryButtonClick} startIcon={<Delete />} variant='outlined' color='error'>
         {t('deleteApplication')}
       </Button>
