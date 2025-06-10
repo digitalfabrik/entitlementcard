@@ -81,12 +81,7 @@ const DeleteDialog = (p: {
   return (
     <Dialog open={p.isOpen} aria-describedby='alert-dialog-description'>
       <DialogContent id='alert-dialog-description'>
-        <Stack
-          direction='row'
-          sx={{
-            gap: 2,
-            alignItems: 'center',
-          }}>
+        <Stack direction='row' sx={{ gap: 2, alignItems: 'center' }}>
           {p.deleteResult.loading || p.deleteResult.called ? (
             <CircularProgress size={64} />
           ) : (
