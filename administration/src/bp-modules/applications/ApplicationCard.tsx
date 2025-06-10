@@ -7,7 +7,6 @@ import {
   AccordionSummary,
   Box,
   Button,
-  ButtonProps,
   CircularProgress,
   Dialog,
   DialogActions,
@@ -42,10 +41,6 @@ import PreVerifiedQuickIndicator from './PreVerifiedQuickIndicator'
 import VerificationsQuickIndicator from './VerificationsQuickIndicator'
 import VerificationsView from './VerificationsView'
 import { GetApplicationsType } from './types'
-
-const PrimaryButton = styled(Button, { name: 'contained' })<ButtonProps>`
-  color: 'primary';
-`
 
 const Spacer = styled('div')`
   flex-grow: 1;
@@ -142,9 +137,14 @@ const ButtonsCardPending = ({
 
   return (
     <>
-      <PrimaryButton variant='contained' startIcon={<CreditScore />} disabled={disabled} onClick={onPrimaryButtonClick}>
+      <Button
+        variant='contained'
+        color='primary'
+        startIcon={<CreditScore />}
+        disabled={disabled}
+        onClick={onPrimaryButtonClick}>
         {t('applicationApprove')}
-      </PrimaryButton>
+      </Button>
       <Button
         variant='outlined'
         startIcon={<Delete />}
@@ -173,9 +173,9 @@ const ButtonsCardApproved = ({
       <Tooltip title={t('incompleteMappingTooltip')}>
         {/* Make the outer Tooltip independent of the button's disabled state */}
         <span>
-          <PrimaryButton variant='contained' href={primaryButtonHref} startIcon={<CreditScore />}>
+          <Button color='primary' variant='contained' href={primaryButtonHref} startIcon={<CreditScore />}>
             {cardAlreadyCreated ? t('createCardAgain') : t('createCard')}
-          </PrimaryButton>
+          </Button>
         </span>
       </Tooltip>
       <Button onClick={onSecondaryButtonClick} startIcon={<Delete />} variant='outlined' color='error'>
