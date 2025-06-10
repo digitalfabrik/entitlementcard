@@ -265,14 +265,16 @@ export const getExpirationDateErrorMessage = (card: Card): string => {
   if (!card.expirationDate) {
     return i18next.t('cards:expirationDateError')
   }
-  if (card.expirationDate.isBefore(today)) {
+  if (card.expirationDate.isBeforeOrEqual(today)) {
     errors.push(i18next.t('cards:expirationDateNotInFutureError'))
   }
   if (startDay && card.expirationDate.isBefore(startDay)) {
     errors.push(i18next.t('cards:expirationDateBeforeStartDayError'))
   }
   if (card.expirationDate.isAfter(today.add(maxCardValidity))) {
-    errors.push(i18next.t('cards:expirationDateError', { maxValidationDate: today.add(maxCardValidity).format() }))
+    errors.push(
+      i18next.t('cards:expirationDateFutureError', { maxValidationDate: today.add(maxCardValidity).format() })
+    )
   }
   return errors.join(' ')
 }

@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import CustomDatePicker from '../../bp-modules/components/CustomDatePicker'
 import FormAlert from '../../mui-modules/base/FormAlert'
 import PlainDate from '../../util/PlainDate'
+import { maxCardValidity } from '../constants'
 import type { Extension, ExtensionComponentProps } from './extensions'
 
 export const START_DAY_EXTENSION_NAME = 'startDay'
@@ -21,11 +22,15 @@ const StartDayForm = ({ value, setValue, isValid }: ExtensionComponentProps<Star
 
   const getStartDayErrorMessage = (): string | null => {
     const startDay = value.startDay
+    const today = PlainDate.fromLocalDate(new Date())
     if (!startDay) {
       return t('startDayError')
     }
     if (startDay.isBefore(minStartDay)) {
       return t('startDayPastError', { minStartDay: minStartDay.format() })
+    }
+    if (startDay.isAfter(today.add(maxCardValidity))) {
+      return t('startDayFutureError', { maxValidationDate: today.add(maxCardValidity).format() })
     }
     return null
   }
@@ -54,7 +59,10 @@ const StartDayForm = ({ value, setValue, isValid }: ExtensionComponentProps<Star
 }
 
 const isStartDayValid = ({ startDay }: StartDayExtensionState): boolean =>
-  startDay ? startDay.isAfterOrEqual(minStartDay) : false
+  startDay
+    ? startDay.isAfterOrEqual(minStartDay) &&
+      startDay.isBeforeOrEqual(PlainDate.fromLocalDate(new Date()).add(maxCardValidity))
+    : false
 
 const StartDayExtension: Extension<StartDayExtensionState> = {
   name: START_DAY_EXTENSION_NAME,

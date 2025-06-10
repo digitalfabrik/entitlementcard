@@ -618,7 +618,8 @@
     "referenceNrLabel": "Aktenzeichen",
     "startDayLabel": "Startdatum",
     "startDayError": "Bitte geben Sie ein gültiges Startdatum ein.",
-    "startDayPastError": "Das Startdatum darf nicht weiter als {{minStartDay}} in der Vergangenheit liegen."
+    "startDayPastError": "Das Startdatum darf nicht weiter als {{minStartDay}} in der Vergangenheit liegen.",
+    "startDayFutureError": "Bitte geben Sie ein gültiges Startdatum ein, das in der Zukunft liegt. Es darf nicht weiter als {{maxValidationDate}} in der Zukunft liegen."
   },
   "shared": {
     "accordionShowLess": "Weniger anzeigen",
