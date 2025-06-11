@@ -240,7 +240,7 @@
     "expirationDate": "Ablaufdatum",
     "expirationDateFutureError": "Bitte geben Sie ein gültiges Ablaufdatum ein, das in der Zukunft liegt. Es darf nicht weiter als {{maxValidationDate}} in der Zukunft liegen.",
     "expirationDateError": "Bitte geben Sie ein gültiges Ablaufdatum ein.",
-    "expirationDateBeforeStartDayError": "Das Ablaufdatum muss vor dem Startdatum liegen.",
+    "expirationDateBeforeStartDayError": "Das Ablaufdatum muss nach dem Startdatum liegen.",
     "expirationDateNotInFutureError": "Das Ablaufdatum muss in der Zukunft liegen.",
     "fullNameValidationInvalidNameError": "Bitte geben Sie einen gültigen Namen an.",
     "fullNameValidationSpecialCharactersError": "Der Name darf keine Sonderzeichen oder Zahlen enthalten.",
