@@ -43,11 +43,9 @@ const BirthdayForm = ({
     if (birthday.isAfter(today)) {
       return t('birthdayFutureError')
     }
-
     if (birthday.isBefore(minBirthday)) {
       return t('birthdayBeforeMinBirthdayError', { minBirthday: minBirthday.format() })
     }
-
     return null
   }
 
