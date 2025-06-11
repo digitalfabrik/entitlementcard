@@ -1,5 +1,4 @@
-import { Button, FormGroup, MenuItem } from '@blueprintjs/core'
-import { ItemRenderer, Select } from '@blueprintjs/select'
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -15,36 +14,29 @@ const BAVARIA_CARD_TYPE_GOLD_LEGACY = 'gold'
 type BavariaCardTypeState = typeof BAVARIA_CARD_TYPE_STANDARD | typeof BAVARIA_CARD_TYPE_GOLD
 export type BavariaCardTypeExtensionState = { [BAVARIA_CARD_TYPE_EXTENSION_NAME]: BavariaCardTypeState }
 
-const StartDayForm = ({ value, setValue }: ExtensionComponentProps<BavariaCardTypeExtensionState>): ReactElement => {
+const BavarianCardTypeForm = ({
+  value,
+  setValue,
+}: ExtensionComponentProps<BavariaCardTypeExtensionState>): ReactElement => {
   const { t } = useTranslation('extensions')
-  const CardTypeSelect = Select.ofType<BavariaCardTypeState>()
 
-  const renderCardType: ItemRenderer<BavariaCardTypeState> = (cardType, { handleClick, modifiers }) => {
-    if (!modifiers.matchesPredicate) {
-      return null
-    }
-    return (
-      <MenuItem
-        active={modifiers.active}
-        disabled={modifiers.disabled}
-        text={cardType}
-        key={cardType}
-        onClick={handleClick}
-      />
-    )
-  }
-
+  const items = [BAVARIA_CARD_TYPE_STANDARD, BAVARIA_CARD_TYPE_GOLD]
   return (
-    <FormGroup label={t('bavariaCardTypeLabel')}>
-      <CardTypeSelect
-        items={[BAVARIA_CARD_TYPE_STANDARD, BAVARIA_CARD_TYPE_GOLD]}
-        activeItem={value.bavariaCardType}
-        onItemSelect={value => setValue({ bavariaCardType: value })}
-        itemRenderer={renderCardType}
-        filterable={false}>
-        <Button text={value.bavariaCardType} rightIcon='caret-down' />
-      </CardTypeSelect>
-    </FormGroup>
+    <FormControl>
+      <InputLabel id='eak-card-type-select-label'>{t('bavariaCardTypeLabel')}</InputLabel>
+      <Select
+        size='small'
+        labelId='eak-card-type-select-label'
+        value={value.bavariaCardType}
+        label={t('bavariaCardTypeLabel')}
+        onChange={event => setValue({ bavariaCardType: event.target.value as BavariaCardTypeState })}>
+        {items.map(item => (
+          <MenuItem key={item} value={item}>
+            {item}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
   )
 }
 
@@ -62,7 +54,7 @@ const toString = ({ bavariaCardType }: BavariaCardTypeExtensionState): string =>
 
 const BavariaCardTypeExtension: Extension<BavariaCardTypeExtensionState> = {
   name: BAVARIA_CARD_TYPE_EXTENSION_NAME,
-  Component: StartDayForm,
+  Component: BavarianCardTypeForm,
   getInitialState: () => ({ bavariaCardType: BAVARIA_CARD_TYPE_STANDARD }),
   causesInfiniteLifetime: state => state.bavariaCardType === BAVARIA_CARD_TYPE_GOLD,
   getProtobufData: state => ({
