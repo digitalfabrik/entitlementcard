@@ -72,7 +72,7 @@ const AddCardForm = ({ card, onRemove, updateCard }: CreateCardsFormProps): Reac
               label={t('expirationDate')}
               value={card.expirationDate?.toLocalDate() ?? null}
               error={showValidationDateError}
-              minDate={today.toLocalDate()}
+              minDate={today.add({ days: 1 }).toLocalDate()}
               maxDate={today.add(maxCardValidity).toLocalDate()}
               onChange={date => {
                 updateCard({ expirationDate: PlainDate.safeFromLocalDate(date) })

@@ -5,7 +5,11 @@ import { Region } from '../generated/graphql'
 import i18next from '../i18n'
 import type { CardConfig } from '../project-configs/getProjectConfig'
 import PlainDate from '../util/PlainDate'
-import { containsOnlyLatinAndCommonCharset, containsSpecialCharacters } from '../util/helper'
+import {
+  containsOnlyLatinAndCommonCharset,
+  containsSpecialCharacters,
+  isExceedingMaxValidityDate,
+} from '../util/helper'
 import { maxCardValidity } from './constants'
 import { REGION_EXTENSION_NAME } from './extensions/RegionExtension'
 import Extensions from './extensions/extensions'
@@ -128,7 +132,7 @@ export const isExpirationDateValid = (card: Card, { nullable } = { nullable: fal
 
   return (
     card.expirationDate.isAfter(today) &&
-    card.expirationDate.isBeforeOrEqual(today.add(maxCardValidity)) &&
+    !isExceedingMaxValidityDate(card.expirationDate) &&
     (startDay?.isBefore(card.expirationDate) ?? true)
   )
 }
@@ -265,14 +269,16 @@ export const getExpirationDateErrorMessage = (card: Card): string => {
   if (!card.expirationDate) {
     return i18next.t('cards:expirationDateError')
   }
-  if (card.expirationDate.isBefore(today)) {
+  if (card.expirationDate.isBeforeOrEqual(today)) {
     errors.push(i18next.t('cards:expirationDateNotInFutureError'))
   }
-  if (startDay && card.expirationDate.isBefore(startDay)) {
+  if (startDay && card.expirationDate.isBeforeOrEqual(startDay)) {
     errors.push(i18next.t('cards:expirationDateBeforeStartDayError'))
   }
-  if (card.expirationDate.isAfter(today.add(maxCardValidity))) {
-    errors.push(i18next.t('cards:expirationDateError', { maxValidationDate: today.add(maxCardValidity).format() }))
+  if (isExceedingMaxValidityDate(card.expirationDate)) {
+    errors.push(
+      i18next.t('cards:expirationDateFutureError', { maxValidationDate: today.add(maxCardValidity).format() })
+    )
   }
   return errors.join(' ')
 }
