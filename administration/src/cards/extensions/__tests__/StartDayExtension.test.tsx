@@ -6,6 +6,7 @@ import React, { ReactNode } from 'react'
 import { AppToasterProvider } from '../../../bp-modules/AppToaster'
 import { renderWithTranslation } from '../../../testing/render'
 import PlainDate from '../../../util/PlainDate'
+import { maxCardValidity } from '../../constants'
 import StartDayExtension, { minStartDay } from '../StartDayExtension'
 
 const wrapper = ({ children }: { children: ReactNode }) => (
@@ -13,6 +14,7 @@ const wrapper = ({ children }: { children: ReactNode }) => (
     <AppToasterProvider>{children}</AppToasterProvider>
   </LocalizationProvider>
 )
+jest.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
 
 describe('StartDayExtension', () => {
   describe('Component', () => {
@@ -50,19 +52,30 @@ describe('StartDayExtension', () => {
       expect(getByText('Bitte geben Sie ein gültiges Startdatum ein.')).toBeTruthy()
     })
 
-    it('should show error message when form is invalid and touched', () => {
+    it('should show error message when startDay is too far in the past and touched', () => {
+      const startDay = new PlainDate(2005, 1, 1)
       const { getByText, getByDisplayValue } = renderWithTranslation(
-        <StartDayExtension.Component
-          {...defaultProps}
-          isValid={false}
-          value={{ startDay: new PlainDate(2005, 1, 1) }}
-        />,
+        <StartDayExtension.Component {...defaultProps} isValid={false} value={{ startDay }} />,
         { wrapper }
       )
-      const datePicker = getByDisplayValue('01.01.2005')
+      const datePicker = getByDisplayValue(startDay.format())
       fireEvent.blur(datePicker)
       expect(
         getByText(`Das Startdatum darf nicht weiter als ${minStartDay.format()} in der Vergangenheit liegen.`)
+      ).toBeTruthy()
+    })
+
+    it('should show error message when startDay is too far in the future and touched', () => {
+      const startDay = new PlainDate(2200, 1, 1)
+      const today = PlainDate.fromLocalDate(new Date())
+      const { getByText, getByDisplayValue } = renderWithTranslation(
+        <StartDayExtension.Component {...defaultProps} isValid={false} value={{ startDay }} />,
+        { wrapper }
+      )
+      const datePicker = getByDisplayValue(startDay.format())
+      fireEvent.blur(datePicker)
+      expect(
+        getByText(`Das Startdatum darf nicht weiter als ${today.add(maxCardValidity).format()} in der Zukunft liegen.`)
       ).toBeTruthy()
     })
 
@@ -78,9 +91,10 @@ describe('StartDayExtension', () => {
       const { getByDisplayValue } = renderWithTranslation(<StartDayExtension.Component {...defaultProps} />, {
         wrapper,
       })
+      const startDayChanged = new PlainDate(2025, 1, 2)
       const datePicker = getByDisplayValue('01.01.2024')
-      fireEvent.change(datePicker, { target: { value: '02.01.2025' } })
-      expect(mockSetValue).toHaveBeenCalledWith({ startDay: { day: 2, isoMonth: 1, isoYear: 2025 } })
+      fireEvent.change(datePicker, { target: { value: startDayChanged.format() } })
+      expect(mockSetValue).toHaveBeenCalledWith({ startDay: startDayChanged })
     })
 
     it('should set startDay to null if no valid date was typed in', () => {
@@ -101,7 +115,7 @@ describe('StartDayExtension', () => {
 
       it('should result in minStartDay if no startDay is provided', () => {
         expect(StartDayExtension.getProtobufData({ startDay: null })).toEqual({
-          extensionStartDay: { startDay: 18418 },
+          extensionStartDay: { startDay: 18424 },
         })
       })
     })
