@@ -161,6 +161,10 @@ tasks.test {
     environment("KOBLENZ_PEPPER", "123456789ABC")
 }
 
+tasks.sentryCollectSourcesJava {
+    dependsOn(tasks.generateProto)
+}
+
 tasks.graphqlGenerateTestClient {
     schemaFile.set(rootDir.parentFile.resolve("specs/backend-api.graphql"))
     packageName.set("app.ehrenamtskarte.backend.generated")

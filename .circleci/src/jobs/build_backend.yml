@@ -21,7 +21,8 @@ steps:
   - run:
       name: Build backend
       # Use `assemble` instead of `build` to not run tests
-      command: ./gradlew assemble
+      # Provide sentry auth token for build.gradle.kts
+      command: SENTRY_AUTH_TOKEN=$SENTRY_BACKEND_AUTH_TOKEN ./gradlew assemble
   - save_cache:
       key: v1-gradle-{{ checksum "build.gradle.kts" }}
       paths:
