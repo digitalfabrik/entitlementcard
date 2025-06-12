@@ -189,7 +189,7 @@ void main() {
       expect(isCardExpired(cardInfo), false);
     });
 
-    test('should return true if expirationDay is today', () {
+    test('should return false if expirationDay is today', () {
       final cardInfo = CardInfo()
         ..fullName = 'Max Mustermann'
         ..expirationDay = getEpochDaysFromUtcOffset(0)
@@ -197,7 +197,7 @@ void main() {
           ..extensionRegion = (RegionExtension()..regionId = 93)
           ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
           ..extensionNuernbergPassId = (NuernbergPassIdExtension()..passId = 99999999));
-      expect(isCardExpired(cardInfo), true);
+      expect(isCardExpired(cardInfo), false);
     });
 
     test('should return true if expirationDay is yesterday', () {
@@ -221,11 +221,11 @@ void main() {
       expect(isCardExpired(cardInfo), false);
     });
 
-    test('should return true if expirationDay is today and current time is 00:01 (still previous day in UTC)', () {
+    test('should return true if expirationDay is yesterday and current time is 00:01 (still previous day in UTC)', () {
       final berlinTimezone = getLocation('Europe/Berlin');
 
-      // Fake current time: 2025-06-06 00:01 in Berlin (2025-06-05 22:01 UTC)
-      withClock(Clock.fixed(TZDateTime(berlinTimezone, 2025, 6, 6, 0, 1)), () {
+      // Fake current time: 2025-06-07 00:01 in Berlin (2025-06-06 22:01 UTC)
+      withClock(Clock.fixed(TZDateTime(berlinTimezone, 2025, 6, 7, 0, 1)), () {
         final expirationDay = DateTime.utc(2025, 6, 6);
         final expirationDayEpoch = expirationDay.difference(DateTime.utc(1970, 1, 1)).inDays;
 
