@@ -1,5 +1,7 @@
 package app.ehrenamtskarte.backend.freinet.util
 
+import app.ehrenamtskarte.backend.common.utils.devInfo
+import app.ehrenamtskarte.backend.common.utils.devWarn
 import app.ehrenamtskarte.backend.common.utils.findValueByName
 import app.ehrenamtskarte.backend.common.utils.findValueByNameNode
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetApiNotReachableException
@@ -138,10 +140,10 @@ class FreinetApi(private val host: String, private val accessKey: String, privat
                     setBody(requestBody)
                 }
                 val body = response.bodyAsText()
-                logger.info("Successfully created person in freinet: $body")
+                logger.devInfo("Successfully created person in freinet: $body")
                 true
             } catch (e: Exception) {
-                logger.warn("Error creating person in freinet", e)
+                logger.devWarn("Error creating person in freinet $e")
                 false
             }
         }

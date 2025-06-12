@@ -2,12 +2,12 @@ package app.ehrenamtskarte.backend.freinet.webservice
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
 import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.service.Authorizer
+import app.ehrenamtskarte.backend.common.utils.devWarn
 import app.ehrenamtskarte.backend.common.utils.findValueByName
 import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
 import app.ehrenamtskarte.backend.exception.service.NotImplementedException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetApiNotReachableException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetFoundMultiplePersonsException
 import app.ehrenamtskarte.backend.freinet.database.repos.FreinetAgencyRepository
 import app.ehrenamtskarte.backend.freinet.util.FreinetApi
@@ -66,11 +66,11 @@ class FreinetApplicationMutationService {
             )
             when {
                 persons.size() > 1 -> {
-                    logger.warn("Multiple persons found in Freinet for $firstName $lastName, born $dateOfBirth")
+                    logger.devWarn("Multiple persons found in Freinet for $firstName $lastName, born $dateOfBirth")
                     throw FreinetFoundMultiplePersonsException()
                 }
-                persons.isEmpty() -> {
-                    val personCreationResult = freinetApi.createPerson(
+                persons.isEmpty -> {
+                    freinetApi.createPerson(
                         firstName,
                         lastName,
                         dateOfBirth,
@@ -78,13 +78,10 @@ class FreinetApplicationMutationService {
                         admin.email,
                         project,
                     )
-                    if (!personCreationResult) {
-                        throw FreinetApiNotReachableException()
-                    }
                 }
                 persons.size() == 1 -> {
                     // TODO: #2143 - Update existing person
-                    logger.warn("update existing person")
+                    logger.devWarn("update existing person")
                 }
             }
 
