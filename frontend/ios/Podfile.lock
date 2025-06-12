@@ -43,10 +43,10 @@ PODS:
   - GoogleUtilitiesComponents (1.1.0):
     - GoogleUtilities/Logger
   - GTMSessionFetcher/Core (2.3.0)
-  - MapLibre (6.5.0)
+  - MapLibre (6.14.0)
   - maplibre_gl (0.0.1):
     - Flutter
-    - MapLibre (= 6.5.0)
+    - MapLibre (= 6.14.0)
   - MLImage (1.0.0-beta4)
   - MLKitBarcodeScanning (3.0.0):
     - MLKitCommon (~> 9.0)
@@ -83,7 +83,7 @@ PODS:
   - PromisesObjC (2.4.0)
   - ReachabilitySwift (5.2.4)
   - Sentry/HybridSDK (8.46.0)
-  - sentry_flutter (8.14.1):
+  - sentry_flutter (8.14.2):
     - Flutter
     - FlutterMacOS
     - Sentry/HybridSDK (= 8.46.0)
@@ -166,8 +166,8 @@ SPEC CHECKSUMS:
   GoogleUtilities: ea963c370a38a8069cc5f7ba4ca849a60b6d7d15
   GoogleUtilitiesComponents: 679b2c881db3b615a2777504623df6122dd20afe
   GTMSessionFetcher: 3a63d75eecd6aa32c2fc79f578064e1214dfdec2
-  MapLibre: 0ebfa9329d313cec8bf0a5ba5a336a1dc903785e
-  maplibre_gl: eab61cca6e1cfa9187249bacd3f08b51e8cd8ae9
+  MapLibre: 69e572367f4ef6287e18246cfafc39c80cdcabcd
+  maplibre_gl: 3c924e44725147b03dda33430ad216005b40555f
   MLImage: 7bb7c4264164ade9bf64f679b40fb29c8f33ee9b
   MLKitBarcodeScanning: 04e264482c5f3810cb89ebc134ef6b61e67db505
   MLKitCommon: c1b791c3e667091918d91bda4bba69a91011e390
@@ -180,7 +180,7 @@ SPEC CHECKSUMS:
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   ReachabilitySwift: 32793e867593cfc1177f5d16491e3a197d2fccda
   Sentry: da60d980b197a46db0b35ea12cb8f39af48d8854
-  sentry_flutter: 942017adbe00f963061cb11ec260414a990b7a42
+  sentry_flutter: 27892878729f42701297c628eb90e7c6529f3684
   shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
   url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
 
