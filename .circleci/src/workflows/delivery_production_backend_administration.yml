@@ -24,6 +24,8 @@ jobs:
 
   - check_backend
   - build_backend:
+      context:
+        - credentials-ehrenamtskarte
       requires:
         - check_backend
   - pack_backend:
