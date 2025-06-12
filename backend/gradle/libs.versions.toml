@@ -6,6 +6,7 @@ io-gitlab-arturbosch-detekt = { id = "io.gitlab.arturbosch.detekt", version = "1
 org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "2.1.21" }
 org-jetbrains-kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version = "0.9.1" }
 org-jlleitschuh-gradle-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "12.3.0" }
+io-sentry-jvm-gradle = { id = "io.sentry.jvm.gradle", version = "3.12.0"}
 
 [versions]
 
@@ -13,12 +14,12 @@ graphql = "8.8.0"
 jackson = "2.19.0"
 javalin = "6.6.0"
 jetbrains-exposed = "0.61.0"
-junit-jupiter = "5.12.2"
+junit-jupiter = "5.13.1"
 junixsocket = "2.10.1"
 kotlin = "2.1.21"
 kotlinx-serialization = "1.8.1"
 ktor = "3.1.3"
-testcontainers = "1.21.0"
+testcontainers = "1.21.1"
 
 [libraries]
 
@@ -30,7 +31,7 @@ com-fasterxml-jackson-dataformat-yaml = { module = "com.fasterxml.jackson.datafo
 com-fasterxml-jackson-datatype-jsr310 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version.ref = "jackson" }
 com-fasterxml-jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
 com-github-ajalt-clikt = "com.github.ajalt.clikt:clikt:5.0.3"
-com-google-protobuf-kotlin = "com.google.protobuf:protobuf-kotlin:4.31.0"
+com-google-protobuf-kotlin = "com.google.protobuf:protobuf-kotlin:4.31.1"
 com-google-zxing-core = "com.google.zxing:core:3.5.3"
 com-kohlschutter-junixsocket-common = { module = "com.kohlschutter.junixsocket:junixsocket-common", version.ref = "junixsocket" }
 com-kohlschutter-junixsocket-core = { module = "com.kohlschutter.junixsocket:junixsocket-core", version.ref = "junixsocket" }
@@ -60,7 +61,7 @@ org-jetbrains-kover-jvm-agent = "org.jetbrains.kotlinx:kover-jvm-agent:0.9.1"
 org-junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
 org-junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit-jupiter" }
 org-piwik-java-tracking-matomo-java-tracker = "org.piwik.java.tracking:matomo-java-tracker:3.4.0"
-org-postgresql-postgresql = "org.postgresql:postgresql:42.7.5"
+org-postgresql-postgresql = "org.postgresql:postgresql:42.7.6"
 org-simplejavamail = "org.simplejavamail:simple-java-mail:8.12.6"
 org-slf4j-simple = "org.slf4j:slf4j-simple:2.0.17"
 org-testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }

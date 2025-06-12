@@ -4,6 +4,8 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 Future<void> runAppWithSentry(void Function() runApp) async {
   await SentryFlutter.init((options) {
     options.dsn = 'https://ceb1e25ecc334e26b1469a0bc325b7c9@sentry.tuerantuer.org/4';
+    // https://docs.sentry.io/concepts/key-terms/tracing/
+    options.tracesSampleRate = 0.05;
   }, appRunner: runApp);
 }
 
