@@ -81,7 +81,7 @@ const DeleteDialog = (p: {
   return (
     <Dialog open={p.isOpen} aria-describedby='alert-dialog-description'>
       <DialogContent id='alert-dialog-description'>
-        <Stack direction='row' gap={2} alignItems='center'>
+        <Stack direction='row' sx={{ gap: 2, alignItems: 'center' }}>
           {p.deleteResult.loading || p.deleteResult.called ? (
             <CircularProgress size={64} />
           ) : (
@@ -224,7 +224,7 @@ const ApplicationCard = ({
       </AccordionSummary>
 
       <AccordionDetails>
-        <Stack sx={{ p: 2 }} gap={2}>
+        <Stack sx={{ p: 2, gap: 2 }}>
           <Stack direction='row' spacing={2} alignItems='flex-start'>
             {withdrawalDate ? (
               <Box sx={{ bgcolor: theme.palette.warning.light, p: 2, flexGrow: 1 }}>

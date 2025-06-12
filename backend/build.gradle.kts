@@ -13,6 +13,7 @@ plugins {
     alias(libs.plugins.org.jetbrains.kotlin.jvm)
     alias(libs.plugins.org.jetbrains.kotlinx.kover)
     alias(libs.plugins.org.jlleitschuh.gradle.ktlint)
+    alias(libs.plugins.io.sentry.jvm.gradle)
     // Apply the application plugin to add support for building a CLI application.
     application
 }
@@ -85,6 +86,17 @@ ktlint {
     }
 }
 
+sentry {
+    // Generates a JVM (Java, Kotlin, etc.) source bundle and uploads your source code to Sentry.
+    // This enables source context, allowing you to see your source
+    // code as part of your stack traces in Sentry.
+    includeSourceContext = true
+
+    org = "digitalfabrik"
+    projectName = "entitlementcard-backend"
+    authToken = System.getenv("SENTRY_AUTH_TOKEN")
+}
+
 sourceSets {
     main {
         proto {
@@ -147,6 +159,10 @@ tasks.test {
     useJUnitPlatform()
     environment("JWT_SECRET", "HelloWorld")
     environment("KOBLENZ_PEPPER", "123456789ABC")
+}
+
+tasks.sentryCollectSourcesJava {
+    dependsOn(tasks.generateProto)
 }
 
 tasks.graphqlGenerateTestClient {

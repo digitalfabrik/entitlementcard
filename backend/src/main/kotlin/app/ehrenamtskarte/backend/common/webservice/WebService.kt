@@ -2,7 +2,9 @@ package app.ehrenamtskarte.backend.common.webservice
 
 import app.ehrenamtskarte.backend.application.webservice.ApplicationAttachmentHandler
 import app.ehrenamtskarte.backend.application.webservice.HealthHandler
+import app.ehrenamtskarte.backend.common.utils.initializeSentry
 import app.ehrenamtskarte.backend.config.BackendConfiguration
+import app.ehrenamtskarte.backend.config.Environment
 import app.ehrenamtskarte.backend.map.webservice.MapStyleHandler
 import app.ehrenamtskarte.backend.userdata.webservice.UserImportHandler
 import io.javalin.Javalin
@@ -82,6 +84,11 @@ class WebService {
         app.post("/users/import") { context -> userImportHandler.handle(context) }
 
         app.start(host, port)
+
+        if (config.environment == Environment.PRODUCTION) {
+            initializeSentry()
+            println("Init Sentry for production environment")
+        }
         println("Server is running at http://$host:$port")
         println("Goto http://$host:$port/graphiql/ for a graphical editor")
     }

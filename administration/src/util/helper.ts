@@ -1,8 +1,10 @@
 import { ApolloError, FetchResult } from '@apollo/client'
 import XRegExp from 'xregexp'
 
+import { maxCardValidity } from '../cards/constants'
 import getMessageFromApolloError from '../errors/getMessageFromApolloError'
 import i18next from '../i18n'
+import PlainDate from './PlainDate'
 
 export const isStagingEnvironment = (): boolean => !!window.location.hostname.match(/staging./)
 export const isProductionEnvironment = (): boolean =>
@@ -50,3 +52,6 @@ export const hasProp = <P extends PropertyKey, O extends { [p in P]: unknown }>(
   obj: O,
   p: P
 ): obj is O & { [p in P]: NonNullable<unknown> } => obj[p] !== undefined && obj[p] !== null
+
+export const isExceedingMaxValidityDate = (currentDate: PlainDate): boolean =>
+  currentDate.isAfter(PlainDate.fromLocalDate(new Date()).add(maxCardValidity))

@@ -6,12 +6,12 @@ import React, { ReactNode, act } from 'react'
 import { MemoryRouter } from 'react-router'
 
 import { initializeCardFromCSV } from '../../../cards/Card'
+import FormAlert from '../../../mui-modules/base/FormAlert'
 import koblenzConfig from '../../../project-configs/koblenz/config'
 import { renderWithTranslation } from '../../../testing/render'
 import { AppToasterProvider } from '../../AppToaster'
 import CardSelfServiceForm from '../CardSelfServiceForm'
 import { exampleCard } from '../__mock__/mockSelfServiceCard'
-import FormAlert from '../components/FormAlert'
 import { DataPrivacyAcceptingStatus } from '../constants'
 
 const wrapper = ({ children }: { children: ReactNode }) => (
@@ -27,7 +27,7 @@ const updateCard = jest.fn()
 const generateCards = jest.fn()
 describe('CardSelfServiceForm', () => {
   it('should display all elements in initial state', () => {
-    const { getByLabelText, getByPlaceholderText, getByTestId, getByText } = renderWithTranslation(
+    const { getByLabelText, getByPlaceholderText, getByText, getByRole } = renderWithTranslation(
       <CardSelfServiceForm
         updateCard={updateCard}
         generateCards={generateCards}
@@ -43,7 +43,7 @@ describe('CardSelfServiceForm', () => {
     expect(getByPlaceholderText('5.031.025.281, 000D000001, 91459')).toBeTruthy()
     expect(getByLabelText('Aktenzeichen').closest('input')).toBeTruthy()
     expect(getByPlaceholderText('TT.MM.JJJJ')).toBeTruthy()
-    const dataPrivacyCheckbox = getByTestId('data-privacy-checkbox')
+    const dataPrivacyCheckbox = getByRole('checkbox')
     expect(dataPrivacyCheckbox).toBeTruthy()
     expect(dataPrivacyCheckbox.getAttribute('checked')).toBeNull()
     expect(getByText('Wo finde ich das Aktenzeichen?')).toBeTruthy()

@@ -1,11 +1,9 @@
-import { FormGroup } from '@blueprintjs/core'
-import { FormGroup as MuiFormGroup } from '@mui/material'
-import { KOBLENZ_PRODUCTION_ID, KOBLENZ_STAGING_ID } from 'build-configs/constants'
+import { FormGroup } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import CustomDatePicker from '../../bp-modules/components/CustomDatePicker'
-import FormAlert from '../../bp-modules/self-service/components/FormAlert'
+import FormAlert from '../../mui-modules/base/FormAlert'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import PlainDate from '../../util/PlainDate'
 import type { Extension, ExtensionComponentProps } from './extensions'
@@ -26,13 +24,14 @@ const BirthdayForm = ({
   const { birthday } = value
   const showErrorMessage = touched || showRequired
   const projectConfig = useContext(ProjectConfigContext)
-  const { projectId } = projectConfig
-  const isKoblenz = projectId === KOBLENZ_PRODUCTION_ID || projectId === KOBLENZ_STAGING_ID
 
   const showBirthdayHint = (): boolean => {
+    if (!projectConfig.showBirthdayExtensionHint || !birthday) {
+      return false
+    }
     const today = PlainDate.fromLocalDate(new Date())
     const underAge = today.subtract({ years: 16 })
-    return !!(birthday?.isAfter(underAge) && projectConfig.showBirthdayExtensionHint && !birthday.isAfter(today))
+    return birthday.isAfter(underAge) && birthday.isBeforeOrEqual(today)
   }
 
   const getErrorMessage = (): string | null => {
@@ -44,41 +43,29 @@ const BirthdayForm = ({
     if (birthday.isAfter(today)) {
       return t('birthdayFutureError')
     }
-
+    if (birthday.isBefore(minBirthday)) {
+      return t('birthdayBeforeMinBirthdayError', { minBirthday: minBirthday.format() })
+    }
     return null
   }
 
-  const datePickerElement = (
-    <>
+  return (
+    <FormGroup>
       <CustomDatePicker
         value={birthday?.toLocalDate() ?? null}
         onBlur={() => setTouched(true)}
+        onClose={() => setTouched(true)}
         onChange={date => {
           setValue({ birthday: PlainDate.safeFromLocalDate(date) })
         }}
         onClear={() => setValue({ birthday: null })}
         error={!isValid && showErrorMessage}
         disableFuture
-        textFieldSlotProps={{
-          sx: {
-            '.MuiPickersSectionList-root': {
-              padding: '5px 0',
-            },
-          },
-        }}
-        // this condition will be removed with #2059
-        {...(isKoblenz && { label: t('birthdayLabel'), textFieldSlotProps: {} })}
+        label={t('birthdayLabel')}
       />
       {showErrorMessage && <FormAlert severity='error' errorMessage={getErrorMessage()} />}
       {showBirthdayHint() && <FormAlert severity='info' errorMessage={t('birthdayHint')} />}
-    </>
-  )
-
-  return isKoblenz ? (
-    <MuiFormGroup>{datePickerElement}</MuiFormGroup>
-  ) : (
-    // This component is deprecated and only used for nuernberg until we migrate completely at #2059.
-    <FormGroup label={t('birthdayLabel')}>{datePickerElement}</FormGroup>
+    </FormGroup>
   )
 }
 
@@ -97,7 +84,7 @@ const BirthdayExtension: Extension<BirthdayExtensionState> = {
       return false
     }
     const today = PlainDate.fromLocalDate(new Date())
-    return !birthday.isBefore(minBirthday) && !birthday.isAfter(today)
+    return birthday.isAfterOrEqual(minBirthday) && birthday.isBeforeOrEqual(today)
   },
   fromString: (value: string) => {
     const birthday = PlainDate.safeFromCustomFormat(value)

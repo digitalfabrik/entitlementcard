@@ -1,9 +1,10 @@
-import { Alert, Typography, styled } from '@mui/material'
+import { Typography } from '@mui/material'
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { ApplicationType, BavariaCardType } from '../../../generated/graphql'
 import i18next from '../../../i18n'
+import FormAlert from '../../base/FormAlert'
 import CustomDivider from '../CustomDivider'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
 import CheckboxForm from '../primitive-inputs/CheckboxForm'
@@ -15,10 +16,6 @@ import {
   createCompoundInitialState,
   createCompoundValidate,
 } from '../util/compoundFormUtils'
-
-const CardTypeAlert = styled(Alert)`
-  margin: 8px 0;
-`
 
 const CardTypeForm = createRadioGroupForm<BavariaCardType>()
 const cardTypeOptions = {
@@ -139,9 +136,7 @@ const StepCardTypeForm: Form<State, ValidatedInput> = {
           label={t('wantsPhysicalCard')}
           options={wantsPhysicalCardOptions}
         />
-        {isInvalid && validationResult.message !== undefined && (
-          <CardTypeAlert severity='error'>{validationResult.message}</CardTypeAlert>
-        )}
+        {isInvalid && validationResult.message !== undefined && <FormAlert errorMessage={validationResult.message} />}
       </div>
     )
   },

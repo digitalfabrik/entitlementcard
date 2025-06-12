@@ -1,8 +1,9 @@
-import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/material'
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import React, { useContext, useState } from 'react'
 
 import { ShortTextInput } from '../../../generated/graphql'
 import i18next from '../../../i18n'
+import FormAlert from '../../base/FormAlert'
 import { FormContext } from '../SteppedSubForms'
 import { Form, FormComponentProps } from '../util/FormType'
 
@@ -50,7 +51,7 @@ const SelectForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
             </MenuItem>
           ))}
         </Select>
-        {(showAllErrors || touched) && isInvalid ? <FormHelperText>{validationResult.message}</FormHelperText> : null}
+        {(showAllErrors || touched) && isInvalid && <FormAlert errorMessage={validationResult.message} />}
       </FormControl>
     )
   },
