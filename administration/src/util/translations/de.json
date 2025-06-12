@@ -205,7 +205,8 @@
     "applicationApprovedToastMessage": "Der Antrag wurde genehmigt.",
     "applicationResolveNotice": "Dieser Antrag wurde am {{date}} um {{time}}",
     "applicationResolveApproved": "genehmigt",
-    "applicationResolveRejected": "abgelehnt"
+    "applicationResolveRejected": "abgelehnt",
+    "incompleteApplicationDataTooltip": "Aus den Antragsdaten kann keine Karte erzeugt werden."
   },
   "auth": {
     "administration": "Verwaltung",
