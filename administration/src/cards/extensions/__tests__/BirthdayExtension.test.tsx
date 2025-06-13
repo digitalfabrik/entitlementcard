@@ -1,9 +1,11 @@
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import { fireEvent } from '@testing-library/react'
 import React, { ReactNode } from 'react'
 
 import { AppToasterProvider } from '../../../bp-modules/AppToaster'
 import koblenzConfig from '../../../project-configs/koblenz/config'
+import nuernbergConfig from '../../../project-configs/nuernberg/config'
 import { renderWithTranslation } from '../../../testing/render'
 import PlainDate from '../../../util/PlainDate'
 import BirthdayExtension from '../BirthdayExtension'
@@ -15,10 +17,11 @@ const wrapper = ({ children }: { children: ReactNode }) => (
 )
 
 jest.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
+const setValue = jest.fn()
+
 describe('BirthdayExtension', () => {
   describe('Component', () => {
     it('should display correct placeholder if no birthday is provided', () => {
-      const setValue = jest.fn()
       const { getByPlaceholderText } = renderWithTranslation(
         <BirthdayExtension.Component showRequired setValue={setValue} isValid={false} value={{ birthday: null }} />,
         { wrapper }
@@ -26,8 +29,22 @@ describe('BirthdayExtension', () => {
       expect(getByPlaceholderText('TT.MM.JJJJ')).toBeTruthy()
     })
 
-    it('should show error if no birthday is provided', () => {
-      const setValue = jest.fn()
+    it('should clear input when clear button is clicked', () => {
+      const { getByTitle } = renderWithTranslation(
+        <BirthdayExtension.Component
+          showRequired
+          setValue={setValue}
+          isValid={false}
+          value={{ birthday: new PlainDate(1955, 1, 1) }}
+        />,
+        { wrapper }
+      )
+      const clearButton = getByTitle('Wert leeren')
+      fireEvent.click(clearButton)
+      expect(setValue).toHaveBeenCalledWith({ birthday: null })
+    })
+
+    it('should show error if no birthday is provided and showRequired is true', () => {
       const { getByText } = renderWithTranslation(
         <BirthdayExtension.Component showRequired setValue={setValue} isValid={false} value={{ birthday: null }} />,
         { wrapper }
@@ -35,26 +52,57 @@ describe('BirthdayExtension', () => {
       expect(getByText('Bitte geben Sie ein gültiges Geburtsdatum an.')).toBeTruthy()
     })
 
-    it('should show error if provided birthday is in the future', () => {
-      const setValue = jest.fn()
-      const tomorrow = new Date()
-      tomorrow.setDate(tomorrow.getDate() + 1)
+    it('should not show error if no birthday is provided and showRequired is false', () => {
+      const { queryByText } = renderWithTranslation(
+        <BirthdayExtension.Component
+          showRequired={false}
+          setValue={setValue}
+          isValid={false}
+          value={{ birthday: null }}
+        />,
+        { wrapper }
+      )
+      expect(queryByText('Bitte geben Sie ein gültiges Geburtsdatum an.')).toBeNull()
+    })
+
+    it('should show error if no birthday is provided, showRequired is false and user left field', () => {
+      const { getByText, getByPlaceholderText } = renderWithTranslation(
+        <BirthdayExtension.Component
+          showRequired={false}
+          setValue={setValue}
+          isValid={false}
+          value={{ birthday: null }}
+        />,
+        { wrapper }
+      )
+      const datePicker = getByPlaceholderText('TT.MM.JJJJ')
+      fireEvent.blur(datePicker)
+      expect(getByText('Bitte geben Sie ein gültiges Geburtsdatum an.')).toBeTruthy()
+    })
+
+    it('should show error if provided birthday is too far in the past', () => {
       const { getByText } = renderWithTranslation(
         <BirthdayExtension.Component
           showRequired
           setValue={setValue}
           isValid={false}
-          value={{ birthday: PlainDate.fromLocalDate(tomorrow) }}
+          value={{ birthday: new PlainDate(1899, 1, 1) }}
         />,
+        { wrapper }
+      )
+      expect(getByText('Das Geburtsdatum darf nicht vor dem 01.01.1900 liegen.')).toBeTruthy()
+    })
+
+    it('should show error if provided birthday is in the future', () => {
+      const tomorrow = PlainDate.fromLocalDate(new Date()).add({ days: 1 })
+      const { getByText } = renderWithTranslation(
+        <BirthdayExtension.Component showRequired setValue={setValue} isValid={false} value={{ birthday: tomorrow }} />,
         { wrapper }
       )
       expect(getByText('Das Geburtsdatum darf nicht in der Zukunft liegen.')).toBeTruthy()
     })
 
-    it('should show an hint if provided birthday is underage', () => {
-      const setValue = jest.fn()
-      const tomorrow = new Date()
-      tomorrow.setDate(tomorrow.getDate() + 1)
+    it('should show an hint if provided birthday is underage for koblenz', () => {
       const { getByText } = renderWithTranslation(
         <BirthdayExtension.Component
           showRequired
@@ -69,6 +117,49 @@ describe('BirthdayExtension', () => {
           'Bei Minderjährigen unter 16 Jahren darf der KoblenzPass nur mit Einverständnis der Erziehungsberechtigten abgerufen werden.'
         )
       ).toBeTruthy()
+    })
+
+    it('should not show an hint if provided birthday is underage for nuernberg', () => {
+      const { queryByText } = renderWithTranslation(
+        <BirthdayExtension.Component
+          showRequired
+          setValue={setValue}
+          isValid={false}
+          value={{ birthday: new PlainDate(2020, 1, 1) }}
+        />,
+        { wrapper, projectConfig: nuernbergConfig }
+      )
+      expect(
+        queryByText(
+          'Bei Minderjährigen unter 16 Jahren darf der KoblenzPass nur mit Einverständnis der Erziehungsberechtigten abgerufen werden.'
+        )
+      ).toBeNull()
+    })
+
+    it('should not show an hint if provided person is not underage anymore', () => {
+      const underAge = PlainDate.fromLocalDate(new Date()).subtract({ years: 16 })
+      const { queryByText } = renderWithTranslation(
+        <BirthdayExtension.Component showRequired setValue={setValue} isValid={false} value={{ birthday: underAge }} />,
+        { wrapper, projectConfig: koblenzConfig }
+      )
+      expect(
+        queryByText(
+          'Bei Minderjährigen unter 16 Jahren darf der KoblenzPass nur mit Einverständnis der Erziehungsberechtigten abgerufen werden.'
+        )
+      ).toBeNull()
+    })
+
+    it('should call setValue when date is changed', () => {
+      const { getByPlaceholderText } = renderWithTranslation(
+        <BirthdayExtension.Component showRequired setValue={setValue} isValid={false} value={{ birthday: null }} />,
+        {
+          wrapper,
+        }
+      )
+      const datePicker = getByPlaceholderText('TT.MM.JJJJ')
+
+      fireEvent.change(datePicker, { target: { value: '02.01.2025' } })
+      expect(setValue).toHaveBeenCalledWith({ birthday: { day: 2, isoMonth: 1, isoYear: 2025 } })
     })
   })
 
@@ -143,6 +234,12 @@ describe('BirthdayExtension', () => {
   describe('getInitializeState', () => {
     it('should initialize birthday state with null', () => {
       expect(BirthdayExtension.getInitialState()).toEqual({ birthday: null })
+    })
+  })
+
+  describe('Extension name', () => {
+    it('should not change to ensure correct user hashes for koblenz project', () => {
+      expect(BirthdayExtension.name).toBe('birthday')
     })
   })
 })

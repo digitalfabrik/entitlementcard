@@ -238,7 +238,7 @@
     "backToSelection": "Zurück zur Auswahl",
     "name": "Name",
     "expirationDate": "Ablaufdatum",
-    "expirationDateFutureError": "Bitte geben Sie ein gültiges Ablaufdatum ein, das in der Zukunft liegt. Es darf nicht weiter als {{maxValidationDate}} in der Zukunft liegen.",
+    "expirationDateFutureError": "Das Ablaufdatum darf nicht weiter als {{maxValidationDate}} in der Zukunft liegen.",
     "expirationDateError": "Bitte geben Sie ein gültiges Ablaufdatum ein.",
     "expirationDateBeforeStartDayError": "Das Ablaufdatum muss nach dem Startdatum liegen.",
     "expirationDateNotInFutureError": "Das Ablaufdatum muss in der Zukunft liegen.",
@@ -622,7 +622,7 @@
     "startDayLabel": "Startdatum",
     "startDayError": "Bitte geben Sie ein gültiges Startdatum ein.",
     "startDayPastError": "Das Startdatum darf nicht weiter als {{minStartDay}} in der Vergangenheit liegen.",
-    "startDayFutureError": "Bitte geben Sie ein gültiges Startdatum ein, das in der Zukunft liegt. Es darf nicht weiter als {{maxValidationDate}} in der Zukunft liegen."
+    "startDayFutureError": "Das Startdatum darf nicht weiter als {{maxValidationDate}} in der Zukunft liegen."
   },
   "shared": {
     "accordionShowLess": "Weniger anzeigen",
