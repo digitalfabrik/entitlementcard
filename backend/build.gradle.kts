@@ -58,6 +58,8 @@ dependencies {
     testImplementation(libs.org.junit.jupiter.params)
     implementation(libs.org.piwik.java.tracking.matomo.java.tracker)
     implementation(libs.org.postgresql.postgresql)
+    implementation(libs.com.kohlschutter.junixsocket.common) // required for PostgreSQL Unix domain socket support
+    implementation(libs.com.kohlschutter.junixsocket.core)
     implementation(libs.org.slf4j.simple)
     implementation(libs.org.simplejavamail)
     testImplementation(libs.org.testcontainers)
