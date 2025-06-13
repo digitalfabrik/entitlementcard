@@ -31,6 +31,7 @@ https://staging.bayern.ehrenamtskarte.app/activation/code#ClcKLQoNRGVlcGxpbmsgVG
 
 ehrenamtbayern://bayern.ehrenamtskarte.app/activation/code#ClcKLQoNRGVlcGxpbmsgVGVzdBCWnQEaGAoCCF0SAwiIORoHCLPPvgEQASoECKiaARIQBuTHyi60o6UC2U439XGLMRoUBzxIAa%2BPG%2Bj%2FIrBzJVTJACh21KA%3D
 koblenzpass://koblenz.sozialpass.app/activation/code#ClcKLQoNRGVlcGxpbmsgVGVzdBCWnQEaGAoCCF0SAwiIORoHCLPPvgEQASoECKiaARIQBuTHyi60o6UC2U439XGLMRoUBzxIAa%2BPG%2Bj%2FIrBzJVTJACh21KA%3D
+nuernbergpass://nuernberg.sozialpass.app/activation/code#ClcKLQoMQW5kcmVhcyBUZXN0EIihARoZCgIIXxIECOq%2BARoHCPm97wUQASoECJueARIQBS8Zat9RNk%2FX2RNgf3NCUxoUITetkzpUEd46A5z1jxIVH0hxTYs%3D
 ```
 
 #### Note
@@ -51,11 +52,19 @@ For local testing you have to install the app and add these domains manually.
 ```
 npx uri-scheme open https://staging.nuernberg.sozialpass.app/activation/code#<activationCode> --android
 ```
+or
+```
+npx uri-scheme open nuernbergpass://nuernberg.sozialpass.app/activation/code#<activationCode> --android
+```
 
 
 ### b) iOS
 ```
 npx uri-scheme open https://staging.nuernberg.sozialpass.app/activation/code#<activationCode> --ios
+```
+or
+```
+npx uri-scheme open nuernbergpass://nuernberg.sozialpass.app/activation/code#<activationCode> --ios
 ```
 
 
