@@ -18,7 +18,8 @@ data class ApplicationView(
     @GraphQLDeprecated("Use 'status' instead")
     val cardCreated: Boolean?,
     val status: ApplicationStatus?,
-    val statusResolvedDate: String? = null,
+    val statusResolvedDate: String?,
+    val rejectionMessage: String?,
 ) {
     companion object {
         fun fromDbEntity(entity: ApplicationEntity, includePrivateInformation: Boolean = false): ApplicationView =
@@ -33,6 +34,7 @@ data class ApplicationView(
                     .takeIf { includePrivateInformation },
                 status = entity.status.takeIf { includePrivateInformation }?.toGraphQlType(),
                 statusResolvedDate = entity.statusResolvedDate?.takeIf { includePrivateInformation }?.toString(),
+                rejectionMessage = entity.rejectionMessage.takeIf { includePrivateInformation },
             )
     }
 
