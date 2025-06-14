@@ -96,6 +96,9 @@ sentry {
     projectName = "entitlementcard-backend"
     authToken = System.getenv("SENTRY_AUTH_TOKEN")
 }
+// Explicitly provide this dependency, otherwise Gradle complains
+tasks.named("generateSentryBundleIdJava") { dependsOn("generateProto") }
+tasks.named("generateSentryBundleIdJava") { dependsOn("graphqlGenerateTestClient") }
 
 sourceSets {
     main {
