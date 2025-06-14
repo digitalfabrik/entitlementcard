@@ -1,6 +1,7 @@
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
-import { createUploadLink } from 'apollo-upload-client'
+// @ts-expect-error tsc reports a missing declaration, but it is typed via JS docs
+import createUploadLink from 'apollo-upload-client/createUploadLink.mjs'
 import React, { ReactElement, useContext } from 'react'
 
 import { AuthContext } from './AuthProvider'
