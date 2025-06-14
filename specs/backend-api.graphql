@@ -79,6 +79,7 @@ type ApplicationView {
   jsonValue: String!
   note: String
   regionId: Int!
+  rejectionMessage: String
   status: ApplicationStatus
   statusResolvedDate: String
   verifications: [ApplicationVerificationView!]!
@@ -166,6 +167,8 @@ type Mutation {
   editAdministrator(adminId: Int!, newEmail: String!, newRegionId: Int, newRole: Role!, project: String!): Boolean!
   "Import accepting stores via csv"
   importAcceptingStores(dryRun: Boolean!, project: String!, stores: [CSVAcceptingStoreInput!]!): StoreImportReturnResultModel!
+  "Reject an application"
+  rejectApplicationStatus(applicationId: Int!, rejectionMessage: String!): ApplicationView!
   "Reset the administrator's password"
   resetPassword(email: String!, newPassword: String!, passwordResetKey: String!, project: String!): Boolean!
   "Send application info to Freinet"
