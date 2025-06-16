@@ -136,13 +136,13 @@ commands:
         steps:
             - restore_cache:
                 keys:
-                    - v1-npm-{{ checksum "~/project/package-lock.json" }}
-                    - v1-npm
+                    - v2-npm-{{ checksum "~/project/package-lock.json" }}
+                    - v2-npm
             - run:
                 command: npm ci --cache ~/.npm --prefer-offline
                 name: Install node dependencies for npm workspaces
             - save_cache:
-                key: v1-npm-{{ checksum "~/project/package-lock.json" }}
+                key: v2-npm-{{ checksum "~/project/package-lock.json" }}
                 paths:
                     - ~/.npm
     install_pods:
