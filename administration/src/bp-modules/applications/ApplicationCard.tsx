@@ -141,7 +141,7 @@ const RejectionDialog = (p: {
   )
 }
 
-const ButtonsCardPending = ({
+const ButtonsApplicationPending = ({
   disabled,
   onPrimaryButtonClick,
   onSecondaryButtonClick,
@@ -174,7 +174,7 @@ const ButtonsCardPending = ({
   )
 }
 
-const ButtonsCardApproved = ({
+const ButtonsApplicationResolved = ({
   cardAlreadyCreated,
   primaryButtonHref,
   onSecondaryButtonClick,
@@ -399,7 +399,7 @@ const ApplicationCard = ({
 
         <Stack sx={{ p: 2, displayPrint: 'none' }} spacing={2} direction='row'>
           {application.status === ApplicationStatus.Pending ? (
-            <ButtonsCardPending
+            <ButtonsApplicationPending
               disabled={approveStatusResult.loading}
               onPrimaryButtonClick={() => {
                 approveStatus({ variables: { applicationId: application.id } })
@@ -412,7 +412,7 @@ const ApplicationCard = ({
 
           {application.status === ApplicationStatus.Approved ||
           application.status === ApplicationStatus.ApprovedCardCreated ? (
-            <ButtonsCardApproved
+            <ButtonsApplicationResolved
               cardAlreadyCreated={application.status === ApplicationStatus.ApprovedCardCreated}
               primaryButtonHref={createCardLink(application.id, jsonValueParsed, config)}
               onSecondaryButtonClick={() => setDeleteDialogOpen(true)}
