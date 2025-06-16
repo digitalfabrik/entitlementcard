@@ -5,8 +5,6 @@ import app.ehrenamtskarte.backend.common.utils.devWarn
 import app.ehrenamtskarte.backend.common.utils.findValueByName
 import app.ehrenamtskarte.backend.common.utils.findValueByNameNode
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetApiNotReachableException
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
-import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.ktor.client.HttpClient
@@ -75,19 +73,13 @@ class FreinetApi(private val host: String, private val accessKey: String, privat
         dateOfBirth: String,
         personalDataNode: JsonNode?,
         userEmail: String,
-        project: String,
     ): Boolean {
         val addressArrayNode = personalDataNode?.get("value")?.findValueByNameNode("address")
         val street = addressArrayNode?.findValueByName("street")
         val postalCode = addressArrayNode?.findValueByName("postalCode")
-        val regionId =
-            addressArrayNode?.findValueByNameNode(
-                "location",
-            )?.asText()?.toIntOrNull() ?: throw RegionNotFoundException()
-        val email = personalDataNode.get("value")?.findValueByName("emailAddress")
-        val phone = personalDataNode.get("value")?.findValueByName("telephone")
-        val region = RegionsRepository.findByIdInProject(project, regionId)
-            ?: throw RegionNotFoundException()
+        val location = addressArrayNode?.findValueByName("location")
+        val email = personalDataNode?.get("value")?.findValueByName("emailAddress")
+        val phone = personalDataNode?.get("value")?.findValueByName("telephone")
 
         val currentDateTime = LocalDateTime
             .now()
@@ -112,7 +104,7 @@ class FreinetApi(private val host: String, private val accessKey: String, privat
             "1": {
               "adress_strasse": "$street",
               "adress_plz": "$postalCode",
-              "adress_ort": "${region.name}",
+              "adress_ort": "$location",
               "adress_mail1": "$email",
               "adress_tel_p": "$phone"
             }

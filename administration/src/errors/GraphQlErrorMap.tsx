@@ -147,6 +147,11 @@ const graphQlErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
         title: i18next.t('errors:freinetMultiplePersonError'),
       }
     }
+    case GraphQlExceptionCode.ApplicationDataIncomplete: {
+      return {
+        title: i18next.t('errors:applicationDataIncompleteException'),
+      }
+    }
     default:
       return {
         title: defaultError.title,
