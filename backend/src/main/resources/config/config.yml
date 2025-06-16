@@ -28,7 +28,7 @@ projects:
     timezone: "Europe/Berlin"
     selfServiceEnabled: false
     smtp:
-      host: mail.ehrenamtskarte.app
+      host: mail.your-server.de
       port: 587
       username: OVERRIDE_IN_LOCAL_CONFIG
       password: OVERRIDE_IN_LOCAL_CONFIG
@@ -45,7 +45,7 @@ projects:
     timezone: "Europe/Berlin"
     selfServiceEnabled: false
     smtp:
-      host: mail.sozialpass.app
+      host: mail.your-server.de
       port: 587
       username: OVERRIDE_IN_LOCAL_CONFIG
       password: OVERRIDE_IN_LOCAL_CONFIG
@@ -57,7 +57,7 @@ projects:
     timezone: "Europe/Berlin"
     selfServiceEnabled: true
     smtp:
-      host: mail.sozialpass.app
+      host: mail.your-server.de
       port: 587
       username: OVERRIDE_IN_LOCAL_CONFIG
       password: OVERRIDE_IN_LOCAL_CONFIG
@@ -69,7 +69,7 @@ projects:
     timezone: "Europe/Berlin"
     selfServiceEnabled: false
     smtp:
-      host: mail.sozialpass.app
+      host: mail.your-server.de
       port: 587
       username: OVERRIDE_IN_LOCAL_CONFIG
       password: OVERRIDE_IN_LOCAL_CONFIG
