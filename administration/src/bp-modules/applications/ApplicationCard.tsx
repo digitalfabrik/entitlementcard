@@ -137,11 +137,7 @@ const RejectionDialog = (p: {
   )
 }
 
-const ButtonsApplicationPending = ({
-  disabled,
-  onPrimaryButtonClick,
-  onSecondaryButtonClick,
-}: {
+const ButtonsApplicationPending = (p: {
   disabled: boolean
   onPrimaryButtonClick: () => void
   onSecondaryButtonClick: () => void
@@ -154,16 +150,16 @@ const ButtonsApplicationPending = ({
         variant='contained'
         color='primary'
         startIcon={<CreditScore />}
-        disabled={disabled}
-        onClick={onPrimaryButtonClick}>
+        disabled={p.disabled}
+        onClick={p.onPrimaryButtonClick}>
         {t('applicationApprove')}
       </Button>
       <Button
         variant='outlined'
         startIcon={<Delete />}
         color='error'
-        disabled={disabled}
-        onClick={onSecondaryButtonClick}>
+        disabled={p.disabled}
+        onClick={p.onSecondaryButtonClick}>
         {t('applicationReject')}
       </Button>
     </>
