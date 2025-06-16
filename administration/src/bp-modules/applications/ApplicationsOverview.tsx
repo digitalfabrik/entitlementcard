@@ -2,6 +2,7 @@ import { AutoAwesome } from '@mui/icons-material'
 import { Container } from '@mui/material'
 import { TFunction } from 'i18next'
 import React, { ReactElement, useMemo, useState } from 'react'
+import type { ComponentProps } from 'react'
 import FlipMove from 'react-flip-move'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -9,7 +10,6 @@ import styled from 'styled-components'
 import NonIdealState from '../../mui-modules/NonIdealState'
 import StandaloneCenter from '../StandaloneCenter'
 import ApplicationCard from './ApplicationCard'
-import type { ApplicationCardProps } from './ApplicationCard'
 import ApplicationStatusBar from './ApplicationStatusBar'
 import usePrintApplication from './hooks/usePrintApplication'
 import { ApplicationStatusBarItemType, ApplicationVerificationStatus, GetApplicationsType } from './types'
@@ -48,7 +48,7 @@ const ApplicationList = styled(FlipMove)`
 
 // Necessary for FlipMove, as it cannot handle functional components
 // eslint-disable-next-line react/prefer-stateless-function
-export class ApplicationViewComponent extends React.Component<ApplicationCardProps> {
+export class ApplicationViewComponent extends React.Component<ComponentProps<typeof ApplicationCard>> {
   render(): ReactElement {
     const { application } = this.props
     return <ApplicationCard key={application.id} {...this.props} />
