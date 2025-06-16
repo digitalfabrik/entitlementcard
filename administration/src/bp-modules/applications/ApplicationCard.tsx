@@ -230,21 +230,19 @@ const createCardLink = (
   return query ? `./cards/add${query}&applicationIdToMarkAsProcessed=${applicationId}` : undefined
 }
 
-export type ApplicationCardProps = {
-  application: GetApplicationsType
-  isSelectedForPrint: boolean
-  onDelete: () => void
-  onChange: (application: GetApplicationsType) => void
-  onPrintApplicationById: (applicationId: number) => void
-}
-
 const ApplicationCard = ({
   application,
   isSelectedForPrint,
   onDelete,
   onChange,
   onPrintApplicationById,
-}: ApplicationCardProps) => {
+}: {
+  application: GetApplicationsType
+  isSelectedForPrint: boolean
+  onDelete: () => void
+  onChange: (application: GetApplicationsType) => void
+  onPrintApplicationById: (applicationId: number) => void
+}) => {
   const { t } = useTranslation('applicationsOverview')
   const theme = useTheme()
   const jsonValueParsed: JsonField<'Array'> = JSON.parse(application.jsonValue)
