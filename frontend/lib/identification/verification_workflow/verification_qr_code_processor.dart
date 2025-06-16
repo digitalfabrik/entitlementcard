@@ -1,6 +1,7 @@
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_parser.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
+import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/query_server_verification.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter/cupertino.dart';
@@ -63,13 +64,9 @@ void assertConsistentCardInfo(CardInfo cardInfo) {
   if (!cardInfo.hasExpirationDay() && cardInfo.extensions.extensionBavariaCardType.cardType != BavariaCardType.GOLD) {
     throw QRCodeMissingExpiryException();
   }
-  final expirationDate = cardInfo.hasExpirationDay()
-      ? DateTime.fromMicrosecondsSinceEpoch(0).add(Duration(days: cardInfo.expirationDay))
-      : null;
-  if (expirationDate != null) {
-    if (DateTime.now().isAfterDate(expirationDate)) {
-      throw CardExpiredException(expirationDate);
-    }
+  final expirationDate = getExpirationDay(cardInfo);
+  if (expirationDate != null && isCardExpired(cardInfo)) {
+    throw CardExpiredException(expirationDate);
   }
 }
 
@@ -85,13 +82,6 @@ void _assertConsistentDynamicVerificationCode(DynamicVerificationCode verificati
 void _assertConsistentStaticVerificationCode(StaticVerificationCode verificationCode) {
   if (!verificationCode.hasPepper()) {
     throw QrCodeFieldMissingException('pepper');
-  }
-}
-
-extension DateComparison on DateTime {
-  bool isAfterDate(DateTime other) {
-    if (isAfter(other)) return true;
-    return year == other.year && month == other.month && day == other.day;
   }
 }
 
