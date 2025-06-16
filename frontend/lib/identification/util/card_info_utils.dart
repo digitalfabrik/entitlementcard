@@ -26,7 +26,7 @@ extension Hashing on CardInfo {
 }
 
 bool isCardExpired(CardInfo cardInfo) {
-  final expirationDay = _getExpirationDay(cardInfo);
+  final expirationDay = getExpirationDay(cardInfo);
   if (expirationDay == null) return false;
   final now = TZDateTime.from(clock.now(), currentTimezone);
   return expirationDay.isBefore(TZDateTime(currentTimezone, now.year, now.month, now.day));
@@ -44,13 +44,13 @@ bool isCardNotYetValid(CardInfo cardInfo) {
 bool isCardExtendable(CardInfo cardInfo, CardVerification cardVerification) {
   if (!cardVerification.cardExtendable) return false;
 
-  final expirationDay = _getExpirationDay(cardInfo);
+  final expirationDay = getExpirationDay(cardInfo);
   if (expirationDay == null) return false;
 
   return DateTime.now().isAfter(expirationDay.subtract(Duration(days: 90)));
 }
 
-DateTime? _getExpirationDay(CardInfo cardInfo) {
+DateTime? getExpirationDay(CardInfo cardInfo) {
   if (!cardInfo.hasExpirationDay()) return null;
   return dateFromEpochDaysInTimeZone(cardInfo.expirationDay, currentTimezone);
 }
