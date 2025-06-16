@@ -174,12 +174,8 @@ const ButtonsApplicationPending = ({
   )
 }
 
-const ButtonsApplicationResolved = ({
-  cardAlreadyCreated,
-  primaryButtonHref,
-  onSecondaryButtonClick,
-}: {
-  cardAlreadyCreated: boolean
+const ButtonsApplicationResolved = (p: {
+  applicationStatus: ApplicationStatus | null | undefined // TODO Remove null|undefined once this type is narrowed
   primaryButtonHref: string | undefined
   onSecondaryButtonClick: () => void
 }) => {
@@ -187,20 +183,23 @@ const ButtonsApplicationResolved = ({
 
   return (
     <>
-      <Tooltip title={primaryButtonHref ? undefined : t('incompleteApplicationDataTooltip')}>
+      <Tooltip title={p.primaryButtonHref ? undefined : t('incompleteApplicationDataTooltip')}>
         {/* Make the outer Tooltip independent of the button's disabled state */}
         <span>
-          <Button
-            color='primary'
-            variant='contained'
-            disabled={primaryButtonHref === undefined}
-            href={primaryButtonHref}
-            startIcon={<CreditScore />}>
-            {cardAlreadyCreated ? t('createCardAgain') : t('createCard')}
-          </Button>
+          {(p.applicationStatus === ApplicationStatus.Approved ||
+            p.applicationStatus === ApplicationStatus.ApprovedCardCreated) && (
+            <Button
+              color='primary'
+              variant='contained'
+              disabled={p.primaryButtonHref === undefined}
+              href={p.primaryButtonHref}
+              startIcon={<CreditScore />}>
+              {p.applicationStatus === ApplicationStatus.ApprovedCardCreated ? t('createCardAgain') : t('createCard')}
+            </Button>
+          )}
         </span>
       </Tooltip>
-      <Button onClick={onSecondaryButtonClick} startIcon={<Delete />} variant='outlined' color='error'>
+      <Button onClick={p.onSecondaryButtonClick} startIcon={<Delete />} variant='outlined' color='error'>
         {t('deleteApplication')}
       </Button>
     </>
@@ -408,16 +407,13 @@ const ApplicationCard = ({
                 rejectionDialogOpenSet(true)
               }}
             />
-          ) : undefined}
-
-          {application.status === ApplicationStatus.Approved ||
-          application.status === ApplicationStatus.ApprovedCardCreated ? (
+          ) : (
             <ButtonsApplicationResolved
-              cardAlreadyCreated={application.status === ApplicationStatus.ApprovedCardCreated}
+              applicationStatus={application.status}
               primaryButtonHref={createCardLink(application.id, jsonValueParsed, config)}
               onSecondaryButtonClick={() => setDeleteDialogOpen(true)}
             />
-          ) : undefined}
+          )}
 
           <Button
             onClick={() => onPrintApplicationById(application.id)}
