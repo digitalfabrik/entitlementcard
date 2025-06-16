@@ -19,7 +19,6 @@ import {
   TextField,
   Tooltip,
   Typography,
-  styled,
   useTheme,
 } from '@mui/material'
 import { format } from 'date-fns'
@@ -40,16 +39,13 @@ import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { useAppToaster } from '../AppToaster'
 import { AccordionExpandButton } from '../components/AccordionExpandButton'
+import { Spacer } from '../components/Spacer'
 import type { JsonField } from './JsonFieldView'
 import JsonFieldView from './JsonFieldView'
 import NoteDialogController from './NoteDialogController'
 import { ApplicationIndicators } from './VerificationsIndicator'
 import VerificationsView from './VerificationsView'
 import { GetApplicationsType } from './types'
-
-const Spacer = styled('div')`
-  flex-grow: 1;
-`
 
 const DeleteDialog = (p: {
   isOpen: boolean
