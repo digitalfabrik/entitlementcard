@@ -73,7 +73,6 @@ type ApplicationVerificationView {
 }
 
 type ApplicationView {
-  cardCreated: Boolean @deprecated(reason : "Use 'status' instead")
   createdDate: String!
   id: Int!
   jsonValue: String!
