@@ -1,18 +1,22 @@
 /* eslint-disable react/destructuring-assignment */
 import { MutationResult } from '@apollo/client'
-import { CreditScore, Delete, ExpandMore, InfoOutline, Print, Warning } from '@mui/icons-material'
+import { CreditScore, Delete, ExpandMore, InfoOutline, Print, Search, Warning } from '@mui/icons-material'
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Autocomplete,
   Box,
   Button,
   CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
+  DialogTitle,
   Divider,
+  InputAdornment,
   Stack,
+  TextField,
   Tooltip,
   Typography,
   styled,
@@ -28,6 +32,7 @@ import {
   ApplicationStatus,
   useApproveApplicationStatusMutation,
   useDeleteApplicationMutation,
+  useRejectApplicationStatusMutation,
 } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import type { ProjectConfig } from '../../project-configs/getProjectConfig'
@@ -78,6 +83,64 @@ const DeleteDialog = (p: {
   )
 }
 
+const RejectionDialog = (p: {
+  open: boolean
+  loading: boolean
+  onConfirm: (reason: string) => void
+  onCancel: () => void
+}) => {
+  const { t } = useTranslation('applicationsOverview')
+  const rejectionMessages = t('rejectionReasons', { returnObjects: true }) as string[]
+  const [reason, reasonSet] = useState<string | null>(null)
+
+  return (
+    <Dialog open={p.open} aria-describedby='reject-dialog-description' fullWidth onClose={p.onCancel}>
+      <DialogTitle>{t('rejectionDialogTitle')}</DialogTitle>
+      <DialogContent id='reject-dialog-description'>
+        {t('rejectionDialogMessage')}
+        <Autocomplete
+          renderInput={params => (
+            <TextField
+              {...params}
+              variant='outlined'
+              label={t('rejectionInputHint')}
+              slotProps={{
+                input: {
+                  ...params.InputProps,
+                  size: 'small',
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <Search />
+                    </InputAdornment>
+                  ),
+                },
+              }}
+            />
+          )}
+          options={rejectionMessages}
+          sx={{ marginTop: 2 }}
+          onChange={(_, value) => reasonSet(value)}
+        />
+      </DialogContent>
+      <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
+        <Button variant='outlined' onClick={p.onCancel} disabled={p.loading}>
+          {t('misc:cancel')}
+        </Button>
+        <Button
+          variant='contained'
+          disabled={reason === null || p.loading}
+          onClick={() => {
+            if (reason !== null) {
+              p.onConfirm(reason)
+            }
+          }}>
+          {t('deleteApplication')}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  )
+}
+
 const ButtonsCardPending = ({
   disabled,
   onPrimaryButtonClick,
@@ -100,7 +163,6 @@ const ButtonsCardPending = ({
         {t('applicationApprove')}
       </Button>
       <Button
-        sx={{ display: 'none' }} // TODO: #1982
         variant='outlined'
         startIcon={<Delete />}
         color='error'
@@ -199,6 +261,7 @@ const ApplicationCard = ({
   const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${application.id}`
   const appToaster = useAppToaster()
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [rejectionDialogOpen, rejectionDialogOpenSet] = useState(false)
   const [openNoteDialog, setOpenNoteDialog] = useState(false)
   const [accordionExpanded, accordionExpandedSet] = useState(false)
 
@@ -226,6 +289,19 @@ const ApplicationCard = ({
       // Update the application with new fields from the query
       onChange({ ...application, ...result.updates })
       appToaster?.show({ intent: 'success', message: t('applicationApprovedToastMessage') })
+    },
+  })
+
+  const [rejectStatus, rejectStatusResult] = useRejectApplicationStatusMutation({
+    onError: error => {
+      const { title } = getMessageFromApolloError(error)
+      appToaster?.show({ intent: 'danger', message: title })
+    },
+    onCompleted: result => {
+      rejectionDialogOpenSet(false)
+      // Update the application with new fields from the query
+      onChange({ ...application, ...result.updates })
+      appToaster?.show({ intent: 'success', message: t('applicationRejectedToastMessage') })
     },
   })
 
@@ -329,8 +405,7 @@ const ApplicationCard = ({
                 approveStatus({ variables: { applicationId: application.id } })
               }}
               onSecondaryButtonClick={() => {
-                // TODO: #1982
-                // resolveStatus({ variables: { applicationId: application.id, approve: false } })
+                rejectionDialogOpenSet(true)
               }}
             />
           ) : undefined}
@@ -358,6 +433,17 @@ const ApplicationCard = ({
           deleteResult={deleteResult}
           onConfirm={() => deleteApplication({ variables: { applicationId: application.id } })}
           onCancel={() => setDeleteDialogOpen(false)}
+        />
+
+        <RejectionDialog
+          open={rejectionDialogOpen}
+          loading={rejectStatusResult.loading}
+          onConfirm={message => {
+            rejectStatus({ variables: { applicationId: application.id, rejectionMessage: message } })
+          }}
+          onCancel={() => {
+            rejectionDialogOpenSet(false)
+          }}
         />
       </AccordionDetails>
     </Accordion>
