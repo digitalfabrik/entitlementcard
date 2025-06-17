@@ -49,31 +49,34 @@ describe('StartDayExtension', () => {
       )
       const datePicker = getByPlaceholderText('TT.MM.JJJJ')
       fireEvent.blur(datePicker)
+      expect(StartDayExtension.isValid({ startDay: null })).toBeFalsy()
       expect(getByText('Bitte geben Sie ein gültiges Startdatum ein.')).toBeTruthy()
     })
 
     it('should show error message when startDay is too far in the past and touched', () => {
-      const startDay = new PlainDate(2005, 1, 1)
+      const startDay = minStartDay.subtract({ days: 1 })
       const { getByText, getByDisplayValue } = renderWithTranslation(
         <StartDayExtension.Component {...defaultProps} isValid={false} value={{ startDay }} />,
         { wrapper }
       )
       const datePicker = getByDisplayValue(startDay.format())
       fireEvent.blur(datePicker)
+      expect(StartDayExtension.isValid({ startDay })).toBeFalsy()
       expect(
         getByText(`Das Startdatum darf nicht weiter als ${minStartDay.format()} in der Vergangenheit liegen.`)
       ).toBeTruthy()
     })
 
     it('should show error message when startDay is too far in the future and touched', () => {
-      const startDay = new PlainDate(2200, 1, 1)
       const today = PlainDate.fromLocalDate(new Date())
+      const startDayTooFarInFuture = today.add(maxCardValidity).add({ days: 1 })
       const { getByText, getByDisplayValue } = renderWithTranslation(
-        <StartDayExtension.Component {...defaultProps} isValid={false} value={{ startDay }} />,
+        <StartDayExtension.Component {...defaultProps} isValid={false} value={{ startDay: startDayTooFarInFuture }} />,
         { wrapper }
       )
-      const datePicker = getByDisplayValue(startDay.format())
+      const datePicker = getByDisplayValue(startDayTooFarInFuture.format())
       fireEvent.blur(datePicker)
+      expect(StartDayExtension.isValid({ startDay: startDayTooFarInFuture })).toBeFalsy()
       expect(
         getByText(`Das Startdatum darf nicht weiter als ${today.add(maxCardValidity).format()} in der Zukunft liegen.`)
       ).toBeTruthy()
@@ -83,8 +86,23 @@ describe('StartDayExtension', () => {
       const { queryByText } = renderWithTranslation(<StartDayExtension.Component {...defaultProps} isValid={false} />, {
         wrapper,
       })
+      expect(StartDayExtension.isValid({ startDay: null })).toBeFalsy()
       const errorMessage = queryByText('Bitte geben Sie ein gültiges Startdatum ein, das in der Vergangenheit liegt.')
       expect(errorMessage).toBeNull()
+    })
+
+    it('should not show error message when startDay is minStartDay', () => {
+      const startDay = minStartDay
+      const { queryByText, getByDisplayValue } = renderWithTranslation(
+        <StartDayExtension.Component {...defaultProps} value={{ startDay }} />,
+        { wrapper }
+      )
+      const datePicker = getByDisplayValue(startDay.format())
+      fireEvent.blur(datePicker)
+      expect(StartDayExtension.isValid({ startDay })).toBeTruthy()
+      expect(
+        queryByText(`Das Startdatum darf nicht weiter als ${startDay.format()} in der Vergangenheit liegen.`)
+      ).toBeNull()
     })
 
     it('should call setValue when date is changed', () => {
@@ -115,22 +133,8 @@ describe('StartDayExtension', () => {
 
       it('should result in minStartDay if no startDay is provided', () => {
         expect(StartDayExtension.getProtobufData({ startDay: null })).toEqual({
-          extensionStartDay: { startDay: 18424 },
+          extensionStartDay: { startDay: minStartDay.toDaysSinceEpoch() },
         })
-      })
-    })
-
-    describe('isValid', () => {
-      it('should be true if a valid startDay after minStartDay was provided', () => {
-        expect(StartDayExtension.isValid({ startDay: minStartDay })).toBeTruthy()
-      })
-
-      it('should be invalid if the provided startDay is before 1900', () => {
-        expect(StartDayExtension.isValid({ startDay: new PlainDate(1899, 1, 1) })).toBeFalsy()
-      })
-
-      it('should be invalid if no startDay was provided', () => {
-        expect(StartDayExtension.isValid({ startDay: null })).toBeFalsy()
       })
     })
 

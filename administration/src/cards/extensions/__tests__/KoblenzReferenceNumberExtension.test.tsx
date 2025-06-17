@@ -74,8 +74,23 @@ describe('KoblenzReferenceNumberExtension', () => {
       expect(getByText('Das Aktenzeichen enthält ungültige Sonderzeichen.')).toBeTruthy()
     })
 
-    it('should show error for invalid length', () => {
+    it('should show error if the value is too short', () => {
       const initialValue = '123'
+      const { getByDisplayValue, getByText } = renderWithTranslation(
+        <KoblenzReferenceNumberExtension.Component
+          value={{ koblenzReferenceNumber: initialValue }}
+          setValue={mockSetValue}
+          isValid={false}
+          showRequired
+        />
+      )
+      const input = getByDisplayValue(initialValue)
+      fireEvent.blur(input)
+      expect(getByText('Das Aktenzeichen muss eine Länge zwischen 4 und 15 haben.')).toBeTruthy()
+    })
+
+    it('should show error if the value exceeds the max length', () => {
+      const initialValue = '123KKdas22sdas23'
       const { getByDisplayValue, getByText } = renderWithTranslation(
         <KoblenzReferenceNumberExtension.Component
           value={{ koblenzReferenceNumber: initialValue }}
