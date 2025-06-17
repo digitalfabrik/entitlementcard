@@ -28,6 +28,7 @@
     "graphql": "^16.11.0",
     "i18next": "^23.16.8",
     "localforage": "^1.10.0",
+    "motion": "^12.18.1",
     "normalize.css": "^8.0.1",
     "notistack": "^3.0.2",
     "react": "^18.3.1",
