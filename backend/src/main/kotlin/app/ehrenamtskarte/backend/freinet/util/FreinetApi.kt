@@ -71,15 +71,16 @@ class FreinetApi(private val host: String, private val accessKey: String, privat
         firstName: String,
         lastName: String,
         dateOfBirth: String,
-        personalDataNode: JsonNode?,
+        personalDataNode: JsonNode,
         userEmail: String,
     ): Boolean {
-        val addressArrayNode = personalDataNode?.get("value")?.findValueByNameNode("address")
+        val addressArrayNode = personalDataNode.get("value").findValueByNameNode("address")
         val street = addressArrayNode?.findValueByName("street")
+        val houseNumber = addressArrayNode?.findValueByName("houseNumber")
         val postalCode = addressArrayNode?.findValueByName("postalCode")
         val location = addressArrayNode?.findValueByName("location")
-        val email = personalDataNode?.get("value")?.findValueByName("emailAddress")
-        val phone = personalDataNode?.get("value")?.findValueByName("telephone")
+        val email = personalDataNode.get("value").findValueByName("emailAddress")
+        val phone = personalDataNode.get("value").findValueByName("telephone")
 
         val currentDateTime = LocalDateTime
             .now()
@@ -102,7 +103,7 @@ class FreinetApi(private val host: String, private val accessKey: String, privat
           "geburtstag": "$dateOfBirth",
           "address": {
             "1": {
-              "adress_strasse": "$street",
+              "adress_strasse": "$street $houseNumber",
               "adress_plz": "$postalCode",
               "adress_ort": "$location",
               "adress_mail1": "$email",

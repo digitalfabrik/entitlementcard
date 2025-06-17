@@ -573,8 +573,8 @@
     "csvCreationError": "Etwas ist schiefgegangen beim Erstellen der CSV.",
     "freinetAgencyNotFound": "Diese Agentur konnte in Freinet nicht gefunden werden.",
     "freinetMultiplePersonError": "Der antragstellenden Person konnte keine Person in Freinet-Online eindeutig zugeordnet werden. Bitte aktualisieren Sie die Daten in Freinet-Online manuell.",
-    "freinetApiNotReachableError": "Die eingegebenen Daten stimmen nicht eindeutig mit einer Person in Freinet-Online überein. Bitte prüfen Sie die Angaben oder nehmen Sie die Aktualisierung direkt in Freinet-Online vor.",
-    "applicationDataIncompleteException": "Erforderliche Anwendungsdaten fehlen oder sind unvollständig."
+    "freinetApiNotReachableError": "Die Verbindung zu Freinet-Online konnte nicht hergestellt werden. Bitte aktualisieren Sie die Daten in Freinet-Online manuell.",
+    "applicationDataIncompleteException": "Erforderliche Antragsdaten fehlen oder sind unvollständig."
   },
   "applicationVerification": {
     "withdrawMessageForVerifier": "Der Antrag wurde vom Antragsteller am {{date}} zurückgezogen.",
