@@ -37,8 +37,7 @@ private const val TEST_USER_HASH = "\$argon2id\$v=19\$m=19456,t=2,p=1\$57YPIKvU/
 
 internal class UserImportTest : IntegrationTest() {
     private val app: Javalin = Javalin.create().apply {
-        val backendConfiguration = loadTestConfig()
-        post(USER_IMPORT_PATH) { ctx -> UserImportHandler(backendConfiguration).handle(ctx) }
+        post(USER_IMPORT_PATH) { ctx -> UserImportHandler(config).handle(ctx) }
     }
 
     private val admin = TestAdministrators.KOBLENZ_PROJECT_ADMIN
