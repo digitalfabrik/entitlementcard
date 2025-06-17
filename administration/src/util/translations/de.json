@@ -573,7 +573,7 @@
     "csvCreationError": "Etwas ist schiefgegangen beim Erstellen der CSV.",
     "freinetAgencyNotFound": "Diese Agentur konnte in Freinet nicht gefunden werden.",
     "freinetMultiplePersonError": "Der antragstellenden Person konnte keine Person in Freinet-Online eindeutig zugeordnet werden. Bitte aktualisieren Sie die Daten in Freinet-Online manuell.",
-    "freinetApiNotReachableError": "Die Verbindung zu Freinet-Online konnte nicht hergestellt werden. nehmen Sie die Aktualisierung direkt in Freinet-Online vor.",
+    "freinetApiNotReachableError": "Die Verbindung zu Freinet-Online konnte nicht hergestellt werden. Nehmen Sie die Aktualisierung direkt in Freinet-Online vor.",
     "applicationDataIncompleteException": "Erforderliche Antragsdaten fehlen oder sind unvollständig."
   },
   "applicationVerification": {
