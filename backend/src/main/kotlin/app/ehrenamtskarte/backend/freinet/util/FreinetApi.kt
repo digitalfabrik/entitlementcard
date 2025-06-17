@@ -137,7 +137,7 @@ class FreinetApi(private val host: String, private val accessKey: String, privat
                 true
             } catch (e: Exception) {
                 logger.devWarn("Error creating person in freinet $e")
-                false
+                throw FreinetApiNotReachableException()
             }
         }
     }
