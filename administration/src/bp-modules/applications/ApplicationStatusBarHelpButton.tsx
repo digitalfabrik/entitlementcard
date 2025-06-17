@@ -44,9 +44,9 @@ const ApplicationStatusHelpButton = (): ReactElement => {
               </Description>
             </li>
             <li>
-              <b>{t('withdrawed')}:</b>
+              <b>{t('withdrawn')}:</b>
               <Description>
-                {t('withdrawedDescription')}
+                {t('withdrawnDescription')}
                 <br />
                 {t('applicationCouldBeDeleted')}
               </Description>

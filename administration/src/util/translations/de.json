@@ -163,7 +163,7 @@
     "allApplications": "Alle Anträge",
     "accepted": "Akzeptiert",
     "rejected": "Abgelehnt",
-    "withdrawed": "Zurückgezogen",
+    "withdrawn": "Zurückgezogen",
     "open": "Offen",
     "status": "Status",
     "whichStatusMeansWhat": "Welcher Status hat welche Bedeutung?",
@@ -171,7 +171,7 @@
     "cardCouldBeCreated": "Die Karte kann erstellt werden.",
     "rejectedDescription": "Der Antrag wurde von allen Organisationen abgelehnt.",
     "applicationCouldBeDeleted": "Der Antrag kann gelöscht werden.",
-    "withdrawedDescription": "Der Antragssteller hat den Antrag zurückgezogen.",
+    "withdrawnDescription": "Der Antragssteller hat den Antrag zurückgezogen.",
     "pendingDescription": "Der Antrag wurde noch nicht von allen Organisationen geprüft.",
     "cardShouldNotYetBeCreated": "Die Karte sollte noch nicht erstellt werden.",
     "noApplicationsOfType": "Keine {{status}} Anträge vorhanden",
@@ -597,7 +597,7 @@
     "verificationNotFoundDescription": "Die Seite konnte nicht gefunden werden."
   },
   "applicationApplicant": {
-    "alreadyWithdrawed": "Der Antrag wurde bereits zurückgezogen.",
+    "alreadyWithdrawn": "Der Antrag wurde bereits zurückgezogen.",
     "headline": "Ihr Antrag auf die Ehrenamtskarte Bayern vom",
     "withdrawInformation": "Hier können Sie Ihren Antrag zurückziehen und Ihre Eingaben unwiderruflich löschen.",
     "withdrawApplication": "Antrag zurückziehen",
