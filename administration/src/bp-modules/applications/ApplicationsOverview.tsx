@@ -29,7 +29,7 @@ export const barItems: ApplicationStatusBarItemType[] = [
     status: ApplicationVerificationStatus.Rejected,
   },
   {
-    title: 'withdrawed',
+    title: 'withdrawn',
     status: ApplicationVerificationStatus.Withdrawn,
   },
   {

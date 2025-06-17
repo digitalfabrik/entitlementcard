@@ -35,13 +35,13 @@ const StyledDivider = styled(Divider)`
 type ApplicationApplicantViewProps = {
   application: GetApplicationsType
   providedKey: string
-  gotWithdrawed: () => void
+  gotWithdrawn: () => void
 }
 
 const ApplicationApplicantView = ({
   application,
   providedKey,
-  gotWithdrawed,
+  gotWithdrawn,
 }: ApplicationApplicantViewProps): ReactElement => {
   const { t } = useTranslation('applicationApplicant')
   const [dialogOpen, setDialogOpen] = useState<boolean>(false)
@@ -56,12 +56,12 @@ const ApplicationApplicantView = ({
       const { title } = getMessageFromApolloError(error)
       enqueueSnackbar(title, { variant: 'error' })
     },
-    onCompleted: ({ isWithdrawed }: { isWithdrawed: boolean }) => {
-      if (isWithdrawed) {
-        gotWithdrawed()
+    onCompleted: ({ isWithdrawn }: { isWithdrawn: boolean }) => {
+      if (isWithdrawn) {
+        gotWithdrawn()
       } else {
         console.error('Withdraw operation returned false.')
-        enqueueSnackbar(t('alreadyWithdrawed'), { variant: 'error' })
+        enqueueSnackbar(t('alreadyWithdrawn'), { variant: 'error' })
       }
     },
   })

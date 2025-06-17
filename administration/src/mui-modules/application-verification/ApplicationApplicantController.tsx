@@ -15,7 +15,7 @@ const CenteredMessage = styled(Alert)`
 
 const ApplicationApplicantController = ({ providedKey }: { providedKey: string }): ReactElement => {
   const { t } = useTranslation('applicationApplicant')
-  const [isWithdrawed, setIsWithdrawed] = useState<boolean>(false)
+  const [isWithdrawn, setIsWithdrawn] = useState<boolean>(false)
   const applicationQuery = useGetApplicationByApplicantQuery({
     variables: { accessKey: providedKey },
   })
@@ -26,15 +26,15 @@ const ApplicationApplicantController = ({ providedKey }: { providedKey: string }
   const application = applicationQueryHandler.data.application
 
   if (application.withdrawalDate) {
-    return <CenteredMessage>{t('alreadyWithdrawed')}</CenteredMessage>
+    return <CenteredMessage>{t('alreadyWithdrawn')}</CenteredMessage>
   }
-  if (isWithdrawed) {
+  if (isWithdrawn) {
     return <CenteredMessage>{t('withdrawConfirmation')}</CenteredMessage>
   }
   return (
     <ApplicationApplicantView
       application={application}
-      gotWithdrawed={() => setIsWithdrawed(true)}
+      gotWithdrawn={() => setIsWithdrawn(true)}
       providedKey={providedKey}
     />
   )
