@@ -329,7 +329,7 @@ jobs:
                 keys:
                     - v1-gradle-{{ checksum "build.gradle.kts" }}
             - run:
-                command: ./gradlew assemble
+                command: SENTRY_AUTH_TOKEN=$SENTRY_BACKEND_AUTH_TOKEN ./gradlew assemble
                 name: Build backend
             - save_cache:
                 key: v1-gradle-{{ checksum "build.gradle.kts" }}
@@ -899,6 +899,8 @@ workflows:
                 requires:
                     - bump_version
             - build_backend:
+                context:
+                    - credentials-ehrenamtskarte
                 requires:
                     - bump_version
             - build_android:
@@ -1000,6 +1002,8 @@ workflows:
                     - build_administration
             - check_backend
             - build_backend:
+                context:
+                    - credentials-ehrenamtskarte
                 requires:
                     - check_backend
             - pack_backend:
@@ -1047,6 +1051,8 @@ workflows:
                     - build_administration
             - check_backend
             - build_backend:
+                context:
+                    - credentials-ehrenamtskarte
                 requires:
                     - check_backend
             - pack_backend:
@@ -1158,6 +1164,8 @@ workflows:
                     - build_administration
             - check_backend
             - build_backend:
+                context:
+                    - credentials-ehrenamtskarte
                 requires:
                     - check_backend
             - pack_backend:

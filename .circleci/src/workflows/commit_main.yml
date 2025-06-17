@@ -12,6 +12,8 @@ jobs:
       requires:
         - bump_version
   - build_backend:
+      context:
+        - credentials-ehrenamtskarte
       requires:
         - bump_version
   - build_android:

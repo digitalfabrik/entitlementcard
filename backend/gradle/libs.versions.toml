@@ -62,7 +62,8 @@ org-junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = 
 org-junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit-jupiter" }
 org-piwik-java-tracking-matomo-java-tracker = "org.piwik.java.tracking:matomo-java-tracker:3.4.0"
 org-postgresql-postgresql = "org.postgresql:postgresql:42.7.6"
-org-simplejavamail = "org.simplejavamail:simple-java-mail:8.12.6"
+# 2273 occurs with 8.6.0 and higher
+org-simplejavamail = "org.simplejavamail:simple-java-mail:8.5.1"
 org-slf4j-simple = "org.slf4j:slf4j-simple:2.0.17"
 org-testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }
 org-testcontainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "testcontainers" }
