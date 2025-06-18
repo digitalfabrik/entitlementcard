@@ -1,21 +1,24 @@
 /* eslint-disable react/destructuring-assignment */
 import { MutationResult } from '@apollo/client'
-import { CreditScore, Delete, ExpandMore, InfoOutline, Print, Warning } from '@mui/icons-material'
+import { CreditScore, Delete, ExpandMore, InfoOutline, Print, Search, Warning } from '@mui/icons-material'
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Autocomplete,
   Box,
   Button,
   CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
+  DialogTitle,
   Divider,
+  InputAdornment,
   Stack,
+  TextField,
   Tooltip,
   Typography,
-  styled,
   useTheme,
 } from '@mui/material'
 import { format } from 'date-fns'
@@ -28,6 +31,7 @@ import {
   ApplicationStatus,
   useApproveApplicationStatusMutation,
   useDeleteApplicationMutation,
+  useRejectApplicationStatusMutation,
 } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import type { ProjectConfig } from '../../project-configs/getProjectConfig'
@@ -35,16 +39,13 @@ import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { useAppToaster } from '../AppToaster'
 import { AccordionExpandButton } from '../components/AccordionExpandButton'
+import { Spacer } from '../components/Spacer'
 import type { JsonField } from './JsonFieldView'
 import JsonFieldView from './JsonFieldView'
 import NoteDialogController from './NoteDialogController'
 import { ApplicationIndicators } from './VerificationsIndicator'
 import VerificationsView from './VerificationsView'
 import { GetApplicationsType } from './types'
-
-const Spacer = styled('div')`
-  flex-grow: 1;
-`
 
 const DeleteDialog = (p: {
   isOpen: boolean
@@ -78,11 +79,65 @@ const DeleteDialog = (p: {
   )
 }
 
-const ButtonsCardPending = ({
-  disabled,
-  onPrimaryButtonClick,
-  onSecondaryButtonClick,
-}: {
+const RejectionDialog = (p: {
+  open: boolean
+  loading: boolean
+  onConfirm: (reason: string) => void
+  onCancel: () => void
+}) => {
+  const { t } = useTranslation('applicationsOverview')
+  const rejectionMessages = t('rejectionReasons', { returnObjects: true }) as string[]
+  const [reason, reasonSet] = useState<string | null>(null)
+
+  return (
+    <Dialog open={p.open} aria-describedby='reject-dialog-description' fullWidth onClose={p.onCancel}>
+      <DialogTitle>{t('rejectionDialogTitle')}</DialogTitle>
+      <DialogContent id='reject-dialog-description'>
+        {t('rejectionDialogMessage')}
+        <Autocomplete
+          renderInput={params => (
+            <TextField
+              {...params}
+              variant='outlined'
+              label={t('rejectionInputHint')}
+              slotProps={{
+                input: {
+                  ...params.InputProps,
+                  size: 'small',
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <Search />
+                    </InputAdornment>
+                  ),
+                },
+              }}
+            />
+          )}
+          options={rejectionMessages}
+          sx={{ marginTop: 2 }}
+          onChange={(_, value) => reasonSet(value)}
+        />
+      </DialogContent>
+      <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
+        <Button variant='outlined' onClick={p.onCancel} disabled={p.loading}>
+          {t('misc:cancel')}
+        </Button>
+        <Button
+          variant='contained'
+          disabled={reason === null || p.loading}
+          onClick={() => {
+            if (reason !== null) {
+              p.onConfirm(reason)
+            }
+          }}>
+          {t('deleteApplication')}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  )
+}
+
+const ButtonsApplicationPending = (p: {
   disabled: boolean
   onPrimaryButtonClick: () => void
   onSecondaryButtonClick: () => void
@@ -95,29 +150,24 @@ const ButtonsCardPending = ({
         variant='contained'
         color='primary'
         startIcon={<CreditScore />}
-        disabled={disabled}
-        onClick={onPrimaryButtonClick}>
+        disabled={p.disabled}
+        onClick={p.onPrimaryButtonClick}>
         {t('applicationApprove')}
       </Button>
       <Button
-        hidden // TODO: #1982
         variant='outlined'
         startIcon={<Delete />}
         color='error'
-        disabled={disabled}
-        onClick={onSecondaryButtonClick}>
+        disabled={p.disabled}
+        onClick={p.onSecondaryButtonClick}>
         {t('applicationReject')}
       </Button>
     </>
   )
 }
 
-const ButtonsCardApproved = ({
-  cardAlreadyCreated,
-  primaryButtonHref,
-  onSecondaryButtonClick,
-}: {
-  cardAlreadyCreated: boolean
+const ButtonsApplicationResolved = (p: {
+  applicationStatus: ApplicationStatus | null | undefined // TODO Remove null|undefined once this type is narrowed
   primaryButtonHref: string | undefined
   onSecondaryButtonClick: () => void
 }) => {
@@ -125,20 +175,23 @@ const ButtonsCardApproved = ({
 
   return (
     <>
-      <Tooltip title={primaryButtonHref ? undefined : t('incompleteApplicationDataTooltip')}>
+      <Tooltip title={p.primaryButtonHref ? undefined : t('incompleteApplicationDataTooltip')}>
         {/* Make the outer Tooltip independent of the button's disabled state */}
         <span>
-          <Button
-            color='primary'
-            variant='contained'
-            disabled={primaryButtonHref === undefined}
-            href={primaryButtonHref}
-            startIcon={<CreditScore />}>
-            {cardAlreadyCreated ? t('createCardAgain') : t('createCard')}
-          </Button>
+          {(p.applicationStatus === ApplicationStatus.Approved ||
+            p.applicationStatus === ApplicationStatus.ApprovedCardCreated) && (
+            <Button
+              color='primary'
+              variant='contained'
+              disabled={p.primaryButtonHref === undefined}
+              href={p.primaryButtonHref}
+              startIcon={<CreditScore />}>
+              {p.applicationStatus === ApplicationStatus.ApprovedCardCreated ? t('createCardAgain') : t('createCard')}
+            </Button>
+          )}
         </span>
       </Tooltip>
-      <Button onClick={onSecondaryButtonClick} startIcon={<Delete />} variant='outlined' color='error'>
+      <Button onClick={p.onSecondaryButtonClick} startIcon={<Delete />} variant='outlined' color='error'>
         {t('deleteApplication')}
       </Button>
     </>
@@ -177,21 +230,19 @@ const createCardLink = (
   return query ? `./cards/add${query}&applicationIdToMarkAsProcessed=${applicationId}` : undefined
 }
 
-export type ApplicationCardProps = {
-  application: GetApplicationsType
-  isSelectedForPrint: boolean
-  onDelete: () => void
-  onChange: (application: GetApplicationsType) => void
-  onPrintApplicationById: (applicationId: number) => void
-}
-
 const ApplicationCard = ({
   application,
   isSelectedForPrint,
   onDelete,
   onChange,
   onPrintApplicationById,
-}: ApplicationCardProps) => {
+}: {
+  application: GetApplicationsType
+  isSelectedForPrint: boolean
+  onDelete: () => void
+  onChange: (application: GetApplicationsType) => void
+  onPrintApplicationById: (applicationId: number) => void
+}) => {
   const { t } = useTranslation('applicationsOverview')
   const theme = useTheme()
   const jsonValueParsed: JsonField<'Array'> = JSON.parse(application.jsonValue)
@@ -199,6 +250,7 @@ const ApplicationCard = ({
   const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${application.id}`
   const appToaster = useAppToaster()
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [rejectionDialogOpen, rejectionDialogOpenSet] = useState(false)
   const [openNoteDialog, setOpenNoteDialog] = useState(false)
   const [accordionExpanded, accordionExpandedSet] = useState(false)
 
@@ -226,6 +278,19 @@ const ApplicationCard = ({
       // Update the application with new fields from the query
       onChange({ ...application, ...result.updates })
       appToaster?.show({ intent: 'success', message: t('applicationApprovedToastMessage') })
+    },
+  })
+
+  const [rejectStatus, rejectStatusResult] = useRejectApplicationStatusMutation({
+    onError: error => {
+      const { title } = getMessageFromApolloError(error)
+      appToaster?.show({ intent: 'danger', message: title })
+    },
+    onCompleted: result => {
+      rejectionDialogOpenSet(false)
+      // Update the application with new fields from the query
+      onChange({ ...application, ...result.updates })
+      appToaster?.show({ intent: 'success', message: t('applicationRejectedToastMessage') })
     },
   })
 
@@ -323,26 +388,22 @@ const ApplicationCard = ({
 
         <Stack sx={{ p: 2, displayPrint: 'none' }} spacing={2} direction='row'>
           {application.status === ApplicationStatus.Pending ? (
-            <ButtonsCardPending
+            <ButtonsApplicationPending
               disabled={approveStatusResult.loading}
               onPrimaryButtonClick={() => {
                 approveStatus({ variables: { applicationId: application.id } })
               }}
               onSecondaryButtonClick={() => {
-                // TODO: #1982
-                // resolveStatus({ variables: { applicationId: application.id, approve: false } })
+                rejectionDialogOpenSet(true)
               }}
             />
-          ) : undefined}
-
-          {application.status === ApplicationStatus.Approved ||
-          application.status === ApplicationStatus.ApprovedCardCreated ? (
-            <ButtonsCardApproved
-              cardAlreadyCreated={application.status === ApplicationStatus.ApprovedCardCreated}
+          ) : (
+            <ButtonsApplicationResolved
+              applicationStatus={application.status}
               primaryButtonHref={createCardLink(application.id, jsonValueParsed, config)}
               onSecondaryButtonClick={() => setDeleteDialogOpen(true)}
             />
-          ) : undefined}
+          )}
 
           <Button
             onClick={() => onPrintApplicationById(application.id)}
@@ -358,6 +419,17 @@ const ApplicationCard = ({
           deleteResult={deleteResult}
           onConfirm={() => deleteApplication({ variables: { applicationId: application.id } })}
           onCancel={() => setDeleteDialogOpen(false)}
+        />
+
+        <RejectionDialog
+          open={rejectionDialogOpen}
+          loading={rejectStatusResult.loading}
+          onConfirm={message => {
+            rejectStatus({ variables: { applicationId: application.id, rejectionMessage: message } })
+          }}
+          onCancel={() => {
+            rejectionDialogOpenSet(false)
+          }}
         />
       </AccordionDetails>
     </Accordion>
