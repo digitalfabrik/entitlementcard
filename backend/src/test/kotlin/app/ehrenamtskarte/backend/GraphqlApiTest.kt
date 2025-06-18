@@ -10,8 +10,11 @@ import io.javalin.testtools.HttpClient
 import java.io.File
 
 open class GraphqlApiTest : IntegrationTest() {
+    companion object {
+        private val graphQLHandler = GraphQLHandler(config)
+    }
+
     protected val app: Javalin = Javalin.create().apply {
-        val graphQLHandler = GraphQLHandler(config)
         post("/") { ctx ->
             graphQLHandler.handle(ctx, applicationData = File("dummy"))
         }
