@@ -4,9 +4,8 @@ import styled from 'styled-components'
 
 import ApplicationStatusHelpButton from './ApplicationStatusBarHelpButton'
 import ApplicationStatusBarItem from './ApplicationStatusBarItem'
-import type { Application } from './ApplicationsOverview'
-import { ApplicationStatus, ApplicationStatusBarItemType } from './constants'
-import { getApplicationStatus, getVerificationStatus } from './utils'
+import { ApplicationStatusBarItemType, ApplicationVerificationStatus, GetApplicationsType } from './types'
+import { applicationEffectiveStatus } from './utils'
 
 const Container = styled.div`
   display: flex;
@@ -37,22 +36,19 @@ const Title = styled.span`
   font-weight: bold;
 `
 
-type ApplicationStatusBarProps = {
-  applications: Application[]
-  setActiveBarItem: (item: ApplicationStatusBarItemType) => void
-  activeBarItem: ApplicationStatusBarItemType
-  barItems: ApplicationStatusBarItemType[]
-}
+const applicationsWithStatusCount = (
+  applications: GetApplicationsType[],
+  status?: ApplicationVerificationStatus
+): number =>
+  status === undefined
+    ? applications.length
+    : applications.reduce((count, a) => count + (applicationEffectiveStatus(a) === status ? 1 : 0), 0)
 
-const getApplicationCount = (applications: Application[], status?: ApplicationStatus): number => {
-  if (status === undefined) {
-    return applications.length
-  }
-  return applications.filter(
-    application =>
-      getApplicationStatus(application.verifications.map(getVerificationStatus), !!application.withdrawalDate) ===
-      status
-  ).length
+type ApplicationStatusBarProps = {
+  applications: GetApplicationsType[]
+  barItems: ApplicationStatusBarItemType[]
+  activeBarItem: ApplicationStatusBarItemType
+  setActiveBarItem: (item: ApplicationStatusBarItemType) => void
 }
 
 const ApplicationStatusBar = ({
@@ -70,7 +66,7 @@ const ApplicationStatusBar = ({
         {barItems.map(item => (
           <ApplicationStatusBarItem
             key={item.title}
-            count={getApplicationCount(applications, item.status)}
+            count={applicationsWithStatusCount(applications, item.status)}
             item={item}
             setActiveBarItem={setActiveBarItem}
             active={item === activeBarItem}

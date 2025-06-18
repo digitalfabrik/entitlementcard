@@ -1,3 +1,3 @@
 mutation withdrawApplication($accessKey: String!) {
-  isWithdrawed: withdrawApplication(accessKey: $accessKey)
+  isWithdrawn: withdrawApplication(accessKey: $accessKey)
 }

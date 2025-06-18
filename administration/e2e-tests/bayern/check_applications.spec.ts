@@ -89,7 +89,7 @@ test.describe('Bayern regional admin', () => {
     await expect(page.locator('#allApplications')).toContainText('Alle Anträge')
     await expect(page.locator('#accepted')).toContainText('Akzeptiert')
     await expect(page.locator('#rejected')).toContainText('Abgelehnt')
-    await expect(page.locator('#withdrawed')).toContainText('Zurückgezogen')
+    await expect(page.locator('#withdrawn')).toContainText('Zurückgezogen')
     await expect(page.locator('#open')).toContainText('Offen')
     await page.getByRole('button').filter({ hasText: /^$/ }).click()
     await expect(page.locator('body')).toContainText('Welcher Status hat welche Bedeutung?')

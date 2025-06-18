@@ -1,32 +1,24 @@
 import { Tooltip } from '@blueprintjs/core'
 import { EditNote } from '@mui/icons-material'
-import { Button } from '@mui/material'
+import { Button, styled } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useUpdateApplicationNoteMutation } from '../../generated/graphql'
 import { useAppToaster } from '../AppToaster'
 import TextAreaDialog from '../components/TextAreaDialog'
-import type { Application } from './ApplicationsOverview'
-
-const NoteButton = styled(Button)`
-  align-self: flex-start;
-  @media print {
-    display: none;
-  }
-`
+import { GetApplicationsType } from './types'
 
 const MultilineContent = styled(Tooltip)`
   white-space: pre-wrap;
 `
 
 type NoteDialogControllerProps = {
-  application: Application
+  application: GetApplicationsType
   isOpen: boolean
   onOpenNoteDialog: (value: boolean) => void
-  onChange: (application: Application) => void
+  onChange: (application: GetApplicationsType) => void
 }
 
 const EXCERPT_LENGTH = 80
@@ -68,14 +60,14 @@ const NoteDialogController = ({
   return (
     <>
       <Tooltip content={toolTipContent}>
-        <NoteButton
+        <Button
           variant='contained'
           color='default'
           onClick={() => onOpenNoteDialog(true)}
           startIcon={<EditNote />}
           sx={{ displayPrint: 'none' }}>
           Notiz anzeigen
-        </NoteButton>
+        </Button>
       </Tooltip>
       {isOpen && (
         <TextAreaDialog

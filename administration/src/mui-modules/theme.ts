@@ -21,6 +21,7 @@ export const theme = createTheme({
       main: '#EEEEEE',
       light: '#f0f0f0',
       dark: '#dddddd',
+      contrastText: '#5C6065',
     },
     defaultInverted: {
       main: '#1c2127',
