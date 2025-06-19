@@ -5,7 +5,11 @@ import app.ehrenamtskarte.backend.common.utils.devWarn
 import app.ehrenamtskarte.backend.common.utils.findValueByName
 import app.ehrenamtskarte.backend.common.utils.findValueByNameNode
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetApiNotReachableException
+import app.ehrenamtskarte.backend.freinet.webservice.schema.types.FreinetAddress
+import app.ehrenamtskarte.backend.freinet.webservice.schema.types.FreinetPerson
+import app.ehrenamtskarte.backend.freinet.webservice.schema.types.FreinetProtocol
 import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpRequestRetry
@@ -86,40 +90,39 @@ class FreinetApi(private val host: String, private val accessKey: String, privat
             .now()
             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
 
-        val requestBody = """
-      {
-        "init": {
-          "apiVersion": "3.0",
-          "agencyID": "$agencyId",
-          "accessKey": "$accessKey",
-          "modul": "personen", 
-          "author": "TuerAnTuer",
-          "author_mail": "berechtigungskarte@tuerantuer.org"
-        },
-        "person": {
-          "user_status": "1",
-          "vorname": "$firstName",
-          "nachname": "$lastName",
-          "geburtstag": "$dateOfBirth",
-          "address": {
-            "1": {
-              "adress_strasse": "$street $houseNumber",
-              "adress_plz": "$postalCode",
-              "adress_ort": "$location",
-              "adress_mail1": "$email",
-              "adress_tel_p": "$phone"
-            }
-          }
-        },
-        "protokoll": {
-          "1": {
-            "title": "Erstellung des Nutzers durch Ehrenamtskarte Bayern von $userEmail",
-            "date": "$currentDateTime"
-          }
-        }
-      }
-        """.trimIndent()
+        val address = FreinetAddress(
+            adress_strasse = listOfNotNull(street, houseNumber).joinToString(" ").trim().takeIf { it.isNotBlank() },
+            adress_plz = postalCode,
+            adress_ort = location,
+            adress_mail1 = email,
+            adress_tel_p = phone,
+        )
 
+        val person = FreinetPerson(
+            vorname = firstName,
+            nachname = lastName,
+            geburtstag = dateOfBirth,
+            address = mapOf("1" to address),
+        )
+
+        val protocolEntry = FreinetProtocol(
+            title = "Erstellung des Nutzers durch Ehrenamtskarte Bayern von $userEmail",
+            date = currentDateTime,
+        )
+
+        val body: ObjectNode = objectMapper.createObjectNode()
+        body.putObject("init").apply {
+            put("apiVersion", "3.0")
+            put("agencyID", agencyId)
+            put("accessKey", accessKey)
+            put("modul", "personen")
+            put("author", "TuerAnTuer")
+            put("author_mail", "berechtigungskarte@tuerantuer.org")
+        }
+        body.set<ObjectNode>("person", objectMapper.valueToTree(person))
+        body.set<ObjectNode>("protokoll", objectMapper.valueToTree(mapOf("1" to protocolEntry)))
+
+        val requestBody = objectMapper.writeValueAsString(body)
         return runBlocking {
             try {
                 val response = httpClient.request {
