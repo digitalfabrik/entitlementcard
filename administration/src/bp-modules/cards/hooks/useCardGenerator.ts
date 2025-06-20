@@ -116,10 +116,8 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
 
         if (region.activatedForCardConfirmationMail) {
           await sendConfirmationMails(codes, cards)
-        }
-
-        // print deep links in the console for testing purposes
-        else if (!isProductionEnvironment()) {
+        } else if (!isProductionEnvironment()) {
+          // print deep links in the console for testing purposes
           codes.forEach(code =>
             getDeepLinkFromQrCode({ case: 'dynamicActivationCode', value: code.dynamicActivationCode })
           )
