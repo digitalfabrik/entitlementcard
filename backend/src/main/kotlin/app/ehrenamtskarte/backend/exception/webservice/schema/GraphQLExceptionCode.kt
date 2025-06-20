@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.exception.webservice.schema
 
 enum class GraphQLExceptionCode {
+    APPLICATION_DATA_INCOMPLETE,
     EMAIL_ALREADY_EXISTS,
     FREINET_AGENCY_NOT_FOUND,
     FREINET_API_NOT_REACHABLE,
