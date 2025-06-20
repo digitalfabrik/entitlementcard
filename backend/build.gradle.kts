@@ -5,6 +5,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
  *
  * This generated file contains a sample Kotlin application project to get you started.
  */
+val isProductionEnvironment = System.getProperty("env") == "prod"
 
 plugins {
     alias(libs.plugins.com.google.protobuf)
@@ -88,15 +89,17 @@ ktlint {
     }
 }
 
-sentry {
-    // Generates a JVM (Java, Kotlin, etc.) source bundle and uploads your source code to Sentry.
-    // This enables source context, allowing you to see your source
-    // code as part of your stack traces in Sentry.
-    includeSourceContext = true
+if (isProductionEnvironment) {
+    sentry {
+        // Generates a JVM (Java, Kotlin, etc.) source bundle and uploads your source code to Sentry.
+        // This enables source context, allowing you to see your source
+        // code as part of your stack traces in Sentry.
+        includeSourceContext = true
 
-    org = "digitalfabrik"
-    projectName = "entitlementcard-backend"
-    authToken = System.getenv("SENTRY_AUTH_TOKEN")
+        org = "digitalfabrik"
+        projectName = "entitlementcard-backend"
+        authToken = System.getenv("SENTRY_AUTH_TOKEN")
+    }
 }
 
 sourceSets {
