@@ -39,9 +39,17 @@ In `frontend/iOS`  run `bundle exec fastlane match appstore` .
 
 - Create a release branch on current main: `release-<version> f.e. "release-2024.11.1`  (check out how to determine next version [here](./cicd.md#determining-the-next-version))
 - Create PR to main branch
-- Trigger `delivery_beta_all` workflow or `delivery_beta_natve` or `delivery_beta_backend_administration` if you just want to create a release artifact for a particular platform.
+- Trigger `run_delivery_beta_all` workflow or `run_delivery_beta_frontend` or `run_delivery_beta_backend_administration` if you just want to create a release artifact for a particular platform.
 
 Hint: Since we want to keep all our platforms on the same version, try to avoid single platform releases.
+
+## Create a hotfix release
+- Get the latest tag: `git tag --sort=-creatordate`
+- Create a branch from the latest release tag. For example: `git checkout -b 2025.6.4-hotfix 2025.6.4-all`
+- Make the fixes and commit your changes
+- Create a pr for your hotfix branch
+- Trigger workflow `run_delivery_beta_all` or if you just want to release a particular platform `run_delivery_beta_frontend` or `run_delivery_beta_backend_administration`.
+- Delete the generated release notes (since they were compared with main branch) and add the changes manually. Please refer to your release pull request to identify the actual changes.
 
 ### Frontend
 
