@@ -55,7 +55,7 @@ describe('BirthdayExtension', () => {
     })
 
     it('should not show error if no birthday is provided and showRequired is false', () => {
-      const { queryByText } = renderWithTranslation(
+      const { queryByTestId } = renderWithTranslation(
         <BirthdayExtension.Component
           showRequired={false}
           setValue={setValue}
@@ -65,7 +65,7 @@ describe('BirthdayExtension', () => {
         { wrapper }
       )
       expect(BirthdayExtension.isValid({ birthday: null })).toBeFalsy()
-      expect(queryByText('Bitte geben Sie ein gültiges Geburtsdatum an.')).toBeNull()
+      expect(queryByTestId('form-alert')).toBeNull()
     })
 
     it('should show error if no birthday is provided, showRequired is false and user left field', () => {
@@ -100,16 +100,16 @@ describe('BirthdayExtension', () => {
     })
 
     it('should not show error if provided birthday is today', () => {
-      const { queryByText } = renderWithTranslation(
+      const { queryByTestId } = renderWithTranslation(
         <BirthdayExtension.Component showRequired setValue={setValue} isValid={false} value={{ birthday: today }} />,
         { wrapper }
       )
       expect(BirthdayExtension.isValid({ birthday: today })).toBeTruthy()
-      expect(queryByText('Das Geburtsdatum darf nicht in der Zukunft liegen.')).toBeNull()
+      expect(queryByTestId('form-alert')).toBeNull()
     })
 
     it('should not show error if provided birthday is minBirthday', () => {
-      const { queryByText } = renderWithTranslation(
+      const { queryByTestId } = renderWithTranslation(
         <BirthdayExtension.Component
           showRequired
           setValue={setValue}
@@ -119,17 +119,17 @@ describe('BirthdayExtension', () => {
         { wrapper }
       )
       expect(BirthdayExtension.isValid({ birthday: minBirthday })).toBeTruthy()
-      expect(queryByText('Das Geburtsdatum darf nicht vor dem 01.01.1900 liegen.')).toBeNull()
+      expect(queryByTestId('form-alert')).toBeNull()
     })
 
     it('should not show error if a correct birthday is provided', () => {
       const birthday = new PlainDate(2020, 1, 1)
-      const { queryByText } = renderWithTranslation(
+      const { queryByTestId } = renderWithTranslation(
         <BirthdayExtension.Component showRequired setValue={setValue} isValid={false} value={{ birthday }} />,
         { wrapper }
       )
       expect(BirthdayExtension.isValid({ birthday })).toBeTruthy()
-      expect(queryByText('Bitte geben Sie ein gültiges Geburtsdatum an.')).toBeNull()
+      expect(queryByTestId('form-alert')).toBeNull()
     })
 
     it('should show error if provided birthday is in the future', () => {
@@ -147,6 +147,7 @@ describe('BirthdayExtension', () => {
         <BirthdayExtension.Component showRequired setValue={setValue} isValid value={{ birthday: today }} />,
         { wrapper, projectConfig: koblenzConfig }
       )
+      expect(BirthdayExtension.isValid({ birthday: today })).toBeTruthy()
       expect(
         getByText(
           'Bei Minderjährigen unter 16 Jahren darf der KoblenzPass nur mit Einverständnis der Erziehungsberechtigten abgerufen werden.'

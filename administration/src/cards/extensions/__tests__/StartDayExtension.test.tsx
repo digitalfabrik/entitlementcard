@@ -83,26 +83,26 @@ describe('StartDayExtension', () => {
     })
 
     it('should not show error message when form is invalid but untouched', () => {
-      const { queryByText } = renderWithTranslation(<StartDayExtension.Component {...defaultProps} isValid={false} />, {
-        wrapper,
-      })
+      const { queryByTestId } = renderWithTranslation(
+        <StartDayExtension.Component {...defaultProps} isValid={false} />,
+        {
+          wrapper,
+        }
+      )
       expect(StartDayExtension.isValid({ startDay: null })).toBeFalsy()
-      const errorMessage = queryByText('Bitte geben Sie ein gültiges Startdatum ein, das in der Vergangenheit liegt.')
-      expect(errorMessage).toBeNull()
+      expect(queryByTestId('form-alert')).toBeNull()
     })
 
     it('should not show error message when startDay is minStartDay', () => {
       const startDay = minStartDay
-      const { queryByText, getByDisplayValue } = renderWithTranslation(
+      const { queryByTestId, getByDisplayValue } = renderWithTranslation(
         <StartDayExtension.Component {...defaultProps} value={{ startDay }} />,
         { wrapper }
       )
       const datePicker = getByDisplayValue(startDay.format())
       fireEvent.blur(datePicker)
       expect(StartDayExtension.isValid({ startDay })).toBeTruthy()
-      expect(
-        queryByText(`Das Startdatum darf nicht weiter als ${startDay.format()} in der Vergangenheit liegen.`)
-      ).toBeNull()
+      expect(queryByTestId('form-alert')).toBeNull()
     })
 
     it('should call setValue when date is changed', () => {

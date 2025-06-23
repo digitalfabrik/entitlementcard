@@ -17,6 +17,11 @@ describe('KoblenzReferenceNumberExtension', () => {
           showRequired={false}
         />
       )
+      expect(
+        KoblenzReferenceNumberExtension.isValid({
+          koblenzReferenceNumber: '',
+        })
+      ).toBe(false)
       expect(getByLabelText('Aktenzeichen')).toBeTruthy()
     })
 
@@ -29,6 +34,11 @@ describe('KoblenzReferenceNumberExtension', () => {
           showRequired={false}
         />
       )
+      expect(
+        KoblenzReferenceNumberExtension.isValid({
+          koblenzReferenceNumber: '',
+        })
+      ).toBe(false)
       expect(getByPlaceholderText('5.031.025.281, 000D000001, 91459')).toBeTruthy()
     })
 
@@ -43,12 +53,17 @@ describe('KoblenzReferenceNumberExtension', () => {
       )
       const input = getByLabelText('Aktenzeichen')
       fireEvent.change(input, { target: { value: '12345' } })
+      expect(
+        KoblenzReferenceNumberExtension.isValid({
+          koblenzReferenceNumber: '12345',
+        })
+      ).toBe(true)
       expect(mockSetValue).toHaveBeenCalledWith({ koblenzReferenceNumber: '12345' })
     })
 
     it('should not show error message if field was not left and required is false', () => {
       const initialValue = '123@45'
-      const { queryByText } = renderWithTranslation(
+      const { queryByTestId } = renderWithTranslation(
         <KoblenzReferenceNumberExtension.Component
           value={{ koblenzReferenceNumber: initialValue }}
           setValue={mockSetValue}
@@ -56,7 +71,12 @@ describe('KoblenzReferenceNumberExtension', () => {
           showRequired={false}
         />
       )
-      expect(queryByText('Das Aktenzeichen enthält ungültige Sonderzeichen.')).toBeNull()
+      expect(
+        KoblenzReferenceNumberExtension.isValid({
+          koblenzReferenceNumber: initialValue,
+        })
+      ).toBe(false)
+      expect(queryByTestId('form-alert')).toBeNull()
     })
 
     it('should show error for special characters', () => {
@@ -71,6 +91,11 @@ describe('KoblenzReferenceNumberExtension', () => {
       )
       const input = getByDisplayValue(initialValue)
       fireEvent.blur(input)
+      expect(
+        KoblenzReferenceNumberExtension.isValid({
+          koblenzReferenceNumber: initialValue,
+        })
+      ).toBe(false)
       expect(getByText('Das Aktenzeichen enthält ungültige Sonderzeichen.')).toBeTruthy()
     })
 
@@ -86,6 +111,11 @@ describe('KoblenzReferenceNumberExtension', () => {
       )
       const input = getByDisplayValue(initialValue)
       fireEvent.blur(input)
+      expect(
+        KoblenzReferenceNumberExtension.isValid({
+          koblenzReferenceNumber: initialValue,
+        })
+      ).toBe(false)
       expect(getByText('Das Aktenzeichen muss eine Länge zwischen 4 und 15 haben.')).toBeTruthy()
     })
 
@@ -101,6 +131,11 @@ describe('KoblenzReferenceNumberExtension', () => {
       )
       const input = getByDisplayValue(initialValue)
       fireEvent.blur(input)
+      expect(
+        KoblenzReferenceNumberExtension.isValid({
+          koblenzReferenceNumber: initialValue,
+        })
+      ).toBe(false)
       expect(getByText('Das Aktenzeichen muss eine Länge zwischen 4 und 15 haben.')).toBeTruthy()
     })
 
@@ -117,29 +152,6 @@ describe('KoblenzReferenceNumberExtension', () => {
       const clearButton = getByRole('button')
       fireEvent.click(clearButton)
       expect(mockSetValue).toHaveBeenCalledWith({ koblenzReferenceNumber: '' })
-    })
-
-    describe('isValid', () => {
-      it('should return true for valid reference number', () => {
-        const result = KoblenzReferenceNumberExtension.isValid({
-          koblenzReferenceNumber: '12345',
-        })
-        expect(result).toBe(true)
-      })
-
-      it('should return false for reference number with special characters', () => {
-        const result = KoblenzReferenceNumberExtension.isValid({
-          koblenzReferenceNumber: '123@45',
-        })
-        expect(result).toBe(false)
-      })
-
-      it('should return false for too short reference number', () => {
-        const result = KoblenzReferenceNumberExtension.isValid({
-          koblenzReferenceNumber: '123',
-        })
-        expect(result).toBe(false)
-      })
     })
 
     describe('getInitializeState', () => {
