@@ -72,7 +72,7 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
   const [sendToFreinet] = useSendApplicationDataToFreinetMutation({
     onCompleted: data => {
       if (data.sendApplicationDataToFreinet === true) {
-        appToaster?.show({ intent: 'success', message: t('freinetDataSyncSuccessMessage'), timeout: 0 })
+        appToaster?.show({ intent: 'success', message: t('freinetDataSyncSuccessMessage') })
       }
     },
     onError: error => {
