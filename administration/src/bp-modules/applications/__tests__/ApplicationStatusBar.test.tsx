@@ -2,10 +2,10 @@ import React from 'react'
 
 import { renderWithTranslation } from '../../../testing/render'
 import ApplicationStatusBar from '../ApplicationStatusBar'
-import { Application } from '../ApplicationsOverview'
-import { barItems } from '../constants'
+import { barItems } from '../ApplicationsOverview'
+import { GetApplicationsType } from '../types'
 
-const applications: Application[] = [
+const applications: GetApplicationsType[] = [
   {
     createdDate: '2024-05-15T09:20:23.350015Z',
     id: 1,
@@ -100,7 +100,7 @@ describe('ApplicationStatusBar', () => {
     const openApplicationsCount = getByTestId('status-Offen-count')
     expect(openApplicationsCount).toHaveTextContent('1')
   })
-  it('Should show the correct count for withdrawed applications', () => {
+  it('Should show the correct count for withdrawn applications', () => {
     const { getByTestId } = renderWithTranslation(
       <ApplicationStatusBar
         applications={applications}
@@ -109,8 +109,8 @@ describe('ApplicationStatusBar', () => {
         activeBarItem={barItems[0]}
       />
     )
-    const withdrawedApplicationsCount = getByTestId('status-Zurückgezogen-count')
-    expect(withdrawedApplicationsCount).toHaveTextContent('1')
+    const withdrawnApplicationsCount = getByTestId('status-Zurückgezogen-count')
+    expect(withdrawnApplicationsCount).toHaveTextContent('1')
   })
   it('Should show the correct count for rejected applications', () => {
     const { getByTestId } = renderWithTranslation(
