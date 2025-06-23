@@ -200,6 +200,7 @@
     "organization": "Organisation",
     "eMail": "E-Mail",
     "none": "keine",
+    "resendApprovalRequest": "Anfrage erneut senden",
     "applicationApprove": "Antrag bestätigen",
     "applicationReject": "Antrag ablehnen",
     "applicationApprovedToastMessage": "Der Antrag wurde genehmigt.",

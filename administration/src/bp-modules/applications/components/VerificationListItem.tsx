@@ -1,10 +1,13 @@
 import { Colors } from '@blueprintjs/core'
+import ForwardToInboxIcon from '@mui/icons-material/ForwardToInbox'
+import { Button } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import { ApplicationVerificationView } from '../../../generated/graphql'
 import EmailLink from '../../EmailLink'
+import { VerificationStatus } from '../types'
 import { verificationStatus } from '../utils'
 import { isEmailValid } from '../utils/verificationHelper'
 import VerificationIndicator from './VerificationIndicator'
@@ -57,6 +60,22 @@ const VerificationListItem = ({ verification }: VerificationListItemProps): Reac
               <VerificationIndicator status={status} text={` ${text}`} />
             </td>
           </tr>
+          {status === VerificationStatus.Pending && (
+            <tr>
+              <td>
+                <Button
+                  variant='contained'
+                  color='default'
+                  onClick={() => {
+                    console.log(status)
+                  }}
+                  startIcon={<ForwardToInboxIcon />}
+                  sx={{ displayPrint: 'none' }}>
+                  {t('resendApprovalRequest')}
+                </Button>
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
     </ListItem>
