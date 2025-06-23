@@ -100,7 +100,7 @@ const ButtonsCardPending = ({
         {t('applicationApprove')}
       </Button>
       <Button
-        hidden // TODO: #1982
+        sx={{ display: 'none' }} // TODO: #1982
         variant='outlined'
         startIcon={<Delete />}
         color='error'
