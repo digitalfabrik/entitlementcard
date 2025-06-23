@@ -11,7 +11,7 @@ import type { Extension, ExtensionComponentProps } from './extensions'
 export const BIRTHDAY_EXTENSION_NAME = 'birthday'
 export type BirthdayExtensionState = { [BIRTHDAY_EXTENSION_NAME]: PlainDate | null }
 
-const minBirthday = new PlainDate(1900, 1, 1)
+export const minBirthday = new PlainDate(1900, 1, 1)
 
 const BirthdayForm = ({
   value,

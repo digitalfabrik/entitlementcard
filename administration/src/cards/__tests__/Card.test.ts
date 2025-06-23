@@ -1,10 +1,10 @@
-import { getTestRegion } from '../bp-modules/user-settings/__mocks__/Region'
-import { BavariaCardType } from '../generated/card_pb'
-import { Region } from '../generated/graphql'
-import bayernConfig from '../project-configs/bayern/config'
-import koblenzConfig from '../project-configs/koblenz/config'
-import nuernbergConfig from '../project-configs/nuernberg/config'
-import PlainDate from '../util/PlainDate'
+import { getTestRegion } from '../../bp-modules/user-settings/__mocks__/Region'
+import { BavariaCardType } from '../../generated/card_pb'
+import { Region } from '../../generated/graphql'
+import bayernConfig from '../../project-configs/bayern/config'
+import koblenzConfig from '../../project-configs/koblenz/config'
+import nuernbergConfig from '../../project-configs/nuernberg/config'
+import PlainDate from '../../util/PlainDate'
 import {
   MAX_NAME_LENGTH,
   generateCardInfo,
@@ -13,16 +13,16 @@ import {
   initializeCardFromCSV,
   isValid,
   isValueValid,
-} from './Card'
-import AddressExtensions from './extensions/AddressFieldExtensions'
-import BavariaCardTypeExtension, { BAVARIA_CARD_TYPE_EXTENSION_NAME } from './extensions/BavariaCardTypeExtension'
-import BirthdayExtension, { BIRTHDAY_EXTENSION_NAME } from './extensions/BirthdayExtension'
+} from '../Card'
+import AddressExtensions from '../extensions/AddressFieldExtensions'
+import BavariaCardTypeExtension, { BAVARIA_CARD_TYPE_EXTENSION_NAME } from '../extensions/BavariaCardTypeExtension'
+import BirthdayExtension, { BIRTHDAY_EXTENSION_NAME } from '../extensions/BirthdayExtension'
 import KoblenzReferenceNumberExtension, {
   KOBLENZ_REFERENCE_NUMBER_EXTENSION_NAME,
-} from './extensions/KoblenzReferenceNumberExtension'
-import NuernbergPassIdExtension from './extensions/NuernbergPassIdExtension'
-import RegionExtension, { REGION_EXTENSION_NAME } from './extensions/RegionExtension'
-import StartDayExtension from './extensions/StartDayExtension'
+} from '../extensions/KoblenzReferenceNumberExtension'
+import NuernbergPassIdExtension from '../extensions/NuernbergPassIdExtension'
+import RegionExtension, { REGION_EXTENSION_NAME } from '../extensions/RegionExtension'
+import StartDayExtension from '../extensions/StartDayExtension'
 
 jest.useFakeTimers({ now: new Date('2020-01-01') })
 
