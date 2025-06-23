@@ -18,7 +18,7 @@ steps:
       command: npm run check-circular-deps
   - run:
       name: Run tests and generate coverage report
-      command: npm run test:coverage -- --maxWorkers=2
+      command: npm run test:coverage -- --maxWorkers=1
   - store_artifacts:
       path: src/coverage
       destination: ~/attached_workspace/coverage
