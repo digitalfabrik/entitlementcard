@@ -47,7 +47,7 @@ Hint: Since we want to keep all our platforms on the same version, try to avoid 
 - Get the latest tag: `git tag --sort=-creatordate`
 - Create a branch from the latest release tag. For example: `git checkout -b 2025.6.4-hotfix 2025.6.4-all`
 - Make the fixes and commit your changes
-- Create a pull request for your hotfix branch
+- Create a PR for your hotfix branch
 - Open [CircleCI Entitlementcard Project](https://app.circleci.com/pipelines/github/digitalfabrik/entitlementcard) and select your branch
 - Click "Trigger pipeline" and set the particular workflow to `true`.
 - Choose `run_delivery_beta_all` for all platforms or `run_delivery_beta_frontend`, `run_delivery_beta_backend_administration` for the particular platform.
