@@ -18,6 +18,7 @@ import { ProjectConfigContext } from '../../../project-configs/ProjectConfigCont
 import { ProjectConfig } from '../../../project-configs/getProjectConfig'
 import { getCsvHeaders } from '../../../project-configs/helper'
 import downloadDataUri from '../../../util/downloadDataUri'
+import getDeepLinkFromQrCode from '../../../util/getDeepLinkFromQrCode'
 import { isProductionEnvironment, updateArrayItem } from '../../../util/helper'
 import { reportErrorToSentry } from '../../../util/sentry'
 import { useAppToaster } from '../../AppToaster'
@@ -115,6 +116,11 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
 
         if (region.activatedForCardConfirmationMail) {
           await sendConfirmationMails(codes, cards)
+        } else if (!isProductionEnvironment()) {
+          // print deep links in the console for testing purposes
+          codes.forEach(code =>
+            getDeepLinkFromQrCode({ case: 'dynamicActivationCode', value: code.dynamicActivationCode })
+          )
         }
 
         setCardGenerationStep('finished')
