@@ -99,7 +99,7 @@ const RejectionDialog = (p: {
 }) => {
   const { t } = useTranslation('applicationsOverview')
   const rejectionMessages = t('rejectionReasons', { returnObjects: true }) as string[]
-  const [reason, reasonSet] = useState<string | null>(null)
+  const [reason, setReason] = useState<string | null>(null)
 
   return (
     <Dialog open={p.open} aria-describedby='reject-dialog-description' fullWidth onClose={p.onCancel}>
@@ -127,7 +127,7 @@ const RejectionDialog = (p: {
           )}
           options={rejectionMessages}
           sx={{ marginTop: 2 }}
-          onChange={(_, value) => reasonSet(value)}
+          onChange={(_, value) => setReason(value)}
         />
       </DialogContent>
       <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
@@ -263,9 +263,9 @@ const ApplicationCard = ({
   const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${application.id}`
   const appToaster = useAppToaster()
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
-  const [rejectionDialogOpen, rejectionDialogOpenSet] = useState(false)
+  const [rejectionDialogOpen, setRejectionDialogOpen] = useState(false)
   const [openNoteDialog, setOpenNoteDialog] = useState(false)
-  const [accordionExpanded, accordionExpandedSet] = useState(false)
+  const [accordionExpanded, setAccordionExpanded] = useState(false)
 
   const [deleteApplication, deleteResult] = useDeleteApplicationMutation({
     onError: error => {
@@ -300,7 +300,7 @@ const ApplicationCard = ({
       appToaster?.show({ intent: 'danger', message: title })
     },
     onCompleted: result => {
-      rejectionDialogOpenSet(false)
+      setRejectionDialogOpen(false)
       // Update the application with new fields from the query
       onChange({ ...application, ...result.updates })
       appToaster?.show({ intent: 'success', message: t('applicationRejectedToastMessage') })
@@ -317,7 +317,7 @@ const ApplicationCard = ({
       sx={{ displayPrint: isSelectedForPrint ? 'block' : 'none' }}
       disableGutters
       aria-controls='panel-content'
-      onChange={(_, expanded) => accordionExpandedSet(expanded)}>
+      onChange={(_, expanded) => setAccordionExpanded(expanded)}>
       <AccordionSummary
         // Need this to display the `expandIconWrapper` slot, even if this is not directly used.
         expandIcon={<ExpandMore />}
@@ -406,9 +406,7 @@ const ApplicationCard = ({
               onPrimaryButtonClick={() => {
                 approveStatus({ variables: { applicationId: application.id } })
               }}
-              onSecondaryButtonClick={() => {
-                rejectionDialogOpenSet(true)
-              }}
+              onSecondaryButtonClick={() => setRejectionDialogOpen(true)}
             />
           ) : (
             <ButtonsApplicationResolved
@@ -441,7 +439,7 @@ const ApplicationCard = ({
             rejectStatus({ variables: { applicationId: application.id, rejectionMessage: message } })
           }}
           onCancel={() => {
-            rejectionDialogOpenSet(false)
+            setRejectionDialogOpen(false)
           }}
         />
       </AccordionDetails>
