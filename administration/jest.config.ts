@@ -1,10 +1,10 @@
 import type { JestConfigWithTsJest } from 'ts-jest'
-import { defaults as tsjPreset } from 'ts-jest/presets'
+import { createDefaultEsmPreset } from 'ts-jest'
 
 process.env.TZ = 'GMT'
 
 const config: JestConfigWithTsJest = {
-  ...tsjPreset,
+  ...createDefaultEsmPreset(),
   rootDir: 'src',
   testEnvironment: 'jsdom',
   verbose: true,
@@ -16,11 +16,7 @@ const config: JestConfigWithTsJest = {
   },
   setupFilesAfterEnv: ['../jest.setup.ts'],
   restoreMocks: true,
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   maxWorkers: '50%',
-  transform: {
-    '^.+\\.(j|t)sx?$': ['ts-jest', { isolatedModules: true }],
-  },
 }
 
 export default config
