@@ -1,6 +1,18 @@
 /* eslint-disable react/destructuring-assignment */
 import { MutationResult } from '@apollo/client'
-import { CreditScore, Delete, ExpandMore, InfoOutline, Print, Search, Warning } from '@mui/icons-material'
+import {
+  CancelOutlined,
+  Check,
+  CheckCircleOutline,
+  Close,
+  CreditScore,
+  Delete,
+  ExpandMore,
+  InfoOutline,
+  Print,
+  Search,
+  Warning,
+} from '@mui/icons-material'
 import {
   Accordion,
   AccordionDetails,
@@ -119,11 +131,12 @@ const RejectionDialog = (p: {
         />
       </DialogContent>
       <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
-        <Button variant='outlined' onClick={p.onCancel} disabled={p.loading}>
+        <Button variant='outlined' color='default.dark' onClick={p.onCancel} disabled={p.loading} startIcon={<Close />}>
           {t('misc:cancel')}
         </Button>
         <Button
           variant='contained'
+          startIcon={<CheckCircleOutline />}
           disabled={reason === null || p.loading}
           onClick={() => {
             if (reason !== null) {
@@ -149,14 +162,14 @@ const ButtonsApplicationPending = (p: {
       <Button
         variant='contained'
         color='primary'
-        startIcon={<CreditScore />}
+        startIcon={<Check />}
         disabled={p.disabled}
         onClick={p.onPrimaryButtonClick}>
         {t('applicationApprove')}
       </Button>
       <Button
         variant='outlined'
-        startIcon={<Delete />}
+        startIcon={<CancelOutlined />}
         color='error'
         disabled={p.disabled}
         onClick={p.onSecondaryButtonClick}>
