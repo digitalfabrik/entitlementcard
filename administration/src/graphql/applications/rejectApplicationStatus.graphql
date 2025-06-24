@@ -1,5 +1,5 @@
 mutation rejectApplicationStatus($applicationId: Int!, $rejectionMessage: String!) {
-  updates: rejectApplicationStatus(applicationId: $applicationId, rejectionMessage: $rejectionMessage) {
+  application: rejectApplicationStatus(applicationId: $applicationId, rejectionMessage: $rejectionMessage) {
     status
     statusResolvedDate
     rejectionMessage
