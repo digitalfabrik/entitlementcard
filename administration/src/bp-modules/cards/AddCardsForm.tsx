@@ -11,12 +11,12 @@ import AddCardForm from './AddCardForm'
 import CardFormButton from './CardFormButton'
 
 const FormsWrapper = styled.div`
-  flex-wrap: wrap;
-  flex-grow: 1;
-  flex-direction: row;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fill, 400px);
+  justify-content: center;
+  justify-items: flex-start;
+  align-items: flex-start;
 `
 
 const Scrollable = styled.div`
@@ -24,14 +24,12 @@ const Scrollable = styled.div`
   flex-grow: 1;
   flex-direction: column;
   flex-basis: 0;
-  padding: 10px;
-  width: 100%;
+  padding: 24px;
   overflow: auto;
 `
 
 const FormColumn = styled.div`
   width: 400px;
-  margin: 10px;
   box-sizing: border-box;
 `
 
