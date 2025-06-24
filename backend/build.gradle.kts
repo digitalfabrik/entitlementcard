@@ -170,7 +170,13 @@ tasks.sentryCollectSourcesJava {
     dependsOn(tasks.generateProto)
 }
 
+tasks.generateProto {
+    dependsOn(tasks.generateSentryBundleIdJava)
+}
+
 tasks.graphqlGenerateTestClient {
+    dependsOn(tasks.generateSentryBundleIdJava)
+    dependsOn(tasks.sentryCollectSourcesJava)
     schemaFile.set(rootDir.parentFile.resolve("specs/backend-api.graphql"))
     packageName.set("app.ehrenamtskarte.backend.generated")
     queryFiles.setFrom(fileTree("src/test/resources/graphql"))
