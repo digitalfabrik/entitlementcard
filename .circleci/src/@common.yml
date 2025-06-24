@@ -34,3 +34,6 @@ parameters:
   run_promotion_all:
     default: false
     type: boolean
+  run_packaging_backend_administration:
+    default: false
+    type: boolean

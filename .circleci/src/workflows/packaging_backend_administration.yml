@@ -1,0 +1,34 @@
+# This is just for testing purposes if changes on pack_deb.sh were performed
+when: << pipeline.parameters.run_packaging_backend_administration >>
+jobs:
+  - bump_version:
+      prepare_delivery: false
+      platforms: web
+      context:
+        - deliverino
+#  - pack_martin:
+#      requires:
+#        - bump_version
+#  - pack_meta:
+#      requires:
+        - bump_version
+
+#  - check_administration
+#  - build_administration:
+#      requires:
+#        - bump_version
+#        - check_administration
+#  - pack_administration:
+#      requires:
+#        - build_administration
+
+  - check_backend
+  - build_backend:
+      context:
+        - credentials-ehrenamtskarte
+      requires:
+        - check_backend
+  - pack_backend:
+      requires:
+        - bump_version
+        - build_backend
