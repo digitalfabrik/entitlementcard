@@ -1,8 +1,8 @@
-import React, { ReactElement, useMemo } from 'react'
+import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
-import { StoresFieldConfig } from '../../project-configs/getProjectConfig'
+import type { StoresFieldConfig } from '../../project-configs/getProjectConfig'
 import { FILE_SIZE_LIMIT_MEGA_BYTES } from './constants'
 
 const RequirementsList = styled.ul`
@@ -15,7 +15,7 @@ type ImportCardsRequirementsProps = {
 }
 
 const StoresRequirementsText = ({ header }: ImportCardsRequirementsProps): ReactElement => {
-  const headers = useMemo(() => header.map(field => (field.isMandatory ? `${field.name}*` : `${field.name}`)), [header])
+  const headers = header.map(field => (field.isMandatory ? `${field.name}*` : `${field.name}`))
   const { t } = useTranslation('stores')
   return (
     <RequirementsList>

@@ -1,4 +1,4 @@
-import React, { ReactElement, useContext, useMemo } from 'react'
+import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
@@ -20,19 +20,16 @@ const ImportCardsRequirementsText = ({
   isFreinetFormat = false,
 }: ImportCardsRequirementsProps): ReactElement => {
   const projectConfig = useContext(ProjectConfigContext)
-  const { card: cardConfig } = projectConfig
   const { t } = useTranslation('cards')
 
-  const requiredHeaders = useMemo(() => {
-    const headers = [cardConfig.nameColumnName, cardConfig.expiryColumnName]
-    cardConfig.extensions.forEach((extension, index) => {
-      const header = cardConfig.extensionColumnNames[index]
-      if (extension.isMandatory && header) {
-        headers.push(header)
-      }
-    })
-    return headers
-  }, [cardConfig])
+  const requiredHeaders = [
+    projectConfig.card.nameColumnName,
+    projectConfig.card.expiryColumnName,
+    ...projectConfig.card.extensions.flatMap((extension, index) => {
+      const header = projectConfig.card.extensionColumnNames[index]
+      return extension.isMandatory && header !== null ? [header] : []
+    }),
+  ]
 
   const decoratedHeaders = csvHeaders.map(header => (requiredHeaders.includes(header) ? `${header}*` : header))
 
