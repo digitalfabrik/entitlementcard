@@ -59,7 +59,7 @@ import { ApplicationIndicators } from './VerificationsIndicator'
 import VerificationsView from './VerificationsView'
 import { GetApplicationsType } from './types'
 
-const DeleteDialog = (p: {
+const DeleteDialog = (props: {
   isOpen: boolean
   deleteResult: MutationResult
   onConfirm: () => void
@@ -68,10 +68,10 @@ const DeleteDialog = (p: {
   const { t } = useTranslation('applicationsOverview')
 
   return (
-    <Dialog open={p.isOpen} aria-describedby='alert-dialog-description'>
+    <Dialog open={props.isOpen} aria-describedby='alert-dialog-description'>
       <DialogContent id='alert-dialog-description'>
         <Stack direction='row' sx={{ gap: 2, alignItems: 'center' }}>
-          {p.deleteResult.loading || p.deleteResult.called ? (
+          {props.deleteResult.loading || props.deleteResult.called ? (
             <CircularProgress size={64} />
           ) : (
             <Delete sx={{ fontSize: '64px' }} color='error' />
@@ -80,10 +80,13 @@ const DeleteDialog = (p: {
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button disabled={p.deleteResult.loading || p.deleteResult.called} onClick={p.onCancel}>
+        <Button disabled={props.deleteResult.loading || props.deleteResult.called} onClick={props.onCancel}>
           {t('misc:cancel')}
         </Button>
-        <Button color='error' disabled={p.deleteResult.loading || p.deleteResult.called} onClick={p.onConfirm}>
+        <Button
+          color='error'
+          disabled={props.deleteResult.loading || props.deleteResult.called}
+          onClick={props.onConfirm}>
           {t('deleteApplication')}
         </Button>
       </DialogActions>
@@ -91,7 +94,7 @@ const DeleteDialog = (p: {
   )
 }
 
-const RejectionDialog = (p: {
+const RejectionDialog = (props: {
   open: boolean
   loading: boolean
   onConfirm: (reason: string) => void
@@ -102,7 +105,7 @@ const RejectionDialog = (p: {
   const [reason, setReason] = useState<string | null>(null)
 
   return (
-    <Dialog open={p.open} aria-describedby='reject-dialog-description' fullWidth onClose={p.onCancel}>
+    <Dialog open={props.open} aria-describedby='reject-dialog-description' fullWidth onClose={props.onCancel}>
       <DialogTitle>{t('rejectionDialogTitle')}</DialogTitle>
       <DialogContent id='reject-dialog-description'>
         {t('rejectionDialogMessage')}
@@ -131,16 +134,24 @@ const RejectionDialog = (p: {
         />
       </DialogContent>
       <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
-        <Button variant='outlined' color='default.dark' onClick={p.onCancel} disabled={p.loading} startIcon={<Close />}>
+        <Button
+          variant='outlined'
+          color='default.dark'
+          onClick={() => {
+            setReason(null)
+            props.onCancel()
+          }}
+          disabled={props.loading}
+          startIcon={<Close />}>
           {t('misc:cancel')}
         </Button>
         <Button
           variant='contained'
           startIcon={<CheckCircleOutline />}
-          disabled={reason === null || p.loading}
+          disabled={reason === null || props.loading}
           onClick={() => {
             if (reason !== null) {
-              p.onConfirm(reason)
+              props.onConfirm(reason)
             }
           }}>
           {t('deleteApplication')}
@@ -150,7 +161,7 @@ const RejectionDialog = (p: {
   )
 }
 
-const ButtonsApplicationPending = (p: {
+const ButtonsApplicationPending = (props: {
   disabled: boolean
   onPrimaryButtonClick: () => void
   onSecondaryButtonClick: () => void
@@ -163,23 +174,23 @@ const ButtonsApplicationPending = (p: {
         variant='contained'
         color='primary'
         startIcon={<Check />}
-        disabled={p.disabled}
-        onClick={p.onPrimaryButtonClick}>
+        disabled={props.disabled}
+        onClick={props.onPrimaryButtonClick}>
         {t('applicationApprove')}
       </Button>
       <Button
         variant='outlined'
         startIcon={<CancelOutlined />}
         color='error'
-        disabled={p.disabled}
-        onClick={p.onSecondaryButtonClick}>
+        disabled={props.disabled}
+        onClick={props.onSecondaryButtonClick}>
         {t('applicationReject')}
       </Button>
     </>
   )
 }
 
-const ButtonsApplicationResolved = (p: {
+const ButtonsApplicationResolved = (props: {
   applicationStatus: ApplicationStatus | null | undefined // TODO Remove null|undefined once this type is narrowed
   primaryButtonHref: string | undefined
   onSecondaryButtonClick: () => void
@@ -188,23 +199,25 @@ const ButtonsApplicationResolved = (p: {
 
   return (
     <>
-      <Tooltip title={p.primaryButtonHref ? undefined : t('incompleteApplicationDataTooltip')}>
+      <Tooltip title={props.primaryButtonHref ? undefined : t('incompleteApplicationDataTooltip')}>
         {/* Make the outer Tooltip independent of the button's disabled state */}
         <span>
-          {(p.applicationStatus === ApplicationStatus.Approved ||
-            p.applicationStatus === ApplicationStatus.ApprovedCardCreated) && (
+          {(props.applicationStatus === ApplicationStatus.Approved ||
+            props.applicationStatus === ApplicationStatus.ApprovedCardCreated) && (
             <Button
               color='primary'
               variant='contained'
-              disabled={p.primaryButtonHref === undefined}
-              href={p.primaryButtonHref}
+              disabled={props.primaryButtonHref === undefined}
+              href={props.primaryButtonHref}
               startIcon={<CreditScore />}>
-              {p.applicationStatus === ApplicationStatus.ApprovedCardCreated ? t('createCardAgain') : t('createCard')}
+              {props.applicationStatus === ApplicationStatus.ApprovedCardCreated
+                ? t('createCardAgain')
+                : t('createCard')}
             </Button>
           )}
         </span>
       </Tooltip>
-      <Button onClick={p.onSecondaryButtonClick} startIcon={<Delete />} variant='outlined' color='error'>
+      <Button onClick={props.onSecondaryButtonClick} startIcon={<Delete />} variant='outlined' color='error'>
         {t('deleteApplication')}
       </Button>
     </>
