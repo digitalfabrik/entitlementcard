@@ -2,12 +2,14 @@ package app.ehrenamtskarte.backend.application.webservice
 
 import app.ehrenamtskarte.backend.application.database.ApplicationEntity
 import app.ehrenamtskarte.backend.application.database.ApplicationEntity.Status
+import app.ehrenamtskarte.backend.application.database.ApplicationVerificationEntity
 import app.ehrenamtskarte.backend.application.database.NOTE_MAX_CHARS
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
 import app.ehrenamtskarte.backend.application.webservice.schema.create.Application
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationView
 import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationHandler
 import app.ehrenamtskarte.backend.auth.getAdministrator
+import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.auth.service.Authorizer.mayDeleteApplicationsInRegion
 import app.ehrenamtskarte.backend.auth.service.Authorizer.mayUpdateApplicationsInRegion
 import app.ehrenamtskarte.backend.common.webservice.context
@@ -15,6 +17,7 @@ import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidLinkException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidNoteSizeException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.MailNotSentException
 import app.ehrenamtskarte.backend.mail.Mailer
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
@@ -164,5 +167,40 @@ class EakApplicationMutationService {
 
             ApplicationRepository.updateApplicationNote(applicationId, noteText)
         }
+    }
+
+    @GraphQLDescription("Send approval mail to organisation")
+    fun sendApprovalMailToOrganisation(
+        project: String,
+        applicationId: Int,
+        applicantName: String,
+        applicationVerificationId: Int,
+        dfe: DataFetchingEnvironment,
+    ): Boolean {
+        val context = dfe.graphQlContext.context
+
+        transaction {
+            val application = ApplicationEntity.findById(applicationId)
+                ?: throw NotFoundException("Application not found")
+
+            if (!Authorizer.maySendMailsInRegion(context.getAdministrator(), application.regionId.value)) {
+                throw ForbiddenException()
+            }
+
+            val applicationVerification = ApplicationVerificationEntity.findById(applicationVerificationId)
+                ?: throw NotFoundException("Application verification not found")
+
+            try {
+                Mailer.sendApplicationVerificationMail(
+                    context.backendConfiguration,
+                    applicantName,
+                    context.backendConfiguration.getProjectConfig(project),
+                    applicationVerification
+                )
+            } catch (exception: MailNotSentException) {
+                return@transaction false
+            }
+        }
+        return true
     }
 }

@@ -1,0 +1,3 @@
+mutation sendApprovalMailToOrganisation($applicantName: String!, $applicationId: Int!, $applicationVerificationId: Int!, $project: String!) {
+  result: sendApprovalMailToOrganisation(applicantName: $applicantName, applicationId: $applicationId, applicationVerificationId: $applicationVerificationId, project: $project)
+}
