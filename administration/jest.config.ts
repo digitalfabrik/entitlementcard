@@ -16,7 +16,6 @@ const config: JestConfigWithTsJest = {
   },
   setupFilesAfterEnv: ['../jest.setup.ts'],
   restoreMocks: true,
-  maxWorkers: '50%',
 }
 
 export default config
