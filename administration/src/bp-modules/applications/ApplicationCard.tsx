@@ -302,7 +302,7 @@ const ApplicationCard = ({
     onCompleted: result => {
       setRejectionDialogOpen(false)
       // Update the application with new fields from the query
-      onChange({ ...application, ...result.updates })
+      onChange({ ...application, ...result.application })
       appToaster?.show({ intent: 'success', message: t('applicationRejectedToastMessage') })
     },
   })
