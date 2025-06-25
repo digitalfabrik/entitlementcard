@@ -195,7 +195,7 @@ class EakApplicationMutationService {
                     context.backendConfiguration,
                     applicantName,
                     context.backendConfiguration.getProjectConfig(project),
-                    applicationVerification
+                    applicationVerification,
                 )
             } catch (exception: MailNotSentException) {
                 return@transaction false

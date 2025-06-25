@@ -69,6 +69,7 @@ type ApplicationVerificationView {
   contactName: String!
   organizationName: String!
   rejectedDate: String
+  verificationId: Int!
   verifiedDate: String
 }
 
