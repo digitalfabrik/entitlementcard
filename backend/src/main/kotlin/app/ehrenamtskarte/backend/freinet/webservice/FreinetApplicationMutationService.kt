@@ -12,6 +12,7 @@ import app.ehrenamtskarte.backend.exception.webservice.exceptions.ApplicationDat
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetFoundMultiplePersonsException
 import app.ehrenamtskarte.backend.freinet.database.repos.FreinetAgencyRepository
 import app.ehrenamtskarte.backend.freinet.util.FreinetApi
+import app.ehrenamtskarte.backend.freinet.webservice.schema.types.FreinetCard
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import graphql.schema.DataFetchingEnvironment
@@ -23,7 +24,13 @@ class FreinetApplicationMutationService {
     private val logger = LoggerFactory.getLogger(FreinetApplicationMutationService::class.java)
 
     @GraphQLDescription("Send application info to Freinet")
-    fun sendApplicationDataToFreinet(applicationId: Int, project: String, dfe: DataFetchingEnvironment): Boolean {
+    fun sendApplicationDataToFreinet(
+        applicationId: Int,
+        project: String,
+        freinetCards: List<FreinetCard>,
+        dfe: DataFetchingEnvironment,
+    ): Boolean {
+        // TODO also create cards without expirationDate
         val context = dfe.graphQlContext.context
         val admin = context.getAdministrator()
         val projectConfig = context.backendConfiguration.getProjectConfig(
@@ -69,21 +76,39 @@ class FreinetApplicationMutationService {
                 lastName,
                 dateOfBirth,
             )
+
             when {
                 persons.size() > 1 -> {
                     logger.devWarn("Multiple persons found in Freinet for $firstName $lastName, born $dateOfBirth")
                     throw FreinetFoundMultiplePersonsException()
                 }
                 persons.isEmpty -> {
-                    freinetApi.createPerson(
+                    val createdPerson = freinetApi.createPerson(
                         firstName,
                         lastName,
                         dateOfBirth,
                         personalDataNode,
                         admin.email,
                     )
+
+                    val userId = createdPerson.data.get("NEW_USERID").intValue()
+                    // TODO Fix check condition is always true
+                    if (userId != null) {
+                        freinetCards.forEach { card ->
+                            freinetApi.addCardInformation(userId, card)
+                        }
+                    }
                 }
                 persons.size() == 1 -> {
+                    print(persons)
+                    val userId = persons[0].get("id").intValue()
+                    // TODO Fix check condition is always true
+                    if (userId != null) {
+                        freinetCards.forEach { card ->
+                            print(card)
+                            freinetApi.addCardInformation(userId, card)
+                        }
+                    }
                     // TODO: #2143 - Update existing person
                     logger.devWarn("update existing person")
                 }

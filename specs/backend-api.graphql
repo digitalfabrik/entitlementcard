@@ -169,7 +169,7 @@ type Mutation {
   "Reset the administrator's password"
   resetPassword(email: String!, newPassword: String!, passwordResetKey: String!, project: String!): Boolean!
   "Send application info to Freinet"
-  sendApplicationDataToFreinet(applicationId: Int!, project: String!): Boolean!
+  sendApplicationDataToFreinet(applicationId: Int!, freinetCards: [FreinetCardInput!]!, project: String!): Boolean!
   "Sends a confirmation mail to the user when the card creation was successful"
   sendCardCreationConfirmationMail(deepLink: String!, project: String!, recipientAddress: String!, recipientName: String!, regionId: Int!): Boolean!
   "Sends a mail that allows the administrator to reset their password."
@@ -502,6 +502,11 @@ input DateInput {
 "An email address with at most 300 characters"
 input EmailInput {
   email: String!
+}
+
+input FreinetCardInput {
+  expirationDate: String
+  id: Int!
 }
 
 "Entitlement for a golden EAK. The field selected by entitlementType must not be null; all others must be null."

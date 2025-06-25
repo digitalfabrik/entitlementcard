@@ -6,7 +6,9 @@ import app.ehrenamtskarte.backend.common.utils.findValueByName
 import app.ehrenamtskarte.backend.common.utils.findValueByNameNode
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetApiNotReachableException
 import app.ehrenamtskarte.backend.freinet.webservice.schema.types.FreinetAddress
+import app.ehrenamtskarte.backend.freinet.webservice.schema.types.FreinetCard
 import app.ehrenamtskarte.backend.freinet.webservice.schema.types.FreinetPerson
+import app.ehrenamtskarte.backend.freinet.webservice.schema.types.FreinetPersonCreationResultModel
 import app.ehrenamtskarte.backend.freinet.webservice.schema.types.FreinetProtocol
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ObjectNode
@@ -77,7 +79,7 @@ class FreinetApi(private val host: String, private val accessKey: String, privat
         dateOfBirth: String,
         personalDataNode: JsonNode,
         userEmail: String,
-    ): Boolean {
+    ): FreinetPersonCreationResultModel {
         val addressArrayNode = personalDataNode.get("value").findValueByNameNode("address")
         val street = addressArrayNode?.findValueByName("street")
         val houseNumber = addressArrayNode?.findValueByName("houseNumber")
@@ -135,8 +137,54 @@ class FreinetApi(private val host: String, private val accessKey: String, privat
                     contentType(ContentType.Application.Json)
                     setBody(requestBody)
                 }
-                val body = response.bodyAsText()
-                logger.devInfo("Successfully created person in freinet: $body")
+                logger.devInfo("Successfully created person in freinet: ${response.bodyAsText()}")
+                FreinetPersonCreationResultModel(
+                    true,
+                    response.bodyAsChannel().toInputStream().use {
+                        objectMapper.readTree(it)
+                    },
+                )
+            } catch (e: Exception) {
+                logger.devWarn("Error creating person in freinet $e")
+                throw FreinetApiNotReachableException()
+            }
+        }
+    }
+
+    fun addCardInformation(userId: Int, card: FreinetCard): Boolean {
+        // TODO improve how to set the values here, add error handling, update confirmation message, decide whether we need separate success messages
+        val color = if (card.cardType == "Standard") 1 else 2
+        val body: ObjectNode = objectMapper.createObjectNode().apply {
+            put("karten_farbe", color)
+            if (card.cardType == "Standard" && card.expirationDate != null) {
+                put("gueltig_bis", card.expirationDate)
+            }
+            put("user_id", userId)
+            put("digital_card", true)
+                .putObject("init").apply {
+                    put("apiVersion", "3.0")
+                    put("agencyID", agencyId)
+                    put("accessKey", accessKey)
+                    put("author", "TuerAnTuer")
+                    put("author_mail", "berechtigungskarte@tuerantuer.org")
+                }
+        }
+
+        val requestBody = objectMapper.writeValueAsString(body)
+
+        return runBlocking {
+            try {
+                val response = httpClient.request {
+                    url {
+                        protocol = URLProtocol.HTTPS
+                        this.host = this@FreinetApi.host
+                        path("/api/input/v3/ehrenamtskarte")
+                    }
+                    method = HttpMethod.Post
+                    contentType(ContentType.Application.Json)
+                    setBody(requestBody)
+                }
+                logger.devInfo("Successfully created card in freinet: ${response.bodyAsText()}")
                 true
             } catch (e: Exception) {
                 logger.devWarn("Error creating person in freinet $e")
