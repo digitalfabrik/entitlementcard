@@ -867,6 +867,9 @@ parameters:
     run_delivery_production_frontend:
         default: false
         type: boolean
+    run_packaging_backend_administration:
+        default: false
+        type: boolean
     run_promotion_all:
         default: false
         type: boolean
@@ -1254,6 +1257,25 @@ workflows:
                     - deliver_android
                     - deliver_ios
         when: << pipeline.parameters.run_delivery_production_frontend >>
+    packaging_backend_administration:
+        jobs:
+            - bump_version:
+                context:
+                    - deliverino
+                    - bump_version
+                platforms: web
+                prepare_delivery: false
+            - check_backend
+            - build_backend:
+                context:
+                    - credentials-ehrenamtskarte
+                requires:
+                    - check_backend
+            - pack_backend:
+                requires:
+                    - bump_version
+                    - build_backend
+        when: << pipeline.parameters.run_packaging_backend_administration >>
     promotion_all:
         jobs:
             - promote_android:
