@@ -12,15 +12,20 @@ import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.auth.service.Authorizer.mayDeleteApplicationsInRegion
 import app.ehrenamtskarte.backend.auth.service.Authorizer.mayUpdateApplicationsInRegion
+import app.ehrenamtskarte.backend.common.utils.findValueByName
+import app.ehrenamtskarte.backend.common.utils.findValueByPath
 import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.ApplicationDataIncompleteException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidJsonException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidLinkException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidNoteSizeException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.MailNotSentException
 import app.ehrenamtskarte.backend.mail.Mailer
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import graphql.execution.DataFetcherResult
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -173,7 +178,6 @@ class EakApplicationMutationService {
     fun sendApprovalMailToOrganisation(
         project: String,
         applicationId: Int,
-        applicantName: String,
         applicationVerificationId: Int,
         dfe: DataFetchingEnvironment,
     ): Boolean {
@@ -181,26 +185,39 @@ class EakApplicationMutationService {
 
         transaction {
             val application = ApplicationEntity.findById(applicationId)
-                ?: throw NotFoundException("Application not found")
+                ?: throw InvalidJsonException("Application not found")
 
             if (!Authorizer.maySendMailsInRegion(context.getAdministrator(), application.regionId.value)) {
                 throw ForbiddenException()
             }
 
             val applicationVerification = ApplicationVerificationEntity.findById(applicationVerificationId)
-                ?: throw NotFoundException("Application verification not found")
+                ?: throw InvalidJsonException("Application verification not found")
 
-            try {
-                Mailer.sendApplicationVerificationMail(
-                    context.backendConfiguration,
-                    applicantName,
-                    context.backendConfiguration.getProjectConfig(project),
-                    applicationVerification,
-                )
-            } catch (exception: MailNotSentException) {
-                return@transaction false
+            if (applicationVerification.applicationId.value != applicationId) {
+                throw InvalidJsonException("Application verification does not belong to the given application")
             }
+
+            Mailer.sendApplicationVerificationMail(
+                context.backendConfiguration,
+                getApplicantName(application.jsonValue),
+                context.backendConfiguration.getProjectConfig(project),
+                applicationVerification,
+            )
         }
         return true
+    }
+
+    private fun getApplicantName(jsonValue: String): String {
+        val root = jacksonObjectMapper().readTree(jsonValue)
+
+        val personalData = root.findValueByPath("application", "personalData")
+            ?: throw ApplicationDataIncompleteException()
+
+        val forenames = personalData.findValueByName("forenames")
+        val surname = personalData.findValueByName("surname")
+
+        return listOfNotNull(forenames, surname)
+            .filter { it.isNotBlank() }.joinToString(" ")
     }
 }
