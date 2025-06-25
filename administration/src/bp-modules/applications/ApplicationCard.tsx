@@ -151,7 +151,7 @@ const RejectionDialog = (props: {
               props.onConfirm(reason)
             }
           }}>
-          {t('deleteApplication')}
+          {t('rejectionButton')}
         </Button>
       </DialogActions>
     </Dialog>
