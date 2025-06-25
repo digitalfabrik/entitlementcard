@@ -16,15 +16,16 @@ const VerificationContainer = styled.ul`
   }
 `
 
-const VerificationsView = ({ verifications }: { verifications: Application['verifications'] }): ReactElement => {
+const VerificationsView = ({ application }: { application: Application }): ReactElement => {
   const { t } = useTranslation('applicationsOverview')
+  const { verifications, id } = application
   return (
     <>
       <H5>{t('confirmationsByOrganizations')}</H5>
       <VerificationContainer>
         {verifications.map(verification => {
           const key = verification.organizationName + verification.contactEmailAddress
-          return <VerificationListItem verification={verification} key={key} />
+          return <VerificationListItem verification={verification} applicationId={id} key={key} />
         })}
       </VerificationContainer>
       {verifications.length === 0 ? <i role='note'>({t('none')})</i> : null}
