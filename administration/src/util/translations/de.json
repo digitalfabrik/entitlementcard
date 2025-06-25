@@ -201,6 +201,7 @@
     "eMail": "E-Mail",
     "none": "keine",
     "resendApprovalRequest": "Anfrage erneut senden",
+    "approvalRequestHasBeenSent": "Anfrage erneut gesendet",
     "approvalRequestSentSuccessfully": "Anfrage erfolgreich gesendet",
     "failedToSendApprovalRequest": "Anfrage konnte nicht gesendet werden",
     "applicationApprove": "Antrag bestätigen",

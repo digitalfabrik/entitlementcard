@@ -1,7 +1,7 @@
 import { Colors } from '@blueprintjs/core'
 import ForwardToInboxIcon from '@mui/icons-material/ForwardToInbox'
 import { Button } from '@mui/material'
-import React, { ReactElement, useContext } from 'react'
+import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
@@ -31,6 +31,7 @@ const VerificationListItem = ({ verification, applicationId }: VerificationListI
   const { t } = useTranslation('applicationsOverview')
   const appToaster = useAppToaster()
   const projectId = useContext(ProjectConfigContext).projectId
+  const [isApprovalRequestSent, setIsApprovalRequestSent] = useState(false)
 
   const status = verificationStatus(verification)
   const unverifiedText = verification.rejectedDate
@@ -43,7 +44,7 @@ const VerificationListItem = ({ verification, applicationId }: VerificationListI
   const color = verification.verifiedDate ? Colors.GREEN2 : unverifiedColor
 
   const [sendApprovalEmail, sendApprovalEmailResult] = useSendApprovalMailToOrganisationMutation({
-    onError: _ => {
+    onError: () => {
       appToaster?.show({ intent: 'danger', message: t('failedToSendApprovalRequest') })
     },
     onCompleted: () => {
@@ -58,6 +59,7 @@ const VerificationListItem = ({ verification, applicationId }: VerificationListI
         project: projectId,
       },
     })
+    setIsApprovalRequestSent(true)
   }
 
   return (
@@ -84,23 +86,19 @@ const VerificationListItem = ({ verification, applicationId }: VerificationListI
               <VerificationIndicator status={status} text={` ${text}`} />
             </td>
           </tr>
-          {status === VerificationStatus.Pending && (
-            <tr>
-              <td>
-                <Button
-                  variant='contained'
-                  color='default'
-                  onClick={() => {onSendApprovalEmailClick()}}
-                  startIcon={<ForwardToInboxIcon />}
-                  sx={{ displayPrint: 'none' }}
-                  disabled={sendApprovalEmailResult.loading}>
-                  {t('resendApprovalRequest')}
-                </Button>
-              </td>
-            </tr>
-          )}
         </tbody>
       </table>
+      {status === VerificationStatus.Pending && (
+        <Button
+          variant='contained'
+          color='default'
+          onClick={() => onSendApprovalEmailClick()}
+          startIcon={<ForwardToInboxIcon />}
+          sx={{ displayPrint: 'none', mt: 1 }}
+          disabled={sendApprovalEmailResult.loading || isApprovalRequestSent}>
+          {isApprovalRequestSent ? t('approvalRequestHasBeenSent') : t('resendApprovalRequest')}
+        </Button>
+      )}
     </ListItem>
   )
 }
