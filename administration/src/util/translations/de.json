@@ -206,7 +206,8 @@
     "applicationResolveNotice": "Dieser Antrag wurde am {{date}} um {{time}}",
     "applicationResolveApproved": "genehmigt",
     "applicationResolveRejected": "abgelehnt",
-    "incompleteApplicationDataTooltip": "Aus den Antragsdaten kann keine Karte erzeugt werden."
+    "incompleteApplicationDataTooltip": "Aus den Antragsdaten kann keine Karte erzeugt werden.",
+    "moreActionsButtonLabel": "Weitere Optionen"
   },
   "auth": {
     "administration": "Verwaltung",

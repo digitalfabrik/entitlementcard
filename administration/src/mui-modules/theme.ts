@@ -34,6 +34,11 @@ export const theme = createTheme({
       lineHeight: 1.1,
       fontWeight: 600,
     },
+    button: {
+      fontSize: 14,
+      fontWeight: 600,
+      textTransform: 'none',
+    },
   },
   components: {
     MuiButton: {
@@ -66,6 +71,20 @@ export const theme = createTheme({
           },
         },
       },
+    },
+    MuiMenuItem: {
+      variants: [
+        {
+          props: { color: 'default' },
+          style: {
+            backgroundColor: '#EEEEEE',
+            color: '#5C6065',
+            '&:hover': {
+              backgroundColor: '#dddddd',
+            },
+          },
+        },
+      ],
     },
   },
 })
