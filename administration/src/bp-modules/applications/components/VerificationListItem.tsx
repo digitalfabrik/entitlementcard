@@ -1,6 +1,7 @@
 import { Colors } from '@blueprintjs/core'
 import ForwardToInboxIcon from '@mui/icons-material/ForwardToInbox'
 import { Button } from '@mui/material'
+import { TFunction } from 'i18next'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -28,14 +29,7 @@ type VerificationListItemProps = {
   applicationId: number
 }
 
-const VerificationListItem = ({ verification, applicationId }: VerificationListItemProps): ReactElement => {
-  const { t } = useTranslation('applicationsOverview')
-  const appToaster = useAppToaster()
-  const projectId = useContext(ProjectConfigContext).projectId
-  const { data: authData } = useContext(AuthContext)
-  const [isApprovalRequestSent, setIsApprovalRequestSent] = useState(false)
-
-  const status = verificationStatus(verification)
+const getStatusMetaData = (verification: Verification, t: TFunction): { text: string; color: string } => {
   const unverifiedText = verification.rejectedDate
     ? `${t('rejectedOn')} ${new Date(verification.rejectedDate).toLocaleString('de')}`
     : t('pending')
@@ -44,6 +38,19 @@ const VerificationListItem = ({ verification, applicationId }: VerificationListI
     : unverifiedText
   const unverifiedColor = verification.rejectedDate ? Colors.RED2 : Colors.ORANGE2
   const color = verification.verifiedDate ? Colors.GREEN2 : unverifiedColor
+
+  return { text, color }
+}
+
+const VerificationListItem = ({ verification, applicationId }: VerificationListItemProps): ReactElement => {
+  const { t } = useTranslation('applicationsOverview')
+  const appToaster = useAppToaster()
+  const projectId = useContext(ProjectConfigContext).projectId
+  const { data: authData } = useContext(AuthContext)
+  const [isApprovalRequestSent, setIsApprovalRequestSent] = useState(false)
+
+  const status = verificationStatus(verification)
+  const { text, color } = getStatusMetaData(verification, t)
 
   const [sendApprovalEmail, sendApprovalEmailResult] = useSendApprovalMailToOrganisationMutation({
     onError: () => {
