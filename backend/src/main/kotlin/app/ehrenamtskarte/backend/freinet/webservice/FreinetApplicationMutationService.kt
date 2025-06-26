@@ -97,6 +97,7 @@ class FreinetApplicationMutationService {
                     }
                 }
                 persons.size() == 1 -> {
+                    // TODO: #2143 - Update existing person
                     val userId = persons[0].get("id") ?: throw FreinetPersonDataInvalidException()
                     freinetCards.forEach { card ->
                         freinetApi.sendCardInformation(userId.intValue(), card)

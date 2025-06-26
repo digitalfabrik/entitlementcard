@@ -278,7 +278,7 @@
     "printQRCodes": "QR-Codes drucken",
     "validationError": "Validierungsfehler",
     "cardCreationConfirmationMessage": "Bestätigungsmail wurde versendet.",
-    "freinetDataSyncSuccessMessage": "Antragsdaten und Karteninformationen wurden erfolgreich an Freinet gesendet."
+    "freinetDataSyncSuccessMessage": "Antrags- und Kartendaten wurden erfolgreich an Freinet gesendet."
   },
   "misc": {
     "openAppStore": "AppStore öffnen",
@@ -581,7 +581,7 @@
     "freinetMultiplePersonError": "Der antragstellenden Person konnte keine Person in Freinet-Online eindeutig zugeordnet werden. Bitte aktualisieren Sie die Daten in Freinet-Online manuell.",
     "freinetApiNotReachableError": "Die Verbindung zu Freinet-Online konnte nicht hergestellt werden. Nehmen Sie die Aktualisierung der Daten direkt in Freinet-Online vor.",
     "applicationDataIncompleteException": "Erforderliche Antragsdaten fehlen oder sind unvollständig.",
-    "freinetPersonDataInvalid": "Erforderliche Personendaten von Freinet sind nicht verfügbar. Die Kartendaten konnten nicht übertragen werden.",
+    "freinetPersonDataInvalid": "Erforderliche Personendaten von Freinet sind nicht verfügbar. Die Kartendaten konnten deshalb nicht übertragen werden.",
     "freinetCardDataInvalid": "Die Kartendaten können nicht an Freinet übertragen werden, weil diese ungültig sind."
   },
   "applicationVerification": {
