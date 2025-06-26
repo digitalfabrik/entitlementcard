@@ -168,8 +168,8 @@ type Mutation {
   importAcceptingStores(dryRun: Boolean!, project: String!, stores: [CSVAcceptingStoreInput!]!): StoreImportReturnResultModel!
   "Reset the administrator's password"
   resetPassword(email: String!, newPassword: String!, passwordResetKey: String!, project: String!): Boolean!
-  "Send application info to Freinet"
-  sendApplicationDataToFreinet(applicationId: Int!, freinetCards: [FreinetCardInput!]!, project: String!): Boolean!
+  "Send application and card information to Freinet"
+  sendApplicationAndCardDataToFreinet(applicationId: Int!, freinetCards: [FreinetCardInput!]!, project: String!): Boolean!
   "Sends a confirmation mail to the user when the card creation was successful"
   sendCardCreationConfirmationMail(deepLink: String!, project: String!, recipientAddress: String!, recipientName: String!, regionId: Int!): Boolean!
   "Sends a mail that allows the administrator to reset their password."
@@ -350,7 +350,9 @@ enum GraphQLExceptionCode {
   EMAIL_ALREADY_EXISTS
   FREINET_AGENCY_NOT_FOUND
   FREINET_API_NOT_REACHABLE
+  FREINET_CARD_DATA_INVALID
   FREINET_FOUND_MULTIPLE_PERSONS
+  FREINET_PERSON_DATA_INVALID
   INVALID_APPLICATION_CONFIRMATION_NOTE_SIZE
   INVALID_CARD_HASH
   INVALID_CODE_TYPE
@@ -505,6 +507,7 @@ input EmailInput {
 }
 
 input FreinetCardInput {
+  cardType: String!
   expirationDate: String
   id: Int!
 }

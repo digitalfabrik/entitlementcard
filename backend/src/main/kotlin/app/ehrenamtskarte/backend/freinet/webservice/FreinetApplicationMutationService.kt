@@ -10,6 +10,7 @@ import app.ehrenamtskarte.backend.exception.service.NotImplementedException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.ApplicationDataIncompleteException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetFoundMultiplePersonsException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetPersonDataInvalidException
 import app.ehrenamtskarte.backend.freinet.database.repos.FreinetAgencyRepository
 import app.ehrenamtskarte.backend.freinet.util.FreinetApi
 import app.ehrenamtskarte.backend.freinet.webservice.schema.types.FreinetCard
@@ -23,14 +24,13 @@ import org.slf4j.LoggerFactory
 class FreinetApplicationMutationService {
     private val logger = LoggerFactory.getLogger(FreinetApplicationMutationService::class.java)
 
-    @GraphQLDescription("Send application info to Freinet")
-    fun sendApplicationDataToFreinet(
+    @GraphQLDescription("Send application and card information to Freinet")
+    fun sendApplicationAndCardDataToFreinet(
         applicationId: Int,
         project: String,
         freinetCards: List<FreinetCard>,
         dfe: DataFetchingEnvironment,
     ): Boolean {
-        // TODO also create cards without expirationDate
         val context = dfe.graphQlContext.context
         val admin = context.getAdministrator()
         val projectConfig = context.backendConfiguration.getProjectConfig(
@@ -91,26 +91,18 @@ class FreinetApplicationMutationService {
                         admin.email,
                     )
 
-                    val userId = createdPerson.data.get("NEW_USERID").intValue()
-                    // TODO Fix check condition is always true
-                    if (userId != null) {
-                        freinetCards.forEach { card ->
-                            freinetApi.addCardInformation(userId, card)
-                        }
+                    val userId = createdPerson.data.get("NEW_USERID") ?: throw FreinetPersonDataInvalidException()
+                    freinetCards.forEach { card ->
+                        freinetApi.sendCardInformation(userId.intValue(), card)
                     }
                 }
                 persons.size() == 1 -> {
-                    print(persons)
-                    val userId = persons[0].get("id").intValue()
-                    // TODO Fix check condition is always true
-                    if (userId != null) {
-                        freinetCards.forEach { card ->
-                            print(card)
-                            freinetApi.addCardInformation(userId, card)
-                        }
+                    val userId = persons[0].get("id") ?: throw FreinetPersonDataInvalidException()
+                    freinetCards.forEach { card ->
+                        freinetApi.sendCardInformation(userId.intValue(), card)
                     }
-                    // TODO: #2143 - Update existing person
-                    logger.devWarn("update existing person")
+
+                    logger.devWarn("update existing person and send card data")
                 }
             }
 
