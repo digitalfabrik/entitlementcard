@@ -21,11 +21,10 @@ import app.ehrenamtskarte.backend.exception.webservice.exceptions.ApplicationDat
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidJsonException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidLinkException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidNoteSizeException
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.MailNotSentException
 import app.ehrenamtskarte.backend.mail.Mailer
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.databind.JsonNode
 import graphql.execution.DataFetcherResult
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -200,7 +199,7 @@ class EakApplicationMutationService {
 
             Mailer.sendApplicationVerificationMail(
                 context.backendConfiguration,
-                getApplicantName(application.jsonValue),
+                getApplicantName(application.parseJsonValue()),
                 context.backendConfiguration.getProjectConfig(project),
                 applicationVerification,
             )
@@ -208,16 +207,13 @@ class EakApplicationMutationService {
         return true
     }
 
-    private fun getApplicantName(jsonValue: String): String {
-        val root = jacksonObjectMapper().readTree(jsonValue)
-
-        val personalData = root.findValueByPath("application", "personalData")
+    private fun getApplicantName(json: JsonNode): String {
+        val personalData = json.findValueByPath("application", "personalData")
             ?: throw ApplicationDataIncompleteException()
 
         val forenames = personalData.findValueByName("forenames")
         val surname = personalData.findValueByName("surname")
 
-        return listOfNotNull(forenames, surname)
-            .filter { it.isNotBlank() }.joinToString(" ")
+        return listOfNotNull(forenames, surname).filter { it.isNotBlank() }.joinToString(" ")
     }
 }
