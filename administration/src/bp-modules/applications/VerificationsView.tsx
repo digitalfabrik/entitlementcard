@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { GetApplicationsQuery } from '../../generated/graphql'
 import VerificationListItem from './components/VerificationListItem'
 
-type Application = GetApplicationsQuery['applications'][number]
+export type Application = GetApplicationsQuery['applications'][number]
 
 const VerificationContainer = styled.ul`
   list-style-type: none;

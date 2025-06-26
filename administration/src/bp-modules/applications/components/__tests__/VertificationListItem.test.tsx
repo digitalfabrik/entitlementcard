@@ -11,7 +11,9 @@ jest.mock('@blueprintjs/core', () => ({
 
 describe('VerificationListItem', () => {
   it('should show a rejected verification list item with correct content', () => {
-    const { getByText } = renderWithTranslation(<VerificationListItem verification={verificationsRejected[0]} />)
+    const { getByText } = renderWithTranslation(
+      <VerificationListItem verification={verificationsRejected[0]} applicationId={1} />
+    )
     expect(getByText('Organisation:')).toBeTruthy()
     expect(getByText('Verein420')).toBeTruthy()
     expect(getByText('E-Mail:')).toBeTruthy()
@@ -21,7 +23,9 @@ describe('VerificationListItem', () => {
   })
 
   it('should show a awaiting verification list item with correct content', () => {
-    const { getByText } = renderWithTranslation(<VerificationListItem verification={verificationsAwaiting[0]} />)
+    const { getByText } = renderWithTranslation(
+      <VerificationListItem verification={verificationsAwaiting[0]} applicationId={1} />
+    )
     expect(getByText('Organisation:')).toBeTruthy()
     expect(getByText('Verein420')).toBeTruthy()
     expect(getByText('E-Mail:')).toBeTruthy()
@@ -31,7 +35,9 @@ describe('VerificationListItem', () => {
   })
 
   it('should show a verified verification list item with correct content', () => {
-    const { getByText } = renderWithTranslation(<VerificationListItem verification={verificationsVerified[0]} />)
+    const { getByText } = renderWithTranslation(
+      <VerificationListItem verification={verificationsVerified[0]} applicationId={1} />
+    )
     expect(getByText('Organisation:')).toBeTruthy()
     expect(getByText('Verein420')).toBeTruthy()
     expect(getByText('E-Mail:')).toBeTruthy()
