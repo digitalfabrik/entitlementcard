@@ -1,15 +1,14 @@
 import { AutoAwesome } from '@mui/icons-material'
 import { Container } from '@mui/material'
 import { TFunction } from 'i18next'
+import { AnimatePresence, motion } from 'motion/react'
 import React, { ReactElement, useMemo, useState } from 'react'
-import FlipMove from 'react-flip-move'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import NonIdealState from '../../mui-modules/NonIdealState'
 import StandaloneCenter from '../StandaloneCenter'
 import ApplicationCard from './ApplicationCard'
-import type { ApplicationCardProps } from './ApplicationCard'
 import ApplicationStatusBar from './ApplicationStatusBar'
 import usePrintApplication from './hooks/usePrintApplication'
 import { ApplicationStatusBarItemType, ApplicationVerificationStatus, GetApplicationsType } from './types'
@@ -38,22 +37,13 @@ export const barItems: ApplicationStatusBarItemType[] = [
   },
 ]
 
-const ApplicationList = styled(FlipMove)`
+const ApplicationList = styled.div`
   display: flex;
   flex-grow: 1;
   flex-direction: column;
   height: 100%;
   gap: 16px;
 `
-
-// Necessary for FlipMove, as it cannot handle functional components
-// eslint-disable-next-line react/prefer-stateless-function
-export class ApplicationViewComponent extends React.Component<ApplicationCardProps> {
-  render(): ReactElement {
-    const { application } = this.props
-    return <ApplicationCard key={application.id} {...this.props} />
-  }
-}
 
 const getEmptyApplicationsListStatusDescription = (activeBarItem: ApplicationStatusBarItemType, t: TFunction): string =>
   activeBarItem.status !== undefined ? `${t(activeBarItem.title).toLowerCase()}en` : ''
@@ -88,20 +78,28 @@ const ApplicationsOverview = ({ applications }: { applications: GetApplicationsT
       />
       {filteredApplications.length > 0 ? (
         <ApplicationList>
-          {filteredApplications.map(application => (
-            <ApplicationViewComponent
-              isSelectedForPrint={application.id === applicationIdForPrint}
-              key={application.id}
-              application={application}
-              onPrintApplicationById={printApplicationById}
-              onDelete={() => setUpdatedApplications(updatedApplications.filter(a => a !== application))}
-              onChange={changed =>
-                setUpdatedApplications(
-                  updatedApplications.map(original => (original.id === changed.id ? changed : original))
-                )
-              }
-            />
-          ))}
+          <AnimatePresence initial={false}>
+            {filteredApplications.map(application => (
+              <motion.div
+                key={application.id}
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.2, ease: 'easeOut' }}>
+                <ApplicationCard
+                  isSelectedForPrint={application.id === applicationIdForPrint}
+                  application={application}
+                  onPrintApplicationById={printApplicationById}
+                  onDelete={() => setUpdatedApplications(updatedApplications.filter(a => a !== application))}
+                  onChange={changed =>
+                    setUpdatedApplications(
+                      updatedApplications.map(original => (original.id === changed.id ? changed : original))
+                    )
+                  }
+                />
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </ApplicationList>
       ) : (
         <StandaloneCenter>
