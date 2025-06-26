@@ -1,6 +1,6 @@
 /* eslint-disable react/destructuring-assignment */
 import { MutationResult } from '@apollo/client'
-import { CreditScore, Delete, ExpandMore, InfoOutline, Print, Warning } from '@mui/icons-material'
+import { CreditScore, Delete, ExpandMore, InfoOutline, PrintOutlined, Warning } from '@mui/icons-material'
 import {
   Accordion,
   AccordionDetails,
@@ -29,6 +29,7 @@ import {
   useApproveApplicationStatusMutation,
   useDeleteApplicationMutation,
 } from '../../generated/graphql'
+import BaseMenu, { MenuItemType } from '../../mui-modules/base/BaseMenu'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import type { ProjectConfig } from '../../project-configs/getProjectConfig'
 import formatDateWithTimezone from '../../util/formatDate'
@@ -97,7 +98,7 @@ const ButtonsCardPending = ({
         startIcon={<CreditScore />}
         disabled={disabled}
         onClick={onPrimaryButtonClick}>
-        {t('applicationApprove')}
+        <Typography variant='button'>{t('applicationApprove')}</Typography>
       </Button>
       <Button
         sx={{ display: 'none' }} // TODO: #1982
@@ -106,7 +107,7 @@ const ButtonsCardPending = ({
         color='error'
         disabled={disabled}
         onClick={onSecondaryButtonClick}>
-        {t('applicationReject')}
+        <Typography variant='button'>{t('applicationReject')}</Typography>
       </Button>
     </>
   )
@@ -134,7 +135,7 @@ const ButtonsCardApproved = ({
             disabled={primaryButtonHref === undefined}
             href={primaryButtonHref}
             startIcon={<CreditScore />}>
-            {cardAlreadyCreated ? t('createCardAgain') : t('createCard')}
+            <Typography variant='button'> {cardAlreadyCreated ? t('createCardAgain') : t('createCard')}</Typography>
           </Button>
         </span>
       </Tooltip>
@@ -233,6 +234,16 @@ const ApplicationCard = ({
     () => config.applicationFeature?.applicationJsonToPersonalData(jsonValueParsed),
     [config.applicationFeature, jsonValueParsed]
   )
+
+  const otherOptionsContainerWidth = 180
+  const otherOptionsItemHeight = 40
+  const menuItems: MenuItemType[] = [
+    {
+      name: t('exportPdf'),
+      onClick: () => onPrintApplicationById(application.id),
+      icon: <PrintOutlined sx={{ height: 24, marginRight: 1 }} />,
+    },
+  ]
 
   return (
     <Accordion
@@ -344,13 +355,12 @@ const ApplicationCard = ({
             />
           ) : undefined}
 
-          <Button
-            onClick={() => onPrintApplicationById(application.id)}
-            startIcon={<Print />}
-            variant='outlined'
-            color='inherit'>
-            {t('exportPdf')}
-          </Button>
+          <BaseMenu
+            menuItems={menuItems}
+            menuLabel={t('moreActionsButtonLabel')}
+            containerWidth={otherOptionsContainerWidth}
+            itemHeight={otherOptionsItemHeight}
+          />
         </Stack>
 
         <DeleteDialog

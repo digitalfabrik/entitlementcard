@@ -1,6 +1,6 @@
 import { Tooltip } from '@blueprintjs/core'
 import { EditNote } from '@mui/icons-material'
-import { Button, styled } from '@mui/material'
+import { Button, Typography, styled } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -66,7 +66,7 @@ const NoteDialogController = ({
           onClick={() => onOpenNoteDialog(true)}
           startIcon={<EditNote />}
           sx={{ displayPrint: 'none' }}>
-          Notiz anzeigen
+          <Typography variant='button'>Notiz anzeigen</Typography>
         </Button>
       </Tooltip>
       {isOpen && (
