@@ -5,6 +5,7 @@ import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
+import { AuthContext } from '../../../AuthProvider'
 import { ApplicationVerificationView, useSendApprovalMailToOrganisationMutation } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import { useAppToaster } from '../../AppToaster'
@@ -31,6 +32,7 @@ const VerificationListItem = ({ verification, applicationId }: VerificationListI
   const { t } = useTranslation('applicationsOverview')
   const appToaster = useAppToaster()
   const projectId = useContext(ProjectConfigContext).projectId
+  const { data: authData } = useContext(AuthContext)
   const [isApprovalRequestSent, setIsApprovalRequestSent] = useState(false)
 
   const status = verificationStatus(verification)
@@ -88,7 +90,7 @@ const VerificationListItem = ({ verification, applicationId }: VerificationListI
           </tr>
         </tbody>
       </table>
-      {status === VerificationStatus.Pending && (
+      {authData !== null && status === VerificationStatus.Pending && (
         <Button
           variant='contained'
           color='default'

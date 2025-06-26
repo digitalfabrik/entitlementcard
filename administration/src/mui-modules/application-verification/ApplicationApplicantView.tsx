@@ -93,7 +93,7 @@ const ApplicationApplicantView = ({
           expandedRoot={false}
         />
         <StyledDivider />
-        <VerificationsView verifications={application.verifications} />
+        <VerificationsView application={application} />
         {!application.withdrawalDate && (
           <>
             <StyledDivider />
