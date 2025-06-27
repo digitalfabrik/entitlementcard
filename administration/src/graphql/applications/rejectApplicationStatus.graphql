@@ -1,0 +1,7 @@
+mutation rejectApplicationStatus($applicationId: Int!, $rejectionMessage: String!) {
+  application: rejectApplicationStatus(applicationId: $applicationId, rejectionMessage: $rejectionMessage) {
+    status
+    statusResolvedDate
+    rejectionMessage
+  }
+}

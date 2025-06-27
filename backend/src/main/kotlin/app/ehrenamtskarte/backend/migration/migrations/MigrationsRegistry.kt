@@ -31,5 +31,6 @@ object MigrationsRegistry {
             V0026_AddFreinetAgenciesTable(),
             V0027_Region_Application_Confirmation_Mail_Note(),
             V0028_Add_Application_Status(),
+            V0029_Add_Application_Rejection_message(),
         )
 }

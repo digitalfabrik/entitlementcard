@@ -24,6 +24,7 @@ object Applications : IntIdTable() {
     val status = enumerationByName<ApplicationEntity.Status>("status", length = 32)
         .default(ApplicationEntity.Status.Pending)
     val statusResolvedDate = timestampWithTimeZone("statusResolvedDate").nullable()
+    val rejectionMessage = text("rejectionMessage").nullable()
 }
 
 class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
@@ -57,6 +58,7 @@ class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
 
     /** Captures the instant that state changes from [Status.Pending] to [Status.Approved] or [Status.Rejected]. */
     var statusResolvedDate by Applications.statusResolvedDate
+    var rejectionMessage by Applications.rejectionMessage
 
     /** Try to change the status to the given value. Returns true if successful, false otherwise. */
     fun tryChangeStatus(status: Status): Boolean =
