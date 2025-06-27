@@ -329,7 +329,7 @@ jobs:
                 keys:
                     - v1-gradle-{{ checksum "build.gradle.kts" }}
             - run:
-                command: SENTRY_AUTH_TOKEN=$SENTRY_BACKEND_AUTH_TOKEN ./gradlew assemble
+                command: SENTRY_AUTH_TOKEN=$SENTRY_BACKEND_AUTH_TOKEN ./gradlew assemble -Denv=prod
                 name: Build backend
             - save_cache:
                 key: v1-gradle-{{ checksum "build.gradle.kts" }}
@@ -439,7 +439,7 @@ jobs:
                 command: npm run check-circular-deps
                 name: Check circular dependencies
             - run:
-                command: npm run test:coverage -- --maxWorkers=2
+                command: npm run test:coverage -- --maxWorkers=1
                 name: Run tests and generate coverage report
             - store_artifacts:
                 destination: ~/attached_workspace/coverage

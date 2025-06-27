@@ -73,12 +73,14 @@ type ApplicationVerificationView {
 }
 
 type ApplicationView {
-  cardCreated: Boolean
+  cardCreated: Boolean @deprecated(reason : "Use 'status' instead")
   createdDate: String!
   id: Int!
   jsonValue: String!
   note: String
   regionId: Int!
+  status: ApplicationStatus
+  statusResolvedDate: String
   verifications: [ApplicationVerificationView!]!
   withdrawalDate: String
 }
@@ -140,6 +142,8 @@ type Mutation {
   activateCard(activationSecretBase64: String!, cardInfoHashBase64: String!, overwrite: Boolean!, project: String!): CardActivationResultModel!
   "Stores a new application for an EAK"
   addEakApplication(application: ApplicationInput!, project: String!, regionId: Int!): Boolean!
+  "Approve an application"
+  approveApplicationStatus(applicationId: Int!): ApplicationView!
   "Changes an administrator's password"
   changePassword(currentPassword: String!, email: String!, newPassword: String!, project: String!): Boolean!
   "Creates a new administrator"
@@ -304,6 +308,13 @@ enum ApiTokenType {
   VERIFIED_APPLICATION
 }
 
+enum ApplicationStatus {
+  Approved
+  ApprovedCardCreated
+  Pending
+  Rejected
+}
+
 enum ApplicationType {
   FIRST_APPLICATION
   RENEWAL_APPLICATION
@@ -335,6 +346,7 @@ enum GoldenCardEntitlementType {
 }
 
 enum GraphQLExceptionCode {
+  APPLICATION_DATA_INCOMPLETE
   EMAIL_ALREADY_EXISTS
   FREINET_AGENCY_NOT_FOUND
   FREINET_API_NOT_REACHABLE

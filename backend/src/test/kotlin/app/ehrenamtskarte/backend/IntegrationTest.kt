@@ -6,7 +6,6 @@ import app.ehrenamtskarte.backend.config.PostgresConfig
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestFreinetAgencies
 import app.ehrenamtskarte.backend.migration.MigrationUtils
-import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.utility.DockerImageName
@@ -21,10 +20,22 @@ open class IntegrationTest {
             postgisImage.asCompatibleSubstituteFor("postgres"),
         )
 
+        init {
+            postgisContainer.start()
+            setupDatabase()
+        }
+
+        @JvmStatic
+        protected val config = loadTestConfig()
+
         @JvmStatic
         @BeforeAll
-        fun setupDatabase() {
-            postgisContainer.start()
+        fun loadTestData() {
+            TestAdministrators.createAll()
+            TestFreinetAgencies.create()
+        }
+
+        private fun setupDatabase() {
             val config = loadTestConfig()
                 .copy(
                     postgres = PostgresConfig(
@@ -36,17 +47,9 @@ open class IntegrationTest {
             val database = Database.setupWithoutMigrationCheck(config)
             MigrationUtils.applyRequiredMigrations(database)
             Database.setupWithInitialDataAndMigrationChecks(config)
-            TestAdministrators.createAll()
-            TestFreinetAgencies.create()
         }
 
-        @JvmStatic
-        @AfterAll
-        fun tearDownDatabase() {
-            postgisContainer.stop()
-        }
-
-        fun loadTestConfig(): BackendConfiguration {
+        private fun loadTestConfig(): BackendConfiguration {
             val resource = ClassLoader.getSystemResource("config.test.yml")
                 ?: throw Exception("Configuration resource 'src/test/resources/config.test.yml' not found")
             return BackendConfiguration.load(resource)

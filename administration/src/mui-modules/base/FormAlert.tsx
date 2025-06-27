@@ -26,7 +26,7 @@ type FormAlertProps = {
 
 const FormAlert = ({ errorMessage, isToast = false, severity = 'error', style }: FormAlertProps): ReactElement | null =>
   errorMessage ? (
-    <Container style={style} $severity={severity} $isToast={isToast}>
+    <Container style={style} $severity={severity} $isToast={isToast} data-testid='form-alert'>
       <InfoOutlined />
       {errorMessage}
     </Container>

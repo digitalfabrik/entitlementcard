@@ -5,6 +5,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
  *
  * This generated file contains a sample Kotlin application project to get you started.
  */
+val isProductionEnvironment = System.getProperty("env") == "prod"
 
 plugins {
     alias(libs.plugins.com.google.protobuf)
@@ -58,6 +59,8 @@ dependencies {
     testImplementation(libs.org.junit.jupiter.params)
     implementation(libs.org.piwik.java.tracking.matomo.java.tracker)
     implementation(libs.org.postgresql.postgresql)
+    implementation(libs.com.kohlschutter.junixsocket.common) // required for PostgreSQL Unix domain socket support
+    implementation(libs.com.kohlschutter.junixsocket.core)
     implementation(libs.org.slf4j.simple)
     implementation(libs.org.simplejavamail)
     testImplementation(libs.org.testcontainers)
@@ -86,15 +89,17 @@ ktlint {
     }
 }
 
-sentry {
-    // Generates a JVM (Java, Kotlin, etc.) source bundle and uploads your source code to Sentry.
-    // This enables source context, allowing you to see your source
-    // code as part of your stack traces in Sentry.
-    includeSourceContext = true
+if (isProductionEnvironment) {
+    sentry {
+        // Generates a JVM (Java, Kotlin, etc.) source bundle and uploads your source code to Sentry.
+        // This enables source context, allowing you to see your source
+        // code as part of your stack traces in Sentry.
+        includeSourceContext = true
 
-    org = "digitalfabrik"
-    projectName = "entitlementcard-backend"
-    authToken = System.getenv("SENTRY_AUTH_TOKEN")
+        org = "digitalfabrik"
+        projectName = "entitlementcard-backend"
+        authToken = System.getenv("SENTRY_AUTH_TOKEN")
+    }
 }
 
 sourceSets {
@@ -165,7 +170,13 @@ tasks.sentryCollectSourcesJava {
     dependsOn(tasks.generateProto)
 }
 
+tasks.generateProto {
+    dependsOn(tasks.generateSentryBundleIdJava)
+}
+
 tasks.graphqlGenerateTestClient {
+    dependsOn(tasks.generateSentryBundleIdJava)
+    dependsOn(tasks.sentryCollectSourcesJava)
     schemaFile.set(rootDir.parentFile.resolve("specs/backend-api.graphql"))
     packageName.set("app.ehrenamtskarte.backend.generated")
     queryFiles.setFrom(fileTree("src/test/resources/graphql"))
