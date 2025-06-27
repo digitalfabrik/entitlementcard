@@ -10,8 +10,16 @@ enum class ActivationState {
     failed,
 }
 
+@Suppress("ktlint:standard:enum-entry-name-case")
+enum class ActivationFailureReason {
+    not_found,
+    wrong_secret,
+    expired,
+}
+
 data class CardActivationResultModel(
     val activationState: ActivationState,
     val totpSecret: String? = null,
+    val failureReason: ActivationFailureReason? = null,
     val activationTimeStamp: String = Instant.now().toString(),
 )

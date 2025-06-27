@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:ehrenamtskarte/app.dart';
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/home/home_page.dart';
@@ -16,6 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import '../identification/activation_workflow/activate_code.dart';
+import '../identification/connection_failed_dialog.dart';
 
 enum DeepLinkActivationStatus {
   // Activation is invalid
@@ -120,7 +121,8 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
                                   _state = _State.loading;
                                 });
                                 try {
-                                  final activated = await activateCard(context, activationCode);
+                                  final activated =
+                                      await activateCard(context, activationCode, source: ActivationSource.deepLink);
                                   if (!context.mounted) return;
                                   if (activated) {
                                     final cardIndex =
@@ -134,17 +136,24 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
                                       _state = _State.waiting;
                                     });
                                   }
+                                } on ServerCardActivationException catch (_) {
+                                  setState(() {
+                                    _state = _State.waiting;
+                                  });
+                                  if (!context.mounted) return;
+                                  await ConnectionFailedDialog.show(
+                                      context, t.identification.codeActivationFailedConnection);
                                 } catch (_) {
                                   setState(() {
                                     _state = _State.waiting;
                                   });
-                                  // TODO 1656: Improve error handling!!
+                                  if (!context.mounted) return;
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text(t.common.unknownError),
                                     ),
                                   );
-                                  rethrow;
+                                  // rethrow;
                                 }
                               }
                             : null,
