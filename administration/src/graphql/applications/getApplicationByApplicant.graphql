@@ -5,6 +5,7 @@ query getApplicationByApplicant($accessKey: String!) {
     jsonValue
     withdrawalDate
     verifications {
+      verificationId
       contactEmailAddress
       organizationName
       verifiedDate

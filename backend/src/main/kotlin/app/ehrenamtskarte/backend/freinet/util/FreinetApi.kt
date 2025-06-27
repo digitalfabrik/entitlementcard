@@ -78,13 +78,13 @@ class FreinetApi(private val host: String, private val accessKey: String, privat
         personalDataNode: JsonNode,
         userEmail: String,
     ): Boolean {
-        val addressArrayNode = personalDataNode.get("value").findValueByNameNode("address")
+        val addressArrayNode = personalDataNode.findValueByNameNode("address")
         val street = addressArrayNode?.findValueByName("street")
         val houseNumber = addressArrayNode?.findValueByName("houseNumber")
         val postalCode = addressArrayNode?.findValueByName("postalCode")
         val location = addressArrayNode?.findValueByName("location")
-        val email = personalDataNode.get("value").findValueByName("emailAddress")
-        val phone = personalDataNode.get("value").findValueByName("telephone")
+        val email = personalDataNode.findValueByName("emailAddress")
+        val phone = personalDataNode.findValueByName("telephone")
 
         val currentDateTime = LocalDateTime
             .now()

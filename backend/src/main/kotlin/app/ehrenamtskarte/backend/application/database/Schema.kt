@@ -1,6 +1,8 @@
 package app.ehrenamtskarte.backend.application.database
 
 import app.ehrenamtskarte.backend.regions.database.Regions
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -66,6 +68,8 @@ class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
         } catch (_: IllegalArgumentException) {
             false
         }
+
+    fun parseJsonValue(): JsonNode = jacksonObjectMapper().readTree(jsonValue)
 }
 
 enum class ApplicationVerificationExternalSource {
