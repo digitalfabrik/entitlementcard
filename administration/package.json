@@ -1,6 +1,7 @@
 {
   "name": "administration",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@apollo/client": "^3.13.8",
     "@blueprintjs/core": "^5.19.0",
@@ -81,8 +82,8 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-unicorn": "^59.0.1",
     "html-webpack-plugin": "^5.6.3",
-    "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0",
+    "jest": "^30.0.2",
+    "jest-environment-jsdom": "^30.0.2",
     "madge": "^7.0.0",
     "mini-css-extract-plugin": "^2.9.2",
     "prettier": "^2.8.8",

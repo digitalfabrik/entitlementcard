@@ -15,7 +15,7 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "moduleResolution": "node",
-    "isolatedModules": false,
+    "isolatedModules": true,
     "jsx": "react-jsx",
     "types": ["node", "jest"]
   },
