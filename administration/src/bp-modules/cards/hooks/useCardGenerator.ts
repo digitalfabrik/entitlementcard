@@ -9,10 +9,11 @@ import createCards, { CreateCardsResult } from '../../../cards/createCards'
 import deleteCards from '../../../cards/deleteCards'
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
 import {
+  FreinetCardInput,
   Region,
   useCreateCardsMutation,
   useDeleteCardsMutation,
-  useSendApplicationDataToFreinetMutation,
+  useSendApplicationAndCardDataToFreinetMutation,
 } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import { ProjectConfig } from '../../../project-configs/getProjectConfig'
@@ -69,9 +70,9 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
   const appToaster = useAppToaster()
   const { t } = useTranslation('cards')
 
-  const [sendToFreinet] = useSendApplicationDataToFreinetMutation({
+  const [sendToFreinet] = useSendApplicationAndCardDataToFreinetMutation({
     onCompleted: data => {
-      if (data.sendApplicationDataToFreinet === true) {
+      if (data.sendApplicationAndCardDataToFreinet === true) {
         appToaster?.show({ intent: 'success', message: t('freinetDataSyncSuccessMessage') })
       }
     },
@@ -106,10 +107,21 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
         // This is a temporary condition from #2141
         if (!isProductionEnvironment() && applicationId != null) {
           const { projectId } = projectConfig
+          const freinetCards: FreinetCardInput[] = cards.map(card => {
+            if (!card.extensions.bavariaCardType) {
+              throw Error('Card data invalid, bavarianCardType missing.')
+            }
+            return {
+              id: card.id,
+              expirationDate: card.expirationDate?.format('yyyy-MM-dd'),
+              cardType: card.extensions.bavariaCardType,
+            }
+          })
           sendToFreinet({
             variables: {
               applicationId,
               project: projectId,
+              freinetCards,
             },
           })
         }
