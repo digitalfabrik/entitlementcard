@@ -88,6 +88,7 @@ type ApplicationView {
 type CardActivationResultModel {
   activationState: ActivationState!
   activationTimeStamp: String!
+  failureReason: ActivationFailureReason
   totpSecret: String
 }
 
@@ -294,6 +295,12 @@ type StoreImportReturnResultModel {
   storesCreated: Int!
   storesDeleted: Int!
   storesUntouched: Int!
+}
+
+enum ActivationFailureReason {
+  expired
+  not_found
+  wrong_secret
 }
 
 enum ActivationState {
