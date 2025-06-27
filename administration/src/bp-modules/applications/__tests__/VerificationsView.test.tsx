@@ -1,7 +1,8 @@
+import { MockedProvider } from '@apollo/client/testing'
 import React from 'react'
 
 import { renderWithTranslation } from '../../../testing/render'
-import VerificationsView from '../VerificationsView'
+import VerificationsView, { Application } from '../VerificationsView'
 import { verificationsMixed } from '../__mocks__/verificationData'
 
 jest.mock('@blueprintjs/core', () => ({
@@ -10,6 +11,13 @@ jest.mock('@blueprintjs/core', () => ({
 }))
 
 describe('VerificationsView', () => {
+  const renderView = (application: Application) =>
+    renderWithTranslation(
+      <MockedProvider>
+        <VerificationsView application={application} />
+      </MockedProvider>
+    )
+
   it('should show a hint if there are no verifications', () => {
     const application = {
       createdDate: '2024-05-15T09:20:23.350015Z',
@@ -19,7 +27,7 @@ describe('VerificationsView', () => {
       verifications: [],
       withdrawalDate: null,
     }
-    const { getByText, getByRole } = renderWithTranslation(<VerificationsView application={application} />)
+    const { getByText, getByRole } = renderView(application)
     expect(getByText('Bestätigung(en) durch Organisationen:')).toBeTruthy()
     expect(getByRole('note').textContent).toBe('(keine)')
   })
@@ -33,7 +41,7 @@ describe('VerificationsView', () => {
       verifications: verificationsMixed,
       withdrawalDate: null,
     }
-    const { getByText, queryAllByRole } = renderWithTranslation(<VerificationsView application={application} />)
+    const { getByText, queryAllByRole } = renderView(application)
     expect(getByText('Bestätigung(en) durch Organisationen:')).toBeTruthy()
     expect(queryAllByRole('listitem')).toHaveLength(3)
   })
