@@ -39,6 +39,16 @@ export const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
+          variants: [
+            {
+              props: { variant: 'contained', color: 'primary' },
+              style: {
+                '&:hover': {
+                  color: '#ffffff',
+                },
+              },
+            },
+          ],
           textTransform: 'none',
         },
       },
