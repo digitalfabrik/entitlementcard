@@ -28,7 +28,7 @@ describe('VerificationListItem', () => {
     renderWithTranslation(
       <MockedProvider>
         <AuthContext.Provider value={mockAuthContext}>
-          <VerificationListItem verification={verification} applicationId={1} />
+          <VerificationListItem verification={verification} applicationId={1} showResendApprovalEmailButton />
         </AuthContext.Provider>
       </MockedProvider>
     )

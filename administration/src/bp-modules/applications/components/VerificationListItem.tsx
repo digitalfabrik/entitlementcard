@@ -6,7 +6,6 @@ import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
-import { AuthContext } from '../../../AuthProvider'
 import { ApplicationVerificationView, useSendApprovalMailToOrganisationMutation } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import { useAppToaster } from '../../AppToaster'
@@ -27,6 +26,7 @@ export type Verification = Omit<ApplicationVerificationView, 'contactName'>
 type VerificationListItemProps = {
   verification: Verification
   applicationId: number
+  showResendApprovalEmailButton: boolean
 }
 
 const getStatusMetaData = (verification: Verification, t: TFunction): { text: string; color: string } => {
@@ -42,11 +42,10 @@ const getStatusMetaData = (verification: Verification, t: TFunction): { text: st
   return { text, color }
 }
 
-const VerificationListItem = ({ verification, applicationId }: VerificationListItemProps): ReactElement => {
+const VerificationListItem = ({ verification, applicationId, showResendApprovalEmailButton }: VerificationListItemProps): ReactElement => {
   const { t } = useTranslation('applicationsOverview')
   const appToaster = useAppToaster()
   const projectId = useContext(ProjectConfigContext).projectId
-  const { data: authData } = useContext(AuthContext)
   const [isApprovalRequestSent, setIsApprovalRequestSent] = useState(false)
 
   const status = verificationStatus(verification)
@@ -97,14 +96,14 @@ const VerificationListItem = ({ verification, applicationId }: VerificationListI
           </tr>
         </tbody>
       </table>
-      {authData !== null && status === VerificationStatus.Pending && (
+      {showResendApprovalEmailButton && status === VerificationStatus.Pending && (
         <Button
           variant='contained'
           color='default'
           onClick={() => onSendApprovalEmailClick()}
           startIcon={<ForwardToInboxIcon />}
           sx={{ displayPrint: 'none', mt: 1 }}
-          disabled={sendApprovalEmailResult.loading || isApprovalRequestSent}>
+          disabled={(Boolean(sendApprovalEmailResult.loading)) || isApprovalRequestSent}>
           {isApprovalRequestSent ? t('approvalRequestHasBeenSent') : t('resendApprovalRequest')}
         </Button>
       )}
