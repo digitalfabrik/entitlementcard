@@ -42,7 +42,11 @@ const getStatusMetaData = (verification: Verification, t: TFunction): { text: st
   return { text, color }
 }
 
-const VerificationListItem = ({ verification, applicationId, showResendApprovalEmailButton }: VerificationListItemProps): ReactElement => {
+const VerificationListItem = ({
+  verification,
+  applicationId,
+  showResendApprovalEmailButton,
+}: VerificationListItemProps): ReactElement => {
   const { t } = useTranslation('applicationsOverview')
   const appToaster = useAppToaster()
   const projectId = useContext(ProjectConfigContext).projectId
@@ -103,7 +107,7 @@ const VerificationListItem = ({ verification, applicationId, showResendApprovalE
           onClick={() => onSendApprovalEmailClick()}
           startIcon={<ForwardToInboxIcon />}
           sx={{ displayPrint: 'none', mt: 1 }}
-          disabled={(Boolean(sendApprovalEmailResult.loading)) || isApprovalRequestSent}>
+          disabled={Boolean(sendApprovalEmailResult.loading) || isApprovalRequestSent}>
           {isApprovalRequestSent ? t('approvalRequestHasBeenSent') : t('resendApprovalRequest')}
         </Button>
       )}

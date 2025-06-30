@@ -14,7 +14,7 @@ describe('VerificationsView', () => {
   const renderView = (application: Application) =>
     renderWithTranslation(
       <MockedProvider>
-        <VerificationsView application={application} />
+        <VerificationsView application={application} showResendApprovalEmailButton />
       </MockedProvider>
     )
 

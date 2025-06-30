@@ -16,7 +16,13 @@ const VerificationContainer = styled.ul`
   }
 `
 
-const VerificationsView = ({ application, showResendApprovalEmailButton }: { application: Application, showResendApprovalEmailButton : boolean }): ReactElement => {
+const VerificationsView = ({
+  application,
+  showResendApprovalEmailButton,
+}: {
+  application: Application
+  showResendApprovalEmailButton: boolean
+}): ReactElement => {
   const { t } = useTranslation('applicationsOverview')
   const { verifications, id } = application
   return (
@@ -25,7 +31,14 @@ const VerificationsView = ({ application, showResendApprovalEmailButton }: { app
       <VerificationContainer>
         {verifications.map(verification => {
           const key = verification.organizationName + verification.contactEmailAddress
-          return <VerificationListItem verification={verification} applicationId={id} showResendApprovalEmailButton={showResendApprovalEmailButton} key={key} />
+          return (
+            <VerificationListItem
+              key={key}
+              verification={verification}
+              applicationId={id}
+              showResendApprovalEmailButton={showResendApprovalEmailButton}
+            />
+          )
         })}
       </VerificationContainer>
       {verifications.length === 0 ? <i role='note'>({t('none')})</i> : null}
