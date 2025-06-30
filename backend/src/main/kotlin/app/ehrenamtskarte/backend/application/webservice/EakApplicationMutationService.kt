@@ -160,7 +160,8 @@ class EakApplicationMutationService {
         rejectionMessage: String,
         dfe: DataFetchingEnvironment,
     ): ApplicationView {
-        dfe.graphQlContext.context.enforceSignedIn()
+        val context = dfe.graphQlContext.context
+        context.enforceSignedIn()
 
         return transaction {
             val applicationEntity = ApplicationEntity.findById(applicationId)
@@ -171,8 +172,12 @@ class EakApplicationMutationService {
                 }
                 ?: throw NotFoundException("Application not found")
             if (
-                mayUpdateApplicationsInRegion(dfe.graphQlContext.context.getAdministrator(), applicationEntity.regionId)
+                mayUpdateApplicationsInRegion(context.getAdministrator(), applicationEntity.regionId)
             ) {
+               // Mailer.sendApplicationRejectedMail(
+               //     context.backendConfiguration,
+               //     context.backendConfiguration.projects.first { it.id == "test" },
+               // )
                 applicationEntity
             } else {
                 throw ForbiddenException()
