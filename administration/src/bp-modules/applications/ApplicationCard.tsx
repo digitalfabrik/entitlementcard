@@ -199,11 +199,11 @@ const ButtonsApplicationResolved = (props: {
 
   return (
     <>
-      <Tooltip title={props.primaryButtonHref ? undefined : t('incompleteApplicationDataTooltip')}>
-        {/* Make the outer Tooltip independent of the button's disabled state */}
-        <span>
-          {(props.applicationStatus === ApplicationStatus.Approved ||
-            props.applicationStatus === ApplicationStatus.ApprovedCardCreated) && (
+      {/* Make the outer Tooltip independent of the button's disabled state */}
+      {(props.applicationStatus === ApplicationStatus.Approved ||
+        props.applicationStatus === ApplicationStatus.ApprovedCardCreated) && (
+        <Tooltip title={props.primaryButtonHref ? undefined : t('incompleteApplicationDataTooltip')}>
+          <div>
             <Button
               color='primary'
               variant='contained'
@@ -214,9 +214,9 @@ const ButtonsApplicationResolved = (props: {
                 ? t('createCardAgain')
                 : t('createCard')}
             </Button>
-          )}
-        </span>
-      </Tooltip>
+          </div>
+        </Tooltip>
+      )}
       <Button onClick={props.onSecondaryButtonClick} startIcon={<Delete />} variant='outlined' color='error'>
         {t('deleteApplication')}
       </Button>
