@@ -36,7 +36,7 @@ import {
 import { format } from 'date-fns'
 import { de } from 'date-fns/locale'
 import React, { memo, useContext, useMemo, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import {
@@ -224,23 +224,30 @@ const ButtonsApplicationResolved = (props: {
   )
 }
 
-const StatusNote = ({ statusResolvedDate, status }: { statusResolvedDate: Date; status: ApplicationStatus }) => {
+const StatusNote = (props: { statusResolvedDate: Date; status: ApplicationStatus; reason: string | undefined }) => {
   const { t } = useTranslation('applicationsOverview')
-  const isApproved = [ApplicationStatus.Approved, ApplicationStatus.ApprovedCardCreated].includes(status)
+  const isApproved = [ApplicationStatus.Approved, ApplicationStatus.ApprovedCardCreated].includes(props.status)
 
   return (
-    <Stack direction='row' sx={{ padding: 2, alignItems: 'center' }}>
+    <Stack direction='row' sx={{ padding: 2, alignItems: 'flex-start' }}>
       <InfoOutline />
       &ensp;
-      {t('applicationResolveNotice', {
-        date: format(statusResolvedDate, 'dd MMMM', { locale: de }),
-        time: format(statusResolvedDate, 'HH:mm', { locale: de }),
-      })}
-      &ensp;
-      <Typography sx={{ fontWeight: 'bold' }} color={isApproved ? 'success' : 'error'}>
-        {t(isApproved ? 'applicationResolveApproved' : 'applicationResolveRejected')}
-      </Typography>
-      .
+      <div>
+        <Trans
+          t={t}
+          i18nKey={isApproved ? 'applicationResolveNoticeApproved' : 'applicationResolveNoticeRejected'}
+          values={{
+            date: format(props.statusResolvedDate, 'dd MMMM', { locale: de }),
+            time: format(props.statusResolvedDate, 'HH:mm', { locale: de }),
+            reason: props.reason,
+          }}
+          components={{
+            resolution: (
+              <Typography component='span' sx={{ fontWeight: 'bold' }} color={isApproved ? 'success' : 'error'} />
+            ),
+          }}
+        />
+      </div>
     </Stack>
   )
 }
@@ -409,7 +416,11 @@ const ApplicationCard = ({
         <Divider />
 
         {application.status != null && application.statusResolvedDate != null && (
-          <StatusNote statusResolvedDate={new Date(application.statusResolvedDate)} status={application.status} />
+          <StatusNote
+            statusResolvedDate={new Date(application.statusResolvedDate)}
+            status={application.status}
+            reason={application.rejectionMessage ?? undefined}
+          />
         )}
 
         <Stack sx={{ p: 2, displayPrint: 'none' }} spacing={2} direction='row'>
