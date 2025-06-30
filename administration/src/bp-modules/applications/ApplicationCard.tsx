@@ -496,7 +496,9 @@ const ApplicationCard = ({
           open={rejectionDialogOpen}
           loading={rejectStatusResult.loading}
           onConfirm={message => {
-            rejectStatus({ variables: { applicationId: application.id, rejectionMessage: message } })
+            rejectStatus({
+              variables: { project: config.projectId, applicationId: application.id, rejectionMessage: message },
+            })
           }}
           onCancel={() => {
             setRejectionDialogOpen(false)
