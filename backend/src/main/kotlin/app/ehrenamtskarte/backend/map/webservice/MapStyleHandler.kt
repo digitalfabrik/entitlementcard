@@ -49,7 +49,7 @@ class MapStyleHandler(config: BackendConfiguration) {
     ): JsonNode? {
         val sources = style["sources"] ?: return null
 
-        val newSources = sources.fields().asSequence().map {
+        val newSources = sources.properties().asSequence().map {
             patcher(it.key, it.value)
         }.toMap()
 

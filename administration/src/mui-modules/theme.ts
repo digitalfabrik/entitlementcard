@@ -68,6 +68,9 @@ export const theme = createTheme({
       },
     },
     MuiStack: {
+      defaultProps: {
+        useFlexGap: true,
+      },
       styleOverrides: {
         root: {
           '& *': {

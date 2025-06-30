@@ -23,7 +23,7 @@ class CanonicalJson {
 
         private fun GeneratedMessage.assertOnlyOptionalFields() {
             this.allFields.forEach {
-                if (!it.key.isOptional) {
+                if (it.key.run { isRequired() || isRepeated() }) {
                     throw Error(
                         """
                     Field ${it.key.name} is not optional, although we only allow optional fields.
