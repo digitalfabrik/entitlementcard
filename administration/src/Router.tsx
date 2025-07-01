@@ -1,6 +1,6 @@
+import { styled } from '@mui/material'
 import React, { ReactElement, useContext, useMemo } from 'react'
 import { Outlet, Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router'
-import styled from 'styled-components'
 
 import { AuthContext } from './AuthProvider'
 import KeepAliveToken from './KeepAliveToken'
@@ -40,33 +40,19 @@ const PrintAwareNavbar = styled(Navigation)`
   height: ${dimensions.navigationBarHeight}px;
 `
 
-const Main = styled('div')`
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  @media print {
-    justify-content: start;
-  }
-`
-
 const AuthLayout = (): ReactElement => {
   const { data: authData, signIn, signOut } = useContext(AuthContext)
   const isLoggedIn = authData !== null && authData.expiry > new Date()
 
-  if (!isLoggedIn) {
-    return <Login onSignIn={signIn} />
-  }
-
-  return (
+  return isLoggedIn ? (
     <WhoAmIProvider>
       <KeepAliveToken authData={authData} onSignIn={signIn} onSignOut={signOut}>
         <PrintAwareNavbar onSignOut={signOut} />
-        <Main>
-          <Outlet />
-        </Main>
+        <Outlet />
       </KeepAliveToken>
     </WhoAmIProvider>
+  ) : (
+    <Login onSignIn={signIn} />
   )
 }
 
