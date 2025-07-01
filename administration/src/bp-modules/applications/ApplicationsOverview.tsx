@@ -1,9 +1,8 @@
-import { Container } from '@mui/material'
+import { Stack } from '@mui/material'
 import { TFunction } from 'i18next'
 import { AnimatePresence, motion } from 'motion/react'
 import React, { ReactElement, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
 import AlertBox from '../../mui-modules/base/AlertBox'
 import ApplicationCard from './ApplicationCard'
@@ -35,18 +34,6 @@ export const barItems: ApplicationStatusBarItemType[] = [
   },
 ]
 
-const ApplicationList = styled.div`
-  display: flex;
-  flex-grow: 1;
-  flex-direction: column;
-  height: 100%;
-  gap: 16px;
-  // This fixes a whitespace issue in print dialog when using motion #2375
-  @media print {
-    gap: 0;
-  }
-`
-
 const getEmptyApplicationsListStatusDescription = (activeBarItem: ApplicationStatusBarItemType, t: TFunction): string =>
   activeBarItem.status !== undefined ? `${t(activeBarItem.title).toLowerCase()}en` : ''
 
@@ -71,7 +58,7 @@ const ApplicationsOverview = ({ applications }: { applications: GetApplicationsT
   )
 
   return (
-    <Container sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', maxWidth: '90%', width: '1000px' }}>
+    <Stack sx={{ flexGrow: 1, maxWidth: '90%', width: '1000px', gap: 2, '@media print': { gap: 0 } }}>
       <ApplicationStatusBar
         applications={updatedApplications}
         activeBarItem={activeBarItem}
@@ -79,30 +66,28 @@ const ApplicationsOverview = ({ applications }: { applications: GetApplicationsT
         barItems={barItems}
       />
       {filteredApplications.length > 0 ? (
-        <ApplicationList>
-          <AnimatePresence initial={false}>
-            {filteredApplications.map(application => (
-              <motion.div
-                key={application.id}
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: 'auto', opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.2, ease: 'easeOut' }}>
-                <ApplicationCard
-                  isSelectedForPrint={application.id === applicationIdForPrint}
-                  application={application}
-                  onPrintApplicationById={printApplicationById}
-                  onDelete={() => setUpdatedApplications(updatedApplications.filter(a => a !== application))}
-                  onChange={changed =>
-                    setUpdatedApplications(
-                      updatedApplications.map(original => (original.id === changed.id ? changed : original))
-                    )
-                  }
-                />
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </ApplicationList>
+        <AnimatePresence initial={false}>
+          {filteredApplications.map(application => (
+            <motion.div
+              key={application.id}
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.2, ease: 'easeOut' }}>
+              <ApplicationCard
+                isSelectedForPrint={application.id === applicationIdForPrint}
+                application={application}
+                onPrintApplicationById={printApplicationById}
+                onDelete={() => setUpdatedApplications(updatedApplications.filter(a => a !== application))}
+                onChange={changed =>
+                  setUpdatedApplications(
+                    updatedApplications.map(original => (original.id === changed.id ? changed : original))
+                  )
+                }
+              />
+            </motion.div>
+          ))}
+        </AnimatePresence>
       ) : (
         <AlertBox
           severity='info'
@@ -112,7 +97,7 @@ const ApplicationsOverview = ({ applications }: { applications: GetApplicationsT
           })}
         />
       )}
-    </Container>
+    </Stack>
   )
 }
 
