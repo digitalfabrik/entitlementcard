@@ -62,6 +62,7 @@ import { ApplicationIndicators } from './VerificationsIndicator'
 import VerificationsView from './VerificationsView'
 import { GetApplicationsType } from './types'
 import { ApplicationToCsvError, exportApplicationToCsv } from './utils/exportApplicationToCsv'
+import { ApplicationDataIncompleteError } from '../../util/applicationDataHelper'
 
 const DeleteDialog = (props: {
   isOpen: boolean
@@ -340,7 +341,7 @@ const ApplicationCard = ({
     try {
       exportApplicationToCsv(application, config)
     } catch (error) {
-      if (error instanceof ApplicationToCsvError) {
+      if (error instanceof ApplicationToCsvError || error instanceof ApplicationDataIncompleteError) {
         const { message } = error
         appToaster?.show({
           message,

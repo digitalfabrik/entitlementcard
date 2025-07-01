@@ -65,7 +65,7 @@ export const getAddressApplicationData = (json: JsonField<'Array'>): AddressAppl
 }
 
 export const getCardTypeApplicationData = (json: JsonField<'Array'>): CardTypeApplicationData => {
-  const applicationDetails = findValue(json, 'applicationDetails', 'Array')
+  const applicationDetails = findValue(json, 'applicationDetails!!', 'Array')
   if (!applicationDetails) {
     throw new ApplicationDataIncompleteError('applicationDetails not found')
   }
