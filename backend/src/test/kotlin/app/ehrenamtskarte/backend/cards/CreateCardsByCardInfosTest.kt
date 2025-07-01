@@ -54,7 +54,7 @@ internal class CreateCardsByCardInfosTest : GraphqlApiTest() {
     @Test
     fun `POST returns an error when the user is not allowed to create cards`() =
         JavalinTest.test(app) { _, client ->
-            val encodedCardInfo = ExampleCardInfo.getEncoded(CardInfoTestSample.BavarianStandard)
+            val encodedCardInfo = SampleCards.BavarianStandard.getEncoded()
             val mutation = createMutation(encodedCardInfo = encodedCardInfo)
             val response = post(client, mutation, projectAdmin.getJwtToken())
 
