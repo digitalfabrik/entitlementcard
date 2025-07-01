@@ -1,6 +1,5 @@
 import React, { ReactElement, useContext, useMemo } from 'react'
 import { Outlet, Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router'
-import styled from 'styled-components'
 
 import { AuthContext } from './AuthProvider'
 import KeepAliveToken from './KeepAliveToken'
@@ -32,33 +31,19 @@ import ApplicationVerificationController from './mui-modules/application-verific
 import ApplyController from './mui-modules/application/ApplyController'
 import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
 
-const Main = styled.div`
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  @media print {
-    justify-content: start;
-  }
-`
-
 const AuthLayout = (): ReactElement => {
   const { data: authData, signIn, signOut } = useContext(AuthContext)
   const isLoggedIn = authData !== null && authData.expiry > new Date()
 
-  if (!isLoggedIn) {
-    return <Login onSignIn={signIn} />
-  }
-
-  return (
+  return isLoggedIn ? (
     <WhoAmIProvider>
       <KeepAliveToken authData={authData} onSignIn={signIn} onSignOut={signOut}>
         <Navigation onSignOut={signOut} />
-        <Main>
-          <Outlet />
-        </Main>
+        <Outlet />
       </KeepAliveToken>
     </WhoAmIProvider>
+  ) : (
+    <Login onSignIn={signIn} />
   )
 }
 
