@@ -13,6 +13,7 @@ import {
   DialogContent,
   Divider,
   Stack,
+  SvgIcon,
   Tooltip,
   Typography,
   styled,
@@ -23,6 +24,7 @@ import { de } from 'date-fns/locale'
 import React, { memo, useContext, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import CSVIcon from '../../assets/icons/csv.svg'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import {
   ApplicationStatus,
@@ -42,6 +44,7 @@ import NoteDialogController from './NoteDialogController'
 import { ApplicationIndicators } from './VerificationsIndicator'
 import VerificationsView from './VerificationsView'
 import { GetApplicationsType } from './types'
+import { exportApplicationToCsv } from './utils/exportApplicationToCsv'
 
 const Spacer = styled('div')`
   flex-grow: 1;
@@ -238,6 +241,15 @@ const ApplicationCard = ({
   const otherOptionsContainerWidth = 180
   const otherOptionsItemHeight = 40
   const menuItems: MenuItemType[] = [
+    {
+      name: t('exportCsv'),
+      onClick: () => exportApplicationToCsv(application, config),
+      icon: (
+        <SvgIcon sx={{ height: 24, marginRight: 1 }}>
+          <CSVIcon />
+        </SvgIcon>
+      ),
+    },
     {
       name: t('exportPdf'),
       onClick: () => onPrintApplicationById(application.id),
