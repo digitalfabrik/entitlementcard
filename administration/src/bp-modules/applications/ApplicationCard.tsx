@@ -44,7 +44,7 @@ import NoteDialogController from './NoteDialogController'
 import { ApplicationIndicators } from './VerificationsIndicator'
 import VerificationsView from './VerificationsView'
 import { GetApplicationsType } from './types'
-import { exportApplicationToCsv } from './utils/exportApplicationToCsv'
+import { ApplicationToCsvError, exportApplicationToCsv } from './utils/exportApplicationToCsv'
 
 const Spacer = styled('div')`
   flex-grow: 1;
@@ -238,12 +238,26 @@ const ApplicationCard = ({
     [config.applicationFeature, jsonValueParsed]
   )
 
+  const onClickExportApplicationToCsv = () => {
+    try {
+      exportApplicationToCsv(application, config)
+    } catch (error) {
+      if (error instanceof ApplicationToCsvError) {
+        const { message } = error
+        appToaster?.show({
+          message,
+          intent: 'danger',
+        })
+      }
+    }
+  }
+
   const otherOptionsContainerWidth = 180
   const otherOptionsItemHeight = 40
   const menuItems: MenuItemType[] = [
     {
       name: t('exportCsv'),
-      onClick: () => exportApplicationToCsv(application, config),
+      onClick: onClickExportApplicationToCsv,
       icon: (
         <SvgIcon sx={{ height: 24, marginRight: 1 }}>
           <CSVIcon />

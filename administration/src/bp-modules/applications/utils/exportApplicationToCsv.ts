@@ -3,7 +3,11 @@ import { stringify } from 'csv-stringify/browser/esm/sync'
 import i18next from '../../../i18n'
 import { ProjectConfig } from '../../../project-configs/getProjectConfig'
 import {
-  CSVApplicationData,
+  AddressApplicationData,
+  ApplicationDataIncompleteError,
+  CardTypeApplicationData,
+  CreationDateApplicationData,
+  PersonalApplicationData,
   getAddressApplicationData,
   getCardTypeApplicationData,
   getPersonalApplicationData,
@@ -14,32 +18,46 @@ import type { JsonField } from '../JsonFieldView'
 import { CSV_MIME_TYPE_UTF8 } from '../constants'
 import { GetApplicationsType } from '../types'
 
-// TODO add unit tests, TODO add error handling
+export type CSVApplicationData = PersonalApplicationData &
+  AddressApplicationData &
+  CardTypeApplicationData &
+  CreationDateApplicationData
+
+export class ApplicationToCsvError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'ApplicationToCsvError'
+  }
+}
+
 export const exportApplicationToCsv = (application: GetApplicationsType, config: ProjectConfig): void => {
-  if (!config.applicationFeature?.csvExport) {
-    throw Error('CSV export not enabled')
-  }
-  const json: JsonField<'Array'> = JSON.parse(application.jsonValue)
-
-  const csvData: CSVApplicationData = {
-    ...getPersonalApplicationData(json),
-    ...getAddressApplicationData(json),
-    ...getCardTypeApplicationData(json),
-    ...{ creationDate: formatDateWithTimezone(application.createdDate, config.timezone) },
-  }
-
-  const csvHeader = Object.keys(csvData).map(key => i18next.t(`application:${key}`))
-  const csvContent = Object.values(csvData)
-  const csv = stringify([csvHeader]) + stringify([csvContent])
-
   try {
+    if (!config.applicationFeature?.csvExport) {
+      throw new ApplicationToCsvError('This project does not support application CSV export.')
+    }
+    const json: JsonField<'Array'> = JSON.parse(application.jsonValue)
+
+    const csvData: CSVApplicationData = {
+      ...getPersonalApplicationData(json),
+      ...getAddressApplicationData(json),
+      ...getCardTypeApplicationData(json),
+      ...{ creationDate: formatDateWithTimezone(application.createdDate, config.timezone) },
+    }
+
+    const csvHeader = Object.keys(csvData).map(key => i18next.t(`application:${key}`))
+    const csvContent = Object.values(csvData)
+    const csv = stringify([csvHeader]) + stringify([csvContent])
+
     const blob = new Blob([csv], { type: CSV_MIME_TYPE_UTF8 })
     const { surname, forenames, creationDate } = csvData
     downloadDataUri(blob, `${surname}_${forenames}_${creationDate}.csv`)
   } catch (error) {
-    if (error instanceof Error) {
-      throw new Error()
+    if (error instanceof ApplicationToCsvError) {
+      console.error(error.message)
+      throw new ApplicationToCsvError(i18next.t('errors:applicationToCsvError'))
+    } else if (error instanceof ApplicationDataIncompleteError) {
+      console.error(error.message)
+      throw new ApplicationDataIncompleteError(i18next.t('errors:applicationDataIncompleteException'))
     }
-    throw error
   }
 }

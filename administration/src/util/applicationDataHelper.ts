@@ -1,7 +1,7 @@
 import { JsonField, findValue } from '../bp-modules/applications/JsonFieldView'
 import { formatDate } from './formatDate'
 
-type PersonalApplicationData = {
+export type PersonalApplicationData = {
   forenames: string | undefined
   surname: string | undefined
   emailAddress: string | undefined
@@ -9,7 +9,7 @@ type PersonalApplicationData = {
   telephone: string | undefined
 }
 
-type AddressApplicationData = {
+export type AddressApplicationData = {
   street: string | undefined
   addressSupplement: string | undefined
   houseNumber: string | undefined
@@ -17,23 +17,25 @@ type AddressApplicationData = {
   location: string | undefined
 }
 
-type CardTypeApplicationData = {
+export type CardTypeApplicationData = {
   cardType: string | undefined
 }
 
-type CreationDateApplicationData = {
+export type CreationDateApplicationData = {
   creationDate: string | undefined
 }
 
-export type CSVApplicationData = PersonalApplicationData &
-  AddressApplicationData &
-  CardTypeApplicationData &
-  CreationDateApplicationData
+export class ApplicationDataIncompleteError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'ApplicationDataIncompleteError'
+  }
+}
 
 export const getPersonalApplicationData = (json: JsonField<'Array'>): PersonalApplicationData => {
   const personalData = findValue(json, 'personalData', 'Array')
   if (!personalData) {
-    throw Error('personalData not found')
+    throw new ApplicationDataIncompleteError('personalData not found')
   }
   const forenames = findValue(personalData, 'forenames', 'String')?.value
   const surname = findValue(personalData, 'surname', 'String')?.value
@@ -46,12 +48,12 @@ export const getPersonalApplicationData = (json: JsonField<'Array'>): PersonalAp
 export const getAddressApplicationData = (json: JsonField<'Array'>): AddressApplicationData => {
   const personalData = findValue(json, 'personalData', 'Array')
   if (!personalData) {
-    throw Error('personalData not found')
+    throw new ApplicationDataIncompleteError('personalData not found')
   }
   const addressData = findValue(personalData, 'address', 'Array')
 
   if (!addressData) {
-    throw Error('addressData not found')
+    throw new ApplicationDataIncompleteError('addressData  not found')
   }
 
   const street = findValue(addressData, 'street', 'String')?.value
@@ -65,7 +67,7 @@ export const getAddressApplicationData = (json: JsonField<'Array'>): AddressAppl
 export const getCardTypeApplicationData = (json: JsonField<'Array'>): CardTypeApplicationData => {
   const applicationDetails = findValue(json, 'applicationDetails', 'Array')
   if (!applicationDetails) {
-    throw Error('applicationDetails not found')
+    throw new ApplicationDataIncompleteError('applicationDetails not found')
   }
   const cardType = findValue(applicationDetails, 'cardType', 'String')?.value
   return { cardType }
