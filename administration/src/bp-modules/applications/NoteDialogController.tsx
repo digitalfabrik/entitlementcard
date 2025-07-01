@@ -1,6 +1,5 @@
-import { Tooltip } from '@blueprintjs/core'
 import { EditNote } from '@mui/icons-material'
-import { Button, Typography, styled } from '@mui/material'
+import { Button, Tooltip, Typography } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -9,10 +8,6 @@ import { useUpdateApplicationNoteMutation } from '../../generated/graphql'
 import { useAppToaster } from '../AppToaster'
 import TextAreaDialog from '../components/TextAreaDialog'
 import { GetApplicationsType } from './types'
-
-const MultilineContent = styled(Tooltip)`
-  white-space: pre-wrap;
-`
 
 type NoteDialogControllerProps = {
   application: GetApplicationsType
@@ -50,16 +45,14 @@ const NoteDialogController = ({
     )
   }
 
-  const getNoteExcerpt = (maxChars: number, text: string): string =>
-    text.length > maxChars ? `${text.slice(0, maxChars)} ...` : text
-
-  const note = application.note
-
-  const toolTipContent =
-    note && note.length > 0 ? <MultilineContent>{getNoteExcerpt(EXCERPT_LENGTH, note)}</MultilineContent> : undefined
   return (
     <>
-      <Tooltip content={toolTipContent}>
+      <Tooltip
+        title={
+          application.note && application.note.length > EXCERPT_LENGTH
+            ? `${application.note.slice(0, EXCERPT_LENGTH)} ...`
+            : application.note
+        }>
         <Button
           variant='contained'
           color='default'
@@ -71,7 +64,7 @@ const NoteDialogController = ({
       </Tooltip>
       {isOpen && (
         <TextAreaDialog
-          defaultText={note}
+          defaultText={application.note}
           isOpen={isOpen}
           maxChars={1000}
           loading={loading}
