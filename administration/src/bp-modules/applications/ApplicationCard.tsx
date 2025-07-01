@@ -55,7 +55,6 @@ import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { useAppToaster } from '../AppToaster'
 import { AccordionExpandButton } from '../components/AccordionExpandButton'
-import { Spacer } from '../components/Spacer'
 import type { JsonField } from './JsonFieldView'
 import JsonFieldView from './JsonFieldView'
 import NoteDialogController from './NoteDialogController'
@@ -412,19 +411,28 @@ const ApplicationCard = ({
       </AccordionSummary>
 
       <AccordionDetails>
-        <Stack sx={{ p: 2, gap: 2 }}>
-          <Stack direction='row' spacing={2} alignItems='flex-start'>
-            {application.withdrawalDate ? (
-              <Box sx={{ bgcolor: theme.palette.warning.light, p: 2, flexGrow: 1 }}>
+        <Stack sx={{ spacing: 2, alignItems: 'flex-start', gap: 2 }}>
+          <Stack sx={{ gap: 2, flexGrow: 1, marginLeft: 2, marginBottom: 2, alignItems: 'flex-start' }}>
+            {!!application.withdrawalDate && (
+              <Box sx={{ bgcolor: theme.palette.warning.light, padding: 2 }}>
                 {t('withdrawalMessage', {
                   withdrawalDate: formatDateWithTimezone(application.withdrawalDate, config.timezone),
                 })}
                 <br />
                 {t('deleteApplicationSoonPrompt')}
               </Box>
-            ) : (
-              <Spacer />
             )}
+            {/* TODO: <JsonFieldView> does not emit a root element and thus, <Stack> would insert a gap here */}
+            <Box>
+              <JsonFieldView
+                jsonField={jsonValueParsed}
+                baseUrl={baseUrl}
+                key={0}
+                hierarchyIndex={0}
+                attachmentAccessible
+                expandedRoot={false}
+              />
+            </Box>
             <NoteDialogController
               application={application}
               isOpen={openNoteDialog}
@@ -432,18 +440,6 @@ const ApplicationCard = ({
               onChange={onChange}
             />
           </Stack>
-
-          {/* TODO: <JsonFieldView> does not emit a root element and thus, <Stack> would insert a gap here */}
-          <div>
-            <JsonFieldView
-              jsonField={jsonValueParsed}
-              baseUrl={baseUrl}
-              key={0}
-              hierarchyIndex={0}
-              attachmentAccessible
-              expandedRoot={false}
-            />
-          </div>
         </Stack>
 
         <Divider />
