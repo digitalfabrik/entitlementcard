@@ -20,6 +20,7 @@ declare module '@mui/material/Button/Button' {
   // https://mui.com/material-ui/customization/palette/#typescript
   interface ButtonPropsColorOverrides {
     default: true
+    'default.dark': true
     defaultInverted: true
   }
 }

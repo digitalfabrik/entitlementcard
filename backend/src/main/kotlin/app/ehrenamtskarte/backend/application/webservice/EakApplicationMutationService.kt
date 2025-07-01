@@ -121,8 +121,9 @@ class EakApplicationMutationService {
     /**
      * Approves an application if it is in the Pending status.
      *
-     * @return The updated ApplicationView.
+     * @return The updated [ApplicationView].
      * @throws NotFoundException If an application with the specified accessKey is not found.
+     * @throws ForbiddenException If the user is not allowed to modify this application
      */
     @GraphQLDescription("Approve an application")
     fun approveApplicationStatus(applicationId: Int, dfe: DataFetchingEnvironment): ApplicationView {
@@ -136,6 +137,39 @@ class EakApplicationMutationService {
                 }
                 ?: throw NotFoundException("Application not found")
 
+            if (
+                mayUpdateApplicationsInRegion(dfe.graphQlContext.context.getAdministrator(), applicationEntity.regionId)
+            ) {
+                applicationEntity
+            } else {
+                throw ForbiddenException()
+            }
+        }
+    }
+
+    /**
+     * Rejects an application if it is in the Pending status.
+     *
+     * @return The updated [ApplicationView].
+     * @throws NotFoundException If an application with the specified accessKey is not found.
+     * @throws ForbiddenException If the user is not allowed to modify this application
+     */
+    @GraphQLDescription("Reject an application")
+    fun rejectApplicationStatus(
+        applicationId: Int,
+        rejectionMessage: String,
+        dfe: DataFetchingEnvironment,
+    ): ApplicationView {
+        dfe.graphQlContext.context.enforceSignedIn()
+
+        return transaction {
+            val applicationEntity = ApplicationEntity.findById(applicationId)
+                ?.let {
+                    it.tryChangeStatus(Status.Rejected)
+                    it.rejectionMessage = rejectionMessage
+                    ApplicationView.fromDbEntity(it, true)
+                }
+                ?: throw NotFoundException("Application not found")
             if (
                 mayUpdateApplicationsInRegion(dfe.graphQlContext.context.getAdministrator(), applicationEntity.regionId)
             ) {
