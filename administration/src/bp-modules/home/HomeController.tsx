@@ -1,4 +1,5 @@
 import { Button, H3 } from '@blueprintjs/core'
+import { Stack } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router'
@@ -13,19 +14,13 @@ const StyledButton = styled(Button)`
   margin: 10px;
 `
 
-const Container = styled.div`
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-`
-
 const HomeController = (): ReactElement => {
   const { applicationFeature, cardStatistics, cardCreation, userImportApiEnabled } = useContext(ProjectConfigContext)
   const { role } = useWhoAmI().me
   const { t } = useTranslation('home')
 
   return (
-    <Container>
+    <Stack sx={{ flexGrow: 1, alignItems: 'center', justifyContent: 'center', overflow: 'auto', padding: 4, gap: 2 }}>
       <H3>Wählen Sie eine Aktion aus:</H3>
       <RenderGuard allowedRoles={[Role.RegionAdmin, Role.RegionManager]}>
         {applicationFeature ? (
@@ -68,7 +63,7 @@ const HomeController = (): ReactElement => {
           <StyledButton icon='shop' text={t('administerStores')} />
         </NavLink>
       </RenderGuard>
-    </Container>
+    </Stack>
   )
 }
 
