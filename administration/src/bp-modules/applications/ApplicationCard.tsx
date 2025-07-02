@@ -337,7 +337,7 @@ const ApplicationCard = ({
   )
 
   const otherOptionsContainerWidth = 170
-  const otherOptionsItemHeight = 40
+  const otherOptionsItemHeight = 36.5
   const menuItems: MenuItemType[] = [
     {
       name: t('exportPdf'),
