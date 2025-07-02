@@ -233,7 +233,8 @@
       "Die antragstellende Person ist identisch mit der bestätigenden Person. Bitte lassen Sie den Antrag von einer anderen Person (z.B. Vertretung) bestätigen.",
       "Leider hat Ihr Verein bzw. Ihre Organisation das von Ihnen geleistet Ehrenamt bislang nicht bestätigt. Ohne eine entsprechende Bestätigung Ihres Engagements kann keine Ehrenamtskarte ausgestellt werden."
     ],
-    "rejectionButton": "Ablehnung bestätigen"
+    "rejectionButton": "Ablehnung bestätigen",
+    "moreActionsButtonLabel": "Weitere Optionen"
   },
   "auth": {
     "administration": "Verwaltung",

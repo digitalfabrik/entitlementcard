@@ -9,7 +9,7 @@ import {
   Delete,
   ExpandMore,
   InfoOutline,
-  Print,
+  PrintOutlined,
   Search,
   Warning,
 } from '@mui/icons-material'
@@ -45,6 +45,7 @@ import {
   useDeleteApplicationMutation,
   useRejectApplicationStatusMutation,
 } from '../../generated/graphql'
+import BaseMenu, { MenuItemType } from '../../mui-modules/base/BaseMenu'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import type { ProjectConfig } from '../../project-configs/getProjectConfig'
 import formatDateWithTimezone from '../../util/formatDate'
@@ -176,7 +177,7 @@ const ButtonsApplicationPending = (props: {
         startIcon={<Check />}
         disabled={props.disabled}
         onClick={props.onPrimaryButtonClick}>
-        {t('applicationApprove')}
+        <Typography variant='button'>{t('applicationApprove')}</Typography>
       </Button>
       <Button
         variant='outlined'
@@ -184,7 +185,7 @@ const ButtonsApplicationPending = (props: {
         color='error'
         disabled={props.disabled}
         onClick={props.onSecondaryButtonClick}>
-        {t('applicationReject')}
+        <Typography variant='button'>{t('applicationReject')}</Typography>
       </Button>
     </>
   )
@@ -210,9 +211,12 @@ const ButtonsApplicationResolved = (props: {
               disabled={props.primaryButtonHref === undefined}
               href={props.primaryButtonHref}
               startIcon={<CreditScore />}>
-              {props.applicationStatus === ApplicationStatus.ApprovedCardCreated
-                ? t('createCardAgain')
-                : t('createCard')}
+              <Typography variant='button'>
+                {' '}
+                {props.applicationStatus === ApplicationStatus.ApprovedCardCreated
+                  ? t('createCardAgain')
+                  : t('createCard')}
+              </Typography>
             </Button>
           </div>
         </Tooltip>
@@ -332,6 +336,16 @@ const ApplicationCard = ({
     [config.applicationFeature, jsonValueParsed]
   )
 
+  const otherOptionsContainerWidth = 170
+  const otherOptionsItemHeight = 36.5
+  const menuItems: MenuItemType[] = [
+    {
+      name: t('exportPdf'),
+      onClick: () => onPrintApplicationById(application.id),
+      icon: <PrintOutlined sx={{ height: 24, marginRight: 1 }} />,
+    },
+  ]
+
   return (
     <Accordion
       sx={{ displayPrint: isSelectedForPrint ? 'block' : 'none' }}
@@ -443,13 +457,12 @@ const ApplicationCard = ({
             />
           )}
 
-          <Button
-            onClick={() => onPrintApplicationById(application.id)}
-            startIcon={<Print />}
-            variant='outlined'
-            color='inherit'>
-            {t('exportPdf')}
-          </Button>
+          <BaseMenu
+            menuItems={menuItems}
+            menuLabel={t('moreActionsButtonLabel')}
+            containerWidth={otherOptionsContainerWidth}
+            itemHeight={otherOptionsItemHeight}
+          />
         </Stack>
 
         <DeleteDialog
