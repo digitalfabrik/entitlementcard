@@ -50,6 +50,7 @@ import {
 import BaseMenu, { MenuItemType } from '../../mui-modules/base/BaseMenu'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import type { ProjectConfig } from '../../project-configs/getProjectConfig'
+import { ApplicationDataIncompleteError } from '../../util/applicationDataHelper'
 import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { useAppToaster } from '../AppToaster'
@@ -62,7 +63,6 @@ import { ApplicationIndicators } from './VerificationsIndicator'
 import VerificationsView from './VerificationsView'
 import { GetApplicationsType } from './types'
 import { ApplicationToCsvError, exportApplicationToCsv } from './utils/exportApplicationToCsv'
-import { ApplicationDataIncompleteError } from '../../util/applicationDataHelper'
 
 const DeleteDialog = (props: {
   isOpen: boolean
@@ -215,9 +215,12 @@ const ButtonsApplicationResolved = (props: {
               disabled={props.primaryButtonHref === undefined}
               href={props.primaryButtonHref}
               startIcon={<CreditScore />}>
-              <Typography variant='button'> {props.applicationStatus === ApplicationStatus.ApprovedCardCreated
-                ? t('createCardAgain')
-                : t('createCard')}</Typography>
+              <Typography variant='button'>
+                {' '}
+                {props.applicationStatus === ApplicationStatus.ApprovedCardCreated
+                  ? t('createCardAgain')
+                  : t('createCard')}
+              </Typography>
             </Button>
           </div>
         </Tooltip>
