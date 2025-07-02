@@ -36,7 +36,7 @@ export const theme = createTheme({
     },
     button: {
       fontSize: 14,
-      fontWeight: 600,
+      fontWeight: 500,
       textTransform: 'none',
     },
   },
@@ -70,7 +70,7 @@ export const theme = createTheme({
         root: {
           '& *': {
             fontFamily: 'inherit',
-            letterSpacing: 'normal',
+            letterSpacing: 'inherit',
           },
         },
       },
