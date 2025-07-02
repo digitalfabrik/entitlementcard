@@ -1,15 +1,15 @@
-import { Alert, Box, Typography } from '@mui/material'
+import { NonIdealState } from '@blueprintjs/core'
+import { Alert, Box, Typography, styled } from '@mui/material'
 import { BarCustomLayerProps, ResponsiveBar } from '@nivo/bar'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
 import { CardStatisticsResultModel } from '../../../generated/graphql'
 import AlertBox from '../../../mui-modules/base/AlertBox'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import StatisticsBarTooltip from './StatisticsBarTooltip'
 
-const BarContainer = styled.div<{ height: number }>`
+const BarContainer = styled('div')<{ height: number }>`
   height: ${props => props.height}px;
   margin-bottom: 62px;
 `
