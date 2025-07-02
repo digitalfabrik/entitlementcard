@@ -203,6 +203,7 @@
     "applicationApprove": "Antrag bestätigen",
     "applicationReject": "Antrag ablehnen",
     "applicationApprovedToastMessage": "Der Antrag wurde genehmigt.",
+    "applicationRejectedToastMessage": "Der Antrag wurde abgelehnt.",
     "applicationResolveNoticeApproved": "Dieser Antrag wurde am {{date}} um {{time}} <resolution>genehmigt</resolution>.",
     "applicationResolveNoticeRejected": "Dieser Antrag wurde am {{date}} um {{time}} <resolution>abgelehnt</resolution> (Begründung: {{reason}}).",
     "incompleteApplicationDataTooltip": "Aus den Antragsdaten kann keine Karte erzeugt werden.",
