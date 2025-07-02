@@ -14,6 +14,7 @@ import ResetPasswordController from './bp-modules/auth/ResetPasswordController'
 import AddCardsController from './bp-modules/cards/AddCardsController'
 import CreateCardsController from './bp-modules/cards/CreateCardsController'
 import ImportCardsController from './bp-modules/cards/ImportCardsController'
+import dimensions from './bp-modules/constants/dimensions'
 import HomeController from './bp-modules/home/HomeController'
 import ProjectSettingsController from './bp-modules/project-settings/ProjectSettingsController'
 import RegionsController from './bp-modules/regions/RegionController'
@@ -32,7 +33,14 @@ import ApplicationVerificationController from './mui-modules/application-verific
 import ApplyController from './mui-modules/application/ApplyController'
 import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
 
-const Main = styled.div`
+const PrintAwareNavbar = styled(Navigation)`
+  @media print {
+    display: none;
+  }
+  height: ${dimensions.navigationBarHeight}px;
+`
+
+const Main = styled('div')`
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -53,7 +61,7 @@ const AuthLayout = (): ReactElement => {
   return (
     <WhoAmIProvider>
       <KeepAliveToken authData={authData} onSignIn={signIn} onSignOut={signOut}>
-        <Navigation onSignOut={signOut} />
+        <PrintAwareNavbar onSignOut={signOut} />
         <Main>
           <Outlet />
         </Main>
