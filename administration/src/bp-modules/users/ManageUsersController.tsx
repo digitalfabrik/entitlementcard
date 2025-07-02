@@ -1,4 +1,5 @@
 import { Card, H3, NonIdealState } from '@blueprintjs/core'
+import { Stack } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -11,17 +12,16 @@ import {
   useGetUsersInRegionQuery,
 } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import StandaloneCenter from '../StandaloneCenter'
 import getQueryResult from '../util/getQueryResult'
 import UsersTable from './UsersTable'
 
 const UsersTableContainer = ({ children, title }: { children: ReactElement; title: string }) => (
-  <StandaloneCenter>
-    <Card style={{ maxWidth: '1200px', margin: '16px' }}>
+  <Stack sx={{ overflow: 'auto', flexGrow: 1, alignItems: 'center', justifyContent: 'safe center' }}>
+    <Card style={{ maxWidth: '1200px', margin: 16 }}>
       <H3 style={{ textAlign: 'center' }}>{title}</H3>
       {children}
     </Card>
-  </StandaloneCenter>
+  </Stack>
 )
 
 const ManageProjectUsers = () => {
