@@ -21,6 +21,7 @@ const FormsWrapper = styled.div`
 
 const Scrollable = styled.div`
   display: flex;
+  width: 100%;
   flex-grow: 1;
   flex-direction: column;
   flex-basis: 0;
