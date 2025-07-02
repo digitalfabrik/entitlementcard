@@ -211,9 +211,12 @@ const ButtonsApplicationResolved = (props: {
               disabled={props.primaryButtonHref === undefined}
               href={props.primaryButtonHref}
               startIcon={<CreditScore />}>
-              <Typography variant='button'> {props.applicationStatus === ApplicationStatus.ApprovedCardCreated
-                ? t('createCardAgain')
-                : t('createCard')}</Typography>
+              <Typography variant='button'>
+                {' '}
+                {props.applicationStatus === ApplicationStatus.ApprovedCardCreated
+                  ? t('createCardAgain')
+                  : t('createCard')}
+              </Typography>
             </Button>
           </div>
         </Tooltip>
@@ -333,7 +336,7 @@ const ApplicationCard = ({
     [config.applicationFeature, jsonValueParsed]
   )
 
-  const otherOptionsContainerWidth = 180
+  const otherOptionsContainerWidth = 170
   const otherOptionsItemHeight = 40
   const menuItems: MenuItemType[] = [
     {
