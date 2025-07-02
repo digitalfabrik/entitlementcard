@@ -163,7 +163,7 @@ const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }:
     <InputContainer
       title={t('selectAFile')}
       icon={<Icon intent='warning' size={NonIdealStateIconSize.STANDARD} icon='upload' />}
-      description={<StoresRequirementsText header={headers} />}
+      description={<StoresRequirementsText header={fields} />}
       action={
         <StoreImportInputContainer>
           <input

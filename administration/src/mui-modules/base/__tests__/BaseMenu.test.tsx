@@ -1,5 +1,5 @@
 import { EditNote, PrintOutlined } from '@mui/icons-material'
-import { fireEvent, render } from '@testing-library/react'
+import { fireEvent, render, waitFor } from '@testing-library/react'
 import React from 'react'
 
 import BaseMenu from '../BaseMenu'
@@ -63,15 +63,16 @@ describe('BaseMenu', () => {
     expect(mockMenuItems[0].onClick).toHaveBeenCalledTimes(1)
   })
 
-  it('should close menu after clicking menu item', () => {
+  it('should close menu after clicking menu item', async () => {
     const { getByRole, getByText, queryByRole } = render(<BaseMenu {...defaultProps} />)
     const menuButton = getByRole('button', { name: 'Test Menu' })
-
     fireEvent.click(menuButton)
     const menuItem = getByText('Print PDF')
     fireEvent.click(menuItem)
-
-    const menu = queryByRole('menu')
-    expect(menu).toBeNull()
+    // MUI popover has some transition which we have to wait for when closing menu
+    await waitFor(() => {
+      const menu = queryByRole('menu')
+      expect(menu).toBeNull()
+    })
   })
 })
