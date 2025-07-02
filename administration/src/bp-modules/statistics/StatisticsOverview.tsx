@@ -1,4 +1,4 @@
-import { Box, styled } from '@mui/system'
+import { Box, styled } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -13,18 +13,21 @@ import StatisticsFilterBar from './components/StatisticsFilterBar'
 import StatisticsLegend from './components/StatisticsLegend'
 import StatisticsTotalCardsCount from './components/StatisticsTotalCardsCount'
 
-type StatisticsOverviewProps = {
-  statistics: CardStatisticsResultModel[]
-  onApplyFilter: (dateStart: string, dateEnd: string) => void
-  region?: Region
-}
-
 const OuterGrid = styled('div')`
   display: grid;
   grid-template-columns: 3fr 1fr;
+  flex-grow: 1;
 `
 
-const StatisticsOverview = ({ statistics, onApplyFilter, region }: StatisticsOverviewProps): ReactElement => {
+const StatisticsOverview = ({
+  statistics,
+  onApplyFilter,
+  region,
+}: {
+  statistics: CardStatisticsResultModel[]
+  onApplyFilter: (dateStart: string, dateEnd: string) => void
+  region?: Region
+}): ReactElement => {
   const appToaster = useAppToaster()
   const { cardStatistics } = useContext(ProjectConfigContext)
   const { t } = useTranslation('statistics')
