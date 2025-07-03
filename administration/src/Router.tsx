@@ -56,46 +56,46 @@ const Router = (): ReactElement => {
       createBrowserRouter(
         createRoutesFromElements(
           <>
+            {/* Public routes */}
+
+            <Route path='/activation/:activationCode' element={<ActivationPage />} />
+            <Route path='/data-privacy-policy' element={<DataPrivacyPolicy />} />
             <Route path='/forgot-password' element={<ForgotPasswordController />} />
             <Route path='/reset-password/' element={<ResetPasswordController />} />
-            <Route path='/data-privacy-policy' element={<DataPrivacyPolicy />} />
-            <Route path='/activation/:activationCode' element={<ActivationPage />} />
 
             {projectConfig.applicationFeature && (
               <>
-                <Route path='/beantragen' element={<ApplyController />} />
                 <Route
                   path='/antrag-verifizieren/:applicationVerificationAccessKey'
                   element={<ApplicationVerificationController />}
                 />
                 <Route path='/antrag-einsehen/:accessKey' element={<ApplicationApplicantController />} />
+                <Route path='/beantragen' element={<ApplyController />} />
               </>
             )}
 
             {projectConfig.selfServiceEnabled && <Route path='/erstellen' element={<CardSelfServiceView />} />}
 
+            {/* Authenticated routes */}
+
             <Route path='*' element={<AuthLayout />}>
-              {projectConfig.applicationFeature && (
-                <>
-                  <Route path='applications' element={<ApplicationsController />} />
-                  <Route path='region/data-privacy-policy' element={<DataPrivacyController />} />
-                  {/* Currently, '/region' only allows to set the data privacy text for the application form */}
-                  <Route path='region' element={<RegionsController />} />
-                </>
-              )}
+              <Route path='project' element={<ProjectSettingsController />} />
+              <Route path='stores' element={<StoresController />} />
+              <Route path='stores/import' element={<StoresImportController />} />
+              <Route path='user-settings' element={<UserSettingsController />} />
+              <Route path='users' element={<ManageUsersController />} />
+              <Route path='*' element={<HomeController />} />
 
               {projectConfig.cardStatistics.enabled && <Route path='statistics' element={<StatisticsController />} />}
 
-              {projectConfig.cardCreation && (
+              {projectConfig.applicationFeature && (
                 <>
-                  <Route path='cards' element={<CreateCardsController />} />
-                  <Route path='cards/add' element={<AddCardsController />} />
-                  <Route path='cards/import' element={<ImportCardsController />} />
+                  <Route path='applications' element={<ApplicationsController />} />
+                  {/* Currently, '/region' only allows setting the data privacy text for the application form */}
+                  <Route path='region' element={<RegionsController />} />
+                  <Route path='region/data-privacy-policy' element={<DataPrivacyController />} />
                 </>
               )}
-
-              <Route path='users' element={<ManageUsersController />} />
-              <Route path='user-settings' element={<UserSettingsController />} />
 
               {projectConfig.activityLogConfig && (
                 <Route
@@ -104,10 +104,13 @@ const Router = (): ReactElement => {
                 />
               )}
 
-              <Route path='stores' element={<StoresController />} />
-              <Route path='stores/import' element={<StoresImportController />} />
-              <Route path='project' element={<ProjectSettingsController />} />
-              <Route path='*' element={<HomeController />} />
+              {projectConfig.cardCreation && (
+                <>
+                  <Route path='cards' element={<CreateCardsController />} />
+                  <Route path='cards/add' element={<AddCardsController />} />
+                  <Route path='cards/import' element={<ImportCardsController />} />
+                </>
+              )}
             </Route>
           </>
         )
