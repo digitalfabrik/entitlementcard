@@ -112,7 +112,6 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
               throw Error('Card data invalid, bavarianCardType missing.')
             }
             return {
-              id: card.id,
               expirationDate: card.expirationDate?.format('yyyy-MM-dd'),
               cardType: card.extensions.bavariaCardType,
             }

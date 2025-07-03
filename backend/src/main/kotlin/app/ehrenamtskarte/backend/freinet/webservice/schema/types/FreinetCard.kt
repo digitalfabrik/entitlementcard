@@ -6,7 +6,6 @@ const val CARD_TYPE_STANDARD = "Standard"
 const val CARD_TYPE_GOLD = "Goldkarte"
 
 data class FreinetCard(
-    val id: Int,
     val expirationDate: String?,
     val cardType: String,
 ) {
