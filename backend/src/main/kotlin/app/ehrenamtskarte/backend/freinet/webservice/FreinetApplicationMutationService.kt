@@ -1,9 +1,11 @@
 package app.ehrenamtskarte.backend.freinet.webservice
+
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
 import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.common.utils.devWarn
 import app.ehrenamtskarte.backend.common.utils.findValueByName
+import app.ehrenamtskarte.backend.common.utils.findValueByPath
 import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
 import app.ehrenamtskarte.backend.exception.service.NotImplementedException
@@ -15,7 +17,6 @@ import app.ehrenamtskarte.backend.freinet.database.repos.FreinetAgencyRepository
 import app.ehrenamtskarte.backend.freinet.util.FreinetApi
 import app.ehrenamtskarte.backend.freinet.webservice.schema.types.FreinetCard
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
@@ -56,18 +57,13 @@ class FreinetApplicationMutationService {
                 ?.takeIf { it.dataTransferActivated }
                 ?: return@transaction false
 
-            val objectMapper = jacksonObjectMapper()
-            val jsonNode = objectMapper.readTree(application.jsonValue)
-            val personalDataNode = jsonNode
-                .path("value").firstOrNull { it["name"].asText() == "personalData" }
+            val jsonValue = application.parseJsonValue()
+            val personalDataNode = jsonValue.findValueByPath("application", "personalData")
+                ?: throw ApplicationDataIncompleteException()
 
-            if (personalDataNode == null) {
-                throw ApplicationDataIncompleteException()
-            }
-
-            val firstName = personalDataNode.get("value")?.findValueByName("forenames").orEmpty()
-            val lastName = personalDataNode.get("value")?.findValueByName("surname").orEmpty()
-            val dateOfBirth = personalDataNode.get("value")?.findValueByName("dateOfBirth").orEmpty()
+            val firstName = personalDataNode.findValueByName("forenames").orEmpty()
+            val lastName = personalDataNode.findValueByName("surname").orEmpty()
+            val dateOfBirth = personalDataNode.findValueByName("dateOfBirth").orEmpty()
 
             val freinetApi = FreinetApi(projectConfig.freinet.host, freinetAgency.apiAccessKey, freinetAgency.agencyId)
 
