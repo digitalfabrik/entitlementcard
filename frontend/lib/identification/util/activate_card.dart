@@ -17,15 +17,18 @@ import 'package:provider/provider.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
+enum ActivationSource { qrScanner, deepLink }
+
 /// Returns
 /// - `true`, if the activation was successful,
 /// - `false`, if the activation was not successful, but feedback was given to the user,
 /// Throws an error otherwise.
 Future<bool> activateCard(
   BuildContext context,
-  DynamicActivationCode activationCode, [
+  DynamicActivationCode activationCode, {
+  required ActivationSource source,
   bool overwriteExisting = false,
-]) async {
+}) async {
   final client = GraphQLProvider.of(context).value;
   final projectId = Configuration.of(context).projectId;
   final userCodesModel = Provider.of<UserCodeModel>(context, listen: false);
@@ -78,7 +81,19 @@ Future<bool> activateCard(
       return false;
     case Enum$ActivationState.failed:
       if (context.mounted) {
-        await ActivationErrorDialog.showErrorDialog(context, t.identification.codeInvalid);
+        final reason = activationResult.failureReason?.toString();
+        late String message;
+
+        if (reason!.contains('not_found')) {
+          message = source == ActivationSource.deepLink ? t.identification.cardNotFound : t.identification.codeInvalid;
+        } else if (reason.contains('wrong_secret')) {
+          message =
+              source == ActivationSource.deepLink ? t.deeplinkActivation.invalidCode : t.identification.codeInvalid;
+        } else if (reason.contains('expired')) {
+          message = t.identification.cardExpiredBeforeActivation;
+        }
+
+        await ActivationErrorDialog.showErrorDialog(context, message);
       }
       return false;
     case Enum$ActivationState.did_not_overwrite_existing:
@@ -96,7 +111,7 @@ Future<bool> activateCard(
       if (context.mounted &&
           await ActivationOverwriteExistingDialog.showActivationOverwriteExistingDialog(context) &&
           context.mounted) {
-        return await activateCard(context, activationCode, overwriteExisting = true);
+        return await activateCard(context, activationCode, source: source, overwriteExisting: true);
       } else {
         return false;
       }
