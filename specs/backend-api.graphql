@@ -69,16 +69,17 @@ type ApplicationVerificationView {
   contactName: String!
   organizationName: String!
   rejectedDate: String
+  verificationId: Int!
   verifiedDate: String
 }
 
 type ApplicationView {
-  cardCreated: Boolean @deprecated(reason : "Use 'status' instead")
   createdDate: String!
   id: Int!
   jsonValue: String!
   note: String
   regionId: Int!
+  rejectionMessage: String
   status: ApplicationStatus
   statusResolvedDate: String
   verifications: [ApplicationVerificationView!]!
@@ -166,10 +167,14 @@ type Mutation {
   editAdministrator(adminId: Int!, newEmail: String!, newRegionId: Int, newRole: Role!, project: String!): Boolean!
   "Import accepting stores via csv"
   importAcceptingStores(dryRun: Boolean!, project: String!, stores: [CSVAcceptingStoreInput!]!): StoreImportReturnResultModel!
+  "Reject an application"
+  rejectApplicationStatus(applicationId: Int!, rejectionMessage: String!): ApplicationView!
   "Reset the administrator's password"
   resetPassword(email: String!, newPassword: String!, passwordResetKey: String!, project: String!): Boolean!
   "Send application info to Freinet"
   sendApplicationDataToFreinet(applicationId: Int!, project: String!): Boolean!
+  "Send approval mail to organisation"
+  sendApprovalMailToOrganisation(applicationId: Int!, applicationVerificationId: Int!, project: String!): Boolean!
   "Sends a confirmation mail to the user when the card creation was successful"
   sendCardCreationConfirmationMail(deepLink: String!, project: String!, recipientAddress: String!, recipientName: String!, regionId: Int!): Boolean!
   "Sends a mail that allows the administrator to reset their password."

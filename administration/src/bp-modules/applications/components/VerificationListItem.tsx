@@ -1,10 +1,16 @@
 import { Colors } from '@blueprintjs/core'
-import React, { ReactElement } from 'react'
+import ForwardToInboxIcon from '@mui/icons-material/ForwardToInbox'
+import { Button } from '@mui/material'
+import { TFunction } from 'i18next'
+import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
-import { ApplicationVerificationView } from '../../../generated/graphql'
+import { ApplicationVerificationView, useSendApprovalMailToOrganisationMutation } from '../../../generated/graphql'
+import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
+import { useAppToaster } from '../../AppToaster'
 import EmailLink from '../../EmailLink'
+import { VerificationStatus } from '../types'
 import { verificationStatus } from '../utils'
 import { isEmailValid } from '../utils/verificationHelper'
 import VerificationIndicator from './VerificationIndicator'
@@ -19,11 +25,11 @@ export type Verification = Omit<ApplicationVerificationView, 'contactName'>
 
 type VerificationListItemProps = {
   verification: Verification
+  applicationId: number
+  showResendApprovalEmailButton: boolean
 }
 
-const VerificationListItem = ({ verification }: VerificationListItemProps): ReactElement => {
-  const { t } = useTranslation('applicationsOverview')
-  const status = verificationStatus(verification)
+const getStatusMetaData = (verification: Verification, t: TFunction): { text: string; color: string } => {
   const unverifiedText = verification.rejectedDate
     ? `${t('rejectedOn')} ${new Date(verification.rejectedDate).toLocaleString('de')}`
     : t('pending')
@@ -32,6 +38,41 @@ const VerificationListItem = ({ verification }: VerificationListItemProps): Reac
     : unverifiedText
   const unverifiedColor = verification.rejectedDate ? Colors.RED2 : Colors.ORANGE2
   const color = verification.verifiedDate ? Colors.GREEN2 : unverifiedColor
+
+  return { text, color }
+}
+
+const VerificationListItem = ({
+  verification,
+  applicationId,
+  showResendApprovalEmailButton,
+}: VerificationListItemProps): ReactElement => {
+  const { t } = useTranslation('applicationsOverview')
+  const appToaster = useAppToaster()
+  const projectId = useContext(ProjectConfigContext).projectId
+  const [isApprovalRequestSent, setIsApprovalRequestSent] = useState(false)
+
+  const status = verificationStatus(verification)
+  const { text, color } = getStatusMetaData(verification, t)
+
+  const [sendApprovalEmail, sendApprovalEmailResult] = useSendApprovalMailToOrganisationMutation({
+    onError: () => {
+      appToaster?.show({ intent: 'danger', message: t('failedToSendApprovalRequest') })
+    },
+    onCompleted: () => {
+      appToaster?.show({ intent: 'success', message: t('approvalRequestSentSuccessfully') })
+    },
+  })
+  const onSendApprovalEmailClick = () => {
+    sendApprovalEmail({
+      variables: {
+        applicationId,
+        applicationVerificationId: verification.verificationId,
+        project: projectId,
+      },
+    })
+    setIsApprovalRequestSent(true)
+  }
 
   return (
     <ListItem $color={color}>
@@ -59,6 +100,17 @@ const VerificationListItem = ({ verification }: VerificationListItemProps): Reac
           </tr>
         </tbody>
       </table>
+      {showResendApprovalEmailButton && status === VerificationStatus.Pending && (
+        <Button
+          variant='contained'
+          color='default'
+          onClick={() => onSendApprovalEmailClick()}
+          startIcon={<ForwardToInboxIcon />}
+          sx={{ displayPrint: 'none', mt: 1 }}
+          disabled={Boolean(sendApprovalEmailResult.loading) || isApprovalRequestSent}>
+          {isApprovalRequestSent ? t('approvalRequestHasBeenSent') : t('resendApprovalRequest')}
+        </Button>
+      )}
     </ListItem>
   )
 }
