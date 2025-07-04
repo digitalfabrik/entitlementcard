@@ -184,7 +184,7 @@
     "createCardAgain": "Karte erneut erstellen",
     "deleteApplication": "Antrag löschen",
     "deleteApplicationConfirmationPrompt": "Möchten Sie den Antrag unwiderruflich löschen?",
-    "exportPdf": "PDF exportieren",
+    "printPdf": "PDF drucken",
     "loadAttachment": "Lade Anhang",
     "attachment": "Anhang",
     "seeAttachment": "siehe Anhang",

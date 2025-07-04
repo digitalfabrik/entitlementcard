@@ -340,9 +340,9 @@ const ApplicationCard = ({
   const otherOptionsItemHeight = 36.5
   const menuItems: MenuItemType[] = [
     {
-      name: t('exportPdf'),
+      name: t('printPdf'),
       onClick: () => onPrintApplicationById(application.id),
-      icon: <PrintOutlined sx={{ height: 24, marginRight: 1 }} />,
+      icon: <PrintOutlined sx={{ height: 20, marginRight: 1 }} />,
     },
   ]
 
