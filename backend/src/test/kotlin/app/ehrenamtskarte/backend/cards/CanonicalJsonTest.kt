@@ -2,8 +2,7 @@ package app.ehrenamtskarte.backend.cards
 
 import Card
 import app.ehrenamtskarte.backend.cards.CanonicalJson.Companion.koblenzUserToString
-import app.ehrenamtskarte.backend.helper.CardInfoTestSample
-import app.ehrenamtskarte.backend.helper.ExampleCardInfo
+import app.ehrenamtskarte.backend.helper.SampleCards
 import app.ehrenamtskarte.backend.helper.koblenzTestUser
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -29,8 +28,7 @@ internal class CanonicalJsonTest {
 
     @Test
     fun mapCardInfoForBavarianBlueEAK() {
-        val cardInfo = ExampleCardInfo.get(CardInfoTestSample.BavarianStandard)
-
+        val cardInfo = SampleCards.BavarianStandard
         assertEquals(
             CanonicalJson.messageToMap(cardInfo),
             mapOf(
@@ -47,7 +45,7 @@ internal class CanonicalJsonTest {
 
     @Test
     fun mapCardInfoForBavarianGoldenEAK() {
-        val cardInfo = ExampleCardInfo.get(CardInfoTestSample.BavarianGold)
+        val cardInfo = SampleCards.BavarianGold
         assertEquals(
             CanonicalJson.messageToMap(cardInfo),
             mapOf(
@@ -63,7 +61,7 @@ internal class CanonicalJsonTest {
 
     @Test
     fun mapCardInfoForNuernbergPass() {
-        val cardInfo = ExampleCardInfo.get(CardInfoTestSample.Nuernberg)
+        val cardInfo = SampleCards.Nuernberg
         assertEquals(
             CanonicalJson.messageToMap(cardInfo),
             mapOf(
@@ -81,7 +79,7 @@ internal class CanonicalJsonTest {
 
     @Test
     fun mapCardInfoForNuernbergPassWithStartDay() {
-        val cardInfo = ExampleCardInfo.get(CardInfoTestSample.NuernbergWithStartDay)
+        val cardInfo = SampleCards.NuernbergWithStartDay
         assertEquals(
             CanonicalJson.messageToMap(cardInfo),
             mapOf(
