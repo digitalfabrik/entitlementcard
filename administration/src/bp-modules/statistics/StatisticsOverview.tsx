@@ -1,3 +1,4 @@
+import { Stack } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -34,7 +35,7 @@ const StatisticsOverview = ({ statistics, onApplyFilter, region }: StatisticsOve
   }
 
   return (
-    <>
+    <Stack sx={{ overflow: 'auto', flexGrow: 1 }}>
       {role === Role.ProjectAdmin && <StatisticsTotalCardsCount statistics={statistics} />}
       <StatisticsBarChart statistics={statistics} />
       <StatisticsFilterBar
@@ -42,7 +43,7 @@ const StatisticsOverview = ({ statistics, onApplyFilter, region }: StatisticsOve
         onExportCsv={exportCardDataToCsv}
         isDataAvailable={statistics.length > 0}
       />
-    </>
+    </Stack>
   )
 }
 
