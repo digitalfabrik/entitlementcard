@@ -152,6 +152,16 @@ const graphQlErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
         title: i18next.t('errors:applicationDataIncompleteException'),
       }
     }
+    case GraphQlExceptionCode.FreinetCardDataInvalid: {
+      return {
+        title: i18next.t('errors:freinetCardDataInvalid'),
+      }
+    }
+    case GraphQlExceptionCode.FreinetPersonDataInvalid: {
+      return {
+        title: i18next.t('errors:freinetPersonDataInvalid'),
+      }
+    }
     default:
       return {
         title: defaultError.title,
