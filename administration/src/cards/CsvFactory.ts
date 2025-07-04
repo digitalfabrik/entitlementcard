@@ -1,5 +1,6 @@
 import { stringify } from 'csv-stringify/browser/esm/sync'
 
+import { CSV_MIME_TYPE_UTF8 } from '../bp-modules/applications/constants'
 import { ProjectConfig } from '../project-configs/getProjectConfig'
 import { Card } from './Card'
 import { CreateCardsResult } from './createCards'
@@ -22,7 +23,7 @@ export const generateCsv = (codes: CreateCardsResult[], cards: Card[], projectCo
     for (let k = 0; k < codes.length; k++) {
       csvContent += csvConfig.buildCsvLine(codes[k], cards[k])
     }
-    return new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    return new Blob([csvContent], { type: CSV_MIME_TYPE_UTF8 })
   } catch (error) {
     if (error instanceof Error) {
       throw new CsvError(error.message)

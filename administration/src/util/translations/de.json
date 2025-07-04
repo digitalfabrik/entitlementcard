@@ -27,6 +27,7 @@
     "region": "Zuständige Behörde",
     "applicationDetails": "Antragsdetails",
     "cardType": "Antrag auf",
+    "creationDate": "Antragsstellung",
     "applicationType": "Art des Antrags",
     "wantsDigitalCard": "Ich beantrage eine digitale Ehrenamtskarte",
     "wantsPhysicalCard": "Ich beantrage eine physische Ehrenamtskarte",
@@ -184,6 +185,7 @@
     "createCardAgain": "Karte erneut erstellen",
     "deleteApplication": "Antrag löschen",
     "deleteApplicationConfirmationPrompt": "Möchten Sie den Antrag unwiderruflich löschen?",
+    "exportCsv": "CSV exportieren",
     "exportPdf": "PDF exportieren",
     "loadAttachment": "Lade Anhang",
     "attachment": "Anhang",
@@ -608,7 +610,9 @@
     "freinetAgencyNotFound": "Diese Agentur konnte in Freinet nicht gefunden werden.",
     "freinetMultiplePersonError": "Der antragstellenden Person konnte keine Person in Freinet-Online eindeutig zugeordnet werden. Bitte aktualisieren Sie die Daten in Freinet-Online manuell.",
     "freinetApiNotReachableError": "Die Verbindung zu Freinet-Online konnte nicht hergestellt werden. Nehmen Sie die Aktualisierung der Daten direkt in Freinet-Online vor.",
-    "applicationDataIncompleteException": "Erforderliche Antragsdaten fehlen oder sind unvollständig."
+    "applicationDataIncompleteException": "Erforderliche Antragsdaten fehlen oder sind unvollständig.",
+    "applicationToCsvDisabledError": "Die Antragsexportfunktion ist nicht verfügbar.",
+    "applicationToCsvError": "Es ist ein Fehler beim Export des Antrags aufgetreten."
   },
   "applicationVerification": {
     "withdrawMessageForVerifier": "Der Antrag wurde vom Antragsteller am {{date}} zurückgezogen.",
