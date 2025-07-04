@@ -42,34 +42,28 @@ describe('DeepLink generation', () => {
   }
 
   const encodedActivationCodeBase64 = 'ChsKGQoJVGhlYSBUZXN0ENOiARoICgIIACICCAA%3D'
-  const overrideHostname = (hostname: string) =>
-    Object.defineProperty(window, 'location', {
-      value: {
-        hostname,
-      },
-      writable: true,
-    })
 
   it('should generate a correct link for development', () => {
     process.env.REACT_APP_IS_PRODUCTION = 'false'
     localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, BAYERN_STAGING_ID)
     const projectId = getBuildConfig(window.location.hostname).common.projectId.staging
+
     expect(getDeepLinkFromQrCode(dynamicPdfQrCode)).toBe(
       `${HTTPS_SCHEME}://${projectId}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}#${encodedActivationCodeBase64}`
     )
   })
   it('should generate a correct link for staging', () => {
-    process.env.REACT_APP_IS_PRODUCTION = 'true'
-    overrideHostname(BAYERN_STAGING_ID)
-    const projectId = getBuildConfig(window.location.hostname).common.projectId.staging
+    process.env.REACT_APP_IS_PRODUCTION = 'false'
+    const projectId = getBuildConfig(BAYERN_STAGING_ID).common.projectId.staging
+
     expect(getDeepLinkFromQrCode(dynamicPdfQrCode)).toBe(
       `${HTTPS_SCHEME}://${projectId}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}#${encodedActivationCodeBase64}`
     )
   })
   it('should generate a correct link for production', () => {
-    overrideHostname(BAYERN_PRODUCTION_ID)
     process.env.REACT_APP_IS_PRODUCTION = 'true'
-    const projectId = getBuildConfig(window.location.hostname).common.projectId.production
+    const projectId = getBuildConfig(BAYERN_PRODUCTION_ID).common.projectId.production
+
     expect(getDeepLinkFromQrCode(dynamicPdfQrCode)).toBe(
       `${HTTPS_SCHEME}://${projectId}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}#${encodedActivationCodeBase64}`
     )
