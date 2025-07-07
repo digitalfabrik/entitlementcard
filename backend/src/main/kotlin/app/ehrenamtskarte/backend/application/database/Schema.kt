@@ -37,6 +37,7 @@ class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
         Rejected,
         Approved,
         ApprovedCardCreated,
+        Withdrawn,
     }
 
     var regionId by Applications.regionId
@@ -124,6 +125,7 @@ private fun ApplicationEntity.Status.canTransitionTo(newValue: ApplicationEntity
             when (newValue) {
                 ApplicationEntity.Status.Approved -> true
                 ApplicationEntity.Status.Rejected -> true
+                ApplicationEntity.Status.Withdrawn -> true
                 else -> false
             }
         }
