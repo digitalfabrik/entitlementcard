@@ -1,6 +1,8 @@
 package app.ehrenamtskarte.backend.application.database
 
 import app.ehrenamtskarte.backend.regions.database.Regions
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -24,6 +26,7 @@ object Applications : IntIdTable() {
     val status = enumerationByName<ApplicationEntity.Status>("status", length = 32)
         .default(ApplicationEntity.Status.Pending)
     val statusResolvedDate = timestampWithTimeZone("statusResolvedDate").nullable()
+    val rejectionMessage = text("rejectionMessage").nullable()
 }
 
 class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
@@ -57,6 +60,7 @@ class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
 
     /** Captures the instant that state changes from [Status.Pending] to [Status.Approved] or [Status.Rejected]. */
     var statusResolvedDate by Applications.statusResolvedDate
+    var rejectionMessage by Applications.rejectionMessage
 
     /** Try to change the status to the given value. Returns true if successful, false otherwise. */
     fun tryChangeStatus(status: Status): Boolean =
@@ -66,6 +70,8 @@ class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
         } catch (_: IllegalArgumentException) {
             false
         }
+
+    fun parseJsonValue(): JsonNode = jacksonObjectMapper().readTree(jsonValue)
 }
 
 enum class ApplicationVerificationExternalSource {
