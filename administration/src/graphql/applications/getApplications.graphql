@@ -5,14 +5,15 @@ query getApplications($regionId: Int!) {
     jsonValue
     withdrawalDate
     note
-    cardCreated
     status
     statusResolvedDate
     verifications {
+      verificationId
       contactEmailAddress
       organizationName
       verifiedDate
       rejectedDate
     }
+    rejectionMessage
   }
 }
