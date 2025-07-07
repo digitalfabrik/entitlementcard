@@ -53,7 +53,7 @@ export const getAddressApplicationData = (json: JsonField<'Array'>): AddressAppl
   const addressData = findValue(personalData, 'address', 'Array')
 
   if (!addressData) {
-    throw new ApplicationDataIncompleteError('addressData  not found')
+    throw new ApplicationDataIncompleteError('addressData not found')
   }
 
   const street = findValue(addressData, 'street', 'String')?.value
