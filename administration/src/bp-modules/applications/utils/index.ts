@@ -1,3 +1,4 @@
+import { ApplicationStatus } from '../../../generated/graphql'
 import {
   ApplicationVerificationStatus,
   GetApplicationsType,
@@ -16,7 +17,7 @@ export const verificationStatus = (verification: GetApplicationsVerificationType
 }
 
 export const applicationEffectiveStatus = (application: GetApplicationsType): ApplicationVerificationStatus => {
-  if (application.withdrawalDate) {
+  if (application.status === ApplicationStatus.Withdrawn) {
     return ApplicationVerificationStatus.Withdrawn
   }
   if (

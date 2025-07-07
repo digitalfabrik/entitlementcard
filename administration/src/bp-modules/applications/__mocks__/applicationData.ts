@@ -381,7 +381,6 @@ const applicationDetailsGold = {
 export const mockApplicationBlue: GetApplicationsType = {
   id: 1,
   createdDate: '2025-05-21 07:57:12.782520',
-  withdrawalDate: null,
   note: null,
   status: ApplicationStatus.Approved,
   statusResolvedDate: '2024-12-12',
@@ -396,7 +395,6 @@ export const mockApplicationBlue: GetApplicationsType = {
 export const mockApplicationGold: GetApplicationsType = {
   id: 1,
   createdDate: '2025-05-21 07:57:12.782520',
-  withdrawalDate: null,
   note: null,
   status: ApplicationStatus.Approved,
   statusResolvedDate: '2024-12-12',
@@ -411,7 +409,6 @@ export const mockApplicationGold: GetApplicationsType = {
 export const mockApplicationWithoutAddress: GetApplicationsType = {
   id: 1,
   createdDate: '2025-05-21 07:57:12.782520',
-  withdrawalDate: null,
   note: null,
   status: ApplicationStatus.Approved,
   statusResolvedDate: '2024-12-12',
@@ -459,7 +456,6 @@ export const mockApplicationWithoutAddress: GetApplicationsType = {
 export const mockApplicationWithoutPersonalData: GetApplicationsType = {
   id: 1,
   createdDate: '2025-05-21 07:57:12.782520',
-  withdrawalDate: null,
   note: null,
   status: ApplicationStatus.Approved,
   statusResolvedDate: '2024-12-12',
@@ -474,7 +470,6 @@ export const mockApplicationWithoutPersonalData: GetApplicationsType = {
 export const mockApplicationWithoutApplicationDetails: GetApplicationsType = {
   id: 1,
   createdDate: '2025-05-21 07:57:12.782520',
-  withdrawalDate: null,
   note: null,
   status: ApplicationStatus.Approved,
   statusResolvedDate: '2024-12-12',
