@@ -4,7 +4,7 @@ import { ACTIVATION_FRAGMENT, ACTIVATION_PATH, HTTPS_SCHEME } from 'build-config
 import { PdfQrCode } from '../cards/pdf/PdfQrCodeElement'
 import { QrCode } from '../generated/card_pb'
 import { uint8ArrayToBase64 } from './base64'
-import { isProductionEnvironment } from './helper'
+
 
 const getDeepLinkFromQrCode = (qrCode: PdfQrCode, buildConfig: BuildConfigType, isProduction: boolean): string => {
   const qrCodeContent = new QrCode({
@@ -16,7 +16,7 @@ const getDeepLinkFromQrCode = (qrCode: PdfQrCode, buildConfig: BuildConfigType, 
   const deepLink = `${HTTPS_SCHEME}://${host}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}#${encodeURIComponent(
     uint8ArrayToBase64(qrCodeContent)
   )}`
-  if (!isProductionEnvironment()) {
+  if (!isProduction) {
     console.log(deepLink)
   }
   return deepLink

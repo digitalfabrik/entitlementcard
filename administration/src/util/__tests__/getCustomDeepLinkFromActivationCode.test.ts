@@ -7,7 +7,7 @@ describe('Custom scheme deepLink generation', () => {
   const buildConfigs = [{ buildConfig: buildConfigBayern }, { buildConfig: buildConfigKoblenz }]
 
   it.each(buildConfigs)(
-    'should generate a correct link for $$buildConfig.common.projectId.production',
+    'should generate a correct link for $buildConfig.common.projectId.production',
     ({ buildConfig }) => {
       const { projectId, deepLinking } = buildConfig.common
       const { production: host } = projectId
