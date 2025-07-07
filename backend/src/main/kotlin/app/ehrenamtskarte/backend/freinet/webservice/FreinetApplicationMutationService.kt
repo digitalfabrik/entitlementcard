@@ -11,9 +11,9 @@ import app.ehrenamtskarte.backend.exception.service.NotFoundException
 import app.ehrenamtskarte.backend.exception.service.NotImplementedException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.ApplicationDataIncompleteException
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetFoundMultiplePersonsException
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetPersonDataInvalidException
 import app.ehrenamtskarte.backend.freinet.database.repos.FreinetAgencyRepository
+import app.ehrenamtskarte.backend.freinet.exceptions.FreinetFoundMultiplePersonsException
+import app.ehrenamtskarte.backend.freinet.exceptions.FreinetPersonDataInvalidException
 import app.ehrenamtskarte.backend.freinet.util.FreinetApi
 import app.ehrenamtskarte.backend.freinet.webservice.schema.types.FreinetCard
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
@@ -29,7 +29,7 @@ class FreinetApplicationMutationService {
     fun sendApplicationAndCardDataToFreinet(
         applicationId: Int,
         project: String,
-        freinetCards: List<FreinetCard>,
+        freinetCard: FreinetCard,
         dfe: DataFetchingEnvironment,
     ): Boolean {
         val context = dfe.graphQlContext.context
@@ -88,16 +88,12 @@ class FreinetApplicationMutationService {
                     )
 
                     val userId = createdPerson.data.get("NEW_USERID") ?: throw FreinetPersonDataInvalidException()
-                    freinetCards.forEach { card ->
-                        freinetApi.sendCardInformation(userId.intValue(), card)
-                    }
+                    freinetApi.sendCardInformation(userId.intValue(), freinetCard)
                 }
                 persons.size() == 1 -> {
                     // TODO: #2143 - Update existing person
                     val userId = persons[0].get("id") ?: throw FreinetPersonDataInvalidException()
-                    freinetCards.forEach { card ->
-                        freinetApi.sendCardInformation(userId.intValue(), card)
-                    }
+                    freinetApi.sendCardInformation(userId.intValue(), freinetCard)
 
                     logger.devWarn("update existing person and send card data")
                 }

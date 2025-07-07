@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import type { MotionNodeAnimationOptions } from 'motion/react'
 import React, { ReactElement, useCallback, useContext, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSearchParams } from 'react-router'
 import styled from 'styled-components'
 
 import { Card, initializeCard } from '../../cards/Card'
@@ -44,13 +45,21 @@ type CreateCardsFormProps = {
   region: Region
   cards: Card[]
   setCards: (cards: Card[]) => void
+  showAddMoreCardsButton: boolean
   updateCard: (updatedCard: Partial<Card>, index: number) => void
 }
 
-const AddCardsForm = ({ region, cards, setCards, updateCard }: CreateCardsFormProps): ReactElement => {
+const AddCardsForm = ({
+  region,
+  cards,
+  setCards,
+  showAddMoreCardsButton,
+  updateCard,
+}: CreateCardsFormProps): ReactElement => {
   const projectConfig = useContext(ProjectConfigContext)
   const { t } = useTranslation('cards')
   const bottomRef = useRef<HTMLDivElement>(null)
+  const [_, setSearchParams] = useSearchParams()
 
   const scrollToBottom = () => {
     if (bottomRef.current) {
@@ -66,6 +75,9 @@ const AddCardsForm = ({ region, cards, setCards, updateCard }: CreateCardsFormPr
 
   const removeCard = (oldCard: Card) => {
     setCards(cards.filter(card => card !== oldCard))
+    // TODO try to avoid timeout
+    // We have to ensure that the removal of the card is done before deleting searchParams to avoid issues with unstableUsePrompt
+    setTimeout(() => setSearchParams(undefined, { replace: true }), 0)
   }
 
   return (
@@ -83,9 +95,11 @@ const AddCardsForm = ({ region, cards, setCards, updateCard }: CreateCardsFormPr
               </FormColumn>
             </motion.div>
           ))}
-          <FormColumn key='AddButton'>
-            <CardFormButton text={t('addCard')} icon='add' onClick={addForm} />
-          </FormColumn>
+          {showAddMoreCardsButton && (
+            <FormColumn key='AddButton'>
+              <CardFormButton text={t('addCard')} icon='add' onClick={addForm} />
+            </FormColumn>
+          )}
           <div ref={bottomRef} />
         </AnimatePresence>
       </FormsWrapper>

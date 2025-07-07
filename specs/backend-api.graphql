@@ -172,7 +172,7 @@ type Mutation {
   "Reset the administrator's password"
   resetPassword(email: String!, newPassword: String!, passwordResetKey: String!, project: String!): Boolean!
   "Send application and card information to Freinet"
-  sendApplicationAndCardDataToFreinet(applicationId: Int!, freinetCards: [FreinetCardInput!]!, project: String!): Boolean!
+  sendApplicationAndCardDataToFreinet(applicationId: Int!, freinetCard: FreinetCardInput!, project: String!): Boolean!
   "Send approval mail to organisation"
   sendApprovalMailToOrganisation(applicationId: Int!, applicationVerificationId: Int!, project: String!): Boolean!
   "Sends a confirmation mail to the user when the card creation was successful"

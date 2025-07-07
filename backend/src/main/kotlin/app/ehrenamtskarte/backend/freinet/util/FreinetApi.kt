@@ -1,10 +1,9 @@
 package app.ehrenamtskarte.backend.freinet.util
 
 import app.ehrenamtskarte.backend.common.utils.devInfo
-import app.ehrenamtskarte.backend.common.utils.devWarn
 import app.ehrenamtskarte.backend.common.utils.findValueByName
 import app.ehrenamtskarte.backend.common.utils.findValueByNameNode
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetApiNotReachableException
+import app.ehrenamtskarte.backend.freinet.exceptions.FreinetApiNotReachableException
 import app.ehrenamtskarte.backend.freinet.webservice.schema.types.CARD_TYPE_GOLD
 import app.ehrenamtskarte.backend.freinet.webservice.schema.types.CARD_TYPE_STANDARD
 import app.ehrenamtskarte.backend.freinet.webservice.schema.types.FreinetAddress
@@ -133,7 +132,7 @@ class FreinetApi(private val host: String, private val accessKey: String, privat
                     contentType(ContentType.Application.Json)
                     setBody(requestBody)
                 }
-                logger.devInfo("Successfully created person in freinet: ${response.bodyAsText()}")
+                logger.error("Successfully created person in freinet: ${response.bodyAsText()}")
                 FreinetPersonCreationResultModel(
                     true,
                     response.bodyAsChannel().toInputStream().use {
@@ -141,7 +140,7 @@ class FreinetApi(private val host: String, private val accessKey: String, privat
                     },
                 )
             } catch (e: Exception) {
-                logger.devWarn("Error creating person in freinet $e")
+                logger.error("Error creating person in freinet $e")
                 throw FreinetApiNotReachableException()
             }
         }
@@ -176,9 +175,20 @@ class FreinetApi(private val host: String, private val accessKey: String, privat
                 logger.devInfo("Successfully created card in freinet: ${response.bodyAsText()}")
                 true
             } catch (e: Exception) {
-                logger.devWarn("Error creating card in freinet $e")
+                logger.error("Error creating card in freinet $e")
                 throw FreinetApiNotReachableException()
             }
+        }
+    }
+
+    private fun ObjectNode.addFreinetInitInformation(agencyId: Int, accessKey: String, moduleName: String) {
+        putObject("init").apply {
+            put("apiVersion", "3.0")
+            put("agencyID", agencyId)
+            put("accessKey", accessKey)
+            put("modul", moduleName)
+            put("author", "TuerAnTuer")
+            put("author_mail", "berechtigungskarte@tuerantuer.org")
         }
     }
 }
