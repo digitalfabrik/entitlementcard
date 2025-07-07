@@ -9,9 +9,6 @@ export type ApplicationStatusBarItemType = {
   status?: ApplicationVerificationStatus
 }
 
-/**
- * The application status, taking into account its verifications, and `application.withdrawalDate`.
- */
 export enum ApplicationVerificationStatus {
   Approved,
   Rejected,

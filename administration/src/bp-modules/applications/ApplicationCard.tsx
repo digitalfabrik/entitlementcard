@@ -376,7 +376,10 @@ const ApplicationCard = ({
           <Typography variant='h4' sx={{ minWidth: '250px' }}>
             {t('applicationFrom')} {formatDateWithTimezone(application.createdDate, config.timezone)}
           </Typography>
-          <Warning color='warning' visibility={application.withdrawalDate !== null ? 'visible' : 'hidden'} />
+          <Warning
+            color='warning'
+            visibility={application.status === ApplicationStatus.Withdrawn ? 'visible' : 'hidden'}
+          />
           <Typography
             variant='h4'
             sx={{
@@ -400,10 +403,10 @@ const ApplicationCard = ({
       <AccordionDetails>
         <Stack sx={{ spacing: 2, alignItems: 'flex-start', gap: 2 }}>
           <Stack sx={{ gap: 2, flexGrow: 1, marginLeft: 2, marginBottom: 2, alignItems: 'flex-start' }}>
-            {!!application.withdrawalDate && (
+            {application.status === ApplicationStatus.Withdrawn && !!application.statusResolvedDate && (
               <Box sx={{ bgcolor: theme.palette.warning.light, padding: 2 }}>
                 {t('withdrawalMessage', {
-                  withdrawalDate: formatDateWithTimezone(application.withdrawalDate, config.timezone),
+                  withdrawalDate: formatDateWithTimezone(application.statusResolvedDate, config.timezone),
                 })}
                 <br />
                 {t('deleteApplicationSoonPrompt')}

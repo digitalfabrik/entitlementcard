@@ -9,7 +9,7 @@ import JsonFieldView, { GeneralJsonField } from '../../bp-modules/applications/J
 import VerificationsView from '../../bp-modules/applications/VerificationsView'
 import { GetApplicationsType } from '../../bp-modules/applications/types'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
-import { useWithdrawApplicationMutation } from '../../generated/graphql'
+import { ApplicationStatus, useWithdrawApplicationMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
@@ -95,7 +95,7 @@ const ApplicationApplicantView = ({
         />
         <StyledDivider />
         <VerificationsView application={application} showResendApprovalEmailButton={false} />
-        {!application.withdrawalDate && (
+        {application.status === ApplicationStatus.Withdrawn && (
           <>
             <StyledDivider />
             <Typography sx={{ mt: '8px', mb: '16px' }} variant='body2'>
