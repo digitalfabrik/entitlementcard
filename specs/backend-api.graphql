@@ -83,7 +83,6 @@ type ApplicationView {
   status: ApplicationStatus
   statusResolvedDate: String
   verifications: [ApplicationVerificationView!]!
-  withdrawalDate: String
 }
 
 type CardActivationResultModel {
@@ -322,6 +321,7 @@ enum ApplicationStatus {
   ApprovedCardCreated
   Pending
   Rejected
+  Withdrawn
 }
 
 enum ApplicationType {
