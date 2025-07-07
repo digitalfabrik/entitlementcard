@@ -20,7 +20,6 @@ const applications: GetApplicationsType[] = [
         verifiedDate: '2024-05-15T13:54:11.010430Z',
       },
     ],
-    withdrawalDate: null,
   },
   {
     createdDate: '2024-05-15T09:20:23.350015Z',
@@ -36,7 +35,6 @@ const applications: GetApplicationsType[] = [
         verifiedDate: '2024-05-15T13:54:11.010430Z',
       },
     ],
-    withdrawalDate: null,
   },
   {
     createdDate: '2024-05-15T09:20:23.350015Z',
@@ -52,7 +50,6 @@ const applications: GetApplicationsType[] = [
         verifiedDate: null,
       },
     ],
-    withdrawalDate: null,
   },
   {
     createdDate: '2024-05-15T09:20:23.350015Z',
@@ -68,7 +65,7 @@ const applications: GetApplicationsType[] = [
         verifiedDate: null,
       },
     ],
-    withdrawalDate: '2024-05-15T09:20:23.350015Z',
+    statusResolvedDate: '2024-05-15T09:20:23.350015Z',
   },
 ]
 
