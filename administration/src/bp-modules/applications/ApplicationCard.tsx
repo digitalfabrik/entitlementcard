@@ -228,29 +228,59 @@ const ButtonsApplicationResolved = (props: {
   )
 }
 
+const statusTranslationKey = (applicationStatus: ApplicationStatus): string | undefined => {
+  switch (applicationStatus) {
+    case ApplicationStatus.Approved:
+    case ApplicationStatus.ApprovedCardCreated:
+      return 'applicationResolveNoticeApproved'
+    case ApplicationStatus.Rejected:
+      return 'applicationResolveNoticeRejected'
+    case ApplicationStatus.Withdrawn:
+      return 'applicationResolveNoticeWithdrawn'
+    case ApplicationStatus.Pending:
+      return undefined
+  }
+}
+
+// Return type should actually be ComponentProps<typeof Typography>['color'] | undefined, but this type is too generic
+const statusColor = (applicationStatus: ApplicationStatus): string | undefined => {
+  switch (applicationStatus) {
+    case ApplicationStatus.Approved:
+    case ApplicationStatus.ApprovedCardCreated:
+      return 'success'
+    case ApplicationStatus.Rejected:
+      return 'error'
+    case ApplicationStatus.Withdrawn:
+      return 'warning'
+    case ApplicationStatus.Pending:
+      return undefined
+  }
+}
+
 const StatusNote = (props: { statusResolvedDate: Date; status: ApplicationStatus; reason: string | undefined }) => {
   const { t } = useTranslation('applicationsOverview')
-  const isApproved = [ApplicationStatus.Approved, ApplicationStatus.ApprovedCardCreated].includes(props.status)
+  const translationKey = statusTranslationKey(props.status)
+  const color = statusColor(props.status)
 
   return (
     <Stack direction='row' sx={{ padding: 2, alignItems: 'flex-start' }}>
       <InfoOutline />
       &ensp;
       <div>
-        <Trans
-          t={t}
-          i18nKey={isApproved ? 'applicationResolveNoticeApproved' : 'applicationResolveNoticeRejected'}
-          values={{
-            date: format(props.statusResolvedDate, 'dd MMMM', { locale: de }),
-            time: format(props.statusResolvedDate, 'HH:mm', { locale: de }),
-            reason: props.reason,
-          }}
-          components={{
-            resolution: (
-              <Typography component='span' sx={{ fontWeight: 'bold' }} color={isApproved ? 'success' : 'error'} />
-            ),
-          }}
-        />
+        {translationKey !== undefined && color !== undefined && (
+          <Trans
+            t={t}
+            i18nKey={translationKey}
+            values={{
+              date: format(props.statusResolvedDate, 'dd MMMM', { locale: de }),
+              time: format(props.statusResolvedDate, 'HH:mm', { locale: de }),
+              reason: props.reason,
+            }}
+            components={{
+              resolution: <Typography component='span' sx={{ fontWeight: 'bold' }} color={color} />,
+            }}
+          />
+        )}
       </div>
     </Stack>
   )
