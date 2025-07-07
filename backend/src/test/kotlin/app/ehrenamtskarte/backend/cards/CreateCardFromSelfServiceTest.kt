@@ -79,7 +79,7 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
     @Test
     fun `POST returns an error when user entitlements not found in the db`() =
         JavalinTest.test(app) { _, client ->
-            val encodedCardInfo = SampleCards.KoblenzPass.getEncoded()
+            val encodedCardInfo = SampleCards.koblenzPass().getEncoded()
             val mutation = createMutation(encodedCardInfo = encodedCardInfo)
             val response = post(client, mutation)
 
@@ -105,7 +105,7 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
                 regionId = 95,
             )
 
-            val encodedCardInfo = SampleCards.KoblenzPass.getEncoded()
+            val encodedCardInfo = SampleCards.koblenzPass().getEncoded()
             val mutation = createMutation(encodedCardInfo = encodedCardInfo)
             val response = post(client, mutation)
 
@@ -131,7 +131,7 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
                 regionId = 95,
             )
 
-            val encodedCardInfo = SampleCards.KoblenzPass.getEncoded()
+            val encodedCardInfo = SampleCards.koblenzPass().getEncoded()
             val mutation = createMutation(encodedCardInfo = encodedCardInfo)
             val response = post(client, mutation)
 
@@ -159,7 +159,7 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
             val oldDynamicCardId = TestData.createDynamicCard(entitlementId = userEntitlementId)
             val oldStaticCardId = TestData.createStaticCard(entitlementId = userEntitlementId)
 
-            val encodedCardInfo = SampleCards.KoblenzPass.getEncoded()
+            val encodedCardInfo = SampleCards.koblenzPass().getEncoded()
             val mutation = createMutation(encodedCardInfo = encodedCardInfo)
             val response = post(client, mutation)
 

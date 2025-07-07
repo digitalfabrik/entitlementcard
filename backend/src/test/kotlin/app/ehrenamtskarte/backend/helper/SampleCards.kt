@@ -10,68 +10,64 @@ import java.util.Base64
  * Provides Card.CardInfo test objects
  *
  * Usage in tests:
- * val cardInfo = SampleCards.BavarianStandard
+ * val cardInfo = SampleCards.bavarianStandard()
  */
 object SampleCards {
-    val BavarianStandard: Card.CardInfo
-        get() = buildCardInfo(
-            base = bavarianBase,
+    fun bavarianStandard(): Card.CardInfo =
+        buildCardInfo(
+            base = bavarianBase(),
             expirationDay = 365 * 40, // Equals 14.600
             bavariaCardType = Card.BavariaCardType.STANDARD,
         )
 
-    val BavarianGold: Card.CardInfo
-        get() = buildCardInfo(
-            base = bavarianBase,
+    fun bavarianGold(): Card.CardInfo =
+        buildCardInfo(
+            base = bavarianBase(),
             bavariaCardType = Card.BavariaCardType.GOLD,
             expirationDay = null,
         )
 
-    val Nuernberg: Card.CardInfo
-        get() = nuernbergBase
+    fun nuernberg(): Card.CardInfo = nuernbergBase()
 
-    val NuernbergWithStartDay: Card.CardInfo
-        get() = buildCardInfo(
-            base = nuernbergBase,
+    fun nuernbergWithStartDay(): Card.CardInfo =
+        buildCardInfo(
+            base = nuernbergBase(),
             startDay = 365 * 2,
         )
 
-    val NuernbergWithPassId: Card.CardInfo
-        get() = buildCardInfo(
-            base = nuernbergBase,
+    fun nuernbergWithPassId(): Card.CardInfo =
+        buildCardInfo(
+            base = nuernbergBase(),
             nuernbergPassIdIdentifier = Card.NuernergPassIdentifier.passId,
             startDay = 365 * 2,
         )
 
-    val NuernbergWithPassNr: Card.CardInfo
-        get() = buildCardInfo(
-            base = nuernbergBase,
+    fun nuernbergWithPassNr(): Card.CardInfo =
+        buildCardInfo(
+            base = nuernbergBase(),
             nuernbergPassIdIdentifier = Card.NuernergPassIdentifier.passNr,
             startDay = 365 * 2,
         )
 
-    val KoblenzPass: Card.CardInfo
-        get() = koblenzBase
+    fun koblenzPass(): Card.CardInfo = koblenzBase()
 
-    private val bavarianBase: Card.CardInfo
-        get() = buildCardInfo(
+    private fun bavarianBase(): Card.CardInfo =
+        buildCardInfo(
             fullName = "Max Mustermann",
             regionId = 16,
         )
 
-    private val nuernbergBase: Card.CardInfo
-        get() {
-            return buildCardInfo(
-                fullName = "Max Mustermann",
-                regionId = 93,
-                nuernbergPassId = 99999999,
-                birthDay = -365 * 10,
-                expirationDay = 365 * 40, // Equals 14.600
-            )
-        }
+    private fun nuernbergBase(): Card.CardInfo =
+        buildCardInfo(
+            fullName = "Max Mustermann",
+            regionId = 93,
+            nuernbergPassId = 99999999,
+            birthDay = -365 * 10,
+            expirationDay = 365 * 40, // Equals 14.600
+        )
 
-    private val koblenzBase: Card.CardInfo
-        get() = buildCardInfo(
+    private fun koblenzBase(): Card.CardInfo =
+        buildCardInfo(
             fullName = "Karla Koblenz",
             regionId = 95,
             koblenzReferenceNumber = "123K",
@@ -89,36 +85,26 @@ object SampleCards {
         nuernbergPassIdIdentifier: Card.NuernergPassIdentifier? = null,
         koblenzReferenceNumber: String? = null,
         startDay: Int? = null,
-    ): Card.CardInfo {
-        val cardInfo = Card.CardInfo.newBuilder(base)
-        val extensions = cardInfo.extensionsBuilder
-        if (fullName != null) cardInfo.setFullName(fullName)
-        if (expirationDay != null) cardInfo.setExpirationDay(expirationDay)
-        if (regionId != null) extensions.extensionRegionBuilder.setRegionId(regionId)
-        if (bavariaCardType != null) {
-            extensions.extensionBavariaCardTypeBuilder.setCardType(
-                bavariaCardType,
-            )
-        }
-        if (birthDay != null) extensions.extensionBirthdayBuilder.setBirthday(birthDay)
-        if (nuernbergPassId != null) {
-            extensions.extensionNuernbergPassIdBuilder.setPassId(
-                nuernbergPassId,
-            )
-        }
-        if (nuernbergPassIdIdentifier != null) {
-            extensions.extensionNuernbergPassIdBuilder.setIdentifier(
-                nuernbergPassIdIdentifier,
-            )
-        }
-        if (koblenzReferenceNumber != null) {
-            extensions.extensionKoblenzReferenceNumberBuilder.setReferenceNumber(
-                koblenzReferenceNumber,
-            )
-        }
-        if (startDay != null) extensions.extensionStartDayBuilder.setStartDay(startDay)
-        return cardInfo.buildPartial()
-    }
+    ): Card.CardInfo =
+        Card.CardInfo.newBuilder(base).apply {
+            fullName?.let { setFullName(it) }
+            expirationDay?.let { setExpirationDay(it) }
+            startDay?.let { extensionsBuilder.extensionStartDayBuilder.setStartDay(it) }
+            birthDay?.let { extensionsBuilder.extensionBirthdayBuilder.setBirthday(it) }
+            regionId?.let { extensionsBuilder.extensionRegionBuilder.setRegionId(it) }
+            bavariaCardType?.let {
+                extensionsBuilder.extensionBavariaCardTypeBuilder.setCardType(it)
+            }
+            nuernbergPassId?.let {
+                extensionsBuilder.extensionNuernbergPassIdBuilder.setPassId(it)
+            }
+            nuernbergPassIdIdentifier?.let {
+                extensionsBuilder.extensionNuernbergPassIdBuilder.setIdentifier(it)
+            }
+            koblenzReferenceNumber?.let {
+                extensionsBuilder.extensionKoblenzReferenceNumberBuilder.setReferenceNumber(it)
+            }
+        }.buildPartial()
 
     fun Card.CardInfo.getEncoded(): String = Base64.getEncoder().encodeToString(this.toByteArray())
 

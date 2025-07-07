@@ -50,7 +50,7 @@ internal class ActivateCardTest : GraphqlApiTest() {
     @Test
     fun `should return successful activation result when the card is valid`() =
         JavalinTest.test(app) { _, client ->
-            val cardInfoHash = SampleCards.BavarianStandard.hash()
+            val cardInfoHash = SampleCards.bavarianStandard().hash()
 
             val rawActivationSecret = Random.nextBytes(20)
             val activationSecretHash = CardActivator.hashActivationSecret(rawActivationSecret)
@@ -85,7 +85,7 @@ internal class ActivateCardTest : GraphqlApiTest() {
     @Test
     fun `should return failed state when the card is static`() =
         JavalinTest.test(app) { _, client ->
-            val cardInfoHash = SampleCards.BavarianStandard.hash()
+            val cardInfoHash = SampleCards.bavarianStandard().hash()
 
             val cardId = TestData.createStaticCard(cardInfoHash, issuerId = eakRegionAdmin.id)
 
@@ -130,7 +130,7 @@ internal class ActivateCardTest : GraphqlApiTest() {
     @Test
     fun `should return failed state when the activation secret is incorrect`() =
         JavalinTest.test(app) { _, client ->
-            val cardInfoHash = SampleCards.BavarianStandard.hash()
+            val cardInfoHash = SampleCards.bavarianStandard().hash()
 
             val rawActivationSecret = Random.nextBytes(20)
             val activationSecretHash = CardActivator.hashActivationSecret(rawActivationSecret)
@@ -165,7 +165,7 @@ internal class ActivateCardTest : GraphqlApiTest() {
     @Test
     fun `should return failed state when the card is expired`() =
         JavalinTest.test(app) { _, client ->
-            val cardInfoHash = SampleCards.BavarianStandard.hash()
+            val cardInfoHash = SampleCards.bavarianStandard().hash()
 
             val rawActivationSecret = Random.nextBytes(20)
             val activationSecretHash = CardActivator.hashActivationSecret(rawActivationSecret)
@@ -201,7 +201,7 @@ internal class ActivateCardTest : GraphqlApiTest() {
     @Test
     fun `should return failed state when the card is revoked`() =
         JavalinTest.test(app) { _, client ->
-            val cardInfoHash = SampleCards.BavarianStandard.hash()
+            val cardInfoHash = SampleCards.bavarianStandard().hash()
 
             val rawActivationSecret = Random.nextBytes(20)
             val activationSecretHash = CardActivator.hashActivationSecret(rawActivationSecret)
@@ -237,7 +237,7 @@ internal class ActivateCardTest : GraphqlApiTest() {
     @Test
     fun `should return successful activation result when the card has already been activated and overwrite = true`() =
         JavalinTest.test(app) { _, client ->
-            val cardInfoHash = SampleCards.BavarianStandard.hash()
+            val cardInfoHash = SampleCards.bavarianStandard().hash()
 
             val rawActivationSecret = Random.nextBytes(20)
             val activationSecretHash = CardActivator.hashActivationSecret(rawActivationSecret)
@@ -279,7 +279,7 @@ internal class ActivateCardTest : GraphqlApiTest() {
     @Test
     fun `should return did_not_overwrite_existing state if card has already been activated and overwrite = false`() =
         JavalinTest.test(app) { _, client ->
-            val cardInfoHash = SampleCards.BavarianStandard.hash()
+            val cardInfoHash = SampleCards.bavarianStandard().hash()
 
             val rawActivationSecret = Random.nextBytes(20)
             val activationSecretHash = CardActivator.hashActivationSecret(rawActivationSecret)

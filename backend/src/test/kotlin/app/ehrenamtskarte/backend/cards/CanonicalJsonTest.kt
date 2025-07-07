@@ -28,7 +28,7 @@ internal class CanonicalJsonTest {
 
     @Test
     fun mapCardInfoForBavarianBlueEAK() {
-        val cardInfo = SampleCards.BavarianStandard
+        val cardInfo = SampleCards.bavarianStandard()
         assertEquals(
             CanonicalJson.messageToMap(cardInfo),
             mapOf(
@@ -45,7 +45,7 @@ internal class CanonicalJsonTest {
 
     @Test
     fun mapCardInfoForBavarianGoldenEAK() {
-        val cardInfo = SampleCards.BavarianGold
+        val cardInfo = SampleCards.bavarianGold()
         assertEquals(
             CanonicalJson.messageToMap(cardInfo),
             mapOf(
@@ -61,7 +61,7 @@ internal class CanonicalJsonTest {
 
     @Test
     fun mapCardInfoForNuernbergPass() {
-        val cardInfo = SampleCards.Nuernberg
+        val cardInfo = SampleCards.nuernberg()
         assertEquals(
             CanonicalJson.messageToMap(cardInfo),
             mapOf(
@@ -79,7 +79,7 @@ internal class CanonicalJsonTest {
 
     @Test
     fun mapCardInfoForNuernbergPassWithStartDay() {
-        val cardInfo = SampleCards.NuernbergWithStartDay
+        val cardInfo = SampleCards.nuernbergWithStartDay()
         assertEquals(
             CanonicalJson.messageToMap(cardInfo),
             mapOf(
