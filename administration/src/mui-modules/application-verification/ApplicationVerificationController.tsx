@@ -8,6 +8,7 @@ import { useParams } from 'react-router'
 import JsonFieldView from '../../bp-modules/applications/JsonFieldView'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import {
+  ApplicationStatus,
   useGetApplicationByApplicationVerificationAccessKeyQuery,
   useVerifyOrRejectApplicationVerificationMutation,
 } from '../../generated/graphql'
@@ -85,10 +86,12 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
   if (verification.rejectedDate || verification.verifiedDate) {
     return <CenteredMessage>{t('alreadyVerified')}</CenteredMessage>
   }
-  if (application.withdrawalDate) {
+  if (application.status === ApplicationStatus.Withdrawn && application.statusResolvedDate) {
     return (
       <CenteredMessage>
-        {t('withdrawMessageForVerifier', { date: formatDateWithTimezone(application.withdrawalDate, config.timezone) })}
+        {t('withdrawMessageForVerifier', {
+          date: formatDateWithTimezone(application.statusResolvedDate, config.timezone),
+        })}
       </CenteredMessage>
     )
   }

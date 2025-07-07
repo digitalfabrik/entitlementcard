@@ -25,7 +25,6 @@ describe('VerificationsView', () => {
       jsonValue: '',
       note: 'neu',
       verifications: [],
-      withdrawalDate: null,
     }
     const { getByText, getByRole } = renderView(application)
     expect(getByText('Bestätigung(en) durch Organisationen:')).toBeTruthy()
@@ -39,7 +38,6 @@ describe('VerificationsView', () => {
       jsonValue: '',
       note: 'neu',
       verifications: verificationsMixed,
-      withdrawalDate: null,
     }
     const { getByText, queryAllByRole } = renderView(application)
     expect(getByText('Bestätigung(en) durch Organisationen:')).toBeTruthy()
