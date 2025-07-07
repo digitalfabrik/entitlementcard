@@ -38,6 +38,7 @@ data class ApplicationView(
         Rejected,
         Approved,
         ApprovedCardCreated,
+        Withdrawn,
     }
 
     fun verifications(environment: DataFetchingEnvironment): CompletableFuture<List<ApplicationVerificationView>> =
@@ -50,4 +51,5 @@ fun ApplicationEntity.Status.toGraphQlType() =
         ApplicationEntity.Status.Rejected -> ApplicationView.ApplicationStatus.Rejected
         ApplicationEntity.Status.Approved -> ApplicationView.ApplicationStatus.Approved
         ApplicationEntity.Status.ApprovedCardCreated -> ApplicationView.ApplicationStatus.ApprovedCardCreated
+        ApplicationEntity.Status.Withdrawn -> ApplicationView.ApplicationStatus.Withdrawn
     }
