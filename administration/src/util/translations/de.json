@@ -214,6 +214,7 @@
     "applicationRejectedToastMessage": "Der Antrag wurde abgelehnt.",
     "applicationResolveNoticeApproved": "Dieser Antrag wurde am {{date}} um {{time}} <resolution>genehmigt</resolution>.",
     "applicationResolveNoticeRejected": "Dieser Antrag wurde am {{date}} um {{time}} <resolution>abgelehnt</resolution> (Begründung: {{reason}}).",
+    "applicationResolveNoticeWithdrawn": "Dieser Antrag wurde am {{date}} um {{time}} <resolution>zurückgezogen</resolution>.",
     "incompleteApplicationDataTooltip": "Aus den Antragsdaten kann keine Karte erzeugt werden.",
     "rejectionDialogTitle": "Antrag ablehnen",
     "rejectionDialogMessage": "Bitte wählen Sie einen Ablehnungsgrund. Der/die Antragsteller/in wird über diesen anschließend via E-Mail informiert.",
