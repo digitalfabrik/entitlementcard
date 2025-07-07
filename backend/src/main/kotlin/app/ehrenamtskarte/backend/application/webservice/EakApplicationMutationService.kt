@@ -3,6 +3,7 @@ package app.ehrenamtskarte.backend.application.webservice
 import app.ehrenamtskarte.backend.application.database.ApplicationEntity
 import app.ehrenamtskarte.backend.application.database.ApplicationEntity.Status
 import app.ehrenamtskarte.backend.application.database.ApplicationVerificationEntity
+import app.ehrenamtskarte.backend.application.database.Applications
 import app.ehrenamtskarte.backend.application.database.NOTE_MAX_CHARS
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
 import app.ehrenamtskarte.backend.application.webservice.schema.create.Application
@@ -90,7 +91,12 @@ class EakApplicationMutationService {
     @GraphQLDescription("Withdraws the application")
     fun withdrawApplication(accessKey: String): Boolean =
         transaction {
-            ApplicationRepository.withdrawApplication(accessKey)
+            try {
+                ApplicationEntity.find { Applications.accessKey eq accessKey }.single().status = Status.Withdrawn
+                true
+            } catch (e: IllegalArgumentException) {
+                false
+            }
         }
 
     @GraphQLDescription("Verifies or rejects an application verification")
