@@ -2,6 +2,11 @@ import { JsonField, findValue } from '../../bp-modules/applications/JsonFieldVie
 import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
 import EMailNotificationExtension from '../../cards/extensions/EMailNotificationExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
+import {
+  ApplicationDataIncompleteError,
+  getCardTypeApplicationData,
+  getPersonalApplicationData,
+} from '../../util/applicationDataHelper'
 import { isProductionEnvironment } from '../../util/helper'
 import { ActivationText } from '../common/ActivationText'
 import type { CardConfig, ProjectConfig } from '../getProjectConfig'
@@ -14,14 +19,12 @@ export const applicationJsonToPersonalData = (
   const personalData = findValue(json, 'personalData', 'Array')
 
   if (!personalData) {
-    return null
+    throw new ApplicationDataIncompleteError('Missing personal data')
   }
 
-  const forenames = findValue(personalData, 'forenames', 'String')
-  const surname = findValue(personalData, 'surname', 'String')
-  const emailAddress = findValue(personalData, 'emailAddress', 'String')
+  const { forenames, surname, emailAddress } = getPersonalApplicationData(json)
 
-  return { forenames: forenames?.value, surname: surname?.value, emailAddress: emailAddress?.value }
+  return { forenames, surname, emailAddress }
 }
 
 const cardConfig: CardConfig = {
@@ -34,27 +37,33 @@ const cardConfig: CardConfig = {
 
 export const applicationJsonToCardQuery = (json: JsonField<'Array'>): string | null => {
   const query = new URLSearchParams()
-  const applicationDetails = findValue(json, 'applicationDetails', 'Array') ?? json
-  const cardType = findValue(applicationDetails, 'cardType', 'String')
+  try {
+    const { cardType } = getCardTypeApplicationData(json)
 
-  const personalData = applicationJsonToPersonalData(json)
+    const personalData = applicationJsonToPersonalData(json)
 
-  if (!personalData || !personalData.forenames || !personalData.surname || !cardType) {
+    if (!personalData || !personalData.forenames || !personalData.surname || !cardType) {
+      throw new ApplicationDataIncompleteError('Missing personal data')
+    }
+
+    query.set(cardConfig.nameColumnName, `${personalData.forenames} ${personalData.surname}`)
+    const cardTypeExtensionIdx = cardConfig.extensions.findIndex(ext => ext === BavariaCardTypeExtension)
+    const value = cardType === 'Goldene Ehrenamtskarte' ? 'Goldkarte' : 'Standard'
+    query.set(cardConfig.extensionColumnNames[cardTypeExtensionIdx] ?? '', value)
+    if (personalData.emailAddress) {
+      const applicantMailNotificationExtensionIdx = cardConfig.extensions.findIndex(
+        ext => ext === EMailNotificationExtension
+      )
+      query.set(cardConfig.extensionColumnNames[applicantMailNotificationExtensionIdx] ?? '', personalData.emailAddress)
+    }
+
+    return `?${query.toString()}`
+  } catch (error) {
+    if (error instanceof ApplicationDataIncompleteError) {
+      console.error(`Application data incomplete: ${error.message}`)
+    }
     return null
   }
-
-  query.set(cardConfig.nameColumnName, `${personalData.forenames} ${personalData.surname}`)
-  const cardTypeExtensionIdx = cardConfig.extensions.findIndex(ext => ext === BavariaCardTypeExtension)
-  const value = cardType.value === 'Goldene Ehrenamtskarte' ? 'Goldkarte' : 'Standard'
-  query.set(cardConfig.extensionColumnNames[cardTypeExtensionIdx] ?? '', value)
-  if (personalData.emailAddress) {
-    const applicantMailNotificationExtensionIdx = cardConfig.extensions.findIndex(
-      ext => ext === EMailNotificationExtension
-    )
-    query.set(cardConfig.extensionColumnNames[applicantMailNotificationExtensionIdx] ?? '', personalData.emailAddress)
-  }
-
-  return `?${query.toString()}`
 }
 
 const config: ProjectConfig = {
@@ -64,6 +73,7 @@ const config: ProjectConfig = {
     applicationJsonToPersonalData,
     applicationJsonToCardQuery,
     applicationUsableWithApiToken: true,
+    csvExport: true,
   },
   staticQrCodesEnabled: false,
   card: cardConfig,
