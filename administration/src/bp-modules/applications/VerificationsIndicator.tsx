@@ -49,7 +49,7 @@ export const VerificationQuickIndicator = ({
       slots={{
         tooltip: ToolTipContent,
       }}>
-      <Stack direction='row' sx={{ height: '25px', alignItems: 'center', '&:focus': { outline: 'none' } }}>
+      <Stack direction='row' sx={{ height: '25px', alignItems: 'center', '&:focus': { outline: 'none' }, gap: '8px' }}>
         <VerificationIndicator
           status={VerificationStatus.Verified}
           text={`: ${verificationStatuses.filter(v => v === VerificationStatus.Verified).length}`}

@@ -69,6 +69,7 @@ type ApplicationVerificationView {
   contactName: String!
   organizationName: String!
   rejectedDate: String
+  verificationId: Int!
   verifiedDate: String
 }
 
@@ -172,6 +173,8 @@ type Mutation {
   resetPassword(email: String!, newPassword: String!, passwordResetKey: String!, project: String!): Boolean!
   "Send application info to Freinet"
   sendApplicationDataToFreinet(applicationId: Int!, project: String!): Boolean!
+  "Send approval mail to organisation"
+  sendApprovalMailToOrganisation(applicationId: Int!, applicationVerificationId: Int!, project: String!): Boolean!
   "Sends a confirmation mail to the user when the card creation was successful"
   sendCardCreationConfirmationMail(deepLink: String!, project: String!, recipientAddress: String!, recipientName: String!, regionId: Int!): Boolean!
   "Sends a mail that allows the administrator to reset their password."
