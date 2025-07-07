@@ -25,6 +25,9 @@ steps:
       command: bundle exec fastlane keystore
       working_directory: android
   - run:
+      name: Install Ninja build system
+      command: sudo apt-get update && sudo apt-get install -y ninja-build
+  - run:
       name: '[FL] Build'
       command: bundle exec fastlane android build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} build_config_name:<< parameters.build_config >>
       working_directory: android

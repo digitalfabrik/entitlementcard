@@ -284,6 +284,9 @@ jobs:
             - run:
                 command: bundle exec fastlane keystore
                 name: '[FL] Prepare Android Keystore'
+            - run:
+                command: sudo apt-get update && sudo apt-get install -y ninja-build
+                name: 'Install Ninja build system'
                 working_directory: android
             - run:
                 command: bundle exec fastlane android build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} build_config_name:<< parameters.build_config >>
