@@ -108,9 +108,6 @@ object SampleCards {
 
     fun Card.CardInfo.getEncoded(): String = Base64.getEncoder().encodeToString(this.toByteArray())
 
-    fun Card.CardInfo.hash(): ByteArray {
-        val pepper = ByteArray(PEPPER_LENGTH)
-        SecureRandom.getInstanceStrong().nextBytes(pepper)
-        return this.hash(pepper)
-    }
+    fun Card.CardInfo.hash(): ByteArray =
+        this.hash(ByteArray(PEPPER_LENGTH).also { SecureRandom.getInstanceStrong().nextBytes(it) })
 }
