@@ -21,7 +21,6 @@ object Applications : IntIdTable() {
     val jsonValue = text("jsonValue")
     val createdDate = timestamp("createdDate").defaultExpression(CurrentTimestamp)
     val accessKey = varchar("accessKey", 100).uniqueIndex()
-    val withdrawalDate = timestamp("withdrawalDate").nullable()
     val note = varchar("note", NOTE_MAX_CHARS).nullable()
     val status = enumerationByName<ApplicationEntity.Status>("status", length = 32)
         .default(ApplicationEntity.Status.Pending)
@@ -44,7 +43,6 @@ class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
     var jsonValue by Applications.jsonValue
     var createdDate by Applications.createdDate
     var accessKey by Applications.accessKey
-    var withdrawalDate by Applications.withdrawalDate
     var note by Applications.note
     private var _status by Applications.status
     var status: Status
