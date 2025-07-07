@@ -361,7 +361,7 @@ const ApplicationCard = ({
       name: t('exportCsv'),
       onClick: onClickExportApplicationToCsv,
       icon: (
-        <SvgIcon sx={{ height: 24, marginRight: 1 }}>
+        <SvgIcon sx={{ height: 20, marginRight: 1 }}>
           <CSVIcon />
         </SvgIcon>
       ),
@@ -369,7 +369,7 @@ const ApplicationCard = ({
     {
       name: t('exportPdf'),
       onClick: () => onPrintApplicationById(application.id),
-      icon: <PrintOutlined sx={{ height: 24, marginRight: 1 }} />,
+      icon: <PrintOutlined sx={{ height: 20, marginRight: 1 }} />,
     },
   ]
 
