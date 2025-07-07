@@ -25,7 +25,7 @@ data class ApplicationView(
                 regionId = entity.regionId.value,
                 createdDate = entity.createdDate.toString(),
                 jsonValue = entity.jsonValue,
-                withdrawalDate = entity.withdrawalDate?.toString(),
+                withdrawalDate = entity.statusResolvedDate?.toString(),
                 note = entity.note.takeIf { includePrivateInformation },
                 status = entity.status.takeIf { includePrivateInformation }?.toGraphQlType(),
                 statusResolvedDate = entity.statusResolvedDate?.takeIf { includePrivateInformation }?.toString(),
