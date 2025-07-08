@@ -7,7 +7,9 @@ import { EMAIL_NOTIFICATION_EXTENSION_NAME } from '../../../cards/extensions/EMa
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
 import { useSendCardCreationConfirmationMailMutation } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
+import { getBuildConfig } from '../../../util/getBuildConfig'
 import getDeepLinkFromQrCode from '../../../util/getDeepLinkFromQrCode'
+import { isProductionEnvironment } from '../../../util/helper'
 import { useAppToaster } from '../../AppToaster'
 
 type SendCardConfirmationMail = (codes: CreateCardsResult[], cards: Card[]) => Promise<void>
@@ -40,7 +42,11 @@ const useSendCardConfirmationMails = (): SendCardConfirmationMail => {
           if (!mailNotificationExtensionState || regionId === undefined) {
             return
           }
-          const deepLink = getDeepLinkFromQrCode({ case: 'dynamicActivationCode', value: code.dynamicActivationCode })
+          const deepLink = getDeepLinkFromQrCode(
+            { case: 'dynamicActivationCode', value: code.dynamicActivationCode },
+            getBuildConfig(window.location.hostname),
+            isProductionEnvironment()
+          )
           await sendMail({
             variables: {
               project: projectId,
