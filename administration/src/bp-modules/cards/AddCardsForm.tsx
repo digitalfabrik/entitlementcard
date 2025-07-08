@@ -75,9 +75,7 @@ const AddCardsForm = ({
 
   const removeCard = (oldCard: Card) => {
     setCards(cards.filter(card => card !== oldCard))
-    // TODO try to avoid timeout
-    // We have to ensure that the removal of the card is done before deleting searchParams to avoid issues with unstableUsePrompt
-    setTimeout(() => setSearchParams(undefined, { replace: true }), 0)
+    setSearchParams(undefined, { replace: true })
   }
 
   return (
