@@ -24,7 +24,7 @@ const ItemContainer = styled('div')`
 const Container = styled('div')`
   padding: 16px;
   position: fixed;
-  right: 10%;
+  right: 3%;
   bottom: 10%;
 `
 
@@ -34,7 +34,7 @@ const StatisticsLegend = ({ items }: StatisticsLegendProps): ReactElement | null
   if (!cardStatistics.enabled) {
     return null
   }
-  const indicatorColors = [cardStatistics.theme.primaryColor, cardStatistics.theme.primaryColorLight]
+  const indicatorColors = Object.values(cardStatistics.theme)
   return (
     <Container>
       {items.map((item, index) => (

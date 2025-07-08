@@ -95,6 +95,8 @@ const config: ProjectConfig = {
       primaryColor: '#8377A9',
       // https://a.atmos.washington.edu/~ovens/javascript/colorpicker.html - 80% lighter than primaryColor
       primaryColorLight: '#c6c0d8',
+      colorBlueCard: '#3B82F6',
+      colorGoldenCard: '#EFBF04',
     },
   },
   freinetCSVImportEnabled: true,

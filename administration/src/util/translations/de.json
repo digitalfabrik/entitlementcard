@@ -441,6 +441,8 @@
     "region": "Region",
     "cardsCreated": "Erstellte Karten",
     "cardsActivated": "Davon aktiviert",
+    "cardsActivatedBlue": "Blaue Ehrenamtskarte (aktiviert)",
+    "cardsActivatedGolden": "Goldene Ehrenamtskarte (aktiviert)",
     "exportCsvNotPossible": "Etwas ist schiefgegangen beim Export der CSV."
   },
   "stores": {

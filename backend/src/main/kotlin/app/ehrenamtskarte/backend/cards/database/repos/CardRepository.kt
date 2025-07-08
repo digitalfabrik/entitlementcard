@@ -96,10 +96,39 @@ object CardRepository {
             )
             .groupBy(Regions.id)
             .alias("ActiveCards")
+        val activeCardsBlue = (Regions leftJoin Cards)
+            .select(Regions.id, numAlias)
+            .where(
+                Cards.firstActivationDate.isNotNull() and
+                    Cards.expirationDay.isNotNull() and
+                    Cards.issueDate.greaterEq(from) and
+                    Cards.issueDate.less(until),
+            )
+            .groupBy(Regions.id)
+            .alias("ActiveCardsBlue")
+        val activeCardsGolden = (Regions leftJoin Cards)
+            .select(Regions.id, numAlias)
+            .where(
+                Cards.firstActivationDate.isNotNull() and
+                    Cards.expirationDay.isNull() and
+                    Cards.issueDate.greaterEq(from) and
+                    Cards.issueDate.less(until),
+            )
+            .groupBy(Regions.id)
+            .alias("ActiveCardsGolden")
         val query = Regions
             .join(cardsCreated, JoinType.LEFT, Regions.id, cardsCreated[Regions.id])
             .join(activeCards, JoinType.LEFT, Regions.id, activeCards[Regions.id])
-            .select(Regions.name, Regions.prefix, cardsCreated[numAlias], activeCards[numAlias])
+            .join(activeCardsBlue, JoinType.LEFT, Regions.id, activeCardsBlue[Regions.id])
+            .join(activeCardsGolden, JoinType.LEFT, Regions.id, activeCardsGolden[Regions.id])
+            .select(
+                Regions.name,
+                Regions.prefix,
+                cardsCreated[numAlias],
+                activeCards[numAlias],
+                activeCardsBlue[numAlias],
+                activeCardsGolden[numAlias],
+            )
             .where(if (regionId == null) Regions.projectId eq projectId else Regions.id eq regionId)
             .orderBy(Regions.name, SortOrder.ASC)
             .orderBy(Regions.prefix, SortOrder.ASC)
@@ -109,6 +138,8 @@ object CardRepository {
                     region = it[Regions.prefix] + ' ' + it[Regions.name],
                     cardsCreated = (it.getOrNull(cardsCreated[numAlias]) ?: 0).toInt(),
                     cardsActivated = (it.getOrNull(activeCards[numAlias]) ?: 0).toInt(),
+                    cardsActivatedBlue = (it.getOrNull(activeCardsBlue[numAlias]) ?: 0).toInt(),
+                    cardsActivatedGolden = (it.getOrNull(activeCardsGolden[numAlias]) ?: 0).toInt(),
                 )
             }
             .toList()

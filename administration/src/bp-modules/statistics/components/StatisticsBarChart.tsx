@@ -10,17 +10,17 @@ import StatisticsBarTooltip from './StatisticsBarTooltip'
 
 const BarContainer = styled.div<{ height: number }>`
   height: ${props => props.height}px;
-  margin-bottom: 70px;
+  margin-bottom: 62px;
 `
 type StatisticsBarChartProps = {
   statistic: CardStatisticsResultModel
 }
 
-const StatisticsBarChart = ({ statistic }: StatisticsBarChartProps): ReactElement => {
+const StatisticsBarChart = ({ statistic }: StatisticsBarChartProps): ReactElement | null => {
   const { cardStatistics } = useContext(ProjectConfigContext)
   const { t } = useTranslation('statistics')
   const barHeight = 32
-  const axisHeight = 90
+  const axisHeight = 110
 
   if (!cardStatistics.enabled) {
     return (
@@ -35,33 +35,33 @@ const StatisticsBarChart = ({ statistic }: StatisticsBarChartProps): ReactElemen
   const statisticKeys = Object.keys(statistic).filter(item => item !== 'region')
 
   return (
-    <BarContainer key={statistic.region} height={barHeight * 2 + axisHeight}>
+    <BarContainer height={barHeight * statisticKeys.length + axisHeight}>
       <ResponsiveBar
         /* Bar chart starts with the first row at bottom axis, so the data has to be reversed to show alphabetically */
         data={[...[statistic]]}
         tooltip={StatisticsBarTooltip}
-        keys={[statisticKeys[0], statisticKeys[1]]}
+        keys={statisticKeys}
         indexBy='region'
         margin={{ top: 25, right: 50, bottom: 25, left: 50 }}
-        innerPadding={2.0}
+        innerPadding={4.0}
         padding={0.2}
+        enableGridY={false}
         groupMode='grouped'
         layout='horizontal'
-        colors={[cardStatistics.theme.primaryColor, cardStatistics.theme.primaryColorLight]}
+        colors={Object.values(cardStatistics.theme)}
         axisTop={{
           legend: statistic.region,
           tickValues: 0,
+          legendPosition: 'start',
         }}
         axisBottom={{
-          tickSize: 5,
-          tickPadding: 5,
-          legendPosition: 'middle',
-          legendOffset: 44,
+          tickSize: 6,
+          tickPadding: 8,
         }}
         axisLeft={null}
         theme={{
           axis: { legend: { text: { fontSize: 14, fontWeight: 700 } } },
-          text: { fontSize: 14 },
+          text: { fontSize: 12 },
           labels: { text: { fontSize: 14, fontWeight: 700 } },
         }}
         role='application'
