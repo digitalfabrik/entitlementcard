@@ -1,9 +1,9 @@
 import {
   ACTIVATION_FRAGMENT,
   ACTIVATION_PATH,
-  BAYERN_PRODUCTION_ID,
-  BAYERN_STAGING_ID,
   HTTPS_SCHEME,
+  buildConfigBayern,
+  buildConfigKoblenz,
 } from 'build-configs'
 
 import { getTestRegion } from '../../bp-modules/user-settings/__mocks__/Region'
@@ -13,8 +13,6 @@ import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExte
 import RegionExtension from '../../cards/extensions/RegionExtension'
 import { PdfQrCode } from '../../cards/pdf/PdfQrCodeElement'
 import { DynamicActivationCode } from '../../generated/card_pb'
-import { LOCAL_STORAGE_PROJECT_KEY } from '../../project-configs/constants'
-import { getBuildConfig } from '../getBuildConfig'
 import getDeepLinkFromQrCode from '../getDeepLinkFromQrCode'
 
 jest.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
@@ -42,36 +40,29 @@ describe('DeepLink generation', () => {
   }
 
   const encodedActivationCodeBase64 = 'ChsKGQoJVGhlYSBUZXN0ENOiARoICgIIACICCAA%3D'
-  const overrideHostname = (hostname: string) =>
-    Object.defineProperty(window, 'location', {
-      value: {
-        hostname,
-      },
-      writable: true,
-    })
 
-  it('should generate a correct link for development', () => {
-    process.env.REACT_APP_IS_PRODUCTION = 'false'
-    localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, BAYERN_STAGING_ID)
-    const projectId = getBuildConfig(window.location.hostname).common.projectId.staging
-    expect(getDeepLinkFromQrCode(dynamicPdfQrCode)).toBe(
-      `${HTTPS_SCHEME}://${projectId}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}#${encodedActivationCodeBase64}`
-    )
-  })
-  it('should generate a correct link for staging', () => {
-    process.env.REACT_APP_IS_PRODUCTION = 'true'
-    overrideHostname(BAYERN_STAGING_ID)
-    const projectId = getBuildConfig(window.location.hostname).common.projectId.staging
-    expect(getDeepLinkFromQrCode(dynamicPdfQrCode)).toBe(
-      `${HTTPS_SCHEME}://${projectId}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}#${encodedActivationCodeBase64}`
-    )
-  })
-  it('should generate a correct link for production', () => {
-    overrideHostname(BAYERN_PRODUCTION_ID)
-    process.env.REACT_APP_IS_PRODUCTION = 'true'
-    const projectId = getBuildConfig(window.location.hostname).common.projectId.production
-    expect(getDeepLinkFromQrCode(dynamicPdfQrCode)).toBe(
-      `${HTTPS_SCHEME}://${projectId}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}#${encodedActivationCodeBase64}`
-    )
-  })
+  const buildConfigs = [{ buildConfig: buildConfigBayern }, { buildConfig: buildConfigKoblenz }]
+
+  // custom link schemes don't work in browsers or pdf thats why we use the staging link scheme also for development
+  it.each(buildConfigs)(
+    'should generate a correct link for $buildConfig.common.projectId.staging for staging and development',
+    ({ buildConfig }) => {
+      const projectId = buildConfig.common.projectId.staging
+
+      expect(getDeepLinkFromQrCode(dynamicPdfQrCode, buildConfig, false)).toBe(
+        `${HTTPS_SCHEME}://${projectId}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}#${encodedActivationCodeBase64}`
+      )
+    }
+  )
+
+  it.each(buildConfigs)(
+    'should generate a correct link for $buildConfig.common.projectId.production',
+    ({ buildConfig }) => {
+      const projectId = buildConfig.common.projectId.production
+
+      expect(getDeepLinkFromQrCode(dynamicPdfQrCode, buildConfig, true)).toBe(
+        `${HTTPS_SCHEME}://${projectId}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}#${encodedActivationCodeBase64}`
+      )
+    }
+  )
 })

@@ -278,6 +278,9 @@ jobs:
                 precache: android
             - install_fastlane:
                 directory: android
+            - run:
+                command: sudo apt-get update && sudo apt-get install -y ninja-build
+                name: Install Ninja
             - restore_cache:
                 keys:
                     - v1-gradle-{{ checksum "android/build.gradle.kts" }}-{{ checksum "android/app/build.gradle.kts" }}-{{ checksum "android/settings.gradle.kts" }}
@@ -355,6 +358,7 @@ jobs:
                     - nuernberg
                     - koblenz
                 type: enum
+        resource_class: m4pro.medium
         steps:
             - prepare_workspace
             - install_app_toolbelt
