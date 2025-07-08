@@ -85,7 +85,7 @@ Future<bool> activateCard(
         late String message;
 
         if (reason!.contains('not_found')) {
-          message = source == ActivationSource.deepLink ? t.identification.cardNotFound : t.identification.codeInvalid;
+          message = t.identification.cardInvalid;
         } else if (reason.contains('wrong_secret')) {
           message =
               source == ActivationSource.deepLink ? t.deeplinkActivation.invalidCode : t.identification.codeInvalid;
