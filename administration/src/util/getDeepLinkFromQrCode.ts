@@ -5,7 +5,6 @@ import { PdfQrCode } from '../cards/pdf/PdfQrCodeElement'
 import { QrCode } from '../generated/card_pb'
 import { uint8ArrayToBase64 } from './base64'
 
-
 const getDeepLinkFromQrCode = (qrCode: PdfQrCode, buildConfig: BuildConfigType, isProduction: boolean): string => {
   const qrCodeContent = new QrCode({
     qrCode,
@@ -21,4 +20,5 @@ const getDeepLinkFromQrCode = (qrCode: PdfQrCode, buildConfig: BuildConfigType, 
   }
   return deepLink
 }
+
 export default getDeepLinkFromQrCode
