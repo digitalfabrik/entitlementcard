@@ -12,6 +12,7 @@ const config: ProjectConfig = {
     applicationJsonToPersonalData,
     applicationJsonToCardQuery,
     applicationUsableWithApiToken: true,
+    csvExport: true,
   },
   staticQrCodesEnabled: false,
   card: {

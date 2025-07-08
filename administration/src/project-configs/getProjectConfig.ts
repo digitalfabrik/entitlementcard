@@ -57,6 +57,7 @@ export type ApplicationFeature = {
   applicationJsonToPersonalData: (json: JsonField<'Array'>) => { forenames?: string; surname?: string } | null
   applicationJsonToCardQuery: (json: JsonField<'Array'>) => string | null
   applicationUsableWithApiToken: boolean
+  csvExport: boolean
 }
 
 export type CsvExport =

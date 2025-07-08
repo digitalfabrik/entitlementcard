@@ -3,7 +3,6 @@ package app.ehrenamtskarte.backend.application.webservice.schema.view
 import app.ehrenamtskarte.backend.application.database.ApplicationEntity
 import app.ehrenamtskarte.backend.application.webservice.dataloader.verificationsByApplicationLoader
 import app.ehrenamtskarte.backend.common.webservice.fromEnvironment
-import com.expediagroup.graphql.generator.annotations.GraphQLDeprecated
 import graphql.schema.DataFetchingEnvironment
 import java.util.concurrent.CompletableFuture
 
@@ -15,10 +14,9 @@ data class ApplicationView(
     val jsonValue: String,
     val withdrawalDate: String?,
     val note: String?,
-    @GraphQLDeprecated("Use 'status' instead")
-    val cardCreated: Boolean?,
     val status: ApplicationStatus?,
-    val statusResolvedDate: String? = null,
+    val statusResolvedDate: String?,
+    val rejectionMessage: String?,
 ) {
     companion object {
         fun fromDbEntity(entity: ApplicationEntity, includePrivateInformation: Boolean = false): ApplicationView =
@@ -29,10 +27,9 @@ data class ApplicationView(
                 jsonValue = entity.jsonValue,
                 withdrawalDate = entity.withdrawalDate?.toString(),
                 note = entity.note.takeIf { includePrivateInformation },
-                cardCreated = (entity.status == ApplicationEntity.Status.ApprovedCardCreated)
-                    .takeIf { includePrivateInformation },
                 status = entity.status.takeIf { includePrivateInformation }?.toGraphQlType(),
                 statusResolvedDate = entity.statusResolvedDate?.takeIf { includePrivateInformation }?.toString(),
+                rejectionMessage = entity.rejectionMessage.takeIf { includePrivateInformation },
             )
     }
 
