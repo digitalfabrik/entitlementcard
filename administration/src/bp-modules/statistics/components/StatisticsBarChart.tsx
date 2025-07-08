@@ -13,16 +13,16 @@ const BarContainer = styled.div<{ height: number }>`
   margin-bottom: 70px;
 `
 type StatisticsBarChartProps = {
-  statistics: CardStatisticsResultModel[]
+  statistic: CardStatisticsResultModel
 }
 
-const StatisticsBarChart = ({ statistics }: StatisticsBarChartProps): ReactElement => {
+const StatisticsBarChart = ({ statistic }: StatisticsBarChartProps): ReactElement => {
   const { cardStatistics } = useContext(ProjectConfigContext)
   const { t } = useTranslation('statistics')
-  const barHeight = 50
+  const barHeight = 32
   const axisHeight = 90
 
-  if (statistics.length === 0 || !cardStatistics.enabled) {
+  if (!cardStatistics.enabled) {
     return (
       <NonIdealState
         icon='warning-sign'
@@ -32,53 +32,38 @@ const StatisticsBarChart = ({ statistics }: StatisticsBarChartProps): ReactEleme
     )
   }
 
-  const statisticKeys = Object.keys(statistics[0]).filter(item => item !== 'region')
+  const statisticKeys = Object.keys(statistic).filter(item => item !== 'region')
 
   return (
-    <BarContainer height={statistics.length * barHeight + axisHeight}>
+    <BarContainer key={statistic.region} height={barHeight * 2 + axisHeight}>
       <ResponsiveBar
         /* Bar chart starts with the first row at bottom axis, so the data has to be reversed to show alphabetically */
-        data={[...statistics].reverse()}
+        data={[...[statistic]]}
         tooltip={StatisticsBarTooltip}
         keys={[statisticKeys[0], statisticKeys[1]]}
         indexBy='region'
-        margin={{ top: 20, right: 300, bottom: 50, left: 300 }}
+        margin={{ top: 25, right: 50, bottom: 25, left: 50 }}
         innerPadding={2.0}
         padding={0.2}
         groupMode='grouped'
         layout='horizontal'
         colors={[cardStatistics.theme.primaryColor, cardStatistics.theme.primaryColorLight]}
+        axisTop={{
+          legend: statistic.region,
+          tickValues: 0,
+        }}
         axisBottom={{
           tickSize: 5,
           tickPadding: 5,
-          legend: t('count'),
           legendPosition: 'middle',
           legendOffset: 44,
         }}
+        axisLeft={null}
         theme={{
           axis: { legend: { text: { fontSize: 14, fontWeight: 700 } } },
           text: { fontSize: 14 },
           labels: { text: { fontSize: 14, fontWeight: 700 } },
         }}
-        legends={[
-          {
-            dataFrom: 'keys',
-            data: statisticKeys.map((item, index) => ({
-              color: [cardStatistics.theme.primaryColor, cardStatistics.theme.primaryColorLight][index],
-              id: item,
-              label: t(item)!,
-            })),
-            anchor: 'top-right',
-            direction: 'column',
-            translateX: 140,
-            translateY: 20,
-            itemsSpacing: 2,
-            itemWidth: 100,
-            itemHeight: 30,
-            itemDirection: 'left-to-right',
-            symbolSize: 20,
-          },
-        ]}
         role='application'
         ariaLabel='Card statistics bar chart'
         barAriaLabel={e => `${e.id}: ${e.formattedValue} ${t('inRegion')}: ${e.indexValue}`}

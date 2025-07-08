@@ -1,7 +1,7 @@
 import { H4 } from '@blueprintjs/core'
+import { styled } from '@mui/system'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
 import { CardStatisticsResultModel } from '../../../generated/graphql'
 import { toLowerCaseFirstLetter } from '../../../util/helper'
@@ -11,12 +11,13 @@ const Headline = styled(H4)`
   margin: 0;
 `
 
-const Container = styled.div`
+const Container = styled('div')`
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 18px;
   margin-top: 12px;
+  margin-bottom: 24px;
   white-space: pre;
 `
 
