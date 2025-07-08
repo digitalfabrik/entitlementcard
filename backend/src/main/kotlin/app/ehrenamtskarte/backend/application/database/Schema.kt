@@ -50,7 +50,7 @@ class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
         set(newValue) {
             require(_status.canTransitionTo(newValue)) { "Cannot transition from '$_status' to '$newValue'" }
 
-            if (newValue == Status.Rejected || newValue == Status.Approved) {
+            if (listOf(Status.Rejected, Status.Approved, Status.Withdrawn).contains(newValue)) {
                 statusResolvedDate = OffsetDateTime.now()
             }
 
