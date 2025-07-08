@@ -3,7 +3,9 @@ import fontkit from '@pdf-lib/fontkit'
 
 import { Region } from '../generated/graphql'
 import { PdfConfig, ProjectConfig } from '../project-configs/getProjectConfig'
+import { getBuildConfig } from '../util/getBuildConfig'
 import getDeepLinkFromQrCode from '../util/getDeepLinkFromQrCode'
+import { isProductionEnvironment } from '../util/helper'
 import normalizeString from '../util/normalizeString'
 import { reportErrorToSentry } from '../util/sentry'
 import { Card } from './Card'
@@ -67,7 +69,7 @@ const fillContentAreas = async (
       doc,
       page: templatePage,
       font: fontBold,
-      url: getDeepLinkFromQrCode(dynamicCode),
+      url: getDeepLinkFromQrCode(dynamicCode, getBuildConfig(window.location.hostname), isProductionEnvironment()),
     })
   }
 
