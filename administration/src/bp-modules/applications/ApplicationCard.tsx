@@ -338,27 +338,18 @@ const ApplicationCard = ({
     () => config.applicationFeature?.applicationJsonToPersonalData(jsonValueParsed),
     [config.applicationFeature, jsonValueParsed]
   )
-
-  const onClickExportApplicationToCsv = () => {
-    try {
-      exportApplicationToCsv(application, config)
-    } catch (error) {
-      if (error instanceof ApplicationToCsvError || error instanceof ApplicationDataIncompleteError) {
-        const { message } = error
-        appToaster?.show({
-          message,
-          intent: 'danger',
-        })
-      }
-    }
-  }
-
-  const otherOptionsContainerWidth = 170
-  const otherOptionsItemHeight = 36.5
   const menuItems: MenuItemType[] = [
     {
       name: t('exportCsv'),
-      onClick: onClickExportApplicationToCsv,
+      onClick: () => {
+        try {
+          exportApplicationToCsv(application, config)
+        } catch (error) {
+          if (error instanceof ApplicationToCsvError || error instanceof ApplicationDataIncompleteError) {
+            appToaster?.show({ message: error.message, intent: 'danger' })
+          }
+        }
+      },
       icon: (
         <SvgIcon sx={{ height: 20, marginRight: 1 }}>
           <CSVIcon />
@@ -483,8 +474,8 @@ const ApplicationCard = ({
           <BaseMenu
             menuItems={menuItems}
             menuLabel={t('moreActionsButtonLabel')}
-            containerWidth={otherOptionsContainerWidth}
-            itemHeight={otherOptionsItemHeight}
+            containerWidth={170}
+            itemHeight={36.5}
           />
         </Stack>
 
