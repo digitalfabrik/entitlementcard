@@ -609,7 +609,6 @@
     "csvCreationError": "Etwas ist schiefgegangen beim Erstellen der CSV.",
     "freinetAgencyNotFound": "Diese Agentur konnte in Freinet nicht gefunden werden.",
     "freinetMultiplePersonError": "Der antragstellenden Person konnte keine Person in Freinet-Online eindeutig zugeordnet werden. Bitte aktualisieren Sie die Daten in Freinet-Online manuell.",
-    "freinetApiNotReachableError": "Die Verbindung zu Freinet-Online konnte nicht hergestellt werden. Nehmen Sie die Aktualisierung der Daten direkt in Freinet-Online vor.",
     "applicationDataIncompleteException": "Erforderliche Antragsdaten fehlen oder sind unvollständig.",
     "applicationToCsvDisabledError": "Die Antragsexportfunktion ist nicht verfügbar.",
     "applicationToCsvError": "Es ist ein Fehler beim Export des Antrags aufgetreten.",
