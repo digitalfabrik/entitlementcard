@@ -1,6 +1,6 @@
 /* eslint-disable react/destructuring-assignment */
 import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material'
-import { Button, Menu, MenuItem, Typography } from '@mui/material'
+import { Button, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 
 export type MenuItemType = {
@@ -42,7 +42,7 @@ const BaseMenu = (props: BaseMenuProps): ReactElement => {
         color='default'
         endIcon={open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
         sx={{ width: props.containerWidth, height: props.itemHeight }}>
-        <Typography variant='button'>{props.menuLabel}</Typography>
+        {props.menuLabel}
       </Button>
 
       <Menu
@@ -60,8 +60,8 @@ const BaseMenu = (props: BaseMenuProps): ReactElement => {
             onClick={() => handleMenuItemClick(menuItem.onClick)}
             disableRipple
             sx={{ width: props.containerWidth, height: props.itemHeight }}>
-            {menuItem.icon}
-            <Typography variant='button'>{menuItem.name}</Typography>
+            <ListItemIcon>{menuItem.icon}</ListItemIcon>
+            <ListItemText slotProps={{ primary: { typography: 'button' } }}>{menuItem.name}</ListItemText>
           </MenuItem>
         ))}
       </Menu>

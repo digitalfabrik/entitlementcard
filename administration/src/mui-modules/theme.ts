@@ -38,6 +38,7 @@ export const theme = createTheme({
       fontSize: 14,
       fontWeight: 600,
       textTransform: 'none',
+      textWrap: 'nowrap',
     },
   },
   components: {
@@ -54,7 +55,6 @@ export const theme = createTheme({
               },
             },
           ],
-          textTransform: 'none',
         },
       },
     },

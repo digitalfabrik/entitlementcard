@@ -1,5 +1,5 @@
 import { EditNote } from '@mui/icons-material'
-import { Button, Typography } from '@mui/material'
+import { Button } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -53,7 +53,7 @@ const NoteDialogController = ({
           onClick={() => onOpenNoteDialog(true)}
           startIcon={<EditNote />}
           sx={{ displayPrint: 'none' }}>
-          <Typography variant='button'>Notiz anzeigen</Typography>
+          Notiz anzeigen
         </Button>
       </ApplicationNoteTooltip>
       {isOpen && (
