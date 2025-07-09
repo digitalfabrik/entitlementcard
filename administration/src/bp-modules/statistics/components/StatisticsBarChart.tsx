@@ -22,6 +22,10 @@ const StatisticsBarChart = ({ statistic }: StatisticsBarChartProps): ReactElemen
   const barHeight = 32
   const axisHeight = 110
 
+  if (statistic.cardsCreated === 0) {
+    return null
+  }
+
   if (!cardStatistics.enabled) {
     return (
       <NonIdealState
@@ -33,7 +37,7 @@ const StatisticsBarChart = ({ statistic }: StatisticsBarChartProps): ReactElemen
   }
 
   const statisticKeys = Object.keys(statistic).filter(item => item !== 'region')
-  // TODO change color of black bar, add info alert
+
   return (
     <BarContainer height={barHeight * statisticKeys.length + axisHeight}>
       <ResponsiveBar

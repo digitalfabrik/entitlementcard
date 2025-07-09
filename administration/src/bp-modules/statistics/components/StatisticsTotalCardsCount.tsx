@@ -28,11 +28,15 @@ type StatisticsTotalCountProps = {
 type TotalAmountResultModel = {
   totalCardsCreated: number
   totalCardsActivated: number
+  totalCardsBlue: number
+  totalCardsGolden: number
 }
 
 const sumTotalAmounts = (statistics: CardStatisticsResultModel[]): TotalAmountResultModel => ({
   totalCardsCreated: statistics.reduce((sum, current) => sum + current.cardsCreated, 0),
   totalCardsActivated: statistics.reduce((sum, current) => sum + current.cardsActivated, 0),
+  totalCardsBlue: statistics.reduce((sum, current) => sum + current.cardsActivatedBlue, 0),
+  totalCardsGolden: statistics.reduce((sum, current) => sum + current.cardsActivatedGolden, 0),
 })
 const StatisticsTotalCardsCount = ({ statistics }: StatisticsTotalCountProps): ReactElement => {
   const { t } = useTranslation('statistics')
@@ -43,6 +47,13 @@ const StatisticsTotalCardsCount = ({ statistics }: StatisticsTotalCountProps): R
       {toLowerCaseFirstLetter(t('cardsCreated'))} /{' '}
       <span data-testid='totalCardsActivated'>
         {sumTotalAmounts(statistics).totalCardsActivated} {toLowerCaseFirstLetter(t('cardsActivated'))}{' '}
+      </span>
+      <span data-testid='totalCardsActivatedBlue'>
+        ({sumTotalAmounts(statistics).totalCardsBlue} {toLowerCaseFirstLetter(t('totalCardsBlue'))}
+        {', '}
+      </span>
+      <span data-testid='totalCardsActivatedGolden'>
+        {sumTotalAmounts(statistics).totalCardsGolden} {toLowerCaseFirstLetter(t('totalCardsGolden'))})
       </span>
     </Container>
   )

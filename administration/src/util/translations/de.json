@@ -443,7 +443,11 @@
     "cardsActivated": "Davon aktiviert",
     "cardsActivatedBlue": "Blaue Ehrenamtskarte (aktiviert)",
     "cardsActivatedGolden": "Goldene Ehrenamtskarte (aktiviert)",
-    "exportCsvNotPossible": "Etwas ist schiefgegangen beim Export der CSV."
+    "exportCsvNotPossible": "Etwas ist schiefgegangen beim Export der CSV.",
+    "notDataDialogHeadline": "Information zur Anzeige der Statistiken",
+    "noDataDialogText": "Bitte beachten Sie: Wenn für einen Landkreis oder eine Stadt keine Daten vorliegen, \nkann auch keine Statistik angezeigt werden.",
+    "totalCardsGolden": "Gold",
+    "totalCardsBlue": "Blau"
   },
   "stores": {
     "entry": "Eintrag",
