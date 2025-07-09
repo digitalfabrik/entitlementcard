@@ -1,7 +1,6 @@
-import { Tooltip as BpTooltip } from '@blueprintjs/core'
 import { EditNote } from '@mui/icons-material'
-import { Stack, Tooltip, useTheme } from '@mui/material'
-import React, { ReactElement, forwardRef } from 'react'
+import { Box, Stack, Tooltip } from '@mui/material'
+import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
@@ -16,40 +15,25 @@ import VerificationIndicator from './components/VerificationIndicator'
 import { GetApplicationsType, GetApplicationsVerificationType, VerificationStatus } from './types'
 import { verificationStatus } from './utils'
 
-const ToolTipContent = forwardRef<HTMLDivElement, unknown>((p, ref) => {
-  const { t } = useTranslation('applicationsOverview')
-  const theme = useTheme()
-
-  return (
-    <Stack
-      ref={ref}
-      sx={{
-        backgroundColor: theme.palette.defaultInverted.main,
-        color: theme.palette.defaultInverted.contrastText,
-        padding: 2,
-        borderRadius: 2,
-      }}>
-      <b>{t('confirmationsByOrganizations')}</b>
-      <br />
-      {t('verified/pending/rejected')}
-    </Stack>
-  )
-})
-
 export const VerificationQuickIndicator = ({
   verifications,
 }: {
   verifications: GetApplicationsVerificationType[]
 }): ReactElement => {
+  const { t } = useTranslation('applicationsOverview')
   const verificationStatuses = verifications.map(verificationStatus)
 
   return (
     <Tooltip
-      title='title'
-      slots={{
-        tooltip: ToolTipContent,
-      }}>
-      <Stack direction='row' sx={{ height: '25px', alignItems: 'center', '&:focus': { outline: 'none' }, gap: '8px' }}>
+      title={
+        <Box>
+          <b>{t('confirmationsByOrganizations')}</b>
+          <br />
+          <br />
+          {t('verified/pending/rejected')}
+        </Box>
+      }>
+      <Stack direction='row' sx={{ height: '25px', alignItems: 'center', '&:focus': { outline: 'none' } }}>
         <VerificationIndicator
           status={VerificationStatus.Verified}
           text={`: ${verificationStatuses.filter(v => v === VerificationStatus.Verified).length}`}
@@ -107,8 +91,8 @@ const PreVerifiedLabel = styled.span<{ type: PreVerifiedEntitlementType }>`
 export const PreVerifiedQuickIndicator = ({ type }: { type: PreVerifiedEntitlementType }): ReactElement => {
   const { t } = useTranslation('applicationsOverview')
   return (
-    <BpTooltip
-      content={
+    <Tooltip
+      title={
         <div>
           <b>{t('confirmationsByOrganizations')}</b>
           <br />
@@ -119,7 +103,7 @@ export const PreVerifiedQuickIndicator = ({ type }: { type: PreVerifiedEntitleme
         <PreVerifiedLabel type={type}>{preVerifiedLabelMetaData[type].labelText}</PreVerifiedLabel>
         <VerificationIndicator status={VerificationStatus.Verified} />
       </Stack>
-    </BpTooltip>
+    </Tooltip>
   )
 }
 
