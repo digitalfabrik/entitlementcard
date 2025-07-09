@@ -339,24 +339,18 @@ const ApplicationCard = ({
     [config.applicationFeature, jsonValueParsed]
   )
 
-  const onClickExportApplicationToCsv = () => {
-    try {
-      exportApplicationToCsv(application, config)
-    } catch (error) {
-      if (error instanceof ApplicationToCsvError || error instanceof ApplicationDataIncompleteError) {
-        const { message } = error
-        appToaster?.show({
-          message,
-          intent: 'danger',
-        })
-      }
-    }
-  }
-
   const menuItems: MenuItemType[] = [
     {
       name: t('exportCsv'),
-      onClick: onClickExportApplicationToCsv,
+      onClick: () => {
+        try {
+          exportApplicationToCsv(application, config)
+        } catch (error) {
+          if (error instanceof ApplicationToCsvError || error instanceof ApplicationDataIncompleteError) {
+            appToaster?.show({ message: error.message, intent: 'danger' })
+          }
+        }
+      },
       icon: (
         <SvgIcon sx={{ height: 20 }}>
           <CSVIcon />
