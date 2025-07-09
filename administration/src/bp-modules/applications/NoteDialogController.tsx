@@ -1,6 +1,5 @@
-import { Tooltip } from '@blueprintjs/core'
 import { EditNote } from '@mui/icons-material'
-import { Button, Typography, styled } from '@mui/material'
+import { Button } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -8,11 +7,8 @@ import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useUpdateApplicationNoteMutation } from '../../generated/graphql'
 import { useAppToaster } from '../AppToaster'
 import TextAreaDialog from '../components/TextAreaDialog'
+import { ApplicationNoteTooltip } from './components/ApplicationNoteTooltip'
 import { GetApplicationsType } from './types'
-
-const MultilineContent = styled(Tooltip)`
-  white-space: pre-wrap;
-`
 
 type NoteDialogControllerProps = {
   application: GetApplicationsType
@@ -20,8 +16,6 @@ type NoteDialogControllerProps = {
   onOpenNoteDialog: (value: boolean) => void
   onChange: (application: GetApplicationsType) => void
 }
-
-const EXCERPT_LENGTH = 80
 
 const NoteDialogController = ({
   application,
@@ -50,28 +44,21 @@ const NoteDialogController = ({
     )
   }
 
-  const getNoteExcerpt = (maxChars: number, text: string): string =>
-    text.length > maxChars ? `${text.slice(0, maxChars)} ...` : text
-
-  const note = application.note
-
-  const toolTipContent =
-    note && note.length > 0 ? <MultilineContent>{getNoteExcerpt(EXCERPT_LENGTH, note)}</MultilineContent> : undefined
   return (
     <>
-      <Tooltip content={toolTipContent}>
+      <ApplicationNoteTooltip application={application}>
         <Button
           variant='contained'
           color='default'
           onClick={() => onOpenNoteDialog(true)}
           startIcon={<EditNote />}
           sx={{ displayPrint: 'none' }}>
-          <Typography variant='button'>Notiz anzeigen</Typography>
+          Notiz anzeigen
         </Button>
-      </Tooltip>
+      </ApplicationNoteTooltip>
       {isOpen && (
         <TextAreaDialog
-          defaultText={note}
+          defaultText={application.note}
           isOpen={isOpen}
           maxChars={1000}
           loading={loading}
