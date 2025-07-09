@@ -180,7 +180,7 @@ const ButtonsApplicationPending = (props: {
         startIcon={<Check />}
         disabled={props.disabled}
         onClick={props.onPrimaryButtonClick}>
-        <Typography variant='button'>{t('applicationApprove')}</Typography>
+        {t('applicationApprove')}
       </Button>
       <Button
         variant='outlined'
@@ -188,7 +188,7 @@ const ButtonsApplicationPending = (props: {
         color='error'
         disabled={props.disabled}
         onClick={props.onSecondaryButtonClick}>
-        <Typography variant='button'>{t('applicationReject')}</Typography>
+        {t('applicationReject')}
       </Button>
     </>
   )
@@ -214,12 +214,10 @@ const ButtonsApplicationResolved = (props: {
               disabled={props.primaryButtonHref === undefined}
               href={props.primaryButtonHref}
               startIcon={<CreditScore />}>
-              <Typography variant='button'>
-                {' '}
-                {props.applicationStatus === ApplicationStatus.ApprovedCardCreated
-                  ? t('createCardAgain')
-                  : t('createCard')}
-              </Typography>
+              {' '}
+              {props.applicationStatus === ApplicationStatus.ApprovedCardCreated
+                ? t('createCardAgain')
+                : t('createCard')}
             </Button>
           </div>
         </Tooltip>
