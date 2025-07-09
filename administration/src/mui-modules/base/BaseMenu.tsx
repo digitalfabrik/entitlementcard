@@ -12,8 +12,6 @@ export type MenuItemType = {
 type BaseMenuProps = {
   menuLabel: string
   menuItems: MenuItemType[]
-  containerWidth: number
-  itemHeight: number
 }
 
 const BaseMenu = (props: BaseMenuProps): ReactElement => {
@@ -40,14 +38,11 @@ const BaseMenu = (props: BaseMenuProps): ReactElement => {
         variant='contained'
         onClick={handleMenuOpen}
         color='default'
+        endIcon={open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
         sx={{
-          width: props.containerWidth,
-          height: props.itemHeight,
           justifyContent: 'space-between',
-          paddingRight: 1,
         }}>
         <Typography variant='button'>{props.menuLabel}</Typography>
-        {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
       </Button>
 
       <Menu
@@ -63,12 +58,7 @@ const BaseMenu = (props: BaseMenuProps): ReactElement => {
             color='default'
             key={menuItem.name}
             onClick={() => handleMenuItemClick(menuItem.onClick)}
-            disableRipple
-            sx={{
-              width: props.containerWidth,
-              height: props.itemHeight,
-              paddingLeft: 1.5,
-            }}>
+            disableRipple>
             {menuItem.icon}
             <Typography variant='button'>{menuItem.name}</Typography>
           </MenuItem>

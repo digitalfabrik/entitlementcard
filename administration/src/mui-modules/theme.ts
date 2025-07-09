@@ -95,6 +95,8 @@ export const theme = createTheme({
             '&:hover': {
               backgroundColor: '#dddddd',
             },
+            paddingLeft: 12,
+            gap: 12,
           },
         },
       ],
