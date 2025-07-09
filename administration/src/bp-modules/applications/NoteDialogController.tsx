@@ -1,5 +1,5 @@
 import { EditNote } from '@mui/icons-material'
-import { Button, Tooltip, Typography } from '@mui/material'
+import { Button, Typography } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -7,6 +7,7 @@ import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useUpdateApplicationNoteMutation } from '../../generated/graphql'
 import { useAppToaster } from '../AppToaster'
 import TextAreaDialog from '../components/TextAreaDialog'
+import { ApplicationNoteTooltip } from './components/ApplicationNoteTooltip'
 import { GetApplicationsType } from './types'
 
 type NoteDialogControllerProps = {
@@ -15,8 +16,6 @@ type NoteDialogControllerProps = {
   onOpenNoteDialog: (value: boolean) => void
   onChange: (application: GetApplicationsType) => void
 }
-
-const EXCERPT_LENGTH = 80
 
 const NoteDialogController = ({
   application,
@@ -47,12 +46,7 @@ const NoteDialogController = ({
 
   return (
     <>
-      <Tooltip
-        title={
-          application.note && application.note.length > EXCERPT_LENGTH
-            ? `${application.note.slice(0, EXCERPT_LENGTH)} ...`
-            : application.note
-        }>
+      <ApplicationNoteTooltip application={application}>
         <Button
           variant='contained'
           color='default'
@@ -61,7 +55,7 @@ const NoteDialogController = ({
           sx={{ displayPrint: 'none' }}>
           <Typography variant='button'>Notiz anzeigen</Typography>
         </Button>
-      </Tooltip>
+      </ApplicationNoteTooltip>
       {isOpen && (
         <TextAreaDialog
           defaultText={application.note}
