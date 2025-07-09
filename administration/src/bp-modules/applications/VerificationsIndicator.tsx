@@ -11,6 +11,7 @@ import {
   getPreVerifiedEntitlementType,
   preVerifiedEntitlements,
 } from './PreVerifiedEntitlementType'
+import { ApplicationNoteTooltip } from './components/ApplicationNoteTooltip'
 import VerificationIndicator from './components/VerificationIndicator'
 import { GetApplicationsType, GetApplicationsVerificationType, VerificationStatus } from './types'
 import { verificationStatus } from './utils'
@@ -120,7 +121,11 @@ export const ApplicationIndicators = ({
 
   return (
     <Stack direction='row' spacing={2} sx={{ displayPrint: 'none' }}>
-      {(application.note ?? '').trim().length > 0 && <EditNote />}
+      {(application.note ?? '').trim().length > 0 && (
+        <ApplicationNoteTooltip application={application}>
+          <EditNote />
+        </ApplicationNoteTooltip>
+      )}
       {preVerifiedEntitlementType !== undefined ? (
         <PreVerifiedQuickIndicator type={preVerifiedEntitlementType} />
       ) : (
