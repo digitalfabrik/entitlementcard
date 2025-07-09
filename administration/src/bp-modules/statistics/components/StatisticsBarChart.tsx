@@ -33,7 +33,7 @@ const StatisticsBarChart = ({ statistic }: StatisticsBarChartProps): ReactElemen
   }
 
   const statisticKeys = Object.keys(statistic).filter(item => item !== 'region')
-
+  // TODO change color of black bar, add info alert
   return (
     <BarContainer height={barHeight * statisticKeys.length + axisHeight}>
       <ResponsiveBar
@@ -48,16 +48,21 @@ const StatisticsBarChart = ({ statistic }: StatisticsBarChartProps): ReactElemen
         enableGridY={false}
         groupMode='grouped'
         layout='horizontal'
+        labelSkipWidth={40}
         colors={Object.values(cardStatistics.theme)}
         axisTop={{
           legend: statistic.region,
           tickValues: 0,
           legendPosition: 'start',
         }}
-        axisBottom={{
-          tickSize: 6,
-          tickPadding: 8,
-        }}
+        axisBottom={
+          statistic.cardsCreated !== 0
+            ? {
+                tickSize: 6,
+                tickPadding: 8,
+              }
+            : null
+        }
         axisLeft={null}
         theme={{
           axis: { legend: { text: { fontSize: 14, fontWeight: 700 } } },
