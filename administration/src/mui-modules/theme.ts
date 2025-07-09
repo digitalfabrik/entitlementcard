@@ -101,5 +101,15 @@ export const theme = createTheme({
         },
       ],
     },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          fontSize: 'inherit',
+          backgroundColor: '#1c2127',
+          color: '#dddddd',
+          padding: 8,
+        },
+      },
+    },
   },
 })
