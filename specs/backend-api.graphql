@@ -172,8 +172,8 @@ type Mutation {
   rejectApplicationStatus(applicationId: Int!, rejectionMessage: String!): ApplicationView!
   "Reset the administrator's password"
   resetPassword(email: String!, newPassword: String!, passwordResetKey: String!, project: String!): Boolean!
-  "Send application info to Freinet"
-  sendApplicationDataToFreinet(applicationId: Int!, project: String!): Boolean!
+  "Send application and card information to Freinet"
+  sendApplicationAndCardDataToFreinet(applicationId: Int!, freinetCard: FreinetCardInput!, project: String!): Boolean!
   "Send approval mail to organisation"
   sendApprovalMailToOrganisation(applicationId: Int!, applicationVerificationId: Int!, project: String!): Boolean!
   "Sends a confirmation mail to the user when the card creation was successful"
@@ -361,8 +361,9 @@ enum GraphQLExceptionCode {
   APPLICATION_DATA_INCOMPLETE
   EMAIL_ALREADY_EXISTS
   FREINET_AGENCY_NOT_FOUND
-  FREINET_API_NOT_REACHABLE
+  FREINET_CARD_DATA_INVALID
   FREINET_FOUND_MULTIPLE_PERSONS
+  FREINET_PERSON_DATA_INVALID
   INVALID_APPLICATION_CONFIRMATION_NOTE_SIZE
   INVALID_CARD_HASH
   INVALID_CODE_TYPE
@@ -514,6 +515,11 @@ input DateInput {
 "An email address with at most 300 characters"
 input EmailInput {
   email: String!
+}
+
+input FreinetCardInput {
+  cardType: String!
+  expirationDate: String
 }
 
 "Entitlement for a golden EAK. The field selected by entitlementType must not be null; all others must be null."

@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import type { MotionNodeAnimationOptions } from 'motion/react'
 import React, { ReactElement, useCallback, useContext, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSearchParams } from 'react-router'
 import styled from 'styled-components'
 
 import { Card, initializeCard } from '../../cards/Card'
@@ -44,13 +45,21 @@ type CreateCardsFormProps = {
   region: Region
   cards: Card[]
   setCards: (cards: Card[]) => void
+  showAddMoreCardsButton: boolean
   updateCard: (updatedCard: Partial<Card>, index: number) => void
 }
 
-const AddCardsForm = ({ region, cards, setCards, updateCard }: CreateCardsFormProps): ReactElement => {
+const AddCardsForm = ({
+  region,
+  cards,
+  setCards,
+  showAddMoreCardsButton,
+  updateCard,
+}: CreateCardsFormProps): ReactElement => {
   const projectConfig = useContext(ProjectConfigContext)
   const { t } = useTranslation('cards')
   const bottomRef = useRef<HTMLDivElement>(null)
+  const [_, setSearchParams] = useSearchParams()
 
   const scrollToBottom = () => {
     if (bottomRef.current) {
@@ -66,6 +75,7 @@ const AddCardsForm = ({ region, cards, setCards, updateCard }: CreateCardsFormPr
 
   const removeCard = (oldCard: Card) => {
     setCards(cards.filter(card => card !== oldCard))
+    setSearchParams(undefined, { replace: true })
   }
 
   return (
@@ -83,9 +93,11 @@ const AddCardsForm = ({ region, cards, setCards, updateCard }: CreateCardsFormPr
               </FormColumn>
             </motion.div>
           ))}
-          <FormColumn key='AddButton'>
-            <CardFormButton text={t('addCard')} icon='add' onClick={addForm} />
-          </FormColumn>
+          {showAddMoreCardsButton && (
+            <FormColumn key='AddButton'>
+              <CardFormButton text={t('addCard')} icon='add' onClick={addForm} />
+            </FormColumn>
+          )}
           <div ref={bottomRef} />
         </AnimatePresence>
       </FormsWrapper>
