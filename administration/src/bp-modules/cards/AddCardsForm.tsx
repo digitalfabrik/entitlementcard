@@ -12,25 +12,23 @@ import AddCardForm from './AddCardForm'
 import CardFormButton from './CardFormButton'
 
 const FormsWrapper = styled.div`
-  display: grid;
-  gap: 24px;
-  grid-template-columns: repeat(auto-fill, 400px);
+  flex-wrap: wrap;
+  flex-direction: row;
+  display: flex;
   justify-content: center;
-  justify-items: flex-start;
-  align-items: flex-start;
+  align-items: center;
 `
 
 const Scrollable = styled.div`
   display: flex;
   flex-grow: 1;
-  flex-direction: column;
-  flex-basis: 0;
-  padding: 24px;
   overflow: auto;
+  justify-content: center;
 `
 
 const FormColumn = styled.div`
   width: 400px;
+  margin: 10px;
   box-sizing: border-box;
 `
 
