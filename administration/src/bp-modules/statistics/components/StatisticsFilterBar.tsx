@@ -1,12 +1,11 @@
 import { Button, Tooltip } from '@blueprintjs/core'
-import { FormControlLabel } from '@mui/material'
+import { FormControlLabel, Stack } from '@mui/material'
 import type { FormControlLabelProps } from '@mui/material'
 import { formatDate } from 'date-fns/format'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
-import StickyBottomBar from '../../StickyBottomBar'
 import CustomDatePicker from '../../components/CustomDatePicker'
 import type { CustomDatePickerTextFieldProps } from '../../components/CustomDatePicker'
 import { defaultEndDate, defaultStartDate } from '../constants'
@@ -55,7 +54,16 @@ const StatisticsFilterBar = ({
   const [dateEnd, setDateEnd] = useState<Date | null>(defaultEndDate.toLocalDate())
 
   return (
-    <StickyBottomBar>
+    <Stack
+      sx={{
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        gap: 2,
+        padding: 2,
+        backgroundColor: '#fafafa',
+      }}>
       <InputContainer>
         <FormControlLabel
           label={t('start')}
@@ -116,7 +124,7 @@ const StatisticsFilterBar = ({
           disabled={!isDataAvailable}
         />
       </Tooltip>
-    </StickyBottomBar>
+    </Stack>
   )
 }
 

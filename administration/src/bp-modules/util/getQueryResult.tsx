@@ -1,11 +1,14 @@
 import { OperationVariables, QueryResult } from '@apollo/client'
-import { Spinner } from '@blueprintjs/core'
+import { CircularProgress, Stack } from '@mui/material'
 import React, { ReactElement } from 'react'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import ErrorHandler from '../ErrorHandler'
 
-type QueryHandlerResult<Data> =
+const getQueryResult = <Data, Variables extends OperationVariables>(
+  queryResult: QueryResult<Data, Variables>,
+  errorComponent?: ReactElement
+):
   | {
       successful: true
       data: Data
@@ -13,15 +16,18 @@ type QueryHandlerResult<Data> =
   | {
       successful: false
       component: ReactElement
-    }
-
-const getQueryResult = <Data, Variables extends OperationVariables>(
-  queryResult: QueryResult<Data, Variables>,
-  errorComponent?: ReactElement
-): QueryHandlerResult<Data> => {
+    } => {
   const { error, loading, data, refetch } = queryResult
+
   if (loading) {
-    return { successful: false, component: <Spinner /> }
+    return {
+      successful: false,
+      component: (
+        <Stack sx={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <CircularProgress size='3rem' />
+        </Stack>
+      ),
+    }
   }
   if (error) {
     const { title, description } = getMessageFromApolloError(error)
