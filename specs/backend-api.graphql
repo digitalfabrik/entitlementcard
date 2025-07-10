@@ -99,6 +99,8 @@ type CardCreationResultModel {
 
 type CardStatisticsResultModel {
   cardsActivated: Int!
+  cardsActivatedBlue: Int!
+  cardsActivatedGolden: Int!
   cardsCreated: Int!
   region: String!
 }

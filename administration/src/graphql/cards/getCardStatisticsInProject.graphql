@@ -3,5 +3,7 @@ query getCardStatisticsInProject($projectId: String!, $dateStart: String!, $date
     region
     cardsCreated
     cardsActivated
+    cardsActivatedBlue
+    cardsActivatedGolden
   }
 }

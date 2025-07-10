@@ -1,5 +1,3 @@
-import i18next from 'i18next'
-
 import { CardStatisticsResultModel } from '../../../generated/graphql'
 import bayernConfig from '../../../project-configs/bayern/config'
 import nuernbergConfig from '../../../project-configs/nuernberg/config'
@@ -17,9 +15,8 @@ describe('CSVStatistics', () => {
   const dateString = '2023-02-01_2024-03-01'
 
   const statisticsData: CardStatisticsResultModel[] = [
-    { region: 'Stadt Augsburg', cardsCreated: 10, cardsActivated: 0 },
+    { region: 'Stadt Augsburg', cardsCreated: 10, cardsActivated: 5, cardsActivatedBlue: 3, cardsActivatedGolden: 2 },
   ]
-  const statisticsHeader = Object.keys(statisticsData[0]).map(it => i18next.t(`statistics:${it}`))
 
   it('should create a proper filename for a single region', () => {
     const filename = getCsvFileName(dateString, region)
@@ -54,9 +51,7 @@ describe('CSVStatistics', () => {
     generateCsv(statisticsData, bayernConfig.cardStatistics)
     expect(TEST_BLOB_CONSTRUCTOR).toHaveBeenCalledWith(
       [
-        `${statisticsHeader.join(',')}${statisticsData[0].region},${statisticsData[0].cardsCreated},${
-          statisticsData[0].cardsActivated
-        }`,
+        'Region,Erstellte Karten,Davon aktiviert,Blaue Ehrenamtskarte (aktiviert),Goldene Ehrenamtskarte (aktiviert)Stadt Augsburg,10,5,3,2',
       ],
       {
         type: 'text/csv;charset=utf-8;',

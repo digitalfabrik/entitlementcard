@@ -26,7 +26,7 @@ export const generateCsv = (statistics: CardStatisticsResultModel[], cardStatist
   let csvContent = stringify([header])
   try {
     statistics.forEach(element => {
-      csvContent += stringify([[element.region, element.cardsCreated, element.cardsActivated]])
+      csvContent += stringify([Object.values(element)])
     })
     return new Blob([csvContent], { type: CSV_MIME_TYPE_UTF8 })
   } catch (error) {

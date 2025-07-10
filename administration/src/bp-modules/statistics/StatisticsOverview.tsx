@@ -1,3 +1,4 @@
+import { Box, styled } from '@mui/system'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -9,6 +10,7 @@ import { useAppToaster } from '../AppToaster'
 import { generateCsv, getCsvFileName } from './CSVStatistics'
 import StatisticsBarChart from './components/StatisticsBarChart'
 import StatisticsFilterBar from './components/StatisticsFilterBar'
+import StatisticsLegend from './components/StatisticsLegend'
 import StatisticsTotalCardsCount from './components/StatisticsTotalCardsCount'
 
 type StatisticsOverviewProps = {
@@ -16,6 +18,11 @@ type StatisticsOverviewProps = {
   onApplyFilter: (dateStart: string, dateEnd: string) => void
   region?: Region
 }
+
+const OuterGrid = styled('div')`
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+`
 
 const StatisticsOverview = ({ statistics, onApplyFilter, region }: StatisticsOverviewProps): ReactElement => {
   const { role } = useWhoAmI().me
@@ -33,10 +40,20 @@ const StatisticsOverview = ({ statistics, onApplyFilter, region }: StatisticsOve
     }
   }
 
+  const statisticKeys = Object.keys(statistics[0]).filter(item => item !== 'region')
+  const isSingleChartView = statistics.length === 1
+
   return (
     <>
       {role === Role.ProjectAdmin && <StatisticsTotalCardsCount statistics={statistics} />}
-      <StatisticsBarChart statistics={statistics} />
+      <OuterGrid>
+        <Box sx={{ display: 'grid', gridTemplateColumns: isSingleChartView ? '1fr' : '1fr 1fr' }}>
+          {statistics.map(statistic => (
+            <StatisticsBarChart key={statistic.region} statistic={statistic} />
+          ))}
+        </Box>
+        <StatisticsLegend items={statisticKeys} />
+      </OuterGrid>
       <StatisticsFilterBar
         onApplyFilter={onApplyFilter}
         onExportCsv={exportCardDataToCsv}

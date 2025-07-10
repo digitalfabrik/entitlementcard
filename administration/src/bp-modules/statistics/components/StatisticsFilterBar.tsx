@@ -1,5 +1,6 @@
-import { Button, Tooltip } from '@blueprintjs/core'
-import { FormControlLabel } from '@mui/material'
+import { Tooltip } from '@blueprintjs/core'
+import { FilterAlt, SaveAlt } from '@mui/icons-material'
+import { Button, FormControlLabel, Typography } from '@mui/material'
 import type { FormControlLabelProps } from '@mui/material'
 import { formatDate } from 'date-fns/format'
 import React, { ReactElement, useState } from 'react'
@@ -91,30 +92,31 @@ const StatisticsFilterBar = ({
         />
         <Tooltip disabled={isValidDateTimePeriod(dateStart, dateEnd)} content={t('invalidStartOrEnd')}>
           <Button
-            icon='tick'
-            text={t('applyFilter')}
-            intent='success'
+            variant='contained'
+            color='success'
+            startIcon={<FilterAlt />}
             onClick={() => {
               if (isValidDate(dateStart) && isValidDate(dateEnd)) {
                 onApplyFilter(formatDate(dateStart, filterDateFormat), formatDate(dateEnd, filterDateFormat))
               }
             }}
-            disabled={!isValidDateTimePeriod(dateStart, dateEnd)}
-          />
+            disabled={!isValidDateTimePeriod(dateStart, dateEnd)}>
+            <Typography variant='button'>{t('applyFilter')}</Typography>
+          </Button>
         </Tooltip>
       </InputContainer>
       <Tooltip disabled={isDataAvailable} content={t('noDataAvailableForExport')}>
         <Button
-          icon='floppy-disk'
-          text={t('exportToCsv')}
-          intent='primary'
+          variant='contained'
+          startIcon={<SaveAlt />}
           onClick={() => {
             if (isValidDate(dateStart) && isValidDate(dateEnd)) {
               onExportCsv(dateStart.toLocaleDateString(), dateEnd.toLocaleDateString())
             }
           }}
-          disabled={!isDataAvailable}
-        />
+          disabled={!isDataAvailable}>
+          <Typography variant='button'>{t('exportToCsv')}</Typography>
+        </Button>
       </Tooltip>
     </StickyBottomBar>
   )
