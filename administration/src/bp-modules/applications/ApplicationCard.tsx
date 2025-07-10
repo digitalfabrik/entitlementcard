@@ -354,14 +354,12 @@ const ApplicationCard = ({
     }
   }
 
-  const otherOptionsContainerWidth = 170
-  const otherOptionsItemHeight = 36.5
   const menuItems: MenuItemType[] = [
     {
       name: t('exportCsv'),
       onClick: onClickExportApplicationToCsv,
       icon: (
-        <SvgIcon sx={{ height: 20, marginRight: 1 }}>
+        <SvgIcon sx={{ height: 20 }}>
           <CSVIcon />
         </SvgIcon>
       ),
@@ -369,7 +367,7 @@ const ApplicationCard = ({
     {
       name: t('exportPdf'),
       onClick: () => onPrintApplicationById(application.id),
-      icon: <PrintOutlined sx={{ height: 20, marginRight: 1 }} />,
+      icon: <PrintOutlined sx={{ height: 20 }} />,
     },
   ]
 
@@ -484,12 +482,7 @@ const ApplicationCard = ({
             />
           )}
 
-          <BaseMenu
-            menuItems={menuItems}
-            menuLabel={t('moreActionsButtonLabel')}
-            containerWidth={otherOptionsContainerWidth}
-            itemHeight={otherOptionsItemHeight}
-          />
+          <BaseMenu menuItems={menuItems} menuLabel={t('moreActionsButtonLabel')} />
         </Stack>
 
         <DeleteDialog
