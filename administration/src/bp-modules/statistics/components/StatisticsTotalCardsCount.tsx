@@ -43,17 +43,17 @@ const StatisticsTotalCardsCount = ({ statistics }: StatisticsTotalCountProps): R
   return (
     <Container>
       <Headline>{t('allRegions')}</Headline>
-      <span data-testid='totalCardsCreated'> {sumTotalAmounts(statistics).totalCardsCreated} </span>{' '}
-      {toLowerCaseFirstLetter(t('cardsCreated'))} /{' '}
+      <span data-testid='totalCardsCreated'>
+        {` ${sumTotalAmounts(statistics).totalCardsCreated} ${toLowerCaseFirstLetter(t('cardsCreated'))} / `}
+      </span>
       <span data-testid='totalCardsActivated'>
-        {sumTotalAmounts(statistics).totalCardsActivated} {toLowerCaseFirstLetter(t('cardsActivated'))}{' '}
+        {`${sumTotalAmounts(statistics).totalCardsActivated} ${toLowerCaseFirstLetter(t('cardsActivated'))}`}
       </span>
       <span data-testid='totalCardsActivatedBlue'>
-        ({sumTotalAmounts(statistics).totalCardsBlue} {toLowerCaseFirstLetter(t('totalCardsBlue'))}
-        {', '}
+        {` (${sumTotalAmounts(statistics).totalCardsBlue} ${toLowerCaseFirstLetter(t('totalCardsBlue'))}, `}
       </span>
       <span data-testid='totalCardsActivatedGolden'>
-        {sumTotalAmounts(statistics).totalCardsGolden} {toLowerCaseFirstLetter(t('totalCardsGolden'))})
+        {`${sumTotalAmounts(statistics).totalCardsGolden} ${toLowerCaseFirstLetter(t('totalCardsGolden'))})`}
       </span>
     </Container>
   )

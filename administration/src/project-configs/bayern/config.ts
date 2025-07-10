@@ -93,7 +93,7 @@ const config: ProjectConfig = {
     enabled: true,
     theme: {
       colorCardCreated: '#D9D9D9',
-      colorActivatedCard: '#8377A9',
+      colorActivatedCard: '#C6C0D8',
       colorActivatedBlueCard: '#3B82F6',
       colorActivatedGoldenCard: '#EFBF04',
     },

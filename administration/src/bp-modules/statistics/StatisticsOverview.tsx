@@ -1,5 +1,5 @@
 import { Box, styled } from '@mui/system'
-import React, { ReactElement, useContext, useState } from 'react'
+import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useWhoAmI } from '../../WhoAmIProvider'
@@ -11,7 +11,6 @@ import { generateCsv, getCsvFileName } from './CSVStatistics'
 import StatisticsBarChart from './components/StatisticsBarChart'
 import StatisticsFilterBar from './components/StatisticsFilterBar'
 import StatisticsLegend from './components/StatisticsLegend'
-import StatisticsNoDataDialog from './components/StatisticsNoDataDialog'
 import StatisticsTotalCardsCount from './components/StatisticsTotalCardsCount'
 
 type StatisticsOverviewProps = {
@@ -29,8 +28,6 @@ const StatisticsOverview = ({ statistics, onApplyFilter, region }: StatisticsOve
   const { role } = useWhoAmI().me
   const appToaster = useAppToaster()
   const { cardStatistics } = useContext(ProjectConfigContext)
-  const hasRegionsWithoutCreatedCards = statistics.map(({ cardsCreated }) => cardsCreated).some(value => value === 0)
-  const [showNoDataDialog, setShowNoDataDialog] = useState(hasRegionsWithoutCreatedCards)
   const { t } = useTranslation('statistics')
   const exportCardDataToCsv = (dateStart: string, dateEnd: string) => {
     try {
@@ -44,13 +41,13 @@ const StatisticsOverview = ({ statistics, onApplyFilter, region }: StatisticsOve
   }
 
   const statisticKeys = Object.keys(statistics[0]).filter(item => item !== 'region')
-  const isSingleView = statistics.length === 1
+  const isSingleChartView = statistics.length === 1
 
   return (
     <>
       {role === Role.ProjectAdmin && <StatisticsTotalCardsCount statistics={statistics} />}
       <OuterGrid>
-        <Box sx={{ display: 'grid', gridTemplateColumns: isSingleView ? '1fr' : '1fr 1fr' }}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: isSingleChartView ? '1fr' : '1fr 1fr' }}>
           {statistics.map(statistic => (
             <StatisticsBarChart key={statistic.region} statistic={statistic} />
           ))}
@@ -62,7 +59,6 @@ const StatisticsOverview = ({ statistics, onApplyFilter, region }: StatisticsOve
         onExportCsv={exportCardDataToCsv}
         isDataAvailable={statistics.length > 0}
       />
-      <StatisticsNoDataDialog isOpen={showNoDataDialog} onClose={() => setShowNoDataDialog(false)} />
     </>
   )
 }
