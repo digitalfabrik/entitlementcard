@@ -1,12 +1,14 @@
 package app.ehrenamtskarte.backend.freinet.util
 
 import app.ehrenamtskarte.backend.common.utils.devInfo
-import app.ehrenamtskarte.backend.common.utils.devWarn
 import app.ehrenamtskarte.backend.common.utils.findValueByName
 import app.ehrenamtskarte.backend.common.utils.findValueByNameNode
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetApiNotReachableException
+import app.ehrenamtskarte.backend.freinet.webservice.schema.types.CARD_TYPE_GOLD
+import app.ehrenamtskarte.backend.freinet.webservice.schema.types.CARD_TYPE_STANDARD
 import app.ehrenamtskarte.backend.freinet.webservice.schema.types.FreinetAddress
+import app.ehrenamtskarte.backend.freinet.webservice.schema.types.FreinetCard
 import app.ehrenamtskarte.backend.freinet.webservice.schema.types.FreinetPerson
+import app.ehrenamtskarte.backend.freinet.webservice.schema.types.FreinetPersonCreationResultModel
 import app.ehrenamtskarte.backend.freinet.webservice.schema.types.FreinetProtocol
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ObjectNode
@@ -67,7 +69,7 @@ class FreinetApi(private val host: String, private val accessKey: String, privat
                 }.bodyAsChannel().toInputStream().use { objectMapper.readTree(it) }
             } catch (e: Exception) {
                 logger.error("Freinet search person API error: $e")
-                throw FreinetApiNotReachableException()
+                throw e
             }
         }
 
@@ -77,7 +79,7 @@ class FreinetApi(private val host: String, private val accessKey: String, privat
         dateOfBirth: String,
         personalDataNode: JsonNode,
         userEmail: String,
-    ): Boolean {
+    ): FreinetPersonCreationResultModel {
         val addressArrayNode = personalDataNode.findValueByNameNode("address")
         val street = addressArrayNode?.findValueByName("street")
         val houseNumber = addressArrayNode?.findValueByName("houseNumber")
@@ -110,17 +112,11 @@ class FreinetApi(private val host: String, private val accessKey: String, privat
             date = currentDateTime,
         )
 
-        val body: ObjectNode = objectMapper.createObjectNode()
-        body.putObject("init").apply {
-            put("apiVersion", "3.0")
-            put("agencyID", agencyId)
-            put("accessKey", accessKey)
-            put("modul", "personen")
-            put("author", "TuerAnTuer")
-            put("author_mail", "berechtigungskarte@tuerantuer.org")
+        val body: ObjectNode = objectMapper.createObjectNode().apply {
+            addFreinetInitInformation(agencyId, accessKey, "personen")
+            set<ObjectNode>("person", objectMapper.valueToTree(person))
+            set<ObjectNode>("protokoll", objectMapper.valueToTree(mapOf("1" to protocolEntry)))
         }
-        body.set<ObjectNode>("person", objectMapper.valueToTree(person))
-        body.set<ObjectNode>("protokoll", objectMapper.valueToTree(mapOf("1" to protocolEntry)))
 
         val requestBody = objectMapper.writeValueAsString(body)
         return runBlocking {
@@ -135,13 +131,62 @@ class FreinetApi(private val host: String, private val accessKey: String, privat
                     contentType(ContentType.Application.Json)
                     setBody(requestBody)
                 }
-                val body = response.bodyAsText()
-                logger.devInfo("Successfully created person in freinet: $body")
-                true
+                logger.devInfo("Successfully created person in freinet: ${response.bodyAsText()}")
+                FreinetPersonCreationResultModel(
+                    true,
+                    response.bodyAsChannel().toInputStream().use {
+                        objectMapper.readTree(it)
+                    },
+                )
             } catch (e: Exception) {
-                logger.devWarn("Error creating person in freinet $e")
-                throw FreinetApiNotReachableException()
+                logger.error("Error creating person in freinet $e")
+                throw e
             }
+        }
+    }
+
+    fun sendCardInformation(userId: Int, card: FreinetCard) {
+        val color = mapOf(CARD_TYPE_STANDARD to 1, CARD_TYPE_GOLD to 2)[card.cardType]
+        val body: ObjectNode = objectMapper.createObjectNode().apply {
+            put("karten_farbe", color)
+            put("user_id", userId)
+            put("digital_card", true)
+            if (card.cardType == CARD_TYPE_STANDARD && card.expirationDate != null) {
+                put("gueltig_bis", card.expirationDate)
+            }
+            addFreinetInitInformation(agencyId, accessKey, "ehrenamtskarte")
+        }
+
+        val requestBody = objectMapper.writeValueAsString(body)
+
+        return runBlocking {
+            try {
+                val response = httpClient.request {
+                    url {
+                        protocol = URLProtocol.HTTPS
+                        this.host = this@FreinetApi.host
+                        path("/api/input/v3/ehrenamtskarte")
+                    }
+                    method = HttpMethod.Post
+                    contentType(ContentType.Application.Json)
+                    setBody(requestBody)
+                }
+                logger.devInfo("Successfully created card in freinet: ${response.bodyAsText()}")
+            } catch (e: Exception) {
+                logger.error("Error creating card in freinet $e")
+                throw e
+            }
+        }
+    }
+
+    private fun ObjectNode.addFreinetInitInformation(agencyId: Int, accessKey: String, moduleName: String) {
+        putObject("init").apply {
+            put("apiVersion", "3.0")
+            put("agencyID", agencyId)
+            put("accessKey", accessKey)
+            put("modul", moduleName)
+            put("author", "TuerAnTuer")
+            put("author_mail", "berechtigungskarte@tuerantuer.org")
         }
     }
 }
