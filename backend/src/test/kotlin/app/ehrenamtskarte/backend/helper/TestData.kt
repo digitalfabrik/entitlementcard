@@ -105,6 +105,8 @@ object TestData {
         }
 
     fun createDynamicCard(
+        cardInfoHash: ByteArray = Random.nextBytes(20),
+        activationSecretHash: ByteArray = Random.nextBytes(20),
         totpSecret: ByteArray? = null,
         expirationDay: Long? = null,
         issueDate: Instant = Instant.now(),
@@ -113,10 +115,10 @@ object TestData {
         firstActivationDate: Instant? = null,
         entitlementId: Int? = null,
         startDay: Long? = null,
-    ): Int {
-        val fakeActivationSecretHash = Random.nextBytes(20)
-        return createCard(
-            fakeActivationSecretHash,
+    ): Int =
+        createCard(
+            cardInfoHash,
+            activationSecretHash,
             totpSecret,
             expirationDay,
             issueDate,
@@ -127,18 +129,18 @@ object TestData {
             entitlementId,
             startDay,
         )
-    }
 
     fun createStaticCard(
+        cardInfoHash: ByteArray = Random.nextBytes(20),
         expirationDay: Long? = null,
         issueDate: Instant = Instant.now(),
         revoked: Boolean = false,
         issuerId: Int? = null,
-        firstActivationDate: Instant? = null,
         entitlementId: Int? = null,
         startDay: Long? = null,
     ): Int =
         createCard(
+            cardInfoHash = cardInfoHash,
             activationSecretHash = null,
             totpSecret = null,
             expirationDay,
@@ -146,12 +148,13 @@ object TestData {
             revoked,
             issuerId,
             CodeType.STATIC,
-            firstActivationDate,
+            firstActivationDate = null,
             entitlementId,
             startDay,
         )
 
     private fun createCard(
+        cardInfoHash: ByteArray,
         activationSecretHash: ByteArray? = null,
         totpSecret: ByteArray? = null,
         expirationDay: Long? = null,
@@ -163,7 +166,6 @@ object TestData {
         entitlementId: Int? = null,
         startDay: Long? = null,
     ): Int {
-        val fakeCardInfoHash = Random.nextBytes(20)
         val regionId = when {
             issuerId != null -> findAdmin(issuerId).regionId
                 ?: throw IllegalStateException("Admin $issuerId must have a region to create a card")
@@ -179,7 +181,7 @@ object TestData {
                 it[Cards.revoked] = revoked
                 it[Cards.regionId] = regionId
                 it[Cards.issuerId] = issuerId
-                it[Cards.cardInfoHash] = fakeCardInfoHash
+                it[Cards.cardInfoHash] = cardInfoHash
                 it[Cards.codeType] = codeType
                 it[Cards.firstActivationDate] = firstActivationDate
                 it[Cards.entitlementId] = entitlementId

@@ -1,3 +1,4 @@
+import { CSV_MIME_TYPE_UTF8 } from '../../bp-modules/applications/constants'
 import { getTestRegion } from '../../bp-modules/user-settings/__mocks__/Region'
 import { DynamicActivationCode } from '../../generated/card_pb'
 import bayernConfig from '../../project-configs/bayern/config'
@@ -69,7 +70,7 @@ describe('CsvFactory', () => {
     }
     generateCsv([], [], nuernbergConfig)
     expect(TEST_BLOB_CONSTRUCTOR).toHaveBeenCalledWith([nuernbergConfig.csvExport.csvHeader.join(',')], {
-      type: 'text/csv;charset=utf-8;',
+      type: CSV_MIME_TYPE_UTF8,
     })
   })
 })

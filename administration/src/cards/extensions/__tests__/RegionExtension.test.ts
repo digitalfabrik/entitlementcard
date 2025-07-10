@@ -1,28 +1,18 @@
+import { mockRegion } from '../../__mocks__/mockRegion'
 import RegionExtension from '../RegionExtension'
 
 describe('RegionExtension', () => {
-  const regionId = 123
-  const mockRegion = {
-    id: regionId,
-    name: 'augsburg',
-    prefix: 'a',
-    activatedForApplication: true,
-    activatedForCardConfirmationMail: true,
-    applicationConfirmationMailNoteActivated: false,
-    applicationConfirmationMailNote: null,
-  }
-
   it('should get correct initial state from region', () => {
     const initialState = RegionExtension.getInitialState(mockRegion)
-    expect(initialState).toEqual({ regionId })
+    expect(initialState).toEqual({ regionId: mockRegion.id })
   })
 
   it('should correctly convert state to protobuf data', () => {
-    const state = { regionId }
+    const state = { regionId: mockRegion.id }
     const protobufData = RegionExtension.getProtobufData(state)
     expect(protobufData).toEqual({
       extensionRegion: {
-        regionId,
+        regionId: mockRegion.id,
       },
     })
   })

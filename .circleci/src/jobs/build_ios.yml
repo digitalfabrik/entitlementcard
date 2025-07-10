@@ -1,5 +1,6 @@
 macos:
   xcode: 16.1.0
+resource_class: m4pro.medium
 parameters:
   build_config:
     description: "Name of the build config to use"

@@ -8,10 +8,12 @@ query getApplications($regionId: Int!) {
     status
     statusResolvedDate
     verifications {
+      verificationId
       contactEmailAddress
       organizationName
       verifiedDate
       rejectedDate
     }
+    rejectionMessage
   }
 }

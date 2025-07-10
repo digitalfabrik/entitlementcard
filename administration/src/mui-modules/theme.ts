@@ -34,11 +34,26 @@ export const theme = createTheme({
       lineHeight: 1.1,
       fontWeight: 600,
     },
+    button: {
+      fontSize: 14,
+      fontWeight: 500,
+      textTransform: 'none',
+    },
   },
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
+          variants: [
+            {
+              props: { variant: 'contained', color: 'primary' },
+              style: {
+                '&:hover': {
+                  color: '#ffffff',
+                },
+              },
+            },
+          ],
           textTransform: 'none',
         },
       },
@@ -58,14 +73,33 @@ export const theme = createTheme({
       },
     },
     MuiStack: {
+      defaultProps: {
+        useFlexGap: true,
+      },
       styleOverrides: {
         root: {
           '& *': {
             fontFamily: 'inherit',
-            letterSpacing: 'normal',
+            letterSpacing: 'inherit',
           },
         },
       },
+    },
+    MuiMenuItem: {
+      variants: [
+        {
+          props: { color: 'default' },
+          style: {
+            backgroundColor: '#EEEEEE',
+            color: '#5C6065',
+            '&:hover': {
+              backgroundColor: '#dddddd',
+            },
+            paddingLeft: 12,
+            gap: 12,
+          },
+        },
+      ],
     },
   },
 })

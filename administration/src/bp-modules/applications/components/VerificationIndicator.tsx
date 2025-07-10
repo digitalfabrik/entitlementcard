@@ -6,7 +6,6 @@ import { VerificationStatus } from '../types'
 
 const StyledIndicator = styled.span`
   display: inline-block;
-  padding: 4px;
 `
 
 type VerificationIndicatorProps = {

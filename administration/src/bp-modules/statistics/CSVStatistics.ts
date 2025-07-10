@@ -3,6 +3,7 @@ import i18next from 'i18next'
 
 import { CardStatisticsResultModel, Region } from '../../generated/graphql'
 import { CardStatistics } from '../../project-configs/getProjectConfig'
+import { CSV_MIME_TYPE_UTF8 } from '../applications/constants'
 
 export class CsvStatisticsError extends Error {
   constructor(message: string) {
@@ -27,7 +28,7 @@ export const generateCsv = (statistics: CardStatisticsResultModel[], cardStatist
     statistics.forEach(element => {
       csvContent += stringify([[element.region, element.cardsCreated, element.cardsActivated]])
     })
-    return new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    return new Blob([csvContent], { type: CSV_MIME_TYPE_UTF8 })
   } catch (error) {
     if (error instanceof Error) {
       throw new CsvStatisticsError(error.message)

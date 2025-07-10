@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { GetApplicationsQuery } from '../../generated/graphql'
 import VerificationListItem from './components/VerificationListItem'
 
-type Application = GetApplicationsQuery['applications'][number]
+export type Application = GetApplicationsQuery['applications'][number]
 
 const VerificationContainer = styled.ul`
   list-style-type: none;
@@ -16,15 +16,29 @@ const VerificationContainer = styled.ul`
   }
 `
 
-const VerificationsView = ({ verifications }: { verifications: Application['verifications'] }): ReactElement => {
+const VerificationsView = ({
+  application,
+  showResendApprovalEmailButton,
+}: {
+  application: Application
+  showResendApprovalEmailButton: boolean
+}): ReactElement => {
   const { t } = useTranslation('applicationsOverview')
+  const { verifications, id } = application
   return (
     <>
       <H5>{t('confirmationsByOrganizations')}</H5>
       <VerificationContainer>
         {verifications.map(verification => {
           const key = verification.organizationName + verification.contactEmailAddress
-          return <VerificationListItem verification={verification} key={key} />
+          return (
+            <VerificationListItem
+              key={key}
+              verification={verification}
+              applicationId={id}
+              showResendApprovalEmailButton={showResendApprovalEmailButton}
+            />
+          )
         })}
       </VerificationContainer>
       {verifications.length === 0 ? <i role='note'>({t('none')})</i> : null}

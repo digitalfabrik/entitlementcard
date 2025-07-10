@@ -13,6 +13,7 @@ const applications: GetApplicationsType[] = [
     note: 'neu',
     verifications: [
       {
+        verificationId: 1,
         contactEmailAddress: 'example@test.de',
         organizationName: 'TürAnTürn',
         rejectedDate: null,
@@ -28,6 +29,7 @@ const applications: GetApplicationsType[] = [
     note: 'neu',
     verifications: [
       {
+        verificationId: 2,
         contactEmailAddress: 'example@test.de',
         organizationName: 'TürAnTürn',
         rejectedDate: null,
@@ -43,6 +45,7 @@ const applications: GetApplicationsType[] = [
     note: 'test',
     verifications: [
       {
+        verificationId: 3,
         contactEmailAddress: 'example@test.de',
         organizationName: 'TürAnTürn',
         rejectedDate: null,
@@ -58,6 +61,7 @@ const applications: GetApplicationsType[] = [
     note: 'test',
     verifications: [
       {
+        verificationId: 4,
         contactEmailAddress: 'example@test.de',
         organizationName: 'TürAnTürn',
         rejectedDate: null,

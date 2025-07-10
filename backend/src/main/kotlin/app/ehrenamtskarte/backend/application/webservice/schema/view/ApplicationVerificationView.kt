@@ -3,6 +3,7 @@ package app.ehrenamtskarte.backend.application.webservice.schema.view
 import app.ehrenamtskarte.backend.application.database.ApplicationVerificationEntity
 
 data class ApplicationVerificationView(
+    val verificationId: Int,
     val contactName: String,
     val contactEmailAddress: String,
     val organizationName: String,
@@ -12,6 +13,7 @@ data class ApplicationVerificationView(
     companion object {
         fun fromDbEntity(entity: ApplicationVerificationEntity): ApplicationVerificationView =
             ApplicationVerificationView(
+                entity.id.value,
                 entity.contactName,
                 entity.contactEmailAddress,
                 entity.organizationName,

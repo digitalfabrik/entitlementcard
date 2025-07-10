@@ -1,7 +1,7 @@
 import { NonIdealState, Spinner } from '@blueprintjs/core'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router'
+import { useNavigate, useSearchParams } from 'react-router'
 
 import { useWhoAmI } from '../../WhoAmIProvider'
 import { Region } from '../../generated/graphql'
@@ -16,6 +16,7 @@ const InnerAddCardsController = ({ region }: { region: Region }) => {
   const { t } = useTranslation('cards')
   const { cardGenerationStep, setCardGenerationStep, generateCardsPdf, generateCardsCsv, setCards, updateCard, cards } =
     useCardGenerator({ region })
+  const [searchParams, setSearchParams] = useSearchParams()
 
   useBlockNavigation({
     when: cards.length > 0,
@@ -30,6 +31,7 @@ const InnerAddCardsController = ({ region }: { region: Region }) => {
       <GenerationFinished
         reset={() => {
           setCards([])
+          setSearchParams(undefined, { replace: true })
           setCardGenerationStep('input')
         }}
       />
@@ -38,7 +40,13 @@ const InnerAddCardsController = ({ region }: { region: Region }) => {
 
   return (
     <>
-      <AddCardsForm region={region} cards={cards} setCards={setCards} updateCard={updateCard} />
+      <AddCardsForm
+        region={region}
+        cards={cards}
+        setCards={setCards}
+        updateCard={updateCard}
+        showAddMoreCardsButton={searchParams.size === 0}
+      />
       <CreateCardsButtonBar
         cards={cards}
         goBack={() => navigate('/cards')}

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import ProjectSwitcher from '../../../bp-modules/util/ProjectSwitcher'
 import { ProjectConfig } from '../../../project-configs/getProjectConfig'
+import { getBuildConfig } from '../../../util/getBuildConfig'
 import getCustomDeepLinkFromActivationCode from '../../../util/getCustomDeepLinkFromActivationCode'
 
 const ActivationPageContent = ({
@@ -18,7 +19,16 @@ const ActivationPageContent = ({
   }
   const { activationText, downloadLink } = config.activation
 
-  return <>{activationText(config.name, downloadLink, getCustomDeepLinkFromActivationCode(activationCode), t)}</>
+  return (
+    <>
+      {activationText(
+        config.name,
+        downloadLink,
+        getCustomDeepLinkFromActivationCode(activationCode, getBuildConfig(window.location.hostname)),
+        t
+      )}
+    </>
+  )
 }
 
 export default ActivationPageContent

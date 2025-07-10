@@ -9,7 +9,7 @@ import {
   Delete,
   ExpandMore,
   InfoOutline,
-  Print,
+  PrintOutlined,
   Search,
   Warning,
 } from '@mui/icons-material'
@@ -28,6 +28,7 @@ import {
   Divider,
   InputAdornment,
   Stack,
+  SvgIcon,
   TextField,
   Tooltip,
   Typography,
@@ -36,8 +37,9 @@ import {
 import { format } from 'date-fns'
 import { de } from 'date-fns/locale'
 import React, { memo, useContext, useMemo, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 
+import CSVIcon from '../../assets/icons/csv.svg'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import {
   ApplicationStatus,
@@ -45,8 +47,10 @@ import {
   useDeleteApplicationMutation,
   useRejectApplicationStatusMutation,
 } from '../../generated/graphql'
+import BaseMenu, { MenuItemType } from '../../mui-modules/base/BaseMenu'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import type { ProjectConfig } from '../../project-configs/getProjectConfig'
+import { ApplicationDataIncompleteError } from '../../util/applicationDataHelper'
 import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { useAppToaster } from '../AppToaster'
@@ -58,6 +62,7 @@ import NoteDialogController from './NoteDialogController'
 import { ApplicationIndicators } from './VerificationsIndicator'
 import VerificationsView from './VerificationsView'
 import { GetApplicationsType } from './types'
+import { ApplicationToCsvError, exportApplicationToCsv } from './utils/exportApplicationToCsv'
 
 const DeleteDialog = (props: {
   isOpen: boolean
@@ -137,7 +142,10 @@ const RejectionDialog = (props: {
         <Button
           variant='outlined'
           color='default.dark'
-          onClick={props.onCancel}
+          onClick={() => {
+            setReason(null)
+            props.onCancel()
+          }}
           disabled={props.loading}
           startIcon={<Close />}>
           {t('misc:cancel')}
@@ -173,7 +181,7 @@ const ButtonsApplicationPending = (props: {
         startIcon={<Check />}
         disabled={props.disabled}
         onClick={props.onPrimaryButtonClick}>
-        {t('applicationApprove')}
+        <Typography variant='button'>{t('applicationApprove')}</Typography>
       </Button>
       <Button
         variant='outlined'
@@ -181,7 +189,7 @@ const ButtonsApplicationPending = (props: {
         color='error'
         disabled={props.disabled}
         onClick={props.onSecondaryButtonClick}>
-        {t('applicationReject')}
+        <Typography variant='button'>{t('applicationReject')}</Typography>
       </Button>
     </>
   )
@@ -196,24 +204,27 @@ const ButtonsApplicationResolved = (props: {
 
   return (
     <>
-      <Tooltip title={props.primaryButtonHref ? undefined : t('incompleteApplicationDataTooltip')}>
-        {/* Make the outer Tooltip independent of the button's disabled state */}
-        <span>
-          {(props.applicationStatus === ApplicationStatus.Approved ||
-            props.applicationStatus === ApplicationStatus.ApprovedCardCreated) && (
+      {/* Make the outer Tooltip independent of the button's disabled state */}
+      {(props.applicationStatus === ApplicationStatus.Approved ||
+        props.applicationStatus === ApplicationStatus.ApprovedCardCreated) && (
+        <Tooltip title={props.primaryButtonHref ? undefined : t('incompleteApplicationDataTooltip')}>
+          <div>
             <Button
               color='primary'
               variant='contained'
               disabled={props.primaryButtonHref === undefined}
               href={props.primaryButtonHref}
               startIcon={<CreditScore />}>
-              {props.applicationStatus === ApplicationStatus.ApprovedCardCreated
-                ? t('createCardAgain')
-                : t('createCard')}
+              <Typography variant='button'>
+                {' '}
+                {props.applicationStatus === ApplicationStatus.ApprovedCardCreated
+                  ? t('createCardAgain')
+                  : t('createCard')}
+              </Typography>
             </Button>
-          )}
-        </span>
-      </Tooltip>
+          </div>
+        </Tooltip>
+      )}
       <Button onClick={props.onSecondaryButtonClick} startIcon={<Delete />} variant='outlined' color='error'>
         {t('deleteApplication')}
       </Button>
@@ -221,23 +232,30 @@ const ButtonsApplicationResolved = (props: {
   )
 }
 
-const StatusNote = ({ statusResolvedDate, status }: { statusResolvedDate: Date; status: ApplicationStatus }) => {
+const StatusNote = (props: { statusResolvedDate: Date; status: ApplicationStatus; reason: string | undefined }) => {
   const { t } = useTranslation('applicationsOverview')
-  const isApproved = [ApplicationStatus.Approved, ApplicationStatus.ApprovedCardCreated].includes(status)
+  const isApproved = [ApplicationStatus.Approved, ApplicationStatus.ApprovedCardCreated].includes(props.status)
 
   return (
-    <Stack direction='row' sx={{ padding: 2, alignItems: 'center' }}>
+    <Stack direction='row' sx={{ padding: 2, alignItems: 'flex-start' }}>
       <InfoOutline />
       &ensp;
-      {t('applicationResolveNotice', {
-        date: format(statusResolvedDate, 'dd MMMM', { locale: de }),
-        time: format(statusResolvedDate, 'HH:mm', { locale: de }),
-      })}
-      &ensp;
-      <Typography sx={{ fontWeight: 'bold' }} color={isApproved ? 'success' : 'error'}>
-        {t(isApproved ? 'applicationResolveApproved' : 'applicationResolveRejected')}
-      </Typography>
-      .
+      <div>
+        <Trans
+          t={t}
+          i18nKey={isApproved ? 'applicationResolveNoticeApproved' : 'applicationResolveNoticeRejected'}
+          values={{
+            date: format(props.statusResolvedDate, 'dd MMMM', { locale: de }),
+            time: format(props.statusResolvedDate, 'HH:mm', { locale: de }),
+            reason: props.reason,
+          }}
+          components={{
+            resolution: (
+              <Typography component='span' sx={{ fontWeight: 'bold' }} color={isApproved ? 'success' : 'error'} />
+            ),
+          }}
+        />
+      </div>
     </Stack>
   )
 }
@@ -322,6 +340,37 @@ const ApplicationCard = ({
     [config.applicationFeature, jsonValueParsed]
   )
 
+  const onClickExportApplicationToCsv = () => {
+    try {
+      exportApplicationToCsv(application, config)
+    } catch (error) {
+      if (error instanceof ApplicationToCsvError || error instanceof ApplicationDataIncompleteError) {
+        const { message } = error
+        appToaster?.show({
+          message,
+          intent: 'danger',
+        })
+      }
+    }
+  }
+
+  const menuItems: MenuItemType[] = [
+    {
+      name: t('exportCsv'),
+      onClick: onClickExportApplicationToCsv,
+      icon: (
+        <SvgIcon sx={{ height: 20 }}>
+          <CSVIcon />
+        </SvgIcon>
+      ),
+    },
+    {
+      name: t('exportPdf'),
+      onClick: () => onPrintApplicationById(application.id),
+      icon: <PrintOutlined sx={{ height: 20 }} />,
+    },
+  ]
+
   return (
     <Accordion
       sx={{ displayPrint: isSelectedForPrint ? 'block' : 'none' }}
@@ -400,13 +449,20 @@ const ApplicationCard = ({
         <Divider />
 
         <Box sx={{ p: 2 }}>
-          <VerificationsView verifications={application.verifications} />
+          <VerificationsView
+            application={application}
+            showResendApprovalEmailButton={application.status !== ApplicationStatus.Rejected}
+          />
         </Box>
 
         <Divider />
 
         {application.status != null && application.statusResolvedDate != null && (
-          <StatusNote statusResolvedDate={new Date(application.statusResolvedDate)} status={application.status} />
+          <StatusNote
+            statusResolvedDate={new Date(application.statusResolvedDate)}
+            status={application.status}
+            reason={application.rejectionMessage ?? undefined}
+          />
         )}
 
         <Stack sx={{ p: 2, displayPrint: 'none' }} spacing={2} direction='row'>
@@ -426,13 +482,7 @@ const ApplicationCard = ({
             />
           )}
 
-          <Button
-            onClick={() => onPrintApplicationById(application.id)}
-            startIcon={<Print />}
-            variant='outlined'
-            color='inherit'>
-            {t('exportPdf')}
-          </Button>
+          <BaseMenu menuItems={menuItems} menuLabel={t('moreActionsButtonLabel')} />
         </Stack>
 
         <DeleteDialog

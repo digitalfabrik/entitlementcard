@@ -6,8 +6,8 @@ import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.NotImplementedException
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.FreinetAgencyNotFoundException
 import app.ehrenamtskarte.backend.freinet.database.repos.FreinetAgencyRepository
+import app.ehrenamtskarte.backend.freinet.exceptions.FreinetAgencyNotFoundException
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
 import app.ehrenamtskarte.backend.projects.database.Projects
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription

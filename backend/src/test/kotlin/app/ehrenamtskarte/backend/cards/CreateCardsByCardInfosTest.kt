@@ -5,8 +5,8 @@ import app.ehrenamtskarte.backend.cards.database.CardEntity
 import app.ehrenamtskarte.backend.cards.database.Cards
 import app.ehrenamtskarte.backend.cards.database.CodeType
 import app.ehrenamtskarte.backend.generated.CreateCardsByCardInfos
-import app.ehrenamtskarte.backend.helper.CardInfoTestSample
-import app.ehrenamtskarte.backend.helper.ExampleCardInfo
+import app.ehrenamtskarte.backend.helper.SampleCards
+import app.ehrenamtskarte.backend.helper.SampleCards.getEncoded
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import io.javalin.testtools.JavalinTest
 import org.jetbrains.exposed.sql.deleteAll
@@ -54,7 +54,7 @@ internal class CreateCardsByCardInfosTest : GraphqlApiTest() {
     @Test
     fun `POST returns an error when the user is not allowed to create cards`() =
         JavalinTest.test(app) { _, client ->
-            val encodedCardInfo = ExampleCardInfo.getEncoded(CardInfoTestSample.BavarianStandard)
+            val encodedCardInfo = SampleCards.bavarianStandard().getEncoded()
             val mutation = createMutation(encodedCardInfo = encodedCardInfo)
             val response = post(client, mutation, projectAdmin.getJwtToken())
 
@@ -79,11 +79,8 @@ internal class CreateCardsByCardInfosTest : GraphqlApiTest() {
 
     @Test
     fun `POST returns a successful response when static and dynamic cards are created without an application`() =
-        JavalinTest.test(app) {
-            _,
-            client,
-            ->
-            val encodedCardInfo = ExampleCardInfo.getEncoded(CardInfoTestSample.BavarianStandard)
+        JavalinTest.test(app) { _, client ->
+            val encodedCardInfo = SampleCards.bavarianStandard().getEncoded()
             val mutation = createMutation(encodedCardInfo = encodedCardInfo)
             val response = post(client, mutation, regionAdmin.getJwtToken())
 

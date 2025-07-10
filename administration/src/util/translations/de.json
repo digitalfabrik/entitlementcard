@@ -27,6 +27,7 @@
     "region": "Zuständige Behörde",
     "applicationDetails": "Antragsdetails",
     "cardType": "Antrag auf",
+    "creationDate": "Antragsstellung",
     "applicationType": "Art des Antrags",
     "wantsDigitalCard": "Ich beantrage eine digitale Ehrenamtskarte",
     "wantsPhysicalCard": "Ich beantrage eine physische Ehrenamtskarte",
@@ -184,7 +185,8 @@
     "createCardAgain": "Karte erneut erstellen",
     "deleteApplication": "Antrag löschen",
     "deleteApplicationConfirmationPrompt": "Möchten Sie den Antrag unwiderruflich löschen?",
-    "exportPdf": "PDF exportieren",
+    "exportCsv": "Als CSV exportieren",
+    "exportPdf": "Als PDF exportieren",
     "loadAttachment": "Lade Anhang",
     "attachment": "Anhang",
     "seeAttachment": "siehe Anhang",
@@ -200,15 +202,18 @@
     "organization": "Organisation",
     "eMail": "E-Mail",
     "none": "keine",
+    "resendApprovalRequest": "Anfrage erneut senden",
+    "approvalRequestHasBeenSent": "Anfrage erneut gesendet",
+    "approvalRequestSentSuccessfully": "Anfrage erfolgreich gesendet",
+    "failedToSendApprovalRequest": "Anfrage konnte nicht gesendet werden",
     "applicationApprove": "Antrag bestätigen",
     "applicationReject": "Antrag ablehnen",
     "applicationApprovedToastMessage": "Der Antrag wurde genehmigt.",
     "applicationRejectedToastMessage": "Der Antrag wurde abgelehnt.",
-    "applicationResolveNotice": "Dieser Antrag wurde am {{date}} um {{time}}",
-    "applicationResolveApproved": "genehmigt",
-    "applicationResolveRejected": "abgelehnt",
+    "applicationResolveNoticeApproved": "Dieser Antrag wurde am {{date}} um {{time}} <resolution>genehmigt</resolution>.",
+    "applicationResolveNoticeRejected": "Dieser Antrag wurde am {{date}} um {{time}} <resolution>abgelehnt</resolution> (Begründung: {{reason}}).",
     "incompleteApplicationDataTooltip": "Aus den Antragsdaten kann keine Karte erzeugt werden.",
-    "rejectionDialogTitle": "Antrag ablehen",
+    "rejectionDialogTitle": "Antrag ablehnen",
     "rejectionDialogMessage": "Bitte wählen Sie einen Ablehnungsgrund. Der/die Antragsteller/in wird über diesen anschließend via E-Mail informiert.",
     "rejectionInputHint": "Grund",
     "rejectionReasons": [
@@ -230,7 +235,8 @@
       "Die antragstellende Person ist identisch mit der bestätigenden Person. Bitte lassen Sie den Antrag von einer anderen Person (z.B. Vertretung) bestätigen.",
       "Leider hat Ihr Verein bzw. Ihre Organisation das von Ihnen geleistet Ehrenamt bislang nicht bestätigt. Ohne eine entsprechende Bestätigung Ihres Engagements kann keine Ehrenamtskarte ausgestellt werden."
     ],
-    "rejectionButton": "Ablehnung bestätigen"
+    "rejectionButton": "Ablehnung bestätigen",
+    "moreActionsButtonLabel": "Weitere Optionen"
   },
   "auth": {
     "administration": "Verwaltung",
@@ -302,7 +308,7 @@
     "printQRCodes": "QR-Codes drucken",
     "validationError": "Validierungsfehler",
     "cardCreationConfirmationMessage": "Bestätigungsmail wurde versendet.",
-    "freinetDataSyncSuccessMessage": "Antragsdaten wurden erfolgreich an Freinet gesendet."
+    "freinetDataSyncSuccessMessage": "Antrags- und Kartendaten wurden erfolgreich an Freinet gesendet."
   },
   "misc": {
     "openAppStore": "AppStore öffnen",
@@ -603,8 +609,11 @@
     "csvCreationError": "Etwas ist schiefgegangen beim Erstellen der CSV.",
     "freinetAgencyNotFound": "Diese Agentur konnte in Freinet nicht gefunden werden.",
     "freinetMultiplePersonError": "Der antragstellenden Person konnte keine Person in Freinet-Online eindeutig zugeordnet werden. Bitte aktualisieren Sie die Daten in Freinet-Online manuell.",
-    "freinetApiNotReachableError": "Die Verbindung zu Freinet-Online konnte nicht hergestellt werden. Nehmen Sie die Aktualisierung der Daten direkt in Freinet-Online vor.",
-    "applicationDataIncompleteException": "Erforderliche Antragsdaten fehlen oder sind unvollständig."
+    "applicationDataIncompleteException": "Erforderliche Antragsdaten fehlen oder sind unvollständig.",
+    "applicationToCsvDisabledError": "Die Antragsexportfunktion ist nicht verfügbar.",
+    "applicationToCsvError": "Es ist ein Fehler beim Export des Antrags aufgetreten.",
+    "freinetPersonDataInvalid": "Erforderliche Personendaten von Freinet sind nicht verfügbar. Die Kartendaten konnten deshalb nicht übertragen werden.",
+    "freinetCardDataInvalid": "Die Kartendaten können nicht an Freinet übertragen werden, weil diese ungültig sind."
   },
   "applicationVerification": {
     "withdrawMessageForVerifier": "Der Antrag wurde vom Antragsteller am {{date}} zurückgezogen.",

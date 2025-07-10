@@ -45,7 +45,7 @@ const AddCardForm = ({ card, onRemove, updateCard }: CreateCardsFormProps): Reac
   return (
     <UiCard>
       <CardHeader>
-        <Button variant='minimal' icon='cross' onClick={() => onRemove()} />
+        <Button variant='minimal' icon='cross' onClick={() => onRemove()} data-testid='remove-card' />
       </CardHeader>
       <Stack key={card.id} sx={{ my: 1, gap: 3 }}>
         <CardTextField
