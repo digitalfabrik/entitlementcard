@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'package:ehrenamtskarte/app.dart';
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/home/home_page.dart';
+import 'package:ehrenamtskarte/identification/activation_workflow/activate_code.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_parser.dart';
+import 'package:ehrenamtskarte/identification/connection_failed_dialog.dart';
 import 'package:ehrenamtskarte/identification/id_card/id_card_with_region_query.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/identification/user_code_model.dart';
@@ -15,8 +17,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import '../identification/activation_workflow/activate_code.dart';
-import '../identification/connection_failed_dialog.dart';
 
 enum DeepLinkActivationStatus {
   // Activation is invalid
@@ -137,17 +137,18 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
                                     });
                                   }
                                 } on ServerCardActivationException catch (_) {
+                                  if (!context.mounted) return;
                                   setState(() {
                                     _state = _State.waiting;
                                   });
-                                  if (!context.mounted) return;
+
                                   await ConnectionFailedDialog.show(
                                       context, t.identification.codeActivationFailedConnection);
                                 } catch (_) {
+                                  if (!context.mounted) return;
                                   setState(() {
                                     _state = _State.waiting;
                                   });
-                                  if (!context.mounted) return;
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text(t.common.unknownError),
