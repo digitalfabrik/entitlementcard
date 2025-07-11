@@ -83,7 +83,7 @@ internal class ActivateCardTest : GraphqlApiTest() {
         }
 
     @Test
-    fun `should return failed state when the card is static`() =
+    fun `should return not_found state when the card is static`() =
         JavalinTest.test(app) { _, client ->
             val cardInfoHash = SampleCards.bavarianStandard().hash()
 
@@ -99,7 +99,7 @@ internal class ActivateCardTest : GraphqlApiTest() {
 
             val activationResult = response.toDataObject<CardActivationResultModel>()
 
-            assertEquals(ActivationState.FAILED, activationResult.activationState)
+            assertEquals(ActivationState.NOT_FOUND, activationResult.activationState)
             assertNull(activationResult.totpSecret)
 
             transaction {
@@ -111,7 +111,7 @@ internal class ActivateCardTest : GraphqlApiTest() {
         }
 
     @Test
-    fun `should return failed state when the card not found`() =
+    fun `should return not_found state when the card not found`() =
         JavalinTest.test(app) { _, client ->
             val mutation = activateCardMutation(
                 cardInfoHashBase64 = Random.nextBytes(20).encodeBase64(),
@@ -123,12 +123,12 @@ internal class ActivateCardTest : GraphqlApiTest() {
 
             val activationResult = response.toDataObject<CardActivationResultModel>()
 
-            assertEquals(ActivationState.FAILED, activationResult.activationState)
+            assertEquals(ActivationState.NOT_FOUND, activationResult.activationState)
             assertNull(activationResult.totpSecret)
         }
 
     @Test
-    fun `should return failed state when the activation secret is incorrect`() =
+    fun `should return wrong_secret state when the activation secret is incorrect`() =
         JavalinTest.test(app) { _, client ->
             val cardInfoHash = SampleCards.bavarianStandard().hash()
 
@@ -151,7 +151,7 @@ internal class ActivateCardTest : GraphqlApiTest() {
 
             val activationResult = response.toDataObject<CardActivationResultModel>()
 
-            assertEquals(ActivationState.FAILED, activationResult.activationState)
+            assertEquals(ActivationState.WRONG_SECRET, activationResult.activationState)
             assertNull(activationResult.totpSecret)
 
             transaction {
@@ -163,7 +163,7 @@ internal class ActivateCardTest : GraphqlApiTest() {
         }
 
     @Test
-    fun `should return failed state when the card is expired`() =
+    fun `should return expired state when the card is expired`() =
         JavalinTest.test(app) { _, client ->
             val cardInfoHash = SampleCards.bavarianStandard().hash()
 
@@ -187,7 +187,7 @@ internal class ActivateCardTest : GraphqlApiTest() {
 
             val activationResult = response.toDataObject<CardActivationResultModel>()
 
-            assertEquals(ActivationState.FAILED, activationResult.activationState)
+            assertEquals(ActivationState.EXPIRED, activationResult.activationState)
             assertNull(activationResult.totpSecret)
 
             transaction {

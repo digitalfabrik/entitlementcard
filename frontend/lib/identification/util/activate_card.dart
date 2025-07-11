@@ -19,28 +19,6 @@ import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
 enum ActivationSource { qrScanner, deepLink }
 
-enum ActivationFailureReasons {
-  notFound,
-  wrongSecretQrScanner,
-  wrongSecretDeepLink,
-  expired,
-  unknown;
-
-  factory ActivationFailureReasons.from(Enum$ActivationFailureReason reason, ActivationSource source) {
-    if (reason == Enum$ActivationFailureReason.not_found) {
-      return ActivationFailureReasons.notFound;
-    } else if (reason == Enum$ActivationFailureReason.wrong_secret && source == ActivationSource.qrScanner) {
-      return ActivationFailureReasons.wrongSecretQrScanner;
-    } else if (reason == Enum$ActivationFailureReason.wrong_secret && source == ActivationSource.deepLink) {
-      return ActivationFailureReasons.wrongSecretDeepLink;
-    } else if (reason == Enum$ActivationFailureReason.expired) {
-      return ActivationFailureReasons.expired;
-    } else {
-      return ActivationFailureReasons.unknown;
-    }
-  }
-}
-
 /// Returns
 /// - `true`, if the activation was successful,
 /// - `false`, if the activation was not successful, but feedback was given to the user,
@@ -101,18 +79,21 @@ Future<bool> activateCard(
         await ActivationErrorDialog.showErrorDialog(context, t.identification.codeRevoked);
       }
       return false;
-    case Enum$ActivationState.failed:
+    case Enum$ActivationState.not_found:
       if (context.mounted) {
-        final status = ActivationFailureReasons.from(activationResult.failureReason!, source);
-        final message = switch (status) {
-          ActivationFailureReasons.notFound => t.identification.cardInvalid,
-          ActivationFailureReasons.expired => t.identification.cardExpiredBeforeActivation,
-          ActivationFailureReasons.wrongSecretQrScanner => t.identification.codeInvalid,
-          ActivationFailureReasons.wrongSecretDeepLink => t.deeplinkActivation.invalidCode,
-          ActivationFailureReasons.unknown => t.common.unknownError,
-        };
-
+        await ActivationErrorDialog.showErrorDialog(context, t.identification.cardInvalid);
+      }
+      return false;
+    case Enum$ActivationState.wrong_secret:
+      if (context.mounted) {
+        final message =
+            source == ActivationSource.qrScanner ? t.identification.codeInvalid : t.deeplinkActivation.invalidCode;
         await ActivationErrorDialog.showErrorDialog(context, message);
+      }
+      return false;
+    case Enum$ActivationState.expired:
+      if (context.mounted) {
+        await ActivationErrorDialog.showErrorDialog(context, t.identification.cardExpiredBeforeActivation);
       }
       return false;
     case Enum$ActivationState.did_not_overwrite_existing:

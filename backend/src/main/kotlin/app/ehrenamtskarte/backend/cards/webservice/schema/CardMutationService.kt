@@ -12,7 +12,6 @@ import app.ehrenamtskarte.backend.cards.hash
 import app.ehrenamtskarte.backend.cards.service.CardActivator
 import app.ehrenamtskarte.backend.cards.service.CardVerifier
 import app.ehrenamtskarte.backend.cards.webservice.QRCodeUtil
-import app.ehrenamtskarte.backend.cards.webservice.schema.types.ActivationFailureReason
 import app.ehrenamtskarte.backend.cards.webservice.schema.types.ActivationState
 import app.ehrenamtskarte.backend.cards.webservice.schema.types.CardActivationResultModel
 import app.ehrenamtskarte.backend.cards.webservice.schema.types.CardCreationResultModel
@@ -324,20 +323,14 @@ class CardMutationService {
                 logger.info(
                     "${context.remoteIp} failed to activate card, card not found with cardHash:$cardInfoHashBase64",
                 )
-                return@t CardActivationResultModel(
-                    activationState = ActivationState.failed,
-                    failureReason = ActivationFailureReason.not_found,
-                )
+                return@t CardActivationResultModel(ActivationState.not_found)
             }
 
             if (!CardActivator.verifyActivationSecret(rawActivationSecret, activationSecretHash)) {
                 logger.info(
                     "${context.remoteIp} failed to activate card with id:${card.id} and overwrite: $overwrite",
                 )
-                return@t CardActivationResultModel(
-                    activationState = ActivationState.failed,
-                    failureReason = ActivationFailureReason.wrong_secret,
-                )
+                return@t CardActivationResultModel(ActivationState.wrong_secret)
             }
 
             if (CardVerifier.isExpired(card.expirationDay, projectConfig.timezone)) {
@@ -345,10 +338,7 @@ class CardMutationService {
                     "${context.remoteIp} failed to activate card with id:${card.id} and overwrite: " +
                         "$overwrite because card is expired",
                 )
-                return@t CardActivationResultModel(
-                    activationState = ActivationState.failed,
-                    failureReason = ActivationFailureReason.expired,
-                )
+                return@t CardActivationResultModel(ActivationState.expired)
             }
 
             if (card.revoked) {
@@ -380,7 +370,7 @@ class CardMutationService {
             context.request,
             dfe.field.name,
             cardHash,
-            activationResult.activationState != ActivationState.failed,
+            activationResult.activationState == ActivationState.success,
         )
         return activationResult
     }
