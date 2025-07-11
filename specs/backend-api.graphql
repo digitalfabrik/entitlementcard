@@ -304,7 +304,6 @@ type StoreImportReturnResultModel {
 enum ActivationState {
   did_not_overwrite_existing
   expired
-  failed
   not_found
   revoked
   success
