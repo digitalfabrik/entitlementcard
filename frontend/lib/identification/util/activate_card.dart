@@ -17,15 +17,18 @@ import 'package:provider/provider.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
+enum ActivationSource { qrScanner, deepLink }
+
 /// Returns
 /// - `true`, if the activation was successful,
 /// - `false`, if the activation was not successful, but feedback was given to the user,
 /// Throws an error otherwise.
 Future<bool> activateCard(
   BuildContext context,
-  DynamicActivationCode activationCode, [
+  DynamicActivationCode activationCode, {
+  required ActivationSource source,
   bool overwriteExisting = false,
-]) async {
+}) async {
   final client = GraphQLProvider.of(context).value;
   final projectId = Configuration.of(context).projectId;
   final userCodesModel = Provider.of<UserCodeModel>(context, listen: false);
@@ -76,9 +79,21 @@ Future<bool> activateCard(
         await ActivationErrorDialog.showErrorDialog(context, t.identification.codeRevoked);
       }
       return false;
-    case Enum$ActivationState.failed:
+    case Enum$ActivationState.not_found:
       if (context.mounted) {
-        await ActivationErrorDialog.showErrorDialog(context, t.identification.codeInvalid);
+        await ActivationErrorDialog.showErrorDialog(context, t.identification.cardInvalid);
+      }
+      return false;
+    case Enum$ActivationState.wrong_secret:
+      if (context.mounted) {
+        final message =
+            source == ActivationSource.qrScanner ? t.identification.codeInvalid : t.deeplinkActivation.invalidCode;
+        await ActivationErrorDialog.showErrorDialog(context, message);
+      }
+      return false;
+    case Enum$ActivationState.expired:
+      if (context.mounted) {
+        await ActivationErrorDialog.showErrorDialog(context, t.identification.cardExpiredBeforeActivation);
       }
       return false;
     case Enum$ActivationState.did_not_overwrite_existing:
@@ -96,7 +111,7 @@ Future<bool> activateCard(
       if (context.mounted &&
           await ActivationOverwriteExistingDialog.showActivationOverwriteExistingDialog(context) &&
           context.mounted) {
-        return await activateCard(context, activationCode, overwriteExisting = true);
+        return await activateCard(context, activationCode, source: source, overwriteExisting: true);
       } else {
         return false;
       }
