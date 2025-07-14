@@ -37,39 +37,39 @@ class EakApplicationMutationService {
         application: Application,
         project: String,
         dfe: DataFetchingEnvironment,
-    ): DataFetcherResult<Boolean> {
-        val applicationHandler = ApplicationHandler(dfe.graphQlContext.context, application, regionId, project)
-        val dataFetcherResultBuilder = DataFetcherResult.newResult<Boolean>()
+    ): DataFetcherResult<Boolean> =
+        transaction {
+            val applicationHandler = ApplicationHandler(dfe.graphQlContext.context, application, regionId, project)
+            val dataFetcherResultBuilder = DataFetcherResult.newResult<Boolean>()
 
-        applicationHandler.validateRegion()
-        val region = transaction {
-            RegionsRepository.findRegionById(regionId)
+            applicationHandler.validateRegion()
+
+            val region = RegionsRepository.findRegionById(regionId)
+            val applicationConfirmationNote = region.applicationConfirmationMailNote
+                ?.takeIf { region.applicationConfirmationMailNoteActivated && it.isNotEmpty() }
+            applicationHandler.validateAttachmentTypes()
+            val isPreVerified = applicationHandler.isValidPreVerifiedApplication()
+
+            val (applicationEntity, verificationEntities) = applicationHandler.saveApplication()
+
+            if (isPreVerified) {
+                applicationHandler.setApplicationVerificationToPreVerifiedNow(verificationEntities)
+                applicationHandler.sendPreVerifiedApplicationMails(
+                    applicationEntity,
+                    verificationEntities,
+                    dataFetcherResultBuilder,
+                    applicationConfirmationNote,
+                )
+            } else {
+                applicationHandler.sendApplicationMails(
+                    applicationEntity,
+                    verificationEntities,
+                    dataFetcherResultBuilder,
+                    applicationConfirmationNote,
+                )
+            }
+            return@transaction dataFetcherResultBuilder.data(true).build()
         }
-        val applicationConfirmationNote = region.applicationConfirmationMailNote
-            ?.takeIf { region.applicationConfirmationMailNoteActivated && it.isNotEmpty() }
-        applicationHandler.validateAttachmentTypes()
-        val isPreVerified = applicationHandler.isValidPreVerifiedApplication()
-
-        val (applicationEntity, verificationEntities) = applicationHandler.saveApplication()
-
-        if (isPreVerified) {
-            applicationHandler.setApplicationVerificationToPreVerifiedNow(verificationEntities)
-            applicationHandler.sendPreVerifiedApplicationMails(
-                applicationEntity,
-                verificationEntities,
-                dataFetcherResultBuilder,
-                applicationConfirmationNote,
-            )
-        } else {
-            applicationHandler.sendApplicationMails(
-                applicationEntity,
-                verificationEntities,
-                dataFetcherResultBuilder,
-                applicationConfirmationNote,
-            )
-        }
-        return dataFetcherResultBuilder.data(true).build()
-    }
 
     @GraphQLDescription("Deletes the application with specified id")
     fun deleteApplication(applicationId: Int, dfe: DataFetchingEnvironment): Boolean {

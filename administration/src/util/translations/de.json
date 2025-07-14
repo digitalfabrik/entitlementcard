@@ -599,7 +599,7 @@
     "invalidApplicationConfirmationNoteSize": "Unzulässige Zeichenlänge der Notiz erreicht. Maximal sind {{maxSize}} Zeichen erlaubt.",
     "entitlementNotFound": "Wir konnten Ihre Angaben nicht im System finden.\nAus technischen Gründen stehen die Daten des Jobcenters Koblenz ab Mitte des folgenden Monats zur Verfügung.\nBitte überprüfen Sie Ihre Angaben und versuchen Sie es erneut.",
     "entitlementExpired": "Sie sind nicht länger berechtigt, einen KoblenzPass zu erstellen. Bitte kontaktieren Sie koblenzpass@stadt.koblenz.de für weitere Informationen.",
-    "mailNotSend": "Email konnte nicht an {{recipient}} gesendet werden.",
+    "mailNotSend": "E-Mail konnte nicht an {{recipient}} gesendet werden.\nBitte probieren Sie es zu einem späteren Zeitpunkt erneut.\nIhre Antragsdaten bleiben erhalten.",
     "passwordResetKeyExpired": "Die Gültigkeit ihres Links ist abgelaufen",
     "regionNotFound": "Diese Region existiert nicht.",
     "regionNotActivatedForApplication": "Für diese Region kann der zentrale Beantragungsprozess noch nicht genutzt werden, kontaktieren Sie bitte Ihre zuständige Behörde direkt.",

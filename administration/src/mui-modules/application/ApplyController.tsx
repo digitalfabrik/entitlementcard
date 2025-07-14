@@ -42,7 +42,7 @@ const ApplyController = (): React.ReactElement | null => {
   const [addEakApplication, { loading: loadingSubmit }] = useAddEakApplicationMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      enqueueSnackbar(title, { variant: 'error' })
+      enqueueSnackbar(title, { variant: 'error', style: { whiteSpace: 'pre-line' }, autoHideDuration: 7200 })
     },
     onCompleted: ({ result }) => {
       if (result) {
