@@ -12,7 +12,7 @@ import {
   Region,
   useCreateCardsMutation,
   useDeleteCardsMutation,
-  useSendApplicationDataToFreinetMutation,
+  useSendApplicationAndCardDataToFreinetMutation,
 } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import { ProjectConfig } from '../../../project-configs/getProjectConfig'
@@ -25,6 +25,7 @@ import { reportErrorToSentry } from '../../../util/sentry'
 import { useAppToaster } from '../../AppToaster'
 import { saveActivityLog } from '../../activity-log/ActivityLog'
 import { showCardGenerationError } from '../../util/cardGenerationError'
+import { getFreinetCardFromCards } from '../../util/getFreinetCardFromCards'
 import useSendCardConfirmationMails from './useSendCardConfirmationMails'
 
 const initializeCardsFromQueryParams = (
@@ -70,9 +71,9 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
   const appToaster = useAppToaster()
   const { t } = useTranslation('cards')
 
-  const [sendToFreinet] = useSendApplicationDataToFreinetMutation({
+  const [sendToFreinet] = useSendApplicationAndCardDataToFreinetMutation({
     onCompleted: data => {
-      if (data.sendApplicationDataToFreinet === true) {
+      if (data.sendApplicationAndCardDataToFreinet === true) {
         appToaster?.show({ intent: 'success', message: t('freinetDataSyncSuccessMessage') })
       }
     },
@@ -107,10 +108,12 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
         // This is a temporary condition from #2141
         if (!isProductionEnvironment() && applicationId != null) {
           const { projectId } = projectConfig
+          const freinetCard = getFreinetCardFromCards(cards)
           sendToFreinet({
             variables: {
               applicationId,
               project: projectId,
+              freinetCard,
             },
           })
         }

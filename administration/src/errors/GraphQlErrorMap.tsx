@@ -137,11 +137,6 @@ const graphQlErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
       return {
         title: i18next.t('errors:invalidApplicationConfirmationNoteSize', { maxSize: extensions.maxSize }),
       }
-    case GraphQlExceptionCode.FreinetApiNotReachable: {
-      return {
-        title: i18next.t('errors:freinetApiNotReachableError'),
-      }
-    }
     case GraphQlExceptionCode.FreinetFoundMultiplePersons: {
       return {
         title: i18next.t('errors:freinetMultiplePersonError'),
@@ -150,6 +145,16 @@ const graphQlErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
     case GraphQlExceptionCode.ApplicationDataIncomplete: {
       return {
         title: i18next.t('errors:applicationDataIncompleteException'),
+      }
+    }
+    case GraphQlExceptionCode.FreinetCardDataInvalid: {
+      return {
+        title: i18next.t('errors:freinetCardDataInvalid'),
+      }
+    }
+    case GraphQlExceptionCode.FreinetPersonDataInvalid: {
+      return {
+        title: i18next.t('errors:freinetPersonDataInvalid'),
       }
     }
     default:
