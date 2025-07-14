@@ -28,6 +28,7 @@ import {
   Divider,
   InputAdornment,
   Stack,
+  SvgIcon,
   TextField,
   Tooltip,
   Typography,
@@ -38,6 +39,7 @@ import { de } from 'date-fns/locale'
 import React, { memo, useContext, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
+import CSVIcon from '../../assets/icons/csv.svg'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import {
   ApplicationStatus,
@@ -48,6 +50,7 @@ import {
 import BaseMenu, { MenuItemType } from '../../mui-modules/base/BaseMenu'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import type { ProjectConfig } from '../../project-configs/getProjectConfig'
+import { ApplicationDataIncompleteError } from '../../util/applicationDataHelper'
 import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { useAppToaster } from '../AppToaster'
@@ -59,6 +62,7 @@ import NoteDialogController from './NoteDialogController'
 import { ApplicationIndicators } from './VerificationsIndicator'
 import VerificationsView from './VerificationsView'
 import { GetApplicationsType } from './types'
+import { ApplicationToCsvError, exportApplicationToCsv } from './utils/exportApplicationToCsv'
 
 const DeleteDialog = (props: {
   isOpen: boolean
@@ -336,13 +340,34 @@ const ApplicationCard = ({
     [config.applicationFeature, jsonValueParsed]
   )
 
-  const otherOptionsContainerWidth = 170
-  const otherOptionsItemHeight = 36.5
+  const onClickExportApplicationToCsv = () => {
+    try {
+      exportApplicationToCsv(application, config)
+    } catch (error) {
+      if (error instanceof ApplicationToCsvError || error instanceof ApplicationDataIncompleteError) {
+        const { message } = error
+        appToaster?.show({
+          message,
+          intent: 'danger',
+        })
+      }
+    }
+  }
+
   const menuItems: MenuItemType[] = [
+    {
+      name: t('exportCsv'),
+      onClick: onClickExportApplicationToCsv,
+      icon: (
+        <SvgIcon sx={{ height: 20 }}>
+          <CSVIcon />
+        </SvgIcon>
+      ),
+    },
     {
       name: t('exportPdf'),
       onClick: () => onPrintApplicationById(application.id),
-      icon: <PrintOutlined sx={{ height: 24, marginRight: 1 }} />,
+      icon: <PrintOutlined sx={{ height: 20 }} />,
     },
   ]
 
@@ -457,12 +482,7 @@ const ApplicationCard = ({
             />
           )}
 
-          <BaseMenu
-            menuItems={menuItems}
-            menuLabel={t('moreActionsButtonLabel')}
-            containerWidth={otherOptionsContainerWidth}
-            itemHeight={otherOptionsItemHeight}
-          />
+          <BaseMenu menuItems={menuItems} menuLabel={t('moreActionsButtonLabel')} />
         </Stack>
 
         <DeleteDialog
