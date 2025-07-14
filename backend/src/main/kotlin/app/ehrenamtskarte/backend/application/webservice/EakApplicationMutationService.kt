@@ -8,23 +8,21 @@ import app.ehrenamtskarte.backend.application.database.repos.ApplicationReposito
 import app.ehrenamtskarte.backend.application.webservice.schema.create.Application
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationView
 import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationHandler
+import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationJsonExtensions.getApplicantEmail
+import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationJsonExtensions.getApplicantName
 import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.auth.service.Authorizer.mayDeleteApplicationsInRegion
 import app.ehrenamtskarte.backend.auth.service.Authorizer.mayUpdateApplicationsInRegion
-import app.ehrenamtskarte.backend.common.utils.findValueByName
-import app.ehrenamtskarte.backend.common.utils.findValueByPath
 import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.ApplicationDataIncompleteException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidLinkException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidNoteSizeException
 import app.ehrenamtskarte.backend.mail.Mailer
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.fasterxml.jackson.databind.JsonNode
 import graphql.execution.DataFetcherResult
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -185,13 +183,11 @@ class EakApplicationMutationService {
 
             application.rejectionMessage = rejectionMessage
 
-            val applicationData = application.parseJsonValue()
-
             Mailer.sendApplicationRejectedMail(
                 context.backendConfiguration,
                 context.backendConfiguration.getProjectConfig(project),
-                getApplicantName(applicationData),
-                getApplicantEmail(applicationData),
+                application.getApplicantName(),
+                application.getApplicantEmail(),
                 rejectionMessage,
             )
 
@@ -245,29 +241,11 @@ class EakApplicationMutationService {
 
             Mailer.sendApplicationVerificationMail(
                 context.backendConfiguration,
-                getApplicantName(application.parseJsonValue()),
+                application.getApplicantName(),
                 context.backendConfiguration.getProjectConfig(project),
                 applicationVerification,
             )
         }
         return true
-    }
-
-    private fun getApplicantName(json: JsonNode): String {
-        val personalData = json.findValueByPath("application", "personalData")
-            ?: throw ApplicationDataIncompleteException()
-
-        val forenames = personalData.findValueByName("forenames")
-        val surname = personalData.findValueByName("surname")
-
-        return listOfNotNull(forenames, surname).filter { it.isNotBlank() }.joinToString(" ")
-    }
-
-    private fun getApplicantEmail(json: JsonNode): String {
-        val personalData = json.findValueByPath("application", "personalData")
-            ?: throw ApplicationDataIncompleteException()
-
-        return personalData.findValueByName("email")
-            ?: throw ApplicationDataIncompleteException()
     }
 }
