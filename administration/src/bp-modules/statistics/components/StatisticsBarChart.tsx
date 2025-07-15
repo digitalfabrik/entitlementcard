@@ -1,6 +1,6 @@
 import { NonIdealState } from '@blueprintjs/core'
 import { Alert, Box, Typography } from '@mui/material'
-import { ResponsiveBar } from '@nivo/bar'
+import { BarCustomLayerProps, ResponsiveBar } from '@nivo/bar'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -16,6 +16,36 @@ const BarContainer = styled.div<{ height: number }>`
 type StatisticsBarChartProps = {
   statistic: CardStatisticsResultModel
 }
+
+const CHART_MARGIN = 30
+const OVERLAP_HEIGHT = 10
+
+const CustomAxisLines = ({ innerWidth, innerHeight }: BarCustomLayerProps<CardStatisticsResultModel>) => (
+  <>
+    {/* Bottom Axis Line */}
+    <line
+      x1={0}
+      x2={innerWidth + OVERLAP_HEIGHT}
+      y1={innerHeight}
+      y2={innerHeight}
+      style={{
+        stroke: '#000',
+        strokeWidth: 1,
+      }}
+    />
+    {/* Left Axis Line */}
+    <line
+      x1={0}
+      x2={0}
+      y1={CHART_MARGIN - OVERLAP_HEIGHT}
+      y2={innerHeight}
+      style={{
+        stroke: '#000',
+        strokeWidth: 1,
+      }}
+    />
+  </>
+)
 
 const StatisticsBarChart = ({ statistic }: StatisticsBarChartProps): ReactElement => {
   const { cardStatistics } = useContext(ProjectConfigContext)
@@ -55,7 +85,7 @@ const StatisticsBarChart = ({ statistic }: StatisticsBarChartProps): ReactElemen
         tooltip={StatisticsBarTooltip}
         keys={statisticKeys}
         indexBy='region'
-        margin={{ top: 30, right: 30, bottom: 30, left: 30 }}
+        margin={{ top: CHART_MARGIN, right: CHART_MARGIN, bottom: CHART_MARGIN, left: CHART_MARGIN }}
         innerPadding={4.0}
         padding={0.2}
         enableGridY={false}
@@ -68,15 +98,12 @@ const StatisticsBarChart = ({ statistic }: StatisticsBarChartProps): ReactElemen
           tickValues: 0,
           legendPosition: 'start',
         }}
-        axisBottom={
-          statistic.cardsCreated !== 0
-            ? {
-                tickSize: 6,
-                tickPadding: 8,
-              }
-            : null
-        }
+        axisBottom={{
+          tickSize: 6,
+          tickPadding: 8,
+        }}
         axisLeft={null}
+        layers={['grid', 'axes', 'bars', CustomAxisLines, 'markers', 'legends', 'annotations']}
         theme={{
           axis: { legend: { text: { fontSize: 14, fontWeight: 500, fontFamily: 'Roboto' } } },
           text: { fontSize: 12, fontFamily: 'Roboto' },
