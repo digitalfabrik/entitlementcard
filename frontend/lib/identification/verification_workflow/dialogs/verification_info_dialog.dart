@@ -17,20 +17,14 @@ class VerificationInfoDialog extends StatelessWidget {
       content: SingleChildScrollView(
         child: ListBody(
           children: [
-            _EnumeratedListItem(
-              index: 0,
-              child: Text(t.identification.scanCode, style: theme.textTheme.bodyLarge),
-            ),
+            _EnumeratedListItem(index: 0, child: Text(t.identification.scanCode, style: theme.textTheme.bodyLarge)),
             _EnumeratedListItem(index: 1, child: Text(t.identification.checkingCode, style: theme.textTheme.bodyLarge)),
             _EnumeratedListItem(
               index: 2,
               child: Text(t.identification.compareWithID, style: theme.textTheme.bodyLarge),
             ),
             SizedBox(height: 12),
-            Text(
-              t.identification.internetRequired,
-              style: theme.textTheme.titleSmall,
-            ),
+            Text(t.identification.internetRequired, style: theme.textTheme.titleSmall),
           ],
         ),
       ),
@@ -42,10 +36,7 @@ class VerificationInfoDialog extends StatelessWidget {
             if (context.mounted) _onDone(context);
           },
         ),
-        TextButton(
-          child: Text(t.common.next),
-          onPressed: () => _onDone(context),
-        )
+        TextButton(child: Text(t.common.next), onPressed: () => _onDone(context)),
       ],
     );
   }
@@ -56,10 +47,7 @@ class VerificationInfoDialog extends StatelessWidget {
   /// Returns a future that resolves to true if the user accepted the info,
   /// and to null if the dialog was dismissed.
   static Future<bool?> show(BuildContext context) {
-    return showDialog<bool>(
-      context: context,
-      builder: (_) => const VerificationInfoDialog(),
-    );
+    return showDialog<bool>(context: context, builder: (_) => const VerificationInfoDialog());
   }
 }
 
@@ -80,10 +68,7 @@ class _EnumeratedListItem extends StatelessWidget {
             backgroundColor: theme.colorScheme.primary,
             child: Text(
               '${index + 1}',
-              style: TextStyle(
-                color: theme.colorScheme.surface,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(color: theme.colorScheme.surface, fontWeight: FontWeight.bold),
             ),
           ),
           const SizedBox(width: 12),

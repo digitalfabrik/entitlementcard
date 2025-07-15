@@ -17,45 +17,49 @@ class NoCardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    return CustomScrollView(slivers: [
-      SliverStatusBarProtector(),
-      SliverLayoutBuilder(builder: (context, constraints) {
-        final remainingExtent = constraints.viewportMainAxisExtent - constraints.precedingScrollExtent;
-        return SliverToBoxAdapter(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: remainingExtent),
-            child: SafeArea(
-              top: false,
-              bottom: false,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _TapableCardWithArea(
-                    onTap: startApplication,
-                    title: t.identification.applyTitle,
-                    description: t.identification.applyDescription,
-                    icon: Icons.assignment,
+    return CustomScrollView(
+      slivers: [
+        SliverStatusBarProtector(),
+        SliverLayoutBuilder(
+          builder: (context, constraints) {
+            final remainingExtent = constraints.viewportMainAxisExtent - constraints.precedingScrollExtent;
+            return SliverToBoxAdapter(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: remainingExtent),
+                child: SafeArea(
+                  top: false,
+                  bottom: false,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _TapableCardWithArea(
+                        onTap: startApplication,
+                        title: t.identification.applyTitle,
+                        description: t.identification.applyDescription,
+                        icon: Icons.assignment,
+                      ),
+                      _TapableCardWithArea(
+                        onTap: startActivation,
+                        title: t.identification.activateTitle,
+                        description: t.identification.activateDescription,
+                        icon: Icons.add_card,
+                      ),
+                      _TapableCardWithArea(
+                        onTap: startVerification,
+                        title: t.identification.verifyTitle,
+                        description: t.identification.verifyDescription,
+                        icon: Icons.verified,
+                      ),
+                    ].wrapWithSpacers(height: 24),
                   ),
-                  _TapableCardWithArea(
-                    onTap: startActivation,
-                    title: t.identification.activateTitle,
-                    description: t.identification.activateDescription,
-                    icon: Icons.add_card,
-                  ),
-                  _TapableCardWithArea(
-                    onTap: startVerification,
-                    title: t.identification.verifyTitle,
-                    description: t.identification.verifyDescription,
-                    icon: Icons.verified,
-                  ),
-                ].wrapWithSpacers(height: 24),
+                ),
               ),
-            ),
-          ),
-        );
-      }),
-    ]);
+            );
+          },
+        ),
+      ],
+    );
   }
 }
 
@@ -65,12 +69,7 @@ class _TapableCardWithArea extends StatelessWidget {
   final String description;
   final IconData icon;
 
-  const _TapableCardWithArea({
-    required this.onTap,
-    required this.title,
-    required this.description,
-    required this.icon,
-  });
+  const _TapableCardWithArea({required this.onTap, required this.title, required this.description, required this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -96,11 +95,7 @@ class _TapableCardWithArea extends StatelessWidget {
                   ),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: Text(
-                      title,
-                      style: theme.textTheme.titleLarge,
-                      textAlign: TextAlign.left,
-                    ),
+                    child: Text(title, style: theme.textTheme.titleLarge, textAlign: TextAlign.left),
                   ),
                 ],
               ),
@@ -113,7 +108,7 @@ class _TapableCardWithArea extends StatelessWidget {
               Align(
                 alignment: Alignment.centerRight,
                 child: Icon(Icons.arrow_forward, color: theme.colorScheme.primary, size: 25),
-              )
+              ),
             ],
           ),
         ),

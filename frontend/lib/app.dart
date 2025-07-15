@@ -43,16 +43,18 @@ final GoRouter router = GoRouter(
       ],
     ),
     GoRoute(
-        path: homeRouteName,
-        builder: (BuildContext context, GoRouterState state) {
-          return HomePage();
-        }),
+      path: homeRouteName,
+      builder: (BuildContext context, GoRouterState state) {
+        return HomePage();
+      },
+    ),
     GoRoute(
       path: '$homeRouteName/:$homeRouteParamTabIndexName/:$homeRouteParamCardIndexName',
       builder: (BuildContext context, GoRouterState state) {
         return HomePage(
-            initialTabIndex: int.parse(state.pathParameters[homeRouteParamTabIndexName]!),
-            initialCardIndex: int.parse(state.pathParameters[homeRouteParamCardIndexName]!));
+          initialTabIndex: int.parse(state.pathParameters[homeRouteParamTabIndexName]!),
+          initialCardIndex: int.parse(state.pathParameters[homeRouteParamCardIndexName]!),
+        );
       },
     ),
     GoRoute(
@@ -73,24 +75,24 @@ class App extends StatelessWidget {
     final mapStyleUrl = settings.enableStaging
         ? buildConfig.mapStyleUrl.staging
         : isProduction()
-            ? buildConfig.mapStyleUrl.production
-            : isLocal()
-                ? buildConfig.mapStyleUrl.local
-                : buildConfig.mapStyleUrl.showcase;
+        ? buildConfig.mapStyleUrl.production
+        : isLocal()
+        ? buildConfig.mapStyleUrl.local
+        : buildConfig.mapStyleUrl.showcase;
 
     final graphqlUrl = settings.enableStaging
         ? buildConfig.backendUrl.staging
         : isProduction()
-            ? buildConfig.backendUrl.production
-            : isLocal()
-                ? buildConfig.backendUrl.local
-                : buildConfig.backendUrl.showcase;
+        ? buildConfig.backendUrl.production
+        : isLocal()
+        ? buildConfig.backendUrl.local
+        : buildConfig.backendUrl.showcase;
 
     final projectId = isProduction()
         ? buildConfig.projectId.production
         : isLocal()
-            ? buildConfig.projectId.local
-            : buildConfig.projectId.showcase;
+        ? buildConfig.projectId.local
+        : buildConfig.projectId.showcase;
 
     // Load default language from settings
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -106,30 +108,31 @@ class App extends StatelessWidget {
       showDevSettings: kDebugMode,
       child: ConfiguredGraphQlProvider(
         child: MultiProvider(
-            providers: [
-              ChangeNotifierProvider<UserCodeModel>(create: (_) => UserCodeModel()..initialize()),
-              ChangeNotifierProvider<FavoritesModel>(create: (_) => FavoritesModel()..initialize())
-            ],
-            child: SafeArea(
-              bottom: true,
-              top: false,
-              left: false,
-              right: false,
-              child: MaterialApp.router(
-                theme: lightTheme,
-                darkTheme: darkTheme,
-                themeMode: ThemeMode.system,
-                debugShowCheckedModeBanner: false,
-                localizationsDelegates: [
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                ],
-                supportedLocales: buildConfig.appLocales.map((locale) => Locale(locale)),
-                locale: TranslationProvider.of(context).flutterLocale,
-                routerConfig: router,
-              ),
-            )),
+          providers: [
+            ChangeNotifierProvider<UserCodeModel>(create: (_) => UserCodeModel()..initialize()),
+            ChangeNotifierProvider<FavoritesModel>(create: (_) => FavoritesModel()..initialize()),
+          ],
+          child: SafeArea(
+            bottom: true,
+            top: false,
+            left: false,
+            right: false,
+            child: MaterialApp.router(
+              theme: lightTheme,
+              darkTheme: darkTheme,
+              themeMode: ThemeMode.system,
+              debugShowCheckedModeBanner: false,
+              localizationsDelegates: [
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: buildConfig.appLocales.map((locale) => Locale(locale)),
+              locale: TranslationProvider.of(context).flutterLocale,
+              routerConfig: router,
+            ),
+          ),
+        ),
       ),
     );
   }

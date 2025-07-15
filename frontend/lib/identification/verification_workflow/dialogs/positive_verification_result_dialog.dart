@@ -9,24 +9,17 @@ class PositiveVerificationResultDialog extends StatefulWidget {
   final CardInfo cardInfo;
   final bool isStaticVerificationCode;
 
-  const PositiveVerificationResultDialog({
-    super.key,
-    required this.cardInfo,
-    required this.isStaticVerificationCode,
-  });
+  const PositiveVerificationResultDialog({super.key, required this.cardInfo, required this.isStaticVerificationCode});
 
   static Future<void> show({
     required BuildContext context,
     required CardInfo cardInfo,
     required bool isStaticVerificationCode,
-  }) =>
-      showDialog(
-        context: context,
-        builder: (_) => PositiveVerificationResultDialog(
-          cardInfo: cardInfo,
-          isStaticVerificationCode: isStaticVerificationCode,
-        ),
-      );
+  }) => showDialog(
+    context: context,
+    builder: (_) =>
+        PositiveVerificationResultDialog(cardInfo: cardInfo, isStaticVerificationCode: isStaticVerificationCode),
+  );
 
   @override
   PositiveVerificationResultDialogState createState() => PositiveVerificationResultDialogState();
@@ -74,7 +67,7 @@ class PositiveVerificationResultDialogState extends State<PositiveVerificationRe
                   },
                 ),
               ),
-            )
+            ),
         ],
       ),
     );

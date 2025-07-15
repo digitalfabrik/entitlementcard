@@ -13,9 +13,7 @@ class QrCodeScannerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return QrCodeScanner(
-      onCodeScanned: (code) async => _onCodeScanned(context, code),
-    );
+    return QrCodeScanner(onCodeScanned: (code) async => _onCodeScanned(context, code));
   }
 
   Future<void> _onCodeScanned(BuildContext context, Uint8List code) async {

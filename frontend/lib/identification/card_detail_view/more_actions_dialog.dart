@@ -55,13 +55,16 @@ class MoreActionsDialog extends StatelessWidget {
             ),
             ListTile(
               enabled: !cardLimitIsReached,
-              title: Text('${t.identification.moreActionsActivateTitle} ($cardsInUse/$maxCardAmount)',
-                  style: TextStyle(color: cardLimitIsReached ? theme.hintColor : null, fontWeight: FontWeight.bold)),
+              title: Text(
+                '${t.identification.moreActionsActivateTitle} ($cardsInUse/$maxCardAmount)',
+                style: TextStyle(color: cardLimitIsReached ? theme.hintColor : null, fontWeight: FontWeight.bold),
+              ),
               subtitle: Text(
-                  cardLimitIsReached
-                      ? t.identification.moreActionsActivateLimitDescription
-                      : t.identification.moreActionsActivateDescription,
-                  style: TextStyle(color: cardLimitIsReached ? theme.hintColor : null)),
+                cardLimitIsReached
+                    ? t.identification.moreActionsActivateLimitDescription
+                    : t.identification.moreActionsActivateDescription,
+                style: TextStyle(color: cardLimitIsReached ? theme.hintColor : null),
+              ),
               leading: Icon(Icons.add_card, size: 36),
               onTap: () {
                 Navigator.pop(context);

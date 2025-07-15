@@ -23,7 +23,10 @@ void main() {
       registerFallbackValue(FakeQueryOptions());
       registerFallbackValue(FakeRoute());
       registerFallbackValue(
-          Options$Query$PhysicalStoreById(variables: Variables$Query$PhysicalStoreById(project: '', ids: [])));
+        Options$Query$PhysicalStoreById(
+          variables: Variables$Query$PhysicalStoreById(project: '', ids: []),
+        ),
+      );
     });
 
     final mockClient = MockGraphQLClient();
@@ -41,10 +44,7 @@ void main() {
           child: MaterialApp(
             navigatorObservers: [mockObserver],
             home: TranslationProvider(
-              child: GraphQLProvider(
-                client: ValueNotifier(mockClient),
-                child: const FavoritesPage(),
-              ),
+              child: GraphQLProvider(client: ValueNotifier(mockClient), child: const FavoritesPage()),
             ),
           ),
         ),
@@ -53,7 +53,7 @@ void main() {
 
     testWidgets('shows store in favorites if the store is available', (WidgetTester tester) async {
       SharedPreferences.setMockInitialValues(<String, List<String>>{
-        'favorites': ['{"storeId":1,"storeName":"Test store","categoryId":9}']
+        'favorites': ['{"storeId":1,"storeName":"Test store","categoryId":9}'],
       });
 
       when(() => mockClient.query(any<Options$Query$PhysicalStoreById>())).thenAnswer((invocation) async {
@@ -73,21 +73,21 @@ void main() {
                     'email': null,
                     'telephone': '08671 95 80 45',
                     'website': null,
-                    '__typename': 'Contact'
+                    '__typename': 'Contact',
                   },
                   'category': {'id': 9, 'name': 'Sonstiges', '__typename': 'Category'},
-                  '__typename': 'AcceptingStore'
+                  '__typename': 'AcceptingStore',
                 },
                 'address': {
                   'street': 'Bahnhofstraße 1',
                   'postalCode': '84503',
                   'location': 'Altötting',
-                  '__typename': 'Address'
+                  '__typename': 'Address',
                 },
-                '__typename': 'PhysicalStore'
-              }
+                '__typename': 'PhysicalStore',
+              },
             ],
-            '__typename': 'Query'
+            '__typename': 'Query',
           },
           source: QueryResultSource.network,
           options: options,
@@ -105,10 +105,11 @@ void main() {
       expect(find.descendant(of: acceptingStoreSummary, matching: find.text('Test description')), findsOneWidget);
     });
 
-    testWidgets('shows a hint to the user if the store is not available anymore and offers the ability to remove it',
-        (WidgetTester tester) async {
+    testWidgets('shows a hint to the user if the store is not available anymore and offers the ability to remove it', (
+      WidgetTester tester,
+    ) async {
       SharedPreferences.setMockInitialValues(<String, List<String>>{
-        'favorites': ['{"storeId":1,"storeName":"Test store","categoryId":9}']
+        'favorites': ['{"storeId":1,"storeName":"Test store","categoryId":9}'],
       });
 
       when(() => mockClient.query(any<Options$Query$PhysicalStoreById>())).thenAnswer((invocation) async {
@@ -116,7 +117,7 @@ void main() {
         return QueryResult(
           data: {
             'stores': [null],
-            '__typename': 'Query'
+            '__typename': 'Query',
           },
           source: QueryResultSource.network,
           options: options,
@@ -131,8 +132,10 @@ void main() {
       final removedStoreSummary = find.byType(RemovedStoreSummary);
       expect(removedStoreSummary, findsOneWidget);
       expect(find.descendant(of: removedStoreSummary, matching: find.text('Test store')), findsOneWidget);
-      expect(find.descendant(of: removedStoreSummary, matching: find.text(t.store.acceptingStoreNotAvailable)),
-          findsOneWidget);
+      expect(
+        find.descendant(of: removedStoreSummary, matching: find.text(t.store.acceptingStoreNotAvailable)),
+        findsOneWidget,
+      );
 
       await tester.tap(find.byType(RemovedStoreSummary));
       await tester.pumpAndSettle();
@@ -144,8 +147,10 @@ void main() {
 
       final removedStoreContent = find.byType(RemovedStoreContent);
       expect(removedStoreContent, findsOneWidget);
-      expect(find.descendant(of: removedStoreContent, matching: find.text(t.store.acceptingStoreNotAvailable)),
-          findsOneWidget);
+      expect(
+        find.descendant(of: removedStoreContent, matching: find.text(t.store.acceptingStoreNotAvailable)),
+        findsOneWidget,
+      );
       expect(find.descendant(of: removedStoreContent, matching: find.text(t.store.removeDescription)), findsOneWidget);
       expect(find.widgetWithText(OutlinedButton, t.store.removeButtonText), findsOneWidget);
 

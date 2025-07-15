@@ -14,12 +14,13 @@ class FloatingActionMapBar extends StatelessWidget {
   final bool followUserLocation;
   final int currentTabIndex;
 
-  const FloatingActionMapBar(
-      {super.key,
-      required this.bringCameraToUser,
-      required this.selectedPhysicalStoreId,
-      required this.currentTabIndex,
-      required this.followUserLocation});
+  const FloatingActionMapBar({
+    super.key,
+    required this.bringCameraToUser,
+    required this.selectedPhysicalStoreId,
+    required this.currentTabIndex,
+    required this.followUserLocation,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,7 @@ class FloatingActionMapBar extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  LocationButton(bringCameraToUser: bringCameraToUser, followUserLocation: followUserLocation)
+                  LocationButton(bringCameraToUser: bringCameraToUser, followUserLocation: followUserLocation),
                 ],
               ),
               AnimatedSize(
@@ -49,7 +50,7 @@ class FloatingActionMapBar extends StatelessWidget {
                         : null,
                   ),
                 ),
-              )
+              ),
             ]
           : [],
     );
