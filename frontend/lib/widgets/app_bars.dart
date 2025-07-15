@@ -1,6 +1,6 @@
 /// These widgets wrap the material AppBar into sized box widgets which can be
 /// used like the apple navigation bars.
-library navigation_bars;
+library;
 
 import 'package:ehrenamtskarte/debouncer.dart';
 import 'package:flutter/material.dart';
@@ -212,11 +212,11 @@ class SearchSliverAppBarState extends State<SearchSliverAppBar> {
     textEditingController.dispose();
   }
 
-  _onSearchFieldTextChanged(String text) {
+  void _onSearchFieldTextChanged(String text) {
     widget.debouncer.run(() => widget.onChanged(text.trim()));
   }
 
-  _clearInput() {
+  void _clearInput() {
     textEditingController.clear();
     _onSearchFieldTextChanged(textEditingController.value.text);
   }
