@@ -1,6 +1,6 @@
 import { Colors } from '@blueprintjs/core'
 import ForwardToInboxIcon from '@mui/icons-material/ForwardToInbox'
-import { Button } from '@mui/material'
+import { Box, Button } from '@mui/material'
 import { TFunction } from 'i18next'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -13,7 +13,7 @@ import EmailLink from '../../EmailLink'
 import { VerificationStatus } from '../types'
 import { verificationStatus } from '../utils'
 import { isEmailValid } from '../utils/verificationHelper'
-import VerificationIndicator from './VerificationIndicator'
+import { VerificationIcon } from './VerificationIcon'
 
 const ListItem = styled.li<{ $color: string }>`
   position: relative;
@@ -22,12 +22,6 @@ const ListItem = styled.li<{ $color: string }>`
 `
 
 export type Verification = Omit<ApplicationVerificationView, 'contactName'>
-
-type VerificationListItemProps = {
-  verification: Verification
-  applicationId: number
-  showResendApprovalEmailButton: boolean
-}
 
 const getStatusMetaData = (verification: Verification, t: TFunction): { text: string; color: string } => {
   const unverifiedText = verification.rejectedDate
@@ -46,7 +40,11 @@ const VerificationListItem = ({
   verification,
   applicationId,
   showResendApprovalEmailButton,
-}: VerificationListItemProps): ReactElement => {
+}: {
+  verification: Verification
+  applicationId: number
+  showResendApprovalEmailButton: boolean
+}): ReactElement => {
   const { t } = useTranslation('applicationsOverview')
   const appToaster = useAppToaster()
   const projectId = useContext(ProjectConfigContext).projectId
@@ -95,7 +93,9 @@ const VerificationListItem = ({
           <tr>
             <td>{t('status')}:</td>
             <td>
-              <VerificationIndicator status={status} text={` ${text}`} />
+              <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1 }}>
+                <VerificationIcon status={status} /> {text}
+              </Box>
             </td>
           </tr>
         </tbody>

@@ -1,6 +1,5 @@
 /* eslint-disable react/destructuring-assignment */
 import { Cancel, CheckCircle, Help } from '@mui/icons-material'
-import { Box } from '@mui/material'
 import React, { ReactElement } from 'react'
 
 import { VerificationStatus } from '../types'
@@ -16,7 +15,7 @@ const colorByStatus = (status: VerificationStatus): 'success' | 'warning' | 'err
   }
 }
 
-const Icon = (p: { status: VerificationStatus }): ReactElement => {
+export const VerificationIcon = (p: { status: VerificationStatus }): ReactElement => {
   const color = colorByStatus(p.status)
 
   switch (p.status) {
@@ -28,12 +27,3 @@ const Icon = (p: { status: VerificationStatus }): ReactElement => {
       return <Cancel color={color} />
   }
 }
-
-const VerificationIndicator = ({ status, text }: { status: VerificationStatus; text?: string }): ReactElement => (
-  <Box sx={{ display: 'inline-flex', alignItems: 'center' }} data-testid={`indicator-${status}`}>
-    <Icon status={status} />
-    {text}
-  </Box>
-)
-
-export default VerificationIndicator
