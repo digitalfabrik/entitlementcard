@@ -17,12 +17,15 @@ type StatisticsBarChartProps = {
   statistic: CardStatisticsResultModel
 }
 
+const CHART_MARGIN = 30
+const OVERLAP_HEIGHT = 10
+
 const CustomAxisLines = ({ innerWidth, innerHeight }: BarCustomLayerProps<CardStatisticsResultModel>) => (
   <>
     {/* Bottom Axis Line */}
     <line
       x1={0}
-      x2={innerWidth}
+      x2={innerWidth + OVERLAP_HEIGHT}
       y1={innerHeight}
       y2={innerHeight}
       style={{
@@ -34,7 +37,7 @@ const CustomAxisLines = ({ innerWidth, innerHeight }: BarCustomLayerProps<CardSt
     <line
       x1={0}
       x2={0}
-      y1={20}
+      y1={CHART_MARGIN - OVERLAP_HEIGHT}
       y2={innerHeight}
       style={{
         stroke: '#000',
@@ -82,7 +85,7 @@ const StatisticsBarChart = ({ statistic }: StatisticsBarChartProps): ReactElemen
         tooltip={StatisticsBarTooltip}
         keys={statisticKeys}
         indexBy='region'
-        margin={{ top: 30, right: 30, bottom: 30, left: 30 }}
+        margin={{ top: CHART_MARGIN, right: CHART_MARGIN, bottom: CHART_MARGIN, left: CHART_MARGIN }}
         innerPadding={4.0}
         padding={0.2}
         enableGridY={false}
