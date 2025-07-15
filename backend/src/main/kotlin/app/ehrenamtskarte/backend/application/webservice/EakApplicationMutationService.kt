@@ -8,8 +8,8 @@ import app.ehrenamtskarte.backend.application.database.repos.ApplicationReposito
 import app.ehrenamtskarte.backend.application.webservice.schema.create.Application
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationView
 import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationHandler
-import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationJsonExtensions.getApplicantEmail
-import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationJsonExtensions.getApplicantName
+import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantEmail
+import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantName
 import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.auth.service.Authorizer.mayDeleteApplicationsInRegion

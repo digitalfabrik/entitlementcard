@@ -1,10 +1,10 @@
 package app.ehrenamtskarte.backend.freinet.webservice
 
 import app.ehrenamtskarte.backend.application.database.ApplicationEntity
-import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationJsonExtensions.getApplicantDateOfBirth
-import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationJsonExtensions.getApplicantFirstName
-import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationJsonExtensions.getApplicantLastName
-import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationJsonExtensions.getPersonalDataNode
+import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantDateOfBirth
+import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantFirstName
+import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantLastName
+import app.ehrenamtskarte.backend.application.webservice.utils.getPersonalDataNode
 import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.common.utils.devWarn
