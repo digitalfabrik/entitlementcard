@@ -7,6 +7,7 @@ import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.Environment
 import app.ehrenamtskarte.backend.map.webservice.MapStyleHandler
 import app.ehrenamtskarte.backend.userdata.webservice.UserImportHandler
+import backend.BuildConfig
 import io.javalin.Javalin
 import io.javalin.http.staticfiles.Location
 import java.io.File
@@ -91,5 +92,6 @@ class WebService {
         }
         println("Server is running at http://$host:$port")
         println("Goto http://$host:$port/graphiql/ for a graphical editor")
+        println("Current backend version: ${BuildConfig.VERSION_NAME}, sha1: ${BuildConfig.COMMIT_HASH}")
     }
 }

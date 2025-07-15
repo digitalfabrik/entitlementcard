@@ -23,8 +23,7 @@ steps:
       # Use `assemble` instead of `build` to not run tests
       # Provide sentry auth token for build.gradle.kts
       # Use production environment to build with sentry
-      # Use version name for sentry releases
-      command: SENTRY_AUTH_TOKEN=$SENTRY_BACKEND_AUTH_TOKEN VERSION_NAME=${NEW_VERSION_NAME} ./gradlew assemble -Denv=prod
+      command: SENTRY_AUTH_TOKEN=$SENTRY_BACKEND_AUTH_TOKEN ./gradlew assemble -Denv=prod
   - save_cache:
       key: v1-gradle-{{ checksum "build.gradle.kts" }}
       paths:
