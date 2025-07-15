@@ -41,7 +41,7 @@ describe('VerificationListItem', () => {
     expect(getByText('E-Mail:')).toBeTruthy()
     expect(getByText('erika.musterfrau@posteo.de')).toBeTruthy()
     expect(getByText('Status:')).toBeTruthy()
-    expect(getByText('icon Widersprochen am 16.1.2025, 16:22:52')).toBeTruthy()
+    expect(getByText('Widersprochen am 16.1.2025, 16:22:52')).toBeTruthy()
 
     expect(queryByText('Anfrage erneut senden')).toBeNull()
   })
@@ -54,7 +54,7 @@ describe('VerificationListItem', () => {
     expect(getByText('E-Mail:')).toBeTruthy()
     expect(getByText('erika.musterfrau@posteo.de')).toBeTruthy()
     expect(getByText('Status:')).toBeTruthy()
-    expect(getByText('icon Ausstehend')).toBeTruthy()
+    expect(getByText('Ausstehend')).toBeTruthy()
 
     const sendApprovalEmailButton = getByText('Anfrage erneut senden')
     expect(sendApprovalEmailButton).toBeInTheDocument()
@@ -69,7 +69,7 @@ describe('VerificationListItem', () => {
     expect(getByText('E-Mail:')).toBeTruthy()
     expect(getByText('erika.musterfrau@posteo.de')).toBeTruthy()
     expect(getByText('Status:')).toBeTruthy()
-    expect(getByText('icon Bestätigt am 16.1.2025, 16:22:52')).toBeTruthy()
+    expect(getByText('Bestätigt am 16.1.2025, 16:22:52')).toBeTruthy()
 
     expect(queryByText('Anfrage erneut senden')).toBeNull()
   })
