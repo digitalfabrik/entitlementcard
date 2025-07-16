@@ -154,7 +154,7 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
                                       content: Text(t.common.unknownError),
                                     ),
                                   );
-                                  // rethrow;
+                                  rethrow;
                                 }
                               }
                             : null,

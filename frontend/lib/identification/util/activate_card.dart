@@ -47,6 +47,11 @@ Future<bool> activateCard(
     overwriteExisting: overwriteExisting,
   );
 
+  if (!context.mounted) {
+    return false;
+  }
+
+  debugPrint('Card Activation: Server returned activation state: ${activationResult.activationState}');
   switch (activationResult.activationState) {
     case Enum$ActivationState.success:
       if (activationResult.totpSecret == null) {
@@ -75,42 +80,30 @@ Future<bool> activateCard(
       }
       return true;
     case Enum$ActivationState.revoked:
-      if (context.mounted) {
-        await ActivationErrorDialog.showErrorDialog(context, t.identification.codeRevoked);
-      }
+      await ActivationErrorDialog.showErrorDialog(context, t.identification.codeRevoked);
       return false;
     case Enum$ActivationState.not_found:
-      if (context.mounted) {
-        await ActivationErrorDialog.showErrorDialog(context, t.identification.cardInvalid);
-      }
+      await ActivationErrorDialog.showErrorDialog(context, t.identification.cardInvalid);
       return false;
     case Enum$ActivationState.wrong_secret:
-      if (context.mounted) {
-        final message =
-            source == ActivationSource.qrScanner ? t.identification.codeInvalid : t.deeplinkActivation.invalidCode;
-        await ActivationErrorDialog.showErrorDialog(context, message);
-      }
+      final message =
+          source == ActivationSource.qrScanner ? t.identification.codeInvalid : t.deeplinkActivation.invalidCode;
+      await ActivationErrorDialog.showErrorDialog(context, message);
       return false;
     case Enum$ActivationState.expired:
-      if (context.mounted) {
-        await ActivationErrorDialog.showErrorDialog(context, t.identification.cardExpiredBeforeActivation);
-      }
+      await ActivationErrorDialog.showErrorDialog(context, t.identification.cardExpiredBeforeActivation);
       return false;
     case Enum$ActivationState.did_not_overwrite_existing:
       if (overwriteExisting) {
         throw const ActivationDidNotOverwriteExisting();
       }
       if (isAlreadyInList(userCodesModel.userCodes, activationCode.info, activationCode.pepper)) {
-        if (context.mounted) {
-          await ActivationErrorDialog.showErrorDialog(context, t.deeplinkActivation.alreadyExists);
-        }
+        await ActivationErrorDialog.showErrorDialog(context, t.deeplinkActivation.alreadyExists);
         return false;
       }
       debugPrint(
           'Card Activation: Card had been activated already and was not overwritten. Waiting for user feedback.');
-      if (context.mounted &&
-          await ActivationOverwriteExistingDialog.showActivationOverwriteExistingDialog(context) &&
-          context.mounted) {
+      if (await ActivationOverwriteExistingDialog.showActivationOverwriteExistingDialog(context) && context.mounted) {
         return await activateCard(context, activationCode, source: source, overwriteExisting: true);
       } else {
         return false;

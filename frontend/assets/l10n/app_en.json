@@ -97,7 +97,7 @@
     "cardAlreadyActivated": "The scanned QR code has already been activated.",
     "cardExpired": "Your card has expired. You can apply for renewal under \"More actions\"",
     "cardExpiredBeforeActivation": "Your card has already expired and can no longer be activated. Please submit a new application.",
-    "cardInvalid": "Your card is invalid. It has either been revoked or activated on another device.",
+    "cardInvalid": "Your card was not found. Please apply for it again.",
     "cardNotYetValid": "The validity period of your card has not yet started.",
     "checkFailed": "Your card could not be verified. Please make sure you have an internet connection and try again.",
     "checkRequired": "Verification necessary",
