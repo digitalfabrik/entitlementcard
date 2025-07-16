@@ -1,4 +1,4 @@
-import { Card, H3, NonIdealState } from '@blueprintjs/core'
+import { Card, H3 } from '@blueprintjs/core'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -10,9 +10,10 @@ import {
   useGetUsersInProjectQuery,
   useGetUsersInRegionQuery,
 } from '../../generated/graphql'
+import AlertBox from '../../mui-modules/base/AlertBox'
+import getQueryResult from '../../mui-modules/util/getQueryResult'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import StandaloneCenter from '../StandaloneCenter'
-import getQueryResult from '../util/getQueryResult'
 import UsersTable from './UsersTable'
 
 const UsersTableContainer = ({ children, title }: { children: ReactElement; title: string }) => (
@@ -85,7 +86,7 @@ const ManageUsersController = (): ReactElement => {
   if (role === Role.ProjectAdmin) {
     return <ManageProjectUsers />
   }
-  return <NonIdealState icon='cross' title={t('notAuthorized')} description={t('notAuthorizedToManageUsers')} />
+  return <AlertBox severity='error' title={t('notAuthorized')} description={t('notAuthorizedToManageUsers')} />
 }
 
 export default ManageUsersController

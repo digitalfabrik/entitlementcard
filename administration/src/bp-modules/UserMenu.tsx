@@ -5,6 +5,8 @@ import { NavLink, useNavigate } from 'react-router'
 import styled from 'styled-components'
 
 import { useWhoAmI } from '../WhoAmIProvider'
+import { Role } from '../generated/graphql'
+import RenderGuard from '../mui-modules/components/RenderGuard'
 import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
 import roleToText from './users/utils/roleToText'
 
@@ -58,11 +60,13 @@ const UserMenu = ({ onSignOut }: UserMenuProps): ReactElement => {
       <NavLink to='/user-settings'>
         <MenuItem minimal icon='settings' text={t('userSettings')} />
       </NavLink>
-      {projectConfig.activityLogConfig && (
+      <RenderGuard
+        condition={projectConfig.activityLogConfig !== undefined}
+        allowedRoles={[Role.RegionManager, Role.RegionAdmin]}>
         <NavLink to='/activity-log'>
           <MenuItem minimal icon='manually-entered-data' text={t('activityLog')} />
         </NavLink>
-      )}
+      </RenderGuard>
       <MenuItem minimal icon='log-out' text={t('logout')} onClick={signOutAndRedirect} />
     </MenuContent>
   )

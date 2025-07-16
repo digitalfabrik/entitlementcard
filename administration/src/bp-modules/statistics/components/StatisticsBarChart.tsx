@@ -1,10 +1,10 @@
-import { NonIdealState } from '@blueprintjs/core'
 import { ResponsiveBar } from '@nivo/bar'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import { CardStatisticsResultModel } from '../../../generated/graphql'
+import AlertBox from '../../../mui-modules/base/AlertBox'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import StatisticsBarTooltip from './StatisticsBarTooltip'
 
@@ -24,8 +24,8 @@ const StatisticsBarChart = ({ statistics }: StatisticsBarChartProps): ReactEleme
 
   if (statistics.length === 0 || !cardStatistics.enabled) {
     return (
-      <NonIdealState
-        icon='warning-sign'
+      <AlertBox
+        severity='warning'
         title={t('noStatisticsAvailable')}
         description={t('noStatisticsAvailableDescription')}
       />

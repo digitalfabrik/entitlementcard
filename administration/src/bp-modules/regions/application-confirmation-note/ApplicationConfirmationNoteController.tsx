@@ -6,8 +6,8 @@ import {
   useGetApplicationConfirmationNoteInformationQuery,
   useUpdateApplicationConfirmationNoteMutation,
 } from '../../../generated/graphql'
+import getQueryResult from '../../../mui-modules/util/getQueryResult'
 import { useAppToaster } from '../../AppToaster'
-import getQueryResult from '../../util/getQueryResult'
 import ApplicationConfirmationNoteCard from './ApplicationConfirmationNoteCard'
 
 type ApplicationConfirmationNoteControllerProps = {

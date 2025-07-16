@@ -5,11 +5,11 @@ import { Link, useNavigate, useSearchParams } from 'react-router'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useCheckPasswordResetLinkQuery, useResetPasswordMutation } from '../../generated/graphql'
+import getQueryResult from '../../mui-modules/util/getQueryResult'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { useAppToaster } from '../AppToaster'
 import PasswordInput from '../PasswordInput'
 import StandaloneCenter from '../StandaloneCenter'
-import getQueryResult from '../util/getQueryResult'
 import validateNewPasswordInput from './validateNewPasswordInput'
 
 const ResetPasswordController = (): ReactElement => {

@@ -1,5 +1,5 @@
 import { Delete } from '@mui/icons-material'
-import { Button, Card, CircularProgress, Divider, Typography } from '@mui/material'
+import { Button, Card, Divider, Typography } from '@mui/material'
 import { styled } from '@mui/system'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
@@ -14,6 +14,7 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import ConfirmDialog from '../application/ConfirmDialog'
+import CenteredCircularProgress from '../base/CenteredCircularProgress'
 
 const ApplicationViewCard = styled(Card)`
   @media screen and (min-width: 600px) {
@@ -75,7 +76,7 @@ const ApplicationApplicantView = ({
   }
 
   if (withdrawalLoading) {
-    return <CircularProgress style={{ margin: 'auto' }} />
+    return <CenteredCircularProgress />
   }
 
   return (

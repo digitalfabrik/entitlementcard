@@ -1,4 +1,3 @@
-import { AutoAwesome } from '@mui/icons-material'
 import { Container } from '@mui/material'
 import { TFunction } from 'i18next'
 import { AnimatePresence, motion } from 'motion/react'
@@ -6,8 +5,7 @@ import React, { ReactElement, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
-import NonIdealState from '../../mui-modules/NonIdealState'
-import StandaloneCenter from '../StandaloneCenter'
+import AlertBox from '../../mui-modules/base/AlertBox'
 import ApplicationCard from './ApplicationCard'
 import ApplicationStatusBar from './ApplicationStatusBar'
 import usePrintApplication from './hooks/usePrintApplication'
@@ -102,15 +100,13 @@ const ApplicationsOverview = ({ applications }: { applications: GetApplicationsT
           </AnimatePresence>
         </ApplicationList>
       ) : (
-        <StandaloneCenter>
-          <NonIdealState
-            title={t('noApplicationsOfType', { status: getEmptyApplicationsListStatusDescription(activeBarItem, t) })}
-            icon={<AutoAwesome fontSize='large' />}
-            description={t('noApplicationsOfTypeDescription', {
-              status: getEmptyApplicationsListStatusDescription(activeBarItem, t),
-            })}
-          />
-        </StandaloneCenter>
+        <AlertBox
+          severity='info'
+          title={t('noApplicationsOfType', { status: getEmptyApplicationsListStatusDescription(activeBarItem, t) })}
+          description={t('noApplicationsOfTypeDescription', {
+            status: getEmptyApplicationsListStatusDescription(activeBarItem, t),
+          })}
+        />
       )}
     </Container>
   )

@@ -1,10 +1,10 @@
-import { NonIdealState } from '@blueprintjs/core'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useWhoAmI } from '../../../WhoAmIProvider'
 import { Role, useGetDataPolicyQuery } from '../../../generated/graphql'
-import getQueryResult from '../../util/getQueryResult'
+import RenderGuard from '../../../mui-modules/components/RenderGuard'
+import getQueryResult from '../../../mui-modules/util/getQueryResult'
 import DataPrivacyOverview from './DataPrivacyOverview'
 
 const DataPrivacyController = ({ regionId }: { regionId: number }) => {
@@ -23,12 +23,17 @@ const DataPrivacyController = ({ regionId }: { regionId: number }) => {
 }
 
 const DataPrivacyWithRegion = (): ReactElement => {
-  const { region, role } = useWhoAmI().me
+  const { region } = useWhoAmI().me
   const { t } = useTranslation('errors')
-  if (!region || role !== Role.RegionAdmin) {
-    return <NonIdealState icon='cross' title={t('notAuthorized')} description={t('notAuthorizedForDataPrivacy')} />
-  }
-  return <DataPrivacyController regionId={region.id} />
+
+  return (
+    <RenderGuard
+      allowedRoles={[Role.RegionAdmin]}
+      condition={region !== undefined}
+      error={{ description: t('notAuthorizedForDataPrivacy') }}>
+      <DataPrivacyController regionId={region!.id} />
+    </RenderGuard>
+  )
 }
 
 export default DataPrivacyWithRegion

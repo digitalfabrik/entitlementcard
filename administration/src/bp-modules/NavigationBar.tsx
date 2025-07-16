@@ -6,6 +6,7 @@ import styled from 'styled-components'
 
 import { useWhoAmI } from '../WhoAmIProvider'
 import { Role } from '../generated/graphql'
+import RenderGuard from '../mui-modules/components/RenderGuard'
 import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
 import UserMenu from './UserMenu'
 import dimensions from './constants/dimensions'
@@ -44,47 +45,48 @@ const Navigation = ({ onSignOut }: Props): ReactElement => {
           </NavLink>
         </Navbar.Heading>
         <Navbar.Divider />
-        {role === Role.RegionAdmin || role === Role.RegionManager ? (
-          <>
-            {config.applicationFeature ? (
-              <NavLink to='/applications'>
-                <Button minimal icon='form' text={t('inComingApplications')} />
-              </NavLink>
-            ) : null}
-            {config.cardCreation ? (
-              <NavLink to='/cards'>
-                <Button minimal icon='id-number' text={t('createCards')} />
-              </NavLink>
-            ) : null}
-          </>
-        ) : null}
-        {role === Role.ProjectAdmin || role === Role.RegionAdmin ? (
-          <>
-            <NavLink to='/users'>
-              <Button minimal icon='people' text={t('manageUsers')} />
+
+        <RenderGuard allowedRoles={[Role.RegionAdmin, Role.RegionManager]}>
+          {config.applicationFeature ? (
+            <NavLink to='/applications'>
+              <Button minimal icon='form' text={t('inComingApplications')} />
             </NavLink>
-            {config.cardStatistics.enabled ? (
-              <NavLink to='/statistics'>
-                <Button minimal icon='stacked-chart' text={t('statistics')} />
-              </NavLink>
-            ) : null}
-          </>
-        ) : null}
-        {role === Role.RegionAdmin && config.applicationFeature ? (
+          ) : null}
+          {config.cardCreation ? (
+            <NavLink to='/cards'>
+              <Button minimal icon='id-number' text={t('createCards')} />
+            </NavLink>
+          ) : null}
+        </RenderGuard>
+
+        <RenderGuard allowedRoles={[Role.RegionAdmin, Role.RegionManager]}>
+          <NavLink to='/users'>
+            <Button minimal icon='people' text={t('manageUsers')} />
+          </NavLink>
+          {config.cardStatistics.enabled ? (
+            <NavLink to='/statistics'>
+              <Button minimal icon='stacked-chart' text={t('statistics')} />
+            </NavLink>
+          ) : null}
+        </RenderGuard>
+
+        <RenderGuard allowedRoles={[Role.RegionAdmin]} condition={config.applicationFeature !== undefined}>
           <NavLink to='/region'>
             <Button minimal icon='path-search' text={t('manageRegion')} />
           </NavLink>
-        ) : null}
-        {canSeeProjectSettings ? (
+        </RenderGuard>
+
+        <RenderGuard condition={canSeeProjectSettings}>
           <NavLink to='/project'>
             <Button minimal icon='projects' text={t('manageProject')} />
           </NavLink>
-        ) : null}
-        {role === Role.ProjectStoreManager ? (
+        </RenderGuard>
+
+        <RenderGuard allowedRoles={[Role.ProjectStoreManager]}>
           <NavLink to='/stores'>
             <Button minimal icon='shop' text={t('manageStores')} />
           </NavLink>
-        ) : null}
+        </RenderGuard>
       </Navbar.Group>
       <Navbar.Group align={Alignment.RIGHT}>
         <UserMenu onSignOut={onSignOut} />

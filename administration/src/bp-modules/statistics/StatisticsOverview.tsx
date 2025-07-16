@@ -1,8 +1,8 @@
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useWhoAmI } from '../../WhoAmIProvider'
 import { CardStatisticsResultModel, Region, Role } from '../../generated/graphql'
+import RenderGuard from '../../mui-modules/components/RenderGuard'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import downloadDataUri from '../../util/downloadDataUri'
 import { useAppToaster } from '../AppToaster'
@@ -18,7 +18,6 @@ type StatisticsOverviewProps = {
 }
 
 const StatisticsOverview = ({ statistics, onApplyFilter, region }: StatisticsOverviewProps): ReactElement => {
-  const { role } = useWhoAmI().me
   const appToaster = useAppToaster()
   const { cardStatistics } = useContext(ProjectConfigContext)
   const { t } = useTranslation('statistics')
@@ -35,7 +34,9 @@ const StatisticsOverview = ({ statistics, onApplyFilter, region }: StatisticsOve
 
   return (
     <>
-      {role === Role.ProjectAdmin && <StatisticsTotalCardsCount statistics={statistics} />}
+      <RenderGuard allowedRoles={[Role.ProjectAdmin]}>
+        <StatisticsTotalCardsCount statistics={statistics} />
+      </RenderGuard>
       <StatisticsBarChart statistics={statistics} />
       <StatisticsFilterBar
         onApplyFilter={onApplyFilter}

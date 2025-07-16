@@ -2,7 +2,7 @@ import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
-import { CircularProgress, DialogActions, Typography } from '@mui/material'
+import { DialogActions, Typography } from '@mui/material'
 import { SnackbarProvider, useSnackbar } from 'notistack'
 import React, { ReactElement, useCallback, useContext, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
@@ -11,6 +11,7 @@ import styled from 'styled-components'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useAddEakApplicationMutation, useGetRegionsQuery } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import CenteredCircularProgress from '../base/CenteredCircularProgress'
 import getQueryResult from '../util/getQueryResult'
 import ApplicationErrorBoundary from './ApplicationErrorBoundary'
 import DiscardAllInputsButton from './DiscardAllInputsButton'
@@ -67,7 +68,7 @@ const ApplyController = (): React.ReactElement | null => {
   const discardAll = useCallback(() => setState(() => ApplicationForm.initialState), [setState])
 
   if (status === 'loading' || !arrayBufferManagerInitialized) {
-    return <CircularProgress style={{ margin: 'auto' }} />
+    return <CenteredCircularProgress />
   }
 
   if (!regionsQueryResult.successful) {

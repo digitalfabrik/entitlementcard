@@ -1,10 +1,11 @@
-import { Alert, Card } from '@mui/material'
+import { Card } from '@mui/material'
 import { styled } from '@mui/system'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
 
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import AlertBox from '../base/AlertBox'
 import ActivationPageContent from './components/ActivationPageContent'
 
 const CardContainer = styled(Card)`
@@ -22,17 +23,13 @@ const StandaloneHorizontalCenter = styled('div')`
   margin-top: 10%;
 `
 
-const CenteredMessage = styled(Alert)`
-  margin: auto;
-`
-
 const ActivationPage = (): ReactElement | null => {
   const { t } = useTranslation('activation')
   const config = useContext(ProjectConfigContext)
   const { hash } = useLocation()
 
   if (!hash) {
-    return <CenteredMessage severity='error'>{t('invalidLink')}</CenteredMessage>
+    return <AlertBox severity='error' description={t('invalidLink')} />
   }
 
   return (

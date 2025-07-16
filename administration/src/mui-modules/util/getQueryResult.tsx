@@ -1,15 +1,9 @@
 import { OperationVariables, QueryResult } from '@apollo/client'
-import { CircularProgress, styled } from '@mui/material'
 import React, { ReactElement } from 'react'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
-import ErrorHandler from '../ErrorHandler'
-
-const LoadingSpinner = styled(CircularProgress)`
-  position: fixed;
-  z-index: 999;
-  top: 50%;
-`
+import AlertBox from '../base/AlertBox'
+import CenteredCircularProgress from '../base/CenteredCircularProgress'
 
 type QueryHandlerResult<Data> =
   | {
@@ -22,19 +16,22 @@ type QueryHandlerResult<Data> =
     }
 
 const getQueryResult = <Data, Variables extends OperationVariables>(
-  queryResult: QueryResult<Data, Variables>
+  queryResult: QueryResult<Data, Variables>,
+  errorComponent?: ReactElement
 ): QueryHandlerResult<Data> => {
   const { error, loading, data, refetch } = queryResult
-
   if (loading) {
-    return { successful: false, component: <LoadingSpinner /> }
+    return { successful: false, component: <CenteredCircularProgress /> }
   }
   if (error) {
     const { title, description } = getMessageFromApolloError(error)
-    return { successful: false, component: <ErrorHandler title={title} description={description} refetch={refetch} /> }
+    return {
+      successful: false,
+      component: errorComponent ?? <AlertBox title={title} description={description} onAction={refetch} />,
+    }
   }
   if (data === undefined) {
-    return { successful: false, component: <ErrorHandler refetch={refetch} /> }
+    return { successful: false, component: <AlertBox onAction={refetch} /> }
   }
   return { successful: true, data }
 }
