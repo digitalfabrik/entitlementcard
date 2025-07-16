@@ -189,14 +189,16 @@ class _WarningText extends StatelessWidget {
     if (status == DeepLinkActivationStatus.valid) {
       return Container();
     }
-    return Padding(
-        padding: EdgeInsets.symmetric(vertical: 8),
-        child: Column(
-          children: [
-            Icon(Icons.warning, color: theme.colorScheme.secondary),
-            Text(text, textAlign: TextAlign.center, style: theme.textTheme.bodyMedium)
-          ],
-        ));
+    return Center(
+      child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 8),
+          child: Column(
+            children: [
+              Icon(Icons.warning, color: theme.colorScheme.secondary),
+              Text(text, textAlign: TextAlign.center, style: theme.textTheme.bodyMedium)
+            ],
+          )),
+    );
   }
 }
 
