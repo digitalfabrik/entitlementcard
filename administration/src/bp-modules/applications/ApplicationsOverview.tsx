@@ -1,13 +1,11 @@
 import { AutoAwesome } from '@mui/icons-material'
-import { Container } from '@mui/material'
+import { Box, Stack } from '@mui/material'
 import { TFunction } from 'i18next'
 import { AnimatePresence, motion } from 'motion/react'
 import React, { ReactElement, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
 import NonIdealState from '../../mui-modules/NonIdealState'
-import StandaloneCenter from '../StandaloneCenter'
 import ApplicationCard from './ApplicationCard'
 import ApplicationStatusBar from './ApplicationStatusBar'
 import usePrintApplication from './hooks/usePrintApplication'
@@ -37,14 +35,6 @@ export const barItems: ApplicationStatusBarItemType[] = [
   },
 ]
 
-const ApplicationList = styled.div`
-  display: flex;
-  flex-grow: 1;
-  flex-direction: column;
-  height: 100%;
-  gap: 16px;
-`
-
 const getEmptyApplicationsListStatusDescription = (activeBarItem: ApplicationStatusBarItemType, t: TFunction): string =>
   activeBarItem.status !== undefined ? `${t(activeBarItem.title).toLowerCase()}en` : ''
 
@@ -69,15 +59,24 @@ const ApplicationsOverview = ({ applications }: { applications: GetApplicationsT
   )
 
   return (
-    <Container sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', maxWidth: '90%', width: '1000px' }}>
-      <ApplicationStatusBar
-        applications={updatedApplications}
-        activeBarItem={activeBarItem}
-        setActiveBarItem={setActiveBarItem}
-        barItems={barItems}
-      />
-      {filteredApplications.length > 0 ? (
-        <ApplicationList>
+    <Stack
+      sx={{
+        flexGrow: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        overflowY: 'scroll',
+        width: '100%',
+        padding: 2,
+      }}>
+      <Stack sx={{ maxWidth: '90%', width: '1000px', height: 'fit-content', gap: 2 }}>
+        <ApplicationStatusBar
+          applications={updatedApplications}
+          activeBarItem={activeBarItem}
+          setActiveBarItem={setActiveBarItem}
+          barItems={barItems}
+        />
+        {filteredApplications.length > 0 ? (
           <AnimatePresence initial={false}>
             {filteredApplications.map(application => (
               <motion.div
@@ -100,19 +99,19 @@ const ApplicationsOverview = ({ applications }: { applications: GetApplicationsT
               </motion.div>
             ))}
           </AnimatePresence>
-        </ApplicationList>
-      ) : (
-        <StandaloneCenter>
-          <NonIdealState
-            title={t('noApplicationsOfType', { status: getEmptyApplicationsListStatusDescription(activeBarItem, t) })}
-            icon={<AutoAwesome fontSize='large' />}
-            description={t('noApplicationsOfTypeDescription', {
-              status: getEmptyApplicationsListStatusDescription(activeBarItem, t),
-            })}
-          />
-        </StandaloneCenter>
-      )}
-    </Container>
+        ) : (
+          <Box sx={{ display: 'flex', flexGrow: 1, alignItems: 'center' }}>
+            <NonIdealState
+              title={t('noApplicationsOfType', { status: getEmptyApplicationsListStatusDescription(activeBarItem, t) })}
+              icon={<AutoAwesome fontSize='large' />}
+              description={t('noApplicationsOfTypeDescription', {
+                status: getEmptyApplicationsListStatusDescription(activeBarItem, t),
+              })}
+            />
+          </Box>
+        )}
+      </Stack>
+    </Stack>
   )
 }
 

@@ -1,18 +1,13 @@
-import { ButtonGroup, NonIdealState } from '@blueprintjs/core'
+import { NonIdealState } from '@blueprintjs/core'
+import { Stack } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
-import styled from 'styled-components'
 
 import { useWhoAmI } from '../../WhoAmIProvider'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import StandaloneCenter from '../StandaloneCenter'
 import { FREINET_PARAM } from '../constants'
 import CardFormButton from './CardFormButton'
-
-const Buttons = styled(ButtonGroup)`
-  width: 400px;
-`
 
 const CreateCardsController = (): ReactElement => {
   const { region } = useWhoAmI().me
@@ -31,8 +26,8 @@ const CreateCardsController = (): ReactElement => {
   }
 
   return (
-    <StandaloneCenter>
-      <Buttons vertical>
+    <Stack sx={{ flexGrow: 1, alignItems: 'center', justifyContent: 'safe center', overflowY: 'auto' }}>
+      <Stack sx={{ width: '400px', padding: 2, gap: 2 }}>
         <CardFormButton text={t('createSingleCards')} icon='add' onClick={() => navigate('./add')} />
         <CardFormButton text={t('importMultipleCards')} icon='upload' onClick={() => navigate('./import')} />
         {freinetCSVImportEnabled && (
@@ -42,8 +37,8 @@ const CreateCardsController = (): ReactElement => {
             onClick={() => navigate(`./import?${FREINET_PARAM}=true`)}
           />
         )}
-      </Buttons>
-    </StandaloneCenter>
+      </Stack>
+    </Stack>
   )
 }
 
