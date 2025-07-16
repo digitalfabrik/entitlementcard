@@ -26,11 +26,7 @@ class ActivationCodeScannerPage extends StatelessWidget {
     return Column(
       children: [
         CustomAppBar(title: t.identification.activateTitle),
-        Expanded(
-          child: QrCodeScannerPage(
-            onCodeScanned: (code) async => _onCodeScanned(context, code),
-          ),
-        ),
+        Expanded(child: QrCodeScannerPage(onCodeScanned: (code) async => _onCodeScanned(context, code))),
       ],
     );
   }

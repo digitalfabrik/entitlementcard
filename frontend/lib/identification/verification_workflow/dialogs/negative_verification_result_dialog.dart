@@ -20,6 +20,8 @@ class NegativeVerificationResultDialog extends StatelessWidget {
     );
   }
 
-  static Future<void> show(BuildContext context, String reason) =>
-      showDialog(context: context, builder: (_) => NegativeVerificationResultDialog(reason: reason));
+  static Future<void> show(BuildContext context, String reason) => showDialog(
+    context: context,
+    builder: (_) => NegativeVerificationResultDialog(reason: reason),
+  );
 }

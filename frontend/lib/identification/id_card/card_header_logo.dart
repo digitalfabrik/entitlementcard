@@ -12,13 +12,7 @@ class CardHeaderLogo extends StatelessWidget {
   final double scaleFactor;
   final CrossAxisAlignment alignment;
 
-  const CardHeaderLogo({
-    super.key,
-    required this.title,
-    this.logo,
-    required this.scaleFactor,
-    required this.alignment,
-  });
+  const CardHeaderLogo({super.key, required this.title, this.logo, required this.scaleFactor, required this.alignment});
 
   @override
   Widget build(BuildContext context) {
@@ -27,16 +21,17 @@ class CardHeaderLogo extends StatelessWidget {
       child: Column(
         crossAxisAlignment: alignment,
         children: [
-          Flexible(
-            child: logo ?? Container(),
-          ),
+          Flexible(child: logo ?? Container()),
           Text(
             title,
             maxLines: 3,
-            style:
-                TextStyle(fontSize: fontSize * scaleFactor, color: textColor, fontFamily: buildConfig.theme.fontFamily),
+            style: TextStyle(
+              fontSize: fontSize * scaleFactor,
+              color: textColor,
+              fontFamily: buildConfig.theme.fontFamily,
+            ),
             textAlign: TextAlign.start,
-          )
+          ),
         ],
       ),
     );

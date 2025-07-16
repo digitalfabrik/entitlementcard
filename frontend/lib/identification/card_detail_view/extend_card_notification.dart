@@ -20,8 +20,9 @@ class _ExtendCardNotificationState extends State<ExtendCardNotification> {
     if (!_isVisible) return Container();
 
     final primaryColor = Theme.of(context).colorScheme.primary;
-    final backgroundColor =
-        Theme.of(context).brightness == Brightness.light ? primaryColor.tint(90) : primaryColor.shade(90);
+    final backgroundColor = Theme.of(context).brightness == Brightness.light
+        ? primaryColor.tint(90)
+        : primaryColor.shade(90);
 
     return Padding(
       padding: const EdgeInsets.all(8),
@@ -29,10 +30,7 @@ class _ExtendCardNotificationState extends State<ExtendCardNotification> {
         color: backgroundColor,
         elevation: 1,
         margin: EdgeInsets.zero,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: _buildContent(context),
-        ),
+        child: Padding(padding: const EdgeInsets.all(16), child: _buildContent(context)),
       ),
     );
   }
@@ -52,20 +50,11 @@ class _ExtendCardNotificationState extends State<ExtendCardNotification> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                t.identification.extendCardNotificationTitle,
-                style: textTheme.bodyLarge,
-              ),
+              Text(t.identification.extendCardNotificationTitle, style: textTheme.bodyLarge),
               SizedBox(height: 8),
-              Text(
-                t.identification.extendCardNotificationDescription,
-                style: textTheme.bodyMedium,
-              ),
+              Text(t.identification.extendCardNotificationDescription, style: textTheme.bodyMedium),
               SizedBox(height: 8),
-              FilledButton(
-                onPressed: () => _openApplication(),
-                child: Text(t.identification.extendCard.toUpperCase()),
-              ),
+              FilledButton(onPressed: () => _openApplication(), child: Text(t.identification.extendCard.toUpperCase())),
             ],
           ),
         ),

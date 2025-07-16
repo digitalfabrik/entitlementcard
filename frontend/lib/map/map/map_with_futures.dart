@@ -29,8 +29,10 @@ class _MapWithFuturesState extends State<MapWithFutures> {
   @override
   void initState() {
     super.initState();
-    positionFuture = determinePosition(context, requestIfNotGranted: false)
-        .timeout(const Duration(milliseconds: 400), onTimeout: () => RequestedPosition.unknown());
+    positionFuture = determinePosition(
+      context,
+      requestIfNotGranted: false,
+    ).timeout(const Duration(milliseconds: 400), onTimeout: () => RequestedPosition.unknown());
   }
 
   @override
@@ -45,13 +47,14 @@ class _MapWithFuturesState extends State<MapWithFutures> {
         final position = snapshot.data;
 
         return MapContainer(
-            onFeatureClick: widget.onFeatureClick,
-            onNoFeatureClick: widget.onNoFeatureClick,
-            locationAvailable: position?.isAvailable() ?? false,
-            userLocation: position?.toLatLng(),
-            onFeatureClickLayerFilter: widget.onFeatureClickLayerFilter,
-            onMapCreated: widget.onMapCreated,
-            setFollowUserLocation: widget.setFollowUserLocation);
+          onFeatureClick: widget.onFeatureClick,
+          onNoFeatureClick: widget.onNoFeatureClick,
+          locationAvailable: position?.isAvailable() ?? false,
+          userLocation: position?.toLatLng(),
+          onFeatureClickLayerFilter: widget.onFeatureClickLayerFilter,
+          onMapCreated: widget.onMapCreated,
+          setFollowUserLocation: widget.setFollowUserLocation,
+        );
       },
     );
   }

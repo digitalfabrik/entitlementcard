@@ -46,7 +46,7 @@ class AttributionDialog extends StatelessWidget {
           onPressed: () {
             launchUrlString(buildConfig.mapAttribution.url, mode: LaunchMode.externalApplication);
           },
-        )
+        ),
       ],
     );
   }

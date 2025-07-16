@@ -17,8 +17,9 @@ class UserCodeStore {
   static const _storageDelimiter = ',';
 
   Future<void> store(List<DynamicUserCode> userCodes) async {
-    String userCodesString =
-        userCodes.map((code) => const Base64Encoder().convert(code.writeToBuffer())).join(_storageDelimiter);
+    String userCodesString = userCodes
+        .map((code) => const Base64Encoder().convert(code.writeToBuffer()))
+        .join(_storageDelimiter);
     await _storage.use((it) => it.write(key: _userCodesBase64Key, value: userCodesString));
   }
 
@@ -59,9 +60,10 @@ Future<String?> _safeRead(FlutterSecureStorage storage, String key) async {
   } on PlatformException catch (e, stackTrace) {
     if (Platform.isAndroid && e.toString().contains('javax.crypto.BadPaddingException')) {
       reportError(
-          'Could not read the key $key from secure storage probably due to wrong or missing secret caused by a backup. '
-          'Deleting secure storage on purpose to resolve the situation and trying again. Original Error: $e',
-          stackTrace);
+        'Could not read the key $key from secure storage probably due to wrong or missing secret caused by a backup. '
+        'Deleting secure storage on purpose to resolve the situation and trying again. Original Error: $e',
+        stackTrace,
+      );
       await storage.deleteAll();
       return await storage.read(key: key);
     } else {

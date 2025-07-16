@@ -21,14 +21,15 @@ class CardDetailView extends StatefulWidget {
   final VoidCallback startApplication;
   final VoidCallback openRemoveCardDialog;
 
-  const CardDetailView(
-      {super.key,
-      required this.applicationUrl,
-      required this.userCode,
-      required this.startActivation,
-      required this.startVerification,
-      required this.startApplication,
-      required this.openRemoveCardDialog});
+  const CardDetailView({
+    super.key,
+    required this.applicationUrl,
+    required this.userCode,
+    required this.startActivation,
+    required this.startVerification,
+    required this.startApplication,
+    required this.openRemoveCardDialog,
+  });
 
   @override
   State<CardDetailView> createState() => _CardDetailViewState();
@@ -69,7 +70,10 @@ class _CardDetailViewState extends State<CardDetailView> {
     final paddedCard = Padding(
       padding: const EdgeInsets.all(8),
       child: IdCardWithRegionQuery(
-          cardInfo: cardInfo, isExpired: isCardExpired(cardInfo), isNotYetValid: isCardNotYetValid(cardInfo)),
+        cardInfo: cardInfo,
+        isExpired: isCardExpired(cardInfo),
+        isNotYetValid: isCardNotYetValid(cardInfo),
+      ),
     );
     final qrCodeAndStatus = QrCodeAndStatus(
       userCode: widget.userCode,
@@ -88,22 +92,23 @@ class _CardDetailViewState extends State<CardDetailView> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Flexible(
-                        child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        if (cardVerification.cardValid && isCardExtendable(cardInfo, cardVerification))
-                          ExtendCardNotification(applicationUrl: widget.applicationUrl),
-                        paddedCard,
-                      ],
-                    )),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          if (cardVerification.cardValid && isCardExtendable(cardInfo, cardVerification))
+                            ExtendCardNotification(applicationUrl: widget.applicationUrl),
+                          paddedCard,
+                        ],
+                      ),
+                    ),
                     if (constraints.maxWidth > qrCodeMinWidth * 2)
                       Flexible(child: qrCodeAndStatus)
                     else
                       ConstrainedBox(
                         constraints: const BoxConstraints.tightFor(width: qrCodeMinWidth),
                         child: qrCodeAndStatus,
-                      )
+                      ),
                   ],
                 );
               },
@@ -111,29 +116,31 @@ class _CardDetailViewState extends State<CardDetailView> {
           )
         : SingleChildScrollView(
             child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Column(
-                children: [
-                  if (cardVerification.cardValid && isCardExtendable(cardInfo, cardVerification))
-                    ExtendCardNotification(applicationUrl: widget.applicationUrl),
-                  paddedCard,
-                  const SizedBox(height: 16),
-                  qrCodeAndStatus,
-                ],
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Column(
+                  children: [
+                    if (cardVerification.cardValid && isCardExtendable(cardInfo, cardVerification))
+                      ExtendCardNotification(applicationUrl: widget.applicationUrl),
+                    paddedCard,
+                    const SizedBox(height: 16),
+                    qrCodeAndStatus,
+                  ],
+                ),
               ),
             ),
-          ));
+          );
   }
 
   void _onMoreActionsPressed(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) => MoreActionsDialog(
-          startActivation: widget.startActivation,
-          startApplication: widget.startApplication,
-          startVerification: widget.startVerification,
-          openRemoveCardDialog: widget.openRemoveCardDialog),
+        startActivation: widget.startActivation,
+        startApplication: widget.startApplication,
+        startVerification: widget.startVerification,
+        openRemoveCardDialog: widget.openRemoveCardDialog,
+      ),
     );
   }
 }
@@ -179,8 +186,12 @@ class QrCodeAndStatus extends StatelessWidget {
   final VoidCallback onSelfVerifyPressed;
   final DynamicUserCode userCode;
 
-  const QrCodeAndStatus(
-      {super.key, required this.onMoreActionsPressed, required this.onSelfVerifyPressed, required this.userCode});
+  const QrCodeAndStatus({
+    super.key,
+    required this.onMoreActionsPressed,
+    required this.onSelfVerifyPressed,
+    required this.userCode,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -194,41 +205,35 @@ class QrCodeAndStatus extends StatelessWidget {
           ...switch (status) {
             CardStatus.expired => [_PaddedText(t.identification.cardExpired)],
             CardStatus.notVerifiedLately => [
-                _PaddedText(t.identification.checkFailed),
-                Flexible(
-                  child: TextButton.icon(
-                    icon: const Icon(Icons.refresh),
-                    onPressed: onSelfVerifyPressed,
-                    label: Text(t.common.tryAgain),
-                  ),
-                ),
-              ],
-            CardStatus.timeOutOfSync => [
-                _PaddedText(t.identification.timeIncorrect),
-                Flexible(
-                    child: TextButton.icon(
+              _PaddedText(t.identification.checkFailed),
+              Flexible(
+                child: TextButton.icon(
                   icon: const Icon(Icons.refresh),
                   onPressed: onSelfVerifyPressed,
                   label: Text(t.common.tryAgain),
-                ))
-              ],
+                ),
+              ),
+            ],
+            CardStatus.timeOutOfSync => [
+              _PaddedText(t.identification.timeIncorrect),
+              Flexible(
+                child: TextButton.icon(
+                  icon: const Icon(Icons.refresh),
+                  onPressed: onSelfVerifyPressed,
+                  label: Text(t.common.tryAgain),
+                ),
+              ),
+            ],
             CardStatus.invalid => [_PaddedText(t.identification.cardInvalid)],
             CardStatus.valid => [
-                _PaddedText(t.identification.authenticationPossible),
-                Flexible(child: VerificationCodeView(userCode: userCode))
-              ],
-            CardStatus.notYetValid => [
-                _PaddedText(t.identification.cardNotYetValid),
-              ]
+              _PaddedText(t.identification.authenticationPossible),
+              Flexible(child: VerificationCodeView(userCode: userCode)),
+            ],
+            CardStatus.notYetValid => [_PaddedText(t.identification.cardNotYetValid)],
           },
           Container(
             alignment: Alignment.center,
-            child: TextButton(
-              onPressed: onMoreActionsPressed,
-              child: Text(
-                t.common.moreActions,
-              ),
-            ),
+            child: TextButton(onPressed: onMoreActionsPressed, child: Text(t.common.moreActions)),
           ),
         ],
       ),

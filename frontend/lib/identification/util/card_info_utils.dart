@@ -34,10 +34,7 @@ bool isCardExpired(CardInfo cardInfo) {
 
 bool isCardNotYetValid(CardInfo cardInfo) {
   if (!cardInfo.extensions.hasExtensionStartDay()) return false;
-  final startDay = dateFromEpochDaysInTimeZone(
-    cardInfo.extensions.extensionStartDay.startDay,
-    currentTimezone,
-  );
+  final startDay = dateFromEpochDaysInTimeZone(cardInfo.extensions.extensionStartDay.startDay, currentTimezone);
   return startDay.isAfter(TZDateTime.from(clock.now(), currentTimezone));
 }
 
@@ -56,12 +53,16 @@ DateTime? getExpirationDay(CardInfo cardInfo) {
 }
 
 bool cardWasVerifiedLately(CardVerification cardVerification) {
-  final lastVerificationTimestamp =
-      cardVerification.hasVerificationTimeStamp() ? cardVerification.verificationTimeStamp : null;
+  final lastVerificationTimestamp = cardVerification.hasVerificationTimeStamp()
+      ? cardVerification.verificationTimeStamp
+      : null;
   return lastVerificationTimestamp == null
       ? false
-      : DateTime.now().toUtc().isBefore(DateTime.fromMillisecondsSinceEpoch(0)
-          .add(Duration(seconds: lastVerificationTimestamp.toInt() + cardValidationExpireSeconds)));
+      : DateTime.now().toUtc().isBefore(
+          DateTime.fromMillisecondsSinceEpoch(
+            0,
+          ).add(Duration(seconds: lastVerificationTimestamp.toInt() + cardValidationExpireSeconds)),
+        );
 }
 
 String? getFormattedBirthday(CardInfo cardInfo) {

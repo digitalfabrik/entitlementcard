@@ -51,18 +51,13 @@ class CustomAlertDialog extends StatelessWidget {
               padding: message != null ? const EdgeInsets.only(top: 8.0) : EdgeInsets.zero,
               child: customContent,
             ),
-          )
+          ),
       ],
     );
   }
 
   List<Widget> _buildActions(BuildContext context) {
     return actions ??
-        [
-          TextButton(
-            onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-            child: Text(t.common.ok),
-          ),
-        ];
+        [TextButton(onPressed: () => Navigator.of(context, rootNavigator: true).pop(), child: Text(t.common.ok))];
   }
 }

@@ -7,17 +7,15 @@ import 'package:flutter/material.dart';
 class AcceptingStorePreview extends StatelessWidget {
   final int physicalStoreId;
 
-  const AcceptingStorePreview({
-    super.key,
-    required this.physicalStoreId,
-  });
+  const AcceptingStorePreview({super.key, required this.physicalStoreId});
 
   @override
   Widget build(BuildContext context) {
     final projectId = Configuration.of(context).projectId;
     return Query$PhysicalStoreSummaryById$Widget(
       options: Options$Query$PhysicalStoreSummaryById(
-          variables: Variables$Query$PhysicalStoreSummaryById(project: projectId, ids: [physicalStoreId])),
+        variables: Variables$Query$PhysicalStoreSummaryById(project: projectId, ids: [physicalStoreId]),
+      ),
       builder: (result, {refetch, fetchMore}) {
         try {
           final exception = result.exception;
@@ -40,10 +38,7 @@ class AcceptingStorePreview extends StatelessWidget {
           if (store == null) {
             throw Exception('ID not found.');
           }
-          return AcceptingStorePreviewCard(
-            isLoading: false,
-            acceptingStore: _convertToAcceptingStoreSummary(store),
-          );
+          return AcceptingStorePreviewCard(isLoading: false, acceptingStore: _convertToAcceptingStoreSummary(store));
         } on Exception catch (e) {
           debugPrint(e.toString());
           return AcceptingStorePreviewCard(isLoading: false, refetch: refetch);

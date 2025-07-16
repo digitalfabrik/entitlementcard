@@ -28,9 +28,14 @@ class FilterBar extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             child: Row(
               children: [
-                Text(t.search.filterByCategories.toUpperCase(),
-                    maxLines: 1, style: theme.textTheme.bodyMedium?.apply(color: theme.hintColor)),
-                const Expanded(child: Padding(padding: EdgeInsets.only(left: 8), child: Divider(thickness: 0.7)))
+                Text(
+                  t.search.filterByCategories.toUpperCase(),
+                  maxLines: 1,
+                  style: theme.textTheme.bodyMedium?.apply(color: theme.hintColor),
+                ),
+                const Expanded(
+                  child: Padding(padding: EdgeInsets.only(left: 8), child: Divider(thickness: 0.7)),
+                ),
               ],
             ),
           ),
@@ -52,9 +57,9 @@ class FilterBar extends StatelessWidget {
                       )
                       .toList(),
                 ),
-              )
+              ),
             ],
-          )
+          ),
         ],
       ),
     );

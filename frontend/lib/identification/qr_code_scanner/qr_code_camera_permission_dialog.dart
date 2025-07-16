@@ -32,9 +32,6 @@ class QrCodeCameraPermissionDialog extends StatelessWidget {
   }
 
   static Future<void> showPermissionDialog(BuildContext context) async {
-    return showDialog<void>(
-      context: context,
-      builder: (context) => const QrCodeCameraPermissionDialog(),
-    );
+    return showDialog<void>(context: context, builder: (context) => const QrCodeCameraPermissionDialog());
   }
 }

@@ -20,8 +20,12 @@ class MapPage extends StatefulWidget {
   final void Function(int? id) selectAcceptingStore;
   final void Function(bool followUserLocation) setFollowUserLocation;
 
-  const MapPage(
-      {super.key, required this.onMapCreated, required this.selectAcceptingStore, required this.setFollowUserLocation});
+  const MapPage({
+    super.key,
+    required this.onMapCreated,
+    required this.selectAcceptingStore,
+    required this.setFollowUserLocation,
+  });
 
   @override
   State<StatefulWidget> createState() {

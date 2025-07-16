@@ -6,16 +6,15 @@ void main() {
   group('toCanonicalJsonObject', () {
     test('should map an empty cardInfo correctly', () {
       final cardInfo = CardInfo();
-      expect(
-        cardInfo.toCanonicalJsonObject(),
-        {},
-      );
+      expect(cardInfo.toCanonicalJsonObject(), {});
     });
 
     test('should map a cardInfo for a Bavarian Blue EAK correctly', () {
       final cardInfo = CardInfo()
         ..fullName = 'Max Mustermann'
-        ..expirationDay = 365 * 40 // Equals 14.600
+        ..expirationDay =
+            365 *
+            40 // Equals 14.600
         ..extensions = (CardExtensions()
           ..extensionRegion = (RegionExtension()..regionId = 16)
           ..extensionBavariaCardType = (BavariaCardTypeExtension()..cardType = BavariaCardType.STANDARD));
@@ -47,7 +46,9 @@ void main() {
     test('should map a cardInfo for a Nuernberg Pass correctly', () {
       final cardInfo = CardInfo()
         ..fullName = 'Max Mustermann'
-        ..expirationDay = 365 * 40 // Equals 14.600
+        ..expirationDay =
+            365 *
+            40 // Equals 14.600
         ..extensions = (CardExtensions()
           ..extensionRegion = (RegionExtension()..regionId = 93)
           ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
@@ -66,7 +67,9 @@ void main() {
     test('should map a cardInfo for a Nuernberg Pass wit startDay correctly', () {
       final cardInfo = CardInfo()
         ..fullName = 'Max Mustermann'
-        ..expirationDay = 365 * 40 // Equals 14.600
+        ..expirationDay =
+            365 *
+            40 // Equals 14.600
         ..extensions = (CardExtensions()
           ..extensionRegion = (RegionExtension()..regionId = 93)
           ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
@@ -79,7 +82,7 @@ void main() {
           '1': {'1': '93'}, // extensionRegion
           '2': {'1': '-3650'}, // extensionBirthday
           '3': {'1': '99999999'}, // extensionNuernbergPassId
-          '5': {'1': '730'} // startDay extension
+          '5': {'1': '730'}, // startDay extension
         },
       });
     });

@@ -19,13 +19,7 @@ class DetailContent extends StatelessWidget {
   final Color? accentColor;
   final Color? readableOnAccentColor;
 
-  const DetailContent(
-    this.acceptingStore, {
-    super.key,
-    this.showOnMap,
-    this.accentColor,
-    this.readableOnAccentColor,
-  });
+  const DetailContent(this.acceptingStore, {super.key, this.showOnMap, this.accentColor, this.readableOnAccentColor});
 
   @override
   Widget build(BuildContext context) {
@@ -52,10 +46,7 @@ class DetailContent extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             if (storeDescription != null) ...[
-              Text(
-                storeDescription,
-                style: theme.textTheme.bodyLarge,
-              ),
+              Text(storeDescription, style: theme.textTheme.bodyLarge),
               Divider(thickness: 0.7, height: 48, color: theme.primaryColorLight),
             ],
             Column(
@@ -100,21 +91,12 @@ class DetailContent extends StatelessWidget {
               ],
             ),
             if (showOnMap != null) ...[
-              Divider(
-                thickness: 0.7,
-                height: 48,
-                color: theme.primaryColorLight,
-              ),
+              Divider(thickness: 0.7, height: 48, color: theme.primaryColorLight),
               OverflowBar(
                 alignment: MainAxisAlignment.center,
-                children: [
-                  OutlinedButton(
-                    child: Text(t.store.showOnMap),
-                    onPressed: () => _showOnMap(context),
-                  ),
-                ],
+                children: [OutlinedButton(child: Text(t.store.showOnMap), onPressed: () => _showOnMap(context))],
               ),
-            ]
+            ],
           ],
         ),
       ),

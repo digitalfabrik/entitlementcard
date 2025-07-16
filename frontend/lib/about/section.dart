@@ -13,8 +13,9 @@ class Section extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-            padding: EdgeInsets.only(top: 16, left: 16, right: 16),
-            child: Text(headline, style: theme.textTheme.bodySmall?.apply(color: theme.colorScheme.secondary))),
+          padding: EdgeInsets.only(top: 16, left: 16, right: 16),
+          child: Text(headline, style: theme.textTheme.bodySmall?.apply(color: theme.colorScheme.secondary)),
+        ),
         Column(children: children),
         const SizedBox(height: 10),
       ],

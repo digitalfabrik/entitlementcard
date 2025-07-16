@@ -48,9 +48,14 @@ class IdentificationPageState extends State<IdentificationPage> {
         if (!userCodeModel.isInitialized) {
           if (userCodeModel.initializationFailed) {
             return SafeArea(
-                child: Center(
-                    child: Text(context.t.common.unknownError,
-                        textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium)));
+              child: Center(
+                child: Text(
+                  context.t.common.unknownError,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ),
+            );
           }
           return Container();
         }
@@ -64,26 +69,30 @@ class IdentificationPageState extends State<IdentificationPage> {
                     code.info,
                     buildConfig.applicationQueryKeyName,
                     buildConfig.applicationQueryKeyBirthday,
-                    buildConfig.applicationQueryKeyReferenceNumber)
+                    buildConfig.applicationQueryKeyReferenceNumber,
+                  )
                 : getApplicationUrl(context);
 
-            carouselCards.add(CardDetailView(
-              applicationUrl: applicationUrl,
-              userCode: code,
-              startVerification: () => _showVerificationDialog(context, settings, userCodeModel),
-              startActivation: () => _startActivation(context),
-              startApplication: () => _startApplication(applicationUrl),
-              openRemoveCardDialog: () => _openRemoveCardDialog(context),
-            ));
+            carouselCards.add(
+              CardDetailView(
+                applicationUrl: applicationUrl,
+                userCode: code,
+                startVerification: () => _showVerificationDialog(context, settings, userCodeModel),
+                startActivation: () => _startActivation(context),
+                startApplication: () => _startApplication(applicationUrl),
+                openRemoveCardDialog: () => _openRemoveCardDialog(context),
+              ),
+            );
           }
 
           return Scaffold(
             appBar: StatusBarProtector(),
             body: CardCarousel(
-                cards: carouselCards,
-                cardIndex: cardIndex,
-                updateIndex: _updateCardIndex,
-                carouselController: carouselController),
+              cards: carouselCards,
+              cardIndex: cardIndex,
+              updateIndex: _updateCardIndex,
+              carouselController: carouselController,
+            ),
           );
         }
 
@@ -101,7 +110,10 @@ class IdentificationPageState extends State<IdentificationPage> {
   }
 
   Future<void> _showVerificationDialog(
-      BuildContext context, SettingsModel settings, UserCodeModel userCodeModel) async {
+    BuildContext context,
+    SettingsModel settings,
+    UserCodeModel userCodeModel,
+  ) async {
     final isGranted = await Permission.camera.request().isGranted;
     if (!context.mounted) return;
     if (isGranted) {
@@ -122,24 +134,26 @@ class IdentificationPageState extends State<IdentificationPage> {
     final isGranted = await Permission.camera.request().isGranted;
     if (!context.mounted) return;
     if (isGranted) {
-      Navigator.of(context, rootNavigator: true)
-          .push(AppRoute(builder: (context) => ActivationCodeScannerPage(moveToLastCard: _moveCarouselToLastPosition)));
+      Navigator.of(
+        context,
+        rootNavigator: true,
+      ).push(AppRoute(builder: (context) => ActivationCodeScannerPage(moveToLastCard: _moveCarouselToLastPosition)));
       return;
     }
     handleDeniedCameraPermission(context);
   }
 
   Future<bool> _startApplication(String applicationUrl) {
-    return launchUrlString(
-      applicationUrl,
-      mode: LaunchMode.externalApplication,
-    );
+    return launchUrlString(applicationUrl, mode: LaunchMode.externalApplication);
   }
 
   Future<void> _openRemoveCardDialog(BuildContext context) async {
     final userCodeModel = Provider.of<UserCodeModel>(context, listen: false);
     await RemoveCardConfirmationDialog.show(
-        context: context, userCode: userCodeModel.userCodes[cardIndex], carouselController: carouselController);
+      context: context,
+      userCode: userCodeModel.userCodes[cardIndex],
+      carouselController: carouselController,
+    );
   }
 
   void _moveCarouselToLastPosition() {

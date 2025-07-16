@@ -74,8 +74,9 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
 
       final fetchIds = favorites.getRange(pageKey, min(pageKey + _pageSize, favorites.length)).toList();
 
-      final newItems = await Future.wait(fetchIds
-          .map((id) async => favoritesModel.getFavoriteStore(id)..physicalStore = await _fetchPhysicalStore(id)));
+      final newItems = await Future.wait(
+        fetchIds.map((id) async => favoritesModel.getFavoriteStore(id)..physicalStore = await _fetchPhysicalStore(id)),
+      );
 
       if (mounted) {
         final isLastPage = newItems.length < _pageSize;
@@ -101,8 +102,11 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
       throw Exception('GraphQL client is not yet initialized!');
     }
 
-    final result = await client.query$PhysicalStoreById(Options$Query$PhysicalStoreById(
-        variables: Variables$Query$PhysicalStoreById(project: projectId, ids: [storeId])));
+    final result = await client.query$PhysicalStoreById(
+      Options$Query$PhysicalStoreById(
+        variables: Variables$Query$PhysicalStoreById(project: projectId, ids: [storeId]),
+      ),
+    );
     final exception = result.exception;
     if (result.hasException && exception != null) {
       throw exception;
@@ -150,17 +154,14 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
       );
     } else {
       return IntrinsicHeight(
-        child: RemovedStoreSummary(
-          storeId: item.storeId,
-          storeName: item.storeName,
-          categoryId: item.categoryId,
-        ),
+        child: RemovedStoreSummary(storeId: item.storeId, storeName: item.storeName, categoryId: item.categoryId),
       );
     }
   }
 
-  Widget _buildProgressIndicator(BuildContext context) =>
-      const Center(child: Padding(padding: EdgeInsets.all(5), child: CircularProgressIndicator()));
+  Widget _buildProgressIndicator(BuildContext context) => const Center(
+    child: Padding(padding: EdgeInsets.all(5), child: CircularProgressIndicator()),
+  );
 
   Widget _buildErrorWithRetry(BuildContext context) {
     final t = context.t;
@@ -170,10 +171,7 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
         children: [
           const Icon(Icons.warning, size: 60, color: Colors.orange),
           Text(t.favorites.loadingFailed),
-          OutlinedButton(
-            onPressed: _pagingController.retryLastFailedRequest,
-            child: Text(t.common.tryAgain),
-          )
+          OutlinedButton(onPressed: _pagingController.retryLastFailedRequest, child: Text(t.common.tryAgain)),
         ],
       ),
     );
@@ -188,10 +186,7 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
           Icon(Icons.search_off, size: 60, color: Theme.of(context).disabledColor),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(
-              t.favorites.noFavoritesFound,
-              textAlign: TextAlign.center,
-            ),
+            child: Text(t.favorites.noFavoritesFound, textAlign: TextAlign.center),
           ),
         ],
       ),

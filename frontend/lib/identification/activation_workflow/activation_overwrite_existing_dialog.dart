@@ -31,10 +31,6 @@ class ActivationOverwriteExistingDialog extends StatelessWidget {
 
   /// Returns true, if the user wants to override the existing device
   static Future<bool> showActivationOverwriteExistingDialog(BuildContext context) async {
-    return await showDialog<bool>(
-          context: context,
-          builder: (context) => ActivationOverwriteExistingDialog(),
-        ) ??
-        false;
+    return await showDialog<bool>(context: context, builder: (context) => ActivationOverwriteExistingDialog()) ?? false;
   }
 }

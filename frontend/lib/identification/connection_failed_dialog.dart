@@ -19,6 +19,8 @@ class ConnectionFailedDialog extends StatelessWidget {
     );
   }
 
-  static Future<void> show(BuildContext context, String reason) =>
-      showDialog(context: context, builder: (_) => ConnectionFailedDialog(reason: reason));
+  static Future<void> show(BuildContext context, String reason) => showDialog(
+    context: context,
+    builder: (_) => ConnectionFailedDialog(reason: reason),
+  );
 }

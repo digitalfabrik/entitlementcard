@@ -27,16 +27,17 @@ class SettingsProviderState extends State<SettingsProvider> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: settingsInitialization,
-        builder: (context, snapshot) {
-          final error = snapshot.error;
-          if (error != null) {
-            return ErrorMessage(error.toString());
-          }
-          if (snapshot.connectionState != ConnectionState.done) {
-            return Container();
-          }
-          return ChangeNotifierProvider.value(value: settings, child: widget.child);
-        });
+      future: settingsInitialization,
+      builder: (context, snapshot) {
+        final error = snapshot.error;
+        if (error != null) {
+          return ErrorMessage(error.toString());
+        }
+        if (snapshot.connectionState != ConnectionState.done) {
+          return Container();
+        }
+        return ChangeNotifierProvider.value(value: settings, child: widget.child);
+      },
+    );
   }
 }

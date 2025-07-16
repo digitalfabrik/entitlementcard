@@ -44,8 +44,10 @@ class BackendSwitchDialogState extends State<BackendSwitchDialog> {
           padding: const EdgeInsets.all(15.0),
           child: Column(
             children: [
-              Text('Current Endpoint: \n${Configuration.of(context).graphqlUrl}',
-                  style: theme.textTheme.bodyLarge?.apply(color: theme.hintColor)),
+              Text(
+                'Current Endpoint: \n${Configuration.of(context).graphqlUrl}',
+                style: theme.textTheme.bodyLarge?.apply(color: theme.hintColor),
+              ),
               Padding(
                 padding: EdgeInsets.only(top: 10, bottom: 10),
                 child: TextField(
@@ -54,16 +56,11 @@ class BackendSwitchDialogState extends State<BackendSwitchDialog> {
                       password = text;
                     });
                   },
-                  decoration: InputDecoration(
-                    hintText: 'Enter password...',
-                  ),
+                  decoration: InputDecoration(hintText: 'Enter password...'),
                 ),
               ),
               password.toLowerCase() == widget.passwordToUnlock
-                  ? ElevatedButton(
-                      child: Text('Switch API'),
-                      onPressed: () => switchBackendUrl(context),
-                    )
+                  ? ElevatedButton(child: Text('Switch API'), onPressed: () => switchBackendUrl(context))
                   : Container(),
             ],
           ),

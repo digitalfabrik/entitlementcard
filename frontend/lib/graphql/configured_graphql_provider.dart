@@ -64,7 +64,7 @@ class ConfiguredGraphQlProviderState extends State<ConfiguredGraphQlProvider> {
               return null;
             },
           ),
-          HttpLink(Configuration.of(context).graphqlUrl, defaultHeaders: {HttpHeaders.userAgentHeader: _userAgent})
+          HttpLink(Configuration.of(context).graphqlUrl, defaultHeaders: {HttpHeaders.userAgentHeader: _userAgent}),
         ]),
       ),
     );
@@ -76,10 +76,7 @@ class ConfiguredGraphQlProviderState extends State<ConfiguredGraphQlProvider> {
     if (kDebugMode) {
       final messengerState = ScaffoldMessenger.of(context);
       messengerState.showSnackBar(
-        SnackBar(
-          behavior: SnackBarBehavior.floating,
-          content: Text('GraphQL Error: $message'),
-        ),
+        SnackBar(behavior: SnackBarBehavior.floating, content: Text('GraphQL Error: $message')),
       );
     }
   }

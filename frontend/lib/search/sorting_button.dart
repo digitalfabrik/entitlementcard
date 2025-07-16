@@ -11,8 +11,12 @@ class SortingButton extends StatefulWidget {
   final void Function(SortingMode sortingMode) setSortingMode;
   final SortingMode sortingMode;
 
-  const SortingButton(
-      {super.key, required this.setCoordinates, required this.setSortingMode, required this.sortingMode});
+  const SortingButton({
+    super.key,
+    required this.setCoordinates,
+    required this.setSortingMode,
+    required this.sortingMode,
+  });
 
   @override
   State<StatefulWidget> createState() => _SortingButtonState();
@@ -89,8 +93,10 @@ class _SortingButtonState extends State<SortingButton> {
     if (userInteract) {
       requestedPosition = await determinePosition(context, requestIfNotGranted: true);
     } else {
-      requestedPosition = await determinePosition(context, requestIfNotGranted: false)
-          .timeout(const Duration(milliseconds: 2000), onTimeout: () => RequestedPosition.unknown());
+      requestedPosition = await determinePosition(
+        context,
+        requestIfNotGranted: false,
+      ).timeout(const Duration(milliseconds: 2000), onTimeout: () => RequestedPosition.unknown());
     }
     if (!mounted) return;
 

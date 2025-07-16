@@ -8,11 +8,8 @@ class VerificationParseException extends QrCodeParseException {
   final Exception cause;
   final StackTrace? stackTrace;
 
-  VerificationParseException({
-    required this.internalMessage,
-    required this.cause,
-    this.stackTrace,
-  }) : super(internalMessage);
+  VerificationParseException({required this.internalMessage, required this.cause, this.stackTrace})
+    : super(internalMessage);
 }
 
 extension QRParsing on Uint8List {
@@ -32,10 +29,7 @@ extension QRParsing on Uint8List {
   }
 }
 
-Uint8List createDynamicVerificationQrCodeData(
-  DynamicUserCode userCode,
-  int otpCode,
-) {
+Uint8List createDynamicVerificationQrCodeData(DynamicUserCode userCode, int otpCode) {
   return (QrCode()
         ..dynamicVerificationCode = (DynamicVerificationCode()
           ..info = userCode.info

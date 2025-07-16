@@ -9,13 +9,14 @@ Future<Mutation$ActivateCard$activation> activateCode({
   required bool overwriteExisting,
 }) async {
   final mutationOptions = Options$Mutation$ActivateCard(
-      fetchPolicy: FetchPolicy.noCache,
-      variables: Variables$Mutation$ActivateCard(
-        project: projectId,
-        overwrite: overwriteExisting,
-        activationSecretBase64: activationSecretBase64,
-        cardInfoHashBase64: cardInfoHashBase64,
-      ));
+    fetchPolicy: FetchPolicy.noCache,
+    variables: Variables$Mutation$ActivateCard(
+      project: projectId,
+      overwrite: overwriteExisting,
+      activationSecretBase64: activationSecretBase64,
+      cardInfoHashBase64: cardInfoHashBase64,
+    ),
+  );
 
   try {
     final mutationResult = await client.mutate$ActivateCard(mutationOptions);

@@ -12,19 +12,27 @@ class LanguageChange extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Column(children: [
-      ...buildConfig.appLocales.map((item) => DecoratedBox(
-          decoration: BoxDecoration(
-              color:
-                  LocaleSettings.currentLocale.languageCode == item ? theme.colorScheme.surfaceContainerHighest : null),
-          child: ListTile(
+    return Column(
+      children: [
+        ...buildConfig.appLocales.map(
+          (item) => DecoratedBox(
+            decoration: BoxDecoration(
+              color: LocaleSettings.currentLocale.languageCode == item
+                  ? theme.colorScheme.surfaceContainerHighest
+                  : null,
+            ),
+            child: ListTile(
               title: Text(
                 nativeLanguageNames[item]!,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              onTap: () => switchLanguage(context, item))))
-    ]);
+              onTap: () => switchLanguage(context, item),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   Future<void> switchLanguage(BuildContext context, String language) async {
@@ -34,10 +42,6 @@ class LanguageChange extends StatelessWidget {
     await settings.setLanguage(language: language);
     if (!context.mounted) return;
     Navigator.pop(context);
-    messengerState.showSnackBar(
-      SnackBar(
-        content: Text(t.about.languageChangeSuccessful),
-      ),
-    );
+    messengerState.showSnackBar(SnackBar(content: Text(t.about.languageChangeSuccessful)));
   }
 }

@@ -53,10 +53,7 @@ class AcceptingStoreSummary extends StatelessWidget {
           child: Row(
             children: [
               CategoryIndicator(categoryId: store.categoryId),
-              StoreTextOverview(
-                store: store,
-                showTownName: currentDistance == null && showLocation,
-              ),
+              StoreTextOverview(store: store, showTownName: currentDistance == null && showLocation),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Row(
@@ -68,7 +65,7 @@ class AcceptingStoreSummary extends StatelessWidget {
                     ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -119,7 +116,7 @@ class StoreTextOverview extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: theme.textTheme.bodyLarge?.apply(color: theme.hintColor),
           ),
-          if (showTownName && location != null) Text(location, maxLines: 1, overflow: TextOverflow.ellipsis)
+          if (showTownName && location != null) Text(location, maxLines: 1, overflow: TextOverflow.ellipsis),
         ],
       ),
     );
@@ -145,8 +142,11 @@ class DistanceText extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Center(
-      child:
-          Text(_formatDistance(distance), maxLines: 1, style: theme.textTheme.bodyLarge?.apply(color: theme.hintColor)),
+      child: Text(
+        _formatDistance(distance),
+        maxLines: 1,
+        style: theme.textTheme.bodyLarge?.apply(color: theme.hintColor),
+      ),
     );
   }
 }

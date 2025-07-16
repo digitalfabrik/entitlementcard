@@ -45,14 +45,10 @@ class VerificationQrScannerPage extends StatelessWidget {
                 await settings.setHideVerificationInfo(enabled: false);
                 if (context.mounted) await VerificationInfoDialog.show(context);
               },
-            )
+            ),
           ],
         ),
-        Expanded(
-          child: QrCodeScannerPage(
-            onCodeScanned: (code) => _handleQrCode(context, code),
-          ),
-        ),
+        Expanded(child: QrCodeScannerPage(onCodeScanned: (code) => _handleQrCode(context, code))),
         if (config.showDevSettings && currentUserCode != null)
           TextButton(
             onPressed: () async {
@@ -66,7 +62,7 @@ class VerificationQrScannerPage extends StatelessWidget {
               _handleQrCode(context, verificationCode);
             },
             child: const Text('Verify activated Card'),
-          )
+          ),
       ],
     );
   }
@@ -92,7 +88,10 @@ class VerificationQrScannerPage extends StatelessWidget {
 
     Future<void> onSuccess(CardInfo cardInfo, bool isStaticVerificationCode) async {
       await PositiveVerificationResultDialog.show(
-          context: context, cardInfo: cardInfo, isStaticVerificationCode: isStaticVerificationCode);
+        context: context,
+        cardInfo: cardInfo,
+        isStaticVerificationCode: isStaticVerificationCode,
+      );
     }
 
     try {

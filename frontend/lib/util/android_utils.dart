@@ -31,7 +31,7 @@ Future<bool> isDeviceWithCameraIssues() async {
     'SM-A236U1',
     'SM-S236DL',
     'SM-S237VL',
-    'SM-A236V'
+    'SM-A236V',
   ];
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;

@@ -23,8 +23,13 @@ class IdCard extends StatelessWidget {
   final bool isExpired;
   final bool isNotYetValid;
 
-  const IdCard(
-      {super.key, required this.cardInfo, required this.region, required this.isExpired, required this.isNotYetValid});
+  const IdCard({
+    super.key,
+    required this.cardInfo,
+    required this.region,
+    required this.isExpired,
+    required this.isNotYetValid,
+  });
 
   @override
   Widget build(BuildContext context) {

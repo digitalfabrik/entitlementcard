@@ -57,17 +57,20 @@ class ResultsLoaderState extends State<ResultsLoader> {
         throw Exception('GraqhQL client is not yet initialized!');
       }
 
-      final result = await client.query$AcceptingStoresSearch(Options$Query$AcceptingStoresSearch(
+      final result = await client.query$AcceptingStoresSearch(
+        Options$Query$AcceptingStoresSearch(
           variables: Variables$Query$AcceptingStoresSearch(
-        project: projectId,
-        params: Input$SearchParamsInput(
-          categoryIds: widget.categoryIds.isEmpty ? null : widget.categoryIds,
-          coordinates: widget.coordinates,
-          searchText: widget.searchText,
-          limit: _pageSize,
-          offset: pageKey,
+            project: projectId,
+            params: Input$SearchParamsInput(
+              categoryIds: widget.categoryIds.isEmpty ? null : widget.categoryIds,
+              coordinates: widget.coordinates,
+              searchText: widget.searchText,
+              limit: _pageSize,
+              offset: pageKey,
+            ),
+          ),
         ),
-      )));
+      );
 
       if (!mounted) return;
 
@@ -145,8 +148,9 @@ class ResultsLoaderState extends State<ResultsLoader> {
     );
   }
 
-  Widget _buildProgressIndicator(BuildContext context) =>
-      const Center(child: Padding(padding: EdgeInsets.all(5), child: CircularProgressIndicator()));
+  Widget _buildProgressIndicator(BuildContext context) => const Center(
+    child: Padding(padding: EdgeInsets.all(5), child: CircularProgressIndicator()),
+  );
 
   Widget _buildNoMoreItemsSpacer(BuildContext context) => const SizedBox(height: 80);
 
@@ -163,7 +167,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
             style: theme.textButtonTheme.style,
             onPressed: _pagingController.retryLastFailedRequest,
             child: Text(t.common.tryAgain),
-          )
+          ),
         ],
       ),
     );
