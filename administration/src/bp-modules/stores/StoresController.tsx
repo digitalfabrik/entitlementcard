@@ -1,18 +1,14 @@
-import { ButtonGroup, NonIdealState } from '@blueprintjs/core'
+import { Clear } from '@mui/icons-material'
+import { Button, Stack } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
-import styled from 'styled-components'
 
 import { useWhoAmI } from '../../WhoAmIProvider'
+import { CsvIcon } from '../../components/icons/CsvIcon'
 import { Role } from '../../generated/graphql'
+import NonIdealState from '../../mui-modules/NonIdealState'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import StandaloneCenter from '../StandaloneCenter'
-import CardFormButton from '../cards/CardFormButton'
-
-const Buttons = styled(ButtonGroup)`
-  width: 400px;
-`
 
 const StoresController = (): ReactElement => {
   const navigate = useNavigate()
@@ -22,21 +18,28 @@ const StoresController = (): ReactElement => {
 
   if (role !== Role.ProjectStoreManager || !storesManagement.enabled) {
     return (
-      <NonIdealState
-        icon='cross'
-        title={t('errors:notAuthorized')}
-        description={
-          storesManagement.enabled ? t('errors:notAuthorizedToManageStores') : t('errors:manageStoresNotActivated')
-        }
-      />
+      <Stack sx={{ flexGrow: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <NonIdealState
+          icon={<Clear sx={{ fontSize: '3em' }} />}
+          title={t('errors:notAuthorized')}
+          description={
+            storesManagement.enabled ? t('errors:notAuthorizedToManageStores') : t('errors:manageStoresNotActivated')
+          }
+        />
+      </Stack>
     )
   }
   return (
-    <StandaloneCenter>
-      <Buttons vertical>
-        <CardFormButton text={t('storesCsvImport')} icon='upload' onClick={() => navigate('./import')} />
-      </Buttons>
-    </StandaloneCenter>
+    <Stack sx={{ flexGrow: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Button
+        color='default'
+        size='large'
+        variant='contained'
+        startIcon={<CsvIcon />}
+        onClick={() => navigate('./import')}>
+        {t('storesCsvImport')}
+      </Button>
+    </Stack>
   )
 }
 
