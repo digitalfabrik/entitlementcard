@@ -3,6 +3,8 @@ import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
+import { Role } from '../../generated/graphql'
+import RenderGuard from '../../mui-modules/components/RenderGuard'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { ActivityLogConfig } from '../../project-configs/getProjectConfig'
 import { loadActivityLog } from './ActivityLog'
@@ -29,13 +31,17 @@ const ActivityLogController = ({ activityLogConfig }: { activityLogConfig: Activ
   const activityLogSorted = loadActivityLog(cardConfig).sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1))
 
   return (
-    <ActivityLogContainer>
-      <ActivityLogCard>
-        <H2>{t('misc:activityLog')}</H2>
-        <DescriptionText>{t('activityLogDescription')}</DescriptionText>
-        <ActivityLogTable activityLog={activityLogSorted} activityLogConfig={activityLogConfig} />
-      </ActivityLogCard>
-    </ActivityLogContainer>
+    <RenderGuard
+      allowedRoles={[Role.RegionAdmin, Role.RegionManager]}
+      error={{ description: t('errors:notAuthorizedToSeeActivityLog') }}>
+      <ActivityLogContainer>
+        <ActivityLogCard>
+          <H2>{t('misc:activityLog')}</H2>
+          <DescriptionText>{t('activityLogDescription')}</DescriptionText>
+          <ActivityLogTable activityLog={activityLogSorted} activityLogConfig={activityLogConfig} />
+        </ActivityLogCard>
+      </ActivityLogContainer>
+    </RenderGuard>
   )
 }
 

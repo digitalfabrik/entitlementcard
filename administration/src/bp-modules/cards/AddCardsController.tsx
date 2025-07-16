@@ -1,10 +1,11 @@
-import { NonIdealState, Spinner } from '@blueprintjs/core'
+import { CircularProgress } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useSearchParams } from 'react-router'
 
 import { useWhoAmI } from '../../WhoAmIProvider'
 import { Region } from '../../generated/graphql'
+import RenderGuard from '../../mui-modules/components/RenderGuard'
 import useBlockNavigation from '../../util/useBlockNavigation'
 import AddCardsForm from './AddCardsForm'
 import GenerationFinished from './CardsCreatedMessage'
@@ -24,7 +25,7 @@ const InnerAddCardsController = ({ region }: { region: Region }) => {
   })
 
   if (cardGenerationStep === 'loading') {
-    return <Spinner />
+    return <CircularProgress style={{ margin: 'auto' }} />
   }
   if (cardGenerationStep === 'finished') {
     return (
@@ -59,19 +60,13 @@ const InnerAddCardsController = ({ region }: { region: Region }) => {
 
 const AddCardsController = (): ReactElement => {
   const { region } = useWhoAmI().me
-  const { t } = useTranslation('cards')
+  const { t } = useTranslation('errors')
 
-  if (!region) {
-    return (
-      <NonIdealState
-        icon='cross'
-        title={t('errors:notAuthorized')}
-        description={t('errors:notAuthorizedToCreateCards')}
-      />
-    )
-  }
-
-  return <InnerAddCardsController region={region} />
+  return (
+    <RenderGuard condition={region !== undefined} error={{ description: t('notAuthorizedToCreateCards') }}>
+      <InnerAddCardsController region={region!} />
+    </RenderGuard>
+  )
 }
 
 export default AddCardsController

@@ -1,10 +1,11 @@
-import { NonIdealState, Spinner } from '@blueprintjs/core'
+import { CircularProgress } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 
 import { useWhoAmI } from '../../WhoAmIProvider'
 import { Region } from '../../generated/graphql'
+import RenderGuard from '../../mui-modules/components/RenderGuard'
 import useBlockNavigation from '../../util/useBlockNavigation'
 import GenerationFinished from './CardsCreatedMessage'
 import CreateCardsButtonBar from './CreateCardsButtonBar'
@@ -32,7 +33,7 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
   }
 
   if (cardGenerationStep === 'loading') {
-    return <Spinner />
+    return <CircularProgress style={{ margin: 'auto' }} />
   }
 
   if (cardGenerationStep === 'finished') {
@@ -66,11 +67,12 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
 const ImportCardsController = (): ReactElement => {
   const { region } = useWhoAmI().me
   const { t } = useTranslation('errors')
-  if (!region) {
-    return <NonIdealState icon='cross' title={t('notAuthorized')} description={t('notAuthorizedToCreateCards')} />
-  }
 
-  return <InnerImportCardsController region={region} />
+  return (
+    <RenderGuard condition={region !== undefined} error={{ description: t('notAuthorizedToCreateCards') }}>
+      <InnerImportCardsController region={region!} />
+    </RenderGuard>
+  )
 }
 
 export default ImportCardsController

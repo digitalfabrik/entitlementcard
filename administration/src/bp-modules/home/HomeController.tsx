@@ -6,6 +6,7 @@ import styled from 'styled-components'
 
 import { useWhoAmI } from '../../WhoAmIProvider'
 import { Role } from '../../generated/graphql'
+import RenderGuard from '../../mui-modules/components/RenderGuard'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 
 const StyledButton = styled(Button)`
@@ -26,47 +27,47 @@ const HomeController = (): ReactElement => {
   return (
     <Container>
       <H3>Wählen Sie eine Aktion aus:</H3>
-      {role === Role.RegionAdmin || role === Role.RegionManager ? (
-        <>
-          {applicationFeature ? (
-            <NavLink to='/applications'>
-              <StyledButton icon='form' text={t('incomingApplications')} />
-            </NavLink>
-          ) : null}
-          {cardCreation ? (
-            <NavLink to='/cards'>
-              <StyledButton icon='id-number' text={t('createCards')} />
-            </NavLink>
-          ) : null}
-        </>
-      ) : null}
-      {role === Role.ProjectAdmin || role === Role.RegionAdmin ? (
-        <>
-          <NavLink to='/users'>
-            <StyledButton icon='people' text={t('administerUsers')} />
+      <RenderGuard allowedRoles={[Role.RegionAdmin, Role.RegionManager]}>
+        {applicationFeature ? (
+          <NavLink to='/applications'>
+            <StyledButton icon='form' text={t('incomingApplications')} />
           </NavLink>
-          {cardStatistics.enabled ? (
-            <NavLink to='/statistics'>
-              <StyledButton icon='stacked-chart' text={t('statistics')} />
-            </NavLink>
-          ) : null}
-        </>
-      ) : null}
-      {role === Role.RegionAdmin && applicationFeature ? (
+        ) : null}
+        {cardCreation ? (
+          <NavLink to='/cards'>
+            <StyledButton icon='id-number' text={t('createCards')} />
+          </NavLink>
+        ) : null}
+      </RenderGuard>
+      <RenderGuard allowedRoles={[Role.RegionAdmin, Role.RegionManager]}>
+        <NavLink to='/users'>
+          <StyledButton icon='people' text={t('administerUsers')} />
+        </NavLink>
+        {cardStatistics.enabled ? (
+          <NavLink to='/statistics'>
+            <StyledButton icon='stacked-chart' text={t('statistics')} />
+          </NavLink>
+        ) : null}
+      </RenderGuard>
+
+      <RenderGuard allowedRoles={[Role.RegionAdmin]} condition={applicationFeature !== undefined}>
         <NavLink to='/region'>
           <StyledButton icon='path-search' text={t('administerRegions')} />
         </NavLink>
-      ) : null}
-      {(role === Role.ProjectAdmin && userImportApiEnabled) || role === Role.ExternalVerifiedApiUser ? (
+      </RenderGuard>
+
+      <RenderGuard
+        condition={(role === Role.ProjectAdmin && userImportApiEnabled) || role === Role.ExternalVerifiedApiUser}>
         <NavLink to='/project'>
           <StyledButton icon='projects' text={t('administerProjects')} />
         </NavLink>
-      ) : null}
-      {role === Role.ProjectStoreManager ? (
+      </RenderGuard>
+
+      <RenderGuard allowedRoles={[Role.ProjectStoreManager]}>
         <NavLink to='/stores'>
           <StyledButton icon='shop' text={t('administerStores')} />
         </NavLink>
-      ) : null}
+      </RenderGuard>
     </Container>
   )
 }

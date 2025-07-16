@@ -1,4 +1,5 @@
-import { Button, Spinner } from '@blueprintjs/core'
+import { Button } from '@blueprintjs/core'
+import { CircularProgress } from '@mui/material'
 import React, { ReactElement, ReactNode, createContext, useContext, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -40,11 +41,7 @@ const WhoAmIProvider = ({ children }: { children: ReactNode }): ReactElement => 
   const context = useMemo(() => ({ me: dataForContext?.me, refetch }), [dataForContext, refetch])
 
   if (!hasProp(context, 'me') && loading) {
-    return (
-      <StandaloneCenter>
-        <Spinner />
-      </StandaloneCenter>
-    )
+    return <CircularProgress style={{ margin: 'auto' }} />
   }
   if (!hasProp(context, 'me') || error) {
     return (
