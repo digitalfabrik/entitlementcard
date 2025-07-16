@@ -10,6 +10,7 @@ val isProductionEnvironment = System.getProperty("env") == "prod"
 plugins {
     alias(libs.plugins.com.google.protobuf)
     alias(libs.plugins.com.expediagroup.graphql)
+    alias(libs.plugins.com.github.gmazzo.buildconfig)
     alias(libs.plugins.io.gitlab.arturbosch.detekt)
     alias(libs.plugins.org.jetbrains.kotlin.jvm)
     alias(libs.plugins.org.jetbrains.kotlinx.kover)
@@ -87,6 +88,11 @@ ktlint {
     filter {
         exclude { it.file.path.contains("${layout.buildDirectory.get()}/generated/") }
     }
+}
+
+buildConfig {
+    buildConfigField("VERSION_NAME", System.getenv("NEW_VERSION_NAME"))
+    buildConfigField("COMMIT_HASH", System.getenv("CIRCLE_SHA1"))
 }
 
 if (isProductionEnvironment) {
