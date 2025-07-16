@@ -9,6 +9,6 @@ repositories {
 
 dependencies {
     implementation(gradleApi())
-    // Newest version does not work with flutter 3.32.6
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+    // TODO Upgrade to recent version -https://github.com/digitalfabrik/entitlementcard/issues/2357
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
 }
