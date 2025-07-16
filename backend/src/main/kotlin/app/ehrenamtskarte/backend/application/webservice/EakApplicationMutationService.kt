@@ -8,23 +8,21 @@ import app.ehrenamtskarte.backend.application.database.repos.ApplicationReposito
 import app.ehrenamtskarte.backend.application.webservice.schema.create.Application
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationView
 import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationHandler
+import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantEmail
+import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantName
 import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.auth.service.Authorizer.mayDeleteApplicationsInRegion
 import app.ehrenamtskarte.backend.auth.service.Authorizer.mayUpdateApplicationsInRegion
-import app.ehrenamtskarte.backend.common.utils.findValueByName
-import app.ehrenamtskarte.backend.common.utils.findValueByPath
 import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.ApplicationDataIncompleteException
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidJsonException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidLinkException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidNoteSizeException
 import app.ehrenamtskarte.backend.mail.Mailer
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.fasterxml.jackson.databind.JsonNode
 import graphql.execution.DataFetcherResult
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -129,7 +127,7 @@ class EakApplicationMutationService {
      * Approves an application if it is in the Pending status.
      *
      * @return The updated [ApplicationView].
-     * @throws NotFoundException If an application with the specified accessKey is not found.
+     * @throws InvalidInputException If an application with the specified id is not found
      * @throws ForbiddenException If the user is not allowed to modify this application
      */
     @GraphQLDescription("Approve an application")
@@ -142,7 +140,7 @@ class EakApplicationMutationService {
                     it.tryChangeStatus(Status.Approved)
                     ApplicationView.fromDbEntity(it, true)
                 }
-                ?: throw NotFoundException("Application not found")
+                ?: throw InvalidInputException("Application not found")
 
             if (
                 mayUpdateApplicationsInRegion(dfe.graphQlContext.context.getAdministrator(), applicationEntity.regionId)
@@ -158,32 +156,42 @@ class EakApplicationMutationService {
      * Rejects an application if it is in the Pending status.
      *
      * @return The updated [ApplicationView].
-     * @throws NotFoundException If an application with the specified accessKey is not found.
+     * @throws InvalidInputException If an application with the specified id is not found
      * @throws ForbiddenException If the user is not allowed to modify this application
      */
     @GraphQLDescription("Reject an application")
     fun rejectApplicationStatus(
+        project: String,
         applicationId: Int,
         rejectionMessage: String,
         dfe: DataFetchingEnvironment,
     ): ApplicationView {
-        dfe.graphQlContext.context.enforceSignedIn()
+        val context = dfe.graphQlContext.context
+        context.enforceSignedIn()
 
         return transaction {
-            val applicationEntity = ApplicationEntity.findById(applicationId)
-                ?.let {
-                    it.tryChangeStatus(Status.Rejected)
-                    it.rejectionMessage = rejectionMessage
-                    ApplicationView.fromDbEntity(it, true)
-                }
-                ?: throw NotFoundException("Application not found")
-            if (
-                mayUpdateApplicationsInRegion(dfe.graphQlContext.context.getAdministrator(), applicationEntity.regionId)
-            ) {
-                applicationEntity
-            } else {
+            val application = ApplicationEntity.findById(applicationId)
+                ?: throw InvalidInputException("Application not found")
+
+            if (!mayUpdateApplicationsInRegion(context.getAdministrator(), application.regionId.value)) {
                 throw ForbiddenException()
             }
+
+            if (!application.tryChangeStatus(Status.Rejected)) {
+                throw InvalidInputException("Application cannot be rejected, as it has already been processed")
+            }
+
+            application.rejectionMessage = rejectionMessage
+
+            Mailer.sendApplicationRejectedMail(
+                context.backendConfiguration,
+                context.backendConfiguration.getProjectConfig(project),
+                application.getApplicantName(),
+                application.getApplicantEmail(),
+                rejectionMessage,
+            )
+
+            ApplicationView.fromDbEntity(application, true)
         }
     }
 
@@ -218,36 +226,26 @@ class EakApplicationMutationService {
 
         transaction {
             val application = ApplicationEntity.findById(applicationId)
-                ?: throw InvalidJsonException("Application not found")
+                ?: throw InvalidInputException("Application not found")
 
             if (!Authorizer.maySendMailsInRegion(context.getAdministrator(), application.regionId.value)) {
                 throw ForbiddenException()
             }
 
             val applicationVerification = ApplicationVerificationEntity.findById(applicationVerificationId)
-                ?: throw InvalidJsonException("Application verification not found")
+                ?: throw InvalidInputException("Application verification not found")
 
             if (applicationVerification.applicationId.value != applicationId) {
-                throw InvalidJsonException("Application verification does not belong to the given application")
+                throw InvalidInputException("Application verification does not belong to the given application")
             }
 
             Mailer.sendApplicationVerificationMail(
                 context.backendConfiguration,
-                getApplicantName(application.parseJsonValue()),
+                application.getApplicantName(),
                 context.backendConfiguration.getProjectConfig(project),
                 applicationVerification,
             )
         }
         return true
-    }
-
-    private fun getApplicantName(json: JsonNode): String {
-        val personalData = json.findValueByPath("application", "personalData")
-            ?: throw ApplicationDataIncompleteException()
-
-        val forenames = personalData.findValueByName("forenames")
-        val surname = personalData.findValueByName("surname")
-
-        return listOfNotNull(forenames, surname).filter { it.isNotBlank() }.joinToString(" ")
     }
 }
