@@ -1,11 +1,11 @@
 import { Button } from '@blueprintjs/core'
-import { CircularProgress } from '@mui/material'
 import React, { ReactElement, ReactNode, createContext, useContext, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { AuthContext } from './AuthProvider'
 import StandaloneCenter from './bp-modules/StandaloneCenter'
 import { WhoAmIQuery, useWhoAmIQuery } from './generated/graphql'
+import CenteredCircularProgress from './mui-modules/base/CenteredCircularProgress'
 import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
 import { hasProp } from './util/helper'
 
@@ -41,7 +41,7 @@ const WhoAmIProvider = ({ children }: { children: ReactNode }): ReactElement => 
   const context = useMemo(() => ({ me: dataForContext?.me, refetch }), [dataForContext, refetch])
 
   if (!hasProp(context, 'me') && loading) {
-    return <CircularProgress style={{ margin: 'auto' }} />
+    return <CenteredCircularProgress />
   }
   if (!hasProp(context, 'me') || error) {
     return (

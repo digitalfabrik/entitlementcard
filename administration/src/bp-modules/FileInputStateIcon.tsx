@@ -1,12 +1,13 @@
 import { Icon, NonIdealStateIconSize } from '@blueprintjs/core'
-import { CircularProgress } from '@mui/material'
 import React, { ReactElement } from 'react'
+
+import CenteredCircularProgress from '../mui-modules/base/CenteredCircularProgress'
 
 export type FileInputStateType = 'loading' | 'error' | 'idle'
 
 const FileInputStateIcon = ({ inputState }: { inputState: FileInputStateType }): ReactElement => {
   if (inputState === 'loading') {
-    return <CircularProgress style={{ margin: 'auto' }} />
+    return <CenteredCircularProgress />
   }
   if (inputState === 'error') {
     return <Icon intent='danger' size={NonIdealStateIconSize.STANDARD} icon='error' />

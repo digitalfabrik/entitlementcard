@@ -1,10 +1,10 @@
-import { CircularProgress } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useSearchParams } from 'react-router'
 
 import { useWhoAmI } from '../../WhoAmIProvider'
 import { Region } from '../../generated/graphql'
+import CenteredCircularProgress from '../../mui-modules/base/CenteredCircularProgress'
 import RenderGuard from '../../mui-modules/components/RenderGuard'
 import useBlockNavigation from '../../util/useBlockNavigation'
 import AddCardsForm from './AddCardsForm'
@@ -25,7 +25,7 @@ const InnerAddCardsController = ({ region }: { region: Region }) => {
   })
 
   if (cardGenerationStep === 'loading') {
-    return <CircularProgress style={{ margin: 'auto' }} />
+    return <CenteredCircularProgress />
   }
   if (cardGenerationStep === 'finished') {
     return (
