@@ -28,7 +28,6 @@ import {
   Divider,
   InputAdornment,
   Stack,
-  SvgIcon,
   TextField,
   Tooltip,
   Typography,
@@ -39,7 +38,7 @@ import { de } from 'date-fns/locale'
 import React, { memo, useContext, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
-import CSVIcon from '../../assets/icons/csv.svg'
+import { CsvIcon } from '../../components/icons/CsvIcon'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import {
   ApplicationStatus,
@@ -349,11 +348,7 @@ const ApplicationCard = ({
           }
         }
       },
-      icon: (
-        <SvgIcon sx={{ height: 20 }}>
-          <CSVIcon />
-        </SvgIcon>
-      ),
+      icon: <CsvIcon sx={{ height: 20 }} />,
     },
     {
       name: t('exportPdf'),
