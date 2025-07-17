@@ -444,7 +444,7 @@
     "cardsActivatedBlue": "Blaue Ehrenamtskarte (aktiviert)",
     "cardsActivatedGolden": "Goldene Ehrenamtskarte (aktiviert)",
     "exportCsvNotPossible": "Etwas ist schiefgegangen beim Export der CSV.",
-    "noDataRegionInfo": "Für diese Region sind keine Daten vorhanden",
+    "noDataRegionInfo": "Für diese Region sind keine Daten für den ausgewählten Zeitraum vorhanden.",
     "totalCardsGolden": "Gold",
     "totalCardsBlue": "Blau"
   },
