@@ -68,33 +68,23 @@ class AboutPageState extends State<AboutPage> {
                 ),
               ),
             ),
-            Center(
-              child: Text(packageInfo.appName, style: textTheme.headlineSmall),
-            ),
+            Center(child: Text(packageInfo.appName, style: textTheme.headlineSmall)),
             Center(
               child: Text(packageInfo.version, style: TextStyle(color: colorTheme.tertiary)),
             ),
             const SizedBox(height: 20),
-            const Divider(
-              height: 1,
-              thickness: 1,
-            ),
+            const Divider(height: 1, thickness: 1),
             InkWell(
               child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
-                    Center(
-                      child: Text(t.about.publisher, style: textTheme.titleSmall),
-                    ),
+                    Center(child: Text(t.about.publisher, style: textTheme.titleSmall)),
                     Padding(
                       padding: const EdgeInsets.only(left: 10, right: 10, top: 16, bottom: 16),
                       child: Text(buildConfig.publisherAddress),
                     ),
-                    Text(
-                      t.about.moreInformation,
-                      style: textTheme.bodyLarge?.apply(color: colorTheme.secondary),
-                    ),
+                    Text(t.about.moreInformation, style: textTheme.bodyLarge?.apply(color: colorTheme.secondary)),
                   ],
                 ),
               ),
@@ -107,68 +97,59 @@ class AboutPageState extends State<AboutPage> {
               },
             ),
             if (buildConfig.appLocales.length > 1)
-              Column(children: [
-                const Divider(
-                  height: 1,
-                  thickness: 1,
+              Column(
+                children: [
+                  const Divider(height: 1, thickness: 1),
+                  Section(
+                    headline: t.about.settingsTitle,
+                    children: [
+                      ContentTile(icon: Icons.language, title: t.about.languageChange, children: [LanguageChange()]),
+                    ],
+                  ),
+                ],
+              ),
+            const Divider(height: 1, thickness: 1),
+            Section(
+              headline: t.about.infoTitle,
+              children: [
+                ContentTile(icon: Icons.copyright, title: t.about.licenses(n: 1), children: getCopyrightText(context)),
+                ListTile(
+                  leading: const Icon(Icons.privacy_tip_outlined),
+                  title: Text(t.about.privacyPolicy),
+                  onTap: () => launchUrlString(buildConfig.dataPrivacyPolicyUrl, mode: LaunchMode.externalApplication),
                 ),
-                Section(
-                  headline: t.about.settingsTitle,
-                  children: [
-                    ContentTile(icon: Icons.language, title: t.about.languageChange, children: [LanguageChange()]),
-                  ],
+                ListTile(
+                  leading: const Icon(Icons.accessibility_new_outlined),
+                  title: Text(t.about.accessibilityPolicy),
+                  onTap: () => launchUrlString(accessibilityPolicyUrl, mode: LaunchMode.externalApplication),
                 ),
-              ]),
-            const Divider(
-              height: 1,
-              thickness: 1,
+                ContentTile(icon: Icons.info_outline, title: t.about.disclaimer, children: getDisclaimerText(context)),
+                ListTile(
+                  leading: const Icon(Icons.book_outlined),
+                  title: Text(t.about.dependencies),
+                  onTap: () {
+                    Navigator.of(
+                      context,
+                      rootNavigator: true,
+                    ).push(AppRoute(builder: (context) => const CustomLicensePage()));
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.code_outlined),
+                  title: Text(t.about.sourceCode),
+                  onTap: () {
+                    launchUrlString(
+                      'https://github.com/digitalfabrik/entitlementcard',
+                      mode: LaunchMode.externalApplication,
+                    );
+                  },
+                ),
+              ],
             ),
-            Section(headline: t.about.infoTitle, children: [
-              ContentTile(icon: Icons.copyright, title: t.about.licenses(n: 1), children: getCopyrightText(context)),
-              ListTile(
-                leading: const Icon(Icons.privacy_tip_outlined),
-                title: Text(t.about.privacyPolicy),
-                onTap: () => launchUrlString(buildConfig.dataPrivacyPolicyUrl, mode: LaunchMode.externalApplication),
-              ),
-              ListTile(
-                leading: const Icon(Icons.accessibility_new_outlined),
-                title: Text(t.about.accessibilityPolicy),
-                onTap: () => launchUrlString(accessibilityPolicyUrl, mode: LaunchMode.externalApplication),
-              ),
-              ContentTile(
-                icon: Icons.info_outline,
-                title: t.about.disclaimer,
-                children: getDisclaimerText(context),
-              ),
-              ListTile(
-                leading: const Icon(Icons.book_outlined),
-                title: Text(t.about.dependencies),
-                onTap: () {
-                  Navigator.of(context, rootNavigator: true).push(
-                    AppRoute(
-                      builder: (context) => const CustomLicensePage(),
-                    ),
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.code_outlined),
-                title: Text(t.about.sourceCode),
-                onTap: () {
-                  launchUrlString(
-                    'https://github.com/digitalfabrik/entitlementcard',
-                    mode: LaunchMode.externalApplication,
-                  );
-                },
-              ),
-            ]),
             if (config.showDevSettings)
               Column(
                 children: [
-                  const Divider(
-                    height: 1,
-                    thickness: 1,
-                  ),
+                  const Divider(height: 1, thickness: 1),
                   ListTile(
                     leading: const Icon(Icons.build),
                     title: Text(t.about.developmentOptions),
@@ -177,19 +158,24 @@ class AboutPageState extends State<AboutPage> {
                       builder: (context) =>
                           SimpleDialog(title: Text(t.about.developmentOptions), children: [DevSettingsView()]),
                     ),
-                  )
+                  ),
                 ],
-              )
+              ),
           ];
         } else {
           children = [];
         }
-        return CustomScrollView(slivers: [SliverStatusBarProtector(), SliverList.list(children: children)]);
+        return CustomScrollView(
+          slivers: [
+            SliverStatusBarProtector(),
+            SliverList.list(children: children),
+          ],
+        );
       },
     );
   }
 
-  activateDialog(BuildContext context) {
+  void activateDialog(BuildContext context) {
     setState(() {
       clickCount += 1;
     });

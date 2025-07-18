@@ -26,7 +26,8 @@ if [ ! -z "$DART_FILES" ]; then
   fi
 
   # Prettify all selected files
-  echo "$DART_FILES" | xargs fvm dart format -l 120
+  # Run dart in the correct project folder to ensure correct dart project version
+  echo "$DART_FILES" | xargs -I {} sh -c 'cd ./frontend && fvm dart format -l 120 . {}'
 
   # Add back the modified/prettified files to staging
   echo "$DART_FILES" | xargs git add

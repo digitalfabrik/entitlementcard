@@ -24,6 +24,7 @@
 * [Migrations](./docs/migrations.md)
 * [Deep Linking](./docs/deep-linking.md)
 * [Domains & Projects](./docs/domains-projects.md)
+* [Upgrade flutter](./docs/flutter-upgrade.md)
 
 ## What is a "entitlementcard"
 

@@ -25,7 +25,8 @@ steps:
         fvm flutter analyze pubs/df_build_config --fatal-infos --fatal-warnings
   - run:
       name: Test
+        # fvm flutter packages - run in vm to allow dart:mirrors - see: https://github.com/flutter/flutter/issues/29868#issuecomment-475982139
       command: |
         fvm flutter test
-        fvm flutter test pubs/df_build_config
+        fvm flutter packages test pubs/df_build_config
   - notify

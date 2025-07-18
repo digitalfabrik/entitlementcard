@@ -9,5 +9,6 @@ repositories {
 
 dependencies {
     implementation(gradleApi())
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
+    // TODO Upgrade to recent version -https://github.com/digitalfabrik/entitlementcard/issues/2357
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
 }

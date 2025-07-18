@@ -1,6 +1,6 @@
 /// These widgets wrap the material AppBar into sized box widgets which can be
 /// used like the apple navigation bars.
-library navigation_bars;
+library;
 
 import 'package:ehrenamtskarte/debouncer.dart';
 import 'package:flutter/material.dart';
@@ -33,13 +33,7 @@ class AppBarWithBottom extends StatelessWidget {
   final PreferredSizeWidget bottom;
   final List<Widget>? actions;
 
-  const AppBarWithBottom({
-    super.key,
-    required this.flexibleSpace,
-    this.color,
-    required this.bottom,
-    this.actions,
-  });
+  const AppBarWithBottom({super.key, required this.flexibleSpace, this.color, required this.bottom, this.actions});
 
   @override
   Widget build(BuildContext context) {
@@ -90,23 +84,26 @@ class StatusBarProtectorFlexibleSpace extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final originalOpacity = backgroundColor.opacity;
+    final originalOpacity = backgroundColor.a;
     return LayoutBuilder(
       builder: (context, constraints) => OverflowBox(
-          fit: OverflowBoxFit.max,
-          alignment: Alignment.topCenter,
-          // Just like Android's GradientProtection overdraw by a factor of 1.2.
-          maxHeight: constraints.maxHeight * 1.2,
-          maxWidth: constraints.maxWidth,
-          child: Container(
-              decoration: BoxDecoration(
+        fit: OverflowBoxFit.max,
+        alignment: Alignment.topCenter,
+        // Just like Android's GradientProtection overdraw by a factor of 1.2.
+        maxHeight: constraints.maxHeight * 1.2,
+        maxWidth: constraints.maxWidth,
+        child: Container(
+          decoration: BoxDecoration(
             gradient: LinearGradient(
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-                colors: _alphas
-                    .map((alpha) => backgroundColor.withOpacity(originalOpacity * alpha))
-                    .toList(growable: false)),
-          ))),
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              colors: _alphas
+                  .map((alpha) => backgroundColor.withValues(alpha: originalOpacity * alpha))
+                  .toList(growable: false),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -116,14 +113,14 @@ class StatusBarProtectorFlexibleSpace extends StatelessWidget {
 class StatusBarProtector extends StatelessWidget implements PreferredSizeWidget {
   /// As per [Android documentation](https://developer.android.com/develop/ui/views/layout/edge-to-edge), this
   /// is ideally, the pane's background color with 80% opacity.
-  /// If unset, `colorScheme.surface.withOpacity(0.8)` is used.
+  /// If unset, `colorScheme.surface.withValues(alpha:0.8)` is used.
   final Color? backgroundColor;
 
   const StatusBarProtector({super.key, this.backgroundColor});
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor = this.backgroundColor ?? Theme.of(context).colorScheme.surface.withOpacity(0.8);
+    final backgroundColor = this.backgroundColor ?? Theme.of(context).colorScheme.surface.withValues(alpha: 0.8);
     return AppBar(
       backgroundColor: Colors.transparent,
       toolbarHeight: 0.0,
@@ -141,14 +138,14 @@ class StatusBarProtector extends StatelessWidget implements PreferredSizeWidget 
 class SliverStatusBarProtector extends StatelessWidget {
   /// As per [Android documentation](https://developer.android.com/develop/ui/views/layout/edge-to-edge), this
   /// is ideally, the pane's background color with 80% opacity.
-  /// If unset, `colorScheme.surface.withOpacity(0.8)` is used.
+  /// If unset, `colorScheme.surface.withValues(alpha:0.8)` is used.
   final Color? backgroundColor;
 
   const SliverStatusBarProtector({super.key, this.backgroundColor});
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor = this.backgroundColor ?? Theme.of(context).colorScheme.surface.withOpacity(0.8);
+    final backgroundColor = this.backgroundColor ?? Theme.of(context).colorScheme.surface.withValues(alpha: 0.8);
     return SliverAppBar(
       backgroundColor: Colors.transparent,
       toolbarHeight: 0.0,
@@ -202,7 +199,7 @@ class SearchSliverAppBarState extends State<SearchSliverAppBar> {
           IconButton(icon: const Icon(Icons.clear), onPressed: _clearInput, color: foregroundColor),
         Padding(
           padding: const EdgeInsets.only(right: 15.0),
-          child: Icon(Icons.search, color: foregroundColor?.withOpacity(0.9)),
+          child: Icon(Icons.search, color: foregroundColor?.withValues(alpha: 0.9)),
         ),
       ],
     );
@@ -215,11 +212,11 @@ class SearchSliverAppBarState extends State<SearchSliverAppBar> {
     textEditingController.dispose();
   }
 
-  _onSearchFieldTextChanged(String text) {
+  void _onSearchFieldTextChanged(String text) {
     widget.debouncer.run(() => widget.onChanged(text.trim()));
   }
 
-  _clearInput() {
+  void _clearInput() {
     textEditingController.clear();
     _onSearchFieldTextChanged(textEditingController.value.text);
   }
