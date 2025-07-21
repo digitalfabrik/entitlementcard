@@ -72,27 +72,26 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsModel>(context);
+
     final mapStyleUrl = settings.enableStaging
         ? buildConfig.mapStyleUrl.staging
-        : isProduction()
-        ? buildConfig.mapStyleUrl.production
-        : isLocal()
-        ? buildConfig.mapStyleUrl.local
-        : buildConfig.mapStyleUrl.showcase;
+        : switch (appEnvironment) {
+            'production' => buildConfig.mapStyleUrl.production,
+            'local' => buildConfig.mapStyleUrl.local,
+            _ => buildConfig.mapStyleUrl.showcase,
+          };
 
     final graphqlUrl = settings.enableStaging
         ? buildConfig.backendUrl.staging
-        : isProduction()
-        ? buildConfig.backendUrl.production
-        : isLocal()
-        ? buildConfig.backendUrl.local
-        : buildConfig.backendUrl.showcase;
+        : switch (appEnvironment) {
+            'production' => buildConfig.backendUrl.production,
+            'local' => buildConfig.backendUrl.local,
+            _ => buildConfig.backendUrl.showcase,
+          };
 
     final projectId = isProduction()
         ? buildConfig.projectId.production
-        : isLocal()
-        ? buildConfig.projectId.local
-        : buildConfig.projectId.showcase;
+        : (isLocal() ? buildConfig.projectId.local : buildConfig.projectId.showcase);
 
     // Load default language from settings
     WidgetsBinding.instance.addPostFrameCallback((_) {
