@@ -2,6 +2,7 @@ package app.ehrenamtskarte.backend.common.webservice
 
 import app.ehrenamtskarte.backend.application.webservice.ApplicationAttachmentHandler
 import app.ehrenamtskarte.backend.application.webservice.HealthHandler
+import app.ehrenamtskarte.backend.common.utils.GraphQLSentryTracing
 import app.ehrenamtskarte.backend.common.utils.initializeSentry
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.Environment
@@ -16,6 +17,8 @@ class WebService {
     companion object {
         private val MIN_FREE_STORAGE = 2.0.pow(30)
     }
+
+    private val graphqlTracing = GraphQLSentryTracing()
 
     fun start(config: BackendConfiguration) {
         val host = config.server.host
@@ -58,13 +61,19 @@ class WebService {
         val applicationHandler = ApplicationAttachmentHandler(applicationData)
         val healthHandler = HealthHandler(config)
         val userImportHandler = UserImportHandler(config)
-
+        app.before("/") { ctx ->
+            // Store tracing in context
+            ctx.attribute("graphql.tracing", graphqlTracing)
+        }
         app.post("/") { context ->
             if (config.isDevelopment()) {
                 context.header("Access-Control-Allow-Headers: Authorization")
                 context.header("Access-Control-Allow-Origin: *")
             }
-            graphQLHandler.handle(context, applicationData)
+
+            graphqlTracing.traceGraphQLRequest(context) {
+                graphQLHandler.handle(context, applicationData)
+            }
         }
 
         app.get(mapStyleHandler.getPath()) { context ->
@@ -85,7 +94,7 @@ class WebService {
 
         app.start(host, port)
 
-        if (config.environment == Environment.PRODUCTION) {
+        if (config.environment == Environment.DEVELOPMENT) {
             initializeSentry()
             println("Init Sentry for production environment")
         }
