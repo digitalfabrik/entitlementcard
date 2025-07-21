@@ -31,6 +31,6 @@
     "eslint-plugin-unicorn": "^59.0.1",
     "prettier": "^2.8.8",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.33.1"
+    "typescript-eslint": "^8.37.0"
   }
 }
