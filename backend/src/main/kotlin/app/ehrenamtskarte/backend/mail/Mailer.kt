@@ -405,4 +405,36 @@ object Mailer {
             message,
         )
     }
+
+    fun sendApplicationRejectedMail(
+        backendConfig: BackendConfiguration,
+        projectConfig: ProjectConfig,
+        applicantName: String,
+        applicantAddress: String,
+        rejectionMessage: String,
+    ) {
+        val subject = "Ihr Antrag wurde abgelehnt"
+        val message = emailBody {
+            p { +"Sehr geehrte/r $applicantName," }
+            p {
+                +"vielen Dank für Ihren Antrag und Ihr Interesse an der Bayerischen Ehrenamtskarte. "
+                +"Wir danken Ihnen für das Engagement und die Zeit, die Sie zum Wohle der Gemeinschaft einbringen. "
+                +"Ihr Einsatz ist von großem Wert und verdient Anerkennung. "
+                +"In diesem Fall ist es leider nicht möglich, dass Sie die Bayerische Ehrenamtskarte erhalten:"
+            }
+            p { +rejectionMessage }
+            finalInformationParagraph(projectConfig)
+        }
+        try {
+            sendMail(
+                backendConfig,
+                projectConfig.smtp,
+                projectConfig.administrationName,
+                applicantAddress,
+                subject,
+                message,
+            )
+        } catch (_: MailNotSentException) {
+        }
+    }
 }

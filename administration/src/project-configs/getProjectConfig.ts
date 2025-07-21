@@ -71,8 +71,10 @@ export type CsvExport =
     }
 
 export type StatisticsTheme = {
-  primaryColor: string
-  primaryColorLight: string
+  colorCardCreated: string
+  colorActivatedCard: string
+  colorActivatedBlueCard: string
+  colorActivatedGoldenCard: string
 }
 
 export type CardStatistics =
