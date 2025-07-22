@@ -3,8 +3,7 @@ import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import ApplicationStatusHelpButton from './ApplicationStatusBarHelpButton'
-import { ApplicationStatusBarItemType, ApplicationVerificationStatus, GetApplicationsType } from './types'
-import { applicationEffectiveStatus } from './utils'
+import { ApplicationStatusBarItemType, GetApplicationsType } from './types'
 
 const Container = styled.div`
   display: flex;
@@ -64,23 +63,15 @@ const ApplicationStatusBarItem = ({
   count: number
   onSetActiveBarItem: (item: ApplicationStatusBarItemType) => void
 }): ReactElement => {
-  const { title } = item
+  const { i18nKey } = item
   const { t } = useTranslation('applicationsOverview')
 
   return (
-    <ItemContainer onClick={() => onSetActiveBarItem(item)} id={title} $active={active}>
-      {t(title)}(<span data-testid={`status-${t(title)}-count`}>{count}</span>)
+    <ItemContainer onClick={() => onSetActiveBarItem(item)} id={i18nKey} $active={active}>
+      {t(i18nKey)}(<span data-testid={`status-${t(i18nKey)}-count`}>{count}</span>)
     </ItemContainer>
   )
 }
-
-const applicationsWithStatusCount = (
-  applications: GetApplicationsType[],
-  status?: ApplicationVerificationStatus
-): number =>
-  status === undefined
-    ? applications.length
-    : applications.reduce((count, a) => count + (applicationEffectiveStatus(a) === status ? 1 : 0), 0)
 
 const ApplicationStatusBar = ({
   applications,
@@ -101,8 +92,8 @@ const ApplicationStatusBar = ({
       <BarItemContainer>
         {barItems.map(item => (
           <ApplicationStatusBarItem
-            key={item.title}
-            count={applicationsWithStatusCount(applications, item.status)}
+            key={item.i18nKey}
+            count={applications.reduce((count, application) => count + (item.filter(application) ? 1 : 0), 0)}
             item={item}
             active={item === activeBarItem}
             onSetActiveBarItem={onSetActiveBarItem}

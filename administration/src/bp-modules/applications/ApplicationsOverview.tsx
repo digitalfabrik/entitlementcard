@@ -1,37 +1,73 @@
 import { Container } from '@mui/material'
-import { TFunction } from 'i18next'
 import { AnimatePresence, motion } from 'motion/react'
 import React, { ReactElement, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
+import { ApplicationStatus } from '../../generated/graphql'
 import AlertBox from '../../mui-modules/base/AlertBox'
 import ApplicationCard from './ApplicationCard'
 import ApplicationStatusBar from './ApplicationStatusBar'
 import usePrintApplication from './hooks/usePrintApplication'
-import { ApplicationStatusBarItemType, ApplicationVerificationStatus, GetApplicationsType } from './types'
-import { applicationEffectiveStatus } from './utils'
+import { ApplicationStatusBarItemType, GetApplicationsType } from './types'
+
+const countApprovingVerifications = (application: GetApplicationsType): number =>
+  application.verifications.reduce((count, verification) => count + (verification.verifiedDate !== null ? 1 : 0), 0)
+
+const countRejectingVerifications = (application: GetApplicationsType): number =>
+  application.verifications.reduce((count, verification) => count + (verification.rejectedDate !== null ? 1 : 0), 0)
+
+const applicationWithdrawn = (application: GetApplicationsType): boolean =>
+  application.status === ApplicationStatus.Withdrawn
+
+const applicationApproved = (application: GetApplicationsType): boolean =>
+  countApprovingVerifications(application) > 0 && countRejectingVerifications(application) === 0
+
+const applicationRejected = (application: GetApplicationsType): boolean =>
+  countApprovingVerifications(application) === 0 && countRejectingVerifications(application) > 0
+
+const applicationOpen = (application: GetApplicationsType): boolean =>
+  countApprovingVerifications(application) === 0 && countRejectingVerifications(application) === 0
+
+const applicationAmbiguous = (application: GetApplicationsType): boolean =>
+  countApprovingVerifications(application) > 0 && countRejectingVerifications(application) > 0
+
+const applicationListOrder = (application: GetApplicationsType): number => {
+  if (applicationAmbiguous(application)) {
+    return 1
+  }
+  if (applicationWithdrawn(application)) {
+    return 2
+  }
+  if (applicationRejected(application)) {
+    return 3
+  }
+  if (applicationApproved(application)) {
+    return 4
+  }
+  return 0
+}
 
 export const barItems: ApplicationStatusBarItemType[] = [
   {
-    title: 'allApplications',
-    status: undefined,
+    i18nKey: 'allApplications',
+    filter: _ => true,
   },
   {
-    title: 'accepted',
-    status: ApplicationVerificationStatus.Approved,
+    i18nKey: 'accepted',
+    filter: applicationApproved,
   },
   {
-    title: 'rejected',
-    status: ApplicationVerificationStatus.Rejected,
+    i18nKey: 'rejected',
+    filter: applicationRejected,
   },
   {
-    title: 'withdrawn',
-    status: ApplicationVerificationStatus.Withdrawn,
+    i18nKey: 'withdrawn',
+    filter: applicationWithdrawn,
   },
   {
-    title: 'open',
-    status: ApplicationVerificationStatus.Ambiguous,
+    i18nKey: 'open',
+    filter: applicationOpen,
   },
 ]
 
@@ -47,9 +83,6 @@ const ApplicationList = styled.div`
   }
 `
 
-const getEmptyApplicationsListStatusDescription = (activeBarItem: ApplicationStatusBarItemType, t: TFunction): string =>
-  activeBarItem.status !== undefined ? `${t(activeBarItem.title).toLowerCase()}en` : ''
-
 const ApplicationsOverview = ({ applications }: { applications: GetApplicationsType[] }): ReactElement => {
   const [updatedApplications, setUpdatedApplications] = useState(applications)
   const { applicationIdForPrint, printApplicationById } = usePrintApplication()
@@ -58,12 +91,12 @@ const ApplicationsOverview = ({ applications }: { applications: GetApplicationsT
   const filteredApplications: GetApplicationsType[] = useMemo(
     () =>
       updatedApplications
-        .filter(a => activeBarItem.status === undefined || applicationEffectiveStatus(a) === activeBarItem.status)
+        .filter(application => activeBarItem.filter(application))
         // Sort by status and within this status by creation date ascending
         .sort(
           (a, b): number =>
             // Sort by status
-            applicationEffectiveStatus(a) - applicationEffectiveStatus(b) ||
+            applicationListOrder(a) - applicationListOrder(b) ||
             // If status is equal, sort by date
             new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime()
         ),
@@ -106,10 +139,8 @@ const ApplicationsOverview = ({ applications }: { applications: GetApplicationsT
       ) : (
         <AlertBox
           severity='info'
-          title={t('noApplicationsOfType', { status: getEmptyApplicationsListStatusDescription(activeBarItem, t) })}
-          description={t('noApplicationsOfTypeDescription', {
-            status: getEmptyApplicationsListStatusDescription(activeBarItem, t),
-          })}
+          title={t('noApplicationsOfType', { status: activeBarItem.i18nKey })}
+          description={t('noApplicationsOfTypeDescription', { status: activeBarItem.i18nKey })}
         />
       )}
     </Container>
