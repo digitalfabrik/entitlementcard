@@ -11,7 +11,7 @@ import {
   PreVerifiedEntitlementType,
   getPreVerifiedEntitlementType,
   preVerifiedEntitlements,
-} from '../PreVerifiedEntitlementType'
+} from '../preVerifiedEntitlements'
 import { type GetApplicationsType, type GetApplicationsVerificationType, VerificationStatus } from '../types'
 import { verificationStatus } from '../utils'
 import { ApplicationNoteTooltip } from './ApplicationNoteTooltip'
