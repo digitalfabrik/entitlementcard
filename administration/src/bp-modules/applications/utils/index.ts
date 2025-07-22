@@ -1,10 +1,4 @@
-import { ApplicationStatus } from '../../../generated/graphql'
-import {
-  ApplicationVerificationStatus,
-  GetApplicationsType,
-  GetApplicationsVerificationType,
-  VerificationStatus,
-} from '../types'
+import { GetApplicationsVerificationType, VerificationStatus } from '../types'
 
 export const verificationStatus = (verification: GetApplicationsVerificationType): VerificationStatus => {
   if (verification.verifiedDate) {
@@ -14,21 +8,4 @@ export const verificationStatus = (verification: GetApplicationsVerificationType
     return VerificationStatus.Rejected
   }
   return VerificationStatus.Pending
-}
-
-export const applicationEffectiveStatus = (application: GetApplicationsType): ApplicationVerificationStatus => {
-  if (application.status === ApplicationStatus.Withdrawn) {
-    return ApplicationVerificationStatus.Withdrawn
-  }
-  if (
-    application.verifications.every(verification => verificationStatus(verification) === VerificationStatus.Verified)
-  ) {
-    return ApplicationVerificationStatus.Approved
-  }
-  if (
-    application.verifications.every(verification => verificationStatus(verification) === VerificationStatus.Rejected)
-  ) {
-    return ApplicationVerificationStatus.Rejected
-  }
-  return ApplicationVerificationStatus.Ambiguous
 }
