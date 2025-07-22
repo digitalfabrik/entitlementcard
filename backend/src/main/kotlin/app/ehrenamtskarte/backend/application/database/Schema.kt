@@ -61,15 +61,6 @@ class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
     var statusResolvedDate by Applications.statusResolvedDate
     var rejectionMessage by Applications.rejectionMessage
 
-    /** Try to change the status to the given value. Returns true if successful, false otherwise. */
-    fun tryChangeStatus(status: Status): Boolean =
-        try {
-            this.status = status
-            true
-        } catch (_: IllegalArgumentException) {
-            false
-        }
-
     fun parseJsonValue(): JsonNode = jacksonObjectMapper().readTree(jsonValue)
 }
 
