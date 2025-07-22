@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { ApplicationStatus } from '../../../generated/graphql'
 import { renderWithTranslation } from '../../../testing/render'
 import ApplicationStatusBar from '../ApplicationStatusBar'
 import { barItems } from '../ApplicationsOverview'
@@ -65,6 +66,7 @@ const applications: GetApplicationsType[] = [
         verifiedDate: null,
       },
     ],
+    status: ApplicationStatus.Withdrawn,
     statusResolvedDate: '2024-05-15T09:20:23.350015Z',
   },
 ]
