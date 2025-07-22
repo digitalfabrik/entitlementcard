@@ -120,48 +120,51 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
                   ElevatedButton.icon(
                     onPressed:
                         activationCode != null && _state == _State.waiting && status == DeepLinkActivationStatus.valid
-                            ? () async {
+                        ? () async {
+                            setState(() {
+                              _state = _State.loading;
+                            });
+                            try {
+                              final activated = await activateCard(
+                                context,
+                                activationCode,
+                                source: ActivationSource.deepLink,
+                              );
+                              if (!context.mounted) return;
+                              if (activated) {
+                                final cardIndex =
+                                    Provider.of<UserCodeModel>(context, listen: false).userCodes.length - 1;
+                                GoRouter.of(context).pushReplacement('$homeRouteName/$identityTabIndex/$cardIndex');
                                 setState(() {
-                                  _state = _State.loading;
+                                  _state = _State.success;
                                 });
-                                try {
-                                  final activated =
-                                      await activateCard(context, activationCode, source: ActivationSource.deepLink);
-                                  if (!context.mounted) return;
-                                  if (activated) {
-                                    final cardIndex =
-                                        Provider.of<UserCodeModel>(context, listen: false).userCodes.length - 1;
-                                    GoRouter.of(context).pushReplacement('$homeRouteName/$identityTabIndex/$cardIndex');
-                                    setState(() {
-                                      _state = _State.success;
-                                    });
-                                  } else {
-                                    setState(() {
-                                      _state = _State.waiting;
-                                    });
-                                  }
-                                } on ServerCardActivationException catch (_) {
-                                  if (!context.mounted) return;
-                                  setState(() {
-                                    _state = _State.waiting;
-                                  });
-
-                                  await ConnectionFailedDialog.show(
-                                      context, t.identification.codeActivationFailedConnection);
-                                } catch (_) {
-                                  if (!context.mounted) return;
-                                  setState(() {
-                                    _state = _State.waiting;
-                                  });
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(t.common.unknownError),
-                                    ),
-                                  );
-                                  rethrow;
-                                }
+                              } else {
+                                setState(() {
+                                  _state = _State.waiting;
+                                });
                               }
-                            : null,
+                            } on ServerCardActivationException catch (_) {
+                              if (!context.mounted) return;
+                              setState(() {
+                                _state = _State.waiting;
+                              });
+
+                              await ConnectionFailedDialog.show(
+                                context,
+                                t.identification.codeActivationFailedConnection,
+                              );
+                            } catch (_) {
+                              if (!context.mounted) return;
+                              setState(() {
+                                _state = _State.waiting;
+                              });
+                              ScaffoldMessenger.of(
+                                context,
+                              ).showSnackBar(SnackBar(content: Text(t.common.unknownError)));
+                              rethrow;
+                            }
+                          }
+                        : null,
                     icon: _state != _State.waiting
                         ? Container(
                             width: 24,

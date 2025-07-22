@@ -82,8 +82,9 @@ Future<bool> activateCard(
       await ActivationErrorDialog.showErrorDialog(context, t.identification.cardInvalid);
       return false;
     case Enum$ActivationState.wrong_secret:
-      final message =
-          source == ActivationSource.qrScanner ? t.identification.codeInvalid : t.deeplinkActivation.invalidCode;
+      final message = source == ActivationSource.qrScanner
+          ? t.identification.codeInvalid
+          : t.deeplinkActivation.invalidCode;
       await ActivationErrorDialog.showErrorDialog(context, message);
       return false;
     case Enum$ActivationState.expired:
@@ -98,7 +99,8 @@ Future<bool> activateCard(
         return false;
       }
       debugPrint(
-          'Card Activation: Card had been activated already and was not overwritten. Waiting for user feedback.');
+        'Card Activation: Card had been activated already and was not overwritten. Waiting for user feedback.',
+      );
       if (await ActivationOverwriteExistingDialog.showActivationOverwriteExistingDialog(context) && context.mounted) {
         return await activateCard(context, activationCode, source: source, overwriteExisting: true);
       } else {
