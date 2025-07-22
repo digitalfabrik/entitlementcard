@@ -1,66 +1,54 @@
-import { Tooltip as BpTooltip } from '@blueprintjs/core'
+/* eslint-disable react/destructuring-assignment */
 import { EditNote } from '@mui/icons-material'
-import { Stack, Tooltip, useTheme } from '@mui/material'
-import React, { ReactElement, forwardRef } from 'react'
+import { Box, Stack, Tooltip } from '@mui/material'
+import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
-import type { JsonField } from './JsonFieldView'
-import { findValue } from './JsonFieldView'
+import type { JsonField } from '../JsonFieldView'
+import { findValue } from '../JsonFieldView'
 import {
   PreVerifiedEntitlementType,
   getPreVerifiedEntitlementType,
   preVerifiedEntitlements,
-} from './PreVerifiedEntitlementType'
-import VerificationIndicator from './components/VerificationIndicator'
-import { GetApplicationsType, GetApplicationsVerificationType, VerificationStatus } from './types'
-import { verificationStatus } from './utils'
+} from '../PreVerifiedEntitlementType'
+import { type GetApplicationsType, type GetApplicationsVerificationType, VerificationStatus } from '../types'
+import { verificationStatus } from '../utils'
+import { ApplicationNoteTooltip } from './ApplicationNoteTooltip'
+import { VerificationIcon } from './VerificationIcon'
 
-const ToolTipContent = forwardRef<HTMLDivElement, unknown>((p, ref) => {
+const VerificationItem = (p: { status: VerificationStatus; count: number }): ReactElement => (
+  <Box sx={{ display: 'inline-flex', alignItems: 'center' }} data-testid={`indicator-${p.status}`}>
+    <VerificationIcon status={p.status} />: {p.count}
+  </Box>
+)
+
+export const VerificationIndicator = (p: { verifications: GetApplicationsVerificationType[] }): ReactElement => {
   const { t } = useTranslation('applicationsOverview')
-  const theme = useTheme()
-
-  return (
-    <Stack
-      ref={ref}
-      sx={{
-        backgroundColor: theme.palette.defaultInverted.main,
-        color: theme.palette.defaultInverted.contrastText,
-        padding: 2,
-        borderRadius: 2,
-      }}>
-      <b>{t('confirmationsByOrganizations')}</b>
-      <br />
-      {t('verified/pending/rejected')}
-    </Stack>
-  )
-})
-
-export const VerificationQuickIndicator = ({
-  verifications,
-}: {
-  verifications: GetApplicationsVerificationType[]
-}): ReactElement => {
-  const verificationStatuses = verifications.map(verificationStatus)
+  const verificationStatuses = p.verifications.map(verificationStatus)
 
   return (
     <Tooltip
-      title='title'
-      slots={{
-        tooltip: ToolTipContent,
-      }}>
-      <Stack direction='row' sx={{ height: '25px', alignItems: 'center', '&:focus': { outline: 'none' }, gap: '8px' }}>
-        <VerificationIndicator
+      title={
+        <Box>
+          <b>{t('confirmationsByOrganizations')}</b>
+          <br />
+          <br />
+          {t('verified/pending/rejected')}
+        </Box>
+      }>
+      <Stack direction='row' sx={{ height: '25px', alignItems: 'center', gap: 1 }}>
+        <VerificationItem
           status={VerificationStatus.Verified}
-          text={`: ${verificationStatuses.filter(v => v === VerificationStatus.Verified).length}`}
+          count={verificationStatuses.reduce((count, s) => (s === VerificationStatus.Verified ? count + 1 : count), 0)}
         />
-        <VerificationIndicator
+        <VerificationItem
           status={VerificationStatus.Pending}
-          text={`: ${verificationStatuses.filter(v => v === VerificationStatus.Pending).length}`}
+          count={verificationStatuses.reduce((count, s) => (s === VerificationStatus.Pending ? count + 1 : count), 0)}
         />
-        <VerificationIndicator
+        <VerificationItem
           status={VerificationStatus.Rejected}
-          text={`: ${verificationStatuses.filter(v => v === VerificationStatus.Rejected).length}`}
+          count={verificationStatuses.reduce((count, s) => (s === VerificationStatus.Rejected ? count + 1 : count), 0)}
         />
       </Stack>
     </Tooltip>
@@ -104,11 +92,11 @@ const PreVerifiedLabel = styled.span<{ type: PreVerifiedEntitlementType }>`
   white-space: nowrap;
 `
 
-export const PreVerifiedQuickIndicator = ({ type }: { type: PreVerifiedEntitlementType }): ReactElement => {
+export const PreVerifiedIndicator = ({ type }: { type: PreVerifiedEntitlementType }): ReactElement => {
   const { t } = useTranslation('applicationsOverview')
   return (
-    <BpTooltip
-      content={
+    <Tooltip
+      title={
         <div>
           <b>{t('confirmationsByOrganizations')}</b>
           <br />
@@ -117,9 +105,9 @@ export const PreVerifiedQuickIndicator = ({ type }: { type: PreVerifiedEntitleme
       }>
       <Stack direction='row' sx={{ height: '25px', alignItems: 'center', '&:focus': { outline: 'none' } }}>
         <PreVerifiedLabel type={type}>{preVerifiedLabelMetaData[type].labelText}</PreVerifiedLabel>
-        <VerificationIndicator status={VerificationStatus.Verified} />
+        <VerificationIcon status={VerificationStatus.Verified} />
       </Stack>
-    </BpTooltip>
+    </Tooltip>
   )
 }
 
@@ -136,11 +124,15 @@ export const ApplicationIndicators = ({
 
   return (
     <Stack direction='row' spacing={2} sx={{ displayPrint: 'none' }}>
-      {(application.note ?? '').trim().length > 0 && <EditNote />}
+      {(application.note ?? '').trim().length > 0 && (
+        <ApplicationNoteTooltip application={application}>
+          <EditNote />
+        </ApplicationNoteTooltip>
+      )}
       {preVerifiedEntitlementType !== undefined ? (
-        <PreVerifiedQuickIndicator type={preVerifiedEntitlementType} />
+        <PreVerifiedIndicator type={preVerifiedEntitlementType} />
       ) : (
-        <VerificationQuickIndicator verifications={application.verifications} />
+        <VerificationIndicator verifications={application.verifications} />
       )}
     </Stack>
   )

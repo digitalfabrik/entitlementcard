@@ -12,6 +12,8 @@ import app.ehrenamtskarte.backend.userdata.database.UserEntitlements
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.Coalesce
 import org.jetbrains.exposed.sql.JoinType
+import org.jetbrains.exposed.sql.Op
+import org.jetbrains.exposed.sql.QueryAlias
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.greaterEq
@@ -81,37 +83,55 @@ object CardRepository {
         until: Instant,
         regionId: Int?,
     ): List<CardStatisticsResultModel> {
+        // Creates sql expression for the card count
         val numAlias = Coalesce(Cards.id.count(), intLiteral(0)).alias("numCards")
-        val cardsCreated = (Regions leftJoin Cards leftJoin Projects)
-            .select(Regions.id, numAlias)
-            .where(Cards.issueDate.greaterEq(from) and Cards.issueDate.less(until))
-            .groupBy(Regions.id)
-            .alias("AllCards")
-        val activeCards = (Regions leftJoin Cards)
-            .select(Regions.id, numAlias)
-            .where(
-                Cards.firstActivationDate.isNotNull() and
-                    Cards.issueDate.greaterEq(from) and
-                    Cards.issueDate.less(until),
-            )
-            .groupBy(Regions.id)
-            .alias("ActiveCards")
+
+        // Base condition for the time
+        val timeCondition = Cards.issueDate.greaterEq(from) and Cards.issueDate.less(until)
+
+        // Helper function that can receive additional conditions
+        fun createdCardsQuery(name: String, additionalConditions: Op<Boolean>? = null): QueryAlias =
+            (Regions leftJoin Cards)
+                .select(Regions.id, numAlias)
+                .where(additionalConditions?.and(timeCondition) ?: timeCondition)
+                .groupBy(Regions.id).alias(name)
+
+        val cardsCreated = createdCardsQuery("AllCards")
+        val activeCards = createdCardsQuery("ActiveCards", Cards.firstActivationDate.isNotNull())
+        val activeCardsBlue = createdCardsQuery(
+            "ActiveCardsBlue",
+            Cards.firstActivationDate.isNotNull() and Cards.expirationDay.isNotNull(),
+        )
+        val activeCardsGolden = createdCardsQuery(
+            "ActiveCardsGolden",
+            Cards.firstActivationDate.isNotNull() and Cards.expirationDay.isNull(),
+        )
+
         val query = Regions
             .join(cardsCreated, JoinType.LEFT, Regions.id, cardsCreated[Regions.id])
             .join(activeCards, JoinType.LEFT, Regions.id, activeCards[Regions.id])
-            .select(Regions.name, Regions.prefix, cardsCreated[numAlias], activeCards[numAlias])
+            .join(activeCardsBlue, JoinType.LEFT, Regions.id, activeCardsBlue[Regions.id])
+            .join(activeCardsGolden, JoinType.LEFT, Regions.id, activeCardsGolden[Regions.id])
+            .select(
+                Regions.name,
+                Regions.prefix,
+                cardsCreated[numAlias],
+                activeCards[numAlias],
+                activeCardsBlue[numAlias],
+                activeCardsGolden[numAlias],
+            )
             .where(if (regionId == null) Regions.projectId eq projectId else Regions.id eq regionId)
-            .orderBy(Regions.name, SortOrder.ASC)
-            .orderBy(Regions.prefix, SortOrder.ASC)
-        return query
-            .map {
-                CardStatisticsResultModel(
-                    region = it[Regions.prefix] + ' ' + it[Regions.name],
-                    cardsCreated = (it.getOrNull(cardsCreated[numAlias]) ?: 0).toInt(),
-                    cardsActivated = (it.getOrNull(activeCards[numAlias]) ?: 0).toInt(),
-                )
-            }
-            .toList()
+            .orderBy(Regions.name to SortOrder.ASC, Regions.prefix to SortOrder.ASC)
+
+        return query.map {
+            CardStatisticsResultModel(
+                region = "${it[Regions.prefix]} ${it[Regions.name]}",
+                cardsCreated = it.getOrNull(cardsCreated[numAlias])?.toInt() ?: 0,
+                cardsActivated = it.getOrNull(activeCards[numAlias])?.toInt() ?: 0,
+                cardsActivatedBlue = it.getOrNull(activeCardsBlue[numAlias])?.toInt() ?: 0,
+                cardsActivatedGolden = it.getOrNull(activeCardsGolden[numAlias])?.toInt() ?: 0,
+            )
+        }.toList()
     }
 
     fun revokeByEntitlementId(entitlementId: Int): Int =

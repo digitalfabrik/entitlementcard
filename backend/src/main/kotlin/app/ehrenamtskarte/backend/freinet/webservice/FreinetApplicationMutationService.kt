@@ -1,16 +1,17 @@
 package app.ehrenamtskarte.backend.freinet.webservice
 
-import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
+import app.ehrenamtskarte.backend.application.database.ApplicationEntity
+import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantDateOfBirth
+import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantFirstName
+import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantLastName
+import app.ehrenamtskarte.backend.application.webservice.utils.getPersonalDataNode
 import app.ehrenamtskarte.backend.auth.getAdministrator
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.common.utils.devWarn
-import app.ehrenamtskarte.backend.common.utils.findValueByName
-import app.ehrenamtskarte.backend.common.utils.findValueByPath
 import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
 import app.ehrenamtskarte.backend.exception.service.NotImplementedException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.ApplicationDataIncompleteException
 import app.ehrenamtskarte.backend.freinet.database.repos.FreinetAgencyRepository
 import app.ehrenamtskarte.backend.freinet.exceptions.FreinetFoundMultiplePersonsException
 import app.ehrenamtskarte.backend.freinet.exceptions.FreinetPersonDataInvalidException
@@ -34,16 +35,14 @@ class FreinetApplicationMutationService {
     ): Boolean {
         val context = dfe.graphQlContext.context
         val admin = context.getAdministrator()
-        val projectConfig = context.backendConfiguration.getProjectConfig(
-            project,
-        )
+        val projectConfig = context.backendConfiguration.getProjectConfig(project)
 
         if (projectConfig.freinet == null) {
             throw NotImplementedException()
         }
 
         return transaction {
-            val application = ApplicationRepository.findByIds(listOf(applicationId)).firstOrNull()
+            val application = ApplicationEntity.findById(applicationId)
                 ?: throw NotFoundException("Application not found")
 
             val regionId = application.regionId.value
@@ -57,21 +56,13 @@ class FreinetApplicationMutationService {
                 ?.takeIf { it.dataTransferActivated }
                 ?: return@transaction false
 
-            val jsonValue = application.parseJsonValue()
-            val personalDataNode = jsonValue.findValueByPath("application", "personalData")
-                ?: throw ApplicationDataIncompleteException()
-
-            val firstName = personalDataNode.findValueByName("forenames").orEmpty()
-            val lastName = personalDataNode.findValueByName("surname").orEmpty()
-            val dateOfBirth = personalDataNode.findValueByName("dateOfBirth").orEmpty()
+            val firstName = application.getApplicantFirstName()
+            val lastName = application.getApplicantLastName()
+            val dateOfBirth = application.getApplicantDateOfBirth()
 
             val freinetApi = FreinetApi(projectConfig.freinet.host, freinetAgency.apiAccessKey, freinetAgency.agencyId)
 
-            val persons = freinetApi.searchPersons(
-                firstName,
-                lastName,
-                dateOfBirth,
-            )
+            val persons = freinetApi.searchPersons(firstName, lastName, dateOfBirth)
 
             when {
                 persons.size() > 1 -> {
@@ -83,7 +74,7 @@ class FreinetApplicationMutationService {
                         firstName,
                         lastName,
                         dateOfBirth,
-                        personalDataNode,
+                        application.getPersonalDataNode(),
                         admin.email,
                     )
 
