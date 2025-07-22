@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import ApplicationStatusHelpButton from './ApplicationStatusBarHelpButton'
-import ApplicationStatusBarItem from './ApplicationStatusBarItem'
 import { ApplicationStatusBarItemType, ApplicationVerificationStatus, GetApplicationsType } from './types'
 import { applicationEffectiveStatus } from './utils'
 
@@ -36,6 +35,45 @@ const Title = styled.span`
   font-weight: bold;
 `
 
+const ItemContainer = styled.button<{ $active: boolean }>`
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  padding: 12px;
+  text-transform: uppercase;
+  border: none;
+  background-color: transparent;
+  font-weight: bold;
+  cursor: pointer;
+
+  :hover {
+    background: #8f99a826;
+  }
+
+  ${props => (props.$active ? 'background:#8f99a84d' : '')};
+`
+
+const ApplicationStatusBarItem = ({
+  item,
+  active,
+  count,
+  onSetActiveBarItem,
+}: {
+  item: ApplicationStatusBarItemType
+  active: boolean
+  count: number
+  onSetActiveBarItem: (item: ApplicationStatusBarItemType) => void
+}): ReactElement => {
+  const { title } = item
+  const { t } = useTranslation('applicationsOverview')
+
+  return (
+    <ItemContainer onClick={() => onSetActiveBarItem(item)} id={title} $active={active}>
+      {t(title)}(<span data-testid={`status-${t(title)}-count`}>{count}</span>)
+    </ItemContainer>
+  )
+}
+
 const applicationsWithStatusCount = (
   applications: GetApplicationsType[],
   status?: ApplicationVerificationStatus
@@ -44,19 +82,17 @@ const applicationsWithStatusCount = (
     ? applications.length
     : applications.reduce((count, a) => count + (applicationEffectiveStatus(a) === status ? 1 : 0), 0)
 
-type ApplicationStatusBarProps = {
-  applications: GetApplicationsType[]
-  barItems: ApplicationStatusBarItemType[]
-  activeBarItem: ApplicationStatusBarItemType
-  setActiveBarItem: (item: ApplicationStatusBarItemType) => void
-}
-
 const ApplicationStatusBar = ({
   applications,
   activeBarItem,
   barItems,
-  setActiveBarItem,
-}: ApplicationStatusBarProps): ReactElement => {
+  onSetActiveBarItem,
+}: {
+  applications: GetApplicationsType[]
+  barItems: ApplicationStatusBarItemType[]
+  activeBarItem: ApplicationStatusBarItemType
+  onSetActiveBarItem: (item: ApplicationStatusBarItemType) => void
+}): ReactElement => {
   const { t } = useTranslation('applicationsOverview')
   return (
     <Container>
@@ -68,8 +104,8 @@ const ApplicationStatusBar = ({
             key={item.title}
             count={applicationsWithStatusCount(applications, item.status)}
             item={item}
-            setActiveBarItem={setActiveBarItem}
             active={item === activeBarItem}
+            onSetActiveBarItem={onSetActiveBarItem}
           />
         ))}
       </BarItemContainer>

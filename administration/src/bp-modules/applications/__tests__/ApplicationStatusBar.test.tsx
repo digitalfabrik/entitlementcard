@@ -81,7 +81,7 @@ describe('ApplicationStatusBar', () => {
     const { getByTestId } = renderWithTranslation(
       <ApplicationStatusBar
         applications={applications}
-        setActiveBarItem={setActiveBarItem}
+        onSetActiveBarItem={setActiveBarItem}
         barItems={barItems}
         activeBarItem={barItems[0]}
       />
@@ -93,7 +93,7 @@ describe('ApplicationStatusBar', () => {
     const { getByTestId } = renderWithTranslation(
       <ApplicationStatusBar
         applications={applications}
-        setActiveBarItem={setActiveBarItem}
+        onSetActiveBarItem={setActiveBarItem}
         barItems={barItems}
         activeBarItem={barItems[0]}
       />
@@ -105,7 +105,7 @@ describe('ApplicationStatusBar', () => {
     const { getByTestId } = renderWithTranslation(
       <ApplicationStatusBar
         applications={applications}
-        setActiveBarItem={setActiveBarItem}
+        onSetActiveBarItem={setActiveBarItem}
         barItems={barItems}
         activeBarItem={barItems[0]}
       />
@@ -117,7 +117,7 @@ describe('ApplicationStatusBar', () => {
     const { getByTestId } = renderWithTranslation(
       <ApplicationStatusBar
         applications={applications}
-        setActiveBarItem={setActiveBarItem}
+        onSetActiveBarItem={setActiveBarItem}
         barItems={barItems}
         activeBarItem={barItems[0]}
       />
@@ -129,7 +129,7 @@ describe('ApplicationStatusBar', () => {
     const { getByTestId } = renderWithTranslation(
       <ApplicationStatusBar
         applications={applications}
-        setActiveBarItem={setActiveBarItem}
+        onSetActiveBarItem={setActiveBarItem}
         barItems={barItems}
         activeBarItem={barItems[0]}
       />
