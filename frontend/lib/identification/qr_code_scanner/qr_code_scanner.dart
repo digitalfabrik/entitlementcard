@@ -80,7 +80,7 @@ class _QRViewState extends State<QrCodeScanner> {
                     children: [
                       MobileScanner(
                         key: qrKey,
-                        placeholderBuilder: (context, _) => Align(
+                        placeholderBuilder: (context) => Align(
                           alignment: Alignment.center,
                           child: Icon(Icons.camera_alt_outlined, size: 128, color: Colors.grey),
                         ),
