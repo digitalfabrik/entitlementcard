@@ -33,29 +33,14 @@ class ContactInfoRow extends StatelessWidget {
               width: 42,
               height: 42,
               color: iconFillColor ?? theme.colorScheme.primary,
-              child: Icon(
-                _icon,
-                size: 28,
-                semanticLabel: _semanticLabel,
-                color: iconColor ?? Colors.white,
-              ),
+              child: Icon(_icon, size: 28, semanticLabel: _semanticLabel, color: iconColor ?? Colors.white),
             ),
           ),
         ),
-        Expanded(
-          child: Text(
-            _description,
-            style: theme.textTheme.bodyMedium,
-          ),
-        ),
+        Expanded(child: Text(_description, style: theme.textTheme.bodyMedium)),
       ],
     );
     final currentOnTap = onTap;
-    return (currentOnTap == null)
-        ? row
-        : InkWell(
-            onTap: currentOnTap,
-            child: row,
-          );
+    return (currentOnTap == null) ? row : InkWell(onTap: currentOnTap, child: row);
   }
 }

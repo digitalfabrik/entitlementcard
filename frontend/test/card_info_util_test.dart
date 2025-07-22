@@ -17,7 +17,9 @@ void main() {
     test('should be stable for a Bavarian Blue EAK', () {
       final cardInfo = CardInfo()
         ..fullName = 'Max Mustermann'
-        ..expirationDay = 365 * 40 // Equals 14.600
+        ..expirationDay =
+            365 *
+            40 // Equals 14.600
         ..extensions = (CardExtensions()
           ..extensionRegion = (RegionExtension()..regionId = 16)
           ..extensionBavariaCardType = (BavariaCardTypeExtension()..cardType = BavariaCardType.STANDARD));
@@ -28,7 +30,9 @@ void main() {
     test('should be stable for a Bavarian Golden EAK', () {
       final cardInfo = CardInfo()
         ..fullName = 'Max Mustermann'
-        ..expirationDay = 365 * 40 // Equals 14.600
+        ..expirationDay =
+            365 *
+            40 // Equals 14.600
         ..extensions = (CardExtensions()
           ..extensionRegion = (RegionExtension()..regionId = 16)
           ..extensionBavariaCardType = (BavariaCardTypeExtension()..cardType = BavariaCardType.STANDARD));
@@ -39,7 +43,9 @@ void main() {
     test('should be stable for a Nuernberg Pass', () {
       final cardInfo = CardInfo()
         ..fullName = 'Max Mustermann'
-        ..expirationDay = 365 * 40 // Equals 14.600
+        ..expirationDay =
+            365 *
+            40 // Equals 14.600
         ..extensions = (CardExtensions()
           ..extensionRegion = (RegionExtension()..regionId = 93)
           ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
@@ -51,7 +57,9 @@ void main() {
     test('should be stable for a Nuernberg Pass with startDay', () {
       final cardInfo = CardInfo()
         ..fullName = 'Max Mustermann'
-        ..expirationDay = 365 * 40 // Equals 14.600
+        ..expirationDay =
+            365 *
+            40 // Equals 14.600
         ..extensions = (CardExtensions()
           ..extensionRegion = (RegionExtension()..regionId = 93)
           ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
@@ -64,7 +72,9 @@ void main() {
     test('should be stable for a Nuernberg Pass with passId identifier', () {
       final cardInfo = CardInfo()
         ..fullName = 'Max Mustermann'
-        ..expirationDay = 365 * 40 // Equals 14.600
+        ..expirationDay =
+            365 *
+            40 // Equals 14.600
         ..extensions = (CardExtensions()
           ..extensionRegion = (RegionExtension()..regionId = 93)
           ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
@@ -79,7 +89,9 @@ void main() {
     test('should be stable for a Nuernberg Pass with passNr identifier', () {
       final cardInfo = CardInfo()
         ..fullName = 'Max Mustermann'
-        ..expirationDay = 365 * 40 // Equals 14.600
+        ..expirationDay =
+            365 *
+            40 // Equals 14.600
         ..extensions = (CardExtensions()
           ..extensionRegion = (RegionExtension()..regionId = 93)
           ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
@@ -111,7 +123,9 @@ void main() {
     test('should return true if startDay is tomorrow', () {
       final cardInfo = CardInfo()
         ..fullName = 'Max Mustermann'
-        ..expirationDay = 365 * 40 // Equals 14.600
+        ..expirationDay =
+            365 *
+            40 // Equals 14.600
         ..extensions = (CardExtensions()
           ..extensionRegion = (RegionExtension()..regionId = 93)
           ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
@@ -123,7 +137,9 @@ void main() {
     test('should return false if startDay is today', () {
       final cardInfo = CardInfo()
         ..fullName = 'Max Mustermann'
-        ..expirationDay = 365 * 40 // Equals 14.600
+        ..expirationDay =
+            365 *
+            40 // Equals 14.600
         ..extensions = (CardExtensions()
           ..extensionRegion = (RegionExtension()..regionId = 93)
           ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
@@ -135,7 +151,9 @@ void main() {
     test('should return false if startDay is yesterday', () {
       final cardInfo = CardInfo()
         ..fullName = 'Max Mustermann'
-        ..expirationDay = 365 * 40 // Equals 14.600
+        ..expirationDay =
+            365 *
+            40 // Equals 14.600
         ..extensions = (CardExtensions()
           ..extensionRegion = (RegionExtension()..regionId = 93)
           ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)
@@ -147,7 +165,9 @@ void main() {
     test('should return false if startDay is not set', () {
       final cardInfo = CardInfo()
         ..fullName = 'Max Mustermann'
-        ..expirationDay = 365 * 40 // Equals 14.600
+        ..expirationDay =
+            365 *
+            40 // Equals 14.600
         ..extensions = (CardExtensions()
           ..extensionRegion = (RegionExtension()..regionId = 93)
           ..extensionBirthday = (BirthdayExtension()..birthday = -365 * 10)

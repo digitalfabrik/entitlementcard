@@ -7,8 +7,13 @@ class ExtendedFloatingActionButton extends StatelessWidget {
   final IconData icon;
   final void Function() onPressed;
 
-  const ExtendedFloatingActionButton(
-      {super.key, required this.label, required this.onPressed, this.loading = false, required this.icon});
+  const ExtendedFloatingActionButton({
+    super.key,
+    required this.label,
+    required this.onPressed,
+    this.loading = false,
+    required this.icon,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,18 +24,9 @@ class ExtendedFloatingActionButton extends StatelessWidget {
       onPressed: onPressed,
       icon: AnimatedSwitcher(
         duration: const Duration(milliseconds: 200),
-        child: loading
-            ? const SmallButtonSpinner()
-            : Icon(
-                icon,
-                size: 24,
-                color: theme.colorScheme.secondary,
-              ),
+        child: loading ? const SmallButtonSpinner() : Icon(icon, size: 24, color: theme.colorScheme.secondary),
       ),
-      label: Text(
-        label,
-        style: theme.textTheme.bodyMedium?.apply(color: theme.hintColor),
-      ),
+      label: Text(label, style: theme.textTheme.bodyMedium?.apply(color: theme.hintColor)),
     );
   }
 }

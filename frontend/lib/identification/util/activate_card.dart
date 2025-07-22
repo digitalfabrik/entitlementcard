@@ -71,11 +71,7 @@ Future<bool> activateCard(
       await userCodesModel.insertCode(userCode);
       debugPrint('Card Activation: Successfully activated.');
       if (context.mounted) {
-        messengerState.showSnackBar(
-          SnackBar(
-            content: Text(t.deeplinkActivation.activationSuccessful),
-          ),
-        );
+        messengerState.showSnackBar(SnackBar(content: Text(t.deeplinkActivation.activationSuccessful)));
         if (Navigator.canPop(context)) Navigator.maybePop(context);
       }
       return true;

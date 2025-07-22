@@ -17,7 +17,7 @@ void main() {
 
     test('init favorites with data', () async {
       SharedPreferences.setMockInitialValues(<String, List<String>>{
-        'favorites': ['{"storeId":1,"storeName":"Test","categoryId":1}']
+        'favorites': ['{"storeId":1,"storeName":"Test","categoryId":1}'],
       });
       final model = FavoritesModel();
       await model.initialize();
@@ -28,7 +28,7 @@ void main() {
 
     test('init favorites with exception', () async {
       SharedPreferences.setMockInitialValues(<String, List<String>>{
-        'favorites': ['corrupted data']
+        'favorites': ['corrupted data'],
       });
       final model = FavoritesModel();
       await model.initialize();
@@ -49,7 +49,7 @@ void main() {
 
     test('remove favorite', () async {
       SharedPreferences.setMockInitialValues(<String, List<String>>{
-        'favorites': ['{"storeId":1,"storeName":"Test","categoryId":1}']
+        'favorites': ['{"storeId":1,"storeName":"Test","categoryId":1}'],
       });
       final model = FavoritesModel();
       await model.initialize();

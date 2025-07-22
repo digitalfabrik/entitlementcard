@@ -70,25 +70,17 @@ class _CustomLicensePageState extends State<CustomLicensePage> {
             slivers: <Widget>[
               CustomSliverAppBar(title: t.about.licenses(n: licenses.length)),
               SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                    final license = result[index];
-                    final paragraphs = license.licenseParagraphs;
-                    return ListTile(
-                      title: Text(license.packageName, style: theme.textTheme.titleSmall),
-                      subtitle: Text(t.about.numberLicenses(n: paragraphs.length), style: theme.textTheme.bodyMedium),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          AppRoute(
-                            builder: (context) => SingleLicensePage(license),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                  childCount: result.length,
-                ),
+                delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+                  final license = result[index];
+                  final paragraphs = license.licenseParagraphs;
+                  return ListTile(
+                    title: Text(license.packageName, style: theme.textTheme.titleSmall),
+                    subtitle: Text(t.about.numberLicenses(n: paragraphs.length), style: theme.textTheme.bodyMedium),
+                    onTap: () {
+                      Navigator.push(context, AppRoute(builder: (context) => SingleLicensePage(license)));
+                    },
+                  );
+                }, childCount: result.length),
               ),
             ],
           );
@@ -113,16 +105,13 @@ class SingleLicensePage extends StatelessWidget {
         CustomSliverAppBar(title: licenseEntry.packageName),
         ...licenseEntry.licenseParagraphs.map(
           (Iterable<LicenseParagraph> paragraphs) => SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                final paragraph = paragraphs.toList()[index];
+            delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+              final paragraph = paragraphs.toList()[index];
 
-                return Text('\t' * paragraph.indent * 2 + paragraph.text, style: Theme.of(context).textTheme.bodyLarge);
-              },
-              childCount: paragraphs.length,
-            ),
+              return Text('\t' * paragraph.indent * 2 + paragraph.text, style: Theme.of(context).textTheme.bodyLarge);
+            }, childCount: paragraphs.length),
           ),
-        )
+        ),
       ],
     );
   }

@@ -19,8 +19,10 @@ typedef OnMapCreatedCallback = void Function(MapController controller);
 class MapContainer extends StatefulWidget {
   static const double zoomLevelUserLocation = 13;
   static final double zoomLevelOverview = buildConfig.mapInitialZoomLevel.toDouble();
-  static final LatLng centerOfProject =
-      LatLng(buildConfig.mapInitialCoordinatesLat, buildConfig.mapInitialCoordinatesLng);
+  static final LatLng centerOfProject = LatLng(
+    buildConfig.mapInitialCoordinatesLat,
+    buildConfig.mapInitialCoordinatesLng,
+  );
   final OnFeatureClickCallback? onFeatureClick;
   final OnNoFeatureClickCallback? onNoFeatureClick;
   final OnMapCreatedCallback? onMapCreated;
@@ -101,10 +103,7 @@ class _MapContainerState extends State<MapContainer> implements MapController {
             icon: const Icon(Icons.info_outline),
             tooltip: t.map.showMapCopyright,
             onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) => const AttributionDialog(),
-              );
+              showDialog(context: context, builder: (context) => const AttributionDialog());
             },
           ),
         ),
@@ -141,8 +140,9 @@ class _MapContainerState extends State<MapContainer> implements MapController {
   @override
   Future<void> setSymbol(LatLng location, int categoryId) async {
     removeSymbol();
-    _symbol = await _controller
-        ?.addSymbol(SymbolOptions(iconSize: 1.5, geometry: location, iconImage: categoryId.toString()));
+    _symbol = await _controller?.addSymbol(
+      SymbolOptions(iconSize: 1.5, geometry: location, iconImage: categoryId.toString()),
+    );
   }
 
   Future<void> _onMapClick(math.Point<double> point, clickCoordinates) async {
@@ -192,15 +192,18 @@ class _MapContainerState extends State<MapContainer> implements MapController {
       // LatLng encodes degrees, so we need to convert to radians.
       const double degreeToRadians = 180.0 / math.pi;
       const double earthRadius = 6371; // radius of the earth in km
-      final double x = (point2.longitude - point1.longitude) *
+      final double x =
+          (point2.longitude - point1.longitude) *
           degreeToRadians *
           math.cos(0.5 * (point2.latitude + point1.latitude) * degreeToRadians);
       final double y = (point2.latitude - point1.latitude) * degreeToRadians;
       return earthRadius * math.sqrt(x * x + y * y);
     }
 
-    final minimalDistanceFeature =
-        features.fold(null, (Tuple2<dynamic, double>? currentFeatureWithDistance, dynamic nextFeature) {
+    final minimalDistanceFeature = features.fold(null, (
+      Tuple2<dynamic, double>? currentFeatureWithDistance,
+      dynamic nextFeature,
+    ) {
       final nextFeatureLatLng = extractLatLngFromFeature(nextFeature);
       final nextFeatureDistance = calculateDistance(nextFeatureLatLng, target);
       if (currentFeatureWithDistance != null && currentFeatureWithDistance.item2 < nextFeatureDistance) {
@@ -219,8 +222,9 @@ class _MapContainerState extends State<MapContainer> implements MapController {
       return;
     }
 
-    final update =
-        zoomLevel != null ? CameraUpdate.newLatLngZoom(location, zoomLevel) : CameraUpdate.newLatLng(location);
+    final update = zoomLevel != null
+        ? CameraUpdate.newLatLngZoom(location, zoomLevel)
+        : CameraUpdate.newLatLng(location);
     await controller.updateMyLocationTrackingMode(MyLocationTrackingMode.none);
     await controller.animateCamera(update);
   }

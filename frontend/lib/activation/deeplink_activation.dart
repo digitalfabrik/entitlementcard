@@ -53,11 +53,7 @@ class DeepLinkActivation extends StatefulWidget {
   State<DeepLinkActivation> createState() => _DeepLinkActivationState();
 }
 
-enum _State {
-  waiting,
-  loading,
-  success,
-}
+enum _State { waiting, loading, success }
 
 class _DeepLinkActivationState extends State<DeepLinkActivation> {
   _State _state = _State.waiting;
@@ -78,7 +74,9 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
 
     if (!userCodeModel.isInitialized) {
       if (userCodeModel.initializationFailed) {
-        return SafeArea(child: Center(child: Text(t.common.unknownError, textAlign: TextAlign.center)));
+        return SafeArea(
+          child: Center(child: Text(t.common.unknownError, textAlign: TextAlign.center)),
+        );
       }
       return Container();
     }
@@ -92,26 +90,32 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
         leading: BackButton(onPressed: () => {GoRouter.of(context).pop()}),
       ),
       body: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              if (status != DeepLinkActivationStatus.invalid)
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Text(t.deeplinkActivation.description,
-                      style: theme.textTheme.headlineSmall, textAlign: TextAlign.center),
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            if (status != DeepLinkActivationStatus.invalid)
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Text(
+                  t.deeplinkActivation.description,
+                  style: theme.textTheme.headlineSmall,
+                  textAlign: TextAlign.center,
                 ),
-              if (cardInfo != null)
-                Center(
-                    child: IdCardWithRegionQuery(
+              ),
+            if (cardInfo != null)
+              Center(
+                child: IdCardWithRegionQuery(
                   cardInfo: cardInfo,
                   // We trust the backend to have checked for expiration.
                   isExpired: false,
                   isNotYetValid: false,
-                )),
-              Padding(
-                padding: const EdgeInsets.all(32),
-                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                ),
+              ),
+            Padding(
+              padding: const EdgeInsets.all(32),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
                   if (_state == _State.waiting) _WarningText(status, userCodeModel, errorMessage),
                   ElevatedButton.icon(
                     onPressed:
@@ -163,17 +167,17 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
                             width: 24,
                             height: 24,
                             padding: const EdgeInsets.all(2.0),
-                            child: const CircularProgressIndicator(
-                              strokeWidth: 3,
-                            ),
+                            child: const CircularProgressIndicator(strokeWidth: 3),
                           )
                         : const Icon(Icons.add_card),
                     label: Text(t.deeplinkActivation.buttonText),
-                  )
-                ]),
+                  ),
+                ],
               ),
-            ],
-          )),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -201,29 +205,35 @@ class _WarningText extends StatelessWidget {
     }
     return Center(
       child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 8),
-          child: Column(
-            children: [
-              Icon(Icons.warning, color: theme.colorScheme.secondary),
-              Text(text, textAlign: TextAlign.center, style: theme.textTheme.bodyMedium)
-            ],
-          )),
+        padding: EdgeInsets.symmetric(vertical: 8),
+        child: Column(
+          children: [
+            Icon(Icons.warning, color: theme.colorScheme.secondary),
+            Text(text, textAlign: TextAlign.center, style: theme.textTheme.bodyMedium),
+          ],
+        ),
+      ),
     );
   }
 }
 
 DynamicActivationCode? getActivationCode(
-    BuildContext context, String encodedBase64QrCode, Function(String message) updateErrorMessage) {
+  BuildContext context,
+  String encodedBase64QrCode,
+  Function(String message) updateErrorMessage,
+) {
   // GoRouter 13.x did not handle uri fragments properly without trailing slash.
   // Therefore we need legacy support for old deep links that have a trailing slash.
   final sanitizedBase64QrCode = removeTrailingSlash(encodedBase64QrCode);
   try {
-    final activationCode = const ActivationCodeParser()
-        .parseQrCodeContent(const Base64Decoder().convert(Uri.decodeComponent(sanitizedBase64QrCode)));
+    final activationCode = const ActivationCodeParser().parseQrCodeContent(
+      const Base64Decoder().convert(Uri.decodeComponent(sanitizedBase64QrCode)),
+    );
     return activationCode;
   } on CardExpiredException catch (e, _) {
     updateErrorMessage(
-        t.deeplinkActivation.cardExpiredExceptionMessage(expiryDate: DateFormat('dd.MM.yyyy').format(e.expiry)));
+      t.deeplinkActivation.cardExpiredExceptionMessage(expiryDate: DateFormat('dd.MM.yyyy').format(e.expiry)),
+    );
     return null;
   } on QrCodeParseException catch (e, _) {
     updateErrorMessage(t.deeplinkActivation.qrCodeParseExceptionMessage);
