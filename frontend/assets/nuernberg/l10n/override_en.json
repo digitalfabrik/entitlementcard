@@ -6,7 +6,7 @@
     "activateTitle": "Activate pass",
     "applyDescription": "You do not yet have a Nürnberg-Pass? Here you can apply for your Nürnberg-Pass.",
     "cardExpired": "Your pass has expired. You can apply for renewal under \"More actions\"",
-    "cardExpiredBeforeActivation": "Your card has already expired and can no longer be activated. Please apply for it again.",
+    "cardExpiredBeforeActivation": "Your pass has already expired and can no longer be activated. Please apply for it again.",
     "cardInvalid": "Your pass was not found. Please apply for it again.",
     "cardNotYetValid": "The validity period of your pass has not yet started.",
     "checkFailed": "Your pass could not be verified. Please make sure you have an internet connection and try again.",
@@ -36,7 +36,7 @@
   "about": {
     "title": "More"
   },
-  "deeplinkActivation" : {
+  "deeplinkActivation": {
     "headline": "Activate pass",
     "description": "Do you want to activate this pass?",
     "limitReached": "Your pass limit has been reached. Please remove a pass first.",
