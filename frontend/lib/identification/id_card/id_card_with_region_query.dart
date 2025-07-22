@@ -10,8 +10,12 @@ class IdCardWithRegionQuery extends StatelessWidget {
   final bool isExpired;
   final bool isNotYetValid;
 
-  const IdCardWithRegionQuery(
-      {super.key, required this.cardInfo, required this.isExpired, required this.isNotYetValid});
+  const IdCardWithRegionQuery({
+    super.key,
+    required this.cardInfo,
+    required this.isExpired,
+    required this.isNotYetValid,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,22 +28,21 @@ class IdCardWithRegionQuery extends StatelessWidget {
     }
 
     return Query$getRegionsById$Widget(
-        options: Options$Query$getRegionsById(
-          fetchPolicy: FetchPolicy.cacheFirst,
-          variables: Variables$Query$getRegionsById(
-            project: projectId,
-            ids: [regionId],
-          ),
-        ),
-        builder: (result, {refetch, fetchMore}) {
-          final fetchedData = result.parsedData;
+      options: Options$Query$getRegionsById(
+        fetchPolicy: FetchPolicy.cacheFirst,
+        variables: Variables$Query$getRegionsById(project: projectId, ids: [regionId]),
+      ),
+      builder: (result, {refetch, fetchMore}) {
+        final fetchedData = result.parsedData;
 
-          final region = result.isLoading || result.hasException || fetchedData == null ? null : fetchedData.regions[0];
-          return IdCard(
-              cardInfo: cardInfo,
-              region: region != null ? Region(region.prefix, region.name) : null,
-              isExpired: isExpired,
-              isNotYetValid: isNotYetValid);
-        });
+        final region = result.isLoading || result.hasException || fetchedData == null ? null : fetchedData.regions[0];
+        return IdCard(
+          cardInfo: cardInfo,
+          region: region != null ? Region(region.prefix, region.name) : null,
+          isExpired: isExpired,
+          isNotYetValid: isNotYetValid,
+        );
+      },
+    );
   }
 }

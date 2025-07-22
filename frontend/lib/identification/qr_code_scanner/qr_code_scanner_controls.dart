@@ -41,7 +41,7 @@ class QrCodeScannerControls extends StatelessWidget {
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }

@@ -115,7 +115,7 @@ class _FilterBarButtonState extends State<FilterBarButton> with SingleTickerProv
                         textAlign: TextAlign.center,
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

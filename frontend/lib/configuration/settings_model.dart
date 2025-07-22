@@ -25,8 +25,10 @@ class SettingsModel extends ChangeNotifier {
     if (obj == null) {
       return null;
     } else if (obj is! bool) {
-      log('Preference key $key has wrong type: Expected bool, but got ${obj.runtimeType}. Returning fallback.',
-          level: 1000);
+      log(
+        'Preference key $key has wrong type: Expected bool, but got ${obj.runtimeType}. Returning fallback.',
+        level: 1000,
+      );
       return null;
     }
     return obj;
@@ -37,8 +39,10 @@ class SettingsModel extends ChangeNotifier {
     if (obj == null) {
       return null;
     } else if (obj is! String) {
-      log('Preference key $key has wrong type: Expected string, but got ${obj.runtimeType}. Returning fallback.',
-          level: 1000);
+      log(
+        'Preference key $key has wrong type: Expected string, but got ${obj.runtimeType}. Returning fallback.',
+        level: 1000,
+      );
       return null;
     }
     return obj;
