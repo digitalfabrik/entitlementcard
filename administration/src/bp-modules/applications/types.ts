@@ -5,15 +5,10 @@ export type GetApplicationsType = GetApplicationsQuery['applications'][number]
 export type GetApplicationsVerificationType = GetApplicationsType['verifications'][number]
 
 export type ApplicationStatusBarItemType = {
-  title: string
-  status?: ApplicationVerificationStatus
-}
-
-export enum ApplicationVerificationStatus {
-  Approved,
-  Rejected,
-  Ambiguous,
-  Withdrawn,
+  /** A translation key for this category */
+  i18nKey: string
+  /** A filter function that returns true if the given application should be included in this category. */
+  filter: (application: GetApplicationsType) => boolean
 }
 
 export enum VerificationStatus {
