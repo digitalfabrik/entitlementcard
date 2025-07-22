@@ -12,7 +12,7 @@ class ErrorMessage extends StatelessWidget {
         const Icon(Icons.warning, color: Colors.orange),
         const SizedBox(width: 10),
         Expanded(child: Text(_message, style: Theme.of(context).textTheme.bodyMedium)),
-        const Icon(Icons.replay)
+        const Icon(Icons.replay),
       ],
     );
   }

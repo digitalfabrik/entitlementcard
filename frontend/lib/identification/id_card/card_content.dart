@@ -46,8 +46,13 @@ class CardContent extends StatelessWidget {
   final bool isExpired;
   final bool isNotYetValid;
 
-  const CardContent(
-      {super.key, required this.cardInfo, this.region, required this.isExpired, required this.isNotYetValid});
+  const CardContent({
+    super.key,
+    required this.cardInfo,
+    this.region,
+    required this.isExpired,
+    required this.isNotYetValid,
+  });
 
   String _getFormattedExpirationDate(BuildContext context) {
     final expirationDay = cardInfo.hasExpirationDay() ? cardInfo.expirationDay : null;
@@ -181,11 +186,7 @@ class CardContent extends StatelessWidget {
                             FittedBox(
                               fit: BoxFit.scaleDown,
                               alignment: Alignment.topLeft,
-                              child: Text(
-                                cardInfo.fullName,
-                                style: bodyTextStyle,
-                                textAlign: TextAlign.start,
-                              ),
+                              child: Text(cardInfo.fullName, style: bodyTextStyle, textAlign: TextAlign.start),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 3.0),
@@ -193,17 +194,8 @@ class CardContent extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   if (formattedBirthday != null)
-                                    Text(
-                                      formattedBirthday,
-                                      style: bodyTextStyle,
-                                      textAlign: TextAlign.start,
-                                    ),
-                                  if (passId != null)
-                                    Text(
-                                      passId,
-                                      style: bodyTextStyle,
-                                      textAlign: TextAlign.end,
-                                    ),
+                                    Text(formattedBirthday, style: bodyTextStyle, textAlign: TextAlign.start),
+                                  if (passId != null) Text(passId, style: bodyTextStyle, textAlign: TextAlign.end),
                                 ],
                               ),
                             ),
@@ -212,8 +204,9 @@ class CardContent extends StatelessWidget {
                               child: Text(
                                 _getCardValidityDate(context, startDate, _getFormattedExpirationDate(context)),
                                 style: theme.textTheme.bodyMedium?.apply(
-                                    fontSizeFactor: scaleFactor,
-                                    color: isExpired || isNotYetValid ? theme.colorScheme.error : textColor),
+                                  fontSizeFactor: scaleFactor,
+                                  color: isExpired || isNotYetValid ? theme.colorScheme.error : textColor,
+                                ),
                                 textAlign: TextAlign.start,
                               ),
                             ),

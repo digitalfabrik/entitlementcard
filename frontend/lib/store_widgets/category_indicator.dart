@@ -8,10 +8,7 @@ import 'package:ehrenamtskarte/l10n/translations.g.dart';
 class CategoryIndicator extends StatelessWidget {
   final int categoryId;
 
-  const CategoryIndicator({
-    super.key,
-    required this.categoryId,
-  });
+  const CategoryIndicator({super.key, required this.categoryId});
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +20,7 @@ class CategoryIndicator extends StatelessWidget {
     final useWideDepiction = MediaQuery.of(context).size.width > 400;
 
     if (useWideDepiction) {
-      return CategoryIconIndicator(
-        svgIconPath: itemCategoryAsset?.icon,
-        categoryName: categoryName,
-      );
+      return CategoryIconIndicator(svgIconPath: itemCategoryAsset?.icon, categoryName: categoryName);
     } else {
       return CategoryColorIndicator(categoryColor: categoryColor);
     }
@@ -52,10 +46,7 @@ class CategoryIconIndicator extends StatelessWidget {
       padding: padding,
       child: currentSvgIconPath != null
           ? SvgPicture.asset(currentSvgIconPath, width: 30, semanticsLabel: categoryName)
-          : const Icon(
-              Icons.info,
-              size: 30,
-            ),
+          : const Icon(Icons.info, size: 30),
     );
   }
 }
@@ -69,10 +60,7 @@ class CategoryColorIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: VerticalDivider(
-        color: categoryColor ?? Theme.of(context).colorScheme.primary,
-        thickness: 3,
-      ),
+      child: VerticalDivider(color: categoryColor ?? Theme.of(context).colorScheme.primary, thickness: 3),
     );
   }
 }

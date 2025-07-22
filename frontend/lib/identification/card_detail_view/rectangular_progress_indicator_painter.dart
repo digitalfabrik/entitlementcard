@@ -3,10 +3,7 @@ import 'dart:math';
 import 'package:flutter/widgets.dart';
 
 class RectangularProgressIndicatorPainter extends CustomPainter {
-  const RectangularProgressIndicatorPainter({
-    required this.valueColor,
-    required this.value,
-  });
+  const RectangularProgressIndicatorPainter({required this.valueColor, required this.value});
 
   final Color valueColor;
   final double value;
@@ -106,8 +103,9 @@ class RectangularProgressIndicatorPainter extends CustomPainter {
     } else if (value <= delay / 2 || value >= 1 - delay / 2) {
       canvas.drawCircle(Offset(size.width / 2, 0), maxRadius, circlePaint);
     } else if (value <= 1 - delay / 2 && value >= 1 - fadeOutDuration - delay / 2) {
-      circlePaint.color =
-          valueColor.withOpacity(1 - Curves.easeInOut.transform((1 - (value + delay / 2)) / fadeOutDuration));
+      circlePaint.color = valueColor.withValues(
+        alpha: 1 - Curves.easeInOut.transform((1 - (value + delay / 2)) / fadeOutDuration),
+      );
       canvas.drawCircle(Offset(size.width / 2, 0), maxRadius, circlePaint);
     }
   }

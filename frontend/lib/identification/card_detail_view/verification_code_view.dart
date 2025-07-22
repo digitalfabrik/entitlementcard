@@ -32,12 +32,13 @@ class VerificationCodeViewState extends State<VerificationCodeView> {
     _resetQrCode();
   }
 
-  _resetQrCode() {
+  void _resetQrCode() {
     final otpCode = widget._otpGenerator.generateOTP();
     _otpCode = otpCode;
     _otpResetTimer = Timer(
-        Duration(milliseconds: otpCode.validUntilMilliSeconds - DateTime.now().millisecondsSinceEpoch),
-        () => setState(_resetQrCode));
+      Duration(milliseconds: otpCode.validUntilMilliSeconds - DateTime.now().millisecondsSinceEpoch),
+      () => setState(_resetQrCode),
+    );
   }
 
   @override
@@ -78,7 +79,9 @@ class VerificationCodeViewState extends State<VerificationCodeView> {
                         version: qr.QrVersions.auto,
                         gapless: false,
                         dataModuleStyle: qr.QrDataModuleStyle(
-                            dataModuleShape: qr.QrDataModuleShape.square, color: colorTheme.tertiary),
+                          dataModuleShape: qr.QrDataModuleShape.square,
+                          color: colorTheme.tertiary,
+                        ),
                         eyeStyle: qr.QrEyeStyle(eyeShape: qr.QrEyeShape.square, color: colorTheme.tertiary),
                       ),
                     ),

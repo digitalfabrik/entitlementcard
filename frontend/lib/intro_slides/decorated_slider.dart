@@ -42,24 +42,24 @@ class _DecoratedSliderState extends State<DecoratedSlider> with TickerProviderSt
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Expanded(
-        child: TabBarView(
-          controller: controller,
-          children: widget.children,
+    return Column(
+      children: [
+        Expanded(
+          child: TabBarView(controller: controller, children: widget.children),
         ),
-      ),
-      MediaQuery.removePadding(
-        removeTop: true,
-        context: context,
-        child: SliderNavigationBar(
+        MediaQuery.removePadding(
+          removeTop: true,
+          context: context,
+          child: SliderNavigationBar(
             currentIndex: controller.index,
             length: widget.children.length,
             tabBarAnimation: controller.animation!,
             animateTo: controller.animateTo,
-            onDonePressed: widget.onDonePressed),
-      )
-    ]);
+            onDonePressed: widget.onDonePressed,
+          ),
+        ),
+      ],
+    );
   }
 
   @override
