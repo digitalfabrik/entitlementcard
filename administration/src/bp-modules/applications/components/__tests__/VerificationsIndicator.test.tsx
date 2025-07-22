@@ -1,13 +1,13 @@
 import React from 'react'
 
 import { renderWithTranslation } from '../../../../testing/render'
-import { PreVerifiedEntitlementType, preVerifiedEntitlements } from '../../PreVerifiedEntitlementType'
 import {
   verificationsAwaiting,
   verificationsMixed,
   verificationsRejected,
   verificationsVerified,
 } from '../../__mocks__/verificationData'
+import { PreVerifiedEntitlementType, preVerifiedEntitlements } from '../../preVerifiedEntitlements'
 import { VerificationStatus } from '../../types'
 import { PreVerifiedIndicator, VerificationIndicator } from '../VerificationsIndicator'
 
