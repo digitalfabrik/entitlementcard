@@ -8,11 +8,12 @@ import 'package:ehrenamtskarte/settings_provider.dart';
 import 'package:ehrenamtskarte/util/android_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:slang/overrides.dart';
 import 'package:timezone/data/latest.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  SentryWidgetsFlutterBinding.ensureInitialized();
   await initializeTranslations();
 
   // support android version < 7.1.1 by adding a valid certificate - https://stackoverflow.com/questions/69511057

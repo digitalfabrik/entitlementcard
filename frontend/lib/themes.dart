@@ -33,14 +33,18 @@ ThemeData get lightTheme {
       error: const Color(0xffcc0000),
       tertiary: const Color(0xFF505050),
     ),
-    dialogTheme: DialogTheme(
-        titleTextStyle: titleLarge.apply(color: textColor), contentTextStyle: bodyLarge.apply(color: textColor)),
+    dialogTheme: DialogThemeData(
+      titleTextStyle: titleLarge.apply(color: textColor),
+      contentTextStyle: bodyLarge.apply(color: textColor),
+    ),
     listTileTheme: ListTileThemeData(
       titleTextStyle: bodyLarge.apply(color: textColor),
       subtitleTextStyle: bodySmall.apply(color: textColor),
     ),
-    snackBarTheme:
-        SnackBarThemeData(backgroundColor: primaryColor, contentTextStyle: bodyLarge.apply(color: backgroundColor)),
+    snackBarTheme: SnackBarThemeData(
+      backgroundColor: primaryColor,
+      contentTextStyle: bodyLarge.apply(color: backgroundColor),
+    ),
     textTheme: defaultTypography.copyWith(
       headlineSmall: defaultTypography.headlineSmall?.apply(color: textColor),
       titleLarge: titleLarge,
@@ -58,14 +62,13 @@ ThemeData get lightTheme {
       selectionHandleColor: Colors.white,
       selectionColor: Color(0xFF505050),
     ),
-    dividerTheme: DividerThemeData(
-      color: Color(0xffeeeeee),
-    ),
+    dividerTheme: DividerThemeData(color: Color(0xffeeeeee)),
     appBarTheme: AppBarTheme(
-        systemOverlayStyle: SystemUiOverlayStyle.light,
-        backgroundColor: lightTheme.colorScheme.primary,
-        foregroundColor: backgroundColor,
-        titleTextStyle: titleMedium),
+      systemOverlayStyle: SystemUiOverlayStyle.light,
+      backgroundColor: lightTheme.colorScheme.primary,
+      foregroundColor: backgroundColor,
+      titleTextStyle: titleMedium,
+    ),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: ButtonStyle(side: WidgetStatePropertyAll(BorderSide(color: primaryColor, width: 1))),
     ),
@@ -73,11 +76,7 @@ ThemeData get lightTheme {
       style: ButtonStyle(
         backgroundColor: WidgetStatePropertyAll(primaryColor),
         elevation: WidgetStatePropertyAll(2),
-        shape: WidgetStatePropertyAll(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
-          ),
-        ),
+        shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))),
       ),
     ),
     checkboxTheme: CheckboxThemeData(
@@ -103,10 +102,12 @@ ThemeData get darkTheme {
       error: const Color(0xff8b0000),
       tertiary: const Color(0xFFC6C4C4),
     ),
-    dialogTheme: DialogTheme(titleTextStyle: titleMedium, contentTextStyle: bodySmall),
+    dialogTheme: DialogThemeData(titleTextStyle: titleMedium, contentTextStyle: bodySmall),
     listTileTheme: ListTileThemeData(titleTextStyle: bodyLarge, subtitleTextStyle: bodySmall),
-    snackBarTheme:
-        SnackBarThemeData(backgroundColor: primaryColor, contentTextStyle: bodyLarge.apply(color: backgroundColor)),
+    snackBarTheme: SnackBarThemeData(
+      backgroundColor: primaryColor,
+      contentTextStyle: bodyLarge.apply(color: backgroundColor),
+    ),
     textTheme: defaultTypography.copyWith(
       headlineSmall: defaultTypography.headlineSmall?.apply(color: Colors.white),
       titleLarge: titleLarge,
@@ -124,14 +125,13 @@ ThemeData get darkTheme {
       selectionHandleColor: Colors.white,
       selectionColor: Color(0xFF505050),
     ),
-    dividerTheme: DividerThemeData(
-      color: Color(0xFF505050),
-    ),
+    dividerTheme: DividerThemeData(color: Color(0xFF505050)),
     appBarTheme: AppBarTheme(
-        systemOverlayStyle: SystemUiOverlayStyle.light,
-        color: theme.colorScheme.primary,
-        foregroundColor: Colors.white,
-        titleTextStyle: titleMedium),
+      systemOverlayStyle: SystemUiOverlayStyle.light,
+      color: theme.colorScheme.primary,
+      foregroundColor: Colors.white,
+      titleTextStyle: titleMedium,
+    ),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: ButtonStyle(side: WidgetStatePropertyAll(BorderSide(color: primaryColor, width: 1))),
     ),
@@ -139,11 +139,7 @@ ThemeData get darkTheme {
       style: ButtonStyle(
         backgroundColor: WidgetStatePropertyAll(primaryColor),
         elevation: WidgetStatePropertyAll(2),
-        shape: WidgetStatePropertyAll(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
-          ),
-        ),
+        shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))),
       ),
     ),
     checkboxTheme: CheckboxThemeData(

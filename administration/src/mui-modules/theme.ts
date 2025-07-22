@@ -38,6 +38,7 @@ export const theme = createTheme({
       fontSize: 14,
       fontWeight: 500,
       textTransform: 'none',
+      textWrap: 'nowrap',
     },
   },
   components: {
@@ -54,7 +55,6 @@ export const theme = createTheme({
               },
             },
           ],
-          textTransform: 'none',
         },
       },
     },
@@ -96,10 +96,19 @@ export const theme = createTheme({
               backgroundColor: '#dddddd',
             },
             paddingLeft: 12,
-            gap: 12,
           },
         },
       ],
+    },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          fontSize: 'inherit',
+          backgroundColor: '#1c2127',
+          color: '#dddddd',
+          padding: 8,
+        },
+      },
     },
   },
 })

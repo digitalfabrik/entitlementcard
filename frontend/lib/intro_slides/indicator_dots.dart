@@ -7,8 +7,12 @@ class IndicatorDots extends StatelessWidget {
   /// Animation with a value between 0 and numTabs.
   final Animation<double> selectedIndexAnimation;
 
-  const IndicatorDots(
-      {super.key, required this.numSlides, required this.animateTo, required this.selectedIndexAnimation});
+  const IndicatorDots({
+    super.key,
+    required this.numSlides,
+    required this.animateTo,
+    required this.selectedIndexAnimation,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +31,10 @@ class IndicatorDots extends StatelessWidget {
     );
     return SizedBox.fromSize(
       size: size,
-      child: Stack(children: [
-        // inactive dots
-        Row(
+      child: Stack(
+        children: [
+          // inactive dots
+          Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(
               numSlides,
@@ -43,16 +48,19 @@ class IndicatorDots extends StatelessWidget {
                   decoration: BoxDecoration(color: inactiveColor, shape: BoxShape.circle),
                 ),
               ),
-            )),
-        // animated, active dot on top
-        PositionedTransition(
+            ),
+          ),
+          // animated, active dot on top
+          PositionedTransition(
             rect: selectedIndexAnimation.drive(activeDotTween),
             child: Container(
               height: dotDiameter,
               width: dotDiameter,
               decoration: BoxDecoration(color: activeColor, shape: BoxShape.circle),
-            ))
-      ]),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

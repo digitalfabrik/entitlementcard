@@ -39,10 +39,8 @@ class ContentPage extends StatelessWidget {
           CustomSliverAppBar(title: title),
           SliverPadding(
             padding: const EdgeInsets.all(10),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate(children),
-            ),
-          )
+            sliver: SliverList(delegate: SliverChildListDelegate(children)),
+          ),
         ],
       ),
     );

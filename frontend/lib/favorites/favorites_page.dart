@@ -18,10 +18,8 @@ class _FavoritesPageState extends State<FavoritesPage> {
         children: [
           CustomScrollView(
             slivers: [
-              SliverAppBar(
-                title: Text(t.favorites.title),
-              ),
-              FavoritesLoader()
+              SliverAppBar(title: Text(t.favorites.title)),
+              FavoritesLoader(),
             ],
           ),
         ],
