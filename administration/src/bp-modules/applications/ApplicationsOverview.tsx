@@ -75,7 +75,7 @@ const ApplicationsOverview = ({ applications }: { applications: GetApplicationsT
       <ApplicationStatusBar
         applications={updatedApplications}
         activeBarItem={activeBarItem}
-        setActiveBarItem={setActiveBarItem}
+        onSetActiveBarItem={setActiveBarItem}
         barItems={barItems}
       />
       {filteredApplications.length > 0 ? (
