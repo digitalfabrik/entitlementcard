@@ -5,12 +5,7 @@ class IntroSlide extends StatelessWidget {
   final String description;
   final String pathImage;
 
-  const IntroSlide({
-    super.key,
-    required this.title,
-    required this.description,
-    required this.pathImage,
-  });
+  const IntroSlide({super.key, required this.title, required this.description, required this.pathImage});
 
   @override
   Widget build(BuildContext context) {
@@ -30,12 +25,7 @@ class IntroSlide extends StatelessWidget {
         children: [
           Container(
             // Title
-            margin: const EdgeInsets.only(
-              top: 70.0,
-              bottom: 50.0,
-              left: 20.0,
-              right: 20.0,
-            ),
+            margin: const EdgeInsets.only(top: 70.0, bottom: 50.0, left: 20.0, right: 20.0),
             child: Text(
               title,
               style: textTheme.headlineSmall,
@@ -45,12 +35,7 @@ class IntroSlide extends StatelessWidget {
             ),
           ),
 
-          Image.asset(
-            pathImage,
-            width: 200.0,
-            height: 200.0,
-            fit: BoxFit.contain,
-          ),
+          Image.asset(pathImage, width: 200.0, height: 200.0, fit: BoxFit.contain),
 
           // Description
           Container(

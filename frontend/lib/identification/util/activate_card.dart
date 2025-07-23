@@ -63,11 +63,7 @@ Future<bool> activateCard(
       await userCodesModel.insertCode(userCode);
       debugPrint('Card Activation: Successfully activated.');
       if (context.mounted) {
-        messengerState.showSnackBar(
-          SnackBar(
-            content: Text(t.deeplinkActivation.activationSuccessful),
-          ),
-        );
+        messengerState.showSnackBar(SnackBar(content: Text(t.deeplinkActivation.activationSuccessful)));
         if (Navigator.canPop(context)) Navigator.maybePop(context);
       }
       return true;
@@ -92,7 +88,8 @@ Future<bool> activateCard(
         return false;
       }
       debugPrint(
-          'Card Activation: Card had been activated already and was not overwritten. Waiting for user feedback.');
+        'Card Activation: Card had been activated already and was not overwritten. Waiting for user feedback.',
+      );
       if (context.mounted &&
           await ActivationOverwriteExistingDialog.showActivationOverwriteExistingDialog(context) &&
           context.mounted) {

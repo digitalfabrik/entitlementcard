@@ -7,10 +7,7 @@ import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-Future<CardInfo?> verifyQrCodeContent(
-  BuildContext context,
-  QrCode qrcode,
-) async {
+Future<CardInfo?> verifyQrCodeContent(BuildContext context, QrCode qrcode) async {
   final client = GraphQLProvider.of(context).value;
   final projectId = Configuration.of(context).projectId;
 
@@ -34,8 +31,10 @@ Future<CardInfo?> verifyDynamicVerificationCode(
   _assertConsistentDynamicVerificationCode(code);
   final (outOfSync: outOfSync, result: result) = await queryDynamicServerVerification(client, projectId, code);
   if (outOfSync) {
-    debugPrint('Verification: This device\'s time is out of sync with the server.'
-        'Ignoring, as only the time of the device that generates the QR code is relevant for the verification process.');
+    debugPrint(
+      'Verification: This device\'s time is out of sync with the server.'
+      'Ignoring, as only the time of the device that generates the QR code is relevant for the verification process.',
+    );
   }
 
   if (!result.valid) {

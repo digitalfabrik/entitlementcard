@@ -24,7 +24,8 @@ class DetailPage extends StatelessWidget {
     final projectId = Configuration.of(context).projectId;
     return Query$PhysicalStoreById$Widget(
       options: Options$Query$PhysicalStoreById(
-          variables: Variables$Query$PhysicalStoreById(project: projectId, ids: [physicalStoreId])),
+        variables: Variables$Query$PhysicalStoreById(project: projectId, ids: [physicalStoreId]),
+      ),
       builder: (result, {refetch, fetchMore}) {
         final exception = result.exception;
         final data = result.parsedData;
@@ -52,13 +53,10 @@ class DetailPage extends StatelessWidget {
                 showFavoriteButton: true,
               ),
               Expanded(
-                  child: Scaffold(
-                body: DetailContent(
-                  matchingStore,
-                  showOnMap: showOnMap,
-                  accentColor: accentColor,
+                child: Scaffold(
+                  body: DetailContent(matchingStore, showOnMap: showOnMap, accentColor: accentColor),
                 ),
-              )),
+              ),
             ],
           );
         } else {
@@ -79,10 +77,7 @@ class DetailErrorMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: refetch,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: ErrorMessage(message),
-      ),
+      child: Padding(padding: const EdgeInsets.all(16), child: ErrorMessage(message)),
     );
   }
 }

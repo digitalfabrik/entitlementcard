@@ -14,5 +14,11 @@ class AcceptingStoreSummaryModel {
   String? location;
 
   AcceptingStoreSummaryModel(
-      this.physicalStoreId, this.name, this.description, this.categoryId, this.coordinates, this.location);
+    this.physicalStoreId,
+    this.name,
+    this.description,
+    this.categoryId,
+    this.coordinates,
+    this.location,
+  );
 }

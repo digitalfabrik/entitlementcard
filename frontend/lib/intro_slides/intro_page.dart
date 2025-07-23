@@ -72,9 +72,10 @@ class _IntroPageState extends State<IntroPage> {
   Widget build(BuildContext context) {
     final backgroundColor = this.backgroundColor(context);
     return Scaffold(
-        backgroundColor: backgroundColor,
-        appBar: StatusBarProtector(backgroundColor: backgroundColor),
-        extendBodyBehindAppBar: true,
-        body: buildSlider(context));
+      backgroundColor: backgroundColor,
+      appBar: StatusBarProtector(backgroundColor: backgroundColor),
+      extendBodyBehindAppBar: true,
+      body: buildSlider(context),
+    );
   }
 }

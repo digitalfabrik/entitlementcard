@@ -16,38 +16,34 @@ class RemovedStoreContent extends StatelessWidget {
     final theme = Theme.of(context);
     final favoritesProvider = Provider.of<FavoritesModel>(context);
     return Expanded(
-        child: Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 18),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                t.store.acceptingStoreNotAvailable,
-                style: theme.textTheme.bodyLarge,
-              ),
-              Text(
-                t.store.removeDescription,
-                style: theme.textTheme.bodyLarge,
-              ),
-              Divider(thickness: 0.7, height: 48, color: theme.primaryColorLight),
-              OverflowBar(
-                alignment: MainAxisAlignment.center,
-                children: [
-                  OutlinedButton(
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 18),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(t.store.acceptingStoreNotAvailable, style: theme.textTheme.bodyLarge),
+                Text(t.store.removeDescription, style: theme.textTheme.bodyLarge),
+                Divider(thickness: 0.7, height: 48, color: theme.primaryColorLight),
+                OverflowBar(
+                  alignment: MainAxisAlignment.center,
+                  children: [
+                    OutlinedButton(
                       style: theme.textButtonTheme.style,
                       child: Text(t.store.removeButtonText),
                       onPressed: () async {
                         await _removeFavorite(context, favoritesProvider);
-                      }),
-                ],
-              ),
-            ],
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
-    ));
+    );
   }
 
   Future<void> _removeFavorite(BuildContext context, FavoritesModel model) async {
