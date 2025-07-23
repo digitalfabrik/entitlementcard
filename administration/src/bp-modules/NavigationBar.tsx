@@ -59,7 +59,7 @@ const Navigation = ({ onSignOut }: Props): ReactElement => {
           ) : null}
         </RenderGuard>
 
-        <RenderGuard allowedRoles={[Role.RegionAdmin, Role.RegionManager]}>
+        <RenderGuard allowedRoles={[Role.RegionAdmin, Role.ProjectAdmin]}>
           <NavLink to='/users'>
             <Button minimal icon='people' text={t('manageUsers')} />
           </NavLink>

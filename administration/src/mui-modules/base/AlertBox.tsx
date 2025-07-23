@@ -4,6 +4,9 @@ import { useTranslation } from 'react-i18next'
 
 const CenteredAlert = styled(Alert)`
   margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
 
 type AlertBoxProps = {
@@ -35,7 +38,7 @@ const AlertBox = ({
           </Button>
         ) : undefined
       }>
-      {title !== undefined && <AlertTitle>{title}</AlertTitle>}
+      {title !== undefined && <AlertTitle sx={{ margin: 0 }}>{title}</AlertTitle>}
       {description}
     </CenteredAlert>
   )

@@ -39,7 +39,7 @@ const HomeController = (): ReactElement => {
           </NavLink>
         ) : null}
       </RenderGuard>
-      <RenderGuard allowedRoles={[Role.RegionAdmin, Role.RegionManager]}>
+      <RenderGuard allowedRoles={[Role.RegionAdmin, Role.ProjectAdmin]}>
         <NavLink to='/users'>
           <StyledButton icon='people' text={t('administerUsers')} />
         </NavLink>
