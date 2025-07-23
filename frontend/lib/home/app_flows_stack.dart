@@ -10,10 +10,7 @@ class AppFlowsStack extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IndexedStack(
-      index: currentIndex,
-      children: _buildChildren(),
-    );
+    return IndexedStack(index: currentIndex, children: _buildChildren());
   }
 
   List<Widget> _buildChildren() {

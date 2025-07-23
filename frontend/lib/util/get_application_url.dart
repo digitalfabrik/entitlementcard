@@ -15,8 +15,13 @@ String getApplicationUrl(BuildContext context) {
   return isProduction() ? applicationUrl.production : applicationUrl.local;
 }
 
-String getApplicationUrlForCardExtension(String applicationUrl, CardInfo cardInfo, String? applicationQueryKeyName,
-    String? applicationQueryKeyBirthday, String? applicationQueryKeyReferenceNumber) {
+String getApplicationUrlForCardExtension(
+  String applicationUrl,
+  CardInfo cardInfo,
+  String? applicationQueryKeyName,
+  String? applicationQueryKeyBirthday,
+  String? applicationQueryKeyReferenceNumber,
+) {
   if (applicationQueryKeyName != null &&
       applicationQueryKeyBirthday != null &&
       applicationQueryKeyReferenceNumber != null) {

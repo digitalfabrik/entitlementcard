@@ -13,14 +13,14 @@ class RemoveCardConfirmationDialog extends StatefulWidget {
 
   const RemoveCardConfirmationDialog({super.key, required this.userCode, required this.carouselController});
 
-  static Future<void> show(
-          {required BuildContext context,
-          required DynamicUserCode userCode,
-          required CarouselSliderController carouselController}) =>
-      showDialog(
-        context: context,
-        builder: (_) => RemoveCardConfirmationDialog(userCode: userCode, carouselController: carouselController),
-      );
+  static Future<void> show({
+    required BuildContext context,
+    required DynamicUserCode userCode,
+    required CarouselSliderController carouselController,
+  }) => showDialog(
+    context: context,
+    builder: (_) => RemoveCardConfirmationDialog(userCode: userCode, carouselController: carouselController),
+  );
 
   @override
   RemoveCardConfirmationDialogState createState() => RemoveCardConfirmationDialogState();
@@ -54,14 +54,8 @@ class RemoveCardConfirmationDialogState extends State<RemoveCardConfirmationDial
         isNotYetValid: false,
       ),
       actions: [
-        TextButton(
-          child: const Text('Abbrechen'),
-          onPressed: () => Navigator.of(context).pop(false),
-        ),
-        TextButton(
-          child: const Text('Löschen'),
-          onPressed: () => removeCard(context),
-        ),
+        TextButton(child: const Text('Abbrechen'), onPressed: () => Navigator.of(context).pop(false)),
+        TextButton(child: const Text('Löschen'), onPressed: () => removeCard(context)),
       ],
     );
   }

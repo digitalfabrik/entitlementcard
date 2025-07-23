@@ -17,9 +17,10 @@ class AcceptingStorePreviewError extends StatelessWidget {
     return InkWell(
       onTap: refetch,
       child: Container(
-          height: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: ErrorMessage(t.store.loadingDataFailed)),
+        height: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: ErrorMessage(t.store.loadingDataFailed),
+      ),
     );
   }
 }
@@ -44,18 +45,15 @@ class AcceptingStorePreviewCard extends StatelessWidget {
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 200),
           child: isLoading
-              ? Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
-                  child: const LinearProgressIndicator(),
-                )
+              ? Container(padding: const EdgeInsets.symmetric(horizontal: 40), child: const LinearProgressIndicator())
               : currentAcceptingStore == null
-                  ? AcceptingStorePreviewError(refetch: refetch)
-                  : AcceptingStoreSummary(
-                      store: currentAcceptingStore,
-                      showLocation: false,
-                      key: ValueKey(currentAcceptingStore.physicalStoreId),
-                      showOnMap: null,
-                    ),
+              ? AcceptingStorePreviewError(refetch: refetch)
+              : AcceptingStoreSummary(
+                  store: currentAcceptingStore,
+                  showLocation: false,
+                  key: ValueKey(currentAcceptingStore.physicalStoreId),
+                  showOnMap: null,
+                ),
         ),
       ),
     );

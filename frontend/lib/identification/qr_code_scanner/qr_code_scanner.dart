@@ -35,13 +35,18 @@ class _QRViewState extends State<QrCodeScanner> {
   }
 
   final MobileScannerController _controller = MobileScannerController(
-      torchEnabled: false, detectionSpeed: DetectionSpeed.normal, formats: [BarcodeFormat.qrCode], returnImage: false);
+    torchEnabled: false,
+    detectionSpeed: DetectionSpeed.normal,
+    formats: [BarcodeFormat.qrCode],
+    returnImage: false,
+  );
   final MobileScannerController _controllerPredefinedCameraResolution = MobileScannerController(
-      torchEnabled: false,
-      detectionSpeed: DetectionSpeed.normal,
-      formats: [BarcodeFormat.qrCode],
-      returnImage: false,
-      cameraResolution: const Size(640, 480));
+    torchEnabled: false,
+    detectionSpeed: DetectionSpeed.normal,
+    formats: [BarcodeFormat.qrCode],
+    returnImage: false,
+    cameraResolution: const Size(640, 480),
+  );
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
   // Determines whether a code is currently processed by the onCodeScanned callback
@@ -53,76 +58,76 @@ class _QRViewState extends State<QrCodeScanner> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<bool>(
-        future: _hasCameraIssues,
-        builder: (context, AsyncSnapshot<bool> snapshot) {
-          final hasCameraIssues = snapshot.data;
-          if (snapshot.hasError && snapshot.error != null) {
-            return ErrorMessage(snapshot.error.toString());
-          } else if (hasCameraIssues == null) {
-            return const Center();
-          }
-          final controller = hasCameraIssues ? _controllerPredefinedCameraResolution : _controller;
-          final t = context.t;
-          final theme = Theme.of(context);
-          return Stack(
-            children: [
-              Column(
-                children: <Widget>[
-                  Expanded(
-                    flex: 4,
-                    child: Stack(
-                      fit: StackFit.expand,
+      future: _hasCameraIssues,
+      builder: (context, AsyncSnapshot<bool> snapshot) {
+        final hasCameraIssues = snapshot.data;
+        if (snapshot.hasError && snapshot.error != null) {
+          return ErrorMessage(snapshot.error.toString());
+        } else if (hasCameraIssues == null) {
+          return const Center();
+        }
+        final controller = hasCameraIssues ? _controllerPredefinedCameraResolution : _controller;
+        final t = context.t;
+        final theme = Theme.of(context);
+        return Stack(
+          children: [
+            Column(
+              children: <Widget>[
+                Expanded(
+                  flex: 4,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      MobileScanner(
+                        key: qrKey,
+                        placeholderBuilder: (context, _) => Align(
+                          alignment: Alignment.center,
+                          child: Icon(Icons.camera_alt_outlined, size: 128, color: Colors.grey),
+                        ),
+                        onDetect: (barcodes) => _onCodeScanned(barcodes),
+                        controller: controller,
+                      ),
+                      DecoratedBox(
+                        decoration: ShapeDecoration(
+                          shape: QrScannerOverlayShape(
+                            borderRadius: 10,
+                            borderColor: theme.colorScheme.secondary,
+                            borderLength: 30,
+                            borderWidth: 10,
+                            cutOutSize: _calculateScanArea(context),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: FittedBox(
+                    fit: BoxFit.contain,
+                    child: Column(
                       children: [
-                        MobileScanner(
-                          key: qrKey,
-                          placeholderBuilder: (context, _) => Align(
-                            alignment: Alignment.center,
-                            child: Icon(Icons.camera_alt_outlined, size: 128, color: Colors.grey),
-                          ),
-                          onDetect: (barcodes) => _onCodeScanned(barcodes),
-                          controller: controller,
+                        Container(
+                          margin: const EdgeInsets.all(8),
+                          child: Text(t.identification.scanQRCode, style: theme.textTheme.bodyLarge),
                         ),
-                        DecoratedBox(
-                          decoration: ShapeDecoration(
-                            shape: QrScannerOverlayShape(
-                              borderRadius: 10,
-                              borderColor: theme.colorScheme.secondary,
-                              borderLength: 30,
-                              borderWidth: 10,
-                              cutOutSize: _calculateScanArea(context),
-                            ),
-                          ),
-                        ),
+                        QrCodeScannerControls(controller: controller),
                       ],
                     ),
                   ),
-                  Expanded(
-                    flex: 1,
-                    child: FittedBox(
-                      fit: BoxFit.contain,
-                      child: Column(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.all(8),
-                            child: Text(t.identification.scanQRCode, style: theme.textTheme.bodyLarge),
-                          ),
-                          QrCodeScannerControls(controller: controller)
-                        ],
-                      ),
-                    ),
-                  )
-                ],
+                ),
+              ],
+            ),
+            if (showWaiting)
+              Center(
+                child: Card(
+                  child: Padding(padding: const EdgeInsets.all(32), child: CircularProgressIndicator()),
+                ),
               ),
-              if (showWaiting)
-                Center(
-                    child: Card(
-                        child: Padding(
-                  padding: const EdgeInsets.all(32),
-                  child: CircularProgressIndicator(),
-                ))),
-            ],
-          );
-        });
+          ],
+        );
+      },
+    );
   }
 
   double _calculateScanArea(BuildContext context) {

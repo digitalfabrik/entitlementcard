@@ -12,20 +12,14 @@ Future<({bool outOfSync, Query$CardVerificationByHash$verification result})> que
   final hash = verificationCode.info.hash(verificationCode.pepper);
   final timeBeforeRequest = DateTime.now();
   final stopWatch = Stopwatch()..start();
-  final result = await _queryServerVerification(
-    client,
-    projectId,
-    hash,
-    verificationCode.otp,
-    Enum$CodeType.DYNAMIC,
-  );
+  final result = await _queryServerVerification(client, projectId, hash, verificationCode.otp, Enum$CodeType.DYNAMIC);
   stopWatch.stop();
   // We assume that the server captured the verificationTimeStamp in the middle of the request:
   final estimatedTimeOfVerification = timeBeforeRequest.add(Duration(milliseconds: stopWatch.elapsedMilliseconds ~/ 2));
   final actualTimeOfVerification = DateTime.parse(result.verificationTimeStamp);
   final timeOffset =
       (estimatedTimeOfVerification.millisecondsSinceEpoch - actualTimeOfVerification.millisecondsSinceEpoch).abs() /
-          1000;
+      1000;
   // The server tolerates a time offset of 30 seconds
   // (see backend/src/main/kotlin/app/ehrenamtskarte/backend/verification/service/CardVerifier.kt)
   final outOfSync = timeOffset >= 30;
@@ -38,13 +32,7 @@ Future<Query$CardVerificationByHash$verification> queryStaticServerVerification(
   StaticVerificationCode verificationCode,
 ) async {
   final hash = verificationCode.info.hash(verificationCode.pepper);
-  return _queryServerVerification(
-    client,
-    projectId,
-    hash,
-    null,
-    Enum$CodeType.STATIC,
-  );
+  return _queryServerVerification(client, projectId, hash, null, Enum$CodeType.STATIC);
 }
 
 Future<Query$CardVerificationByHash$verification> _queryServerVerification(
@@ -58,11 +46,7 @@ Future<Query$CardVerificationByHash$verification> _queryServerVerification(
     fetchPolicy: FetchPolicy.noCache,
     variables: Variables$Query$CardVerificationByHash(
       project: projectId,
-      card: Input$CardVerificationModelInput(
-        cardInfoHashBase64: verificationHash,
-        totp: totp,
-        codeType: codeType,
-      ),
+      card: Input$CardVerificationModelInput(cardInfoHashBase64: verificationHash, totp: totp, codeType: codeType),
     ),
   );
 

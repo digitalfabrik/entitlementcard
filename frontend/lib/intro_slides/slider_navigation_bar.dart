@@ -10,13 +10,14 @@ class SliderNavigationBar extends StatelessWidget {
   final Function(int) animateTo;
   final VoidCallback? onDonePressed;
 
-  const SliderNavigationBar(
-      {super.key,
-      required this.currentIndex,
-      required this.length,
-      required this.tabBarAnimation,
-      required this.animateTo,
-      required this.onDonePressed});
+  const SliderNavigationBar({
+    super.key,
+    required this.currentIndex,
+    required this.length,
+    required this.tabBarAnimation,
+    required this.animateTo,
+    required this.onDonePressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +36,10 @@ class SliderNavigationBar extends StatelessWidget {
 
     final buttonRight = TextButton(
       child: _CustomAnimatedSwitcher(
-          child: currentIndex == length - 1
-              ? Text(t.common.done, key: Key('done'))
-              : Text(t.common.next, key: Key('next'))),
+        child: currentIndex == length - 1
+            ? Text(t.common.done, key: Key('done'))
+            : Text(t.common.next, key: Key('next')),
+      ),
       onPressed: currentIndex == length - 1 ? onDonePressed : () => animateTo(currentIndex + 1),
     );
 
@@ -49,14 +51,10 @@ class SliderNavigationBar extends StatelessWidget {
           Expanded(child: buttonLeft),
           Expanded(
             child: Center(
-              child: IndicatorDots(
-                numSlides: length,
-                animateTo: animateTo,
-                selectedIndexAnimation: tabBarAnimation,
-              ),
+              child: IndicatorDots(numSlides: length, animateTo: animateTo, selectedIndexAnimation: tabBarAnimation),
             ),
           ),
-          Expanded(child: buttonRight)
+          Expanded(child: buttonRight),
         ],
       ),
     );
@@ -75,10 +73,7 @@ class _CustomAnimatedSwitcher extends StatelessWidget {
       layoutBuilder: (currentChild, previousChildren) => Stack(
         alignment: Alignment.center,
         fit: StackFit.passthrough,
-        children: [
-          ...previousChildren,
-          if (currentChild != null) currentChild,
-        ],
+        children: [...previousChildren, if (currentChild != null) currentChild],
       ),
       child: child,
     );
