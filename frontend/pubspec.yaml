@@ -24,7 +24,8 @@ dependencies:
   flutter_svg: ^2.1.0
   permission_handler: ^11.3.0
   package_info_plus: ^8.3.0 # for about dialog
-  mobile_scanner: ^7.0.1
+  # Cannot be updated to v7 due to https://github.com/juliansteenbakker/mobile_scanner/issues/1444
+  mobile_scanner: 5.2.3
   fixnum: ^1.1.0
   # Locking this version due to this issue https://github.com/mogol/flutter_secure_storage/issues/762
   flutter_secure_storage: 9.0.0
