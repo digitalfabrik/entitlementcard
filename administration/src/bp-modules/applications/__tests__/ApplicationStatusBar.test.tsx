@@ -100,8 +100,8 @@ describe('ApplicationStatusBar', () => {
       <ApplicationStatusBar
         applications={applications}
         onSetActiveBarItem={setActiveBarItem}
-        barItems={barItems}
-        activeBarItem={barItems[0]}
+        barItems={Object.values(barItems)}
+        activeBarItem={barItems.all}
       />
     )
     const allApplicationsCount = getByTestId('status-Alle Anträge-count')
@@ -112,8 +112,8 @@ describe('ApplicationStatusBar', () => {
       <ApplicationStatusBar
         applications={applications}
         onSetActiveBarItem={setActiveBarItem}
-        barItems={barItems}
-        activeBarItem={barItems[0]}
+        barItems={Object.values(barItems)}
+        activeBarItem={barItems.open}
       />
     )
     const openApplicationsCount = getByTestId('status-Offen-count')
@@ -124,8 +124,8 @@ describe('ApplicationStatusBar', () => {
       <ApplicationStatusBar
         applications={applications}
         onSetActiveBarItem={setActiveBarItem}
-        barItems={barItems}
-        activeBarItem={barItems[0]}
+        barItems={Object.values(barItems)}
+        activeBarItem={barItems.withdrawn}
       />
     )
     const withdrawnApplicationsCount = getByTestId('status-Zurückgezogen-count')
@@ -136,8 +136,8 @@ describe('ApplicationStatusBar', () => {
       <ApplicationStatusBar
         applications={applications}
         onSetActiveBarItem={setActiveBarItem}
-        barItems={barItems}
-        activeBarItem={barItems[0]}
+        barItems={Object.values(barItems)}
+        activeBarItem={barItems.rejected}
       />
     )
     const rejectedApplicationsCount = getByTestId('status-Abgelehnt-count')
@@ -148,8 +148,8 @@ describe('ApplicationStatusBar', () => {
       <ApplicationStatusBar
         applications={applications}
         onSetActiveBarItem={setActiveBarItem}
-        barItems={barItems}
-        activeBarItem={barItems[0]}
+        barItems={Object.values(barItems)}
+        activeBarItem={barItems.accepted}
       />
     )
     const acceptedApplicationsCount = getByTestId('status-Akzeptiert-count')
