@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useWhoAmI } from '../../WhoAmIProvider'
 import { Region, useGetApplicationsQuery } from '../../generated/graphql'
 import NonIdealState from '../../mui-modules/NonIdealState'
+import { parseApplication } from '../../shared/application'
 import getQueryResult from '../util/getQueryResult'
 import ApplicationsOverview from './ApplicationsOverview'
 
@@ -14,10 +15,12 @@ const ApplicationsController = ({ region }: { region: Region }) => {
     onError: error => console.error(error),
   })
   const applicationsQueryResult = getQueryResult(applicationsQuery)
-  if (!applicationsQueryResult.successful) {
-    return applicationsQueryResult.component
-  }
-  return <ApplicationsOverview applications={applicationsQueryResult.data.applications} />
+
+  return !applicationsQueryResult.successful ? (
+    applicationsQueryResult.component
+  ) : (
+    <ApplicationsOverview applications={applicationsQueryResult.data.applications.map(parseApplication)} />
+  )
 }
 
 const ControllerWithRegion = (): ReactElement => {

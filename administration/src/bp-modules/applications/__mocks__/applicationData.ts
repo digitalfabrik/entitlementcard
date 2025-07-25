@@ -1,20 +1,21 @@
 import { ApplicationStatus } from '../../../generated/graphql'
-import { GetApplicationsType } from '../types'
+import { JsonField } from '../JsonFieldView'
+import type { Application } from '../types'
 import { verificationsAwaiting } from './verificationData'
 
-const cardTypeBlue = {
+const cardTypeBlue: JsonField<'String'> = {
   name: 'cardType',
   type: 'String',
   value: 'Blaue Ehrenamtskarte',
 }
 
-const cardTypeGold = {
+const cardTypeGold: JsonField<'String'> = {
   name: 'cardType',
   type: 'String',
   value: 'Goldene Ehrenamtskarte',
 }
 
-const addressData = {
+const addressData: JsonField<'Array'> = {
   name: 'address',
   type: 'Array',
   value: [
@@ -50,7 +51,7 @@ const addressData = {
     },
   ],
 }
-const personalData = {
+const personalData: JsonField<'Array'> = {
   name: 'personalData',
   type: 'Array',
   value: [
@@ -82,7 +83,7 @@ const personalData = {
     },
   ],
 }
-const applicationDetailsBlue = {
+const applicationDetailsBlue: JsonField<'Array'> = {
   name: 'applicationDetails',
   type: 'Array',
   value: [
@@ -230,7 +231,7 @@ const applicationDetailsBlue = {
   ],
 }
 
-const applicationDetailsGold = {
+const applicationDetailsGold: JsonField<'Array'> = {
   name: 'applicationDetails',
   type: 'Array',
   value: [
@@ -378,42 +379,42 @@ const applicationDetailsGold = {
   ],
 }
 
-export const mockApplicationBlue: GetApplicationsType = {
+export const mockApplicationBlue: Application = {
   id: 1,
   createdDate: '2025-05-21 07:57:12.782520',
   note: null,
   status: ApplicationStatus.Approved,
   statusResolvedDate: '2024-12-12',
   verifications: verificationsAwaiting,
-  jsonValue: JSON.stringify({
+  jsonValue: {
     name: 'application',
     type: 'Array',
     value: [{ ...personalData }, { ...applicationDetailsBlue }],
-  }),
+  },
 }
 
-export const mockApplicationGold: GetApplicationsType = {
+export const mockApplicationGold: Application = {
   id: 1,
   createdDate: '2025-05-21 07:57:12.782520',
   note: null,
   status: ApplicationStatus.Approved,
   statusResolvedDate: '2024-12-12',
   verifications: verificationsAwaiting,
-  jsonValue: JSON.stringify({
+  jsonValue: {
     name: 'application',
     type: 'Array',
     value: [{ ...personalData }, { ...applicationDetailsGold }],
-  }),
+  },
 }
 
-export const mockApplicationWithoutAddress: GetApplicationsType = {
+export const mockApplicationWithoutAddress: Application = {
   id: 1,
   createdDate: '2025-05-21 07:57:12.782520',
   note: null,
   status: ApplicationStatus.Approved,
   statusResolvedDate: '2024-12-12',
   verifications: verificationsAwaiting,
-  jsonValue: JSON.stringify({
+  jsonValue: {
     name: 'application',
     type: 'Array',
     value: [
@@ -450,33 +451,33 @@ export const mockApplicationWithoutAddress: GetApplicationsType = {
       },
       { ...applicationDetailsBlue },
     ],
-  }),
+  },
 }
 
-export const mockApplicationWithoutPersonalData: GetApplicationsType = {
+export const mockApplicationWithoutPersonalData: Application = {
   id: 1,
   createdDate: '2025-05-21 07:57:12.782520',
   note: null,
   status: ApplicationStatus.Approved,
   statusResolvedDate: '2024-12-12',
   verifications: verificationsAwaiting,
-  jsonValue: JSON.stringify({
+  jsonValue: {
     name: 'application',
     type: 'Array',
     value: [{ ...applicationDetailsBlue }],
-  }),
+  },
 }
 
-export const mockApplicationWithoutApplicationDetails: GetApplicationsType = {
+export const mockApplicationWithoutApplicationDetails: Application = {
   id: 1,
   createdDate: '2025-05-21 07:57:12.782520',
   note: null,
   status: ApplicationStatus.Approved,
   statusResolvedDate: '2024-12-12',
   verifications: verificationsAwaiting,
-  jsonValue: JSON.stringify({
+  jsonValue: {
     name: 'application',
     type: 'Array',
     value: [{ ...personalData }],
-  }),
+  },
 }

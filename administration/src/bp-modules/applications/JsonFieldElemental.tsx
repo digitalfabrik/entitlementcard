@@ -37,8 +37,8 @@ const JsonFieldAttachment = memo(
     const appToaster = useAppToaster()
     const token = useContext(AuthContext).data?.token
     const { t } = useTranslation('application')
-
     const attachment = jsonField.value
+
     if (attachmentAccessible) {
       const downloadUrl = `${baseUrl}/file/${attachment.fileIndex}`
       const onClick = async () => {

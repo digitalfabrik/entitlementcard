@@ -11,30 +11,29 @@ import StandaloneCenter from '../StandaloneCenter'
 import ApplicationCard from './ApplicationCard'
 import ApplicationStatusBar from './ApplicationStatusBar'
 import usePrintApplication from './hooks/usePrintApplication'
-import { ApplicationStatusBarItemType, GetApplicationsType } from './types'
+import type { Application, ApplicationStatusBarItemType } from './types'
 
-const countApprovingVerifications = (application: GetApplicationsType): number =>
+const countApprovingVerifications = (application: Application): number =>
   application.verifications.reduce((count, verification) => count + (verification.verifiedDate !== null ? 1 : 0), 0)
 
-const countRejectingVerifications = (application: GetApplicationsType): number =>
+const countRejectingVerifications = (application: Application): number =>
   application.verifications.reduce((count, verification) => count + (verification.rejectedDate !== null ? 1 : 0), 0)
 
-const applicationWithdrawn = (application: GetApplicationsType): boolean =>
-  application.status === ApplicationStatus.Withdrawn
+const applicationWithdrawn = (application: Application): boolean => application.status === ApplicationStatus.Withdrawn
 
-const applicationApproved = (application: GetApplicationsType): boolean =>
+const applicationApproved = (application: Application): boolean =>
   countApprovingVerifications(application) > 0 && countRejectingVerifications(application) === 0
 
-const applicationRejected = (application: GetApplicationsType): boolean =>
+const applicationRejected = (application: Application): boolean =>
   countApprovingVerifications(application) === 0 && countRejectingVerifications(application) > 0
 
-const applicationOpen = (application: GetApplicationsType): boolean =>
+const applicationOpen = (application: Application): boolean =>
   countApprovingVerifications(application) === 0 && countRejectingVerifications(application) === 0
 
-const applicationAmbiguous = (application: GetApplicationsType): boolean =>
+const applicationAmbiguous = (application: Application): boolean =>
   countApprovingVerifications(application) > 0 && countRejectingVerifications(application) > 0
 
-const applicationListOrder = (application: GetApplicationsType): number => {
+const applicationListOrder = (application: Application): number => {
   if (applicationAmbiguous(application)) {
     return 1
   }
@@ -81,12 +80,12 @@ const ApplicationList = styled.div`
   gap: 16px;
 `
 
-const ApplicationsOverview = ({ applications }: { applications: GetApplicationsType[] }): ReactElement => {
+const ApplicationsOverview = ({ applications }: { applications: Application[] }): ReactElement => {
   const [updatedApplications, setUpdatedApplications] = useState(applications)
   const { applicationIdForPrint, printApplicationById } = usePrintApplication()
   const [activeBarItem, setActiveBarItem] = useState<ApplicationStatusBarItemType>(barItems[0])
   const { t } = useTranslation('applicationsOverview')
-  const filteredApplications: GetApplicationsType[] = useMemo(
+  const filteredApplications: Application[] = useMemo(
     () =>
       updatedApplications
         .filter(application => activeBarItem.filter(application))
