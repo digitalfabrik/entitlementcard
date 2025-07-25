@@ -9,6 +9,7 @@ import AlertBox from '../../mui-modules/base/AlertBox'
 import ApplicationCard from './ApplicationCard'
 import ApplicationStatusBar from './ApplicationStatusBar'
 import usePrintApplication from './hooks/usePrintApplication'
+import { getPreVerifiedEntitlementType } from './preVerifiedEntitlements'
 import type { Application, ApplicationStatusBarItemType } from './types'
 
 const countApprovedVerifications = (application: Application): number =>
@@ -17,58 +18,49 @@ const countApprovedVerifications = (application: Application): number =>
 const countRejectingVerifications = (application: Application): number =>
   application.verifications.reduce((count, verification) => count + (verification.rejectedDate !== null ? 1 : 0), 0)
 
-const applicationWithdrawn = (application: Application): boolean => application.status === ApplicationStatus.Withdrawn
-
-const applicationApproved = (application: Application): boolean =>
-  countApprovingVerifications(application) > 0 && countRejectingVerifications(application) === 0
-
-const applicationRejected = (application: Application): boolean =>
-  countApprovingVerifications(application) === 0 && countRejectingVerifications(application) > 0
-
-const applicationOpen = (application: Application): boolean =>
-  countApprovingVerifications(application) === 0 && countRejectingVerifications(application) === 0
-
-const applicationAmbiguous = (application: Application): boolean =>
-  countApprovingVerifications(application) > 0 && countRejectingVerifications(application) > 0
-
-const applicationListOrder = (application: Application): number => {
-  if (applicationAmbiguous(application)) {
-    return 1
-  }
-  if (applicationWithdrawn(application)) {
-    return 2
-  }
-  if (applicationRejected(application)) {
-    return 3
-  }
-  if (applicationApproved(application)) {
-    return 4
-  }
-  return 0
+export const barItems = {
+  all: {
+    i18nKey: 'allApplications',
+    filter: (_: Application): boolean => true,
+  },
+  accepted: {
+    i18nKey: 'accepted',
+    filter: (application: Application): boolean =>
+      application.verifications.every(verification => verification.verifiedDate !== null) ||
+      getPreVerifiedEntitlementType(application.jsonValue) !== undefined,
+  },
+  rejected: {
+    i18nKey: 'rejected',
+    filter: (application: Application): boolean => countRejectingVerifications(application) > 0,
+  },
+  withdrawn: {
+    i18nKey: 'withdrawn',
+    filter: (application: Application): boolean => application.status === ApplicationStatus.Withdrawn,
+  },
+  open: {
+    i18nKey: 'open',
+    filter: (application: Application): boolean =>
+      application.verifications.every(
+        verification => verification.verifiedDate === null && verification.rejectedDate === null
+      ) &&
+      getPreVerifiedEntitlementType(application.jsonValue) === undefined &&
+      application.status !== ApplicationStatus.Withdrawn,
+  },
 }
 
-export const barItems: ApplicationStatusBarItemType[] = [
-  {
-    i18nKey: 'allApplications',
-    filter: _ => true,
-  },
-  {
-    i18nKey: 'accepted',
-    filter: applicationApproved,
-  },
-  {
-    i18nKey: 'rejected',
-    filter: applicationRejected,
-  },
-  {
-    i18nKey: 'withdrawn',
-    filter: applicationWithdrawn,
-  },
-  {
-    i18nKey: 'open',
-    filter: applicationOpen,
-  },
-]
+/** Determines the order within a category */
+const applicationListOrder = (application: Application): number => {
+  if (barItems.accepted.filter(application)) {
+    return 0
+  }
+  if (barItems.rejected.filter(application)) {
+    return 1
+  }
+  if (barItems.withdrawn.filter(application)) {
+    return 2
+  }
+  return Number.MAX_SAFE_INTEGER // Sort last
+}
 
 const ApplicationList = styled.div`
   display: flex;
@@ -85,7 +77,7 @@ const ApplicationList = styled.div`
 const ApplicationsOverview = ({ applications }: { applications: Application[] }): ReactElement => {
   const [updatedApplications, setUpdatedApplications] = useState(applications)
   const { applicationIdForPrint, printApplicationById } = usePrintApplication()
-  const [activeBarItem, setActiveBarItem] = useState<ApplicationStatusBarItemType>(barItems[0])
+  const [activeBarItem, setActiveBarItem] = useState<ApplicationStatusBarItemType>(barItems.all)
   const { t } = useTranslation('applicationsOverview')
   const filteredApplications: Application[] = useMemo(
     () =>
@@ -108,7 +100,7 @@ const ApplicationsOverview = ({ applications }: { applications: Application[] })
         applications={updatedApplications}
         activeBarItem={activeBarItem}
         onSetActiveBarItem={setActiveBarItem}
-        barItems={barItems}
+        barItems={Object.values(barItems)}
       />
       {filteredApplications.length > 0 ? (
         <ApplicationList>
