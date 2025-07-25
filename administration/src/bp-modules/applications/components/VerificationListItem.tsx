@@ -10,7 +10,6 @@ import { ApplicationVerificationView, useSendApprovalMailToOrganisationMutation 
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import { useAppToaster } from '../../AppToaster'
 import EmailLink from '../../EmailLink'
-import { VerificationStatus } from '../types'
 import { verificationStatus } from '../utils'
 import { isEmailValid } from '../utils/verificationHelper'
 import { VerificationIcon } from './VerificationIcon'
@@ -49,7 +48,6 @@ const VerificationListItem = ({
   const appToaster = useAppToaster()
   const projectId = useContext(ProjectConfigContext).projectId
   const [isApprovalRequestSent, setIsApprovalRequestSent] = useState(false)
-
   const status = verificationStatus(verification)
   const { text, color } = getStatusMetaData(verification, t)
 
@@ -100,7 +98,7 @@ const VerificationListItem = ({
           </tr>
         </tbody>
       </table>
-      {showResendApprovalEmailButton && status === VerificationStatus.Pending && (
+      {showResendApprovalEmailButton && (
         <Button
           variant='contained'
           color='default'
