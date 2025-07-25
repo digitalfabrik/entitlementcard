@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
 
 import { ApplicationStatus, useGetApplicationByApplicantQuery } from '../../generated/graphql'
+import { parseApplication } from '../../shared/application'
 import AlertBox from '../base/AlertBox'
 import getQueryResult from '../util/getQueryResult'
 import ApplicationApplicantView from './ApplicationApplicantView'
@@ -18,7 +19,7 @@ const ApplicationApplicantController = ({ providedKey }: { providedKey: string }
   if (!applicationQueryHandler.successful) {
     return applicationQueryHandler.component
   }
-  const application = applicationQueryHandler.data.application
+  const application = parseApplication(applicationQueryHandler.data.application)
 
   if (application.status === ApplicationStatus.Withdrawn) {
     return <AlertBox severity='info' description={t('alreadyWithdrawn')} />

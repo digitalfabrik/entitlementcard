@@ -1,15 +1,20 @@
 import React from 'react'
 
+import { ApplicationStatus } from '../../../generated/graphql'
 import { renderWithTranslation } from '../../../testing/render'
 import ApplicationStatusBar from '../ApplicationStatusBar'
 import { barItems } from '../ApplicationsOverview'
-import { GetApplicationsType } from '../types'
+import type { Application } from '../types'
 
-const applications: GetApplicationsType[] = [
+const applications: Application[] = [
   {
     createdDate: '2024-05-15T09:20:23.350015Z',
     id: 1,
-    jsonValue: '',
+    jsonValue: {
+      name: 'application',
+      type: 'Array',
+      value: [],
+    },
     note: 'neu',
     verifications: [
       {
@@ -24,7 +29,11 @@ const applications: GetApplicationsType[] = [
   {
     createdDate: '2024-05-15T09:20:23.350015Z',
     id: 2,
-    jsonValue: '',
+    jsonValue: {
+      name: 'application',
+      type: 'Array',
+      value: [],
+    },
     note: 'neu',
     verifications: [
       {
@@ -39,7 +48,11 @@ const applications: GetApplicationsType[] = [
   {
     createdDate: '2024-05-15T09:20:23.350015Z',
     id: 3,
-    jsonValue: '',
+    jsonValue: {
+      name: 'application',
+      type: 'Array',
+      value: [],
+    },
     note: 'test',
     verifications: [
       {
@@ -54,7 +67,11 @@ const applications: GetApplicationsType[] = [
   {
     createdDate: '2024-05-15T09:20:23.350015Z',
     id: 4,
-    jsonValue: '',
+    jsonValue: {
+      name: 'application',
+      type: 'Array',
+      value: [],
+    },
     note: 'test',
     verifications: [
       {
@@ -65,6 +82,7 @@ const applications: GetApplicationsType[] = [
         verifiedDate: null,
       },
     ],
+    status: ApplicationStatus.Withdrawn,
     statusResolvedDate: '2024-05-15T09:20:23.350015Z',
   },
 ]
