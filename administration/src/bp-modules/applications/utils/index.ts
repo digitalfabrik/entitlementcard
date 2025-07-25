@@ -1,6 +1,6 @@
-import { GetApplicationsVerificationType, VerificationStatus } from '../types'
+import { type ApplicationVerification, VerificationStatus } from '../types'
 
-export const verificationStatus = (verification: GetApplicationsVerificationType): VerificationStatus => {
+export const verificationStatus = (verification: ApplicationVerification): VerificationStatus => {
   if (verification.verifiedDate) {
     return VerificationStatus.Verified
   }
