@@ -17,15 +17,16 @@ const verein360Matcher = (entitlement?: GeneralJsonField): boolean => {
   )
 }
 
-const hasPreVerifiedEntitlement = (
-  applicationDetails: JsonField<'Array'>,
-  field: PreVerifiedEntitlementType
-): boolean => {
-  const entitlement = findValue(applicationDetails, field, 'Array')
-  return field === preVerifiedEntitlements.Verein360 ? verein360Matcher(entitlement) : entitlement !== undefined
-}
-
 export const getPreVerifiedEntitlementType = (
-  applicationDetails: JsonField<'Array'>
-): PreVerifiedEntitlementType | undefined =>
-  Object.values(preVerifiedEntitlements).find(type => hasPreVerifiedEntitlement(applicationDetails, type))
+  applicationJsonValue: JsonField<'Array'>
+): PreVerifiedEntitlementType | undefined => {
+  const applicationDetails = findValue(applicationJsonValue, 'applicationDetails', 'Array')
+
+  return applicationDetails !== undefined
+    ? Object.values(preVerifiedEntitlements).find(type => {
+        const entitlement = findValue(applicationDetails, type, 'Array')
+
+        return type === preVerifiedEntitlements.Verein360 ? verein360Matcher(entitlement) : entitlement !== undefined
+      })
+    : undefined
+}
