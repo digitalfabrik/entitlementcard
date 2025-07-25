@@ -464,10 +464,7 @@ const ApplicationCard = ({
         <Divider />
 
         <Box sx={{ p: 2 }}>
-          <VerificationsView
-            application={application}
-            showResendApprovalEmailButton={application.status !== ApplicationStatus.Rejected}
-          />
+          <VerificationsView application={application} isAdminView />
         </Box>
 
         <Divider />

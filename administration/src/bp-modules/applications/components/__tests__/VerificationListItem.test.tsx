@@ -42,8 +42,7 @@ describe('VerificationListItem', () => {
     expect(getByText('erika.musterfrau@posteo.de')).toBeTruthy()
     expect(getByText('Status:')).toBeTruthy()
     expect(getByText('Widersprochen am 16.1.2025, 16:22:52')).toBeTruthy()
-
-    expect(queryByText('Anfrage erneut senden')).toBeNull()
+    expect(queryByText('Anfrage erneut senden')).toBeTruthy()
   })
 
   it('should show a awaiting verification list item with correct content', () => {
@@ -70,7 +69,36 @@ describe('VerificationListItem', () => {
     expect(getByText('erika.musterfrau@posteo.de')).toBeTruthy()
     expect(getByText('Status:')).toBeTruthy()
     expect(getByText('Bestätigt am 16.1.2025, 16:22:52')).toBeTruthy()
+    expect(queryByText('Anfrage erneut senden')).toBeTruthy()
+  })
 
+  it('should show a resend email button when `showResendApprovalEmailButton` prop is true', () => {
+    const { queryByText } = renderWithTranslation(
+      <MockedProvider>
+        <AuthContext.Provider value={mockAuthContext}>
+          <VerificationListItem
+            verification={verificationsVerified[0]}
+            applicationId={1}
+            showResendApprovalEmailButton
+          />
+        </AuthContext.Provider>
+      </MockedProvider>
+    )
+    expect(queryByText('Anfrage erneut senden')).toBeTruthy()
+  })
+
+  it('should not show a resend email button when `showResendApprovalEmailButton` prop is omitted', () => {
+    const { queryByText } = renderWithTranslation(
+      <MockedProvider>
+        <AuthContext.Provider value={mockAuthContext}>
+          <VerificationListItem
+            verification={verificationsVerified[0]}
+            applicationId={1}
+            showResendApprovalEmailButton={false}
+          />
+        </AuthContext.Provider>
+      </MockedProvider>
+    )
     expect(queryByText('Anfrage erneut senden')).toBeNull()
   })
 })
