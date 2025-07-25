@@ -94,7 +94,7 @@ const ApplicationApplicantView = ({
           expandedRoot={false}
         />
         <StyledDivider />
-        <VerificationsView application={application} showResendApprovalEmailButton={false} />
+        <VerificationsView application={application} />
         {application.status === ApplicationStatus.Withdrawn && (
           <>
             <StyledDivider />
