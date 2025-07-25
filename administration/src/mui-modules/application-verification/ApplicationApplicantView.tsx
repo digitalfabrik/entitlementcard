@@ -95,8 +95,8 @@ const ApplicationApplicantView = ({
           expandedRoot={false}
         />
         <StyledDivider />
-        <VerificationsView application={application} showResendApprovalEmailButton={false} />
-        {application.status === ApplicationStatus.Withdrawn && (
+        <VerificationsView application={application} />
+        {application.status === ApplicationStatus.Pending && (
           <>
             <StyledDivider />
             <Typography sx={{ mt: '8px', mb: '16px' }} variant='body2'>
