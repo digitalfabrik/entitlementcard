@@ -90,7 +90,7 @@ const ApplicationStatusBar = ({
       <Title>{t('status')}</Title>
       <ApplicationStatusHelpButton />
       <BarItemContainer>
-        {barItems.map(item => (
+        {Object.values(barItems).map(item => (
           <ApplicationStatusBarItem
             key={item.i18nKey}
             count={applications.reduce((count, application) => count + (item.filter(application) ? 1 : 0), 0)}
