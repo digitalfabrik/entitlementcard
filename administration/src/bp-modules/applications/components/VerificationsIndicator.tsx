@@ -5,14 +5,12 @@ import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
-import type { JsonField } from '../JsonFieldView'
-import { findValue } from '../JsonFieldView'
 import {
   PreVerifiedEntitlementType,
   getPreVerifiedEntitlementType,
   preVerifiedEntitlements,
 } from '../preVerifiedEntitlements'
-import { type GetApplicationsType, type GetApplicationsVerificationType, VerificationStatus } from '../types'
+import { type Application, type ApplicationVerification, VerificationStatus } from '../types'
 import { verificationStatus } from '../utils'
 import { ApplicationNoteTooltip } from './ApplicationNoteTooltip'
 import { VerificationIcon } from './VerificationIcon'
@@ -23,7 +21,7 @@ const VerificationItem = (p: { status: VerificationStatus; count: number }): Rea
   </Box>
 )
 
-export const VerificationIndicator = (p: { verifications: GetApplicationsVerificationType[] }): ReactElement => {
+export const VerificationIndicator = (p: { verifications: ApplicationVerification[] }): ReactElement => {
   const { t } = useTranslation('applicationsOverview')
   const verificationStatuses = p.verifications.map(verificationStatus)
 
@@ -111,16 +109,8 @@ export const PreVerifiedIndicator = ({ type }: { type: PreVerifiedEntitlementTyp
   )
 }
 
-export const ApplicationIndicators = ({
-  application,
-  applicationJsonData,
-}: {
-  application: GetApplicationsType
-  applicationJsonData: JsonField<'Array'>
-}): ReactElement => {
-  const preVerifiedEntitlementType = getPreVerifiedEntitlementType(
-    findValue(applicationJsonData, 'applicationDetails', 'Array') ?? applicationJsonData
-  )
+export const ApplicationIndicators = ({ application }: { application: Application }): ReactElement => {
+  const preVerifiedEntitlementType = getPreVerifiedEntitlementType(application.jsonValue)
 
   return (
     <Stack direction='row' spacing={2} sx={{ displayPrint: 'none' }}>

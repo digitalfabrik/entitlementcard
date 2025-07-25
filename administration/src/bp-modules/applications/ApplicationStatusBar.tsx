@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import ApplicationStatusHelpButton from './ApplicationStatusBarHelpButton'
-import { ApplicationStatusBarItemType, GetApplicationsType } from './types'
+import type { Application, ApplicationStatusBarItemType } from './types'
 
 const Container = styled.div`
   display: flex;
@@ -79,7 +79,7 @@ const ApplicationStatusBar = ({
   barItems,
   onSetActiveBarItem,
 }: {
-  applications: GetApplicationsType[]
+  applications: Application[]
   barItems: ApplicationStatusBarItemType[]
   activeBarItem: ApplicationStatusBarItemType
   onSetActiveBarItem: (item: ApplicationStatusBarItemType) => void

@@ -3,10 +3,8 @@ import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
-import { GetApplicationsQuery } from '../../generated/graphql'
 import VerificationListItem from './components/VerificationListItem'
-
-export type Application = GetApplicationsQuery['applications'][number]
+import type { Application } from './types'
 
 const VerificationContainer = styled.ul`
   list-style-type: none;

@@ -5,12 +5,16 @@ import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import JsonFieldView, { GeneralJsonField } from '../../bp-modules/applications/JsonFieldView'
+import JsonFieldView from '../../bp-modules/applications/JsonFieldView'
 import VerificationsView from '../../bp-modules/applications/VerificationsView'
-import { GetApplicationsType } from '../../bp-modules/applications/types'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
-import { ApplicationStatus, useWithdrawApplicationMutation } from '../../generated/graphql'
+import {
+  ApplicationStatus,
+  GetApplicationByApplicantQuery,
+  useWithdrawApplicationMutation,
+} from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { ApplicationParsedJsonValue } from '../../shared/application'
 import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import ConfirmDialog from '../application/ConfirmDialog'
@@ -33,21 +37,18 @@ const StyledDivider = styled(Divider)`
   margin: 24px 0;
 `
 
-type ApplicationApplicantViewProps = {
-  application: GetApplicationsType
-  providedKey: string
-  gotWithdrawn: () => void
-}
-
 const ApplicationApplicantView = ({
   application,
   providedKey,
-  gotWithdrawn,
-}: ApplicationApplicantViewProps): ReactElement => {
+  inWithdrawApplication,
+}: {
+  application: ApplicationParsedJsonValue<GetApplicationByApplicantQuery['application']>
+  providedKey: string
+  inWithdrawApplication: () => void
+}): ReactElement => {
   const { t } = useTranslation('applicationApplicant')
   const [dialogOpen, setDialogOpen] = useState<boolean>(false)
-  const { createdDate: createdDateString, jsonValue, id } = application
-  const jsonField: GeneralJsonField = JSON.parse(jsonValue)
+  const { createdDate: createdDateString, id } = application
   const config = useContext(ProjectConfigContext)
   const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${id}`
   const { enqueueSnackbar } = useSnackbar()
@@ -86,7 +87,7 @@ const ApplicationApplicantView = ({
           {`${t('headline')} ${formatDateWithTimezone(createdDateString, config.timezone)}`}
         </Typography>
         <JsonFieldView
-          jsonField={jsonField}
+          jsonField={application.jsonValue}
           baseUrl={baseUrl}
           key={0}
           hierarchyIndex={0}
