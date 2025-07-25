@@ -3,6 +3,7 @@ import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
+import { ApplicationStatus } from '../../generated/graphql'
 import VerificationListItem from './components/VerificationListItem'
 import type { Application } from './types'
 
@@ -16,30 +17,31 @@ const VerificationContainer = styled.ul`
 
 const VerificationsView = ({
   application,
-  showResendApprovalEmailButton,
+  isAdminView,
 }: {
   application: Application
-  showResendApprovalEmailButton: boolean
+  /** Displayed in an administration page, so show administrative UI */
+  isAdminView?: boolean
 }): ReactElement => {
   const { t } = useTranslation('applicationsOverview')
-  const { verifications, id } = application
+
   return (
     <>
       <H5>{t('confirmationsByOrganizations')}</H5>
       <VerificationContainer>
-        {verifications.map(verification => {
+        {application.verifications.map(verification => {
           const key = verification.organizationName + verification.contactEmailAddress
           return (
             <VerificationListItem
               key={key}
               verification={verification}
-              applicationId={id}
-              showResendApprovalEmailButton={showResendApprovalEmailButton}
+              applicationId={application.id}
+              showResendApprovalEmailButton={isAdminView === true && application.status === ApplicationStatus.Pending}
             />
           )
         })}
       </VerificationContainer>
-      {verifications.length === 0 ? <i role='note'>({t('none')})</i> : null}
+      {application.verifications.length === 0 ? <i role='note'>({t('none')})</i> : null}
     </>
   )
 }
