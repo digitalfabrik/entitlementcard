@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.common.utils
 
-import backend.BuildConfig
+import app.ehrenamtskarte.backend.BuildConfig
 import io.sentry.Sentry
 
 fun initializeSentry() {

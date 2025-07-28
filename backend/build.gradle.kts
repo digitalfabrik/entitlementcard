@@ -6,6 +6,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
  * This generated file contains a sample Kotlin application project to get you started.
  */
 val isProductionEnvironment = System.getProperty("env") == "prod"
+val backendPackageName = "app.ehrenamtskarte.backend"
 
 plugins {
     alias(libs.plugins.com.google.protobuf)
@@ -91,6 +92,7 @@ ktlint {
 }
 
 buildConfig {
+    packageName(backendPackageName)
     buildConfigField("VERSION_NAME", System.getenv("NEW_VERSION_NAME"))
     buildConfigField("COMMIT_HASH", System.getenv("CIRCLE_SHA1"))
 }
@@ -137,14 +139,14 @@ protobuf {
 
 application {
     // Define the main class for the application.
-    mainClass.set("app.ehrenamtskarte.backend.EntryPointKt")
+    mainClass.set("$backendPackageName.EntryPointKt")
 }
 
 kover {
     reports {
         filters {
             includes {
-                classes("app.ehrenamtskarte.backend.*")
+                classes("$backendPackageName.*")
             }
         }
     }
@@ -184,7 +186,7 @@ tasks.graphqlGenerateTestClient {
     dependsOn(tasks.generateSentryBundleIdJava)
     dependsOn(tasks.sentryCollectSourcesJava)
     schemaFile.set(rootDir.parentFile.resolve("specs/backend-api.graphql"))
-    packageName.set("app.ehrenamtskarte.backend.generated")
+    packageName.set("$backendPackageName.generated")
     queryFiles.setFrom(fileTree("src/test/resources/graphql"))
 }
 
