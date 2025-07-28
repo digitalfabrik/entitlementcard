@@ -78,7 +78,7 @@ class DetailAppBarBottom extends StatelessWidget {
             style: textTheme.titleLarge?.apply(color: textColor),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-          )
+          ),
         ],
       ),
     );
@@ -119,12 +119,13 @@ class DetailAppBar extends StatelessWidget {
       actions: [
         if (buildConfig.featureFlags.favorites && showFavoriteButton)
           IconButton(
-              color: foregroundColor,
-              icon: isFavorite ? Icon(Icons.favorite) : Icon(Icons.favorite_border_outlined),
-              iconSize: 36,
-              onPressed: () async {
-                await _toggleFavorites(context, favoritesProvider);
-              }),
+            color: foregroundColor,
+            icon: isFavorite ? Icon(Icons.favorite) : Icon(Icons.favorite_border_outlined),
+            iconSize: 36,
+            onPressed: () async {
+              await _toggleFavorites(context, favoritesProvider);
+            },
+          ),
       ],
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(bottomSize),

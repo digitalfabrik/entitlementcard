@@ -11,12 +11,7 @@ class RemovedStoreSummary extends StatelessWidget {
   final String storeName;
   final int categoryId;
 
-  const RemovedStoreSummary({
-    super.key,
-    required this.storeId,
-    required this.storeName,
-    required this.categoryId,
-  });
+  const RemovedStoreSummary({super.key, required this.storeId, required this.storeName, required this.categoryId});
 
   @override
   Widget build(BuildContext context) {
@@ -39,12 +34,7 @@ class RemovedStoreSummary extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      storeName,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.bodyLarge,
-                    ),
+                    Text(storeName, maxLines: 1, overflow: TextOverflow.ellipsis, style: theme.textTheme.bodyLarge),
                     const SizedBox(height: 4),
                     Text(
                       t.store.acceptingStoreNotAvailable,
@@ -75,15 +65,8 @@ class RemovedStoreSummary extends StatelessWidget {
         builder: (context) => Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            DetailAppBar(
-              storeId: storeId,
-              storeName: storeName,
-              categoryId: categoryId,
-              showFavoriteButton: false,
-            ),
-            RemovedStoreContent(
-              storeId: storeId,
-            ),
+            DetailAppBar(storeId: storeId, storeName: storeName, categoryId: categoryId, showFavoriteButton: false),
+            RemovedStoreContent(storeId: storeId),
           ],
         ),
       ),

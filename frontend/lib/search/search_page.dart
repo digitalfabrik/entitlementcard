@@ -54,7 +54,9 @@ class _SearchPageState extends State<SearchPage> {
                       '${t.search.searchResults.toUpperCase()} ${_sortingMode == SortingMode.byDistance ? t.search.nearby : t.search.alphabetically}',
                       style: theme.textTheme.bodyMedium?.apply(color: theme.hintColor),
                     ),
-                    const Expanded(child: Padding(padding: EdgeInsets.only(left: 8), child: Divider()))
+                    const Expanded(
+                      child: Padding(padding: EdgeInsets.only(left: 8), child: Divider()),
+                    ),
                   ],
                 ),
               ),
@@ -63,7 +65,7 @@ class _SearchPageState extends State<SearchPage> {
               searchText: searchFieldText,
               categoryIds: _selectedCategories.map((e) => e.id).toList(),
               coordinates: _sortingMode == SortingMode.byDistance ? _coordinates : null,
-            )
+            ),
           ],
         ),
         SortingButton(
@@ -82,7 +84,7 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  _onCategoryPress(CategoryAsset asset, bool isSelected) {
+  void _onCategoryPress(CategoryAsset asset, bool isSelected) {
     setState(() {
       if (isSelected) {
         _selectedCategories.add(asset);

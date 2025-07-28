@@ -54,33 +54,25 @@ class DevSettingsView extends StatelessWidget {
       padding: const EdgeInsets.all(15.0),
       child: Column(
         children: [
-          ListTile(
-            title: const Text('Reset cards'),
-            onTap: () => _resetEakData(context, userCodeModel),
-          ),
-          ListTile(
-            title: const Text('Set (invalid) sample card'),
-            onTap: () => _setSampleCard(context),
-          ),
+          ListTile(title: const Text('Reset cards'), onTap: () => _resetEakData(context, userCodeModel)),
+          ListTile(title: const Text('Set (invalid) sample card'), onTap: () => _setSampleCard(context)),
           ListTile(
             title: Text('Set base64 card (Limit: ${buildConfig.maxCardAmount})'),
             enabled: !hasReachedCardLimit(userCodeModel.userCodes),
             onTap: () => _showRawCardInput(context),
           ),
-          ListTile(
-            title: const Text('Show Intro Slides'),
-            onTap: () => _showIntroSlides(context),
-          ),
+          ListTile(title: const Text('Show Intro Slides'), onTap: () => _showIntroSlides(context)),
           ListTile(
             title: const Text('Set expired last card verification'),
             onTap: () => _setExpiredLastVerifications(context),
           ),
           ListTile(
-              title: const Text('Trigger self-verification'),
-              onTap: () => {
-                    for (final userCode in userCodeModel.userCodes)
-                      {selfVerifyCard(userCodeModel, userCode, Configuration.of(context).projectId, client)}
-                  }),
+            title: const Text('Trigger self-verification'),
+            onTap: () => {
+              for (final userCode in userCodeModel.userCodes)
+                {selfVerifyCard(userCodeModel, userCode, Configuration.of(context).projectId, client)},
+            },
+          ),
           ListTile(
             title: const Text('Log sample exception'),
             onTap: () => log('Sample exception.', error: Exception('Sample exception...')),
@@ -90,9 +82,10 @@ class DevSettingsView extends StatelessWidget {
             onTap: () {
               showDialog<bool>(
                 context: context,
-                builder: (context) => SimpleDialog(title: const Text('Settings'), children: [
-                  Text(settings.toString(), style: textTheme.bodySmall),
-                ]),
+                builder: (context) => SimpleDialog(
+                  title: const Text('Settings'),
+                  children: [Text(settings.toString(), style: textTheme.bodySmall)],
+                ),
               );
             },
           ),
@@ -140,15 +133,10 @@ class DevSettingsView extends StatelessWidget {
             child: Form(
               child: Column(
                 children: <Widget>[
-                  const SelectableText(
-                    'Get the base64 activationCode from the console when card was created',
-                  ),
+                  const SelectableText('Get the base64 activationCode from the console when card was created'),
                   TextFormField(
                     controller: base64Controller,
-                    decoration: const InputDecoration(
-                      labelText: 'Base64 data',
-                      icon: Icon(Icons.card_membership),
-                    ),
+                    decoration: const InputDecoration(labelText: 'Base64 data', icon: Icon(Icons.card_membership)),
                   ),
                 ],
               ),
@@ -161,7 +149,7 @@ class DevSettingsView extends StatelessWidget {
               onPressed: () {
                 GoRouter.of(context).push('/$activationRouteName/code#${base64Controller.text}');
               },
-            )
+            ),
           ],
         );
       },
@@ -182,18 +170,21 @@ class DevSettingsView extends StatelessWidget {
     }
   }
 
-// This is used to check the invalidation of a card because the verification with the backend couldn't be done lately (1 week plus UTC tolerance)
+  // This is used to check the invalidation of a card because the verification with the backend couldn't be done lately (1 week plus UTC tolerance)
   void _setExpiredLastVerification(BuildContext context, DynamicUserCode userCode) {
     final userCodesModel = Provider.of<UserCodeModel>(context, listen: false);
     final CardVerification cardVerification = CardVerification()
-      ..verificationTimeStamp =
-          secondsSinceEpoch(DateTime.now().toUtc().subtract(Duration(seconds: cardValidationExpireSeconds + 3600)))
+      ..verificationTimeStamp = secondsSinceEpoch(
+        DateTime.now().toUtc().subtract(Duration(seconds: cardValidationExpireSeconds + 3600)),
+      )
       ..cardValid = true;
-    userCodesModel.updateCode(DynamicUserCode()
-      ..info = userCode.info
-      ..ecSignature = userCode.ecSignature
-      ..pepper = userCode.pepper
-      ..totpSecret = userCode.totpSecret
-      ..cardVerification = cardVerification);
+    userCodesModel.updateCode(
+      DynamicUserCode()
+        ..info = userCode.info
+        ..ecSignature = userCode.ecSignature
+        ..pepper = userCode.pepper
+        ..totpSecret = userCode.totpSecret
+        ..cardVerification = cardVerification,
+    );
   }
 }
