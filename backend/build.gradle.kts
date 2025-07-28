@@ -6,10 +6,12 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
  * This generated file contains a sample Kotlin application project to get you started.
  */
 val isProductionEnvironment = System.getProperty("env") == "prod"
+val rootPackageName = "app.ehrenamtskarte.backend"
 
 plugins {
     alias(libs.plugins.com.google.protobuf)
     alias(libs.plugins.com.expediagroup.graphql)
+    alias(libs.plugins.com.github.gmazzo.buildconfig)
     alias(libs.plugins.io.gitlab.arturbosch.detekt)
     alias(libs.plugins.org.jetbrains.kotlin.jvm)
     alias(libs.plugins.org.jetbrains.kotlinx.kover)
@@ -89,6 +91,12 @@ ktlint {
     }
 }
 
+buildConfig {
+    packageName(rootPackageName)
+    buildConfigField("VERSION_NAME", System.getenv("NEW_VERSION_NAME"))
+    buildConfigField("COMMIT_HASH", System.getenv("CIRCLE_SHA1"))
+}
+
 if (isProductionEnvironment) {
     sentry {
         // Generates a JVM (Java, Kotlin, etc.) source bundle and uploads your source code to Sentry.
@@ -131,14 +139,14 @@ protobuf {
 
 application {
     // Define the main class for the application.
-    mainClass.set("app.ehrenamtskarte.backend.EntryPointKt")
+    mainClass.set("$rootPackageName.EntryPointKt")
 }
 
 kover {
     reports {
         filters {
             includes {
-                classes("app.ehrenamtskarte.backend.*")
+                classes("$rootPackageName.*")
             }
         }
     }
@@ -178,7 +186,7 @@ tasks.graphqlGenerateTestClient {
     dependsOn(tasks.generateSentryBundleIdJava)
     dependsOn(tasks.sentryCollectSourcesJava)
     schemaFile.set(rootDir.parentFile.resolve("specs/backend-api.graphql"))
-    packageName.set("app.ehrenamtskarte.backend.generated")
+    packageName.set("$rootPackageName.generated")
     queryFiles.setFrom(fileTree("src/test/resources/graphql"))
 }
 

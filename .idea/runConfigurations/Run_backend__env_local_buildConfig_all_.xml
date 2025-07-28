@@ -5,6 +5,7 @@
         <map>
           <entry key="JWT_SECRET" value="HelloWorld" />
           <entry key="KOBLENZ_PEPPER" value="123456789ABC" />
+          <entry key="NEW_VERSION_NAME" value="1.0.0" />
         </map>
       </option>
       <option name="executionName" />
