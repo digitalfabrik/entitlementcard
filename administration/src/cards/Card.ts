@@ -95,10 +95,10 @@ export const deserializeCard = (serializedCard: SerializedCard, cardConfig: Card
   fullName: serializedCard.fullName,
   expirationDate: PlainDate.safeFrom(serializedCard.expirationDate),
   extensions: Object.entries(serializedCard.extensions).reduce(
-    (acc, [key, value]) => ({
-      ...acc,
-      ...cardConfig.extensions.find(it => it.name === key)!.fromSerialized(value),
-    }),
+    (acc, [key, value]) => {
+      const extension = cardConfig.extensions.find(it => it.name === key);
+      return extension ? { ...acc, ...extension.fromSerialized(value) } : acc;
+    },
     {}
   ),
 })
