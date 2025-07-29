@@ -150,7 +150,7 @@ type Mutation {
   "Changes an administrator's password"
   changePassword(currentPassword: String!, email: String!, newPassword: String!, project: String!): Boolean!
   "Creates a new administrator"
-  createAdministrator(email: String!, project: String!, regionId: Int, role: Role!, sendWelcomeMail: Boolean!): Boolean!
+  createAdministrator(email: String!, regionId: Int, role: Role!, sendWelcomeMail: Boolean!): Boolean!
   "Creates a new api token for user import endpoint"
   createApiToken(expiresIn: Int!): String!
   "Creates a new digital entitlementcard from self-service portal"
@@ -158,7 +158,7 @@ type Mutation {
   "Creates a new digital entitlementcard and returns it"
   createCardsByCardInfos(applicationIdToMarkAsProcessed: Int, encodedCardInfos: [String!]!, generateStaticCodes: Boolean!): [CardCreationResultModel!]!
   "Deletes an existing administrator"
-  deleteAdministrator(adminId: Int!, project: String!): Boolean!
+  deleteAdministrator(adminId: Int!): Boolean!
   "Deletes a selected API token"
   deleteApiToken(id: Int!): Int!
   "Deletes the application with specified id"
@@ -166,7 +166,7 @@ type Mutation {
   "Deletes a batch of cards (that have not yet been activated)"
   deleteInactiveCards(cardInfoHashBase64List: [String!]!, regionId: Int!): Boolean!
   "Edits an existing administrator"
-  editAdministrator(adminId: Int!, newEmail: String!, newRegionId: Int, newRole: Role!, project: String!): Boolean!
+  editAdministrator(adminId: Int!, newEmail: String!, newRegionId: Int, newRole: Role!): Boolean!
   "Import accepting stores via csv"
   importAcceptingStores(dryRun: Boolean!, project: String!, stores: [CSVAcceptingStoreInput!]!): StoreImportReturnResultModel!
   "Reject an application"
@@ -192,7 +192,7 @@ type Mutation {
   "Updates the data transfer to freinet. Works only for the EAK project."
   updateDataTransferToFreinet(dataTransferActivated: Boolean!, project: String!, regionId: Int!): Boolean!
   "Updates the notification settings"
-  updateNotificationSettings(notificationSettings: NotificationSettingsInput!, project: String!): Boolean!
+  updateNotificationSettings(notificationSettings: NotificationSettingsInput!): Boolean!
   "Updates the region specific settings"
   updateRegionSettings(activatedForApplication: Boolean!, activatedForConfirmationMail: Boolean!, regionId: Int!): Boolean!
   "Verifies or rejects an application verification"

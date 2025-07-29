@@ -8,11 +8,7 @@ import { useAppToaster } from '../AppToaster'
 import getQueryResult from '../util/getQueryResult'
 import SettingsCard from './SettingsCard'
 
-type NotificationSettingsProps = {
-  projectId: string
-}
-
-const NotificationSettings = ({ projectId }: NotificationSettingsProps): ReactElement => {
+const NotificationSettings = (): ReactElement => {
   const { t } = useTranslation('userSettings')
   const [receiveEmailForActivation, setReceiveEmailForActivation] = useState<boolean>(false)
   const [receiveEmailForVerification, setReceiveEmailForVerification] = useState<boolean>(false)
@@ -46,7 +42,6 @@ const NotificationSettings = ({ projectId }: NotificationSettingsProps): ReactEl
   const submit = () => {
     updateNotificationSettings({
       variables: {
-        project: projectId,
         notificationSettings: {
           notificationOnApplication: receiveEmailForActivation,
           notificationOnVerification: receiveEmailForVerification,
