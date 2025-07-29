@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { AuthContext } from './AuthProvider'
 import StandaloneCenter from './bp-modules/StandaloneCenter'
 import { WhoAmIQuery, useWhoAmIQuery } from './generated/graphql'
-import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
 import { hasProp } from './util/helper'
 
 type WhoAmIContextType = {
@@ -30,11 +29,8 @@ export const useWhoAmI = (): UseWhoAmIReturn => {
 
 const WhoAmIProvider = ({ children }: { children: ReactNode }): ReactElement => {
   const { t } = useTranslation('auth')
-  const { projectId } = useContext(ProjectConfigContext)
   const { signOut } = useContext(AuthContext)
-  const { loading, error, data, refetch, previousData } = useWhoAmIQuery({
-    variables: { project: projectId },
-  })
+  const { loading, error, data, refetch, previousData } = useWhoAmIQuery()
   // Use the previous data (if existent) while potentially loading new data to prevent remounting
   const dataForContext = data ?? previousData
   const context = useMemo(() => ({ me: dataForContext?.me, refetch }), [dataForContext, refetch])
@@ -50,7 +46,7 @@ const WhoAmIProvider = ({ children }: { children: ReactNode }): ReactElement => 
     return (
       <StandaloneCenter>
         <p>{t('accountInformationNotAvailable')}</p>
-        <Button icon='repeat' onClick={refetch}>
+        <Button icon='repeat' onClick={() => refetch()}>
           {t('retry')}
         </Button>
         <Button icon='log-out' onClick={signOut}>

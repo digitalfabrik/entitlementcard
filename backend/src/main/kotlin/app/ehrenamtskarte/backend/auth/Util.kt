@@ -17,7 +17,7 @@ fun GraphQLContext.getAuthContext(): AuthContext {
             adminId = jwtPayload.adminId,
             admin = adminEntity,
             projectId = adminEntity.projectId.value,
-            project = adminEntity.projectName,
+            project = adminEntity.project.project,
         )
     }
 }

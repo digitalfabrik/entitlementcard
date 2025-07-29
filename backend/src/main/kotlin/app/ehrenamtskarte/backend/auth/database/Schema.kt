@@ -62,10 +62,8 @@ class AdministratorEntity(id: EntityID<Int>) : IntEntity(id) {
     var deleted by Administrators.deleted
 
     val project by ProjectEntity referencedOn Administrators.projectId
-    val projectName: String
-        get() = this.project.project
 
-    fun isInProject(project: String): Boolean = this.projectName == project
+    fun isInProject(project: String): Boolean = this.project.project == project
 
     fun isInProject(projectId: Int): Boolean = this.projectId.value == projectId
 
