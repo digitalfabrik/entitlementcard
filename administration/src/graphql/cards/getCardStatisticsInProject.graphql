@@ -1,5 +1,5 @@
-query getCardStatisticsInProject($projectId: String!, $dateStart: String!, $dateEnd: String!) {
-  result: getCardStatisticsInProject(project: $projectId, dateStart: $dateStart, dateEnd: $dateEnd) {
+query getCardStatisticsInProject($dateStart: String!, $dateEnd: String!) {
+  result: getCardStatisticsInProject(dateStart: $dateStart, dateEnd: $dateEnd) {
     region
     cardsCreated
     cardsActivated

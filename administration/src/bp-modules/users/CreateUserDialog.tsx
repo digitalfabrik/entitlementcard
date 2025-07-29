@@ -1,11 +1,10 @@
 import { Button, Checkbox, Classes, Dialog, FormGroup, InputGroup } from '@blueprintjs/core'
-import React, { ReactElement, useContext, useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { Role, useCreateAdministratorMutation } from '../../generated/graphql'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { useAppToaster } from '../AppToaster'
 import RegionSelector from './RegionSelector'
 import RoleHelpButton from './RoleHelpButton'
@@ -36,7 +35,6 @@ const CreateUserDialog = ({
   const [role, setRole] = useState<Role | null>(null)
   const [regionId, setRegionId] = useState<number | null>(null)
   const [sendWelcomeMail, setSendWelcomeMail] = useState(true)
-  const project = useContext(ProjectConfigContext).projectId
   const rolesWithRegion = [Role.RegionManager, Role.RegionAdmin]
 
   const [createAdministrator, { loading }] = useCreateAdministratorMutation({
@@ -70,7 +68,6 @@ const CreateUserDialog = ({
           e.preventDefault()
           createAdministrator({
             variables: {
-              project,
               email,
               role: role as Role,
               regionId: getRegionId(),

@@ -2,18 +2,15 @@ package app.ehrenamtskarte.backend.auth.webservice.schema
 
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
-import app.ehrenamtskarte.backend.auth.getAdministrator
+import app.ehrenamtskarte.backend.auth.getAuthContext
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
 import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
-import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.EmailAlreadyExistsException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.mail.Mailer
-import app.ehrenamtskarte.backend.projects.database.ProjectEntity
-import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
@@ -23,7 +20,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
 class ManageUsersMutationService {
     @GraphQLDescription("Creates a new administrator")
     fun createAdministrator(
-        project: String,
         email: String,
         role: Role,
         regionId: Int?,
@@ -31,20 +27,16 @@ class ManageUsersMutationService {
         dfe: DataFetchingEnvironment,
     ): Boolean {
         val context = dfe.graphQlContext.context
-        val actingAdmin = context.getAdministrator()
+        val authContext = context.getAuthContext()
         val backendConfig = context.backendConfiguration
-        val projectConfig = backendConfig.projects.first { it.id == project }
+        val projectConfig = backendConfig.getProjectConfig(authContext.project)
 
         transaction {
-            val projectEntity = ProjectEntity
-                .find { Projects.project eq project }
-                .singleOrNull()
-                ?: throw ProjectNotFoundException(project)
             val region = regionId?.let {
-                RegionsRepository.findByIdInProject(project, it) ?: throw RegionNotFoundException()
+                RegionsRepository.findByIdInProject(authContext.project, it) ?: throw RegionNotFoundException()
             }
 
-            if (!Authorizer.mayCreateUser(actingAdmin, projectEntity.id.value, role, region)) {
+            if (!Authorizer.mayCreateUser(authContext.admin, authContext.projectId, role, region)) {
                 throw ForbiddenException()
             }
 
@@ -52,7 +44,7 @@ class ManageUsersMutationService {
                 throw EmailAlreadyExistsException()
             }
 
-            val newUser = AdministratorsRepository.insert(project, email, null, role, regionId)
+            val newUser = AdministratorsRepository.insert(authContext.project, email, null, role, regionId)
 
             if (sendWelcomeMail) {
                 val key = AdministratorsRepository.setNewPasswordResetKey(newUser)
@@ -69,7 +61,6 @@ class ManageUsersMutationService {
 
     @GraphQLDescription("Edits an existing administrator")
     fun editAdministrator(
-        project: String,
         adminId: Int,
         newEmail: String,
         newRole: Role,
@@ -77,19 +68,16 @@ class ManageUsersMutationService {
         dfe: DataFetchingEnvironment,
     ): Boolean {
         val context = dfe.graphQlContext.context
-        val actingAdmin = context.getAdministrator()
+        val authContext = context.getAuthContext()
 
         transaction {
-            val existingAdmin = AdministratorEntity.findById(adminId) ?: throw UnauthorizedException()
-
-            val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
-                ?: throw ProjectNotFoundException(project)
-            val newRegion = newRegionId?.let { RegionsRepository.findByIdInProject(project, it) }
+            val adminToEdit = AdministratorEntity.findById(adminId) ?: throw UnauthorizedException()
+            val newRegion = newRegionId?.let { RegionsRepository.findByIdInProject(authContext.project, it) }
 
             if (!Authorizer.mayEditUser(
-                    actingAdmin,
-                    existingAdmin,
-                    projectEntity.id.value,
+                    authContext.admin,
+                    adminToEdit,
+                    authContext.projectId,
                     newRole,
                     newRegion,
                 )
@@ -98,37 +86,31 @@ class ManageUsersMutationService {
             }
 
             if (
-                newEmail != existingAdmin.email &&
+                newEmail != adminToEdit.email &&
                 AdministratorsRepository.emailAlreadyExists(newEmail)
             ) {
                 throw EmailAlreadyExistsException()
             }
 
-            existingAdmin.email = newEmail
-            existingAdmin.role = newRole.db_value
-            existingAdmin.regionId = newRegion?.id
+            adminToEdit.email = newEmail
+            adminToEdit.role = newRole.db_value
+            adminToEdit.regionId = newRegion?.id
         }
         return true
     }
 
     @GraphQLDescription("Deletes an existing administrator")
-    fun deleteAdministrator(project: String, adminId: Int, dfe: DataFetchingEnvironment): Boolean {
-        val context = dfe.graphQlContext.context
-        val actingAdmin = context.getAdministrator()
+    fun deleteAdministrator(adminId: Int, dfe: DataFetchingEnvironment): Boolean {
+        val authContext = dfe.graphQlContext.context.getAuthContext()
 
         transaction {
-            val existingAdmin = AdministratorEntity.findById(adminId) ?: throw UnauthorizedException()
-            val projectEntity = ProjectEntity.find {
-                Projects.project eq project
-            }.firstOrNull() ?: throw ProjectNotFoundException(project)
+            val adminToDelete = AdministratorEntity.findById(adminId) ?: throw UnauthorizedException()
 
-            if (existingAdmin.projectId != projectEntity.id) throw UnauthorizedException()
-
-            if (!Authorizer.mayDeleteUser(actingAdmin, existingAdmin)) {
+            if (!Authorizer.mayDeleteUser(authContext.admin, adminToDelete)) {
                 throw ForbiddenException()
             }
 
-            AdministratorsRepository.deleteAdministrator(existingAdmin)
+            AdministratorsRepository.deleteAdministrator(adminToDelete)
         }
         return true
     }

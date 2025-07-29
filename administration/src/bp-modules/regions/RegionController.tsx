@@ -21,7 +21,7 @@ const RegionSettingsContainer = styled.div`
 
 const RegionController = (): ReactElement => {
   const { region, role } = useWhoAmI().me
-  const { freinetDataTransferEnabled, projectId } = useContext(ProjectConfigContext)
+  const { freinetDataTransferEnabled } = useContext(ProjectConfigContext)
   const { t } = useTranslation('errors')
   if (!region || role !== Role.RegionAdmin) {
     return <NonIdealState icon='cross' title={t('notAuthorized')} description={t('notAuthorizedForRegionSettings')} />
@@ -31,7 +31,7 @@ const RegionController = (): ReactElement => {
       <DataPrivacyCard />
       <RegionSettingsController regionId={region.id} />
       <ApplicationConfirmationNoteController regionId={region.id} />
-      {freinetDataTransferEnabled && <FreinetSettingsController regionId={region.id} project={projectId} />}
+      {freinetDataTransferEnabled && <FreinetSettingsController regionId={region.id} />}
     </RegionSettingsContainer>
   )
 }

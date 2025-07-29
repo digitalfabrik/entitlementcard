@@ -107,12 +107,10 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
 
         // This is a temporary condition from #2141
         if (!isProductionEnvironment() && applicationId != null) {
-          const { projectId } = projectConfig
           const freinetCard = getFreinetCardFromCards(cards)
           sendToFreinet({
             variables: {
               applicationId,
-              project: projectId,
               freinetCard,
             },
           })

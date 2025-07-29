@@ -1,11 +1,9 @@
 mutation createCards(
-  $project: String!
   $encodedCardInfos: [String!]!
   $generateStaticCodes: Boolean!
   $applicationIdToMarkAsProcessed: Int
 ) {
   cards: createCardsByCardInfos(
-    project: $project
     encodedCardInfos: $encodedCardInfos
     generateStaticCodes: $generateStaticCodes
     applicationIdToMarkAsProcessed: $applicationIdToMarkAsProcessed

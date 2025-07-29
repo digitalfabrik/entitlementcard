@@ -1,5 +1,5 @@
-query whoAmI($project: String!) {
-  me: whoAmI(project: $project) {
+query whoAmI {
+  me: whoAmI {
     id
     email
     role

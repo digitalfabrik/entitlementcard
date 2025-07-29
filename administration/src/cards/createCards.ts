@@ -55,10 +55,10 @@ const createCards = async (
   cards: Card[],
   applicationIdToMarkAsProcessed: number | null
 ): Promise<CreateCardsResult[]> => {
-  const { projectId, staticQrCodesEnabled: generateStaticCodes } = projectConfig
+  const { staticQrCodesEnabled: generateStaticCodes } = projectConfig
   const encodedCardInfos = cards.map(generateCardInfo).map(cardInfo => uint8ArrayToBase64(cardInfo.toBinary()))
   const result = await createCardsMutation({
-    variables: { project: projectId, encodedCardInfos, generateStaticCodes, applicationIdToMarkAsProcessed },
+    variables: { encodedCardInfos, generateStaticCodes, applicationIdToMarkAsProcessed },
   })
   const data = mapGraphqlRequestResult(result, message => new CreateCardsError(message))
   return data.cards.map(mapCardCreationResult)

@@ -28,7 +28,7 @@ const ManageProjectUsers = () => {
   const { projectId, name: projectName } = useContext(ProjectConfigContext)
   const { t } = useTranslation('users')
   const regionsQuery = useGetRegionsQuery({ variables: { project: projectId } })
-  const usersQuery = useGetUsersInProjectQuery({ variables: { project: projectId } })
+  const usersQuery = useGetUsersInProjectQuery()
 
   const regionsQueryResult = getQueryResult(regionsQuery)
   const usersQueryResult = getQueryResult(usersQuery)

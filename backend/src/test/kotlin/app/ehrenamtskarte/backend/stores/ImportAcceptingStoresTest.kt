@@ -42,18 +42,6 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
     }
 
     @Test
-    fun `POST returns an error when project does not exist`() =
-        JavalinTest.test(app) { _, client ->
-            val mutation = createMutation(
-                project = "non-existent.ehrenamtskarte.app",
-                stores = emptyList(),
-            )
-            val response = post(client, mutation, projectStoreManager.getJwtToken())
-
-            assertEquals(404, response.code)
-        }
-
-    @Test
     fun `POST returns an error when the auth token is missing`() =
         JavalinTest.test(app) { _, client ->
             val mutation = createMutation(stores = emptyList())
@@ -75,7 +63,6 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
     fun `POST returns an error response if no unique region can be found for a project`() =
         JavalinTest.test(app) { _, client ->
             val mutation = createMutation(
-                project = "bayern.ehrenamtskarte.app",
                 stores = listOf(CSVAcceptanceStoreBuilder.build()),
             )
             val response = post(client, mutation, TestAdministrators.EAK_PROJECT_STORE_MANAGER.getJwtToken())
@@ -331,13 +318,8 @@ internal class ImportAcceptingStoresTest : GraphqlApiTest() {
             }
         }
 
-    private fun createMutation(
-        project: String = "nuernberg.sozialpass.app",
-        dryRun: Boolean = false,
-        stores: List<CSVAcceptingStoreInput>,
-    ): ImportAcceptingStores {
+    private fun createMutation(dryRun: Boolean = false, stores: List<CSVAcceptingStoreInput>): ImportAcceptingStores {
         val variables = ImportAcceptingStores.Variables(
-            project = project,
             dryRun = dryRun,
             stores = stores,
         )
