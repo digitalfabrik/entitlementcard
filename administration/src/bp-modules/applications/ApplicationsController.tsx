@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useWhoAmI } from '../../WhoAmIProvider'
-import { Region, useGetApplicationsQuery } from '../../generated/graphql'
+import { Region, Role, useGetApplicationsQuery } from '../../generated/graphql'
 import RenderGuard from '../../mui-modules/components/RenderGuard'
 import getQueryResult from '../../mui-modules/util/getQueryResult'
 import ApplicationsOverview from './ApplicationsOverview'
@@ -24,7 +24,10 @@ const ControllerWithRegion = (): ReactElement => {
   const { t } = useTranslation('errors')
 
   return (
-    <RenderGuard condition={region !== undefined} error={{ description: t('notAuthorizedToSeeApplications') }}>
+    <RenderGuard
+      allowedRoles={[Role.RegionManager, Role.RegionAdmin]}
+      condition={region !== undefined}
+      error={{ description: t('notAuthorizedToSeeApplications') }}>
       <ApplicationsController region={region!} />
     </RenderGuard>
   )

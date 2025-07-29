@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router'
 import styled from 'styled-components'
 
 import { useWhoAmI } from '../../WhoAmIProvider'
+import { Role } from '../../generated/graphql'
 import RenderGuard from '../../mui-modules/components/RenderGuard'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import StandaloneCenter from '../StandaloneCenter'
@@ -23,7 +24,10 @@ const CreateCardsController = (): ReactElement => {
   const navigate = useNavigate()
 
   return (
-    <RenderGuard condition={region !== undefined} error={{ description: t('errors:notAuthorizedToCreateCards') }}>
+    <RenderGuard
+      allowedRoles={[Role.RegionManager, Role.RegionAdmin]}
+      condition={region !== undefined}
+      error={{ description: t('errors:notAuthorizedToCreateCards') }}>
       <StandaloneCenter>
         <Buttons vertical>
           <CardFormButton text={t('createSingleCards')} icon='add' onClick={() => navigate('./add')} />

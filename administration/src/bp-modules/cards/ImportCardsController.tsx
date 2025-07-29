@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 
 import { useWhoAmI } from '../../WhoAmIProvider'
-import { Region } from '../../generated/graphql'
+import { Region, Role } from '../../generated/graphql'
 import CenteredCircularProgress from '../../mui-modules/base/CenteredCircularProgress'
 import RenderGuard from '../../mui-modules/components/RenderGuard'
 import useBlockNavigation from '../../util/useBlockNavigation'
@@ -69,7 +69,10 @@ const ImportCardsController = (): ReactElement => {
   const { t } = useTranslation('errors')
 
   return (
-    <RenderGuard condition={region !== undefined} error={{ description: t('notAuthorizedToCreateCards') }}>
+    <RenderGuard
+      allowedRoles={[Role.RegionManager, Role.RegionAdmin]}
+      condition={region !== undefined}
+      error={{ description: t('notAuthorizedToCreateCards') }}>
       <InnerImportCardsController region={region!} />
     </RenderGuard>
   )
