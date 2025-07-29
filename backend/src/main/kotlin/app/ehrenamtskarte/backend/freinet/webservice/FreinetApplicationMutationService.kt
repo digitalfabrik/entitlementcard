@@ -29,13 +29,12 @@ class FreinetApplicationMutationService {
     @GraphQLDescription("Send application and card information to Freinet")
     fun sendApplicationAndCardDataToFreinet(
         applicationId: Int,
-        project: String,
         freinetCard: FreinetCard,
         dfe: DataFetchingEnvironment,
     ): Boolean {
         val context = dfe.graphQlContext.context
         val authContext = context.getAuthContext()
-        val projectConfig = context.backendConfiguration.getProjectConfig(project)
+        val projectConfig = context.backendConfiguration.getProjectConfig(authContext.project)
 
         if (projectConfig.freinet == null) {
             throw NotImplementedException()
