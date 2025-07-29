@@ -7,16 +7,11 @@ import { useAppToaster } from '../../AppToaster'
 import getQueryResult from '../../util/getQueryResult'
 import FreinetSettingsCard from './FreinetSettingsCard'
 
-type FreinetSettingsControllerProps = {
-  regionId: number
-  project: string
-}
-
-const FreinetSettingsController = ({ regionId, project }: FreinetSettingsControllerProps): ReactElement | null => {
+const FreinetSettingsController = ({ regionId }: { regionId: number }): ReactElement | null => {
   const appToaster = useAppToaster()
   const { t } = useTranslation('regionSettings')
   const freinetQuery = useGetFreinetAgencyByRegionIdQuery({
-    variables: { regionId, project },
+    variables: { regionId },
   })
   const [updateFreinetDataTransfer] = useUpdateDataTransferToFreinetMutation({
     onError: error => {

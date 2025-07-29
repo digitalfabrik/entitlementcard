@@ -1,5 +1,5 @@
-query getFreinetAgencyByRegionId($regionId: Int!, $project: String!) {
-  agency: getFreinetAgencyByRegionId(regionId: $regionId, project: $project) {
+query getFreinetAgencyByRegionId($regionId: Int!) {
+  agency: getFreinetAgencyByRegionId(regionId: $regionId) {
     agencyId
     agencyName
     apiAccessKey

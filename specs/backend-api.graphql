@@ -235,7 +235,7 @@ type Query {
   "Returns card statistics for region. Start and end dates are inclusive."
   getCardStatisticsInRegion(dateEnd: String!, dateStart: String!, regionId: Int!): [CardStatisticsResultModel!]!
   "Returns freinet agency information for a particular region. Works only for the EAK project."
-  getFreinetAgencyByRegionId(project: String!, regionId: Int!): FreinetAgency
+  getFreinetAgencyByRegionId(regionId: Int!): FreinetAgency
   "Get the pepper for Koblenz user hashing"
   getHashingPepper: String!
   "Get the notification settings of the authenticated administrator"
