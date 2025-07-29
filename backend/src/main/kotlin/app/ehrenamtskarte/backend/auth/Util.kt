@@ -1,13 +1,21 @@
 package app.ehrenamtskarte.backend.auth
 
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
+import app.ehrenamtskarte.backend.auth.database.Administrators
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
+import org.jetbrains.exposed.dao.with
 import org.jetbrains.exposed.sql.transactions.transaction
 
-fun GraphQLContext.getAdministrator(): AdministratorEntity {
+fun GraphQLContext.getAuthContext(): AuthContext {
     val jwtPayload = this.enforceSignedIn()
     return transaction {
-        AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
+        val adminEntity = AdministratorEntity.find { Administrators.id eq jwtPayload.adminId }
+            .with(AdministratorEntity::project)
+            .singleOrNull() ?: throw UnauthorizedException()
+        AuthContext(
+            projectName = adminEntity.projectName,
+            admin = adminEntity,
+        )
     }
 }

@@ -2,7 +2,7 @@ package app.ehrenamtskarte.backend.auth.webservice.schema
 
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
-import app.ehrenamtskarte.backend.auth.getAdministrator
+import app.ehrenamtskarte.backend.auth.getAuthContext
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
 import app.ehrenamtskarte.backend.common.webservice.context
@@ -31,7 +31,7 @@ class ManageUsersMutationService {
         dfe: DataFetchingEnvironment,
     ): Boolean {
         val context = dfe.graphQlContext.context
-        val actingAdmin = context.getAdministrator()
+        val actingAdmin = context.getAuthContext().admin
         val backendConfig = context.backendConfiguration
         val projectConfig = backendConfig.projects.first { it.id == project }
 
@@ -77,7 +77,7 @@ class ManageUsersMutationService {
         dfe: DataFetchingEnvironment,
     ): Boolean {
         val context = dfe.graphQlContext.context
-        val actingAdmin = context.getAdministrator()
+        val actingAdmin = context.getAuthContext().admin
 
         transaction {
             val existingAdmin = AdministratorEntity.findById(adminId) ?: throw UnauthorizedException()
@@ -114,7 +114,7 @@ class ManageUsersMutationService {
     @GraphQLDescription("Deletes an existing administrator")
     fun deleteAdministrator(project: String, adminId: Int, dfe: DataFetchingEnvironment): Boolean {
         val context = dfe.graphQlContext.context
-        val actingAdmin = context.getAdministrator()
+        val actingAdmin = context.getAuthContext().admin
 
         transaction {
             val existingAdmin = AdministratorEntity.findById(adminId) ?: throw UnauthorizedException()

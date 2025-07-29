@@ -1,7 +1,6 @@
 import { NonIdealState } from '@blueprintjs/core'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
-
 import { useWhoAmI } from '../../WhoAmIProvider'
 import {
   Region,
@@ -15,14 +14,13 @@ import StatisticsOverview from './StatisticsOverview'
 import { defaultEndDate, defaultStartDate } from './constants'
 
 const ViewProjectStatistics = () => {
-  const { projectId } = useContext(ProjectConfigContext)
   const cardStatisticsQuery = useGetCardStatisticsInProjectQuery({
-    variables: { projectId, dateEnd: defaultEndDate.toString(), dateStart: defaultStartDate.toString() },
+    variables: { dateEnd: defaultEndDate.toString(), dateStart: defaultStartDate.toString() },
   })
   const cardStatisticsQueryResult = getQueryResult(cardStatisticsQuery)
 
   const applyFilter = (dateStart: string, dateEnd: string) => {
-    cardStatisticsQuery.refetch({ projectId, dateEnd, dateStart })
+    cardStatisticsQuery.refetch({ dateEnd, dateStart })
   }
 
   if (!cardStatisticsQueryResult.successful) {
@@ -32,10 +30,8 @@ const ViewProjectStatistics = () => {
 }
 
 const ViewRegionStatistics = ({ region }: { region: Region }) => {
-  const { projectId } = useContext(ProjectConfigContext)
   const cardStatisticsQuery = useGetCardStatisticsInRegionQuery({
     variables: {
-      projectId,
       dateEnd: defaultEndDate.toString(),
       dateStart: defaultStartDate.toString(),
       regionId: region.id,
@@ -44,7 +40,7 @@ const ViewRegionStatistics = ({ region }: { region: Region }) => {
   const cardStatisticsQueryResult = getQueryResult(cardStatisticsQuery)
 
   const applyFilter = (dateStart: string, dateEnd: string) => {
-    cardStatisticsQuery.refetch({ projectId, dateEnd, dateStart, regionId: region.id })
+    cardStatisticsQuery.refetch({ dateEnd, dateStart, regionId: region.id })
   }
 
   if (!cardStatisticsQueryResult.successful) {

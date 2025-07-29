@@ -5,7 +5,7 @@ import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantDateO
 import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantFirstName
 import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantLastName
 import app.ehrenamtskarte.backend.application.webservice.utils.getPersonalDataNode
-import app.ehrenamtskarte.backend.auth.getAdministrator
+import app.ehrenamtskarte.backend.auth.getAuthContext
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.common.utils.devWarn
 import app.ehrenamtskarte.backend.common.webservice.context
@@ -34,7 +34,7 @@ class FreinetApplicationMutationService {
         dfe: DataFetchingEnvironment,
     ): Boolean {
         val context = dfe.graphQlContext.context
-        val admin = context.getAdministrator()
+        val authContext = context.getAuthContext()
         val projectConfig = context.backendConfiguration.getProjectConfig(project)
 
         if (projectConfig.freinet == null) {
@@ -47,7 +47,7 @@ class FreinetApplicationMutationService {
 
             val regionId = application.regionId.value
 
-            if (!Authorizer.mayViewApplicationsInRegion(admin, regionId)) {
+            if (!Authorizer.mayViewApplicationsInRegion(authContext.admin, regionId)) {
                 throw UnauthorizedException()
             }
 
@@ -75,7 +75,7 @@ class FreinetApplicationMutationService {
                         lastName,
                         dateOfBirth,
                         application.getPersonalDataNode(),
-                        admin.email,
+                        authContext.admin.email,
                     )
 
                     val userId = createdPerson.data.get("NEW_USERID") ?: throw FreinetPersonDataInvalidException()

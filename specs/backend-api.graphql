@@ -156,7 +156,7 @@ type Mutation {
   "Creates a new digital entitlementcard from self-service portal"
   createCardFromSelfService(encodedCardInfo: String!, generateStaticCode: Boolean!, project: String!): CardCreationResultModel!
   "Creates a new digital entitlementcard and returns it"
-  createCardsByCardInfos(applicationIdToMarkAsProcessed: Int, encodedCardInfos: [String!]!, generateStaticCodes: Boolean!, project: String!): [CardCreationResultModel!]!
+  createCardsByCardInfos(applicationIdToMarkAsProcessed: Int, encodedCardInfos: [String!]!, generateStaticCodes: Boolean!): [CardCreationResultModel!]!
   "Deletes an existing administrator"
   deleteAdministrator(adminId: Int!, project: String!): Boolean!
   "Deletes a selected API token"
@@ -178,7 +178,7 @@ type Mutation {
   "Send approval mail to organisation"
   sendApprovalMailToOrganisation(applicationId: Int!, applicationVerificationId: Int!, project: String!): Boolean!
   "Sends a confirmation mail to the user when the card creation was successful"
-  sendCardCreationConfirmationMail(deepLink: String!, project: String!, recipientAddress: String!, recipientName: String!, regionId: Int!): Boolean!
+  sendCardCreationConfirmationMail(deepLink: String!, recipientAddress: String!, recipientName: String!, regionId: Int!): Boolean!
   "Sends a mail that allows the administrator to reset their password."
   sendResetMail(email: String!, project: String!): Boolean!
   "Signs in an administrator"
@@ -231,15 +231,15 @@ type Query {
   "Queries all applications for a specific region"
   getApplications(regionId: Int!): [ApplicationView!]!
   "Returns card statistics for project. Start and end dates are inclusive."
-  getCardStatisticsInProject(dateEnd: String!, dateStart: String!, project: String!): [CardStatisticsResultModel!]!
+  getCardStatisticsInProject(dateEnd: String!, dateStart: String!): [CardStatisticsResultModel!]!
   "Returns card statistics for region. Start and end dates are inclusive."
-  getCardStatisticsInRegion(dateEnd: String!, dateStart: String!, project: String!, regionId: Int!): [CardStatisticsResultModel!]!
+  getCardStatisticsInRegion(dateEnd: String!, dateStart: String!, regionId: Int!): [CardStatisticsResultModel!]!
   "Returns freinet agency information for a particular region. Works only for the EAK project."
   getFreinetAgencyByRegionId(project: String!, regionId: Int!): FreinetAgency
   "Get the pepper for Koblenz user hashing"
   getHashingPepper: String!
   "Get the notification settings of the authenticated administrator"
-  getNotificationSettings(project: String!): NotificationSettings!
+  getNotificationSettings: NotificationSettings!
   "Returns all administrators in a project. This query requires the role PROJECT_ADMIN."
   getUsersInProject(project: String!): [Administrator!]!
   "Returns all administrators in a region. This query requires the role REGION_ADMIN or PROJECT_ADMIN."

@@ -2,7 +2,7 @@ package app.ehrenamtskarte.backend.auth.webservice.schema
 
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.database.Administrators
-import app.ehrenamtskarte.backend.auth.getAdministrator
+import app.ehrenamtskarte.backend.auth.getAuthContext
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Administrator
 import app.ehrenamtskarte.backend.common.webservice.context
@@ -27,7 +27,7 @@ class ViewAdministratorsQueryService {
     @GraphQLDescription("Returns the requesting administrator as retrieved from his JWT token.")
     fun whoAmI(project: String, dfe: DataFetchingEnvironment): Administrator {
         val context = dfe.graphQlContext.context
-        val admin = context.getAdministrator()
+        val admin = context.getAuthContext().admin
 
         return transaction {
             val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
@@ -44,7 +44,7 @@ class ViewAdministratorsQueryService {
     )
     fun getUsersInProject(project: String, dfe: DataFetchingEnvironment): List<Administrator> {
         val context = dfe.graphQlContext.context
-        val admin = context.getAdministrator()
+        val admin = context.getAuthContext().admin
 
         return transaction {
             val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
@@ -67,7 +67,7 @@ class ViewAdministratorsQueryService {
     )
     fun getUsersInRegion(regionId: Int, dfe: DataFetchingEnvironment): List<Administrator> {
         val context = dfe.graphQlContext.context
-        val admin = context.getAdministrator()
+        val admin = context.getAuthContext().admin
 
         return transaction {
             val region = RegionEntity.findById(regionId) ?: throw RegionNotFoundException()

@@ -26,7 +26,7 @@ const NotificationSettings = ({ projectId }: NotificationSettingsProps): ReactEl
     onCompleted: () => appToaster?.show({ intent: 'success', message: t('notificationUpdateSuccess') }),
   })
 
-  const notificationSettingsQuery = useGetNotificationSettingsQuery({ variables: { project: projectId } })
+  const notificationSettingsQuery = useGetNotificationSettingsQuery()
 
   useEffect(() => {
     const notificationQueryResult = getQueryResult(notificationSettingsQuery)

@@ -10,7 +10,7 @@ import app.ehrenamtskarte.backend.application.webservice.schema.view.Application
 import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationHandler
 import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantEmail
 import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantName
-import app.ehrenamtskarte.backend.auth.getAdministrator
+import app.ehrenamtskarte.backend.auth.getAuthContext
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.auth.service.Authorizer.mayDeleteApplicationsInRegion
 import app.ehrenamtskarte.backend.auth.service.Authorizer.mayUpdateApplicationsInRegion
@@ -72,14 +72,14 @@ class EakApplicationMutationService {
     @GraphQLDescription("Deletes the application with specified id")
     fun deleteApplication(applicationId: Int, dfe: DataFetchingEnvironment): Boolean {
         val context = dfe.graphQlContext.context
-        val admin = context.getAdministrator()
+        val authContext = context.getAuthContext()
 
         return transaction {
             val application = ApplicationEntity
                 .findById(applicationId)
                 ?: throw NotFoundException("Application not found")
 
-            if (!mayDeleteApplicationsInRegion(admin, application.regionId.value)) {
+            if (!mayDeleteApplicationsInRegion(authContext.admin, application.regionId.value)) {
                 throw ForbiddenException()
             }
 
@@ -132,7 +132,7 @@ class EakApplicationMutationService {
      */
     @GraphQLDescription("Approve an application")
     fun approveApplicationStatus(applicationId: Int, dfe: DataFetchingEnvironment): ApplicationView {
-        dfe.graphQlContext.context.enforceSignedIn()
+        val context = dfe.graphQlContext.context
 
         return transaction {
             val applicationEntity = ApplicationEntity.findById(applicationId)
@@ -143,7 +143,7 @@ class EakApplicationMutationService {
                 ?: throw InvalidInputException("Application not found")
 
             if (
-                mayUpdateApplicationsInRegion(dfe.graphQlContext.context.getAdministrator(), applicationEntity.regionId)
+                mayUpdateApplicationsInRegion(context.getAuthContext().admin, applicationEntity.regionId)
             ) {
                 applicationEntity
             } else {
@@ -167,13 +167,12 @@ class EakApplicationMutationService {
         dfe: DataFetchingEnvironment,
     ): ApplicationView {
         val context = dfe.graphQlContext.context
-        context.enforceSignedIn()
 
         return transaction {
             val application = ApplicationEntity.findById(applicationId)
                 ?: throw InvalidInputException("Application not found")
 
-            if (!mayUpdateApplicationsInRegion(context.getAdministrator(), application.regionId.value)) {
+            if (!mayUpdateApplicationsInRegion(context.getAuthContext().admin, application.regionId.value)) {
                 throw ForbiddenException()
             }
 
@@ -198,7 +197,6 @@ class EakApplicationMutationService {
     @GraphQLDescription("Updates a note of an application")
     fun updateApplicationNote(applicationId: Int, noteText: String, dfe: DataFetchingEnvironment): Boolean {
         val context = dfe.graphQlContext.context
-        val admin = context.getAdministrator()
 
         return transaction {
             val application =
@@ -207,7 +205,7 @@ class EakApplicationMutationService {
                 throw InvalidNoteSizeException(NOTE_MAX_CHARS)
             }
 
-            if (!mayUpdateApplicationsInRegion(admin, application.regionId.value)) {
+            if (!mayUpdateApplicationsInRegion(context.getAuthContext().admin, application.regionId.value)) {
                 throw ForbiddenException()
             }
 
@@ -228,7 +226,7 @@ class EakApplicationMutationService {
             val application = ApplicationEntity.findById(applicationId)
                 ?: throw InvalidInputException("Application not found")
 
-            if (!Authorizer.maySendMailsInRegion(context.getAdministrator(), application.regionId.value)) {
+            if (!Authorizer.maySendMailsInRegion(context.getAuthContext().admin, application.regionId.value)) {
                 throw ForbiddenException()
             }
 

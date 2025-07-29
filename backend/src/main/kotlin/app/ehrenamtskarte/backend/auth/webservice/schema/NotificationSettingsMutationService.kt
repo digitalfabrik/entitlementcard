@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.auth.webservice.schema
 
 import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
-import app.ehrenamtskarte.backend.auth.getAdministrator
+import app.ehrenamtskarte.backend.auth.getAuthContext
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.NotificationSettings
 import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
@@ -21,7 +21,7 @@ class NotificationSettingsMutationService {
         dfe: DataFetchingEnvironment,
     ): Boolean {
         val context = dfe.graphQlContext.context
-        val admin = context.getAdministrator()
+        val admin = context.getAuthContext().admin
 
         transaction {
             val projectEntity = ProjectEntity

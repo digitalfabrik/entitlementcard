@@ -2,7 +2,7 @@ package app.ehrenamtskarte.backend.cards.webservice.schema
 
 import Card
 import app.ehrenamtskarte.backend.application.database.ApplicationEntity
-import app.ehrenamtskarte.backend.auth.getAdministrator
+import app.ehrenamtskarte.backend.auth.getAuthContext
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.cards.Argon2IdHasher
 import app.ehrenamtskarte.backend.cards.PEPPER_LENGTH
@@ -247,26 +247,32 @@ class CardMutationService {
     @GraphQLDescription("Creates a new digital entitlementcard and returns it")
     fun createCardsByCardInfos(
         dfe: DataFetchingEnvironment,
-        project: String,
         encodedCardInfos: List<String>,
         generateStaticCodes: Boolean,
         applicationIdToMarkAsProcessed: Int? = null,
     ): List<CardCreationResultModel> {
         val context = dfe.graphQlContext.context
-        val projectConfig = context.backendConfiguration.getProjectConfig(project)
-        val admin = context.getAdministrator()
+        val authContext = context.getAuthContext()
+        val projectConfig = context.backendConfiguration.getProjectConfig(authContext.projectName)
 
         val activationCodes = transaction {
             encodedCardInfos.map { encodedCardInfo ->
                 val cardInfo = parseEncodedCardInfo(encodedCardInfo)
 
-                if (!Authorizer.mayCreateCardInRegion(admin, cardInfo.extensions.extensionRegion.regionId)) {
+                if (!Authorizer.mayCreateCardInRegion(
+                        authContext.admin,
+                        cardInfo.extensions.extensionRegion.regionId,
+                    )
+                ) {
                     throw ForbiddenException()
                 } else {
                     CardCreationResultModel(
-                        dynamicActivationCode = createDynamicActivationCode(cardInfo, userId = admin.id.value),
+                        dynamicActivationCode = createDynamicActivationCode(
+                            cardInfo,
+                            userId = authContext.admin.id.value,
+                        ),
                         staticVerificationCode = if (generateStaticCodes) {
-                            createStaticVerificationCode(cardInfo, userId = admin.id.value)
+                            createStaticVerificationCode(cardInfo, userId = authContext.admin.id.value)
                         } else {
                             null
                         },
@@ -281,7 +287,7 @@ class CardMutationService {
             }
         }
 
-        val regionId = admin.regionId?.value
+        val regionId = authContext.admin.regionId?.value
 
         if (regionId != null) {
             Matomo.trackCreateCards(
@@ -382,11 +388,11 @@ class CardMutationService {
         cardInfoHashBase64List: List<String>,
     ): Boolean {
         val context = dfe.graphQlContext.context
-        val admin = context.getAdministrator()
+        val authContext = context.getAuthContext()
 
         val cardInfoHashList = cardInfoHashBase64List.map { it.decodeBase64Bytes() }
         transaction {
-            if (!Authorizer.mayDeleteCardInRegion(admin, regionId)) {
+            if (!Authorizer.mayDeleteCardInRegion(authContext.admin, regionId)) {
                 throw ForbiddenException()
             }
             CardRepository.deleteInactiveCardsByHash(regionId, cardInfoHashList)
@@ -399,26 +405,26 @@ class CardMutationService {
     )
     fun sendCardCreationConfirmationMail(
         dfe: DataFetchingEnvironment,
-        project: String,
         regionId: Int,
         recipientAddress: String,
         recipientName: String,
         deepLink: String,
     ): Boolean {
         val context = dfe.graphQlContext.context
-        val admin = context.getAdministrator()
+        val authContext = context.getAuthContext()
+
         transaction {
-            val region = admin.regionId?.value?.let {
-                RegionsRepository.findByIdInProject(project, it) ?: throw RegionNotFoundException()
+            val region = authContext.admin.regionId?.value?.let {
+                RegionsRepository.findByIdInProject(authContext.projectName, it) ?: throw RegionNotFoundException()
             }
             if (region != null && !region.activatedForCardConfirmationMail) {
                 throw RegionNotActivatedForCardConfirmationMailException()
             }
-            if (!Authorizer.maySendMailsInRegion(admin, regionId)) {
+            if (!Authorizer.maySendMailsInRegion(authContext.admin, regionId)) {
                 throw ForbiddenException()
             }
             val backendConfig = dfe.graphQlContext.context.backendConfiguration
-            val projectConfig = context.backendConfiguration.getProjectConfig(project)
+            val projectConfig = context.backendConfiguration.getProjectConfig(authContext.projectName)
             Mailer.sendCardCreationConfirmationMail(
                 backendConfig,
                 projectConfig,

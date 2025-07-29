@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.freinet.webservice
 
-import app.ehrenamtskarte.backend.auth.getAdministrator
+import app.ehrenamtskarte.backend.auth.getAuthContext
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
@@ -22,7 +22,7 @@ class FreinetAgencyQueryService {
     fun getFreinetAgencyByRegionId(dfe: DataFetchingEnvironment, regionId: Int, project: String): FreinetAgency? =
         transaction {
             val context = dfe.graphQlContext.context
-            val admin = context.getAdministrator()
+            val admin = context.getAuthContext().admin
             val projectConfig = dfe.graphQlContext.context.backendConfiguration.getProjectConfig(
                 project,
             )
