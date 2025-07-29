@@ -41,7 +41,6 @@ const FreinetSettingsController = ({ regionId, project }: FreinetSettingsControl
     updateFreinetDataTransfer({
       variables: {
         regionId,
-        project,
         dataTransferActivated: dataTransferForFreinetActivated,
       },
     })

@@ -190,7 +190,7 @@ type Mutation {
   "Updates the data privacy policy of a region"
   updateDataPrivacy(dataPrivacyText: String!, regionId: Int!): Boolean!
   "Updates the data transfer to freinet. Works only for the EAK project."
-  updateDataTransferToFreinet(dataTransferActivated: Boolean!, project: String!, regionId: Int!): Boolean!
+  updateDataTransferToFreinet(dataTransferActivated: Boolean!, regionId: Int!): Boolean!
   "Updates the notification settings"
   updateNotificationSettings(notificationSettings: NotificationSettingsInput!): Boolean!
   "Updates the region specific settings"
