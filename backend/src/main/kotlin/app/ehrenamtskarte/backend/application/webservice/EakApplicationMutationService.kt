@@ -215,18 +215,18 @@ class EakApplicationMutationService {
 
     @GraphQLDescription("Send approval mail to organisation")
     fun sendApprovalMailToOrganisation(
-        project: String,
         applicationId: Int,
         applicationVerificationId: Int,
         dfe: DataFetchingEnvironment,
     ): Boolean {
         val context = dfe.graphQlContext.context
+        val authContext = context.getAuthContext()
 
         transaction {
             val application = ApplicationEntity.findById(applicationId)
                 ?: throw InvalidInputException("Application not found")
 
-            if (!Authorizer.maySendMailsInRegion(context.getAuthContext().admin, application.regionId.value)) {
+            if (!Authorizer.maySendMailsInRegion(authContext.admin, application.regionId.value)) {
                 throw ForbiddenException()
             }
 
@@ -240,7 +240,7 @@ class EakApplicationMutationService {
             Mailer.sendApplicationVerificationMail(
                 context.backendConfiguration,
                 application.getApplicantName(),
-                context.backendConfiguration.getProjectConfig(project),
+                context.backendConfiguration.getProjectConfig(authContext.project),
                 applicationVerification,
             )
         }
