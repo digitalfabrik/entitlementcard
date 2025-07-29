@@ -1,5 +1,5 @@
-query getUsersInProject($project: String!) {
-  users: getUsersInProject(project: $project) {
+query getUsersInProject {
+  users: getUsersInProject {
     regionId
     email
     id

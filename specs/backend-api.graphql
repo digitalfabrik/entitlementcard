@@ -241,7 +241,7 @@ type Query {
   "Get the notification settings of the authenticated administrator"
   getNotificationSettings: NotificationSettings!
   "Returns all administrators in a project. This query requires the role PROJECT_ADMIN."
-  getUsersInProject(project: String!): [Administrator!]!
+  getUsersInProject: [Administrator!]!
   "Returns all administrators in a region. This query requires the role REGION_ADMIN or PROJECT_ADMIN."
   getUsersInRegion(regionId: Int!): [Administrator!]!
   "Return list of all accepting stores in the eak bayern project."
@@ -273,7 +273,7 @@ type Query {
   "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid, extendable and a timestamp of the last check"
   verifyCardInProjectV2(card: CardVerificationModelInput!, project: String!): CardVerificationResultModel!
   "Returns the requesting administrator as retrieved from his JWT token."
-  whoAmI(project: String!): Administrator!
+  whoAmI: Administrator!
 }
 
 type Region {

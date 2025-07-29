@@ -7,11 +7,8 @@ import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Administrator
 import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
-import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
-import app.ehrenamtskarte.backend.projects.database.ProjectEntity
-import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.RegionEntity
 import app.ehrenamtskarte.backend.regions.database.Regions
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
@@ -25,14 +22,12 @@ import org.jetbrains.exposed.sql.transactions.transaction
 @Suppress("unused")
 class ViewAdministratorsQueryService {
     @GraphQLDescription("Returns the requesting administrator as retrieved from his JWT token.")
-    fun whoAmI(project: String, dfe: DataFetchingEnvironment): Administrator {
+    fun whoAmI(dfe: DataFetchingEnvironment): Administrator {
         val context = dfe.graphQlContext.context
         val admin = context.getAuthContext().admin
 
         return transaction {
-            val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
-                ?: throw ProjectNotFoundException(project)
-            if (admin.deleted || admin.projectId != projectEntity.id) {
+            if (admin.deleted) {
                 throw UnauthorizedException()
             }
             Administrator.fromDbEntity(admin)
@@ -42,20 +37,17 @@ class ViewAdministratorsQueryService {
     @GraphQLDescription(
         "Returns all administrators in a project. This query requires the role PROJECT_ADMIN.",
     )
-    fun getUsersInProject(project: String, dfe: DataFetchingEnvironment): List<Administrator> {
+    fun getUsersInProject(dfe: DataFetchingEnvironment): List<Administrator> {
         val context = dfe.graphQlContext.context
-        val admin = context.getAuthContext().admin
+        val authContext = context.getAuthContext()
 
         return transaction {
-            val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
-                ?: throw ProjectNotFoundException(project)
-            val projectId = projectEntity.id.value
-            if (!Authorizer.mayViewUsersInProject(admin, projectId)) {
+            if (!Authorizer.mayViewUsersInProject(authContext.admin, authContext.projectId)) {
                 throw ForbiddenException()
             }
             val administrators = (Administrators leftJoin Regions)
                 .select(Administrators.columns)
-                .where(Administrators.projectId eq projectId and not(Administrators.deleted))
+                .where(Administrators.projectId eq authContext.projectId and not(Administrators.deleted))
                 .orderBy(Regions.name to SortOrder.ASC, Administrators.email to SortOrder.ASC)
                 .let { AdministratorEntity.wrapRows(it) }
             administrators.map { Administrator.fromDbEntity(it) }
