@@ -148,7 +148,7 @@ type Mutation {
   "Approve an application"
   approveApplicationStatus(applicationId: Int!): ApplicationView!
   "Changes an administrator's password"
-  changePassword(currentPassword: String!, email: String!, newPassword: String!, project: String!): Boolean!
+  changePassword(currentPassword: String!, email: String!, newPassword: String!): Boolean!
   "Creates a new administrator"
   createAdministrator(email: String!, regionId: Int, role: Role!, sendWelcomeMail: Boolean!): Boolean!
   "Creates a new api token for user import endpoint"
