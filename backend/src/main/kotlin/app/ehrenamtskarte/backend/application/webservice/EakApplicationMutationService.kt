@@ -161,18 +161,18 @@ class EakApplicationMutationService {
      */
     @GraphQLDescription("Reject an application")
     fun rejectApplicationStatus(
-        project: String,
         applicationId: Int,
         rejectionMessage: String,
         dfe: DataFetchingEnvironment,
     ): ApplicationView {
         val context = dfe.graphQlContext.context
+        val authContext = context.getAuthContext()
 
         return transaction {
             val application = ApplicationEntity.findById(applicationId)
                 ?: throw InvalidInputException("Application not found")
 
-            if (!mayUpdateApplicationsInRegion(context.getAuthContext().admin, application.regionId.value)) {
+            if (!mayUpdateApplicationsInRegion(authContext.admin, application.regionId.value)) {
                 throw ForbiddenException()
             }
 
@@ -184,7 +184,7 @@ class EakApplicationMutationService {
 
             Mailer.sendApplicationRejectedMail(
                 context.backendConfiguration,
-                context.backendConfiguration.getProjectConfig(project),
+                context.backendConfiguration.getProjectConfig(authContext.project),
                 application.getApplicantName(),
                 application.getApplicantEmail(),
                 rejectionMessage,
