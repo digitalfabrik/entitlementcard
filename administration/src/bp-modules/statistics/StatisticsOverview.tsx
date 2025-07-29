@@ -1,4 +1,4 @@
-import { Box, styled } from '@mui/material'
+import { Box, Stack } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -12,12 +12,6 @@ import StatisticsBarChart from './components/StatisticsBarChart'
 import StatisticsFilterBar from './components/StatisticsFilterBar'
 import StatisticsLegend from './components/StatisticsLegend'
 import StatisticsTotalCardsCount from './components/StatisticsTotalCardsCount'
-
-const OuterGrid = styled('div')`
-  display: grid;
-  grid-template-columns: 3fr 1fr;
-  flex-grow: 1;
-`
 
 const StatisticsOverview = ({
   statistics,
@@ -50,14 +44,22 @@ const StatisticsOverview = ({
       <RenderGuard allowedRoles={[Role.ProjectAdmin]}>
         <StatisticsTotalCardsCount statistics={statistics} />
       </RenderGuard>
-      <OuterGrid>
-        <Box sx={{ display: 'grid', gridTemplateColumns: isSingleChartView ? '1fr' : '1fr 1fr' }}>
+      <Stack sx={{ flexGrow: 1, overflow: 'auto', padding: 4 }}>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: isSingleChartView ? '1fr' : '1fr 1fr',
+            flexGrow: 1,
+            alignItems: 'center',
+            marginRight: '330px',
+            gap: 6,
+          }}>
           {statistics.map(statistic => (
             <StatisticsBarChart key={statistic.region} statistic={statistic} />
           ))}
         </Box>
         <StatisticsLegend items={statisticKeys} />
-      </OuterGrid>
+      </Stack>
       <StatisticsFilterBar
         onApplyFilter={onApplyFilter}
         onExportCsv={exportCardDataToCsv}
