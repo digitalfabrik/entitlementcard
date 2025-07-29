@@ -168,7 +168,7 @@ type Mutation {
   "Edits an existing administrator"
   editAdministrator(adminId: Int!, newEmail: String!, newRegionId: Int, newRole: Role!): Boolean!
   "Import accepting stores via csv"
-  importAcceptingStores(dryRun: Boolean!, project: String!, stores: [CSVAcceptingStoreInput!]!): StoreImportReturnResultModel!
+  importAcceptingStores(dryRun: Boolean!, stores: [CSVAcceptingStoreInput!]!): StoreImportReturnResultModel!
   "Reject an application"
   rejectApplicationStatus(applicationId: Int!, project: String!, rejectionMessage: String!): ApplicationView!
   "Reset the administrator's password"

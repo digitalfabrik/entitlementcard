@@ -4,11 +4,8 @@ import app.ehrenamtskarte.backend.auth.getAuthContext
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
-import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidJsonException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotUniqueException
-import app.ehrenamtskarte.backend.projects.database.ProjectEntity
-import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import app.ehrenamtskarte.backend.stores.database.repos.AcceptingStoresRepository
 import app.ehrenamtskarte.backend.stores.utils.mapCsvToStore
@@ -24,27 +21,22 @@ class AcceptingStoresMutationService {
     @GraphQLDescription("Import accepting stores via csv")
     fun importAcceptingStores(
         stores: List<CSVAcceptingStore>,
-        project: String,
         dryRun: Boolean,
         dfe: DataFetchingEnvironment,
     ): StoreImportReturnResultModel {
-        val context = dfe.graphQlContext.context
-        val admin = context.getAuthContext().admin
+        val authContext = dfe.graphQlContext.context.getAuthContext()
 
         return transaction {
-            val projectEntity = ProjectEntity.find { Projects.project eq project }.firstOrNull()
-                ?: throw ProjectNotFoundException(project)
-
-            if (!Authorizer.mayUpdateStoresInProject(admin, projectEntity.id.value)) {
+            if (!Authorizer.mayUpdateStoresInProject(authContext.admin, authContext.admin.projectId.value)) {
                 throw ForbiddenException()
             }
 
             // TODO 2012 provide region ars
-            val regionEntity = RegionsRepository.findAllInProject(project).singleOrNull()
+            val regionEntity = RegionsRepository.findAllInProject(authContext.projectName).singleOrNull()
                 ?: throw RegionNotUniqueException()
 
             assertNoDuplicateStores(stores)
-            handleStoreImport(stores, projectEntity.id, regionEntity.id, dryRun)
+            handleStoreImport(stores, authContext.admin.projectId, regionEntity.id, dryRun)
         }
     }
 
