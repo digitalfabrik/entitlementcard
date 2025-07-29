@@ -94,13 +94,10 @@ export const deserializeCard = (serializedCard: SerializedCard, cardConfig: Card
   id: serializedCard.id,
   fullName: serializedCard.fullName,
   expirationDate: PlainDate.safeFrom(serializedCard.expirationDate),
-  extensions: Object.entries(serializedCard.extensions).reduce(
-    (acc, [key, value]) => {
-      const extension = cardConfig.extensions.find(it => it.name === key);
-      return extension ? { ...acc, ...extension.fromSerialized(value) } : acc;
-    },
-    {}
-  ),
+  extensions: Object.entries(serializedCard.extensions).reduce((acc, [key, value]) => {
+    const extension = cardConfig.extensions.find(it => it.name === key)
+    return extension ? { ...acc, ...extension.fromSerialized(value) } : acc
+  }, {}),
 })
 
 export const hasInfiniteLifetime = (card: Card): boolean =>
