@@ -43,6 +43,10 @@ const ApplicationList = styled.div`
   flex-direction: column;
   height: 100%;
   gap: 16px;
+  // This fixes a whitespace issue in print dialog when using motion #2375
+  @media print {
+    gap: 0;
+  }
 `
 
 const getEmptyApplicationsListStatusDescription = (activeBarItem: ApplicationStatusBarItemType, t: TFunction): string =>
