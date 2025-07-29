@@ -29,14 +29,14 @@ class ManageUsersMutationService {
         val context = dfe.graphQlContext.context
         val authContext = context.getAuthContext()
         val backendConfig = context.backendConfiguration
-        val projectConfig = backendConfig.getProjectConfig(authContext.projectName)
+        val projectConfig = backendConfig.getProjectConfig(authContext.project)
 
         transaction {
             val region = regionId?.let {
-                RegionsRepository.findByIdInProject(authContext.projectName, it) ?: throw RegionNotFoundException()
+                RegionsRepository.findByIdInProject(authContext.project, it) ?: throw RegionNotFoundException()
             }
 
-            if (!Authorizer.mayCreateUser(authContext.admin, authContext.admin.projectId.value, role, region)) {
+            if (!Authorizer.mayCreateUser(authContext.admin, authContext.projectId, role, region)) {
                 throw ForbiddenException()
             }
 
@@ -44,7 +44,7 @@ class ManageUsersMutationService {
                 throw EmailAlreadyExistsException()
             }
 
-            val newUser = AdministratorsRepository.insert(authContext.projectName, email, null, role, regionId)
+            val newUser = AdministratorsRepository.insert(authContext.project, email, null, role, regionId)
 
             if (sendWelcomeMail) {
                 val key = AdministratorsRepository.setNewPasswordResetKey(newUser)
@@ -72,12 +72,12 @@ class ManageUsersMutationService {
 
         transaction {
             val adminToEdit = AdministratorEntity.findById(adminId) ?: throw UnauthorizedException()
-            val newRegion = newRegionId?.let { RegionsRepository.findByIdInProject(authContext.projectName, it) }
+            val newRegion = newRegionId?.let { RegionsRepository.findByIdInProject(authContext.project, it) }
 
             if (!Authorizer.mayEditUser(
                     authContext.admin,
                     adminToEdit,
-                    authContext.admin.projectId.value,
+                    authContext.projectId,
                     newRole,
                     newRegion,
                 )

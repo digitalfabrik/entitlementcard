@@ -27,12 +27,12 @@ class AcceptingStoresMutationService {
         val authContext = dfe.graphQlContext.context.getAuthContext()
 
         return transaction {
-            if (!Authorizer.mayUpdateStoresInProject(authContext.admin, authContext.admin.projectId.value)) {
+            if (!Authorizer.mayUpdateStoresInProject(authContext.admin, authContext.projectId)) {
                 throw ForbiddenException()
             }
 
             // TODO 2012 provide region ars
-            val regionEntity = RegionsRepository.findAllInProject(authContext.projectName).singleOrNull()
+            val regionEntity = RegionsRepository.findAllInProject(authContext.project).singleOrNull()
                 ?: throw RegionNotUniqueException()
 
             assertNoDuplicateStores(stores)

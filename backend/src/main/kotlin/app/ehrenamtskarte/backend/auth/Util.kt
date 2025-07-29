@@ -14,8 +14,10 @@ fun GraphQLContext.getAuthContext(): AuthContext {
             .with(AdministratorEntity::project)
             .singleOrNull() ?: throw UnauthorizedException()
         AuthContext(
-            projectName = adminEntity.projectName,
+            adminId = jwtPayload.adminId,
             admin = adminEntity,
+            projectId = adminEntity.projectId.value,
+            project = adminEntity.projectName,
         )
     }
 }

@@ -24,10 +24,10 @@ class CardStatisticsQueryService {
     ): List<CardStatisticsResultModel> {
         val context = dfe.graphQlContext.context
         val authContext = context.getAuthContext()
-        val projectConfig = context.backendConfiguration.getProjectConfig(authContext.projectName)
+        val projectConfig = context.backendConfiguration.getProjectConfig(authContext.project)
 
         return transaction {
-            val projectId = authContext.admin.projectId.value
+            val projectId = authContext.projectId
 
             if (!Authorizer.mayViewCardStatisticsInProject(authContext.admin, projectId)) {
                 throw ForbiddenException()
@@ -51,7 +51,7 @@ class CardStatisticsQueryService {
     ): List<CardStatisticsResultModel> {
         val context = dfe.graphQlContext.context
         val authContext = context.getAuthContext()
-        val projectConfig = context.backendConfiguration.getProjectConfig(authContext.projectName)
+        val projectConfig = context.backendConfiguration.getProjectConfig(authContext.project)
 
         return transaction {
             val region = RegionEntity.findById(regionId) ?: throw RegionNotFoundException()
@@ -61,7 +61,7 @@ class CardStatisticsQueryService {
             }
 
             CardRepository.getCardStatisticsByProjectAndRegion(
-                authContext.admin.projectId.value,
+                authContext.projectId,
                 dateStringToStartOfDayInstant(dateStart, projectConfig.timezone),
                 dateStringToEndOfDayInstant(dateEnd, projectConfig.timezone),
                 regionId,

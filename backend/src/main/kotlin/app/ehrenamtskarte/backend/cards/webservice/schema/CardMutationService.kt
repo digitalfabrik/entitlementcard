@@ -253,7 +253,7 @@ class CardMutationService {
     ): List<CardCreationResultModel> {
         val context = dfe.graphQlContext.context
         val authContext = context.getAuthContext()
-        val projectConfig = context.backendConfiguration.getProjectConfig(authContext.projectName)
+        val projectConfig = context.backendConfiguration.getProjectConfig(authContext.project)
 
         val activationCodes = transaction {
             encodedCardInfos.map { encodedCardInfo ->
@@ -269,10 +269,10 @@ class CardMutationService {
                     CardCreationResultModel(
                         dynamicActivationCode = createDynamicActivationCode(
                             cardInfo,
-                            userId = authContext.admin.id.value,
+                            userId = authContext.adminId,
                         ),
                         staticVerificationCode = if (generateStaticCodes) {
-                            createStaticVerificationCode(cardInfo, userId = authContext.admin.id.value)
+                            createStaticVerificationCode(cardInfo, userId = authContext.adminId)
                         } else {
                             null
                         },
@@ -415,7 +415,7 @@ class CardMutationService {
 
         transaction {
             val region = authContext.admin.regionId?.value?.let {
-                RegionsRepository.findByIdInProject(authContext.projectName, it) ?: throw RegionNotFoundException()
+                RegionsRepository.findByIdInProject(authContext.project, it) ?: throw RegionNotFoundException()
             }
             if (region != null && !region.activatedForCardConfirmationMail) {
                 throw RegionNotActivatedForCardConfirmationMailException()
@@ -424,7 +424,7 @@ class CardMutationService {
                 throw ForbiddenException()
             }
             val backendConfig = dfe.graphQlContext.context.backendConfiguration
-            val projectConfig = context.backendConfiguration.getProjectConfig(authContext.projectName)
+            val projectConfig = context.backendConfiguration.getProjectConfig(authContext.project)
             Mailer.sendCardCreationConfirmationMail(
                 backendConfig,
                 projectConfig,
