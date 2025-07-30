@@ -1,41 +1,67 @@
 import { AutoAwesome } from '@mui/icons-material'
 import { Container } from '@mui/material'
-import { TFunction } from 'i18next'
 import { AnimatePresence, motion } from 'motion/react'
 import React, { ReactElement, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
+import { ApplicationStatus } from '../../generated/graphql'
 import NonIdealState from '../../mui-modules/NonIdealState'
 import StandaloneCenter from '../StandaloneCenter'
 import ApplicationCard from './ApplicationCard'
 import ApplicationStatusBar from './ApplicationStatusBar'
 import usePrintApplication from './hooks/usePrintApplication'
-import { ApplicationStatusBarItemType, ApplicationVerificationStatus, GetApplicationsType } from './types'
-import { applicationEffectiveStatus } from './utils'
+import { getPreVerifiedEntitlementType } from './preVerifiedEntitlements'
+import type { Application, ApplicationStatusBarItemType } from './types'
 
-export const barItems: ApplicationStatusBarItemType[] = [
-  {
-    title: 'allApplications',
-    status: undefined,
+const countApprovingVerifications = (application: Application): number =>
+  application.verifications.reduce((count, verification) => count + (verification.verifiedDate !== null ? 1 : 0), 0)
+
+const countRejectingVerifications = (application: Application): number =>
+  application.verifications.reduce((count, verification) => count + (verification.rejectedDate !== null ? 1 : 0), 0)
+
+export const barItems = {
+  all: {
+    i18nKey: 'allApplications',
+    filter: (_: Application): boolean => true,
   },
-  {
-    title: 'accepted',
-    status: ApplicationVerificationStatus.Approved,
+  accepted: {
+    i18nKey: 'accepted',
+    filter: (application: Application): boolean =>
+      countApprovingVerifications(application) > 0 ||
+      getPreVerifiedEntitlementType(application.jsonValue) !== undefined,
   },
-  {
-    title: 'rejected',
-    status: ApplicationVerificationStatus.Rejected,
+  rejected: {
+    i18nKey: 'rejected',
+    filter: (application: Application): boolean => countRejectingVerifications(application) > 0,
   },
-  {
-    title: 'withdrawn',
-    status: ApplicationVerificationStatus.Withdrawn,
+  withdrawn: {
+    i18nKey: 'withdrawn',
+    filter: (application: Application): boolean => application.status === ApplicationStatus.Withdrawn,
   },
-  {
-    title: 'open',
-    status: ApplicationVerificationStatus.Ambiguous,
+  open: {
+    i18nKey: 'open',
+    filter: (application: Application): boolean =>
+      countApprovingVerifications(application) === 0 &&
+      countRejectingVerifications(application) === 0 &&
+      getPreVerifiedEntitlementType(application.jsonValue) === undefined &&
+      application.status !== ApplicationStatus.Withdrawn,
   },
-]
+}
+
+/** Determines the order within a category */
+const applicationListOrder = (application: Application): number => {
+  if (barItems.accepted.filter(application)) {
+    return 0
+  }
+  if (barItems.rejected.filter(application)) {
+    return 1
+  }
+  if (barItems.withdrawn.filter(application)) {
+    return 2
+  }
+  return Number.MAX_SAFE_INTEGER // Sort last
+}
 
 const ApplicationList = styled.div`
   display: flex;
@@ -49,23 +75,20 @@ const ApplicationList = styled.div`
   }
 `
 
-const getEmptyApplicationsListStatusDescription = (activeBarItem: ApplicationStatusBarItemType, t: TFunction): string =>
-  activeBarItem.status !== undefined ? `${t(activeBarItem.title).toLowerCase()}en` : ''
-
-const ApplicationsOverview = ({ applications }: { applications: GetApplicationsType[] }): ReactElement => {
+const ApplicationsOverview = ({ applications }: { applications: Application[] }): ReactElement => {
   const [updatedApplications, setUpdatedApplications] = useState(applications)
   const { applicationIdForPrint, printApplicationById } = usePrintApplication()
-  const [activeBarItem, setActiveBarItem] = useState<ApplicationStatusBarItemType>(barItems[0])
+  const [activeBarItem, setActiveBarItem] = useState<ApplicationStatusBarItemType>(barItems.all)
   const { t } = useTranslation('applicationsOverview')
-  const filteredApplications: GetApplicationsType[] = useMemo(
+  const filteredApplications: Application[] = useMemo(
     () =>
       updatedApplications
-        .filter(a => activeBarItem.status === undefined || applicationEffectiveStatus(a) === activeBarItem.status)
+        .filter(application => activeBarItem.filter(application))
         // Sort by status and within this status by creation date ascending
         .sort(
           (a, b): number =>
             // Sort by status
-            applicationEffectiveStatus(a) - applicationEffectiveStatus(b) ||
+            applicationListOrder(a) - applicationListOrder(b) ||
             // If status is equal, sort by date
             new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime()
         ),
@@ -77,8 +100,8 @@ const ApplicationsOverview = ({ applications }: { applications: GetApplicationsT
       <ApplicationStatusBar
         applications={updatedApplications}
         activeBarItem={activeBarItem}
-        setActiveBarItem={setActiveBarItem}
-        barItems={barItems}
+        onSetActiveBarItem={setActiveBarItem}
+        barItems={Object.values(barItems)}
       />
       {filteredApplications.length > 0 ? (
         <ApplicationList>
@@ -108,10 +131,10 @@ const ApplicationsOverview = ({ applications }: { applications: GetApplicationsT
       ) : (
         <StandaloneCenter>
           <NonIdealState
-            title={t('noApplicationsOfType', { status: getEmptyApplicationsListStatusDescription(activeBarItem, t) })}
+            title={t('noApplicationsOfType', { status: t(activeBarItem.i18nKey) })}
             icon={<AutoAwesome fontSize='large' />}
             description={t('noApplicationsOfTypeDescription', {
-              status: getEmptyApplicationsListStatusDescription(activeBarItem, t),
+              status: t(activeBarItem.i18nKey),
             })}
           />
         </StandaloneCenter>

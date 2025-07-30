@@ -161,17 +161,6 @@ object ApplicationRepository {
         }
     }
 
-    fun withdrawApplication(accessKey: String): Boolean {
-        val application = ApplicationEntity.find { Applications.accessKey eq accessKey }.single()
-
-        return if (application.withdrawalDate == null) {
-            application.withdrawalDate = Instant.now()
-            true
-        } else {
-            false
-        }
-    }
-
     fun findByIds(ids: List<Int>): List<ApplicationEntity?> =
         ApplicationEntity
             .find { Applications.id inList ids }

@@ -1,22 +1,14 @@
-import { GetApplicationsQuery } from '../../generated/graphql'
+import type { GetApplicationsQuery } from '../../generated/graphql'
+import { ApplicationParsedJsonValue } from '../../shared/application'
 
-export type GetApplicationsType = GetApplicationsQuery['applications'][number]
-
-export type GetApplicationsVerificationType = GetApplicationsType['verifications'][number]
+/** A Verification that was obtained from the `getApplications` query. */
+export type ApplicationVerification = GetApplicationsQuery['applications'][number]['verifications'][number]
 
 export type ApplicationStatusBarItemType = {
-  title: string
-  status?: ApplicationVerificationStatus
-}
-
-/**
- * The application status, taking into account its verifications, and `application.withdrawalDate`.
- */
-export enum ApplicationVerificationStatus {
-  Approved,
-  Rejected,
-  Ambiguous,
-  Withdrawn,
+  /** A translation key for this category */
+  i18nKey: string
+  /** A filter function that returns true if the given application should be included in this category. */
+  filter: (application: Application) => boolean
 }
 
 export enum VerificationStatus {
@@ -24,3 +16,6 @@ export enum VerificationStatus {
   Rejected,
   Pending,
 }
+
+/** An application that was obtained from the `getApplications` query. */
+export type Application = ApplicationParsedJsonValue<GetApplicationsQuery['applications'][number]>

@@ -8,10 +8,12 @@ import { useParams } from 'react-router'
 import JsonFieldView from '../../bp-modules/applications/JsonFieldView'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import {
+  ApplicationStatus,
   useGetApplicationByApplicationVerificationAccessKeyQuery,
   useVerifyOrRejectApplicationVerificationMutation,
 } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { parseApplication } from '../../shared/application'
 import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import getQueryResult from '../util/getQueryResult'
@@ -80,15 +82,18 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
     return applicationQueryHandler.component
   }
 
-  const { verification, application } = applicationQueryHandler.data
+  const verification = applicationQueryHandler.data.verification
+  const application = parseApplication(applicationQueryHandler.data.application)
 
   if (verification.rejectedDate || verification.verifiedDate) {
     return <CenteredMessage>{t('alreadyVerified')}</CenteredMessage>
   }
-  if (application.withdrawalDate) {
+  if (application.status === ApplicationStatus.Withdrawn && application.statusResolvedDate) {
     return (
       <CenteredMessage>
-        {t('withdrawMessageForVerifier', { date: formatDateWithTimezone(application.withdrawalDate, config.timezone) })}
+        {t('withdrawMessageForVerifier', {
+          date: formatDateWithTimezone(application.statusResolvedDate, config.timezone),
+        })}
       </CenteredMessage>
     )
   }
@@ -101,9 +106,9 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
     )
   }
 
-  const { jsonValue, createdDate: createdDateString, id } = application
-  const jsonField = JSON.parse(jsonValue)
+  const { createdDate: createdDateString, id } = application
   const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${id}`
+
   return (
     <ApplicationViewCard elevation={2}>
       <div style={{ overflow: 'visible', padding: '20px' }}>
@@ -121,7 +126,7 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
           Antrag vom {formatDateWithTimezone(createdDateString, config.timezone)}
         </Typography>
         <JsonFieldView
-          jsonField={jsonField}
+          jsonField={application.jsonValue}
           baseUrl={baseUrl}
           hierarchyIndex={0}
           attachmentAccessible={false}

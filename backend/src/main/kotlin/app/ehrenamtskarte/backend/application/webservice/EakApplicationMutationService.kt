@@ -3,6 +3,7 @@ package app.ehrenamtskarte.backend.application.webservice
 import app.ehrenamtskarte.backend.application.database.ApplicationEntity
 import app.ehrenamtskarte.backend.application.database.ApplicationEntity.Status
 import app.ehrenamtskarte.backend.application.database.ApplicationVerificationEntity
+import app.ehrenamtskarte.backend.application.database.Applications
 import app.ehrenamtskarte.backend.application.database.NOTE_MAX_CHARS
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
 import app.ehrenamtskarte.backend.application.webservice.schema.create.Application
@@ -75,8 +76,7 @@ class EakApplicationMutationService {
         val admin = context.getAdministrator()
 
         return transaction {
-            val application = ApplicationEntity
-                .findById(applicationId)
+            val application = ApplicationEntity.findById(applicationId)
                 ?: throw NotFoundException("Application not found")
 
             if (!mayDeleteApplicationsInRegion(admin, application.regionId.value)) {
@@ -90,7 +90,12 @@ class EakApplicationMutationService {
     @GraphQLDescription("Withdraws the application")
     fun withdrawApplication(accessKey: String): Boolean =
         transaction {
-            ApplicationRepository.withdrawApplication(accessKey)
+            try {
+                ApplicationEntity.find { Applications.accessKey eq accessKey }.single().status = Status.Withdrawn
+                true
+            } catch (e: IllegalArgumentException) {
+                false
+            }
         }
 
     @GraphQLDescription("Verifies or rejects an application verification")
@@ -101,9 +106,12 @@ class EakApplicationMutationService {
         dfe: DataFetchingEnvironment,
     ): Boolean =
         transaction {
-            val application = ApplicationRepository
-                .getApplicationByApplicationVerificationAccessKey(accessKey)
+            val application = ApplicationRepository.getApplicationByApplicationVerificationAccessKey(accessKey)
                 ?: throw InvalidLinkException()
+
+            if (application.status == Status.Withdrawn) {
+                throw InvalidInputException("Application is withdrawn")
+            }
 
             if (verified) {
                 val context = dfe.graphQlContext.context
@@ -136,16 +144,17 @@ class EakApplicationMutationService {
 
         return transaction {
             val applicationEntity = ApplicationEntity.findById(applicationId)
-                ?.let {
-                    it.tryChangeStatus(Status.Approved)
-                    ApplicationView.fromDbEntity(it, true)
-                }
                 ?: throw InvalidInputException("Application not found")
 
+            applicationEntity.changeStatusOrThrow(Status.Approved)
+
             if (
-                mayUpdateApplicationsInRegion(dfe.graphQlContext.context.getAdministrator(), applicationEntity.regionId)
+                mayUpdateApplicationsInRegion(
+                    dfe.graphQlContext.context.getAdministrator(),
+                    applicationEntity.regionId.value,
+                )
             ) {
-                applicationEntity
+                ApplicationView.fromDbEntity(applicationEntity, true)
             } else {
                 throw ForbiddenException()
             }
@@ -177,10 +186,7 @@ class EakApplicationMutationService {
                 throw ForbiddenException()
             }
 
-            if (!application.tryChangeStatus(Status.Rejected)) {
-                throw InvalidInputException("Application cannot be rejected, as it has already been processed")
-            }
-
+            application.changeStatusOrThrow(Status.Rejected)
             application.rejectionMessage = rejectionMessage
 
             Mailer.sendApplicationRejectedMail(
@@ -232,6 +238,10 @@ class EakApplicationMutationService {
                 throw ForbiddenException()
             }
 
+            if (application.status == Status.Withdrawn) {
+                throw InvalidInputException("Application is withdrawn")
+            }
+
             val applicationVerification = ApplicationVerificationEntity.findById(applicationVerificationId)
                 ?: throw InvalidInputException("Application verification not found")
 
@@ -249,3 +259,11 @@ class EakApplicationMutationService {
         return true
     }
 }
+
+private fun ApplicationEntity.changeStatusOrThrow(status: Status): ApplicationEntity =
+    try {
+        this.status = status
+        this
+    } catch (e: IllegalArgumentException) {
+        throw InvalidInputException("Cannot approve application, status is '${this.status}'")
+    }

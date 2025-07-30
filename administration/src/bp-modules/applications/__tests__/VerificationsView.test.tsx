@@ -2,8 +2,10 @@ import { MockedProvider } from '@apollo/client/testing'
 import React from 'react'
 
 import { renderWithTranslation } from '../../../testing/render'
-import VerificationsView, { Application } from '../VerificationsView'
+import { JsonField } from '../JsonFieldView'
+import VerificationsView from '../VerificationsView'
 import { verificationsMixed } from '../__mocks__/verificationData'
+import type { Application } from '../types'
 
 jest.mock('@blueprintjs/core', () => ({
   ...jest.requireActual('@blueprintjs/core'),
@@ -14,7 +16,7 @@ describe('VerificationsView', () => {
   const renderView = (application: Application) =>
     renderWithTranslation(
       <MockedProvider>
-        <VerificationsView application={application} showResendApprovalEmailButton />
+        <VerificationsView application={application} isAdminView={false} />
       </MockedProvider>
     )
 
@@ -22,10 +24,13 @@ describe('VerificationsView', () => {
     const application = {
       createdDate: '2024-05-15T09:20:23.350015Z',
       id: 1,
-      jsonValue: '',
+      jsonValue: {
+        name: 'application',
+        type: 'Array',
+        value: [],
+      } as JsonField<'Array'>,
       note: 'neu',
       verifications: [],
-      withdrawalDate: null,
     }
     const { getByText, getByRole } = renderView(application)
     expect(getByText('Bestätigung(en) durch Organisationen:')).toBeTruthy()
@@ -36,10 +41,13 @@ describe('VerificationsView', () => {
     const application = {
       createdDate: '2024-05-15T09:20:23.350015Z',
       id: 2,
-      jsonValue: '',
+      jsonValue: {
+        name: 'application',
+        type: 'Array',
+        value: [],
+      } as JsonField<'Array'>,
       note: 'neu',
       verifications: verificationsMixed,
-      withdrawalDate: null,
     }
     const { getByText, queryAllByRole } = renderView(application)
     expect(getByText('Bestätigung(en) durch Organisationen:')).toBeTruthy()

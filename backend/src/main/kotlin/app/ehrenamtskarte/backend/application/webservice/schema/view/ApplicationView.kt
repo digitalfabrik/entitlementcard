@@ -12,7 +12,6 @@ data class ApplicationView(
     val regionId: Int,
     val createdDate: String,
     val jsonValue: String,
-    val withdrawalDate: String?,
     val note: String?,
     val status: ApplicationStatus?,
     val statusResolvedDate: String?,
@@ -25,7 +24,6 @@ data class ApplicationView(
                 regionId = entity.regionId.value,
                 createdDate = entity.createdDate.toString(),
                 jsonValue = entity.jsonValue,
-                withdrawalDate = entity.withdrawalDate?.toString(),
                 note = entity.note.takeIf { includePrivateInformation },
                 status = entity.status.takeIf { includePrivateInformation }?.toGraphQlType(),
                 statusResolvedDate = entity.statusResolvedDate?.takeIf { includePrivateInformation }?.toString(),
@@ -38,6 +36,7 @@ data class ApplicationView(
         Rejected,
         Approved,
         ApprovedCardCreated,
+        Withdrawn,
     }
 
     fun verifications(environment: DataFetchingEnvironment): CompletableFuture<List<ApplicationVerificationView>> =
@@ -50,4 +49,5 @@ fun ApplicationEntity.Status.toGraphQlType() =
         ApplicationEntity.Status.Rejected -> ApplicationView.ApplicationStatus.Rejected
         ApplicationEntity.Status.Approved -> ApplicationView.ApplicationStatus.Approved
         ApplicationEntity.Status.ApprovedCardCreated -> ApplicationView.ApplicationStatus.ApprovedCardCreated
+        ApplicationEntity.Status.Withdrawn -> ApplicationView.ApplicationStatus.Withdrawn
     }
