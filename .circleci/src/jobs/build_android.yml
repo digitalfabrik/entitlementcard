@@ -13,7 +13,6 @@ working_directory: ~/project/frontend
 steps:
   - prepare_workspace
   - install_app_toolbelt
-# uses the ruby orb and install minimum ruby version required by fastlane
   - ruby/install:
         version: '3.1'
   - install_flutter:
