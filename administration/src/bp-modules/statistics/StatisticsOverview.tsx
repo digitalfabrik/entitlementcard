@@ -35,7 +35,6 @@ const StatisticsOverview = ({
       })
     }
   }
-
   const statisticKeys = Object.keys(statistics[0]).filter(item => item !== 'region')
   const isSingleChartView = statistics.length === 1
 
@@ -58,7 +57,7 @@ const StatisticsOverview = ({
             <StatisticsBarChart key={statistic.region} statistic={statistic} />
           ))}
         </Box>
-        <StatisticsLegend items={statisticKeys} />
+        {cardStatistics.enabled && <StatisticsLegend items={statisticKeys} statisticsTheme={cardStatistics.theme} />}
       </Stack>
       <StatisticsFilterBar
         onApplyFilter={onApplyFilter}
