@@ -258,7 +258,7 @@ jobs:
         working_directory: ~/project/administration
     build_android:
         docker:
-            - image: cimg/android:2024.01.1-node
+            - image: cimg/android:2025.04.1-node
         environment:
             FASTLANE_SKIP_UPDATE_CHECK: true
             GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx2048m" -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2
@@ -274,6 +274,8 @@ jobs:
         steps:
             - prepare_workspace
             - install_app_toolbelt
+            - ruby/install:
+                version: "3.1"
             - install_flutter:
                 precache: android
             - install_fastlane:
@@ -530,7 +532,7 @@ jobs:
         working_directory: ~/project/frontend
     deliver_android:
         docker:
-            - image: cimg/android:2024.01.1-node
+            - image: cimg/android:2025.04.1-node
         environment:
             FASTLANE_SKIP_UPDATE_CHECK: true
         parameters:
@@ -770,7 +772,7 @@ jobs:
             - notify
     promote_android:
         docker:
-            - image: cimg/android:2024.01.1-node
+            - image: cimg/android:2025.04.1-node
         environment:
             FASTLANE_SKIP_UPDATE_CHECK: true
         parameters:
@@ -845,6 +847,8 @@ jobs:
                     curl https://webhook.entitlementcard.tuerantuer.org/hooks/install-backend-admin-$EAK_WEBHOOK
                 name: Install administration & backend packages via webhook
             - notify
+orbs:
+    ruby: circleci/ruby@2.5.3
 parameters:
     run_commit:
         default: true
