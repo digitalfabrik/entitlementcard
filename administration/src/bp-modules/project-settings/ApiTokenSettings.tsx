@@ -11,10 +11,10 @@ import {
   useDeleteApiTokenMutation,
   useGetApiTokenMetaDataQuery,
 } from '../../generated/graphql'
+import getQueryResult from '../../mui-modules/util/getQueryResult'
 import { formatDate } from '../../util/formatDate'
 import { useAppToaster } from '../AppToaster'
 import SettingsCard from '../user-settings/SettingsCard'
-import getQueryResult from '../util/getQueryResult'
 import PepperSettings from './PepperSettings'
 
 const Container = styled.div`

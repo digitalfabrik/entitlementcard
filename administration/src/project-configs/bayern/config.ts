@@ -7,7 +7,6 @@ import {
   getCardTypeApplicationData,
   getPersonalApplicationData,
 } from '../../util/applicationDataHelper'
-import { isProductionEnvironment } from '../../util/helper'
 import { ActivationText } from '../common/ActivationText'
 import type { CardConfig, ProjectConfig } from '../getProjectConfig'
 import { DataPrivacyAdditionalBaseText, DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
@@ -99,8 +98,7 @@ const config: ProjectConfig = {
     },
   },
   freinetCSVImportEnabled: true,
-  // TODO #1751 has to be implemented, before we ship it to production
-  freinetDataTransferEnabled: !isProductionEnvironment(),
+  freinetDataTransferEnabled: true,
   cardCreation: true,
   selfServiceEnabled: false,
   storesManagement: {

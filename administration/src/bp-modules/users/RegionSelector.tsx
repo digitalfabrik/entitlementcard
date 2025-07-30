@@ -4,8 +4,8 @@ import React, { ReactElement, useContext, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Region, useGetRegionsQuery } from '../../generated/graphql'
+import getQueryResult from '../../mui-modules/util/getQueryResult'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import getQueryResult from '../util/getQueryResult'
 
 const RegionSelect = Select.ofType<Region>()
 

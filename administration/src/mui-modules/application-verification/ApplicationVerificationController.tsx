@@ -1,5 +1,5 @@
 import { Check, Close } from '@mui/icons-material'
-import { Alert, AlertTitle, Button, Card, Divider, Typography, styled } from '@mui/material'
+import { Alert, Button, Card, Divider, Typography, styled } from '@mui/material'
 import { SnackbarProvider, useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
@@ -14,6 +14,7 @@ import {
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
+import AlertBox from '../base/AlertBox'
 import getQueryResult from '../util/getQueryResult'
 
 const ApplicationViewCard = styled(Card)`
@@ -24,10 +25,6 @@ const ApplicationViewCard = styled(Card)`
 
 const StyledAlert = styled(Alert)`
   margin: 20px 0;
-`
-
-const CenteredMessage = styled(Alert)`
-  margin: auto;
 `
 
 const ButtonContainer = styled('div')`
@@ -83,22 +80,20 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
   const { verification, application } = applicationQueryHandler.data
 
   if (verification.rejectedDate || verification.verifiedDate) {
-    return <CenteredMessage>{t('alreadyVerified')}</CenteredMessage>
+    return <AlertBox severity='info' description={t('alreadyVerified')} />
   }
   if (application.withdrawalDate) {
     return (
-      <CenteredMessage>
-        {t('withdrawMessageForVerifier', { date: formatDateWithTimezone(application.withdrawalDate, config.timezone) })}
-      </CenteredMessage>
+      <AlertBox
+        severity='info'
+        description={t('withdrawMessageForVerifier', {
+          date: formatDateWithTimezone(application.withdrawalDate, config.timezone),
+        })}
+      />
     )
   }
   if (verificationFinished) {
-    return (
-      <CenteredMessage>
-        <AlertTitle>{t('verificationFinishedTitle')}</AlertTitle>
-        {t('verificationFinishedContent')}
-      </CenteredMessage>
-    )
+    return <AlertBox title={t('verificationFinishedTitle')} description={t('verificationFinishedContent')} />
   }
 
   const { jsonValue, createdDate: createdDateString, id } = application
@@ -164,10 +159,11 @@ const ApplicationVerificationController = (): ReactElement => {
 
   if (!applicationVerificationAccessKey) {
     return (
-      <CenteredMessage>
-        <AlertTitle>{t('verificationNotFoundTitle')}</AlertTitle>
-        {t('verificationNotFoundDescription')}
-      </CenteredMessage>
+      <AlertBox
+        severity='error'
+        title={t('verificationNotFoundTitle')}
+        description={t('verificationNotFoundDescription')}
+      />
     )
   }
 

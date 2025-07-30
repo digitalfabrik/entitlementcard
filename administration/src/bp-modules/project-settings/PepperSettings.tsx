@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import { useGetHashingPepperQuery } from '../../generated/graphql'
+import getQueryResult from '../../mui-modules/util/getQueryResult'
 import PasswordInput from '../PasswordInput'
-import getQueryResult from '../util/getQueryResult'
 
 const Container = styled.div`
   padding: 8px 0;
