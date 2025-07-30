@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useGetRegionSettingsByIdQuery, useUpdateRegionSettingsMutation } from '../../generated/graphql'
+import getQueryResult from '../../mui-modules/util/getQueryResult'
 import { useAppToaster } from '../AppToaster'
-import getQueryResult from '../util/getQueryResult'
 import RegionSettingsCard from './RegionSettingsCard'
 
 const RegionSettingsController = ({ regionId }: { regionId: number }): ReactElement => {
