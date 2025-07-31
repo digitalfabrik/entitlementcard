@@ -1,23 +1,19 @@
-import { Alert, Box, Typography } from '@mui/material'
+import { Alert, Typography, styled } from '@mui/material'
 import { BarCustomLayerProps, ResponsiveBar } from '@nivo/bar'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
 import { CardStatisticsResultModel } from '../../../generated/graphql'
 import AlertBox from '../../../mui-modules/base/AlertBox'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import StatisticsBarTooltip from './StatisticsBarTooltip'
 
-const BarContainer = styled.div<{ height: number }>`
+const BarContainer = styled('div')<{ height: number }>`
   height: ${props => props.height}px;
-  margin-bottom: 62px;
+  display: flex;
+  flex-direction: column;
 `
-type StatisticsBarChartProps = {
-  statistic: CardStatisticsResultModel
-}
 
-const CHART_MARGIN = 30
 const OVERLAP_HEIGHT = 10
 
 const CustomAxisLines = ({ innerWidth, innerHeight }: BarCustomLayerProps<CardStatisticsResultModel>) => (
@@ -37,7 +33,7 @@ const CustomAxisLines = ({ innerWidth, innerHeight }: BarCustomLayerProps<CardSt
     <line
       x1={0}
       x2={0}
-      y1={CHART_MARGIN - OVERLAP_HEIGHT}
+      y1={-OVERLAP_HEIGHT}
       y2={innerHeight}
       style={{
         stroke: '#000',
@@ -47,25 +43,12 @@ const CustomAxisLines = ({ innerWidth, innerHeight }: BarCustomLayerProps<CardSt
   </>
 )
 
-const StatisticsBarChart = ({ statistic }: StatisticsBarChartProps): ReactElement => {
+const StatisticsBarChart = ({ statistic }: { statistic: CardStatisticsResultModel }): ReactElement => {
   const { cardStatistics } = useContext(ProjectConfigContext)
   const { t } = useTranslation('statistics')
   const barHeight = 32
   const axisHeight = 110
-
   const statisticKeys = Object.keys(statistic).filter(item => item !== 'region')
-  if (statistic.cardsCreated === 0) {
-    return (
-      <BarContainer height={barHeight * statisticKeys.length + axisHeight}>
-        <Box sx={{ padding: 2, display: 'flex', flexDirection: 'column', ml: 2 }}>
-          <Typography variant='subtitle2'>{statistic.region}</Typography>
-          <Alert severity='info' variant='outlined' sx={{ alignSelf: 'baseline', mt: 2 }}>
-            {t('noDataRegionInfo')}
-          </Alert>
-        </Box>
-      </BarContainer>
-    )
-  }
 
   if (!cardStatistics.enabled) {
     return (
@@ -77,15 +60,27 @@ const StatisticsBarChart = ({ statistic }: StatisticsBarChartProps): ReactElemen
     )
   }
 
+  if (statistic.cardsCreated === 0) {
+    return (
+      <BarContainer height={barHeight * statisticKeys.length + axisHeight}>
+        <Typography variant='subtitle2'>{statistic.region}</Typography>
+        <Alert severity='info' variant='outlined' sx={{ alignSelf: 'baseline', mt: 2 }}>
+          {t('noDataRegionInfo')}
+        </Alert>
+      </BarContainer>
+    )
+  }
+
   return (
     <BarContainer height={barHeight * statisticKeys.length + axisHeight}>
+      <Typography variant='subtitle2'>{statistic.region}</Typography>
       <ResponsiveBar
         /* Bar chart starts with the first row at bottom axis, so the data has to be reversed to show alphabetically */
         data={[...[statistic]]}
         tooltip={StatisticsBarTooltip}
         keys={statisticKeys}
         indexBy='region'
-        margin={{ top: CHART_MARGIN, right: CHART_MARGIN, bottom: CHART_MARGIN, left: CHART_MARGIN }}
+        margin={{ top: 20, right: 16, bottom: 40, left: 16 }}
         innerPadding={4.0}
         padding={0.2}
         enableGridY={false}
@@ -93,11 +88,6 @@ const StatisticsBarChart = ({ statistic }: StatisticsBarChartProps): ReactElemen
         layout='horizontal'
         labelSkipWidth={40}
         colors={Object.values(cardStatistics.theme)}
-        axisTop={{
-          legend: statistic.region,
-          tickValues: 0,
-          legendPosition: 'start',
-        }}
         axisBottom={{
           tickSize: 6,
           tickPadding: 8,

@@ -1,9 +1,8 @@
-import { Container } from '@mui/material'
+import { Stack } from '@mui/material'
 import { TFunction } from 'i18next'
 import { AnimatePresence, motion } from 'motion/react'
 import React, { ReactElement, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
 import AlertBox from '../../mui-modules/base/AlertBox'
 import ApplicationCard from './ApplicationCard'
@@ -35,18 +34,6 @@ export const barItems: ApplicationStatusBarItemType[] = [
   },
 ]
 
-const ApplicationList = styled.div`
-  display: flex;
-  flex-grow: 1;
-  flex-direction: column;
-  height: 100%;
-  gap: 16px;
-  // This fixes a whitespace issue in print dialog when using motion #2375
-  @media print {
-    gap: 0;
-  }
-`
-
 const getEmptyApplicationsListStatusDescription = (activeBarItem: ApplicationStatusBarItemType, t: TFunction): string =>
   activeBarItem.status !== undefined ? `${t(activeBarItem.title).toLowerCase()}en` : ''
 
@@ -71,15 +58,24 @@ const ApplicationsOverview = ({ applications }: { applications: GetApplicationsT
   )
 
   return (
-    <Container sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', maxWidth: '90%', width: '1000px' }}>
-      <ApplicationStatusBar
-        applications={updatedApplications}
-        activeBarItem={activeBarItem}
-        setActiveBarItem={setActiveBarItem}
-        barItems={barItems}
-      />
-      {filteredApplications.length > 0 ? (
-        <ApplicationList>
+    <Stack
+      sx={{
+        flexGrow: 1,
+        flexDirection: 'row',
+        justifyContent: 'safe center',
+        alignItems: 'flex-start',
+        padding: 2,
+        overflow: 'auto',
+        '@media print': { overflow: 'visible' },
+      }}>
+      <Stack sx={{ maxWidth: '90%', width: '1000px', gap: 2, '@media print': { gap: 0 } }}>
+        <ApplicationStatusBar
+          applications={updatedApplications}
+          activeBarItem={activeBarItem}
+          setActiveBarItem={setActiveBarItem}
+          barItems={barItems}
+        />
+        {filteredApplications.length > 0 ? (
           <AnimatePresence initial={false}>
             {filteredApplications.map(application => (
               <motion.div
@@ -102,17 +98,17 @@ const ApplicationsOverview = ({ applications }: { applications: GetApplicationsT
               </motion.div>
             ))}
           </AnimatePresence>
-        </ApplicationList>
-      ) : (
-        <AlertBox
-          severity='info'
-          title={t('noApplicationsOfType', { status: getEmptyApplicationsListStatusDescription(activeBarItem, t) })}
-          description={t('noApplicationsOfTypeDescription', {
-            status: getEmptyApplicationsListStatusDescription(activeBarItem, t),
-          })}
-        />
-      )}
-    </Container>
+        ) : (
+          <AlertBox
+            severity='info'
+            title={t('noApplicationsOfType', { status: getEmptyApplicationsListStatusDescription(activeBarItem, t) })}
+            description={t('noApplicationsOfTypeDescription', {
+              status: getEmptyApplicationsListStatusDescription(activeBarItem, t),
+            })}
+          />
+        )}
+      </Stack>
+    </Stack>
   )
 }
 

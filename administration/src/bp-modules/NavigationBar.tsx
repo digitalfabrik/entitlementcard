@@ -1,8 +1,8 @@
 import { Alignment, Button, Navbar } from '@blueprintjs/core'
+import { styled } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router'
-import styled from 'styled-components'
 
 import { useWhoAmI } from '../WhoAmIProvider'
 import { Role } from '../generated/graphql'
