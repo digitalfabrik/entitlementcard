@@ -305,9 +305,11 @@ type StoreImportReturnResultModel {
 
 enum ActivationState {
   did_not_overwrite_existing
-  failed
+  expired
+  not_found
   revoked
   success
+  wrong_secret
 }
 
 enum ApiTokenType {

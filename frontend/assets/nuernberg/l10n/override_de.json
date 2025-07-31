@@ -6,7 +6,8 @@
     "activateTitle": "Pass aktivieren",
     "applyDescription": "Sie haben noch keinen Nürnberg-Pass? Hier können Sie Ihren Nürnberg-Pass beantragen.",
     "cardExpired": "Ihr Pass ist abgelaufen. Unter \"Weitere Aktionen\" können Sie einen Antrag auf Verlängerung stellen.",
-    "cardInvalid": "Ihr Pass ist ungültig. Er wurde entweder widerrufen oder auf einem anderen Gerät aktiviert.",
+    "cardExpiredBeforeActivation": "Ihr Pass ist bereits abgelaufen und kann nicht mehr aktiviert werden. Bitte beantragen Sie ihn erneut.",
+    "cardInvalid": "Ihr Pass wurde nicht gefunden. Bitte beantragen Sie ihn erneut.",
     "cardNotYetValid": "Der Gültigkeitszeitraum Ihres Passes hat noch nicht begonnen.",
     "checkFailed": "Ihr Pass konnte nicht auf ihre Gültigkeit geprüft werden. Bitte stellen Sie sicher, dass eine Internetverbindung besteht und prüfen Sie erneut.",
     "codeRevoked": "Dieser Pass konnte nicht aktiviert werden, da er widerrufen wurde.",
@@ -35,7 +36,7 @@
   "about": {
     "title": "Mehr"
   },
-  "deeplinkActivation" : {
+  "deeplinkActivation": {
     "headline": "Pass aktivieren",
     "description": "Wollen Sie diesen Pass aktivieren?",
     "limitReached": "Ihr Passlimit wurde erreicht. Bitte entfernen Sie vorher einen Pass, damit Sie einen neuen aktivieren können.",
