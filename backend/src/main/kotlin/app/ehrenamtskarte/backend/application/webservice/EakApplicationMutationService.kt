@@ -7,7 +7,7 @@ import app.ehrenamtskarte.backend.application.database.Applications
 import app.ehrenamtskarte.backend.application.database.NOTE_MAX_CHARS
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
 import app.ehrenamtskarte.backend.application.webservice.schema.create.Application
-import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationView
+import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationAdminGql
 import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationHandler
 import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantEmail
 import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantName
@@ -134,12 +134,12 @@ class EakApplicationMutationService {
     /**
      * Approves an application if it is in the Pending status.
      *
-     * @return The updated [ApplicationView].
+     * @return The updated [ApplicationAdminGql].
      * @throws InvalidInputException If an application with the specified id is not found
      * @throws ForbiddenException If the user is not allowed to modify this application
      */
     @GraphQLDescription("Approve an application")
-    fun approveApplicationStatus(applicationId: Int, dfe: DataFetchingEnvironment): ApplicationView {
+    fun approveApplicationStatus(applicationId: Int, dfe: DataFetchingEnvironment): ApplicationAdminGql {
         val context = dfe.graphQlContext.context
 
         return transaction {
@@ -149,7 +149,7 @@ class EakApplicationMutationService {
             applicationEntity.changeStatusOrThrow(Status.Approved)
 
             if (mayUpdateApplicationsInRegion(context.getAuthContext().admin, applicationEntity.regionId.value)) {
-                ApplicationView.fromDbEntity(applicationEntity, true)
+                ApplicationAdminGql.fromDbEntity(applicationEntity)
             } else {
                 throw ForbiddenException()
             }
@@ -159,7 +159,7 @@ class EakApplicationMutationService {
     /**
      * Rejects an application if it is in the Pending status.
      *
-     * @return The updated [ApplicationView].
+     * @return The updated [ApplicationAdminGql].
      * @throws InvalidInputException If an application with the specified id is not found
      * @throws ForbiddenException If the user is not allowed to modify this application
      */
@@ -168,7 +168,7 @@ class EakApplicationMutationService {
         applicationId: Int,
         rejectionMessage: String,
         dfe: DataFetchingEnvironment,
-    ): ApplicationView {
+    ): ApplicationAdminGql {
         val context = dfe.graphQlContext.context
         val authContext = context.getAuthContext()
 
@@ -191,7 +191,7 @@ class EakApplicationMutationService {
                 rejectionMessage,
             )
 
-            ApplicationView.fromDbEntity(application, true)
+            ApplicationAdminGql.fromDbEntity(application)
         }
     }
 
