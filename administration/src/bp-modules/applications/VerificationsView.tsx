@@ -3,9 +3,8 @@ import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
-import { ApplicationStatus } from '../../generated/graphql'
+import { ApplicationPublic, ApplicationStatus, ApplicationVerificationView } from '../../generated/graphql'
 import VerificationListItem from './components/VerificationListItem'
-import type { Application } from './types'
 
 const VerificationContainer = styled.ul`
   list-style-type: none;
@@ -19,7 +18,14 @@ const VerificationsView = ({
   application,
   isAdminView,
 }: {
-  application: Application
+  application: Pick<ApplicationPublic, 'id' | 'status'> & {
+    verifications: Array<
+      Pick<
+        ApplicationVerificationView,
+        'organizationName' | 'contactEmailAddress' | 'verificationId' | 'rejectedDate' | 'verifiedDate'
+      >
+    >
+  }
   /** Displayed in an administration page, so show administrative UI */
   isAdminView?: boolean
 }): ReactElement => {
