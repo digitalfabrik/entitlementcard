@@ -1,11 +1,11 @@
 import { MockedProvider } from '@apollo/client/testing'
 import React from 'react'
 
+import { type ApplicationPublic, ApplicationStatus, type ApplicationVerificationView } from '../../../generated/graphql'
 import { renderWithTranslation } from '../../../testing/render'
 import { JsonField } from '../JsonFieldView'
 import VerificationsView from '../VerificationsView'
 import { verificationsMixed } from '../__mocks__/verificationData'
-import type { Application } from '../types'
 
 jest.mock('@blueprintjs/core', () => ({
   ...jest.requireActual('@blueprintjs/core'),
@@ -13,7 +13,14 @@ jest.mock('@blueprintjs/core', () => ({
 }))
 
 describe('VerificationsView', () => {
-  const renderView = (application: Application) =>
+  const renderView = (
+    application: Pick<ApplicationPublic, 'status' | 'id'> & {
+      verifications: Pick<
+        ApplicationVerificationView,
+        'organizationName' | 'contactEmailAddress' | 'verificationId' | 'rejectedDate' | 'verifiedDate'
+      >[]
+    }
+  ) =>
     renderWithTranslation(
       <MockedProvider>
         <VerificationsView application={application} isAdminView={false} />
@@ -29,6 +36,7 @@ describe('VerificationsView', () => {
         type: 'Array',
         value: [],
       } as JsonField<'Array'>,
+      status: ApplicationStatus.Pending,
       note: 'neu',
       verifications: [],
     }
@@ -46,6 +54,7 @@ describe('VerificationsView', () => {
         type: 'Array',
         value: [],
       } as JsonField<'Array'>,
+      status: ApplicationStatus.Pending,
       note: 'neu',
       verifications: verificationsMixed,
     }

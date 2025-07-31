@@ -19,9 +19,10 @@ const ListItem = styled.li<{ $color: string }>`
   border-left: 2px solid ${props => props.$color};
 `
 
-export type Verification = Omit<ApplicationVerificationView, 'contactName'>
-
-const getStatusMetaData = (verification: Verification, t: TFunction): { text: string; color: string } => {
+const getStatusMetaData = (
+  verification: Pick<ApplicationVerificationView, 'rejectedDate' | 'verifiedDate'>,
+  t: TFunction
+): { text: string; color: string } => {
   const unverifiedText = verification.rejectedDate
     ? `${t('rejectedOn')} ${new Date(verification.rejectedDate).toLocaleString('de')}`
     : t('pending')
@@ -39,7 +40,10 @@ const VerificationListItem = ({
   applicationId,
   showResendApprovalEmailButton,
 }: {
-  verification: Verification
+  verification: Pick<
+    ApplicationVerificationView,
+    'verificationId' | 'verifiedDate' | 'rejectedDate' | 'organizationName' | 'contactEmailAddress'
+  >
   applicationId: number
   showResendApprovalEmailButton: boolean
 }): ReactElement => {

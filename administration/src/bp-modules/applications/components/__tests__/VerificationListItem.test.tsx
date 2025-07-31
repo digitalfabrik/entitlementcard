@@ -2,9 +2,10 @@ import { MockedProvider } from '@apollo/client/testing'
 import React from 'react'
 
 import { AuthContext } from '../../../../AuthProvider'
+import { ApplicationVerificationView } from '../../../../generated/graphql'
 import { renderWithTranslation } from '../../../../testing/render'
 import { verificationsAwaiting, verificationsRejected, verificationsVerified } from '../../__mocks__/verificationData'
-import VerificationListItem, { Verification } from '../VerificationListItem'
+import VerificationListItem from '../VerificationListItem'
 
 jest.mock('@blueprintjs/core', () => ({
   ...jest.requireActual('@blueprintjs/core'),
@@ -24,7 +25,12 @@ describe('VerificationListItem', () => {
     signOut: jest.fn(),
   }
 
-  const renderListItem = (verification: Verification) =>
+  const renderListItem = (
+    verification: Pick<
+      ApplicationVerificationView,
+      'organizationName' | 'contactEmailAddress' | 'verificationId' | 'rejectedDate' | 'verifiedDate'
+    >
+  ) =>
     renderWithTranslation(
       <MockedProvider>
         <AuthContext.Provider value={mockAuthContext}>
