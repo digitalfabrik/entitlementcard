@@ -48,7 +48,7 @@ io-ktor-client-cio-jvm = { module = "io.ktor:ktor-client-cio-jvm", version.ref =
 io-ktor-client-core-jvm = { module = "io.ktor:ktor-client-core-jvm", version.ref = "ktor" }
 io-mockk = "io.mockk:mockk:1.14.2"
 net-postgis-jdbc = "net.postgis:postgis-jdbc:2025.1.0"
-org-apache-commons-compress = "org.apache.commons:commons-compress:1.27.1"
+org-apache-commons-compress = "org.apache.commons:commons-compress:1.28.0"
 org-apache-commons-csv = "org.apache.commons:commons-csv:1.14.0"
 org-apache-commons-text = "org.apache.commons:commons-text:1.14.0"
 org-bouncycastle-bcpkix-jdk18on = "org.bouncycastle:bcpkix-jdk18on:1.81"
