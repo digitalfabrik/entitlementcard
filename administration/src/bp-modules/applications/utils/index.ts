@@ -1,6 +1,8 @@
 import { type ApplicationVerification, VerificationStatus } from '../types'
 
-export const verificationStatus = (verification: ApplicationVerification): VerificationStatus => {
+export const verificationStatus = (
+  verification: Pick<ApplicationVerification, 'rejectedDate' | 'verifiedDate'>
+): VerificationStatus => {
   if (verification.verifiedDate) {
     return VerificationStatus.Verified
   }
