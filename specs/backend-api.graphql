@@ -64,6 +64,28 @@ type ApiTokenMetaData {
   type: ApiTokenType!
 }
 
+type ApplicationAdmin {
+  createdDate: String!
+  id: Int!
+  jsonValue: String!
+  note: String
+  regionId: Int!
+  rejectionMessage: String
+  status: ApplicationStatus!
+  statusResolvedDate: String
+  verifications: [ApplicationVerificationView!]!
+}
+
+type ApplicationPublic {
+  createdDate: String!
+  id: Int!
+  jsonValue: String!
+  regionId: Int!
+  status: ApplicationStatus!
+  statusResolvedDate: String
+  verifications: [ApplicationVerificationView!]!
+}
+
 type ApplicationVerificationView {
   contactEmailAddress: String!
   contactName: String!
@@ -71,18 +93,6 @@ type ApplicationVerificationView {
   rejectedDate: String
   verificationId: Int!
   verifiedDate: String
-}
-
-type ApplicationView {
-  createdDate: String!
-  id: Int!
-  jsonValue: String!
-  note: String
-  regionId: Int!
-  rejectionMessage: String
-  status: ApplicationStatus
-  statusResolvedDate: String
-  verifications: [ApplicationVerificationView!]!
 }
 
 type CardActivationResultModel {
@@ -145,7 +155,7 @@ type Mutation {
   "Stores a new application for an EAK"
   addEakApplication(application: ApplicationInput!, project: String!, regionId: Int!): Boolean!
   "Approve an application"
-  approveApplicationStatus(applicationId: Int!): ApplicationView!
+  approveApplicationStatus(applicationId: Int!): ApplicationAdmin!
   "Changes an administrator's password"
   changePassword(currentPassword: String!, email: String!, newPassword: String!): Boolean!
   "Creates a new administrator"
@@ -169,7 +179,7 @@ type Mutation {
   "Import accepting stores via csv"
   importAcceptingStores(dryRun: Boolean!, stores: [CSVAcceptingStoreInput!]!): StoreImportReturnResultModel!
   "Reject an application"
-  rejectApplicationStatus(applicationId: Int!, rejectionMessage: String!): ApplicationView!
+  rejectApplicationStatus(applicationId: Int!, rejectionMessage: String!): ApplicationAdmin!
   "Reset the administrator's password"
   resetPassword(email: String!, newPassword: String!, passwordResetKey: String!, project: String!): Boolean!
   "Send application and card information to Freinet"
@@ -222,13 +232,13 @@ type Query {
   "Gets metadata of all api tokens for a project"
   getApiTokenMetaData: [ApiTokenMetaData!]!
   "Queries an application by application accessKey"
-  getApplicationByApplicant(accessKey: String!): ApplicationView!
+  getApplicationByApplicant(accessKey: String!): ApplicationPublic!
   "Queries an application by application verification accessKey"
-  getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey: String!): ApplicationView!
+  getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey: String!): ApplicationPublic!
   "Queries an application verification by application verification accessKey"
   getApplicationVerification(applicationVerificationAccessKey: String!): ApplicationVerificationView!
   "Queries all applications for a specific region"
-  getApplications(regionId: Int!): [ApplicationView!]!
+  getApplications(regionId: Int!): [ApplicationAdmin!]!
   "Returns card statistics for project. Start and end dates are inclusive."
   getCardStatisticsInProject(dateEnd: String!, dateStart: String!): [CardStatisticsResultModel!]!
   "Returns card statistics for region. Start and end dates are inclusive."
