@@ -30,7 +30,7 @@ const ApplicationApplicantController = ({ providedKey }: { providedKey: string }
   return (
     <ApplicationApplicantView
       application={application}
-      gotWithdrawn={() => setIsWithdrawn(true)}
+      onWithdraw={() => setIsWithdrawn(true)}
       providedKey={providedKey}
     />
   )
