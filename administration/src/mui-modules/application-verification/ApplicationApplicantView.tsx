@@ -40,11 +40,11 @@ const StyledDivider = styled(Divider)`
 const ApplicationApplicantView = ({
   application,
   providedKey,
-  inWithdrawApplication,
+  onWithdraw,
 }: {
   application: ApplicationParsedJsonValue<GetApplicationByApplicantQuery['application']>
   providedKey: string
-  inWithdrawApplication: () => void
+  onWithdraw: () => void
 }): ReactElement => {
   const { t } = useTranslation('applicationApplicant')
   const [dialogOpen, setDialogOpen] = useState<boolean>(false)
@@ -52,7 +52,6 @@ const ApplicationApplicantView = ({
   const config = useContext(ProjectConfigContext)
   const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${id}`
   const { enqueueSnackbar } = useSnackbar()
-
   const [withdrawApplication, { loading: withdrawalLoading }] = useWithdrawApplicationMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
@@ -60,14 +59,13 @@ const ApplicationApplicantView = ({
     },
     onCompleted: ({ isWithdrawn }: { isWithdrawn: boolean }) => {
       if (isWithdrawn) {
-        gotWithdrawn()
+        onWithdraw()
       } else {
         console.error('Withdraw operation returned false.')
         enqueueSnackbar(t('alreadyWithdrawn'), { variant: 'error' })
       }
     },
   })
-
   const submitWithdrawal = () => {
     withdrawApplication({
       variables: {
@@ -76,11 +74,9 @@ const ApplicationApplicantView = ({
     })
   }
 
-  if (withdrawalLoading) {
-    return <CenteredCircularProgress />
-  }
-
-  return (
+  return withdrawalLoading ? (
+    <CenteredCircularProgress />
+  ) : (
     <ApplicationViewCard elevation={2}>
       <ApplicationViewCardContent>
         <Typography sx={{ mb: '8px' }} variant='h6'>
@@ -102,7 +98,7 @@ const ApplicationApplicantView = ({
             <Typography sx={{ mt: '8px', mb: '16px' }} variant='body2'>
               {t('withdrawInformation')}
             </Typography>
-            <Button variant='contained' endIcon={<Delete />} onClick={() => setDialogOpen(true)}>
+            <Button variant='contained' startIcon={<Delete />} onClick={() => setDialogOpen(true)}>
               {t('withdrawApplication')}
             </Button>
             <ConfirmDialog
