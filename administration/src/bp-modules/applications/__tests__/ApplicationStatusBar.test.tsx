@@ -16,6 +16,7 @@ const applications: Application[] = [
       value: [],
     },
     note: 'neu',
+    status: ApplicationStatus.Pending,
     verifications: [
       {
         verificationId: 1,
@@ -35,6 +36,7 @@ const applications: Application[] = [
       value: [],
     },
     note: 'neu',
+    status: ApplicationStatus.Pending,
     verifications: [
       {
         verificationId: 2,
@@ -54,6 +56,7 @@ const applications: Application[] = [
       value: [],
     },
     note: 'test',
+    status: ApplicationStatus.Pending,
     verifications: [
       {
         verificationId: 3,
@@ -73,6 +76,8 @@ const applications: Application[] = [
       value: [],
     },
     note: 'test',
+    status: ApplicationStatus.Withdrawn,
+    statusResolvedDate: '2024-05-15T09:20:23.350015Z',
     verifications: [
       {
         verificationId: 4,
@@ -82,8 +87,6 @@ const applications: Application[] = [
         verifiedDate: null,
       },
     ],
-    status: ApplicationStatus.Withdrawn,
-    statusResolvedDate: '2024-05-15T09:20:23.350015Z',
   },
 ]
 
