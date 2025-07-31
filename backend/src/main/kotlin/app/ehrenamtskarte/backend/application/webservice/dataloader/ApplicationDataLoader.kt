@@ -4,8 +4,8 @@ import app.ehrenamtskarte.backend.application.database.ApplicationVerificationEn
 import app.ehrenamtskarte.backend.application.database.ApplicationVerifications
 import app.ehrenamtskarte.backend.application.database.Applications
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
+import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationAdminGql
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationVerificationView
-import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationView
 import app.ehrenamtskarte.backend.common.webservice.newNamedDataLoader
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -13,7 +13,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 val applicationLoader = newNamedDataLoader("APPLICATION_LOADER") { ids ->
     transaction {
         ApplicationRepository.findByIds(ids).map {
-            it?.let { ApplicationView.fromDbEntity(it) }
+            it?.let { ApplicationAdminGql.fromDbEntity(it) }
         }
     }
 }

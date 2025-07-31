@@ -469,7 +469,7 @@ const ApplicationCard = ({
 
         <Divider />
 
-        {application.status != null && application.statusResolvedDate != null && (
+        {application.statusResolvedDate != null && (
           <StatusNote
             statusResolvedDate={new Date(application.statusResolvedDate)}
             status={application.status}
