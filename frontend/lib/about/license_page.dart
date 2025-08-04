@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:ehrenamtskarte/routing.dart';
 import 'package:ehrenamtskarte/widgets/app_bars.dart';
+import 'package:ehrenamtskarte/widgets/landscape_safe_area.dart';
 import 'package:ehrenamtskarte/widgets/error_message.dart';
 import 'package:ehrenamtskarte/widgets/top_loading_spinner.dart';
 import 'package:flutter/foundation.dart';
@@ -66,23 +67,25 @@ class _CustomLicensePageState extends State<CustomLicensePage> {
 
           result.sortBy((element) => element.packageName.toLowerCase());
 
-          return CustomScrollView(
-            slivers: <Widget>[
-              CustomSliverAppBar(title: t.about.licenses(n: licenses.length)),
-              SliverList(
-                delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-                  final license = result[index];
-                  final paragraphs = license.licenseParagraphs;
-                  return ListTile(
-                    title: Text(license.packageName, style: theme.textTheme.titleSmall),
-                    subtitle: Text(t.about.numberLicenses(n: paragraphs.length), style: theme.textTheme.bodyMedium),
-                    onTap: () {
-                      Navigator.push(context, AppRoute(builder: (context) => SingleLicensePage(license)));
-                    },
-                  );
-                }, childCount: result.length),
-              ),
-            ],
+          return LandscapeSafeArea(
+            child: CustomScrollView(
+              slivers: <Widget>[
+                CustomSliverAppBar(title: t.about.licenses(n: licenses.length)),
+                SliverList(
+                  delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+                    final license = result[index];
+                    final paragraphs = license.licenseParagraphs;
+                    return ListTile(
+                      title: Text(license.packageName, style: theme.textTheme.titleSmall),
+                      subtitle: Text(t.about.numberLicenses(n: paragraphs.length), style: theme.textTheme.bodyMedium),
+                      onTap: () {
+                        Navigator.push(context, AppRoute(builder: (context) => SingleLicensePage(license)));
+                      },
+                    );
+                  }, childCount: result.length),
+                ),
+              ],
+            ),
           );
         } else {
           // loading
@@ -100,19 +103,27 @@ class SingleLicensePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: <Widget>[
-        CustomSliverAppBar(title: licenseEntry.packageName),
-        ...licenseEntry.licenseParagraphs.map(
-          (Iterable<LicenseParagraph> paragraphs) => SliverList(
-            delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-              final paragraph = paragraphs.toList()[index];
+    return SafeArea(
+      child: CustomScrollView(
+        slivers: <Widget>[
+          CustomSliverAppBar(title: licenseEntry.packageName),
+          ...licenseEntry.licenseParagraphs.map(
+            (Iterable<LicenseParagraph> paragraphs) => SliverList(
+              delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+                final paragraph = paragraphs.toList()[index];
 
-              return Text('\t' * paragraph.indent * 2 + paragraph.text, style: Theme.of(context).textTheme.bodyLarge);
-            }, childCount: paragraphs.length),
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  child: Text(
+                    '\t' * paragraph.indent * 2 + paragraph.text,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                );
+              }, childCount: paragraphs.length),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
