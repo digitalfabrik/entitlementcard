@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { VerificationStatus } from '../../../../shared/verifications'
 import { renderWithTranslation } from '../../../../testing/render'
 import {
   verificationsAwaiting,
@@ -8,7 +9,6 @@ import {
   verificationsVerified,
 } from '../../__mocks__/verificationData'
 import { PreVerifiedEntitlementType, preVerifiedEntitlements } from '../../preVerifiedEntitlements'
-import { VerificationStatus } from '../../types'
 import { PreVerifiedIndicator, VerificationIndicator } from '../VerificationsIndicator'
 
 jest.mock('@blueprintjs/core', () => ({

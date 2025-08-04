@@ -5,8 +5,6 @@ import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import JsonFieldView from '../../bp-modules/applications/JsonFieldView'
-import VerificationsView from '../../bp-modules/applications/VerificationsView'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import {
   ApplicationStatus,
@@ -15,6 +13,8 @@ import {
 } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { ApplicationParsedJsonValue } from '../../shared/application'
+import JsonFieldView from '../../shared/components/JsonFieldView'
+import VerificationsView from '../../shared/components/VerificationsView'
 import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import ConfirmDialog from '../application/ConfirmDialog'

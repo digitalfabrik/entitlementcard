@@ -1,4 +1,4 @@
-import { JsonField } from '../bp-modules/applications/JsonFieldView'
+import { JsonField } from './components/JsonFieldView'
 
 type ApplicationJsonValue = {
   jsonValue: string

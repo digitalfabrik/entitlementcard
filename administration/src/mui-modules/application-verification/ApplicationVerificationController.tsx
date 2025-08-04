@@ -5,7 +5,6 @@ import React, { ReactElement, useContext, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
 
-import JsonFieldView from '../../bp-modules/applications/JsonFieldView'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import {
   ApplicationStatus,
@@ -14,6 +13,7 @@ import {
 } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { parseApplication } from '../../shared/application'
+import JsonFieldView from '../../shared/components/JsonFieldView'
 import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import AlertBox from '../base/AlertBox'
