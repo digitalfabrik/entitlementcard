@@ -55,7 +55,6 @@ const CardSelfServiceForm = ({
     if (!cardValid || dataPrivacyAccepted !== DataPrivacyAcceptingStatus.accepted) {
       appToaster?.show({
         message: <FormAlert isToast errorMessage={t('atLeastOneInputIsInvalid')} />,
-        timeout: 0,
         intent: 'danger',
       })
       return
