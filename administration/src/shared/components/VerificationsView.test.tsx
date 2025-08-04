@@ -1,11 +1,11 @@
 import { MockedProvider } from '@apollo/client/testing'
 import React from 'react'
 
-import { type ApplicationPublic, ApplicationStatus, type ApplicationVerificationView } from '../../../generated/graphql'
-import { renderWithTranslation } from '../../../testing/render'
-import { JsonField } from '../JsonFieldView'
-import VerificationsView from '../VerificationsView'
-import { verificationsMixed } from '../__mocks__/verificationData'
+import { verificationsMixed } from '../../bp-modules/applications/__mocks__/verificationData'
+import { type ApplicationPublic, ApplicationStatus, type ApplicationVerificationView } from '../../generated/graphql'
+import { renderWithTranslation } from '../../testing/render'
+import { JsonField } from './JsonFieldView'
+import VerificationsView from './VerificationsView'
 
 jest.mock('@blueprintjs/core', () => ({
   ...jest.requireActual('@blueprintjs/core'),

@@ -3,9 +3,9 @@ import React from 'react'
 
 import { AuthContext } from '../../../../AuthProvider'
 import { ApplicationVerificationView } from '../../../../generated/graphql'
+import VerificationListItem from '../../../../shared/components/VerificationListItem'
 import { renderWithTranslation } from '../../../../testing/render'
 import { verificationsAwaiting, verificationsRejected, verificationsVerified } from '../../__mocks__/verificationData'
-import VerificationListItem from '../VerificationListItem'
 
 jest.mock('@blueprintjs/core', () => ({
   ...jest.requireActual('@blueprintjs/core'),

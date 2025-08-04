@@ -6,11 +6,10 @@ import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
-import { ApplicationVerificationView, useSendApprovalMailToOrganisationMutation } from '../../../generated/graphql'
-import { useAppToaster } from '../../AppToaster'
-import EmailLink from '../../EmailLink'
-import { verificationStatus } from '../utils'
-import { isEmailValid } from '../utils/verificationHelper'
+import { useAppToaster } from '../../bp-modules/AppToaster'
+import EmailLink from '../../bp-modules/EmailLink'
+import { ApplicationVerificationView, useSendApprovalMailToOrganisationMutation } from '../../generated/graphql'
+import { isEmailValid, verificationStatus } from '../verifications'
 import { VerificationIcon } from './VerificationIcon'
 
 const ListItem = styled.li<{ $color: string }>`

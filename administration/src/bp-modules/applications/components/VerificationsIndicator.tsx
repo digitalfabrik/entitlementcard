@@ -5,15 +5,15 @@ import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
+import { VerificationIcon } from '../../../shared/components/VerificationIcon'
+import { VerificationStatus, verificationStatus } from '../../../shared/verifications'
 import {
   PreVerifiedEntitlementType,
   getPreVerifiedEntitlementType,
   preVerifiedEntitlements,
 } from '../preVerifiedEntitlements'
-import { type Application, type ApplicationVerification, VerificationStatus } from '../types'
-import { verificationStatus } from '../utils'
+import { type Application, type ApplicationVerification } from '../types'
 import { ApplicationNoteTooltip } from './ApplicationNoteTooltip'
-import { VerificationIcon } from './VerificationIcon'
 
 const VerificationItem = (p: { status: VerificationStatus; count: number }): ReactElement => (
   <Box sx={{ display: 'inline-flex', alignItems: 'center' }} data-testid={`indicator-${p.status}`}>
