@@ -1,4 +1,4 @@
-import { JsonField, findValue } from '../bp-modules/applications/JsonFieldView'
+import { JsonField, findValue } from '../shared/components/JsonFieldView'
 import { formatDate } from './formatDate'
 
 export type PersonalApplicationData = {

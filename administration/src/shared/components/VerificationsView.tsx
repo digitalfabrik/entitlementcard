@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import { ApplicationPublic, ApplicationStatus, ApplicationVerificationView } from '../../generated/graphql'
-import VerificationListItem from './components/VerificationListItem'
+import VerificationListItem from './VerificationListItem'
 
 const VerificationContainer = styled.ul`
   list-style-type: none;
