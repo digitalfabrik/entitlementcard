@@ -1,9 +1,10 @@
 import 'dart:convert';
-
 import 'package:ehrenamtskarte/app.dart';
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/home/home_page.dart';
+import 'package:ehrenamtskarte/identification/activation_workflow/activate_code.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_parser.dart';
+import 'package:ehrenamtskarte/identification/connection_failed_dialog.dart';
 import 'package:ehrenamtskarte/identification/id_card/id_card_with_region_query.dart';
 import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/identification/user_code_model.dart';
@@ -124,7 +125,11 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
                               _state = _State.loading;
                             });
                             try {
-                              final activated = await activateCard(context, activationCode);
+                              final activated = await activateCard(
+                                context,
+                                activationCode,
+                                source: ActivationSource.deepLink,
+                              );
                               if (!context.mounted) return;
                               if (activated) {
                                 final cardIndex =
@@ -138,11 +143,21 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
                                   _state = _State.waiting;
                                 });
                               }
-                            } catch (_) {
+                            } on ServerCardActivationException catch (_) {
+                              if (!context.mounted) return;
                               setState(() {
                                 _state = _State.waiting;
                               });
-                              // TODO 1656: Improve error handling!!
+
+                              await ConnectionFailedDialog.show(
+                                context,
+                                t.identification.codeActivationFailedConnection,
+                              );
+                            } catch (_) {
+                              if (!context.mounted) return;
+                              setState(() {
+                                _state = _State.waiting;
+                              });
                               ScaffoldMessenger.of(
                                 context,
                               ).showSnackBar(SnackBar(content: Text(t.common.unknownError)));
