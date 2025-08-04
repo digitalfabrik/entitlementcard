@@ -1,17 +1,12 @@
-import { Alert } from '@mui/material'
 import { SnackbarProvider } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
-import styled from 'styled-components'
 
 import { useGetApplicationByApplicantQuery } from '../../generated/graphql'
+import AlertBox from '../base/AlertBox'
 import getQueryResult from '../util/getQueryResult'
 import ApplicationApplicantView from './ApplicationApplicantView'
-
-const CenteredMessage = styled(Alert)`
-  margin: auto;
-`
 
 const ApplicationApplicantController = ({ providedKey }: { providedKey: string }): ReactElement => {
   const { t } = useTranslation('applicationApplicant')
@@ -26,10 +21,10 @@ const ApplicationApplicantController = ({ providedKey }: { providedKey: string }
   const application = applicationQueryHandler.data.application
 
   if (application.withdrawalDate) {
-    return <CenteredMessage>{t('alreadyWithdrawn')}</CenteredMessage>
+    return <AlertBox severity='info' description={t('alreadyWithdrawn')} />
   }
   if (isWithdrawn) {
-    return <CenteredMessage>{t('withdrawConfirmation')}</CenteredMessage>
+    return <AlertBox severity='info' description={t('withdrawConfirmation')} />
   }
   return (
     <ApplicationApplicantView
