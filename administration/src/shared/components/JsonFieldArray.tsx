@@ -5,7 +5,6 @@ import styled from 'styled-components'
 
 import JsonFieldView from './JsonFieldView'
 import type { JsonField, JsonFieldViewProps } from './JsonFieldView'
-import { printAwareCss } from './constants'
 
 const ParentOfBorder = styled.div<{ $hierarchyIndex: number }>`
   border-color: #ddd;
@@ -32,7 +31,9 @@ const CollapsableHeader = styled(H6)`
 `
 
 const PrintableCaret = styled(Icon)`
-  ${printAwareCss};
+  @media print {
+    display: none;
+  }
 `
 
 const PrintableCollapse = styled(Collapse)`
