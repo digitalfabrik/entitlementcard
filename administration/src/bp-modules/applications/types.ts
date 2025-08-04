@@ -11,11 +11,5 @@ export type ApplicationStatusBarItemType = {
   filter: (application: Application) => boolean
 }
 
-export enum VerificationStatus {
-  Verified,
-  Rejected,
-  Pending,
-}
-
 /** An application that was obtained from the `getApplications` query. */
 export type Application = ApplicationParsedJsonValue<GetApplicationsQuery['applications'][number]>
