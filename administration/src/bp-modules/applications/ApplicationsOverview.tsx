@@ -12,33 +12,33 @@ import usePrintApplication from './hooks/usePrintApplication'
 import { getPreVerifiedEntitlementType } from './preVerifiedEntitlements'
 import type { Application, ApplicationStatusBarItemType } from './types'
 
-const countApprovedVerifications = (application: Application): number =>
-  application.verifications.reduce((count, verification) => count + (verification.verifiedDate !== null ? 1 : 0), 0)
-
-const countRejectingVerifications = (application: Application): number =>
-  application.verifications.reduce((count, verification) => count + (verification.rejectedDate !== null ? 1 : 0), 0)
-
-export const barItems = {
+export const barItems: { [key in string]: ApplicationStatusBarItemType } = {
   all: {
-    i18nKey: 'allApplications',
+    barItemI18nKey: 'statusBarAll',
+    applicationAdjectiveI18nKey: 'applicationAdjectiveAll',
     filter: (_: Application): boolean => true,
   },
   accepted: {
-    i18nKey: 'accepted',
+    barItemI18nKey: 'statusBarAccepted',
+    applicationAdjectiveI18nKey: 'applicationAdjectiveAccepted',
     filter: (application: Application): boolean =>
       application.verifications.every(verification => verification.verifiedDate !== null) ||
       getPreVerifiedEntitlementType(application.jsonValue) !== undefined,
   },
   rejected: {
-    i18nKey: 'rejected',
-    filter: (application: Application): boolean => countRejectingVerifications(application) > 0,
+    barItemI18nKey: 'statusBarRejected',
+    applicationAdjectiveI18nKey: 'applicationAdjectiveRejected',
+    filter: (application: Application): boolean =>
+      application.verifications.every(verification => verification.rejectedDate !== null),
   },
   withdrawn: {
-    i18nKey: 'withdrawn',
+    barItemI18nKey: 'statusBarWithdrawn',
+    applicationAdjectiveI18nKey: 'applicationAdjectiveWithdrawn',
     filter: (application: Application): boolean => application.status === ApplicationStatus.Withdrawn,
   },
   open: {
-    i18nKey: 'open',
+    barItemI18nKey: 'statusBarOpen',
+    applicationAdjectiveI18nKey: 'applicationAdjectiveOpen',
     filter: (application: Application): boolean =>
       application.verifications.every(
         verification => verification.verifiedDate === null && verification.rejectedDate === null
@@ -130,8 +130,8 @@ const ApplicationsOverview = ({ applications }: { applications: Application[] })
       ) : (
         <AlertBox
           severity='info'
-          title={t('noApplicationsOfType', { status: activeBarItem.i18nKey })}
-          description={t('noApplicationsOfTypeDescription', { status: activeBarItem.i18nKey })}
+          title={t('noApplicationsOfType', { status: t(activeBarItem.applicationAdjectiveI18nKey) })}
+          description={t('noApplicationsOfTypeDescription', { status: t(activeBarItem.applicationAdjectiveI18nKey) })}
         />
       )}
     </Container>
