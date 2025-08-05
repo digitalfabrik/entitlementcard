@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import { ApplicationPublic, ApplicationStatus, ApplicationVerificationView } from '../../generated/graphql'
+import { VerificationStatus, verificationStatus } from '../verifications'
 import VerificationListItem from './VerificationListItem'
 
 const VerificationContainer = styled.ul`
@@ -42,7 +43,12 @@ const VerificationsView = ({
               key={key}
               verification={verification}
               applicationId={application.id}
-              showResendApprovalEmailButton={isAdminView === true && application.status === ApplicationStatus.Pending}
+              showResendApprovalEmailButton={
+                isAdminView === true &&
+                verificationStatus(verification) === VerificationStatus.Pending &&
+                application.status !== ApplicationStatus.Withdrawn &&
+                application.status !== ApplicationStatus.Rejected
+              }
             />
           )
         })}
