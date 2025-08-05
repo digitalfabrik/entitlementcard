@@ -5,8 +5,10 @@ import { ApplicationParsedJsonValue } from '../../shared/application'
 export type ApplicationVerification = GetApplicationsQuery['applications'][number]['verifications'][number]
 
 export type ApplicationStatusBarItemType = {
-  /** A translation key for this category */
-  i18nKey: string
+  /** A translation key for this category's bar item */
+  barItemI18nKey: string
+  /** A translation key for an adjective specific for the item this filter allows. */
+  applicationAdjectiveI18nKey: string
   /** A filter function that returns true if the given application should be included in this category. */
   filter: (application: Application) => boolean
 }
