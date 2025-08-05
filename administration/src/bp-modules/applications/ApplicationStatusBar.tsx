@@ -63,12 +63,11 @@ const ApplicationStatusBarItem = ({
   count: number
   onSetActiveBarItem: (item: ApplicationStatusBarItemType) => void
 }): ReactElement => {
-  const { i18nKey } = item
   const { t } = useTranslation('applicationsOverview')
 
   return (
-    <ItemContainer onClick={() => onSetActiveBarItem(item)} id={i18nKey} $active={active}>
-      {t(i18nKey)}(<span data-testid={`status-${t(i18nKey)}-count`}>{count}</span>)
+    <ItemContainer onClick={() => onSetActiveBarItem(item)} id={item.barItemI18nKey} $active={active}>
+      {t(item.barItemI18nKey)}(<span data-testid={`status-${t(item.barItemI18nKey)}-count`}>{count}</span>)
     </ItemContainer>
   )
 }
@@ -92,7 +91,7 @@ const ApplicationStatusBar = ({
       <BarItemContainer>
         {Object.values(barItems).map(item => (
           <ApplicationStatusBarItem
-            key={item.i18nKey}
+            key={item.barItemI18nKey}
             count={applications.reduce((count, application) => count + (item.filter(application) ? 1 : 0), 0)}
             item={item}
             active={item === activeBarItem}
