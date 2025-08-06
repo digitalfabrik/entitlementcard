@@ -1,3 +1,4 @@
+import { Stack } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -24,12 +25,22 @@ const ControllerWithRegion = (): ReactElement => {
   const { t } = useTranslation('errors')
 
   return (
-    <RenderGuard
-      allowedRoles={[Role.RegionManager, Role.RegionAdmin]}
-      condition={region !== undefined}
-      error={{ description: t('notAuthorizedToSeeApplications') }}>
-      <ApplicationsController region={region!} />
-    </RenderGuard>
+    <Stack
+      sx={{
+        flexGrow: 1,
+        justifyContent: 'safe center',
+        alignItems: 'center',
+        padding: 2,
+        overflow: 'auto',
+        '@media print': { overflow: 'visible' },
+      }}>
+      <RenderGuard
+        allowedRoles={[Role.RegionManager, Role.RegionAdmin]}
+        condition={region !== undefined}
+        error={{ description: t('notAuthorizedToSeeApplications') }}>
+        <ApplicationsController region={region!} />
+      </RenderGuard>
+    </Stack>
   )
 }
 

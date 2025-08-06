@@ -1,6 +1,6 @@
+import { Stack } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
 import { useWhoAmI } from '../../WhoAmIProvider'
 import { Role } from '../../generated/graphql'
@@ -10,14 +10,6 @@ import DataPrivacyCard from './DataPrivacyCard'
 import RegionSettingsController from './RegionSettingsController'
 import ApplicationConfirmationNoteController from './application-confirmation-note/ApplicationConfirmationNoteController'
 import FreinetSettingsController from './freinet/FreinetSettingsController'
-
-const RegionSettingsContainer = styled.div`
-  display: flex;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-`
 
 const RegionController = (): ReactElement => {
   const { region } = useWhoAmI().me
@@ -30,12 +22,21 @@ const RegionController = (): ReactElement => {
       condition={region !== undefined}
       error={{ description: t('notAuthorizedForRegionSettings') }}>
       {region && (
-        <RegionSettingsContainer>
+        <Stack
+          sx={{
+            flexGrow: 1,
+            width: '100%',
+            justifyContent: 'safe center',
+            alignItems: 'center',
+            padding: 2,
+            gap: 2,
+            overflow: 'auto',
+          }}>
           <DataPrivacyCard />
           <RegionSettingsController regionId={region.id} />
           <ApplicationConfirmationNoteController regionId={region.id} />
           {freinetDataTransferEnabled && <FreinetSettingsController regionId={region.id} project={projectId} />}
-        </RegionSettingsContainer>
+        </Stack>
       )}
     </RenderGuard>
   )
