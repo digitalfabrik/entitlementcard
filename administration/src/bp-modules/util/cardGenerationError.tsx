@@ -20,6 +20,7 @@ export const showCardGenerationError = (appToaster: Toaster, error: unknown): vo
     const { title } = getMessageFromApolloError(error)
     appToaster.show({
       message: <FormAlert isToast errorMessage={title} />,
+      timeout: 8000,
       intent: 'danger',
     })
   } else if (error instanceof PdfError) {
