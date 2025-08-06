@@ -1,10 +1,9 @@
 package app.ehrenamtskarte.backend.regions.webservice.schema
 
-import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
+import app.ehrenamtskarte.backend.auth.getAuthContext
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
-import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidApplicationConfirmationNoteSizeException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidDataPolicySizeException
 import app.ehrenamtskarte.backend.regions.database.APPLICATION_CONFIRMATION_MAIL_NOTE_MAX_CHARS
@@ -18,13 +17,12 @@ import org.jetbrains.exposed.sql.transactions.transaction
 class RegionsMutationService {
     @GraphQLDescription("Updates the data privacy policy of a region")
     fun updateDataPrivacy(dfe: DataFetchingEnvironment, regionId: Int, dataPrivacyText: String): Boolean {
-        val jwtPayload = dfe.graphQlContext.context.enforceSignedIn()
+        val admin = dfe.graphQlContext.context.getAuthContext().admin
         transaction {
-            val user = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
             if (dataPrivacyText.length > PRIVACY_POLICY_MAX_CHARS) {
                 throw InvalidDataPolicySizeException(PRIVACY_POLICY_MAX_CHARS)
             }
-            if (!Authorizer.mayUpdateSettingsInRegion(user, regionId)) {
+            if (!Authorizer.mayUpdateSettingsInRegion(admin, regionId)) {
                 throw ForbiddenException()
             }
             val region = RegionsRepository.findRegionById(regionId)
@@ -40,10 +38,9 @@ class RegionsMutationService {
         activatedForApplication: Boolean,
         activatedForConfirmationMail: Boolean,
     ): Boolean {
-        val jwtPayload = dfe.graphQlContext.context.enforceSignedIn()
+        val admin = dfe.graphQlContext.context.getAuthContext().admin
         transaction {
-            val user = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
-            if (!Authorizer.mayUpdateSettingsInRegion(user, regionId)) {
+            if (!Authorizer.mayUpdateSettingsInRegion(admin, regionId)) {
                 throw ForbiddenException()
             }
             val region = RegionsRepository.findRegionById(regionId)
@@ -63,13 +60,12 @@ class RegionsMutationService {
         applicationConfirmationNote: String,
         applicationConfirmationNoteActivated: Boolean,
     ): Boolean {
-        val jwtPayload = dfe.graphQlContext.context.enforceSignedIn()
+        val admin = dfe.graphQlContext.context.getAuthContext().admin
         transaction {
-            val user = AdministratorEntity.findById(jwtPayload.adminId) ?: throw UnauthorizedException()
             if (applicationConfirmationNote.length > APPLICATION_CONFIRMATION_MAIL_NOTE_MAX_CHARS) {
                 throw InvalidApplicationConfirmationNoteSizeException(APPLICATION_CONFIRMATION_MAIL_NOTE_MAX_CHARS)
             }
-            if (!Authorizer.mayUpdateSettingsInRegion(user, regionId)) {
+            if (!Authorizer.mayUpdateSettingsInRegion(admin, regionId)) {
                 throw ForbiddenException()
             }
             val region = RegionsRepository.findRegionById(regionId)

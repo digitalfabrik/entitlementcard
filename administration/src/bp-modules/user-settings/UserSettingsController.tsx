@@ -16,11 +16,11 @@ const UserSettingsContainer = styled.div`
 `
 
 const UserSettingsController = (): ReactElement => {
-  const { applicationFeature, projectId } = useContext(ProjectConfigContext)
+  const { applicationFeature } = useContext(ProjectConfigContext)
   const { role } = useWhoAmI().me
   return (
     <UserSettingsContainer>
-      {applicationFeature && role !== Role.ProjectAdmin && <NotificationSettings projectId={projectId} />}
+      {applicationFeature && role !== Role.ProjectAdmin && <NotificationSettings />}
       <ChangePasswordForm />
     </UserSettingsContainer>
   )

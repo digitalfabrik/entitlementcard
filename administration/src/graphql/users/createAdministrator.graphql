@@ -1,15 +1,3 @@
-mutation createAdministrator(
-  $project: String!
-  $email: String!
-  $regionId: Int
-  $role: Role!
-  $sendWelcomeMail: Boolean!
-) {
-  result: createAdministrator(
-    project: $project
-    email: $email
-    regionId: $regionId
-    role: $role
-    sendWelcomeMail: $sendWelcomeMail
-  )
+mutation createAdministrator($email: String!, $regionId: Int, $role: Role!, $sendWelcomeMail: Boolean!) {
+  result: createAdministrator(email: $email, regionId: $regionId, role: $role, sendWelcomeMail: $sendWelcomeMail)
 }

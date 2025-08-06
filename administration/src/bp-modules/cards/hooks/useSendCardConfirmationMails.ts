@@ -1,4 +1,4 @@
-import { useCallback, useContext } from 'react'
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Card } from '../../../cards/Card'
@@ -6,7 +6,6 @@ import { CreateCardsResult } from '../../../cards/createCards'
 import { EMAIL_NOTIFICATION_EXTENSION_NAME } from '../../../cards/extensions/EMailNotificationExtension'
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
 import { useSendCardCreationConfirmationMailMutation } from '../../../generated/graphql'
-import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import { getBuildConfig } from '../../../util/getBuildConfig'
 import getDeepLinkFromQrCode from '../../../util/getDeepLinkFromQrCode'
 import { isProductionEnvironment } from '../../../util/helper'
@@ -15,7 +14,6 @@ import { useAppToaster } from '../../AppToaster'
 type SendCardConfirmationMail = (codes: CreateCardsResult[], cards: Card[]) => Promise<void>
 
 const useSendCardConfirmationMails = (): SendCardConfirmationMail => {
-  const { projectId } = useContext(ProjectConfigContext)
   const { t } = useTranslation('cards')
   const appToaster = useAppToaster()
   const [sendMail] = useSendCardCreationConfirmationMailMutation({
@@ -49,7 +47,6 @@ const useSendCardConfirmationMails = (): SendCardConfirmationMail => {
           )
           await sendMail({
             variables: {
-              project: projectId,
               regionId,
               recipientAddress: mailNotificationExtensionState,
               recipientName: card.fullName,
@@ -59,7 +56,7 @@ const useSendCardConfirmationMails = (): SendCardConfirmationMail => {
         })
       )
     },
-    [sendMail, projectId]
+    [sendMail]
   )
 }
 

@@ -1,5 +1,5 @@
-query getNotificationSettings($project: String!) {
-  notificationSettings: getNotificationSettings(project: $project) {
+query getNotificationSettings {
+  notificationSettings: getNotificationSettings {
     notificationOnApplication
     notificationOnVerification
   }

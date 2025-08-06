@@ -3,7 +3,7 @@ package app.ehrenamtskarte.backend.application.webservice
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationVerificationView
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationView
-import app.ehrenamtskarte.backend.auth.getAdministrator
+import app.ehrenamtskarte.backend.auth.getAuthContext
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
@@ -16,10 +16,10 @@ import org.jetbrains.exposed.sql.transactions.transaction
 class EakApplicationQueryService {
     @GraphQLDescription("Queries all applications for a specific region")
     fun getApplications(dfe: DataFetchingEnvironment, regionId: Int): List<ApplicationView> {
-        val admin = dfe.graphQlContext.context.getAdministrator()
+        val authContext = dfe.graphQlContext.context.getAuthContext()
 
         return transaction {
-            if (Authorizer.mayViewApplicationsInRegion(admin, regionId)) {
+            if (Authorizer.mayViewApplicationsInRegion(authContext.admin, regionId)) {
                 ApplicationRepository.getApplicationsByAdmin(regionId).map { ApplicationView.fromDbEntity(it, true) }
             } else {
                 throw ForbiddenException()
