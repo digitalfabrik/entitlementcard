@@ -6,13 +6,11 @@ import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
-import { ApplicationVerificationView, useSendApprovalMailToOrganisationMutation } from '../../../generated/graphql'
-import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
-import { useAppToaster } from '../../AppToaster'
-import EmailLink from '../../EmailLink'
-import { VerificationStatus } from '../types'
-import { verificationStatus } from '../utils'
-import { isEmailValid } from '../utils/verificationHelper'
+import { useAppToaster } from '../../bp-modules/AppToaster'
+import EmailLink from '../../bp-modules/EmailLink'
+import { ApplicationVerificationView, useSendApprovalMailToOrganisationMutation } from '../../generated/graphql'
+import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { isEmailValid, verificationStatus } from '../../shared/verifications'
 import { VerificationIcon } from './VerificationIcon'
 
 const ListItem = styled.li<{ $color: string }>`
@@ -21,9 +19,10 @@ const ListItem = styled.li<{ $color: string }>`
   border-left: 2px solid ${props => props.$color};
 `
 
-export type Verification = Omit<ApplicationVerificationView, 'contactName'>
-
-const getStatusMetaData = (verification: Verification, t: TFunction): { text: string; color: string } => {
+const getStatusMetaData = (
+  verification: Pick<ApplicationVerificationView, 'rejectedDate' | 'verifiedDate'>,
+  t: TFunction
+): { text: string; color: string } => {
   const unverifiedText = verification.rejectedDate
     ? `${t('rejectedOn')} ${new Date(verification.rejectedDate).toLocaleString('de')}`
     : t('pending')
@@ -41,7 +40,10 @@ const VerificationListItem = ({
   applicationId,
   showResendApprovalEmailButton,
 }: {
-  verification: Verification
+  verification: Pick<
+    ApplicationVerificationView,
+    'verificationId' | 'verifiedDate' | 'rejectedDate' | 'organizationName' | 'contactEmailAddress'
+  >
   applicationId: number
   showResendApprovalEmailButton: boolean
 }): ReactElement => {
@@ -49,7 +51,6 @@ const VerificationListItem = ({
   const appToaster = useAppToaster()
   const projectId = useContext(ProjectConfigContext).projectId
   const [isApprovalRequestSent, setIsApprovalRequestSent] = useState(false)
-
   const status = verificationStatus(verification)
   const { text, color } = getStatusMetaData(verification, t)
 
@@ -100,7 +101,7 @@ const VerificationListItem = ({
           </tr>
         </tbody>
       </table>
-      {showResendApprovalEmailButton && status === VerificationStatus.Pending && (
+      {showResendApprovalEmailButton && (
         <Button
           variant='contained'
           color='default'

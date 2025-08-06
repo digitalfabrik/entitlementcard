@@ -3,9 +3,7 @@ import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import ApplicationStatusHelpButton from './ApplicationStatusBarHelpButton'
-import ApplicationStatusBarItem from './ApplicationStatusBarItem'
-import { ApplicationStatusBarItemType, ApplicationVerificationStatus, GetApplicationsType } from './types'
-import { applicationEffectiveStatus } from './utils'
+import type { Application, ApplicationStatusBarItemType } from './types'
 
 const Container = styled.div`
   display: flex;
@@ -36,40 +34,68 @@ const Title = styled.span`
   font-weight: bold;
 `
 
-const applicationsWithStatusCount = (
-  applications: GetApplicationsType[],
-  status?: ApplicationVerificationStatus
-): number =>
-  status === undefined
-    ? applications.length
-    : applications.reduce((count, a) => count + (applicationEffectiveStatus(a) === status ? 1 : 0), 0)
+const ItemContainer = styled.button<{ $active: boolean }>`
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  padding: 12px;
+  text-transform: uppercase;
+  border: none;
+  background-color: transparent;
+  font-weight: bold;
+  cursor: pointer;
 
-type ApplicationStatusBarProps = {
-  applications: GetApplicationsType[]
-  barItems: ApplicationStatusBarItemType[]
-  activeBarItem: ApplicationStatusBarItemType
-  setActiveBarItem: (item: ApplicationStatusBarItemType) => void
+  :hover {
+    background: #8f99a826;
+  }
+
+  ${props => (props.$active ? 'background:#8f99a84d' : '')};
+`
+
+const ApplicationStatusBarItem = ({
+  item,
+  active,
+  count,
+  onSetActiveBarItem,
+}: {
+  item: ApplicationStatusBarItemType
+  active: boolean
+  count: number
+  onSetActiveBarItem: (item: ApplicationStatusBarItemType) => void
+}): ReactElement => {
+  const { t } = useTranslation('applicationsOverview')
+
+  return (
+    <ItemContainer onClick={() => onSetActiveBarItem(item)} id={item.barItemI18nKey} $active={active}>
+      {t(item.barItemI18nKey)}(<span data-testid={`status-${t(item.barItemI18nKey)}-count`}>{count}</span>)
+    </ItemContainer>
+  )
 }
 
 const ApplicationStatusBar = ({
   applications,
   activeBarItem,
   barItems,
-  setActiveBarItem,
-}: ApplicationStatusBarProps): ReactElement => {
+  onSetActiveBarItem,
+}: {
+  applications: Application[]
+  barItems: ApplicationStatusBarItemType[]
+  activeBarItem: ApplicationStatusBarItemType
+  onSetActiveBarItem: (item: ApplicationStatusBarItemType) => void
+}): ReactElement => {
   const { t } = useTranslation('applicationsOverview')
   return (
     <Container>
       <Title>{t('status')}</Title>
       <ApplicationStatusHelpButton />
       <BarItemContainer>
-        {barItems.map(item => (
+        {Object.values(barItems).map(item => (
           <ApplicationStatusBarItem
-            key={item.title}
-            count={applicationsWithStatusCount(applications, item.status)}
+            key={item.barItemI18nKey}
+            count={applications.reduce((count, application) => count + (item.filter(application) ? 1 : 0), 0)}
             item={item}
-            setActiveBarItem={setActiveBarItem}
             active={item === activeBarItem}
+            onSetActiveBarItem={onSetActiveBarItem}
           />
         ))}
       </BarItemContainer>

@@ -1,16 +1,22 @@
 import React from 'react'
 
-import { renderWithTranslation } from '../../../testing/render'
-import ApplicationStatusBar from '../ApplicationStatusBar'
-import { barItems } from '../ApplicationsOverview'
-import { GetApplicationsType } from '../types'
+import { ApplicationStatus } from '../../generated/graphql'
+import { renderWithTranslation } from '../../testing/render'
+import ApplicationStatusBar from './ApplicationStatusBar'
+import { barItems } from './ApplicationsOverview'
+import type { Application } from './types'
 
-const applications: GetApplicationsType[] = [
+const applications: Application[] = [
   {
     createdDate: '2024-05-15T09:20:23.350015Z',
     id: 1,
-    jsonValue: '',
+    jsonValue: {
+      name: 'application',
+      type: 'Array',
+      value: [],
+    },
     note: 'neu',
+    status: ApplicationStatus.Pending,
     verifications: [
       {
         verificationId: 1,
@@ -20,13 +26,17 @@ const applications: GetApplicationsType[] = [
         verifiedDate: '2024-05-15T13:54:11.010430Z',
       },
     ],
-    withdrawalDate: null,
   },
   {
     createdDate: '2024-05-15T09:20:23.350015Z',
     id: 2,
-    jsonValue: '',
+    jsonValue: {
+      name: 'application',
+      type: 'Array',
+      value: [],
+    },
     note: 'neu',
+    status: ApplicationStatus.Pending,
     verifications: [
       {
         verificationId: 2,
@@ -36,13 +46,17 @@ const applications: GetApplicationsType[] = [
         verifiedDate: '2024-05-15T13:54:11.010430Z',
       },
     ],
-    withdrawalDate: null,
   },
   {
     createdDate: '2024-05-15T09:20:23.350015Z',
     id: 3,
-    jsonValue: '',
+    jsonValue: {
+      name: 'application',
+      type: 'Array',
+      value: [],
+    },
     note: 'test',
+    status: ApplicationStatus.Pending,
     verifications: [
       {
         verificationId: 3,
@@ -52,13 +66,18 @@ const applications: GetApplicationsType[] = [
         verifiedDate: null,
       },
     ],
-    withdrawalDate: null,
   },
   {
     createdDate: '2024-05-15T09:20:23.350015Z',
     id: 4,
-    jsonValue: '',
+    jsonValue: {
+      name: 'application',
+      type: 'Array',
+      value: [],
+    },
     note: 'test',
+    status: ApplicationStatus.Withdrawn,
+    statusResolvedDate: '2024-05-15T09:20:23.350015Z',
     verifications: [
       {
         verificationId: 4,
@@ -68,7 +87,6 @@ const applications: GetApplicationsType[] = [
         verifiedDate: null,
       },
     ],
-    withdrawalDate: '2024-05-15T09:20:23.350015Z',
   },
 ]
 
@@ -84,9 +102,9 @@ describe('ApplicationStatusBar', () => {
     const { getByTestId } = renderWithTranslation(
       <ApplicationStatusBar
         applications={applications}
-        setActiveBarItem={setActiveBarItem}
-        barItems={barItems}
-        activeBarItem={barItems[0]}
+        onSetActiveBarItem={setActiveBarItem}
+        barItems={Object.values(barItems)}
+        activeBarItem={barItems.all}
       />
     )
     const allApplicationsCount = getByTestId('status-Alle Anträge-count')
@@ -96,9 +114,9 @@ describe('ApplicationStatusBar', () => {
     const { getByTestId } = renderWithTranslation(
       <ApplicationStatusBar
         applications={applications}
-        setActiveBarItem={setActiveBarItem}
-        barItems={barItems}
-        activeBarItem={barItems[0]}
+        onSetActiveBarItem={setActiveBarItem}
+        barItems={Object.values(barItems)}
+        activeBarItem={barItems.open}
       />
     )
     const openApplicationsCount = getByTestId('status-Offen-count')
@@ -108,9 +126,9 @@ describe('ApplicationStatusBar', () => {
     const { getByTestId } = renderWithTranslation(
       <ApplicationStatusBar
         applications={applications}
-        setActiveBarItem={setActiveBarItem}
-        barItems={barItems}
-        activeBarItem={barItems[0]}
+        onSetActiveBarItem={setActiveBarItem}
+        barItems={Object.values(barItems)}
+        activeBarItem={barItems.withdrawn}
       />
     )
     const withdrawnApplicationsCount = getByTestId('status-Zurückgezogen-count')
@@ -120,9 +138,9 @@ describe('ApplicationStatusBar', () => {
     const { getByTestId } = renderWithTranslation(
       <ApplicationStatusBar
         applications={applications}
-        setActiveBarItem={setActiveBarItem}
-        barItems={barItems}
-        activeBarItem={barItems[0]}
+        onSetActiveBarItem={setActiveBarItem}
+        barItems={Object.values(barItems)}
+        activeBarItem={barItems.rejected}
       />
     )
     const rejectedApplicationsCount = getByTestId('status-Abgelehnt-count')
@@ -132,9 +150,9 @@ describe('ApplicationStatusBar', () => {
     const { getByTestId } = renderWithTranslation(
       <ApplicationStatusBar
         applications={applications}
-        setActiveBarItem={setActiveBarItem}
-        barItems={barItems}
-        activeBarItem={barItems[0]}
+        onSetActiveBarItem={setActiveBarItem}
+        barItems={Object.values(barItems)}
+        activeBarItem={barItems.accepted}
       />
     )
     const acceptedApplicationsCount = getByTestId('status-Akzeptiert-count')

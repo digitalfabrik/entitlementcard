@@ -14,9 +14,8 @@ import {
 } from '../../../util/applicationDataHelper'
 import downloadDataUri from '../../../util/downloadDataUri'
 import formatDateWithTimezone from '../../../util/formatDate'
-import type { JsonField } from '../JsonFieldView'
 import { CSV_MIME_TYPE_UTF8 } from '../constants'
-import { GetApplicationsType } from '../types'
+import type { Application } from '../types'
 
 export type CSVApplicationData = PersonalApplicationData &
   AddressApplicationData &
@@ -30,17 +29,15 @@ export class ApplicationToCsvError extends Error {
   }
 }
 
-export const exportApplicationToCsv = (application: GetApplicationsType, config: ProjectConfig): void => {
+export const exportApplicationToCsv = (application: Application, config: ProjectConfig): void => {
   try {
     if (!config.applicationFeature?.csvExport) {
       throw new ApplicationToCsvError('This project does not support application CSV export.')
     }
-    const json: JsonField<'Array'> = JSON.parse(application.jsonValue)
-
     const csvData: CSVApplicationData = {
-      ...getPersonalApplicationData(json),
-      ...getAddressApplicationData(json),
-      ...getCardTypeApplicationData(json),
+      ...getPersonalApplicationData(application.jsonValue),
+      ...getAddressApplicationData(application.jsonValue),
+      ...getCardTypeApplicationData(application.jsonValue),
       ...{ creationDate: formatDateWithTimezone(application.createdDate, config.timezone) },
     }
 
