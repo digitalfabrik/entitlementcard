@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useGetNotificationSettingsQuery, useUpdateNotificationSettingsMutation } from '../../generated/graphql'
+import getQueryResult from '../../mui-modules/util/getQueryResult'
 import { useAppToaster } from '../AppToaster'
-import getQueryResult from '../util/getQueryResult'
 import SettingsCard from './SettingsCard'
 
 const NotificationSettings = (): ReactElement => {

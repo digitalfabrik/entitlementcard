@@ -7,7 +7,9 @@ enum class ActivationState {
     success,
     did_not_overwrite_existing,
     revoked,
-    failed,
+    not_found,
+    wrong_secret,
+    expired,
 }
 
 data class CardActivationResultModel(

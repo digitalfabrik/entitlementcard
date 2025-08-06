@@ -29,3 +29,5 @@ export const saveActivityLog = (card: Card): void => {
   }
   sessionStorage.setItem(STORAGE_KEY, JSON.stringify([...logEntries, jsonLogEntry]))
 }
+
+export const clearActivityLog = (): void => sessionStorage.removeItem(STORAGE_KEY)

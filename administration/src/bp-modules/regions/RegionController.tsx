@@ -1,10 +1,10 @@
-import { NonIdealState } from '@blueprintjs/core'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import { useWhoAmI } from '../../WhoAmIProvider'
 import { Role } from '../../generated/graphql'
+import RenderGuard from '../../mui-modules/components/RenderGuard'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import DataPrivacyCard from './DataPrivacyCard'
 import RegionSettingsController from './RegionSettingsController'
@@ -20,19 +20,24 @@ const RegionSettingsContainer = styled.div`
 `
 
 const RegionController = (): ReactElement => {
-  const { region, role } = useWhoAmI().me
+  const { region } = useWhoAmI().me
   const { freinetDataTransferEnabled } = useContext(ProjectConfigContext)
   const { t } = useTranslation('errors')
-  if (!region || role !== Role.RegionAdmin) {
-    return <NonIdealState icon='cross' title={t('notAuthorized')} description={t('notAuthorizedForRegionSettings')} />
-  }
+
   return (
-    <RegionSettingsContainer>
-      <DataPrivacyCard />
-      <RegionSettingsController regionId={region.id} />
-      <ApplicationConfirmationNoteController regionId={region.id} />
-      {freinetDataTransferEnabled && <FreinetSettingsController regionId={region.id} />}
-    </RegionSettingsContainer>
+    <RenderGuard
+      allowedRoles={[Role.RegionAdmin]}
+      condition={region !== undefined}
+      error={{ description: t('notAuthorizedForRegionSettings') }}>
+      {region && (
+        <RegionSettingsContainer>
+          <DataPrivacyCard />
+          <RegionSettingsController regionId={region.id} />
+          <ApplicationConfirmationNoteController regionId={region.id} />
+          {freinetDataTransferEnabled && <FreinetSettingsController regionId={region.id} />}
+        </RegionSettingsContainer>
+      )}
+    </RenderGuard>
   )
 }
 

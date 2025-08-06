@@ -1,4 +1,3 @@
-import { NonIdealState } from '@blueprintjs/core'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -9,8 +8,9 @@ import {
   useGetCardStatisticsInProjectQuery,
   useGetCardStatisticsInRegionQuery,
 } from '../../generated/graphql'
+import AlertBox from '../../mui-modules/base/AlertBox'
+import getQueryResult from '../../mui-modules/util/getQueryResult'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import getQueryResult from '../util/getQueryResult'
 import StatisticsOverview from './StatisticsOverview'
 import { defaultEndDate, defaultStartDate } from './constants'
 
@@ -66,6 +66,6 @@ const StatisticsController = (): ReactElement => {
   if (role === Role.ProjectAdmin && cardStatistics.enabled) {
     return <ViewProjectStatistics />
   }
-  return <NonIdealState icon='cross' title={t('notAuthorized')} description={t('notAuthorizedToSeeStatistics')} />
+  return <AlertBox severity='error' description={t('notAuthorizedToSeeStatistics')} title={t('notAuthorized')} />
 }
 export default StatisticsController
