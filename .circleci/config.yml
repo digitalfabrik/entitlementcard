@@ -1266,7 +1266,6 @@ workflows:
         jobs:
             - promote_android:
                 context:
-                    - mattermost
                     - tuerantuer-google-play
                 matrix:
                     parameters:
@@ -1276,7 +1275,6 @@ workflows:
                             - koblenz
             - promote_ios:
                 context:
-                    - mattermost
                     - tuerantuer-apple
                 matrix:
                     parameters:
@@ -1305,7 +1303,6 @@ workflows:
         jobs:
             - promote_android:
                 context:
-                    - mattermost
                     - tuerantuer-google-play
                 matrix:
                     parameters:
@@ -1315,7 +1312,6 @@ workflows:
                             - koblenz
             - promote_ios:
                 context:
-                    - mattermost
                     - tuerantuer-apple
                 matrix:
                     parameters:

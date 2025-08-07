@@ -5,14 +5,12 @@ jobs:
         parameters:
           build_config: [bayern, nuernberg, koblenz]
       context:
-        - mattermost
         - tuerantuer-google-play
   - promote_ios:
       matrix:
         parameters:
           build_config: [bayern, nuernberg, koblenz]
       context:
-        - mattermost
         - tuerantuer-apple
   - promote_server:
       context:
