@@ -86,7 +86,7 @@ internal class FreinetApplicationMutationServiceTest : GraphqlApiTest() {
                 agency.dataTransferActivated = false
             }
 
-            val applicationId = createTestApplicationWithCorrectStructure()
+            val applicationId = createTestApplicationForFreinet()
             val mutation = createMutation(applicationId, projectId)
             val response = post(client, mutation, regionAdminFreinet.getJwtToken())
             assertEquals(200, response.code)
@@ -103,7 +103,7 @@ internal class FreinetApplicationMutationServiceTest : GraphqlApiTest() {
                 agency.dataTransferActivated = true
             }
 
-            val applicationId = createTestApplicationWithCorrectStructure()
+            val applicationId = createTestApplicationForFreinet()
             val mutation = createMutation(applicationId, projectId)
             val response = post(client, mutation, regionAdminFreinet.getJwtToken())
             assertEquals(200, response.code)
@@ -139,7 +139,7 @@ internal class FreinetApplicationMutationServiceTest : GraphqlApiTest() {
                     )
                 }
 
-            val applicationId = createTestApplicationWithCorrectStructure()
+            val applicationId = createTestApplicationForFreinet()
             val mutation = createMutation(applicationId, projectId)
             val response = post(client, mutation, regionAdminFreinet.getJwtToken())
             assertEquals(200, response.code)
@@ -176,7 +176,7 @@ internal class FreinetApplicationMutationServiceTest : GraphqlApiTest() {
                     )
                 }
 
-            val applicationId = createTestApplicationWithCorrectStructure()
+            val applicationId = createTestApplicationForFreinet()
             val mutation = createMutation(applicationId, projectId)
             val response = post(client, mutation, regionAdminFreinet.getJwtToken())
             assertEquals(200, response.code)
@@ -200,7 +200,7 @@ internal class FreinetApplicationMutationServiceTest : GraphqlApiTest() {
             }[Applications.id].value
         }
 
-    private fun createTestApplicationWithCorrectStructure(regionId: Int = 9): Int =
+    private fun createTestApplicationForFreinet(regionId: Int = 9): Int =
         transaction {
             val applicationJsonField = createTestApplicationJsonField()
             val applicationJson = objectMapper.writeValueAsString(applicationJsonField)
