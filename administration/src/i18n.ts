@@ -18,6 +18,7 @@ export const loadTranslations = (): Translations => ({
     applicationForms: deTranslations.applicationForms,
     applicationVerification: deTranslations.applicationVerification,
     applicationApplicant: deTranslations.applicationApplicant,
+    applicationStatusNote: deTranslations.applicationStatusNote,
     auth: deTranslations.auth,
     cards: deTranslations.cards,
     extensions: deTranslations.extensions,

@@ -215,9 +215,6 @@
     "applicationReject": "Antrag ablehnen",
     "applicationApprovedToastMessage": "Der Antrag wurde genehmigt.",
     "applicationRejectedToastMessage": "Der Antrag wurde abgelehnt.",
-    "applicationResolveNoticeApproved": "Dieser Antrag wurde am {{date}} um {{time}} <resolution>genehmigt</resolution>.",
-    "applicationResolveNoticeRejected": "Dieser Antrag wurde am {{date}} um {{time}} <resolution>abgelehnt</resolution> (Begründung: {{reason}}).",
-    "applicationResolveNoticeWithdrawn": "Dieser Antrag wurde am {{date}} um {{time}} <resolution>zurückgezogen</resolution>.",
     "incompleteApplicationDataTooltip": "Aus den Antragsdaten kann keine Karte erzeugt werden.",
     "rejectionDialogTitle": "Antrag ablehnen",
     "rejectionDialogMessage": "Bitte wählen Sie einen Ablehnungsgrund. Der/die Antragsteller/in wird über diesen anschließend via E-Mail informiert.",
@@ -649,7 +646,17 @@
     "withdrawApplication": "Antrag zurückziehen",
     "withdrawConfirmationTitle": "Antrag zurückziehen?",
     "withdrawConfirmationContent": "Möchten Sie Ihren Antrag zurückziehen?",
-    "withdrawConfirmation": "Ihr Antrag wurde zurückgezogen."
+    "withdrawConfirmation": "Ihr Antrag wurde zurückgezogen.",
+    "titleStatusApproved": "Antrag genehmigt",
+    "titleStatusRejected": "Antrag abgelehnt"
+  },
+  "applicationStatusNote": {
+    "noticeApprovedAdmin": "Dieser Antrag wurde am {{date}} um {{time}} <resolution>genehmigt</resolution>.",
+    "noticeApprovedPublic": "Ihr Antrag wurde am {{date}} um {{time}} <resolution>genehmigt</resolution>. Sie erhalten alle weiteren Informationen per Mail.",
+    "noticeRejectedAdmin": "Dieser Antrag wurde am {{date}} um {{time}} <resolution>abgelehnt</resolution>{{reason}}.",
+    "noticeRejectedPublic": "Leider wurde Ihr Antrag am {{date}} um {{time}} <resolution>abgelehnt</resolution>. Sie erhalten alle weiteren Informationen per Mail.",
+    "noticeWithdrawn": "Dieser Antrag wurde am {{date}} um {{time}} <resolution>zurückgezogen</resolution>.",
+    "reason": " (Begründung: {{message}})"
   },
   "errorTemplates": {
     "invalidLinkHeadline": "Der von Ihnen geöffnete Link ist ungültig. Mögliche Gründe:",

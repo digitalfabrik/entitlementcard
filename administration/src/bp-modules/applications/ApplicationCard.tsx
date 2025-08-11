@@ -8,7 +8,6 @@ import {
   CreditScore,
   Delete,
   ExpandMore,
-  InfoOutline,
   PrintOutlined,
   Search,
   Warning,
@@ -33,10 +32,8 @@ import {
   Typography,
   useTheme,
 } from '@mui/material'
-import { format } from 'date-fns'
-import { de } from 'date-fns/locale'
 import React, { memo, useContext, useMemo, useState } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 import { CsvIcon } from '../../components/icons/CsvIcon'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
@@ -57,6 +54,7 @@ import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { useAppToaster } from '../AppToaster'
 import { AccordionExpandButton } from '../components/AccordionExpandButton'
 import NoteDialogController from './NoteDialogController'
+import { ApplicationStatusNote } from './components/ApplicationStatusNote'
 import { ApplicationIndicators } from './components/VerificationsIndicator'
 import type { Application } from './types'
 import { ApplicationToCsvError, exportApplicationToCsv } from './utils/exportApplicationToCsv'
@@ -224,64 +222,6 @@ const ButtonsApplicationResolved = (props: {
         {t('deleteApplication')}
       </Button>
     </>
-  )
-}
-
-const statusTranslationKey = (applicationStatus: ApplicationStatus): string | undefined => {
-  switch (applicationStatus) {
-    case ApplicationStatus.Approved:
-    case ApplicationStatus.ApprovedCardCreated:
-      return 'applicationResolveNoticeApproved'
-    case ApplicationStatus.Rejected:
-      return 'applicationResolveNoticeRejected'
-    case ApplicationStatus.Withdrawn:
-      return 'applicationResolveNoticeWithdrawn'
-    case ApplicationStatus.Pending:
-      return undefined
-  }
-}
-
-// Return type should actually be ComponentProps<typeof Typography>['color'] | undefined, but this type is too generic
-const statusColor = (applicationStatus: ApplicationStatus): string | undefined => {
-  switch (applicationStatus) {
-    case ApplicationStatus.Approved:
-    case ApplicationStatus.ApprovedCardCreated:
-      return 'success'
-    case ApplicationStatus.Rejected:
-      return 'error'
-    case ApplicationStatus.Withdrawn:
-      return 'warning'
-    case ApplicationStatus.Pending:
-      return undefined
-  }
-}
-
-const StatusNote = (props: { statusResolvedDate: Date; status: ApplicationStatus; reason: string | undefined }) => {
-  const { t } = useTranslation('applicationsOverview')
-  const translationKey = statusTranslationKey(props.status)
-  const color = statusColor(props.status)
-
-  return (
-    <Stack direction='row' sx={{ padding: 2, alignItems: 'flex-start' }}>
-      <InfoOutline />
-      &ensp;
-      <div>
-        {translationKey !== undefined && color !== undefined && (
-          <Trans
-            t={t}
-            i18nKey={translationKey}
-            values={{
-              date: format(props.statusResolvedDate, 'dd MMMM', { locale: de }),
-              time: format(props.statusResolvedDate, 'HH:mm', { locale: de }),
-              reason: props.reason,
-            }}
-            components={{
-              resolution: <Typography component='span' sx={{ fontWeight: 'bold' }} color={color} />,
-            }}
-          />
-        )}
-      </div>
-    </Stack>
   )
 }
 
@@ -465,11 +405,14 @@ const ApplicationCard = ({
         <Divider />
 
         {application.statusResolvedDate != null && (
-          <StatusNote
-            statusResolvedDate={new Date(application.statusResolvedDate)}
-            status={application.status}
-            reason={application.rejectionMessage ?? undefined}
-          />
+          <Box sx={{ p: 2 }}>
+            <ApplicationStatusNote
+              statusResolvedDate={new Date(application.statusResolvedDate)}
+              status={application.status}
+              reason={application.rejectionMessage ?? undefined}
+              adminView
+            />
+          </Box>
         )}
 
         <Stack sx={{ p: 2, displayPrint: 'none' }} spacing={2} direction='row'>
