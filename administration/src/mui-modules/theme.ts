@@ -32,7 +32,9 @@ export const theme = createTheme({
     h4: {
       fontSize: '1.1rem',
       lineHeight: 1.1,
-      fontWeight: 600,
+      fontWeight: 500,
+      marginTop: 10,
+      marginBottom: 6,
     },
     button: {
       fontSize: 14,
