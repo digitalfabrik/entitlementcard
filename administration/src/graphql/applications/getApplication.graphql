@@ -15,3 +15,21 @@ query getApplicationByApplicationVerificationAccessKey($applicationVerificationA
     rejectedDate
   }
 }
+
+query getApplicationById($id: Int!) {
+  application: getApplicationById(id: $id) {
+    id
+    jsonValue
+    createdDate
+    status
+    statusResolvedDate
+    verifications {
+      verificationId
+      contactEmailAddress
+      contactName
+      organizationName
+      verifiedDate
+      rejectedDate
+    }
+  }
+}
