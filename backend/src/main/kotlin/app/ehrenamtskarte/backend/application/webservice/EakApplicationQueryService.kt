@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.application.webservice
 
+import app.ehrenamtskarte.backend.application.database.ApplicationEntity
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationAdminGql
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationPublicGql
@@ -28,6 +29,19 @@ class EakApplicationQueryService {
             }
         }
     }
+
+    @GraphQLDescription("Queries an application by id")
+    fun getApplicationById(id: Int, dfe: DataFetchingEnvironment): ApplicationAdminGql =
+        transaction {
+            val application = ApplicationEntity.findById(id) ?: throw InvalidLinkException()
+            val admin = dfe.graphQlContext.context.getAdministrator()
+
+            if (!Authorizer.mayViewApplicationsInRegion(admin, application.regionId.value)) {
+                throw ForbiddenException()
+            }
+
+            ApplicationAdminGql.fromDbEntity(application)
+        }
 
     @GraphQLDescription("Queries an application by application accessKey")
     fun getApplicationByApplicant(accessKey: String): ApplicationPublicGql =

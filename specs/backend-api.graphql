@@ -235,6 +235,8 @@ type Query {
   getApplicationByApplicant(accessKey: String!): ApplicationPublic!
   "Queries an application by application verification accessKey"
   getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey: String!): ApplicationPublic!
+  "Queries an application by id"
+  getApplicationById(id: Int!): ApplicationAdmin!
   "Queries an application verification by application verification accessKey"
   getApplicationVerification(applicationVerificationAccessKey: String!): ApplicationVerificationView!
   "Queries all applications for a specific region"
