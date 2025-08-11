@@ -30,6 +30,32 @@ import ApplicationApplicantController from './mui-modules/application-verificati
 import ApplicationVerificationController from './mui-modules/application-verification/ApplicationVerificationController'
 import ApplyController from './mui-modules/application/ApplyController'
 import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
+import type { ProjectConfig } from './project-configs/getProjectConfig'
+import type { JsonField } from './shared/components/JsonFieldView'
+
+/** Creates a route string in a type-safe way. */
+export const createRoute = (
+  projectConfig: ProjectConfig,
+  route:
+    | { page: 'applications/:id/print'; applicationId: number }
+    /** Throws, if the application data cannot be mapped to a query. */
+    | { page: 'cards/addquery'; application: { id: number; jsonValue: JsonField<'Array'> } }
+): string => {
+  switch (route.page) {
+    case 'applications/:id/print':
+      return `/applications/${route.applicationId}/print`
+    case 'cards/addquery': {
+      const query = projectConfig.applicationFeature?.applicationJsonToCardQuery(route.application.jsonValue)
+
+      if (typeof query === 'string') {
+        return `./cards/add${query}&applicationIdToMarkAsProcessed=${route.application.id}`
+      }
+      throw new Error('Application data cannot be mapped to a query')
+    }
+    default:
+      throw new Error('Unknown route')
+  }
+}
 
 const AuthLayout = (): ReactElement => {
   const { data: authData, signIn, signOut } = useContext(AuthContext)
