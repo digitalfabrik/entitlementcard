@@ -6,6 +6,7 @@ import KeepAliveToken from './KeepAliveToken'
 import WhoAmIProvider from './WhoAmIProvider'
 import Navigation from './bp-modules/NavigationBar'
 import ActivityLogController from './bp-modules/activity-log/ActivityLogController'
+import { ApplicationPrintController } from './bp-modules/applications/ApplicationPrintController'
 import ApplicationsController from './bp-modules/applications/ApplicationsController'
 import ForgotPasswordController from './bp-modules/auth/ForgotPasswordController'
 import Login from './bp-modules/auth/Login'
@@ -117,6 +118,7 @@ const Router = (): ReactElement => {
               {projectConfig.applicationFeature && (
                 <>
                   <Route path='applications' element={<ApplicationsController />} />
+                  <Route path='applications/:id/print' element={<ApplicationPrintController id={2} />} />
                   {/* Currently, '/region' only allows setting the data privacy text for the application form */}
                   <Route path='region' element={<RegionsController />} />
                   <Route path='region/data-privacy-policy' element={<DataPrivacyController />} />

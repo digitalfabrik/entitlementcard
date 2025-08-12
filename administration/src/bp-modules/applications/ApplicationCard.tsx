@@ -35,6 +35,7 @@ import {
 } from '@mui/material'
 import React, { memo, useContext, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router'
 
 import { createRoute } from '../../Router'
 import { CsvIcon } from '../../components/icons/CsvIcon'
@@ -233,20 +234,17 @@ const headerTypography: SxProps = {
 
 const ApplicationCard = ({
   application,
-  isSelectedForPrint,
   onDelete,
   onChange,
-  onPrintApplicationById,
 }: {
   application: Application
-  isSelectedForPrint: boolean
   onDelete: () => void
   onChange: (application: Application) => void
-  onPrintApplicationById: (applicationId: number) => void
 }) => {
   const { t } = useTranslation('applicationsOverview')
   const theme = useTheme()
   const config = useContext(ProjectConfigContext)
+  const navigate = useNavigate()
   const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${application.id}`
   const appToaster = useAppToaster()
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
@@ -315,17 +313,20 @@ const ApplicationCard = ({
     },
     {
       name: t('exportPdf'),
-      onClick: () => onPrintApplicationById(application.id),
+      onClick: () => {
+        navigate(
+          createRoute(config, {
+            page: 'applications/:id/print',
+            applicationId: application.id,
+          })
+        )
+      },
       icon: <PrintOutlined sx={{ height: 20 }} />,
     },
   ]
 
   return (
-    <Accordion
-      sx={{ displayPrint: isSelectedForPrint ? 'block' : 'none' }}
-      disableGutters
-      aria-controls='panel-content'
-      onChange={(_, expanded) => setAccordionExpanded(expanded)}>
+    <Accordion disableGutters aria-controls='panel-content' onChange={(_, expanded) => setAccordionExpanded(expanded)}>
       <AccordionSummary
         // Need this to display the `expandIconWrapper` slot, even if this is not directly used.
         expandIcon={<ExpandMore />}
