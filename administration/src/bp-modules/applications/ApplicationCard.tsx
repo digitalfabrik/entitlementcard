@@ -27,6 +27,7 @@ import {
   Divider,
   InputAdornment,
   Stack,
+  SxProps,
   TextField,
   Tooltip,
   Typography,
@@ -232,6 +233,11 @@ const createCardLink = (application: Application, config: ProjectConfig): string
   return query ? `./cards/add${query}&applicationIdToMarkAsProcessed=${application.id}` : undefined
 }
 
+const headerTypography: SxProps = {
+  fontSize: '1.1rem',
+  fontWeight: '500',
+}
+
 const ApplicationCard = ({
   application,
   isSelectedForPrint,
@@ -337,7 +343,7 @@ const ApplicationCard = ({
         }}
         sx={{ flexDirection: 'column', alignItems: 'stretch', padding: 0 }}>
         <Stack direction='row' sx={{ width: '100%', gap: 2, paddingLeft: 2, paddingRight: 2 }}>
-          <Typography variant='h4' sx={{ minWidth: '250px' }}>
+          <Typography sx={{ minWidth: '250px', ...headerTypography }}>
             {t('applicationFrom')} {formatDateWithTimezone(application.createdDate, config.timezone)}
           </Typography>
           <Warning
@@ -345,7 +351,6 @@ const ApplicationCard = ({
             visibility={application.status === ApplicationStatus.Withdrawn ? 'visible' : 'hidden'}
           />
           <Typography
-            variant='h4'
             sx={{
               flexGrow: 1,
               flexShrink: 1,
@@ -354,6 +359,7 @@ const ApplicationCard = ({
               whiteSpace: 'nowrap',
               overflow: 'hidden',
               displayPrint: 'none',
+              ...headerTypography,
             }}>
             {personalData &&
               personalData.forenames !== undefined &&
