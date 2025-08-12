@@ -1,3 +1,4 @@
+import { Stack } from '@mui/material'
 import { SnackbarProvider } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -22,17 +23,27 @@ const ApplicationApplicantController = ({ providedKey }: { providedKey: string }
   const application = parseApplication(applicationQueryHandler.data.application)
 
   if (application.status === ApplicationStatus.Withdrawn) {
-    return <AlertBox severity='info' description={t('alreadyWithdrawn')} />
+    return (
+      <Stack sx={{ flexGrow: 1, alignSelf: 'center', justifyContent: 'center', p: 2 }}>
+        <AlertBox severity='info' description={t('alreadyWithdrawn')} />
+      </Stack>
+    )
   }
   if (isWithdrawn) {
-    return <AlertBox severity='info' description={t('withdrawConfirmation')} />
+    return (
+      <Stack sx={{ flexGrow: 1, alignSelf: 'center', justifyContent: 'center', p: 2 }}>
+        <AlertBox severity='info' description={t('withdrawConfirmation')} />
+      </Stack>
+    )
   }
   return (
-    <ApplicationApplicantView
-      application={application}
-      onWithdraw={() => setIsWithdrawn(true)}
-      providedKey={providedKey}
-    />
+    <Stack sx={{ alignSelf: 'center', justifyContent: 'flex-start' }}>
+      <ApplicationApplicantView
+        application={application}
+        onWithdraw={() => setIsWithdrawn(true)}
+        providedKey={providedKey}
+      />
+    </Stack>
   )
 }
 
