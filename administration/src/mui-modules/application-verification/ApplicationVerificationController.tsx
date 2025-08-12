@@ -1,5 +1,5 @@
 import { Check, Close } from '@mui/icons-material'
-import { Alert, Button, Card, Divider, Typography, styled } from '@mui/material'
+import { Alert, Box, Button, Card, Divider, Typography, styled } from '@mui/material'
 import { SnackbarProvider, useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
@@ -21,8 +21,7 @@ import getQueryResult from '../util/getQueryResult'
 
 const ApplicationViewCard = styled(Card)`
   max-width: 800px;
-  margin: 10px;
-  align-self: center;
+  margin: 16px auto 16px auto;
 `
 
 const StyledAlert = styled(Alert)`
@@ -103,56 +102,61 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
   const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${id}`
 
   return (
-    <ApplicationViewCard elevation={2}>
-      <div style={{ overflow: 'visible', padding: '20px' }}>
-        <Typography sx={{ mb: '12px' }} variant='h4'>
-          {config.name}
-        </Typography>
-        <Typography sx={{ my: '8px' }} variant='body1'>
-          {t('greeting', { contactName: verification.contactName })}
-          <br />
-          <br />
-          <Trans i18nKey='applicationVerification:text' values={{ organizationName: verification.organizationName }} />
-        </Typography>
-        <Divider style={{ margin: '24px 0px' }} />
-        <Typography variant='h6' sx={{ mb: '8px' }}>
-          Antrag vom {formatDateWithTimezone(createdDateString, config.timezone)}
-        </Typography>
-        <JsonFieldView
-          jsonField={application.jsonValue}
-          baseUrl={baseUrl}
-          hierarchyIndex={0}
-          attachmentAccessible={false}
-          expandedRoot
-        />
-        <Divider style={{ margin: '24px 0px' }} />
-        <Typography sx={{ mt: '8px' }} variant='body1'>
-          <Trans
-            i18nKey='applicationVerification:confirmationMessage'
-            values={{ organizationName: verification.organizationName }}
+    <Box sx={{ flexGrow: 1, overflow: 'auto', alignItems: 'safe center' }}>
+      <ApplicationViewCard elevation={2}>
+        <div style={{ overflow: 'visible', padding: '20px' }}>
+          <Typography sx={{ mb: '12px' }} variant='h4'>
+            {config.name}
+          </Typography>
+          <Typography sx={{ my: '8px' }} variant='body1'>
+            {t('greeting', { contactName: verification.contactName })}
+            <br />
+            <br />
+            <Trans
+              i18nKey='applicationVerification:text'
+              values={{ organizationName: verification.organizationName }}
+            />
+          </Typography>
+          <Divider style={{ margin: '24px 0px' }} />
+          <Typography variant='h6' sx={{ mb: '8px' }}>
+            Antrag vom {formatDateWithTimezone(createdDateString, config.timezone)}
+          </Typography>
+          <JsonFieldView
+            jsonField={application.jsonValue}
+            baseUrl={baseUrl}
+            hierarchyIndex={0}
+            attachmentAccessible={false}
+            expandedRoot
           />
-        </Typography>
-        <StyledAlert severity='warning'>
-          <Trans i18nKey='applicationVerification:confirmationNote' />
-        </StyledAlert>
-        <ButtonContainer>
-          <Button
-            variant='contained'
-            color='error'
-            endIcon={<Close />}
-            onClick={() => submitApplicationVerification(false)}>
-            {t('rejectButton')}
-          </Button>
-          <Button
-            variant='contained'
-            color='success'
-            endIcon={<Check />}
-            onClick={() => submitApplicationVerification(true)}>
-            {t('confirmationButton')}
-          </Button>
-        </ButtonContainer>
-      </div>
-    </ApplicationViewCard>
+          <Divider style={{ margin: '24px 0px' }} />
+          <Typography sx={{ mt: '8px' }} variant='body1'>
+            <Trans
+              i18nKey='applicationVerification:confirmationMessage'
+              values={{ organizationName: verification.organizationName }}
+            />
+          </Typography>
+          <StyledAlert severity='warning'>
+            <Trans i18nKey='applicationVerification:confirmationNote' />
+          </StyledAlert>
+          <ButtonContainer>
+            <Button
+              variant='contained'
+              color='error'
+              endIcon={<Close />}
+              onClick={() => submitApplicationVerification(false)}>
+              {t('rejectButton')}
+            </Button>
+            <Button
+              variant='contained'
+              color='success'
+              endIcon={<Check />}
+              onClick={() => submitApplicationVerification(true)}>
+              {t('confirmationButton')}
+            </Button>
+          </ButtonContainer>
+        </div>
+      </ApplicationViewCard>
+    </Box>
   )
 }
 
