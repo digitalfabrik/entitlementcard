@@ -5,6 +5,7 @@ import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { ApplicationStatusNote } from '../../bp-modules/applications/components/ApplicationStatusNote'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import {
   ApplicationStatus,
@@ -77,41 +78,59 @@ const ApplicationApplicantView = ({
   return withdrawalLoading ? (
     <CenteredCircularProgress />
   ) : (
-    <ApplicationViewCard elevation={2}>
-      <ApplicationViewCardContent>
-        <Typography sx={{ mb: '8px' }} variant='h6'>
-          {`${t('headline')} ${formatDateWithTimezone(createdDateString, config.timezone)}`}
-        </Typography>
-        <JsonFieldView
-          jsonField={application.jsonValue}
-          baseUrl={baseUrl}
-          key={0}
-          hierarchyIndex={0}
-          attachmentAccessible={false}
-          expandedRoot={false}
-        />
-        <StyledDivider />
-        <VerificationsView application={application} />
-        {application.status === ApplicationStatus.Pending && (
-          <>
-            <StyledDivider />
-            <Typography sx={{ mt: '8px', mb: '16px' }} variant='body2'>
-              {t('withdrawInformation')}
-            </Typography>
-            <Button variant='contained' startIcon={<Delete />} onClick={() => setDialogOpen(true)}>
-              {t('withdrawApplication')}
-            </Button>
-            <ConfirmDialog
-              open={dialogOpen}
-              onUpdateOpen={setDialogOpen}
-              title={t('withdrawConfirmationTitle')}
-              content={t('withdrawConfirmationContent')}
-              onConfirm={submitWithdrawal}
-            />
-          </>
-        )}
-      </ApplicationViewCardContent>
-    </ApplicationViewCard>
+    <>
+      <ConfirmDialog
+        open={dialogOpen}
+        onUpdateOpen={setDialogOpen}
+        title={t('withdrawConfirmationTitle')}
+        content={t('withdrawConfirmationContent')}
+        onConfirm={submitWithdrawal}
+      />
+
+      <ApplicationViewCard elevation={2}>
+        <ApplicationViewCardContent>
+          <Typography sx={{ mb: '8px' }} variant='h6'>
+            {`${t('headline')} ${formatDateWithTimezone(createdDateString, config.timezone)}`}
+          </Typography>
+          <JsonFieldView
+            jsonField={application.jsonValue}
+            baseUrl={baseUrl}
+            key={0}
+            hierarchyIndex={0}
+            attachmentAccessible={false}
+            expandedRoot={false}
+          />
+          <StyledDivider />
+          <VerificationsView application={application} />
+          {application.status === ApplicationStatus.Pending && (
+            <>
+              <StyledDivider />
+              <Typography sx={{ mt: '8px', mb: '16px' }} variant='body2'>
+                {t('withdrawInformation')}
+              </Typography>
+              <Button variant='contained' startIcon={<Delete />} onClick={() => setDialogOpen(true)}>
+                {t('withdrawApplication')}
+              </Button>
+            </>
+          )}
+          {(application.status === ApplicationStatus.Approved ||
+            application.status === ApplicationStatus.ApprovedCardCreated ||
+            application.status === ApplicationStatus.Rejected) &&
+          !!application.statusResolvedDate ? (
+            <>
+              <StyledDivider />
+              <Typography variant='h4'>
+                {t(application.status === ApplicationStatus.Rejected ? 'titleStatusRejected' : 'titleStatusApproved')}
+              </Typography>
+              <ApplicationStatusNote
+                statusResolvedDate={new Date(application.statusResolvedDate)}
+                status={application.status}
+              />
+            </>
+          ) : undefined}
+        </ApplicationViewCardContent>
+      </ApplicationViewCard>
+    </>
   )
 }
 
