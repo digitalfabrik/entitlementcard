@@ -1,13 +1,12 @@
-import { H5 } from '@blueprintjs/core'
+import { Typography, styled } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
 import { ApplicationPublic, ApplicationStatus, ApplicationVerificationView } from '../../generated/graphql'
 import { VerificationStatus, verificationStatus } from '../verifications'
 import VerificationListItem from './VerificationListItem'
 
-const VerificationContainer = styled.ul`
+const VerificationContainer = styled('ul')`
   list-style-type: none;
   padding-left: 0;
   li:not(:last-child) {
@@ -34,7 +33,7 @@ const VerificationsView = ({
 
   return (
     <>
-      <H5>{t('confirmationsByOrganizations')}</H5>
+      <Typography variant='h4'>{t('confirmationsByOrganizations')}</Typography>
       <VerificationContainer>
         {application.verifications.map(verification => {
           const key = verification.organizationName + verification.contactEmailAddress
