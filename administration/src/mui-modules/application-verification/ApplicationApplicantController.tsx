@@ -1,3 +1,4 @@
+import { Stack } from '@mui/material'
 import { SnackbarProvider } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -44,7 +45,9 @@ const ControllerWithAccessKey = (): ReactElement | null => {
   }
   return (
     <SnackbarProvider>
-      <ApplicationApplicantController providedKey={accessKey} />
+      <Stack>
+        <ApplicationApplicantController providedKey={accessKey} />
+      </Stack>
     </SnackbarProvider>
   )
 }
