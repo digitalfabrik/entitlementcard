@@ -1,4 +1,4 @@
-import { Box, Stack } from '@mui/material'
+import { Stack } from '@mui/material'
 import { SnackbarProvider } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
