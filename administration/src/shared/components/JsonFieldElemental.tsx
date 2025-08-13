@@ -1,15 +1,14 @@
 import { Colors, Icon, Tag } from '@blueprintjs/core'
+import { styled } from '@mui/material'
 import React, { memo, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
 import { AuthContext } from '../../AuthProvider'
+import { useAppToaster } from '../../bp-modules/AppToaster'
+import EmailLink from '../../bp-modules/EmailLink'
 import downloadDataUri from '../../util/downloadDataUri'
-import { useAppToaster } from '../AppToaster'
-import EmailLink from '../EmailLink'
+import { isEmailValid } from '../verifications'
 import type { GeneralJsonField, JsonField, JsonFieldViewProps } from './JsonFieldView'
-import { printAwareCss } from './constants'
-import { isEmailValid } from './utils/verificationHelper'
 
 const extensionByContentType = new Map([
   ['application/pdf', 'pdf'],
@@ -18,10 +17,12 @@ const extensionByContentType = new Map([
 ])
 
 const PrintAwareTag = styled(Tag)`
-  ${printAwareCss};
+  @media print {
+    display: none;
+  }
 `
 
-const PrintOnlySpan = styled.span`
+const PrintOnlySpan = styled('span')`
   visibility: hidden;
   @media print {
     visibility: visible;
@@ -37,8 +38,8 @@ const JsonFieldAttachment = memo(
     const appToaster = useAppToaster()
     const token = useContext(AuthContext).data?.token
     const { t } = useTranslation('application')
-
     const attachment = jsonField.value
+
     if (attachmentAccessible) {
       const downloadUrl = `${baseUrl}/file/${attachment.fileIndex}`
       const onClick = async () => {

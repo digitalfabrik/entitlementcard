@@ -5,12 +5,17 @@ import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import JsonFieldView, { GeneralJsonField } from '../../bp-modules/applications/JsonFieldView'
-import VerificationsView from '../../bp-modules/applications/VerificationsView'
-import { GetApplicationsType } from '../../bp-modules/applications/types'
+import { ApplicationStatusNote } from '../../bp-modules/applications/components/ApplicationStatusNote'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
-import { useWithdrawApplicationMutation } from '../../generated/graphql'
+import {
+  ApplicationStatus,
+  GetApplicationByApplicantQuery,
+  useWithdrawApplicationMutation,
+} from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { ApplicationParsedJsonValue } from '../../shared/application'
+import JsonFieldView from '../../shared/components/JsonFieldView'
+import VerificationsView from '../../shared/components/VerificationsView'
 import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import ConfirmDialog from '../application/ConfirmDialog'
@@ -33,25 +38,21 @@ const StyledDivider = styled(Divider)`
   margin: 24px 0;
 `
 
-type ApplicationApplicantViewProps = {
-  application: GetApplicationsType
-  providedKey: string
-  gotWithdrawn: () => void
-}
-
 const ApplicationApplicantView = ({
   application,
   providedKey,
-  gotWithdrawn,
-}: ApplicationApplicantViewProps): ReactElement => {
+  onWithdraw,
+}: {
+  application: ApplicationParsedJsonValue<GetApplicationByApplicantQuery['application']>
+  providedKey: string
+  onWithdraw: () => void
+}): ReactElement => {
   const { t } = useTranslation('applicationApplicant')
   const [dialogOpen, setDialogOpen] = useState<boolean>(false)
-  const { createdDate: createdDateString, jsonValue, id } = application
-  const jsonField: GeneralJsonField = JSON.parse(jsonValue)
+  const { createdDate: createdDateString, id } = application
   const config = useContext(ProjectConfigContext)
   const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${id}`
   const { enqueueSnackbar } = useSnackbar()
-
   const [withdrawApplication, { loading: withdrawalLoading }] = useWithdrawApplicationMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
@@ -59,14 +60,13 @@ const ApplicationApplicantView = ({
     },
     onCompleted: ({ isWithdrawn }: { isWithdrawn: boolean }) => {
       if (isWithdrawn) {
-        gotWithdrawn()
+        onWithdraw()
       } else {
         console.error('Withdraw operation returned false.')
         enqueueSnackbar(t('alreadyWithdrawn'), { variant: 'error' })
       }
     },
   })
-
   const submitWithdrawal = () => {
     withdrawApplication({
       variables: {
@@ -75,46 +75,62 @@ const ApplicationApplicantView = ({
     })
   }
 
-  if (withdrawalLoading) {
-    return <CenteredCircularProgress />
-  }
+  return withdrawalLoading ? (
+    <CenteredCircularProgress />
+  ) : (
+    <>
+      <ConfirmDialog
+        open={dialogOpen}
+        onUpdateOpen={setDialogOpen}
+        title={t('withdrawConfirmationTitle')}
+        content={t('withdrawConfirmationContent')}
+        onConfirm={submitWithdrawal}
+      />
 
-  return (
-    <ApplicationViewCard elevation={2}>
-      <ApplicationViewCardContent>
-        <Typography sx={{ mb: '8px' }} variant='h6'>
-          {`${t('headline')} ${formatDateWithTimezone(createdDateString, config.timezone)}`}
-        </Typography>
-        <JsonFieldView
-          jsonField={jsonField}
-          baseUrl={baseUrl}
-          key={0}
-          hierarchyIndex={0}
-          attachmentAccessible={false}
-          expandedRoot={false}
-        />
-        <StyledDivider />
-        <VerificationsView application={application} showResendApprovalEmailButton={false} />
-        {!application.withdrawalDate && (
-          <>
-            <StyledDivider />
-            <Typography sx={{ mt: '8px', mb: '16px' }} variant='body2'>
-              {t('withdrawInformation')}
-            </Typography>
-            <Button variant='contained' endIcon={<Delete />} onClick={() => setDialogOpen(true)}>
-              {t('withdrawApplication')}
-            </Button>
-            <ConfirmDialog
-              open={dialogOpen}
-              onUpdateOpen={setDialogOpen}
-              title={t('withdrawConfirmationTitle')}
-              content={t('withdrawConfirmationContent')}
-              onConfirm={submitWithdrawal}
-            />
-          </>
-        )}
-      </ApplicationViewCardContent>
-    </ApplicationViewCard>
+      <ApplicationViewCard elevation={2}>
+        <ApplicationViewCardContent>
+          <Typography sx={{ mb: '8px' }} variant='h6'>
+            {`${t('headline')} ${formatDateWithTimezone(createdDateString, config.timezone)}`}
+          </Typography>
+          <JsonFieldView
+            jsonField={application.jsonValue}
+            baseUrl={baseUrl}
+            key={0}
+            hierarchyIndex={0}
+            attachmentAccessible={false}
+            expandedRoot={false}
+          />
+          <StyledDivider />
+          <VerificationsView application={application} />
+          {application.status === ApplicationStatus.Pending && (
+            <>
+              <StyledDivider />
+              <Typography sx={{ mt: '8px', mb: '16px' }} variant='body2'>
+                {t('withdrawInformation')}
+              </Typography>
+              <Button variant='contained' startIcon={<Delete />} onClick={() => setDialogOpen(true)}>
+                {t('withdrawApplication')}
+              </Button>
+            </>
+          )}
+          {(application.status === ApplicationStatus.Approved ||
+            application.status === ApplicationStatus.ApprovedCardCreated ||
+            application.status === ApplicationStatus.Rejected) &&
+          !!application.statusResolvedDate ? (
+            <>
+              <StyledDivider />
+              <Typography variant='h4'>
+                {t(application.status === ApplicationStatus.Rejected ? 'titleStatusRejected' : 'titleStatusApproved')}
+              </Typography>
+              <ApplicationStatusNote
+                statusResolvedDate={new Date(application.statusResolvedDate)}
+                status={application.status}
+              />
+            </>
+          ) : undefined}
+        </ApplicationViewCardContent>
+      </ApplicationViewCard>
+    </>
   )
 }
 
