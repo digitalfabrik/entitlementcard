@@ -11,6 +11,16 @@ import usePrintApplication from './hooks/usePrintApplication'
 import { getPreVerifiedEntitlementType } from './preVerifiedEntitlements'
 import type { Application, ApplicationStatusBarItemType } from './types'
 
+const isStatusMatch = (application: Application, statuses: ApplicationStatus[]): boolean =>
+  statuses.includes(application.status)
+
+const isStatusPending = (application: Application): boolean => application.status === ApplicationStatus.Pending
+
+/**
+ * 1. The application status will be considered to categorize the application.
+ * 2. If the application status is pending, because it was not processed yet, other criteria will apply.
+ * */
+
 export const barItems: { [key in string]: ApplicationStatusBarItemType } = {
   all: {
     barItemI18nKey: 'statusBarAll',
@@ -21,24 +31,26 @@ export const barItems: { [key in string]: ApplicationStatusBarItemType } = {
     barItemI18nKey: 'statusBarAccepted',
     applicationAdjectiveI18nKey: 'applicationAdjectiveAccepted',
     filter: (application: Application): boolean =>
-      application.status !== ApplicationStatus.Withdrawn &&
-      ((application.verifications.length > 0 &&
-        application.verifications.every(verification => verification.verifiedDate !== null)) ||
-        getPreVerifiedEntitlementType(application.jsonValue) !== undefined),
+      isStatusMatch(application, [ApplicationStatus.Approved, ApplicationStatus.ApprovedCardCreated]) ||
+      (isStatusPending(application) &&
+        ((application.verifications.length > 0 &&
+          application.verifications.every(verification => verification.verifiedDate !== null)) ||
+          getPreVerifiedEntitlementType(application.jsonValue) !== undefined)),
   },
   rejected: {
     barItemI18nKey: 'statusBarRejected',
     applicationAdjectiveI18nKey: 'applicationAdjectiveRejected',
     filter: (application: Application): boolean =>
-      application.status !== ApplicationStatus.Withdrawn &&
-      application.verifications.length > 0 &&
-      application.verifications.every(verification => verification.rejectedDate !== null) &&
-      getPreVerifiedEntitlementType(application.jsonValue) === undefined,
+      isStatusMatch(application, [ApplicationStatus.Rejected]) ||
+      (isStatusPending(application) &&
+        application.verifications.length > 0 &&
+        application.verifications.every(verification => verification.rejectedDate !== null) &&
+        getPreVerifiedEntitlementType(application.jsonValue) === undefined),
   },
   withdrawn: {
     barItemI18nKey: 'statusBarWithdrawn',
     applicationAdjectiveI18nKey: 'applicationAdjectiveWithdrawn',
-    filter: (application: Application): boolean => application.status === ApplicationStatus.Withdrawn,
+    filter: (application: Application): boolean => isStatusMatch(application, [ApplicationStatus.Withdrawn]),
   },
   open: {
     barItemI18nKey: 'statusBarOpen',
