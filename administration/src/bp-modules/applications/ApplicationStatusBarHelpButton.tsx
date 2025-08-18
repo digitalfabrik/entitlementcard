@@ -1,6 +1,6 @@
 import { Button, H4, Popover } from '@blueprintjs/core'
 import React, { ReactElement } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 const HelpButton = styled(Button)`
@@ -28,23 +28,23 @@ const ApplicationStatusHelpButton = (): ReactElement => {
           <Headline>{t('whichStatusMeansWhat')}</Headline>
           <Description>
             <li>
-              <b>{t('accepted')}:</b>
+              <b>{t('statusBarAccepted')}:</b>
               <Description>
-                {t('acceptedDescription')}
+                <Trans i18nKey='applicationsOverview:acceptedDescription' />
                 <br />
                 {t('cardCouldBeCreated')}
               </Description>
             </li>
             <li>
-              <b>{t('rejected')}:</b>
+              <b>{t('statusBarRejected')}:</b>
               <Description>
-                {t('rejectedDescription')}
+                <Trans i18nKey='applicationsOverview:rejectedDescription' />
                 <br />
                 {t('applicationCouldBeDeleted')}
               </Description>
             </li>
             <li>
-              <b>{t('withdrawn')}:</b>
+              <b>{t('statusBarWithdrawn')}:</b>
               <Description>
                 {t('withdrawnDescription')}
                 <br />
@@ -52,7 +52,7 @@ const ApplicationStatusHelpButton = (): ReactElement => {
               </Description>
             </li>
             <li>
-              <b>{t('open')}:</b>
+              <b>{t('statusBarOpen')}:</b>
               <Description>
                 {t('pendingDescription')}
                 <br />
@@ -62,7 +62,7 @@ const ApplicationStatusHelpButton = (): ReactElement => {
           </Description>
         </PopoverContent>
       }>
-      <HelpButton icon='help' minimal />
+      <HelpButton icon='help' variant='minimal' />
     </Popover>
   )
 }
