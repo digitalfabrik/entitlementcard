@@ -1,36 +1,15 @@
-import { AnimatePresence, motion } from 'motion/react'
+import { AddCard } from '@mui/icons-material'
+import { Button, Stack } from '@mui/material'
 import type { MotionNodeAnimationOptions } from 'motion/react'
+import { AnimatePresence, motion } from 'motion/react'
 import React, { ReactElement, useCallback, useContext, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
-import styled from 'styled-components'
 
 import { Card, initializeCard } from '../../cards/Card'
 import { Region } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import AddCardForm from './AddCardForm'
-import CardFormButton from './CardFormButton'
-
-const FormsWrapper = styled.div`
-  flex-wrap: wrap;
-  flex-direction: row;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
-
-const Scrollable = styled.div`
-  display: flex;
-  flex-grow: 1;
-  overflow: auto;
-  justify-content: center;
-`
-
-const FormColumn = styled.div`
-  width: 400px;
-  margin: 10px;
-  box-sizing: border-box;
-`
 
 const animationProperties: MotionNodeAnimationOptions = {
   initial: { opacity: 0, scale: 0 },
@@ -39,21 +18,19 @@ const animationProperties: MotionNodeAnimationOptions = {
   transition: { duration: 0.3 },
 }
 
-type CreateCardsFormProps = {
-  region: Region
-  cards: Card[]
-  setCards: (cards: Card[]) => void
-  showAddMoreCardsButton: boolean
-  updateCard: (updatedCard: Partial<Card>, index: number) => void
-}
-
 const AddCardsForm = ({
   region,
   cards,
   setCards,
   showAddMoreCardsButton,
   updateCard,
-}: CreateCardsFormProps): ReactElement => {
+}: {
+  region: Region
+  cards: Card[]
+  setCards: (cards: Card[]) => void
+  showAddMoreCardsButton: boolean
+  updateCard: (updatedCard: Partial<Card>, index: number) => void
+}): ReactElement => {
   const projectConfig = useContext(ProjectConfigContext)
   const { t } = useTranslation('cards')
   const bottomRef = useRef<HTMLDivElement>(null)
@@ -65,7 +42,7 @@ const AddCardsForm = ({
     }
   }
 
-  const addForm = useCallback(() => {
+  const addCard = useCallback(() => {
     const card = initializeCard(projectConfig.card, region)
     setCards([...cards, card])
     setTimeout(scrollToBottom, 200)
@@ -77,29 +54,43 @@ const AddCardsForm = ({
   }
 
   return (
-    <Scrollable>
-      <FormsWrapper>
+    <Stack sx={{ flexGrow: 1, overflow: 'auto', justifyContent: 'safe center', alignItems: 'center' }}>
+      <Stack
+        sx={{
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: 2,
+          gap: 2,
+        }}>
         <AnimatePresence initial={false}>
           {cards.map((card, index) => (
             <motion.div {...animationProperties} key={card.id.toString()}>
-              <FormColumn>
-                <AddCardForm
-                  card={card}
-                  onRemove={() => removeCard(card)}
-                  updateCard={updatedCard => updateCard(updatedCard, index)}
-                />
-              </FormColumn>
+              <AddCardForm
+                card={card}
+                onRemove={() => removeCard(card)}
+                updateCard={updatedCard => updateCard(updatedCard, index)}
+              />
             </motion.div>
           ))}
           {showAddMoreCardsButton && (
-            <FormColumn key='AddButton'>
-              <CardFormButton text={t('addCard')} icon='add' onClick={addForm} />
-            </FormColumn>
+            <Stack
+              key='AddButton'
+              sx={{
+                width: '400px',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Button startIcon={<AddCard />} color='default' variant='contained' onClick={addCard}>
+                {t('addCard')}
+              </Button>
+            </Stack>
           )}
           <div ref={bottomRef} />
         </AnimatePresence>
-      </FormsWrapper>
-    </Scrollable>
+      </Stack>
+    </Stack>
   )
 }
 

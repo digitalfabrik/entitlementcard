@@ -411,10 +411,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_svg
-      sha256: d44bf546b13025ec7353091516f6881f1d4c633993cb109c3916c3a0159dadf1
+      sha256: cd57f7969b4679317c17af6fd16ee233c1e60a82ed209d8a475c54fd6fd6f845
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.0"
+    version: "2.2.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -1150,18 +1150,18 @@ packages:
     dependency: transitive
     description:
       name: sentry
-      sha256: "0609ce3be0c39ac9cd7febbb9b2a14c2f298a085216bb23cde8c22a8b9adf14e"
+      sha256: e33638161982fb5deea36751800f7e83d9e4da79e2ff2e822dd92b6b6ddcee8b
       url: "https://pub.dev"
     source: hosted
-    version: "9.4.0"
+    version: "9.5.0"
   sentry_flutter:
     dependency: "direct main"
     description:
       name: sentry_flutter
-      sha256: "003dcebeffe4d52cd965e6587f7a777f1f1e25746b07ae21ab0de9316cacbf21"
+      sha256: "3abb443a6308504478c4b4061016ee8b7f83aa569f9f3c7f019de7ce91832ea6"
       url: "https://pub.dev"
     source: hosted
-    version: "9.4.0"
+    version: "9.5.0"
   shared_preferences:
     dependency: "direct main"
     description:

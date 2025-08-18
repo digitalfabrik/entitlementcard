@@ -13,8 +13,6 @@ const StyledButton = styled(Button)`
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  width: 100%;
   padding: 10px;
   justify-content: center;
   align-items: center;
