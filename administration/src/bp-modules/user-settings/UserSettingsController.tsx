@@ -1,5 +1,5 @@
+import { Stack } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
-import styled from 'styled-components'
 
 import { useWhoAmI } from '../../WhoAmIProvider'
 import { Role } from '../../generated/graphql'
@@ -7,22 +7,15 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 import ChangePasswordForm from './ChangePasswordForm'
 import NotificationSettings from './NotificationSettings'
 
-const UserSettingsContainer = styled.div`
-  display: flex;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-`
-
 const UserSettingsController = (): ReactElement => {
   const { applicationFeature } = useContext(ProjectConfigContext)
   const { role } = useWhoAmI().me
   return (
-    <UserSettingsContainer>
+    <Stack
+      sx={{ flexGrow: 1, justifyContent: 'safe center', alignItems: 'center', padding: 2, gap: 2, overflow: 'auto' }}>
       {applicationFeature && role !== Role.ProjectAdmin && <NotificationSettings />}
       <ChangePasswordForm />
-    </UserSettingsContainer>
+    </Stack>
   )
 }
 

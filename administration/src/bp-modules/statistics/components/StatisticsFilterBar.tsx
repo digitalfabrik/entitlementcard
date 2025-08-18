@@ -1,20 +1,17 @@
-import { Tooltip } from '@blueprintjs/core'
 import { FilterAlt, SaveAlt } from '@mui/icons-material'
-import { Button, FormControlLabel, Typography } from '@mui/material'
 import type { FormControlLabelProps } from '@mui/material'
+import { Button, FormControlLabel, Stack, Tooltip, styled } from '@mui/material'
 import { formatDate } from 'date-fns/format'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
-import StickyBottomBar from '../../StickyBottomBar'
-import CustomDatePicker from '../../components/CustomDatePicker'
 import type { CustomDatePickerTextFieldProps } from '../../components/CustomDatePicker'
+import CustomDatePicker from '../../components/CustomDatePicker'
 import { defaultEndDate, defaultStartDate } from '../constants'
 
 const filterDateFormat = 'yyyy-MM-dd'
 
-const InputContainer = styled.div`
+const InputContainer = styled('div')`
   flex-direction: row;
   display: flex;
   justify-content: start;
@@ -22,12 +19,6 @@ const InputContainer = styled.div`
   flex: 1;
   gap: 16px;
 `
-type StatisticsFilterBarProps = {
-  onApplyFilter: (dateStart: string, dateEnd: string) => void
-  isDataAvailable: boolean
-  onExportCsv: (dateStart: string, dateEnd: string) => void
-}
-
 const isValidDate = (value: Date | null): value is Date => value !== null && !Number.isNaN(value.valueOf())
 
 const isValidDateTimePeriod = (dateStart: Date | null, dateEnd: Date | null): boolean =>
@@ -47,16 +38,29 @@ const datePickerTextFieldProps: CustomDatePickerTextFieldProps = {
 }
 
 const StatisticsFilterBar = ({
-  onApplyFilter,
   isDataAvailable,
+  onApplyFilter,
   onExportCsv,
-}: StatisticsFilterBarProps): ReactElement => {
+}: {
+  isDataAvailable: boolean
+  onApplyFilter: (dateStart: string, dateEnd: string) => void
+  onExportCsv: (dateStart: string, dateEnd: string) => void
+}): ReactElement => {
   const { t } = useTranslation('statistics')
   const [dateStart, setDateStart] = useState<Date | null>(defaultStartDate.toLocalDate())
   const [dateEnd, setDateEnd] = useState<Date | null>(defaultEndDate.toLocalDate())
 
   return (
-    <StickyBottomBar>
+    <Stack
+      sx={{
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        gap: 2,
+        padding: 2,
+        backgroundColor: '#fafafa',
+      }}>
       <InputContainer>
         <FormControlLabel
           label={t('start')}
@@ -90,7 +94,7 @@ const StatisticsFilterBar = ({
             />
           }
         />
-        <Tooltip disabled={isValidDateTimePeriod(dateStart, dateEnd)} content={t('invalidStartOrEnd')}>
+        <Tooltip title={isValidDateTimePeriod(dateStart, dateEnd) ? undefined : t('invalidStartOrEnd')}>
           <Button
             variant='contained'
             color='success'
@@ -101,24 +105,26 @@ const StatisticsFilterBar = ({
               }
             }}
             disabled={!isValidDateTimePeriod(dateStart, dateEnd)}>
-            <Typography variant='button'>{t('applyFilter')}</Typography>
+            {t('applyFilter')}
           </Button>
         </Tooltip>
       </InputContainer>
-      <Tooltip disabled={isDataAvailable} content={t('noDataAvailableForExport')}>
-        <Button
-          variant='contained'
-          startIcon={<SaveAlt />}
-          onClick={() => {
-            if (isValidDate(dateStart) && isValidDate(dateEnd)) {
-              onExportCsv(dateStart.toLocaleDateString(), dateEnd.toLocaleDateString())
-            }
-          }}
-          disabled={!isDataAvailable}>
-          <Typography variant='button'>{t('exportToCsv')}</Typography>
-        </Button>
+      <Tooltip title={isDataAvailable ? undefined : t('noDataAvailableForExport')}>
+        <div>
+          <Button
+            variant='contained'
+            startIcon={<SaveAlt />}
+            onClick={() => {
+              if (isValidDate(dateStart) && isValidDate(dateEnd)) {
+                onExportCsv(dateStart.toLocaleDateString(), dateEnd.toLocaleDateString())
+              }
+            }}
+            disabled={!isDataAvailable}>
+            {t('exportToCsv')}
+          </Button>
+        </div>
       </Tooltip>
-    </StickyBottomBar>
+    </Stack>
   )
 }
 

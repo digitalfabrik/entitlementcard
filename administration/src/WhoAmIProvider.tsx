@@ -1,4 +1,5 @@
-import { Button } from '@blueprintjs/core'
+import { Logout, Replay } from '@mui/icons-material'
+import { Button, Stack } from '@mui/material'
 import React, { ReactElement, ReactNode, createContext, useContext, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -18,9 +19,7 @@ export const WhoAmIContext = createContext<WhoAmIContextType>({
   refetch: () => undefined,
 })
 
-type UseWhoAmIReturn = WhoAmIContextType & { me: WhoAmIQuery['me'] }
-
-export const useWhoAmI = (): UseWhoAmIReturn => {
+export const useWhoAmI = (): WhoAmIContextType & { me: WhoAmIQuery['me'] } => {
   const context = useContext(WhoAmIContext)
   if (!hasProp(context, 'me')) {
     throw new Error('WhoAmI context is not available')
@@ -43,12 +42,14 @@ const WhoAmIProvider = ({ children }: { children: ReactNode }): ReactElement => 
     return (
       <StandaloneCenter>
         <p>{t('accountInformationNotAvailable')}</p>
-        <Button icon='repeat' onClick={() => refetch()}>
-          {t('retry')}
-        </Button>
-        <Button icon='log-out' onClick={signOut}>
-          {t('logout')}
-        </Button>
+        <Stack direction='row' spacing={2}>
+          <Button variant='outlined' startIcon={<Replay />} onClick={() => refetch()}>
+            {t('retry')}
+          </Button>
+          <Button variant='contained' color='error' startIcon={<Logout />} onClick={signOut}>
+            {t('logout')}
+          </Button>
+        </Stack>
       </StandaloneCenter>
     )
   }
