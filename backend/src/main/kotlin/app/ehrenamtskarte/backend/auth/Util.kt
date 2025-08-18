@@ -10,15 +10,17 @@ import org.jetbrains.exposed.sql.transactions.transaction
 fun GraphQLContext.getAuthContext(): AuthContext {
     val jwtPayload = this.enforceSignedIn()
     return transaction {
-        val row = (Administrators innerJoin Projects)
+        (Administrators innerJoin Projects)
             .select(Administrators.columns + Projects.columns)
             .where { Administrators.id eq jwtPayload.adminId }
-            .singleOrNull() ?: throw UnauthorizedException()
-        AuthContext(
-            adminId = jwtPayload.adminId,
-            admin = AdministratorEntity.wrapRow(row),
-            projectId = row[Projects.id].value,
-            project = row[Projects.project],
-        )
+            .singleOrNull()
+            ?.let {
+                AuthContext(
+                    adminId = jwtPayload.adminId,
+                    admin = AdministratorEntity.wrapRow(it),
+                    projectId = it[Projects.id].value,
+                    project = it[Projects.project],
+                )
+            } ?: throw UnauthorizedException()
     }
 }
