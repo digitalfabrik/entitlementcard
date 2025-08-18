@@ -13,16 +13,16 @@ io-sentry-jvm-gradle = { id = "io.sentry.jvm.gradle", version = "5.8.0"}
 
 [versions]
 
-graphql = "8.8.0"
-jackson = "2.19.1"
+graphql = "8.8.1"
+jackson = "2.19.2"
 javalin = "6.7.0"
 jetbrains-exposed = "0.61.0"
-junit-jupiter = "5.13.1"
+junit-jupiter = "5.13.4"
 junixsocket = "2.10.1"
 kotlin = "2.2.0"
 kotlinx-serialization = "1.9.0"
-ktor = "3.2.0"
-testcontainers = "1.21.1"
+ktor = "3.2.3"
+testcontainers = "1.21.3"
 
 [libraries]
 
@@ -46,10 +46,10 @@ io-javalin = { group = "io.javalin", name = "javalin", version.ref = "javalin" }
 io-javalin-testtools = { module = "io.javalin:javalin-testtools", version.ref = "javalin" }
 io-ktor-client-cio-jvm = { module = "io.ktor:ktor-client-cio-jvm", version.ref = "ktor" }
 io-ktor-client-core-jvm = { module = "io.ktor:ktor-client-core-jvm", version.ref = "ktor" }
-io-mockk = "io.mockk:mockk:1.14.2"
-net-postgis-jdbc = "net.postgis:postgis-jdbc:2025.1.0"
+io-mockk = "io.mockk:mockk:1.14.5"
+net-postgis-jdbc = "net.postgis:postgis-jdbc:2025.1.1"
 org-apache-commons-compress = "org.apache.commons:commons-compress:1.28.0"
-org-apache-commons-csv = "org.apache.commons:commons-csv:1.14.0"
+org-apache-commons-csv = "org.apache.commons:commons-csv:1.14.1"
 org-apache-commons-text = "org.apache.commons:commons-text:1.14.0"
 org-bouncycastle-bcpkix-jdk18on = "org.bouncycastle:bcpkix-jdk18on:1.81"
 org-jetbrains-exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "jetbrains-exposed" }
