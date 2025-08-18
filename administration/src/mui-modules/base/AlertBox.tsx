@@ -3,10 +3,17 @@ import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 const CenteredAlert = styled(Alert)`
-  margin: auto;
+  margin: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
+
+  @media (max-width: 899px) {
+    & .MuiAlert-action {
+      align-self: start;
+      margin-left: 0;
+    }
+  }
 `
 
 type AlertBoxProps = {
@@ -31,6 +38,7 @@ const AlertBox = ({
       data-testid='alert-box'
       severity={severity}
       variant='outlined'
+      sx={{ flexDirection: { xs: 'column', md: 'row' } }}
       action={
         onAction ? (
           <Button color='inherit' size='small' onClick={onAction}>
