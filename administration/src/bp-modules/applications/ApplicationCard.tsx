@@ -480,7 +480,7 @@ const ApplicationCard = ({
           loading={rejectStatusResult.loading}
           onConfirm={message => {
             rejectStatus({
-              variables: { project: config.projectId, applicationId: application.id, rejectionMessage: message },
+              variables: { applicationId: application.id, rejectionMessage: message },
             })
           }}
           onCancel={() => {

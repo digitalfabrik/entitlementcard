@@ -148,17 +148,17 @@ type Mutation {
   "Approve an application"
   approveApplicationStatus(applicationId: Int!): ApplicationView!
   "Changes an administrator's password"
-  changePassword(currentPassword: String!, email: String!, newPassword: String!, project: String!): Boolean!
+  changePassword(currentPassword: String!, email: String!, newPassword: String!): Boolean!
   "Creates a new administrator"
-  createAdministrator(email: String!, project: String!, regionId: Int, role: Role!, sendWelcomeMail: Boolean!): Boolean!
+  createAdministrator(email: String!, regionId: Int, role: Role!, sendWelcomeMail: Boolean!): Boolean!
   "Creates a new api token for user import endpoint"
   createApiToken(expiresIn: Int!): String!
   "Creates a new digital entitlementcard from self-service portal"
   createCardFromSelfService(encodedCardInfo: String!, generateStaticCode: Boolean!, project: String!): CardCreationResultModel!
   "Creates a new digital entitlementcard and returns it"
-  createCardsByCardInfos(applicationIdToMarkAsProcessed: Int, encodedCardInfos: [String!]!, generateStaticCodes: Boolean!, project: String!): [CardCreationResultModel!]!
+  createCardsByCardInfos(applicationIdToMarkAsProcessed: Int, encodedCardInfos: [String!]!, generateStaticCodes: Boolean!): [CardCreationResultModel!]!
   "Deletes an existing administrator"
-  deleteAdministrator(adminId: Int!, project: String!): Boolean!
+  deleteAdministrator(adminId: Int!): Boolean!
   "Deletes a selected API token"
   deleteApiToken(id: Int!): Int!
   "Deletes the application with specified id"
@@ -166,19 +166,19 @@ type Mutation {
   "Deletes a batch of cards (that have not yet been activated)"
   deleteInactiveCards(cardInfoHashBase64List: [String!]!, regionId: Int!): Boolean!
   "Edits an existing administrator"
-  editAdministrator(adminId: Int!, newEmail: String!, newRegionId: Int, newRole: Role!, project: String!): Boolean!
+  editAdministrator(adminId: Int!, newEmail: String!, newRegionId: Int, newRole: Role!): Boolean!
   "Import accepting stores via csv"
-  importAcceptingStores(dryRun: Boolean!, project: String!, stores: [CSVAcceptingStoreInput!]!): StoreImportReturnResultModel!
+  importAcceptingStores(dryRun: Boolean!, stores: [CSVAcceptingStoreInput!]!): StoreImportReturnResultModel!
   "Reject an application"
-  rejectApplicationStatus(applicationId: Int!, project: String!, rejectionMessage: String!): ApplicationView!
+  rejectApplicationStatus(applicationId: Int!, rejectionMessage: String!): ApplicationView!
   "Reset the administrator's password"
   resetPassword(email: String!, newPassword: String!, passwordResetKey: String!, project: String!): Boolean!
   "Send application and card information to Freinet"
-  sendApplicationAndCardDataToFreinet(applicationId: Int!, freinetCard: FreinetCardInput!, project: String!): Boolean!
+  sendApplicationAndCardDataToFreinet(applicationId: Int!, freinetCard: FreinetCardInput!): Boolean!
   "Send approval mail to organisation"
-  sendApprovalMailToOrganisation(applicationId: Int!, applicationVerificationId: Int!, project: String!): Boolean!
+  sendApprovalMailToOrganisation(applicationId: Int!, applicationVerificationId: Int!): Boolean!
   "Sends a confirmation mail to the user when the card creation was successful"
-  sendCardCreationConfirmationMail(deepLink: String!, project: String!, recipientAddress: String!, recipientName: String!, regionId: Int!): Boolean!
+  sendCardCreationConfirmationMail(deepLink: String!, recipientAddress: String!, recipientName: String!, regionId: Int!): Boolean!
   "Sends a mail that allows the administrator to reset their password."
   sendResetMail(email: String!, project: String!): Boolean!
   "Signs in an administrator"
@@ -190,9 +190,9 @@ type Mutation {
   "Updates the data privacy policy of a region"
   updateDataPrivacy(dataPrivacyText: String!, regionId: Int!): Boolean!
   "Updates the data transfer to freinet. Works only for the EAK project."
-  updateDataTransferToFreinet(dataTransferActivated: Boolean!, project: String!, regionId: Int!): Boolean!
+  updateDataTransferToFreinet(dataTransferActivated: Boolean!, regionId: Int!): Boolean!
   "Updates the notification settings"
-  updateNotificationSettings(notificationSettings: NotificationSettingsInput!, project: String!): Boolean!
+  updateNotificationSettings(notificationSettings: NotificationSettingsInput!): Boolean!
   "Updates the region specific settings"
   updateRegionSettings(activatedForApplication: Boolean!, activatedForConfirmationMail: Boolean!, regionId: Int!): Boolean!
   "Verifies or rejects an application verification"
@@ -231,17 +231,17 @@ type Query {
   "Queries all applications for a specific region"
   getApplications(regionId: Int!): [ApplicationView!]!
   "Returns card statistics for project. Start and end dates are inclusive."
-  getCardStatisticsInProject(dateEnd: String!, dateStart: String!, project: String!): [CardStatisticsResultModel!]!
+  getCardStatisticsInProject(dateEnd: String!, dateStart: String!): [CardStatisticsResultModel!]!
   "Returns card statistics for region. Start and end dates are inclusive."
-  getCardStatisticsInRegion(dateEnd: String!, dateStart: String!, project: String!, regionId: Int!): [CardStatisticsResultModel!]!
+  getCardStatisticsInRegion(dateEnd: String!, dateStart: String!, regionId: Int!): [CardStatisticsResultModel!]!
   "Returns freinet agency information for a particular region. Works only for the EAK project."
-  getFreinetAgencyByRegionId(project: String!, regionId: Int!): FreinetAgency
+  getFreinetAgencyByRegionId(regionId: Int!): FreinetAgency
   "Get the pepper for Koblenz user hashing"
   getHashingPepper: String!
   "Get the notification settings of the authenticated administrator"
-  getNotificationSettings(project: String!): NotificationSettings!
+  getNotificationSettings: NotificationSettings!
   "Returns all administrators in a project. This query requires the role PROJECT_ADMIN."
-  getUsersInProject(project: String!): [Administrator!]!
+  getUsersInProject: [Administrator!]!
   "Returns all administrators in a region. This query requires the role REGION_ADMIN or PROJECT_ADMIN."
   getUsersInRegion(regionId: Int!): [Administrator!]!
   "Return list of all accepting stores in the eak bayern project."
@@ -273,7 +273,7 @@ type Query {
   "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid, extendable and a timestamp of the last check"
   verifyCardInProjectV2(card: CardVerificationModelInput!, project: String!): CardVerificationResultModel!
   "Returns the requesting administrator as retrieved from his JWT token."
-  whoAmI(project: String!): Administrator!
+  whoAmI: Administrator!
 }
 
 type Region {

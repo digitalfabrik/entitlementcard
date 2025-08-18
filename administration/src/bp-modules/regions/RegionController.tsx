@@ -13,7 +13,7 @@ import FreinetSettingsController from './freinet/FreinetSettingsController'
 
 const RegionController = (): ReactElement => {
   const { region } = useWhoAmI().me
-  const { freinetDataTransferEnabled, projectId } = useContext(ProjectConfigContext)
+  const { freinetDataTransferEnabled } = useContext(ProjectConfigContext)
   const { t } = useTranslation('errors')
 
   return (
@@ -35,7 +35,7 @@ const RegionController = (): ReactElement => {
           <DataPrivacyCard />
           <RegionSettingsController regionId={region.id} />
           <ApplicationConfirmationNoteController regionId={region.id} />
-          {freinetDataTransferEnabled && <FreinetSettingsController regionId={region.id} project={projectId} />}
+          {freinetDataTransferEnabled && <FreinetSettingsController regionId={region.id} />}
         </Stack>
       )}
     </RenderGuard>

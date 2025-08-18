@@ -61,8 +61,9 @@ class AdministratorEntity(id: EntityID<Int>) : IntEntity(id) {
     var notificationOnVerification by Administrators.notificationOnVerification
     var deleted by Administrators.deleted
 
-    fun isInProject(project: String): Boolean =
-        this.projectId == ProjectEntity.find { Projects.project eq project }.single().id
+    val project by ProjectEntity referencedOn Administrators.projectId
+
+    fun isInProject(project: String): Boolean = this.project.project == project
 
     fun isInProject(projectId: Int): Boolean = this.projectId.value == projectId
 
