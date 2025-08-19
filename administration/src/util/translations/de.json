@@ -191,6 +191,8 @@
     "attachment": "Anhang",
     "seeAttachment": "siehe Anhang",
     "submittedButNotVisible": "eingereicht, nicht sichtbar",
+    "noteButtonCreate": "Notiz anlegen",
+    "noteButtonShow": "Notiz anzeigen",
     "noteChangedSuccessfully": "Notiz erfolgreich geändert.",
     "applicationNotePlaceholder": "Fügen Sie hier eine Notiz hinzu...",
     "confirmationsByOrganizations": "Bestätigung(en) durch Organisationen:",
