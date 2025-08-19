@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.helper
 
 import app.ehrenamtskarte.backend.application.database.ApplicationEntity
+import app.ehrenamtskarte.backend.application.database.ApplicationVerifications
 import app.ehrenamtskarte.backend.application.database.Applications
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.database.ApiTokenType
@@ -43,6 +44,19 @@ object TestData {
                 it[Applications.accessKey] = accessKey
                 it[Applications.status] = status
                 it[Applications.statusResolvedDate] = statusResolvedDate
+            }.value
+        }
+    }
+
+    fun createApplicationVerification(applicationId: Int): Int {
+        val accessKey = Base64.getUrlEncoder().encodeToString(Random.nextBytes(20))
+        return transaction {
+            ApplicationVerifications.insertAndGetId {
+                it[ApplicationVerifications.applicationId] = applicationId
+                it[ApplicationVerifications.contactEmailAddress] = "dummy@test.de"
+                it[ApplicationVerifications.contactName] = "dummy"
+                it[ApplicationVerifications.organizationName] = "dummy"
+                it[ApplicationVerifications.accessKey] = accessKey
             }.value
         }
     }

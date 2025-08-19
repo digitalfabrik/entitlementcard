@@ -74,17 +74,21 @@ class EakApplicationMutationService {
         val context = dfe.graphQlContext.context
         val authContext = context.getAuthContext()
 
-        return transaction {
-            val application = ApplicationEntity
-                .findById(applicationId)
-                ?: throw NotFoundException("Application not found")
+        transaction {
+            val application = ApplicationEntity.findById(applicationId)
+                ?: throw InvalidInputException("Application not found")
 
             if (!mayDeleteApplicationsInRegion(authContext.admin, application.regionId.value)) {
                 throw ForbiddenException()
             }
 
-            ApplicationRepository.delete(applicationId, context)
+            if (application.status == Status.Pending) {
+                throw InvalidInputException("Application cannot be deleted while it is in a pending state")
+            }
+
+            ApplicationRepository.delete(authContext.project, application, context)
         }
+        return true
     }
 
     @GraphQLDescription("Withdraws the application")
