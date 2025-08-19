@@ -240,16 +240,12 @@ const headerTypography: SxProps = {
 
 const ApplicationCard = ({
   application,
-  isSelectedForPrint,
   onDelete,
   onChange,
-  onPrintApplicationById,
 }: {
   application: Application
-  isSelectedForPrint: boolean
   onDelete: () => void
   onChange: (application: Application) => void
-  onPrintApplicationById: (applicationId: number) => void
 }) => {
   const { t } = useTranslation('applicationsOverview')
   const theme = useTheme()
@@ -322,17 +318,14 @@ const ApplicationCard = ({
     },
     {
       name: t('exportPdf'),
-      onClick: () => onPrintApplicationById(application.id),
+      onClick: () => {
+      },
       icon: <PrintOutlined sx={{ height: 20 }} />,
     },
   ]
 
   return (
-    <Accordion
-      sx={{ displayPrint: isSelectedForPrint ? 'block' : 'none' }}
-      disableGutters
-      aria-controls='panel-content'
-      onChange={(_, expanded) => setAccordionExpanded(expanded)}>
+    <Accordion disableGutters aria-controls='panel-content' onChange={(_, expanded) => setAccordionExpanded(expanded)}>
       <AccordionSummary
         // Need this to display the `expandIconWrapper` slot, even if this is not directly used.
         expandIcon={<ExpandMore />}
@@ -358,7 +351,6 @@ const ApplicationCard = ({
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap',
               overflow: 'hidden',
-              displayPrint: 'none',
               ...headerTypography,
             }}>
             {personalData &&
@@ -415,7 +407,7 @@ const ApplicationCard = ({
           </Box>
         )}
 
-        <Stack sx={{ p: 2, displayPrint: 'none' }} spacing={2} direction='row'>
+        <Stack sx={{ p: 2, gap: 2, flexDirection: 'row' }}>
           {application.status === ApplicationStatus.Pending ? (
             <ButtonsApplicationPending
               disabled={approveStatusResult.loading}
