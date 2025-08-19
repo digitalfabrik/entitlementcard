@@ -81,8 +81,8 @@ Future<RequestedPosition> determinePosition(BuildContext context, {bool requestI
     return RequestedPosition(null, permission);
   }
 
-  var position = await Geolocator.getLastKnownPosition(forceAndroidLocationManager: EnvironmentConfig.androidFloss);
-  position ??= await Geolocator.getCurrentPosition(forceAndroidLocationManager: EnvironmentConfig.androidFloss);
+  var position = await Geolocator.getLastKnownPosition();
+  position ??= await Geolocator.getCurrentPosition();
 
   return RequestedPosition(position, permission);
 }
