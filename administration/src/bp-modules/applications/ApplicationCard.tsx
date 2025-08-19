@@ -397,7 +397,7 @@ const ApplicationCard = ({
         </Stack>
       </AccordionSummary>
 
-      <AccordionDetails>
+      <AccordionDetails sx={{ position: 'relative' }}>
         <Stack sx={{ spacing: 2, alignItems: 'flex-start', gap: 2 }}>
           <Stack sx={{ gap: 2, flexGrow: 1, marginLeft: 2, marginBottom: 2, alignItems: 'flex-start' }}>
             {!!application.withdrawalDate && (
@@ -420,12 +420,6 @@ const ApplicationCard = ({
                 expandedRoot={false}
               />
             </Box>
-            <NoteDialogController
-              application={application}
-              isOpen={openNoteDialog}
-              onOpenNoteDialog={setOpenNoteDialog}
-              onChange={onChange}
-            />
           </Stack>
         </Stack>
 
@@ -487,6 +481,14 @@ const ApplicationCard = ({
             setRejectionDialogOpen(false)
           }}
         />
+        <Box sx={{ position: 'absolute', top: 0, right: theme.spacing(2), zIndex: 1 }}>
+          <NoteDialogController
+            application={application}
+            isOpen={openNoteDialog}
+            onOpenNoteDialog={setOpenNoteDialog}
+            onChange={onChange}
+          />
+        </Box>
       </AccordionDetails>
     </Accordion>
   )
