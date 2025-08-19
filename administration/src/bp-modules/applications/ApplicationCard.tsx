@@ -33,8 +33,9 @@ import {
   Typography,
   useTheme,
 } from '@mui/material'
-import React, { memo, useContext, useMemo, useState } from 'react'
+import React, { memo, useContext, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useReactToPrint } from 'react-to-print'
 
 import { CsvIcon } from '../../components/icons/CsvIcon'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
@@ -53,6 +54,7 @@ import { ApplicationDataIncompleteError } from '../../util/applicationDataHelper
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { useAppToaster } from '../AppToaster'
 import { AccordionExpandButton } from '../components/AccordionExpandButton'
+import { ApplicationPrintView, applicationPrintViewPageStyle } from './ApplicationPrintView'
 import NoteDialogController from './NoteDialogController'
 import { ApplicationStatusNote } from './components/ApplicationStatusNote'
 import { ApplicationIndicators } from './components/VerificationsIndicator'
@@ -251,6 +253,12 @@ const ApplicationCard = ({
   const config = useContext(ProjectConfigContext)
   const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${application.id}`
   const appToaster = useAppToaster()
+  const printContentRef = useRef<HTMLDivElement>(null)
+  const printApplication = useReactToPrint({
+    contentRef: printContentRef,
+    pageStyle: applicationPrintViewPageStyle.styles,
+    documentTitle: t('applicationFrom', { date: new Date(application.createdDate) }),
+  })
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [rejectionDialogOpen, setRejectionDialogOpen] = useState(false)
   const [openNoteDialog, setOpenNoteDialog] = useState(false)
@@ -318,6 +326,7 @@ const ApplicationCard = ({
     {
       name: t('exportPdf'),
       onClick: () => {
+        printApplication()
       },
       icon: <PrintOutlined sx={{ height: 20 }} />,
     },
@@ -424,25 +433,6 @@ const ApplicationCard = ({
           <BaseMenu menuItems={menuItems} menuLabel={t('moreActionsButtonLabel')} />
         </Stack>
 
-        <DeleteDialog
-          isOpen={deleteDialogOpen}
-          deleteResult={deleteResult}
-          onConfirm={() => deleteApplication({ variables: { applicationId: application.id } })}
-          onCancel={() => setDeleteDialogOpen(false)}
-        />
-
-        <RejectionDialog
-          open={rejectionDialogOpen}
-          loading={rejectStatusResult.loading}
-          onConfirm={message => {
-            rejectStatus({
-              variables: { applicationId: application.id, rejectionMessage: message },
-            })
-          }}
-          onCancel={() => {
-            setRejectionDialogOpen(false)
-          }}
-        />
         <Box sx={{ position: 'absolute', top: 0, right: theme.spacing(2), zIndex: 1 }}>
           <NoteDialogController
             application={application}
@@ -452,6 +442,30 @@ const ApplicationCard = ({
           />
         </Box>
       </AccordionDetails>
+
+      <DeleteDialog
+        isOpen={deleteDialogOpen}
+        deleteResult={deleteResult}
+        onConfirm={() => deleteApplication({ variables: { applicationId: application.id } })}
+        onCancel={() => setDeleteDialogOpen(false)}
+      />
+
+      <RejectionDialog
+        open={rejectionDialogOpen}
+        loading={rejectStatusResult.loading}
+        onConfirm={message => {
+          rejectStatus({
+            variables: { applicationId: application.id, rejectionMessage: message },
+          })
+        }}
+        onCancel={() => {
+          setRejectionDialogOpen(false)
+        }}
+      />
+
+      <Box sx={{ display: 'none' }}>
+        <ApplicationPrintView ref={printContentRef} application={application} />
+      </Box>
     </Accordion>
   )
 }
