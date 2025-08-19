@@ -3,7 +3,8 @@ query getApplicationByApplicant($accessKey: String!) {
     id
     createdDate
     jsonValue
-    withdrawalDate
+    status
+    statusResolvedDate
     verifications {
       verificationId
       contactEmailAddress
