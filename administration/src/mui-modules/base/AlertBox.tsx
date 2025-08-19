@@ -2,11 +2,12 @@ import { Alert, AlertColor, AlertTitle, Button, styled } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
-const CenteredAlert = styled(Alert)`
+const CenteredAlert = styled(Alert)<{ $borderless: boolean }>`
   margin: auto;
   display: flex;
   justify-content: center;
   align-items: center;
+  ${({ $borderless }) => $borderless && 'border: none;'}
 `
 
 type AlertBoxProps = {
@@ -15,6 +16,7 @@ type AlertBoxProps = {
   description?: string | ReactElement
   onAction?: () => void
   actionButtonLabel?: string
+  borderless?: boolean
 }
 
 const AlertBox = ({
@@ -23,11 +25,13 @@ const AlertBox = ({
   description,
   onAction,
   actionButtonLabel,
+  borderless = false,
 }: AlertBoxProps): ReactElement => {
   const { t } = useTranslation('errors')
 
   return (
     <CenteredAlert
+      $borderless={borderless}
       data-testid='alert-box'
       severity={severity}
       variant='outlined'

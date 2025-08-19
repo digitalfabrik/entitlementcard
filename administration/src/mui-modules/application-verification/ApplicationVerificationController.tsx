@@ -18,6 +18,7 @@ import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import AlertBox from '../base/AlertBox'
 import getQueryResult from '../util/getQueryResult'
+import { applicationWasAlreadyProcessed } from './util'
 
 const ApplicationViewCard = styled(Card)`
   max-width: 800px;
@@ -26,6 +27,7 @@ const ApplicationViewCard = styled(Card)`
 
 const StyledAlert = styled(Alert)`
   margin: 20px 0;
+  background-color: transparent;
 `
 
 const ButtonContainer = styled('div')`
@@ -100,6 +102,7 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
 
   const { createdDate: createdDateString, id } = application
   const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${id}`
+  const applicationVerificationDisabled = applicationWasAlreadyProcessed(application.status)
 
   return (
     <Box sx={{ flexGrow: 1, overflow: 'auto', alignItems: 'safe center' }}>
@@ -129,19 +132,34 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
             expandedRoot
           />
           <Divider style={{ margin: '24px 0px' }} />
-          <Typography sx={{ mt: '8px' }} variant='body1'>
-            <Trans
-              i18nKey='applicationVerification:confirmationMessage'
-              values={{ organizationName: verification.organizationName }}
-            />
-          </Typography>
-          <StyledAlert severity='warning'>
-            <Trans i18nKey='applicationVerification:confirmationNote' />
-          </StyledAlert>
+          {applicationVerificationDisabled ? (
+            <Box sx={{ marginBottom: 3 }}>
+              <AlertBox
+                title={t('applicationAlreadyProcessed')}
+                description={t('applicationAlreadyProcessedHint')}
+                severity='info'
+                borderless
+              />
+            </Box>
+          ) : (
+            <>
+              <Typography sx={{ mt: '8px' }} variant='body1'>
+                <Trans
+                  i18nKey='applicationVerification:confirmationMessage'
+                  values={{ organizationName: verification.organizationName }}
+                />
+              </Typography>
+              <StyledAlert severity='warning'>
+                <Trans i18nKey='applicationVerification:confirmationNote' />
+              </StyledAlert>
+            </>
+          )}
+
           <ButtonContainer>
             <Button
               variant='contained'
               color='error'
+              disabled={applicationVerificationDisabled}
               endIcon={<Close />}
               onClick={() => submitApplicationVerification(false)}>
               {t('rejectButton')}
@@ -149,6 +167,7 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
             <Button
               variant='contained'
               color='success'
+              disabled={applicationVerificationDisabled}
               endIcon={<Check />}
               onClick={() => submitApplicationVerification(true)}>
               {t('confirmationButton')}
