@@ -1,5 +1,7 @@
 package app.ehrenamtskarte.backend.helper
 
+import app.ehrenamtskarte.backend.application.database.ApplicationEntity
+import app.ehrenamtskarte.backend.application.database.Applications
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.database.ApiTokenType
 import app.ehrenamtskarte.backend.auth.database.ApiTokens
@@ -19,12 +21,32 @@ import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.Instant
 import java.time.LocalDate
+import java.time.OffsetDateTime
+import java.util.Base64
 import kotlin.random.Random
 
 /**
  * Helper object for creating test data in the database
  */
 object TestData {
+    fun createApplication(
+        regionId: Int? = 1,
+        status: ApplicationEntity.Status = ApplicationEntity.Status.Pending,
+        statusResolvedDate: OffsetDateTime? = null,
+        jsonValue: String = """{"name":"application","type":"Array","value":[]""",
+    ): Int {
+        val accessKey = Base64.getUrlEncoder().encodeToString(Random.nextBytes(20))
+        return transaction {
+            Applications.insertAndGetId {
+                it[Applications.regionId] = regionId ?: 1
+                it[Applications.jsonValue] = jsonValue
+                it[Applications.accessKey] = accessKey
+                it[Applications.status] = status
+                it[Applications.statusResolvedDate] = statusResolvedDate
+            }.value
+        }
+    }
+
     fun createApiToken(
         token: String = "dummy",
         creatorId: Int,
