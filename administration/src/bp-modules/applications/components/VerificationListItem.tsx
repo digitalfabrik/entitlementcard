@@ -2,12 +2,11 @@ import { Colors } from '@blueprintjs/core'
 import ForwardToInboxIcon from '@mui/icons-material/ForwardToInbox'
 import { Box, Button } from '@mui/material'
 import { TFunction } from 'i18next'
-import React, { ReactElement, useContext, useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import { ApplicationVerificationView, useSendApprovalMailToOrganisationMutation } from '../../../generated/graphql'
-import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import { useAppToaster } from '../../AppToaster'
 import EmailLink from '../../EmailLink'
 import { VerificationStatus } from '../types'
@@ -47,7 +46,6 @@ const VerificationListItem = ({
 }): ReactElement => {
   const { t } = useTranslation('applicationsOverview')
   const appToaster = useAppToaster()
-  const projectId = useContext(ProjectConfigContext).projectId
   const [isApprovalRequestSent, setIsApprovalRequestSent] = useState(false)
 
   const status = verificationStatus(verification)
@@ -66,7 +64,6 @@ const VerificationListItem = ({
       variables: {
         applicationId,
         applicationVerificationId: verification.verificationId,
-        project: projectId,
       },
     })
     setIsApprovalRequestSent(true)

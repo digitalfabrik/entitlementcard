@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.auth.webservice.schema
 
-import app.ehrenamtskarte.backend.auth.getAdministrator
+import app.ehrenamtskarte.backend.auth.getAuthContext
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.common.utils.Environment
 import app.ehrenamtskarte.backend.common.webservice.KOBLENZ_PEPPER_SYS_ENV
@@ -16,7 +16,7 @@ class ViewPepperQueryService {
     @GraphQLDescription("Get the pepper for Koblenz user hashing")
     fun getHashingPepper(dfe: DataFetchingEnvironment): String {
         val context = dfe.graphQlContext.context
-        val admin = context.getAdministrator()
+        val admin = context.getAuthContext().admin
 
         return transaction {
             if (!Authorizer.mayViewHashingPepper(admin)) {

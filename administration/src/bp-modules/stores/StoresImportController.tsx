@@ -30,7 +30,6 @@ export type StoresData = {
   [key: string]: string
 }
 const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
-  const { projectId } = useContext(ProjectConfigContext)
   const navigate = useNavigate()
   const appToaster = useAppToaster()
   const [acceptingStores, setAcceptingStores] = useState<AcceptingStoresEntry[]>([])
@@ -89,7 +88,6 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
     importStores({
       variables: {
         stores: storesToImport,
-        project: projectId,
         dryRun,
       },
     })

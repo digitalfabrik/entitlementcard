@@ -8,12 +8,12 @@ import ChangePasswordForm from './ChangePasswordForm'
 import NotificationSettings from './NotificationSettings'
 
 const UserSettingsController = (): ReactElement => {
-  const { applicationFeature, projectId } = useContext(ProjectConfigContext)
+  const { applicationFeature } = useContext(ProjectConfigContext)
   const { role } = useWhoAmI().me
   return (
     <Stack
       sx={{ flexGrow: 1, justifyContent: 'safe center', alignItems: 'center', padding: 2, gap: 2, overflow: 'auto' }}>
-      {applicationFeature && role !== Role.ProjectAdmin && <NotificationSettings projectId={projectId} />}
+      {applicationFeature && role !== Role.ProjectAdmin && <NotificationSettings />}
       <ChangePasswordForm />
     </Stack>
   )
