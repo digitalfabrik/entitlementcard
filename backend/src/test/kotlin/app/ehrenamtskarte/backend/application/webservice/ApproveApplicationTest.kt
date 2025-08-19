@@ -10,7 +10,6 @@ import io.javalin.testtools.JavalinTest
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
@@ -87,10 +86,9 @@ internal class ApproveApplicationTest : GraphqlApiTest() {
             assertEquals(403, response.code)
         }
 
-    @Disabled("Wait for https://github.com/digitalfabrik/entitlementcard/pull/2373")
     @ParameterizedTest
-    @EnumSource(value = ApplicationEntity.Status::class, names = ["Pending"], mode = EnumSource.Mode.EXCLUDE)
-    fun `should return an error when application was already processed`(status: ApplicationEntity.Status) =
+    @EnumSource(value = ApplicationEntity.Status::class, names = ["Rejected", "Withdrawn", "ApprovedCardCreated"])
+    fun `should return an error if the application status has already been resolved`(status: ApplicationEntity.Status) =
         JavalinTest.test(app) { _, client ->
             val statusResolvedDate = OffsetDateTime.now().minusDays(1L)
             val applicationId = TestData.createApplication(
@@ -107,6 +105,10 @@ internal class ApproveApplicationTest : GraphqlApiTest() {
             val jsonResponse = response.json()
 
             assertEquals("Error INVALID_INPUT occurred.", jsonResponse.findValue("message").textValue())
+            assertEquals(
+                "Cannot set application to 'Approved', is '$status'",
+                jsonResponse.findValue("reason").textValue(),
+            )
 
             transaction {
                 // verify that the status has not been updated in the database
