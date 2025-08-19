@@ -3,10 +3,11 @@ package app.ehrenamtskarte.backend.application.webservice
 import app.ehrenamtskarte.backend.application.database.ApplicationEntity
 import app.ehrenamtskarte.backend.application.database.ApplicationEntity.Status
 import app.ehrenamtskarte.backend.application.database.ApplicationVerificationEntity
+import app.ehrenamtskarte.backend.application.database.Applications
 import app.ehrenamtskarte.backend.application.database.NOTE_MAX_CHARS
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
 import app.ehrenamtskarte.backend.application.webservice.schema.create.Application
-import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationView
+import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationAdminGql
 import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationHandler
 import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantEmail
 import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantName
@@ -94,7 +95,12 @@ class EakApplicationMutationService {
     @GraphQLDescription("Withdraws the application")
     fun withdrawApplication(accessKey: String): Boolean =
         transaction {
-            ApplicationRepository.withdrawApplication(accessKey)
+            try {
+                ApplicationEntity.find { Applications.accessKey eq accessKey }.single().status = Status.Withdrawn
+                true
+            } catch (e: IllegalArgumentException) {
+                false
+            }
         }
 
     @GraphQLDescription("Verifies or rejects an application verification")
@@ -105,9 +111,12 @@ class EakApplicationMutationService {
         dfe: DataFetchingEnvironment,
     ): Boolean =
         transaction {
-            val application = ApplicationRepository
-                .getApplicationByApplicationVerificationAccessKey(accessKey)
+            val application = ApplicationRepository.getApplicationByApplicationVerificationAccessKey(accessKey)
                 ?: throw InvalidLinkException()
+
+            if (application.status == Status.Withdrawn) {
+                throw InvalidInputException("Application is withdrawn")
+            }
 
             if (verified) {
                 val context = dfe.graphQlContext.context
@@ -130,26 +139,22 @@ class EakApplicationMutationService {
     /**
      * Approves an application if it is in the Pending status.
      *
-     * @return The updated [ApplicationView].
+     * @return The updated [ApplicationAdminGql].
      * @throws InvalidInputException If an application with the specified id is not found
      * @throws ForbiddenException If the user is not allowed to modify this application
      */
     @GraphQLDescription("Approve an application")
-    fun approveApplicationStatus(applicationId: Int, dfe: DataFetchingEnvironment): ApplicationView {
+    fun approveApplicationStatus(applicationId: Int, dfe: DataFetchingEnvironment): ApplicationAdminGql {
         val context = dfe.graphQlContext.context
 
         return transaction {
             val applicationEntity = ApplicationEntity.findById(applicationId)
-                ?.let {
-                    it.tryChangeStatus(Status.Approved)
-                    ApplicationView.fromDbEntity(it, true)
-                }
                 ?: throw InvalidInputException("Application not found")
 
-            if (
-                mayUpdateApplicationsInRegion(context.getAuthContext().admin, applicationEntity.regionId)
-            ) {
-                applicationEntity
+            applicationEntity.changeStatusOrThrow(Status.Approved)
+
+            if (mayUpdateApplicationsInRegion(context.getAuthContext().admin, applicationEntity.regionId.value)) {
+                ApplicationAdminGql.fromDbEntity(applicationEntity)
             } else {
                 throw ForbiddenException()
             }
@@ -159,7 +164,7 @@ class EakApplicationMutationService {
     /**
      * Rejects an application if it is in the Pending status.
      *
-     * @return The updated [ApplicationView].
+     * @return The updated [ApplicationAdminGql].
      * @throws InvalidInputException If an application with the specified id is not found
      * @throws ForbiddenException If the user is not allowed to modify this application
      */
@@ -168,7 +173,7 @@ class EakApplicationMutationService {
         applicationId: Int,
         rejectionMessage: String,
         dfe: DataFetchingEnvironment,
-    ): ApplicationView {
+    ): ApplicationAdminGql {
         val context = dfe.graphQlContext.context
         val authContext = context.getAuthContext()
 
@@ -180,10 +185,7 @@ class EakApplicationMutationService {
                 throw ForbiddenException()
             }
 
-            if (!application.tryChangeStatus(Status.Rejected)) {
-                throw InvalidInputException("Application cannot be rejected, as it has already been processed")
-            }
-
+            application.changeStatusOrThrow(Status.Rejected)
             application.rejectionMessage = rejectionMessage
 
             Mailer.sendApplicationRejectedMail(
@@ -194,7 +196,7 @@ class EakApplicationMutationService {
                 rejectionMessage,
             )
 
-            ApplicationView.fromDbEntity(application, true)
+            ApplicationAdminGql.fromDbEntity(application)
         }
     }
 
@@ -234,6 +236,10 @@ class EakApplicationMutationService {
                 throw ForbiddenException()
             }
 
+            if (application.status == Status.Withdrawn) {
+                throw InvalidInputException("Application is withdrawn")
+            }
+
             val applicationVerification = ApplicationVerificationEntity.findById(applicationVerificationId)
                 ?: throw InvalidInputException("Application verification not found")
 
@@ -251,3 +257,11 @@ class EakApplicationMutationService {
         return true
     }
 }
+
+private fun ApplicationEntity.changeStatusOrThrow(status: Status): ApplicationEntity =
+    try {
+        this.status = status
+        this
+    } catch (e: IllegalArgumentException) {
+        throw InvalidInputException("Cannot set application to '$status', is '${this.status}'")
+    }
