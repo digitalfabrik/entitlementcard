@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
 import java.time.OffsetDateTime
+import java.time.temporal.ChronoUnit
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
@@ -90,7 +91,7 @@ internal class ApproveApplicationTest : GraphqlApiTest() {
     @EnumSource(value = ApplicationEntity.Status::class, names = ["Rejected", "Withdrawn", "ApprovedCardCreated"])
     fun `should return an error if the application status has already been resolved`(status: ApplicationEntity.Status) =
         JavalinTest.test(app) { _, client ->
-            val statusResolvedDate = OffsetDateTime.now().minusDays(1L)
+            val statusResolvedDate = OffsetDateTime.now().minusDays(1L).truncatedTo(ChronoUnit.MICROS)
             val applicationId = TestData.createApplication(
                 regionId = regionAdmin.regionId,
                 status = status,
