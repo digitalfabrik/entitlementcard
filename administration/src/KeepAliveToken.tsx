@@ -26,6 +26,20 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props): Rea
   const projectId = useContext(ProjectConfigContext).projectId
   const email = useWhoAmI().me.email
   const [secondsLeft, setSecondsLeft] = useState(computeSecondsLeft(authData))
+  const appToaster = useAppToaster()
+  const [password, setPassword] = useState('')
+  const [signIn, mutationState] = useSignInMutation({
+    onCompleted: payload => {
+      appToaster?.show({ intent: 'success', message: t('loginPeriodExtended') })
+      onSignIn(payload.signInPayload)
+      setPassword('')
+    },
+    onError: error => {
+      const { title } = getMessageFromApolloError(error)
+      appToaster?.show({ intent: 'danger', message: title })
+    },
+  })
+
   useEffect(() => {
     setSecondsLeft(computeSecondsLeft(authData))
     const interval = setInterval(() => {
@@ -38,21 +52,7 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props): Rea
     }, 1000)
     return () => clearInterval(interval)
   }, [authData, onSignOut, navigate])
-  const appToaster = useAppToaster()
 
-  const [password, setPassword] = useState('')
-
-  const [signIn, mutationState] = useSignInMutation({
-    onCompleted: payload => {
-      appToaster?.show({ intent: 'success', message: t('loginPeriodExtended') })
-      onSignIn(payload.signInPayload)
-      setPassword('')
-    },
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
-      appToaster?.show({ intent: 'danger', message: title })
-    },
-  })
   const extendLogin = () => signIn({ variables: { project: projectId, authData: { email, password } } })
 
   return (
