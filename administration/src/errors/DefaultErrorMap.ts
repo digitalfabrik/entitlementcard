@@ -14,10 +14,10 @@ const defaultErrorMap = (error: ApolloError): GraphQLErrorMessage => {
     return { title: i18next.t('errors:pageNotFound') }
   }
   if (error.message.includes('500')) {
-    return { title: i18next.t('errors:internalError') }
+    return { title: i18next.t('errors:internalError'), retryable: true }
   }
   if (error.message.includes('501')) {
-    return { title: i18next.t('errors:functionNotAvailable') }
+    return { title: i18next.t('errors:functionNotAvailable'), retryable: true }
   }
   return { title: i18next.t('errors:serverNotAvailable'), retryable: true }
 }
