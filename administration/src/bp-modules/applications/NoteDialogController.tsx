@@ -49,11 +49,11 @@ const NoteDialogController = ({
       <ApplicationNoteTooltip application={application}>
         <Button
           variant='contained'
-          color='default'
+          color={application.note ? 'primary' : 'default'}
           onClick={() => onOpenNoteDialog(true)}
           startIcon={<EditNote />}
           sx={{ displayPrint: 'none' }}>
-          Notiz anzeigen
+          {application.note ? t('noteButtonShow') : t('noteButtonCreate')}
         </Button>
       </ApplicationNoteTooltip>
       {isOpen && (
