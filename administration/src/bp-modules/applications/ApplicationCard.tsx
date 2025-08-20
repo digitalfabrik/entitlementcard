@@ -50,7 +50,6 @@ import type { ProjectConfig } from '../../project-configs/getProjectConfig'
 import JsonFieldView from '../../shared/components/JsonFieldView'
 import VerificationsView from '../../shared/components/VerificationsView'
 import { ApplicationDataIncompleteError } from '../../util/applicationDataHelper'
-import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { useAppToaster } from '../AppToaster'
 import { AccordionExpandButton } from '../components/AccordionExpandButton'
@@ -337,7 +336,7 @@ const ApplicationCard = ({
         sx={{ flexDirection: 'column', alignItems: 'stretch', padding: 0 }}>
         <Stack direction='row' sx={{ width: '100%', gap: 2, paddingLeft: 2, paddingRight: 2 }}>
           <Typography sx={{ minWidth: '250px', ...headerTypography }}>
-            {t('applicationFrom')} {formatDateWithTimezone(application.createdDate, config.timezone)}
+            {t('applicationFrom', { date: new Date(application.createdDate) })}
           </Typography>
           <Warning
             color='warning'
@@ -367,9 +366,7 @@ const ApplicationCard = ({
           <Stack sx={{ gap: 2, flexGrow: 1, marginLeft: 2, marginBottom: 2, alignItems: 'flex-start' }}>
             {application.status === ApplicationStatus.Withdrawn && !!application.statusResolvedDate && (
               <Box sx={{ bgcolor: theme.palette.warning.light, padding: 2 }}>
-                {t('withdrawalMessage', {
-                  withdrawalDate: formatDateWithTimezone(application.statusResolvedDate, config.timezone),
-                })}
+                {t('withdrawalMessage', { date: new Date(application.statusResolvedDate) })}
                 <br />
                 {t('deleteApplicationSoonPrompt')}
               </Box>
