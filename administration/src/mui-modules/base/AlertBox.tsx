@@ -29,15 +29,9 @@ const AlertBox = ({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        gap: '12px',
         maxWidth: '900px',
         [theme.breakpoints.down('md')]: {
-          flexDirection: 'column',
           margin: '5px',
-          '& .MuiAlert-action': {
-            alignSelf: 'start',
-            marginLeft: 0,
-          },
         },
       })}
       action={

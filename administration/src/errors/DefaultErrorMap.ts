@@ -19,7 +19,7 @@ const defaultErrorMap = (error: ApolloError): GraphQLErrorMessage => {
   if (error.message.includes('501')) {
     return { title: i18next.t('errors:functionNotAvailable') }
   }
-  return { title: i18next.t('errors:serverNotAvailable') }
+  return { title: i18next.t('errors:serverNotAvailable'), retryable: true }
 }
 
 export default defaultErrorMap
