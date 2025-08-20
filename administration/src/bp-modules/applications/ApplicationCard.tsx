@@ -370,28 +370,16 @@ const ApplicationCard = ({
       </AccordionSummary>
 
       <AccordionDetails sx={{ position: 'relative' }}>
-        <Stack sx={{ spacing: 2, alignItems: 'flex-start', gap: 2 }}>
-          <Stack sx={{ gap: 2, flexGrow: 1, marginLeft: 2, marginBottom: 2, alignItems: 'flex-start' }}>
-            {application.status === ApplicationStatus.Withdrawn && !!application.statusResolvedDate && (
-              <Box sx={{ bgcolor: theme.palette.warning.light, padding: 2 }}>
-                {t('withdrawalMessage', { date: new Date(application.statusResolvedDate) })}
-                <br />
-                {t('deleteApplicationSoonPrompt')}
-              </Box>
-            )}
-            {/* TODO: <JsonFieldView> does not emit a root element and thus, <Stack> would insert a gap here */}
-            <Box>
-              <JsonFieldView
-                jsonField={application.jsonValue}
-                baseUrl={baseUrl}
-                key={0}
-                hierarchyIndex={0}
-                attachmentAccessible
-                expandedRoot={false}
-              />
-            </Box>
-          </Stack>
-        </Stack>
+        <Box sx={{ paddingLeft: 2, paddingRight: 2, paddingBottom: 2 }}>
+          <JsonFieldView
+            jsonField={application.jsonValue}
+            baseUrl={baseUrl}
+            key={0}
+            hierarchyIndex={0}
+            attachmentAccessible
+            expandedRoot={false}
+          />
+        </Box>
 
         <Divider />
 
