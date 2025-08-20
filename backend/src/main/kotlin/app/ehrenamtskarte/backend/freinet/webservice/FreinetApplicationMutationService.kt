@@ -1,17 +1,19 @@
 package app.ehrenamtskarte.backend.freinet.webservice
 
 import app.ehrenamtskarte.backend.application.database.ApplicationEntity
+import app.ehrenamtskarte.backend.application.database.ApplicationEntity.Status
 import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantDateOfBirth
 import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantFirstName
 import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantLastName
 import app.ehrenamtskarte.backend.application.webservice.utils.getPersonalDataNode
-import app.ehrenamtskarte.backend.auth.getAdministrator
+import app.ehrenamtskarte.backend.auth.getAuthContext
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.common.utils.devWarn
 import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
 import app.ehrenamtskarte.backend.exception.service.NotImplementedException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.freinet.database.repos.FreinetAgencyRepository
 import app.ehrenamtskarte.backend.freinet.exceptions.FreinetFoundMultiplePersonsException
 import app.ehrenamtskarte.backend.freinet.exceptions.FreinetPersonDataInvalidException
@@ -29,13 +31,12 @@ class FreinetApplicationMutationService {
     @GraphQLDescription("Send application and card information to Freinet")
     fun sendApplicationAndCardDataToFreinet(
         applicationId: Int,
-        project: String,
         freinetCard: FreinetCard,
         dfe: DataFetchingEnvironment,
     ): Boolean {
         val context = dfe.graphQlContext.context
-        val admin = context.getAdministrator()
-        val projectConfig = context.backendConfiguration.getProjectConfig(project)
+        val authContext = context.getAuthContext()
+        val projectConfig = context.backendConfiguration.getProjectConfig(authContext.project)
 
         if (projectConfig.freinet == null) {
             throw NotImplementedException()
@@ -45,9 +46,13 @@ class FreinetApplicationMutationService {
             val application = ApplicationEntity.findById(applicationId)
                 ?: throw NotFoundException("Application not found")
 
+            if (application.status == Status.Withdrawn) {
+                throw InvalidInputException("Application is withdrawn")
+            }
+
             val regionId = application.regionId.value
 
-            if (!Authorizer.mayViewApplicationsInRegion(admin, regionId)) {
+            if (!Authorizer.mayViewApplicationsInRegion(authContext.admin, regionId)) {
                 throw UnauthorizedException()
             }
 
@@ -75,7 +80,7 @@ class FreinetApplicationMutationService {
                         lastName,
                         dateOfBirth,
                         application.getPersonalDataNode(),
-                        admin.email,
+                        authContext.admin.email,
                     )
 
                     val userId = createdPerson.data.get("NEW_USERID") ?: throw FreinetPersonDataInvalidException()

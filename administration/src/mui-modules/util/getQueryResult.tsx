@@ -28,12 +28,12 @@ const getQueryResult = <Data, Variables extends OperationVariables>(
     return {
       successful: false,
       component: errorComponent ?? (
-        <AlertBox severity='error' title={title} description={description} onAction={refetch} />
+        <AlertBox title={title} description={description} onAction={refetch} severity='error' />
       ),
     }
   }
   if (data === undefined) {
-    return { successful: false, component: <AlertBox severity='error' onAction={refetch} /> }
+    return { successful: false, component: <AlertBox onAction={refetch} severity='error' /> }
   }
   return { successful: true, data }
 }

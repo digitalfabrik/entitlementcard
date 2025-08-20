@@ -8,11 +8,7 @@ import getQueryResult from '../../mui-modules/util/getQueryResult'
 import { useAppToaster } from '../AppToaster'
 import SettingsCard from './SettingsCard'
 
-type NotificationSettingsProps = {
-  projectId: string
-}
-
-const NotificationSettings = ({ projectId }: NotificationSettingsProps): ReactElement => {
+const NotificationSettings = (): ReactElement => {
   const { t } = useTranslation('userSettings')
   const [receiveEmailForActivation, setReceiveEmailForActivation] = useState<boolean>(false)
   const [receiveEmailForVerification, setReceiveEmailForVerification] = useState<boolean>(false)
@@ -26,7 +22,7 @@ const NotificationSettings = ({ projectId }: NotificationSettingsProps): ReactEl
     onCompleted: () => appToaster?.show({ intent: 'success', message: t('notificationUpdateSuccess') }),
   })
 
-  const notificationSettingsQuery = useGetNotificationSettingsQuery({ variables: { project: projectId } })
+  const notificationSettingsQuery = useGetNotificationSettingsQuery()
 
   useEffect(() => {
     const notificationQueryResult = getQueryResult(notificationSettingsQuery)
@@ -46,7 +42,6 @@ const NotificationSettings = ({ projectId }: NotificationSettingsProps): ReactEl
   const submit = () => {
     updateNotificationSettings({
       variables: {
-        project: projectId,
         notificationSettings: {
           notificationOnApplication: receiveEmailForActivation,
           notificationOnVerification: receiveEmailForVerification,

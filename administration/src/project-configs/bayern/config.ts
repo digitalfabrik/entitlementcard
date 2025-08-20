@@ -1,7 +1,7 @@
-import { JsonField, findValue } from '../../bp-modules/applications/JsonFieldView'
 import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
 import EMailNotificationExtension from '../../cards/extensions/EMailNotificationExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
+import { JsonField, findValue } from '../../shared/components/JsonFieldView'
 import {
   ApplicationDataIncompleteError,
   getCardTypeApplicationData,

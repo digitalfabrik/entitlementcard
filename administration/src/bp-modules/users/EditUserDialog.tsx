@@ -6,7 +6,6 @@ import styled from 'styled-components'
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { Administrator, Role, useEditAdministratorMutation } from '../../generated/graphql'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { useAppToaster } from '../AppToaster'
 import RegionSelector from './RegionSelector'
 import RoleHelpButton from './RoleHelpButton'
@@ -37,7 +36,6 @@ const EditUserDialog = ({
   const [email, setEmail] = useState('')
   const [role, setRole] = useState<Role | null>(null)
   const [regionId, setRegionId] = useState<number | null>(null)
-  const { projectId: project } = useContext(ProjectConfigContext)
   const rolesWithRegion = [Role.RegionManager, Role.RegionAdmin]
 
   useEffect(() => {
@@ -87,7 +85,6 @@ const EditUserDialog = ({
 
           editAdministrator({
             variables: {
-              project,
               adminId: selectedUser.id,
               newEmail: email,
               newRole: role as Role,

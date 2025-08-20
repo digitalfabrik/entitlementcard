@@ -1,12 +1,10 @@
 mutation sendCardCreationConfirmationMail(
-  $project: String!
   $regionId: Int!
   $recipientAddress: String!
   $recipientName: String!
   $deepLink: String!
 ) {
   result: sendCardCreationConfirmationMail(
-    project: $project
     regionId: $regionId
     recipientAddress: $recipientAddress
     recipientName: $recipientName

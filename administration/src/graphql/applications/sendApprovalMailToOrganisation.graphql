@@ -1,7 +1,6 @@
-mutation sendApprovalMailToOrganisation($applicationId: Int!, $applicationVerificationId: Int!, $project: String!) {
+mutation sendApprovalMailToOrganisation($applicationId: Int!, $applicationVerificationId: Int!) {
   result: sendApprovalMailToOrganisation(
     applicationId: $applicationId
     applicationVerificationId: $applicationVerificationId
-    project: $project
   )
 }

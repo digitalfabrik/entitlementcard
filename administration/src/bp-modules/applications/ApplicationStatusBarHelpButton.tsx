@@ -28,7 +28,7 @@ const ApplicationStatusHelpButton = (): ReactElement => {
           <Headline>{t('whichStatusMeansWhat')}</Headline>
           <Description>
             <li>
-              <b>{t('accepted')}:</b>
+              <b>{t('statusBarAll')}:</b>
               <Description>
                 {t('acceptedDescription')}
                 <br />
@@ -36,7 +36,7 @@ const ApplicationStatusHelpButton = (): ReactElement => {
               </Description>
             </li>
             <li>
-              <b>{t('rejected')}:</b>
+              <b>{t('statusBarRejected')}:</b>
               <Description>
                 {t('rejectedDescription')}
                 <br />
@@ -44,7 +44,7 @@ const ApplicationStatusHelpButton = (): ReactElement => {
               </Description>
             </li>
             <li>
-              <b>{t('withdrawn')}:</b>
+              <b>{t('statusBarWithdrawn')}:</b>
               <Description>
                 {t('withdrawnDescription')}
                 <br />
@@ -52,7 +52,7 @@ const ApplicationStatusHelpButton = (): ReactElement => {
               </Description>
             </li>
             <li>
-              <b>{t('open')}:</b>
+              <b>{t('statusBarOpen')}:</b>
               <Description>
                 {t('pendingDescription')}
                 <br />

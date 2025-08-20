@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.auth.webservice.schema
 
 import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
+import app.ehrenamtskarte.backend.auth.getAuthContext
 import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCredentialsException
@@ -12,20 +13,20 @@ import org.jetbrains.exposed.sql.transactions.transaction
 class ChangePasswordMutationService {
     @GraphQLDescription("Changes an administrator's password")
     fun changePassword(
-        project: String,
         email: String,
         currentPassword: String,
         newPassword: String,
         dfe: DataFetchingEnvironment,
     ): Boolean {
         val context = dfe.graphQlContext.context
-        val jwtPayload = context.enforceSignedIn()
+        val authContext = context.getAuthContext()
+
         transaction {
             val administratorEntity =
-                AdministratorsRepository.findByAuthData(project, email, currentPassword)
+                AdministratorsRepository.findByAuthData(authContext.project, email, currentPassword)
                     ?: throw InvalidCredentialsException()
 
-            if (administratorEntity.id.value != jwtPayload.adminId) {
+            if (administratorEntity.id.value != authContext.adminId) {
                 throw UnauthorizedException()
             }
 

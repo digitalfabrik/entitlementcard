@@ -6,7 +6,6 @@ import { AuthContext } from '../../AuthProvider'
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { Administrator, useDeleteAdministratorMutation } from '../../generated/graphql'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { useAppToaster } from '../AppToaster'
 
 const DeleteUserDialog = ({
@@ -21,7 +20,6 @@ const DeleteUserDialog = ({
   const appToaster = useAppToaster()
   const { signOut } = useContext(AuthContext)
   const actingAdminId = useContext(WhoAmIContext).me?.id
-  const { projectId: project } = useContext(ProjectConfigContext)
   const { t } = useTranslation('users')
 
   const [deleteAdministrator, { loading }] = useDeleteAdministratorMutation({
@@ -56,7 +54,6 @@ const DeleteUserDialog = ({
 
           deleteAdministrator({
             variables: {
-              project,
               adminId: selectedUser.id,
             },
           })
