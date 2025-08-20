@@ -198,9 +198,9 @@ cp backend/src/main/resources/config/config.yml ~/.config/entitlementcard
 0. Use the docker desktop client
 1. Set up the matomo instance [http://localhost:5003](http://localhost:5003).
  The public version is available at https://matomo-entitlementcard.tuerantuer.org
-1. Create an access token at [localhost:5003/settings](http://localhost:5003/settings)
-2. Add `localhost:5003` to `matomos trusted_hosts` at `/var/www/html/config/config.ini.php`
-3. Add your matomo config for each project as described in [Local Backend Configuration](#local-backend-configuration)
+2. Create an access token (login before) at [http://localhost:5003/index.php?module=UsersManager&action=userSecurity](http://localhost:5003/index.php?module=UsersManager&action=userSecurity)
+3. Add `localhost:5003` to `matomos trusted_hosts` at `/var/www/html/config/config.ini.php`
+4. Add your matomo config for each project as described in [Local Backend Configuration](#local-backend-configuration)
 ```yaml
 projects:
   - id: ...
@@ -210,6 +210,7 @@ projects:
       url: http://localhost:5003/matomo.php
       accessToken: <matomo-access-token>
 ```
+Troubleshooting: If your matomo instance is corrupt, you can just delete `config/config.ini.php` in folder (var/www/html)
 
 #### Inspecting Services
 
