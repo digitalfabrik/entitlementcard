@@ -104,6 +104,7 @@ export type StoresManagementConfig =
 export type ProjectConfig = {
   name: string
   projectId: string
+  publisherText: string
   applicationFeature?: ApplicationFeature
   staticQrCodesEnabled: boolean
   card: CardConfig

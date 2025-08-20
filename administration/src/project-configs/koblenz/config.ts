@@ -1,4 +1,9 @@
-import { QUERY_PARAM_BIRTHDAY, QUERY_PARAM_KOBLENZ_REFERENCE_NUMBER, QUERY_PARAM_NAME } from 'build-configs'
+import {
+  QUERY_PARAM_BIRTHDAY,
+  QUERY_PARAM_KOBLENZ_REFERENCE_NUMBER,
+  QUERY_PARAM_NAME,
+  buildConfigKoblenz,
+} from 'build-configs'
 
 import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
 import KoblenzReferenceNumberExtension from '../../cards/extensions/KoblenzReferenceNumberExtension'
@@ -11,6 +16,7 @@ import pdfConfig from './pdf'
 const config: ProjectConfig = {
   name: 'KoblenzPass',
   projectId: 'koblenz.sozialpass.app',
+  publisherText: buildConfigKoblenz.common.publisherText,
   staticQrCodesEnabled: true,
   card: {
     nameColumnName: QUERY_PARAM_NAME,
