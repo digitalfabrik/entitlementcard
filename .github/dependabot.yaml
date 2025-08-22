@@ -12,7 +12,7 @@ updates:
       - "dependencies"
     ignore:
       - dependency-name: "*"
-        # Ignore major and minor updates for all dependencies
+        # Ignore major updates for all dependencies
         update-types: ["version-update:semver-major"]
     groups:
       minor-and-patch:
@@ -29,7 +29,7 @@ updates:
       - "dependencies"
     ignore:
       - dependency-name: "*"
-        # Ignore major and minor updates for all dependencies
+        # Ignore major updates for all dependencies
         update-types: ["version-update:semver-major"]
     groups:
       minor-and-patch:
@@ -47,7 +47,7 @@ updates:
     open-pull-requests-limit: 1
     ignore:
       - dependency-name: "*"
-        # Ignore major and minor updates for all dependencies
+        # Ignore major updates for all dependencies
         update-types: ["version-update:semver-major"]
     groups:
       minor-and-patch:
@@ -64,7 +64,7 @@ updates:
     open-pull-requests-limit: 1
     ignore:
       - dependency-name: "*"
-        # Ignore major and minor updates for all dependencies
+        # Ignore major updates for all dependencies
         update-types: ["version-update:semver-major"]
     groups:
       minor-and-patch:
