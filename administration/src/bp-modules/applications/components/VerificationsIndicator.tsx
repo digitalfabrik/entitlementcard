@@ -116,7 +116,7 @@ export const ApplicationIndicators = ({ application }: { application: Applicatio
     <Stack direction='row' spacing={2} sx={{ displayPrint: 'none' }}>
       {(application.note ?? '').trim().length > 0 && (
         <ApplicationNoteTooltip application={application}>
-          <EditNote />
+          <EditNote color='primary' />
         </ApplicationNoteTooltip>
       )}
       {preVerifiedEntitlementType !== undefined ? (

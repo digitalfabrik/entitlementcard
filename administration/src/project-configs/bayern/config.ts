@@ -1,3 +1,5 @@
+import { buildConfigBayern } from 'build-configs'
+
 import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
 import EMailNotificationExtension from '../../cards/extensions/EMailNotificationExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
@@ -68,6 +70,7 @@ export const applicationJsonToCardQuery = (json: JsonField<'Array'>): string | n
 const config: ProjectConfig = {
   name: 'Ehrenamtskarte Bayern',
   projectId: 'bayern.ehrenamtskarte.app',
+  publisherText: buildConfigBayern.common.publisherText,
   applicationFeature: {
     applicationJsonToPersonalData,
     applicationJsonToCardQuery,
