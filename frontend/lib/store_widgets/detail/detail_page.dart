@@ -4,7 +4,6 @@ import 'package:ehrenamtskarte/store_widgets/detail/detail_app_bar.dart';
 import 'package:ehrenamtskarte/store_widgets/detail/detail_content.dart';
 import 'package:ehrenamtskarte/util/color_utils.dart';
 import 'package:ehrenamtskarte/widgets/error_message.dart';
-import 'package:ehrenamtskarte/widgets/landscape_safe_area.dart';
 import 'package:ehrenamtskarte/widgets/top_loading_spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -55,9 +54,7 @@ class DetailPage extends StatelessWidget {
               ),
               Expanded(
                 child: Scaffold(
-                  body: LandscapeSafeArea(
-                    child: DetailContent(matchingStore, showOnMap: showOnMap, accentColor: accentColor),
-                  ),
+                  body: DetailContent(matchingStore, showOnMap: showOnMap, accentColor: accentColor),
                 ),
               ),
             ],
