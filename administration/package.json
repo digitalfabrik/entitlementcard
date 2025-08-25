@@ -23,7 +23,7 @@
     "apollo-upload-client": "^18.0.1",
     "build-configs": "file:../frontend/build-configs",
     "csv-parse": "^5.6.0",
-    "csv-stringify": "^6.5.2",
+    "csv-stringify": "^6.6.0",
     "date-fns": "^4.1.0",
     "graphql": "^16.11.0",
     "html-react-parser": "^5.2.6",
