@@ -20,12 +20,14 @@ class QrCodeScannerControls extends StatelessWidget {
           margin: const EdgeInsets.all(8),
           child: OutlinedButton(
             onPressed: () => controller.toggleTorch(),
-            child: ValueListenableBuilder(
-              valueListenable: controller.torchState,
-              builder: (ctx, state, child) => Text(
-                state == TorchState.on ? t.identification.flashOff : t.identification.flashOn,
-                style: theme.textTheme.titleSmall?.apply(color: theme.colorScheme.primary),
-              ),
+            child: ValueListenableBuilder<MobileScannerState>(
+              valueListenable: controller,
+              builder: (context, state, child) {
+                final buttonText = state.torchState == TorchState.on
+                    ? t.identification.flashOff
+                    : t.identification.flashOn;
+                return Text(buttonText, style: theme.textTheme.titleSmall?.apply(color: theme.colorScheme.primary));
+              },
             ),
           ),
         ),
@@ -33,12 +35,14 @@ class QrCodeScannerControls extends StatelessWidget {
           margin: const EdgeInsets.all(8),
           child: OutlinedButton(
             onPressed: () => controller.switchCamera(),
-            child: ValueListenableBuilder(
-              valueListenable: controller.cameraFacingState,
-              builder: (ctx, state, child) => Text(
-                state == CameraFacing.back ? t.identification.selfieCamera : t.identification.standardCamera,
-                style: theme.textTheme.titleSmall?.apply(color: theme.colorScheme.primary),
-              ),
+            child: ValueListenableBuilder<MobileScannerState>(
+              valueListenable: controller,
+              builder: (context, state, child) {
+                final buttonText = state.cameraDirection == CameraFacing.back
+                    ? t.identification.selfieCamera
+                    : t.identification.standardCamera;
+                return Text(buttonText, style: theme.textTheme.titleSmall?.apply(color: theme.colorScheme.primary));
+              },
             ),
           ),
         ),
