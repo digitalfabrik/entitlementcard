@@ -20,6 +20,7 @@ import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import ConfirmDialog from '../application/ConfirmDialog'
 import CenteredCircularProgress from '../base/CenteredCircularProgress'
+import { applicationWasAlreadyProcessed } from './util'
 
 const ApplicationViewCard = styled(Card)`
   @media screen and (min-width: 600px) {
@@ -113,10 +114,7 @@ const ApplicationApplicantView = ({
               </Button>
             </>
           )}
-          {(application.status === ApplicationStatus.Approved ||
-            application.status === ApplicationStatus.ApprovedCardCreated ||
-            application.status === ApplicationStatus.Rejected) &&
-          !!application.statusResolvedDate ? (
+          {applicationWasAlreadyProcessed(application.status) && !!application.statusResolvedDate ? (
             <>
               <StyledDivider />
               <Typography variant='h4'>
