@@ -24,11 +24,11 @@ const getQueryResult = <Data, Variables extends OperationVariables>(
     return { successful: false, component: <CenteredCircularProgress /> }
   }
   if (error) {
-    const { title, description } = getMessageFromApolloError(error)
+    const { title, description, retryable } = getMessageFromApolloError(error)
     return {
       successful: false,
       component: errorComponent ?? (
-        <AlertBox title={title} description={description} onAction={refetch} severity='error' />
+        <AlertBox title={title} description={description} onAction={retryable ? refetch : undefined} severity='error' />
       ),
     }
   }
