@@ -8,13 +8,13 @@ import { useUpdateApplicationNoteMutation } from '../../generated/graphql'
 import { useAppToaster } from '../AppToaster'
 import TextAreaDialog from '../components/TextAreaDialog'
 import { ApplicationNoteTooltip } from './components/ApplicationNoteTooltip'
-import { GetApplicationsType } from './types'
+import type { Application } from './types'
 
 type NoteDialogControllerProps = {
-  application: GetApplicationsType
+  application: Application
   isOpen: boolean
   onOpenNoteDialog: (value: boolean) => void
-  onChange: (application: GetApplicationsType) => void
+  onChange: (application: Application) => void
 }
 
 const NoteDialogController = ({
@@ -49,11 +49,11 @@ const NoteDialogController = ({
       <ApplicationNoteTooltip application={application}>
         <Button
           variant='contained'
-          color='default'
+          color={application.note ? 'primary' : 'default'}
           onClick={() => onOpenNoteDialog(true)}
           startIcon={<EditNote />}
           sx={{ displayPrint: 'none' }}>
-          Notiz anzeigen
+          {application.note ? t('noteButtonShow') : t('noteButtonCreate')}
         </Button>
       </ApplicationNoteTooltip>
       {isOpen && (

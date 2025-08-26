@@ -24,24 +24,41 @@
     </JetCodeStyleSettings>
     <SqlCodeStyleSettings version="7">
       <option name="QUOTE_IDENTIFIER" value="2" />
+      <option name="QUOTE_TYPE" value="11" />
       <option name="QUERY_EL_LINE" value="101" />
       <option name="QUERY_EL_COMMA" value="2" />
+      <option name="QUERY_ALIGN_ELEMENTS" value="false" />
       <option name="QUERY_ALIGN_LINE_COMMENTS" value="false" />
-      <option name="INSERT_CONTENT" value="4" />
-      <option name="SET_EL_LINE" value="101" />
-      <option name="SET_EL_WRAP" value="3" />
+      <option name="INSERT_INTO_NL" value="2" />
+      <option name="INSERT_CONTENT" value="2" />
+      <option name="INSERT_CLOSING" value="3" />
+      <option name="INSERT_VALUES_EL_LINE" value="101" />
+      <option name="INSERT_EL_WRAP" value="2" />
+      <option name="INSERT_COLLAPSE_MULTI_ROW_VALUES" value="true" />
+      <option name="INSERT_MATRIX_MIN_WIDENING_THRESHOLD" value="0" />
+      <option name="INSERT_MATRIX_BREAK_THRESHOLD" value="0" />
+      <option name="SET_EL_WRAP" value="2" />
       <option name="SET_ALIGN_EQUAL_SIGN" value="false" />
-      <option name="SELECT_EL_WRAP" value="3" />
+      <option name="SELECT_NEW_LINE_AFTER_ALL_DISTINCT" value="true" />
       <option name="SELECT_ALIGN_AS" value="false" />
+      <option name="FROM_ONLY_JOIN_INDENT" value="1" />
+      <option name="FROM_PLACE_ON" value="10" />
       <option name="TABLE_OPENING" value="1" />
       <option name="TABLE_CONTENT" value="2" />
       <option name="TABLE_CLOSING" value="2" />
       <option name="TABLE_TYPES_ALIGN" value="false" />
       <option name="TABLE_DEFAULTS_ALIGN" value="false" />
       <option name="TABLE_NULLABILITIES_ALIGN" value="false" />
-      <option name="TABLE_ALTER_ITEM_WRAP" value="1" />
-      <option name="ROUTINE_ARG_CONTENT" value="2" />
-      <option name="ROUTINE_ARG_CLOSING" value="2" />
+      <option name="TABLE_ALTER_INSTRUCTION_ALIGN" value="false" />
+      <option name="TABLE_ALTER_ITEM_WRAP" value="2" />
+      <option name="TABLE_ALTER_ITEM_ALIGN" value="false" />
+      <option name="CONSTRAINT_WRAP_2" value="true" />
+      <option name="CONSTRAINT_WRAP_3" value="true" />
+      <option name="CONSTRAINT_WRAP_4" value="true" />
+      <option name="POST_OPT_ALIGN" value="false" />
+      <option name="SCRIPT_STMT_SEMICOLON_WRAP" value="2" />
+      <option name="IMP_DECLARE_ALIGN_TYPE" value="false" />
+      <option name="IMP_DECLARE_ALIGN_EQ" value="false" />
     </SqlCodeStyleSettings>
     <TypeScriptCodeStyleSettings version="0">
       <option name="USE_SEMICOLON_AFTER_STATEMENT" value="false" />
@@ -77,11 +94,13 @@
       </indentOptions>
     </codeStyleSettings>
     <codeStyleSettings language="SQL">
+      <option name="KEEP_LINE_BREAKS" value="false" />
       <indentOptions>
         <option name="CONTINUATION_INDENT_SIZE" value="4" />
       </indentOptions>
     </codeStyleSettings>
     <codeStyleSettings language="TypeScript">
+      <option name="BLOCK_COMMENT_ADD_SPACE" value="true" />
       <option name="SOFT_MARGINS" value="120" />
       <indentOptions>
         <option name="INDENT_SIZE" value="2" />
@@ -98,6 +117,9 @@
     <codeStyleSettings language="kotlin">
       <option name="CODE_STYLE_DEFAULTS" value="KOTLIN_OFFICIAL" />
       <option name="RIGHT_MARGIN" value="120" />
+      <option name="LINE_COMMENT_AT_FIRST_COLUMN" value="false" />
+      <option name="LINE_COMMENT_ADD_SPACE" value="true" />
+      <option name="LINE_COMMENT_ADD_SPACE_ON_REFORMAT" value="true" />
       <indentOptions>
         <option name="CONTINUATION_INDENT_SIZE" value="4" />
       </indentOptions>

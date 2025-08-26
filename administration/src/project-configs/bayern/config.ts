@@ -1,13 +1,14 @@
-import { JsonField, findValue } from '../../bp-modules/applications/JsonFieldView'
+import { buildConfigBayern } from 'build-configs'
+
 import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
 import EMailNotificationExtension from '../../cards/extensions/EMailNotificationExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
+import { JsonField, findValue } from '../../shared/components/JsonFieldView'
 import {
   ApplicationDataIncompleteError,
   getCardTypeApplicationData,
   getPersonalApplicationData,
 } from '../../util/applicationDataHelper'
-import { isProductionEnvironment } from '../../util/helper'
 import { ActivationText } from '../common/ActivationText'
 import type { CardConfig, ProjectConfig } from '../getProjectConfig'
 import { DataPrivacyAdditionalBaseText, DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
@@ -69,6 +70,7 @@ export const applicationJsonToCardQuery = (json: JsonField<'Array'>): string | n
 const config: ProjectConfig = {
   name: 'Ehrenamtskarte Bayern',
   projectId: 'bayern.ehrenamtskarte.app',
+  publisherText: buildConfigBayern.common.publisherText,
   applicationFeature: {
     applicationJsonToPersonalData,
     applicationJsonToCardQuery,
@@ -99,8 +101,7 @@ const config: ProjectConfig = {
     },
   },
   freinetCSVImportEnabled: true,
-  // TODO #1751 has to be implemented, before we ship it to production
-  freinetDataTransferEnabled: !isProductionEnvironment(),
+  freinetDataTransferEnabled: true,
   cardCreation: true,
   selfServiceEnabled: false,
   storesManagement: {

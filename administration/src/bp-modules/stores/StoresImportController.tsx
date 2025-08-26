@@ -1,12 +1,11 @@
-import { NonIdealState, Spinner } from '@blueprintjs/core'
+import { CircularProgress, styled } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
-import styled from 'styled-components'
 
-import { useWhoAmI } from '../../WhoAmIProvider'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { Role, useImportAcceptingStoresMutation } from '../../generated/graphql'
+import RenderGuard from '../../mui-modules/components/RenderGuard'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { StoresFieldConfig } from '../../project-configs/getProjectConfig'
 import { useAppToaster } from '../AppToaster'
@@ -16,7 +15,7 @@ import StoresCSVInput from './StoresCSVInput'
 import StoresImportResult from './StoresImportResult'
 import StoresTable from './StoresTable'
 
-const CenteredSpinner = styled(Spinner)`
+const CenteredSpinner = styled(CircularProgress)`
   z-index: 999;
   top: 50%;
   left: 50%;
@@ -31,7 +30,6 @@ export type StoresData = {
   [key: string]: string
 }
 const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
-  const { projectId } = useContext(ProjectConfigContext)
   const navigate = useNavigate()
   const appToaster = useAppToaster()
   const [acceptingStores, setAcceptingStores] = useState<AcceptingStoresEntry[]>([])
@@ -90,7 +88,6 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
     importStores({
       variables: {
         stores: storesToImport,
-        project: projectId,
         dryRun,
       },
     })
@@ -98,7 +95,7 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
 
   return (
     <>
-      {(isApplyingStoreTransaction || isLoadingCoordinates) && <CenteredSpinner intent='primary' />}
+      {(isApplyingStoreTransaction || isLoadingCoordinates) && <CenteredSpinner />}
       {acceptingStores.length === 0 ? (
         <StoresCSVInput
           setAcceptingStores={setAcceptingStores}
@@ -120,14 +117,17 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
 }
 
 const StoresImportController = (): ReactElement => {
-  const { role } = useWhoAmI().me
   const storesManagement = useContext(ProjectConfigContext).storesManagement
   const { t } = useTranslation('errors')
-  if (role !== Role.ProjectStoreManager || !storesManagement.enabled) {
-    return <NonIdealState icon='cross' title={t('notAuthorized')} description={t('notAuthorizedToManageStores')} />
-  }
 
-  return <StoresImport fields={storesManagement.fields} />
+  return (
+    <RenderGuard
+      allowedRoles={[Role.ProjectStoreManager]}
+      condition={storesManagement.enabled}
+      error={{ description: t('notAuthorizedToManageStores') }}>
+      {storesManagement.enabled && <StoresImport fields={storesManagement.fields} />}
+    </RenderGuard>
+  )
 }
 
 export default StoresImportController

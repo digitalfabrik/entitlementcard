@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.common.webservice
 
+import app.ehrenamtskarte.backend.BuildConfig
 import app.ehrenamtskarte.backend.application.webservice.ApplicationAttachmentHandler
 import app.ehrenamtskarte.backend.application.webservice.HealthHandler
 import app.ehrenamtskarte.backend.common.utils.initializeSentry
@@ -91,5 +92,6 @@ class WebService {
         }
         println("Server is running at http://$host:$port")
         println("Goto http://$host:$port/graphiql/ for a graphical editor")
+        println("Current backend version: ${BuildConfig.VERSION_NAME}, sha1: ${BuildConfig.COMMIT_HASH}")
     }
 }

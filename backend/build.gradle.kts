@@ -6,10 +6,12 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
  * This generated file contains a sample Kotlin application project to get you started.
  */
 val isProductionEnvironment = System.getProperty("env") == "prod"
+val rootPackageName = "app.ehrenamtskarte.backend"
 
 plugins {
     alias(libs.plugins.com.google.protobuf)
     alias(libs.plugins.com.expediagroup.graphql)
+    alias(libs.plugins.com.github.gmazzo.buildconfig)
     alias(libs.plugins.io.gitlab.arturbosch.detekt)
     alias(libs.plugins.org.jetbrains.kotlin.jvm)
     alias(libs.plugins.org.jetbrains.kotlinx.kover)
@@ -25,15 +27,15 @@ repositories {
 
 dependencies {
     implementation(libs.at.favre.lib.bcrypt)
-    implementation(libs.com.auth0.java.jwt) // JSON web tokens
-    implementation(libs.com.eatthepath.java.otp) // dynamic card verification
+    implementation(libs.com.auth0.java.jwt)
+    implementation(libs.com.eatthepath.java.otp)
     implementation(libs.com.expediagroup.graphql.kotlin.schema.generator)
     testImplementation(libs.com.expediagroup.graphql.kotlin.client)
     implementation(libs.com.fasterxml.jackson.dataformat.xml)
     implementation(libs.com.fasterxml.jackson.dataformat.yaml)
     implementation(libs.com.fasterxml.jackson.datatype.jsr310)
     implementation(libs.com.fasterxml.jackson.module.kotlin)
-    implementation(libs.com.google.zxing.core) // QR-Codes
+    implementation(libs.com.google.zxing.core)
     implementation(libs.com.github.ajalt.clikt)
     implementation(libs.com.google.protobuf.kotlin)
     implementation(libs.com.graphql.java.extended.scalars)
@@ -59,12 +61,21 @@ dependencies {
     testImplementation(libs.org.junit.jupiter.params)
     implementation(libs.org.piwik.java.tracking.matomo.java.tracker)
     implementation(libs.org.postgresql.postgresql)
-    implementation(libs.com.kohlschutter.junixsocket.common) // required for PostgreSQL Unix domain socket support
+    implementation(libs.com.kohlschutter.junixsocket.common) {
+        because("PostgreSQL Unix domain socket support")
+    }
     implementation(libs.com.kohlschutter.junixsocket.core)
     implementation(libs.org.slf4j.simple)
     implementation(libs.org.simplejavamail)
     testImplementation(libs.org.testcontainers)
     testImplementation(libs.org.testcontainers.postgresql)
+    constraints {
+        testImplementation(libs.org.apache.commons.compress) {
+            because(
+                "Replace transitive dependency in testcontainers to mitigate vulnerability: testcontainers/testcontainers-java#8338",
+            )
+        }
+    }
 }
 
 kotlin {
@@ -87,6 +98,12 @@ ktlint {
     filter {
         exclude { it.file.path.contains("${layout.buildDirectory.get()}/generated/") }
     }
+}
+
+buildConfig {
+    packageName(rootPackageName)
+    buildConfigField("VERSION_NAME", System.getenv("NEW_VERSION_NAME"))
+    buildConfigField("COMMIT_HASH", System.getenv("CIRCLE_SHA1"))
 }
 
 if (isProductionEnvironment) {
@@ -131,14 +148,14 @@ protobuf {
 
 application {
     // Define the main class for the application.
-    mainClass.set("app.ehrenamtskarte.backend.EntryPointKt")
+    mainClass.set("$rootPackageName.EntryPointKt")
 }
 
 kover {
     reports {
         filters {
             includes {
-                classes("app.ehrenamtskarte.backend.*")
+                classes("$rootPackageName.*")
             }
         }
     }
@@ -178,7 +195,7 @@ tasks.graphqlGenerateTestClient {
     dependsOn(tasks.generateSentryBundleIdJava)
     dependsOn(tasks.sentryCollectSourcesJava)
     schemaFile.set(rootDir.parentFile.resolve("specs/backend-api.graphql"))
-    packageName.set("app.ehrenamtskarte.backend.generated")
+    packageName.set("$rootPackageName.generated")
     queryFiles.setFrom(fileTree("src/test/resources/graphql"))
 }
 

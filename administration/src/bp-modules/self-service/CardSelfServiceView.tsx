@@ -1,5 +1,4 @@
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
-import { CircularProgress } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -7,6 +6,7 @@ import styled from 'styled-components'
 import KoblenzLogo from '../../assets/koblenz_logo.svg'
 import { updateCard } from '../../cards/Card'
 import BasicDialog from '../../mui-modules/application/BasicDialog'
+import CenteredCircularProgress from '../../mui-modules/base/CenteredCircularProgress'
 import CardSelfServiceActivation from './CardSelfServiceActivation'
 import CardSelfServiceForm from './CardSelfServiceForm'
 import CardSelfServiceInformation from './CardSelfServiceInformation'
@@ -85,7 +85,7 @@ const CardSelfServiceView = (): ReactElement => {
   } = useCardGeneratorSelfService()
 
   if (cardGenerationStep === 'loading') {
-    return <CircularProgress style={{ margin: 'auto' }} />
+    return <CenteredCircularProgress />
   }
 
   const totalSteps = Object.keys(selfServiceStepInfo).length

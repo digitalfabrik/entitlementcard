@@ -60,7 +60,9 @@ class _IntroPageState extends State<IntroPage> {
         pathImage: buildConfig.introSlidesImages[3],
       ),
     ];
-    return DecoratedSlider(children: slides, onDonePressed: () => _onDonePress(settings));
+    return SafeArea(
+      child: DecoratedSlider(children: slides, onDonePressed: () => _onDonePress(settings)),
+    );
   }
 
   Color backgroundColor(BuildContext context) {

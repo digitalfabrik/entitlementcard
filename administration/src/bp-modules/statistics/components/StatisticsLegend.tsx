@@ -1,49 +1,36 @@
+import { Stack } from '@mui/material'
 import { styled } from '@mui/system'
-import React, { ReactElement, useContext } from 'react'
+import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
-
-type StatisticsLegendProps = {
-  items: string[]
-}
+import { StatisticsTheme } from '../../../project-configs/getProjectConfig'
 
 const ColorIndicator = styled('div')(props => ({
   backgroundColor: props.color,
+  flexShrink: 0,
   width: 30,
   height: 30,
 }))
 
-const ItemContainer = styled('div')`
-  display: flex;
-  flex-direction: row;
-  margin-bottom: 16px;
-  gap: 12px;
-  align-items: center;
-`
-const Container = styled('div')`
-  padding: 16px;
-  position: fixed;
-  right: 1%;
-  bottom: 10%;
-`
-
-const StatisticsLegend = ({ items }: StatisticsLegendProps): ReactElement | null => {
-  const { cardStatistics } = useContext(ProjectConfigContext)
+const StatisticsLegend = ({
+  items,
+  statisticsTheme,
+}: {
+  items: string[]
+  statisticsTheme: StatisticsTheme
+}): ReactElement | null => {
   const { t } = useTranslation('statistics')
-  if (!cardStatistics.enabled) {
-    return null
-  }
-  const indicatorColors = Object.values(cardStatistics.theme)
+  const indicatorColors = Object.values(statisticsTheme)
+
   return (
-    <Container>
+    <Stack sx={{ width: 280, gap: 2, position: 'fixed', right: 32, bottom: 96 }}>
       {items.map((item, index) => (
-        <ItemContainer key={item}>
+        <Stack key={item} sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
           <ColorIndicator color={indicatorColors[index]} />
           {t(item)}
-        </ItemContainer>
+        </Stack>
       ))}
-    </Container>
+    </Stack>
   )
 }
 

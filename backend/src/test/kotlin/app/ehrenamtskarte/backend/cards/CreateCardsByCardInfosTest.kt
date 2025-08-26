@@ -31,18 +31,6 @@ internal class CreateCardsByCardInfosTest : GraphqlApiTest() {
     }
 
     @Test
-    fun `POST returns an error when project does not exist`() =
-        JavalinTest.test(app) { _, client ->
-            val mutation = createMutation(
-                project = "non-existent.ehrenamtskarte.app",
-                encodedCardInfo = "dummy",
-            )
-            val response = post(client, mutation)
-
-            assertEquals(404, response.code)
-        }
-
-    @Test
     fun `POST returns an error when the auth token is missing`() =
         JavalinTest.test(app) { _, client ->
             val mutation = createMutation(encodedCardInfo = "dummy")
@@ -125,13 +113,11 @@ internal class CreateCardsByCardInfosTest : GraphqlApiTest() {
         }
 
     private fun createMutation(
-        project: String = "bayern.ehrenamtskarte.app",
         encodedCardInfo: String,
         generateStaticCode: Boolean = true,
         applicationIdToMarkAsProcessed: Int? = null,
     ): CreateCardsByCardInfos {
         val variables = CreateCardsByCardInfos.Variables(
-            project = project,
             encodedCardInfos = listOf(encodedCardInfo),
             generateStaticCodes = generateStaticCode,
             applicationIdToMarkAsProcessed = applicationIdToMarkAsProcessed,

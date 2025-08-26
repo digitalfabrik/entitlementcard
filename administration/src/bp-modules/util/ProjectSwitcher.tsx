@@ -3,11 +3,14 @@ import React, { ReactElement } from 'react'
 import { useNavigate } from 'react-router'
 
 import { LOCAL_STORAGE_PROJECT_KEY } from '../../project-configs/constants'
+import { clearActivityLog } from '../activity-log/ActivityLog'
 
 const ProjectSwitcher = (): ReactElement | null => {
   const navigate = useNavigate()
   const switchProject = (project: string) => {
     window.localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, project)
+    // This is needed for local development, because activity log entries may have a different format per project
+    clearActivityLog()
     navigate(0)
   }
 

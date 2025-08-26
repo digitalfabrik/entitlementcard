@@ -1,11 +1,12 @@
-import { Button, Spinner } from '@blueprintjs/core'
+import { Logout, Replay } from '@mui/icons-material'
+import { Button, Stack } from '@mui/material'
 import React, { ReactElement, ReactNode, createContext, useContext, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { AuthContext } from './AuthProvider'
 import StandaloneCenter from './bp-modules/StandaloneCenter'
 import { WhoAmIQuery, useWhoAmIQuery } from './generated/graphql'
-import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
+import CenteredCircularProgress from './mui-modules/base/CenteredCircularProgress'
 import { hasProp } from './util/helper'
 
 type WhoAmIContextType = {
@@ -18,9 +19,7 @@ export const WhoAmIContext = createContext<WhoAmIContextType>({
   refetch: () => undefined,
 })
 
-type UseWhoAmIReturn = WhoAmIContextType & { me: WhoAmIQuery['me'] }
-
-export const useWhoAmI = (): UseWhoAmIReturn => {
+export const useWhoAmI = (): WhoAmIContextType & { me: WhoAmIQuery['me'] } => {
   const context = useContext(WhoAmIContext)
   if (!hasProp(context, 'me')) {
     throw new Error('WhoAmI context is not available')
@@ -30,32 +29,27 @@ export const useWhoAmI = (): UseWhoAmIReturn => {
 
 const WhoAmIProvider = ({ children }: { children: ReactNode }): ReactElement => {
   const { t } = useTranslation('auth')
-  const { projectId } = useContext(ProjectConfigContext)
   const { signOut } = useContext(AuthContext)
-  const { loading, error, data, refetch, previousData } = useWhoAmIQuery({
-    variables: { project: projectId },
-  })
+  const { loading, error, data, refetch, previousData } = useWhoAmIQuery()
   // Use the previous data (if existent) while potentially loading new data to prevent remounting
   const dataForContext = data ?? previousData
   const context = useMemo(() => ({ me: dataForContext?.me, refetch }), [dataForContext, refetch])
 
   if (!hasProp(context, 'me') && loading) {
-    return (
-      <StandaloneCenter>
-        <Spinner />
-      </StandaloneCenter>
-    )
+    return <CenteredCircularProgress />
   }
   if (!hasProp(context, 'me') || error) {
     return (
       <StandaloneCenter>
         <p>{t('accountInformationNotAvailable')}</p>
-        <Button icon='repeat' onClick={refetch}>
-          {t('retry')}
-        </Button>
-        <Button icon='log-out' onClick={signOut}>
-          {t('logout')}
-        </Button>
+        <Stack direction='row' spacing={2}>
+          <Button variant='outlined' startIcon={<Replay />} onClick={() => refetch()}>
+            {t('retry')}
+          </Button>
+          <Button variant='contained' color='error' startIcon={<Logout />} onClick={signOut}>
+            {t('logout')}
+          </Button>
+        </Stack>
       </StandaloneCenter>
     )
   }

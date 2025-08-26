@@ -3,20 +3,15 @@ import { useTranslation } from 'react-i18next'
 
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
 import { useGetFreinetAgencyByRegionIdQuery, useUpdateDataTransferToFreinetMutation } from '../../../generated/graphql'
+import getQueryResult from '../../../mui-modules/util/getQueryResult'
 import { useAppToaster } from '../../AppToaster'
-import getQueryResult from '../../util/getQueryResult'
 import FreinetSettingsCard from './FreinetSettingsCard'
 
-type FreinetSettingsControllerProps = {
-  regionId: number
-  project: string
-}
-
-const FreinetSettingsController = ({ regionId, project }: FreinetSettingsControllerProps): ReactElement | null => {
+const FreinetSettingsController = ({ regionId }: { regionId: number }): ReactElement | null => {
   const appToaster = useAppToaster()
   const { t } = useTranslation('regionSettings')
   const freinetQuery = useGetFreinetAgencyByRegionIdQuery({
-    variables: { regionId, project },
+    variables: { regionId },
   })
   const [updateFreinetDataTransfer] = useUpdateDataTransferToFreinetMutation({
     onError: error => {
@@ -41,7 +36,6 @@ const FreinetSettingsController = ({ regionId, project }: FreinetSettingsControl
     updateFreinetDataTransfer({
       variables: {
         regionId,
-        project,
         dataTransferActivated: dataTransferForFreinetActivated,
       },
     })
