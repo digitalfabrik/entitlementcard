@@ -137,38 +137,18 @@ object ApplicationRepository {
             }
         }
 
-    fun delete(applicationId: Int, graphQLContext: GraphQLContext): Boolean {
-        val application = ApplicationEntity.findById(applicationId)
+    fun delete(project: String, application: ApplicationEntity, graphQLContext: GraphQLContext) {
+        ApplicationVerifications.deleteWhere { ApplicationVerifications.applicationId eq application.id }
+        application.delete()
 
-        return if (application != null) {
-            val project = (Projects innerJoin Regions)
-                .select(Projects.columns)
-                .where { Regions.id eq application.regionId }
-                .single()
-                .let { ProjectEntity.wrapRow(it) }
-            val applicationDirectory =
-                Paths.get(
-                    graphQLContext.applicationData.absolutePath,
-                    project.project,
-                    application.id.toString(),
-                )
-            ApplicationVerifications.deleteWhere { ApplicationVerifications.applicationId eq applicationId }
-            application.delete()
-            applicationDirectory.toFile().deleteRecursively()
-            // TODO Should we really use the expression value above as the return value of this method?
-        } else {
-            false
-        }
-    }
+        val applicationDirectory = Paths.get(
+            graphQLContext.applicationData.absolutePath,
+            project,
+            application.id.toString(),
+        ).toFile()
 
-    fun withdrawApplication(accessKey: String): Boolean {
-        val application = ApplicationEntity.find { Applications.accessKey eq accessKey }.single()
-
-        return if (application.withdrawalDate == null) {
-            application.withdrawalDate = Instant.now()
-            true
-        } else {
-            false
+        if (applicationDirectory.exists()) {
+            applicationDirectory.deleteRecursively()
         }
     }
 
