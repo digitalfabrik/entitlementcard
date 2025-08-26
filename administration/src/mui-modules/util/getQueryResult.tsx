@@ -27,11 +27,13 @@ const getQueryResult = <Data, Variables extends OperationVariables>(
     const { title, description } = getMessageFromApolloError(error)
     return {
       successful: false,
-      component: errorComponent ?? <AlertBox title={title} description={description} onAction={refetch} />,
+      component: errorComponent ?? (
+        <AlertBox title={title} description={description} onAction={refetch} severity='error' />
+      ),
     }
   }
   if (data === undefined) {
-    return { successful: false, component: <AlertBox onAction={refetch} /> }
+    return { successful: false, component: <AlertBox onAction={refetch} severity='error' /> }
   }
   return { successful: true, data }
 }
