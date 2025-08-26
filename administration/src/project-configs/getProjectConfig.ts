@@ -11,7 +11,6 @@ import { TFunction } from 'i18next'
 import { ReactElement, ReactNode } from 'react'
 
 import type { ActivityLogEntryType } from '../bp-modules/activity-log/ActivityLog'
-import type { JsonField } from '../bp-modules/applications/JsonFieldView'
 import type { Card } from '../cards/Card'
 import type { CreateCardsResult } from '../cards/createCards'
 import type { Extension } from '../cards/extensions/extensions'
@@ -19,6 +18,7 @@ import type { PdfFormElementProps } from '../cards/pdf/PdfFormElement'
 import type { PdfLinkAreaProps } from '../cards/pdf/PdfLinkArea'
 import type { PdfQrCodeElementProps } from '../cards/pdf/PdfQrCodeElement'
 import type { PdfTextElementProps } from '../cards/pdf/PdfTextElement'
+import type { JsonField } from '../shared/components/JsonFieldView'
 import bayernConfig from './bayern/config'
 import { LOCAL_STORAGE_PROJECT_KEY } from './constants'
 import koblenzConfig from './koblenz/config'
@@ -104,6 +104,7 @@ export type StoresManagementConfig =
 export type ProjectConfig = {
   name: string
   projectId: string
+  publisherText: string
   applicationFeature?: ApplicationFeature
   staticQrCodesEnabled: boolean
   card: CardConfig

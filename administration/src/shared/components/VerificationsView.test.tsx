@@ -1,9 +1,11 @@
 import { MockedProvider } from '@apollo/client/testing'
 import React from 'react'
 
-import { renderWithTranslation } from '../../../testing/render'
-import VerificationsView, { Application } from '../VerificationsView'
-import { verificationsMixed } from '../__mocks__/verificationData'
+import { verificationsMixed } from '../../bp-modules/applications/__mocks__/verificationData'
+import { type ApplicationPublic, ApplicationStatus, type ApplicationVerificationView } from '../../generated/graphql'
+import { renderWithTranslation } from '../../testing/render'
+import { JsonField } from './JsonFieldView'
+import VerificationsView from './VerificationsView'
 
 jest.mock('@blueprintjs/core', () => ({
   ...jest.requireActual('@blueprintjs/core'),
@@ -11,10 +13,17 @@ jest.mock('@blueprintjs/core', () => ({
 }))
 
 describe('VerificationsView', () => {
-  const renderView = (application: Application) =>
+  const renderView = (
+    application: Pick<ApplicationPublic, 'status' | 'id'> & {
+      verifications: Pick<
+        ApplicationVerificationView,
+        'organizationName' | 'contactEmailAddress' | 'verificationId' | 'rejectedDate' | 'verifiedDate'
+      >[]
+    }
+  ) =>
     renderWithTranslation(
       <MockedProvider>
-        <VerificationsView application={application} showResendApprovalEmailButton />
+        <VerificationsView application={application} isAdminView={false} />
       </MockedProvider>
     )
 
@@ -22,10 +31,14 @@ describe('VerificationsView', () => {
     const application = {
       createdDate: '2024-05-15T09:20:23.350015Z',
       id: 1,
-      jsonValue: '',
+      jsonValue: {
+        name: 'application',
+        type: 'Array',
+        value: [],
+      } as JsonField<'Array'>,
+      status: ApplicationStatus.Pending,
       note: 'neu',
       verifications: [],
-      withdrawalDate: null,
     }
     const { getByText, getByRole } = renderView(application)
     expect(getByText('Bestätigung(en) durch Organisationen:')).toBeTruthy()
@@ -36,10 +49,14 @@ describe('VerificationsView', () => {
     const application = {
       createdDate: '2024-05-15T09:20:23.350015Z',
       id: 2,
-      jsonValue: '',
+      jsonValue: {
+        name: 'application',
+        type: 'Array',
+        value: [],
+      } as JsonField<'Array'>,
+      status: ApplicationStatus.Pending,
       note: 'neu',
       verifications: verificationsMixed,
-      withdrawalDate: null,
     }
     const { getByText, queryAllByRole } = renderView(application)
     expect(getByText('Bestätigung(en) durch Organisationen:')).toBeTruthy()

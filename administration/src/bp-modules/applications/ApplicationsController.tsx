@@ -6,6 +6,7 @@ import { useWhoAmI } from '../../WhoAmIProvider'
 import { Region, Role, useGetApplicationsQuery } from '../../generated/graphql'
 import RenderGuard from '../../mui-modules/components/RenderGuard'
 import getQueryResult from '../../mui-modules/util/getQueryResult'
+import { parseApplication } from '../../shared/application'
 import ApplicationsOverview from './ApplicationsOverview'
 
 const ApplicationsController = ({ region }: { region: Region }) => {
@@ -14,10 +15,12 @@ const ApplicationsController = ({ region }: { region: Region }) => {
     onError: error => console.error(error),
   })
   const applicationsQueryResult = getQueryResult(applicationsQuery)
-  if (!applicationsQueryResult.successful) {
-    return applicationsQueryResult.component
-  }
-  return <ApplicationsOverview applications={applicationsQueryResult.data.applications} />
+
+  return !applicationsQueryResult.successful ? (
+    applicationsQueryResult.component
+  ) : (
+    <ApplicationsOverview applications={applicationsQueryResult.data.applications.map(parseApplication)} />
+  )
 }
 
 const ControllerWithRegion = (): ReactElement => {
