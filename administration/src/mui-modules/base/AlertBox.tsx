@@ -33,7 +33,7 @@ const AlertBox = ({
       variant='outlined'
       action={
         onAction ? (
-          <Button color='inherit' size='small' onClick={onAction}>
+          <Button color='inherit' size='small' onClick={() => onAction()}>
             {actionButtonLabel || t('retry')}
           </Button>
         ) : undefined
