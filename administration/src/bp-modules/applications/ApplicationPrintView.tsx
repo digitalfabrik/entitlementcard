@@ -6,6 +6,7 @@ import { ApplicationAdmin, ApplicationStatus, ApplicationVerificationView } from
 import { ApplicationParsedJsonValue } from '../../shared/application'
 import JsonFieldView from '../../shared/components/JsonFieldView'
 import VerificationsView from '../../shared/components/VerificationsView'
+import { ApplicationStatusNote } from './components/ApplicationStatusNote'
 
 export const applicationPrintViewPageStyle = css`
   @page {
@@ -34,7 +35,7 @@ export const ApplicationPrintView = forwardRef<
     // eslint-disable-next-line react/no-unused-prop-types
     application: Pick<
       ApplicationParsedJsonValue<ApplicationAdmin>,
-      'createdDate' | 'jsonValue' | 'id' | 'status' | 'statusResolvedDate'
+      'createdDate' | 'jsonValue' | 'id' | 'status' | 'statusResolvedDate' | 'rejectionMessage'
     > & {
       verifications: Pick<
         ApplicationVerificationView,
@@ -67,6 +68,15 @@ export const ApplicationPrintView = forwardRef<
       />
       <hr />
       <VerificationsView application={p.application} isAdminView />
+      <hr />
+      {p.application.statusResolvedDate != null && (
+        <ApplicationStatusNote
+          statusResolvedDate={new Date(p.application.statusResolvedDate)}
+          status={p.application.status}
+          reason={p.application.rejectionMessage ?? undefined}
+          adminView
+        />
+      )}
     </Stack>
   )
 })
