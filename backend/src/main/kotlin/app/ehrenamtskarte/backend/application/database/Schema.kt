@@ -21,7 +21,6 @@ object Applications : IntIdTable() {
     val jsonValue = text("jsonValue")
     val createdDate = timestamp("createdDate").defaultExpression(CurrentTimestamp)
     val accessKey = varchar("accessKey", 100).uniqueIndex()
-    val withdrawalDate = timestamp("withdrawalDate").nullable()
     val note = varchar("note", NOTE_MAX_CHARS).nullable()
     val status = enumerationByName<ApplicationEntity.Status>("status", length = 32)
         .default(ApplicationEntity.Status.Pending)
@@ -37,21 +36,22 @@ class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
         Rejected,
         Approved,
         ApprovedCardCreated,
+        Withdrawn,
     }
 
     var regionId by Applications.regionId
     var jsonValue by Applications.jsonValue
     var createdDate by Applications.createdDate
     var accessKey by Applications.accessKey
-    var withdrawalDate by Applications.withdrawalDate
     var note by Applications.note
     private var _status by Applications.status
     var status: Status
         get() = _status
         set(newValue) {
+            if (_status == newValue) return
             require(_status.canTransitionTo(newValue)) { "Cannot transition from '$_status' to '$newValue'" }
 
-            if (newValue == Status.Rejected || newValue == Status.Approved) {
+            if (listOf(Status.Rejected, Status.Approved, Status.Withdrawn).contains(newValue)) {
                 statusResolvedDate = OffsetDateTime.now()
             }
 
@@ -61,15 +61,6 @@ class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
     /** Captures the instant that state changes from [Status.Pending] to [Status.Approved] or [Status.Rejected]. */
     var statusResolvedDate by Applications.statusResolvedDate
     var rejectionMessage by Applications.rejectionMessage
-
-    /** Try to change the status to the given value. Returns true if successful, false otherwise. */
-    fun tryChangeStatus(status: Status): Boolean =
-        try {
-            this.status = status
-            true
-        } catch (_: IllegalArgumentException) {
-            false
-        }
 
     fun parseJsonValue(): JsonNode = jacksonObjectMapper().readTree(jsonValue)
 }
@@ -124,6 +115,7 @@ private fun ApplicationEntity.Status.canTransitionTo(newValue: ApplicationEntity
             when (newValue) {
                 ApplicationEntity.Status.Approved -> true
                 ApplicationEntity.Status.Rejected -> true
+                ApplicationEntity.Status.Withdrawn -> true
                 else -> false
             }
         }

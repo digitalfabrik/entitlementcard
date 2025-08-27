@@ -2,14 +2,11 @@
 import { Tooltip } from '@mui/material'
 import React, { ReactElement } from 'react'
 
-import { GetApplicationsType } from '../types'
+import type { Application } from '../types'
 
 const EXCERPT_LENGTH = 80
 
-export const ApplicationNoteTooltip = (p: {
-  application: GetApplicationsType
-  children: ReactElement
-}): ReactElement => (
+export const ApplicationNoteTooltip = (p: { application: Application; children: ReactElement }): ReactElement => (
   <Tooltip
     title={
       p.application.note && p.application.note.length > EXCERPT_LENGTH

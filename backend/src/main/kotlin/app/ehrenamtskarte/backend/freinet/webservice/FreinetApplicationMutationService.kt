@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.freinet.webservice
 
 import app.ehrenamtskarte.backend.application.database.ApplicationEntity
+import app.ehrenamtskarte.backend.application.database.ApplicationEntity.Status
 import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantDateOfBirth
 import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantFirstName
 import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantLastName
@@ -12,6 +13,7 @@ import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
 import app.ehrenamtskarte.backend.exception.service.NotImplementedException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.freinet.database.repos.FreinetAgencyRepository
 import app.ehrenamtskarte.backend.freinet.exceptions.FreinetFoundMultiplePersonsException
 import app.ehrenamtskarte.backend.freinet.exceptions.FreinetPersonDataInvalidException
@@ -43,6 +45,10 @@ class FreinetApplicationMutationService {
         return transaction {
             val application = ApplicationEntity.findById(applicationId)
                 ?: throw NotFoundException("Application not found")
+
+            if (application.status == Status.Withdrawn) {
+                throw InvalidInputException("Application is withdrawn")
+            }
 
             val regionId = application.regionId.value
 
