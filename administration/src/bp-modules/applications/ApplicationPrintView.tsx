@@ -1,8 +1,8 @@
-import { Stack, Typography, css } from '@mui/material'
+import { Box, Stack, Typography, css } from '@mui/material'
 import React, { ReactElement, forwardRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { ApplicationAdmin, ApplicationVerificationView } from '../../generated/graphql'
+import { ApplicationAdmin, ApplicationStatus, ApplicationVerificationView } from '../../generated/graphql'
 import { ApplicationParsedJsonValue } from '../../shared/application'
 import JsonFieldView from '../../shared/components/JsonFieldView'
 import VerificationsView from '../../shared/components/VerificationsView'
@@ -32,7 +32,10 @@ export const ApplicationPrintView = forwardRef<
   HTMLDivElement,
   {
     // eslint-disable-next-line react/no-unused-prop-types
-    application: Pick<ApplicationParsedJsonValue<ApplicationAdmin>, 'createdDate' | 'jsonValue' | 'id' | 'status'> & {
+    application: Pick<
+      ApplicationParsedJsonValue<ApplicationAdmin>,
+      'createdDate' | 'jsonValue' | 'id' | 'status' | 'statusResolvedDate'
+    > & {
       verifications: Pick<
         ApplicationVerificationView,
         'organizationName' | 'contactEmailAddress' | 'verificationId' | 'rejectedDate' | 'verifiedDate'
@@ -45,6 +48,15 @@ export const ApplicationPrintView = forwardRef<
   return (
     <Stack ref={ref} sx={{ gap: 4 }}>
       <Typography variant='h4'>{t('applicationFrom', { date: new Date(p.application.createdDate) })}</Typography>
+
+      {p.application.status === ApplicationStatus.Withdrawn && !!p.application.statusResolvedDate && (
+        <Box sx={{ border: '1pt solid black', borderRadius: '4pt', padding: 2, width: 'fit-content' }}>
+          {t('withdrawalMessage', { date: new Date(p.application.statusResolvedDate) })}
+          <br />
+          {t('deleteApplicationSoonPrompt')}
+        </Box>
+      )}
+      <hr />
       <JsonFieldView
         jsonField={p.application.jsonValue}
         baseUrl=''
@@ -53,6 +65,7 @@ export const ApplicationPrintView = forwardRef<
         attachmentAccessible
         expandedRoot={false}
       />
+      <hr />
       <VerificationsView application={p.application} isAdminView />
     </Stack>
   )
