@@ -32,6 +32,7 @@ const AlertBox = ({
         justifyContent: 'center',
         alignItems: 'center',
         maxWidth: '900px',
+        border: borderless ? 'none' : undefined,
         [theme.breakpoints.down('md')]: {
           margin: '5px',
         },
