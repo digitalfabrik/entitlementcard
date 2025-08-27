@@ -48,6 +48,7 @@ class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
     var status: Status
         get() = _status
         set(newValue) {
+            if (_status == newValue) return
             require(_status.canTransitionTo(newValue)) { "Cannot transition from '$_status' to '$newValue'" }
 
             if (listOf(Status.Rejected, Status.Approved, Status.Withdrawn).contains(newValue)) {

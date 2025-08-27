@@ -1,14 +1,6 @@
-import { Alert, AlertColor, AlertTitle, Button, styled } from '@mui/material'
+import { Alert, AlertColor, AlertTitle, Button } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-
-const CenteredAlert = styled(Alert)<{ $borderless: boolean }>`
-  margin: auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  ${({ $borderless }) => $borderless && 'border: none;'}
-`
 
 type AlertBoxProps = {
   severity?: AlertColor
@@ -30,21 +22,30 @@ const AlertBox = ({
   const { t } = useTranslation('errors')
 
   return (
-    <CenteredAlert
-      $borderless={borderless}
+    <Alert
       data-testid='alert-box'
       severity={severity}
       variant='outlined'
+      sx={theme => ({
+        margin: 'auto',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        maxWidth: '900px',
+        [theme.breakpoints.down('md')]: {
+          margin: '5px',
+        },
+      })}
       action={
         onAction ? (
-          <Button color='inherit' size='small' onClick={onAction}>
+          <Button variant='outlined' color='inherit' size='small' onClick={() => onAction()}>
             {actionButtonLabel || t('retry')}
           </Button>
         ) : undefined
       }>
       {title !== undefined && <AlertTitle sx={{ margin: 0 }}>{title}</AlertTitle>}
       {description}
-    </CenteredAlert>
+    </Alert>
   )
 }
 

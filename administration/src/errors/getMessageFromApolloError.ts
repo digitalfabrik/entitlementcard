@@ -7,6 +7,7 @@ import graphQlErrorMap from './GraphQlErrorMap'
 export type GraphQLErrorMessage = {
   title: string
   description?: string | ReactElement
+  retryable?: boolean
 }
 
 const getMessageFromApolloError = (error: ApolloError): GraphQLErrorMessage => {
