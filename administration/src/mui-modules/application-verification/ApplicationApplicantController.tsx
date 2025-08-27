@@ -1,11 +1,12 @@
-import { Stack } from '@mui/material'
+import { Stack, Typography } from '@mui/material'
 import { SnackbarProvider } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
 
+import { ApplicationStatusNote } from '../../bp-modules/applications/components/ApplicationStatusNote'
 import { ApplicationStatus, useGetApplicationByApplicantQuery } from '../../generated/graphql'
-import { parseApplication } from '../../shared/application'
+import { applicationWasAlreadyProcessed, parseApplication } from '../../shared/application'
 import AlertBox from '../base/AlertBox'
 import getQueryResult from '../util/getQueryResult'
 import ApplicationApplicantView from './ApplicationApplicantView'
@@ -36,6 +37,21 @@ const ApplicationApplicantController = ({ providedKey }: { providedKey: string }
       </Stack>
     )
   }
+
+  if (applicationWasAlreadyProcessed(application.status) && !!application.statusResolvedDate) {
+    return (
+      <Stack sx={{ flexGrow: 1, alignSelf: 'center', justifyContent: 'center', p: 2 }}>
+        <Typography variant='h4'>
+          {t(application.status === ApplicationStatus.Rejected ? 'titleStatusRejected' : 'titleStatusApproved')}
+        </Typography>
+        <ApplicationStatusNote
+          statusResolvedDate={new Date(application.statusResolvedDate)}
+          status={application.status}
+        />
+      </Stack>
+    )
+  }
+
   return (
     <Stack sx={{ alignSelf: 'center', justifyContent: 'flex-start' }}>
       <ApplicationApplicantView

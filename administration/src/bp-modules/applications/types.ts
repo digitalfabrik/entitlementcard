@@ -1,4 +1,4 @@
-import type { GetApplicationsQuery } from '../../generated/graphql'
+import type { ApplicationVerificationView, GetApplicationsQuery } from '../../generated/graphql'
 import { ApplicationParsedJsonValue } from '../../shared/application'
 
 /** A Verification that was obtained from the `getApplications` query. */
@@ -15,3 +15,5 @@ export type ApplicationStatusBarItemType = {
 
 /** An application that was obtained from the `getApplications` query. */
 export type Application = ApplicationParsedJsonValue<GetApplicationsQuery['applications'][number]>
+
+export type ApplicationVerificationPublic = Omit<ApplicationVerificationView, 'contactEmailAddress' | 'verificationId'>

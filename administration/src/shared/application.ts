@@ -1,3 +1,4 @@
+import { ApplicationStatus } from '../generated/graphql'
 import { JsonField } from './components/JsonFieldView'
 
 type ApplicationJsonValue = {
@@ -11,9 +12,19 @@ export type ApplicationParsedJsonValue<T extends ApplicationJsonValue> = {
   jsonValue: JsonField<'Array'>
 }
 
+export type ApplicationWithoutVerifications<T extends ApplicationJsonValue> = Omit<
+  ApplicationParsedJsonValue<T>,
+  'verifications'
+>
+
 /** Return an application object with the 'jsonValue' property already parsed */
 export const parseApplication = <T extends ApplicationJsonValue>(rawApplication: T): ApplicationParsedJsonValue<T> => ({
   ...rawApplication,
   /** Application data, already parsed from JSON. */
   jsonValue: JSON.parse(rawApplication.jsonValue),
 })
+
+export const applicationWasAlreadyProcessed = (status: ApplicationStatus): boolean =>
+  status === ApplicationStatus.Approved ||
+  status === ApplicationStatus.ApprovedCardCreated ||
+  status === ApplicationStatus.Rejected

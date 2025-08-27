@@ -5,7 +5,6 @@ import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { ApplicationStatusNote } from '../../bp-modules/applications/components/ApplicationStatusNote'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import {
   ApplicationStatus,
@@ -20,7 +19,6 @@ import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import ConfirmDialog from '../application/ConfirmDialog'
 import CenteredCircularProgress from '../base/CenteredCircularProgress'
-import { applicationWasAlreadyProcessed } from './util'
 
 const ApplicationViewCard = styled(Card)`
   @media screen and (min-width: 600px) {
@@ -114,18 +112,6 @@ const ApplicationApplicantView = ({
               </Button>
             </>
           )}
-          {applicationWasAlreadyProcessed(application.status) && !!application.statusResolvedDate ? (
-            <>
-              <StyledDivider />
-              <Typography variant='h4'>
-                {t(application.status === ApplicationStatus.Rejected ? 'titleStatusRejected' : 'titleStatusApproved')}
-              </Typography>
-              <ApplicationStatusNote
-                statusResolvedDate={new Date(application.statusResolvedDate)}
-                status={application.status}
-              />
-            </>
-          ) : undefined}
         </ApplicationViewCardContent>
       </ApplicationViewCard>
     </>
