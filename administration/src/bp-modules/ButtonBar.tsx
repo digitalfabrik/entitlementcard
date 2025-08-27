@@ -5,7 +5,7 @@ import dimensions from './constants/dimensions'
 
 const ButtonBar = styled(Card)`
   width: 100%;
-  padding: 15px;
+  padding: 12px;
   background: #fafafa;
   z-index: 10;
   display: flex;

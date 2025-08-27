@@ -1,6 +1,8 @@
-import { StoresData } from '../StoresImportController'
+import { CsvAcceptingStoreInput } from '../../../generated/graphql'
+import { CSVStoreInput } from '../AcceptingStoresEntry'
 
-export const invalidStoreData: StoresData = {
+/** mock of raw csv store data */
+export const invalidStoreData: CSVStoreInput = {
   categoryId: '25',
   discountDE: '20% Ermäßigung für Erwachsene',
   discountEN: '20% discount for adults',
@@ -15,8 +17,8 @@ export const invalidStoreData: StoresData = {
   street: 'Meuschelstr.',
   telephone: '0911/9944884',
 }
-
-export const validStoreData: StoresData = {
+/** mock of raw csv store data */
+export const validStoreData: CSVStoreInput = {
   categoryId: '15',
   discountDE: '20% Ermäßigung für Erwachsene',
   discountEN: '20% discount for adults',
@@ -30,4 +32,20 @@ export const validStoreData: StoresData = {
   postalCode: '90408',
   street: 'Meuschelstr.',
   telephone: '0911/9944884',
+}
+
+export const validStoreDataForImport: CsvAcceptingStoreInput = {
+  name: 'TestStpre',
+  street: 'Meuschelstr.',
+  houseNumber: '10',
+  postalCode: '90408',
+  location: 'Nürnberg',
+  latitude: 49.4622598,
+  longitude: 49.4622598,
+  telephone: '0911/9944884',
+  email: 'info@academie-ballettschule-uliczay.de',
+  homepage: 'https://www.academie-ballettschule-uliczay.de/kontakt/',
+  discountDE: '20% Ermäßigung für Erwachsene',
+  discountEN: '20% discount for adults',
+  categoryId: 15,
 }

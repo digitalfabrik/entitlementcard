@@ -14,6 +14,7 @@ jest.useFakeTimers()
 const setDryRun = jest.fn()
 
 const goBack = jest.fn()
+const downloadStoreCsv = jest.fn()
 const importStores = jest.fn()
 
 describe('StoresButtonBar', () => {
@@ -25,6 +26,7 @@ describe('StoresButtonBar', () => {
       const { getByText } = renderWithTranslation(
         <StoresButtonBar
           dryRun
+          downloadStoreCsv={downloadStoreCsv}
           setDryRun={setDryRun}
           goBack={goBack}
           acceptingStores={[]}
@@ -49,6 +51,7 @@ describe('StoresButtonBar', () => {
       const { getByText } = renderWithTranslation(
         <StoresButtonBar
           dryRun
+          downloadStoreCsv={downloadStoreCsv}
           setDryRun={setDryRun}
           goBack={goBack}
           acceptingStores={[]}
@@ -79,6 +82,7 @@ describe('StoresButtonBar', () => {
       const { getByText } = renderWithTranslation(
         <StoresButtonBar
           dryRun
+          downloadStoreCsv={downloadStoreCsv}
           setDryRun={setDryRun}
           goBack={goBack}
           acceptingStores={stores}
@@ -110,6 +114,7 @@ describe('StoresButtonBar', () => {
       const { getAllByText } = renderWithTranslation(
         <StoresButtonBar
           dryRun
+          downloadStoreCsv={downloadStoreCsv}
           setDryRun={setDryRun}
           goBack={goBack}
           acceptingStores={stores}

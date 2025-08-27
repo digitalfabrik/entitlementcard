@@ -455,6 +455,8 @@
   },
   "stores": {
     "entry": "Eintrag",
+    "csvFileName": "Akzeptanzstellen",
+    "exportCsvNotPossible": "Etwas ist schiefgegangen beim Export der Akzeptanzstellen.",
     "missingAddressData": "Es sind nicht alle notwendigen Adressdaten vorhanden, um die notwendigen Geodaten abzurufen",
     "noGeoDataFoundForAddress": "Keine passenden Geodaten gefunden! Bitte prüfen sie die Adresse.",
     "coordinatesContainInvalidChars": "Koordinaten beinhalten ungültige Zeichen.",
@@ -463,6 +465,7 @@
     "importStores": "Importiere Akzeptanzpartner",
     "backToSelection": "Zurück zur Auswahl",
     "storesCsvImport": "Akzeptanzpartner CSV Import",
+    "storesCsvDownload": "Download CSV",
     "selectAFile": "Wählen Sie eine Datei",
     "dryRun": "Testlauf",
     "dryRunDescription": "In diesem Testlauf wird nur simuliert, wie viele Akzeptanzpartner geändert oder gelöscht werden würden. Es werden noch keine Änderungen an der Datenbank vorgenommen.",

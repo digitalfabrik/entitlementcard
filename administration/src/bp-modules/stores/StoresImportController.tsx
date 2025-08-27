@@ -8,8 +8,10 @@ import { Role, useImportAcceptingStoresMutation } from '../../generated/graphql'
 import RenderGuard from '../../mui-modules/components/RenderGuard'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { StoresFieldConfig } from '../../project-configs/getProjectConfig'
+import downloadDataUri from '../../util/downloadDataUri'
 import { useAppToaster } from '../AppToaster'
 import { AcceptingStoresEntry } from './AcceptingStoresEntry'
+import { generateCsv } from './StoreCSVOutput'
 import StoresButtonBar from './StoresButtonBar'
 import StoresCSVInput from './StoresCSVInput'
 import StoresImportResult from './StoresImportResult'
@@ -26,10 +28,8 @@ type StoreImportProps = {
   fields: StoresFieldConfig[]
 }
 
-export type StoresData = {
-  [key: string]: string
-}
 const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
+  const { t } = useTranslation('stores')
   const navigate = useNavigate()
   const appToaster = useAppToaster()
   const [acceptingStores, setAcceptingStores] = useState<AcceptingStoresEntry[]>([])
@@ -65,32 +65,43 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
     }
   }
 
-  const onImportStores = () => {
-    const storesToImport = acceptingStores.map(store => {
-      const storeData = store.data
-      return {
-        name: storeData.name,
-        categoryId: Number(storeData.categoryId),
-        discountDE: storeData.discountDE,
-        discountEN: storeData.discountEN,
-        email: storeData.email,
-        homepage: storeData.homepage,
-        houseNumber: storeData.houseNumber,
-        latitude: Number(storeData.latitude),
-        longitude: Number(storeData.longitude),
-        location: storeData.location,
-        postalCode: storeData.postalCode,
-        street: storeData.street,
-        telephone: storeData.telephone,
-      }
-    })
+  const preparedStoresForImport = acceptingStores.map(store => {
+    const storeData = store.data
+    return {
+      name: storeData.name,
+      street: storeData.street,
+      houseNumber: storeData.houseNumber,
+      postalCode: storeData.postalCode,
+      location: storeData.location,
+      latitude: Number(storeData.latitude),
+      longitude: Number(storeData.longitude),
+      telephone: storeData.telephone,
+      email: storeData.email,
+      homepage: storeData.homepage,
+      discountDE: storeData.discountDE,
+      discountEN: storeData.discountEN,
+      categoryId: Number(storeData.categoryId),
+    }
+  })
 
+  const onImportStores = () => {
     importStores({
       variables: {
-        stores: storesToImport,
+        stores: preparedStoresForImport,
         dryRun,
       },
     })
+  }
+
+  const downloadStoreCsv = () => {
+    try {
+      downloadDataUri(generateCsv(preparedStoresForImport), `${t('csvFileName')}.csv`)
+    } catch {
+      appToaster?.show({
+        message: 'exportCsvNotPossible',
+        intent: 'danger',
+      })
+    }
   }
 
   return (
@@ -107,6 +118,7 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
       )}
       <StoresButtonBar
         goBack={goBack}
+        downloadStoreCsv={downloadStoreCsv}
         acceptingStores={acceptingStores}
         importStores={onImportStores}
         dryRun={dryRun}
