@@ -1,3 +1,5 @@
+import { buildConfigNuernberg } from 'build-configs'
+
 import AddressExtensions from '../../cards/extensions/AddressFieldExtensions'
 import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
 import NuernbergPassIdExtension from '../../cards/extensions/NuernbergPassIdExtension'
@@ -13,6 +15,7 @@ import pdfConfig from './pdf'
 const config: ProjectConfig = {
   name: 'Digitaler Nürnberg-Pass',
   projectId: 'nuernberg.sozialpass.app',
+  publisherText: buildConfigNuernberg.common.publisherText,
   staticQrCodesEnabled: true,
   card: {
     nameColumnName: 'Name',

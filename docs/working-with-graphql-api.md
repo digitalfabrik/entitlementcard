@@ -12,7 +12,8 @@ Example:
     @GraphQLDescription("Queries all applications for a specific region")
     fun getApplications(dfe: DataFetchingEnvironment, regionId: Int): List<ApplicationView> {
         val context = dfe.graphQlContext.context
-        val admin = context.getAdministrator()
+        val admin = context.getAuthContext().admin
+    
         return transaction {
             if (!Authorizer.mayViewApplicationsInRegion(admin, regionId)) {
               throw ForbiddenException()
@@ -41,9 +42,9 @@ query getApplications($regionId: Int!) {
     id
     createdDate
     jsonValue
-    withdrawalDate
     note
     cardCreated
+    statusResolvedDate
     verifications {
       contactEmailAddress
       organizationName

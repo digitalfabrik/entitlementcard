@@ -6,7 +6,7 @@ import app.ehrenamtskarte.backend.auth.database.ApiTokens
 import app.ehrenamtskarte.backend.auth.database.PasswordCrypto
 import app.ehrenamtskarte.backend.auth.database.TOKEN_LENGTH
 import app.ehrenamtskarte.backend.auth.database.repos.ApiTokensRepository
-import app.ehrenamtskarte.backend.auth.getAdministrator
+import app.ehrenamtskarte.backend.auth.getAuthContext
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.ApiTokenMetaData
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
@@ -30,13 +30,12 @@ class ApiTokenService {
     @GraphQLDescription("Creates a new api token for user import endpoint")
     fun createApiToken(expiresIn: Int, dfe: DataFetchingEnvironment): String {
         val context = dfe.graphQlContext.context
-        val admin = context.getAdministrator()
+        val authContext = context.getAuthContext()
 
-        admin.takeIf { Authorizer.mayAddApiTokensInProject(it) } ?: throw ForbiddenException()
+        val admin = authContext.admin.takeIf { Authorizer.mayAddApiTokensInProject(it) }
+            ?: throw ForbiddenException()
 
-        val type = if (admin.role ==
-            Role.PROJECT_ADMIN.db_value
-        ) {
+        val type = if (admin.role == Role.PROJECT_ADMIN.db_value) {
             ApiTokenType.USER_IMPORT
         } else {
             ApiTokenType.VERIFIED_APPLICATION
@@ -59,8 +58,8 @@ class ApiTokenService {
     @GraphQLDescription("Deletes a selected API token")
     fun deleteApiToken(id: Int, dfe: DataFetchingEnvironment): Int {
         val context = dfe.graphQlContext.context
-        val admin = context.getAdministrator()
-        admin.takeIf { Authorizer.mayDeleteApiTokensInProject(it) } ?: throw ForbiddenException()
+        val admin = context.getAuthContext().admin.takeIf { Authorizer.mayDeleteApiTokensInProject(it) }
+            ?: throw ForbiddenException()
 
         transaction {
             if (admin.role == Role.PROJECT_ADMIN.db_value) {
@@ -85,8 +84,8 @@ class ApiTokenQueryService {
     @GraphQLDescription("Gets metadata of all api tokens for a project")
     fun getApiTokenMetaData(dfe: DataFetchingEnvironment): List<ApiTokenMetaData> {
         val context = dfe.graphQlContext.context
-        val admin = context.getAdministrator()
-        admin.takeIf { Authorizer.mayViewApiMetadataInProject(it) } ?: throw ForbiddenException()
+        val admin = context.getAuthContext().admin.takeIf { Authorizer.mayViewApiMetadataInProject(it) }
+            ?: throw ForbiddenException()
 
         return transaction {
             (ApiTokens leftJoin Administrators)

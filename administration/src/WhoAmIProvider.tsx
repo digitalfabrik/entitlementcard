@@ -7,7 +7,6 @@ import { AuthContext } from './AuthProvider'
 import StandaloneCenter from './bp-modules/StandaloneCenter'
 import { WhoAmIQuery, useWhoAmIQuery } from './generated/graphql'
 import CenteredCircularProgress from './mui-modules/base/CenteredCircularProgress'
-import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
 import { hasProp } from './util/helper'
 
 type WhoAmIContextType = {
@@ -30,9 +29,8 @@ export const useWhoAmI = (): WhoAmIContextType & { me: WhoAmIQuery['me'] } => {
 
 const WhoAmIProvider = ({ children }: { children: ReactNode }): ReactElement => {
   const { t } = useTranslation('auth')
-  const { projectId } = useContext(ProjectConfigContext)
   const { signOut } = useContext(AuthContext)
-  const { loading, error, data, refetch, previousData } = useWhoAmIQuery({ variables: { project: projectId } })
+  const { loading, error, data, refetch, previousData } = useWhoAmIQuery()
   // Use the previous data (if existent) while potentially loading new data to prevent remounting
   const dataForContext = data ?? previousData
   const context = useMemo(() => ({ me: dataForContext?.me, refetch }), [dataForContext, refetch])
