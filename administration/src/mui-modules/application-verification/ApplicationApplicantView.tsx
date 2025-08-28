@@ -5,7 +5,6 @@ import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { ApplicationStatusNote } from '../../bp-modules/applications/components/ApplicationStatusNote'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import {
   ApplicationStatus,
@@ -113,21 +112,6 @@ const ApplicationApplicantView = ({
               </Button>
             </>
           )}
-          {(application.status === ApplicationStatus.Approved ||
-            application.status === ApplicationStatus.ApprovedCardCreated ||
-            application.status === ApplicationStatus.Rejected) &&
-          !!application.statusResolvedDate ? (
-            <>
-              <StyledDivider />
-              <Typography variant='h4'>
-                {t(application.status === ApplicationStatus.Rejected ? 'titleStatusRejected' : 'titleStatusApproved')}
-              </Typography>
-              <ApplicationStatusNote
-                statusResolvedDate={new Date(application.statusResolvedDate)}
-                status={application.status}
-              />
-            </>
-          ) : undefined}
         </ApplicationViewCardContent>
       </ApplicationViewCard>
     </>
