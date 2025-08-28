@@ -55,15 +55,16 @@ export const ApplicationStatusNote = (p: {
   status: ApplicationStatus
   reason?: string | undefined
   adminView?: boolean
+  showIcon?: boolean
 }): ReactElement => {
   const { t } = useTranslation('applicationStatusNote')
   const translationKey = statusTranslationKey(p.status, p.adminView === true)
   const color = statusColor(p.status)
+  const showIcon = p.showIcon ?? true
 
   return (
     <Stack direction='row' sx={{ justifyContent: 'flex-start', alignItems: 'bottom' }}>
-      {icon(p.status)}
-      &ensp;
+      {showIcon && `${icon(p.status)}&ensp;`}
       <div>
         {translationKey !== undefined && (
           <Trans

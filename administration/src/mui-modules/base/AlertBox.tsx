@@ -8,7 +8,6 @@ type AlertBoxProps = {
   description?: string | ReactElement
   onAction?: () => void
   actionButtonLabel?: string
-  borderless?: boolean
 }
 
 const AlertBox = ({
@@ -17,7 +16,6 @@ const AlertBox = ({
   description,
   onAction,
   actionButtonLabel,
-  borderless = false,
 }: AlertBoxProps): ReactElement => {
   const { t } = useTranslation('errors')
 
@@ -32,7 +30,6 @@ const AlertBox = ({
         justifyContent: 'center',
         alignItems: 'center',
         maxWidth: '900px',
-        border: borderless ? 'none' : undefined,
         [theme.breakpoints.down('md')]: {
           margin: '5px',
         },

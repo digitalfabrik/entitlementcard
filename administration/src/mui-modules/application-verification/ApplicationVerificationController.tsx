@@ -1,4 +1,3 @@
-import { Stack } from '@mui/material'
 import { SnackbarProvider, useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
@@ -14,6 +13,7 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 import { applicationWasAlreadyProcessed, parseApplication } from '../../shared/application'
 import formatDateWithTimezone from '../../util/formatDate'
 import AlertBox from '../base/AlertBox'
+import CenteredStack from '../base/CenteredStack'
 import getQueryResult from '../util/getQueryResult'
 import ApplicationVerifierView from './ApplicationVerifierView'
 
@@ -65,37 +65,40 @@ const ApplicationVerificationController = ({ applicationVerificationAccessKey }:
 
   if (verification.rejectedDate || verification.verifiedDate) {
     return (
-      <Stack sx={{ flexGrow: 1, alignSelf: 'center', justifyContent: 'center', p: 2 }}>
+      <CenteredStack>
         <AlertBox severity='info' description={t('alreadyVerified')} />
-      </Stack>
+      </CenteredStack>
     )
   }
   if (application.status === ApplicationStatus.Withdrawn && application.statusResolvedDate) {
     return (
-      <Stack sx={{ flexGrow: 1, alignSelf: 'center', justifyContent: 'center', p: 2 }}>
+      <CenteredStack>
         <AlertBox
           severity='info'
           description={t('withdrawMessageForVerifier', {
             date: formatDateWithTimezone(application.statusResolvedDate, config.timezone),
           })}
         />
-      </Stack>
+      </CenteredStack>
     )
   }
   if (verificationFinished) {
-    return <AlertBox title={t('verificationFinishedTitle')} description={t('verificationFinishedContent')} />
+    return (
+      <CenteredStack>
+        <AlertBox title={t('verificationFinishedTitle')} description={t('verificationFinishedContent')} />
+      </CenteredStack>
+    )
   }
 
   if (applicationWasAlreadyProcessed(application.status)) {
     return (
-      <Stack sx={{ flexGrow: 1, alignSelf: 'center', justifyContent: 'center', p: 2 }}>
+      <CenteredStack>
         <AlertBox
           title={t('applicationAlreadyProcessed')}
           description={<Trans i18nKey='applicationVerification:applicationAlreadyProcessedHint' />}
           severity='info'
-          borderless
         />
-      </Stack>
+      </CenteredStack>
     )
   }
 

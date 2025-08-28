@@ -407,6 +407,7 @@ const ApplicationCard = ({
         {application.statusResolvedDate != null && (
           <Box sx={{ p: 2 }}>
             <ApplicationStatusNote
+              showIcon
               statusResolvedDate={new Date(application.statusResolvedDate)}
               status={application.status}
               reason={application.rejectionMessage ?? undefined}

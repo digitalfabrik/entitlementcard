@@ -1,3 +1,5 @@
+import { AlertColor } from '@mui/material'
+
 import { ApplicationStatus } from '../generated/graphql'
 import { JsonField } from './components/JsonFieldView'
 
@@ -23,6 +25,20 @@ export const parseApplication = <T extends ApplicationJsonValue>(rawApplication:
   /** Application data, already parsed from JSON. */
   jsonValue: JSON.parse(rawApplication.jsonValue),
 })
+
+export const getAlertSeverityByApplicationStatus = (applicationStatus: ApplicationStatus): AlertColor | undefined => {
+  switch (applicationStatus) {
+    case ApplicationStatus.Pending:
+      return undefined
+    case ApplicationStatus.Approved:
+    case ApplicationStatus.ApprovedCardCreated:
+      return 'success'
+    case ApplicationStatus.Rejected:
+      return 'error'
+    case ApplicationStatus.Withdrawn:
+      return 'success'
+  }
+}
 
 export const applicationWasAlreadyProcessed = (status: ApplicationStatus): boolean =>
   status === ApplicationStatus.Approved ||
