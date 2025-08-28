@@ -21,4 +21,6 @@ jobs:
         with:
           skip-step: install
           working-directory: administration
-          test-script: npm run test:coverage -- --outputFile=report.json
+          test-script: npm run test:coverage -- --silent --ci --json --testLocationInResults --outputFile=report.json
+          output: comment, report-markdown
+
