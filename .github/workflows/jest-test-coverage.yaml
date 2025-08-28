@@ -11,10 +11,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20.18.0'
-      - run: npm ci --ignore-scripts
+      - name: Install protobuf
+        run: |
+          curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v21.11/protoc-21.11-linux-x86_64.zip"
+          unzip protoc*.zip -d $HOME/.local
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - run: npm ci
       - uses: ArtiomTr/jest-coverage-report-action@v2
         with:
           skip-step: install
           working-directory: administration
           test-script: npm run test:coverage -- --outputFile=report.json
-
