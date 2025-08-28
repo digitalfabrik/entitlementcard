@@ -8,8 +8,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.18.0'
+      - run: npm ci --ignore-scripts
       - uses: ArtiomTr/jest-coverage-report-action@v2
         with:
+          skip-step: install
           working-directory: administration
-          test-script: npm run test:coverage
+          test-script: npm run test:coverage -- --outputFile=report.json
 
