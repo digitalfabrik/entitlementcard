@@ -48,14 +48,19 @@ object TestData {
         }
     }
 
-    fun createApplicationVerification(applicationId: Int): Int {
+    fun createApplicationVerification(
+        applicationId: Int,
+        contactEmailAddress: String = "dummy@test.de",
+        contactName: String = "dummy",
+        organizationName: String = "dummy"
+    ): Int {
         val accessKey = Base64.getUrlEncoder().encodeToString(Random.nextBytes(20))
         return transaction {
             ApplicationVerifications.insertAndGetId {
                 it[ApplicationVerifications.applicationId] = applicationId
-                it[ApplicationVerifications.contactEmailAddress] = "dummy@test.de"
-                it[ApplicationVerifications.contactName] = "dummy"
-                it[ApplicationVerifications.organizationName] = "dummy"
+                it[ApplicationVerifications.contactEmailAddress] = contactEmailAddress
+                it[ApplicationVerifications.contactName] = contactName
+                it[ApplicationVerifications.organizationName] = organizationName
                 it[ApplicationVerifications.accessKey] = accessKey
             }.value
         }

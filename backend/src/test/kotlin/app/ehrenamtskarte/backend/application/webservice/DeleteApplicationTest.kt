@@ -24,6 +24,7 @@ internal class DeleteApplicationTest : GraphqlApiTest() {
     @BeforeEach
     fun cleanUp() {
         transaction {
+            ApplicationVerifications.deleteAll()
             Applications.deleteAll()
         }
     }
