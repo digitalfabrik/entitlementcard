@@ -36,65 +36,12 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      testMatch: 'create_applications.spec.ts',
-      use: {
-        ...devices['Desktop Chrome'],
-      },
-    },
-    {
-      name: 'firefox',
-      testMatch: 'create_applications.spec.ts',
-      use: {
-        ...devices['Desktop Firefox'],
-      },
-    },
-    {
-      name: 'chromium',
-      testMatch: 'check_applications.spec.ts',
       use: { ...devices['Desktop Chrome'] },
     },
-
     {
       name: 'firefox',
-      testMatch: 'check_applications.spec.ts',
       use: { ...devices['Desktop Firefox'] },
-    },
-    {
-      name: 'chromium',
-      testMatch: 'delete_applications.spec.ts',
-      use: { ...devices['Desktop Chrome'] },
-    },
-
-    {
-      name: 'firefox',
-      testMatch: 'delete_applications.spec.ts',
-      use: { ...devices['Desktop Firefox'] },
-    },
-
-    // {
-    //   name: 'webkit',
-    //   use: { ...devices['Desktop Safari'] },
-    // },
-
-    /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: { ...devices['Pixel 5'] },
-    // },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: { ...devices['iPhone 12'] },
-    // },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
+    }
   ],
 
   /* Run your local dev server before starting the tests */
