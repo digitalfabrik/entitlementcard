@@ -25,8 +25,11 @@ Future<void> main() async {
 
   debugPrint('Environment: $appEnvironment');
 
-  void run() {
-    return runApp(TranslationProvider(child: SettingsProvider(child: const App())));
+  Future<void> run() {
+    return SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]).then((value) => runApp(TranslationProvider(child: SettingsProvider(child: const App()))));
   }
 
   if (isProduction()) {

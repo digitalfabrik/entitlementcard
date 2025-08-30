@@ -1,5 +1,3 @@
-import { Check, Close } from '@mui/icons-material'
-import { Alert, Box, Button, Card, Divider, Typography, styled } from '@mui/material'
 import { SnackbarProvider, useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
@@ -12,34 +10,18 @@ import {
   useVerifyOrRejectApplicationVerificationMutation,
 } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import { parseApplication } from '../../shared/application'
-import JsonFieldView from '../../shared/components/JsonFieldView'
+import { applicationWasAlreadyProcessed, parseApplication } from '../../shared/application'
 import formatDateWithTimezone from '../../util/formatDate'
-import getApiBaseUrl from '../../util/getApiBaseUrl'
 import AlertBox from '../base/AlertBox'
+import CenteredStack from '../base/CenteredStack'
 import getQueryResult from '../util/getQueryResult'
-
-const ApplicationViewCard = styled(Card)`
-  max-width: 800px;
-  margin: 16px auto 16px auto;
-`
-
-const StyledAlert = styled(Alert)`
-  margin: 20px 0;
-`
-
-const ButtonContainer = styled('div')`
-  display: flex;
-  width: inherit;
-  flex-direction: row;
-  justify-content: space-around;
-`
+import ApplicationVerifierView from './ApplicationVerifierView'
 
 type ApplicationVerificationProps = {
   applicationVerificationAccessKey: string
 }
 
-const ApplicationVerification = ({ applicationVerificationAccessKey }: ApplicationVerificationProps) => {
+const ApplicationVerificationController = ({ applicationVerificationAccessKey }: ApplicationVerificationProps) => {
   const { t } = useTranslation('applicationVerification')
   const [verificationFinished, setVerificationFinished] = useState(false)
   const config = useContext(ProjectConfigContext)
@@ -82,85 +64,54 @@ const ApplicationVerification = ({ applicationVerificationAccessKey }: Applicati
   const application = parseApplication(applicationQueryHandler.data.application)
 
   if (verification.rejectedDate || verification.verifiedDate) {
-    return <AlertBox severity='info' description={t('alreadyVerified')} />
+    return (
+      <CenteredStack>
+        <AlertBox severity='info' description={t('alreadyVerified')} />
+      </CenteredStack>
+    )
   }
   if (application.status === ApplicationStatus.Withdrawn && application.statusResolvedDate) {
     return (
-      <AlertBox
-        severity='info'
-        description={t('withdrawMessageForVerifier', {
-          date: formatDateWithTimezone(application.statusResolvedDate, config.timezone),
-        })}
-      />
+      <CenteredStack>
+        <AlertBox
+          severity='info'
+          description={t('withdrawMessageForVerifier', {
+            date: formatDateWithTimezone(application.statusResolvedDate, config.timezone),
+          })}
+        />
+      </CenteredStack>
     )
   }
   if (verificationFinished) {
-    return <AlertBox title={t('verificationFinishedTitle')} description={t('verificationFinishedContent')} />
+    return (
+      <CenteredStack>
+        <AlertBox title={t('verificationFinishedTitle')} description={t('verificationFinishedContent')} />
+      </CenteredStack>
+    )
   }
 
-  const { createdDate: createdDateString, id } = application
-  const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${id}`
+  if (applicationWasAlreadyProcessed(application.status)) {
+    return (
+      <CenteredStack>
+        <AlertBox
+          title={t('applicationAlreadyProcessed')}
+          description={<Trans i18nKey='applicationVerification:applicationAlreadyProcessedHint' />}
+          severity='info'
+        />
+      </CenteredStack>
+    )
+  }
 
   return (
-    <Box sx={{ flexGrow: 1, overflow: 'auto', alignItems: 'safe center' }}>
-      <ApplicationViewCard elevation={2}>
-        <div style={{ overflow: 'visible', padding: '20px' }}>
-          <Typography sx={{ mb: '12px' }} variant='h4'>
-            {config.name}
-          </Typography>
-          <Typography sx={{ my: '8px' }} variant='body1'>
-            {t('greeting', { contactName: verification.contactName })}
-            <br />
-            <br />
-            <Trans
-              i18nKey='applicationVerification:text'
-              values={{ organizationName: verification.organizationName }}
-            />
-          </Typography>
-          <Divider style={{ margin: '24px 0px' }} />
-          <Typography variant='h6' sx={{ mb: '8px' }}>
-            Antrag vom {formatDateWithTimezone(createdDateString, config.timezone)}
-          </Typography>
-          <JsonFieldView
-            jsonField={application.jsonValue}
-            baseUrl={baseUrl}
-            hierarchyIndex={0}
-            attachmentAccessible={false}
-            expandedRoot
-          />
-          <Divider style={{ margin: '24px 0px' }} />
-          <Typography sx={{ mt: '8px' }} variant='body1'>
-            <Trans
-              i18nKey='applicationVerification:confirmationMessage'
-              values={{ organizationName: verification.organizationName }}
-            />
-          </Typography>
-          <StyledAlert severity='warning'>
-            <Trans i18nKey='applicationVerification:confirmationNote' />
-          </StyledAlert>
-          <ButtonContainer>
-            <Button
-              variant='contained'
-              color='error'
-              endIcon={<Close />}
-              onClick={() => submitApplicationVerification(false)}>
-              {t('rejectButton')}
-            </Button>
-            <Button
-              variant='contained'
-              color='success'
-              endIcon={<Check />}
-              onClick={() => submitApplicationVerification(true)}>
-              {t('confirmationButton')}
-            </Button>
-          </ButtonContainer>
-        </div>
-      </ApplicationViewCard>
-    </Box>
+    <ApplicationVerifierView
+      verification={verification}
+      application={application}
+      submitApplicationVerification={submitApplicationVerification}
+    />
   )
 }
 
-const ApplicationVerificationController = (): ReactElement => {
+const ControllerWithAccessKey = (): ReactElement => {
   const { t } = useTranslation('applicationVerification')
   const { applicationVerificationAccessKey } = useParams()
 
@@ -176,9 +127,9 @@ const ApplicationVerificationController = (): ReactElement => {
 
   return (
     <SnackbarProvider>
-      <ApplicationVerification applicationVerificationAccessKey={applicationVerificationAccessKey} />
+      <ApplicationVerificationController applicationVerificationAccessKey={applicationVerificationAccessKey} />
     </SnackbarProvider>
   )
 }
 
-export default ApplicationVerificationController
+export default ControllerWithAccessKey

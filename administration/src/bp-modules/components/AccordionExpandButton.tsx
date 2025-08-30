@@ -11,7 +11,7 @@ export const AccordionExpandButton = ({ expanded }: AccordionExpandButtonProps):
   const { t } = useTranslation('shared')
 
   return (
-    <Stack sx={{ displayPrint: 'none' }}>
+    <Stack>
       <Divider />
       <Stack direction='row' sx={{ p: 1, alignItems: 'center' }}>
         <ExpandMore
