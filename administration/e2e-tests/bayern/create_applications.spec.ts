@@ -2,9 +2,9 @@ import { Page, expect, test } from '@playwright/test'
 
 test.describe('Bayern testing', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:3000/')
+    await page.goto('/')
     await page.getByRole('button', { name: 'Switch to Ehrenamtskarte' }).click({ force: true })
-    await page.goto('http://localhost:3000/beantragen')
+    await page.goto('/beantragen')
   })
 
   const testImageFileSelection = async (page: Page, buttonName) => {
