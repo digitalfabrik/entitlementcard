@@ -1,6 +1,5 @@
 import 'package:ehrenamtskarte/routing.dart';
 import 'package:ehrenamtskarte/widgets/app_bars.dart';
-import 'package:ehrenamtskarte/widgets/landscape_safe_area.dart';
 import 'package:flutter/material.dart';
 
 class ContentTile extends StatelessWidget {
@@ -35,16 +34,14 @@ class ContentPage extends StatelessWidget {
     final theme = Theme.of(context);
     return DecoratedBox(
       decoration: BoxDecoration(color: theme.colorScheme.surface),
-      child: LandscapeSafeArea(
-        child: CustomScrollView(
-          slivers: <Widget>[
-            CustomSliverAppBar(title: title),
-            SliverPadding(
-              padding: const EdgeInsets.all(10),
-              sliver: SliverList(delegate: SliverChildListDelegate(children)),
-            ),
-          ],
-        ),
+      child: CustomScrollView(
+        slivers: <Widget>[
+          CustomSliverAppBar(title: title),
+          SliverPadding(
+            padding: const EdgeInsets.all(10),
+            sliver: SliverList(delegate: SliverChildListDelegate(children)),
+          ),
+        ],
       ),
     );
   }

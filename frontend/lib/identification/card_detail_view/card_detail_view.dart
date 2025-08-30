@@ -62,8 +62,6 @@ class _CardDetailViewState extends State<CardDetailView> {
 
   @override
   Widget build(BuildContext context) {
-    final orientation = MediaQuery.of(context).orientation;
-
     final cardInfo = widget.userCode.info;
     final cardVerification = widget.userCode.cardVerification;
 
@@ -81,55 +79,22 @@ class _CardDetailViewState extends State<CardDetailView> {
       onSelfVerifyPressed: () => _selfVerifyCard(widget.userCode),
     );
 
-    return orientation == Orientation.landscape
-        ? SafeArea(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                const qrCodeMinWidth = 280.0;
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Flexible(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          if (cardVerification.cardValid && isCardExtendable(cardInfo, cardVerification))
-                            ExtendCardNotification(applicationUrl: widget.applicationUrl),
-                          paddedCard,
-                        ],
-                      ),
-                    ),
-                    if (constraints.maxWidth > qrCodeMinWidth * 2)
-                      Flexible(child: qrCodeAndStatus)
-                    else
-                      ConstrainedBox(
-                        constraints: const BoxConstraints.tightFor(width: qrCodeMinWidth),
-                        child: qrCodeAndStatus,
-                      ),
-                  ],
-                );
-              },
-            ),
-          )
-        : SingleChildScrollView(
-            child: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Column(
-                  children: [
-                    if (cardVerification.cardValid && isCardExtendable(cardInfo, cardVerification))
-                      ExtendCardNotification(applicationUrl: widget.applicationUrl),
-                    paddedCard,
-                    const SizedBox(height: 16),
-                    qrCodeAndStatus,
-                  ],
-                ),
-              ),
-            ),
-          );
+    return SingleChildScrollView(
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Column(
+            children: [
+              if (cardVerification.cardValid && isCardExtendable(cardInfo, cardVerification))
+                ExtendCardNotification(applicationUrl: widget.applicationUrl),
+              paddedCard,
+              const SizedBox(height: 16),
+              qrCodeAndStatus,
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   void _onMoreActionsPressed(BuildContext context) {
