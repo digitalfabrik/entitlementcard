@@ -1,4 +1,4 @@
-name: 'Check Administration'
+name: 'Administration Check'
 on:
   pull_request:
     branches:
@@ -6,20 +6,29 @@ on:
     paths:
       - 'administration/**'
 jobs:
-  check-administration:
+  administration-check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v4
         with:
           node-version: '20.18.0'
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
       - name: Install protobuf
         run: |
           curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v21.11/protoc-21.11-linux-x86_64.zip"
           unzip protoc*.zip -d $HOME/.local
           echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       - name: Install node modules
-        run: npm ci
+        run: npm ci --cache ~/.npm --prefer-offline
       - name: Typescript
         run: npm run ts:check
         working-directory: administration
