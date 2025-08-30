@@ -70,7 +70,7 @@ const DeleteDialog = (props: {
 
   return (
     <Dialog open={props.isOpen} aria-describedby='alert-dialog-description'>
-      <DialogContent id='alert-dialog-description'>
+      <DialogContent id='alert-dialog-description2'>
         <Stack direction='row' sx={{ gap: 2, alignItems: 'center' }}>
           {props.deleteResult.loading || props.deleteResult.called ? (
             <CircularProgress size={64} />

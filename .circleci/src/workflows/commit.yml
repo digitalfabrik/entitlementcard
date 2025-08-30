@@ -6,4 +6,5 @@ when:
 jobs:
   - check_backend
   - check_administration
-  - check_frontend
+# Commented out, because we test gh actions ./github/workflows/check-administration
+#  - check_frontend

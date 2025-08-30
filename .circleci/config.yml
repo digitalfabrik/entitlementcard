@@ -891,7 +891,6 @@ workflows:
         jobs:
             - check_backend
             - check_administration
-            - check_frontend
         when:
             and:
                 - << pipeline.parameters.run_commit >>
