@@ -103,6 +103,7 @@
   },
   "scripts": {
     "start": "set -ae; REACT_APP_APPLICATION_COMMIT=$(./application_commit.sh); NODE_OPTIONS='--require ts-node/register' NODE_ENV=development webpack serve --config config/webpack.config.ts",
+    "start:ci": "set -ae; REACT_APP_APPLICATION_COMMIT=$(./application_commit.sh); NODE_OPTIONS='--require ts-node/register' NODE_ENV=development webpack serve --config config/webpack.config.ts --no-open",
     "build": "set -ae; REACT_APP_APPLICATION_COMMIT=$(./application_commit.sh); NODE_OPTIONS='--require ts-node/register' NODE_ENV=production webpack --config config/webpack.config.ts",
     "test": "jest",
     "test:coverage": "jest --coverage",
