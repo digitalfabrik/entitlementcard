@@ -7,7 +7,6 @@ import { ApplicationStatus } from '../../generated/graphql'
 import AlertBox from '../../mui-modules/base/AlertBox'
 import ApplicationCard from './ApplicationCard'
 import ApplicationStatusBar from './ApplicationStatusBar'
-import usePrintApplication from './hooks/usePrintApplication'
 import { getPreVerifiedEntitlementType } from './preVerifiedEntitlements'
 import type { Application, ApplicationStatusBarItemType } from './types'
 
@@ -66,7 +65,6 @@ const applicationListOrder = (application: Application): number => {
 
 const ApplicationsOverview = ({ applications }: { applications: Application[] }): ReactElement => {
   const [updatedApplications, setUpdatedApplications] = useState(applications)
-  const { applicationIdForPrint, printApplicationById } = usePrintApplication()
   const [activeBarItem, setActiveBarItem] = useState<ApplicationStatusBarItemType>(barItems.all)
   const { t } = useTranslation('applicationsOverview')
   const filteredApplications: Application[] = useMemo(
@@ -102,9 +100,7 @@ const ApplicationsOverview = ({ applications }: { applications: Application[] })
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.2, ease: 'easeOut' }}>
               <ApplicationCard
-                isSelectedForPrint={application.id === applicationIdForPrint}
                 application={application}
-                onPrintApplicationById={printApplicationById}
                 onDelete={() => setUpdatedApplications(updatedApplications.filter(a => a !== application))}
                 onChange={changed =>
                   setUpdatedApplications(

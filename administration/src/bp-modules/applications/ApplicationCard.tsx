@@ -33,8 +33,9 @@ import {
   Typography,
   useTheme,
 } from '@mui/material'
-import React, { memo, useContext, useMemo, useState } from 'react'
+import React, { memo, useContext, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useReactToPrint } from 'react-to-print'
 
 import { CsvIcon } from '../../components/icons/CsvIcon'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
@@ -50,10 +51,10 @@ import type { ProjectConfig } from '../../project-configs/getProjectConfig'
 import JsonFieldView from '../../shared/components/JsonFieldView'
 import VerificationsView from '../../shared/components/VerificationsView'
 import { ApplicationDataIncompleteError } from '../../util/applicationDataHelper'
-import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { useAppToaster } from '../AppToaster'
 import { AccordionExpandButton } from '../components/AccordionExpandButton'
+import { ApplicationPrintView, applicationPrintViewPageStyle } from './ApplicationPrintView'
 import NoteDialogController from './NoteDialogController'
 import { ApplicationStatusNote } from './components/ApplicationStatusNote'
 import { ApplicationIndicators } from './components/VerificationsIndicator'
@@ -240,22 +241,24 @@ const headerTypography: SxProps = {
 
 const ApplicationCard = ({
   application,
-  isSelectedForPrint,
   onDelete,
   onChange,
-  onPrintApplicationById,
 }: {
   application: Application
-  isSelectedForPrint: boolean
   onDelete: () => void
   onChange: (application: Application) => void
-  onPrintApplicationById: (applicationId: number) => void
 }) => {
   const { t } = useTranslation('applicationsOverview')
   const theme = useTheme()
   const config = useContext(ProjectConfigContext)
   const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${application.id}`
   const appToaster = useAppToaster()
+  const printContentRef = useRef<HTMLDivElement>(null)
+  const printApplication = useReactToPrint({
+    contentRef: printContentRef,
+    pageStyle: applicationPrintViewPageStyle.styles,
+    documentTitle: t('applicationFrom', { date: new Date(application.createdDate) }),
+  })
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [rejectionDialogOpen, setRejectionDialogOpen] = useState(false)
   const [openNoteDialog, setOpenNoteDialog] = useState(false)
@@ -322,17 +325,15 @@ const ApplicationCard = ({
     },
     {
       name: t('exportPdf'),
-      onClick: () => onPrintApplicationById(application.id),
+      onClick: () => {
+        printApplication()
+      },
       icon: <PrintOutlined sx={{ height: 20 }} />,
     },
   ]
 
   return (
-    <Accordion
-      sx={{ displayPrint: isSelectedForPrint ? 'block' : 'none' }}
-      disableGutters
-      aria-controls='panel-content'
-      onChange={(_, expanded) => setAccordionExpanded(expanded)}>
+    <Accordion disableGutters aria-controls='panel-content' onChange={(_, expanded) => setAccordionExpanded(expanded)}>
       <AccordionSummary
         // Need this to display the `expandIconWrapper` slot, even if this is not directly used.
         expandIcon={<ExpandMore />}
@@ -344,7 +345,7 @@ const ApplicationCard = ({
         sx={{ flexDirection: 'column', alignItems: 'stretch', padding: 0 }}>
         <Stack direction='row' sx={{ width: '100%', gap: 2, paddingLeft: 2, paddingRight: 2 }}>
           <Typography sx={{ minWidth: '250px', ...headerTypography }}>
-            {t('applicationFrom')} {formatDateWithTimezone(application.createdDate, config.timezone)}
+            {t('applicationFrom', { date: new Date(application.createdDate) })}
           </Typography>
           <Warning
             color='warning'
@@ -358,7 +359,6 @@ const ApplicationCard = ({
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap',
               overflow: 'hidden',
-              displayPrint: 'none',
               ...headerTypography,
             }}>
             {personalData &&
@@ -371,29 +371,25 @@ const ApplicationCard = ({
       </AccordionSummary>
 
       <AccordionDetails sx={{ position: 'relative' }}>
-        <Stack sx={{ spacing: 2, alignItems: 'flex-start', gap: 2 }}>
-          <Stack sx={{ gap: 2, flexGrow: 1, marginLeft: 2, marginBottom: 2, alignItems: 'flex-start' }}>
-            {application.status === ApplicationStatus.Withdrawn && !!application.statusResolvedDate && (
-              <Box sx={{ bgcolor: theme.palette.warning.light, padding: 2 }}>
-                {t('withdrawalMessage', {
-                  withdrawalDate: formatDateWithTimezone(application.statusResolvedDate, config.timezone),
-                })}
-                <br />
-                {t('deleteApplicationSoonPrompt')}
-              </Box>
-            )}
-            {/* TODO: <JsonFieldView> does not emit a root element and thus, <Stack> would insert a gap here */}
-            <Box>
-              <JsonFieldView
-                jsonField={application.jsonValue}
-                baseUrl={baseUrl}
-                key={0}
-                hierarchyIndex={0}
-                attachmentAccessible
-                expandedRoot={false}
-              />
+        <Stack sx={{ spacing: 2, alignItems: 'flex-start', gap: 2, marginLeft: 2, marginBottom: 2, marginRight: 2 }}>
+          {application.status === ApplicationStatus.Withdrawn && !!application.statusResolvedDate && (
+            <Box sx={{ bgcolor: theme.palette.warning.light, padding: 2 }}>
+              {t('withdrawalMessage', { date: new Date(application.statusResolvedDate) })}
+              <br />
+              {t('deleteApplicationSoonPrompt')}
             </Box>
-          </Stack>
+          )}
+          {/* TODO: <JsonFieldView> does not emit a root element and thus, <Stack> would insert a gap here */}
+          <Box>
+            <JsonFieldView
+              jsonField={application.jsonValue}
+              baseUrl={baseUrl}
+              key={0}
+              hierarchyIndex={0}
+              attachmentAccessible
+              expandedRoot={false}
+            />
+          </Box>
         </Stack>
 
         <Divider />
@@ -416,7 +412,7 @@ const ApplicationCard = ({
           </Box>
         )}
 
-        <Stack sx={{ p: 2, displayPrint: 'none' }} spacing={2} direction='row'>
+        <Stack sx={{ p: 2, gap: 2, flexDirection: 'row' }}>
           {application.status === ApplicationStatus.Pending ? (
             <ButtonsApplicationPending
               disabled={approveStatusResult.loading}
@@ -436,25 +432,6 @@ const ApplicationCard = ({
           <BaseMenu menuItems={menuItems} menuLabel={t('moreActionsButtonLabel')} />
         </Stack>
 
-        <DeleteDialog
-          isOpen={deleteDialogOpen}
-          deleteResult={deleteResult}
-          onConfirm={() => deleteApplication({ variables: { applicationId: application.id } })}
-          onCancel={() => setDeleteDialogOpen(false)}
-        />
-
-        <RejectionDialog
-          open={rejectionDialogOpen}
-          loading={rejectStatusResult.loading}
-          onConfirm={message => {
-            rejectStatus({
-              variables: { applicationId: application.id, rejectionMessage: message },
-            })
-          }}
-          onCancel={() => {
-            setRejectionDialogOpen(false)
-          }}
-        />
         <Box sx={{ position: 'absolute', top: 0, right: theme.spacing(2), zIndex: 1 }}>
           <NoteDialogController
             application={application}
@@ -464,6 +441,30 @@ const ApplicationCard = ({
           />
         </Box>
       </AccordionDetails>
+
+      <DeleteDialog
+        isOpen={deleteDialogOpen}
+        deleteResult={deleteResult}
+        onConfirm={() => deleteApplication({ variables: { applicationId: application.id } })}
+        onCancel={() => setDeleteDialogOpen(false)}
+      />
+
+      <RejectionDialog
+        open={rejectionDialogOpen}
+        loading={rejectStatusResult.loading}
+        onConfirm={message => {
+          rejectStatus({
+            variables: { applicationId: application.id, rejectionMessage: message },
+          })
+        }}
+        onCancel={() => {
+          setRejectionDialogOpen(false)
+        }}
+      />
+
+      <Box sx={{ display: 'none' }}>
+        <ApplicationPrintView ref={printContentRef} application={application} />
+      </Box>
     </Accordion>
   )
 }

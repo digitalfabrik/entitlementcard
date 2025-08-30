@@ -76,7 +76,7 @@ const JsonFieldAttachment = memo(
           {t(getTranslationKey(jsonField.name, parentName))}:&nbsp;
           <PrintAwareTag
             round
-            rightIcon={<Icon icon='download' color={Colors.GRAY1} />}
+            endIcon={<Icon icon='download' color={Colors.GRAY1} />}
             interactive
             minimal
             onClick={onClick}>{`${t('applicationsOverview:attachment')} ${
