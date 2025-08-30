@@ -28,7 +28,7 @@ const ApplicationStatusHelpButton = (): ReactElement => {
           <Headline>{t('whichStatusMeansWhat')}</Headline>
           <Description>
             <li>
-              <b>{t('statusBarAll')}:</b>
+              <b>{t('statusBarAccepted')}:</b>
               <Description>
                 {t('acceptedDescription')}
                 <br />
