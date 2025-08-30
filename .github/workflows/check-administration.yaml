@@ -1,0 +1,38 @@
+name: 'Check Administration'
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'administration/**'
+jobs:
+  check-administration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.18.0'
+      - name: Install protobuf
+        run: |
+          curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v21.11/protoc-21.11-linux-x86_64.zip"
+          unzip protoc*.zip -d $HOME/.local
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Install node modules
+        run: npm ci
+      - name: Typescript
+        run: npm run ts:check
+        working-directory: administration
+      - name: Lint
+        run: npm run lint
+        working-directory: administration
+      - name: Check circular dependencies
+        run: npm run check-circular-deps
+        working-directory: administration
+      - uses: ArtiomTr/jest-coverage-report-action@v2
+        name: Run tests with coverage
+        with:
+          skip-step: install
+          working-directory: administration
+          test-script: npm run test:coverage -- --silent --ci --json --testLocationInResults --outputFile=report.json --maxWorkers=1
+
