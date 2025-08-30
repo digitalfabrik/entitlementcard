@@ -131,17 +131,14 @@ test.describe('Bayern testing', () => {
     )
     await page
       .getByRole('radio', { name: cardType == 'blue' ? 'Blaue Ehrenamtskarte' : 'Goldene Ehrenamtskarte' })
-      .dispatchEvent('click')
-    await page
-      .getByRole('radio', { name: cardType == 'blue' ? 'Blaue Ehrenamtskarte' : 'Goldene Ehrenamtskarte' })
-      .check()
+      .click()
     if (cardType == 'blue') {
       await expect(form).toContainText('Art des Antrags: *')
       await expect(form).toContainText('Erstantrag *')
       await expect(form).toContainText('Verlängerungsantrag *')
       await page
         .getByRole('radio', { name: applicationType == 'initial' ? 'Erstantrag' : 'Verlängerungsantrag' })
-        .check()
+        .click()
     }
 
     await page.getByRole('checkbox', { name: 'Ich beantrage eine physische' }).check()
