@@ -13,6 +13,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.javalin.testtools.JavalinTest
 import io.mockk.every
 import io.mockk.mockkObject
+import io.mockk.verify
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.BeforeEach
@@ -33,11 +34,11 @@ internal class RejectApplicationTest : GraphqlApiTest() {
     /**
      * Set up a mock to be able to verify sending emails
      */
-    //@BeforeEach
-    //fun mockMailer() {
-    //    mockkObject(Mailer::class)
-    //    every { anyConstructed<Mailer>().sendApplicationRejectedMail(any(), any(), any(), any(), any()) } returns Unit
-    //}
+    @BeforeEach
+    fun mockMailer() {
+        mockkObject(Mailer)
+        every { Mailer.sendApplicationRejectedMail(any(), any(), any(), any(), any()) } returns Unit
+    }
 
     @Test
     fun `should return a successful response when the application has been rejected`() =
@@ -61,7 +62,15 @@ internal class RejectApplicationTest : GraphqlApiTest() {
                 }
             }
 
-            // todo check that the email has been sent
+            verify(exactly = 1) {
+                Mailer.sendApplicationRejectedMail(
+                    any(),
+                    any(),
+                    "John Doe",
+                    "johndoe@example.com",
+                    "dummy",
+                )
+            }
         }
 
     private fun createTestApplicationJsonField(): String {
