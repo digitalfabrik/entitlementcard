@@ -30,9 +30,8 @@ dependencies:
   # Locking this version due to this issue https://github.com/mogol/flutter_secure_storage/issues/762
   flutter_secure_storage: 9.0.0
   infinite_scroll_pagination: ^4.1.0
-  geolocator: ^12.0.0
-  # Locking this version until: #2322 Updating geolocator and geolocator_android
-  geolocator_android: 4.6.1
+  geolocator: ^14.0.2
+  geolocator_android: ^5.0.2
   protobuf: ^3.1.0
   base32: ^2.2.0
   qr_flutter: ^4.0.0
