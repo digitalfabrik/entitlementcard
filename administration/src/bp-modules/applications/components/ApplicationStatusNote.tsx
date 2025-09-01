@@ -64,7 +64,7 @@ export const ApplicationStatusNote = (p: {
 
   return (
     <Stack direction='row' sx={{ justifyContent: 'flex-start', alignItems: 'bottom' }}>
-      {showIcon && `${icon(p.status)}&ensp;`}
+      {showIcon && <>{icon(p.status)}&ensp;</>}
       <div>
         {translationKey !== undefined && (
           <Trans
