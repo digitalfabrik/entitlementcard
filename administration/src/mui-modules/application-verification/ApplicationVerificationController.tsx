@@ -93,7 +93,7 @@ const ApplicationVerificationController = ({ applicationVerificationAccessKey }:
   if (applicationWasAlreadyProcessed(application.status)) {
     return (
       <CenteredStack>
-        <AlertBox title={t('applicationAlreadyProcessed')} severity='info' />
+        <AlertBox description={t('applicationAlreadyProcessed')} severity='info' />
       </CenteredStack>
     )
   }
