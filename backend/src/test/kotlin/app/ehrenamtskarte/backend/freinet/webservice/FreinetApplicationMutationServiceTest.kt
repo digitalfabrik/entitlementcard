@@ -94,10 +94,25 @@ internal class FreinetApplicationMutationServiceTest : GraphqlApiTest() {
         }
 
     @Test
+    fun `POST returns a forbidden error when region is not authorized`() =
+        JavalinTest.test(app) { _, client ->
+            val applicationId = createTestApplication(regionId = 9)
+            val mutation = createMutation(applicationId)
+            val response = post(client, mutation, regionAdminFreinet.getJwtToken())
+            assertEquals(401, response.code)
+
+            verify(exactly = 0) {
+                anyConstructed<FreinetApi>().searchPersons(any(), any(), any())
+                anyConstructed<FreinetApi>().createPerson(any(), any(), any(), any(), any())
+                anyConstructed<FreinetApi>().sendCardInformation(any(), any())
+            }
+        }
+
+    @Test
     fun `POST returns false when data transfer is not activated`() =
         JavalinTest.test(app) { _, client ->
             transaction {
-                val agency = FreinetAgenciesEntity.find { FreinetAgencies.regionId eq 9 }.single()
+                val agency = FreinetAgenciesEntity.find { FreinetAgencies.regionId eq 94 }.single()
                 agency.dataTransferActivated = false
             }
 
@@ -120,7 +135,7 @@ internal class FreinetApplicationMutationServiceTest : GraphqlApiTest() {
     fun `POST returns true when data transfer is activated and creates new person`() =
         JavalinTest.test(app) { _, client ->
             transaction {
-                val agency = FreinetAgenciesEntity.find { FreinetAgencies.regionId eq 9 }.single()
+                val agency = FreinetAgenciesEntity.find { FreinetAgencies.regionId eq 94 }.single()
                 agency.dataTransferActivated = true
             }
 
@@ -142,7 +157,7 @@ internal class FreinetApplicationMutationServiceTest : GraphqlApiTest() {
     fun `POST returns true when person exists`() =
         JavalinTest.test(app) { _, client ->
             transaction {
-                val agency = FreinetAgenciesEntity.find { FreinetAgencies.regionId eq 9 }.single()
+                val agency = FreinetAgenciesEntity.find { FreinetAgencies.regionId eq 94 }.single()
                 agency.dataTransferActivated = true
             }
 
@@ -177,7 +192,7 @@ internal class FreinetApplicationMutationServiceTest : GraphqlApiTest() {
     fun `POST returns error when multiple persons are found in Freinet`() =
         JavalinTest.test(app) { _, client ->
             transaction {
-                val agency = FreinetAgenciesEntity.find { FreinetAgencies.regionId eq 9 }.single()
+                val agency = FreinetAgenciesEntity.find { FreinetAgencies.regionId eq 94 }.single()
                 agency.dataTransferActivated = true
             }
 
@@ -216,7 +231,7 @@ internal class FreinetApplicationMutationServiceTest : GraphqlApiTest() {
             verify(exactly = 0) { anyConstructed<FreinetApi>().sendCardInformation(any(), any()) }
         }
 
-    private fun createTestApplication(regionId: Int = 9): Int {
+    private fun createTestApplication(regionId: Int = 94): Int {
         val applicationJsonField = createTestApplicationJsonField()
         val applicationJson = objectMapper.writeValueAsString(applicationJsonField)
 
