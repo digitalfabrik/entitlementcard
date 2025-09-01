@@ -95,7 +95,7 @@ enum class TestAdministrators(
         project = "bayern.ehrenamtskarte.app",
         email = "region-admin+freinet@bayern.ehrenamtskarte.app",
         role = Role.REGION_ADMIN,
-        regionId = 9,
+        regionId = 94,
     ),
     ;
 
