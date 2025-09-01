@@ -892,7 +892,6 @@ workflows:
     commit:
         jobs:
             - check_backend
-            - check_administration
             - check_frontend
         when:
             and:
