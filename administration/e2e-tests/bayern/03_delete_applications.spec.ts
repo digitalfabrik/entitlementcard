@@ -19,9 +19,9 @@ test.describe('DeleteApplications', () => {
 
     while (true) {
       const items = await page
-        .getByRole('listitem')
+        .locator('.MuiAccordion-root')
         .filter({ hasText: 'Antrag vom' })
-        .filter({ hasText: `Name: Doe, ${browserName}` })
+        .filter({ hasText: `${browserName}` })
         .all()
 
       if (items.length === 0) {
@@ -31,8 +31,24 @@ test.describe('DeleteApplications', () => {
       const item = items[0]
 
       await item.click()
+
+      const confirmButton = item.getByRole('button', { name: 'Antrag bestätigen' }).first()
+      if (await confirmButton.isVisible()) {
+        await item.getByRole('button', { name: 'Antrag ablehnen' }).click()
+        await page.getByText('Bitte wählen Sie einen').click()
+        await page
+          .getByRole('option', {
+            name: 'Die angegebene Anwartschaftszeit des Engagements ist leider nicht ausreichend, um die blaue Bayerische Ehrenamtskarte zu erhalten. Erforderlich ist ein Engagement von mindestens zwei Jahren.',
+            exact: true,
+          })
+          .click()
+        await page.getByRole('button', { name: 'Ablehnung bestätigen' }).click()
+        await page.waitForTimeout(500)
+      }
+      await expect(item.getByRole('button', { name: 'Antrag löschen' })).toBeVisible()
       await item.getByRole('button', { name: 'Antrag löschen' }).click()
-      await page.getByRole('alertdialog').getByRole('button', { name: 'Antrag löschen' }).click()
+      await expect(page.getByRole('dialog')).toBeVisible()
+      await page.getByRole('dialog').getByRole('button', { name: 'Antrag löschen' }).click()
       await expect(page.getByRole('alertdialog')).toBeHidden()
     }
   })
