@@ -629,7 +629,6 @@
   },
   "applicationVerification": {
     "applicationAlreadyProcessed": "Der Antrag wurde bereits bearbeitet. Eine weitere Bestätigung oder Ablehnung ist nicht mehr möglich.",
-    "applicationAlreadyProcessedHint": "Hinweis: Sie erfahren nicht, ob der Antrag genehmigt oder abgelehnt wurde.<br/>Ihre Rückmeldung dient ausschließlich der Verifizierung der Angaben, die Ihre Organisation betreffen.",
     "withdrawMessageForVerifier": "Der Antrag wurde vom Antragsteller am {{date}} zurückgezogen.",
     "verificationFinishedTitle": "Ihre Eingaben wurden erfolgreich gespeichert.",
     "verificationFinishedContent": "Vielen Dank für Ihre Mithilfe. Sie können das Fenster jetzt schließen.",
