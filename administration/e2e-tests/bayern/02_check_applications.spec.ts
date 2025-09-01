@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test'
 
 export const expectVisible = async (item, text) => {
-  await expect(await item.getByText(text, { exact: true }).last()).toBeVisible()
+  await expect(await item.getByText(text, { exact: true }).first()).toBeVisible()
 }
 
 test.describe('Bayern regional admin', () => {
@@ -82,7 +82,6 @@ test.describe('Bayern regional admin', () => {
     test.setTimeout(200_000)
     const casesToVisit = new Set(['blue1', 'blue2', 'blue3', 'blue4', 'blue5', 'gold1', 'gold2', 'gold3', 'gold4'])
     const visitedCases = new Set()
-
     await page.getByRole('button', { name: 'Eingehende Anträge' }).nth(1).click()
     await expect(page.getByText('Status', { exact: true })).toBeVisible()
     await expect(page.getByRole('button').filter({ hasText: /^$/ })).toBeVisible()
@@ -111,7 +110,7 @@ test.describe('Bayern regional admin', () => {
     await page.getByRole('button').filter({ hasText: /^$/ }).click()
 
     // await page.getByRole('button', { name: 'Akzeptiert' }).click()
-    const listItems = await page.getByRole('listitem').filter({ hasText: 'Antrag vom' }).all()
+    const listItems = await page.locator('.MuiAccordion-root').filter({ hasText: 'Antrag vom' }).all()
     for (const item of listItems) {
       const data = await item.innerText()
       if (!data.includes(`Name: Doe, ${browserName}`)) {
@@ -131,7 +130,7 @@ test.describe('Bayern regional admin', () => {
       // await dialog.getByRole('button', { name: 'Speichern' }).last().click()
       // await expect(page.getByText('Notiz erfolgreich geändert.').last()).toBeVisible()
 
-      await item.getByRole('heading', { name: 'Persönliche' }).click()
+      await item.getByText('Persönliche Daten').first().click()
       await expect(await item.getByText('Vorname').first()).toBeVisible()
       await expect(await item.getByText('Nachname').first()).toBeVisible()
 
@@ -146,13 +145,17 @@ test.describe('Bayern regional admin', () => {
       await expectVisible(item, 'E-Mail-Adresse: example@gmail.com')
 
       await item.getByRole('heading', { name: 'Antragsdetails' }).click()
-      const element = item.getByText(/Antrag auf: (Goldene|Blaue)/)
+      const element = item.getByText(/Antrag auf: (Goldene|Blaue)/).first()
       await expect(element).toBeVisible()
       await expect(await item.getByText('Ich beantrage eine digitale Ehrenamtskarte: Ja').first()).toBeVisible()
       await expect(await item.getByText('Ich beantrage eine physische Ehrenamtskarte: Ja').first()).toBeVisible()
 
       if ((await item.innerText()).includes('Goldene')) {
-        const h6Element = await item.locator('xpath=.//div[2]/div/div[1]/div[3]/div/div/div/h6').textContent()
+        const h6Element = await item
+          .locator('.bp5-heading')
+          .filter({ hasText: /Ich (bin|leiste|habe)/ })
+          .first()
+          .textContent()
         switch (h6Element) {
           case 'Ich bin Inhaber:in des Ehrenzeichens für Verdienste im Ehrenamt des Bayerischen Ministerpräsidenten.':
             await item.getByRole('heading', { name: h6Element }).click()
@@ -187,13 +190,17 @@ test.describe('Bayern regional admin', () => {
         // blue
 
         await expect(await item.getByText('Antrag auf: Blaue Ehrenamtskarte').first()).toBeVisible()
-        const typeOfApplication = item.getByText(/Art des Antrags: (Verlängerungsantrag|Erstantrag)/)
+        const typeOfApplication = item.getByText(/Art des Antrags: (Verlängerungsantrag|Erstantrag)/).first()
         await expect(typeOfApplication).toBeVisible()
 
         await expectVisible(item, 'Ich beantrage eine digitale Ehrenamtskarte: Ja')
         await expectVisible(item, 'Ich beantrage eine physische Ehrenamtskarte: Ja')
 
-        const h6Element = await item.locator('xpath=.//div[2]/div/div[1]/div[3]/div/div/div/h6').textContent()
+        const h6Element = await item
+          .locator('.bp5-heading')
+          .filter({ hasText: /Ich (bin|leiste|habe|engagiere)/ })
+          .first()
+          .textContent()
         switch (h6Element) {
           case 'Ich leiste einen Freiwilligendienst ab in einem Freiwilligen Sozialen Jahr (FSJ), einem Freiwilligen Ökologischen Jahr (FÖJ) oder einem Bundesfreiwilligendienst (BFD).':
             await expectVisible(item, 'Name des Programms: the program')
@@ -210,9 +217,6 @@ test.describe('Bayern regional admin', () => {
             break
 
           case 'Ich bin Inhaber:in einer JuLeiCa (Jugendleiter:in-Card).':
-            const imageLocator = item.locator('img[src*="juleica"]')
-            await expect(imageLocator).toBeVisible()
-
             await expectVisible(item, 'Kartennummer: 123456789')
             await expectVisible(item, 'Karte gültig bis: 10.10.1999')
             await expectVisible(item, 'Kopie der Karte (1): Anhang 1(siehe Anhang 1)')

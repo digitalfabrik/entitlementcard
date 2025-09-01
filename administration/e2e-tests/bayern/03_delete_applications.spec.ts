@@ -18,11 +18,16 @@ test.describe('DeleteApplications', () => {
     await expect(page.getByText('Status', { exact: true })).toBeVisible()
 
     while (true) {
+      try {
+        await expect(page.getByRole('dialog')).toBeHidden({ timeout: 200 })
+      } catch {}
+
       const items = await page
         .locator('.MuiAccordion-root')
         .filter({ hasText: 'Antrag vom' })
         .filter({ hasText: `${browserName}` })
         .all()
+      // console.log(`Found ${items.length} items for ${browserName}`)
 
       if (items.length === 0) {
         break
@@ -35,7 +40,12 @@ test.describe('DeleteApplications', () => {
       const confirmButton = item.getByRole('button', { name: 'Antrag bestätigen' }).first()
       if (await confirmButton.isVisible()) {
         await item.getByRole('button', { name: 'Antrag ablehnen' }).click()
-        await page.getByText('Bitte wählen Sie einen').click()
+
+        // Wait for the dropdown to appear and become interactive
+        const dropdownSelector = page.getByText('Bitte wählen Sie einen')
+        await expect(dropdownSelector).toBeVisible({ timeout: 3000 })
+        await dropdownSelector.click()
+
         await page
           .getByRole('option', {
             name: 'Die angegebene Anwartschaftszeit des Engagements ist leider nicht ausreichend, um die blaue Bayerische Ehrenamtskarte zu erhalten. Erforderlich ist ein Engagement von mindestens zwei Jahren.',
@@ -43,13 +53,13 @@ test.describe('DeleteApplications', () => {
           })
           .click()
         await page.getByRole('button', { name: 'Ablehnung bestätigen' }).click()
-        await page.waitForTimeout(500)
+        await page.waitForTimeout(200)
       }
       await expect(item.getByRole('button', { name: 'Antrag löschen' })).toBeVisible()
       await item.getByRole('button', { name: 'Antrag löschen' }).click()
       await expect(page.getByRole('dialog')).toBeVisible()
       await page.getByRole('dialog').getByRole('button', { name: 'Antrag löschen' }).click()
-      await expect(page.getByRole('alertdialog')).toBeHidden()
+      await expect(page.getByRole('dialog')).toBeHidden()
     }
   })
 })

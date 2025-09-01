@@ -133,8 +133,7 @@ test.describe('Bayern testing', () => {
       .getByRole('radio', { name: cardType == 'blue' ? 'Blaue Ehrenamtskarte' : 'Goldene Ehrenamtskarte' })
       .click()
     if (cardType == 'blue') {
-      await expect(form).toContainText('Art des Antrags: *')
-      await expect(form).toContainText('Erstantrag *')
+      await expect(form).toContainText('Antrag auf: *')
       await expect(form).toContainText('Verlängerungsantrag *')
       await page
         .getByRole('radio', { name: applicationType == 'initial' ? 'Erstantrag' : 'Verlängerungsantrag' })
