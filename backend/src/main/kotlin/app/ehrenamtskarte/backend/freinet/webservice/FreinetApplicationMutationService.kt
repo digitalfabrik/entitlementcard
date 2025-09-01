@@ -18,9 +18,7 @@ import app.ehrenamtskarte.backend.freinet.database.repos.FreinetAgencyRepository
 import app.ehrenamtskarte.backend.freinet.exceptions.FreinetFoundMultiplePersonsException
 import app.ehrenamtskarte.backend.freinet.exceptions.FreinetPersonDataInvalidException
 import app.ehrenamtskarte.backend.freinet.util.FreinetApi
-import app.ehrenamtskarte.backend.freinet.util.validateFreinetDataTransferPermission
 import app.ehrenamtskarte.backend.freinet.webservice.schema.types.FreinetCard
-import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -47,10 +45,6 @@ class FreinetApplicationMutationService {
         return transaction {
             val application = ApplicationEntity.findById(applicationId)
                 ?: throw NotFoundException("Application not found")
-
-            val region = RegionsRepository.findRegionById(application.regionId.value)
-
-            validateFreinetDataTransferPermission(context.backendConfiguration.environment, region.name)
 
             if (application.status == Status.Withdrawn) {
                 throw InvalidInputException("Application is withdrawn")

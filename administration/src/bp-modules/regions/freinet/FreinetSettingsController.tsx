@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
@@ -10,13 +10,20 @@ import FreinetSettingsCard from './FreinetSettingsCard'
 const FreinetSettingsController = ({ regionId }: { regionId: number }): ReactElement | null => {
   const appToaster = useAppToaster()
   const { t } = useTranslation('regionSettings')
+  const [dataTransferActivated, setDataTransferActivated] = useState(false)
   const freinetQuery = useGetFreinetAgencyByRegionIdQuery({
     variables: { regionId },
+    onCompleted: result => {
+      if (result.agency) {
+        setDataTransferActivated(result.agency.dataTransferActivated)
+      }
+    },
   })
   const [updateFreinetDataTransfer] = useUpdateDataTransferToFreinetMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
       appToaster?.show({ intent: 'danger', message: title })
+      setDataTransferActivated(!dataTransferActivated)
     },
     onCompleted: () => {
       appToaster?.show({ intent: 'success', message: t('freinetActivateDataTransferSuccessful') })
@@ -41,7 +48,14 @@ const FreinetSettingsController = ({ regionId }: { regionId: number }): ReactEle
     })
   }
 
-  return <FreinetSettingsCard agencyInformation={freinetQueryResult.data.agency} onSave={onSave} />
+  return (
+    <FreinetSettingsCard
+      agencyInformation={freinetQueryResult.data.agency}
+      onSave={onSave}
+      dataTransferActivated={dataTransferActivated}
+      setDataTransferActivated={setDataTransferActivated}
+    />
+  )
 }
 
 export default FreinetSettingsController

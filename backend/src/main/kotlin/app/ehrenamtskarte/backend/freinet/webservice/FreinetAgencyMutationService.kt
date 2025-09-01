@@ -7,6 +7,8 @@ import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.NotImplementedException
 import app.ehrenamtskarte.backend.freinet.database.repos.FreinetAgencyRepository
 import app.ehrenamtskarte.backend.freinet.exceptions.FreinetAgencyNotFoundException
+import app.ehrenamtskarte.backend.freinet.util.validateFreinetDataTransferPermission
+import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -28,6 +30,11 @@ class FreinetAgencyMutationService {
         }
 
         transaction {
+            val region = RegionsRepository.findRegionById(regionId)
+
+            if (dataTransferActivated) {
+                validateFreinetDataTransferPermission(context.backendConfiguration.environment, region.name)
+            }
             if (!Authorizer.mayUpdateFreinetAgencyInformationInRegion(authContext.admin, regionId)) {
                 throw ForbiddenException()
             }

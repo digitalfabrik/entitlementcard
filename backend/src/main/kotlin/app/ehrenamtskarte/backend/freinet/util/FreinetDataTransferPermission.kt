@@ -2,7 +2,7 @@ package app.ehrenamtskarte.backend.freinet.util
 
 import app.ehrenamtskarte.backend.common.webservice.FREINET_DEMO_REGION_NAME
 import app.ehrenamtskarte.backend.config.Environment
-import app.ehrenamtskarte.backend.exception.service.ForbiddenException
+import app.ehrenamtskarte.backend.freinet.exceptions.FreinetDataTransferNotPermittedException
 
 /**
  * Validates if Freinet data transfer is permitted for the given environment and region.
@@ -11,6 +11,6 @@ import app.ehrenamtskarte.backend.exception.service.ForbiddenException
  */
 fun validateFreinetDataTransferPermission(environment: Environment, regionName: String) {
     if (environment != Environment.PRODUCTION && regionName != FREINET_DEMO_REGION_NAME) {
-        throw ForbiddenException()
+        throw FreinetDataTransferNotPermittedException()
     }
 }
