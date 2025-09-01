@@ -30,13 +30,13 @@ class FreinetAgencyMutationService {
         }
 
         transaction {
+            if (!Authorizer.mayUpdateFreinetAgencyInformationInRegion(authContext.admin, regionId)) {
+                throw ForbiddenException()
+            }
             val region = RegionsRepository.findRegionById(regionId)
 
             if (dataTransferActivated) {
                 validateFreinetDataTransferPermission(context.backendConfiguration.environment, region.name)
-            }
-            if (!Authorizer.mayUpdateFreinetAgencyInformationInRegion(authContext.admin, regionId)) {
-                throw ForbiddenException()
             }
             val freinetAgency = FreinetAgencyRepository.getFreinetAgencyByRegionId(regionId)
                 ?: throw FreinetAgencyNotFoundException()

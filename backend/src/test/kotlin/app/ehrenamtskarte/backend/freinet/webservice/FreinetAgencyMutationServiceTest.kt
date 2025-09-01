@@ -41,7 +41,7 @@ internal class FreinetAgencyMutationServiceTest : GraphqlApiTest() {
     @Test
     fun `POST returns a successful response and sets dataTransferActivated to true`() =
         JavalinTest.test(app) { _, client ->
-            val regionId = 9
+            val regionId = 94
             val mutation = createMutation(regionId, true)
             val response = post(client, mutation, regionAdminFreinet.getJwtToken())
             assertEquals(200, response.code)
