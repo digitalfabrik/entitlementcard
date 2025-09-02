@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.regions.webservice.schema.types
+package app.ehrenamtskarte.backend.graphql.regions.schema.types
 
 data class Region(
     val id: Int,

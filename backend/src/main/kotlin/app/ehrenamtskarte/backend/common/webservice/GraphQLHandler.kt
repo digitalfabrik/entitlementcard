@@ -11,9 +11,9 @@ import app.ehrenamtskarte.backend.graphql.auth.JwtService
 import app.ehrenamtskarte.backend.graphql.auth.authGraphQlParams
 import app.ehrenamtskarte.backend.graphql.cards.cardsGraphQlParams
 import app.ehrenamtskarte.backend.graphql.freinet.freinetGraphQlParams
+import app.ehrenamtskarte.backend.graphql.regions.regionsGraphQlParams
 import app.ehrenamtskarte.backend.graphql.stores.storesGraphQlParams
 import app.ehrenamtskarte.backend.regions.utils.PostalCodesLoader
-import app.ehrenamtskarte.backend.regions.webservice.regionsGraphQlParams
 import com.auth0.jwt.exceptions.AlgorithmMismatchException
 import com.auth0.jwt.exceptions.InvalidClaimException
 import com.auth0.jwt.exceptions.JWTDecodeException
