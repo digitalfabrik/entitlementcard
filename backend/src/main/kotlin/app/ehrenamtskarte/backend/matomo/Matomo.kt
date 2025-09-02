@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.matomo
 
 import app.ehrenamtskarte.backend.db.entities.CodeType
-import app.ehrenamtskarte.backend.cards.database.repos.CardRepository
+import app.ehrenamtskarte.backend.db.repositories.CardRepository
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.MatomoConfig
 import app.ehrenamtskarte.backend.config.ProjectConfig
