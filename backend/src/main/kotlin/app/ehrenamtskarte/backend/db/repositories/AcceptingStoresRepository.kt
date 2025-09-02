@@ -12,7 +12,7 @@ import app.ehrenamtskarte.backend.db.entities.ContactEntity
 import app.ehrenamtskarte.backend.db.entities.Contacts
 import app.ehrenamtskarte.backend.db.entities.PhysicalStoreEntity
 import app.ehrenamtskarte.backend.db.entities.PhysicalStores
-import app.ehrenamtskarte.backend.stores.database.PointColumnType
+import app.ehrenamtskarte.backend.db.columns.GisPointColumn
 import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.Coordinates
 import net.postgis.jdbc.geometry.Point
@@ -185,4 +185,4 @@ class DistanceFunction(expr1: Expression<Point>, expr2: Expression<Point>) :
 
 // https://postgis.net/docs/ST_MakePoint.html
 class MakePointFunction(expr1: Expression<Double>, expr2: Expression<Double>) :
-    CustomFunction<Point>("ST_MakePoint", PointColumnType(), expr1, expr2)
+    CustomFunction<Point>("ST_MakePoint", GisPointColumn(), expr1, expr2)
