@@ -1,8 +1,8 @@
-package app.ehrenamtskarte.backend.stores.webservice.dataloader
+package app.ehrenamtskarte.backend.graphql.stores.dataloader
 
 import app.ehrenamtskarte.backend.common.webservice.newNamedDataLoader
 import app.ehrenamtskarte.backend.db.repositories.ContactsRepository
-import app.ehrenamtskarte.backend.stores.webservice.schema.types.Contact
+import app.ehrenamtskarte.backend.graphql.stores.schema.types.Contact
 import org.jetbrains.exposed.sql.transactions.transaction
 
 val contactLoader = newNamedDataLoader("CONTACT_LOADER") { ids ->

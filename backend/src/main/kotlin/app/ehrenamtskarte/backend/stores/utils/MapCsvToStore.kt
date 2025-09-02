@@ -1,8 +1,8 @@
 package app.ehrenamtskarte.backend.stores.utils
 
+import app.ehrenamtskarte.backend.graphql.stores.schema.types.CSVAcceptingStore
 import app.ehrenamtskarte.backend.stores.COUNTRY_CODE
 import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
-import app.ehrenamtskarte.backend.stores.webservice.schema.types.CSVAcceptingStore
 
 fun getDiscount(discounts: List<String?>): String = discounts.filterNot { it.isNullOrEmpty() }.joinToString("\n\n")
 

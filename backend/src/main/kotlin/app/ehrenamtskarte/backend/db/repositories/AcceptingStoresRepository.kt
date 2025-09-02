@@ -14,7 +14,7 @@ import app.ehrenamtskarte.backend.db.entities.PhysicalStoreEntity
 import app.ehrenamtskarte.backend.db.entities.PhysicalStores
 import app.ehrenamtskarte.backend.db.columns.GisPointColumn
 import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
-import app.ehrenamtskarte.backend.stores.webservice.schema.types.Coordinates
+import app.ehrenamtskarte.backend.graphql.stores.schema.types.Coordinates
 import net.postgis.jdbc.geometry.Point
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.ComparisonOp

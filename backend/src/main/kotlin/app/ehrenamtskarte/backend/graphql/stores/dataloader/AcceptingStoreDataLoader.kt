@@ -1,8 +1,8 @@
-package app.ehrenamtskarte.backend.stores.webservice.dataloader
+package app.ehrenamtskarte.backend.graphql.stores.dataloader
 
 import app.ehrenamtskarte.backend.common.webservice.newNamedDataLoader
 import app.ehrenamtskarte.backend.db.repositories.AcceptingStoresRepository
-import app.ehrenamtskarte.backend.stores.webservice.schema.types.AcceptingStore
+import app.ehrenamtskarte.backend.graphql.stores.schema.types.AcceptingStore
 import org.jetbrains.exposed.sql.transactions.transaction
 
 val acceptingStoreLoader = newNamedDataLoader("ACCEPTING_STORE_LOADER") { ids ->

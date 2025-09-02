@@ -1,14 +1,14 @@
-package app.ehrenamtskarte.backend.stores.webservice.schema
+package app.ehrenamtskarte.backend.graphql.stores.schema
 
 import app.ehrenamtskarte.backend.common.webservice.DEFAULT_PROJECT
 import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.common.webservice.schema.IdsParams
-import app.ehrenamtskarte.backend.matomo.Matomo
 import app.ehrenamtskarte.backend.db.repositories.AcceptingStoresRepository
 import app.ehrenamtskarte.backend.db.repositories.PhysicalStoresRepository
-import app.ehrenamtskarte.backend.stores.webservice.schema.types.AcceptingStore
-import app.ehrenamtskarte.backend.stores.webservice.schema.types.Coordinates
-import app.ehrenamtskarte.backend.stores.webservice.schema.types.PhysicalStore
+import app.ehrenamtskarte.backend.graphql.stores.schema.types.AcceptingStore
+import app.ehrenamtskarte.backend.graphql.stores.schema.types.Coordinates
+import app.ehrenamtskarte.backend.graphql.stores.schema.types.PhysicalStore
+import app.ehrenamtskarte.backend.matomo.Matomo
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
