@@ -1,8 +1,8 @@
 package app.ehrenamtskarte.backend.helper
 
-import app.ehrenamtskarte.backend.application.database.ApplicationEntity
-import app.ehrenamtskarte.backend.application.database.ApplicationVerifications
-import app.ehrenamtskarte.backend.application.database.Applications
+import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
+import app.ehrenamtskarte.backend.db.entities.ApplicationVerifications
+import app.ehrenamtskarte.backend.db.entities.Applications
 import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.database.ApiTokenType
 import app.ehrenamtskarte.backend.auth.database.ApiTokens

@@ -1,11 +1,11 @@
 package app.ehrenamtskarte.backend.application.webservice
 
 import app.ehrenamtskarte.backend.GraphqlApiTest
-import app.ehrenamtskarte.backend.application.database.ApplicationEntity
-import app.ehrenamtskarte.backend.application.database.ApplicationVerificationEntity
-import app.ehrenamtskarte.backend.application.database.ApplicationVerificationExternalSource
-import app.ehrenamtskarte.backend.application.database.ApplicationVerifications
-import app.ehrenamtskarte.backend.application.database.Applications
+import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
+import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
+import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationExternalSource
+import app.ehrenamtskarte.backend.db.entities.ApplicationVerifications
+import app.ehrenamtskarte.backend.db.entities.Applications
 import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationHandler
 import app.ehrenamtskarte.backend.auth.database.ApiTokenType
 import app.ehrenamtskarte.backend.auth.database.ApiTokens

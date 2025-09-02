@@ -1,10 +1,10 @@
 package app.ehrenamtskarte.backend.application.webservice
 
-import app.ehrenamtskarte.backend.application.database.ApplicationEntity
-import app.ehrenamtskarte.backend.application.database.ApplicationEntity.Status
-import app.ehrenamtskarte.backend.application.database.ApplicationVerificationEntity
-import app.ehrenamtskarte.backend.application.database.Applications
-import app.ehrenamtskarte.backend.application.database.NOTE_MAX_CHARS
+import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
+import app.ehrenamtskarte.backend.db.entities.ApplicationEntity.Status
+import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
+import app.ehrenamtskarte.backend.db.entities.Applications
+import app.ehrenamtskarte.backend.db.entities.NOTE_MAX_CHARS
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
 import app.ehrenamtskarte.backend.application.webservice.schema.create.Application
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationAdminGql

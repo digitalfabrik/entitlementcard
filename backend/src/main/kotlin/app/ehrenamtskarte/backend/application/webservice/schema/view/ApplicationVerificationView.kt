@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.application.webservice.schema.view
 
-import app.ehrenamtskarte.backend.application.database.ApplicationVerificationEntity
+import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
 
 data class ApplicationVerificationView(
     val verificationId: Int,
