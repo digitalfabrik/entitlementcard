@@ -2,7 +2,7 @@ package app.ehrenamtskarte.backend.regions.database.repos
 
 import app.ehrenamtskarte.backend.common.database.sortByKeys
 import app.ehrenamtskarte.backend.db.entities.FreinetAgencies
-import app.ehrenamtskarte.backend.projects.database.Projects
+import app.ehrenamtskarte.backend.db.entities.Projects
 import app.ehrenamtskarte.backend.regions.database.RegionEntity
 import app.ehrenamtskarte.backend.regions.database.Regions
 import org.jetbrains.exposed.dao.id.EntityID
