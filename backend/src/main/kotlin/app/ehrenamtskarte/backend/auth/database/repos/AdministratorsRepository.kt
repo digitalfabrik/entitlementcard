@@ -2,8 +2,8 @@ package app.ehrenamtskarte.backend.auth.database.repos
 
 import app.ehrenamtskarte.backend.auth.PasswordValidationResult
 import app.ehrenamtskarte.backend.auth.PasswordValidator
-import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
-import app.ehrenamtskarte.backend.auth.database.Administrators
+import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
+import app.ehrenamtskarte.backend.db.entities.Administrators
 import app.ehrenamtskarte.backend.auth.database.PasswordCrypto
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.NotificationSettings
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role

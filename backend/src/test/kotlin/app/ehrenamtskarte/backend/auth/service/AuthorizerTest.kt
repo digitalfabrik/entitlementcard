@@ -1,8 +1,8 @@
 package app.ehrenamtskarte.backend.auth.service
 
 import app.ehrenamtskarte.backend.IntegrationTest
-import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
-import app.ehrenamtskarte.backend.auth.database.Administrators
+import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
+import app.ehrenamtskarte.backend.db.entities.Administrators
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.regions.database.RegionEntity

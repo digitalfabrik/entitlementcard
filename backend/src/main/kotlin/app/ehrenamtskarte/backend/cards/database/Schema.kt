@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.cards.database
 
-import app.ehrenamtskarte.backend.auth.database.Administrators
+import app.ehrenamtskarte.backend.db.entities.Administrators
 import app.ehrenamtskarte.backend.regions.database.Regions
 import app.ehrenamtskarte.backend.userdata.database.UserEntitlements
 import org.jetbrains.exposed.dao.IntEntity

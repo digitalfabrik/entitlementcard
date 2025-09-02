@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.auth
 
-import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
+import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
 
 data class AuthContext(
     val adminId: Int,

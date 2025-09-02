@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.cards.database.repos
 
-import app.ehrenamtskarte.backend.auth.database.Administrators
+import app.ehrenamtskarte.backend.db.entities.Administrators
 import app.ehrenamtskarte.backend.cards.database.CardEntity
 import app.ehrenamtskarte.backend.cards.database.Cards
 import app.ehrenamtskarte.backend.cards.database.CodeType

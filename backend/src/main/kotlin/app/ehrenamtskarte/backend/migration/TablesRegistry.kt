@@ -2,8 +2,8 @@ package app.ehrenamtskarte.backend.migration
 
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerifications
 import app.ehrenamtskarte.backend.db.entities.Applications
-import app.ehrenamtskarte.backend.auth.database.Administrators
-import app.ehrenamtskarte.backend.auth.database.ApiTokens
+import app.ehrenamtskarte.backend.db.entities.Administrators
+import app.ehrenamtskarte.backend.db.entities.ApiTokens
 import app.ehrenamtskarte.backend.cards.database.Cards
 import app.ehrenamtskarte.backend.freinet.database.FreinetAgencies
 import app.ehrenamtskarte.backend.migration.database.Migrations

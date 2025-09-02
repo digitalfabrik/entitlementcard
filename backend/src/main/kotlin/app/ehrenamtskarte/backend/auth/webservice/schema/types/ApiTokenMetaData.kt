@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.auth.webservice.schema.types
 
-import app.ehrenamtskarte.backend.auth.database.ApiTokenType
+import app.ehrenamtskarte.backend.db.entities.ApiTokenType
 
 class ApiTokenMetaData(
     val id: Int,

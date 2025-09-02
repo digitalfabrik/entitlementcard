@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.auth.webservice.schema.types
 
-import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
+import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
 import app.ehrenamtskarte.backend.common.webservice.fromEnvironment
 import app.ehrenamtskarte.backend.regions.webservice.dataloader.regionLoader
 import app.ehrenamtskarte.backend.regions.webservice.schema.types.Region

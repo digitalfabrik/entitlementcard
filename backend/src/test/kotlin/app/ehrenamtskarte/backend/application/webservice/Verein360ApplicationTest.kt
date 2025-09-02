@@ -7,8 +7,8 @@ import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationExternalSou
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerifications
 import app.ehrenamtskarte.backend.db.entities.Applications
 import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationHandler
-import app.ehrenamtskarte.backend.auth.database.ApiTokenType
-import app.ehrenamtskarte.backend.auth.database.ApiTokens
+import app.ehrenamtskarte.backend.db.entities.ApiTokenType
+import app.ehrenamtskarte.backend.db.entities.ApiTokens
 import app.ehrenamtskarte.backend.generated.AddEakApplication
 import app.ehrenamtskarte.backend.generated.enums.ApplicationType
 import app.ehrenamtskarte.backend.generated.inputs.ApplicationInput

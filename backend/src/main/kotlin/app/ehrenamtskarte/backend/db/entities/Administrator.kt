@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.auth.database
+package app.ehrenamtskarte.backend.db.entities
 
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity
@@ -73,27 +73,3 @@ class AdministratorEntity(id: EntityID<Int>) : IntEntity(id) {
     fun isInRegion(regionId: Int): Boolean = this.regionId?.value == regionId
 }
 
-const val TOKEN_LENGTH = 60
-
-enum class ApiTokenType {
-    USER_IMPORT,
-    VERIFIED_APPLICATION,
-}
-
-object ApiTokens : IntIdTable() {
-    val tokenHash = binary("tokenHash").uniqueIndex()
-    val creatorId = reference("creatorId", Administrators)
-    val projectId = reference("projectId", Projects)
-    val expirationDate = date("expirationDate")
-    val type = enumerationByName("type", 50, ApiTokenType::class)
-}
-
-class ApiTokenEntity(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<ApiTokenEntity>(ApiTokens)
-
-    var tokenHash by ApiTokens.tokenHash
-    var creator by ApiTokens.creatorId
-    var projectId by ApiTokens.projectId
-    var expirationDate by ApiTokens.expirationDate
-    var type by ApiTokens.type
-}

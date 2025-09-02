@@ -1,8 +1,8 @@
 package app.ehrenamtskarte.backend.auth.database.repos
 
-import app.ehrenamtskarte.backend.auth.database.ApiTokenEntity
-import app.ehrenamtskarte.backend.auth.database.ApiTokenType
-import app.ehrenamtskarte.backend.auth.database.ApiTokens
+import app.ehrenamtskarte.backend.db.entities.ApiTokenEntity
+import app.ehrenamtskarte.backend.db.entities.ApiTokenType
+import app.ehrenamtskarte.backend.db.entities.ApiTokens
 import org.jetbrains.exposed.dao.id.EntityID
 import java.time.LocalDate
 

@@ -2,7 +2,7 @@ package app.ehrenamtskarte.backend.mail
 
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
 import app.ehrenamtskarte.backend.application.webservice.schema.create.PersonalData
-import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
+import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.ProjectConfig

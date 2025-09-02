@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.application.webservice
 
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
-import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
+import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.auth.webservice.JwtService
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException

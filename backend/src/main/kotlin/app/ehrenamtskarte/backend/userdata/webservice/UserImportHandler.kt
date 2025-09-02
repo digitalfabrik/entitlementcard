@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.userdata.webservice
 
-import app.ehrenamtskarte.backend.auth.database.ApiTokenType
+import app.ehrenamtskarte.backend.db.entities.ApiTokenType
 import app.ehrenamtskarte.backend.auth.webservice.TokenAuthenticator
 import app.ehrenamtskarte.backend.cards.Argon2IdHasher
 import app.ehrenamtskarte.backend.cards.database.repos.CardRepository
