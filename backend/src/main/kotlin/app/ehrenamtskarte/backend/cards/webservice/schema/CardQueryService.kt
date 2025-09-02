@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.cards.webservice.schema
 
-import app.ehrenamtskarte.backend.cards.database.CodeType
+import app.ehrenamtskarte.backend.db.entities.CodeType
 import app.ehrenamtskarte.backend.cards.service.CardVerifier
 import app.ehrenamtskarte.backend.cards.webservice.schema.types.CardVerificationModel
 import app.ehrenamtskarte.backend.cards.webservice.schema.types.CardVerificationResultModel

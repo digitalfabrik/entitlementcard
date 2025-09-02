@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.cards.service
 
-import app.ehrenamtskarte.backend.cards.database.TOTP_SECRET_LENGTH
+import app.ehrenamtskarte.backend.db.entities.TOTP_SECRET_LENGTH
 import at.favre.lib.crypto.bcrypt.BCrypt
 import com.eatthepath.otp.TimeBasedOneTimePasswordGenerator
 import javax.crypto.KeyGenerator

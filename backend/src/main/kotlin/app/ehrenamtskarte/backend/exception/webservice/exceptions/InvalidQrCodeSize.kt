@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.exception.webservice.exceptions
 
-import app.ehrenamtskarte.backend.cards.database.CodeType
+import app.ehrenamtskarte.backend.db.entities.CodeType
 import app.ehrenamtskarte.backend.exception.GraphQLBaseException
 import app.ehrenamtskarte.backend.exception.webservice.schema.GraphQLExceptionCode
 

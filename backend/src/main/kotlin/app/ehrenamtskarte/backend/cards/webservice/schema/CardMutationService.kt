@@ -6,7 +6,7 @@ import app.ehrenamtskarte.backend.auth.getAuthContext
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.cards.Argon2IdHasher
 import app.ehrenamtskarte.backend.cards.PEPPER_LENGTH
-import app.ehrenamtskarte.backend.cards.database.CodeType
+import app.ehrenamtskarte.backend.db.entities.CodeType
 import app.ehrenamtskarte.backend.cards.database.repos.CardRepository
 import app.ehrenamtskarte.backend.cards.hash
 import app.ehrenamtskarte.backend.cards.service.CardActivator

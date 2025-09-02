@@ -1,9 +1,9 @@
 package app.ehrenamtskarte.backend.cards.database.repos
 
 import app.ehrenamtskarte.backend.db.entities.Administrators
-import app.ehrenamtskarte.backend.cards.database.CardEntity
-import app.ehrenamtskarte.backend.cards.database.Cards
-import app.ehrenamtskarte.backend.cards.database.CodeType
+import app.ehrenamtskarte.backend.db.entities.CardEntity
+import app.ehrenamtskarte.backend.db.entities.Cards
+import app.ehrenamtskarte.backend.db.entities.CodeType
 import app.ehrenamtskarte.backend.cards.webservice.schema.types.CardStatisticsResultModel
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCodeTypeException
 import app.ehrenamtskarte.backend.projects.database.Projects

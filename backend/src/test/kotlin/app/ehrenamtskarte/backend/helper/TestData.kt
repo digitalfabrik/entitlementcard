@@ -7,8 +7,8 @@ import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
 import app.ehrenamtskarte.backend.db.entities.ApiTokenType
 import app.ehrenamtskarte.backend.db.entities.ApiTokens
 import app.ehrenamtskarte.backend.auth.database.PasswordCrypto
-import app.ehrenamtskarte.backend.cards.database.Cards
-import app.ehrenamtskarte.backend.cards.database.CodeType
+import app.ehrenamtskarte.backend.db.entities.Cards
+import app.ehrenamtskarte.backend.db.entities.CodeType
 import app.ehrenamtskarte.backend.stores.database.AcceptingStoreEntity
 import app.ehrenamtskarte.backend.stores.database.AcceptingStores
 import app.ehrenamtskarte.backend.stores.database.Addresses

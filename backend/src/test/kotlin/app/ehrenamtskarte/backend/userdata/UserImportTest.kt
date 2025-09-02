@@ -3,8 +3,8 @@ package app.ehrenamtskarte.backend.userdata
 import app.ehrenamtskarte.backend.IntegrationTest
 import app.ehrenamtskarte.backend.db.entities.ApiTokenType
 import app.ehrenamtskarte.backend.db.entities.ApiTokens
-import app.ehrenamtskarte.backend.cards.database.CardEntity
-import app.ehrenamtskarte.backend.cards.database.Cards
+import app.ehrenamtskarte.backend.db.entities.CardEntity
+import app.ehrenamtskarte.backend.db.entities.Cards
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestData
 import app.ehrenamtskarte.backend.userdata.database.UserEntitlements

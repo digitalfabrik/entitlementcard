@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.cards.webservice.schema.types
 
-import app.ehrenamtskarte.backend.cards.database.CodeType
+import app.ehrenamtskarte.backend.db.entities.CodeType
 
 data class CardVerificationModel(
     val cardInfoHashBase64: String,
