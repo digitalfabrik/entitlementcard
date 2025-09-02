@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.cards.webservice.schema
+package app.ehrenamtskarte.backend.graphql.cards.schema
 
 import Card
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
@@ -11,12 +11,12 @@ import app.ehrenamtskarte.backend.db.repositories.CardRepository
 import app.ehrenamtskarte.backend.cards.hash
 import app.ehrenamtskarte.backend.cards.service.CardActivator
 import app.ehrenamtskarte.backend.cards.service.CardVerifier
-import app.ehrenamtskarte.backend.cards.webservice.QRCodeUtil
-import app.ehrenamtskarte.backend.cards.webservice.schema.types.ActivationState
-import app.ehrenamtskarte.backend.cards.webservice.schema.types.CardActivationResultModel
-import app.ehrenamtskarte.backend.cards.webservice.schema.types.CardCreationResultModel
-import app.ehrenamtskarte.backend.cards.webservice.schema.types.DynamicActivationCodeResult
-import app.ehrenamtskarte.backend.cards.webservice.schema.types.StaticVerificationCodeResult
+import app.ehrenamtskarte.backend.graphql.cards.QRCodeUtil
+import app.ehrenamtskarte.backend.graphql.cards.schema.types.ActivationState
+import app.ehrenamtskarte.backend.graphql.cards.schema.types.CardActivationResultModel
+import app.ehrenamtskarte.backend.graphql.cards.schema.types.CardCreationResultModel
+import app.ehrenamtskarte.backend.graphql.cards.schema.types.DynamicActivationCodeResult
+import app.ehrenamtskarte.backend.graphql.cards.schema.types.StaticVerificationCodeResult
 import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.NotFoundException

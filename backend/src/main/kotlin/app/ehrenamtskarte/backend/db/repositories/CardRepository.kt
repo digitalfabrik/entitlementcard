@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.db.repositories
 
-import app.ehrenamtskarte.backend.cards.webservice.schema.types.CardStatisticsResultModel
+import app.ehrenamtskarte.backend.graphql.cards.schema.types.CardStatisticsResultModel
 import app.ehrenamtskarte.backend.db.entities.Administrators
 import app.ehrenamtskarte.backend.db.entities.CardEntity
 import app.ehrenamtskarte.backend.db.entities.Cards

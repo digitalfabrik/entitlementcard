@@ -1,9 +1,9 @@
-package app.ehrenamtskarte.backend.cards.webservice.schema
+package app.ehrenamtskarte.backend.graphql.cards.schema
 
 import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.db.repositories.CardRepository
-import app.ehrenamtskarte.backend.cards.webservice.schema.types.CardStatisticsResultModel
+import app.ehrenamtskarte.backend.graphql.cards.schema.types.CardStatisticsResultModel
 import app.ehrenamtskarte.backend.common.utils.dateStringToEndOfDayInstant
 import app.ehrenamtskarte.backend.common.utils.dateStringToStartOfDayInstant
 import app.ehrenamtskarte.backend.common.webservice.context
