@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.cards.webservice.schema.types
+package app.ehrenamtskarte.backend.graphql.cards.schema.types
 
 data class DynamicActivationCodeResult(
     val cardInfoHashBase64: String,
