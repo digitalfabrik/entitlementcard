@@ -1,8 +1,8 @@
 package app.ehrenamtskarte.backend.application.webservice
 
 import app.ehrenamtskarte.backend.config.BackendConfiguration
-import app.ehrenamtskarte.backend.projects.database.ProjectEntity
-import app.ehrenamtskarte.backend.projects.database.Projects
+import app.ehrenamtskarte.backend.db.entities.ProjectEntity
+import app.ehrenamtskarte.backend.db.entities.Projects
 import io.javalin.http.Context
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.transactions.transaction

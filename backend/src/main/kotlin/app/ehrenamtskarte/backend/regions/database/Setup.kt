@@ -9,7 +9,7 @@ import app.ehrenamtskarte.backend.config.Environment
 import app.ehrenamtskarte.backend.db.entities.FreinetAgenciesEntity
 import app.ehrenamtskarte.backend.freinet.database.insertOrUpdateFreinetRegionInformation
 import app.ehrenamtskarte.backend.freinet.webservice.schema.types.FreinetApiAgency
-import app.ehrenamtskarte.backend.projects.database.ProjectEntity
+import app.ehrenamtskarte.backend.db.entities.ProjectEntity
 import org.jetbrains.exposed.sql.transactions.transaction
 
 fun insertOrUpdateRegions(agencies: List<FreinetApiAgency>, config: BackendConfiguration) {

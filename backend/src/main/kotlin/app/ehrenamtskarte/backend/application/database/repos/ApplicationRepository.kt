@@ -10,8 +10,8 @@ import app.ehrenamtskarte.backend.application.webservice.utils.ExtractedApplicat
 import app.ehrenamtskarte.backend.common.database.sortByKeys
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidLinkException
-import app.ehrenamtskarte.backend.projects.database.ProjectEntity
-import app.ehrenamtskarte.backend.projects.database.Projects
+import app.ehrenamtskarte.backend.db.entities.ProjectEntity
+import app.ehrenamtskarte.backend.db.entities.Projects
 import app.ehrenamtskarte.backend.regions.database.Regions
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
