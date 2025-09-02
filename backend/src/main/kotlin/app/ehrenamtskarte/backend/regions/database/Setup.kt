@@ -6,7 +6,7 @@ import app.ehrenamtskarte.backend.common.webservice.KOBLENZ_PASS_PROJECT
 import app.ehrenamtskarte.backend.common.webservice.NUERNBERG_PASS_PROJECT
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.Environment
-import app.ehrenamtskarte.backend.freinet.database.FreinetAgenciesEntity
+import app.ehrenamtskarte.backend.db.entities.FreinetAgenciesEntity
 import app.ehrenamtskarte.backend.freinet.database.insertOrUpdateFreinetRegionInformation
 import app.ehrenamtskarte.backend.freinet.webservice.schema.types.FreinetApiAgency
 import app.ehrenamtskarte.backend.projects.database.ProjectEntity

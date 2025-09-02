@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.freinet.database
+package app.ehrenamtskarte.backend.db.entities
 
 import app.ehrenamtskarte.backend.regions.database.Regions
 import org.jetbrains.exposed.dao.IntEntity
