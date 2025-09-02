@@ -1,9 +1,9 @@
-package app.ehrenamtskarte.backend.stores.webservice.schema.types
+package app.ehrenamtskarte.backend.graphql.stores.schema.types
 
 import app.ehrenamtskarte.backend.common.webservice.fromEnvironment
-import app.ehrenamtskarte.backend.stores.webservice.dataloader.categoryLoader
-import app.ehrenamtskarte.backend.stores.webservice.dataloader.contactLoader
-import app.ehrenamtskarte.backend.stores.webservice.dataloader.physicalStoreByStoreIdLoader
+import app.ehrenamtskarte.backend.graphql.stores.dataloader.categoryLoader
+import app.ehrenamtskarte.backend.graphql.stores.dataloader.contactLoader
+import app.ehrenamtskarte.backend.graphql.stores.dataloader.physicalStoreByStoreIdLoader
 import graphql.schema.DataFetchingEnvironment
 import java.util.concurrent.CompletableFuture
 

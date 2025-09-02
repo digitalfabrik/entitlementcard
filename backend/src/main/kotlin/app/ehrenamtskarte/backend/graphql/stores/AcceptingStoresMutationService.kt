@@ -1,16 +1,16 @@
-package app.ehrenamtskarte.backend.stores.webservice
+package app.ehrenamtskarte.backend.graphql.stores
 
-import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.common.webservice.context
+import app.ehrenamtskarte.backend.db.repositories.AcceptingStoresRepository
+import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidJsonException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotUniqueException
-import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
-import app.ehrenamtskarte.backend.db.repositories.AcceptingStoresRepository
+import app.ehrenamtskarte.backend.graphql.getAuthContext
+import app.ehrenamtskarte.backend.graphql.stores.schema.types.CSVAcceptingStore
+import app.ehrenamtskarte.backend.graphql.stores.schema.types.StoreImportReturnResultModel
 import app.ehrenamtskarte.backend.stores.utils.mapCsvToStore
-import app.ehrenamtskarte.backend.stores.webservice.schema.types.CSVAcceptingStore
-import app.ehrenamtskarte.backend.stores.webservice.schema.types.StoreImportReturnResultModel
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.dao.id.EntityID

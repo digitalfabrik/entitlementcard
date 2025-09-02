@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.stores.webservice.schema.types
+package app.ehrenamtskarte.backend.graphql.stores.schema.types
 
 data class StoreImportReturnResultModel(
     val storesCreated: Int,
