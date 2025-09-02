@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.application.webservice
 
-import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
+import app.ehrenamtskarte.backend.db.repositories.ApplicationRepository
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationAdminGql
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationPublicGql
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationVerificationView
