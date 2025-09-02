@@ -72,8 +72,6 @@ class MapStyleHandler(config: BackendConfiguration) {
         return mapper.readTree(text)
     }
 
-    fun getPath(): String = "/project/{project_id}/map"
-
     fun handle(context: Context) {
         try {
             val projectId: String = context.pathParam("project_id")

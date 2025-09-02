@@ -17,8 +17,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
 
 class ApplicationAttachmentHandler(private val applicationData: File) {
-    fun getPath(): String = "/application/{project}/{applicationId}/file/{fileIndex}"
-
     fun handle(context: Context) {
         val jwtPayload = JwtService.verifyRequest(context)
         if (jwtPayload == null) {
