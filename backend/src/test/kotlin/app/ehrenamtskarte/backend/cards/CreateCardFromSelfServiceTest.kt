@@ -7,8 +7,8 @@ import app.ehrenamtskarte.backend.generated.CreateCardFromSelfService
 import app.ehrenamtskarte.backend.helper.SampleCards
 import app.ehrenamtskarte.backend.helper.SampleCards.getEncoded
 import app.ehrenamtskarte.backend.helper.TestData
-import app.ehrenamtskarte.backend.userdata.database.UserEntitlements
-import app.ehrenamtskarte.backend.userdata.database.UserEntitlementsEntity
+import app.ehrenamtskarte.backend.db.entities.UserEntitlements
+import app.ehrenamtskarte.backend.db.entities.UserEntitlementsEntity
 import io.javalin.testtools.JavalinTest
 import io.ktor.util.decodeBase64Bytes
 import org.jetbrains.exposed.sql.deleteAll

@@ -1,5 +1,7 @@
 package app.ehrenamtskarte.backend.userdata.database
 
+import app.ehrenamtskarte.backend.db.entities.UserEntitlements
+import app.ehrenamtskarte.backend.db.entities.UserEntitlementsEntity
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.update
 import java.time.Instant
