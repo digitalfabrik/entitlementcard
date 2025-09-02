@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.regions.webservice.schema
+package app.ehrenamtskarte.backend.graphql.regions.schema
 
 import app.ehrenamtskarte.backend.common.webservice.DEFAULT_PROJECT
 import app.ehrenamtskarte.backend.common.webservice.EAK_BAYERN_PROJECT
@@ -10,7 +10,7 @@ import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFound
 import app.ehrenamtskarte.backend.db.entities.ProjectEntity
 import app.ehrenamtskarte.backend.db.entities.Projects
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
-import app.ehrenamtskarte.backend.regions.webservice.schema.types.Region
+import app.ehrenamtskarte.backend.graphql.regions.schema.types.Region
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction

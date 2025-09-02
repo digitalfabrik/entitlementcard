@@ -1,8 +1,8 @@
-package app.ehrenamtskarte.backend.regions.webservice.dataloader
+package app.ehrenamtskarte.backend.graphql.regions.dataloader
 
 import app.ehrenamtskarte.backend.common.webservice.newNamedDataLoader
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
-import app.ehrenamtskarte.backend.regions.webservice.schema.types.Region
+import app.ehrenamtskarte.backend.graphql.regions.schema.types.Region
 import org.jetbrains.exposed.sql.transactions.transaction
 
 val regionLoader = newNamedDataLoader("REGION_LOADER") { ids ->
