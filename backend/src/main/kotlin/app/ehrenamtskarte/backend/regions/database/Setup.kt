@@ -8,7 +8,7 @@ import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.Environment
 import app.ehrenamtskarte.backend.db.entities.FreinetAgenciesEntity
 import app.ehrenamtskarte.backend.freinet.database.insertOrUpdateFreinetRegionInformation
-import app.ehrenamtskarte.backend.freinet.webservice.schema.types.FreinetApiAgency
+import app.ehrenamtskarte.backend.graphql.freinet.schema.types.FreinetApiAgency
 import app.ehrenamtskarte.backend.db.entities.ProjectEntity
 import app.ehrenamtskarte.backend.db.entities.RegionEntity
 import org.jetbrains.exposed.sql.transactions.transaction
