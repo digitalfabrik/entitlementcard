@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.auth.webservice.schema
+package app.ehrenamtskarte.backend.graphql.auth.schema
 
 import app.ehrenamtskarte.backend.db.repositories.AdministratorsRepository
 import app.ehrenamtskarte.backend.graphql.getAuthContext
