@@ -4,7 +4,7 @@ import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
 import app.ehrenamtskarte.backend.db.entities.Administrators
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
-import app.ehrenamtskarte.backend.projects.database.Projects
+import app.ehrenamtskarte.backend.db.entities.Projects
 import org.jetbrains.exposed.sql.transactions.transaction
 
 fun GraphQLContext.getAuthContext(): AuthContext {

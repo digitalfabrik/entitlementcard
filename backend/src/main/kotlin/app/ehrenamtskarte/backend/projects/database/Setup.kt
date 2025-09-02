@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.projects.database
 
 import app.ehrenamtskarte.backend.config.BackendConfiguration
+import app.ehrenamtskarte.backend.db.entities.ProjectEntity
 import org.jetbrains.exposed.sql.transactions.transaction
 
 fun insertOrUpdateProjects(config: BackendConfiguration) {

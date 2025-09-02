@@ -9,7 +9,7 @@ import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidLinkException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.PasswordResetKeyExpiredException
 import app.ehrenamtskarte.backend.mail.Mailer
-import app.ehrenamtskarte.backend.projects.database.Projects
+import app.ehrenamtskarte.backend.db.entities.Projects
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.LowerCase
