@@ -1,14 +1,14 @@
-package app.ehrenamtskarte.backend.cards.database.repos
+package app.ehrenamtskarte.backend.db.repositories
 
+import app.ehrenamtskarte.backend.cards.webservice.schema.types.CardStatisticsResultModel
 import app.ehrenamtskarte.backend.db.entities.Administrators
 import app.ehrenamtskarte.backend.db.entities.CardEntity
 import app.ehrenamtskarte.backend.db.entities.Cards
 import app.ehrenamtskarte.backend.db.entities.CodeType
-import app.ehrenamtskarte.backend.cards.webservice.schema.types.CardStatisticsResultModel
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCodeTypeException
 import app.ehrenamtskarte.backend.db.entities.Projects
 import app.ehrenamtskarte.backend.db.entities.Regions
 import app.ehrenamtskarte.backend.db.entities.UserEntitlements
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCodeTypeException
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.Coalesce
 import org.jetbrains.exposed.sql.JoinType
