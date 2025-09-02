@@ -1,4 +1,5 @@
-import { Button, Callout, Card, Classes, FormGroup, H2, H3, H4, InputGroup } from '@blueprintjs/core'
+import { Callout, Card, Classes, FormGroup, H2, H3, H4, InputGroup } from '@blueprintjs/core'
+import { Button } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate, useSearchParams } from 'react-router'
@@ -84,13 +85,9 @@ const ResetPasswordController = (): ReactElement => {
             className={Classes.DIALOG_FOOTER_ACTIONS}
             style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px' }}>
             <Link to='/'>{t('backToLogin')}</Link>
-            <Button
-              type='submit'
-              intent='primary'
-              text={t('resetPassword')}
-              loading={loading}
-              disabled={warnMessage !== null}
-            />
+            <Button type='submit' loading={loading} variant='contained' disabled={warnMessage !== null}>
+              {t('resetPassword')}
+            </Button>
           </div>
         </form>
       </Card>
