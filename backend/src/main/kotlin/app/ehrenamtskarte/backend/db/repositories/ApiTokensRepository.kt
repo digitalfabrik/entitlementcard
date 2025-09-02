@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.auth.database.repos
+package app.ehrenamtskarte.backend.db.repositories
 
 import app.ehrenamtskarte.backend.db.entities.ApiTokenEntity
 import app.ehrenamtskarte.backend.db.entities.ApiTokenType
@@ -14,7 +14,7 @@ object ApiTokensRepository {
         projectId: EntityID<Int>,
         type: ApiTokenType,
     ): ApiTokenEntity =
-        ApiTokenEntity.new {
+        ApiTokenEntity.Companion.new {
             this.tokenHash = tokenHash
             this.creator = adminId
             this.expirationDate = expirationDate
@@ -23,7 +23,7 @@ object ApiTokensRepository {
         }
 
     fun findByTokenHash(tokenHash: ByteArray): ApiTokenEntity? =
-        ApiTokenEntity.find {
+        ApiTokenEntity.Companion.find {
             (ApiTokens.tokenHash eq tokenHash)
         }.singleOrNull()
 }
