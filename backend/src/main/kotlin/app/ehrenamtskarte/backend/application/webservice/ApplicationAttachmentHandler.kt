@@ -11,7 +11,7 @@ import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.db.entities.ProjectEntity
 import app.ehrenamtskarte.backend.db.entities.Projects
-import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
+import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import io.javalin.http.Context
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File

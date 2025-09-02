@@ -8,7 +8,7 @@ import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidApplica
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidDataPolicySizeException
 import app.ehrenamtskarte.backend.db.entities.APPLICATION_CONFIRMATION_MAIL_NOTE_MAX_CHARS
 import app.ehrenamtskarte.backend.db.entities.PRIVACY_POLICY_MAX_CHARS
-import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
+import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction

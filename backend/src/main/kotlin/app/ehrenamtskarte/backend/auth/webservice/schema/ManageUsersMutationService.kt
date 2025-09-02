@@ -11,7 +11,7 @@ import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.EmailAlreadyExistsException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.mail.Mailer
-import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
+import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction

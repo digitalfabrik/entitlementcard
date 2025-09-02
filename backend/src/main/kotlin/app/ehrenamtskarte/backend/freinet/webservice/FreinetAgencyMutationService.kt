@@ -8,7 +8,7 @@ import app.ehrenamtskarte.backend.exception.service.NotImplementedException
 import app.ehrenamtskarte.backend.db.repositories.FreinetAgencyRepository
 import app.ehrenamtskarte.backend.freinet.exceptions.FreinetAgencyNotFoundException
 import app.ehrenamtskarte.backend.freinet.util.validateFreinetDataTransferPermission
-import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
+import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction

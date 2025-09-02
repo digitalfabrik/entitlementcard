@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.stores.utils
 
 import app.ehrenamtskarte.backend.db.entities.RegionEntity
-import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
+import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import org.jetbrains.exposed.dao.id.EntityID
 
 fun getRegionFromAcceptingStore(projectId: EntityID<Int>, freinetId: Int?, districtName: String?): RegionEntity? {

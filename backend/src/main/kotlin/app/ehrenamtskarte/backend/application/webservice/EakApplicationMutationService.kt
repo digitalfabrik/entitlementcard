@@ -22,7 +22,7 @@ import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidInputEx
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidLinkException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidNoteSizeException
 import app.ehrenamtskarte.backend.mail.Mailer
-import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
+import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.execution.DataFetcherResult
 import graphql.schema.DataFetchingEnvironment

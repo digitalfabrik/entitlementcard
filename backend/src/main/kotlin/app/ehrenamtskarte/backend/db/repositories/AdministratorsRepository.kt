@@ -14,7 +14,6 @@ import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidPasswordException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidRoleException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
-import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import org.jetbrains.exposed.sql.LowerCase
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and

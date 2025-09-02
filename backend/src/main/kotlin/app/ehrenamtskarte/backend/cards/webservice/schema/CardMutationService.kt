@@ -29,7 +29,7 @@ import app.ehrenamtskarte.backend.exception.webservice.exceptions.UserEntitlemen
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.UserEntitlementNotFoundException
 import app.ehrenamtskarte.backend.mail.Mailer
 import app.ehrenamtskarte.backend.matomo.Matomo
-import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
+import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.userdata.KoblenzUser
 import app.ehrenamtskarte.backend.userdata.database.UserEntitlementsRepository
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
