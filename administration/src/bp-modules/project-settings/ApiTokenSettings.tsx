@@ -1,5 +1,6 @@
-import { Alert, Button, H2, H4, HTMLSelect, HTMLTable } from '@blueprintjs/core'
+import { Alert, H2, H4, HTMLSelect, HTMLTable } from '@blueprintjs/core'
 import Delete from '@mui/icons-material/Delete'
+import { Button } from '@mui/material'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -137,9 +138,7 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
               <option value='12'>1 {t('year')}</option>
               <option value='36'>3 {t('years')}</option>
             </HTMLSelect>
-            <Button intent='primary' onClick={() => createToken({ variables: { expiresIn } })}>
-              {t('create')}
-            </Button>
+            <Button onClick={() => createToken({ variables: { expiresIn } })}>{t('create')}</Button>
           </Row>
           {createdToken !== null && (
             <>
