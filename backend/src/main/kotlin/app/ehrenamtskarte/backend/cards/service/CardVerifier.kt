@@ -4,7 +4,7 @@ import app.ehrenamtskarte.backend.cards.ValidityPeriodUtil.Companion.daysSinceEp
 import app.ehrenamtskarte.backend.cards.ValidityPeriodUtil.Companion.isOnOrAfterToday
 import app.ehrenamtskarte.backend.cards.ValidityPeriodUtil.Companion.isOnOrBeforeToday
 import app.ehrenamtskarte.backend.cards.database.repos.CardRepository
-import app.ehrenamtskarte.backend.userdata.database.UserEntitlementsEntity
+import app.ehrenamtskarte.backend.db.entities.UserEntitlementsEntity
 import com.eatthepath.otp.TimeBasedOneTimePasswordGenerator
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.Duration

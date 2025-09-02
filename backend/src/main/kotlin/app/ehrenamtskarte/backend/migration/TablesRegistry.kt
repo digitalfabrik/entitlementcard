@@ -14,7 +14,7 @@ import app.ehrenamtskarte.backend.db.entities.Addresses
 import app.ehrenamtskarte.backend.db.entities.Categories
 import app.ehrenamtskarte.backend.db.entities.Contacts
 import app.ehrenamtskarte.backend.db.entities.PhysicalStores
-import app.ehrenamtskarte.backend.userdata.database.UserEntitlements
+import app.ehrenamtskarte.backend.db.entities.UserEntitlements
 
 object TablesRegistry {
     fun getAllTables() =
