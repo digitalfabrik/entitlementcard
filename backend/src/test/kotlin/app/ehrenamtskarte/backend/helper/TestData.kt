@@ -14,8 +14,8 @@ import app.ehrenamtskarte.backend.db.entities.AcceptingStores
 import app.ehrenamtskarte.backend.db.entities.Addresses
 import app.ehrenamtskarte.backend.db.entities.Contacts
 import app.ehrenamtskarte.backend.db.entities.PhysicalStores
-import app.ehrenamtskarte.backend.userdata.database.UserEntitlements
-import app.ehrenamtskarte.backend.userdata.database.UserEntitlementsEntity
+import app.ehrenamtskarte.backend.db.entities.UserEntitlements
+import app.ehrenamtskarte.backend.db.entities.UserEntitlementsEntity
 import net.postgis.jdbc.geometry.Point
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.insertAndGetId
