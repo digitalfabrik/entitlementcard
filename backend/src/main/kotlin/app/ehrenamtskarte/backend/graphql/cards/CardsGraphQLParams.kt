@@ -1,8 +1,8 @@
-package app.ehrenamtskarte.backend.cards.webservice
+package app.ehrenamtskarte.backend.graphql.cards
 
-import app.ehrenamtskarte.backend.cards.webservice.schema.CardMutationService
-import app.ehrenamtskarte.backend.cards.webservice.schema.CardQueryService
-import app.ehrenamtskarte.backend.cards.webservice.schema.CardStatisticsQueryService
+import app.ehrenamtskarte.backend.graphql.cards.schema.CardMutationService
+import app.ehrenamtskarte.backend.graphql.cards.schema.CardQueryService
+import app.ehrenamtskarte.backend.graphql.cards.schema.CardStatisticsQueryService
 import app.ehrenamtskarte.backend.common.webservice.GraphQLParams
 import app.ehrenamtskarte.backend.common.webservice.createRegistryFromNamedDataLoaders
 import com.expediagroup.graphql.generator.SchemaGeneratorConfig
@@ -10,7 +10,7 @@ import com.expediagroup.graphql.generator.TopLevelObject
 
 val cardsGraphQlParams = GraphQLParams(
     config = SchemaGeneratorConfig(
-        supportedPackages = listOf("app.ehrenamtskarte.backend.cards.webservice.schema"),
+        supportedPackages = listOf("app.ehrenamtskarte.backend.graphql.cards.schema"),
     ),
     dataLoaderRegistry = createRegistryFromNamedDataLoaders(),
     queries = listOf(

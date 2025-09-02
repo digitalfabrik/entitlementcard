@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.cards.webservice
+package app.ehrenamtskarte.backend.graphql.cards
 
 import Card
 import com.google.zxing.common.BitArray

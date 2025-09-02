@@ -1,6 +1,5 @@
 package app.ehrenamtskarte.backend.common.webservice
 
-import app.ehrenamtskarte.backend.cards.webservice.cardsGraphQlParams
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
@@ -11,6 +10,7 @@ import app.ehrenamtskarte.backend.freinet.webservice.freinetGraphQlParams
 import app.ehrenamtskarte.backend.graphql.application.applicationGraphQlParams
 import app.ehrenamtskarte.backend.graphql.auth.JwtService
 import app.ehrenamtskarte.backend.graphql.auth.authGraphQlParams
+import app.ehrenamtskarte.backend.graphql.cards.cardsGraphQlParams
 import app.ehrenamtskarte.backend.regions.utils.PostalCodesLoader
 import app.ehrenamtskarte.backend.regions.webservice.regionsGraphQlParams
 import app.ehrenamtskarte.backend.stores.webservice.storesGraphQlParams
