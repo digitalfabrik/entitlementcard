@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.application.webservice.utils
 
-import app.ehrenamtskarte.backend.application.database.ApplicationEntity
+import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
 import app.ehrenamtskarte.backend.common.utils.findValueByName
 import app.ehrenamtskarte.backend.common.utils.findValueByPath
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.ApplicationDataIncompleteException
