@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend
 
-import app.ehrenamtskarte.backend.common.database.Database
+import app.ehrenamtskarte.backend.db.Database
 import app.ehrenamtskarte.backend.common.webservice.GraphQLHandler
 import app.ehrenamtskarte.backend.common.webservice.WebService
 import app.ehrenamtskarte.backend.config.BackendConfiguration

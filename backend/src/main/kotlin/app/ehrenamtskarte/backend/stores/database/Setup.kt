@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.stores.database
 
-import app.ehrenamtskarte.backend.common.database.Database
+import app.ehrenamtskarte.backend.db.Database
 
 fun insertOrUpdateCategories() {
     Database.executeSqlResource("sql/create_categories.sql")
