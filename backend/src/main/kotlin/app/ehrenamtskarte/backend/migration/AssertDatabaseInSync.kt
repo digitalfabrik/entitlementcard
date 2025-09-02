@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.migration
 
-import app.ehrenamtskarte.backend.migration.database.Migrations
+import app.ehrenamtskarte.backend.db.entities.Migrations
 import app.ehrenamtskarte.backend.migration.migrations.MigrationsRegistry
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.Table
