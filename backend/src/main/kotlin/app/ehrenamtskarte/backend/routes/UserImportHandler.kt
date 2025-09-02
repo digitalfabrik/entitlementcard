@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.userdata.webservice
+package app.ehrenamtskarte.backend.routes
 
 import app.ehrenamtskarte.backend.cards.Argon2IdHasher
 import app.ehrenamtskarte.backend.config.BackendConfiguration
