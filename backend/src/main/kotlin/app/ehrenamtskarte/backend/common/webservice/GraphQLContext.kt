@@ -1,8 +1,8 @@
 package app.ehrenamtskarte.backend.common.webservice
 
-import app.ehrenamtskarte.backend.auth.webservice.JwtPayload
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
+import app.ehrenamtskarte.backend.graphql.auth.JwtPayload
 import graphql.GraphQLContext
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.Part
