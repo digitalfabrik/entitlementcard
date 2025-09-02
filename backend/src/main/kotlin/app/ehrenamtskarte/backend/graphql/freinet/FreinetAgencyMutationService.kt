@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.freinet.webservice
+package app.ehrenamtskarte.backend.graphql.freinet
 
 import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.auth.service.Authorizer

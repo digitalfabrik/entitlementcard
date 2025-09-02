@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.freinet.webservice
+package app.ehrenamtskarte.backend.graphql.freinet
 
 import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.auth.service.Authorizer
@@ -6,7 +6,7 @@ import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.NotImplementedException
 import app.ehrenamtskarte.backend.db.repositories.FreinetAgencyRepository
-import app.ehrenamtskarte.backend.freinet.webservice.schema.types.FreinetAgency
+import app.ehrenamtskarte.backend.graphql.freinet.schema.types.FreinetAgency
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
