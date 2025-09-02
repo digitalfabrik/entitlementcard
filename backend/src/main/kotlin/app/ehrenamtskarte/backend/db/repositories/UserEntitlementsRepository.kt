@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.userdata.database
+package app.ehrenamtskarte.backend.db.repositories
 
 import app.ehrenamtskarte.backend.db.entities.UserEntitlements
 import app.ehrenamtskarte.backend.db.entities.UserEntitlementsEntity
