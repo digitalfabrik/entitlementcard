@@ -8,7 +8,7 @@ import app.ehrenamtskarte.backend.db.entities.Cards
 import app.ehrenamtskarte.backend.db.entities.FreinetAgencies
 import app.ehrenamtskarte.backend.migration.database.Migrations
 import app.ehrenamtskarte.backend.db.entities.Projects
-import app.ehrenamtskarte.backend.regions.database.Regions
+import app.ehrenamtskarte.backend.db.entities.Regions
 import app.ehrenamtskarte.backend.stores.database.AcceptingStores
 import app.ehrenamtskarte.backend.stores.database.Addresses
 import app.ehrenamtskarte.backend.stores.database.Categories

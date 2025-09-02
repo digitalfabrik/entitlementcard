@@ -1,7 +1,6 @@
 package app.ehrenamtskarte.backend.db.entities
 
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
-import app.ehrenamtskarte.backend.regions.database.Regions
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID

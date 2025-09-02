@@ -9,7 +9,7 @@ import app.ehrenamtskarte.backend.common.utils.dateStringToStartOfDayInstant
 import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
-import app.ehrenamtskarte.backend.regions.database.RegionEntity
+import app.ehrenamtskarte.backend.db.entities.RegionEntity
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction

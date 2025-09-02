@@ -3,8 +3,8 @@ package app.ehrenamtskarte.backend.regions.database.repos
 import app.ehrenamtskarte.backend.common.database.sortByKeys
 import app.ehrenamtskarte.backend.db.entities.FreinetAgencies
 import app.ehrenamtskarte.backend.db.entities.Projects
-import app.ehrenamtskarte.backend.regions.database.RegionEntity
-import app.ehrenamtskarte.backend.regions.database.Regions
+import app.ehrenamtskarte.backend.db.entities.RegionEntity
+import app.ehrenamtskarte.backend.db.entities.Regions
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq

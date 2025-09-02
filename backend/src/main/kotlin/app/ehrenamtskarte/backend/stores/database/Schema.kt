@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.stores.database
 
 import app.ehrenamtskarte.backend.db.entities.Projects
-import app.ehrenamtskarte.backend.regions.database.Regions
+import app.ehrenamtskarte.backend.db.entities.Regions
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
