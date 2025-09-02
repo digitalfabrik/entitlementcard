@@ -51,13 +51,13 @@ internal class FreinetAgencyQueryServiceTest : GraphqlApiTest() {
     @Test
     fun `POST returns a successful response with agency information if region has information`() =
         JavalinTest.test(app) { _, client ->
-            val query = createQuery(9)
+            val query = createQuery(94)
             val response = post(client, query, regionAdminFreinet.getJwtToken())
             assertEquals(200, response.code)
             val jsonResponse = response.json()
             jsonResponse.apply {
                 assertEquals("123", findValuesAsText("agencyId").single())
-                assertEquals("Demo Mandant", findValuesAsText("agencyName").single())
+                assertEquals("Freinet Demo", findValuesAsText("agencyName").single())
                 assertEquals("testKey", findValuesAsText("apiAccessKey").single())
                 assertEquals("false", findValuesAsText("dataTransferActivated").single())
             }

@@ -8,7 +8,6 @@ import 'package:ehrenamtskarte/favorites/favorites_page.dart';
 import 'package:ehrenamtskarte/map/floating_action_map_bar.dart';
 import 'package:ehrenamtskarte/map/map_page.dart';
 import 'package:ehrenamtskarte/search/search_page.dart';
-import 'package:ehrenamtskarte/widgets/landscape_safe_area.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -51,7 +50,7 @@ class HomePageState extends State<HomePage> {
         GlobalKey<NavigatorState>(debugLabel: 'Map tab key'),
       ),
       AppFlow(
-        LandscapeSafeArea(child: SearchPage()),
+        SearchPage(),
         Icons.search_outlined,
         (BuildContext context) => t.search.title,
         GlobalKey<NavigatorState>(debugLabel: 'Search tab key'),
