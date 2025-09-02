@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.freinet.webservice
+package app.ehrenamtskarte.backend.graphql.freinet
 
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity.Status
@@ -18,7 +18,7 @@ import app.ehrenamtskarte.backend.db.repositories.FreinetAgencyRepository
 import app.ehrenamtskarte.backend.freinet.exceptions.FreinetFoundMultiplePersonsException
 import app.ehrenamtskarte.backend.freinet.exceptions.FreinetPersonDataInvalidException
 import app.ehrenamtskarte.backend.freinet.util.FreinetApi
-import app.ehrenamtskarte.backend.freinet.webservice.schema.types.FreinetCard
+import app.ehrenamtskarte.backend.graphql.freinet.schema.types.FreinetCard
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction

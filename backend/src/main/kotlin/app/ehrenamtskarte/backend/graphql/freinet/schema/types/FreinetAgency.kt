@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.freinet.webservice.schema.types
+package app.ehrenamtskarte.backend.graphql.freinet.schema.types
 
 data class FreinetAgency(
     val agencyId: Int,

@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.freinet.webservice.schema.types
+package app.ehrenamtskarte.backend.graphql.freinet.schema.types
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper

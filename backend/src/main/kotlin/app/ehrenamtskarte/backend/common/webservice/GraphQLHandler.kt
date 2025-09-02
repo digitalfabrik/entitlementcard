@@ -6,11 +6,11 @@ import app.ehrenamtskarte.backend.exception.service.NotFoundException
 import app.ehrenamtskarte.backend.exception.service.NotImplementedException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.ExceptionSchemaConfig
-import app.ehrenamtskarte.backend.freinet.webservice.freinetGraphQlParams
 import app.ehrenamtskarte.backend.graphql.application.applicationGraphQlParams
 import app.ehrenamtskarte.backend.graphql.auth.JwtService
 import app.ehrenamtskarte.backend.graphql.auth.authGraphQlParams
 import app.ehrenamtskarte.backend.graphql.cards.cardsGraphQlParams
+import app.ehrenamtskarte.backend.graphql.freinet.freinetGraphQlParams
 import app.ehrenamtskarte.backend.regions.utils.PostalCodesLoader
 import app.ehrenamtskarte.backend.regions.webservice.regionsGraphQlParams
 import app.ehrenamtskarte.backend.stores.webservice.storesGraphQlParams
