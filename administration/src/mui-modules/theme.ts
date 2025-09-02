@@ -18,7 +18,7 @@ export const theme = createTheme({
       disabled: '#898989',
     },
     default: {
-      main: '#EEEEEE',
+      main: '#1c2127',
       light: '#f0f0f0',
       dark: '#dddddd',
       contrastText: '#5C6065',
@@ -45,6 +45,9 @@ export const theme = createTheme({
   },
   components: {
     MuiButton: {
+      defaultProps: {
+        variant: 'outlined',
+      },
       styleOverrides: {
         root: {
           variants: [
@@ -109,6 +112,13 @@ export const theme = createTheme({
           backgroundColor: '#1c2127',
           color: '#dddddd',
           padding: 8,
+        },
+      },
+    },
+    MuiFormLabel: {
+      styleOverrides: {
+        root: {
+          fontSize: '0.9rem',
         },
       },
     },
