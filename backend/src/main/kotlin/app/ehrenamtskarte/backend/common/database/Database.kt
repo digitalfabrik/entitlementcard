@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.common.database
 
-import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
+import app.ehrenamtskarte.backend.db.repositories.AdministratorsRepository
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.Environment
