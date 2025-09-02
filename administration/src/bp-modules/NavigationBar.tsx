@@ -1,5 +1,6 @@
-import { Alignment, Button, Navbar } from '@blueprintjs/core'
-import { styled } from '@mui/material'
+import { Alignment, Navbar } from '@blueprintjs/core'
+import { AddCard, Analytics, Checklist, Inventory, Map, People, Place } from '@mui/icons-material'
+import { Button, ButtonProps, styled } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router'
@@ -17,6 +18,12 @@ const PrintAwareNavbar = styled(Navbar)`
   }
   height: ${dimensions.navigationBarHeight};
 `
+
+const MenuButton = (p: ButtonProps) => (
+  <Button variant='text' {...p} color='default'>
+    {p.children}
+  </Button>
+)
 
 type Props = {
   onSignOut: () => void
@@ -49,42 +56,42 @@ const Navigation = ({ onSignOut }: Props): ReactElement => {
         <RenderGuard allowedRoles={[Role.RegionAdmin, Role.RegionManager]}>
           {config.applicationFeature ? (
             <NavLink to='/applications'>
-              <Button minimal icon='form' text={t('inComingApplications')} />
+              <MenuButton startIcon={<Checklist />}>{t('inComingApplications')}</MenuButton>
             </NavLink>
           ) : null}
           {config.cardCreation ? (
             <NavLink to='/cards'>
-              <Button minimal icon='id-number' text={t('createCards')} />
+              <MenuButton startIcon={<AddCard />}>{t('createCards')}</MenuButton>
             </NavLink>
           ) : null}
         </RenderGuard>
 
         <RenderGuard allowedRoles={[Role.RegionAdmin, Role.ProjectAdmin]}>
           <NavLink to='/users'>
-            <Button minimal icon='people' text={t('manageUsers')} />
+            <MenuButton startIcon={<People />}>{t('manageUsers')}</MenuButton>
           </NavLink>
           {config.cardStatistics.enabled ? (
             <NavLink to='/statistics'>
-              <Button minimal icon='stacked-chart' text={t('statistics')} />
+              <MenuButton startIcon={<Analytics />}>{t('statistics')}</MenuButton>
             </NavLink>
           ) : null}
         </RenderGuard>
 
         <RenderGuard allowedRoles={[Role.RegionAdmin]} condition={config.applicationFeature !== undefined}>
           <NavLink to='/region'>
-            <Button minimal icon='path-search' text={t('manageRegion')} />
+            <MenuButton startIcon={<Map />}>{t('manageRegion')}</MenuButton>
           </NavLink>
         </RenderGuard>
 
         <RenderGuard condition={canSeeProjectSettings}>
           <NavLink to='/project'>
-            <Button minimal icon='projects' text={t('manageProject')} />
+            <MenuButton startIcon={<Inventory />}>{t('manageProject')}</MenuButton>
           </NavLink>
         </RenderGuard>
 
         <RenderGuard allowedRoles={[Role.ProjectStoreManager]}>
           <NavLink to='/stores'>
-            <Button minimal icon='shop' text={t('manageStores')} />
+            <MenuButton startIcon={<Place />}>{t('manageStores')}</MenuButton>
           </NavLink>
         </RenderGuard>
       </Navbar.Group>
