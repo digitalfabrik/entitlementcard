@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.map.webservice
+package app.ehrenamtskarte.backend.routes
 
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
