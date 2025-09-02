@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.application.webservice
+package app.ehrenamtskarte.backend.routes
 
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.db.entities.ProjectEntity
