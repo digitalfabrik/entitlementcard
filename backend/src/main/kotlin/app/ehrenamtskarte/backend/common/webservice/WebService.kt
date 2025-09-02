@@ -68,7 +68,7 @@ class WebService {
             graphQLHandler.handle(context, applicationData)
         }
 
-        app.get(mapStyleHandler.getPath()) { context ->
+        app.get("/project/{project_id}/map") { context ->
             if (config.isDevelopment()) {
                 context.header("Access-Control-Allow-Headers: Authorization")
                 context.header("Access-Control-Allow-Origin: *")
@@ -76,7 +76,7 @@ class WebService {
             mapStyleHandler.handle(context)
         }
 
-        app.get(applicationHandler.getPath()) { context ->
+        app.get("/application/{project}/{applicationId}/file/{fileIndex}") { context ->
             applicationHandler.handle(context)
         }
 
