@@ -6,7 +6,7 @@ import app.ehrenamtskarte.backend.db.entities.ApiTokens
 import app.ehrenamtskarte.backend.auth.database.PasswordCrypto
 import app.ehrenamtskarte.backend.db.entities.TOKEN_LENGTH
 import app.ehrenamtskarte.backend.db.repositories.ApiTokensRepository
-import app.ehrenamtskarte.backend.auth.getAuthContext
+import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.ApiTokenMetaData
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role

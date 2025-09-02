@@ -4,7 +4,7 @@ import app.ehrenamtskarte.backend.db.repositories.ApplicationRepository
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationAdminGql
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationPublicGql
 import app.ehrenamtskarte.backend.application.webservice.schema.view.ApplicationVerificationView
-import app.ehrenamtskarte.backend.auth.getAuthContext
+import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
