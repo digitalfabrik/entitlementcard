@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.cards.webservice.schema
 
-import app.ehrenamtskarte.backend.auth.getAuthContext
+import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.db.repositories.CardRepository
 import app.ehrenamtskarte.backend.cards.webservice.schema.types.CardStatisticsResultModel
