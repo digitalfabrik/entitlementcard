@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.common.webservice
 
 import app.ehrenamtskarte.backend.BuildConfig
-import app.ehrenamtskarte.backend.application.webservice.HealthHandler
+import app.ehrenamtskarte.backend.routes.HealthHandler
 import app.ehrenamtskarte.backend.common.utils.initializeSentry
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.Environment
