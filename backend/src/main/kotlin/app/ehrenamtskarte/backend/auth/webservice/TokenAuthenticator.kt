@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.auth.webservice
 
-import app.ehrenamtskarte.backend.auth.database.ApiTokenEntity
-import app.ehrenamtskarte.backend.auth.database.ApiTokenType
+import app.ehrenamtskarte.backend.db.entities.ApiTokenEntity
+import app.ehrenamtskarte.backend.db.entities.ApiTokenType
 import app.ehrenamtskarte.backend.auth.database.PasswordCrypto
 import app.ehrenamtskarte.backend.auth.database.repos.ApiTokensRepository
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
