@@ -7,11 +7,11 @@ import app.ehrenamtskarte.backend.db.repositories.AdministratorsRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.freinet.util.FreinetAgenciesLoader
 import app.ehrenamtskarte.backend.graphql.auth.schema.types.Role
-import app.ehrenamtskarte.backend.projects.database.insertOrUpdateProjects
-import app.ehrenamtskarte.backend.regions.database.insertOrUpdateRegions
-import app.ehrenamtskarte.backend.stores.database.createOrReplaceStoreFunctions
-import app.ehrenamtskarte.backend.stores.database.insertOrUpdateCategories
 import org.jetbrains.exposed.sql.Database.Companion.connect
+import app.ehrenamtskarte.backend.db.setup.insertOrUpdateProjects
+import app.ehrenamtskarte.backend.db.setup.insertOrUpdateRegions
+import app.ehrenamtskarte.backend.db.setup.createOrReplaceStoreFunctions
+import app.ehrenamtskarte.backend.db.setup.insertOrUpdateCategories
 import org.jetbrains.exposed.sql.DatabaseConfig
 import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.transactions.TransactionManager

@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.stores.database
+package app.ehrenamtskarte.backend.db.setup
 
 import app.ehrenamtskarte.backend.db.Database
 
