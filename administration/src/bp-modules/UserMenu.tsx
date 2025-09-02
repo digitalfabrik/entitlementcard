@@ -1,4 +1,7 @@
-import { Button, Divider, Menu, Popover } from '@blueprintjs/core'
+/* eslint-disable react/destructuring-assignment */
+import { Divider, Menu, Popover } from '@blueprintjs/core'
+import { AccountCircle, ArrowDropDown, ArrowDropUp, EditSquare, Logout, Settings } from '@mui/icons-material'
+import { Button, type ButtonProps } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, useNavigate } from 'react-router'
@@ -30,14 +33,11 @@ const MenuContent = styled(Menu)`
   justify-content: flex-start;
 `
 
-const MenuItem = styled(Button)`
-  display: inline-block;
-  width: 100%;
-`
-
-const UserMenuButton = styled(Button)`
-  min-width: 220px;
-`
+const MenuButton = (p: ButtonProps): ReactElement => (
+  <Button sx={{ width: '100%', justifyContent: 'start' }} color='inherit' variant='text' {...p}>
+    {p.children}
+  </Button>
+)
 
 const RoleInfo = styled.span`
   padding: 5px 10px;
@@ -53,33 +53,37 @@ const UserMenu = ({ onSignOut }: UserMenuProps): ReactElement => {
     onSignOut()
     navigate('/')
   }
+
   const userMenuContent = (
     <MenuContent onClick={() => setIsOpen(false)}>
       <RoleInfo>Rolle: {roleToText(role)}</RoleInfo>
+
       <Divider style={{ margin: '4px 0px' }} />
+
       <NavLink to='/user-settings'>
-        <MenuItem minimal icon='settings' text={t('userSettings')} />
+        <MenuButton startIcon={<Settings />}>{t('userSettings')}</MenuButton>
       </NavLink>
+
       <RenderGuard
         condition={projectConfig.activityLogConfig !== undefined}
         allowedRoles={[Role.RegionManager, Role.RegionAdmin]}>
         <NavLink to='/activity-log'>
-          <MenuItem minimal icon='manually-entered-data' text={t('activityLog')} />
+          <MenuButton startIcon={<EditSquare />}>{t('activityLog')}</MenuButton>
         </NavLink>
       </RenderGuard>
-      <MenuItem minimal icon='log-out' text={t('logout')} onClick={signOutAndRedirect} />
+
+      <MenuButton startIcon={<Logout />} onClick={signOutAndRedirect}>
+        {t('logout')}
+      </MenuButton>
     </MenuContent>
   )
+
   return (
     <>
       <Popover content={userMenuContent} placement='bottom' matchTargetWidth isOpen={isOpen} onInteraction={setIsOpen}>
-        <UserMenuButton
-          minimal
-          alignText='left'
-          icon='user'
-          rightIcon={isOpen ? 'caret-up' : 'caret-down'}
-          text={email}
-        />
+        <Button color='inherit' startIcon={<AccountCircle />} endIcon={isOpen ? <ArrowDropDown /> : <ArrowDropUp />}>
+          {email}
+        </Button>
       </Popover>
       <Backdrop onClick={() => setIsOpen(false)} isOpen={isOpen} />
     </>
