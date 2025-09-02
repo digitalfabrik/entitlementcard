@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.stores.database.repos
+package app.ehrenamtskarte.backend.db.repositories
 
 import app.ehrenamtskarte.backend.common.database.sortByKeys
 import app.ehrenamtskarte.backend.db.entities.Projects
