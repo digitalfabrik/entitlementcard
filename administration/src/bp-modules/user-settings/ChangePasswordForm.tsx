@@ -1,4 +1,5 @@
-import { Button, Callout, H2 } from '@blueprintjs/core'
+import { Callout, H2 } from '@blueprintjs/core'
+import { Button } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -65,7 +66,9 @@ const ChangePasswordForm = (): ReactElement => {
         <PasswordInput label={t('newPasswordConfirm')} value={repeatNewPassword} setValue={setRepeatNewPassword} />
         {warnMessage === null ? null : <Callout intent='danger'>{warnMessage}</Callout>}
         <div style={{ textAlign: 'right', padding: '10px 0' }}>
-          <Button text={t('changePassword')} intent='primary' type='submit' disabled={!valid} loading={loading} />
+          <Button type='submit' disabled={!valid} loading={loading}>
+            {t('changePassword')}
+          </Button>
         </div>
       </form>
     </SettingsCard>
