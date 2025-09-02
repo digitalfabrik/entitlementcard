@@ -2,7 +2,7 @@ package app.ehrenamtskarte.backend.helper
 
 import app.ehrenamtskarte.backend.common.webservice.FREINET_DEMO_REGION_NAME
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
-import app.ehrenamtskarte.backend.freinet.database.FreinetAgencies
+import app.ehrenamtskarte.backend.db.entities.FreinetAgencies
 import app.ehrenamtskarte.backend.regions.database.RegionEntity
 import app.ehrenamtskarte.backend.regions.database.Regions
 import org.jetbrains.exposed.sql.transactions.transaction
