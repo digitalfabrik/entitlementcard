@@ -1,19 +1,19 @@
-package app.ehrenamtskarte.backend.auth.database.repos
+package app.ehrenamtskarte.backend.db.repositories
 
 import app.ehrenamtskarte.backend.auth.PasswordValidationResult
 import app.ehrenamtskarte.backend.auth.PasswordValidator
-import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
-import app.ehrenamtskarte.backend.db.entities.Administrators
 import app.ehrenamtskarte.backend.auth.database.PasswordCrypto
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.NotificationSettings
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
 import app.ehrenamtskarte.backend.common.database.sortByKeys
+import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
+import app.ehrenamtskarte.backend.db.entities.Administrators
+import app.ehrenamtskarte.backend.db.entities.ProjectEntity
+import app.ehrenamtskarte.backend.db.entities.Projects
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidPasswordException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidRoleException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
-import app.ehrenamtskarte.backend.db.entities.ProjectEntity
-import app.ehrenamtskarte.backend.db.entities.Projects
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import org.jetbrains.exposed.sql.LowerCase
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
