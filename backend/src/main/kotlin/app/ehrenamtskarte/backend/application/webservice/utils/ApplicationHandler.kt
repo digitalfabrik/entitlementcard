@@ -18,7 +18,7 @@ import app.ehrenamtskarte.backend.exception.webservice.exceptions.MailNotSentExc
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotActivatedForApplicationException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.mail.Mailer
-import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
+import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import graphql.execution.DataFetcherResult
 import io.javalin.http.BadRequestResponse
 import org.jetbrains.exposed.sql.transactions.transaction
