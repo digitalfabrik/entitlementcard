@@ -1,9 +1,9 @@
 package app.ehrenamtskarte.backend.migration
 
-import app.ehrenamtskarte.backend.migration.database.MigrationEntity
-import app.ehrenamtskarte.backend.migration.database.Migrations
-import app.ehrenamtskarte.backend.migration.migrations.MigrationsRegistry
-import app.ehrenamtskarte.backend.migration.migrations.V0001_Baseline
+import app.ehrenamtskarte.backend.db.entities.MigrationEntity
+import app.ehrenamtskarte.backend.db.entities.Migrations
+import app.ehrenamtskarte.backend.db.migration.migrations.MigrationsRegistry
+import app.ehrenamtskarte.backend.db.migration.migrations.V0001_Baseline
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.Database
