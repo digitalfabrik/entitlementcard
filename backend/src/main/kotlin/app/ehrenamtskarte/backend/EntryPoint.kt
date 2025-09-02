@@ -5,8 +5,8 @@ import app.ehrenamtskarte.backend.common.webservice.GraphQLHandler
 import app.ehrenamtskarte.backend.common.webservice.WebService
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.Environment
-import app.ehrenamtskarte.backend.migration.MigrationUtils
 import app.ehrenamtskarte.backend.db.entities.Migrations
+import app.ehrenamtskarte.backend.db.migration.MigrationUtils
 import app.ehrenamtskarte.backend.stores.importer.Importer
 import app.ehrenamtskarte.backend.stores.importer.toImportConfig
 import com.expediagroup.graphql.generator.extensions.print
