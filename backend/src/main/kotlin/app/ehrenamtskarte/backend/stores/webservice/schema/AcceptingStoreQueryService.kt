@@ -5,7 +5,7 @@ import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.common.webservice.schema.IdsParams
 import app.ehrenamtskarte.backend.matomo.Matomo
 import app.ehrenamtskarte.backend.db.repositories.AcceptingStoresRepository
-import app.ehrenamtskarte.backend.stores.database.repos.PhysicalStoresRepository
+import app.ehrenamtskarte.backend.db.repositories.PhysicalStoresRepository
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.AcceptingStore
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.Coordinates
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.PhysicalStore
