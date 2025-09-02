@@ -1,21 +1,21 @@
-package app.ehrenamtskarte.backend.stores.webservice
+package app.ehrenamtskarte.backend.graphql.stores
 
 import app.ehrenamtskarte.backend.common.webservice.GraphQLParams
 import app.ehrenamtskarte.backend.common.webservice.createRegistryFromNamedDataLoaders
-import app.ehrenamtskarte.backend.stores.webservice.dataloader.acceptingStoreLoader
-import app.ehrenamtskarte.backend.stores.webservice.dataloader.addressLoader
-import app.ehrenamtskarte.backend.stores.webservice.dataloader.categoryLoader
-import app.ehrenamtskarte.backend.stores.webservice.dataloader.contactLoader
-import app.ehrenamtskarte.backend.stores.webservice.dataloader.physicalStoreByStoreIdLoader
-import app.ehrenamtskarte.backend.stores.webservice.dataloader.physicalStoreLoader
-import app.ehrenamtskarte.backend.stores.webservice.schema.AcceptingStoreQueryService
-import app.ehrenamtskarte.backend.stores.webservice.schema.CategoriesQueryService
+import app.ehrenamtskarte.backend.graphql.stores.dataloader.acceptingStoreLoader
+import app.ehrenamtskarte.backend.graphql.stores.dataloader.addressLoader
+import app.ehrenamtskarte.backend.graphql.stores.dataloader.categoryLoader
+import app.ehrenamtskarte.backend.graphql.stores.dataloader.contactLoader
+import app.ehrenamtskarte.backend.graphql.stores.dataloader.physicalStoreByStoreIdLoader
+import app.ehrenamtskarte.backend.graphql.stores.dataloader.physicalStoreLoader
+import app.ehrenamtskarte.backend.graphql.stores.schema.AcceptingStoreQueryService
+import app.ehrenamtskarte.backend.graphql.stores.schema.CategoriesQueryService
 import com.expediagroup.graphql.generator.SchemaGeneratorConfig
 import com.expediagroup.graphql.generator.TopLevelObject
 
 val storesGraphQlParams = GraphQLParams(
     config = SchemaGeneratorConfig(
-        supportedPackages = listOf("app.ehrenamtskarte.backend.stores.webservice.schema"),
+        supportedPackages = listOf("app.ehrenamtskarte.backend.graphql.stores.schema"),
     ),
     dataLoaderRegistry = createRegistryFromNamedDataLoaders(
         contactLoader,

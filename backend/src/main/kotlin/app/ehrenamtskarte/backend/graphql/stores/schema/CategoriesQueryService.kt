@@ -1,7 +1,7 @@
-package app.ehrenamtskarte.backend.stores.webservice.schema
+package app.ehrenamtskarte.backend.graphql.stores.schema
 
 import app.ehrenamtskarte.backend.db.repositories.CategoriesRepository
-import app.ehrenamtskarte.backend.stores.webservice.schema.types.Category
+import app.ehrenamtskarte.backend.graphql.stores.schema.types.Category
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import org.jetbrains.exposed.sql.transactions.transaction
 
