@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.common.webservice
 
-import app.ehrenamtskarte.backend.application.webservice.applicationGraphQlParams
+import app.ehrenamtskarte.backend.graphql.application.applicationGraphQlParams
 import app.ehrenamtskarte.backend.auth.webservice.JwtService
 import app.ehrenamtskarte.backend.auth.webservice.authGraphQlParams
 import app.ehrenamtskarte.backend.cards.webservice.cardsGraphQlParams

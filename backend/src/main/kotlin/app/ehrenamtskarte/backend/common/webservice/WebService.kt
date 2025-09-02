@@ -1,11 +1,11 @@
 package app.ehrenamtskarte.backend.common.webservice
 
 import app.ehrenamtskarte.backend.BuildConfig
-import app.ehrenamtskarte.backend.application.webservice.ApplicationAttachmentHandler
 import app.ehrenamtskarte.backend.application.webservice.HealthHandler
 import app.ehrenamtskarte.backend.common.utils.initializeSentry
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.Environment
+import app.ehrenamtskarte.backend.graphql.application.ApplicationAttachmentHandler
 import app.ehrenamtskarte.backend.map.webservice.MapStyleHandler
 import app.ehrenamtskarte.backend.userdata.webservice.UserImportHandler
 import io.javalin.Javalin
