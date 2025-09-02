@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.stores.webservice.dataloader
 
 import app.ehrenamtskarte.backend.common.webservice.newNamedDataLoader
-import app.ehrenamtskarte.backend.stores.database.repos.AcceptingStoresRepository
+import app.ehrenamtskarte.backend.db.repositories.AcceptingStoresRepository
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.AcceptingStore
 import org.jetbrains.exposed.sql.transactions.transaction
 

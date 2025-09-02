@@ -7,7 +7,7 @@ import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidJsonException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotUniqueException
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
-import app.ehrenamtskarte.backend.stores.database.repos.AcceptingStoresRepository
+import app.ehrenamtskarte.backend.db.repositories.AcceptingStoresRepository
 import app.ehrenamtskarte.backend.stores.utils.mapCsvToStore
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.CSVAcceptingStore
 import app.ehrenamtskarte.backend.stores.webservice.schema.types.StoreImportReturnResultModel
