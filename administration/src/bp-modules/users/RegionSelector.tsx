@@ -8,8 +8,6 @@ import { Region, useGetRegionsQuery } from '../../generated/graphql'
 import getQueryResult from '../../mui-modules/util/getQueryResult'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 
-const RegionSelect = Select.ofType<Region>()
-
 const getTitle = (region: Region) => `${region.prefix} ${region.name}`
 
 const renderMenu: ItemListRenderer<Region> = ({ itemsParentRef, renderItem, filteredItems }) => {
@@ -61,7 +59,7 @@ const RegionSelector = ({
 
   const activeItem = regions.find((other: Region) => selectedId === other.id)
   return (
-    <RegionSelect
+    <Select<Region>
       activeItem={activeItem}
       items={regions}
       itemRenderer={itemRenderer}
@@ -87,7 +85,7 @@ const RegionSelector = ({
           {activeItem ? getTitle(activeItem) : t('select')}
         </Button>
       </div>
-    </RegionSelect>
+    </Select>
   )
 }
 
