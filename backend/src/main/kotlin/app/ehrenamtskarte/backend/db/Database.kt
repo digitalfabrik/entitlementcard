@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.common.database
+package app.ehrenamtskarte.backend.db
 
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
 import app.ehrenamtskarte.backend.config.BackendConfiguration
