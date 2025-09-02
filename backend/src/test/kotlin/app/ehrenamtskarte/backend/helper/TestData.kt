@@ -9,11 +9,11 @@ import app.ehrenamtskarte.backend.db.entities.ApiTokens
 import app.ehrenamtskarte.backend.auth.database.PasswordCrypto
 import app.ehrenamtskarte.backend.db.entities.Cards
 import app.ehrenamtskarte.backend.db.entities.CodeType
-import app.ehrenamtskarte.backend.stores.database.AcceptingStoreEntity
-import app.ehrenamtskarte.backend.stores.database.AcceptingStores
-import app.ehrenamtskarte.backend.stores.database.Addresses
-import app.ehrenamtskarte.backend.stores.database.Contacts
-import app.ehrenamtskarte.backend.stores.database.PhysicalStores
+import app.ehrenamtskarte.backend.db.entities.AcceptingStoreEntity
+import app.ehrenamtskarte.backend.db.entities.AcceptingStores
+import app.ehrenamtskarte.backend.db.entities.Addresses
+import app.ehrenamtskarte.backend.db.entities.Contacts
+import app.ehrenamtskarte.backend.db.entities.PhysicalStores
 import app.ehrenamtskarte.backend.userdata.database.UserEntitlements
 import app.ehrenamtskarte.backend.userdata.database.UserEntitlementsEntity
 import net.postgis.jdbc.geometry.Point

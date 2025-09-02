@@ -9,11 +9,11 @@ import app.ehrenamtskarte.backend.db.entities.FreinetAgencies
 import app.ehrenamtskarte.backend.migration.database.Migrations
 import app.ehrenamtskarte.backend.db.entities.Projects
 import app.ehrenamtskarte.backend.db.entities.Regions
-import app.ehrenamtskarte.backend.stores.database.AcceptingStores
-import app.ehrenamtskarte.backend.stores.database.Addresses
-import app.ehrenamtskarte.backend.stores.database.Categories
-import app.ehrenamtskarte.backend.stores.database.Contacts
-import app.ehrenamtskarte.backend.stores.database.PhysicalStores
+import app.ehrenamtskarte.backend.db.entities.AcceptingStores
+import app.ehrenamtskarte.backend.db.entities.Addresses
+import app.ehrenamtskarte.backend.db.entities.Categories
+import app.ehrenamtskarte.backend.db.entities.Contacts
+import app.ehrenamtskarte.backend.db.entities.PhysicalStores
 import app.ehrenamtskarte.backend.userdata.database.UserEntitlements
 
 object TablesRegistry {
