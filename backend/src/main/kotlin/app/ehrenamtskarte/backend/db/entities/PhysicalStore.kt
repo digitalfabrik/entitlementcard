@@ -1,13 +1,13 @@
 package app.ehrenamtskarte.backend.db.entities
 
-import app.ehrenamtskarte.backend.stores.database.point
+import app.ehrenamtskarte.backend.db.columns.gisPoint
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 
 object PhysicalStores : IntIdTable() {
-    val coordinates = point("coordinates")
+    val coordinates = gisPoint("coordinates")
     val addressId = reference("addressId", Addresses)
     val storeId = reference("storeId", AcceptingStores)
 }
