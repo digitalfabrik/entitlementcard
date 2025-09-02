@@ -6,7 +6,7 @@ import app.ehrenamtskarte.backend.common.utils.initializeSentry
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.Environment
 import app.ehrenamtskarte.backend.graphql.application.ApplicationAttachmentHandler
-import app.ehrenamtskarte.backend.map.webservice.MapStyleHandler
+import app.ehrenamtskarte.backend.routes.MapStyleHandler
 import app.ehrenamtskarte.backend.routes.UserImportHandler
 import io.javalin.Javalin
 import io.javalin.http.staticfiles.Location
