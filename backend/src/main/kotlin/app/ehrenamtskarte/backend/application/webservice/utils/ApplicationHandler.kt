@@ -8,7 +8,7 @@ import app.ehrenamtskarte.backend.application.webservice.schema.create.Applicati
 import app.ehrenamtskarte.backend.application.webservice.schema.create.ApplicationType
 import app.ehrenamtskarte.backend.application.webservice.schema.create.BavariaCardType
 import app.ehrenamtskarte.backend.application.webservice.schema.create.BlueCardEntitlementType
-import app.ehrenamtskarte.backend.auth.database.ApiTokenType
+import app.ehrenamtskarte.backend.db.entities.ApiTokenType
 import app.ehrenamtskarte.backend.auth.webservice.TokenAuthenticator
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidFileSizeException

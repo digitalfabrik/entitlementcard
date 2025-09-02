@@ -1,10 +1,10 @@
 package app.ehrenamtskarte.backend.auth.webservice.schema
 
-import app.ehrenamtskarte.backend.auth.database.Administrators
-import app.ehrenamtskarte.backend.auth.database.ApiTokenType
-import app.ehrenamtskarte.backend.auth.database.ApiTokens
+import app.ehrenamtskarte.backend.db.entities.Administrators
+import app.ehrenamtskarte.backend.db.entities.ApiTokenType
+import app.ehrenamtskarte.backend.db.entities.ApiTokens
 import app.ehrenamtskarte.backend.auth.database.PasswordCrypto
-import app.ehrenamtskarte.backend.auth.database.TOKEN_LENGTH
+import app.ehrenamtskarte.backend.db.entities.TOKEN_LENGTH
 import app.ehrenamtskarte.backend.auth.database.repos.ApiTokensRepository
 import app.ehrenamtskarte.backend.auth.getAuthContext
 import app.ehrenamtskarte.backend.auth.service.Authorizer

@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.auth
 
-import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
-import app.ehrenamtskarte.backend.auth.database.Administrators
+import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
+import app.ehrenamtskarte.backend.db.entities.Administrators
 import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.projects.database.Projects
