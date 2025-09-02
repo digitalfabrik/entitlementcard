@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.regions.database.repos
 
 import app.ehrenamtskarte.backend.common.database.sortByKeys
-import app.ehrenamtskarte.backend.freinet.database.FreinetAgencies
+import app.ehrenamtskarte.backend.db.entities.FreinetAgencies
 import app.ehrenamtskarte.backend.projects.database.Projects
 import app.ehrenamtskarte.backend.regions.database.RegionEntity
 import app.ehrenamtskarte.backend.regions.database.Regions
