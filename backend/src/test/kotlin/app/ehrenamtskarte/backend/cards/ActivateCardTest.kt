@@ -1,8 +1,8 @@
 package app.ehrenamtskarte.backend.cards
 
 import app.ehrenamtskarte.backend.GraphqlApiTest
-import app.ehrenamtskarte.backend.cards.database.CardEntity
-import app.ehrenamtskarte.backend.cards.database.Cards
+import app.ehrenamtskarte.backend.db.entities.CardEntity
+import app.ehrenamtskarte.backend.db.entities.Cards
 import app.ehrenamtskarte.backend.cards.service.CardActivator
 import app.ehrenamtskarte.backend.generated.ActivateCard
 import app.ehrenamtskarte.backend.generated.activatecard.CardActivationResultModel
