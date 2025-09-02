@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.freinet.database
+package app.ehrenamtskarte.backend.db.setup
 
 import app.ehrenamtskarte.backend.db.entities.FreinetAgenciesEntity
 import app.ehrenamtskarte.backend.graphql.freinet.schema.types.FreinetApiAgency

@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.regions.database
+package app.ehrenamtskarte.backend.db.setup
 
 import app.ehrenamtskarte.backend.common.webservice.EAK_BAYERN_PROJECT
 import app.ehrenamtskarte.backend.common.webservice.FREINET_DEMO_REGION_NAME
@@ -7,10 +7,10 @@ import app.ehrenamtskarte.backend.common.webservice.NUERNBERG_PASS_PROJECT
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.Environment
 import app.ehrenamtskarte.backend.db.entities.FreinetAgenciesEntity
-import app.ehrenamtskarte.backend.freinet.database.insertOrUpdateFreinetRegionInformation
 import app.ehrenamtskarte.backend.graphql.freinet.schema.types.FreinetApiAgency
 import app.ehrenamtskarte.backend.db.entities.ProjectEntity
 import app.ehrenamtskarte.backend.db.entities.RegionEntity
+import app.ehrenamtskarte.backend.regions.database.EAK_BAYERN_REGIONS
 import org.jetbrains.exposed.sql.transactions.transaction
 
 fun insertOrUpdateRegions(agencies: List<FreinetApiAgency>, config: BackendConfiguration) {

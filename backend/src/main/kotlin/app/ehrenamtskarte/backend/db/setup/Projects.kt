@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.projects.database
+package app.ehrenamtskarte.backend.db.setup
 
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.db.entities.ProjectEntity
