@@ -6,8 +6,8 @@ import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidApplicationConfirmationNoteSizeException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidDataPolicySizeException
-import app.ehrenamtskarte.backend.regions.database.APPLICATION_CONFIRMATION_MAIL_NOTE_MAX_CHARS
-import app.ehrenamtskarte.backend.regions.database.PRIVACY_POLICY_MAX_CHARS
+import app.ehrenamtskarte.backend.db.entities.APPLICATION_CONFIRMATION_MAIL_NOTE_MAX_CHARS
+import app.ehrenamtskarte.backend.db.entities.PRIVACY_POLICY_MAX_CHARS
 import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment

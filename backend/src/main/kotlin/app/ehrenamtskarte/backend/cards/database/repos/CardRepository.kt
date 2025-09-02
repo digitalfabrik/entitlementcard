@@ -7,7 +7,7 @@ import app.ehrenamtskarte.backend.db.entities.CodeType
 import app.ehrenamtskarte.backend.cards.webservice.schema.types.CardStatisticsResultModel
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCodeTypeException
 import app.ehrenamtskarte.backend.db.entities.Projects
-import app.ehrenamtskarte.backend.regions.database.Regions
+import app.ehrenamtskarte.backend.db.entities.Regions
 import app.ehrenamtskarte.backend.userdata.database.UserEntitlements
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.Coalesce

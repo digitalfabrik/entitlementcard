@@ -4,7 +4,7 @@ import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
 import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
 import app.ehrenamtskarte.backend.common.webservice.EAK_BAYERN_PROJECT
 import app.ehrenamtskarte.backend.common.webservice.KOBLENZ_PASS_PROJECT
-import app.ehrenamtskarte.backend.regions.database.RegionEntity
+import app.ehrenamtskarte.backend.db.entities.RegionEntity
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object Authorizer {

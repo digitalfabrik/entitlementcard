@@ -1,17 +1,14 @@
 package app.ehrenamtskarte.backend.db.entities
 
-import app.ehrenamtskarte.backend.regions.database.Regions
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.javatime.CurrentTimestamp
 import org.jetbrains.exposed.sql.javatime.timestamp
 import org.jetbrains.exposed.sql.javatime.timestampWithTimeZone
-import org.jetbrains.exposed.sql.not
 import java.time.OffsetDateTime
 
 const val NOTE_MAX_CHARS = 1000
