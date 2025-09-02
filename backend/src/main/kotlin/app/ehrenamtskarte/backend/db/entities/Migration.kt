@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.migration.database
+package app.ehrenamtskarte.backend.db.entities
 
 import org.jetbrains.exposed.dao.EntityClass
 import org.jetbrains.exposed.dao.IntEntity
