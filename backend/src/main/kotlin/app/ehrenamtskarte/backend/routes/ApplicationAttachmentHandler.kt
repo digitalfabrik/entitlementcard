@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.graphql.application
+package app.ehrenamtskarte.backend.routes
 
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
