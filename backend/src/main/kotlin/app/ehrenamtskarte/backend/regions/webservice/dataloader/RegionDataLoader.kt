@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.regions.webservice.dataloader
 
 import app.ehrenamtskarte.backend.common.webservice.newNamedDataLoader
-import app.ehrenamtskarte.backend.regions.database.repos.RegionsRepository
+import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.regions.webservice.schema.types.Region
 import org.jetbrains.exposed.sql.transactions.transaction
 
