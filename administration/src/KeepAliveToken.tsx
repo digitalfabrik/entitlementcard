@@ -1,4 +1,5 @@
-import { Button, Classes, Dialog } from '@blueprintjs/core'
+import { Classes, Dialog } from '@blueprintjs/core'
+import { Button } from '@mui/material'
 import React, { ReactElement, ReactNode, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -83,12 +84,9 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props): Rea
               <Button onClick={onSignOut} loading={mutationState.loading}>
                 {t('loginPeriodLogoutButton')}
               </Button>
-              <Button
-                intent='primary'
-                type='submit'
-                loading={mutationState.loading}
-                text={t('loginPeriodExtendButton')}
-              />
+              <Button variant='contained' type='submit' loading={mutationState.loading}>
+                {t('loginPeriodExtendButton')}
+              </Button>
             </div>
           </div>
         </form>
