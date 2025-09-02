@@ -1,9 +1,9 @@
-package app.ehrenamtskarte.backend.auth.webservice.schema
+package app.ehrenamtskarte.backend.graphql.auth.schema
 
-import app.ehrenamtskarte.backend.db.repositories.AdministratorsRepository
-import app.ehrenamtskarte.backend.graphql.getAuthContext
-import app.ehrenamtskarte.backend.auth.webservice.schema.types.NotificationSettings
 import app.ehrenamtskarte.backend.common.webservice.context
+import app.ehrenamtskarte.backend.db.repositories.AdministratorsRepository
+import app.ehrenamtskarte.backend.graphql.auth.schema.types.NotificationSettings
+import app.ehrenamtskarte.backend.graphql.getAuthContext
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction

@@ -1,16 +1,16 @@
-package app.ehrenamtskarte.backend.auth.webservice.schema
+package app.ehrenamtskarte.backend.graphql.auth.schema
 
+import app.ehrenamtskarte.backend.auth.service.Authorizer
+import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
 import app.ehrenamtskarte.backend.db.entities.Administrators
-import app.ehrenamtskarte.backend.graphql.getAuthContext
-import app.ehrenamtskarte.backend.auth.service.Authorizer
-import app.ehrenamtskarte.backend.auth.webservice.schema.types.Administrator
-import app.ehrenamtskarte.backend.common.webservice.context
+import app.ehrenamtskarte.backend.db.entities.RegionEntity
+import app.ehrenamtskarte.backend.db.entities.Regions
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
-import app.ehrenamtskarte.backend.db.entities.RegionEntity
-import app.ehrenamtskarte.backend.db.entities.Regions
+import app.ehrenamtskarte.backend.graphql.auth.schema.types.Administrator
+import app.ehrenamtskarte.backend.graphql.getAuthContext
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.SortOrder

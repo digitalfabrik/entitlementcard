@@ -1,17 +1,18 @@
 package app.ehrenamtskarte.backend.auth.webservice
 
 import app.ehrenamtskarte.backend.IntegrationTest
+import app.ehrenamtskarte.backend.auth.service.Authorizer
+import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
+import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
 import app.ehrenamtskarte.backend.db.entities.Administrators
 import app.ehrenamtskarte.backend.db.entities.ApiTokenType
 import app.ehrenamtskarte.backend.db.entities.ApiTokens
-import app.ehrenamtskarte.backend.auth.service.Authorizer
-import app.ehrenamtskarte.backend.auth.webservice.schema.ApiTokenQueryService
-import app.ehrenamtskarte.backend.auth.webservice.schema.ApiTokenService
-import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
-import app.ehrenamtskarte.backend.common.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
+import app.ehrenamtskarte.backend.graphql.auth.JwtPayload
+import app.ehrenamtskarte.backend.graphql.auth.schema.ApiTokenQueryService
+import app.ehrenamtskarte.backend.graphql.auth.schema.ApiTokenService
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestData
 import graphql.schema.DataFetchingEnvironment

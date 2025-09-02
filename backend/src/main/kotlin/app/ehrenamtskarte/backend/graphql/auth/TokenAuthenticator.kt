@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.auth.webservice
+package app.ehrenamtskarte.backend.graphql.auth
 
 import app.ehrenamtskarte.backend.db.entities.ApiTokenEntity
 import app.ehrenamtskarte.backend.db.entities.ApiTokenType

@@ -1,12 +1,12 @@
 package app.ehrenamtskarte.backend.db
 
-import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.Environment
 import app.ehrenamtskarte.backend.db.migration.assertDatabaseIsInSync
 import app.ehrenamtskarte.backend.db.repositories.AdministratorsRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.freinet.util.FreinetAgenciesLoader
+import app.ehrenamtskarte.backend.graphql.auth.schema.types.Role
 import app.ehrenamtskarte.backend.projects.database.insertOrUpdateProjects
 import app.ehrenamtskarte.backend.regions.database.insertOrUpdateRegions
 import app.ehrenamtskarte.backend.stores.database.createOrReplaceStoreFunctions
