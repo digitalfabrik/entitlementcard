@@ -11,7 +11,7 @@ import app.ehrenamtskarte.backend.application.webservice.schema.view.Application
 import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationHandler
 import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantEmail
 import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantName
-import app.ehrenamtskarte.backend.auth.getAuthContext
+import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.auth.service.Authorizer.mayDeleteApplicationsInRegion
 import app.ehrenamtskarte.backend.auth.service.Authorizer.mayUpdateApplicationsInRegion

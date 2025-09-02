@@ -6,7 +6,7 @@ import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantDateO
 import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantFirstName
 import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantLastName
 import app.ehrenamtskarte.backend.application.webservice.utils.getPersonalDataNode
-import app.ehrenamtskarte.backend.auth.getAuthContext
+import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.common.utils.devWarn
 import app.ehrenamtskarte.backend.common.webservice.context
