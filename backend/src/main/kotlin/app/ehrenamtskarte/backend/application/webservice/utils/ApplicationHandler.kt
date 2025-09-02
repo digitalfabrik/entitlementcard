@@ -1,8 +1,8 @@
 package app.ehrenamtskarte.backend.application.webservice.utils
 
-import app.ehrenamtskarte.backend.application.database.ApplicationEntity
-import app.ehrenamtskarte.backend.application.database.ApplicationVerificationEntity
-import app.ehrenamtskarte.backend.application.database.ApplicationVerificationExternalSource
+import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
+import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
+import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationExternalSource
 import app.ehrenamtskarte.backend.application.database.repos.ApplicationRepository
 import app.ehrenamtskarte.backend.application.webservice.schema.create.Application
 import app.ehrenamtskarte.backend.application.webservice.schema.create.ApplicationType

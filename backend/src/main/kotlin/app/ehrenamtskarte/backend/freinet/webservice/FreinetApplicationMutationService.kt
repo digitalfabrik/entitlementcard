@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.freinet.webservice
 
-import app.ehrenamtskarte.backend.application.database.ApplicationEntity
-import app.ehrenamtskarte.backend.application.database.ApplicationEntity.Status
+import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
+import app.ehrenamtskarte.backend.db.entities.ApplicationEntity.Status
 import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantDateOfBirth
 import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantFirstName
 import app.ehrenamtskarte.backend.application.webservice.utils.getApplicantLastName

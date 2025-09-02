@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.application.webservice.schema.view
 
-import app.ehrenamtskarte.backend.application.database.ApplicationEntity
+import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
 
 enum class ApplicationStatus {
     Pending,
