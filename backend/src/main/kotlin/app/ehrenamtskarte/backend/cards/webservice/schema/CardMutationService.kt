@@ -31,7 +31,7 @@ import app.ehrenamtskarte.backend.mail.Mailer
 import app.ehrenamtskarte.backend.matomo.Matomo
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.userdata.KoblenzUser
-import app.ehrenamtskarte.backend.userdata.database.UserEntitlementsRepository
+import app.ehrenamtskarte.backend.db.repositories.UserEntitlementsRepository
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.google.protobuf.ByteString
 import com.google.protobuf.InvalidProtocolBufferException
