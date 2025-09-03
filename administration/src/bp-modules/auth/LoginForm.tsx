@@ -1,4 +1,5 @@
-import { Button, Classes, FormGroup, InputGroup } from '@blueprintjs/core'
+import { Classes, FormGroup, InputGroup } from '@blueprintjs/core'
+import { Button, FormControl, FormLabel, Stack } from '@mui/material'
 import React, { ChangeEvent, ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
@@ -40,8 +41,12 @@ const LoginForm = ({ loading, email, password, setEmail, setPassword, onSubmit }
         <div
           className={Classes.DIALOG_FOOTER_ACTIONS}
           style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Link to='/forgot-password'>{t('forgotPassword')}</Link>
-          <Button text='Anmelden' type='submit' intent='primary' loading={!!loading} />
+          <Link to='/forgot-password'>
+            <Button variant='text'>{t('forgotPassword')}</Button>
+          </Link>
+          <Button type='submit' variant='contained' loading={!!loading}>
+            Anmelden
+          </Button>
         </div>
       </form>
     </div>
