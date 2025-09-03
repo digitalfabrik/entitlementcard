@@ -7,7 +7,8 @@
     "steps": "Andernfalls befolgen Sie diese Schritte:",
     "activateButton": "Karte aktivieren",
     "openOnMobileDevice": "Öffnen Sie dafür den folgenden Link auf Ihrem Smartphone:",
-    "downloadApp": "Laden Sie sich die App <strong>{{applicationName}}</strong> im App- oder PlayStore auf Ihrem Smartphone herunter."
+    "downloadApp": "Laden Sie sich die App <strong>{{applicationName}}</strong> im App- oder PlayStore auf Ihrem Smartphone herunter.",
+    "downloadNow": "Jetzt herunterladen:"
   },
   "application": {
     "_comment": "!Important! These keys should not be edited, since they are stored in the database and have to remain resolvable. If you change these keys, labels of old applications can not be resolved anymore.",
