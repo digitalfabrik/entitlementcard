@@ -84,7 +84,9 @@ const ResetPasswordController = (): ReactElement => {
           <div
             className={Classes.DIALOG_FOOTER_ACTIONS}
             style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px' }}>
-            <Link to='/'>{t('backToLogin')}</Link>
+            <Link to='/'>
+              <Button variant='text'>{t('backToLogin')}</Button>
+            </Link>
             <Button type='submit' loading={loading} variant='contained' disabled={warnMessage !== null}>
               {t('resetPassword')}
             </Button>
