@@ -1,5 +1,5 @@
 import { Callout } from '@blueprintjs/core'
-import { TFunction } from 'i18next'
+import { Stack } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -12,13 +12,6 @@ const Container = styled.div`
   padding: 8px 0;
 `
 
-const PepperSettingsView = ({ pepper, t }: { pepper: string; t: TFunction }) => (
-  <Container>
-    <p>{t('pepperExplanation')}:</p>
-    <PasswordInput label='' value={pepper} setValue={null} />
-  </Container>
-)
-
 const PepperSettings = (): ReactElement => {
   const { t } = useTranslation('projectSettings')
   const errorComponent = (
@@ -28,10 +21,15 @@ const PepperSettings = (): ReactElement => {
   )
   const pepperQuery = useGetHashingPepperQuery()
   const result = getQueryResult(pepperQuery, errorComponent)
-  if (!result.successful) {
-    return result.component
-  }
-  return <PepperSettingsView pepper={result.data.pepper} t={t} />
+
+  return result.successful ? (
+    <Stack sx={{ marginBottom: 2 }}>
+      <p>{t('pepperExplanation')}:</p>
+      <PasswordInput value={result.data.pepper} />
+    </Stack>
+  ) : (
+    result.component
+  )
 }
 
 export default PepperSettings

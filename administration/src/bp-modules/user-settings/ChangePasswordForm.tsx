@@ -1,5 +1,5 @@
 import { Callout, H2 } from '@blueprintjs/core'
-import { Button } from '@mui/material'
+import { Button, FormControl, FormLabel, Stack } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -14,9 +14,9 @@ import SettingsCard from './SettingsCard'
 const ChangePasswordForm = (): ReactElement => {
   const { t: tAuth } = useTranslation('auth')
   const { t } = useTranslation('userSettings')
-  const [currentPassword, setCurrentPassword] = useState('')
-  const [newPassword, setNewPassword] = useState('')
-  const [repeatNewPassword, setRepeatNewPassword] = useState('')
+  const [currentPassword, setCurrentPassword] = useState<string>()
+  const [newPassword, setNewPassword] = useState<string>()
+  const [repeatNewPassword, setRepeatNewPassword] = useState<string>()
 
   const appToaster = useAppToaster()
   const [changePassword, { loading }] = useChangePasswordMutation({
@@ -46,8 +46,8 @@ const ChangePasswordForm = (): ReactElement => {
   const submit = async () =>
     changePassword({
       variables: {
-        newPassword,
-        currentPassword,
+        newPassword: newPassword ?? '',
+        currentPassword: currentPassword ?? '',
         email,
       },
     })
@@ -61,15 +61,27 @@ const ChangePasswordForm = (): ReactElement => {
           event.preventDefault()
           submit()
         }}>
-        <PasswordInput label={t('currentPassword')} value={currentPassword} setValue={setCurrentPassword} />
-        <PasswordInput label={t('newPassword')} value={newPassword} setValue={setNewPassword} />
-        <PasswordInput label={t('newPasswordConfirm')} value={repeatNewPassword} setValue={setRepeatNewPassword} />
-        {warnMessage === null ? null : <Callout intent='danger'>{warnMessage}</Callout>}
-        <div style={{ textAlign: 'right', padding: '10px 0' }}>
-          <Button type='submit' disabled={!valid} loading={loading}>
-            {t('changePassword')}
-          </Button>
-        </div>
+        <Stack sx={{ gap: 2 }}>
+          <FormControl fullWidth>
+            <FormLabel>{t('currentPassword')}</FormLabel>
+            <PasswordInput value={currentPassword} setValue={setCurrentPassword} />
+          </FormControl>
+          <FormControl fullWidth>
+            <FormLabel>{t('newPassword')}</FormLabel>
+            <PasswordInput value={newPassword} setValue={setNewPassword} />
+          </FormControl>
+          <FormControl fullWidth>
+            <FormLabel>{t('newPasswordConfirm')}</FormLabel>
+            <PasswordInput value={repeatNewPassword} setValue={setRepeatNewPassword} />
+          </FormControl>
+
+          {warnMessage === null ? null : <Callout intent='danger'>{warnMessage}</Callout>}
+          <div style={{ textAlign: 'right' }}>
+            <Button type='submit' variant='contained' disabled={!valid} loading={loading}>
+              {t('changePassword')}
+            </Button>
+          </div>
+        </Stack>
       </form>
     </SettingsCard>
   )

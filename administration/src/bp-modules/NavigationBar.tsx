@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment */
 import { Alignment, Navbar } from '@blueprintjs/core'
 import { AddCard, Analytics, Checklist, Inventory, Map, People, Place } from '@mui/icons-material'
 import { Button, ButtonProps, styled } from '@mui/material'

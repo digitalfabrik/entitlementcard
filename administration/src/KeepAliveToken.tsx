@@ -28,7 +28,7 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props): Rea
   const email = useWhoAmI().me.email
   const [secondsLeft, setSecondsLeft] = useState(computeSecondsLeft(authData))
   const appToaster = useAppToaster()
-  const [password, setPassword] = useState('')
+  const [password, setPassword] = useState<string>()
   const [signIn, mutationState] = useSignInMutation({
     onCompleted: payload => {
       appToaster?.show({ intent: 'success', message: t('loginPeriodExtended') })
@@ -54,7 +54,7 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props): Rea
     return () => clearInterval(interval)
   }, [authData, onSignOut, navigate])
 
-  const extendLogin = () => signIn({ variables: { project: projectId, authData: { email, password } } })
+  const extendLogin = () => signIn({ variables: { project: projectId, authData: { email, password: password ?? '' } } })
 
   return (
     <>
@@ -72,12 +72,7 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props): Rea
           <div className={Classes.DIALOG_BODY}>
             <p>{t('loginPeriodSecondsLeft', { secondsLeft })}</p>
             <p>{t('loginPeriodPasswordPrompt')}</p>
-            <PasswordInput
-              label=''
-              placeholder={t('loginPeriodPasswordPlaceholder')}
-              setValue={setPassword}
-              value={password}
-            />
+            <PasswordInput placeholder={t('loginPeriodPasswordPlaceholder')} setValue={setPassword} value={password} />
           </div>
           <div className={Classes.DIALOG_FOOTER}>
             <div className={Classes.DIALOG_FOOTER_ACTIONS}>
