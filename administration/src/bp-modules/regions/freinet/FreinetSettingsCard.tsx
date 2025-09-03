@@ -1,4 +1,5 @@
-import { Button, Checkbox, H2 } from '@blueprintjs/core'
+import { Checkbox, H2 } from '@blueprintjs/core'
+import { Button } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -69,7 +70,7 @@ const FreinetSettingsCard = ({
         label={t('freinetActivateDataTransferCheckbox')}
       />
       <ButtonContainer>
-        <Button text={t('save')} intent='primary' onClick={() => onSave(dataTransferActivated)} />
+        <Button onClick={() => onSave(dataTransferActivated)}>{t('save')}</Button>
       </ButtonContainer>
     </SettingsCard>
   )

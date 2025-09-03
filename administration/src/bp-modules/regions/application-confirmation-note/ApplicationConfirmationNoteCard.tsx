@@ -1,4 +1,5 @@
-import { Button, H2 } from '@blueprintjs/core'
+import { H2 } from '@blueprintjs/core'
+import { Button } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -32,7 +33,7 @@ const ApplicationConfirmationNoteCard = ({
       <H2>{t('applicationConfirmationMailNoteHeadline')}</H2>
       <p>{t('applicationConfirmationMailNoteExplanation')}</p>
       <ButtonContainer>
-        <Button text={t('open')} intent='primary' onClick={() => setOpenApplicationConfirmationNote(true)} />
+        <Button onClick={() => setOpenApplicationConfirmationNote(true)}>{t('open')}</Button>
       </ButtonContainer>
       {openApplicationConfirmationNote && (
         <ApplicationConfirmationNote

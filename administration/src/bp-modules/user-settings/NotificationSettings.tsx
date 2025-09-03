@@ -1,4 +1,5 @@
-import { Button, Checkbox, H2 } from '@blueprintjs/core'
+import { Checkbox, H2 } from '@blueprintjs/core'
+import { Button } from '@mui/material'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -70,7 +71,9 @@ const NotificationSettings = (): ReactElement => {
           label={t('newVerifications')}
         />
         <div style={{ textAlign: 'right', padding: '10px 0' }}>
-          <Button text={t('save')} intent='primary' type='submit' loading={loading} />
+          <Button type='submit' loading={loading}>
+            {t('save')}
+          </Button>
         </div>
       </form>
     </SettingsCard>

@@ -1,8 +1,11 @@
-import { Button, Tooltip } from '@blueprintjs/core'
+import { Tooltip } from '@blueprintjs/core'
+import { ArrowBack, UploadFile } from '@mui/icons-material'
+import { Button } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Card, isValid } from '../../cards/Card'
+import { CsvIcon } from '../../components/icons/CsvIcon'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import ButtonBar from '../ButtonBar'
 
@@ -25,31 +28,37 @@ const CreateCardsButtonBar = ({
 
   return (
     <ButtonBar>
-      <Button icon='arrow-left' text={t('backToSelection')} onClick={goBack} />
+      <Button startIcon={<ArrowBack />} onClick={goBack}>
+        {t('backToSelection')}
+      </Button>
+
       <Tooltip
         placement='top'
         content={cards.length === 0 ? t('createOnCard') : t('atLeastOnCardIsInvalid')}
         disabled={allCardsValid && cards.length > 0}>
         <Button
-          icon='export'
-          text={t('printQRCodes')}
-          intent='success'
+          startIcon={<UploadFile />}
           onClick={generateCardsPdf}
           disabled={!allCardsValid || cards.length === 0}
-        />
+          variant='contained'
+          size='small'>
+          {t('printQRCodes')}
+        </Button>
       </Tooltip>
+
       {csvExport.enabled && (
         <Tooltip
           placement='top'
           content={cards.length === 0 ? t('createOnCard') : t('atLeastOnCardIsInvalid')}
           disabled={allCardsValid && cards.length > 0}>
           <Button
-            icon='th-derived'
-            text={t('exportCsv')}
-            intent='success'
+            startIcon={<CsvIcon />}
             onClick={generateCardsCsv}
             disabled={!allCardsValid || cards.length === 0}
-          />
+            variant='contained'
+            size='small'>
+            {t('exportCsv')}
+          </Button>
         </Tooltip>
       )}
     </ButtonBar>

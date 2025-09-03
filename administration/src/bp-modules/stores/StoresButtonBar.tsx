@@ -1,4 +1,6 @@
-import { Alert, Button, Tooltip } from '@blueprintjs/core'
+import { Alert } from '@blueprintjs/core'
+import { ArrowBack, UploadFile } from '@mui/icons-material'
+import { Button, Tooltip } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -30,22 +32,32 @@ const StoresButtonBar = ({
     setImportDialogIsOpen(false)
   }
 
+  let tooltip
+  if (hasNoAcceptingStores) {
+    tooltip = t('hasNoAcceptingStores')
+  }
+  if (hasInvalidStores) {
+    tooltip = t('hasInvalidStores')
+  }
+
   return (
     <ButtonBar>
-      <Button icon='arrow-left' text={t('backToSelection')} onClick={goBack} />
-      <Tooltip
-        placement='top'
-        content={hasNoAcceptingStores ? t('hasNoAcceptingStores') : t('hasInvalidStores')}
-        disabled={!hasNoAcceptingStores && !hasInvalidStores}
-        openOnTargetFocus={false}>
-        <Button
-          icon='upload'
-          text={t('importStores')}
-          intent='success'
-          onClick={() => setImportDialogIsOpen(true)}
-          disabled={hasNoAcceptingStores || hasInvalidStores}
-        />
+      <Button startIcon={<ArrowBack />} onClick={goBack}>
+        {t('backToSelection')}
+      </Button>
+      <Tooltip title={tooltip}>
+        <div>
+          <Button
+            startIcon={<UploadFile />}
+            variant='contained'
+            size='small' // TODO The tooltip component somehow changes the default button size
+            onClick={() => setImportDialogIsOpen(true)}
+            disabled={hasNoAcceptingStores || hasInvalidStores}>
+            {t('importStores')}
+          </Button>
+        </div>
       </Tooltip>
+
       <Alert
         cancelButtonText={t('misc:cancel')}
         confirmButtonText={t('importStores')}
