@@ -1,9 +1,9 @@
 package app.ehrenamtskarte.backend.graphql.regions.schema
 
-import app.ehrenamtskarte.backend.common.webservice.DEFAULT_PROJECT
-import app.ehrenamtskarte.backend.common.webservice.EAK_BAYERN_PROJECT
-import app.ehrenamtskarte.backend.common.webservice.context
-import app.ehrenamtskarte.backend.common.webservice.schema.IdsParams
+import app.ehrenamtskarte.backend.shared.webservice.DEFAULT_PROJECT
+import app.ehrenamtskarte.backend.shared.webservice.EAK_BAYERN_PROJECT
+import app.ehrenamtskarte.backend.shared.webservice.context
+import app.ehrenamtskarte.backend.shared.webservice.schema.IdsParams
 import app.ehrenamtskarte.backend.exception.service.NotEakProjectException
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException

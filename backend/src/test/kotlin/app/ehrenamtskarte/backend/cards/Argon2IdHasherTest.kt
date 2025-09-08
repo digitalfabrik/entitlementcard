@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.cards
-import app.ehrenamtskarte.backend.common.utils.Environment
-import app.ehrenamtskarte.backend.common.webservice.KOBLENZ_PEPPER_SYS_ENV
+import app.ehrenamtskarte.backend.shared.utils.Environment
+import app.ehrenamtskarte.backend.shared.webservice.KOBLENZ_PEPPER_SYS_ENV
 import app.ehrenamtskarte.backend.userdata.KoblenzUser
 import io.mockk.every
 import io.mockk.mockkObject

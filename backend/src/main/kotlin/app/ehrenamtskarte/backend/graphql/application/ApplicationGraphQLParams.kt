@@ -3,8 +3,8 @@ package app.ehrenamtskarte.backend.graphql.application
 import app.ehrenamtskarte.backend.graphql.application.dataloader.applicationLoader
 import app.ehrenamtskarte.backend.graphql.application.dataloader.verificationsByApplicationLoader
 import app.ehrenamtskarte.backend.graphql.application.schema.create.primitives.UploadKey
-import app.ehrenamtskarte.backend.common.webservice.GraphQLParams
-import app.ehrenamtskarte.backend.common.webservice.createRegistryFromNamedDataLoaders
+import app.ehrenamtskarte.backend.shared.webservice.GraphQLParams
+import app.ehrenamtskarte.backend.shared.webservice.createRegistryFromNamedDataLoaders
 import com.expediagroup.graphql.generator.SchemaGeneratorConfig
 import com.expediagroup.graphql.generator.TopLevelObject
 import com.expediagroup.graphql.generator.hooks.SchemaGeneratorHooks

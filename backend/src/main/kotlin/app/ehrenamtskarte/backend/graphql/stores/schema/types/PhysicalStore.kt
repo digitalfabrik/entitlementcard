@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.graphql.stores.schema.types
 
-import app.ehrenamtskarte.backend.common.webservice.fromEnvironment
+import app.ehrenamtskarte.backend.shared.webservice.fromEnvironment
 import app.ehrenamtskarte.backend.graphql.stores.dataloader.acceptingStoreLoader
 import app.ehrenamtskarte.backend.graphql.stores.dataloader.addressLoader
 import graphql.schema.DataFetchingEnvironment

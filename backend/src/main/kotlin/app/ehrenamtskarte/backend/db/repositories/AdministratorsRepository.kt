@@ -3,7 +3,7 @@ package app.ehrenamtskarte.backend.db.repositories
 import app.ehrenamtskarte.backend.auth.PasswordValidationResult
 import app.ehrenamtskarte.backend.auth.PasswordValidator
 import app.ehrenamtskarte.backend.auth.database.PasswordCrypto
-import app.ehrenamtskarte.backend.common.database.sortByKeys
+import app.ehrenamtskarte.backend.shared.database.sortByKeys
 import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
 import app.ehrenamtskarte.backend.db.entities.Administrators
 import app.ehrenamtskarte.backend.db.entities.ProjectEntity

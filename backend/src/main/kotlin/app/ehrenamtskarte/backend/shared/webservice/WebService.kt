@@ -1,7 +1,7 @@
-package app.ehrenamtskarte.backend.common.webservice
+package app.ehrenamtskarte.backend.shared.webservice
 
 import app.ehrenamtskarte.backend.BuildConfig
-import app.ehrenamtskarte.backend.common.utils.initializeSentry
+import app.ehrenamtskarte.backend.shared.utils.initializeSentry
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.Environment
 import app.ehrenamtskarte.backend.routes.ApplicationAttachmentHandler

@@ -2,7 +2,7 @@ package app.ehrenamtskarte.backend.graphql.regions.schema
 
 import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.auth.service.Authorizer
-import app.ehrenamtskarte.backend.common.webservice.context
+import app.ehrenamtskarte.backend.shared.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidApplicationConfirmationNoteSizeException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidDataPolicySizeException
