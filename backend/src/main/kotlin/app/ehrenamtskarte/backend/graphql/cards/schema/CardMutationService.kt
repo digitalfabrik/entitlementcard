@@ -4,10 +4,10 @@ import Card
 import app.ehrenamtskarte.backend.cards.Argon2IdHasher
 import app.ehrenamtskarte.backend.cards.PEPPER_LENGTH
 import app.ehrenamtskarte.backend.cards.hash
-import app.ehrenamtskarte.backend.cards.service.CardActivator
 import app.ehrenamtskarte.backend.cards.service.CardVerifier
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
 import app.ehrenamtskarte.backend.db.entities.CodeType
+import app.ehrenamtskarte.backend.db.entities.TOTP_SECRET_LENGTH
 import app.ehrenamtskarte.backend.db.entities.mayCreateCardInRegion
 import app.ehrenamtskarte.backend.db.entities.mayDeleteCardInRegion
 import app.ehrenamtskarte.backend.db.entities.maySendMailsInRegion
@@ -30,10 +30,12 @@ import app.ehrenamtskarte.backend.graphql.cards.schema.types.CardCreationResultM
 import app.ehrenamtskarte.backend.graphql.cards.schema.types.DynamicActivationCodeResult
 import app.ehrenamtskarte.backend.graphql.cards.schema.types.StaticVerificationCodeResult
 import app.ehrenamtskarte.backend.graphql.getAuthContext
+import app.ehrenamtskarte.backend.graphql.shared.context
 import app.ehrenamtskarte.backend.mail.Mailer
 import app.ehrenamtskarte.backend.matomo.Matomo
-import app.ehrenamtskarte.backend.graphql.shared.context
 import app.ehrenamtskarte.backend.userdata.KoblenzUser
+import at.favre.lib.crypto.bcrypt.BCrypt
+import com.eatthepath.otp.TimeBasedOneTimePasswordGenerator
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.google.protobuf.ByteString
 import com.google.protobuf.InvalidProtocolBufferException
@@ -48,6 +50,7 @@ import java.security.SecureRandom
 import java.sql.Connection.TRANSACTION_REPEATABLE_READ
 import java.time.LocalDate
 import java.util.Base64
+import javax.crypto.KeyGenerator
 
 @Suppress("unused")
 class CardMutationService {
@@ -67,7 +70,7 @@ class CardMutationService {
         val rawActivationSecret = ByteArray(activationSecretLength)
         secureRandom.nextBytes(rawActivationSecret)
 
-        val activationSecretHash = CardActivator.hashActivationSecret(rawActivationSecret)
+        val activationSecretHash = hashActivationSecret(rawActivationSecret)
         val hashedCardInfo = cardInfo.hash(pepper)
         val dynamicActivationCode = Card.DynamicActivationCode.newBuilder()
             .setInfo(cardInfo)
@@ -330,7 +333,7 @@ class CardMutationService {
                 return@t CardActivationResultModel(ActivationState.not_found)
             }
 
-            if (!CardActivator.verifyActivationSecret(rawActivationSecret, activationSecretHash)) {
+            if (!verifyActivationSecret(rawActivationSecret, activationSecretHash)) {
                 logger.info(
                     "${context.remoteIp} failed to activate card with id:${card.id} and overwrite: $overwrite",
                 )
@@ -360,7 +363,7 @@ class CardMutationService {
                 return@t CardActivationResultModel(ActivationState.did_not_overwrite_existing)
             }
 
-            val totpSecret = CardActivator.generateTotpSecret()
+            val totpSecret = generateTotpSecret()
             val encodedTotpSecret = Base64.getEncoder().encodeToString(totpSecret)
             CardRepository.activate(card, totpSecret)
             logger.info(
@@ -434,3 +437,25 @@ class CardMutationService {
         return true
     }
 }
+
+private const val cost = 10
+
+fun hashActivationSecret(rawActivationSecret: ByteArray): ByteArray =
+    BCrypt.withDefaults().hash(cost, rawActivationSecret)
+
+@Synchronized
+private fun generateTotpSecret(): ByteArray {
+    // https://tools.ietf.org/html/rfc6238#section-3 - R3 (TOTP uses HTOP)
+    // https://tools.ietf.org/html/rfc4226#section-4 - R6 (How long should a shared secret be?
+    // -> 160bit)
+    // https://tools.ietf.org/html/rfc4226#section-7.5 - Random Generation (How to generate a
+    // secret? -> Random))))
+    val algorithm = TimeBasedOneTimePasswordGenerator.TOTP_ALGORITHM_HMAC_SHA256
+    val keyGenerator = KeyGenerator.getInstance(algorithm)
+    keyGenerator.init(TOTP_SECRET_LENGTH * 8)
+
+    return keyGenerator.generateKey().encoded
+}
+
+private fun verifyActivationSecret(rawActivationSecret: ByteArray, activationSecretHash: ByteArray): Boolean =
+    BCrypt.verifyer().verify(rawActivationSecret, activationSecretHash).verified
