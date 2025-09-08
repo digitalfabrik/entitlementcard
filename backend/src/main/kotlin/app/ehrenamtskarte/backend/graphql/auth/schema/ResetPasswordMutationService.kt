@@ -4,7 +4,7 @@ import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
 import app.ehrenamtskarte.backend.db.entities.Administrators
 import app.ehrenamtskarte.backend.shared.crypto.PasswordCrypto
 import app.ehrenamtskarte.backend.db.repositories.AdministratorsRepository
-import app.ehrenamtskarte.backend.shared.webservice.context
+import app.ehrenamtskarte.backend.graphql.shared.context
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidLinkException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.PasswordResetKeyExpiredException

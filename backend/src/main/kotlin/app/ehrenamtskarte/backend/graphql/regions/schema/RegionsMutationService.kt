@@ -8,7 +8,7 @@ import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidApplicationConfirmationNoteSizeException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidDataPolicySizeException
 import app.ehrenamtskarte.backend.graphql.getAuthContext
-import app.ehrenamtskarte.backend.shared.webservice.context
+import app.ehrenamtskarte.backend.graphql.shared.context
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction

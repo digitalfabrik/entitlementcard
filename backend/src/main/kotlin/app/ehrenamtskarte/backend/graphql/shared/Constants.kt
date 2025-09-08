@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.shared.webservice
+package app.ehrenamtskarte.backend.graphql.shared
 
 const val EAK_BAYERN_PROJECT = "bayern.ehrenamtskarte.app"
 const val NUERNBERG_PASS_PROJECT = "nuernberg.sozialpass.app"

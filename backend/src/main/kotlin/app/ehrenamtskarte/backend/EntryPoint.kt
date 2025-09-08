@@ -1,8 +1,8 @@
 package app.ehrenamtskarte.backend
 
 import app.ehrenamtskarte.backend.db.Database
-import app.ehrenamtskarte.backend.shared.webservice.GraphQLHandler
-import app.ehrenamtskarte.backend.shared.webservice.WebService
+import app.ehrenamtskarte.backend.graphql.shared.GraphQLHandler
+import app.ehrenamtskarte.backend.graphql.shared.WebService
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.Environment
 import app.ehrenamtskarte.backend.db.entities.Migrations

@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.shared.webservice
+package app.ehrenamtskarte.backend.graphql.shared
 
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
@@ -11,9 +11,9 @@ import app.ehrenamtskarte.backend.graphql.auth.JwtService
 import app.ehrenamtskarte.backend.graphql.auth.authGraphQlParams
 import app.ehrenamtskarte.backend.graphql.cards.cardsGraphQlParams
 import app.ehrenamtskarte.backend.graphql.freinet.freinetGraphQlParams
-import app.ehrenamtskarte.backend.regions.utils.PostalCodesLoader
 import app.ehrenamtskarte.backend.graphql.regions.regionsGraphQlParams
 import app.ehrenamtskarte.backend.graphql.stores.storesGraphQlParams
+import app.ehrenamtskarte.backend.regions.utils.PostalCodesLoader
 import com.auth0.jwt.exceptions.AlgorithmMismatchException
 import com.auth0.jwt.exceptions.InvalidClaimException
 import com.auth0.jwt.exceptions.JWTDecodeException
@@ -44,7 +44,7 @@ class GraphQLHandler(
         PostalCodesLoader.loadRegionIdentifierByPostalCodeMap(),
 ) {
     val config: SchemaGeneratorConfig = graphQLParams.config
-        .plus(SchemaGeneratorConfig(listOf("app.ehrenamtskarte.backend.common.webservice.schema")))
+        .plus(SchemaGeneratorConfig(listOf("app.ehrenamtskarte.backend.graphql.shared.schema")))
         .plus(ExceptionSchemaConfig)
 
     val graphQLSchema = toSchema(

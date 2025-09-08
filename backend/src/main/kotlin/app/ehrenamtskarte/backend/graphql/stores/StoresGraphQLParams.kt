@@ -1,7 +1,5 @@
 package app.ehrenamtskarte.backend.graphql.stores
 
-import app.ehrenamtskarte.backend.shared.webservice.GraphQLParams
-import app.ehrenamtskarte.backend.shared.webservice.createRegistryFromNamedDataLoaders
 import app.ehrenamtskarte.backend.graphql.stores.dataloader.acceptingStoreLoader
 import app.ehrenamtskarte.backend.graphql.stores.dataloader.addressLoader
 import app.ehrenamtskarte.backend.graphql.stores.dataloader.categoryLoader
@@ -10,6 +8,8 @@ import app.ehrenamtskarte.backend.graphql.stores.dataloader.physicalStoreByStore
 import app.ehrenamtskarte.backend.graphql.stores.dataloader.physicalStoreLoader
 import app.ehrenamtskarte.backend.graphql.stores.schema.AcceptingStoreQueryService
 import app.ehrenamtskarte.backend.graphql.stores.schema.CategoriesQueryService
+import app.ehrenamtskarte.backend.graphql.shared.GraphQLParams
+import app.ehrenamtskarte.backend.graphql.shared.createRegistryFromNamedDataLoaders
 import com.expediagroup.graphql.generator.SchemaGeneratorConfig
 import com.expediagroup.graphql.generator.TopLevelObject
 

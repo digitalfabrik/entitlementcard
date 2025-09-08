@@ -1,9 +1,9 @@
 package app.ehrenamtskarte.backend.db.setup
 
-import app.ehrenamtskarte.backend.shared.webservice.EAK_BAYERN_PROJECT
-import app.ehrenamtskarte.backend.shared.webservice.FREINET_DEMO_REGION_NAME
-import app.ehrenamtskarte.backend.shared.webservice.KOBLENZ_PASS_PROJECT
-import app.ehrenamtskarte.backend.shared.webservice.NUERNBERG_PASS_PROJECT
+import app.ehrenamtskarte.backend.graphql.shared.EAK_BAYERN_PROJECT
+import app.ehrenamtskarte.backend.graphql.shared.FREINET_DEMO_REGION_NAME
+import app.ehrenamtskarte.backend.graphql.shared.KOBLENZ_PASS_PROJECT
+import app.ehrenamtskarte.backend.graphql.shared.NUERNBERG_PASS_PROJECT
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.Environment
 import app.ehrenamtskarte.backend.db.entities.FreinetAgenciesEntity

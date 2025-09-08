@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.shared.webservice
+package app.ehrenamtskarte.backend.graphql.shared
 
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
@@ -20,9 +20,9 @@ data class GraphQLContext(
     fun enforceSignedIn(): JwtPayload = jwtPayload ?: throw UnauthorizedException()
 }
 
-fun GraphQLContext.Builder.put(context: app.ehrenamtskarte.backend.shared.webservice.GraphQLContext) {
+fun GraphQLContext.Builder.put(context: app.ehrenamtskarte.backend.graphql.shared.GraphQLContext) {
     put(GraphQLContext::class, context)
 }
 
-val GraphQLContext.context: app.ehrenamtskarte.backend.shared.webservice.GraphQLContext
+val GraphQLContext.context: app.ehrenamtskarte.backend.graphql.shared.GraphQLContext
     get() = get(GraphQLContext::class)
