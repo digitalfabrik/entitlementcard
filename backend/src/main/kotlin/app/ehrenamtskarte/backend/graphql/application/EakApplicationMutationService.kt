@@ -1,14 +1,13 @@
 package app.ehrenamtskarte.backend.graphql.application
 
-import app.ehrenamtskarte.backend.auth.service.Authorizer
-import app.ehrenamtskarte.backend.auth.service.Authorizer.mayDeleteApplicationsInRegion
-import app.ehrenamtskarte.backend.auth.service.Authorizer.mayUpdateApplicationsInRegion
-import app.ehrenamtskarte.backend.shared.webservice.context
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity.Status
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
 import app.ehrenamtskarte.backend.db.entities.Applications
 import app.ehrenamtskarte.backend.db.entities.NOTE_MAX_CHARS
+import app.ehrenamtskarte.backend.db.entities.mayDeleteApplicationsInRegion
+import app.ehrenamtskarte.backend.db.entities.maySendMailsInRegion
+import app.ehrenamtskarte.backend.db.entities.mayUpdateApplicationsInRegion
 import app.ehrenamtskarte.backend.db.repositories.ApplicationRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
@@ -23,6 +22,7 @@ import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantEmail
 import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantName
 import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.mail.Mailer
+import app.ehrenamtskarte.backend.shared.webservice.context
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.execution.DataFetcherResult
 import graphql.schema.DataFetchingEnvironment
@@ -79,7 +79,7 @@ class EakApplicationMutationService {
             val application = ApplicationEntity.findById(applicationId)
                 ?: throw InvalidInputException("Application not found")
 
-            if (!mayDeleteApplicationsInRegion(authContext.admin, application.regionId.value)) {
+            if (!authContext.admin.mayDeleteApplicationsInRegion(application.regionId.value)) {
                 throw ForbiddenException()
             }
 
@@ -153,7 +153,7 @@ class EakApplicationMutationService {
 
             applicationEntity.changeStatusOrThrow(Status.Approved)
 
-            if (mayUpdateApplicationsInRegion(context.getAuthContext().admin, applicationEntity.regionId.value)) {
+            if (context.getAuthContext().admin.mayUpdateApplicationsInRegion(applicationEntity.regionId.value)) {
                 ApplicationAdminGql.fromDbEntity(applicationEntity)
             } else {
                 throw ForbiddenException()
@@ -181,7 +181,7 @@ class EakApplicationMutationService {
             val application = ApplicationEntity.findById(applicationId)
                 ?: throw InvalidInputException("Application not found")
 
-            if (!mayUpdateApplicationsInRegion(authContext.admin, application.regionId.value)) {
+            if (!authContext.admin.mayUpdateApplicationsInRegion(application.regionId.value)) {
                 throw ForbiddenException()
             }
 
@@ -211,7 +211,7 @@ class EakApplicationMutationService {
                 throw InvalidNoteSizeException(NOTE_MAX_CHARS)
             }
 
-            if (!mayUpdateApplicationsInRegion(context.getAuthContext().admin, application.regionId.value)) {
+            if (!context.getAuthContext().admin.mayUpdateApplicationsInRegion(application.regionId.value)) {
                 throw ForbiddenException()
             }
 
@@ -232,7 +232,7 @@ class EakApplicationMutationService {
             val application = ApplicationEntity.findById(applicationId)
                 ?: throw InvalidInputException("Application not found")
 
-            if (!Authorizer.maySendMailsInRegion(authContext.admin, application.regionId.value)) {
+            if (!authContext.admin.maySendMailsInRegion(application.regionId.value)) {
                 throw ForbiddenException()
             }
 

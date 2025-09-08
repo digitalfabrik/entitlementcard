@@ -1,7 +1,6 @@
 package app.ehrenamtskarte.backend.graphql.stores
 
-import app.ehrenamtskarte.backend.auth.service.Authorizer
-import app.ehrenamtskarte.backend.shared.webservice.context
+import app.ehrenamtskarte.backend.db.entities.mayUpdateStoresInProject
 import app.ehrenamtskarte.backend.db.repositories.AcceptingStoresRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
@@ -10,6 +9,7 @@ import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotUniqu
 import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.graphql.stores.schema.types.CSVAcceptingStore
 import app.ehrenamtskarte.backend.graphql.stores.schema.types.StoreImportReturnResultModel
+import app.ehrenamtskarte.backend.shared.webservice.context
 import app.ehrenamtskarte.backend.stores.utils.mapCsvToStore
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
@@ -27,7 +27,7 @@ class AcceptingStoresMutationService {
         val authContext = dfe.graphQlContext.context.getAuthContext()
 
         return transaction {
-            if (!Authorizer.mayUpdateStoresInProject(authContext.admin, authContext.projectId)) {
+            if (!authContext.admin.mayUpdateStoresInProject(authContext.projectId)) {
                 throw ForbiddenException()
             }
 
