@@ -1,9 +1,6 @@
 package app.ehrenamtskarte.backend.db.repositories
 
-import app.ehrenamtskarte.backend.auth.PasswordValidationResult
-import app.ehrenamtskarte.backend.auth.PasswordValidator
 import app.ehrenamtskarte.backend.auth.database.PasswordCrypto
-import app.ehrenamtskarte.backend.shared.database.sortByKeys
 import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
 import app.ehrenamtskarte.backend.db.entities.Administrators
 import app.ehrenamtskarte.backend.db.entities.ProjectEntity
@@ -14,6 +11,7 @@ import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidRoleExc
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.graphql.auth.schema.types.NotificationSettings
 import app.ehrenamtskarte.backend.graphql.auth.schema.types.Role
+import app.ehrenamtskarte.backend.shared.database.sortByKeys
 import org.jetbrains.exposed.sql.LowerCase
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
@@ -62,7 +60,7 @@ object AdministratorsRepository {
         }
 
         val passwordHash = password?.let {
-            val passwordValidation = PasswordValidator.validatePassword(it)
+            val passwordValidation = validatePassword(it)
             if (passwordValidation != PasswordValidationResult.VALID) {
                 throw InvalidPasswordException()
             }
@@ -80,7 +78,7 @@ object AdministratorsRepository {
     }
 
     fun changePassword(administrator: AdministratorEntity, newPassword: String) {
-        val passwordValidationResult = PasswordValidator.validatePassword(newPassword)
+        val passwordValidationResult = validatePassword(newPassword)
         if (passwordValidationResult != PasswordValidationResult.VALID) {
             throw InvalidPasswordException()
         }
@@ -133,4 +131,41 @@ object AdministratorsRepository {
                 .let { AdministratorEntity.wrapRows(it) }
                 .toList()
         }
+}
+
+const val minPasswordLength = 12
+const val minLowercaseChars = 1
+const val minUppercaseChars = 1
+const val minNumericChars = 0
+const val minSpecialChars = 1
+
+enum class PasswordValidationResult {
+    VALID,
+    NOT_LONG_ENOUGH,
+    TOO_FEW_LOWERCASE_CHARS,
+    TOO_FEW_UPPERCASE_CHARS,
+    TOO_FEW_NUMERIC_CHARS,
+    TOO_FEW_SPECIAL_CHARS,
+}
+
+fun validatePassword(password: String): PasswordValidationResult {
+    if (password.length < minPasswordLength) {
+        return PasswordValidationResult.NOT_LONG_ENOUGH
+    }
+
+    val numLowercaseChars = password.count { it.category == CharCategory.LOWERCASE_LETTER }
+    val numUppercaseChars = password.count { it.category == CharCategory.UPPERCASE_LETTER }
+    val numNumericChars = password.count { it.category == CharCategory.DECIMAL_DIGIT_NUMBER }
+    val numSpecialChars = password.length - numLowercaseChars - numUppercaseChars - numNumericChars
+
+    if (numLowercaseChars < minLowercaseChars) {
+        return PasswordValidationResult.TOO_FEW_LOWERCASE_CHARS
+    } else if (numUppercaseChars < minUppercaseChars) {
+        return PasswordValidationResult.TOO_FEW_UPPERCASE_CHARS
+    } else if (numNumericChars < minNumericChars) {
+        return PasswordValidationResult.TOO_FEW_NUMERIC_CHARS
+    } else if (numSpecialChars < minSpecialChars) {
+        return PasswordValidationResult.TOO_FEW_SPECIAL_CHARS
+    }
+    return PasswordValidationResult.VALID
 }
