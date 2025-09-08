@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.common.webservice
+package app.ehrenamtskarte.backend.shared.webservice
 
 import com.expediagroup.graphql.generator.SchemaGeneratorConfig
 import com.expediagroup.graphql.generator.TopLevelObject

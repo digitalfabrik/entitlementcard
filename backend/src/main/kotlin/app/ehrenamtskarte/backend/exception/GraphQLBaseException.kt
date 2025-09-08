@@ -8,7 +8,7 @@ import graphql.language.SourceLocation
 
 /**
  * If an instance of this class is thrown inside the GraphQL endpoints and/or data fetching, it is converted to an
- * GraphQLError in [app.ehrenamtskarte.backend.common.webservice.CustomDataFetcherExceptionHandler].
+ * GraphQLError in [app.ehrenamtskarte.backend.shared.webservice.CustomDataFetcherExceptionHandler].
  * It is not logged as it's an "expected error".
  */
 open class GraphQLBaseException(

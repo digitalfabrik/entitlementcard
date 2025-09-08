@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.db.repositories
 
-import app.ehrenamtskarte.backend.common.database.sortByKeys
+import app.ehrenamtskarte.backend.shared.database.sortByKeys
 import app.ehrenamtskarte.backend.db.entities.FreinetAgencies
 import app.ehrenamtskarte.backend.db.entities.Projects
 import app.ehrenamtskarte.backend.db.entities.RegionEntity

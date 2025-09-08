@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.graphql.stores
 
-import app.ehrenamtskarte.backend.common.webservice.GraphQLParams
-import app.ehrenamtskarte.backend.common.webservice.createRegistryFromNamedDataLoaders
+import app.ehrenamtskarte.backend.shared.webservice.GraphQLParams
+import app.ehrenamtskarte.backend.shared.webservice.createRegistryFromNamedDataLoaders
 import app.ehrenamtskarte.backend.graphql.stores.dataloader.acceptingStoreLoader
 import app.ehrenamtskarte.backend.graphql.stores.dataloader.addressLoader
 import app.ehrenamtskarte.backend.graphql.stores.dataloader.categoryLoader

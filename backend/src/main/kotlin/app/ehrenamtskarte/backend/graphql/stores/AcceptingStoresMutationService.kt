@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.graphql.stores
 
 import app.ehrenamtskarte.backend.auth.service.Authorizer
-import app.ehrenamtskarte.backend.common.webservice.context
+import app.ehrenamtskarte.backend.shared.webservice.context
 import app.ehrenamtskarte.backend.db.repositories.AcceptingStoresRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException

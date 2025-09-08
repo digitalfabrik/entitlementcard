@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.common.utils
+package app.ehrenamtskarte.backend.shared.utils
 import org.slf4j.Logger
 
 fun isDevEnv(): Boolean = Environment.getVariable("APP_ENV") == "dev"
