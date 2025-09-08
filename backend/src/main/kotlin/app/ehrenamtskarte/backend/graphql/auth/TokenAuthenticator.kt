@@ -2,7 +2,7 @@ package app.ehrenamtskarte.backend.graphql.auth
 
 import app.ehrenamtskarte.backend.db.entities.ApiTokenEntity
 import app.ehrenamtskarte.backend.db.entities.ApiTokenType
-import app.ehrenamtskarte.backend.auth.database.PasswordCrypto
+import app.ehrenamtskarte.backend.shared.crypto.PasswordCrypto
 import app.ehrenamtskarte.backend.db.repositories.ApiTokensRepository
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException

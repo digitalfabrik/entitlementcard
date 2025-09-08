@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.auth.database
+package app.ehrenamtskarte.backend.shared.crypto
 
 import at.favre.lib.crypto.bcrypt.BCrypt
 import java.security.MessageDigest
