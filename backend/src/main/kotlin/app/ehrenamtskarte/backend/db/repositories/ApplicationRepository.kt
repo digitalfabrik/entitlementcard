@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.db.repositories
 
-import app.ehrenamtskarte.backend.common.database.sortByKeys
-import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
+import app.ehrenamtskarte.backend.shared.database.sortByKeys
+import app.ehrenamtskarte.backend.shared.webservice.GraphQLContext
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationExternalSource

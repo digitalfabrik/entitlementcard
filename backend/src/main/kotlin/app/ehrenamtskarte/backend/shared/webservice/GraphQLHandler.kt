@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.common.webservice
+package app.ehrenamtskarte.backend.shared.webservice
 
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException

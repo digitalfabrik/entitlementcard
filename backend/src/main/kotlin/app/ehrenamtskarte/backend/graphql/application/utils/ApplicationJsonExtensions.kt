@@ -1,8 +1,8 @@
 package app.ehrenamtskarte.backend.graphql.application.utils
 
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
-import app.ehrenamtskarte.backend.common.utils.findValueByName
-import app.ehrenamtskarte.backend.common.utils.findValueByPath
+import app.ehrenamtskarte.backend.shared.utils.findValueByName
+import app.ehrenamtskarte.backend.shared.utils.findValueByPath
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.ApplicationDataIncompleteException
 import com.fasterxml.jackson.databind.JsonNode
 

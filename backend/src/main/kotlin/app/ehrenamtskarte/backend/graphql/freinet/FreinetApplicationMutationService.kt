@@ -8,8 +8,8 @@ import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantLastName
 import app.ehrenamtskarte.backend.graphql.application.utils.getPersonalDataNode
 import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.auth.service.Authorizer
-import app.ehrenamtskarte.backend.common.utils.devWarn
-import app.ehrenamtskarte.backend.common.webservice.context
+import app.ehrenamtskarte.backend.shared.utils.devWarn
+import app.ehrenamtskarte.backend.shared.webservice.context
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
 import app.ehrenamtskarte.backend.exception.service.NotImplementedException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException

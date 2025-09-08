@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.common.database
+package app.ehrenamtskarte.backend.shared.database
 
 /***
  * Extending an iterable of values (this).

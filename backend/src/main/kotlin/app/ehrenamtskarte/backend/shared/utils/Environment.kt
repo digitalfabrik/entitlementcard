@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.common.utils
+package app.ehrenamtskarte.backend.shared.utils
 
 // This helper class was created to enable mocking getenv in Tests
 class Environment {

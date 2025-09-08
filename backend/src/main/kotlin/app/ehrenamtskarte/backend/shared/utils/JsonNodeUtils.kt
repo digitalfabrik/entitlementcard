@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.common.utils
+package app.ehrenamtskarte.backend.shared.utils
 
 import com.fasterxml.jackson.databind.JsonNode
 

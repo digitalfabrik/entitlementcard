@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.helper
 
-import app.ehrenamtskarte.backend.common.webservice.FREINET_DEMO_REGION_NAME
+import app.ehrenamtskarte.backend.shared.webservice.FREINET_DEMO_REGION_NAME
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.db.entities.FreinetAgencies
 import app.ehrenamtskarte.backend.db.entities.RegionEntity

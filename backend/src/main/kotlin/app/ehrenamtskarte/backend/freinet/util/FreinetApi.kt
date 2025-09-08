@@ -1,8 +1,8 @@
 package app.ehrenamtskarte.backend.freinet.util
 
-import app.ehrenamtskarte.backend.common.utils.devInfo
-import app.ehrenamtskarte.backend.common.utils.findValueByName
-import app.ehrenamtskarte.backend.common.utils.findValueByNameNode
+import app.ehrenamtskarte.backend.shared.utils.devInfo
+import app.ehrenamtskarte.backend.shared.utils.findValueByName
+import app.ehrenamtskarte.backend.shared.utils.findValueByNameNode
 import app.ehrenamtskarte.backend.graphql.freinet.schema.types.CARD_TYPE_GOLD
 import app.ehrenamtskarte.backend.graphql.freinet.schema.types.CARD_TYPE_STANDARD
 import app.ehrenamtskarte.backend.graphql.freinet.schema.types.FreinetAddress

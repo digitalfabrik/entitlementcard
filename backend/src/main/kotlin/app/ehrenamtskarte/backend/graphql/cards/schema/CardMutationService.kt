@@ -17,7 +17,7 @@ import app.ehrenamtskarte.backend.graphql.cards.schema.types.CardActivationResul
 import app.ehrenamtskarte.backend.graphql.cards.schema.types.CardCreationResultModel
 import app.ehrenamtskarte.backend.graphql.cards.schema.types.DynamicActivationCodeResult
 import app.ehrenamtskarte.backend.graphql.cards.schema.types.StaticVerificationCodeResult
-import app.ehrenamtskarte.backend.common.webservice.context
+import app.ehrenamtskarte.backend.shared.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCardHashException

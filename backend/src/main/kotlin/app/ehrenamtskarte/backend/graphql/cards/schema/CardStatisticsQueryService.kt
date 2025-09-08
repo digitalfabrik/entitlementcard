@@ -4,9 +4,9 @@ import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.db.repositories.CardRepository
 import app.ehrenamtskarte.backend.graphql.cards.schema.types.CardStatisticsResultModel
-import app.ehrenamtskarte.backend.common.utils.dateStringToEndOfDayInstant
-import app.ehrenamtskarte.backend.common.utils.dateStringToStartOfDayInstant
-import app.ehrenamtskarte.backend.common.webservice.context
+import app.ehrenamtskarte.backend.shared.utils.dateStringToEndOfDayInstant
+import app.ehrenamtskarte.backend.shared.utils.dateStringToStartOfDayInstant
+import app.ehrenamtskarte.backend.shared.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.db.entities.RegionEntity

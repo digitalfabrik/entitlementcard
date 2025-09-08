@@ -2,9 +2,9 @@ package app.ehrenamtskarte.backend.graphql.auth.schema
 
 import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.auth.service.Authorizer
-import app.ehrenamtskarte.backend.common.utils.Environment
-import app.ehrenamtskarte.backend.common.webservice.KOBLENZ_PEPPER_SYS_ENV
-import app.ehrenamtskarte.backend.common.webservice.context
+import app.ehrenamtskarte.backend.shared.utils.Environment
+import app.ehrenamtskarte.backend.shared.webservice.KOBLENZ_PEPPER_SYS_ENV
+import app.ehrenamtskarte.backend.shared.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.NotImplementedException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
