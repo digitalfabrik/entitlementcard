@@ -1,23 +1,19 @@
 package app.ehrenamtskarte.backend.graphql.cards.schema
 
 import Card
-import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
-import app.ehrenamtskarte.backend.graphql.getAuthContext
-import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.cards.Argon2IdHasher
 import app.ehrenamtskarte.backend.cards.PEPPER_LENGTH
-import app.ehrenamtskarte.backend.db.entities.CodeType
-import app.ehrenamtskarte.backend.db.repositories.CardRepository
 import app.ehrenamtskarte.backend.cards.hash
 import app.ehrenamtskarte.backend.cards.service.CardActivator
 import app.ehrenamtskarte.backend.cards.service.CardVerifier
-import app.ehrenamtskarte.backend.graphql.cards.QRCodeUtil
-import app.ehrenamtskarte.backend.graphql.cards.schema.types.ActivationState
-import app.ehrenamtskarte.backend.graphql.cards.schema.types.CardActivationResultModel
-import app.ehrenamtskarte.backend.graphql.cards.schema.types.CardCreationResultModel
-import app.ehrenamtskarte.backend.graphql.cards.schema.types.DynamicActivationCodeResult
-import app.ehrenamtskarte.backend.graphql.cards.schema.types.StaticVerificationCodeResult
-import app.ehrenamtskarte.backend.shared.webservice.context
+import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
+import app.ehrenamtskarte.backend.db.entities.CodeType
+import app.ehrenamtskarte.backend.db.entities.mayCreateCardInRegion
+import app.ehrenamtskarte.backend.db.entities.mayDeleteCardInRegion
+import app.ehrenamtskarte.backend.db.entities.maySendMailsInRegion
+import app.ehrenamtskarte.backend.db.repositories.CardRepository
+import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
+import app.ehrenamtskarte.backend.db.repositories.UserEntitlementsRepository
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidCardHashException
@@ -27,11 +23,17 @@ import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotActiv
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.UserEntitlementExpiredException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.UserEntitlementNotFoundException
+import app.ehrenamtskarte.backend.graphql.cards.QRCodeUtil
+import app.ehrenamtskarte.backend.graphql.cards.schema.types.ActivationState
+import app.ehrenamtskarte.backend.graphql.cards.schema.types.CardActivationResultModel
+import app.ehrenamtskarte.backend.graphql.cards.schema.types.CardCreationResultModel
+import app.ehrenamtskarte.backend.graphql.cards.schema.types.DynamicActivationCodeResult
+import app.ehrenamtskarte.backend.graphql.cards.schema.types.StaticVerificationCodeResult
+import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.mail.Mailer
 import app.ehrenamtskarte.backend.matomo.Matomo
-import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
+import app.ehrenamtskarte.backend.shared.webservice.context
 import app.ehrenamtskarte.backend.userdata.KoblenzUser
-import app.ehrenamtskarte.backend.db.repositories.UserEntitlementsRepository
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.google.protobuf.ByteString
 import com.google.protobuf.InvalidProtocolBufferException
@@ -259,11 +261,7 @@ class CardMutationService {
             encodedCardInfos.map { encodedCardInfo ->
                 val cardInfo = parseEncodedCardInfo(encodedCardInfo)
 
-                if (!Authorizer.mayCreateCardInRegion(
-                        authContext.admin,
-                        cardInfo.extensions.extensionRegion.regionId,
-                    )
-                ) {
+                if (!authContext.admin.mayCreateCardInRegion(cardInfo.extensions.extensionRegion.regionId)) {
                     throw ForbiddenException()
                 } else {
                     CardCreationResultModel(
@@ -392,7 +390,7 @@ class CardMutationService {
 
         val cardInfoHashList = cardInfoHashBase64List.map { it.decodeBase64Bytes() }
         transaction {
-            if (!Authorizer.mayDeleteCardInRegion(authContext.admin, regionId)) {
+            if (!authContext.admin.mayDeleteCardInRegion(regionId)) {
                 throw ForbiddenException()
             }
             CardRepository.deleteInactiveCardsByHash(regionId, cardInfoHashList)
@@ -420,7 +418,7 @@ class CardMutationService {
             if (region != null && !region.activatedForCardConfirmationMail) {
                 throw RegionNotActivatedForCardConfirmationMailException()
             }
-            if (!Authorizer.maySendMailsInRegion(authContext.admin, regionId)) {
+            if (!authContext.admin.maySendMailsInRegion(regionId)) {
                 throw ForbiddenException()
             }
             val backendConfig = dfe.graphQlContext.context.backendConfiguration

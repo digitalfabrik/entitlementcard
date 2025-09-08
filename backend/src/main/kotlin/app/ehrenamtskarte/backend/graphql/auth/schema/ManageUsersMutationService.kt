@@ -1,8 +1,9 @@
 package app.ehrenamtskarte.backend.graphql.auth.schema
 
-import app.ehrenamtskarte.backend.auth.service.Authorizer
-import app.ehrenamtskarte.backend.shared.webservice.context
 import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
+import app.ehrenamtskarte.backend.db.entities.mayCreateUser
+import app.ehrenamtskarte.backend.db.entities.mayDeleteUser
+import app.ehrenamtskarte.backend.db.entities.mayEditUser
 import app.ehrenamtskarte.backend.db.repositories.AdministratorsRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
@@ -12,6 +13,7 @@ import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFound
 import app.ehrenamtskarte.backend.graphql.auth.schema.types.Role
 import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.mail.Mailer
+import app.ehrenamtskarte.backend.shared.webservice.context
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -36,7 +38,7 @@ class ManageUsersMutationService {
                 RegionsRepository.findByIdInProject(authContext.project, it) ?: throw RegionNotFoundException()
             }
 
-            if (!Authorizer.mayCreateUser(authContext.admin, authContext.projectId, role, region)) {
+            if (!authContext.admin.mayCreateUser(authContext.projectId, role, region)) {
                 throw ForbiddenException()
             }
 
@@ -74,21 +76,11 @@ class ManageUsersMutationService {
             val adminToEdit = AdministratorEntity.findById(adminId) ?: throw UnauthorizedException()
             val newRegion = newRegionId?.let { RegionsRepository.findByIdInProject(authContext.project, it) }
 
-            if (!Authorizer.mayEditUser(
-                    authContext.admin,
-                    adminToEdit,
-                    authContext.projectId,
-                    newRole,
-                    newRegion,
-                )
-            ) {
+            if (!authContext.admin.mayEditUser(adminToEdit, authContext.projectId, newRole, newRegion)) {
                 throw ForbiddenException()
             }
 
-            if (
-                newEmail != adminToEdit.email &&
-                AdministratorsRepository.emailAlreadyExists(newEmail)
-            ) {
+            if (newEmail != adminToEdit.email && AdministratorsRepository.emailAlreadyExists(newEmail)) {
                 throw EmailAlreadyExistsException()
             }
 
@@ -106,7 +98,7 @@ class ManageUsersMutationService {
         transaction {
             val adminToDelete = AdministratorEntity.findById(adminId) ?: throw UnauthorizedException()
 
-            if (!Authorizer.mayDeleteUser(authContext.admin, adminToDelete)) {
+            if (!authContext.admin.mayDeleteUser(adminToDelete)) {
                 throw ForbiddenException()
             }
 

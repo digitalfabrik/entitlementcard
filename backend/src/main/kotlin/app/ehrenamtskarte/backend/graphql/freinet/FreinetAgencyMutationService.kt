@@ -1,14 +1,14 @@
 package app.ehrenamtskarte.backend.graphql.freinet
 
-import app.ehrenamtskarte.backend.graphql.getAuthContext
-import app.ehrenamtskarte.backend.auth.service.Authorizer
-import app.ehrenamtskarte.backend.shared.webservice.context
+import app.ehrenamtskarte.backend.db.entities.mayUpdateFreinetAgencyInformationInRegion
+import app.ehrenamtskarte.backend.db.repositories.FreinetAgencyRepository
+import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.NotImplementedException
-import app.ehrenamtskarte.backend.db.repositories.FreinetAgencyRepository
 import app.ehrenamtskarte.backend.freinet.exceptions.FreinetAgencyNotFoundException
 import app.ehrenamtskarte.backend.freinet.util.validateFreinetDataTransferPermission
-import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
+import app.ehrenamtskarte.backend.graphql.getAuthContext
+import app.ehrenamtskarte.backend.shared.webservice.context
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -30,7 +30,7 @@ class FreinetAgencyMutationService {
         }
 
         transaction {
-            if (!Authorizer.mayUpdateFreinetAgencyInformationInRegion(authContext.admin, regionId)) {
+            if (!authContext.admin.mayUpdateFreinetAgencyInformationInRegion(regionId)) {
                 throw ForbiddenException()
             }
             val region = RegionsRepository.findRegionById(regionId)

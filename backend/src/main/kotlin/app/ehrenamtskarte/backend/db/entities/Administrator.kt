@@ -1,6 +1,8 @@
 package app.ehrenamtskarte.backend.db.entities
 
 import app.ehrenamtskarte.backend.graphql.auth.schema.types.Role
+import app.ehrenamtskarte.backend.shared.webservice.EAK_BAYERN_PROJECT
+import app.ehrenamtskarte.backend.shared.webservice.KOBLENZ_PASS_PROJECT
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -10,6 +12,7 @@ import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.javatime.timestamp
 import org.jetbrains.exposed.sql.lowerCase
 import org.jetbrains.exposed.sql.or
+import org.jetbrains.exposed.sql.transactions.transaction
 
 object Administrators : IntIdTable() {
     val email = varchar("email", 254)
@@ -59,13 +62,127 @@ class AdministratorEntity(id: EntityID<Int>) : IntEntity(id) {
 
     val project by ProjectEntity referencedOn Administrators.projectId
 
+    fun hasRole(role: Role, vararg other: Role): Boolean =
+        this.role == role.db_value || other.any { this.role == it.db_value }
+
     fun isInProject(project: String): Boolean = this.project.project == project
 
     fun isInProject(projectId: Int): Boolean = this.projectId.value == projectId
 
-    fun hasRole(role: Role, vararg other: Role): Boolean =
-        this.role == role.db_value || other.any { this.role == it.db_value }
-
     fun isInRegion(regionId: Int): Boolean = this.regionId?.value == regionId
 }
 
+fun AdministratorEntity.mayCreateCardInRegion(regionId: Int): Boolean =
+    isInRegion(regionId) && hasRole(Role.REGION_MANAGER, Role.REGION_ADMIN)
+
+fun AdministratorEntity.mayDeleteCardInRegion(regionId: Int): Boolean =
+    isInRegion(regionId) && hasRole(Role.REGION_MANAGER, Role.REGION_ADMIN)
+
+fun AdministratorEntity.mayViewApplicationsInRegion(regionId: Int): Boolean =
+    isInRegion(regionId) && hasRole(Role.REGION_MANAGER, Role.REGION_ADMIN)
+
+fun AdministratorEntity.mayUpdateApplicationsInRegion(regionId: Int): Boolean =
+    isInRegion(regionId) && hasRole(Role.REGION_MANAGER, Role.REGION_ADMIN)
+
+fun AdministratorEntity.mayDeleteApplicationsInRegion(regionId: Int): Boolean =
+    isInRegion(regionId) && hasRole(Role.REGION_MANAGER, Role.REGION_ADMIN)
+
+fun AdministratorEntity.mayUpdateSettingsInRegion(regionId: Int): Boolean =
+    isInRegion(regionId) && hasRole(Role.REGION_ADMIN)
+
+fun AdministratorEntity.mayViewUsersInProject(projectId: Int): Boolean =
+    isInProject(projectId) && hasRole(Role.PROJECT_ADMIN)
+
+fun AdministratorEntity.mayViewUsersInRegion(region: RegionEntity): Boolean =
+    mayViewUsersInProject(region.projectId.value) ||
+        (hasRole(Role.REGION_ADMIN) && isInRegion(region.id.value))
+
+fun AdministratorEntity.maySendMailsInRegion(regionId: Int): Boolean =
+    isInRegion(regionId) && hasRole(Role.REGION_MANAGER, Role.REGION_ADMIN)
+
+fun AdministratorEntity.mayViewCardStatisticsInProject(projectId: Int): Boolean =
+    isInProject(projectId) && hasRole(Role.PROJECT_ADMIN)
+
+fun AdministratorEntity.mayViewCardStatisticsInRegion(regionId: Int): Boolean =
+    hasRole(Role.REGION_ADMIN) && isInRegion(regionId)
+
+fun AdministratorEntity.mayCreateUser(
+    newAdminProjectId: Int,
+    newAdminRole: Role,
+    newAdminRegion: RegionEntity?,
+): Boolean {
+    if (projectId.value != newAdminProjectId || newAdminRole == Role.NO_RIGHTS) {
+        return false
+    }
+    if (hasRole(Role.PROJECT_ADMIN)) {
+        if (newAdminRole == Role.EXTERNAL_VERIFIED_API_USER) {
+            return transaction { isInProject(EAK_BAYERN_PROJECT) }
+        }
+        return true
+    }
+    return hasRole(Role.REGION_ADMIN) &&
+        newAdminRegion != null &&
+        regionId == newAdminRegion.id &&
+        newAdminRole in setOf(Role.REGION_ADMIN, Role.REGION_MANAGER)
+}
+
+fun AdministratorEntity.mayEditUser(
+    existingAdmin: AdministratorEntity,
+    newAdminProjectId: Int,
+    newAdminRole: Role,
+    newAdminRegion: RegionEntity?,
+): Boolean {
+    if (!isInProject(newAdminProjectId) ||
+        !existingAdmin.isInProject(newAdminProjectId) ||
+        newAdminRole == Role.NO_RIGHTS
+    ) {
+        return false
+    }
+    if (hasRole(Role.PROJECT_ADMIN)) {
+        if (newAdminRole == Role.EXTERNAL_VERIFIED_API_USER) {
+            return transaction { isInProject(EAK_BAYERN_PROJECT) }
+        }
+        return true
+    }
+    return hasRole(Role.REGION_ADMIN) &&
+        existingAdmin.regionId == regionId &&
+        newAdminRegion != null &&
+        regionId == newAdminRegion.id &&
+        newAdminRole in setOf(Role.REGION_ADMIN, Role.REGION_MANAGER)
+}
+
+fun AdministratorEntity.mayDeleteUser(existingAdmin: AdministratorEntity): Boolean {
+    if (projectId != existingAdmin.projectId) {
+        return false
+    }
+    if (hasRole(Role.PROJECT_ADMIN)) {
+        return true
+    }
+    return hasRole(Role.REGION_ADMIN) && existingAdmin.regionId == regionId
+}
+
+fun AdministratorEntity.mayUpdateStoresInProject(projectId: Int): Boolean =
+    this.projectId.value == projectId && hasRole(Role.PROJECT_STORE_MANAGER)
+
+fun AdministratorEntity.mayViewFreinetAgencyInformationInRegion(regionId: Int): Boolean =
+    hasRole(Role.REGION_ADMIN) && isInRegion(regionId) && isInProject(EAK_BAYERN_PROJECT)
+
+fun AdministratorEntity.mayUpdateFreinetAgencyInformationInRegion(regionId: Int): Boolean =
+    hasRole(Role.REGION_ADMIN) && isInRegion(regionId) && isInProject(EAK_BAYERN_PROJECT)
+
+fun AdministratorEntity.mayAddApiTokensInProject(): Boolean =
+    transaction {
+        (hasRole(Role.PROJECT_ADMIN) && isInProject(KOBLENZ_PASS_PROJECT)) ||
+            (hasRole(Role.EXTERNAL_VERIFIED_API_USER) && isInProject(EAK_BAYERN_PROJECT))
+    }
+
+fun AdministratorEntity.mayViewApiMetadataInProject(): Boolean =
+    hasRole(Role.PROJECT_ADMIN) || hasRole(Role.EXTERNAL_VERIFIED_API_USER)
+
+fun AdministratorEntity.mayDeleteApiTokensInProject(): Boolean =
+    hasRole(Role.PROJECT_ADMIN) || hasRole(Role.EXTERNAL_VERIFIED_API_USER)
+
+fun AdministratorEntity.mayViewHashingPepper(): Boolean =
+    transaction {
+        isInProject(KOBLENZ_PASS_PROJECT) && hasRole(Role.PROJECT_ADMIN)
+    }

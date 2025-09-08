@@ -1,15 +1,16 @@
 package app.ehrenamtskarte.backend.graphql.cards.schema
 
-import app.ehrenamtskarte.backend.graphql.getAuthContext
-import app.ehrenamtskarte.backend.auth.service.Authorizer
+import app.ehrenamtskarte.backend.db.entities.RegionEntity
+import app.ehrenamtskarte.backend.db.entities.mayViewCardStatisticsInProject
+import app.ehrenamtskarte.backend.db.entities.mayViewCardStatisticsInRegion
 import app.ehrenamtskarte.backend.db.repositories.CardRepository
+import app.ehrenamtskarte.backend.exception.service.ForbiddenException
+import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.graphql.cards.schema.types.CardStatisticsResultModel
+import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.shared.utils.dateStringToEndOfDayInstant
 import app.ehrenamtskarte.backend.shared.utils.dateStringToStartOfDayInstant
 import app.ehrenamtskarte.backend.shared.webservice.context
-import app.ehrenamtskarte.backend.exception.service.ForbiddenException
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
-import app.ehrenamtskarte.backend.db.entities.RegionEntity
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -29,7 +30,7 @@ class CardStatisticsQueryService {
         return transaction {
             val projectId = authContext.projectId
 
-            if (!Authorizer.mayViewCardStatisticsInProject(authContext.admin, projectId)) {
+            if (!authContext.admin.mayViewCardStatisticsInProject(projectId)) {
                 throw ForbiddenException()
             }
 
@@ -56,7 +57,7 @@ class CardStatisticsQueryService {
         return transaction {
             val region = RegionEntity.findById(regionId) ?: throw RegionNotFoundException()
 
-            if (!Authorizer.mayViewCardStatisticsInRegion(authContext.admin, region.id.value)) {
+            if (!authContext.admin.mayViewCardStatisticsInRegion(region.id.value)) {
                 throw ForbiddenException()
             }
 

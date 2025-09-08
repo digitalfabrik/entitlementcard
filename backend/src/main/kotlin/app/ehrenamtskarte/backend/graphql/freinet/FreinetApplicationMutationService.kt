@@ -2,23 +2,23 @@ package app.ehrenamtskarte.backend.graphql.freinet
 
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity.Status
-import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantDateOfBirth
-import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantFirstName
-import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantLastName
-import app.ehrenamtskarte.backend.graphql.application.utils.getPersonalDataNode
-import app.ehrenamtskarte.backend.graphql.getAuthContext
-import app.ehrenamtskarte.backend.auth.service.Authorizer
-import app.ehrenamtskarte.backend.shared.utils.devWarn
-import app.ehrenamtskarte.backend.shared.webservice.context
+import app.ehrenamtskarte.backend.db.entities.mayViewApplicationsInRegion
+import app.ehrenamtskarte.backend.db.repositories.FreinetAgencyRepository
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
 import app.ehrenamtskarte.backend.exception.service.NotImplementedException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidInputException
-import app.ehrenamtskarte.backend.db.repositories.FreinetAgencyRepository
 import app.ehrenamtskarte.backend.freinet.exceptions.FreinetFoundMultiplePersonsException
 import app.ehrenamtskarte.backend.freinet.exceptions.FreinetPersonDataInvalidException
 import app.ehrenamtskarte.backend.freinet.util.FreinetApi
+import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantDateOfBirth
+import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantFirstName
+import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantLastName
+import app.ehrenamtskarte.backend.graphql.application.utils.getPersonalDataNode
 import app.ehrenamtskarte.backend.graphql.freinet.schema.types.FreinetCard
+import app.ehrenamtskarte.backend.graphql.getAuthContext
+import app.ehrenamtskarte.backend.shared.utils.devWarn
+import app.ehrenamtskarte.backend.shared.webservice.context
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -52,7 +52,7 @@ class FreinetApplicationMutationService {
 
             val regionId = application.regionId.value
 
-            if (!Authorizer.mayViewApplicationsInRegion(authContext.admin, regionId)) {
+            if (!authContext.admin.mayViewApplicationsInRegion(regionId)) {
                 throw UnauthorizedException()
             }
 

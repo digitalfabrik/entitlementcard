@@ -1,7 +1,6 @@
 package app.ehrenamtskarte.backend.graphql.application
 
-import app.ehrenamtskarte.backend.auth.service.Authorizer
-import app.ehrenamtskarte.backend.shared.webservice.context
+import app.ehrenamtskarte.backend.db.entities.mayViewApplicationsInRegion
 import app.ehrenamtskarte.backend.db.repositories.ApplicationRepository
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidLinkException
@@ -9,6 +8,7 @@ import app.ehrenamtskarte.backend.graphql.application.schema.view.ApplicationAdm
 import app.ehrenamtskarte.backend.graphql.application.schema.view.ApplicationPublicGql
 import app.ehrenamtskarte.backend.graphql.application.schema.view.ApplicationVerificationView
 import app.ehrenamtskarte.backend.graphql.getAuthContext
+import app.ehrenamtskarte.backend.shared.webservice.context
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -20,7 +20,7 @@ class EakApplicationQueryService {
         val admin = dfe.graphQlContext.context.getAuthContext().admin
 
         return transaction {
-            if (Authorizer.mayViewApplicationsInRegion(admin, regionId)) {
+            if (admin.mayViewApplicationsInRegion(regionId)) {
                 ApplicationRepository.getApplicationsByAdmin(regionId)
                     .map { ApplicationAdminGql.fromDbEntity(it) }
             } else {

@@ -1,10 +1,10 @@
 package app.ehrenamtskarte.backend.routes
 
-import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
 import app.ehrenamtskarte.backend.db.entities.ProjectEntity
 import app.ehrenamtskarte.backend.db.entities.Projects
+import app.ehrenamtskarte.backend.db.entities.mayViewApplicationsInRegion
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
@@ -45,7 +45,7 @@ class ApplicationAttachmentHandler(private val applicationData: File) {
             Pair(admin, application)
         }
 
-        if (!Authorizer.mayViewApplicationsInRegion(admin, application.regionId.value)) {
+        if (!admin.mayViewApplicationsInRegion(application.regionId.value)) {
             throw ForbiddenException()
         }
 
