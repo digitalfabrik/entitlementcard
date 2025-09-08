@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.graphql.stores.dataloader
 
 import app.ehrenamtskarte.backend.shared.database.sortByKeys
-import app.ehrenamtskarte.backend.shared.webservice.newNamedDataLoader
+import app.ehrenamtskarte.backend.graphql.shared.newNamedDataLoader
 import app.ehrenamtskarte.backend.db.entities.PhysicalStoreEntity
 import app.ehrenamtskarte.backend.db.entities.PhysicalStores
 import app.ehrenamtskarte.backend.graphql.stores.schema.types.Coordinates

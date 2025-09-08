@@ -9,7 +9,7 @@ import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotUniqu
 import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.graphql.stores.schema.types.CSVAcceptingStore
 import app.ehrenamtskarte.backend.graphql.stores.schema.types.StoreImportReturnResultModel
-import app.ehrenamtskarte.backend.shared.webservice.context
+import app.ehrenamtskarte.backend.graphql.shared.context
 import app.ehrenamtskarte.backend.stores.utils.mapCsvToStore
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment

@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.shared.webservice
+package app.ehrenamtskarte.backend.graphql.shared
 
 import app.ehrenamtskarte.backend.exception.GraphQLBaseException
 import graphql.ExceptionWhileDataFetching

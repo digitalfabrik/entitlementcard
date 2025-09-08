@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.shared.webservice
+package app.ehrenamtskarte.backend.graphql.shared
 
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
@@ -44,7 +44,7 @@ class GraphQLHandler(
         PostalCodesLoader.loadRegionIdentifierByPostalCodeMap(),
 ) {
     val config: SchemaGeneratorConfig = graphQLParams.config
-        .plus(SchemaGeneratorConfig(listOf("app.ehrenamtskarte.backend.common.webservice.schema")))
+        .plus(SchemaGeneratorConfig(listOf("app.ehrenamtskarte.backend.graphql.shared.schema")))
         .plus(ExceptionSchemaConfig)
 
     val graphQLSchema = toSchema(

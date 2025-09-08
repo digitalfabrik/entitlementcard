@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.freinet.util
 
-import app.ehrenamtskarte.backend.shared.webservice.FREINET_DEMO_REGION_NAME
+import app.ehrenamtskarte.backend.graphql.shared.FREINET_DEMO_REGION_NAME
 import app.ehrenamtskarte.backend.config.Environment
 import app.ehrenamtskarte.backend.freinet.exceptions.FreinetDataTransferNotPermittedException
 

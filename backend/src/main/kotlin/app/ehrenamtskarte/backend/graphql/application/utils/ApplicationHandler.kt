@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.graphql.application.utils
 
-import app.ehrenamtskarte.backend.shared.webservice.GraphQLContext
+import app.ehrenamtskarte.backend.graphql.shared.GraphQLContext
 import app.ehrenamtskarte.backend.db.entities.ApiTokenType
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity

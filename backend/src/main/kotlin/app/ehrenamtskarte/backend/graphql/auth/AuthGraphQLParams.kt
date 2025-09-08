@@ -1,7 +1,5 @@
 package app.ehrenamtskarte.backend.graphql.auth
 
-import app.ehrenamtskarte.backend.shared.webservice.GraphQLParams
-import app.ehrenamtskarte.backend.shared.webservice.createRegistryFromNamedDataLoaders
 import app.ehrenamtskarte.backend.graphql.auth.dataloader.administratorLoader
 import app.ehrenamtskarte.backend.graphql.auth.schema.ApiTokenQueryService
 import app.ehrenamtskarte.backend.graphql.auth.schema.ApiTokenService
@@ -14,6 +12,8 @@ import app.ehrenamtskarte.backend.graphql.auth.schema.ResetPasswordQueryService
 import app.ehrenamtskarte.backend.graphql.auth.schema.SignInMutationService
 import app.ehrenamtskarte.backend.graphql.auth.schema.ViewAdministratorsQueryService
 import app.ehrenamtskarte.backend.graphql.auth.schema.ViewPepperQueryService
+import app.ehrenamtskarte.backend.graphql.shared.GraphQLParams
+import app.ehrenamtskarte.backend.graphql.shared.createRegistryFromNamedDataLoaders
 import com.expediagroup.graphql.generator.SchemaGeneratorConfig
 import com.expediagroup.graphql.generator.TopLevelObject
 

@@ -14,8 +14,8 @@ import app.ehrenamtskarte.backend.graphql.auth.schema.ApiTokenQueryService
 import app.ehrenamtskarte.backend.graphql.auth.schema.ApiTokenService
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestData
-import app.ehrenamtskarte.backend.shared.webservice.GraphQLContext
-import app.ehrenamtskarte.backend.shared.webservice.context
+import app.ehrenamtskarte.backend.graphql.shared.GraphQLContext
+import app.ehrenamtskarte.backend.graphql.shared.context
 import graphql.schema.DataFetchingEnvironment
 import io.mockk.every
 import io.mockk.mockk

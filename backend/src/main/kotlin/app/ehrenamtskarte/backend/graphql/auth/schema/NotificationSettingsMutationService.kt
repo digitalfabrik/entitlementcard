@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.graphql.auth.schema
 
-import app.ehrenamtskarte.backend.shared.webservice.context
+import app.ehrenamtskarte.backend.graphql.shared.context
 import app.ehrenamtskarte.backend.db.repositories.AdministratorsRepository
 import app.ehrenamtskarte.backend.graphql.auth.schema.types.NotificationSettings
 import app.ehrenamtskarte.backend.graphql.getAuthContext

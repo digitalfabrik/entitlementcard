@@ -18,7 +18,7 @@ import app.ehrenamtskarte.backend.graphql.application.utils.getPersonalDataNode
 import app.ehrenamtskarte.backend.graphql.freinet.schema.types.FreinetCard
 import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.shared.utils.devWarn
-import app.ehrenamtskarte.backend.shared.webservice.context
+import app.ehrenamtskarte.backend.graphql.shared.context
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction

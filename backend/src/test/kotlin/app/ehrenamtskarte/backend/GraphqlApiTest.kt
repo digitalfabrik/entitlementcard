@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend
 
-import app.ehrenamtskarte.backend.shared.webservice.GraphQLHandler
+import app.ehrenamtskarte.backend.graphql.shared.GraphQLHandler
 import app.ehrenamtskarte.backend.helper.GraphqlResponse
 import com.expediagroup.graphql.client.types.GraphQLClientRequest
 import io.javalin.Javalin

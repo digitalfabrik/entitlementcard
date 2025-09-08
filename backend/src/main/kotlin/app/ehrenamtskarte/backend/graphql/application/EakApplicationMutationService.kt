@@ -22,7 +22,7 @@ import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantEmail
 import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantName
 import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.mail.Mailer
-import app.ehrenamtskarte.backend.shared.webservice.context
+import app.ehrenamtskarte.backend.graphql.shared.context
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.execution.DataFetcherResult
 import graphql.schema.DataFetchingEnvironment

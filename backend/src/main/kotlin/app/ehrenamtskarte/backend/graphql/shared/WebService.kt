@@ -1,13 +1,13 @@
-package app.ehrenamtskarte.backend.shared.webservice
+package app.ehrenamtskarte.backend.graphql.shared
 
 import app.ehrenamtskarte.backend.BuildConfig
-import app.ehrenamtskarte.backend.shared.utils.initializeSentry
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.Environment
 import app.ehrenamtskarte.backend.routes.ApplicationAttachmentHandler
 import app.ehrenamtskarte.backend.routes.HealthHandler
 import app.ehrenamtskarte.backend.routes.MapStyleHandler
 import app.ehrenamtskarte.backend.routes.UserImportHandler
+import app.ehrenamtskarte.backend.shared.utils.initializeSentry
 import io.javalin.Javalin
 import io.javalin.http.staticfiles.Location
 import java.io.File

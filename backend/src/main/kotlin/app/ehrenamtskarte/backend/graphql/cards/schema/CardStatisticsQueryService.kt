@@ -10,7 +10,7 @@ import app.ehrenamtskarte.backend.graphql.cards.schema.types.CardStatisticsResul
 import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.shared.utils.dateStringToEndOfDayInstant
 import app.ehrenamtskarte.backend.shared.utils.dateStringToStartOfDayInstant
-import app.ehrenamtskarte.backend.shared.webservice.context
+import app.ehrenamtskarte.backend.graphql.shared.context
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction

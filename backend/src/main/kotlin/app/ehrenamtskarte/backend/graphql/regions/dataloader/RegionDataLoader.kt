@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.graphql.regions.dataloader
 
-import app.ehrenamtskarte.backend.shared.webservice.newNamedDataLoader
+import app.ehrenamtskarte.backend.graphql.shared.newNamedDataLoader
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.graphql.regions.schema.types.Region
 import org.jetbrains.exposed.sql.transactions.transaction
