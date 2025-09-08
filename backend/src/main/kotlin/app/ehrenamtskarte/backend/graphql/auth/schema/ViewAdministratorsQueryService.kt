@@ -1,16 +1,17 @@
 package app.ehrenamtskarte.backend.graphql.auth.schema
 
-import app.ehrenamtskarte.backend.auth.service.Authorizer
-import app.ehrenamtskarte.backend.shared.webservice.context
 import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
 import app.ehrenamtskarte.backend.db.entities.Administrators
 import app.ehrenamtskarte.backend.db.entities.RegionEntity
 import app.ehrenamtskarte.backend.db.entities.Regions
+import app.ehrenamtskarte.backend.db.entities.mayViewUsersInProject
+import app.ehrenamtskarte.backend.db.entities.mayViewUsersInRegion
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.graphql.auth.schema.types.Administrator
 import app.ehrenamtskarte.backend.graphql.getAuthContext
+import app.ehrenamtskarte.backend.shared.webservice.context
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.SortOrder
@@ -42,7 +43,7 @@ class ViewAdministratorsQueryService {
         val authContext = context.getAuthContext()
 
         return transaction {
-            if (!Authorizer.mayViewUsersInProject(authContext.admin, authContext.projectId)) {
+            if (!authContext.admin.mayViewUsersInProject(authContext.projectId)) {
                 throw ForbiddenException()
             }
             val administrators = (Administrators leftJoin Regions)
@@ -63,7 +64,7 @@ class ViewAdministratorsQueryService {
 
         return transaction {
             val region = RegionEntity.findById(regionId) ?: throw RegionNotFoundException()
-            if (!Authorizer.mayViewUsersInRegion(admin, region)) {
+            if (!admin.mayViewUsersInRegion(region)) {
                 throw ForbiddenException()
             }
             val administrators = AdministratorEntity

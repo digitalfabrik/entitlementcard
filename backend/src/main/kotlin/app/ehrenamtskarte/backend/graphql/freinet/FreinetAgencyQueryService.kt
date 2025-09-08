@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.graphql.freinet
 
 import app.ehrenamtskarte.backend.graphql.getAuthContext
-import app.ehrenamtskarte.backend.auth.service.Authorizer
+import app.ehrenamtskarte.backend.db.entities.mayViewFreinetAgencyInformationInRegion
 import app.ehrenamtskarte.backend.shared.webservice.context
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.NotImplementedException
@@ -26,7 +26,7 @@ class FreinetAgencyQueryService {
                 throw NotImplementedException()
             }
 
-            if (!Authorizer.mayViewFreinetAgencyInformationInRegion(authContext.admin, regionId)) {
+            if (!authContext.admin.mayViewFreinetAgencyInformationInRegion(regionId)) {
                 throw ForbiddenException()
             }
 
