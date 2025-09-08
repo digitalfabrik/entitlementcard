@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.graphql.auth.schema
 
-import app.ehrenamtskarte.backend.auth.database.PasswordCrypto
+import app.ehrenamtskarte.backend.shared.crypto.PasswordCrypto
 import app.ehrenamtskarte.backend.auth.service.Authorizer
 import app.ehrenamtskarte.backend.shared.webservice.context
 import app.ehrenamtskarte.backend.db.entities.Administrators
