@@ -1,10 +1,10 @@
 package app.ehrenamtskarte.backend.graphql.regions
 
-import app.ehrenamtskarte.backend.shared.webservice.GraphQLParams
-import app.ehrenamtskarte.backend.shared.webservice.createRegistryFromNamedDataLoaders
 import app.ehrenamtskarte.backend.graphql.regions.dataloader.regionLoader
 import app.ehrenamtskarte.backend.graphql.regions.schema.RegionsMutationService
 import app.ehrenamtskarte.backend.graphql.regions.schema.RegionsQueryService
+import app.ehrenamtskarte.backend.graphql.shared.GraphQLParams
+import app.ehrenamtskarte.backend.graphql.shared.createRegistryFromNamedDataLoaders
 import com.expediagroup.graphql.generator.SchemaGeneratorConfig
 import com.expediagroup.graphql.generator.TopLevelObject
 

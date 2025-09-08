@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.graphql.stores.schema.types
 
-import app.ehrenamtskarte.backend.shared.webservice.fromEnvironment
+import app.ehrenamtskarte.backend.graphql.shared.fromEnvironment
 import app.ehrenamtskarte.backend.graphql.stores.dataloader.categoryLoader
 import app.ehrenamtskarte.backend.graphql.stores.dataloader.contactLoader
 import app.ehrenamtskarte.backend.graphql.stores.dataloader.physicalStoreByStoreIdLoader

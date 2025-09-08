@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.graphql.auth.schema.types
 
 import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
-import app.ehrenamtskarte.backend.shared.webservice.fromEnvironment
+import app.ehrenamtskarte.backend.graphql.shared.fromEnvironment
 import app.ehrenamtskarte.backend.graphql.regions.dataloader.regionLoader
 import app.ehrenamtskarte.backend.graphql.regions.schema.types.Region
 import graphql.schema.DataFetchingEnvironment

@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.graphql.application.schema.view
 
-import app.ehrenamtskarte.backend.shared.webservice.fromEnvironment
+import app.ehrenamtskarte.backend.graphql.shared.fromEnvironment
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
 import app.ehrenamtskarte.backend.graphql.application.dataloader.verificationsByApplicationLoader
 import com.expediagroup.graphql.generator.annotations.GraphQLName
