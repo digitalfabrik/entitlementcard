@@ -3,10 +3,10 @@ package app.ehrenamtskarte.backend.cards
 import app.ehrenamtskarte.backend.GraphqlApiTest
 import app.ehrenamtskarte.backend.db.entities.CardEntity
 import app.ehrenamtskarte.backend.db.entities.Cards
-import app.ehrenamtskarte.backend.cards.service.CardActivator
 import app.ehrenamtskarte.backend.generated.ActivateCard
 import app.ehrenamtskarte.backend.generated.activatecard.CardActivationResultModel
 import app.ehrenamtskarte.backend.generated.enums.ActivationState
+import app.ehrenamtskarte.backend.graphql.cards.schema.hashActivationSecret
 import app.ehrenamtskarte.backend.helper.SampleCards
 import app.ehrenamtskarte.backend.helper.SampleCards.hash
 import app.ehrenamtskarte.backend.helper.TestAdministrators
@@ -53,7 +53,7 @@ internal class ActivateCardTest : GraphqlApiTest() {
             val cardInfoHash = SampleCards.bavarianStandard().hash()
 
             val rawActivationSecret = Random.nextBytes(20)
-            val activationSecretHash = CardActivator.hashActivationSecret(rawActivationSecret)
+            val activationSecretHash = hashActivationSecret(rawActivationSecret)
 
             val cardId = TestData.createDynamicCard(
                 cardInfoHash,
@@ -133,7 +133,7 @@ internal class ActivateCardTest : GraphqlApiTest() {
             val cardInfoHash = SampleCards.bavarianStandard().hash()
 
             val rawActivationSecret = Random.nextBytes(20)
-            val activationSecretHash = CardActivator.hashActivationSecret(rawActivationSecret)
+            val activationSecretHash = hashActivationSecret(rawActivationSecret)
 
             val cardId = TestData.createDynamicCard(
                 cardInfoHash,
@@ -168,7 +168,7 @@ internal class ActivateCardTest : GraphqlApiTest() {
             val cardInfoHash = SampleCards.bavarianStandard().hash()
 
             val rawActivationSecret = Random.nextBytes(20)
-            val activationSecretHash = CardActivator.hashActivationSecret(rawActivationSecret)
+            val activationSecretHash = hashActivationSecret(rawActivationSecret)
 
             val cardId = TestData.createDynamicCard(
                 cardInfoHash,
@@ -204,7 +204,7 @@ internal class ActivateCardTest : GraphqlApiTest() {
             val cardInfoHash = SampleCards.bavarianStandard().hash()
 
             val rawActivationSecret = Random.nextBytes(20)
-            val activationSecretHash = CardActivator.hashActivationSecret(rawActivationSecret)
+            val activationSecretHash = hashActivationSecret(rawActivationSecret)
 
             val cardId = TestData.createDynamicCard(
                 cardInfoHash,
@@ -240,7 +240,7 @@ internal class ActivateCardTest : GraphqlApiTest() {
             val cardInfoHash = SampleCards.bavarianStandard().hash()
 
             val rawActivationSecret = Random.nextBytes(20)
-            val activationSecretHash = CardActivator.hashActivationSecret(rawActivationSecret)
+            val activationSecretHash = hashActivationSecret(rawActivationSecret)
 
             val firstActivationDate = LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC)
 
@@ -282,7 +282,7 @@ internal class ActivateCardTest : GraphqlApiTest() {
             val cardInfoHash = SampleCards.bavarianStandard().hash()
 
             val rawActivationSecret = Random.nextBytes(20)
-            val activationSecretHash = CardActivator.hashActivationSecret(rawActivationSecret)
+            val activationSecretHash = hashActivationSecret(rawActivationSecret)
 
             val firstActivationDate = LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC)
             val firstTotpSecret = Random.nextBytes(20)
