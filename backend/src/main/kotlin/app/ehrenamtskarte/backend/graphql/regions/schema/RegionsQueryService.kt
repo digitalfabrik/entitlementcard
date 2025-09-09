@@ -3,8 +3,8 @@ package app.ehrenamtskarte.backend.graphql.regions.schema
 import app.ehrenamtskarte.backend.db.entities.ProjectEntity
 import app.ehrenamtskarte.backend.db.entities.Projects
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
-import app.ehrenamtskarte.backend.exception.service.NotEakProjectException
-import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
+import app.ehrenamtskarte.backend.graphql.shared.exceptions.NotEakProjectException
+import app.ehrenamtskarte.backend.shared.exceptions.ProjectNotFoundException
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.graphql.regions.schema.types.Region
 import app.ehrenamtskarte.backend.graphql.shared.DEFAULT_PROJECT

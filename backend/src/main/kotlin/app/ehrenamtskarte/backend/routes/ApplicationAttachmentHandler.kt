@@ -6,10 +6,10 @@ import app.ehrenamtskarte.backend.db.entities.ProjectEntity
 import app.ehrenamtskarte.backend.db.entities.Projects
 import app.ehrenamtskarte.backend.db.entities.mayViewApplicationsInRegion
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
-import app.ehrenamtskarte.backend.exception.service.ForbiddenException
-import app.ehrenamtskarte.backend.exception.service.NotFoundException
-import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
-import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
+import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
+import app.ehrenamtskarte.backend.shared.exceptions.NotFoundException
+import app.ehrenamtskarte.backend.shared.exceptions.ProjectNotFoundException
+import app.ehrenamtskarte.backend.shared.exceptions.UnauthorizedException
 import app.ehrenamtskarte.backend.graphql.auth.JwtService
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.RegionNotFoundException
 import io.javalin.http.Context

@@ -10,8 +10,8 @@ import app.ehrenamtskarte.backend.db.entities.maySendMailsInRegion
 import app.ehrenamtskarte.backend.db.repositories.CardRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.db.repositories.UserEntitlementsRepository
-import app.ehrenamtskarte.backend.exception.service.ForbiddenException
-import app.ehrenamtskarte.backend.exception.service.NotFoundException
+import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
+import app.ehrenamtskarte.backend.shared.exceptions.NotFoundException
 import app.ehrenamtskarte.backend.graphql.cards.CardVerifier
 import app.ehrenamtskarte.backend.graphql.cards.KoblenzUser
 import app.ehrenamtskarte.backend.graphql.cards.PEPPER_LENGTH

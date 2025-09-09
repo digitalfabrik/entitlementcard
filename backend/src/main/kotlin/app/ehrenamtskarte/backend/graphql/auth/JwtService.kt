@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.graphql.auth
 
-import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
+import app.ehrenamtskarte.backend.shared.exceptions.UnauthorizedException
 import app.ehrenamtskarte.backend.graphql.auth.schema.types.Administrator
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm

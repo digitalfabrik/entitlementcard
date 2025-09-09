@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.exception.service
+package app.ehrenamtskarte.backend.shared.exceptions
 
 /**
  * will result in 401
