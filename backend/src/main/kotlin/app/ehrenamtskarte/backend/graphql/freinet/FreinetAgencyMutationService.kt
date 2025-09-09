@@ -6,7 +6,7 @@ import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.NotImplementedException
 import app.ehrenamtskarte.backend.graphql.freinet.exceptions.FreinetAgencyNotFoundException
-import app.ehrenamtskarte.backend.freinet.util.validateFreinetDataTransferPermission
+import app.ehrenamtskarte.backend.graphql.freinet.util.validateFreinetDataTransferPermission
 import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.graphql.shared.context
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription

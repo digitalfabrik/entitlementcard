@@ -5,7 +5,7 @@ import app.ehrenamtskarte.backend.config.Environment
 import app.ehrenamtskarte.backend.db.migration.assertDatabaseIsInSync
 import app.ehrenamtskarte.backend.db.repositories.AdministratorsRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
-import app.ehrenamtskarte.backend.freinet.util.FreinetAgenciesLoader
+import app.ehrenamtskarte.backend.graphql.freinet.util.FreinetAgenciesLoader
 import app.ehrenamtskarte.backend.graphql.auth.schema.types.Role
 import org.jetbrains.exposed.sql.Database.Companion.connect
 import app.ehrenamtskarte.backend.db.setup.insertOrUpdateProjects

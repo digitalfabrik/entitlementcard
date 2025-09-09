@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.freinet.util
+package app.ehrenamtskarte.backend.graphql.freinet.util
 
 import app.ehrenamtskarte.backend.shared.utils.devInfo
 import app.ehrenamtskarte.backend.shared.utils.findValueByName
