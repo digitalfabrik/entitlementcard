@@ -1,5 +1,7 @@
 package app.ehrenamtskarte.backend.cards
 
+import app.ehrenamtskarte.backend.graphql.cards.daysSinceEpochToDate
+import app.ehrenamtskarte.backend.graphql.cards.isOnOrBeforeToday
 import org.junit.jupiter.api.Test
 import java.time.Clock
 import java.time.LocalDateTime
@@ -23,50 +25,50 @@ internal class ValidityPeriodUtilTest {
         // On 1970-01-01 no card is valid. We exclude this day because it corresponds to day == 0.
 
         val clock = clockWithTime(1970, 1, 1, 0, 0)
-        assertFalse(ValidityPeriodUtil.isOnOrBeforeToday(ValidityPeriodUtil.daysSinceEpochToDate(0L), clock))
+        assertFalse(isOnOrBeforeToday(daysSinceEpochToDate(0L), clock))
     }
 
     @Test
     fun threeDaysAfterEpochWithLaterExpiration() {
         val clock = clockWithTime(1970, 1, 7, 0, 0)
-        assertFalse(ValidityPeriodUtil.isOnOrBeforeToday(ValidityPeriodUtil.daysSinceEpochToDate(5L), clock))
+        assertFalse(isOnOrBeforeToday(daysSinceEpochToDate(5L), clock))
     }
 
     @Test
     fun sameDays() {
         val clock = clockWithTime(1970, 1, 6, 0, 0)
-        assertTrue(ValidityPeriodUtil.isOnOrBeforeToday(ValidityPeriodUtil.daysSinceEpochToDate(5L), clock))
+        assertTrue(isOnOrBeforeToday(daysSinceEpochToDate(5L), clock))
     }
 
     @Test
     fun oneDayAfterEpochWithLaterExpiration() {
         val clock = clockWithTime(1970, 1, 2, 0, 0)
-        assertTrue(ValidityPeriodUtil.isOnOrBeforeToday(ValidityPeriodUtil.daysSinceEpochToDate(5L), clock))
+        assertTrue(isOnOrBeforeToday(daysSinceEpochToDate(5L), clock))
     }
 
     @Test
     fun twoDaysBeforeEpochWithLaterExpiration() {
         val clock = clockWithTime(1969, 12, 29, 0, 0)
-        assertTrue(ValidityPeriodUtil.isOnOrBeforeToday(ValidityPeriodUtil.daysSinceEpochToDate(1L), clock))
+        assertTrue(isOnOrBeforeToday(daysSinceEpochToDate(1L), clock))
     }
 
     @Test
     fun beforeMidnight() {
         val clock = clockWithTime(1970, 1, 6, 23, 30)
-        assertTrue(ValidityPeriodUtil.isOnOrBeforeToday(ValidityPeriodUtil.daysSinceEpochToDate(5L), clock))
+        assertTrue(isOnOrBeforeToday(daysSinceEpochToDate(5L), clock))
     }
 
     @Test
     fun afterMidnight() {
         val clock = clockWithTime(1970, 1, 7, 0, 30)
-        assertFalse(ValidityPeriodUtil.isOnOrBeforeToday(ValidityPeriodUtil.daysSinceEpochToDate(5L), clock))
+        assertFalse(isOnOrBeforeToday(daysSinceEpochToDate(5L), clock))
     }
 
     @Test
     fun randomDayIsConformantWithAdministrationFrontend() {
         // Values taken from administration frontend
         val clock = clockWithTime(2080, 12, 7, 15, 30)
-        assertTrue(ValidityPeriodUtil.isOnOrBeforeToday(ValidityPeriodUtil.daysSinceEpochToDate(40518), clock))
+        assertTrue(isOnOrBeforeToday(daysSinceEpochToDate(40518), clock))
     }
 
     @Test
@@ -74,7 +76,7 @@ internal class ValidityPeriodUtilTest {
         // 30304 was defined in DayUtilTest.kt
         // "2052, 12, 20" was calculated here and is copied to day.test.ts
         val clock = clockWithTime(2052, 12, 20, 0, 0)
-        assertTrue(ValidityPeriodUtil.isOnOrBeforeToday(ValidityPeriodUtil.daysSinceEpochToDate(30304), clock))
+        assertTrue(isOnOrBeforeToday(daysSinceEpochToDate(30304), clock))
     }
 
     @Test
