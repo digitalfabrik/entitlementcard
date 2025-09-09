@@ -12,7 +12,7 @@ import app.ehrenamtskarte.backend.exception.webservice.exceptions.EmailAlreadyEx
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.graphql.auth.schema.types.Role
 import app.ehrenamtskarte.backend.graphql.getAuthContext
-import app.ehrenamtskarte.backend.mail.Mailer
+import app.ehrenamtskarte.backend.shared.mail.Mailer
 import app.ehrenamtskarte.backend.graphql.shared.context
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment

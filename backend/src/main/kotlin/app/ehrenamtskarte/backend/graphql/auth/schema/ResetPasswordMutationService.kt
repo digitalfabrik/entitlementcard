@@ -8,7 +8,7 @@ import app.ehrenamtskarte.backend.graphql.shared.context
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidLinkException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.PasswordResetKeyExpiredException
-import app.ehrenamtskarte.backend.mail.Mailer
+import app.ehrenamtskarte.backend.shared.mail.Mailer
 import app.ehrenamtskarte.backend.db.entities.Projects
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
