@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.graphql.stores.schema.types
 
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidJsonException
+import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidJsonException
 
 data class CSVAcceptingStore(
     var name: String,

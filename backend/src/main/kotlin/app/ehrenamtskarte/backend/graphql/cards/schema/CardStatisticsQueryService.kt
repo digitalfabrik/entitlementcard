@@ -5,12 +5,12 @@ import app.ehrenamtskarte.backend.db.entities.mayViewCardStatisticsInProject
 import app.ehrenamtskarte.backend.db.entities.mayViewCardStatisticsInRegion
 import app.ehrenamtskarte.backend.db.repositories.CardRepository
 import app.ehrenamtskarte.backend.exception.service.ForbiddenException
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.graphql.cards.schema.types.CardStatisticsResultModel
+import app.ehrenamtskarte.backend.graphql.shared.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.graphql.getAuthContext
+import app.ehrenamtskarte.backend.graphql.shared.context
 import app.ehrenamtskarte.backend.shared.utils.dateStringToEndOfDayInstant
 import app.ehrenamtskarte.backend.shared.utils.dateStringToStartOfDayInstant
-import app.ehrenamtskarte.backend.graphql.shared.context
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction

@@ -1,16 +1,16 @@
 package app.ehrenamtskarte.backend.graphql.regions.schema
 
+import app.ehrenamtskarte.backend.db.entities.ProjectEntity
+import app.ehrenamtskarte.backend.db.entities.Projects
+import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
+import app.ehrenamtskarte.backend.exception.service.NotEakProjectException
+import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
+import app.ehrenamtskarte.backend.graphql.shared.exceptions.RegionNotFoundException
+import app.ehrenamtskarte.backend.graphql.regions.schema.types.Region
 import app.ehrenamtskarte.backend.graphql.shared.DEFAULT_PROJECT
 import app.ehrenamtskarte.backend.graphql.shared.EAK_BAYERN_PROJECT
 import app.ehrenamtskarte.backend.graphql.shared.context
 import app.ehrenamtskarte.backend.graphql.shared.schema.IdsParams
-import app.ehrenamtskarte.backend.exception.service.NotEakProjectException
-import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
-import app.ehrenamtskarte.backend.db.entities.ProjectEntity
-import app.ehrenamtskarte.backend.db.entities.Projects
-import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
-import app.ehrenamtskarte.backend.graphql.regions.schema.types.Region
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction

@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.graphql.auth.schema.types
 
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidRoleException
+import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidRoleException
 
 enum class Role(val db_value: String) {
     // A Project Admin has the right to (de)nominate Region Admins for each region in his project
