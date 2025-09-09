@@ -18,7 +18,7 @@ import app.ehrenamtskarte.backend.graphql.application.schema.create.ApplicationT
 import app.ehrenamtskarte.backend.graphql.application.schema.create.BavariaCardType
 import app.ehrenamtskarte.backend.graphql.application.schema.create.BlueCardEntitlementType
 import app.ehrenamtskarte.backend.graphql.auth.TokenAuthenticator
-import app.ehrenamtskarte.backend.mail.Mailer
+import app.ehrenamtskarte.backend.shared.mail.Mailer
 import graphql.execution.DataFetcherResult
 import io.javalin.http.BadRequestResponse
 import org.jetbrains.exposed.sql.transactions.transaction
