@@ -1,13 +1,15 @@
 package app.ehrenamtskarte.backend.stores.importer.common.steps
 
+import app.ehrenamtskarte.backend.db.entities.AcceptingStores
 import app.ehrenamtskarte.backend.db.entities.ProjectEntity
 import app.ehrenamtskarte.backend.db.entities.Projects
-import app.ehrenamtskarte.backend.db.entities.AcceptingStores
+import app.ehrenamtskarte.backend.db.entities.RegionEntity
 import app.ehrenamtskarte.backend.db.repositories.AcceptingStoresRepository
+import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
-import app.ehrenamtskarte.backend.stores.utils.getRegionFromAcceptingStore
+import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.Logger
@@ -67,4 +69,14 @@ class Store(config: ImportConfig, private val logger: Logger) :
             }
         }
     }
+}
+
+private fun getRegionFromAcceptingStore(projectId: EntityID<Int>, freinetId: Int?, districtName: String?): RegionEntity? {
+    if (freinetId != null) {
+        return RegionsRepository.findRegionByFreinetId(freinetId, projectId)
+    } else if (!districtName.isNullOrEmpty()) {
+        val split = districtName.split(" ", limit = 2)
+        return RegionsRepository.findRegionByNameAndPrefix(split[1], split[0], projectId)
+    }
+    return null
 }
