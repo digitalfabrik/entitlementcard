@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.freinet.util
+package app.ehrenamtskarte.backend.graphql.freinet.util
 
 import app.ehrenamtskarte.backend.graphql.shared.EAK_BAYERN_PROJECT
 import app.ehrenamtskarte.backend.config.ProjectConfig

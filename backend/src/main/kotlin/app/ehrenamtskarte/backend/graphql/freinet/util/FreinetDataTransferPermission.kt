@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.freinet.util
+package app.ehrenamtskarte.backend.graphql.freinet.util
 
 import app.ehrenamtskarte.backend.graphql.shared.FREINET_DEMO_REGION_NAME
 import app.ehrenamtskarte.backend.config.Environment
