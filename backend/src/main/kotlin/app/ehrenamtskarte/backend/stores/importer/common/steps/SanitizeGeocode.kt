@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.stores.importer.common.steps
 
 import app.ehrenamtskarte.backend.stores.STREET_EXCLUDE_PATTERN
-import app.ehrenamtskarte.backend.stores.geocoding.FeatureFetcher
+import app.ehrenamtskarte.backend.stores.importer.geocoding.FeatureFetcher
 import app.ehrenamtskarte.backend.stores.importer.ImportConfig
 import app.ehrenamtskarte.backend.stores.importer.PipelineStep
 import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
