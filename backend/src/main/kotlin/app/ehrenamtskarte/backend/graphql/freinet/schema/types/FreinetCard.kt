@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.graphql.freinet.schema.types
 
-import app.ehrenamtskarte.backend.freinet.exceptions.FreinetCardDataInvalidException
+import app.ehrenamtskarte.backend.graphql.freinet.exceptions.FreinetCardDataInvalidException
 
 const val CARD_TYPE_STANDARD = "Standard"
 const val CARD_TYPE_GOLD = "Goldkarte"
