@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.graphql.cards.schema
 
 import app.ehrenamtskarte.backend.db.entities.CodeType
-import app.ehrenamtskarte.backend.cards.service.CardVerifier
+import app.ehrenamtskarte.backend.graphql.cards.CardVerifier
 import app.ehrenamtskarte.backend.graphql.cards.schema.types.CardVerificationModel
 import app.ehrenamtskarte.backend.graphql.cards.schema.types.CardVerificationResultModel
 import app.ehrenamtskarte.backend.graphql.shared.context
