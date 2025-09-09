@@ -13,7 +13,6 @@ import app.ehrenamtskarte.backend.graphql.cards.cardsGraphQlParams
 import app.ehrenamtskarte.backend.graphql.freinet.freinetGraphQlParams
 import app.ehrenamtskarte.backend.graphql.regions.regionsGraphQlParams
 import app.ehrenamtskarte.backend.graphql.stores.storesGraphQlParams
-import app.ehrenamtskarte.backend.regions.utils.PostalCodesLoader
 import com.auth0.jwt.exceptions.AlgorithmMismatchException
 import com.auth0.jwt.exceptions.InvalidClaimException
 import com.auth0.jwt.exceptions.JWTDecodeException
@@ -30,8 +29,10 @@ import graphql.GraphQL
 import io.javalin.http.Context
 import io.javalin.http.util.MultipartUtil
 import jakarta.servlet.http.Part
+import org.apache.commons.csv.CSVFormat
 import java.io.File
 import java.io.IOException
+import java.io.InputStream
 import java.util.concurrent.ExecutionException
 
 class GraphQLHandler(
@@ -40,8 +41,7 @@ class GraphQLHandler(
         storesGraphQlParams stitch cardsGraphQlParams
             stitch applicationGraphQlParams stitch regionsGraphQlParams stitch authGraphQlParams stitch
             freinetGraphQlParams,
-    private val regionIdentifierByPostalCode: List<Pair<String, String>> =
-        PostalCodesLoader.loadRegionIdentifierByPostalCodeMap(),
+    private val regionIdentifierByPostalCode: List<Pair<String, String>> = loadRegionIdentifierByPostalCodeMap(),
 ) {
     val config: SchemaGeneratorConfig = graphQLParams.config
         .plus(SchemaGeneratorConfig(listOf("app.ehrenamtskarte.backend.graphql.shared.schema")))
@@ -200,5 +200,23 @@ class GraphQLHandler(
             e.printStackTrace()
             context.res().sendError(500)
         }
+    }
+}
+
+private fun loadRegionIdentifierByPostalCodeMap(): List<Pair<String, String>> {
+    try {
+        val csvInput: InputStream = ClassLoader.getSystemResourceAsStream("import/plz_ort_bayern.csv")!!
+        val records = CSVFormat.RFC4180.parse(csvInput.reader())
+        val postalCodes = mutableListOf<Pair<String, String>>()
+        records.forEachIndexed { index, record ->
+            val headline = index == 0
+            if (record[1].isNotEmpty() && !headline) {
+                postalCodes.add(record[1] to '0' + record[0].substring(0, 4))
+            }
+        }
+        // Since we shorten region codes we have to remove duplicate pairs
+        return postalCodes.toSet().toList()
+    } catch (e: Exception) {
+        throw Exception("Couldn't read CSV", e)
     }
 }
