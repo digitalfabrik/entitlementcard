@@ -5,13 +5,13 @@ import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
 import app.ehrenamtskarte.backend.exception.service.NotImplementedException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
-import app.ehrenamtskarte.backend.exception.webservice.ExceptionSchemaConfig
 import app.ehrenamtskarte.backend.graphql.application.applicationGraphQlParams
 import app.ehrenamtskarte.backend.graphql.auth.JwtService
 import app.ehrenamtskarte.backend.graphql.auth.authGraphQlParams
 import app.ehrenamtskarte.backend.graphql.cards.cardsGraphQlParams
 import app.ehrenamtskarte.backend.graphql.freinet.freinetGraphQlParams
 import app.ehrenamtskarte.backend.graphql.regions.regionsGraphQlParams
+import app.ehrenamtskarte.backend.graphql.shared.schema.GraphQLExceptionCode
 import app.ehrenamtskarte.backend.graphql.stores.storesGraphQlParams
 import com.auth0.jwt.exceptions.AlgorithmMismatchException
 import com.auth0.jwt.exceptions.InvalidClaimException
@@ -26,6 +26,10 @@ import graphql.ExceptionWhileDataFetching
 import graphql.ExecutionInput
 import graphql.ExecutionResult
 import graphql.GraphQL
+import graphql.schema.GraphQLEnumType
+import graphql.schema.GraphQLEnumType.newEnum
+import graphql.schema.GraphQLEnumValueDefinition
+import graphql.schema.GraphQLEnumValueDefinition.newEnumValueDefinition
 import io.javalin.http.Context
 import io.javalin.http.util.MultipartUtil
 import jakarta.servlet.http.Part
@@ -44,8 +48,24 @@ class GraphQLHandler(
     private val regionIdentifierByPostalCode: List<Pair<String, String>> = loadRegionIdentifierByPostalCodeMap(),
 ) {
     val config: SchemaGeneratorConfig = graphQLParams.config
-        .plus(SchemaGeneratorConfig(listOf("app.ehrenamtskarte.backend.graphql.shared.schema")))
-        .plus(ExceptionSchemaConfig)
+        .plus(
+            SchemaGeneratorConfig(
+                listOf("app.ehrenamtskarte.backend.graphql.shared.schema"),
+                additionalTypes = setOf<GraphQLEnumType>(
+                    newEnum()
+                        .name("GraphQLExceptionCode")
+                        .values(
+                            GraphQLExceptionCode.values().map<GraphQLExceptionCode, GraphQLEnumValueDefinition> {
+                                newEnumValueDefinition()
+                                    .name(it.name)
+                                    .value(it.name)
+                                    .build()
+                            },
+                        )
+                        .build(),
+                ),
+            ),
+        )
 
     val graphQLSchema = toSchema(
         config,
@@ -155,6 +175,7 @@ class GraphQLHandler(
                     regionIdentifierByPostalCode,
                     context.req(),
                 )
+
                 else -> throw e
             }
         }
