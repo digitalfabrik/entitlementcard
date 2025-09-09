@@ -1,4 +1,4 @@
-import { Button, Callout, Checkbox, Classes, Dialog } from '@blueprintjs/core'
+import { Button, Checkbox, Classes, Dialog } from '@blueprintjs/core'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -7,6 +7,7 @@ import { WhoAmIContext } from '../../WhoAmIProvider'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { Administrator, useDeleteAdministratorMutation } from '../../generated/graphql'
 import { useAppToaster } from '../AppToaster'
+import { Callout } from '../../shared/components/Callout'
 
 const DeleteUserDialog = ({
   selectedUser,
@@ -61,7 +62,7 @@ const DeleteUserDialog = ({
         <div className={Classes.DIALOG_BODY}>
           {t('deleteUserIrrevocableConfirmPrompt', { mail: selectedUser?.email })}
           {selectedUser?.id !== actingAdminId ? null : (
-            <Callout intent='danger' style={{ marginTop: '16px' }}>
+            <Callout color='error' sx={{ marginTop: 2 }}>
               <b>{t('deleteOwnAccountWarning')}</b> {t('deleteOwnAccountWarningExplanation')}
               <Checkbox required>{t('ownAccountWarningConfirmation')}</Checkbox>
             </Callout>
