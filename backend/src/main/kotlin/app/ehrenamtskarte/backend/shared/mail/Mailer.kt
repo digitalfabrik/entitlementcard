@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.mail
+package app.ehrenamtskarte.backend.shared.mail
 
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.ProjectConfig

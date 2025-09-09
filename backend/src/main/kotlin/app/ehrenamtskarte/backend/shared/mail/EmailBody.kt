@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.mail
+package app.ehrenamtskarte.backend.shared.mail
 
 import kotlinx.html.HtmlBlockInlineTag
 import kotlinx.html.HtmlBlockTag
