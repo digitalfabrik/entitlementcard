@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.exception
+package app.ehrenamtskarte.backend.graphql.shared.exceptions
 
 import app.ehrenamtskarte.backend.exception.webservice.schema.GraphQLExceptionCode
 import graphql.ErrorType
