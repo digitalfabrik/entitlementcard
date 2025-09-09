@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.matomo
+package app.ehrenamtskarte.backend.shared
 
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.MatomoConfig
@@ -12,7 +12,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.matomo.java.tracking.MatomoRequest
-import org.matomo.java.tracking.MatomoRequest.MatomoRequestBuilder
 import org.matomo.java.tracking.MatomoTracker
 import org.matomo.java.tracking.TrackerConfiguration
 import org.matomo.java.tracking.parameters.AcceptLanguage
@@ -41,7 +40,7 @@ object Matomo {
     private fun sendTrackingRequest(
         config: BackendConfiguration,
         matomoConfig: MatomoConfig,
-        requestBuilder: MatomoRequestBuilder,
+        requestBuilder: MatomoRequest.MatomoRequestBuilder,
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val siteId = matomoConfig.siteId
@@ -68,7 +67,7 @@ object Matomo {
     private fun sendBulkTrackingRequest(
         config: BackendConfiguration,
         matomoConfig: MatomoConfig,
-        requestBuilder: Iterable<MatomoRequestBuilder>,
+        requestBuilder: Iterable<MatomoRequest.MatomoRequestBuilder>,
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val siteId = matomoConfig.siteId
@@ -92,9 +91,9 @@ object Matomo {
     }
 
     private fun attachRequestInformation(
-        builder: MatomoRequestBuilder,
+        builder: MatomoRequest.MatomoRequestBuilder,
         request: HttpServletRequest,
-    ): MatomoRequestBuilder {
+    ): MatomoRequest.MatomoRequestBuilder {
         val userAgent = request.getHeader("User-Agent")
         val acceptLanguage = request.getHeader("Accept-Language")
         return builder
@@ -109,7 +108,7 @@ object Matomo {
         query: String,
         codeType: CodeType,
         numberOfCards: Int,
-    ): MatomoRequestBuilder =
+    ): MatomoRequest.MatomoRequestBuilder =
         MatomoRequest.request()
             .eventAction(query)
             .eventCategory(codeType.toString())

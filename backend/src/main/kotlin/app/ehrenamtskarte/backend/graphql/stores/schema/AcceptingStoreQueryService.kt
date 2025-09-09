@@ -8,7 +8,7 @@ import app.ehrenamtskarte.backend.db.repositories.PhysicalStoresRepository
 import app.ehrenamtskarte.backend.graphql.stores.schema.types.AcceptingStore
 import app.ehrenamtskarte.backend.graphql.stores.schema.types.Coordinates
 import app.ehrenamtskarte.backend.graphql.stores.schema.types.PhysicalStore
-import app.ehrenamtskarte.backend.matomo.Matomo
+import app.ehrenamtskarte.backend.shared.Matomo
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
