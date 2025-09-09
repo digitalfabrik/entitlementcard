@@ -5,7 +5,7 @@ import app.ehrenamtskarte.backend.graphql.cards.CardVerifier
 import app.ehrenamtskarte.backend.graphql.cards.schema.types.CardVerificationModel
 import app.ehrenamtskarte.backend.graphql.cards.schema.types.CardVerificationResultModel
 import app.ehrenamtskarte.backend.graphql.shared.context
-import app.ehrenamtskarte.backend.matomo.Matomo
+import app.ehrenamtskarte.backend.shared.Matomo
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import java.util.Base64
