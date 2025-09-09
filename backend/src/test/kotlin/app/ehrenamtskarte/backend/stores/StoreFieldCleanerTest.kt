@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.stores
 
-import app.ehrenamtskarte.backend.stores.utils.clean
+import app.ehrenamtskarte.backend.graphql.stores.clean
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
