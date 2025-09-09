@@ -10,7 +10,7 @@ import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.graphql.freinet.exceptions.FreinetFoundMultiplePersonsException
 import app.ehrenamtskarte.backend.graphql.freinet.exceptions.FreinetPersonDataInvalidException
-import app.ehrenamtskarte.backend.freinet.util.FreinetApi
+import app.ehrenamtskarte.backend.graphql.freinet.util.FreinetApi
 import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantDateOfBirth
 import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantFirstName
 import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantLastName
