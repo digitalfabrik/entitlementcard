@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.userdata.exception
+package app.ehrenamtskarte.backend.routes.exception
 
 class UserImportException : Exception {
     constructor(message: String) : super(message)
