@@ -33,7 +33,7 @@ import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.graphql.shared.context
 import app.ehrenamtskarte.backend.shared.mail.Mailer
 import app.ehrenamtskarte.backend.matomo.Matomo
-import app.ehrenamtskarte.backend.userdata.KoblenzUser
+import app.ehrenamtskarte.backend.graphql.cards.KoblenzUser
 import at.favre.lib.crypto.bcrypt.BCrypt
 import com.eatthepath.otp.TimeBasedOneTimePasswordGenerator
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
