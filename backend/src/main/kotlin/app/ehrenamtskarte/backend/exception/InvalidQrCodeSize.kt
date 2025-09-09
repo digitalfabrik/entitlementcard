@@ -1,7 +1,6 @@
-package app.ehrenamtskarte.backend.exception.webservice.exceptions
+package app.ehrenamtskarte.backend.graphql.shared.exceptions
 
 import app.ehrenamtskarte.backend.db.entities.CodeType
-import app.ehrenamtskarte.backend.exception.GraphQLBaseException
 import app.ehrenamtskarte.backend.exception.webservice.schema.GraphQLExceptionCode
 
 class InvalidQrCodeSize(encodedCardInfoBase64: String, codeType: CodeType) : GraphQLBaseException(

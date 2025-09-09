@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.graphql.application.schema.view
 
 import app.ehrenamtskarte.backend.graphql.application.schema.create.primitives.Attachment
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidJsonException
+import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidJsonException
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 
 enum class Type {

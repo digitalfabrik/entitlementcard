@@ -1,6 +1,5 @@
-package app.ehrenamtskarte.backend.exception.webservice.exceptions
+package app.ehrenamtskarte.backend.graphql.shared.exceptions
 
-import app.ehrenamtskarte.backend.exception.GraphQLBaseException
 import app.ehrenamtskarte.backend.exception.webservice.schema.GraphQLExceptionCode
 
 class RegionNotUniqueException : GraphQLBaseException(GraphQLExceptionCode.REGION_NOT_UNIQUE)
