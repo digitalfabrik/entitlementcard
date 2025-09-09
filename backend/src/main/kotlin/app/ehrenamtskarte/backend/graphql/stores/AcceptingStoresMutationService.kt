@@ -10,9 +10,9 @@ import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.graphql.shared.context
 import app.ehrenamtskarte.backend.graphql.stores.schema.types.CSVAcceptingStore
 import app.ehrenamtskarte.backend.graphql.stores.schema.types.StoreImportReturnResultModel
-import app.ehrenamtskarte.backend.stores.COUNTRY_CODE
-import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
-import app.ehrenamtskarte.backend.stores.importer.replaceNa
+import app.ehrenamtskarte.backend.import.COUNTRY_CODE
+import app.ehrenamtskarte.backend.import.stores.common.types.AcceptingStore
+import app.ehrenamtskarte.backend.import.stores.replaceNa
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.dao.id.EntityID

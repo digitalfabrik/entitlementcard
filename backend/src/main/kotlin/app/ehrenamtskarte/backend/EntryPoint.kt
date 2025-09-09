@@ -1,14 +1,14 @@
 package app.ehrenamtskarte.backend
 
-import app.ehrenamtskarte.backend.db.Database
-import app.ehrenamtskarte.backend.graphql.shared.GraphQLHandler
-import app.ehrenamtskarte.backend.graphql.shared.WebService
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.Environment
+import app.ehrenamtskarte.backend.db.Database
 import app.ehrenamtskarte.backend.db.entities.Migrations
 import app.ehrenamtskarte.backend.db.migration.MigrationUtils
-import app.ehrenamtskarte.backend.stores.importer.Importer
-import app.ehrenamtskarte.backend.stores.importer.toImportConfig
+import app.ehrenamtskarte.backend.graphql.shared.GraphQLHandler
+import app.ehrenamtskarte.backend.graphql.shared.WebService
+import app.ehrenamtskarte.backend.import.stores.Importer
+import app.ehrenamtskarte.backend.import.stores.toImportConfig
 import com.expediagroup.graphql.generator.extensions.print
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.Context
