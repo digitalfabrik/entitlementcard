@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.exception.webservice
 
-import app.ehrenamtskarte.backend.exception.webservice.schema.GraphQLExceptionCode
+import app.ehrenamtskarte.backend.graphql.shared.schema.GraphQLExceptionCode
 import com.expediagroup.graphql.generator.SchemaGeneratorConfig
 import graphql.schema.GraphQLEnumType
 import graphql.schema.GraphQLEnumValueDefinition
@@ -18,6 +18,6 @@ val codeEnumType = GraphQLEnumType.newEnum()
     .build()
 
 val ExceptionSchemaConfig = SchemaGeneratorConfig(
-    listOf("app.ehrenamtskarte.backend.exception.webservice.schema"),
+    listOf("app.ehrenamtskarte.backend.graphql.shared.schema"),
     additionalTypes = setOf(codeEnumType),
 )
