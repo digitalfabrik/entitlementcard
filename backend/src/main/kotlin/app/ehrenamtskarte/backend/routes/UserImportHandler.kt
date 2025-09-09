@@ -12,7 +12,7 @@ import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
 import app.ehrenamtskarte.backend.graphql.auth.TokenAuthenticator
-import app.ehrenamtskarte.backend.userdata.exception.UserImportException
+import app.ehrenamtskarte.backend.routes.exception.UserImportException
 import io.javalin.http.Context
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
