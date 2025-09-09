@@ -2,7 +2,7 @@ package app.ehrenamtskarte.backend.graphql.application.schema.create.primitives
 
 import app.ehrenamtskarte.backend.graphql.application.schema.view.JsonField
 import app.ehrenamtskarte.backend.graphql.application.schema.view.Type
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidJsonException
+import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidJsonException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 
 const val MAX_SHORT_TEXT_LENGTH = 300

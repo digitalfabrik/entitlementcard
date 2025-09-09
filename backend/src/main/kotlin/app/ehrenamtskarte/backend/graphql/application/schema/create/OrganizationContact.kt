@@ -1,11 +1,11 @@
 package app.ehrenamtskarte.backend.graphql.application.schema.create
 
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidJsonException
 import app.ehrenamtskarte.backend.graphql.application.schema.create.primitives.EmailInput
 import app.ehrenamtskarte.backend.graphql.application.schema.create.primitives.ShortTextInput
 import app.ehrenamtskarte.backend.graphql.application.schema.view.JsonField
 import app.ehrenamtskarte.backend.graphql.application.schema.view.Type
 import app.ehrenamtskarte.backend.graphql.application.utils.JsonFieldSerializable
+import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidJsonException
 
 data class OrganizationContact(
     val name: ShortTextInput,

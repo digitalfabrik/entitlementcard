@@ -1,6 +1,5 @@
 package app.ehrenamtskarte.backend.graphql.application.schema.create
 
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.InvalidJsonException
 import app.ehrenamtskarte.backend.graphql.application.schema.create.primitives.Attachment
 import app.ehrenamtskarte.backend.graphql.application.schema.create.primitives.DateInput
 import app.ehrenamtskarte.backend.graphql.application.schema.create.primitives.ShortTextInput
@@ -9,6 +8,7 @@ import app.ehrenamtskarte.backend.graphql.application.schema.view.Type
 import app.ehrenamtskarte.backend.graphql.application.utils.ApplicationVerificationsHolder
 import app.ehrenamtskarte.backend.graphql.application.utils.JsonFieldSerializable
 import app.ehrenamtskarte.backend.graphql.application.utils.onlySelectedIsPresent
+import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidJsonException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 
 enum class BlueCardEntitlementType {

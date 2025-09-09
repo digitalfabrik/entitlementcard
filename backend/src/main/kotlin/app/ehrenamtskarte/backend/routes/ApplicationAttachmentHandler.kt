@@ -10,8 +10,8 @@ import app.ehrenamtskarte.backend.exception.service.ForbiddenException
 import app.ehrenamtskarte.backend.exception.service.NotFoundException
 import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
 import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
-import app.ehrenamtskarte.backend.exception.webservice.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.graphql.auth.JwtService
+import app.ehrenamtskarte.backend.graphql.shared.exceptions.RegionNotFoundException
 import io.javalin.http.Context
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
