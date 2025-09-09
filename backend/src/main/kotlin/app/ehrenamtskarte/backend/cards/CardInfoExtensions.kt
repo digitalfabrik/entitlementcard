@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.cards
 
 import Card.CardInfo
+import app.ehrenamtskarte.backend.graphql.cards.CanonicalJson
 import io.ktor.util.moveToByteArray
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec

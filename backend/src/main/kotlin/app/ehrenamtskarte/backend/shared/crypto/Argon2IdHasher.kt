@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.shared.crypto
 
-import app.ehrenamtskarte.backend.cards.CanonicalJson
+import app.ehrenamtskarte.backend.graphql.cards.CanonicalJson
 import app.ehrenamtskarte.backend.graphql.cards.KoblenzUser
 import app.ehrenamtskarte.backend.graphql.shared.KOBLENZ_PEPPER_SYS_ENV
 import app.ehrenamtskarte.backend.shared.utils.Environment
