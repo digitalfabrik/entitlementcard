@@ -4,7 +4,7 @@ import Card
 import app.ehrenamtskarte.backend.cards.Argon2IdHasher
 import app.ehrenamtskarte.backend.cards.PEPPER_LENGTH
 import app.ehrenamtskarte.backend.cards.hash
-import app.ehrenamtskarte.backend.cards.service.CardVerifier
+import app.ehrenamtskarte.backend.graphql.cards.CardVerifier
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
 import app.ehrenamtskarte.backend.db.entities.CodeType
 import app.ehrenamtskarte.backend.db.entities.TOTP_SECRET_LENGTH
