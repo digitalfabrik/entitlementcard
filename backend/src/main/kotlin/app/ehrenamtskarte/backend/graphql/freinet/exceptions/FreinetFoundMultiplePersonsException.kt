@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.freinet.exceptions
+package app.ehrenamtskarte.backend.graphql.freinet.exceptions
 
 import app.ehrenamtskarte.backend.exception.GraphQLBaseException
 import app.ehrenamtskarte.backend.exception.webservice.schema.GraphQLExceptionCode
