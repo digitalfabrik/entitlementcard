@@ -2,7 +2,7 @@ package app.ehrenamtskarte.backend.stores
 
 import app.ehrenamtskarte.backend.graphql.stores.mapCsvToStore
 import app.ehrenamtskarte.backend.graphql.stores.schema.types.CSVAcceptingStore
-import app.ehrenamtskarte.backend.stores.importer.common.types.AcceptingStore
+import app.ehrenamtskarte.backend.import.stores.common.types.AcceptingStore
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 import kotlin.test.assertEquals
