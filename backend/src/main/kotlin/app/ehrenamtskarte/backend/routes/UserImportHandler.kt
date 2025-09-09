@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.routes
 
-import app.ehrenamtskarte.backend.cards.Argon2IdHasher
+import app.ehrenamtskarte.backend.shared.crypto.Argon2IdHasher
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.db.entities.ApiTokenType
 import app.ehrenamtskarte.backend.db.entities.ProjectEntity
