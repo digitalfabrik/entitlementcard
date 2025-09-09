@@ -1,5 +1,6 @@
+package app.ehrenamtskarte.backend.shared.exceptions
 
-package app.ehrenamtskarte.backend.exception.service
+import app.ehrenamtskarte.backend.shared.exceptions.NotFoundException
 
 class ProjectNotFoundException(projectId: String) : NotFoundException("Project $projectId not found") {
     init {

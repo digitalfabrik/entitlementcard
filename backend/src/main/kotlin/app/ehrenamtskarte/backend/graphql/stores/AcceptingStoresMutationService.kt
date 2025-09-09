@@ -3,7 +3,7 @@ package app.ehrenamtskarte.backend.graphql.stores
 import app.ehrenamtskarte.backend.db.entities.mayUpdateStoresInProject
 import app.ehrenamtskarte.backend.db.repositories.AcceptingStoresRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
-import app.ehrenamtskarte.backend.exception.service.ForbiddenException
+import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidJsonException
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.RegionNotUniqueException
 import app.ehrenamtskarte.backend.graphql.getAuthContext

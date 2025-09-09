@@ -2,7 +2,7 @@ package app.ehrenamtskarte.backend.graphql.freinet.util
 
 import app.ehrenamtskarte.backend.graphql.shared.EAK_BAYERN_PROJECT
 import app.ehrenamtskarte.backend.config.ProjectConfig
-import app.ehrenamtskarte.backend.exception.service.NotFoundException
+import app.ehrenamtskarte.backend.shared.exceptions.NotFoundException
 import app.ehrenamtskarte.backend.graphql.freinet.schema.types.FreinetApiAgency
 import app.ehrenamtskarte.backend.graphql.freinet.schema.types.XMLAgencies
 import com.fasterxml.jackson.databind.DeserializationFeature

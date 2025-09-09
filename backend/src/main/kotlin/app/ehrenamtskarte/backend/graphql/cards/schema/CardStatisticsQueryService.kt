@@ -4,7 +4,7 @@ import app.ehrenamtskarte.backend.db.entities.RegionEntity
 import app.ehrenamtskarte.backend.db.entities.mayViewCardStatisticsInProject
 import app.ehrenamtskarte.backend.db.entities.mayViewCardStatisticsInRegion
 import app.ehrenamtskarte.backend.db.repositories.CardRepository
-import app.ehrenamtskarte.backend.exception.service.ForbiddenException
+import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import app.ehrenamtskarte.backend.graphql.cards.schema.types.CardStatisticsResultModel
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.graphql.getAuthContext

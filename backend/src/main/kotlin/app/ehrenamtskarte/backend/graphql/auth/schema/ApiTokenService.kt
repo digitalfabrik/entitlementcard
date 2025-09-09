@@ -8,7 +8,7 @@ import app.ehrenamtskarte.backend.db.entities.mayAddApiTokensInProject
 import app.ehrenamtskarte.backend.db.entities.mayDeleteApiTokensInProject
 import app.ehrenamtskarte.backend.db.entities.mayViewApiMetadataInProject
 import app.ehrenamtskarte.backend.db.repositories.ApiTokensRepository
-import app.ehrenamtskarte.backend.exception.service.ForbiddenException
+import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import app.ehrenamtskarte.backend.graphql.auth.schema.types.ApiTokenMetaData
 import app.ehrenamtskarte.backend.graphql.auth.schema.types.Role
 import app.ehrenamtskarte.backend.graphql.getAuthContext

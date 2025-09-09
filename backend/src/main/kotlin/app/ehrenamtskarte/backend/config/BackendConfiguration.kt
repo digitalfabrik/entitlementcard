@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.config
 
-import app.ehrenamtskarte.backend.exception.service.ProjectNotFoundException
+import app.ehrenamtskarte.backend.shared.exceptions.ProjectNotFoundException
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
