@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.stores.geocoding
+package app.ehrenamtskarte.backend.stores.importer.geocoding
 
 import app.ehrenamtskarte.backend.stores.COUNTRY_CODE
 import app.ehrenamtskarte.backend.stores.STATE
