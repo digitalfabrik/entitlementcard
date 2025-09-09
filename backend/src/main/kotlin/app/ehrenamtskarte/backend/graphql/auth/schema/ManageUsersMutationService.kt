@@ -6,8 +6,8 @@ import app.ehrenamtskarte.backend.db.entities.mayDeleteUser
 import app.ehrenamtskarte.backend.db.entities.mayEditUser
 import app.ehrenamtskarte.backend.db.repositories.AdministratorsRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
-import app.ehrenamtskarte.backend.exception.service.ForbiddenException
-import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
+import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
+import app.ehrenamtskarte.backend.shared.exceptions.UnauthorizedException
 import app.ehrenamtskarte.backend.graphql.auth.schema.types.Role
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.EmailAlreadyExistsException
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.RegionNotFoundException

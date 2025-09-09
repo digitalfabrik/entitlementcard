@@ -4,7 +4,7 @@ import app.ehrenamtskarte.backend.db.entities.APPLICATION_CONFIRMATION_MAIL_NOTE
 import app.ehrenamtskarte.backend.db.entities.PRIVACY_POLICY_MAX_CHARS
 import app.ehrenamtskarte.backend.db.entities.mayUpdateSettingsInRegion
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
-import app.ehrenamtskarte.backend.exception.service.ForbiddenException
+import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidApplicationConfirmationNoteSizeException
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidDataPolicySizeException
 import app.ehrenamtskarte.backend.graphql.getAuthContext

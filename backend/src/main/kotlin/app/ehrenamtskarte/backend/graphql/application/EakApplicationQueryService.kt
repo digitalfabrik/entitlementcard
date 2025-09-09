@@ -2,7 +2,7 @@ package app.ehrenamtskarte.backend.graphql.application
 
 import app.ehrenamtskarte.backend.db.entities.mayViewApplicationsInRegion
 import app.ehrenamtskarte.backend.db.repositories.ApplicationRepository
-import app.ehrenamtskarte.backend.exception.service.ForbiddenException
+import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import app.ehrenamtskarte.backend.graphql.application.schema.view.ApplicationAdminGql
 import app.ehrenamtskarte.backend.graphql.application.schema.view.ApplicationPublicGql
 import app.ehrenamtskarte.backend.graphql.application.schema.view.ApplicationVerificationView

@@ -4,9 +4,9 @@ import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity.Status
 import app.ehrenamtskarte.backend.db.entities.mayViewApplicationsInRegion
 import app.ehrenamtskarte.backend.db.repositories.FreinetAgencyRepository
-import app.ehrenamtskarte.backend.exception.service.NotFoundException
-import app.ehrenamtskarte.backend.exception.service.NotImplementedException
-import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
+import app.ehrenamtskarte.backend.shared.exceptions.NotFoundException
+import app.ehrenamtskarte.backend.graphql.shared.exceptions.NotImplementedException
+import app.ehrenamtskarte.backend.shared.exceptions.UnauthorizedException
 import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantDateOfBirth
 import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantFirstName
 import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantLastName
