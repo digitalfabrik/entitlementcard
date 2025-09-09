@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.graphql.cards.schema
 
 import Card
-import app.ehrenamtskarte.backend.cards.Argon2IdHasher
+import app.ehrenamtskarte.backend.shared.crypto.Argon2IdHasher
 import app.ehrenamtskarte.backend.cards.PEPPER_LENGTH
 import app.ehrenamtskarte.backend.cards.hash
 import app.ehrenamtskarte.backend.graphql.cards.CardVerifier
