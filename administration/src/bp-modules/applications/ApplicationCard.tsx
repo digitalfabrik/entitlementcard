@@ -60,6 +60,7 @@ import { ApplicationStatusNote } from './components/ApplicationStatusNote'
 import { ApplicationIndicators } from './components/VerificationsIndicator'
 import type { Application } from './types'
 import { ApplicationToCsvError, exportApplicationToCsv } from './utils/exportApplicationToCsv'
+import { Callout } from '../../shared/components/Callout'
 
 const DeleteDialog = (props: {
   isOpen: boolean
@@ -372,13 +373,11 @@ const ApplicationCard = ({
 
       <AccordionDetails sx={{ position: 'relative' }}>
         <Stack sx={{ spacing: 2, alignItems: 'flex-start', gap: 2, marginLeft: 2, marginBottom: 2, marginRight: 2 }}>
-          {application.status === ApplicationStatus.Withdrawn && !!application.statusResolvedDate && (
-            <Box sx={{ bgcolor: theme.palette.warning.light, padding: 2 }}>
+          <Callout color="warning">
               {t('withdrawalMessage', { date: new Date(application.statusResolvedDate) })}
               <br />
               {t('deleteApplicationSoonPrompt')}
-            </Box>
-          )}
+          </Callout>
           {/* TODO: <JsonFieldView> does not emit a root element and thus, <Stack> would insert a gap here */}
           <Box>
             <JsonFieldView
