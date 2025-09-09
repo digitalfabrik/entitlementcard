@@ -2,6 +2,8 @@ package app.ehrenamtskarte.backend.cards
 
 import Card.CardInfo
 import io.ktor.util.moveToByteArray
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
 
 const val PEPPER_LENGTH = 16
 
@@ -11,5 +13,8 @@ fun CardInfo.hash(pepper: ByteArray): ByteArray {
     }
     val jsonString = CanonicalJson.serializeToString(this)
     val jsonByteArray = Charsets.UTF_8.encode(jsonString).moveToByteArray()
-    return Hmac.digest(jsonByteArray, pepper)
+
+    return Mac.getInstance("HmacSHA256")
+        .apply { init(SecretKeySpec(pepper, "HmacSHA256")) }
+        .doFinal(jsonByteArray)
 }
