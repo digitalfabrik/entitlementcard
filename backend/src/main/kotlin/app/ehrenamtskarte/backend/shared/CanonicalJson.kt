@@ -1,5 +1,6 @@
-package app.ehrenamtskarte.backend.graphql.cards
+package app.ehrenamtskarte.backend.shared
 
+import app.ehrenamtskarte.backend.graphql.cards.utils.KoblenzUser
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.protobuf.Descriptors
@@ -122,7 +123,7 @@ private fun GeneratedMessage.assertOnlyOptionalFields() {
                     Note that, 'optional' in proto3 only means explicit presence, i.e. it can be determined if a field marked
                     as optional is actually present in an instance of a proto. Using only fields with explicit presence
                     enables us to remove fields from the proto in the future.
-                        """.trimIndent(),
+                """.trimIndent(),
             )
         }
     }
