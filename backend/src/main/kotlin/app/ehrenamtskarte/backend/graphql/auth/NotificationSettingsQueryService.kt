@@ -1,7 +1,7 @@
-package app.ehrenamtskarte.backend.graphql.auth.schema
+package app.ehrenamtskarte.backend.graphql.auth
 
+import app.ehrenamtskarte.backend.graphql.auth.types.NotificationSettings
 import app.ehrenamtskarte.backend.graphql.context
-import app.ehrenamtskarte.backend.graphql.auth.schema.types.NotificationSettings
 import app.ehrenamtskarte.backend.graphql.getAuthContext
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment

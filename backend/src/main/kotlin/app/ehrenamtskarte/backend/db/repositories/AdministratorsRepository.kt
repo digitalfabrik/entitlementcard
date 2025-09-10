@@ -9,8 +9,8 @@ import app.ehrenamtskarte.backend.shared.exceptions.ProjectNotFoundException
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidPasswordException
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidRoleException
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.RegionNotFoundException
-import app.ehrenamtskarte.backend.graphql.auth.schema.types.NotificationSettings
-import app.ehrenamtskarte.backend.graphql.auth.schema.types.Role
+import app.ehrenamtskarte.backend.graphql.auth.types.NotificationSettings
+import app.ehrenamtskarte.backend.graphql.auth.types.Role
 import app.ehrenamtskarte.backend.shared.database.sortByKeys
 import org.jetbrains.exposed.sql.LowerCase
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq

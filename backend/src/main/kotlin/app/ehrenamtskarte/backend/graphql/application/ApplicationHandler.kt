@@ -11,7 +11,7 @@ import app.ehrenamtskarte.backend.graphql.application.types.Application
 import app.ehrenamtskarte.backend.graphql.application.types.ApplicationType
 import app.ehrenamtskarte.backend.graphql.application.types.BavariaCardType
 import app.ehrenamtskarte.backend.graphql.application.types.BlueCardEntitlementType
-import app.ehrenamtskarte.backend.graphql.auth.TokenAuthenticator
+import app.ehrenamtskarte.backend.graphql.shared.TokenAuthenticator
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidFileSizeException
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidFileTypeException
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidJsonException
@@ -129,7 +129,7 @@ class ApplicationHandler(
         val allAlreadyVerifiedWithToken = when {
             isAlreadyVerifiedList.all { it == false || it == null } -> false
             isAlreadyVerifiedList.all { it == true } -> {
-                TokenAuthenticator.TokenAuthenticator.authenticate(context.request, ApiTokenType.VERIFIED_APPLICATION)
+                TokenAuthenticator.authenticate(context.request, ApiTokenType.VERIFIED_APPLICATION)
                 true
             }
 

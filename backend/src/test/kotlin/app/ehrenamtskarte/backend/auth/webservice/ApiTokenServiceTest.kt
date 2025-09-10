@@ -10,8 +10,8 @@ import app.ehrenamtskarte.backend.db.entities.mayViewApiMetadataInProject
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import app.ehrenamtskarte.backend.shared.exceptions.UnauthorizedException
 import app.ehrenamtskarte.backend.graphql.auth.JwtPayload
-import app.ehrenamtskarte.backend.graphql.auth.schema.ApiTokenQueryService
-import app.ehrenamtskarte.backend.graphql.auth.schema.ApiTokenService
+import app.ehrenamtskarte.backend.graphql.auth.ApiTokenQueryService
+import app.ehrenamtskarte.backend.graphql.auth.ApiTokenService
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestData
 import app.ehrenamtskarte.backend.graphql.GraphQLContext

@@ -24,7 +24,7 @@ import app.ehrenamtskarte.backend.db.entities.mayViewFreinetAgencyInformationInR
 import app.ehrenamtskarte.backend.db.entities.mayViewHashingPepper
 import app.ehrenamtskarte.backend.db.entities.mayViewUsersInProject
 import app.ehrenamtskarte.backend.db.entities.mayViewUsersInRegion
-import app.ehrenamtskarte.backend.graphql.auth.schema.types.Role
+import app.ehrenamtskarte.backend.graphql.auth.types.Role
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.Test

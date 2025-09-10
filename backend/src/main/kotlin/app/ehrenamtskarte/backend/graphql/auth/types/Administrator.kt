@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.graphql.auth.schema.types
+package app.ehrenamtskarte.backend.graphql.auth.types
 
 import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
 import app.ehrenamtskarte.backend.graphql.fromEnvironment

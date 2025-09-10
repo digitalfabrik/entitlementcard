@@ -11,7 +11,7 @@ import app.ehrenamtskarte.backend.db.repositories.UserEntitlementsRepository
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import app.ehrenamtskarte.backend.shared.exceptions.ProjectNotFoundException
 import app.ehrenamtskarte.backend.shared.exceptions.UnauthorizedException
-import app.ehrenamtskarte.backend.graphql.auth.TokenAuthenticator
+import app.ehrenamtskarte.backend.graphql.shared.TokenAuthenticator
 import app.ehrenamtskarte.backend.routes.exception.UserImportException
 import io.javalin.http.Context
 import org.apache.commons.csv.CSVFormat
