@@ -1,14 +1,14 @@
-package app.ehrenamtskarte.backend.graphql.auth.schema
+package app.ehrenamtskarte.backend.graphql.auth
 
 import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
 import app.ehrenamtskarte.backend.db.entities.Administrators
 import app.ehrenamtskarte.backend.db.entities.Projects
 import app.ehrenamtskarte.backend.db.repositories.AdministratorsRepository
-import app.ehrenamtskarte.backend.shared.exceptions.ProjectNotFoundException
+import app.ehrenamtskarte.backend.graphql.context
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidLinkException
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.PasswordResetKeyExpiredException
-import app.ehrenamtskarte.backend.graphql.context
 import app.ehrenamtskarte.backend.shared.crypto.PasswordCrypto
+import app.ehrenamtskarte.backend.shared.exceptions.ProjectNotFoundException
 import app.ehrenamtskarte.backend.shared.mail.Mailer
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment

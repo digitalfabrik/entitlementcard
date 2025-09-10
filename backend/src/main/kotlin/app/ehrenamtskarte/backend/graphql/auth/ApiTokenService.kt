@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.graphql.auth.schema
+package app.ehrenamtskarte.backend.graphql.auth
 
 import app.ehrenamtskarte.backend.db.entities.Administrators
 import app.ehrenamtskarte.backend.db.entities.ApiTokenType
@@ -8,12 +8,12 @@ import app.ehrenamtskarte.backend.db.entities.mayAddApiTokensInProject
 import app.ehrenamtskarte.backend.db.entities.mayDeleteApiTokensInProject
 import app.ehrenamtskarte.backend.db.entities.mayViewApiMetadataInProject
 import app.ehrenamtskarte.backend.db.repositories.ApiTokensRepository
-import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
-import app.ehrenamtskarte.backend.graphql.auth.schema.types.ApiTokenMetaData
-import app.ehrenamtskarte.backend.graphql.auth.schema.types.Role
+import app.ehrenamtskarte.backend.graphql.auth.types.ApiTokenMetaData
+import app.ehrenamtskarte.backend.graphql.auth.types.Role
+import app.ehrenamtskarte.backend.graphql.context
 import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.shared.crypto.PasswordCrypto
-import app.ehrenamtskarte.backend.graphql.context
+import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.Op

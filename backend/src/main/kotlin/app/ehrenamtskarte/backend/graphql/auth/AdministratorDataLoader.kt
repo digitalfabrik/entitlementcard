@@ -1,9 +1,9 @@
-package app.ehrenamtskarte.backend.graphql.auth.dataloader
+package app.ehrenamtskarte.backend.graphql.auth
 
-import app.ehrenamtskarte.backend.graphql.newNamedDataLoader
 import app.ehrenamtskarte.backend.db.repositories.AdministratorsRepository
-import app.ehrenamtskarte.backend.graphql.auth.schema.types.Administrator
-import app.ehrenamtskarte.backend.graphql.auth.schema.types.Role
+import app.ehrenamtskarte.backend.graphql.auth.types.Administrator
+import app.ehrenamtskarte.backend.graphql.auth.types.Role
+import app.ehrenamtskarte.backend.graphql.newNamedDataLoader
 import org.jetbrains.exposed.sql.transactions.transaction
 
 val administratorLoader = newNamedDataLoader("ADMINISTRATOR_LOADER") { ids ->

@@ -1,17 +1,5 @@
 package app.ehrenamtskarte.backend.graphql.auth
 
-import app.ehrenamtskarte.backend.graphql.auth.dataloader.administratorLoader
-import app.ehrenamtskarte.backend.graphql.auth.schema.ApiTokenQueryService
-import app.ehrenamtskarte.backend.graphql.auth.schema.ApiTokenService
-import app.ehrenamtskarte.backend.graphql.auth.schema.ChangePasswordMutationService
-import app.ehrenamtskarte.backend.graphql.auth.schema.ManageUsersMutationService
-import app.ehrenamtskarte.backend.graphql.auth.schema.NotificationSettingsMutationService
-import app.ehrenamtskarte.backend.graphql.auth.schema.NotificationSettingsQueryService
-import app.ehrenamtskarte.backend.graphql.auth.schema.ResetPasswordMutationService
-import app.ehrenamtskarte.backend.graphql.auth.schema.ResetPasswordQueryService
-import app.ehrenamtskarte.backend.graphql.auth.schema.SignInMutationService
-import app.ehrenamtskarte.backend.graphql.auth.schema.ViewAdministratorsQueryService
-import app.ehrenamtskarte.backend.graphql.auth.schema.ViewPepperQueryService
 import app.ehrenamtskarte.backend.graphql.GraphQLParams
 import app.ehrenamtskarte.backend.graphql.createRegistryFromNamedDataLoaders
 import com.expediagroup.graphql.generator.SchemaGeneratorConfig
@@ -19,7 +7,7 @@ import com.expediagroup.graphql.generator.TopLevelObject
 
 val authGraphQlParams = GraphQLParams(
     config = SchemaGeneratorConfig(
-        supportedPackages = listOf("app.ehrenamtskarte.backend.graphql.auth.schema"),
+        supportedPackages = listOf("app.ehrenamtskarte.backend.graphql.auth.types"),
     ),
     dataLoaderRegistry = createRegistryFromNamedDataLoaders(administratorLoader),
     mutations = listOf(

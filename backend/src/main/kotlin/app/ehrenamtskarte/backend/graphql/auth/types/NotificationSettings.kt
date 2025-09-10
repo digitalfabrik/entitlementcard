@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.graphql.auth.schema.types
+package app.ehrenamtskarte.backend.graphql.auth.types
 
 data class NotificationSettings(
     val notificationOnApplication: Boolean,
