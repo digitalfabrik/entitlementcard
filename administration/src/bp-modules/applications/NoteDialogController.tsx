@@ -22,7 +22,7 @@ const NoteDialogController = ({
   isOpen,
   onOpenNoteDialog,
   onChange,
-}: NoteDialogControllerProps): ReactElement | null => {
+}: NoteDialogControllerProps): ReactElement => {
   const appToaster = useAppToaster()
   const { t } = useTranslation('applicationsOverview')
   const [updateApplicationNote, { loading }] = useUpdateApplicationNoteMutation({
