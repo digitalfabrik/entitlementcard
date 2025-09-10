@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.graphql.application.schema.view
+package app.ehrenamtskarte.backend.graphql.application.types
 
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
 

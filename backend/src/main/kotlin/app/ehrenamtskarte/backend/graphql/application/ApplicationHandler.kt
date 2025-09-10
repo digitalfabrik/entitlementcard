@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.graphql.application.utils
+package app.ehrenamtskarte.backend.graphql.application
 
 import app.ehrenamtskarte.backend.db.entities.ApiTokenType
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
@@ -6,10 +6,11 @@ import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationExternalSource
 import app.ehrenamtskarte.backend.db.repositories.ApplicationRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
-import app.ehrenamtskarte.backend.graphql.application.schema.create.Application
-import app.ehrenamtskarte.backend.graphql.application.schema.create.ApplicationType
-import app.ehrenamtskarte.backend.graphql.application.schema.create.BavariaCardType
-import app.ehrenamtskarte.backend.graphql.application.schema.create.BlueCardEntitlementType
+import app.ehrenamtskarte.backend.graphql.GraphQLContext
+import app.ehrenamtskarte.backend.graphql.application.types.Application
+import app.ehrenamtskarte.backend.graphql.application.types.ApplicationType
+import app.ehrenamtskarte.backend.graphql.application.types.BavariaCardType
+import app.ehrenamtskarte.backend.graphql.application.types.BlueCardEntitlementType
 import app.ehrenamtskarte.backend.graphql.auth.TokenAuthenticator
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidFileSizeException
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidFileTypeException
@@ -17,7 +18,6 @@ import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidJsonException
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.MailNotSentException
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.RegionNotActivatedForApplicationException
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.RegionNotFoundException
-import app.ehrenamtskarte.backend.graphql.GraphQLContext
 import app.ehrenamtskarte.backend.shared.mail.Mailer
 import graphql.execution.DataFetcherResult
 import io.javalin.http.BadRequestResponse
@@ -129,7 +129,7 @@ class ApplicationHandler(
         val allAlreadyVerifiedWithToken = when {
             isAlreadyVerifiedList.all { it == false || it == null } -> false
             isAlreadyVerifiedList.all { it == true } -> {
-                TokenAuthenticator.authenticate(context.request, ApiTokenType.VERIFIED_APPLICATION)
+                TokenAuthenticator.TokenAuthenticator.authenticate(context.request, ApiTokenType.VERIFIED_APPLICATION)
                 true
             }
 

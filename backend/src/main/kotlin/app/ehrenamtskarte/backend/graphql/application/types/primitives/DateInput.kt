@@ -1,7 +1,7 @@
-package app.ehrenamtskarte.backend.graphql.application.schema.create.primitives
+package app.ehrenamtskarte.backend.graphql.application.types.primitives
 
-import app.ehrenamtskarte.backend.graphql.application.schema.view.JsonField
-import app.ehrenamtskarte.backend.graphql.application.schema.view.Type
+import app.ehrenamtskarte.backend.graphql.application.types.JsonField
+import app.ehrenamtskarte.backend.graphql.application.types.Type
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidJsonException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import java.time.LocalDate

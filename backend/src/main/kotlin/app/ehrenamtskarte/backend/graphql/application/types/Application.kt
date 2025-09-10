@@ -1,9 +1,5 @@
-package app.ehrenamtskarte.backend.graphql.application.schema.create
+package app.ehrenamtskarte.backend.graphql.application.types
 
-import app.ehrenamtskarte.backend.graphql.application.schema.view.JsonField
-import app.ehrenamtskarte.backend.graphql.application.schema.view.Type
-import app.ehrenamtskarte.backend.graphql.application.utils.ApplicationVerificationsHolder
-import app.ehrenamtskarte.backend.graphql.application.utils.JsonFieldSerializable
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 
 enum class ApplicationType {

@@ -1,9 +1,6 @@
-package app.ehrenamtskarte.backend.graphql.application.schema.create
+package app.ehrenamtskarte.backend.graphql.application.types
 
-import app.ehrenamtskarte.backend.graphql.application.schema.create.primitives.ShortTextInput
-import app.ehrenamtskarte.backend.graphql.application.schema.view.JsonField
-import app.ehrenamtskarte.backend.graphql.application.schema.view.Type
-import app.ehrenamtskarte.backend.graphql.application.utils.JsonFieldSerializable
+import app.ehrenamtskarte.backend.graphql.application.types.primitives.ShortTextInput
 
 data class Address(
     val street: ShortTextInput,
