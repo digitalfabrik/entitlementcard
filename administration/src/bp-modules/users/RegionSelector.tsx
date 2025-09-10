@@ -1,13 +1,12 @@
-import { Button, Menu } from '@blueprintjs/core'
-import { Classes, ItemListRenderer, ItemRenderer, Select } from '@blueprintjs/select'
+import { Menu } from '@blueprintjs/core'
+import { ItemListRenderer, ItemRenderer, Select } from '@blueprintjs/select'
+import { Button } from '@mui/material'
 import React, { ReactElement, useContext, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Region, useGetRegionsQuery } from '../../generated/graphql'
 import getQueryResult from '../../mui-modules/util/getQueryResult'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-
-const RegionSelect = Select.ofType<Region>()
 
 const getTitle = (region: Region) => `${region.prefix} ${region.name}`
 
@@ -22,12 +21,11 @@ const renderMenu: ItemListRenderer<Region> = ({ itemsParentRef, renderItem, filt
 
 const itemRenderer: ItemRenderer<Region> = (region, { handleClick, modifiers }) => (
   <Button
-    style={{ display: 'block' }}
-    fill
     key={region.id}
-    minimal
+    size='small'
+    variant='text'
+    sx={{ margin: 1 }}
     onClick={handleClick}
-    active={modifiers.active}
     disabled={modifiers.disabled}>
     {getTitle(region)}
   </Button>
@@ -61,7 +59,7 @@ const RegionSelector = ({
 
   const activeItem = regions.find((other: Region) => selectedId === other.id)
   return (
-    <RegionSelect
+    <Select<Region>
       activeItem={activeItem}
       items={regions}
       itemRenderer={itemRenderer}
@@ -83,15 +81,11 @@ const RegionSelector = ({
             {activeItem ? getTitle(activeItem) : t('select')}
           </option>
         </select>
-        <Button
-          className={Classes.SELECT_POPOVER}
-          style={{ justifyContent: 'space-between', padding: '0 10px' }}
-          fill
-          rightIcon='double-caret-vertical'>
+        <Button sx={{ justifyContent: 'space-between', padding: '0 10px' }}>
           {activeItem ? getTitle(activeItem) : t('select')}
         </Button>
       </div>
-    </RegionSelect>
+    </Select>
   )
 }
 

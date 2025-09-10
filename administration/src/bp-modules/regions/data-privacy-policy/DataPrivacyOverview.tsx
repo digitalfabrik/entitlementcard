@@ -1,4 +1,6 @@
-import { Button, H3, TextArea, Tooltip } from '@blueprintjs/core'
+import { H3, TextArea, Tooltip } from '@blueprintjs/core'
+import { ArrowBack, SaveAlt } from '@mui/icons-material'
+import { Button } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -78,16 +80,18 @@ const DataPrivacyOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProp
         </CharCounter>
       </Content>
       <ButtonBar>
-        <Button icon='arrow-left' text={t('back')} onClick={() => navigate(-1)} />
-        <Tooltip disabled={!maxCharsExceeded} content={errorMessage}>
+        <Button startIcon={<ArrowBack />} onClick={() => navigate(-1)}>
+          {t('back')}
+        </Button>
+        <Tooltip content={maxCharsExceeded ? errorMessage : undefined}>
           <Button
             disabled={maxCharsExceeded}
-            icon='floppy-disk'
-            text={t('save')}
-            intent='success'
+            startIcon={<SaveAlt />}
+            color='primary'
             onClick={onSave}
-            loading={loading}
-          />
+            loading={loading}>
+            {t('save')}
+          </Button>
         </Tooltip>
       </ButtonBar>
     </>

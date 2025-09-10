@@ -1,4 +1,6 @@
-import { Button, Callout, Checkbox, Classes, Dialog } from '@blueprintjs/core'
+import { Callout, Checkbox, Classes, Dialog } from '@blueprintjs/core'
+import { PersonRemove } from '@mui/icons-material'
+import { Button } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -69,7 +71,9 @@ const DeleteUserDialog = ({
         </div>
         <div className={Classes.DIALOG_FOOTER}>
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button type='submit' intent='danger' text={t('deleteUser')} icon='trash' loading={loading} />
+            <Button type='submit' color='error' startIcon={<PersonRemove />} loading={loading}>
+              {t('deleteUser')}
+            </Button>
           </div>
         </div>
       </form>

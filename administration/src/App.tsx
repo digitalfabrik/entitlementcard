@@ -18,17 +18,17 @@ if (!process.env.REACT_APP_API_BASE_URL) {
 
 const App = (): ReactElement => (
   <ProjectConfigProvider projectConfig={getProjectConfig(window.location.hostname)}>
-    <AppToasterProvider>
-      <AuthProvider>
-        <AppApolloProvider>
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
+      <AppToasterProvider>
+        <AuthProvider>
+          <AppApolloProvider>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
               <Router />
-            </ThemeProvider>
-          </LocalizationProvider>
-        </AppApolloProvider>
-      </AuthProvider>
-    </AppToasterProvider>
+            </LocalizationProvider>
+          </AppApolloProvider>
+        </AuthProvider>
+      </AppToasterProvider>
+    </ThemeProvider>
   </ProjectConfigProvider>
 )
 

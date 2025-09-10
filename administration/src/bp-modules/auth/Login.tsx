@@ -45,7 +45,7 @@ const Login = ({ onSignIn }: { onSignIn: (payload: SignInPayload) => void }): Re
           password={state.password}
           email={state.email}
           setEmail={email => setState({ ...state, email })}
-          setPassword={password => setState({ ...state, password })}
+          setPassword={password => setState({ ...state, password: password ?? '' })}
           onSubmit={onSubmit}
           loading={mutationState.loading}
         />

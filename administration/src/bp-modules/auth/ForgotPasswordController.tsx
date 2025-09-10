@@ -1,4 +1,5 @@
-import { Button, Card, Classes, FormGroup, H2, H3, H4, InputGroup } from '@blueprintjs/core'
+import { Card, Classes, FormGroup, H2, H3, H4, InputGroup } from '@blueprintjs/core'
+import { Button } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
@@ -46,7 +47,9 @@ const ForgotPasswordController = (): ReactElement => {
             <p>{t('resetPasswordSuceessMessage', { email })}</p>
             <p>{t('checkSpamHint')}</p>
             <p>
-              <Link to='/'>{t('toLogin')}</Link>
+              <Link to='/'>
+                <Button variant='text'>{t('toLogin')}</Button>
+              </Link>
             </p>
           </>
         ) : (
@@ -68,14 +71,12 @@ const ForgotPasswordController = (): ReactElement => {
               <div
                 className={Classes.DIALOG_FOOTER_ACTIONS}
                 style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Link to='/'>{t('backToLogin')}</Link>
-                <Button
-                  type='submit'
-                  intent='primary'
-                  text={t('resetPassword')}
-                  loading={loading}
-                  disabled={email === ''}
-                />
+                <Link to='/'>
+                  <Button variant='text'>{t('backToLogin')}</Button>
+                </Link>
+                <Button type='submit' variant='contained' loading={loading} disabled={email === ''}>
+                  {t('resetPassword')}
+                </Button>
               </div>
             </form>
           </>

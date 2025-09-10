@@ -82,7 +82,7 @@ const AddCardsForm = ({
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Button startIcon={<AddCard />} color='default' variant='contained' onClick={addCard}>
+              <Button startIcon={<AddCard />} variant='contained' onClick={addCard}>
                 {t('addCard')}
               </Button>
             </Stack>

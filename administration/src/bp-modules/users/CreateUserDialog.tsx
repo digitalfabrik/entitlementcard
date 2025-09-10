@@ -1,4 +1,6 @@
-import { Button, Checkbox, Classes, Dialog, FormGroup, InputGroup } from '@blueprintjs/core'
+import { Checkbox, Classes, Dialog, FormGroup, InputGroup } from '@blueprintjs/core'
+import { PersonAdd } from '@mui/icons-material'
+import { Button } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -108,7 +110,9 @@ const CreateUserDialog = ({
         </div>
         <div className={Classes.DIALOG_FOOTER}>
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button type='submit' intent='success' text={t('addUser')} icon='add' loading={loading} />
+            <Button type='submit' startIcon={<PersonAdd />} loading={loading}>
+              {t('addUser')}
+            </Button>
           </div>
         </div>
       </form>

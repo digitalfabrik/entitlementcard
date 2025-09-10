@@ -1,4 +1,5 @@
-import { Button, Icon } from '@blueprintjs/core'
+import { Icon } from '@blueprintjs/core'
+import { Button } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'

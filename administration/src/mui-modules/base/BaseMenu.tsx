@@ -37,7 +37,6 @@ const BaseMenu = (props: BaseMenuProps): ReactElement => {
         aria-expanded={open ? 'true' : undefined}
         variant='contained'
         onClick={handleMenuOpen}
-        color='default'
         endIcon={open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
         sx={{
           justifyContent: 'space-between',
@@ -50,17 +49,14 @@ const BaseMenu = (props: BaseMenuProps): ReactElement => {
         anchorEl={anchorEl}
         sx={{ marginTop: 1 }}
         slotProps={{ list: { sx: { padding: 0 } } }}
-        color='default'
         open={open}
         onClose={handleMenuClose}>
         {props.menuItems.map(menuItem => (
-          <MenuItem
-            color='default'
-            key={menuItem.name}
-            onClick={() => handleMenuItemClick(menuItem.onClick)}
-            disableRipple>
+          <MenuItem key={menuItem.name} onClick={() => handleMenuItemClick(menuItem.onClick)} disableRipple>
             <ListItemIcon>{menuItem.icon}</ListItemIcon>
-            <ListItemText slotProps={{ primary: { typography: 'button' } }}>{menuItem.name}</ListItemText>
+            <ListItemText slotProps={{ primary: { typography: 'button', color: 'textSecondary' } }}>
+              {menuItem.name}
+            </ListItemText>
           </MenuItem>
         ))}
       </Menu>

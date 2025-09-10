@@ -1,4 +1,6 @@
-import { Button, H4, Popover } from '@blueprintjs/core'
+import { H4, Popover } from '@blueprintjs/core'
+import { Help } from '@mui/icons-material'
+import { IconButton } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -52,7 +54,9 @@ const RoleHelpButton = (): ReactElement => {
           </ul>
         </div>
       }>
-      <Button icon='help' minimal />
+      <IconButton size='small'>
+        <Help />
+      </IconButton>
     </Popover>
   )
 }

@@ -73,7 +73,7 @@ const SubForm = ({
             type='submit'
             variant='contained'
             disabled={formContext.disableAllInputs}
-            endIcon={loading ? <CircularProgress size={20} color='inherit' /> : <Send />}>
+            endIcon={loading ? <CircularProgress size={20} /> : <Send />}>
             {t('submitApplicationButton')}
           </Button>
         )}

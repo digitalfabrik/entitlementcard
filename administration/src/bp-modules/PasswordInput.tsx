@@ -1,41 +1,43 @@
-import { Button, InputGroup, InputGroupProps2, Label, Tooltip } from '@blueprintjs/core'
-import { TFunction } from 'i18next'
+/* eslint-disable react/destructuring-assignment */
+import { Visibility, VisibilityOff } from '@mui/icons-material'
+import { IconButton, InputAdornment, OutlinedInput, SxProps, Tooltip } from '@mui/material'
+import { Theme } from '@mui/system'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-const ShowPasswordButton = ({ hidden, onClick, t }: { hidden: boolean; onClick: () => void; t: TFunction }) => (
-  <Tooltip
-    content={hidden ? t('showPassword') : t('hidePassword')}
-    renderTarget={({ isOpen, ref, ...tooltipProps }) => (
-      <Button ref={ref} {...tooltipProps} minimal icon={hidden ? 'eye-open' : 'eye-off'} onClick={onClick} />
-    )}
-  />
-)
-
-const PasswordInput = ({
-  label,
-  setValue,
-  ...otherProps
-}: InputGroupProps2 & {
-  label: string
-  setValue: ((value: string) => void) | null
+const PasswordInput = (p: {
+  sx?: SxProps<Theme>
+  placeholder?: string
+  disabled?: boolean
+  value?: string
+  setValue?: (v: string | undefined) => void
 }): ReactElement => {
   const { t } = useTranslation('misc')
   const [passwordHidden, setPasswordHidden] = useState(true)
   return (
-    <Label>
-      {label}
-      <InputGroup
-        placeholder={label}
-        {...otherProps}
-        type={passwordHidden ? 'password' : 'text'}
-        onChange={event => setValue?.(event.currentTarget.value)}
-        readOnly={setValue === null}
-        rightElement={
-          <ShowPasswordButton hidden={passwordHidden} onClick={() => setPasswordHidden(!passwordHidden)} t={t} />
-        }
-      />
-    </Label>
+    <OutlinedInput
+      placeholder={p.placeholder}
+      type={passwordHidden ? 'password' : 'text'}
+      size='small'
+      disabled={p.disabled}
+      value={p.value}
+      sx={p.sx}
+      endAdornment={
+        <InputAdornment position='end'>
+          <Tooltip title={t(passwordHidden ? 'showPassword' : 'hidePassword')}>
+            <IconButton
+              aria-label={t(passwordHidden ? 'showPassword' : 'hidePassword')}
+              onClick={() => {
+                setPasswordHidden(!passwordHidden)
+              }}
+              edge='end'>
+              {passwordHidden ? <Visibility /> : <VisibilityOff />}
+            </IconButton>
+          </Tooltip>
+        </InputAdornment>
+      }
+      onChange={event => p.setValue?.(event.currentTarget.value)}
+    />
   )
 }
 
