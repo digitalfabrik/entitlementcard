@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.graphql.auth.schema
+package app.ehrenamtskarte.backend.graphql.auth
 
 import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
 import app.ehrenamtskarte.backend.db.entities.mayCreateUser
@@ -6,13 +6,13 @@ import app.ehrenamtskarte.backend.db.entities.mayDeleteUser
 import app.ehrenamtskarte.backend.db.entities.mayEditUser
 import app.ehrenamtskarte.backend.db.repositories.AdministratorsRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
-import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
-import app.ehrenamtskarte.backend.shared.exceptions.UnauthorizedException
-import app.ehrenamtskarte.backend.graphql.auth.schema.types.Role
+import app.ehrenamtskarte.backend.graphql.auth.types.Role
+import app.ehrenamtskarte.backend.graphql.context
+import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.EmailAlreadyExistsException
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.RegionNotFoundException
-import app.ehrenamtskarte.backend.graphql.getAuthContext
-import app.ehrenamtskarte.backend.graphql.context
+import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
+import app.ehrenamtskarte.backend.shared.exceptions.UnauthorizedException
 import app.ehrenamtskarte.backend.shared.mail.Mailer
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment

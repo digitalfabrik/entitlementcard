@@ -5,8 +5,8 @@ import app.ehrenamtskarte.backend.db.entities.Administrators
 import app.ehrenamtskarte.backend.db.entities.ProjectEntity
 import app.ehrenamtskarte.backend.db.repositories.AdministratorsRepository
 import app.ehrenamtskarte.backend.graphql.auth.JwtService
-import app.ehrenamtskarte.backend.graphql.auth.schema.types.Administrator
-import app.ehrenamtskarte.backend.graphql.auth.schema.types.Role
+import app.ehrenamtskarte.backend.graphql.auth.types.Administrator
+import app.ehrenamtskarte.backend.graphql.auth.types.Role
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.upsert
 

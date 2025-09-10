@@ -1,12 +1,11 @@
-package app.ehrenamtskarte.backend.graphql.auth.schema
+package app.ehrenamtskarte.backend.graphql.auth
 
 import app.ehrenamtskarte.backend.db.repositories.AdministratorsRepository
-import app.ehrenamtskarte.backend.graphql.auth.JwtService
-import app.ehrenamtskarte.backend.graphql.auth.schema.types.Administrator
-import app.ehrenamtskarte.backend.graphql.auth.schema.types.AuthData
-import app.ehrenamtskarte.backend.graphql.auth.schema.types.SignInPayload
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidCredentialsException
+import app.ehrenamtskarte.backend.graphql.auth.types.Administrator
+import app.ehrenamtskarte.backend.graphql.auth.types.AuthData
+import app.ehrenamtskarte.backend.graphql.auth.types.SignInPayload
 import app.ehrenamtskarte.backend.graphql.context
+import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidCredentialsException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction

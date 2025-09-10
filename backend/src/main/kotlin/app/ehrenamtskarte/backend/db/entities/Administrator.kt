@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.db.entities
 
-import app.ehrenamtskarte.backend.graphql.auth.schema.types.Role
+import app.ehrenamtskarte.backend.graphql.auth.types.Role
 import app.ehrenamtskarte.backend.graphql.shared.EAK_BAYERN_PROJECT
 import app.ehrenamtskarte.backend.graphql.shared.KOBLENZ_PASS_PROJECT
 import org.jetbrains.exposed.dao.IntEntity

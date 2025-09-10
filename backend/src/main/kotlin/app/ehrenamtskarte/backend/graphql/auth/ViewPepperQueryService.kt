@@ -1,12 +1,12 @@
-package app.ehrenamtskarte.backend.graphql.auth.schema
+package app.ehrenamtskarte.backend.graphql.auth
 
 import app.ehrenamtskarte.backend.db.entities.mayViewHashingPepper
-import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.NotImplementedException
-import app.ehrenamtskarte.backend.graphql.getAuthContext
-import app.ehrenamtskarte.backend.shared.utils.Environment
-import app.ehrenamtskarte.backend.graphql.shared.KOBLENZ_PEPPER_SYS_ENV
 import app.ehrenamtskarte.backend.graphql.context
+import app.ehrenamtskarte.backend.graphql.getAuthContext
+import app.ehrenamtskarte.backend.graphql.shared.KOBLENZ_PEPPER_SYS_ENV
+import app.ehrenamtskarte.backend.graphql.shared.exceptions.NotImplementedException
+import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
+import app.ehrenamtskarte.backend.shared.utils.Environment
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -22,7 +22,7 @@ class ViewPepperQueryService {
             if (!admin.mayViewHashingPepper()) {
                 throw ForbiddenException()
             }
-            Environment.getVariable(KOBLENZ_PEPPER_SYS_ENV)
+            Environment.Companion.getVariable(KOBLENZ_PEPPER_SYS_ENV)
                 ?: throw NotImplementedException("Koblenz pepper is not set properly in this environment")
         }
     }
