@@ -40,8 +40,7 @@ const CreateCardsButtonBar = ({
           startIcon={<UploadFile />}
           onClick={generateCardsPdf}
           disabled={!allCardsValid || cards.length === 0}
-          variant='contained'
-          size='small'>
+          variant='contained'>
           {t('printQRCodes')}
         </Button>
       </Tooltip>
@@ -55,8 +54,7 @@ const CreateCardsButtonBar = ({
             startIcon={<CsvIcon />}
             onClick={generateCardsCsv}
             disabled={!allCardsValid || cards.length === 0}
-            variant='contained'
-            size='small'>
+            color='primary'>
             {t('exportCsv')}
           </Button>
         </Tooltip>

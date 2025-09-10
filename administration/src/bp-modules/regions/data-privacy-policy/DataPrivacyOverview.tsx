@@ -87,11 +87,9 @@ const DataPrivacyOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProp
           <Button
             disabled={maxCharsExceeded}
             startIcon={<SaveAlt />}
-            variant='contained'
+            color='primary'
             onClick={onSave}
-            loading={loading}
-            size='small' // TODO The tooltip component somehow changes the default button size
-          >
+            loading={loading}>
             {t('save')}
           </Button>
         </Tooltip>

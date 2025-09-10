@@ -49,8 +49,7 @@ const StoresButtonBar = ({
         <div>
           <Button
             startIcon={<UploadFile />}
-            variant='contained'
-            size='small' // TODO The tooltip component somehow changes the default button size
+            color='primary'
             onClick={() => setImportDialogIsOpen(true)}
             disabled={hasNoAcceptingStores || hasInvalidStores}>
             {t('importStores')}
