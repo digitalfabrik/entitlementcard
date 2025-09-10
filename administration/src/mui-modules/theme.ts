@@ -41,17 +41,29 @@ export const theme = createTheme({
         color: 'inherit',
       },
       styleOverrides: {
-        root: {
-          variants: [
-            {
-              props: { variant: 'contained', color: 'primary' },
-              style: {
-                '&:hover': {
-                  color: '#ffffff',
-                },
-              },
-            },
-          ],
+        textInherit: {
+          color: '#5C6065',
+        },
+        outlinedInherit: {
+          borderColor: '#EEEEEE',
+          borderWidth: '2px',
+          color: '#5C6065',
+        },
+        containedInherit: {
+          backgroundColor: '#F6F7F9',
+          borderStyle: 'solid',
+          borderColor: '#EEEEEE',
+          borderWidth: '1px',
+          color: '#5C6065',
+          ':hover': {
+            backgroundColor: '#e9eaedff',
+          },
+        },
+        contained: {
+          boxShadow: '0 2px 2px #BBBBBB',
+          ':hover': {
+            boxShadow: '0 2px 2px #BBBBBB', // 0 2px 6px #BBBBBB',
+          },
         },
       },
     },
