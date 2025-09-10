@@ -17,16 +17,6 @@ export const theme = createTheme({
       primary: '#1c2127',
       disabled: '#898989',
     },
-    default: {
-      main: '#1c2127',
-      light: '#f0f0f0',
-      dark: '#dddddd',
-      contrastText: '#5C6065',
-    },
-    defaultInverted: {
-      main: '#1c2127',
-      contrastText: '#dddddd',
-    },
   },
   typography: {
     h4: {

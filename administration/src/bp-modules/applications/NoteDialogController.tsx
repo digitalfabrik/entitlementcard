@@ -48,8 +48,8 @@ const NoteDialogController = ({
     <>
       <ApplicationNoteTooltip application={application}>
         <Button
+          color={application.note ? 'primary' : 'inherit'}
           variant='contained'
-          color={application.note ? 'primary' : 'default'}
           onClick={() => onOpenNoteDialog(true)}
           startIcon={<EditNote />}>
           {application.note ? t('noteButtonShow') : t('noteButtonCreate')}

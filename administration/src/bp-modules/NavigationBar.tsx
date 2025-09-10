@@ -21,7 +21,7 @@ const PrintAwareNavbar = styled(Navbar)`
 `
 
 const MenuButton = (p: ButtonProps) => (
-  <Button variant='text' {...p} color='default'>
+  <Button variant='text' {...p}>
     {p.children}
   </Button>
 )
