@@ -34,7 +34,7 @@ const MenuContent = styled(Menu)`
 `
 
 const MenuButton = (p: ButtonProps): ReactElement => (
-  <Button sx={{ width: '100%', justifyContent: 'start' }} color='inherit' variant='text' {...p}>
+  <Button sx={{ width: '100%', justifyContent: 'start' }} variant='text' {...p}>
     {p.children}
   </Button>
 )
@@ -81,7 +81,7 @@ const UserMenu = ({ onSignOut }: UserMenuProps): ReactElement => {
   return (
     <>
       <Popover content={userMenuContent} placement='bottom' matchTargetWidth isOpen={isOpen} onInteraction={setIsOpen}>
-        <Button color='inherit' startIcon={<AccountCircle />} endIcon={isOpen ? <ArrowDropDown /> : <ArrowDropUp />}>
+        <Button startIcon={<AccountCircle />} endIcon={isOpen ? <ArrowDropDown /> : <ArrowDropUp />}>
           {email}
         </Button>
       </Popover>

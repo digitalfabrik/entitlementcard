@@ -47,6 +47,7 @@ export const theme = createTheme({
     MuiButton: {
       defaultProps: {
         variant: 'outlined',
+        color: 'inherit',
       },
       styleOverrides: {
         root: {
