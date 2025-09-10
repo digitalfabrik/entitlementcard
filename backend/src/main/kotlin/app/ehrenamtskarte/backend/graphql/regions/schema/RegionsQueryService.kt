@@ -9,7 +9,7 @@ import app.ehrenamtskarte.backend.graphql.shared.exceptions.RegionNotFoundExcept
 import app.ehrenamtskarte.backend.graphql.regions.schema.types.Region
 import app.ehrenamtskarte.backend.graphql.shared.DEFAULT_PROJECT
 import app.ehrenamtskarte.backend.graphql.shared.EAK_BAYERN_PROJECT
-import app.ehrenamtskarte.backend.graphql.shared.context
+import app.ehrenamtskarte.backend.graphql.context
 import app.ehrenamtskarte.backend.graphql.shared.schema.IdsParams
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment

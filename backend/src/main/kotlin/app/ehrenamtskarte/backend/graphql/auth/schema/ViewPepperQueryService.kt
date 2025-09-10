@@ -6,7 +6,7 @@ import app.ehrenamtskarte.backend.graphql.shared.exceptions.NotImplementedExcept
 import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.shared.utils.Environment
 import app.ehrenamtskarte.backend.graphql.shared.KOBLENZ_PEPPER_SYS_ENV
-import app.ehrenamtskarte.backend.graphql.shared.context
+import app.ehrenamtskarte.backend.graphql.context
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction

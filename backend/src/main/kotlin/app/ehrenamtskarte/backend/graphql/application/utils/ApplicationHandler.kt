@@ -17,7 +17,7 @@ import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidJsonException
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.MailNotSentException
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.RegionNotActivatedForApplicationException
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.RegionNotFoundException
-import app.ehrenamtskarte.backend.graphql.shared.GraphQLContext
+import app.ehrenamtskarte.backend.graphql.GraphQLContext
 import app.ehrenamtskarte.backend.shared.mail.Mailer
 import graphql.execution.DataFetcherResult
 import io.javalin.http.BadRequestResponse
