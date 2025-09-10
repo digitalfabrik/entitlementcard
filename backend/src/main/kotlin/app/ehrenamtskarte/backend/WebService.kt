@@ -1,6 +1,5 @@
-package app.ehrenamtskarte.backend.graphql.shared
+package app.ehrenamtskarte.backend
 
-import app.ehrenamtskarte.backend.BuildConfig
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.Environment
 import app.ehrenamtskarte.backend.graphql.GraphQLHandler
