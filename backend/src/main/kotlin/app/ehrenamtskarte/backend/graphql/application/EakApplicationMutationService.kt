@@ -21,7 +21,7 @@ import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidInputExceptio
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidLinkException
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidNoteSizeException
 import app.ehrenamtskarte.backend.graphql.getAuthContext
-import app.ehrenamtskarte.backend.graphql.shared.context
+import app.ehrenamtskarte.backend.graphql.context
 import app.ehrenamtskarte.backend.shared.mail.Mailer
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.execution.DataFetcherResult

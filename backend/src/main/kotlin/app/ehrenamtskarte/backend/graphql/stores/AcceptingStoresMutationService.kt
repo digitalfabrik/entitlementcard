@@ -7,7 +7,7 @@ import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidJsonException
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.RegionNotUniqueException
 import app.ehrenamtskarte.backend.graphql.getAuthContext
-import app.ehrenamtskarte.backend.graphql.shared.context
+import app.ehrenamtskarte.backend.graphql.context
 import app.ehrenamtskarte.backend.graphql.stores.schema.types.CSVAcceptingStore
 import app.ehrenamtskarte.backend.graphql.stores.schema.types.StoreImportReturnResultModel
 import app.ehrenamtskarte.backend.import.COUNTRY_CODE

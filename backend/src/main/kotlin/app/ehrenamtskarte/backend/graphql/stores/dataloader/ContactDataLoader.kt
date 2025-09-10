@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.graphql.stores.dataloader
 
-import app.ehrenamtskarte.backend.graphql.shared.newNamedDataLoader
+import app.ehrenamtskarte.backend.graphql.newNamedDataLoader
 import app.ehrenamtskarte.backend.db.repositories.ContactsRepository
 import app.ehrenamtskarte.backend.graphql.stores.schema.types.Contact
 import org.jetbrains.exposed.sql.transactions.transaction

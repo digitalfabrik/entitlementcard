@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.graphql.shared
+package app.ehrenamtskarte.backend.graphql
 
 import graphql.schema.DataFetchingEnvironment
 import kotlinx.coroutines.runBlocking

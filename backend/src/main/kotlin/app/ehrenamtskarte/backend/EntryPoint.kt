@@ -5,7 +5,7 @@ import app.ehrenamtskarte.backend.config.Environment
 import app.ehrenamtskarte.backend.db.Database
 import app.ehrenamtskarte.backend.db.entities.Migrations
 import app.ehrenamtskarte.backend.db.migration.MigrationUtils
-import app.ehrenamtskarte.backend.graphql.shared.GraphQLHandler
+import app.ehrenamtskarte.backend.graphql.GraphQLHandler
 import app.ehrenamtskarte.backend.graphql.shared.WebService
 import app.ehrenamtskarte.backend.import.stores.Importer
 import app.ehrenamtskarte.backend.import.stores.toImportConfig

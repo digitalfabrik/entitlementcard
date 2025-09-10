@@ -17,7 +17,7 @@ import app.ehrenamtskarte.backend.graphql.freinet.exceptions.FreinetPersonDataIn
 import app.ehrenamtskarte.backend.graphql.freinet.schema.types.FreinetCard
 import app.ehrenamtskarte.backend.graphql.freinet.util.FreinetApi
 import app.ehrenamtskarte.backend.graphql.getAuthContext
-import app.ehrenamtskarte.backend.graphql.shared.context
+import app.ehrenamtskarte.backend.graphql.context
 import app.ehrenamtskarte.backend.shared.utils.devWarn
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment

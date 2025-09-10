@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.graphql.stores.schema
 
 import app.ehrenamtskarte.backend.graphql.shared.DEFAULT_PROJECT
-import app.ehrenamtskarte.backend.graphql.shared.context
+import app.ehrenamtskarte.backend.graphql.context
 import app.ehrenamtskarte.backend.graphql.shared.schema.IdsParams
 import app.ehrenamtskarte.backend.db.repositories.AcceptingStoresRepository
 import app.ehrenamtskarte.backend.db.repositories.PhysicalStoresRepository

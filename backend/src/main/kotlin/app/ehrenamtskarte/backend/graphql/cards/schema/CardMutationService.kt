@@ -30,7 +30,7 @@ import app.ehrenamtskarte.backend.graphql.shared.exceptions.RegionNotFoundExcept
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.UserEntitlementExpiredException
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.UserEntitlementNotFoundException
 import app.ehrenamtskarte.backend.graphql.getAuthContext
-import app.ehrenamtskarte.backend.graphql.shared.context
+import app.ehrenamtskarte.backend.graphql.context
 import app.ehrenamtskarte.backend.shared.Matomo
 import app.ehrenamtskarte.backend.shared.crypto.Argon2IdHasher
 import app.ehrenamtskarte.backend.shared.mail.Mailer

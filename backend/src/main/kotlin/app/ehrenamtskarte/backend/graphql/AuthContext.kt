@@ -1,6 +1,5 @@
 package app.ehrenamtskarte.backend.graphql
 
-import app.ehrenamtskarte.backend.graphql.shared.GraphQLContext
 import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
 import app.ehrenamtskarte.backend.db.entities.Administrators
 import app.ehrenamtskarte.backend.db.entities.Projects
