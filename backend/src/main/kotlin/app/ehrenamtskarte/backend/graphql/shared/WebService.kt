@@ -3,6 +3,7 @@ package app.ehrenamtskarte.backend.graphql.shared
 import app.ehrenamtskarte.backend.BuildConfig
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.Environment
+import app.ehrenamtskarte.backend.graphql.GraphQLHandler
 import app.ehrenamtskarte.backend.routes.ApplicationAttachmentHandler
 import app.ehrenamtskarte.backend.routes.HealthHandler
 import app.ehrenamtskarte.backend.routes.MapStyleHandler

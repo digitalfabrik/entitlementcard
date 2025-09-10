@@ -3,8 +3,8 @@ package app.ehrenamtskarte.backend.graphql.cards
 import app.ehrenamtskarte.backend.graphql.cards.schema.CardMutationService
 import app.ehrenamtskarte.backend.graphql.cards.schema.CardQueryService
 import app.ehrenamtskarte.backend.graphql.cards.schema.CardStatisticsQueryService
-import app.ehrenamtskarte.backend.graphql.shared.GraphQLParams
-import app.ehrenamtskarte.backend.graphql.shared.createRegistryFromNamedDataLoaders
+import app.ehrenamtskarte.backend.graphql.GraphQLParams
+import app.ehrenamtskarte.backend.graphql.createRegistryFromNamedDataLoaders
 import com.expediagroup.graphql.generator.SchemaGeneratorConfig
 import com.expediagroup.graphql.generator.TopLevelObject
 

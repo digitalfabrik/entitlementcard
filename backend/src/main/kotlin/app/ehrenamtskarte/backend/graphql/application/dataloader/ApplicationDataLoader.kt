@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.graphql.application.dataloader
 
-import app.ehrenamtskarte.backend.graphql.shared.newNamedDataLoader
+import app.ehrenamtskarte.backend.graphql.newNamedDataLoader
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerifications
 import app.ehrenamtskarte.backend.db.entities.Applications

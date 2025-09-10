@@ -11,7 +11,7 @@ import app.ehrenamtskarte.backend.db.entities.Regions
 import app.ehrenamtskarte.backend.graphql.application.schema.view.JsonField
 import app.ehrenamtskarte.backend.graphql.application.utils.ExtractedApplicationVerification
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidLinkException
-import app.ehrenamtskarte.backend.graphql.shared.GraphQLContext
+import app.ehrenamtskarte.backend.graphql.GraphQLContext
 import app.ehrenamtskarte.backend.shared.database.sortByKeys
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule

@@ -8,7 +8,7 @@ import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import app.ehrenamtskarte.backend.graphql.cards.schema.types.CardStatisticsResultModel
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.graphql.getAuthContext
-import app.ehrenamtskarte.backend.graphql.shared.context
+import app.ehrenamtskarte.backend.graphql.context
 import app.ehrenamtskarte.backend.shared.utils.dateStringToEndOfDayInstant
 import app.ehrenamtskarte.backend.shared.utils.dateStringToStartOfDayInstant
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
