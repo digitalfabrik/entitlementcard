@@ -1,12 +1,12 @@
-package app.ehrenamtskarte.backend.graphql.application.dataloader
+package app.ehrenamtskarte.backend.graphql.application
 
-import app.ehrenamtskarte.backend.graphql.newNamedDataLoader
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerifications
 import app.ehrenamtskarte.backend.db.entities.Applications
 import app.ehrenamtskarte.backend.db.repositories.ApplicationRepository
-import app.ehrenamtskarte.backend.graphql.application.schema.view.ApplicationAdminGql
-import app.ehrenamtskarte.backend.graphql.application.schema.view.ApplicationVerificationView
+import app.ehrenamtskarte.backend.graphql.application.types.ApplicationAdminGql
+import app.ehrenamtskarte.backend.graphql.application.types.ApplicationVerificationView
+import app.ehrenamtskarte.backend.graphql.newNamedDataLoader
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.transactions.transaction
 

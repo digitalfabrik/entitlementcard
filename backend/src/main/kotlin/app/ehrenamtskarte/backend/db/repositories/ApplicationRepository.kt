@@ -8,8 +8,8 @@ import app.ehrenamtskarte.backend.db.entities.Applications
 import app.ehrenamtskarte.backend.db.entities.ProjectEntity
 import app.ehrenamtskarte.backend.db.entities.Projects
 import app.ehrenamtskarte.backend.db.entities.Regions
-import app.ehrenamtskarte.backend.graphql.application.schema.view.JsonField
-import app.ehrenamtskarte.backend.graphql.application.utils.ExtractedApplicationVerification
+import app.ehrenamtskarte.backend.graphql.application.types.JsonField
+import app.ehrenamtskarte.backend.graphql.application.types.ExtractedApplicationVerification
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidLinkException
 import app.ehrenamtskarte.backend.graphql.GraphQLContext
 import app.ehrenamtskarte.backend.shared.database.sortByKeys
@@ -84,6 +84,7 @@ object ApplicationRepository {
         }
     }
 
+    // TODO Express this as a method of JsonField (and reuse mapper)
     private fun toString(obj: JsonField): String {
         val mapper = JsonMapper()
         mapper.registerModule(KotlinModule.Builder().build())

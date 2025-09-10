@@ -1,11 +1,8 @@
-package app.ehrenamtskarte.backend.graphql.application.schema.create
+package app.ehrenamtskarte.backend.graphql.application.types
 
-import app.ehrenamtskarte.backend.graphql.application.schema.create.primitives.DateInput
-import app.ehrenamtskarte.backend.graphql.application.schema.create.primitives.EmailInput
-import app.ehrenamtskarte.backend.graphql.application.schema.create.primitives.ShortTextInput
-import app.ehrenamtskarte.backend.graphql.application.schema.view.JsonField
-import app.ehrenamtskarte.backend.graphql.application.schema.view.Type
-import app.ehrenamtskarte.backend.graphql.application.utils.JsonFieldSerializable
+import app.ehrenamtskarte.backend.graphql.application.types.primitives.DateInput
+import app.ehrenamtskarte.backend.graphql.application.types.primitives.EmailInput
+import app.ehrenamtskarte.backend.graphql.application.types.primitives.ShortTextInput
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidJsonException
 import java.time.LocalDate
 import java.time.ZoneId
