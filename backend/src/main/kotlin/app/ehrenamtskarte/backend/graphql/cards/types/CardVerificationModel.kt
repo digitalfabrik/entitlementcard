@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.graphql.cards.schema.types
+package app.ehrenamtskarte.backend.graphql.cards.types
 
 import app.ehrenamtskarte.backend.db.entities.CodeType
 

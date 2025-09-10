@@ -1,5 +1,6 @@
-package app.ehrenamtskarte.backend.graphql.cards
+package app.ehrenamtskarte.backend.shared
 
+import app.ehrenamtskarte.backend.graphql.cards.utils.KoblenzUser
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.protobuf.Descriptors

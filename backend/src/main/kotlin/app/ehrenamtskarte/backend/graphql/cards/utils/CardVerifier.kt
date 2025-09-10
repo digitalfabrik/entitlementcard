@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.graphql.cards
+package app.ehrenamtskarte.backend.graphql.cards.utils
 
 import app.ehrenamtskarte.backend.db.entities.UserEntitlementsEntity
 import app.ehrenamtskarte.backend.db.repositories.CardRepository

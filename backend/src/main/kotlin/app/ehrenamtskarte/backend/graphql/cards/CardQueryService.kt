@@ -1,9 +1,9 @@
-package app.ehrenamtskarte.backend.graphql.cards.schema
+package app.ehrenamtskarte.backend.graphql.cards
 
 import app.ehrenamtskarte.backend.db.entities.CodeType
-import app.ehrenamtskarte.backend.graphql.cards.CardVerifier
-import app.ehrenamtskarte.backend.graphql.cards.schema.types.CardVerificationModel
-import app.ehrenamtskarte.backend.graphql.cards.schema.types.CardVerificationResultModel
+import app.ehrenamtskarte.backend.graphql.cards.types.CardVerificationModel
+import app.ehrenamtskarte.backend.graphql.cards.types.CardVerificationResultModel
+import app.ehrenamtskarte.backend.graphql.cards.utils.CardVerifier
 import app.ehrenamtskarte.backend.graphql.context
 import app.ehrenamtskarte.backend.shared.Matomo
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
