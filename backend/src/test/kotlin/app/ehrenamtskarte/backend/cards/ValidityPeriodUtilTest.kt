@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.cards
 
-import app.ehrenamtskarte.backend.graphql.cards.daysSinceEpochToDate
-import app.ehrenamtskarte.backend.graphql.cards.isOnOrBeforeToday
+import app.ehrenamtskarte.backend.graphql.cards.utils.daysSinceEpochToDate
+import app.ehrenamtskarte.backend.graphql.cards.utils.isOnOrBeforeToday
 import org.junit.jupiter.api.Test
 import java.time.Clock
 import java.time.LocalDateTime

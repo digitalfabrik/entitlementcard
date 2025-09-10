@@ -1,8 +1,8 @@
 package app.ehrenamtskarte.backend.cards
 
 import Card
-import app.ehrenamtskarte.backend.graphql.cards.CanonicalJson
-import app.ehrenamtskarte.backend.graphql.cards.CanonicalJson.koblenzUserToString
+import app.ehrenamtskarte.backend.shared.CanonicalJson
+import app.ehrenamtskarte.backend.shared.CanonicalJson.koblenzUserToString
 import app.ehrenamtskarte.backend.helper.SampleCards
 import app.ehrenamtskarte.backend.helper.koblenzTestUser
 import org.junit.jupiter.api.Test

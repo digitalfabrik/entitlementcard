@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.graphql.cards.schema
+package app.ehrenamtskarte.backend.graphql.cards
 
 import Card
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
@@ -10,18 +10,16 @@ import app.ehrenamtskarte.backend.db.entities.maySendMailsInRegion
 import app.ehrenamtskarte.backend.db.repositories.CardRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.db.repositories.UserEntitlementsRepository
-import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
-import app.ehrenamtskarte.backend.shared.exceptions.NotFoundException
-import app.ehrenamtskarte.backend.graphql.cards.CardVerifier
-import app.ehrenamtskarte.backend.graphql.cards.KoblenzUser
-import app.ehrenamtskarte.backend.graphql.cards.PEPPER_LENGTH
-import app.ehrenamtskarte.backend.graphql.cards.QRCodeUtil
-import app.ehrenamtskarte.backend.graphql.cards.hash
-import app.ehrenamtskarte.backend.graphql.cards.schema.types.ActivationState
-import app.ehrenamtskarte.backend.graphql.cards.schema.types.CardActivationResultModel
-import app.ehrenamtskarte.backend.graphql.cards.schema.types.CardCreationResultModel
-import app.ehrenamtskarte.backend.graphql.cards.schema.types.DynamicActivationCodeResult
-import app.ehrenamtskarte.backend.graphql.cards.schema.types.StaticVerificationCodeResult
+import app.ehrenamtskarte.backend.graphql.cards.types.ActivationState
+import app.ehrenamtskarte.backend.graphql.cards.types.CardActivationResultModel
+import app.ehrenamtskarte.backend.graphql.cards.types.CardCreationResultModel
+import app.ehrenamtskarte.backend.graphql.cards.types.DynamicActivationCodeResult
+import app.ehrenamtskarte.backend.graphql.cards.types.StaticVerificationCodeResult
+import app.ehrenamtskarte.backend.graphql.cards.utils.CardVerifier
+import app.ehrenamtskarte.backend.graphql.cards.utils.KoblenzUser
+import app.ehrenamtskarte.backend.graphql.cards.utils.QRCodeUtil
+import app.ehrenamtskarte.backend.graphql.context
+import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidCardHashException
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidQrCodeSize
@@ -29,10 +27,10 @@ import app.ehrenamtskarte.backend.graphql.shared.exceptions.RegionNotActivatedFo
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.UserEntitlementExpiredException
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.UserEntitlementNotFoundException
-import app.ehrenamtskarte.backend.graphql.getAuthContext
-import app.ehrenamtskarte.backend.graphql.context
 import app.ehrenamtskarte.backend.shared.Matomo
 import app.ehrenamtskarte.backend.shared.crypto.Argon2IdHasher
+import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
+import app.ehrenamtskarte.backend.shared.exceptions.NotFoundException
 import app.ehrenamtskarte.backend.shared.mail.Mailer
 import at.favre.lib.crypto.bcrypt.BCrypt
 import com.eatthepath.otp.TimeBasedOneTimePasswordGenerator
