@@ -1,8 +1,8 @@
-package app.ehrenamtskarte.backend.graphql.application.schema.view
+package app.ehrenamtskarte.backend.graphql.application.types
 
-import app.ehrenamtskarte.backend.graphql.fromEnvironment
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
-import app.ehrenamtskarte.backend.graphql.application.dataloader.verificationsByApplicationLoader
+import app.ehrenamtskarte.backend.graphql.application.verificationsByApplicationLoader
+import app.ehrenamtskarte.backend.graphql.fromEnvironment
 import com.expediagroup.graphql.generator.annotations.GraphQLName
 import graphql.schema.DataFetchingEnvironment
 import java.util.concurrent.CompletableFuture

@@ -2,13 +2,13 @@ package app.ehrenamtskarte.backend.graphql.application
 
 import app.ehrenamtskarte.backend.db.entities.mayViewApplicationsInRegion
 import app.ehrenamtskarte.backend.db.repositories.ApplicationRepository
-import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
-import app.ehrenamtskarte.backend.graphql.application.schema.view.ApplicationAdminGql
-import app.ehrenamtskarte.backend.graphql.application.schema.view.ApplicationPublicGql
-import app.ehrenamtskarte.backend.graphql.application.schema.view.ApplicationVerificationView
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidLinkException
-import app.ehrenamtskarte.backend.graphql.getAuthContext
+import app.ehrenamtskarte.backend.graphql.application.types.ApplicationAdminGql
+import app.ehrenamtskarte.backend.graphql.application.types.ApplicationPublicGql
+import app.ehrenamtskarte.backend.graphql.application.types.ApplicationVerificationView
 import app.ehrenamtskarte.backend.graphql.context
+import app.ehrenamtskarte.backend.graphql.getAuthContext
+import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidLinkException
+import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction

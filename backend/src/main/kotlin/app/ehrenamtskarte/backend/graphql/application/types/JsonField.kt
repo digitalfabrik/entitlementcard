@@ -1,6 +1,6 @@
-package app.ehrenamtskarte.backend.graphql.application.schema.view
+package app.ehrenamtskarte.backend.graphql.application.types
 
-import app.ehrenamtskarte.backend.graphql.application.schema.create.primitives.Attachment
+import app.ehrenamtskarte.backend.graphql.application.types.primitives.Attachment
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidJsonException
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 

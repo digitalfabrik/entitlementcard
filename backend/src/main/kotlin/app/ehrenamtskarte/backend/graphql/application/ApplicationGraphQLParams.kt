@@ -1,9 +1,7 @@
 package app.ehrenamtskarte.backend.graphql.application
 
-import app.ehrenamtskarte.backend.graphql.application.dataloader.applicationLoader
-import app.ehrenamtskarte.backend.graphql.application.dataloader.verificationsByApplicationLoader
-import app.ehrenamtskarte.backend.graphql.application.schema.create.primitives.UploadKey
 import app.ehrenamtskarte.backend.graphql.GraphQLParams
+import app.ehrenamtskarte.backend.graphql.application.types.primitives.UploadKey
 import app.ehrenamtskarte.backend.graphql.createRegistryFromNamedDataLoaders
 import com.expediagroup.graphql.generator.SchemaGeneratorConfig
 import com.expediagroup.graphql.generator.TopLevelObject
@@ -48,7 +46,7 @@ val Upload: GraphQLScalarType = GraphQLScalarType.newScalar()
 
 val applicationGraphQlParams = GraphQLParams(
     config = SchemaGeneratorConfig(
-        supportedPackages = listOf("app.ehrenamtskarte.backend.graphql.application.schema"),
+        supportedPackages = listOf("app.ehrenamtskarte.backend.graphql.application.types"),
         hooks = object : SchemaGeneratorHooks {
             override fun willGenerateGraphQLType(type: KType): GraphQLType? =
                 when (type.classifier) {

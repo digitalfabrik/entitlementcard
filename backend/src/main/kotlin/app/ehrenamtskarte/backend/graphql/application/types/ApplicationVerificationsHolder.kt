@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.graphql.application.utils
+package app.ehrenamtskarte.backend.graphql.application.types
 
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 
