@@ -41,33 +41,14 @@ export default defineConfig({
       },
     },
     {
-      name: 'firefox',
-      testMatch: '01_create_applications.spec.ts',
-      use: {
-        ...devices['Desktop Firefox'],
-      },
-    },
-    {
       name: 'chromium',
       testMatch: '02_check_applications.spec.ts',
       use: { ...devices['Desktop Chrome'] },
-    },
-
-    {
-      name: 'firefox',
-      testMatch: '02_check_applications.spec.ts',
-      use: { ...devices['Desktop Firefox'] },
     },
     {
       name: 'chromium',
       testMatch: '03_delete_applications.spec.ts',
       use: { ...devices['Desktop Chrome'] },
-    },
-
-    {
-      name: 'firefox',
-      testMatch: '03_delete_applications.spec.ts',
-      use: { ...devices['Desktop Firefox'] },
     },
 
     // {

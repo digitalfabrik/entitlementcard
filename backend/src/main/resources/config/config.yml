@@ -2,6 +2,7 @@
 # - All updates in this file have to added/adjusted in salt before deployment!
 # - Example: https://git.tuerantuer.org/DF/salt/src/branch/master/pillars/entitlementcard/production/bayern.sls
 environment: development
+disableApplicationEmails: false
 postgres:
   url: jdbc:postgresql://localhost:5432/ehrenamtskarte
   user: postgres

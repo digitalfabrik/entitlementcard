@@ -1,2 +1,2 @@
 #!/bin/bash
-cd ../backend && ./gradlew run --args="execute"
+cd ../backend && ./gradlew run --args="--disable-application-emails=true execute"

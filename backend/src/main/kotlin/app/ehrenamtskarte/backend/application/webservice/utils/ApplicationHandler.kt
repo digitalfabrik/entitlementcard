@@ -38,6 +38,11 @@ class ApplicationHandler(
         val backendConfig = context.backendConfiguration
         val projectConfig = backendConfig.projects.first { it.id == project }
 
+        // Skip sending emails for e2e tests
+        if (backendConfig.disableApplicationEmails) {
+            return
+        }
+
         Mailer.sendApplicationApplicantMail(
             backendConfig,
             projectConfig,
@@ -71,6 +76,11 @@ class ApplicationHandler(
     ) {
         val backendConfig = context.backendConfiguration
         val projectConfig = backendConfig.projects.first { it.id == project }
+
+        // Skip sending emails for e2e tests
+        if (backendConfig.disableApplicationEmails) {
+            return
+        }
 
         for (applicationVerification in verificationEntities) {
             try {
