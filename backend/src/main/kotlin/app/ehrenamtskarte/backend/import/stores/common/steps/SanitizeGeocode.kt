@@ -77,7 +77,6 @@ class SanitizeGeocode(config: ImportConfig, private val logger: Logger, httpClie
         this.getProperty<LinkedHashMap<String, String>>("address")
 }
 
-
 private const val DISTANCE_THRESHOLD_IN_KM = 1.0
 
 /**

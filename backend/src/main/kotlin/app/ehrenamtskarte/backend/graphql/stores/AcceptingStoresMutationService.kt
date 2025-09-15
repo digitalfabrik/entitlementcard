@@ -83,7 +83,6 @@ class AcceptingStoresMutationService {
     }
 }
 
-
 fun mapCsvToStore(csvStore: CSVAcceptingStore): AcceptingStore {
     val discount = listOf(csvStore.discountDE, csvStore.discountEN)
         .filterNot { it.isNullOrEmpty() }

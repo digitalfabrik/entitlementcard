@@ -72,7 +72,6 @@ class AdministratorEntity(id: EntityID<Int>) : IntEntity(id) {
     fun isInRegion(regionId: Int): Boolean = this.regionId?.value == regionId
 }
 
-
 fun AdministratorEntity.mayCreateCardInRegion(regionId: Int): Boolean =
     isInRegion(regionId) && hasRole(Role.REGION_MANAGER, Role.REGION_ADMIN)
 

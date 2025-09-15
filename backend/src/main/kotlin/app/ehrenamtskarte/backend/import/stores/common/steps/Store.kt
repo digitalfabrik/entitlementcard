@@ -71,7 +71,11 @@ class Store(config: ImportConfig, private val logger: Logger) :
     }
 }
 
-private fun getRegionFromAcceptingStore(projectId: EntityID<Int>, freinetId: Int?, districtName: String?): RegionEntity? {
+private fun getRegionFromAcceptingStore(
+    projectId: EntityID<Int>,
+    freinetId: Int?,
+    districtName: String?,
+): RegionEntity? {
     if (freinetId != null) {
         return RegionsRepository.findRegionByFreinetId(freinetId, projectId)
     } else if (!districtName.isNullOrEmpty()) {

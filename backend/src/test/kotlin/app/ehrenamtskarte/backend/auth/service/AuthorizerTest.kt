@@ -307,7 +307,7 @@ internal class AuthorizerTest : IntegrationTest() {
             )
             assertFalse(bayernProjectAdmin.mayEditUser(bayernProjectAdmin, koblenzId, Role.REGION_ADMIN, bayernRegion))
             assertFalse(bayernProjectAdmin.mayEditUser(koblenzProjectAdmin, koblenzId, Role.REGION_ADMIN, bayernRegion))
-            assertFalse(bayernProjectAdmin.mayEditUser( bayernProjectAdmin, bayernId, Role.NO_RIGHTS, bayernRegion))
+            assertFalse(bayernProjectAdmin.mayEditUser(bayernProjectAdmin, bayernId, Role.NO_RIGHTS, bayernRegion))
             assertFalse(bayernProjectAdmin.mayEditUser(bayernProjectAdmin, bayernId, Role.NO_RIGHTS, bayernRegion))
 
             assertFalse(bayernRegionAdmin.mayEditUser(bayernRegionManager, bayernId, Role.PROJECT_ADMIN, null))

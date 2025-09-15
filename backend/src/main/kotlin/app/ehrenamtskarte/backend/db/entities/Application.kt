@@ -62,7 +62,6 @@ class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
     fun parseJsonValue(): JsonNode = jacksonObjectMapper().readTree(jsonValue)
 }
 
-
 /** Check if this state transition makes sense */
 private fun ApplicationEntity.Status.canTransitionTo(newValue: ApplicationEntity.Status): Boolean =
     when (this) {

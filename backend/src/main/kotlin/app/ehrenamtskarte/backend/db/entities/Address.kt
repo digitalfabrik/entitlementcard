@@ -5,7 +5,6 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 
-
 object Addresses : IntIdTable() {
     val street = varchar("street", 200).nullable()
     val postalCode = varchar("postalCode", 10)

@@ -123,7 +123,7 @@ private fun GeneratedMessage.assertOnlyOptionalFields() {
                     Note that, 'optional' in proto3 only means explicit presence, i.e. it can be determined if a field marked
                     as optional is actually present in an instance of a proto. Using only fields with explicit presence
                     enables us to remove fields from the proto in the future.
-                        """.trimIndent(),
+                """.trimIndent(),
             )
         }
     }
