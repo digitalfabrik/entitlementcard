@@ -7,7 +7,7 @@ import com.expediagroup.graphql.generator.TopLevelObject
 
 val freinetGraphQlParams = GraphQLParams(
     config = SchemaGeneratorConfig(
-        supportedPackages = listOf("app.ehrenamtskarte.backend.graphql.freinet.schema"),
+        supportedPackages = listOf("app.ehrenamtskarte.backend.graphql.freinet.types"),
     ),
     dataLoaderRegistry = createRegistryFromNamedDataLoaders(),
     queries = listOf(

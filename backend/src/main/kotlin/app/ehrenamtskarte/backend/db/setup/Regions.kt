@@ -5,7 +5,7 @@ import app.ehrenamtskarte.backend.config.Environment
 import app.ehrenamtskarte.backend.db.entities.FreinetAgenciesEntity
 import app.ehrenamtskarte.backend.db.entities.ProjectEntity
 import app.ehrenamtskarte.backend.db.entities.RegionEntity
-import app.ehrenamtskarte.backend.graphql.freinet.schema.types.FreinetApiAgency
+import app.ehrenamtskarte.backend.graphql.freinet.types.FreinetApiAgency
 import app.ehrenamtskarte.backend.graphql.shared.EAK_BAYERN_PROJECT
 import app.ehrenamtskarte.backend.graphql.shared.FREINET_DEMO_REGION_NAME
 import app.ehrenamtskarte.backend.graphql.shared.KOBLENZ_PASS_PROJECT

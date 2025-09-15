@@ -1,8 +1,8 @@
 package app.ehrenamtskarte.backend.graphql.freinet.util
 
-import app.ehrenamtskarte.backend.graphql.shared.FREINET_DEMO_REGION_NAME
 import app.ehrenamtskarte.backend.config.Environment
 import app.ehrenamtskarte.backend.graphql.freinet.exceptions.FreinetDataTransferNotPermittedException
+import app.ehrenamtskarte.backend.graphql.shared.FREINET_DEMO_REGION_NAME
 
 /**
  * Validates if Freinet data transfer is permitted for the given environment and region.

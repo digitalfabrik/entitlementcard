@@ -1,12 +1,12 @@
 package app.ehrenamtskarte.backend.graphql.freinet
 
-import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.db.entities.mayViewFreinetAgencyInformationInRegion
-import app.ehrenamtskarte.backend.graphql.context
-import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.NotImplementedException
 import app.ehrenamtskarte.backend.db.repositories.FreinetAgencyRepository
-import app.ehrenamtskarte.backend.graphql.freinet.schema.types.FreinetAgency
+import app.ehrenamtskarte.backend.graphql.context
+import app.ehrenamtskarte.backend.graphql.freinet.types.FreinetAgency
+import app.ehrenamtskarte.backend.graphql.getAuthContext
+import app.ehrenamtskarte.backend.graphql.shared.exceptions.NotImplementedException
+import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction

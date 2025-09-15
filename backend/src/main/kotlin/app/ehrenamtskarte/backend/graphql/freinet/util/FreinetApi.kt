@@ -1,15 +1,15 @@
 package app.ehrenamtskarte.backend.graphql.freinet.util
 
+import app.ehrenamtskarte.backend.graphql.freinet.types.CARD_TYPE_GOLD
+import app.ehrenamtskarte.backend.graphql.freinet.types.CARD_TYPE_STANDARD
+import app.ehrenamtskarte.backend.graphql.freinet.types.FreinetAddress
+import app.ehrenamtskarte.backend.graphql.freinet.types.FreinetCard
+import app.ehrenamtskarte.backend.graphql.freinet.types.FreinetPerson
+import app.ehrenamtskarte.backend.graphql.freinet.types.FreinetPersonCreationResultModel
+import app.ehrenamtskarte.backend.graphql.freinet.types.FreinetProtocol
 import app.ehrenamtskarte.backend.shared.utils.devInfo
 import app.ehrenamtskarte.backend.shared.utils.findValueByName
 import app.ehrenamtskarte.backend.shared.utils.findValueByNameNode
-import app.ehrenamtskarte.backend.graphql.freinet.schema.types.CARD_TYPE_GOLD
-import app.ehrenamtskarte.backend.graphql.freinet.schema.types.CARD_TYPE_STANDARD
-import app.ehrenamtskarte.backend.graphql.freinet.schema.types.FreinetAddress
-import app.ehrenamtskarte.backend.graphql.freinet.schema.types.FreinetCard
-import app.ehrenamtskarte.backend.graphql.freinet.schema.types.FreinetPerson
-import app.ehrenamtskarte.backend.graphql.freinet.schema.types.FreinetPersonCreationResultModel
-import app.ehrenamtskarte.backend.graphql.freinet.schema.types.FreinetProtocol
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
