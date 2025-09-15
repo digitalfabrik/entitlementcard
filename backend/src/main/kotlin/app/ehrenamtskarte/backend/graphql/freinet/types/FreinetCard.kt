@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.graphql.freinet.schema.types
+package app.ehrenamtskarte.backend.graphql.freinet.types
 
 import app.ehrenamtskarte.backend.graphql.freinet.exceptions.FreinetCardDataInvalidException
 

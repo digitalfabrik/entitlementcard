@@ -1,10 +1,10 @@
 package app.ehrenamtskarte.backend.graphql.freinet.util
 
-import app.ehrenamtskarte.backend.graphql.shared.EAK_BAYERN_PROJECT
 import app.ehrenamtskarte.backend.config.ProjectConfig
+import app.ehrenamtskarte.backend.graphql.freinet.types.FreinetApiAgency
+import app.ehrenamtskarte.backend.graphql.freinet.types.XMLAgencies
+import app.ehrenamtskarte.backend.graphql.shared.EAK_BAYERN_PROJECT
 import app.ehrenamtskarte.backend.shared.exceptions.NotFoundException
-import app.ehrenamtskarte.backend.graphql.freinet.schema.types.FreinetApiAgency
-import app.ehrenamtskarte.backend.graphql.freinet.schema.types.XMLAgencies
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
