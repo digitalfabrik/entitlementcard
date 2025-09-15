@@ -241,6 +241,7 @@
       "Leider hat Ihr Verein bzw. Ihre Organisation das von Ihnen geleistet Ehrenamt bislang nicht bestätigt. Ohne eine entsprechende Bestätigung Ihres Engagements kann keine Ehrenamtskarte ausgestellt werden."
     ],
     "rejectionButton": "Ablehnung bestätigen",
+    "rejectionCancelButton": "Ablehnung abbrechen",
     "moreActionsButtonLabel": "Weitere Optionen"
   },
   "auth": {
