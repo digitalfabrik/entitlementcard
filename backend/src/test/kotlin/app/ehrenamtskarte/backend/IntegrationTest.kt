@@ -1,8 +1,8 @@
 package app.ehrenamtskarte.backend
 
-import app.ehrenamtskarte.backend.db.Database
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.PostgresConfig
+import app.ehrenamtskarte.backend.db.Database
 import app.ehrenamtskarte.backend.db.migration.MigrationUtils
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestFreinetAgencies

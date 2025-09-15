@@ -8,8 +8,8 @@ import app.ehrenamtskarte.backend.graphql.cards.cardsGraphQlParams
 import app.ehrenamtskarte.backend.graphql.freinet.freinetGraphQlParams
 import app.ehrenamtskarte.backend.graphql.regions.regionsGraphQlParams
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.NotImplementedException
-import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
 import app.ehrenamtskarte.backend.graphql.shared.substitute
+import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
 import app.ehrenamtskarte.backend.graphql.stores.storesGraphQlParams
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import app.ehrenamtskarte.backend.shared.exceptions.NotFoundException
