@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.stores
 
 import app.ehrenamtskarte.backend.graphql.stores.mapCsvToStore
-import app.ehrenamtskarte.backend.graphql.stores.schema.types.CSVAcceptingStore
+import app.ehrenamtskarte.backend.graphql.stores.types.CSVAcceptingStore
 import app.ehrenamtskarte.backend.import.stores.common.types.AcceptingStore
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory

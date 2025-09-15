@@ -1,8 +1,8 @@
-package app.ehrenamtskarte.backend.graphql.stores.schema.types
+package app.ehrenamtskarte.backend.graphql.stores.types
 
 import app.ehrenamtskarte.backend.graphql.fromEnvironment
-import app.ehrenamtskarte.backend.graphql.stores.dataloader.acceptingStoreLoader
-import app.ehrenamtskarte.backend.graphql.stores.dataloader.addressLoader
+import app.ehrenamtskarte.backend.graphql.stores.acceptingStoreLoader
+import app.ehrenamtskarte.backend.graphql.stores.addressLoader
 import graphql.schema.DataFetchingEnvironment
 import java.util.concurrent.CompletableFuture
 

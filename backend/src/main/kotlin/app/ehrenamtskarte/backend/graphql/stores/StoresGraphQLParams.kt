@@ -1,13 +1,5 @@
 package app.ehrenamtskarte.backend.graphql.stores
 
-import app.ehrenamtskarte.backend.graphql.stores.dataloader.acceptingStoreLoader
-import app.ehrenamtskarte.backend.graphql.stores.dataloader.addressLoader
-import app.ehrenamtskarte.backend.graphql.stores.dataloader.categoryLoader
-import app.ehrenamtskarte.backend.graphql.stores.dataloader.contactLoader
-import app.ehrenamtskarte.backend.graphql.stores.dataloader.physicalStoreByStoreIdLoader
-import app.ehrenamtskarte.backend.graphql.stores.dataloader.physicalStoreLoader
-import app.ehrenamtskarte.backend.graphql.stores.schema.AcceptingStoreQueryService
-import app.ehrenamtskarte.backend.graphql.stores.schema.CategoriesQueryService
 import app.ehrenamtskarte.backend.graphql.GraphQLParams
 import app.ehrenamtskarte.backend.graphql.createRegistryFromNamedDataLoaders
 import com.expediagroup.graphql.generator.SchemaGeneratorConfig
@@ -15,7 +7,7 @@ import com.expediagroup.graphql.generator.TopLevelObject
 
 val storesGraphQlParams = GraphQLParams(
     config = SchemaGeneratorConfig(
-        supportedPackages = listOf("app.ehrenamtskarte.backend.graphql.stores.schema"),
+        supportedPackages = listOf("app.ehrenamtskarte.backend.graphql.stores.types"),
     ),
     dataLoaderRegistry = createRegistryFromNamedDataLoaders(
         contactLoader,
