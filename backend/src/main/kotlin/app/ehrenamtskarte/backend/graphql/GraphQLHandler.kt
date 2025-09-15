@@ -7,9 +7,8 @@ import app.ehrenamtskarte.backend.graphql.auth.authGraphQlParams
 import app.ehrenamtskarte.backend.graphql.cards.cardsGraphQlParams
 import app.ehrenamtskarte.backend.graphql.freinet.freinetGraphQlParams
 import app.ehrenamtskarte.backend.graphql.regions.regionsGraphQlParams
-import app.ehrenamtskarte.backend.graphql.CustomDataFetcherExceptionHandler
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.NotImplementedException
-import app.ehrenamtskarte.backend.graphql.shared.schema.GraphQLExceptionCode
+import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
 import app.ehrenamtskarte.backend.graphql.shared.substitute
 import app.ehrenamtskarte.backend.graphql.stores.storesGraphQlParams
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
@@ -52,7 +51,7 @@ class GraphQLHandler(
     val config: SchemaGeneratorConfig = graphQLParams.config
         .plus(
             SchemaGeneratorConfig(
-                listOf("app.ehrenamtskarte.backend.graphql.shared.schema"),
+                listOf("app.ehrenamtskarte.backend.graphql.shared.types"),
                 additionalTypes = setOf<GraphQLEnumType>(
                     newEnum()
                         .name("GraphQLExceptionCode")
