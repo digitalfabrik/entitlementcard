@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.db.setup
 
 import app.ehrenamtskarte.backend.db.entities.FreinetAgenciesEntity
-import app.ehrenamtskarte.backend.graphql.freinet.schema.types.FreinetApiAgency
+import app.ehrenamtskarte.backend.graphql.freinet.types.FreinetApiAgency
 import app.ehrenamtskarte.backend.db.entities.RegionEntity
 import org.jetbrains.exposed.sql.SizedIterable
 

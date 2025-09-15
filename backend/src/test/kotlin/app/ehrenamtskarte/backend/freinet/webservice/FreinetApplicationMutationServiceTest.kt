@@ -8,7 +8,7 @@ import app.ehrenamtskarte.backend.generated.SendApplicationAndCardDataToFreinet
 import app.ehrenamtskarte.backend.generated.inputs.FreinetCardInput
 import app.ehrenamtskarte.backend.graphql.application.types.JsonField
 import app.ehrenamtskarte.backend.graphql.application.types.Type
-import app.ehrenamtskarte.backend.graphql.freinet.schema.types.FreinetPersonCreationResultModel
+import app.ehrenamtskarte.backend.graphql.freinet.types.FreinetPersonCreationResultModel
 import app.ehrenamtskarte.backend.graphql.freinet.util.FreinetApi
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestData
