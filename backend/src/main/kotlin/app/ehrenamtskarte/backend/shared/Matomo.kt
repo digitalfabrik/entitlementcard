@@ -5,7 +5,7 @@ import app.ehrenamtskarte.backend.config.MatomoConfig
 import app.ehrenamtskarte.backend.config.ProjectConfig
 import app.ehrenamtskarte.backend.db.entities.CodeType
 import app.ehrenamtskarte.backend.db.repositories.CardRepository
-import app.ehrenamtskarte.backend.graphql.stores.schema.SearchParams
+import app.ehrenamtskarte.backend.graphql.stores.types.SearchParams
 import jakarta.servlet.http.HttpServletRequest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

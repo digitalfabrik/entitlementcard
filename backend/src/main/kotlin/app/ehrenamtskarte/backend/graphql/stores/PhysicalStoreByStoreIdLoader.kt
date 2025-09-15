@@ -1,11 +1,11 @@
-package app.ehrenamtskarte.backend.graphql.stores.dataloader
+package app.ehrenamtskarte.backend.graphql.stores
 
-import app.ehrenamtskarte.backend.shared.database.sortByKeys
-import app.ehrenamtskarte.backend.graphql.newNamedDataLoader
 import app.ehrenamtskarte.backend.db.entities.PhysicalStoreEntity
 import app.ehrenamtskarte.backend.db.entities.PhysicalStores
-import app.ehrenamtskarte.backend.graphql.stores.schema.types.Coordinates
-import app.ehrenamtskarte.backend.graphql.stores.schema.types.PhysicalStore
+import app.ehrenamtskarte.backend.graphql.newNamedDataLoader
+import app.ehrenamtskarte.backend.graphql.stores.types.Coordinates
+import app.ehrenamtskarte.backend.graphql.stores.types.PhysicalStore
+import app.ehrenamtskarte.backend.shared.database.sortByKeys
 import org.jetbrains.exposed.sql.transactions.transaction
 
 val physicalStoreByStoreIdLoader = newNamedDataLoader<Int, _>(

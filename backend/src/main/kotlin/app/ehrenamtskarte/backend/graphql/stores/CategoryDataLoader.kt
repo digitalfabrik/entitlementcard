@@ -1,8 +1,8 @@
-package app.ehrenamtskarte.backend.graphql.stores.dataloader
+package app.ehrenamtskarte.backend.graphql.stores
 
-import app.ehrenamtskarte.backend.graphql.newNamedDataLoader
 import app.ehrenamtskarte.backend.db.repositories.CategoriesRepository
-import app.ehrenamtskarte.backend.graphql.stores.schema.types.Category
+import app.ehrenamtskarte.backend.graphql.newNamedDataLoader
+import app.ehrenamtskarte.backend.graphql.stores.types.Category
 import org.jetbrains.exposed.sql.transactions.transaction
 
 val categoryLoader = newNamedDataLoader("CATEGORY_LOADER") { ids ->
