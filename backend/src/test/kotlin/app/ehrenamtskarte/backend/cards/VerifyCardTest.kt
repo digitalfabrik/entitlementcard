@@ -3,12 +3,12 @@ package app.ehrenamtskarte.backend.cards
 import app.ehrenamtskarte.backend.GraphqlApiTest
 import app.ehrenamtskarte.backend.db.entities.CardEntity
 import app.ehrenamtskarte.backend.db.entities.Cards
-import app.ehrenamtskarte.backend.graphql.cards.types.CardVerificationResultModel
+import app.ehrenamtskarte.backend.db.entities.UserEntitlements
 import app.ehrenamtskarte.backend.generated.VerifyCardInProjectV2
 import app.ehrenamtskarte.backend.generated.enums.CodeType
 import app.ehrenamtskarte.backend.generated.inputs.CardVerificationModelInput
+import app.ehrenamtskarte.backend.graphql.cards.types.CardVerificationResultModel
 import app.ehrenamtskarte.backend.helper.TestData
-import app.ehrenamtskarte.backend.db.entities.UserEntitlements
 import io.javalin.testtools.JavalinTest
 import io.ktor.util.encodeBase64
 import org.jetbrains.exposed.sql.deleteAll
