@@ -2,8 +2,8 @@ package app.ehrenamtskarte.backend.graphql.auth.types
 
 import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
 import app.ehrenamtskarte.backend.graphql.fromEnvironment
-import app.ehrenamtskarte.backend.graphql.regions.dataloader.regionLoader
-import app.ehrenamtskarte.backend.graphql.regions.schema.types.Region
+import app.ehrenamtskarte.backend.graphql.regions.regionLoader
+import app.ehrenamtskarte.backend.graphql.regions.types.Region
 import graphql.schema.DataFetchingEnvironment
 import java.util.concurrent.CompletableFuture
 

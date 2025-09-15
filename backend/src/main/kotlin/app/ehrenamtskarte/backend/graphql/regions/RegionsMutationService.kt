@@ -1,14 +1,14 @@
-package app.ehrenamtskarte.backend.graphql.regions.schema
+package app.ehrenamtskarte.backend.graphql.regions
 
 import app.ehrenamtskarte.backend.db.entities.APPLICATION_CONFIRMATION_MAIL_NOTE_MAX_CHARS
 import app.ehrenamtskarte.backend.db.entities.PRIVACY_POLICY_MAX_CHARS
 import app.ehrenamtskarte.backend.db.entities.mayUpdateSettingsInRegion
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
-import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
+import app.ehrenamtskarte.backend.graphql.context
+import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidApplicationConfirmationNoteSizeException
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidDataPolicySizeException
-import app.ehrenamtskarte.backend.graphql.getAuthContext
-import app.ehrenamtskarte.backend.graphql.context
+import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
