@@ -11,7 +11,7 @@ import app.ehrenamtskarte.backend.db.entities.Contacts
 import app.ehrenamtskarte.backend.db.entities.PhysicalStoreEntity
 import app.ehrenamtskarte.backend.db.entities.PhysicalStores
 import app.ehrenamtskarte.backend.db.entities.Projects
-import app.ehrenamtskarte.backend.graphql.stores.schema.types.Coordinates
+import app.ehrenamtskarte.backend.graphql.stores.types.Coordinates
 import app.ehrenamtskarte.backend.import.COUNTRY_CODE
 import app.ehrenamtskarte.backend.import.stores.common.types.AcceptingStore
 import app.ehrenamtskarte.backend.shared.database.sortByKeys

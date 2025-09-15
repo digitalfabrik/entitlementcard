@@ -1,13 +1,14 @@
-package app.ehrenamtskarte.backend.graphql.stores.schema
+package app.ehrenamtskarte.backend.graphql.stores
 
-import app.ehrenamtskarte.backend.graphql.shared.DEFAULT_PROJECT
-import app.ehrenamtskarte.backend.graphql.context
-import app.ehrenamtskarte.backend.graphql.shared.types.IdsParams
 import app.ehrenamtskarte.backend.db.repositories.AcceptingStoresRepository
 import app.ehrenamtskarte.backend.db.repositories.PhysicalStoresRepository
-import app.ehrenamtskarte.backend.graphql.stores.schema.types.AcceptingStore
-import app.ehrenamtskarte.backend.graphql.stores.schema.types.Coordinates
-import app.ehrenamtskarte.backend.graphql.stores.schema.types.PhysicalStore
+import app.ehrenamtskarte.backend.graphql.context
+import app.ehrenamtskarte.backend.graphql.shared.DEFAULT_PROJECT
+import app.ehrenamtskarte.backend.graphql.shared.types.IdsParams
+import app.ehrenamtskarte.backend.graphql.stores.types.AcceptingStore
+import app.ehrenamtskarte.backend.graphql.stores.types.Coordinates
+import app.ehrenamtskarte.backend.graphql.stores.types.PhysicalStore
+import app.ehrenamtskarte.backend.graphql.stores.types.SearchParams
 import app.ehrenamtskarte.backend.shared.Matomo
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
@@ -110,11 +111,3 @@ class AcceptingStoreQueryService {
     fun searchAcceptingStores(params: SearchParams, dfe: DataFetchingEnvironment): List<AcceptingStore> =
         searchAcceptingStoresInProject(DEFAULT_PROJECT, params, dfe)
 }
-
-data class SearchParams(
-    val searchText: String?,
-    val categoryIds: List<Int>?,
-    val coordinates: Coordinates?,
-    val limit: Int?,
-    val offset: Long?,
-)

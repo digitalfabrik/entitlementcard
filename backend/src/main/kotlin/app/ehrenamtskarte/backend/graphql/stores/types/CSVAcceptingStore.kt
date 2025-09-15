@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.graphql.stores.schema.types
+package app.ehrenamtskarte.backend.graphql.stores.types
 
 import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidJsonException
 
