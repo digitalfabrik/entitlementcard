@@ -1,11 +1,6 @@
 package app.ehrenamtskarte.backend.stores
 
 import app.ehrenamtskarte.backend.GraphqlApiTest
-import app.ehrenamtskarte.backend.generated.ImportAcceptingStores
-import app.ehrenamtskarte.backend.generated.inputs.CSVAcceptingStoreInput
-import app.ehrenamtskarte.backend.helper.CSVAcceptanceStoreBuilder
-import app.ehrenamtskarte.backend.helper.TestAdministrators
-import app.ehrenamtskarte.backend.helper.TestData
 import app.ehrenamtskarte.backend.db.entities.AcceptingStoreEntity
 import app.ehrenamtskarte.backend.db.entities.AcceptingStores
 import app.ehrenamtskarte.backend.db.entities.AddressEntity
@@ -14,6 +9,11 @@ import app.ehrenamtskarte.backend.db.entities.ContactEntity
 import app.ehrenamtskarte.backend.db.entities.Contacts
 import app.ehrenamtskarte.backend.db.entities.PhysicalStoreEntity
 import app.ehrenamtskarte.backend.db.entities.PhysicalStores
+import app.ehrenamtskarte.backend.generated.ImportAcceptingStores
+import app.ehrenamtskarte.backend.generated.inputs.CSVAcceptingStoreInput
+import app.ehrenamtskarte.backend.helper.CSVAcceptanceStoreBuilder
+import app.ehrenamtskarte.backend.helper.TestAdministrators
+import app.ehrenamtskarte.backend.helper.TestData
 import app.ehrenamtskarte.backend.util.JsonAssertion.assertJsonValue
 import io.javalin.testtools.JavalinTest
 import org.jetbrains.exposed.sql.deleteAll

@@ -1,10 +1,10 @@
 package app.ehrenamtskarte.backend.import.stores.common.steps
 
 import app.ehrenamtskarte.backend.import.STREET_EXCLUDE_PATTERN
-import app.ehrenamtskarte.backend.import.stores.geocoding.FeatureFetcher
 import app.ehrenamtskarte.backend.import.stores.ImportConfig
 import app.ehrenamtskarte.backend.import.stores.PipelineStep
 import app.ehrenamtskarte.backend.import.stores.common.types.AcceptingStore
+import app.ehrenamtskarte.backend.import.stores.geocoding.FeatureFetcher
 import app.ehrenamtskarte.backend.import.stores.logChange
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.runBlocking
