@@ -71,7 +71,7 @@ export const ApplicationStatusNote = (p: {
             t={t}
             i18nKey={translationKey}
             values={{
-              date: format(p.statusResolvedDate, 'dd MMMM', { locale: de }),
+              date: format(p.statusResolvedDate, 'dd. MMMM yyyy', { locale: de }),
               time: format(p.statusResolvedDate, 'HH:mm', { locale: de }),
               reason: p.reason !== undefined ? t('reason', { message: p.reason }) : '',
             }}
