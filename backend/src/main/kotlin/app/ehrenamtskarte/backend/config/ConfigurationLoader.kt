@@ -27,8 +27,8 @@ object ConfigurationLoader {
      * @return The URL to the found configuration file.
      * @throws IllegalStateException if no configuration file can be found.
      */
-    private fun findConfigurationUrl(explicitConfigFile: File? = null): URL {
-        return explicitConfigFile?.let {
+    private fun findConfigurationUrl(explicitConfigFile: File? = null): URL =
+        explicitConfigFile?.let {
             logger.info("Load backend configuration from explicit config file '$it'.")
             it.toURI().toURL()
         } ?: defaultConfigFilePaths.firstNotNullOfOrNull { path ->
@@ -46,7 +46,6 @@ object ConfigurationLoader {
             "No backend configuration found. Please provide a config.yml file in one of the default locations: " +
                 "${defaultConfigFilePaths.joinToString()} or in classpath resources: ${defaultConfigResourceUrls.joinToString()}",
         )
-    }
 
     /**
      * Loads the BackendConfiguration from a file.
