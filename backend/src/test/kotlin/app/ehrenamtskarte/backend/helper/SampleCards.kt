@@ -1,8 +1,8 @@
 package app.ehrenamtskarte.backend.helper
 
 import Card
-import app.ehrenamtskarte.backend.cards.PEPPER_LENGTH
-import app.ehrenamtskarte.backend.cards.hash
+import app.ehrenamtskarte.backend.graphql.cards.PEPPER_LENGTH
+import app.ehrenamtskarte.backend.graphql.cards.hash
 import java.security.SecureRandom
 import java.util.Base64
 
