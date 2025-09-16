@@ -7,9 +7,7 @@ import org.springframework.context.annotation.Import
 @Import(TestcontainersConfiguration::class)
 @SpringBootTest
 class BackendApplicationTests {
-
-	@Test
-	fun contextLoads() {
-	}
-
+    @Test
+    fun contextLoads() {
+    }
 }

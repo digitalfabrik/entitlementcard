@@ -24,6 +24,7 @@ import org.jetbrains.exposed.sql.exists
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
 import org.springframework.boot.runApplication
+import org.springframework.context.support.beans
 import java.io.File
 import java.sql.SQLException
 import java.util.TimeZone
@@ -106,10 +107,10 @@ class GraphQLExport : CliktCommand("graphql-export") {
     override fun help(context: Context): String = "Exports the GraphQL schema into the directory given by '--path'"
 
     override fun run() {
-        //todo fix after graphql handler migration to spring
-        //val schema = GraphQLHandler(config).graphQLSchema.print()
-        //val file = File(path)
-        //file.writeText(schema)
+        // todo fix after graphql handler migration to spring
+        // val schema = GraphQLHandler(config).graphQLSchema.print()
+        // val file = File(path)
+        // file.writeText(schema)
     }
 }
 
@@ -171,7 +172,13 @@ class Execute : CliktCommand() {
 
     override fun run() {
         Database.setupWithInitialDataAndMigrationChecks(config)
-        runApplication<BackendApplication>()
+        runApplication<BackendApplication> {
+            addInitializers(
+                beans {
+                    bean { config }
+                },
+            )
+        }
     }
 }
 
