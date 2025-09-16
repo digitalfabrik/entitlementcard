@@ -7,66 +7,58 @@ import app.ehrenamtskarte.backend.db.entities.Projects
 import app.ehrenamtskarte.backend.db.repositories.CardRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.db.repositories.UserEntitlementsRepository
-import app.ehrenamtskarte.backend.graphql.shared.TokenAuthenticator
+import app.ehrenamtskarte.backend.shared.TokenAuthenticator
 import app.ehrenamtskarte.backend.routes.exception.UserImportException
 import app.ehrenamtskarte.backend.shared.crypto.Argon2IdHasher
-import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
-import app.ehrenamtskarte.backend.shared.exceptions.ProjectNotFoundException
-import app.ehrenamtskarte.backend.shared.exceptions.UnauthorizedException
-import io.javalin.http.Context
+import jakarta.servlet.http.HttpServletRequest
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.multipart.MultipartFile
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
-class UserImportHandler(
-    private val backendConfiguration: BackendConfiguration,
+@RestController
+@RequestMapping("/users/import")
+class UserImportController(
+    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
+    private val config: BackendConfiguration,
 ) {
-    private val logger: Logger = LoggerFactory.getLogger(UserImportHandler::class.java)
-
-    fun handle(context: Context) {
-        try {
-            val apiToken = TokenAuthenticator.authenticate(context, ApiTokenType.USER_IMPORT)
-
-            val project = transaction { ProjectEntity.find { Projects.id eq apiToken.projectId }.single() }
-            val projectConfig = backendConfiguration.getProjectConfig(project.project)
-
-            if (!projectConfig.selfServiceEnabled) {
-                throw UserImportException("User import is not enabled in the project")
-            }
-
-            val files = context.uploadedFiles("file")
-            when {
-                files.isEmpty() -> throw UserImportException("No file uploaded")
-                files.size > 1 -> throw UserImportException("Multiple files uploaded")
-            }
-            val file = files[0]
-
-            BufferedReader(InputStreamReader(file.content())).use { reader ->
-                getCSVParser(reader).use { csvParser ->
-                    validateHeaders(csvParser.headerNames)
-                    importData(csvParser, project.project)
-                }
-            }
-            context.status(200).json(mapOf("message" to "Import successfully completed"))
-        } catch (exception: UserImportException) {
-            context.status(400).json(mapOf("message" to exception.message))
-        } catch (exception: UnauthorizedException) {
-            context.status(401).json(mapOf("message" to exception.message))
-        } catch (exception: ForbiddenException) {
-            context.status(403).json(mapOf("message" to exception.message))
-        } catch (exception: ProjectNotFoundException) {
-            context.status(404).json(mapOf("message" to exception.message))
-        } catch (exception: Exception) {
-            logger.error("Failed to perform user import", exception)
-            context.status(500).json(mapOf("message" to "Internal error occurred"))
+    @PostMapping
+    fun handleUserImport(
+        @RequestParam("file") files: List<MultipartFile>,
+        request: HttpServletRequest,
+    ): ResponseEntity<Map<String, String>> {
+        when {
+            files.isEmpty() -> throw UserImportException("No file uploaded")
+            files.size > 1 -> throw UserImportException("Multiple files uploaded")
         }
+        val file = files.single()
+
+        val apiToken = TokenAuthenticator.authenticate(request, ApiTokenType.USER_IMPORT)
+        val project = transaction { ProjectEntity.find { Projects.id eq apiToken.projectId }.single() }
+        val projectConfig = config.getProjectConfig(project.project)
+
+        if (!projectConfig.selfServiceEnabled) {
+            throw UserImportException("User import is not enabled for this project")
+        }
+
+        BufferedReader(InputStreamReader(file.inputStream)).use { reader ->
+            getCSVParser(reader).use { csvParser ->
+                validateHeaders(csvParser.headerNames)
+                importData(csvParser, project.project)
+            }
+        }
+
+        return ResponseEntity.ok(mapOf("message" to "Import successfully completed"))
     }
 
     private fun getCSVParser(reader: BufferedReader): CSVParser =
@@ -127,7 +119,7 @@ class UserImportHandler(
     private fun parseDate(dateString: String, lineNumber: Long): LocalDate {
         try {
             return LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd.MM.yyyy"))
-        } catch (exception: DateTimeParseException) {
+        } catch (_: DateTimeParseException) {
             throw UserImportException(
                 lineNumber,
                 "Failed to parse date [$dateString]. Expected format: dd.MM.yyyy",
