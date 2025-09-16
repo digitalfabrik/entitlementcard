@@ -129,7 +129,7 @@ export const generatePdf = async (
     doc.setAuthor(pdfConfig.issuer)
 
     const pdfBytes = await doc.save()
-    return new Blob([pdfBytes], { type: 'application/pdf' })
+    return new Blob([pdfBytes.buffer as ArrayBuffer], { type: 'application/pdf' })
   } catch (error) {
     if (error instanceof Error) {
       throw new PdfError(error.message)

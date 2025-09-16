@@ -1,11 +1,11 @@
 package app.ehrenamtskarte.backend
 
-import app.ehrenamtskarte.backend.common.database.Database
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.PostgresConfig
+import app.ehrenamtskarte.backend.db.Database
+import app.ehrenamtskarte.backend.db.migration.MigrationUtils
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestFreinetAgencies
-import app.ehrenamtskarte.backend.migration.MigrationUtils
 import org.junit.jupiter.api.BeforeAll
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.utility.DockerImageName

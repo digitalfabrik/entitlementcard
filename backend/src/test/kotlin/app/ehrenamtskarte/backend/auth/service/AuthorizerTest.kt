@@ -1,14 +1,35 @@
 package app.ehrenamtskarte.backend.auth.service
 
 import app.ehrenamtskarte.backend.IntegrationTest
-import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
-import app.ehrenamtskarte.backend.auth.database.Administrators
-import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
+import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
+import app.ehrenamtskarte.backend.db.entities.Administrators
+import app.ehrenamtskarte.backend.db.entities.RegionEntity
+import app.ehrenamtskarte.backend.db.entities.mayAddApiTokensInProject
+import app.ehrenamtskarte.backend.db.entities.mayCreateCardInRegion
+import app.ehrenamtskarte.backend.db.entities.mayCreateUser
+import app.ehrenamtskarte.backend.db.entities.mayDeleteApiTokensInProject
+import app.ehrenamtskarte.backend.db.entities.mayDeleteApplicationsInRegion
+import app.ehrenamtskarte.backend.db.entities.mayDeleteCardInRegion
+import app.ehrenamtskarte.backend.db.entities.mayDeleteUser
+import app.ehrenamtskarte.backend.db.entities.mayEditUser
+import app.ehrenamtskarte.backend.db.entities.maySendMailsInRegion
+import app.ehrenamtskarte.backend.db.entities.mayUpdateApplicationsInRegion
+import app.ehrenamtskarte.backend.db.entities.mayUpdateSettingsInRegion
+import app.ehrenamtskarte.backend.db.entities.mayUpdateStoresInProject
+import app.ehrenamtskarte.backend.db.entities.mayViewApiMetadataInProject
+import app.ehrenamtskarte.backend.db.entities.mayViewApplicationsInRegion
+import app.ehrenamtskarte.backend.db.entities.mayViewCardStatisticsInProject
+import app.ehrenamtskarte.backend.db.entities.mayViewCardStatisticsInRegion
+import app.ehrenamtskarte.backend.db.entities.mayViewFreinetAgencyInformationInRegion
+import app.ehrenamtskarte.backend.db.entities.mayViewHashingPepper
+import app.ehrenamtskarte.backend.db.entities.mayViewUsersInProject
+import app.ehrenamtskarte.backend.db.entities.mayViewUsersInRegion
+import app.ehrenamtskarte.backend.graphql.auth.types.Role
 import app.ehrenamtskarte.backend.helper.TestAdministrators
-import app.ehrenamtskarte.backend.regions.database.RegionEntity
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 val bayernProjectAdmin = AdministratorEntity
     .find { Administrators.email eq TestAdministrators.EAK_PROJECT_ADMIN.email }
@@ -51,506 +72,283 @@ internal class AuthorizerTest : IntegrationTest() {
     @Test
     fun testMayCreateCardInRegion() {
         transaction {
-            assertEquals(Authorizer.mayCreateCardInRegion(bayernRegionAdmin, bayernRegionId), true)
-            assertEquals(Authorizer.mayCreateCardInRegion(bayernRegionManager, bayernRegionId), true)
-            assertEquals(Authorizer.mayCreateCardInRegion(koblenzRegionAdmin, koblenzRegionId), true)
-            assertEquals(Authorizer.mayCreateCardInRegion(koblenzRegionManager, koblenzRegionId), true)
+            assertTrue(bayernRegionAdmin.mayCreateCardInRegion(bayernRegionId))
+            assertTrue(bayernRegionManager.mayCreateCardInRegion(bayernRegionId))
+            assertTrue(koblenzRegionAdmin.mayCreateCardInRegion(koblenzRegionId))
+            assertTrue(koblenzRegionManager.mayCreateCardInRegion(koblenzRegionId))
 
-            assertEquals(Authorizer.mayCreateCardInRegion(bayernProjectAdmin, 16), false)
-            assertEquals(Authorizer.mayCreateCardInRegion(bayernRegionAdmin, 5), false)
-            assertEquals(Authorizer.mayCreateCardInRegion(bayernRegionManager, 5), false)
-            assertEquals(Authorizer.mayCreateCardInRegion(koblenzProjectAdmin, 2), false)
-            assertEquals(Authorizer.mayCreateCardInRegion(koblenzRegionManager, 2), false)
-            assertEquals(Authorizer.mayCreateCardInRegion(nuernbergStoreManager, 5), false)
+            assertFalse(bayernProjectAdmin.mayCreateCardInRegion(16))
+            assertFalse(bayernRegionAdmin.mayCreateCardInRegion(5))
+            assertFalse(bayernRegionManager.mayCreateCardInRegion(5))
+            assertFalse(koblenzProjectAdmin.mayCreateCardInRegion(2))
+            assertFalse(koblenzRegionManager.mayCreateCardInRegion(2))
+            assertFalse(nuernbergStoreManager.mayCreateCardInRegion(5))
         }
     }
 
     @Test
     fun testMayDeleteCardInRegion() {
         transaction {
-            assertEquals(Authorizer.mayDeleteCardInRegion(bayernRegionAdmin, bayernRegionId), true)
-            assertEquals(Authorizer.mayDeleteCardInRegion(bayernRegionManager, bayernRegionId), true)
-            assertEquals(Authorizer.mayDeleteCardInRegion(koblenzRegionAdmin, koblenzRegionId), true)
-            assertEquals(Authorizer.mayDeleteCardInRegion(koblenzRegionManager, koblenzRegionId), true)
+            assertTrue(bayernRegionAdmin.mayDeleteCardInRegion(bayernRegionId))
+            assertTrue(bayernRegionManager.mayDeleteCardInRegion(bayernRegionId))
+            assertTrue(koblenzRegionAdmin.mayDeleteCardInRegion(koblenzRegionId))
+            assertTrue(koblenzRegionManager.mayDeleteCardInRegion(koblenzRegionId))
 
-            assertEquals(Authorizer.mayDeleteCardInRegion(bayernProjectAdmin, 16), false)
-            assertEquals(Authorizer.mayDeleteCardInRegion(bayernRegionAdmin, 5), false)
-            assertEquals(Authorizer.mayDeleteCardInRegion(bayernRegionManager, 5), false)
-            assertEquals(Authorizer.mayDeleteCardInRegion(koblenzProjectAdmin, 2), false)
-            assertEquals(Authorizer.mayDeleteCardInRegion(koblenzRegionManager, 2), false)
-            assertEquals(Authorizer.mayDeleteCardInRegion(nuernbergStoreManager, 5), false)
+            assertFalse(bayernProjectAdmin.mayDeleteCardInRegion(16))
+            assertFalse(bayernRegionAdmin.mayDeleteCardInRegion(5))
+            assertFalse(bayernRegionManager.mayDeleteCardInRegion(5))
+            assertFalse(koblenzProjectAdmin.mayDeleteCardInRegion(2))
+            assertFalse(koblenzRegionManager.mayDeleteCardInRegion(2))
+            assertFalse(nuernbergStoreManager.mayDeleteCardInRegion(5))
         }
     }
 
     @Test
     fun testMayViewApplicationsInRegion() {
         transaction {
-            assertEquals(Authorizer.mayViewApplicationsInRegion(bayernRegionAdmin, bayernRegionId), true)
-            assertEquals(Authorizer.mayViewApplicationsInRegion(bayernRegionManager, bayernRegionId), true)
-            assertEquals(Authorizer.mayViewApplicationsInRegion(koblenzRegionAdmin, koblenzRegionId), true)
-            assertEquals(Authorizer.mayViewApplicationsInRegion(koblenzRegionManager, koblenzRegionId), true)
+            assertTrue(bayernRegionAdmin.mayViewApplicationsInRegion(bayernRegionId))
+            assertTrue(bayernRegionManager.mayViewApplicationsInRegion(bayernRegionId))
+            assertTrue(koblenzRegionAdmin.mayViewApplicationsInRegion(koblenzRegionId))
+            assertTrue(koblenzRegionManager.mayViewApplicationsInRegion(koblenzRegionId))
 
-            assertEquals(Authorizer.mayViewApplicationsInRegion(bayernProjectAdmin, 16), false)
-            assertEquals(Authorizer.mayViewApplicationsInRegion(bayernRegionAdmin, 5), false)
-            assertEquals(Authorizer.mayViewApplicationsInRegion(bayernRegionManager, 5), false)
-            assertEquals(Authorizer.mayViewApplicationsInRegion(koblenzProjectAdmin, 2), false)
-            assertEquals(Authorizer.mayViewApplicationsInRegion(koblenzRegionManager, 2), false)
-            assertEquals(Authorizer.mayViewApplicationsInRegion(nuernbergStoreManager, 5), false)
+            assertFalse(bayernProjectAdmin.mayViewApplicationsInRegion(16))
+            assertFalse(bayernRegionAdmin.mayViewApplicationsInRegion(5))
+            assertFalse(bayernRegionManager.mayViewApplicationsInRegion(5))
+            assertFalse(koblenzProjectAdmin.mayViewApplicationsInRegion(2))
+            assertFalse(koblenzRegionManager.mayViewApplicationsInRegion(2))
+            assertFalse(nuernbergStoreManager.mayViewApplicationsInRegion(5))
         }
     }
 
     @Test
     fun testMayUpdateApplicationsInRegion() {
         transaction {
-            assertEquals(Authorizer.mayUpdateApplicationsInRegion(bayernRegionAdmin, bayernRegionId), true)
-            assertEquals(Authorizer.mayUpdateApplicationsInRegion(bayernRegionManager, bayernRegionId), true)
-            assertEquals(Authorizer.mayUpdateApplicationsInRegion(koblenzRegionAdmin, koblenzRegionId), true)
-            assertEquals(Authorizer.mayUpdateApplicationsInRegion(koblenzRegionManager, koblenzRegionId), true)
+            assertTrue(bayernRegionAdmin.mayUpdateApplicationsInRegion(bayernRegionId))
+            assertTrue(bayernRegionManager.mayUpdateApplicationsInRegion(bayernRegionId))
+            assertTrue(koblenzRegionAdmin.mayUpdateApplicationsInRegion(koblenzRegionId))
+            assertTrue(koblenzRegionManager.mayUpdateApplicationsInRegion(koblenzRegionId))
 
-            assertEquals(Authorizer.mayUpdateApplicationsInRegion(bayernProjectAdmin, 16), false)
-            assertEquals(Authorizer.mayUpdateApplicationsInRegion(bayernRegionAdmin, 5), false)
-            assertEquals(Authorizer.mayUpdateApplicationsInRegion(bayernRegionManager, 5), false)
-            assertEquals(Authorizer.mayUpdateApplicationsInRegion(koblenzProjectAdmin, 2), false)
-            assertEquals(Authorizer.mayUpdateApplicationsInRegion(koblenzRegionManager, 2), false)
-            assertEquals(Authorizer.mayUpdateApplicationsInRegion(nuernbergStoreManager, 5), false)
+            assertFalse(bayernProjectAdmin.mayUpdateApplicationsInRegion(16))
+            assertFalse(bayernRegionAdmin.mayUpdateApplicationsInRegion(5))
+            assertFalse(bayernRegionManager.mayUpdateApplicationsInRegion(5))
+            assertFalse(koblenzProjectAdmin.mayUpdateApplicationsInRegion(2))
+            assertFalse(koblenzRegionManager.mayUpdateApplicationsInRegion(2))
+            assertFalse(nuernbergStoreManager.mayUpdateApplicationsInRegion(5))
         }
     }
 
     @Test
     fun testMayDeleteApplicationsInRegion() {
         transaction {
-            assertEquals(Authorizer.mayDeleteApplicationsInRegion(bayernRegionAdmin, bayernRegionId), true)
-            assertEquals(Authorizer.mayDeleteApplicationsInRegion(bayernRegionManager, bayernRegionId), true)
-            assertEquals(Authorizer.mayDeleteApplicationsInRegion(koblenzRegionAdmin, koblenzRegionId), true)
-            assertEquals(Authorizer.mayDeleteApplicationsInRegion(koblenzRegionManager, koblenzRegionId), true)
+            assertTrue(bayernRegionAdmin.mayDeleteApplicationsInRegion(bayernRegionId))
+            assertTrue(bayernRegionManager.mayDeleteApplicationsInRegion(bayernRegionId))
+            assertTrue(koblenzRegionAdmin.mayDeleteApplicationsInRegion(koblenzRegionId))
+            assertTrue(koblenzRegionManager.mayDeleteApplicationsInRegion(koblenzRegionId))
 
-            assertEquals(Authorizer.mayDeleteApplicationsInRegion(bayernProjectAdmin, 16), false)
-            assertEquals(Authorizer.mayDeleteApplicationsInRegion(bayernRegionAdmin, 5), false)
-            assertEquals(Authorizer.mayDeleteApplicationsInRegion(bayernRegionManager, 5), false)
-            assertEquals(Authorizer.mayDeleteApplicationsInRegion(koblenzProjectAdmin, 2), false)
-            assertEquals(Authorizer.mayDeleteApplicationsInRegion(koblenzRegionManager, 2), false)
-            assertEquals(Authorizer.mayDeleteApplicationsInRegion(nuernbergStoreManager, 5), false)
+            assertFalse(bayernProjectAdmin.mayDeleteApplicationsInRegion(16))
+            assertFalse(bayernRegionAdmin.mayDeleteApplicationsInRegion(5))
+            assertFalse(bayernRegionManager.mayDeleteApplicationsInRegion(5))
+            assertFalse(koblenzProjectAdmin.mayDeleteApplicationsInRegion(2))
+            assertFalse(koblenzRegionManager.mayDeleteApplicationsInRegion(2))
+            assertFalse(nuernbergStoreManager.mayDeleteApplicationsInRegion(5))
         }
     }
 
     @Test
     fun testMayUpdateSettingsInRegion() {
         transaction {
-            assertEquals(Authorizer.mayUpdateSettingsInRegion(bayernRegionAdmin, bayernRegionId), true)
-            assertEquals(Authorizer.mayUpdateSettingsInRegion(koblenzRegionAdmin, koblenzRegionId), true)
+            assertTrue(bayernRegionAdmin.mayUpdateSettingsInRegion(bayernRegionId))
+            assertTrue(koblenzRegionAdmin.mayUpdateSettingsInRegion(koblenzRegionId))
 
-            assertEquals(Authorizer.mayUpdateSettingsInRegion(bayernProjectAdmin, 16), false)
-            assertEquals(Authorizer.mayUpdateSettingsInRegion(bayernRegionAdmin, 5), false)
-            assertEquals(Authorizer.mayUpdateSettingsInRegion(bayernRegionManager, bayernRegionId), false)
-            assertEquals(Authorizer.mayUpdateSettingsInRegion(bayernRegionManager, 5), false)
-            assertEquals(Authorizer.mayUpdateSettingsInRegion(koblenzProjectAdmin, 2), false)
-            assertEquals(Authorizer.mayUpdateSettingsInRegion(koblenzRegionManager, 2), false)
-            assertEquals(Authorizer.mayUpdateSettingsInRegion(koblenzRegionManager, koblenzRegionId), false)
-            assertEquals(Authorizer.mayUpdateSettingsInRegion(nuernbergStoreManager, 5), false)
+            assertFalse(bayernProjectAdmin.mayUpdateSettingsInRegion(16))
+            assertFalse(bayernRegionAdmin.mayUpdateSettingsInRegion(5))
+            assertFalse(bayernRegionManager.mayUpdateSettingsInRegion(bayernRegionId))
+            assertFalse(bayernRegionManager.mayUpdateSettingsInRegion(5))
+            assertFalse(koblenzProjectAdmin.mayUpdateSettingsInRegion(2))
+            assertFalse(koblenzRegionManager.mayUpdateSettingsInRegion(2))
+            assertFalse(koblenzRegionManager.mayUpdateSettingsInRegion(koblenzRegionId))
+            assertFalse(nuernbergStoreManager.mayUpdateSettingsInRegion(5))
         }
     }
 
     @Test
     fun testMayViewUsersInProject() {
         transaction {
-            assertEquals(Authorizer.mayViewUsersInProject(bayernProjectAdmin, bayernId), true)
-            assertEquals(Authorizer.mayViewUsersInProject(koblenzProjectAdmin, koblenzId), true)
-            assertEquals(Authorizer.mayViewUsersInProject(nuernbergProjectAdmin, nuernbergId), true)
+            assertTrue(bayernProjectAdmin.mayViewUsersInProject(bayernId))
+            assertTrue(koblenzProjectAdmin.mayViewUsersInProject(koblenzId))
+            assertTrue(nuernbergProjectAdmin.mayViewUsersInProject(nuernbergId))
 
-            assertEquals(Authorizer.mayViewUsersInProject(bayernProjectAdmin, 10), false)
-            assertEquals(Authorizer.mayViewUsersInProject(bayernRegionAdmin, bayernId), false)
-            assertEquals(Authorizer.mayViewUsersInProject(bayernRegionManager, bayernId), false)
-            assertEquals(Authorizer.mayViewUsersInProject(koblenzProjectAdmin, 10), false)
-            assertEquals(Authorizer.mayViewUsersInProject(koblenzRegionManager, koblenzId), false)
-            assertEquals(Authorizer.mayViewUsersInProject(koblenzRegionAdmin, koblenzId), false)
-            assertEquals(Authorizer.mayViewUsersInProject(koblenzRegionManager, koblenzId), false)
-            assertEquals(Authorizer.mayViewUsersInProject(nuernbergStoreManager, nuernbergId), false)
+            assertFalse(bayernProjectAdmin.mayViewUsersInProject(10))
+            assertFalse(bayernRegionAdmin.mayViewUsersInProject(bayernId))
+            assertFalse(bayernRegionManager.mayViewUsersInProject(bayernId))
+            assertFalse(koblenzProjectAdmin.mayViewUsersInProject(10))
+            assertFalse(koblenzRegionManager.mayViewUsersInProject(koblenzId))
+            assertFalse(koblenzRegionAdmin.mayViewUsersInProject(koblenzId))
+            assertFalse(koblenzRegionManager.mayViewUsersInProject(koblenzId))
+            assertFalse(nuernbergStoreManager.mayViewUsersInProject(nuernbergId))
         }
     }
 
     @Test
     fun testMayViewUsersInRegion() {
         transaction {
-            assertEquals(Authorizer.mayViewUsersInRegion(bayernProjectAdmin, bayernRegion), true)
-            assertEquals(Authorizer.mayViewUsersInRegion(bayernRegionAdmin, bayernRegion), true)
-            assertEquals(Authorizer.mayViewUsersInRegion(koblenzProjectAdmin, koblenzRegionAdmin.region()), true)
-            assertEquals(Authorizer.mayViewUsersInRegion(koblenzRegionAdmin, koblenzRegionAdmin.region()), true)
+            assertTrue(bayernProjectAdmin.mayViewUsersInRegion(bayernRegion))
+            assertTrue(bayernRegionAdmin.mayViewUsersInRegion(bayernRegion))
+            assertTrue(koblenzProjectAdmin.mayViewUsersInRegion(koblenzRegionAdmin.region()))
+            assertTrue(koblenzRegionAdmin.mayViewUsersInRegion(koblenzRegionAdmin.region()))
 
-            assertEquals(Authorizer.mayViewUsersInRegion(bayernProjectAdmin, koblenzRegion), false)
-            assertEquals(Authorizer.mayViewUsersInRegion(bayernRegionAdmin, koblenzRegionAdmin.region()), false)
-            assertEquals(Authorizer.mayViewUsersInRegion(bayernRegionManager, bayernRegionManager.region()), false)
-            assertEquals(Authorizer.mayViewUsersInRegion(koblenzProjectAdmin, bayernRegion), false)
-            assertEquals(Authorizer.mayViewUsersInRegion(koblenzRegionAdmin, bayernRegion), false)
-            assertEquals(Authorizer.mayViewUsersInRegion(koblenzRegionManager, koblenzRegion), false)
-            assertEquals(Authorizer.mayViewUsersInRegion(nuernbergStoreManager, koblenzRegion), false)
+            assertFalse(bayernProjectAdmin.mayViewUsersInRegion(koblenzRegion))
+            assertFalse(bayernRegionAdmin.mayViewUsersInRegion(koblenzRegionAdmin.region()))
+            assertFalse(bayernRegionManager.mayViewUsersInRegion(bayernRegionManager.region()))
+            assertFalse(koblenzProjectAdmin.mayViewUsersInRegion(bayernRegion))
+            assertFalse(koblenzRegionAdmin.mayViewUsersInRegion(bayernRegion))
+            assertFalse(koblenzRegionManager.mayViewUsersInRegion(koblenzRegion))
+            assertFalse(nuernbergStoreManager.mayViewUsersInRegion(koblenzRegion))
         }
     }
 
     @Test
     fun testMaySendMailsInRegion() {
         transaction {
-            assertEquals(Authorizer.maySendMailsInRegion(bayernRegionAdmin, bayernRegionId), true)
-            assertEquals(Authorizer.maySendMailsInRegion(bayernRegionManager, bayernRegionId), true)
-            assertEquals(Authorizer.maySendMailsInRegion(koblenzRegionAdmin, koblenzRegionId), true)
-            assertEquals(Authorizer.maySendMailsInRegion(koblenzRegionManager, koblenzRegionId), true)
+            assertTrue(bayernRegionAdmin.maySendMailsInRegion(bayernRegionId))
+            assertTrue(bayernRegionManager.maySendMailsInRegion(bayernRegionId))
+            assertTrue(koblenzRegionAdmin.maySendMailsInRegion(koblenzRegionId))
+            assertTrue(koblenzRegionManager.maySendMailsInRegion(koblenzRegionId))
 
-            assertEquals(Authorizer.maySendMailsInRegion(bayernProjectAdmin, 16), false)
-            assertEquals(Authorizer.maySendMailsInRegion(bayernRegionAdmin, 5), false)
-            assertEquals(Authorizer.maySendMailsInRegion(bayernRegionManager, 5), false)
-            assertEquals(Authorizer.maySendMailsInRegion(koblenzProjectAdmin, 2), false)
-            assertEquals(Authorizer.maySendMailsInRegion(koblenzRegionManager, 2), false)
-            assertEquals(Authorizer.maySendMailsInRegion(nuernbergStoreManager, 5), false)
+            assertFalse(bayernProjectAdmin.maySendMailsInRegion(16))
+            assertFalse(bayernRegionAdmin.maySendMailsInRegion(5))
+            assertFalse(bayernRegionManager.maySendMailsInRegion(5))
+            assertFalse(koblenzProjectAdmin.maySendMailsInRegion(2))
+            assertFalse(koblenzRegionManager.maySendMailsInRegion(2))
+            assertFalse(nuernbergStoreManager.maySendMailsInRegion(5))
         }
     }
 
     @Test
     fun testMayCardStatisticsInProject() {
         transaction {
-            assertEquals(Authorizer.mayViewCardStatisticsInProject(bayernProjectAdmin, bayernId), true)
-            assertEquals(Authorizer.mayViewCardStatisticsInProject(koblenzProjectAdmin, koblenzId), true)
-            assertEquals(Authorizer.mayViewUsersInProject(nuernbergProjectAdmin, nuernbergId), true)
+            assertTrue(bayernProjectAdmin.mayViewCardStatisticsInProject(bayernId))
+            assertTrue(koblenzProjectAdmin.mayViewCardStatisticsInProject(koblenzId))
+            assertTrue(nuernbergProjectAdmin.mayViewUsersInProject(nuernbergId))
 
-            assertEquals(Authorizer.mayViewCardStatisticsInProject(bayernProjectAdmin, 10), false)
-            assertEquals(Authorizer.mayViewCardStatisticsInProject(bayernRegionAdmin, bayernId), false)
-            assertEquals(Authorizer.mayViewCardStatisticsInProject(bayernRegionManager, bayernId), false)
-            assertEquals(Authorizer.mayViewCardStatisticsInProject(koblenzProjectAdmin, 10), false)
-            assertEquals(Authorizer.mayViewCardStatisticsInProject(koblenzRegionManager, koblenzId), false)
-            assertEquals(Authorizer.mayViewCardStatisticsInProject(koblenzRegionAdmin, koblenzId), false)
-            assertEquals(Authorizer.mayViewCardStatisticsInProject(koblenzRegionManager, koblenzId), false)
-            assertEquals(Authorizer.mayViewCardStatisticsInProject(nuernbergStoreManager, nuernbergId), false)
+            assertFalse(bayernProjectAdmin.mayViewCardStatisticsInProject(10))
+            assertFalse(bayernRegionAdmin.mayViewCardStatisticsInProject(bayernId))
+            assertFalse(bayernRegionManager.mayViewCardStatisticsInProject(bayernId))
+            assertFalse(koblenzProjectAdmin.mayViewCardStatisticsInProject(10))
+            assertFalse(koblenzRegionManager.mayViewCardStatisticsInProject(koblenzId))
+            assertFalse(koblenzRegionAdmin.mayViewCardStatisticsInProject(koblenzId))
+            assertFalse(koblenzRegionManager.mayViewCardStatisticsInProject(koblenzId))
+            assertFalse(nuernbergStoreManager.mayViewCardStatisticsInProject(nuernbergId))
         }
     }
 
     @Test
     fun testMayViewCardStatisticsInRegion() {
         transaction {
-            assertEquals(Authorizer.mayViewCardStatisticsInRegion(bayernRegionAdmin, bayernRegionId), true)
-            assertEquals(Authorizer.mayViewCardStatisticsInRegion(koblenzRegionAdmin, koblenzRegionId), true)
+            assertTrue(bayernRegionAdmin.mayViewCardStatisticsInRegion(bayernRegionId))
+            assertTrue(koblenzRegionAdmin.mayViewCardStatisticsInRegion(koblenzRegionId))
 
-            assertEquals(Authorizer.mayViewCardStatisticsInRegion(bayernProjectAdmin, 16), false)
-            assertEquals(Authorizer.mayViewCardStatisticsInRegion(bayernRegionAdmin, 5), false)
-            assertEquals(Authorizer.mayViewCardStatisticsInRegion(bayernRegionManager, bayernRegionId), false)
-            assertEquals(Authorizer.mayViewCardStatisticsInRegion(bayernRegionManager, 5), false)
-            assertEquals(Authorizer.mayViewCardStatisticsInRegion(koblenzProjectAdmin, 2), false)
-            assertEquals(Authorizer.mayViewCardStatisticsInRegion(koblenzRegionManager, 2), false)
-            assertEquals(Authorizer.mayViewCardStatisticsInRegion(koblenzRegionManager, koblenzRegionId), false)
-            assertEquals(Authorizer.mayViewCardStatisticsInRegion(nuernbergStoreManager, 5), false)
+            assertFalse(bayernProjectAdmin.mayViewCardStatisticsInRegion(16))
+            assertFalse(bayernRegionAdmin.mayViewCardStatisticsInRegion(5))
+            assertFalse(bayernRegionManager.mayViewCardStatisticsInRegion(bayernRegionId))
+            assertFalse(bayernRegionManager.mayViewCardStatisticsInRegion(5))
+            assertFalse(koblenzProjectAdmin.mayViewCardStatisticsInRegion(2))
+            assertFalse(koblenzRegionManager.mayViewCardStatisticsInRegion(2))
+            assertFalse(koblenzRegionManager.mayViewCardStatisticsInRegion(koblenzRegionId))
+            assertFalse(nuernbergStoreManager.mayViewCardStatisticsInRegion(5))
         }
     }
 
     @Test
     fun testMayCreateUser() {
         transaction {
-            assertEquals(
-                Authorizer.mayCreateUser(bayernProjectAdmin, bayernId, Role.PROJECT_ADMIN, null),
-                true,
-            )
-            assertEquals(Authorizer.mayCreateUser(bayernProjectAdmin, bayernId, Role.REGION_ADMIN, bayernRegion), true)
-            assertEquals(
-                Authorizer.mayCreateUser(bayernProjectAdmin, bayernId, Role.REGION_MANAGER, bayernRegion),
-                true,
-            )
-            assertEquals(
-                Authorizer.mayCreateUser(bayernProjectAdmin, bayernId, Role.EXTERNAL_VERIFIED_API_USER, null),
-                true,
-            )
-            assertEquals(
-                Authorizer.mayCreateUser(bayernProjectAdmin, koblenzId, Role.REGION_ADMIN, bayernRegion),
-                false,
-            )
-            assertEquals(Authorizer.mayCreateUser(bayernProjectAdmin, bayernId, Role.NO_RIGHTS, bayernRegion), false)
+            assertTrue(bayernProjectAdmin.mayCreateUser(bayernId, Role.PROJECT_ADMIN, null))
+            assertTrue(bayernProjectAdmin.mayCreateUser(bayernId, Role.REGION_ADMIN, bayernRegion))
+            assertTrue(bayernProjectAdmin.mayCreateUser(bayernId, Role.REGION_MANAGER, bayernRegion))
+            assertTrue(bayernProjectAdmin.mayCreateUser(bayernId, Role.EXTERNAL_VERIFIED_API_USER, null))
+            assertFalse(bayernProjectAdmin.mayCreateUser(koblenzId, Role.REGION_ADMIN, bayernRegion))
 
-            assertEquals(Authorizer.mayCreateUser(bayernRegionAdmin, bayernId, Role.PROJECT_ADMIN, null), false)
-            assertEquals(Authorizer.mayCreateUser(bayernRegionAdmin, bayernId, Role.REGION_ADMIN, bayernRegion), true)
-            assertEquals(Authorizer.mayCreateUser(bayernRegionAdmin, bayernId, Role.REGION_ADMIN, null), false)
-            assertEquals(Authorizer.mayCreateUser(bayernRegionAdmin, bayernId, Role.REGION_MANAGER, bayernRegion), true)
-            assertEquals(Authorizer.mayCreateUser(bayernRegionAdmin, bayernId, Role.REGION_MANAGER, null), false)
-            assertEquals(
-                Authorizer.mayCreateUser(bayernRegionAdmin, bayernId, Role.EXTERNAL_VERIFIED_API_USER, null),
-                false,
-            )
-            assertEquals(Authorizer.mayCreateUser(bayernRegionAdmin, koblenzId, Role.REGION_ADMIN, bayernRegion), false)
-            assertEquals(Authorizer.mayCreateUser(bayernRegionAdmin, bayernId, Role.NO_RIGHTS, bayernRegion), false)
+            assertFalse(bayernProjectAdmin.mayCreateUser(bayernId, Role.NO_RIGHTS, bayernRegion))
+            assertFalse(bayernRegionAdmin.mayCreateUser(bayernId, Role.PROJECT_ADMIN, null))
+            assertTrue(bayernRegionAdmin.mayCreateUser(bayernId, Role.REGION_ADMIN, bayernRegion))
+            assertFalse(bayernRegionAdmin.mayCreateUser(bayernId, Role.REGION_ADMIN, null))
+            assertTrue(bayernRegionAdmin.mayCreateUser(bayernId, Role.REGION_MANAGER, bayernRegion))
+            assertFalse(bayernRegionAdmin.mayCreateUser(bayernId, Role.REGION_MANAGER, null))
+            assertFalse(bayernRegionAdmin.mayCreateUser(bayernId, Role.EXTERNAL_VERIFIED_API_USER, null))
+            assertFalse(bayernRegionAdmin.mayCreateUser(koblenzId, Role.REGION_ADMIN, bayernRegion))
+            assertFalse(bayernRegionAdmin.mayCreateUser(bayernId, Role.NO_RIGHTS, bayernRegion))
 
-            assertEquals(
-                Authorizer.mayCreateUser(bayernRegionManager, bayernId, Role.REGION_MANAGER, bayernRegion),
-                false,
-            )
-            assertEquals(
-                Authorizer.mayCreateUser(bayernRegionManager, bayernId, Role.REGION_MANAGER, bayernRegion),
-                false,
-            )
-            assertEquals(
-                Authorizer.mayCreateUser(bayernExternalUser, bayernId, Role.REGION_MANAGER, bayernRegion),
-                false,
-            )
+            assertFalse(bayernRegionManager.mayCreateUser(bayernId, Role.REGION_MANAGER, bayernRegion))
+            assertFalse(bayernRegionManager.mayCreateUser(bayernId, Role.REGION_MANAGER, bayernRegion))
+            assertFalse(bayernExternalUser.mayCreateUser(bayernId, Role.REGION_MANAGER, bayernRegion))
 
-            assertEquals(Authorizer.mayCreateUser(koblenzProjectAdmin, koblenzId, Role.PROJECT_ADMIN, null), true)
-            assertEquals(
-                Authorizer.mayCreateUser(koblenzProjectAdmin, koblenzId, Role.REGION_ADMIN, koblenzRegion),
-                true,
-            )
-            assertEquals(
-                Authorizer.mayCreateUser(koblenzProjectAdmin, koblenzId, Role.REGION_MANAGER, koblenzRegion),
-                true,
-            )
-            assertEquals(Authorizer.mayCreateUser(koblenzProjectAdmin, nuernbergId, Role.PROJECT_ADMIN, null), false)
-            assertEquals(Authorizer.mayCreateUser(koblenzProjectAdmin, koblenzId, Role.NO_RIGHTS, null), false)
-            assertEquals(
-                Authorizer.mayCreateUser(koblenzProjectAdmin, koblenzId, Role.EXTERNAL_VERIFIED_API_USER, null),
-                false,
-            )
+            assertTrue(koblenzProjectAdmin.mayCreateUser(koblenzId, Role.PROJECT_ADMIN, null))
+            assertTrue(koblenzProjectAdmin.mayCreateUser(koblenzId, Role.REGION_ADMIN, koblenzRegion))
+            assertTrue(koblenzProjectAdmin.mayCreateUser(koblenzId, Role.REGION_MANAGER, koblenzRegion))
+            assertFalse(koblenzProjectAdmin.mayCreateUser(nuernbergId, Role.PROJECT_ADMIN, null))
+            assertFalse(koblenzProjectAdmin.mayCreateUser(koblenzId, Role.NO_RIGHTS, null))
+            assertFalse(koblenzProjectAdmin.mayCreateUser(koblenzId, Role.EXTERNAL_VERIFIED_API_USER, null))
 
-            assertEquals(Authorizer.mayCreateUser(nuernbergProjectAdmin, nuernbergId, Role.PROJECT_ADMIN, null), true)
-            assertEquals(Authorizer.mayCreateUser(nuernbergProjectAdmin, koblenzId, Role.PROJECT_ADMIN, null), false)
-            assertEquals(Authorizer.mayCreateUser(nuernbergProjectAdmin, nuernbergId, Role.NO_RIGHTS, null), false)
-            assertEquals(
-                Authorizer.mayCreateUser(nuernbergProjectAdmin, nuernbergId, Role.EXTERNAL_VERIFIED_API_USER, null),
-                false,
-            )
+            assertTrue(nuernbergProjectAdmin.mayCreateUser(nuernbergId, Role.PROJECT_ADMIN, null))
+            assertFalse(nuernbergProjectAdmin.mayCreateUser(koblenzId, Role.PROJECT_ADMIN, null))
+            assertFalse(nuernbergProjectAdmin.mayCreateUser(nuernbergId, Role.NO_RIGHTS, null))
+            assertFalse(nuernbergProjectAdmin.mayCreateUser(nuernbergId, Role.EXTERNAL_VERIFIED_API_USER, null))
         }
     }
 
     @Test
     fun testMayEditUser() {
         transaction {
-            assertEquals(
-                Authorizer.mayEditUser(bayernProjectAdmin, bayernRegionAdmin, bayernId, Role.PROJECT_ADMIN, null),
-                true,
+            assertTrue(bayernProjectAdmin.mayEditUser(bayernRegionAdmin, bayernId, Role.PROJECT_ADMIN, null))
+            assertTrue(bayernProjectAdmin.mayEditUser(bayernProjectAdmin, bayernId, Role.REGION_ADMIN, bayernRegion))
+            assertTrue(bayernProjectAdmin.mayEditUser(bayernProjectAdmin, bayernId, Role.REGION_MANAGER, bayernRegion))
+            assertTrue(
+                bayernProjectAdmin.mayEditUser(bayernProjectAdmin, bayernId, Role.EXTERNAL_VERIFIED_API_USER, null),
             )
-            assertEquals(
-                Authorizer.mayEditUser(
-                    bayernProjectAdmin,
-                    bayernProjectAdmin,
-                    bayernId,
-                    Role.REGION_ADMIN,
-                    bayernRegion,
-                ),
-                true,
-            )
-            assertEquals(
-                Authorizer.mayEditUser(
-                    bayernProjectAdmin,
-                    bayernProjectAdmin,
-                    bayernId,
-                    Role.REGION_MANAGER,
-                    bayernRegion,
-                ),
-                true,
-            )
-            assertEquals(
-                Authorizer.mayEditUser(
-                    bayernProjectAdmin,
-                    bayernProjectAdmin,
-                    bayernId,
-                    Role.EXTERNAL_VERIFIED_API_USER,
-                    null,
-                ),
-                true,
-            )
-            assertEquals(
-                Authorizer.mayEditUser(
-                    bayernProjectAdmin,
-                    bayernProjectAdmin,
-                    koblenzId,
-                    Role.REGION_ADMIN,
-                    bayernRegion,
-                ),
-                false,
-            )
-            assertEquals(
-                Authorizer.mayEditUser(
-                    bayernProjectAdmin,
-                    koblenzProjectAdmin,
-                    koblenzId,
-                    Role.REGION_ADMIN,
-                    bayernRegion,
-                ),
-                false,
-            )
-            assertEquals(
-                Authorizer.mayEditUser(bayernProjectAdmin, bayernProjectAdmin, bayernId, Role.NO_RIGHTS, bayernRegion),
-                false,
-            )
-            assertEquals(
-                Authorizer.mayEditUser(bayernProjectAdmin, bayernProjectAdmin, bayernId, Role.NO_RIGHTS, bayernRegion),
-                false,
+            assertFalse(bayernProjectAdmin.mayEditUser(bayernProjectAdmin, koblenzId, Role.REGION_ADMIN, bayernRegion))
+            assertFalse(bayernProjectAdmin.mayEditUser(koblenzProjectAdmin, koblenzId, Role.REGION_ADMIN, bayernRegion))
+            assertFalse(bayernProjectAdmin.mayEditUser(bayernProjectAdmin, bayernId, Role.NO_RIGHTS, bayernRegion))
+            assertFalse(bayernProjectAdmin.mayEditUser(bayernProjectAdmin, bayernId, Role.NO_RIGHTS, bayernRegion))
+
+            assertFalse(bayernRegionAdmin.mayEditUser(bayernRegionManager, bayernId, Role.PROJECT_ADMIN, null))
+            assertTrue(bayernRegionAdmin.mayEditUser(bayernRegionManager, bayernId, Role.REGION_ADMIN, bayernRegion))
+            assertTrue(bayernRegionAdmin.mayEditUser(bayernRegionAdmin, bayernId, Role.REGION_MANAGER, bayernRegion))
+            assertFalse(bayernRegionAdmin.mayEditUser(bayernProjectAdmin, koblenzId, Role.REGION_ADMIN, bayernRegion))
+            assertFalse(bayernRegionAdmin.mayEditUser(koblenzProjectAdmin, koblenzId, Role.REGION_ADMIN, bayernRegion))
+            assertFalse(bayernRegionAdmin.mayEditUser(bayernProjectAdmin, bayernId, Role.NO_RIGHTS, bayernRegion))
+            assertFalse(bayernRegionAdmin.mayEditUser(bayernProjectAdmin, bayernId, Role.NO_RIGHTS, bayernRegion))
+
+            assertFalse(bayernExternalUser.mayEditUser(bayernProjectAdmin, bayernId, Role.REGION_MANAGER, bayernRegion))
+            assertFalse(bayernRegionManager.mayEditUser(bayernRegionAdmin, bayernId, Role.REGION_MANAGER, bayernRegion))
+            assertFalse(
+                bayernRegionManager.mayEditUser(bayernRegionManager, bayernId, Role.REGION_MANAGER, bayernRegion),
             )
 
-            assertEquals(
-                Authorizer.mayEditUser(bayernRegionAdmin, bayernRegionManager, bayernId, Role.PROJECT_ADMIN, null),
-                false,
+            assertTrue(koblenzProjectAdmin.mayEditUser(koblenzProjectAdmin, koblenzId, Role.PROJECT_ADMIN, null))
+            assertTrue(koblenzProjectAdmin.mayEditUser(koblenzRegionAdmin, koblenzId, Role.PROJECT_ADMIN, null))
+            assertTrue(koblenzProjectAdmin.mayEditUser(koblenzRegionAdmin, koblenzId, Role.REGION_ADMIN, koblenzRegion))
+            assertTrue(
+                koblenzProjectAdmin.mayEditUser(koblenzRegionManager, koblenzId, Role.REGION_MANAGER, koblenzRegion),
             )
-            assertEquals(
-                Authorizer.mayEditUser(
-                    bayernRegionAdmin,
-                    bayernRegionManager,
-                    bayernId,
-                    Role.REGION_ADMIN,
-                    bayernRegion,
-                ),
-                true,
+            assertFalse(
+                koblenzProjectAdmin.mayEditUser(bayernRegionManager, koblenzId, Role.REGION_MANAGER, koblenzRegion),
             )
-            assertEquals(
-                Authorizer.mayEditUser(
-                    bayernRegionAdmin,
-                    bayernRegionAdmin,
-                    bayernId,
-                    Role.REGION_MANAGER,
-                    bayernRegion,
-                ),
-                true,
-            )
-            assertEquals(
-                Authorizer.mayEditUser(
-                    bayernRegionAdmin,
-                    bayernProjectAdmin,
-                    koblenzId,
-                    Role.REGION_ADMIN,
-                    bayernRegion,
-                ),
-                false,
-            )
-            assertEquals(
-                Authorizer.mayEditUser(
-                    bayernRegionAdmin,
-                    koblenzProjectAdmin,
-                    koblenzId,
-                    Role.REGION_ADMIN,
-                    bayernRegion,
-                ),
-                false,
-            )
-            assertEquals(
-                Authorizer.mayEditUser(bayernRegionAdmin, bayernProjectAdmin, bayernId, Role.NO_RIGHTS, bayernRegion),
-                false,
-            )
-            assertEquals(
-                Authorizer.mayEditUser(bayernRegionAdmin, bayernProjectAdmin, bayernId, Role.NO_RIGHTS, bayernRegion),
-                false,
+            assertFalse(koblenzProjectAdmin.mayEditUser(koblenzRegionAdmin, nuernbergId, Role.PROJECT_ADMIN, null))
+            assertFalse(koblenzProjectAdmin.mayEditUser(koblenzRegionAdmin, koblenzId, Role.NO_RIGHTS, null))
+            assertFalse(
+                koblenzProjectAdmin.mayEditUser(koblenzRegionAdmin, koblenzId, Role.EXTERNAL_VERIFIED_API_USER, null),
             )
 
-            assertEquals(
-                Authorizer.mayEditUser(
-                    bayernExternalUser,
-                    bayernProjectAdmin,
-                    bayernId,
-                    Role.REGION_MANAGER,
-                    bayernRegion,
-                ),
-                false,
-            )
-            assertEquals(
-                Authorizer.mayEditUser(
-                    bayernRegionManager,
-                    bayernRegionAdmin,
-                    bayernId,
-                    Role.REGION_MANAGER,
-                    bayernRegion,
-                ),
-                false,
-            )
-            assertEquals(
-                Authorizer.mayEditUser(
-                    bayernRegionManager,
-                    bayernRegionManager,
-                    bayernId,
-                    Role.REGION_MANAGER,
-                    bayernRegion,
-                ),
-                false,
-            )
-
-            assertEquals(
-                Authorizer.mayEditUser(koblenzProjectAdmin, koblenzProjectAdmin, koblenzId, Role.PROJECT_ADMIN, null),
-                true,
-            )
-            assertEquals(
-                Authorizer.mayEditUser(koblenzProjectAdmin, koblenzRegionAdmin, koblenzId, Role.PROJECT_ADMIN, null),
-                true,
-            )
-            assertEquals(
-                Authorizer.mayEditUser(
-                    koblenzProjectAdmin,
-                    koblenzRegionAdmin,
-                    koblenzId,
-                    Role.REGION_ADMIN,
-                    koblenzRegion,
-                ),
-                true,
-            )
-            assertEquals(
-                Authorizer.mayEditUser(
-                    koblenzProjectAdmin,
-                    koblenzRegionManager,
-                    koblenzId,
-                    Role.REGION_MANAGER,
-                    koblenzRegion,
-                ),
-                true,
-            )
-            assertEquals(
-                Authorizer.mayEditUser(
-                    koblenzProjectAdmin,
-                    bayernRegionManager,
-                    koblenzId,
-                    Role.REGION_MANAGER,
-                    koblenzRegion,
-                ),
-                false,
-            )
-            assertEquals(
-                Authorizer.mayEditUser(koblenzProjectAdmin, koblenzRegionAdmin, nuernbergId, Role.PROJECT_ADMIN, null),
-                false,
-            )
-            assertEquals(
-                Authorizer.mayEditUser(koblenzProjectAdmin, koblenzRegionAdmin, koblenzId, Role.NO_RIGHTS, null),
-                false,
-            )
-            assertEquals(
-                Authorizer.mayEditUser(
-                    koblenzProjectAdmin,
-                    koblenzRegionAdmin,
-                    koblenzId,
-                    Role.EXTERNAL_VERIFIED_API_USER,
-                    null,
-                ),
-                false,
-            )
-
-            assertEquals(
-                Authorizer.mayEditUser(
-                    nuernbergProjectAdmin,
-                    nuernbergProjectAdmin,
-                    nuernbergId,
-                    Role.PROJECT_ADMIN,
-                    null,
-                ),
-                true,
-            )
-            assertEquals(
-                Authorizer.mayEditUser(
-                    nuernbergProjectAdmin,
-                    nuernbergProjectAdmin,
-                    koblenzId,
-                    Role.PROJECT_ADMIN,
-                    null,
-                ),
-                false,
-            )
-            assertEquals(
-                Authorizer.mayEditUser(nuernbergProjectAdmin, nuernbergProjectAdmin, nuernbergId, Role.NO_RIGHTS, null),
-                false,
-            )
-            assertEquals(
-                Authorizer.mayEditUser(
-                    nuernbergProjectAdmin,
+            assertTrue(nuernbergProjectAdmin.mayEditUser(nuernbergProjectAdmin, nuernbergId, Role.PROJECT_ADMIN, null))
+            assertFalse(nuernbergProjectAdmin.mayEditUser(nuernbergProjectAdmin, koblenzId, Role.PROJECT_ADMIN, null))
+            assertFalse(nuernbergProjectAdmin.mayEditUser(nuernbergProjectAdmin, nuernbergId, Role.NO_RIGHTS, null))
+            assertFalse(
+                nuernbergProjectAdmin.mayEditUser(
                     nuernbergProjectAdmin,
                     nuernbergId,
                     Role.EXTERNAL_VERIFIED_API_USER,
                     null,
                 ),
-                false,
             )
         }
     }
@@ -558,144 +356,138 @@ internal class AuthorizerTest : IntegrationTest() {
     @Test
     fun testMayDeleteUser() {
         transaction {
-            assertEquals(Authorizer.mayDeleteUser(bayernProjectAdmin, bayernExternalUser), true)
-            assertEquals(Authorizer.mayDeleteUser(bayernProjectAdmin, bayernProjectAdmin), true)
-            assertEquals(Authorizer.mayDeleteUser(bayernProjectAdmin, bayernRegionAdmin), true)
-            assertEquals(Authorizer.mayDeleteUser(bayernProjectAdmin, koblenzProjectAdmin), false)
-            assertEquals(Authorizer.mayDeleteUser(bayernProjectAdmin, koblenzRegionManager), false)
+            assertTrue(bayernProjectAdmin.mayDeleteUser(bayernExternalUser))
+            assertTrue(bayernProjectAdmin.mayDeleteUser(bayernProjectAdmin))
+            assertTrue(bayernProjectAdmin.mayDeleteUser(bayernRegionAdmin))
+            assertFalse(bayernProjectAdmin.mayDeleteUser(koblenzProjectAdmin))
+            assertFalse(bayernProjectAdmin.mayDeleteUser(koblenzRegionManager))
 
-            assertEquals(Authorizer.mayDeleteUser(bayernRegionAdmin, bayernProjectAdmin), false)
-            assertEquals(Authorizer.mayDeleteUser(bayernRegionAdmin, bayernRegionAdmin), true)
-            assertEquals(Authorizer.mayDeleteUser(bayernRegionAdmin, bayernRegionManager), true)
-            assertEquals(Authorizer.mayDeleteUser(bayernRegionAdmin, koblenzRegionAdmin), false)
-            assertEquals(Authorizer.mayDeleteUser(bayernRegionAdmin, nuernbergStoreManager), false)
+            assertFalse(bayernRegionAdmin.mayDeleteUser(bayernProjectAdmin))
+            assertTrue(bayernRegionAdmin.mayDeleteUser(bayernRegionAdmin))
+            assertTrue(bayernRegionAdmin.mayDeleteUser(bayernRegionManager))
+            assertFalse(bayernRegionAdmin.mayDeleteUser(koblenzRegionAdmin))
+            assertFalse(bayernRegionAdmin.mayDeleteUser(nuernbergStoreManager))
 
-            assertEquals(Authorizer.mayDeleteUser(bayernRegionManager, bayernRegionManager), false)
-            assertEquals(Authorizer.mayDeleteUser(bayernRegionManager, bayernRegionAdmin), false)
-            assertEquals(Authorizer.mayDeleteUser(bayernExternalUser, koblenzRegionManager), false)
+            assertFalse(bayernRegionManager.mayDeleteUser(bayernRegionManager))
+            assertFalse(bayernRegionManager.mayDeleteUser(bayernRegionAdmin))
+            assertFalse(bayernExternalUser.mayDeleteUser(koblenzRegionManager))
 
-            assertEquals(Authorizer.mayDeleteUser(koblenzProjectAdmin, koblenzProjectAdmin), true)
-            assertEquals(Authorizer.mayDeleteUser(koblenzProjectAdmin, koblenzRegionAdmin), true)
-            assertEquals(Authorizer.mayDeleteUser(koblenzProjectAdmin, koblenzRegionManager), true)
-            assertEquals(Authorizer.mayDeleteUser(koblenzProjectAdmin, bayernProjectAdmin), false)
-            assertEquals(Authorizer.mayDeleteUser(koblenzProjectAdmin, bayernRegionAdmin), false)
+            assertTrue(koblenzProjectAdmin.mayDeleteUser(koblenzProjectAdmin))
+            assertTrue(koblenzProjectAdmin.mayDeleteUser(koblenzRegionAdmin))
+            assertTrue(koblenzProjectAdmin.mayDeleteUser(koblenzRegionManager))
+            assertFalse(koblenzProjectAdmin.mayDeleteUser(bayernProjectAdmin))
+            assertFalse(koblenzProjectAdmin.mayDeleteUser(bayernRegionAdmin))
 
-            assertEquals(Authorizer.mayDeleteUser(nuernbergProjectAdmin, nuernbergProjectAdmin), true)
-            assertEquals(Authorizer.mayDeleteUser(nuernbergProjectAdmin, bayernRegionAdmin), false)
+            assertTrue(nuernbergProjectAdmin.mayDeleteUser(nuernbergProjectAdmin))
+            assertFalse(nuernbergProjectAdmin.mayDeleteUser(bayernRegionAdmin))
         }
     }
 
     @Test
     fun testMayViewFreinetAgencyInformationInRegion() {
         transaction {
-            assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(bayernRegionAdmin, bayernRegionId), true)
-            assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(bayernProjectAdmin, 16), false)
-            assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(bayernRegionAdmin, 5), false)
-            assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(bayernRegionManager, bayernRegionId), false)
-            assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(bayernRegionManager, 5), false)
-            assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(koblenzProjectAdmin, 2), false)
-            assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(koblenzRegionAdmin, koblenzRegionId), false)
-            assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(koblenzRegionManager, 2), false)
-            assertEquals(
-                Authorizer.mayViewFreinetAgencyInformationInRegion(koblenzRegionManager, koblenzRegionId),
-                false,
-            )
-            assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(nuernbergStoreManager, 5), false)
+            assertTrue(bayernRegionAdmin.mayViewFreinetAgencyInformationInRegion(bayernRegionId))
+            assertFalse(bayernProjectAdmin.mayViewFreinetAgencyInformationInRegion(16))
+            assertFalse(bayernRegionAdmin.mayViewFreinetAgencyInformationInRegion(5))
+            assertFalse(bayernRegionManager.mayViewFreinetAgencyInformationInRegion(bayernRegionId))
+            assertFalse(bayernRegionManager.mayViewFreinetAgencyInformationInRegion(5))
+            assertFalse(koblenzProjectAdmin.mayViewFreinetAgencyInformationInRegion(2))
+            assertFalse(koblenzRegionAdmin.mayViewFreinetAgencyInformationInRegion(koblenzRegionId))
+            assertFalse(koblenzRegionManager.mayViewFreinetAgencyInformationInRegion(2))
+            assertFalse(koblenzRegionManager.mayViewFreinetAgencyInformationInRegion(koblenzRegionId))
+            assertFalse(nuernbergStoreManager.mayViewFreinetAgencyInformationInRegion(5))
         }
     }
 
     @Test
     fun testMayUpdateFreinetAgencyInformationInRegion() {
         transaction {
-            assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(bayernRegionAdmin, bayernRegionId), true)
-            assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(bayernProjectAdmin, 16), false)
-            assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(bayernRegionAdmin, 5), false)
-            assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(bayernRegionManager, bayernRegionId), false)
-            assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(bayernRegionManager, 5), false)
-            assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(koblenzProjectAdmin, 2), false)
-            assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(koblenzRegionAdmin, koblenzRegionId), false)
-            assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(koblenzRegionManager, 2), false)
-            assertEquals(
-                Authorizer.mayViewFreinetAgencyInformationInRegion(koblenzRegionManager, koblenzRegionId),
-                false,
-            )
-            assertEquals(Authorizer.mayViewFreinetAgencyInformationInRegion(nuernbergStoreManager, 5), false)
+            assertTrue(bayernRegionAdmin.mayViewFreinetAgencyInformationInRegion(bayernRegionId))
+            assertFalse(bayernProjectAdmin.mayViewFreinetAgencyInformationInRegion(16))
+            assertFalse(bayernRegionAdmin.mayViewFreinetAgencyInformationInRegion(5))
+            assertFalse(bayernRegionManager.mayViewFreinetAgencyInformationInRegion(bayernRegionId))
+            assertFalse(bayernRegionManager.mayViewFreinetAgencyInformationInRegion(5))
+            assertFalse(koblenzProjectAdmin.mayViewFreinetAgencyInformationInRegion(2))
+            assertFalse(koblenzRegionAdmin.mayViewFreinetAgencyInformationInRegion(koblenzRegionId))
+            assertFalse(koblenzRegionManager.mayViewFreinetAgencyInformationInRegion(2))
+            assertFalse(koblenzRegionManager.mayViewFreinetAgencyInformationInRegion(koblenzRegionId))
+            assertFalse(nuernbergStoreManager.mayViewFreinetAgencyInformationInRegion(5))
         }
     }
 
     @Test
     fun testMayAddApiTokensInProject() {
         transaction {
-            assertEquals(Authorizer.mayAddApiTokensInProject(bayernExternalUser), true)
-            assertEquals(Authorizer.mayAddApiTokensInProject(koblenzProjectAdmin), true)
+            assertTrue(bayernExternalUser.mayAddApiTokensInProject())
+            assertTrue(koblenzProjectAdmin.mayAddApiTokensInProject())
 
-            assertEquals(Authorizer.mayAddApiTokensInProject(bayernProjectAdmin), false)
-            assertEquals(Authorizer.mayAddApiTokensInProject(bayernRegionAdmin), false)
-            assertEquals(Authorizer.mayAddApiTokensInProject(bayernRegionManager), false)
-            assertEquals(Authorizer.mayAddApiTokensInProject(koblenzRegionManager), false)
-            assertEquals(Authorizer.mayAddApiTokensInProject(koblenzRegionAdmin), false)
-            assertEquals(Authorizer.mayAddApiTokensInProject(koblenzRegionManager), false)
-            assertEquals(Authorizer.mayAddApiTokensInProject(nuernbergProjectAdmin), false)
-            assertEquals(Authorizer.mayAddApiTokensInProject(nuernbergStoreManager), false)
+            assertFalse(bayernProjectAdmin.mayAddApiTokensInProject())
+            assertFalse(bayernRegionAdmin.mayAddApiTokensInProject())
+            assertFalse(bayernRegionManager.mayAddApiTokensInProject())
+            assertFalse(koblenzRegionManager.mayAddApiTokensInProject())
+            assertFalse(koblenzRegionAdmin.mayAddApiTokensInProject())
+            assertFalse(koblenzRegionManager.mayAddApiTokensInProject())
+            assertFalse(nuernbergProjectAdmin.mayAddApiTokensInProject())
+            assertFalse(nuernbergStoreManager.mayAddApiTokensInProject())
         }
     }
 
     @Test
     fun testMayViewApiMetadataInProject() {
         transaction {
-            assertEquals(Authorizer.mayViewApiMetadataInProject(bayernProjectAdmin), true)
-            assertEquals(Authorizer.mayViewApiMetadataInProject(bayernExternalUser), true)
-            assertEquals(Authorizer.mayViewApiMetadataInProject(koblenzProjectAdmin), true)
-            assertEquals(Authorizer.mayViewApiMetadataInProject(nuernbergProjectAdmin), true)
+            assertTrue(bayernProjectAdmin.mayViewApiMetadataInProject())
+            assertTrue(bayernExternalUser.mayViewApiMetadataInProject())
+            assertTrue(koblenzProjectAdmin.mayViewApiMetadataInProject())
+            assertTrue(nuernbergProjectAdmin.mayViewApiMetadataInProject())
 
-            assertEquals(Authorizer.mayViewApiMetadataInProject(bayernRegionAdmin), false)
-            assertEquals(Authorizer.mayViewApiMetadataInProject(bayernRegionManager), false)
-            assertEquals(Authorizer.mayViewApiMetadataInProject(koblenzRegionManager), false)
-            assertEquals(Authorizer.mayViewApiMetadataInProject(koblenzRegionAdmin), false)
-            assertEquals(Authorizer.mayViewApiMetadataInProject(koblenzRegionManager), false)
-            assertEquals(Authorizer.mayViewApiMetadataInProject(nuernbergStoreManager), false)
+            assertFalse(bayernRegionAdmin.mayViewApiMetadataInProject())
+            assertFalse(bayernRegionManager.mayViewApiMetadataInProject())
+            assertFalse(koblenzRegionManager.mayViewApiMetadataInProject())
+            assertFalse(koblenzRegionAdmin.mayViewApiMetadataInProject())
+            assertFalse(koblenzRegionManager.mayViewApiMetadataInProject())
+            assertFalse(nuernbergStoreManager.mayViewApiMetadataInProject())
         }
     }
 
     @Test
     fun testMayDeleteApiTokensInProject() {
         transaction {
-            assertEquals(Authorizer.mayDeleteApiTokensInProject(bayernProjectAdmin), true)
-            assertEquals(Authorizer.mayDeleteApiTokensInProject(bayernExternalUser), true)
-            assertEquals(Authorizer.mayDeleteApiTokensInProject(koblenzProjectAdmin), true)
-            assertEquals(Authorizer.mayDeleteApiTokensInProject(nuernbergProjectAdmin), true)
+            assertTrue(bayernProjectAdmin.mayDeleteApiTokensInProject())
+            assertTrue(bayernExternalUser.mayDeleteApiTokensInProject())
+            assertTrue(koblenzProjectAdmin.mayDeleteApiTokensInProject())
+            assertTrue(nuernbergProjectAdmin.mayDeleteApiTokensInProject())
 
-            assertEquals(Authorizer.mayDeleteApiTokensInProject(bayernRegionAdmin), false)
-            assertEquals(Authorizer.mayDeleteApiTokensInProject(bayernRegionManager), false)
-            assertEquals(Authorizer.mayDeleteApiTokensInProject(koblenzRegionManager), false)
-            assertEquals(Authorizer.mayDeleteApiTokensInProject(koblenzRegionAdmin), false)
-            assertEquals(Authorizer.mayDeleteApiTokensInProject(koblenzRegionManager), false)
-            assertEquals(Authorizer.mayDeleteApiTokensInProject(nuernbergStoreManager), false)
+            assertFalse(bayernRegionAdmin.mayDeleteApiTokensInProject())
+            assertFalse(bayernRegionManager.mayDeleteApiTokensInProject())
+            assertFalse(koblenzRegionManager.mayDeleteApiTokensInProject())
+            assertFalse(koblenzRegionAdmin.mayDeleteApiTokensInProject())
+            assertFalse(koblenzRegionManager.mayDeleteApiTokensInProject())
+            assertFalse(nuernbergStoreManager.mayDeleteApiTokensInProject())
         }
     }
 
     @Test
     fun testMayViewHashingPepper() {
         transaction {
-            assertEquals(Authorizer.mayViewHashingPepper(koblenzProjectAdmin), true)
+            assertTrue(koblenzProjectAdmin.mayViewHashingPepper())
 
-            assertEquals(Authorizer.mayViewHashingPepper(bayernProjectAdmin), false)
-            assertEquals(Authorizer.mayViewHashingPepper(bayernExternalUser), false)
-            assertEquals(Authorizer.mayViewHashingPepper(bayernRegionAdmin), false)
-            assertEquals(Authorizer.mayViewHashingPepper(bayernRegionManager), false)
-            assertEquals(Authorizer.mayViewHashingPepper(koblenzRegionManager), false)
-            assertEquals(Authorizer.mayViewHashingPepper(koblenzRegionAdmin), false)
-            assertEquals(Authorizer.mayViewHashingPepper(koblenzRegionManager), false)
-            assertEquals(Authorizer.mayViewHashingPepper(nuernbergProjectAdmin), false)
-            assertEquals(Authorizer.mayViewHashingPepper(nuernbergStoreManager), false)
+            assertFalse(bayernProjectAdmin.mayViewHashingPepper())
+            assertFalse(bayernExternalUser.mayViewHashingPepper())
+            assertFalse(bayernRegionAdmin.mayViewHashingPepper())
+            assertFalse(bayernRegionManager.mayViewHashingPepper())
+            assertFalse(koblenzRegionManager.mayViewHashingPepper())
+            assertFalse(koblenzRegionAdmin.mayViewHashingPepper())
+            assertFalse(koblenzRegionManager.mayViewHashingPepper())
+            assertFalse(nuernbergProjectAdmin.mayViewHashingPepper())
+            assertFalse(nuernbergStoreManager.mayViewHashingPepper())
         }
     }
 
     @Test
     fun testMayUpdateStoresInProject() {
         transaction {
-            assertEquals(Authorizer.mayUpdateStoresInProject(nuernbergStoreManager, 2), true)
-            assertEquals(Authorizer.mayUpdateStoresInProject(nuernbergProjectAdmin, 2), false)
+            assertTrue(nuernbergStoreManager.mayUpdateStoresInProject(2))
+            assertFalse(nuernbergProjectAdmin.mayUpdateStoresInProject(2))
         }
     }
 }
