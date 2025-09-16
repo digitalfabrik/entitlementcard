@@ -5,10 +5,8 @@ import app.ehrenamtskarte.backend.config.Environment
 import app.ehrenamtskarte.backend.db.Database
 import app.ehrenamtskarte.backend.db.entities.Migrations
 import app.ehrenamtskarte.backend.db.migration.MigrationUtils
-import app.ehrenamtskarte.backend.graphql.GraphQLHandler
 import app.ehrenamtskarte.backend.import.stores.Importer
 import app.ehrenamtskarte.backend.import.stores.toImportConfig
-import com.expediagroup.graphql.generator.extensions.print
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.Context
 import com.github.ajalt.clikt.core.ProgramResult
@@ -24,6 +22,8 @@ import com.github.ajalt.clikt.parameters.types.file
 import org.jetbrains.exposed.sql.exists
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
+import org.springframework.boot.runApplication
+import org.springframework.context.support.beans
 import java.io.File
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -131,15 +131,16 @@ class DbImportDev : CliktCommand("db-import-dev") {
 }
 
 class GraphQLExport : CliktCommand("graphql-export") {
-    private val config by requireObject<BackendConfiguration>()
-    private val path by argument(help = "Export GraphQL schema. Given ")
+    //private val config by requireObject<BackendConfiguration>()
+    //private val path by argument(help = "Export GraphQL schema. Given ")
 
     override fun help(context: Context): String = "Exports the GraphQL schema into the directory given by '--path'"
 
     override fun run() {
-        val schema = GraphQLHandler(config).graphQLSchema.print()
-        val file = File(path)
-        file.writeText(schema)
+        //todo fix after graphql handler migration to spring
+        //val schema = GraphQLHandler(config).graphQLSchema.print()
+        //val file = File(path)
+        //file.writeText(schema)
     }
 }
 
@@ -201,7 +202,15 @@ class Execute : CliktCommand() {
 
     override fun run() {
         Database.setupWithInitialDataAndMigrationChecks(config)
-        WebService().start(config)
+        runApplication<BackendApplication> {
+            addInitializers(
+                beans {
+                    bean("backendConfiguration") {
+                        config
+                    }
+                }
+            )
+        }
     }
 }
 
