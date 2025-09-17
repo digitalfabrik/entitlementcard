@@ -96,12 +96,12 @@ enum class TestAdministrators(
     ),
     ;
 
-    //fun getJwtToken(): String {
+    // fun getJwtToken(): String {
     //    val adminEntity = transaction { AdministratorsRepository.findByAuthData(project, email, password) }
     //        ?: throw Exception("Test administrator not found!")
     //    val admin = Administrator.fromDbEntity(adminEntity)
     //    return JwtService.createToken(admin)
-    //}
+    // }
 
     companion object {
         fun createAll() {

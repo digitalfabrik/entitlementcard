@@ -39,8 +39,8 @@ repositories {
 dependencies {
     annotationProcessor(libs.springframework.boot.configurationprocessor)
 
-    //todo: fix or remove; this prevents webserver to be run from CliktCommand
-    //developmentOnly(libs.springframework.boot.devtools)
+    // todo: fix or remove; this prevents webserver to be run from CliktCommand
+    // developmentOnly(libs.springframework.boot.devtools)
 
     implementation(libs.ajalt.clikt)
     implementation(libs.apache.commons.text)

@@ -10,19 +10,30 @@ import jakarta.servlet.http.HttpServletRequest
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.LocalDate
 
-//todo: this should be removed or refactored after #2452
+// todo: this should be removed or refactored after #2452
 object TokenAuthenticator {
+    private const val BEARER_PREFIX = "Bearer "
+
     private fun authenticateToken(header: String?, neededType: ApiTokenType): ApiTokenEntity {
-        val authHeader = header?.takeIf { it.startsWith("Bearer ") }
+        val tokenValue = header
+            ?.takeIf { it.startsWith(BEARER_PREFIX) }
+            ?.removePrefix(BEARER_PREFIX)
             ?: throw UnauthorizedException()
 
-        val tokenHash = PasswordCrypto.hashWithSHA256(authHeader.substring(7).toByteArray())
+        val tokenHash = PasswordCrypto.hashWithSHA256(tokenValue.toByteArray())
 
-        return transaction {
-            ApiTokensRepository.findByTokenHash(tokenHash)
-                ?.takeIf { it.expirationDate > LocalDate.now() && it.type == neededType }
-                ?: throw ForbiddenException()
+        val tokenEntity = transaction { ApiTokensRepository.findByTokenHash(tokenHash) }
+            ?: throw UnauthorizedException()
+
+        if (tokenEntity.expirationDate <= LocalDate.now()) {
+            throw UnauthorizedException()
         }
+
+        if (tokenEntity.type != neededType) {
+            throw ForbiddenException()
+        }
+
+        return tokenEntity
     }
 
     fun authenticate(request: HttpServletRequest, neededType: ApiTokenType): ApiTokenEntity =
