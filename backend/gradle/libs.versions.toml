@@ -20,7 +20,7 @@ graphql = "8.8.1"
 jackson = "2.19.2"
 javalin = "6.7.0"
 jetbrains-exposed = "0.61.0"
-junit-jupiter = "5.13.4"
+junit-jupiter = "5.12.2"
 junixsocket = "2.10.1"
 kotlin = "2.2.10"
 kotlinx-coroutines = "1.10.2"
@@ -64,7 +64,7 @@ jetbrains-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx
 jetbrains-kover-jvm-agent = "org.jetbrains.kotlinx:kover-jvm-agent:0.9.1"
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
 junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit-jupiter" }
-junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version = "6.0.0-RC2" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version = "1.12.2" }
 kohlschutter-junixsocket-common = { module = "com.kohlschutter.junixsocket:junixsocket-common", version.ref = "junixsocket" }
 kohlschutter-junixsocket-core = { module = "com.kohlschutter.junixsocket:junixsocket-core", version.ref = "junixsocket" }
 ktor-client-cio-jvm = { module = "io.ktor:ktor-client-cio-jvm", version.ref = "ktor" }
