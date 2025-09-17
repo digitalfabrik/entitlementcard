@@ -591,3 +591,4 @@ val EAK_BAYERN_REGIONS = listOf(
         "http://www.landkreis-wunsiedel.de/ehrenamtskarte",
     ),
 )
+
