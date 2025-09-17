@@ -6,7 +6,9 @@ import app.ehrenamtskarte.backend.db.migration.MigrationUtils
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestFreinetAgencies
 import org.junit.jupiter.api.BeforeAll
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.test.context.ContextConfiguration
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.utility.DockerImageName
@@ -16,7 +18,7 @@ import org.testcontainers.utility.DockerImageName
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = [IntegrationTestConfig::class])
-class IntegrationTest {
+open class IntegrationTest {
     companion object {
         private var postgisImage = DockerImageName.parse("postgis/postgis:13-3.0-alpine")
         internal var postgisContainer = PostgreSQLContainer(
@@ -48,4 +50,7 @@ class IntegrationTest {
             Database.setupWithInitialDataAndMigrationChecks(config)
         }
     }
+
+    @Autowired
+    protected lateinit var restTemplate: TestRestTemplate
 }
