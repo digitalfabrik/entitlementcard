@@ -22,7 +22,7 @@ description = "Backend for the Ehrenamtskarte system"
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(24)
+        languageVersion = JavaLanguageVersion.of(17)
     }
 }
 
@@ -39,8 +39,8 @@ repositories {
 dependencies {
     annotationProcessor(libs.springframework.boot.configurationprocessor)
 
-    // todo this prevents webserver to be run from CliktCommand; fix or remove
-    // developmentOnly(libs.springframework.boot.devtools)
+    //todo: fix or remove; this prevents webserver to be run from CliktCommand
+    //developmentOnly(libs.springframework.boot.devtools)
 
     implementation(libs.ajalt.clikt)
     implementation(libs.apache.commons.text)
