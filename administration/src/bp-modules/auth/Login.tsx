@@ -45,7 +45,7 @@ const Login = ({ onSignIn }: { onSignIn: (payload: SignInPayload) => void }): Re
         <Typography variant='h3' fontSize={22} fontWeight={600}>
           {t('administration')}
         </Typography>
-        <Typography variant='h4' fontSize={18} fontWeight={600} marginBottom={2}>
+        <Typography variant='h4' fontSize={18} fontWeight={600}>
           {t('login')}
         </Typography>
         <LoginForm

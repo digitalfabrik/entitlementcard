@@ -1,4 +1,4 @@
-import { Button } from '@mui/material'
+import { Box, Button } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useNavigate } from 'react-router'
 
@@ -15,7 +15,7 @@ const ProjectSwitcher = (): ReactElement | null => {
   }
 
   return process.env.NODE_ENV === 'development' ? (
-    <>
+    <Box sx={{ marginTop: 2 }}>
       <Button variant='text' onClick={() => switchProject('koblenz.sozialpass.app')}>
         Switch to Koblenz
       </Button>
@@ -25,7 +25,7 @@ const ProjectSwitcher = (): ReactElement | null => {
       <Button variant='text' onClick={() => switchProject('bayern.ehrenamtskarte.app')}>
         Switch to Ehrenamtskarte Bayern
       </Button>
-    </>
+    </Box>
   ) : null
 }
 

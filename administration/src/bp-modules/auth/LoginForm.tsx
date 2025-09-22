@@ -47,7 +47,7 @@ const LoginForm = ({
           <FormLabel>{t('password')}</FormLabel>
           <PasswordInput required placeholder='Passwort' value={password} disabled={loading} setValue={setPassword} />
         </FormControl>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 2 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Link to='/forgot-password'>
             <Button variant='text'>{t('forgotPassword')}</Button>
           </Link>
