@@ -18,11 +18,6 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(mapOf("message" to ex.message))
     }
 
-    @ExceptionHandler(MissingServletRequestPartException::class)
-    fun handleMissingPartException(ex: MissingServletRequestPartException): ResponseEntity<Map<String, String>> {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(mapOf("message" to "Required part 'file' is not present."))
-    }
-
     @ExceptionHandler(UnauthorizedException::class)
     fun handleUnauthorizedException(ex: UnauthorizedException): ResponseEntity<Map<String, String?>> {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(mapOf("message" to ex.message))
