@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Bean
 
 @TestConfiguration
 class IntegrationTestConfig {
-
     @Bean
     fun backendConfiguration(): BackendConfiguration {
         val resource = ClassLoader.getSystemResource("config.test.yml")

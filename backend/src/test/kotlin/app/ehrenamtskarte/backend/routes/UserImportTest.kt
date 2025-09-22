@@ -31,7 +31,8 @@ import kotlin.test.assertTrue
 internal class UserImportTest : IntegrationTest() {
     companion object {
         private const val TEST_CSV_FILE_PATH = "build/tmp/test.csv"
-        private const val TEST_USER_HASH = "\$argon2id\$v=19\$m=19456,t=2,p=1\$57YPIKvU/XE9h7/JA0tZFT2TzpwBQfYAW6K+ojXBh5w"
+        private const val TEST_USER_HASH =
+            $$"$argon2id$v=19$m=19456,t=2,p=1$57YPIKvU/XE9h7/JA0tZFT2TzpwBQfYAW6K+ojXBh5w"
     }
 
     data class UserImportResponse(val message: String)
@@ -370,10 +371,7 @@ internal class UserImportTest : IntegrationTest() {
         }
     }
 
-    private fun importUsers(
-        vararg files: File,
-        token: String? = "dummy",
-    ): ResponseEntity<UserImportResponse> {
+    private fun importUsers(vararg files: File, token: String? = "dummy"): ResponseEntity<UserImportResponse> {
         val headers = HttpHeaders()
         token?.let { headers.setBearerAuth(it) }
 

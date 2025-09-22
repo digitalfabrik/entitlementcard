@@ -19,8 +19,8 @@ class HealthController(
     private val logger = LoggerFactory.getLogger(HealthController::class.java)
 
     @GetMapping("/health")
-    fun healthCheck(): ResponseEntity<Void> {
-        return try {
+    fun healthCheck(): ResponseEntity<Void> =
+        try {
             transaction {
                 val projectIds = config.projects.map { it.id }
                 val projects = ProjectEntity.find { Projects.project inList projectIds }
@@ -36,5 +36,4 @@ class HealthController(
             logger.error("Health check failed due to a database exception", exception)
             ResponseEntity.status(HttpStatus.BAD_GATEWAY).build()
         }
-    }
 }

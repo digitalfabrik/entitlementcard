@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpServletRequest
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.LocalDate
 
-//todo: this should be removed or refactored after #2452
+// todo: this will be removed or refactored after #2452
 object TokenAuthenticator {
     private fun authenticateToken(header: String?, neededType: ApiTokenType): ApiTokenEntity {
         val token = header
