@@ -1,15 +1,15 @@
 package app.ehrenamtskarte.backend.freinet.webservice
 
 import app.ehrenamtskarte.backend.GraphqlApiTest
-import app.ehrenamtskarte.backend.application.database.Applications
-import app.ehrenamtskarte.backend.application.webservice.schema.view.JsonField
-import app.ehrenamtskarte.backend.application.webservice.schema.view.Type
-import app.ehrenamtskarte.backend.freinet.database.FreinetAgencies
-import app.ehrenamtskarte.backend.freinet.database.FreinetAgenciesEntity
-import app.ehrenamtskarte.backend.freinet.util.FreinetApi
-import app.ehrenamtskarte.backend.freinet.webservice.schema.types.FreinetPersonCreationResultModel
+import app.ehrenamtskarte.backend.db.entities.Applications
+import app.ehrenamtskarte.backend.db.entities.FreinetAgencies
+import app.ehrenamtskarte.backend.db.entities.FreinetAgenciesEntity
 import app.ehrenamtskarte.backend.generated.SendApplicationAndCardDataToFreinet
 import app.ehrenamtskarte.backend.generated.inputs.FreinetCardInput
+import app.ehrenamtskarte.backend.graphql.application.types.JsonField
+import app.ehrenamtskarte.backend.graphql.application.types.Type
+import app.ehrenamtskarte.backend.graphql.freinet.types.FreinetPersonCreationResultModel
+import app.ehrenamtskarte.backend.graphql.freinet.util.FreinetApi
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestData
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
