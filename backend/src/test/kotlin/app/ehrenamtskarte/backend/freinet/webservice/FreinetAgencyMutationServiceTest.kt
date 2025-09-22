@@ -1,8 +1,8 @@
 package app.ehrenamtskarte.backend.freinet.webservice
 
 import app.ehrenamtskarte.backend.GraphqlApiTest
-import app.ehrenamtskarte.backend.freinet.database.FreinetAgencies
-import app.ehrenamtskarte.backend.freinet.database.FreinetAgenciesEntity
+import app.ehrenamtskarte.backend.db.entities.FreinetAgencies
+import app.ehrenamtskarte.backend.db.entities.FreinetAgenciesEntity
 import app.ehrenamtskarte.backend.generated.UpdateDataTransferToFreinet
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import io.javalin.testtools.JavalinTest
@@ -41,7 +41,7 @@ internal class FreinetAgencyMutationServiceTest : GraphqlApiTest() {
     @Test
     fun `POST returns a successful response and sets dataTransferActivated to true`() =
         JavalinTest.test(app) { _, client ->
-            val regionId = 9
+            val regionId = 94
             val mutation = createMutation(regionId, true)
             val response = post(client, mutation, regionAdminFreinet.getJwtToken())
             assertEquals(200, response.code)

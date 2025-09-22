@@ -36,6 +36,10 @@ const graphQlErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
       return {
         title: i18next.t('errors:freinetAgencyNotFound'),
       }
+    case GraphQlExceptionCode.FreinetDataTransferNotPermitted:
+      return {
+        title: i18next.t('errors:freinetDataTransferNotPermitted'),
+      }
     case GraphQlExceptionCode.InvalidLink:
       return {
         title: i18next.t('errors:invalidLink'),

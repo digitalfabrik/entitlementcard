@@ -1,6 +1,6 @@
 import { SnackbarProvider, useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
@@ -93,11 +93,7 @@ const ApplicationVerificationController = ({ applicationVerificationAccessKey }:
   if (applicationWasAlreadyProcessed(application.status)) {
     return (
       <CenteredStack>
-        <AlertBox
-          title={t('applicationAlreadyProcessed')}
-          description={<Trans i18nKey='applicationVerification:applicationAlreadyProcessedHint' />}
-          severity='info'
-        />
+        <AlertBox description={t('applicationAlreadyProcessed')} severity='info' />
       </CenteredStack>
     )
   }

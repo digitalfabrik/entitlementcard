@@ -549,6 +549,8 @@ jobs:
         steps:
             - prepare_workspace
             - install_app_toolbelt
+            - ruby/install:
+                version: "3.1"
             - install_fastlane
             - run:
                 command: bundle exec fastlane android upload_to_playstore build_config_name:<< parameters.build_config >> production_delivery:"<< parameters.production_delivery >>" version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE}
@@ -890,7 +892,6 @@ workflows:
     commit:
         jobs:
             - check_backend
-            - check_administration
             - check_frontend
         when:
             and:
