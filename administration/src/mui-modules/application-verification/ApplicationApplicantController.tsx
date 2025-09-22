@@ -4,9 +4,15 @@ import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
 
+import { ApplicationStatusNote } from '../../bp-modules/applications/components/ApplicationStatusNote'
 import { ApplicationStatus, useGetApplicationByApplicantQuery } from '../../generated/graphql'
-import { parseApplication } from '../../shared/application'
+import {
+  applicationWasAlreadyProcessed,
+  getAlertSeverityByApplicationStatus,
+  parseApplication,
+} from '../../shared/application'
 import AlertBox from '../base/AlertBox'
+import CenteredStack from '../base/CenteredStack'
 import getQueryResult from '../util/getQueryResult'
 import ApplicationApplicantView from './ApplicationApplicantView'
 
@@ -24,18 +30,37 @@ const ApplicationApplicantController = ({ providedKey }: { providedKey: string }
 
   if (application.status === ApplicationStatus.Withdrawn) {
     return (
-      <Stack sx={{ flexGrow: 1, alignSelf: 'center', justifyContent: 'center', p: 2 }}>
+      <CenteredStack>
         <AlertBox severity='info' description={t('alreadyWithdrawn')} />
-      </Stack>
+      </CenteredStack>
     )
   }
   if (isWithdrawn) {
     return (
-      <Stack sx={{ flexGrow: 1, alignSelf: 'center', justifyContent: 'center', p: 2 }}>
+      <CenteredStack>
         <AlertBox severity='info' description={t('withdrawConfirmation')} />
-      </Stack>
+      </CenteredStack>
     )
   }
+
+  if (applicationWasAlreadyProcessed(application.status) && !!application.statusResolvedDate) {
+    return (
+      <CenteredStack>
+        <AlertBox
+          severity={getAlertSeverityByApplicationStatus(application.status)}
+          title={t(application.status === ApplicationStatus.Rejected ? 'titleStatusRejected' : 'titleStatusApproved')}
+          description={
+            <ApplicationStatusNote
+              statusResolvedDate={new Date(application.statusResolvedDate)}
+              status={application.status}
+              showIcon={false}
+            />
+          }
+        />
+      </CenteredStack>
+    )
+  }
+
   return (
     <Stack sx={{ alignSelf: 'center', justifyContent: 'flex-start' }}>
       <ApplicationApplicantView

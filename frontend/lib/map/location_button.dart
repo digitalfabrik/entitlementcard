@@ -67,12 +67,12 @@ class _LocationButtonState extends State<LocationButton> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    bool isLandscapeMode = MediaQuery.of(context).orientation == Orientation.landscape;
+
     return Container(
       // Makes sure that the FAB has
       // has a padding to the right
       //screen edge
-      padding: EdgeInsets.only(right: isLandscapeMode ? 48 : 16),
+      padding: EdgeInsets.only(right: 16),
       child: FloatingActionButton(
         heroTag: 'fab_map_view',
         elevation: 1,

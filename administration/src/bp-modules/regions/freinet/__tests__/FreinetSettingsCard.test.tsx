@@ -7,6 +7,7 @@ import FreinetSettingsCard from '../FreinetSettingsCard'
 
 describe('FreinetSettingsCard', () => {
   const onSave = jest.fn()
+  const setDateTransferActivated = jest.fn()
   const agencyData: FreinetAgency = {
     agencyId: 908,
     agencyName: 'EAK-Stadt Augsburg',
@@ -15,24 +16,28 @@ describe('FreinetSettingsCard', () => {
   }
 
   it('should render agency information', () => {
-    const { getByText } = renderWithTranslation(<FreinetSettingsCard agencyInformation={agencyData} onSave={onSave} />)
+    const { getByText } = renderWithTranslation(
+      <FreinetSettingsCard
+        agencyInformation={agencyData}
+        onSave={onSave}
+        dataTransferActivated={false}
+        setDataTransferActivated={setDateTransferActivated}
+      />
+    )
     expect(getByText(agencyData.agencyName)).toBeTruthy()
     expect(getByText(agencyData.agencyId)).toBeTruthy()
     expect(getByText(agencyData.apiAccessKey)).toBeTruthy()
   })
 
-  it('should initially set and update the checkbox correctly', () => {
-    const { queryByRole } = renderWithTranslation(
-      <FreinetSettingsCard agencyInformation={agencyData} onSave={onSave} />
-    )
-    const checkbox = queryByRole('checkbox') as HTMLElement
-    expect(checkbox).not.toBeChecked()
-    fireEvent.click(checkbox)
-    expect(checkbox).toBeChecked()
-  })
-
   it('should call onSave if save button has been clicked', () => {
-    const { getByText } = renderWithTranslation(<FreinetSettingsCard agencyInformation={agencyData} onSave={onSave} />)
+    const { getByText } = renderWithTranslation(
+      <FreinetSettingsCard
+        agencyInformation={agencyData}
+        onSave={onSave}
+        dataTransferActivated={false}
+        setDataTransferActivated={setDateTransferActivated}
+      />
+    )
     const saveButton = getByText('Speichern') as HTMLElement
     fireEvent.click(saveButton)
     expect(onSave).toHaveBeenCalled()

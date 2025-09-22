@@ -1,12 +1,12 @@
 package app.ehrenamtskarte.backend.helper
 
-import app.ehrenamtskarte.backend.auth.database.Administrators
-import app.ehrenamtskarte.backend.auth.database.PasswordCrypto
-import app.ehrenamtskarte.backend.auth.database.repos.AdministratorsRepository
-import app.ehrenamtskarte.backend.auth.webservice.JwtService
-import app.ehrenamtskarte.backend.auth.webservice.schema.types.Administrator
-import app.ehrenamtskarte.backend.auth.webservice.schema.types.Role
-import app.ehrenamtskarte.backend.projects.database.ProjectEntity
+import app.ehrenamtskarte.backend.db.entities.Administrators
+import app.ehrenamtskarte.backend.db.entities.ProjectEntity
+import app.ehrenamtskarte.backend.db.repositories.AdministratorsRepository
+import app.ehrenamtskarte.backend.graphql.auth.JwtService
+import app.ehrenamtskarte.backend.graphql.auth.types.Administrator
+import app.ehrenamtskarte.backend.graphql.auth.types.Role
+import app.ehrenamtskarte.backend.shared.crypto.PasswordCrypto
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.upsert
 
@@ -95,7 +95,7 @@ enum class TestAdministrators(
         project = "bayern.ehrenamtskarte.app",
         email = "region-admin+freinet@bayern.ehrenamtskarte.app",
         role = Role.REGION_ADMIN,
-        regionId = 9,
+        regionId = 94,
     ),
     ;
 

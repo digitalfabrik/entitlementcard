@@ -1,30 +1,66 @@
 package app.ehrenamtskarte.backend.helper
 
-import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
-import app.ehrenamtskarte.backend.auth.database.ApiTokenType
-import app.ehrenamtskarte.backend.auth.database.ApiTokens
-import app.ehrenamtskarte.backend.auth.database.PasswordCrypto
-import app.ehrenamtskarte.backend.cards.database.Cards
-import app.ehrenamtskarte.backend.cards.database.CodeType
-import app.ehrenamtskarte.backend.stores.database.AcceptingStoreEntity
-import app.ehrenamtskarte.backend.stores.database.AcceptingStores
-import app.ehrenamtskarte.backend.stores.database.Addresses
-import app.ehrenamtskarte.backend.stores.database.Contacts
-import app.ehrenamtskarte.backend.stores.database.PhysicalStores
-import app.ehrenamtskarte.backend.userdata.database.UserEntitlements
-import app.ehrenamtskarte.backend.userdata.database.UserEntitlementsEntity
+import app.ehrenamtskarte.backend.db.entities.AcceptingStoreEntity
+import app.ehrenamtskarte.backend.db.entities.AcceptingStores
+import app.ehrenamtskarte.backend.db.entities.Addresses
+import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
+import app.ehrenamtskarte.backend.db.entities.ApiTokenType
+import app.ehrenamtskarte.backend.db.entities.ApiTokens
+import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
+import app.ehrenamtskarte.backend.db.entities.ApplicationVerifications
+import app.ehrenamtskarte.backend.db.entities.Applications
+import app.ehrenamtskarte.backend.db.entities.Cards
+import app.ehrenamtskarte.backend.db.entities.CodeType
+import app.ehrenamtskarte.backend.db.entities.Contacts
+import app.ehrenamtskarte.backend.db.entities.PhysicalStores
+import app.ehrenamtskarte.backend.db.entities.UserEntitlements
+import app.ehrenamtskarte.backend.db.entities.UserEntitlementsEntity
+import app.ehrenamtskarte.backend.shared.crypto.PasswordCrypto
 import net.postgis.jdbc.geometry.Point
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.Instant
 import java.time.LocalDate
+import java.time.OffsetDateTime
+import java.util.Base64
 import kotlin.random.Random
 
 /**
  * Helper object for creating test data in the database
  */
 object TestData {
+    fun createApplication(
+        regionId: Int? = 1,
+        status: ApplicationEntity.Status = ApplicationEntity.Status.Pending,
+        statusResolvedDate: OffsetDateTime? = null,
+        jsonValue: String = """{"name":"application","type":"Array","value":[]""",
+    ): Int {
+        val accessKey = Base64.getUrlEncoder().encodeToString(Random.nextBytes(20))
+        return transaction {
+            Applications.insertAndGetId {
+                it[Applications.regionId] = regionId ?: 1
+                it[Applications.jsonValue] = jsonValue
+                it[Applications.accessKey] = accessKey
+                it[Applications.status] = status
+                it[Applications.statusResolvedDate] = statusResolvedDate
+            }.value
+        }
+    }
+
+    fun createApplicationVerification(applicationId: Int): Int {
+        val accessKey = Base64.getUrlEncoder().encodeToString(Random.nextBytes(20))
+        return transaction {
+            ApplicationVerifications.insertAndGetId {
+                it[ApplicationVerifications.applicationId] = applicationId
+                it[ApplicationVerifications.contactEmailAddress] = "dummy@test.de"
+                it[ApplicationVerifications.contactName] = "dummy"
+                it[ApplicationVerifications.organizationName] = "dummy"
+                it[ApplicationVerifications.accessKey] = accessKey
+            }.value
+        }
+    }
+
     fun createApiToken(
         token: String = "dummy",
         creatorId: Int,

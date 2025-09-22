@@ -1,5 +1,5 @@
 import { Button, Checkbox, H2 } from '@blueprintjs/core'
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
@@ -28,12 +28,19 @@ const Table = styled.table`
 type FreinetSettingsCardProps = {
   agencyInformation: FreinetAgency
   onSave: (dataTransferActivated: boolean) => void
+  dataTransferActivated: boolean
+  setDataTransferActivated: (dataTransferActivated: boolean) => void
 }
 
-const FreinetSettingsCard = ({ agencyInformation, onSave }: FreinetSettingsCardProps): ReactElement => {
+const FreinetSettingsCard = ({
+  agencyInformation,
+  onSave,
+  setDataTransferActivated,
+  dataTransferActivated,
+}: FreinetSettingsCardProps): ReactElement => {
   const { t } = useTranslation('regionSettings')
-  const { agencyId, apiAccessKey, agencyName, dataTransferActivated: initialDataTransferActivated } = agencyInformation
-  const [dataTransferActivated, setDataTransferActivated] = useState(initialDataTransferActivated)
+  const { agencyId, apiAccessKey, agencyName } = agencyInformation
+
   return (
     <SettingsCard>
       <Headline>{t('freinetHeadline')}</Headline>
