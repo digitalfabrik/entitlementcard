@@ -81,7 +81,6 @@ slf4j-simple = { module = "org.slf4j:slf4j-simple", version = "2.0.17" }
 springframework-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools" }
 springframework-boot-configurationprocessor = { module = "org.springframework.boot:spring-boot-configuration-processor" }
 springframework-boot-starter-mail = { module = "org.springframework.boot:spring-boot-starter-mail", version.ref = "spring" }
-springframework-boot-starter-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux", version.ref = "spring" }
 springframework-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
 springframework-boot-testcontainers = { module = "org.springframework.boot:spring-boot-testcontainers" }
 testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }
