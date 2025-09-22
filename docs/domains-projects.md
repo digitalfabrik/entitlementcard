@@ -1,18 +1,18 @@
 # Domains and Projects
 
-Several production domains are used for the entitlementcard project.
+Several production domains are used for the entitlementcard project:
 
 - `tiles.entitlementcard.app` - Tile server
 - `api.entitlementcard.app` - Backend server
 - `entitlementcard.tuerantuer.org:/srv/local-apt-repository/` - SFTP directory for deployment
 
-Several staging domains are used for the entitlementcard project.
+Several staging domains are used for the entitlementcard project:
 
 - `tiles.staging.entitlementcard.app` - Tile server
 - `api.staging.entitlementcard.app` - Backend server
 - `entitlementcard-test.tuerantuer.org:/srv/local-apt-repository` - SFTP directory for deployment
 
-Druckerei Domains
+Administration domains
 
 - [KoblenzPass Staging](https://staging.koblenz.sozialpass.app/)
 - [KoblenzPass Production](https://koblenz.sozialpass.app/)
