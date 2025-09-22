@@ -17,7 +17,6 @@ spring-dependencymanagement = { id = "io.spring.dependency-management", version 
 [versions]
 
 graphql = "8.8.1"
-jackson = "2.20.0"
 javalin = "6.7.0"
 jetbrains-exposed = "0.61.0"
 junit-jupiter = "5.12.2"
@@ -40,10 +39,10 @@ bouncycastle-bcpkix-jdk18on = { module = "org.bouncycastle:bcpkix-jdk18on", vers
 eatthepath-java-otp = { module = "com.eatthepath:java-otp", version = "0.4.0" }
 expediagroup-graphql-kotlin-client = { module = "com.expediagroup:graphql-kotlin-client", version.ref = "graphql" }
 expediagroup-graphql-kotlin-schema-generator = { module = "com.expediagroup:graphql-kotlin-schema-generator", version.ref = "graphql" }
-fasterxml-jackson-dataformat-xml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-xml", version.ref = "jackson" }
-fasterxml-jackson-dataformat-yaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jackson" }
-fasterxml-jackson-datatype-jsr310 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version.ref = "jackson" }
-fasterxml-jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
+fasterxml-jackson-dataformat-xml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-xml" }
+fasterxml-jackson-dataformat-yaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml" }
+fasterxml-jackson-datatype-jsr310 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310" }
+fasterxml-jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin" }
 favre-lib-bcrypt = { module = "at.favre.lib:bcrypt", version = "0.10.2" }
 google-protobuf-kotlin = { module = "com.google.protobuf:protobuf-kotlin", version = "4.32.0" }
 google-zxing-core = { module = "com.google.zxing:core", version = "3.5.3" }
