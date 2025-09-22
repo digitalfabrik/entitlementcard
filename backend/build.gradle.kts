@@ -22,7 +22,7 @@ description = "Backend for the Ehrenamtskarte system"
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(24)
+        languageVersion = JavaLanguageVersion.of(17)
     }
 }
 
