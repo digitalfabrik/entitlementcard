@@ -1,4 +1,4 @@
-import { Card, H2, H3, H4 } from '@blueprintjs/core'
+import { Card, Typography } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -37,10 +37,17 @@ const Login = ({ onSignIn }: { onSignIn: (payload: SignInPayload) => void }): Re
 
   return (
     <StandaloneCenter>
-      <Card style={{ width: '100%', maxWidth: '500px' }}>
-        <H2>{config.name}</H2>
-        <H3>{t('administration')}</H3>
-        <H4>{t('login')}</H4>
+      <Card sx={{ width: '100%', maxWidth: '500px', padding: 3 }}>
+        {/* TODO Setup Typography and remove custom fontSizes and fontHeights https://github.com/digitalfabrik/entitlementcard/issues/2334 */}
+        <Typography variant='h2' fontSize={28} fontWeight={600} marginBottom={1}>
+          {config.name}
+        </Typography>
+        <Typography variant='h3' fontSize={22} fontWeight={600}>
+          {t('administration')}
+        </Typography>
+        <Typography variant='h4' fontSize={18} fontWeight={600} marginBottom={2}>
+          {t('login')}
+        </Typography>
         <LoginForm
           password={state.password}
           email={state.email}

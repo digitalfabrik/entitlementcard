@@ -9,6 +9,7 @@ const PasswordInput = (p: {
   sx?: SxProps<Theme>
   placeholder?: string
   disabled?: boolean
+  required?: boolean
   value?: string
   setValue?: (v: string | undefined) => void
 }): ReactElement => {
@@ -19,6 +20,7 @@ const PasswordInput = (p: {
       placeholder={p.placeholder}
       type={passwordHidden ? 'password' : 'text'}
       size='small'
+      required
       disabled={p.disabled}
       value={p.value}
       sx={p.sx}

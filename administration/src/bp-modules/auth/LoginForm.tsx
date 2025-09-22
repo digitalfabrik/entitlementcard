@@ -1,6 +1,5 @@
-import { Classes, InputGroup } from '@blueprintjs/core'
-import { Button, FormControl, FormLabel, Stack } from '@mui/material'
-import React, { ChangeEvent, ReactElement } from 'react'
+import { Box, Button, FormControl, FormLabel, Stack, TextField } from '@mui/material'
+import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 
@@ -31,30 +30,31 @@ const LoginForm = ({
       <Stack sx={{ gap: 2 }}>
         <FormControl fullWidth>
           <FormLabel>{t('eMail')}</FormLabel>
-          <InputGroup
+          <TextField
             placeholder='erika.musterfrau@example.org'
-            autoFocus
+            fullWidth
             autoComplete='on'
-            name='email'
+            autoFocus
+            type='email'
+            size='small'
             value={email}
+            required
             disabled={loading}
-            onChange={(event: ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)}
+            onChange={event => setEmail(event.target.value)}
           />
         </FormControl>
         <FormControl fullWidth>
           <FormLabel>{t('password')}</FormLabel>
-          <PasswordInput placeholder='Passwort' value={password} disabled={loading} setValue={setPassword} />
+          <PasswordInput required placeholder='Passwort' value={password} disabled={loading} setValue={setPassword} />
         </FormControl>
-        <div
-          className={Classes.DIALOG_FOOTER_ACTIONS}
-          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 2 }}>
           <Link to='/forgot-password'>
             <Button variant='text'>{t('forgotPassword')}</Button>
           </Link>
-          <Button type='submit' variant='contained' loading={loading}>
-            Anmelden
+          <Button type='submit' variant='contained' color='primary' loading={loading}>
+            {t('signIn')}
           </Button>
-        </div>
+        </Box>
       </Stack>
     </form>
   )
