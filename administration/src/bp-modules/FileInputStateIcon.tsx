@@ -1,4 +1,5 @@
-import { Icon, NonIdealStateIconSize } from '@blueprintjs/core'
+import CloudUploadIcon from '@mui/icons-material/CloudUpload'
+import ErrorIcon from '@mui/icons-material/Error'
 import React, { ReactElement } from 'react'
 
 import CenteredCircularProgress from '../mui-modules/base/CenteredCircularProgress'
@@ -10,9 +11,9 @@ const FileInputStateIcon = ({ inputState }: { inputState: FileInputStateType }):
     return <CenteredCircularProgress />
   }
   if (inputState === 'error') {
-    return <Icon intent='danger' size={NonIdealStateIconSize.STANDARD} icon='error' />
+    return <ErrorIcon color='error' sx={{ fontSize: 48 }} />
   }
-  return <Icon intent='warning' size={NonIdealStateIconSize.STANDARD} icon='upload' />
+  return <CloudUploadIcon color='warning' sx={{ fontSize: 48 }} />
 }
 
 export default FileInputStateIcon

@@ -1,9 +1,10 @@
-import { Icon, NonIdealState, NonIdealStateIconSize } from '@blueprintjs/core'
+import CloudUploadIcon from '@mui/icons-material/CloudUpload'
+import { Stack, styled } from '@mui/material'
 import { parse } from 'csv-parse/browser/esm/sync'
 import React, { ChangeEventHandler, ReactElement, useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
+import NonIdealState from '../../mui-modules/NonIdealState'
 import { StoresFieldConfig } from '../../project-configs/getProjectConfig'
 import { useAppToaster } from '../AppToaster'
 import { AcceptingStoresEntry } from './AcceptingStoresEntry'
@@ -12,17 +13,12 @@ import StoresRequirementsText from './StoresRequirementsText'
 import { DEFAULT_ERROR_TIMEOUT, FILE_SIZE_LIMIT_MEGA_BYTES, LONG_ERROR_TIMEOUT } from './constants'
 import { getStoresWithCoordinates } from './util/storeGeoDataService'
 
-const StoreImportInputContainer = styled.div`
-  display: flex;
-  align-items: center;
-`
-
-const InputContainer = styled(NonIdealState)`
+const StoreImportInputContainer = styled('div')`
   display: flex;
   align-items: center;
   flex-grow: 1;
-  justify-content: center;
 `
+
 type StoresCsvInputProps = {
   setAcceptingStores: (store: AcceptingStoresEntry[]) => void
   fields: StoresFieldConfig[]
@@ -159,23 +155,29 @@ const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }:
     reader.readAsText(file)
   }
 
+  const fileSelectionContent = (
+    <>
+      <StoresRequirementsText header={fields} />
+      <StoreImportInputContainer>
+        <input
+          data-testid='store-file-upload'
+          ref={fileInput}
+          accept='.csv, text/csv'
+          type='file'
+          onInput={onInputChange}
+        />
+      </StoreImportInputContainer>
+    </>
+  )
+
   return (
-    <InputContainer
-      title={t('selectAFile')}
-      icon={<Icon intent='warning' size={NonIdealStateIconSize.STANDARD} icon='upload' />}
-      description={<StoresRequirementsText header={fields} />}
-      action={
-        <StoreImportInputContainer>
-          <input
-            data-testid='store-file-upload'
-            ref={fileInput}
-            accept='.csv, text/csv'
-            type='file'
-            onInput={onInputChange}
-          />
-        </StoreImportInputContainer>
-      }
-    />
+    <Stack sx={{ flexGrow: 1, justifyContent: 'center' }}>
+      <NonIdealState
+        title={t('selectAFile')}
+        icon={<CloudUploadIcon color='warning' sx={{ fontSize: 48 }} />}
+        description={fileSelectionContent}
+      />
+    </Stack>
   )
 }
 
