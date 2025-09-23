@@ -1,4 +1,4 @@
-import { Button, Callout, Checkbox, Classes, Dialog, FormGroup, InputGroup } from '@blueprintjs/core'
+import { Button, Checkbox, Classes, Dialog, FormGroup, InputGroup } from '@blueprintjs/core'
 import React, { ReactElement, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -10,6 +10,7 @@ import { useAppToaster } from '../AppToaster'
 import RegionSelector from './RegionSelector'
 import RoleHelpButton from './RoleHelpButton'
 import RoleSelector from './RoleSelector'
+import { Callout } from '../../shared/components/Callout'
 
 const RoleFormGroupLabel = styled.span`
   & span {
@@ -115,7 +116,7 @@ const EditUserDialog = ({
               <RegionSelector onSelect={region => setRegionId(region.id)} selectedId={regionId} />
             </FormGroup>
           )}
-          <Callout intent='primary'>
+          <Callout color='info'>
             {selectedUser?.id === me?.id ? (
               <>
                 {t('youCanChangeYourOwnPassword')}{' '}
@@ -135,7 +136,7 @@ const EditUserDialog = ({
             )}
           </Callout>
           {selectedUser?.id !== me?.id ? null : (
-            <Callout intent='danger' style={{ marginTop: '16px' }}>
+            <Callout color='error' sx={{ marginTop: 2 }}>
               <b>{t('youEditYourOwnAccount')} </b>
               {t('youMayCannotUndoThis')}
               <Checkbox required>{t('ownAccountWarningConfirmation')}</Checkbox>
