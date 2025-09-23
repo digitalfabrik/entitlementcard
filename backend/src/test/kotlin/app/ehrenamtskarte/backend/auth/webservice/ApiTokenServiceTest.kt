@@ -1,19 +1,21 @@
 package app.ehrenamtskarte.backend.auth.webservice
 
 import app.ehrenamtskarte.backend.IntegrationTest
-import app.ehrenamtskarte.backend.auth.database.AdministratorEntity
-import app.ehrenamtskarte.backend.auth.database.Administrators
-import app.ehrenamtskarte.backend.auth.database.ApiTokenType
-import app.ehrenamtskarte.backend.auth.database.ApiTokens
-import app.ehrenamtskarte.backend.auth.service.Authorizer
-import app.ehrenamtskarte.backend.auth.webservice.schema.ApiTokenQueryService
-import app.ehrenamtskarte.backend.auth.webservice.schema.ApiTokenService
-import app.ehrenamtskarte.backend.common.webservice.GraphQLContext
-import app.ehrenamtskarte.backend.common.webservice.context
-import app.ehrenamtskarte.backend.exception.service.ForbiddenException
-import app.ehrenamtskarte.backend.exception.service.UnauthorizedException
+import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
+import app.ehrenamtskarte.backend.db.entities.Administrators
+import app.ehrenamtskarte.backend.db.entities.ApiTokenType
+import app.ehrenamtskarte.backend.db.entities.ApiTokens
+import app.ehrenamtskarte.backend.db.entities.mayAddApiTokensInProject
+import app.ehrenamtskarte.backend.db.entities.mayViewApiMetadataInProject
+import app.ehrenamtskarte.backend.graphql.GraphQLContext
+import app.ehrenamtskarte.backend.graphql.auth.ApiTokenQueryService
+import app.ehrenamtskarte.backend.graphql.auth.ApiTokenService
+import app.ehrenamtskarte.backend.graphql.auth.JwtPayload
+import app.ehrenamtskarte.backend.graphql.context
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestData
+import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
+import app.ehrenamtskarte.backend.shared.exceptions.UnauthorizedException
 import graphql.schema.DataFetchingEnvironment
 import io.mockk.every
 import io.mockk.mockk
@@ -65,9 +67,8 @@ internal class ApiTokenServiceTest : IntegrationTest() {
                 ApiTokenService().createApiToken(1, mockDfe)
             }
             assertFalse(
-                Authorizer.mayAddApiTokensInProject(
-                    AdministratorEntity.find { Administrators.id eq mockJwtPayload.adminId }.single(),
-                ),
+                AdministratorEntity.find { Administrators.id eq mockJwtPayload.adminId }
+                    .single().mayAddApiTokensInProject(),
             )
         }
     }
@@ -160,9 +161,8 @@ internal class ApiTokenServiceTest : IntegrationTest() {
                 ApiTokenService().deleteApiToken(1, mockDfe)
             }
             assertFalse(
-                Authorizer.mayAddApiTokensInProject(
-                    AdministratorEntity.find { Administrators.id eq mockJwtPayload.adminId }.single(),
-                ),
+                AdministratorEntity.find { Administrators.id eq mockJwtPayload.adminId }.single()
+                    .mayAddApiTokensInProject(),
             )
         }
     }
@@ -205,9 +205,8 @@ internal class ApiTokenServiceTest : IntegrationTest() {
                 ApiTokenQueryService().getApiTokenMetaData(mockDfe)
             }
             assertFalse(
-                Authorizer.mayViewApiMetadataInProject(
-                    AdministratorEntity.find { Administrators.id eq mockJwtPayload.adminId }.single(),
-                ),
+                AdministratorEntity.find { Administrators.id eq mockJwtPayload.adminId }.single()
+                    .mayViewApiMetadataInProject(),
             )
         }
     }

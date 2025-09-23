@@ -1,17 +1,17 @@
 package app.ehrenamtskarte.backend.application.webservice
 
 import app.ehrenamtskarte.backend.GraphqlApiTest
-import app.ehrenamtskarte.backend.application.database.ApplicationEntity
-import app.ehrenamtskarte.backend.application.database.ApplicationVerificationEntity
-import app.ehrenamtskarte.backend.application.database.ApplicationVerificationExternalSource
-import app.ehrenamtskarte.backend.application.database.ApplicationVerifications
-import app.ehrenamtskarte.backend.application.database.Applications
-import app.ehrenamtskarte.backend.application.webservice.utils.ApplicationHandler
-import app.ehrenamtskarte.backend.auth.database.ApiTokenType
-import app.ehrenamtskarte.backend.auth.database.ApiTokens
+import app.ehrenamtskarte.backend.db.entities.ApiTokenType
+import app.ehrenamtskarte.backend.db.entities.ApiTokens
+import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
+import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
+import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationExternalSource
+import app.ehrenamtskarte.backend.db.entities.ApplicationVerifications
+import app.ehrenamtskarte.backend.db.entities.Applications
 import app.ehrenamtskarte.backend.generated.AddEakApplication
 import app.ehrenamtskarte.backend.generated.enums.ApplicationType
 import app.ehrenamtskarte.backend.generated.inputs.ApplicationInput
+import app.ehrenamtskarte.backend.graphql.application.ApplicationHandler
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestApplicationBuilder
 import app.ehrenamtskarte.backend.helper.TestData
