@@ -39,7 +39,8 @@ repositories {
 dependencies {
     annotationProcessor(libs.springframework.boot.configurationprocessor)
 
-    developmentOnly(libs.springframework.boot.devtools)
+    // todo this prevents webserver to be run from CliktCommand; fix or remove
+    // developmentOnly(libs.springframework.boot.devtools)
 
     implementation(libs.ajalt.clikt)
     implementation(libs.apache.commons.text)
@@ -76,6 +77,7 @@ dependencies {
     implementation(libs.sentry.springbootstarter)
     implementation(libs.simplejavamail)
     implementation(libs.springframework.boot.starter.mail)
+    implementation(libs.springframework.boot.starter.web)
 
     runtimeOnly(libs.postgresql.postgresql)
 
@@ -158,8 +160,7 @@ ktlint {
 }
 
 application {
-    // Define the main class for the application.
-    mainClass.set(project.group.toString())
+    mainClass.set("${project.group}.EntryPointKt")
 }
 
 kover {

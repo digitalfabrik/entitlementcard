@@ -17,10 +17,8 @@ spring-dependencymanagement = { id = "io.spring.dependency-management", version 
 [versions]
 
 graphql = "8.8.1"
-jackson = "2.20.0"
 javalin = "6.7.0"
 jetbrains-exposed = "0.61.0"
-junit-jupiter = "5.13.4"
 junixsocket = "2.10.1"
 kotlin = "2.2.10"
 kotlinx-coroutines = "1.10.2"
@@ -40,10 +38,10 @@ bouncycastle-bcpkix-jdk18on = { module = "org.bouncycastle:bcpkix-jdk18on", vers
 eatthepath-java-otp = { module = "com.eatthepath:java-otp", version = "0.4.0" }
 expediagroup-graphql-kotlin-client = { module = "com.expediagroup:graphql-kotlin-client", version.ref = "graphql" }
 expediagroup-graphql-kotlin-schema-generator = { module = "com.expediagroup:graphql-kotlin-schema-generator", version.ref = "graphql" }
-fasterxml-jackson-dataformat-xml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-xml", version.ref = "jackson" }
-fasterxml-jackson-dataformat-yaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jackson" }
-fasterxml-jackson-datatype-jsr310 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version.ref = "jackson" }
-fasterxml-jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
+fasterxml-jackson-dataformat-xml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-xml" }
+fasterxml-jackson-dataformat-yaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml" }
+fasterxml-jackson-datatype-jsr310 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310" }
+fasterxml-jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin" }
 favre-lib-bcrypt = { module = "at.favre.lib:bcrypt", version = "0.10.2" }
 google-protobuf-kotlin = { module = "com.google.protobuf:protobuf-kotlin", version = "4.32.0" }
 google-zxing-core = { module = "com.google.zxing:core", version = "3.5.3" }
@@ -62,9 +60,9 @@ jetbrains-kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-co
 jetbrains-kotlinx-html-jvm = { module = "org.jetbrains.kotlinx:kotlinx-html-jvm", version = "0.12.0" }
 jetbrains-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 jetbrains-kover-jvm-agent = "org.jetbrains.kotlinx:kover-jvm-agent:0.9.1"
-junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
-junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit-jupiter" }
-junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version = "6.0.0-RC2" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
+junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version = "1.12.2" }
 kohlschutter-junixsocket-common = { module = "com.kohlschutter.junixsocket:junixsocket-common", version.ref = "junixsocket" }
 kohlschutter-junixsocket-core = { module = "com.kohlschutter.junixsocket:junixsocket-core", version.ref = "junixsocket" }
 ktor-client-cio-jvm = { module = "io.ktor:ktor-client-cio-jvm", version.ref = "ktor" }
@@ -75,12 +73,13 @@ postgis-jdbc = { module = "net.postgis:postgis-jdbc", version = "2025.1.1" }
 postgresql-postgresql = { module = "org.postgresql:postgresql", version = "42.7.7" }
 projectreactor-reactor-test = { module = "io.projectreactor:reactor-test", version = "3.8.0-M6" }
 projectreactor-reactor-kotlinextensions = { module = "io.projectreactor.kotlin:reactor-kotlin-extensions", version = "1.2.3" }
-sentry-springbootstarter = { module = "io.sentry:sentry-spring-boot-starter-jakarta", version = "6.30.0" }
+sentry-springbootstarter = { module = "io.sentry:sentry-spring-boot-starter-jakarta", version = "8.19.0" }
 simplejavamail = { module = "org.simplejavamail:simple-java-mail", version = "8.12.6" }
 slf4j-simple = { module = "org.slf4j:slf4j-simple", version = "2.0.17" }
 springframework-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools" }
 springframework-boot-configurationprocessor = { module = "org.springframework.boot:spring-boot-configuration-processor" }
 springframework-boot-starter-mail = { module = "org.springframework.boot:spring-boot-starter-mail", version.ref = "spring" }
+springframework-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "spring" }
 springframework-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
 springframework-boot-testcontainers = { module = "org.springframework.boot:spring-boot-testcontainers" }
 testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }
