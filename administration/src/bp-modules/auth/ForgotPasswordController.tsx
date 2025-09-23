@@ -1,4 +1,4 @@
-import { Box, Button, Card, FormControl, FormLabel, TextField, Typography } from '@mui/material'
+import { Box, Button, Card, TextField, Typography } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
@@ -68,16 +68,16 @@ const ForgotPasswordController = (): ReactElement => {
                 e.preventDefault()
                 submit()
               }}>
-              <FormControl fullWidth>
-                <FormLabel>{t('eMail')}</FormLabel>
-                <TextField
-                  value={email}
-                  size='small'
-                  onChange={e => setEmail(e.target.value)}
-                  type='email'
-                  placeholder='erika.musterfrau@example.org'
-                />
-              </FormControl>
+              <TextField
+                value={email}
+                fullWidth
+                size='small'
+                label={t('eMail')}
+                required
+                onChange={e => setEmail(e.target.value)}
+                type='email'
+                placeholder='erika.musterfrau@example.org'
+              />
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 3 }}>
                 <Link to='/'>
                   <Button variant='text'>{t('backToLogin')}</Button>

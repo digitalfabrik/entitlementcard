@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, FormLabel, Stack, TextField } from '@mui/material'
+import { Box, Button, FormControl, InputLabel, Stack, TextField } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
@@ -27,25 +27,34 @@ const LoginForm = ({
         event.preventDefault()
         onSubmit()
       }}>
-      <Stack sx={{ gap: 2 }}>
-        <FormControl fullWidth>
-          <FormLabel>{t('eMail')}</FormLabel>
-          <TextField
-            placeholder='erika.musterfrau@example.org'
-            fullWidth
-            autoComplete='on'
-            autoFocus
-            type='email'
-            size='small'
-            value={email}
-            required
+      <Stack sx={{ gap: 2, marginY: 2 }}>
+        <TextField
+          placeholder='erika.musterfrau@example.org'
+          fullWidth
+          autoComplete='on'
+          autoFocus
+          type='email'
+          size='small'
+          label={t('eMail')}
+          value={email}
+          required
+          disabled={loading}
+          onChange={event => setEmail(event.target.value)}
+        />
+        <FormControl variant='outlined'>
+          <InputLabel required size='small'>
+            {t('password')}
+          </InputLabel>
+          <PasswordInput
+            label={t('password')}
+            placeholder='Passwort'
+            value={password}
             disabled={loading}
-            onChange={event => setEmail(event.target.value)}
+            fullWidth
+            setValue={setPassword}
+            required
+            autoFocus={false}
           />
-        </FormControl>
-        <FormControl fullWidth>
-          <FormLabel>{t('password')}</FormLabel>
-          <PasswordInput required placeholder='Passwort' value={password} disabled={loading} setValue={setPassword} />
         </FormControl>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Link to='/forgot-password'>
