@@ -12,13 +12,6 @@ import java.net.URL
 import java.nio.file.Paths
 import java.time.ZoneId
 
-val possibleBackendConfigurationFiles =
-    listOf<File>(
-        Paths.get(System.getProperty("user.dir"), "config.yml").toFile(),
-        Paths.get(System.getProperty("user.home"), ".config", "entitlementcard", "config.yml").toFile(),
-        Paths.get("/etc/entitlementcard/config.yml").toFile(),
-    )
-
 data class PostgresConfig(val url: String, val user: String, val password: String)
 
 data class MapConfig(val baseUrl: String)

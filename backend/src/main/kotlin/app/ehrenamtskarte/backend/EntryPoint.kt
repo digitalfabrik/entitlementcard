@@ -8,6 +8,7 @@ import app.ehrenamtskarte.backend.db.entities.Migrations
 import app.ehrenamtskarte.backend.db.migration.MigrationUtils
 import app.ehrenamtskarte.backend.import.stores.Importer
 import app.ehrenamtskarte.backend.import.stores.toImportConfig
+import com.expediagroup.graphql.generator.extensions.print
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.Context
 import com.github.ajalt.clikt.core.ProgramResult
@@ -20,6 +21,7 @@ import com.github.ajalt.clikt.parameters.options.convert
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.clikt.parameters.types.file
+import graphql.schema.GraphQLSchema
 import org.jetbrains.exposed.sql.exists
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
@@ -107,10 +109,20 @@ class GraphQLExport : CliktCommand("graphql-export") {
     override fun help(context: Context): String = "Exports the GraphQL schema into the directory given by '--path'"
 
     override fun run() {
-        // todo fix after graphql handler migration to spring
-        // val schema = GraphQLHandler(config).graphQLSchema.print()
-        // val file = File(path)
-        // file.writeText(schema)
+        val springContext = runApplication<BackendApplication> {
+            addInitializers(
+                beans {
+                    bean { config }
+                },
+            )
+        }
+        try {
+            val schema = springContext.getBean(GraphQLSchema::class.java)
+            File(path).writeText(schema.print())
+            logger.info("GraphQL schema successfully exported to '$path'")
+        } finally {
+            springContext.close()
+        }
     }
 }
 
