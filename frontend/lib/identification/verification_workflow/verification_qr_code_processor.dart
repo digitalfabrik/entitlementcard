@@ -4,6 +4,7 @@ import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.
 import 'package:ehrenamtskarte/identification/util/card_info_utils.dart';
 import 'package:ehrenamtskarte/identification/verification_workflow/query_server_verification.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
+import 'package:ehrenamtskarte/util/date_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -50,6 +51,7 @@ Future<CardInfo?> verifyStaticVerificationCode(
 ) async {
   assertConsistentCardInfo(code.info);
   _assertConsistentStaticVerificationCode(code);
+
   if (!(await queryStaticServerVerification(client, projectId, code)).valid) {
     return null;
   }
@@ -66,6 +68,11 @@ void assertConsistentCardInfo(CardInfo cardInfo) {
   final expirationDate = getExpirationDay(cardInfo);
   if (expirationDate != null && isCardExpired(cardInfo)) {
     throw CardExpiredException(expirationDate);
+  }
+
+  if (cardInfo.extensions.hasExtensionStartDay() && isCardNotYetValid(cardInfo)) {
+    final startDay = dateFromEpochDaysInTimeZone(cardInfo.extensions.extensionStartDay.startDay, currentTimezone);
+    throw CardNotYetValidException(startDay);
   }
 }
 
@@ -88,4 +95,10 @@ class CardExpiredException extends QrCodeParseException {
   final DateTime expiry;
 
   CardExpiredException(this.expiry) : super('card already expired');
+}
+
+class CardNotYetValidException extends QrCodeParseException {
+  final DateTime startDay;
+
+  CardNotYetValidException(this.startDay) : super('card is not yet valid');
 }
