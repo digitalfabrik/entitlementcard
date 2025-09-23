@@ -73,7 +73,7 @@ postgis-jdbc = { module = "net.postgis:postgis-jdbc", version = "2025.1.1" }
 postgresql-postgresql = { module = "org.postgresql:postgresql", version = "42.7.7" }
 projectreactor-reactor-test = { module = "io.projectreactor:reactor-test", version = "3.8.0-M6" }
 projectreactor-reactor-kotlinextensions = { module = "io.projectreactor.kotlin:reactor-kotlin-extensions", version = "1.2.3" }
-sentry-springbootstarter = { module = "io.sentry:sentry-spring-boot-starter-jakarta", version = "6.30.0" }
+sentry-springbootstarter = { module = "io.sentry:sentry-spring-boot-starter-jakarta", version = "8.19.0" }
 simplejavamail = { module = "org.simplejavamail:simple-java-mail", version = "8.12.6" }
 slf4j-simple = { module = "org.slf4j:slf4j-simple", version = "2.0.17" }
 springframework-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools" }
