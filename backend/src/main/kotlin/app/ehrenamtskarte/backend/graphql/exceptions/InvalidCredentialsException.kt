@@ -1,0 +1,5 @@
+package app.ehrenamtskarte.backend.graphql.exceptions
+
+import app.ehrenamtskarte.backend.graphql.exceptions.GraphQLExceptionCode
+
+class InvalidCredentialsException : GraphQLBaseException(GraphQLExceptionCode.INVALID_CREDENTIALS)

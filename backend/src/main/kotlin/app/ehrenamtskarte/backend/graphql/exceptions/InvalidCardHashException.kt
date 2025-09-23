@@ -1,0 +1,3 @@
+package app.ehrenamtskarte.backend.graphql.exceptions
+
+class InvalidCardHashException : GraphQLBaseException(GraphQLExceptionCode.INVALID_CARD_HASH)

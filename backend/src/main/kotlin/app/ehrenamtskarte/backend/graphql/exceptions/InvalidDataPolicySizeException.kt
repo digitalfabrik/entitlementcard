@@ -1,6 +1,6 @@
-package app.ehrenamtskarte.backend.graphql.shared.exceptions
+package app.ehrenamtskarte.backend.graphql.exceptions
 
-import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
+import app.ehrenamtskarte.backend.graphql.exceptions.GraphQLExceptionCode
 
 open class InvalidDataPolicySizeException(maxSize: Int) : GraphQLBaseException(
     GraphQLExceptionCode.INVALID_DATA_POLICY_SIZE,
