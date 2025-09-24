@@ -71,7 +71,7 @@ data class BackendConfiguration(
     val geocoding: GeocodingConfig,
     val projects: List<ProjectConfig>,
     val matomoUrl: String,
-    val disableApplicationEmails: Boolean = false,
+    val disableMailService: Boolean = false,
 ) {
     fun isDevelopment(): Boolean = environment == Environment.DEVELOPMENT
 
