@@ -39,6 +39,7 @@ const CreateCardsButtonBar = ({
         <Button
           startIcon={<UploadFile />}
           onClick={generateCardsPdf}
+          color='primary'
           disabled={!allCardsValid || cards.length === 0}
           variant='contained'>
           {t('printQRCodes')}
