@@ -200,8 +200,10 @@ tasks.generateProto {
 }
 
 tasks.graphqlGenerateTestClient {
-    dependsOn(tasks.generateSentryBundleIdJava)
-    dependsOn(tasks.sentryCollectSourcesJava)
+    if (isProductionEnvironment) {
+        dependsOn(tasks.generateSentryBundleIdJava)
+        dependsOn(tasks.sentryCollectSourcesJava)
+    }
     schemaFile.set(rootDir.parentFile.resolve("specs/backend-api.graphql"))
     packageName.set("${project.group}.generated")
     queryFiles.setFrom(fileTree("src/test/resources/graphql"))

@@ -11,17 +11,15 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class GraphQLConfiguration {
     @Bean
-    fun graphQLSchema(
-        cardQueryService: CardQueryService
-    ): GraphQLSchema {
+    fun graphQLSchema(cardQueryService: CardQueryService): GraphQLSchema {
         val config = SchemaGeneratorConfig(
             supportedPackages = listOf(
                 "app.ehrenamtskarte.backend.graphql.cards.types",
-                "app.ehrenamtskarte.backend.graphql.shared.types"
-            )
+                "app.ehrenamtskarte.backend.graphql.shared.types",
+            ),
         )
         val queries = listOf(
-            TopLevelObject(cardQueryService)
+            TopLevelObject(cardQueryService),
         )
         return toSchema(
             config = config,

@@ -7,9 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import java.io.File
 import java.net.URL
-import java.nio.file.Paths
 import java.time.ZoneId
 
 data class PostgresConfig(val url: String, val user: String, val password: String)

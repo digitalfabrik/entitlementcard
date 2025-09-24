@@ -15,8 +15,8 @@ class GraphQLExceptionHandler {
     private val logger = LoggerFactory.getLogger(GraphQLExceptionHandler::class.java)
 
     @GraphQlExceptionHandler
-    fun handleGraphQLException(ex: Exception, env: DataFetchingEnvironment): GraphQLError {
-        return when (ex) {
+    fun handleGraphQLException(ex: Exception, env: DataFetchingEnvironment): GraphQLError =
+        when (ex) {
             is GraphQLBaseException -> {
                 ex.toError(env.executionStepInfo.path, env.field.sourceLocation)
             }
@@ -29,13 +29,8 @@ class GraphQLExceptionHandler {
                 buildError(env, ErrorType.INTERNAL_ERROR, "An internal server error occurred.")
             }
         }
-    }
 
-    private fun buildError(
-        env: DataFetchingEnvironment,
-        errorType: ErrorType,
-        message: String?,
-    ): GraphQLError {
+    private fun buildError(env: DataFetchingEnvironment, errorType: ErrorType, message: String?): GraphQLError {
         val finalMessage = message ?: "An error occurred."
         return GraphQLError.newError()
             .errorType(errorType)
