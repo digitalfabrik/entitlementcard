@@ -9,7 +9,10 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class CardsGraphQLConfiguration {
     @Bean
-    fun cardsGraphQlParams(cardQueryController: CardQueryController, cardMutationController: CardMutationController): GraphQLParams =
+    fun cardsGraphQlParams(
+        cardQueryController: CardQueryController,
+        cardMutationController: CardMutationController,
+    ): GraphQLParams =
         GraphQLParams(
             config = SchemaGeneratorConfig(
                 supportedPackages = listOf("app.ehrenamtskarte.backend.graphql.cards.types"),

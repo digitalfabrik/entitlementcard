@@ -1,9 +1,10 @@
-package app.ehrenamtskarte.backend.graphql
+package app.ehrenamtskarte.backend.graphql.auth
 
 import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
 import app.ehrenamtskarte.backend.db.entities.Administrators
 import app.ehrenamtskarte.backend.db.entities.Projects
 import app.ehrenamtskarte.backend.shared.exceptions.UnauthorizedException
+import jakarta.servlet.http.HttpServletRequest
 import org.jetbrains.exposed.sql.transactions.transaction
 
 data class AuthContext(
@@ -13,8 +14,8 @@ data class AuthContext(
     val project: String,
 )
 
-fun GraphQLContext.getAuthContext(): AuthContext {
-    val jwtPayload = this.enforceSignedIn()
+fun HttpServletRequest.getAuthContext(): AuthContext {
+    val jwtPayload = JwtService.verifyRequest(this) ?: throw UnauthorizedException()
     return transaction {
         (Administrators innerJoin Projects)
             .select(Administrators.columns + Projects.columns)

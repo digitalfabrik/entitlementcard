@@ -11,6 +11,7 @@ import app.ehrenamtskarte.backend.db.entities.maySendMailsInRegion
 import app.ehrenamtskarte.backend.db.repositories.CardRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.db.repositories.UserEntitlementsRepository
+import app.ehrenamtskarte.backend.graphql.auth.getAuthContext
 import app.ehrenamtskarte.backend.graphql.cards.types.ActivationState
 import app.ehrenamtskarte.backend.graphql.cards.types.CardActivationResultModel
 import app.ehrenamtskarte.backend.graphql.cards.types.CardCreationResultModel
@@ -21,8 +22,6 @@ import app.ehrenamtskarte.backend.graphql.cards.utils.KoblenzUser
 import app.ehrenamtskarte.backend.graphql.cards.utils.PEPPER_LENGTH
 import app.ehrenamtskarte.backend.graphql.cards.utils.QRCodeUtil
 import app.ehrenamtskarte.backend.graphql.cards.utils.hash
-import app.ehrenamtskarte.backend.graphql.context
-import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidCardHashException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidQrCodeSize
@@ -150,12 +149,11 @@ class CardMutationController(
     @GraphQLDescription("Creates a new digital entitlementcard from self-service portal")
     @MutationMapping
     fun createCardFromSelfService(
-        dfe: DataFetchingEnvironment,
         @Argument project: String,
         @Argument encodedCardInfo: String,
         @Argument generateStaticCode: Boolean,
+        dfe: DataFetchingEnvironment,
     ): CardCreationResultModel {
-        val context = dfe.graphQlContext.context
         val config = backendConfiguration.getProjectConfig(project)
         if (!config.selfServiceEnabled) {
             throw NotFoundException()
@@ -174,7 +172,7 @@ class CardMutationController(
         if (userEntitlements == null) {
             // This logging is used for rate limiting
             // See https://git.tuerantuer.org/DF/salt/pulls/187
-            logger.info("${context.remoteIp} failed to create a new card")
+            logger.info("${request.remoteAddr} failed to create a new card")
             throw UserEntitlementNotFoundException()
         }
         if (userEntitlements.revoked || userEntitlements.endDate.isBefore(LocalDate.now())) {
@@ -267,8 +265,7 @@ class CardMutationController(
         @Argument generateStaticCodes: Boolean,
         @Argument applicationIdToMarkAsProcessed: Int? = null,
     ): List<CardCreationResultModel> {
-        val context = dfe.graphQlContext.context
-        val authContext = context.getAuthContext()
+        val authContext = request.getAuthContext()
         val projectConfig = backendConfiguration.getProjectConfig(authContext.project)
 
         val activationCodes = transaction {
@@ -325,7 +322,6 @@ class CardMutationController(
         @Argument overwrite: Boolean,
         dfe: DataFetchingEnvironment,
     ): CardActivationResultModel {
-        val context = dfe.graphQlContext.context
         val projectConfig = backendConfiguration.getProjectConfig(project)
         val cardHash = Base64.getDecoder().decode(cardInfoHashBase64)
         val rawActivationSecret = Base64.getDecoder().decode(activationSecretBase64)
@@ -339,21 +335,21 @@ class CardMutationController(
 
             if (card == null || activationSecretHash == null) {
                 logger.info(
-                    "${context.remoteIp} failed to activate card, card not found with cardHash:$cardInfoHashBase64",
+                    "${request.remoteAddr} failed to activate card, card not found with cardHash:$cardInfoHashBase64",
                 )
                 return@t CardActivationResultModel(ActivationState.not_found)
             }
 
             if (!verifyActivationSecret(rawActivationSecret, activationSecretHash)) {
                 logger.info(
-                    "${context.remoteIp} failed to activate card with id:${card.id} and overwrite: $overwrite",
+                    "${request.remoteAddr} failed to activate card with id:${card.id} and overwrite: $overwrite",
                 )
                 return@t CardActivationResultModel(ActivationState.wrong_secret)
             }
 
             if (CardVerifier.isExpired(card.expirationDay, projectConfig.timezone)) {
                 logger.info(
-                    "${context.remoteIp} failed to activate card with id:${card.id} and overwrite: " +
+                    "${request.remoteAddr} failed to activate card with id:${card.id} and overwrite: " +
                         "$overwrite because card is expired",
                 )
                 return@t CardActivationResultModel(ActivationState.expired)
@@ -361,7 +357,7 @@ class CardMutationController(
 
             if (card.revoked) {
                 logger.info(
-                    "${context.remoteIp} failed to activate card with id:${card.id} and overwrite: " +
+                    "${request.remoteAddr} failed to activate card with id:${card.id} and overwrite: " +
                         "$overwrite because card is revoked",
                 )
                 return@t CardActivationResultModel(ActivationState.revoked)
@@ -369,7 +365,7 @@ class CardMutationController(
 
             if (!overwrite && card.totpSecret != null) {
                 logger.info(
-                    "Card with id:${card.id} did not overwrite card from ${context.remoteIp}",
+                    "Card with id:${card.id} did not overwrite card from ${request.remoteAddr}",
                 )
                 return@t CardActivationResultModel(ActivationState.did_not_overwrite_existing)
             }
@@ -378,7 +374,7 @@ class CardMutationController(
             val encodedTotpSecret = Base64.getEncoder().encodeToString(totpSecret)
             CardRepository.activate(card, totpSecret)
             logger.info(
-                "Card with id:${card.id} and overwrite: $overwrite was activated from ${context.remoteIp}",
+                "Card with id:${card.id} and overwrite: $overwrite was activated from ${request.remoteAddr}",
             )
             return@t CardActivationResultModel(ActivationState.success, encodedTotpSecret)
         }
@@ -396,12 +392,10 @@ class CardMutationController(
     @GraphQLDescription("Deletes a batch of cards (that have not yet been activated)")
     @MutationMapping
     fun deleteInactiveCards(
-        dfe: DataFetchingEnvironment,
         @Argument regionId: Int,
         @Argument cardInfoHashBase64List: List<String>,
     ): Boolean {
-        val context = dfe.graphQlContext.context
-        val authContext = context.getAuthContext()
+        val authContext = request.getAuthContext()
 
         val cardInfoHashList = cardInfoHashBase64List.map { it.decodeBase64Bytes() }
         transaction {
@@ -418,14 +412,12 @@ class CardMutationController(
     )
     @MutationMapping
     fun sendCardCreationConfirmationMail(
-        dfe: DataFetchingEnvironment,
         @Argument regionId: Int,
         @Argument recipientAddress: String,
         @Argument recipientName: String,
         @Argument deepLink: String,
     ): Boolean {
-        val context = dfe.graphQlContext.context
-        val authContext = context.getAuthContext()
+        val authContext = request.getAuthContext()
 
         transaction {
             val region = authContext.admin.regionId?.value?.let {
