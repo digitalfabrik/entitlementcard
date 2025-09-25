@@ -111,11 +111,7 @@ const StepSendForm: Form<State, ValidatedInput, AdditionalProps> = {
           id='data-privacy-dialog'
           onClose={() => setOpenPrivacyPolicy(false)}
           onCancelAction={
-            <Button
-              onClick={() => setOpenPrivacyPolicy(false)}
-              variant='outlined'
-              color='default.dark'
-              startIcon={<Close />}>
+            <Button onClick={() => setOpenPrivacyPolicy(false)} variant='outlined' startIcon={<Close />}>
               {t('misc:close')}
             </Button>
           }>

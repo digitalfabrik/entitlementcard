@@ -128,11 +128,7 @@ const CardSelfServiceView = (): ReactElement => {
         id='help-dialog'
         onClose={() => setOpenHelpDialog(false)}
         onCancelAction={
-          <Button
-            onClick={() => setOpenHelpDialog(false)}
-            variant='outlined'
-            color='default.dark'
-            startIcon={<Close />}>
+          <Button onClick={() => setOpenHelpDialog(false)} variant='outlined' startIcon={<Close />}>
             {t('misc:cancel')}
           </Button>
         }

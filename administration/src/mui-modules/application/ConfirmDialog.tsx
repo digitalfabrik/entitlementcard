@@ -44,7 +44,7 @@ const ConfirmDialog = ({
       title={title}
       onClose={onClose}
       onCancelAction={
-        <Button onClick={onClose} variant='outlined' color='default.dark' startIcon={<Close />}>
+        <Button onClick={onClose} variant='outlined' startIcon={<Close />}>
           {t('cancel')}
         </Button>
       }

@@ -75,12 +75,7 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props): Rea
           </Button>
         }
         onCancelAction={
-          <Button
-            variant='outlined'
-            color='default.dark'
-            startIcon={<Close />}
-            onClick={onSignOut}
-            loading={mutationState.loading}>
+          <Button variant='outlined' startIcon={<Close />} onClick={onSignOut} loading={mutationState.loading}>
             {t('loginPeriodLogoutButton')}
           </Button>
         }>

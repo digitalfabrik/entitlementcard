@@ -47,7 +47,7 @@ const TextAreaDialog = ({
       fullWidth
       open={isOpen}
       onCancelAction={
-        <Button variant='outlined' color='default.dark' startIcon={<Close />} onClick={onClose}>
+        <Button variant='outlined' startIcon={<Close />} onClick={onClose}>
           {t('close')}
         </Button>
       }
