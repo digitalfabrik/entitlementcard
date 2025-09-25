@@ -1,5 +1,5 @@
 import { Checkbox, FormGroup, InputGroup } from '@blueprintjs/core'
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
+import { PersonAdd } from '@mui/icons-material'
 import { Stack } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -75,7 +75,7 @@ const CreateUserDialog = ({
       id='add-user-dialog'
       onClose={clearAndCloseDialog}
       confirmButtonText={t('addUser')}
-      confirmButtonIcon={<AddCircleOutlineIcon />}
+      confirmButtonIcon={<PersonAdd />}
       onConfirm={() =>
         createAdministrator({
           variables: {

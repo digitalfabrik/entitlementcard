@@ -1,8 +1,8 @@
-import { Tooltip } from '@blueprintjs/core'
-import { Button } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { Button, Tooltip } from '@mui/material'
+import { ArrowBack, UploadFile } from '@mui/icons-material'
 import ConfirmDialog from '../../mui-modules/application/ConfirmDialog'
 import ButtonBar from '../ButtonBar'
 import { AcceptingStoresEntry } from './AcceptingStoresEntry'
@@ -32,25 +32,33 @@ const StoresButtonBar = ({
     setImportDialogIsOpen(false)
   }
 
+  let tooltip
+  if (hasNoAcceptingStores) {
+    tooltip = t('hasNoAcceptingStores')
+  }
+  if (hasInvalidStores) {
+    tooltip = t('hasInvalidStores')
+  }
+
   // TODO fix button alignment
   return (
     <ButtonBar>
-      <Button color='inherit' onClick={goBack}>
+      <Button startIcon={<ArrowBack />} onClick={goBack}>
         {t('backToSelection')}
       </Button>
-      <Tooltip
-        placement='top'
-        content={hasNoAcceptingStores ? t('hasNoAcceptingStores') : t('hasInvalidStores')}
-        disabled={!hasNoAcceptingStores && !hasInvalidStores}
-        openOnTargetFocus={false}>
-        <Button
-          color='primary'
-          variant='contained'
-          onClick={() => setImportDialogIsOpen(true)}
-          disabled={hasNoAcceptingStores || hasInvalidStores}>
-          {t('importStores')}
-        </Button>
+      <Tooltip title={tooltip}>
+        <div>
+          <Button
+            startIcon={<UploadFile />}
+            color='primary'
+            variant='contained'
+            onClick={() => setImportDialogIsOpen(true)}
+            disabled={hasNoAcceptingStores || hasInvalidStores}>
+            {t('importStores')}
+          </Button>
+        </div>
       </Tooltip>
+
       <ConfirmDialog
         open={importDialogIsOpen}
         title={t('importStores')}

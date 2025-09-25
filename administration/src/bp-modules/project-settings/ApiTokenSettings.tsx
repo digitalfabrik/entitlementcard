@@ -124,7 +124,9 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
       </ConfirmDialog>
       <SettingsCard>
         <H2>{t('apiToken')}</H2>
+
         {showPepperSection && <PepperSettings />}
+
         <Container>
           <H4>{t('createNewToken')}</H4>
           <p>{t('tokenOnlyShowedOnceHint')}</p>

@@ -179,7 +179,6 @@ const ButtonsApplicationPending = (props: {
         {t('applicationApprove')}
       </Button>
       <Button
-        variant='outlined'
         startIcon={<CancelOutlined />}
         color='error'
         disabled={props.disabled}

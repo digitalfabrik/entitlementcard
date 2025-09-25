@@ -101,7 +101,6 @@ const VerificationListItem = ({
       {showResendApprovalEmailButton && (
         <Button
           variant='contained'
-          color='default'
           onClick={() => onSendApprovalEmailClick()}
           startIcon={<ForwardToInboxIcon />}
           sx={{ displayPrint: 'none', mt: 1 }}
