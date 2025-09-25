@@ -1,4 +1,5 @@
-import { Button } from '@blueprintjs/core'
+import { Edit, PersonAdd, PersonRemove } from '@mui/icons-material'
+import { Button, Stack } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -73,20 +74,18 @@ const UsersTable = ({
                 {selectedRegionId !== null ? null : <td>{regionName === null ? <i>({t('none')})</i> : regionName}</td>}
                 <td>{roleToText(user.role)}</td>
                 <td>
-                  <Button
-                    icon='edit'
-                    intent='warning'
-                    text={t('edit')}
-                    minimal
-                    onClick={() => setUserInEditDialog(user)}
-                  />
-                  <Button
-                    icon='trash'
-                    intent='danger'
-                    text={t('delete')}
-                    minimal
-                    onClick={() => setUserInDeleteDialog(user)}
-                  />
+                  <Stack sx={{ flexDirection: 'row', gap: 1 }}>
+                    <Button startIcon={<Edit />} size='small' onClick={() => setUserInEditDialog(user)}>
+                      {t('edit')}
+                    </Button>
+                    <Button
+                      startIcon={<PersonRemove />}
+                      color='error'
+                      size='small'
+                      onClick={() => setUserInDeleteDialog(user)}>
+                      {t('delete')}
+                    </Button>
+                  </Stack>
                 </td>
               </tr>
             )
@@ -94,7 +93,9 @@ const UsersTable = ({
         </tbody>
       </StyledTable>
       <div style={{ padding: '16px', textAlign: 'center' }}>
-        <Button intent='success' text={t('addUser')} icon='add' onClick={() => setCreateUserDialogOpen(true)} />
+        <Button startIcon={<PersonAdd />} onClick={() => setCreateUserDialogOpen(true)}>
+          {t('addUser')}
+        </Button>
         <CreateUserDialog
           isOpen={createUserDialogOpen}
           onClose={() => setCreateUserDialogOpen(false)}

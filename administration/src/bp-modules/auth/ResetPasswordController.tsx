@@ -1,4 +1,5 @@
-import { Button, Callout, Card, Classes, FormGroup, H2, H3, H4, InputGroup } from '@blueprintjs/core'
+import { Callout, Card, Classes, H2, H3, H4, InputGroup } from '@blueprintjs/core'
+import { Button, FormControl, FormLabel, Stack } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate, useSearchParams } from 'react-router'
@@ -18,8 +19,8 @@ const ResetPasswordController = (): ReactElement => {
   const [queryParams] = useSearchParams()
   const adminEmail = queryParams.get('email') ?? ''
   const { t } = useTranslation('auth')
-  const [newPassword, setNewPassword] = useState('')
-  const [repeatNewPassword, setRepeatNewPassword] = useState('')
+  const [newPassword, setNewPassword] = useState<string>()
+  const [repeatNewPassword, setRepeatNewPassword] = useState<string>()
   const navigate = useNavigate()
 
   const checkPasswordResetLinkQuery = useCheckPasswordResetLinkQuery({
@@ -48,7 +49,7 @@ const ResetPasswordController = (): ReactElement => {
       variables: {
         project: config.projectId,
         email: adminEmail,
-        newPassword,
+        newPassword: newPassword ?? '',
         passwordResetKey: queryParams.get('token')!,
       },
     })
@@ -74,23 +75,32 @@ const ResetPasswordController = (): ReactElement => {
             e.preventDefault()
             submit()
           }}>
-          <FormGroup label={t('eMail')}>
-            <InputGroup value={adminEmail} disabled type='email' />
-          </FormGroup>
-          <PasswordInput label={t('newPassword')} setValue={setNewPassword} value={newPassword} />
-          <PasswordInput label={t('newPasswordRepeat')} setValue={setRepeatNewPassword} value={repeatNewPassword} />
-          {warnMessage === null || !isDirty ? null : <Callout intent='danger'>{warnMessage}</Callout>}
+          <Stack sx={{ gap: 2 }}>
+            <FormControl fullWidth>
+              <FormLabel>{t('eMail')}</FormLabel>
+              <InputGroup value={adminEmail} disabled type='email' />
+            </FormControl>
+            <FormControl fullWidth>
+              <FormLabel>{t('newPassword')}</FormLabel>
+              <PasswordInput setValue={setNewPassword} value={newPassword} />
+            </FormControl>
+            <FormControl fullWidth>
+              <FormLabel>{t('newPasswordRepeat')}</FormLabel>
+              <PasswordInput setValue={setRepeatNewPassword} value={repeatNewPassword} />
+            </FormControl>
+
+            {warnMessage === null || !isDirty ? null : <Callout intent='danger'>{warnMessage}</Callout>}
+          </Stack>
+
           <div
             className={Classes.DIALOG_FOOTER_ACTIONS}
             style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px' }}>
-            <Link to='/'>{t('backToLogin')}</Link>
-            <Button
-              type='submit'
-              intent='primary'
-              text={t('resetPassword')}
-              loading={loading}
-              disabled={warnMessage !== null}
-            />
+            <Link to='/'>
+              <Button variant='text'>{t('backToLogin')}</Button>
+            </Link>
+            <Button type='submit' loading={loading} variant='contained' disabled={warnMessage !== null}>
+              {t('resetPassword')}
+            </Button>
           </div>
         </form>
       </Card>

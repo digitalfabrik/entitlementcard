@@ -23,12 +23,7 @@ const StoresController = (): ReactElement => {
           : t('errors:manageStoresNotActivated'),
       }}>
       <Stack sx={{ flexGrow: 1, alignItems: 'center', justifyContent: 'safe center' }}>
-        <Button
-          color='default'
-          size='large'
-          variant='contained'
-          startIcon={<CsvIcon />}
-          onClick={() => navigate('./import')}>
+        <Button startIcon={<CsvIcon />} onClick={() => navigate('./import')}>
           {t('storesCsvImport')}
         </Button>
       </Stack>

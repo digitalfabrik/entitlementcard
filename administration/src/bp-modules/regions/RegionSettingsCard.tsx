@@ -1,4 +1,5 @@
-import { Button, Checkbox, H2 } from '@blueprintjs/core'
+import { Checkbox, H2 } from '@blueprintjs/core'
+import { Button } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -45,12 +46,9 @@ const RegionSettingsCard = ({
         label={t('activatedForCardConfirmationMail')}
       />
       <ButtonContainer>
-        <Button
-          text={t('save')}
-          intent='primary'
-          onClick={() => onSave(activatedForApplication, activatedForCardConfirmationMail)}
-          loading={loading}
-        />
+        <Button onClick={() => onSave(activatedForApplication, activatedForCardConfirmationMail)} loading={loading}>
+          {t('save')}
+        </Button>
       </ButtonContainer>
     </SettingsCard>
   )
