@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.graphql.cards
 
 import Card
+import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
 import app.ehrenamtskarte.backend.db.entities.CodeType
 import app.ehrenamtskarte.backend.db.entities.TOTP_SECRET_LENGTH
@@ -17,16 +18,18 @@ import app.ehrenamtskarte.backend.graphql.cards.types.DynamicActivationCodeResul
 import app.ehrenamtskarte.backend.graphql.cards.types.StaticVerificationCodeResult
 import app.ehrenamtskarte.backend.graphql.cards.utils.CardVerifier
 import app.ehrenamtskarte.backend.graphql.cards.utils.KoblenzUser
+import app.ehrenamtskarte.backend.graphql.cards.utils.PEPPER_LENGTH
 import app.ehrenamtskarte.backend.graphql.cards.utils.QRCodeUtil
+import app.ehrenamtskarte.backend.graphql.cards.utils.hash
 import app.ehrenamtskarte.backend.graphql.context
 import app.ehrenamtskarte.backend.graphql.getAuthContext
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidCardHashException
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidInputException
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidQrCodeSize
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.RegionNotActivatedForCardConfirmationMailException
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.RegionNotFoundException
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.UserEntitlementExpiredException
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.UserEntitlementNotFoundException
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidCardHashException
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidInputException
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidQrCodeSize
+import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotActivatedForCardConfirmationMailException
+import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotFoundException
+import app.ehrenamtskarte.backend.graphql.exceptions.UserEntitlementExpiredException
+import app.ehrenamtskarte.backend.graphql.exceptions.UserEntitlementNotFoundException
 import app.ehrenamtskarte.backend.shared.Matomo
 import app.ehrenamtskarte.backend.shared.crypto.Argon2IdHasher
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
@@ -41,18 +44,26 @@ import extensionStartDayOrNull
 import graphql.schema.DataFetchingEnvironment
 import io.ktor.util.decodeBase64Bytes
 import io.ktor.util.encodeBase64
+import jakarta.servlet.http.HttpServletRequest
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.MutationMapping
+import org.springframework.stereotype.Controller
 import java.security.SecureRandom
 import java.sql.Connection.TRANSACTION_REPEATABLE_READ
 import java.time.LocalDate
 import java.util.Base64
 import javax.crypto.KeyGenerator
 
-@Suppress("unused")
-class CardMutationService {
-    private val logger: Logger = LoggerFactory.getLogger(CardMutationService::class.java)
+@Controller
+class CardMutationController(
+    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
+    private val backendConfiguration: BackendConfiguration,
+    private val request: HttpServletRequest,
+) {
+    private val logger: Logger = LoggerFactory.getLogger(CardMutationController::class.java)
 
     private val activationSecretLength = 20
 
@@ -137,14 +148,15 @@ class CardMutationService {
     }
 
     @GraphQLDescription("Creates a new digital entitlementcard from self-service portal")
+    @MutationMapping
     fun createCardFromSelfService(
         dfe: DataFetchingEnvironment,
-        project: String,
-        encodedCardInfo: String,
-        generateStaticCode: Boolean,
+        @Argument project: String,
+        @Argument encodedCardInfo: String,
+        @Argument generateStaticCode: Boolean,
     ): CardCreationResultModel {
         val context = dfe.graphQlContext.context
-        val config = context.backendConfiguration.getProjectConfig(project)
+        val config = backendConfiguration.getProjectConfig(project)
         if (!config.selfServiceEnabled) {
             throw NotFoundException()
         }
@@ -202,9 +214,9 @@ class CardMutationService {
         }
 
         Matomo.trackCreateCards(
-            context.backendConfiguration,
+            backendConfiguration,
             config,
-            context.request,
+            request,
             dfe.field.name,
             userEntitlements.regionId.value,
             numberOfDynamicCards = 1,
@@ -248,15 +260,16 @@ class CardMutationService {
     }
 
     @GraphQLDescription("Creates a new digital entitlementcard and returns it")
+    @MutationMapping
     fun createCardsByCardInfos(
         dfe: DataFetchingEnvironment,
-        encodedCardInfos: List<String>,
-        generateStaticCodes: Boolean,
-        applicationIdToMarkAsProcessed: Int? = null,
+        @Argument encodedCardInfos: List<String>,
+        @Argument generateStaticCodes: Boolean,
+        @Argument applicationIdToMarkAsProcessed: Int? = null,
     ): List<CardCreationResultModel> {
         val context = dfe.graphQlContext.context
         val authContext = context.getAuthContext()
-        val projectConfig = context.backendConfiguration.getProjectConfig(authContext.project)
+        val projectConfig = backendConfiguration.getProjectConfig(authContext.project)
 
         val activationCodes = transaction {
             encodedCardInfos.map { encodedCardInfo ->
@@ -290,9 +303,9 @@ class CardMutationService {
 
         if (regionId != null) {
             Matomo.trackCreateCards(
-                context.backendConfiguration,
+                backendConfiguration,
                 projectConfig,
-                context.request,
+                request,
                 dfe.field.name,
                 regionId,
                 numberOfDynamicCards = encodedCardInfos.size,
@@ -304,16 +317,16 @@ class CardMutationService {
     }
 
     @GraphQLDescription("Activate a dynamic entitlement card")
+    @MutationMapping
     fun activateCard(
-        project: String,
-        cardInfoHashBase64: String,
-        activationSecretBase64: String,
-        overwrite: Boolean,
+        @Argument project: String,
+        @Argument cardInfoHashBase64: String,
+        @Argument activationSecretBase64: String,
+        @Argument overwrite: Boolean,
         dfe: DataFetchingEnvironment,
     ): CardActivationResultModel {
-        val logger = LoggerFactory.getLogger(CardMutationService::class.java)
         val context = dfe.graphQlContext.context
-        val projectConfig = context.backendConfiguration.getProjectConfig(project)
+        val projectConfig = backendConfiguration.getProjectConfig(project)
         val cardHash = Base64.getDecoder().decode(cardInfoHashBase64)
         val rawActivationSecret = Base64.getDecoder().decode(activationSecretBase64)
 
@@ -370,9 +383,9 @@ class CardMutationService {
             return@t CardActivationResultModel(ActivationState.success, encodedTotpSecret)
         }
         Matomo.trackActivation(
-            context.backendConfiguration,
+            backendConfiguration,
             projectConfig,
-            context.request,
+            request,
             dfe.field.name,
             cardHash,
             activationResult.activationState == ActivationState.success,
@@ -381,10 +394,11 @@ class CardMutationService {
     }
 
     @GraphQLDescription("Deletes a batch of cards (that have not yet been activated)")
+    @MutationMapping
     fun deleteInactiveCards(
         dfe: DataFetchingEnvironment,
-        regionId: Int,
-        cardInfoHashBase64List: List<String>,
+        @Argument regionId: Int,
+        @Argument cardInfoHashBase64List: List<String>,
     ): Boolean {
         val context = dfe.graphQlContext.context
         val authContext = context.getAuthContext()
@@ -402,12 +416,13 @@ class CardMutationService {
     @GraphQLDescription(
         "Sends a confirmation mail to the user when the card creation was successful",
     )
+    @MutationMapping
     fun sendCardCreationConfirmationMail(
         dfe: DataFetchingEnvironment,
-        regionId: Int,
-        recipientAddress: String,
-        recipientName: String,
-        deepLink: String,
+        @Argument regionId: Int,
+        @Argument recipientAddress: String,
+        @Argument recipientName: String,
+        @Argument deepLink: String,
     ): Boolean {
         val context = dfe.graphQlContext.context
         val authContext = context.getAuthContext()
@@ -422,10 +437,9 @@ class CardMutationService {
             if (!authContext.admin.maySendMailsInRegion(regionId)) {
                 throw ForbiddenException()
             }
-            val backendConfig = dfe.graphQlContext.context.backendConfiguration
-            val projectConfig = context.backendConfiguration.getProjectConfig(authContext.project)
+            val projectConfig = backendConfiguration.getProjectConfig(authContext.project)
             Mailer.sendCardCreationConfirmationMail(
-                backendConfig,
+                backendConfiguration,
                 projectConfig,
                 deepLink,
                 recipientAddress,
