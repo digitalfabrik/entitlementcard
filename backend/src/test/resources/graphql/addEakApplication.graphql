@@ -1,3 +1,0 @@
-mutation AddEakApplication($regionId: Int!, $application: ApplicationInput!, $project: String!) {
-    result: addEakApplication(regionId: $regionId, application: $application, project: $project)
-}
