@@ -87,11 +87,7 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props): Rea
         <Stack>
           <p>{t('loginPeriodSecondsLeft', { secondsLeft })}</p>
           <p>{t('loginPeriodPasswordPrompt')}</p>
-          <PasswordInput
-            placeholder={t('loginPeriodPasswordPlaceholder')}
-            setValue={setPassword}
-            value={password}
-          />
+          <PasswordInput placeholder={t('loginPeriodPasswordPlaceholder')} setValue={setPassword} value={password} />
         </Stack>
       </CustomDialog>
     </>

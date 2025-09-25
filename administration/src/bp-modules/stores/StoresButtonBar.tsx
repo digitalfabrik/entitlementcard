@@ -1,8 +1,8 @@
+import { ArrowBack, UploadFile } from '@mui/icons-material'
+import { Button, Tooltip } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Button, Tooltip } from '@mui/material'
-import { ArrowBack, UploadFile } from '@mui/icons-material'
 import ConfirmDialog from '../../mui-modules/application/ConfirmDialog'
 import ButtonBar from '../ButtonBar'
 import { AcceptingStoresEntry } from './AcceptingStoresEntry'

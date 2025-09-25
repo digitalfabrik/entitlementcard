@@ -83,8 +83,7 @@ const ApplicationApplicantView = ({
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
         title={t('withdrawConfirmationTitle')}
-        onConfirm={submitWithdrawal}
-      >
+        onConfirm={submitWithdrawal}>
         {t('withdrawConfirmationContent')}
       </ConfirmDialog>
 
