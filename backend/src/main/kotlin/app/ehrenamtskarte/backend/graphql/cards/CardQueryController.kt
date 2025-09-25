@@ -15,7 +15,7 @@ import org.springframework.stereotype.Controller
 import java.util.Base64
 
 @Controller
-class CardQueryService(
+class CardQueryController(
     @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     private val backendConfiguration: BackendConfiguration,
     private val request: HttpServletRequest,

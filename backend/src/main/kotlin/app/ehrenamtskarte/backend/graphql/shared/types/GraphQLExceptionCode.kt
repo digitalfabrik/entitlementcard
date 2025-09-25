@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.graphql.exceptions
+package app.ehrenamtskarte.backend.graphql.shared.types
 
 enum class GraphQLExceptionCode {
     APPLICATION_DATA_INCOMPLETE,

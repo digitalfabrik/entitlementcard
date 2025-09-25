@@ -1,5 +1,6 @@
-package app.ehrenamtskarte.backend.graphql.exceptions
+package app.ehrenamtskarte.backend.graphql
 
+import app.ehrenamtskarte.backend.graphql.exceptions.GraphQLBaseException
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import app.ehrenamtskarte.backend.shared.exceptions.ProjectNotFoundException
 import app.ehrenamtskarte.backend.shared.exceptions.UnauthorizedException

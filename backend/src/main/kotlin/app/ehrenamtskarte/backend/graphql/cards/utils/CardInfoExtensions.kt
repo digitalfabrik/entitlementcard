@@ -1,4 +1,4 @@
-package app.ehrenamtskarte.backend.graphql.cards
+package app.ehrenamtskarte.backend.graphql.cards.utils
 
 import Card.CardInfo
 import app.ehrenamtskarte.backend.shared.CanonicalJson

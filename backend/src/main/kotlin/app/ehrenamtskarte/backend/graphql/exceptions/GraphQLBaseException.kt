@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.graphql.exceptions
 
+import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
 import graphql.ErrorType
 import graphql.GraphQLError
 import graphql.execution.ResultPath

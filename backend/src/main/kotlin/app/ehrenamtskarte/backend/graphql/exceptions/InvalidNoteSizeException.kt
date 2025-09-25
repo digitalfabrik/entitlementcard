@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.graphql.exceptions
 
-import app.ehrenamtskarte.backend.graphql.exceptions.GraphQLExceptionCode
+import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
 
 open class InvalidNoteSizeException(maxSize: Int) : GraphQLBaseException(
     GraphQLExceptionCode.INVALID_NOTE_SIZE,

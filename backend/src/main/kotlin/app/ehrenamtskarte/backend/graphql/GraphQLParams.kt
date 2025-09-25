@@ -7,7 +7,7 @@ import org.dataloader.DataLoaderRegistry
 
 data class GraphQLParams(
     val config: SchemaGeneratorConfig,
-    val dataLoaderRegistry: DataLoaderRegistry,
+    val dataLoaderRegistry: DataLoaderRegistry = DataLoaderRegistry(),
     val queries: List<TopLevelObject>,
     val mutations: List<TopLevelObject> = emptyList(),
     val subscriptions: List<TopLevelObject> = emptyList(),

@@ -22,7 +22,6 @@ import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.clikt.parameters.types.file
 import graphql.schema.GraphQLSchema
-import graphql.schema.idl.SchemaPrinter
 import org.jetbrains.exposed.sql.exists
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
