@@ -27,6 +27,8 @@ const ConfirmDialog = ({
       <DialogActions>
         <Button onClick={() => onUpdateOpen(false)}>Abbrechen</Button>
         <Button
+          color='primary'
+          variant='contained'
           onClick={() => {
             onUpdateOpen(false)
             onConfirm()
