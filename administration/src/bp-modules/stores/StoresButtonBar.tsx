@@ -1,7 +1,9 @@
-import { Alert, Button, Tooltip } from '@blueprintjs/core'
+import { Tooltip } from '@blueprintjs/core'
+import { Button } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import ConfirmDialog from '../../mui-modules/application/ConfirmDialog'
 import ButtonBar from '../ButtonBar'
 import { AcceptingStoresEntry } from './AcceptingStoresEntry'
 import StoresImportAlert from './StoresImportAlert'
@@ -30,32 +32,33 @@ const StoresButtonBar = ({
     setImportDialogIsOpen(false)
   }
 
+  // TODO fix button alignment
   return (
     <ButtonBar>
-      <Button icon='arrow-left' text={t('backToSelection')} onClick={goBack} />
+      <Button color='inherit' onClick={goBack}>
+        {t('backToSelection')}
+      </Button>
       <Tooltip
         placement='top'
         content={hasNoAcceptingStores ? t('hasNoAcceptingStores') : t('hasInvalidStores')}
         disabled={!hasNoAcceptingStores && !hasInvalidStores}
         openOnTargetFocus={false}>
         <Button
-          icon='upload'
-          text={t('importStores')}
-          intent='success'
+          color='primary'
+          variant='contained'
           onClick={() => setImportDialogIsOpen(true)}
-          disabled={hasNoAcceptingStores || hasInvalidStores}
-        />
+          disabled={hasNoAcceptingStores || hasInvalidStores}>
+          {t('importStores')}
+        </Button>
       </Tooltip>
-      <Alert
-        cancelButtonText={t('misc:cancel')}
-        confirmButtonText={t('importStores')}
-        icon='upload'
-        intent='warning'
-        isOpen={importDialogIsOpen}
-        onCancel={() => setImportDialogIsOpen(false)}
+      <ConfirmDialog
+        open={importDialogIsOpen}
+        title={t('importStores')}
+        id='import-stores-dialog'
+        onClose={() => setImportDialogIsOpen(false)}
         onConfirm={confirmImportDialog}>
         <StoresImportAlert dryRun={dryRun} setDryRun={setDryRun} storesCount={acceptingStores.length} />
-      </Alert>
+      </ConfirmDialog>
     </ButtonBar>
   )
 }

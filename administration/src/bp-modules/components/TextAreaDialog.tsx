@@ -1,19 +1,17 @@
-import { Button, Dialog, DialogFooter, TextArea, Tooltip } from '@blueprintjs/core'
+import { Close, Save } from '@mui/icons-material'
+import { Button, Stack, TextField } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
 import graphQlErrorMap from '../../errors/GraphQlErrorMap'
 import { GraphQlExceptionCode } from '../../generated/graphql'
+import AlertBox from '../../mui-modules/base/AlertBox'
 import CharacterCounter from './CharacterCounter'
-
-const ButtonContainer = styled.div`
-  display: flex;
-  flex: 1;
-  justify-content: flex-end;
-`
+import CustomDialog from './CustomDialog'
 
 type NoteProps = {
+  title: string
+  id: string
   placeholder: string
   isOpen: boolean
   onSave: (text: string) => void
@@ -32,6 +30,8 @@ const TextAreaDialog = ({
   placeholder,
   defaultText,
   maxChars,
+  title,
+  id,
   additionalContent,
 }: NoteProps): ReactElement => {
   const { t } = useTranslation('misc')
@@ -42,39 +42,44 @@ const TextAreaDialog = ({
     maxSize: maxChars,
   })
 
-  const actions = (
-    <ButtonContainer>
-      <Button intent='none' text={t('close')} icon='cross' onClick={onClose} />
-      <Tooltip disabled={!maxCharsExceeded} content={errorMessage}>
+  return (
+    <CustomDialog
+      fullWidth
+      open={isOpen}
+      onCancelAction={
+        <Button variant='outlined' color='default.dark' startIcon={<Close />} onClick={onClose}>
+          {t('close')}
+        </Button>
+      }
+      title={title}
+      id={id}
+      onConfirmAction={
         <Button
           disabled={maxCharsExceeded}
           loading={loading}
-          intent='success'
-          text={t('save')}
-          icon='floppy-disk'
-          onClick={() => onSave(text)}
-        />
-      </Tooltip>
-    </ButtonContainer>
-  )
-
-  return (
-    <Dialog isOpen={isOpen} onClose={onClose}>
-      <>
-        <TextArea
-          fill
-          onChange={e => setText(e.target.value)}
-          value={text}
-          readOnly={loading}
-          rows={20}
+          variant='contained'
+          startIcon={<Save />}
+          onClick={() => onSave(text)}>
+          {' '}
+          {t('save')}
+        </Button>
+      }
+      onClose={onClose}>
+      <Stack sx={{ gap: 1 }}>
+        <TextField
+          id='outlined-textarea'
+          rows={12}
+          fullWidth
           placeholder={placeholder}
+          multiline
+          value={text}
+          onChange={e => setText(e.target.value)}
         />
+        {maxChars !== undefined ? <CharacterCounter text={text} maxChars={maxChars} /> : undefined}
+        {maxCharsExceeded ? <AlertBox title={errorMessage} severity='error' /> : undefined}
         {additionalContent}
-      </>
-      <DialogFooter actions={actions}>
-        {maxChars !== undefined && <CharacterCounter text={text} maxChars={maxChars} />}
-      </DialogFooter>
-    </Dialog>
+      </Stack>
+    </CustomDialog>
   )
 }
 

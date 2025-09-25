@@ -196,6 +196,7 @@
     "attachment": "Anhang",
     "seeAttachment": "siehe Anhang",
     "submittedButNotVisible": "eingereicht, nicht sichtbar",
+    "noteDialogTitle": "Notiz anlegen",
     "noteButtonCreate": "Notiz anlegen",
     "noteButtonShow": "Notiz anzeigen",
     "noteChangedSuccessfully": "Notiz erfolgreich geändert.",
@@ -392,6 +393,7 @@
     "applicationConfirmationMailNoteDialogPlaceholder": "Fügen Sie hier Ihre Notiz ein...",
     "applicationConfirmationMailNoteExplanation": "Hier können Sie eine allgemeine Notiz hinterlegen, welche dem Antragssteller in der Eingangsbestätigungsmail des Antrags zusätzlich angezeigt wird. Sie können die Notiz jederzeit aktivieren oder deaktivieren.",
     "applicationConfirmationMailNoteActivated": "Notiz aktivieren",
+    "applicationConfirmationMailNoteDialogTitle": "Notiz zur Eingangsbestätigung",
     "applicationConfirmationMailNoteSavedSuccessful": "Ihre Notizeinstellungen wurden erfolgreich geändert."
   },
   "selfService": {

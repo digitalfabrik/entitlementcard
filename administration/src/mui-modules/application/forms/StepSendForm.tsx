@@ -1,12 +1,13 @@
+import { Close } from '@mui/icons-material'
 import { Button } from '@mui/material'
 import React, { useContext, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
+import CustomDialog from '../../../bp-modules/components/CustomDialog'
 import { useGetDataPolicyQuery } from '../../../generated/graphql'
 import i18next from '../../../i18n'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import getQueryResult from '../../util/getQueryResult'
-import BasicDialog from '../BasicDialog'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
 import CheckboxForm from '../primitive-inputs/CheckboxForm'
 import { Form, FormComponentProps } from '../util/FormType'
@@ -104,22 +105,29 @@ const StepSendForm: Form<State, ValidatedInput, AdditionalProps> = {
           setState={setGivenInformationIsCorrectAndComplete}
           options={givenInformationIsCorrectAndCompleteOptions}
         />
-        <BasicDialog
+        <CustomDialog
           open={openPrivacyPolicy}
-          maxWidth='lg'
-          onUpdateOpen={setOpenPrivacyPolicy}
           title={config.dataPrivacyHeadline}
-          content={
-            <>
-              <config.dataPrivacyContent />
-              {config.dataPrivacyAdditionalBaseContent && (!dataPrivacyPolicy || dataPrivacyPolicy.length === 0) ? (
-                <config.dataPrivacyAdditionalBaseContent />
-              ) : (
-                dataPrivacyPolicy
-              )}
-            </>
-          }
-        />
+          id='data-privacy-dialog'
+          onClose={() => setOpenPrivacyPolicy(false)}
+          onCancelAction={
+            <Button
+              onClick={() => setOpenPrivacyPolicy(false)}
+              variant='outlined'
+              color='default.dark'
+              startIcon={<Close />}>
+              {t('misc:close')}
+            </Button>
+          }>
+          <>
+            <config.dataPrivacyContent />
+            {config.dataPrivacyAdditionalBaseContent && (!dataPrivacyPolicy || dataPrivacyPolicy.length === 0) ? (
+              <config.dataPrivacyAdditionalBaseContent />
+            ) : (
+              dataPrivacyPolicy
+            )}
+          </>
+        </CustomDialog>
       </>
     )
   },

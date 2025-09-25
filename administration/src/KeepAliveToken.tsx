@@ -1,4 +1,5 @@
-import { Button, Classes, Dialog } from '@blueprintjs/core'
+import { CheckCircleOutline, Close } from '@mui/icons-material'
+import { Button, Stack } from '@mui/material'
 import React, { ReactElement, ReactNode, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -7,6 +8,7 @@ import { TokenPayload } from './AuthProvider'
 import { useWhoAmI } from './WhoAmIProvider'
 import { useAppToaster } from './bp-modules/AppToaster'
 import PasswordInput from './bp-modules/PasswordInput'
+import CustomDialog from './bp-modules/components/CustomDialog'
 import getMessageFromApolloError from './errors/getMessageFromApolloError'
 import { SignInPayload, useSignInMutation } from './generated/graphql'
 import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
@@ -58,41 +60,41 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props): Rea
   return (
     <>
       {children}
-      <Dialog
-        isOpen={secondsLeft <= 180}
+      <CustomDialog
+        open={secondsLeft <= 180}
         title={t('loginPeriodExpires')}
-        icon='warning-sign'
-        isCloseButtonShown={false}>
-        <form
-          onSubmit={e => {
-            e.preventDefault()
-            extendLogin()
-          }}>
-          <div className={Classes.DIALOG_BODY}>
-            <p>{t('loginPeriodSecondsLeft', { secondsLeft })}</p>
-            <p>{t('loginPeriodPasswordPrompt')}</p>
-            <PasswordInput
-              label=''
-              placeholder={t('loginPeriodPasswordPlaceholder')}
-              setValue={setPassword}
-              value={password}
-            />
-          </div>
-          <div className={Classes.DIALOG_FOOTER}>
-            <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-              <Button onClick={onSignOut} loading={mutationState.loading}>
-                {t('loginPeriodLogoutButton')}
-              </Button>
-              <Button
-                intent='primary'
-                type='submit'
-                loading={mutationState.loading}
-                text={t('loginPeriodExtendButton')}
-              />
-            </div>
-          </div>
-        </form>
-      </Dialog>
+        id='keep-alive-dialog'
+        onConfirmAction={
+          <Button
+            variant='contained'
+            color='primary'
+            onClick={extendLogin}
+            startIcon={<CheckCircleOutline />}
+            loading={mutationState.loading}>
+            {t('loginPeriodExtendButton')}
+          </Button>
+        }
+        onCancelAction={
+          <Button
+            variant='outlined'
+            color='default.dark'
+            startIcon={<Close />}
+            onClick={onSignOut}
+            loading={mutationState.loading}>
+            {t('loginPeriodLogoutButton')}
+          </Button>
+        }>
+        <Stack>
+          <p>{t('loginPeriodSecondsLeft', { secondsLeft })}</p>
+          <p>{t('loginPeriodPasswordPrompt')}</p>
+          <PasswordInput
+            label=''
+            placeholder={t('loginPeriodPasswordPlaceholder')}
+            setValue={setPassword}
+            value={password}
+          />
+        </Stack>
+      </CustomDialog>
     </>
   )
 }

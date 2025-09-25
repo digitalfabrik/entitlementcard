@@ -1,12 +1,14 @@
+import { Close } from '@mui/icons-material'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
+import { Button } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import KoblenzLogo from '../../assets/koblenz_logo.svg'
 import { updateCard } from '../../cards/Card'
-import BasicDialog from '../../mui-modules/application/BasicDialog'
 import CenteredCircularProgress from '../../mui-modules/base/CenteredCircularProgress'
+import CustomDialog from '../components/CustomDialog'
 import CardSelfServiceActivation from './CardSelfServiceActivation'
 import CardSelfServiceForm from './CardSelfServiceForm'
 import CardSelfServiceInformation from './CardSelfServiceInformation'
@@ -120,21 +122,26 @@ const CardSelfServiceView = (): ReactElement => {
           <CardSelfServiceActivation downloadPdf={downloadPdf} code={code} />
         )}
       </Body>
-      <BasicDialog
+      <CustomDialog
         open={openHelpDialog}
-        maxWidth='lg'
-        onUpdateOpen={setOpenHelpDialog}
         title={t('help')}
-        content={
-          <>
-            <InfoText>
-              {t('youHaveProblemsCreatingAPass')} <br />
-              {t('pleaseContactUsForHelp')}
-            </InfoText>
-            <ActionButton href='mailto:koblenzpass@stadt.koblenz.de'>{t('sendMail')}</ActionButton>
-          </>
+        id='help-dialog'
+        onClose={() => setOpenHelpDialog(false)}
+        onCancelAction={
+          <Button
+            onClick={() => setOpenHelpDialog(false)}
+            variant='outlined'
+            color='default.dark'
+            startIcon={<Close />}>
+            {t('misc:cancel')}
+          </Button>
         }
-      />
+        onConfirmAction={<ActionButton href='mailto:koblenzpass@stadt.koblenz.de'>{t('sendMail')}</ActionButton>}>
+        <InfoText>
+          {t('youHaveProblemsCreatingAPass')} <br />
+          {t('pleaseContactUsForHelp')}
+        </InfoText>
+      </CustomDialog>
     </Container>
   )
 }

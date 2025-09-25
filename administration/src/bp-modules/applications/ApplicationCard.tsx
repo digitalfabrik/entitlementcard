@@ -20,10 +20,6 @@ import {
   Box,
   Button,
   CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Divider,
   InputAdornment,
   Stack,
@@ -45,6 +41,7 @@ import {
   useDeleteApplicationMutation,
   useRejectApplicationStatusMutation,
 } from '../../generated/graphql'
+import ConfirmDialog from '../../mui-modules/application/ConfirmDialog'
 import BaseMenu, { MenuItemType } from '../../mui-modules/base/BaseMenu'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import type { ProjectConfig } from '../../project-configs/getProjectConfig'
@@ -54,6 +51,7 @@ import { ApplicationDataIncompleteError } from '../../util/applicationDataHelper
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { useAppToaster } from '../AppToaster'
 import { AccordionExpandButton } from '../components/AccordionExpandButton'
+import CustomDialog from '../components/CustomDialog'
 import { ApplicationPrintView, applicationPrintViewPageStyle } from './ApplicationPrintView'
 import NoteDialogController from './NoteDialogController'
 import { ApplicationStatusNote } from './components/ApplicationStatusNote'
@@ -70,29 +68,23 @@ const DeleteDialog = (props: {
   const { t } = useTranslation('applicationsOverview')
 
   return (
-    <Dialog open={props.isOpen} aria-describedby='alert-dialog-description'>
-      <DialogContent id='alert-dialog-description'>
-        <Stack direction='row' sx={{ gap: 2, alignItems: 'center' }}>
-          {props.deleteResult.loading || props.deleteResult.called ? (
-            <CircularProgress size={64} />
-          ) : (
-            <Delete sx={{ fontSize: '64px' }} color='error' />
-          )}
-          {t('deleteApplicationConfirmationPrompt')}
-        </Stack>
-      </DialogContent>
-      <DialogActions>
-        <Button disabled={props.deleteResult.loading || props.deleteResult.called} onClick={props.onCancel}>
-          {t('misc:cancel')}
-        </Button>
-        <Button
-          color='error'
-          disabled={props.deleteResult.loading || props.deleteResult.called}
-          onClick={props.onConfirm}>
-          {t('deleteApplication')}
-        </Button>
-      </DialogActions>
-    </Dialog>
+    <ConfirmDialog
+      open={props.isOpen}
+      onClose={props.onCancel}
+      title={t('deleteApplication')}
+      id='alert-dialog-description'
+      onConfirm={props.onConfirm}
+      actionDisabled={props.deleteResult.loading || props.deleteResult.called}
+      color='error'>
+      <Stack direction='row' sx={{ gap: 2, alignItems: 'center' }}>
+        {props.deleteResult.loading || props.deleteResult.called ? (
+          <CircularProgress size={64} />
+        ) : (
+          <Delete sx={{ fontSize: '64px' }} color='error' />
+        )}
+        {t('deleteApplicationConfirmationPrompt')}
+      </Stack>
+    </ConfirmDialog>
   )
 }
 
@@ -107,9 +99,39 @@ const RejectionDialog = (props: {
   const [reason, setReason] = useState<string | null>(null)
 
   return (
-    <Dialog open={props.open} aria-describedby='reject-dialog-description' fullWidth onClose={props.onCancel}>
-      <DialogTitle>{t('rejectionDialogTitle')}</DialogTitle>
-      <DialogContent id='reject-dialog-description'>
+    <CustomDialog
+      open={props.open}
+      title={t('rejectionDialogTitle')}
+      id='reject-dialog-description'
+      onCancelAction={
+        <Button
+          variant='outlined'
+          color='default.dark'
+          startIcon={<Close />}
+          onClick={() => {
+            setReason(null)
+            props.onCancel()
+          }}
+          disabled={props.loading}>
+          {t('rejectionCancelButton')}
+        </Button>
+      }
+      onConfirmAction={
+        <Button
+          variant='contained'
+          startIcon={<CheckCircleOutline />}
+          disabled={reason === null || props.loading}
+          onClick={() => {
+            if (reason !== null) {
+              props.onConfirm(reason)
+            }
+          }}>
+          {t('rejectionButton')}
+        </Button>
+      }
+      onClose={props.onCancel}
+      fullWidth>
+      <>
         {t('rejectionDialogMessage')}
         <Autocomplete
           renderInput={params => (
@@ -134,32 +156,8 @@ const RejectionDialog = (props: {
           sx={{ marginTop: 2 }}
           onChange={(_, value) => setReason(value)}
         />
-      </DialogContent>
-      <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
-        <Button
-          variant='outlined'
-          color='default.dark'
-          onClick={() => {
-            setReason(null)
-            props.onCancel()
-          }}
-          disabled={props.loading}
-          startIcon={<Close />}>
-          {t('rejectionCancelButton')}
-        </Button>
-        <Button
-          variant='contained'
-          startIcon={<CheckCircleOutline />}
-          disabled={reason === null || props.loading}
-          onClick={() => {
-            if (reason !== null) {
-              props.onConfirm(reason)
-            }
-          }}>
-          {t('rejectionButton')}
-        </Button>
-      </DialogActions>
-    </Dialog>
+      </>
+    </CustomDialog>
   )
 }
 

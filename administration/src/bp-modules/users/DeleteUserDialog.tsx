@@ -1,4 +1,6 @@
-import { Button, Callout, Checkbox, Classes, Dialog } from '@blueprintjs/core'
+import { Callout, Checkbox } from '@blueprintjs/core'
+import { PersonRemove } from '@mui/icons-material'
+import { Stack } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -6,6 +8,7 @@ import { AuthContext } from '../../AuthProvider'
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { Administrator, useDeleteAdministratorMutation } from '../../generated/graphql'
+import ConfirmDialog from '../../mui-modules/application/ConfirmDialog'
 import { useAppToaster } from '../AppToaster'
 
 const DeleteUserDialog = ({
@@ -38,42 +41,40 @@ const DeleteUserDialog = ({
     },
   })
 
+  const deleteUser = () => {
+    if (selectedUser === null) {
+      console.error('Form submitted in an unexpected state.')
+      return
+    }
+
+    deleteAdministrator({
+      variables: {
+        adminId: selectedUser.id,
+      },
+    })
+  }
+
   return (
-    <Dialog
+    <ConfirmDialog
+      open={selectedUser !== null}
       title={t('deleteUserConfirmPrompt', { mail: selectedUser?.email })}
-      isOpen={selectedUser !== null}
-      onClose={onClose}>
-      <form
-        onSubmit={e => {
-          e.preventDefault()
-
-          if (selectedUser === null) {
-            console.error('Form submitted in an unexpected state.')
-            return
-          }
-
-          deleteAdministrator({
-            variables: {
-              adminId: selectedUser.id,
-            },
-          })
-        }}>
-        <div className={Classes.DIALOG_BODY}>
-          {t('deleteUserIrrevocableConfirmPrompt', { mail: selectedUser?.email })}
-          {selectedUser?.id !== actingAdminId ? null : (
-            <Callout intent='danger' style={{ marginTop: '16px' }}>
-              <b>{t('deleteOwnAccountWarning')}</b> {t('deleteOwnAccountWarningExplanation')}
-              <Checkbox required>{t('ownAccountWarningConfirmation')}</Checkbox>
-            </Callout>
-          )}
-        </div>
-        <div className={Classes.DIALOG_FOOTER}>
-          <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button type='submit' intent='danger' text={t('deleteUser')} icon='trash' loading={loading} />
-          </div>
-        </div>
-      </form>
-    </Dialog>
+      id='delete-user-dialog'
+      onClose={onClose}
+      color='error'
+      onConfirm={deleteUser}
+      loading={loading}
+      confirmButtonIcon={<PersonRemove />}
+      confirmButtonText={t('deleteUser')}>
+      <Stack>
+        {t('deleteUserIrrevocableConfirmPrompt', { mail: selectedUser?.email })}
+        {selectedUser?.id !== actingAdminId ? null : (
+          <Callout intent='danger' style={{ marginTop: '16px' }}>
+            <b>{t('deleteOwnAccountWarning')}</b> {t('deleteOwnAccountWarningExplanation')}
+            <Checkbox required>{t('ownAccountWarningConfirmation')}</Checkbox>
+          </Callout>
+        )}
+      </Stack>
+    </ConfirmDialog>
   )
 }
 

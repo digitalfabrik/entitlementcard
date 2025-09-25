@@ -1,4 +1,6 @@
-import { Button, Callout, Checkbox, Classes, Dialog, FormGroup, InputGroup } from '@blueprintjs/core'
+import { Callout, Checkbox, FormGroup, InputGroup } from '@blueprintjs/core'
+import { Edit } from '@mui/icons-material'
+import { Stack } from '@mui/material'
 import React, { ReactElement, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -6,6 +8,7 @@ import styled from 'styled-components'
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { Administrator, Role, useEditAdministratorMutation } from '../../generated/graphql'
+import ConfirmDialog from '../../mui-modules/application/ConfirmDialog'
 import { useAppToaster } from '../AppToaster'
 import RegionSelector from './RegionSelector'
 import RoleHelpButton from './RoleHelpButton'
@@ -69,86 +72,83 @@ const EditUserDialog = ({
     return role !== null && rolesWithRegion.includes(role) ? regionId : null
   }
 
+  const onEditUser = () => {
+    if (selectedUser === null) {
+      console.error('Form submitted in an unexpected state.')
+      return
+    }
+
+    editAdministrator({
+      variables: {
+        adminId: selectedUser.id,
+        newEmail: email,
+        newRole: role as Role,
+        newRegionId: getRegionId(),
+      },
+    })
+  }
+
   return (
-    <Dialog
+    <ConfirmDialog
+      open={selectedUser !== null}
+      onClose={onClose}
       title={t('editUserWithMail', { mail: selectedUser?.email })}
-      isOpen={selectedUser !== null}
-      onClose={onClose}>
-      <form
-        onSubmit={e => {
-          e.preventDefault()
-
-          if (selectedUser === null) {
-            console.error('Form submitted in an unexpected state.')
-            return
-          }
-
-          editAdministrator({
-            variables: {
-              adminId: selectedUser.id,
-              newEmail: email,
-              newRole: role as Role,
-              newRegionId: getRegionId(),
-            },
-          })
-        }}>
-        <div className={Classes.DIALOG_BODY}>
-          <FormGroup label={t('eMail')}>
-            <InputGroup
-              value={email}
-              required
-              onChange={e => setEmail(e.target.value)}
-              type='email'
-              placeholder='erika.musterfrau@example.org'
-            />
+      id='edit-user-dialog'
+      onConfirm={onEditUser}
+      loading={loading}
+      confirmButtonText={t('editUser')}
+      confirmButtonIcon={<Edit />}>
+      <Stack>
+        <FormGroup label={t('eMail')}>
+          <InputGroup
+            value={email}
+            required
+            onChange={e => setEmail(e.target.value)}
+            type='email'
+            placeholder='erika.musterfrau@example.org'
+          />
+        </FormGroup>
+        <FormGroup
+          label={
+            <RoleFormGroupLabel>
+              {t('role')} <RoleHelpButton />
+            </RoleFormGroupLabel>
+          }>
+          <RoleSelector role={role} onChange={setRole} hideProjectAdmin={regionIdOverride !== null} />
+        </FormGroup>
+        {regionIdOverride !== null || role === null || !rolesWithRegion.includes(role) ? null : (
+          <FormGroup label={t('region')}>
+            <RegionSelector onSelect={region => setRegionId(region.id)} selectedId={regionId} />
           </FormGroup>
-          <FormGroup
-            label={
-              <RoleFormGroupLabel>
-                {t('role')} <RoleHelpButton />
-              </RoleFormGroupLabel>
-            }>
-            <RoleSelector role={role} onChange={setRole} hideProjectAdmin={regionIdOverride !== null} />
-          </FormGroup>
-          {regionIdOverride !== null || role === null || !rolesWithRegion.includes(role) ? null : (
-            <FormGroup label={t('region')}>
-              <RegionSelector onSelect={region => setRegionId(region.id)} selectedId={regionId} />
-            </FormGroup>
+        )}
+        <Callout intent='primary'>
+          {selectedUser?.id === me?.id ? (
+            <>
+              {t('youCanChangeYourOwnPassword')}{' '}
+              <a href={`${window.location.origin}/user-settings`} target='_blank' rel='noreferrer'>
+                {t('userSettings')}
+              </a>{' '}
+              {t('change')}.
+            </>
+          ) : (
+            <>
+              {t('userCanChangePassword')}{' '}
+              <a href={`${window.location.origin}/forgot-password`} target='_blank' rel='noreferrer'>
+                {`${window.location.origin}/forgot-password`}
+              </a>{' '}
+              {t('reset')}.
+            </>
           )}
-          <Callout intent='primary'>
-            {selectedUser?.id === me?.id ? (
-              <>
-                {t('youCanChangeYourOwnPassword')}{' '}
-                <a href={`${window.location.origin}/user-settings`} target='_blank' rel='noreferrer'>
-                  {t('userSettings')}
-                </a>{' '}
-                {t('change')}.
-              </>
-            ) : (
-              <>
-                {t('userCanChangePassword')}{' '}
-                <a href={`${window.location.origin}/forgot-password`} target='_blank' rel='noreferrer'>
-                  {`${window.location.origin}/forgot-password`}
-                </a>{' '}
-                {t('reset')}.
-              </>
-            )}
+        </Callout>
+        {selectedUser?.id !== me?.id ? null : (
+          <Callout intent='danger' style={{ marginTop: '16px' }}>
+            <b>{t('youEditYourOwnAccount')} </b>
+            {t('youMayCannotUndoThis')}
+            <Checkbox required>{t('ownAccountWarningConfirmation')}</Checkbox>
           </Callout>
-          {selectedUser?.id !== me?.id ? null : (
-            <Callout intent='danger' style={{ marginTop: '16px' }}>
-              <b>{t('youEditYourOwnAccount')} </b>
-              {t('youMayCannotUndoThis')}
-              <Checkbox required>{t('ownAccountWarningConfirmation')}</Checkbox>
-            </Callout>
-          )}
-        </div>
-        <div className={Classes.DIALOG_FOOTER}>
-          <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button type='submit' intent='primary' text={t('editUser')} icon='edit' loading={loading} />
-          </div>
-        </div>
-      </form>
-    </Dialog>
+        )}
+      </Stack>
+    </ConfirmDialog>
   )
 }
 
