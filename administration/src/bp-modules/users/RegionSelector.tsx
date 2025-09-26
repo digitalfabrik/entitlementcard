@@ -13,20 +13,16 @@ const getTitle = (region: Region) => `${region.prefix} ${region.name}`
 const renderMenu: ItemListRenderer<Region> = ({ itemsParentRef, renderItem, filteredItems }) => {
   const renderedItems = filteredItems.map(renderItem).filter(item => item != null)
   return (
-    <Menu ulRef={itemsParentRef} style={{ maxHeight: 500, overflow: 'auto' }}>
+    <Menu
+      ulRef={itemsParentRef}
+      style={{ maxHeight: 500, overflow: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
       {renderedItems}
     </Menu>
   )
 }
 
 const itemRenderer: ItemRenderer<Region> = (region, { handleClick, modifiers }) => (
-  <Button
-    key={region.id}
-    size='small'
-    variant='text'
-    sx={{ margin: 1 }}
-    onClick={handleClick}
-    disabled={modifiers.disabled}>
+  <Button key={region.id} size='small' variant='text' onClick={handleClick} disabled={modifiers.disabled}>
     {getTitle(region)}
   </Button>
 )
@@ -81,7 +77,7 @@ const RegionSelector = ({
             {activeItem ? getTitle(activeItem) : t('select')}
           </option>
         </select>
-        <Button sx={{ justifyContent: 'space-between', padding: '0 10px' }}>
+        <Button fullWidth sx={{ justifyContent: 'space-between', padding: '0 10px' }}>
           {activeItem ? getTitle(activeItem) : t('select')}
         </Button>
       </div>

@@ -77,7 +77,7 @@ const ChangePasswordForm = (): ReactElement => {
 
           {warnMessage === null ? null : <Callout intent='danger'>{warnMessage}</Callout>}
           <div style={{ textAlign: 'right' }}>
-            <Button type='submit' variant='contained' disabled={!valid} loading={loading}>
+            <Button type='submit' disabled={!valid} loading={loading}>
               {t('changePassword')}
             </Button>
           </div>

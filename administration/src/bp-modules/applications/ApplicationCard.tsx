@@ -143,7 +143,7 @@ const RejectionDialog = (props: {
           }}
           disabled={props.loading}
           startIcon={<Close />}>
-          {t('misc:cancel')}
+          {t('rejectionCancelButton')}
         </Button>
         <Button
           variant='contained'
