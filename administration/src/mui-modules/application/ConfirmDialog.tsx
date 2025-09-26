@@ -15,6 +15,7 @@ const ConfirmDialog = ({
   onConfirm,
   onClose,
   confirmButtonText,
+  cancelButtonText,
   color = 'primary',
   confirmButtonIcon,
 }: {
@@ -26,6 +27,7 @@ const ConfirmDialog = ({
   id: string
   onConfirm: () => void
   onClose: () => void
+  cancelButtonText?: string
   confirmButtonIcon?: ReactNode
   confirmButtonText?: string
   color?: OverridableStringUnion<
@@ -41,7 +43,7 @@ const ConfirmDialog = ({
       <DialogContent id={id}>{children}</DialogContent>
       <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
         <Button onClick={onClose} variant='outlined' startIcon={<Close />}>
-          {t('cancel')}
+          {cancelButtonText ?? t('cancel')}
         </Button>
         <Button
           variant='contained'

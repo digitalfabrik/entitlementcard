@@ -3,8 +3,6 @@ import { MutationResult } from '@apollo/client'
 import {
   CancelOutlined,
   Check,
-  CheckCircleOutline,
-  Close,
   CreditScore,
   Delete,
   ExpandMore,
@@ -20,10 +18,6 @@ import {
   Box,
   Button,
   CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Divider,
   InputAdornment,
   Stack,
@@ -108,53 +102,45 @@ const RejectionDialog = (props: {
   }
 
   return (
-    <Dialog open={props.open} aria-describedby='reject-dialog-description' fullWidth onClose={closeAndClearDialog}>
-      <DialogTitle>{t('rejectionDialogTitle')}</DialogTitle>
-      <DialogContent id='reject-dialog-description'>
-        <>
-          {t('rejectionDialogMessage')}
-          <Autocomplete
-            renderInput={params => (
-              <TextField
-                {...params}
-                variant='outlined'
-                label={t('rejectionInputHint')}
-                slotProps={{
-                  input: {
-                    ...params.InputProps,
-                    size: 'small',
-                    startAdornment: (
-                      <InputAdornment position='start'>
-                        <Search />
-                      </InputAdornment>
-                    ),
-                  },
-                }}
-              />
-            )}
-            options={rejectionMessages}
-            sx={{ marginTop: 2 }}
-            onChange={(_, value) => setReason(value)}
-          />
-        </>
-      </DialogContent>
-      <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
-        <Button variant='outlined' startIcon={<Close />} onClick={closeAndClearDialog} disabled={props.loading}>
-          {t('rejectionCancelButton')}
-        </Button>
-        <Button
-          variant='contained'
-          startIcon={<CheckCircleOutline />}
-          disabled={reason === null || props.loading}
-          onClick={() => {
-            if (reason !== null) {
-              props.onConfirm(reason)
-            }
-          }}>
-          {t('rejectionButton')}
-        </Button>
-      </DialogActions>
-    </Dialog>
+    <ConfirmDialog
+      open={props.open}
+      title={t('rejectionDialogTitle')}
+      id='reject-dialog-description'
+      onConfirm={() => {
+        if (reason !== null) {
+          props.onConfirm(reason)
+        }
+      }}
+      onClose={closeAndClearDialog}
+      cancelButtonText={t('rejectionCancelButton')}
+      confirmButtonText={t('rejectionButton')}>
+      <>
+        {t('rejectionDialogMessage')}
+        <Autocomplete
+          renderInput={params => (
+            <TextField
+              {...params}
+              variant='outlined'
+              label={t('rejectionInputHint')}
+              slotProps={{
+                input: {
+                  ...params.InputProps,
+                  size: 'small',
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <Search />
+                    </InputAdornment>
+                  ),
+                },
+              }}
+            />
+          )}
+          options={rejectionMessages}
+          sx={{ marginTop: 2 }}
+          onChange={(_, value) => setReason(value)}
+        />
+      </>
+    </ConfirmDialog>
   )
 }
 

@@ -49,6 +49,7 @@ const TextAreaDialog = ({
       id={id}
       onConfirm={() => onSave(text)}
       onClose={onClose}
+      cancelButtonText={t('close')}
       confirmButtonText={t('save')}
       confirmButtonIcon={<Save />}
       actionDisabled={maxCharsExceeded}
