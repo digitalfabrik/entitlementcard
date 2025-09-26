@@ -3,6 +3,7 @@ import { Edit } from '@mui/icons-material'
 import { Stack } from '@mui/material'
 import React, { ReactElement, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router'
 import styled from 'styled-components'
 
 import { WhoAmIContext } from '../../WhoAmIProvider'
@@ -125,17 +126,17 @@ const EditUserDialog = ({
           {selectedUser?.id === me?.id ? (
             <>
               {t('youCanChangeYourOwnPassword')}{' '}
-              <a href={`${window.location.origin}/user-settings`} target='_blank' rel='noreferrer'>
+              <Link to='/user-settings`' target='_blank' rel='noreferrer'>
                 {t('userSettings')}
-              </a>{' '}
+              </Link>{' '}
               {t('change')}.
             </>
           ) : (
             <>
               {t('userCanChangePassword')}{' '}
-              <a href={`${window.location.origin}/forgot-password`} target='_blank' rel='noreferrer'>
+              <Link to='/forgot-password' target='_blank' rel='noreferrer'>
                 {`${window.location.origin}/forgot-password`}
-              </a>{' '}
+              </Link>{' '}
               {t('reset')}.
             </>
           )}
