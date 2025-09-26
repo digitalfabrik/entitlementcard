@@ -1,9 +1,8 @@
 import { Close } from '@mui/icons-material'
-import { Button } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import React, { useContext, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
-import CustomDialog from '../../../bp-modules/components/CustomDialog'
 import { useGetDataPolicyQuery } from '../../../generated/graphql'
 import i18next from '../../../i18n'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
@@ -105,25 +104,28 @@ const StepSendForm: Form<State, ValidatedInput, AdditionalProps> = {
           setState={setGivenInformationIsCorrectAndComplete}
           options={givenInformationIsCorrectAndCompleteOptions}
         />
-        <CustomDialog
+        <Dialog
           open={openPrivacyPolicy}
-          title={config.dataPrivacyHeadline}
-          id='data-privacy-dialog'
-          onClose={() => setOpenPrivacyPolicy(false)}
-          onCancelAction={
+          aria-describedby='data-privacy-dialog'
+          fullWidth
+          onClose={() => setOpenPrivacyPolicy(false)}>
+          <DialogTitle>{config.dataPrivacyHeadline}</DialogTitle>
+          <DialogContent id='data-privacy-dialog'>
+            <>
+              <config.dataPrivacyContent />
+              {config.dataPrivacyAdditionalBaseContent && (!dataPrivacyPolicy || dataPrivacyPolicy.length === 0) ? (
+                <config.dataPrivacyAdditionalBaseContent />
+              ) : (
+                dataPrivacyPolicy
+              )}
+            </>
+          </DialogContent>
+          <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
             <Button onClick={() => setOpenPrivacyPolicy(false)} variant='outlined' startIcon={<Close />}>
               {t('misc:close')}
             </Button>
-          }>
-          <>
-            <config.dataPrivacyContent />
-            {config.dataPrivacyAdditionalBaseContent && (!dataPrivacyPolicy || dataPrivacyPolicy.length === 0) ? (
-              <config.dataPrivacyAdditionalBaseContent />
-            ) : (
-              dataPrivacyPolicy
-            )}
-          </>
-        </CustomDialog>
+          </DialogActions>
+        </Dialog>
       </>
     )
   },

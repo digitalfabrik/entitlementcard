@@ -1,13 +1,13 @@
-import { Close, Save } from '@mui/icons-material'
-import { Button, Stack, TextField } from '@mui/material'
+import { Save } from '@mui/icons-material'
+import { Stack, TextField } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import graphQlErrorMap from '../../errors/GraphQlErrorMap'
 import { GraphQlExceptionCode } from '../../generated/graphql'
+import ConfirmDialog from '../../mui-modules/application/ConfirmDialog'
 import AlertBox from '../../mui-modules/base/AlertBox'
 import CharacterCounter from './CharacterCounter'
-import CustomDialog from './CustomDialog'
 
 type NoteProps = {
   title: string
@@ -43,28 +43,16 @@ const TextAreaDialog = ({
   })
 
   return (
-    <CustomDialog
-      fullWidth
+    <ConfirmDialog
       open={isOpen}
-      onCancelAction={
-        <Button variant='outlined' startIcon={<Close />} onClick={onClose}>
-          {t('close')}
-        </Button>
-      }
       title={title}
       id={id}
-      onConfirmAction={
-        <Button
-          disabled={maxCharsExceeded}
-          loading={loading}
-          variant='contained'
-          startIcon={<Save />}
-          onClick={() => onSave(text)}>
-          {' '}
-          {t('save')}
-        </Button>
-      }
-      onClose={onClose}>
+      onConfirm={() => onSave(text)}
+      onClose={onClose}
+      confirmButtonText={t('save')}
+      confirmButtonIcon={<Save />}
+      actionDisabled={maxCharsExceeded}
+      loading={loading}>
       <Stack sx={{ gap: 1 }}>
         <TextField
           id='outlined-textarea'
@@ -79,7 +67,7 @@ const TextAreaDialog = ({
         {maxCharsExceeded ? <AlertBox title={errorMessage} severity='error' /> : undefined}
         {additionalContent}
       </Stack>
-    </CustomDialog>
+    </ConfirmDialog>
   )
 }
 

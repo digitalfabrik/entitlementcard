@@ -20,6 +20,10 @@ import {
   Box,
   Button,
   CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Divider,
   InputAdornment,
   Stack,
@@ -52,7 +56,6 @@ import { ApplicationDataIncompleteError } from '../../util/applicationDataHelper
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { useAppToaster } from '../AppToaster'
 import { AccordionExpandButton } from '../components/AccordionExpandButton'
-import CustomDialog from '../components/CustomDialog'
 import { ApplicationPrintView, applicationPrintViewPageStyle } from './ApplicationPrintView'
 import NoteDialogController from './NoteDialogController'
 import { ApplicationStatusNote } from './components/ApplicationStatusNote'
@@ -99,24 +102,46 @@ const RejectionDialog = (props: {
   const rejectionMessages = t('rejectionReasons', { returnObjects: true }) as string[]
   const [reason, setReason] = useState<string | null>(null)
 
+  const closeAndClearDialog = () => {
+    setReason(null)
+    props.onCancel()
+  }
+
   return (
-    <CustomDialog
-      open={props.open}
-      title={t('rejectionDialogTitle')}
-      id='reject-dialog-description'
-      onCancelAction={
-        <Button
-          variant='outlined'
-          startIcon={<Close />}
-          onClick={() => {
-            setReason(null)
-            props.onCancel()
-          }}
-          disabled={props.loading}>
+    <Dialog open={props.open} aria-describedby='reject-dialog-description' fullWidth onClose={closeAndClearDialog}>
+      <DialogTitle>{t('rejectionDialogTitle')}</DialogTitle>
+      <DialogContent id='reject-dialog-description'>
+        <>
+          {t('rejectionDialogMessage')}
+          <Autocomplete
+            renderInput={params => (
+              <TextField
+                {...params}
+                variant='outlined'
+                label={t('rejectionInputHint')}
+                slotProps={{
+                  input: {
+                    ...params.InputProps,
+                    size: 'small',
+                    startAdornment: (
+                      <InputAdornment position='start'>
+                        <Search />
+                      </InputAdornment>
+                    ),
+                  },
+                }}
+              />
+            )}
+            options={rejectionMessages}
+            sx={{ marginTop: 2 }}
+            onChange={(_, value) => setReason(value)}
+          />
+        </>
+      </DialogContent>
+      <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
+        <Button variant='outlined' startIcon={<Close />} onClick={closeAndClearDialog} disabled={props.loading}>
           {t('rejectionCancelButton')}
         </Button>
-      }
-      onConfirmAction={
         <Button
           variant='contained'
           startIcon={<CheckCircleOutline />}
@@ -128,36 +153,8 @@ const RejectionDialog = (props: {
           }}>
           {t('rejectionButton')}
         </Button>
-      }
-      onClose={props.onCancel}
-      fullWidth>
-      <>
-        {t('rejectionDialogMessage')}
-        <Autocomplete
-          renderInput={params => (
-            <TextField
-              {...params}
-              variant='outlined'
-              label={t('rejectionInputHint')}
-              slotProps={{
-                input: {
-                  ...params.InputProps,
-                  size: 'small',
-                  startAdornment: (
-                    <InputAdornment position='start'>
-                      <Search />
-                    </InputAdornment>
-                  ),
-                },
-              }}
-            />
-          )}
-          options={rejectionMessages}
-          sx={{ marginTop: 2 }}
-          onChange={(_, value) => setReason(value)}
-        />
-      </>
-    </CustomDialog>
+      </DialogActions>
+    </Dialog>
   )
 }
 

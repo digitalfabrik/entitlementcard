@@ -1,11 +1,9 @@
 import { CheckCircleOutline, Close } from '@mui/icons-material'
-import { Button } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import { ButtonPropsColorOverrides } from '@mui/material/Button/Button'
 import { OverridableStringUnion } from '@mui/types'
 import React, { ReactElement, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-
-import CustomDialog from '../../bp-modules/components/CustomDialog'
 
 const ConfirmDialog = ({
   actionDisabled = false,
@@ -38,17 +36,13 @@ const ConfirmDialog = ({
   const { t } = useTranslation('misc')
 
   return (
-    <CustomDialog
-      id={id}
-      open={open}
-      title={title}
-      onClose={onClose}
-      onCancelAction={
+    <Dialog open={open} aria-describedby={id} fullWidth onClose={onClose}>
+      <DialogTitle>{title}</DialogTitle>
+      <DialogContent id={id}>{children}</DialogContent>
+      <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
         <Button onClick={onClose} variant='outlined' startIcon={<Close />}>
           {t('cancel')}
         </Button>
-      }
-      onConfirmAction={
         <Button
           variant='contained'
           color={color}
@@ -61,9 +55,8 @@ const ConfirmDialog = ({
           }}>
           {confirmButtonText ?? t('confirm')}
         </Button>
-      }>
-      {children}
-    </CustomDialog>
+      </DialogActions>
+    </Dialog>
   )
 }
 

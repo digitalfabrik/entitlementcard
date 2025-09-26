@@ -1,5 +1,5 @@
 import { CheckCircleOutline, Close } from '@mui/icons-material'
-import { Button, Stack } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack } from '@mui/material'
 import React, { ReactElement, ReactNode, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -8,7 +8,6 @@ import { TokenPayload } from './AuthProvider'
 import { useWhoAmI } from './WhoAmIProvider'
 import { useAppToaster } from './bp-modules/AppToaster'
 import PasswordInput from './bp-modules/PasswordInput'
-import CustomDialog from './bp-modules/components/CustomDialog'
 import getMessageFromApolloError from './errors/getMessageFromApolloError'
 import { SignInPayload, useSignInMutation } from './generated/graphql'
 import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
@@ -60,11 +59,19 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props): Rea
   return (
     <>
       {children}
-      <CustomDialog
-        open={secondsLeft <= 180}
-        title={t('loginPeriodExpires')}
-        id='keep-alive-dialog'
-        onConfirmAction={
+      <Dialog open={secondsLeft <= 180} aria-describedby='keep-alive-dialog' fullWidth>
+        <DialogTitle>{t('loginPeriodExpires')}</DialogTitle>
+        <DialogContent id='keep-alive-dialog'>
+          <Stack>
+            <p>{t('loginPeriodSecondsLeft', { secondsLeft })}</p>
+            <p>{t('loginPeriodPasswordPrompt')}</p>
+            <PasswordInput placeholder={t('loginPeriodPasswordPlaceholder')} setValue={setPassword} value={password} />
+          </Stack>
+        </DialogContent>
+        <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
+          <Button variant='outlined' startIcon={<Close />} onClick={onSignOut} loading={mutationState.loading}>
+            {t('loginPeriodLogoutButton')}
+          </Button>
           <Button
             variant='contained'
             color='primary'
@@ -73,18 +80,8 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props): Rea
             loading={mutationState.loading}>
             {t('loginPeriodExtendButton')}
           </Button>
-        }
-        onCancelAction={
-          <Button variant='outlined' startIcon={<Close />} onClick={onSignOut} loading={mutationState.loading}>
-            {t('loginPeriodLogoutButton')}
-          </Button>
-        }>
-        <Stack>
-          <p>{t('loginPeriodSecondsLeft', { secondsLeft })}</p>
-          <p>{t('loginPeriodPasswordPrompt')}</p>
-          <PasswordInput placeholder={t('loginPeriodPasswordPlaceholder')} setValue={setPassword} value={password} />
-        </Stack>
-      </CustomDialog>
+        </DialogActions>
+      </Dialog>
     </>
   )
 }
