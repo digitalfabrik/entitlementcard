@@ -22,11 +22,17 @@ import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.clikt.parameters.types.file
 import graphql.schema.GraphQLSchema
+import jakarta.servlet.http.HttpServletRequest
 import org.jetbrains.exposed.sql.exists
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
+import org.springframework.boot.Banner
+import org.springframework.boot.SpringApplication
+import org.springframework.boot.WebApplicationType
 import org.springframework.boot.runApplication
+import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.context.support.beans
+import org.springframework.mock.web.MockHttpServletRequest
 import java.io.File
 import java.sql.SQLException
 import java.util.TimeZone
@@ -109,19 +115,36 @@ class GraphQLExport : CliktCommand("graphql-export") {
     override fun help(context: Context): String = "Exports the GraphQL schema into the directory given by '--path'"
 
     override fun run() {
-        val springContext = runApplication<BackendApplication> {
-            addInitializers(
-                beans {
-                    bean { config }
-                },
-            )
-        }
+        val app = SpringApplication(BackendApplication::class.java)
+        app.webApplicationType = WebApplicationType.NONE
+        app.setLogStartupInfo(false)
+        app.setBannerMode(Banner.Mode.OFF)
+
+        // Set schema-export profile
+        System.setProperty("spring.profiles.active", "schema-export")
+
+        app.addInitializers(
+            beans {
+                bean { config }
+                // Mock alle Web-abhängigen Beans
+                bean<HttpServletRequest> {
+                    MockHttpServletRequest()
+                }
+            },
+        )
+
+        val springContext = app.run(
+            "--spring.main.web-application-type=none",
+            "--spring.profiles.active=schema-export",
+        )
+
         try {
             val schema = springContext.getBean(GraphQLSchema::class.java)
             File(path).writeText(schema.print())
             logger.info("GraphQL schema successfully exported to '$path'")
         } finally {
-            springContext.close()
+            (springContext as ConfigurableApplicationContext).close()
+            System.clearProperty("spring.profiles.active")
         }
     }
 }

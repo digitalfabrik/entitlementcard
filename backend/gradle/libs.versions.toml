@@ -78,6 +78,7 @@ simplejavamail = { module = "org.simplejavamail:simple-java-mail", version = "8.
 springframework-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools" }
 springframework-boot-configurationprocessor = { module = "org.springframework.boot:spring-boot-configuration-processor" }
 springframework-boot-starter-mail = { module = "org.springframework.boot:spring-boot-starter-mail", version.ref = "spring" }
+springframework-spring-test = { module = "org.springframework:spring-test", version = "6.2.9" }
 springframework-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "spring" }
 springframework-boot-starter-graphql = { module = "org.springframework.boot:spring-boot-starter-graphql", version.ref = "spring" }
 springframework-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
