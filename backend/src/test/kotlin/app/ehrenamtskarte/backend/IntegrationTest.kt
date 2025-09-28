@@ -57,5 +57,5 @@ open class IntegrationTest {
     protected lateinit var restTemplate: TestRestTemplate
 
     protected fun postGraphQL(request: GraphQLClientRequest<*>): ResponseEntity<String> =
-        restTemplate.postForEntity("/graphql", request, String::class.java)
+        restTemplate.postForEntity("/", request, String::class.java)
 }
