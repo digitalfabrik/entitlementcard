@@ -11,7 +11,7 @@ import app.ehrenamtskarte.backend.db.entities.maySendMailsInRegion
 import app.ehrenamtskarte.backend.db.repositories.CardRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.db.repositories.UserEntitlementsRepository
-import app.ehrenamtskarte.backend.graphql.auth.getAuthContext
+import app.ehrenamtskarte.backend.graphql.auth.requireAuthContext
 import app.ehrenamtskarte.backend.graphql.cards.types.ActivationState
 import app.ehrenamtskarte.backend.graphql.cards.types.CardActivationResultModel
 import app.ehrenamtskarte.backend.graphql.cards.types.CardCreationResultModel
@@ -265,7 +265,7 @@ class CardMutationController(
         @Argument generateStaticCodes: Boolean,
         @Argument applicationIdToMarkAsProcessed: Int? = null,
     ): List<CardCreationResultModel> {
-        val authContext = request.getAuthContext()
+        val authContext = dfe.requireAuthContext()
         val projectConfig = backendConfiguration.getProjectConfig(authContext.project)
 
         val activationCodes = transaction {
@@ -394,10 +394,11 @@ class CardMutationController(
     fun deleteInactiveCards(
         @Argument regionId: Int,
         @Argument cardInfoHashBase64List: List<String>,
+        dfe: DataFetchingEnvironment,
     ): Boolean {
-        val authContext = request.getAuthContext()
-
+        val authContext = dfe.requireAuthContext()
         val cardInfoHashList = cardInfoHashBase64List.map { it.decodeBase64Bytes() }
+
         transaction {
             if (!authContext.admin.mayDeleteCardInRegion(regionId)) {
                 throw ForbiddenException()
@@ -416,8 +417,9 @@ class CardMutationController(
         @Argument recipientAddress: String,
         @Argument recipientName: String,
         @Argument deepLink: String,
+        dfe: DataFetchingEnvironment,
     ): Boolean {
-        val authContext = request.getAuthContext()
+        val authContext = dfe.requireAuthContext()
 
         transaction {
             val region = authContext.admin.regionId?.value?.let {
