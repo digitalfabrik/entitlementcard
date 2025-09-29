@@ -6,6 +6,7 @@
 - [Commit Messages and Pull Requests Names](#commit-messages-and-pull-request-names)
 - [Reviews](#reviews)
 - [Versioning](#versioning)
+- [Labels](#labels)
 
 ## Naming
 
@@ -32,6 +33,19 @@ Branch names should use lower-kebab-case and be prefixed with the issue number:
 
 _Note: Branch names (and PR names) do NOT have to match the issue title. Instead, try to be short and concise to focus
 on the actual work done._
+
+## Pull Requests
+
+Pull requests should belong to one of our [issues](https://github.com/digitalfabrik/entitlementcard/issues).
+If you are looking for issues to work on, a good place to start are
+our [good first issues](https://github.com/digitalfabrik/entitlementcard/issues?q=state%3Aopen%20label%3A%22good%20first%20issue%22).
+
+To merge a pull request, it has to meet the following criteria:
+
+- All checks (formatting, linting and unit tests) have to pass.
+- No changes are requested.
+- Two approvals are needed.
+- Labels are set, check [Labels](#labels).
 
 ## Reviews
 
@@ -63,3 +77,13 @@ Examples:
 
 An additional consecutive version code is used for unique identification in the app stores.
 The version code has to be incremented for every new release uploaded to the stores.
+
+## Labels
+
+Here you find our current list of [labels](https://github.com/digitalfabrik/entitlementcard/labels).
+
+- Please ensure that you set labels according to the affected environments: `backend`, `frontend`, `web`. 
+- If your pull request should not be listed in the changelog (f.e. for release pull requests), add `exclude-changelog`.
+- Since we have a testing team, also mark pull requests that are not testable for "end-users" with `not-testable`, so they will be listed separately in our release notes. 
+- If your pull request is testable, ensure that there is a proper description in your pull request.
+
