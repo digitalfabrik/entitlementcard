@@ -66,6 +66,11 @@ object Mailer {
     ) {
         val logger = LoggerFactory.getLogger(Mailer::class.java)
 
+        // Skip sending emails for cases like e2e tests
+        if (backendConfig.disableMailService) {
+            return
+        }
+
         if (backendConfig.isDevelopment()) {
             logger.info(
                 """

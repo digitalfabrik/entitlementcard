@@ -15,17 +15,8 @@ export const theme = createTheme({
     },
     text: {
       primary: '#1c2127',
+      secondary: '#5C6065',
       disabled: '#898989',
-    },
-    default: {
-      main: '#EEEEEE',
-      light: '#f0f0f0',
-      dark: '#dddddd',
-      contrastText: '#5C6065',
-    },
-    defaultInverted: {
-      main: '#1c2127',
-      contrastText: '#dddddd',
     },
   },
   typography: {
@@ -45,18 +36,34 @@ export const theme = createTheme({
   },
   components: {
     MuiButton: {
+      defaultProps: {
+        variant: 'outlined',
+        color: 'inherit',
+      },
       styleOverrides: {
-        root: {
-          variants: [
-            {
-              props: { variant: 'contained', color: 'primary' },
-              style: {
-                '&:hover': {
-                  color: '#ffffff',
-                },
-              },
-            },
-          ],
+        textInherit: {
+          color: '#5C6065',
+        },
+        outlinedInherit: {
+          borderColor: '#EEEEEE',
+          borderWidth: '2px',
+          color: '#5C6065',
+        },
+        containedInherit: {
+          backgroundColor: '#F6F7F9',
+          borderStyle: 'solid',
+          borderColor: '#EEEEEE',
+          borderWidth: '1px',
+          color: '#5C6065',
+          ':hover': {
+            backgroundColor: '#e9eaedff',
+          },
+        },
+        contained: {
+          boxShadow: '0 2px 2px #BBBBBB',
+          ':hover': {
+            boxShadow: '0 2px 2px #BBBBBB', // 0 2px 6px #BBBBBB',
+          },
         },
       },
     },
@@ -109,6 +116,13 @@ export const theme = createTheme({
           backgroundColor: '#1c2127',
           color: '#dddddd',
           padding: 8,
+        },
+      },
+    },
+    MuiFormLabel: {
+      styleOverrides: {
+        root: {
+          fontSize: '0.9rem',
         },
       },
     },

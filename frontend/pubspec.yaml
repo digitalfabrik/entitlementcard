@@ -25,7 +25,7 @@ dependencies:
   permission_handler: ^11.3.0
   package_info_plus: ^8.3.1 # for about dialog
   # Cannot be updated to v7 due to https://github.com/juliansteenbakker/mobile_scanner/issues/1444
-  mobile_scanner: 6.0.10
+  mobile_scanner: 6.0.11
   fixnum: ^1.1.0
   # Manually update this dependency, issues can result in data loss
   flutter_secure_storage: 9.2.4

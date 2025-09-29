@@ -5,14 +5,14 @@ import dimensions from './constants/dimensions'
 
 const ButtonBar = styled(Card)`
   width: 100%;
-  padding: 15px;
+  padding: 8px;
   background: #fafafa;
-  z-index: 10;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
+  align-items: center;
   & button {
-    margin: 5px;
+    margin-right: 5px;
   }
   height: ${dimensions.bottomBarHeight}px;
 `
