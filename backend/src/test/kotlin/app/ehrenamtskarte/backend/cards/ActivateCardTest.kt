@@ -11,8 +11,8 @@ import app.ehrenamtskarte.backend.helper.SampleCards
 import app.ehrenamtskarte.backend.helper.SampleCards.hash
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestData
-import app.ehrenamtskarte.backend.helper.error
 import app.ehrenamtskarte.backend.helper.toDataObject
+import app.ehrenamtskarte.backend.helper.toErrorObject
 import io.ktor.util.encodeBase64
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -47,7 +47,11 @@ internal class ActivateCardTest : IntegrationTest() {
         val response = postGraphQL(mutation)
 
         assertEquals(HttpStatus.OK, response.statusCode)
-        assertEquals("Project 'non-existent.sozialpass.app' not found", response.error()?.get("message")?.asText())
+
+        val error = response.toErrorObject()
+
+        assertEquals("Project 'non-existent.sozialpass.app' not found", error.message)
+        assertEquals("NOT_FOUND", error.extensions?.classification)
     }
 
     @Test
