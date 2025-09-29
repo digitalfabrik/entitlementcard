@@ -2,9 +2,9 @@ import { Page, expect, test } from '@playwright/test'
 
 test.describe('Bayern testing', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:3000/')
+    await page.goto('/')
     await page.getByRole('button', { name: 'Switch to Ehrenamtskarte' }).click({ force: true })
-    await page.goto('http://localhost:3000/beantragen')
+    await page.goto('/beantragen')
   })
 
   const testImageFileSelection = async (page: Page, buttonName) => {
@@ -131,17 +131,13 @@ test.describe('Bayern testing', () => {
     )
     await page
       .getByRole('radio', { name: cardType == 'blue' ? 'Blaue Ehrenamtskarte' : 'Goldene Ehrenamtskarte' })
-      .dispatchEvent('click')
-    await page
-      .getByRole('radio', { name: cardType == 'blue' ? 'Blaue Ehrenamtskarte' : 'Goldene Ehrenamtskarte' })
-      .check()
+      .click()
     if (cardType == 'blue') {
-      await expect(form).toContainText('Art des Antrags: *')
-      await expect(form).toContainText('Erstantrag *')
+      await expect(form).toContainText('Antrag auf: *')
       await expect(form).toContainText('Verlängerungsantrag *')
       await page
         .getByRole('radio', { name: applicationType == 'initial' ? 'Erstantrag' : 'Verlängerungsantrag' })
-        .check()
+        .click()
     }
 
     await page.getByRole('checkbox', { name: 'Ich beantrage eine physische' }).check()
