@@ -49,8 +49,10 @@ Future<CardInfo?> verifyStaticVerificationCode(
   String projectId,
   StaticVerificationCode code,
 ) async {
-  assertConsistentCardInfo(code.info);
+  CardInfo cardInfo = code.info;
+  assertConsistentCardInfo(cardInfo);
   _assertConsistentStaticVerificationCode(code);
+  _assertCardIsAlreadyValid(cardInfo);
 
   if (!(await queryStaticServerVerification(client, projectId, code)).valid) {
     return null;
@@ -58,18 +60,7 @@ Future<CardInfo?> verifyStaticVerificationCode(
   return code.info;
 }
 
-void assertConsistentCardInfo(CardInfo cardInfo) {
-  if (!cardInfo.hasFullName()) {
-    throw QrCodeFieldMissingException('fullName');
-  }
-  if (!cardInfo.hasExpirationDay() && cardInfo.extensions.extensionBavariaCardType.cardType != BavariaCardType.GOLD) {
-    throw QRCodeMissingExpiryException();
-  }
-  final expirationDate = getExpirationDay(cardInfo);
-  if (expirationDate != null && isCardExpired(cardInfo)) {
-    throw CardExpiredException(expirationDate);
-  }
-
+void _assertCardIsAlreadyValid(CardInfo cardInfo) {
   if (cardInfo.extensions.hasExtensionStartDay() && isCardNotYetValid(cardInfo)) {
     final startDay = dateFromEpochDaysInTimeZone(cardInfo.extensions.extensionStartDay.startDay, currentTimezone);
     throw CardNotYetValidException(startDay);
