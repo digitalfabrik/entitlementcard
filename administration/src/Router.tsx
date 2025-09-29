@@ -29,8 +29,8 @@ import ActivationPage from './mui-modules/activation/ActivationPage'
 import ApplicationApplicantController from './mui-modules/application-verification/ApplicationApplicantController'
 import ApplicationVerificationController from './mui-modules/application-verification/ApplicationVerificationController'
 import ApplyController from './mui-modules/application/ApplyController'
-import ImprintPage from './mui-modules/imprint/ImprintPage'
 import DownloadPage from './mui-modules/download/DownloadPage'
+import ImprintPage from './mui-modules/imprint/ImprintPage'
 import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
 
 const AuthLayout = (): ReactElement => {
