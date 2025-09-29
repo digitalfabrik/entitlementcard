@@ -22,7 +22,7 @@ const DownloadPage = (): ReactElement => {
         sx={{
           height: 100,
           aspectRatio: 1,
-          marginBottom: '1rem',
+          marginBottom: 2,
           borderRadius: '20%',
           border: 1,
           borderColor: 'grey.300',
