@@ -114,7 +114,7 @@ Run `Start administration (env:local+buildConfig:all)` from Intellij run configu
 
 ### Prerequisites
 
-You can either use the open-source docker replacement podman/podman-compose or classic docker/docker-compose.
+You can either use the open-source docker replacement podman/podman-compose or classic docker/docker compose.
 
 #### Podman
 
@@ -127,12 +127,12 @@ podman machine start && podman-compose up
 
 #### Docker
 
-1. Install docker and docker-compose
-2. Setup docker-compose
+1. Install docker
+2. Setup docker compose
 ```shell
-docker-compose rm
-docker-compose build
-docker-compose up --force-recreate
+docker compose rm
+docker compose build
+docker compose up --force-recreate
 ```
 
 ### Recommended IDE set up
@@ -161,9 +161,9 @@ cd backend && ./gradlew run --args "migrate"
 ```shell
 podman machine start && podman-compose up
 ```
-or `docker-compose`
+or `docker compose`
 ```shell
-sudo docker-compose up --force-recreate
+sudo docker compose up --force-recreate
 ```
 2. Run the backend (`Run backend (env:local+buildConfig:all)`)
 ```shell
