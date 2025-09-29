@@ -8,7 +8,7 @@ import app.ehrenamtskarte.backend.db.entities.Projects
 import app.ehrenamtskarte.backend.db.entities.Regions
 import app.ehrenamtskarte.backend.db.entities.UserEntitlements
 import app.ehrenamtskarte.backend.graphql.cards.types.CardStatisticsResultModel
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidCodeTypeException
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidCodeTypeException
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.Coalesce
 import org.jetbrains.exposed.sql.JoinType

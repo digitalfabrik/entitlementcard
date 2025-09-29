@@ -5,16 +5,18 @@ import app.ehrenamtskarte.backend.db.Database
 import app.ehrenamtskarte.backend.db.migration.MigrationUtils
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestFreinetAgencies
+import com.expediagroup.graphql.client.types.GraphQLClientRequest
 import org.junit.jupiter.api.BeforeAll
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.http.ResponseEntity
 import org.springframework.test.context.ContextConfiguration
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.utility.DockerImageName
 
 /**
- * Base class for integration tests that require a database connection
+ * Base class for integration tests providing a fully initialized Spring Boot application context
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = [IntegrationTestConfig::class])
@@ -53,4 +55,7 @@ open class IntegrationTest {
 
     @Autowired
     protected lateinit var restTemplate: TestRestTemplate
+
+    protected fun postGraphQL(request: GraphQLClientRequest<*>): ResponseEntity<String> =
+        restTemplate.postForEntity("/graphql", request, String::class.java)
 }

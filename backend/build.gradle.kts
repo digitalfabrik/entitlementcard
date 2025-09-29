@@ -78,6 +78,7 @@ dependencies {
     implementation(libs.simplejavamail)
     implementation(libs.springframework.boot.starter.mail)
     implementation(libs.springframework.boot.starter.web)
+    implementation(libs.springframework.boot.starter.graphql)
 
     runtimeOnly(libs.postgresql.postgresql)
 
@@ -143,6 +144,14 @@ sourceSets {
     }
 }
 
+tasks.processResources {
+    // required to load graphql schema by spring-boot
+    from("../specs") {
+        include("*.graphql")
+        into("specs")
+    }
+}
+
 detekt {
     // https://detekt.dev/docs/gettingstarted/gradle
     toolVersion = "1.23.8"
@@ -191,8 +200,10 @@ tasks.generateProto {
 }
 
 tasks.graphqlGenerateTestClient {
-    dependsOn(tasks.generateSentryBundleIdJava)
-    dependsOn(tasks.sentryCollectSourcesJava)
+    if (isProductionEnvironment) {
+        dependsOn(tasks.generateSentryBundleIdJava)
+        dependsOn(tasks.sentryCollectSourcesJava)
+    }
     schemaFile.set(rootDir.parentFile.resolve("specs/backend-api.graphql"))
     packageName.set("${project.group}.generated")
     queryFiles.setFrom(fileTree("src/test/resources/graphql"))

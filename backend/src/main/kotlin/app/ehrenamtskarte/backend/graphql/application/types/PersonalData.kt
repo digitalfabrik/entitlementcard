@@ -3,7 +3,7 @@ package app.ehrenamtskarte.backend.graphql.application.types
 import app.ehrenamtskarte.backend.graphql.application.types.primitives.DateInput
 import app.ehrenamtskarte.backend.graphql.application.types.primitives.EmailInput
 import app.ehrenamtskarte.backend.graphql.application.types.primitives.ShortTextInput
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidJsonException
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidJsonException
 import java.time.LocalDate
 import java.time.ZoneId
 
