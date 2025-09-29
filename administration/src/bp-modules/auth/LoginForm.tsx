@@ -52,7 +52,6 @@ const LoginForm = ({
             disabled={loading}
             fullWidth
             setValue={setPassword}
-            required
             autoFocus={false}
           />
         </FormControl>

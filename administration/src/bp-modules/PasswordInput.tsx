@@ -10,7 +10,6 @@ const PasswordInput = (p: {
   placeholder?: string
   label?: string
   disabled?: boolean
-  required?: boolean
   autoFocus?: boolean
   fullWidth?: boolean
   value?: string
