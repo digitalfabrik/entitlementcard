@@ -8,7 +8,7 @@ parameters:
     enum: [bayern, nuernberg, koblenz]
 environment:
   FASTLANE_SKIP_UPDATE_CHECK: true
-  GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m" -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2'
+  GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+UseParallelGC -XX:MaxPermSize=512m" -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2'
 working_directory: ~/project/frontend
 steps:
   - prepare_workspace

@@ -261,7 +261,7 @@ jobs:
             - image: cimg/android:2025.04.1-node
         environment:
             FASTLANE_SKIP_UPDATE_CHECK: true
-            GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx2048m" -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2
+            GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx2048m -XX:+UseParallelGC -XX:MaxPermSize=512m" -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2
         parameters:
             build_config:
                 description: Name of the build config to use
@@ -904,26 +904,11 @@ workflows:
         jobs:
             - bump_version:
                 prepare_delivery: false
-            - build_administration:
-                requires:
-                    - bump_version
-            - build_backend:
-                context:
-                    - credentials-ehrenamtskarte
-                requires:
-                    - bump_version
             - build_android:
                 build_config: bayern
                 context:
                     - credentials-repo
                     - credentials-ehrenamtskarte
-                requires:
-                    - bump_version
-            - build_ios:
-                build_config: bayern
-                context:
-                    - tuerantuer-apple
-                    - fastlane-match
                 requires:
                     - bump_version
         when:

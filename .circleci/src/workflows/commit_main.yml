@@ -8,14 +8,14 @@ jobs:
   - bump_version:
       prepare_delivery: false
 
-  - build_administration:
-      requires:
-        - bump_version
-  - build_backend:
-      context:
-        - credentials-ehrenamtskarte
-      requires:
-        - bump_version
+#  - build_administration:
+#      requires:
+#        - bump_version
+#  - build_backend:
+#      context:
+#        - credentials-ehrenamtskarte
+#      requires:
+#        - bump_version
   - build_android:
       build_config: bayern
       context:
@@ -23,10 +23,10 @@ jobs:
         - credentials-ehrenamtskarte
       requires:
         - bump_version
-  - build_ios:
-      build_config: bayern
-      requires:
-        - bump_version
-      context:
-        - tuerantuer-apple
-        - fastlane-match
+#  - build_ios:
+#      build_config: bayern
+#      requires:
+#        - bump_version
+#      context:
+#        - tuerantuer-apple
+#        - fastlane-match
