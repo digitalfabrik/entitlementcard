@@ -1,4 +1,5 @@
-import { Button, H2 } from '@blueprintjs/core'
+import { H2 } from '@blueprintjs/core'
+import { Button } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -19,7 +20,7 @@ const DataPrivacyCard = (): ReactElement => {
       <H2>{t('dataPrivacyHeading')}</H2>
       <p>{t('dataPrivacyExplanation')}</p>
       <ButtonContainer>
-        <Button text={t('open')} intent='primary' onClick={() => navigate('/region/data-privacy-policy')} />
+        <Button onClick={() => navigate('/region/data-privacy-policy')}>{t('open')}</Button>
       </ButtonContainer>
     </SettingsCard>
   )

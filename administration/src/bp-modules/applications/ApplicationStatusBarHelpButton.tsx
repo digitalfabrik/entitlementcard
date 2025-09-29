@@ -1,9 +1,11 @@
-import { Button, H4, Popover } from '@blueprintjs/core'
+import { H4, Popover } from '@blueprintjs/core'
+import { Help } from '@mui/icons-material'
+import { IconButton } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
-const HelpButton = styled(Button)`
+const HelpButton = styled(IconButton)`
   margin: 0 10px;
 `
 
@@ -28,7 +30,7 @@ const ApplicationStatusHelpButton = (): ReactElement => {
           <Headline>{t('whichStatusMeansWhat')}</Headline>
           <Description>
             <li>
-              <b>{t('statusBarAll')}:</b>
+              <b>{t('statusBarAccepted')}:</b>
               <Description>
                 {t('acceptedDescription')}
                 <br />
@@ -62,7 +64,9 @@ const ApplicationStatusHelpButton = (): ReactElement => {
           </Description>
         </PopoverContent>
       }>
-      <HelpButton icon='help' minimal />
+      <HelpButton>
+        <Help />
+      </HelpButton>
     </Popover>
   )
 }

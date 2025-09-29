@@ -13,26 +13,26 @@ const getNumChars = (value: string, predicate: (char: string) => boolean): numbe
 const minPasswordLength = 12
 
 const validateNewPasswordInput = (
-  newPassword: string,
-  repeatNewPassword: string,
+  newPassword: string | undefined,
+  repeatNewPassword: string | undefined,
   t: TFunction<'auth', undefined>
 ): string | null => {
-  if (newPassword.length < minPasswordLength) {
+  if (newPassword && newPassword.length < minPasswordLength) {
     return t('passwordValidationNeedsLength', {
       minPasswordLength,
       currentPasswordLength: newPassword.length,
     })
   }
-  if (getNumChars(newPassword, isLowerCase) < 1) {
+  if (newPassword && getNumChars(newPassword, isLowerCase) < 1) {
     return t('passwordValidationNeedsLowerCaseLetter')
   }
-  if (getNumChars(newPassword, isUpperCase) < 1) {
+  if (newPassword && getNumChars(newPassword, isUpperCase) < 1) {
     return t('passwordValidationNeedsUpperCaseLetter')
   }
-  if (getNumChars(newPassword, isSpecialChar) < 1) {
+  if (newPassword && getNumChars(newPassword, isSpecialChar) < 1) {
     return t('passwordValidationNeedsSpecialCharacter')
   }
-  if (newPassword !== repeatNewPassword) {
+  if (newPassword && newPassword !== repeatNewPassword) {
     return t('passwordValidationMustBeEqual')
   }
   return null

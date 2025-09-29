@@ -1,5 +1,6 @@
-import { Button, H3 } from '@blueprintjs/core'
-import { Stack } from '@mui/material'
+import { H3 } from '@blueprintjs/core'
+import { AddCard, Analytics, Checklist, Inventory, Map, People, Place } from '@mui/icons-material'
+import { Button, Stack } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router'
@@ -17,45 +18,47 @@ const HomeController = (): ReactElement => {
   return (
     <Stack sx={{ flexGrow: 1, alignItems: 'center', justifyContent: 'center', overflow: 'auto', padding: 4, gap: 2 }}>
       <H3>Wählen Sie eine Aktion aus:</H3>
+
       <RenderGuard allowedRoles={[Role.RegionAdmin, Role.RegionManager]}>
         {applicationFeature ? (
           <NavLink to='/applications'>
-            <Button icon='form' text={t('incomingApplications')} />
+            <Button startIcon={<Checklist />}>{t('incomingApplications')}</Button>
           </NavLink>
         ) : null}
         {cardCreation ? (
           <NavLink to='/cards'>
-            <Button icon='id-number' text={t('createCards')} />
+            <Button startIcon={<AddCard />}>{t('createCards')}</Button>
           </NavLink>
         ) : null}
       </RenderGuard>
+
       <RenderGuard allowedRoles={[Role.RegionAdmin, Role.ProjectAdmin]}>
         <NavLink to='/users'>
-          <Button icon='people' text={t('administerUsers')} />
+          <Button startIcon={<People />}>{t('administerUsers')}</Button>
         </NavLink>
         {cardStatistics.enabled ? (
           <NavLink to='/statistics'>
-            <Button icon='stacked-chart' text={t('statistics')} />
+            <Button startIcon={<Analytics />}>{t('statistics')}</Button>
           </NavLink>
         ) : null}
       </RenderGuard>
 
       <RenderGuard allowedRoles={[Role.RegionAdmin]} condition={applicationFeature !== undefined}>
         <NavLink to='/region'>
-          <Button icon='path-search' text={t('administerRegions')} />
+          <Button startIcon={<Map />}>{t('administerRegions')}</Button>
         </NavLink>
       </RenderGuard>
 
       <RenderGuard
         condition={(role === Role.ProjectAdmin && userImportApiEnabled) || role === Role.ExternalVerifiedApiUser}>
         <NavLink to='/project'>
-          <Button icon='projects' text={t('administerProjects')} />
+          <Button startIcon={<Inventory />}>{t('administerProjects')}</Button>
         </NavLink>
       </RenderGuard>
 
       <RenderGuard allowedRoles={[Role.ProjectStoreManager]}>
         <NavLink to='/stores'>
-          <Button icon='shop' text={t('administerStores')} />
+          <Button startIcon={<Place />}>{t('administerStores')}</Button>
         </NavLink>
       </RenderGuard>
     </Stack>

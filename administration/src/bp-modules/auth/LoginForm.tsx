@@ -1,50 +1,70 @@
-import { Button, Classes, FormGroup, InputGroup } from '@blueprintjs/core'
-import React, { ChangeEvent, ReactElement } from 'react'
+import { Box, Button, FormControl, InputLabel, Stack, TextField } from '@mui/material'
+import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 
 import PasswordInput from '../PasswordInput'
 
-type Props = {
+const LoginForm = ({
+  loading,
+  email,
+  password,
+  setEmail,
+  setPassword,
+  onSubmit,
+}: {
   loading?: boolean
   email: string
   password: string
   setEmail: (email: string) => void
-  setPassword: (password: string) => void
+  setPassword: (password: string | undefined) => void
   onSubmit: () => void
-}
-
-const LoginForm = ({ loading, email, password, setEmail, setPassword, onSubmit }: Props): ReactElement => {
+}): ReactElement => {
   const { t } = useTranslation('auth')
   return (
-    <div style={{ marginTop: '20px' }}>
-      <form
-        onSubmit={event => {
-          event.preventDefault()
-          onSubmit()
-        }}>
-        <FormGroup label={t('eMail')}>
-          <InputGroup
-            placeholder='erika.musterfrau@example.org'
-            autoFocus
-            autoComplete='on'
-            name='email'
-            value={email}
-            disabled={!!loading}
-            onChange={(event: ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)}
+    <form
+      onSubmit={event => {
+        event.preventDefault()
+        onSubmit()
+      }}>
+      <Stack sx={{ gap: 2, marginY: 2 }}>
+        <TextField
+          placeholder='erika.musterfrau@example.org'
+          fullWidth
+          autoComplete='on'
+          autoFocus
+          type='email'
+          size='small'
+          label={t('eMail')}
+          value={email}
+          required
+          disabled={loading}
+          onChange={event => setEmail(event.target.value)}
+        />
+        <FormControl variant='outlined'>
+          <InputLabel required size='small'>
+            {t('password')}
+          </InputLabel>
+          <PasswordInput
+            label={t('password')}
+            placeholder='Passwort'
+            value={password}
+            disabled={loading}
+            fullWidth
+            setValue={setPassword}
+            autoFocus={false}
           />
-        </FormGroup>
-        <FormGroup label={t('password')}>
-          <PasswordInput placeholder='Passwort' value={password} disabled={!!loading} setValue={setPassword} label='' />
-        </FormGroup>
-        <div
-          className={Classes.DIALOG_FOOTER_ACTIONS}
-          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Link to='/forgot-password'>{t('forgotPassword')}</Link>
-          <Button text='Anmelden' type='submit' intent='primary' loading={!!loading} />
-        </div>
-      </form>
-    </div>
+        </FormControl>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Link to='/forgot-password'>
+            <Button variant='text'>{t('forgotPassword')}</Button>
+          </Link>
+          <Button type='submit' variant='contained' color='primary' loading={loading}>
+            {t('signIn')}
+          </Button>
+        </Box>
+      </Stack>
+    </form>
   )
 }
 

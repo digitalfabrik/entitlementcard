@@ -1,4 +1,5 @@
-import { Button, Icon, IconName } from '@blueprintjs/core'
+import { Icon, IconName } from '@blueprintjs/core'
+import { Button } from '@mui/material'
 import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
@@ -25,7 +26,10 @@ const StyledButton = styled(Button)`
 `
 
 const CardFormButton = ({ text, icon, onClick, disabled = false }: Props): ReactElement => (
-  <StyledButton icon={<Icon style={{ margin: 10 }} icon={icon} iconSize={20} />} onClick={onClick} disabled={disabled}>
+  <StyledButton
+    startIcon={<Icon style={{ margin: 10 }} icon={icon} iconSize={20} />}
+    onClick={onClick}
+    disabled={disabled}>
     {text}
   </StyledButton>
 )
