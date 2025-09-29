@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.cards
 
-import app.ehrenamtskarte.backend.GraphqlApiTest
+import app.ehrenamtskarte.backend.IntegrationTest
 import app.ehrenamtskarte.backend.db.entities.CardEntity
 import app.ehrenamtskarte.backend.db.entities.Cards
 import app.ehrenamtskarte.backend.generated.ActivateCard
@@ -11,20 +11,23 @@ import app.ehrenamtskarte.backend.helper.SampleCards
 import app.ehrenamtskarte.backend.helper.SampleCards.hash
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestData
-import io.javalin.testtools.JavalinTest
+import app.ehrenamtskarte.backend.helper.error
+import app.ehrenamtskarte.backend.helper.toDataObject
 import io.ktor.util.encodeBase64
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertNotNull
-import org.junit.jupiter.api.assertNull
+import org.springframework.http.HttpStatus
 import java.time.LocalDate
 import java.time.ZoneOffset
 import kotlin.random.Random
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
+import kotlin.test.fail
 
-internal class ActivateCardTest : GraphqlApiTest() {
+internal class ActivateCardTest : IntegrationTest() {
     private val eakRegionAdmin = TestAdministrators.EAK_REGION_ADMIN
 
     @BeforeEach
@@ -35,289 +38,281 @@ internal class ActivateCardTest : GraphqlApiTest() {
     }
 
     @Test
-    fun `should return error response when the project not found`() =
-        JavalinTest.test(app) { _, client ->
-            val mutation = activateCardMutation(
-                project = "non-existent.sozialpass.app",
-                cardInfoHashBase64 = Random.nextBytes(20).encodeBase64(),
-                activationSecretBase64 = Random.nextBytes(20).encodeBase64(),
-            )
-            val response = post(client, mutation)
+    fun `should return an error when project does not exist`() {
+        val mutation = activateCardMutation(
+            project = "non-existent.sozialpass.app",
+            cardInfoHashBase64 = Random.nextBytes(20).encodeBase64(),
+            activationSecretBase64 = Random.nextBytes(20).encodeBase64(),
+        )
+        val response = postGraphQL(mutation)
 
-            assertEquals(404, response.code)
-        }
-
-    @Test
-    fun `should return successful activation result when the card is valid`() =
-        JavalinTest.test(app) { _, client ->
-            val cardInfoHash = SampleCards.bavarianStandard().hash()
-
-            val rawActivationSecret = Random.nextBytes(20)
-            val activationSecretHash = hashActivationSecret(rawActivationSecret)
-
-            val cardId = TestData.createDynamicCard(
-                cardInfoHash,
-                activationSecretHash,
-                issuerId = eakRegionAdmin.id,
-            )
-
-            val mutation = activateCardMutation(
-                cardInfoHashBase64 = cardInfoHash.encodeBase64(),
-                activationSecretBase64 = rawActivationSecret.encodeBase64(),
-            )
-            val response = post(client, mutation)
-
-            assertEquals(200, response.code)
-
-            val activationResult = response.toDataObject<CardActivationResultModel>()
-
-            assertEquals(ActivationState.SUCCESS, activationResult.activationState)
-            assertNotNull(activationResult.totpSecret)
-
-            transaction {
-                val card = CardEntity.findById(cardId) ?: throw AssertionError("Card not found")
-
-                assertNotNull(card.firstActivationDate)
-                assertEquals(activationResult.totpSecret, card.totpSecret?.encodeBase64())
-            }
-        }
+        assertEquals(HttpStatus.OK, response.statusCode)
+        assertEquals("Project 'non-existent.sozialpass.app' not found", response.error()?.get("message")?.asText())
+    }
 
     @Test
-    fun `should return not_found state when the card is static`() =
-        JavalinTest.test(app) { _, client ->
-            val cardInfoHash = SampleCards.bavarianStandard().hash()
+    fun `should return successful activation result when the card is valid`() {
+        val cardInfoHash = SampleCards.bavarianStandard().hash()
 
-            val cardId = TestData.createStaticCard(cardInfoHash, issuerId = eakRegionAdmin.id)
+        val rawActivationSecret = Random.nextBytes(20)
+        val activationSecretHash = hashActivationSecret(rawActivationSecret)
 
-            val mutation = activateCardMutation(
-                cardInfoHashBase64 = cardInfoHash.encodeBase64(),
-                activationSecretBase64 = Random.nextBytes(20).encodeBase64(),
-            )
-            val response = post(client, mutation)
+        val cardId = TestData.createDynamicCard(
+            cardInfoHash,
+            activationSecretHash,
+            issuerId = eakRegionAdmin.id,
+        )
 
-            assertEquals(200, response.code)
+        val mutation = activateCardMutation(
+            cardInfoHashBase64 = cardInfoHash.encodeBase64(),
+            activationSecretBase64 = rawActivationSecret.encodeBase64(),
+        )
+        val response = postGraphQL(mutation)
 
-            val activationResult = response.toDataObject<CardActivationResultModel>()
+        assertEquals(HttpStatus.OK, response.statusCode)
 
-            assertEquals(ActivationState.NOT_FOUND, activationResult.activationState)
-            assertNull(activationResult.totpSecret)
+        val activationResult = response.toDataObject<CardActivationResultModel>()
 
-            transaction {
-                val card = CardEntity.findById(cardId) ?: throw AssertionError("Card not found")
+        assertEquals(ActivationState.SUCCESS, activationResult.activationState)
+        assertNotNull(activationResult.totpSecret)
 
-                assertNull(card.firstActivationDate)
-                assertNull(card.totpSecret)
-            }
+        transaction {
+            val card = CardEntity.findById(cardId) ?: fail("Card not found")
+
+            assertNotNull(card.firstActivationDate)
+            assertEquals(activationResult.totpSecret, card.totpSecret?.encodeBase64())
         }
+    }
 
     @Test
-    fun `should return not_found state when the card not found`() =
-        JavalinTest.test(app) { _, client ->
-            val mutation = activateCardMutation(
-                cardInfoHashBase64 = Random.nextBytes(20).encodeBase64(),
-                activationSecretBase64 = Random.nextBytes(20).encodeBase64(),
-            )
-            val response = post(client, mutation)
+    fun `should return not_found state when the card is static`() {
+        val cardInfoHash = SampleCards.bavarianStandard().hash()
 
-            assertEquals(200, response.code)
+        val cardId = TestData.createStaticCard(cardInfoHash, issuerId = eakRegionAdmin.id)
 
-            val activationResult = response.toDataObject<CardActivationResultModel>()
+        val mutation = activateCardMutation(
+            cardInfoHashBase64 = cardInfoHash.encodeBase64(),
+            activationSecretBase64 = Random.nextBytes(20).encodeBase64(),
+        )
+        val response = postGraphQL(mutation)
 
-            assertEquals(ActivationState.NOT_FOUND, activationResult.activationState)
-            assertNull(activationResult.totpSecret)
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val activationResult = response.toDataObject<CardActivationResultModel>()
+
+        assertEquals(ActivationState.NOT_FOUND, activationResult.activationState)
+        assertNull(activationResult.totpSecret)
+
+        transaction {
+            val card = CardEntity.findById(cardId) ?: fail("Card not found")
+
+            assertNull(card.firstActivationDate)
+            assertNull(card.totpSecret)
         }
+    }
 
     @Test
-    fun `should return wrong_secret state when the activation secret is incorrect`() =
-        JavalinTest.test(app) { _, client ->
-            val cardInfoHash = SampleCards.bavarianStandard().hash()
+    fun `should return not_found state when the card not found`() {
+        val mutation = activateCardMutation(
+            cardInfoHashBase64 = Random.nextBytes(20).encodeBase64(),
+            activationSecretBase64 = Random.nextBytes(20).encodeBase64(),
+        )
+        val response = postGraphQL(mutation)
 
-            val rawActivationSecret = Random.nextBytes(20)
-            val activationSecretHash = hashActivationSecret(rawActivationSecret)
+        assertEquals(HttpStatus.OK, response.statusCode)
 
-            val cardId = TestData.createDynamicCard(
-                cardInfoHash,
-                activationSecretHash,
-                issuerId = eakRegionAdmin.id,
-            )
+        val activationResult = response.toDataObject<CardActivationResultModel>()
 
-            val mutation = activateCardMutation(
-                cardInfoHashBase64 = cardInfoHash.encodeBase64(),
-                activationSecretBase64 = Random.nextBytes(20).encodeBase64(),
-            )
-            val response = post(client, mutation)
-
-            assertEquals(200, response.code)
-
-            val activationResult = response.toDataObject<CardActivationResultModel>()
-
-            assertEquals(ActivationState.WRONG_SECRET, activationResult.activationState)
-            assertNull(activationResult.totpSecret)
-
-            transaction {
-                val card = CardEntity.findById(cardId) ?: throw AssertionError("Card not found")
-
-                assertNull(card.firstActivationDate)
-                assertNull(card.totpSecret)
-            }
-        }
+        assertEquals(ActivationState.NOT_FOUND, activationResult.activationState)
+        assertNull(activationResult.totpSecret)
+    }
 
     @Test
-    fun `should return expired state when the card is expired`() =
-        JavalinTest.test(app) { _, client ->
-            val cardInfoHash = SampleCards.bavarianStandard().hash()
+    fun `should return wrong_secret state when the activation secret is incorrect`() {
+        val cardInfoHash = SampleCards.bavarianStandard().hash()
 
-            val rawActivationSecret = Random.nextBytes(20)
-            val activationSecretHash = hashActivationSecret(rawActivationSecret)
+        val rawActivationSecret = Random.nextBytes(20)
+        val activationSecretHash = hashActivationSecret(rawActivationSecret)
 
-            val cardId = TestData.createDynamicCard(
-                cardInfoHash,
-                activationSecretHash,
-                issuerId = eakRegionAdmin.id,
-                expirationDay = LocalDate.now().minusDays(1L).toEpochDay(),
-            )
+        val cardId = TestData.createDynamicCard(
+            cardInfoHash,
+            activationSecretHash,
+            issuerId = eakRegionAdmin.id,
+        )
 
-            val mutation = activateCardMutation(
-                cardInfoHashBase64 = cardInfoHash.encodeBase64(),
-                activationSecretBase64 = rawActivationSecret.encodeBase64(),
-            )
-            val response = post(client, mutation)
+        val mutation = activateCardMutation(
+            cardInfoHashBase64 = cardInfoHash.encodeBase64(),
+            activationSecretBase64 = Random.nextBytes(20).encodeBase64(),
+        )
+        val response = postGraphQL(mutation)
 
-            assertEquals(200, response.code)
+        assertEquals(HttpStatus.OK, response.statusCode)
 
-            val activationResult = response.toDataObject<CardActivationResultModel>()
+        val activationResult = response.toDataObject<CardActivationResultModel>()
 
-            assertEquals(ActivationState.EXPIRED, activationResult.activationState)
-            assertNull(activationResult.totpSecret)
+        assertEquals(ActivationState.WRONG_SECRET, activationResult.activationState)
+        assertNull(activationResult.totpSecret)
 
-            transaction {
-                val card = CardEntity.findById(cardId) ?: throw AssertionError("Card not found")
+        transaction {
+            val card = CardEntity.findById(cardId) ?: fail("Card not found")
 
-                assertNull(card.firstActivationDate)
-                assertNull(card.totpSecret)
-            }
+            assertNull(card.firstActivationDate)
+            assertNull(card.totpSecret)
         }
+    }
 
     @Test
-    fun `should return failed state when the card is revoked`() =
-        JavalinTest.test(app) { _, client ->
-            val cardInfoHash = SampleCards.bavarianStandard().hash()
+    fun `should return expired state when the card is expired`() {
+        val cardInfoHash = SampleCards.bavarianStandard().hash()
 
-            val rawActivationSecret = Random.nextBytes(20)
-            val activationSecretHash = hashActivationSecret(rawActivationSecret)
+        val rawActivationSecret = Random.nextBytes(20)
+        val activationSecretHash = hashActivationSecret(rawActivationSecret)
 
-            val cardId = TestData.createDynamicCard(
-                cardInfoHash,
-                activationSecretHash,
-                issuerId = eakRegionAdmin.id,
-                revoked = true,
-            )
+        val cardId = TestData.createDynamicCard(
+            cardInfoHash,
+            activationSecretHash,
+            issuerId = eakRegionAdmin.id,
+            expirationDay = LocalDate.now().minusDays(1L).toEpochDay(),
+        )
 
-            val mutation = activateCardMutation(
-                cardInfoHashBase64 = cardInfoHash.encodeBase64(),
-                activationSecretBase64 = rawActivationSecret.encodeBase64(),
-            )
-            val response = post(client, mutation)
+        val mutation = activateCardMutation(
+            cardInfoHashBase64 = cardInfoHash.encodeBase64(),
+            activationSecretBase64 = rawActivationSecret.encodeBase64(),
+        )
+        val response = postGraphQL(mutation)
 
-            assertEquals(200, response.code)
+        assertEquals(HttpStatus.OK, response.statusCode)
 
-            val activationResult = response.toDataObject<CardActivationResultModel>()
+        val activationResult = response.toDataObject<CardActivationResultModel>()
 
-            assertEquals(ActivationState.REVOKED, activationResult.activationState)
-            assertNull(activationResult.totpSecret)
+        assertEquals(ActivationState.EXPIRED, activationResult.activationState)
+        assertNull(activationResult.totpSecret)
 
-            transaction {
-                val card = CardEntity.findById(cardId) ?: throw AssertionError("Card not found")
+        transaction {
+            val card = CardEntity.findById(cardId) ?: fail("Card not found")
 
-                assertNull(card.firstActivationDate)
-                assertNull(card.totpSecret)
-            }
+            assertNull(card.firstActivationDate)
+            assertNull(card.totpSecret)
         }
+    }
 
     @Test
-    fun `should return successful activation result when the card has already been activated and overwrite = true`() =
-        JavalinTest.test(app) { _, client ->
-            val cardInfoHash = SampleCards.bavarianStandard().hash()
+    fun `should return revoked state when the card is revoked`() {
+        val cardInfoHash = SampleCards.bavarianStandard().hash()
 
-            val rawActivationSecret = Random.nextBytes(20)
-            val activationSecretHash = hashActivationSecret(rawActivationSecret)
+        val rawActivationSecret = Random.nextBytes(20)
+        val activationSecretHash = hashActivationSecret(rawActivationSecret)
 
-            val firstActivationDate = LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC)
+        val cardId = TestData.createDynamicCard(
+            cardInfoHash,
+            activationSecretHash,
+            issuerId = eakRegionAdmin.id,
+            revoked = true,
+        )
 
-            val cardId = TestData.createDynamicCard(
-                cardInfoHash,
-                activationSecretHash,
-                issuerId = eakRegionAdmin.id,
-                totpSecret = Random.nextBytes(20),
-                firstActivationDate = firstActivationDate,
-            )
+        val mutation = activateCardMutation(
+            cardInfoHashBase64 = cardInfoHash.encodeBase64(),
+            activationSecretBase64 = rawActivationSecret.encodeBase64(),
+        )
+        val response = postGraphQL(mutation)
 
-            val mutation = activateCardMutation(
-                cardInfoHashBase64 = cardInfoHash.encodeBase64(),
-                activationSecretBase64 = rawActivationSecret.encodeBase64(),
-                overwrite = true,
-            )
-            val response = post(client, mutation)
+        assertEquals(HttpStatus.OK, response.statusCode)
 
-            assertEquals(200, response.code)
+        val activationResult = response.toDataObject<CardActivationResultModel>()
 
-            val activationResult = response.toDataObject<CardActivationResultModel>()
+        assertEquals(ActivationState.REVOKED, activationResult.activationState)
+        assertNull(activationResult.totpSecret)
 
-            assertEquals(ActivationState.SUCCESS, activationResult.activationState)
-            assertNotNull(activationResult.totpSecret)
+        transaction {
+            val card = CardEntity.findById(cardId) ?: fail("Card not found")
 
-            transaction {
-                val card = CardEntity.findById(cardId) ?: throw AssertionError("Card not found")
-
-                // first activation date should not change
-                assertEquals(firstActivationDate, card.firstActivationDate)
-                // new totp secret should be generated
-                assertEquals(activationResult.totpSecret, card.totpSecret?.encodeBase64())
-            }
+            assertNull(card.firstActivationDate)
+            assertNull(card.totpSecret)
         }
+    }
 
     @Test
-    fun `should return did_not_overwrite_existing state if card has already been activated and overwrite = false`() =
-        JavalinTest.test(app) { _, client ->
-            val cardInfoHash = SampleCards.bavarianStandard().hash()
+    fun `should return successful activation result when the card has already been activated and overwrite = true`() {
+        val cardInfoHash = SampleCards.bavarianStandard().hash()
 
-            val rawActivationSecret = Random.nextBytes(20)
-            val activationSecretHash = hashActivationSecret(rawActivationSecret)
+        val rawActivationSecret = Random.nextBytes(20)
+        val activationSecretHash = hashActivationSecret(rawActivationSecret)
 
-            val firstActivationDate = LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC)
-            val firstTotpSecret = Random.nextBytes(20)
+        val firstActivationDate = LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC)
 
-            val cardId = TestData.createDynamicCard(
-                cardInfoHash,
-                activationSecretHash,
-                issuerId = eakRegionAdmin.id,
-                totpSecret = firstTotpSecret,
-                firstActivationDate = firstActivationDate,
-            )
+        val cardId = TestData.createDynamicCard(
+            cardInfoHash,
+            activationSecretHash,
+            issuerId = eakRegionAdmin.id,
+            totpSecret = Random.nextBytes(20),
+            firstActivationDate = firstActivationDate,
+        )
 
-            val mutation = activateCardMutation(
-                cardInfoHashBase64 = cardInfoHash.encodeBase64(),
-                activationSecretBase64 = rawActivationSecret.encodeBase64(),
-                overwrite = false,
-            )
-            val response = post(client, mutation)
+        val mutation = activateCardMutation(
+            cardInfoHashBase64 = cardInfoHash.encodeBase64(),
+            activationSecretBase64 = rawActivationSecret.encodeBase64(),
+            overwrite = true,
+        )
+        val response = postGraphQL(mutation)
 
-            assertEquals(200, response.code)
+        assertEquals(HttpStatus.OK, response.statusCode)
 
-            val activationResult = response.toDataObject<CardActivationResultModel>()
+        val activationResult = response.toDataObject<CardActivationResultModel>()
 
-            assertEquals(ActivationState.DID_NOT_OVERWRITE_EXISTING, activationResult.activationState)
-            assertNull(activationResult.totpSecret)
+        assertEquals(ActivationState.SUCCESS, activationResult.activationState)
+        assertNotNull(activationResult.totpSecret)
 
-            transaction {
-                val card = CardEntity.findById(cardId) ?: throw AssertionError("Card not found")
+        transaction {
+            val card = CardEntity.findById(cardId) ?: fail("Card not found")
 
-                // first activation date should not change
-                assertEquals(firstActivationDate, card.firstActivationDate)
-                // totp secret should not change
-                assertEquals(firstTotpSecret.encodeBase64(), card.totpSecret?.encodeBase64())
-            }
+            // first activation date should not change
+            assertEquals(firstActivationDate, card.firstActivationDate)
+            // new totp secret should be generated
+            assertEquals(activationResult.totpSecret, card.totpSecret?.encodeBase64())
         }
+    }
+
+    @Test
+    fun `should return did_not_overwrite_existing state if card has already been activated and overwrite = false`() {
+        val cardInfoHash = SampleCards.bavarianStandard().hash()
+
+        val rawActivationSecret = Random.nextBytes(20)
+        val activationSecretHash = hashActivationSecret(rawActivationSecret)
+
+        val firstActivationDate = LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC)
+        val firstTotpSecret = Random.nextBytes(20)
+
+        val cardId = TestData.createDynamicCard(
+            cardInfoHash,
+            activationSecretHash,
+            issuerId = eakRegionAdmin.id,
+            totpSecret = firstTotpSecret,
+            firstActivationDate = firstActivationDate,
+        )
+
+        val mutation = activateCardMutation(
+            cardInfoHashBase64 = cardInfoHash.encodeBase64(),
+            activationSecretBase64 = rawActivationSecret.encodeBase64(),
+            overwrite = false,
+        )
+        val response = postGraphQL(mutation)
+
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val activationResult = response.toDataObject<CardActivationResultModel>()
+
+        assertEquals(ActivationState.DID_NOT_OVERWRITE_EXISTING, activationResult.activationState)
+        assertNull(activationResult.totpSecret)
+
+        transaction {
+            val card = CardEntity.findById(cardId) ?: fail("Card not found")
+
+            // first activation date should not change
+            assertEquals(firstActivationDate, card.firstActivationDate)
+            // totp secret should not change
+            assertEquals(firstTotpSecret.encodeBase64(), card.totpSecret?.encodeBase64())
+        }
+    }
 
     private fun activateCardMutation(
         project: String = "bayern.ehrenamtskarte.app",
