@@ -1,4 +1,4 @@
-import CloudUploadIcon from '@mui/icons-material/CloudUpload'
+import { ArrowCircleUp } from '@mui/icons-material'
 import { Stack, styled } from '@mui/material'
 import { parse } from 'csv-parse/browser/esm/sync'
 import React, { ChangeEventHandler, ReactElement, useCallback, useRef } from 'react'
@@ -174,7 +174,7 @@ const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }:
     <Stack sx={{ flexGrow: 1, justifyContent: 'center' }}>
       <NonIdealState
         title={t('selectAFile')}
-        icon={<CloudUploadIcon color='warning' sx={{ fontSize: 48 }} />}
+        icon={<ArrowCircleUp color='warning' sx={{ fontSize: 56 }} />}
         description={fileSelectionContent}
       />
     </Stack>

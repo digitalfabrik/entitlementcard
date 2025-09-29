@@ -1,5 +1,4 @@
-import CloudUploadIcon from '@mui/icons-material/CloudUpload'
-import ErrorIcon from '@mui/icons-material/Error'
+import { ArrowCircleUp, Error } from '@mui/icons-material'
 import React, { ReactElement } from 'react'
 
 import CenteredCircularProgress from '../mui-modules/base/CenteredCircularProgress'
@@ -11,9 +10,9 @@ const FileInputStateIcon = ({ inputState }: { inputState: FileInputStateType }):
     return <CenteredCircularProgress />
   }
   if (inputState === 'error') {
-    return <ErrorIcon color='error' sx={{ fontSize: 48 }} />
+    return <Error color='error' sx={{ fontSize: 56 }} />
   }
-  return <CloudUploadIcon color='warning' sx={{ fontSize: 48 }} />
+  return <ArrowCircleUp color='warning' sx={{ fontSize: 56 }} />
 }
 
 export default FileInputStateIcon
