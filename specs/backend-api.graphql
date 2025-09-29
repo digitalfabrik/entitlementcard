@@ -1,5 +1,6 @@
 schema {
   query: Query
+  mutation: Mutation
 }
 
 "This directive allows results to be deferred during execution"
@@ -40,15 +41,58 @@ directive @specifiedBy(
     url: String!
   ) on SCALAR
 
+type CardActivationResultModel {
+  activationState: ActivationState!
+  activationTimeStamp: String!
+  totpSecret: String
+}
+
+type CardCreationResultModel {
+  dynamicActivationCode: DynamicActivationCodeResult!
+  staticVerificationCode: StaticVerificationCodeResult
+}
+
 type CardVerificationResultModel {
   extendable: Boolean!
   valid: Boolean!
   verificationTimeStamp: String!
 }
 
+type DynamicActivationCodeResult {
+  cardInfoHashBase64: String!
+  codeBase64: String!
+}
+
+type Mutation {
+  "Activate a dynamic entitlement card"
+  activateCard(activationSecretBase64: String!, cardInfoHashBase64: String!, overwrite: Boolean!, project: String!): CardActivationResultModel!
+  "Creates a new digital entitlementcard from self-service portal"
+  createCardFromSelfService(encodedCardInfo: String!, generateStaticCode: Boolean!, project: String!): CardCreationResultModel!
+  "Creates a new digital entitlementcard and returns it"
+  createCardsByCardInfos(applicationIdToMarkAsProcessed: Int, encodedCardInfos: [String!]!, generateStaticCodes: Boolean!): [CardCreationResultModel!]!
+  "Deletes a batch of cards (that have not yet been activated)"
+  deleteInactiveCards(cardInfoHashBase64List: [String!]!, regionId: Int!): Boolean!
+  "Sends a confirmation mail to the user when the card creation was successful"
+  sendCardCreationConfirmationMail(deepLink: String!, recipientAddress: String!, recipientName: String!, regionId: Int!): Boolean!
+}
+
 type Query {
   "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid, extendable and a timestamp of the last check"
   verifyCardInProjectV2(card: CardVerificationModelInput!, project: String!): CardVerificationResultModel!
+}
+
+type StaticVerificationCodeResult {
+  cardInfoHashBase64: String!
+  codeBase64: String!
+}
+
+enum ActivationState {
+  did_not_overwrite_existing
+  expired
+  not_found
+  revoked
+  success
+  wrong_secret
 }
 
 enum CodeType {

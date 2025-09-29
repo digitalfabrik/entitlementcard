@@ -11,6 +11,7 @@ import app.ehrenamtskarte.backend.graphql.cards.types.CardVerificationResultMode
 import app.ehrenamtskarte.backend.helper.TestData
 import app.ehrenamtskarte.backend.helper.error
 import app.ehrenamtskarte.backend.helper.toDataObject
+import app.ehrenamtskarte.backend.helper.toErrorObject
 import io.ktor.util.encodeBase64
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -156,7 +157,11 @@ internal class VerifyCardTest : IntegrationTest() {
         val response = postGraphQL(query)
 
         assertEquals(HttpStatus.OK, response.statusCode)
-        assertEquals("Project 'non-existent.sozialpass.app' not found", response.error()?.get("message")?.asText())
+
+        val error = response.toErrorObject()
+
+        assertEquals("Project 'non-existent.sozialpass.app' not found", error.message)
+        assertEquals("NOT_FOUND", error.extensions?.classification)
     }
 
     private fun createQuery(

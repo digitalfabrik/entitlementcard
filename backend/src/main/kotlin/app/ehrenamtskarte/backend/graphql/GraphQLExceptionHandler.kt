@@ -2,7 +2,7 @@ package app.ehrenamtskarte.backend.graphql
 
 import app.ehrenamtskarte.backend.graphql.exceptions.GraphQLBaseException
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
-import app.ehrenamtskarte.backend.shared.exceptions.ProjectNotFoundException
+import app.ehrenamtskarte.backend.shared.exceptions.NotFoundException
 import app.ehrenamtskarte.backend.shared.exceptions.UnauthorizedException
 import graphql.GraphQLError
 import graphql.schema.DataFetchingEnvironment
@@ -21,7 +21,7 @@ class GraphQLExceptionHandler {
             is GraphQLBaseException -> {
                 ex.toError(env.executionStepInfo.path, env.field.sourceLocation)
             }
-            is ProjectNotFoundException -> buildError(env, ErrorType.NOT_FOUND, ex.message)
+            is NotFoundException -> buildError(env, ErrorType.NOT_FOUND, ex.message)
             is UnauthorizedException -> buildError(env, ErrorType.UNAUTHORIZED, ex.message)
             is ForbiddenException -> buildError(env, ErrorType.FORBIDDEN, ex.message)
             is IllegalArgumentException -> buildError(env, ErrorType.BAD_REQUEST, "Invalid argument: ${ex.message}")

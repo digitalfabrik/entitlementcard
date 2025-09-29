@@ -9,7 +9,10 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class CardsGraphQLConfiguration {
     @Bean
-    fun cardsGraphQlParams(cardQueryController: CardQueryController): GraphQLParams =
+    fun cardsGraphQlParams(
+        cardQueryController: CardQueryController,
+        cardMutationController: CardMutationController,
+    ): GraphQLParams =
         GraphQLParams(
             config = SchemaGeneratorConfig(
                 supportedPackages = listOf("app.ehrenamtskarte.backend.graphql.cards.types"),
@@ -19,7 +22,7 @@ class CardsGraphQLConfiguration {
                 // TopLevelObject(CardStatisticsQueryService()),
             ),
             mutations = listOf(
-                // TopLevelObject(cardMutationService),
+                TopLevelObject(cardMutationController),
             ),
         )
 }

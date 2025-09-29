@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.helper
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.treeToValue
@@ -32,3 +33,30 @@ inline fun <reified T> ResponseEntity<String>.toDataObject(): T {
  * Extracts the "errors" node from a GraphQL response if it exists
  */
 fun ResponseEntity<String>.error(): JsonNode? = this.json().get("errors")?.first()
+
+/**
+ * Deserializes the GraphQL error into a structured [GraphQLErrorModel] object.
+ * This provides a type-safe way to assert on error properties.
+ * Fails the test if the response does not contain a parsable error.
+ */
+fun ResponseEntity<String>.toErrorObject(): GraphQLErrorModel {
+    val errorNode = this.error() ?: fail("Response contains no errors")
+    return try {
+        objectMapper.treeToValue(errorNode)
+    } catch (e: Exception) {
+        fail("Failed to deserialize error node to GraphQLErrorModel: ${e.message}. Node was: $errorNode")
+    }
+}
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class GraphQLErrorModel(
+    val message: String,
+    val extensions: GraphQLErrorExtensions?,
+)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class GraphQLErrorExtensions(
+    val classification: String?,
+    val code: String?,
+    val reason: String?,
+)

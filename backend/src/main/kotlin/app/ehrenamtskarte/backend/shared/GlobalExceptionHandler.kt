@@ -1,11 +1,14 @@
-package app.ehrenamtskarte.backend.shared.exceptions
+package app.ehrenamtskarte.backend.shared
 
 import app.ehrenamtskarte.backend.routes.exception.UserImportException
+import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
+import app.ehrenamtskarte.backend.shared.exceptions.UnauthorizedException
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.servlet.resource.NoResourceFoundException
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
@@ -23,8 +26,8 @@ class GlobalExceptionHandler {
     fun handleForbiddenException(ex: ForbiddenException): ResponseEntity<Map<String, String?>> =
         ResponseEntity.status(HttpStatus.FORBIDDEN).body(mapOf("message" to ex.message))
 
-    @ExceptionHandler(ProjectNotFoundException::class)
-    fun handleProjectNotFoundException(ex: ProjectNotFoundException): ResponseEntity<Map<String, String?>> =
+    @ExceptionHandler(NoResourceFoundException::class)
+    fun handleNoResourceFound(ex: NoResourceFoundException): ResponseEntity<Map<String, String?>?> =
         ResponseEntity.status(HttpStatus.NOT_FOUND).body(mapOf("message" to ex.message))
 
     @ExceptionHandler(Exception::class)

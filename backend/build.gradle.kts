@@ -26,9 +26,13 @@ java {
     }
 }
 
-configurations {
-    compileOnly {
-        extendsFrom(configurations.annotationProcessor.get())
+protobuf {
+    generateProtoTasks {
+        all().configureEach {
+            builtins {
+                create("kotlin")
+            }
+        }
     }
 }
 
