@@ -1,14 +1,13 @@
 package app.ehrenamtskarte.backend
 
-import app.ehrenamtskarte.backend.common.database.Database
-import app.ehrenamtskarte.backend.common.webservice.GraphQLHandler
-import app.ehrenamtskarte.backend.common.webservice.WebService
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.Environment
-import app.ehrenamtskarte.backend.migration.MigrationUtils
-import app.ehrenamtskarte.backend.migration.database.Migrations
-import app.ehrenamtskarte.backend.stores.importer.Importer
-import app.ehrenamtskarte.backend.stores.importer.toImportConfig
+import app.ehrenamtskarte.backend.db.Database
+import app.ehrenamtskarte.backend.db.entities.Migrations
+import app.ehrenamtskarte.backend.db.migration.MigrationUtils
+import app.ehrenamtskarte.backend.graphql.GraphQLHandler
+import app.ehrenamtskarte.backend.import.stores.Importer
+import app.ehrenamtskarte.backend.import.stores.toImportConfig
 import com.expediagroup.graphql.generator.extensions.print
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.Context
@@ -56,6 +55,7 @@ class Entry : CliktCommand() {
     private val postgresPassword by option()
     private val geocoding by option().choice("true", "false").convert { it.toBoolean() }
     private val geocodingHost by option()
+    private val disableMailService by option().choice("true", "false").convert { it.toBoolean() }
 
     override fun run() {
         val backendConfiguration = BackendConfiguration.load(
@@ -93,6 +93,7 @@ class Entry : CliktCommand() {
                 enabled = geocoding ?: backendConfiguration.geocoding.enabled,
                 host = geocodingHost ?: backendConfiguration.geocoding.host,
             ),
+            disableMailService = disableMailService ?: backendConfiguration.disableMailService,
         )
     }
 }

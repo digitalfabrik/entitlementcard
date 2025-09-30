@@ -1,15 +1,25 @@
 # Domains and Projects
 
-Several domains are used for the entitlementcard project.
+Several production domains are used for the entitlementcard project:
 
 - `tiles.entitlementcard.app` - Tile server
 - `api.entitlementcard.app` - Backend server
-- `apt.entitlementcard.app` - SSH server for deployment
-- `druckerei.entitlementcard.app` - Web server for `administration`
+- `entitlementcard.tuerantuer.org:/srv/local-apt-repository/` - SFTP directory for deployment
 
-All of the above domains point to the same production server. This should not be used for development. It maybe used for showcasing the app though. A special environment can be used for showcasing. 
+Several staging domains are used for the entitlementcard project:
 
-In the following the available environments and their domains are listed.
+- `tiles.staging.entitlementcard.app` - Tile server
+- `api.staging.entitlementcard.app` - Backend server
+- `entitlementcard-test.tuerantuer.org:/srv/local-apt-repository` - SFTP directory for deployment
+
+Administration domains
+
+- [KoblenzPass Staging](https://staging.koblenz.sozialpass.app/)
+- [KoblenzPass Production](https://koblenz.sozialpass.app/)
+- [NürnbergPass Staging](https://staging.nuernberg.sozialpass.app/)
+- [NürnbergPass Production](https://nuernberg.sozialpass.app/)
+- [Ehrenamtskarte Bayern Staging](https://staging.bayern.ehrenamtskarte.app/)
+- [Ehrenamtskarte Bayern Production](https://bayern.ehrenamtskarte.app/)
 
 ## Project IDs
 

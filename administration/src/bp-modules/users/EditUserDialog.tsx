@@ -1,4 +1,6 @@
-import { Button, Callout, Checkbox, Classes, Dialog, FormGroup, InputGroup } from '@blueprintjs/core'
+import { Callout, Checkbox, Classes, Dialog, FormGroup, InputGroup } from '@blueprintjs/core'
+import { Edit } from '@mui/icons-material'
+import { Button } from '@mui/material'
 import React, { ReactElement, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -144,7 +146,9 @@ const EditUserDialog = ({
         </div>
         <div className={Classes.DIALOG_FOOTER}>
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button type='submit' intent='primary' text={t('editUser')} icon='edit' loading={loading} />
+            <Button type='submit' startIcon={<Edit />} loading={loading}>
+              {t('saveUser')}
+            </Button>
           </div>
         </div>
       </form>

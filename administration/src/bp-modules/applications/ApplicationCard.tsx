@@ -137,15 +137,13 @@ const RejectionDialog = (props: {
       </DialogContent>
       <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
         <Button
-          variant='outlined'
-          color='default.dark'
           onClick={() => {
             setReason(null)
             props.onCancel()
           }}
           disabled={props.loading}
           startIcon={<Close />}>
-          {t('misc:cancel')}
+          {t('rejectionCancelButton')}
         </Button>
         <Button
           variant='contained'
@@ -181,7 +179,6 @@ const ButtonsApplicationPending = (props: {
         {t('applicationApprove')}
       </Button>
       <Button
-        variant='outlined'
         startIcon={<CancelOutlined />}
         color='error'
         disabled={props.disabled}
