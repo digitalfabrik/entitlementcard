@@ -1,14 +1,15 @@
-import { Callout, Checkbox } from '@blueprintjs/core'
 import { PersonRemove } from '@mui/icons-material'
-import { Stack } from '@mui/material'
-import React, { ReactElement, useContext } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Box, Stack, Typography } from '@mui/material'
+import React, { ReactElement, useContext, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 
 import { AuthContext } from '../../AuthProvider'
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { Administrator, useDeleteAdministratorMutation } from '../../generated/graphql'
 import ConfirmDialog from '../../mui-modules/application/ConfirmDialog'
+import AlertBox from '../../mui-modules/base/AlertBox'
+import BaseCheckbox from '../../mui-modules/base/BaseCheckbox'
 import { useAppToaster } from '../AppToaster'
 
 const DeleteUserDialog = ({
@@ -23,6 +24,7 @@ const DeleteUserDialog = ({
   const appToaster = useAppToaster()
   const { signOut } = useContext(AuthContext)
   const actingAdminId = useContext(WhoAmIContext).me?.id
+  const [deleteWarningConfirmed, setDeleteWarningConfirmed] = useState(false)
   const { t } = useTranslation('users')
 
   const [deleteAdministrator, { loading }] = useDeleteAdministratorMutation({
@@ -32,12 +34,8 @@ const DeleteUserDialog = ({
     },
     onCompleted: () => {
       appToaster?.show({ intent: 'success', message: t('deleteUserSuccess') })
-      if (selectedUser?.id === actingAdminId) {
-        signOut()
-      } else {
-        onClose()
-        onSuccess()
-      }
+      onClose()
+      onSuccess()
     },
   })
 
@@ -52,26 +50,50 @@ const DeleteUserDialog = ({
         adminId: selectedUser.id,
       },
     })
+
+    if (selectedUser.id === actingAdminId) {
+      signOut()
+    }
   }
+
+  const alertBoxContent = (
+    <Box sx={{ px: 1, paddingTop: 1 }}>
+      {' '}
+      <Typography variant='body1' fontWeight='bold'>
+        {t('deleteOwnAccountWarning')}
+      </Typography>{' '}
+      <Typography variant='body1'>{t('deleteOwnAccountWarningExplanation')}</Typography>
+      <BaseCheckbox
+        checked={deleteWarningConfirmed}
+        onChange={setDeleteWarningConfirmed}
+        required
+        label={t('ownAccountWarningConfirmation')}
+        hasError={false}
+        errorMessage={undefined}
+      />
+    </Box>
+  )
 
   return (
     <ConfirmDialog
       open={selectedUser !== null}
-      title={t('deleteUserConfirmPrompt', { mail: selectedUser?.email })}
+      title={t('deleteUserConfirmPrompt')}
       id='delete-user-dialog'
       onClose={onClose}
       color='error'
       onConfirm={deleteUser}
       loading={loading}
+      actionDisabled={selectedUser?.id === actingAdminId && !deleteWarningConfirmed}
       confirmButtonIcon={<PersonRemove />}
       confirmButtonText={t('deleteUser')}>
-      <Stack>
-        {t('deleteUserIrrevocableConfirmPrompt', { mail: selectedUser?.email })}
+      <Stack gap={2}>
+        <Box>
+          <Typography variant='body1'>
+            <Trans i18nKey='users:deleteUserIrrevocableConfirmPrompt' values={{ mail: selectedUser?.email }} />
+          </Typography>
+        </Box>
         {selectedUser?.id !== actingAdminId ? null : (
-          <Callout intent='danger' style={{ marginTop: '16px' }}>
-            <b>{t('deleteOwnAccountWarning')}</b> {t('deleteOwnAccountWarningExplanation')}
-            <Checkbox required>{t('ownAccountWarningConfirmation')}</Checkbox>
-          </Callout>
+          <AlertBox sx={{ margin: 0 }} severity='error' description={alertBoxContent} />
         )}
       </Stack>
     </ConfirmDialog>

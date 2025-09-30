@@ -1,8 +1,10 @@
-import { Alert, AlertColor, AlertTitle, Button } from '@mui/material'
+import { Alert, AlertColor, AlertTitle, Button, SxProps } from '@mui/material'
+import { Theme } from '@mui/system'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 type AlertBoxProps = {
+  sx?: SxProps<Theme>
   severity?: AlertColor
   title?: string
   description?: string | ReactElement
@@ -11,6 +13,7 @@ type AlertBoxProps = {
 }
 
 const AlertBox = ({
+  sx,
   severity = 'success',
   title,
   description,
@@ -24,16 +27,19 @@ const AlertBox = ({
       data-testid='alert-box'
       severity={severity}
       variant='outlined'
-      sx={theme => ({
+      sx={{
         margin: 'auto',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         maxWidth: '900px',
-        [theme.breakpoints.down('md')]: {
-          margin: '5px',
-        },
-      })}
+        '&': theme => ({
+          [theme.breakpoints.down('md')]: {
+            margin: '5px',
+          },
+        }),
+        ...sx,
+      }}
       action={
         onAction ? (
           <Button variant='outlined' size='small' onClick={() => onAction()}>
