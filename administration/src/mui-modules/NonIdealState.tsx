@@ -8,7 +8,7 @@ const NonIdealState = ({
 }: {
   title: string
   icon: ReactElement
-  description: string
+  description: string | ReactElement
 }): ReactElement => {
   const theme = useTheme()
 

@@ -21,7 +21,7 @@ const ApplicationStatusHelpButton = (): ReactElement => {
         </Typography>
         <Description>
           <li>
-            <b>{t('statusBarAll')}:</b>
+            <b>{t('statusBarAccepted')}:</b>
             <Description>
               {t('acceptedDescription')}
               <br />

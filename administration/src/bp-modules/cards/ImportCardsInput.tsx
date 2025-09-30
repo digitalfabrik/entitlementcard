@@ -1,11 +1,11 @@
-import { NonIdealState } from '@blueprintjs/core'
+import { Stack, styled } from '@mui/material'
 import React, { ChangeEvent, ReactElement, useCallback, useContext, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
-import styled from 'styled-components'
 
 import { Card, initializeCardFromCSV } from '../../cards/Card'
 import { Region } from '../../generated/graphql'
+import NonIdealState from '../../mui-modules/NonIdealState'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { getCsvHeaders } from '../../project-configs/helper'
 import { useAppToaster } from '../AppToaster'
@@ -15,16 +15,9 @@ import convertFreinetImport from '../util/convertFreinetImport'
 import ImportCardsRequirementsText from './ImportCardsRequirementsText'
 import { ENTRY_LIMIT, FILE_SIZE_LIMIT_MEGA_BYTES } from './constants'
 
-const CardImportInputContainer = styled.div`
+const CardImportInputContainer = styled('div')`
   display: flex;
   align-items: center;
-`
-
-const InputContainer = styled(NonIdealState)`
-  display: flex;
-  align-items: center;
-  flex-grow: 1;
-  justify-content: center;
 `
 
 const defaultExtensionsByMIMEType = {
@@ -119,23 +112,23 @@ const ImportCardsInput = ({ setCards, region }: ImportCardsInputProps): ReactEle
     reader.readAsText(file)
   }
 
+  const fileSelectionContent = (
+    <>
+      <ImportCardsRequirementsText csvHeaders={csvHeaders} isFreinetFormat={isFreinetFormat} />
+      <CardImportInputContainer>
+        <input data-testid='file-upload' ref={fileInput} accept='.csv, text/csv' type='file' onInput={onInputChange} />
+      </CardImportInputContainer>
+    </>
+  )
+
   return (
-    <InputContainer
-      title={t('selectAFile')}
-      icon={<FileInputStateIcon inputState={inputState} />}
-      description={<ImportCardsRequirementsText csvHeaders={csvHeaders} isFreinetFormat={isFreinetFormat} />}
-      action={
-        <CardImportInputContainer>
-          <input
-            data-testid='file-upload'
-            ref={fileInput}
-            accept='.csv, text/csv'
-            type='file'
-            onInput={onInputChange}
-          />
-        </CardImportInputContainer>
-      }
-    />
+    <Stack sx={{ flexGrow: 1, justifyContent: 'center' }}>
+      <NonIdealState
+        icon={<FileInputStateIcon inputState={inputState} />}
+        title={t('selectAFile')}
+        description={fileSelectionContent}
+      />
+    </Stack>
   )
 }
 

@@ -55,6 +55,7 @@ class Entry : CliktCommand() {
     private val postgresPassword by option()
     private val geocoding by option().choice("true", "false").convert { it.toBoolean() }
     private val geocodingHost by option()
+    private val disableMailService by option().choice("true", "false").convert { it.toBoolean() }
 
     override fun run() {
         val backendConfiguration = BackendConfiguration.load(
@@ -92,6 +93,7 @@ class Entry : CliktCommand() {
                 enabled = geocoding ?: backendConfiguration.geocoding.enabled,
                 host = geocodingHost ?: backendConfiguration.geocoding.host,
             ),
+            disableMailService = disableMailService ?: backendConfiguration.disableMailService,
         )
     }
 }
