@@ -44,7 +44,6 @@ const CardSelfServiceForm = ({
   const [_, setSearchParams] = useSearchParams()
   const cardValid = isValid(card, projectConfig.card, { expirationDateNullable: true })
   const appToaster = useAppToaster()
-  const showErrorMessage = formSendAttempt
   const { viewportSmall } = useWindowDimensions()
 
   const createKoblenzPass = async () => {
@@ -71,9 +70,10 @@ const CardSelfServiceForm = ({
           label={t('firstNameLastName')}
           placeholder='Erika Musterfrau'
           autoFocus
+          forceError={formSendAttempt}
           value={card.fullName}
           onChange={fullName => updateCard({ fullName: removeMultipleSpaces(fullName) })}
-          showError={!isFullNameValid(card) && showErrorMessage}
+          showError={!isFullNameValid(card)}
           inputProps={{
             sx: { paddingRight: 0 },
             endAdornment: (
@@ -86,7 +86,7 @@ const CardSelfServiceForm = ({
           }}
           errorMessage={getFullNameValidationErrorMessage(card.fullName)}
         />
-        <ExtensionForms card={card} updateCard={updateCard} showRequired={formSendAttempt} />
+        <ExtensionForms card={card} updateCard={updateCard} forceError={formSendAttempt} />
         <IconTextButton onClick={() => setOpenReferenceInformation(true)}>
           <InfoOutlined />
           {t('whereToFindReferenceNumber')}

@@ -8,6 +8,8 @@ type CardTextFieldProps = {
   label: string
   placeholder: string
   autoFocus?: boolean
+  // shows error message even component was not touched yet
+  forceError?: boolean
   value: string
   onChange: (value: string) => void
   showError: boolean
@@ -25,9 +27,10 @@ const CardTextField = ({
   showError,
   errorMessage,
   inputProps,
+  forceError = false,
 }: CardTextFieldProps): ReactElement => {
   const [touched, setTouched] = useState(false)
-  const showErrorAfterTouched = touched && showError
+  const showErrorAfterTouched = (touched || forceError) && showError
   return (
     <TextField
       id={id}

@@ -10,7 +10,7 @@ describe('NuernbergPassIdExtension', () => {
     value: { nuernbergPassId: null },
     setValue: mockSetValue,
     isValid: true,
-    showRequired: true,
+    forceError: true,
   }
 
   beforeEach(() => {
