@@ -1,25 +1,26 @@
 package app.ehrenamtskarte.backend.graphql.auth
 
 import app.ehrenamtskarte.backend.db.repositories.AdministratorsRepository
-import app.ehrenamtskarte.backend.graphql.context
-import app.ehrenamtskarte.backend.graphql.getAuthContext
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidCredentialsException
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidCredentialsException
 import app.ehrenamtskarte.backend.shared.exceptions.UnauthorizedException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.MutationMapping
+import org.springframework.stereotype.Controller
 
-@Suppress("unused")
-class ChangePasswordMutationService {
+@Controller
+class ChangePasswordMutationController {
     @GraphQLDescription("Changes an administrator's password")
+    @MutationMapping
     fun changePassword(
-        email: String,
-        currentPassword: String,
-        newPassword: String,
+        @Argument email: String,
+        @Argument currentPassword: String,
+        @Argument newPassword: String,
         dfe: DataFetchingEnvironment,
     ): Boolean {
-        val context = dfe.graphQlContext.context
-        val authContext = context.getAuthContext()
+        val authContext = dfe.requireAuthContext()
 
         transaction {
             val administratorEntity =

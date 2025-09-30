@@ -9,15 +9,7 @@ data class GraphQLParams(
     val queries: List<TopLevelObject>,
     val mutations: List<TopLevelObject> = emptyList(),
     val subscriptions: List<TopLevelObject> = emptyList(),
-) {
-    infix fun stitch(other: GraphQLParams): GraphQLParams =
-        GraphQLParams(
-            config + other.config,
-            queries + other.queries,
-            mutations + other.mutations,
-            subscriptions + other.subscriptions,
-        )
-}
+)
 
 infix operator fun SchemaGeneratorConfig.plus(other: SchemaGeneratorConfig): SchemaGeneratorConfig {
     // This is quite hacky, but we can migrate to graphql-kotlin-federation once we need more than one custom hook

@@ -4,20 +4,27 @@ import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
 import app.ehrenamtskarte.backend.db.entities.Administrators
 import app.ehrenamtskarte.backend.db.entities.ProjectEntity
 import app.ehrenamtskarte.backend.db.entities.Projects
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidPasswordResetLinkException
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.PasswordResetKeyExpiredException
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidPasswordResetLinkException
+import app.ehrenamtskarte.backend.graphql.exceptions.PasswordResetKeyExpiredException
 import app.ehrenamtskarte.backend.shared.crypto.PasswordCrypto
 import app.ehrenamtskarte.backend.shared.exceptions.ProjectNotFoundException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.not
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.stereotype.Controller
 import java.time.Instant
 
-@Suppress("unused")
-class ResetPasswordQueryService {
+@Controller
+class ResetPasswordQueryController {
     @GraphQLDescription("Verify password reset link")
-    fun checkPasswordResetLink(project: String, resetKey: String): Boolean =
+    @QueryMapping
+    fun checkPasswordResetLink(
+        @Argument project: String,
+        @Argument resetKey: String,
+    ): Boolean =
         transaction {
             val projectEntity =
                 ProjectEntity.find { Projects.project eq project }.firstOrNull() ?: throw ProjectNotFoundException(
