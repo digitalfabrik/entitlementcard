@@ -93,7 +93,7 @@ const EditUserDialog = ({
     <ConfirmDialog
       open={selectedUser !== null}
       onClose={onClose}
-      title={t('editUserWithMail', { mail: selectedUser?.email })}
+      title={t('editUser')}
       id='edit-user-dialog'
       onConfirm={onEditUser}
       loading={loading}
@@ -118,9 +118,7 @@ const EditUserDialog = ({
           <RoleSelector role={role} onChange={setRole} hideProjectAdmin={regionIdOverride !== null} />
         </FormGroup>
         {regionIdOverride !== null || role === null || !rolesWithRegion.includes(role) ? null : (
-          <FormGroup label={t('region')}>
-            <RegionSelector onSelect={region => setRegionId(region.id)} selectedId={regionId} />
-          </FormGroup>
+          <RegionSelector onSelect={region => setRegionId(region.id)} selectedId={regionId} />
         )}
         <Callout intent='primary'>
           {selectedUser?.id === me?.id ? (

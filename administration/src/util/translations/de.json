@@ -537,7 +537,7 @@
     "deleteOwnAccountWarning": "Sie löschen Ihr eigenes Konto.",
     "deleteOwnAccountWarningExplanation": "Sie werden ausgeloggt und können sich nicht mehr einloggen.",
     "ownAccountWarningConfirmation": "Ich bestätige, dass ich diesen Warnhinweis gelesen habe.",
-    "editUserWithMail": "Benutzer '{{mail}}' bearbeiten",
+    "editUser": "Benutzer bearbeiten",
     "saveUser": "Benutzerdaten speichern",
     "editUserSuccess": "Benutzer erfolgreich bearbeitet.",
     "edit": "Bearbeiten",
