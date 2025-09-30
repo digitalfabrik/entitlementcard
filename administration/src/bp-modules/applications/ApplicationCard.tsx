@@ -17,7 +17,6 @@ import {
   Autocomplete,
   Box,
   Button,
-  CircularProgress,
   Divider,
   InputAdornment,
   Stack,
@@ -75,11 +74,6 @@ const DeleteDialog = (props: {
       actionDisabled={props.deleteResult.loading || props.deleteResult.called}
       color='error'>
       <Stack direction='row' sx={{ gap: 2, alignItems: 'center' }}>
-        {props.deleteResult.loading || props.deleteResult.called ? (
-          <CircularProgress size={64} />
-        ) : (
-          <Delete sx={{ fontSize: '64px' }} color='error' />
-        )}
         {t('deleteApplicationConfirmationPrompt')}
       </Stack>
     </ConfirmDialog>
