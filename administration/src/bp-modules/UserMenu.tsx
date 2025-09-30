@@ -81,7 +81,7 @@ const UserMenu = ({ onSignOut }: UserMenuProps): ReactElement => {
   return (
     <>
       <Popover content={userMenuContent} placement='bottom' matchTargetWidth isOpen={isOpen} onInteraction={setIsOpen}>
-        <Button startIcon={<AccountCircle />} endIcon={isOpen ? <ArrowDropDown /> : <ArrowDropUp />}>
+        <Button startIcon={<AccountCircle />} endIcon={isOpen ? <ArrowDropUp /> : <ArrowDropDown />}>
           {email}
         </Button>
       </Popover>

@@ -1,6 +1,5 @@
-import { Classes, InputGroup } from '@blueprintjs/core'
-import { Button, FormControl, FormLabel, Stack } from '@mui/material'
-import React, { ChangeEvent, ReactElement } from 'react'
+import { Box, Button, FormControl, InputLabel, Stack, TextField } from '@mui/material'
+import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 
@@ -28,33 +27,42 @@ const LoginForm = ({
         event.preventDefault()
         onSubmit()
       }}>
-      <Stack sx={{ gap: 2 }}>
-        <FormControl fullWidth>
-          <FormLabel>{t('eMail')}</FormLabel>
-          <InputGroup
-            placeholder='erika.musterfrau@example.org'
-            autoFocus
-            autoComplete='on'
-            name='email'
-            value={email}
+      <Stack sx={{ gap: 2, marginY: 2 }}>
+        <TextField
+          placeholder='erika.musterfrau@example.org'
+          fullWidth
+          autoComplete='on'
+          autoFocus
+          type='email'
+          size='small'
+          label={t('eMail')}
+          value={email}
+          required
+          disabled={loading}
+          onChange={event => setEmail(event.target.value)}
+        />
+        <FormControl variant='outlined'>
+          <InputLabel required size='small'>
+            {t('password')}
+          </InputLabel>
+          <PasswordInput
+            label={t('password')}
+            placeholder='Passwort'
+            value={password}
             disabled={loading}
-            onChange={(event: ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)}
+            fullWidth
+            setValue={setPassword}
+            autoFocus={false}
           />
         </FormControl>
-        <FormControl fullWidth>
-          <FormLabel>{t('password')}</FormLabel>
-          <PasswordInput placeholder='Passwort' value={password} disabled={loading} setValue={setPassword} />
-        </FormControl>
-        <div
-          className={Classes.DIALOG_FOOTER_ACTIONS}
-          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Link to='/forgot-password'>
             <Button variant='text'>{t('forgotPassword')}</Button>
           </Link>
-          <Button type='submit' variant='contained' loading={loading}>
-            Anmelden
+          <Button type='submit' variant='contained' color='primary' loading={loading}>
+            {t('signIn')}
           </Button>
-        </div>
+        </Box>
       </Stack>
     </form>
   )
