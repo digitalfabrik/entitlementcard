@@ -1,25 +1,19 @@
-import { Callout, Checkbox, FormGroup, InputGroup } from '@blueprintjs/core'
 import { Edit } from '@mui/icons-material'
-import { Stack } from '@mui/material'
+import { Stack, Typography } from '@mui/material'
 import React, { ReactElement, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
-import styled from 'styled-components'
 
 import { WhoAmIContext } from '../../WhoAmIProvider'
+import CardTextField from '../../cards/extensions/components/CardTextField'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { Administrator, Role, useEditAdministratorMutation } from '../../generated/graphql'
 import ConfirmDialog from '../../mui-modules/application/ConfirmDialog'
+import AlertBox from '../../mui-modules/base/AlertBox'
+import BaseCheckbox from '../../mui-modules/base/BaseCheckbox'
 import { useAppToaster } from '../AppToaster'
 import RegionSelector from './RegionSelector'
-import RoleHelpButton from './RoleHelpButton'
 import RoleSelector from './RoleSelector'
-
-const RoleFormGroupLabel = styled.span`
-  & span {
-    display: inline-block !important;
-  }
-`
 
 const EditUserDialog = ({
   selectedUser,
@@ -40,6 +34,7 @@ const EditUserDialog = ({
   const [email, setEmail] = useState('')
   const [role, setRole] = useState<Role | null>(null)
   const [regionId, setRegionId] = useState<number | null>(null)
+  const [notificationConfirmed, setNotificationConfirmed] = useState(false)
   const rolesWithRegion = [Role.RegionManager, Role.RegionAdmin]
 
   useEffect(() => {
@@ -88,6 +83,32 @@ const EditUserDialog = ({
       },
     })
   }
+  const showRegionSelector = regionIdOverride === null && role !== null && rolesWithRegion.includes(role)
+  const notificationShownAndNotConfirmed = selectedUser?.id === me?.id && !notificationConfirmed
+  const userEditDisabled =
+    !email || role === null || (showRegionSelector && regionId === null) || notificationShownAndNotConfirmed
+
+  const editUserAlertDescription = (
+    <>
+      {selectedUser?.id === me?.id ? (
+        <>
+          {t('youCanChangeYourOwnPassword')}{' '}
+          <Link to='/user-settings' target='_blank' rel='noreferrer'>
+            {t('userSettings')}
+          </Link>{' '}
+          {t('change')}.
+        </>
+      ) : (
+        <>
+          {t('userCanChangePassword')}{' '}
+          <Link to='/forgot-password' target='_blank' rel='noreferrer'>
+            {`${window.location.origin}/forgot-password`}
+          </Link>{' '}
+          {t('reset')}.
+        </>
+      )}
+    </>
+  )
 
   return (
     <ConfirmDialog
@@ -97,56 +118,44 @@ const EditUserDialog = ({
       id='edit-user-dialog'
       onConfirm={onEditUser}
       loading={loading}
-      actionDisabled={regionId === null && role !== null && rolesWithRegion.includes(role)}
+      actionDisabled={userEditDisabled}
       confirmButtonText={t('editUser')}
       confirmButtonIcon={<Edit />}>
-      <Stack>
-        <FormGroup label={t('eMail')}>
-          <InputGroup
-            value={email}
-            required
-            onChange={e => setEmail(e.target.value)}
-            type='email'
-            placeholder='erika.musterfrau@example.org'
-          />
-        </FormGroup>
-        <FormGroup
-          label={
-            <RoleFormGroupLabel>
-              {t('role')} <RoleHelpButton />
-            </RoleFormGroupLabel>
-          }>
-          <RoleSelector role={role} onChange={setRole} hideProjectAdmin={regionIdOverride !== null} />
-        </FormGroup>
-        {regionIdOverride !== null || role === null || !rolesWithRegion.includes(role) ? null : (
+      <Stack sx={{ paddingY: 1, gap: 2 }}>
+        <CardTextField
+          id='edit-user-name-input'
+          label={t('createUserEmailLabel')}
+          placeholder='erika.musterfrau@example.org'
+          value={email}
+          onChange={value => setEmail(value)}
+          showError={!email}
+          errorMessage={t('noUserNameError')}
+        />
+        <RoleSelector role={role} onChange={setRole} hideProjectAdmin={regionIdOverride !== null} />
+        {showRegionSelector ? (
           <RegionSelector onSelect={region => setRegionId(region ? region.id : null)} selectedId={regionId} />
-        )}
-        <Callout intent='primary'>
-          {selectedUser?.id === me?.id ? (
-            <>
-              {t('youCanChangeYourOwnPassword')}{' '}
-              <Link to='/user-settings`' target='_blank' rel='noreferrer'>
-                {t('userSettings')}
-              </Link>{' '}
-              {t('change')}.
-            </>
-          ) : (
-            <>
-              {t('userCanChangePassword')}{' '}
-              <Link to='/forgot-password' target='_blank' rel='noreferrer'>
-                {`${window.location.origin}/forgot-password`}
-              </Link>{' '}
-              {t('reset')}.
-            </>
-          )}
-        </Callout>
-        {selectedUser?.id !== me?.id ? null : (
-          <Callout intent='danger' style={{ marginTop: '16px' }}>
-            <b>{t('youEditYourOwnAccount')} </b>
-            {t('youMayCannotUndoThis')}
-            <Checkbox required>{t('ownAccountWarningConfirmation')}</Checkbox>
-          </Callout>
-        )}
+        ) : null}
+        <AlertBox sx={{ margin: 0 }} severity='info' description={editUserAlertDescription} />
+        {selectedUser?.id === me?.id ? (
+          <AlertBox
+            sx={{ margin: 0 }}
+            severity='error'
+            title={t('youEditYourOwnAccount')}
+            description={
+              <Typography variant='body2' component='div'>
+                {t('youMayCannotUndoThis')}
+                <BaseCheckbox
+                  label={t('ownAccountWarningConfirmation')}
+                  required
+                  checked={notificationConfirmed}
+                  onChange={setNotificationConfirmed}
+                  hasError={false}
+                  errorMessage={undefined}
+                />
+              </Typography>
+            }
+          />
+        ) : null}
       </Stack>
     </ConfirmDialog>
   )

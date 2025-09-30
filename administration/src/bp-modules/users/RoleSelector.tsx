@@ -1,10 +1,12 @@
-import { HTMLSelect } from '@blueprintjs/core'
-import React, { ReactElement, useContext } from 'react'
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
+import { Stack } from '@mui/system'
+import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Role } from '../../generated/graphql'
-import RenderGuard from '../../mui-modules/components/RenderGuard'
+import FormAlert from '../../mui-modules/base/FormAlert'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import RoleHelpButton from './RoleHelpButton'
 import roleToText from './utils/roleToText'
 
 const RoleSelector = ({
@@ -17,22 +19,34 @@ const RoleSelector = ({
   hideProjectAdmin: boolean
 }): ReactElement => {
   const { t } = useTranslation('users')
+  const [touched, setTouched] = useState(false)
   const config = useContext(ProjectConfigContext)
-
+  const showExternalVerifiedApiUser = config.applicationFeature?.applicationUsableWithApiToken && !hideProjectAdmin
+  const showError = role === null && touched
   return (
-    <HTMLSelect fill onChange={e => onChange((e.target.value as Role | null) ?? null)} value={role ?? ''} required>
-      <option value='' disabled>
-        {t('select')}
-      </option>
-      {hideProjectAdmin ? null : <option value={Role.ProjectAdmin}>{roleToText(Role.ProjectAdmin)}</option>}
-      <RenderGuard
-        allowedRoles={[Role.ProjectAdmin]}
-        condition={config.applicationFeature?.applicationUsableWithApiToken}>
-        <option value={Role.ExternalVerifiedApiUser}>{roleToText(Role.ExternalVerifiedApiUser)}</option>
-      </RenderGuard>
-      <option value={Role.RegionAdmin}>{roleToText(Role.RegionAdmin)}</option>
-      <option value={Role.RegionManager}>{roleToText(Role.RegionManager)}</option>
-    </HTMLSelect>
+    <>
+      <Stack direction='row'>
+        <FormControl fullWidth size='small' required>
+          <InputLabel shrink={role !== null}>{t('selectRole')}</InputLabel>
+          <Select
+            notched={role !== null}
+            size='small'
+            label={t('selectRole')}
+            value={role ?? ''}
+            onBlur={() => setTouched(true)}
+            onChange={e => onChange(e.target.value as Role)}>
+            {hideProjectAdmin ? null : <MenuItem value={Role.ProjectAdmin}>{roleToText(Role.ProjectAdmin)}</MenuItem>}
+            {showExternalVerifiedApiUser && (
+              <MenuItem value={Role.ExternalVerifiedApiUser}>{roleToText(Role.ExternalVerifiedApiUser)}</MenuItem>
+            )}
+            <MenuItem value={Role.RegionAdmin}>{roleToText(Role.RegionAdmin)}</MenuItem>
+            <MenuItem value={Role.RegionManager}>{roleToText(Role.RegionManager)}</MenuItem>
+          </Select>
+        </FormControl>
+        <RoleHelpButton />
+      </Stack>
+      {showError && <FormAlert errorMessage={t('noRoleError')} />}
+    </>
   )
 }
 export default RoleSelector

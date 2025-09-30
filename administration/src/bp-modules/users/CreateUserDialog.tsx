@@ -1,23 +1,17 @@
-import { Checkbox, FormGroup, InputGroup } from '@blueprintjs/core'
+import { FormGroup } from '@blueprintjs/core'
 import { PersonAdd } from '@mui/icons-material'
 import { Stack } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
+import CardTextField from '../../cards/extensions/components/CardTextField'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { Role, useCreateAdministratorMutation } from '../../generated/graphql'
 import ConfirmDialog from '../../mui-modules/application/ConfirmDialog'
+import BaseCheckbox from '../../mui-modules/base/BaseCheckbox'
 import { useAppToaster } from '../AppToaster'
 import RegionSelector from './RegionSelector'
-import RoleHelpButton from './RoleHelpButton'
 import RoleSelector from './RoleSelector'
-
-const RoleFormGroupLabel = styled.span`
-  & span {
-    display: inline-block !important;
-  }
-`
 
 const CreateUserDialog = ({
   isOpen,
@@ -67,13 +61,15 @@ const CreateUserDialog = ({
     return role !== null && rolesWithRegion.includes(role) ? regionId : null
   }
 
+  const showRegionSelector = regionIdOverride === null && role !== null && rolesWithRegion.includes(role)
+  const userCreationDisabled = !email || role === null || (showRegionSelector && regionId === null)
   return (
     <ConfirmDialog
       open={isOpen}
       title={t('addUser')}
       loading={loading}
       id='add-user-dialog'
-      actionDisabled={regionId === null && role !== null && rolesWithRegion.includes(role)}
+      actionDisabled={userCreationDisabled}
       onClose={clearAndCloseDialog}
       confirmButtonText={t('addUser')}
       confirmButtonIcon={<PersonAdd />}
@@ -87,35 +83,36 @@ const CreateUserDialog = ({
           },
         })
       }>
-      <Stack>
-        <FormGroup label={t('createUserEmailLabel')}>
-          <InputGroup
-            value={email}
-            required
-            onChange={e => setEmail(e.target.value)}
-            type='email'
-            placeholder='erika.musterfrau@example.org'
-          />
-        </FormGroup>
-        <FormGroup
-          label={
-            <RoleFormGroupLabel>
-              {t('role')} <RoleHelpButton />
-            </RoleFormGroupLabel>
-          }>
-          <RoleSelector role={role} onChange={setRole} hideProjectAdmin={regionIdOverride !== null} />
-        </FormGroup>
-        {regionIdOverride !== null || role === null || !rolesWithRegion.includes(role) ? null : (
-          <FormGroup label={t('region')}>
-            <RegionSelector onSelect={region => setRegionId(region ? region.id : null)} selectedId={regionId} />
-          </FormGroup>
-        )}
+      <Stack sx={{ paddingY: 1, gap: 2 }}>
+        <CardTextField
+          id='create-user-name-input'
+          label={t('createUserEmailLabel')}
+          placeholder='erika.musterfrau@example.org'
+          value={email}
+          onChange={value => setEmail(value)}
+          showError={!email}
+          errorMessage={t('noUserNameError')}
+        />
+        <RoleSelector role={role} onChange={setRole} hideProjectAdmin={regionIdOverride !== null} />
+
+        {showRegionSelector ? (
+          <RegionSelector onSelect={region => setRegionId(region ? region.id : null)} selectedId={regionId} />
+        ) : null}
         <FormGroup>
-          <Checkbox checked={sendWelcomeMail} onChange={e => setSendWelcomeMail(e.currentTarget.checked)}>
-            <b>{t('sendWelcomeMail')}</b>
-            <br />
-            {t('sendWelcomeMailExplanation')}
-          </Checkbox>
+          <BaseCheckbox
+            label={
+              <>
+                {' '}
+                <b>{t('sendWelcomeMail')}</b>
+                <br />
+                {t('sendWelcomeMailExplanation')}
+              </>
+            }
+            checked={sendWelcomeMail}
+            onChange={checked => setSendWelcomeMail(checked)}
+            hasError={false}
+            errorMessage={undefined}
+          />
         </FormGroup>
       </Stack>
     </ConfirmDialog>
