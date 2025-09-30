@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'package:clock/clock.dart';
 import 'package:crypto/crypto.dart';
+import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_parser.dart';
+import 'package:ehrenamtskarte/identification/qr_code_scanner/qr_code_processor.dart';
 import 'package:ehrenamtskarte/identification/util/canonical_json.dart';
+import 'package:ehrenamtskarte/identification/verification_workflow/verification_qr_code_processor.dart';
 import 'package:ehrenamtskarte/proto/card.pb.dart';
 import 'package:ehrenamtskarte/util/date_utils.dart';
 import 'package:ehrenamtskarte/util/json_canonicalizer.dart';
@@ -69,4 +72,17 @@ String? getFormattedBirthday(CardInfo cardInfo) {
   if (!cardInfo.extensions.hasExtensionBirthday()) return null;
   final birthday = dateFromEpochDaysUtc(cardInfo.extensions.extensionBirthday.birthday);
   return DateFormat('dd.MM.yyyy').format(birthday);
+}
+
+void assertConsistentCardInfo(CardInfo cardInfo) {
+  if (!cardInfo.hasFullName()) {
+    throw QrCodeFieldMissingException('fullName');
+  }
+  if (!cardInfo.hasExpirationDay() && cardInfo.extensions.extensionBavariaCardType.cardType != BavariaCardType.GOLD) {
+    throw QRCodeMissingExpiryException();
+  }
+  final expirationDate = getExpirationDay(cardInfo);
+  if (expirationDate != null && isCardExpired(cardInfo)) {
+    throw CardExpiredException(expirationDate);
+  }
 }
