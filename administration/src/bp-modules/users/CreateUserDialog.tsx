@@ -73,6 +73,7 @@ const CreateUserDialog = ({
       title={t('addUser')}
       loading={loading}
       id='add-user-dialog'
+      actionDisabled={regionId === null && role !== null && rolesWithRegion.includes(role)}
       onClose={clearAndCloseDialog}
       confirmButtonText={t('addUser')}
       confirmButtonIcon={<PersonAdd />}
@@ -106,7 +107,7 @@ const CreateUserDialog = ({
         </FormGroup>
         {regionIdOverride !== null || role === null || !rolesWithRegion.includes(role) ? null : (
           <FormGroup label={t('region')}>
-            <RegionSelector onSelect={region => setRegionId(region.id)} selectedId={regionId} />
+            <RegionSelector onSelect={region => setRegionId(region ? region.id : null)} selectedId={regionId} />
           </FormGroup>
         )}
         <FormGroup>

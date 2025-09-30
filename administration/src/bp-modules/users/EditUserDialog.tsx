@@ -97,6 +97,7 @@ const EditUserDialog = ({
       id='edit-user-dialog'
       onConfirm={onEditUser}
       loading={loading}
+      actionDisabled={regionId === null && role !== null && rolesWithRegion.includes(role)}
       confirmButtonText={t('editUser')}
       confirmButtonIcon={<Edit />}>
       <Stack>
@@ -118,7 +119,7 @@ const EditUserDialog = ({
           <RoleSelector role={role} onChange={setRole} hideProjectAdmin={regionIdOverride !== null} />
         </FormGroup>
         {regionIdOverride !== null || role === null || !rolesWithRegion.includes(role) ? null : (
-          <RegionSelector onSelect={region => setRegionId(region.id)} selectedId={regionId} />
+          <RegionSelector onSelect={region => setRegionId(region ? region.id : null)} selectedId={regionId} />
         )}
         <Callout intent='primary'>
           {selectedUser?.id === me?.id ? (
