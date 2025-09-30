@@ -1,6 +1,7 @@
 import { CheckCircleOutline, Close } from '@mui/icons-material'
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, SxProps } from '@mui/material'
 import { ButtonPropsColorOverrides } from '@mui/material/Button/Button'
+import { Theme } from '@mui/system'
 import { OverridableStringUnion } from '@mui/types'
 import React, { ReactElement, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -18,6 +19,8 @@ const ConfirmDialog = ({
   cancelButtonText,
   color = 'primary',
   confirmButtonIcon,
+  showCancelButton = true,
+  buttonSx,
 }: {
   actionDisabled?: boolean
   loading?: boolean
@@ -27,9 +30,12 @@ const ConfirmDialog = ({
   id: string
   onConfirm: () => void
   onClose: () => void
+  // TODO #2362 Set up MUI colors - remove this property
+  buttonSx?: SxProps<Theme>
   cancelButtonText?: string
   confirmButtonIcon?: ReactNode
   confirmButtonText?: string
+  showCancelButton?: boolean
   color?: OverridableStringUnion<
     'inherit' | 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning',
     ButtonPropsColorOverrides
@@ -42,10 +48,13 @@ const ConfirmDialog = ({
       <DialogTitle>{title}</DialogTitle>
       <DialogContent id={id}>{children}</DialogContent>
       <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
-        <Button onClick={onClose} variant='outlined' startIcon={<Close />}>
-          {cancelButtonText ?? t('cancel')}
-        </Button>
+        {showCancelButton && (
+          <Button onClick={onClose} variant='outlined' startIcon={<Close />}>
+            {cancelButtonText ?? t('cancel')}
+          </Button>
+        )}
         <Button
+          sx={buttonSx}
           variant='contained'
           color={color}
           loading={loading}
