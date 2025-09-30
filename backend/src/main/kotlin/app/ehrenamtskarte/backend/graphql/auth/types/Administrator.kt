@@ -1,8 +1,6 @@
 package app.ehrenamtskarte.backend.graphql.auth.types
 
 import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
-import app.ehrenamtskarte.backend.graphql.fromEnvironment
-import app.ehrenamtskarte.backend.graphql.regions.regionLoader
 import app.ehrenamtskarte.backend.graphql.regions.types.Region
 import graphql.schema.DataFetchingEnvironment
 import java.util.concurrent.CompletableFuture
@@ -27,6 +25,8 @@ class Administrator(
         if (regionId == null) {
             CompletableFuture.completedFuture(null)
         } else {
-            regionLoader.fromEnvironment(dataFetchingEnvironment).load(regionId)
+            dataFetchingEnvironment.getDataLoader<Int, Region>("REGION_LOADER")
+                ?.load(regionId)
+                ?: CompletableFuture.completedFuture(null)
         }
 }
