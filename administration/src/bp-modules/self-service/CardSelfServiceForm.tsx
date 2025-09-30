@@ -38,13 +38,12 @@ const CardSelfServiceForm = ({
   const projectConfig = useContext(ProjectConfigContext)
   const { t } = useTranslation('selfService')
   const [formSendAttempt, setFormSendAttempt] = useState(false)
-  const [touchedFullName, setTouchedFullName] = useState(false)
   const [openDataPrivacy, setOpenDataPrivacy] = useState<boolean>(false)
   const [openReferenceInformation, setOpenReferenceInformation] = useState<boolean>(false)
   const [_, setSearchParams] = useSearchParams()
   const cardValid = isValid(card, projectConfig.card, { expirationDateNullable: true })
   const appToaster = useAppToaster()
-  const showErrorMessage = touchedFullName || formSendAttempt
+  const showErrorMessage = formSendAttempt
   const { viewportSmall } = useWindowDimensions()
 
   const createKoblenzPass = async () => {
@@ -72,7 +71,6 @@ const CardSelfServiceForm = ({
           placeholder='Erika Musterfrau'
           autoFocus
           value={card.fullName}
-          onBlur={() => setTouchedFullName(true)}
           onChange={fullName => updateCard({ fullName: removeMultipleSpaces(fullName) })}
           showError={!isFullNameValid(card) && showErrorMessage}
           inputProps={{

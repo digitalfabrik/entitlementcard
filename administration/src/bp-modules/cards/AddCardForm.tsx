@@ -30,9 +30,7 @@ const AddCardForm = ({
 }): ReactElement => {
   const today = PlainDate.fromLocalDate(new Date())
   const { t } = useTranslation('cards')
-  const [touched, setTouched] = useState(false)
   const [touchedValidationDate, setTouchedValidationDate] = useState(false)
-  const showError = !isFullNameValid(card) && touched
   const showValidationDateError = !isExpirationDateValid(card) && touchedValidationDate
 
   return (
@@ -52,8 +50,7 @@ const AddCardForm = ({
             autoFocus
             value={card.fullName}
             onChange={fullName => updateCard({ fullName })}
-            showError={showError}
-            onBlur={() => setTouched(true)}
+            showError={!isFullNameValid(card)}
             inputProps={{
               inputProps: {
                 max: MAX_NAME_LENGTH,

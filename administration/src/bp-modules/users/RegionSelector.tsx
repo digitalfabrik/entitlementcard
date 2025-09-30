@@ -1,9 +1,10 @@
 import { Search } from '@mui/icons-material'
-import { Autocomplete, InputAdornment, TextField } from '@mui/material'
+import { Autocomplete, InputAdornment, Stack, TextField } from '@mui/material'
 import React, { ReactElement, useContext, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Region, useGetRegionsQuery } from '../../generated/graphql'
+import FormAlert from '../../mui-modules/base/FormAlert'
 import getQueryResult from '../../mui-modules/util/getQueryResult'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 
@@ -36,31 +37,35 @@ const RegionSelector = ({
   }
 
   return (
-    <Autocomplete
-      value={selectedId != null ? getTitle(regions.find(region => region.id === selectedId)) : null}
-      renderInput={params => (
-        <TextField
-          {...params}
-          variant='outlined'
-          label={t('region')}
-          required
-          slotProps={{
-            input: {
-              ...params.InputProps,
-              size: 'small',
-              startAdornment: (
-                <InputAdornment position='start'>
-                  <Search />
-                </InputAdornment>
-              ),
-            },
-          }}
-        />
-      )}
-      options={regions.map(region => getTitle(region))}
-      sx={{ marginY: 2 }}
-      onChange={(_, value) => onSelect(regions.find(region => getTitle(region) === value))}
-    />
+    <Stack>
+      <Autocomplete
+        value={selectedId != null ? getTitle(regions.find(region => region.id === selectedId)) : null}
+        renderInput={params => (
+          <TextField
+            sx={{ marginY: -2 }}
+            {...params}
+            variant='outlined'
+            label={t('region')}
+            required
+            slotProps={{
+              input: {
+                ...params.InputProps,
+                size: 'small',
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <Search />
+                  </InputAdornment>
+                ),
+              },
+            }}
+          />
+        )}
+        options={regions.map(region => getTitle(region))}
+        sx={{ marginY: 2 }}
+        onChange={(_, value) => onSelect(regions.find(region => getTitle(region) === value))}
+      />
+      {selectedId == null && <FormAlert errorMessage={t('noRegionError')} />}
+    </Stack>
   )
 }
 

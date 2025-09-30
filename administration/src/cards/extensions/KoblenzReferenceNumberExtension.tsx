@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import useWindowDimensions from '../../hooks/useWindowDimensions'
@@ -23,10 +23,9 @@ const KoblenzReferenceNumberExtensionForm = ({
   showRequired,
 }: ExtensionComponentProps<KoblenzReferenceNumberExtensionState>): ReactElement => {
   const { t } = useTranslation('extensions')
-  const [touched, setTouched] = useState(false)
   const { viewportSmall } = useWindowDimensions()
   const { koblenzReferenceNumber } = value
-  const showErrorMessage = touched || showRequired
+  const showErrorMessage = showRequired
   const clearInput = () => setValue({ koblenzReferenceNumber: '' })
 
   const getErrorMessage = (): string | null => {
@@ -49,7 +48,6 @@ const KoblenzReferenceNumberExtensionForm = ({
       label={t('referenceNrLabel')}
       value={koblenzReferenceNumber}
       onChange={koblenzReferenceNumber => setValue({ koblenzReferenceNumber })}
-      onBlur={() => setTouched(true)}
       showError={!isValid && showErrorMessage}
       inputProps={{
         sx: { paddingRight: 0 },
