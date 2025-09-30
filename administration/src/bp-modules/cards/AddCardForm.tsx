@@ -84,7 +84,7 @@ const AddCardForm = ({
               )}
             </FormGroup>
           )}
-          <ExtensionForms card={card} updateCard={updateCard} showRequired={false} />
+          <ExtensionForms card={card} updateCard={updateCard} forceError={false} />
         </Stack>
       </CardContent>
     </MuiCard>

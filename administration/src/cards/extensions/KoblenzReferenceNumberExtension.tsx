@@ -20,12 +20,11 @@ const KoblenzReferenceNumberExtensionForm = ({
   value,
   setValue,
   isValid,
-  showRequired,
+  forceError,
 }: ExtensionComponentProps<KoblenzReferenceNumberExtensionState>): ReactElement => {
   const { t } = useTranslation('extensions')
   const { viewportSmall } = useWindowDimensions()
   const { koblenzReferenceNumber } = value
-  const showErrorMessage = showRequired
   const clearInput = () => setValue({ koblenzReferenceNumber: '' })
 
   const getErrorMessage = (): string | null => {
@@ -46,9 +45,10 @@ const KoblenzReferenceNumberExtensionForm = ({
       id='koblenz-reference-number-input'
       placeholder='5.031.025.281, 000D000001, 91459'
       label={t('referenceNrLabel')}
+      forceError={forceError}
       value={koblenzReferenceNumber}
       onChange={koblenzReferenceNumber => setValue({ koblenzReferenceNumber })}
-      showError={!isValid && showErrorMessage}
+      showError={!isValid}
       inputProps={{
         sx: { paddingRight: 0 },
         endAdornment: (
