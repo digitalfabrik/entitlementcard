@@ -241,13 +241,14 @@
       "Leider hat Ihr Verein bzw. Ihre Organisation das von Ihnen geleistet Ehrenamt bislang nicht bestätigt. Ohne eine entsprechende Bestätigung Ihres Engagements kann keine Ehrenamtskarte ausgestellt werden."
     ],
     "rejectionButton": "Ablehnung bestätigen",
+    "rejectionCancelButton": "Ablehnung abbrechen",
     "moreActionsButtonLabel": "Weitere Optionen"
   },
   "auth": {
     "administration": "Verwaltung",
     "forgotPassword": "Passwort vergessen",
     "login": "Login",
-    "resetPasswordSuceessMessage": "Falls die angegebene E-Mail-Adresse {{email}} in unserem System existiert, wird eine E-Mail an sie gesendet. Darin finden Sie einen Link, mit dem Sie Ihr Passwort zurücksetzen können.",
+    "resetPasswordSuccessMessage": "Falls die angegebene E-Mail-Adresse {{email}} in unserem System existiert, wird eine E-Mail an sie gesendet. Darin finden Sie einen Link, mit dem Sie Ihr Passwort zurücksetzen können.",
     "checkSpamHint": "Bitte prüfen Sie Ihren Spam-Ordner.",
     "toLogin": "Zum Login",
     "backToLogin": "Zurück zum Login",
@@ -255,6 +256,7 @@
     "password": "Passwort",
     "resetPassword": "Passwort zurücksetzen",
     "resetPasswordText": "Falls Sie Ihr Passwort vergessen haben, können Sie es hier zurücksetzen.",
+    "signIn": "Anmelden",
     "setPasswordSuccess": "Ihr Passwort wurde erfolgreich zurückgesetzt.",
     "setPasswordText": "Hier können Sie ein neues Passwort wählen. Ein gültiges Passwort ist mindestens zwölf Zeichen lang, enthält mindestens einen Klein- und einen Großbuchstaben sowie mindestens ein Sonderzeichen.",
     "newPassword": "Neues Passwort",
@@ -535,7 +537,7 @@
     "deleteOwnAccountWarningExplanation": "Sie werden ausgeloggt und können sich nicht mehr einloggen.",
     "ownAccountWarningConfirmation": "Ich bestätige, dass ich diesen Warnhinweis gelesen habe.",
     "editUserWithMail": "Benutzer '{{mail}}' bearbeiten",
-    "editUser": "Benutzer bearbeiten",
+    "saveUser": "Benutzerdaten speichern",
     "editUserSuccess": "Benutzer erfolgreich bearbeitet.",
     "edit": "Bearbeiten",
     "youCanChangeYourOwnPassword": "Sie können Ihr eigenes Passwort in den",
@@ -655,11 +657,11 @@
     "titleStatusRejected": "Antrag abgelehnt"
   },
   "applicationStatusNote": {
-    "noticeApprovedAdmin": "Dieser Antrag wurde am {{date}} um {{time}} <resolution>genehmigt</resolution>.",
-    "noticeApprovedPublic": "Ihr Antrag wurde am {{date}} um {{time}} <resolution>genehmigt</resolution>. Sie erhalten alle weiteren Informationen per Mail.",
-    "noticeRejectedAdmin": "Dieser Antrag wurde am {{date}} um {{time}} <resolution>abgelehnt</resolution>{{reason}}.",
-    "noticeRejectedPublic": "Leider wurde Ihr Antrag am {{date}} um {{time}} <resolution>abgelehnt</resolution>. Sie erhalten alle weiteren Informationen per Mail.",
-    "noticeWithdrawn": "Dieser Antrag wurde am {{date}} um {{time}} <resolution>zurückgezogen</resolution>.",
+    "noticeApprovedAdmin": "Dieser Antrag wurde am {{date}} um {{time}} Uhr <resolution>genehmigt</resolution>.",
+    "noticeApprovedPublic": "Ihr Antrag wurde am {{date}} um {{time}} Uhr <resolution>genehmigt</resolution>. Sie erhalten alle weiteren Informationen per Mail.",
+    "noticeRejectedAdmin": "Dieser Antrag wurde am {{date}} um {{time}} Uhr <resolution>abgelehnt</resolution>{{reason}}.",
+    "noticeRejectedPublic": "Leider wurde Ihr Antrag am {{date}} um {{time}} Uhr <resolution>abgelehnt</resolution>. Sie erhalten alle weiteren Informationen per Mail.",
+    "noticeWithdrawn": "Dieser Antrag wurde am {{date}} um {{time}} Uhr <resolution>zurückgezogen</resolution>.",
     "reason": " (Begründung: {{message}})"
   },
   "errorTemplates": {

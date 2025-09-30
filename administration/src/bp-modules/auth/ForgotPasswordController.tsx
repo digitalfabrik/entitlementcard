@@ -1,4 +1,4 @@
-import { Button, Card, Classes, FormGroup, H2, H3, H4, InputGroup } from '@blueprintjs/core'
+import { Box, Button, Card, TextField, Typography } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
@@ -37,46 +37,55 @@ const ForgotPasswordController = (): ReactElement => {
 
   return (
     <StandaloneCenter>
-      <Card style={{ width: '100%', maxWidth: '500px' }}>
-        <H2>{config.name}</H2>
-        <H3>{t('administration')}</H3>
-        <H4>{t('forgotPassword')}</H4>
+      <Card sx={{ width: '100%', maxWidth: '500px', padding: 3 }}>
+        {/* TODO Setup Typography and remove custom fontSizes and fontHeights https://github.com/digitalfabrik/entitlementcard/issues/2334 */}
+        <Typography variant='h2' fontSize={28} fontWeight={600} marginBottom={1}>
+          {config.name}
+        </Typography>
+        <Typography variant='h3' fontSize={22} fontWeight={600}>
+          {t('administration')}
+        </Typography>
+        <Typography variant='h4' fontSize={18} fontWeight={600} marginBottom={2}>
+          {t('forgotPassword')}
+        </Typography>
         {finished ? (
           <>
-            <p>{t('resetPasswordSuceessMessage', { email })}</p>
-            <p>{t('checkSpamHint')}</p>
-            <p>
-              <Link to='/'>{t('toLogin')}</Link>
-            </p>
+            <Typography variant='body2'>{t('resetPasswordSuccessMessage', { email })}</Typography>
+            <Typography variant='body2'>{t('checkSpamHint')}</Typography>
+            <Box sx={{ marginTop: 3 }}>
+              <Link to='/'>
+                <Button variant='text'>{t('toLogin')}</Button>
+              </Link>
+            </Box>
           </>
         ) : (
           <>
-            <p>{t('resetPasswordText')}</p>
+            <Typography variant='body2' marginBottom={2}>
+              {t('resetPasswordText')}
+            </Typography>
             <form
               onSubmit={e => {
                 e.preventDefault()
                 submit()
               }}>
-              <FormGroup label={t('eMail')}>
-                <InputGroup
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  type='email'
-                  placeholder='erika.musterfrau@example.org'
-                />
-              </FormGroup>
-              <div
-                className={Classes.DIALOG_FOOTER_ACTIONS}
-                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Link to='/'>{t('backToLogin')}</Link>
-                <Button
-                  type='submit'
-                  intent='primary'
-                  text={t('resetPassword')}
-                  loading={loading}
-                  disabled={email === ''}
-                />
-              </div>
+              <TextField
+                value={email}
+                fullWidth
+                size='small'
+                label={t('eMail')}
+                required
+                onChange={e => setEmail(e.target.value)}
+                type='email'
+                placeholder='erika.musterfrau@example.org'
+              />
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 3 }}>
+                <Link to='/'>
+                  <Button variant='text'>{t('backToLogin')}</Button>
+                </Link>
+                <Button type='submit' variant='contained' color='primary' loading={loading} disabled={email === ''}>
+                  {t('resetPassword')}
+                </Button>
+              </Box>
             </form>
           </>
         )}
