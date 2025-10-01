@@ -4,13 +4,12 @@ import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, useNavigate } from 'react-router'
 
+import { AuthContext } from '../AuthProvider'
 import { useWhoAmI } from '../WhoAmIProvider'
 import { Role } from '../generated/graphql'
 import RenderGuard from '../mui-modules/components/RenderGuard'
 import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
 import roleToText from './users/utils/roleToText'
-import { AuthContext } from '../AuthProvider'
-
 
 const UserMenu = (): ReactElement => {
   const { role, email } = useWhoAmI().me
