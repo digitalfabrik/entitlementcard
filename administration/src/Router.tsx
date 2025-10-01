@@ -4,7 +4,7 @@ import { Outlet, Route, RouterProvider, createBrowserRouter, createRoutesFromEle
 import { AuthContext } from './AuthProvider'
 import KeepAliveToken from './KeepAliveToken'
 import WhoAmIProvider from './WhoAmIProvider'
-import Navigation from './bp-modules/NavigationBar'
+import NavigationBar from './bp-modules/NavigationBar'
 import ActivityLogController from './bp-modules/activity-log/ActivityLogController'
 import ApplicationsController from './bp-modules/applications/ApplicationsController'
 import ForgotPasswordController from './bp-modules/auth/ForgotPasswordController'
@@ -39,7 +39,7 @@ const AuthLayout = (): ReactElement => {
   return isLoggedIn ? (
     <WhoAmIProvider>
       <KeepAliveToken authData={authData} onSignIn={signIn} onSignOut={signOut}>
-        <Navigation onSignOut={signOut} />
+        <NavigationBar />
         <Outlet />
       </KeepAliveToken>
     </WhoAmIProvider>
