@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.graphql.auth
 
+import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
 import app.ehrenamtskarte.backend.db.entities.mayCreateUser
 import app.ehrenamtskarte.backend.db.entities.mayDeleteUser
@@ -7,30 +8,33 @@ import app.ehrenamtskarte.backend.db.entities.mayEditUser
 import app.ehrenamtskarte.backend.db.repositories.AdministratorsRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.graphql.auth.types.Role
-import app.ehrenamtskarte.backend.graphql.context
-import app.ehrenamtskarte.backend.graphql.getAuthContext
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.EmailAlreadyExistsException
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.RegionNotFoundException
+import app.ehrenamtskarte.backend.graphql.exceptions.EmailAlreadyExistsException
+import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import app.ehrenamtskarte.backend.shared.exceptions.UnauthorizedException
 import app.ehrenamtskarte.backend.shared.mail.Mailer
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.MutationMapping
+import org.springframework.stereotype.Controller
 
-@Suppress("unused")
-class ManageUsersMutationService {
+@Controller
+class ManageUsersMutationController(
+    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
+    private val backendConfig: BackendConfiguration,
+) {
     @GraphQLDescription("Creates a new administrator")
+    @MutationMapping
     fun createAdministrator(
-        email: String,
-        role: Role,
-        regionId: Int?,
-        sendWelcomeMail: Boolean,
+        @Argument email: String,
+        @Argument role: Role,
+        @Argument regionId: Int?,
+        @Argument sendWelcomeMail: Boolean,
         dfe: DataFetchingEnvironment,
     ): Boolean {
-        val context = dfe.graphQlContext.context
-        val authContext = context.getAuthContext()
-        val backendConfig = context.backendConfiguration
+        val authContext = dfe.requireAuthContext()
         val projectConfig = backendConfig.getProjectConfig(authContext.project)
 
         transaction {
@@ -62,15 +66,15 @@ class ManageUsersMutationService {
     }
 
     @GraphQLDescription("Edits an existing administrator")
+    @MutationMapping
     fun editAdministrator(
-        adminId: Int,
-        newEmail: String,
-        newRole: Role,
-        newRegionId: Int?,
+        @Argument adminId: Int,
+        @Argument newEmail: String,
+        @Argument newRole: Role,
+        @Argument newRegionId: Int?,
         dfe: DataFetchingEnvironment,
     ): Boolean {
-        val context = dfe.graphQlContext.context
-        val authContext = context.getAuthContext()
+        val authContext = dfe.requireAuthContext()
 
         transaction {
             val adminToEdit = AdministratorEntity.findById(adminId) ?: throw UnauthorizedException()
@@ -92,8 +96,12 @@ class ManageUsersMutationService {
     }
 
     @GraphQLDescription("Deletes an existing administrator")
-    fun deleteAdministrator(adminId: Int, dfe: DataFetchingEnvironment): Boolean {
-        val authContext = dfe.graphQlContext.context.getAuthContext()
+    @MutationMapping
+    fun deleteAdministrator(
+        @Argument adminId: Int,
+        dfe: DataFetchingEnvironment,
+    ): Boolean {
+        val authContext = dfe.requireAuthContext()
 
         transaction {
             val adminToDelete = AdministratorEntity.findById(adminId) ?: throw UnauthorizedException()

@@ -1,26 +1,14 @@
 package app.ehrenamtskarte.backend.graphql.regions
 
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
-import app.ehrenamtskarte.backend.graphql.newNamedDataLoader
+import app.ehrenamtskarte.backend.graphql.BaseDataLoader
 import app.ehrenamtskarte.backend.graphql.regions.types.Region
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.springframework.stereotype.Component
 
-val regionLoader = newNamedDataLoader("REGION_LOADER") { ids ->
-    transaction {
-        RegionsRepository.findByIds(ids).map {
-            it?.let {
-                Region(
-                    it.id.value,
-                    it.prefix,
-                    it.name,
-                    it.regionIdentifier,
-                    it.dataPrivacyPolicy,
-                    it.activatedForApplication,
-                    it.activatedForCardConfirmationMail,
-                    it.applicationConfirmationMailNoteActivated,
-                    it.applicationConfirmationMailNote,
-                )
-            }
-        }
-    }
+@Component
+class RegionDataLoader : BaseDataLoader<Int, Region>(Int::class, Region::class) {
+    override fun loadBatch(keys: List<Int>): Map<Int, Region> =
+        RegionsRepository.findByIds(keys)
+            .mapNotNull { it?.let { it.id.value to Region.fromDbEntity(it) } }
+            .toMap()
 }

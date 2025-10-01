@@ -10,8 +10,6 @@ import app.ehrenamtskarte.backend.db.entities.mayViewApiMetadataInProject
 import app.ehrenamtskarte.backend.db.repositories.ApiTokensRepository
 import app.ehrenamtskarte.backend.graphql.auth.types.ApiTokenMetaData
 import app.ehrenamtskarte.backend.graphql.auth.types.Role
-import app.ehrenamtskarte.backend.graphql.context
-import app.ehrenamtskarte.backend.graphql.getAuthContext
 import app.ehrenamtskarte.backend.shared.crypto.PasswordCrypto
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
@@ -21,18 +19,25 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.MutationMapping
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.stereotype.Controller
 import java.security.SecureRandom
 import java.time.LocalDate
 import java.util.Base64
 
 fun getByteArrayLength() = 3 * TOKEN_LENGTH / 4 // 4*(n/3) chars are needed to represent n bytes
 
-@Suppress("unused")
-class ApiTokenService {
+@Controller
+class ApiTokenController {
     @GraphQLDescription("Creates a new api token for user import endpoint")
-    fun createApiToken(expiresIn: Int, dfe: DataFetchingEnvironment): String {
-        val context = dfe.graphQlContext.context
-        val authContext = context.getAuthContext()
+    @MutationMapping
+    fun createApiToken(
+        @Argument expiresIn: Int,
+        dfe: DataFetchingEnvironment,
+    ): String {
+        val authContext = dfe.requireAuthContext()
 
         val admin = authContext.admin.takeIf { it.mayAddApiTokensInProject() }
             ?: throw ForbiddenException()
@@ -58,9 +63,12 @@ class ApiTokenService {
     }
 
     @GraphQLDescription("Deletes a selected API token")
-    fun deleteApiToken(id: Int, dfe: DataFetchingEnvironment): Int {
-        val context = dfe.graphQlContext.context
-        val admin = context.getAuthContext().admin.takeIf { it.mayDeleteApiTokensInProject() }
+    @MutationMapping
+    fun deleteApiToken(
+        @Argument id: Int,
+        dfe: DataFetchingEnvironment,
+    ): Int {
+        val admin = dfe.requireAuthContext().admin.takeIf { it.mayDeleteApiTokensInProject() }
             ?: throw ForbiddenException()
 
         transaction {
@@ -81,12 +89,12 @@ class ApiTokenService {
     }
 }
 
-@Suppress("unused")
-class ApiTokenQueryService {
+@Controller
+class ApiTokenQueryController {
     @GraphQLDescription("Gets metadata of all api tokens for a project")
+    @QueryMapping
     fun getApiTokenMetaData(dfe: DataFetchingEnvironment): List<ApiTokenMetaData> {
-        val context = dfe.graphQlContext.context
-        val admin = context.getAuthContext().admin.takeIf { it.mayViewApiMetadataInProject() }
+        val admin = dfe.requireAuthContext().admin.takeIf { it.mayViewApiMetadataInProject() }
             ?: throw ForbiddenException()
 
         return transaction {

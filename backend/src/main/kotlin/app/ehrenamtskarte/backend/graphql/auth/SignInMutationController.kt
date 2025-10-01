@@ -4,27 +4,34 @@ import app.ehrenamtskarte.backend.db.repositories.AdministratorsRepository
 import app.ehrenamtskarte.backend.graphql.auth.types.Administrator
 import app.ehrenamtskarte.backend.graphql.auth.types.AuthData
 import app.ehrenamtskarte.backend.graphql.auth.types.SignInPayload
-import app.ehrenamtskarte.backend.graphql.context
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidCredentialsException
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidCredentialsException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import graphql.schema.DataFetchingEnvironment
+import jakarta.servlet.http.HttpServletRequest
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.MutationMapping
+import org.springframework.stereotype.Controller
 
-@Suppress("unused")
-class SignInMutationService {
+@Controller
+class SignInMutationController(
+    private val request: HttpServletRequest,
+) {
     @GraphQLDescription("Signs in an administrator")
-    fun signIn(project: String, authData: AuthData, dfe: DataFetchingEnvironment): SignInPayload {
-        val logger = LoggerFactory.getLogger(SignInMutationService::class.java)
+    @MutationMapping
+    fun signIn(
+        @Argument project: String,
+        @Argument authData: AuthData,
+    ): SignInPayload {
+        val logger = LoggerFactory.getLogger(SignInMutationController::class.java)
 
         val administratorEntity = transaction {
             AdministratorsRepository.findByAuthData(project, authData.email, authData.password)
         }
         if (administratorEntity == null) {
-            val context = dfe.graphQlContext.context
             // This logging is used for rate limiting
             // See https://git.tuerantuer.org/DF/salt/pulls/187
-            logger.info("${context.remoteIp} ${authData.email} failed to log in")
+            logger.info("${request.remoteAddr} ${authData.email} failed to log in")
             throw InvalidCredentialsException()
         }
 

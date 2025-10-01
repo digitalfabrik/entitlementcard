@@ -2,6 +2,9 @@ package app.ehrenamtskarte.backend.helper
 
 import app.ehrenamtskarte.backend.db.entities.Administrators
 import app.ehrenamtskarte.backend.db.entities.ProjectEntity
+import app.ehrenamtskarte.backend.db.repositories.AdministratorsRepository
+import app.ehrenamtskarte.backend.graphql.auth.JwtService
+import app.ehrenamtskarte.backend.graphql.auth.types.Administrator
 import app.ehrenamtskarte.backend.graphql.auth.types.Role
 import app.ehrenamtskarte.backend.shared.crypto.PasswordCrypto
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -96,13 +99,12 @@ enum class TestAdministrators(
     ),
     ;
 
-    // todo: commented out until #2507
-    // fun getJwtToken(): String {
-    //    val adminEntity = transaction { AdministratorsRepository.findByAuthData(project, email, password) }
-    //        ?: throw Exception("Test administrator not found!")
-    //    val admin = Administrator.fromDbEntity(adminEntity)
-    //    return JwtService.createToken(admin)
-    // }
+    fun getJwtToken(): String {
+        val adminEntity = transaction { AdministratorsRepository.findByAuthData(project, email, password) }
+            ?: throw Exception("Test administrator not found!")
+        val admin = Administrator.fromDbEntity(adminEntity)
+        return JwtService.createToken(admin)
+    }
 
     companion object {
         fun createAll() {

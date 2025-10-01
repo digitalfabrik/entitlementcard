@@ -41,6 +41,21 @@ directive @specifiedBy(
     url: String!
   ) on SCALAR
 
+type Administrator {
+  email: String!
+  id: Int!
+  region: Region
+  regionId: Int
+  role: Role!
+}
+
+type ApiTokenMetaData {
+  creatorEmail: String!
+  expirationDate: String!
+  id: Int!
+  type: ApiTokenType!
+}
+
 type CardActivationResultModel {
   activationState: ActivationState!
   activationTimeStamp: String!
@@ -66,19 +81,86 @@ type DynamicActivationCodeResult {
 type Mutation {
   "Activate a dynamic entitlement card"
   activateCard(activationSecretBase64: String!, cardInfoHashBase64: String!, overwrite: Boolean!, project: String!): CardActivationResultModel!
+  "Changes an administrator's password"
+  changePassword(currentPassword: String!, email: String!, newPassword: String!): Boolean!
+  "Creates a new administrator"
+  createAdministrator(email: String!, regionId: Int, role: Role!, sendWelcomeMail: Boolean!): Boolean!
+  "Creates a new api token for user import endpoint"
+  createApiToken(expiresIn: Int!): String!
   "Creates a new digital entitlementcard from self-service portal"
   createCardFromSelfService(encodedCardInfo: String!, generateStaticCode: Boolean!, project: String!): CardCreationResultModel!
   "Creates a new digital entitlementcard and returns it"
   createCardsByCardInfos(applicationIdToMarkAsProcessed: Int, encodedCardInfos: [String!]!, generateStaticCodes: Boolean!): [CardCreationResultModel!]!
+  "Deletes an existing administrator"
+  deleteAdministrator(adminId: Int!): Boolean!
+  "Deletes a selected API token"
+  deleteApiToken(id: Int!): Int!
   "Deletes a batch of cards (that have not yet been activated)"
   deleteInactiveCards(cardInfoHashBase64List: [String!]!, regionId: Int!): Boolean!
+  "Edits an existing administrator"
+  editAdministrator(adminId: Int!, newEmail: String!, newRegionId: Int, newRole: Role!): Boolean!
+  "Reset the administrator's password"
+  resetPassword(email: String!, newPassword: String!, passwordResetKey: String!, project: String!): Boolean!
   "Sends a confirmation mail to the user when the card creation was successful"
   sendCardCreationConfirmationMail(deepLink: String!, recipientAddress: String!, recipientName: String!, regionId: Int!): Boolean!
+  "Sends a mail that allows the administrator to reset their password."
+  sendResetMail(email: String!, project: String!): Boolean!
+  "Signs in an administrator"
+  signIn(authData: AuthDataInput!, project: String!): SignInPayload!
+  "Updates application confirmation mail note"
+  updateApplicationConfirmationNote(applicationConfirmationNote: String!, applicationConfirmationNoteActivated: Boolean!, regionId: Int!): Boolean!
+  "Updates the data privacy policy of a region"
+  updateDataPrivacy(dataPrivacyText: String!, regionId: Int!): Boolean!
+  "Updates the notification settings"
+  updateNotificationSettings(notificationSettings: NotificationSettingsInput!): Boolean!
+  "Updates the region specific settings"
+  updateRegionSettings(activatedForApplication: Boolean!, activatedForConfirmationMail: Boolean!, regionId: Int!): Boolean!
+}
+
+type NotificationSettings {
+  notificationOnApplication: Boolean!
+  notificationOnVerification: Boolean!
 }
 
 type Query {
+  "Verify password reset link"
+  checkPasswordResetLink(project: String!, resetKey: String!): Boolean!
+  "Gets metadata of all api tokens for a project"
+  getApiTokenMetaData: [ApiTokenMetaData!]!
+  "Get the pepper for Koblenz user hashing"
+  getHashingPepper: String!
+  "Get the notification settings of the authenticated administrator"
+  getNotificationSettings: NotificationSettings!
+  "Returns all administrators in a project. This query requires the role PROJECT_ADMIN."
+  getUsersInProject: [Administrator!]!
+  "Returns all administrators in a region. This query requires the role REGION_ADMIN or PROJECT_ADMIN."
+  getUsersInRegion(regionId: Int!): [Administrator!]!
+  "Returns region data for specific region."
+  regionByRegionId(regionId: Int!): Region!
+  "Returns regions queried by ids in the given project."
+  regionsByIdInProject(ids: [Int!]!, project: String!): [Region]!
+  "Return list of all regions in the given project."
+  regionsInProject(project: String!): [Region!]!
   "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid, extendable and a timestamp of the last check"
   verifyCardInProjectV2(card: CardVerificationModelInput!, project: String!): CardVerificationResultModel!
+  "Returns the requesting administrator as retrieved from his JWT token."
+  whoAmI: Administrator!
+}
+
+type Region {
+  activatedForApplication: Boolean!
+  activatedForCardConfirmationMail: Boolean!
+  applicationConfirmationMailNote: String
+  applicationConfirmationMailNoteActivated: Boolean!
+  dataPrivacyPolicy: String
+  id: Int!
+  name: String!
+  prefix: String!
+  regionIdentifier: String
+}
+
+type SignInPayload {
+  token: String!
 }
 
 type StaticVerificationCodeResult {
@@ -93,6 +175,11 @@ enum ActivationState {
   revoked
   success
   wrong_secret
+}
+
+enum ApiTokenType {
+  USER_IMPORT
+  VERIFIED_APPLICATION
 }
 
 enum CodeType {
@@ -133,8 +220,27 @@ enum GraphQLExceptionCode {
   USER_ENTITLEMENT_NOT_FOUND
 }
 
+enum Role {
+  EXTERNAL_VERIFIED_API_USER
+  NO_RIGHTS
+  PROJECT_ADMIN
+  PROJECT_STORE_MANAGER
+  REGION_ADMIN
+  REGION_MANAGER
+}
+
+input AuthDataInput {
+  email: String!
+  password: String!
+}
+
 input CardVerificationModelInput {
   cardInfoHashBase64: String!
   codeType: CodeType!
   totp: Int
+}
+
+input NotificationSettingsInput {
+  notificationOnApplication: Boolean!
+  notificationOnVerification: Boolean!
 }

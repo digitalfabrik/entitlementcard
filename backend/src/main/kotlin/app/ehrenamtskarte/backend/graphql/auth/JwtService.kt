@@ -1,15 +1,15 @@
 package app.ehrenamtskarte.backend.graphql.auth
 
-// import app.ehrenamtskarte.backend.graphql.auth.types.Administrator
+import app.ehrenamtskarte.backend.graphql.auth.types.Administrator
 import app.ehrenamtskarte.backend.shared.exceptions.UnauthorizedException
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.exceptions.JWTVerificationException
 import org.springframework.graphql.server.WebGraphQlRequest
 import java.io.File
-// import java.time.Instant
-// import java.time.temporal.ChronoUnit
-// import java.util.Date
+import java.time.Instant
+import java.time.temporal.ChronoUnit
+import java.util.Date
 
 object JwtService {
     private val secret by lazy {
@@ -19,11 +19,11 @@ object JwtService {
     }
     private val algorithm by lazy { Algorithm.HMAC512(secret) }
 
-    // fun createToken(administrator: Administrator): String =
-    //    JWT.create()
-    //        .withClaim(JwtPayload::adminId.name, administrator.id)
-    //        .withExpiresAt(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)))
-    //        .sign(algorithm)
+    fun createToken(administrator: Administrator): String =
+        JWT.create()
+            .withClaim(JwtPayload::adminId.name, administrator.id)
+            .withExpiresAt(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)))
+            .sign(algorithm)
 
     /**
      * Verifies the Authorization header and returns a [JwtPayload] if successful.
