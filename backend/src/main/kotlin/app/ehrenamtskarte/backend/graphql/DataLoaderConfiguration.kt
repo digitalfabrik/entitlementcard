@@ -31,8 +31,6 @@ abstract class BaseDataLoader<K : Any, V : Any>(
     private val keyKClass: KClass<K>,
     private val valueKClass: KClass<V>,
 ) {
-    abstract fun loadBatch(keys: List<K>): Map<K, V>
-
     fun register(registry: BatchLoaderRegistry) {
         registry.forTypePair(keyKClass.java, valueKClass.java)
             .registerMappedBatchLoader { keys, _ ->
@@ -43,4 +41,6 @@ abstract class BaseDataLoader<K : Any, V : Any>(
                 }.subscribeOn(Schedulers.boundedElastic())
             }
     }
+
+    abstract fun loadBatch(keys: List<K>): Map<K, V>
 }
