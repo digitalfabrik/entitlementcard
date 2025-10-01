@@ -1,92 +1,90 @@
-/* eslint-disable react/destructuring-assignment */
-import { Divider, Menu, Popover } from '@blueprintjs/core'
-import { AccountCircle, ArrowDropDown, ArrowDropUp, EditSquare, Logout, Settings } from '@mui/icons-material'
-import { Button, type ButtonProps } from '@mui/material'
-import React, { ReactElement, useContext, useState } from 'react'
+import { EditSquare, Logout, Settings } from '@mui/icons-material'
+import { Avatar, Box, Button, Divider, IconButton, Menu, Stack, Tooltip, Typography } from '@mui/material'
+import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, useNavigate } from 'react-router'
-import styled from 'styled-components'
 
 import { useWhoAmI } from '../WhoAmIProvider'
 import { Role } from '../generated/graphql'
 import RenderGuard from '../mui-modules/components/RenderGuard'
 import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
 import roleToText from './users/utils/roleToText'
+import { AuthContext } from '../AuthProvider'
 
-type UserMenuProps = {
-  onSignOut: () => void
-}
 
-const Backdrop = styled.div<{ isOpen: boolean }>`
-  display: ${props => (props.isOpen ? 'block' : 'none')};
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  z-index: 10;
-  left: 0;
-  top: 0;
-`
-
-const MenuContent = styled(Menu)`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-`
-
-const MenuButton = (p: ButtonProps): ReactElement => (
-  <Button sx={{ width: '100%', justifyContent: 'start' }} variant='text' {...p}>
-    {p.children}
-  </Button>
-)
-
-const RoleInfo = styled.span`
-  padding: 5px 10px;
-`
-
-const UserMenu = ({ onSignOut }: UserMenuProps): ReactElement => {
+const UserMenu = (): ReactElement => {
   const { role, email } = useWhoAmI().me
+  const { signOut } = useContext(AuthContext)
   const { t } = useTranslation('misc')
   const projectConfig = useContext(ProjectConfigContext)
-  const [isOpen, setIsOpen] = useState<boolean>(false)
   const navigate = useNavigate()
+  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null)
   const signOutAndRedirect = () => {
-    onSignOut()
+    signOut()
     navigate('/')
   }
-
-  const userMenuContent = (
-    <MenuContent onClick={() => setIsOpen(false)}>
-      <RoleInfo>Rolle: {roleToText(role)}</RoleInfo>
-
-      <Divider style={{ margin: '4px 0px' }} />
-
-      <NavLink to='/user-settings'>
-        <MenuButton startIcon={<Settings />}>{t('userSettings')}</MenuButton>
-      </NavLink>
-
-      <RenderGuard
-        condition={projectConfig.activityLogConfig !== undefined}
-        allowedRoles={[Role.RegionManager, Role.RegionAdmin]}>
-        <NavLink to='/activity-log'>
-          <MenuButton startIcon={<EditSquare />}>{t('activityLog')}</MenuButton>
-        </NavLink>
-      </RenderGuard>
-
-      <MenuButton startIcon={<Logout />} onClick={signOutAndRedirect}>
-        {t('logout')}
-      </MenuButton>
-    </MenuContent>
-  )
+  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElUser(event.currentTarget)
+  }
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null)
+  }
 
   return (
-    <>
-      <Popover content={userMenuContent} placement='bottom' matchTargetWidth isOpen={isOpen} onInteraction={setIsOpen}>
-        <Button startIcon={<AccountCircle />} endIcon={isOpen ? <ArrowDropUp /> : <ArrowDropDown />}>
-          {email}
-        </Button>
-      </Popover>
-      <Backdrop onClick={() => setIsOpen(false)} isOpen={isOpen} />
-    </>
+    <Box sx={{ flexGrow: 0 }}>
+      <Tooltip title='Open settings'>
+        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+          <Avatar alt={email} />
+        </IconButton>
+      </Tooltip>
+      <Menu
+        sx={{ mt: '45px' }}
+        id='menu-appbar'
+        anchorEl={anchorElUser}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        keepMounted
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        open={Boolean(anchorElUser)}
+        onClose={handleCloseUserMenu}>
+        <Stack sx={{ padding: 1, alignItems: 'baseline' }}>
+          <Box sx={{ paddingX: 1, marginBottom: 1 }}>
+            <Typography noWrap fontWeight='500' variant='body2'>
+              {email}
+            </Typography>
+            <Typography variant='body2'>Rolle: {roleToText(role)}</Typography>
+          </Box>
+          <Divider sx={{ my: 1, width: '100%' }} />
+          <NavLink to='/user-settings' style={{ width: '100%' }}>
+            <Button fullWidth variant='text' startIcon={<Settings />} sx={{ justifyContent: 'flex-start' }}>
+              {t('userSettings')}
+            </Button>
+          </NavLink>
+          <RenderGuard
+            condition={projectConfig.activityLogConfig !== undefined}
+            allowedRoles={[Role.RegionManager, Role.RegionAdmin]}>
+            <NavLink to='/activity-log'>
+              <Button fullWidth variant='text' startIcon={<EditSquare />}>
+                {t('activityLog')}
+              </Button>
+            </NavLink>
+          </RenderGuard>
+          <Button
+            sx={{ justifyContent: 'flex-start' }}
+            fullWidth
+            variant='text'
+            startIcon={<Logout />}
+            onClick={signOutAndRedirect}>
+            {t('logout')}
+          </Button>
+        </Stack>
+      </Menu>
+    </Box>
   )
 }
 
