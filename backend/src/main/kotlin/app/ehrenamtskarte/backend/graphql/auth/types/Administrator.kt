@@ -28,9 +28,8 @@ data class Administrator(
 @Controller
 class AdministratorResolver {
     @SchemaMapping(typeName = "Administrator", field = "region")
-    fun region(admin: Administrator, dfe: DataFetchingEnvironment): CompletableFuture<Region?> {
-        return admin.regionId?.let { id ->
+    fun region(admin: Administrator, dfe: DataFetchingEnvironment): CompletableFuture<Region?> =
+        admin.regionId?.let { id ->
             dfe.getDataLoader<Int, Region>(Region::class.java.name)?.load(id)
         } ?: CompletableFuture.completedFuture(null)
-    }
 }

@@ -10,6 +10,8 @@ import org.junit.jupiter.api.BeforeAll
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.test.context.ContextConfiguration
 import org.testcontainers.containers.PostgreSQLContainer
@@ -56,6 +58,11 @@ open class IntegrationTest {
     @Autowired
     protected lateinit var restTemplate: TestRestTemplate
 
-    protected fun postGraphQL(request: GraphQLClientRequest<*>): ResponseEntity<String> =
-        restTemplate.postForEntity("/", request, String::class.java)
+    protected fun postGraphQL(request: GraphQLClientRequest<*>, token: String? = null): ResponseEntity<String> {
+        val headers = HttpHeaders().apply {
+            token?.let { setBearerAuth(it) }
+        }
+        val entity = HttpEntity(request, headers)
+        return restTemplate.postForEntity("/", entity, String::class.java)
+    }
 }
