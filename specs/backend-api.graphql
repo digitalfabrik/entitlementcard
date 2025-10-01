@@ -107,8 +107,14 @@ type Mutation {
   sendResetMail(email: String!, project: String!): Boolean!
   "Signs in an administrator"
   signIn(authData: AuthDataInput!, project: String!): SignInPayload!
+  "Updates application confirmation mail note"
+  updateApplicationConfirmationNote(applicationConfirmationNote: String!, applicationConfirmationNoteActivated: Boolean!, regionId: Int!): Boolean!
+  "Updates the data privacy policy of a region"
+  updateDataPrivacy(dataPrivacyText: String!, regionId: Int!): Boolean!
   "Updates the notification settings"
   updateNotificationSettings(notificationSettings: NotificationSettingsInput!): Boolean!
+  "Updates the region specific settings"
+  updateRegionSettings(activatedForApplication: Boolean!, activatedForConfirmationMail: Boolean!, regionId: Int!): Boolean!
 }
 
 type NotificationSettings {
@@ -129,6 +135,12 @@ type Query {
   getUsersInProject: [Administrator!]!
   "Returns all administrators in a region. This query requires the role REGION_ADMIN or PROJECT_ADMIN."
   getUsersInRegion(regionId: Int!): [Administrator!]!
+  "Returns region data for specific region."
+  regionByRegionId(regionId: Int!): Region!
+  "Returns regions queried by ids in the given project."
+  regionsByIdInProject(ids: [Int!]!, project: String!): [Region]!
+  "Return list of all regions in the given project."
+  regionsInProject(project: String!): [Region!]!
   "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid, extendable and a timestamp of the last check"
   verifyCardInProjectV2(card: CardVerificationModelInput!, project: String!): CardVerificationResultModel!
   "Returns the requesting administrator as retrieved from his JWT token."
