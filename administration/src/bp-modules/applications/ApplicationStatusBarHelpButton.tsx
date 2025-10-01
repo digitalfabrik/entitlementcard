@@ -16,7 +16,7 @@ const ApplicationStatusHelpButton = (): ReactElement => {
   return (
     <PopoverWrapper icon={<HelpOutlinedIcon color='inherit' />}>
       <Box sx={{ padding: 2 }}>
-        <Typography variant='h4' sx={{ textAlign: 'center' }}>
+        <Typography variant='h4' textAlign='center'>
           {t('whichStatusMeansWhat')}
         </Typography>
         <Description>
