@@ -1,4 +1,6 @@
-import { Button, Dialog, DialogFooter, TextArea, Tooltip } from '@blueprintjs/core'
+import { Dialog, DialogFooter, TextArea, Tooltip } from '@blueprintjs/core'
+import { Close, SaveAlt } from '@mui/icons-material'
+import { Button } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -11,6 +13,7 @@ const ButtonContainer = styled.div`
   display: flex;
   flex: 1;
   justify-content: flex-end;
+  gap: 8px;
 `
 
 type NoteProps = {
@@ -44,33 +47,34 @@ const TextAreaDialog = ({
 
   const actions = (
     <ButtonContainer>
-      <Button intent='none' text={t('close')} icon='cross' onClick={onClose} />
+      <Button startIcon={<Close />} size='small' onClick={onClose}>
+        {t('close')}
+      </Button>
       <Tooltip disabled={!maxCharsExceeded} content={errorMessage}>
         <Button
           disabled={maxCharsExceeded}
           loading={loading}
-          intent='success'
-          text={t('save')}
-          icon='floppy-disk'
-          onClick={() => onSave(text)}
-        />
+          variant='contained'
+          size='small'
+          startIcon={<SaveAlt />}
+          onClick={() => onSave(text)}>
+          {t('save')}
+        </Button>
       </Tooltip>
     </ButtonContainer>
   )
 
   return (
     <Dialog isOpen={isOpen} onClose={onClose}>
-      <>
-        <TextArea
-          fill
-          onChange={e => setText(e.target.value)}
-          value={text}
-          readOnly={loading}
-          rows={20}
-          placeholder={placeholder}
-        />
-        {additionalContent}
-      </>
+      <TextArea
+        fill
+        onChange={e => setText(e.target.value)}
+        value={text}
+        readOnly={loading}
+        rows={20}
+        placeholder={placeholder}
+      />
+      {additionalContent}
       <DialogFooter actions={actions}>
         {maxChars !== undefined && <CharacterCounter text={text} maxChars={maxChars} />}
       </DialogFooter>

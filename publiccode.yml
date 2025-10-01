@@ -1,0 +1,41 @@
+publiccodeYmlVersion: "0.4.0"
+name: Entitlementcard
+url: "https://github.com/digitalfabrik/entitlementcard.git"
+softwareVersion: "2025.9.2"
+releaseDate: "2025-09-01"
+platforms:
+  - web
+  - ios
+  - android
+categories:
+  - digital-citizenship
+  - identity-management
+usedBy:
+  - Germany - Bavaria
+  - Germany - City of Koblenz
+  - Germany - City of Nuremberg
+developmentStatus: stable
+softwareType: standalone/mobile
+description:
+  en:
+    shortDescription: The app allows accepting stores to validate that card holders are entitled to benefits.
+    longDescription: >
+           Benefit card for volunteers or socially vulnerable groups in Germany. App for Android & iOS + Backend + Administration Web Portal.
+    features:
+       - Digital Identity Management
+       - Digital Benefit Card
+legal:
+  license: MIT
+  mainCopyrightOwner: "Tür an Tür Digitalfabrik gGmbH"
+  repoOwner: "Tür an Tür Digitalfabrik gGmbH"
+maintenance:
+  type: internal
+  contacts:
+    - name: Sven Seeberg
+      email: sven.seeberg@tuerantuer.org
+      affiliation: Tuer an Tuer Digitalfabrik gGmbH
+localisation:
+  localisationReady: true
+  availableLanguages:
+    - en
+    - de

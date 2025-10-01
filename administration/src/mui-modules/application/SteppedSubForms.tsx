@@ -1,5 +1,15 @@
 import { Send } from '@mui/icons-material'
-import { Button, ButtonBase, CircularProgress, Divider, Step, StepContent, StepLabel, Stepper } from '@mui/material'
+import {
+  Button,
+  ButtonBase,
+  CircularProgress,
+  Divider,
+  Stack,
+  Step,
+  StepContent,
+  StepLabel,
+  Stepper,
+} from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, ReactNode, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -59,24 +69,26 @@ const SubForm = ({
       <form onSubmit={handleOnSubmit}>
         {children}
         <Divider sx={{ margin: '16px' }} />
-        {index === 0 ? null : (
-          <Button onClick={() => setActiveStep(() => index - 1)} disabled={formContext.disableAllInputs}>
-            {t('backButton')}
-          </Button>
-        )}
-        {onSubmit === undefined ? (
-          <Button type='submit' variant='contained' disabled={formContext.disableAllInputs}>
-            {t('nextStepButton')}
-          </Button>
-        ) : (
-          <Button
-            type='submit'
-            variant='contained'
-            disabled={formContext.disableAllInputs}
-            endIcon={loading ? <CircularProgress size={20} color='inherit' /> : <Send />}>
-            {t('submitApplicationButton')}
-          </Button>
-        )}
+        <Stack direction='row' sx={{ gap: 2 }}>
+          {index === 0 ? null : (
+            <Button onClick={() => setActiveStep(() => index - 1)} disabled={formContext.disableAllInputs}>
+              {t('backButton')}
+            </Button>
+          )}
+          {onSubmit === undefined ? (
+            <Button type='submit' color='primary' variant='contained' disabled={formContext.disableAllInputs}>
+              {t('nextStepButton')}
+            </Button>
+          ) : (
+            <Button
+              type='submit'
+              variant='contained'
+              disabled={formContext.disableAllInputs}
+              endIcon={loading ? <CircularProgress size={20} /> : <Send />}>
+              {t('submitApplicationButton')}
+            </Button>
+          )}
+        </Stack>
       </form>
     </FormContext.Provider>
   )

@@ -97,7 +97,7 @@ const StatisticsFilterBar = ({
         <Tooltip title={isValidDateTimePeriod(dateStart, dateEnd) ? undefined : t('invalidStartOrEnd')}>
           <Button
             variant='contained'
-            color='success'
+            color='primary'
             startIcon={<FilterAlt />}
             onClick={() => {
               if (isValidDate(dateStart) && isValidDate(dateEnd)) {
