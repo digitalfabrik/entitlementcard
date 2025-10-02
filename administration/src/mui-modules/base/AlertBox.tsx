@@ -30,7 +30,7 @@ const AlertBox = ({
       sx={{
         margin: 'auto',
         display: 'flex',
-        justifyContent: 'center',
+        justifyContent: 'space-around',
         alignItems: 'center',
         maxWidth: '900px',
         '&': theme => ({
