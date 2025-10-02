@@ -12,7 +12,7 @@ const RoleHelpButton = (): ReactElement => {
   return (
     <PopoverWrapper icon={<HelpOutlinedIcon color='inherit' fontSize='small' />}>
       <Box sx={{ padding: 2 }}>
-        <Typography variant='h4' sx={{ textAlign: 'center' }}>
+        <Typography variant='h5' sx={{ textAlign: 'center' }}>
           {t('roleRightsHeading')}
         </Typography>
         <ul>
