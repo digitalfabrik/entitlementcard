@@ -533,7 +533,7 @@
     "deleteUser": "Benutzer löschen",
     "delete": "Löschen",
     "deleteUserSuccess": "Benutzer erfolgreich gelöscht.",
-    "deleteUserConfirmPrompt": "Benutzer löschen?",
+    "deleteUserConfirmPrompt": "Benutzer löschen",
     "deleteUserIrrevocableConfirmPrompt": "Möchten Sie den Benutzer <strong>{{mail}}</strong> unwiderruflich löschen?",
     "deleteOwnAccountWarning": "Sie löschen Ihr eigenes Konto.",
     "deleteOwnAccountWarningExplanation": "Sie werden ausgeloggt und können sich nicht mehr einloggen.",
