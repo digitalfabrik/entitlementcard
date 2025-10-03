@@ -355,50 +355,50 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_secure_storage
-      sha256: "9cad52d75ebc511adfae3d447d5d13da15a55a92c9410e50f67335b6d21d16ea"
+      sha256: f7eceb0bc6f4fd0441e29d43cab9ac2a1c5ffd7ea7b64075136b718c46954874
       url: "https://pub.dev"
     source: hosted
-    version: "9.2.4"
+    version: "10.0.0-beta.4"
+  flutter_secure_storage_darwin:
+    dependency: transitive
+    description:
+      name: flutter_secure_storage_darwin
+      sha256: f226f2a572bed96bc6542198ebaec227150786e34311d455a7e2d3d06d951845
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0"
   flutter_secure_storage_linux:
     dependency: transitive
     description:
       name: flutter_secure_storage_linux
-      sha256: bf7404619d7ab5c0a1151d7c4e802edad8f33535abfbeff2f9e1fe1274e2d705
+      sha256: "9b4b73127e857cd3117d43a70fa3dddadb6e0b253be62e6a6ab85caa0742182c"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.2"
-  flutter_secure_storage_macos:
-    dependency: transitive
-    description:
-      name: flutter_secure_storage_macos
-      sha256: "6c0a2795a2d1de26ae202a0d78527d163f4acbb11cde4c75c670f3a0fc064247"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.1.3"
+    version: "2.0.1"
   flutter_secure_storage_platform_interface:
     dependency: transitive
     description:
       name: flutter_secure_storage_platform_interface
-      sha256: cf91ad32ce5adef6fba4d736a542baca9daf3beac4db2d04be350b87f69ac4a8
+      sha256: "8ceea1223bee3c6ac1a22dabd8feefc550e4729b3675de4b5900f55afcb435d6"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.2"
+    version: "2.0.1"
   flutter_secure_storage_web:
     dependency: transitive
     description:
       name: flutter_secure_storage_web
-      sha256: f4ebff989b4f07b2656fb16b47852c0aab9fed9b4ec1c70103368337bc1886a9
+      sha256: "4c3f233e739545c6cb09286eeec1cc4744138372b985113acc904f7263bef517"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.1"
+    version: "2.0.0"
   flutter_secure_storage_windows:
     dependency: transitive
     description:
       name: flutter_secure_storage_windows
-      sha256: b20b07cb5ed4ed74fc567b78a72936203f587eba460af1df11281c9326cd3709
+      sha256: ff32af20f70a8d0e59b2938fc92de35b54a74671041c814275afd80e27df9f21
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.2"
+    version: "4.0.0"
   flutter_staggered_grid_view:
     dependency: transitive
     description:
@@ -411,10 +411,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_svg
-      sha256: cd57f7969b4679317c17af6fd16ee233c1e60a82ed209d8a475c54fd6fd6f845
+      sha256: b9c2ad5872518a27507ab432d1fb97e8813b05f0fc693f9d40fad06d073e0678
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.0"
+    version: "2.2.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -613,10 +613,10 @@ packages:
     dependency: "direct main"
     description:
       name: graphql_flutter
-      sha256: "49867a84a9243142d69a31075dbb9ff9468366827b0e5bfcdb3867abbe1d5ee6"
+      sha256: "0fef9dc2483c4f21c6ac93cd2ef0b820542fc0ce6db6efa87367326d7f36ade4"
       url: "https://pub.dev"
     source: hosted
-    version: "5.2.0"
+    version: "5.2.1"
   graphs:
     dependency: transitive
     description:
@@ -717,10 +717,10 @@ packages:
     dependency: transitive
     description:
       name: js
-      sha256: f2c445dce49627136094980615a031419f7f3eb393237e4ecd97ac15dea343f3
+      sha256: "53385261521cc4a0c4658fd0ad07a7d14591cf8fc33abbceae306ddb974888dc"
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.7"
+    version: "0.7.2"
   json_annotation:
     dependency: transitive
     description:
@@ -797,26 +797,26 @@ packages:
     dependency: "direct main"
     description:
       name: maplibre_gl
-      sha256: "5c7b1008396b2a321bada7d986ed60f9423406fbc7bd16f7ce91b385dfa054cd"
+      sha256: "9ad9a1799aed29d2f4c980a514b2bd54b70c454cbd695e07497a201b631923e4"
       url: "https://pub.dev"
     source: hosted
-    version: "0.22.0"
+    version: "0.23.0"
   maplibre_gl_platform_interface:
     dependency: transitive
     description:
       name: maplibre_gl_platform_interface
-      sha256: "08ee0a2d0853ea945a0ab619d52c0c714f43144145cd67478fc6880b52f37509"
+      sha256: e218914cad0830d393a26f84a2f8419892b8aba7b44b1e6beef0d650b3242e36
       url: "https://pub.dev"
     source: hosted
-    version: "0.22.0"
+    version: "0.23.0"
   maplibre_gl_web:
     dependency: transitive
     description:
       name: maplibre_gl_web
-      sha256: "2b13d4b1955a9a54e38a718f2324e56e4983c080fc6de316f6f4b5458baacb58"
+      sha256: a43d40d080c9691274b50a565cf64ab15d34265b87fa0c4b71491660a35499ac
       url: "https://pub.dev"
     source: hosted
-    version: "0.22.0"
+    version: "0.23.0"
   matcher:
     dependency: transitive
     description:
@@ -1291,10 +1291,10 @@ packages:
     dependency: "direct dev"
     description:
       name: slang_build_runner
-      sha256: "3679d6ab1373a9e5c0894d29d612abd2f75f969b0ef2f19cafaed2d1b9e49d39"
+      sha256: c1cf6525aee9afa9411d689908e6638f2da0ad581ce59eb11132d5f976450c8c
       url: "https://pub.dev"
     source: hosted
-    version: "4.8.0"
+    version: "4.8.1"
   slang_flutter:
     dependency: "direct main"
     description:
