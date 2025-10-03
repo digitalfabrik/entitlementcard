@@ -12,7 +12,8 @@ import app.ehrenamtskarte.backend.shared.exceptions.ProjectNotFoundException
 import app.ehrenamtskarte.backend.shared.mail.Mailer
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
-import jakarta.servlet.http.HttpServletRequest
+import app.ehrenamtskarte.backend.graphql.shared.context.RemoteIp
+import com.expediagroup.graphql.generator.extensions.get
 import org.jetbrains.exposed.sql.LowerCase
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
@@ -27,14 +28,14 @@ import java.time.Instant
 class ResetPasswordMutationController(
     @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     private val backendConfig: BackendConfiguration,
-    private val request: HttpServletRequest,
 ) {
     @GraphQLDescription("Sends a mail that allows the administrator to reset their password.")
     @MutationMapping
     fun sendResetMail(
         @Argument project: String,
         @Argument email: String,
-    ): Boolean {
+        dfe: DataFetchingEnvironment,
+        ): Boolean {
         val logger = LoggerFactory.getLogger(ResetPasswordMutationController::class.java)
         val projectConfig = backendConfig.getProjectConfig(project)
         transaction {
@@ -55,7 +56,7 @@ class ResetPasswordMutationController(
             if (user == null) {
                 // This logging is used for rate limiting
                 // See https://git.tuerantuer.org/DF/salt/pulls/187
-                logger.info("${request.remoteAddr} $email failed to request password reset mail")
+                logger.info("${dfe.graphQlContext.get<RemoteIp>()} $email failed to request password reset mail")
             }
         }
         return true
@@ -91,14 +92,14 @@ class ResetPasswordMutationController(
                 // This logging is used for rate limiting
                 // See https://git.tuerantuer.org/DF/salt/pulls/187
                 logger.info(
-                    "${request.remoteAddr} $email failed to reset password (unknown user or no reset mail sent)",
+                    "${dfe.graphQlContext.get<RemoteIp>()} $email failed to reset password (unknown user or no reset mail sent)",
                 )
                 return@transaction
             }
             if (user.passwordResetKeyExpiry!!.isBefore(Instant.now())) {
                 // This logging is used for rate limiting
                 // See https://git.tuerantuer.org/DF/salt/pulls/187
-                logger.info("${request.remoteAddr} $email failed to reset password (expired reset key)")
+                logger.info("${dfe.graphQlContext.get<RemoteIp>()} $email failed to reset password (expired reset key)")
                 throw PasswordResetKeyExpiredException()
             } else if (!PasswordCrypto.verifyPasswordResetKey(
                     passwordResetKey,
@@ -107,7 +108,7 @@ class ResetPasswordMutationController(
             ) {
                 // This logging is used for rate limiting
                 // See https://git.tuerantuer.org/DF/salt/pulls/187
-                logger.info("${request.remoteAddr} $email failed to reset password (invalid reset key)")
+                logger.info("${dfe.graphQlContext.get<RemoteIp>()} $email failed to reset password (invalid reset key)")
                 throw InvalidLinkException()
             }
 
