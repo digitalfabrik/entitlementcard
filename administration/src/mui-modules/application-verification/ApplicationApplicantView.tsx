@@ -79,12 +79,13 @@ const ApplicationApplicantView = ({
   ) : (
     <>
       <ConfirmDialog
+        id='withdraw-confirmation-dialog'
         open={dialogOpen}
-        onUpdateOpen={setDialogOpen}
+        onClose={() => setDialogOpen(false)}
         title={t('withdrawConfirmationTitle')}
-        content={t('withdrawConfirmationContent')}
-        onConfirm={submitWithdrawal}
-      />
+        onConfirm={submitWithdrawal}>
+        {t('withdrawConfirmationContent')}
+      </ConfirmDialog>
 
       <ApplicationViewCard elevation={2}>
         <ApplicationViewCardContent>

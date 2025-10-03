@@ -1,9 +1,9 @@
-import { Alert } from '@blueprintjs/core'
 import { ArrowBack, UploadFile } from '@mui/icons-material'
 import { Button, Tooltip } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import ConfirmDialog from '../../mui-modules/application/ConfirmDialog'
 import ButtonBar from '../ButtonBar'
 import { AcceptingStoresEntry } from './AcceptingStoresEntry'
 import StoresImportAlert from './StoresImportAlert'
@@ -40,6 +40,7 @@ const StoresButtonBar = ({
     tooltip = t('hasInvalidStores')
   }
 
+  // TODO fix button alignment
   return (
     <ButtonBar>
       <Button startIcon={<ArrowBack />} onClick={goBack}>
@@ -50,6 +51,7 @@ const StoresButtonBar = ({
           <Button
             startIcon={<UploadFile />}
             color='primary'
+            variant='contained'
             onClick={() => setImportDialogIsOpen(true)}
             disabled={hasNoAcceptingStores || hasInvalidStores}>
             {t('importStores')}
@@ -57,16 +59,14 @@ const StoresButtonBar = ({
         </div>
       </Tooltip>
 
-      <Alert
-        cancelButtonText={t('misc:cancel')}
-        confirmButtonText={t('importStores')}
-        icon='upload'
-        intent='warning'
-        isOpen={importDialogIsOpen}
-        onCancel={() => setImportDialogIsOpen(false)}
+      <ConfirmDialog
+        open={importDialogIsOpen}
+        title={t('importStores')}
+        id='import-stores-dialog'
+        onClose={() => setImportDialogIsOpen(false)}
         onConfirm={confirmImportDialog}>
         <StoresImportAlert dryRun={dryRun} setDryRun={setDryRun} storesCount={acceptingStores.length} />
-      </Alert>
+      </ConfirmDialog>
     </ButtonBar>
   )
 }

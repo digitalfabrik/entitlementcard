@@ -1,37 +1,20 @@
-import { Menu } from '@blueprintjs/core'
-import { ItemListRenderer, ItemRenderer, Select } from '@blueprintjs/select'
-import { Button } from '@mui/material'
+import { Search } from '@mui/icons-material'
+import { Autocomplete, InputAdornment, Stack, TextField } from '@mui/material'
 import React, { ReactElement, useContext, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Region, useGetRegionsQuery } from '../../generated/graphql'
+import FormAlert from '../../mui-modules/base/FormAlert'
 import getQueryResult from '../../mui-modules/util/getQueryResult'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 
-const getTitle = (region: Region) => `${region.prefix} ${region.name}`
-
-const renderMenu: ItemListRenderer<Region> = ({ itemsParentRef, renderItem, filteredItems }) => {
-  const renderedItems = filteredItems.map(renderItem).filter(item => item != null)
-  return (
-    <Menu
-      ulRef={itemsParentRef}
-      style={{ maxHeight: 500, overflow: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-      {renderedItems}
-    </Menu>
-  )
-}
-
-const itemRenderer: ItemRenderer<Region> = (region, { handleClick, modifiers }) => (
-  <Button key={region.id} size='small' variant='text' onClick={handleClick} disabled={modifiers.disabled}>
-    {getTitle(region)}
-  </Button>
-)
+const getTitle = (region?: Region): string | undefined => (region ? `${region.prefix} ${region.name}` : undefined)
 
 const RegionSelector = ({
   onSelect,
   selectedId,
 }: {
-  onSelect: (region: Region) => void
+  onSelect: (region?: Region) => void
   selectedId: number | null
 }): ReactElement => {
   const { t } = useTranslation('users')
@@ -53,35 +36,36 @@ const RegionSelector = ({
     return regionsQueryResult.component
   }
 
-  const activeItem = regions.find((other: Region) => selectedId === other.id)
   return (
-    <Select<Region>
-      activeItem={activeItem}
-      items={regions}
-      itemRenderer={itemRenderer}
-      filterable
-      itemListPredicate={(filter, items) =>
-        items.filter(region => getTitle(region).toLowerCase().includes(filter.toLowerCase()))
-      }
-      fill
-      itemListRenderer={renderMenu}
-      onItemSelect={onSelect}>
-      <div style={{ position: 'relative' }}>
-        {/* Make the browser think there is an actual select element to make it validate the form. */}
-        <select
-          style={{ height: '30px', opacity: 0, pointerEvents: 'none', position: 'absolute' }}
-          value={activeItem?.id ?? ''}
-          required
-          tabIndex={-1}>
-          <option value={activeItem?.id ?? ''} disabled>
-            {activeItem ? getTitle(activeItem) : t('select')}
-          </option>
-        </select>
-        <Button fullWidth sx={{ justifyContent: 'space-between', padding: '0 10px' }}>
-          {activeItem ? getTitle(activeItem) : t('select')}
-        </Button>
-      </div>
-    </Select>
+    <Stack>
+      <Autocomplete
+        value={selectedId != null ? getTitle(regions.find(region => region.id === selectedId)) : null}
+        renderInput={params => (
+          <TextField
+            sx={{ marginY: -2 }}
+            {...params}
+            variant='outlined'
+            label={t('region')}
+            required
+            slotProps={{
+              input: {
+                ...params.InputProps,
+                size: 'small',
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <Search />
+                  </InputAdornment>
+                ),
+              },
+            }}
+          />
+        )}
+        options={regions.map(region => getTitle(region))}
+        sx={{ marginY: 2 }}
+        onChange={(_, value) => onSelect(regions.find(region => getTitle(region) === value))}
+      />
+      {selectedId == null && <FormAlert errorMessage={t('noRegionError')} />}
+    </Stack>
   )
 }
 

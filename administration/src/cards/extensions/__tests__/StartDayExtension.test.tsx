@@ -23,7 +23,7 @@ describe('StartDayExtension', () => {
       value: { startDay: new PlainDate(2024, 1, 1) },
       setValue: mockSetValue,
       isValid: true,
-      showRequired: false,
+      forceError: false,
     }
 
     it('should render date picker with correct initial value', () => {

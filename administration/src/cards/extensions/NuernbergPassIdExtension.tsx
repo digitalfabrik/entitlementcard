@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { NuernergPassIdentifier } from '../../generated/card_pb'
@@ -19,10 +19,8 @@ const NuernbergPassIdForm = ({
   isValid,
 }: ExtensionComponentProps<NuernbergPassIdExtensionState>): ReactElement => {
   const { t } = useTranslation('extensions')
-  const [touched, setTouched] = useState(false)
   const { viewportSmall } = useWindowDimensions()
   const { nuernbergPassId } = value
-  const showError = !isValid && touched
   const clearInput = () => setValue({ nuernbergPassId: null })
 
   return (
@@ -37,8 +35,7 @@ const NuernbergPassIdForm = ({
           setValue({ nuernbergPassId: Number.isNaN(parsedNumber) ? null : parsedNumber })
         }
       }}
-      onBlur={() => setTouched(true)}
-      showError={showError}
+      showError={!isValid}
       inputProps={{
         sx: { paddingRight: 0 },
         endAdornment: (

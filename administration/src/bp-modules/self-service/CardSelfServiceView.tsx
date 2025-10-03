@@ -1,11 +1,12 @@
+import { Close } from '@mui/icons-material'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import KoblenzLogo from '../../assets/koblenz_logo.svg'
 import { updateCard } from '../../cards/Card'
-import BasicDialog from '../../mui-modules/application/BasicDialog'
 import CenteredCircularProgress from '../../mui-modules/base/CenteredCircularProgress'
 import CardSelfServiceActivation from './CardSelfServiceActivation'
 import CardSelfServiceForm from './CardSelfServiceForm'
@@ -120,21 +121,21 @@ const CardSelfServiceView = (): ReactElement => {
           <CardSelfServiceActivation downloadPdf={downloadPdf} code={code} />
         )}
       </Body>
-      <BasicDialog
-        open={openHelpDialog}
-        maxWidth='lg'
-        onUpdateOpen={setOpenHelpDialog}
-        title={t('help')}
-        content={
-          <>
-            <InfoText>
-              {t('youHaveProblemsCreatingAPass')} <br />
-              {t('pleaseContactUsForHelp')}
-            </InfoText>
-            <ActionButton href='mailto:koblenzpass@stadt.koblenz.de'>{t('sendMail')}</ActionButton>
-          </>
-        }
-      />
+      <Dialog open={openHelpDialog} aria-describedby='help-dialog' fullWidth onClose={() => setOpenHelpDialog(false)}>
+        <DialogTitle>{t('help')}</DialogTitle>
+        <DialogContent id='help-dialog'>
+          <InfoText>
+            {t('youHaveProblemsCreatingAPass')} <br />
+            {t('pleaseContactUsForHelp')}
+          </InfoText>
+        </DialogContent>
+        <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
+          <Button onClick={() => setOpenHelpDialog(false)} variant='outlined' startIcon={<Close />}>
+            {t('misc:cancel')}
+          </Button>
+          <ActionButton href='mailto:koblenzpass@stadt.koblenz.de'>{t('sendMail')}</ActionButton>
+        </DialogActions>
+      </Dialog>
     </Container>
   )
 }

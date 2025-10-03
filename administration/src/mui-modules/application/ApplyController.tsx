@@ -2,7 +2,7 @@ import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
-import { DialogActions, Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import { SnackbarProvider, useSnackbar } from 'notistack'
 import React, { ReactElement, useCallback, useContext, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
@@ -113,9 +113,9 @@ const ApplyController = (): React.ReactElement | null => {
             options={{ regions }}
           />
         )}
-        <DialogActions>
+        <Box sx={{ justifyContent: 'flex-end', display: 'flex', marginY: 2 }}>
           {loadingSubmit || formSubmitted ? null : <DiscardAllInputsButton discardAll={discardAll} />}
-        </DialogActions>
+        </Box>
       </div>
     </div>
   )

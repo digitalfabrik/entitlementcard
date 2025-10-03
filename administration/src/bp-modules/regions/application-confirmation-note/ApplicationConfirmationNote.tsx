@@ -1,13 +1,8 @@
-import { Checkbox } from '@blueprintjs/core'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
+import BaseCheckbox from '../../../mui-modules/base/BaseCheckbox'
 import TextAreaDialog from '../../components/TextAreaDialog'
-
-const StyledCheckbox = styled(Checkbox)`
-  margin: 12px;
-`
 
 type ApplicationConfirmationNoteDialogProps = {
   defaultConfirmationNote?: string | null
@@ -37,15 +32,19 @@ const ApplicationConfirmationNoteDialog = ({
   }
 
   const additionalContent = (
-    <StyledCheckbox
+    <BaseCheckbox
       checked={applicationConfirmationNoteActivated}
-      onChange={e => setApplicationConfirmationNoteActivated(e.currentTarget.checked)}
+      onChange={checked => setApplicationConfirmationNoteActivated(checked)}
       label={t('applicationConfirmationMailNoteActivated')}
+      hasError={false}
+      errorMessage={undefined}
     />
   )
 
   return (
     <TextAreaDialog
+      title={t('applicationConfirmationMailNoteDialogTitle')}
+      id='application-confirmation-note-dialog'
       defaultText={defaultConfirmationNote}
       maxChars={MAX_NOTE_CHARS}
       placeholder={t('applicationConfirmationMailNoteDialogPlaceholder')}
