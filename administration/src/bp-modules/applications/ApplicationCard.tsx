@@ -27,7 +27,6 @@ import {
   Divider,
   InputAdornment,
   Stack,
-  SxProps,
   TextField,
   Tooltip,
   Typography,
@@ -231,11 +230,6 @@ const createCardLink = (application: Application, config: ProjectConfig): string
   return query ? `./cards/add${query}&applicationIdToMarkAsProcessed=${application.id}` : undefined
 }
 
-const headerTypography: SxProps = {
-  fontSize: '1.1rem',
-  fontWeight: '500',
-}
-
 const ApplicationCard = ({
   application,
   onDelete,
@@ -341,7 +335,7 @@ const ApplicationCard = ({
         }}
         sx={{ flexDirection: 'column', alignItems: 'stretch', padding: 0 }}>
         <Stack direction='row' sx={{ width: '100%', gap: 2, paddingLeft: 2, paddingRight: 2 }}>
-          <Typography sx={{ minWidth: '250px', ...headerTypography }}>
+          <Typography variant='h6' sx={{ minWidth: '250px' }} marginY={0}>
             {t('applicationFrom', { date: new Date(application.createdDate) })}
           </Typography>
           <Warning
@@ -349,14 +343,15 @@ const ApplicationCard = ({
             visibility={application.status === ApplicationStatus.Withdrawn ? 'visible' : 'hidden'}
           />
           <Typography
+            variant='h6'
             sx={{
+              marginY: 0,
               flexGrow: 1,
               flexShrink: 1,
               color: theme.palette.text.secondary,
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap',
               overflow: 'hidden',
-              ...headerTypography,
             }}>
             {personalData &&
               personalData.forenames !== undefined &&

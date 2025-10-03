@@ -52,9 +52,13 @@ const BaseMenu = (props: BaseMenuProps): ReactElement => {
         open={open}
         onClose={handleMenuClose}>
         {props.menuItems.map(menuItem => (
-          <MenuItem key={menuItem.name} onClick={() => handleMenuItemClick(menuItem.onClick)} disableRipple>
+          <MenuItem
+            key={menuItem.name}
+            sx={{ marginY: 0.5 }}
+            onClick={() => handleMenuItemClick(menuItem.onClick)}
+            disableRipple>
             <ListItemIcon>{menuItem.icon}</ListItemIcon>
-            <ListItemText slotProps={{ primary: { typography: 'button', color: 'textSecondary' } }}>
+            <ListItemText slotProps={{ primary: { typography: 'button', color: 'textSecondary', margin: 0 } }}>
               {menuItem.name}
             </ListItemText>
           </MenuItem>

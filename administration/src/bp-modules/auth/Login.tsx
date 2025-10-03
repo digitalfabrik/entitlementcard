@@ -38,14 +38,13 @@ const Login = ({ onSignIn }: { onSignIn: (payload: SignInPayload) => void }): Re
   return (
     <StandaloneCenter>
       <Card sx={{ width: '100%', maxWidth: '500px', padding: 3 }}>
-        {/* TODO Setup Typography and remove custom fontSizes and fontHeights https://github.com/digitalfabrik/entitlementcard/issues/2334 */}
-        <Typography variant='h2' fontSize={28} fontWeight={600} marginBottom={1}>
+        <Typography variant='h4' component='h1'>
           {config.name}
         </Typography>
-        <Typography variant='h3' fontSize={22} fontWeight={600}>
+        <Typography variant='h5' component='h2'>
           {t('administration')}
         </Typography>
-        <Typography variant='h4' fontSize={18} fontWeight={600}>
+        <Typography variant='h6' component='h3' marginBottom={3}>
           {t('login')}
         </Typography>
         <LoginForm
