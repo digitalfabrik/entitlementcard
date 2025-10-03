@@ -8,14 +8,12 @@ import app.ehrenamtskarte.backend.db.entities.Applications
 import app.ehrenamtskarte.backend.db.entities.ProjectEntity
 import app.ehrenamtskarte.backend.db.entities.Projects
 import app.ehrenamtskarte.backend.db.entities.Regions
-import app.ehrenamtskarte.backend.graphql.GraphQLContext
 import app.ehrenamtskarte.backend.graphql.application.types.ExtractedApplicationVerification
 import app.ehrenamtskarte.backend.graphql.application.types.JsonField
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidLinkException
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidLinkException
 import app.ehrenamtskarte.backend.shared.database.sortByKeys
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import io.javalin.util.FileUtil
 import jakarta.servlet.http.Part
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.SizedIterable
@@ -70,11 +68,9 @@ object ApplicationRepository {
         val applicationDirectory = File(projectDirectory, newApplication.id.toString())
 
         return try {
+            applicationDirectory.mkdirs()
             files.forEachIndexed { index, part ->
-                FileUtil.streamToFile(
-                    part.inputStream,
-                    File(applicationDirectory, "$index").absolutePath,
-                )
+                part.write(File(applicationDirectory, "$index").absolutePath)
                 File(applicationDirectory, "$index.contentType").writeText(part.contentType)
             }
             Pair(newApplication, verificationEntities)
@@ -138,12 +134,12 @@ object ApplicationRepository {
             }
         }
 
-    fun delete(project: String, application: ApplicationEntity, graphQLContext: GraphQLContext) {
+    fun delete(project: String, application: ApplicationEntity, applicationData: File) {
         ApplicationVerifications.deleteWhere { ApplicationVerifications.applicationId eq application.id }
         application.delete()
 
         val applicationDirectory = Paths.get(
-            graphQLContext.applicationData.absolutePath,
+            applicationData.absolutePath,
             project,
             application.id.toString(),
         ).toFile()

@@ -11,6 +11,7 @@ import app.ehrenamtskarte.backend.db.entities.maySendMailsInRegion
 import app.ehrenamtskarte.backend.db.repositories.CardRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.db.repositories.UserEntitlementsRepository
+import app.ehrenamtskarte.backend.graphql.shared.context.RemoteIp
 import app.ehrenamtskarte.backend.graphql.auth.requireAuthContext
 import app.ehrenamtskarte.backend.graphql.cards.types.ActivationState
 import app.ehrenamtskarte.backend.graphql.cards.types.CardActivationResultModel
@@ -29,6 +30,7 @@ import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotActivatedForCardCo
 import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.graphql.exceptions.UserEntitlementExpiredException
 import app.ehrenamtskarte.backend.graphql.exceptions.UserEntitlementNotFoundException
+import app.ehrenamtskarte.backend.graphql.shared.context.GraphQLContext
 import app.ehrenamtskarte.backend.shared.Matomo
 import app.ehrenamtskarte.backend.shared.crypto.Argon2IdHasher
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
@@ -37,6 +39,7 @@ import app.ehrenamtskarte.backend.shared.mail.Mailer
 import at.favre.lib.crypto.bcrypt.BCrypt
 import com.eatthepath.otp.TimeBasedOneTimePasswordGenerator
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
+import com.expediagroup.graphql.generator.extensions.get
 import com.google.protobuf.ByteString
 import com.google.protobuf.InvalidProtocolBufferException
 import extensionStartDayOrNull
@@ -153,7 +156,10 @@ class CardMutationController(
         @Argument encodedCardInfo: String,
         @Argument generateStaticCode: Boolean,
         dfe: DataFetchingEnvironment,
+        @GraphQLContext remoteIp: RemoteIp,
     ): CardCreationResultModel {
+        logger.info(remoteIp.toString())
+
         val config = backendConfiguration.getProjectConfig(project)
         if (!config.selfServiceEnabled) {
             throw NotFoundException()
@@ -172,7 +178,7 @@ class CardMutationController(
         if (userEntitlements == null) {
             // This logging is used for rate limiting
             // See https://git.tuerantuer.org/DF/salt/pulls/187
-            logger.info("${request.remoteAddr} failed to create a new card")
+            logger.info("${dfe.graphQlContext.get<RemoteIp>()} failed to create a new card")
             throw UserEntitlementNotFoundException()
         }
         if (userEntitlements.revoked || userEntitlements.endDate.isBefore(LocalDate.now())) {
@@ -335,21 +341,21 @@ class CardMutationController(
 
             if (card == null || activationSecretHash == null) {
                 logger.info(
-                    "${request.remoteAddr} failed to activate card, card not found with cardHash:$cardInfoHashBase64",
+                    "${dfe.graphQlContext.get<RemoteIp>()} failed to activate card, card not found with cardHash:$cardInfoHashBase64",
                 )
                 return@t CardActivationResultModel(ActivationState.not_found)
             }
 
             if (!verifyActivationSecret(rawActivationSecret, activationSecretHash)) {
                 logger.info(
-                    "${request.remoteAddr} failed to activate card with id:${card.id} and overwrite: $overwrite",
+                    "${dfe.graphQlContext.get<RemoteIp>()} failed to activate card with id:${card.id} and overwrite: $overwrite",
                 )
                 return@t CardActivationResultModel(ActivationState.wrong_secret)
             }
 
             if (CardVerifier.isExpired(card.expirationDay, projectConfig.timezone)) {
                 logger.info(
-                    "${request.remoteAddr} failed to activate card with id:${card.id} and overwrite: " +
+                    "${dfe.graphQlContext.get<RemoteIp>()} failed to activate card with id:${card.id} and overwrite: " +
                         "$overwrite because card is expired",
                 )
                 return@t CardActivationResultModel(ActivationState.expired)
@@ -357,7 +363,7 @@ class CardMutationController(
 
             if (card.revoked) {
                 logger.info(
-                    "${request.remoteAddr} failed to activate card with id:${card.id} and overwrite: " +
+                    "${dfe.graphQlContext.get<RemoteIp>()} failed to activate card with id:${card.id} and overwrite: " +
                         "$overwrite because card is revoked",
                 )
                 return@t CardActivationResultModel(ActivationState.revoked)
@@ -365,7 +371,7 @@ class CardMutationController(
 
             if (!overwrite && card.totpSecret != null) {
                 logger.info(
-                    "Card with id:${card.id} did not overwrite card from ${request.remoteAddr}",
+                    "Card with id:${card.id} did not overwrite card from ${dfe.graphQlContext.get<RemoteIp>()}",
                 )
                 return@t CardActivationResultModel(ActivationState.did_not_overwrite_existing)
             }
@@ -374,7 +380,7 @@ class CardMutationController(
             val encodedTotpSecret = Base64.getEncoder().encodeToString(totpSecret)
             CardRepository.activate(card, totpSecret)
             logger.info(
-                "Card with id:${card.id} and overwrite: $overwrite was activated from ${request.remoteAddr}",
+                "Card with id:${card.id} and overwrite: $overwrite was activated from ${dfe.graphQlContext.get<RemoteIp>()}",
             )
             return@t CardActivationResultModel(ActivationState.success, encodedTotpSecret)
         }

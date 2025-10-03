@@ -14,9 +14,7 @@ import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.stereotype.Controller
 
 @Controller
-class SignInMutationController(
-    private val request: HttpServletRequest,
-) {
+class SignInMutationController {
     @GraphQLDescription("Signs in an administrator")
     @MutationMapping
     fun signIn(
@@ -31,7 +29,7 @@ class SignInMutationController(
         if (administratorEntity == null) {
             // This logging is used for rate limiting
             // See https://git.tuerantuer.org/DF/salt/pulls/187
-            logger.info("${request.remoteAddr} ${authData.email} failed to log in")
+          //  logger.info("${dfe.graphQlContext.get<RemoteIp>()} ${authData.email} failed to log in")
             throw InvalidCredentialsException()
         }
 
