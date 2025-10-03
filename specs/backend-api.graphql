@@ -139,6 +139,8 @@ type Query {
   regionByRegionId(regionId: Int!): Region!
   "Returns regions queried by ids in the given project."
   regionsByIdInProject(ids: [Int!]!, project: String!): [Region]!
+  "Returns regions by postal code. Works only for the EAK project in which each region has an appropriate regionIdentifier."
+  regionsByPostalCode(postalCode: String!, project: String!): [Region!]!
   "Return list of all regions in the given project."
   regionsInProject(project: String!): [Region!]!
   "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid, extendable and a timestamp of the last check"
