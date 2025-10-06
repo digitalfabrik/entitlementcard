@@ -1,6 +1,6 @@
 import { H2, H4, HTMLSelect, HTMLTable } from '@blueprintjs/core'
 import { Delete } from '@mui/icons-material'
-import { Button } from '@mui/material'
+import { Button, Typography } from '@mui/material'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -120,7 +120,9 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
         onClose={() => setTokenToDelete(null)}
         confirmButtonIcon={<Delete />}
         confirmButtonText={t('deleteToken')}>
-        <p>{t('deleteTokenConfirmationPrompt')}</p>
+        <Typography component='p' variant='body2'>
+          {t('deleteTokenConfirmationPrompt')}
+        </Typography>
       </ConfirmDialog>
       <SettingsCard>
         <H2>{t('apiToken')}</H2>
@@ -129,7 +131,9 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
 
         <Container>
           <H4>{t('createNewToken')}</H4>
-          <p>{t('tokenOnlyShowedOnceHint')}</p>
+          <Typography component='p' variant='body2'>
+            {t('tokenOnlyShowedOnceHint')}
+          </Typography>
           <Row>
             <label htmlFor='expiresIn'>{t('validPeriod')}:</label>
             <HTMLSelect
@@ -146,7 +150,9 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
           </Row>
           {createdToken !== null && (
             <>
-              <p>{t('newToken')}:</p>
+              <Typography component='p' variant='body2'>
+                {t('newToken')}:
+              </Typography>
               <NewTokenText> {createdToken}</NewTokenText>
             </>
           )}

@@ -1,5 +1,5 @@
 import { Checkbox, H2 } from '@blueprintjs/core'
-import { Button } from '@mui/material'
+import { Button, Typography } from '@mui/material'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -54,7 +54,9 @@ const NotificationSettings = (): ReactElement => {
   return (
     <SettingsCard>
       <H2>{t('notifications')}</H2>
-      <p>{t('notificationsExplanation')}</p>
+      <Typography component='p' variant='body2'>
+        {t('notificationsExplanation')}
+      </Typography>
       <form
         onSubmit={event => {
           event.preventDefault()

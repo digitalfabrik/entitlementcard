@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -45,9 +46,9 @@ const WorkAtDepartmentEntitlementForm: Form<State, ValidatedInput, AdditionalPro
           setState={useUpdateStateCallback(setState, 'responsibility')}
         />
         <h4>{t('certificateHeadline')}</h4>
-        <p>
+        <Typography component='p' variant='body2'>
           {t('certificateDescription')} {FileRequirementsText}
-        </p>
+        </Typography>
         <SubForms.certificate.Component
           state={state.certificate}
           setState={useUpdateStateCallback(setState, 'certificate')}

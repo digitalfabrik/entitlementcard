@@ -1,5 +1,5 @@
 import { Colors, Icon, Tag } from '@blueprintjs/core'
-import { styled } from '@mui/material'
+import { Typography, styled } from '@mui/material'
 import React, { memo, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -72,7 +72,7 @@ const JsonFieldAttachment = memo(
         }
       }
       return (
-        <p>
+        <Typography component='p' variant='body2'>
           {t(getTranslationKey(jsonField.name, parentName))}:&nbsp;
           <PrintAwareTag
             round
@@ -85,14 +85,14 @@ const JsonFieldAttachment = memo(
           <PrintOnlySpan>{`(${t('applicationsOverview:seeAttachment')} ${
             jsonField.value.fileIndex + 1
           })`}</PrintOnlySpan>
-        </p>
+        </Typography>
       )
     }
     return (
-      <p>
+      <Typography component='p' variant='body2'>
         {t(getTranslationKey(jsonField.name, parentName))}:&nbsp;
         <span>{t('applicationsOverview:submittedButNotVisible')}</span>
-      </p>
+      </Typography>
     )
   }
 )
@@ -107,33 +107,33 @@ const JsonFieldElemental = ({
   switch (jsonField.type) {
     case 'String':
       return (
-        <p>
+        <Typography component='p' variant='body2'>
           {t(getTranslationKey(jsonField.name, parentName))}:{' '}
           {isEmailValid(jsonField.value) ? <EmailLink email={jsonField.value} /> : <span>{jsonField.value}</span>}
-        </p>
+        </Typography>
       )
     case 'TranslatableString':
       return (
-        <p>
+        <Typography component='p' variant='body2'>
           {t(getTranslationKey(jsonField.name, parentName))}:{' '}
           <span>{t(getTranslationKey(jsonField.value, parentName))}</span>
-        </p>
+        </Typography>
       )
     case 'Date':
       return (
-        <p>
+        <Typography component='p' variant='body2'>
           {t(getTranslationKey(jsonField.name, parentName))}: {new Date(jsonField.value).toLocaleDateString('de')}
-        </p>
+        </Typography>
       )
     case 'Number':
       return (
-        <p>
+        <Typography component='p' variant='body2'>
           {t(getTranslationKey(jsonField.name, parentName))}: {jsonField.value}
-        </p>
+        </Typography>
       )
     case 'Boolean':
       return (
-        <p>
+        <Typography component='p' variant='body2'>
           {t(getTranslationKey(jsonField.name, parentName))}:&nbsp;
           {jsonField.value ? (
             <>
@@ -144,7 +144,7 @@ const JsonFieldElemental = ({
               <Icon icon='cross' intent='danger' /> {t('negativeAnswer')}
             </>
           )}
-        </p>
+        </Typography>
       )
     case 'Attachment':
       return <JsonFieldAttachment jsonField={jsonField} parentName={parentName} {...rest} />

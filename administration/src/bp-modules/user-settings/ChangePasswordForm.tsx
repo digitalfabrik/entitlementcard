@@ -1,5 +1,5 @@
 import { Callout, H2 } from '@blueprintjs/core'
-import { Button, FormControl, FormLabel, Stack } from '@mui/material'
+import { Button, FormControl, FormLabel, Stack, Typography } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -55,7 +55,9 @@ const ChangePasswordForm = (): ReactElement => {
   return (
     <SettingsCard>
       <H2>{t('changePassword')}</H2>
-      <p>{t('changePasswordExplanation')}</p>
+      <Typography component='p' variant='body2'>
+        {t('changePasswordExplanation')}
+      </Typography>
       <form
         onSubmit={event => {
           event.preventDefault()

@@ -1,5 +1,5 @@
 import { Checkbox, H2 } from '@blueprintjs/core'
-import { Button } from '@mui/material'
+import { Button, Typography } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -45,9 +45,9 @@ const FreinetSettingsCard = ({
   return (
     <SettingsCard>
       <Headline>{t('freinetHeadline')}</Headline>
-      <p>
+      <Typography component='p' variant='body2'>
         <Trans i18nKey='regionSettings:freinetExplanation' />
-      </p>
+      </Typography>
       <Table>
         <thead>
           <tr>

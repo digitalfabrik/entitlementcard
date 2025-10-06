@@ -1,5 +1,5 @@
 import { Callout, Card, Classes, H2, H3, H4, InputGroup } from '@blueprintjs/core'
-import { Button, FormControl, FormLabel, Stack } from '@mui/material'
+import { Button, FormControl, FormLabel, Stack, Typography } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate, useSearchParams } from 'react-router'
@@ -69,7 +69,9 @@ const ResetPasswordController = (): ReactElement => {
         <H2>{config.name}</H2>
         <H3>{t('administration')}</H3>
         <H4>{t('resetPassword')}</H4>
-        <p>{t('setPasswordText')}</p>
+        <Typography component='p' variant='body2'>
+          {t('setPasswordText')}
+        </Typography>
         <form
           onSubmit={e => {
             e.preventDefault()

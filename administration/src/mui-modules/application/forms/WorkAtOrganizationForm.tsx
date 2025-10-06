@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -108,9 +109,9 @@ const WorkAtOrganizationForm: Form<State, ValidatedInput, AdditionalProps> = {
           options={paymentOptions}
         />
         <h4>{t('applicationForms:certificateHeadline')}</h4>
-        <p>
+        <Typography component='p' variant='body2'>
           {t('applicationForms:certificateDescription')} {FileRequirementsText}
-        </p>
+        </Typography>
         <SubForms.certificate.Component
           state={state.certificate}
           setState={useUpdateStateCallback(setState, 'certificate')}
