@@ -1,4 +1,4 @@
-import { AppBar, Stack, SvgIcon, Toolbar, Typography } from '@mui/material'
+import { AppBar, Divider, Stack, SvgIcon, Toolbar, Typography } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router'
@@ -17,7 +17,13 @@ const NavigationBar = (): ReactElement => {
   return (
     <AppBar position='sticky' color='transparent'>
       <Stack>
-        <Toolbar sx={{ flexWrap: 'wrap' }}>
+        <Toolbar
+          sx={theme => ({
+            flexWrap: 'wrap',
+            [theme.breakpoints.down('lg')]: {
+              padding: 1.5,
+            },
+          })}>
           <SvgIcon fontSize='large'>
             <EntitlementIcon />
           </SvgIcon>
@@ -33,6 +39,7 @@ const NavigationBar = (): ReactElement => {
               )}
             </Stack>
           </NavLink>
+          <Divider orientation='vertical' variant='middle' flexItem />
           <Stack direction='row' sx={{ flexGrow: 1, gap: 1, paddingX: 1 }}>
             <NavigationItems variant='text' />
           </Stack>
