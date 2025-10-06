@@ -1,23 +1,20 @@
-import { Callout, Checkbox, Classes, Dialog, FormGroup, InputGroup } from '@blueprintjs/core'
 import { Edit } from '@mui/icons-material'
-import { Button } from '@mui/material'
+import { Stack, Typography } from '@mui/material'
 import React, { ReactElement, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
+import { Link } from 'react-router'
 
 import { WhoAmIContext } from '../../WhoAmIProvider'
+import CardTextField from '../../cards/extensions/components/CardTextField'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { Administrator, Role, useEditAdministratorMutation } from '../../generated/graphql'
+import ConfirmDialog from '../../mui-modules/application/ConfirmDialog'
+import AlertBox from '../../mui-modules/base/AlertBox'
+import BaseCheckbox from '../../mui-modules/base/BaseCheckbox'
+import { isEmailValid } from '../../shared/verifications'
 import { useAppToaster } from '../AppToaster'
 import RegionSelector from './RegionSelector'
-import RoleHelpButton from './RoleHelpButton'
 import RoleSelector from './RoleSelector'
-
-const RoleFormGroupLabel = styled.span`
-  & span {
-    display: inline-block !important;
-  }
-`
 
 const EditUserDialog = ({
   selectedUser,
@@ -38,6 +35,7 @@ const EditUserDialog = ({
   const [email, setEmail] = useState('')
   const [role, setRole] = useState<Role | null>(null)
   const [regionId, setRegionId] = useState<number | null>(null)
+  const [notificationConfirmed, setNotificationConfirmed] = useState(false)
   const rolesWithRegion = [Role.RegionManager, Role.RegionAdmin]
 
   useEffect(() => {
@@ -71,88 +69,96 @@ const EditUserDialog = ({
     return role !== null && rolesWithRegion.includes(role) ? regionId : null
   }
 
+  const onEditUser = () => {
+    if (selectedUser === null) {
+      console.error('Form submitted in an unexpected state.')
+      return
+    }
+
+    editAdministrator({
+      variables: {
+        adminId: selectedUser.id,
+        newEmail: email,
+        newRole: role as Role,
+        newRegionId: getRegionId(),
+      },
+    })
+  }
+  const showRegionSelector = regionIdOverride === null && role !== null && rolesWithRegion.includes(role)
+  const notificationShownAndNotConfirmed = selectedUser?.id === me?.id && !notificationConfirmed
+  const userEditDisabled =
+    !email || role === null || (showRegionSelector && regionId === null) || notificationShownAndNotConfirmed
+
+  const editUserAlertDescription = (
+    <>
+      {selectedUser?.id === me?.id ? (
+        <>
+          {t('youCanChangeYourOwnPassword')}{' '}
+          <Link to='/user-settings' target='_blank' rel='noreferrer'>
+            {t('userSettings')}
+          </Link>{' '}
+          {t('change')}.
+        </>
+      ) : (
+        <>
+          {t('userCanChangePassword')}{' '}
+          <Link to='/forgot-password' target='_blank' rel='noreferrer'>
+            {`${window.location.origin}/forgot-password`}
+          </Link>{' '}
+          {t('reset')}.
+        </>
+      )}
+    </>
+  )
+
   return (
-    <Dialog
-      title={t('editUserWithMail', { mail: selectedUser?.email })}
-      isOpen={selectedUser !== null}
-      onClose={onClose}>
-      <form
-        onSubmit={e => {
-          e.preventDefault()
-
-          if (selectedUser === null) {
-            console.error('Form submitted in an unexpected state.')
-            return
-          }
-
-          editAdministrator({
-            variables: {
-              adminId: selectedUser.id,
-              newEmail: email,
-              newRole: role as Role,
-              newRegionId: getRegionId(),
-            },
-          })
-        }}>
-        <div className={Classes.DIALOG_BODY}>
-          <FormGroup label={t('eMail')}>
-            <InputGroup
-              value={email}
-              required
-              onChange={e => setEmail(e.target.value)}
-              type='email'
-              placeholder='erika.musterfrau@example.org'
-            />
-          </FormGroup>
-          <FormGroup
-            label={
-              <RoleFormGroupLabel>
-                {t('role')} <RoleHelpButton />
-              </RoleFormGroupLabel>
-            }>
-            <RoleSelector role={role} onChange={setRole} hideProjectAdmin={regionIdOverride !== null} />
-          </FormGroup>
-          {regionIdOverride !== null || role === null || !rolesWithRegion.includes(role) ? null : (
-            <FormGroup label={t('region')}>
-              <RegionSelector onSelect={region => setRegionId(region.id)} selectedId={regionId} />
-            </FormGroup>
-          )}
-          <Callout intent='primary'>
-            {selectedUser?.id === me?.id ? (
-              <>
-                {t('youCanChangeYourOwnPassword')}{' '}
-                <a href={`${window.location.origin}/user-settings`} target='_blank' rel='noreferrer'>
-                  {t('userSettings')}
-                </a>{' '}
-                {t('change')}.
-              </>
-            ) : (
-              <>
-                {t('userCanChangePassword')}{' '}
-                <a href={`${window.location.origin}/forgot-password`} target='_blank' rel='noreferrer'>
-                  {`${window.location.origin}/forgot-password`}
-                </a>{' '}
-                {t('reset')}.
-              </>
-            )}
-          </Callout>
-          {selectedUser?.id !== me?.id ? null : (
-            <Callout intent='danger' style={{ marginTop: '16px' }}>
-              <b>{t('youEditYourOwnAccount')} </b>
-              {t('youMayCannotUndoThis')}
-              <Checkbox required>{t('ownAccountWarningConfirmation')}</Checkbox>
-            </Callout>
-          )}
-        </div>
-        <div className={Classes.DIALOG_FOOTER}>
-          <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button type='submit' startIcon={<Edit />} loading={loading}>
-              {t('saveUser')}
-            </Button>
-          </div>
-        </div>
-      </form>
-    </Dialog>
+    <ConfirmDialog
+      open={selectedUser !== null}
+      onClose={onClose}
+      title={t('editUser')}
+      id='edit-user-dialog'
+      onConfirm={onEditUser}
+      loading={loading}
+      actionDisabled={userEditDisabled}
+      confirmButtonText={t('editUser')}
+      confirmButtonIcon={<Edit />}>
+      <Stack sx={{ paddingY: 1, gap: 2 }}>
+        <CardTextField
+          id='edit-user-name-input'
+          label={t('createUserEmailLabel')}
+          placeholder='erika.musterfrau@example.org'
+          value={email}
+          onChange={value => setEmail(value)}
+          showError={!email || !isEmailValid(email)}
+          errorMessage={t('noUserNameError')}
+        />
+        <RoleSelector role={role} onChange={setRole} hideProjectAdmin={regionIdOverride !== null} />
+        {showRegionSelector ? (
+          <RegionSelector onSelect={region => setRegionId(region ? region.id : null)} selectedId={regionId} />
+        ) : null}
+        <AlertBox sx={{ margin: 0 }} severity='info' description={editUserAlertDescription} />
+        {selectedUser?.id === me?.id ? (
+          <AlertBox
+            sx={{ margin: 0 }}
+            severity='error'
+            title={t('youEditYourOwnAccount')}
+            description={
+              <Typography variant='body2' component='div'>
+                {t('youMayCannotUndoThis')}
+                <BaseCheckbox
+                  label={t('ownAccountWarningConfirmation')}
+                  required
+                  checked={notificationConfirmed}
+                  onChange={setNotificationConfirmed}
+                  hasError={false}
+                  errorMessage={undefined}
+                />
+              </Typography>
+            }
+          />
+        ) : null}
+      </Stack>
+    </ConfirmDialog>
   )
 }
 

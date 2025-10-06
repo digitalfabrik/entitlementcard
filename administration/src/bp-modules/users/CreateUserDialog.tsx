@@ -1,22 +1,18 @@
-import { Checkbox, Classes, Dialog, FormGroup, InputGroup } from '@blueprintjs/core'
+import { FormGroup } from '@blueprintjs/core'
 import { PersonAdd } from '@mui/icons-material'
-import { Button } from '@mui/material'
+import { Stack } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
+import CardTextField from '../../cards/extensions/components/CardTextField'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { Role, useCreateAdministratorMutation } from '../../generated/graphql'
+import ConfirmDialog from '../../mui-modules/application/ConfirmDialog'
+import BaseCheckbox from '../../mui-modules/base/BaseCheckbox'
+import { isEmailValid } from '../../shared/verifications'
 import { useAppToaster } from '../AppToaster'
 import RegionSelector from './RegionSelector'
-import RoleHelpButton from './RoleHelpButton'
 import RoleSelector from './RoleSelector'
-
-const RoleFormGroupLabel = styled.span`
-  & span {
-    display: inline-block !important;
-  }
-`
 
 const CreateUserDialog = ({
   isOpen,
@@ -39,6 +35,14 @@ const CreateUserDialog = ({
   const [sendWelcomeMail, setSendWelcomeMail] = useState(true)
   const rolesWithRegion = [Role.RegionManager, Role.RegionAdmin]
 
+  const clearAndCloseDialog = () => {
+    setEmail('')
+    setRole(null)
+    setRegionId(null)
+    setSendWelcomeMail(true)
+    onClose()
+  }
+
   const [createAdministrator, { loading }] = useCreateAdministratorMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
@@ -46,13 +50,8 @@ const CreateUserDialog = ({
     },
     onCompleted: () => {
       appToaster?.show({ intent: 'success', message: t('addUserSuccess') })
-      onClose()
       onSuccess()
-      // Reset State
-      setEmail('')
-      setRole(null)
-      setRegionId(null)
-      setSendWelcomeMail(true)
+      clearAndCloseDialog()
     },
   })
 
@@ -63,60 +62,61 @@ const CreateUserDialog = ({
     return role !== null && rolesWithRegion.includes(role) ? regionId : null
   }
 
+  const showRegionSelector = regionIdOverride === null && role !== null && rolesWithRegion.includes(role)
+  const userCreationDisabled = !email || role === null || (showRegionSelector && regionId === null)
   return (
-    <Dialog title={t('addUser')} isOpen={isOpen} onClose={onClose}>
-      <form
-        onSubmit={e => {
-          e.preventDefault()
-          createAdministrator({
-            variables: {
-              email,
-              role: role as Role,
-              regionId: getRegionId(),
-              sendWelcomeMail,
-            },
-          })
-        }}>
-        <div className={Classes.DIALOG_BODY}>
-          <FormGroup label={t('createUserEmailLabel')}>
-            <InputGroup
-              value={email}
-              required
-              onChange={e => setEmail(e.target.value)}
-              type='email'
-              placeholder='erika.musterfrau@example.org'
-            />
-          </FormGroup>
-          <FormGroup
+    <ConfirmDialog
+      open={isOpen}
+      title={t('addUser')}
+      loading={loading}
+      id='add-user-dialog'
+      actionDisabled={userCreationDisabled}
+      onClose={clearAndCloseDialog}
+      confirmButtonText={t('addUser')}
+      confirmButtonIcon={<PersonAdd />}
+      onConfirm={() =>
+        createAdministrator({
+          variables: {
+            email,
+            role: role as Role,
+            regionId: getRegionId(),
+            sendWelcomeMail,
+          },
+        })
+      }>
+      <Stack sx={{ paddingY: 1, gap: 2 }}>
+        <CardTextField
+          id='create-user-name-input'
+          label={t('createUserEmailLabel')}
+          placeholder='erika.musterfrau@example.org'
+          value={email}
+          onChange={value => setEmail(value)}
+          showError={!email || !isEmailValid(email)}
+          errorMessage={t('noUserNameError')}
+        />
+        <RoleSelector role={role} onChange={setRole} hideProjectAdmin={regionIdOverride !== null} />
+
+        {showRegionSelector ? (
+          <RegionSelector onSelect={region => setRegionId(region ? region.id : null)} selectedId={regionId} />
+        ) : null}
+        <FormGroup>
+          <BaseCheckbox
             label={
-              <RoleFormGroupLabel>
-                {t('role')} <RoleHelpButton />
-              </RoleFormGroupLabel>
-            }>
-            <RoleSelector role={role} onChange={setRole} hideProjectAdmin={regionIdOverride !== null} />
-          </FormGroup>
-          {regionIdOverride !== null || role === null || !rolesWithRegion.includes(role) ? null : (
-            <FormGroup label={t('region')}>
-              <RegionSelector onSelect={region => setRegionId(region.id)} selectedId={regionId} />
-            </FormGroup>
-          )}
-          <FormGroup>
-            <Checkbox checked={sendWelcomeMail} onChange={e => setSendWelcomeMail(e.currentTarget.checked)}>
-              <b>{t('sendWelcomeMail')}</b>
-              <br />
-              {t('sendWelcomeMailExplanation')}
-            </Checkbox>
-          </FormGroup>
-        </div>
-        <div className={Classes.DIALOG_FOOTER}>
-          <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button type='submit' startIcon={<PersonAdd />} loading={loading}>
-              {t('addUser')}
-            </Button>
-          </div>
-        </div>
-      </form>
-    </Dialog>
+              <>
+                {' '}
+                <b>{t('sendWelcomeMail')}</b>
+                <br />
+                {t('sendWelcomeMailExplanation')}
+              </>
+            }
+            checked={sendWelcomeMail}
+            onChange={checked => setSendWelcomeMail(checked)}
+            hasError={false}
+            errorMessage={undefined}
+          />
+        </FormGroup>
+      </Stack>
+    </ConfirmDialog>
   )
 }
 

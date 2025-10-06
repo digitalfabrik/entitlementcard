@@ -14,7 +14,7 @@ describe('KoblenzReferenceNumberExtension', () => {
           value={{ koblenzReferenceNumber: '' }}
           setValue={mockSetValue}
           isValid
-          showRequired={false}
+          forceError={false}
         />
       )
       expect(
@@ -31,7 +31,7 @@ describe('KoblenzReferenceNumberExtension', () => {
           value={{ koblenzReferenceNumber: '' }}
           setValue={mockSetValue}
           isValid
-          showRequired={false}
+          forceError={false}
         />
       )
       expect(
@@ -48,7 +48,7 @@ describe('KoblenzReferenceNumberExtension', () => {
           value={{ koblenzReferenceNumber: '' }}
           setValue={mockSetValue}
           isValid
-          showRequired={false}
+          forceError={false}
         />
       )
       const input = getByLabelText('Aktenzeichen')
@@ -68,7 +68,7 @@ describe('KoblenzReferenceNumberExtension', () => {
           value={{ koblenzReferenceNumber: initialValue }}
           setValue={mockSetValue}
           isValid={false}
-          showRequired={false}
+          forceError={false}
         />
       )
       expect(
@@ -86,7 +86,7 @@ describe('KoblenzReferenceNumberExtension', () => {
           value={{ koblenzReferenceNumber: initialValue }}
           setValue={mockSetValue}
           isValid={false}
-          showRequired
+          forceError
         />
       )
       const input = getByDisplayValue(initialValue)
@@ -106,7 +106,7 @@ describe('KoblenzReferenceNumberExtension', () => {
           value={{ koblenzReferenceNumber: initialValue }}
           setValue={mockSetValue}
           isValid={false}
-          showRequired
+          forceError
         />
       )
       const input = getByDisplayValue(initialValue)
@@ -126,7 +126,7 @@ describe('KoblenzReferenceNumberExtension', () => {
           value={{ koblenzReferenceNumber: initialValue }}
           setValue={mockSetValue}
           isValid={false}
-          showRequired
+          forceError
         />
       )
       const input = getByDisplayValue(initialValue)
@@ -145,7 +145,7 @@ describe('KoblenzReferenceNumberExtension', () => {
           value={{ koblenzReferenceNumber: '12345' }}
           setValue={mockSetValue}
           isValid
-          showRequired={false}
+          forceError={false}
         />
       )
 

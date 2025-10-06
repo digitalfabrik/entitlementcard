@@ -11,15 +11,17 @@ const DiscardAllInputsButton = ({ discardAll }: { discardAll: () => void }): Rea
   return (
     <>
       <Button variant='outlined' endIcon={<Delete />} onClick={() => setDialogOpen(true)}>
-        Alle Eingaben verwerfen
+        {t('discardInputsButton')}
       </Button>
       <ConfirmDialog
+        id='discard-inputs-dialog'
         open={dialogOpen}
-        onUpdateOpen={setDialogOpen}
+        onClose={() => setDialogOpen(false)}
         title={t('discardInputsTitle')}
-        content={t('discardInputsContent')}
-        onConfirm={discardAll}
-      />
+        color='error'
+        onConfirm={discardAll}>
+        {t('discardInputsContent')}
+      </ConfirmDialog>
     </>
   )
 }

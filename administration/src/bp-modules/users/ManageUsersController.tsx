@@ -1,5 +1,4 @@
-import { Card, H3 } from '@blueprintjs/core'
-import { Stack } from '@mui/material'
+import { Card, Stack, Typography } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -18,8 +17,10 @@ import UsersTable from './UsersTable'
 
 const UsersTableContainer = ({ children, title }: { children: ReactElement; title: string }) => (
   <Stack sx={{ overflow: 'auto', flexGrow: 1, alignItems: 'center', justifyContent: 'safe center' }}>
-    <Card style={{ maxWidth: '1200px', margin: 16 }}>
-      <H3 style={{ textAlign: 'center' }}>{title}</H3>
+    <Card style={{ maxWidth: '1200px', margin: 2 }}>
+      <Typography variant='h5' sx={{ textAlign: 'center', marginY: 1 }}>
+        {title}
+      </Typography>
       {children}
     </Card>
   </Stack>

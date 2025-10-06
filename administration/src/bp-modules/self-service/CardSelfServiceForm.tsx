@@ -1,3 +1,4 @@
+import { Close } from '@mui/icons-material'
 import InfoOutlined from '@mui/icons-material/InfoOutlined'
 import { Stack } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
@@ -8,14 +9,14 @@ import { Card, getFullNameValidationErrorMessage, isFullNameValid, isValid } fro
 import CardTextField from '../../cards/extensions/components/CardTextField'
 import ClearInputButton from '../../cards/extensions/components/ClearInputButton'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
-import BasicDialog from '../../mui-modules/application/BasicDialog'
+import ConfirmDialog from '../../mui-modules/application/ConfirmDialog'
 import BaseCheckbox from '../../mui-modules/base/BaseCheckbox'
 import FormAlert from '../../mui-modules/base/FormAlert'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { removeMultipleSpaces } from '../../util/helper'
 import { useAppToaster } from '../AppToaster'
 import ExtensionForms from '../cards/ExtensionForms'
-import { ActionButton } from './components/ActionButton'
+import { ActionButton, actionButtonSx } from './components/ActionButton'
 import { IconTextButton } from './components/IconTextButton'
 import { UnderlineTextButton } from './components/UnderlineTextButton'
 import { DataPrivacyAcceptingStatus } from './constants'
@@ -38,13 +39,11 @@ const CardSelfServiceForm = ({
   const projectConfig = useContext(ProjectConfigContext)
   const { t } = useTranslation('selfService')
   const [formSendAttempt, setFormSendAttempt] = useState(false)
-  const [touchedFullName, setTouchedFullName] = useState(false)
   const [openDataPrivacy, setOpenDataPrivacy] = useState<boolean>(false)
   const [openReferenceInformation, setOpenReferenceInformation] = useState<boolean>(false)
   const [_, setSearchParams] = useSearchParams()
   const cardValid = isValid(card, projectConfig.card, { expirationDateNullable: true })
   const appToaster = useAppToaster()
-  const showErrorMessage = touchedFullName || formSendAttempt
   const { viewportSmall } = useWindowDimensions()
 
   const createKoblenzPass = async () => {
@@ -71,10 +70,10 @@ const CardSelfServiceForm = ({
           label={t('firstNameLastName')}
           placeholder='Erika Musterfrau'
           autoFocus
+          forceError={formSendAttempt}
           value={card.fullName}
-          onBlur={() => setTouchedFullName(true)}
           onChange={fullName => updateCard({ fullName: removeMultipleSpaces(fullName) })}
-          showError={!isFullNameValid(card) && showErrorMessage}
+          showError={!isFullNameValid(card)}
           inputProps={{
             sx: { paddingRight: 0 },
             endAdornment: (
@@ -87,7 +86,7 @@ const CardSelfServiceForm = ({
           }}
           errorMessage={getFullNameValidationErrorMessage(card.fullName)}
         />
-        <ExtensionForms card={card} updateCard={updateCard} showRequired={formSendAttempt} />
+        <ExtensionForms card={card} updateCard={updateCard} forceError={formSendAttempt} />
         <IconTextButton onClick={() => setOpenReferenceInformation(true)}>
           <InfoOutlined />
           {t('whereToFindReferenceNumber')}
@@ -117,34 +116,42 @@ const CardSelfServiceForm = ({
       <ActionButton onClick={createKoblenzPass} variant='contained' size='large'>
         {t('createKoblenzPass')}
       </ActionButton>
-      <BasicDialog
+      <ConfirmDialog
         open={openReferenceInformation}
-        maxWidth='lg'
-        onUpdateOpen={setOpenReferenceInformation}
         title={t('whereToFindReferenceNumber')}
-        content={
-          <>
-            {t('whereToFindReferenceNumberExplanation')} <br />
-            {t('moreInformationAndExamples')}
-            <a
-              href='https://www.koblenz.de/leben-in-koblenz/soziales/koblenzpass/#accordion-2-4'
-              target='_blank'
-              rel='noreferrer'>
-              www.koblenz.de/koblenzpass
-            </a>
-            . <br />
-            <br /> {t('forQuestionsPleaseContact')}
-            <a href='mailto:koblenzpass@stadt.koblenz.de'>koblenzpass@stadt.koblenz.de</a>.
-          </>
-        }
-      />
-      <BasicDialog
+        buttonSx={actionButtonSx}
+        confirmButtonText={t('misc:close')}
+        confirmButtonIcon={<Close />}
+        id='reference-information-dialog'
+        onConfirm={() => setOpenReferenceInformation(false)}
+        onClose={() => setOpenReferenceInformation(false)}
+        showCancelButton={false}>
+        <>
+          {t('whereToFindReferenceNumberExplanation')} <br />
+          {t('moreInformationAndExamples')}
+          <a
+            href='https://www.koblenz.de/leben-in-koblenz/soziales/koblenzpass/#accordion-2-4'
+            target='_blank'
+            rel='noreferrer'>
+            www.koblenz.de/koblenzpass
+          </a>
+          . <br />
+          <br /> {t('forQuestionsPleaseContact')}
+          <a href='mailto:koblenzpass@stadt.koblenz.de'>koblenzpass@stadt.koblenz.de</a>.
+        </>
+      </ConfirmDialog>
+      <ConfirmDialog
+        confirmButtonText={t('misc:close')}
+        confirmButtonIcon={<Close />}
+        showCancelButton={false}
         open={openDataPrivacy}
-        maxWidth='md'
-        onUpdateOpen={setOpenDataPrivacy}
+        buttonSx={actionButtonSx}
         title={projectConfig.dataPrivacyHeadline}
-        content={<projectConfig.dataPrivacyContent />}
-      />
+        id='data-privacy-dialog'
+        onConfirm={() => setOpenDataPrivacy(false)}
+        onClose={() => setOpenDataPrivacy(false)}>
+        <projectConfig.dataPrivacyContent />
+      </ConfirmDialog>
     </>
   )
 }
