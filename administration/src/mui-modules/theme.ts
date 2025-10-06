@@ -199,5 +199,14 @@ export const theme = createTheme({
         },
       },
     },
+    MuiTypography: {
+      styleOverrides: {
+        root: ({ ownerState }) => ({
+          ...(ownerState.component === 'p' && {
+            marginBottom: 8,
+          }),
+        }),
+      },
+    },
   },
 })
