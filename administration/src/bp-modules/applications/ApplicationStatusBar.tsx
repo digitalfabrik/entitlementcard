@@ -64,7 +64,7 @@ const ApplicationStatusBarItem = ({
   onSetActiveBarItem: (item: ApplicationStatusBarItemType) => void
 }): ReactElement => {
   const { t } = useTranslation('applicationsOverview')
-
+  // TODO adjust button and span together
   return (
     <ItemContainer onClick={() => onSetActiveBarItem(item)} id={item.barItemI18nKey} $active={active}>
       {t(item.barItemI18nKey)}(<span data-testid={`status-${t(item.barItemI18nKey)}-count`}>{count}</span>)

@@ -20,14 +20,14 @@ export const ActivationText = (
     <Typography variant='h6' marginBottom={1}>
       {t('headline')}
     </Typography>
-    <span>
+    <Typography variant='body2' component='span'>
       <Trans i18nKey='activation:description' values={{ applicationName }} /> <br />{' '}
       <ActivationButton href={deepLink} variant='contained' size='small'>
         {t('activateButton')}
       </ActivationButton>
       <br /> <br />
       <b>{t('steps')}</b>
-    </span>
+    </Typography>
     <ol>
       <li>
         <Trans i18nKey='activation:downloadApp' values={{ applicationName }} />

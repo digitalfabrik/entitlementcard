@@ -1,4 +1,5 @@
 import { H4 } from '@blueprintjs/core'
+import { Typography } from '@mui/material'
 import { styled } from '@mui/system'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -43,18 +44,18 @@ const StatisticsTotalCardsCount = ({ statistics }: StatisticsTotalCountProps): R
   return (
     <Container>
       <Headline>{t('allRegions')}</Headline>
-      <span data-testid='totalCardsCreated'>
+      <Typography variant='body2' component='span' data-testid='totalCardsCreated'>
         {` ${sumTotalAmounts(statistics).totalCardsCreated} ${toLowerCaseFirstLetter(t('cardsCreated'))} / `}
-      </span>
-      <span data-testid='totalCardsActivated'>
+      </Typography>
+      <Typography variant='body2' component='span' data-testid='totalCardsActivated'>
         {`${sumTotalAmounts(statistics).totalCardsActivated} ${toLowerCaseFirstLetter(t('cardsActivated'))}`}
-      </span>
-      <span data-testid='totalCardsActivatedBlue'>
+      </Typography>
+      <Typography variant='body2' component='span' data-testid='totalCardsActivatedBlue'>
         {` (${sumTotalAmounts(statistics).totalCardsBlue} ${toLowerCaseFirstLetter(t('totalCardsBlue'))}, `}
-      </span>
-      <span data-testid='totalCardsActivatedGolden'>
+      </Typography>
+      <Typography variant='body2' component='span' data-testid='totalCardsActivatedGolden'>
         {`${sumTotalAmounts(statistics).totalCardsGolden} ${toLowerCaseFirstLetter(t('totalCardsGolden'))})`}
-      </span>
+      </Typography>
     </Container>
   )
 }

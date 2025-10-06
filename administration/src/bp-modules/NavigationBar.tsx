@@ -1,7 +1,7 @@
 /* eslint-disable react/destructuring-assignment */
 import { Alignment, Navbar } from '@blueprintjs/core'
 import { AddCard, Analytics, Checklist, Inventory, Map, People, Place } from '@mui/icons-material'
-import { Button, ButtonProps, styled } from '@mui/material'
+import { Button, ButtonProps, Typography, styled } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router'
@@ -46,9 +46,9 @@ const Navigation = ({ onSignOut }: Props): ReactElement => {
               {config.name} {t('administration')}
             </div>
             {!region ? null : (
-              <span>
+              <Typography variant='body2' component='span'>
                 {region.prefix} {region.name} {`(${process.env.REACT_APP_VERSION})`}
-              </span>
+              </Typography>
             )}
           </NavLink>
         </Navbar.Heading>

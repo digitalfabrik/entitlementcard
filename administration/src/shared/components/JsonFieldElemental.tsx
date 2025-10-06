@@ -91,7 +91,9 @@ const JsonFieldAttachment = memo(
     return (
       <Typography component='p' variant='body2'>
         {t(getTranslationKey(jsonField.name, parentName))}:&nbsp;
-        <span>{t('applicationsOverview:submittedButNotVisible')}</span>
+        <Typography variant='body2' component='span'>
+          {t('applicationsOverview:submittedButNotVisible')}
+        </Typography>
       </Typography>
     )
   }
@@ -109,14 +111,22 @@ const JsonFieldElemental = ({
       return (
         <Typography component='p' variant='body2'>
           {t(getTranslationKey(jsonField.name, parentName))}:{' '}
-          {isEmailValid(jsonField.value) ? <EmailLink email={jsonField.value} /> : <span>{jsonField.value}</span>}
+          {isEmailValid(jsonField.value) ? (
+            <EmailLink email={jsonField.value} />
+          ) : (
+            <Typography variant='body2' component='span'>
+              {jsonField.value}
+            </Typography>
+          )}
         </Typography>
       )
     case 'TranslatableString':
       return (
         <Typography component='p' variant='body2'>
           {t(getTranslationKey(jsonField.name, parentName))}:{' '}
-          <span>{t(getTranslationKey(jsonField.value, parentName))}</span>
+          <Typography variant='body2' component='span'>
+            {t(getTranslationKey(jsonField.value, parentName))}
+          </Typography>
         </Typography>
       )
     case 'Date':

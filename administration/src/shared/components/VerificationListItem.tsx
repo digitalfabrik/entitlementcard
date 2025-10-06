@@ -1,6 +1,6 @@
 import { Colors } from '@blueprintjs/core'
 import ForwardToInboxIcon from '@mui/icons-material/ForwardToInbox'
-import { Box, Button } from '@mui/material'
+import { Box, Button, Typography } from '@mui/material'
 import { TFunction } from 'i18next'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -84,7 +84,9 @@ const VerificationListItem = ({
               {isEmailValid(verification.contactEmailAddress) ? (
                 <EmailLink email={verification.contactEmailAddress} />
               ) : (
-                <span>{verification.contactEmailAddress}</span>
+                <Typography variant='body2' component='span'>
+                  {verification.contactEmailAddress}
+                </Typography>
               )}
             </td>
           </tr>

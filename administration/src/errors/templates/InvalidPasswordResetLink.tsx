@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -5,7 +6,9 @@ const InvalidPasswordResetLink = (): ReactElement => {
   const { t } = useTranslation('errorTemplates')
   return (
     <>
-      <span>{t('invalidLinkHeadline')}</span>
+      <Typography variant='body2' component='span'>
+        {t('invalidLinkHeadline')}
+      </Typography>
       <ul>
         <li>{t('browserIssue')}</li>
         <li>{t('passwordAlreadyReset')}</li>

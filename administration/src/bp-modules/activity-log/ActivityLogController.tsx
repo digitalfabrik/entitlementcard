@@ -1,5 +1,5 @@
 import { Card, H2 } from '@blueprintjs/core'
-import { Stack, styled, Typography } from '@mui/material'
+import { Stack, Typography, styled } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -27,7 +27,9 @@ const ActivityLogController = ({ activityLogConfig }: { activityLogConfig: Activ
         error={{ description: t('errors:notAuthorizedToSeeActivityLog') }}>
         <ActivityLogCard>
           <H2>{t('misc:activityLog')}</H2>
-          <Typography variant='body2' component='p' paddingY={1.5}>{t('activityLogDescription')}</Typography>
+          <Typography variant='body2' component='p' paddingY={1.5}>
+            {t('activityLogDescription')}
+          </Typography>
           <ActivityLogTable activityLog={activityLogSorted} activityLogConfig={activityLogConfig} />
         </ActivityLogCard>
       </RenderGuard>

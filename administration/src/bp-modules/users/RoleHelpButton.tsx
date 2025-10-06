@@ -31,7 +31,13 @@ const RoleHelpButton = (): ReactElement => {
               <li>{t('regionAdminRight4')}</li>
             </ul>
             <div>
-              <span style={{ color: 'red', fontWeight: 'bold' }}>{t('hint')}: </span>
+              <Typography
+                color='error'
+                variant='body2bold'
+                component='span'
+                style={{ color: 'red', fontWeight: 'bold' }}>
+                {t('hint')}:{' '}
+              </Typography>
               {t('regionAdminHint')}
             </div>
           </li>
