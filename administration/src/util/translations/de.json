@@ -137,6 +137,7 @@
     "nextStepButton": "Nächster Schritt",
     "backButton": "Zurück",
     "submitApplicationButton": "Antrag abschicken",
+    "discardInputsButton": "Alle Eingaben verwerfen",
     "discardInputsTitle": "Alle Eingaben verwerfen?",
     "discardInputsContent": "Wollen Sie wirklich alle Eingaben unwiderruflich löschen?",
     "submitSuccessText": "Ihr Antrag für die Ehrenamtskarte wurde erfolgreich übermittelt.<br/>Über den Fortschritt Ihres Antrags werden Sie per E-Mail informiert.<br/>Sie können das Fenster jetzt schließen.",
