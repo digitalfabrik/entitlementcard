@@ -81,6 +81,11 @@ export const theme = createTheme({
       lineHeight: 1.4,
       fontWeight: 400,
     },
+    body2bold: {
+      fontSize: '0.875rem',
+      lineHeight: 1.4,
+      fontWeight: 700,
+    },
     button: {
       fontSize: '0.875rem',
       fontWeight: 500,
