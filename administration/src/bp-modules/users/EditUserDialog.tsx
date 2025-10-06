@@ -11,6 +11,7 @@ import { Administrator, Role, useEditAdministratorMutation } from '../../generat
 import ConfirmDialog from '../../mui-modules/application/ConfirmDialog'
 import AlertBox from '../../mui-modules/base/AlertBox'
 import BaseCheckbox from '../../mui-modules/base/BaseCheckbox'
+import { isEmailValid } from '../../shared/verifications'
 import { useAppToaster } from '../AppToaster'
 import RegionSelector from './RegionSelector'
 import RoleSelector from './RoleSelector'
@@ -128,7 +129,7 @@ const EditUserDialog = ({
           placeholder='erika.musterfrau@example.org'
           value={email}
           onChange={value => setEmail(value)}
-          showError={!email}
+          showError={!email || !isEmailValid(email)}
           errorMessage={t('noUserNameError')}
         />
         <RoleSelector role={role} onChange={setRole} hideProjectAdmin={regionIdOverride !== null} />

@@ -9,6 +9,7 @@ import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { Role, useCreateAdministratorMutation } from '../../generated/graphql'
 import ConfirmDialog from '../../mui-modules/application/ConfirmDialog'
 import BaseCheckbox from '../../mui-modules/base/BaseCheckbox'
+import { isEmailValid } from '../../shared/verifications'
 import { useAppToaster } from '../AppToaster'
 import RegionSelector from './RegionSelector'
 import RoleSelector from './RoleSelector'
@@ -90,7 +91,7 @@ const CreateUserDialog = ({
           placeholder='erika.musterfrau@example.org'
           value={email}
           onChange={value => setEmail(value)}
-          showError={!email}
+          showError={!email || !isEmailValid(email)}
           errorMessage={t('noUserNameError')}
         />
         <RoleSelector role={role} onChange={setRole} hideProjectAdmin={regionIdOverride !== null} />
