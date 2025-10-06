@@ -1,5 +1,5 @@
 import { EditSquare, Logout, Settings } from '@mui/icons-material'
-import { Avatar, Box, Button, Divider, IconButton, Menu, Stack, Tooltip, Typography } from '@mui/material'
+import { Avatar, Box, Button, Divider, IconButton, Menu, Stack, Typography } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, useNavigate } from 'react-router'
@@ -30,14 +30,25 @@ const UserMenu = (): ReactElement => {
   }
 
   return (
-    <Box sx={{ flexGrow: 0 }}>
-      <Tooltip title='Open settings'>
-        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-          <Avatar alt={email} />
-        </IconButton>
-      </Tooltip>
+    <Box
+      sx={theme => ({
+        flexGrow: 0,
+        [theme.breakpoints.down('lg')]: {
+          flex: 1,
+          display: 'flex',
+          justifyContent: 'flex-end',
+        },
+      })}>
+      <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+        <Avatar alt={email} />
+      </IconButton>
       <Menu
-        sx={{ mt: '45px' }}
+        sx={{
+          mt: '45px',
+          '& .MuiList-root': {
+            padding: 0.5,
+          },
+        }}
         id='menu-appbar'
         anchorEl={anchorElUser}
         anchorOrigin={{
@@ -51,7 +62,7 @@ const UserMenu = (): ReactElement => {
         }}
         open={Boolean(anchorElUser)}
         onClose={handleCloseUserMenu}>
-        <Stack sx={{ padding: 1, alignItems: 'baseline' }}>
+        <Stack sx={{ paddingX: 0.5, paddingTop: 1, paddingBottom: 0.5, alignItems: 'baseline' }}>
           <Box sx={{ paddingX: 1, marginBottom: 1 }}>
             <Typography noWrap fontWeight='500' variant='body2'>
               {email}
@@ -59,7 +70,7 @@ const UserMenu = (): ReactElement => {
             <Typography variant='body2'>Rolle: {roleToText(role)}</Typography>
           </Box>
           <Divider sx={{ my: 1, width: '100%' }} />
-          <NavLink to='/user-settings' style={{ width: '100%' }}>
+          <NavLink to='/user-settings' style={{ width: '100%' }} onClick={handleCloseUserMenu}>
             <Button fullWidth variant='text' startIcon={<Settings />} sx={{ justifyContent: 'flex-start' }}>
               {t('userSettings')}
             </Button>
@@ -67,8 +78,8 @@ const UserMenu = (): ReactElement => {
           <RenderGuard
             condition={projectConfig.activityLogConfig !== undefined}
             allowedRoles={[Role.RegionManager, Role.RegionAdmin]}>
-            <NavLink to='/activity-log'>
-              <Button fullWidth variant='text' startIcon={<EditSquare />}>
+            <NavLink to='/activity-log' style={{ width: '100%' }} onClick={handleCloseUserMenu}>
+              <Button fullWidth variant='text' startIcon={<EditSquare />} sx={{ justifyContent: 'flex-start' }}>
                 {t('activityLog')}
               </Button>
             </NavLink>
