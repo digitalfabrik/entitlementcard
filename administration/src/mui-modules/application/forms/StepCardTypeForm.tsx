@@ -90,7 +90,7 @@ const StepCardTypeForm: Form<State, ValidatedInput> = {
 
     return (
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <Typography>{t('applicationForms:cardTypeExplanation')}</Typography>
+        <Typography component='p'>{t('applicationForms:cardTypeExplanation')}</Typography>
         <Typography>
           {t('applicationForms:cardTypeRequirements')}{' '}
           <a
