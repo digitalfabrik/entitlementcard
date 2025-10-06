@@ -1,130 +1,117 @@
 import { createTheme } from '@mui/material'
+import { Theme } from '@mui/system'
 
-export const theme = createTheme({
-  palette: {
-    mode: 'light',
-    primary: {
-      main: '#3B82F6',
-    },
-    error: {
-      main: '#CC4246',
-    },
-    warning: {
-      main: '#9C6324',
-      light: '#faf0e8',
-    },
-    text: {
-      primary: '#1c2127',
-      secondary: '#5C6065',
-      disabled: '#898989',
-    },
-  },
-  typography: {
-    h4: {
-      fontSize: '1.1rem',
-      lineHeight: 1.1,
-      fontWeight: 500,
-      marginTop: 10,
-      marginBottom: 6,
-    },
-    button: {
-      fontSize: 14,
-      fontWeight: 500,
-      textTransform: 'none',
-      textWrap: 'nowrap',
-    },
-  },
-  components: {
-    MuiButton: {
-      defaultProps: {
-        variant: 'outlined',
-        color: 'inherit',
+import { ProjectConfig } from '../project-configs/getProjectConfig'
+
+export const theme = (config: ProjectConfig): Theme =>
+  createTheme({
+    palette: config.colorPalette,
+    typography: {
+      h4: {
+        fontSize: '1.1rem',
+        lineHeight: 1.1,
+        fontWeight: 500,
+        marginTop: 10,
+        marginBottom: 6,
       },
-      styleOverrides: {
-        textInherit: {
-          color: '#5C6065',
-        },
-        outlinedInherit: {
-          borderColor: '#EEEEEE',
-          borderWidth: '2px',
-          color: '#5C6065',
-        },
-        containedInherit: {
-          backgroundColor: '#F6F7F9',
-          borderStyle: 'solid',
-          borderColor: '#EEEEEE',
-          borderWidth: '1px',
-          color: '#5C6065',
-          ':hover': {
-            backgroundColor: '#e9eaedff',
-          },
-        },
-        contained: {
-          boxShadow: '0 2px 2px #BBBBBB',
-          ':hover': {
-            boxShadow: '0 2px 2px #BBBBBB', // 0 2px 6px #BBBBBB',
-          },
-        },
+      button: {
+        fontSize: 14,
+        fontWeight: 500,
+        textTransform: 'none',
+        textWrap: 'nowrap',
       },
     },
-    MuiAccordion: {
-      styleOverrides: {
-        root: {
-          borderRadius: '0px',
+    components: {
+      MuiButton: {
+        defaultProps: {
+          variant: 'outlined',
+          color: 'inherit',
         },
-      },
-    },
-    MuiIconButton: {
-      styleOverrides: {
-        root: {
-          color: '#0000008a',
-        },
-      },
-    },
-    MuiStack: {
-      defaultProps: {
-        useFlexGap: true,
-      },
-      styleOverrides: {
-        root: {
-          '& *': {
-            fontFamily: 'inherit',
-            letterSpacing: 'inherit',
-          },
-        },
-      },
-    },
-    MuiMenuItem: {
-      variants: [
-        {
-          props: { color: 'default' },
-          style: {
-            backgroundColor: '#EEEEEE',
+        styleOverrides: {
+          textInherit: {
             color: '#5C6065',
-            '&:hover': {
-              backgroundColor: '#dddddd',
+          },
+          outlinedInherit: {
+            borderColor: '#EEEEEE',
+            borderWidth: '2px',
+            color: '#5C6065',
+          },
+          containedInherit: {
+            backgroundColor: '#F6F7F9',
+            borderStyle: 'solid',
+            borderColor: '#EEEEEE',
+            borderWidth: '1px',
+            color: '#5C6065',
+            ':hover': {
+              backgroundColor: '#e9eaedff',
             },
-            paddingLeft: 12,
+          },
+          contained: {
+            boxShadow: '0 2px 2px #BBBBBB',
+            ':hover': {
+              boxShadow: '0 2px 2px #BBBBBB', // 0 2px 6px #BBBBBB',
+            },
           },
         },
-      ],
-    },
-    MuiTooltip: {
-      styleOverrides: {
-        tooltip: {
-          fontSize: 'inherit',
-          backgroundColor: '#1c2127',
-          color: '#dddddd',
-          padding: 8,
+      },
+      MuiAccordion: {
+        styleOverrides: {
+          root: {
+            borderRadius: '0px',
+          },
+        },
+      },
+      MuiIconButton: {
+        styleOverrides: {
+          root: {
+            color: '#0000008a',
+          },
+        },
+      },
+      MuiStack: {
+        defaultProps: {
+          useFlexGap: true,
+        },
+        styleOverrides: {
+          root: {
+            '& *': {
+              fontFamily: 'inherit',
+              letterSpacing: 'inherit',
+            },
+          },
+        },
+      },
+      MuiMenuItem: {
+        variants: [
+          {
+            props: { color: 'default' },
+            style: {
+              backgroundColor: '#EEEEEE',
+              color: '#5C6065',
+              '&:hover': {
+                backgroundColor: '#dddddd',
+              },
+              paddingLeft: 12,
+            },
+          },
+        ],
+      },
+      MuiTooltip: {
+        styleOverrides: {
+          tooltip: {
+            fontSize: 'inherit',
+            backgroundColor: '#1c2127',
+            color: '#dddddd',
+            padding: 8,
+          },
+        },
+      },
+      MuiFormLabel: {
+        styleOverrides: {
+          root: {
+            fontSize: '0.9rem',
+          },
         },
       },
     },
-    MuiFormLabel: {
-      styleOverrides: {
-        root: {
-          fontSize: '0.9rem',
-        },
-      },
-    },
-  },
-})
+  })
