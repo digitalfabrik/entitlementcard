@@ -8,6 +8,8 @@ import org.springframework.graphql.server.WebGraphQlInterceptor
 import org.springframework.graphql.server.WebGraphQlRequest
 import org.springframework.graphql.server.WebGraphQlResponse
 import org.springframework.stereotype.Component
+import org.springframework.web.context.request.RequestContextHolder
+import org.springframework.web.context.request.ServletRequestAttributes
 import reactor.core.publisher.Mono
 
 /**
@@ -20,22 +22,23 @@ import reactor.core.publisher.Mono
  * ```
  */
 @Component
-class RequestContextInterceptor(private val request: HttpServletRequest) : WebGraphQlInterceptor {
+class RequestContextInterceptor : WebGraphQlInterceptor {
     override fun intercept(request: WebGraphQlRequest, chain: WebGraphQlInterceptor.Chain): Mono<WebGraphQlResponse> {
-        val jwtPayload = JwtService.verifyRequest(request)
+        val servletRequest = (RequestContextHolder.getRequestAttributes() as? ServletRequestAttributes)?.request
+        val jwtPayload = JwtService.verifyRequest(servletRequest)
         val authContext = jwtPayload?.let { AuthContext.fromJwtPayload(it) }
 
         request.configureExecutionInput { _, builder ->
             builder.graphQLContext { ctx ->
                 authContext?.let { ctx.put(AuthContext::class, it) }
-                ctx.put(RemoteIp::class, RemoteIp(getIpAddress()))
+                servletRequest?.let { ctx.put(RemoteIp::class, RemoteIp(getIpAddress(it))) }
             }.build()
         }
 
         return chain.next(request)
     }
 
-    private fun getIpAddress(): String {
+    private fun getIpAddress(request: HttpServletRequest): String {
         val xRealIp = request.getHeader("X-Real-IP")
         val xForwardedFor = request.getHeader("X-Forwarded-For")
         val remoteAddress = request.remoteAddr
