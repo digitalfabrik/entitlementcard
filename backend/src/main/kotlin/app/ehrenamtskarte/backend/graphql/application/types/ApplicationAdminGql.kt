@@ -41,7 +41,9 @@ data class ApplicationAdminGql(
             application: ApplicationAdminGql,
             dfe: DataFetchingEnvironment,
         ): CompletableFuture<List<ApplicationVerificationView>> {
-            val loader = dfe.getDataLoader<Int, List<ApplicationVerificationView>>(VerificationsByApplicationDataLoader::class.java.name)
+            val loader = dfe.getDataLoader<Int, List<ApplicationVerificationView>>(
+                VerificationsByApplicationDataLoader::class.java.name,
+            )
             return loader?.load(application.id) ?: CompletableFuture.completedFuture(emptyList())
         }
     }
