@@ -29,6 +29,7 @@ import ActivationPage from './mui-modules/activation/ActivationPage'
 import ApplicationApplicantController from './mui-modules/application-verification/ApplicationApplicantController'
 import ApplicationVerificationController from './mui-modules/application-verification/ApplicationVerificationController'
 import ApplyController from './mui-modules/application/ApplyController'
+import DownloadPage from './mui-modules/download/DownloadPage'
 import ImprintPage from './mui-modules/imprint/ImprintPage'
 import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
 
@@ -64,6 +65,7 @@ const Router = (): ReactElement => {
             <Route path='/forgot-password' element={<ForgotPasswordController />} />
             <Route path='/reset-password/' element={<ResetPasswordController />} />
             <Route path='/imprint/' element={<ImprintPage />} />
+            <Route path='/download/' element={<DownloadPage />} />
 
             {projectConfig.applicationFeature && (
               <>

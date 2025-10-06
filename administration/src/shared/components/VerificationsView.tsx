@@ -33,7 +33,7 @@ const VerificationsView = ({
 
   return (
     <>
-      <Typography variant='h4'>{t('confirmationsByOrganizations')}</Typography>
+      <Typography variant='h6'>{t('confirmationsByOrganizations')}</Typography>
       <VerificationContainer>
         {application.verifications.map(verification => {
           const key = verification.organizationName + verification.contactEmailAddress
