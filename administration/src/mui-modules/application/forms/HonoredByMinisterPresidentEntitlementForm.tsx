@@ -29,7 +29,9 @@ const HonoredByMinisterPresidentEntitlementForm: Form<State, ValidatedInput, Add
     return (
       <>
         <CustomDivider label={t('honoredByMinisterDivider')} />
-        <h4>{t('honoredByMinisterCertificate')}</h4>
+        <Typography variant='body2bold' component='h4' marginY={1.5}>
+          {t('honoredByMinisterCertificate')}
+        </Typography>
         <Typography component='p' variant='body2'>
           {t('honoredByMinisterCertificateDescription')} {FileRequirementsText}
         </Typography>

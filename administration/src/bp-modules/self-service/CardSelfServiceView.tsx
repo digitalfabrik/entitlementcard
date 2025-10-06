@@ -1,6 +1,6 @@
 import { Close } from '@mui/icons-material'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -50,18 +50,6 @@ const Step = styled.div`
   align-self: flex-end;
 `
 
-const Headline = styled.h1`
-  color: #e2007a;
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 0;
-`
-
-const SubHeadline = styled.h2`
-  color: #131314;
-  font-size: 22px;
-`
-
 const Text = styled.div`
   margin-bottom: 24px;
   font-size: 16px;
@@ -102,8 +90,12 @@ const CardSelfServiceView = (): ReactElement => {
       </Header>
       <Body>
         <Step>{`${t('step')} ${selfServiceStepInfo[cardGenerationStep].stepNr}/${totalSteps}`}</Step>
-        <Headline>{selfServiceStepInfo[cardGenerationStep].headline}</Headline>
-        <SubHeadline>{selfServiceStepInfo[cardGenerationStep].subHeadline}</SubHeadline>
+        <Typography variant='h6' component='h1' sx={{ color: '#e2007a' }}>
+          {selfServiceStepInfo[cardGenerationStep].headline}
+        </Typography>
+        <Typography variant='h5' component='h2'>
+          {selfServiceStepInfo[cardGenerationStep].subHeadline}
+        </Typography>
         <Text>{selfServiceStepInfo[cardGenerationStep].text}</Text>
         {cardGenerationStep === 'input' && (
           <CardSelfServiceForm

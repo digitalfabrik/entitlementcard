@@ -88,7 +88,9 @@ const OrganizationForm: Form<State, ValidatedInput, AdditionalProps> = {
     const { t } = useTranslation('application')
     return (
       <>
-        <h4>{t('organization.title')}</h4>
+        <Typography variant='body2bold' component='h4' marginY={1.5}>
+          {t('organization.title')}
+        </Typography>
         <ShortTextForm.Component
           state={state.name}
           setState={useUpdateStateCallback(setState, 'name')}
@@ -101,7 +103,9 @@ const OrganizationForm: Form<State, ValidatedInput, AdditionalProps> = {
           label={t('organization.category')}
           options={organizationCategoryOptions}
         />
-        <h4>{t('organizationContact.title')}</h4>
+        <Typography variant='body2bold' component='h4' marginY={1.5}>
+          {t('organizationContact.title')}
+        </Typography>
         <Typography>{t('applicationForms:organizationContactPersonDescription')}</Typography>
         {normalizeName(applicantName) === normalizeName(state.contactName.shortText) && (
           <WarningContactPersonSamePerson severity='warning'>

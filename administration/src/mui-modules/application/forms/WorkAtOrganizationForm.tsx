@@ -72,7 +72,9 @@ const WorkAtOrganizationForm: Form<State, ValidatedInput, AdditionalProps> = {
     return (
       <>
         <ActivityDivider onDelete={onDelete} />
-        <h4>{t('applicationForms:workAtOrganizationHeadline')}</h4>
+        <Typography variant='body2bold' component='h4' marginY={1.5}>
+          {t('applicationForms:workAtOrganizationHeadline')}
+        </Typography>
         <SubForms.responsibility.Component
           state={state.responsibility}
           setState={useUpdateStateCallback(setState, 'responsibility')}
@@ -108,7 +110,9 @@ const WorkAtOrganizationForm: Form<State, ValidatedInput, AdditionalProps> = {
           label={t('payment')}
           options={paymentOptions}
         />
-        <h4>{t('applicationForms:certificateHeadline')}</h4>
+        <Typography variant='body2bold' component='h4' marginY={1.5}>
+          {t('applicationForms:certificateHeadline')}
+        </Typography>
         <Typography component='p' variant='body2'>
           {t('applicationForms:certificateDescription')} {FileRequirementsText}
         </Typography>

@@ -1,4 +1,4 @@
-import { Callout, Card, Classes, H2, H3, H4, InputGroup } from '@blueprintjs/core'
+import { Callout, Card, Classes, InputGroup } from '@blueprintjs/core'
 import { Button, FormControl, FormLabel, Stack, Typography } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -66,9 +66,9 @@ const ResetPasswordController = (): ReactElement => {
   return (
     <StandaloneCenter>
       <Card style={{ width: '100%', maxWidth: '500px' }}>
-        <H2>{config.name}</H2>
-        <H3>{t('administration')}</H3>
-        <H4>{t('resetPassword')}</H4>
+        <Typography variant='h4'>{config.name}</Typography>
+        <Typography variant='h5'>{t('administration')}</Typography>
+        <Typography variant='h6'>{t('resetPassword')}</Typography>
         <Typography component='p' variant='body2'>
           {t('setPasswordText')}
         </Typography>

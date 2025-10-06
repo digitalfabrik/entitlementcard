@@ -1,4 +1,3 @@
-import { H5 } from '@blueprintjs/core'
 import { Typography } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -25,9 +24,9 @@ const StoresImportResult = ({
   const { t } = useTranslation('stores')
   return (
     <Container>
-      <H5 data-testid='import-result-headline'>{`${t('articleMale')} ${dryRun ? t('dryRunImport') : t('import')} ${t(
-        'wasSuccessful'
-      )}`}</H5>
+      <Typography variant='h6' data-testid='import-result-headline'>{`${t('articleMale')} ${
+        dryRun ? t('dryRunImport') : t('import')
+      } ${t('wasSuccessful')}`}</Typography>
       <Typography variant='body2' component='span'>
         {dryRun ? t('importResult') : t('importResult')}
       </Typography>

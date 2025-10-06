@@ -1,4 +1,4 @@
-import { Card, H2 } from '@blueprintjs/core'
+import { Card } from '@blueprintjs/core'
 import { Stack, Typography, styled } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -26,7 +26,7 @@ const ActivityLogController = ({ activityLogConfig }: { activityLogConfig: Activ
         allowedRoles={[Role.RegionAdmin, Role.RegionManager]}
         error={{ description: t('errors:notAuthorizedToSeeActivityLog') }}>
         <ActivityLogCard>
-          <H2>{t('misc:activityLog')}</H2>
+          <Typography variant='h4'>{t('misc:activityLog')}</Typography>
           <Typography variant='body2' component='p' paddingY={1.5}>
             {t('activityLogDescription')}
           </Typography>

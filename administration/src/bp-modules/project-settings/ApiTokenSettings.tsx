@@ -1,4 +1,4 @@
-import { H2, H4, HTMLSelect, HTMLTable } from '@blueprintjs/core'
+import { HTMLSelect, HTMLTable } from '@blueprintjs/core'
 import { Delete } from '@mui/icons-material'
 import { Button, Typography } from '@mui/material'
 import React, { ReactElement, useEffect, useState } from 'react'
@@ -125,12 +125,12 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
         </Typography>
       </ConfirmDialog>
       <SettingsCard>
-        <H2>{t('apiToken')}</H2>
+        <Typography variant='h4'>{t('apiToken')}</Typography>
 
         {showPepperSection && <PepperSettings />}
 
         <Container>
-          <H4>{t('createNewToken')}</H4>
+          <Typography variant='h6'>{t('createNewToken')}</Typography>
           <Typography component='p' variant='body2'>
             {t('tokenOnlyShowedOnceHint')}
           </Typography>

@@ -1,4 +1,3 @@
-import { H2 } from '@blueprintjs/core'
 import { Button, Typography } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -30,7 +29,7 @@ const ApplicationConfirmationNoteCard = ({
 
   return (
     <SettingsCard>
-      <H2>{t('applicationConfirmationMailNoteHeadline')}</H2>
+      <Typography variant='h4'>{t('applicationConfirmationMailNoteHeadline')}</Typography>
       <Typography component='p' variant='body2'>
         {t('applicationConfirmationMailNoteExplanation')}
       </Typography>

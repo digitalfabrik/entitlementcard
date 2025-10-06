@@ -1,4 +1,4 @@
-import { Callout, H2 } from '@blueprintjs/core'
+import { Callout } from '@blueprintjs/core'
 import { Button, FormControl, FormLabel, Stack, Typography } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -54,7 +54,7 @@ const ChangePasswordForm = (): ReactElement => {
 
   return (
     <SettingsCard>
-      <H2>{t('changePassword')}</H2>
+      <Typography variant='h4'>{t('changePassword')}</Typography>
       <Typography component='p' variant='body2'>
         {t('changePasswordExplanation')}
       </Typography>

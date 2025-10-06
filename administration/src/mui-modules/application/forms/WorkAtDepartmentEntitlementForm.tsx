@@ -39,13 +39,17 @@ const WorkAtDepartmentEntitlementForm: Form<State, ValidatedInput, AdditionalPro
           setState={useUpdateStateCallback(setState, 'organization')}
           applicantName={applicantName}
         />
-        <h4>{t('activityInformation')}</h4>
+        <Typography variant='body2bold' component='h4' marginY={1.5}>
+          {t('activityInformation')}
+        </Typography>
         <SubForms.responsibility.Component
           label={t('activityFunction')}
           state={state.responsibility}
           setState={useUpdateStateCallback(setState, 'responsibility')}
         />
-        <h4>{t('certificateHeadline')}</h4>
+        <Typography variant='body2bold' component='h4' marginY={1.5}>
+          {t('certificateHeadline')}
+        </Typography>
         <Typography component='p' variant='body2'>
           {t('certificateDescription')} {FileRequirementsText}
         </Typography>

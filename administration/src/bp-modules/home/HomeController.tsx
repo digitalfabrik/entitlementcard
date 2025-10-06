@@ -1,6 +1,5 @@
-import { H3 } from '@blueprintjs/core'
 import { AddCard, Analytics, Checklist, Inventory, Map, People, Place } from '@mui/icons-material'
-import { Button, Stack } from '@mui/material'
+import { Button, Stack, Typography } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router'
@@ -17,7 +16,7 @@ const HomeController = (): ReactElement => {
 
   return (
     <Stack sx={{ flexGrow: 1, alignItems: 'center', justifyContent: 'center', overflow: 'auto', padding: 4, gap: 2 }}>
-      <H3>Wählen Sie eine Aktion aus:</H3>
+      <Typography variant='h5'>Wählen Sie eine Aktion aus:</Typography>
 
       <RenderGuard allowedRoles={[Role.RegionAdmin, Role.RegionManager]}>
         {applicationFeature ? (
