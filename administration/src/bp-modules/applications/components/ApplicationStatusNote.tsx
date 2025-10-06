@@ -76,9 +76,7 @@ export const ApplicationStatusNote = (p: {
               reason: p.reason !== undefined ? t('reason', { message: p.reason }) : '',
             }}
             components={{
-              resolution: (
-                <Typography component='span' sx={{ fontWeight: 'bold', fontSize: 'inherit' }} color={color} />
-              ),
+              resolution: <Typography component='span' fontWeight='bold' fontSize='inherit' color={color} />,
             }}
           />
         )}
