@@ -24,7 +24,6 @@ class EakApplicationQueryController {
         @Argument regionId: Int,
     ): List<ApplicationAdminGql> {
         val admin = dfe.requireAuthContext().admin
-
         return transaction {
             if (admin.mayViewApplicationsInRegion(regionId)) {
                 ApplicationRepository.getApplicationsByAdmin(regionId)
