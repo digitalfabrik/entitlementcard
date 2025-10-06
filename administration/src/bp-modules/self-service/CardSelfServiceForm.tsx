@@ -1,5 +1,5 @@
 import InfoOutlined from '@mui/icons-material/InfoOutlined'
-import { Stack } from '@mui/material'
+import { Button, Stack } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
@@ -15,7 +15,6 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 import { removeMultipleSpaces } from '../../util/helper'
 import { useAppToaster } from '../AppToaster'
 import ExtensionForms from '../cards/ExtensionForms'
-import { ActionButton } from './components/ActionButton'
 import { IconTextButton } from './components/IconTextButton'
 import { UnderlineTextButton } from './components/UnderlineTextButton'
 import { DataPrivacyAcceptingStatus } from './constants'
@@ -114,9 +113,14 @@ const CardSelfServiceForm = ({
           errorMessage={t('pleaseAcceptPrivacyPolicy')}
         />
       </Stack>
-      <ActionButton onClick={createKoblenzPass} variant='contained' size='large'>
+      <Button
+        color='secondary'
+        sx={{ width: 'fit-content' }}
+        onClick={createKoblenzPass}
+        variant='contained'
+        size='large'>
         {t('createKoblenzPass')}
-      </ActionButton>
+      </Button>
       <BasicDialog
         open={openReferenceInformation}
         maxWidth='lg'
