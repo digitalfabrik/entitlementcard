@@ -21,8 +21,6 @@ describe('NavigationBar', () => {
     jest.clearAllMocks()
   })
 
-  const signOut = jest.fn()
-
   describe('when user RegionAdmin is logged in', () => {
     beforeEach(() => {
       mockUseWhoAmI.mockReturnValue({
@@ -32,7 +30,7 @@ describe('NavigationBar', () => {
     })
 
     it('should render the correct NavBar items for bayern', async () => {
-      const { getByText, queryByText } = renderWithTranslation(<NavigationBar onSignOut={signOut} />, {
+      const { getByText, queryByText } = renderWithTranslation(<NavigationBar />, {
         wrapper,
         projectConfig: bayernConfig,
       })
@@ -46,7 +44,7 @@ describe('NavigationBar', () => {
     })
 
     it('should render the correct NavBar items for nuernberg', async () => {
-      const { getByText, queryByText } = renderWithTranslation(<NavigationBar onSignOut={signOut} />, {
+      const { getByText, queryByText } = renderWithTranslation(<NavigationBar />, {
         wrapper,
         projectConfig: nuernbergConfig,
       })
@@ -60,7 +58,7 @@ describe('NavigationBar', () => {
     })
 
     it('should render the correct NavBar items for koblenz', async () => {
-      const { getByText, queryByText } = renderWithTranslation(<NavigationBar onSignOut={signOut} />, {
+      const { getByText, queryByText } = renderWithTranslation(<NavigationBar />, {
         wrapper,
         projectConfig: koblenzConfig,
       })
@@ -83,7 +81,7 @@ describe('NavigationBar', () => {
     })
 
     it('should render the correct NavBar items Ehrenamtskarte Bayern', async () => {
-      const { getByText, queryByText } = renderWithTranslation(<NavigationBar onSignOut={signOut} />, {
+      const { getByText, queryByText } = renderWithTranslation(<NavigationBar />, {
         wrapper,
         projectConfig: bayernConfig,
       })
@@ -97,7 +95,7 @@ describe('NavigationBar', () => {
     })
 
     it('should render the correct NavBar items for nuernberg', async () => {
-      const { getByText, queryByText } = renderWithTranslation(<NavigationBar onSignOut={signOut} />, {
+      const { getByText, queryByText } = renderWithTranslation(<NavigationBar />, {
         wrapper,
         projectConfig: nuernbergConfig,
       })
@@ -111,7 +109,7 @@ describe('NavigationBar', () => {
     })
 
     it('should render the correct NavBar items for koblenz', async () => {
-      const { queryByText } = renderWithTranslation(<NavigationBar onSignOut={signOut} />, {
+      const { queryByText } = renderWithTranslation(<NavigationBar />, {
         wrapper,
         projectConfig: koblenzConfig,
       })
@@ -134,7 +132,7 @@ describe('NavigationBar', () => {
     })
 
     it('should render the correct NavBar items for bayern', async () => {
-      const { getByText, queryByText } = renderWithTranslation(<NavigationBar onSignOut={signOut} />, {
+      const { getByText, queryByText } = renderWithTranslation(<NavigationBar />, {
         wrapper,
         projectConfig: bayernConfig,
       })
@@ -148,7 +146,7 @@ describe('NavigationBar', () => {
     })
 
     it('should render the correct NavBar items for nuernberg', async () => {
-      const { getByText, queryByText } = renderWithTranslation(<NavigationBar onSignOut={signOut} />, {
+      const { getByText, queryByText } = renderWithTranslation(<NavigationBar />, {
         wrapper,
         projectConfig: nuernbergConfig,
       })
@@ -162,7 +160,7 @@ describe('NavigationBar', () => {
     })
 
     it('should render the correct NavBar items for koblenz', async () => {
-      const { getByText, queryByText } = renderWithTranslation(<NavigationBar onSignOut={signOut} />, {
+      const { getByText, queryByText } = renderWithTranslation(<NavigationBar />, {
         wrapper,
         projectConfig: koblenzConfig,
       })
@@ -185,7 +183,7 @@ describe('NavigationBar', () => {
     })
 
     it('should render the correct NavBar items for bayern', async () => {
-      const { getByText, queryByText } = renderWithTranslation(<NavigationBar onSignOut={signOut} />, {
+      const { getByText, queryByText } = renderWithTranslation(<NavigationBar />, {
         wrapper,
         projectConfig: bayernConfig,
       })
@@ -210,7 +208,7 @@ describe('NavigationBar', () => {
     it.each(projectConfigsWithStoreUpload)(
       `should render the correct NavBar items for $projectConfig.name`,
       ({ projectConfig }) => {
-        const { getByText, queryByText } = renderWithTranslation(<NavigationBar onSignOut={signOut} />, {
+        const { getByText, queryByText } = renderWithTranslation(<NavigationBar />, {
           wrapper,
           projectConfig,
         })
