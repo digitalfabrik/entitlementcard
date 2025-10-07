@@ -28,20 +28,22 @@ export const ActivationText = (
       <br /> <br />
       <b>{t('steps')}</b>
     </Typography>
-    <ol>
-      <li>
+    <Typography component='ol'>
+      <Typography component='li' variant='body2'>
         <Trans i18nKey='activation:downloadApp' values={{ applicationName }} />
         Laden Sie sich die App <b>{applicationName}</b> im App- oder PlayStore auf Ihrem Smartphone herunter.
-      </li>
-      <li>
+      </Typography>
+      <Typography component='li' variant='body2'>
         {' '}
         {t('openOnMobileDevice')}
         <br />
         <a href={downloadLink} target='_blank' rel='noreferrer'>
           {downloadLink}
         </a>
-      </li>
-      <li>{t('explanation')}</li>
-    </ol>
+      </Typography>
+      <Typography component='li' variant='body2'>
+        {t('explanation')}{' '}
+      </Typography>
+    </Typography>
   </div>
 )

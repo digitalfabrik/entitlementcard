@@ -9,11 +9,17 @@ const InvalidPasswordResetLink = (): ReactElement => {
       <Typography variant='body2' component='span'>
         {t('invalidLinkHeadline')}
       </Typography>
-      <ul>
-        <li>{t('browserIssue')}</li>
-        <li>{t('passwordAlreadyReset')}</li>
-        <li>{t('passwordLinkInvalid')}</li>
-      </ul>
+      <Typography component='ul'>
+        <Typography component='li' variant='body2'>
+          {t('browserIssue')}
+        </Typography>
+        <Typography component='li' variant='body2'>
+          {t('passwordAlreadyReset')}
+        </Typography>
+        <Typography component='li' variant='body2'>
+          {t('passwordLinkInvalid')}
+        </Typography>
+      </Typography>
     </>
   )
 }

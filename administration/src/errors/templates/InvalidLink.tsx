@@ -9,12 +9,20 @@ const InvalidLink = (): ReactElement => {
       <Typography variant='body2' component='span'>
         {t('invalidLinkHeadline')}
       </Typography>
-      <ul>
-        <li>{t('browserIssue')}</li>
-        <li>{t('applicationApproved')}</li>
-        <li>{t('applicationRejected')}</li>
-        <li>{t('applicationRequirementsNotFulfilled')}</li>
-      </ul>
+      <Typography component='ul'>
+        <Typography component='li' variant='body2'>
+          {t('browserIssue')}
+        </Typography>
+        <Typography component='li' variant='body2'>
+          {t('applicationApproved')}
+        </Typography>
+        <Typography component='li' variant='body2'>
+          {t('applicationRejected')}
+        </Typography>
+        <Typography component='li' variant='body2'>
+          {t('applicationRequirementsNotFulfilled')}
+        </Typography>
+      </Typography>
     </>
   )
 }
