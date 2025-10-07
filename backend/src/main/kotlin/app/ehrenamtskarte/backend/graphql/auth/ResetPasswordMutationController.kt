@@ -11,15 +11,14 @@ import app.ehrenamtskarte.backend.shared.crypto.PasswordCrypto
 import app.ehrenamtskarte.backend.shared.exceptions.ProjectNotFoundException
 import app.ehrenamtskarte.backend.shared.mail.Mailer
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import graphql.schema.DataFetchingEnvironment
-import app.ehrenamtskarte.backend.graphql.shared.context.RemoteIp
-import com.expediagroup.graphql.generator.extensions.get
+import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import org.jetbrains.exposed.sql.LowerCase
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
 import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.ContextValue
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.stereotype.Controller
 import java.time.Instant
@@ -34,8 +33,8 @@ class ResetPasswordMutationController(
     fun sendResetMail(
         @Argument project: String,
         @Argument email: String,
-        dfe: DataFetchingEnvironment,
-        ): Boolean {
+        @GraphQLIgnore @ContextValue remoteIp: String,
+    ): Boolean {
         val logger = LoggerFactory.getLogger(ResetPasswordMutationController::class.java)
         val projectConfig = backendConfig.getProjectConfig(project)
         transaction {
@@ -56,7 +55,7 @@ class ResetPasswordMutationController(
             if (user == null) {
                 // This logging is used for rate limiting
                 // See https://git.tuerantuer.org/DF/salt/pulls/187
-                logger.info("${dfe.graphQlContext.get<RemoteIp>()} $email failed to request password reset mail")
+                logger.info("$remoteIp $email failed to request password reset mail")
             }
         }
         return true
@@ -65,11 +64,11 @@ class ResetPasswordMutationController(
     @GraphQLDescription("Reset the administrator's password")
     @MutationMapping
     fun resetPassword(
-        dfe: DataFetchingEnvironment,
         @Argument project: String,
         @Argument email: String,
         @Argument passwordResetKey: String,
         @Argument newPassword: String,
+        @GraphQLIgnore @ContextValue remoteIp: String,
     ): Boolean {
         val logger = LoggerFactory.getLogger(ResetPasswordMutationController::class.java)
         if (!backendConfig.projects.any { it.id == project }) {
@@ -92,14 +91,14 @@ class ResetPasswordMutationController(
                 // This logging is used for rate limiting
                 // See https://git.tuerantuer.org/DF/salt/pulls/187
                 logger.info(
-                    "${dfe.graphQlContext.get<RemoteIp>()} $email failed to reset password (unknown user or no reset mail sent)",
+                    "$remoteIp $email failed to reset password (unknown user or no reset mail sent)",
                 )
                 return@transaction
             }
             if (user.passwordResetKeyExpiry!!.isBefore(Instant.now())) {
                 // This logging is used for rate limiting
                 // See https://git.tuerantuer.org/DF/salt/pulls/187
-                logger.info("${dfe.graphQlContext.get<RemoteIp>()} $email failed to reset password (expired reset key)")
+                logger.info("$remoteIp $email failed to reset password (expired reset key)")
                 throw PasswordResetKeyExpiredException()
             } else if (!PasswordCrypto.verifyPasswordResetKey(
                     passwordResetKey,
@@ -108,7 +107,7 @@ class ResetPasswordMutationController(
             ) {
                 // This logging is used for rate limiting
                 // See https://git.tuerantuer.org/DF/salt/pulls/187
-                logger.info("${dfe.graphQlContext.get<RemoteIp>()} $email failed to reset password (invalid reset key)")
+                logger.info("$remoteIp $email failed to reset password (invalid reset key)")
                 throw InvalidLinkException()
             }
 

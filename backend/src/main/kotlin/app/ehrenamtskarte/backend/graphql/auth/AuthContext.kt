@@ -20,8 +20,8 @@ data class AuthContext(
          * the administrator and project details from the database.
          * Returns null if the administrator is not found.
          */
-        fun fromJwtPayload(payload: JwtPayload): AuthContext? {
-            return transaction {
+        fun fromJwtPayload(payload: JwtPayload): AuthContext? =
+            transaction {
                 (Administrators innerJoin Projects)
                     .select(Administrators.columns + Projects.columns)
                     .where { Administrators.id eq payload.adminId }
@@ -35,7 +35,6 @@ data class AuthContext(
                         )
                     }
             }
-        }
     }
 }
 
