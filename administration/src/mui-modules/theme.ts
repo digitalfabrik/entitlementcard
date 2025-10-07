@@ -1,5 +1,7 @@
 import { createTheme } from '@mui/material'
 
+import LinkBehavior from './util/LinkBehavior'
+
 export const theme = createTheme({
   palette: {
     mode: 'light',
@@ -114,29 +116,48 @@ export const theme = createTheme({
         color: 'inherit',
       },
       styleOverrides: {
-        textInherit: {
-          color: '#5C6065',
-        },
-        outlinedInherit: {
-          borderColor: '#EEEEEE',
-          borderWidth: '2px',
-          color: '#5C6065',
-        },
-        containedInherit: {
-          backgroundColor: '#F6F7F9',
-          borderStyle: 'solid',
-          borderColor: '#EEEEEE',
-          borderWidth: '1px',
-          color: '#5C6065',
-          ':hover': {
-            backgroundColor: '#e9eaedff',
+        root: {
+          '&.MuiButton-colorInherit': {
+            color: '#5C6065',
+            '&[href]:hover': {
+              color: '#5C6065',
+            },
           },
-        },
-        contained: {
-          boxShadow: '0 2px 2px #BBBBBB',
-          ':hover': {
-            boxShadow: '0 2px 2px #BBBBBB', // 0 2px 6px #BBBBBB',
+          '&.MuiButton-contained': {
+            '&[href]:hover': {
+              color: '#EEEEEE',
+            },
           },
+          variants: [
+            {
+              props: { variant: 'outlined', color: 'inherit' },
+              style: {
+                borderColor: '#EEEEEE',
+                borderWidth: '2px',
+              },
+            },
+            {
+              props: { variant: 'contained', color: 'inherit' },
+              style: {
+                backgroundColor: '#F6F7F9',
+                borderStyle: 'solid',
+                borderColor: '#EEEEEE',
+                borderWidth: '1px',
+                ':hover': {
+                  backgroundColor: '#e9eaedff',
+                },
+              },
+            },
+            {
+              props: { variant: 'contained' },
+              style: {
+                boxShadow: '0 2px 2px #BBBBBB',
+                ':hover': {
+                  boxShadow: '0 2px 2px #BBBBBB',
+                },
+              },
+            },
+          ],
         },
       },
     },
@@ -206,6 +227,16 @@ export const theme = createTheme({
             marginBottom: 8,
           }),
         }),
+      },
+    },
+    MuiLink: {
+      defaultProps: {
+        component: LinkBehavior,
+      },
+    },
+    MuiButtonBase: {
+      defaultProps: {
+        LinkComponent: LinkBehavior,
       },
     },
   },
