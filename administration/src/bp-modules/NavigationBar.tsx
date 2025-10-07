@@ -16,36 +16,34 @@ const NavigationBar = (): ReactElement => {
 
   return (
     <AppBar position='sticky' color='transparent'>
-      <Stack>
-        <Toolbar
-          sx={theme => ({
-            flexWrap: 'wrap',
-            [theme.breakpoints.down('lg')]: {
-              padding: 1.5,
-            },
-          })}>
-          <SvgIcon fontSize='large'>
-            <EntitlementIcon />
-          </SvgIcon>
-          <NavLink to='/' style={{ color: 'inherit', textDecoration: 'none', margin: '0 12px' }}>
-            <Stack>
+      <Toolbar
+        sx={theme => ({
+          flexWrap: 'wrap',
+          [theme.breakpoints.down('lg')]: {
+            padding: 1.5,
+          },
+        })}>
+        <SvgIcon fontSize='large'>
+          <EntitlementIcon />
+        </SvgIcon>
+        <NavLink to='/' style={{ color: 'inherit', textDecoration: 'none', margin: '0 12px' }}>
+          <Stack>
+            <Typography>
+              {config.name} {t('administration')}
+            </Typography>
+            {!region ? null : (
               <Typography>
-                {config.name} {t('administration')}
+                {region.prefix} {region.name} {`(${process.env.REACT_APP_VERSION})`}
               </Typography>
-              {!region ? null : (
-                <Typography>
-                  {region.prefix} {region.name} {`(${process.env.REACT_APP_VERSION})`}
-                </Typography>
-              )}
-            </Stack>
-          </NavLink>
-          <Divider orientation='vertical' variant='middle' flexItem />
-          <Stack direction='row' sx={{ flexGrow: 1, gap: 1, paddingX: 1 }}>
-            <NavigationItems variant='text' />
+            )}
           </Stack>
-          <UserMenu />
-        </Toolbar>
-      </Stack>
+        </NavLink>
+        <Divider orientation='vertical' variant='middle' flexItem />
+        <Stack direction='row' sx={{ flexGrow: 1, gap: 1, paddingX: 1 }}>
+          <NavigationItems variant='text' />
+        </Stack>
+        <UserMenu />
+      </Toolbar>
     </AppBar>
   )
 }
