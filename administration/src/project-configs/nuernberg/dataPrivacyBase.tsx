@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material'
+import { Link, Typography } from '@mui/material'
 import React, { ReactElement } from 'react'
 
 export const dataPrivacyBaseHeadline =
@@ -61,7 +61,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
       Der gesamte Programmcode des digitalen NürnbergPass ist darüber hinaus quelloffen lizenziert unter der MIT-Lizenz
       und kann hier eingesehen werden:
       <br />
-      <a
+      <Link
         target='_blank'
         rel='noreferrer'
         href='https://github.com/digitalfabrik/entitlementcard'
@@ -69,7 +69,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
         <Typography variant='body2' component='span' sx={{ textDecoration: 'underline', color: '#0000ff' }}>
           https://github.com/digitalfabrik/entitlementcard
         </Typography>
-      </a>
+      </Link>
     </Typography>
     <Typography variant='body2' component='p' marginTop={1}>
       Für nähere Informationen zur Verarbeitung Ihrer personenbezogenen Daten können Sie uns unter den unten genannten
@@ -91,11 +91,11 @@ export const DataPrivacyBaseText = (): ReactElement => (
       0911 /231 - 2315
       <br />
       E-Mail:
-      <a target='_blank' rel='noreferrer' href='mailto:SHA@stadt.nuernberg.de' title='mailto:SHA@stadt.nuernberg.de'>
+      <Link target='_blank' rel='noreferrer' href='mailto:SHA@stadt.nuernberg.de' title='mailto:SHA@stadt.nuernberg.de'>
         <Typography variant='body2' component='span' sx={{ textDecoration: 'underline', color: '#0000ff' }}>
           SHA@stadt.nuernberg.de
         </Typography>
-      </a>
+      </Link>
     </Typography>
     <Typography variant='body2' component='p' marginTop={1}>
       <Typography variant='body2bold' component='span'>
@@ -114,7 +114,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
         <br />
         E-Mail:{' '}
       </Typography>
-      <a
+      <Link
         target='_blank'
         rel='noreferrer'
         href='mailto:Datenschutz@stadt.nuernberg.de'
@@ -122,7 +122,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
         <Typography variant='body2' component='span' sx={{ textDecoration: 'underline', color: '#0000ff' }}>
           Datenschutz@stadt.nuernberg.de
         </Typography>
-      </a>
+      </Link>
     </Typography>
     <br />
     <Typography variant='body2' component='p' marginTop={1}>

@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material'
+import { Link, Typography } from '@mui/material'
 import React, { ReactElement } from 'react'
 
 export const dataPrivacyBaseHeadline =
@@ -60,7 +60,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
     <Typography variant='body2' component='p' marginTop={1}>
       Der gesamte Programmcode der digitalen bayerischen Ehrenamtskarte ist darüber hinaus quelloffen lizenziert unter
       der MIT-Lizenz und kann hier eingesehen werden:{' '}
-      <a
+      <Link
         target='_blank'
         rel='noreferrer'
         href='https://github.com/digitalfabrik/entitlementcard'
@@ -68,7 +68,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
         <Typography variant='body2' component='span' sx={{ textDecoration: 'underline', color: '#0000ff' }}>
           https://github.com/digitalfabrik/entitlementcard
         </Typography>
-      </a>
+      </Link>
     </Typography>
     <Typography variant='body2' component='p' marginTop={1}>
       Für nähere Informationen zur Verarbeitung Ihrer personenbezogenen Daten können Sie uns unter den unten genannten
@@ -84,7 +84,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
       Telefon: 089 1261-01
       <br />
       E-Mail:{' '}
-      <a
+      <Link
         target='_blank'
         rel='noreferrer'
         href='mailto:Poststelle@stmas.bayern.de'
@@ -92,7 +92,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
         <Typography variant='body2' component='span' sx={{ textDecoration: 'underline', color: '#0000ff' }}>
           Poststelle@stmas.bayern.de
         </Typography>
-      </a>
+      </Link>
       &nbsp;
     </Typography>
     <Typography variant='body2' component='p' marginTop={1}>
@@ -110,7 +110,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
         <br />
       </span>
       E-Mail:{' '}
-      <a
+      <Link
         target='_blank'
         rel='noreferrer'
         href='mailto:Datenschutz@stmas.bayern.de'
@@ -118,14 +118,14 @@ export const DataPrivacyBaseText = (): ReactElement => (
         <Typography variant='body2' component='span' sx={{ textDecoration: 'underline', color: '#0000ff' }}>
           Datenschutz@stmas.bayern.de
         </Typography>
-      </a>
+      </Link>
       <br />
       Telefon: 089 1261 1445
     </Typography>
     <Typography variant='body2' component='p' margin={0}>
       Allgemeines zum Thema Datenschutz finden Sie auf der Website des Bayerischen Landesbeauftragten für den
       Datenschutz (
-      <a
+      <Link
         target='_blank'
         rel='noreferrer'
         href='https://www.datenschutz-bayern.de'
@@ -133,7 +133,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
         <Typography variant='body2' component='span' sx={{ textDecoration: 'underline', color: '#0000ff' }}>
           https://www.datenschutz-bayern.de
         </Typography>
-      </a>
+      </Link>
       ).{' '}
     </Typography>
     <Typography variant='body2' component='p' marginTop={1}>
@@ -162,7 +162,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
       </Typography>
       <br />
       Bei jedem Zugriff auf das Antragsformular (
-      <a
+      <Link
         target='_blank'
         rel='noreferrer'
         href='https://bayern.ehrenamtskarte.app/beantragen'
@@ -170,7 +170,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
         <Typography variant='body2' component='span' sx={{ textDecoration: 'underline', color: '#0000ff' }}>
           https://bayern.ehrenamtskarte.app/beantragen
         </Typography>
-      </a>
+      </Link>
       ) oder die Nutzung der bayerischen Ehrenamtskarten-App (Android/iOS) werden folgende Nutzungsdaten gemäß § 15 Abs.
       1 TMG bei jedem Aufruf mit aktiver Internetverbindung anonymisiert erhoben:
     </Typography>
@@ -266,7 +266,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
       erhoben, genutzt oder verarbeitet werden. Um dies zu gewährleisten, müssen Sie z.B. bei der Beantragung der
       digitalen bayerischen Ehrenamtskarte explizit der Verarbeitung und Weitergabe Ihrer Daten zustimmen. Sollten Sie
       die digitale bayerische Ehrenamtskarte über das Online-Formular auf (
-      <a
+      <Link
         target='_blank'
         rel='noreferrer'
         href='https://bayern.ehrenamtskarte.app/beantragen'
@@ -274,7 +274,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
         <Typography variant='body2' component='span' sx={{ textDecoration: 'underline', color: '#0000ff' }}>
           https://bayern.ehrenamtskarte.app/beantragen
         </Typography>
-      </a>
+      </Link>
       ) beantragen, wird die Tür an Tür – Digitalfabrik gGmbH die im Antragsformular angegebenen Daten erheben,
       verarbeiten und nutzen. Dies erfolgt ausschließlich für den Zweck der Ausstellung der Bayerischen Ehrenamtskarte,
       sowie der damit verbundenen Gewährung von Vergünstigungen und zugehörigen Kommunikationsmaßnahmen.{' '}
