@@ -96,6 +96,15 @@ class MultipartGraphQLHandler(
             LocaleContextHolder.getLocale(),
         )
 
+        // Add uploaded files to the GraphQL context
+        graphQlRequest.configureExecutionInput { executionInput, _ ->
+            executionInput.transform { builder ->
+                builder.graphQLContext { ctxBuilder ->
+                    ctxBuilder.put("files", files)
+                }
+            }
+        }
+
         val future = graphQlHandler.handleRequest(graphQlRequest)
             .map { response ->
                 ServerResponse.ok()

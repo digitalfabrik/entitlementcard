@@ -19,27 +19,20 @@ import app.ehrenamtskarte.backend.graphql.auth.requireAuthContext
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidLinkException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidNoteSizeException
-import app.ehrenamtskarte.backend.graphql.shared.substitute
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import app.ehrenamtskarte.backend.shared.exceptions.NotFoundException
 import app.ehrenamtskarte.backend.shared.mail.Mailer
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.generator.extensions.get
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
+import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import graphql.execution.DataFetcherResult
 import graphql.schema.DataFetchingEnvironment
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.Part
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.ContextValue
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.stereotype.Controller
-import org.springframework.web.context.request.RequestContextHolder
-import org.springframework.web.context.request.ServletRequestAttributes
-import org.springframework.web.multipart.MultipartFile
-import org.springframework.web.multipart.MultipartHttpServletRequest
 import java.io.File
 
 @Controller
@@ -54,22 +47,17 @@ class EakApplicationMutationController(
         @Argument regionId: Int,
         @Argument application: Application,
         @Argument project: String,
-        dfe: DataFetchingEnvironment,
-    ): DataFetcherResult<Boolean> {
-        println("in mutation")
-        val request = (RequestContextHolder.getRequestAttributes() as? ServletRequestAttributes)?.request
-            ?: throw IllegalStateException("No current request")
-
-        val files = getUploadedFiles(request)
-
-        return transaction {
+        @GraphQLIgnore @ContextValue(required = false) files: List<Part>?,
+        @GraphQLIgnore @ContextValue request: HttpServletRequest,
+    ): DataFetcherResult<Boolean> =
+        transaction {
             val applicationHandler = ApplicationHandler(
                 backendConfiguration,
                 application,
                 regionId,
                 project,
                 applicationData,
-                files,
+                files.orEmpty(),
                 request,
             )
             val dataFetcherResultBuilder = DataFetcherResult.newResult<Boolean>()
@@ -102,18 +90,6 @@ class EakApplicationMutationController(
             }
             dataFetcherResultBuilder.data(true).build()
         }
-    }
-
-    private fun getUploadedFiles(request: HttpServletRequest): List<Part> {
-        return try {
-            val partsByName = request.parts.associateBy { it.name }
-            val mapPart = request.getParameter("map") ?: return emptyList()
-            val substitutions: Map<String, List<String>> = jacksonObjectMapper().readValue(mapPart)
-            substitutions.keys.mapNotNull { partsByName[it] }
-        } catch (_: Exception) {
-            emptyList()
-        }
-    }
 
     @GraphQLDescription("Deletes the application with specified id")
     @MutationMapping
