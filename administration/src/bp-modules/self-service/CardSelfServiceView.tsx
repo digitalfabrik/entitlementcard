@@ -94,7 +94,7 @@ const CardSelfServiceView = (): ReactElement => {
       </Header>
       <Body>
         <Step>{`${t('step')} ${selfServiceStepInfo[cardGenerationStep].stepNr}/${totalSteps}`}</Step>
-        <Typography fontWeight='600' marginBottom={0} variant='h5' color='info' fontSize={20}>
+        <Typography fontWeight='600' marginBottom={0} variant='h5' color='accent' fontSize={20}>
           {selfServiceStepInfo[cardGenerationStep].headline}
         </Typography>
         <SubHeadline>{selfServiceStepInfo[cardGenerationStep].subHeadline}</SubHeadline>
