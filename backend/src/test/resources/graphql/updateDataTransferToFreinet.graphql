@@ -1,6 +1,0 @@
-mutation UpdateDataTransferToFreinet($regionId: Int!, $dataTransferActivated: Boolean!) {
-    result: updateDataTransferToFreinet(
-        regionId: $regionId
-        dataTransferActivated: $dataTransferActivated
-    )
-}
