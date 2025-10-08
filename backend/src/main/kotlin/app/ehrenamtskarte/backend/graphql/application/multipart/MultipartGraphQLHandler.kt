@@ -18,18 +18,18 @@ import org.springframework.web.servlet.function.ServerRequest
 import org.springframework.web.servlet.function.ServerResponse
 
 /**
- * Handles GraphQL multipart requests (file uploads).
+ * Custom handler for processing GraphQL multipart requests (file uploads).
  *
- * This handler extracts:
- *  - the main GraphQL operation (the `"operations"` part)
- *  - the mapping of files to variables (the `"map"` part)
- *  - the uploaded files
+ * The handler performs the following steps:
+ * 1. Parses all parts of the incoming multipart request.
+ * 2. Stores uploaded files in the GraphQL context (under the key `"files"`) so they can be
+ *    accessed in resolvers or injected into query/mutation functions using the `@ContextValue` annotation.
+ * 3. Inserts the corresponding `fileIndex` into the JSON payload according to each file reference
+ *    (e.g. `{"name":"certificate","type":"Attachment","value":{"fileIndex":0}}`).
+ * 4. Forwards the reconstructed GraphQL request to the standard [WebGraphQlHandler] for execution.
  *
- * Then it connects the uploaded files with the correct GraphQL variables
- * and forwards the combined data to the standard [WebGraphQlHandler].
- *
- * A separate handler is required because Spring Boot does not support
- * the GraphQL multipart request format out of the box.
+ * This implementation serves as a compatibility workaround to enable file uploads in GraphQL
+ * within Spring Boot applications.
  */
 @Component
 class MultipartGraphQLHandler(
@@ -45,7 +45,7 @@ class MultipartGraphQLHandler(
         // Collect all parts
         val partsMap = request.parts.associateBy { it.name }
 
-        // Parse GraphQL operations
+        // Parse operations
         val operationsJson = partsMap["operations"]?.inputStream
             ?: throw GraphQLMultipartParseException("Missing 'operations' part")
         val operationsNode = mapper.readTree(operationsJson)
