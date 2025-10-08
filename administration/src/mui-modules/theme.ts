@@ -101,6 +101,13 @@ export const theme = (config: ProjectConfig): Theme =>
           color: 'inherit',
         },
         styleOverrides: {
+          root: {
+            '&.MuiButton-contained': {
+              '&[href]:hover': {
+                color: '#EEEEEE',
+              },
+            },
+          },
           textInherit: {
             color: '#5C6065',
           },
