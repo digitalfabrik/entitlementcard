@@ -1,24 +1,26 @@
 package app.ehrenamtskarte.backend.application.webservice
 
-import app.ehrenamtskarte.backend.GraphqlApiTest
+import app.ehrenamtskarte.backend.IntegrationTest
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
 import app.ehrenamtskarte.backend.db.entities.Applications
 import app.ehrenamtskarte.backend.generated.ApproveApplicationStatus
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestData
-import io.javalin.testtools.JavalinTest
+import app.ehrenamtskarte.backend.helper.json
+import app.ehrenamtskarte.backend.helper.toErrorObject
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
+import org.springframework.http.HttpStatus
 import java.time.OffsetDateTime
 import java.time.temporal.ChronoUnit
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-internal class ApproveApplicationTest : GraphqlApiTest() {
+internal class ApproveApplicationTest : IntegrationTest() {
     private val regionAdmin = TestAdministrators.EAK_REGION_ADMIN
 
     @BeforeEach
@@ -29,96 +31,99 @@ internal class ApproveApplicationTest : GraphqlApiTest() {
     }
 
     @Test
-    fun `should return a successful response when the application has been approved`() =
-        JavalinTest.test(app) { _, client ->
-            val applicationId = TestData.createApplication(regionAdmin.regionId)
+    fun `should return a successful response when the application has been approved`() {
+        val applicationId = TestData.createApplication(regionAdmin.regionId)
 
-            val mutation = createMutation(applicationId = applicationId)
-            val response = post(client, mutation, regionAdmin.getJwtToken())
+        val mutation = createMutation(applicationId = applicationId)
+        val response = postGraphQL(mutation, regionAdmin.getJwtToken())
 
-            assertEquals(200, response.code)
+        assertEquals(HttpStatus.OK, response.statusCode)
 
-            val jsonResponse = response.json()
+        val data = response.json()
 
-            assertEquals("Approved", jsonResponse.findValue("status").asText())
-            assertNotNull(jsonResponse.findValue("statusResolvedDate").asText())
+        assertEquals("Approved", data.findValue("status").asText())
+        assertNotNull(data.findValue("statusResolvedDate").asText())
 
-            transaction {
-                ApplicationEntity.find { Applications.id eq applicationId }.single().let {
-                    assertEquals(ApplicationEntity.Status.Approved, it.status)
-                    assertNotNull(it.statusResolvedDate)
-                }
+        transaction {
+            ApplicationEntity.find { Applications.id eq applicationId }.single().let {
+                assertEquals(ApplicationEntity.Status.Approved, it.status)
+                assertNotNull(it.statusResolvedDate)
             }
         }
+    }
 
     @Test
-    fun `should return an error when application not found`() =
-        JavalinTest.test(app) { _, client ->
-            val mutation = createMutation(applicationId = 99)
-            val response = post(client, mutation, regionAdmin.getJwtToken())
+    fun `should return an error when application not found`() {
+        val mutation = createMutation(applicationId = 99)
+        val response = postGraphQL(mutation, regionAdmin.getJwtToken())
 
-            assertEquals(200, response.code)
+        assertEquals(HttpStatus.OK, response.statusCode)
 
-            val jsonResponse = response.json()
+        val error = response.toErrorObject()
 
-            assertEquals("Error INVALID_INPUT occurred.", jsonResponse.findValue("message").textValue())
-            assertEquals("Application not found", jsonResponse.findValue("reason").textValue())
-        }
-
-    @Test
-    fun `should return an error when request not authorized`() =
-        JavalinTest.test(app) { _, client ->
-            val applicationId = TestData.createApplication(regionAdmin.regionId)
-
-            val mutation = createMutation(applicationId = applicationId)
-            val response = post(client, mutation)
-
-            assertEquals(401, response.code)
-        }
+        assertEquals("Error INVALID_INPUT occurred.", error.message)
+        assertEquals("Application not found", error.extensions?.reason)
+    }
 
     @Test
-    fun `should return an error when admin region is different than application region`() =
-        JavalinTest.test(app) { _, client ->
-            val applicationId = TestData.createApplication(TestAdministrators.EAK_REGION_ADMIN_FREINET.regionId)
+    fun `should return an error when request not authorized`() {
+        val applicationId = TestData.createApplication(regionAdmin.regionId)
 
-            val mutation = createMutation(applicationId = applicationId)
-            val response = post(client, mutation, regionAdmin.getJwtToken())
+        val mutation = createMutation(applicationId = applicationId)
+        val response = postGraphQL(mutation)
 
-            assertEquals(403, response.code)
-        }
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val error = response.toErrorObject()
+
+        assertEquals("Authorization token expired, invalid or missing", error.message)
+    }
+
+    @Test
+    fun `should return an error when admin region is different than application region`() {
+        val applicationId = TestData.createApplication(TestAdministrators.EAK_REGION_ADMIN_FREINET.regionId)
+
+        val mutation = createMutation(applicationId = applicationId)
+        val response = postGraphQL(mutation, regionAdmin.getJwtToken())
+
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val error = response.toErrorObject()
+
+        assertEquals("Insufficient access rights", error.message)
+    }
 
     @ParameterizedTest
     @EnumSource(value = ApplicationEntity.Status::class, names = ["Rejected", "Withdrawn", "ApprovedCardCreated"])
-    fun `should return an error if the application status has already been resolved`(status: ApplicationEntity.Status) =
-        JavalinTest.test(app) { _, client ->
-            val statusResolvedDate = OffsetDateTime.now().minusDays(1L).truncatedTo(ChronoUnit.MICROS)
-            val applicationId = TestData.createApplication(
-                regionId = regionAdmin.regionId,
-                status = status,
-                statusResolvedDate = statusResolvedDate,
-            )
+    fun `should return an error if the application status has already been resolved`(status: ApplicationEntity.Status) {
+        val statusResolvedDate = OffsetDateTime.now().minusDays(1L).truncatedTo(ChronoUnit.MICROS)
+        val applicationId = TestData.createApplication(
+            regionId = regionAdmin.regionId,
+            status = status,
+            statusResolvedDate = statusResolvedDate,
+        )
 
-            val mutation = createMutation(applicationId = applicationId)
-            val response = post(client, mutation, regionAdmin.getJwtToken())
+        val mutation = createMutation(applicationId = applicationId)
+        val response = postGraphQL(mutation, regionAdmin.getJwtToken())
 
-            assertEquals(200, response.code)
+        assertEquals(HttpStatus.OK, response.statusCode)
 
-            val jsonResponse = response.json()
+        val error = response.toErrorObject()
 
-            assertEquals("Error INVALID_INPUT occurred.", jsonResponse.findValue("message").textValue())
-            assertEquals(
-                "Cannot set application to 'Approved', is '$status'",
-                jsonResponse.findValue("reason").textValue(),
-            )
+        assertEquals("Error INVALID_INPUT occurred.", error.message)
+        assertEquals(
+            "Cannot set application to 'Approved', is '$status'",
+            error.extensions?.reason,
+        )
 
-            transaction {
-                // verify that the status has not been updated in the database
-                ApplicationEntity.find { Applications.id eq applicationId }.single().let {
-                    assertEquals(status, it.status)
-                    assertEquals(statusResolvedDate.toInstant(), it.statusResolvedDate?.toInstant())
-                }
+        transaction {
+            // verify that the status has not been updated in the database
+            ApplicationEntity.find { Applications.id eq applicationId }.single().let {
+                assertEquals(status, it.status)
+                assertEquals(statusResolvedDate.toInstant(), it.statusResolvedDate?.toInstant())
             }
         }
+    }
 
     private fun createMutation(applicationId: Int): ApproveApplicationStatus {
         val variables = ApproveApplicationStatus.Variables(

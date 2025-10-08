@@ -37,6 +37,7 @@ import app.ehrenamtskarte.backend.shared.mail.Mailer
 import at.favre.lib.crypto.bcrypt.BCrypt
 import com.eatthepath.otp.TimeBasedOneTimePasswordGenerator
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
+import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.google.protobuf.ByteString
 import com.google.protobuf.InvalidProtocolBufferException
 import extensionStartDayOrNull
@@ -48,6 +49,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.ContextValue
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.stereotype.Controller
 import java.security.SecureRandom
@@ -60,7 +62,6 @@ import javax.crypto.KeyGenerator
 class CardMutationController(
     @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     private val backendConfiguration: BackendConfiguration,
-    private val request: HttpServletRequest,
 ) {
     private val logger: Logger = LoggerFactory.getLogger(CardMutationController::class.java)
 
@@ -152,6 +153,8 @@ class CardMutationController(
         @Argument project: String,
         @Argument encodedCardInfo: String,
         @Argument generateStaticCode: Boolean,
+        @GraphQLIgnore @ContextValue remoteIp: String,
+        @GraphQLIgnore @ContextValue request: HttpServletRequest,
         dfe: DataFetchingEnvironment,
     ): CardCreationResultModel {
         val config = backendConfiguration.getProjectConfig(project)
@@ -172,7 +175,7 @@ class CardMutationController(
         if (userEntitlements == null) {
             // This logging is used for rate limiting
             // See https://git.tuerantuer.org/DF/salt/pulls/187
-            logger.info("${request.remoteAddr} failed to create a new card")
+            logger.info("$remoteIp failed to create a new card")
             throw UserEntitlementNotFoundException()
         }
         if (userEntitlements.revoked || userEntitlements.endDate.isBefore(LocalDate.now())) {
@@ -264,6 +267,7 @@ class CardMutationController(
         @Argument encodedCardInfos: List<String>,
         @Argument generateStaticCodes: Boolean,
         @Argument applicationIdToMarkAsProcessed: Int? = null,
+        @GraphQLIgnore @ContextValue request: HttpServletRequest,
     ): List<CardCreationResultModel> {
         val authContext = dfe.requireAuthContext()
         val projectConfig = backendConfiguration.getProjectConfig(authContext.project)
@@ -320,6 +324,8 @@ class CardMutationController(
         @Argument cardInfoHashBase64: String,
         @Argument activationSecretBase64: String,
         @Argument overwrite: Boolean,
+        @GraphQLIgnore @ContextValue remoteIp: String,
+        @GraphQLIgnore @ContextValue request: HttpServletRequest,
         dfe: DataFetchingEnvironment,
     ): CardActivationResultModel {
         val projectConfig = backendConfiguration.getProjectConfig(project)
@@ -335,21 +341,21 @@ class CardMutationController(
 
             if (card == null || activationSecretHash == null) {
                 logger.info(
-                    "${request.remoteAddr} failed to activate card, card not found with cardHash:$cardInfoHashBase64",
+                    "$remoteIp failed to activate card, card not found with cardHash:$cardInfoHashBase64",
                 )
                 return@t CardActivationResultModel(ActivationState.not_found)
             }
 
             if (!verifyActivationSecret(rawActivationSecret, activationSecretHash)) {
                 logger.info(
-                    "${request.remoteAddr} failed to activate card with id:${card.id} and overwrite: $overwrite",
+                    "$remoteIp failed to activate card with id:${card.id} and overwrite: $overwrite",
                 )
                 return@t CardActivationResultModel(ActivationState.wrong_secret)
             }
 
             if (CardVerifier.isExpired(card.expirationDay, projectConfig.timezone)) {
                 logger.info(
-                    "${request.remoteAddr} failed to activate card with id:${card.id} and overwrite: " +
+                    "$remoteIp failed to activate card with id:${card.id} and overwrite: " +
                         "$overwrite because card is expired",
                 )
                 return@t CardActivationResultModel(ActivationState.expired)
@@ -357,7 +363,7 @@ class CardMutationController(
 
             if (card.revoked) {
                 logger.info(
-                    "${request.remoteAddr} failed to activate card with id:${card.id} and overwrite: " +
+                    "$remoteIp failed to activate card with id:${card.id} and overwrite: " +
                         "$overwrite because card is revoked",
                 )
                 return@t CardActivationResultModel(ActivationState.revoked)
@@ -365,7 +371,7 @@ class CardMutationController(
 
             if (!overwrite && card.totpSecret != null) {
                 logger.info(
-                    "Card with id:${card.id} did not overwrite card from ${request.remoteAddr}",
+                    "Card with id:${card.id} did not overwrite card from $remoteIp",
                 )
                 return@t CardActivationResultModel(ActivationState.did_not_overwrite_existing)
             }
@@ -374,7 +380,7 @@ class CardMutationController(
             val encodedTotpSecret = Base64.getEncoder().encodeToString(totpSecret)
             CardRepository.activate(card, totpSecret)
             logger.info(
-                "Card with id:${card.id} and overwrite: $overwrite was activated from ${request.remoteAddr}",
+                "Card with id:${card.id} and overwrite: $overwrite was activated from $remoteIp",
             )
             return@t CardActivationResultModel(ActivationState.success, encodedTotpSecret)
         }

@@ -7,9 +7,11 @@ import app.ehrenamtskarte.backend.graphql.cards.types.CardVerificationResultMode
 import app.ehrenamtskarte.backend.graphql.cards.utils.CardVerifier
 import app.ehrenamtskarte.backend.shared.Matomo
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
+import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import graphql.schema.DataFetchingEnvironment
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.ContextValue
 import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.stereotype.Controller
 import java.util.Base64
@@ -18,7 +20,6 @@ import java.util.Base64
 class CardQueryController(
     @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     private val backendConfiguration: BackendConfiguration,
-    private val request: HttpServletRequest,
 ) {
     @GraphQLDescription(
         "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid, extendable and a timestamp of the last check",
@@ -27,6 +28,7 @@ class CardQueryController(
     fun verifyCardInProjectV2(
         @Argument project: String,
         @Argument card: CardVerificationModel,
+        @GraphQLIgnore @ContextValue request: HttpServletRequest,
         dfe: DataFetchingEnvironment,
     ): CardVerificationResultModel {
         val projectConfig = backendConfiguration.getProjectConfig(project)

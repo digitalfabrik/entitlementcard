@@ -5,7 +5,7 @@ import app.ehrenamtskarte.backend.shared.exceptions.UnauthorizedException
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.exceptions.JWTVerificationException
-import org.springframework.graphql.server.WebGraphQlRequest
+import jakarta.servlet.http.HttpServletRequest
 import java.io.File
 import java.time.Instant
 import java.time.temporal.ChronoUnit
@@ -30,8 +30,8 @@ object JwtService {
      * It expects a "Bearer <token>" format.
      * Returns null if the header is malformed or the token is invalid.
      */
-    fun verifyRequest(request: WebGraphQlRequest): JwtPayload? {
-        val authHeader = request.headers.getFirst("Authorization") ?: return null
+    fun verifyRequest(request: HttpServletRequest?): JwtPayload? {
+        val authHeader = request?.getHeader("Authorization") ?: return null
         val split = authHeader.split(" ")
         val jwtToken = (if (split.size != 2 || split[0] != "Bearer") null else split[1]) ?: return null
 
