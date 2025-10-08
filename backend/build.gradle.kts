@@ -119,7 +119,7 @@ kotlin {
 
 buildConfig {
     packageName(project.group.toString())
-    buildConfigField("VERSION_NAME", System.getenv("NEW_VERSION_NAME"))
+    buildConfigField("VERSION_NAME", System.getProperty("NEW_VERSION_NAME", "1.0.0"))
     buildConfigField("COMMIT_HASH", System.getenv("CIRCLE_SHA1"))
 }
 
