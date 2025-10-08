@@ -1,3 +1,0 @@
-mutation SendApplicationAndCardDataToFreinet($applicationId: Int!, $freinetCard: FreinetCardInput!) {
-    sendApplicationAndCardDataToFreinet(applicationId: $applicationId, freinetCard: $freinetCard)
-}

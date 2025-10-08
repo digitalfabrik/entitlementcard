@@ -4,48 +4,40 @@ import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerifications
 import app.ehrenamtskarte.backend.db.entities.Applications
 import app.ehrenamtskarte.backend.db.repositories.ApplicationRepository
+import app.ehrenamtskarte.backend.graphql.BaseDataLoader
 import app.ehrenamtskarte.backend.graphql.application.types.ApplicationAdminGql
 import app.ehrenamtskarte.backend.graphql.application.types.ApplicationVerificationView
-import app.ehrenamtskarte.backend.graphql.newNamedDataLoader
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.springframework.stereotype.Component
 
-val applicationLoader = newNamedDataLoader("APPLICATION_LOADER") { ids ->
-    transaction {
-        ApplicationRepository.findByIds(ids).map {
-            it?.let { ApplicationAdminGql.fromDbEntity(it) }
+@Component
+class ApplicationDataLoader : BaseDataLoader<Int, ApplicationAdminGql>() {
+    override fun loadBatch(keys: List<Int>): Map<Int, ApplicationAdminGql> =
+        transaction {
+            ApplicationRepository.findByIds(keys)
+                .mapNotNull { it?.let { entity -> entity.id.value to ApplicationAdminGql.fromDbEntity(entity) } }
+                .toMap()
         }
-    }
 }
 
-val verificationsByApplicationLoader = newNamedDataLoader<Int, _>(
-    "VERIFICATIONS_BY_APPLICATION_LOADER",
-) { ids ->
-    transaction {
-        val list = (Applications leftJoin ApplicationVerifications)
-            .select(ApplicationVerifications.columns + Applications.id)
-            .where { Applications.id inList ids }
-            .orderBy(Applications.id to SortOrder.ASC, ApplicationVerifications.id to SortOrder.ASC)
-            .toList()
-        val groupedByApplication = list.groupBy { row -> row[Applications.id].value }
-        val entities = ids.map { id ->
-            groupedByApplication[id]?.let { list ->
-                val verificationEntities = list.mapNotNull {
-                    if (it.getOrNull(ApplicationVerifications.id) == null) {
-                        null
-                    } else {
-                        ApplicationVerificationEntity.wrapRow(it)
-                    }
-                }
-                verificationEntities
-            }
+@Component
+class VerificationsByApplicationDataLoader : BaseDataLoader<Int, List<ApplicationVerificationView>>() {
+    override fun loadBatch(keys: List<Int>): Map<Int, List<ApplicationVerificationView>> {
+        val rowsByApplicationId = transaction {
+            (Applications leftJoin ApplicationVerifications)
+                .select(ApplicationVerifications.columns + Applications.id)
+                .where { Applications.id inList keys }
+                .orderBy(Applications.id to SortOrder.ASC, ApplicationVerifications.id to SortOrder.ASC)
+                .toList()
+                .groupBy { it[Applications.id].value }
         }
-        entities.map {
-            it?.let { verificationEntities ->
-                verificationEntities.map { entity ->
-                    ApplicationVerificationView.fromDbEntity(entity)
+        return keys.associateWith { key ->
+            rowsByApplicationId[key]?.mapNotNull { row ->
+                row.getOrNull(ApplicationVerifications.id)?.let {
+                    ApplicationVerificationView.fromDbEntity(ApplicationVerificationEntity.wrapRow(row))
                 }
-            }
+            } ?: emptyList()
         }
     }
 }

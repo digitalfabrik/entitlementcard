@@ -5,20 +5,25 @@ import app.ehrenamtskarte.backend.db.repositories.ApplicationRepository
 import app.ehrenamtskarte.backend.graphql.application.types.ApplicationAdminGql
 import app.ehrenamtskarte.backend.graphql.application.types.ApplicationPublicGql
 import app.ehrenamtskarte.backend.graphql.application.types.ApplicationVerificationView
-import app.ehrenamtskarte.backend.graphql.context
-import app.ehrenamtskarte.backend.graphql.getAuthContext
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidLinkException
+import app.ehrenamtskarte.backend.graphql.auth.requireAuthContext
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidLinkException
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.stereotype.Controller
 
-@Suppress("unused")
-class EakApplicationQueryService {
+@Controller
+class EakApplicationQueryController {
     @GraphQLDescription("Queries all applications for a specific region")
-    fun getApplications(dfe: DataFetchingEnvironment, regionId: Int): List<ApplicationAdminGql> {
-        val admin = dfe.graphQlContext.context.getAuthContext().admin
-
+    @QueryMapping
+    fun getApplications(
+        dfe: DataFetchingEnvironment,
+        @Argument regionId: Int,
+    ): List<ApplicationAdminGql> {
+        val admin = dfe.requireAuthContext().admin
         return transaction {
             if (admin.mayViewApplicationsInRegion(regionId)) {
                 ApplicationRepository.getApplicationsByAdmin(regionId)
@@ -30,7 +35,10 @@ class EakApplicationQueryService {
     }
 
     @GraphQLDescription("Queries an application by application accessKey")
-    fun getApplicationByApplicant(accessKey: String): ApplicationPublicGql =
+    @QueryMapping
+    fun getApplicationByApplicant(
+        @Argument accessKey: String,
+    ): ApplicationPublicGql =
         transaction {
             ApplicationRepository.getApplicationByApplicant(accessKey)
                 ?.let { ApplicationPublicGql.fromDbEntity(it) }
@@ -38,8 +46,9 @@ class EakApplicationQueryService {
         }
 
     @GraphQLDescription("Queries an application by application verification accessKey")
+    @QueryMapping
     fun getApplicationByApplicationVerificationAccessKey(
-        applicationVerificationAccessKey: String,
+        @Argument applicationVerificationAccessKey: String,
     ): ApplicationPublicGql =
         transaction {
             ApplicationRepository
@@ -49,7 +58,10 @@ class EakApplicationQueryService {
         }
 
     @GraphQLDescription("Queries an application verification by application verification accessKey")
-    fun getApplicationVerification(applicationVerificationAccessKey: String): ApplicationVerificationView =
+    @QueryMapping
+    fun getApplicationVerification(
+        @Argument applicationVerificationAccessKey: String,
+    ): ApplicationVerificationView =
         transaction {
             ApplicationRepository.getApplicationVerification(applicationVerificationAccessKey).let {
                 ApplicationVerificationView.fromDbEntity(it)
