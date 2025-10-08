@@ -1,12 +1,13 @@
 /* eslint-disable react/destructuring-assignment */
 import { CancelOutlined, CheckCircleOutlined, RemoveCircleOutline } from '@mui/icons-material'
-import { Stack, Typography } from '@mui/material'
+import { Typography } from '@mui/material'
 import { format } from 'date-fns'
 import { de } from 'date-fns/locale'
 import React, { ReactElement } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { ApplicationStatus } from '../../../generated/graphql'
+import AlertBox from '../../../mui-modules/base/AlertBox'
 
 const statusTranslationKey = (applicationStatus: ApplicationStatus, isAdminView: boolean): string | undefined => {
   switch (applicationStatus) {
@@ -63,24 +64,27 @@ export const ApplicationStatusNote = (p: {
   const showIcon = p.showIcon ?? true
 
   return (
-    <Stack direction='row' sx={{ justifyContent: 'flex-start', alignItems: 'bottom' }}>
-      {showIcon && <>{icon(p.status)}&ensp;</>}
-      <div>
-        {translationKey !== undefined && (
-          <Trans
-            t={t}
-            i18nKey={translationKey}
-            values={{
-              date: format(p.statusResolvedDate, 'dd. MMMM yyyy', { locale: de }),
-              time: format(p.statusResolvedDate, 'HH:mm', { locale: de }),
-              reason: p.reason !== undefined ? t('reason', { message: p.reason }) : '',
-            }}
-            components={{
-              resolution: <Typography component='span' fontWeight='bold' fontSize='inherit' color={color} />,
-            }}
-          />
-        )}
-      </div>
-    </Stack>
+    <AlertBox
+      sx={{ border: 'none', padding: 0, maxWidth: 'none' }}
+      customIcon={showIcon && <>{icon(p.status)}&ensp;</>}
+      description={
+        <div>
+          {translationKey !== undefined && (
+            <Trans
+              t={t}
+              i18nKey={translationKey}
+              values={{
+                date: format(p.statusResolvedDate, 'dd. MMMM yyyy', { locale: de }),
+                time: format(p.statusResolvedDate, 'HH:mm', { locale: de }),
+                reason: p.reason !== undefined ? t('reason', { message: p.reason }) : '',
+              }}
+              components={{
+                resolution: <Typography component='span' fontWeight='bold' fontSize='inherit' color={color} />,
+              }}
+            />
+          )}
+        </div>
+      }
+    />
   )
 }
