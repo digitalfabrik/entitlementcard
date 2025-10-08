@@ -30,13 +30,14 @@ const ActivityDivider = ({ onDelete }: { onDelete?: () => void }) => {
       />
       {onDelete === undefined ? null : (
         <ConfirmDialog
+          id='delete-activity-dialog'
           open={deleteDialogOpen}
-          onUpdateOpen={setDeleteDialogOpen}
+          onClose={() => setDeleteDialogOpen(false)}
           confirmButtonText={t('misc:delete')}
-          content={t('deleteActivityContent')}
           onConfirm={onDelete}
-          title={t('deleteActivityTitle')}
-        />
+          title={t('deleteActivityTitle')}>
+          {t('deleteActivityContent')}
+        </ConfirmDialog>
       )}
     </>
   )

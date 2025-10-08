@@ -1,5 +1,5 @@
-import { Classes, Dialog } from '@blueprintjs/core'
-import { Button } from '@mui/material'
+import { CheckCircleOutline, Close } from '@mui/icons-material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack } from '@mui/material'
 import React, { ReactElement, ReactNode, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -59,32 +59,28 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props): Rea
   return (
     <>
       {children}
-      <Dialog
-        isOpen={secondsLeft <= 180}
-        title={t('loginPeriodExpires')}
-        icon='warning-sign'
-        isCloseButtonShown={false}>
-        <form
-          onSubmit={e => {
-            e.preventDefault()
-            extendLogin()
-          }}>
-          <div className={Classes.DIALOG_BODY}>
+      <Dialog open={secondsLeft <= 180} aria-describedby='keep-alive-dialog' fullWidth>
+        <DialogTitle>{t('loginPeriodExpires')}</DialogTitle>
+        <DialogContent id='keep-alive-dialog'>
+          <Stack>
             <p>{t('loginPeriodSecondsLeft', { secondsLeft })}</p>
             <p>{t('loginPeriodPasswordPrompt')}</p>
             <PasswordInput placeholder={t('loginPeriodPasswordPlaceholder')} setValue={setPassword} value={password} />
-          </div>
-          <div className={Classes.DIALOG_FOOTER}>
-            <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-              <Button onClick={onSignOut} loading={mutationState.loading}>
-                {t('loginPeriodLogoutButton')}
-              </Button>
-              <Button variant='contained' type='submit' loading={mutationState.loading}>
-                {t('loginPeriodExtendButton')}
-              </Button>
-            </div>
-          </div>
-        </form>
+          </Stack>
+        </DialogContent>
+        <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
+          <Button variant='outlined' startIcon={<Close />} onClick={onSignOut} loading={mutationState.loading}>
+            {t('loginPeriodLogoutButton')}
+          </Button>
+          <Button
+            variant='contained'
+            color='primary'
+            onClick={extendLogin}
+            startIcon={<CheckCircleOutline />}
+            loading={mutationState.loading}>
+            {t('loginPeriodExtendButton')}
+          </Button>
+        </DialogActions>
       </Dialog>
     </>
   )

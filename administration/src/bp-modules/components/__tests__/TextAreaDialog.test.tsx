@@ -12,6 +12,8 @@ describe('TextAreaDialog', () => {
   const renderTextDialog = ({ maxChars, defaultText }: { maxChars?: number; defaultText: string | null }) =>
     renderWithTranslation(
       <TextAreaDialog
+        title='Show note'
+        id='show-note-dialog'
         loading={false}
         maxChars={maxChars}
         defaultText={defaultText}

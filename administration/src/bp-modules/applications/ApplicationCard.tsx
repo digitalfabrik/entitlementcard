@@ -3,8 +3,6 @@ import { MutationResult } from '@apollo/client'
 import {
   CancelOutlined,
   Check,
-  CheckCircleOutline,
-  Close,
   CreditScore,
   Delete,
   ExpandMore,
@@ -19,11 +17,6 @@ import {
   Autocomplete,
   Box,
   Button,
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Divider,
   InputAdornment,
   Stack,
@@ -34,6 +27,7 @@ import {
 } from '@mui/material'
 import React, { memo, useContext, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router'
 import { useReactToPrint } from 'react-to-print'
 
 import { CsvIcon } from '../../components/icons/CsvIcon'
@@ -44,6 +38,7 @@ import {
   useDeleteApplicationMutation,
   useRejectApplicationStatusMutation,
 } from '../../generated/graphql'
+import ConfirmDialog from '../../mui-modules/application/ConfirmDialog'
 import BaseMenu, { MenuItemType } from '../../mui-modules/base/BaseMenu'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import type { ProjectConfig } from '../../project-configs/getProjectConfig'
@@ -69,29 +64,18 @@ const DeleteDialog = (props: {
   const { t } = useTranslation('applicationsOverview')
 
   return (
-    <Dialog open={props.isOpen} aria-describedby='alert-dialog-description'>
-      <DialogContent id='alert-dialog-description'>
-        <Stack direction='row' sx={{ gap: 2, alignItems: 'center' }}>
-          {props.deleteResult.loading || props.deleteResult.called ? (
-            <CircularProgress size={64} />
-          ) : (
-            <Delete sx={{ fontSize: '64px' }} color='error' />
-          )}
-          {t('deleteApplicationConfirmationPrompt')}
-        </Stack>
-      </DialogContent>
-      <DialogActions>
-        <Button disabled={props.deleteResult.loading || props.deleteResult.called} onClick={props.onCancel}>
-          {t('misc:cancel')}
-        </Button>
-        <Button
-          color='error'
-          disabled={props.deleteResult.loading || props.deleteResult.called}
-          onClick={props.onConfirm}>
-          {t('deleteApplication')}
-        </Button>
-      </DialogActions>
-    </Dialog>
+    <ConfirmDialog
+      open={props.isOpen}
+      onClose={props.onCancel}
+      title={t('deleteApplication')}
+      id='alert-dialog-description'
+      onConfirm={props.onConfirm}
+      actionDisabled={props.deleteResult.loading || props.deleteResult.called}
+      color='error'>
+      <Stack direction='row' sx={{ gap: 2, alignItems: 'center' }}>
+        {t('deleteApplicationConfirmationPrompt')}
+      </Stack>
+    </ConfirmDialog>
   )
 }
 
@@ -105,10 +89,25 @@ const RejectionDialog = (props: {
   const rejectionMessages = t('rejectionReasons', { returnObjects: true }) as string[]
   const [reason, setReason] = useState<string | null>(null)
 
+  const closeAndClearDialog = () => {
+    setReason(null)
+    props.onCancel()
+  }
+
   return (
-    <Dialog open={props.open} aria-describedby='reject-dialog-description' fullWidth onClose={props.onCancel}>
-      <DialogTitle>{t('rejectionDialogTitle')}</DialogTitle>
-      <DialogContent id='reject-dialog-description'>
+    <ConfirmDialog
+      open={props.open}
+      title={t('rejectionDialogTitle')}
+      id='reject-dialog-description'
+      onConfirm={() => {
+        if (reason !== null) {
+          props.onConfirm(reason)
+        }
+      }}
+      onClose={closeAndClearDialog}
+      cancelButtonText={t('rejectionCancelButton')}
+      confirmButtonText={t('rejectionButton')}>
+      <>
         {t('rejectionDialogMessage')}
         <Autocomplete
           renderInput={params => (
@@ -133,30 +132,8 @@ const RejectionDialog = (props: {
           sx={{ marginTop: 2 }}
           onChange={(_, value) => setReason(value)}
         />
-      </DialogContent>
-      <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
-        <Button
-          onClick={() => {
-            setReason(null)
-            props.onCancel()
-          }}
-          disabled={props.loading}
-          startIcon={<Close />}>
-          {t('rejectionCancelButton')}
-        </Button>
-        <Button
-          variant='contained'
-          startIcon={<CheckCircleOutline />}
-          disabled={reason === null || props.loading}
-          onClick={() => {
-            if (reason !== null) {
-              props.onConfirm(reason)
-            }
-          }}>
-          {t('rejectionButton')}
-        </Button>
-      </DialogActions>
-    </Dialog>
+      </>
+    </ConfirmDialog>
   )
 }
 
@@ -190,11 +167,10 @@ const ButtonsApplicationPending = (props: {
 
 const ButtonsApplicationResolved = (props: {
   applicationStatus: ApplicationStatus | null | undefined // TODO Remove null|undefined once this type is narrowed
-  primaryButtonHref: string | undefined
+  primaryButtonHref: string
   onSecondaryButtonClick: () => void
 }) => {
   const { t } = useTranslation('applicationsOverview')
-
   return (
     <>
       {/* Make the outer Tooltip independent of the button's disabled state */}
@@ -202,17 +178,18 @@ const ButtonsApplicationResolved = (props: {
         props.applicationStatus === ApplicationStatus.ApprovedCardCreated) && (
         <Tooltip title={props.primaryButtonHref ? undefined : t('incompleteApplicationDataTooltip')}>
           <div>
-            <Button
-              color='primary'
-              variant='contained'
-              disabled={props.primaryButtonHref === undefined}
-              href={props.primaryButtonHref}
-              startIcon={<CreditScore />}>
-              {' '}
-              {props.applicationStatus === ApplicationStatus.ApprovedCardCreated
-                ? t('createCardAgain')
-                : t('createCard')}
-            </Button>
+            <Link to={props.primaryButtonHref}>
+              <Button
+                color='primary'
+                variant='contained'
+                disabled={props.primaryButtonHref.length === 0}
+                startIcon={<CreditScore />}>
+                {' '}
+                {props.applicationStatus === ApplicationStatus.ApprovedCardCreated
+                  ? t('createCardAgain')
+                  : t('createCard')}
+              </Button>
+            </Link>
           </div>
         </Tooltip>
       )}
@@ -224,10 +201,10 @@ const ButtonsApplicationResolved = (props: {
 }
 
 /** Returns a link to the create card route. Might be undefined, if the application data cannot be mapped to a query. */
-const createCardLink = (application: Application, config: ProjectConfig): string | undefined => {
+const createCardLink = (application: Application, config: ProjectConfig): string => {
   const query = config.applicationFeature?.applicationJsonToCardQuery(application.jsonValue)
   // TODO: This URL should be generated by a router function
-  return query ? `./cards/add${query}&applicationIdToMarkAsProcessed=${application.id}` : undefined
+  return query ? `/cards/add${query}&applicationIdToMarkAsProcessed=${application.id}` : ''
 }
 
 const ApplicationCard = ({
