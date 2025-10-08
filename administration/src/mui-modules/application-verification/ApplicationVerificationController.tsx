@@ -1,8 +1,8 @@
-import { SnackbarProvider, useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
 
+import { useAppSnackbar } from '../../AppSnackbar'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import {
   ApplicationStatus,
@@ -25,16 +25,16 @@ const ApplicationVerificationController = ({ applicationVerificationAccessKey }:
   const { t } = useTranslation('applicationVerification')
   const [verificationFinished, setVerificationFinished] = useState(false)
   const config = useContext(ProjectConfigContext)
-  const { enqueueSnackbar } = useSnackbar()
+  const appSnackbar = useAppSnackbar()
   const [verifyOrRejectApplicationVerification] = useVerifyOrRejectApplicationVerificationMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      enqueueSnackbar(title, { variant: 'error' })
+      appSnackbar.enqueueError(title, { variant: 'error' })
     },
     onCompleted: ({ result }) => {
       if (!result) {
         console.error('Verify operation returned false.')
-        enqueueSnackbar(t('unknown'), { variant: 'error' })
+        appSnackbar.enqueueError(t('unknown'), { variant: 'error' })
       } else {
         setVerificationFinished(true)
       }
@@ -121,11 +121,7 @@ const ControllerWithAccessKey = (): ReactElement => {
     )
   }
 
-  return (
-    <SnackbarProvider>
-      <ApplicationVerificationController applicationVerificationAccessKey={applicationVerificationAccessKey} />
-    </SnackbarProvider>
-  )
+  return <ApplicationVerificationController applicationVerificationAccessKey={applicationVerificationAccessKey} />
 }
 
 export default ControllerWithAccessKey

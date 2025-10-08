@@ -4,13 +4,13 @@ import { Stack } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { useAppSnackbar } from '../../AppSnackbar'
 import CardTextField from '../../cards/extensions/components/CardTextField'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { Role, useCreateAdministratorMutation } from '../../generated/graphql'
 import ConfirmDialog from '../../mui-modules/application/ConfirmDialog'
 import BaseCheckbox from '../../mui-modules/base/BaseCheckbox'
 import { isEmailValid } from '../../shared/verifications'
-import { useAppToaster } from '../AppToaster'
 import RegionSelector from './RegionSelector'
 import RoleSelector from './RoleSelector'
 
@@ -27,7 +27,7 @@ const CreateUserDialog = ({
   // roles are selectable.
   regionIdOverride: number | null
 }): ReactElement => {
-  const appToaster = useAppToaster()
+  const appSnackbar = useAppSnackbar()
   const { t } = useTranslation('users')
   const [email, setEmail] = useState('')
   const [role, setRole] = useState<Role | null>(null)
@@ -46,10 +46,10 @@ const CreateUserDialog = ({
   const [createAdministrator, { loading }] = useCreateAdministratorMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appToaster?.show({ intent: 'danger', message: title })
+      appSnackbar.enqueueError(title)
     },
     onCompleted: () => {
-      appToaster?.show({ intent: 'success', message: t('addUserSuccess') })
+      appSnackbar.enqueueSuccess(t('addUserSuccess'))
       onSuccess()
       clearAndCloseDialog()
     },

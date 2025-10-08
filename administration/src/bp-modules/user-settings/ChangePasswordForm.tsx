@@ -3,10 +3,10 @@ import { Button, FormControl, FormLabel, Stack } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { useAppSnackbar } from '../../AppSnackbar'
 import { useWhoAmI } from '../../WhoAmIProvider'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useChangePasswordMutation } from '../../generated/graphql'
-import { useAppToaster } from '../AppToaster'
 import PasswordInput from '../PasswordInput'
 import validatePasswordInput from '../auth/validateNewPasswordInput'
 import SettingsCard from './SettingsCard'
@@ -18,17 +18,14 @@ const ChangePasswordForm = (): ReactElement => {
   const [newPassword, setNewPassword] = useState<string>()
   const [repeatNewPassword, setRepeatNewPassword] = useState<string>()
 
-  const appToaster = useAppToaster()
+  const appSnackbar = useAppSnackbar()
   const [changePassword, { loading }] = useChangePasswordMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appToaster?.show({ intent: 'danger', message: title })
+      appSnackbar.enqueueError(title)
     },
     onCompleted: () => {
-      appToaster?.show({
-        intent: 'success',
-        message: t('passwordChangeSuccessful'),
-      })
+      appSnackbar.enqueueSuccess(t('passwordChangeSuccessful'))
       setCurrentPassword('')
       setNewPassword('')
       setRepeatNewPassword('')

@@ -6,10 +6,10 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import styled from 'styled-components'
 
+import { useAppSnackbar } from '../../../AppSnackbar'
 import graphQlErrorMap from '../../../errors/GraphQlErrorMap'
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
 import { GraphQlExceptionCode, useUpdateDataPolicyMutation } from '../../../generated/graphql'
-import { useAppToaster } from '../../AppToaster'
 import ButtonBar from '../../ButtonBar'
 
 const Content = styled.div`
@@ -44,15 +44,17 @@ const MAX_CHARS = 20000
 
 const DataPrivacyOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProps): ReactElement => {
   const navigate = useNavigate()
-  const appToaster = useAppToaster()
+  const appSnackbar = useAppSnackbar()
   const { t } = useTranslation('regionSettings')
   const [dataPrivacyText, setDataPrivacyText] = useState<string>(dataPrivacyPolicy)
   const [updateDataPrivacy, { loading }] = useUpdateDataPolicyMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appToaster?.show({ intent: 'danger', message: title })
+      appSnackbar.enqueueError(title)
     },
-    onCompleted: () => appToaster?.show({ intent: 'success', message: t('dataPrivacyChangeSuccessful') }),
+    onCompleted: () => {
+      appSnackbar.enqueueSuccess(t('dataPrivacyChangeSuccessful'))
+    },
   })
   const maxCharsExceeded = dataPrivacyText.length > MAX_CHARS
 

@@ -1,10 +1,10 @@
 import { Delete } from '@mui/icons-material'
 import { Button, Card, Divider, Typography } from '@mui/material'
 import { styled } from '@mui/system'
-import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { useAppSnackbar } from '../../AppSnackbar'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import {
   ApplicationStatus,
@@ -51,18 +51,18 @@ const ApplicationApplicantView = ({
   const { createdDate: createdDateString, id } = application
   const config = useContext(ProjectConfigContext)
   const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${id}`
-  const { enqueueSnackbar } = useSnackbar()
+  const appSnackbar = useAppSnackbar()
   const [withdrawApplication, { loading: withdrawalLoading }] = useWithdrawApplicationMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      enqueueSnackbar(title, { variant: 'error' })
+      appSnackbar.enqueueError(title)
     },
     onCompleted: ({ isWithdrawn }: { isWithdrawn: boolean }) => {
       if (isWithdrawn) {
         onWithdraw()
       } else {
         console.error('Withdraw operation returned false.')
-        enqueueSnackbar(t('alreadyWithdrawn'), { variant: 'error' })
+        appSnackbar.enqueueError(t('alreadyWithdrawn'))
       }
     },
   })

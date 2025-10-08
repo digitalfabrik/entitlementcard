@@ -4,9 +4,9 @@ import { parse } from 'csv-parse/browser/esm/sync'
 import React, { ChangeEventHandler, ReactElement, useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { useAppSnackbar } from '../../AppSnackbar'
 import NonIdealState from '../../mui-modules/NonIdealState'
 import { StoresFieldConfig } from '../../project-configs/getProjectConfig'
-import { useAppToaster } from '../AppToaster'
 import { AcceptingStoresEntry } from './AcceptingStoresEntry'
 import StoresImportDuplicates from './StoresImportDuplicates'
 import StoresRequirementsText from './StoresRequirementsText'
@@ -55,19 +55,19 @@ const getStoreDuplicates = (stores: AcceptingStoresEntry[]): number[][] =>
 
 const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }: StoresCsvInputProps): ReactElement => {
   const fileInput = useRef<HTMLInputElement>(null)
-  const appToaster = useAppToaster()
+  const appSnackbar = useAppSnackbar()
   const { t } = useTranslation('stores')
   const headers = fields.map(field => field.name)
 
   const showInputError = useCallback(
     (message: string | ReactElement, timeout = DEFAULT_ERROR_TIMEOUT) => {
-      appToaster?.show({ intent: 'danger', message, timeout })
+      appSnackbar.enqueueError(message, { autoHideDuration: timeout, persist: timeout === 0 ? true : undefined })
       if (!fileInput.current) {
         return
       }
       fileInput.current.value = ''
     },
-    [appToaster]
+    [appSnackbar]
   )
 
   const onLoadEnd = useCallback(

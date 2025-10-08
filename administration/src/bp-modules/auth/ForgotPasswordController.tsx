@@ -3,15 +3,15 @@ import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 
+import { useAppSnackbar } from '../../AppSnackbar'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useSendResetMailMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import { useAppToaster } from '../AppToaster'
 import StandaloneCenter from '../StandaloneCenter'
 
 const ForgotPasswordController = (): ReactElement => {
   const config = useContext(ProjectConfigContext)
-  const appToaster = useAppToaster()
+  const appSnackbar = useAppSnackbar()
   const { t } = useTranslation('auth')
   const [finished, setFinished] = useState(false)
   const [email, setEmail] = useState('')
@@ -20,10 +20,7 @@ const ForgotPasswordController = (): ReactElement => {
     onCompleted: () => setFinished(true),
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appToaster?.show({
-        intent: 'danger',
-        message: title,
-      })
+      appSnackbar.enqueueError(title)
     },
   })
 

@@ -2,6 +2,7 @@ import { useCallback, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 
+import { useAppSnackbar } from '../../../AppSnackbar'
 import { Card, initializeCardFromCSV, updateCard as updateCardObject } from '../../../cards/Card'
 import { generateCsv, getCSVFilename } from '../../../cards/CsvFactory'
 import { generatePdf, getPdfFilename } from '../../../cards/PdfFactory'
@@ -22,7 +23,6 @@ import { getBuildConfig } from '../../../util/getBuildConfig'
 import getDeepLinkFromQrCode from '../../../util/getDeepLinkFromQrCode'
 import { isProductionEnvironment, updateArrayItem } from '../../../util/helper'
 import { reportErrorToSentry } from '../../../util/sentry'
-import { useAppToaster } from '../../AppToaster'
 import { saveActivityLog } from '../../activity-log/ActivityLog'
 import { showCardGenerationError } from '../../util/cardGenerationError'
 import { getFreinetCardFromCards } from '../../util/getFreinetCardFromCards'
@@ -68,18 +68,18 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
   const [cardGenerationStep, setCardGenerationStep] = useState<CardGenerationStep>('input')
   const [createCardsMutation] = useCreateCardsMutation()
   const [deleteCardsMutation] = useDeleteCardsMutation()
-  const appToaster = useAppToaster()
+  const appSnackbar = useAppSnackbar()
   const { t } = useTranslation('cards')
 
   const [sendToFreinet] = useSendApplicationAndCardDataToFreinetMutation({
     onCompleted: data => {
       if (data.sendApplicationAndCardDataToFreinet === true) {
-        appToaster?.show({ intent: 'success', message: t('freinetDataSyncSuccessMessage') })
+        appSnackbar.enqueueSuccess(t('freinetDataSyncSuccessMessage'))
       }
     },
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appToaster?.show({ intent: 'danger', message: title, timeout: 0 })
+      appSnackbar.enqueueError(title, { persist: true })
     },
   })
   const sendConfirmationMails = useSendCardConfirmationMails()
@@ -135,9 +135,7 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
           // Rollback
           await deleteCards(deleteCardsMutation, region.id, codes).catch(reportErrorToSentry)
         }
-        if (appToaster) {
-          showCardGenerationError(appToaster, error)
-        }
+        showCardGenerationError(appSnackbar, error)
         setCardGenerationStep('input')
       } finally {
         setCards([])
@@ -151,7 +149,7 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
       region,
       sendToFreinet,
       sendConfirmationMails,
-      appToaster,
+      appSnackbar,
       deleteCardsMutation,
     ]
   )

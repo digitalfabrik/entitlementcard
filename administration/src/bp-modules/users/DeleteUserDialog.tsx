@@ -3,6 +3,7 @@ import { Box, Stack, Typography } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
+import { useAppSnackbar } from '../../AppSnackbar'
 import { AuthContext } from '../../AuthProvider'
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
@@ -10,7 +11,6 @@ import { Administrator, useDeleteAdministratorMutation } from '../../generated/g
 import ConfirmDialog from '../../mui-modules/application/ConfirmDialog'
 import AlertBox from '../../mui-modules/base/AlertBox'
 import BaseCheckbox from '../../mui-modules/base/BaseCheckbox'
-import { useAppToaster } from '../AppToaster'
 
 const DeleteUserDialog = ({
   selectedUser,
@@ -21,7 +21,7 @@ const DeleteUserDialog = ({
   selectedUser: Administrator | null
   onSuccess: () => void
 }): ReactElement => {
-  const appToaster = useAppToaster()
+  const appSnackbar = useAppSnackbar()
   const { signOut } = useContext(AuthContext)
   const actingAdminId = useContext(WhoAmIContext).me?.id
   const [deleteWarningConfirmed, setDeleteWarningConfirmed] = useState(false)
@@ -30,10 +30,10 @@ const DeleteUserDialog = ({
   const [deleteAdministrator, { loading }] = useDeleteAdministratorMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appToaster?.show({ intent: 'danger', message: title })
+      appSnackbar.enqueueError(title)
     },
     onCompleted: () => {
-      appToaster?.show({ intent: 'success', message: t('deleteUserSuccess') })
+      appSnackbar.enqueueSuccess(t('deleteUserSuccess'))
       onClose()
       onSuccess()
     },

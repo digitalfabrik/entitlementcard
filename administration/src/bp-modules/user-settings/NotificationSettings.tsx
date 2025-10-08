@@ -3,10 +3,10 @@ import { Button } from '@mui/material'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { useAppSnackbar } from '../../AppSnackbar'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useGetNotificationSettingsQuery, useUpdateNotificationSettingsMutation } from '../../generated/graphql'
 import getQueryResult from '../../mui-modules/util/getQueryResult'
-import { useAppToaster } from '../AppToaster'
 import SettingsCard from './SettingsCard'
 
 const NotificationSettings = (): ReactElement => {
@@ -14,13 +14,15 @@ const NotificationSettings = (): ReactElement => {
   const [receiveEmailForActivation, setReceiveEmailForActivation] = useState<boolean>(false)
   const [receiveEmailForVerification, setReceiveEmailForVerification] = useState<boolean>(false)
 
-  const appToaster = useAppToaster()
+  const appSnackbar = useAppSnackbar()
   const [updateNotificationSettings, { loading }] = useUpdateNotificationSettingsMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appToaster?.show({ intent: 'danger', message: title })
+      appSnackbar.enqueueError(title)
     },
-    onCompleted: () => appToaster?.show({ intent: 'success', message: t('notificationUpdateSuccess') }),
+    onCompleted: () => {
+      appSnackbar.enqueueSuccess(t('notificationUpdateSuccess'))
+    },
   })
 
   const notificationSettingsQuery = useGetNotificationSettingsQuery()

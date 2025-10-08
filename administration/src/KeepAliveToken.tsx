@@ -4,9 +4,9 @@ import React, { ReactElement, ReactNode, useContext, useEffect, useState } from 
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 
+import { useAppSnackbar } from './AppSnackbar'
 import { TokenPayload } from './AuthProvider'
 import { useWhoAmI } from './WhoAmIProvider'
-import { useAppToaster } from './bp-modules/AppToaster'
 import PasswordInput from './bp-modules/PasswordInput'
 import getMessageFromApolloError from './errors/getMessageFromApolloError'
 import { SignInPayload, useSignInMutation } from './generated/graphql'
@@ -27,17 +27,17 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props): Rea
   const projectId = useContext(ProjectConfigContext).projectId
   const email = useWhoAmI().me.email
   const [secondsLeft, setSecondsLeft] = useState(computeSecondsLeft(authData))
-  const appToaster = useAppToaster()
+  const appSnackbar = useAppSnackbar()
   const [password, setPassword] = useState<string>()
   const [signIn, mutationState] = useSignInMutation({
     onCompleted: payload => {
-      appToaster?.show({ intent: 'success', message: t('loginPeriodExtended') })
+      appSnackbar.enqueueSuccess(t('loginPeriodExtended'))
       onSignIn(payload.signInPayload)
       setPassword('')
     },
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appToaster?.show({ intent: 'danger', message: title })
+      appSnackbar.enqueueError(title)
     },
   })
 

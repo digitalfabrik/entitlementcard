@@ -1,8 +1,8 @@
 import { AttachFile, Attachment } from '@mui/icons-material'
 import { Button, Chip } from '@mui/material'
-import { useSnackbar } from 'notistack'
 import React, { ChangeEventHandler, useContext, useEffect, useRef } from 'react'
 
+import { useAppSnackbar } from '../../../AppSnackbar'
 import { AttachmentInput } from '../../../generated/graphql'
 import i18next from '../../../i18n'
 import FormAlert from '../../base/FormAlert'
@@ -63,20 +63,19 @@ const Component = <I,>({
   required: boolean
   validate: (state: State) => ValidationResult<I>
 }) => {
-  const { enqueueSnackbar } = useSnackbar()
+  const appSnackbar = useAppSnackbar()
   const { showAllErrors, disableAllInputs } = useContext(FormContext)
   const validationResult = validate(state)
   const onInputChange: ChangeEventHandler<HTMLInputElement> = async e => {
     const file = e.target.files![0]
     if (!(file.type in defaultExtensionsByMIMEType)) {
-      enqueueSnackbar('Die gewählte Datei hat einen unzulässigen Dateityp.', { variant: 'error' })
+      appSnackbar.enqueueError('Die gewählte Datei hat einen unzulässigen Dateityp.')
       e.target.value = ''
       return
     }
     if (file.size > FILE_SIZE_LIMIT_BYTES) {
-      enqueueSnackbar(
-        `Die gewählte Datei ist zu groß. Die maximale Dateigröße beträgt ${FILE_SIZE_LIMIT_MEGA_BYTES}MB.`,
-        { variant: 'error' }
+      appSnackbar.enqueueError(
+        `Die gewählte Datei ist zu groß. Die maximale Dateigröße beträgt ${FILE_SIZE_LIMIT_MEGA_BYTES}MB.`
       )
       e.target.value = ''
       return

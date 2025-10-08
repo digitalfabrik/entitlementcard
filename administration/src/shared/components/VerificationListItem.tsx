@@ -6,7 +6,7 @@ import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
-import { useAppToaster } from '../../bp-modules/AppToaster'
+import { useAppSnackbar } from '../../AppSnackbar'
 import EmailLink from '../../bp-modules/EmailLink'
 import { ApplicationVerificationView, useSendApprovalMailToOrganisationMutation } from '../../generated/graphql'
 import { isEmailValid, verificationStatus } from '../verifications'
@@ -47,17 +47,17 @@ const VerificationListItem = ({
   showResendApprovalEmailButton: boolean
 }): ReactElement => {
   const { t } = useTranslation('applicationsOverview')
-  const appToaster = useAppToaster()
+  const appSnackbar = useAppSnackbar()
   const [isApprovalRequestSent, setIsApprovalRequestSent] = useState(false)
   const status = verificationStatus(verification)
   const { text, color } = getStatusMetaData(verification, t)
 
   const [sendApprovalEmail, sendApprovalEmailResult] = useSendApprovalMailToOrganisationMutation({
     onError: () => {
-      appToaster?.show({ intent: 'danger', message: t('failedToSendApprovalRequest') })
+      appSnackbar.enqueueError(t('failedToSendApprovalRequest'))
     },
     onCompleted: () => {
-      appToaster?.show({ intent: 'success', message: t('approvalRequestSentSuccessfully') })
+      appSnackbar.enqueueSuccess(t('approvalRequestSentSuccessfully'))
     },
   })
   const onSendApprovalEmailClick = () => {

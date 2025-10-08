@@ -4,18 +4,18 @@ import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate, useSearchParams } from 'react-router'
 
+import { useAppSnackbar } from '../../AppSnackbar'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useCheckPasswordResetLinkQuery, useResetPasswordMutation } from '../../generated/graphql'
 import getQueryResult from '../../mui-modules/util/getQueryResult'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import { useAppToaster } from '../AppToaster'
 import PasswordInput from '../PasswordInput'
 import StandaloneCenter from '../StandaloneCenter'
 import validateNewPasswordInput from './validateNewPasswordInput'
 
 const ResetPasswordController = (): ReactElement => {
   const config = useContext(ProjectConfigContext)
-  const appToaster = useAppToaster()
+  const appSnackbar = useAppSnackbar()
   const [queryParams] = useSearchParams()
   const adminEmail = queryParams.get('email') ?? ''
   const { t } = useTranslation('auth')
@@ -32,15 +32,12 @@ const ResetPasswordController = (): ReactElement => {
 
   const [resetPassword, { loading }] = useResetPasswordMutation({
     onCompleted: () => {
-      appToaster?.show({ intent: 'success', message: t('setPasswordSuccess') })
+      appSnackbar.enqueueSuccess(t('setPasswordSuccess'))
       navigate('/')
     },
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appToaster?.show({
-        intent: 'danger',
-        message: title,
-      })
+      appSnackbar.enqueueError(title)
     },
   })
 

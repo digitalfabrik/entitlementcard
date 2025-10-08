@@ -3,12 +3,12 @@ import React, { ChangeEvent, ReactElement, useCallback, useContext, useRef, useS
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
 
+import { useAppSnackbar } from '../../AppSnackbar'
 import { Card, initializeCardFromCSV } from '../../cards/Card'
 import { Region } from '../../generated/graphql'
 import NonIdealState from '../../mui-modules/NonIdealState'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { getCsvHeaders } from '../../project-configs/helper'
-import { useAppToaster } from '../AppToaster'
 import FileInputStateIcon from '../FileInputStateIcon'
 import { FREINET_PARAM } from '../constants'
 import convertFreinetImport from '../util/convertFreinetImport'
@@ -38,18 +38,18 @@ const ImportCardsInput = ({ setCards, region }: ImportCardsInputProps): ReactEle
   const { t } = useTranslation('cards')
   const [inputState, setInputState] = useState<'loading' | 'error' | 'idle'>('idle')
   const fileInput = useRef<HTMLInputElement>(null)
-  const appToaster = useAppToaster()
+  const appSnackbar = useAppSnackbar()
 
   const showInputError = useCallback(
     (message: string) => {
-      appToaster?.show({ intent: 'danger', message })
+      appSnackbar.enqueueError(message)
       setInputState('error')
       if (!fileInput.current) {
         return
       }
       fileInput.current.value = ''
     },
-    [appToaster]
+    [appSnackbar]
   )
 
   const onLoadEnd = useCallback(

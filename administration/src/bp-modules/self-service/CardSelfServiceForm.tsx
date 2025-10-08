@@ -5,6 +5,7 @@ import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 
+import { useAppSnackbar } from '../../AppSnackbar'
 import { Card, getFullNameValidationErrorMessage, isFullNameValid, isValid } from '../../cards/Card'
 import CardTextField from '../../cards/extensions/components/CardTextField'
 import ClearInputButton from '../../cards/extensions/components/ClearInputButton'
@@ -14,7 +15,6 @@ import BaseCheckbox from '../../mui-modules/base/BaseCheckbox'
 import FormAlert from '../../mui-modules/base/FormAlert'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { removeMultipleSpaces } from '../../util/helper'
-import { useAppToaster } from '../AppToaster'
 import ExtensionForms from '../cards/ExtensionForms'
 import { ActionButton, actionButtonSx } from './components/ActionButton'
 import { IconTextButton } from './components/IconTextButton'
@@ -43,7 +43,7 @@ const CardSelfServiceForm = ({
   const [openReferenceInformation, setOpenReferenceInformation] = useState<boolean>(false)
   const [_, setSearchParams] = useSearchParams()
   const cardValid = isValid(card, projectConfig.card, { expirationDateNullable: true })
-  const appToaster = useAppToaster()
+  const appSnackbar = useAppSnackbar()
   const { viewportSmall } = useWindowDimensions()
 
   const createKoblenzPass = async () => {
@@ -52,10 +52,7 @@ const CardSelfServiceForm = ({
       setDataPrivacyAccepted(DataPrivacyAcceptingStatus.denied)
     }
     if (!cardValid || dataPrivacyAccepted !== DataPrivacyAcceptingStatus.accepted) {
-      appToaster?.show({
-        message: <FormAlert isToast errorMessage={t('atLeastOneInputIsInvalid')} />,
-        intent: 'danger',
-      })
+      appSnackbar.enqueueError(<FormAlert isToast errorMessage={t('atLeastOneInputIsInvalid')} />)
       return
     }
     await generateCards()
