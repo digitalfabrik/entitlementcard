@@ -16,7 +16,6 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 import { removeMultipleSpaces } from '../../util/helper'
 import { useAppToaster } from '../AppToaster'
 import ExtensionForms from '../cards/ExtensionForms'
-import { actionButtonSx } from './components/ActionButton'
 import { IconTextButton } from './components/IconTextButton'
 import { UnderlineTextButton } from './components/UnderlineTextButton'
 import { DataPrivacyAcceptingStatus } from './constants'
@@ -124,7 +123,7 @@ const CardSelfServiceForm = ({
       <ConfirmDialog
         open={openReferenceInformation}
         title={t('whereToFindReferenceNumber')}
-        buttonSx={actionButtonSx}
+        color='secondary'
         confirmButtonText={t('misc:close')}
         confirmButtonIcon={<Close />}
         id='reference-information-dialog'
@@ -150,7 +149,7 @@ const CardSelfServiceForm = ({
         confirmButtonIcon={<Close />}
         showCancelButton={false}
         open={openDataPrivacy}
-        buttonSx={actionButtonSx}
+        color='secondary'
         title={projectConfig.dataPrivacyHeadline}
         id='data-privacy-dialog'
         onConfirm={() => setOpenDataPrivacy(false)}

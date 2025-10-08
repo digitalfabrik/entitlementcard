@@ -1,6 +1,6 @@
 import { Close } from '@mui/icons-material'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -127,7 +127,9 @@ const CardSelfServiceView = (): ReactElement => {
           <Button onClick={() => setOpenHelpDialog(false)} variant='outlined' startIcon={<Close />}>
             {t('misc:cancel')}
           </Button>
-          <ActionButton href='mailto:koblenzpass@stadt.koblenz.de'>{t('sendMail')}</ActionButton>
+          <Button color='secondary' variant='contained' href='mailto:koblenzpass@stadt.koblenz.de'>
+            {t('sendMail')}
+          </Button>
         </DialogActions>
       </Dialog>
     </Container>
