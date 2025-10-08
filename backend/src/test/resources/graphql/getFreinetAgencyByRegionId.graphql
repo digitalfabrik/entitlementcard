@@ -1,8 +1,0 @@
-query GetFreinetAgencyByRegionId($regionId: Int!) {
-    agency: getFreinetAgencyByRegionId(regionId: $regionId) {
-        agencyId
-        agencyName
-        apiAccessKey
-        dataTransferActivated
-    }
-}
