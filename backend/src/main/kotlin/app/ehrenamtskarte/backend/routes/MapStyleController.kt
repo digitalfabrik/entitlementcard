@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ArrayNode
 import com.fasterxml.jackson.databind.node.JsonNodeFactory
 import com.fasterxml.jackson.databind.node.ObjectNode
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -21,7 +23,12 @@ class MapStyleController(
     private val styles: Map<String, String> = initializeStyles()
 
     @GetMapping("/project/{projectId}/map")
+    @Operation(
+        summary = "Returns the style for a specific project",
+        description = "Returns the style as a JSON string",
+    )
     fun handle(
+        @Parameter(description = "ID of the project")
         @PathVariable projectId: String,
     ): ResponseEntity<String> {
         val style = styles[projectId] ?: throw ProjectNotFoundException(projectId)
