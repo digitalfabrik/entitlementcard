@@ -10,6 +10,8 @@ import app.ehrenamtskarte.backend.db.repositories.UserEntitlementsRepository
 import app.ehrenamtskarte.backend.routes.exception.UserImportException
 import app.ehrenamtskarte.backend.shared.TokenAuthenticator
 import app.ehrenamtskarte.backend.shared.crypto.Argon2IdHasher
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
 import jakarta.servlet.http.HttpServletRequest
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
@@ -33,7 +35,19 @@ class UserImportController(
     private val config: BackendConfiguration,
 ) {
     @PostMapping
+    @Operation(
+        summary = "Imports user data from a CSV file",
+    )
     fun handleUserImport(
+        @Parameter(
+            description = "CSV file with user information",
+            example = """
+    
+        regionKey,userHash,startDate,endDate,revoked
+        07111,hashedUser1,01.01.2022,31.12.2022,false
+        07111,hashedUser2,01.06.2022,31.05.2023,true
+    """,
+        )
         @RequestParam("file", required = false) files: List<MultipartFile>?,
         request: HttpServletRequest,
     ): ResponseEntity<Map<String, String>> {
