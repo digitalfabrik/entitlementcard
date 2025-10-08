@@ -3,6 +3,7 @@ package app.ehrenamtskarte.backend.routes
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.db.entities.ProjectEntity
 import app.ehrenamtskarte.backend.db.entities.Projects
+import io.swagger.v3.oas.annotations.Operation
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
@@ -19,6 +20,11 @@ class HealthController(
     private val logger = LoggerFactory.getLogger(HealthController::class.java)
 
     @GetMapping("/health")
+    @Operation(
+        summary = "Health check for the backend.",
+        description = "Returns HTTP 200 if the database connection is working and the projects are loaded. " +
+            "Otherwise, returns HTTP 502.",
+    )
     fun healthCheck(): ResponseEntity<Void> =
         try {
             transaction {
