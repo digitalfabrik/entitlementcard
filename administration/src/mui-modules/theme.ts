@@ -1,4 +1,5 @@
 import { createTheme } from '@mui/material'
+import { grey } from '@mui/material/colors'
 import { Theme } from '@mui/system'
 
 import { ProjectConfig } from '../project-configs/getProjectConfig'
@@ -104,7 +105,7 @@ export const theme = (config: ProjectConfig): Theme =>
           root: {
             '&.MuiButton-contained': {
               '&[href]:hover': {
-                color: '#EEEEEE',
+                color: grey[200],
               },
             },
           },
@@ -112,14 +113,14 @@ export const theme = (config: ProjectConfig): Theme =>
             color: '#5C6065',
           },
           outlinedInherit: {
-            borderColor: '#EEEEEE',
+            borderColor: grey[200],
             borderWidth: '2px',
             color: '#5C6065',
           },
           containedInherit: {
             backgroundColor: '#F6F7F9',
             borderStyle: 'solid',
-            borderColor: '#EEEEEE',
+            borderColor: grey[200],
             borderWidth: '1px',
             color: '#5C6065',
             ':hover': {
@@ -166,7 +167,7 @@ export const theme = (config: ProjectConfig): Theme =>
           {
             props: { color: 'default' },
             style: {
-              backgroundColor: '#EEEEEE',
+              backgroundColor: grey[200],
               color: '#5C6065',
               '&:hover': {
                 backgroundColor: '#dddddd',
