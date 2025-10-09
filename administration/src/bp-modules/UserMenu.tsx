@@ -2,11 +2,12 @@ import { EditSquare, Logout, Settings } from '@mui/icons-material'
 import { Avatar, Box, Button, Divider, IconButton, Menu, Stack, Typography } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NavLink, useNavigate } from 'react-router'
+import { NavLink } from 'react-router'
 
 import { AuthContext } from '../AuthProvider'
 import { useWhoAmI } from '../WhoAmIProvider'
 import { Role } from '../generated/graphql'
+import useNavigateWithCallback from '../hooks/useNavigateWithCallback'
 import RenderGuard from '../mui-modules/components/RenderGuard'
 import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
 import roleToText from './users/utils/roleToText'
@@ -16,12 +17,10 @@ const UserMenu = (): ReactElement => {
   const { signOut } = useContext(AuthContext)
   const { t } = useTranslation('misc')
   const projectConfig = useContext(ProjectConfigContext)
-  const navigate = useNavigate()
+
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null)
-  const signOutAndRedirect = () => {
-    signOut()
-    navigate('/')
-  }
+  const navigateAndSignOut = useNavigateWithCallback(signOut)
+
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget)
   }
@@ -89,7 +88,7 @@ const UserMenu = (): ReactElement => {
             fullWidth
             variant='text'
             startIcon={<Logout />}
-            onClick={signOutAndRedirect}>
+            onClick={() => navigateAndSignOut('/')}>
             {t('logout')}
           </Button>
         </Stack>
