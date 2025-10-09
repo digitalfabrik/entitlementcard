@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material'
+import { Link, Typography } from '@mui/material'
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
@@ -93,12 +93,12 @@ const StepCardTypeForm: Form<State, ValidatedInput> = {
         <Typography component='p'>{t('applicationForms:cardTypeExplanation')}</Typography>
         <Typography>
           {t('applicationForms:cardTypeRequirements')}{' '}
-          <a
+          <Link
             href='https://www.ehrenamt.bayern.de/vorteile-wettbewerbe/ehrenamtskarte/index.php#sec3'
             target='_blank'
             rel='noreferrer'>
             {t('applicationForms:cardTypeRequirementsButton')}
-          </a>
+          </Link>
           .
         </Typography>
         <SubForms.cardType.Component

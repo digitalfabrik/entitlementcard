@@ -1,3 +1,4 @@
+import { Link } from '@mui/material'
 import { styled } from '@mui/system'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -5,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import AndroidStoreIcon from '../../assets/android_appstore_icon.svg'
 import AppStoreIcon from '../../assets/ios_appstore_icon.svg'
 
-const StoreLink = styled('a')`
+const StoreLink = styled(Link)`
   display: flex;
   gap: 20px;
   align-items: center;

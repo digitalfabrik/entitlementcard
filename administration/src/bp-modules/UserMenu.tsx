@@ -2,7 +2,7 @@ import { EditSquare, Logout, Settings } from '@mui/icons-material'
 import { Avatar, Box, Button, Divider, IconButton, Menu, Stack, Typography } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NavLink, useNavigate } from 'react-router'
+import { useNavigate } from 'react-router'
 
 import { AuthContext } from '../AuthProvider'
 import { useWhoAmI } from '../WhoAmIProvider'
@@ -70,19 +70,27 @@ const UserMenu = (): ReactElement => {
             <Typography variant='body2'>Rolle: {roleToText(role)}</Typography>
           </Box>
           <Divider sx={{ my: 1, width: '100%' }} />
-          <NavLink to='/user-settings' style={{ width: '100%' }} onClick={handleCloseUserMenu}>
-            <Button fullWidth variant='text' startIcon={<Settings />} sx={{ justifyContent: 'flex-start' }}>
-              {t('userSettings')}
-            </Button>
-          </NavLink>
+          <Button
+            href='/user-settings'
+            fullWidth
+            variant='text'
+            sx={{ justifyContent: 'flex-start' }}
+            startIcon={<Settings />}
+            onClick={handleCloseUserMenu}>
+            {t('userSettings')}
+          </Button>
           <RenderGuard
             condition={projectConfig.activityLogConfig !== undefined}
             allowedRoles={[Role.RegionManager, Role.RegionAdmin]}>
-            <NavLink to='/activity-log' style={{ width: '100%' }} onClick={handleCloseUserMenu}>
-              <Button fullWidth variant='text' startIcon={<EditSquare />} sx={{ justifyContent: 'flex-start' }}>
-                {t('activityLog')}
-              </Button>
-            </NavLink>
+            <Button
+              href='/activity-log'
+              fullWidth
+              variant='text'
+              startIcon={<EditSquare />}
+              sx={{ justifyContent: 'flex-start' }}
+              onClick={handleCloseUserMenu}>
+              {t('activityLog')}
+            </Button>
           </RenderGuard>
           <Button
             sx={{ justifyContent: 'flex-start' }}
