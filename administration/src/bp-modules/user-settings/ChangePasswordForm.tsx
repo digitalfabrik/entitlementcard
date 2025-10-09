@@ -1,4 +1,4 @@
-import { Callout, H2 } from '@blueprintjs/core'
+import { H2 } from '@blueprintjs/core'
 import { Button, FormControl, FormLabel, Stack } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { useWhoAmI } from '../../WhoAmIProvider'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useChangePasswordMutation } from '../../generated/graphql'
+import AlertBox from '../../mui-modules/base/AlertBox'
 import { useAppToaster } from '../AppToaster'
 import PasswordInput from '../PasswordInput'
 import validatePasswordInput from '../auth/validateNewPasswordInput'
@@ -75,7 +76,9 @@ const ChangePasswordForm = (): ReactElement => {
             <PasswordInput value={repeatNewPassword} setValue={setRepeatNewPassword} />
           </FormControl>
 
-          {warnMessage === null ? null : <Callout intent='danger'>{warnMessage}</Callout>}
+          {warnMessage === null ? null : (
+            <AlertBox sx={{ my: 2, mx: 0, justifyContent: 'flex-start' }} severity='error' description={warnMessage} />
+          )}
           <div style={{ textAlign: 'right' }}>
             <Button type='submit' disabled={!valid} loading={loading}>
               {t('changePassword')}
