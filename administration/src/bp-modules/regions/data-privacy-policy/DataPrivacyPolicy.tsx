@@ -16,9 +16,7 @@ const DataPrivacyPolicy = (): ReactElement => {
   const config = useContext(ProjectConfigContext)
   return (
     <Container>
-      <Typography variant='h4' component='h1'>
-        {config.dataPrivacyHeadline}
-      </Typography>
+      <Typography variant='h4'>{config.dataPrivacyHeadline}</Typography>
       <config.dataPrivacyContent />
       {config.dataPrivacyAdditionalBaseContent && <config.dataPrivacyAdditionalBaseContent />}
     </Container>

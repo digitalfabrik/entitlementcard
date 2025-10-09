@@ -94,7 +94,8 @@ const CardSelfServiceView = (): ReactElement => {
         </Typography>
         <Typography variant='h5' component='h2'>
           {selfServiceStepInfo[cardGenerationStep].subHeadline}
-        </Typography><Text>{selfServiceStepInfo[cardGenerationStep].text}</Text>
+        </Typography>
+        <Text>{selfServiceStepInfo[cardGenerationStep].text}</Text>
         {cardGenerationStep === 'input' && (
           <CardSelfServiceForm
             card={selfServiceCard}

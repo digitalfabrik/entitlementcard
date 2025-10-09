@@ -168,40 +168,41 @@ export const theme = (config: ProjectConfig): Theme =>
             props: { color: 'default' },
             style: {
               backgroundColor: grey[200],
-            color: '#5C6065',
-            '&:hover': {
-              backgroundColor: '#dddddd',
+              color: '#5C6065',
+              '&:hover': {
+                backgroundColor: '#dddddd',
+              },
+              paddingLeft: 12,
             },
-            paddingLeft: 12,
+          },
+        ],
+      },
+      MuiTooltip: {
+        styleOverrides: {
+          tooltip: {
+            fontSize: 'inherit',
+            backgroundColor: '#1c2127',
+            color: '#dddddd',
+            padding: 8,
           },
         },
-      ],
-    },
-    MuiTooltip: {
-      styleOverrides: {
-        tooltip: {
-          fontSize: 'inherit',
-          backgroundColor: '#1c2127',
-          color: '#dddddd',
-          padding: 8,
+      },
+      MuiFormLabel: {
+        styleOverrides: {
+          root: {
+            fontSize: '0.9rem',
+          },
         },
       },
-    },
-    MuiFormLabel: {
-      styleOverrides: {
-        root: {
-          fontSize: '0.9rem',
-        },
+      MuiTypography: {
+        variants: [
+          {
+            props: { component: 'p' },
+            style: {
+              marginBottom: 8,
+            },
+          },
+        ],
       },
     },
-    MuiTypography: {
-      styleOverrides: {
-        root: ({ ownerState }) => ({
-          ...(ownerState.component === 'p' && {
-            marginBottom: 8,
-          }),
-        }),
-      },
-    },
-  },
-})
+  })
