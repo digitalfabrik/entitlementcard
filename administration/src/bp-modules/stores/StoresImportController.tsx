@@ -45,7 +45,6 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
           storesCreated={result.storesCreated}
         />,
         {
-          variant: 'default',
           persist: true,
         }
       )

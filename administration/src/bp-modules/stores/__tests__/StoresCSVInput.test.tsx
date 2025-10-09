@@ -95,6 +95,7 @@ describe('StoresCSVInput', () => {
     expect(enqueueSnackbarMock).toHaveBeenCalledWith(error, {
       variant: 'error',
       autoHideDuration: DEFAULT_ERROR_TIMEOUT,
+      persist: false
     })
     expect(setAcceptingStores).not.toHaveBeenCalled()
   })
@@ -107,6 +108,7 @@ describe('StoresCSVInput', () => {
     expect(enqueueSnackbarMock).toHaveBeenCalledWith(error, {
       variant: 'error',
       autoHideDuration: DEFAULT_ERROR_TIMEOUT,
+      persist: false
     })
     expect(setAcceptingStores).not.toHaveBeenCalled()
   })
@@ -150,6 +152,7 @@ describe('StoresCSVInput', () => {
     expect(enqueueSnackbarMock).toHaveBeenCalledWith(error, {
       variant: 'error',
       autoHideDuration: DEFAULT_ERROR_TIMEOUT,
+      persist: false
     })
     expect(setAcceptingStores).not.toHaveBeenCalled()
   })
@@ -195,6 +198,7 @@ describe('StoresCSVInput', () => {
     expect(enqueueSnackbarMock).toHaveBeenCalledWith(error, {
       variant: 'error',
       autoHideDuration: DEFAULT_ERROR_TIMEOUT,
+      persist: false
     })
     expect(setAcceptingStores).not.toHaveBeenCalled()
   })

@@ -64,7 +64,7 @@ const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }:
       enqueueSnackbar(message, {
         variant: 'error',
         autoHideDuration: timeout,
-        persist: timeout === 0 ? true : undefined,
+        persist: timeout === 0,
       })
       if (!fileInput.current) {
         return
