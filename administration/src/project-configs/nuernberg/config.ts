@@ -5,6 +5,7 @@ import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
 import NuernbergPassIdExtension from '../../cards/extensions/NuernbergPassIdExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
 import StartDayExtension from '../../cards/extensions/StartDayExtension'
+import { commonColors } from '../common/colors'
 import type { ProjectConfig } from '../getProjectConfig'
 import { storesManagementConfig } from '../storesManagementConfig'
 import ActivityLogEntry from './ActivityLogEntry'
@@ -13,6 +14,7 @@ import { DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
 import pdfConfig from './pdf'
 
 const config: ProjectConfig = {
+  colorPalette: commonColors,
   name: 'Digitaler Nürnberg-Pass',
   projectId: 'nuernberg.sozialpass.app',
   publisherText: buildConfigNuernberg.common.publisherText,

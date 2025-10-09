@@ -1,6 +1,6 @@
 import { Close } from '@mui/icons-material'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -11,7 +11,6 @@ import CenteredCircularProgress from '../../mui-modules/base/CenteredCircularPro
 import CardSelfServiceActivation from './CardSelfServiceActivation'
 import CardSelfServiceForm from './CardSelfServiceForm'
 import CardSelfServiceInformation from './CardSelfServiceInformation'
-import { ActionButton } from './components/ActionButton'
 import { IconTextButton } from './components/IconTextButton'
 import { InfoText } from './components/InfoText'
 import { DataPrivacyAcceptingStatus } from './constants'
@@ -48,13 +47,6 @@ const Step = styled.div`
   font-size: 16px;
   padding: 14px;
   align-self: flex-end;
-`
-
-const Headline = styled.h1`
-  color: #e2007a;
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 0;
 `
 
 const SubHeadline = styled.h2`
@@ -102,7 +94,9 @@ const CardSelfServiceView = (): ReactElement => {
       </Header>
       <Body>
         <Step>{`${t('step')} ${selfServiceStepInfo[cardGenerationStep].stepNr}/${totalSteps}`}</Step>
-        <Headline>{selfServiceStepInfo[cardGenerationStep].headline}</Headline>
+        <Typography fontWeight='600' marginBottom={0} variant='h5' color='accent' fontSize={20}>
+          {selfServiceStepInfo[cardGenerationStep].headline}
+        </Typography>
         <SubHeadline>{selfServiceStepInfo[cardGenerationStep].subHeadline}</SubHeadline>
         <Text>{selfServiceStepInfo[cardGenerationStep].text}</Text>
         {cardGenerationStep === 'input' && (
@@ -133,7 +127,9 @@ const CardSelfServiceView = (): ReactElement => {
           <Button onClick={() => setOpenHelpDialog(false)} variant='outlined' startIcon={<Close />}>
             {t('misc:cancel')}
           </Button>
-          <ActionButton href='mailto:koblenzpass@stadt.koblenz.de'>{t('sendMail')}</ActionButton>
+          <Button color='secondary' variant='contained' href='mailto:koblenzpass@stadt.koblenz.de'>
+            {t('sendMail')}
+          </Button>
         </DialogActions>
       </Dialog>
     </Container>

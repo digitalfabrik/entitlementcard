@@ -18,7 +18,7 @@ if (!process.env.REACT_APP_API_BASE_URL) {
 
 const App = (): ReactElement => (
   <ProjectConfigProvider projectConfig={getProjectConfig(window.location.hostname)}>
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme(getProjectConfig(window.location.hostname))}>
       <AppSnackbarProvider>
         <AuthProvider>
           <AppApolloProvider>
