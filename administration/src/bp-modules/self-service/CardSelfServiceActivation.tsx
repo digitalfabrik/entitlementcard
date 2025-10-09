@@ -1,12 +1,11 @@
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined'
-import { styled } from '@mui/material'
+import { Button, styled } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { CreateCardsResult } from '../../cards/createCards'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import getCustomDeepLinkFromQrCode from '../../util/getCustomDeepLinkFromQrCode'
-import { ActionButton } from './components/ActionButton'
 import { IconTextButton } from './components/IconTextButton'
 import { InfoText } from './components/InfoText'
 
@@ -44,9 +43,9 @@ const CardSelfServiceActivation = ({ code, downloadPdf }: CardSelfServiceActivat
         <b>{t('important')}: </b>
         {t('koblenzPassAppNeedsToBeInstalled')}
       </InfoText>
-      <ActionButton href={deepLink} variant='contained' size='large'>
+      <Button color='secondary' href={deepLink} variant='contained' size='large'>
         {t('activatePass')}
-      </ActionButton>
+      </Button>
     </Container>
   )
 }

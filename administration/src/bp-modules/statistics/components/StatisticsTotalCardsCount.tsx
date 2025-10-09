@@ -1,4 +1,3 @@
-import { H4 } from '@blueprintjs/core'
 import { Typography } from '@mui/material'
 import { styled } from '@mui/system'
 import React, { ReactElement } from 'react'
@@ -6,11 +5,6 @@ import { useTranslation } from 'react-i18next'
 
 import { CardStatisticsResultModel } from '../../../generated/graphql'
 import { toLowerCaseFirstLetter } from '../../../util/helper'
-
-const Headline = styled(H4)`
-  text-align: center;
-  margin: 0;
-`
 
 const Container = styled('div')`
   display: flex;
@@ -43,7 +37,9 @@ const StatisticsTotalCardsCount = ({ statistics }: StatisticsTotalCountProps): R
   const { t } = useTranslation('statistics')
   return (
     <Container>
-      <Headline>{t('allRegions')}</Headline>
+      <Typography variant='h6' margin={0} textAlign='center'>
+        {t('allRegions')}
+      </Typography>
       <Typography variant='body2' component='span' data-testid='totalCardsCreated'>
         {` ${sumTotalAmounts(statistics).totalCardsCreated} ${toLowerCaseFirstLetter(t('cardsCreated'))} / `}
       </Typography>

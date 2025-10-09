@@ -11,7 +11,6 @@ import CenteredCircularProgress from '../../mui-modules/base/CenteredCircularPro
 import CardSelfServiceActivation from './CardSelfServiceActivation'
 import CardSelfServiceForm from './CardSelfServiceForm'
 import CardSelfServiceInformation from './CardSelfServiceInformation'
-import { ActionButton } from './components/ActionButton'
 import { IconTextButton } from './components/IconTextButton'
 import { InfoText } from './components/InfoText'
 import { DataPrivacyAcceptingStatus } from './constants'
@@ -90,7 +89,7 @@ const CardSelfServiceView = (): ReactElement => {
       </Header>
       <Body>
         <Step>{`${t('step')} ${selfServiceStepInfo[cardGenerationStep].stepNr}/${totalSteps}`}</Step>
-        <Typography variant='h6' component='h1' sx={{ color: '#e2007a' }}>
+        <Typography variant='h6' color='accent' component='h1'>
           {selfServiceStepInfo[cardGenerationStep].headline}
         </Typography>
         <Typography variant='h5' component='h2'>
@@ -125,7 +124,9 @@ const CardSelfServiceView = (): ReactElement => {
           <Button onClick={() => setOpenHelpDialog(false)} variant='outlined' startIcon={<Close />}>
             {t('misc:cancel')}
           </Button>
-          <ActionButton href='mailto:koblenzpass@stadt.koblenz.de'>{t('sendMail')}</ActionButton>
+          <Button color='secondary' variant='contained' href='mailto:koblenzpass@stadt.koblenz.de'>
+            {t('sendMail')}
+          </Button>
         </DialogActions>
       </Dialog>
     </Container>

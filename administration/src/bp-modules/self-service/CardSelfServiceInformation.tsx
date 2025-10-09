@@ -1,10 +1,10 @@
+import { Button } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import { getBuildConfig } from '../../util/getBuildConfig'
 import AppStoreLinks from '../components/AppStoreLinks'
-import { ActionButton } from './components/ActionButton'
 import { InfoText } from './components/InfoText'
 
 type CardSelfServiceInformationProps = {
@@ -21,9 +21,9 @@ const CardSelfServiceInformation = ({ goToActivation }: CardSelfServiceInformati
   const { t } = useTranslation('selfService')
   return (
     <>
-      <ActionButton onClick={goToActivation} variant='contained' size='large'>
+      <Button color='secondary' onClick={goToActivation} variant='contained' size='large' sx={{ width: 'fit-content' }}>
         {t('nextToActivation')}
-      </ActionButton>
+      </Button>
       <StyledInfoText>
         <div>{t('appNotInstalled')}</div>
         <div>

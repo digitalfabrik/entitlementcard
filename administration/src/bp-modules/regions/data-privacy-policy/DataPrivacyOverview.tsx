@@ -1,6 +1,6 @@
-import { H3, TextArea, Tooltip } from '@blueprintjs/core'
+import { TextArea, Tooltip } from '@blueprintjs/core'
 import { ArrowBack, SaveAlt } from '@mui/icons-material'
-import { Button } from '@mui/material'
+import { Button, Typography } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -22,10 +22,6 @@ const Content = styled.div`
   justify-content: space-evenly;
   align-items: center;
   flex-direction: column;
-`
-const Label = styled(H3)`
-  text-align: center;
-  margin: 15px;
 `
 
 const CharCounter = styled.span<{ $hasError: boolean }>`
@@ -66,7 +62,9 @@ const DataPrivacyOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProp
   return (
     <>
       <Content>
-        <Label>{t('dataPrivacy')}</Label>
+        <Typography variant='h5' textAlign='center' margin={2}>
+          {t('dataPrivacy')}
+        </Typography>
         <TextArea
           fill
           onChange={e => setDataPrivacyText(e.target.value)}
