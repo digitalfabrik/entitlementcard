@@ -1,10 +1,10 @@
 import { Callout, Card, Classes, H2, H3, H4, InputGroup } from '@blueprintjs/core'
 import { Button, FormControl, FormLabel, Stack } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate, useSearchParams } from 'react-router'
 
-import { useAppSnackbar } from '../../AppSnackbar'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useCheckPasswordResetLinkQuery, useResetPasswordMutation } from '../../generated/graphql'
 import getQueryResult from '../../mui-modules/util/getQueryResult'
@@ -15,7 +15,7 @@ import validateNewPasswordInput from './validateNewPasswordInput'
 
 const ResetPasswordController = (): ReactElement => {
   const config = useContext(ProjectConfigContext)
-  const appSnackbar = useAppSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
   const [queryParams] = useSearchParams()
   const adminEmail = queryParams.get('email') ?? ''
   const { t } = useTranslation('auth')
@@ -32,12 +32,12 @@ const ResetPasswordController = (): ReactElement => {
 
   const [resetPassword, { loading }] = useResetPasswordMutation({
     onCompleted: () => {
-      appSnackbar.enqueueSuccess(t('setPasswordSuccess'))
+      enqueueSnackbar(t('setPasswordSuccess'), { variant: 'success' })
       navigate('/')
     },
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appSnackbar.enqueueError(title)
+      enqueueSnackbar(title, { variant: 'error' })
     },
   })
 

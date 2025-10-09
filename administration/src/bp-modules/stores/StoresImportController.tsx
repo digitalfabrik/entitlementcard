@@ -1,9 +1,9 @@
 import { CircularProgress, styled } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 
-import { useAppSnackbar } from '../../AppSnackbar'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { Role, useImportAcceptingStoresMutation } from '../../generated/graphql'
 import RenderGuard from '../../mui-modules/components/RenderGuard'
@@ -31,13 +31,13 @@ export type StoresData = {
 }
 const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
   const navigate = useNavigate()
-  const appSnackbar = useAppSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
   const [acceptingStores, setAcceptingStores] = useState<AcceptingStoresEntry[]>([])
   const [dryRun, setDryRun] = useState<boolean>(false)
   const [isLoadingCoordinates, setIsLoadingCoordinates] = useState(false)
   const [importStores, { loading: isApplyingStoreTransaction }] = useImportAcceptingStoresMutation({
     onCompleted: ({ result }) => {
-      appSnackbar.enqueueDefault(
+      enqueueSnackbar(
         <StoresImportResult
           dryRun={dryRun}
           storesUntouched={result.storesUntouched}
@@ -45,6 +45,7 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
           storesCreated={result.storesCreated}
         />,
         {
+          variant: 'default',
           persist: true,
         }
       )
@@ -52,7 +53,7 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
     },
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appSnackbar.enqueueError(title)
+      enqueueSnackbar(title, { variant: 'error' })
     },
   })
 

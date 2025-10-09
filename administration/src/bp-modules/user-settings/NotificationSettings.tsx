@@ -1,9 +1,9 @@
 import { Checkbox, H2 } from '@blueprintjs/core'
 import { Button } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useAppSnackbar } from '../../AppSnackbar'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useGetNotificationSettingsQuery, useUpdateNotificationSettingsMutation } from '../../generated/graphql'
 import getQueryResult from '../../mui-modules/util/getQueryResult'
@@ -14,14 +14,14 @@ const NotificationSettings = (): ReactElement => {
   const [receiveEmailForActivation, setReceiveEmailForActivation] = useState<boolean>(false)
   const [receiveEmailForVerification, setReceiveEmailForVerification] = useState<boolean>(false)
 
-  const appSnackbar = useAppSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
   const [updateNotificationSettings, { loading }] = useUpdateNotificationSettingsMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appSnackbar.enqueueError(title)
+      enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: () => {
-      appSnackbar.enqueueSuccess(t('notificationUpdateSuccess'))
+      enqueueSnackbar(t('notificationUpdateSuccess'), { variant: 'success' })
     },
   })
 

@@ -1,9 +1,9 @@
 import { Stack, styled } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { ChangeEvent, ReactElement, useCallback, useContext, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
 
-import { useAppSnackbar } from '../../AppSnackbar'
 import { Card, initializeCardFromCSV } from '../../cards/Card'
 import { Region } from '../../generated/graphql'
 import NonIdealState from '../../mui-modules/NonIdealState'
@@ -38,18 +38,18 @@ const ImportCardsInput = ({ setCards, region }: ImportCardsInputProps): ReactEle
   const { t } = useTranslation('cards')
   const [inputState, setInputState] = useState<'loading' | 'error' | 'idle'>('idle')
   const fileInput = useRef<HTMLInputElement>(null)
-  const appSnackbar = useAppSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
 
   const showInputError = useCallback(
     (message: string) => {
-      appSnackbar.enqueueError(message)
+      enqueueSnackbar(message, { variant: 'error' })
       setInputState('error')
       if (!fileInput.current) {
         return
       }
       fileInput.current.value = ''
     },
-    [appSnackbar]
+    [enqueueSnackbar]
   )
 
   const onLoadEnd = useCallback(

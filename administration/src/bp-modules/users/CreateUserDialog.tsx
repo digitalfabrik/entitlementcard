@@ -1,10 +1,10 @@
 import { FormGroup } from '@blueprintjs/core'
 import { PersonAdd } from '@mui/icons-material'
 import { Stack } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useAppSnackbar } from '../../AppSnackbar'
 import CardTextField from '../../cards/extensions/components/CardTextField'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { Role, useCreateAdministratorMutation } from '../../generated/graphql'
@@ -27,7 +27,7 @@ const CreateUserDialog = ({
   // roles are selectable.
   regionIdOverride: number | null
 }): ReactElement => {
-  const appSnackbar = useAppSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('users')
   const [email, setEmail] = useState('')
   const [role, setRole] = useState<Role | null>(null)
@@ -46,10 +46,10 @@ const CreateUserDialog = ({
   const [createAdministrator, { loading }] = useCreateAdministratorMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appSnackbar.enqueueError(title)
+      enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: () => {
-      appSnackbar.enqueueSuccess(t('addUserSuccess'))
+      enqueueSnackbar(t('addUserSuccess'), { variant: 'success' })
       onSuccess()
       clearAndCloseDialog()
     },

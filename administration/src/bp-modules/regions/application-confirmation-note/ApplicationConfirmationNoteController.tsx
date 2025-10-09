@@ -1,7 +1,7 @@
+import { useSnackbar } from 'notistack'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useAppSnackbar } from '../../../AppSnackbar'
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
 import {
   useGetApplicationConfirmationNoteInformationQuery,
@@ -17,7 +17,7 @@ type ApplicationConfirmationNoteControllerProps = {
 const ApplicationConfirmationNoteController = ({
   regionId,
 }: ApplicationConfirmationNoteControllerProps): ReactElement => {
-  const appSnackbar = useAppSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('regionSettings')
   const applicationConfirmationNoteQuery = useGetApplicationConfirmationNoteInformationQuery({
     variables: { regionId },
@@ -26,10 +26,10 @@ const ApplicationConfirmationNoteController = ({
   const [updateApplicationConfirmationNote, { loading }] = useUpdateApplicationConfirmationNoteMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appSnackbar.enqueueError(title)
+      enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: () => {
-      appSnackbar.enqueueSuccess(t('applicationConfirmationMailNoteSavedSuccessful'))
+      enqueueSnackbar(t('applicationConfirmationMailNoteSavedSuccessful'), { variant: 'success' })
       applicationConfirmationNoteQuery.refetch({ regionId })
     },
   })

@@ -10,10 +10,10 @@ import {
   StepLabel,
   Stepper,
 } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement, ReactNode, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useAppSnackbar } from '../../AppSnackbar'
 import i18next from '../../i18n'
 import { SetState, useUpdateStateCallback } from './hooks/useUpdateStateCallback'
 import { Form, ValidationResult } from './util/FormType'
@@ -47,14 +47,14 @@ const SubForm = ({
 }) => {
   const { t } = useTranslation('applicationForms')
   const [formContext, setFormContxt] = useState<FormContextType>(initialFormContext)
-  const appSnackbar = useAppSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
   useEffect(() => setFormContxt(state => ({ ...state, disableAllInputs: loading })), [loading])
 
   const handleOnSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
       if (validate().type === 'error') {
-        appSnackbar.enqueueError(i18next.t('applicationForms:invalidDataError'))
+        enqueueSnackbar(i18next.t('applicationForms:invalidDataError'), { variant: 'error' })
         setFormContxt(state => ({ ...state, showAllErrors: true }))
       } else if (onSubmit === undefined) {
         setActiveStep(() => index + 1)
@@ -62,7 +62,7 @@ const SubForm = ({
         onSubmit()
       }
     },
-    [validate, onSubmit, setActiveStep, index, appSnackbar]
+    [validate, onSubmit, setActiveStep, index, enqueueSnackbar]
   )
   return (
     <FormContext.Provider value={formContext}>

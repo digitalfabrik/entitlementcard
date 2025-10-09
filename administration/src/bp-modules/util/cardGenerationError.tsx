@@ -1,7 +1,7 @@
 import { ApolloError } from '@apollo/client'
+import { EnqueueSnackbar } from 'notistack'
 import React from 'react'
 
-import { AppSnackbar } from '../../AppSnackbar'
 import { CsvError } from '../../cards/CsvFactory'
 import { PdfError } from '../../cards/PdfFactory'
 import { CreateCardsError } from '../../cards/createCards'
@@ -10,18 +10,18 @@ import i18next from '../../i18n'
 import FormAlert from '../../mui-modules/base/FormAlert'
 import { reportErrorToSentry } from '../../util/sentry'
 
-export const showCardGenerationError = (appSnackbar: AppSnackbar, error: unknown): void => {
+export const showCardGenerationError = (enqueueSnackbar: EnqueueSnackbar, error: unknown): void => {
   if (error instanceof CreateCardsError) {
-    appSnackbar.enqueueError(error.message)
+    enqueueSnackbar(error.message, { variant: 'error' })
   } else if (error instanceof ApolloError) {
     const { title } = getMessageFromApolloError(error)
-    appSnackbar.enqueueError(<FormAlert isToast errorMessage={title} />, { autoHideDuration: 8000 })
+    enqueueSnackbar(<FormAlert isToast errorMessage={title} />, { variant: 'error', autoHideDuration: 8000 })
   } else if (error instanceof PdfError) {
-    appSnackbar.enqueueError(i18next.t('errors:pdfCreationError'))
+    enqueueSnackbar(i18next.t('errors:pdfCreationError'), { variant: 'error' })
   } else if (error instanceof CsvError) {
-    appSnackbar.enqueueError(i18next.t('errors:csvCreationError'))
+    enqueueSnackbar(i18next.t('errors:csvCreationError'), { variant: 'error' })
   } else {
-    appSnackbar.enqueueError(i18next.t('errors:unknownError'))
+    enqueueSnackbar(i18next.t('errors:unknownError'), { variant: 'error' })
     reportErrorToSentry(error)
   }
 }

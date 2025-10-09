@@ -1,10 +1,10 @@
 import { Edit } from '@mui/icons-material'
 import { Stack, Typography } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 
-import { useAppSnackbar } from '../../AppSnackbar'
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import CardTextField from '../../cards/extensions/components/CardTextField'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
@@ -29,7 +29,7 @@ const EditUserDialog = ({
   // roles are selectable.
   regionIdOverride: number | null
 }): ReactElement => {
-  const appSnackbar = useAppSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
   const { me, refetch: refetchMe } = useContext(WhoAmIContext)
   const { t } = useTranslation('users')
   const [email, setEmail] = useState('')
@@ -49,10 +49,10 @@ const EditUserDialog = ({
   const [editAdministrator, { loading }] = useEditAdministratorMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appSnackbar.enqueueError(title)
+      enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: () => {
-      appSnackbar.enqueueSuccess(t('editUserSuccess'))
+      enqueueSnackbar(t('editUserSuccess'), { variant: 'success' })
       onClose()
       if (me?.id === selectedUser?.id) {
         refetchMe()

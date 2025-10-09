@@ -1,11 +1,11 @@
 import { H2, H4, HTMLSelect, HTMLTable } from '@blueprintjs/core'
 import { Delete } from '@mui/icons-material'
 import { Button } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
-import { useAppSnackbar } from '../../AppSnackbar'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import {
   ApiTokenMetaData,
@@ -58,7 +58,7 @@ type ApiTokenSettingsProps = {
 const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactElement => {
   const metaDataQuery = useGetApiTokenMetaDataQuery({})
 
-  const appSnackbar = useAppSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('projectSettings')
 
   const [tokenMetaData, setTokenMetadata] = useState<Array<ApiTokenMetaData>>([])
@@ -77,24 +77,24 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
 
   const [createToken] = useCreateApiTokenMutation({
     onCompleted: result => {
-      appSnackbar.enqueueSuccess(t('tokenCreateSuccessMessage'))
+      enqueueSnackbar(t('tokenCreateSuccessMessage'), { variant: 'success' })
       setCreatedToken(result.createApiTokenPayload)
       metaDataQuery.refetch()
     },
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appSnackbar.enqueueError(title)
+      enqueueSnackbar(title, { variant: 'error' })
     },
   })
 
   const [deleteToken] = useDeleteApiTokenMutation({
     onCompleted: () => {
-      appSnackbar.enqueueSuccess(t('tokenDeleteSuccessMessage'))
+      enqueueSnackbar(t('tokenDeleteSuccessMessage'), { variant: 'success' })
       metaDataQuery.refetch()
     },
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appSnackbar.enqueueError(title)
+      enqueueSnackbar(title, { variant: 'error' })
     },
   })
 

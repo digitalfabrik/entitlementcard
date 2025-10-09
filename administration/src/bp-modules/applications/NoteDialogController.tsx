@@ -1,9 +1,9 @@
 import { EditNote } from '@mui/icons-material'
 import { Button } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useAppSnackbar } from '../../AppSnackbar'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useUpdateApplicationNoteMutation } from '../../generated/graphql'
 import TextAreaDialog from '../components/TextAreaDialog'
@@ -23,15 +23,15 @@ const NoteDialogController = ({
   onOpenNoteDialog,
   onChange,
 }: NoteDialogControllerProps): ReactElement => {
-  const appSnackbar = useAppSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('applicationsOverview')
   const [updateApplicationNote, { loading }] = useUpdateApplicationNoteMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appSnackbar.enqueueError(title)
+      enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: () => {
-      appSnackbar.enqueueSuccess(t('noteChangedSuccessfully'), { autoHideDuration: 2000 })
+      enqueueSnackbar(t('noteChangedSuccessfully', { variant: 'success' }), { autoHideDuration: 2000 })
       onOpenNoteDialog(false)
     },
   })

@@ -1,14 +1,14 @@
+import { useSnackbar } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useAppSnackbar } from '../../../AppSnackbar'
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
 import { useGetFreinetAgencyByRegionIdQuery, useUpdateDataTransferToFreinetMutation } from '../../../generated/graphql'
 import getQueryResult from '../../../mui-modules/util/getQueryResult'
 import FreinetSettingsCard from './FreinetSettingsCard'
 
 const FreinetSettingsController = ({ regionId }: { regionId: number }): ReactElement | null => {
-  const appSnackbar = useAppSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('regionSettings')
   const [dataTransferActivated, setDataTransferActivated] = useState(false)
   const freinetQuery = useGetFreinetAgencyByRegionIdQuery({
@@ -22,11 +22,11 @@ const FreinetSettingsController = ({ regionId }: { regionId: number }): ReactEle
   const [updateFreinetDataTransfer] = useUpdateDataTransferToFreinetMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appSnackbar.enqueueError(title)
+      enqueueSnackbar(title, { variant: 'error' })
       setDataTransferActivated(!dataTransferActivated)
     },
     onCompleted: () => {
-      appSnackbar.enqueueSuccess(t('freinetActivateDataTransferSuccessful'))
+      enqueueSnackbar(t('freinetActivateDataTransferSuccessful'), { variant: 'success' })
     },
   })
 

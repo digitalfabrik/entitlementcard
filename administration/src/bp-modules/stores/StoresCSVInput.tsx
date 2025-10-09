@@ -1,10 +1,10 @@
 import { ArrowCircleUp } from '@mui/icons-material'
 import { Stack, styled } from '@mui/material'
 import { parse } from 'csv-parse/browser/esm/sync'
+import { useSnackbar } from 'notistack'
 import React, { ChangeEventHandler, ReactElement, useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useAppSnackbar } from '../../AppSnackbar'
 import NonIdealState from '../../mui-modules/NonIdealState'
 import { StoresFieldConfig } from '../../project-configs/getProjectConfig'
 import { AcceptingStoresEntry } from './AcceptingStoresEntry'
@@ -55,19 +55,23 @@ const getStoreDuplicates = (stores: AcceptingStoresEntry[]): number[][] =>
 
 const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }: StoresCsvInputProps): ReactElement => {
   const fileInput = useRef<HTMLInputElement>(null)
-  const appSnackbar = useAppSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('stores')
   const headers = fields.map(field => field.name)
 
   const showInputError = useCallback(
     (message: string | ReactElement, timeout = DEFAULT_ERROR_TIMEOUT) => {
-      appSnackbar.enqueueError(message, { autoHideDuration: timeout, persist: timeout === 0 ? true : undefined })
+      enqueueSnackbar(message, {
+        variant: 'error',
+        autoHideDuration: timeout,
+        persist: timeout === 0 ? true : undefined,
+      })
       if (!fileInput.current) {
         return
       }
       fileInput.current.value = ''
     },
-    [appSnackbar]
+    [enqueueSnackbar]
   )
 
   const onLoadEnd = useCallback(

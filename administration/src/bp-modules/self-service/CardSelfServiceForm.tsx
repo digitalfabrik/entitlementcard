@@ -1,11 +1,11 @@
 import { Close } from '@mui/icons-material'
 import InfoOutlined from '@mui/icons-material/InfoOutlined'
 import { Stack } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 
-import { useAppSnackbar } from '../../AppSnackbar'
 import { Card, getFullNameValidationErrorMessage, isFullNameValid, isValid } from '../../cards/Card'
 import CardTextField from '../../cards/extensions/components/CardTextField'
 import ClearInputButton from '../../cards/extensions/components/ClearInputButton'
@@ -43,7 +43,7 @@ const CardSelfServiceForm = ({
   const [openReferenceInformation, setOpenReferenceInformation] = useState<boolean>(false)
   const [_, setSearchParams] = useSearchParams()
   const cardValid = isValid(card, projectConfig.card, { expirationDateNullable: true })
-  const appSnackbar = useAppSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
   const { viewportSmall } = useWindowDimensions()
 
   const createKoblenzPass = async () => {
@@ -52,7 +52,7 @@ const CardSelfServiceForm = ({
       setDataPrivacyAccepted(DataPrivacyAcceptingStatus.denied)
     }
     if (!cardValid || dataPrivacyAccepted !== DataPrivacyAcceptingStatus.accepted) {
-      appSnackbar.enqueueError(<FormAlert isToast errorMessage={t('atLeastOneInputIsInvalid')} />)
+      enqueueSnackbar(<FormAlert isToast errorMessage={t('atLeastOneInputIsInvalid')} />, { variant: 'error' })
       return
     }
     await generateCards()

@@ -1,7 +1,7 @@
+import { useSnackbar } from 'notistack'
 import { useCallback, useContext, useState } from 'react'
 import { useSearchParams } from 'react-router'
 
-import { useAppSnackbar } from '../../../AppSnackbar'
 import { Card, initializeCardFromCSV } from '../../../cards/Card'
 import { generatePdf } from '../../../cards/PdfFactory'
 import { CreateCardsResult, createSelfServiceCard } from '../../../cards/createCards'
@@ -25,7 +25,7 @@ type UseCardGeneratorSelfServiceReturn = {
 
 const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
   const projectConfig = useContext(ProjectConfigContext)
-  const appSnackbar = useAppSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
   const [searchParams] = useSearchParams()
   const [cardGenerationStep, setCardGenerationStep] = useState<SelfServiceCardGenerationStep>('input')
   const [code, setCode] = useState<CreateCardsResult | null>(null)
@@ -43,10 +43,10 @@ const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
       setCode(code)
       setCardGenerationStep('information')
     } catch (error) {
-      showCardGenerationError(appSnackbar, error)
+      showCardGenerationError(enqueueSnackbar, error)
       setCardGenerationStep('input')
     }
-  }, [projectConfig, setCode, createCardsSelfService, appSnackbar, selfServiceCard])
+  }, [projectConfig, setCode, createCardsSelfService, enqueueSnackbar, selfServiceCard])
 
   const downloadPdf = async (code: CreateCardsResult, fileName: string): Promise<void> => {
     const blob = await generatePdf([code], [selfServiceCard], projectConfig)

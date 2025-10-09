@@ -1,8 +1,8 @@
 import { Card, Typography } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useAppSnackbar } from '../../AppSnackbar'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { SignInMutation, SignInPayload, useSignInMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
@@ -17,14 +17,14 @@ type State = {
 
 const Login = ({ onSignIn }: { onSignIn: (payload: SignInPayload) => void }): ReactElement => {
   const config = useContext(ProjectConfigContext)
-  const appSnackbar = useAppSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('auth')
   const [state, setState] = React.useState<State>({ email: '', password: '' })
   const [signIn, mutationState] = useSignInMutation({
     onCompleted: (payload: SignInMutation) => onSignIn(payload.signInPayload),
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appSnackbar.enqueueError(title)
+      enqueueSnackbar(title, { variant: 'error' })
     },
   })
   const onSubmit = () =>

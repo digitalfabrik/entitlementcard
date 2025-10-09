@@ -1,7 +1,7 @@
+import { useSnackbar } from 'notistack'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useAppSnackbar } from '../../../AppSnackbar'
 import { Card } from '../../../cards/Card'
 import { CreateCardsResult } from '../../../cards/createCards'
 import { EMAIL_NOTIFICATION_EXTENSION_NAME } from '../../../cards/extensions/EMailNotificationExtension'
@@ -15,14 +15,14 @@ type SendCardConfirmationMail = (codes: CreateCardsResult[], cards: Card[]) => P
 
 const useSendCardConfirmationMails = (): SendCardConfirmationMail => {
   const { t } = useTranslation('cards')
-  const appSnackbar = useAppSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
   const [sendMail] = useSendCardCreationConfirmationMailMutation({
     onCompleted: () => {
-      appSnackbar.enqueueSuccess(t('cards:cardCreationConfirmationMessage'))
+      enqueueSnackbar(t('cards:cardCreationConfirmationMessage'), { variant: 'success' })
     },
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appSnackbar.enqueueError(title, { persist: true })
+      enqueueSnackbar(title, { variant: 'error', persist: true })
     },
   })
 

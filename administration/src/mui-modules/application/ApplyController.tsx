@@ -3,11 +3,11 @@ import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import { Box, Typography } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement, useCallback, useContext, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
-import { useAppSnackbar } from '../../AppSnackbar'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useAddEakApplicationMutation, useGetRegionsQuery } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
@@ -34,7 +34,7 @@ const SuccessContent = styled.div`
 const ApplyController = (): React.ReactElement | null => {
   const { t } = useTranslation('applicationForms')
   const [formSubmitted, setFormSubmitted] = useState<boolean>(false)
-  const appSnackbar = useAppSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
   const { status, state, setState } = useVersionedLocallyStoredState(
     ApplicationForm.initialState,
     applicationStorageKey,
@@ -43,7 +43,7 @@ const ApplyController = (): React.ReactElement | null => {
   const [addEakApplication, { loading: loadingSubmit }] = useAddEakApplicationMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appSnackbar.enqueueError(title, { style: { whiteSpace: 'pre-line' }, autoHideDuration: 7200 })
+      enqueueSnackbar(title, { variant: 'error', style: { whiteSpace: 'pre-line' }, autoHideDuration: 7200 })
     },
     onCompleted: ({ result }) => {
       if (result) {
@@ -80,7 +80,7 @@ const ApplyController = (): React.ReactElement | null => {
   const submit = () => {
     const validationResult = ApplicationForm.validate(state, { regions })
     if (validationResult.type === 'error') {
-      appSnackbar.enqueueError(t('invalidInputError'))
+      enqueueSnackbar(t('invalidInputError'), { variant: 'error' })
       return
     }
     const [regionId, application] = validationResult.value

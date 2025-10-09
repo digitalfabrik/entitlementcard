@@ -1,14 +1,14 @@
+import { useSnackbar } from 'notistack'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useAppSnackbar } from '../../AppSnackbar'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useGetRegionSettingsByIdQuery, useUpdateRegionSettingsMutation } from '../../generated/graphql'
 import getQueryResult from '../../mui-modules/util/getQueryResult'
 import RegionSettingsCard from './RegionSettingsCard'
 
 const RegionSettingsController = ({ regionId }: { regionId: number }): ReactElement => {
-  const appSnackbar = useAppSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('regionSettings')
   const regionSettingsByIdQuery = useGetRegionSettingsByIdQuery({
     variables: { regionId },
@@ -17,10 +17,10 @@ const RegionSettingsController = ({ regionId }: { regionId: number }): ReactElem
   const [updateRegionSettings, { loading }] = useUpdateRegionSettingsMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appSnackbar.enqueueError(title)
+      enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: () => {
-      appSnackbar.enqueueSuccess(t('savedSettingsSuccessful'))
+      enqueueSnackbar(t('savedSettingsSuccessful'), { variant: 'success' })
     },
   })
 

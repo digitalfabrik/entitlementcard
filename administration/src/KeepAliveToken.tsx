@@ -1,10 +1,10 @@
 import { CheckCircleOutline, Close } from '@mui/icons-material'
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement, ReactNode, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 
-import { useAppSnackbar } from './AppSnackbar'
 import { TokenPayload } from './AuthProvider'
 import { useWhoAmI } from './WhoAmIProvider'
 import PasswordInput from './bp-modules/PasswordInput'
@@ -27,17 +27,17 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props): Rea
   const projectId = useContext(ProjectConfigContext).projectId
   const email = useWhoAmI().me.email
   const [secondsLeft, setSecondsLeft] = useState(computeSecondsLeft(authData))
-  const appSnackbar = useAppSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
   const [password, setPassword] = useState<string>()
   const [signIn, mutationState] = useSignInMutation({
     onCompleted: payload => {
-      appSnackbar.enqueueSuccess(t('loginPeriodExtended'))
+      enqueueSnackbar(t('loginPeriodExtended'), { variant: 'success' })
       onSignIn(payload.signInPayload)
       setPassword('')
     },
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appSnackbar.enqueueError(title)
+      enqueueSnackbar(title, { variant: 'error' })
     },
   })
 

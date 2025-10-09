@@ -1,12 +1,12 @@
 import { H3, TextArea, Tooltip } from '@blueprintjs/core'
 import { ArrowBack, SaveAlt } from '@mui/icons-material'
 import { Button } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import styled from 'styled-components'
 
-import { useAppSnackbar } from '../../../AppSnackbar'
 import graphQlErrorMap from '../../../errors/GraphQlErrorMap'
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
 import { GraphQlExceptionCode, useUpdateDataPolicyMutation } from '../../../generated/graphql'
@@ -44,16 +44,16 @@ const MAX_CHARS = 20000
 
 const DataPrivacyOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProps): ReactElement => {
   const navigate = useNavigate()
-  const appSnackbar = useAppSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('regionSettings')
   const [dataPrivacyText, setDataPrivacyText] = useState<string>(dataPrivacyPolicy)
   const [updateDataPrivacy, { loading }] = useUpdateDataPolicyMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appSnackbar.enqueueError(title)
+      enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: () => {
-      appSnackbar.enqueueSuccess(t('dataPrivacyChangeSuccessful'))
+      enqueueSnackbar(t('dataPrivacyChangeSuccessful'), { variant: 'success' })
     },
   })
   const maxCharsExceeded = dataPrivacyText.length > MAX_CHARS

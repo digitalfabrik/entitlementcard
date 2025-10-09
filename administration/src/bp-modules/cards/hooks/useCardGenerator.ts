@@ -1,8 +1,8 @@
+import { useSnackbar } from 'notistack'
 import { useCallback, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 
-import { useAppSnackbar } from '../../../AppSnackbar'
 import { Card, initializeCardFromCSV, updateCard as updateCardObject } from '../../../cards/Card'
 import { generateCsv, getCSVFilename } from '../../../cards/CsvFactory'
 import { generatePdf, getPdfFilename } from '../../../cards/PdfFactory'
@@ -68,18 +68,18 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
   const [cardGenerationStep, setCardGenerationStep] = useState<CardGenerationStep>('input')
   const [createCardsMutation] = useCreateCardsMutation()
   const [deleteCardsMutation] = useDeleteCardsMutation()
-  const appSnackbar = useAppSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('cards')
 
   const [sendToFreinet] = useSendApplicationAndCardDataToFreinetMutation({
     onCompleted: data => {
       if (data.sendApplicationAndCardDataToFreinet === true) {
-        appSnackbar.enqueueSuccess(t('freinetDataSyncSuccessMessage'))
+        enqueueSnackbar(t('freinetDataSyncSuccessMessage'), { variant: 'success' })
       }
     },
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appSnackbar.enqueueError(title, { persist: true })
+      enqueueSnackbar(title, { variant: 'error', persist: true })
     },
   })
   const sendConfirmationMails = useSendCardConfirmationMails()
@@ -135,7 +135,7 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
           // Rollback
           await deleteCards(deleteCardsMutation, region.id, codes).catch(reportErrorToSentry)
         }
-        showCardGenerationError(appSnackbar, error)
+        showCardGenerationError(enqueueSnackbar, error)
         setCardGenerationStep('input')
       } finally {
         setCards([])
@@ -149,7 +149,7 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
       region,
       sendToFreinet,
       sendConfirmationMails,
-      appSnackbar,
+      enqueueSnackbar,
       deleteCardsMutation,
     ]
   )

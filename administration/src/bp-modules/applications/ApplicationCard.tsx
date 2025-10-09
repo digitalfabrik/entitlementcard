@@ -25,12 +25,12 @@ import {
   Typography,
   useTheme,
 } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { memo, useContext, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { useReactToPrint } from 'react-to-print'
 
-import { useAppSnackbar } from '../../AppSnackbar'
 import { CsvIcon } from '../../components/icons/CsvIcon'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import {
@@ -220,7 +220,7 @@ const ApplicationCard = ({
   const theme = useTheme()
   const config = useContext(ProjectConfigContext)
   const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${application.id}`
-  const appSnackbar = useAppSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
   const printContentRef = useRef<HTMLDivElement>(null)
   const printApplication = useReactToPrint({
     contentRef: printContentRef,
@@ -235,14 +235,14 @@ const ApplicationCard = ({
   const [deleteApplication, deleteResult] = useDeleteApplicationMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appSnackbar.enqueueError(title)
+      enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: ({ deleted }: { deleted: boolean }) => {
       if (deleted) {
         onDelete()
       } else {
         console.error('Delete operation returned false.')
-        appSnackbar.enqueueError(t('errors:unknown'))
+        enqueueSnackbar(t('errors:unknown'), { variant: 'error' })
       }
     },
   })
@@ -250,25 +250,25 @@ const ApplicationCard = ({
   const [approveStatus, approveStatusResult] = useApproveApplicationStatusMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appSnackbar.enqueueError(title)
+      enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: result => {
       // Update the application with new fields from the query
       onChange({ ...application, ...result.updates })
-      appSnackbar.enqueueSuccess(t('applicationApprovedToastMessage'))
+      enqueueSnackbar(t('applicationApprovedToastMessage'), { variant: 'success' })
     },
   })
 
   const [rejectStatus, rejectStatusResult] = useRejectApplicationStatusMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appSnackbar.enqueueError(title)
+      enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: result => {
       setRejectionDialogOpen(false)
       // Update the application with new fields from the query
       onChange({ ...application, ...result.application })
-      appSnackbar.enqueueSuccess(t('applicationRejectedToastMessage'))
+      enqueueSnackbar(t('applicationRejectedToastMessage'), { variant: 'success' })
     },
   })
 
@@ -285,7 +285,7 @@ const ApplicationCard = ({
           exportApplicationToCsv(application, config)
         } catch (error) {
           if (error instanceof ApplicationToCsvError || error instanceof ApplicationDataIncompleteError) {
-            appSnackbar.enqueueError(error.message)
+            enqueueSnackbar(error.message, { variant: 'error' })
           }
         }
       },

@@ -1,42 +1,7 @@
 import CloseIcon from '@mui/icons-material/Close'
 import { IconButton, styled } from '@mui/material'
-import {
-  MaterialDesignContent,
-  OptionsWithExtraProps,
-  SnackbarKey,
-  SnackbarMessage,
-  SnackbarProvider,
-  closeSnackbar,
-  useSnackbar,
-} from 'notistack'
+import { closeSnackbar, MaterialDesignContent, SnackbarKey, SnackbarProvider } from 'notistack'
 import React, { ReactElement, ReactNode, useCallback } from 'react'
-
-export type AppSnackbar = {
-  enqueueSuccess: (message: SnackbarMessage, options?: OptionsWithExtraProps<'success'>) => SnackbarKey
-  enqueueInfo: (message: SnackbarMessage, options?: OptionsWithExtraProps<'info'>) => SnackbarKey
-  enqueueWarning: (message: SnackbarMessage, options?: OptionsWithExtraProps<'warning'>) => SnackbarKey
-  enqueueError: (message: SnackbarMessage, options?: OptionsWithExtraProps<'error'>) => SnackbarKey
-  enqueueDefault: (message: SnackbarMessage, options?: OptionsWithExtraProps<'default'>) => SnackbarKey
-  close: (snackbarKey: SnackbarKey) => void
-}
-
-export const useAppSnackbar = (): AppSnackbar => {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
-
-  return {
-    enqueueSuccess: (message: SnackbarMessage, options?: OptionsWithExtraProps<'success'>): SnackbarKey =>
-      enqueueSnackbar(message, { ...options, variant: 'success' }),
-    enqueueInfo: (message: SnackbarMessage, options?: OptionsWithExtraProps<'info'>): SnackbarKey =>
-      enqueueSnackbar(message, { ...options, variant: 'info' }),
-    enqueueWarning: (message: SnackbarMessage, options?: OptionsWithExtraProps<'warning'>): SnackbarKey =>
-      enqueueSnackbar(message, { ...options, variant: 'warning' }),
-    enqueueError: (message: SnackbarMessage, options?: OptionsWithExtraProps<'error'>): SnackbarKey =>
-      enqueueSnackbar(message, { ...options, variant: 'error' }),
-    enqueueDefault: (message: SnackbarMessage, options?: OptionsWithExtraProps<'default'>): SnackbarKey =>
-      enqueueSnackbar(message, { ...options, variant: 'default' }),
-    close: closeSnackbar,
-  }
-}
 
 const StyledMaterialDesignSnackbar = styled(MaterialDesignContent)(({ theme }) => ({
   '&.notistack-MuiContent-success': {

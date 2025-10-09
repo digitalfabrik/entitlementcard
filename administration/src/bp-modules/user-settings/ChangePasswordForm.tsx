@@ -1,9 +1,9 @@
 import { Callout, H2 } from '@blueprintjs/core'
 import { Button, FormControl, FormLabel, Stack } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useAppSnackbar } from '../../AppSnackbar'
 import { useWhoAmI } from '../../WhoAmIProvider'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useChangePasswordMutation } from '../../generated/graphql'
@@ -18,14 +18,14 @@ const ChangePasswordForm = (): ReactElement => {
   const [newPassword, setNewPassword] = useState<string>()
   const [repeatNewPassword, setRepeatNewPassword] = useState<string>()
 
-  const appSnackbar = useAppSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
   const [changePassword, { loading }] = useChangePasswordMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appSnackbar.enqueueError(title)
+      enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: () => {
-      appSnackbar.enqueueSuccess(t('passwordChangeSuccessful'))
+      enqueueSnackbar(t('passwordChangeSuccessful'), { variant: 'success' })
       setCurrentPassword('')
       setNewPassword('')
       setRepeatNewPassword('')
