@@ -1,15 +1,10 @@
+import { Typography } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { ProjectConfig } from '../../project-configs/getProjectConfig'
 import { ENTRY_LIMIT, FILE_SIZE_LIMIT_MEGA_BYTES } from './constants'
-
-const RequirementsList = styled.ul`
-  text-align: left;
-  padding-left: 20px;
-`
 
 type ImportCardsRequirementsProps = {
   csvHeaders: string[]
@@ -36,15 +31,23 @@ const ImportCardsRequirementsText = ({
   )
 
   return (
-    <RequirementsList>
-      <li>{t('maxFileSize', { maxFileSize: FILE_SIZE_LIMIT_MEGA_BYTES })}</li>
-      <li>{t('fileFormatCSV')}</li>
-      <li>
+    <Typography component='ul' paddingLeft={2.5} sx={{ textAlign: 'left' }}>
+      <Typography component='li' variant='body2'>
+        {t('maxFileSize', { maxFileSize: FILE_SIZE_LIMIT_MEGA_BYTES })}{' '}
+      </Typography>
+      <Typography component='li' variant='body2'>
+        {t('fileFormatCSV')}{' '}
+      </Typography>
+      <Typography component='li' variant='body2'>
         {t('maxNumberOfEntries')}: {ENTRY_LIMIT}
-      </li>
-      <li>{isFreinetFormat ? t('minColumnsForFreinet') : `${t('columnFormat')}:  ${decoratedHeaders.join(', ')}`}</li>
-      <li>{t('dateFormatHint')}</li>
-    </RequirementsList>
+      </Typography>
+      <Typography component='li' variant='body2'>
+        {isFreinetFormat ? t('minColumnsForFreinet') : `${t('columnFormat')}:  ${decoratedHeaders.join(', ')}`}{' '}
+      </Typography>
+      <Typography component='li' variant='body2'>
+        {t('dateFormatHint')}{' '}
+      </Typography>
+    </Typography>
   )
 }
 

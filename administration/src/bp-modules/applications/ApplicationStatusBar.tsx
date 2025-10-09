@@ -1,3 +1,5 @@
+import { Button, Typography } from '@mui/material'
+import { common } from '@mui/material/colors'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -34,24 +36,6 @@ const Title = styled.span`
   font-weight: bold;
 `
 
-const ItemContainer = styled.button<{ $active: boolean }>`
-  display: flex;
-  flex: 1;
-  justify-content: center;
-  padding: 12px;
-  text-transform: uppercase;
-  border: none;
-  background-color: transparent;
-  font-weight: bold;
-  cursor: pointer;
-
-  :hover {
-    background: #8f99a826;
-  }
-
-  ${props => (props.$active ? 'background:#8f99a84d' : '')};
-`
-
 const ApplicationStatusBarItem = ({
   item,
   active,
@@ -64,11 +48,31 @@ const ApplicationStatusBarItem = ({
   onSetActiveBarItem: (item: ApplicationStatusBarItemType) => void
 }): ReactElement => {
   const { t } = useTranslation('applicationsOverview')
+  const buttonBackgroundColor = active ? '#8f99a84d' : ''
 
   return (
-    <ItemContainer onClick={() => onSetActiveBarItem(item)} id={item.barItemI18nKey} $active={active}>
-      {t(item.barItemI18nKey)}(<span data-testid={`status-${t(item.barItemI18nKey)}-count`}>{count}</span>)
-    </ItemContainer>
+    <Button
+      sx={{
+        display: 'flex',
+        flex: 1,
+        justifyContent: 'center',
+        textTransform: 'uppercase',
+        border: 'none',
+        backgroundColor: buttonBackgroundColor,
+        borderBottomLeftRadius: 0,
+        borderTopLeftRadius: 0,
+      }}
+      size='large'
+      onClick={() => onSetActiveBarItem(item)}
+      id={item.barItemI18nKey}>
+      <Typography color={common.black} variant='body2bold'>
+        {t(item.barItemI18nKey)}(
+        <Typography variant='body2bold' component='span' data-testid={`status-${t(item.barItemI18nKey)}-count`}>
+          {count}
+        </Typography>
+        )
+      </Typography>
+    </Button>
   )
 }
 

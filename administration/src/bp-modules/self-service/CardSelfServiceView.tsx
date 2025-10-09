@@ -49,11 +49,6 @@ const Step = styled.div`
   align-self: flex-end;
 `
 
-const SubHeadline = styled.h2`
-  color: #131314;
-  font-size: 22px;
-`
-
 const Text = styled.div`
   margin-bottom: 24px;
   font-size: 16px;
@@ -94,10 +89,12 @@ const CardSelfServiceView = (): ReactElement => {
       </Header>
       <Body>
         <Step>{`${t('step')} ${selfServiceStepInfo[cardGenerationStep].stepNr}/${totalSteps}`}</Step>
-        <Typography fontWeight='600' marginBottom={0} variant='h5' color='accent' fontSize={20}>
+        <Typography variant='h6' color='accent' component='h1'>
           {selfServiceStepInfo[cardGenerationStep].headline}
         </Typography>
-        <SubHeadline>{selfServiceStepInfo[cardGenerationStep].subHeadline}</SubHeadline>
+        <Typography variant='h5' component='h2'>
+          {selfServiceStepInfo[cardGenerationStep].subHeadline}
+        </Typography>
         <Text>{selfServiceStepInfo[cardGenerationStep].text}</Text>
         {cardGenerationStep === 'input' && (
           <CardSelfServiceForm

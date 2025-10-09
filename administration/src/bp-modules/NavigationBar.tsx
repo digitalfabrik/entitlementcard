@@ -32,7 +32,7 @@ const NavigationBar = (): ReactElement => {
               {config.name} {t('administration')}
             </Typography>
             {!region ? null : (
-              <Typography>
+              <Typography variant='body2' component='span'>
                 {region.prefix} {region.name} {`(${process.env.REACT_APP_VERSION})`}
               </Typography>
             )}

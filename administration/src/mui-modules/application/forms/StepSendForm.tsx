@@ -1,5 +1,5 @@
 import { Close } from '@mui/icons-material'
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material'
 import React, { useContext, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
@@ -66,7 +66,7 @@ const StepSendForm: Form<State, ValidatedInput, AdditionalProps> = {
     const config = useContext(ProjectConfigContext)
     const [openPrivacyPolicy, setOpenPrivacyPolicy] = useState<boolean>(false)
     const PrivacyLabel = (
-      <span>
+      <Typography variant='body2' component='span'>
         <Trans i18nKey='applicationForms:acceptDataPrivacyPolicy' />{' '}
         <Button
           variant='text'
@@ -75,7 +75,7 @@ const StepSendForm: Form<State, ValidatedInput, AdditionalProps> = {
           {t('acceptDataPrivacyButton')}
         </Button>
         .
-      </span>
+      </Typography>
     )
 
     const policyQueryHandler = getQueryResult(policyQuery)

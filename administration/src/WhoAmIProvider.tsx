@@ -1,5 +1,5 @@
 import { Logout, Replay } from '@mui/icons-material'
-import { Button, Stack } from '@mui/material'
+import { Button, Stack, Typography } from '@mui/material'
 import React, { ReactElement, ReactNode, createContext, useContext, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -41,7 +41,7 @@ const WhoAmIProvider = ({ children }: { children: ReactNode }): ReactElement => 
   if (!hasProp(context, 'me') || error) {
     return (
       <StandaloneCenter>
-        <p>{t('accountInformationNotAvailable')}</p>
+        <Typography component='p'>{t('accountInformationNotAvailable')}</Typography>
         <Stack direction='row' spacing={2}>
           <Button variant='outlined' startIcon={<Replay />} onClick={() => refetch()}>
             {t('retry')}

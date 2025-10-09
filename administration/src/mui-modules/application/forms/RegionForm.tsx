@@ -16,11 +16,6 @@ const StyledAlert = styled(Alert)`
   transition: background-color 0.2s, color 0.2s;
 `
 
-const StyledRegionsList = styled('ul')`
-  margin-block-start: 4px;
-  margin-block-end: 4px;
-`
-
 const SubForms = {
   region: SelectForm,
 }
@@ -62,12 +57,16 @@ const renderAlert = (
     return (
       <StyledAlert severity='warning'>
         <Trans i18nKey='applicationForms:regionNotUnique' />
-        <StyledRegionsList>
+        <Typography component='ul' variant='body2' marginX={0.5}>
           {regions.map(region => {
             const displayName = `${region.name} (${region.prefix})`
-            return <li key={displayName}>{displayName}</li>
+            return (
+              <Typography variant='body2' component='li' key={displayName}>
+                {displayName}
+              </Typography>
+            )
           })}
-        </StyledRegionsList>
+        </Typography>
       </StyledAlert>
     )
   }

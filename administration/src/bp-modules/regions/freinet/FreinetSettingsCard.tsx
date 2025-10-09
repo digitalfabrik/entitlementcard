@@ -1,15 +1,11 @@
-import { Checkbox, H2 } from '@blueprintjs/core'
-import { Button } from '@mui/material'
+import { Checkbox } from '@blueprintjs/core'
+import { Button, Typography } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import { FreinetAgency } from '../../../generated/graphql'
 import SettingsCard from '../../user-settings/SettingsCard'
-
-const Headline = styled(H2)`
-  margin-bottom: 16px;
-`
 
 const ButtonContainer = styled.div`
   text-align: right;
@@ -44,10 +40,12 @@ const FreinetSettingsCard = ({
 
   return (
     <SettingsCard>
-      <Headline>{t('freinetHeadline')}</Headline>
-      <p>
+      <Typography variant='h4' marginBottom={2}>
+        {t('freinetHeadline')}
+      </Typography>
+      <Typography component='p' variant='body2'>
         <Trans i18nKey='regionSettings:freinetExplanation' />
-      </p>
+      </Typography>
       <Table>
         <thead>
           <tr>

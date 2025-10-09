@@ -1,5 +1,4 @@
-import { H2 } from '@blueprintjs/core'
-import { Button } from '@mui/material'
+import { Button, Typography } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -30,8 +29,10 @@ const ApplicationConfirmationNoteCard = ({
 
   return (
     <SettingsCard>
-      <H2>{t('applicationConfirmationMailNoteHeadline')}</H2>
-      <p>{t('applicationConfirmationMailNoteExplanation')}</p>
+      <Typography variant='h4'>{t('applicationConfirmationMailNoteHeadline')}</Typography>
+      <Typography component='p' variant='body2'>
+        {t('applicationConfirmationMailNoteExplanation')}
+      </Typography>
       <ButtonContainer>
         <Button onClick={() => setOpenApplicationConfirmationNote(true)}>{t('open')}</Button>
       </ButtonContainer>

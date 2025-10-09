@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -15,7 +16,11 @@ const StoresImportDuplicates = ({ entries }: StoresImportDuplicatesProps): React
       {t('csvInvalidDuplicateEntries')}:
       {entries.map(entry => {
         const entries = entry.join(', ')
-        return <span key={entries}>{t('theseEntriesAreDuplicated', { entries })}</span>
+        return (
+          <Typography variant='body2' component='span' key={entries}>
+            {t('theseEntriesAreDuplicated', { entries })}
+          </Typography>
+        )
       })}
       {t('pleaseDeleteDuplicates')}
     </Container>
