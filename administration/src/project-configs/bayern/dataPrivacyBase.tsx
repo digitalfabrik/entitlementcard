@@ -64,10 +64,9 @@ export const DataPrivacyBaseText = (): ReactElement => (
         target='_blank'
         rel='noreferrer'
         href='https://github.com/digitalfabrik/entitlementcard'
-        title='https://github.com/digitalfabrik/entitlementcard'>
-        <Typography variant='body2' component='span' sx={{ textDecoration: 'underline', color: '#0000ff' }}>
-          https://github.com/digitalfabrik/entitlementcard
-        </Typography>
+        title='https://github.com/digitalfabrik/entitlementcard'
+        variant='body2'>
+        https://github.com/digitalfabrik/entitlementcard
       </Link>
     </Typography>
     <Typography variant='body2' component='p' marginTop={1}>
@@ -88,10 +87,9 @@ export const DataPrivacyBaseText = (): ReactElement => (
         target='_blank'
         rel='noreferrer'
         href='mailto:Poststelle@stmas.bayern.de'
-        title='mailto:Poststelle@stmas.bayern.de'>
-        <Typography variant='body2' component='span' sx={{ textDecoration: 'underline', color: '#0000ff' }}>
-          Poststelle@stmas.bayern.de
-        </Typography>
+        title='mailto:Poststelle@stmas.bayern.de'
+        variant='body2'>
+        Poststelle@stmas.bayern.de
       </Link>
       &nbsp;
     </Typography>
@@ -114,10 +112,9 @@ export const DataPrivacyBaseText = (): ReactElement => (
         target='_blank'
         rel='noreferrer'
         href='mailto:Datenschutz@stmas.bayern.de'
-        title='mailto:Datenschutz@stmas.bayern.de'>
-        <Typography variant='body2' component='span' sx={{ textDecoration: 'underline', color: '#0000ff' }}>
-          Datenschutz@stmas.bayern.de
-        </Typography>
+        title='mailto:Datenschutz@stmas.bayern.de'
+        variant='body2'>
+        Datenschutz@stmas.bayern.de
       </Link>
       <br />
       Telefon: 089 1261 1445
@@ -129,10 +126,9 @@ export const DataPrivacyBaseText = (): ReactElement => (
         target='_blank'
         rel='noreferrer'
         href='https://www.datenschutz-bayern.de'
-        title='https://www.datenschutz-bayern.de'>
-        <Typography variant='body2' component='span' sx={{ textDecoration: 'underline', color: '#0000ff' }}>
-          https://www.datenschutz-bayern.de
-        </Typography>
+        title='https://www.datenschutz-bayern.de'
+        variant='body2'>
+        https://www.datenschutz-bayern.de
       </Link>
       ).{' '}
     </Typography>
@@ -166,10 +162,9 @@ export const DataPrivacyBaseText = (): ReactElement => (
         target='_blank'
         rel='noreferrer'
         href='https://bayern.ehrenamtskarte.app/beantragen'
-        title='https://bayern.ehrenamtskarte.app/beantragen'>
-        <Typography variant='body2' component='span' sx={{ textDecoration: 'underline', color: '#0000ff' }}>
-          https://bayern.ehrenamtskarte.app/beantragen
-        </Typography>
+        title='https://bayern.ehrenamtskarte.app/beantragen'
+        variant='body2'>
+        https://bayern.ehrenamtskarte.app/beantragen
       </Link>
       ) oder die Nutzung der bayerischen Ehrenamtskarten-App (Android/iOS) werden folgende Nutzungsdaten gemäß § 15 Abs.
       1 TMG bei jedem Aufruf mit aktiver Internetverbindung anonymisiert erhoben:
@@ -270,10 +265,9 @@ export const DataPrivacyBaseText = (): ReactElement => (
         target='_blank'
         rel='noreferrer'
         href='https://bayern.ehrenamtskarte.app/beantragen'
-        title='https://bayern.ehrenamtskarte.app/beantragen'>
-        <Typography variant='body2' component='span' sx={{ textDecoration: 'underline', color: '#0000ff' }}>
-          https://bayern.ehrenamtskarte.app/beantragen
-        </Typography>
+        title='https://bayern.ehrenamtskarte.app/beantragen'
+        variant='body2'>
+        https://bayern.ehrenamtskarte.app/beantragen
       </Link>
       ) beantragen, wird die Tür an Tür – Digitalfabrik gGmbH die im Antragsformular angegebenen Daten erheben,
       verarbeiten und nutzen. Dies erfolgt ausschließlich für den Zweck der Ausstellung der Bayerischen Ehrenamtskarte,

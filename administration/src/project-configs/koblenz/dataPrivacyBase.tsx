@@ -62,14 +62,15 @@ export const DataPrivacyBaseText = (): ReactElement => (
     <Typography variant='body2' component='p' marginTop={1}>
       Der gesamte Programmcode des digitalen KoblenzPasses ist darüber hinaus quelloffen lizenziert unter der MIT-Lizenz
       und kann hier eingesehen werden:
-      <Link href='https://github.com/digitalfabrik/entitlementcard' target='_blank' rel='noreferrer'>
-        <Typography variant='body2' sx={{ color: '#0000ff', textDecoration: 'underline' }}>
-          {' '}
-          https://github.com/digitalfabrik/entitlementcard
-        </Typography>
+      <Link
+        href='https://github.com/digitalfabrik/entitlementcard'
+        target='_blank'
+        rel='noreferrer'
+        variant='body2'
+        sx={{ display: 'block' }}>
+        https://github.com/digitalfabrik/entitlementcard
       </Link>
     </Typography>
-
     <Typography variant='h5' component='h2'>
       Kontaktdaten:
     </Typography>
@@ -89,10 +90,13 @@ export const DataPrivacyBaseText = (): ReactElement => (
       Telefon: +49 (0)261 129 1000
       <br />
       E-Mail:
-      <Link href='mailto:koblenzpass@stadt.koblenz.de' target='_blank' rel='noreferrer'>
-        <Typography variant='body2' sx={{ color: '#0000ff', textDecoration: 'underline' }}>
-          koblenzpass@stadt.koblenz.de
-        </Typography>
+      <Link
+        href='mailto:koblenzpass@stadt.koblenz.de'
+        target='_blank'
+        rel='noreferrer'
+        variant='body2'
+        sx={{ display: 'block' }}>
+        koblenzpass@stadt.koblenz.de
       </Link>
     </Typography>
     <Typography variant='body2' component='p' marginTop={1}>
@@ -113,20 +117,26 @@ export const DataPrivacyBaseText = (): ReactElement => (
       Telefon: +49 (0)261 129-1017
       <br />
       E-Mail:
-      <Link href='mailto:security.management@stadt.koblenz.de' target='_blank' rel='noreferrer'>
-        <Typography variant='body2' sx={{ color: '#0000ff', textDecoration: 'underline' }}>
-          security.management@stadt.koblenz.de
-        </Typography>
+      <Link
+        href='mailto:security.management@stadt.koblenz.de'
+        target='_blank'
+        rel='noreferrer'
+        variant='body2'
+        sx={{ display: 'block' }}>
+        security.management@stadt.koblenz.de
       </Link>
     </Typography>
 
     <Typography variant='body2' component='p' marginTop={1}>
       Allgemeines zum Thema Datenschutz finden Sie auf der Website des Landesbeauftragten für den Datenschutz und die
       Informationsfreiheit Rheinland-Pfalz
-      <Link href='https://www.datenschutz.rlp.de' target='_blank' rel='noreferrer'>
-        <Typography variant='body2' sx={{ color: '#0000ff', textDecoration: 'underline' }}>
-          (https://www.datenschutz.rlp.de)
-        </Typography>
+      <Link
+        href='https://www.datenschutz.rlp.de'
+        target='_blank'
+        rel='noreferrer'
+        variant='body2'
+        sx={{ display: 'block' }}>
+        (https://www.datenschutz.rlp.de)
       </Link>
     </Typography>
 

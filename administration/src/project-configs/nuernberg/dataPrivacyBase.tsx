@@ -65,10 +65,9 @@ export const DataPrivacyBaseText = (): ReactElement => (
         target='_blank'
         rel='noreferrer'
         href='https://github.com/digitalfabrik/entitlementcard'
-        title='https://github.com/digitalfabrik/entitlementcard'>
-        <Typography variant='body2' component='span' sx={{ textDecoration: 'underline', color: '#0000ff' }}>
-          https://github.com/digitalfabrik/entitlementcard
-        </Typography>
+        title='https://github.com/digitalfabrik/entitlementcard'
+        variant='body2'>
+        https://github.com/digitalfabrik/entitlementcard
       </Link>
     </Typography>
     <Typography variant='body2' component='p' marginTop={1}>
@@ -92,7 +91,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
       <br />
       E-Mail:
       <Link target='_blank' rel='noreferrer' href='mailto:SHA@stadt.nuernberg.de' title='mailto:SHA@stadt.nuernberg.de'>
-        <Typography variant='body2' component='span' sx={{ textDecoration: 'underline', color: '#0000ff' }}>
+        <Typography variant='body2' component='span'>
           SHA@stadt.nuernberg.de
         </Typography>
       </Link>
@@ -118,10 +117,9 @@ export const DataPrivacyBaseText = (): ReactElement => (
         target='_blank'
         rel='noreferrer'
         href='mailto:Datenschutz@stadt.nuernberg.de'
-        title='mailto:Datenschutz@stadt.nuernberg.de'>
-        <Typography variant='body2' component='span' sx={{ textDecoration: 'underline', color: '#0000ff' }}>
-          Datenschutz@stadt.nuernberg.de
-        </Typography>
+        title='mailto:Datenschutz@stadt.nuernberg.de'
+        variant='body2'>
+        Datenschutz@stadt.nuernberg.de
       </Link>
     </Typography>
     <br />
