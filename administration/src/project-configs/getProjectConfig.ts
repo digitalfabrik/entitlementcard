@@ -1,3 +1,4 @@
+import { PaletteOptions } from '@mui/material'
 import {
   BAYERN_PRODUCTION_ID,
   BAYERN_STAGING_ID,
@@ -103,6 +104,7 @@ export type StoresManagementConfig =
 
 export type ProjectConfig = {
   name: string
+  colorPalette: PaletteOptions
   projectId: string
   publisherText: string
   applicationFeature?: ApplicationFeature

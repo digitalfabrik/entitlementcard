@@ -3,9 +3,11 @@ import RegionExtension from '../../cards/extensions/RegionExtension'
 import { applicationJsonToCardQuery, applicationJsonToPersonalData } from '../bayern/config'
 import { DataPrivacyBaseText, dataPrivacyBaseHeadline } from '../bayern/dataPrivacyBase'
 import pdfConfiguration from '../bayern/pdf'
+import { commonColors } from '../common/colors'
 import type { ProjectConfig } from '../getProjectConfig'
 
 const config: ProjectConfig = {
+  colorPalette: commonColors,
   name: 'Showcase Berechtigungskarte',
   projectId: 'showcase.entitlementcard.app',
   publisherText: 'Showcase gGmbH',
