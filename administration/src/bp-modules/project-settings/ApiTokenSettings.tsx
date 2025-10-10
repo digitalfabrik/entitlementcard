@@ -1,6 +1,18 @@
-import { H4, HTMLSelect, HTMLTable } from '@blueprintjs/core'
 import { Delete } from '@mui/icons-material'
-import { Button } from '@mui/material'
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Typography,
+} from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -26,25 +38,12 @@ const Container = styled.div`
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
 `
 
-const Row = styled.div`
-  width: 80%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 15px;
-`
-
 const NewTokenText = styled.p`
-  font-size: 18px;
   padding: 10px;
   border: 1px solid black;
   border-radius: 6px;
   margin-top: 15px;
   word-break: break-all;
-`
-
-const TableData = styled.td`
-  vertical-align: middle !important;
 `
 
 const DeleteIcon = styled(Delete)`
@@ -120,52 +119,63 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
         {showPepperSection && <PepperSettings />}
 
         <Container>
-          <H4>{t('createNewToken')}</H4>
-          <p>{t('tokenOnlyShowedOnceHint')}</p>
-          <Row>
-            <label htmlFor='expiresIn'>{t('validPeriod')}:</label>
-            <HTMLSelect
-              name='expiresIn'
-              id='expiresIn'
-              value={expiresIn}
-              onChange={e => setExpiresIn(parseInt(e.target.value, 10))}>
-              <option value='1'>1 {t('month')}</option>
-              <option value='3'>3 {t('months')}</option>
-              <option value='12'>1 {t('year')}</option>
-              <option value='36'>3 {t('years')}</option>
-            </HTMLSelect>
-            <Button onClick={() => createToken({ variables: { expiresIn } })}>{t('create')}</Button>
-          </Row>
+          <Typography variant='h6'>{t('createNewToken')}</Typography>
+          <Typography variant='body2'>{t('tokenOnlyShowedOnceHint')}</Typography>
+          <Box my={2} display='flex' flexDirection='row' justifyContent='center' alignItems='space-between' gap={2}>
+            <FormControl fullWidth>
+              <InputLabel id='expiresIn-label'>{t('validPeriod')}</InputLabel>
+              <Select
+                size='small'
+                labelId='expiresIn-label'
+                name='expiresIn'
+                id='expiresIn'
+                value={expiresIn}
+                label={t('validPeriod')}
+                onChange={e => setExpiresIn(e.target.value)}>
+                <MenuItem value={1}>1 {t('month')}</MenuItem>
+                <MenuItem value={3}>3 {t('months')}</MenuItem>
+                <MenuItem value={12}>1 {t('year')}</MenuItem>
+                <MenuItem value={36}>3 {t('years')}</MenuItem>
+              </Select>
+            </FormControl>
+            <Button sx={{ minWidth: 'auto' }} onClick={() => createToken({ variables: { expiresIn } })}>
+              {t('create')}
+            </Button>
+          </Box>
           {createdToken !== null && (
             <>
-              <p>{t('newToken')}:</p>
-              <NewTokenText> {createdToken}</NewTokenText>
+              <Typography variant='body2'>{t('newToken')}:</Typography>
+              <NewTokenText>
+                <Typography variant='body1'>{createdToken}</Typography>
+              </NewTokenText>
             </>
           )}
         </Container>
 
-        {tokenMetaData.length > 0 && (
-          <HTMLTable>
-            <thead>
-              <tr>
-                <th>{t('eMailOfCreator')}</th>
-                <th>{t('expirationDate')}</th>
-                <th aria-label='Delete' />
-              </tr>
-            </thead>
-            <tbody>
-              {tokenMetaData.map(item => (
-                <tr key={item.id}>
-                  <TableData>{item.creatorEmail}</TableData>
-                  <TableData>{formatDate(item.expirationDate)}</TableData>
-                  <TableData>
-                    <DeleteIcon color='error' onClick={() => setTokenToDelete(item.id)} />
-                  </TableData>
-                </tr>
-              ))}
-            </tbody>
-          </HTMLTable>
-        )}
+        <Typography variant='body2'>
+          {tokenMetaData.length > 0 && (
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>{t('eMailOfCreator')}</TableCell>
+                  <TableCell>{t('expirationDate')}</TableCell>
+                  <TableCell aria-label='Delete' />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {tokenMetaData.map(item => (
+                  <TableRow key={item.id}>
+                    <TableCell>{item.creatorEmail}</TableCell>
+                    <TableCell>{formatDate(item.expirationDate)}</TableCell>
+                    <TableCell>
+                      <DeleteIcon color='error' onClick={() => setTokenToDelete(item.id)} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </Typography>
       </SettingsCard>
     </>
   )
