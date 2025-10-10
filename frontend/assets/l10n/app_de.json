@@ -103,6 +103,7 @@
     "checkRequired": "Prüfung nötig",
     "checkingCode": "Der QR-Code wird durch eine Server-Anfrage geprüft.",
     "codeExpired": "Der eingescannte Code ist bereits am {{expirationDate}} abgelaufen.",
+    "codeNotYetValid" : "Der eingescannte Code ist erst ab {{startDay}} gültig.",
     "codeRevoked": "Diese Karte konnte nicht aktiviert werden, da sie widerrufen wurde.",
     "codeInvalid": "Der Inhalt des eingescannten Codes kann nicht verstanden werden. Vermutlich handelt es sich um einen QR-Code, der nicht für diese App generiert wurde.",
     "codeInvalidMissing": "Der Inhalt des eingescannten Codes ist unvollständig. (Fehlercode: {{missing}}Missing)",
