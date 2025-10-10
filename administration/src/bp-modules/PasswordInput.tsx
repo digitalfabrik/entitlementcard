@@ -13,7 +13,7 @@ const PasswordInput = (p: {
   autoFocus?: boolean
   fullWidth?: boolean
   value?: string
-  setValue?: (v: string | undefined) => void
+  setValue?: (v: string) => void
 }): ReactElement => {
   const { t } = useTranslation('misc')
   const [passwordHidden, setPasswordHidden] = useState(true)
