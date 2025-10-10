@@ -1,5 +1,5 @@
 import { Callout } from '@blueprintjs/core'
-import { Stack } from '@mui/material'
+import { Stack, Typography } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -23,9 +23,9 @@ const PepperSettings = (): ReactElement => {
   const result = getQueryResult(pepperQuery, errorComponent)
 
   return result.successful ? (
-    <Stack sx={{ marginBottom: 2 }}>
-      <p>{t('pepperExplanation')}:</p>
-      <PasswordInput value={result.data.pepper} />
+    <Stack sx={{ marginBottom: 2, gap: 1 }}>
+      <Typography variant='body2'>{t('pepperExplanation')}:</Typography>
+      <PasswordInput disabled value={result.data.pepper} />
     </Stack>
   ) : (
     result.component

@@ -1,6 +1,5 @@
-import { H3, TextArea, Tooltip } from '@blueprintjs/core'
 import { ArrowBack, SaveAlt } from '@mui/icons-material'
-import { Button } from '@mui/material'
+import { Button, TextField, Tooltip, Typography, useTheme } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -23,10 +22,6 @@ const Content = styled.div`
   align-items: center;
   flex-direction: column;
 `
-const Label = styled(H3)`
-  text-align: center;
-  margin: 15px;
-`
 
 const CharCounter = styled.span<{ $hasError: boolean }>`
   text-align: center;
@@ -43,6 +38,7 @@ type RegionOverviewProps = {
 const MAX_CHARS = 20000
 
 const DataPrivacyOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProps): ReactElement => {
+  const theme = useTheme()
   const navigate = useNavigate()
   const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('regionSettings')
@@ -68,14 +64,24 @@ const DataPrivacyOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProp
   return (
     <>
       <Content>
-        <Label>{t('dataPrivacy')}</Label>
-        <TextArea
-          fill
-          onChange={e => setDataPrivacyText(e.target.value)}
-          value={dataPrivacyText}
-          large
-          rows={20}
+        <Typography mt={5} variant='h5' align='center'>
+          {t('dataPrivacy')}
+        </Typography>
+        <TextField
+          sx={{
+            mb: 0,
+          }}
+          slotProps={{
+            input: {
+              sx: { fontSize: theme.typography.body2.fontSize },
+            },
+          }}
+          rows={30}
+          fullWidth
           placeholder={t('dataPrivacyPlaceholder')}
+          multiline
+          value={dataPrivacyText}
+          onChange={e => setDataPrivacyText(e.target.value)}
         />
         <CharCounter $hasError={maxCharsExceeded}>
           {dataPrivacyText.length}/{MAX_CHARS}
@@ -85,15 +91,17 @@ const DataPrivacyOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProp
         <Button startIcon={<ArrowBack />} onClick={() => navigate(-1)}>
           {t('back')}
         </Button>
-        <Tooltip content={maxCharsExceeded ? errorMessage : undefined}>
-          <Button
-            disabled={maxCharsExceeded}
-            startIcon={<SaveAlt />}
-            color='primary'
-            onClick={onSave}
-            loading={loading}>
-            {t('save')}
-          </Button>
+        <Tooltip title={maxCharsExceeded ? errorMessage : undefined} placement='top' arrow>
+          <span>
+            <Button
+              disabled={maxCharsExceeded}
+              startIcon={<SaveAlt />}
+              color='primary'
+              onClick={onSave}
+              loading={loading}>
+              {t('save')}
+            </Button>
+          </span>
         </Tooltip>
       </ButtonBar>
     </>
