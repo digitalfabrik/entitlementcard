@@ -1,10 +1,10 @@
 import { Colors, Icon, Tag } from '@blueprintjs/core'
 import { styled } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { memo, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { AuthContext } from '../../AuthProvider'
-import { useAppToaster } from '../../bp-modules/AppToaster'
 import EmailLink from '../../bp-modules/EmailLink'
 import downloadDataUri from '../../util/downloadDataUri'
 import { isEmailValid } from '../verifications'
@@ -35,7 +35,7 @@ const getTranslationKey = (fieldName: string, parentName?: string) =>
 
 const JsonFieldAttachment = memo(
   ({ jsonField, baseUrl, attachmentAccessible, parentName }: JsonFieldViewProps<JsonField<'Attachment'>>) => {
-    const appToaster = useAppToaster()
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar()
     const token = useContext(AuthContext).data?.token
     const { t } = useTranslation('application')
     const attachment = jsonField.value
@@ -43,11 +43,10 @@ const JsonFieldAttachment = memo(
     if (attachmentAccessible) {
       const downloadUrl = `${baseUrl}/file/${attachment.fileIndex}`
       const onClick = async () => {
-        const loadingToastKey = appToaster?.show({
-          message: `${t('applicationsOverview:loadAttachment')} ${attachment.fileIndex + 1}...`,
-          intent: 'primary',
-          isCloseButtonShown: false,
-        })
+        const loadingSnackbarKey = enqueueSnackbar(
+          `${t('applicationsOverview:loadAttachment')} ${attachment.fileIndex + 1}...`,
+          { variant: 'info', persist: true, action: () => null }
+        )
         try {
           const result = await fetch(downloadUrl, { headers: { authorization: `Bearer ${token}` } })
           const contentType = result.headers.get('content-type')
@@ -64,11 +63,9 @@ const JsonFieldAttachment = memo(
           downloadDataUri(file, filename)
         } catch (e) {
           console.error(e)
-          appToaster?.show({ message: t('errors:unknown'), intent: 'danger' })
+          enqueueSnackbar(t('errors:unknown'), { variant: 'error' })
         } finally {
-          if (loadingToastKey !== undefined) {
-            appToaster?.dismiss(loadingToastKey)
-          }
+          closeSnackbar(loadingSnackbarKey)
         }
       }
       return (

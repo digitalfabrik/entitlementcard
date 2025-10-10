@@ -1,23 +1,30 @@
-import { OverlayToaster } from '@blueprintjs/core'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { fireEvent } from '@testing-library/react'
 import React, { ReactNode, act } from 'react'
 import { MemoryRouter } from 'react-router'
 
+import { AppSnackbarProvider } from '../../../AppSnackbar'
 import { initializeCardFromCSV } from '../../../cards/Card'
 import FormAlert from '../../../mui-modules/base/FormAlert'
 import koblenzConfig from '../../../project-configs/koblenz/config'
 import { renderWithTranslation } from '../../../testing/render'
-import { AppToasterProvider } from '../../AppToaster'
 import CardSelfServiceForm from '../CardSelfServiceForm'
 import { exampleCard } from '../__mock__/mockSelfServiceCard'
 import { DataPrivacyAcceptingStatus } from '../constants'
 
+const enqueueSnackbarMock = jest.fn()
+jest.mock('notistack', () => ({
+  ...jest.requireActual('notistack'),
+  useSnackbar: () => ({
+    enqueueSnackbar: enqueueSnackbarMock,
+  }),
+}))
+
 const wrapper = ({ children }: { children: ReactNode }) => (
   <LocalizationProvider dateAdapter={AdapterDateFns}>
     <MemoryRouter>
-      <AppToasterProvider>{children}</AppToasterProvider>
+      <AppSnackbarProvider>{children}</AppSnackbarProvider>
     </MemoryRouter>
   </LocalizationProvider>
 )
@@ -26,6 +33,8 @@ const setDataPrivacyAccepted = jest.fn()
 const updateCard = jest.fn()
 const generateCards = jest.fn()
 describe('CardSelfServiceForm', () => {
+  beforeEach(jest.resetAllMocks)
+
   it('should display all elements in initial state', () => {
     const { getByLabelText, getByPlaceholderText, getByText, getByRole } = renderWithTranslation(
       <CardSelfServiceForm
@@ -53,7 +62,6 @@ describe('CardSelfServiceForm', () => {
   })
 
   it('should show an error message if card creation button is pressed without needed information', async () => {
-    const toasterSpy = jest.spyOn(OverlayToaster.prototype, 'show')
     const { getByText } = renderWithTranslation(
       <CardSelfServiceForm
         updateCard={updateCard}
@@ -71,14 +79,15 @@ describe('CardSelfServiceForm', () => {
     await act(async () => {
       fireEvent.click(createPassButton)
     })
-    expect(toasterSpy).toHaveBeenCalledWith({
-      intent: 'danger',
-      message: <FormAlert isToast errorMessage='Mindestens eine Ihrer Angaben ist ungültig.' />,
-    })
+    expect(enqueueSnackbarMock).toHaveBeenCalledWith(
+      <FormAlert isToast errorMessage='Mindestens eine Ihrer Angaben ist ungültig.' />,
+      {
+        variant: 'error',
+      }
+    )
   })
 
   it('should not show an error message if all fields are filled correctly', async () => {
-    const toasterSpy = jest.spyOn(OverlayToaster.prototype, 'show')
     const { getByText } = renderWithTranslation(
       <CardSelfServiceForm
         updateCard={updateCard}
@@ -96,6 +105,6 @@ describe('CardSelfServiceForm', () => {
     await act(async () => {
       fireEvent.click(createPassButton)
     })
-    expect(toasterSpy).not.toHaveBeenCalled()
+    expect(enqueueSnackbarMock).not.toHaveBeenCalled()
   })
 })

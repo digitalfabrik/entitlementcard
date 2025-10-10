@@ -1,12 +1,12 @@
 import { CheckCircleOutline, Close } from '@mui/icons-material'
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement, ReactNode, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 
 import { TokenPayload } from './AuthProvider'
 import { useWhoAmI } from './WhoAmIProvider'
-import { useAppToaster } from './bp-modules/AppToaster'
 import PasswordInput from './bp-modules/PasswordInput'
 import getMessageFromApolloError from './errors/getMessageFromApolloError'
 import { SignInPayload, useSignInMutation } from './generated/graphql'
@@ -27,17 +27,17 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props): Rea
   const projectId = useContext(ProjectConfigContext).projectId
   const email = useWhoAmI().me.email
   const [secondsLeft, setSecondsLeft] = useState(computeSecondsLeft(authData))
-  const appToaster = useAppToaster()
+  const { enqueueSnackbar } = useSnackbar()
   const [password, setPassword] = useState<string>()
   const [signIn, mutationState] = useSignInMutation({
     onCompleted: payload => {
-      appToaster?.show({ intent: 'success', message: t('loginPeriodExtended') })
+      enqueueSnackbar(t('loginPeriodExtended'), { variant: 'success' })
       onSignIn(payload.signInPayload)
       setPassword('')
     },
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appToaster?.show({ intent: 'danger', message: title })
+      enqueueSnackbar(title, { variant: 'error' })
     },
   })
 

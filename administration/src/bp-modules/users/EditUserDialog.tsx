@@ -1,5 +1,6 @@
 import { Edit } from '@mui/icons-material'
 import { Stack, Typography } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
@@ -12,7 +13,6 @@ import ConfirmDialog from '../../mui-modules/application/ConfirmDialog'
 import AlertBox from '../../mui-modules/base/AlertBox'
 import BaseCheckbox from '../../mui-modules/base/BaseCheckbox'
 import { isEmailValid } from '../../shared/verifications'
-import { useAppToaster } from '../AppToaster'
 import RegionSelector from './RegionSelector'
 import RoleSelector from './RoleSelector'
 
@@ -29,7 +29,7 @@ const EditUserDialog = ({
   // roles are selectable.
   regionIdOverride: number | null
 }): ReactElement => {
-  const appToaster = useAppToaster()
+  const { enqueueSnackbar } = useSnackbar()
   const { me, refetch: refetchMe } = useContext(WhoAmIContext)
   const { t } = useTranslation('users')
   const [email, setEmail] = useState('')
@@ -49,10 +49,10 @@ const EditUserDialog = ({
   const [editAdministrator, { loading }] = useEditAdministratorMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appToaster?.show({ intent: 'danger', message: title })
+      enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: () => {
-      appToaster?.show({ intent: 'success', message: t('editUserSuccess') })
+      enqueueSnackbar(t('editUserSuccess'), { variant: 'success' })
       onClose()
       if (me?.id === selectedUser?.id) {
         refetchMe()

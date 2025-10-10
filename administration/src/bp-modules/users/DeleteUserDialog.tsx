@@ -1,5 +1,6 @@
 import { PersonRemove } from '@mui/icons-material'
 import { Box, Stack, Typography } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
@@ -10,7 +11,6 @@ import { Administrator, useDeleteAdministratorMutation } from '../../generated/g
 import ConfirmDialog from '../../mui-modules/application/ConfirmDialog'
 import AlertBox from '../../mui-modules/base/AlertBox'
 import BaseCheckbox from '../../mui-modules/base/BaseCheckbox'
-import { useAppToaster } from '../AppToaster'
 
 const DeleteUserDialog = ({
   selectedUser,
@@ -21,7 +21,7 @@ const DeleteUserDialog = ({
   selectedUser: Administrator | null
   onSuccess: () => void
 }): ReactElement => {
-  const appToaster = useAppToaster()
+  const { enqueueSnackbar } = useSnackbar()
   const { signOut } = useContext(AuthContext)
   const actingAdminId = useContext(WhoAmIContext).me?.id
   const [deleteWarningConfirmed, setDeleteWarningConfirmed] = useState(false)
@@ -30,10 +30,10 @@ const DeleteUserDialog = ({
   const [deleteAdministrator, { loading }] = useDeleteAdministratorMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appToaster?.show({ intent: 'danger', message: title })
+      enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: () => {
-      appToaster?.show({ intent: 'success', message: t('deleteUserSuccess') })
+      enqueueSnackbar(t('deleteUserSuccess'), { variant: 'success' })
       onClose()
       onSuccess()
     },
