@@ -1,4 +1,4 @@
-import { H2, H4, HTMLSelect, HTMLTable } from '@blueprintjs/core'
+import { H4, HTMLSelect, HTMLTable } from '@blueprintjs/core'
 import { Delete } from '@mui/icons-material'
 import { Button } from '@mui/material'
 import { useSnackbar } from 'notistack'
@@ -116,9 +116,7 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
         confirmButtonText={t('deleteToken')}>
         <p>{t('deleteTokenConfirmationPrompt')}</p>
       </ConfirmDialog>
-      <SettingsCard>
-        <H2>{t('apiToken')}</H2>
-
+      <SettingsCard title={t('apiToken')}>
         {showPepperSection && <PepperSettings />}
 
         <Container>
