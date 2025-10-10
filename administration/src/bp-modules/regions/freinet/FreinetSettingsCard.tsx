@@ -1,20 +1,11 @@
-import { Checkbox, H2 } from '@blueprintjs/core'
-import { Button } from '@mui/material'
+import { Button, Typography } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import { FreinetAgency } from '../../../generated/graphql'
-import SettingsCard from '../../user-settings/SettingsCard'
-
-const Headline = styled(H2)`
-  margin-bottom: 16px;
-`
-
-const ButtonContainer = styled.div`
-  text-align: right;
-  padding: 8px 0;
-`
+import BaseCheckbox from '../../../mui-modules/base/BaseCheckbox'
+import SettingsCard, { SettingsCardButtonBox } from '../../user-settings/SettingsCard'
 
 const Table = styled.table`
   margin: 32px 0;
@@ -43,35 +34,36 @@ const FreinetSettingsCard = ({
   const { agencyId, apiAccessKey, agencyName } = agencyInformation
 
   return (
-    <SettingsCard>
-      <Headline>{t('freinetHeadline')}</Headline>
-      <p>
+    <SettingsCard title={t('freinetHeadline')}>
+      <Typography variant='body2'>
         <Trans i18nKey='regionSettings:freinetExplanation' />
-      </p>
-      <Table>
-        <thead>
-          <tr>
-            <th>{t('freinetAgencyName')}</th>
-            <th>{t('freinetAgencyId')}</th>
-            <th>{t('freinetAgencyAccessKey')}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{agencyName}</td>
-            <td>{agencyId}</td>
-            <td>{apiAccessKey}</td>
-          </tr>
-        </tbody>
-      </Table>
-      <Checkbox
+        <Table>
+          <thead>
+            <tr>
+              <th>{t('freinetAgencyName')}</th>
+              <th>{t('freinetAgencyId')}</th>
+              <th>{t('freinetAgencyAccessKey')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{agencyName}</td>
+              <td>{agencyId}</td>
+              <td>{apiAccessKey}</td>
+            </tr>
+          </tbody>
+        </Table>
+      </Typography>
+      <BaseCheckbox
         checked={dataTransferActivated}
-        onChange={e => setDataTransferActivated(e.currentTarget.checked)}
+        onChange={checked => setDataTransferActivated(checked)}
         label={t('freinetActivateDataTransferCheckbox')}
+        hasError={false}
+        errorMessage={undefined}
       />
-      <ButtonContainer>
+      <SettingsCardButtonBox>
         <Button onClick={() => onSave(dataTransferActivated)}>{t('save')}</Button>
-      </ButtonContainer>
+      </SettingsCardButtonBox>
     </SettingsCard>
   )
 }

@@ -1,5 +1,5 @@
-import { Callout, H2 } from '@blueprintjs/core'
-import { Button, FormControl, FormLabel, Stack } from '@mui/material'
+import { Callout } from '@blueprintjs/core'
+import { Button, FormControl, FormLabel, Stack, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -9,7 +9,7 @@ import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useChangePasswordMutation } from '../../generated/graphql'
 import PasswordInput from '../PasswordInput'
 import validatePasswordInput from '../auth/validateNewPasswordInput'
-import SettingsCard from './SettingsCard'
+import SettingsCard, { SettingsCardButtonBox } from './SettingsCard'
 
 const ChangePasswordForm = (): ReactElement => {
   const { t: tAuth } = useTranslation('auth')
@@ -50,9 +50,10 @@ const ChangePasswordForm = (): ReactElement => {
     })
 
   return (
-    <SettingsCard>
-      <H2>{t('changePassword')}</H2>
-      <p>{t('changePasswordExplanation')}</p>
+    <SettingsCard title={t('changePassword')}>
+      <Typography mb={2} variant='body2'>
+        {t('changePasswordExplanation')}
+      </Typography>
       <form
         onSubmit={event => {
           event.preventDefault()
@@ -73,11 +74,11 @@ const ChangePasswordForm = (): ReactElement => {
           </FormControl>
 
           {warnMessage === null ? null : <Callout intent='danger'>{warnMessage}</Callout>}
-          <div style={{ textAlign: 'right' }}>
+          <SettingsCardButtonBox>
             <Button type='submit' disabled={!valid} loading={loading}>
               {t('changePassword')}
             </Button>
-          </div>
+          </SettingsCardButtonBox>
         </Stack>
       </form>
     </SettingsCard>

@@ -1,9 +1,9 @@
-import { Card } from '@blueprintjs/core'
+import { Box } from '@mui/system'
 import styled from 'styled-components'
 
 import dimensions from './constants/dimensions'
 
-const ButtonBar = styled(Card)`
+const ButtonBar = styled(Box)`
   width: 100%;
   padding: 8px;
   background: #fafafa;

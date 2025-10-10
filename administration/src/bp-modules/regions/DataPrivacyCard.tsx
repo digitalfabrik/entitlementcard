@@ -1,27 +1,19 @@
-import { H2 } from '@blueprintjs/core'
-import { Button } from '@mui/material'
+import { Button, Typography } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
-import styled from 'styled-components'
 
-import SettingsCard from '../user-settings/SettingsCard'
-
-const ButtonContainer = styled.div`
-  text-align: right;
-  padding: 8px 0;
-`
+import SettingsCard, { SettingsCardButtonBox } from '../user-settings/SettingsCard'
 
 const DataPrivacyCard = (): ReactElement => {
   const navigate = useNavigate()
   const { t } = useTranslation('regionSettings')
   return (
-    <SettingsCard>
-      <H2>{t('dataPrivacyHeading')}</H2>
-      <p>{t('dataPrivacyExplanation')}</p>
-      <ButtonContainer>
+    <SettingsCard title={t('dataPrivacyHeading')}>
+      <Typography variant='body2'>{t('dataPrivacyExplanation')}</Typography>
+      <SettingsCardButtonBox>
         <Button onClick={() => navigate('/region/data-privacy-policy')}>{t('open')}</Button>
-      </ButtonContainer>
+      </SettingsCardButtonBox>
     </SettingsCard>
   )
 }
