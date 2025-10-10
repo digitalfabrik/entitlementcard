@@ -14,9 +14,9 @@ import SettingsCard from './SettingsCard'
 const ChangePasswordForm = (): ReactElement => {
   const { t: tAuth } = useTranslation('auth')
   const { t } = useTranslation('userSettings')
-  const [currentPassword, setCurrentPassword] = useState<string>()
-  const [newPassword, setNewPassword] = useState<string>()
-  const [repeatNewPassword, setRepeatNewPassword] = useState<string>()
+  const [currentPassword, setCurrentPassword] = useState<string>('')
+  const [newPassword, setNewPassword] = useState<string>('')
+  const [repeatNewPassword, setRepeatNewPassword] = useState<string>('')
 
   const { enqueueSnackbar } = useSnackbar()
   const [changePassword, { loading }] = useChangePasswordMutation({
@@ -43,8 +43,8 @@ const ChangePasswordForm = (): ReactElement => {
   const submit = async () =>
     changePassword({
       variables: {
-        newPassword: newPassword ?? '',
-        currentPassword: currentPassword ?? '',
+        newPassword,
+        currentPassword,
         email,
       },
     })
