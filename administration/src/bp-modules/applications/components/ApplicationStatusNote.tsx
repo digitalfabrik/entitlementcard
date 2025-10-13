@@ -68,22 +68,20 @@ export const ApplicationStatusNote = (p: {
       sx={{ border: 'none', padding: 0, maxWidth: 'none' }}
       customIcon={showIcon && <>{icon(p.status)}&ensp;</>}
       description={
-        <div>
-          {translationKey !== undefined && (
-            <Trans
-              t={t}
-              i18nKey={translationKey}
-              values={{
-                date: format(p.statusResolvedDate, 'dd. MMMM yyyy', { locale: de }),
-                time: format(p.statusResolvedDate, 'HH:mm', { locale: de }),
-                reason: p.reason !== undefined ? t('reason', { message: p.reason }) : '',
-              }}
-              components={{
-                resolution: <Typography component='span' fontWeight='bold' fontSize='inherit' color={color} />,
-              }}
-            />
-          )}
-        </div>
+        translationKey !== undefined ? (
+          <Trans
+            t={t}
+            i18nKey={translationKey}
+            values={{
+              date: format(p.statusResolvedDate, 'dd. MMMM yyyy', { locale: de }),
+              time: format(p.statusResolvedDate, 'HH:mm', { locale: de }),
+              reason: p.reason !== undefined ? t('reason', { message: p.reason }) : '',
+            }}
+            components={{
+              resolution: <Typography component='span' fontWeight='bold' fontSize='inherit' color={color} />,
+            }}
+          />
+        ) : undefined
       }
     />
   )
