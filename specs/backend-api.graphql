@@ -98,6 +98,14 @@ type CardCreationResultModel {
   staticVerificationCode: StaticVerificationCodeResult
 }
 
+type CardStatisticsResultModel {
+  cardsActivated: Int!
+  cardsActivatedBlue: Int!
+  cardsActivatedGolden: Int!
+  cardsCreated: Int!
+  region: String!
+}
+
 type CardVerificationResultModel {
   extendable: Boolean!
   valid: Boolean!
@@ -182,6 +190,10 @@ type Query {
   getApplicationVerification(applicationVerificationAccessKey: String!): ApplicationVerificationView!
   "Queries all applications for a specific region"
   getApplications(regionId: Int!): [ApplicationAdmin!]!
+  "Returns card statistics for project. Start and end dates are inclusive."
+  getCardStatisticsInProject(dateEnd: String!, dateStart: String!): [CardStatisticsResultModel!]!
+  "Returns card statistics for region. Start and end dates are inclusive."
+  getCardStatisticsInRegion(dateEnd: String!, dateStart: String!, regionId: Int!): [CardStatisticsResultModel!]!
   "Get the pepper for Koblenz user hashing"
   getHashingPepper: String!
   "Get the notification settings of the authenticated administrator"
