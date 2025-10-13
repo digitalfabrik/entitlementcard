@@ -2,7 +2,6 @@ import { EditSquare, Logout, Settings } from '@mui/icons-material'
 import { Avatar, Box, Button, Divider, IconButton, Menu, Stack, Typography } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NavLink } from 'react-router'
 
 import { AuthContext } from '../AuthProvider'
 import { useWhoAmI } from '../WhoAmIProvider'
@@ -17,15 +16,17 @@ const UserMenu = (): ReactElement => {
   const { signOut } = useContext(AuthContext)
   const { t } = useTranslation('misc')
   const projectConfig = useContext(ProjectConfigContext)
-
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null)
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null)
+  }
+
+  // TODO 2575 Migrate unstable_usePrompt and remove these functions including the custom hook
   const navigateAndSignOut = useNavigateWithCallback(signOut)
+  const navigateAndCloseMenu = useNavigateWithCallback(handleCloseUserMenu)
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget)
-  }
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null)
   }
 
   return (
@@ -69,19 +70,25 @@ const UserMenu = (): ReactElement => {
             <Typography variant='body2'>Rolle: {roleToText(role)}</Typography>
           </Box>
           <Divider sx={{ my: 1, width: '100%' }} />
-          <NavLink to='/user-settings' style={{ width: '100%' }} onClick={handleCloseUserMenu}>
-            <Button fullWidth variant='text' startIcon={<Settings />} sx={{ justifyContent: 'flex-start' }}>
-              {t('userSettings')}
-            </Button>
-          </NavLink>
+          <Button
+            fullWidth
+            variant='text'
+            startIcon={<Settings />}
+            sx={{ justifyContent: 'flex-start' }}
+            onClick={() => navigateAndCloseMenu('/user-settings')}>
+            {t('userSettings')}
+          </Button>
           <RenderGuard
             condition={projectConfig.activityLogConfig !== undefined}
             allowedRoles={[Role.RegionManager, Role.RegionAdmin]}>
-            <NavLink to='/activity-log' style={{ width: '100%' }} onClick={handleCloseUserMenu}>
-              <Button fullWidth variant='text' startIcon={<EditSquare />} sx={{ justifyContent: 'flex-start' }}>
-                {t('activityLog')}
-              </Button>
-            </NavLink>
+            <Button
+              fullWidth
+              variant='text'
+              startIcon={<EditSquare />}
+              sx={{ justifyContent: 'flex-start' }}
+              onClick={() => navigateAndCloseMenu('/activity-log')}>
+              {t('activityLog')}
+            </Button>
           </RenderGuard>
           <Button
             sx={{ justifyContent: 'flex-start' }}
