@@ -1,5 +1,5 @@
 macos:
-  xcode: 16.1.0
+  xcode: 16.4.0
 resource_class: m4pro.medium
 parameters:
   build_config:
