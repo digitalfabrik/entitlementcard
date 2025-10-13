@@ -16,8 +16,8 @@ import app.ehrenamtskarte.backend.graphql.freinet.exceptions.FreinetFoundMultipl
 import app.ehrenamtskarte.backend.graphql.freinet.exceptions.FreinetPersonDataInvalidException
 import app.ehrenamtskarte.backend.graphql.freinet.types.FreinetCard
 import app.ehrenamtskarte.backend.graphql.freinet.util.FreinetApi
+import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import app.ehrenamtskarte.backend.shared.exceptions.NotFoundException
-import app.ehrenamtskarte.backend.shared.exceptions.UnauthorizedException
 import app.ehrenamtskarte.backend.shared.utils.devWarn
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
@@ -59,7 +59,7 @@ class FreinetApplicationMutationController(
             val regionId = application.regionId.value
 
             if (!authContext.admin.mayViewApplicationsInRegion(regionId)) {
-                throw UnauthorizedException()
+                throw ForbiddenException()
             }
 
             val freinetAgency = FreinetAgencyRepository.getFreinetAgencyByRegionId(regionId)
