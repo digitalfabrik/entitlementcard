@@ -6,12 +6,15 @@ parameters:
     default: bayern
 macos:
   xcode: 16.4.0
+resource_class: m4pro.medium
 environment:
   FASTLANE_SKIP_UPDATE_CHECK: true
 working_directory: ~/project/frontend/ios
 steps:
   - prepare_workspace
   - install_app_toolbelt
+  - ruby/install:
+      version: '3.3'
   - install_fastlane
   - run:
       name: '[FL] Appstore Connect Store Promotion'

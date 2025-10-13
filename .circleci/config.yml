@@ -371,6 +371,8 @@ jobs:
         steps:
             - prepare_workspace
             - install_app_toolbelt
+            - ruby/install:
+                version: "3.3"
             - run:
                 command: softwareupdate --install-rosetta --agree-to-license
                 name: Install rosetta
@@ -579,9 +581,12 @@ jobs:
             production_delivery:
                 description: Whether to deliver the build to production.
                 type: boolean
+        resource_class: m4pro.medium
         steps:
             - prepare_workspace
             - install_app_toolbelt
+            - ruby/install:
+                version: "3.3"
             - install_fastlane
             - when:
                 condition: << parameters.production_delivery >>
@@ -826,9 +831,12 @@ jobs:
                     - nuernberg
                     - koblenz
                 type: enum
+        resource_class: m4pro.medium
         steps:
             - prepare_workspace
             - install_app_toolbelt
+            - ruby/install:
+                version: "3.3"
             - install_fastlane
             - run:
                 command: bundle exec fastlane ios appstoreconnect_promote build_config_name:<< parameters.build_config >>

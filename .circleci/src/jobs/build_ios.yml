@@ -12,6 +12,8 @@ working_directory: ~/project/frontend
 steps:
   - prepare_workspace
   - install_app_toolbelt
+  - ruby/install:
+        version: '3.3'
   - run:
       # Rosetta is necessary to build flutter apps on circleci mac m1 images
       # https://github.com/digitalfabrik/entitlementcard/pull/2001#discussion_r2010122708
