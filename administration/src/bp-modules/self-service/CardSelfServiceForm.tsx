@@ -1,6 +1,7 @@
 import { Close } from '@mui/icons-material'
 import InfoOutlined from '@mui/icons-material/InfoOutlined'
-import { Stack } from '@mui/material'
+import { Button, Stack } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
@@ -14,9 +15,7 @@ import BaseCheckbox from '../../mui-modules/base/BaseCheckbox'
 import FormAlert from '../../mui-modules/base/FormAlert'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { removeMultipleSpaces } from '../../util/helper'
-import { useAppToaster } from '../AppToaster'
 import ExtensionForms from '../cards/ExtensionForms'
-import { ActionButton, actionButtonSx } from './components/ActionButton'
 import { IconTextButton } from './components/IconTextButton'
 import { UnderlineTextButton } from './components/UnderlineTextButton'
 import { DataPrivacyAcceptingStatus } from './constants'
@@ -43,7 +42,7 @@ const CardSelfServiceForm = ({
   const [openReferenceInformation, setOpenReferenceInformation] = useState<boolean>(false)
   const [_, setSearchParams] = useSearchParams()
   const cardValid = isValid(card, projectConfig.card, { expirationDateNullable: true })
-  const appToaster = useAppToaster()
+  const { enqueueSnackbar } = useSnackbar()
   const { viewportSmall } = useWindowDimensions()
 
   const createKoblenzPass = async () => {
@@ -52,10 +51,7 @@ const CardSelfServiceForm = ({
       setDataPrivacyAccepted(DataPrivacyAcceptingStatus.denied)
     }
     if (!cardValid || dataPrivacyAccepted !== DataPrivacyAcceptingStatus.accepted) {
-      appToaster?.show({
-        message: <FormAlert isToast errorMessage={t('atLeastOneInputIsInvalid')} />,
-        intent: 'danger',
-      })
+      enqueueSnackbar(<FormAlert isToast errorMessage={t('atLeastOneInputIsInvalid')} />, { variant: 'error' })
       return
     }
     await generateCards()
@@ -113,13 +109,18 @@ const CardSelfServiceForm = ({
           errorMessage={t('pleaseAcceptPrivacyPolicy')}
         />
       </Stack>
-      <ActionButton onClick={createKoblenzPass} variant='contained' size='large'>
+      <Button
+        color='secondary'
+        sx={{ width: 'fit-content' }}
+        onClick={createKoblenzPass}
+        variant='contained'
+        size='large'>
         {t('createKoblenzPass')}
-      </ActionButton>
+      </Button>
       <ConfirmDialog
         open={openReferenceInformation}
         title={t('whereToFindReferenceNumber')}
-        buttonSx={actionButtonSx}
+        color='secondary'
         confirmButtonText={t('misc:close')}
         confirmButtonIcon={<Close />}
         id='reference-information-dialog'
@@ -145,7 +146,7 @@ const CardSelfServiceForm = ({
         confirmButtonIcon={<Close />}
         showCancelButton={false}
         open={openDataPrivacy}
-        buttonSx={actionButtonSx}
+        color='secondary'
         title={projectConfig.dataPrivacyHeadline}
         id='data-privacy-dialog'
         onConfirm={() => setOpenDataPrivacy(false)}

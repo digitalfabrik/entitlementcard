@@ -1,5 +1,6 @@
 import { Card, Classes, H2, H3, H4, InputGroup } from '@blueprintjs/core'
 import { Button, FormControl, FormLabel, Stack } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate, useSearchParams } from 'react-router'
@@ -9,14 +10,13 @@ import { useCheckPasswordResetLinkQuery, useResetPasswordMutation } from '../../
 import AlertBox from '../../mui-modules/base/AlertBox'
 import getQueryResult from '../../mui-modules/util/getQueryResult'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import { useAppToaster } from '../AppToaster'
 import PasswordInput from '../PasswordInput'
 import StandaloneCenter from '../StandaloneCenter'
 import validateNewPasswordInput from './validateNewPasswordInput'
 
 const ResetPasswordController = (): ReactElement => {
   const config = useContext(ProjectConfigContext)
-  const appToaster = useAppToaster()
+  const { enqueueSnackbar } = useSnackbar()
   const [queryParams] = useSearchParams()
   const adminEmail = queryParams.get('email') ?? ''
   const { t } = useTranslation('auth')
@@ -33,15 +33,12 @@ const ResetPasswordController = (): ReactElement => {
 
   const [resetPassword, { loading }] = useResetPasswordMutation({
     onCompleted: () => {
-      appToaster?.show({ intent: 'success', message: t('setPasswordSuccess') })
+      enqueueSnackbar(t('setPasswordSuccess'), { variant: 'success' })
       navigate('/')
     },
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appToaster?.show({
-        intent: 'danger',
-        message: title,
-      })
+      enqueueSnackbar(title, { variant: 'error' })
     },
   })
 

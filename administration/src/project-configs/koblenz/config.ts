@@ -8,12 +8,15 @@ import {
 import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
 import KoblenzReferenceNumberExtension from '../../cards/extensions/KoblenzReferenceNumberExtension'
 import { ActivationText } from '../common/ActivationText'
+import { commonColors } from '../common/colors'
 import type { ProjectConfig } from '../getProjectConfig'
 import { storesManagementConfig } from '../storesManagementConfig'
+import colorsOverride from './colorsOverride'
 import { DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
 import pdfConfig from './pdf'
 
 const config: ProjectConfig = {
+  colorPalette: { ...commonColors, ...colorsOverride },
   name: 'KoblenzPass',
   projectId: 'koblenz.sozialpass.app',
   publisherText: buildConfigKoblenz.common.publisherText,

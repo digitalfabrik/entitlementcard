@@ -10,6 +10,7 @@ import {
   getPersonalApplicationData,
 } from '../../util/applicationDataHelper'
 import { ActivationText } from '../common/ActivationText'
+import { commonColors } from '../common/colors'
 import type { CardConfig, ProjectConfig } from '../getProjectConfig'
 import { DataPrivacyAdditionalBaseText, DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
 import pdfConfiguration from './pdf'
@@ -68,6 +69,7 @@ export const applicationJsonToCardQuery = (json: JsonField<'Array'>): string | n
 }
 
 const config: ProjectConfig = {
+  colorPalette: commonColors,
   name: 'Ehrenamtskarte Bayern',
   projectId: 'bayern.ehrenamtskarte.app',
   publisherText: buildConfigBayern.common.publisherText,

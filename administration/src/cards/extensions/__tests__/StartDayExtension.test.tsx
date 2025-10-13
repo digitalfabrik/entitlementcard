@@ -3,7 +3,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { fireEvent } from '@testing-library/react'
 import React, { ReactNode } from 'react'
 
-import { AppToasterProvider } from '../../../bp-modules/AppToaster'
+import { AppSnackbarProvider } from '../../../AppSnackbar'
 import { renderWithTranslation } from '../../../testing/render'
 import PlainDate from '../../../util/PlainDate'
 import { maxCardValidity } from '../../constants'
@@ -11,7 +11,7 @@ import StartDayExtension, { minStartDay } from '../StartDayExtension'
 
 const wrapper = ({ children }: { children: ReactNode }) => (
   <LocalizationProvider dateAdapter={AdapterDateFns}>
-    <AppToasterProvider>{children}</AppToasterProvider>
+    <AppSnackbarProvider>{children}</AppSnackbarProvider>
   </LocalizationProvider>
 )
 jest.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
