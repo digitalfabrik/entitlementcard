@@ -88,11 +88,7 @@ const ResetPasswordController = (): ReactElement => {
             </FormControl>
 
             {warnMessage === null || !isDirty ? null : (
-              <AlertBox
-                sx={{ my: 2, mx: 0, justifyContent: 'flex-start' }}
-                severity='error'
-                description={warnMessage}
-              />
+              <AlertBox sx={{ my: 2, mx: 0 }} severity='error' description={warnMessage} />
             )}
           </Stack>
 

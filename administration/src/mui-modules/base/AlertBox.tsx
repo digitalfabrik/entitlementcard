@@ -9,6 +9,7 @@ type AlertBoxProps = {
   severity?: AlertColor
   title?: string
   description?: string | ReactElement
+  fullWidth?: boolean
   onAction?: () => void
   actionButtonLabel?: string
 }
@@ -18,11 +19,13 @@ const AlertBox = ({
   customIcon,
   severity = 'success',
   title,
+  fullWidth = false,
   description,
   onAction,
   actionButtonLabel,
 }: AlertBoxProps): ReactElement => {
   const { t } = useTranslation('errors')
+  const fullWidthStyles = fullWidth ? { margin: 0, maxWidth: 'none' } : {}
 
   return (
     <Alert
@@ -33,13 +36,14 @@ const AlertBox = ({
       sx={{
         margin: 'auto',
         display: 'flex',
-        justifyContent: 'space-around',
+        justifyContent: 'flex-start',
         maxWidth: '900px',
         '&': theme => ({
           [theme.breakpoints.down('md')]: {
             margin: '5px',
           },
         }),
+        ...fullWidthStyles,
         ...sx,
       }}
       action={

@@ -73,9 +73,7 @@ const ChangePasswordForm = (): ReactElement => {
             <PasswordInput value={repeatNewPassword} setValue={setRepeatNewPassword} />
           </FormControl>
 
-          {warnMessage === null ? null : (
-            <AlertBox sx={{ my: 2, mx: 0, justifyContent: 'flex-start' }} severity='error' description={warnMessage} />
-          )}
+          {warnMessage === null ? null : <AlertBox sx={{ my: 2, mx: 0 }} severity='error' description={warnMessage} />}
           <div style={{ textAlign: 'right' }}>
             <Button type='submit' disabled={!valid} loading={loading}>
               {t('changePassword')}
