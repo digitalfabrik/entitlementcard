@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.graphql.freinet
 
+import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity.Status
 import app.ehrenamtskarte.backend.db.entities.mayViewApplicationsInRegion
@@ -8,14 +9,13 @@ import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantDateOfBi
 import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantFirstName
 import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantLastName
 import app.ehrenamtskarte.backend.graphql.application.utils.getPersonalDataNode
-import app.ehrenamtskarte.backend.graphql.context
+import app.ehrenamtskarte.backend.graphql.auth.requireAuthContext
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidInputException
+import app.ehrenamtskarte.backend.graphql.exceptions.NotImplementedException
 import app.ehrenamtskarte.backend.graphql.freinet.exceptions.FreinetFoundMultiplePersonsException
 import app.ehrenamtskarte.backend.graphql.freinet.exceptions.FreinetPersonDataInvalidException
 import app.ehrenamtskarte.backend.graphql.freinet.types.FreinetCard
 import app.ehrenamtskarte.backend.graphql.freinet.util.FreinetApi
-import app.ehrenamtskarte.backend.graphql.getAuthContext
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidInputException
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.NotImplementedException
 import app.ehrenamtskarte.backend.shared.exceptions.NotFoundException
 import app.ehrenamtskarte.backend.shared.exceptions.UnauthorizedException
 import app.ehrenamtskarte.backend.shared.utils.devWarn
@@ -23,20 +23,26 @@ import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.MutationMapping
+import org.springframework.stereotype.Controller
 
-@Suppress("unused")
-class FreinetApplicationMutationService {
-    private val logger = LoggerFactory.getLogger(FreinetApplicationMutationService::class.java)
+@Controller
+class FreinetApplicationMutationController(
+    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
+    private val backendConfiguration: BackendConfiguration,
+) {
+    private val logger = LoggerFactory.getLogger(FreinetApplicationMutationController::class.java)
 
     @GraphQLDescription("Send application and card information to Freinet")
+    @MutationMapping
     fun sendApplicationAndCardDataToFreinet(
-        applicationId: Int,
-        freinetCard: FreinetCard,
+        @Argument applicationId: Int,
+        @Argument freinetCard: FreinetCard,
         dfe: DataFetchingEnvironment,
     ): Boolean {
-        val context = dfe.graphQlContext.context
-        val authContext = context.getAuthContext()
-        val projectConfig = context.backendConfiguration.getProjectConfig(authContext.project)
+        val authContext = dfe.requireAuthContext()
+        val projectConfig = backendConfiguration.getProjectConfig(authContext.project)
 
         if (projectConfig.freinet == null) {
             throw NotImplementedException()

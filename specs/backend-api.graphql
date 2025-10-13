@@ -117,6 +117,13 @@ type DynamicActivationCodeResult {
   codeBase64: String!
 }
 
+type FreinetAgency {
+  agencyId: Int!
+  agencyName: String!
+  apiAccessKey: String!
+  dataTransferActivated: Boolean!
+}
+
 type Mutation {
   "Activate a dynamic entitlement card"
   activateCard(activationSecretBase64: String!, cardInfoHashBase64: String!, overwrite: Boolean!, project: String!): CardActivationResultModel!
@@ -148,6 +155,8 @@ type Mutation {
   rejectApplicationStatus(applicationId: Int!, rejectionMessage: String!): ApplicationAdmin!
   "Reset the administrator's password"
   resetPassword(email: String!, newPassword: String!, passwordResetKey: String!, project: String!): Boolean!
+  "Send application and card information to Freinet"
+  sendApplicationAndCardDataToFreinet(applicationId: Int!, freinetCard: FreinetCardInput!): Boolean!
   "Send approval mail to organisation"
   sendApprovalMailToOrganisation(applicationId: Int!, applicationVerificationId: Int!): Boolean!
   "Sends a confirmation mail to the user when the card creation was successful"
@@ -162,6 +171,8 @@ type Mutation {
   updateApplicationNote(applicationId: Int!, noteText: String!): Boolean!
   "Updates the data privacy policy of a region"
   updateDataPrivacy(dataPrivacyText: String!, regionId: Int!): Boolean!
+  "Updates the data transfer to freinet. Works only for the EAK project."
+  updateDataTransferToFreinet(dataTransferActivated: Boolean!, regionId: Int!): Boolean!
   "Updates the notification settings"
   updateNotificationSettings(notificationSettings: NotificationSettingsInput!): Boolean!
   "Updates the region specific settings"
@@ -194,6 +205,8 @@ type Query {
   getCardStatisticsInProject(dateEnd: String!, dateStart: String!): [CardStatisticsResultModel!]!
   "Returns card statistics for region. Start and end dates are inclusive."
   getCardStatisticsInRegion(dateEnd: String!, dateStart: String!, regionId: Int!): [CardStatisticsResultModel!]!
+  "Returns freinet agency information for a particular region. Works only for the EAK project."
+  getFreinetAgencyByRegionId(regionId: Int!): FreinetAgency
   "Get the pepper for Koblenz user hashing"
   getHashingPepper: String!
   "Get the notification settings of the authenticated administrator"
@@ -424,6 +437,11 @@ input DateInput {
 "An email address with at most 300 characters"
 input EmailInput {
   email: String!
+}
+
+input FreinetCardInput {
+  cardType: String!
+  expirationDate: String
 }
 
 "Entitlement for a golden EAK. The field selected by entitlementType must not be null; all others must be null."
