@@ -1,10 +1,10 @@
 import { MockedProvider as ApolloProvider } from '@apollo/client/testing'
-import { OverlayToaster } from '@blueprintjs/core'
 import { act, renderHook } from '@testing-library/react'
 import { mocked } from 'jest-mock'
 import React, { ReactNode } from 'react'
 import { MemoryRouter } from 'react-router'
 
+import { AppSnackbarProvider } from '../../../AppSnackbar'
 import { generateCardInfo, initializeCard } from '../../../cards/Card'
 import { PdfError, generatePdf } from '../../../cards/PdfFactory'
 import createCards, { CreateCardsError, CreateCardsResult } from '../../../cards/createCards'
@@ -16,7 +16,6 @@ import { ProjectConfig } from '../../../project-configs/getProjectConfig'
 import nuernbergConfig from '../../../project-configs/nuernberg/config'
 import showcaseConfig from '../../../project-configs/showcase/config'
 import downloadDataUri from '../../../util/downloadDataUri'
-import { AppToasterProvider } from '../../AppToaster'
 import { getTestRegion } from '../../user-settings/__mocks__/Region'
 import useCardGenerator from './useCardGenerator'
 
@@ -32,6 +31,15 @@ jest.mock('../../../cards/createCards', () => ({
 }))
 jest.mock('../../../cards/deleteCards')
 jest.mock('../../../util/downloadDataUri')
+
+const enqueueSnackbarMock = jest.fn()
+jest.mock('notistack', () => ({
+  ...jest.requireActual('notistack'),
+  useSnackbar: () => ({
+    enqueueSnackbar: enqueueSnackbarMock,
+  }),
+}))
+
 const wrapper = ({
   children,
   initialRoutes,
@@ -43,9 +51,9 @@ const wrapper = ({
 }) => (
   <MemoryRouter initialEntries={initialRoutes}>
     <ProjectConfigProvider projectConfig={projectConfig ?? showcaseConfig}>
-      <AppToasterProvider>
+      <AppSnackbarProvider>
         <ApolloProvider>{children}</ApolloProvider>
-      </AppToasterProvider>
+      </AppSnackbarProvider>
     </ProjectConfigProvider>
   </MemoryRouter>
 )
@@ -82,7 +90,6 @@ describe('useCardGenerator', () => {
   beforeEach(jest.resetAllMocks)
 
   it('should successfully create multiple cards', async () => {
-    const toasterSpy = jest.spyOn(OverlayToaster.prototype, 'show')
     mocked(createCards).mockReturnValueOnce(Promise.resolve(codes))
     const { result } = renderHook(() => useCardGenerator({ region }), { wrapper })
     act(() => result.current.setCards(cards))
@@ -92,7 +99,7 @@ describe('useCardGenerator', () => {
       await result.current.generateCardsPdf()
     })
 
-    expect(toasterSpy).not.toHaveBeenCalled()
+    expect(enqueueSnackbarMock).not.toHaveBeenCalled()
     expect(createCards).toHaveBeenCalled()
     expect(downloadDataUri).toHaveBeenCalled()
     expect(result.current.cardGenerationStep).toBe('finished')
@@ -100,7 +107,6 @@ describe('useCardGenerator', () => {
   })
 
   it('should show error message for failed card generation', async () => {
-    const toasterSpy = jest.spyOn(OverlayToaster.prototype, 'show')
     mocked(createCards).mockImplementation(() => {
       throw new CreateCardsError('error')
     })
@@ -114,7 +120,7 @@ describe('useCardGenerator', () => {
       await result.current.generateCardsPdf()
     })
 
-    expect(toasterSpy).toHaveBeenCalledWith({ message: 'error', intent: 'danger' })
+    expect(enqueueSnackbarMock).toHaveBeenCalledWith('error', { variant: 'error' })
     expect(downloadDataUri).not.toHaveBeenCalled()
     expect(result.current.cardGenerationStep).toBe('input')
     expect(result.current.cards).toEqual([])
@@ -126,7 +132,6 @@ describe('useCardGenerator', () => {
     mocked(generatePdf).mockImplementationOnce(() => {
       throw new PdfError('error')
     })
-    const toasterSpy = jest.spyOn(OverlayToaster.prototype, 'show')
 
     const { result } = renderHook(() => useCardGenerator({ region }), { wrapper })
 
@@ -137,7 +142,7 @@ describe('useCardGenerator', () => {
       await result.current.generateCardsPdf()
     })
 
-    expect(toasterSpy).toHaveBeenCalledWith(expect.objectContaining({ intent: 'danger' }))
+    expect(enqueueSnackbarMock).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ variant: 'error' }))
     expect(deleteCards).toHaveBeenCalled()
     expect(deleteCards).toHaveBeenCalledWith(expect.anything(), region.id, codes)
     expect(downloadDataUri).not.toHaveBeenCalled()

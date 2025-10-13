@@ -3,7 +3,7 @@ import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import { Box, Typography } from '@mui/material'
-import { SnackbarProvider, useSnackbar } from 'notistack'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement, useCallback, useContext, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -80,9 +80,7 @@ const ApplyController = (): React.ReactElement | null => {
   const submit = () => {
     const validationResult = ApplicationForm.validate(state, { regions })
     if (validationResult.type === 'error') {
-      enqueueSnackbar(t('invalidInputError'), {
-        variant: 'error',
-      })
+      enqueueSnackbar(t('invalidInputError'), { variant: 'error' })
       return
     }
     const [regionId, application] = validationResult.value
@@ -122,11 +120,9 @@ const ApplyController = (): React.ReactElement | null => {
 }
 
 const ApplyApp = (): ReactElement => (
-  <SnackbarProvider>
-    <ApplicationErrorBoundary>
-      <ApplyController />
-    </ApplicationErrorBoundary>
-  </SnackbarProvider>
+  <ApplicationErrorBoundary>
+    <ApplyController />
+  </ApplicationErrorBoundary>
 )
 
 export default ApplyApp

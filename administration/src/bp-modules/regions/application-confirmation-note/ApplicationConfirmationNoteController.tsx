@@ -1,3 +1,4 @@
+import { useSnackbar } from 'notistack'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -7,7 +8,6 @@ import {
   useUpdateApplicationConfirmationNoteMutation,
 } from '../../../generated/graphql'
 import getQueryResult from '../../../mui-modules/util/getQueryResult'
-import { useAppToaster } from '../../AppToaster'
 import ApplicationConfirmationNoteCard from './ApplicationConfirmationNoteCard'
 
 type ApplicationConfirmationNoteControllerProps = {
@@ -17,7 +17,7 @@ type ApplicationConfirmationNoteControllerProps = {
 const ApplicationConfirmationNoteController = ({
   regionId,
 }: ApplicationConfirmationNoteControllerProps): ReactElement => {
-  const appToaster = useAppToaster()
+  const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('regionSettings')
   const applicationConfirmationNoteQuery = useGetApplicationConfirmationNoteInformationQuery({
     variables: { regionId },
@@ -26,10 +26,10 @@ const ApplicationConfirmationNoteController = ({
   const [updateApplicationConfirmationNote, { loading }] = useUpdateApplicationConfirmationNoteMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appToaster?.show({ intent: 'danger', message: title })
+      enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: () => {
-      appToaster?.show({ intent: 'success', message: t('applicationConfirmationMailNoteSavedSuccessful') })
+      enqueueSnackbar(t('applicationConfirmationMailNoteSavedSuccessful'), { variant: 'success' })
       applicationConfirmationNoteQuery.refetch({ regionId })
     },
   })

@@ -3,7 +3,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { fireEvent } from '@testing-library/react'
 import React, { ReactNode } from 'react'
 
-import { AppToasterProvider } from '../../../bp-modules/AppToaster'
+import { AppSnackbarProvider } from '../../../AppSnackbar'
 import koblenzConfig from '../../../project-configs/koblenz/config'
 import nuernbergConfig from '../../../project-configs/nuernberg/config'
 import { renderWithTranslation } from '../../../testing/render'
@@ -12,7 +12,7 @@ import BirthdayExtension, { minBirthday } from '../BirthdayExtension'
 
 const wrapper = ({ children }: { children: ReactNode }) => (
   <LocalizationProvider dateAdapter={AdapterDateFns}>
-    <AppToasterProvider>{children}</AppToasterProvider>
+    <AppSnackbarProvider>{children}</AppSnackbarProvider>
   </LocalizationProvider>
 )
 

@@ -1,4 +1,4 @@
-import { SnackbarProvider, useSnackbar } from 'notistack'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
@@ -121,11 +121,7 @@ const ControllerWithAccessKey = (): ReactElement => {
     )
   }
 
-  return (
-    <SnackbarProvider>
-      <ApplicationVerificationController applicationVerificationAccessKey={applicationVerificationAccessKey} />
-    </SnackbarProvider>
-  )
+  return <ApplicationVerificationController applicationVerificationAccessKey={applicationVerificationAccessKey} />
 }
 
 export default ControllerWithAccessKey

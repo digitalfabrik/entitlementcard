@@ -1,5 +1,4 @@
 import { Stack } from '@mui/material'
-import { SnackbarProvider } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
@@ -78,11 +77,7 @@ const ControllerWithAccessKey = (): ReactElement | null => {
   if (!accessKey) {
     return null
   }
-  return (
-    <SnackbarProvider>
-      <ApplicationApplicantController providedKey={accessKey} />
-    </SnackbarProvider>
-  )
+  return <ApplicationApplicantController providedKey={accessKey} />
 }
 
 export default ControllerWithAccessKey
