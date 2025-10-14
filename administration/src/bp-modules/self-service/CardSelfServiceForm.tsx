@@ -1,6 +1,6 @@
 import { Close } from '@mui/icons-material'
 import InfoOutlined from '@mui/icons-material/InfoOutlined'
-import { Button, Stack } from '@mui/material'
+import { Button, Link, Stack } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -130,15 +130,15 @@ const CardSelfServiceForm = ({
         <>
           {t('whereToFindReferenceNumberExplanation')} <br />
           {t('moreInformationAndExamples')}
-          <a
+          <Link
             href='https://www.koblenz.de/leben-in-koblenz/soziales/koblenzpass/#accordion-2-4'
             target='_blank'
             rel='noreferrer'>
             www.koblenz.de/koblenzpass
-          </a>
+          </Link>
           . <br />
           <br /> {t('forQuestionsPleaseContact')}
-          <a href='mailto:koblenzpass@stadt.koblenz.de'>koblenzpass@stadt.koblenz.de</a>.
+          <Link href='mailto:koblenzpass@stadt.koblenz.de'>koblenzpass@stadt.koblenz.de</Link>.
         </>
       </ConfirmDialog>
       <ConfirmDialog

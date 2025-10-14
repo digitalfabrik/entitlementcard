@@ -1,4 +1,4 @@
-import { Button, Typography, styled } from '@mui/material'
+import { Button, Link, Typography, styled } from '@mui/material'
 import { TFunction } from 'i18next'
 import React, { ReactElement } from 'react'
 import { Trans } from 'react-i18next'
@@ -37,9 +37,9 @@ export const ActivationText = (
         {' '}
         {t('openOnMobileDevice')}
         <br />
-        <a href={downloadLink} target='_blank' rel='noreferrer'>
+        <Link href={downloadLink} target='_blank' rel='noreferrer'>
           {downloadLink}
-        </a>
+        </Link>
       </Typography>
       <Typography component='li' variant='body2'>
         {t('explanation')}{' '}

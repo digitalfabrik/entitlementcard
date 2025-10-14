@@ -1,7 +1,6 @@
-import { AppBar, Divider, Stack, SvgIcon, Toolbar, Typography } from '@mui/material'
+import { AppBar, Divider, Link, Stack, SvgIcon, Toolbar, Typography } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NavLink } from 'react-router'
 
 import { useWhoAmI } from '../WhoAmIProvider'
 import EntitlementIcon from '../assets/icons/entitlement_icon_outline.svg'
@@ -26,18 +25,28 @@ const NavigationBar = (): ReactElement => {
         <SvgIcon fontSize='large'>
           <EntitlementIcon />
         </SvgIcon>
-        <NavLink to='/' style={{ color: 'inherit', textDecoration: 'none', margin: '0 12px' }}>
+        <Link
+          color='inherit'
+          href='/'
+          underline='none'
+          sx={{ '&:hover': { textDecoration: 'none', color: 'inherit' } }}
+          marginX={1.5}>
           <Stack>
-            <Typography>
+            <Typography variant='body2' component='span'>
               {config.name} {t('administration')}
             </Typography>
-            {!region ? null : (
+            <Stack direction='row' sx={{ gap: 1 }}>
+              {!region ? null : (
+                <Typography variant='body2' component='span'>
+                  {region.prefix} {region.name}
+                </Typography>
+              )}
               <Typography variant='body2' component='span'>
-                {region.prefix} {region.name} {`(${process.env.REACT_APP_VERSION})`}
+                {`(${process.env.REACT_APP_VERSION})`}
               </Typography>
-            )}
+            </Stack>
           </Stack>
-        </NavLink>
+        </Link>
         <Divider orientation='vertical' variant='middle' flexItem />
         <Stack direction='row' sx={{ flexGrow: 1, gap: 1, paddingX: 1 }}>
           <NavigationItems variant='text' />

@@ -2,7 +2,6 @@ import { Box, Button, Card, TextField, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useSendResetMailMutation } from '../../generated/graphql'
@@ -53,9 +52,9 @@ const ForgotPasswordController = (): ReactElement => {
               {t('checkSpamHint')}
             </Typography>
             <Box sx={{ marginTop: 3 }}>
-              <Link to='/'>
-                <Button variant='text'>{t('toLogin')}</Button>
-              </Link>
+              <Button href='/' variant='text'>
+                {t('toLogin')}
+              </Button>
             </Box>
           </>
         ) : (
@@ -79,9 +78,9 @@ const ForgotPasswordController = (): ReactElement => {
                 placeholder='erika.musterfrau@example.org'
               />
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 3 }}>
-                <Link to='/'>
-                  <Button variant='text'>{t('backToLogin')}</Button>
-                </Link>
+                <Button href='/' variant='text'>
+                  {t('backToLogin')}
+                </Button>
                 <Button type='submit' variant='contained' color='primary' loading={loading} disabled={email === ''}>
                   {t('resetPassword')}
                 </Button>

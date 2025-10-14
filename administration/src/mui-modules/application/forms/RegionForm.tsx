@@ -1,4 +1,4 @@
-import { Alert, CircularProgress, Typography } from '@mui/material'
+import { Alert, CircularProgress, Link, Typography } from '@mui/material'
 import { styled } from '@mui/system'
 import { TFunction } from 'i18next'
 import React, { useContext, useEffect } from 'react'
@@ -127,22 +127,22 @@ const RegionForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
       <>
         <Typography>
           {t('regionSelectionDescriptionStart')}
-          <a
+          <Link
             href='https://www.ehrenamt.bayern.de/vorteile-wettbewerbe/ehrenamtskarte/'
             target='_blank'
             rel='noreferrer'>
             {t('misc:clickHere')}
-          </a>{' '}
+          </Link>{' '}
           {t('regionSelectionDescriptionEnd')}
           .
           <br />
           <Trans i18nKey='applicationForms:regionSelectionListTextStart' />{' '}
-          <a
+          <Link
             href='https://www.ehrenamt.bayern.de/vorteile-wettbewerbe/ehrenamtskarte/landkreise.php'
             target='_blank'
             rel='noreferrer'>
             {t('misc:clickHere')}
-          </a>{' '}
+          </Link>{' '}
           {t('regionSelectionListTextEnd')}
         </Typography>
         {renderAlert(state, postalCode, regionQuery, t)}

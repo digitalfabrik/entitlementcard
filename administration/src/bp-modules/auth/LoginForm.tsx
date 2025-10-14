@@ -1,7 +1,6 @@
 import { Box, Button, FormControl, InputLabel, Stack, TextField } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router'
 
 import PasswordInput from '../PasswordInput'
 
@@ -56,9 +55,9 @@ const LoginForm = ({
           />
         </FormControl>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Link to='/forgot-password'>
-            <Button variant='text'>{t('forgotPassword')}</Button>
-          </Link>
+          <Button href='/forgot-password' variant='text'>
+            {t('forgotPassword')}
+          </Button>
           <Button type='submit' variant='contained' color='primary' loading={loading}>
             {t('signIn')}
           </Button>
