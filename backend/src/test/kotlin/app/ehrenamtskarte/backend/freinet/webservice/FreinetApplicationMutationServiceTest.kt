@@ -79,7 +79,7 @@ internal class FreinetApplicationMutationServiceTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Error NOT_IMPLEMENTED occurred.", error.message)
+        assertEquals("Freinet is not configured in this project", error.message)
 
         verify(exactly = 0) { anyConstructed<FreinetApi>().searchPersons(any(), any(), any()) }
     }

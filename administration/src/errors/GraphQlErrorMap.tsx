@@ -161,6 +161,11 @@ const graphQlErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
         title: i18next.t('errors:freinetPersonDataInvalid'),
       }
     }
+    case GraphQlExceptionCode.NotImplemented: {
+      return {
+        title: i18next.t('errors:functionNotAvailable'),
+      }
+    }
     default:
       return {
         title: defaultError.title,

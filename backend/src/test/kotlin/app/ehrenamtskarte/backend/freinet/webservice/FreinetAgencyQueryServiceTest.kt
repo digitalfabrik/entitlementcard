@@ -33,7 +33,7 @@ internal class FreinetAgencyQueryServiceTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Error NOT_IMPLEMENTED occurred.", error.message)
+        assertEquals("Freinet is not configured in this project", error.message)
     }
 
     @Test
