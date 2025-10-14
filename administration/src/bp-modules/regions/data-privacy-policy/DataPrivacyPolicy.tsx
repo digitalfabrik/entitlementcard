@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import styled from 'styled-components'
 
@@ -10,17 +11,12 @@ const Container = styled.div`
   flex-direction: column;
   align-self: center;
 `
-const Title = styled.h1`
-  margin: 10px;
-  text-align: center;
-  font-size: 1.5rem;
-`
 
 const DataPrivacyPolicy = (): ReactElement => {
   const config = useContext(ProjectConfigContext)
   return (
     <Container>
-      <Title>{config.dataPrivacyHeadline}</Title>
+      <Typography variant='h4'>{config.dataPrivacyHeadline}</Typography>
       <config.dataPrivacyContent />
       {config.dataPrivacyAdditionalBaseContent && <config.dataPrivacyAdditionalBaseContent />}
     </Container>

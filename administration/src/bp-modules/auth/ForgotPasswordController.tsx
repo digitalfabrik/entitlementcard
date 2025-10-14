@@ -46,8 +46,12 @@ const ForgotPasswordController = (): ReactElement => {
         </Typography>
         {finished ? (
           <>
-            <Typography variant='body2'>{t('resetPasswordSuccessMessage', { email })}</Typography>
-            <Typography variant='body2'>{t('checkSpamHint')}</Typography>
+            <Typography variant='body2' component='p'>
+              {t('resetPasswordSuccessMessage', { email })}
+            </Typography>
+            <Typography variant='body2' component='p'>
+              {t('checkSpamHint')}
+            </Typography>
             <Box sx={{ marginTop: 3 }}>
               <Link to='/'>
                 <Button variant='text'>{t('toLogin')}</Button>

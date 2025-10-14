@@ -31,7 +31,7 @@ const DownloadPage = (): ReactElement => {
         src={`/icons/${config.projectId}.png`}
         aria-hidden
       />
-      <Typography variant='h5' component='h1' fontWeight={600}>
+      <Typography variant='h5' component='h1'>
         {config.name}
       </Typography>
       <MUILink

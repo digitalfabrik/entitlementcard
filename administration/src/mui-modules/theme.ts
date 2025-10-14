@@ -194,5 +194,15 @@ export const theme = (config: ProjectConfig): Theme =>
           },
         },
       },
+      MuiTypography: {
+        variants: [
+          {
+            props: { component: 'p' },
+            style: {
+              marginBottom: 8,
+            },
+          },
+        ],
+      },
     },
   })
