@@ -12,6 +12,7 @@ import app.ehrenamtskarte.backend.generated.AddEakApplication
 import app.ehrenamtskarte.backend.generated.enums.ApplicationType
 import app.ehrenamtskarte.backend.generated.inputs.ApplicationInput
 import app.ehrenamtskarte.backend.graphql.application.ApplicationHandler
+import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestApplicationBuilder
 import app.ehrenamtskarte.backend.helper.TestData
@@ -137,8 +138,8 @@ internal class Verein360ApplicationTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Error INVALID_JSON occurred.", error.message)
-        assertEquals(testCase.error, error.extensions?.reason)
+        assertEquals(testCase.error, error.message)
+        assertEquals(GraphQLExceptionCode.INVALID_INPUT, error.extensions?.code)
     }
 
     @Test
@@ -154,7 +155,7 @@ internal class Verein360ApplicationTest : IntegrationTest() {
         val error = response.toErrorObject()
 
         assertEquals("Error REGION_NOT_FOUND occurred.", error.message)
-        assertEquals("REGION_NOT_FOUND", error.extensions?.code)
+        assertEquals(GraphQLExceptionCode.REGION_NOT_FOUND, error.extensions?.code)
     }
 
     @Test

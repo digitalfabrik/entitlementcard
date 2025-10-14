@@ -1,8 +1,10 @@
 package app.ehrenamtskarte.backend.graphql.exceptions
 
 import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
+import graphql.ErrorType
 
-class InvalidInputException(reason: String) : GraphQLBaseException(
+class InvalidInputException(message: String) : GraphQLBaseException(
     GraphQLExceptionCode.INVALID_INPUT,
-    mapOf("reason" to reason),
+    message = message,
+    errorType = ErrorType.ValidationError,
 )

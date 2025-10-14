@@ -4,6 +4,7 @@ import app.ehrenamtskarte.backend.IntegrationTest
 import app.ehrenamtskarte.backend.db.entities.FreinetAgencies
 import app.ehrenamtskarte.backend.db.entities.FreinetAgenciesEntity
 import app.ehrenamtskarte.backend.generated.UpdateDataTransferToFreinet
+import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.toDataObject
 import app.ehrenamtskarte.backend.helper.toErrorObject
@@ -48,6 +49,7 @@ internal class FreinetAgencyMutationServiceTest : IntegrationTest() {
         val error = response.toErrorObject()
 
         assertEquals("Freinet is not configured in this project", error.message)
+        assertEquals(GraphQLExceptionCode.NOT_IMPLEMENTED, error.extensions?.code)
     }
 
     @Test

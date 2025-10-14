@@ -16,11 +16,15 @@ class GraphQLExceptionHandler {
     private val logger = LoggerFactory.getLogger(GraphQLExceptionHandler::class.java)
 
     @GraphQlExceptionHandler
-    fun handleGraphQLException(ex: Exception, env: DataFetchingEnvironment): GraphQLError =
+    fun handleGraphQLBaseException(ex: GraphQLBaseException, env: DataFetchingEnvironment): GraphQLError =
+        ex.toError(
+            path = env.executionStepInfo.path,
+            location = env.field.sourceLocation,
+        )
+
+    @GraphQlExceptionHandler
+    fun handleGenericException(ex: Exception, env: DataFetchingEnvironment): GraphQLError =
         when (ex) {
-            is GraphQLBaseException -> {
-                ex.toError(env.executionStepInfo.path, env.field.sourceLocation)
-            }
             is NotFoundException -> buildError(env, ErrorType.NOT_FOUND, ex.message)
             is UnauthorizedException -> buildError(env, ErrorType.UNAUTHORIZED, ex.message)
             is ForbiddenException -> buildError(env, ErrorType.FORBIDDEN, ex.message)

@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.helper
 
+import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -57,6 +58,6 @@ data class GraphQLErrorModel(
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class GraphQLErrorExtensions(
     val classification: String?,
-    val code: String?,
+    val code: GraphQLExceptionCode?,
     val reason: String?,
 )

@@ -8,18 +8,23 @@ import graphql.language.SourceLocation
 
 open class GraphQLBaseException(
     val code: GraphQLExceptionCode,
-    extraExtensions: Map<String, Any> = emptyMap(),
-    private val errorType: ErrorType = ErrorType.DataFetchingException,
-) : Exception() {
-    override val message: String? = "Exception for GraphQL error $code was thrown."
-    private val extensions: Map<String, Any> = extraExtensions.plus("code" to code)
+    val extraExtensions: Map<String, Any> = emptyMap(),
+    val errorType: ErrorType = ErrorType.DataFetchingException,
+    override val message: String = "Error $code occurred.",
+) : RuntimeException(message) {
+    val extensions: Map<String, Any> = buildMap {
+        put("code", code)
+        putAll(extraExtensions)
+    }
 
     fun toError(path: ResultPath? = null, location: SourceLocation? = null): GraphQLError =
         GraphQLError.newError()
             .errorType(errorType)
-            .message("Error $code occurred.")
+            .message(message)
             .extensions(extensions)
-            .path(path)
-            .location(location)
+            .apply {
+                path?.let { path(it) }
+                location?.let { location(it) }
+            }
             .build()
 }
