@@ -2,10 +2,10 @@ import { Colors } from '@blueprintjs/core'
 import ForwardToInboxIcon from '@mui/icons-material/ForwardToInbox'
 import { Box, Button, Typography } from '@mui/material'
 import { TFunction } from 'i18next'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useAppToaster } from '../../bp-modules/AppToaster'
 import EmailLink from '../../bp-modules/EmailLink'
 import { ApplicationVerificationView, useSendApprovalMailToOrganisationMutation } from '../../generated/graphql'
 import { isEmailValid, verificationStatus } from '../verifications'
@@ -40,17 +40,17 @@ const VerificationListItem = ({
   showResendApprovalEmailButton: boolean
 }): ReactElement => {
   const { t } = useTranslation('applicationsOverview')
-  const appToaster = useAppToaster()
+  const { enqueueSnackbar } = useSnackbar()
   const [isApprovalRequestSent, setIsApprovalRequestSent] = useState(false)
   const status = verificationStatus(verification)
   const { text, color } = getStatusMetaData(verification, t)
 
   const [sendApprovalEmail, sendApprovalEmailResult] = useSendApprovalMailToOrganisationMutation({
     onError: () => {
-      appToaster?.show({ intent: 'danger', message: t('failedToSendApprovalRequest') })
+      enqueueSnackbar(t('failedToSendApprovalRequest'), { variant: 'error' })
     },
     onCompleted: () => {
-      appToaster?.show({ intent: 'success', message: t('approvalRequestSentSuccessfully') })
+      enqueueSnackbar(t('approvalRequestSentSuccessfully'), { variant: 'success' })
     },
   })
   const onSendApprovalEmailClick = () => {

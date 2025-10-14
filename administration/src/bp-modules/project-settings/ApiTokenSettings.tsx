@@ -1,6 +1,7 @@
 import { HTMLSelect, HTMLTable } from '@blueprintjs/core'
 import { Delete } from '@mui/icons-material'
 import { Button, Typography } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -15,7 +16,6 @@ import {
 import ConfirmDialog from '../../mui-modules/application/ConfirmDialog'
 import getQueryResult from '../../mui-modules/util/getQueryResult'
 import { formatDate } from '../../util/formatDate'
-import { useAppToaster } from '../AppToaster'
 import SettingsCard from '../user-settings/SettingsCard'
 import PepperSettings from './PepperSettings'
 
@@ -58,7 +58,7 @@ type ApiTokenSettingsProps = {
 const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactElement => {
   const metaDataQuery = useGetApiTokenMetaDataQuery({})
 
-  const appToaster = useAppToaster()
+  const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('projectSettings')
 
   const [tokenMetaData, setTokenMetadata] = useState<Array<ApiTokenMetaData>>([])
@@ -77,30 +77,24 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
 
   const [createToken] = useCreateApiTokenMutation({
     onCompleted: result => {
-      appToaster?.show({ intent: 'success', message: t('tokenCreateSuccessMessage') })
+      enqueueSnackbar(t('tokenCreateSuccessMessage'), { variant: 'success' })
       setCreatedToken(result.createApiTokenPayload)
       metaDataQuery.refetch()
     },
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appToaster?.show({
-        intent: 'danger',
-        message: title,
-      })
+      enqueueSnackbar(title, { variant: 'error' })
     },
   })
 
   const [deleteToken] = useDeleteApiTokenMutation({
     onCompleted: () => {
-      appToaster?.show({ intent: 'success', message: t('tokenDeleteSuccessMessage') })
+      enqueueSnackbar(t('tokenDeleteSuccessMessage'), { variant: 'success' })
       metaDataQuery.refetch()
     },
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appToaster?.show({
-        intent: 'danger',
-        message: title,
-      })
+      enqueueSnackbar(title, { variant: 'error' })
     },
   })
 

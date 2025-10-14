@@ -25,6 +25,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { memo, useContext, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useReactToPrint } from 'react-to-print'
@@ -45,7 +46,6 @@ import JsonFieldView from '../../shared/components/JsonFieldView'
 import VerificationsView from '../../shared/components/VerificationsView'
 import { ApplicationDataIncompleteError } from '../../util/applicationDataHelper'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
-import { useAppToaster } from '../AppToaster'
 import { AccordionExpandButton } from '../components/AccordionExpandButton'
 import { ApplicationPrintView, applicationPrintViewPageStyle } from './ApplicationPrintView'
 import NoteDialogController from './NoteDialogController'
@@ -218,7 +218,7 @@ const ApplicationCard = ({
   const theme = useTheme()
   const config = useContext(ProjectConfigContext)
   const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${application.id}`
-  const appToaster = useAppToaster()
+  const { enqueueSnackbar } = useSnackbar()
   const printContentRef = useRef<HTMLDivElement>(null)
   const printApplication = useReactToPrint({
     contentRef: printContentRef,
@@ -233,14 +233,14 @@ const ApplicationCard = ({
   const [deleteApplication, deleteResult] = useDeleteApplicationMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appToaster?.show({ intent: 'danger', message: title })
+      enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: ({ deleted }: { deleted: boolean }) => {
       if (deleted) {
         onDelete()
       } else {
         console.error('Delete operation returned false.')
-        appToaster?.show({ intent: 'danger', message: t('errors:unknown') })
+        enqueueSnackbar(t('errors:unknown'), { variant: 'error' })
       }
     },
   })
@@ -248,25 +248,25 @@ const ApplicationCard = ({
   const [approveStatus, approveStatusResult] = useApproveApplicationStatusMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appToaster?.show({ intent: 'danger', message: title })
+      enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: result => {
       // Update the application with new fields from the query
       onChange({ ...application, ...result.updates })
-      appToaster?.show({ intent: 'success', message: t('applicationApprovedToastMessage') })
+      enqueueSnackbar(t('applicationApprovedToastMessage'), { variant: 'success' })
     },
   })
 
   const [rejectStatus, rejectStatusResult] = useRejectApplicationStatusMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appToaster?.show({ intent: 'danger', message: title })
+      enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: result => {
       setRejectionDialogOpen(false)
       // Update the application with new fields from the query
       onChange({ ...application, ...result.application })
-      appToaster?.show({ intent: 'success', message: t('applicationRejectedToastMessage') })
+      enqueueSnackbar(t('applicationRejectedToastMessage'), { variant: 'success' })
     },
   })
 
@@ -283,7 +283,7 @@ const ApplicationCard = ({
           exportApplicationToCsv(application, config)
         } catch (error) {
           if (error instanceof ApplicationToCsvError || error instanceof ApplicationDataIncompleteError) {
-            appToaster?.show({ message: error.message, intent: 'danger' })
+            enqueueSnackbar(error.message, { variant: 'error' })
           }
         }
       },

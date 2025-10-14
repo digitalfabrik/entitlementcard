@@ -1,5 +1,5 @@
 import { ApolloError } from '@apollo/client'
-import { Toaster } from '@blueprintjs/core'
+import { EnqueueSnackbar } from 'notistack'
 import React from 'react'
 
 import { CsvError } from '../../cards/CsvFactory'
@@ -10,34 +10,18 @@ import i18next from '../../i18n'
 import FormAlert from '../../mui-modules/base/FormAlert'
 import { reportErrorToSentry } from '../../util/sentry'
 
-export const showCardGenerationError = (appToaster: Toaster, error: unknown): void => {
+export const showCardGenerationError = (enqueueSnackbar: EnqueueSnackbar, error: unknown): void => {
   if (error instanceof CreateCardsError) {
-    appToaster.show({
-      message: error.message,
-      intent: 'danger',
-    })
+    enqueueSnackbar(error.message, { variant: 'error' })
   } else if (error instanceof ApolloError) {
     const { title } = getMessageFromApolloError(error)
-    appToaster.show({
-      message: <FormAlert isToast errorMessage={title} />,
-      timeout: 8000,
-      intent: 'danger',
-    })
+    enqueueSnackbar(<FormAlert isToast errorMessage={title} />, { variant: 'error', autoHideDuration: 8000 })
   } else if (error instanceof PdfError) {
-    appToaster.show({
-      message: i18next.t('errors:pdfCreationError'),
-      intent: 'danger',
-    })
+    enqueueSnackbar(i18next.t('errors:pdfCreationError'), { variant: 'error' })
   } else if (error instanceof CsvError) {
-    appToaster.show({
-      message: i18next.t('errors:csvCreationError'),
-      intent: 'danger',
-    })
+    enqueueSnackbar(i18next.t('errors:csvCreationError'), { variant: 'error' })
   } else {
-    appToaster.show({
-      message: i18next.t('errors:unknownError'),
-      intent: 'danger',
-    })
+    enqueueSnackbar(i18next.t('errors:unknownError'), { variant: 'error' })
     reportErrorToSentry(error)
   }
 }

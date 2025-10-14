@@ -1,4 +1,5 @@
 import { CircularProgress, styled } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -8,7 +9,6 @@ import { Role, useImportAcceptingStoresMutation } from '../../generated/graphql'
 import RenderGuard from '../../mui-modules/components/RenderGuard'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { StoresFieldConfig } from '../../project-configs/getProjectConfig'
-import { useAppToaster } from '../AppToaster'
 import { AcceptingStoresEntry } from './AcceptingStoresEntry'
 import StoresButtonBar from './StoresButtonBar'
 import StoresCSVInput from './StoresCSVInput'
@@ -31,29 +31,28 @@ export type StoresData = {
 }
 const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
   const navigate = useNavigate()
-  const appToaster = useAppToaster()
+  const { enqueueSnackbar } = useSnackbar()
   const [acceptingStores, setAcceptingStores] = useState<AcceptingStoresEntry[]>([])
   const [dryRun, setDryRun] = useState<boolean>(false)
   const [isLoadingCoordinates, setIsLoadingCoordinates] = useState(false)
   const [importStores, { loading: isApplyingStoreTransaction }] = useImportAcceptingStoresMutation({
     onCompleted: ({ result }) => {
-      appToaster?.show({
-        intent: 'none',
-        timeout: 0,
-        message: (
-          <StoresImportResult
-            dryRun={dryRun}
-            storesUntouched={result.storesUntouched}
-            storesDeleted={result.storesDeleted}
-            storesCreated={result.storesCreated}
-          />
-        ),
-      })
+      enqueueSnackbar(
+        <StoresImportResult
+          dryRun={dryRun}
+          storesUntouched={result.storesUntouched}
+          storesDeleted={result.storesDeleted}
+          storesCreated={result.storesCreated}
+        />,
+        {
+          persist: true,
+        }
+      )
       setAcceptingStores([])
     },
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appToaster?.show({ intent: 'danger', message: title })
+      enqueueSnackbar(title, { variant: 'error' })
     },
   })
 

@@ -1,6 +1,7 @@
 import { FormGroup } from '@blueprintjs/core'
 import { PersonAdd } from '@mui/icons-material'
 import { Stack } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -10,7 +11,6 @@ import { Role, useCreateAdministratorMutation } from '../../generated/graphql'
 import ConfirmDialog from '../../mui-modules/application/ConfirmDialog'
 import BaseCheckbox from '../../mui-modules/base/BaseCheckbox'
 import { isEmailValid } from '../../shared/verifications'
-import { useAppToaster } from '../AppToaster'
 import RegionSelector from './RegionSelector'
 import RoleSelector from './RoleSelector'
 
@@ -27,7 +27,7 @@ const CreateUserDialog = ({
   // roles are selectable.
   regionIdOverride: number | null
 }): ReactElement => {
-  const appToaster = useAppToaster()
+  const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('users')
   const [email, setEmail] = useState('')
   const [role, setRole] = useState<Role | null>(null)
@@ -46,10 +46,10 @@ const CreateUserDialog = ({
   const [createAdministrator, { loading }] = useCreateAdministratorMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appToaster?.show({ intent: 'danger', message: title })
+      enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: () => {
-      appToaster?.show({ intent: 'success', message: t('addUserSuccess') })
+      enqueueSnackbar(t('addUserSuccess'), { variant: 'success' })
       onSuccess()
       clearAndCloseDialog()
     },

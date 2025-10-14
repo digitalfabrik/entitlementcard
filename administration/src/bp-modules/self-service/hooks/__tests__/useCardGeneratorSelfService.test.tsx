@@ -1,13 +1,12 @@
 import { MockedProvider, MockedResponse } from '@apollo/client/testing'
-import { OverlayToaster } from '@blueprintjs/core'
 import { act, renderHook } from '@testing-library/react'
 import React, { ReactNode } from 'react'
 import { MemoryRouter } from 'react-router'
 
+import { AppSnackbarProvider } from '../../../../AppSnackbar'
 import { ProjectConfigProvider } from '../../../../project-configs/ProjectConfigContext'
 import koblenzConfig from '../../../../project-configs/koblenz/config'
 import downloadDataUri from '../../../../util/downloadDataUri'
-import { AppToasterProvider } from '../../../AppToaster'
 import { exampleCard, mockedCardMutation } from '../../__mock__/mockSelfServiceCard'
 import useCardGeneratorSelfService from '../useCardGeneratorSelfService'
 
@@ -25,13 +24,21 @@ jest.mock('../../../../cards/PdfFactory', () => ({
 
 jest.mock('../../../../util/downloadDataUri')
 
+const enqueueSnackbarMock = jest.fn()
+jest.mock('notistack', () => ({
+  ...jest.requireActual('notistack'),
+  useSnackbar: () => ({
+    enqueueSnackbar: enqueueSnackbarMock,
+  }),
+}))
+
 const wrapper = ({ children, initialRoutes }: { children: ReactNode; initialRoutes?: string[] }) => (
   <MemoryRouter initialEntries={initialRoutes}>
-    <AppToasterProvider>
+    <AppSnackbarProvider>
       <MockedProvider mocks={mocks} addTypename={false}>
         <ProjectConfigProvider projectConfig={koblenzConfig}>{children}</ProjectConfigProvider>
       </MockedProvider>
-    </AppToasterProvider>
+    </AppSnackbarProvider>
   </MemoryRouter>
 )
 
@@ -44,15 +51,16 @@ const withCustomWrapper =
     })
 
 describe('useCardGeneratorSelfService', () => {
+  beforeEach(jest.resetAllMocks)
+
   it('should successfully create a card', async () => {
-    const toasterSpy = jest.spyOn(OverlayToaster.prototype, 'show')
     mocks.push(mockedCardMutation)
 
     const { result } = renderHook(() => useCardGeneratorSelfService(), { wrapper })
     act(() => result.current.setSelfServiceCard(exampleCard))
     expect(result.current.selfServiceCard).toEqual(exampleCard)
     await act(async () => result.current.generateCards())
-    expect(toasterSpy).not.toHaveBeenCalled()
+    expect(enqueueSnackbarMock).not.toHaveBeenCalled()
     expect(result.current.cardGenerationStep).toBe('information')
     await act(async () => result.current.downloadPdf(result.current.code!, 'koblenzpass.pdf'))
     expect(downloadDataUri).toHaveBeenCalled()
