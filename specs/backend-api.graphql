@@ -112,6 +112,11 @@ type CardVerificationResultModel {
   verificationTimeStamp: String!
 }
 
+type Category {
+  id: Int!
+  name: String!
+}
+
 type DynamicActivationCodeResult {
   cardInfoHashBase64: String!
   codeBase64: String!
@@ -189,6 +194,8 @@ type NotificationSettings {
 }
 
 type Query {
+  "Return list of all categories."
+  categories: [Category!]!
   "Verify password reset link"
   checkPasswordResetLink(project: String!, resetKey: String!): Boolean!
   "Gets metadata of all api tokens for a project"
