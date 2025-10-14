@@ -56,6 +56,37 @@ type ApiTokenMetaData {
   type: ApiTokenType!
 }
 
+type ApplicationAdmin {
+  createdDate: String!
+  id: Int!
+  jsonValue: String!
+  note: String
+  regionId: Int!
+  rejectionMessage: String
+  status: ApplicationStatus!
+  statusResolvedDate: String
+  verifications: [ApplicationVerificationView!]
+}
+
+type ApplicationPublic {
+  createdDate: String!
+  id: Int!
+  jsonValue: String!
+  regionId: Int!
+  status: ApplicationStatus!
+  statusResolvedDate: String
+  verifications: [ApplicationVerificationView!]
+}
+
+type ApplicationVerificationView {
+  contactEmailAddress: String!
+  contactName: String!
+  organizationName: String!
+  rejectedDate: String
+  verificationId: Int!
+  verifiedDate: String
+}
+
 type CardActivationResultModel {
   activationState: ActivationState!
   activationTimeStamp: String!
@@ -127,6 +158,14 @@ type Query {
   checkPasswordResetLink(project: String!, resetKey: String!): Boolean!
   "Gets metadata of all api tokens for a project"
   getApiTokenMetaData: [ApiTokenMetaData!]!
+  "Queries an application by application accessKey"
+  getApplicationByApplicant(accessKey: String!): ApplicationPublic!
+  "Queries an application by application verification accessKey"
+  getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey: String!): ApplicationPublic!
+  "Queries an application verification by application verification accessKey"
+  getApplicationVerification(applicationVerificationAccessKey: String!): ApplicationVerificationView!
+  "Queries all applications for a specific region"
+  getApplications(regionId: Int!): [ApplicationAdmin!]!
   "Get the pepper for Koblenz user hashing"
   getHashingPepper: String!
   "Get the notification settings of the authenticated administrator"
@@ -139,6 +178,8 @@ type Query {
   regionByRegionId(regionId: Int!): Region!
   "Returns regions queried by ids in the given project."
   regionsByIdInProject(ids: [Int!]!, project: String!): [Region]!
+  "Returns regions by postal code. Works only for the EAK project in which each region has an appropriate regionIdentifier."
+  regionsByPostalCode(postalCode: String!, project: String!): [Region!]!
   "Return list of all regions in the given project."
   regionsInProject(project: String!): [Region!]!
   "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid, extendable and a timestamp of the last check"
@@ -180,6 +221,14 @@ enum ActivationState {
 enum ApiTokenType {
   USER_IMPORT
   VERIFIED_APPLICATION
+}
+
+enum ApplicationStatus {
+  Approved
+  ApprovedCardCreated
+  Pending
+  Rejected
+  Withdrawn
 }
 
 enum CodeType {

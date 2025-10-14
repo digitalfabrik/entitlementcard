@@ -8,6 +8,8 @@ import org.springframework.graphql.server.WebGraphQlInterceptor
 import org.springframework.graphql.server.WebGraphQlRequest
 import org.springframework.graphql.server.WebGraphQlResponse
 import org.springframework.stereotype.Component
+import org.springframework.web.context.request.RequestContextHolder
+import org.springframework.web.context.request.ServletRequestAttributes
 import reactor.core.publisher.Mono
 
 /**
@@ -24,7 +26,8 @@ import reactor.core.publisher.Mono
 @Component
 class AuthInterceptor : WebGraphQlInterceptor {
     override fun intercept(request: WebGraphQlRequest, chain: WebGraphQlInterceptor.Chain): Mono<WebGraphQlResponse> {
-        val jwtPayload = JwtService.verifyRequest(request)
+        val servletRequest = (RequestContextHolder.getRequestAttributes() as? ServletRequestAttributes)?.request
+        val jwtPayload = JwtService.verifyRequest(servletRequest)
         val authContext = jwtPayload?.let {
             transaction {
                 (Administrators innerJoin Projects)

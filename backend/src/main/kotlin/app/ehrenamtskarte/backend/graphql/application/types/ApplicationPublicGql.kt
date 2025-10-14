@@ -1,10 +1,11 @@
 package app.ehrenamtskarte.backend.graphql.application.types
 
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
-import app.ehrenamtskarte.backend.graphql.application.verificationsByApplicationLoader
-import app.ehrenamtskarte.backend.graphql.fromEnvironment
+import app.ehrenamtskarte.backend.graphql.application.VerificationsByApplicationDataLoader
 import com.expediagroup.graphql.generator.annotations.GraphQLName
 import graphql.schema.DataFetchingEnvironment
+import org.springframework.graphql.data.method.annotation.SchemaMapping
+import org.springframework.stereotype.Controller
 import java.util.concurrent.CompletableFuture
 
 @GraphQLName("ApplicationPublic")
@@ -15,6 +16,7 @@ data class ApplicationPublicGql(
     val jsonValue: String,
     val status: ApplicationStatus,
     val statusResolvedDate: String?,
+    val verifications: List<ApplicationVerificationView>? = null, // resolved by ApplicationVerificationsResolver
 ) {
     companion object {
         fun fromDbEntity(entity: ApplicationEntity): ApplicationPublicGql =
@@ -28,7 +30,17 @@ data class ApplicationPublicGql(
             )
     }
 
-    @Suppress("unused")
-    fun verifications(dfe: DataFetchingEnvironment): CompletableFuture<List<ApplicationVerificationView>> =
-        verificationsByApplicationLoader.fromEnvironment(dfe).load(id).thenApply { it }
+    @Controller
+    class ApplicationVerificationsResolver {
+        @SchemaMapping(typeName = "ApplicationPublic", field = "verifications")
+        fun verifications(
+            application: ApplicationPublicGql,
+            dfe: DataFetchingEnvironment,
+        ): CompletableFuture<List<ApplicationVerificationView>> {
+            val loader = dfe.getDataLoader<Int, List<ApplicationVerificationView>>(
+                VerificationsByApplicationDataLoader::class.java.name,
+            )
+            return loader?.load(application.id) ?: CompletableFuture.completedFuture(emptyList())
+        }
+    }
 }
