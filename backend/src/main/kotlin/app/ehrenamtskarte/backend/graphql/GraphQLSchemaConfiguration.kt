@@ -7,6 +7,7 @@ import com.expediagroup.graphql.generator.SchemaGeneratorConfig
 import com.expediagroup.graphql.generator.TopLevelObject
 import com.expediagroup.graphql.generator.hooks.SchemaGeneratorHooks
 import com.expediagroup.graphql.generator.toSchema
+import graphql.scalars.ExtendedScalars.GraphQLLong
 import graphql.schema.GraphQLEnumType
 import graphql.schema.GraphQLEnumValueDefinition
 import graphql.schema.GraphQLScalarType
@@ -80,20 +81,22 @@ class GraphQLSchemaConfiguration(
 
     private val hooks = object : SchemaGeneratorHooks {
         override fun willGenerateGraphQLType(type: KType): GraphQLType? =
-            if (type.classifier == UploadKey::class) {
-                uploadScalar
-            } else {
-                null
+            when (type.classifier) {
+                UploadKey::class -> uploadScalar
+                Long::class -> GraphQLLong
+                else -> null
             }
     }
 
     /**
-     * Registers custom "Upload" scalar with Spring's GraphQL runtime.
+     * Registers custom scalar types with Spring's GraphQL runtime.
      * This prevents Spring from autoconfiguring its own, avoiding a conflict.
      */
     @Bean
     fun runtimeWiringConfigurer(): RuntimeWiringConfigurer =
         RuntimeWiringConfigurer { wiringBuilder ->
-            wiringBuilder.scalar(this.uploadScalar)
+            wiringBuilder
+                .scalar(this.uploadScalar)
+                .scalar(GraphQLLong)
         }
 }

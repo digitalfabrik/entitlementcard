@@ -41,6 +41,25 @@ directive @specifiedBy(
     url: String!
   ) on SCALAR
 
+type AcceptingStore {
+  category: Category
+  categoryId: Int!
+  contact: Contact
+  contactId: Int!
+  description: String
+  id: Int!
+  name: String
+  physicalStore: PhysicalStore
+}
+
+type Address {
+  id: Int!
+  location: String
+  postalCode: String
+  state: String
+  street: String
+}
+
 type Administrator {
   email: String!
   id: Int!
@@ -115,6 +134,18 @@ type CardVerificationResultModel {
 type Category {
   id: Int!
   name: String!
+}
+
+type Contact {
+  email: String
+  id: Int!
+  telephone: String
+  website: String
+}
+
+type Coordinates {
+  lat: Float!
+  lng: Float!
 }
 
 type DynamicActivationCodeResult {
@@ -193,6 +224,15 @@ type NotificationSettings {
   notificationOnVerification: Boolean!
 }
 
+type PhysicalStore {
+  address: Address
+  addressId: Int!
+  coordinates: Coordinates!
+  id: Int!
+  store: AcceptingStore
+  storeId: Int!
+}
+
 type Query {
   "Return list of all categories."
   categories: [Category!]!
@@ -222,6 +262,10 @@ type Query {
   getUsersInProject: [Administrator!]!
   "Returns all administrators in a region. This query requires the role REGION_ADMIN or PROJECT_ADMIN."
   getUsersInRegion(regionId: Int!): [Administrator!]!
+  "Returns list of all accepting stores in the given project queried by ids."
+  physicalStoresByIdInProject(ids: [Int!]!, project: String!): [PhysicalStore]!
+  "Returns list of all accepting stores in the given project."
+  physicalStoresInProject(project: String!): [PhysicalStore!]!
   "Returns region data for specific region."
   regionByRegionId(regionId: Int!): Region!
   "Returns regions queried by ids in the given project."
@@ -230,6 +274,8 @@ type Query {
   regionsByPostalCode(postalCode: String!, project: String!): [Region!]!
   "Return list of all regions in the given project."
   regionsInProject(project: String!): [Region!]!
+  "Search for accepting stores in the given project using searchText and categoryIds."
+  searchAcceptingStoresInProject(params: SearchParamsInput!, project: String!): [AcceptingStore!]!
   "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid, extendable and a timestamp of the last check"
   verifyCardInProjectV2(card: CardVerificationModelInput!, project: String!): CardVerificationResultModel!
   "Returns the requesting administrator as retrieved from his JWT token."
@@ -351,6 +397,9 @@ enum Role {
   REGION_MANAGER
 }
 
+"A 64-bit signed integer"
+scalar Long
+
 "A file part in a multipart request"
 scalar Upload
 
@@ -436,6 +485,11 @@ input CardVerificationModelInput {
   totp: Int
 }
 
+input CoordinatesInput {
+  lat: Float!
+  lng: Float!
+}
+
 "A local date in the format yyyy-MM-dd"
 input DateInput {
   date: String!
@@ -504,6 +558,14 @@ input PersonalDataInput {
   forenames: ShortTextInput!
   surname: ShortTextInput!
   telephone: ShortTextInput
+}
+
+input SearchParamsInput {
+  categoryIds: [Int!]
+  coordinates: CoordinatesInput
+  limit: Int
+  offset: Long
+  searchText: String
 }
 
 "A String wrapper that expects a non-empty string with at most 300 characters"
