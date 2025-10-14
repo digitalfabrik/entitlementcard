@@ -17,7 +17,6 @@ import app.ehrenamtskarte.backend.graphql.freinet.exceptions.FreinetPersonDataIn
 import app.ehrenamtskarte.backend.graphql.freinet.types.FreinetCard
 import app.ehrenamtskarte.backend.graphql.freinet.util.FreinetApi
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
-import app.ehrenamtskarte.backend.shared.exceptions.NotFoundException
 import app.ehrenamtskarte.backend.shared.utils.devWarn
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
@@ -50,7 +49,7 @@ class FreinetApplicationMutationController(
 
         return transaction {
             val application = ApplicationEntity.findById(applicationId)
-                ?: throw NotFoundException("Application not found")
+                ?: throw InvalidInputException("Application not found")
 
             if (application.status == Status.Withdrawn) {
                 throw InvalidInputException("Application is withdrawn")

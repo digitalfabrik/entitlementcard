@@ -166,6 +166,11 @@ const graphQlErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
         title: i18next.t('errors:functionNotAvailable'),
       }
     }
+    case GraphQlExceptionCode.ProjectNotFound: {
+      return {
+        title: i18next.t('errors:projectNotFound'),
+      }
+    }
     default:
       return {
         title: defaultError.title,

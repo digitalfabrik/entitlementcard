@@ -17,7 +17,7 @@ open class GraphQLBaseException(
         putAll(extraExtensions)
     }
 
-    fun toError(path: ResultPath? = null, location: SourceLocation? = null): GraphQLError =
+    fun toGraphQLError(path: ResultPath? = null, location: SourceLocation? = null): GraphQLError =
         GraphQLError.newError()
             .errorType(errorType)
             .message(message)

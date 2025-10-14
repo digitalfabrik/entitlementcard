@@ -25,6 +25,7 @@ import app.ehrenamtskarte.backend.graphql.cards.utils.hash
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidCardHashException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidQrCodeSize
+import app.ehrenamtskarte.backend.graphql.exceptions.NotImplementedException
 import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotActivatedForCardConfirmationMailException
 import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.graphql.exceptions.UserEntitlementExpiredException
@@ -32,7 +33,6 @@ import app.ehrenamtskarte.backend.graphql.exceptions.UserEntitlementNotFoundExce
 import app.ehrenamtskarte.backend.shared.Matomo
 import app.ehrenamtskarte.backend.shared.crypto.Argon2IdHasher
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
-import app.ehrenamtskarte.backend.shared.exceptions.NotFoundException
 import app.ehrenamtskarte.backend.shared.mail.Mailer
 import at.favre.lib.crypto.bcrypt.BCrypt
 import com.eatthepath.otp.TimeBasedOneTimePasswordGenerator
@@ -159,7 +159,7 @@ class CardMutationController(
     ): CardCreationResultModel {
         val config = backendConfiguration.getProjectConfig(project)
         if (!config.selfServiceEnabled) {
-            throw NotFoundException()
+            throw NotImplementedException("Self-Service is not enabled in the project")
         }
 
         val cardInfo = parseEncodedCardInfo(encodedCardInfo)

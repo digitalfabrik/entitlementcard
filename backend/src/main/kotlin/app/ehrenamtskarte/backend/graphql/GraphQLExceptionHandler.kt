@@ -2,7 +2,6 @@ package app.ehrenamtskarte.backend.graphql
 
 import app.ehrenamtskarte.backend.graphql.exceptions.GraphQLBaseException
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
-import app.ehrenamtskarte.backend.shared.exceptions.NotFoundException
 import app.ehrenamtskarte.backend.shared.exceptions.UnauthorizedException
 import graphql.GraphQLError
 import graphql.schema.DataFetchingEnvironment
@@ -25,7 +24,6 @@ class GraphQLExceptionHandler {
     @GraphQlExceptionHandler
     fun handleGenericException(ex: Exception, env: DataFetchingEnvironment): GraphQLError =
         when (ex) {
-            is NotFoundException -> buildError(env, ErrorType.NOT_FOUND, ex.message)
             is UnauthorizedException -> buildError(env, ErrorType.UNAUTHORIZED, ex.message)
             is ForbiddenException -> buildError(env, ErrorType.FORBIDDEN, ex.message)
             is IllegalArgumentException -> buildError(env, ErrorType.BAD_REQUEST, "Invalid argument: ${ex.message}")

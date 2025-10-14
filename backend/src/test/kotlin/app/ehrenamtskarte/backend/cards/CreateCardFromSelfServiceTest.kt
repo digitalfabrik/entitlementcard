@@ -49,7 +49,7 @@ internal class CreateCardFromSelfServiceTest : IntegrationTest() {
         val error = response.toErrorObject()
 
         assertEquals("Project 'non-existent.sozialpass.app' not found", error.message)
-        assertEquals("NOT_FOUND", error.extensions?.classification)
+        assertEquals(GraphQLExceptionCode.PROJECT_NOT_FOUND, error.extensions?.code)
     }
 
     @Test
@@ -64,8 +64,8 @@ internal class CreateCardFromSelfServiceTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Resource not found", error.message)
-        assertEquals("NOT_FOUND", error.extensions?.classification)
+        assertEquals("Self-Service is not enabled in the project", error.message)
+        assertEquals(GraphQLExceptionCode.NOT_IMPLEMENTED, error.extensions?.code)
     }
 
     @Test

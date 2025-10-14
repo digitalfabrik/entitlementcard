@@ -62,7 +62,7 @@ class ApplicationHandler(
                     applicationVerification,
                 )
             } catch (exception: MailNotSentException) {
-                dataFetcherResultBuilder.error(exception.toError())
+                dataFetcherResultBuilder.error(exception.toGraphQLError())
             }
         }
         Mailer.sendNotificationForApplicationMails(project, backendConfig, projectConfig, regionId)
@@ -87,7 +87,7 @@ class ApplicationHandler(
                     applicationConfirmationNote,
                 )
             } catch (exception: MailNotSentException) {
-                dataFetcherResultBuilder.error(exception.toError())
+                dataFetcherResultBuilder.error(exception.toGraphQLError())
             }
         }
         Mailer.sendNotificationForApplicationMails(project, backendConfig, projectConfig, regionId)
