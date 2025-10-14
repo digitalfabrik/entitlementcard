@@ -1,5 +1,5 @@
 import { CheckCircleOutline, Close } from '@mui/icons-material'
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, ReactNode, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -63,8 +63,12 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props): Rea
         <DialogTitle>{t('loginPeriodExpires')}</DialogTitle>
         <DialogContent id='keep-alive-dialog'>
           <Stack>
-            <p>{t('loginPeriodSecondsLeft', { secondsLeft })}</p>
-            <p>{t('loginPeriodPasswordPrompt')}</p>
+            <Typography component='p' variant='body2'>
+              {t('loginPeriodSecondsLeft', { secondsLeft })}
+            </Typography>
+            <Typography component='p' variant='body2'>
+              {t('loginPeriodPasswordPrompt')}
+            </Typography>
             <PasswordInput placeholder={t('loginPeriodPasswordPlaceholder')} setValue={setPassword} value={password} />
           </Stack>
         </DialogContent>

@@ -115,6 +115,7 @@ const Component = <I,>({
 
   return (
     <Chip
+      sx={{ marginRight: 1 }}
       label={state.filename}
       icon={<Attachment />}
       onDelete={disableAllInputs ? undefined : () => setState(() => null)}

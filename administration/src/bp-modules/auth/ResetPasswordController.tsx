@@ -1,9 +1,9 @@
-import { Card, Classes, H2, H3, H4, InputGroup } from '@blueprintjs/core'
-import { Button, FormControl, FormLabel, Stack } from '@mui/material'
+import { Card, Classes, InputGroup } from '@blueprintjs/core'
+import { Button, FormControl, FormLabel, Stack, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useNavigate, useSearchParams } from 'react-router'
+import { useNavigate, useSearchParams } from 'react-router'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useCheckPasswordResetLinkQuery, useResetPasswordMutation } from '../../generated/graphql'
@@ -64,10 +64,12 @@ const ResetPasswordController = (): ReactElement => {
   return (
     <StandaloneCenter>
       <Card style={{ width: '100%', maxWidth: '500px' }}>
-        <H2>{config.name}</H2>
-        <H3>{t('administration')}</H3>
-        <H4>{t('resetPassword')}</H4>
-        <p>{t('setPasswordText')}</p>
+        <Typography variant='h4'>{config.name}</Typography>
+        <Typography variant='h5'>{t('administration')}</Typography>
+        <Typography variant='h6'>{t('resetPassword')}</Typography>
+        <Typography component='p' variant='body2'>
+          {t('setPasswordText')}
+        </Typography>
         <form
           onSubmit={e => {
             e.preventDefault()
@@ -95,9 +97,9 @@ const ResetPasswordController = (): ReactElement => {
           <div
             className={Classes.DIALOG_FOOTER_ACTIONS}
             style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px' }}>
-            <Link to='/'>
-              <Button variant='text'>{t('backToLogin')}</Button>
-            </Link>
+            <Button href='/' variant='text'>
+              {t('backToLogin')}
+            </Button>
             <Button type='submit' loading={loading} variant='contained' disabled={warnMessage !== null}>
               {t('resetPassword')}
             </Button>

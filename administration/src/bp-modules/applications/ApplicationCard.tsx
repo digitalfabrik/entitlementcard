@@ -28,7 +28,6 @@ import {
 import { useSnackbar } from 'notistack'
 import React, { memo, useContext, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router'
 import { useReactToPrint } from 'react-to-print'
 
 import { CsvIcon } from '../../components/icons/CsvIcon'
@@ -178,18 +177,17 @@ const ButtonsApplicationResolved = (props: {
         props.applicationStatus === ApplicationStatus.ApprovedCardCreated) && (
         <Tooltip title={props.primaryButtonHref ? undefined : t('incompleteApplicationDataTooltip')}>
           <div>
-            <Link to={props.primaryButtonHref}>
-              <Button
-                color='primary'
-                variant='contained'
-                disabled={props.primaryButtonHref.length === 0}
-                startIcon={<CreditScore />}>
-                {' '}
-                {props.applicationStatus === ApplicationStatus.ApprovedCardCreated
-                  ? t('createCardAgain')
-                  : t('createCard')}
-              </Button>
-            </Link>
+            <Button
+              href={props.primaryButtonHref}
+              color='primary'
+              variant='contained'
+              disabled={props.primaryButtonHref.length === 0}
+              startIcon={<CreditScore />}>
+              {' '}
+              {props.applicationStatus === ApplicationStatus.ApprovedCardCreated
+                ? t('createCardAgain')
+                : t('createCard')}
+            </Button>
           </div>
         </Tooltip>
       )}
