@@ -68,7 +68,7 @@ export const ApplicationStatusNote = (p: {
       sx={{ border: 'none', padding: 0, maxWidth: 'none' }}
       customIcon={showIcon && <>{icon(p.status)}&ensp;</>}
       description={
-        translationKey !== undefined ? (
+        translationKey ? (
           <Trans
             t={t}
             i18nKey={translationKey}
