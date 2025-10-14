@@ -135,10 +135,10 @@ const EditUserDialog = ({
         {showRegionSelector ? (
           <RegionSelector onSelect={region => setRegionId(region ? region.id : null)} selectedId={regionId} />
         ) : null}
-        <AlertBox sx={{ margin: 0 }} severity='info' description={editUserAlertDescription} />
+        <AlertBox fullWidth severity='info' description={editUserAlertDescription} />
         {selectedUser?.id === me?.id ? (
           <AlertBox
-            sx={{ margin: 0 }}
+            fullWidth
             severity='error'
             title={t('youEditYourOwnAccount')}
             description={

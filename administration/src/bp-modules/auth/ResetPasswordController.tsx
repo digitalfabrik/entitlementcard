@@ -1,4 +1,4 @@
-import { Callout, Card, Classes, InputGroup } from '@blueprintjs/core'
+import { Card, Classes, InputGroup } from '@blueprintjs/core'
 import { Button, FormControl, FormLabel, Stack, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
@@ -7,6 +7,7 @@ import { useNavigate, useSearchParams } from 'react-router'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useCheckPasswordResetLinkQuery, useResetPasswordMutation } from '../../generated/graphql'
+import AlertBox from '../../mui-modules/base/AlertBox'
 import getQueryResult from '../../mui-modules/util/getQueryResult'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import PasswordInput from '../PasswordInput'
@@ -88,7 +89,9 @@ const ResetPasswordController = (): ReactElement => {
               <PasswordInput setValue={setRepeatNewPassword} value={repeatNewPassword} />
             </FormControl>
 
-            {warnMessage === null || !isDirty ? null : <Callout intent='danger'>{warnMessage}</Callout>}
+            {warnMessage === null || !isDirty ? null : (
+              <AlertBox sx={{ my: 2, mx: 0 }} severity='error' description={warnMessage} />
+            )}
           </Stack>
 
           <div
