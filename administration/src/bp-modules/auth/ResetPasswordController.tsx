@@ -20,8 +20,8 @@ const ResetPasswordController = (): ReactElement => {
   const [queryParams] = useSearchParams()
   const adminEmail = queryParams.get('email') ?? ''
   const { t } = useTranslation('auth')
-  const [newPassword, setNewPassword] = useState<string>()
-  const [repeatNewPassword, setRepeatNewPassword] = useState<string>()
+  const [newPassword, setNewPassword] = useState<string>('')
+  const [repeatNewPassword, setRepeatNewPassword] = useState<string>('')
   const navigate = useNavigate()
 
   const checkPasswordResetLinkQuery = useCheckPasswordResetLinkQuery({
@@ -47,7 +47,7 @@ const ResetPasswordController = (): ReactElement => {
       variables: {
         project: config.projectId,
         email: adminEmail,
-        newPassword: newPassword ?? '',
+        newPassword,
         passwordResetKey: queryParams.get('token')!,
       },
     })

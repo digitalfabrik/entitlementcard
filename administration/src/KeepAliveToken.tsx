@@ -28,7 +28,7 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props): Rea
   const email = useWhoAmI().me.email
   const [secondsLeft, setSecondsLeft] = useState(computeSecondsLeft(authData))
   const { enqueueSnackbar } = useSnackbar()
-  const [password, setPassword] = useState<string>()
+  const [password, setPassword] = useState<string>('')
   const [signIn, mutationState] = useSignInMutation({
     onCompleted: payload => {
       enqueueSnackbar(t('loginPeriodExtended'), { variant: 'success' })
@@ -54,7 +54,7 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props): Rea
     return () => clearInterval(interval)
   }, [authData, onSignOut, navigate])
 
-  const extendLogin = () => signIn({ variables: { project: projectId, authData: { email, password: password ?? '' } } })
+  const extendLogin = () => signIn({ variables: { project: projectId, authData: { email, password } } })
 
   return (
     <>
