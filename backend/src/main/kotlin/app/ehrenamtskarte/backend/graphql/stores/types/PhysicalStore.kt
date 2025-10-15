@@ -29,6 +29,7 @@ data class PhysicalStore(
     // These ensure the fields appear in the generated GraphQL schema.
     @Suppress("unused")
     fun store(): CompletableFuture<AcceptingStore> = CompletableFuture.completedFuture(null)
+
     @Suppress("unused")
     fun address(): CompletableFuture<Address> = CompletableFuture.completedFuture(null)
 }
