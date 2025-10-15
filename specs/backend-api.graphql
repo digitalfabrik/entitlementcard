@@ -42,9 +42,9 @@ directive @specifiedBy(
   ) on SCALAR
 
 type AcceptingStore {
-  category: Category
+  category: Category!
   categoryId: Int!
-  contact: Contact
+  contact: Contact!
   contactId: Int!
   description: String
   id: Int!
@@ -84,7 +84,7 @@ type ApplicationAdmin {
   rejectionMessage: String
   status: ApplicationStatus!
   statusResolvedDate: String
-  verifications: [ApplicationVerificationView!]
+  verifications: [ApplicationVerificationView!]!
 }
 
 type ApplicationPublic {
@@ -94,7 +94,7 @@ type ApplicationPublic {
   regionId: Int!
   status: ApplicationStatus!
   statusResolvedDate: String
-  verifications: [ApplicationVerificationView!]
+  verifications: [ApplicationVerificationView!]!
 }
 
 type ApplicationVerificationView {
@@ -225,11 +225,11 @@ type NotificationSettings {
 }
 
 type PhysicalStore {
-  address: Address
+  address: Address!
   addressId: Int!
   coordinates: Coordinates!
   id: Int!
-  store: AcceptingStore
+  store: AcceptingStore!
   storeId: Int!
 }
 

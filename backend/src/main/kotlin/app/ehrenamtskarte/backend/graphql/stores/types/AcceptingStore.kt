@@ -9,17 +9,12 @@ import org.springframework.graphql.data.method.annotation.SchemaMapping
 import org.springframework.stereotype.Controller
 import java.util.concurrent.CompletableFuture
 
-@Suppress("unused")
 data class AcceptingStore(
     val id: Int,
     val name: String?,
     val description: String?,
     val contactId: Int,
     val categoryId: Int,
-    // The following fields are resolved by AcceptingStoreResolver
-    val contact: Contact? = null,
-    val category: Category? = null,
-    val physicalStore: PhysicalStore? = null,
 ) {
     companion object {
         fun fromDbEntity(entity: AcceptingStoreEntity) =
@@ -31,6 +26,15 @@ data class AcceptingStore(
                 categoryId = entity.categoryId.value,
             )
     }
+
+    // Dummy functions for compatibility with the schema generator.
+    // These ensure the fields appear in the generated GraphQL schema.
+    @Suppress("unused")
+    fun contact(): CompletableFuture<Contact> = CompletableFuture.completedFuture(null)
+    @Suppress("unused")
+    fun category(): CompletableFuture<Category> = CompletableFuture.completedFuture(null)
+    @Suppress("unused")
+    fun physicalStore(): CompletableFuture<PhysicalStore?> = CompletableFuture.completedFuture(null)
 }
 
 @Controller

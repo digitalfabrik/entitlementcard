@@ -18,7 +18,7 @@ data class ApplicationAdminGql(
     val status: ApplicationStatus,
     val statusResolvedDate: String?,
     val rejectionMessage: String?,
-    val verifications: List<ApplicationVerificationView>? = null, // resolved by ApplicationVerificationsResolver
+    val verifications: List<ApplicationVerificationView> = emptyList(), // resolved by ApplicationVerificationsResolver
 ) {
     companion object {
         fun fromDbEntity(entity: ApplicationEntity): ApplicationAdminGql =

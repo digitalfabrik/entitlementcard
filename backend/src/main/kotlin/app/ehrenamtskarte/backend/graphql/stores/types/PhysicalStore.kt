@@ -13,9 +13,6 @@ data class PhysicalStore(
     val storeId: Int,
     val addressId: Int,
     val coordinates: Coordinates,
-    // The following fields are resolved by PhysicalStoreResolver
-    val store: AcceptingStore? = null,
-    val address: Address? = null,
 ) {
     companion object {
         fun fromDbEntity(entity: PhysicalStoreEntity) =
@@ -26,6 +23,13 @@ data class PhysicalStore(
                 coordinates = Coordinates(lng = entity.coordinates.x, lat = entity.coordinates.y),
             )
     }
+
+    // Dummy functions for compatibility with the schema generator.
+    // These ensure the fields appear in the generated GraphQL schema.
+    @Suppress("unused")
+    fun store(): CompletableFuture<AcceptingStore> = CompletableFuture.completedFuture(null)
+    @Suppress("unused")
+    fun address(): CompletableFuture<Address> = CompletableFuture.completedFuture(null)
 }
 
 @Controller
