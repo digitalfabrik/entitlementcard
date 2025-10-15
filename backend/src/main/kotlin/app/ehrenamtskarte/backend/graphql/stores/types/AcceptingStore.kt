@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.graphql.stores.types
 
 import app.ehrenamtskarte.backend.db.entities.AcceptingStoreEntity
+import app.ehrenamtskarte.backend.graphql.loadFrom
 import app.ehrenamtskarte.backend.graphql.stores.CategoryDataLoader
 import app.ehrenamtskarte.backend.graphql.stores.ContactDataLoader
 import app.ehrenamtskarte.backend.graphql.stores.PhysicalStoreByStoreIdLoader
@@ -31,8 +32,10 @@ data class AcceptingStore(
     // These ensure the fields appear in the generated GraphQL schema.
     @Suppress("unused")
     fun contact(): CompletableFuture<Contact> = CompletableFuture.completedFuture(null)
+
     @Suppress("unused")
     fun category(): CompletableFuture<Category> = CompletableFuture.completedFuture(null)
+
     @Suppress("unused")
     fun physicalStore(): CompletableFuture<PhysicalStore?> = CompletableFuture.completedFuture(null)
 }
@@ -41,16 +44,13 @@ data class AcceptingStore(
 class AcceptingStoreResolver {
     @SchemaMapping(typeName = "AcceptingStore", field = "contact")
     fun contact(store: AcceptingStore, dfe: DataFetchingEnvironment): CompletableFuture<Contact> =
-        dfe.getDataLoader<Int, Contact>(ContactDataLoader::class.java.name)
-            ?.load(store.contactId) ?: CompletableFuture.completedFuture(null)
+        dfe.loadFrom(ContactDataLoader::class, store.contactId).thenApply { it!! }
 
     @SchemaMapping(typeName = "AcceptingStore", field = "category")
     fun category(store: AcceptingStore, dfe: DataFetchingEnvironment): CompletableFuture<Category> =
-        dfe.getDataLoader<Int, Category>(CategoryDataLoader::class.java.name)
-            ?.load(store.categoryId) ?: CompletableFuture.completedFuture(null)
+        dfe.loadFrom(CategoryDataLoader::class, store.categoryId).thenApply { it!! }
 
     @SchemaMapping(typeName = "AcceptingStore", field = "physicalStore")
     fun physicalStore(store: AcceptingStore, dfe: DataFetchingEnvironment): CompletableFuture<PhysicalStore?> =
-        dfe.getDataLoader<Int, PhysicalStore>(PhysicalStoreByStoreIdLoader::class.java.name)
-            ?.load(store.id) ?: CompletableFuture.completedFuture(null)
+        dfe.loadFrom(PhysicalStoreByStoreIdLoader::class, store.id)
 }
