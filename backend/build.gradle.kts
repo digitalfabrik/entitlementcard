@@ -80,6 +80,7 @@ dependencies {
     implementation(libs.projectreactor.reactor.kotlinextensions)
     implementation(libs.sentry.springbootstarter)
     implementation(libs.simplejavamail)
+    implementation(libs.springdoc.openapi.starter)
     implementation(libs.springframework.boot.starter.mail)
     implementation(libs.springframework.boot.starter.web)
     implementation(libs.springframework.boot.starter.graphql)
@@ -118,7 +119,7 @@ kotlin {
 
 buildConfig {
     packageName(project.group.toString())
-    buildConfigField("VERSION_NAME", System.getenv("NEW_VERSION_NAME"))
+    buildConfigField("VERSION_NAME", System.getProperty("NEW_VERSION_NAME", "1.0.0"))
     buildConfigField("COMMIT_HASH", System.getenv("CIRCLE_SHA1"))
 }
 
@@ -193,11 +194,12 @@ tasks.test {
     environment("KOBLENZ_PEPPER", "123456789ABC")
 }
 
-// TODO Do we need this?
-tasks.register<Copy>("copyStyle") {
-    from("$rootDir/ehrenamtskarte-maplibre-style/style.json")
-    into("${layout.buildDirectory.get()}/resources/main/styles")
+val copyStyleTask = tasks.register<Copy>("copyStyle") {
+    from(layout.projectDirectory.file("ehrenamtskarte-maplibre-style/style.json"))
+    into(layout.buildDirectory.dir("resources/main/styles"))
 }
+tasks.named("classes") { dependsOn(copyStyleTask) }
+
 
 tasks.generateProto {
     dependsOn(tasks.generateSentryBundleIdJava)
@@ -252,3 +254,4 @@ tasks.register("db-recreate") {
     dbImportDev.dependsOn(dbImportOnline)
     this.dependsOn(dbImportDev)
 }
+
