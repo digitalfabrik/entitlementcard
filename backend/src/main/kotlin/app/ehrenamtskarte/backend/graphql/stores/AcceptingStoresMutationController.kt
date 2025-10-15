@@ -3,10 +3,9 @@ package app.ehrenamtskarte.backend.graphql.stores
 import app.ehrenamtskarte.backend.db.entities.mayUpdateStoresInProject
 import app.ehrenamtskarte.backend.db.repositories.AcceptingStoresRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
-import app.ehrenamtskarte.backend.graphql.context
-import app.ehrenamtskarte.backend.graphql.getAuthContext
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidJsonException
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.RegionNotUniqueException
+import app.ehrenamtskarte.backend.graphql.auth.requireAuthContext
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidJsonException
+import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotUniqueException
 import app.ehrenamtskarte.backend.graphql.stores.types.CSVAcceptingStore
 import app.ehrenamtskarte.backend.graphql.stores.types.StoreImportReturnResultModel
 import app.ehrenamtskarte.backend.import.COUNTRY_CODE
@@ -17,16 +16,20 @@ import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.MutationMapping
+import org.springframework.stereotype.Controller
 
-@Suppress("unused")
+@Controller
 class AcceptingStoresMutationService {
     @GraphQLDescription("Import accepting stores via csv")
+    @MutationMapping
     fun importAcceptingStores(
-        stores: List<CSVAcceptingStore>,
-        dryRun: Boolean,
+        @Argument stores: List<CSVAcceptingStore>,
+        @Argument dryRun: Boolean,
         dfe: DataFetchingEnvironment,
     ): StoreImportReturnResultModel {
-        val authContext = dfe.graphQlContext.context.getAuthContext()
+        val authContext = dfe.requireAuthContext()
 
         return transaction {
             if (!authContext.admin.mayUpdateStoresInProject(authContext.projectId)) {

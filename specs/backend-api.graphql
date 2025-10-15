@@ -187,6 +187,8 @@ type Mutation {
   deleteInactiveCards(cardInfoHashBase64List: [String!]!, regionId: Int!): Boolean!
   "Edits an existing administrator"
   editAdministrator(adminId: Int!, newEmail: String!, newRegionId: Int, newRole: Role!): Boolean!
+  "Import accepting stores via csv"
+  importAcceptingStores(dryRun: Boolean!, stores: [CSVAcceptingStoreInput!]!): StoreImportReturnResultModel!
   "Reject an application"
   rejectApplicationStatus(applicationId: Int!, rejectionMessage: String!): ApplicationAdmin!
   "Reset the administrator's password"
@@ -301,6 +303,12 @@ type SignInPayload {
 type StaticVerificationCodeResult {
   cardInfoHashBase64: String!
   codeBase64: String!
+}
+
+type StoreImportReturnResultModel {
+  storesCreated: Int!
+  storesDeleted: Int!
+  storesUntouched: Int!
 }
 
 enum ActivationState {
@@ -477,6 +485,22 @@ input BlueCardWorkAtDepartmentEntitlementInput {
 
 input BlueCardWorkAtOrganizationsEntitlementInput {
   list: [WorkAtOrganizationInput!]!
+}
+
+input CSVAcceptingStoreInput {
+  categoryId: Int!
+  discountDE: String
+  discountEN: String
+  email: String
+  homepage: String
+  houseNumber: String!
+  latitude: Float!
+  location: String!
+  longitude: Float!
+  name: String!
+  postalCode: String!
+  street: String!
+  telephone: String
 }
 
 input CardVerificationModelInput {
