@@ -32,7 +32,7 @@ const ApplicationStatusBar = ({
   const { t } = useTranslation('applicationsOverview')
   return (
     <Container>
-      <Typography variant='h6' sx={{ margin: 0 }}>
+      <Typography variant='h6' margin={0}>
         {t('status')}
       </Typography>
       <ApplicationStatusHelpButton />
