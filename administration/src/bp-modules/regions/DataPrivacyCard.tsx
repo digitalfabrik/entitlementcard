@@ -10,7 +10,9 @@ const DataPrivacyCard = (): ReactElement => {
   const { t } = useTranslation('regionSettings')
   return (
     <SettingsCard title={t('dataPrivacyHeading')}>
-      <Typography variant='body2'>{t('dataPrivacyExplanation')}</Typography>
+      <Typography component='p' variant='body2'>
+        {t('dataPrivacyExplanation')}
+      </Typography>
       <SettingsCardButtonBox>
         <Button onClick={() => navigate('/region/data-privacy-policy')}>{t('open')}</Button>
       </SettingsCardButtonBox>

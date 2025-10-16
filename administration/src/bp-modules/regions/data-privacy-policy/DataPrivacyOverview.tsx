@@ -64,7 +64,7 @@ const DataPrivacyOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProp
   return (
     <>
       <Content>
-        <Typography mt={5} variant='h5' align='center'>
+        <Typography variant='h5' textAlign='center' margin={2}>
           {t('dataPrivacy')}
         </Typography>
         <TextField

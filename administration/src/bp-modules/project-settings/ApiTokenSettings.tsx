@@ -113,14 +113,18 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
         onClose={() => setTokenToDelete(null)}
         confirmButtonIcon={<Delete />}
         confirmButtonText={t('deleteToken')}>
-        <p>{t('deleteTokenConfirmationPrompt')}</p>
+        <Typography component='p' variant='body2'>
+          {t('deleteTokenConfirmationPrompt')}
+        </Typography>
       </ConfirmDialog>
       <SettingsCard title={t('apiToken')}>
         {showPepperSection && <PepperSettings />}
 
         <Container>
           <Typography variant='h6'>{t('createNewToken')}</Typography>
-          <Typography variant='body2'>{t('tokenOnlyShowedOnceHint')}</Typography>
+          <Typography component='p' variant='body2'>
+            {t('tokenOnlyShowedOnceHint')}
+          </Typography>
           <Box my={2} display='flex' flexDirection='row' justifyContent='center' alignItems='space-between' gap={2}>
             <FormControl fullWidth>
               <InputLabel id='expiresIn-label'>{t('validPeriod')}</InputLabel>
@@ -144,7 +148,9 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
           </Box>
           {createdToken !== null && (
             <>
-              <Typography variant='body2'>{t('newToken')}:</Typography>
+              <Typography component='p' variant='body2'>
+                {t('newToken')}:
+              </Typography>
               <NewTokenText>
                 <Typography variant='body1'>{createdToken}</Typography>
               </NewTokenText>

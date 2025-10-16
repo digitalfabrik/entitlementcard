@@ -60,6 +60,8 @@ PODS:
     - nanopb/encode (= 3.30910.0)
   - nanopb/decode (3.30910.0)
   - nanopb/encode (3.30910.0)
+  - objective_c (0.0.1):
+    - Flutter
   - package_info_plus (0.4.5):
     - Flutter
   - path_provider_foundation (0.0.1):
@@ -68,11 +70,11 @@ PODS:
   - permission_handler_apple (9.3.0):
     - Flutter
   - PromisesObjC (2.4.0)
-  - Sentry/HybridSDK (8.52.1)
-  - sentry_flutter (9.6.0):
+  - Sentry/HybridSDK (8.56.2)
+  - sentry_flutter (9.7.0):
     - Flutter
     - FlutterMacOS
-    - Sentry/HybridSDK (= 8.52.1)
+    - Sentry/HybridSDK (= 8.56.2)
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -87,6 +89,7 @@ DEPENDENCIES:
   - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
   - maplibre_gl (from `.symlinks/plugins/maplibre_gl/ios`)
   - mobile_scanner (from `.symlinks/plugins/mobile_scanner/ios`)
+  - objective_c (from `.symlinks/plugins/objective_c/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
@@ -125,6 +128,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/maplibre_gl/ios"
   mobile_scanner:
     :path: ".symlinks/plugins/mobile_scanner/ios"
+  objective_c:
+    :path: ".symlinks/plugins/objective_c/ios"
   package_info_plus:
     :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_foundation:
@@ -157,12 +162,13 @@ SPEC CHECKSUMS:
   MLKitVision: 45e79d68845a2de77e2dd4d7f07947f0ed157b0e
   mobile_scanner: af8f71879eaba2bbcb4d86c6a462c3c0e7f23036
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
+  objective_c: 89e720c30d716b036faf9c9684022048eee1eee2
   package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
-  Sentry: 2cbbe3592f30050c60e916c63c7f5a2fa584005e
-  sentry_flutter: 9b1e3e6934cb7040ffb71383c95a35f73523180c
+  Sentry: b53951377b78e21a734f5dc8318e333dbfc682d7
+  sentry_flutter: 7f88e12d1882ec6e648644a7c0ff5b1466f07f99
   shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
   url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
 

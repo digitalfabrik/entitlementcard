@@ -35,25 +35,25 @@ const FreinetSettingsCard = ({
 
   return (
     <SettingsCard title={t('freinetHeadline')}>
-      <Typography variant='body2'>
+      <Typography component='p' variant='body2'>
         <Trans i18nKey='regionSettings:freinetExplanation' />
-        <Table>
-          <thead>
-            <tr>
-              <th>{t('freinetAgencyName')}</th>
-              <th>{t('freinetAgencyId')}</th>
-              <th>{t('freinetAgencyAccessKey')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>{agencyName}</td>
-              <td>{agencyId}</td>
-              <td>{apiAccessKey}</td>
-            </tr>
-          </tbody>
-        </Table>
       </Typography>
+      <Table>
+        <thead>
+          <tr>
+            <th>{t('freinetAgencyName')}</th>
+            <th>{t('freinetAgencyId')}</th>
+            <th>{t('freinetAgencyAccessKey')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{agencyName}</td>
+            <td>{agencyId}</td>
+            <td>{apiAccessKey}</td>
+          </tr>
+        </tbody>
+      </Table>
       <BaseCheckbox
         checked={dataTransferActivated}
         onChange={checked => setDataTransferActivated(checked)}

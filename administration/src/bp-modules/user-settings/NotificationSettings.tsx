@@ -55,7 +55,9 @@ const NotificationSettings = (): ReactElement => {
 
   return (
     <SettingsCard title={t('notifications')}>
-      <Typography variant='body2'>{t('notificationsExplanation')}</Typography>
+      <Typography component='p' variant='body2'>
+        {t('notificationsExplanation')}
+      </Typography>
       <form
         onSubmit={event => {
           event.preventDefault()

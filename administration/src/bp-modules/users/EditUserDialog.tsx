@@ -1,9 +1,8 @@
 import { Edit } from '@mui/icons-material'
-import { Stack, Typography } from '@mui/material'
+import { Link, Stack, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router'
 
 import { WhoAmIContext } from '../../WhoAmIProvider'
 import CardTextField from '../../cards/extensions/components/CardTextField'
@@ -94,7 +93,7 @@ const EditUserDialog = ({
       {selectedUser?.id === me?.id ? (
         <>
           {t('youCanChangeYourOwnPassword')}{' '}
-          <Link to='/user-settings' target='_blank' rel='noreferrer'>
+          <Link href='/user-settings' target='_blank' rel='noreferrer'>
             {t('userSettings')}
           </Link>{' '}
           {t('change')}.
@@ -102,7 +101,7 @@ const EditUserDialog = ({
       ) : (
         <>
           {t('userCanChangePassword')}{' '}
-          <Link to='/forgot-password' target='_blank' rel='noreferrer'>
+          <Link href='/forgot-password' target='_blank' rel='noreferrer'>
             {`${window.location.origin}/forgot-password`}
           </Link>{' '}
           {t('reset')}.
@@ -136,10 +135,10 @@ const EditUserDialog = ({
         {showRegionSelector ? (
           <RegionSelector onSelect={region => setRegionId(region ? region.id : null)} selectedId={regionId} />
         ) : null}
-        <AlertBox sx={{ margin: 0 }} severity='info' description={editUserAlertDescription} />
+        <AlertBox fullWidth severity='info' description={editUserAlertDescription} />
         {selectedUser?.id === me?.id ? (
           <AlertBox
-            sx={{ margin: 0 }}
+            fullWidth
             severity='error'
             title={t('youEditYourOwnAccount')}
             description={
