@@ -1,11 +1,11 @@
 import { Delete } from '@mui/icons-material'
 import {
-  Box,
   Button,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -125,7 +125,7 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
           <Typography component='p' variant='body2'>
             {t('tokenOnlyShowedOnceHint')}
           </Typography>
-          <Box my={2} display='flex' flexDirection='row' justifyContent='center' alignItems='space-between' gap={2}>
+          <Stack direction='row' my={2} spacing={2}>
             <FormControl fullWidth>
               <InputLabel id='expiresIn-label'>{t('validPeriod')}</InputLabel>
               <Select
@@ -145,7 +145,7 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
             <Button sx={{ minWidth: 'auto' }} onClick={() => createToken({ variables: { expiresIn } })}>
               {t('create')}
             </Button>
-          </Box>
+          </Stack>
           {createdToken !== null && (
             <>
               <Typography component='p' variant='body2'>
