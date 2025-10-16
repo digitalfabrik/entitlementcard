@@ -31,7 +31,7 @@ const NoteDialogController = ({
       enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: () => {
-      enqueueSnackbar(t('noteChangedSuccessfully', { variant: 'success' }), { autoHideDuration: 2000 })
+      enqueueSnackbar(t('noteChangedSuccessfully'), { variant: 'success', autoHideDuration: 2000 })
       onOpenNoteDialog(false)
     },
   })

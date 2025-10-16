@@ -1,5 +1,5 @@
-import { Checkbox, H2 } from '@blueprintjs/core'
-import { Button } from '@mui/material'
+import { Checkbox } from '@blueprintjs/core'
+import { Button, Typography } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -9,10 +9,6 @@ import SettingsCard from '../user-settings/SettingsCard'
 const ButtonContainer = styled.div`
   text-align: right;
   padding: 8px 0;
-`
-
-const Headline = styled(H2)`
-  margin-bottom: 16px;
 `
 
 const RegionSettingsCard = ({
@@ -34,7 +30,9 @@ const RegionSettingsCard = ({
 
   return (
     <SettingsCard>
-      <Headline>{t('regionSettings')}</Headline>
+      <Typography variant='h4' marginBottom={2}>
+        {t('regionSettings')}
+      </Typography>
       <Checkbox
         checked={activatedForApplication}
         onChange={e => setActivatedForApplication(e.currentTarget.checked)}

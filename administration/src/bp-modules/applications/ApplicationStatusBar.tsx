@@ -46,7 +46,9 @@ const ApplicationStatusBar = ({
               value={item}
               onClick={() => onSetActiveBarItem(item)}
               id={item.barItemI18nKey}>
-              {t(item.barItemI18nKey)} (<span data-testid={`status-${t(item.barItemI18nKey)}-count`}>{count}</span>)
+              <Typography variant='body2bold'>
+                {t(item.barItemI18nKey)} (<span data-testid={`status-${t(item.barItemI18nKey)}-count`}>{count}</span>)
+              </Typography>
             </ToggleButton>
           )
         })}

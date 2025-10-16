@@ -1,12 +1,13 @@
-import { Callout, Card, Classes, H2, H3, H4, InputGroup } from '@blueprintjs/core'
-import { Button, FormControl, FormLabel, Stack } from '@mui/material'
+import { Card, Classes, InputGroup } from '@blueprintjs/core'
+import { Button, FormControl, FormLabel, Stack, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useNavigate, useSearchParams } from 'react-router'
+import { useNavigate, useSearchParams } from 'react-router'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useCheckPasswordResetLinkQuery, useResetPasswordMutation } from '../../generated/graphql'
+import AlertBox from '../../mui-modules/base/AlertBox'
 import getQueryResult from '../../mui-modules/util/getQueryResult'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import PasswordInput from '../PasswordInput'
@@ -19,8 +20,8 @@ const ResetPasswordController = (): ReactElement => {
   const [queryParams] = useSearchParams()
   const adminEmail = queryParams.get('email') ?? ''
   const { t } = useTranslation('auth')
-  const [newPassword, setNewPassword] = useState<string>()
-  const [repeatNewPassword, setRepeatNewPassword] = useState<string>()
+  const [newPassword, setNewPassword] = useState<string>('')
+  const [repeatNewPassword, setRepeatNewPassword] = useState<string>('')
   const navigate = useNavigate()
 
   const checkPasswordResetLinkQuery = useCheckPasswordResetLinkQuery({
@@ -46,7 +47,7 @@ const ResetPasswordController = (): ReactElement => {
       variables: {
         project: config.projectId,
         email: adminEmail,
-        newPassword: newPassword ?? '',
+        newPassword,
         passwordResetKey: queryParams.get('token')!,
       },
     })
@@ -63,10 +64,12 @@ const ResetPasswordController = (): ReactElement => {
   return (
     <StandaloneCenter>
       <Card style={{ width: '100%', maxWidth: '500px' }}>
-        <H2>{config.name}</H2>
-        <H3>{t('administration')}</H3>
-        <H4>{t('resetPassword')}</H4>
-        <p>{t('setPasswordText')}</p>
+        <Typography variant='h4'>{config.name}</Typography>
+        <Typography variant='h5'>{t('administration')}</Typography>
+        <Typography variant='h6'>{t('resetPassword')}</Typography>
+        <Typography component='p' variant='body2'>
+          {t('setPasswordText')}
+        </Typography>
         <form
           onSubmit={e => {
             e.preventDefault()
@@ -86,15 +89,17 @@ const ResetPasswordController = (): ReactElement => {
               <PasswordInput setValue={setRepeatNewPassword} value={repeatNewPassword} />
             </FormControl>
 
-            {warnMessage === null || !isDirty ? null : <Callout intent='danger'>{warnMessage}</Callout>}
+            {warnMessage === null || !isDirty ? null : (
+              <AlertBox sx={{ my: 2, mx: 0 }} severity='error' description={warnMessage} />
+            )}
           </Stack>
 
           <div
             className={Classes.DIALOG_FOOTER_ACTIONS}
             style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px' }}>
-            <Link to='/'>
-              <Button variant='text'>{t('backToLogin')}</Button>
-            </Link>
+            <Button href='/' variant='text'>
+              {t('backToLogin')}
+            </Button>
             <Button type='submit' loading={loading} variant='contained' disabled={warnMessage !== null}>
               {t('resetPassword')}
             </Button>

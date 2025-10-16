@@ -93,7 +93,7 @@ const DeleteUserDialog = ({
           </Typography>
         </Box>
         {selectedUser?.id !== actingAdminId ? null : (
-          <AlertBox sx={{ margin: 0 }} severity='error' description={alertBoxContent} />
+          <AlertBox fullWidth severity='error' description={alertBoxContent} />
         )}
       </Stack>
     </ConfirmDialog>

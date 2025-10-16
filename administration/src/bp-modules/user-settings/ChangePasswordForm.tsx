@@ -1,5 +1,4 @@
-import { Callout, H2 } from '@blueprintjs/core'
-import { Button, FormControl, FormLabel, Stack } from '@mui/material'
+import { Button, FormControl, FormLabel, Stack, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -7,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { useWhoAmI } from '../../WhoAmIProvider'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useChangePasswordMutation } from '../../generated/graphql'
+import AlertBox from '../../mui-modules/base/AlertBox'
 import PasswordInput from '../PasswordInput'
 import validatePasswordInput from '../auth/validateNewPasswordInput'
 import SettingsCard from './SettingsCard'
@@ -14,9 +14,9 @@ import SettingsCard from './SettingsCard'
 const ChangePasswordForm = (): ReactElement => {
   const { t: tAuth } = useTranslation('auth')
   const { t } = useTranslation('userSettings')
-  const [currentPassword, setCurrentPassword] = useState<string>()
-  const [newPassword, setNewPassword] = useState<string>()
-  const [repeatNewPassword, setRepeatNewPassword] = useState<string>()
+  const [currentPassword, setCurrentPassword] = useState<string>('')
+  const [newPassword, setNewPassword] = useState<string>('')
+  const [repeatNewPassword, setRepeatNewPassword] = useState<string>('')
 
   const { enqueueSnackbar } = useSnackbar()
   const [changePassword, { loading }] = useChangePasswordMutation({
@@ -43,16 +43,18 @@ const ChangePasswordForm = (): ReactElement => {
   const submit = async () =>
     changePassword({
       variables: {
-        newPassword: newPassword ?? '',
-        currentPassword: currentPassword ?? '',
+        newPassword,
+        currentPassword,
         email,
       },
     })
 
   return (
     <SettingsCard>
-      <H2>{t('changePassword')}</H2>
-      <p>{t('changePasswordExplanation')}</p>
+      <Typography variant='h4'>{t('changePassword')}</Typography>
+      <Typography component='p' variant='body2'>
+        {t('changePasswordExplanation')}
+      </Typography>
       <form
         onSubmit={event => {
           event.preventDefault()
@@ -72,7 +74,7 @@ const ChangePasswordForm = (): ReactElement => {
             <PasswordInput value={repeatNewPassword} setValue={setRepeatNewPassword} />
           </FormControl>
 
-          {warnMessage === null ? null : <Callout intent='danger'>{warnMessage}</Callout>}
+          {warnMessage === null ? null : <AlertBox sx={{ my: 2, mx: 0 }} severity='error' description={warnMessage} />}
           <div style={{ textAlign: 'right' }}>
             <Button type='submit' disabled={!valid} loading={loading}>
               {t('changePassword')}

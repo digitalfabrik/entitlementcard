@@ -1,8 +1,7 @@
-import { Box, Typography } from '@mui/material'
+import { Box, Link, Typography } from '@mui/material'
 import MUILink from '@mui/material/Link'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router'
 
 import AppStoreLinks from '../../bp-modules/components/AppStoreLinks'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
@@ -31,7 +30,7 @@ const DownloadPage = (): ReactElement => {
         src={`/icons/${config.projectId}.png`}
         aria-hidden
       />
-      <Typography variant='h5' component='h1' fontWeight={600}>
+      <Typography variant='h5' component='h1'>
         {config.name}
       </Typography>
       <MUILink
@@ -47,15 +46,11 @@ const DownloadPage = (): ReactElement => {
       </Typography>
       <AppStoreLinks playStoreLink={android.appStoreLink} appStoreLink={ios.appStoreLink} />
       <Box display='flex' flexWrap='wrap' justifyContent='center' gap={2}>
-        <Link to='/imprint'>
-          <MUILink color='textPrimary' underline='none'>
-            Impressum
-          </MUILink>
+        <Link href='/imprint' color='textPrimary' underline='none'>
+          Impressum
         </Link>
-        <Link to='/data-privacy-policy'>
-          <MUILink color='textPrimary' underline='none'>
-            {regionSettingsTranslations('dataPrivacy')}
-          </MUILink>
+        <Link href='/data-privacy-policy' color='textPrimary' underline='none'>
+          {regionSettingsTranslations('dataPrivacy')}
         </Link>
       </Box>
     </Box>

@@ -3,6 +3,7 @@ import { grey } from '@mui/material/colors'
 import { Theme } from '@mui/system'
 
 import { ProjectConfig } from '../project-configs/getProjectConfig'
+import LinkBehavior from './util/LinkBehavior'
 
 export const theme = (config: ProjectConfig): Theme =>
   createTheme({
@@ -103,35 +104,47 @@ export const theme = (config: ProjectConfig): Theme =>
         },
         styleOverrides: {
           root: {
+            '&.MuiButton-colorInherit': {
+              color: '#5C6065',
+              '&[href]:hover': {
+                color: '#5C6065',
+              },
+            },
             '&.MuiButton-contained': {
               '&[href]:hover': {
                 color: grey[200],
               },
             },
-          },
-          textInherit: {
-            color: '#5C6065',
-          },
-          outlinedInherit: {
-            borderColor: grey[200],
-            borderWidth: '2px',
-            color: '#5C6065',
-          },
-          containedInherit: {
-            backgroundColor: '#F6F7F9',
-            borderStyle: 'solid',
-            borderColor: grey[200],
-            borderWidth: '1px',
-            color: '#5C6065',
-            ':hover': {
-              backgroundColor: '#e9eaedff',
-            },
-          },
-          contained: {
-            boxShadow: '0 2px 2px #BBBBBB',
-            ':hover': {
-              boxShadow: '0 2px 2px #BBBBBB', // 0 2px 6px #BBBBBB',
-            },
+            variants: [
+              {
+                props: { variant: 'outlined', color: 'inherit' },
+                style: {
+                  borderColor: grey[200],
+                  borderWidth: '2px',
+                },
+              },
+              {
+                props: { variant: 'contained', color: 'inherit' },
+                style: {
+                  backgroundColor: '#F6F7F9',
+                  borderStyle: 'solid',
+                  borderColor: grey[200],
+                  borderWidth: '1px',
+                  ':hover': {
+                    backgroundColor: '#e9eaedff',
+                  },
+                },
+              },
+              {
+                props: { variant: 'contained' },
+                style: {
+                  boxShadow: '0 2px 2px #BBBBBB',
+                  ':hover': {
+                    boxShadow: '0 2px 2px #BBBBBB',
+                  },
+                },
+              },
+            ],
           },
         },
       },
@@ -192,6 +205,26 @@ export const theme = (config: ProjectConfig): Theme =>
           root: {
             fontSize: '0.9rem',
           },
+        },
+      },
+      MuiTypography: {
+        variants: [
+          {
+            props: { component: 'p' },
+            style: {
+              marginBottom: 8,
+            },
+          },
+        ],
+      },
+      MuiLink: {
+        defaultProps: {
+          component: LinkBehavior,
+        },
+      },
+      MuiButtonBase: {
+        defaultProps: {
+          LinkComponent: LinkBehavior,
         },
       },
     },

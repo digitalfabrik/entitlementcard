@@ -1,22 +1,15 @@
 import { Colors } from '@blueprintjs/core'
 import ForwardToInboxIcon from '@mui/icons-material/ForwardToInbox'
-import { Box, Button } from '@mui/material'
+import { Box, Button, Typography } from '@mui/material'
 import { TFunction } from 'i18next'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
 import EmailLink from '../../bp-modules/EmailLink'
 import { ApplicationVerificationView, useSendApprovalMailToOrganisationMutation } from '../../generated/graphql'
 import { isEmailValid, verificationStatus } from '../verifications'
 import { VerificationIcon } from './VerificationIcon'
-
-const ListItem = styled.li<{ $color: string }>`
-  position: relative;
-  padding-left: 10px;
-  border-left: 2px solid ${props => props.$color};
-`
 
 const getStatusMetaData = (
   verification: Pick<ApplicationVerificationView, 'rejectedDate' | 'verifiedDate'>,
@@ -71,7 +64,11 @@ const VerificationListItem = ({
   }
 
   return (
-    <ListItem $color={color}>
+    <Typography
+      component='li'
+      variant='body2'
+      sx={{ borderLeft: `2px solid ${color}`, position: 'relative' }}
+      paddingLeft={1.5}>
       <table cellPadding='2px'>
         <tbody>
           <tr>
@@ -84,7 +81,9 @@ const VerificationListItem = ({
               {isEmailValid(verification.contactEmailAddress) ? (
                 <EmailLink email={verification.contactEmailAddress} />
               ) : (
-                <span>{verification.contactEmailAddress}</span>
+                <Typography variant='body2' component='span'>
+                  {verification.contactEmailAddress}
+                </Typography>
               )}
             </td>
           </tr>
@@ -108,7 +107,7 @@ const VerificationListItem = ({
           {isApprovalRequestSent ? t('approvalRequestHasBeenSent') : t('resendApprovalRequest')}
         </Button>
       )}
-    </ListItem>
+    </Typography>
   )
 }
 
