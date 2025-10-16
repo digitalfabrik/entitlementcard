@@ -1,5 +1,5 @@
 import { ArrowBack, SaveAlt } from '@mui/icons-material'
-import { Button, TextField, Tooltip, Typography, useTheme } from '@mui/material'
+import { Button, TextField, Tooltip, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -38,7 +38,6 @@ type RegionOverviewProps = {
 const MAX_CHARS = 20000
 
 const DataPrivacyOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProps): ReactElement => {
-  const theme = useTheme()
   const navigate = useNavigate()
   const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('regionSettings')
@@ -68,14 +67,6 @@ const DataPrivacyOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProp
           {t('dataPrivacy')}
         </Typography>
         <TextField
-          sx={{
-            mb: 0,
-          }}
-          slotProps={{
-            input: {
-              sx: { fontSize: theme.typography.body2.fontSize },
-            },
-          }}
           rows={30}
           fullWidth
           placeholder={t('dataPrivacyPlaceholder')}
