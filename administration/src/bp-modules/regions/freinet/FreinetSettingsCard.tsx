@@ -1,21 +1,25 @@
-import { Button, Typography } from '@mui/material'
+import {
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+  styled,
+} from '@mui/material'
 import React, { ReactElement } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
 import { FreinetAgency } from '../../../generated/graphql'
 import BaseCheckbox from '../../../mui-modules/base/BaseCheckbox'
 import SettingsCard, { SettingsCardButtonBox } from '../../user-settings/SettingsCard'
 
-const Table = styled.table`
-  margin: 32px 0;
-  width: 100%;
-
-  & th {
-    text-align: start;
-    min-width: 80px;
-  }
-`
+const WordBreakingTableCell = styled(TableCell)({
+  wordBreak: 'break-all',
+  borderBottom: 0,
+})
 
 type FreinetSettingsCardProps = {
   agencyInformation: FreinetAgency
@@ -38,22 +42,24 @@ const FreinetSettingsCard = ({
       <Typography component='p' variant='body2'>
         <Trans i18nKey='regionSettings:freinetExplanation' />
       </Typography>
-      <Table>
-        <thead>
-          <tr>
-            <th>{t('freinetAgencyName')}</th>
-            <th>{t('freinetAgencyId')}</th>
-            <th>{t('freinetAgencyAccessKey')}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{agencyName}</td>
-            <td>{agencyId}</td>
-            <td>{apiAccessKey}</td>
-          </tr>
-        </tbody>
-      </Table>
+      <TableContainer>
+        <Table sx={{ width: '100%', my: 4 }} size='small'>
+          <TableHead>
+            <TableRow>
+              <TableCell>{t('freinetAgencyName')}</TableCell>
+              <TableCell>{t('freinetAgencyId')}</TableCell>
+              <TableCell>{t('freinetAgencyAccessKey')}</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableRow>
+              <WordBreakingTableCell>{agencyName}</WordBreakingTableCell>
+              <WordBreakingTableCell>{agencyId}</WordBreakingTableCell>
+              <WordBreakingTableCell>{apiAccessKey}</WordBreakingTableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
       <BaseCheckbox
         checked={dataTransferActivated}
         onChange={checked => setDataTransferActivated(checked)}

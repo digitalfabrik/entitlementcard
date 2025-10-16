@@ -1,5 +1,6 @@
 import { Delete } from '@mui/icons-material'
 import {
+  Box,
   Button,
   FormControl,
   InputLabel,
@@ -16,7 +17,6 @@ import {
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import {
@@ -30,26 +30,6 @@ import getQueryResult from '../../mui-modules/util/getQueryResult'
 import { formatDate } from '../../util/formatDate'
 import SettingsCard from '../user-settings/SettingsCard'
 import PepperSettings from './PepperSettings'
-
-const Container = styled.div`
-  background: ghostwhite;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
-`
-
-const NewTokenText = styled.p`
-  padding: 10px;
-  border: 1px solid black;
-  border-radius: 6px;
-  margin-top: 15px;
-  word-break: break-all;
-`
-
-const DeleteIcon = styled(Delete)`
-  display: block !important;
-  cursor: pointer;
-`
 
 type ApiTokenSettingsProps = {
   showPepperSection: boolean
@@ -120,7 +100,7 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
       <SettingsCard title={t('apiToken')}>
         {showPepperSection && <PepperSettings />}
 
-        <Container>
+        <Stack my={1} p={2} borderRadius={2} boxShadow='inset 0 2px 4px rgba(0, 0, 0, 0.05)' bgcolor='ghostwhite'>
           <Typography variant='h6'>{t('createNewToken')}</Typography>
           <Typography component='p' variant='body2'>
             {t('tokenOnlyShowedOnceHint')}
@@ -151,12 +131,14 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
               <Typography component='p' variant='body2'>
                 {t('newToken')}:
               </Typography>
-              <NewTokenText>
-                <Typography variant='body1'>{createdToken}</Typography>
-              </NewTokenText>
+              <Box p={2} mt={1} border={1} borderRadius={2} sx={{ wordBreak: 'break-all' }}>
+                <Typography variant='body1' sx={{ userSelect: 'all' }}>
+                  {createdToken}
+                </Typography>
+              </Box>
             </>
           )}
-        </Container>
+        </Stack>
 
         <Typography variant='body2'>
           {tokenMetaData.length > 0 && (
@@ -174,7 +156,11 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
                     <TableCell>{item.creatorEmail}</TableCell>
                     <TableCell>{formatDate(item.expirationDate)}</TableCell>
                     <TableCell>
-                      <DeleteIcon color='error' onClick={() => setTokenToDelete(item.id)} />
+                      <Delete
+                        sx={{ pointer: 'cursor', display: 'block' }}
+                        color='error'
+                        onClick={() => setTokenToDelete(item.id)}
+                      />
                     </TableCell>
                   </TableRow>
                 ))}
