@@ -31,28 +31,14 @@ import { formatDate } from '../../util/formatDate'
 import SettingsCard from '../user-settings/SettingsCard'
 import PepperSettings from './PepperSettings'
 
-type ApiTokenSettingsProps = {
-  showPepperSection: boolean
-}
-const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactElement => {
+const ApiTokenGeneration = (): ReactElement => {
   const metaDataQuery = useGetApiTokenMetaDataQuery({})
 
   const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('projectSettings')
 
-  const [tokenMetaData, setTokenMetadata] = useState<Array<ApiTokenMetaData>>([])
   const [createdToken, setCreatedToken] = useState<string | null>(null)
   const [expiresIn, setExpiresIn] = useState<number>(1)
-
-  const [tokenToDelete, setTokenToDelete] = useState<number | null>(null)
-
-  useEffect(() => {
-    const metaDataQueryResult = getQueryResult(metaDataQuery)
-    if (metaDataQueryResult.successful) {
-      const { tokenMetaData } = metaDataQueryResult.data
-      setTokenMetadata(tokenMetaData)
-    }
-  }, [metaDataQuery, t])
 
   const [createToken] = useCreateApiTokenMutation({
     onCompleted: result => {
@@ -65,6 +51,70 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
       enqueueSnackbar(title, { variant: 'error' })
     },
   })
+
+  return (
+    <Stack my={1} p={2} borderRadius={2} boxShadow='inset 0 2px 4px rgba(0, 0, 0, 0.05)' bgcolor='ghostwhite'>
+      <Typography variant='h6'>{t('createNewToken')}</Typography>
+      <Typography component='p' variant='body2'>
+        {t('tokenOnlyShowedOnceHint')}
+      </Typography>
+      <Stack direction='row' my={2} spacing={2}>
+        <FormControl fullWidth>
+          <InputLabel id='expiresIn-label'>{t('validPeriod')}</InputLabel>
+          <Select
+            size='small'
+            labelId='expiresIn-label'
+            name='expiresIn'
+            id='expiresIn'
+            value={expiresIn}
+            label={t('validPeriod')}
+            onChange={e => setExpiresIn(e.target.value)}>
+            <MenuItem value={1}>1 {t('month')}</MenuItem>
+            <MenuItem value={3}>3 {t('months')}</MenuItem>
+            <MenuItem value={12}>1 {t('year')}</MenuItem>
+            <MenuItem value={36}>3 {t('years')}</MenuItem>
+          </Select>
+        </FormControl>
+        <Button sx={{ minWidth: 'auto' }} onClick={() => createToken({ variables: { expiresIn } })}>
+          {t('create')}
+        </Button>
+      </Stack>
+      {createdToken !== null && (
+        <>
+          <Typography component='p' variant='body2'>
+            {t('newToken')}:
+          </Typography>
+          <Box p={2} mt={1} border={1} borderRadius={2} sx={{ wordBreak: 'break-all' }}>
+            <Typography variant='body1' sx={{ userSelect: 'all' }}>
+              {createdToken}
+            </Typography>
+          </Box>
+        </>
+      )}
+    </Stack>
+  )
+}
+
+type ApiTokenSettingsProps = {
+  showPepperSection: boolean
+}
+const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactElement => {
+  const metaDataQuery = useGetApiTokenMetaDataQuery({})
+
+  const { enqueueSnackbar } = useSnackbar()
+  const { t } = useTranslation('projectSettings')
+
+  const [tokenMetaData, setTokenMetadata] = useState<Array<ApiTokenMetaData>>([])
+
+  const [tokenToDelete, setTokenToDelete] = useState<number | null>(null)
+
+  useEffect(() => {
+    const metaDataQueryResult = getQueryResult(metaDataQuery)
+    if (metaDataQueryResult.successful) {
+      const { tokenMetaData } = metaDataQueryResult.data
+      setTokenMetadata(tokenMetaData)
+    }
+  }, [metaDataQuery, t])
 
   const [deleteToken] = useDeleteApiTokenMutation({
     onCompleted: () => {
@@ -100,45 +150,7 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
       <SettingsCard title={t('apiToken')}>
         {showPepperSection && <PepperSettings />}
 
-        <Stack my={1} p={2} borderRadius={2} boxShadow='inset 0 2px 4px rgba(0, 0, 0, 0.05)' bgcolor='ghostwhite'>
-          <Typography variant='h6'>{t('createNewToken')}</Typography>
-          <Typography component='p' variant='body2'>
-            {t('tokenOnlyShowedOnceHint')}
-          </Typography>
-          <Stack direction='row' my={2} spacing={2}>
-            <FormControl fullWidth>
-              <InputLabel id='expiresIn-label'>{t('validPeriod')}</InputLabel>
-              <Select
-                size='small'
-                labelId='expiresIn-label'
-                name='expiresIn'
-                id='expiresIn'
-                value={expiresIn}
-                label={t('validPeriod')}
-                onChange={e => setExpiresIn(e.target.value)}>
-                <MenuItem value={1}>1 {t('month')}</MenuItem>
-                <MenuItem value={3}>3 {t('months')}</MenuItem>
-                <MenuItem value={12}>1 {t('year')}</MenuItem>
-                <MenuItem value={36}>3 {t('years')}</MenuItem>
-              </Select>
-            </FormControl>
-            <Button sx={{ minWidth: 'auto' }} onClick={() => createToken({ variables: { expiresIn } })}>
-              {t('create')}
-            </Button>
-          </Stack>
-          {createdToken !== null && (
-            <>
-              <Typography component='p' variant='body2'>
-                {t('newToken')}:
-              </Typography>
-              <Box p={2} mt={1} border={1} borderRadius={2} sx={{ wordBreak: 'break-all' }}>
-                <Typography variant='body1' sx={{ userSelect: 'all' }}>
-                  {createdToken}
-                </Typography>
-              </Box>
-            </>
-          )}
-        </Stack>
+        <ApiTokenGeneration />
 
         <Typography variant='body2'>
           {tokenMetaData.length > 0 && (
