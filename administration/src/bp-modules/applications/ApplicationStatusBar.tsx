@@ -1,5 +1,4 @@
-import { Button, Typography } from '@mui/material'
-import { common } from '@mui/material/colors'
+import { ToggleButton, ToggleButtonGroup, Typography, useTheme } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -17,64 +16,6 @@ const Container = styled.div`
     display: none;
   }
 `
-const BarItemContainer = styled.div`
-  display: flex;
-  flex: 1;
-  justify-content: space-evenly;
-  border: 1px solid #8f99a84d;
-  border-radius: 2px;
-  box-shadow: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 1px 1px rgba(17, 20, 24, 0.2);
-
-  > * {
-    &:not(:first-child) {
-      border-left: 1px solid #585858;
-    }
-  }
-`
-const Title = styled.span`
-  font-size: 20px;
-  font-weight: bold;
-`
-
-const ApplicationStatusBarItem = ({
-  item,
-  active,
-  count,
-  onSetActiveBarItem,
-}: {
-  item: ApplicationStatusBarItemType
-  active: boolean
-  count: number
-  onSetActiveBarItem: (item: ApplicationStatusBarItemType) => void
-}): ReactElement => {
-  const { t } = useTranslation('applicationsOverview')
-  const buttonBackgroundColor = active ? '#8f99a84d' : ''
-
-  return (
-    <Button
-      sx={{
-        display: 'flex',
-        flex: 1,
-        justifyContent: 'center',
-        textTransform: 'uppercase',
-        border: 'none',
-        backgroundColor: buttonBackgroundColor,
-        borderBottomLeftRadius: 0,
-        borderTopLeftRadius: 0,
-      }}
-      size='large'
-      onClick={() => onSetActiveBarItem(item)}
-      id={item.barItemI18nKey}>
-      <Typography color={common.black} variant='body2bold'>
-        {t(item.barItemI18nKey)}(
-        <Typography variant='body2bold' component='span' data-testid={`status-${t(item.barItemI18nKey)}-count`}>
-          {count}
-        </Typography>
-        )
-      </Typography>
-    </Button>
-  )
-}
 
 const ApplicationStatusBar = ({
   applications,
@@ -87,22 +28,31 @@ const ApplicationStatusBar = ({
   activeBarItem: ApplicationStatusBarItemType
   onSetActiveBarItem: (item: ApplicationStatusBarItemType) => void
 }): ReactElement => {
+  const theme = useTheme()
   const { t } = useTranslation('applicationsOverview')
   return (
     <Container>
-      <Title>{t('status')}</Title>
+      <Typography variant='h6' margin={0}>
+        {t('status')}
+      </Typography>
       <ApplicationStatusHelpButton />
-      <BarItemContainer>
-        {Object.values(barItems).map(item => (
-          <ApplicationStatusBarItem
-            key={item.barItemI18nKey}
-            count={applications.reduce((count, application) => count + (item.filter(application) ? 1 : 0), 0)}
-            item={item}
-            active={item === activeBarItem}
-            onSetActiveBarItem={onSetActiveBarItem}
-          />
-        ))}
-      </BarItemContainer>
+      <ToggleButtonGroup exclusive color='primary' value={activeBarItem} sx={{ flex: 1, flexWrap: 'wrap' }}>
+        {Object.values(barItems).map(item => {
+          const count = applications.reduce((count, application) => count + (item.filter(application) ? 1 : 0), 0)
+          return (
+            <ToggleButton
+              key={item.barItemI18nKey}
+              sx={{ flex: 1, textTransform: 'uppercase', color: theme.palette.text.primary }}
+              value={item}
+              onClick={() => onSetActiveBarItem(item)}
+              id={item.barItemI18nKey}>
+              <Typography variant='body2bold'>
+                {t(item.barItemI18nKey)} (<span data-testid={`status-${t(item.barItemI18nKey)}-count`}>{count}</span>)
+              </Typography>
+            </ToggleButton>
+          )
+        })}
+      </ToggleButtonGroup>
     </Container>
   )
 }
