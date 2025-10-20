@@ -18,7 +18,10 @@ import jakarta.servlet.http.Part
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.SizedIterable
 import org.jetbrains.exposed.sql.SortOrder
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.deleteWhere
 import java.io.File
+import java.nio.file.Paths
 import java.security.SecureRandom
 import java.time.Instant
 import java.util.Base64
@@ -131,21 +134,20 @@ object ApplicationRepository {
             }
         }
 
-    // TODO: to be migrated later
-    // fun delete(project: String, application: ApplicationEntity, graphQLContext: GraphQLContext) {
-    //     ApplicationVerifications.deleteWhere { ApplicationVerifications.applicationId eq application.id }
-    //     application.delete()
-    //
-    //     val applicationDirectory = Paths.get(
-    //         graphQLContext.applicationData.absolutePath,
-    //         project,
-    //         application.id.toString(),
-    //     ).toFile()
-    //
-    //     if (applicationDirectory.exists()) {
-    //         applicationDirectory.deleteRecursively()
-    //     }
-    // }
+    fun delete(project: String, application: ApplicationEntity, applicationData: File) {
+        ApplicationVerifications.deleteWhere { ApplicationVerifications.applicationId eq application.id }
+        application.delete()
+
+        val applicationDirectory = Paths.get(
+            applicationData.absolutePath,
+            project,
+            application.id.toString(),
+        ).toFile()
+
+        if (applicationDirectory.exists()) {
+            applicationDirectory.deleteRecursively()
+        }
+    }
 
     fun findByIds(ids: List<Int>): List<ApplicationEntity?> =
         ApplicationEntity

@@ -112,6 +112,10 @@ type DynamicActivationCodeResult {
 type Mutation {
   "Activate a dynamic entitlement card"
   activateCard(activationSecretBase64: String!, cardInfoHashBase64: String!, overwrite: Boolean!, project: String!): CardActivationResultModel!
+  "Stores a new application for an EAK"
+  addEakApplication(application: ApplicationInput!, project: String!, regionId: Int!): Boolean!
+  "Approve an application"
+  approveApplicationStatus(applicationId: Int!): ApplicationAdmin!
   "Changes an administrator's password"
   changePassword(currentPassword: String!, email: String!, newPassword: String!): Boolean!
   "Creates a new administrator"
@@ -126,12 +130,18 @@ type Mutation {
   deleteAdministrator(adminId: Int!): Boolean!
   "Deletes a selected API token"
   deleteApiToken(id: Int!): Int!
+  "Deletes the application with specified id"
+  deleteApplication(applicationId: Int!): Boolean!
   "Deletes a batch of cards (that have not yet been activated)"
   deleteInactiveCards(cardInfoHashBase64List: [String!]!, regionId: Int!): Boolean!
   "Edits an existing administrator"
   editAdministrator(adminId: Int!, newEmail: String!, newRegionId: Int, newRole: Role!): Boolean!
+  "Reject an application"
+  rejectApplicationStatus(applicationId: Int!, rejectionMessage: String!): ApplicationAdmin!
   "Reset the administrator's password"
   resetPassword(email: String!, newPassword: String!, passwordResetKey: String!, project: String!): Boolean!
+  "Send approval mail to organisation"
+  sendApprovalMailToOrganisation(applicationId: Int!, applicationVerificationId: Int!): Boolean!
   "Sends a confirmation mail to the user when the card creation was successful"
   sendCardCreationConfirmationMail(deepLink: String!, recipientAddress: String!, recipientName: String!, regionId: Int!): Boolean!
   "Sends a mail that allows the administrator to reset their password."
@@ -140,12 +150,18 @@ type Mutation {
   signIn(authData: AuthDataInput!, project: String!): SignInPayload!
   "Updates application confirmation mail note"
   updateApplicationConfirmationNote(applicationConfirmationNote: String!, applicationConfirmationNoteActivated: Boolean!, regionId: Int!): Boolean!
+  "Updates a note of an application"
+  updateApplicationNote(applicationId: Int!, noteText: String!): Boolean!
   "Updates the data privacy policy of a region"
   updateDataPrivacy(dataPrivacyText: String!, regionId: Int!): Boolean!
   "Updates the notification settings"
   updateNotificationSettings(notificationSettings: NotificationSettingsInput!): Boolean!
   "Updates the region specific settings"
   updateRegionSettings(activatedForApplication: Boolean!, activatedForConfirmationMail: Boolean!, regionId: Int!): Boolean!
+  "Verifies or rejects an application verification"
+  verifyOrRejectApplicationVerification(accessKey: String!, project: String!, verified: Boolean!): Boolean!
+  "Withdraws the application"
+  withdrawApplication(accessKey: String!): Boolean!
 }
 
 type NotificationSettings {
@@ -231,9 +247,34 @@ enum ApplicationStatus {
   Withdrawn
 }
 
+enum ApplicationType {
+  FIRST_APPLICATION
+  RENEWAL_APPLICATION
+}
+
+enum BavariaCardType {
+  BLUE
+  GOLDEN
+}
+
+enum BlueCardEntitlementType {
+  JULEICA
+  MILITARY_RESERVE
+  VOLUNTEER_SERVICE
+  WORK_AT_DEPARTMENT
+  WORK_AT_ORGANIZATIONS
+}
+
 enum CodeType {
   DYNAMIC
   STATIC
+}
+
+enum GoldenCardEntitlementType {
+  HONORED_BY_MINISTER_PRESIDENT
+  MILITARY_RESERVE
+  WORK_AT_DEPARTMENT
+  WORK_AT_ORGANIZATIONS
 }
 
 enum GraphQLExceptionCode {
@@ -278,9 +319,83 @@ enum Role {
   REGION_MANAGER
 }
 
+"A file part in a multipart request"
+scalar Upload
+
+input AddressInput {
+  addressSupplement: ShortTextInput
+  country: ShortTextInput!
+  houseNumber: ShortTextInput!
+  location: ShortTextInput!
+  postalCode: ShortTextInput!
+  street: ShortTextInput!
+}
+
+input ApplicationDetailsInput {
+  applicationType: ApplicationType
+  blueCardEntitlement: BlueCardEntitlementInput
+  cardType: BavariaCardType!
+  givenInformationIsCorrectAndComplete: Boolean!
+  goldenCardEntitlement: GoldenCardEntitlementInput
+  hasAcceptedEmailUsage: Boolean!
+  hasAcceptedPrivacyPolicy: Boolean!
+  wantsDigitalCard: Boolean!
+  wantsPhysicalCard: Boolean!
+}
+
+"""
+An application for the Bayerische Ehrenamtskarte.
+The field `cardType` specifies whether `blueCardEntitlement` or `goldenCardEntitlement` must be present/null.
+The field `applicationType` must not be null if and only if `cardType` is BavariaCardType.BLUE.
+"""
+input ApplicationInput {
+  applicationDetails: ApplicationDetailsInput!
+  personalData: PersonalDataInput!
+}
+
+input AttachmentInput {
+  data: Upload!
+}
+
 input AuthDataInput {
   email: String!
   password: String!
+}
+
+"Entitlement for a blue EAK. The field selected by entitlementType must not be null; all others must be null."
+input BlueCardEntitlementInput {
+  entitlementType: BlueCardEntitlementType!
+  juleicaEntitlement: BlueCardJuleicaEntitlementInput
+  militaryReserveEntitlement: BlueCardMilitaryReserveEntitlementInput
+  volunteerServiceEntitlement: BlueCardVolunteerServiceEntitlementInput
+  workAtDepartmentEntitlement: BlueCardWorkAtDepartmentEntitlementInput
+  workAtOrganizationsEntitlement: BlueCardWorkAtOrganizationsEntitlementInput
+}
+
+input BlueCardJuleicaEntitlementInput {
+  copyOfJuleicaBack: AttachmentInput
+  copyOfJuleicaFront: AttachmentInput!
+  juleicaExpirationDate: DateInput!
+  juleicaNumber: ShortTextInput!
+}
+
+input BlueCardMilitaryReserveEntitlementInput {
+  certificate: AttachmentInput!
+}
+
+input BlueCardVolunteerServiceEntitlementInput {
+  certificate: AttachmentInput!
+  programName: ShortTextInput!
+}
+
+input BlueCardWorkAtDepartmentEntitlementInput {
+  certificate: AttachmentInput
+  organization: OrganizationInput!
+  responsibility: ShortTextInput!
+}
+
+input BlueCardWorkAtOrganizationsEntitlementInput {
+  list: [WorkAtOrganizationInput!]!
 }
 
 input CardVerificationModelInput {
@@ -289,7 +404,82 @@ input CardVerificationModelInput {
   totp: Int
 }
 
+"A local date in the format yyyy-MM-dd"
+input DateInput {
+  date: String!
+}
+
+"An email address with at most 300 characters"
+input EmailInput {
+  email: String!
+}
+
+"Entitlement for a golden EAK. The field selected by entitlementType must not be null; all others must be null."
+input GoldenCardEntitlementInput {
+  entitlementType: GoldenCardEntitlementType!
+  honoredByMinisterPresidentEntitlement: GoldenCardHonoredByMinisterPresidentEntitlementInput
+  militaryReserveEntitlement: GoldenCardMilitaryReserveEntitlementInput
+  workAtDepartmentEntitlement: GoldenCardWorkAtDepartmentEntitlementInput
+  workAtOrganizationsEntitlement: GoldenCardWorkAtOrganizationsEntitlementInput
+}
+
+input GoldenCardHonoredByMinisterPresidentEntitlementInput {
+  certificate: AttachmentInput!
+}
+
+input GoldenCardMilitaryReserveEntitlementInput {
+  certificate: AttachmentInput!
+}
+
+input GoldenCardWorkAtDepartmentEntitlementInput {
+  certificate: AttachmentInput
+  organization: OrganizationInput!
+  responsibility: ShortTextInput!
+}
+
+input GoldenCardWorkAtOrganizationsEntitlementInput {
+  list: [WorkAtOrganizationInput!]!
+}
+
 input NotificationSettingsInput {
   notificationOnApplication: Boolean!
   notificationOnVerification: Boolean!
+}
+
+input OrganizationContactInput {
+  email: EmailInput!
+  hasGivenPermission: Boolean!
+  name: ShortTextInput!
+  telephone: ShortTextInput!
+}
+
+input OrganizationInput {
+  address: AddressInput!
+  category: ShortTextInput!
+  contact: OrganizationContactInput!
+  name: ShortTextInput!
+}
+
+input PersonalDataInput {
+  address: AddressInput!
+  dateOfBirth: DateInput!
+  emailAddress: EmailInput!
+  forenames: ShortTextInput!
+  surname: ShortTextInput!
+  telephone: ShortTextInput
+}
+
+"A String wrapper that expects a non-empty string with at most 300 characters"
+input ShortTextInput {
+  shortText: String!
+}
+
+input WorkAtOrganizationInput {
+  amountOfWork: Float!
+  certificate: AttachmentInput
+  isAlreadyVerified: Boolean
+  organization: OrganizationInput!
+  payment: Boolean!
+  responsibility: ShortTextInput!
+  workSinceDate: DateInput!
 }

@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.graphql.application
 
+import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity.Status
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
@@ -14,30 +15,51 @@ import app.ehrenamtskarte.backend.graphql.application.types.Application
 import app.ehrenamtskarte.backend.graphql.application.types.ApplicationAdminGql
 import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantEmail
 import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantName
-import app.ehrenamtskarte.backend.graphql.context
-import app.ehrenamtskarte.backend.graphql.getAuthContext
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidInputException
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidLinkException
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidNoteSizeException
+import app.ehrenamtskarte.backend.graphql.auth.requireAuthContext
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidInputException
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidLinkException
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidNoteSizeException
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import app.ehrenamtskarte.backend.shared.exceptions.NotFoundException
 import app.ehrenamtskarte.backend.shared.mail.Mailer
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
+import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import graphql.execution.DataFetcherResult
 import graphql.schema.DataFetchingEnvironment
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.Part
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.ContextValue
+import org.springframework.graphql.data.method.annotation.MutationMapping
+import org.springframework.stereotype.Controller
+import java.io.File
 
-@Suppress("unused")
-class EakApplicationMutationService {
+@Controller
+class EakApplicationMutationController(
+    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
+    private val backendConfiguration: BackendConfiguration,
+    private val applicationData: File,
+) {
     @GraphQLDescription("Stores a new application for an EAK")
+    @MutationMapping
     fun addEakApplication(
-        regionId: Int,
-        application: Application,
-        project: String,
-        dfe: DataFetchingEnvironment,
+        @Argument regionId: Int,
+        @Argument application: Application,
+        @Argument project: String,
+        @GraphQLIgnore @ContextValue(required = false) files: List<Part>?,
+        @GraphQLIgnore @ContextValue request: HttpServletRequest,
     ): DataFetcherResult<Boolean> =
         transaction {
-            val applicationHandler = ApplicationHandler(dfe.graphQlContext.context, application, regionId, project)
+            val applicationHandler = ApplicationHandler(
+                backendConfiguration,
+                application,
+                regionId,
+                project,
+                applicationData,
+                files.orEmpty(),
+                request,
+            )
             val dataFetcherResultBuilder = DataFetcherResult.newResult<Boolean>()
 
             applicationHandler.validateRegion()
@@ -66,13 +88,16 @@ class EakApplicationMutationService {
                     applicationConfirmationNote,
                 )
             }
-            return@transaction dataFetcherResultBuilder.data(true).build()
+            dataFetcherResultBuilder.data(true).build()
         }
 
     @GraphQLDescription("Deletes the application with specified id")
-    fun deleteApplication(applicationId: Int, dfe: DataFetchingEnvironment): Boolean {
-        val context = dfe.graphQlContext.context
-        val authContext = context.getAuthContext()
+    @MutationMapping
+    fun deleteApplication(
+        @Argument applicationId: Int,
+        dfe: DataFetchingEnvironment,
+    ): Boolean {
+        val authContext = dfe.requireAuthContext()
 
         transaction {
             val application = ApplicationEntity.findById(applicationId)
@@ -86,13 +111,16 @@ class EakApplicationMutationService {
                 throw InvalidInputException("Application cannot be deleted while it is in a pending state")
             }
 
-            ApplicationRepository.delete(authContext.project, application, context)
+            ApplicationRepository.delete(authContext.project, application, applicationData)
         }
         return true
     }
 
     @GraphQLDescription("Withdraws the application")
-    fun withdrawApplication(accessKey: String): Boolean =
+    @MutationMapping
+    fun withdrawApplication(
+        @Argument accessKey: String,
+    ): Boolean =
         transaction {
             try {
                 ApplicationEntity.find { Applications.accessKey eq accessKey }.single().status = Status.Withdrawn
@@ -103,11 +131,11 @@ class EakApplicationMutationService {
         }
 
     @GraphQLDescription("Verifies or rejects an application verification")
+    @MutationMapping
     fun verifyOrRejectApplicationVerification(
-        project: String,
-        accessKey: String,
-        verified: Boolean,
-        dfe: DataFetchingEnvironment,
+        @Argument project: String,
+        @Argument accessKey: String,
+        @Argument verified: Boolean,
     ): Boolean =
         transaction {
             val application = ApplicationRepository.getApplicationByApplicationVerificationAccessKey(accessKey)
@@ -118,14 +146,12 @@ class EakApplicationMutationService {
             }
 
             if (verified) {
-                val context = dfe.graphQlContext.context
-                val backendConfig = context.backendConfiguration
-                val projectConfig = backendConfig.projects.first { it.id == project }
+                val projectConfig = backendConfiguration.getProjectConfig(project)
 
                 ApplicationRepository.verifyApplicationVerification(accessKey).also {
                     Mailer.sendNotificationForVerificationMails(
                         project,
-                        backendConfig,
+                        backendConfiguration,
                         projectConfig,
                         application.regionId.value,
                     )
@@ -143,22 +169,23 @@ class EakApplicationMutationService {
      * @throws ForbiddenException If the user is not allowed to modify this application
      */
     @GraphQLDescription("Approve an application")
-    fun approveApplicationStatus(applicationId: Int, dfe: DataFetchingEnvironment): ApplicationAdminGql {
-        val context = dfe.graphQlContext.context
-
-        return transaction {
+    @MutationMapping
+    fun approveApplicationStatus(
+        @Argument applicationId: Int,
+        dfe: DataFetchingEnvironment,
+    ): ApplicationAdminGql =
+        transaction {
             val applicationEntity = ApplicationEntity.findById(applicationId)
                 ?: throw InvalidInputException("Application not found")
 
             applicationEntity.changeStatusOrThrow(Status.Approved)
 
-            if (context.getAuthContext().admin.mayUpdateApplicationsInRegion(applicationEntity.regionId.value)) {
+            if (dfe.requireAuthContext().admin.mayUpdateApplicationsInRegion(applicationEntity.regionId.value)) {
                 ApplicationAdminGql.fromDbEntity(applicationEntity)
             } else {
                 throw ForbiddenException()
             }
         }
-    }
 
     /**
      * Rejects an application if it is in the Pending status.
@@ -168,13 +195,13 @@ class EakApplicationMutationService {
      * @throws ForbiddenException If the user is not allowed to modify this application
      */
     @GraphQLDescription("Reject an application")
+    @MutationMapping
     fun rejectApplicationStatus(
-        applicationId: Int,
-        rejectionMessage: String,
+        @Argument applicationId: Int,
+        @Argument rejectionMessage: String,
         dfe: DataFetchingEnvironment,
     ): ApplicationAdminGql {
-        val context = dfe.graphQlContext.context
-        val authContext = context.getAuthContext()
+        val authContext = dfe.requireAuthContext()
 
         return transaction {
             val application = ApplicationEntity.findById(applicationId)
@@ -188,8 +215,8 @@ class EakApplicationMutationService {
             application.rejectionMessage = rejectionMessage
 
             Mailer.sendApplicationRejectedMail(
-                context.backendConfiguration,
-                context.backendConfiguration.getProjectConfig(authContext.project),
+                backendConfiguration,
+                backendConfiguration.getProjectConfig(authContext.project),
                 application.getApplicantName(),
                 application.getApplicantEmail(),
                 rejectionMessage,
@@ -200,32 +227,34 @@ class EakApplicationMutationService {
     }
 
     @GraphQLDescription("Updates a note of an application")
-    fun updateApplicationNote(applicationId: Int, noteText: String, dfe: DataFetchingEnvironment): Boolean {
-        val context = dfe.graphQlContext.context
-
-        return transaction {
+    @MutationMapping
+    fun updateApplicationNote(
+        @Argument applicationId: Int,
+        @Argument noteText: String,
+        dfe: DataFetchingEnvironment,
+    ): Boolean =
+        transaction {
             val application =
                 ApplicationEntity.findById(applicationId) ?: throw NotFoundException("Application not found")
             if (noteText.length > NOTE_MAX_CHARS) {
                 throw InvalidNoteSizeException(NOTE_MAX_CHARS)
             }
 
-            if (!context.getAuthContext().admin.mayUpdateApplicationsInRegion(application.regionId.value)) {
+            if (!dfe.requireAuthContext().admin.mayUpdateApplicationsInRegion(application.regionId.value)) {
                 throw ForbiddenException()
             }
 
             ApplicationRepository.updateApplicationNote(applicationId, noteText)
         }
-    }
 
     @GraphQLDescription("Send approval mail to organisation")
+    @MutationMapping
     fun sendApprovalMailToOrganisation(
-        applicationId: Int,
-        applicationVerificationId: Int,
+        @Argument applicationId: Int,
+        @Argument applicationVerificationId: Int,
         dfe: DataFetchingEnvironment,
     ): Boolean {
-        val context = dfe.graphQlContext.context
-        val authContext = context.getAuthContext()
+        val authContext = dfe.requireAuthContext()
 
         transaction {
             val application = ApplicationEntity.findById(applicationId)
@@ -247,9 +276,9 @@ class EakApplicationMutationService {
             }
 
             Mailer.sendApplicationVerificationMail(
-                context.backendConfiguration,
+                backendConfiguration,
                 application.getApplicantName(),
-                context.backendConfiguration.getProjectConfig(authContext.project),
+                backendConfiguration.getProjectConfig(authContext.project),
                 applicationVerification,
             )
         }

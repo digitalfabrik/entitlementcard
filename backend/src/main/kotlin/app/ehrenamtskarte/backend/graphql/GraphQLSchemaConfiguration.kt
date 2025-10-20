@@ -1,18 +1,25 @@
 package app.ehrenamtskarte.backend.graphql
 
+import app.ehrenamtskarte.backend.graphql.application.multipart.UploadCoercing
+import app.ehrenamtskarte.backend.graphql.application.types.primitives.UploadKey
 import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
 import com.expediagroup.graphql.generator.SchemaGeneratorConfig
 import com.expediagroup.graphql.generator.TopLevelObject
+import com.expediagroup.graphql.generator.hooks.SchemaGeneratorHooks
 import com.expediagroup.graphql.generator.toSchema
 import graphql.schema.GraphQLEnumType
 import graphql.schema.GraphQLEnumValueDefinition
+import graphql.schema.GraphQLScalarType
 import graphql.schema.GraphQLSchema
+import graphql.schema.GraphQLType
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.graphql.execution.RuntimeWiringConfigurer
 import org.springframework.stereotype.Controller
+import kotlin.reflect.KType
 import kotlin.reflect.full.memberFunctions
 
 /**
@@ -42,6 +49,7 @@ class GraphQLSchemaConfiguration(
 
         val config = SchemaGeneratorConfig(
             supportedPackages = listOf("app.ehrenamtskarte.backend.graphql"),
+            hooks = hooks,
             additionalTypes = setOf(
                 GraphQLEnumType.newEnum()
                     .name("GraphQLExceptionCode")
@@ -63,4 +71,26 @@ class GraphQLSchemaConfiguration(
             subscriptions = emptyList(),
         )
     }
+
+    private val uploadScalar: GraphQLScalarType = GraphQLScalarType.newScalar()
+        .name("Upload")
+        .description("A file part in a multipart request")
+        .coercing(UploadCoercing())
+        .build()
+
+    private val hooks = object : SchemaGeneratorHooks {
+        override fun willGenerateGraphQLType(type: KType): GraphQLType? =
+            if (type.classifier == UploadKey::class) {
+                uploadScalar
+            } else {
+                null
+            }
+    }
+
+    /**
+     * Registers custom "Upload" scalar with Spring's GraphQL runtime.
+     * This prevents Spring from autoconfiguring its own, avoiding a conflict.
+     */
+    @Bean
+    fun runtimeWiringConfigurer(): RuntimeWiringConfigurer = RuntimeWiringConfigurer { it.scalar(this.uploadScalar) }
 }
