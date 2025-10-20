@@ -45,6 +45,7 @@
     "@babel/plugin-proposal-decorators": "^7.27.1",
     "@babel/plugin-transform-runtime": "^7.28.3",
     "@babel/runtime": "^7.28.3",
+    "@bufbuild/buf": "^1.58.0",
     "@bufbuild/protoc-gen-es": "^1.10.1",
     "@eslint/compat": "^1.4.0",
     "@eslint/eslintrc": "^3.3.1",
@@ -113,7 +114,7 @@
     "ts:check": "tsc --build",
     "format": "NODE_ENV=test eslint . --fix && prettier . --write",
     "generate-graphql": "graphql-codegen --config graphql-codegen.yml",
-    "generate-protobuf": "mkdir -p src/generated && protoc -I ../specs --es_out=src/generated --es_opt=target=ts --plugin=protoc-gen-es=../node_modules/.bin/protoc-gen-es ../specs/card.proto",
+    "generate-protobuf": "npm exec buf generate",
     "postinstall": "npm run generate-protobuf && npm run generate-graphql",
     "check-circular-deps": "bash ./scripts/check_circular_deps.sh",
     "test:e2e": "npx playwright test"
