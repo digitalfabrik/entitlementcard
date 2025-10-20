@@ -92,8 +92,5 @@ class GraphQLSchemaConfiguration(
      * This prevents Spring from autoconfiguring its own, avoiding a conflict.
      */
     @Bean
-    fun runtimeWiringConfigurer(): RuntimeWiringConfigurer =
-        RuntimeWiringConfigurer { wiringBuilder ->
-            wiringBuilder.scalar(this.uploadScalar)
-        }
+    fun runtimeWiringConfigurer(): RuntimeWiringConfigurer = RuntimeWiringConfigurer { it.scalar(this.uploadScalar) }
 }
