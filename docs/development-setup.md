@@ -27,13 +27,10 @@
 
 ## Prerequisites
 
-1. Install the [protobuf compiler](https://github.com/protocolbuffers/protobuf) using a package manager of your choice
-  or using a binary from the [github release page](https://github.com/protocolbuffers/protobuf/releases). 
-  *The selected version has to match (or be older than) the version of protobuf-kotlin dependency used in [build.gradle.kts](../backend/build.gradle.kts).*
-2. Install Java JDK 17.
+- Install Java JDK 17.
    *If you use a later version, it has to be compatible with the [configured Gradle version](../frontend/android/gradle/wrapper/gradle-wrapper.properties).
    Check the [Gradle Compatibility Matrix](https://docs.gradle.org/current/userguide/compatibility.html#java) for details.*
-3. Open the [root project](..) in IntelliJ.
+- Open the [root project](..) in IntelliJ.
 
 ## Frontend
 
