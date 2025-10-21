@@ -50,7 +50,7 @@ const WorkAtDepartmentEntitlementForm: Form<State, ValidatedInput, AdditionalPro
         <Typography variant='body2bold' component='h4' marginY={1.5}>
           {t('certificateHeadline')}
         </Typography>
-        <Typography component='p' variant='body2'>
+        <Typography component='p'>
           {t('certificateDescription')} {FileRequirementsText}
         </Typography>
         <SubForms.certificate.Component

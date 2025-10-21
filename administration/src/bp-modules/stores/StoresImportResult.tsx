@@ -27,25 +27,23 @@ const StoresImportResult = ({
       <Typography variant='h6' data-testid='import-result-headline'>{`${t('articleMale')} ${
         dryRun ? t('dryRunImport') : t('import')
       } ${t('wasSuccessful')}`}</Typography>
-      <Typography variant='body2' component='span'>
-        {dryRun ? t('importResult') : t('importResult')}
-      </Typography>
+      <Typography component='span'>{dryRun ? t('importResult') : t('importResult')}</Typography>
       <br />
       <div>
         {t('storesCreated')}{' '}
-        <Typography variant='body2' component='span' data-testid='storesCreated'>
+        <Typography component='span' data-testid='storesCreated'>
           {storesCreated}
         </Typography>
       </div>
       <div>
         {t('storesDeleted')}{' '}
-        <Typography variant='body2' component='span' data-testid='storesDeleted'>
+        <Typography component='span' data-testid='storesDeleted'>
           {storesDeleted}
         </Typography>
       </div>
       <div>
         {t('storesUntouched')}{' '}
-        <Typography variant='body2' component='span' data-testid='storesUntouched'>
+        <Typography component='span' data-testid='storesUntouched'>
           {storesUntouched}
         </Typography>
       </div>

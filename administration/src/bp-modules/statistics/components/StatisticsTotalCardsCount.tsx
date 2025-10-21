@@ -40,16 +40,16 @@ const StatisticsTotalCardsCount = ({ statistics }: StatisticsTotalCountProps): R
       <Typography variant='h6' margin={0} textAlign='center'>
         {t('allRegions')}
       </Typography>
-      <Typography variant='body2' component='span' data-testid='totalCardsCreated'>
+      <Typography component='span' data-testid='totalCardsCreated'>
         {` ${sumTotalAmounts(statistics).totalCardsCreated} ${toLowerCaseFirstLetter(t('cardsCreated'))} / `}
       </Typography>
-      <Typography variant='body2' component='span' data-testid='totalCardsActivated'>
+      <Typography component='span' data-testid='totalCardsActivated'>
         {`${sumTotalAmounts(statistics).totalCardsActivated} ${toLowerCaseFirstLetter(t('cardsActivated'))}`}
       </Typography>
-      <Typography variant='body2' component='span' data-testid='totalCardsActivatedBlue'>
+      <Typography component='span' data-testid='totalCardsActivatedBlue'>
         {` (${sumTotalAmounts(statistics).totalCardsBlue} ${toLowerCaseFirstLetter(t('totalCardsBlue'))}, `}
       </Typography>
-      <Typography variant='body2' component='span' data-testid='totalCardsActivatedGolden'>
+      <Typography component='span' data-testid='totalCardsActivatedGolden'>
         {`${sumTotalAmounts(statistics).totalCardsGolden} ${toLowerCaseFirstLetter(t('totalCardsGolden'))})`}
       </Typography>
     </Container>

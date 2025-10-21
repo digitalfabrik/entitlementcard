@@ -15,56 +15,39 @@ const RoleHelpButton = (): ReactElement => {
         <Typography variant='h5' sx={{ textAlign: 'center' }}>
           {t('roleRightsHeading')}
         </Typography>
-        <Typography component='ul'>
+        <Typography variant='body1' component='ul'>
           <Typography variant='body2bold' component='li'>
             {roleToText(Role.ProjectAdmin)}:
-            <Typography component='ul'>
-              <Typography component='li' variant='body2'>
-                {t('projectAdminRight')}
-              </Typography>
+            <Typography variant='body1' component='ul'>
+              <Typography component='li'>{t('projectAdminRight')}</Typography>
             </Typography>
           </Typography>
-          <Typography component='li'>
+          <Typography variant='body1' component='li'>
             <Typography variant='body2bold'>{roleToText(Role.RegionAdmin)}:</Typography>
-            <Typography component='ul'>
-              <Typography variant='body2' component='li'>
-                {t('regionAdminRight1')}
-              </Typography>
-              <Typography variant='body2' component='li'>
-                {t('regionAdminRight2')}
-              </Typography>
-              <Typography variant='body2' component='li'>
-                {t('regionAdminRight3')}
-              </Typography>
-              <Typography variant='body2' component='li'>
-                {t('regionAdminRight4')}
-              </Typography>
+            <Typography variant='body1' component='ul'>
+              <Typography component='li'>{t('regionAdminRight1')}</Typography>
+              <Typography component='li'>{t('regionAdminRight2')}</Typography>
+              <Typography component='li'>{t('regionAdminRight3')}</Typography>
+              <Typography component='li'>{t('regionAdminRight4')}</Typography>
             </Typography>
             <div>
               <Typography color='error' variant='body2bold'>
                 {t('hint')}:{' '}
               </Typography>
-              <Typography variant='body2' component='span'>
-                {' '}
-                {t('regionAdminHint')}
-              </Typography>
+              <Typography component='span'> {t('regionAdminHint')}</Typography>
             </div>
           </Typography>
-          <Typography component='li'>
+          <Typography variant='body1' component='li'>
             <Typography variant='body2bold'>{roleToText(Role.RegionManager)}:</Typography>
-            <Typography component='ul'>
-              <Typography variant='body2' component='li'>
-                {t('regionManagerRight1')}
-              </Typography>
-              <Typography variant='body2' component='li'>
-                {t('regionManagerRight2')}
-              </Typography>
+            <Typography variant='body1' component='ul'>
+              <Typography component='li'>{t('regionManagerRight1')}</Typography>
+              <Typography component='li'>{t('regionManagerRight2')}</Typography>
             </Typography>
           </Typography>
           <Typography component='li' variant='body2bold'>
             {roleToText(Role.ExternalVerifiedApiUser)}:
-            <Typography component='ul'>
-              <Typography variant='body2' component='li'>
+            <Typography variant='body1' component='ul'>
+              <Typography component='li'>
                 {t('externalVerifiedApiUser1')}
                 <br />
                 {t('externalVerifiedApiUser2')}

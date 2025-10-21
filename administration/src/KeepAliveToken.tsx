@@ -63,12 +63,8 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props): Rea
         <DialogTitle>{t('loginPeriodExpires')}</DialogTitle>
         <DialogContent id='keep-alive-dialog'>
           <Stack>
-            <Typography component='p' variant='body2'>
-              {t('loginPeriodSecondsLeft', { secondsLeft })}
-            </Typography>
-            <Typography component='p' variant='body2'>
-              {t('loginPeriodPasswordPrompt')}
-            </Typography>
+            <Typography component='p'>{t('loginPeriodSecondsLeft', { secondsLeft })}</Typography>
+            <Typography component='p'>{t('loginPeriodPasswordPrompt')}</Typography>
             <PasswordInput placeholder={t('loginPeriodPasswordPlaceholder')} setValue={setPassword} value={password} />
           </Stack>
         </DialogContent>

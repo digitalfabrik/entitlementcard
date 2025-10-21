@@ -55,9 +55,7 @@ const ApiTokenGeneration = (): ReactElement => {
   return (
     <Stack my={1} p={2} borderRadius={2} boxShadow='inset 0 2px 4px rgba(0, 0, 0, 0.05)' bgcolor='ghostwhite'>
       <Typography variant='h6'>{t('createNewToken')}</Typography>
-      <Typography component='p' variant='body2'>
-        {t('tokenOnlyShowedOnceHint')}
-      </Typography>
+      <Typography component='p'>{t('tokenOnlyShowedOnceHint')}</Typography>
       <Stack direction='row' my={2} spacing={2}>
         <FormControl fullWidth>
           <InputLabel id='expiresIn-label'>{t('validPeriod')}</InputLabel>
@@ -81,9 +79,7 @@ const ApiTokenGeneration = (): ReactElement => {
       </Stack>
       {createdToken !== null && (
         <>
-          <Typography component='p' variant='body2'>
-            {t('newToken')}:
-          </Typography>
+          <Typography component='p'>{t('newToken')}:</Typography>
           <Box p={2} mt={1} border={1} borderRadius={2} sx={{ wordBreak: 'break-all' }}>
             <Typography variant='body1' sx={{ userSelect: 'all' }}>
               {createdToken}
@@ -143,16 +139,14 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
         onClose={() => setTokenToDelete(null)}
         confirmButtonIcon={<Delete />}
         confirmButtonText={t('deleteToken')}>
-        <Typography component='p' variant='body2'>
-          {t('deleteTokenConfirmationPrompt')}
-        </Typography>
+        <Typography component='p'>{t('deleteTokenConfirmationPrompt')}</Typography>
       </ConfirmDialog>
       <SettingsCard title={t('apiToken')}>
         {showPepperSection && <PepperSettings />}
 
         <ApiTokenGeneration />
 
-        <Typography variant='body2'>
+        <Typography>
           {tokenMetaData.length > 0 && (
             <Table>
               <TableHead>

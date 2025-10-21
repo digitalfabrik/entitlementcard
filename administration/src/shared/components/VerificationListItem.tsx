@@ -64,11 +64,7 @@ const VerificationListItem = ({
   }
 
   return (
-    <Typography
-      component='li'
-      variant='body2'
-      sx={{ borderLeft: `2px solid ${color}`, position: 'relative' }}
-      paddingLeft={1.5}>
+    <Typography component='li' sx={{ borderLeft: `2px solid ${color}`, position: 'relative' }} paddingLeft={1.5}>
       <table cellPadding='2px'>
         <tbody>
           <tr>
@@ -81,9 +77,7 @@ const VerificationListItem = ({
               {isEmailValid(verification.contactEmailAddress) ? (
                 <EmailLink email={verification.contactEmailAddress} />
               ) : (
-                <Typography variant='body2' component='span'>
-                  {verification.contactEmailAddress}
-                </Typography>
+                <Typography component='span'>{verification.contactEmailAddress}</Typography>
               )}
             </td>
           </tr>

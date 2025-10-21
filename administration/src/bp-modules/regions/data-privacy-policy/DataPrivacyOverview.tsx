@@ -63,7 +63,6 @@ const DataPrivacyOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProp
           onChange={e => setDataPrivacyText(e.target.value)}
         />
         <Typography
-          variant='body2'
           m={2}
           sx={{
             alignSelf: 'flex-start',

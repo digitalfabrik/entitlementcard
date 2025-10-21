@@ -23,9 +23,7 @@ const ApplicationConfirmationNoteCard = ({
 
   return (
     <SettingsCard title={t('applicationConfirmationMailNoteHeadline')}>
-      <Typography component='p' variant='body2'>
-        {t('applicationConfirmationMailNoteExplanation')}
-      </Typography>
+      <Typography component='p'>{t('applicationConfirmationMailNoteExplanation')}</Typography>
       <SettingsCardButtonBox>
         <Button onClick={() => setOpenApplicationConfirmationNote(true)}>{t('open')}</Button>
       </SettingsCardButtonBox>

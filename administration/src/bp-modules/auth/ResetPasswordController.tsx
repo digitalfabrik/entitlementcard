@@ -67,9 +67,7 @@ const ResetPasswordController = (): ReactElement => {
         <Typography variant='h4'>{config.name}</Typography>
         <Typography variant='h5'>{t('administration')}</Typography>
         <Typography variant='h6'>{t('resetPassword')}</Typography>
-        <Typography component='p' variant='body2'>
-          {t('setPasswordText')}
-        </Typography>
+        <Typography component='p'>{t('setPasswordText')}</Typography>
         <form
           onSubmit={e => {
             e.preventDefault()

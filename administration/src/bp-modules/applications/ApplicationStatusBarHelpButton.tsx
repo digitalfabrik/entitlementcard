@@ -14,10 +14,10 @@ const ApplicationStatusHelpButton = (): ReactElement => {
         <Typography variant='h5' textAlign='center'>
           {t('whichStatusMeansWhat')}
         </Typography>
-        <Typography component='ul' marginY={0.5} variant='body2'>
+        <Typography component='ul' marginY={0.5}>
           <Typography component='li' variant='body2bold'>
             {t('statusBarAccepted')}:
-            <Typography component='ul' marginY={0.5} variant='body2'>
+            <Typography component='ul' marginY={0.5}>
               {t('acceptedDescription')}
               <br />
               {t('cardCouldBeCreated')}
@@ -25,7 +25,7 @@ const ApplicationStatusHelpButton = (): ReactElement => {
           </Typography>
           <Typography component='li' variant='body2bold'>
             {t('statusBarRejected')}:
-            <Typography component='ul' marginY={0.5} variant='body2'>
+            <Typography component='ul' marginY={0.5}>
               {t('rejectedDescription')}
               <br />
               {t('applicationCouldBeDeleted')}
@@ -33,7 +33,7 @@ const ApplicationStatusHelpButton = (): ReactElement => {
           </Typography>
           <Typography component='li' variant='body2bold'>
             {t('statusBarWithdrawn')}:
-            <Typography component='ul' marginY={0.5} variant='body2'>
+            <Typography component='ul' marginY={0.5}>
               {t('withdrawnDescription')}
               <br />
               {t('applicationCouldBeDeleted')}
@@ -41,7 +41,7 @@ const ApplicationStatusHelpButton = (): ReactElement => {
           </Typography>
           <Typography component='li' variant='body2bold'>
             {t('statusBarOpen')}:
-            <Typography component='ul' marginY={0.5} variant='body2'>
+            <Typography component='ul' marginY={0.5}>
               {t('pendingDescription')}
               <br />
               {t('cardShouldNotYetBeCreated')}

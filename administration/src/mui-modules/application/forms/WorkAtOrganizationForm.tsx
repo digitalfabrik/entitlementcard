@@ -113,7 +113,7 @@ const WorkAtOrganizationForm: Form<State, ValidatedInput, AdditionalProps> = {
         <Typography variant='body2bold' component='h4' marginY={1.5}>
           {t('applicationForms:certificateHeadline')}
         </Typography>
-        <Typography component='p' variant='body2'>
+        <Typography component='p'>
           {t('applicationForms:certificateDescription')} {FileRequirementsText}
         </Typography>
         <SubForms.certificate.Component

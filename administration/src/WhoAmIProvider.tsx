@@ -41,7 +41,9 @@ const WhoAmIProvider = ({ children }: { children: ReactNode }): ReactElement => 
   if (!hasProp(context, 'me') || error) {
     return (
       <StandaloneCenter>
-        <Typography component='p'>{t('accountInformationNotAvailable')}</Typography>
+        <Typography variant='body1' component='p'>
+          {t('accountInformationNotAvailable')}
+        </Typography>
         <Stack direction='row' spacing={2}>
           <Button variant='outlined' startIcon={<Replay />} onClick={() => refetch()}>
             {t('retry')}

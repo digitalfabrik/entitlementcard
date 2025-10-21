@@ -16,18 +16,14 @@ const selfServiceStepInfo: { [step in Exclude<SelfServiceCardGenerationStep, 'lo
     stepNr: 1,
     headline: i18next.t('selfService:welcome'),
     subHeadline: i18next.t('selfService:fewStepsNeeded'),
-    text: (
-      <Typography variant='body2' component='span'>
-        {i18next.t('selfService:explanation')}
-      </Typography>
-    ),
+    text: <Typography component='span'>{i18next.t('selfService:explanation')}</Typography>,
   },
   information: {
     stepNr: 2,
     headline: i18next.t('selfService:createdPassSuccessfully'),
     subHeadline: i18next.t('selfService:fewMoreStepsNeeded'),
     text: (
-      <Typography variant='body2' component='span'>
+      <Typography component='span'>
         <b>{i18next.t('selfService:appAlreadyInstalled')} </b>
         {i18next.t('selfService:appAlreadyInstalledPrompt')}
       </Typography>
@@ -38,7 +34,7 @@ const selfServiceStepInfo: { [step in Exclude<SelfServiceCardGenerationStep, 'lo
     headline: i18next.t('selfService:almostThere'),
     subHeadline: i18next.t('selfService:activateAndDownloadPrompt'),
     text: (
-      <Typography variant='body2' component='span'>
+      <Typography component='span'>
         {i18next.t('selfService:lastStepExplanation1')}
         <b>{i18next.t('selfService:lastStepExplanation2')}</b>
         {i18next.t('selfService:lastStepExplanation3')} <b>{i18next.t('selfService:lastStepExplanation4')}</b>.

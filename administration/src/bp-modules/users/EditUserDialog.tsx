@@ -142,7 +142,7 @@ const EditUserDialog = ({
             severity='error'
             title={t('youEditYourOwnAccount')}
             description={
-              <Typography variant='body2' component='div'>
+              <Typography component='div'>
                 {t('youMayCannotUndoThis')}
                 <BaseCheckbox
                   label={t('ownAccountWarningConfirmation')}

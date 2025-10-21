@@ -31,12 +31,12 @@ const StoresImportAlert = ({ dryRun, setDryRun, storesCount }: StoreImportAlertP
   return (
     <>
       {dryRun ? (
-        <Typography variant='body2' component='span' data-testid='dry-run-alert'>
+        <Typography component='span' data-testid='dry-run-alert'>
           <b>{t('dryRun')}:</b> {t('dryRunDescription')}
         </Typography>
       ) : (
         <>
-          <Typography variant='body2' component='span' data-testid='prod-run-alert'>
+          <Typography component='span' data-testid='prod-run-alert'>
             <b>{t('caution')}:</b> {t('cautionDescription')}
           </Typography>
           <br />

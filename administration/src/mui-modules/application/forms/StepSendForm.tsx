@@ -66,7 +66,7 @@ const StepSendForm: Form<State, ValidatedInput, AdditionalProps> = {
     const config = useContext(ProjectConfigContext)
     const [openPrivacyPolicy, setOpenPrivacyPolicy] = useState<boolean>(false)
     const PrivacyLabel = (
-      <Typography variant='body2' component='span'>
+      <Typography component='span'>
         <Trans i18nKey='applicationForms:acceptDataPrivacyPolicy' />{' '}
         <Button
           variant='text'
