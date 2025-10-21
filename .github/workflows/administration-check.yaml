@@ -3,6 +3,7 @@ on:
   pull_request:
     branches:
       - main
+      - 2108-install-protoc-with-npm
     paths:
       - 'administration/**'
 jobs:
