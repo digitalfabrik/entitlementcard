@@ -208,6 +208,9 @@ export const theme = (config: ProjectConfig): Theme =>
         },
       },
       MuiTypography: {
+        defaultProps: {
+          variant: 'body2',
+        },
         variants: [
           {
             props: { component: 'p' },
