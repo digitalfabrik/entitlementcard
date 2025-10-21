@@ -1,15 +1,9 @@
-import { Checkbox } from '@blueprintjs/core'
 import { Button, Typography } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
-import SettingsCard from '../user-settings/SettingsCard'
-
-const ButtonContainer = styled.div`
-  text-align: right;
-  padding: 8px 0;
-`
+import BaseCheckbox from '../../mui-modules/base/BaseCheckbox'
+import SettingsCard, { SettingsCardButtonBox } from '../user-settings/SettingsCard'
 
 const RegionSettingsCard = ({
   onSave,
@@ -29,25 +23,26 @@ const RegionSettingsCard = ({
   )
 
   return (
-    <SettingsCard>
-      <Typography variant='h4' marginBottom={2}>
-        {t('regionSettings')}
-      </Typography>
-      <Checkbox
+    <SettingsCard title={t('regionSettings')}>
+      <BaseCheckbox
         checked={activatedForApplication}
-        onChange={e => setActivatedForApplication(e.currentTarget.checked)}
-        label={t('activatedForApplication')}
+        onChange={checked => setActivatedForApplication(checked)}
+        label={<Typography variant='body2'>{t('activatedForApplication')}</Typography>}
+        hasError={false}
+        errorMessage={undefined}
       />
-      <Checkbox
+      <BaseCheckbox
         checked={activatedForCardConfirmationMail}
-        onChange={e => setActivatedForCardConfirmationMail(e.currentTarget.checked)}
-        label={t('activatedForCardConfirmationMail')}
+        onChange={checked => setActivatedForCardConfirmationMail(checked)}
+        label={<Typography variant='body2'>{t('activatedForCardConfirmationMail')}</Typography>}
+        hasError={false}
+        errorMessage={undefined}
       />
-      <ButtonContainer>
+      <SettingsCardButtonBox>
         <Button onClick={() => onSave(activatedForApplication, activatedForCardConfirmationMail)} loading={loading}>
           {t('save')}
         </Button>
-      </ButtonContainer>
+      </SettingsCardButtonBox>
     </SettingsCard>
   )
 }

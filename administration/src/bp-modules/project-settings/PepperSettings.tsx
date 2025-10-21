@@ -14,11 +14,11 @@ const PepperSettings = (): ReactElement => {
   const result = getQueryResult(pepperQuery, errorComponent)
 
   return result.successful ? (
-    <Stack sx={{ marginBottom: 2 }}>
+    <Stack sx={{ marginBottom: 2, gap: 1 }}>
       <Typography component='p' variant='body2'>
         {t('pepperExplanation')}:
       </Typography>
-      <PasswordInput value={result.data.pepper} />
+      <PasswordInput disabled value={result.data.pepper} />
     </Stack>
   ) : (
     result.component

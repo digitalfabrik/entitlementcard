@@ -1,4 +1,3 @@
-import { Checkbox } from '@blueprintjs/core'
 import { Button, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useEffect, useState } from 'react'
@@ -6,8 +5,9 @@ import { useTranslation } from 'react-i18next'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useGetNotificationSettingsQuery, useUpdateNotificationSettingsMutation } from '../../generated/graphql'
+import BaseCheckbox from '../../mui-modules/base/BaseCheckbox'
 import getQueryResult from '../../mui-modules/util/getQueryResult'
-import SettingsCard from './SettingsCard'
+import SettingsCard, { SettingsCardButtonBox } from './SettingsCard'
 
 const NotificationSettings = (): ReactElement => {
   const { t } = useTranslation('userSettings')
@@ -54,8 +54,7 @@ const NotificationSettings = (): ReactElement => {
   }
 
   return (
-    <SettingsCard>
-      <Typography variant='h4'>{t('notifications')}</Typography>
+    <SettingsCard title={t('notifications')}>
       <Typography component='p' variant='body2'>
         {t('notificationsExplanation')}
       </Typography>
@@ -64,21 +63,25 @@ const NotificationSettings = (): ReactElement => {
           event.preventDefault()
           submit()
         }}>
-        <Checkbox
+        <BaseCheckbox
           checked={receiveEmailForActivation}
-          onChange={e => setReceiveEmailForActivation(e.currentTarget.checked)}
-          label={t('newApplications')}
+          onChange={checked => setReceiveEmailForActivation(checked)}
+          label={<Typography variant='body2'>{t('newApplications')}</Typography>}
+          hasError={false}
+          errorMessage={undefined}
         />
-        <Checkbox
+        <BaseCheckbox
           checked={receiveEmailForVerification}
-          onChange={e => setReceiveEmailForVerification(e.currentTarget.checked)}
-          label={t('newVerifications')}
+          onChange={checked => setReceiveEmailForVerification(checked)}
+          label={<Typography variant='body2'>{t('newVerifications')}</Typography>}
+          hasError={false}
+          errorMessage={undefined}
         />
-        <div style={{ textAlign: 'right', padding: '10px 0' }}>
+        <SettingsCardButtonBox>
           <Button type='submit' loading={loading}>
             {t('save')}
           </Button>
-        </div>
+        </SettingsCardButtonBox>
       </form>
     </SettingsCard>
   )

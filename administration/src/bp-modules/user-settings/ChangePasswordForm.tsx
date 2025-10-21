@@ -9,7 +9,7 @@ import { useChangePasswordMutation } from '../../generated/graphql'
 import AlertBox from '../../mui-modules/base/AlertBox'
 import PasswordInput from '../PasswordInput'
 import validatePasswordInput from '../auth/validateNewPasswordInput'
-import SettingsCard from './SettingsCard'
+import SettingsCard, { SettingsCardButtonBox } from './SettingsCard'
 
 const ChangePasswordForm = (): ReactElement => {
   const { t: tAuth } = useTranslation('auth')
@@ -50,9 +50,8 @@ const ChangePasswordForm = (): ReactElement => {
     })
 
   return (
-    <SettingsCard>
-      <Typography variant='h4'>{t('changePassword')}</Typography>
-      <Typography component='p' variant='body2'>
+    <SettingsCard title={t('changePassword')}>
+      <Typography component='p' mb={2} variant='body2'>
         {t('changePasswordExplanation')}
       </Typography>
       <form
@@ -75,11 +74,11 @@ const ChangePasswordForm = (): ReactElement => {
           </FormControl>
 
           {warnMessage === null ? null : <AlertBox sx={{ my: 2, mx: 0 }} severity='error' description={warnMessage} />}
-          <div style={{ textAlign: 'right' }}>
+          <SettingsCardButtonBox>
             <Button type='submit' disabled={!valid} loading={loading}>
               {t('changePassword')}
             </Button>
-          </div>
+          </SettingsCardButtonBox>
         </Stack>
       </form>
     </SettingsCard>

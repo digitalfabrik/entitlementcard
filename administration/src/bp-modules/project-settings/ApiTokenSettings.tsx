@@ -1,10 +1,22 @@
-import { HTMLSelect, HTMLTable } from '@blueprintjs/core'
 import { Delete } from '@mui/icons-material'
-import { Button, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Typography,
+} from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import {
@@ -19,61 +31,14 @@ import { formatDate } from '../../util/formatDate'
 import SettingsCard from '../user-settings/SettingsCard'
 import PepperSettings from './PepperSettings'
 
-const Container = styled.div`
-  background: ghostwhite;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
-`
-
-const Row = styled.div`
-  width: 80%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 15px;
-`
-
-const NewTokenText = styled.p`
-  font-size: 18px;
-  padding: 10px;
-  border: 1px solid black;
-  border-radius: 6px;
-  margin-top: 15px;
-  word-break: break-all;
-`
-
-const TableData = styled.td`
-  vertical-align: middle !important;
-`
-
-const DeleteIcon = styled(Delete)`
-  display: block !important;
-  cursor: pointer;
-`
-
-type ApiTokenSettingsProps = {
-  showPepperSection: boolean
-}
-const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactElement => {
+const ApiTokenGeneration = (): ReactElement => {
   const metaDataQuery = useGetApiTokenMetaDataQuery({})
 
   const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('projectSettings')
 
-  const [tokenMetaData, setTokenMetadata] = useState<Array<ApiTokenMetaData>>([])
   const [createdToken, setCreatedToken] = useState<string | null>(null)
   const [expiresIn, setExpiresIn] = useState<number>(1)
-
-  const [tokenToDelete, setTokenToDelete] = useState<number | null>(null)
-
-  useEffect(() => {
-    const metaDataQueryResult = getQueryResult(metaDataQuery)
-    if (metaDataQueryResult.successful) {
-      const { tokenMetaData } = metaDataQueryResult.data
-      setTokenMetadata(tokenMetaData)
-    }
-  }, [metaDataQuery, t])
 
   const [createToken] = useCreateApiTokenMutation({
     onCompleted: result => {
@@ -86,6 +51,70 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
       enqueueSnackbar(title, { variant: 'error' })
     },
   })
+
+  return (
+    <Stack my={1} p={2} borderRadius={2} boxShadow='inset 0 2px 4px rgba(0, 0, 0, 0.05)' bgcolor='ghostwhite'>
+      <Typography variant='h6'>{t('createNewToken')}</Typography>
+      <Typography component='p' variant='body2'>
+        {t('tokenOnlyShowedOnceHint')}
+      </Typography>
+      <Stack direction='row' my={2} spacing={2}>
+        <FormControl fullWidth>
+          <InputLabel id='expiresIn-label'>{t('validPeriod')}</InputLabel>
+          <Select
+            size='small'
+            labelId='expiresIn-label'
+            name='expiresIn'
+            id='expiresIn'
+            value={expiresIn}
+            label={t('validPeriod')}
+            onChange={e => setExpiresIn(e.target.value)}>
+            <MenuItem value={1}>1 {t('month')}</MenuItem>
+            <MenuItem value={3}>3 {t('months')}</MenuItem>
+            <MenuItem value={12}>1 {t('year')}</MenuItem>
+            <MenuItem value={36}>3 {t('years')}</MenuItem>
+          </Select>
+        </FormControl>
+        <Button sx={{ minWidth: 'auto' }} onClick={() => createToken({ variables: { expiresIn } })}>
+          {t('create')}
+        </Button>
+      </Stack>
+      {createdToken !== null && (
+        <>
+          <Typography component='p' variant='body2'>
+            {t('newToken')}:
+          </Typography>
+          <Box p={2} mt={1} border={1} borderRadius={2} sx={{ wordBreak: 'break-all' }}>
+            <Typography variant='body1' sx={{ userSelect: 'all' }}>
+              {createdToken}
+            </Typography>
+          </Box>
+        </>
+      )}
+    </Stack>
+  )
+}
+
+type ApiTokenSettingsProps = {
+  showPepperSection: boolean
+}
+const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactElement => {
+  const metaDataQuery = useGetApiTokenMetaDataQuery({})
+
+  const { enqueueSnackbar } = useSnackbar()
+  const { t } = useTranslation('projectSettings')
+
+  const [tokenMetaData, setTokenMetadata] = useState<Array<ApiTokenMetaData>>([])
+
+  const [tokenToDelete, setTokenToDelete] = useState<number | null>(null)
+
+  useEffect(() => {
+    const metaDataQueryResult = getQueryResult(metaDataQuery)
+    if (metaDataQueryResult.successful) {
+      const { tokenMetaData } = metaDataQueryResult.data
+      setTokenMetadata(tokenMetaData)
+    }
+  }, [metaDataQuery, t])
 
   const [deleteToken] = useDeleteApiTokenMutation({
     onCompleted: () => {
@@ -118,62 +147,39 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
           {t('deleteTokenConfirmationPrompt')}
         </Typography>
       </ConfirmDialog>
-      <SettingsCard>
-        <Typography variant='h4'>{t('apiToken')}</Typography>
-
+      <SettingsCard title={t('apiToken')}>
         {showPepperSection && <PepperSettings />}
 
-        <Container>
-          <Typography variant='h6'>{t('createNewToken')}</Typography>
-          <Typography component='p' variant='body2'>
-            {t('tokenOnlyShowedOnceHint')}
-          </Typography>
-          <Row>
-            <label htmlFor='expiresIn'>{t('validPeriod')}:</label>
-            <HTMLSelect
-              name='expiresIn'
-              id='expiresIn'
-              value={expiresIn}
-              onChange={e => setExpiresIn(parseInt(e.target.value, 10))}>
-              <option value='1'>1 {t('month')}</option>
-              <option value='3'>3 {t('months')}</option>
-              <option value='12'>1 {t('year')}</option>
-              <option value='36'>3 {t('years')}</option>
-            </HTMLSelect>
-            <Button onClick={() => createToken({ variables: { expiresIn } })}>{t('create')}</Button>
-          </Row>
-          {createdToken !== null && (
-            <>
-              <Typography component='p' variant='body2'>
-                {t('newToken')}:
-              </Typography>
-              <NewTokenText> {createdToken}</NewTokenText>
-            </>
-          )}
-        </Container>
+        <ApiTokenGeneration />
 
-        {tokenMetaData.length > 0 && (
-          <HTMLTable>
-            <thead>
-              <tr>
-                <th>{t('eMailOfCreator')}</th>
-                <th>{t('expirationDate')}</th>
-                <th aria-label='Delete' />
-              </tr>
-            </thead>
-            <tbody>
-              {tokenMetaData.map(item => (
-                <tr key={item.id}>
-                  <TableData>{item.creatorEmail}</TableData>
-                  <TableData>{formatDate(item.expirationDate)}</TableData>
-                  <TableData>
-                    <DeleteIcon color='error' onClick={() => setTokenToDelete(item.id)} />
-                  </TableData>
-                </tr>
-              ))}
-            </tbody>
-          </HTMLTable>
-        )}
+        <Typography variant='body2'>
+          {tokenMetaData.length > 0 && (
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>{t('eMailOfCreator')}</TableCell>
+                  <TableCell>{t('expirationDate')}</TableCell>
+                  <TableCell aria-label='Delete' />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {tokenMetaData.map(item => (
+                  <TableRow key={item.id}>
+                    <TableCell>{item.creatorEmail}</TableCell>
+                    <TableCell>{formatDate(item.expirationDate)}</TableCell>
+                    <TableCell>
+                      <Delete
+                        sx={{ cursor: 'pointer', display: 'block' }}
+                        color='error'
+                        onClick={() => setTokenToDelete(item.id)}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </Typography>
       </SettingsCard>
     </>
   )
