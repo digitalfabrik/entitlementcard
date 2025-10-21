@@ -169,7 +169,7 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
                     <TableCell>{formatDate(item.expirationDate)}</TableCell>
                     <TableCell>
                       <Delete
-                        sx={{ pointer: 'cursor', display: 'block' }}
+                        sx={{ cursor: 'pointer', display: 'block' }}
                         color='error'
                         onClick={() => setTokenToDelete(item.id)}
                       />
