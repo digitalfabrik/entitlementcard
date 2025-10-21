@@ -1,29 +1,35 @@
 package app.ehrenamtskarte.backend.graphql.freinet
 
+import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.db.entities.mayUpdateFreinetAgencyInformationInRegion
 import app.ehrenamtskarte.backend.db.repositories.FreinetAgencyRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
-import app.ehrenamtskarte.backend.graphql.context
+import app.ehrenamtskarte.backend.graphql.auth.requireAuthContext
+import app.ehrenamtskarte.backend.graphql.exceptions.NotImplementedException
 import app.ehrenamtskarte.backend.graphql.freinet.exceptions.FreinetAgencyNotFoundException
 import app.ehrenamtskarte.backend.graphql.freinet.util.validateFreinetDataTransferPermission
-import app.ehrenamtskarte.backend.graphql.getAuthContext
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.NotImplementedException
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.MutationMapping
+import org.springframework.stereotype.Controller
 
-@Suppress("unused")
-class FreinetAgencyMutationService {
+@Controller
+class FreinetAgencyMutationController(
+    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
+    private val backendConfiguration: BackendConfiguration,
+) {
     @GraphQLDescription("Updates the data transfer to freinet. Works only for the EAK project.")
+    @MutationMapping
     fun updateDataTransferToFreinet(
         dfe: DataFetchingEnvironment,
-        regionId: Int,
-        dataTransferActivated: Boolean,
+        @Argument regionId: Int,
+        @Argument dataTransferActivated: Boolean,
     ): Boolean {
-        val context = dfe.graphQlContext.context
-        val authContext = context.getAuthContext()
-        val projectConfig = context.backendConfiguration.getProjectConfig(authContext.project)
+        val authContext = dfe.requireAuthContext()
+        val projectConfig = backendConfiguration.getProjectConfig(authContext.project)
 
         if (projectConfig.freinet == null) {
             throw NotImplementedException()
@@ -36,7 +42,7 @@ class FreinetAgencyMutationService {
             val region = RegionsRepository.findRegionById(regionId)
 
             if (dataTransferActivated) {
-                validateFreinetDataTransferPermission(context.backendConfiguration.environment, region.name)
+                validateFreinetDataTransferPermission(backendConfiguration.environment, region.name)
             }
             val freinetAgency = FreinetAgencyRepository.getFreinetAgencyByRegionId(regionId)
                 ?: throw FreinetAgencyNotFoundException()
