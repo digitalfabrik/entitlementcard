@@ -171,9 +171,10 @@ const graphQlErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
         title: i18next.t('errors:projectNotFound'),
       }
     }
-    default:
+    case GraphQlExceptionCode.Forbidden:
+    case GraphQlExceptionCode.Unauthorized:
       return {
-        title: defaultError.title,
+        title: i18next.t('errors:notAuthorized'),
       }
   }
 }
