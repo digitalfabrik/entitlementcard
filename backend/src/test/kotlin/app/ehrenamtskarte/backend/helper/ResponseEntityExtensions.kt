@@ -52,12 +52,11 @@ fun ResponseEntity<String>.toErrorObject(): GraphQLErrorModel {
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class GraphQLErrorModel(
     val message: String,
-    val extensions: GraphQLErrorExtensions?,
+    val extensions: GraphQLErrorExtensions,
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class GraphQLErrorExtensions(
-    val classification: String?,
-    val code: GraphQLExceptionCode?,
+    val code: GraphQLExceptionCode,
     val reason: String?,
 )

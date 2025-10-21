@@ -52,7 +52,7 @@ internal class ActivateCardTest : IntegrationTest() {
         val error = response.toErrorObject()
 
         assertEquals("Project 'non-existent.sozialpass.app' not found", error.message)
-        assertEquals(GraphQLExceptionCode.PROJECT_NOT_FOUND, error.extensions?.code)
+        assertEquals(GraphQLExceptionCode.PROJECT_NOT_FOUND, error.extensions.code)
     }
 
     @Test

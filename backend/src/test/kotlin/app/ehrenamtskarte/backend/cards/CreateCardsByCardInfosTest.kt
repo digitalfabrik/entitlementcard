@@ -43,7 +43,7 @@ internal class CreateCardsByCardInfosTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Authorization token expired, invalid or missing", error.message)
+        assertEquals(GraphQLExceptionCode.UNAUTHORIZED, error.extensions.code)
     }
 
     @Test
@@ -56,7 +56,7 @@ internal class CreateCardsByCardInfosTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Insufficient access rights", error.message)
+        assertEquals(GraphQLExceptionCode.FORBIDDEN, error.extensions.code)
     }
 
     @Test
@@ -69,7 +69,7 @@ internal class CreateCardsByCardInfosTest : IntegrationTest() {
         val error = response.toErrorObject()
 
         assertEquals("Failed to parse encodedCardInfo", error.message)
-        assertEquals(GraphQLExceptionCode.INVALID_INPUT, error.extensions?.code)
+        assertEquals(GraphQLExceptionCode.INVALID_INPUT, error.extensions.code)
     }
 
     @Test

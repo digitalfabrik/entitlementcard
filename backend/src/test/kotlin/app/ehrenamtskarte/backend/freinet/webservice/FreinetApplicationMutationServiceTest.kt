@@ -10,6 +10,7 @@ import app.ehrenamtskarte.backend.graphql.application.types.JsonField
 import app.ehrenamtskarte.backend.graphql.application.types.Type
 import app.ehrenamtskarte.backend.graphql.freinet.types.FreinetPersonCreationResultModel
 import app.ehrenamtskarte.backend.graphql.freinet.util.FreinetApi
+import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestData
 import app.ehrenamtskarte.backend.helper.toDataObject
@@ -23,7 +24,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
-import kotlin.test.Ignore
 import kotlin.test.assertEquals
 
 internal class FreinetApplicationMutationServiceTest : IntegrationTest() {
@@ -63,12 +63,11 @@ internal class FreinetApplicationMutationServiceTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Authorization token expired, invalid or missing", error.message)
+        assertEquals(GraphQLExceptionCode.UNAUTHORIZED, error.extensions.code)
 
         verify(exactly = 0) { anyConstructed<FreinetApi>().searchPersons(any(), any(), any()) }
     }
 
-    @Ignore("TODO fix exceptions handler")
     @Test
     fun `should return not implemented error if freinet is not configured`() {
         val applicationId = createTestApplication(regionId = 96)
@@ -79,7 +78,7 @@ internal class FreinetApplicationMutationServiceTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Freinet is not configured in this project", error.message)
+        assertEquals(GraphQLExceptionCode.NOT_IMPLEMENTED, error.extensions.code)
 
         verify(exactly = 0) { anyConstructed<FreinetApi>().searchPersons(any(), any(), any()) }
     }
@@ -94,7 +93,7 @@ internal class FreinetApplicationMutationServiceTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Insufficient access rights", error.message)
+        assertEquals(GraphQLExceptionCode.FORBIDDEN, error.extensions.code)
 
         verify(exactly = 0) { anyConstructed<FreinetApi>().searchPersons(any(), any(), any()) }
     }
@@ -109,7 +108,7 @@ internal class FreinetApplicationMutationServiceTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Insufficient access rights", error.message)
+        assertEquals(GraphQLExceptionCode.FORBIDDEN, error.extensions.code)
 
         verify(exactly = 0) { anyConstructed<FreinetApi>().searchPersons(any(), any(), any()) }
     }

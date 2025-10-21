@@ -12,7 +12,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
-import kotlin.test.Ignore
 import kotlin.test.assertEquals
 
 internal class FreinetAgencyMutationServiceTest : IntegrationTest() {
@@ -35,10 +34,9 @@ internal class FreinetAgencyMutationServiceTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Authorization token expired, invalid or missing", error.message)
+        assertEquals(GraphQLExceptionCode.UNAUTHORIZED, error.extensions.code)
     }
 
-    @Ignore("TODO fix exceptions handler")
     @Test
     fun `should return not implemented error if freinet is not configured in project`() {
         val mutation = createMutation(16, true)
@@ -48,8 +46,7 @@ internal class FreinetAgencyMutationServiceTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Freinet is not configured in this project", error.message)
-        assertEquals(GraphQLExceptionCode.NOT_IMPLEMENTED, error.extensions?.code)
+        assertEquals(GraphQLExceptionCode.NOT_IMPLEMENTED, error.extensions.code)
     }
 
     @Test
@@ -61,7 +58,7 @@ internal class FreinetAgencyMutationServiceTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Insufficient access rights", error.message)
+        assertEquals(GraphQLExceptionCode.FORBIDDEN, error.extensions.code)
     }
 
     @Test

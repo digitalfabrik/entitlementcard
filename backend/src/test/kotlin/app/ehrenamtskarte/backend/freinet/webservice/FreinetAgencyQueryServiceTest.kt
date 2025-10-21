@@ -2,12 +2,12 @@ package app.ehrenamtskarte.backend.freinet.webservice
 
 import app.ehrenamtskarte.backend.IntegrationTest
 import app.ehrenamtskarte.backend.generated.GetFreinetAgencyByRegionId
+import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.json
 import app.ehrenamtskarte.backend.helper.toErrorObject
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
-import kotlin.test.Ignore
 import kotlin.test.assertEquals
 
 internal class FreinetAgencyQueryServiceTest : IntegrationTest() {
@@ -20,10 +20,9 @@ internal class FreinetAgencyQueryServiceTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Authorization token expired, invalid or missing", error.message)
+        assertEquals(GraphQLExceptionCode.UNAUTHORIZED, error.extensions.code)
     }
 
-    @Ignore("TODO fix exceptions handler")
     @Test
     fun `should return not implemented error if freinet is not configured in project`() {
         val query = createQuery(16)
@@ -33,7 +32,7 @@ internal class FreinetAgencyQueryServiceTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Freinet is not configured in this project", error.message)
+        assertEquals(GraphQLExceptionCode.NOT_IMPLEMENTED, error.extensions.code)
     }
 
     @Test
@@ -45,7 +44,7 @@ internal class FreinetAgencyQueryServiceTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Insufficient access rights", error.message)
+        assertEquals(GraphQLExceptionCode.FORBIDDEN, error.extensions.code)
     }
 
     @Test

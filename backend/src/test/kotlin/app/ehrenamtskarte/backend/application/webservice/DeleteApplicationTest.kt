@@ -42,7 +42,7 @@ internal class DeleteApplicationTest : IntegrationTest() {
         val error = response.toErrorObject()
 
         assertEquals("Application not found", error.message)
-        assertEquals(GraphQLExceptionCode.INVALID_INPUT, error.extensions?.code)
+        assertEquals(GraphQLExceptionCode.INVALID_INPUT, error.extensions.code)
     }
 
     @Test
@@ -56,7 +56,7 @@ internal class DeleteApplicationTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Authorization token expired, invalid or missing", error.message)
+        assertEquals(GraphQLExceptionCode.UNAUTHORIZED, error.extensions.code)
     }
 
     @Test
@@ -70,7 +70,7 @@ internal class DeleteApplicationTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Insufficient access rights", error.message)
+        assertEquals(GraphQLExceptionCode.FORBIDDEN, error.extensions.code)
     }
 
     @Test
@@ -85,7 +85,7 @@ internal class DeleteApplicationTest : IntegrationTest() {
         val error = response.toErrorObject()
 
         assertEquals("Application cannot be deleted while it is in a pending state", error.message)
-        assertEquals(GraphQLExceptionCode.INVALID_INPUT, error.extensions?.code)
+        assertEquals(GraphQLExceptionCode.INVALID_INPUT, error.extensions.code)
     }
 
     @ParameterizedTest

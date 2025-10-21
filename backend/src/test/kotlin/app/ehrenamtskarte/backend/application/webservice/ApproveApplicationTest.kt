@@ -63,7 +63,7 @@ internal class ApproveApplicationTest : IntegrationTest() {
         val error = response.toErrorObject()
 
         assertEquals("Application not found", error.message)
-        assertEquals(GraphQLExceptionCode.INVALID_INPUT, error.extensions?.code)
+        assertEquals(GraphQLExceptionCode.INVALID_INPUT, error.extensions.code)
     }
 
     @Test
@@ -77,7 +77,7 @@ internal class ApproveApplicationTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Authorization token expired, invalid or missing", error.message)
+        assertEquals(GraphQLExceptionCode.UNAUTHORIZED, error.extensions.code)
     }
 
     @Test
@@ -91,7 +91,7 @@ internal class ApproveApplicationTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Insufficient access rights", error.message)
+        assertEquals(GraphQLExceptionCode.FORBIDDEN, error.extensions.code)
     }
 
     @ParameterizedTest
@@ -112,7 +112,7 @@ internal class ApproveApplicationTest : IntegrationTest() {
         val error = response.toErrorObject()
 
         assertEquals("Cannot set application to 'Approved', is '$status'", error.message)
-        assertEquals(GraphQLExceptionCode.INVALID_INPUT, error.extensions?.code)
+        assertEquals(GraphQLExceptionCode.INVALID_INPUT, error.extensions.code)
 
         transaction {
             // verify that the status has not been updated in the database
