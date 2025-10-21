@@ -104,7 +104,7 @@ const EditUserDialog = ({
           <Link href='/forgot-password' target='_blank' rel='noreferrer'>
             {`${window.location.origin}/forgot-password`}
           </Link>{' '}
-          {t('reset')}.
+          {t('reset')}!
         </>
       )}
     </>
