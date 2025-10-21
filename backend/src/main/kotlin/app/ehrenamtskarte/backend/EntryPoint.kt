@@ -49,7 +49,7 @@ class Entry : CliktCommand() {
 
     override fun run() {
         val backendConfiguration = try {
-            ConfigurationLoader.load(config)
+            BackendConfiguration.load(ConfigurationLoader().findConfigurationUrl(config))
         } catch (e: IllegalStateException) {
             logger.error(e.message)
             throw ProgramResult(statusCode = 4)
