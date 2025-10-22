@@ -200,7 +200,6 @@ val copyStyleTask = tasks.register<Copy>("copyStyle") {
 }
 tasks.named("classes") { dependsOn(copyStyleTask) }
 
-
 tasks.generateProto {
     dependsOn(tasks.generateSentryBundleIdJava)
 }
@@ -254,4 +253,3 @@ tasks.register("db-recreate") {
     dbImportDev.dependsOn(dbImportOnline)
     this.dependsOn(dbImportDev)
 }
-

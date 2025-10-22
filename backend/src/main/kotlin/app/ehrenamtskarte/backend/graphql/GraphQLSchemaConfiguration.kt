@@ -94,8 +94,8 @@ class GraphQLSchemaConfiguration(
      */
     @Bean
     fun runtimeWiringConfigurer(): RuntimeWiringConfigurer =
-        RuntimeWiringConfigurer { wiringBuilder ->
-            wiringBuilder
+        RuntimeWiringConfigurer {
+            it
                 .scalar(this.uploadScalar)
                 .scalar(GraphQLLong)
         }
