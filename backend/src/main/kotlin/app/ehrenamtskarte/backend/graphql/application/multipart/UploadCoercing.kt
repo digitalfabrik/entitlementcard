@@ -13,7 +13,7 @@ import java.util.Locale
 
 class UploadCoercing : Coercing<UploadKey?, Void?> {
     @Throws(CoercingSerializeException::class)
-    override fun serialize(dataFetcherResult: Any, graphQLContext: GraphQLContext, locale: Locale): Void? =
+    override fun serialize(dataFetcherResult: Any, graphQLContext: GraphQLContext, locale: Locale): Nothing =
         throw CoercingSerializeException("Upload is an input-only type")
 
     @Throws(CoercingParseValueException::class)
@@ -36,5 +36,5 @@ class UploadCoercing : Coercing<UploadKey?, Void?> {
         variables: CoercedVariables,
         graphQLContext: GraphQLContext,
         locale: Locale,
-    ): UploadKey = throw CoercingParseLiteralException("Parsing literal of 'MultipartFile' is not supported")
+    ): Nothing = throw CoercingParseLiteralException("Parsing literal of 'MultipartFile' is not supported")
 }

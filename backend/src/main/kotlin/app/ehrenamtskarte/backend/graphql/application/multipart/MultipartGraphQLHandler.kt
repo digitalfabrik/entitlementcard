@@ -45,21 +45,17 @@ class MultipartGraphQLHandler(
         // Collect all parts
         val partsMap = request.parts.associateBy { it.name }
 
-        // Parse operations
-        val operationsJson = partsMap["operations"]?.inputStream
-            ?: throw GraphQLMultipartParseException("Missing 'operations' part")
-        val operationsNode = mapper.readTree(operationsJson)
+        val operationsNode = partsMap["operations"]?.inputStream?.use { mapper.readTree(it) }
+            ?: throw GraphQLMultipartParseException("Missing 'operations' node")
 
-        // Parse file mapping
-        val mapJson = partsMap["map"]?.inputStream
-            ?: throw GraphQLMultipartParseException("Missing 'map' part")
-        val substitutions = mapper.readValue<Map<String, List<String>>>(mapJson)
+        val mapNode = partsMap["map"]?.inputStream?.use { mapper.readValue<Map<String, List<String>>>(it) }
+            ?: throw GraphQLMultipartParseException("Missing 'map' node")
 
         // Collect uploaded files
-        val files = request.parts.filter { substitutions.containsKey(it.name) }
+        val files = request.parts.filter { mapNode.containsKey(it.name) }
 
         // Substitute file references into the GraphQL variables
-        substitutions.forEach { (key, paths) ->
+        mapNode.forEach { (key, paths) ->
             if (key == "operations" || key == "map") {
                 throw GraphQLMultipartParseException("Invalid file key: '$key'")
             }
