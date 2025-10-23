@@ -1,23 +1,33 @@
 package app.ehrenamtskarte.backend.graphql.stores
 
+import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.db.repositories.AcceptingStoresRepository
 import app.ehrenamtskarte.backend.db.repositories.PhysicalStoresRepository
-import app.ehrenamtskarte.backend.graphql.context
-import app.ehrenamtskarte.backend.graphql.shared.DEFAULT_PROJECT
-import app.ehrenamtskarte.backend.graphql.shared.types.IdsParams
 import app.ehrenamtskarte.backend.graphql.stores.types.AcceptingStore
 import app.ehrenamtskarte.backend.graphql.stores.types.Coordinates
 import app.ehrenamtskarte.backend.graphql.stores.types.PhysicalStore
 import app.ehrenamtskarte.backend.graphql.stores.types.SearchParams
 import app.ehrenamtskarte.backend.shared.Matomo
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
+import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import graphql.schema.DataFetchingEnvironment
+import jakarta.servlet.http.HttpServletRequest
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.ContextValue
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.stereotype.Controller
 
-@Suppress("unused")
-class AcceptingStoreQueryService {
+@Controller
+class AcceptingStoreQueryController(
+    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
+    private val backendConfig: BackendConfiguration,
+) {
     @GraphQLDescription("Returns list of all accepting stores in the given project.")
-    fun physicalStoresInProject(project: String): List<PhysicalStore> =
+    @QueryMapping
+    fun physicalStoresInProject(
+        @Argument project: String,
+    ): List<PhysicalStore> =
         transaction {
             PhysicalStoresRepository.findAllInProject(project).map {
                 PhysicalStore(
@@ -30,7 +40,11 @@ class AcceptingStoreQueryService {
         }
 
     @GraphQLDescription("Returns list of all accepting stores in the given project queried by ids.")
-    fun physicalStoresByIdInProject(project: String, ids: List<Int>): List<PhysicalStore?> =
+    @QueryMapping
+    fun physicalStoresByIdInProject(
+        @Argument project: String,
+        @Argument ids: List<Int>,
+    ): List<PhysicalStore?> =
         transaction {
             PhysicalStoresRepository.findByIdsInProject(project, ids).map {
                 if (it == null) {
@@ -49,13 +63,14 @@ class AcceptingStoreQueryService {
     @GraphQLDescription(
         "Search for accepting stores in the given project using searchText and categoryIds.",
     )
+    @QueryMapping
     fun searchAcceptingStoresInProject(
-        project: String,
-        params: SearchParams,
+        @Argument project: String,
+        @Argument params: SearchParams,
         dfe: DataFetchingEnvironment,
+        @GraphQLIgnore @ContextValue request: HttpServletRequest,
     ): List<AcceptingStore> {
-        val context = dfe.graphQlContext.context
-        val projectConfig = context.backendConfiguration.getProjectConfig(project)
+        val projectConfig = backendConfig.getProjectConfig(project)
         val filteredStores = transaction {
             AcceptingStoresRepository.findBySearch(
                 project,
@@ -75,39 +90,13 @@ class AcceptingStoreQueryService {
             }
         }
         Matomo.trackSearch(
-            context.backendConfiguration,
+            backendConfig,
             projectConfig,
-            context.request,
+            request,
             dfe.field.name,
             params,
             filteredStores.size,
         )
         return filteredStores
     }
-
-    @Deprecated(
-        "Deprecated in favor of project specific query",
-        ReplaceWith("physicalStoresInProject"),
-    )
-    @GraphQLDescription("Return list of all accepting stores in the eak bayern project.")
-    fun physicalStores(): List<PhysicalStore> = physicalStoresInProject(DEFAULT_PROJECT)
-
-    @Deprecated(
-        "Deprecated in favor of project specific query",
-        ReplaceWith("physicalStoresByIdInProject"),
-    )
-    @GraphQLDescription(
-        "Returns list of all accepting stores queried by ids in the eak bayern project.",
-    )
-    fun physicalStoresById(params: IdsParams) = physicalStoresByIdInProject(DEFAULT_PROJECT, params.ids)
-
-    @Deprecated(
-        "Deprecated in favor of project specific query",
-        ReplaceWith("searchAcceptingStoresInProject"),
-    )
-    @GraphQLDescription(
-        "Search for accepting stores using searchText and categoryIds in the eak bayern project.",
-    )
-    fun searchAcceptingStores(params: SearchParams, dfe: DataFetchingEnvironment): List<AcceptingStore> =
-        searchAcceptingStoresInProject(DEFAULT_PROJECT, params, dfe)
 }

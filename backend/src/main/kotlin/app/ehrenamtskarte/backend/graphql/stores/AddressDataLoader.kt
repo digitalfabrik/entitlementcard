@@ -1,14 +1,14 @@
 package app.ehrenamtskarte.backend.graphql.stores
 
 import app.ehrenamtskarte.backend.db.repositories.AddressRepository
-import app.ehrenamtskarte.backend.graphql.newNamedDataLoader
+import app.ehrenamtskarte.backend.graphql.BaseDataLoader
 import app.ehrenamtskarte.backend.graphql.stores.types.Address
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.springframework.stereotype.Component
 
-val addressLoader = newNamedDataLoader("ADDRESS_LOADER") { ids ->
-    transaction {
-        AddressRepository.findByIds(ids).map {
-            it?.let { Address(it.id.value, it.street, it.postalCode, it.location, it.countryCode) }
-        }
-    }
+@Component
+class AddressDataLoader : BaseDataLoader<Int, Address>() {
+    override fun loadBatch(keys: List<Int>): Map<Int, Address> =
+        AddressRepository.findByIds(keys)
+            .mapNotNull { it?.let { address -> address.id.value to Address.fromDbEntity(address) } }
+            .toMap()
 }

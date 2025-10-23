@@ -4,10 +4,13 @@ import app.ehrenamtskarte.backend.db.repositories.CategoriesRepository
 import app.ehrenamtskarte.backend.graphql.stores.types.Category
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.stereotype.Controller
 
-@Suppress("unused")
-class CategoriesQueryService {
+@Controller
+class CategoriesQueryController {
     @GraphQLDescription("Return list of all categories.")
+    @QueryMapping
     fun categories(): List<Category> =
         transaction {
             CategoriesRepository.findAll().map {

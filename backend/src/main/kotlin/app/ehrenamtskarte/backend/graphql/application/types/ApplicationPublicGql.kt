@@ -16,7 +16,7 @@ data class ApplicationPublicGql(
     val jsonValue: String,
     val status: ApplicationStatus,
     val statusResolvedDate: String?,
-    val verifications: List<ApplicationVerificationView>? = null, // resolved by ApplicationVerificationsResolver
+    val verifications: List<ApplicationVerificationView> = emptyList(), // resolved by ApplicationVerificationsResolver
 ) {
     companion object {
         fun fromDbEntity(entity: ApplicationEntity): ApplicationPublicGql =

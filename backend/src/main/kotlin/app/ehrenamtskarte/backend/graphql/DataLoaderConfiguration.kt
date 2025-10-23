@@ -1,10 +1,13 @@
 package app.ehrenamtskarte.backend.graphql
 
+import graphql.schema.DataFetchingEnvironment
 import kotlinx.coroutines.reactor.mono
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.context.annotation.Configuration
 import org.springframework.graphql.execution.BatchLoaderRegistry
 import reactor.core.scheduler.Schedulers
+import java.util.concurrent.CompletableFuture
+import kotlin.reflect.KClass
 
 @Configuration
 class DataLoaderConfiguration(
@@ -14,6 +17,20 @@ class DataLoaderConfiguration(
     init {
         loaders.forEach { it.register(registry) }
     }
+}
+
+/**
+ * Helper to load a value from a DataLoader, reducing boilerplate in resolvers.
+ * It throws an IllegalStateException if the DataLoader is not registered.
+ */
+fun <K : Any, V : Any> DataFetchingEnvironment.loadFrom(
+    loaderClass: KClass<out BaseDataLoader<K, V>>,
+    key: K,
+): CompletableFuture<V?> {
+    val loaderName = loaderClass.java.name
+    val dataLoader = getDataLoader<K, V>(loaderName)
+        ?: throw IllegalStateException("DataLoader '${loaderClass.simpleName}' not registered.")
+    return dataLoader.load(key)
 }
 
 /**
