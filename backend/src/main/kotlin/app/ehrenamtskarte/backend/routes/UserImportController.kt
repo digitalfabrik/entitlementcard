@@ -35,7 +35,7 @@ class UserImportController(
     @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     private val config: BackendConfiguration,
 ) {
-    @PostMapping(consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    @PostMapping(consumes = [MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE])
     @Operation(
         summary = "Imports user data from a CSV file",
     )
