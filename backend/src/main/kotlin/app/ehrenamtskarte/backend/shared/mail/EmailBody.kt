@@ -15,38 +15,30 @@ class EmailBody {
     private val children = ArrayList<Paragraph>(0)
 
     fun p(builder: Paragraph.() -> Unit) {
-        val paragraph = Paragraph()
-        paragraph.builder()
-        children.add(paragraph)
+        children.add(Paragraph().apply { builder() })
     }
 
-    fun renderHtml(): String {
-        val builder = StringBuilder()
-        builder.appendHTML().html {
-            body {
-                for (child in children) {
-                    child.renderHtml(this)
+    fun renderHtml(): String =
+        StringBuilder().apply {
+            appendHTML().html {
+                body {
+                    for (child in children) {
+                        child.renderHtml(this)
+                    }
                 }
             }
-        }
-        return builder.toString()
-    }
+        }.toString()
 
-    fun renderPlain(): String {
-        val builder = StringBuilder()
-        for (child in children) {
-            child.renderPlain(builder)
-        }
-        builder.dropLastWhile { it == '\n' }
-        return builder.toString()
-    }
+    fun renderPlain(): String =
+        StringBuilder().also { builder ->
+            for (child in children) {
+                child.renderPlain(builder)
+            }
+            builder.dropLastWhile { it == '\n' }
+        }.toString()
 }
 
-fun emailBody(builder: EmailBody.() -> Unit): EmailBody {
-    val email = EmailBody()
-    email.builder()
-    return email
-}
+fun emailBody(builder: EmailBody.() -> Unit): EmailBody = EmailBody().apply { builder() }
 
 interface InlineRenderable {
     fun renderHtml(parent: HtmlBlockInlineTag)
@@ -65,10 +57,7 @@ class Paragraph {
 
     fun plain(plainText: String) {
         plainText.trim().lines().forEachIndexed { index, text ->
-            if (index != 0) {
-                children.add(LineBreak())
-            }
-            children.add(Text(text))
+            children.add(if (index != 0) LineBreak() else Text(text))
         }
     }
 
@@ -90,6 +79,7 @@ class Paragraph {
 
     fun renderPlain(builder: StringBuilder) {
         val firstIndex = builder.length
+
         for (child in children) {
             child.renderPlain(builder)
         }
@@ -116,8 +106,8 @@ class Text(text: String) : InlineRenderable {
 
     override fun renderPlain(builder: StringBuilder) {
         val hasTrailingSpace = builder.lastOrNull() == ' '
-
         var toAppend = text
+
         if (hasTrailingSpace && toAppend.startsWith(" ")) {
             toAppend = toAppend.substring(1)
         }
@@ -136,10 +126,11 @@ class Link(val url: URL) : InlineRenderable {
 
     override fun renderPlain(builder: StringBuilder) {
         val last = builder.lastOrNull()
-        val shouldPrependSpace = last != null && last != ' ' && last != '\n'
-        if (shouldPrependSpace) {
+
+        if (last != null && last != ' ' && last != '\n') {
             builder.append(" ")
         }
+
         builder.append(url.toString())
         // Always append a space to make the URL stand out in plain text.
         // In the case of a subsequent newline, this space will get removed again.
@@ -153,11 +144,10 @@ class LineBreak : InlineRenderable {
     }
 
     override fun renderPlain(builder: StringBuilder) {
-        val last = builder.lastOrNull()
-        val hasTrailingSpace = last != null && last == ' '
-        if (hasTrailingSpace) {
+        if (builder.lastOrNull() == ' ') {
             builder.dropLast(1)
         }
+
         builder.append("\n")
     }
 }
