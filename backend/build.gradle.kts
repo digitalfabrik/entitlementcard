@@ -137,6 +137,9 @@ java {
 }
 
 protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:${libs.versions.protobuf.get()}"
+    }
     generateProtoTasks {
         all().configureEach {
             builtins {

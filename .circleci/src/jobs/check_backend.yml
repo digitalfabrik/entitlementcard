@@ -8,7 +8,6 @@ working_directory: ~/project/backend
 steps:
   - prepare_workspace
   - check_circleci_config
-  - install_protobuf_linux
   - setup_remote_docker:
       docker_layer_caching: true
   - run:

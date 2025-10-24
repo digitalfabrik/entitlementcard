@@ -5,7 +5,6 @@ working_directory: ~/project/administration
 steps:
   - prepare_workspace
   - check_circleci_config
-  - install_protobuf_linux
   - install_node_modules
   - run:
       name: Typescript
