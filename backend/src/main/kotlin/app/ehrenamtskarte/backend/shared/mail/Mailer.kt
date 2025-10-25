@@ -297,11 +297,12 @@ object Mailer {
                 message = emailBody {
                     p { +"Sehr geehrte/r $applicantName," }
                     p {
-                        +"vielen Dank für Ihren Antrag und Ihr Interesse an der Bayerischen Ehrenamtskarte. "
-                        +"Wir danken Ihnen für das Engagement und die Zeit, die Sie zum Wohle der Gemeinschaft "
-                        +"einbringen."
-                        +"Ihr Einsatz ist von großem Wert und verdient Anerkennung. "
-                        +"In diesem Fall ist es leider nicht möglich, dass Sie die Bayerische Ehrenamtskarte erhalten:"
+                        +"""
+                        vielen Dank für Ihren Antrag und Ihr Interesse an der Bayerischen Ehrenamtskarte. Wir danken 
+                        Ihnen für das Engagement und die Zeit, die Sie zum Wohle der Gemeinschaft einbringen. Ihr 
+                        Einsatz ist von großem Wert und verdient Anerkennung. In diesem Fall ist es leider nicht 
+                        möglich, dass Sie die Bayerische Ehrenamtskarte erhalten.                            
+                        """.trimIndent()
                     }
                     p { +rejectionMessage }
                     finalInformationParagraph(projectConfig)
