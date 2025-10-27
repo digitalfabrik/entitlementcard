@@ -166,14 +166,6 @@ export const theme = (config: ProjectConfig): Theme =>
         defaultProps: {
           useFlexGap: true,
         },
-        styleOverrides: {
-          root: {
-            '& *': {
-              fontFamily: 'inherit',
-              letterSpacing: 'inherit',
-            },
-          },
-        },
       },
       MuiMenuItem: {
         variants: [
