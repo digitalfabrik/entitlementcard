@@ -13,7 +13,7 @@ import org.simplejavamail.MailException
 import org.simplejavamail.email.EmailBuilder
 import org.simplejavamail.mailer.MailerBuilder
 import org.slf4j.LoggerFactory
-import java.net.URL
+import java.net.URI
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
@@ -268,7 +268,7 @@ object Mailer {
                     +"können Sie in vielen Fällen die digitale Karte schon jetzt aktivieren. "
                     +"Klicken Sie dazu einfach auf den folgenden Link von Ihrem Smartphone aus: "
                     br()
-                    link(URL(deepLink))
+                    link(URI.create(deepLink))
                 }
                 p {
                     +"Hinweis: Die Vorab-Aktivierung wird nicht auf allen Endgeräten unterstützt. "
@@ -329,7 +329,7 @@ private fun EmailBody.adjustNotificationsParagraph(projectConfig: ProjectConfig)
     p {
         +"Email-Benachrichtigungen zu Anträgen können Sie hier konfigurieren:"
         br()
-        link(URL("${projectConfig.administrationBaseUrl}/user-settings"))
+        link(URI.create("${projectConfig.administrationBaseUrl}/user-settings"))
     }
 }
 
@@ -337,7 +337,7 @@ private fun EmailBody.viewApplicationsParagraph(projectConfig: ProjectConfig) {
     p {
         +"Unter folgendem Link können Sie Anträge einsehen und bearbeiten:"
         br()
-        link(URL("${projectConfig.administrationBaseUrl}/applications"))
+        link(URI.create("${projectConfig.administrationBaseUrl}/applications"))
     }
 }
 
@@ -400,19 +400,21 @@ private fun sendMail(
     }
 }
 
-private fun resetPasswordLink(projectConfig: ProjectConfig, recipient: String, passwortResetKey: String): URL =
-    URL(
+private fun resetPasswordLink(projectConfig: ProjectConfig, recipient: String, passwortResetKey: String): URI =
+    URI.create(
         "${projectConfig.administrationBaseUrl}/reset-password?" +
             "email=${urlEncode(recipient)}&token=${urlEncode(passwortResetKey)}",
     )
 
-private fun reviewApplicationLink(projectConfig: ProjectConfig, accessKey: String): URL =
-    URL("${projectConfig.administrationBaseUrl}/antrag-einsehen/${urlEncode(accessKey)}")
+private fun reviewApplicationLink(projectConfig: ProjectConfig, accessKey: String): URI =
+    URI.create("${projectConfig.administrationBaseUrl}/antrag-einsehen/${urlEncode(accessKey)}")
 
 private fun verificationLink(
     projectConfig: ProjectConfig,
     applicationVerification: ApplicationVerificationEntity,
-): URL =
-    URL("${projectConfig.administrationBaseUrl}/antrag-verifizieren/${urlEncode(applicationVerification.accessKey)}")
+): URI =
+    URI.create(
+        "${projectConfig.administrationBaseUrl}/antrag-verifizieren/${urlEncode(applicationVerification.accessKey)}",
+    )
 
 private fun urlEncode(str: String) = URLEncoder.encode(str, StandardCharsets.UTF_8)

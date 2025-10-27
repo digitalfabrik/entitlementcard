@@ -9,7 +9,7 @@ import kotlinx.html.html
 import kotlinx.html.p
 import kotlinx.html.stream.appendHTML
 import kotlinx.html.style
-import java.net.URL
+import java.net.URI
 
 class EmailBody {
     private val children = ArrayList<Paragraph>(0)
@@ -61,8 +61,8 @@ class Paragraph {
         }
     }
 
-    fun link(url: URL) {
-        children.add(Link(url))
+    fun link(uri: URI) {
+        children.add(Link(uri))
     }
 
     fun br() {
@@ -116,11 +116,11 @@ class Text(text: String) : InlineRenderable {
     }
 }
 
-class Link(val url: URL) : InlineRenderable {
+class Link(val uri: URI) : InlineRenderable {
     override fun renderHtml(parent: HtmlBlockInlineTag) {
-        parent.a(url.toString()) {
+        parent.a(uri.toString()) {
             style = "word-wrap: break-word;"
-            +url.toString()
+            +uri.toString()
         }
     }
 
@@ -131,7 +131,7 @@ class Link(val url: URL) : InlineRenderable {
             builder.append(" ")
         }
 
-        builder.append(url.toString())
+        builder.append(uri.toString())
         // Always append a space to make the URL stand out in plain text.
         // In the case of a subsequent newline, this space will get removed again.
         builder.append(" ")
