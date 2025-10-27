@@ -39,7 +39,6 @@ const Container = styled.div`
   width: 100%;
   max-width: 500px;
   border: 1px solid #f7f7f7;
-  font-family: Roboto Roboto, Helvetica, Arial, sans-serif;
 `
 
 const Step = styled.div`
