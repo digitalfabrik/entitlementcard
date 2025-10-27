@@ -22,6 +22,7 @@ import downloadDataUri from '../../../util/downloadDataUri'
 import { getBuildConfig } from '../../../util/getBuildConfig'
 import getDeepLinkFromQrCode from '../../../util/getDeepLinkFromQrCode'
 import { isProductionEnvironment, updateArrayItem } from '../../../util/helper'
+import { normalizeWhitespace } from '../../../util/normalizeString'
 import { reportErrorToSentry } from '../../../util/sentry'
 import { saveActivityLog } from '../../activity-log/ActivityLog'
 import { showCardGenerationError } from '../../util/cardGenerationError'
@@ -99,15 +100,18 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
       let codes: CreateCardsResult[] | undefined
       setCardGenerationStep('loading')
 
+      // Normalize each card's full name
+      const normalizedCards = cards.map(card => ({ ...card, fullName: normalizeWhitespace(card.fullName) }))
+
       try {
-        codes = await createCards(createCardsMutation, projectConfig, cards, applicationId)
-        const dataUri = await generateFunction(codes, cards, projectConfig, region)
+        codes = await createCards(createCardsMutation, projectConfig, normalizedCards, applicationId)
+        const dataUri = await generateFunction(codes, normalizedCards, projectConfig, region)
         downloadDataUri(dataUri, filename)
-        cards.forEach(saveActivityLog)
+        normalizedCards.forEach(saveActivityLog)
 
         // This is a temporary condition from #2141
         if (!isProductionEnvironment() && applicationId != null) {
-          const freinetCard = getFreinetCardFromCards(cards)
+          const freinetCard = getFreinetCardFromCards(normalizedCards)
           sendToFreinet({
             variables: {
               applicationId,
@@ -117,7 +121,7 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
         }
 
         if (region.activatedForCardConfirmationMail) {
-          await sendConfirmationMails(codes, cards)
+          await sendConfirmationMails(codes, normalizedCards)
         } else if (!isProductionEnvironment()) {
           // print deep links in the console for testing purposes
           codes.forEach(code =>
