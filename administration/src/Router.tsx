@@ -3,6 +3,7 @@ import { Outlet, Route, RouterProvider, createBrowserRouter, createRoutesFromEle
 
 import { AuthContext } from './AuthProvider'
 import KeepAliveToken from './KeepAliveToken'
+import { Logout } from './Logout'
 import WhoAmIProvider from './WhoAmIProvider'
 import NavigationBar from './bp-modules/NavigationBar'
 import ActivityLogController from './bp-modules/activity-log/ActivityLogController'
@@ -66,6 +67,7 @@ const Router = (): ReactElement => {
             <Route path='/reset-password/' element={<ResetPasswordController />} />
             <Route path='/imprint/' element={<ImprintPage />} />
             <Route path='/download/' element={<DownloadPage />} />
+            <Route path='/logout' Component={Logout} />
 
             {projectConfig.applicationFeature && (
               <>
