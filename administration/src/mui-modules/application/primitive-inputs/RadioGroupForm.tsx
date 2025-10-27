@@ -42,7 +42,7 @@ export const createRadioGroupForm = <T extends string>(): RadioGroupForm<T> => {
       const isInvalid = validationResult.type === 'error'
       const labelByValueEntries: [T, string][] = Object.entries(options.labelByValue) as [T, string][]
       return (
-        <FormControl fullWidth variant='standard' required style={{ margin: '4px 0' }} error={touched && isInvalid}>
+        <FormControl fullWidth variant='standard' required sx={{ marginY: 0.5 }} error={touched && isInvalid}>
           <FormLabel>{title}</FormLabel>
           <RadioGroup
             sx={{ '& > label': { marginTop: '4px', marginBottom: '4px' } }}
