@@ -33,7 +33,7 @@ const DateForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
       return { type: 'error', message: i18next.t('applicationForms:invalidDateError') }
     }
     if (date <= minDate) {
-      return { type: 'error', message: 'Das Datum muss nach dem 1.1.1900 liegen' }
+      return { type: 'error', message: i18next.t('applicationForms:dateBefore1900Error') }
     }
     if (options.maximumDate && date > options.maximumDate) {
       return { type: 'error', message: options.maximumDateErrorMessage }

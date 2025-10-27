@@ -1,4 +1,5 @@
 import { TextField } from '@mui/material'
+import i18next from 'i18next'
 import React, { useContext, useState } from 'react'
 
 import { ShortTextInput } from '../../../generated/graphql'
@@ -53,12 +54,12 @@ const ShortTextForm: Form<State, ValidatedInput, AdditionalProps> = {
   getArrayBufferKeys: () => [],
   validate: ({ shortText }) => {
     if (shortText.length === 0) {
-      return { type: 'error', message: 'Feld ist erforderlich.' }
+      return { type: 'error', message: i18next.t('applicationForms:fieldRequiredError') }
     }
     if (shortText.length > MAX_SHORT_TEXT_LENGTH) {
       return {
         type: 'error',
-        message: `Text überschreitet die maximal erlaubten ${MAX_SHORT_TEXT_LENGTH} Zeichen.`,
+        message: i18next.t('applicationForms:maxShortTextLengthError', { maxLength: MAX_SHORT_TEXT_LENGTH }),
       }
     }
     return { type: 'valid', value: { shortText } }

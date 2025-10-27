@@ -69,18 +69,14 @@ const Component = <I,>({
   const onInputChange: ChangeEventHandler<HTMLInputElement> = async e => {
     const file = e.target.files![0]
     if (!(file.type in defaultExtensionsByMIMEType)) {
-      enqueueSnackbar(
-        `Die gewählte Datei ist zu groß. Die maximale Dateigröße beträgt ${FILE_SIZE_LIMIT_MEGA_BYTES}MB.`,
-        { variant: 'error' }
-      )
+      enqueueSnackbar(i18next.t('errors:invalidFileType'), { variant: 'error' })
       e.target.value = ''
       return
     }
     if (file.size > FILE_SIZE_LIMIT_BYTES) {
-      enqueueSnackbar(
-        `Die gewählte Datei ist zu groß. Die maximale Dateigröße beträgt ${FILE_SIZE_LIMIT_MEGA_BYTES}MB.`,
-        { variant: 'error' }
-      )
+      enqueueSnackbar(i18next.t('errors:invalidFileSizeWithMaximum', { maxSize: FILE_SIZE_LIMIT_MEGA_BYTES }), {
+        variant: 'error',
+      })
       e.target.value = ''
       return
     }
