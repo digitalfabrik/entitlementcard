@@ -4,7 +4,6 @@ import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 
-import { AuthContext } from '../AuthProvider'
 import { useWhoAmI } from '../WhoAmIProvider'
 import { Role } from '../generated/graphql'
 import RenderGuard from '../mui-modules/components/RenderGuard'
@@ -13,15 +12,10 @@ import roleToText from './users/utils/roleToText'
 
 const UserMenu = (): ReactElement => {
   const { role, email } = useWhoAmI().me
-  const { signOut } = useContext(AuthContext)
   const { t } = useTranslation('misc')
   const projectConfig = useContext(ProjectConfigContext)
   const navigate = useNavigate()
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null)
-  const signOutAndRedirect = () => {
-    signOut()
-    navigate('/')
-  }
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget)
   }
@@ -97,7 +91,7 @@ const UserMenu = (): ReactElement => {
             fullWidth
             variant='text'
             startIcon={<Logout />}
-            onClick={signOutAndRedirect}>
+            onClick={() => navigate('/logout')}>
             {t('logout')}
           </Button>
         </Stack>
