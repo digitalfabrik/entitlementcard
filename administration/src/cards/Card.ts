@@ -222,8 +222,7 @@ export const initializeCardFromCSV = (
     return extension && value != null ? Object.assign(acc, extension.fromString(value)) : acc
   }, defaultCard.extensions)
 
-  const rawFullName = line[headers.indexOf(cardConfig.nameColumnName)] ?? defaultCard.fullName
-  const fullName = normalizeWhitespace(rawFullName)
+  const fullName = normalizeWhitespace(line[headers.indexOf(cardConfig.nameColumnName)] ?? defaultCard.fullName)
   const rawExpirationDate = line[headers.indexOf(cardConfig.expiryColumnName)]
   const expirationDate = PlainDate.safeFromCustomFormat(rawExpirationDate) ?? defaultCard.expirationDate
 
