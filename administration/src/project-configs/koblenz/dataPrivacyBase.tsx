@@ -43,7 +43,7 @@ Copy the resulting string into the htmltojsx converter.
 
 export const DataPrivacyBaseText = (): ReactElement => (
   <div>
-    <Typography variant='h5' component='h2'>
+    <Typography variant='h6' component='h2'>
       Vorbemerkungen:
     </Typography>
     <Typography component='p' marginTop={1}>
@@ -70,7 +70,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
         https://github.com/digitalfabrik/entitlementcard
       </Link>
     </Typography>
-    <Typography variant='h5' component='h2'>
+    <Typography variant='h6' component='h2'>
       Kontaktdaten:
     </Typography>
     <Typography component='p' marginTop={1}>
@@ -128,7 +128,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
       </Link>
     </Typography>
 
-    <Typography variant='h5' component='h2'>
+    <Typography variant='h6' component='h2'>
       Zwecke und Rechtsgrundlagen für die Verarbeitung personenbezogener Daten
     </Typography>
     <Typography component='p' marginTop={1}>
