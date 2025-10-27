@@ -1,11 +1,7 @@
-import { Checkbox, FormControl, FormControlLabel, FormGroup, styled } from '@mui/material'
+import { Checkbox, FormControl, FormControlLabel, FormGroup } from '@mui/material'
 import React, { ReactElement } from 'react'
 
 import FormAlert from './FormAlert'
-
-const StyledFormControlLabel = styled(FormControlLabel)`
-  margin: 8px 0;
-`
 
 type BaseCheckboxProps = {
   disabled?: boolean
@@ -30,7 +26,8 @@ const BaseCheckbox = ({
 }: BaseCheckboxProps): ReactElement => (
   <FormGroup>
     <FormControl required={required} error={hasError} disabled={disabled}>
-      <StyledFormControlLabel
+      <FormControlLabel
+        sx={{ marginTop: 0.5, marginX: 0 }}
         control={
           <Checkbox
             sx={{ pl: 0 }}
