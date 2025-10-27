@@ -187,6 +187,7 @@ class Execute : CliktCommand() {
     override fun run() {
         Database.setupWithInitialDataAndMigrationChecks(config)
         runApplication<BackendApplication> {
+            setAdditionalProfiles(config.environment.toString().lowercase())
             addInitializers(
                 beans {
                     bean { config }
