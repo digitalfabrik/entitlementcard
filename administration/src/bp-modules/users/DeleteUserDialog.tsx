@@ -57,12 +57,10 @@ const DeleteUserDialog = ({
   }
 
   const alertBoxContent = (
-    <Box sx={{ px: 1, paddingTop: 1 }}>
+    <Box sx={{ px: 1 }}>
       {' '}
-      <Typography variant='body1' fontWeight='bold'>
-        {t('deleteOwnAccountWarning')}
-      </Typography>{' '}
-      <Typography variant='body1'>{t('deleteOwnAccountWarningExplanation')}</Typography>
+      <Typography fontWeight='bold'>{t('deleteOwnAccountWarning')}</Typography>{' '}
+      <Typography>{t('deleteOwnAccountWarningExplanation')}</Typography>
       <BaseCheckbox
         checked={deleteWarningConfirmed}
         onChange={setDeleteWarningConfirmed}
@@ -88,7 +86,7 @@ const DeleteUserDialog = ({
       confirmButtonText={t('deleteUser')}>
       <Stack gap={2}>
         <Box>
-          <Typography variant='body1'>
+          <Typography>
             <Trans i18nKey='users:deleteUserIrrevocableConfirmPrompt' values={{ mail: selectedUser?.email }} />
           </Typography>
         </Box>
