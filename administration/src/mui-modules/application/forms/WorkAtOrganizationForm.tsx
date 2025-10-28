@@ -37,7 +37,7 @@ const ActivityDivider = ({ onDelete }: { onDelete?: () => void }) => {
           confirmButtonText={t('misc:delete')}
           onConfirm={onDelete}
           title={t('deleteActivityTitle')}>
-          {t('deleteActivityContent')}
+          <Typography> {t('deleteActivityContent')}</Typography>
         </ConfirmDialog>
       )}
     </>

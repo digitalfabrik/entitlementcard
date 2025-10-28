@@ -1,5 +1,5 @@
 import { Delete } from '@mui/icons-material'
-import { Button } from '@mui/material'
+import { Button, Typography } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -20,7 +20,7 @@ const DiscardAllInputsButton = ({ discardAll }: { discardAll: () => void }): Rea
         title={t('discardInputsTitle')}
         color='error'
         onConfirm={discardAll}>
-        {t('discardInputsContent')}
+        <Typography>{t('discardInputsContent')}</Typography>
       </ConfirmDialog>
     </>
   )
