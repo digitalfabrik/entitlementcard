@@ -1,5 +1,5 @@
 import { Edit, PersonAdd, PersonRemove } from '@mui/icons-material'
-import { Button, Stack } from '@mui/material'
+import { Button, Stack, Typography } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -56,11 +56,13 @@ const UsersTable = ({
       <StyledTable>
         <thead>
           <tr>
-            <th>{t('eMail')}</th>
+            <Typography fontWeight='bold' variant='body1' component='th'>
+              {t('eMail')}
+            </Typography>
             {selectedRegionId !== null ? null : <th>{t('role')}</th>}
-            <th>
+            <Typography fontWeight='bold' variant='body1' component='th'>
               {t('role')} <RoleHelpButton />
-            </th>
+            </Typography>
             <th>{/* Action Buttons */}</th>
           </tr>
         </thead>
@@ -70,9 +72,11 @@ const UsersTable = ({
             const regionName = region === undefined ? null : `${region.prefix} ${region.name}`
             return (
               <tr key={user.id}>
-                <td>{user.email}</td>
-                {selectedRegionId !== null ? null : <td>{regionName === null ? <i>({t('none')})</i> : regionName}</td>}
-                <td>{roleToText(user.role)}</td>
+                <Typography component='td'>{user.email}</Typography>
+                {selectedRegionId !== null ? null : (
+                  <Typography component='td'>{regionName === null ? <i>({t('none')})</i> : regionName}</Typography>
+                )}
+                <Typography component='td'>{roleToText(user.role)}</Typography>
                 <td>
                   <Stack sx={{ flexDirection: 'row', gap: 1 }}>
                     <Button startIcon={<Edit />} size='small' onClick={() => setUserInEditDialog(user)}>
