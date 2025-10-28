@@ -25,6 +25,7 @@ import graphql.schema.GraphQLSchema
 import org.jetbrains.exposed.sql.exists
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
+import org.springframework.boot.WebApplicationType
 import org.springframework.boot.runApplication
 import org.springframework.context.support.beans
 import java.io.File
@@ -112,6 +113,7 @@ class GraphQLExport : CliktCommand("graphql-export") {
 
     override fun run() {
         val springContext = runApplication<BackendApplication> {
+            webApplicationType = WebApplicationType.NONE
             addInitializers(
                 beans {
                     bean { config }
