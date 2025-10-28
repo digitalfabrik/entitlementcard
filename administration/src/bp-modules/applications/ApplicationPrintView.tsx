@@ -54,9 +54,12 @@ export const ApplicationPrintView = forwardRef<
 
       {p.application.status === ApplicationStatus.Withdrawn && !!p.application.statusResolvedDate && (
         <Box sx={{ border: '1pt solid black', borderRadius: '4pt', padding: 2, width: 'fit-content' }}>
-          {t('withdrawalMessage', { date: new Date(p.application.statusResolvedDate) })}
-          <br />
-          {t('deleteApplicationSoonPrompt')}
+          <Typography>
+            {' '}
+            {t('withdrawalMessage', { date: new Date(p.application.statusResolvedDate) })}
+            <br />
+            {t('deleteApplicationSoonPrompt')}
+          </Typography>
         </Box>
       )}
       <hr />
