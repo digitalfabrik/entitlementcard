@@ -232,5 +232,14 @@ export const theme = (config: ProjectConfig): Theme =>
           LinkComponent: LinkBehavior,
         },
       },
+      MuiCssBaseline: {
+        styleOverrides: {
+          '#root': {
+            height: '100dvh',
+            display: 'flex',
+            flexFlow: 'column nowrap',
+          },
+        },
+      },
     },
   })
