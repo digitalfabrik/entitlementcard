@@ -12,7 +12,7 @@ type SettingsCardProps = {
 }
 
 const SettingsCard = ({ children, title }: PropsWithChildren<SettingsCardProps>): ReactNode => (
-  <Card sx={{ minHeight: 'fit-content', width: '100%', maxWidth: '500px', padding: 3 }}>
+  <Card sx={{ width: '100%', maxWidth: '500px', padding: 3, display: 'table' }}>
     <Typography variant='h4' component='h2'>
       {title}
     </Typography>

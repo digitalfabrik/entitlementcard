@@ -20,7 +20,7 @@ export const ActivationText = (
     <Typography variant='h6' marginBottom={1}>
       {t('headline')}
     </Typography>
-    <Typography variant='body2' component='span'>
+    <Typography component='span'>
       <Trans i18nKey='activation:description' values={{ applicationName }} /> <br />{' '}
       <ActivationButton href={deepLink} variant='contained' size='small'>
         {t('activateButton')}
@@ -29,11 +29,11 @@ export const ActivationText = (
       <b>{t('steps')}</b>
     </Typography>
     <Typography component='ol'>
-      <Typography component='li' variant='body2'>
+      <Typography component='li'>
         <Trans i18nKey='activation:downloadApp' values={{ applicationName }} />
         Laden Sie sich die App <b>{applicationName}</b> im App- oder PlayStore auf Ihrem Smartphone herunter.
       </Typography>
-      <Typography component='li' variant='body2'>
+      <Typography component='li'>
         {' '}
         {t('openOnMobileDevice')}
         <br />
@@ -41,9 +41,7 @@ export const ActivationText = (
           {downloadLink}
         </Link>
       </Typography>
-      <Typography component='li' variant='body2'>
-        {t('explanation')}{' '}
-      </Typography>
+      <Typography component='li'>{t('explanation')} </Typography>
     </Typography>
   </div>
 )

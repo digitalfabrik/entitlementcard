@@ -17,7 +17,7 @@ const StoresImportDuplicates = ({ entries }: StoresImportDuplicatesProps): React
       {entries.map(entry => {
         const entries = entry.join(', ')
         return (
-          <Typography variant='body2' component='span' key={entries}>
+          <Typography component='span' key={entries}>
             {t('theseEntriesAreDuplicated', { entries })}
           </Typography>
         )

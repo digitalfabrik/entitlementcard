@@ -37,7 +37,7 @@ const RegionSelector = ({
   }
 
   return (
-    <Stack>
+    <Stack gap={0}>
       <Autocomplete
         value={selectedId != null ? getTitle(regions.find(region => region.id === selectedId)) : null}
         renderInput={params => (
@@ -61,7 +61,7 @@ const RegionSelector = ({
           />
         )}
         options={regions.map(region => getTitle(region))}
-        sx={{ marginY: 2 }}
+        sx={{ marginTop: 2, marginBottom: 0 }}
         onChange={(_, value) => onSelect(regions.find(region => getTitle(region) === value))}
       />
       {selectedId == null && <FormAlert errorMessage={t('noRegionError')} />}

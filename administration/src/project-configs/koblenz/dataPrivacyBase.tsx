@@ -43,42 +43,41 @@ Copy the resulting string into the htmltojsx converter.
 
 export const DataPrivacyBaseText = (): ReactElement => (
   <div>
-    <Typography variant='h5' component='h2'>
+    <Typography variant='h6' component='h2'>
       Vorbemerkungen:
     </Typography>
-    <Typography variant='body2' component='p' marginTop={1}>
+    <Typography component='p' marginTop={1}>
       Diese Datenschutzerklärung bezieht sich auf die Verarbeitung personenbezogener Daten im Rahmen des digitalen
       KoblenzPasses einschließlich verbundener Dienste.
     </Typography>
-    <Typography variant='body2' component='p' marginTop={1}>
+    <Typography component='p' marginTop={1}>
       Der digitale KoblenzPass wird im Auftrag der Stadt Koblenz durch die Tür an Tür – Digitalfabrik gGmbH,
       Wertachstraße 29, 86153 Augsburg betrieben.
     </Typography>
-    <Typography variant='body2' component='p' marginTop={1}>
+    <Typography component='p' marginTop={1}>
       Die Betreiber dieser Seiten nehmen den Schutz Ihrer persönlichen Daten sehr ernst. Wir behandeln Ihre
       personenbezogenen Daten vertraulich und entsprechend den gesetzlichen Datenschutzvorschriften sowie dieser
       Datenschutzerklärung.
     </Typography>
-    <Typography variant='body2' component='p' marginTop={1}>
+    <Typography component='p' marginTop={1}>
       Der gesamte Programmcode des digitalen KoblenzPasses ist darüber hinaus quelloffen lizenziert unter der MIT-Lizenz
       und kann hier eingesehen werden:
       <Link
         href='https://github.com/digitalfabrik/entitlementcard'
         target='_blank'
         rel='noreferrer'
-        variant='body2'
         sx={{ display: 'block' }}>
         https://github.com/digitalfabrik/entitlementcard
       </Link>
     </Typography>
-    <Typography variant='h5' component='h2'>
+    <Typography variant='h6' component='h2'>
       Kontaktdaten:
     </Typography>
-    <Typography variant='body2' component='p' marginTop={1}>
+    <Typography component='p' marginTop={1}>
       Für nähere Informationen zur Verarbeitung Ihrer personenbezogenen Daten können Sie uns unter den unten genannten
       Kontaktdaten erreichen.
     </Typography>
-    <Typography variant='body2' component='p' marginTop={1}>
+    <Typography component='p' marginTop={1}>
       <Typography variant='body2bold' component='span'>
         Name und Kontaktdaten des Verantwortlichen
       </Typography>
@@ -90,16 +89,11 @@ export const DataPrivacyBaseText = (): ReactElement => (
       Telefon: +49 (0)261 129 1000
       <br />
       E-Mail:
-      <Link
-        href='mailto:koblenzpass@stadt.koblenz.de'
-        target='_blank'
-        rel='noreferrer'
-        variant='body2'
-        sx={{ display: 'block' }}>
+      <Link href='mailto:koblenzpass@stadt.koblenz.de' target='_blank' rel='noreferrer' sx={{ display: 'block' }}>
         koblenzpass@stadt.koblenz.de
       </Link>
     </Typography>
-    <Typography variant='body2' component='p' marginTop={1}>
+    <Typography component='p' marginTop={1}>
       <Typography variant='body2bold' component='span'>
         Kontaktdaten der Datenschutzbeauftragten
       </Typography>
@@ -121,32 +115,26 @@ export const DataPrivacyBaseText = (): ReactElement => (
         href='mailto:security.management@stadt.koblenz.de'
         target='_blank'
         rel='noreferrer'
-        variant='body2'
         sx={{ display: 'block' }}>
         security.management@stadt.koblenz.de
       </Link>
     </Typography>
 
-    <Typography variant='body2' component='p' marginTop={1}>
+    <Typography component='p' marginTop={1}>
       Allgemeines zum Thema Datenschutz finden Sie auf der Website des Landesbeauftragten für den Datenschutz und die
       Informationsfreiheit Rheinland-Pfalz
-      <Link
-        href='https://www.datenschutz.rlp.de'
-        target='_blank'
-        rel='noreferrer'
-        variant='body2'
-        sx={{ display: 'block' }}>
+      <Link href='https://www.datenschutz.rlp.de' target='_blank' rel='noreferrer' sx={{ display: 'block' }}>
         (https://www.datenschutz.rlp.de)
       </Link>
     </Typography>
 
-    <Typography variant='h5' component='h2'>
+    <Typography variant='h6' component='h2'>
       Zwecke und Rechtsgrundlagen für die Verarbeitung personenbezogener Daten
     </Typography>
-    <Typography variant='body2' component='p' marginTop={1}>
+    <Typography component='p' marginTop={1}>
       Zweck der Verarbeitung ist die Bereitstellung und spätere Nutzung eines beantragten digitalen KoblenzPasses.
     </Typography>
-    <Typography variant='body2' component='p' marginTop={1}>
+    <Typography component='p' marginTop={1}>
       Die Datenverarbeitungen im Zusammenhang mit der Bereitstellung und Nutzung des digitalen KoblenzPass sind
       Verarbeitungen personenbezogener Daten gemäß Art. 4 der Datenschutz-Grundverordnung (DSGVO). Diese erfolgt
       aufgrund ausdrücklicher Einwilligung, mithin des/der Personensorgeberechtigten (Art. 6 Abs. 1 lit. a DSGVO). Um
@@ -154,11 +142,11 @@ export const DataPrivacyBaseText = (): ReactElement => (
       zustimmen. Dies erfolgt ausschließlich, um Sie als berechtigten KoblenzPass-Inhaber bzw. -Inhaberin zu
       identifizieren. Die Daten werden nicht gespeichert.
     </Typography>
-    <Typography variant='body2' component='p' marginTop={1}>
+    <Typography component='p' marginTop={1}>
       Rechtsgrundlage für die vorübergehende Speicherung und Verarbeitung von Daten hinsichtlich der Bereitstellung der
       Website „KoblenzPass-Portal“ und Erstellung von notwendigen Logfiles ist Art. 6 Abs. 1 lit. e DSGVO.
     </Typography>
-    <Typography variant='body2' component='p' marginTop={1}>
+    <Typography component='p' marginTop={1}>
       <br />
       <Typography variant='body2bold' component='span'>
         Automatische Speicherung von Daten:
@@ -168,47 +156,33 @@ export const DataPrivacyBaseText = (): ReactElement => (
       folgende Nutzungsdaten erhoben:
     </Typography>
     <Typography component='ul'>
-      <Typography variant='body2' component='li'>
-        Datum und Uhrzeit des Abrufs
-      </Typography>
+      <Typography component='li'>Datum und Uhrzeit des Abrufs</Typography>
 
-      <Typography variant='body2' component='li'>
+      <Typography component='li'>
         Name des aufgerufenen Internetdienstes, der aufgerufenen Ressource und der verwendeten Aktion
       </Typography>
 
-      <Typography variant='body2' component='li'>
-        vollständige IP-Adresse des anfordernden Rechners
-      </Typography>
+      <Typography component='li'>vollständige IP-Adresse des anfordernden Rechners</Typography>
 
-      <Typography variant='body2' component='li'>
-        Abfrage, die der Client gestellt hat
-      </Typography>
+      <Typography component='li'>Abfrage, die der Client gestellt hat</Typography>
 
-      <Typography variant='body2' component='li'>
-        übertragene Datenmenge
-      </Typography>
+      <Typography component='li'>übertragene Datenmenge</Typography>
 
-      <Typography variant='body2' component='li'>
-        Meldung, ob der Abruf erfolgreich war
-      </Typography>
+      <Typography component='li'>Meldung, ob der Abruf erfolgreich war</Typography>
 
-      <Typography variant='body2' component='li'>
+      <Typography component='li'>
         Browser-Identifikation (enthält in der Regel die Browserversion, sowie das Betriebssystem)
       </Typography>
 
-      <Typography variant='body2' component='li'>
-        Innerhalb der App eingegebene Suchen nach Adressen oder Vergünstigungen;
-      </Typography>
+      <Typography component='li'>Innerhalb der App eingegebene Suchen nach Adressen oder Vergünstigungen;</Typography>
 
-      <Typography variant='body2' component='li'>
-        Standort-Positionen, falls der Standort in den Apps freigegeben ist.
-      </Typography>
+      <Typography component='li'>Standort-Positionen, falls der Standort in den Apps freigegeben ist.</Typography>
     </Typography>
-    <Typography variant='body2' component='p' marginTop={1}>
+    <Typography component='p' marginTop={1}>
       Die in den Formularfelder eingegebenen Daten werden ebenfalls an den Server gesendet und dort transient
       verarbeitet. Eine Speicherung der Daten erfolgt nicht.
     </Typography>
-    <Typography variant='body2' component='p' marginBottom={0}>
+    <Typography component='p' marginBottom={0}>
       Sonstige Daten werden bei Ihrer Nutzung nicht automatisch erhoben und nicht an unsere Server gesendet. Nach dem
       Grundsatz der Datenvermeidung und der Datensparsamkeit sowie dem Grundsatz der anonymen und pseudonymen Nutzung
       wird nur das Minimum an Nutzungsdaten erhoben, soweit dies für den technischen Betrieb und die Sicherheit der Apps
@@ -216,118 +190,118 @@ export const DataPrivacyBaseText = (): ReactElement => (
       noch mit Hilfe von Zusatzwissen auf eine bestimmte Person zurückgeführt werden. Die einzelnen Nutzerinnen und
       Nutzer können somit nicht identifiziert werden. Wir erstellen keine Nutzungsprofile.
     </Typography>
-    <Typography variant='body2' component='p' marginTop={0} marginBottom={0}>
+    <Typography component='p' marginTop={0} marginBottom={0}>
       &nbsp;
     </Typography>
-    <Typography variant='body2' component='p' marginTop={0}>
+    <Typography component='p' marginTop={0}>
       Zur Gewährleistung des technischen Betriebs wird die IP-Adresse für 14 Tage in den Serverprotokollen gespeichert
       und danach gelöscht.
     </Typography>
-    <Typography variant='body2' component='p' marginTop={1}>
+    <Typography component='p' marginTop={1}>
       <br />
       <Typography variant='body2bold' component='span'>
         Weitergabe erhobener Daten
       </Typography>
     </Typography>
-    <Typography variant='body2' component='p' marginTop={1}>
+    <Typography component='p' marginTop={1}>
       Der technische Betrieb unserer Datenverarbeitungssysteme erfolgt durch:
     </Typography>
-    <Typography variant='body2' component='p' marginTop={1}>
+    <Typography component='p' marginTop={1}>
       Tür an Tür – Digitalfabrik gGmbH,
       <br />
       Wertachstr. 29,
       <br />
       86153 Augsburg
     </Typography>
-    <Typography variant='body2' component='p' marginTop={1}>
+    <Typography component='p' marginTop={1}>
       Alle uns bekannt gewordenen personenbezogenen Daten von betroffenen Personen dürfen wir nur dann an andere
       Personen oder Stellen weitergeben oder für andere Zwecke verwenden, wenn diese dem zugestimmt haben oder die
       Weitergabe gesetzlich zugelassen ist.
     </Typography>
-    <Typography variant='body2' component='p' marginTop={1}>
+    <Typography component='p' marginTop={1}>
       <br />
       <Typography variant='body2bold' component='span'>
         Einwilligung durch Minderjährige
       </Typography>
     </Typography>
-    <Typography variant='body2' component='p' marginTop={1}>
+    <Typography component='p' marginTop={1}>
       Personenbezogene Daten von Minderjährigen unter 16 Jahren werden nicht bewusst erhoben und verarbeitet. Gemäß Art.
       8 DSGVO dürfen Jugendliche ab 16 Jahre ihr Einverständnis zur Datenverarbeitung selbst erteilen. Für Kinder und
       Jugendliche unter 16 Jahren bedarf es der Einverständniserklärung der Personensorgeberechtigten.
     </Typography>
     <br />
-    <Typography variant='body2' component='p' marginTop={1}>
+    <Typography component='p' marginTop={1}>
       <Typography variant='body2bold' component='span'>
         Dauer der Speicherung der personenbezogenen Daten
       </Typography>
     </Typography>
-    <Typography variant='body2' component='p' marginTop={1}>
+    <Typography component='p' marginTop={1}>
       Ihre Daten werden, vorbehaltlich eines Widerrufs, nur so lange gespeichert, wie dies unter Beachtung gesetzlicher
       Aufbewahrungsfristen zur Aufgabenerfüllung erforderlich ist.
     </Typography>
     <br />
-    <Typography variant='body2' component='p' marginTop={1}>
+    <Typography component='p' marginTop={1}>
       <Typography variant='body2bold' component='span'>
         Widerrufsrecht bei Einwilligung:
       </Typography>
     </Typography>
-    <Typography variant='body2' component='p' marginTop={1}>
+    <Typography component='p' marginTop={1}>
       Die Einwilligung kann jederzeit für die Zukunft widerrufen werden. Die Rechtmäßigkeit der aufgrund der
       Einwilligung bis zum Widerruf erfolgten Datenverarbeitung wird durch diesen nicht berührt.
     </Typography>
     <br />
-    <Typography variant='body2' component='p' marginTop={1}>
+    <Typography component='p' marginTop={1}>
       <Typography variant='body2bold' component='span'>
         Ihre Rechte
       </Typography>
     </Typography>
-    <Typography variant='body2' component='p' marginTop={1}>
+    <Typography component='p' marginTop={1}>
       Soweit wir von Ihnen personenbezogene Daten verarbeiten, stehen Ihnen als Betroffener nachfolgende Rechte zu:
     </Typography>
     <Typography component='ul'>
-      <Typography variant='body2' component='li'>
+      <Typography component='li'>
         Sie haben das Recht auf Auskunft über die zu Ihrer Person gespeicherten Daten (Art. 15 DSGVO).
       </Typography>
 
-      <Typography variant='body2' component='li'>
+      <Typography component='li'>
         Sollten unrichtige personenbezogene Daten verarbeitet werden, steht Ihnen ein Recht auf Berichtigung zu (Art. 16
         DSGVO).
       </Typography>
 
-      <Typography variant='body2' component='li'>
+      <Typography component='li'>
         Liegen die gesetzlichen Voraussetzungen vor, so können Sie die Löschung oder Einschränkung der Verarbeitung
         verlangen (Art. 17 und 18 DSGVO).
       </Typography>
 
-      <Typography variant='body2' component='li'>
+      <Typography component='li'>
         Wenn Sie in die Verarbeitung eingewilligt haben oder ein Vertrag zur Datenverarbeitung besteht und die
         Datenverarbeitung mithilfe automatisierter Verfahren durchgeführt wird, steht Ihnen gegebenenfalls ein Recht auf
         Datenübertragbarkeit zu (Art. 20 DSGVO).
       </Typography>
 
-      <Typography variant='body2' component='li'>
+      <Typography component='li'>
         Falls Sie in die Verarbeitung eingewilligt haben und die Verarbeitung auf dieser Einwilligung beruht, können Sie
         die Einwilligung jederzeit für die Zukunft widerrufen. Die Rechtmäßigkeit der aufgrund der Einwilligung bis zum
         Widerruf erfolgten Datenverarbeitung wird durch diesen nicht berührt.
       </Typography>
 
-      <Typography variant='body2' component='li'>
+      <Typography component='li'>
         Sie haben das Recht, aus Gründen, die sich aus Ihrer besonderen Situation ergeben, jederzeit gegen die
         Verarbeitung Ihrer Daten Widerspruch einzulegen, wenn die Verarbeitung ausschließlich auf Grundlage des Art. 6
         Abs. 1 lit. e oder f DSGVO erfolgt (Art. 21 Abs. 1 Satz 1 DSGVO).
       </Typography>
     </Typography>
     <br />
-    <Typography variant='body2' component='p' marginTop={1}>
+    <Typography component='p' marginTop={1}>
       <Typography variant='body2bold' component='span'>
         Beschwerderecht bei der Aufsichtsbehörde
       </Typography>
     </Typography>
-    <Typography variant='body2' component='p' marginTop={1}>
+    <Typography component='p' marginTop={1}>
       Weiterhin besteht ein Beschwerderecht beim Landesbeauftragten für den Datenschutz und die Informationsfreiheit
       Rheinland-Pfalz. Diesen können Sie unter folgenden Kontaktdaten erreichen:
     </Typography>
-    <Typography variant='body2' component='p' marginTop={1}>
+    <Typography component='p' marginTop={1}>
       Postanschrift: Postfach 30 40 55020 Mainz
       <br />
       Adresse: Hinter Bleiche 34, 55116 Mainz
@@ -339,7 +313,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
       E-Mail: poststelle@datenschutz.rlp.de
     </Typography>
     <br />
-    <Typography variant='body2' component='p' marginTop={1}>
+    <Typography component='p' marginTop={1}>
       <Typography variant='body2bold' component='span'>
         Datensicherheit
       </Typography>
@@ -349,7 +323,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
       regelmäßig und passen sie dem technologischen Fortschritt an.
     </Typography>
     <br />
-    <Typography variant='body2' component='p' marginTop={1}>
+    <Typography component='p' marginTop={1}>
       <Typography variant='body2bold' component='span'>
         Elektronische Post (E-Mail)
       </Typography>

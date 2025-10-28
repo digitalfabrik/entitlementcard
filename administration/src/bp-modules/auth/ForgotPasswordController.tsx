@@ -45,12 +45,8 @@ const ForgotPasswordController = (): ReactElement => {
         </Typography>
         {finished ? (
           <>
-            <Typography variant='body2' component='p'>
-              {t('resetPasswordSuccessMessage', { email })}
-            </Typography>
-            <Typography variant='body2' component='p'>
-              {t('checkSpamHint')}
-            </Typography>
+            <Typography component='p'>{t('resetPasswordSuccessMessage', { email })}</Typography>
+            <Typography component='p'>{t('checkSpamHint')}</Typography>
             <Box sx={{ marginTop: 3 }}>
               <Button href='/' variant='text'>
                 {t('toLogin')}
@@ -59,9 +55,7 @@ const ForgotPasswordController = (): ReactElement => {
           </>
         ) : (
           <>
-            <Typography variant='body2' marginY={2}>
-              {t('resetPasswordText')}
-            </Typography>
+            <Typography marginY={2}>{t('resetPasswordText')}</Typography>
             <form
               onSubmit={e => {
                 e.preventDefault()

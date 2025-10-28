@@ -28,56 +28,66 @@ export const theme = (config: ProjectConfig): Theme =>
         fontSize: '2.125rem',
         lineHeight: 1.1,
         fontWeight: 600,
+        letterSpacing: 0,
         marginBottom: '0.7em',
       },
       h4: {
         fontSize: '1.75rem',
         lineHeight: 1.1,
         fontWeight: 600,
+        letterSpacing: 0,
         marginBottom: '0.7em',
       },
       h5: {
         fontSize: '1.375rem',
         lineHeight: 1.1,
         fontWeight: 600,
+        letterSpacing: 0,
         marginBottom: '0.7em',
       },
       h6: {
         fontSize: '1.125rem',
         lineHeight: 1.2,
         fontWeight: 600,
+        letterSpacing: 0,
         marginBottom: '0.7em',
       },
       subtitle1: {
         fontSize: '1.125rem',
         lineHeight: 1.3,
         fontWeight: 400,
+        letterSpacing: 0,
         marginBottom: '0.7em',
       },
       subtitle2: {
         fontSize: '1rem',
         lineHeight: 1.3,
         fontWeight: 500,
+        letterSpacing: 0,
         marginBottom: '0.7em',
       },
       body1: {
         fontSize: '1rem',
         lineHeight: 1.3,
         fontWeight: 400,
+        letterSpacing: 0,
       },
       body2: {
         fontSize: '0.875rem',
         lineHeight: 1.4,
         fontWeight: 400,
+        letterSpacing: 0,
       },
       body2bold: {
         fontSize: '0.875rem',
         lineHeight: 1.4,
         fontWeight: 700,
+        letterSpacing: 0,
       },
       button: {
         fontSize: '0.875rem',
         fontWeight: 500,
+        letterSpacing: 0,
         lineHeight: 1.8,
         textTransform: 'none',
         textWrap: 'nowrap',
@@ -166,14 +176,6 @@ export const theme = (config: ProjectConfig): Theme =>
         defaultProps: {
           useFlexGap: true,
         },
-        styleOverrides: {
-          root: {
-            '& *': {
-              fontFamily: 'inherit',
-              letterSpacing: 'inherit',
-            },
-          },
-        },
       },
       MuiMenuItem: {
         variants: [
@@ -208,6 +210,9 @@ export const theme = (config: ProjectConfig): Theme =>
         },
       },
       MuiTypography: {
+        defaultProps: {
+          variant: 'body2',
+        },
         variants: [
           {
             props: { component: 'p' },
@@ -225,6 +230,29 @@ export const theme = (config: ProjectConfig): Theme =>
       MuiButtonBase: {
         defaultProps: {
           LinkComponent: LinkBehavior,
+        },
+      },
+      MuiCssBaseline: {
+        styleOverrides: {
+          '#root': {
+            height: '100dvh',
+            display: 'flex',
+            flexFlow: 'column nowrap',
+          },
+        },
+      },
+      MuiInputBase: {
+        styleOverrides: {
+          root: {
+            fontSize: '0.875rem',
+          },
+        },
+      },
+      MuiAutocomplete: {
+        styleOverrides: {
+          option: {
+            fontSize: '14px',
+          },
         },
       },
     },

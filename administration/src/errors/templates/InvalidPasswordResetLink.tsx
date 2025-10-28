@@ -6,19 +6,11 @@ const InvalidPasswordResetLink = (): ReactElement => {
   const { t } = useTranslation('errorTemplates')
   return (
     <>
-      <Typography variant='body2' component='span'>
-        {t('invalidLinkHeadline')}
-      </Typography>
-      <Typography component='ul'>
-        <Typography component='li' variant='body2'>
-          {t('browserIssue')}
-        </Typography>
-        <Typography component='li' variant='body2'>
-          {t('passwordAlreadyReset')}
-        </Typography>
-        <Typography component='li' variant='body2'>
-          {t('passwordLinkInvalid')}
-        </Typography>
+      <Typography component='span'>{t('invalidLinkHeadline')}</Typography>
+      <Typography variant='body1' component='ul'>
+        <Typography component='li'>{t('browserIssue')}</Typography>
+        <Typography component='li'>{t('passwordAlreadyReset')}</Typography>
+        <Typography component='li'>{t('passwordLinkInvalid')}</Typography>
       </Typography>
     </>
   )

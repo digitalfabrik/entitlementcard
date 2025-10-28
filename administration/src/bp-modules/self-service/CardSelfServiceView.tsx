@@ -11,8 +11,6 @@ import CenteredCircularProgress from '../../mui-modules/base/CenteredCircularPro
 import CardSelfServiceActivation from './CardSelfServiceActivation'
 import CardSelfServiceForm from './CardSelfServiceForm'
 import CardSelfServiceInformation from './CardSelfServiceInformation'
-import { IconTextButton } from './components/IconTextButton'
-import { InfoText } from './components/InfoText'
 import { DataPrivacyAcceptingStatus } from './constants'
 import selfServiceStepInfo from './constants/selfServiceStepInfo'
 import useCardGeneratorSelfService from './hooks/useCardGeneratorSelfService'
@@ -39,7 +37,6 @@ const Container = styled.div`
   width: 100%;
   max-width: 500px;
   border: 1px solid #f7f7f7;
-  font-family: Roboto Roboto, Helvetica, Arial, sans-serif;
 `
 
 const Step = styled.div`
@@ -52,10 +49,6 @@ const Step = styled.div`
 const Text = styled.div`
   margin-bottom: 24px;
   font-size: 16px;
-`
-
-const StyledInfoTextButton = styled(IconTextButton)`
-  margin: 0;
 `
 
 const CardSelfServiceView = (): ReactElement => {
@@ -82,10 +75,15 @@ const CardSelfServiceView = (): ReactElement => {
     <Container>
       <Header>
         <KoblenzLogo height='40px' />
-        <StyledInfoTextButton onClick={() => setOpenHelpDialog(true)}>
+        <Button
+          color='inherit'
+          variant='text'
+          size='large'
+          onClick={() => setOpenHelpDialog(true)}
+          endIcon={<HelpOutlineOutlinedIcon />}>
+          {' '}
           {t('help')}
-          <HelpOutlineOutlinedIcon />
-        </StyledInfoTextButton>
+        </Button>
       </Header>
       <Body>
         <Step>{`${t('step')} ${selfServiceStepInfo[cardGenerationStep].stepNr}/${totalSteps}`}</Step>
@@ -115,10 +113,10 @@ const CardSelfServiceView = (): ReactElement => {
       <Dialog open={openHelpDialog} aria-describedby='help-dialog' fullWidth onClose={() => setOpenHelpDialog(false)}>
         <DialogTitle>{t('help')}</DialogTitle>
         <DialogContent id='help-dialog'>
-          <InfoText>
+          <Typography marginTop={1.5} marginBottom={3}>
             {t('youHaveProblemsCreatingAPass')} <br />
             {t('pleaseContactUsForHelp')}
-          </InfoText>
+          </Typography>
         </DialogContent>
         <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
           <Button onClick={() => setOpenHelpDialog(false)} variant='outlined' startIcon={<Close />}>

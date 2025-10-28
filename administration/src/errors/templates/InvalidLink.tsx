@@ -6,22 +6,12 @@ const InvalidLink = (): ReactElement => {
   const { t } = useTranslation('errorTemplates')
   return (
     <>
-      <Typography variant='body2' component='span'>
-        {t('invalidLinkHeadline')}
-      </Typography>
-      <Typography component='ul'>
-        <Typography component='li' variant='body2'>
-          {t('browserIssue')}
-        </Typography>
-        <Typography component='li' variant='body2'>
-          {t('applicationApproved')}
-        </Typography>
-        <Typography component='li' variant='body2'>
-          {t('applicationRejected')}
-        </Typography>
-        <Typography component='li' variant='body2'>
-          {t('applicationRequirementsNotFulfilled')}
-        </Typography>
+      <Typography component='span'>{t('invalidLinkHeadline')}</Typography>
+      <Typography component='ul' variant='body1'>
+        <Typography component='li'>{t('browserIssue')}</Typography>
+        <Typography component='li'>{t('applicationApproved')}</Typography>
+        <Typography component='li'>{t('applicationRejected')}</Typography>
+        <Typography component='li'>{t('applicationRequirementsNotFulfilled')}</Typography>
       </Typography>
     </>
   )

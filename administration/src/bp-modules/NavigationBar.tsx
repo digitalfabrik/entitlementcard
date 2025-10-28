@@ -35,18 +35,16 @@ const NavigationBar = (): ReactElement => {
           }}
           marginX={1.5}>
           <Stack>
-            <Typography variant='body2' component='span'>
+            <Typography component='span'>
               {config.name} {t('administration')}
             </Typography>
             <Stack direction='row' sx={{ gap: 1 }}>
               {!region ? null : (
-                <Typography variant='body2' component='span'>
+                <Typography component='span'>
                   {region.prefix} {region.name}
                 </Typography>
               )}
-              <Typography variant='body2' component='span'>
-                {`(${process.env.REACT_APP_VERSION})`}
-              </Typography>
+              <Typography component='span'>{`(${process.env.REACT_APP_VERSION})`}</Typography>
             </Stack>
           </Stack>
         </Link>

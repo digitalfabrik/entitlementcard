@@ -48,7 +48,7 @@ const JuleicaEntitlementForm: Form<State, ValidatedInput> = {
         <Typography variant='body2bold' component='h4' marginY={1.5}>
           {t('applicationForms:juleicaCardAttachmentTitle')}
         </Typography>
-        <Typography component='p' variant='body2'>
+        <Typography component='p'>
           {t('applicationForms:juleicaCardAttachmentDescription')} {FileRequirementsText}
         </Typography>
         <SubForms.copyOfJuleicaFront.Component

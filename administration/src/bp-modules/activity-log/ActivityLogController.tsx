@@ -27,7 +27,7 @@ const ActivityLogController = ({ activityLogConfig }: { activityLogConfig: Activ
         error={{ description: t('errors:notAuthorizedToSeeActivityLog') }}>
         <ActivityLogCard>
           <Typography variant='h4'>{t('misc:activityLog')}</Typography>
-          <Typography variant='body2' component='p' paddingY={1.5}>
+          <Typography component='p' paddingY={1.5}>
             {t('activityLogDescription')}
           </Typography>
           <ActivityLogTable activityLog={activityLogSorted} activityLogConfig={activityLogConfig} />

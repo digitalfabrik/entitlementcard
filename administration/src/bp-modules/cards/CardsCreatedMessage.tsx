@@ -24,9 +24,7 @@ const CardsCreatedMessage = ({ reset }: Props): ReactElement => {
   return (
     <Container>
       <Icon icon='tick-circle' color='green' iconSize={100} />
-      <Typography component='p' variant='body2'>
-        {t('addCardSuccessMessage')}
-      </Typography>
+      <Typography component='p'>{t('addCardSuccessMessage')}</Typography>
       <Button onClick={reset}>{t('createMoreCards')}</Button>
     </Container>
   )

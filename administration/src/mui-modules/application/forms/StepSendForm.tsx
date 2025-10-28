@@ -66,11 +66,12 @@ const StepSendForm: Form<State, ValidatedInput, AdditionalProps> = {
     const config = useContext(ProjectConfigContext)
     const [openPrivacyPolicy, setOpenPrivacyPolicy] = useState<boolean>(false)
     const PrivacyLabel = (
-      <Typography variant='body2' component='span'>
+      <Typography component='span'>
         <Trans i18nKey='applicationForms:acceptDataPrivacyPolicy' />{' '}
         <Button
           variant='text'
-          style={{ textTransform: 'capitalize', padding: 0, verticalAlign: 'unset' }}
+          color='primary'
+          sx={{ textTransform: 'capitalize', padding: 0, verticalAlign: 'unset' }}
           onClick={() => setOpenPrivacyPolicy(true)}>
           {t('acceptDataPrivacyButton')}
         </Button>
@@ -116,7 +117,7 @@ const StepSendForm: Form<State, ValidatedInput, AdditionalProps> = {
               {config.dataPrivacyAdditionalBaseContent && (!dataPrivacyPolicy || dataPrivacyPolicy.length === 0) ? (
                 <config.dataPrivacyAdditionalBaseContent />
               ) : (
-                dataPrivacyPolicy
+                <Typography>{dataPrivacyPolicy}</Typography>
               )}
             </>
           </DialogContent>

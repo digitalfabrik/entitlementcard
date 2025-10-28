@@ -69,7 +69,7 @@ const JsonFieldAttachment = memo(
         }
       }
       return (
-        <Typography component='p' variant='body2'>
+        <Typography component='p'>
           {t(getTranslationKey(jsonField.name, parentName))}:&nbsp;
           <PrintAwareTag
             round
@@ -86,11 +86,9 @@ const JsonFieldAttachment = memo(
       )
     }
     return (
-      <Typography component='p' variant='body2'>
+      <Typography component='p'>
         {t(getTranslationKey(jsonField.name, parentName))}:&nbsp;
-        <Typography variant='body2' component='span'>
-          {t('applicationsOverview:submittedButNotVisible')}
-        </Typography>
+        <Typography component='span'>{t('applicationsOverview:submittedButNotVisible')}</Typography>
       </Typography>
     )
   }
@@ -106,41 +104,37 @@ const JsonFieldElemental = ({
   switch (jsonField.type) {
     case 'String':
       return (
-        <Typography component='p' variant='body2'>
+        <Typography component='p'>
           {t(getTranslationKey(jsonField.name, parentName))}:{' '}
           {isEmailValid(jsonField.value) ? (
             <EmailLink email={jsonField.value} />
           ) : (
-            <Typography variant='body2' component='span'>
-              {jsonField.value}
-            </Typography>
+            <Typography component='span'>{jsonField.value}</Typography>
           )}
         </Typography>
       )
     case 'TranslatableString':
       return (
-        <Typography component='p' variant='body2'>
+        <Typography component='p'>
           {t(getTranslationKey(jsonField.name, parentName))}:{' '}
-          <Typography variant='body2' component='span'>
-            {t(getTranslationKey(jsonField.value, parentName))}
-          </Typography>
+          <Typography component='span'>{t(getTranslationKey(jsonField.value, parentName))}</Typography>
         </Typography>
       )
     case 'Date':
       return (
-        <Typography component='p' variant='body2'>
+        <Typography component='p'>
           {t(getTranslationKey(jsonField.name, parentName))}: {new Date(jsonField.value).toLocaleDateString('de')}
         </Typography>
       )
     case 'Number':
       return (
-        <Typography component='p' variant='body2'>
+        <Typography component='p'>
           {t(getTranslationKey(jsonField.name, parentName))}: {jsonField.value}
         </Typography>
       )
     case 'Boolean':
       return (
-        <Typography component='p' variant='body2'>
+        <Typography component='p'>
           {t(getTranslationKey(jsonField.name, parentName))}:&nbsp;
           {jsonField.value ? (
             <>

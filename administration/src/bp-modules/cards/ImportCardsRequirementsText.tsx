@@ -31,22 +31,16 @@ const ImportCardsRequirementsText = ({
   )
 
   return (
-    <Typography component='ul' paddingLeft={2.5} sx={{ textAlign: 'left' }}>
-      <Typography component='li' variant='body2'>
-        {t('maxFileSize', { maxFileSize: FILE_SIZE_LIMIT_MEGA_BYTES })}{' '}
-      </Typography>
-      <Typography component='li' variant='body2'>
-        {t('fileFormatCSV')}{' '}
-      </Typography>
-      <Typography component='li' variant='body2'>
+    <Typography variant='body1' component='ul' paddingLeft={2.5} sx={{ textAlign: 'left' }}>
+      <Typography component='li'>{t('maxFileSize', { maxFileSize: FILE_SIZE_LIMIT_MEGA_BYTES })} </Typography>
+      <Typography component='li'>{t('fileFormatCSV')} </Typography>
+      <Typography component='li'>
         {t('maxNumberOfEntries')}: {ENTRY_LIMIT}
       </Typography>
-      <Typography component='li' variant='body2'>
+      <Typography component='li'>
         {isFreinetFormat ? t('minColumnsForFreinet') : `${t('columnFormat')}:  ${decoratedHeaders.join(', ')}`}{' '}
       </Typography>
-      <Typography component='li' variant='body2'>
-        {t('dateFormatHint')}{' '}
-      </Typography>
+      <Typography component='li'>{t('dateFormatHint')} </Typography>
     </Typography>
   )
 }

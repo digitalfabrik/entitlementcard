@@ -32,7 +32,7 @@ const HonoredByMinisterPresidentEntitlementForm: Form<State, ValidatedInput, Add
         <Typography variant='body2bold' component='h4' marginY={1.5}>
           {t('honoredByMinisterCertificate')}
         </Typography>
-        <Typography component='p' variant='body2'>
+        <Typography component='p'>
           {t('honoredByMinisterCertificateDescription')} {FileRequirementsText}
         </Typography>
         <FileInputForm.Component state={state.certificate} setState={useUpdateStateCallback(setState, 'certificate')} />

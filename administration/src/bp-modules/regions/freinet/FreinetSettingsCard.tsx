@@ -39,7 +39,7 @@ const FreinetSettingsCard = ({
 
   return (
     <SettingsCard title={t('freinetHeadline')}>
-      <Typography component='p' variant='body2'>
+      <Typography component='p'>
         <Trans i18nKey='regionSettings:freinetExplanation' />
       </Typography>
       <TableContainer>

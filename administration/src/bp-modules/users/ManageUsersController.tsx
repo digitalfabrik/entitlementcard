@@ -16,7 +16,7 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 import UsersTable from './UsersTable'
 
 const UsersTableContainer = ({ children, title }: { children: ReactElement; title: string }) => (
-  <Stack sx={{ overflow: 'auto', flexGrow: 1, alignItems: 'center', justifyContent: 'safe center' }}>
+  <Stack sx={{ flexGrow: 1, alignItems: 'center', justifyContent: 'safe center' }}>
     <Card style={{ maxWidth: '1200px', margin: 2 }}>
       <Typography variant='h5' sx={{ textAlign: 'center', marginY: 1 }}>
         {title}

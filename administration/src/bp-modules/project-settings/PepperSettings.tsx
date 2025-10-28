@@ -15,9 +15,7 @@ const PepperSettings = (): ReactElement => {
 
   return result.successful ? (
     <Stack sx={{ marginBottom: 2, gap: 1 }}>
-      <Typography component='p' variant='body2'>
-        {t('pepperExplanation')}:
-      </Typography>
+      <Typography component='p'>{t('pepperExplanation')}:</Typography>
       <PasswordInput disabled value={result.data.pepper} />
     </Stack>
   ) : (

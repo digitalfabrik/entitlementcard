@@ -7,11 +7,11 @@ describe('AppStoreLinks', () => {
   const examplePlayStoreLink = 'https://play.google.com'
   const exampleAppStoreLink = 'https://apple.appstore.com'
   it('should provide correct store links', () => {
-    const { getByText } = renderWithTranslation(
+    const { getByRole } = renderWithTranslation(
       <AppStoreLinks playStoreLink={examplePlayStoreLink} appStoreLink={exampleAppStoreLink} />
     )
 
-    expect(getByText('AppStore öffnen').getAttribute('href')).toBe(exampleAppStoreLink)
-    expect(getByText('Google Play öffnen').getAttribute('href')).toBe(examplePlayStoreLink)
+    expect(getByRole('link', { name: 'AppStore öffnen' })).toHaveAttribute('href', exampleAppStoreLink)
+    expect(getByRole('link', { name: 'Google Play öffnen' })).toHaveAttribute('href', examplePlayStoreLink)
   })
 })

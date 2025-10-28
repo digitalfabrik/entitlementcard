@@ -1,4 +1,4 @@
-import { ThemeProvider } from '@mui/material'
+import { CssBaseline, ThemeProvider } from '@mui/material'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import React, { ReactElement } from 'react'
@@ -19,6 +19,7 @@ if (!process.env.REACT_APP_API_BASE_URL) {
 const App = (): ReactElement => (
   <ProjectConfigProvider projectConfig={getProjectConfig(window.location.hostname)}>
     <ThemeProvider theme={theme(getProjectConfig(window.location.hostname))}>
+      <CssBaseline />
       <AppSnackbarProvider>
         <AuthProvider>
           <AppApolloProvider>

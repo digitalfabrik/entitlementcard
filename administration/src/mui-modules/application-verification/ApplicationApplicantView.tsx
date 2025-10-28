@@ -84,7 +84,7 @@ const ApplicationApplicantView = ({
         onClose={() => setDialogOpen(false)}
         title={t('withdrawConfirmationTitle')}
         onConfirm={submitWithdrawal}>
-        {t('withdrawConfirmationContent')}
+        <Typography> {t('withdrawConfirmationContent')}</Typography>
       </ConfirmDialog>
 
       <ApplicationViewCard elevation={2}>
@@ -105,7 +105,7 @@ const ApplicationApplicantView = ({
           {application.status === ApplicationStatus.Pending && (
             <>
               <StyledDivider />
-              <Typography marginTop={1} marginBottom={2} variant='body2'>
+              <Typography marginTop={1} marginBottom={2}>
                 {t('withdrawInformation')}
               </Typography>
               <Button variant='contained' startIcon={<Delete />} onClick={() => setDialogOpen(true)}>

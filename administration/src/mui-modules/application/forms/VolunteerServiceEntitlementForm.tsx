@@ -39,7 +39,7 @@ const VolunteerServiceEntitlementForm: Form<State, ValidatedInput> = {
         <Typography variant='body2bold' component='h4' marginY={1.5}>
           {t('application:volunteerServiceEntitlement:certificate')}
         </Typography>
-        <Typography component='p' variant='body2'>
+        <Typography component='p'>
           {t('certificateDescription')} {FileRequirementsText}
         </Typography>
         <FileInputForm.Component state={state.certificate} setState={useUpdateStateCallback(setState, 'certificate')} />

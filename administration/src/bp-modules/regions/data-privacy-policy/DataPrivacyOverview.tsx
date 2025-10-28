@@ -47,23 +47,33 @@ const DataPrivacyOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProp
         px={12}
         justifyContent='space-evenly'
         alignItems='center'
-        flexGrow={1}
+        flexGrow={0}
         sx={{
           zIndex: 0,
+          height: '100vh',
         }}>
         <Typography variant='h5' textAlign='center' margin={2}>
           {t('dataPrivacy')}
         </Typography>
         <TextField
-          rows={30}
           fullWidth
           placeholder={t('dataPrivacyPlaceholder')}
           multiline
+          sx={{
+            flex: 1,
+            '& .MuiInputBase-root': {
+              height: '100%',
+              alignItems: 'flex-start',
+            },
+            '& .MuiInputBase-input': {
+              height: '100%',
+              overflow: 'auto',
+            },
+          }}
           value={dataPrivacyText}
           onChange={e => setDataPrivacyText(e.target.value)}
         />
         <Typography
-          variant='body2'
           m={2}
           sx={{
             alignSelf: 'flex-start',
@@ -81,6 +91,7 @@ const DataPrivacyOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProp
             <Button
               disabled={maxCharsExceeded}
               startIcon={<SaveAlt />}
+              variant='contained'
               color='primary'
               onClick={onSave}
               loading={loading}>

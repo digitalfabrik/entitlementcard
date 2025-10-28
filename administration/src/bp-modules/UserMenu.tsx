@@ -64,10 +64,10 @@ const UserMenu = (): ReactElement => {
         onClose={handleCloseUserMenu}>
         <Stack sx={{ paddingX: 0.5, paddingTop: 1, paddingBottom: 0.5, alignItems: 'baseline' }}>
           <Box sx={{ paddingX: 1, marginBottom: 1 }}>
-            <Typography noWrap fontWeight='500' variant='body2'>
+            <Typography noWrap fontWeight='500'>
               {email}
             </Typography>
-            <Typography variant='body2'>Rolle: {roleToText(role)}</Typography>
+            <Typography>Rolle: {roleToText(role)}</Typography>
           </Box>
           <Divider sx={{ my: 1, width: '100%' }} />
           <Button

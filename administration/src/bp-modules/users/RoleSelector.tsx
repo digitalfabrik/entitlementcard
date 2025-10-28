@@ -1,5 +1,5 @@
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
-import { Stack } from '@mui/system'
+import { Box, Stack } from '@mui/system'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -45,7 +45,7 @@ const RoleSelector = ({
         </FormControl>
         <RoleHelpButton />
       </Stack>
-      {showError && <FormAlert errorMessage={t('noRoleError')} />}
+      <Box sx={{ marginTop: -2 }}>{showError && <FormAlert errorMessage={t('noRoleError')} />}</Box>
     </>
   )
 }

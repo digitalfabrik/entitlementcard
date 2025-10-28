@@ -27,14 +27,14 @@ const RegionSettingsCard = ({
       <BaseCheckbox
         checked={activatedForApplication}
         onChange={checked => setActivatedForApplication(checked)}
-        label={<Typography variant='body2'>{t('activatedForApplication')}</Typography>}
+        label={<Typography>{t('activatedForApplication')}</Typography>}
         hasError={false}
         errorMessage={undefined}
       />
       <BaseCheckbox
         checked={activatedForCardConfirmationMail}
         onChange={checked => setActivatedForCardConfirmationMail(checked)}
-        label={<Typography variant='body2'>{t('activatedForCardConfirmationMail')}</Typography>}
+        label={<Typography>{t('activatedForCardConfirmationMail')}</Typography>}
         hasError={false}
         errorMessage={undefined}
       />

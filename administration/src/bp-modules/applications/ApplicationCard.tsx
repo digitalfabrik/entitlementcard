@@ -72,7 +72,7 @@ const DeleteDialog = (props: {
       actionDisabled={props.deleteResult.loading || props.deleteResult.called}
       color='error'>
       <Stack direction='row' sx={{ gap: 2, alignItems: 'center' }}>
-        {t('deleteApplicationConfirmationPrompt')}
+        <Typography>{t('deleteApplicationConfirmationPrompt')}</Typography>
       </Stack>
     </ConfirmDialog>
   )
@@ -107,7 +107,7 @@ const RejectionDialog = (props: {
       cancelButtonText={t('rejectionCancelButton')}
       confirmButtonText={t('rejectionButton')}>
       <>
-        {t('rejectionDialogMessage')}
+        <Typography paddingBottom={1}>{t('rejectionDialogMessage')}</Typography>
         <Autocomplete
           renderInput={params => (
             <TextField
@@ -340,10 +340,12 @@ const ApplicationCard = ({
       <AccordionDetails sx={{ position: 'relative' }}>
         <Stack sx={{ spacing: 2, alignItems: 'flex-start', gap: 2, marginLeft: 2, marginBottom: 2, marginRight: 2 }}>
           {application.status === ApplicationStatus.Withdrawn && !!application.statusResolvedDate && (
-            <Box sx={{ bgcolor: theme.palette.warning.light, padding: 2 }}>
-              {t('withdrawalMessage', { date: new Date(application.statusResolvedDate) })}
-              <br />
-              {t('deleteApplicationSoonPrompt')}
+            <Box sx={{ backgroundColor: theme.palette.warning.light, padding: 2 }}>
+              <Typography>
+                {t('withdrawalMessage', { date: new Date(application.statusResolvedDate) })}
+                <br />
+                {t('deleteApplicationSoonPrompt')}{' '}
+              </Typography>
             </Box>
           )}
           {/* TODO: <JsonFieldView> does not emit a root element and thus, <Stack> would insert a gap here */}

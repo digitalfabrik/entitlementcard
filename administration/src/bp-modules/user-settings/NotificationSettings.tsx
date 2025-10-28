@@ -55,9 +55,7 @@ const NotificationSettings = (): ReactElement => {
 
   return (
     <SettingsCard title={t('notifications')}>
-      <Typography component='p' variant='body2'>
-        {t('notificationsExplanation')}
-      </Typography>
+      <Typography component='p'>{t('notificationsExplanation')}</Typography>
       <form
         onSubmit={event => {
           event.preventDefault()
@@ -66,14 +64,14 @@ const NotificationSettings = (): ReactElement => {
         <BaseCheckbox
           checked={receiveEmailForActivation}
           onChange={checked => setReceiveEmailForActivation(checked)}
-          label={<Typography variant='body2'>{t('newApplications')}</Typography>}
+          label={<Typography>{t('newApplications')}</Typography>}
           hasError={false}
           errorMessage={undefined}
         />
         <BaseCheckbox
           checked={receiveEmailForVerification}
           onChange={checked => setReceiveEmailForVerification(checked)}
-          label={<Typography variant='body2'>{t('newVerifications')}</Typography>}
+          label={<Typography>{t('newVerifications')}</Typography>}
           hasError={false}
           errorMessage={undefined}
         />
