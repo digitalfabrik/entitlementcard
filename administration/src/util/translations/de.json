@@ -608,7 +608,7 @@
     "invalidCredentials": "Der Login ist fehlgeschlagen.",
     "invalidFileType": "Dieser Dateityp wird nicht unterstützt.",
     "invalidInput": "Die Anfrage enthält ungültige Eingaben.",
-    "invalidFileSizeWithMaximum": "Die gewählte Datei ist zu groß. Die maximale Dateigröße beträgt {{maxSize}}MB.",
+    "invalidFileSizeWithMaximum": "Die gewählte Datei ist zu groß. Die maximale Dateigröße beträgt {{maxSize}} MB.",
     "invalidFileSize": "Die Datei ist zu groß.",
     "invalidDataPolicySize": "Unzulässige Zeichenlänge der Datenschutzerklärung. Maximal sind {{maxSize}} Zeichen erlaubt.",
     "invalidJson": "Daten konnten nicht geparsed werden.",
