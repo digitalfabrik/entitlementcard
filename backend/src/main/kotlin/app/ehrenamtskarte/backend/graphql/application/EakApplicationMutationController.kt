@@ -20,7 +20,6 @@ import app.ehrenamtskarte.backend.graphql.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidLinkException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidNoteSizeException
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
-import app.ehrenamtskarte.backend.shared.exceptions.NotFoundException
 import app.ehrenamtskarte.backend.shared.mail.Mailer
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
@@ -235,7 +234,7 @@ class EakApplicationMutationController(
     ): Boolean =
         transaction {
             val application =
-                ApplicationEntity.findById(applicationId) ?: throw NotFoundException("Application not found")
+                ApplicationEntity.findById(applicationId) ?: throw InvalidInputException("Application not found")
             if (noteText.length > NOTE_MAX_CHARS) {
                 throw InvalidNoteSizeException(NOTE_MAX_CHARS)
             }

@@ -8,8 +8,8 @@ import app.ehrenamtskarte.backend.generated.VerifyCardInProjectV2
 import app.ehrenamtskarte.backend.generated.enums.CodeType
 import app.ehrenamtskarte.backend.generated.inputs.CardVerificationModelInput
 import app.ehrenamtskarte.backend.graphql.cards.types.CardVerificationResultModel
+import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
 import app.ehrenamtskarte.backend.helper.TestData
-import app.ehrenamtskarte.backend.helper.error
 import app.ehrenamtskarte.backend.helper.toDataObject
 import app.ehrenamtskarte.backend.helper.toErrorObject
 import io.ktor.util.encodeBase64
@@ -161,7 +161,7 @@ internal class VerifyCardTest : IntegrationTest() {
         val error = response.toErrorObject()
 
         assertEquals("Project 'non-existent.sozialpass.app' not found", error.message)
-        assertEquals("NOT_FOUND", error.extensions?.classification)
+        assertEquals(GraphQLExceptionCode.PROJECT_NOT_FOUND, error.extensions.code)
     }
 
     private fun createQuery(

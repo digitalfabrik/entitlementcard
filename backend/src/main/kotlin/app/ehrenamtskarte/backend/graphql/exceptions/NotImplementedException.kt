@@ -1,3 +1,6 @@
 package app.ehrenamtskarte.backend.graphql.exceptions
 
-open class NotImplementedException(reason: String = "Not implemented") : Exception(reason)
+import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
+
+class NotImplementedException(message: String) :
+    GraphQLBaseException(GraphQLExceptionCode.NOT_IMPLEMENTED, message = message)

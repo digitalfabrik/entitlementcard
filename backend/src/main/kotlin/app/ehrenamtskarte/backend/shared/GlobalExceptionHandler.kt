@@ -2,6 +2,7 @@ package app.ehrenamtskarte.backend.shared
 
 import app.ehrenamtskarte.backend.routes.exception.UserImportException
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
+import app.ehrenamtskarte.backend.shared.exceptions.NotFoundException
 import app.ehrenamtskarte.backend.shared.exceptions.UnauthorizedException
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -25,6 +26,10 @@ class GlobalExceptionHandler {
     @ExceptionHandler(ForbiddenException::class)
     fun handleForbiddenException(ex: ForbiddenException): ResponseEntity<Map<String, String?>> =
         ResponseEntity.status(HttpStatus.FORBIDDEN).body(mapOf("message" to ex.message))
+
+    @ExceptionHandler(NotFoundException::class)
+    fun handleNotFoundException(ex: NotFoundException): ResponseEntity<Map<String, String?>?> =
+        ResponseEntity.status(HttpStatus.NOT_FOUND).body(mapOf("message" to ex.message))
 
     @ExceptionHandler(NoResourceFoundException::class)
     fun handleNoResourceFound(ex: NoResourceFoundException): ResponseEntity<Map<String, String?>?> =

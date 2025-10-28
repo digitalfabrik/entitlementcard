@@ -6,6 +6,7 @@ import app.ehrenamtskarte.backend.db.entities.Cards
 import app.ehrenamtskarte.backend.db.entities.CodeType
 import app.ehrenamtskarte.backend.generated.CreateCardsByCardInfos
 import app.ehrenamtskarte.backend.generated.createcardsbycardinfos.CardCreationResultModel
+import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
 import app.ehrenamtskarte.backend.helper.SampleCards
 import app.ehrenamtskarte.backend.helper.SampleCards.getEncoded
 import app.ehrenamtskarte.backend.helper.TestAdministrators
@@ -42,7 +43,7 @@ internal class CreateCardsByCardInfosTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Authorization token expired, invalid or missing", error.message)
+        assertEquals(GraphQLExceptionCode.UNAUTHORIZED, error.extensions.code)
     }
 
     @Test
@@ -55,7 +56,7 @@ internal class CreateCardsByCardInfosTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Insufficient access rights", error.message)
+        assertEquals(GraphQLExceptionCode.FORBIDDEN, error.extensions.code)
     }
 
     @Test
@@ -67,9 +68,8 @@ internal class CreateCardsByCardInfosTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Error INVALID_INPUT occurred.", error.message)
-        assertEquals("INVALID_INPUT", error.extensions?.code)
-        assertEquals("Failed to parse encodedCardInfo", error.extensions?.reason)
+        assertEquals("Failed to parse encodedCardInfo", error.message)
+        assertEquals(GraphQLExceptionCode.INVALID_INPUT, error.extensions.code)
     }
 
     @Test

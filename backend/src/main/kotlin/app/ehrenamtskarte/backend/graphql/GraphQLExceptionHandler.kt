@@ -1,43 +1,40 @@
 package app.ehrenamtskarte.backend.graphql
 
 import app.ehrenamtskarte.backend.graphql.exceptions.GraphQLBaseException
+import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
-import app.ehrenamtskarte.backend.shared.exceptions.NotFoundException
 import app.ehrenamtskarte.backend.shared.exceptions.UnauthorizedException
+import graphql.ExceptionWhileDataFetching
 import graphql.GraphQLError
 import graphql.schema.DataFetchingEnvironment
 import org.slf4j.LoggerFactory
+import org.springframework.beans.BeanInstantiationException
 import org.springframework.graphql.data.method.annotation.GraphQlExceptionHandler
-import org.springframework.graphql.execution.ErrorType
 import org.springframework.web.bind.annotation.ControllerAdvice
+import java.util.concurrent.CompletionException
 
 @ControllerAdvice
 class GraphQLExceptionHandler {
     private val logger = LoggerFactory.getLogger(GraphQLExceptionHandler::class.java)
 
     @GraphQlExceptionHandler
-    fun handleGraphQLException(ex: Exception, env: DataFetchingEnvironment): GraphQLError =
-        when (ex) {
-            is GraphQLBaseException -> {
-                ex.toError(env.executionStepInfo.path, env.field.sourceLocation)
-            }
-            is NotFoundException -> buildError(env, ErrorType.NOT_FOUND, ex.message)
-            is UnauthorizedException -> buildError(env, ErrorType.UNAUTHORIZED, ex.message)
-            is ForbiddenException -> buildError(env, ErrorType.FORBIDDEN, ex.message)
-            is IllegalArgumentException -> buildError(env, ErrorType.BAD_REQUEST, "Invalid argument: ${ex.message}")
+    fun handleGraphQLException(ex: Exception, env: DataFetchingEnvironment): GraphQLError {
+        val unwrapped = ex.unwrap()
+        return when (unwrapped) {
+            is GraphQLBaseException -> unwrapped.toGraphQLError(env)
+            is UnauthorizedException -> GraphQLBaseException(GraphQLExceptionCode.UNAUTHORIZED).toGraphQLError(env)
+            is ForbiddenException -> GraphQLBaseException(GraphQLExceptionCode.FORBIDDEN).toGraphQLError(env)
             else -> {
-                logger.error("Unexpected GraphQL error on field '${env.field.name}'", ex)
-                buildError(env, ErrorType.INTERNAL_ERROR, "An internal server error occurred.")
+                logger.error("Unexpected GraphQL error on field '${env.field.name}'", unwrapped)
+                ExceptionWhileDataFetching(env.executionStepInfo.path, unwrapped, env.field.sourceLocation)
             }
         }
-
-    private fun buildError(env: DataFetchingEnvironment, errorType: ErrorType, message: String?): GraphQLError {
-        val finalMessage = message ?: "An error occurred."
-        return GraphQLError.newError()
-            .errorType(errorType)
-            .message(finalMessage)
-            .path(env.executionStepInfo.path)
-            .location(env.field.sourceLocation)
-            .build()
     }
+
+    private fun Throwable.unwrap(): Throwable =
+        when (this) {
+            is CompletionException -> cause ?: this
+            is BeanInstantiationException -> (cause as? GraphQLBaseException) ?: this
+            else -> this
+        }
 }

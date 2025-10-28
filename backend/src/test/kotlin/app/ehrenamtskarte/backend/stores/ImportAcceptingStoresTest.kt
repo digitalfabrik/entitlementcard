@@ -11,6 +11,7 @@ import app.ehrenamtskarte.backend.db.entities.PhysicalStoreEntity
 import app.ehrenamtskarte.backend.db.entities.PhysicalStores
 import app.ehrenamtskarte.backend.generated.ImportAcceptingStores
 import app.ehrenamtskarte.backend.generated.inputs.CSVAcceptingStoreInput
+import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
 import app.ehrenamtskarte.backend.helper.CSVAcceptanceStoreBuilder
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestData
@@ -24,7 +25,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import org.springframework.http.HttpStatus
-import kotlin.test.Ignore
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -52,7 +52,7 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Authorization token expired, invalid or missing", error.message)
+        assertEquals(GraphQLExceptionCode.UNAUTHORIZED, error.extensions.code)
     }
 
     @Test
@@ -64,7 +64,7 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Insufficient access rights", error.message)
+        assertEquals(GraphQLExceptionCode.FORBIDDEN, error.extensions.code)
     }
 
     @Test
@@ -208,8 +208,8 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Error INVALID_JSON occurred.", error.message)
-        assertEquals("Duplicate store(s) found: Test store Teststr. 10 90408 Nürnberg", error.extensions?.reason)
+        assertEquals(GraphQLExceptionCode.INVALID_JSON, error.extensions.code)
+        assertEquals("Duplicate store(s) found: Test store Teststr. 10 90408 Nürnberg", error.message)
     }
 
     @Test
@@ -288,7 +288,6 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
         }
     }
 
-    @Ignore("TODO fix exception handling")
     @ParameterizedTest
     @MethodSource("validationErrorTestCases")
     fun `should return validation error when the csv store input is not valid`(testCase: ValidationErrorTestCase) {
@@ -301,8 +300,8 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Error INVALID_JSON occurred.", error.message)
-        assertEquals(testCase.error, error.extensions?.reason)
+        assertEquals(GraphQLExceptionCode.INVALID_JSON, error.extensions.code)
+        assertEquals(testCase.error, error.message)
     }
 
     private fun createMutation(dryRun: Boolean = false, stores: List<CSVAcceptingStoreInput>): ImportAcceptingStores {
