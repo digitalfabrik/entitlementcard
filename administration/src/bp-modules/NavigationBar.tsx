@@ -1,4 +1,4 @@
-import { AppBar, Divider, Link, Stack, SvgIcon, Toolbar, Typography } from '@mui/material'
+import { AppBar, Divider, Link, Stack, SvgIcon, Toolbar, Typography, useTheme } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -10,11 +10,12 @@ import UserMenu from './UserMenu'
 
 const NavigationBar = (): ReactElement => {
   const { t } = useTranslation('misc')
+  const theme = useTheme()
   const config = useContext(ProjectConfigContext)
   const { region } = useWhoAmI().me
 
   return (
-    <AppBar position='sticky' color='transparent'>
+    <AppBar position='sticky' sx={{ backgroundColor: theme.palette.common.white }}>
       <Toolbar
         sx={theme => ({
           flexWrap: 'wrap',
@@ -26,10 +27,12 @@ const NavigationBar = (): ReactElement => {
           <EntitlementIcon />
         </SvgIcon>
         <Link
-          color='inherit'
           href='/'
           underline='none'
-          sx={{ '&:hover': { textDecoration: 'none', color: 'inherit' } }}
+          sx={{
+            '&:hover': { textDecoration: 'none', color: theme.palette.common.black },
+            color: theme.palette.common.black,
+          }}
           marginX={1.5}>
           <Stack>
             <Typography component='span'>

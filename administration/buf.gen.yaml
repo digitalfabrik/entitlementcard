@@ -1,0 +1,12 @@
+# https://buf.build/docs/configuration/v2/buf-gen-yaml/
+
+version: v2
+
+plugins:
+  - local: ../node_modules/.bin/protoc-gen-es
+    out: src/generated
+    opt:
+      - target=ts
+
+inputs:
+  - directory: ../specs
