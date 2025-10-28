@@ -52,7 +52,11 @@ const VerificationsView = ({
           )
         })}
       </VerificationContainer>
-      {application.verifications.length === 0 ? <i role='note'>({t('none')})</i> : null}
+      {application.verifications.length === 0 ? (
+        <Typography fontStyle='italic' role='note'>
+          ({t('none')})
+        </Typography>
+      ) : null}
     </>
   )
 }
