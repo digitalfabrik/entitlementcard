@@ -20,10 +20,35 @@ group = "app.ehrenamtskarte.backend"
 version = "0.0.1-SNAPSHOT"
 description = "Backend for the Ehrenamtskarte system"
 
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.addAll("-Xjsr305=strict")
+    }
+}
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
+}
+
+sourceSets {
+    main {
+        proto {
+            srcDir("../specs")
+        }
+    }
+    test {
+        kotlin {
+            srcDir("${layout.buildDirectory.get()}/generated/source/graphql")
+        }
+    }
+}
+
+buildConfig {
+    packageName(project.group.toString())
+    buildConfigField("VERSION_NAME", System.getProperty("NEW_VERSION_NAME", "1.0.0"))
+    buildConfigField("COMMIT_HASH", System.getenv("CIRCLE_SHA1"))
 }
 
 protobuf {
@@ -41,6 +66,19 @@ protobuf {
 
 repositories {
     mavenCentral()
+}
+
+
+// Workaround for detekt with recent kotlin version, should be removed when detekt plugin v2.0.0 is stable
+// https://github.com/detekt/detekt/issues/6198#issuecomment-2265183695
+dependencyManagement {
+    configurations.matching { it.name == "detekt" }.all {
+        resolutionStrategy.eachDependency {
+            if (requested.group == "org.jetbrains.kotlin") {
+                useVersion(io.gitlab.arturbosch.detekt.getSupportedKotlinVersion())
+            }
+        }
+    }
 }
 
 dependencies {
@@ -114,30 +152,6 @@ dependencies {
     testRuntimeOnly(libs.junit.platform.launcher)
 }
 
-// Workaround for detekt with recent kotlin version, should be removed when detekt plugin v2.0.0 is stable
-// https://github.com/detekt/detekt/issues/6198#issuecomment-2265183695
-dependencyManagement {
-    configurations.matching { it.name == "detekt" }.all {
-        resolutionStrategy.eachDependency {
-            if (requested.group == "org.jetbrains.kotlin") {
-                useVersion(io.gitlab.arturbosch.detekt.getSupportedKotlinVersion())
-            }
-        }
-    }
-}
-
-kotlin {
-    compilerOptions {
-        freeCompilerArgs.addAll("-Xjsr305=strict")
-    }
-}
-
-buildConfig {
-    packageName(project.group.toString())
-    buildConfigField("VERSION_NAME", System.getProperty("NEW_VERSION_NAME", "1.0.0"))
-    buildConfigField("COMMIT_HASH", System.getenv("CIRCLE_SHA1"))
-}
-
 if (isProductionEnvironment) {
     sentry {
         // Generates a JVM (Java, Kotlin, etc.) source bundle and uploads your source code to Sentry.
@@ -148,27 +162,6 @@ if (isProductionEnvironment) {
         org = "digitalfabrik"
         projectName = "entitlementcard-backend"
         authToken = System.getenv("SENTRY_AUTH_TOKEN")
-    }
-}
-
-sourceSets {
-    main {
-        proto {
-            srcDir("../specs")
-        }
-    }
-    test {
-        kotlin {
-            srcDir("${layout.buildDirectory.get()}/generated/source/graphql")
-        }
-    }
-}
-
-tasks.processResources {
-    // required to load graphql schema by spring-boot
-    from("../specs") {
-        include("*.graphql")
-        into("specs")
     }
 }
 
@@ -199,6 +192,14 @@ kover {
                 classes("${project.group}.*")
             }
         }
+    }
+}
+
+tasks.processResources {
+    // required to load graphql schema by spring-boot
+    from("../specs") {
+        include("*.graphql")
+        into("specs")
     }
 }
 
