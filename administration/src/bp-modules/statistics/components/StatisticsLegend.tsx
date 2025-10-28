@@ -1,4 +1,4 @@
-import { Stack } from '@mui/material'
+import { Stack, Typography } from '@mui/material'
 import { styled } from '@mui/system'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -27,7 +27,7 @@ const StatisticsLegend = ({
       {items.map((item, index) => (
         <Stack key={item} sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
           <ColorIndicator color={indicatorColors[index]} />
-          {t(item)}
+          <Typography>{t(item)}</Typography>
         </Stack>
       ))}
     </Stack>
