@@ -72,7 +72,7 @@ const DeleteDialog = (props: {
       actionDisabled={props.deleteResult.loading || props.deleteResult.called}
       color='error'>
       <Stack direction='row' sx={{ gap: 2, alignItems: 'center' }}>
-        {t('deleteApplicationConfirmationPrompt')}
+        <Typography>{t('deleteApplicationConfirmationPrompt')}</Typography>
       </Stack>
     </ConfirmDialog>
   )
@@ -107,7 +107,7 @@ const RejectionDialog = (props: {
       cancelButtonText={t('rejectionCancelButton')}
       confirmButtonText={t('rejectionButton')}>
       <>
-        {t('rejectionDialogMessage')}
+        <Typography paddingBottom={1}>{t('rejectionDialogMessage')}</Typography>
         <Autocomplete
           renderInput={params => (
             <TextField

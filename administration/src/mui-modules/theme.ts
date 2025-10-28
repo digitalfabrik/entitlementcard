@@ -241,5 +241,19 @@ export const theme = (config: ProjectConfig): Theme =>
           },
         },
       },
+      MuiInputBase: {
+        styleOverrides: {
+          root: {
+            fontSize: '0.875rem',
+          },
+        },
+      },
+      MuiAutocomplete: {
+        styleOverrides: {
+          option: {
+            fontSize: '14px',
+          },
+        },
+      },
     },
   })
