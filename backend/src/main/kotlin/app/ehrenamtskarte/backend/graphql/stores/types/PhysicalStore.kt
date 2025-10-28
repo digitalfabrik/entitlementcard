@@ -38,9 +38,7 @@ data class PhysicalStore(
 class PhysicalStoreResolver {
     @SchemaMapping(typeName = "PhysicalStore", field = "store")
     fun store(physicalStore: PhysicalStore, dfe: DataFetchingEnvironment): CompletableFuture<AcceptingStore> =
-        dfe.loadFrom(AcceptingStoreDataLoader::class, physicalStore.storeId).thenApply {
-            it!!
-        }
+        dfe.loadFrom(AcceptingStoreDataLoader::class, physicalStore.storeId).thenApply { it!! }
 
     @SchemaMapping(typeName = "PhysicalStore", field = "address")
     fun address(physicalStore: PhysicalStore, dfe: DataFetchingEnvironment): CompletableFuture<Address> =

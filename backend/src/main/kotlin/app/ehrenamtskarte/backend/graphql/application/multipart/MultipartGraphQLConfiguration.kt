@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.graphql.application.multipart
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order
@@ -10,6 +11,7 @@ import org.springframework.web.servlet.function.ServerResponse
 import org.springframework.web.servlet.function.router
 
 @Configuration
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 class MultipartGraphQLConfiguration {
     /**
      * Creates a router function to handle multipart/form-data requests for the GraphQL endpoint
