@@ -12,47 +12,49 @@ const RoleHelpButton = (): ReactElement => {
   return (
     <PopoverWrapper icon={<HelpOutlinedIcon color='inherit' fontSize='small' />}>
       <Box sx={{ padding: 2 }}>
-        <Typography variant='h4' sx={{ textAlign: 'center' }}>
+        <Typography variant='h5' sx={{ textAlign: 'center' }}>
           {t('roleRightsHeading')}
         </Typography>
-        <ul>
-          <li>
-            <b>{roleToText(Role.ProjectAdmin)}:</b>
-            <ul>
-              <li>{t('projectAdminRight')}</li>
-            </ul>
-          </li>
-          <li>
-            <b>{roleToText(Role.RegionAdmin)}:</b>
-            <ul>
-              <li>{t('regionAdminRight1')}</li>
-              <li>{t('regionAdminRight2')}</li>
-              <li>{t('regionAdminRight3')}</li>
-              <li>{t('regionAdminRight4')}</li>
-            </ul>
+        <Typography variant='body1' component='ul'>
+          <Typography variant='body2bold' component='li'>
+            {roleToText(Role.ProjectAdmin)}:
+            <Typography variant='body1' component='ul'>
+              <Typography component='li'>{t('projectAdminRight')}</Typography>
+            </Typography>
+          </Typography>
+          <Typography variant='body1' component='li'>
+            <Typography variant='body2bold'>{roleToText(Role.RegionAdmin)}:</Typography>
+            <Typography variant='body1' component='ul'>
+              <Typography component='li'>{t('regionAdminRight1')}</Typography>
+              <Typography component='li'>{t('regionAdminRight2')}</Typography>
+              <Typography component='li'>{t('regionAdminRight3')}</Typography>
+              <Typography component='li'>{t('regionAdminRight4')}</Typography>
+            </Typography>
             <div>
-              <span style={{ color: 'red', fontWeight: 'bold' }}>{t('hint')}: </span>
-              {t('regionAdminHint')}
+              <Typography color='error' variant='body2bold'>
+                {t('hint')}:{' '}
+              </Typography>
+              <Typography component='span'> {t('regionAdminHint')}</Typography>
             </div>
-          </li>
-          <li>
-            <b>{roleToText(Role.RegionManager)}:</b>
-            <ul>
-              <li>{t('regionManagerRight1')}</li>
-              <li>{t('regionManagerRight2')}</li>
-            </ul>
-          </li>
-          <li>
-            <b>{roleToText(Role.ExternalVerifiedApiUser)}:</b>
-            <ul>
-              <li>
+          </Typography>
+          <Typography variant='body1' component='li'>
+            <Typography variant='body2bold'>{roleToText(Role.RegionManager)}:</Typography>
+            <Typography variant='body1' component='ul'>
+              <Typography component='li'>{t('regionManagerRight1')}</Typography>
+              <Typography component='li'>{t('regionManagerRight2')}</Typography>
+            </Typography>
+          </Typography>
+          <Typography component='li' variant='body2bold'>
+            {roleToText(Role.ExternalVerifiedApiUser)}:
+            <Typography variant='body1' component='ul'>
+              <Typography component='li'>
                 {t('externalVerifiedApiUser1')}
                 <br />
                 {t('externalVerifiedApiUser2')}
-              </li>
-            </ul>
-          </li>
-        </ul>
+              </Typography>
+            </Typography>
+          </Typography>
+        </Typography>
       </Box>
     </PopoverWrapper>
   )

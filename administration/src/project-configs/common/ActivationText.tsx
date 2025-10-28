@@ -1,4 +1,4 @@
-import { Button, Typography, styled } from '@mui/material'
+import { Button, Link, Typography, styled } from '@mui/material'
 import { TFunction } from 'i18next'
 import React, { ReactElement } from 'react'
 import { Trans } from 'react-i18next'
@@ -17,31 +17,31 @@ export const ActivationText = (
   t: TFunction
 ): ReactElement => (
   <div>
-    <Typography variant='h6' sx={{ mb: '8px' }}>
+    <Typography variant='h6' marginBottom={1}>
       {t('headline')}
     </Typography>
-    <span>
+    <Typography component='span'>
       <Trans i18nKey='activation:description' values={{ applicationName }} /> <br />{' '}
       <ActivationButton href={deepLink} variant='contained' size='small'>
         {t('activateButton')}
       </ActivationButton>
       <br /> <br />
       <b>{t('steps')}</b>
-    </span>
-    <ol>
-      <li>
+    </Typography>
+    <Typography component='ol'>
+      <Typography component='li'>
         <Trans i18nKey='activation:downloadApp' values={{ applicationName }} />
         Laden Sie sich die App <b>{applicationName}</b> im App- oder PlayStore auf Ihrem Smartphone herunter.
-      </li>
-      <li>
+      </Typography>
+      <Typography component='li'>
         {' '}
         {t('openOnMobileDevice')}
         <br />
-        <a href={downloadLink} target='_blank' rel='noreferrer'>
+        <Link href={downloadLink} target='_blank' rel='noreferrer'>
           {downloadLink}
-        </a>
-      </li>
-      <li>{t('explanation')}</li>
-    </ol>
+        </Link>
+      </Typography>
+      <Typography component='li'>{t('explanation')} </Typography>
+    </Typography>
   </div>
 )

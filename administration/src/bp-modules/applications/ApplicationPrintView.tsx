@@ -48,13 +48,18 @@ export const ApplicationPrintView = forwardRef<
 
   return (
     <Stack ref={ref} sx={{ gap: 4 }}>
-      <Typography variant='h4'>{t('applicationFrom', { date: new Date(p.application.createdDate) })}</Typography>
+      <Typography variant='h6' marginY={0}>
+        {t('applicationFrom', { date: new Date(p.application.createdDate) })}
+      </Typography>
 
       {p.application.status === ApplicationStatus.Withdrawn && !!p.application.statusResolvedDate && (
         <Box sx={{ border: '1pt solid black', borderRadius: '4pt', padding: 2, width: 'fit-content' }}>
-          {t('withdrawalMessage', { date: new Date(p.application.statusResolvedDate) })}
-          <br />
-          {t('deleteApplicationSoonPrompt')}
+          <Typography>
+            {' '}
+            {t('withdrawalMessage', { date: new Date(p.application.statusResolvedDate) })}
+            <br />
+            {t('deleteApplicationSoonPrompt')}
+          </Typography>
         </Box>
       )}
       <hr />

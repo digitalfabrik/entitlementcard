@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -30,13 +31,14 @@ const ActivityDivider = ({ onDelete }: { onDelete?: () => void }) => {
       />
       {onDelete === undefined ? null : (
         <ConfirmDialog
+          id='delete-activity-dialog'
           open={deleteDialogOpen}
-          onUpdateOpen={setDeleteDialogOpen}
+          onClose={() => setDeleteDialogOpen(false)}
           confirmButtonText={t('misc:delete')}
-          content={t('deleteActivityContent')}
           onConfirm={onDelete}
-          title={t('deleteActivityTitle')}
-        />
+          title={t('deleteActivityTitle')}>
+          <Typography> {t('deleteActivityContent')}</Typography>
+        </ConfirmDialog>
       )}
     </>
   )
@@ -70,7 +72,9 @@ const WorkAtOrganizationForm: Form<State, ValidatedInput, AdditionalProps> = {
     return (
       <>
         <ActivityDivider onDelete={onDelete} />
-        <h4>{t('applicationForms:workAtOrganizationHeadline')}</h4>
+        <Typography variant='body2bold' component='h4' marginY={1.5}>
+          {t('applicationForms:workAtOrganizationHeadline')}
+        </Typography>
         <SubForms.responsibility.Component
           state={state.responsibility}
           setState={useUpdateStateCallback(setState, 'responsibility')}
@@ -106,10 +110,12 @@ const WorkAtOrganizationForm: Form<State, ValidatedInput, AdditionalProps> = {
           label={t('payment')}
           options={paymentOptions}
         />
-        <h4>{t('applicationForms:certificateHeadline')}</h4>
-        <p>
+        <Typography variant='body2bold' component='h4' marginY={1.5}>
+          {t('applicationForms:certificateHeadline')}
+        </Typography>
+        <Typography component='p'>
           {t('applicationForms:certificateDescription')} {FileRequirementsText}
-        </p>
+        </Typography>
         <SubForms.certificate.Component
           state={state.certificate}
           setState={useUpdateStateCallback(setState, 'certificate')}

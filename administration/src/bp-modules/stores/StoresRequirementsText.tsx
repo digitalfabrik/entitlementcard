@@ -1,14 +1,9 @@
+import { Typography } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
 import type { StoresFieldConfig } from '../../project-configs/getProjectConfig'
 import { FILE_SIZE_LIMIT_MEGA_BYTES } from './constants'
-
-const RequirementsList = styled.ul`
-  text-align: left;
-  padding-left: 20px;
-`
 
 type ImportCardsRequirementsProps = {
   header: StoresFieldConfig[]
@@ -18,13 +13,13 @@ const StoresRequirementsText = ({ header }: ImportCardsRequirementsProps): React
   const headers = header.map(field => (field.isMandatory ? `${field.name}*` : `${field.name}`))
   const { t } = useTranslation('stores')
   return (
-    <RequirementsList>
-      <li>{t('maxFileSize', { maxFileSize: FILE_SIZE_LIMIT_MEGA_BYTES })} </li>
-      <li>{t('fileFormat')}</li>
-      <li>
+    <Typography variant='body1' component='ul' paddingLeft={3} sx={{ textAlign: 'left' }}>
+      <Typography component='li'>{t('maxFileSize', { maxFileSize: FILE_SIZE_LIMIT_MEGA_BYTES })} </Typography>
+      <Typography component='li'>{t('fileFormat')} </Typography>
+      <Typography component='li'>
         {t('neededColumns')} {headers.join(', ')}
-      </li>
-    </RequirementsList>
+      </Typography>
+    </Typography>
   )
 }
 

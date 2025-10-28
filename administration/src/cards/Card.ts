@@ -10,6 +10,7 @@ import {
   containsSpecialCharacters,
   isExceedingMaxValidityDate,
 } from '../util/helper'
+import { normalizeWhitespace } from '../util/normalizeString'
 import { maxCardValidity } from './constants'
 import { REGION_EXTENSION_NAME } from './extensions/RegionExtension'
 import Extensions from './extensions/extensions'
@@ -109,7 +110,7 @@ const hasValidNameLength = (fullName: string): boolean => {
 }
 
 const hasNameAndForename = (fullName: string): boolean => {
-  const names = fullName.trim().split(' ')
+  const names = normalizeWhitespace(fullName).split(' ')
   return names.length > 1 && names.every(name => name.length > 0)
 }
 
@@ -160,7 +161,7 @@ export const generateCardInfo = (card: Card): CardInfo => {
     expirationDate !== null && !hasInfiniteLifetime(card) ? Math.max(expirationDate.toDaysSinceEpoch(), 0) : undefined
 
   return new CardInfo({
-    fullName: card.fullName.trim(),
+    fullName: card.fullName,
     expirationDay,
     extensions: new CardExtensions(extensionsMessage),
   })
@@ -221,7 +222,7 @@ export const initializeCardFromCSV = (
     return extension && value != null ? Object.assign(acc, extension.fromString(value)) : acc
   }, defaultCard.extensions)
 
-  const fullName = line[headers.indexOf(cardConfig.nameColumnName)] ?? defaultCard.fullName
+  const fullName = normalizeWhitespace(line[headers.indexOf(cardConfig.nameColumnName)] ?? defaultCard.fullName)
   const rawExpirationDate = line[headers.indexOf(cardConfig.expiryColumnName)]
   const expirationDate = PlainDate.safeFromCustomFormat(rawExpirationDate) ?? defaultCard.expirationDate
 

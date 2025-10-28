@@ -4,13 +4,13 @@
 
 expediagroup-graphql = { id = "com.expediagroup.graphql", version.ref = "graphql" }
 gitlab-arturbosch-detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.8" }
-gmazzo-buildconfig = { id = "com.github.gmazzo.buildconfig", version = "5.6.7"}
+gmazzo-buildconfig = { id = "com.github.gmazzo.buildconfig", version = "5.6.8"}
 google-protobuf = { id = "com.google.protobuf", version = "0.9.5" }
 jetbrains-kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version = "2.2.20-RC2" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-jetbrains-kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version = "0.9.1" }
+jetbrains-kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version = "0.9.2" }
 jlleitschuh-gradle-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "12.3.0" }
-sentry-jvm-gradle = { id = "io.sentry.jvm.gradle", version = "5.9.0" }
+sentry-jvm-gradle = { id = "io.sentry.jvm.gradle", version = "5.12.0" }
 springframework-boot = { id = "org.springframework.boot", version = "3.5.5" }
 spring-dependencymanagement = { id = "io.spring.dependency-management", version = "1.1.7" }
 
@@ -20,12 +20,13 @@ graphql = "8.8.1"
 javalin = "6.7.0"
 jetbrains-exposed = "0.61.0"
 junixsocket = "2.10.1"
-kotlin = "2.2.10"
+kotlin = "2.2.20"
 kotlinx-coroutines = "1.10.2"
 kotlinx-serialization = "1.9.0"
-ktor = "3.2.3"
+ktor = "3.3.0"
 spring = "3.5.5"
 testcontainers = "1.21.3"
+protobuf = "4.32.1"
 
 [libraries]
 
@@ -34,7 +35,7 @@ apache-commons-compress = { module = "org.apache.commons:commons-compress", vers
 apache-commons-csv = { module = "org.apache.commons:commons-csv", version = "1.14.1" }
 apache-commons-text = { module = "org.apache.commons:commons-text", version = "1.14.0" }
 auth0-java-jwt = { module = "com.auth0:java-jwt", version = "4.5.0" }
-bouncycastle-bcpkix-jdk18on = { module = "org.bouncycastle:bcpkix-jdk18on", version = "1.81" }
+bouncycastle-bcpkix-jdk18on = { module = "org.bouncycastle:bcpkix-jdk18on", version = "1.82" }
 eatthepath-java-otp = { module = "com.eatthepath:java-otp", version = "0.4.0" }
 expediagroup-graphql-kotlin-client = { module = "com.expediagroup:graphql-kotlin-client", version.ref = "graphql" }
 expediagroup-graphql-kotlin-schema-generator = { module = "com.expediagroup:graphql-kotlin-schema-generator", version.ref = "graphql" }
@@ -43,7 +44,7 @@ fasterxml-jackson-dataformat-yaml = { module = "com.fasterxml.jackson.dataformat
 fasterxml-jackson-datatype-jsr310 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310" }
 fasterxml-jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin" }
 favre-lib-bcrypt = { module = "at.favre.lib:bcrypt", version = "0.10.2" }
-google-protobuf-kotlin = { module = "com.google.protobuf:protobuf-kotlin", version = "4.32.0" }
+google-protobuf-kotlin = { module = "com.google.protobuf:protobuf-kotlin", version = "4.32.1" }
 google-zxing-core = { module = "com.google.zxing:core", version = "3.5.3" }
 grundig-geojson-jackson = { module = "de.grundid.opendatalab:geojson-jackson", version = "1.14" }
 graphql-extended-scalars = { module = "com.graphql-java:graphql-java-extended-scalars", version = "22.0" }
@@ -59,7 +60,7 @@ jetbrains-kotlinx-coroutines-reactor = { module = "org.jetbrains.kotlinx:kotlinx
 jetbrains-kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 jetbrains-kotlinx-html-jvm = { module = "org.jetbrains.kotlinx:kotlinx-html-jvm", version = "0.12.0" }
 jetbrains-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
-jetbrains-kover-jvm-agent = "org.jetbrains.kotlinx:kover-jvm-agent:0.9.1"
+jetbrains-kover-jvm-agent = "org.jetbrains.kotlinx:kover-jvm-agent:0.9.2"
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
 junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version = "1.12.2" }
@@ -67,10 +68,10 @@ kohlschutter-junixsocket-common = { module = "com.kohlschutter.junixsocket:junix
 kohlschutter-junixsocket-core = { module = "com.kohlschutter.junixsocket:junixsocket-core", version.ref = "junixsocket" }
 ktor-client-cio-jvm = { module = "io.ktor:ktor-client-cio-jvm", version.ref = "ktor" }
 ktor-client-core-jvm = { module = "io.ktor:ktor-client-core-jvm", version.ref = "ktor" }
-mockk = { module = "io.mockk:mockk", version = "1.14.5" }
+mockk = { module = "io.mockk:mockk", version = "1.14.6" }
 piwik-matomo-java-tracker = { module = "org.piwik.java.tracking:matomo-java-tracker", version = "3.4.0" }
 postgis-jdbc = { module = "net.postgis:postgis-jdbc", version = "2025.1.1" }
-postgresql-postgresql = { module = "org.postgresql:postgresql", version = "42.7.7" }
+postgresql-postgresql = { module = "org.postgresql:postgresql", version = "42.7.8" }
 projectreactor-reactor-test = { module = "io.projectreactor:reactor-test", version = "3.8.0-M6" }
 projectreactor-reactor-kotlinextensions = { module = "io.projectreactor.kotlin:reactor-kotlin-extensions", version = "1.2.3" }
 sentry-springbootstarter = { module = "io.sentry:sentry-spring-boot-starter-jakarta", version = "8.19.0" }

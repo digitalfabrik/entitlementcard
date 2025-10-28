@@ -1,106 +1,61 @@
-/* eslint-disable react/destructuring-assignment */
-import { Alignment, Navbar } from '@blueprintjs/core'
-import { AddCard, Analytics, Checklist, Inventory, Map, People, Place } from '@mui/icons-material'
-import { Button, ButtonProps, styled } from '@mui/material'
+import { AppBar, Divider, Link, Stack, SvgIcon, Toolbar, Typography, useTheme } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NavLink } from 'react-router'
 
 import { useWhoAmI } from '../WhoAmIProvider'
-import { Role } from '../generated/graphql'
-import RenderGuard from '../mui-modules/components/RenderGuard'
+import EntitlementIcon from '../assets/icons/entitlement_icon_outline.svg'
+import NavigationItems from '../mui-modules/navigation/NavigationItems'
 import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
 import UserMenu from './UserMenu'
-import dimensions from './constants/dimensions'
 
-const PrintAwareNavbar = styled(Navbar)`
-  @media print {
-    display: none;
-  }
-  height: ${dimensions.navigationBarHeight};
-`
-
-const MenuButton = (p: ButtonProps) => (
-  <Button variant='text' {...p}>
-    {p.children}
-  </Button>
-)
-
-type Props = {
-  onSignOut: () => void
-}
-
-const Navigation = ({ onSignOut }: Props): ReactElement => {
+const NavigationBar = (): ReactElement => {
   const { t } = useTranslation('misc')
+  const theme = useTheme()
   const config = useContext(ProjectConfigContext)
-  const { region, role } = useWhoAmI().me
-  const canSeeProjectSettings =
-    (role === Role.ProjectAdmin && config.userImportApiEnabled) || role === Role.ExternalVerifiedApiUser
+  const { region } = useWhoAmI().me
 
   return (
-    <PrintAwareNavbar style={{ height: 'auto' }}>
-      <Navbar.Group>
-        <Navbar.Heading>
-          <NavLink to='/' style={{ color: 'black', textDecoration: 'none', display: 'block' }}>
-            <div style={{ flexDirection: 'column' }}>
+    <AppBar position='sticky' sx={{ backgroundColor: theme.palette.common.white }}>
+      <Toolbar
+        sx={theme => ({
+          flexWrap: 'wrap',
+          [theme.breakpoints.down('lg')]: {
+            padding: 1.5,
+          },
+        })}>
+        <SvgIcon fontSize='large'>
+          <EntitlementIcon />
+        </SvgIcon>
+        <Link
+          href='/'
+          underline='none'
+          sx={{
+            '&:hover': { textDecoration: 'none', color: theme.palette.common.black },
+            color: theme.palette.common.black,
+          }}
+          marginX={1.5}>
+          <Stack>
+            <Typography component='span'>
               {config.name} {t('administration')}
-            </div>
-            {!region ? null : (
-              <span>
-                {region.prefix} {region.name} {`(${process.env.REACT_APP_VERSION})`}
-              </span>
-            )}
-          </NavLink>
-        </Navbar.Heading>
-        <Navbar.Divider />
-
-        <RenderGuard allowedRoles={[Role.RegionAdmin, Role.RegionManager]}>
-          {config.applicationFeature ? (
-            <NavLink to='/applications'>
-              <MenuButton startIcon={<Checklist />}>{t('inComingApplications')}</MenuButton>
-            </NavLink>
-          ) : null}
-          {config.cardCreation ? (
-            <NavLink to='/cards'>
-              <MenuButton startIcon={<AddCard />}>{t('createCards')}</MenuButton>
-            </NavLink>
-          ) : null}
-        </RenderGuard>
-
-        <RenderGuard allowedRoles={[Role.RegionAdmin, Role.ProjectAdmin]}>
-          <NavLink to='/users'>
-            <MenuButton startIcon={<People />}>{t('manageUsers')}</MenuButton>
-          </NavLink>
-          {config.cardStatistics.enabled ? (
-            <NavLink to='/statistics'>
-              <MenuButton startIcon={<Analytics />}>{t('statistics')}</MenuButton>
-            </NavLink>
-          ) : null}
-        </RenderGuard>
-
-        <RenderGuard allowedRoles={[Role.RegionAdmin]} condition={config.applicationFeature !== undefined}>
-          <NavLink to='/region'>
-            <MenuButton startIcon={<Map />}>{t('manageRegion')}</MenuButton>
-          </NavLink>
-        </RenderGuard>
-
-        <RenderGuard condition={canSeeProjectSettings}>
-          <NavLink to='/project'>
-            <MenuButton startIcon={<Inventory />}>{t('manageProject')}</MenuButton>
-          </NavLink>
-        </RenderGuard>
-
-        <RenderGuard allowedRoles={[Role.ProjectStoreManager]}>
-          <NavLink to='/stores'>
-            <MenuButton startIcon={<Place />}>{t('manageStores')}</MenuButton>
-          </NavLink>
-        </RenderGuard>
-      </Navbar.Group>
-      <Navbar.Group align={Alignment.RIGHT}>
-        <UserMenu onSignOut={onSignOut} />
-      </Navbar.Group>
-    </PrintAwareNavbar>
+            </Typography>
+            <Stack direction='row' sx={{ gap: 1 }}>
+              {!region ? null : (
+                <Typography component='span'>
+                  {region.prefix} {region.name}
+                </Typography>
+              )}
+              <Typography component='span'>{`(${process.env.REACT_APP_VERSION})`}</Typography>
+            </Stack>
+          </Stack>
+        </Link>
+        <Divider orientation='vertical' variant='middle' flexItem />
+        <Stack direction='row' sx={{ flexGrow: 1, gap: 1, paddingX: 1 }}>
+          <NavigationItems variant='text' />
+        </Stack>
+        <UserMenu />
+      </Toolbar>
+    </AppBar>
   )
 }
 
-export default Navigation
+export default NavigationBar

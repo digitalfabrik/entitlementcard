@@ -118,6 +118,9 @@ class VerificationQrScannerPage extends StatelessWidget {
     } on CardExpiredException catch (e) {
       final expirationDate = DateFormat('dd.MM.yyyy').format(e.expiry);
       await onError(t.identification.codeExpired(expirationDate: expirationDate), e);
+    } on CardNotYetValidException catch (e) {
+      final startDay = DateFormat('dd.MM.yyyy').format(e.startDay);
+      await onError(t.identification.codeNotYetValid(startDay: startDay), e);
     } on QrCodeParseException catch (e) {
       await onError(t.identification.codeInvalid, e);
     } on Exception catch (e) {

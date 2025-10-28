@@ -1,5 +1,5 @@
 macos:
-  xcode: 16.1.0
+  xcode: 16.4.0
 resource_class: m4pro.medium
 parameters:
   build_config:
@@ -12,6 +12,8 @@ working_directory: ~/project/frontend
 steps:
   - prepare_workspace
   - install_app_toolbelt
+  - ruby/install:
+        version: '3.3'
   - run:
       # Rosetta is necessary to build flutter apps on circleci mac m1 images
       # https://github.com/digitalfabrik/entitlementcard/pull/2001#discussion_r2010122708

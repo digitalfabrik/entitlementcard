@@ -24,6 +24,6 @@ Now you switch to branch b2, which does not now about migration m1.
 There are two ways to fix this:
 - a: manually delete the entry for m1 from the `migrations` table and also delete the constraint from the administration table
 - b: delete and recreate the database (this obviously also clears all the db entries)
-  1. `sudo docker-compose rm`
-  2. `sudo docker-compose build`
-  3. `sudo docker-compose up --force-recreate`
+  1. `sudo docker compose rm`
+  2. `sudo docker compose build`
+  3. `sudo docker compose up --force-recreate`

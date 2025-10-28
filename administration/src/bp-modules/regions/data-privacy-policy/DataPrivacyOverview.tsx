@@ -1,39 +1,14 @@
-import { H3, TextArea, Tooltip } from '@blueprintjs/core'
 import { ArrowBack, SaveAlt } from '@mui/icons-material'
-import { Button } from '@mui/material'
+import { Button, Stack, TextField, Tooltip, Typography, useTheme } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
-import styled from 'styled-components'
 
 import graphQlErrorMap from '../../../errors/GraphQlErrorMap'
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
 import { GraphQlExceptionCode, useUpdateDataPolicyMutation } from '../../../generated/graphql'
-import { useAppToaster } from '../../AppToaster'
 import ButtonBar from '../../ButtonBar'
-
-const Content = styled.div`
-  padding: 0 6rem;
-  width: 100%;
-  z-index: 0;
-  flex-grow: 1;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  align-items: center;
-  flex-direction: column;
-`
-const Label = styled(H3)`
-  text-align: center;
-  margin: 15px;
-`
-
-const CharCounter = styled.span<{ $hasError: boolean }>`
-  text-align: center;
-  align-self: flex-start;
-  color: ${props => (props.$hasError ? 'red' : 'black')};
-  margin: 15px;
-`
 
 type RegionOverviewProps = {
   dataPrivacyPolicy: string
@@ -43,16 +18,19 @@ type RegionOverviewProps = {
 const MAX_CHARS = 20000
 
 const DataPrivacyOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProps): ReactElement => {
+  const { palette } = useTheme()
   const navigate = useNavigate()
-  const appToaster = useAppToaster()
+  const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('regionSettings')
   const [dataPrivacyText, setDataPrivacyText] = useState<string>(dataPrivacyPolicy)
   const [updateDataPrivacy, { loading }] = useUpdateDataPolicyMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appToaster?.show({ intent: 'danger', message: title })
+      enqueueSnackbar(title, { variant: 'error' })
     },
-    onCompleted: () => appToaster?.show({ intent: 'success', message: t('dataPrivacyChangeSuccessful') }),
+    onCompleted: () => {
+      enqueueSnackbar(t('dataPrivacyChangeSuccessful'), { variant: 'success' })
+    },
   })
   const maxCharsExceeded = dataPrivacyText.length > MAX_CHARS
 
@@ -65,33 +43,61 @@ const DataPrivacyOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProp
 
   return (
     <>
-      <Content>
-        <Label>{t('dataPrivacy')}</Label>
-        <TextArea
-          fill
-          onChange={e => setDataPrivacyText(e.target.value)}
-          value={dataPrivacyText}
-          large
-          rows={20}
+      <Stack
+        px={12}
+        justifyContent='space-evenly'
+        alignItems='center'
+        flexGrow={0}
+        sx={{
+          zIndex: 0,
+          height: '100vh',
+        }}>
+        <Typography variant='h5' textAlign='center' margin={2}>
+          {t('dataPrivacy')}
+        </Typography>
+        <TextField
+          fullWidth
           placeholder={t('dataPrivacyPlaceholder')}
+          multiline
+          sx={{
+            flex: 1,
+            '& .MuiInputBase-root': {
+              height: '100%',
+              alignItems: 'flex-start',
+            },
+            '& .MuiInputBase-input': {
+              height: '100%',
+              overflow: 'auto',
+            },
+          }}
+          value={dataPrivacyText}
+          onChange={e => setDataPrivacyText(e.target.value)}
         />
-        <CharCounter $hasError={maxCharsExceeded}>
+        <Typography
+          m={2}
+          sx={{
+            alignSelf: 'flex-start',
+            color: maxCharsExceeded ? palette.error.main : palette.text.primary,
+          }}>
           {dataPrivacyText.length}/{MAX_CHARS}
-        </CharCounter>
-      </Content>
+        </Typography>
+      </Stack>
       <ButtonBar>
         <Button startIcon={<ArrowBack />} onClick={() => navigate(-1)}>
           {t('back')}
         </Button>
-        <Tooltip content={maxCharsExceeded ? errorMessage : undefined}>
-          <Button
-            disabled={maxCharsExceeded}
-            startIcon={<SaveAlt />}
-            color='primary'
-            onClick={onSave}
-            loading={loading}>
-            {t('save')}
-          </Button>
+        <Tooltip title={maxCharsExceeded ? errorMessage : undefined} placement='top' arrow>
+          <span>
+            <Button
+              disabled={maxCharsExceeded}
+              startIcon={<SaveAlt />}
+              variant='contained'
+              color='primary'
+              onClick={onSave}
+              loading={loading}>
+              {t('save')}
+            </Button>
+          </span>
         </Tooltip>
       </ButtonBar>
     </>

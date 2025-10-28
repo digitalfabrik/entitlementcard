@@ -1,3 +1,4 @@
+import { useSnackbar } from 'notistack'
 import { useCallback, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
@@ -21,8 +22,8 @@ import downloadDataUri from '../../../util/downloadDataUri'
 import { getBuildConfig } from '../../../util/getBuildConfig'
 import getDeepLinkFromQrCode from '../../../util/getDeepLinkFromQrCode'
 import { isProductionEnvironment, updateArrayItem } from '../../../util/helper'
+import { normalizeWhitespace } from '../../../util/normalizeString'
 import { reportErrorToSentry } from '../../../util/sentry'
-import { useAppToaster } from '../../AppToaster'
 import { saveActivityLog } from '../../activity-log/ActivityLog'
 import { showCardGenerationError } from '../../util/cardGenerationError'
 import { getFreinetCardFromCards } from '../../util/getFreinetCardFromCards'
@@ -68,18 +69,18 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
   const [cardGenerationStep, setCardGenerationStep] = useState<CardGenerationStep>('input')
   const [createCardsMutation] = useCreateCardsMutation()
   const [deleteCardsMutation] = useDeleteCardsMutation()
-  const appToaster = useAppToaster()
+  const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('cards')
 
   const [sendToFreinet] = useSendApplicationAndCardDataToFreinetMutation({
     onCompleted: data => {
       if (data.sendApplicationAndCardDataToFreinet === true) {
-        appToaster?.show({ intent: 'success', message: t('freinetDataSyncSuccessMessage') })
+        enqueueSnackbar(t('freinetDataSyncSuccessMessage'), { variant: 'success' })
       }
     },
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appToaster?.show({ intent: 'danger', message: title, timeout: 0 })
+      enqueueSnackbar(title, { variant: 'error', persist: true })
     },
   })
   const sendConfirmationMails = useSendCardConfirmationMails()
@@ -99,15 +100,18 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
       let codes: CreateCardsResult[] | undefined
       setCardGenerationStep('loading')
 
+      // Normalize each card's full name
+      const normalizedCards = cards.map(card => ({ ...card, fullName: normalizeWhitespace(card.fullName) }))
+
       try {
-        codes = await createCards(createCardsMutation, projectConfig, cards, applicationId)
-        const dataUri = await generateFunction(codes, cards, projectConfig, region)
+        codes = await createCards(createCardsMutation, projectConfig, normalizedCards, applicationId)
+        const dataUri = await generateFunction(codes, normalizedCards, projectConfig, region)
         downloadDataUri(dataUri, filename)
-        cards.forEach(saveActivityLog)
+        normalizedCards.forEach(saveActivityLog)
 
         // This is a temporary condition from #2141
         if (!isProductionEnvironment() && applicationId != null) {
-          const freinetCard = getFreinetCardFromCards(cards)
+          const freinetCard = getFreinetCardFromCards(normalizedCards)
           sendToFreinet({
             variables: {
               applicationId,
@@ -117,7 +121,7 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
         }
 
         if (region.activatedForCardConfirmationMail) {
-          await sendConfirmationMails(codes, cards)
+          await sendConfirmationMails(codes, normalizedCards)
         } else if (!isProductionEnvironment()) {
           // print deep links in the console for testing purposes
           codes.forEach(code =>
@@ -135,9 +139,7 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
           // Rollback
           await deleteCards(deleteCardsMutation, region.id, codes).catch(reportErrorToSentry)
         }
-        if (appToaster) {
-          showCardGenerationError(appToaster, error)
-        }
+        showCardGenerationError(enqueueSnackbar, error)
         setCardGenerationStep('input')
       } finally {
         setCards([])
@@ -151,7 +153,7 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
       region,
       sendToFreinet,
       sendConfirmationMails,
-      appToaster,
+      enqueueSnackbar,
       deleteCardsMutation,
     ]
   )

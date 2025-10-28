@@ -2,6 +2,7 @@ import { TextField } from '@mui/material'
 import React, { useContext, useState } from 'react'
 
 import i18next from '../../../i18n'
+import FormAlert from '../../base/FormAlert'
 import { FormContext } from '../SteppedSubForms'
 import { Form, FormComponentProps } from '../util/FormType'
 
@@ -48,7 +49,7 @@ const NumberForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
         value={state.value}
         onBlur={() => setTouched(true)}
         onChange={e => setState(() => ({ type: 'NumberForm', value: e.target.value }))}
-        helperText={touched && isInvalid ? validationResult.message : ''}
+        helperText={<FormAlert errorMessage={touched && isInvalid ? validationResult.message : undefined} />}
         slotProps={{
           htmlInput: { inputMode: 'numeric', min: options.min, max: options.max },
         }}

@@ -1,4 +1,5 @@
 import { Checkbox } from '@blueprintjs/core'
+import { Typography } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -30,14 +31,14 @@ const StoresImportAlert = ({ dryRun, setDryRun, storesCount }: StoreImportAlertP
   return (
     <>
       {dryRun ? (
-        <span data-testid='dry-run-alert'>
+        <Typography component='span' data-testid='dry-run-alert'>
           <b>{t('dryRun')}:</b> {t('dryRunDescription')}
-        </span>
+        </Typography>
       ) : (
         <>
-          <span data-testid='prod-run-alert'>
+          <Typography component='span' data-testid='prod-run-alert'>
             <b>{t('caution')}:</b> {t('cautionDescription')}
-          </span>
+          </Typography>
           <br />
           {storesCount > STORES_COUNT_NOTE_THRESHOLD && (
             <DurationContainer data-testid='duration-alert'>

@@ -1,4 +1,5 @@
-import { Button } from '@mui/material'
+import { Close } from '@mui/icons-material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material'
 import React, { useContext, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
@@ -6,7 +7,6 @@ import { useGetDataPolicyQuery } from '../../../generated/graphql'
 import i18next from '../../../i18n'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import getQueryResult from '../../util/getQueryResult'
-import BasicDialog from '../BasicDialog'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'
 import CheckboxForm from '../primitive-inputs/CheckboxForm'
 import { Form, FormComponentProps } from '../util/FormType'
@@ -66,16 +66,17 @@ const StepSendForm: Form<State, ValidatedInput, AdditionalProps> = {
     const config = useContext(ProjectConfigContext)
     const [openPrivacyPolicy, setOpenPrivacyPolicy] = useState<boolean>(false)
     const PrivacyLabel = (
-      <span>
+      <Typography component='span'>
         <Trans i18nKey='applicationForms:acceptDataPrivacyPolicy' />{' '}
         <Button
           variant='text'
-          style={{ textTransform: 'capitalize', padding: 0, verticalAlign: 'unset' }}
+          color='primary'
+          sx={{ textTransform: 'capitalize', padding: 0, verticalAlign: 'unset' }}
           onClick={() => setOpenPrivacyPolicy(true)}>
           {t('acceptDataPrivacyButton')}
         </Button>
         .
-      </span>
+      </Typography>
     )
 
     const policyQueryHandler = getQueryResult(policyQuery)
@@ -104,22 +105,28 @@ const StepSendForm: Form<State, ValidatedInput, AdditionalProps> = {
           setState={setGivenInformationIsCorrectAndComplete}
           options={givenInformationIsCorrectAndCompleteOptions}
         />
-        <BasicDialog
+        <Dialog
           open={openPrivacyPolicy}
-          maxWidth='lg'
-          onUpdateOpen={setOpenPrivacyPolicy}
-          title={config.dataPrivacyHeadline}
-          content={
+          aria-describedby='data-privacy-dialog'
+          fullWidth
+          onClose={() => setOpenPrivacyPolicy(false)}>
+          <DialogTitle>{config.dataPrivacyHeadline}</DialogTitle>
+          <DialogContent id='data-privacy-dialog'>
             <>
               <config.dataPrivacyContent />
               {config.dataPrivacyAdditionalBaseContent && (!dataPrivacyPolicy || dataPrivacyPolicy.length === 0) ? (
                 <config.dataPrivacyAdditionalBaseContent />
               ) : (
-                dataPrivacyPolicy
+                <Typography>{dataPrivacyPolicy}</Typography>
               )}
             </>
-          }
-        />
+          </DialogContent>
+          <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
+            <Button onClick={() => setOpenPrivacyPolicy(false)} variant='outlined' startIcon={<Close />}>
+              {t('misc:close')}
+            </Button>
+          </DialogActions>
+        </Dialog>
       </>
     )
   },

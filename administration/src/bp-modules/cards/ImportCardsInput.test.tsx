@@ -1,7 +1,7 @@
-import { OverlayToaster } from '@blueprintjs/core'
 import { fireEvent, waitFor } from '@testing-library/react'
 import React from 'react'
 
+import { AppSnackbarProvider } from '../../AppSnackbar'
 import { BAVARIA_CARD_TYPE_GOLD, BAVARIA_CARD_TYPE_STANDARD } from '../../cards/extensions/BavariaCardTypeExtension'
 import { ProjectConfigProvider } from '../../project-configs/ProjectConfigContext'
 import bayernConfig from '../../project-configs/bayern/config'
@@ -10,18 +10,24 @@ import koblenzConfig from '../../project-configs/koblenz/config'
 import nuernbergConfig from '../../project-configs/nuernberg/config'
 import { renderWithRouter } from '../../testing/render'
 import PlainDate from '../../util/PlainDate'
-import { AppToasterProvider } from '../AppToaster'
 import { getTestRegion } from '../user-settings/__mocks__/Region'
 import ImportCardsInput from './ImportCardsInput'
 import { ENTRY_LIMIT } from './constants'
 
 jest.mock('../../Router', () => ({}))
 
+const enqueueSnackbarMock = jest.fn()
+jest.mock('notistack', () => ({
+  ...jest.requireActual('notistack'),
+  useSnackbar: () => ({
+    enqueueSnackbar: enqueueSnackbarMock,
+  }),
+}))
+
 describe('ImportCardsInput', () => {
   beforeEach(jest.clearAllMocks)
   const region = getTestRegion({})
 
-  const toaster = jest.spyOn(OverlayToaster.prototype, 'show')
   const setCards = jest.fn()
 
   const renderAndSubmitCardsInput = async (projectConfig: ProjectConfig, csv: string, setCards: () => void) => {
@@ -35,11 +41,11 @@ describe('ImportCardsInput', () => {
     const file = new File([csv], `${projectConfig.name}.csv`, { type: 'text/csv' })
 
     const { getByTestId } = renderWithRouter(
-      <AppToasterProvider>
+      <AppSnackbarProvider>
         <ProjectConfigProvider projectConfig={projectConfig}>
           <ImportCardsInput setCards={setCards} region={region} />
         </ProjectConfigProvider>
-      </AppToasterProvider>
+      </AppSnackbarProvider>
     )
 
     const fileInput = getByTestId('file-upload') as HTMLInputElement
@@ -59,7 +65,7 @@ Tilo Traber,,gold
 `
     await renderAndSubmitCardsInput(projectConfig, csv, setCards)
 
-    expect(toaster).not.toHaveBeenCalled()
+    expect(enqueueSnackbarMock).not.toHaveBeenCalled()
     expect(setCards).toHaveBeenCalledTimes(1)
     expect(setCards).toHaveBeenCalledWith([
       {
@@ -88,7 +94,7 @@ inhaber_ehrenamtskarte;eak_datum;eak_karten_status;co_name;anrede;titel;vorname;
 `
     await renderAndSubmitCardsInput(projectConfig, csv, setCards)
 
-    expect(toaster).not.toHaveBeenCalled()
+    expect(enqueueSnackbarMock).not.toHaveBeenCalled()
     expect(setCards).toHaveBeenCalledTimes(1)
     expect(setCards).toHaveBeenCalledWith([
       {
@@ -116,7 +122,7 @@ Tilo Traber,03.04.2025,01.01.2026,12.01.1984,98765432
 
     await renderAndSubmitCardsInput(projectConfig, csv, setCards)
 
-    expect(toaster).not.toHaveBeenCalled()
+    expect(enqueueSnackbarMock).not.toHaveBeenCalled()
     expect(setCards).toHaveBeenCalledTimes(1)
     expect(setCards).toHaveBeenCalledWith([
       {
@@ -154,7 +160,7 @@ Tilo Traber,03.04.2025,12.01.1984,98765432
 
     await renderAndSubmitCardsInput(projectConfig, csv, setCards)
 
-    expect(toaster).not.toHaveBeenCalled()
+    expect(enqueueSnackbarMock).not.toHaveBeenCalled()
     expect(setCards).toHaveBeenCalledTimes(1)
     expect(setCards).toHaveBeenCalledWith([
       {
@@ -205,12 +211,11 @@ ${'Thea Test,03.04.2024,12345678\n'.repeat(ENTRY_LIMIT + 1)}
       error: `Die Datei hat mehr als ${ENTRY_LIMIT} Einträge.`,
     },
   ])(`import CSV Card should fail with error '$error'`, async ({ csv, error }) => {
-    const toaster = jest.spyOn(OverlayToaster.prototype, 'show')
     const setCards = jest.fn()
 
     await renderAndSubmitCardsInput(bayernConfig, csv, setCards)
 
-    expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error })
+    expect(enqueueSnackbarMock).toHaveBeenCalledWith(error, { variant: 'error' })
     expect(setCards).not.toHaveBeenCalled()
   })
 })

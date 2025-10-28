@@ -2,8 +2,8 @@ import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
-import { DialogActions, Typography } from '@mui/material'
-import { SnackbarProvider, useSnackbar } from 'notistack'
+import { Box, Typography } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement, useCallback, useContext, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -80,9 +80,7 @@ const ApplyController = (): React.ReactElement | null => {
   const submit = () => {
     const validationResult = ApplicationForm.validate(state, { regions })
     if (validationResult.type === 'error') {
-      enqueueSnackbar(t('invalidInputError'), {
-        variant: 'error',
-      })
+      enqueueSnackbar(t('invalidInputError'), { variant: 'error' })
       return
     }
     const [regionId, application] = validationResult.value
@@ -95,7 +93,7 @@ const ApplyController = (): React.ReactElement | null => {
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', margin: '16px' }}>
       <div style={{ maxWidth: '1000px', width: '100%' }}>
-        <Typography variant='h4' component='h1' style={{ textAlign: 'center', margin: '16px' }}>
+        <Typography variant='h4' component='h1' margin={2} textAlign='center'>
           {formSubmitted ? t('sentSuccessfully') : t('title')}
         </Typography>
         {formSubmitted ? (
@@ -113,20 +111,18 @@ const ApplyController = (): React.ReactElement | null => {
             options={{ regions }}
           />
         )}
-        <DialogActions>
+        <Box sx={{ justifyContent: 'flex-end', display: 'flex', marginY: 2 }}>
           {loadingSubmit || formSubmitted ? null : <DiscardAllInputsButton discardAll={discardAll} />}
-        </DialogActions>
+        </Box>
       </div>
     </div>
   )
 }
 
 const ApplyApp = (): ReactElement => (
-  <SnackbarProvider>
-    <ApplicationErrorBoundary>
-      <ApplyController />
-    </ApplicationErrorBoundary>
-  </SnackbarProvider>
+  <ApplicationErrorBoundary>
+    <ApplyController />
+  </ApplicationErrorBoundary>
 )
 
 export default ApplyApp

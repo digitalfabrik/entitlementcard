@@ -1,9 +1,11 @@
+import { FormGroup } from '@mui/material'
 import { formatISO, parseISO } from 'date-fns'
 import React, { useContext, useState } from 'react'
 
 import CustomDatePicker from '../../../bp-modules/components/CustomDatePicker'
 import { DateInput } from '../../../generated/graphql'
 import i18next from '../../../i18n'
+import FormAlert from '../../base/FormAlert'
 import { FormContext } from '../SteppedSubForms'
 import type { Form, FormComponentProps } from '../util/FormType'
 
@@ -53,32 +55,34 @@ const DateForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
     const isInvalid = validationResult.type === 'error'
 
     return (
-      <CustomDatePicker
-        value={parseDateFromState(state.value)}
-        disabled={disableAllInputs}
-        error={(showAllErrors || touched) && isInvalid}
-        label={label}
-        minDate={minDate}
-        maxDate={options.maximumDate}
-        onBlur={() => setTouched(true)}
-        onChange={date => {
-          setState(() => ({
-            type: 'DateForm',
-            // Catch invalid dates: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#the_epoch_timestamps_and_invalid_date
-            value: date && !Number.isNaN(date.valueOf()) ? date.toISOString() : '',
-          }))
-        }}
-        textFieldHelperText={(showAllErrors || touched) && isInvalid ? validationResult.message : undefined}
-        textFieldSlotProps={{
-          required: true,
-          variant: 'standard',
-          style: { margin: '4px 0', minWidth },
-          sx: {
-            input: { paddingTop: '4px' },
-            '.MuiInputAdornment-root': { transform: 'translateX(-8px)' },
-          },
-        }}
-      />
+      <FormGroup>
+        <CustomDatePicker
+          value={parseDateFromState(state.value)}
+          disabled={disableAllInputs}
+          error={(showAllErrors || touched) && isInvalid}
+          label={label}
+          minDate={minDate}
+          maxDate={options.maximumDate}
+          onBlur={() => setTouched(true)}
+          onChange={date => {
+            setState(() => ({
+              type: 'DateForm',
+              // Catch invalid dates: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#the_epoch_timestamps_and_invalid_date
+              value: date && !Number.isNaN(date.valueOf()) ? date.toISOString() : '',
+            }))
+          }}
+          textFieldSlotProps={{
+            required: true,
+            variant: 'standard',
+            style: { margin: '4px 0', minWidth },
+            sx: {
+              input: { paddingTop: '4px' },
+              '.MuiInputAdornment-root': { transform: 'translateX(-8px)' },
+            },
+          }}
+        />
+        <FormAlert errorMessage={(showAllErrors || touched) && isInvalid ? validationResult.message : undefined} />
+      </FormGroup>
     )
   },
 }

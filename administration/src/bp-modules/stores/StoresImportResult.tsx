@@ -1,4 +1,4 @@
-import { H5 } from '@blueprintjs/core'
+import { Typography } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -24,19 +24,28 @@ const StoresImportResult = ({
   const { t } = useTranslation('stores')
   return (
     <Container>
-      <H5 data-testid='import-result-headline'>{`${t('articleMale')} ${dryRun ? t('dryRunImport') : t('import')} ${t(
-        'wasSuccessful'
-      )}`}</H5>
-      <span>{dryRun ? t('importResult') : t('importResult')}</span>
+      <Typography variant='h6' data-testid='import-result-headline'>{`${t('articleMale')} ${
+        dryRun ? t('dryRunImport') : t('import')
+      } ${t('wasSuccessful')}`}</Typography>
+      <Typography component='span'>{dryRun ? t('importResult') : t('importResult')}</Typography>
       <br />
       <div>
-        {t('storesCreated')} <span data-testid='storesCreated'>{storesCreated}</span>
+        {t('storesCreated')}{' '}
+        <Typography component='span' data-testid='storesCreated'>
+          {storesCreated}
+        </Typography>
       </div>
       <div>
-        {t('storesDeleted')} <span data-testid='storesDeleted'>{storesDeleted}</span>
+        {t('storesDeleted')}{' '}
+        <Typography component='span' data-testid='storesDeleted'>
+          {storesDeleted}
+        </Typography>
       </div>
       <div>
-        {t('storesUntouched')} <span data-testid='storesUntouched'>{storesUntouched}</span>
+        {t('storesUntouched')}{' '}
+        <Typography component='span' data-testid='storesUntouched'>
+          {storesUntouched}
+        </Typography>
       </div>
     </Container>
   )

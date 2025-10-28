@@ -27,13 +27,10 @@
 
 ## Prerequisites
 
-1. Install the [protobuf compiler](https://github.com/protocolbuffers/protobuf) using a package manager of your choice
-  or using a binary from the [github release page](https://github.com/protocolbuffers/protobuf/releases). 
-  *The selected version has to match (or be older than) the version of protobuf-kotlin dependency used in [build.gradle.kts](../backend/build.gradle.kts).*
-2. Install Java JDK 17.
+- Install Java JDK 17.
    *If you use a later version, it has to be compatible with the [configured Gradle version](../frontend/android/gradle/wrapper/gradle-wrapper.properties).
    Check the [Gradle Compatibility Matrix](https://docs.gradle.org/current/userguide/compatibility.html#java) for details.*
-3. Open the [root project](..) in IntelliJ.
+- Open the [root project](..) in IntelliJ.
 
 ## Frontend
 
@@ -114,7 +111,7 @@ Run `Start administration (env:local+buildConfig:all)` from Intellij run configu
 
 ### Prerequisites
 
-You can either use the open-source docker replacement podman/podman-compose or classic docker/docker-compose.
+You can either use the open-source docker replacement podman/podman-compose or classic docker/docker compose.
 
 #### Podman
 
@@ -127,12 +124,12 @@ podman machine start && podman-compose up
 
 #### Docker
 
-1. Install docker and docker-compose
-2. Setup docker-compose
+1. Install docker
+2. Setup docker compose
 ```shell
-docker-compose rm
-docker-compose build
-docker-compose up --force-recreate
+docker compose rm
+docker compose build
+docker compose up --force-recreate
 ```
 
 ### Recommended IDE set up
@@ -161,9 +158,9 @@ cd backend && ./gradlew run --args "migrate"
 ```shell
 podman machine start && podman-compose up
 ```
-or `docker-compose`
+or `docker compose`
 ```shell
-sudo docker-compose up --force-recreate
+sudo docker compose up --force-recreate
 ```
 2. Run the backend (`Run backend (env:local+buildConfig:all)`)
 ```shell
