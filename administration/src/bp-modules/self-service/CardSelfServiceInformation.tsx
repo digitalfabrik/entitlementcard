@@ -1,20 +1,14 @@
-import { Button } from '@mui/material'
+import { Button, Typography } from '@mui/material'
+import { Box } from '@mui/system'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
 import { getBuildConfig } from '../../util/getBuildConfig'
 import AppStoreLinks from '../components/AppStoreLinks'
-import { InfoText } from './components/InfoText'
 
 type CardSelfServiceInformationProps = {
   goToActivation: () => void
 }
-
-const StyledInfoText = styled(InfoText)`
-  margin-top: 48px;
-  margin-bottom: 8px;
-`
 
 const CardSelfServiceInformation = ({ goToActivation }: CardSelfServiceInformationProps): ReactElement => {
   const { ios, android } = getBuildConfig(window.location.hostname)
@@ -24,12 +18,12 @@ const CardSelfServiceInformation = ({ goToActivation }: CardSelfServiceInformati
       <Button color='secondary' onClick={goToActivation} variant='contained' size='large' sx={{ width: 'fit-content' }}>
         {t('nextToActivation')}
       </Button>
-      <StyledInfoText>
-        <div>{t('appNotInstalled')}</div>
-        <div>
-          <b>{t('downloadApp')}</b>
-        </div>
-      </StyledInfoText>
+      <Box sx={{ marginTop: 6, marginBottom: 1 }}>
+        <Typography variant='body1'>{t('appNotInstalled')}</Typography>
+        <Typography variant='body1' fontWeight='bold'>
+          {t('downloadApp')}
+        </Typography>
+      </Box>
       <AppStoreLinks playStoreLink={android.appStoreLink} appStoreLink={ios.appStoreLink} />
     </>
   )

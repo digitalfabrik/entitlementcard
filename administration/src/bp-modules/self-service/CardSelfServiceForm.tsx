@@ -1,6 +1,6 @@
 import { Close } from '@mui/icons-material'
 import InfoOutlined from '@mui/icons-material/InfoOutlined'
-import { Button, Link, Stack } from '@mui/material'
+import { Button, Link, Stack, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -16,7 +16,6 @@ import FormAlert from '../../mui-modules/base/FormAlert'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { removeMultipleSpaces } from '../../util/helper'
 import ExtensionForms from '../cards/ExtensionForms'
-import { IconTextButton } from './components/IconTextButton'
 import { UnderlineTextButton } from './components/UnderlineTextButton'
 import { DataPrivacyAcceptingStatus } from './constants'
 
@@ -83,20 +82,25 @@ const CardSelfServiceForm = ({
           errorMessage={getFullNameValidationErrorMessage(card.fullName)}
         />
         <ExtensionForms card={card} updateCard={updateCard} forceError={formSendAttempt} />
-        <IconTextButton onClick={() => setOpenReferenceInformation(true)}>
-          <InfoOutlined />
-          {t('whereToFindReferenceNumber')}
-        </IconTextButton>
+        <Button
+          color='inherit'
+          variant='text'
+          onClick={() => setOpenReferenceInformation(true)}
+          sx={{ width: 'fit-content' }}
+          startIcon={<InfoOutlined />}>
+          {' '}
+          <Typography>{t('whereToFindReferenceNumber')}</Typography>
+        </Button>
         <BaseCheckbox
           checked={dataPrivacyAccepted === DataPrivacyAcceptingStatus.accepted}
           label={
-            <>
+            <Typography>
               {t('iAccept')}
               <UnderlineTextButton onClick={() => setOpenDataPrivacy(true)}>
                 {t('datePrivacyAgreement')}
               </UnderlineTextButton>
               .
-            </>
+            </Typography>
           }
           onChange={() =>
             setDataPrivacyAccepted(
@@ -127,7 +131,7 @@ const CardSelfServiceForm = ({
         onConfirm={() => setOpenReferenceInformation(false)}
         onClose={() => setOpenReferenceInformation(false)}
         showCancelButton={false}>
-        <>
+        <Typography>
           {t('whereToFindReferenceNumberExplanation')} <br />
           {t('moreInformationAndExamples')}
           <Link
@@ -139,7 +143,7 @@ const CardSelfServiceForm = ({
           . <br />
           <br /> {t('forQuestionsPleaseContact')}
           <Link href='mailto:koblenzpass@stadt.koblenz.de'>koblenzpass@stadt.koblenz.de</Link>.
-        </>
+        </Typography>
       </ConfirmDialog>
       <ConfirmDialog
         confirmButtonText={t('misc:close')}
