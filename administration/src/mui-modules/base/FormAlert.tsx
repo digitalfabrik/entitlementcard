@@ -1,5 +1,5 @@
 import InfoOutlined from '@mui/icons-material/InfoOutlined'
-import { styled } from '@mui/material'
+import { Typography, styled } from '@mui/material'
 import React, { CSSProperties, ReactElement } from 'react'
 
 const severityColors = {
@@ -28,7 +28,7 @@ const FormAlert = ({ errorMessage, isToast = false, severity = 'error', style }:
   errorMessage ? (
     <Container style={style} $severity={severity} $isToast={isToast} data-testid='form-alert'>
       <InfoOutlined />
-      {errorMessage}
+      <Typography>{errorMessage}</Typography>
     </Container>
   ) : null
 
