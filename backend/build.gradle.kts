@@ -124,6 +124,7 @@ dependencies {
     implementation(libs.springdoc.openapi.starter)
     implementation(libs.springframework.boot.starter.mail)
     implementation(libs.springframework.boot.starter.web)
+    implementation(libs.springframework.boot.starter.webflux)
     implementation(libs.springframework.boot.starter.graphql)
 
     runtimeOnly(libs.postgresql.postgresql)

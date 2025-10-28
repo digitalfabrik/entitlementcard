@@ -81,6 +81,7 @@ springframework-boot-devtools = { module = "org.springframework.boot:spring-boot
 springframework-boot-configurationprocessor = { module = "org.springframework.boot:spring-boot-configuration-processor" }
 springframework-boot-starter-mail = { module = "org.springframework.boot:spring-boot-starter-mail", version.ref = "spring" }
 springframework-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "spring" }
+springframework-boot-starter-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux", version.ref = "spring" }
 springframework-boot-starter-graphql = { module = "org.springframework.boot:spring-boot-starter-graphql", version.ref = "spring" }
 springframework-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
 springframework-boot-testcontainers = { module = "org.springframework.boot:spring-boot-testcontainers" }
