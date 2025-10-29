@@ -10,10 +10,10 @@ import org.junit.jupiter.api.BeforeAll
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.context.annotation.Import
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
-import org.springframework.test.context.ContextConfiguration
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.utility.DockerImageName
 
@@ -21,7 +21,7 @@ import org.testcontainers.utility.DockerImageName
  * Base class for integration tests providing a fully initialized Spring Boot application context
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ContextConfiguration(classes = [IntegrationTestConfig::class])
+@Import(IntegrationTestConfig::class)
 open class IntegrationTest {
     companion object {
         private var postgisImage = DockerImageName.parse("postgis/postgis:13-3.0-alpine")
