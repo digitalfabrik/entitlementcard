@@ -13,7 +13,7 @@ import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
 const computeSecondsRemaining = (expiresAt: Date) => Math.round((expiresAt.valueOf() - Date.now()) / 1000)
 const openAtRemainingSeconds = 180
 
-const KeepAliveToken = ({
+const AutomaticLogoutDialog = ({
   expiresAt,
   onSignOut,
   onSignIn,
@@ -86,4 +86,4 @@ const KeepAliveToken = ({
   )
 }
 
-export default KeepAliveToken
+export default AutomaticLogoutDialog
