@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class MapStyleController(
-    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     private val config: BackendConfiguration,
 ) {
     private val styles: Map<String, String> = initializeStyles()

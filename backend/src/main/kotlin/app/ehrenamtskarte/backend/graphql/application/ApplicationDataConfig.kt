@@ -18,7 +18,6 @@ import kotlin.math.pow
  */
 @Configuration
 class ApplicationDataConfig(
-    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     private val backendConfiguration: BackendConfiguration,
 ) {
     companion object {

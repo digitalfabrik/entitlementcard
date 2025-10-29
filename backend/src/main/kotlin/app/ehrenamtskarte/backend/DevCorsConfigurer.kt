@@ -13,7 +13,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
  */
 @Component
 class DevCorsConfigurer(
-    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     private val config: BackendConfiguration,
 ) : WebMvcConfigurer {
     override fun addCorsMappings(registry: CorsRegistry) {

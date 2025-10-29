@@ -36,7 +36,6 @@ import java.io.File
 
 @Controller
 class EakApplicationMutationController(
-    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     private val backendConfiguration: BackendConfiguration,
     private val applicationData: File,
 ) {

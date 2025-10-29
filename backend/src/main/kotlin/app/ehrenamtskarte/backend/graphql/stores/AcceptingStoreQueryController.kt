@@ -20,7 +20,6 @@ import org.springframework.stereotype.Controller
 
 @Controller
 class AcceptingStoreQueryController(
-    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     private val backendConfig: BackendConfiguration,
 ) {
     @GraphQLDescription("Returns list of all accepting stores in the given project.")

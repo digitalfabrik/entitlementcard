@@ -20,7 +20,6 @@ import org.springframework.stereotype.Controller
 
 @Controller
 class CardStatisticsQueryController(
-    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     private val backendConfiguration: BackendConfiguration,
 ) {
     @GraphQLDescription("Returns card statistics for project. Start and end dates are inclusive.")

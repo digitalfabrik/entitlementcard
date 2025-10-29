@@ -32,7 +32,6 @@ import java.time.format.DateTimeParseException
 @RestController
 @RequestMapping("/users/import")
 class UserImportController(
-    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     private val config: BackendConfiguration,
 ) {
     @PostMapping(consumes = [MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE])

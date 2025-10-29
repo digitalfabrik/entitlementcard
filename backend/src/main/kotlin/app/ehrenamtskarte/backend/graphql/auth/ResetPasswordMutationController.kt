@@ -25,7 +25,6 @@ import java.time.Instant
 
 @Controller
 class ResetPasswordMutationController(
-    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     private val backendConfig: BackendConfiguration,
 ) {
     @GraphQLDescription("Sends a mail that allows the administrator to reset their password.")

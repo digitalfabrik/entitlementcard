@@ -60,7 +60,6 @@ import javax.crypto.KeyGenerator
 
 @Controller
 class CardMutationController(
-    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     private val backendConfiguration: BackendConfiguration,
 ) {
     private val logger: Logger = LoggerFactory.getLogger(CardMutationController::class.java)
