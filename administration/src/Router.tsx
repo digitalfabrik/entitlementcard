@@ -2,7 +2,7 @@ import React, { ReactElement, useContext, useMemo } from 'react'
 import { Outlet, Route, RouterProvider, createBrowserRouter, createRoutesFromElements, useNavigate } from 'react-router'
 
 import { AuthContext } from './AuthProvider'
-import KeepAliveToken from './KeepAliveToken'
+import AutomaticLogoutDialog from './AutomaticLogoutDialog'
 import { Logout } from './Logout'
 import WhoAmIProvider from './WhoAmIProvider'
 import NavigationBar from './bp-modules/NavigationBar'
@@ -41,7 +41,7 @@ const AuthLayout = (): ReactElement => {
 
   return isLoggedIn ? (
     <WhoAmIProvider>
-      <KeepAliveToken
+      <AutomaticLogoutDialog
         expiresAt={authData.expiry}
         onSignIn={signIn}
         onSignOut={() => {
@@ -49,7 +49,7 @@ const AuthLayout = (): ReactElement => {
         }}>
         <NavigationBar />
         <Outlet />
-      </KeepAliveToken>
+      </AutomaticLogoutDialog>
     </WhoAmIProvider>
   ) : (
     <Login onSignIn={signIn} />
