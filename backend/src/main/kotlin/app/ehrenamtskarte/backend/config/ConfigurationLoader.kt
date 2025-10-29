@@ -10,10 +10,10 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.io.path.exists
 
+private val logger by lazy { LoggerFactory.getLogger(ConfigurationLoader::class.java) }
+
 @Configuration
 class ConfigurationLoader {
-    private val logger = LoggerFactory.getLogger(ConfigurationLoader::class.java)
-
     private val defaultConfigFilePaths: List<Path> = listOf(
         Paths.get(System.getProperty("user.dir"), "config.yml"),
         Paths.get(System.getProperty("user.home"), ".config", "entitlementcard", "config.yml"),

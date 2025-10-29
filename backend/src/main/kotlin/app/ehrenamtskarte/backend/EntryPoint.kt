@@ -32,7 +32,7 @@ import java.io.File
 import java.sql.SQLException
 import java.util.TimeZone
 
-private val logger = LoggerFactory.getLogger("EntryPoint")
+private val logger by lazy { LoggerFactory.getLogger("EntryPoint") }
 
 class Entry : CliktCommand() {
     private val config by option().file(canBeDir = false, mustBeReadable = true)
@@ -190,6 +190,12 @@ class Execute : CliktCommand() {
         Database.setupWithInitialDataAndMigrationChecks(config)
         runApplication<BackendApplication> {
             setAdditionalProfiles(config.environment.toString().lowercase())
+            setDefaultProperties(
+                mapOf(
+                    "server.address" to config.server.host,
+                    "server.port" to config.server.port,
+                ),
+            )
             addInitializers(
                 beans {
                     bean { config }
