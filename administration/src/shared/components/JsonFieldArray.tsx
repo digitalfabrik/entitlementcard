@@ -1,40 +1,10 @@
-import { Classes, Collapse, Icon } from '@blueprintjs/core'
-import { Typography } from '@mui/material'
+import { ExpandLess, ExpandMore } from '@mui/icons-material'
+import { Accordion, AccordionDetails, AccordionSummary, Button, Typography } from '@mui/material'
 import React, { memo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
 import JsonFieldView from './JsonFieldView'
 import type { JsonField, JsonFieldViewProps } from './JsonFieldView'
-
-const ParentOfBorder = styled.div<{ $hierarchyIndex: number }>`
-  border-color: #ddd;
-  transition: 0.2s;
-
-  & > div {
-    padding-left: 10px;
-    border-left: 1px solid;
-    border-color: inherit;
-  }
-`
-
-const PrintableCaret = styled(Icon)`
-  @media print {
-    display: none;
-  }
-`
-
-const PrintableCollapse = styled(Collapse)`
-  @media print {
-    height: auto !important;
-    overflow-y: visible !important;
-
-    .${Classes.COLLAPSE_BODY} {
-      display: block !important;
-      transform: none !important;
-    }
-  }
-`
 
 const JsonFieldArray = ({
   jsonField,
@@ -80,25 +50,37 @@ const JsonFieldArray = ({
   return jsonField.name === 'application' ? (
     <>{children}</>
   ) : (
-    <ParentOfBorder $hierarchyIndex={hierarchyIndex}>
-      <Typography
-        variant='body2bold'
-        margin={0}
-        padding={0.5}
-        sx={{
-          '&:hover': {
-            cursor: 'pointer',
-          },
-        }}
-        component='h6'
-        onClick={() => setIsExpanded(!isExpanded)}>
-        <PrintableCaret icon={isExpanded ? 'caret-up' : 'caret-down'} />
-        {t(getTranslationKey())}
-      </Typography>
-      <PrintableCollapse keepChildrenMounted isOpen={isExpanded}>
+    <Accordion
+      elevation={0}
+      disableGutters
+      expanded={isExpanded}
+      sx={{
+        '&::before': {
+          display: 'none',
+        },
+      }}>
+      <AccordionSummary sx={{ minHeight: 24, p: 0, '& > span': { m: 0.5 } }} component='div'>
+        <Button
+          sx={theme => ({ p: 0, color: `${theme.palette.common.black}!important` })}
+          size='small'
+          startIcon={isExpanded ? <ExpandLess /> : <ExpandMore />}
+          variant='text'
+          onClick={() => setIsExpanded(!isExpanded)}>
+          <Typography variant='body2bold' sx={{ whiteSpace: 'pre-line', textAlign: 'left' }}>
+            {' '}
+            {t(getTranslationKey())}
+          </Typography>
+        </Button>
+      </AccordionSummary>
+      <AccordionDetails
+        sx={theme => ({
+          transition: '0.2s',
+          padding: 1.5,
+          borderLeft: `1px solid ${theme.palette.divider}`,
+        })}>
         {children}
-      </PrintableCollapse>
-    </ParentOfBorder>
+      </AccordionDetails>
+    </Accordion>
   )
 }
 
