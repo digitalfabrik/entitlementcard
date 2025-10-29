@@ -1,7 +1,7 @@
 import { CheckCircleOutline, Close } from '@mui/icons-material'
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import React, { ReactElement, ReactNode, useContext, useEffect, useState } from 'react'
+import React, { ReactElement, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useWhoAmI } from './WhoAmIProvider'
@@ -17,10 +17,8 @@ const AutomaticLogoutDialog = ({
   expiresAt,
   onSignOut,
   onSignIn,
-  children,
 }: {
   expiresAt: Date
-  children: ReactNode
   onSignIn: (payload: SignInPayload) => void
   onSignOut: () => void
 }): ReactElement => {
@@ -57,32 +55,29 @@ const AutomaticLogoutDialog = ({
   }, [expiresAt, onSignOut])
 
   return (
-    <>
-      {children}
-      <Dialog open={secondsLeft <= openAtRemainingSeconds} aria-describedby='keep-alive-dialog' fullWidth>
-        <DialogTitle>{t('loginPeriodExpires')}</DialogTitle>
-        <DialogContent id='keep-alive-dialog'>
-          <Stack>
-            <Typography component='p'>{t('loginPeriodSecondsLeft', { secondsLeft })}</Typography>
-            <Typography component='p'>{t('loginPeriodPasswordPrompt')}</Typography>
-            <PasswordInput placeholder={t('loginPeriodPasswordPlaceholder')} setValue={setPassword} value={password} />
-          </Stack>
-        </DialogContent>
-        <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
-          <Button variant='outlined' startIcon={<Close />} onClick={onSignOut} loading={mutationState.loading}>
-            {t('loginPeriodLogoutButton')}
-          </Button>
-          <Button
-            variant='contained'
-            color='primary'
-            onClick={() => signIn({ variables: { project: projectId, authData: { email, password } } })}
-            startIcon={<CheckCircleOutline />}
-            loading={mutationState.loading}>
-            {t('loginPeriodExtendButton')}
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </>
+    <Dialog open={secondsLeft <= openAtRemainingSeconds} aria-describedby='keep-alive-dialog' fullWidth>
+      <DialogTitle>{t('loginPeriodExpires')}</DialogTitle>
+      <DialogContent id='keep-alive-dialog'>
+        <Stack>
+          <Typography component='p'>{t('loginPeriodSecondsLeft', { secondsLeft })}</Typography>
+          <Typography component='p'>{t('loginPeriodPasswordPrompt')}</Typography>
+          <PasswordInput placeholder={t('loginPeriodPasswordPlaceholder')} setValue={setPassword} value={password} />
+        </Stack>
+      </DialogContent>
+      <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
+        <Button variant='outlined' startIcon={<Close />} onClick={onSignOut} loading={mutationState.loading}>
+          {t('loginPeriodLogoutButton')}
+        </Button>
+        <Button
+          variant='contained'
+          color='primary'
+          onClick={() => signIn({ variables: { project: projectId, authData: { email, password } } })}
+          startIcon={<CheckCircleOutline />}
+          loading={mutationState.loading}>
+          {t('loginPeriodExtendButton')}
+        </Button>
+      </DialogActions>
+    </Dialog>
   )
 }
 
