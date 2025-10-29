@@ -1,5 +1,5 @@
-import { ExpandLess, ExpandMore } from '@mui/icons-material'
-import { Accordion, AccordionDetails, AccordionSummary, Button, Typography } from '@mui/material'
+import { ExpandMore } from '@mui/icons-material'
+import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material'
 import React, { memo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -59,18 +59,14 @@ const JsonFieldArray = ({
           display: 'none',
         },
       }}>
-      <AccordionSummary sx={{ minHeight: 24, p: 0, '& > span': { m: 0.5 } }} component='div'>
-        <Button
-          sx={theme => ({ p: 0, color: `${theme.palette.common.black}!important` })}
-          size='small'
-          startIcon={isExpanded ? <ExpandLess /> : <ExpandMore />}
-          variant='text'
-          onClick={() => setIsExpanded(!isExpanded)}>
-          <Typography variant='body2bold' sx={{ whiteSpace: 'pre-line', textAlign: 'left' }}>
-            {' '}
-            {t(getTranslationKey())}
-          </Typography>
-        </Button>
+      <AccordionSummary
+        sx={{ minHeight: 24, p: 0, '& > span': { m: 0.5 }, flexDirection: 'row-reverse' }}
+        component='div'
+        onClick={() => setIsExpanded(!isExpanded)}
+        expandIcon={<ExpandMore sx={theme => ({ color: theme.palette.common.black })} />}>
+        <Typography variant='body2bold' sx={{ whiteSpace: 'pre-line', textAlign: 'left' }}>
+          {t(getTranslationKey())}
+        </Typography>
       </AccordionSummary>
       <AccordionDetails
         sx={theme => ({
