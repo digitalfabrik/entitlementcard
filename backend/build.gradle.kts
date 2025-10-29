@@ -114,6 +114,18 @@ dependencies {
     testRuntimeOnly(libs.junit.platform.launcher)
 }
 
+// Workaround for detekt with recent kotlin version, should be removed when detekt plugin v2.0.0 is stable
+// https://github.com/detekt/detekt/issues/6198#issuecomment-2265183695
+dependencyManagement {
+    configurations.matching { it.name == "detekt" }.all {
+        resolutionStrategy.eachDependency {
+            if (requested.group == "org.jetbrains.kotlin") {
+                useVersion(io.gitlab.arturbosch.detekt.getSupportedKotlinVersion())
+            }
+        }
+    }
+}
+
 kotlin {
     compilerOptions {
         freeCompilerArgs.addAll("-Xjsr305=strict")
