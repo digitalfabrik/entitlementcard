@@ -1,7 +1,6 @@
 import { CheckCircleOutline, Close } from '@mui/icons-material'
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, SxProps } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import { ButtonPropsColorOverrides } from '@mui/material/Button/Button'
-import { Theme } from '@mui/system'
 import { OverridableStringUnion } from '@mui/types'
 import React, { ReactElement, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -20,7 +19,6 @@ const ConfirmDialog = ({
   color = 'primary',
   confirmButtonIcon,
   showCancelButton = true,
-  buttonSx,
 }: {
   actionDisabled?: boolean
   loading?: boolean
@@ -30,8 +28,6 @@ const ConfirmDialog = ({
   id: string
   onConfirm: () => void
   onClose: () => void
-  // TODO #2362 Set up MUI colors - remove this property
-  buttonSx?: SxProps<Theme>
   cancelButtonText?: string
   confirmButtonIcon?: ReactNode
   confirmButtonText?: string
@@ -54,7 +50,6 @@ const ConfirmDialog = ({
           </Button>
         )}
         <Button
-          sx={buttonSx}
           variant='contained'
           color={color}
           loading={loading}

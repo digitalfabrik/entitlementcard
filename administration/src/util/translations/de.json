@@ -160,7 +160,8 @@
     "noValidNumberError": "Eingabe ist keine Zahl.",
     "minMaxNumberError": "Wert muss zwischen {{min}} und {{max}} liegen.",
     "valueHasToBeSelectableOptionError": "Wert muss einer der auswählbaren Optionen entsprechen.",
-    "invalidDataError": "Ihre Eingaben sind ungültig oder nicht vollständig."
+    "invalidDataError": "Ihre Eingaben sind ungültig oder nicht vollständig.",
+    "dateBefore1900Error": "Das Datum muss nach dem 1.1.1900 liegen."
   },
   "applicationsOverview": {
     "statusBarAll": "Alle Anträge",
@@ -345,7 +346,8 @@
     "logout": "Logout",
     "confirm": "Bestätigen",
     "delete": "Löschen",
-    "clickHere": "hier"
+    "clickHere": "hier",
+    "imprint": "Impressum"
   },
   "home": {
     "incomingApplications": "Eingehende Anträge",
@@ -610,6 +612,7 @@
     "invalidCredentials": "Der Login ist fehlgeschlagen.",
     "invalidFileType": "Dieser Dateityp wird nicht unterstützt.",
     "invalidInput": "Die Anfrage enthält ungültige Eingaben.",
+    "invalidFileSizeWithMaximum": "Die gewählte Datei ist zu groß. Die maximale Dateigröße beträgt {{maxSize}} MB.",
     "invalidFileSize": "Die Datei ist zu groß.",
     "invalidDataPolicySize": "Unzulässige Zeichenlänge der Datenschutzerklärung. Maximal sind {{maxSize}} Zeichen erlaubt.",
     "invalidJson": "Daten konnten nicht geparsed werden.",
