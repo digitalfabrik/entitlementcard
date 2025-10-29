@@ -11,6 +11,12 @@ import kotlinx.html.stream.appendHTML
 import kotlinx.html.style
 import java.net.URI
 
+interface InlineRenderable {
+    fun renderHtml(parent: HtmlBlockInlineTag)
+
+    fun renderPlain(builder: StringBuilder)
+}
+
 class EmailBody {
     private val children = ArrayList<Paragraph>(0)
 
@@ -39,14 +45,6 @@ class EmailBody {
 }
 
 fun emailBody(builder: EmailBody.() -> Unit): EmailBody = EmailBody().apply { builder() }
-
-interface InlineRenderable {
-    fun renderHtml(parent: HtmlBlockInlineTag)
-
-    fun renderPlain(builder: StringBuilder)
-}
-
-private val multipleWhiteSpaces = Regex("\\s+")
 
 class Paragraph {
     private val children: ArrayList<InlineRenderable> = ArrayList(0)
@@ -151,3 +149,5 @@ class LineBreak : InlineRenderable {
         builder.append("\n")
     }
 }
+
+private val multipleWhiteSpaces = Regex("\\s+")
