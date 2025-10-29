@@ -31,7 +31,6 @@ export const ActivationText = (
     <Typography component='ol'>
       <Typography component='li' variant='body2'>
         <Trans i18nKey='activation:downloadApp' values={{ applicationName }} />
-        Laden Sie sich die App <b>{applicationName}</b> im App- oder PlayStore auf Ihrem Smartphone herunter.
       </Typography>
       <Typography component='li' variant='body2'>
         {' '}
