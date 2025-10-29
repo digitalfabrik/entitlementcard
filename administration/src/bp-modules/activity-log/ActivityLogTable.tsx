@@ -1,51 +1,46 @@
+import { styled } from '@mui/system'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
 import { ActivityLogConfig } from '../../project-configs/getProjectConfig'
 import { ActivityLogEntryType } from './ActivityLog'
 
-const StickyTableHeader = styled.thead`
-  position: -webkit-sticky;
+const StickyTableHeader = styled('thead')`
   position: sticky;
   top: 0;
   z-index: 2;
 `
 
-const EmptyLogColumn = styled.td`
-  padding: 12px;
-`
+const EmptyLogColumn = styled('td')(({ theme }) => ({
+  padding: theme.spacing(1.5),
+}))
 
-const EmptyLogRow = styled.tr`
+const EmptyLogRow = styled('tr')`
   &:hover {
     background-color: transparent !important;
-  }
+  },
 `
 
-const StyledTable = styled.table`
-  border-spacing: 0;
-  min-width: 800px;
-  overflow-x: hidden;
-
-  & tbody tr:hover {
-    background: rgba(0, 0, 0, 0.05);
-  }
-
-  & td,
-  & th {
-    margin: 0;
-    padding: 16px;
-    text-align: center;
-  }
-
-  & th {
-    position: sticky;
-    top: 0;
-    background: white;
-    border-top: 1px solid lightgray;
-    border-bottom: 1px solid lightgray;
-  }
-`
+const StyledTable = styled('table')(({ theme }) => ({
+  borderSpacing: '0',
+  minWidth: 800,
+  overflowX: 'hidden',
+  '& tbody tr:hover': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  '& td, & th': {
+    margin: 0,
+    padding: theme.spacing(2),
+    textAlign: 'center',
+  },
+  '& th': {
+    position: 'sticky',
+    top: 0,
+    backgroundColor: theme.palette.background.paper,
+    borderTop: `1px solid ${theme.palette.divider}`,
+    borderBottom: `1px solid ${theme.palette.divider}`,
+  },
+}))
 
 type ActivityLogTableProps = {
   activityLog: ActivityLogEntryType[]

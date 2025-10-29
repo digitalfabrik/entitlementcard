@@ -1,9 +1,10 @@
 /* eslint-disable react/destructuring-assignment */
 import { EditNote } from '@mui/icons-material'
-import { Box, Stack, Tooltip } from '@mui/material'
+import { Box, Stack, Tooltip, Typography, styled, useTheme } from '@mui/material'
+import { blue, yellow } from '@mui/material/colors'
+import { Theme } from '@mui/system'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
 import { VerificationIcon } from '../../../shared/components/VerificationIcon'
 import { VerificationStatus, verificationStatus } from '../../../shared/verifications'
@@ -29,10 +30,12 @@ export const VerificationIndicator = (p: { verifications: ApplicationVerificatio
     <Tooltip
       title={
         <Box>
-          <b>{t('confirmationsByOrganizations')}</b>
-          <br />
-          <br />
-          {t('verified/pending/rejected')}
+          <Typography>
+            <b>{t('confirmationsByOrganizations')}</b>
+            <br />
+            <br />
+            {t('verified/pending/rejected')}
+          </Typography>
         </Box>
       }>
       <Stack direction='row' sx={{ height: '25px', alignItems: 'center', gap: 1 }}>
@@ -59,50 +62,53 @@ type PreVerifiedLabelMetaData = {
   labelText: string
 }
 
-const preVerifiedLabelMetaData: Record<PreVerifiedEntitlementType, PreVerifiedLabelMetaData> = {
+const preVerifiedLabelMetaData = (theme: Theme): Record<PreVerifiedEntitlementType, PreVerifiedLabelMetaData> => ({
   [preVerifiedEntitlements.Juleica]: {
     backgroundColor: '#bfd4f2',
-    fontColor: '#000000',
+    fontColor: theme.palette.common.black,
     labelText: 'Juleica',
   },
   [preVerifiedEntitlements.Verein360]: {
-    backgroundColor: '#0366D6',
-    fontColor: '#ffffff',
+    backgroundColor: blue[500],
+    fontColor: theme.palette.common.white,
     labelText: 'Verein360',
   },
   [preVerifiedEntitlements.HonoredByMinisterPresident]: {
-    backgroundColor: '#FBCA01',
-    fontColor: '#000000',
+    backgroundColor: yellow[700],
+    fontColor: theme.palette.common.black,
     labelText: 'Ehrenzeichen',
   },
-}
+})
 
-const PreVerifiedLabel = styled.span<{ type: PreVerifiedEntitlementType }>`
-  padding: 6px 12px;
-  font-size: 14px;
-  font-weight: 600;
-  background-color: ${({ type }) => preVerifiedLabelMetaData[type].backgroundColor};
-  color: ${({ type }) => preVerifiedLabelMetaData[type].fontColor};
-  border-radius: 2em;
-  line-height: 1;
-  margin-right: 6px;
-  display: inline-block;
-  white-space: nowrap;
-`
+const PreVerifiedLabel = styled('span')<{ itemType: PreVerifiedEntitlementType }>(({ theme, itemType }) => ({
+  padding: '6px 12px',
+  fontSize: '14px',
+  fontWeight: 600,
+  backgroundColor: preVerifiedLabelMetaData(theme)[itemType].backgroundColor,
+  color: preVerifiedLabelMetaData(theme)[itemType].fontColor,
+  borderRadius: '2em',
+  lineHeight: 1,
+  marginRight: theme.spacing(1), // Using MUI theme for spacing
+  display: 'inline-block',
+  whiteSpace: 'nowrap',
+}))
 
 export const PreVerifiedIndicator = ({ type }: { type: PreVerifiedEntitlementType }): ReactElement => {
   const { t } = useTranslation('applicationsOverview')
+  const theme = useTheme()
   return (
     <Tooltip
       title={
         <div>
-          <b>{t('confirmationsByOrganizations')}</b>
-          <br />
-          {t('noConfirmationNeeded')}
+          <Typography>
+            <b>{t('confirmationsByOrganizations')}</b>
+            <br />
+            {t('noConfirmationNeeded')}
+          </Typography>
         </div>
       }>
       <Stack direction='row' sx={{ height: '25px', alignItems: 'center', '&:focus': { outline: 'none' } }}>
-        <PreVerifiedLabel type={type}>{preVerifiedLabelMetaData[type].labelText}</PreVerifiedLabel>
+        <PreVerifiedLabel itemType={type}>{preVerifiedLabelMetaData(theme)[type].labelText}</PreVerifiedLabel>
         <VerificationIcon status={VerificationStatus.Verified} />
       </Stack>
     </Tooltip>

@@ -1,9 +1,19 @@
 import { Close } from '@mui/icons-material'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Stack,
+  Typography,
+  styled,
+} from '@mui/material'
+import { grey } from '@mui/material/colors'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
 import KoblenzLogo from '../../assets/koblenz_logo.svg'
 import { updateCard } from '../../cards/Card'
@@ -15,41 +25,15 @@ import { DataPrivacyAcceptingStatus } from './constants'
 import selfServiceStepInfo from './constants/selfServiceStepInfo'
 import useCardGeneratorSelfService from './hooks/useCardGeneratorSelfService'
 
-const Header = styled.div`
-  background-color: #f7f7f7;
-  display: flex;
-  justify-content: space-between;
-  justify-self: center;
-  padding: 12px;
-`
-
-const Body = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 16px;
-`
-
-const Container = styled.div`
-  align-self: center;
-  justify-content: center;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 500px;
-  border: 1px solid #f7f7f7;
-`
-
-const Step = styled.div`
-  color: #595959;
-  font-size: 16px;
-  padding: 14px;
-  align-self: flex-end;
-`
-
-const Text = styled.div`
-  margin-bottom: 24px;
-  font-size: 16px;
-`
+const Container = styled('div')(({ theme }) => ({
+  alignSelf: 'center',
+  justifyContent: 'center',
+  display: 'flex',
+  flexDirection: 'column',
+  width: '100%',
+  maxWidth: theme.breakpoints.values.sm,
+  border: `1px solid ${theme.palette.divider}`,
+}))
 
 const CardSelfServiceView = (): ReactElement => {
   const { t } = useTranslation('selfService')
@@ -73,7 +57,7 @@ const CardSelfServiceView = (): ReactElement => {
 
   return (
     <Container>
-      <Header>
+      <Box sx={{ backgroundColor: grey[100], padding: 1.5, display: 'flex', justifyContent: 'space-between' }}>
         <KoblenzLogo height='40px' />
         <Button
           color='inherit'
@@ -84,16 +68,20 @@ const CardSelfServiceView = (): ReactElement => {
           {' '}
           {t('help')}
         </Button>
-      </Header>
-      <Body>
-        <Step>{`${t('step')} ${selfServiceStepInfo[cardGenerationStep].stepNr}/${totalSteps}`}</Step>
+      </Box>
+      <Stack padding={2}>
+        <Typography component='div' variant='body1' color='inherit' sx={{ p: 2, alignSelf: 'flex-end' }}>{`${t(
+          'step'
+        )} ${selfServiceStepInfo[cardGenerationStep].stepNr}/${totalSteps}`}</Typography>
         <Typography variant='h6' color='accent' component='h1'>
           {selfServiceStepInfo[cardGenerationStep].headline}
         </Typography>
         <Typography variant='h5' component='h2'>
           {selfServiceStepInfo[cardGenerationStep].subHeadline}
         </Typography>
-        <Text>{selfServiceStepInfo[cardGenerationStep].text}</Text>
+        <Typography variant='body1' marginBottom={3}>
+          {selfServiceStepInfo[cardGenerationStep].text}
+        </Typography>
         {cardGenerationStep === 'input' && (
           <CardSelfServiceForm
             card={selfServiceCard}
@@ -109,7 +97,7 @@ const CardSelfServiceView = (): ReactElement => {
         {cardGenerationStep === 'activation' && code && (
           <CardSelfServiceActivation downloadPdf={downloadPdf} code={code} />
         )}
-      </Body>
+      </Stack>
       <Dialog open={openHelpDialog} aria-describedby='help-dialog' fullWidth onClose={() => setOpenHelpDialog(false)}>
         <DialogTitle>{t('help')}</DialogTitle>
         <DialogContent id='help-dialog'>

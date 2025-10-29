@@ -1,6 +1,7 @@
 import { FilterAlt, SaveAlt } from '@mui/icons-material'
 import type { FormControlLabelProps } from '@mui/material'
 import { Button, FormControlLabel, Stack, Tooltip, styled } from '@mui/material'
+import { grey } from '@mui/material/colors'
 import { formatDate } from 'date-fns/format'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -59,7 +60,7 @@ const StatisticsFilterBar = ({
         alignItems: 'center',
         gap: 2,
         padding: 2,
-        backgroundColor: '#fafafa',
+        backgroundColor: grey[50],
       }}>
       <InputContainer>
         <FormControlLabel

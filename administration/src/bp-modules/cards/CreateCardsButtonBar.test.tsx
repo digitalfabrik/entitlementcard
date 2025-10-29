@@ -1,4 +1,4 @@
-import { act, fireEvent, render } from '@testing-library/react'
+import { act, fireEvent } from '@testing-library/react'
 import React from 'react'
 
 import { initializeCard } from '../../cards/Card'
@@ -14,7 +14,7 @@ describe('CreateCardsButtonBar', () => {
 
   it('Should goBack when clicking back', async () => {
     const goBack = jest.fn()
-    const { getByText } = render(
+    const { getByText } = renderWithTranslation(
       <CreateCardsButtonBar
         goBack={goBack}
         cards={[]}
@@ -90,7 +90,7 @@ describe('CreateCardsButtonBar', () => {
     const generateCardsPdf = jest.fn()
     const generateCardsCsv = jest.fn()
     const cards = [initializeCard(bayernConfig.card, region, { fullName: 'Thea Test' })]
-    const { getByText } = render(
+    const { getByText } = renderWithTranslation(
       <CreateCardsButtonBar
         goBack={() => undefined}
         cards={cards}

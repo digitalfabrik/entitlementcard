@@ -1,32 +1,33 @@
 import InfoOutlined from '@mui/icons-material/InfoOutlined'
 import { Typography, styled } from '@mui/material'
-import React, { CSSProperties, ReactElement } from 'react'
+import { Theme } from '@mui/system'
+import React, { ReactElement } from 'react'
 
-const severityColors = {
-  info: '#000',
-  error: '#ba1a1a',
-}
+const severityColors = (theme: Theme) => ({
+  info: theme.palette.common.black,
+  error: theme.palette.error.main,
+})
 
-const Container = styled('span')<{ $severity: 'info' | 'error'; $isToast: boolean }>`
-  margin: 6px 0;
-  color: ${props => (props.$isToast ? '#fff' : severityColors[props.$severity])};
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  font-size: 14px;
-  white-space: pre-line;
-`
+const Container = styled('span', {
+  shouldForwardProp: prop => !['$severity', '$isToast'].includes(prop as string),
+})<{ $severity: 'info' | 'error'; $isToast: boolean }>(({ theme, $severity, $isToast }) => ({
+  margin: theme.spacing(0.5, 0), // Using MUI's spacing utility
+  color: $isToast ? theme.palette.common.white : severityColors(theme)[$severity],
+  display: 'flex',
+  gap: theme.spacing(1),
+  alignItems: 'center',
+  whiteSpace: 'pre-line',
+}))
 
 type FormAlertProps = {
   errorMessage: string | null | undefined
   isToast?: boolean
-  style?: CSSProperties
   severity?: 'info' | 'error'
 }
 
-const FormAlert = ({ errorMessage, isToast = false, severity = 'error', style }: FormAlertProps): ReactElement | null =>
+const FormAlert = ({ errorMessage, isToast = false, severity = 'error' }: FormAlertProps): ReactElement | null =>
   errorMessage ? (
-    <Container style={style} $severity={severity} $isToast={isToast} data-testid='form-alert'>
+    <Container $severity={severity} $isToast={isToast} data-testid='form-alert'>
       <InfoOutlined />
       <Typography>{errorMessage}</Typography>
     </Container>
