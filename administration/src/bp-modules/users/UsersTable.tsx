@@ -1,8 +1,7 @@
 import { Edit, PersonAdd, PersonRemove } from '@mui/icons-material'
-import { Button, Stack, Typography } from '@mui/material'
+import { Button, Stack, Typography, styled } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
 import { Administrator, Region } from '../../generated/graphql'
 import CreateUserDialog from './CreateUserDialog'
@@ -11,27 +10,23 @@ import EditUserDialog from './EditUserDialog'
 import RoleHelpButton from './RoleHelpButton'
 import roleToText from './utils/roleToText'
 
-const StyledTable = styled.table`
-  border-spacing: 0;
-
-  & tbody tr:hover {
-    background: rgba(0, 0, 0, 0.05);
-  }
-
-  & td,
-  & th {
-    margin: 0;
-    padding: 16px;
-    text-align: center;
-  }
-
-  & th {
-    position: sticky;
-    top: 0;
-    background: white;
-    border-bottom: 1px solid lightgray;
-  }
-`
+const StyledTable = styled('table')(({ theme }) => ({
+  borderSpacing: '0',
+  '& tbody tr:hover': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  '& td, & th': {
+    margin: 0,
+    padding: theme.spacing(2),
+    textAlign: 'center',
+  },
+  '& th': {
+    position: 'sticky',
+    top: 0,
+    backgroundColor: theme.palette.background.paper,
+    borderBottom: `1px solid ${theme.palette.divider}`,
+  },
+}))
 
 const UsersTable = ({
   users,

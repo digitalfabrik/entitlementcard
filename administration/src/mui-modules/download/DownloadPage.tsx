@@ -1,5 +1,6 @@
 import { Box, Link, Typography } from '@mui/material'
 import MUILink from '@mui/material/Link'
+import { grey } from '@mui/material/colors'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -24,7 +25,7 @@ const DownloadPage = (): ReactElement => {
           marginBottom: 2,
           borderRadius: '20%',
           border: 1,
-          borderColor: 'grey.300',
+          borderColor: grey[300],
         }}
         alt={`${config.name} app icon`}
         src={`/icons/${config.projectId}.png`}
