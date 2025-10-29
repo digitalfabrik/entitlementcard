@@ -7,7 +7,6 @@ resource_class: small
 working_directory: ~/project/backend
 steps:
   - prepare_workspace
-  - install_protobuf_linux
   - setup_remote_docker:
       docker_layer_caching: true
   - run:

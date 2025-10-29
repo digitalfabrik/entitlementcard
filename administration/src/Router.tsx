@@ -4,7 +4,7 @@ import { Outlet, Route, RouterProvider, createBrowserRouter, createRoutesFromEle
 import { AuthContext } from './AuthProvider'
 import KeepAliveToken from './KeepAliveToken'
 import WhoAmIProvider from './WhoAmIProvider'
-import Navigation from './bp-modules/NavigationBar'
+import NavigationBar from './bp-modules/NavigationBar'
 import ActivityLogController from './bp-modules/activity-log/ActivityLogController'
 import ApplicationsController from './bp-modules/applications/ApplicationsController'
 import ForgotPasswordController from './bp-modules/auth/ForgotPasswordController'
@@ -29,6 +29,7 @@ import ActivationPage from './mui-modules/activation/ActivationPage'
 import ApplicationApplicantController from './mui-modules/application-verification/ApplicationApplicantController'
 import ApplicationVerificationController from './mui-modules/application-verification/ApplicationVerificationController'
 import ApplyController from './mui-modules/application/ApplyController'
+import DownloadPage from './mui-modules/download/DownloadPage'
 import ImprintPage from './mui-modules/imprint/ImprintPage'
 import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
 
@@ -39,7 +40,7 @@ const AuthLayout = (): ReactElement => {
   return isLoggedIn ? (
     <WhoAmIProvider>
       <KeepAliveToken authData={authData} onSignIn={signIn} onSignOut={signOut}>
-        <Navigation onSignOut={signOut} />
+        <NavigationBar />
         <Outlet />
       </KeepAliveToken>
     </WhoAmIProvider>
@@ -64,6 +65,7 @@ const Router = (): ReactElement => {
             <Route path='/forgot-password' element={<ForgotPasswordController />} />
             <Route path='/reset-password/' element={<ResetPasswordController />} />
             <Route path='/imprint/' element={<ImprintPage />} />
+            <Route path='/download/' element={<DownloadPage />} />
 
             {projectConfig.applicationFeature && (
               <>

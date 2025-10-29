@@ -1,3 +1,4 @@
+import { Link } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -6,9 +7,9 @@ const PasswordResetKeyExpired = (): ReactElement => {
   return (
     <>
       {t('passwordResetKeyExpired')}
-      <a href={`${window.location.origin}/forgot-password`} target='_blank' rel='noreferrer'>
+      <Link href='/forgot-password' target='_blank' rel='noreferrer'>
         {`${window.location.origin}/forgot-password`}
-      </a>
+      </Link>
     </>
   )
 }

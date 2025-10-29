@@ -17,12 +17,12 @@ const BirthdayForm = ({
   value,
   setValue,
   isValid,
-  showRequired,
+  forceError,
 }: ExtensionComponentProps<BirthdayExtensionState>): ReactElement => {
   const { t } = useTranslation('extensions')
   const [touched, setTouched] = useState(false)
   const { birthday } = value
-  const showErrorMessage = touched || showRequired
+  const showErrorMessage = touched || forceError
   const projectConfig = useContext(ProjectConfigContext)
 
   const showBirthdayHint = (): boolean => {

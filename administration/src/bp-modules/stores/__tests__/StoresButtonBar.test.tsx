@@ -120,9 +120,7 @@ describe('StoresButtonBar', () => {
       const importButton = getAllByText('Importiere Akzeptanzpartner')[0].closest('button') as HTMLButtonElement
       expect(importButton).toBeTruthy()
       fireEvent.click(importButton)
-      const importConfirmationButton = getAllByText('Importiere Akzeptanzpartner')[1].closest(
-        'button'
-      ) as HTMLButtonElement
+      const importConfirmationButton = getAllByText('Bestätigen')[0].closest('button') as HTMLButtonElement
       fireEvent.click(importConfirmationButton)
       await act(async () => null) // Popper update() - https://github.com/popperjs/react-popper/issues/350
 

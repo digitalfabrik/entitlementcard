@@ -1,17 +1,16 @@
 import { Box, Button, Card, TextField, Typography } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useSendResetMailMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import { useAppToaster } from '../AppToaster'
 import StandaloneCenter from '../StandaloneCenter'
 
 const ForgotPasswordController = (): ReactElement => {
   const config = useContext(ProjectConfigContext)
-  const appToaster = useAppToaster()
+  const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('auth')
   const [finished, setFinished] = useState(false)
   const [email, setEmail] = useState('')
@@ -20,10 +19,7 @@ const ForgotPasswordController = (): ReactElement => {
     onCompleted: () => setFinished(true),
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appToaster?.show({
-        intent: 'danger',
-        message: title,
-      })
+      enqueueSnackbar(title, { variant: 'error' })
     },
   })
 
@@ -38,31 +34,28 @@ const ForgotPasswordController = (): ReactElement => {
   return (
     <StandaloneCenter>
       <Card sx={{ width: '100%', maxWidth: '500px', padding: 3 }}>
-        {/* TODO Setup Typography and remove custom fontSizes and fontHeights https://github.com/digitalfabrik/entitlementcard/issues/2334 */}
-        <Typography variant='h2' fontSize={28} fontWeight={600} marginBottom={1}>
+        <Typography variant='h4' component='h1'>
           {config.name}
         </Typography>
-        <Typography variant='h3' fontSize={22} fontWeight={600}>
+        <Typography variant='h5' component='h2'>
           {t('administration')}
         </Typography>
-        <Typography variant='h4' fontSize={18} fontWeight={600} marginBottom={2}>
+        <Typography variant='h6' component='h3'>
           {t('forgotPassword')}
         </Typography>
         {finished ? (
           <>
-            <Typography variant='body2'>{t('resetPasswordSuccessMessage', { email })}</Typography>
-            <Typography variant='body2'>{t('checkSpamHint')}</Typography>
+            <Typography component='p'>{t('resetPasswordSuccessMessage', { email })}</Typography>
+            <Typography component='p'>{t('checkSpamHint')}</Typography>
             <Box sx={{ marginTop: 3 }}>
-              <Link to='/'>
-                <Button variant='text'>{t('toLogin')}</Button>
-              </Link>
+              <Button href='/' variant='text'>
+                {t('toLogin')}
+              </Button>
             </Box>
           </>
         ) : (
           <>
-            <Typography variant='body2' marginBottom={2}>
-              {t('resetPasswordText')}
-            </Typography>
+            <Typography marginY={2}>{t('resetPasswordText')}</Typography>
             <form
               onSubmit={e => {
                 e.preventDefault()
@@ -79,9 +72,9 @@ const ForgotPasswordController = (): ReactElement => {
                 placeholder='erika.musterfrau@example.org'
               />
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 3 }}>
-                <Link to='/'>
-                  <Button variant='text'>{t('backToLogin')}</Button>
-                </Link>
+                <Button href='/' variant='text'>
+                  {t('backToLogin')}
+                </Button>
                 <Button type='submit' variant='contained' color='primary' loading={loading} disabled={email === ''}>
                   {t('resetPassword')}
                 </Button>

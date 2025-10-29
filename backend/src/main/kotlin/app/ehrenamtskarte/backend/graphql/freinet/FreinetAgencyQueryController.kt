@@ -32,7 +32,7 @@ class FreinetAgencyQueryController(
             val projectConfig = backendConfiguration.getProjectConfig(authContext.project)
 
             if (projectConfig.freinet == null) {
-                throw NotImplementedException()
+                throw NotImplementedException("Freinet is not configured in this project")
             }
 
             if (!authContext.admin.mayViewFreinetAgencyInformationInRegion(regionId)) {

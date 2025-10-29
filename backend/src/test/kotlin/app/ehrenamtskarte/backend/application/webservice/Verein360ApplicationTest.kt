@@ -12,6 +12,7 @@ import app.ehrenamtskarte.backend.generated.AddEakApplication
 import app.ehrenamtskarte.backend.generated.enums.ApplicationType
 import app.ehrenamtskarte.backend.generated.inputs.ApplicationInput
 import app.ehrenamtskarte.backend.graphql.application.ApplicationHandler
+import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestApplicationBuilder
 import app.ehrenamtskarte.backend.helper.TestData
@@ -28,7 +29,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import org.springframework.http.HttpStatus
-import kotlin.test.Ignore
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -124,7 +124,6 @@ internal class Verein360ApplicationTest : IntegrationTest() {
             Unit
     }
 
-    @Ignore("TODO fix exceptions handler")
     @ParameterizedTest
     @MethodSource("validationErrorTestCases")
     fun `should return validation error when the request is not valid`(testCase: ValidationErrorTestCase) {
@@ -137,8 +136,8 @@ internal class Verein360ApplicationTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Error INVALID_JSON occurred.", error.message)
-        assertEquals(testCase.error, error.extensions?.reason)
+        assertEquals(GraphQLExceptionCode.INVALID_JSON, error.extensions.code)
+        assertEquals(testCase.error, error.message)
     }
 
     @Test
@@ -154,7 +153,7 @@ internal class Verein360ApplicationTest : IntegrationTest() {
         val error = response.toErrorObject()
 
         assertEquals("Error REGION_NOT_FOUND occurred.", error.message)
-        assertEquals("REGION_NOT_FOUND", error.extensions?.code)
+        assertEquals(GraphQLExceptionCode.REGION_NOT_FOUND, error.extensions.code)
     }
 
     @Test
@@ -166,7 +165,7 @@ internal class Verein360ApplicationTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Authorization token expired, invalid or missing", error.message)
+        assertEquals(GraphQLExceptionCode.UNAUTHORIZED, error.extensions.code)
     }
 
     @Test
@@ -178,7 +177,7 @@ internal class Verein360ApplicationTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Authorization token expired, invalid or missing", error.message)
+        assertEquals(GraphQLExceptionCode.UNAUTHORIZED, error.extensions.code)
     }
 
     @Test
@@ -192,7 +191,7 @@ internal class Verein360ApplicationTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Insufficient access rights", error.message)
+        assertEquals(GraphQLExceptionCode.FORBIDDEN, error.extensions.code)
     }
 
     @Test

@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -28,10 +29,12 @@ const MilitaryReserveEntitlementForm: Form<State, ValidatedInput> = {
     return (
       <>
         <CustomDivider label={t('activityInformation')} />
-        <h4>{t('certificateHeadline')}</h4>
-        <p>
+        <Typography variant='body2bold' component='h4' marginY={1.5}>
+          {t('certificateHeadline')}
+        </Typography>
+        <Typography component='p'>
           {t('certificateDescription')} {FileRequirementsText}
-        </p>
+        </Typography>
         <FileInputForm.Component state={state.certificate} setState={useUpdateStateCallback(setState, 'certificate')} />
       </>
     )

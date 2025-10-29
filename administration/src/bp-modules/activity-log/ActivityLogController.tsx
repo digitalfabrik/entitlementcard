@@ -1,5 +1,5 @@
-import { Card, H2 } from '@blueprintjs/core'
-import { Stack, styled } from '@mui/material'
+import { Card } from '@blueprintjs/core'
+import { Stack, Typography, styled } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -15,10 +15,6 @@ const ActivityLogCard = styled(Card)`
   margin: 16px;
 `
 
-const DescriptionText = styled('p')`
-  padding: 10px 0;
-`
-
 const ActivityLogController = ({ activityLogConfig }: { activityLogConfig: ActivityLogConfig }): ReactElement => {
   const { t } = useTranslation('activityLog')
   const { card: cardConfig } = useContext(ProjectConfigContext)
@@ -30,8 +26,10 @@ const ActivityLogController = ({ activityLogConfig }: { activityLogConfig: Activ
         allowedRoles={[Role.RegionAdmin, Role.RegionManager]}
         error={{ description: t('errors:notAuthorizedToSeeActivityLog') }}>
         <ActivityLogCard>
-          <H2>{t('misc:activityLog')}</H2>
-          <DescriptionText>{t('activityLogDescription')}</DescriptionText>
+          <Typography variant='h4'>{t('misc:activityLog')}</Typography>
+          <Typography component='p' paddingY={1.5}>
+            {t('activityLogDescription')}
+          </Typography>
           <ActivityLogTable activityLog={activityLogSorted} activityLogConfig={activityLogConfig} />
         </ActivityLogCard>
       </RenderGuard>

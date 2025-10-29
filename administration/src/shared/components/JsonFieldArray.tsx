@@ -1,4 +1,5 @@
-import { Classes, Collapse, H6, Icon } from '@blueprintjs/core'
+import { Classes, Collapse, Icon } from '@blueprintjs/core'
+import { Typography } from '@mui/material'
 import React, { memo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -14,14 +15,6 @@ const ParentOfBorder = styled.div<{ $hierarchyIndex: number }>`
     padding-left: 10px;
     border-left: 1px solid;
     border-color: inherit;
-  }
-`
-
-const CollapsableHeader = styled(H6)`
-  padding-bottom: 10px;
-  margin-bottom: 0;
-  &:hover {
-    cursor: pointer;
   }
 `
 
@@ -88,10 +81,20 @@ const JsonFieldArray = ({
     <>{children}</>
   ) : (
     <ParentOfBorder $hierarchyIndex={hierarchyIndex}>
-      <CollapsableHeader onClick={() => setIsExpanded(!isExpanded)}>
+      <Typography
+        variant='body2bold'
+        margin={0}
+        padding={0.5}
+        sx={{
+          '&:hover': {
+            cursor: 'pointer',
+          },
+        }}
+        component='h6'
+        onClick={() => setIsExpanded(!isExpanded)}>
         <PrintableCaret icon={isExpanded ? 'caret-up' : 'caret-down'} />
         {t(getTranslationKey())}
-      </CollapsableHeader>
+      </Typography>
       <PrintableCollapse keepChildrenMounted isOpen={isExpanded}>
         {children}
       </PrintableCollapse>

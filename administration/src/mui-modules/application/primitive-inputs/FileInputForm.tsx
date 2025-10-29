@@ -69,7 +69,10 @@ const Component = <I,>({
   const onInputChange: ChangeEventHandler<HTMLInputElement> = async e => {
     const file = e.target.files![0]
     if (!(file.type in defaultExtensionsByMIMEType)) {
-      enqueueSnackbar('Die gewählte Datei hat einen unzulässigen Dateityp.', { variant: 'error' })
+      enqueueSnackbar(
+        `Die gewählte Datei ist zu groß. Die maximale Dateigröße beträgt ${FILE_SIZE_LIMIT_MEGA_BYTES}MB.`,
+        { variant: 'error' }
+      )
       e.target.value = ''
       return
     }
@@ -112,6 +115,7 @@ const Component = <I,>({
 
   return (
     <Chip
+      sx={{ marginRight: 1 }}
       label={state.filename}
       icon={<Attachment />}
       onDelete={disableAllInputs ? undefined : () => setState(() => null)}

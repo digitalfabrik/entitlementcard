@@ -33,18 +33,26 @@ describe('CardTextField', () => {
   })
 
   it('should call onBlur handler when input loses focus', () => {
-    const onBlur = jest.fn()
-    const { getByLabelText } = render(<CardTextField {...defaultProps} onBlur={onBlur} />)
+    const onBlurMock = jest.fn()
+    const propsWithOnBlur = {
+      ...defaultProps,
+      inputProps: { onBlur: onBlurMock },
+    }
+
+    const { getByLabelText } = render(<CardTextField {...propsWithOnBlur} />)
 
     const input = getByLabelText('Test Label')
     fireEvent.blur(input)
 
-    expect(onBlur).toHaveBeenCalled()
+    expect(onBlurMock).toHaveBeenCalled()
   })
 
   it('should display error message when showError is true', () => {
-    const { getByText } = render(<CardTextField {...defaultProps} showError errorMessage='Error occurred' />)
-
+    const { getByText, getByLabelText } = render(
+      <CardTextField {...defaultProps} showError errorMessage='Error occurred' />
+    )
+    const input = getByLabelText('Test Label')
+    fireEvent.blur(input)
     expect(getByText('Error occurred')).toBeTruthy()
   })
 

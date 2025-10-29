@@ -1,12 +1,11 @@
-import { OverlayToaster } from '@blueprintjs/core'
 import { fireEvent, waitFor } from '@testing-library/react'
 import { parse } from 'csv-parse/browser/esm/sync'
 import { mocked } from 'jest-mock'
 import React, { ReactNode } from 'react'
 
+import { AppSnackbarProvider } from '../../../AppSnackbar'
 import nuernbergConfig from '../../../project-configs/nuernberg/config'
 import { renderWithTranslation } from '../../../testing/render'
-import { AppToasterProvider } from '../../AppToaster'
 import StoresCSVInput from '../StoresCSVInput'
 import StoresImportDuplicates from '../StoresImportDuplicates'
 import { DEFAULT_ERROR_TIMEOUT } from '../constants'
@@ -19,7 +18,16 @@ const fieldNames = nuernbergConfig.storesManagement.enabled
 jest.mock('csv-parse/browser/esm/sync', () => ({
   parse: jest.fn(),
 }))
-const wrapper = ({ children }: { children: ReactNode }) => <AppToasterProvider>{children}</AppToasterProvider>
+
+const enqueueSnackbarMock = jest.fn()
+jest.mock('notistack', () => ({
+  ...jest.requireActual('notistack'),
+  useSnackbar: () => ({
+    enqueueSnackbar: enqueueSnackbarMock,
+  }),
+}))
+
+const wrapper = ({ children }: { children: ReactNode }) => <AppSnackbarProvider>{children}</AppSnackbarProvider>
 const setAcceptingStores = jest.fn()
 const setIsLoadingCoordinates = jest.fn()
 
@@ -55,7 +63,6 @@ describe('StoresCSVInput', () => {
 
   it(`should correctly import csv store`, async () => {
     const csv = ''
-    const toaster = jest.spyOn(OverlayToaster.prototype, 'show')
     mocked(parse).mockReturnValueOnce([
       fieldNames,
       [
@@ -76,34 +83,39 @@ describe('StoresCSVInput', () => {
     ])
 
     await waitFor(async () => renderAndSubmitStoreInput(csv))
-    expect(toaster).not.toHaveBeenCalled()
+    expect(enqueueSnackbarMock).not.toHaveBeenCalled()
     expect(setAcceptingStores).toHaveBeenCalledTimes(1)
   })
 
   it(`should fail with error if empty csv is provided`, async () => {
     const error = 'Die gewählte Datei ist leer.'
     const csv = ''
-    const toaster = jest.spyOn(OverlayToaster.prototype, 'show')
     mocked(parse).mockReturnValueOnce([])
     await waitFor(async () => renderAndSubmitStoreInput(csv))
-    expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error, timeout: DEFAULT_ERROR_TIMEOUT })
+    expect(enqueueSnackbarMock).toHaveBeenCalledWith(error, {
+      variant: 'error',
+      autoHideDuration: DEFAULT_ERROR_TIMEOUT,
+      persist: false,
+    })
     expect(setAcceptingStores).not.toHaveBeenCalled()
   })
 
   it(`should fail if no store entry is provided`, async () => {
     const error = 'Die Datei muss mindestens einen Eintrag enthalten.'
     const csv = ''
-    const toaster = jest.spyOn(OverlayToaster.prototype, 'show')
     mocked(parse).mockReturnValueOnce([fieldNames])
     await waitFor(async () => renderAndSubmitStoreInput(csv))
-    expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error, timeout: DEFAULT_ERROR_TIMEOUT })
+    expect(enqueueSnackbarMock).toHaveBeenCalledWith(error, {
+      variant: 'error',
+      autoHideDuration: DEFAULT_ERROR_TIMEOUT,
+      persist: false,
+    })
     expect(setAcceptingStores).not.toHaveBeenCalled()
   })
 
   it(`should fail if the column format is not correct`, async () => {
     const error = 'Die erforderlichen Spalten sind nicht vorhanden oder nicht in der richtigen Reihenfolge.'
     const csv = ''
-    const toaster = jest.spyOn(OverlayToaster.prototype, 'show')
     mocked(parse).mockReturnValueOnce([
       [
         'name',
@@ -137,14 +149,17 @@ describe('StoresCSVInput', () => {
       ],
     ])
     await waitFor(async () => renderAndSubmitStoreInput(csv))
-    expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error, timeout: DEFAULT_ERROR_TIMEOUT })
+    expect(enqueueSnackbarMock).toHaveBeenCalledWith(error, {
+      variant: 'error',
+      autoHideDuration: DEFAULT_ERROR_TIMEOUT,
+      persist: false,
+    })
     expect(setAcceptingStores).not.toHaveBeenCalled()
   })
 
   it(`should fail if the column amount is not correct`, async () => {
     const error = `Die CSV enthält eine ungültige Anzahl an Spalten.`
     const csv = ''
-    const toaster = jest.spyOn(OverlayToaster.prototype, 'show')
     mocked(parse).mockReturnValueOnce([
       [
         'name',
@@ -180,14 +195,17 @@ describe('StoresCSVInput', () => {
       ],
     ])
     await waitFor(async () => renderAndSubmitStoreInput(csv))
-    expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error, timeout: DEFAULT_ERROR_TIMEOUT })
+    expect(enqueueSnackbarMock).toHaveBeenCalledWith(error, {
+      variant: 'error',
+      autoHideDuration: DEFAULT_ERROR_TIMEOUT,
+      persist: false,
+    })
     expect(setAcceptingStores).not.toHaveBeenCalled()
   })
 
   it(`should fail if the csv includes duplicated stores`, async () => {
     const error = <StoresImportDuplicates entries={[[1, 2]]} />
     const csv = ''
-    const toaster = jest.spyOn(OverlayToaster.prototype, 'show')
     mocked(parse).mockReturnValueOnce([
       fieldNames,
       [
@@ -222,7 +240,7 @@ describe('StoresCSVInput', () => {
       ],
     ])
     await waitFor(async () => renderAndSubmitStoreInput(csv))
-    expect(toaster).toHaveBeenCalledWith({ intent: 'danger', message: error, timeout: 0 })
+    expect(enqueueSnackbarMock).toHaveBeenCalledWith(error, { variant: 'error', autoHideDuration: 0, persist: true })
     expect(setAcceptingStores).not.toHaveBeenCalled()
   })
 })

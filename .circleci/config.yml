@@ -169,22 +169,6 @@ commands:
                 name: Save pods
                 paths:
                     - ~/Library/Caches/CocoaPods
-    install_protobuf_linux:
-        steps:
-            - run:
-                command: |
-                    curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v21.11/protoc-21.11-linux-x86_64.zip"
-                    unzip protoc*.zip -d $HOME/.local
-                    echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
-                name: Install protobuf
-    install_protobuf_mac:
-        steps:
-            - run:
-                command: |
-                    curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v21.11/protoc-21.11-osx-universal_binary.zip"
-                    unzip protoc*.zip -d $HOME/.local
-                    echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
-                name: Install protobuf
     notify:
         description: Send a notification (to Mattermost) at the end of a job, based on success or failure. Must be the last step in a job.
         parameters:
@@ -252,7 +236,6 @@ jobs:
         resource_class: medium
         steps:
             - prepare_workspace
-            - install_protobuf_linux
             - install_node_modules
             - run:
                 command: npm run build --version_name=${NEW_VERSION_NAME}
@@ -329,7 +312,6 @@ jobs:
         resource_class: small
         steps:
             - prepare_workspace
-            - install_protobuf_linux
             - setup_remote_docker:
                 docker_layer_caching: true
             - run:
@@ -358,7 +340,7 @@ jobs:
         environment:
             FASTLANE_SKIP_UPDATE_CHECK: true
         macos:
-            xcode: 16.1.0
+            xcode: 16.4.0
         parameters:
             build_config:
                 description: Name of the build config to use
@@ -371,6 +353,8 @@ jobs:
         steps:
             - prepare_workspace
             - install_app_toolbelt
+            - ruby/install:
+                version: "3.3"
             - run:
                 command: softwareupdate --install-rosetta --agree-to-license
                 name: Install rosetta
@@ -440,7 +424,6 @@ jobs:
         steps:
             - prepare_workspace
             - check_circleci_config
-            - install_protobuf_linux
             - install_node_modules
             - run:
                 command: npm run ts:check
@@ -469,7 +452,6 @@ jobs:
         steps:
             - prepare_workspace
             - check_circleci_config
-            - install_protobuf_linux
             - setup_remote_docker:
                 docker_layer_caching: true
             - run:
@@ -568,7 +550,7 @@ jobs:
         environment:
             FASTLANE_SKIP_UPDATE_CHECK: true
         macos:
-            xcode: 16.1.0
+            xcode: 16.4.0
         parameters:
             build_config:
                 enum:
@@ -579,9 +561,12 @@ jobs:
             production_delivery:
                 description: Whether to deliver the build to production.
                 type: boolean
+        resource_class: m4pro.medium
         steps:
             - prepare_workspace
             - install_app_toolbelt
+            - ruby/install:
+                version: "3.3"
             - install_fastlane
             - when:
                 condition: << parameters.production_delivery >>
@@ -796,6 +781,8 @@ jobs:
         steps:
             - prepare_workspace
             - install_app_toolbelt
+            - ruby/install:
+                version: "3.1"
             - install_fastlane
             - run:
                 command: bundle exec fastlane android playstore_promote build_config_name:<< parameters.build_config >>
@@ -817,7 +804,7 @@ jobs:
         environment:
             FASTLANE_SKIP_UPDATE_CHECK: true
         macos:
-            xcode: 16.1.0
+            xcode: 16.4.0
         parameters:
             build_config:
                 default: bayern
@@ -826,9 +813,12 @@ jobs:
                     - nuernberg
                     - koblenz
                 type: enum
+        resource_class: m4pro.medium
         steps:
             - prepare_workspace
             - install_app_toolbelt
+            - ruby/install:
+                version: "3.3"
             - install_fastlane
             - run:
                 command: bundle exec fastlane ios appstoreconnect_promote build_config_name:<< parameters.build_config >>

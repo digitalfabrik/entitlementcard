@@ -1,3 +1,4 @@
+import { Link, Typography } from '@mui/material'
 import { styled } from '@mui/system'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -5,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import AndroidStoreIcon from '../../assets/android_appstore_icon.svg'
 import AppStoreIcon from '../../assets/ios_appstore_icon.svg'
 
-const StoreLink = styled('a')`
+const StoreLink = styled(Link)`
   display: flex;
   gap: 20px;
   align-items: center;
@@ -28,11 +29,11 @@ const AppStoreLinks = ({ appStoreLink, playStoreLink }: AppStoreLinksProps): Rea
     <LinkContainer>
       <StoreLink href={appStoreLink} target='_blank' rel='noreferrer'>
         <AppStoreIcon height='40px' width='130px' aria-hidden />
-        {t('openAppStore')}
+        <Typography variant='body1'>{t('openAppStore')}</Typography>
       </StoreLink>
       <StoreLink href={playStoreLink} target='_blank' rel='noreferrer'>
         <AndroidStoreIcon height='40px' width='130px' aria-hidden />
-        {t('openPlayStore')}
+        <Typography variant='body1'>{t('openPlayStore')}</Typography>
       </StoreLink>
     </LinkContainer>
   )

@@ -4,7 +4,6 @@ resource_class: medium
 working_directory: ~/project/administration
 steps:
   - prepare_workspace
-  - install_protobuf_linux
   - install_node_modules
   - run:
       name: Build

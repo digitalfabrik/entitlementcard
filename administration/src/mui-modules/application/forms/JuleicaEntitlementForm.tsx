@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -44,10 +45,12 @@ const JuleicaEntitlementForm: Form<State, ValidatedInput> = {
           setState={useUpdateStateCallback(setState, 'juleicaExpirationDate')}
           options={{ maximumDate: undefined }}
         />
-        <h4>{t('applicationForms:juleicaCardAttachmentTitle')}</h4>
-        <p>
+        <Typography variant='body2bold' component='h4' marginY={1.5}>
+          {t('applicationForms:juleicaCardAttachmentTitle')}
+        </Typography>
+        <Typography component='p'>
           {t('applicationForms:juleicaCardAttachmentDescription')} {FileRequirementsText}
-        </p>
+        </Typography>
         <SubForms.copyOfJuleicaFront.Component
           state={state.copyOfJuleicaFront}
           setState={useUpdateStateCallback(setState, 'copyOfJuleicaFront')}

@@ -14,7 +14,7 @@ describe('BavariaCardTypeExtension', () => {
     value: { bavariaCardType: BAVARIA_CARD_TYPE_STANDARD } as BavariaCardTypeExtensionState,
     setValue: mockSetValue,
     isValid: true,
-    showRequired: false,
+    forceError: false,
   }
 
   it('should render the component with default value', () => {

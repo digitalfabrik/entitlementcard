@@ -1,22 +1,15 @@
 import { Colors } from '@blueprintjs/core'
 import ForwardToInboxIcon from '@mui/icons-material/ForwardToInbox'
-import { Box, Button } from '@mui/material'
+import { Box, Button, Typography } from '@mui/material'
 import { TFunction } from 'i18next'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
-import { useAppToaster } from '../../bp-modules/AppToaster'
 import EmailLink from '../../bp-modules/EmailLink'
 import { ApplicationVerificationView, useSendApprovalMailToOrganisationMutation } from '../../generated/graphql'
 import { isEmailValid, verificationStatus } from '../verifications'
 import { VerificationIcon } from './VerificationIcon'
-
-const ListItem = styled.li<{ $color: string }>`
-  position: relative;
-  padding-left: 10px;
-  border-left: 2px solid ${props => props.$color};
-`
 
 const getStatusMetaData = (
   verification: Pick<ApplicationVerificationView, 'rejectedDate' | 'verifiedDate'>,
@@ -47,17 +40,17 @@ const VerificationListItem = ({
   showResendApprovalEmailButton: boolean
 }): ReactElement => {
   const { t } = useTranslation('applicationsOverview')
-  const appToaster = useAppToaster()
+  const { enqueueSnackbar } = useSnackbar()
   const [isApprovalRequestSent, setIsApprovalRequestSent] = useState(false)
   const status = verificationStatus(verification)
   const { text, color } = getStatusMetaData(verification, t)
 
   const [sendApprovalEmail, sendApprovalEmailResult] = useSendApprovalMailToOrganisationMutation({
     onError: () => {
-      appToaster?.show({ intent: 'danger', message: t('failedToSendApprovalRequest') })
+      enqueueSnackbar(t('failedToSendApprovalRequest'), { variant: 'error' })
     },
     onCompleted: () => {
-      appToaster?.show({ intent: 'success', message: t('approvalRequestSentSuccessfully') })
+      enqueueSnackbar(t('approvalRequestSentSuccessfully'), { variant: 'success' })
     },
   })
   const onSendApprovalEmailClick = () => {
@@ -71,7 +64,7 @@ const VerificationListItem = ({
   }
 
   return (
-    <ListItem $color={color}>
+    <Typography component='li' sx={{ borderLeft: `2px solid ${color}`, position: 'relative' }} paddingLeft={1.5}>
       <table cellPadding='2px'>
         <tbody>
           <tr>
@@ -84,7 +77,7 @@ const VerificationListItem = ({
               {isEmailValid(verification.contactEmailAddress) ? (
                 <EmailLink email={verification.contactEmailAddress} />
               ) : (
-                <span>{verification.contactEmailAddress}</span>
+                <Typography component='span'>{verification.contactEmailAddress}</Typography>
               )}
             </td>
           </tr>
@@ -108,7 +101,7 @@ const VerificationListItem = ({
           {isApprovalRequestSent ? t('approvalRequestHasBeenSent') : t('resendApprovalRequest')}
         </Button>
       )}
-    </ListItem>
+    </Typography>
   )
 }
 

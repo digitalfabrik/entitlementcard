@@ -1,12 +1,12 @@
-import { Classes, Dialog } from '@blueprintjs/core'
-import { Button } from '@mui/material'
+import { CheckCircleOutline, Close } from '@mui/icons-material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement, ReactNode, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 
 import { TokenPayload } from './AuthProvider'
 import { useWhoAmI } from './WhoAmIProvider'
-import { useAppToaster } from './bp-modules/AppToaster'
 import PasswordInput from './bp-modules/PasswordInput'
 import getMessageFromApolloError from './errors/getMessageFromApolloError'
 import { SignInPayload, useSignInMutation } from './generated/graphql'
@@ -27,17 +27,17 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props): Rea
   const projectId = useContext(ProjectConfigContext).projectId
   const email = useWhoAmI().me.email
   const [secondsLeft, setSecondsLeft] = useState(computeSecondsLeft(authData))
-  const appToaster = useAppToaster()
-  const [password, setPassword] = useState<string>()
+  const { enqueueSnackbar } = useSnackbar()
+  const [password, setPassword] = useState<string>('')
   const [signIn, mutationState] = useSignInMutation({
     onCompleted: payload => {
-      appToaster?.show({ intent: 'success', message: t('loginPeriodExtended') })
+      enqueueSnackbar(t('loginPeriodExtended'), { variant: 'success' })
       onSignIn(payload.signInPayload)
       setPassword('')
     },
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appToaster?.show({ intent: 'danger', message: title })
+      enqueueSnackbar(title, { variant: 'error' })
     },
   })
 
@@ -54,37 +54,33 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props): Rea
     return () => clearInterval(interval)
   }, [authData, onSignOut, navigate])
 
-  const extendLogin = () => signIn({ variables: { project: projectId, authData: { email, password: password ?? '' } } })
+  const extendLogin = () => signIn({ variables: { project: projectId, authData: { email, password } } })
 
   return (
     <>
       {children}
-      <Dialog
-        isOpen={secondsLeft <= 180}
-        title={t('loginPeriodExpires')}
-        icon='warning-sign'
-        isCloseButtonShown={false}>
-        <form
-          onSubmit={e => {
-            e.preventDefault()
-            extendLogin()
-          }}>
-          <div className={Classes.DIALOG_BODY}>
-            <p>{t('loginPeriodSecondsLeft', { secondsLeft })}</p>
-            <p>{t('loginPeriodPasswordPrompt')}</p>
+      <Dialog open={secondsLeft <= 180} aria-describedby='keep-alive-dialog' fullWidth>
+        <DialogTitle>{t('loginPeriodExpires')}</DialogTitle>
+        <DialogContent id='keep-alive-dialog'>
+          <Stack>
+            <Typography component='p'>{t('loginPeriodSecondsLeft', { secondsLeft })}</Typography>
+            <Typography component='p'>{t('loginPeriodPasswordPrompt')}</Typography>
             <PasswordInput placeholder={t('loginPeriodPasswordPlaceholder')} setValue={setPassword} value={password} />
-          </div>
-          <div className={Classes.DIALOG_FOOTER}>
-            <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-              <Button onClick={onSignOut} loading={mutationState.loading}>
-                {t('loginPeriodLogoutButton')}
-              </Button>
-              <Button variant='contained' type='submit' loading={mutationState.loading}>
-                {t('loginPeriodExtendButton')}
-              </Button>
-            </div>
-          </div>
-        </form>
+          </Stack>
+        </DialogContent>
+        <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
+          <Button variant='outlined' startIcon={<Close />} onClick={onSignOut} loading={mutationState.loading}>
+            {t('loginPeriodLogoutButton')}
+          </Button>
+          <Button
+            variant='contained'
+            color='primary'
+            onClick={extendLogin}
+            startIcon={<CheckCircleOutline />}
+            loading={mutationState.loading}>
+            {t('loginPeriodExtendButton')}
+          </Button>
+        </DialogActions>
       </Dialog>
     </>
   )

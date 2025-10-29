@@ -3,8 +3,6 @@ import { MutationResult } from '@apollo/client'
 import {
   CancelOutlined,
   Check,
-  CheckCircleOutline,
-  Close,
   CreditScore,
   Delete,
   ExpandMore,
@@ -19,20 +17,15 @@ import {
   Autocomplete,
   Box,
   Button,
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Divider,
   InputAdornment,
   Stack,
-  SxProps,
   TextField,
   Tooltip,
   Typography,
   useTheme,
 } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { memo, useContext, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useReactToPrint } from 'react-to-print'
@@ -45,6 +38,7 @@ import {
   useDeleteApplicationMutation,
   useRejectApplicationStatusMutation,
 } from '../../generated/graphql'
+import ConfirmDialog from '../../mui-modules/application/ConfirmDialog'
 import BaseMenu, { MenuItemType } from '../../mui-modules/base/BaseMenu'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import type { ProjectConfig } from '../../project-configs/getProjectConfig'
@@ -52,7 +46,6 @@ import JsonFieldView from '../../shared/components/JsonFieldView'
 import VerificationsView from '../../shared/components/VerificationsView'
 import { ApplicationDataIncompleteError } from '../../util/applicationDataHelper'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
-import { useAppToaster } from '../AppToaster'
 import { AccordionExpandButton } from '../components/AccordionExpandButton'
 import { ApplicationPrintView, applicationPrintViewPageStyle } from './ApplicationPrintView'
 import NoteDialogController from './NoteDialogController'
@@ -70,29 +63,18 @@ const DeleteDialog = (props: {
   const { t } = useTranslation('applicationsOverview')
 
   return (
-    <Dialog open={props.isOpen} aria-describedby='alert-dialog-description'>
-      <DialogContent id='alert-dialog-description'>
-        <Stack direction='row' sx={{ gap: 2, alignItems: 'center' }}>
-          {props.deleteResult.loading || props.deleteResult.called ? (
-            <CircularProgress size={64} />
-          ) : (
-            <Delete sx={{ fontSize: '64px' }} color='error' />
-          )}
-          {t('deleteApplicationConfirmationPrompt')}
-        </Stack>
-      </DialogContent>
-      <DialogActions>
-        <Button disabled={props.deleteResult.loading || props.deleteResult.called} onClick={props.onCancel}>
-          {t('misc:cancel')}
-        </Button>
-        <Button
-          color='error'
-          disabled={props.deleteResult.loading || props.deleteResult.called}
-          onClick={props.onConfirm}>
-          {t('deleteApplication')}
-        </Button>
-      </DialogActions>
-    </Dialog>
+    <ConfirmDialog
+      open={props.isOpen}
+      onClose={props.onCancel}
+      title={t('deleteApplication')}
+      id='alert-dialog-description'
+      onConfirm={props.onConfirm}
+      actionDisabled={props.deleteResult.loading || props.deleteResult.called}
+      color='error'>
+      <Stack direction='row' sx={{ gap: 2, alignItems: 'center' }}>
+        <Typography>{t('deleteApplicationConfirmationPrompt')}</Typography>
+      </Stack>
+    </ConfirmDialog>
   )
 }
 
@@ -106,11 +88,26 @@ const RejectionDialog = (props: {
   const rejectionMessages = t('rejectionReasons', { returnObjects: true }) as string[]
   const [reason, setReason] = useState<string | null>(null)
 
+  const closeAndClearDialog = () => {
+    setReason(null)
+    props.onCancel()
+  }
+
   return (
-    <Dialog open={props.open} aria-describedby='reject-dialog-description' fullWidth onClose={props.onCancel}>
-      <DialogTitle>{t('rejectionDialogTitle')}</DialogTitle>
-      <DialogContent id='reject-dialog-description'>
-        {t('rejectionDialogMessage')}
+    <ConfirmDialog
+      open={props.open}
+      title={t('rejectionDialogTitle')}
+      id='reject-dialog-description'
+      onConfirm={() => {
+        if (reason !== null) {
+          props.onConfirm(reason)
+        }
+      }}
+      onClose={closeAndClearDialog}
+      cancelButtonText={t('rejectionCancelButton')}
+      confirmButtonText={t('rejectionButton')}>
+      <>
+        <Typography paddingBottom={1}>{t('rejectionDialogMessage')}</Typography>
         <Autocomplete
           renderInput={params => (
             <TextField
@@ -134,30 +131,8 @@ const RejectionDialog = (props: {
           sx={{ marginTop: 2 }}
           onChange={(_, value) => setReason(value)}
         />
-      </DialogContent>
-      <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
-        <Button
-          onClick={() => {
-            setReason(null)
-            props.onCancel()
-          }}
-          disabled={props.loading}
-          startIcon={<Close />}>
-          {t('rejectionCancelButton')}
-        </Button>
-        <Button
-          variant='contained'
-          startIcon={<CheckCircleOutline />}
-          disabled={reason === null || props.loading}
-          onClick={() => {
-            if (reason !== null) {
-              props.onConfirm(reason)
-            }
-          }}>
-          {t('rejectionButton')}
-        </Button>
-      </DialogActions>
-    </Dialog>
+      </>
+    </ConfirmDialog>
   )
 }
 
@@ -191,11 +166,10 @@ const ButtonsApplicationPending = (props: {
 
 const ButtonsApplicationResolved = (props: {
   applicationStatus: ApplicationStatus | null | undefined // TODO Remove null|undefined once this type is narrowed
-  primaryButtonHref: string | undefined
+  primaryButtonHref: string
   onSecondaryButtonClick: () => void
 }) => {
   const { t } = useTranslation('applicationsOverview')
-
   return (
     <>
       {/* Make the outer Tooltip independent of the button's disabled state */}
@@ -204,10 +178,10 @@ const ButtonsApplicationResolved = (props: {
         <Tooltip title={props.primaryButtonHref ? undefined : t('incompleteApplicationDataTooltip')}>
           <div>
             <Button
+              href={props.primaryButtonHref}
               color='primary'
               variant='contained'
-              disabled={props.primaryButtonHref === undefined}
-              href={props.primaryButtonHref}
+              disabled={props.primaryButtonHref.length === 0}
               startIcon={<CreditScore />}>
               {' '}
               {props.applicationStatus === ApplicationStatus.ApprovedCardCreated
@@ -225,15 +199,10 @@ const ButtonsApplicationResolved = (props: {
 }
 
 /** Returns a link to the create card route. Might be undefined, if the application data cannot be mapped to a query. */
-const createCardLink = (application: Application, config: ProjectConfig): string | undefined => {
+const createCardLink = (application: Application, config: ProjectConfig): string => {
   const query = config.applicationFeature?.applicationJsonToCardQuery(application.jsonValue)
   // TODO: This URL should be generated by a router function
-  return query ? `./cards/add${query}&applicationIdToMarkAsProcessed=${application.id}` : undefined
-}
-
-const headerTypography: SxProps = {
-  fontSize: '1.1rem',
-  fontWeight: '500',
+  return query ? `/cards/add${query}&applicationIdToMarkAsProcessed=${application.id}` : ''
 }
 
 const ApplicationCard = ({
@@ -249,7 +218,7 @@ const ApplicationCard = ({
   const theme = useTheme()
   const config = useContext(ProjectConfigContext)
   const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${application.id}`
-  const appToaster = useAppToaster()
+  const { enqueueSnackbar } = useSnackbar()
   const printContentRef = useRef<HTMLDivElement>(null)
   const printApplication = useReactToPrint({
     contentRef: printContentRef,
@@ -264,14 +233,14 @@ const ApplicationCard = ({
   const [deleteApplication, deleteResult] = useDeleteApplicationMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appToaster?.show({ intent: 'danger', message: title })
+      enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: ({ deleted }: { deleted: boolean }) => {
       if (deleted) {
         onDelete()
       } else {
         console.error('Delete operation returned false.')
-        appToaster?.show({ intent: 'danger', message: t('errors:unknown') })
+        enqueueSnackbar(t('errors:unknown'), { variant: 'error' })
       }
     },
   })
@@ -279,25 +248,25 @@ const ApplicationCard = ({
   const [approveStatus, approveStatusResult] = useApproveApplicationStatusMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appToaster?.show({ intent: 'danger', message: title })
+      enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: result => {
       // Update the application with new fields from the query
       onChange({ ...application, ...result.updates })
-      appToaster?.show({ intent: 'success', message: t('applicationApprovedToastMessage') })
+      enqueueSnackbar(t('applicationApprovedToastMessage'), { variant: 'success' })
     },
   })
 
   const [rejectStatus, rejectStatusResult] = useRejectApplicationStatusMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appToaster?.show({ intent: 'danger', message: title })
+      enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: result => {
       setRejectionDialogOpen(false)
       // Update the application with new fields from the query
       onChange({ ...application, ...result.application })
-      appToaster?.show({ intent: 'success', message: t('applicationRejectedToastMessage') })
+      enqueueSnackbar(t('applicationRejectedToastMessage'), { variant: 'success' })
     },
   })
 
@@ -314,7 +283,7 @@ const ApplicationCard = ({
           exportApplicationToCsv(application, config)
         } catch (error) {
           if (error instanceof ApplicationToCsvError || error instanceof ApplicationDataIncompleteError) {
-            appToaster?.show({ message: error.message, intent: 'danger' })
+            enqueueSnackbar(error.message, { variant: 'error' })
           }
         }
       },
@@ -341,7 +310,7 @@ const ApplicationCard = ({
         }}
         sx={{ flexDirection: 'column', alignItems: 'stretch', padding: 0 }}>
         <Stack direction='row' sx={{ width: '100%', gap: 2, paddingLeft: 2, paddingRight: 2 }}>
-          <Typography sx={{ minWidth: '250px', ...headerTypography }}>
+          <Typography variant='h6' sx={{ minWidth: '250px' }} marginY={0}>
             {t('applicationFrom', { date: new Date(application.createdDate) })}
           </Typography>
           <Warning
@@ -349,14 +318,15 @@ const ApplicationCard = ({
             visibility={application.status === ApplicationStatus.Withdrawn ? 'visible' : 'hidden'}
           />
           <Typography
+            variant='h6'
             sx={{
+              marginY: 0,
               flexGrow: 1,
               flexShrink: 1,
               color: theme.palette.text.secondary,
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap',
               overflow: 'hidden',
-              ...headerTypography,
             }}>
             {personalData &&
               personalData.forenames !== undefined &&
@@ -370,10 +340,12 @@ const ApplicationCard = ({
       <AccordionDetails sx={{ position: 'relative' }}>
         <Stack sx={{ spacing: 2, alignItems: 'flex-start', gap: 2, marginLeft: 2, marginBottom: 2, marginRight: 2 }}>
           {application.status === ApplicationStatus.Withdrawn && !!application.statusResolvedDate && (
-            <Box sx={{ bgcolor: theme.palette.warning.light, padding: 2 }}>
-              {t('withdrawalMessage', { date: new Date(application.statusResolvedDate) })}
-              <br />
-              {t('deleteApplicationSoonPrompt')}
+            <Box sx={{ backgroundColor: theme.palette.warning.light, padding: 2 }}>
+              <Typography>
+                {t('withdrawalMessage', { date: new Date(application.statusResolvedDate) })}
+                <br />
+                {t('deleteApplicationSoonPrompt')}{' '}
+              </Typography>
             </Box>
           )}
           {/* TODO: <JsonFieldView> does not emit a root element and thus, <Stack> would insert a gap here */}

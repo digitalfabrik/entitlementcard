@@ -1,34 +1,31 @@
-import { Callout, H2 } from '@blueprintjs/core'
-import { Button, FormControl, FormLabel, Stack } from '@mui/material'
+import { Button, FormControl, FormLabel, Stack, Typography } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useWhoAmI } from '../../WhoAmIProvider'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useChangePasswordMutation } from '../../generated/graphql'
-import { useAppToaster } from '../AppToaster'
+import AlertBox from '../../mui-modules/base/AlertBox'
 import PasswordInput from '../PasswordInput'
 import validatePasswordInput from '../auth/validateNewPasswordInput'
-import SettingsCard from './SettingsCard'
+import SettingsCard, { SettingsCardButtonBox } from './SettingsCard'
 
 const ChangePasswordForm = (): ReactElement => {
   const { t: tAuth } = useTranslation('auth')
   const { t } = useTranslation('userSettings')
-  const [currentPassword, setCurrentPassword] = useState<string>()
-  const [newPassword, setNewPassword] = useState<string>()
-  const [repeatNewPassword, setRepeatNewPassword] = useState<string>()
+  const [currentPassword, setCurrentPassword] = useState<string>('')
+  const [newPassword, setNewPassword] = useState<string>('')
+  const [repeatNewPassword, setRepeatNewPassword] = useState<string>('')
 
-  const appToaster = useAppToaster()
+  const { enqueueSnackbar } = useSnackbar()
   const [changePassword, { loading }] = useChangePasswordMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appToaster?.show({ intent: 'danger', message: title })
+      enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: () => {
-      appToaster?.show({
-        intent: 'success',
-        message: t('passwordChangeSuccessful'),
-      })
+      enqueueSnackbar(t('passwordChangeSuccessful'), { variant: 'success' })
       setCurrentPassword('')
       setNewPassword('')
       setRepeatNewPassword('')
@@ -46,16 +43,17 @@ const ChangePasswordForm = (): ReactElement => {
   const submit = async () =>
     changePassword({
       variables: {
-        newPassword: newPassword ?? '',
-        currentPassword: currentPassword ?? '',
+        newPassword,
+        currentPassword,
         email,
       },
     })
 
   return (
-    <SettingsCard>
-      <H2>{t('changePassword')}</H2>
-      <p>{t('changePasswordExplanation')}</p>
+    <SettingsCard title={t('changePassword')}>
+      <Typography component='p' mb={2}>
+        {t('changePasswordExplanation')}
+      </Typography>
       <form
         onSubmit={event => {
           event.preventDefault()
@@ -75,12 +73,12 @@ const ChangePasswordForm = (): ReactElement => {
             <PasswordInput value={repeatNewPassword} setValue={setRepeatNewPassword} />
           </FormControl>
 
-          {warnMessage === null ? null : <Callout intent='danger'>{warnMessage}</Callout>}
-          <div style={{ textAlign: 'right' }}>
+          {warnMessage === null ? null : <AlertBox sx={{ my: 2, mx: 0 }} severity='error' description={warnMessage} />}
+          <SettingsCardButtonBox>
             <Button type='submit' disabled={!valid} loading={loading}>
               {t('changePassword')}
             </Button>
-          </div>
+          </SettingsCardButtonBox>
         </Stack>
       </form>
     </SettingsCard>

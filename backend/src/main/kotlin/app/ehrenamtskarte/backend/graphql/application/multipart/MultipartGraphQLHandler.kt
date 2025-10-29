@@ -3,6 +3,7 @@ package app.ehrenamtskarte.backend.graphql.application.multipart
 import app.ehrenamtskarte.backend.graphql.shared.substitute
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.graphql.MediaTypes.APPLICATION_GRAPHQL_RESPONSE
 import org.springframework.graphql.server.WebGraphQlHandler
@@ -32,6 +33,7 @@ import org.springframework.web.servlet.function.ServerResponse
  * within Spring Boot applications.
  */
 @Component
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 class MultipartGraphQLHandler(
     private val graphQlHandler: WebGraphQlHandler,
 ) {

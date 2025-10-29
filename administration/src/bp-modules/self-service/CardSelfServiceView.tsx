@@ -1,18 +1,16 @@
+import { Close } from '@mui/icons-material'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import KoblenzLogo from '../../assets/koblenz_logo.svg'
 import { updateCard } from '../../cards/Card'
-import BasicDialog from '../../mui-modules/application/BasicDialog'
 import CenteredCircularProgress from '../../mui-modules/base/CenteredCircularProgress'
 import CardSelfServiceActivation from './CardSelfServiceActivation'
 import CardSelfServiceForm from './CardSelfServiceForm'
 import CardSelfServiceInformation from './CardSelfServiceInformation'
-import { ActionButton } from './components/ActionButton'
-import { IconTextButton } from './components/IconTextButton'
-import { InfoText } from './components/InfoText'
 import { DataPrivacyAcceptingStatus } from './constants'
 import selfServiceStepInfo from './constants/selfServiceStepInfo'
 import useCardGeneratorSelfService from './hooks/useCardGeneratorSelfService'
@@ -39,7 +37,6 @@ const Container = styled.div`
   width: 100%;
   max-width: 500px;
   border: 1px solid #f7f7f7;
-  font-family: Roboto Roboto, Helvetica, Arial, sans-serif;
 `
 
 const Step = styled.div`
@@ -49,25 +46,9 @@ const Step = styled.div`
   align-self: flex-end;
 `
 
-const Headline = styled.h1`
-  color: #e2007a;
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 0;
-`
-
-const SubHeadline = styled.h2`
-  color: #131314;
-  font-size: 22px;
-`
-
 const Text = styled.div`
   margin-bottom: 24px;
   font-size: 16px;
-`
-
-const StyledInfoTextButton = styled(IconTextButton)`
-  margin: 0;
 `
 
 const CardSelfServiceView = (): ReactElement => {
@@ -94,15 +75,24 @@ const CardSelfServiceView = (): ReactElement => {
     <Container>
       <Header>
         <KoblenzLogo height='40px' />
-        <StyledInfoTextButton onClick={() => setOpenHelpDialog(true)}>
+        <Button
+          color='inherit'
+          variant='text'
+          size='large'
+          onClick={() => setOpenHelpDialog(true)}
+          endIcon={<HelpOutlineOutlinedIcon />}>
+          {' '}
           {t('help')}
-          <HelpOutlineOutlinedIcon />
-        </StyledInfoTextButton>
+        </Button>
       </Header>
       <Body>
         <Step>{`${t('step')} ${selfServiceStepInfo[cardGenerationStep].stepNr}/${totalSteps}`}</Step>
-        <Headline>{selfServiceStepInfo[cardGenerationStep].headline}</Headline>
-        <SubHeadline>{selfServiceStepInfo[cardGenerationStep].subHeadline}</SubHeadline>
+        <Typography variant='h6' color='accent' component='h1'>
+          {selfServiceStepInfo[cardGenerationStep].headline}
+        </Typography>
+        <Typography variant='h5' component='h2'>
+          {selfServiceStepInfo[cardGenerationStep].subHeadline}
+        </Typography>
         <Text>{selfServiceStepInfo[cardGenerationStep].text}</Text>
         {cardGenerationStep === 'input' && (
           <CardSelfServiceForm
@@ -120,21 +110,23 @@ const CardSelfServiceView = (): ReactElement => {
           <CardSelfServiceActivation downloadPdf={downloadPdf} code={code} />
         )}
       </Body>
-      <BasicDialog
-        open={openHelpDialog}
-        maxWidth='lg'
-        onUpdateOpen={setOpenHelpDialog}
-        title={t('help')}
-        content={
-          <>
-            <InfoText>
-              {t('youHaveProblemsCreatingAPass')} <br />
-              {t('pleaseContactUsForHelp')}
-            </InfoText>
-            <ActionButton href='mailto:koblenzpass@stadt.koblenz.de'>{t('sendMail')}</ActionButton>
-          </>
-        }
-      />
+      <Dialog open={openHelpDialog} aria-describedby='help-dialog' fullWidth onClose={() => setOpenHelpDialog(false)}>
+        <DialogTitle>{t('help')}</DialogTitle>
+        <DialogContent id='help-dialog'>
+          <Typography marginTop={1.5} marginBottom={3}>
+            {t('youHaveProblemsCreatingAPass')} <br />
+            {t('pleaseContactUsForHelp')}
+          </Typography>
+        </DialogContent>
+        <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
+          <Button onClick={() => setOpenHelpDialog(false)} variant='outlined' startIcon={<Close />}>
+            {t('misc:cancel')}
+          </Button>
+          <Button color='secondary' variant='contained' href='mailto:koblenzpass@stadt.koblenz.de'>
+            {t('sendMail')}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   )
 }

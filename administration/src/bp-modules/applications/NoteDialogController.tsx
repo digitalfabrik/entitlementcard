@@ -1,11 +1,11 @@
 import { EditNote } from '@mui/icons-material'
 import { Button } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useUpdateApplicationNoteMutation } from '../../generated/graphql'
-import { useAppToaster } from '../AppToaster'
 import TextAreaDialog from '../components/TextAreaDialog'
 import { ApplicationNoteTooltip } from './components/ApplicationNoteTooltip'
 import type { Application } from './types'
@@ -23,15 +23,15 @@ const NoteDialogController = ({
   onOpenNoteDialog,
   onChange,
 }: NoteDialogControllerProps): ReactElement => {
-  const appToaster = useAppToaster()
+  const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('applicationsOverview')
   const [updateApplicationNote, { loading }] = useUpdateApplicationNoteMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      appToaster?.show({ intent: 'danger', message: title })
+      enqueueSnackbar(title, { variant: 'error' })
     },
     onCompleted: () => {
-      appToaster?.show({ intent: 'success', message: t('noteChangedSuccessfully'), timeout: 2000 })
+      enqueueSnackbar(t('noteChangedSuccessfully'), { variant: 'success', autoHideDuration: 2000 })
       onOpenNoteDialog(false)
     },
   })
@@ -58,6 +58,8 @@ const NoteDialogController = ({
       {isOpen && (
         <TextAreaDialog
           defaultText={application.note}
+          title={t('noteDialogTitle')}
+          id='application-note-dialog'
           isOpen={isOpen}
           maxChars={1000}
           loading={loading}

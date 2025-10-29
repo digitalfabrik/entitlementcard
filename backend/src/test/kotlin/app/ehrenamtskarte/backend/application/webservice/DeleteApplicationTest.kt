@@ -6,6 +6,7 @@ import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerifications
 import app.ehrenamtskarte.backend.db.entities.Applications
 import app.ehrenamtskarte.backend.generated.DeleteApplication
+import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestData
 import app.ehrenamtskarte.backend.helper.toDataObject
@@ -40,8 +41,8 @@ internal class DeleteApplicationTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Error INVALID_INPUT occurred.", error.message)
-        assertEquals("Application not found", error.extensions?.reason)
+        assertEquals("Application not found", error.message)
+        assertEquals(GraphQLExceptionCode.INVALID_INPUT, error.extensions.code)
     }
 
     @Test
@@ -55,7 +56,7 @@ internal class DeleteApplicationTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Authorization token expired, invalid or missing", error.message)
+        assertEquals(GraphQLExceptionCode.UNAUTHORIZED, error.extensions.code)
     }
 
     @Test
@@ -69,7 +70,7 @@ internal class DeleteApplicationTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Insufficient access rights", error.message)
+        assertEquals(GraphQLExceptionCode.FORBIDDEN, error.extensions.code)
     }
 
     @Test
@@ -83,11 +84,8 @@ internal class DeleteApplicationTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Error INVALID_INPUT occurred.", error.message)
-        assertEquals(
-            "Application cannot be deleted while it is in a pending state",
-            error.extensions?.reason,
-        )
+        assertEquals("Application cannot be deleted while it is in a pending state", error.message)
+        assertEquals(GraphQLExceptionCode.INVALID_INPUT, error.extensions.code)
     }
 
     @ParameterizedTest

@@ -4,6 +4,7 @@ import app.ehrenamtskarte.backend.IntegrationTest
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
 import app.ehrenamtskarte.backend.db.entities.Applications
 import app.ehrenamtskarte.backend.generated.ApproveApplicationStatus
+import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestData
 import app.ehrenamtskarte.backend.helper.json
@@ -61,8 +62,8 @@ internal class ApproveApplicationTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Error INVALID_INPUT occurred.", error.message)
-        assertEquals("Application not found", error.extensions?.reason)
+        assertEquals("Application not found", error.message)
+        assertEquals(GraphQLExceptionCode.INVALID_INPUT, error.extensions.code)
     }
 
     @Test
@@ -76,7 +77,7 @@ internal class ApproveApplicationTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Authorization token expired, invalid or missing", error.message)
+        assertEquals(GraphQLExceptionCode.UNAUTHORIZED, error.extensions.code)
     }
 
     @Test
@@ -90,7 +91,7 @@ internal class ApproveApplicationTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Insufficient access rights", error.message)
+        assertEquals(GraphQLExceptionCode.FORBIDDEN, error.extensions.code)
     }
 
     @ParameterizedTest
@@ -110,11 +111,8 @@ internal class ApproveApplicationTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Error INVALID_INPUT occurred.", error.message)
-        assertEquals(
-            "Cannot set application to 'Approved', is '$status'",
-            error.extensions?.reason,
-        )
+        assertEquals("Cannot set application to 'Approved', is '$status'", error.message)
+        assertEquals(GraphQLExceptionCode.INVALID_INPUT, error.extensions.code)
 
         transaction {
             // verify that the status has not been updated in the database

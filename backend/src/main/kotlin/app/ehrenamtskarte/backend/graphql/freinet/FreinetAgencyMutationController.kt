@@ -32,7 +32,7 @@ class FreinetAgencyMutationController(
         val projectConfig = backendConfiguration.getProjectConfig(authContext.project)
 
         if (projectConfig.freinet == null) {
-            throw NotImplementedException()
+            throw NotImplementedException("Freinet is not configured in this project")
         }
 
         transaction {

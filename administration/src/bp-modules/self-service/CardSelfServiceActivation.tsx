@@ -1,23 +1,11 @@
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined'
-import { styled } from '@mui/material'
+import { Button, Typography } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { CreateCardsResult } from '../../cards/createCards'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import getCustomDeepLinkFromQrCode from '../../util/getCustomDeepLinkFromQrCode'
-import { ActionButton } from './components/ActionButton'
-import { IconTextButton } from './components/IconTextButton'
-import { InfoText } from './components/InfoText'
-
-const Container = styled('div')`
-  display: flex;
-  flex-direction: column;
-`
-
-const StyledIconTextButton = styled(IconTextButton)`
-  color: #131314;
-`
 
 type CardSelfServiceActivationProps = {
   code: CreateCardsResult
@@ -33,21 +21,26 @@ const CardSelfServiceActivation = ({ code, downloadPdf }: CardSelfServiceActivat
   })
 
   return (
-    <Container>
-      <StyledIconTextButton onClick={() => downloadPdf(code, `${projectConfig.name}.pdf`)}>
-        <FileDownloadOutlinedIcon />
+    <>
+      <Button
+        color='primary'
+        variant='text'
+        onClick={() => downloadPdf(code, `${projectConfig.name}.pdf`)}
+        sx={theme => ({ width: 'fit-content', color: theme.palette.common.black })}
+        startIcon={<FileDownloadOutlinedIcon />}>
+        {' '}
         {t('koblenzPassPdf')}
-      </StyledIconTextButton>
-      <InfoText>
+      </Button>
+      <Typography variant='body1' marginTop={1.5} marginBottom={3}>
         {t('howToActivateHint')} <br />
         <br />
         <b>{t('important')}: </b>
         {t('koblenzPassAppNeedsToBeInstalled')}
-      </InfoText>
-      <ActionButton href={deepLink} variant='contained' size='large'>
+      </Typography>
+      <Button color='secondary' href={deepLink} variant='contained' size='large' sx={{ width: 'fit-content' }}>
         {t('activatePass')}
-      </ActionButton>
-    </Container>
+      </Button>
+    </>
   )
 }
 

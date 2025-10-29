@@ -2,13 +2,8 @@ import HelpOutlinedIcon from '@mui/icons-material/HelpOutlined'
 import { Box, Typography } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
 import PopoverWrapper from '../../mui-modules/components/PopoverWrapper'
-
-const Description = styled.ul`
-  margin: 4px 0;
-`
 
 const ApplicationStatusHelpButton = (): ReactElement => {
   const { t } = useTranslation('applicationsOverview')
@@ -16,43 +11,43 @@ const ApplicationStatusHelpButton = (): ReactElement => {
   return (
     <PopoverWrapper icon={<HelpOutlinedIcon color='inherit' />}>
       <Box sx={{ padding: 2 }}>
-        <Typography variant='h4' sx={{ textAlign: 'center' }}>
+        <Typography variant='h5' textAlign='center'>
           {t('whichStatusMeansWhat')}
         </Typography>
-        <Description>
-          <li>
-            <b>{t('statusBarAccepted')}:</b>
-            <Description>
+        <Typography component='ul' marginY={0.5}>
+          <Typography component='li' variant='body2bold'>
+            {t('statusBarAccepted')}:
+            <Typography component='ul' marginY={0.5}>
               {t('acceptedDescription')}
               <br />
               {t('cardCouldBeCreated')}
-            </Description>
-          </li>
-          <li>
-            <b>{t('statusBarRejected')}:</b>
-            <Description>
+            </Typography>
+          </Typography>
+          <Typography component='li' variant='body2bold'>
+            {t('statusBarRejected')}:
+            <Typography component='ul' marginY={0.5}>
               {t('rejectedDescription')}
               <br />
               {t('applicationCouldBeDeleted')}
-            </Description>
-          </li>
-          <li>
-            <b>{t('statusBarWithdrawn')}:</b>
-            <Description>
+            </Typography>
+          </Typography>
+          <Typography component='li' variant='body2bold'>
+            {t('statusBarWithdrawn')}:
+            <Typography component='ul' marginY={0.5}>
               {t('withdrawnDescription')}
               <br />
               {t('applicationCouldBeDeleted')}
-            </Description>
-          </li>
-          <li>
-            <b>{t('statusBarOpen')}:</b>
-            <Description>
+            </Typography>
+          </Typography>
+          <Typography component='li' variant='body2bold'>
+            {t('statusBarOpen')}:
+            <Typography component='ul' marginY={0.5}>
               {t('pendingDescription')}
               <br />
               {t('cardShouldNotYetBeCreated')}
-            </Description>
-          </li>
-        </Description>
+            </Typography>
+          </Typography>
+        </Typography>
       </Box>
     </PopoverWrapper>
   )

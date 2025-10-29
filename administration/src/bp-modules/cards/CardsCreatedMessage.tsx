@@ -1,5 +1,5 @@
 import { Icon } from '@blueprintjs/core'
-import { Button } from '@mui/material'
+import { Button, Typography } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -24,7 +24,7 @@ const CardsCreatedMessage = ({ reset }: Props): ReactElement => {
   return (
     <Container>
       <Icon icon='tick-circle' color='green' iconSize={100} />
-      <p>{t('addCardSuccessMessage')}</p>
+      <Typography component='p'>{t('addCardSuccessMessage')}</Typography>
       <Button onClick={reset}>{t('createMoreCards')}</Button>
     </Container>
   )

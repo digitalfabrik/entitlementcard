@@ -1,5 +1,5 @@
 import { ExpandMore } from '@mui/icons-material'
-import { Divider, Stack } from '@mui/material'
+import { Divider, Stack, Typography } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -24,7 +24,7 @@ export const AccordionExpandButton = ({ expanded }: AccordionExpandButtonProps):
           }}
         />
         &ensp;
-        {t(expanded ? 'accordionShowLess' : 'accordionShowMore')}
+        <Typography>{t(expanded ? 'accordionShowLess' : 'accordionShowMore')}</Typography>
       </Stack>
     </Stack>
   )

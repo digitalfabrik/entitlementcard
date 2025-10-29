@@ -1,16 +1,9 @@
-import { H2 } from '@blueprintjs/core'
-import { Button } from '@mui/material'
+import { Button, Typography } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
-import SettingsCard from '../../user-settings/SettingsCard'
+import SettingsCard, { SettingsCardButtonBox } from '../../user-settings/SettingsCard'
 import ApplicationConfirmationNote from './ApplicationConfirmationNote'
-
-const ButtonContainer = styled.div`
-  text-align: right;
-  padding: 8px 0;
-`
 
 type ApplicationConfirmationNoteCardProps = {
   defaultConfirmationNote: string | null | undefined
@@ -29,12 +22,11 @@ const ApplicationConfirmationNoteCard = ({
   const { t } = useTranslation('regionSettings')
 
   return (
-    <SettingsCard>
-      <H2>{t('applicationConfirmationMailNoteHeadline')}</H2>
-      <p>{t('applicationConfirmationMailNoteExplanation')}</p>
-      <ButtonContainer>
+    <SettingsCard title={t('applicationConfirmationMailNoteHeadline')}>
+      <Typography component='p'>{t('applicationConfirmationMailNoteExplanation')}</Typography>
+      <SettingsCardButtonBox>
         <Button onClick={() => setOpenApplicationConfirmationNote(true)}>{t('open')}</Button>
-      </ButtonContainer>
+      </SettingsCardButtonBox>
       {openApplicationConfirmationNote && (
         <ApplicationConfirmationNote
           saveApplicationConfirmationNote={saveApplicationConfirmationNote}

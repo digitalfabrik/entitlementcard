@@ -3,18 +3,21 @@ package app.ehrenamtskarte.backend.graphql
 import graphql.schema.DataFetchingEnvironment
 import kotlinx.coroutines.reactor.mono
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.springframework.context.annotation.Configuration
+import org.springframework.context.event.ContextRefreshedEvent
+import org.springframework.context.event.EventListener
 import org.springframework.graphql.execution.BatchLoaderRegistry
+import org.springframework.stereotype.Component
 import reactor.core.scheduler.Schedulers
 import java.util.concurrent.CompletableFuture
 import kotlin.reflect.KClass
 
-@Configuration
-class DataLoaderConfiguration(
+@Component
+class DataLoaderInitializer(
     private val registry: BatchLoaderRegistry,
-    loaders: List<BaseDataLoader<*, *>>,
+    private val loaders: List<BaseDataLoader<*, *>>,
 ) {
-    init {
+    @EventListener
+    fun onContextRefreshed(event: ContextRefreshedEvent) {
         loaders.forEach { it.register(registry) }
     }
 }
@@ -26,12 +29,10 @@ class DataLoaderConfiguration(
 fun <K : Any, V : Any> DataFetchingEnvironment.loadFrom(
     loaderClass: KClass<out BaseDataLoader<K, V>>,
     key: K,
-): CompletableFuture<V?> {
-    val loaderName = loaderClass.java.name
-    val dataLoader = getDataLoader<K, V>(loaderName)
+): CompletableFuture<V?> =
+    getDataLoader<K, V>(loaderClass.java.name)
+        ?.load(key)
         ?: throw IllegalStateException("DataLoader '${loaderClass.simpleName}' not registered.")
-    return dataLoader.load(key)
-}
 
 /**
  * Abstract base class for GraphQL data loaders.

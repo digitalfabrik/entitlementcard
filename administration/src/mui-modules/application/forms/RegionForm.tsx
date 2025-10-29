@@ -1,4 +1,4 @@
-import { Alert, CircularProgress, Typography } from '@mui/material'
+import { Alert, CircularProgress, Link, Typography } from '@mui/material'
 import { styled } from '@mui/system'
 import { TFunction } from 'i18next'
 import React, { useContext, useEffect } from 'react'
@@ -14,11 +14,6 @@ import { CompoundState, createCompoundGetArrayBufferKeys, createCompoundInitialS
 const StyledAlert = styled(Alert)`
   margin: 16px 0;
   transition: background-color 0.2s, color 0.2s;
-`
-
-const StyledRegionsList = styled('ul')`
-  margin-block-start: 4px;
-  margin-block-end: 4px;
 `
 
 const SubForms = {
@@ -62,12 +57,16 @@ const renderAlert = (
     return (
       <StyledAlert severity='warning'>
         <Trans i18nKey='applicationForms:regionNotUnique' />
-        <StyledRegionsList>
+        <Typography component='ul' marginX={0.5}>
           {regions.map(region => {
             const displayName = `${region.name} (${region.prefix})`
-            return <li key={displayName}>{displayName}</li>
+            return (
+              <Typography component='li' key={displayName}>
+                {displayName}
+              </Typography>
+            )
           })}
-        </StyledRegionsList>
+        </Typography>
       </StyledAlert>
     )
   }
@@ -128,22 +127,22 @@ const RegionForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
       <>
         <Typography>
           {t('regionSelectionDescriptionStart')}
-          <a
+          <Link
             href='https://www.ehrenamt.bayern.de/vorteile-wettbewerbe/ehrenamtskarte/'
             target='_blank'
             rel='noreferrer'>
             {t('misc:clickHere')}
-          </a>{' '}
+          </Link>{' '}
           {t('regionSelectionDescriptionEnd')}
           .
           <br />
           <Trans i18nKey='applicationForms:regionSelectionListTextStart' />{' '}
-          <a
+          <Link
             href='https://www.ehrenamt.bayern.de/vorteile-wettbewerbe/ehrenamtskarte/landkreise.php'
             target='_blank'
             rel='noreferrer'>
             {t('misc:clickHere')}
-          </a>{' '}
+          </Link>{' '}
           {t('regionSelectionListTextEnd')}
         </Typography>
         {renderAlert(state, postalCode, regionQuery, t)}

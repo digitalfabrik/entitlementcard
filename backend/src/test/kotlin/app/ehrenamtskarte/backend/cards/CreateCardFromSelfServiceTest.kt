@@ -7,6 +7,7 @@ import app.ehrenamtskarte.backend.db.entities.UserEntitlements
 import app.ehrenamtskarte.backend.db.entities.UserEntitlementsEntity
 import app.ehrenamtskarte.backend.generated.CreateCardFromSelfService
 import app.ehrenamtskarte.backend.generated.createcardfromselfservice.CardCreationResultModel
+import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
 import app.ehrenamtskarte.backend.helper.SampleCards
 import app.ehrenamtskarte.backend.helper.SampleCards.getEncoded
 import app.ehrenamtskarte.backend.helper.TestData
@@ -48,7 +49,7 @@ internal class CreateCardFromSelfServiceTest : IntegrationTest() {
         val error = response.toErrorObject()
 
         assertEquals("Project 'non-existent.sozialpass.app' not found", error.message)
-        assertEquals("NOT_FOUND", error.extensions?.classification)
+        assertEquals(GraphQLExceptionCode.PROJECT_NOT_FOUND, error.extensions.code)
     }
 
     @Test
@@ -63,8 +64,8 @@ internal class CreateCardFromSelfServiceTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Resource not found", error.message)
-        assertEquals("NOT_FOUND", error.extensions?.classification)
+        assertEquals("Self-Service is not enabled in the project", error.message)
+        assertEquals(GraphQLExceptionCode.NOT_IMPLEMENTED, error.extensions.code)
     }
 
     @Test
@@ -76,9 +77,8 @@ internal class CreateCardFromSelfServiceTest : IntegrationTest() {
 
         val error = response.toErrorObject()
 
-        assertEquals("Error INVALID_INPUT occurred.", error.message)
-        assertEquals("INVALID_INPUT", error.extensions?.code)
-        assertEquals("Failed to parse encodedCardInfo", error.extensions?.reason)
+        assertEquals("Failed to parse encodedCardInfo", error.message)
+        assertEquals(GraphQLExceptionCode.INVALID_INPUT, error.extensions.code)
 
         transaction {
             assertEquals(0, Cards.selectAll().count())
@@ -96,7 +96,7 @@ internal class CreateCardFromSelfServiceTest : IntegrationTest() {
         val error = response.toErrorObject()
 
         assertEquals("Error USER_ENTITLEMENT_NOT_FOUND occurred.", error.message)
-        assertEquals("USER_ENTITLEMENT_NOT_FOUND", error.extensions?.code)
+        assertEquals(GraphQLExceptionCode.USER_ENTITLEMENT_NOT_FOUND, error.extensions.code)
 
         transaction {
             assertEquals(0, Cards.selectAll().count())
@@ -120,7 +120,7 @@ internal class CreateCardFromSelfServiceTest : IntegrationTest() {
         val error = response.toErrorObject()
 
         assertEquals("Error USER_ENTITLEMENT_EXPIRED occurred.", error.message)
-        assertEquals("USER_ENTITLEMENT_EXPIRED", error.extensions?.code)
+        assertEquals(GraphQLExceptionCode.USER_ENTITLEMENT_EXPIRED, error.extensions.code)
 
         transaction {
             assertEquals(0, Cards.selectAll().count())
@@ -144,7 +144,7 @@ internal class CreateCardFromSelfServiceTest : IntegrationTest() {
         val error = response.toErrorObject()
 
         assertEquals("Error USER_ENTITLEMENT_EXPIRED occurred.", error.message)
-        assertEquals("USER_ENTITLEMENT_EXPIRED", error.extensions?.code)
+        assertEquals(GraphQLExceptionCode.USER_ENTITLEMENT_EXPIRED, error.extensions.code)
 
         transaction {
             assertEquals(0, Cards.selectAll().count())

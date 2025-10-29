@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material'
 import React, { ReactElement } from 'react'
 
 import i18next from '../../../i18n'
@@ -15,17 +16,22 @@ const selfServiceStepInfo: { [step in Exclude<SelfServiceCardGenerationStep, 'lo
     stepNr: 1,
     headline: i18next.t('selfService:welcome'),
     subHeadline: i18next.t('selfService:fewStepsNeeded'),
-    text: <span>{i18next.t('selfService:explanation')}</span>,
+    text: (
+      <Typography variant='body1' component='span'>
+        {i18next.t('selfService:explanation')}
+      </Typography>
+    ),
   },
   information: {
     stepNr: 2,
     headline: i18next.t('selfService:createdPassSuccessfully'),
     subHeadline: i18next.t('selfService:fewMoreStepsNeeded'),
     text: (
-      <span>
+      <Typography variant='body1' component='span'>
         <b>{i18next.t('selfService:appAlreadyInstalled')} </b>
+        <br />
         {i18next.t('selfService:appAlreadyInstalledPrompt')}
-      </span>
+      </Typography>
     ),
   },
   activation: {
@@ -33,11 +39,11 @@ const selfServiceStepInfo: { [step in Exclude<SelfServiceCardGenerationStep, 'lo
     headline: i18next.t('selfService:almostThere'),
     subHeadline: i18next.t('selfService:activateAndDownloadPrompt'),
     text: (
-      <span>
+      <Typography variant='body1' component='span'>
         {i18next.t('selfService:lastStepExplanation1')}
         <b>{i18next.t('selfService:lastStepExplanation2')}</b>
         {i18next.t('selfService:lastStepExplanation3')} <b>{i18next.t('selfService:lastStepExplanation4')}</b>.
-      </span>
+      </Typography>
     ),
   },
 }

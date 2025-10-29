@@ -7,13 +7,16 @@ parameters:
     description: Whether to deliver the build to production.
     type: boolean
 macos:
-  xcode: 16.1.0
+  xcode: 16.4.0
+resource_class: m4pro.medium
 environment:
   FASTLANE_SKIP_UPDATE_CHECK: true
 working_directory: ~/project/frontend/ios
 steps:
   - prepare_workspace
   - install_app_toolbelt
+  - ruby/install:
+      version: '3.3'
   - install_fastlane
   - when:
       condition: << parameters.production_delivery >>

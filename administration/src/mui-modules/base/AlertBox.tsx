@@ -1,39 +1,51 @@
-import { Alert, AlertColor, AlertTitle, Button } from '@mui/material'
-import React, { ReactElement } from 'react'
+import { Alert, AlertColor, AlertTitle, Button, SxProps } from '@mui/material'
+import { Theme } from '@mui/system'
+import React, { ReactElement, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
 type AlertBoxProps = {
+  customIcon?: ReactNode
+  sx?: SxProps<Theme>
   severity?: AlertColor
   title?: string
   description?: string | ReactElement
+  fullWidth?: boolean
   onAction?: () => void
   actionButtonLabel?: string
 }
 
 const AlertBox = ({
+  sx,
+  customIcon,
   severity = 'success',
   title,
+  fullWidth = false,
   description,
   onAction,
   actionButtonLabel,
 }: AlertBoxProps): ReactElement => {
   const { t } = useTranslation('errors')
+  const fullWidthStyles = fullWidth ? { margin: 0, maxWidth: 'none' } : {}
 
   return (
     <Alert
       data-testid='alert-box'
       severity={severity}
+      icon={customIcon}
       variant='outlined'
-      sx={theme => ({
+      sx={{
         margin: 'auto',
         display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
+        justifyContent: 'flex-start',
         maxWidth: '900px',
-        [theme.breakpoints.down('md')]: {
-          margin: '5px',
-        },
-      })}
+        '&': theme => ({
+          [theme.breakpoints.down('md')]: {
+            margin: '5px',
+          },
+        }),
+        ...fullWidthStyles,
+        ...sx,
+      }}
       action={
         onAction ? (
           <Button variant='outlined' size='small' onClick={() => onAction()}>

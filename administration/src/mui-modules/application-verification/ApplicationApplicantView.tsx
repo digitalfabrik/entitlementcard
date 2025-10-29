@@ -79,16 +79,17 @@ const ApplicationApplicantView = ({
   ) : (
     <>
       <ConfirmDialog
+        id='withdraw-confirmation-dialog'
         open={dialogOpen}
-        onUpdateOpen={setDialogOpen}
+        onClose={() => setDialogOpen(false)}
         title={t('withdrawConfirmationTitle')}
-        content={t('withdrawConfirmationContent')}
-        onConfirm={submitWithdrawal}
-      />
+        onConfirm={submitWithdrawal}>
+        <Typography> {t('withdrawConfirmationContent')}</Typography>
+      </ConfirmDialog>
 
       <ApplicationViewCard elevation={2}>
         <ApplicationViewCardContent>
-          <Typography sx={{ mb: '8px' }} variant='h6'>
+          <Typography marginBottom={1} variant='h6'>
             {`${t('headline')} ${formatDateWithTimezone(createdDateString, config.timezone)}`}
           </Typography>
           <JsonFieldView
@@ -104,7 +105,7 @@ const ApplicationApplicantView = ({
           {application.status === ApplicationStatus.Pending && (
             <>
               <StyledDivider />
-              <Typography sx={{ mt: '8px', mb: '16px' }} variant='body2'>
+              <Typography marginTop={1} marginBottom={2}>
                 {t('withdrawInformation')}
               </Typography>
               <Button variant='contained' startIcon={<Delete />} onClick={() => setDialogOpen(true)}>
