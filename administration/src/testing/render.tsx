@@ -1,3 +1,4 @@
+import { ThemeProvider, createTheme } from '@mui/material'
 import { RenderOptions, RenderResult, render as rawRender } from '@testing-library/react'
 import React, { ReactElement, ReactNode } from 'react'
 import { I18nextProvider } from 'react-i18next'
@@ -30,10 +31,13 @@ export const renderWithTranslation = (
 ): RenderResult => {
   const CustomWrapper = options?.wrapper
   const projectConfig = options?.projectConfig ?? showcaseConfig
+  const theme = createTheme({})
 
   const wrapper = (props: { children: ReactNode }) => (
     <ProjectConfigProvider projectConfig={projectConfig}>
-      <I18nextProvider i18n={i18n}>{CustomWrapper ? <CustomWrapper {...props} /> : props.children}</I18nextProvider>
+      <ThemeProvider theme={theme}>
+        <I18nextProvider i18n={i18n}>{CustomWrapper ? <CustomWrapper {...props} /> : props.children}</I18nextProvider>
+      </ThemeProvider>
     </ProjectConfigProvider>
   )
 
