@@ -207,6 +207,10 @@ tasks.generateProto {
     dependsOn(tasks.generateSentryBundleIdJava)
 }
 
+tasks.sentryCollectSourcesJava {
+    dependsOn(tasks.generateProto)
+}
+
 tasks.graphqlGenerateTestClient {
     if (isProductionEnvironment) {
         dependsOn(tasks.generateSentryBundleIdJava)
