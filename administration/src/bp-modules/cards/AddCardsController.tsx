@@ -8,8 +8,8 @@ import CenteredCircularProgress from '../../mui-modules/base/CenteredCircularPro
 import RenderGuard from '../../mui-modules/components/RenderGuard'
 import useBlockNavigation from '../../util/useBlockNavigation'
 import AddCardsForm from './AddCardsForm'
-import GenerationFinished from './CardsCreatedMessage'
 import CreateCardsButtonBar from './CreateCardsButtonBar'
+import { CardsCreatedScreen } from './components/CardsCreatedScreen'
 import useCardGenerator from './hooks/useCardGenerator'
 
 const InnerAddCardsController = ({ region }: { region: Region }) => {
@@ -24,38 +24,38 @@ const InnerAddCardsController = ({ region }: { region: Region }) => {
     message: t('dataWillBeLostWarning'),
   })
 
-  if (cardGenerationStep === 'loading') {
-    return <CenteredCircularProgress />
+  switch (cardGenerationStep) {
+    case 'loading':
+      return <CenteredCircularProgress />
+    case 'input':
+      return (
+        <>
+          <AddCardsForm
+            region={region}
+            cards={cards}
+            setCards={setCards}
+            updateCard={updateCard}
+            showAddMoreCardsButton={searchParams.size === 0}
+          />
+          <CreateCardsButtonBar
+            cards={cards}
+            goBack={() => navigate('/cards')}
+            generateCardsPdf={() => generateCardsPdf()}
+            generateCardsCsv={() => generateCardsCsv()}
+          />
+        </>
+      )
+    case 'finished':
+      return (
+        <CardsCreatedScreen
+          onProceed={() => {
+            setCards([])
+            setSearchParams(undefined, { replace: true })
+            setCardGenerationStep('input')
+          }}
+        />
+      )
   }
-  if (cardGenerationStep === 'finished') {
-    return (
-      <GenerationFinished
-        reset={() => {
-          setCards([])
-          setSearchParams(undefined, { replace: true })
-          setCardGenerationStep('input')
-        }}
-      />
-    )
-  }
-
-  return (
-    <>
-      <AddCardsForm
-        region={region}
-        cards={cards}
-        setCards={setCards}
-        updateCard={updateCard}
-        showAddMoreCardsButton={searchParams.size === 0}
-      />
-      <CreateCardsButtonBar
-        cards={cards}
-        goBack={() => navigate('/cards')}
-        generateCardsPdf={() => generateCardsPdf()}
-        generateCardsCsv={() => generateCardsCsv()}
-      />
-    </>
-  )
 }
 
 const AddCardsController = (): ReactElement => {

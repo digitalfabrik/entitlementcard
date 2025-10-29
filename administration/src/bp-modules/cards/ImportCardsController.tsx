@@ -1,3 +1,5 @@
+import { CheckCircle } from '@mui/icons-material'
+import { Button, Stack, Typography } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -7,7 +9,6 @@ import { Region, Role } from '../../generated/graphql'
 import CenteredCircularProgress from '../../mui-modules/base/CenteredCircularProgress'
 import RenderGuard from '../../mui-modules/components/RenderGuard'
 import useBlockNavigation from '../../util/useBlockNavigation'
-import GenerationFinished from './CardsCreatedMessage'
 import CreateCardsButtonBar from './CreateCardsButtonBar'
 import ImportCardsInput from './ImportCardsInput'
 import CardImportTable from './ImportCardsTable'
@@ -32,36 +33,40 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
     }
   }
 
-  if (cardGenerationStep === 'loading') {
-    return <CenteredCircularProgress />
+  switch (cardGenerationStep) {
+    case 'loading':
+      return <CenteredCircularProgress />
+    case 'input':
+      return (
+        <>
+          {cards.length === 0 ? (
+            <ImportCardsInput setCards={setCards} region={region} />
+          ) : (
+            <CardImportTable cards={cards} />
+          )}
+          <CreateCardsButtonBar
+            cards={cards}
+            goBack={goBack}
+            generateCardsPdf={() => generateCardsPdf()}
+            generateCardsCsv={() => generateCardsCsv()}
+          />
+        </>
+      )
+    case 'finished':
+      return (
+        <Stack justifyContent='center' alignItems='center' spacing={2} sx={{ height: '100%' }}>
+          <CheckCircle color='success' sx={{ fontSize: 100 }} />
+          <Typography component='p'>{t('addCardSuccessMessage')}</Typography>
+          <Button
+            onClick={() => {
+              setCards([])
+              setCardGenerationStep('input')
+            }}>
+            {t('createMoreCards')}
+          </Button>
+        </Stack>
+      )
   }
-
-  if (cardGenerationStep === 'finished') {
-    return (
-      <GenerationFinished
-        reset={() => {
-          setCards([])
-          setCardGenerationStep('input')
-        }}
-      />
-    )
-  }
-
-  return (
-    <>
-      {cards.length === 0 ? (
-        <ImportCardsInput setCards={setCards} region={region} />
-      ) : (
-        <CardImportTable cards={cards} />
-      )}
-      <CreateCardsButtonBar
-        cards={cards}
-        goBack={goBack}
-        generateCardsPdf={() => generateCardsPdf()}
-        generateCardsCsv={() => generateCardsCsv()}
-      />
-    </>
-  )
 }
 
 const ImportCardsController = (): ReactElement => {

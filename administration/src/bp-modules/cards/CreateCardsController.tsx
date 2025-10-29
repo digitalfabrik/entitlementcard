@@ -1,4 +1,5 @@
-import { Stack } from '@mui/material'
+import { AddCard, UploadFile } from '@mui/icons-material'
+import { Button, Stack, SxProps } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -8,7 +9,10 @@ import { Role } from '../../generated/graphql'
 import RenderGuard from '../../mui-modules/components/RenderGuard'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { FREINET_PARAM } from '../constants'
-import CardFormButton from './CardFormButton'
+
+const buttonStyle: SxProps = {
+  p: 4,
+}
 
 const CreateCardsController = (): ReactElement => {
   const { region } = useWhoAmI().me
@@ -24,14 +28,20 @@ const CreateCardsController = (): ReactElement => {
       error={{ description: t('errors:notAuthorizedToCreateCards') }}>
       <Stack sx={{ flexGrow: 1, alignItems: 'center', justifyContent: 'safe center', overflowY: 'auto' }}>
         <Stack sx={{ width: '400px', padding: 2, gap: 2 }}>
-          <CardFormButton text={t('createSingleCards')} icon='add' onClick={() => navigate('./add')} />
-          <CardFormButton text={t('importMultipleCards')} icon='upload' onClick={() => navigate('./import')} />
+          <Button sx={buttonStyle} startIcon={<AddCard />} size='large' onClick={() => navigate('./add')}>
+            {t('createSingleCards')}
+          </Button>
+          <Button sx={buttonStyle} startIcon={<UploadFile />} size='large' onClick={() => navigate('./import')}>
+            {t('importMultipleCards')}
+          </Button>
           {freinetCSVImportEnabled && (
-            <CardFormButton
-              text={t('importCardsFromFreinet')}
-              icon='upload'
-              onClick={() => navigate(`./import?${FREINET_PARAM}=true`)}
-            />
+            <Button
+              sx={buttonStyle}
+              startIcon={<UploadFile />}
+              size='large'
+              onClick={() => navigate(`./import?${FREINET_PARAM}=true`)}>
+              {t('importMultipleCards')}
+            </Button>
           )}
         </Stack>
       </Stack>
