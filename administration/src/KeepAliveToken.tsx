@@ -3,30 +3,31 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typog
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, ReactNode, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router'
 
-import { TokenPayload } from './AuthProvider'
 import { useWhoAmI } from './WhoAmIProvider'
 import PasswordInput from './bp-modules/PasswordInput'
 import getMessageFromApolloError from './errors/getMessageFromApolloError'
-import { SignInPayload, useSignInMutation } from './generated/graphql'
+import { type SignInPayload, useSignInMutation } from './generated/graphql'
 import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
 
-type Props = {
-  authData: TokenPayload
+const computeSecondsRemaining = (expiresAt: Date) => Math.round((expiresAt.valueOf() - Date.now()) / 1000)
+const openAtRemainingSeconds = 180
+
+const KeepAliveToken = ({
+  expiresAt,
+  onSignOut,
+  onSignIn,
+  children,
+}: {
+  expiresAt: Date
   children: ReactNode
   onSignIn: (payload: SignInPayload) => void
   onSignOut: () => void
-}
-
-const computeSecondsLeft = (authData: TokenPayload) => Math.round((authData.expiry.valueOf() - Date.now()) / 1000)
-
-const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props): ReactElement => {
+}): ReactElement => {
   const { t } = useTranslation('auth')
-  const navigate = useNavigate()
   const projectId = useContext(ProjectConfigContext).projectId
   const email = useWhoAmI().me.email
-  const [secondsLeft, setSecondsLeft] = useState(computeSecondsLeft(authData))
+  const [secondsLeft, setSecondsLeft] = useState(computeSecondsRemaining(expiresAt))
   const { enqueueSnackbar } = useSnackbar()
   const [password, setPassword] = useState<string>('')
   const [signIn, mutationState] = useSignInMutation({
@@ -42,24 +43,23 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props): Rea
   })
 
   useEffect(() => {
-    setSecondsLeft(computeSecondsLeft(authData))
+    setSecondsLeft(computeSecondsRemaining(expiresAt))
+
     const interval = setInterval(() => {
-      const timeLeft = computeSecondsLeft(authData)
-      setSecondsLeft(Math.max(timeLeft, 0))
-      if (timeLeft <= 0) {
+      const secondsRemaining = computeSecondsRemaining(expiresAt)
+      setSecondsLeft(Math.max(secondsRemaining, 0))
+
+      if (secondsRemaining <= 0) {
         onSignOut()
-        navigate('/')
       }
     }, 1000)
     return () => clearInterval(interval)
-  }, [authData, onSignOut, navigate])
-
-  const extendLogin = () => signIn({ variables: { project: projectId, authData: { email, password } } })
+  }, [expiresAt, onSignOut])
 
   return (
     <>
       {children}
-      <Dialog open={secondsLeft <= 180} aria-describedby='keep-alive-dialog' fullWidth>
+      <Dialog open={secondsLeft <= openAtRemainingSeconds} aria-describedby='keep-alive-dialog' fullWidth>
         <DialogTitle>{t('loginPeriodExpires')}</DialogTitle>
         <DialogContent id='keep-alive-dialog'>
           <Stack>
@@ -75,7 +75,7 @@ const KeepAliveToken = ({ authData, onSignOut, onSignIn, children }: Props): Rea
           <Button
             variant='contained'
             color='primary'
-            onClick={extendLogin}
+            onClick={() => signIn({ variables: { project: projectId, authData: { email, password } } })}
             startIcon={<CheckCircleOutline />}
             loading={mutationState.loading}>
             {t('loginPeriodExtendButton')}
