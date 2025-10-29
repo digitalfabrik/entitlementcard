@@ -341,7 +341,8 @@
     "logout": "Logout",
     "confirm": "Bestätigen",
     "delete": "Löschen",
-    "clickHere": "hier"
+    "clickHere": "hier",
+    "browseButtonLabelSingleFile": "Datei wählen"
   },
   "home": {
     "incomingApplications": "Eingehende Anträge",
