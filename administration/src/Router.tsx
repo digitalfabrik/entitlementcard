@@ -1,5 +1,5 @@
 import React, { ReactElement, useContext, useMemo } from 'react'
-import { Outlet, Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router'
+import { Outlet, Route, RouterProvider, createBrowserRouter, createRoutesFromElements, useNavigate } from 'react-router'
 
 import { AuthContext } from './AuthProvider'
 import KeepAliveToken from './KeepAliveToken'
@@ -35,12 +35,18 @@ import ImprintPage from './mui-modules/imprint/ImprintPage'
 import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
 
 const AuthLayout = (): ReactElement => {
-  const { data: authData, signIn, signOut } = useContext(AuthContext)
+  const { data: authData, signIn } = useContext(AuthContext)
+  const navigate = useNavigate()
   const isLoggedIn = authData !== null && authData.expiry > new Date()
 
   return isLoggedIn ? (
     <WhoAmIProvider>
-      <KeepAliveToken authData={authData} onSignIn={signIn} onSignOut={signOut}>
+      <KeepAliveToken
+        expiresAt={authData.expiry}
+        onSignIn={signIn}
+        onSignOut={() => {
+          navigate('/logout', { replace: true })
+        }}>
         <NavigationBar />
         <Outlet />
       </KeepAliveToken>
