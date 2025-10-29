@@ -7,7 +7,7 @@ import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
 import app.ehrenamtskarte.backend.db.repositories.AdministratorsRepository
 import app.ehrenamtskarte.backend.graphql.application.types.PersonalData
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.MailNotSentException
+import app.ehrenamtskarte.backend.graphql.exceptions.MailNotSentException
 import com.sanctionco.jmail.JMail
 import org.simplejavamail.MailException
 import org.simplejavamail.email.EmailBuilder

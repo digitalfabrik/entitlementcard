@@ -3,7 +3,7 @@ package app.ehrenamtskarte.backend.graphql.application.types
 import app.ehrenamtskarte.backend.graphql.application.types.primitives.Attachment
 import app.ehrenamtskarte.backend.graphql.application.types.primitives.ShortTextInput
 import app.ehrenamtskarte.backend.graphql.application.utils.onlySelectedIsPresent
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidJsonException
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidJsonException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 
 enum class GoldenCardEntitlementType {

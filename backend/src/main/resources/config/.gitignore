@@ -1,2 +1,0 @@
-# Do not commit the local config, which might contain sensitive data (e.g. SMTP passwords, etc.)
-config.local.yml

@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.freinet.webservice
 
-import app.ehrenamtskarte.backend.GraphqlApiTest
+import app.ehrenamtskarte.backend.IntegrationTest
 import app.ehrenamtskarte.backend.db.entities.Applications
 import app.ehrenamtskarte.backend.db.entities.FreinetAgencies
 import app.ehrenamtskarte.backend.db.entities.FreinetAgenciesEntity
@@ -10,10 +10,12 @@ import app.ehrenamtskarte.backend.graphql.application.types.JsonField
 import app.ehrenamtskarte.backend.graphql.application.types.Type
 import app.ehrenamtskarte.backend.graphql.freinet.types.FreinetPersonCreationResultModel
 import app.ehrenamtskarte.backend.graphql.freinet.util.FreinetApi
+import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestData
+import app.ehrenamtskarte.backend.helper.toDataObject
+import app.ehrenamtskarte.backend.helper.toErrorObject
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import io.javalin.testtools.JavalinTest
 import io.mockk.every
 import io.mockk.mockkConstructor
 import io.mockk.verify
@@ -21,17 +23,20 @@ import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.springframework.http.HttpStatus
 import kotlin.test.assertEquals
 
-internal class FreinetApplicationMutationServiceTest : GraphqlApiTest() {
+internal class FreinetApplicationMutationServiceTest : IntegrationTest() {
     private val regionAdminFreinet = TestAdministrators.EAK_REGION_ADMIN_FREINET
-    private val projectAdmin = TestAdministrators.EAK_PROJECT_ADMIN
     private val objectMapper = jacksonObjectMapper()
 
     @BeforeEach
     fun cleanUp() {
         transaction {
             Applications.deleteAll()
+            // Reset the state for the region used in the tests
+            val agency = FreinetAgenciesEntity.find { FreinetAgencies.regionId eq regionAdminFreinet.regionId }.single()
+            agency.dataTransferActivated = false
         }
     }
 
@@ -49,189 +54,157 @@ internal class FreinetApplicationMutationServiceTest : GraphqlApiTest() {
     }
 
     @Test
-    fun `POST returns an unauthorized error when not logged in`() =
-        JavalinTest.test(app) { _, client ->
-            val applicationId = createTestApplication()
-            val mutation = createMutation(applicationId)
-            val response = post(client, mutation)
-            assertEquals(401, response.code)
+    fun `should return an unauthorized error when not logged in`() {
+        val applicationId = createTestApplication()
+        val mutation = createMutation(applicationId)
+        val response = postGraphQL(mutation)
 
-            verify(exactly = 0) {
-                anyConstructed<FreinetApi>().searchPersons(any(), any(), any())
-                anyConstructed<FreinetApi>().createPerson(any(), any(), any(), any(), any())
-                anyConstructed<FreinetApi>().sendCardInformation(any(), any())
-            }
-        }
+        assertEquals(HttpStatus.OK, response.statusCode)
 
-    @Test
-    fun `POST returns not implemented error if freinet is not configured`() =
-        JavalinTest.test(app) { _, client ->
-            val applicationId = createTestApplication(regionId = 96)
-            val mutation = createMutation(applicationId)
-            val response = post(client, mutation, TestAdministrators.KOBLENZ_REGION_ADMIN.getJwtToken())
-            assertEquals(501, response.code)
+        val error = response.toErrorObject()
 
-            verify(exactly = 0) {
-                anyConstructed<FreinetApi>().searchPersons(any(), any(), any())
-                anyConstructed<FreinetApi>().createPerson(any(), any(), any(), any(), any())
-                anyConstructed<FreinetApi>().sendCardInformation(any(), any())
-            }
-        }
+        assertEquals(GraphQLExceptionCode.UNAUTHORIZED, error.extensions.code)
+
+        verify(exactly = 0) { anyConstructed<FreinetApi>().searchPersons(any(), any(), any()) }
+    }
 
     @Test
-    fun `POST returns a forbidden error when requesting role is not authorized`() =
-        JavalinTest.test(app) { _, client ->
-            val applicationId = createTestApplication()
-            val mutation = createMutation(applicationId)
-            val response = post(client, mutation, projectAdmin.getJwtToken())
-            assertEquals(401, response.code)
+    fun `should return not implemented error if freinet is not configured`() {
+        val applicationId = createTestApplication(regionId = 96)
+        val mutation = createMutation(applicationId)
+        val response = postGraphQL(mutation, TestAdministrators.KOBLENZ_REGION_ADMIN.getJwtToken())
 
-            verify(exactly = 0) {
-                anyConstructed<FreinetApi>().searchPersons(any(), any(), any())
-                anyConstructed<FreinetApi>().createPerson(any(), any(), any(), any(), any())
-                anyConstructed<FreinetApi>().sendCardInformation(any(), any())
-            }
-        }
+        assertEquals(HttpStatus.OK, response.statusCode)
 
-    @Test
-    fun `POST returns a forbidden error when region is not authorized`() =
-        JavalinTest.test(app) { _, client ->
-            val applicationId = createTestApplication(regionId = 9)
-            val mutation = createMutation(applicationId)
-            val response = post(client, mutation, regionAdminFreinet.getJwtToken())
-            assertEquals(401, response.code)
+        val error = response.toErrorObject()
 
-            verify(exactly = 0) {
-                anyConstructed<FreinetApi>().searchPersons(any(), any(), any())
-                anyConstructed<FreinetApi>().createPerson(any(), any(), any(), any(), any())
-                anyConstructed<FreinetApi>().sendCardInformation(any(), any())
-            }
-        }
+        assertEquals(GraphQLExceptionCode.NOT_IMPLEMENTED, error.extensions.code)
+
+        verify(exactly = 0) { anyConstructed<FreinetApi>().searchPersons(any(), any(), any()) }
+    }
 
     @Test
-    fun `POST returns false when data transfer is not activated`() =
-        JavalinTest.test(app) { _, client ->
-            transaction {
-                val agency = FreinetAgenciesEntity.find { FreinetAgencies.regionId eq 94 }.single()
-                agency.dataTransferActivated = false
-            }
+    fun `should return a forbidden error when role is not authorized`() {
+        val applicationId = createTestApplication()
+        val mutation = createMutation(applicationId)
+        val response = postGraphQL(mutation, TestAdministrators.EAK_PROJECT_ADMIN.getJwtToken())
 
-            val applicationId = createTestApplication()
-            val mutation = createMutation(applicationId)
-            val response = post(client, mutation, regionAdminFreinet.getJwtToken())
-            assertEquals(200, response.code)
+        assertEquals(HttpStatus.OK, response.statusCode)
 
-            val jsonResponse = response.json()
-            assertEquals(false, jsonResponse.path("data").path("sendApplicationAndCardDataToFreinet").asBoolean())
+        val error = response.toErrorObject()
 
-            verify(exactly = 0) {
-                anyConstructed<FreinetApi>().searchPersons(any(), any(), any())
-                anyConstructed<FreinetApi>().createPerson(any(), any(), any(), any(), any())
-                anyConstructed<FreinetApi>().sendCardInformation(any(), any())
-            }
-        }
+        assertEquals(GraphQLExceptionCode.FORBIDDEN, error.extensions.code)
+
+        verify(exactly = 0) { anyConstructed<FreinetApi>().searchPersons(any(), any(), any()) }
+    }
 
     @Test
-    fun `POST returns true when data transfer is activated and creates new person`() =
-        JavalinTest.test(app) { _, client ->
-            transaction {
-                val agency = FreinetAgenciesEntity.find { FreinetAgencies.regionId eq 94 }.single()
-                agency.dataTransferActivated = true
-            }
+    fun `should return a forbidden error when region is not authorized`() {
+        val applicationId = createTestApplication(regionId = 9)
+        val mutation = createMutation(applicationId)
+        val response = postGraphQL(mutation, regionAdminFreinet.getJwtToken())
 
-            val applicationId = createTestApplication()
-            val mutation = createMutation(applicationId)
-            val response = post(client, mutation, regionAdminFreinet.getJwtToken())
-            assertEquals(200, response.code)
+        assertEquals(HttpStatus.OK, response.statusCode)
 
-            val jsonResponse = response.json()
+        val error = response.toErrorObject()
 
-            verify { anyConstructed<FreinetApi>().searchPersons("John", "Doe", "1990-01-01") }
-            verify { anyConstructed<FreinetApi>().createPerson("John", "Doe", "1990-01-01", any(), any()) }
-            verify { anyConstructed<FreinetApi>().sendCardInformation(12345, any()) }
+        assertEquals(GraphQLExceptionCode.FORBIDDEN, error.extensions.code)
 
-            assertEquals(true, jsonResponse.path("data").path("sendApplicationAndCardDataToFreinet").asBoolean())
-        }
+        verify(exactly = 0) { anyConstructed<FreinetApi>().searchPersons(any(), any(), any()) }
+    }
 
     @Test
-    fun `POST returns true when person exists`() =
-        JavalinTest.test(app) { _, client ->
-            transaction {
-                val agency = FreinetAgenciesEntity.find { FreinetAgencies.regionId eq 94 }.single()
-                agency.dataTransferActivated = true
-            }
+    fun `should return false when data transfer is not activated`() {
+        // State is set to false in cleanUp() by default
+        val applicationId = createTestApplication()
+        val mutation = createMutation(applicationId)
+        val response = postGraphQL(mutation, regionAdminFreinet.getJwtToken())
 
-            every { anyConstructed<FreinetApi>().searchPersons(any(), any(), any()) } returns
-                objectMapper.createArrayNode().apply {
-                    add(
-                        objectMapper.createObjectNode().apply {
-                            put("id", 1277076)
-                            put("name", "John")
-                            put("nachname", "Doe")
-                            put("strasse", "Example Street 123")
-                            put("email", "john.doe@example.com")
-                            put("geburtstag", "1990-01-01")
-                        },
-                    )
-                }
+        assertEquals(HttpStatus.OK, response.statusCode)
+        assertEquals(false, response.toDataObject())
 
-            val applicationId = createTestApplication()
-            val mutation = createMutation(applicationId)
-            val response = post(client, mutation, regionAdminFreinet.getJwtToken())
-            assertEquals(200, response.code)
-
-            val jsonResponse = response.json()
-            assertEquals(true, jsonResponse.path("data").path("sendApplicationAndCardDataToFreinet").asBoolean())
-
-            verify { anyConstructed<FreinetApi>().searchPersons("John", "Doe", "1990-01-01") }
-            verify(exactly = 0) { anyConstructed<FreinetApi>().createPerson(any(), any(), any(), any(), any()) }
-            verify { anyConstructed<FreinetApi>().sendCardInformation(1277076, any()) }
-        }
+        verify(exactly = 0) { anyConstructed<FreinetApi>().searchPersons(any(), any(), any()) }
+    }
 
     @Test
-    fun `POST returns error when multiple persons are found in Freinet`() =
-        JavalinTest.test(app) { _, client ->
-            transaction {
-                val agency = FreinetAgenciesEntity.find { FreinetAgencies.regionId eq 94 }.single()
-                agency.dataTransferActivated = true
-            }
-
-            every { anyConstructed<FreinetApi>().searchPersons(any(), any(), any()) } returns
-                objectMapper.createArrayNode().apply {
-                    add(
-                        objectMapper.createObjectNode().apply {
-                            put("id", 1001)
-                            put("name", "John")
-                            put("nachname", "Doe")
-                            put("geburtstag", "1990-01-01")
-                        },
-                    )
-                    add(
-                        objectMapper.createObjectNode().apply {
-                            put("id", 1002)
-                            put("name", "John")
-                            put("nachname", "Doe")
-                            put("geburtstag", "1990-01-01")
-                        },
-                    )
-                }
-
-            val applicationId = createTestApplication()
-            val mutation = createMutation(applicationId)
-            val response = post(client, mutation, regionAdminFreinet.getJwtToken())
-            assertEquals(200, response.code)
-
-            val jsonResponse = response.json()
-            assertEquals(
-                "Error FREINET_FOUND_MULTIPLE_PERSONS occurred.",
-                jsonResponse.findValue("message").textValue(),
-            )
-            verify { anyConstructed<FreinetApi>().searchPersons("John", "Doe", "1990-01-01") }
-            verify(exactly = 0) { anyConstructed<FreinetApi>().createPerson(any(), any(), any(), any(), any()) }
-            verify(exactly = 0) { anyConstructed<FreinetApi>().sendCardInformation(any(), any()) }
+    fun `should return true and create new person when data transfer is activated`() {
+        transaction {
+            val agency = FreinetAgenciesEntity.find { FreinetAgencies.regionId eq regionAdminFreinet.regionId }.single()
+            agency.dataTransferActivated = true
         }
 
-    private fun createTestApplication(regionId: Int = 94): Int {
+        val applicationId = createTestApplication()
+        val mutation = createMutation(applicationId)
+        val response = postGraphQL(mutation, regionAdminFreinet.getJwtToken())
+
+        assertEquals(HttpStatus.OK, response.statusCode)
+        assertEquals(true, response.toDataObject())
+
+        verify { anyConstructed<FreinetApi>().searchPersons("John", "Doe", "1990-01-01") }
+        verify { anyConstructed<FreinetApi>().createPerson("John", "Doe", "1990-01-01", any(), any()) }
+        verify { anyConstructed<FreinetApi>().sendCardInformation(12345, any()) }
+    }
+
+    @Test
+    fun `should return true when person already exists in Freinet`() {
+        transaction {
+            val agency = FreinetAgenciesEntity.find { FreinetAgencies.regionId eq regionAdminFreinet.regionId }.single()
+            agency.dataTransferActivated = true
+        }
+
+        every { anyConstructed<FreinetApi>().searchPersons(any(), any(), any()) } returns
+            objectMapper.createArrayNode().apply {
+                add(
+                    objectMapper.createObjectNode().apply {
+                        put("id", 1277076)
+                        put("name", "John")
+                        put("nachname", "Doe")
+                        put("geburtstag", "1990-01-01")
+                    },
+                )
+            }
+
+        val applicationId = createTestApplication()
+        val mutation = createMutation(applicationId)
+        val response = postGraphQL(mutation, regionAdminFreinet.getJwtToken())
+
+        assertEquals(HttpStatus.OK, response.statusCode)
+        assertEquals(true, response.toDataObject())
+
+        verify { anyConstructed<FreinetApi>().searchPersons("John", "Doe", "1990-01-01") }
+        verify(exactly = 0) { anyConstructed<FreinetApi>().createPerson(any(), any(), any(), any(), any()) }
+        verify { anyConstructed<FreinetApi>().sendCardInformation(1277076, any()) }
+    }
+
+    @Test
+    fun `should return an error when multiple persons are found in Freinet`() {
+        transaction {
+            val agency = FreinetAgenciesEntity.find { FreinetAgencies.regionId eq regionAdminFreinet.regionId }.single()
+            agency.dataTransferActivated = true
+        }
+
+        every { anyConstructed<FreinetApi>().searchPersons(any(), any(), any()) } returns
+            objectMapper.createArrayNode().apply {
+                add(objectMapper.createObjectNode().put("id", 1001))
+                add(objectMapper.createObjectNode().put("id", 1002))
+            }
+
+        val applicationId = createTestApplication()
+        val mutation = createMutation(applicationId)
+        val response = postGraphQL(mutation, regionAdminFreinet.getJwtToken())
+
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val error = response.toErrorObject()
+
+        assertEquals("Error FREINET_FOUND_MULTIPLE_PERSONS occurred.", error.message)
+
+        verify { anyConstructed<FreinetApi>().searchPersons("John", "Doe", "1990-01-01") }
+        verify(exactly = 0) { anyConstructed<FreinetApi>().createPerson(any(), any(), any(), any(), any()) }
+        verify(exactly = 0) { anyConstructed<FreinetApi>().sendCardInformation(any(), any()) }
+    }
+
+    private fun createTestApplication(regionId: Int = regionAdminFreinet.regionId!!): Int {
         val applicationJsonField = createTestApplicationJsonField()
         val applicationJson = objectMapper.writeValueAsString(applicationJsonField)
 

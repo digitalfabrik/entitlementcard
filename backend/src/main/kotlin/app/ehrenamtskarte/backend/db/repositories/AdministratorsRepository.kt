@@ -6,9 +6,9 @@ import app.ehrenamtskarte.backend.db.entities.ProjectEntity
 import app.ehrenamtskarte.backend.db.entities.Projects
 import app.ehrenamtskarte.backend.graphql.auth.types.NotificationSettings
 import app.ehrenamtskarte.backend.graphql.auth.types.Role
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidPasswordException
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidRoleException
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.RegionNotFoundException
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidPasswordException
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidRoleException
+import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.shared.crypto.PasswordCrypto
 import app.ehrenamtskarte.backend.shared.database.sortByKeys
 import app.ehrenamtskarte.backend.shared.exceptions.ProjectNotFoundException

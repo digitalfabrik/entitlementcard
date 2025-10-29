@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.cards
 
-import app.ehrenamtskarte.backend.GraphqlApiTest
+import app.ehrenamtskarte.backend.IntegrationTest
 import app.ehrenamtskarte.backend.db.entities.CardEntity
 import app.ehrenamtskarte.backend.db.entities.Cards
 import app.ehrenamtskarte.backend.db.entities.UserEntitlements
@@ -8,8 +8,10 @@ import app.ehrenamtskarte.backend.generated.VerifyCardInProjectV2
 import app.ehrenamtskarte.backend.generated.enums.CodeType
 import app.ehrenamtskarte.backend.generated.inputs.CardVerificationModelInput
 import app.ehrenamtskarte.backend.graphql.cards.types.CardVerificationResultModel
+import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
 import app.ehrenamtskarte.backend.helper.TestData
-import io.javalin.testtools.JavalinTest
+import app.ehrenamtskarte.backend.helper.toDataObject
+import app.ehrenamtskarte.backend.helper.toErrorObject
 import io.ktor.util.encodeBase64
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -17,12 +19,13 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
+import org.springframework.http.HttpStatus
 import java.time.LocalDate
 import kotlin.random.Random
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
+import kotlin.test.fail
 
-internal class VerifyCardTest : GraphqlApiTest() {
+internal class VerifyCardTest : IntegrationTest() {
     data class VerifyCardTestCase(val createCard: () -> Int, val valid: Boolean, val extendable: Boolean)
 
     companion object {
@@ -110,57 +113,56 @@ internal class VerifyCardTest : GraphqlApiTest() {
 
     @ParameterizedTest
     @MethodSource("verifyCardTestCases")
-    fun `should return whether the card is valid and extendable`(testCase: VerifyCardTestCase) =
-        JavalinTest.test(app) { _, client ->
-            val card = transaction {
-                CardEntity.findById(testCase.createCard())
-                    ?: error("Test card has not been created")
-            }
-            val query = createQuery(
-                cardInfoHash = card.cardInfoHash.encodeBase64(),
-                codeType = CodeType.valueOf(card.codeType.name),
-            )
-
-            val response = post(client, query)
-
-            assertEquals(200, response.code)
-
-            val verificationResult = response.toDataObject<CardVerificationResultModel>()
-
-            assertEquals(testCase.valid, verificationResult.valid)
-            assertEquals(testCase.extendable, verificationResult.extendable)
+    fun `should return whether the card is valid and extendable`(testCase: VerifyCardTestCase) {
+        val card = transaction {
+            CardEntity.findById(testCase.createCard()) ?: fail("Test card has not been created")
         }
+        val query = createQuery(
+            cardInfoHash = card.cardInfoHash.encodeBase64(),
+            codeType = CodeType.valueOf(card.codeType.name),
+        )
+        val response = postGraphQL(query)
+
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val verificationResult = response.toDataObject<CardVerificationResultModel>()
+
+        assertEquals(testCase.valid, verificationResult.valid)
+        assertEquals(testCase.extendable, verificationResult.extendable)
+    }
 
     @Test
-    fun `should return valid = false and extendable = false when the card doesn't exist`() =
-        JavalinTest.test(app) { _, client ->
-            val query = createQuery(
-                cardInfoHash = Random.nextBytes(20).encodeBase64(),
-                codeType = CodeType.STATIC,
-            )
+    fun `should return valid = false and extendable = false when the card doesn't exist`() {
+        val query = createQuery(
+            cardInfoHash = Random.nextBytes(20).encodeBase64(),
+            codeType = CodeType.STATIC,
+        )
+        val response = postGraphQL(query)
 
-            val response = post(client, query)
+        assertEquals(HttpStatus.OK, response.statusCode)
 
-            assertEquals(200, response.code)
+        val verificationResult = response.toDataObject<CardVerificationResultModel>()
 
-            val verificationResult = response.toDataObject<CardVerificationResultModel>()
-
-            assertFalse(verificationResult.valid)
-            assertFalse(verificationResult.extendable)
-        }
+        assertEquals(false, verificationResult.valid)
+        assertEquals(false, verificationResult.extendable)
+    }
 
     @Test
-    fun `should return an error when project does not exist`() =
-        JavalinTest.test(app) { _, client ->
-            val query = createQuery(
-                project = "non-existent.sozialpass.app",
-                cardInfoHash = "qwerty",
-                codeType = CodeType.STATIC,
-            )
-            val response = post(client, query)
+    fun `should return an error when project does not exist`() {
+        val query = createQuery(
+            project = "non-existent.sozialpass.app",
+            cardInfoHash = "qwerty",
+            codeType = CodeType.STATIC,
+        )
+        val response = postGraphQL(query)
 
-            assertEquals(404, response.code)
-        }
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val error = response.toErrorObject()
+
+        assertEquals("Project 'non-existent.sozialpass.app' not found", error.message)
+        assertEquals(GraphQLExceptionCode.PROJECT_NOT_FOUND, error.extensions.code)
+    }
 
     private fun createQuery(
         project: String = "koblenz.sozialpass.app",

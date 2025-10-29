@@ -161,9 +161,20 @@ const graphQlErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
         title: i18next.t('errors:freinetPersonDataInvalid'),
       }
     }
-    default:
+    case GraphQlExceptionCode.NotImplemented: {
       return {
-        title: defaultError.title,
+        title: i18next.t('errors:functionNotAvailable'),
+      }
+    }
+    case GraphQlExceptionCode.ProjectNotFound: {
+      return {
+        title: i18next.t('errors:projectNotFound'),
+      }
+    }
+    case GraphQlExceptionCode.Forbidden:
+    case GraphQlExceptionCode.Unauthorized:
+      return {
+        title: i18next.t('errors:notAuthorized'),
       }
   }
 }
