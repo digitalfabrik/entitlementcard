@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.config
 
 import org.slf4j.LoggerFactory
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import java.io.File
@@ -25,7 +26,8 @@ class ConfigurationLoader {
     )
 
     @Bean
-    fun load(): BackendConfiguration {
+    @ConditionalOnMissingBean(BackendConfiguration::class)
+    fun backendConfiguration(): BackendConfiguration {
         val url = findConfigurationUrl()
         return BackendConfiguration.load(url)
     }
