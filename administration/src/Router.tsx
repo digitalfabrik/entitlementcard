@@ -46,10 +46,10 @@ const AuthLayout = (): ReactElement => {
         onSignIn={signIn}
         onSignOut={() => {
           navigate('/logout', { replace: true })
-        }}>
-        <NavigationBar />
-        <Outlet />
-      </AutomaticLogoutDialog>
+        }}
+      />
+      <NavigationBar />
+      <Outlet />
     </WhoAmIProvider>
   ) : (
     <Login onSignIn={signIn} />
