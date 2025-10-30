@@ -1,5 +1,5 @@
 import { EditSquare, Logout, Settings } from '@mui/icons-material'
-import { Avatar, Box, Button, Divider, IconButton, Menu, Stack, Typography } from '@mui/material'
+import { Avatar, Box, Button, Divider, IconButton, Menu, Typography } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -46,7 +46,7 @@ const UserMenu = (): ReactElement => {
         sx={{
           mt: '45px',
           '& .MuiList-root': {
-            padding: 0.5,
+            padding: 1,
           },
         }}
         id='menu-appbar'
@@ -62,8 +62,8 @@ const UserMenu = (): ReactElement => {
         }}
         open={Boolean(anchorElUser)}
         onClose={handleCloseUserMenu}>
-        <Stack sx={{ paddingX: 0.5, paddingTop: 1, paddingBottom: 0.5, alignItems: 'baseline' }}>
-          <Box sx={{ paddingX: 1, marginBottom: 1 }}>
+        <>
+          <Box sx={{ paddingX: 1, marginY: 1 }}>
             <Typography noWrap fontWeight='500'>
               {email}
             </Typography>
@@ -100,7 +100,7 @@ const UserMenu = (): ReactElement => {
             onClick={signOutAndRedirect}>
             {t('logout')}
           </Button>
-        </Stack>
+        </>
       </Menu>
     </Box>
   )
