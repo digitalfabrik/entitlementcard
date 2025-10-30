@@ -1,8 +1,9 @@
 import React, { ReactElement, useContext, useMemo } from 'react'
-import { Outlet, Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router'
+import { Outlet, Route, RouterProvider, createBrowserRouter, createRoutesFromElements, useNavigate } from 'react-router'
 
 import { AuthContext } from './AuthProvider'
-import KeepAliveToken from './KeepAliveToken'
+import AutomaticLogoutDialog from './AutomaticLogoutDialog'
+import { Logout } from './Logout'
 import WhoAmIProvider from './WhoAmIProvider'
 import NavigationBar from './bp-modules/NavigationBar'
 import ActivityLogController from './bp-modules/activity-log/ActivityLogController'
@@ -34,15 +35,21 @@ import ImprintPage from './mui-modules/imprint/ImprintPage'
 import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
 
 const AuthLayout = (): ReactElement => {
-  const { data: authData, signIn, signOut } = useContext(AuthContext)
+  const { data: authData, signIn } = useContext(AuthContext)
+  const navigate = useNavigate()
   const isLoggedIn = authData !== null && authData.expiry > new Date()
 
   return isLoggedIn ? (
     <WhoAmIProvider>
-      <KeepAliveToken authData={authData} onSignIn={signIn} onSignOut={signOut}>
-        <NavigationBar />
-        <Outlet />
-      </KeepAliveToken>
+      <AutomaticLogoutDialog
+        expiresAt={authData.expiry}
+        onSignIn={signIn}
+        onSignOut={() => {
+          navigate('/logout', { replace: true })
+        }}
+      />
+      <NavigationBar />
+      <Outlet />
     </WhoAmIProvider>
   ) : (
     <Login onSignIn={signIn} />
@@ -66,6 +73,7 @@ const Router = (): ReactElement => {
             <Route path='/reset-password/' element={<ResetPasswordController />} />
             <Route path='/imprint/' element={<ImprintPage />} />
             <Route path='/download/' element={<DownloadPage />} />
+            <Route path='/logout' Component={Logout} />
 
             {projectConfig.applicationFeature && (
               <>
