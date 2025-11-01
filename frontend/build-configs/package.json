@@ -9,7 +9,7 @@
     "prepare": "tsc --build"
   },
   "devDependencies": {
-    "@eslint/compat": "^1.4.0",
+    "@eslint/compat": "^1.4.1",
     "@eslint/eslintrc": "^3.3.1",
     "eslint": "^9.34.0",
     "eslint-config-airbnb": "^19.0.4",
@@ -24,6 +24,6 @@
     "eslint-plugin-unicorn": "^60.0.0",
     "prettier": "^2.8.8",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.46.0"
+    "typescript-eslint": "^8.46.2"
   }
 }
