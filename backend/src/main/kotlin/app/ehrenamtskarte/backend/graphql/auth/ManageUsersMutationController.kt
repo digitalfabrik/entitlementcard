@@ -22,7 +22,6 @@ import org.springframework.stereotype.Controller
 
 @Controller
 class ManageUsersMutationController(
-    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     private val backendConfig: BackendConfiguration,
 ) {
     @GraphQLDescription("Creates a new administrator")

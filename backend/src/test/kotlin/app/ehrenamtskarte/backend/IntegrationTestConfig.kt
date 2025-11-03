@@ -1,15 +1,18 @@
 package app.ehrenamtskarte.backend
 
 import app.ehrenamtskarte.backend.config.BackendConfiguration
+import kotlinx.io.files.FileNotFoundException
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Primary
 
 @TestConfiguration
 class IntegrationTestConfig {
     @Bean
-    fun backendConfiguration(): BackendConfiguration {
-        val resource = ClassLoader.getSystemResource("config.test.yml")
-            ?: throw Exception("Configuration resource 'src/test/resources/config.test.yml' not found")
-        return BackendConfiguration.load(resource)
-    }
+    @Primary
+    fun backendConfiguration(): BackendConfiguration =
+        BackendConfiguration.load(
+            ClassLoader.getSystemResource("config.test.yml")
+                ?: throw FileNotFoundException("src/test/resources/config.test.yml"),
+        )
 }

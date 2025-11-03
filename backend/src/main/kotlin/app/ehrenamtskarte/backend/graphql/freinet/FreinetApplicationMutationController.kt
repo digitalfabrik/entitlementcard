@@ -28,7 +28,6 @@ import org.springframework.stereotype.Controller
 
 @Controller
 class FreinetApplicationMutationController(
-    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     private val backendConfiguration: BackendConfiguration,
 ) {
     private val logger = LoggerFactory.getLogger(FreinetApplicationMutationController::class.java)

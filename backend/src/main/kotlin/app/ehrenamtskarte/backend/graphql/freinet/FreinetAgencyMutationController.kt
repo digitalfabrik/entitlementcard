@@ -18,7 +18,6 @@ import org.springframework.stereotype.Controller
 
 @Controller
 class FreinetAgencyMutationController(
-    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     private val backendConfiguration: BackendConfiguration,
 ) {
     @GraphQLDescription("Updates the data transfer to freinet. Works only for the EAK project.")

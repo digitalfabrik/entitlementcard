@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class HealthController(
-    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     private val config: BackendConfiguration,
 ) {
     private val logger = LoggerFactory.getLogger(HealthController::class.java)

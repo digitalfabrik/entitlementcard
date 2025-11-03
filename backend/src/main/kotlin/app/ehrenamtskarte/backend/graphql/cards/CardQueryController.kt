@@ -18,7 +18,6 @@ import java.util.Base64
 
 @Controller
 class CardQueryController(
-    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     private val backendConfiguration: BackendConfiguration,
 ) {
     @GraphQLDescription(

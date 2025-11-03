@@ -16,7 +16,6 @@ import org.springframework.stereotype.Controller
 
 @Controller
 class FreinetAgencyQueryController(
-    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     private val backendConfiguration: BackendConfiguration,
 ) {
     @GraphQLDescription(

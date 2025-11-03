@@ -1,15 +1,19 @@
 package app.ehrenamtskarte.backend.config
 
 import org.slf4j.LoggerFactory
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 import java.io.File
 import java.net.URL
 import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.io.path.exists
 
-object ConfigurationLoader {
-    private val logger = LoggerFactory.getLogger(ConfigurationLoader::class.java)
+private val logger by lazy { LoggerFactory.getLogger(ConfigurationLoader::class.java) }
 
+@Configuration
+class ConfigurationLoader {
     private val defaultConfigFilePaths: List<Path> = listOf(
         Paths.get(System.getProperty("user.dir"), "config.yml"),
         Paths.get(System.getProperty("user.home"), ".config", "entitlementcard", "config.yml"),
@@ -21,13 +25,17 @@ object ConfigurationLoader {
         "config/config.yml",
     )
 
+    @Bean
+    @ConditionalOnMissingBean(BackendConfiguration::class)
+    fun backendConfiguration(): BackendConfiguration = BackendConfiguration.load(findConfigurationUrl())
+
     /**
      * Finds the configuration URL from an explicit file or by searching default locations.
      * @param explicitConfigFile An optional, explicitly provided config file.
      * @return The URL to the found configuration file.
      * @throws IllegalStateException if no configuration file can be found.
      */
-    private fun findConfigurationUrl(explicitConfigFile: File? = null): URL =
+    fun findConfigurationUrl(explicitConfigFile: File? = null): URL =
         explicitConfigFile?.let {
             logger.info("Load backend configuration from explicit config file '$it'.")
             it.toURI().toURL()
@@ -46,15 +54,4 @@ object ConfigurationLoader {
             "No backend configuration found. Please provide a config.yml file in one of the default locations: " +
                 "${defaultConfigFilePaths.joinToString()} or in classpath resources: ${defaultConfigResourceUrls.joinToString()}",
         )
-
-    /**
-     * Loads the BackendConfiguration from a file.
-     * If no file is provided, it searches in default locations.
-     * @param configFile An optional, explicitly provided config file.
-     * @return The loaded BackendConfiguration.
-     */
-    fun load(configFile: File? = null): BackendConfiguration {
-        val url = findConfigurationUrl(configFile)
-        return BackendConfiguration.load(url)
-    }
 }
