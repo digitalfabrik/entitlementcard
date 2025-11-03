@@ -255,5 +255,12 @@ export const theme = (config: ProjectConfig): Theme =>
           },
         },
       },
+      MuiDialogContentText: {
+        styleOverrides: {
+          root: {
+            color: 'inherit',
+          },
+        },
+      },
     },
   })
