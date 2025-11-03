@@ -1,4 +1,3 @@
-import { CircularProgress, styled } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -6,6 +5,7 @@ import { useNavigate } from 'react-router'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { Role, useImportAcceptingStoresMutation } from '../../generated/graphql'
+import CenteredCircularProgress from '../../mui-modules/base/CenteredCircularProgress'
 import RenderGuard from '../../mui-modules/components/RenderGuard'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { StoresFieldConfig } from '../../project-configs/getProjectConfig'
@@ -14,13 +14,6 @@ import StoresButtonBar from './StoresButtonBar'
 import StoresCSVInput from './StoresCSVInput'
 import StoresImportResult from './StoresImportResult'
 import StoresTable from './StoresTable'
-
-const CenteredSpinner = styled(CircularProgress)`
-  z-index: 999;
-  top: 50%;
-  left: 50%;
-  position: fixed;
-`
 
 type StoreImportProps = {
   fields: StoresFieldConfig[]
@@ -94,7 +87,7 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
 
   return (
     <>
-      {(isApplyingStoreTransaction || isLoadingCoordinates) && <CenteredSpinner />}
+      {(isApplyingStoreTransaction || isLoadingCoordinates) && <CenteredCircularProgress />}
       {acceptingStores.length === 0 ? (
         <StoresCSVInput
           setAcceptingStores={setAcceptingStores}
