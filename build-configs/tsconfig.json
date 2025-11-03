@@ -1,8 +1,7 @@
 {
-  "extends": "../../administration/tsconfig.json",
+  "extends": "../administration/tsconfig.json",
   "compilerOptions": {
-    "composite": true,
-    "types": [],
+    "moduleResolution": "bundler",
     "noEmit": false,
     "outDir": "dist"
   },
