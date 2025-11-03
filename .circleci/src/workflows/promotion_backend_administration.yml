@@ -3,3 +3,8 @@ jobs:
   - promote_server:
       context:
         - credentials-ehrenamtskarte
+  - promote_github_release:
+      context:
+        - deliverino
+      requires:
+        - promote_server

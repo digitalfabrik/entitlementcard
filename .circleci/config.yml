@@ -1296,6 +1296,11 @@ workflows:
             - promote_server:
                 context:
                     - credentials-ehrenamtskarte
+            - promote_github_release:
+                context:
+                    - deliverino
+                requires:
+                    - promote_server
         when: << pipeline.parameters.run_promotion_backend_administration >>
     promotion_frontend:
         jobs:
@@ -1317,5 +1322,11 @@ workflows:
                             - bayern
                             - nuernberg
                             - koblenz
+            - promote_github_release:
+                context:
+                    - deliverino
+                requires:
+                    - promote_android
+                    - promote_ios
         when: << pipeline.parameters.run_promotion_frontend >>
 

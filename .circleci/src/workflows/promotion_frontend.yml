@@ -12,3 +12,9 @@ jobs:
           build_config: [bayern, nuernberg, koblenz]
       context:
         - tuerantuer-apple
+  - promote_github_release:
+      context:
+        - deliverino
+      requires:
+        - promote_android
+        - promote_ios
