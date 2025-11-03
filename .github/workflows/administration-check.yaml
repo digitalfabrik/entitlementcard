@@ -11,7 +11,7 @@ on:
       - package.json
       - package-lock.json
       - administration/**
-      - frontend/build-configs/**
+      - build-configs/**
 
 jobs:
   administration-check:
