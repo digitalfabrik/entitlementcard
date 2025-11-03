@@ -16,7 +16,7 @@ const VerificationContainer = styled('ul')`
 
 const VerificationsView = ({
   application,
-  isAdminView,
+  isAdminView = false,
 }: {
   application: Pick<ApplicationPublic, 'id' | 'status'> & {
     verifications: Array<
@@ -43,10 +43,9 @@ const VerificationsView = ({
               verification={verification}
               applicationId={application.id}
               showResendApprovalEmailButton={
-                isAdminView === true &&
+                isAdminView &&
                 verificationStatus(verification) === VerificationStatus.Pending &&
-                application.status !== ApplicationStatus.Withdrawn &&
-                application.status !== ApplicationStatus.Rejected
+                application.status === ApplicationStatus.Pending
               }
             />
           )

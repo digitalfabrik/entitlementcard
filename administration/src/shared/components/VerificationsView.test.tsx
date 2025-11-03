@@ -23,7 +23,7 @@ describe('VerificationsView', () => {
   ) =>
     renderWithTranslation(
       <MockedProvider>
-        <VerificationsView application={application} isAdminView={false} />
+        <VerificationsView application={application} />
       </MockedProvider>
     )
 
