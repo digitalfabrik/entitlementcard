@@ -27,10 +27,7 @@ class ConfigurationLoader {
 
     @Bean
     @ConditionalOnMissingBean(BackendConfiguration::class)
-    fun backendConfiguration(): BackendConfiguration {
-        val url = findConfigurationUrl()
-        return BackendConfiguration.load(url)
-    }
+    fun backendConfiguration(): BackendConfiguration = BackendConfiguration.load(findConfigurationUrl())
 
     /**
      * Finds the configuration URL from an explicit file or by searching default locations.
