@@ -7,11 +7,6 @@ import { renderWithTranslation } from '../../testing/render'
 import { JsonField } from './JsonFieldView'
 import VerificationsView from './VerificationsView'
 
-jest.mock('@blueprintjs/core', () => ({
-  ...jest.requireActual('@blueprintjs/core'),
-  Icon: () => 'icon',
-}))
-
 describe('VerificationsView', () => {
   const renderView = (
     application: Pick<ApplicationPublic, 'status' | 'id'> & {

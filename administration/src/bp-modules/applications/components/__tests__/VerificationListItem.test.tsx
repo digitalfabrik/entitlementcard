@@ -7,11 +7,6 @@ import VerificationListItem from '../../../../shared/components/VerificationList
 import { renderWithTranslation } from '../../../../testing/render'
 import { verificationsAwaiting, verificationsRejected, verificationsVerified } from '../../__mocks__/verificationData'
 
-jest.mock('@blueprintjs/core', () => ({
-  ...jest.requireActual('@blueprintjs/core'),
-  Icon: () => 'icon',
-}))
-
 describe('VerificationListItem', () => {
   const mockTokenPayload = {
     token: 'dummy',

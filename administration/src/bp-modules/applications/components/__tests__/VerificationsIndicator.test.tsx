@@ -11,11 +11,6 @@ import {
 import { PreVerifiedEntitlementType, preVerifiedEntitlements } from '../../preVerifiedEntitlements'
 import { PreVerifiedIndicator, VerificationIndicator } from '../VerificationsIndicator'
 
-jest.mock('@blueprintjs/core', () => ({
-  ...jest.requireActual('@blueprintjs/core'),
-  Icon: () => 'icon',
-}))
-
 describe('VerificationQuickIndicator', () => {
   it('should show only awaiting verifications', () => {
     const { getByTestId } = renderWithTranslation(<VerificationIndicator verifications={verificationsAwaiting} />)
