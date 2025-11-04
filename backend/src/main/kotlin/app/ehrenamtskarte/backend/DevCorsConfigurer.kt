@@ -3,8 +3,8 @@ package app.ehrenamtskarte.backend
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.Environment
 import org.springframework.stereotype.Component
-import org.springframework.web.servlet.config.annotation.CorsRegistry
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
+import org.springframework.web.reactive.config.CorsRegistry
+import org.springframework.web.reactive.config.WebFluxConfigurer
 
 /**
  * Development-only configuration that adds CORS headers to responses.
@@ -14,7 +14,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 @Component
 class DevCorsConfigurer(
     private val config: BackendConfiguration,
-) : WebMvcConfigurer {
+) : WebFluxConfigurer {
     override fun addCorsMappings(registry: CorsRegistry) {
         if (config.environment == Environment.DEVELOPMENT) {
             registry.addMapping("/**")

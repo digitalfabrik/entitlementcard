@@ -9,11 +9,11 @@ import app.ehrenamtskarte.backend.shared.Matomo
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import graphql.schema.DataFetchingEnvironment
-import jakarta.servlet.http.HttpServletRequest
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.ContextValue
 import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.stereotype.Controller
+import org.springframework.web.reactive.function.server.ServerRequest
 import java.util.Base64
 
 @Controller
@@ -27,7 +27,7 @@ class CardQueryController(
     fun verifyCardInProjectV2(
         @Argument project: String,
         @Argument card: CardVerificationModel,
-        @GraphQLIgnore @ContextValue request: HttpServletRequest,
+        @GraphQLIgnore @ContextValue request: ServerRequest,
         dfe: DataFetchingEnvironment,
     ): CardVerificationResultModel {
         val projectConfig = backendConfiguration.getProjectConfig(project)

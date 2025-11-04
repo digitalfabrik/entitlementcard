@@ -12,7 +12,6 @@ import app.ehrenamtskarte.backend.shared.TokenAuthenticator
 import app.ehrenamtskarte.backend.shared.crypto.Argon2IdHasher
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
-import jakarta.servlet.http.HttpServletRequest
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
+import org.springframework.web.reactive.function.server.ServerRequest
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.time.LocalDate
@@ -49,7 +49,7 @@ class UserImportController(
     """,
         )
         @RequestParam("file", required = false) files: List<MultipartFile>?,
-        request: HttpServletRequest,
+        request: ServerRequest,
     ): ResponseEntity<Map<String, String>> {
         when {
             files.isNullOrEmpty() -> throw UserImportException("No file uploaded")
@@ -57,7 +57,10 @@ class UserImportController(
         }
         val file = files.single()
 
-        val apiToken = TokenAuthenticator.authenticate(request, ApiTokenType.USER_IMPORT)
+        val apiToken = TokenAuthenticator.authenticate(
+            request.headers().firstHeader("Authorization"),
+            ApiTokenType.USER_IMPORT
+        )
         val project = transaction { ProjectEntity.find { Projects.id eq apiToken.projectId }.single() }
         val projectConfig = config.getProjectConfig(project.project)
 

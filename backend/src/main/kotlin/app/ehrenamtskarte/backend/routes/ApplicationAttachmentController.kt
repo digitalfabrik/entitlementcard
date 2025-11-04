@@ -11,7 +11,6 @@ import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import app.ehrenamtskarte.backend.shared.exceptions.NotFoundException
 import app.ehrenamtskarte.backend.shared.exceptions.ProjectNotFoundException
 import app.ehrenamtskarte.backend.shared.exceptions.UnauthorizedException
-import jakarta.servlet.http.HttpServletRequest
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.core.io.InputStreamResource
 import org.springframework.core.io.Resource
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.reactive.function.server.ServerRequest
 import java.io.File
 
 @RestController
@@ -34,9 +34,10 @@ class ApplicationAttachmentController(
         @PathVariable project: String,
         @PathVariable applicationId: Int,
         @PathVariable fileIndex: Int,
-        request: HttpServletRequest,
+        request: ServerRequest,
     ): ResponseEntity<Resource> {
-        val jwtPayload = JwtService.verifyRequest(request)
+        val jwtPayload = request.headers().firstHeader("Authorization")
+            ?.let { JwtService.verifyRequest(it) }
             ?: return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
 
         val (admin, application) = transaction {

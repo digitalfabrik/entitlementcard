@@ -25,12 +25,12 @@ import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import graphql.execution.DataFetcherResult
 import graphql.schema.DataFetchingEnvironment
-import jakarta.servlet.http.HttpServletRequest
-import jakarta.servlet.http.Part
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.ContextValue
 import org.springframework.graphql.data.method.annotation.MutationMapping
+import org.springframework.graphql.server.WebGraphQlRequest
+import org.springframework.http.codec.multipart.Part
 import org.springframework.stereotype.Controller
 import java.io.File
 
@@ -46,7 +46,7 @@ class EakApplicationMutationController(
         @Argument application: Application,
         @Argument project: String,
         @GraphQLIgnore @ContextValue(required = false) files: List<Part>?,
-        @GraphQLIgnore @ContextValue request: HttpServletRequest,
+        @GraphQLIgnore @ContextValue request: WebGraphQlRequest,
     ): DataFetcherResult<Boolean> =
         transaction {
             val applicationHandler = ApplicationHandler(
