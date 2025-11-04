@@ -1,6 +1,6 @@
-import { Colors } from '@blueprintjs/core'
 import ForwardToInboxIcon from '@mui/icons-material/ForwardToInbox'
-import { Button, Typography } from '@mui/material'
+import { Button, Typography, useTheme } from '@mui/material'
+import { Theme } from '@mui/system'
 import { TFunction } from 'i18next'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useState } from 'react'
@@ -13,7 +13,8 @@ import { VerificationIcon } from './VerificationIcon'
 
 const getStatusMetaData = (
   verification: Pick<ApplicationVerificationView, 'rejectedDate' | 'verifiedDate'>,
-  t: TFunction
+  t: TFunction,
+  theme: Theme
 ): { text: string; color: string } => {
   const unverifiedText = verification.rejectedDate
     ? `${t('rejectedOn')} ${new Date(verification.rejectedDate).toLocaleString('de')}`
@@ -21,8 +22,8 @@ const getStatusMetaData = (
   const text = verification.verifiedDate
     ? `${t('verifiedOn')} ${new Date(verification.verifiedDate).toLocaleString('de')}`
     : unverifiedText
-  const unverifiedColor = verification.rejectedDate ? Colors.RED2 : Colors.ORANGE2
-  const color = verification.verifiedDate ? Colors.GREEN2 : unverifiedColor
+  const unverifiedColor = verification.rejectedDate ? theme.palette.error.main : theme.palette.warning.main
+  const color = verification.verifiedDate ? theme.palette.success.main : unverifiedColor
 
   return { text, color }
 }
@@ -43,7 +44,8 @@ const VerificationListItem = ({
   const { enqueueSnackbar } = useSnackbar()
   const [isApprovalRequestSent, setIsApprovalRequestSent] = useState(false)
   const status = verificationStatus(verification)
-  const { text, color } = getStatusMetaData(verification, t)
+  const theme = useTheme()
+  const { text, color } = getStatusMetaData(verification, t, theme)
 
   const [sendApprovalEmail, sendApprovalEmailResult] = useSendApprovalMailToOrganisationMutation({
     onError: () => {
