@@ -1,5 +1,6 @@
-import { Colors, Icon, Tag } from '@blueprintjs/core'
-import { Typography, styled } from '@mui/material'
+import { Close, Done, DownloadForOffline } from '@mui/icons-material'
+import { Button, Typography } from '@mui/material'
+import { Stack } from '@mui/system'
 import { useSnackbar } from 'notistack'
 import React, { memo, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -15,19 +16,6 @@ const extensionByContentType = new Map([
   ['image/png', 'png'],
   ['image/jpeg', 'jpg'],
 ])
-
-const PrintAwareTag = styled(Tag)`
-  @media print {
-    display: none;
-  }
-`
-
-const PrintOnlySpan = styled('span')`
-  visibility: hidden;
-  @media print {
-    visibility: visible;
-  }
-`
 
 // Some field names are equal therefore the parents are needed for resolving the label
 const getTranslationKey = (fieldName: string, parentName?: string) =>
@@ -69,20 +57,19 @@ const JsonFieldAttachment = memo(
         }
       }
       return (
-        <Typography component='p'>
-          {t(getTranslationKey(jsonField.name, parentName))}:&nbsp;
-          <PrintAwareTag
-            round
-            endIcon={<Icon icon='download' color={Colors.GRAY1} />}
-            interactive
-            minimal
-            onClick={onClick}>{`${t('applicationsOverview:attachment')} ${
+        <Stack direction='row' sx={{ alignItems: 'center', gap: 1 }}>
+          <Typography> {t(getTranslationKey(jsonField.name, parentName))}:</Typography>
+          <Button
+            size='small'
+            endIcon={<DownloadForOffline />}
+            onClick={onClick}
+            sx={{ py: 0, displayPrint: 'none', boxShadow: 0 }}>{`${t('applicationsOverview:attachment')} ${
             jsonField.value.fileIndex + 1
-          }`}</PrintAwareTag>
-          <PrintOnlySpan>{`(${t('applicationsOverview:seeAttachment')} ${
-            jsonField.value.fileIndex + 1
-          })`}</PrintOnlySpan>
-        </Typography>
+          }`}</Button>
+          <Typography sx={{ display: 'none', displayPrint: 'block' }}>
+            {`(${t('applicationsOverview:seeAttachment')} ${jsonField.value.fileIndex + 1})`}
+          </Typography>
+        </Stack>
       )
     }
     return (
@@ -137,13 +124,15 @@ const JsonFieldElemental = ({
         <Typography component='p'>
           {t(getTranslationKey(jsonField.name, parentName))}:&nbsp;
           {jsonField.value ? (
-            <>
-              <Icon icon='tick' intent='success' /> {t('positiveAnswer')}
-            </>
+            <Typography component='span'>
+              <Done color='success' sx={{ fontSize: 16, verticalAlign: 'sub' }} />
+              {t('positiveAnswer')}
+            </Typography>
           ) : (
-            <>
-              <Icon icon='cross' intent='danger' /> {t('negativeAnswer')}
-            </>
+            <Typography component='span'>
+              <Close color='error' sx={{ fontSize: 16, verticalAlign: 'sub' }} />
+              {t('negativeAnswer')}
+            </Typography>
           )}
         </Typography>
       )
