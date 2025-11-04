@@ -4,12 +4,12 @@
 
 com-expediagroup-graphql = { id = "com.expediagroup.graphql", version.ref = "graphql" }
 com-google-protobuf = { id = "com.google.protobuf", version = "0.9.5" }
-com-github-gmazzo-buildconfig = { id = "com.github.gmazzo.buildconfig", version = "5.7.0"}
+com-github-gmazzo-buildconfig = { id = "com.github.gmazzo.buildconfig", version = "5.7.1"}
 io-gitlab-arturbosch-detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.8" }
 org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 org-jetbrains-kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version = "0.9.3" }
-org-jlleitschuh-gradle-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "12.3.0" }
-io-sentry-jvm-gradle = { id = "io.sentry.jvm.gradle", version = "5.12.1"}
+org-jlleitschuh-gradle-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "13.1.0" }
+io-sentry-jvm-gradle = { id = "io.sentry.jvm.gradle", version = "5.12.2"}
 
 [versions]
 
