@@ -5,6 +5,8 @@ on:
       - main
     paths:
       - 'administration/**'
+permissions:
+  checks: write
 jobs:
   administration-check:
     runs-on: ubuntu-latest
