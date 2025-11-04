@@ -1,5 +1,4 @@
-import { Card, Classes, InputGroup } from '@blueprintjs/core'
-import { Button, FormControl, FormLabel, Stack, Typography } from '@mui/material'
+import { Box, Button, Card, FormControl, InputLabel, Stack, TextField, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -63,7 +62,7 @@ const ResetPasswordController = (): ReactElement => {
 
   return (
     <StandaloneCenter>
-      <Card style={{ width: '100%', maxWidth: '500px' }}>
+      <Card sx={{ width: '100%', maxWidth: '500px', p: 2 }}>
         <Typography variant='h4'>{config.name}</Typography>
         <Typography variant='h5'>{t('administration')}</Typography>
         <Typography variant='h6'>{t('resetPassword')}</Typography>
@@ -73,35 +72,59 @@ const ResetPasswordController = (): ReactElement => {
             e.preventDefault()
             submit()
           }}>
-          <Stack sx={{ gap: 2 }}>
-            <FormControl fullWidth>
-              <FormLabel>{t('eMail')}</FormLabel>
-              <InputGroup value={adminEmail} disabled type='email' />
+          <Stack sx={{ gap: 2, marginTop: 3, marginBottom: 2 }}>
+            <TextField
+              fullWidth
+              autoComplete='on'
+              autoFocus
+              type='email'
+              size='small'
+              label={t('eMail')}
+              value={adminEmail}
+              required
+              disabled
+            />
+            <FormControl variant='outlined'>
+              <InputLabel required size='small'>
+                {t('newPassword')}
+              </InputLabel>
+              <PasswordInput
+                label={t('newPassword')}
+                placeholder='Passwort'
+                setValue={setNewPassword}
+                value={newPassword}
+                disabled={loading}
+                fullWidth
+                autoFocus={false}
+              />
             </FormControl>
-            <FormControl fullWidth>
-              <FormLabel>{t('newPassword')}</FormLabel>
-              <PasswordInput setValue={setNewPassword} value={newPassword} />
+            <FormControl variant='outlined'>
+              <InputLabel required size='small'>
+                {t('newPasswordRepeat')}
+              </InputLabel>
+              <PasswordInput
+                label={t('newPasswordRepeat')}
+                placeholder='Passwort'
+                setValue={setRepeatNewPassword}
+                value={repeatNewPassword}
+                disabled={loading}
+                fullWidth
+                autoFocus={false}
+              />
             </FormControl>
-            <FormControl fullWidth>
-              <FormLabel>{t('newPasswordRepeat')}</FormLabel>
-              <PasswordInput setValue={setRepeatNewPassword} value={repeatNewPassword} />
-            </FormControl>
-
             {warnMessage === null || !isDirty ? null : (
               <AlertBox sx={{ my: 2, mx: 0 }} severity='error' description={warnMessage} />
             )}
           </Stack>
 
-          <div
-            className={Classes.DIALOG_FOOTER_ACTIONS}
-            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 1.5 }}>
             <Button href='/' variant='text'>
               {t('backToLogin')}
             </Button>
-            <Button type='submit' loading={loading} variant='contained' disabled={warnMessage !== null}>
+            <Button type='submit' loading={loading} variant='contained' color='primary' disabled={warnMessage !== null}>
               {t('resetPassword')}
             </Button>
-          </div>
+          </Box>
         </form>
       </Card>
     </StandaloneCenter>
