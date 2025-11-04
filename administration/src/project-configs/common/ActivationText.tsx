@@ -1,14 +1,7 @@
-import { Button, Link, Typography, styled } from '@mui/material'
+import { Button, Link, Typography } from '@mui/material'
 import { TFunction } from 'i18next'
 import React, { ReactElement } from 'react'
 import { Trans } from 'react-i18next'
-
-const ActivationButton = styled(Button)`
-  margin-top: 12px;
-  :hover {
-    color: white;
-  }
-`
 
 export const ActivationText = (
   applicationName: string,
@@ -22,9 +15,9 @@ export const ActivationText = (
     </Typography>
     <Typography component='span'>
       <Trans i18nKey='activation:description' values={{ applicationName }} /> <br />{' '}
-      <ActivationButton href={deepLink} variant='contained' size='small'>
+      <Button href={deepLink} variant='contained' sx={{ mt: 1.5 }} color='primary'>
         {t('activateButton')}
-      </ActivationButton>
+      </Button>
       <br /> <br />
       <b>{t('steps')}</b>
     </Typography>

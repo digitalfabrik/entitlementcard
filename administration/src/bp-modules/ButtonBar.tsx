@@ -3,7 +3,7 @@ import { Box, styled } from '@mui/system'
 const ButtonBar = styled(Box)(({ theme }) => ({
   width: '100%',
   padding: theme.spacing(2, 1),
-  background: '#fafafa',
+  background: theme.palette.common.white,
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'flex-end',

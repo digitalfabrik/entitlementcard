@@ -707,6 +707,7 @@
     "startDayFutureError": "Das Startdatum darf nicht weiter als {{maxValidationDate}} in der Zukunft liegen."
   },
   "shared": {
+    "warningDialogTitle": "Warnung",
     "accordionShowLess": "Weniger anzeigen",
     "accordionShowMore": "Mehr anzeigen"
   }

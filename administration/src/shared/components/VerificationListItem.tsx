@@ -1,6 +1,6 @@
 import { Colors } from '@blueprintjs/core'
 import ForwardToInboxIcon from '@mui/icons-material/ForwardToInbox'
-import { Box, Button, Typography } from '@mui/material'
+import { Button, Typography } from '@mui/material'
 import { TFunction } from 'i18next'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useState } from 'react'
@@ -83,10 +83,8 @@ const VerificationListItem = ({
           </tr>
           <tr>
             <td>{t('status')}:</td>
-            <td>
-              <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1 }}>
-                <VerificationIcon status={status} /> {text}
-              </Box>
+            <td style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <VerificationIcon status={status} /> {text}
             </td>
           </tr>
         </tbody>
