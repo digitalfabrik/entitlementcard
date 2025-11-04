@@ -347,7 +347,8 @@
     "confirm": "Bestätigen",
     "delete": "Löschen",
     "clickHere": "hier",
-    "imprint": "Impressum"
+    "imprint": "Impressum",
+    "browseButtonLabelSingleFile": "Datei wählen"
   },
   "home": {
     "incomingApplications": "Eingehende Anträge",
