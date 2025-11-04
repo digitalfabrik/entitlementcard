@@ -664,7 +664,7 @@ jobs:
             - notify:
                 allow_all_branches: true
                 channel: releases
-                success_message: <<^ parameters.production_delivery >>[Beta] <</ parameters.production_delivery >>Ehrenamtskarte Bayern, Sozialpass Nürnberg und Sozialpass Koblenz ${NEW_VERSION_NAME} have been released successfully! https://github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/tag/${NEW_VERSION_NAME}-all
+                success_message: <<^ parameters.production_delivery >>[Beta] <</ parameters.production_delivery >>Ehrenamtskarte Bayern, Sozialpass Nürnberg und Sozialpass Koblenz ${NEW_VERSION_NAME} have been released successfully! https://github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/tag/${NEW_VERSION_NAME}
     pack_administration:
         docker:
             - image: debian:12
