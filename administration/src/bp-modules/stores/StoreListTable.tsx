@@ -87,8 +87,6 @@ const StoreListTable = ({ data }: { data: AcceptingStoresData[] }): ReactElement
           },
         }}
         disableRowSelectionOnClick
-        hideFooterPagination
-        hideFooter
         disableColumnMenu
       />
     </Box>
