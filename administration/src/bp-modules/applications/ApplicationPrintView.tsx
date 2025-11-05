@@ -69,7 +69,7 @@ export const ApplicationPrintView = forwardRef<
         key={0}
         hierarchyIndex={0}
         attachmentAccessible
-        expandedRoot={false}
+        expandedRoot
       />
       <hr />
       <VerificationsView application={p.application} isAdminView />

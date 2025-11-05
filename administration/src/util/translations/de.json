@@ -160,7 +160,8 @@
     "noValidNumberError": "Eingabe ist keine Zahl.",
     "minMaxNumberError": "Wert muss zwischen {{min}} und {{max}} liegen.",
     "valueHasToBeSelectableOptionError": "Wert muss einer der auswählbaren Optionen entsprechen.",
-    "invalidDataError": "Ihre Eingaben sind ungültig oder nicht vollständig."
+    "invalidDataError": "Ihre Eingaben sind ungültig oder nicht vollständig.",
+    "dateBefore1900Error": "Das Datum muss nach dem 1.1.1900 liegen."
   },
   "applicationsOverview": {
     "statusBarAll": "Alle Anträge",
@@ -228,20 +229,24 @@
       "Die angegebene Anwartschaftszeit des Engagements ist leider nicht ausreichend, um die blaue Bayerische Ehrenamtskarte zu erhalten. Erforderlich ist ein Engagement von mindestens zwei Jahren.",
       "Die angegebene Anwartschaftszeit des Engagements ist leider nicht ausreichend, um die goldene Bayerische Ehrenamtskarte zu erhalten. Erforderlich ist ein Engagement von mindestens 25 Jahren.",
       "Die von Ihnen angegebene Höhe der Aufwandsentschädigung übersteigt leider die möglichen Freibeträge.",
-      "Die von Ihnen angegebene Tätigkeit ist leider nicht als “Ehrenamt” zu werten. Ehrenamtlichkeit zeichnet sich insbesondere durch Unentgeltlichkeit, Gemeinwohlbezug und Freiwilligkeit aus.",
+      "Die von Ihnen angegebene Tätigkeit ist leider nicht als Ehrenamt zu werten. Ehrenamtlichkeit zeichnet sich insbesondere durch Unentgeltlichkeit, Gemeinwohlbezug und Freiwilligkeit aus.",
       "Die angegebene Stundenzahl ist leider nicht ausreichend, um die goldene Bayerische Ehrenamtskarte zu erhalten. Erforderlich ist ein Engagement von durchschnittlich fünf Stunden pro Woche bzw. bei Projektarbeiten mindestens 250 Stunden pro Jahr.",
       "Die angegebene Stundenzahl ist leider nicht ausreichend, um die blaue Bayerische Ehrenamtskarte zu erhalten. Erforderlich ist ein Engagement von durchschnittlich fünf Stunden pro Woche bzw. bei Projektarbeiten mindestens 250 Stunden pro Jahr.",
       "Ihr Wohnsitz befindet sich nicht im Landkreis/der kreisfreien Stadt. Bitte stellen Sie Ihren Antrag in dem Landkreis/der kreisfreien Stadt, in welchem/in welcher sich Ihr Erstwohnsitz befindet.",
-      "Das erforderliche Mindestalter ist leider nicht erreicht. Um die Bayerische Ehrenmtskarte erhalten zu können, müssen Sie mindestens 16 Jahre alt sein.",
+      "Das erforderliche Mindestalter ist leider nicht erreicht. Um die Bayerische Ehrenamtskarte erhalten zu können, müssen Sie mindestens 16 Jahre alt sein.",
       "Leider fehlt hier ein Nachweis: Sie haben keine gültige Jugendleitercard (Juleica) vorgelegt.",
       "Leider fehlt hier ein Nachweis: Sie haben keinen Nachweis über einen derzeitigen Freiwilligendienst (FSJ, FÖJ, BFD) vorgelegt.",
       "Leider fehlt hier ein Nachweis: Sie haben keinen Nachweis über den aktiven Dienst in der Freiwilligen Feuerwehr (mit abgeschlossener Truppmannausbildung bzw. mit mindestens abgeschlossenem Basis-Modul der Modularen Truppausbildung) vorgelegt.",
       "Leider fehlt hier ein Nachweis: Sie haben keinen Nachweis über die Tätigkeit im Rettungsdienst mit abgeschlossener Grundausbildung vorgelegt.",
       "Leider fehlt hier ein Nachweis: Sie haben keinen Nachweis über die Tätigkeit im Katastrophenschutz mit abgeschlossener Grundausbildung vorgelegt.",
       "Leider fehlt hier ein Nachweis: Sie haben keinen Nachweis über einen Reservistendienst bei der Bundeswehr vorgelegt. Erforderlich wäre ein regelmäßiger, aktiver Wehrdienst an mindestens 40 Tagen in den vergangenen zwei Kalenderjahren oder eine ständige Angehörigkeit eines Bezirks- oder Kreisverbindungskommandos in den vergangenen zwei Kalenderjahren.",
-      "Leider fehlt hier ein Nachweis: Sie haben keinen Nachweis über das Ehrenzeichen des Bayerischen Ministerpräsidenten für Verdienste im Ehrenamt vorgelegt",
+      "Leider fehlt hier ein Nachweis: Sie haben keinen Nachweis über das Ehrenzeichen des Bayerischen Ministerpräsidenten für Verdienste im Ehrenamt vorgelegt.",
       "Die antragstellende Person ist identisch mit der bestätigenden Person. Bitte lassen Sie den Antrag von einer anderen Person (z.B. Vertretung) bestätigen.",
-      "Leider hat Ihr Verein bzw. Ihre Organisation das von Ihnen geleistet Ehrenamt bislang nicht bestätigt. Ohne eine entsprechende Bestätigung Ihres Engagements kann keine Ehrenamtskarte ausgestellt werden."
+      "Leider hat Ihr Verein bzw. Ihre Organisation das von Ihnen geleistet Ehrenamt bislang nicht bestätigt. Ohne eine entsprechende Bestätigung Ihres Engagements kann keine Ehrenamtskarte ausgestellt werden.",
+      "Sie sind bereits im Besitz einer noch gültigen Ehrenamtskarte, weshalb aktuell keine neue ausgestellt werden kann. Bitte beantragen Sie eine neue Karte, wenn das Gültigkeitsdatum auf der bisherigen abgelaufen ist oder demnächst abläuft.",
+      "Laut unseren Unterlagen besitzen Sie bereits eine goldene Ehrenamtskarte mit unbegrenzter Gültigkeit. Sollten Sie diese verloren haben, bitten wir um kurze formlose Mitteilung, damit wir eine neue Karte ausstellen können.",
+      "Leider erkennen wir bei Ihrem Ehrenamt nicht, dass Sie in den letzten beiden Jahren auf mindestens 5 Stunden pro Woche ehrenamtlich tätig waren. Falls Sie Nachweise haben, die eine wöchentliche Zeit von 5 Stunden belegen, können Sie diese zusammen mit einem neuen Antrag einreichen.",
+      "Leider erfüllen Sie derzeit nicht alle erforderlichen Voraussetzungen. Bitte stellen Sie den Antrag erneut, sobald diese erfüllt sind."
     ],
     "rejectionButton": "Ablehnung bestätigen",
     "rejectionCancelButton": "Ablehnung abbrechen",
@@ -341,7 +346,8 @@
     "logout": "Logout",
     "confirm": "Bestätigen",
     "delete": "Löschen",
-    "clickHere": "hier"
+    "clickHere": "hier",
+    "imprint": "Impressum"
   },
   "home": {
     "incomingApplications": "Eingehende Anträge",
@@ -606,6 +612,7 @@
     "invalidCredentials": "Der Login ist fehlgeschlagen.",
     "invalidFileType": "Dieser Dateityp wird nicht unterstützt.",
     "invalidInput": "Die Anfrage enthält ungültige Eingaben.",
+    "invalidFileSizeWithMaximum": "Die gewählte Datei ist zu groß. Die maximale Dateigröße beträgt {{maxSize}} MB.",
     "invalidFileSize": "Die Datei ist zu groß.",
     "invalidDataPolicySize": "Unzulässige Zeichenlänge der Datenschutzerklärung. Maximal sind {{maxSize}} Zeichen erlaubt.",
     "invalidJson": "Daten konnten nicht geparsed werden.",
@@ -700,6 +707,7 @@
     "startDayFutureError": "Das Startdatum darf nicht weiter als {{maxValidationDate}} in der Zukunft liegen."
   },
   "shared": {
+    "warningDialogTitle": "Warnung",
     "accordionShowLess": "Weniger anzeigen",
     "accordionShowMore": "Mehr anzeigen"
   }

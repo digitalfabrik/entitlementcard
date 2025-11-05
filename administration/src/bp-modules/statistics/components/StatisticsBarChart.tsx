@@ -14,32 +14,19 @@ const BarContainer = styled('div')<{ height: number }>`
   flex-direction: column;
 `
 
+const StyledLine = styled('line')(({ theme }) => ({
+  stroke: theme.palette.common.black,
+  strokeWidth: 1,
+}))
+
 const OVERLAP_HEIGHT = 10
 
 const CustomAxisLines = ({ innerWidth, innerHeight }: BarCustomLayerProps<CardStatisticsResultModel>) => (
   <>
     {/* Bottom Axis Line */}
-    <line
-      x1={0}
-      x2={innerWidth + OVERLAP_HEIGHT}
-      y1={innerHeight}
-      y2={innerHeight}
-      style={{
-        stroke: '#000',
-        strokeWidth: 1,
-      }}
-    />
+    <StyledLine x1={0} x2={innerWidth + OVERLAP_HEIGHT} y1={innerHeight} y2={innerHeight} />
     {/* Left Axis Line */}
-    <line
-      x1={0}
-      x2={0}
-      y1={-OVERLAP_HEIGHT}
-      y2={innerHeight}
-      style={{
-        stroke: '#000',
-        strokeWidth: 1,
-      }}
-    />
+    <StyledLine x1={0} x2={0} y1={-OVERLAP_HEIGHT} y2={innerHeight} />
   </>
 )
 

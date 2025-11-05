@@ -16,7 +16,6 @@ import FormAlert from '../../mui-modules/base/FormAlert'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { removeMultipleSpaces } from '../../util/helper'
 import ExtensionForms from '../cards/ExtensionForms'
-import { UnderlineTextButton } from './components/UnderlineTextButton'
 import { DataPrivacyAcceptingStatus } from './constants'
 
 type CardSelfServiceFormProps = {
@@ -96,9 +95,13 @@ const CardSelfServiceForm = ({
           label={
             <Typography>
               {t('iAccept')}
-              <UnderlineTextButton onClick={() => setOpenDataPrivacy(true)}>
+              <Button
+                color='info'
+                variant='text'
+                sx={{ textDecoration: 'underline', px: 0, verticalAlign: 'unset' }}
+                onClick={() => setOpenDataPrivacy(true)}>
                 {t('datePrivacyAgreement')}
-              </UnderlineTextButton>
+              </Button>
               .
             </Typography>
           }

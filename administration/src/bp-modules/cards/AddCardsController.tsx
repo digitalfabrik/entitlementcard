@@ -1,12 +1,12 @@
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate, useSearchParams } from 'react-router'
+import { useBlocker, useNavigate, useSearchParams } from 'react-router'
 
 import { useWhoAmI } from '../../WhoAmIProvider'
 import { Region, Role } from '../../generated/graphql'
 import CenteredCircularProgress from '../../mui-modules/base/CenteredCircularProgress'
 import RenderGuard from '../../mui-modules/components/RenderGuard'
-import useBlockNavigation from '../../util/useBlockNavigation'
+import { BlockerDialog } from '../../shared/components/BlockerDialog'
 import AddCardsForm from './AddCardsForm'
 import GenerationFinished from './CardsCreatedMessage'
 import CreateCardsButtonBar from './CreateCardsButtonBar'
@@ -19,43 +19,50 @@ const InnerAddCardsController = ({ region }: { region: Region }) => {
     useCardGenerator({ region })
   const [searchParams, setSearchParams] = useSearchParams()
 
-  useBlockNavigation({
-    when: cards.length > 0,
-    message: t('dataWillBeLostWarning'),
-  })
-
-  if (cardGenerationStep === 'loading') {
-    return <CenteredCircularProgress />
-  }
-  if (cardGenerationStep === 'finished') {
-    return (
-      <GenerationFinished
-        reset={() => {
-          setCards([])
-          setSearchParams(undefined, { replace: true })
-          setCardGenerationStep('input')
-        }}
-      />
-    )
-  }
-
-  return (
-    <>
-      <AddCardsForm
-        region={region}
-        cards={cards}
-        setCards={setCards}
-        updateCard={updateCard}
-        showAddMoreCardsButton={searchParams.size === 0}
-      />
-      <CreateCardsButtonBar
-        cards={cards}
-        goBack={() => navigate('/cards')}
-        generateCardsPdf={() => generateCardsPdf()}
-        generateCardsCsv={() => generateCardsCsv()}
-      />
-    </>
+  const blocker = useBlocker(
+    ({ currentLocation, nextLocation }) =>
+      currentLocation.pathname !== nextLocation.pathname &&
+      cards.length > 0 &&
+      cards.some(card => card.fullName.trim().length > 0 || card.expirationDate !== null)
   )
+
+  switch (cardGenerationStep) {
+    case 'loading':
+      return <CenteredCircularProgress />
+    case 'finished':
+      return (
+        <GenerationFinished
+          reset={() => {
+            setCards([])
+            setSearchParams(undefined, { replace: true })
+            setCardGenerationStep('input')
+          }}
+        />
+      )
+    case 'input':
+      return (
+        <>
+          <AddCardsForm
+            region={region}
+            cards={cards}
+            setCards={setCards}
+            updateCard={updateCard}
+            showAddMoreCardsButton={searchParams.size === 0}
+          />
+          <CreateCardsButtonBar
+            cards={cards}
+            goBack={() => navigate('/cards')}
+            generateCardsPdf={() => generateCardsPdf()}
+            generateCardsCsv={() => generateCardsCsv()}
+          />
+          <BlockerDialog
+            title={t('shared:warningDialogTitle')}
+            message={t('dataWillBeLostWarning')}
+            blocker={blocker}
+          />
+        </>
+      )
+  }
 }
 
 const AddCardsController = (): ReactElement => {
