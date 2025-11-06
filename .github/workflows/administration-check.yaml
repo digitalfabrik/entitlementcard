@@ -1,20 +1,28 @@
-name: 'Administration Check'
+name: 'PR'
+
 on:
   pull_request:
     branches:
       - main
     paths:
       - 'administration/**'
+
 jobs:
   administration-check:
+    name: 'administration check'
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup node
+        uses: actions/setup-node@v4
         with:
           node-version: '20.18.0'
           cache: 'npm'
           cache-dependency-path: '**/package-lock.json'
+
       - name: Cache node modules
         uses: actions/cache@v4
         with:
@@ -22,17 +30,22 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
+
       - name: Install node modules
         run: npm ci --cache ~/.npm --prefer-offline
-      - name: Typescript
+
+      - name: Check Typescript
         run: npm run ts:check
         working-directory: administration
-      - name: Lint
+
+      - name: Run Lint
         run: npm run lint
         working-directory: administration
+
       - name: Check circular dependencies
         run: npm run check-circular-deps
         working-directory: administration
+
       - uses: ArtiomTr/jest-coverage-report-action@v2
         name: Run tests with coverage
         with:
@@ -40,4 +53,3 @@ jobs:
           skip-step: install
           working-directory: administration
           test-script: npm run test:coverage -- --silent --ci --json --testLocationInResults --outputFile=report.json --maxWorkers=1
-
