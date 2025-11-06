@@ -474,7 +474,7 @@
     "hasInvalidStores": "Fehlerhafte Einträge. Bitte prüfen sie die rot markierten Felder.",
     "importStores": "Importiere Akzeptanzpartner",
     "backToSelection": "Zurück zur Auswahl",
-    "storesCsvImport": "Akzeptanzpartner CSV Import",
+    "storesCsvImport": "CSV-Datei importieren",
     "selectAFile": "Wählen Sie eine Datei",
     "dryRun": "Testlauf",
     "dryRunDescription": "In diesem Testlauf wird nur simuliert, wie viele Akzeptanzpartner geändert oder gelöscht werden würden. Es werden noch keine Änderungen an der Datenbank vorgenommen.",
