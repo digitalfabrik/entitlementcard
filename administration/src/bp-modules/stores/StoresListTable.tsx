@@ -67,7 +67,7 @@ const columns = (t: TFunction): GridColDef[] => [
   },
 ]
 
-const StoreListTable = ({ data }: { data: AcceptingStoresData[] }): ReactElement => {
+const StoresListTable = ({ data }: { data: AcceptingStoresData[] }): ReactElement => {
   const { t } = useTranslation('stores')
 
   return (
@@ -98,4 +98,4 @@ const StoreListTable = ({ data }: { data: AcceptingStoresData[] }): ReactElement
   )
 }
 
-export default StoreListTable
+export default StoresListTable

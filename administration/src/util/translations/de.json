@@ -513,7 +513,9 @@
     "storeListHeadlineAddress": "Adresse",
     "storeListHeadlineCategory": "Kategorie",
     "storeListHeadlineEmail": "E-Mail",
-    "storeListHeadlineTelephone": "Telefon"
+    "storeListHeadlineTelephone": "Telefon",
+    "storesListOverviewNoEntryTitle": "Noch keine Einträge",
+    "storesListOverviewNoEntryDescription": "Legen Sie eine neue Akzeptanzstelle an oder importieren Sie eine bestehende Liste."
   },
   "userSettings": {
     "passwordChangeSuccessful": "Passwort erfolgreich geändert.",
