@@ -33,18 +33,18 @@ const columns = (t: TFunction): GridColDef[] => [
   },
   {
     field: 'name',
-    headerName: t('storeListHeadlineName'),
+    headerName: t('storesListColumnName'),
     width: 250,
   },
   {
     field: 'category',
-    headerName: t('storeListHeadlineCategory'),
+    headerName: t('storesListColumnCategory'),
     width: 200,
     valueGetter: (_, row: AcceptingStoresData) => row.category.name,
   },
   {
     field: 'address',
-    headerName: t('storeListHeadlineAddress'),
+    headerName: t('storesListColumnAddress'),
     width: 300,
     valueGetter: (_, row: AcceptingStoresData) =>
       row.physicalStore
@@ -53,13 +53,13 @@ const columns = (t: TFunction): GridColDef[] => [
   },
   {
     field: 'telephone',
-    headerName: t('storeListHeadlineTelephone'),
+    headerName: t('storesListColumnTelephone'),
     width: 160,
     valueGetter: (_, row: AcceptingStoresData) => row.contact.telephone,
   },
   {
     field: 'email',
-    headerName: t('storeListHeadlineEmail'),
+    headerName: t('storesListColumnEmail'),
     width: 250,
     renderCell: ({ row }: { row: AcceptingStoresData }) =>
       row.contact.email ? <EMailCell email={row.contact.email} /> : undefined,
