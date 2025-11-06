@@ -82,6 +82,11 @@ const StoreListTable = ({ data }: { data: AcceptingStoresData[] }): ReactElement
         }}
         columns={columns(t)}
         initialState={{
+          columns: {
+            columnVisibilityModel: {
+              id: false,
+            },
+          },
           sorting: {
             sortModel: [{ field: 'name', sort: 'asc' }],
           },
