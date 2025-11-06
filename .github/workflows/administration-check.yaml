@@ -5,7 +5,13 @@ on:
     branches:
       - main
     paths:
-      - 'administration/**'
+      - .prettierrc
+      - eslint.config-base.mjs
+      - graphql.config.yml
+      - package.json
+      - package-lock.json
+      - administration/**
+      - frontend/build-configs/**
 
 jobs:
   administration-check:
