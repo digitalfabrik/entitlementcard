@@ -17,7 +17,6 @@ spring-dependencymanagement = { id = "io.spring.dependency-management", version 
 [versions]
 
 graphql = "8.8.1"
-javalin = "6.7.0"
 jetbrains-exposed = "0.61.0"
 junixsocket = "2.10.1"
 kotlin = "2.2.21"
@@ -61,9 +60,6 @@ jetbrains-kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-co
 jetbrains-kotlinx-html-jvm = { module = "org.jetbrains.kotlinx:kotlinx-html-jvm", version = "0.12.0" }
 jetbrains-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 jetbrains-kover-jvm-agent = "org.jetbrains.kotlinx:kover-jvm-agent:0.9.3"
-junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
-junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params" }
-junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version = "1.12.2" }
 kohlschutter-junixsocket-common = { module = "com.kohlschutter.junixsocket:junixsocket-common", version.ref = "junixsocket" }
 kohlschutter-junixsocket-core = { module = "com.kohlschutter.junixsocket:junixsocket-core", version.ref = "junixsocket" }
 ktor-client-cio-jvm = { module = "io.ktor:ktor-client-cio-jvm", version.ref = "ktor" }
