@@ -20,23 +20,39 @@ group = "app.ehrenamtskarte.backend"
 version = "0.0.1-SNAPSHOT"
 description = "Backend for the Ehrenamtskarte system"
 
+application {
+    mainClass.set("${project.group}.EntryPointKt")
+}
+
+sourceSets {
+    main {
+        proto {
+            srcDir("../specs")
+        }
+    }
+    test {
+        kotlin {
+            srcDir("${layout.buildDirectory.get()}/generated/source/graphql")
+        }
+    }
+}
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
 }
 
-protobuf {
-    protoc {
-        artifact = "com.google.protobuf:protoc:${libs.versions.protobuf.get()}"
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.addAll("-Xjsr305=strict")
     }
-    generateProtoTasks {
-        all().configureEach {
-            builtins {
-                create("kotlin")
-            }
-        }
-    }
+}
+
+buildConfig {
+    packageName(project.group.toString())
+    buildConfigField("VERSION_NAME", System.getProperty("NEW_VERSION_NAME", "1.0.0"))
+    buildConfigField("COMMIT_HASH", System.getenv("CIRCLE_SHA1"))
 }
 
 repositories {
@@ -122,16 +138,17 @@ dependencyManagement {
     }
 }
 
-kotlin {
-    compilerOptions {
-        freeCompilerArgs.addAll("-Xjsr305=strict")
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:${libs.versions.protobuf.get()}"
     }
-}
-
-buildConfig {
-    packageName(project.group.toString())
-    buildConfigField("VERSION_NAME", System.getProperty("NEW_VERSION_NAME", "1.0.0"))
-    buildConfigField("COMMIT_HASH", System.getenv("CIRCLE_SHA1"))
+    generateProtoTasks {
+        all().configureEach {
+            builtins {
+                create("kotlin")
+            }
+        }
+    }
 }
 
 if (isProductionEnvironment) {
@@ -144,27 +161,6 @@ if (isProductionEnvironment) {
         org = "digitalfabrik"
         projectName = "entitlementcard-backend"
         authToken = System.getenv("SENTRY_AUTH_TOKEN")
-    }
-}
-
-sourceSets {
-    main {
-        proto {
-            srcDir("../specs")
-        }
-    }
-    test {
-        kotlin {
-            srcDir("${layout.buildDirectory.get()}/generated/source/graphql")
-        }
-    }
-}
-
-tasks.processResources {
-    // required to load graphql schema by spring-boot
-    from("../specs") {
-        include("*.graphql")
-        into("specs")
     }
 }
 
@@ -184,6 +180,16 @@ ktlint {
     }
 }
 
+kover {
+    reports {
+        filters {
+            includes {
+                classes("${project.group}.*")
+            }
+        }
+    }
+}
+
 tasks.bootDistTar {
     enabled = false
 }
@@ -196,17 +202,11 @@ tasks.withType<Tar>().configureEach {
     archiveVersion.set("")
 }
 
-application {
-    mainClass.set("${project.group}.EntryPointKt")
-}
-
-kover {
-    reports {
-        filters {
-            includes {
-                classes("${project.group}.*")
-            }
-        }
+tasks.processResources {
+    // required to load graphql schema by spring-boot
+    from("../specs") {
+        include("*.graphql")
+        into("specs")
     }
 }
 
