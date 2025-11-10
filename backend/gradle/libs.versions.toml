@@ -6,12 +6,12 @@ expediagroup-graphql = { id = "com.expediagroup.graphql", version.ref = "graphql
 gitlab-arturbosch-detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.8" }
 gmazzo-buildconfig = { id = "com.github.gmazzo.buildconfig", version = "5.7.1"}
 google-protobuf = { id = "com.google.protobuf", version = "0.9.5" }
-jetbrains-kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version = "2.2.21" }
+jetbrains-kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 jetbrains-kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version = "0.9.3" }
 jlleitschuh-gradle-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "13.1.0" }
 sentry-jvm-gradle = { id = "io.sentry.jvm.gradle", version = "5.12.2" }
-springframework-boot = { id = "org.springframework.boot", version = "3.5.7" }
+springframework-boot = { id = "org.springframework.boot", version.ref = "spring" }
 spring-dependencymanagement = { id = "io.spring.dependency-management", version = "1.1.7" }
 
 [versions]
