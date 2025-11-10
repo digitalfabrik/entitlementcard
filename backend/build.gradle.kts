@@ -94,7 +94,7 @@ dependencies {
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.junit.jupiter.params)
     testImplementation(libs.jetbrains.kotlin.test)
-    testImplementation(libs.jetbrains.kotlin.test.juni5)
+    testImplementation(libs.jetbrains.kotlin.test.junit5)
     testImplementation(libs.jetbrains.kotlinx.coroutines.test)
     testImplementation(libs.mockk)
     testImplementation(libs.projectreactor.reactor.test)
