@@ -37,13 +37,22 @@ sourceSets {
     }
 }
 
+// TODO JVM 25 support is planned for Kotlin 2.3.0:
+// https://youtrack.jetbrains.com/issue/KT-81077/Add-JVM-target-bytecode-version-25
+// After moving to JRE 25, this block can be removed.
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(25)
+        // kotlinCompile tasks will target JRE 24, so set the javaCompile tasks to target JRE 24 as well
+        sourceCompatibility = JavaVersion.VERSION_24
+        targetCompatibility = JavaVersion.VERSION_24
     }
 }
 
 kotlin {
+    // Sets the Java version as well:
+    // https://kotlinlang.org/docs/gradle-configure-project.html#gradle-java-toolchains-support
+    jvmToolchain(25)
     compilerOptions {
         freeCompilerArgs.addAll("-Xjsr305=strict")
     }
