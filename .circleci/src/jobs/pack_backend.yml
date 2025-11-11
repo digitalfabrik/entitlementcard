@@ -16,6 +16,7 @@ steps:
       command: |
         mkdir -p ~/attached_workspace/debs/backend
         mv *.deb ~/attached_workspace/debs/backend
+  - install_temurin
   - check_backend_health
   - store_artifacts:
       path: ~/attached_workspace
