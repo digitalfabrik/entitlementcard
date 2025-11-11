@@ -2,7 +2,7 @@ environment:
   _JAVA_OPTIONS: "-Xmx3g"
   GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
 docker:
-  - image: cimg/openjdk:17.0.13-node
+  - image: cimg/openjdk:25.0-node
 resource_class: small
 working_directory: ~/project/backend
 steps:
@@ -19,14 +19,16 @@ steps:
         - v1-gradle-{{ checksum "build.gradle.kts" }}
   - run:
       name: Build backend
-      # Use `assemble` instead of `build` to not run tests
-      # Use production environment to build with sentry
-      command: ./gradlew assemble -Denv=prod
+      # Use the production environment to build with sentry
+      command: ./gradlew distTar -Denv=prod
   - save_cache:
       key: v1-gradle-{{ checksum "build.gradle.kts" }}
       paths:
         - ~/.gradle/caches
         - ~/.gradle/wrapper
+  - store_artifacts:
+      path: ~/project/backend/build/distributions/backend.tar
+      destination: artifact-files
   - persist_to_workspace:
       root: ~/project
       paths:
