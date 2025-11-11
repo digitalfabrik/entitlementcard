@@ -141,17 +141,13 @@ Install Node.js dependencies: `npm install`
 > [!NOTE]: all commands here are meant to be executed in the `/backend` directory. 
 
 
-### Recommended IDE set up
+### IntelliJ set up
 
-For IntelliJ, the following plugins are recommended:
-
-- [detekt](https://plugins.jetbrains.com/plugin/10761-detekt)
-- [Ktlint](https://plugins.jetbrains.com/plugin/15057-ktlint)
+Open the IntelliJ project structure dialog under `/File/Project Structure…` and set up the project SDK to a JDK 25 installation. If the JDK is not listed in the SDK drop down, you might need to set it up under *Platform Settings/SDKs* (in the same dialog) first. 
+  ![SDK/JDK setup](./img/intellij-sdk-setup.png)
 
 ### Backend Setup
 
-- Open the IntelliJ "Project Structure" and set up the required SDK called "entitlementcard-jdk" and point it to your JDK installation.
-   ![SDK/JDK setup](./img/intellij-sdk-setup.png)
 - Create a DB with some test data (`Migrate DB`)
   - With an IntelliJ run configuration: `Backend commands / DB recreate`
   - With a shell: `./gradlew run db-recreate`
