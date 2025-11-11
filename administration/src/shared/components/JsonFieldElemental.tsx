@@ -123,7 +123,8 @@ const JsonFieldElemental = ({
     case 'Date':
       return (
         <Typography component='p'>
-          {t(getTranslationKey(jsonField.name, parentName))}: {new Date(jsonField.value).toLocaleDateString('de')}
+          {t(getTranslationKey(jsonField.name, parentName))}:{' '}
+          {new Date(jsonField.value).toLocaleDateString('de', { day: '2-digit', month: '2-digit', year: 'numeric' })}
         </Typography>
       )
     case 'Number':
