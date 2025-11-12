@@ -124,15 +124,15 @@ const JsonFieldElemental = ({
         <Typography component='p'>
           {t(getTranslationKey(jsonField.name, parentName))}:&nbsp;
           {jsonField.value ? (
-            <Typography component='span'>
+            <>
               <Done color='success' sx={{ fontSize: 16, verticalAlign: 'sub' }} />
               {t('positiveAnswer')}
-            </Typography>
+            </>
           ) : (
-            <Typography component='span'>
+            <>
               <Close color='error' sx={{ fontSize: 16, verticalAlign: 'sub' }} />
               {t('negativeAnswer')}
-            </Typography>
+            </>
           )}
         </Typography>
       )
