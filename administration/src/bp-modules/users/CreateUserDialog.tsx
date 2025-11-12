@@ -1,4 +1,3 @@
-import { FormGroup } from '@blueprintjs/core'
 import { PersonAdd } from '@mui/icons-material'
 import { Stack } from '@mui/material'
 import { useSnackbar } from 'notistack'
@@ -99,22 +98,21 @@ const CreateUserDialog = ({
         {showRegionSelector ? (
           <RegionSelector onSelect={region => setRegionId(region ? region.id : null)} selectedId={regionId} />
         ) : null}
-        <FormGroup>
-          <BaseCheckbox
-            label={
-              <>
-                {' '}
-                <b>{t('sendWelcomeMail')}</b>
-                <br />
-                {t('sendWelcomeMailExplanation')}
-              </>
-            }
-            checked={sendWelcomeMail}
-            onChange={checked => setSendWelcomeMail(checked)}
-            hasError={false}
-            errorMessage={undefined}
-          />
-        </FormGroup>
+
+        <BaseCheckbox
+          label={
+            <>
+              {' '}
+              <b>{t('sendWelcomeMail')}</b>
+              <br />
+              {t('sendWelcomeMailExplanation')}
+            </>
+          }
+          checked={sendWelcomeMail}
+          onChange={checked => setSendWelcomeMail(checked)}
+          hasError={false}
+          errorMessage={undefined}
+        />
       </Stack>
     </ConfirmDialog>
   )

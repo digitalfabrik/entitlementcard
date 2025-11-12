@@ -90,11 +90,6 @@ const applications: Application[] = [
   },
 ]
 
-jest.mock('@blueprintjs/core', () => ({
-  ...jest.requireActual('@blueprintjs/core'),
-  Button: () => 'button',
-}))
-
 describe('ApplicationStatusBar', () => {
   const setActiveBarItem = jest.fn()
 

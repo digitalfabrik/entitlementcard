@@ -1,4 +1,4 @@
-import { Button, FormControl, FormLabel, Stack, Typography } from '@mui/material'
+import { Button, Stack, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -60,18 +60,9 @@ const ChangePasswordForm = (): ReactElement => {
           submit()
         }}>
         <Stack sx={{ gap: 2 }}>
-          <FormControl fullWidth>
-            <FormLabel>{t('currentPassword')}</FormLabel>
-            <PasswordInput value={currentPassword} setValue={setCurrentPassword} />
-          </FormControl>
-          <FormControl fullWidth>
-            <FormLabel>{t('newPassword')}</FormLabel>
-            <PasswordInput value={newPassword} setValue={setNewPassword} />
-          </FormControl>
-          <FormControl fullWidth>
-            <FormLabel>{t('newPasswordConfirm')}</FormLabel>
-            <PasswordInput value={repeatNewPassword} setValue={setRepeatNewPassword} />
-          </FormControl>
+          <PasswordInput value={currentPassword} setValue={setCurrentPassword} label={t('currentPassword')} />
+          <PasswordInput value={newPassword} setValue={setNewPassword} label={t('newPassword')} />
+          <PasswordInput value={repeatNewPassword} setValue={setRepeatNewPassword} label={t('newPassword')} />
 
           {warnMessage === null ? null : <AlertBox sx={{ my: 2, mx: 0 }} severity='error' description={warnMessage} />}
           <SettingsCardButtonBox>

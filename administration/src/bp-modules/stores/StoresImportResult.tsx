@@ -1,12 +1,6 @@
-import { Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-`
 
 type StoreImportResultProps = {
   storesCreated: number
@@ -23,7 +17,7 @@ const StoresImportResult = ({
 }: StoreImportResultProps): ReactElement => {
   const { t } = useTranslation('stores')
   return (
-    <Container>
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <Typography variant='h6' data-testid='import-result-headline'>{`${t('articleMale')} ${
         dryRun ? t('dryRunImport') : t('import')
       } ${t('wasSuccessful')}`}</Typography>
@@ -47,7 +41,7 @@ const StoresImportResult = ({
           {storesUntouched}
         </Typography>
       </div>
-    </Container>
+    </Box>
   )
 }
 

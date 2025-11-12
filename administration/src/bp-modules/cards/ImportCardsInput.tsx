@@ -21,12 +21,13 @@ const defaultExtensionsByMIMEType = {
 
 const FILE_SIZE_LIMIT_BYTES = FILE_SIZE_LIMIT_MEGA_BYTES * 1000 * 1000
 
-type ImportCardsInputProps = {
+const ImportCardsInput = ({
+  setCards,
+  region,
+}: {
   setCards: (cards: Card[]) => void
   region: Region
-}
-
-const ImportCardsInput = ({ setCards, region }: ImportCardsInputProps): ReactElement => {
+}): ReactElement => {
   const isFreinetFormat = new URLSearchParams(useLocation().search).get(FREINET_PARAM) === 'true'
   const projectConfig = useContext(ProjectConfigContext)
   const csvHeaders = getCsvHeaders(projectConfig)

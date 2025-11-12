@@ -301,8 +301,8 @@
     "addCard": "Karte hinzufügen",
     "addCardSuccessMessage": "Die Karten wurden erstellt.",
     "createMoreCards": "Mehr Karten erstellen",
-    "createOnCard": "Legen Sie zunächst eine Karte an.",
-    "atLeastOnCardIsInvalid": "Mindestens eine Karte enthält ungültige Eingaben.",
+    "createOneCard": "Legen Sie zunächst eine Karte an.",
+    "atLeastOneCardIsInvalid": "Mindestens eine Karte enthält ungültige Eingaben.",
     "exportCsv": "CSV Export",
     "createSingleCards": "Einzelne Karten erstellen",
     "selectAFile": "Wählen Sie eine Datei",
@@ -347,7 +347,8 @@
     "confirm": "Bestätigen",
     "delete": "Löschen",
     "clickHere": "hier",
-    "imprint": "Impressum"
+    "imprint": "Impressum",
+    "browseButtonLabelSingleFile": "Datei wählen"
   },
   "home": {
     "incomingApplications": "Eingehende Anträge",
