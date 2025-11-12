@@ -1,12 +1,12 @@
-import { Stack, styled } from '@mui/material'
+import { Button, Stack } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ChangeEvent, ReactElement, useCallback, useContext, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
 
 import { Card, initializeCardFromCSV } from '../../cards/Card'
+import Blankslate from '../../components/Blankslate'
 import { Region } from '../../generated/graphql'
-import NonIdealState from '../../mui-modules/NonIdealState'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { getCsvHeaders } from '../../project-configs/helper'
 import FileInputStateIcon from '../FileInputStateIcon'
@@ -14,11 +14,6 @@ import { FREINET_PARAM } from '../constants'
 import convertFreinetImport from '../util/convertFreinetImport'
 import ImportCardsRequirementsText from './ImportCardsRequirementsText'
 import { ENTRY_LIMIT, FILE_SIZE_LIMIT_MEGA_BYTES } from './constants'
-
-const CardImportInputContainer = styled('div')`
-  display: flex;
-  align-items: center;
-`
 
 const defaultExtensionsByMIMEType = {
   'text/csv': '.csv',
@@ -112,22 +107,24 @@ const ImportCardsInput = ({ setCards, region }: ImportCardsInputProps): ReactEle
     reader.readAsText(file)
   }
 
-  const fileSelectionContent = (
-    <>
-      <ImportCardsRequirementsText csvHeaders={csvHeaders} isFreinetFormat={isFreinetFormat} />
-      <CardImportInputContainer>
-        <input data-testid='file-upload' ref={fileInput} accept='.csv, text/csv' type='file' onInput={onInputChange} />
-      </CardImportInputContainer>
-    </>
-  )
-
   return (
     <Stack sx={{ flexGrow: 1, justifyContent: 'center' }}>
-      <NonIdealState
+      <Blankslate
         icon={<FileInputStateIcon inputState={inputState} />}
         title={t('selectAFile')}
-        description={fileSelectionContent}
-      />
+        description={<ImportCardsRequirementsText csvHeaders={csvHeaders} isFreinetFormat={isFreinetFormat} />}>
+        <Button variant='contained' color='primary' component='label'>
+          <input
+            style={{ display: 'none' }}
+            data-testid='file-upload'
+            ref={fileInput}
+            accept='.csv, text/csv'
+            type='file'
+            onInput={onInputChange}
+          />
+          {t('misc:browseButtonLabelSingleFile')}
+        </Button>
+      </Blankslate>
     </Stack>
   )
 }
