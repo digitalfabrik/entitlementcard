@@ -8,8 +8,8 @@ import CenteredCircularProgress from '../../mui-modules/base/CenteredCircularPro
 import RenderGuard from '../../mui-modules/components/RenderGuard'
 import { BlockerDialog } from '../../shared/components/BlockerDialog'
 import AddCardsForm from './AddCardsForm'
-import GenerationFinished from './CardsCreatedMessage'
 import CreateCardsButtonBar from './CreateCardsButtonBar'
+import { CardsCreatedScreen } from './components/CardsCreatedScreen'
 import useCardGenerator from './hooks/useCardGenerator'
 
 const InnerAddCardsController = ({ region }: { region: Region }) => {
@@ -29,16 +29,6 @@ const InnerAddCardsController = ({ region }: { region: Region }) => {
   switch (cardGenerationStep) {
     case 'loading':
       return <CenteredCircularProgress />
-    case 'finished':
-      return (
-        <GenerationFinished
-          reset={() => {
-            setCards([])
-            setSearchParams(undefined, { replace: true })
-            setCardGenerationStep('input')
-          }}
-        />
-      )
     case 'input':
       return (
         <>
@@ -61,6 +51,16 @@ const InnerAddCardsController = ({ region }: { region: Region }) => {
             blocker={blocker}
           />
         </>
+      )
+    case 'finished':
+      return (
+        <CardsCreatedScreen
+          onProceed={() => {
+            setCards([])
+            setSearchParams(undefined, { replace: true })
+            setCardGenerationStep('input')
+          }}
+        />
       )
   }
 }

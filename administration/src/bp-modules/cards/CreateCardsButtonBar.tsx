@@ -1,6 +1,6 @@
-import { Tooltip } from '@blueprintjs/core'
+/* eslint-disable no-nested-ternary */
 import { ArrowBack, UploadFile } from '@mui/icons-material'
-import { Button } from '@mui/material'
+import { Button, Tooltip } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -9,22 +9,25 @@ import { CsvIcon } from '../../components/icons/CsvIcon'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import ButtonBar from '../ButtonBar'
 
-type CreateCardsButtonBarProps = {
-  cards: Card[]
-  goBack: () => void
-  generateCardsPdf: () => Promise<void>
-  generateCardsCsv: () => Promise<void>
-}
-
 const CreateCardsButtonBar = ({
   cards,
   generateCardsPdf,
   generateCardsCsv,
   goBack,
-}: CreateCardsButtonBarProps): ReactElement => {
+}: {
+  cards: Card[]
+  goBack: () => void
+  generateCardsPdf: () => Promise<void>
+  generateCardsCsv: () => Promise<void>
+}): ReactElement => {
   const { csvExport, card: cardConfig } = useContext(ProjectConfigContext)
   const allCardsValid = cards.every(card => isValid(card, cardConfig))
   const { t } = useTranslation('cards')
+  // prettier-ignore
+  const tooltipText = cards.length === 0
+    ? t('createOneCard')
+    : (!allCardsValid ? t('atLeastOneCardIsInvalid') : undefined)
+  const buttonDisabled = !allCardsValid || cards.length === 0
 
   return (
     <ButtonBar>
@@ -32,32 +35,31 @@ const CreateCardsButtonBar = ({
         {t('backToSelection')}
       </Button>
 
-      <Tooltip
-        placement='top'
-        content={cards.length === 0 ? t('createOnCard') : t('atLeastOnCardIsInvalid')}
-        disabled={allCardsValid && cards.length > 0}>
-        <Button
-          startIcon={<UploadFile />}
-          onClick={generateCardsPdf}
-          color='primary'
-          disabled={!allCardsValid || cards.length === 0}
-          variant='contained'>
-          {t('printQRCodes')}
-        </Button>
+      <Tooltip placement='top' title={tooltipText}>
+        <span>
+          <Button
+            startIcon={<UploadFile />}
+            onClick={generateCardsPdf}
+            disabled={buttonDisabled}
+            color='primary'
+            variant='contained'>
+            {t('printQRCodes')}
+          </Button>
+        </span>
       </Tooltip>
 
       {csvExport.enabled && (
-        <Tooltip
-          placement='top'
-          content={cards.length === 0 ? t('createOnCard') : t('atLeastOnCardIsInvalid')}
-          disabled={allCardsValid && cards.length > 0}>
-          <Button
-            startIcon={<CsvIcon />}
-            onClick={generateCardsCsv}
-            disabled={!allCardsValid || cards.length === 0}
-            color='primary'>
-            {t('exportCsv')}
-          </Button>
+        <Tooltip placement='top' title={tooltipText}>
+          <span>
+            <Button
+              startIcon={<CsvIcon />}
+              onClick={generateCardsCsv}
+              disabled={buttonDisabled}
+              color='primary'
+              variant='contained'>
+              {t('exportCsv')}
+            </Button>
+          </span>
         </Tooltip>
       )}
     </ButtonBar>
