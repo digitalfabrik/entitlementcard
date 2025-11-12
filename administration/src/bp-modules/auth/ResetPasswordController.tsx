@@ -90,7 +90,7 @@ const ResetPasswordController = (): ReactElement => {
               </InputLabel>
               <PasswordInput
                 label={t('newPassword')}
-                placeholder='Passwort'
+                placeholder={t('password')}
                 setValue={setNewPassword}
                 value={newPassword}
                 disabled={loading}
@@ -104,7 +104,7 @@ const ResetPasswordController = (): ReactElement => {
               </InputLabel>
               <PasswordInput
                 label={t('newPasswordRepeat')}
-                placeholder='Passwort'
+                placeholder={t('password')}
                 setValue={setRepeatNewPassword}
                 value={repeatNewPassword}
                 disabled={loading}
