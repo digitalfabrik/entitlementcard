@@ -1,4 +1,4 @@
-import { Box, Button, Card, FormControl, InputLabel, Stack, TextField, Typography } from '@mui/material'
+import { Box, Button, Card, Stack, TextField, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -84,34 +84,24 @@ const ResetPasswordController = (): ReactElement => {
               required
               disabled
             />
-            <FormControl variant='outlined'>
-              <InputLabel required size='small'>
-                {t('newPassword')}
-              </InputLabel>
-              <PasswordInput
-                label={t('newPassword')}
-                placeholder={t('password')}
-                setValue={setNewPassword}
-                value={newPassword}
-                disabled={loading}
-                fullWidth
-                autoFocus={false}
-              />
-            </FormControl>
-            <FormControl variant='outlined'>
-              <InputLabel required size='small'>
-                {t('newPasswordRepeat')}
-              </InputLabel>
-              <PasswordInput
-                label={t('newPasswordRepeat')}
-                placeholder={t('password')}
-                setValue={setRepeatNewPassword}
-                value={repeatNewPassword}
-                disabled={loading}
-                fullWidth
-                autoFocus={false}
-              />
-            </FormControl>
+            <PasswordInput
+              label={t('newPassword')}
+              placeholder={t('password')}
+              setValue={setNewPassword}
+              value={newPassword}
+              disabled={loading}
+              fullWidth
+              autoFocus={false}
+            />
+            <PasswordInput
+              label={t('newPasswordRepeat')}
+              placeholder={t('password')}
+              setValue={setRepeatNewPassword}
+              value={repeatNewPassword}
+              disabled={loading}
+              fullWidth
+              autoFocus={false}
+            />
             {warnMessage === null || !isDirty ? null : (
               <AlertBox sx={{ my: 2, mx: 0 }} severity='error' description={warnMessage} />
             )}
