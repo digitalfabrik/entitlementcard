@@ -9,7 +9,7 @@
     "prepare": "tsc --build"
   },
   "devDependencies": {
-    "@eslint/compat": "^1.4.0",
+    "@eslint/compat": "^1.4.1",
     "@eslint/eslintrc": "^3.3.1",
     "eslint": "^9.34.0",
     "eslint-config-airbnb": "^19.0.4",
