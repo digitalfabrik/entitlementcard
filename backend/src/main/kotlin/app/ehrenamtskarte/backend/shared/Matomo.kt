@@ -6,7 +6,6 @@ import app.ehrenamtskarte.backend.config.ProjectConfig
 import app.ehrenamtskarte.backend.db.entities.CodeType
 import app.ehrenamtskarte.backend.db.repositories.CardRepository
 import app.ehrenamtskarte.backend.graphql.stores.types.SearchParams
-import jakarta.servlet.http.HttpServletRequest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,6 +15,8 @@ import org.matomo.java.tracking.MatomoTracker
 import org.matomo.java.tracking.TrackerConfiguration
 import org.matomo.java.tracking.parameters.AcceptLanguage
 import org.slf4j.LoggerFactory
+import org.springframework.web.reactive.function.server.ServerRequest
+import org.springframework.web.reactive.function.server.remoteAddressOrNull
 import java.io.IOException
 import java.net.URI
 import java.util.concurrent.ExecutionException
@@ -92,18 +93,19 @@ object Matomo {
 
     private fun attachRequestInformation(
         builder: MatomoRequest.MatomoRequestBuilder,
-        request: HttpServletRequest,
+        request: ServerRequest,
     ): MatomoRequest.MatomoRequestBuilder {
-        val userAgent = request.getHeader("User-Agent")
-        val acceptLanguage = request.getHeader("Accept-Language")
+        val userAgent = request.headers().firstHeader("User-Agent")
+        val acceptLanguage = request.headers().firstHeader("Accept-Language")
+
         return builder
             .headerAcceptLanguage(AcceptLanguage.fromHeader(acceptLanguage))
             .headerUserAgent(userAgent)
-            .visitorIp(request.remoteAddr)
+            .visitorIp(request.remoteAddressOrNull().toString())
     }
 
     private fun buildCardsTrackingRequest(
-        request: HttpServletRequest,
+        request: ServerRequest,
         regionId: Int,
         query: String,
         codeType: CodeType,
@@ -119,7 +121,7 @@ object Matomo {
     fun trackCreateCards(
         config: BackendConfiguration,
         projectConfig: ProjectConfig,
-        request: HttpServletRequest,
+        request: ServerRequest,
         query: String,
         regionId: Int,
         numberOfDynamicCards: Int,
@@ -166,7 +168,7 @@ object Matomo {
     fun trackVerification(
         config: BackendConfiguration,
         projectConfig: ProjectConfig,
-        request: HttpServletRequest,
+        request: ServerRequest,
         query: String,
         cardHash: ByteArray,
         codeType: CodeType,
@@ -189,7 +191,7 @@ object Matomo {
     fun trackActivation(
         config: BackendConfiguration,
         projectConfig: ProjectConfig,
-        request: HttpServletRequest,
+        request: ServerRequest,
         query: String,
         cardHash: ByteArray,
         successful: Boolean,
@@ -210,7 +212,7 @@ object Matomo {
     fun trackSearch(
         config: BackendConfiguration,
         projectConfig: ProjectConfig,
-        request: HttpServletRequest,
+        request: ServerRequest,
         query: String,
         params: SearchParams,
         numResults: Int,
