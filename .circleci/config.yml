@@ -640,7 +640,7 @@ jobs:
         parameters:
             platform:
                 default: all
-                description: Define the platform that will be used in release notes description
+                description: Define the platform that will be used for release name
                 type: string
             production_delivery:
                 description: Whether builds are delivered to the production or beta lane of the play store.
