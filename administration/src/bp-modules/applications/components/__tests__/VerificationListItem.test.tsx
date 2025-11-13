@@ -5,11 +5,6 @@ import VerificationListItem from '../../../../shared/components/VerificationList
 import { CustomRenderOptions, renderWithOptions } from '../../../../testing/render'
 import { verificationsAwaiting, verificationsRejected, verificationsVerified } from '../../__mocks__/verificationData'
 
-jest.mock('@blueprintjs/core', () => ({
-  ...jest.requireActual('@blueprintjs/core'),
-  Icon: () => 'icon',
-}))
-
 const mockProvider: CustomRenderOptions = {
   translation: true,
   apollo: true,

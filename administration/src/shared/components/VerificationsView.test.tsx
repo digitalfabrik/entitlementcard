@@ -6,11 +6,6 @@ import { CustomRenderOptions, renderWithOptions } from '../../testing/render'
 import { JsonField } from './JsonFieldView'
 import VerificationsView from './VerificationsView'
 
-jest.mock('@blueprintjs/core', () => ({
-  ...jest.requireActual('@blueprintjs/core'),
-  Icon: () => 'icon',
-}))
-
 const mockProvider: CustomRenderOptions = {
   translation: true,
   apollo: true,

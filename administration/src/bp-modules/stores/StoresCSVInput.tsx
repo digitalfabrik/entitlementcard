@@ -1,5 +1,5 @@
 import { ArrowCircleUp } from '@mui/icons-material'
-import { Stack, styled } from '@mui/material'
+import { Button, Stack } from '@mui/material'
 import { parse } from 'csv-parse/browser/esm/sync'
 import { useSnackbar } from 'notistack'
 import React, { ChangeEventHandler, ReactElement, useCallback, useRef } from 'react'
@@ -12,12 +12,6 @@ import StoresImportDuplicates from './StoresImportDuplicates'
 import StoresRequirementsText from './StoresRequirementsText'
 import { DEFAULT_ERROR_TIMEOUT, FILE_SIZE_LIMIT_MEGA_BYTES, LONG_ERROR_TIMEOUT } from './constants'
 import { getStoresWithCoordinates } from './util/storeGeoDataService'
-
-const StoreImportInputContainer = styled('div')`
-  display: flex;
-  align-items: center;
-  flex-grow: 1;
-`
 
 type StoresCsvInputProps = {
   setAcceptingStores: (store: AcceptingStoresEntry[]) => void
@@ -162,15 +156,17 @@ const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }:
   const fileSelectionContent = (
     <>
       <StoresRequirementsText header={fields} />
-      <StoreImportInputContainer>
+      <Button variant='contained' color='primary' component='label'>
         <input
+          style={{ display: 'none' }}
           data-testid='store-file-upload'
           ref={fileInput}
           accept='.csv, text/csv'
           type='file'
           onInput={onInputChange}
         />
-      </StoreImportInputContainer>
+        {t('misc:browseButtonLabelSingleFile')}
+      </Button>
     </>
   )
 
