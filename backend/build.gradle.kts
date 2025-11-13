@@ -91,10 +91,8 @@ dependencies {
     runtimeOnly(libs.postgresql.postgresql)
 
     testImplementation(libs.expediagroup.graphql.kotlin.client)
-    testImplementation(libs.junit.jupiter)
-    testImplementation(libs.junit.jupiter.params)
     testImplementation(libs.jetbrains.kotlin.test)
-    testImplementation(libs.jetbrains.kotlin.test.juni5)
+    testImplementation(libs.jetbrains.kotlin.test.junit5)
     testImplementation(libs.jetbrains.kotlinx.coroutines.test)
     testImplementation(libs.mockk)
     testImplementation(libs.projectreactor.reactor.test)
@@ -110,8 +108,6 @@ dependencies {
             )
         }
     }
-
-    testRuntimeOnly(libs.junit.platform.launcher)
 }
 
 // Workaround for detekt with recent kotlin version, should be removed when detekt plugin v2.0.0 is stable
