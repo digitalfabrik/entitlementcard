@@ -74,9 +74,9 @@ export const renderWithOptions = (
     wrappers.push(({ children }: { children: ReactNode }) => <MockedProvider>{children}</MockedProvider>)
   }
 
-  const Wrapper = ({ children }: { children: ReactNode }) => (
-    <>{wrappers.reduce((acc, wrapper) => wrapper({ children: acc }), children)}</>
-  )
-
-  return rawRender(ui, { wrapper: Wrapper })
+  return rawRender(ui, {
+    wrapper: ({ children }: { children: ReactNode }) => (
+      <>{wrappers.reduce((acc, wrapper) => wrapper({ children: acc }), children)}</>
+    ),
+  })
 }
