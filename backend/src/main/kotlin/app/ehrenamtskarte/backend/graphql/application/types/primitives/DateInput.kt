@@ -2,7 +2,7 @@ package app.ehrenamtskarte.backend.graphql.application.types.primitives
 
 import app.ehrenamtskarte.backend.graphql.application.types.JsonField
 import app.ehrenamtskarte.backend.graphql.application.types.Type
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidJsonException
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidJsonException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

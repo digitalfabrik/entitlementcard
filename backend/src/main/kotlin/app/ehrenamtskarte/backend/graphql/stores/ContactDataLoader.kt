@@ -1,14 +1,14 @@
 package app.ehrenamtskarte.backend.graphql.stores
 
 import app.ehrenamtskarte.backend.db.repositories.ContactsRepository
-import app.ehrenamtskarte.backend.graphql.newNamedDataLoader
+import app.ehrenamtskarte.backend.graphql.BaseDataLoader
 import app.ehrenamtskarte.backend.graphql.stores.types.Contact
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.springframework.stereotype.Component
 
-val contactLoader = newNamedDataLoader("CONTACT_LOADER") { ids ->
-    transaction {
-        ContactsRepository.findByIds(ids).map {
-            it?.let { Contact(it.id.value, it.email, it.telephone, it.website) }
-        }
-    }
+@Component
+class ContactDataLoader : BaseDataLoader<Int, Contact>() {
+    override fun loadBatch(keys: List<Int>): Map<Int, Contact> =
+        ContactsRepository.findByIds(keys)
+            .mapNotNull { it?.let { contact -> contact.id.value to Contact.fromDbEntity(contact) } }
+            .toMap()
 }

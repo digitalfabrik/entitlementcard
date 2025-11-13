@@ -1,67 +1,80 @@
 package app.ehrenamtskarte.backend.freinet.webservice
 
-import app.ehrenamtskarte.backend.GraphqlApiTest
+import app.ehrenamtskarte.backend.IntegrationTest
 import app.ehrenamtskarte.backend.generated.GetFreinetAgencyByRegionId
+import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
 import app.ehrenamtskarte.backend.helper.TestAdministrators
-import io.javalin.testtools.JavalinTest
+import app.ehrenamtskarte.backend.helper.json
+import app.ehrenamtskarte.backend.helper.toErrorObject
 import org.junit.jupiter.api.Test
+import org.springframework.http.HttpStatus
 import kotlin.test.assertEquals
 
-internal class FreinetAgencyQueryServiceTest : GraphqlApiTest() {
-    private val regionAdminFreinet = TestAdministrators.EAK_REGION_ADMIN_FREINET
-    private val regionAdmin = TestAdministrators.EAK_REGION_ADMIN
-    private val projectAdmin = TestAdministrators.EAK_PROJECT_ADMIN
+internal class FreinetAgencyQueryServiceTest : IntegrationTest() {
+    @Test
+    fun `should return an unauthorized error when not logged in`() {
+        val query = createQuery(9)
+        val response = postGraphQL(query)
+
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val error = response.toErrorObject()
+
+        assertEquals(GraphQLExceptionCode.UNAUTHORIZED, error.extensions.code)
+    }
 
     @Test
-    fun `POST returns an unauthorized error when not logged in`() =
-        JavalinTest.test(app) { _, client ->
-            val query = createQuery(9)
-            val response = post(client, query)
-            assertEquals(401, response.code)
-        }
+    fun `should return not implemented error if freinet is not configured in project`() {
+        val query = createQuery(16)
+        val response = postGraphQL(query, TestAdministrators.KOBLENZ_REGION_ADMIN.getJwtToken())
+
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val error = response.toErrorObject()
+
+        assertEquals(GraphQLExceptionCode.NOT_IMPLEMENTED, error.extensions.code)
+    }
 
     @Test
-    fun `POST returns not implemented error if freinet is not configured in project`() =
-        JavalinTest.test(app) { _, client ->
-            val query = createQuery(16)
-            val response = post(client, query, TestAdministrators.KOBLENZ_REGION_ADMIN.getJwtToken())
-            assertEquals(501, response.code)
-        }
+    fun `should return a forbidden error when role is not authorized`() {
+        val query = createQuery(9)
+        val response = postGraphQL(query, TestAdministrators.EAK_PROJECT_ADMIN.getJwtToken())
+
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val error = response.toErrorObject()
+
+        assertEquals(GraphQLExceptionCode.FORBIDDEN, error.extensions.code)
+    }
 
     @Test
-    fun `POST returns a forbidden error when requesting role is not authorized`() =
-        JavalinTest.test(app) { _, client ->
-            val query = createQuery(9)
-            val response = post(client, query, projectAdmin.getJwtToken())
-            assertEquals(403, response.code)
-        }
+    fun `should return null if a region has no agency information`() {
+        val query = createQuery(16)
+        val response = postGraphQL(query, TestAdministrators.EAK_REGION_ADMIN.getJwtToken())
+
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val jsonResponse = response.json()
+
+        assertEquals("null", jsonResponse.findValue("agency").asText())
+    }
 
     @Test
-    fun `POST returns a successful response without information if a region has no agency information`() =
-        JavalinTest.test(app) { _, client ->
-            val query = createQuery(16)
-            val response = post(client, query, regionAdmin.getJwtToken())
-            assertEquals(200, response.code)
-            val jsonResponse = response.json()
-            jsonResponse.apply {
-                assertEquals("null", findValuesAsText("agency").single())
-            }
-        }
+    fun `should return agency information if region has information`() {
+        val query = createQuery(94)
+        val response = postGraphQL(query, TestAdministrators.EAK_REGION_ADMIN_FREINET.getJwtToken())
 
-    @Test
-    fun `POST returns a successful response with agency information if region has information`() =
-        JavalinTest.test(app) { _, client ->
-            val query = createQuery(94)
-            val response = post(client, query, regionAdminFreinet.getJwtToken())
-            assertEquals(200, response.code)
-            val jsonResponse = response.json()
-            jsonResponse.apply {
-                assertEquals("123", findValuesAsText("agencyId").single())
-                assertEquals("Freinet Demo", findValuesAsText("agencyName").single())
-                assertEquals("testKey", findValuesAsText("apiAccessKey").single())
-                assertEquals("false", findValuesAsText("dataTransferActivated").single())
-            }
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val jsonResponse = response.json()
+
+        jsonResponse.apply {
+            assertEquals("123", findValuesAsText("agencyId").single())
+            assertEquals("Freinet Demo", findValuesAsText("agencyName").single())
+            assertEquals("testKey", findValuesAsText("apiAccessKey").single())
+            assertEquals("false", findValuesAsText("dataTransferActivated").single())
         }
+    }
 
     private fun createQuery(regionId: Int): GetFreinetAgencyByRegionId {
         val variables = GetFreinetAgencyByRegionId.Variables(

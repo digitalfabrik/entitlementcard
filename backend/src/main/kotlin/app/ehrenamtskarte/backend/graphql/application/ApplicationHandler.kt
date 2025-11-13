@@ -1,33 +1,39 @@
 package app.ehrenamtskarte.backend.graphql.application
 
+import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.db.entities.ApiTokenType
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationExternalSource
 import app.ehrenamtskarte.backend.db.repositories.ApplicationRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
-import app.ehrenamtskarte.backend.graphql.GraphQLContext
 import app.ehrenamtskarte.backend.graphql.application.types.Application
 import app.ehrenamtskarte.backend.graphql.application.types.ApplicationType
 import app.ehrenamtskarte.backend.graphql.application.types.BavariaCardType
 import app.ehrenamtskarte.backend.graphql.application.types.BlueCardEntitlementType
-import app.ehrenamtskarte.backend.graphql.shared.TokenAuthenticator
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidFileSizeException
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidFileTypeException
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidJsonException
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.MailNotSentException
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.RegionNotActivatedForApplicationException
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.RegionNotFoundException
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidFileSizeException
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidFileTypeException
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidInputException
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidJsonException
+import app.ehrenamtskarte.backend.graphql.exceptions.MailNotSentException
+import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotActivatedForApplicationException
+import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotFoundException
+import app.ehrenamtskarte.backend.shared.TokenAuthenticator
 import app.ehrenamtskarte.backend.shared.mail.Mailer
 import graphql.execution.DataFetcherResult
-import io.javalin.http.BadRequestResponse
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.Part
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.io.File
 
 class ApplicationHandler(
-    private val context: GraphQLContext,
+    private val backendConfig: BackendConfiguration,
     private val application: Application,
     private val regionId: Int,
     private val project: String,
+    private val applicationData: File,
+    private val files: List<Part>,
+    private val request: HttpServletRequest,
 ) {
     fun sendApplicationMails(
         applicationEntity: ApplicationEntity,
@@ -35,7 +41,6 @@ class ApplicationHandler(
         dataFetcherResultBuilder: DataFetcherResult.Builder<Boolean>,
         applicationConfirmationNote: String?,
     ) {
-        val backendConfig = context.backendConfiguration
         val projectConfig = backendConfig.projects.first { it.id == project }
 
         Mailer.sendApplicationApplicantMail(
@@ -57,7 +62,7 @@ class ApplicationHandler(
                     applicationVerification,
                 )
             } catch (exception: MailNotSentException) {
-                dataFetcherResultBuilder.error(exception.toError())
+                dataFetcherResultBuilder.error(exception.toGraphQLError())
             }
         }
         Mailer.sendNotificationForApplicationMails(project, backendConfig, projectConfig, regionId)
@@ -69,7 +74,6 @@ class ApplicationHandler(
         dataFetcherResultBuilder: DataFetcherResult.Builder<Boolean>,
         applicationConfirmationNote: String?,
     ) {
-        val backendConfig = context.backendConfiguration
         val projectConfig = backendConfig.projects.first { it.id == project }
 
         for (applicationVerification in verificationEntities) {
@@ -83,7 +87,7 @@ class ApplicationHandler(
                     applicationConfirmationNote,
                 )
             } catch (exception: MailNotSentException) {
-                dataFetcherResultBuilder.error(exception.toError())
+                dataFetcherResultBuilder.error(exception.toGraphQLError())
             }
         }
         Mailer.sendNotificationForApplicationMails(project, backendConfig, projectConfig, regionId)
@@ -92,10 +96,10 @@ class ApplicationHandler(
     fun validateAttachmentTypes() {
         val allowedContentTypes = setOf("application/pdf", "image/png", "image/jpeg")
         val maxFileSizeBytes = 5 * 1000 * 1000
-        if (!context.files.all { it.contentType in allowedContentTypes }) {
+        if (!files.all { it.contentType in allowedContentTypes }) {
             throw InvalidFileTypeException()
         }
-        if (!context.files.all { it.size <= maxFileSizeBytes }) {
+        if (!files.all { it.size <= maxFileSizeBytes }) {
             throw InvalidFileSizeException()
         }
     }
@@ -114,8 +118,8 @@ class ApplicationHandler(
                 application.toJsonField(),
                 application.extractApplicationVerifications(),
                 regionId,
-                context.applicationData,
-                context.files,
+                applicationData,
+                files,
             )
         }
         return Pair(applicationEntity, verificationEntities)
@@ -129,11 +133,10 @@ class ApplicationHandler(
         val allAlreadyVerifiedWithToken = when {
             isAlreadyVerifiedList.all { it == false || it == null } -> false
             isAlreadyVerifiedList.all { it == true } -> {
-                TokenAuthenticator.authenticate(context.request, ApiTokenType.VERIFIED_APPLICATION)
+                TokenAuthenticator.authenticate(request, ApiTokenType.VERIFIED_APPLICATION)
                 true
             }
-
-            else -> throw BadRequestResponse("isAlreadyVerified must be the same for all entries")
+            else -> throw InvalidInputException("isAlreadyVerified must be the same for all entries")
         }
         if (!allAlreadyVerifiedWithToken) return false
         validateAllAttributesForPreVerifiedApplication()
