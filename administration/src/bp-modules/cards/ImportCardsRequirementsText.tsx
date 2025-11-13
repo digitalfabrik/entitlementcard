@@ -31,7 +31,7 @@ const ImportCardsRequirementsText = ({
   )
 
   return (
-    <Typography variant='body1' component='ul' paddingLeft={2.5} sx={{ textAlign: 'left' }}>
+    <Typography color='textDisabled' variant='body1' component='ul' paddingLeft={2.5} sx={{ textAlign: 'left' }}>
       <Typography component='li'>{t('maxFileSize', { maxFileSize: FILE_SIZE_LIMIT_MEGA_BYTES })} </Typography>
       <Typography component='li'>{t('fileFormatCSV')} </Typography>
       <Typography component='li'>

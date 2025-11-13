@@ -1,15 +1,30 @@
-import { Button, Stack } from '@mui/material'
+import { Stack } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { CsvIcon } from '../../components/icons/CsvIcon'
-import { Role } from '../../generated/graphql'
+import { Role, useSearchAcceptingStoresInProjectQuery } from '../../generated/graphql'
 import RenderGuard from '../../mui-modules/components/RenderGuard'
+import getQueryResult from '../../mui-modules/util/getQueryResult'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import StoresListOverview from './StoresListOverview'
 
 const StoresController = (): ReactElement => {
-  const storesManagement = useContext(ProjectConfigContext).storesManagement
+  const { projectId: project, storesManagement } = useContext(ProjectConfigContext)
+
   const { t } = useTranslation('stores')
+  const searchAcceptingStoresInProjectQuery = useSearchAcceptingStoresInProjectQuery({
+    variables: {
+      project,
+      params: {},
+    },
+  })
+
+  const searchAcceptingStoresInProjectQueryResult = getQueryResult(searchAcceptingStoresInProjectQuery)
+
+  if (!searchAcceptingStoresInProjectQueryResult.successful) {
+    return searchAcceptingStoresInProjectQueryResult.component
+  }
+  const storeData = searchAcceptingStoresInProjectQueryResult.data.stores
 
   return (
     <RenderGuard
@@ -20,14 +35,8 @@ const StoresController = (): ReactElement => {
           ? t('errors:notAuthorizedToManageStores')
           : t('errors:manageStoresNotActivated'),
       }}>
-      <Stack sx={{ flexGrow: 1, alignItems: 'center', justifyContent: 'safe center', overflowY: 'auto' }}>
-        <Button
-          size='large'
-          startIcon={<CsvIcon />}
-          href='./import'
-          sx={{ flexDirection: 'column', gap: 1, py: 2, width: '400px' }}>
-          {t('storesCsvImport')}
-        </Button>
+      <Stack sx={{ maxWidth: '95vw', m: 2, gap: 2, alignSelf: 'center' }}>
+        <StoresListOverview data={storeData} />
       </Stack>
     </RenderGuard>
   )

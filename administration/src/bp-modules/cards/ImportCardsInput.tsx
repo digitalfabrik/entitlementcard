@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
 
 import { Card, initializeCardFromCSV } from '../../cards/Card'
+import Blankslate from '../../components/Blankslate'
 import { Region } from '../../generated/graphql'
-import NonIdealState from '../../mui-modules/NonIdealState'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { getCsvHeaders } from '../../project-configs/helper'
 import FileInputStateIcon from '../FileInputStateIcon'
@@ -110,25 +110,22 @@ const ImportCardsInput = ({
 
   return (
     <Stack sx={{ flexGrow: 1, justifyContent: 'center' }}>
-      <NonIdealState
+      <Blankslate
         icon={<FileInputStateIcon inputState={inputState} />}
         title={t('selectAFile')}
-        description={
-          <>
-            <ImportCardsRequirementsText csvHeaders={csvHeaders} isFreinetFormat={isFreinetFormat} />
-            <Button variant='contained' color='primary' component='label'>
-              <input
-                style={{ display: 'none' }}
-                type='file'
-                data-testid='file-upload'
-                accept='.csv, text/csv'
-                onInput={onInputChange}
-              />
-              {t('misc:browseButtonLabelSingleFile')}
-            </Button>
-          </>
-        }
-      />
+        description={<ImportCardsRequirementsText csvHeaders={csvHeaders} isFreinetFormat={isFreinetFormat} />}>
+        <Button variant='contained' color='primary' component='label'>
+          <input
+            style={{ display: 'none' }}
+            data-testid='file-upload'
+            ref={fileInput}
+            accept='.csv, text/csv'
+            type='file'
+            onInput={onInputChange}
+          />
+          {t('misc:browseButtonLabelSingleFile')}
+        </Button>
+      </Blankslate>
     </Stack>
   )
 }

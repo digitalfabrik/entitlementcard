@@ -475,7 +475,7 @@
     "hasInvalidStores": "Fehlerhafte Einträge. Bitte prüfen sie die rot markierten Felder.",
     "importStores": "Importiere Akzeptanzpartner",
     "backToSelection": "Zurück zur Auswahl",
-    "storesCsvImport": "Akzeptanzpartner CSV Import",
+    "storesCsvImport": "CSV-Datei importieren",
     "selectAFile": "Wählen Sie eine Datei",
     "dryRun": "Testlauf",
     "dryRunDescription": "In diesem Testlauf wird nur simuliert, wie viele Akzeptanzpartner geändert oder gelöscht werden würden. Es werden noch keine Änderungen an der Datenbank vorgenommen.",
@@ -509,7 +509,14 @@
     "theseEntriesAreDuplicated": "Die Einträge {{entries}} sind identisch.",
     "pleaseDeleteDuplicates": "Bitte löschen Sie die doppelten Einträge.",
     "csvCouldNotGetCoordinates": "Fehler beim Abrufen der fehlenden Koordinaten!",
-    "csvImportUnknownError": "Beim Verarbeiten der Datei ist ein unbekannter Fehler aufgetreten"
+    "csvImportUnknownError": "Beim Verarbeiten der Datei ist ein unbekannter Fehler aufgetreten",
+    "storesListColumnName": "Name",
+    "storesListColumnAddress": "Adresse",
+    "storesListColumnCategory": "Kategorie",
+    "storesListColumnEmail": "E-Mail",
+    "storesListColumnTelephone": "Telefon",
+    "storesListOverviewNoEntryTitle": "Noch keine Einträge",
+    "storesListOverviewNoEntryDescription": "Legen Sie eine neue Akzeptanzstelle an oder importieren Sie eine bestehende Liste."
   },
   "userSettings": {
     "passwordChangeSuccessful": "Passwort erfolgreich geändert.",

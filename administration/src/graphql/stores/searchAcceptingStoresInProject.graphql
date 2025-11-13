@@ -1,0 +1,30 @@
+query searchAcceptingStoresInProject($project: String!, $params: SearchParamsInput!) {
+  stores: searchAcceptingStoresInProject(project: $project, params: $params) {
+    id
+    name
+    description
+    contact {
+      telephone
+      website
+      email
+      id
+    }
+    physicalStore {
+      id
+      address {
+        id
+        location
+        postalCode
+        street
+      }
+      coordinates {
+        lat
+        lng
+      }
+    }
+    category {
+      name
+      id
+    }
+  }
+}

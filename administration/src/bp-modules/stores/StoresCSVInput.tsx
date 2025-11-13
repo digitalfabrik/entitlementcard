@@ -5,7 +5,7 @@ import { useSnackbar } from 'notistack'
 import React, { ChangeEventHandler, ReactElement, useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import NonIdealState from '../../mui-modules/NonIdealState'
+import Blankslate from '../../components/Blankslate'
 import { StoresFieldConfig } from '../../project-configs/getProjectConfig'
 import { AcceptingStoresEntry } from './AcceptingStoresEntry'
 import StoresImportDuplicates from './StoresImportDuplicates'
@@ -153,30 +153,24 @@ const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }:
     reader.readAsText(file)
   }
 
-  const fileSelectionContent = (
-    <>
-      <StoresRequirementsText header={fields} />
-      <Button variant='contained' color='primary' component='label'>
-        <input
-          style={{ display: 'none' }}
-          data-testid='store-file-upload'
-          ref={fileInput}
-          accept='.csv, text/csv'
-          type='file'
-          onInput={onInputChange}
-        />
-        {t('misc:browseButtonLabelSingleFile')}
-      </Button>
-    </>
-  )
-
   return (
     <Stack sx={{ flexGrow: 1, justifyContent: 'center' }}>
-      <NonIdealState
-        title={t('selectAFile')}
+      <Blankslate
         icon={<ArrowCircleUp color='warning' sx={{ fontSize: 56 }} />}
-        description={fileSelectionContent}
-      />
+        title={t('selectAFile')}
+        description={<StoresRequirementsText header={fields} />}>
+        <Button variant='contained' color='primary' component='label'>
+          <input
+            style={{ display: 'none' }}
+            data-testid='store-file-upload'
+            ref={fileInput}
+            accept='.csv, text/csv'
+            type='file'
+            onInput={onInputChange}
+          />
+          {t('misc:browseButtonLabelSingleFile')}
+        </Button>
+      </Blankslate>
     </Stack>
   )
 }
