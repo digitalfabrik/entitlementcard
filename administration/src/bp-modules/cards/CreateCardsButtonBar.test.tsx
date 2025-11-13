@@ -3,7 +3,7 @@ import React from 'react'
 
 import { initializeCard } from '../../cards/Card'
 import bayernConfig from '../../project-configs/bayern/config'
-import { renderWithTranslation } from '../../testing/render'
+import { renderWithOptions } from '../../testing/render'
 import { getTestRegion } from '../user-settings/__mocks__/Region'
 import CreateCardsButtonBar from './CreateCardsButtonBar'
 
@@ -14,13 +14,14 @@ describe('CreateCardsButtonBar', () => {
 
   it('Should goBack when clicking back', async () => {
     const goBack = jest.fn()
-    const { getByText } = renderWithTranslation(
+    const { getByText } = renderWithOptions(
       <CreateCardsButtonBar
         goBack={goBack}
         cards={[]}
         generateCardsPdf={() => Promise.resolve()}
         generateCardsCsv={() => Promise.resolve()}
-      />
+      />,
+      { translation: true, theme: true }
     )
 
     const backButton = getByText('Zurück zur Auswahl')
@@ -35,13 +36,14 @@ describe('CreateCardsButtonBar', () => {
   it('Should disable generate button for no cards', async () => {
     const generateCardsPdf = jest.fn()
     const generateCardsCsv = jest.fn()
-    const { getByText } = renderWithTranslation(
+    const { getByText } = renderWithOptions(
       <CreateCardsButtonBar
         goBack={() => undefined}
         cards={[]}
         generateCardsPdf={generateCardsPdf}
         generateCardsCsv={generateCardsCsv}
-      />
+      />,
+      { translation: true, theme: true }
     )
 
     const generateButton = getByText('QR-Codes drucken').closest('button') as HTMLButtonElement
@@ -62,13 +64,14 @@ describe('CreateCardsButtonBar', () => {
     const generateCardsPdf = jest.fn()
     const generateCardsCsv = jest.fn()
     const cards = [initializeCard(bayernConfig.card, region, { fullName: '' })]
-    const { getByText } = renderWithTranslation(
+    const { getByText } = renderWithOptions(
       <CreateCardsButtonBar
         goBack={() => undefined}
         cards={cards}
         generateCardsPdf={generateCardsPdf}
         generateCardsCsv={generateCardsCsv}
-      />
+      />,
+      { translation: true, theme: true }
     )
 
     const generateButton = getByText('QR-Codes drucken').closest('button') as HTMLButtonElement
@@ -90,13 +93,14 @@ describe('CreateCardsButtonBar', () => {
     const generateCardsPdf = jest.fn()
     const generateCardsCsv = jest.fn()
     const cards = [initializeCard(bayernConfig.card, region, { fullName: 'Thea Test' })]
-    const { getByText } = renderWithTranslation(
+    const { getByText } = renderWithOptions(
       <CreateCardsButtonBar
         goBack={() => undefined}
         cards={cards}
         generateCardsPdf={generateCardsPdf}
         generateCardsCsv={generateCardsCsv}
-      />
+      />,
+      { translation: true, theme: true }
     )
 
     const generateButton = getByText('QR-Codes drucken').closest('button') as HTMLButtonElement

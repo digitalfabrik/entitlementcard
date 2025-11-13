@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { ApplicationStatus } from '../../generated/graphql'
-import { renderWithTranslation } from '../../testing/render'
+import { renderWithOptions } from '../../testing/render'
 import ApplicationStatusBar from './ApplicationStatusBar'
 import { barItems } from './ApplicationsOverview'
 import type { Application } from './types'
@@ -99,61 +99,66 @@ describe('ApplicationStatusBar', () => {
   const setActiveBarItem = jest.fn()
 
   it('Should show the correct count for all applications', () => {
-    const { getByTestId } = renderWithTranslation(
+    const { getByTestId } = renderWithOptions(
       <ApplicationStatusBar
         applications={applications}
         onSetActiveBarItem={setActiveBarItem}
         barItems={Object.values(barItems)}
         activeBarItem={barItems.all}
-      />
+      />,
+      { translation: true }
     )
     const allApplicationsCount = getByTestId('status-Alle Anträge-count')
     expect(allApplicationsCount).toHaveTextContent('4')
   })
   it('Should show the correct count for open applications', () => {
-    const { getByTestId } = renderWithTranslation(
+    const { getByTestId } = renderWithOptions(
       <ApplicationStatusBar
         applications={applications}
         onSetActiveBarItem={setActiveBarItem}
         barItems={Object.values(barItems)}
         activeBarItem={barItems.open}
-      />
+      />,
+      { translation: true }
     )
     const openApplicationsCount = getByTestId('status-Offen-count')
     expect(openApplicationsCount).toHaveTextContent('1')
   })
   it('Should show the correct count for withdrawn applications', () => {
-    const { getByTestId } = renderWithTranslation(
+    const { getByTestId } = renderWithOptions(
       <ApplicationStatusBar
         applications={applications}
         onSetActiveBarItem={setActiveBarItem}
         barItems={Object.values(barItems)}
         activeBarItem={barItems.withdrawn}
-      />
+      />,
+      { translation: true }
     )
     const withdrawnApplicationsCount = getByTestId('status-Zurückgezogen-count')
     expect(withdrawnApplicationsCount).toHaveTextContent('1')
   })
   it('Should show the correct count for rejected applications', () => {
-    const { getByTestId } = renderWithTranslation(
+    const { getByTestId } = renderWithOptions(
       <ApplicationStatusBar
         applications={applications}
         onSetActiveBarItem={setActiveBarItem}
         barItems={Object.values(barItems)}
         activeBarItem={barItems.rejected}
-      />
+      />,
+      { translation: true }
     )
     const rejectedApplicationsCount = getByTestId('status-Abgelehnt-count')
     expect(rejectedApplicationsCount).toHaveTextContent('0')
   })
   it('Should show the correct count for accepted applications', () => {
-    const { getByTestId } = renderWithTranslation(
+    const { getByTestId } = renderWithOptions(
       <ApplicationStatusBar
         applications={applications}
         onSetActiveBarItem={setActiveBarItem}
         barItems={Object.values(barItems)}
         activeBarItem={barItems.accepted}
-      />
+      />,
+      { translation: true }
     )
     const acceptedApplicationsCount = getByTestId('status-Akzeptiert-count')
     expect(acceptedApplicationsCount).toHaveTextContent('2')

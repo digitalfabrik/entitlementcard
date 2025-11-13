@@ -1,20 +1,11 @@
-import { LocalizationProvider } from '@mui/x-date-pickers'
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { fireEvent } from '@testing-library/react'
-import React, { ReactNode } from 'react'
+import React from 'react'
 
-import { AppSnackbarProvider } from '../../../AppSnackbar'
 import koblenzConfig from '../../../project-configs/koblenz/config'
 import nuernbergConfig from '../../../project-configs/nuernberg/config'
-import { renderWithTranslation } from '../../../testing/render'
+import { renderWithOptions } from '../../../testing/render'
 import PlainDate from '../../../util/PlainDate'
 import BirthdayExtension, { minBirthday } from '../BirthdayExtension'
-
-const wrapper = ({ children }: { children: ReactNode }) => (
-  <LocalizationProvider dateAdapter={AdapterDateFns}>
-    <AppSnackbarProvider>{children}</AppSnackbarProvider>
-  </LocalizationProvider>
-)
 
 jest.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
 const setValue = jest.fn()
@@ -23,22 +14,22 @@ describe('BirthdayExtension', () => {
   const today = PlainDate.fromLocalDate(new Date())
   describe('Component', () => {
     it('should display correct placeholder if no birthday is provided', () => {
-      const { getByPlaceholderText } = renderWithTranslation(
+      const { getByPlaceholderText } = renderWithOptions(
         <BirthdayExtension.Component forceError setValue={setValue} isValid={false} value={{ birthday: null }} />,
-        { wrapper }
+        { translation: true, localization: true, snackbar: true }
       )
       expect(getByPlaceholderText('TT.MM.JJJJ')).toBeTruthy()
     })
 
     it('should clear input when clear button is clicked', () => {
-      const { getByTitle } = renderWithTranslation(
+      const { getByTitle } = renderWithOptions(
         <BirthdayExtension.Component
           forceError
           setValue={setValue}
           isValid={false}
           value={{ birthday: new PlainDate(1955, 1, 1) }}
         />,
-        { wrapper }
+        { translation: true, localization: true, snackbar: true }
       )
       const clearButton = getByTitle('Wert leeren')
       fireEvent.click(clearButton)
@@ -46,37 +37,37 @@ describe('BirthdayExtension', () => {
     })
 
     it('should show error if no birthday is provided and forceError is true', () => {
-      const { getByText } = renderWithTranslation(
+      const { getByText } = renderWithOptions(
         <BirthdayExtension.Component forceError setValue={setValue} isValid={false} value={{ birthday: null }} />,
-        { wrapper }
+        { translation: true, localization: true, snackbar: true }
       )
       expect(BirthdayExtension.isValid({ birthday: null })).toBeFalsy()
       expect(getByText('Bitte geben Sie ein gültiges Geburtsdatum an.')).toBeTruthy()
     })
 
     it('should not show error if no birthday is provided and forceError is false', () => {
-      const { queryByTestId } = renderWithTranslation(
+      const { queryByTestId } = renderWithOptions(
         <BirthdayExtension.Component
           forceError={false}
           setValue={setValue}
           isValid={false}
           value={{ birthday: null }}
         />,
-        { wrapper }
+        { translation: true, localization: true, snackbar: true }
       )
       expect(BirthdayExtension.isValid({ birthday: null })).toBeFalsy()
       expect(queryByTestId('form-alert')).toBeNull()
     })
 
     it('should show error if no birthday is provided, forceError is false and user left field', () => {
-      const { getByText, getByPlaceholderText } = renderWithTranslation(
+      const { getByText, getByPlaceholderText } = renderWithOptions(
         <BirthdayExtension.Component
           forceError={false}
           setValue={setValue}
           isValid={false}
           value={{ birthday: null }}
         />,
-        { wrapper }
+        { translation: true, localization: true, snackbar: true }
       )
       const datePicker = getByPlaceholderText('TT.MM.JJJJ')
       fireEvent.blur(datePicker)
@@ -86,37 +77,37 @@ describe('BirthdayExtension', () => {
 
     it('should show error if provided birthday is too far in the past', () => {
       const birthDayTooFarInPast = minBirthday.subtract({ days: 1 })
-      const { getByText } = renderWithTranslation(
+      const { getByText } = renderWithOptions(
         <BirthdayExtension.Component
           forceError
           setValue={setValue}
           isValid={false}
           value={{ birthday: birthDayTooFarInPast }}
         />,
-        { wrapper }
+        { translation: true, localization: true, snackbar: true }
       )
       expect(BirthdayExtension.isValid({ birthday: birthDayTooFarInPast })).toBeFalsy()
       expect(getByText('Das Geburtsdatum darf nicht vor dem 01.01.1900 liegen.')).toBeTruthy()
     })
 
     it('should not show error if provided birthday is today', () => {
-      const { queryByTestId } = renderWithTranslation(
+      const { queryByTestId } = renderWithOptions(
         <BirthdayExtension.Component forceError setValue={setValue} isValid={false} value={{ birthday: today }} />,
-        { wrapper }
+        { translation: true, localization: true, snackbar: true }
       )
       expect(BirthdayExtension.isValid({ birthday: today })).toBeTruthy()
       expect(queryByTestId('form-alert')).toBeNull()
     })
 
     it('should not show error if provided birthday is minBirthday', () => {
-      const { queryByTestId } = renderWithTranslation(
+      const { queryByTestId } = renderWithOptions(
         <BirthdayExtension.Component
           forceError
           setValue={setValue}
           isValid={false}
           value={{ birthday: minBirthday }}
         />,
-        { wrapper }
+        { translation: true, localization: true, snackbar: true }
       )
       expect(BirthdayExtension.isValid({ birthday: minBirthday })).toBeTruthy()
       expect(queryByTestId('form-alert')).toBeNull()
@@ -124,9 +115,9 @@ describe('BirthdayExtension', () => {
 
     it('should not show error if a correct birthday is provided', () => {
       const birthday = new PlainDate(2020, 1, 1)
-      const { queryByTestId } = renderWithTranslation(
+      const { queryByTestId } = renderWithOptions(
         <BirthdayExtension.Component forceError setValue={setValue} isValid={false} value={{ birthday }} />,
-        { wrapper }
+        { translation: true, localization: true, snackbar: true }
       )
       expect(BirthdayExtension.isValid({ birthday })).toBeTruthy()
       expect(queryByTestId('form-alert')).toBeNull()
@@ -134,18 +125,18 @@ describe('BirthdayExtension', () => {
 
     it('should show error if provided birthday is in the future', () => {
       const tomorrow = PlainDate.fromLocalDate(new Date()).add({ days: 1 })
-      const { getByText } = renderWithTranslation(
+      const { getByText } = renderWithOptions(
         <BirthdayExtension.Component forceError setValue={setValue} isValid={false} value={{ birthday: tomorrow }} />,
-        { wrapper }
+        { translation: true, localization: true, snackbar: true }
       )
       expect(BirthdayExtension.isValid({ birthday: tomorrow })).toBeFalsy()
       expect(getByText('Das Geburtsdatum darf nicht in der Zukunft liegen.')).toBeTruthy()
     })
 
     it('should show an underage hint if provided birthday is today for koblenz', () => {
-      const { getByText } = renderWithTranslation(
+      const { getByText } = renderWithOptions(
         <BirthdayExtension.Component forceError setValue={setValue} isValid value={{ birthday: today }} />,
-        { wrapper, projectConfig: koblenzConfig }
+        { translation: true, localization: true, snackbar: true, projectConfig: koblenzConfig }
       )
       expect(BirthdayExtension.isValid({ birthday: today })).toBeTruthy()
       expect(
@@ -157,9 +148,9 @@ describe('BirthdayExtension', () => {
 
     it('should show a hint if provided birthday is underage for koblenz', () => {
       const underAgeBirthday = today.subtract({ years: 16 }).add({ days: 1 })
-      const { getByText } = renderWithTranslation(
+      const { getByText } = renderWithOptions(
         <BirthdayExtension.Component forceError setValue={setValue} isValid value={{ birthday: underAgeBirthday }} />,
-        { wrapper, projectConfig: koblenzConfig }
+        { translation: true, localization: true, snackbar: true, projectConfig: koblenzConfig }
       )
       expect(BirthdayExtension.isValid({ birthday: underAgeBirthday })).toBeTruthy()
       expect(
@@ -170,14 +161,14 @@ describe('BirthdayExtension', () => {
     })
 
     it('should not show a hint if provided birthday is underage for nuernberg', () => {
-      const { queryByText } = renderWithTranslation(
+      const { queryByText } = renderWithOptions(
         <BirthdayExtension.Component
           forceError
           setValue={setValue}
           isValid={false}
           value={{ birthday: new PlainDate(2020, 1, 1) }}
         />,
-        { wrapper, projectConfig: nuernbergConfig }
+        { translation: true, localization: true, snackbar: true, projectConfig: nuernbergConfig }
       )
       expect(
         queryByText(
@@ -188,14 +179,14 @@ describe('BirthdayExtension', () => {
 
     it('should not show a hint when person turns 16 today', () => {
       const notUnderageBirthday = today.subtract({ years: 16 })
-      const { queryByText } = renderWithTranslation(
+      const { queryByText } = renderWithOptions(
         <BirthdayExtension.Component
           forceError
           setValue={setValue}
           isValid={false}
           value={{ birthday: notUnderageBirthday }}
         />,
-        { wrapper, projectConfig: koblenzConfig }
+        { translation: true, localization: true, snackbar: true, projectConfig: koblenzConfig }
       )
       expect(
         queryByText(
@@ -205,10 +196,12 @@ describe('BirthdayExtension', () => {
     })
 
     it('should call setValue when date is changed', () => {
-      const { getByPlaceholderText } = renderWithTranslation(
+      const { getByPlaceholderText } = renderWithOptions(
         <BirthdayExtension.Component forceError setValue={setValue} isValid={false} value={{ birthday: null }} />,
         {
-          wrapper,
+          translation: true,
+          localization: true,
+          snackbar: true,
         }
       )
       const datePicker = getByPlaceholderText('TT.MM.JJJJ')

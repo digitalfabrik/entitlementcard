@@ -1,9 +1,8 @@
-import { MockedProvider } from '@apollo/client/testing'
 import React from 'react'
 
 import { verificationsMixed } from '../../bp-modules/applications/__mocks__/verificationData'
 import { type ApplicationPublic, ApplicationStatus, type ApplicationVerificationView } from '../../generated/graphql'
-import { renderWithTranslation } from '../../testing/render'
+import { CustomRenderOptions, renderWithOptions } from '../../testing/render'
 import { JsonField } from './JsonFieldView'
 import VerificationsView from './VerificationsView'
 
@@ -11,6 +10,11 @@ jest.mock('@blueprintjs/core', () => ({
   ...jest.requireActual('@blueprintjs/core'),
   Icon: () => 'icon',
 }))
+
+const mockProvider: CustomRenderOptions = {
+  translation: true,
+  apollo: true,
+}
 
 describe('VerificationsView', () => {
   const renderView = (
@@ -20,12 +24,7 @@ describe('VerificationsView', () => {
         'organizationName' | 'contactEmailAddress' | 'verificationId' | 'rejectedDate' | 'verifiedDate'
       >[]
     }
-  ) =>
-    renderWithTranslation(
-      <MockedProvider>
-        <VerificationsView application={application} />
-      </MockedProvider>
-    )
+  ) => renderWithOptions(<VerificationsView application={application} />, mockProvider)
 
   it('should show a hint if there are no verifications', () => {
     const application = {

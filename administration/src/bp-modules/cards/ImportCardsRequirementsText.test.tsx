@@ -5,16 +5,16 @@ import { getCsvHeaders } from '../../project-configs/helper'
 import koblenzConfig from '../../project-configs/koblenz/config'
 import nuernbergConfig from '../../project-configs/nuernberg/config'
 import showcaseConfig from '../../project-configs/showcase/config'
-import { renderWithTranslation } from '../../testing/render'
+import { renderWithOptions } from '../../testing/render'
 import ImportCardsRequirementsText from './ImportCardsRequirementsText'
 
 describe('ImportCardsRequirementsText', () => {
   it('should show mandatory requirements with asterisks at Showcase', () => {
     const projectConfig = showcaseConfig
     const csvHeaders = getCsvHeaders(projectConfig)
-    const { getByText } = renderWithTranslation(
+    const { getByText } = renderWithOptions(
       <ImportCardsRequirementsText csvHeaders={csvHeaders} isFreinetFormat={false} />,
-      { projectConfig }
+      { projectConfig, translation: true }
     )
     expect(getByText('Spaltenformat: Name*, Ablaufdatum*, Kartentyp*')).toBeTruthy()
   })
@@ -22,9 +22,9 @@ describe('ImportCardsRequirementsText', () => {
   it('should show mandatory requirements with asterisks at Bayern', () => {
     const projectConfig = bayernConfig
     const csvHeaders = getCsvHeaders(projectConfig)
-    const { getByText } = renderWithTranslation(
+    const { getByText } = renderWithOptions(
       <ImportCardsRequirementsText csvHeaders={csvHeaders} isFreinetFormat={false} />,
-      { projectConfig }
+      { projectConfig, translation: true }
     )
     expect(getByText('Spaltenformat: Name*, Ablaufdatum*, Kartentyp*, MailNotification')).toBeTruthy()
   })
@@ -32,9 +32,9 @@ describe('ImportCardsRequirementsText', () => {
   it('should show mandatory requirements with asterisks at Nuernberg', () => {
     const projectConfig = nuernbergConfig
     const csvHeaders = getCsvHeaders(projectConfig)
-    const { getByText } = renderWithTranslation(
+    const { getByText } = renderWithOptions(
       <ImportCardsRequirementsText csvHeaders={csvHeaders} isFreinetFormat={false} />,
-      { projectConfig }
+      { projectConfig, translation: true }
     )
     expect(
       getByText(
@@ -46,9 +46,9 @@ describe('ImportCardsRequirementsText', () => {
   it('should show mandatory requirements with asterisks at Koblenz', () => {
     const projectConfig = koblenzConfig
     const csvHeaders = getCsvHeaders(projectConfig)
-    const { getByText } = renderWithTranslation(
+    const { getByText } = renderWithOptions(
       <ImportCardsRequirementsText csvHeaders={csvHeaders} isFreinetFormat={false} />,
-      { projectConfig }
+      { projectConfig, translation: true }
     )
     expect(getByText('Spaltenformat: Name*, Ablaufdatum*, Geburtsdatum*, Referenznummer*')).toBeTruthy()
   })

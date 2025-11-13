@@ -2,7 +2,7 @@ import { fireEvent } from '@testing-library/react'
 import React from 'react'
 
 import { FreinetAgency } from '../../../../generated/graphql'
-import { renderWithTranslation } from '../../../../testing/render'
+import { renderWithOptions } from '../../../../testing/render'
 import FreinetSettingsCard from '../FreinetSettingsCard'
 
 describe('FreinetSettingsCard', () => {
@@ -16,13 +16,14 @@ describe('FreinetSettingsCard', () => {
   }
 
   it('should render agency information', () => {
-    const { getByText } = renderWithTranslation(
+    const { getByText } = renderWithOptions(
       <FreinetSettingsCard
         agencyInformation={agencyData}
         onSave={onSave}
         dataTransferActivated={false}
         setDataTransferActivated={setDateTransferActivated}
-      />
+      />,
+      { translation: true }
     )
     expect(getByText(agencyData.agencyName)).toBeTruthy()
     expect(getByText(agencyData.agencyId)).toBeTruthy()
@@ -30,13 +31,14 @@ describe('FreinetSettingsCard', () => {
   })
 
   it('should call onSave if save button has been clicked', () => {
-    const { getByText } = renderWithTranslation(
+    const { getByText } = renderWithOptions(
       <FreinetSettingsCard
         agencyInformation={agencyData}
         onSave={onSave}
         dataTransferActivated={false}
         setDataTransferActivated={setDateTransferActivated}
-      />
+      />,
+      { translation: true }
     )
     const saveButton = getByText('Speichern') as HTMLElement
     fireEvent.click(saveButton)

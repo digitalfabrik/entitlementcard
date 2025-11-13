@@ -1,7 +1,7 @@
 import { fireEvent } from '@testing-library/react'
 import React from 'react'
 
-import { renderWithTranslation } from '../../testing/render'
+import { renderWithOptions } from '../../testing/render'
 import RegionSettingsCard from './RegionSettingsCard'
 
 describe('RegionSettingsCard', () => {
@@ -13,13 +13,14 @@ describe('RegionSettingsCard', () => {
     defaultApplicationActivation: boolean
     defaultConfirmationMailActivation: boolean
   }) =>
-    renderWithTranslation(
+    renderWithOptions(
       <RegionSettingsCard
         loading={false}
         defaultApplicationActivation={defaultApplicationActivation}
         defaultConfirmationMailActivation={defaultConfirmationMailActivation}
         onSave={onSave}
-      />
+      />,
+      { translation: true }
     )
 
   it('should execute on save if button was clicked', () => {
