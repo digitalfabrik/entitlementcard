@@ -2,7 +2,6 @@ when: << pipeline.parameters.run_delivery_production_frontend >>
 jobs:
   - bump_version:
       prepare_delivery: true
-      platforms: native
       context:
         - deliverino
   - check_frontend
@@ -49,6 +48,7 @@ jobs:
 
   - notify_release:
       production_delivery: true
+      platform: native
       context:
         - deliverino
       requires:
