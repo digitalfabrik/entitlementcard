@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, InputLabel, Stack, TextField } from '@mui/material'
+import { Box, Button, Stack, TextField } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -40,20 +40,16 @@ const LoginForm = ({
           disabled={loading}
           onChange={event => setEmail(event.target.value)}
         />
-        <FormControl variant='outlined'>
-          <InputLabel required size='small'>
-            {t('password')}
-          </InputLabel>
-          <PasswordInput
-            label={t('password')}
-            placeholder='Passwort'
-            value={password}
-            disabled={loading}
-            fullWidth
-            setValue={setPassword}
-            autoFocus={false}
-          />
-        </FormControl>
+
+        <PasswordInput
+          label={t('password')}
+          placeholder='Passwort'
+          value={password}
+          disabled={loading}
+          fullWidth
+          setValue={setPassword}
+          autoFocus={false}
+        />
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Button href='/forgot-password' variant='text'>
             {t('forgotPassword')}

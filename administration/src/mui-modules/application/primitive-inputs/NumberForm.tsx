@@ -14,7 +14,13 @@ const NumberForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
   initialState: { type: 'NumberForm', value: '' },
   getArrayBufferKeys: () => [],
   validate: ({ value }, options) => {
-    const number = parseFloat(value)
+    if (value === '') {
+      return { type: 'error', message: i18next.t('applicationForms:fieldRequiredError') }
+    }
+    if (value.endsWith('.')) {
+      return { type: 'error', message: i18next.t('applicationForms:noValidNumberError') }
+    }
+    const number = Number(value)
     const { min, max } = options
     if (Number.isNaN(number)) {
       return { type: 'error', message: i18next.t('applicationForms:noValidNumberError') }
@@ -41,14 +47,18 @@ const NumberForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
         variant='standard'
         fullWidth
         style={{ margin: '4px 0', minWidth }}
-        type='number'
+        type='text'
+        inputMode='decimal'
         label={label}
         required
         disabled={disableAllInputs}
         error={(showAllErrors || touched) && isInvalid}
         value={state.value}
         onBlur={() => setTouched(true)}
-        onChange={e => setState(() => ({ type: 'NumberForm', value: e.target.value }))}
+        onChange={e => {
+          const sanitizedValue = e.target.value.replace(/\s/g, '')
+          setState(() => ({ type: 'NumberForm', value: sanitizedValue }))
+        }}
         helperText={<FormAlert errorMessage={touched && isInvalid ? validationResult.message : undefined} />}
         slotProps={{
           htmlInput: { inputMode: 'numeric', min: options.min, max: options.max },
