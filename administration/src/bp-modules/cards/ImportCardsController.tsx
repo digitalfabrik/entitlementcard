@@ -7,10 +7,10 @@ import { Region, Role } from '../../generated/graphql'
 import CenteredCircularProgress from '../../mui-modules/base/CenteredCircularProgress'
 import RenderGuard from '../../mui-modules/components/RenderGuard'
 import { BlockerDialog } from '../../shared/components/BlockerDialog'
-import GenerationFinished from './CardsCreatedMessage'
 import CreateCardsButtonBar from './CreateCardsButtonBar'
 import ImportCardsInput from './ImportCardsInput'
 import CardImportTable from './ImportCardsTable'
+import { CardsCreatedScreen } from './components/CardsCreatedScreen'
 import useCardGenerator from './hooks/useCardGenerator'
 
 const InnerImportCardsController = ({ region }: { region: Region }): ReactElement => {
@@ -34,15 +34,6 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
   switch (cardGenerationStep) {
     case 'loading':
       return <CenteredCircularProgress />
-    case 'finished':
-      return (
-        <GenerationFinished
-          reset={() => {
-            setCards([])
-            setCardGenerationStep('input')
-          }}
-        />
-      )
     case 'input':
       return (
         <>
@@ -63,6 +54,15 @@ const InnerImportCardsController = ({ region }: { region: Region }): ReactElemen
             blocker={blocker}
           />
         </>
+      )
+    case 'finished':
+      return (
+        <CardsCreatedScreen
+          onProceed={() => {
+            setCards([])
+            setCardGenerationStep('input')
+          }}
+        />
       )
   }
 }

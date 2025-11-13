@@ -1,18 +1,14 @@
 import { Typography } from '@mui/material'
+import { Box } from '@mui/system'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
 type StoresImportDuplicatesProps = { entries: number[][] }
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-`
 const StoresImportDuplicates = ({ entries }: StoresImportDuplicatesProps): ReactElement => {
   const { t } = useTranslation('stores')
   return (
-    <Container>
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       {t('csvInvalidDuplicateEntries')}:
       {entries.map(entry => {
         const entries = entry.join(', ')
@@ -23,7 +19,7 @@ const StoresImportDuplicates = ({ entries }: StoresImportDuplicatesProps): React
         )
       })}
       {t('pleaseDeleteDuplicates')}
-    </Container>
+    </Box>
   )
 }
 

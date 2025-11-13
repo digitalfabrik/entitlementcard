@@ -1,11 +1,10 @@
+import { grey } from '@mui/material/colors'
 import { Box, styled } from '@mui/system'
-
-import dimensions from './constants/dimensions'
 
 const ButtonBar = styled(Box)(({ theme }) => ({
   width: '100%',
-  padding: theme.spacing(1),
-  background: theme.palette.common.white,
+  padding: theme.spacing(2, 1),
+  background: grey[100],
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'flex-end',
@@ -13,7 +12,6 @@ const ButtonBar = styled(Box)(({ theme }) => ({
   '& button': {
     marginRight: theme.spacing(1),
   },
-  height: dimensions.bottomBarHeight,
 }))
 
 export default ButtonBar

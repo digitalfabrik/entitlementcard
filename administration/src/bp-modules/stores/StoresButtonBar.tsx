@@ -40,7 +40,6 @@ const StoresButtonBar = ({
     tooltip = t('hasInvalidStores')
   }
 
-  // TODO fix button alignment
   return (
     <ButtonBar>
       <Button startIcon={<ArrowBack />} onClick={goBack}>
@@ -58,7 +57,6 @@ const StoresButtonBar = ({
           </Button>
         </div>
       </Tooltip>
-
       <ConfirmDialog
         open={importDialogIsOpen}
         title={t('importStores')}

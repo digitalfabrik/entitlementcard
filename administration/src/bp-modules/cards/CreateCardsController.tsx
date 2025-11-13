@@ -1,5 +1,5 @@
-import { AddCircleOutlineOutlined, ArrowCircleUp } from '@mui/icons-material'
-import { Button, Stack } from '@mui/material'
+import { AddCard, UploadFile } from '@mui/icons-material'
+import { Button, Stack, SxProps } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -8,6 +8,12 @@ import { Role } from '../../generated/graphql'
 import RenderGuard from '../../mui-modules/components/RenderGuard'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { FREINET_PARAM } from '../constants'
+
+const buttonStyle: SxProps = {
+  flexDirection: 'column',
+  gap: 1,
+  py: 2,
+}
 
 const CreateCardsController = (): ReactElement => {
   const { region } = useWhoAmI().me
@@ -21,29 +27,14 @@ const CreateCardsController = (): ReactElement => {
       error={{ description: t('errors:notAuthorizedToCreateCards') }}>
       <Stack sx={{ flexGrow: 1, alignItems: 'center', justifyContent: 'safe center', overflowY: 'auto' }}>
         <Stack sx={{ width: '400px', padding: 2, gap: 2 }}>
-          <Button
-            href='./add'
-            size='large'
-            startIcon={<AddCircleOutlineOutlined />}
-            variant='outlined'
-            sx={{ flexDirection: 'column', gap: 1, py: 2 }}>
+          <Button sx={buttonStyle} startIcon={<AddCard />} size='large' href='./add'>
             {t('createSingleCards')}
           </Button>
-          <Button
-            href='./import'
-            size='large'
-            startIcon={<ArrowCircleUp />}
-            variant='outlined'
-            sx={{ flexDirection: 'column', gap: 1, py: 2 }}>
+          <Button sx={buttonStyle} startIcon={<UploadFile />} size='large' href='./import'>
             {t('importMultipleCards')}
           </Button>
           {freinetCSVImportEnabled && (
-            <Button
-              href={`./import?${FREINET_PARAM}=true`}
-              size='large'
-              startIcon={<ArrowCircleUp />}
-              variant='outlined'
-              sx={{ flexDirection: 'column', gap: 1, py: 2 }}>
+            <Button sx={buttonStyle} startIcon={<UploadFile />} size='large' href={`./import?${FREINET_PARAM}=true`}>
               {t('importCardsFromFreinet')}
             </Button>
           )}
