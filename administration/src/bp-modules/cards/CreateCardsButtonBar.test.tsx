@@ -3,11 +3,13 @@ import React from 'react'
 
 import { initializeCard } from '../../cards/Card'
 import bayernConfig from '../../project-configs/bayern/config'
-import { renderWithOptions } from '../../testing/render'
+import { CustomRenderOptions, renderWithOptions } from '../../testing/render'
 import { getTestRegion } from '../user-settings/__mocks__/Region'
 import CreateCardsButtonBar from './CreateCardsButtonBar'
 
 jest.useFakeTimers()
+
+const mockProvider: CustomRenderOptions = { translation: true, theme: true }
 
 describe('CreateCardsButtonBar', () => {
   const region = getTestRegion({})
@@ -21,7 +23,7 @@ describe('CreateCardsButtonBar', () => {
         generateCardsPdf={() => Promise.resolve()}
         generateCardsCsv={() => Promise.resolve()}
       />,
-      { translation: true, theme: true }
+      mockProvider
     )
 
     const backButton = getByText('Zurück zur Auswahl')
@@ -43,7 +45,7 @@ describe('CreateCardsButtonBar', () => {
         generateCardsPdf={generateCardsPdf}
         generateCardsCsv={generateCardsCsv}
       />,
-      { translation: true, theme: true }
+      mockProvider
     )
 
     const generateButton = getByText('QR-Codes drucken').closest('button') as HTMLButtonElement
@@ -71,7 +73,7 @@ describe('CreateCardsButtonBar', () => {
         generateCardsPdf={generateCardsPdf}
         generateCardsCsv={generateCardsCsv}
       />,
-      { translation: true, theme: true }
+      mockProvider
     )
 
     const generateButton = getByText('QR-Codes drucken').closest('button') as HTMLButtonElement
@@ -100,7 +102,7 @@ describe('CreateCardsButtonBar', () => {
         generateCardsPdf={generateCardsPdf}
         generateCardsCsv={generateCardsCsv}
       />,
-      { translation: true, theme: true }
+      mockProvider
     )
 
     const generateButton = getByText('QR-Codes drucken').closest('button') as HTMLButtonElement
