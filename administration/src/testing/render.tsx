@@ -1,45 +1,82 @@
+import { MockedProvider } from '@apollo/client/testing'
 import { ThemeProvider, createTheme } from '@mui/material'
+import { LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { RenderOptions, RenderResult, render as rawRender } from '@testing-library/react'
-import React, { ReactElement, ReactNode } from 'react'
+import React, { ReactElement, ReactNode, createElement } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import { MemoryRouter } from 'react-router'
 
+import { AppSnackbarProvider } from '../AppSnackbar'
 import i18n from '../i18n'
 import { ProjectConfigProvider } from '../project-configs/ProjectConfigContext'
 import { ProjectConfig } from '../project-configs/getProjectConfig'
-import showcaseConfig from '../project-configs/showcase/config'
 
-export const renderWithRouter = (ui: ReactElement, options?: RenderOptions): RenderResult => {
-  const CustomWrapper = options?.wrapper
-  const wrapper = CustomWrapper
-    ? (props: { children: ReactNode }) => (
-        <MemoryRouter>
-          <CustomWrapper {...props} />
-        </MemoryRouter>
-      )
-    : MemoryRouter
-  return rawRender(ui, { wrapper })
-}
-
-type CustomRenderOptions = {
+export type CustomRenderOptions = {
   projectConfig?: ProjectConfig
+  theme?: boolean
+  translation?: boolean
+  router?: boolean
+  localization?: boolean
+  snackbar?: boolean
+  apollo?: boolean
 }
 
-export const renderWithTranslation = (
+export const renderWithOptions = (
   ui: ReactElement,
-  options?: RenderOptions & CustomRenderOptions
+  options: RenderOptions & CustomRenderOptions = {}
 ): RenderResult => {
-  const CustomWrapper = options?.wrapper
-  const projectConfig = options?.projectConfig ?? showcaseConfig
-  const theme = createTheme({})
+  const {
+    projectConfig,
+    theme = false,
+    translation = false,
+    router = false,
+    localization = false,
+    snackbar = false,
+    apollo = false,
+    wrapper,
+  } = options
+  const wrappers: ((props: { children: ReactNode }) => ReactNode)[] = []
+  if (wrapper) {
+    wrappers.push((props: { children: ReactNode }) => createElement(wrapper, props, props.children))
+  }
+  if (theme) {
+    wrappers.push(({ children }: { children: ReactNode }) => (
+      <ThemeProvider theme={createTheme({})}>{children}</ThemeProvider>
+    ))
+  }
 
-  const wrapper = (props: { children: ReactNode }) => (
-    <ProjectConfigProvider projectConfig={projectConfig}>
-      <ThemeProvider theme={theme}>
-        <I18nextProvider i18n={i18n}>{CustomWrapper ? <CustomWrapper {...props} /> : props.children}</I18nextProvider>
-      </ThemeProvider>
-    </ProjectConfigProvider>
-  )
+  if (translation) {
+    wrappers.push(({ children }: { children: ReactNode }) => <I18nextProvider i18n={i18n}>{children}</I18nextProvider>)
+  }
 
-  return rawRender(ui, { wrapper })
+  if (router) {
+    wrappers.push(({ children }: { children: ReactNode }) => <MemoryRouter>{children}</MemoryRouter>)
+  }
+
+  if (localization) {
+    wrappers.push(({ children }: { children: ReactNode }) => (
+      <LocalizationProvider dateAdapter={AdapterDateFns}>{children}</LocalizationProvider>
+    ))
+  }
+
+  if (snackbar) {
+    wrappers.push(({ children }: { children: ReactNode }) => <AppSnackbarProvider>{children}</AppSnackbarProvider>)
+  }
+
+  if (projectConfig) {
+    wrappers.push(({ children }: { children: ReactNode }) => (
+      <ProjectConfigProvider projectConfig={projectConfig}>{children}</ProjectConfigProvider>
+    ))
+  }
+
+  if (apollo) {
+    wrappers.push(({ children }: { children: ReactNode }) => <MockedProvider>{children}</MockedProvider>)
+  }
+
+  return rawRender(ui, {
+    wrapper: ({ children }: { children: ReactNode }) => (
+      <>{wrappers.reduce((acc, wrapper) => wrapper({ children: acc }), children)}</>
+    ),
+  })
 }

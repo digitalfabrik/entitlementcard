@@ -1,7 +1,7 @@
 import { fireEvent } from '@testing-library/react'
 import React from 'react'
 
-import { renderWithTranslation } from '../../../testing/render'
+import { renderWithOptions } from '../../../testing/render'
 import BavariaCardTypeExtension, {
   BAVARIA_CARD_TYPE_GOLD,
   BAVARIA_CARD_TYPE_STANDARD,
@@ -18,15 +18,18 @@ describe('BavariaCardTypeExtension', () => {
   }
 
   it('should render the component with default value', () => {
-    const { getByLabelText } = renderWithTranslation(<BavariaCardTypeExtension.Component {...defaultProps} />)
+    const { getByLabelText } = renderWithOptions(<BavariaCardTypeExtension.Component {...defaultProps} />, {
+      translation: true,
+    })
 
     const select = getByLabelText('Kartentyp')
     expect(select).toBeTruthy()
   })
 
   it('should display both card type options', () => {
-    const { getByLabelText, getAllByRole } = renderWithTranslation(
-      <BavariaCardTypeExtension.Component {...defaultProps} />
+    const { getByLabelText, getAllByRole } = renderWithOptions(
+      <BavariaCardTypeExtension.Component {...defaultProps} />,
+      { translation: true }
     )
 
     const select = getByLabelText('Kartentyp')
@@ -39,9 +42,9 @@ describe('BavariaCardTypeExtension', () => {
   })
 
   it('should call setValue with correct value when an option is selected', () => {
-    const { getByLabelText, getByText } = renderWithTranslation(
-      <BavariaCardTypeExtension.Component {...defaultProps} />
-    )
+    const { getByLabelText, getByText } = renderWithOptions(<BavariaCardTypeExtension.Component {...defaultProps} />, {
+      translation: true,
+    })
 
     const select = getByLabelText('Kartentyp')
     fireEvent.mouseDown(select)

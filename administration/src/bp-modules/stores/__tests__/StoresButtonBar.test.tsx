@@ -4,7 +4,7 @@ import React from 'react'
 import { LOCAL_STORAGE_PROJECT_KEY } from '../../../project-configs/constants'
 import koblenzConfig from '../../../project-configs/koblenz/config'
 import nuernbergConfig from '../../../project-configs/nuernberg/config'
-import { renderWithTranslation } from '../../../testing/render'
+import { CustomRenderOptions, renderWithOptions } from '../../../testing/render'
 import { AcceptingStoresEntry } from '../AcceptingStoresEntry'
 import StoresButtonBar from '../StoresButtonBar'
 import { invalidStoreData, validStoreData } from '../__mock__/mockStoreEntry'
@@ -16,20 +16,23 @@ const setDryRun = jest.fn()
 const goBack = jest.fn()
 const importStores = jest.fn()
 
+const mockProvider: CustomRenderOptions = { theme: true, translation: true }
+
 describe('StoresButtonBar', () => {
   const projectConfigsWithStoreUpload = [{ projectConfig: nuernbergConfig }, { projectConfig: koblenzConfig }]
   it.each(projectConfigsWithStoreUpload)(
     `should goBack when clicking back for $projectConfig.name`,
     async ({ projectConfig }) => {
       localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, projectConfig.projectId)
-      const { getByText } = renderWithTranslation(
+      const { getByText } = renderWithOptions(
         <StoresButtonBar
           dryRun
           setDryRun={setDryRun}
           goBack={goBack}
           acceptingStores={[]}
           importStores={importStores}
-        />
+        />,
+        mockProvider
       )
 
       const backButton = getByText('Zurück zur Auswahl')
@@ -46,14 +49,15 @@ describe('StoresButtonBar', () => {
     `should disable import button for no stores for $projectConfig.name`,
     async ({ projectConfig }) => {
       localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, projectConfig.projectId)
-      const { getByText } = renderWithTranslation(
+      const { getByText } = renderWithOptions(
         <StoresButtonBar
           dryRun
           setDryRun={setDryRun}
           goBack={goBack}
           acceptingStores={[]}
           importStores={importStores}
-        />
+        />,
+        mockProvider
       )
 
       const importButton = getByText('Importiere Akzeptanzpartner').closest('button') as HTMLButtonElement
@@ -76,14 +80,15 @@ describe('StoresButtonBar', () => {
       localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, projectConfig.projectId)
       const fields = projectConfig.storesManagement.enabled ? projectConfig.storesManagement.fields : []
       const stores = [new AcceptingStoresEntry(invalidStoreData, fields)]
-      const { getByText } = renderWithTranslation(
+      const { getByText } = renderWithOptions(
         <StoresButtonBar
           dryRun
           setDryRun={setDryRun}
           goBack={goBack}
           acceptingStores={stores}
           importStores={importStores}
-        />
+        />,
+        mockProvider
       )
 
       const importButton = getByText('Importiere Akzeptanzpartner').closest('button') as HTMLButtonElement
@@ -107,14 +112,15 @@ describe('StoresButtonBar', () => {
       localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, projectConfig.projectId)
       const fields = projectConfig.storesManagement.enabled ? projectConfig.storesManagement.fields : []
       const stores = [new AcceptingStoresEntry(validStoreData, fields)]
-      const { getAllByText } = renderWithTranslation(
+      const { getAllByText } = renderWithOptions(
         <StoresButtonBar
           dryRun
           setDryRun={setDryRun}
           goBack={goBack}
           acceptingStores={stores}
           importStores={importStores}
-        />
+        />,
+        mockProvider
       )
 
       const importButton = getAllByText('Importiere Akzeptanzpartner')[0].closest('button') as HTMLButtonElement

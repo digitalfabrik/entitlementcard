@@ -1,12 +1,11 @@
-import React, { ReactNode } from 'react'
-import { MemoryRouter } from 'react-router'
+import React from 'react'
 
 import { useWhoAmI } from '../../WhoAmIProvider'
 import { Role } from '../../generated/graphql'
 import bayernConfig from '../../project-configs/bayern/config'
 import koblenzConfig from '../../project-configs/koblenz/config'
 import nuernbergConfig from '../../project-configs/nuernberg/config'
-import { renderWithTranslation } from '../../testing/render'
+import { CustomRenderOptions, renderWithOptions } from '../../testing/render'
 import NavigationBar from '../NavigationBar'
 
 jest.mock('../../WhoAmIProvider', () => ({
@@ -14,7 +13,7 @@ jest.mock('../../WhoAmIProvider', () => ({
 }))
 
 const mockUseWhoAmI = useWhoAmI as jest.MockedFunction<typeof useWhoAmI>
-const wrapper = ({ children }: { children: ReactNode }) => <MemoryRouter>{children}</MemoryRouter>
+const mockBaseProvider: CustomRenderOptions = { router: true, translation: true }
 
 describe('NavigationBar', () => {
   beforeEach(() => {
@@ -30,8 +29,8 @@ describe('NavigationBar', () => {
     })
 
     it('should render the correct NavBar items for bayern', async () => {
-      const { getByText, queryByText } = renderWithTranslation(<NavigationBar />, {
-        wrapper,
+      const { getByText, queryByText } = renderWithOptions(<NavigationBar />, {
+        ...mockBaseProvider,
         projectConfig: bayernConfig,
       })
       expect(queryByText('Akzeptanzpartner verwalten')).toBeNull()
@@ -44,8 +43,8 @@ describe('NavigationBar', () => {
     })
 
     it('should render the correct NavBar items for nuernberg', async () => {
-      const { getByText, queryByText } = renderWithTranslation(<NavigationBar />, {
-        wrapper,
+      const { getByText, queryByText } = renderWithOptions(<NavigationBar />, {
+        ...mockBaseProvider,
         projectConfig: nuernbergConfig,
       })
       expect(queryByText('Akzeptanzpartner verwalten')).toBeNull()
@@ -58,8 +57,8 @@ describe('NavigationBar', () => {
     })
 
     it('should render the correct NavBar items for koblenz', async () => {
-      const { getByText, queryByText } = renderWithTranslation(<NavigationBar />, {
-        wrapper,
+      const { getByText, queryByText } = renderWithOptions(<NavigationBar />, {
+        ...mockBaseProvider,
         projectConfig: koblenzConfig,
       })
       expect(queryByText('Akzeptanzpartner verwalten')).toBeNull()
@@ -81,8 +80,8 @@ describe('NavigationBar', () => {
     })
 
     it('should render the correct NavBar items Ehrenamtskarte Bayern', async () => {
-      const { getByText, queryByText } = renderWithTranslation(<NavigationBar />, {
-        wrapper,
+      const { getByText, queryByText } = renderWithOptions(<NavigationBar />, {
+        ...mockBaseProvider,
         projectConfig: bayernConfig,
       })
       expect(queryByText('Akzeptanzpartner verwalten')).toBeNull()
@@ -95,8 +94,8 @@ describe('NavigationBar', () => {
     })
 
     it('should render the correct NavBar items for nuernberg', async () => {
-      const { getByText, queryByText } = renderWithTranslation(<NavigationBar />, {
-        wrapper,
+      const { getByText, queryByText } = renderWithOptions(<NavigationBar />, {
+        ...mockBaseProvider,
         projectConfig: nuernbergConfig,
       })
       expect(queryByText('Akzeptanzpartner verwalten')).toBeNull()
@@ -109,8 +108,8 @@ describe('NavigationBar', () => {
     })
 
     it('should render the correct NavBar items for koblenz', async () => {
-      const { queryByText } = renderWithTranslation(<NavigationBar />, {
-        wrapper,
+      const { queryByText } = renderWithOptions(<NavigationBar />, {
+        ...mockBaseProvider,
         projectConfig: koblenzConfig,
       })
       expect(queryByText('Akzeptanzpartner verwalten')).toBeNull()
@@ -132,8 +131,8 @@ describe('NavigationBar', () => {
     })
 
     it('should render the correct NavBar items for bayern', async () => {
-      const { getByText, queryByText } = renderWithTranslation(<NavigationBar />, {
-        wrapper,
+      const { getByText, queryByText } = renderWithOptions(<NavigationBar />, {
+        ...mockBaseProvider,
         projectConfig: bayernConfig,
       })
       expect(queryByText('Akzeptanzpartner verwalten')).toBeNull()
@@ -146,8 +145,8 @@ describe('NavigationBar', () => {
     })
 
     it('should render the correct NavBar items for nuernberg', async () => {
-      const { getByText, queryByText } = renderWithTranslation(<NavigationBar />, {
-        wrapper,
+      const { getByText, queryByText } = renderWithOptions(<NavigationBar />, {
+        ...mockBaseProvider,
         projectConfig: nuernbergConfig,
       })
       expect(queryByText('Akzeptanzpartner verwalten')).toBeNull()
@@ -160,8 +159,8 @@ describe('NavigationBar', () => {
     })
 
     it('should render the correct NavBar items for koblenz', async () => {
-      const { getByText, queryByText } = renderWithTranslation(<NavigationBar />, {
-        wrapper,
+      const { getByText, queryByText } = renderWithOptions(<NavigationBar />, {
+        ...mockBaseProvider,
         projectConfig: koblenzConfig,
       })
       expect(queryByText('Akzeptanzpartner verwalten')).toBeNull()
@@ -183,8 +182,8 @@ describe('NavigationBar', () => {
     })
 
     it('should render the correct NavBar items for bayern', async () => {
-      const { getByText, queryByText } = renderWithTranslation(<NavigationBar />, {
-        wrapper,
+      const { getByText, queryByText } = renderWithOptions(<NavigationBar />, {
+        ...mockBaseProvider,
         projectConfig: bayernConfig,
       })
       expect(queryByText('Akzeptanzpartner verwalten')).toBeNull()
@@ -208,8 +207,8 @@ describe('NavigationBar', () => {
     it.each(projectConfigsWithStoreUpload)(
       `should render the correct NavBar items for $projectConfig.name`,
       ({ projectConfig }) => {
-        const { getByText, queryByText } = renderWithTranslation(<NavigationBar />, {
-          wrapper,
+        const { getByText, queryByText } = renderWithOptions(<NavigationBar />, {
+          ...mockBaseProvider,
           projectConfig,
         })
         expect(getByText('Akzeptanzpartner verwalten')).toBeTruthy()

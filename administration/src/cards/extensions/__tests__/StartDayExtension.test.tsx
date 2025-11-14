@@ -1,19 +1,16 @@
-import { LocalizationProvider } from '@mui/x-date-pickers'
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { fireEvent } from '@testing-library/react'
-import React, { ReactNode } from 'react'
+import React from 'react'
 
-import { AppSnackbarProvider } from '../../../AppSnackbar'
-import { renderWithTranslation } from '../../../testing/render'
+import { CustomRenderOptions, renderWithOptions } from '../../../testing/render'
 import PlainDate from '../../../util/PlainDate'
 import { maxCardValidity } from '../../constants'
 import StartDayExtension, { minStartDay } from '../StartDayExtension'
 
-const wrapper = ({ children }: { children: ReactNode }) => (
-  <LocalizationProvider dateAdapter={AdapterDateFns}>
-    <AppSnackbarProvider>{children}</AppSnackbarProvider>
-  </LocalizationProvider>
-)
+const mockProvider: CustomRenderOptions = {
+  router: true,
+  translation: true,
+  localization: true,
+}
 jest.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
 
 describe('StartDayExtension', () => {
@@ -27,25 +24,21 @@ describe('StartDayExtension', () => {
     }
 
     it('should render date picker with correct initial value', () => {
-      const { getByDisplayValue } = renderWithTranslation(<StartDayExtension.Component {...defaultProps} />, {
-        wrapper,
-      })
+      const { getByDisplayValue } = renderWithOptions(<StartDayExtension.Component {...defaultProps} />, mockProvider)
       expect(getByDisplayValue('01.01.2024')).toBeTruthy()
     })
 
     it('should clear input when clear button is clicked', () => {
-      const { getByTitle } = renderWithTranslation(<StartDayExtension.Component {...defaultProps} />, {
-        wrapper,
-      })
+      const { getByTitle } = renderWithOptions(<StartDayExtension.Component {...defaultProps} />, mockProvider)
       const clearButton = getByTitle('Wert leeren')
       fireEvent.click(clearButton)
       expect(mockSetValue).toHaveBeenCalledWith({ startDay: null })
     })
 
     it('should show error message when startDay is empty and field was touched', () => {
-      const { getByText, getByPlaceholderText } = renderWithTranslation(
+      const { getByText, getByPlaceholderText } = renderWithOptions(
         <StartDayExtension.Component {...defaultProps} isValid={false} value={{ startDay: null }} />,
-        { wrapper }
+        mockProvider
       )
       const datePicker = getByPlaceholderText('TT.MM.JJJJ')
       fireEvent.blur(datePicker)
@@ -55,9 +48,9 @@ describe('StartDayExtension', () => {
 
     it('should show error message when startDay is too far in the past and touched', () => {
       const startDay = minStartDay.subtract({ days: 1 })
-      const { getByText, getByDisplayValue } = renderWithTranslation(
+      const { getByText, getByDisplayValue } = renderWithOptions(
         <StartDayExtension.Component {...defaultProps} isValid={false} value={{ startDay }} />,
-        { wrapper }
+        mockProvider
       )
       const datePicker = getByDisplayValue(startDay.format())
       fireEvent.blur(datePicker)
@@ -70,9 +63,9 @@ describe('StartDayExtension', () => {
     it('should show error message when startDay is too far in the future and touched', () => {
       const today = PlainDate.fromLocalDate(new Date())
       const startDayTooFarInFuture = today.add(maxCardValidity).add({ days: 1 })
-      const { getByText, getByDisplayValue } = renderWithTranslation(
+      const { getByText, getByDisplayValue } = renderWithOptions(
         <StartDayExtension.Component {...defaultProps} isValid={false} value={{ startDay: startDayTooFarInFuture }} />,
-        { wrapper }
+        mockProvider
       )
       const datePicker = getByDisplayValue(startDayTooFarInFuture.format())
       fireEvent.blur(datePicker)
@@ -83,11 +76,9 @@ describe('StartDayExtension', () => {
     })
 
     it('should not show error message when form is invalid but untouched', () => {
-      const { queryByTestId } = renderWithTranslation(
+      const { queryByTestId } = renderWithOptions(
         <StartDayExtension.Component {...defaultProps} isValid={false} />,
-        {
-          wrapper,
-        }
+        mockProvider
       )
       expect(StartDayExtension.isValid({ startDay: null })).toBeFalsy()
       expect(queryByTestId('form-alert')).toBeNull()
@@ -95,9 +86,9 @@ describe('StartDayExtension', () => {
 
     it('should not show error message when startDay is minStartDay', () => {
       const startDay = minStartDay
-      const { queryByTestId, getByDisplayValue } = renderWithTranslation(
+      const { queryByTestId, getByDisplayValue } = renderWithOptions(
         <StartDayExtension.Component {...defaultProps} value={{ startDay }} />,
-        { wrapper }
+        mockProvider
       )
       const datePicker = getByDisplayValue(startDay.format())
       fireEvent.blur(datePicker)
@@ -106,9 +97,7 @@ describe('StartDayExtension', () => {
     })
 
     it('should call setValue when date is changed', () => {
-      const { getByDisplayValue } = renderWithTranslation(<StartDayExtension.Component {...defaultProps} />, {
-        wrapper,
-      })
+      const { getByDisplayValue } = renderWithOptions(<StartDayExtension.Component {...defaultProps} />, mockProvider)
       const startDayChanged = new PlainDate(2025, 1, 2)
       const datePicker = getByDisplayValue('01.01.2024')
       fireEvent.change(datePicker, { target: { value: startDayChanged.format() } })
@@ -116,9 +105,7 @@ describe('StartDayExtension', () => {
     })
 
     it('should set startDay to null if no valid date was typed in', () => {
-      const { getByDisplayValue } = renderWithTranslation(<StartDayExtension.Component {...defaultProps} />, {
-        wrapper,
-      })
+      const { getByDisplayValue } = renderWithOptions(<StartDayExtension.Component {...defaultProps} />, mockProvider)
       const datePicker = getByDisplayValue('01.01.2024')
       fireEvent.change(datePicker, { target: { value: '02' } })
       expect(mockSetValue).toHaveBeenCalledWith({ startDay: null })

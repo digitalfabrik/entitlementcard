@@ -1,14 +1,10 @@
-import { LocalizationProvider } from '@mui/x-date-pickers'
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { fireEvent } from '@testing-library/react'
-import React, { ReactNode, act } from 'react'
-import { MemoryRouter } from 'react-router'
+import React, { act } from 'react'
 
-import { AppSnackbarProvider } from '../../../AppSnackbar'
 import { initializeCardFromCSV } from '../../../cards/Card'
 import FormAlert from '../../../mui-modules/base/FormAlert'
 import koblenzConfig from '../../../project-configs/koblenz/config'
-import { renderWithTranslation } from '../../../testing/render'
+import { CustomRenderOptions, renderWithOptions } from '../../../testing/render'
 import CardSelfServiceForm from '../CardSelfServiceForm'
 import { exampleCard } from '../__mock__/mockSelfServiceCard'
 import { DataPrivacyAcceptingStatus } from '../constants'
@@ -21,13 +17,13 @@ jest.mock('notistack', () => ({
   }),
 }))
 
-const wrapper = ({ children }: { children: ReactNode }) => (
-  <LocalizationProvider dateAdapter={AdapterDateFns}>
-    <MemoryRouter>
-      <AppSnackbarProvider>{children}</AppSnackbarProvider>
-    </MemoryRouter>
-  </LocalizationProvider>
-)
+const mockProvider: CustomRenderOptions = {
+  projectConfig: koblenzConfig,
+  localization: true,
+  translation: true,
+  router: true,
+  snackbar: true,
+}
 
 const setDataPrivacyAccepted = jest.fn()
 const updateCard = jest.fn()
@@ -36,7 +32,7 @@ describe('CardSelfServiceForm', () => {
   beforeEach(jest.resetAllMocks)
 
   it('should display all elements in initial state', () => {
-    const { getByLabelText, getByPlaceholderText, getByText, getByRole } = renderWithTranslation(
+    const { getByLabelText, getByPlaceholderText, getByText, getByRole } = renderWithOptions(
       <CardSelfServiceForm
         updateCard={updateCard}
         generateCards={generateCards}
@@ -44,7 +40,7 @@ describe('CardSelfServiceForm', () => {
         dataPrivacyAccepted={DataPrivacyAcceptingStatus.untouched}
         setDataPrivacyAccepted={setDataPrivacyAccepted}
       />,
-      { wrapper, projectConfig: koblenzConfig }
+      mockProvider
     )
 
     expect(getByLabelText('Vorname Name').closest('input')).toBeTruthy()
@@ -62,7 +58,7 @@ describe('CardSelfServiceForm', () => {
   })
 
   it('should show an error message if card creation button is pressed without needed information', async () => {
-    const { getByText } = renderWithTranslation(
+    const { getByText } = renderWithOptions(
       <CardSelfServiceForm
         updateCard={updateCard}
         generateCards={generateCards}
@@ -70,7 +66,7 @@ describe('CardSelfServiceForm', () => {
         dataPrivacyAccepted={DataPrivacyAcceptingStatus.accepted}
         setDataPrivacyAccepted={setDataPrivacyAccepted}
       />,
-      { wrapper, projectConfig: koblenzConfig }
+      mockProvider
     )
 
     const createPassButton = getByText('KoblenzPass erstellen')
@@ -88,7 +84,7 @@ describe('CardSelfServiceForm', () => {
   })
 
   it('should not show an error message if all fields are filled correctly', async () => {
-    const { getByText } = renderWithTranslation(
+    const { getByText } = renderWithOptions(
       <CardSelfServiceForm
         updateCard={updateCard}
         generateCards={generateCards}
@@ -96,7 +92,7 @@ describe('CardSelfServiceForm', () => {
         dataPrivacyAccepted={DataPrivacyAcceptingStatus.accepted}
         setDataPrivacyAccepted={setDataPrivacyAccepted}
       />,
-      { wrapper, projectConfig: koblenzConfig }
+      mockProvider
     )
 
     const createPassButton = getByText('KoblenzPass erstellen')

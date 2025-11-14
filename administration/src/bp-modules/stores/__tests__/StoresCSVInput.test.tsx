@@ -1,11 +1,10 @@
 import { fireEvent, waitFor } from '@testing-library/react'
 import { parse } from 'csv-parse/browser/esm/sync'
 import { mocked } from 'jest-mock'
-import React, { ReactNode } from 'react'
+import React from 'react'
 
-import { AppSnackbarProvider } from '../../../AppSnackbar'
 import nuernbergConfig from '../../../project-configs/nuernberg/config'
-import { renderWithTranslation } from '../../../testing/render'
+import { CustomRenderOptions, renderWithOptions } from '../../../testing/render'
 import StoresCSVInput from '../StoresCSVInput'
 import StoresImportDuplicates from '../StoresImportDuplicates'
 import { DEFAULT_ERROR_TIMEOUT } from '../constants'
@@ -27,7 +26,11 @@ jest.mock('notistack', () => ({
   }),
 }))
 
-const wrapper = ({ children }: { children: ReactNode }) => <AppSnackbarProvider>{children}</AppSnackbarProvider>
+const mockProvider: CustomRenderOptions = {
+  snackbar: true,
+  translation: true,
+}
+
 const setAcceptingStores = jest.fn()
 const setIsLoadingCoordinates = jest.fn()
 
@@ -43,15 +46,13 @@ describe('StoresCSVInput', () => {
     jest.spyOn(global, 'FileReader').mockReturnValue(fileReaderMock)
     const file = new File([csv], 'Stores.csv', { type: 'text/csv' })
     const fields = nuernbergConfig.storesManagement.enabled ? nuernbergConfig.storesManagement.fields : []
-    const { getByTestId } = renderWithTranslation(
+    const { getByTestId } = renderWithOptions(
       <StoresCSVInput
         setAcceptingStores={setAcceptingStores}
         fields={fields}
         setIsLoadingCoordinates={setIsLoadingCoordinates}
       />,
-      {
-        wrapper,
-      }
+      mockProvider
     )
 
     const fileInput = getByTestId('store-file-upload') as HTMLInputElement

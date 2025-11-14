@@ -1,16 +1,17 @@
-import { LocalizationProvider } from '@mui/x-date-pickers'
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { act, fireEvent } from '@testing-library/react'
 import { formatDate } from 'date-fns/format'
 import React from 'react'
 
-import { renderWithTranslation } from '../../../testing/render'
+import { CustomRenderOptions, renderWithOptions } from '../../../testing/render'
 import { defaultEndDate, defaultStartDate } from '../constants'
 import StatisticsFilterBar from './StatisticsFilterBar'
 
 jest.useFakeTimers()
 const dateFormat = 'dd.MM.yyyy'
-
+const mockProvider: CustomRenderOptions = {
+  localization: true,
+  translation: true,
+}
 describe('StatisticFilterBar', () => {
   const onApplyFilter = jest.fn()
   const onExportCsv = jest.fn()
@@ -18,10 +19,9 @@ describe('StatisticFilterBar', () => {
   beforeEach(jest.resetAllMocks)
 
   it('should execute onApplyFilter if filter button was clicked', async () => {
-    const { getByText } = renderWithTranslation(
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <StatisticsFilterBar onApplyFilter={onApplyFilter} isDataAvailable onExportCsv={onExportCsv} />
-      </LocalizationProvider>
+    const { getByText } = renderWithOptions(
+      <StatisticsFilterBar onApplyFilter={onApplyFilter} isDataAvailable onExportCsv={onExportCsv} />,
+      mockProvider
     )
     const applyFilterButton = getByText('Filter anwenden')
     fireEvent.click(applyFilterButton)
@@ -30,10 +30,9 @@ describe('StatisticFilterBar', () => {
   })
 
   it('should disable filter button if start date is after end date', async () => {
-    const { getByText, getByDisplayValue } = renderWithTranslation(
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <StatisticsFilterBar onApplyFilter={onApplyFilter} isDataAvailable onExportCsv={onExportCsv} />
-      </LocalizationProvider>
+    const { getByText, getByDisplayValue } = renderWithOptions(
+      <StatisticsFilterBar onApplyFilter={onApplyFilter} isDataAvailable onExportCsv={onExportCsv} />,
+      mockProvider
     )
     const applyFilterButton = getByText('Filter anwenden')
     const startInput = getByDisplayValue(formatDate(defaultStartDate.toLocalDate(), dateFormat))
@@ -54,10 +53,9 @@ describe('StatisticFilterBar', () => {
   })
 
   it('should disable filter button if input is not a correct date string', () => {
-    const { getByText, getByDisplayValue } = renderWithTranslation(
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <StatisticsFilterBar onApplyFilter={onApplyFilter} isDataAvailable onExportCsv={onExportCsv} />
-      </LocalizationProvider>
+    const { getByText, getByDisplayValue } = renderWithOptions(
+      <StatisticsFilterBar onApplyFilter={onApplyFilter} isDataAvailable onExportCsv={onExportCsv} />,
+      mockProvider
     )
 
     const applyFilterButton = getByText('Filter anwenden')
@@ -72,10 +70,9 @@ describe('StatisticFilterBar', () => {
   })
 
   it('should display a proper tooltip message if filter button is disabled and filtering should not be applied', async () => {
-    const { getByText, getByDisplayValue } = renderWithTranslation(
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <StatisticsFilterBar onApplyFilter={onApplyFilter} isDataAvailable onExportCsv={onExportCsv} />
-      </LocalizationProvider>
+    const { getByText, getByDisplayValue } = renderWithOptions(
+      <StatisticsFilterBar onApplyFilter={onApplyFilter} isDataAvailable onExportCsv={onExportCsv} />,
+      mockProvider
     )
     const applyFilterButton = getByText('Filter anwenden')
     const startInput = getByDisplayValue(formatDate(defaultStartDate.toLocalDate(), dateFormat))
@@ -101,10 +98,9 @@ describe('StatisticFilterBar', () => {
   })
 
   it('should execute onExportCsv if csv export button was clicked', async () => {
-    const { getByText } = renderWithTranslation(
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <StatisticsFilterBar onApplyFilter={onApplyFilter} isDataAvailable onExportCsv={onExportCsv} />
-      </LocalizationProvider>
+    const { getByText } = renderWithOptions(
+      <StatisticsFilterBar onApplyFilter={onApplyFilter} isDataAvailable onExportCsv={onExportCsv} />,
+      mockProvider
     )
     const csvExportButton = getByText('CSV Export')
     fireEvent.click(csvExportButton)
@@ -113,10 +109,9 @@ describe('StatisticFilterBar', () => {
   })
 
   it('should disable csv export button if no data is available and show tooltip', async () => {
-    const { getByText } = renderWithTranslation(
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <StatisticsFilterBar onApplyFilter={onApplyFilter} isDataAvailable={false} onExportCsv={onExportCsv} />
-      </LocalizationProvider>
+    const { getByText } = renderWithOptions(
+      <StatisticsFilterBar onApplyFilter={onApplyFilter} isDataAvailable={false} onExportCsv={onExportCsv} />,
+      mockProvider
     )
 
     const csvExportButton = getByText('CSV Export')

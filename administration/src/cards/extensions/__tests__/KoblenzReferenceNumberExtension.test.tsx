@@ -1,7 +1,7 @@
 import { fireEvent } from '@testing-library/react'
 import React from 'react'
 
-import { renderWithTranslation } from '../../../testing/render'
+import { renderWithOptions } from '../../../testing/render'
 import KoblenzReferenceNumberExtension from '../KoblenzReferenceNumberExtension'
 
 const mockSetValue = jest.fn()
@@ -9,13 +9,14 @@ const mockSetValue = jest.fn()
 describe('KoblenzReferenceNumberExtension', () => {
   describe('Component', () => {
     it('should render the input field', () => {
-      const { getByLabelText } = renderWithTranslation(
+      const { getByLabelText } = renderWithOptions(
         <KoblenzReferenceNumberExtension.Component
           value={{ koblenzReferenceNumber: '' }}
           setValue={mockSetValue}
           isValid
           forceError={false}
-        />
+        />,
+        { translation: true }
       )
       expect(
         KoblenzReferenceNumberExtension.isValid({
@@ -26,13 +27,14 @@ describe('KoblenzReferenceNumberExtension', () => {
     })
 
     it('should render the correct placeholder', () => {
-      const { getByPlaceholderText } = renderWithTranslation(
+      const { getByPlaceholderText } = renderWithOptions(
         <KoblenzReferenceNumberExtension.Component
           value={{ koblenzReferenceNumber: '' }}
           setValue={mockSetValue}
           isValid
           forceError={false}
-        />
+        />,
+        { translation: true }
       )
       expect(
         KoblenzReferenceNumberExtension.isValid({
@@ -43,13 +45,14 @@ describe('KoblenzReferenceNumberExtension', () => {
     })
 
     it('should update value when user types', () => {
-      const { getByLabelText } = renderWithTranslation(
+      const { getByLabelText } = renderWithOptions(
         <KoblenzReferenceNumberExtension.Component
           value={{ koblenzReferenceNumber: '' }}
           setValue={mockSetValue}
           isValid
           forceError={false}
-        />
+        />,
+        { translation: true }
       )
       const input = getByLabelText('Aktenzeichen')
       fireEvent.change(input, { target: { value: '12345' } })
@@ -63,13 +66,14 @@ describe('KoblenzReferenceNumberExtension', () => {
 
     it('should not show error message if field was not left and required is false', () => {
       const initialValue = '123@45'
-      const { queryByTestId } = renderWithTranslation(
+      const { queryByTestId } = renderWithOptions(
         <KoblenzReferenceNumberExtension.Component
           value={{ koblenzReferenceNumber: initialValue }}
           setValue={mockSetValue}
           isValid={false}
           forceError={false}
-        />
+        />,
+        { translation: true }
       )
       expect(
         KoblenzReferenceNumberExtension.isValid({
@@ -81,13 +85,14 @@ describe('KoblenzReferenceNumberExtension', () => {
 
     it('should show error for special characters', () => {
       const initialValue = '123@45'
-      const { getByText, getByDisplayValue } = renderWithTranslation(
+      const { getByText, getByDisplayValue } = renderWithOptions(
         <KoblenzReferenceNumberExtension.Component
           value={{ koblenzReferenceNumber: initialValue }}
           setValue={mockSetValue}
           isValid={false}
           forceError
-        />
+        />,
+        { translation: true }
       )
       const input = getByDisplayValue(initialValue)
       fireEvent.blur(input)
@@ -101,13 +106,14 @@ describe('KoblenzReferenceNumberExtension', () => {
 
     it('should show error if the value is too short', () => {
       const initialValue = '123'
-      const { getByDisplayValue, getByText } = renderWithTranslation(
+      const { getByDisplayValue, getByText } = renderWithOptions(
         <KoblenzReferenceNumberExtension.Component
           value={{ koblenzReferenceNumber: initialValue }}
           setValue={mockSetValue}
           isValid={false}
           forceError
-        />
+        />,
+        { translation: true }
       )
       const input = getByDisplayValue(initialValue)
       fireEvent.blur(input)
@@ -121,13 +127,14 @@ describe('KoblenzReferenceNumberExtension', () => {
 
     it('should show error if the value exceeds the max length', () => {
       const initialValue = '123KKdas22sdas23'
-      const { getByDisplayValue, getByText } = renderWithTranslation(
+      const { getByDisplayValue, getByText } = renderWithOptions(
         <KoblenzReferenceNumberExtension.Component
           value={{ koblenzReferenceNumber: initialValue }}
           setValue={mockSetValue}
           isValid={false}
           forceError
-        />
+        />,
+        { translation: true }
       )
       const input = getByDisplayValue(initialValue)
       fireEvent.blur(input)
@@ -140,13 +147,14 @@ describe('KoblenzReferenceNumberExtension', () => {
     })
 
     it('should clear input when clear button is clicked', () => {
-      const { getByRole } = renderWithTranslation(
+      const { getByRole } = renderWithOptions(
         <KoblenzReferenceNumberExtension.Component
           value={{ koblenzReferenceNumber: '12345' }}
           setValue={mockSetValue}
           isValid
           forceError={false}
-        />
+        />,
+        { translation: true }
       )
 
       const clearButton = getByRole('button')
