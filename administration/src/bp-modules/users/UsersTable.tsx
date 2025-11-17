@@ -54,7 +54,7 @@ const UsersTable = ({
             <Typography fontWeight='bold' variant='body1' component='th'>
               {t('eMail')}
             </Typography>
-            {selectedRegionId !== null ? null : <th>{t('role')}</th>}
+            {selectedRegionId !== null ? null : <th>{t('region')}</th>}
             <Typography fontWeight='bold' variant='body1' component='th'>
               {t('role')} <RoleHelpButton />
             </Typography>
