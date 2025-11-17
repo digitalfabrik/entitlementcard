@@ -13,6 +13,7 @@ jobs:
       context:
         - tuerantuer-apple
   - promote_github_release:
+      platform: web
       context:
         - deliverino
       requires:

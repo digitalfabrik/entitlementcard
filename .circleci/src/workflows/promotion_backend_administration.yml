@@ -4,6 +4,7 @@ jobs:
       context:
         - credentials-ehrenamtskarte
   - promote_github_release:
+      platform: web
       context:
         - deliverino
       requires:
