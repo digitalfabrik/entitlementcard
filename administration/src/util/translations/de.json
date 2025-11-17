@@ -366,7 +366,7 @@
     "apiToken": "Api Token",
     "deleteTokenConfirmationPrompt": "Möchten Sie das Token unwiderruflich löschen?",
     "createNewToken": "Neues Token erstellen",
-    "tokenOnlyShowedOnceHint": "Ein neu erzeugtes Token wir nur einmalig angezeigt und kann danach nicht wieder abgerufen werden. Bitte speichern Sie dieses Token an einem sicheren Ort.",
+    "tokenOnlyShowedOnceHint": "Ein neu erzeugtes Token wird nur einmalig angezeigt und kann danach nicht wieder abgerufen werden. Bitte speichern Sie dieses Token an einem sicheren Ort.",
     "validPeriod": "Gültigkeitsdauer",
     "month": "Monat",
     "months": "Monate",
