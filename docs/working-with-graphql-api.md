@@ -3,37 +3,55 @@
 > This article is about how to create your first query in the backend and use it in the web frontend.
 > In this case you want to create a simple graphql query that fetches applications for a region.
 
-1. Search for `EakApplicationQueryService (regions/webservice)`
-2. Create a new function with a graphql description. Define the parameters that you need from the frontend in this case the `regionId`. Note that `DataFetchingEnvironment` provides some context from the graphQL payload and is always available.
-3. Here you want to return a list of `ApplicationView`
-
-Example:
+1. Search for `EakApplicationQueryController`
+   
+In Spring Boot, all GraphQL queries and mutations are handled in a controller class annotated with `@Controller`:
 ```kotlin
-    @GraphQLDescription("Queries all applications for a specific region")
-    fun getApplications(dfe: DataFetchingEnvironment, regionId: Int): List<ApplicationView> {
-        val context = dfe.graphQlContext.context
-        val admin = context.getAuthContext().admin
-    
-        return transaction {
-            if (!Authorizer.mayViewApplicationsInRegion(admin, regionId)) {
-              throw ForbiddenException()
-            }
-            ApplicationRepository.getApplicationsByAdmin(regionId)
-         }
-    }
+@Controller
+class EakApplicationQueryController
+```
 
-```
-3. In this example we check if the requesting user is authorized. If you just want to check if the user is logged in, you can also use:
+2. Create a new GraphQL function
+
+Each query function should be annotated with `@QueryMapping` (or `@MutationMapping` for mutations).
+Use `@GraphQLDescription` to describe what the function does.
+
+3. Define the parameters
+
+* Include the parameters you need from the frontend. In this example, `regionId`.
+* Each parameter should be annotated with `@Argument`.
+* `DataFetchingEnvironment` is always available and provides the request context (e.g., the logged-in user).
+
+4. Return the result
+
+The function returns a list of `ApplicationAdminGql` objects:
 ```kotlin
-val jwtPayload = dfe.graphQlContext.context.enforceSignedIn()
+@GraphQLDescription("Queries all applications for a specific region")
+@QueryMapping
+fun getApplications(@Argument regionId: Int, dfe: DataFetchingEnvironment): List<ApplicationAdminGql> { 
+    val admin = dfe.requireAuthContext().admin
+    return transaction {
+       if (admin.mayViewApplicationsInRegion(regionId)) {
+           ApplicationRepository.getApplicationsByAdmin(regionId)
+               .map { ApplicationAdminGql.fromDbEntity(it) }
+       } else {
+           throw ForbiddenException()
+       }
+   }
+}
 ```
-4. Ensure wrapping your code in a `transaction {}` if you want to make any database interactions.
-5. To ensure that we keep a clean structure, please keep all database interacting functions in the particular repositories. `(ApplicationRepository)`
-6. Once your backend function is created you can run `Export GraphQL (runConfig/backend)`.
-7. This will update the `backend-api.graphql` specs file `(/specs)`.
-8. Check if your new query is listed there.
-- Additional info: If you want to create a new service file, you also have to add it to the `ApplicationGraphQLParams.kt` in this case. Then it will be listed in the specs.
-9. Now you can create you query file for the web frontend `getApplications.grapqhl (administration/src/graphql/applications)`
+
+5. Verify that the user is logged in (when applicable)
+
+* Use `dfe.requireAuthContext()` to get the AuthContext from the GraphQL context. This provides information about the authenticated user.
+* If no user is found (e.g., the JWT is missing or the admin not found in the database), it throws `UnauthorizedException`.
+
+6. Ensure wrapping your code in a `transaction {}` if you want to make any database interactions.
+7. To ensure that we keep a clean structure, please keep all database interacting functions in the particular repositories. `(ApplicationRepository)`
+8. Once your backend function is created you can run `Generate GraphQL specs (runConfig/backend)`.
+9. This will update the `backend-api.graphql` specs file `(/specs)`.
+10. Check if your new query is listed there.
+11. Now you can create you query file for the web frontend `getApplications.grapqhl (administration/src/graphql/applications)`
 
 Example:
 ```
@@ -54,11 +72,11 @@ query getApplications($regionId: Int!) {
   }
 }
 ```
-10. `applications: getApplications(regionId: $regionId)` is calling the backend function you created in step 3.
-11. Define all properties of the list object that you need in curly braces.
-12. Now you want to create the react hooks to interact with your query in the frontend.
-13. Run `Generate Administration GraqhQl`.
-14. Check the `graqhql.tsx` file if your hook was created `(useGetApplicationsQuery)`.
-15. Before you can call a new query you have to restart the backend service to ensure that update schema was loaded.
-16. Find an example how to use this hook in the `ApplicationsController.tsx`.
-16. Note that the hooks always provide `onError` and `onComplete` functions were f.e. toasts can be shown to the user.
+12. `applications: getApplications(regionId: $regionId)` is calling the backend function you created in step 3.
+13. Define all properties of the list object that you need in curly braces.
+14. Now you want to create the react hooks to interact with your query in the frontend.
+15. Run `Generate Administration GraqhQl`.
+16. Check the `graqhql.tsx` file if your hook was created `(useGetApplicationsQuery)`.
+17. Before you can call a new query you have to restart the backend service to ensure that update schema was loaded.
+18. Find an example how to use this hook in the `ApplicationsController.tsx`.
+19. Note that the hooks always provide `onError` and `onComplete` functions were f.e. toasts can be shown to the user.
