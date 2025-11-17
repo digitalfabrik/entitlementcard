@@ -3,10 +3,6 @@
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.14.0",
-    "@blueprintjs/core": "^5.19.0",
-    "@blueprintjs/icons": "^5.23.0",
-    "@blueprintjs/select": "^5.3.20",
-    "@blueprintjs/table": "^5.3.14",
     "@bufbuild/protobuf": "^1.2.1",
     "@cantoo/pdf-lib": "^2.5.3",
     "@emotion/styled": "^11.14.0",
