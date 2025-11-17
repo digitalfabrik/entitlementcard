@@ -44,7 +44,7 @@ fasterxml-jackson-dataformat-yaml = { module = "com.fasterxml.jackson.dataformat
 fasterxml-jackson-datatype-jsr310 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310" }
 fasterxml-jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin" }
 favre-lib-bcrypt = { module = "at.favre.lib:bcrypt", version = "0.10.2" }
-google-protobuf-kotlin = { module = "com.google.protobuf:protobuf-kotlin", version = "4.32.1" }
+google-protobuf-kotlin = { module = "com.google.protobuf:protobuf-kotlin", version.ref = "protobuf" }
 google-zxing-core = { module = "com.google.zxing:core", version = "3.5.3" }
 grundig-geojson-jackson = { module = "de.grundid.opendatalab:geojson-jackson", version = "1.14" }
 graphql-extended-scalars = { module = "com.graphql-java:graphql-java-extended-scalars", version = "22.0" }
