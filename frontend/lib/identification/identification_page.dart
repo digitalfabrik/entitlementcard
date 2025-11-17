@@ -64,13 +64,7 @@ class IdentificationPageState extends State<IdentificationPage> {
           final List<Widget> carouselCards = [];
           for (var code in userCodeModel.userCodes) {
             final applicationUrl = isCardExtendable(code.info, code.cardVerification)
-                ? getApplicationUrlForCardExtension(
-                    getApplicationUrl(context),
-                    code.info,
-                    buildConfig.applicationQueryKeyName,
-                    buildConfig.applicationQueryKeyBirthday,
-                    buildConfig.applicationQueryKeyReferenceNumber,
-                  )
+                ? getApplicationUrlForCardExtension(context, code.info)
                 : getApplicationUrl(context);
 
             carouselCards.add(
