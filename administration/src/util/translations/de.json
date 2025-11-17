@@ -651,7 +651,8 @@
     "applicationToCsvError": "Es ist ein Fehler beim Export des Antrags aufgetreten.",
     "freinetPersonDataInvalid": "Erforderliche Personendaten von Freinet sind nicht verfügbar. Die Kartendaten konnten deshalb nicht übertragen werden.",
     "freinetCardDataInvalid": "Die Kartendaten können nicht an Freinet übertragen werden, weil diese ungültig sind.",
-    "freinetDataTransferNotPermitted": "Für diese Region ist keine Datenübermittlung erlaubt."
+    "freinetDataTransferNotPermitted": "Für diese Region ist keine Datenübermittlung erlaubt.",
+    "projectNotFound": "Dieses Projekt existiert nicht."
   },
   "applicationVerification": {
     "applicationAlreadyProcessed": "Der Antrag wurde bereits bearbeitet. Eine weitere Bestätigung oder Ablehnung ist nicht mehr möglich.",

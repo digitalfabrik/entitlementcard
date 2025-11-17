@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.cards
 
-import app.ehrenamtskarte.backend.graphql.cards.hash
+import app.ehrenamtskarte.backend.graphql.cards.utils.hash
 import app.ehrenamtskarte.backend.helper.SampleCards
 import io.ktor.util.decodeBase64Bytes
 import io.ktor.util.encodeBase64
