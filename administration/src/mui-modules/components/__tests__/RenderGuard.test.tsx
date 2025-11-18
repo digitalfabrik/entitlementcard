@@ -3,7 +3,7 @@ import React from 'react'
 
 import { useWhoAmI } from '../../../WhoAmIProvider'
 import { Role } from '../../../generated/graphql'
-import { renderWithTranslation } from '../../../testing/render'
+import { renderWithOptions } from '../../../testing/render'
 import RenderGuard from '../RenderGuard'
 
 jest.mock('../../../WhoAmIProvider', () => ({
@@ -89,10 +89,11 @@ describe('RenderGuard', () => {
     })
 
     it('should render default error message when user role is not in allowedRoles and error object is empty', () => {
-      const { getByText, queryByTestId } = renderWithTranslation(
+      const { getByText, queryByTestId } = renderWithOptions(
         <RenderGuard allowedRoles={[Role.RegionAdmin]} error={{}}>
           {mockChildren}
-        </RenderGuard>
+        </RenderGuard>,
+        { translation: true }
       )
 
       expect(queryByTestId('protected-content')).toBeNull()

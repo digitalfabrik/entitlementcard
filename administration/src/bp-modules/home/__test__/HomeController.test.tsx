@@ -1,12 +1,11 @@
-import React, { ReactNode } from 'react'
-import { MemoryRouter } from 'react-router'
+import React from 'react'
 
 import { useWhoAmI } from '../../../WhoAmIProvider'
 import { Role } from '../../../generated/graphql'
 import bayernConfig from '../../../project-configs/bayern/config'
 import koblenzConfig from '../../../project-configs/koblenz/config'
 import nuernbergConfig from '../../../project-configs/nuernberg/config'
-import { renderWithTranslation } from '../../../testing/render'
+import { renderWithOptions } from '../../../testing/render'
 import HomeController from '../HomeController'
 
 jest.mock('../../../WhoAmIProvider', () => ({
@@ -14,7 +13,6 @@ jest.mock('../../../WhoAmIProvider', () => ({
 }))
 
 const mockUseWhoAmI = useWhoAmI as jest.MockedFunction<typeof useWhoAmI>
-const wrapper = ({ children }: { children: ReactNode }) => <MemoryRouter>{children}</MemoryRouter>
 
 describe('HomeController', () => {
   describe('when user RegionAdmin is logged in', () => {
@@ -26,8 +24,8 @@ describe('HomeController', () => {
     })
 
     it('should render the correct NavBar items for bayern', async () => {
-      const { getByText, queryByText } = renderWithTranslation(<HomeController />, {
-        wrapper,
+      const { getByText, queryByText } = renderWithOptions(<HomeController />, {
+        router: true,
         projectConfig: bayernConfig,
       })
       expect(queryByText('Akzeptanzpartner verwalten')).toBeNull()
@@ -40,8 +38,8 @@ describe('HomeController', () => {
     })
 
     it('should render the correct NavBar items for nuernberg', async () => {
-      const { getByText, queryByText } = renderWithTranslation(<HomeController />, {
-        wrapper,
+      const { getByText, queryByText } = renderWithOptions(<HomeController />, {
+        router: true,
         projectConfig: nuernbergConfig,
       })
       expect(queryByText('Akzeptanzpartner verwalten')).toBeNull()
@@ -54,8 +52,8 @@ describe('HomeController', () => {
     })
 
     it('should render the correct NavBar items for koblenz', async () => {
-      const { getByText, queryByText } = renderWithTranslation(<HomeController />, {
-        wrapper,
+      const { getByText, queryByText } = renderWithOptions(<HomeController />, {
+        router: true,
         projectConfig: koblenzConfig,
       })
       expect(queryByText('Akzeptanzpartner verwalten')).toBeNull()
@@ -77,8 +75,8 @@ describe('HomeController', () => {
     })
 
     it('should render the correct NavBar items bayern', async () => {
-      const { getByText, queryByText } = renderWithTranslation(<HomeController />, {
-        wrapper,
+      const { getByText, queryByText } = renderWithOptions(<HomeController />, {
+        router: true,
         projectConfig: bayernConfig,
       })
       expect(queryByText('Akzeptanzpartner verwalten')).toBeNull()
@@ -91,8 +89,8 @@ describe('HomeController', () => {
     })
 
     it('should render the correct NavBar items for nuernberg', async () => {
-      const { getByText, queryByText } = renderWithTranslation(<HomeController />, {
-        wrapper,
+      const { getByText, queryByText } = renderWithOptions(<HomeController />, {
+        router: true,
         projectConfig: nuernbergConfig,
       })
       expect(queryByText('Akzeptanzpartner verwalten')).toBeNull()
@@ -105,7 +103,7 @@ describe('HomeController', () => {
     })
 
     it('should render the correct NavBar items for koblenz', async () => {
-      const { queryByText } = renderWithTranslation(<HomeController />, { wrapper, projectConfig: koblenzConfig })
+      const { queryByText } = renderWithOptions(<HomeController />, { router: true, projectConfig: koblenzConfig })
       expect(queryByText('Akzeptanzpartner verwalten')).toBeNull()
       expect(queryByText('Benutzer verwalten')).toBeNull()
       expect(queryByText('Eingehende Anträge')).toBeNull()
@@ -125,8 +123,8 @@ describe('HomeController', () => {
     })
 
     it('should render the correct NavBar items for bayern', async () => {
-      const { getByText, queryByText } = renderWithTranslation(<HomeController />, {
-        wrapper,
+      const { getByText, queryByText } = renderWithOptions(<HomeController />, {
+        router: true,
         projectConfig: bayernConfig,
       })
       expect(queryByText('Akzeptanzpartner verwalten')).toBeNull()
@@ -139,8 +137,8 @@ describe('HomeController', () => {
     })
 
     it('should render the correct NavBar items for nuernberg', async () => {
-      const { getByText, queryByText } = renderWithTranslation(<HomeController />, {
-        wrapper,
+      const { getByText, queryByText } = renderWithOptions(<HomeController />, {
+        router: true,
         projectConfig: nuernbergConfig,
       })
       expect(queryByText('Akzeptanzpartner verwalten')).toBeNull()
@@ -153,8 +151,8 @@ describe('HomeController', () => {
     })
 
     it('should render the correct NavBar items for koblenz', async () => {
-      const { getByText, queryByText } = renderWithTranslation(<HomeController />, {
-        wrapper,
+      const { getByText, queryByText } = renderWithOptions(<HomeController />, {
+        router: true,
         projectConfig: koblenzConfig,
       })
       expect(queryByText('Akzeptanzpartner verwalten')).toBeNull()
@@ -176,8 +174,8 @@ describe('HomeController', () => {
     })
 
     it('should render the correct NavBar items for bayern', async () => {
-      const { getByText, queryByText } = renderWithTranslation(<HomeController />, {
-        wrapper,
+      const { getByText, queryByText } = renderWithOptions(<HomeController />, {
+        router: true,
         projectConfig: bayernConfig,
       })
       expect(queryByText('Akzeptanzpartner verwalten')).toBeNull()
@@ -201,7 +199,7 @@ describe('HomeController', () => {
     it.each(projectConfigsWithStoreUpload)(
       `should render the correct NavBar items for $projectConfig.name`,
       ({ projectConfig }) => {
-        const { getByText, queryByText } = renderWithTranslation(<HomeController />, { wrapper, projectConfig })
+        const { getByText, queryByText } = renderWithOptions(<HomeController />, { router: true, projectConfig })
         expect(getByText('Akzeptanzpartner verwalten')).toBeTruthy()
         expect(queryByText('Benutzer verwalten')).toBeNull()
         expect(queryByText('Eingehende Anträge')).toBeNull()

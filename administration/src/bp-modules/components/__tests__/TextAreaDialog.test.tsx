@@ -1,7 +1,7 @@
 import { act, fireEvent } from '@testing-library/react'
 import React from 'react'
 
-import { renderWithTranslation } from '../../../testing/render'
+import { renderWithOptions } from '../../../testing/render'
 import TextAreaDialog from '../TextAreaDialog'
 
 describe('TextAreaDialog', () => {
@@ -10,7 +10,7 @@ describe('TextAreaDialog', () => {
   const defaultText = 'Hallo'
   const placeholderText = 'Hier kann ein Text stehen...'
   const renderTextDialog = ({ maxChars, defaultText }: { maxChars?: number; defaultText: string | null }) =>
-    renderWithTranslation(
+    renderWithOptions(
       <TextAreaDialog
         title='Show note'
         id='show-note-dialog'
@@ -21,7 +21,8 @@ describe('TextAreaDialog', () => {
         isOpen
         onClose={onClose}
         onSave={onSave}
-      />
+      />,
+      { translation: true }
     )
 
   it('should disable save button when character limit is exceeded', async () => {

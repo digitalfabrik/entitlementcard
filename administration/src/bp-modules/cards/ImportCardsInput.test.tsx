@@ -8,7 +8,7 @@ import bayernConfig from '../../project-configs/bayern/config'
 import { ProjectConfig } from '../../project-configs/getProjectConfig'
 import koblenzConfig from '../../project-configs/koblenz/config'
 import nuernbergConfig from '../../project-configs/nuernberg/config'
-import { renderWithRouter } from '../../testing/render'
+import { renderWithOptions } from '../../testing/render'
 import PlainDate from '../../util/PlainDate'
 import { getTestRegion } from '../user-settings/__mocks__/Region'
 import ImportCardsInput from './ImportCardsInput'
@@ -40,12 +40,13 @@ describe('ImportCardsInput', () => {
     jest.spyOn(global, 'FileReader').mockReturnValue(fileReaderMock)
     const file = new File([csv], `${projectConfig.name}.csv`, { type: 'text/csv' })
 
-    const { getByTestId } = renderWithRouter(
+    const { getByTestId } = renderWithOptions(
       <AppSnackbarProvider>
         <ProjectConfigProvider projectConfig={projectConfig}>
           <ImportCardsInput setCards={setCards} region={region} />
         </ProjectConfigProvider>
-      </AppSnackbarProvider>
+      </AppSnackbarProvider>,
+      { router: true }
     )
 
     const fileInput = getByTestId('file-upload') as HTMLInputElement

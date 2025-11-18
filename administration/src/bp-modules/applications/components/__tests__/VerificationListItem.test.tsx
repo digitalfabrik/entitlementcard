@@ -1,37 +1,25 @@
-import { MockedProvider } from '@apollo/client/testing'
 import React from 'react'
 
-import { AuthContext } from '../../../../AuthProvider'
 import { ApplicationVerificationView } from '../../../../generated/graphql'
 import VerificationListItem from '../../../../shared/components/VerificationListItem'
-import { renderWithTranslation } from '../../../../testing/render'
+import { CustomRenderOptions, renderWithOptions } from '../../../../testing/render'
 import { verificationsAwaiting, verificationsRejected, verificationsVerified } from '../../__mocks__/verificationData'
 
+const mockProvider: CustomRenderOptions = {
+  translation: true,
+  apollo: true,
+}
+
 describe('VerificationListItem', () => {
-  const mockTokenPayload = {
-    token: 'dummy',
-    expiry: new Date('2099-01-01'),
-    adminId: 123,
-  }
-
-  const mockAuthContext = {
-    data: mockTokenPayload,
-    signIn: jest.fn(),
-    signOut: jest.fn(),
-  }
-
   const renderListItem = (
     verification: Pick<
       ApplicationVerificationView,
       'organizationName' | 'contactEmailAddress' | 'verificationId' | 'rejectedDate' | 'verifiedDate'
     >
   ) =>
-    renderWithTranslation(
-      <MockedProvider>
-        <AuthContext.Provider value={mockAuthContext}>
-          <VerificationListItem verification={verification} applicationId={1} showResendApprovalEmailButton />
-        </AuthContext.Provider>
-      </MockedProvider>
+    renderWithOptions(
+      <VerificationListItem verification={verification} applicationId={1} showResendApprovalEmailButton />,
+      mockProvider
     )
 
   it('should show a rejected verification list item with correct content', () => {
@@ -74,31 +62,21 @@ describe('VerificationListItem', () => {
   })
 
   it('should show a resend email button when `showResendApprovalEmailButton` prop is true', () => {
-    const { queryByText } = renderWithTranslation(
-      <MockedProvider>
-        <AuthContext.Provider value={mockAuthContext}>
-          <VerificationListItem
-            verification={verificationsVerified[0]}
-            applicationId={1}
-            showResendApprovalEmailButton
-          />
-        </AuthContext.Provider>
-      </MockedProvider>
+    const { queryByText } = renderWithOptions(
+      <VerificationListItem verification={verificationsVerified[0]} applicationId={1} showResendApprovalEmailButton />,
+      mockProvider
     )
     expect(queryByText('Anfrage erneut senden')).toBeTruthy()
   })
 
   it('should not show a resend email button when `showResendApprovalEmailButton` prop is omitted', () => {
-    const { queryByText } = renderWithTranslation(
-      <MockedProvider>
-        <AuthContext.Provider value={mockAuthContext}>
-          <VerificationListItem
-            verification={verificationsVerified[0]}
-            applicationId={1}
-            showResendApprovalEmailButton={false}
-          />
-        </AuthContext.Provider>
-      </MockedProvider>
+    const { queryByText } = renderWithOptions(
+      <VerificationListItem
+        verification={verificationsVerified[0]}
+        applicationId={1}
+        showResendApprovalEmailButton={false}
+      />,
+      mockProvider
     )
     expect(queryByText('Anfrage erneut senden')).toBeNull()
   })

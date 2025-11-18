@@ -5,11 +5,15 @@ import { generateCardInfo, initializeCard } from '../../../cards/Card'
 import { CreateCardsResult } from '../../../cards/createCards'
 import { DynamicActivationCode } from '../../../generated/card_pb'
 import koblenzConfig from '../../../project-configs/koblenz/config'
-import { renderWithTranslation } from '../../../testing/render'
+import { CustomRenderOptions, renderWithOptions } from '../../../testing/render'
 import getCustomDeepLinkFromQrCode from '../../../util/getCustomDeepLinkFromQrCode'
 import CardSelfServiceActivation from '../CardSelfServiceActivation'
 
 const downloadPdf = jest.fn()
+const mockProvider: CustomRenderOptions = {
+  projectConfig: koblenzConfig,
+  translation: true,
+}
 
 describe('CardSelfServiceActivation', () => {
   const card = initializeCard(koblenzConfig.card, undefined, { fullName: 'Thea Test' })
@@ -23,16 +27,18 @@ describe('CardSelfServiceActivation', () => {
   })
 
   it('should have the correct deeplink', async () => {
-    const { getByText } = renderWithTranslation(<CardSelfServiceActivation downloadPdf={downloadPdf} code={code} />, {
-      projectConfig: koblenzConfig,
-    })
+    const { getByText } = renderWithOptions(
+      <CardSelfServiceActivation downloadPdf={downloadPdf} code={code} />,
+      mockProvider
+    )
     expect(getByText('KoblenzPass jetzt aktivieren').getAttribute('href')).toBe(deepLink)
   })
 
   it('should provide a pdf download button', async () => {
-    const { getByText } = renderWithTranslation(<CardSelfServiceActivation downloadPdf={downloadPdf} code={code} />, {
-      projectConfig: koblenzConfig,
-    })
+    const { getByText } = renderWithOptions(
+      <CardSelfServiceActivation downloadPdf={downloadPdf} code={code} />,
+      mockProvider
+    )
 
     const downloadPDFButton = getByText('KoblenzPass PDF')
     fireEvent.click(downloadPDFButton)
