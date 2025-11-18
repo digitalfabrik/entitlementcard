@@ -1,21 +1,20 @@
-import { ToggleButton, ToggleButtonGroup, Typography, useTheme } from '@mui/material'
+import { ToggleButton, ToggleButtonGroup, Typography, styled, useTheme } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
 import ApplicationStatusHelpButton from './ApplicationStatusBarHelpButton'
 import type { Application, ApplicationStatusBarItemType } from './types'
 
-const Container = styled.div`
-  display: flex;
-  width: 100%;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  align-items: center;
-  @media print {
-    display: none;
-  }
-`
+const Container = styled('div')(({ theme }) => ({
+  display: 'flex',
+  width: '100%',
+  marginTop: theme.spacing(1.5),
+  marginBottom: theme.spacing(1.5),
+  alignItems: 'center',
+  '@media print': {
+    display: 'none',
+  },
+}))
 
 const ApplicationStatusBar = ({
   applications,

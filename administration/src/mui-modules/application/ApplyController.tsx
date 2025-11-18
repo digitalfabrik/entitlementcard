@@ -2,11 +2,10 @@ import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
-import { Box, Typography } from '@mui/material'
+import { Box, Typography, styled } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useCallback, useContext, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useAddEakApplicationMutation, useGetRegionsQuery } from '../../generated/graphql'
@@ -24,12 +23,12 @@ import { useGarbageCollectArrayBuffers, useInitializeGlobalArrayBuffersManager }
 // application form.
 const lastCommitForApplicationForm = process.env.REACT_APP_APPLICATION_COMMIT as string
 
-const SuccessContent = styled.div`
-  white-space: pre-line;
-  display: flex;
-  justify-content: center;
-  margin-bottom: 1rem;
-`
+const SuccessContent = styled('div')(({ theme }) => ({
+  marginBottom: theme.spacing(2),
+  whiteSpace: 'pre-line',
+  display: 'flex',
+  justifyContent: 'center',
+}))
 
 const ApplyController = (): React.ReactElement | null => {
   const { t } = useTranslation('applicationForms')
