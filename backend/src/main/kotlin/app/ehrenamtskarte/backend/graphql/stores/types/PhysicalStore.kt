@@ -1,9 +1,12 @@
 package app.ehrenamtskarte.backend.graphql.stores.types
 
-import app.ehrenamtskarte.backend.graphql.fromEnvironment
-import app.ehrenamtskarte.backend.graphql.stores.acceptingStoreLoader
-import app.ehrenamtskarte.backend.graphql.stores.addressLoader
+import app.ehrenamtskarte.backend.db.entities.PhysicalStoreEntity
+import app.ehrenamtskarte.backend.graphql.loadFrom
+import app.ehrenamtskarte.backend.graphql.stores.AcceptingStoreDataLoader
+import app.ehrenamtskarte.backend.graphql.stores.AddressDataLoader
 import graphql.schema.DataFetchingEnvironment
+import org.springframework.graphql.data.method.annotation.SchemaMapping
+import org.springframework.stereotype.Controller
 import java.util.concurrent.CompletableFuture
 
 data class PhysicalStore(
@@ -12,9 +15,32 @@ data class PhysicalStore(
     val addressId: Int,
     val coordinates: Coordinates,
 ) {
-    fun store(environment: DataFetchingEnvironment): CompletableFuture<AcceptingStore> =
-        acceptingStoreLoader.fromEnvironment(environment).load(storeId).thenApply { it!! }
+    companion object {
+        fun fromDbEntity(entity: PhysicalStoreEntity) =
+            PhysicalStore(
+                id = entity.id.value,
+                storeId = entity.storeId.value,
+                addressId = entity.addressId.value,
+                coordinates = Coordinates(lng = entity.coordinates.x, lat = entity.coordinates.y),
+            )
+    }
 
-    fun address(environment: DataFetchingEnvironment): CompletableFuture<Address> =
-        addressLoader.fromEnvironment(environment).load(addressId).thenApply { it!! }
+    // Dummy functions for compatibility with the schema generator.
+    // These ensure the fields appear in the generated GraphQL schema.
+    @Suppress("unused")
+    fun store(): CompletableFuture<AcceptingStore> = CompletableFuture.completedFuture(null)
+
+    @Suppress("unused")
+    fun address(): CompletableFuture<Address> = CompletableFuture.completedFuture(null)
+}
+
+@Controller
+class PhysicalStoreResolver {
+    @SchemaMapping(typeName = "PhysicalStore", field = "store")
+    fun store(physicalStore: PhysicalStore, dfe: DataFetchingEnvironment): CompletableFuture<AcceptingStore> =
+        dfe.loadFrom(AcceptingStoreDataLoader::class, physicalStore.storeId).thenApply { it!! }
+
+    @SchemaMapping(typeName = "PhysicalStore", field = "address")
+    fun address(physicalStore: PhysicalStore, dfe: DataFetchingEnvironment): CompletableFuture<Address> =
+        dfe.loadFrom(AddressDataLoader::class, physicalStore.addressId).thenApply { it!! }
 }

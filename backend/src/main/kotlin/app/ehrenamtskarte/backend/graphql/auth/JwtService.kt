@@ -4,7 +4,8 @@ import app.ehrenamtskarte.backend.graphql.auth.types.Administrator
 import app.ehrenamtskarte.backend.shared.exceptions.UnauthorizedException
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import io.javalin.http.Context
+import com.auth0.jwt.exceptions.JWTVerificationException
+import jakarta.servlet.http.HttpServletRequest
 import java.io.File
 import java.time.Instant
 import java.time.temporal.ChronoUnit
@@ -24,6 +25,23 @@ object JwtService {
             .withExpiresAt(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)))
             .sign(algorithm)
 
+    /**
+     * Verifies the Authorization header and returns a [JwtPayload] if successful.
+     * It expects a "Bearer <token>" format.
+     * Returns null if the header is malformed or the token is invalid.
+     */
+    fun verifyRequest(request: HttpServletRequest?): JwtPayload? {
+        val authHeader = request?.getHeader("Authorization") ?: return null
+        val split = authHeader.split(" ")
+        val jwtToken = (if (split.size != 2 || split[0] != "Bearer") null else split[1]) ?: return null
+
+        return try {
+            verifyToken(jwtToken)
+        } catch (_: JWTVerificationException) {
+            null
+        }
+    }
+
     private fun readJwtSecretFile(fileName: String?): String? {
         if (fileName == null) {
             return null
@@ -38,14 +56,6 @@ object JwtService {
             .verify(token).claims.let {
                 JwtPayload(it[JwtPayload::adminId.name]!!.asInt())
             }
-
-    fun verifyRequest(context: Context): JwtPayload? {
-        val header = context.header("Authorization") ?: return null
-        val split = header.split(" ")
-        val jwtToken = (if (split.size != 2 || split[0] != "Bearer") null else split[1]) ?: return null
-
-        return verifyToken(jwtToken)
-    }
 }
 
 data class JwtPayload(val adminId: Int)
