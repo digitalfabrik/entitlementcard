@@ -1,21 +1,25 @@
 package app.ehrenamtskarte.backend.cards
 
-import app.ehrenamtskarte.backend.GraphqlApiTest
+import app.ehrenamtskarte.backend.IntegrationTest
 import app.ehrenamtskarte.backend.db.entities.CardEntity
 import app.ehrenamtskarte.backend.db.entities.Cards
 import app.ehrenamtskarte.backend.db.entities.UserEntitlements
 import app.ehrenamtskarte.backend.db.entities.UserEntitlementsEntity
 import app.ehrenamtskarte.backend.generated.CreateCardFromSelfService
+import app.ehrenamtskarte.backend.generated.createcardfromselfservice.CardCreationResultModel
+import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
 import app.ehrenamtskarte.backend.helper.SampleCards
 import app.ehrenamtskarte.backend.helper.SampleCards.getEncoded
 import app.ehrenamtskarte.backend.helper.TestData
-import io.javalin.testtools.JavalinTest
+import app.ehrenamtskarte.backend.helper.toDataObject
+import app.ehrenamtskarte.backend.helper.toErrorObject
 import io.ktor.util.decodeBase64Bytes
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.springframework.http.HttpStatus
 import java.time.LocalDate
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -23,7 +27,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
+internal class CreateCardFromSelfServiceTest : IntegrationTest() {
     @BeforeEach
     fun cleanUp() {
         transaction {
@@ -33,159 +37,155 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
     }
 
     @Test
-    fun `POST returns an error when project does not exist`() =
-        JavalinTest.test(app) { _, client ->
-            val mutation = createMutation(
-                project = "non-existent.sozialpass.app",
-                encodedCardInfo = "qwerty",
-            )
-            val response = post(client, mutation)
+    fun `should return an error when project does not exist`() {
+        val mutation = createMutation(
+            project = "non-existent.sozialpass.app",
+            encodedCardInfo = "qwerty",
+        )
+        val response = postGraphQL(mutation)
 
-            assertEquals(404, response.code)
-        }
+        assertEquals(HttpStatus.OK, response.statusCode)
 
-    @Test
-    fun `POST returns an error when self-service is not enabled in the project`() =
-        JavalinTest.test(app) { _, client ->
-            val mutation = createMutation(
-                project = "bayern.ehrenamtskarte.app",
-                encodedCardInfo = "qwerty",
-            )
-            val response = post(client, mutation)
+        val error = response.toErrorObject()
 
-            assertEquals(404, response.code)
-        }
+        assertEquals("Project 'non-existent.sozialpass.app' not found", error.message)
+        assertEquals(GraphQLExceptionCode.PROJECT_NOT_FOUND, error.extensions.code)
+    }
 
     @Test
-    fun `POST returns an error when encoded card info can't be parsed`() =
-        JavalinTest.test(app) { _, client ->
-            val mutation = createMutation(encodedCardInfo = "qwerty")
-            val response = post(client, mutation)
+    fun `should return an error when self-service is not enabled in the project`() {
+        val mutation = createMutation(
+            project = "bayern.ehrenamtskarte.app",
+            encodedCardInfo = "qwerty",
+        )
+        val response = postGraphQL(mutation)
 
-            assertEquals(200, response.code)
+        assertEquals(HttpStatus.OK, response.statusCode)
 
-            val jsonResponse = response.json()
+        val error = response.toErrorObject()
 
-            jsonResponse.apply {
-                assertEquals("Error INVALID_INPUT occurred.", findValuesAsText("message").single())
-                assertEquals("Failed to parse encodedCardInfo", findValuesAsText("reason").single())
-            }
-
-            transaction {
-                assertEquals(0, Cards.selectAll().count())
-            }
-        }
+        assertEquals("Self-Service is not enabled in the project", error.message)
+        assertEquals(GraphQLExceptionCode.NOT_IMPLEMENTED, error.extensions.code)
+    }
 
     @Test
-    fun `POST returns an error when user entitlements not found in the db`() =
-        JavalinTest.test(app) { _, client ->
-            val encodedCardInfo = SampleCards.koblenzPass().getEncoded()
-            val mutation = createMutation(encodedCardInfo = encodedCardInfo)
-            val response = post(client, mutation)
+    fun `should return an error when encoded card info can't be parsed`() {
+        val mutation = createMutation(encodedCardInfo = "qwerty")
+        val response = postGraphQL(mutation)
 
-            assertEquals(200, response.code)
+        assertEquals(HttpStatus.OK, response.statusCode)
 
-            val jsonResponse = response.json()
+        val error = response.toErrorObject()
 
-            jsonResponse.apply {
-                assertEquals("Error USER_ENTITLEMENT_NOT_FOUND occurred.", findValuesAsText("message").single())
-            }
+        assertEquals("Failed to parse encodedCardInfo", error.message)
+        assertEquals(GraphQLExceptionCode.INVALID_INPUT, error.extensions.code)
 
-            transaction {
-                assertEquals(0, Cards.selectAll().count())
-            }
+        transaction {
+            assertEquals(0, Cards.selectAll().count())
         }
+    }
 
     @Test
-    fun `POST returns an error when user entitlements expired`() =
-        JavalinTest.test(app) { _, client ->
-            TestData.createUserEntitlement(
-                userHash = "\$argon2id\$v=19\$m=19456,t=2,p=1\$cr3lP9IMUKNz4BLfPGlAOHq1z98G5/2tTbhDIko35tY",
-                endDate = LocalDate.now().minusDays(1L),
-                regionId = 95,
-            )
+    fun `should return an error when user entitlements not found in the db`() {
+        val encodedCardInfo = SampleCards.koblenzPass().getEncoded()
+        val mutation = createMutation(encodedCardInfo = encodedCardInfo)
+        val response = postGraphQL(mutation)
 
-            val encodedCardInfo = SampleCards.koblenzPass().getEncoded()
-            val mutation = createMutation(encodedCardInfo = encodedCardInfo)
-            val response = post(client, mutation)
+        assertEquals(HttpStatus.OK, response.statusCode)
 
-            assertEquals(200, response.code)
+        val error = response.toErrorObject()
 
-            val jsonResponse = response.json()
+        assertEquals("Error USER_ENTITLEMENT_NOT_FOUND occurred.", error.message)
+        assertEquals(GraphQLExceptionCode.USER_ENTITLEMENT_NOT_FOUND, error.extensions.code)
 
-            jsonResponse.apply {
-                assertEquals("Error USER_ENTITLEMENT_EXPIRED occurred.", findValuesAsText("message").single())
-            }
-
-            transaction {
-                assertEquals(0, Cards.selectAll().count())
-            }
+        transaction {
+            assertEquals(0, Cards.selectAll().count())
         }
+    }
 
     @Test
-    fun `POST returns an error when user entitlements revoked`() =
-        JavalinTest.test(app) { _, client ->
-            TestData.createUserEntitlement(
-                userHash = "\$argon2id\$v=19\$m=19456,t=2,p=1\$cr3lP9IMUKNz4BLfPGlAOHq1z98G5/2tTbhDIko35tY",
-                revoked = true,
-                regionId = 95,
-            )
+    fun `should return an error when user entitlements expired`() {
+        TestData.createUserEntitlement(
+            userHash = $$"$argon2id$v=19$m=19456,t=2,p=1$cr3lP9IMUKNz4BLfPGlAOHq1z98G5/2tTbhDIko35tY",
+            endDate = LocalDate.now().minusDays(1L),
+            regionId = 95,
+        )
 
-            val encodedCardInfo = SampleCards.koblenzPass().getEncoded()
-            val mutation = createMutation(encodedCardInfo = encodedCardInfo)
-            val response = post(client, mutation)
+        val encodedCardInfo = SampleCards.koblenzPass().getEncoded()
+        val mutation = createMutation(encodedCardInfo = encodedCardInfo)
+        val response = postGraphQL(mutation)
 
-            assertEquals(200, response.code)
+        assertEquals(HttpStatus.OK, response.statusCode)
 
-            val jsonResponse = response.json()
+        val error = response.toErrorObject()
 
-            jsonResponse.apply {
-                assertEquals("Error USER_ENTITLEMENT_EXPIRED occurred.", findPath("message").textValue())
-            }
+        assertEquals("Error USER_ENTITLEMENT_EXPIRED occurred.", error.message)
+        assertEquals(GraphQLExceptionCode.USER_ENTITLEMENT_EXPIRED, error.extensions.code)
 
-            transaction {
-                assertEquals(0, Cards.selectAll().count())
-            }
+        transaction {
+            assertEquals(0, Cards.selectAll().count())
         }
+    }
 
     @Test
-    fun `POST returns a successful response when cards are created`() =
-        JavalinTest.test(app) { _, client ->
-            val userRegionId = 95
-            val userEntitlementId = TestData.createUserEntitlement(
-                userHash = "\$argon2id\$v=19\$m=19456,t=2,p=1\$cr3lP9IMUKNz4BLfPGlAOHq1z98G5/2tTbhDIko35tY",
-                regionId = userRegionId,
-            )
-            val oldDynamicCardId = TestData.createDynamicCard(entitlementId = userEntitlementId)
-            val oldStaticCardId = TestData.createStaticCard(entitlementId = userEntitlementId)
+    fun `should return an error when user entitlements revoked`() {
+        TestData.createUserEntitlement(
+            userHash = $$"$argon2id$v=19$m=19456,t=2,p=1$cr3lP9IMUKNz4BLfPGlAOHq1z98G5/2tTbhDIko35tY",
+            revoked = true,
+            regionId = 95,
+        )
 
-            val encodedCardInfo = SampleCards.koblenzPass().getEncoded()
-            val mutation = createMutation(encodedCardInfo = encodedCardInfo)
-            val response = post(client, mutation)
+        val encodedCardInfo = SampleCards.koblenzPass().getEncoded()
+        val mutation = createMutation(encodedCardInfo = encodedCardInfo)
+        val response = postGraphQL(mutation)
 
-            assertEquals(200, response.code)
+        assertEquals(HttpStatus.OK, response.statusCode)
 
-            val jsonResponse = response.json()
+        val error = response.toErrorObject()
 
-            val newDynamicActivationCode = jsonResponse.findPath(
-                "dynamicActivationCode",
-            ).path("cardInfoHashBase64").textValue()
-            val newStaticVerificationCode = jsonResponse.findPath(
-                "staticVerificationCode",
-            ).path("cardInfoHashBase64").textValue()
+        assertEquals("Error USER_ENTITLEMENT_EXPIRED occurred.", error.message)
+        assertEquals(GraphQLExceptionCode.USER_ENTITLEMENT_EXPIRED, error.extensions.code)
 
-            assertNotNull(newDynamicActivationCode)
-            assertNotNull(newStaticVerificationCode)
+        transaction {
+            assertEquals(0, Cards.selectAll().count())
+        }
+    }
 
-            transaction {
-                assertEquals(4, Cards.selectAll().count())
+    @Test
+    fun `should return a successful response when cards are created`() {
+        val userRegionId = 95
+        val userEntitlementId = TestData.createUserEntitlement(
+            userHash = $$"$argon2id$v=19$m=19456,t=2,p=1$cr3lP9IMUKNz4BLfPGlAOHq1z98G5/2tTbhDIko35tY",
+            regionId = userRegionId,
+        )
+        val oldDynamicCardId = TestData.createDynamicCard(entitlementId = userEntitlementId)
+        val oldStaticCardId = TestData.createStaticCard(entitlementId = userEntitlementId)
 
-                assertTrue(CardEntity.find { Cards.id eq oldDynamicCardId }.single().revoked)
-                assertTrue(CardEntity.find { Cards.id eq oldStaticCardId }.single().revoked)
+        val encodedCardInfo = SampleCards.koblenzPass().getEncoded()
+        val mutation = createMutation(encodedCardInfo = encodedCardInfo)
+        val response = postGraphQL(mutation)
 
-                val userEntitlement = UserEntitlementsEntity.find { UserEntitlements.id eq userEntitlementId }.single()
+        assertEquals(HttpStatus.OK, response.statusCode)
 
-                CardEntity.find { Cards.cardInfoHash eq newDynamicActivationCode.decodeBase64Bytes() }.single().let {
+        val result = response.toDataObject<CardCreationResultModel>()
+        val newDynamicActivationCode = result.dynamicActivationCode
+        val newStaticVerificationCode = result.staticVerificationCode
+
+        assertNotNull(newDynamicActivationCode)
+        assertNotNull(newStaticVerificationCode)
+        assertNotNull(newDynamicActivationCode.cardInfoHashBase64)
+        assertNotNull(newStaticVerificationCode.cardInfoHashBase64)
+
+        transaction {
+            assertEquals(4, Cards.selectAll().count())
+
+            assertTrue(CardEntity.findById(oldDynamicCardId)!!.revoked)
+            assertTrue(CardEntity.findById(oldStaticCardId)!!.revoked)
+
+            val userEntitlement = UserEntitlementsEntity.findById(userEntitlementId)!!
+
+            CardEntity.find { Cards.cardInfoHash eq newDynamicActivationCode.cardInfoHashBase64.decodeBase64Bytes() }
+                .single().let {
                     assertNotNull(it.activationSecretHash)
                     assertNull(it.totpSecret)
                     assertEquals(userEntitlement.endDate.toEpochDay(), it.expirationDay)
@@ -197,7 +197,8 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
                     assertEquals(userEntitlement.id, it.entitlementId)
                 }
 
-                CardEntity.find { Cards.cardInfoHash eq newStaticVerificationCode.decodeBase64Bytes() }.single().let {
+            CardEntity.find { Cards.cardInfoHash eq newStaticVerificationCode.cardInfoHashBase64.decodeBase64Bytes() }
+                .single().let {
                     assertNull(it.activationSecretHash)
                     assertNull(it.totpSecret)
                     assertEquals(userEntitlement.endDate.toEpochDay(), it.expirationDay)
@@ -208,8 +209,8 @@ internal class CreateCardFromSelfServiceTest : GraphqlApiTest() {
                     assertEquals(userEntitlement.startDate.toEpochDay(), it.startDay)
                     assertEquals(userEntitlement.id, it.entitlementId)
                 }
-            }
         }
+    }
 
     private fun createMutation(
         project: String = "koblenz.sozialpass.app",

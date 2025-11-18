@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.graphql.application.types
 
 import app.ehrenamtskarte.backend.graphql.application.utils.onlySelectedIsPresent
-import app.ehrenamtskarte.backend.graphql.shared.exceptions.InvalidJsonException
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidJsonException
 
 data class ApplicationDetails(
     val cardType: BavariaCardType,

@@ -3,11 +3,22 @@ schema {
   mutation: Mutation
 }
 
+"This directive allows results to be deferred during execution"
+directive @defer(
+    "Deferred behaviour is controlled by this argument"
+    if: Boolean! = true,
+    "A unique label that represents the fragment being deferred"
+    label: String
+  ) on FRAGMENT_SPREAD | INLINE_FRAGMENT
+
 "Marks the field, argument, input field or enum value as deprecated"
 directive @deprecated(
     "The reason for the deprecation"
-    reason: String = "No longer supported"
+    reason: String! = "No longer supported"
   ) on FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM_VALUE | INPUT_FIELD_DEFINITION
+
+"This directive disables error propagation when a non nullable field returns null for the given operation."
+directive @experimental_disableErrorPropagation on QUERY | MUTATION | SUBSCRIPTION
 
 "Directs the executor to include this field or fragment only when the `if` argument is true"
 directive @include(
@@ -253,32 +264,20 @@ type Query {
   getUsersInProject: [Administrator!]!
   "Returns all administrators in a region. This query requires the role REGION_ADMIN or PROJECT_ADMIN."
   getUsersInRegion(regionId: Int!): [Administrator!]!
-  "Return list of all accepting stores in the eak bayern project."
-  physicalStores: [PhysicalStore!]! @deprecated(reason : "Deprecated in favor of project specific query, replace with physicalStoresInProject")
-  "Returns list of all accepting stores queried by ids in the eak bayern project."
-  physicalStoresById(params: IdsParamsInput!): [PhysicalStore]! @deprecated(reason : "Deprecated in favor of project specific query, replace with physicalStoresByIdInProject")
   "Returns list of all accepting stores in the given project queried by ids."
   physicalStoresByIdInProject(ids: [Int!]!, project: String!): [PhysicalStore]!
   "Returns list of all accepting stores in the given project."
   physicalStoresInProject(project: String!): [PhysicalStore!]!
   "Returns region data for specific region."
   regionByRegionId(regionId: Int!): Region!
-  "Return list of all regions in the eak bayern project."
-  regions: [Region!]! @deprecated(reason : "Deprecated in favor of project specific query, replace with regionsInProject")
-  "Returns regions queried by ids in the eak bayern project."
-  regionsById(params: IdsParamsInput!): [Region]! @deprecated(reason : "Deprecated in favor of project specific query, replace with regionsByIdInProject")
   "Returns regions queried by ids in the given project."
   regionsByIdInProject(ids: [Int!]!, project: String!): [Region]!
   "Returns regions by postal code. Works only for the EAK project in which each region has an appropriate regionIdentifier."
   regionsByPostalCode(postalCode: String!, project: String!): [Region!]!
   "Return list of all regions in the given project."
   regionsInProject(project: String!): [Region!]!
-  "Search for accepting stores using searchText and categoryIds in the eak bayern project."
-  searchAcceptingStores(params: SearchParamsInput!): [AcceptingStore!]! @deprecated(reason : "Deprecated in favor of project specific query, replace with searchAcceptingStoresInProject")
   "Search for accepting stores in the given project using searchText and categoryIds."
   searchAcceptingStoresInProject(params: SearchParamsInput!, project: String!): [AcceptingStore!]!
-  "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid and a timestamp of the last check"
-  verifyCardInProject(card: CardVerificationModelInput!, project: String!): Boolean! @deprecated(reason : "Deprecated since May 2023 in favor of CardVerificationResultModel that return a current timestamp, replace with verifyCardInProjectV2")
   "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid, extendable and a timestamp of the last check"
   verifyCardInProjectV2(card: CardVerificationModelInput!, project: String!): CardVerificationResultModel!
   "Returns the requesting administrator as retrieved from his JWT token."
@@ -367,6 +366,7 @@ enum GoldenCardEntitlementType {
 enum GraphQLExceptionCode {
   APPLICATION_DATA_INCOMPLETE
   EMAIL_ALREADY_EXISTS
+  FORBIDDEN
   FREINET_AGENCY_NOT_FOUND
   FREINET_CARD_DATA_INVALID
   FREINET_DATA_TRANSFER_NOT_PERMITTED
@@ -388,11 +388,14 @@ enum GraphQLExceptionCode {
   INVALID_QR_CODE_SIZE
   INVALID_ROLE
   MAIL_NOT_SENT
+  NOT_IMPLEMENTED
   PASSWORD_RESET_KEY_EXPIRED
+  PROJECT_NOT_FOUND
   REGION_NOT_ACTIVATED_CARD_CONFIRMATION_MAIL
   REGION_NOT_ACTIVATED_FOR_APPLICATION
   REGION_NOT_FOUND
   REGION_NOT_UNIQUE
+  UNAUTHORIZED
   USER_ENTITLEMENT_EXPIRED
   USER_ENTITLEMENT_NOT_FOUND
 }
@@ -555,10 +558,6 @@ input GoldenCardWorkAtDepartmentEntitlementInput {
 
 input GoldenCardWorkAtOrganizationsEntitlementInput {
   list: [WorkAtOrganizationInput!]!
-}
-
-input IdsParamsInput {
-  ids: [Int!]!
 }
 
 input NotificationSettingsInput {
