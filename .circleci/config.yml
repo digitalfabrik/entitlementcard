@@ -1339,7 +1339,7 @@ workflows:
             - promote_github_release:
                 context:
                     - deliverino
-                platform: web
+                platform: native
                 requires:
                     - promote_android
                     - promote_ios
