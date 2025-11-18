@@ -1,11 +1,11 @@
-import styled from 'styled-components'
+import { styled } from '@mui/material'
 
-const StandaloneCenter = styled('div')`
-  display: flex;
-  flex-grow: 1;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`
+const StandaloneCenter = styled('div')({
+  display: 'flex',
+  flexGrow: 1,
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+})
 
 export default StandaloneCenter
