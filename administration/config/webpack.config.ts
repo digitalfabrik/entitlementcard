@@ -389,6 +389,13 @@ const createWebpackConfig = (webpackEnv: 'development' | 'production'): Configur
             to: `${distDirectory}/${config.projectName}`,
             transform: () => generateAppleAppSiteAssociation(config),
           })),
+          {
+            from: 'public',
+            to: distDirectory,
+            globOptions: {
+              ignore: ['**/index.html'],
+            },
+          },
         ],
       }),
     ].filter(Boolean),
