@@ -6,25 +6,24 @@ expediagroup-graphql = { id = "com.expediagroup.graphql", version.ref = "graphql
 gitlab-arturbosch-detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.8" }
 gmazzo-buildconfig = { id = "com.github.gmazzo.buildconfig", version = "5.7.1"}
 google-protobuf = { id = "com.google.protobuf", version = "0.9.5" }
-jetbrains-kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version = "2.2.20-RC2" }
+jetbrains-kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 jetbrains-kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version = "0.9.3" }
 jlleitschuh-gradle-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "13.1.0" }
 sentry-jvm-gradle = { id = "io.sentry.jvm.gradle", version = "5.12.2" }
-springframework-boot = { id = "org.springframework.boot", version = "3.5.5" }
+springframework-boot = { id = "org.springframework.boot", version.ref = "spring" }
 spring-dependencymanagement = { id = "io.spring.dependency-management", version = "1.1.7" }
 
 [versions]
 
 graphql = "8.8.1"
-javalin = "6.7.0"
 jetbrains-exposed = "0.61.0"
 junixsocket = "2.10.1"
 kotlin = "2.2.21"
 kotlinx-coroutines = "1.10.2"
 kotlinx-serialization = "1.9.0"
-ktor = "3.3.1"
-spring = "3.5.5"
+ktor = "3.3.2"
+spring = "3.5.7"
 testcontainers = "1.21.3"
 protobuf = "4.33.0"
 
@@ -47,7 +46,7 @@ favre-lib-bcrypt = { module = "at.favre.lib:bcrypt", version = "0.10.2" }
 google-protobuf-kotlin = { module = "com.google.protobuf:protobuf-kotlin", version.ref = "protobuf" }
 google-zxing-core = { module = "com.google.zxing:core", version = "3.5.3" }
 grundig-geojson-jackson = { module = "de.grundid.opendatalab:geojson-jackson", version = "1.14" }
-graphql-extended-scalars = { module = "com.graphql-java:graphql-java-extended-scalars", version = "22.0" }
+graphql-extended-scalars = { module = "com.graphql-java:graphql-java-extended-scalars", version = "24.0" }
 jetbrains-exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "jetbrains-exposed" }
 jetbrains-exposed-dao = { module = "org.jetbrains.exposed:exposed-dao", version.ref = "jetbrains-exposed" }
 jetbrains-exposed-java-time = { module = "org.jetbrains.exposed:exposed-java-time", version.ref = "jetbrains-exposed" }
@@ -55,15 +54,12 @@ jetbrains-exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", versio
 jetbrains-kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 jetbrains-kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin"  }
 jetbrains-kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin"  }
-jetbrains-kotlin-test-juni5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5", version.ref = "kotlin" }
+jetbrains-kotlin-test-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5", version.ref = "kotlin" }
 jetbrains-kotlinx-coroutines-reactor = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactor", version.ref = "kotlinx-coroutines" }
 jetbrains-kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 jetbrains-kotlinx-html-jvm = { module = "org.jetbrains.kotlinx:kotlinx-html-jvm", version = "0.12.0" }
 jetbrains-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 jetbrains-kover-jvm-agent = "org.jetbrains.kotlinx:kover-jvm-agent:0.9.3"
-junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
-junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params" }
-junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version = "1.12.2" }
 kohlschutter-junixsocket-common = { module = "com.kohlschutter.junixsocket:junixsocket-common", version.ref = "junixsocket" }
 kohlschutter-junixsocket-core = { module = "com.kohlschutter.junixsocket:junixsocket-core", version.ref = "junixsocket" }
 ktor-client-cio-jvm = { module = "io.ktor:ktor-client-cio-jvm", version.ref = "ktor" }
@@ -72,11 +68,11 @@ mockk = { module = "io.mockk:mockk", version = "1.14.6" }
 piwik-matomo-java-tracker = { module = "org.piwik.java.tracking:matomo-java-tracker", version = "3.4.0" }
 postgis-jdbc = { module = "net.postgis:postgis-jdbc", version = "2025.1.1" }
 postgresql-postgresql = { module = "org.postgresql:postgresql", version = "42.7.8" }
-projectreactor-reactor-test = { module = "io.projectreactor:reactor-test", version = "3.8.0-M6" }
-projectreactor-reactor-kotlinextensions = { module = "io.projectreactor.kotlin:reactor-kotlin-extensions", version = "1.2.3" }
-sentry-springbootstarter = { module = "io.sentry:sentry-spring-boot-starter-jakarta", version = "8.22.0" }
+projectreactor-reactor-test = { module = "io.projectreactor:reactor-test", version = "3.8.0" }
+projectreactor-reactor-kotlinextensions = { module = "io.projectreactor.kotlin:reactor-kotlin-extensions", version = "1.3.0" }
+sentry-springbootstarter = { module = "io.sentry:sentry-spring-boot-starter-jakarta", version = "8.25.0" }
 simplejavamail = { module = "org.simplejavamail:simple-java-mail", version = "8.12.6" }
-springdoc-openapi-starter = {module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version="2.8.13"}
+springdoc-openapi-starter = {module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version="2.8.14"}
 springframework-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools" }
 springframework-boot-configurationprocessor = { module = "org.springframework.boot:spring-boot-configuration-processor" }
 springframework-boot-starter-mail = { module = "org.springframework.boot:spring-boot-starter-mail", version.ref = "spring" }
