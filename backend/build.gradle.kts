@@ -184,6 +184,14 @@ ktlint {
     }
 }
 
+tasks.withType<Zip>().configureEach {
+    archiveVersion.set("")
+}
+
+tasks.withType<Tar>().configureEach {
+    archiveVersion.set("")
+}
+
 application {
     mainClass.set("${project.group}.EntryPointKt")
 }
