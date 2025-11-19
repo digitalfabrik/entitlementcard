@@ -1,9 +1,9 @@
-import { getTestRegion } from '../../bp-modules/user-settings/__mocks__/Region'
 import { BavariaCardType } from '../../generated/card_pb'
 import { Region } from '../../generated/graphql'
 import bayernConfig from '../../project-configs/bayern/config'
 import koblenzConfig from '../../project-configs/koblenz/config'
 import nuernbergConfig from '../../project-configs/nuernberg/config'
+import { getTestRegion } from '../../routes/user-settings/__mocks__/Region'
 import PlainDate from '../../util/PlainDate'
 import {
   MAX_NAME_LENGTH,

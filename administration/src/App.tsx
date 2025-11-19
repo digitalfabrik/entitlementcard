@@ -3,14 +3,14 @@ import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import React, { ReactElement } from 'react'
 
-import AppApolloProvider from './AppApolloProvider'
-import { AppSnackbarProvider } from './AppSnackbar'
-import AuthProvider from './AuthProvider'
 import Router from './Router'
 import './i18n'
-import { theme } from './mui-modules/theme'
 import { ProjectConfigProvider } from './project-configs/ProjectConfigContext'
 import getProjectConfig from './project-configs/getProjectConfig'
+import AppApolloProvider from './provider/AppApolloProvider'
+import { AppSnackbarProvider } from './provider/AppSnackbarProvider'
+import AuthProvider from './provider/AuthProvider'
+import { theme } from './util/theme'
 
 if (!process.env.REACT_APP_API_BASE_URL) {
   throw new Error('REACT_APP_API_BASE_URL is not set!')

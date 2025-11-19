@@ -1,8 +1,8 @@
-import { CSV_MIME_TYPE_UTF8 } from '../../bp-modules/applications/constants'
-import { getTestRegion } from '../../bp-modules/user-settings/__mocks__/Region'
 import { DynamicActivationCode } from '../../generated/card_pb'
 import bayernConfig from '../../project-configs/bayern/config'
 import nuernbergConfig from '../../project-configs/nuernberg/config'
+import { CSV_MIME_TYPE_UTF8 } from '../../routes/applications/constants'
+import { getTestRegion } from '../../routes/user-settings/__mocks__/Region'
 import { generateCardInfo, initializeCard } from '../Card'
 import { CsvError, generateCsv, getCSVFilename } from '../CsvFactory'
 import { CreateCardsResult } from '../createCards'
@@ -12,7 +12,7 @@ jest.mock('csv-stringify/browser/esm/sync', () => ({
   stringify: (input: string[][]) => input[0].join(','),
 }))
 
-jest.mock('../../project-configs/showcase/config')
+jest.mock('../../../project-configs/showcase/config')
 
 const TEST_BLOB_CONSTRUCTOR = jest.fn()
 

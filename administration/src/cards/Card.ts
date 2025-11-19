@@ -2,8 +2,8 @@ import { PartialMessage } from '@bufbuild/protobuf'
 
 import { CardExtensions, CardInfo } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
-import i18next from '../i18n'
 import type { CardConfig } from '../project-configs/getProjectConfig'
+import i18next from '../translations/i18n'
 import PlainDate from '../util/PlainDate'
 import {
   containsOnlyLatinAndCommonCharset,

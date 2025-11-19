@@ -3,12 +3,12 @@ import { buildConfigBayern } from 'build-configs'
 import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
 import EMailNotificationExtension from '../../cards/extensions/EMailNotificationExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
-import { JsonField, findValue } from '../../shared/components/JsonFieldView'
 import {
   ApplicationDataIncompleteError,
   getCardTypeApplicationData,
   getPersonalApplicationData,
-} from '../../util/applicationDataHelper'
+} from '../../routes/applications/utils/applicationDataHelper'
+import { JsonField, findValue } from '../../shared/components/JsonFieldView'
 import { ActivationText } from '../common/ActivationText'
 import { commonColors } from '../common/colors'
 import type { CardConfig, ProjectConfig } from '../getProjectConfig'
