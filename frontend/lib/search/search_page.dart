@@ -44,7 +44,7 @@ class _SearchPageState extends State<SearchPage> {
                 searchFieldText = text;
               }),
             ),
-            FilterBar(onCategoryPress: _onCategoryPress),
+            SliverFilterBar(onCategoryPress: _onCategoryPress),
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.all(8),

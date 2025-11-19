@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
-class FilterBar extends StatelessWidget {
+class SliverFilterBar extends StatelessWidget {
   final Function(CategoryAsset, bool) onCategoryPress;
 
-  const FilterBar({super.key, required this.onCategoryPress});
+  const SliverFilterBar({super.key, required this.onCategoryPress});
 
   @override
   Widget build(BuildContext context) {
