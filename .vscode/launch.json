@@ -1,0 +1,69 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "frontend | run (local, bayern)",
+      "cwd": "frontend",
+      "request": "launch",
+      "type": "dart",
+      // "flutterMode": "profile",
+      "args": ["--dart-define=environment=local", "--flavor=bayern"],
+      "console": "debugConsole",
+      "internalConsoleOptions": "openOnSessionStart",
+    },
+    {
+      "name": "frontend | run (local, koblenz)",
+      "cwd": "frontend",
+      "request": "launch",
+      "type": "dart",
+      // "flutterMode": "profile",
+      "args": ["--dart-define=environment=local", "--flavor=koblenz"],
+      "console": "debugConsole",
+      "internalConsoleOptions": "openOnSessionStart",
+    },
+    {
+      "name": "frontend | run (local, nuernberg)",
+      "cwd": "frontend",
+      "request": "launch",
+      "type": "dart",
+      // "flutterMode": "profile",
+      "args": ["--dart-define=environment=local", "--flavor=nuernberg"],
+      "console": "debugConsole",
+      "internalConsoleOptions": "openOnSessionStart",
+    },
+        {
+      "name": "frontend | run (prod, bayern)",
+      "cwd": "frontend",
+      "request": "launch",
+      "type": "dart",
+      // "flutterMode": "profile",
+      "args": ["--dart-define=environment=production", "--flavor=bayern"],
+      "console": "debugConsole",
+      "internalConsoleOptions": "openOnSessionStart",
+    },
+    {
+      "name": "frontend | run (prod, koblenz)",
+      "cwd": "frontend",
+      "request": "launch",
+      "type": "dart",
+      // "flutterMode": "profile",
+      "args": ["--dart-define=environment=production", "--flavor=koblenz"],
+      "console": "debugConsole",
+      "internalConsoleOptions": "openOnSessionStart",
+    },
+    {
+      "name": "frontend | run (prod, nuernberg)",
+      "cwd": "frontend",
+      "request": "launch",
+      "type": "dart",
+      // "flutterMode": "profile",
+      "args": ["--dart-define=environment=production", "--flavor=nuernberg"],
+      "console": "debugConsole",
+      "internalConsoleOptions": "openOnSessionStart",
+    },
+
+  ]
+}
