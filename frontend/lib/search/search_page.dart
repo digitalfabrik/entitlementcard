@@ -61,7 +61,7 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               ),
             ),
-            ResultsLoader(
+            SliverResultsLoader(
               searchText: searchFieldText,
               categoryIds: _selectedCategories.map((e) => e.id).toList(),
               coordinates: _sortingMode == SortingMode.byDistance ? _coordinates : null,
