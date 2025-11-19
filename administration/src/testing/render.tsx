@@ -7,10 +7,10 @@ import React, { ReactElement, ReactNode, createElement } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import { MemoryRouter } from 'react-router'
 
-import { AppSnackbarProvider } from '../provider/AppSnackbarProvider'
-import i18n from '../translations/i18n'
 import { ProjectConfigProvider } from '../project-configs/ProjectConfigContext'
 import { ProjectConfig } from '../project-configs/getProjectConfig'
+import { AppSnackbarProvider } from '../provider/AppSnackbarProvider'
+import i18n from '../translations/i18n'
 
 export type CustomRenderOptions = {
   projectConfig?: ProjectConfig
