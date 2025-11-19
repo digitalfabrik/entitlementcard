@@ -1,15 +1,14 @@
 import 'package:collection/collection.dart';
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/category_assets.dart';
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/search/filter_bar_button.dart';
 import 'package:flutter/material.dart';
 
-import 'package:ehrenamtskarte/l10n/translations.g.dart';
+class CategoryFilterBar extends StatelessWidget {
+  final Function(CategoryAsset, bool) onCategoryPress;
 
-class FilterBar extends StatelessWidget {
-  final void Function(CategoryAsset, bool) onCategoryPress;
-
-  const FilterBar({super.key, required this.onCategoryPress});
+  const CategoryFilterBar({super.key, required this.onCategoryPress});
 
   @override
   Widget build(BuildContext context) {
