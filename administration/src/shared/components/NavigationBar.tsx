@@ -2,9 +2,9 @@ import { AppBar, Divider, Link, Stack, SvgIcon, Toolbar, Typography, useTheme } 
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import EntitlementIcon from '../../assets/icons/entitlement_icon_outline.svg'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { useWhoAmI } from '../../provider/WhoAmIProvider'
-import EntitlementIcon from '../assets/icons/entitlement_icon_outline.svg'
 import NavigationItems from './NavigationItems'
 import UserMenu from './UserMenu'
 
