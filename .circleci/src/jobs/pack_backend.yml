@@ -10,7 +10,7 @@ steps:
   - prepare_workspace
   - run:
       name: Pack backend
-      command: scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -t ~/attached_workspace/backend/build/distributions/*.tar -s scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "openjdk-17-jre-headless"
+      command: scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -t ~/attached_workspace/backend/build/distributions/backend-boot*.tar -s scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "openjdk-17-jre-headless"
   - run:
       name: Move package
       command: |
