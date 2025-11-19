@@ -158,17 +158,17 @@ class SliverStatusBarProtector extends StatelessWidget {
   }
 }
 
-class SearchSliverAppBar extends StatefulWidget {
+class SliverSearchAppBar extends StatefulWidget {
   final ValueChanged<String> onChanged;
   final Debouncer debouncer = Debouncer(delay: const Duration(milliseconds: 50));
 
-  SearchSliverAppBar({super.key, required this.onChanged});
+  SliverSearchAppBar({super.key, required this.onChanged});
 
   @override
-  SearchSliverAppBarState createState() => SearchSliverAppBarState();
+  SliverSearchAppBarState createState() => SliverSearchAppBarState();
 }
 
-class SearchSliverAppBarState extends State<SearchSliverAppBar> {
+class SliverSearchAppBarState extends State<SliverSearchAppBar> {
   final TextEditingController textEditingController = TextEditingController();
   final FocusNode focusNode = FocusNode();
 
