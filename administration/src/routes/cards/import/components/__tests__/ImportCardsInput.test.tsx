@@ -17,7 +17,7 @@ import { getTestRegion } from '../../../../user-settings/__mocks__/Region'
 import { ENTRY_LIMIT } from '../../../constants'
 import ImportCardsInput from '../ImportCardsInput'
 
-jest.mock('../../Router', () => ({}))
+jest.mock('../../../../../Router', () => ({}))
 
 const enqueueSnackbarMock = jest.fn()
 jest.mock('notistack', () => ({

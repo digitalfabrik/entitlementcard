@@ -6,7 +6,7 @@ import { useWhoAmI } from '../../../provider/WhoAmIProvider'
 import { renderWithOptions } from '../../../testing/render'
 import RenderGuard from '../RenderGuard'
 
-jest.mock('../../../WhoAmIProvider', () => ({
+jest.mock('../../../provider/WhoAmIProvider', () => ({
   useWhoAmI: jest.fn(),
 }))
 

@@ -8,7 +8,7 @@ jest.mock('csv-stringify/browser/esm/sync', () => ({
   stringify: (input: string[][]) => input[0].join(','),
 }))
 
-jest.mock('../../../project-configs/showcase/config')
+jest.mock('../../../../project-configs/showcase/config')
 const TEST_BLOB_CONSTRUCTOR = jest.fn()
 describe('CSVStatistics', () => {
   const region = getTestRegion({ prefix: 'Stadt' })

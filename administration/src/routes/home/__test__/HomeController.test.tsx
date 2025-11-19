@@ -8,7 +8,7 @@ import { useWhoAmI } from '../../../provider/WhoAmIProvider'
 import { renderWithOptions } from '../../../testing/render'
 import HomeController from '../HomeController'
 
-jest.mock('../../../WhoAmIProvider', () => ({
+jest.mock('../../../provider/WhoAmIProvider', () => ({
   useWhoAmI: jest.fn(),
 }))
 

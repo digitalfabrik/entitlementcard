@@ -20,8 +20,8 @@ import { getTestRegion } from '../../user-settings/__mocks__/Region'
 import useCardGenerator from './useCardGenerator'
 
 jest.useFakeTimers({ now: new Date('2025-01-01T00:00:00.000Z') })
-jest.mock('../../../cards/PdfFactory', () => ({
-  ...jest.requireActual('../../../cards/PdfFactory'),
+jest.mock('../../../cards/pdf/PdfFactory', () => ({
+  ...jest.requireActual('../../../cards/pdf/PdfFactory'),
   generatePdf: jest.fn(),
 }))
 jest.mock('../../../cards/createCards', () => ({
