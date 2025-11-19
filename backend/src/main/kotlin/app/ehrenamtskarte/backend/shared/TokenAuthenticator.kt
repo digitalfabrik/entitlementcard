@@ -6,14 +6,13 @@ import app.ehrenamtskarte.backend.db.repositories.ApiTokensRepository
 import app.ehrenamtskarte.backend.shared.crypto.PasswordCrypto
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import app.ehrenamtskarte.backend.shared.exceptions.UnauthorizedException
-import jakarta.servlet.http.HttpServletRequest
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.LocalDate
 
 // todo: this will be removed or refactored after #2452
 object TokenAuthenticator {
-    private fun authenticateToken(header: String?, neededType: ApiTokenType): ApiTokenEntity {
-        val token = header
+    fun authenticate(authorizationHeader: String?, neededType: ApiTokenType): ApiTokenEntity {
+        val token = authorizationHeader
             ?.takeIf { it.startsWith("Bearer ") }
             ?.removePrefix("Bearer ")
             ?: throw UnauthorizedException()
@@ -30,7 +29,4 @@ object TokenAuthenticator {
             apiToken
         }
     }
-
-    fun authenticate(request: HttpServletRequest, neededType: ApiTokenType): ApiTokenEntity =
-        authenticateToken(request.getHeader("Authorization"), neededType)
 }

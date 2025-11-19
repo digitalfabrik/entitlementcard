@@ -21,9 +21,10 @@ import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.shared.TokenAuthenticator
 import app.ehrenamtskarte.backend.shared.mail.Mailer
 import graphql.execution.DataFetcherResult
-import jakarta.servlet.http.HttpServletRequest
-import jakarta.servlet.http.Part
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.springframework.graphql.server.WebGraphQlRequest
+import org.springframework.http.MediaType
+import org.springframework.http.codec.multipart.Part
 import java.io.File
 
 class ApplicationHandler(
@@ -33,7 +34,7 @@ class ApplicationHandler(
     private val project: String,
     private val applicationData: File,
     private val files: List<Part>,
-    private val request: HttpServletRequest,
+    private val request: WebGraphQlRequest,
 ) {
     fun sendApplicationMails(
         applicationEntity: ApplicationEntity,
@@ -94,12 +95,17 @@ class ApplicationHandler(
     }
 
     fun validateAttachmentTypes() {
-        val allowedContentTypes = setOf("application/pdf", "image/png", "image/jpeg")
+        val allowedContentTypes = setOf(
+            MediaType.APPLICATION_PDF,
+            MediaType.IMAGE_PNG,
+            MediaType.IMAGE_JPEG,
+        )
         val maxFileSizeBytes = 5 * 1000 * 1000
-        if (!files.all { it.contentType in allowedContentTypes }) {
+        if (!files.all { it.headers().contentType in allowedContentTypes }) {
             throw InvalidFileTypeException()
         }
-        if (!files.all { it.size <= maxFileSizeBytes }) {
+        // Use header for preflight check, TODO Add plugin for max body size
+        if (!files.all { it.headers().contentLength <= maxFileSizeBytes }) {
             throw InvalidFileSizeException()
         }
     }
@@ -133,7 +139,10 @@ class ApplicationHandler(
         val allAlreadyVerifiedWithToken = when {
             isAlreadyVerifiedList.all { it == false || it == null } -> false
             isAlreadyVerifiedList.all { it == true } -> {
-                TokenAuthenticator.authenticate(request, ApiTokenType.VERIFIED_APPLICATION)
+                TokenAuthenticator.authenticate(
+                    request.headers.getFirst("Authorization"),
+                    ApiTokenType.VERIFIED_APPLICATION,
+                )
                 true
             }
             else -> throw InvalidInputException("isAlreadyVerified must be the same for all entries")

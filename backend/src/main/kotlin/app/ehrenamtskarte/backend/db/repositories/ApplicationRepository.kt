@@ -14,12 +14,13 @@ import app.ehrenamtskarte.backend.graphql.exceptions.InvalidLinkException
 import app.ehrenamtskarte.backend.shared.database.sortByKeys
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import jakarta.servlet.http.Part
+import kotlinx.coroutines.reactive.collect
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.SizedIterable
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
+import org.springframework.http.codec.multipart.Part
 import java.io.File
 import java.nio.file.Paths
 import java.security.SecureRandom
@@ -70,8 +71,11 @@ object ApplicationRepository {
         return try {
             applicationDirectory.mkdirs()
             files.forEachIndexed { index, part ->
-                part.write(File(applicationDirectory, "$index").absolutePath)
-                File(applicationDirectory, "$index.contentType").writeText(part.contentType)
+                File(applicationDirectory, "$index").outputStream().buffered().use { outputStream ->
+                    part.content().subscribe { it.asInputStream().copyTo(outputStream) }
+                }
+
+                File(applicationDirectory, "$index.contentType").writeText(part.headers().contentType.toString())
             }
             Pair(newApplication, verificationEntities)
         } catch (e: Exception) {

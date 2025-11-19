@@ -2,13 +2,10 @@ package app.ehrenamtskarte.backend.graphql
 
 import app.ehrenamtskarte.backend.graphql.auth.AuthContext
 import app.ehrenamtskarte.backend.graphql.auth.JwtService
-import jakarta.servlet.http.HttpServletRequest
 import org.springframework.graphql.server.WebGraphQlInterceptor
 import org.springframework.graphql.server.WebGraphQlRequest
 import org.springframework.graphql.server.WebGraphQlResponse
 import org.springframework.stereotype.Component
-import org.springframework.web.context.request.RequestContextHolder
-import org.springframework.web.context.request.ServletRequestAttributes
 import reactor.core.publisher.Mono
 
 /**
@@ -28,28 +25,23 @@ import reactor.core.publisher.Mono
 @Component
 class GraphQLRequestInterceptor : WebGraphQlInterceptor {
     override fun intercept(request: WebGraphQlRequest, chain: WebGraphQlInterceptor.Chain): Mono<WebGraphQlResponse> {
-        val servletRequest = (RequestContextHolder.getRequestAttributes() as? ServletRequestAttributes)?.request
-        val jwtPayload = servletRequest?.let { JwtService.verifyRequest(it) }
-        val authContext = jwtPayload?.let { AuthContext.fromJwtPayload(it) }
+        val authContext = request.headers.getFirst("Authorization")
+            ?.let { JwtService.verifyRequest(it) }
+            ?.let { AuthContext.fromJwtPayload(it) }
 
         request.configureExecutionInput { _, builder ->
             builder.graphQLContext { ctx ->
                 authContext?.let { ctx.put(AuthContext::class, it) }
-                servletRequest?.let { req ->
-                    ctx.put("request", req)
-                    ctx.put("remoteIp", getIpAddress(req))
-                }
+                ctx.put("request", request)
+                ctx.put("remoteIp", getIpAddress(request))
             }.build()
         }
 
         return chain.next(request)
     }
 
-    private fun getIpAddress(request: HttpServletRequest): String {
-        val xRealIp = request.getHeader("X-Real-IP")
-        val xForwardedFor = request.getHeader("X-Forwarded-For")
-        val remoteAddress = request.remoteAddr
-
-        return listOfNotNull(xRealIp, xForwardedFor, remoteAddress).firstOrNull() ?: "unknown"
-    }
+    private fun getIpAddress(request: WebGraphQlRequest): String =
+        request.headers["X-Real-IP"]?.firstOrNull()
+            ?: request.headers["X-Forwarded-For"]?.firstOrNull()
+            ?: request.remoteAddress.toString()
 }
