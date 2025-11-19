@@ -1,12 +1,11 @@
 import 'package:ehrenamtskarte/category_assets.dart';
-import 'package:ehrenamtskarte/search/filter_bar.dart';
-import 'package:ehrenamtskarte/search/sorting_button.dart';
+import 'package:ehrenamtskarte/graphql_gen/schema.graphql.dart';
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
+import 'package:ehrenamtskarte/search/category_filter_bar.dart';
 import 'package:ehrenamtskarte/search/results_loader.dart';
+import 'package:ehrenamtskarte/search/sorting_button.dart';
 import 'package:ehrenamtskarte/widgets/app_bars.dart';
 import 'package:flutter/material.dart';
-import 'package:ehrenamtskarte/l10n/translations.g.dart';
-
-import 'package:ehrenamtskarte/graphql_gen/schema.graphql.dart';
 
 enum SortingMode { alphabetically, byDistance }
 
@@ -44,7 +43,7 @@ class _SearchPageState extends State<SearchPage> {
                 searchFieldText = text;
               }),
             ),
-            FilterBar(onCategoryPress: _onCategoryPress),
+            CategoryFilterBar(onCategoryPress: _onCategoryPress),
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.all(8),
