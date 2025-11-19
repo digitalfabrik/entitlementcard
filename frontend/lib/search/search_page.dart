@@ -39,7 +39,7 @@ class _SearchPageState extends State<SearchPage> {
       children: [
         CustomScrollView(
           slivers: [
-            SearchSliverAppBar(
+            SliverSearchAppBar(
               onChanged: (text) => setState(() {
                 searchFieldText = text;
               }),
