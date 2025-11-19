@@ -1,3 +1,8 @@
+parameters:
+  platform:
+    description: Define the platform that will be used for release name
+    default: 'all'
+    type: string
 docker:
   - image: cimg/node:20.18.0
 resource_class: small
@@ -6,5 +11,10 @@ steps:
   - install_app_toolbelt
   - run:
       name: Remove prerelease flag from github release
-      command: npx --no app-toolbelt v0 release promote --platform all --private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
-  - notify
+      command: |
+              RELEASE=$(npx --no app-toolbelt v0 release promote --platform << parameters.platform >> --private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME})
+              echo "export RELEASE='${RELEASE}'" >> $BASH_ENV
+  - notify:
+      success_message: "Ehrenamtskarte Bayern, Sozialpass Nürnberg und Sozialpass Koblenz ${RELEASE} have been promoted successfully to production :tada:"
+      channel: releases
+      allow_all_branches: true

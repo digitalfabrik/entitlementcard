@@ -3,6 +3,10 @@ parameters:
   production_delivery:
     description: Whether builds are delivered to the production or beta lane of the play store.
     type: boolean
+  platform:
+    description: Define the platform that will be used for release name
+    default: 'all'
+    type: string
 docker:
   - image: cimg/node:20.18.0
 resource_class: small
@@ -11,7 +15,10 @@ steps:
   - install_app_toolbelt
   - run:
       name: Create github release
-      command: echo "export RELEASE_ID='$(npx --no app-toolbelt v0 release create all ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} <<# parameters.production_delivery >>--production-release<</ parameters.production_delivery >>)'" >> ${BASH_ENV}
+      command: |
+        RELEASE=$(npx --no app-toolbelt v0 release create << parameters.platform >> ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} <<# parameters.production_delivery >>--production-release<</ parameters.production_delivery >>)
+        echo "export RELEASE_ID=$(echo ${RELEASE} | jq .id)" >> ${BASH_ENV}
+        echo "export RELEASE_NOTES=$(echo ${RELEASE} | jq .releaseNotes)" >> ${BASH_ENV}
   - run:
       name: Upload android apks to github release
       command: npx --no app-toolbelt v0 release upload --releaseId ${RELEASE_ID} --files "$(ls ~/attached_workspace/*.apk)" --private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
@@ -22,6 +29,6 @@ steps:
       name: Upload backend debian packages to github release
       command: npx --no app-toolbelt v0 release upload --releaseId ${RELEASE_ID} --files "$(ls ~/attached_workspace/debs/backend/*.deb)" --private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
   - notify:
-      success_message: <<^ parameters.production_delivery >>[Beta] <</ parameters.production_delivery >>Ehrenamtskarte Bayern, Sozialpass Nürnberg und Sozialpass Koblenz ${NEW_VERSION_NAME} have been released successfully! https://github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/tag/${NEW_VERSION_NAME}
+      success_message: <<^ parameters.production_delivery >>[Beta] <</ parameters.production_delivery >>Ehrenamtskarte Bayern, Sozialpass Nürnberg und Sozialpass Koblenz ${NEW_VERSION_NAME} have been released successfully! :tada:\n${RELEASE_NOTES}\n https://github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/tag/${NEW_VERSION_NAME}
       channel: releases
       allow_all_branches: true
