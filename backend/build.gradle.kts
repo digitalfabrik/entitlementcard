@@ -20,23 +20,48 @@ group = "app.ehrenamtskarte.backend"
 version = "0.0.1-SNAPSHOT"
 description = "Backend for the Ehrenamtskarte system"
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+application {
+    mainClass.set("${project.group}.EntryPointKt")
+}
+
+sourceSets {
+    main {
+        proto {
+            srcDir("../specs")
+        }
+    }
+    test {
+        kotlin {
+            srcDir("${layout.buildDirectory.get()}/generated/source/graphql")
+        }
     }
 }
 
-protobuf {
-    protoc {
-        artifact = "com.google.protobuf:protoc:${libs.versions.protobuf.get()}"
+// TODO JVM 25 support is planned for Kotlin 2.3.0:
+// https://youtrack.jetbrains.com/issue/KT-81077/Add-JVM-target-bytecode-version-25
+// After moving to JRE 25, this block can be removed.
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+        // kotlinCompile tasks will target JRE 24, so set the javaCompile tasks to target JRE 24 as well
+        sourceCompatibility = JavaVersion.VERSION_24
+        targetCompatibility = JavaVersion.VERSION_24
     }
-    generateProtoTasks {
-        all().configureEach {
-            builtins {
-                create("kotlin")
-            }
-        }
+}
+
+kotlin {
+    // Sets the Java version as well:
+    // https://kotlinlang.org/docs/gradle-configure-project.html#gradle-java-toolchains-support
+    jvmToolchain(25)
+    compilerOptions {
+        freeCompilerArgs.addAll("-Xjsr305=strict")
     }
+}
+
+buildConfig {
+    packageName(project.group.toString())
+    buildConfigField("VERSION_NAME", System.getProperty("NEW_VERSION_NAME", "1.0.0"))
+    buildConfigField("COMMIT_HASH", System.getenv("CIRCLE_SHA1"))
 }
 
 repositories {
@@ -122,16 +147,17 @@ dependencyManagement {
     }
 }
 
-kotlin {
-    compilerOptions {
-        freeCompilerArgs.addAll("-Xjsr305=strict")
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:${libs.versions.protobuf.get()}"
     }
-}
-
-buildConfig {
-    packageName(project.group.toString())
-    buildConfigField("VERSION_NAME", System.getProperty("NEW_VERSION_NAME", "1.0.0"))
-    buildConfigField("COMMIT_HASH", System.getenv("CIRCLE_SHA1"))
+    generateProtoTasks {
+        all().configureEach {
+            builtins {
+                create("kotlin")
+            }
+        }
+    }
 }
 
 if (isProductionEnvironment) {
@@ -144,27 +170,6 @@ if (isProductionEnvironment) {
         org = "digitalfabrik"
         projectName = "entitlementcard-backend"
         authToken = System.getenv("SENTRY_AUTH_TOKEN")
-    }
-}
-
-sourceSets {
-    main {
-        proto {
-            srcDir("../specs")
-        }
-    }
-    test {
-        kotlin {
-            srcDir("${layout.buildDirectory.get()}/generated/source/graphql")
-        }
-    }
-}
-
-tasks.processResources {
-    // required to load graphql schema by spring-boot
-    from("../specs") {
-        include("*.graphql")
-        into("specs")
     }
 }
 
@@ -184,10 +189,6 @@ ktlint {
     }
 }
 
-application {
-    mainClass.set("${project.group}.EntryPointKt")
-}
-
 kover {
     reports {
         filters {
@@ -195,6 +196,14 @@ kover {
                 classes("${project.group}.*")
             }
         }
+    }
+}
+
+tasks.processResources {
+    // required to load graphql schema by spring-boot
+    from("../specs") {
+        include("*.graphql")
+        into("specs")
     }
 }
 

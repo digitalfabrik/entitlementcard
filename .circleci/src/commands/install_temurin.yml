@@ -1,0 +1,16 @@
+#
+# https://adoptium.net/de/news/2021/12/eclipse-temurin-linux-installers-available
+#
+description: Install the temurin JDK
+steps:
+  - temurin-deps:
+      name: Add wget, apt-transport-https, gnupg
+      command: apt-get install -y wget apt-transport-https gnupg
+  - temurin-gpg:
+      name: Add temurin GPG key
+      command: wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | apt-key add -
+  - temurin-repo:
+      name: Add temurin repo
+      command: echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
+  - temurin_install:
+      command: apt-get update && apt-get install temurin-25-jdk
