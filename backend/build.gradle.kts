@@ -184,8 +184,12 @@ ktlint {
     }
 }
 
+tasks.bootDistTar {
+    enabled = false
+}
+
 tasks.withType<Zip>().configureEach {
-    archiveVersion.set("")
+    enabled = false
 }
 
 tasks.withType<Tar>().configureEach {
