@@ -6,8 +6,8 @@ import { useSnackbar } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import EmailLink from '../../bp-modules/EmailLink'
 import { ApplicationVerificationView, useSendApprovalMailToOrganisationMutation } from '../../generated/graphql'
+import EmailLink from '../components/EmailLink'
 import { isEmailValid, verificationStatus } from '../verifications'
 import { VerificationIcon } from './VerificationIcon'
 

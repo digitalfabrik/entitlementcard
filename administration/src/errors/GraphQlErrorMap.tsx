@@ -1,9 +1,9 @@
 import React, { ReactElement } from 'react'
 
+import { base64ToUint8Array } from '../cards/base64'
 import { CardInfo } from '../generated/card_pb'
 import { CodeType, GraphQlExceptionCode } from '../generated/graphql'
-import i18next from '../i18n'
-import { base64ToUint8Array } from '../util/base64'
+import i18next from '../translations/i18n'
 import InvalidLink from './templates/InvalidLink'
 import InvalidPasswordResetLink from './templates/InvalidPasswordResetLink'
 import PasswordResetKeyExpired from './templates/PasswordResetKeyExpired'

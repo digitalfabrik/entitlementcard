@@ -3,7 +3,7 @@ import XRegExp from 'xregexp'
 
 import { maxCardValidity } from '../cards/constants'
 import getMessageFromApolloError from '../errors/getMessageFromApolloError'
-import i18next from '../i18n'
+import i18next from '../translations/i18n'
 import PlainDate from './PlainDate'
 
 export const isStagingEnvironment = (): boolean => !!window.location.hostname.match(/staging./)

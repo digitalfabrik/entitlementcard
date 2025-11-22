@@ -1,7 +1,7 @@
-import { getTestRegion } from '../../../bp-modules/user-settings/__mocks__/Region'
 import { generateCardInfo, initializeCard } from '../../../cards/Card'
 import { CreateCardsResult } from '../../../cards/createCards'
 import { DynamicActivationCode } from '../../../generated/card_pb'
+import { getTestRegion } from '../../../routes/user-settings/__mocks__/Region'
 import nuernbergConfig from '../config'
 import { buildCsvLine } from '../csvExport'
 

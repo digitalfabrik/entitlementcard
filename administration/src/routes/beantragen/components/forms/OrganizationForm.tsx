@@ -1,0 +1,141 @@
+import { Alert, Typography, styled } from '@mui/material'
+import React from 'react'
+import { Trans, useTranslation } from 'react-i18next'
+
+import { OrganizationInput } from '../../../../generated/graphql'
+import i18next from '../../../../translations/i18n'
+import { normalizeName } from '../../../../util/normalizeString'
+import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
+import { Form, FormComponentProps } from '../../util/FormType'
+import {
+  CompoundState,
+  createCompoundGetArrayBufferKeys,
+  createCompoundInitialState,
+  createCompoundValidate,
+} from '../../util/compoundFormUtils'
+import CheckboxForm from '../primitive-inputs/CheckboxForm'
+import EmailForm from '../primitive-inputs/EmailForm'
+import SelectForm from '../primitive-inputs/SelectForm'
+import ShortTextForm from '../primitive-inputs/ShortTextForm'
+import AddressForm from './AddressForm'
+
+const WarningContactPersonSamePerson = styled(Alert)`
+  margin: 8px 0;
+`
+
+const organizationCategoryOptions = {
+  items: [
+    'social',
+    'animalWelfare',
+    'sports',
+    'education',
+    'conservation',
+    'culture',
+    'health',
+    'civilProtection',
+    'church',
+    'others',
+  ].map(item => ({ label: i18next.t(`application:organization:${item}`), value: item })),
+}
+
+const contactHasGivenPermissionOptions = {
+  required: true,
+  notCheckedErrorMessage: i18next.t('applicationForms:contactHasGivenPermissionNotCheckedError'),
+} as const
+
+const SubForms = {
+  name: ShortTextForm,
+  address: AddressForm,
+  category: SelectForm,
+  contactName: ShortTextForm,
+  contactEmail: EmailForm,
+  contactPhone: ShortTextForm,
+  contactHasGivenPermission: CheckboxForm,
+}
+
+const getValidatedCompoundInput = createCompoundValidate(SubForms, {
+  contactHasGivenPermission: contactHasGivenPermissionOptions,
+  category: organizationCategoryOptions,
+})
+
+type State = CompoundState<typeof SubForms>
+type ValidatedInput = OrganizationInput
+type AdditionalProps = { applicantName: string }
+const OrganizationForm: Form<State, ValidatedInput, AdditionalProps> = {
+  initialState: createCompoundInitialState(SubForms),
+  getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
+  validate: state => {
+    const compoundResult = getValidatedCompoundInput(state)
+    if (compoundResult.type === 'error') {
+      return compoundResult
+    }
+    return {
+      type: 'valid',
+      value: {
+        name: compoundResult.value.name,
+        category: compoundResult.value.category,
+        address: compoundResult.value.address,
+        contact: {
+          name: compoundResult.value.contactName,
+          email: compoundResult.value.contactEmail,
+          telephone: compoundResult.value.contactPhone,
+          hasGivenPermission: compoundResult.value.contactHasGivenPermission,
+        },
+      },
+    }
+  },
+  Component: ({ state, setState, applicantName }: FormComponentProps<State, AdditionalProps>) => {
+    const { t } = useTranslation('application')
+    return (
+      <>
+        <Typography variant='body2bold' component='h4' marginY={1.5}>
+          {t('organization.title')}
+        </Typography>
+        <ShortTextForm.Component
+          state={state.name}
+          setState={useUpdateStateCallback(setState, 'name')}
+          label={t('organization.name')}
+        />
+        <AddressForm.Component state={state.address} setState={useUpdateStateCallback(setState, 'address')} />
+        <SelectForm.Component
+          state={state.category}
+          setState={useUpdateStateCallback(setState, 'category')}
+          label={t('organization.category')}
+          options={organizationCategoryOptions}
+        />
+        <Typography variant='body2bold' component='h4' marginY={1.5}>
+          {t('organizationContact.title')}
+        </Typography>
+        <Typography>{t('applicationForms:organizationContactPersonDescription')}</Typography>
+        {normalizeName(applicantName) === normalizeName(state.contactName.shortText) && (
+          <WarningContactPersonSamePerson severity='warning'>
+            <Trans i18nKey='applicationForms:organizationContactPersonAlert' />
+          </WarningContactPersonSamePerson>
+        )}
+        <ShortTextForm.Component
+          state={state.contactName}
+          setState={useUpdateStateCallback(setState, 'contactName')}
+          label={t('organizationContact.name')}
+        />
+        <EmailForm.Component
+          state={state.contactEmail}
+          setState={useUpdateStateCallback(setState, 'contactEmail')}
+          label={t('organizationContact.email')}
+        />
+        <ShortTextForm.Component
+          state={state.contactPhone}
+          setState={useUpdateStateCallback(setState, 'contactPhone')}
+          label={t('organizationContact.telephone')}
+        />
+        <CheckboxForm.Component
+          state={state.contactHasGivenPermission}
+          setState={useUpdateStateCallback(setState, 'contactHasGivenPermission')}
+          label={t('organizationContact.hasGivenPermission')}
+          options={contactHasGivenPermissionOptions}
+        />
+      </>
+    )
+  },
+}
+
+export default OrganizationForm

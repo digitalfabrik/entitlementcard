@@ -5,9 +5,9 @@ import { useSnackbar } from 'notistack'
 import React, { memo, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { AuthContext } from '../../AuthProvider'
-import EmailLink from '../../bp-modules/EmailLink'
+import { AuthContext } from '../../provider/AuthProvider'
 import downloadDataUri from '../../util/downloadDataUri'
+import EmailLink from '../components/EmailLink'
 import { isEmailValid } from '../verifications'
 import type { GeneralJsonField, JsonField, JsonFieldViewProps } from './JsonFieldView'
 

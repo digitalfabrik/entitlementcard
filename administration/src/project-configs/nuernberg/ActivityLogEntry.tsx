@@ -1,8 +1,8 @@
 import React, { ReactElement } from 'react'
 
-import { ActivityLogEntryType } from '../../bp-modules/activity-log/ActivityLog'
 import { BIRTHDAY_EXTENSION_NAME } from '../../cards/extensions/BirthdayExtension'
 import { NUERNBERG_PASS_ID_EXTENSION_NAME } from '../../cards/extensions/NuernbergPassIdExtension'
+import { ActivityLogEntryType } from '../../routes/activity-log/utils/ActivityLog'
 
 // Check column names of the activityLogConfig have the same order and amount than here
 const ActivityLogEntry = (logEntry: ActivityLogEntryType): ReactElement => {

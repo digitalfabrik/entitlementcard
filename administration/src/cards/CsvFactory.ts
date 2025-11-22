@@ -1,7 +1,7 @@
 import { stringify } from 'csv-stringify/browser/esm/sync'
 
-import { CSV_MIME_TYPE_UTF8 } from '../bp-modules/applications/constants'
 import { ProjectConfig } from '../project-configs/getProjectConfig'
+import { CSV_MIME_TYPE_UTF8 } from '../routes/applications/constants'
 import { Card } from './Card'
 import { CreateCardsResult } from './createCards'
 import { NUERNBERG_PASS_ID_EXTENSION_NAME } from './extensions/NuernbergPassIdExtension'
