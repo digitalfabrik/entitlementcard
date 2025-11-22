@@ -19,6 +19,7 @@ import app.ehrenamtskarte.backend.graphql.auth.requireAuthContext
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidLinkException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidNoteSizeException
+import app.ehrenamtskarte.backend.graphql.exceptions.OutOfSyncException
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import app.ehrenamtskarte.backend.shared.mail.Mailer
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
@@ -120,12 +121,11 @@ class EakApplicationMutationController(
         @Argument accessKey: String,
     ): Boolean =
         transaction {
-            try {
-                ApplicationEntity.find { Applications.accessKey eq accessKey }.single().status = Status.Withdrawn
-                true
-            } catch (e: IllegalArgumentException) {
-                false
-            }
+            val application = ApplicationEntity.find { Applications.accessKey eq accessKey }
+                .singleOrNull() ?: throw InvalidLinkException()
+            if (application.status != Status.Pending) throw OutOfSyncException()
+            application.status = Status.Withdrawn
+            true
         }
 
     @GraphQLDescription("Verifies or rejects an application verification")

@@ -593,6 +593,7 @@
     "none": "Keine"
   },
   "errors": {
+    "outOfSync": "Die angezeigten Daten sind nicht aktuell. Bitte aktualisieren Sie die Seite, um Ihre Anfrage erfolgreich durchführen zu können.",
     "functionNotAvailable": "Funktion nicht verfügbar",
     "internalError": "Interner Fehler aufgetreten",
     "pageNotFound": "Seite nicht gefunden",

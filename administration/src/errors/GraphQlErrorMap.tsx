@@ -104,6 +104,10 @@ const graphQlErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
       return {
         title: i18next.t('errors:invalidRole'),
       }
+    case GraphQlExceptionCode.OutOfSync:
+      return {
+        title: i18next.t('errors:outOfSync'),
+      }
     case GraphQlExceptionCode.UserEntitlementNotFound:
       return {
         title: i18next.t('errors:entitlementNotFound'),
