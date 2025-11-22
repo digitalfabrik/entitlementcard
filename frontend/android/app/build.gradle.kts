@@ -31,7 +31,7 @@ android {
     ndkVersion = "28.1.13356709"
 
     defaultConfig {
-        minSdk = 23
+        minSdk = flutter.minSdkVersion
         targetSdk = 36
         multiDexEnabled = true
         versionCode = flutter.versionCode
