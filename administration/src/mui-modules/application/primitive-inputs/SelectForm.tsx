@@ -40,13 +40,16 @@ const SelectForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
       <FormControl fullWidth variant='standard' required style={{ margin: '4px 0' }} error={touched && isInvalid}>
         <InputLabel>{label}</InputLabel>
         <Select
+          inputProps={{
+            'aria-label': label,
+          }}
           disabled={disableAllInputs}
           value={state.selectedValue}
           label={label}
           onBlur={() => setTouched(true)}
           onChange={e => setState(() => ({ selectedValue: e.target.value, manuallySelected: true }))}>
           {options.items.map(item => (
-            <MenuItem key={item.label} value={item.value}>
+            <MenuItem key={item.label} value={item.value} aria-label={item.label}>
               {item.label}
             </MenuItem>
           ))}
