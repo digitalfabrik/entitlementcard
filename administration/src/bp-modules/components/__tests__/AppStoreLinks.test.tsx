@@ -12,7 +12,7 @@ describe('AppStoreLinks', () => {
       { translation: true, theme: true }
     )
 
-    expect(getByRole('link', { name: 'AppStore öffnen' })).toHaveAttribute('href', exampleAppStoreLink)
+    expect(getByRole('link', { name: 'App Store öffnen' })).toHaveAttribute('href', exampleAppStoreLink)
     expect(getByRole('link', { name: 'Google Play öffnen' })).toHaveAttribute('href', examplePlayStoreLink)
   })
 })
