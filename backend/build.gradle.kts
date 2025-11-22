@@ -184,6 +184,18 @@ ktlint {
     }
 }
 
+tasks.bootDistTar {
+    enabled = false
+}
+
+tasks.withType<Zip>().configureEach {
+    enabled = false
+}
+
+tasks.withType<Tar>().configureEach {
+    archiveVersion.set("")
+}
+
 application {
     mainClass.set("${project.group}.EntryPointKt")
 }
