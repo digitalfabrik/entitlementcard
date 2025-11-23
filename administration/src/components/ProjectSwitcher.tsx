@@ -1,5 +1,5 @@
 import { Box, Button } from '@mui/material'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useNavigate } from 'react-router'
 
 import { clearActivityLog } from '../routes/activity-log/utils/activityLog'

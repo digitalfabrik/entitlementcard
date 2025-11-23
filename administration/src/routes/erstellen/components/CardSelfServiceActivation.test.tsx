@@ -1,6 +1,5 @@
 import { create } from '@bufbuild/protobuf'
 import { fireEvent } from '@testing-library/react'
-import React from 'react'
 
 import { DynamicActivationCodeSchema } from '../../../card_pb'
 import { generateCardInfo, initializeCard } from '../../../cards/card'

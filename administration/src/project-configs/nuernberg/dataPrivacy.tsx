@@ -1,5 +1,5 @@
 import { Link, Typography } from '@mui/material'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 /* Generated using https://magic.reactjs.net/htmltojsx.htm
 Instructions:

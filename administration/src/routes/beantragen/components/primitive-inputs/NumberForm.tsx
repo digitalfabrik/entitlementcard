@@ -1,5 +1,5 @@
 import { TextField } from '@mui/material'
-import React, { useContext, useState } from 'react'
+import { useContext, useState } from 'react'
 
 import FormAlert from '../../../../components/FormAlert'
 import i18next from '../../../../translations/i18n'

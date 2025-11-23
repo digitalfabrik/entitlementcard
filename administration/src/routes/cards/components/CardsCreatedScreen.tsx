@@ -1,6 +1,6 @@
 import { CheckCircle } from '@mui/icons-material'
 import { Button, Stack, Typography } from '@mui/material'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 export const CardsCreatedScreen = ({ onProceed }: { onProceed: () => void }): ReactElement => {

@@ -1,5 +1,5 @@
 import { Chip, Divider } from '@mui/material'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 const CustomDivider = ({
   label,

@@ -1,6 +1,6 @@
 import { TextField } from '@mui/material'
 import i18next from 'i18next'
-import React, { useContext, useState } from 'react'
+import { useContext, useState } from 'react'
 
 import FormAlert from '../../../../components/FormAlert'
 import { ShortTextInput } from '../../../../graphql'

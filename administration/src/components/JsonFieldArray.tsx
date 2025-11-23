@@ -1,6 +1,6 @@
 import { ExpandMore } from '@mui/icons-material'
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material'
-import React, { memo, useState } from 'react'
+import { memo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import JsonFieldView from './JsonFieldView'

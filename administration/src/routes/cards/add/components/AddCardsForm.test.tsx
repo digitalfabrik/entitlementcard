@@ -1,5 +1,4 @@
 import { act, fireEvent } from '@testing-library/react'
-import React from 'react'
 
 import { mockRegion } from '../../../../cards/__mocks__/mockRegion'
 import { initializeCardFromCSV } from '../../../../cards/card'
