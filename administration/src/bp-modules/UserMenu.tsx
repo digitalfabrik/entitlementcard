@@ -56,7 +56,6 @@ const UserMenu = (): ReactElement => {
         }}
         open={Boolean(anchorElUser)}
         onClose={handleCloseUserMenu}>
-        <>
           <Box sx={{ paddingX: 1, marginY: 1 }}>
             <Typography noWrap fontWeight='500'>
               {email}
@@ -94,7 +93,6 @@ const UserMenu = (): ReactElement => {
             onClick={() => navigate('/logout')}>
             {t('logout')}
           </Button>
-        </>
       </Menu>
     </Box>
   )
