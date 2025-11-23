@@ -1,5 +1,5 @@
 import { ToggleButton, ToggleButtonGroup, Typography, styled, useTheme } from '@mui/material'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import ApplicationStatusHelpButton from './ApplicationStatusBarHelpButton'

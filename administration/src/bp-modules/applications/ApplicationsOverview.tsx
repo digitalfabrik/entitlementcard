@@ -1,6 +1,6 @@
 import { Stack } from '@mui/material'
 import { AnimatePresence, motion } from 'motion/react'
-import React, { ReactElement, useMemo, useState } from 'react'
+import { ReactElement, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { ApplicationStatus } from '../../generated/graphql'

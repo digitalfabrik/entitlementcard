@@ -2,7 +2,7 @@ import { AddCard } from '@mui/icons-material'
 import { Button, Stack } from '@mui/material'
 import type { MotionNodeAnimationOptions } from 'motion/react'
 import { AnimatePresence, motion } from 'motion/react'
-import React, { ReactElement, useCallback, useContext, useRef } from 'react'
+import { ReactElement, useCallback, useContext, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 

@@ -1,5 +1,5 @@
 import { Divider, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material'
-import React, { useContext, useState } from 'react'
+import { Fragment, useContext, useState } from 'react'
 
 import i18next from '../../../i18n'
 import FormAlert from '../../base/FormAlert'
@@ -50,7 +50,7 @@ export const createRadioGroupForm = <T extends string>(): RadioGroupForm<T> => {
             onBlur={() => setTouched(true)}
             onChange={e => setState(() => ({ selectedValue: e.target.value as T }))}>
             {labelByValueEntries.map(([value, label], index, array) => (
-              <React.Fragment key={label}>
+              <Fragment key={label}>
                 <FormControlLabel
                   disabled={disableAllInputs}
                   value={value}
@@ -58,7 +58,7 @@ export const createRadioGroupForm = <T extends string>(): RadioGroupForm<T> => {
                   control={<Radio required />}
                 />
                 {divideItems && index < array.length - 1 ? <Divider variant='middle' /> : null}
-              </React.Fragment>
+              </Fragment>
             ))}
           </RadioGroup>
           {(showAllErrors || touched) && isInvalid && <FormAlert errorMessage={validationResult.message} />}

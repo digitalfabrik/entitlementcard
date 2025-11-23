@@ -1,6 +1,6 @@
 import HelpOutlinedIcon from '@mui/icons-material/HelpOutlined'
 import { Box, Typography } from '@mui/material'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import PopoverWrapper from '../../mui-modules/components/PopoverWrapper'

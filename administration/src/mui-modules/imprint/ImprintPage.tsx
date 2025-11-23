@@ -1,6 +1,6 @@
 import { Card, Typography } from '@mui/material'
 import parse from 'html-react-parser'
-import React, { ReactElement, useContext } from 'react'
+import { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'

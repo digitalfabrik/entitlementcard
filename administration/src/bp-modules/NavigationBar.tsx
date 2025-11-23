@@ -1,5 +1,5 @@
 import { AppBar, Divider, Link, Stack, SvgIcon, Toolbar, Typography, useTheme } from '@mui/material'
-import React, { ReactElement, useContext } from 'react'
+import { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useWhoAmI } from '../WhoAmIProvider'

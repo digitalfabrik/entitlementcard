@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material'
 import { Stack } from '@mui/system'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 import { StoresFieldConfig } from '../../project-configs/getProjectConfig'
 import { AcceptingStoresEntry } from './AcceptingStoresEntry'

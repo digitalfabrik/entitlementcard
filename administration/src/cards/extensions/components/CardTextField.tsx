@@ -1,5 +1,5 @@
 import { InputProps, TextField } from '@mui/material'
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 
 import FormAlert from '../../../mui-modules/base/FormAlert'
 

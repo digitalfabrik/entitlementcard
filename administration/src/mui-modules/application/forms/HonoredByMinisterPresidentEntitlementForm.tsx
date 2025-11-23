@@ -1,5 +1,4 @@
 import { Typography } from '@mui/material'
-import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { GoldenCardHonoredByMinisterPresidentEntitlementInput } from '../../../generated/graphql'

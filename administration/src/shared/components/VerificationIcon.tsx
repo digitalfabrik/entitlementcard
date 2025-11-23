@@ -1,6 +1,6 @@
 /* eslint-disable react/destructuring-assignment */
 import { Cancel, CheckCircle, Help } from '@mui/icons-material'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 import { VerificationStatus } from '../verifications'
 

@@ -1,7 +1,7 @@
 import { PersonAdd } from '@mui/icons-material'
 import { Stack } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import CardTextField from '../../cards/extensions/components/CardTextField'

@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { useWhoAmI } from '../../../WhoAmIProvider'
 import { Role } from '../../../generated/graphql'
 import bayernConfig from '../../../project-configs/bayern/config'

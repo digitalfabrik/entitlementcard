@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { BavariaCardType, BlueCardEntitlementInput, GoldenCardEntitlementInput } from '../../../generated/graphql'
 import SwitchComponent from '../SwitchComponent'
 import { useUpdateStateCallback } from '../hooks/useUpdateStateCallback'

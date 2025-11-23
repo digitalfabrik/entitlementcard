@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react'
-import React from 'react'
 
 import { activityLogCardExample } from '../../../bp-modules/activity-log/__mocks__/ActivityLogData'
 import ActivityLogEntry from '../ActivityLogEntry'

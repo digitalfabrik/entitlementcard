@@ -2,7 +2,7 @@ import { Delete } from '@mui/icons-material'
 import { Button, Card, Divider, Typography } from '@mui/material'
 import { styled } from '@mui/system'
 import { useSnackbar } from 'notistack'
-import React, { ReactElement, useContext, useState } from 'react'
+import { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'

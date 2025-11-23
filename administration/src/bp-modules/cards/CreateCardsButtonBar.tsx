@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 import { ArrowBack, UploadFile } from '@mui/icons-material'
 import { Button, Tooltip } from '@mui/material'
-import React, { ReactElement, useContext } from 'react'
+import { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Card, isValid } from '../../cards/Card'

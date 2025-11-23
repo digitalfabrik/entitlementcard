@@ -1,5 +1,5 @@
 import { SvgIcon, SvgIconProps } from '@mui/material'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 import CsvImage from '../../assets/icons/csv.svg'
 

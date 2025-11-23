@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { renderWithOptions } from '../../../testing/render'
 import StoresImportAlert from '../StoresImportAlert'
 

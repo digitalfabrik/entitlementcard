@@ -1,5 +1,5 @@
 import { TextField } from '@mui/material'
-import React, { useContext, useState } from 'react'
+import { useContext, useState } from 'react'
 
 import { EmailInput } from '../../../generated/graphql'
 import i18next from '../../../i18n'

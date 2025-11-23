@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { VerificationStatus } from '../../../../shared/verifications'
 import { renderWithOptions } from '../../../../testing/render'
 import {

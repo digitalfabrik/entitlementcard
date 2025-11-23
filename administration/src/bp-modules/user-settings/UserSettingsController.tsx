@@ -1,5 +1,5 @@
 import { Stack } from '@mui/material'
-import React, { ReactElement, useContext } from 'react'
+import { ReactElement, useContext } from 'react'
 
 import { useWhoAmI } from '../../WhoAmIProvider'
 import { Role } from '../../generated/graphql'

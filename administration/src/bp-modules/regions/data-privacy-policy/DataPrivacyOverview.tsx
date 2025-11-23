@@ -1,7 +1,7 @@
 import { ArrowBack, SaveAlt } from '@mui/icons-material'
 import { Button, Stack, TextField, Tooltip, Typography, useTheme } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 

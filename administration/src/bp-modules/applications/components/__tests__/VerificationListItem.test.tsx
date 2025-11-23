@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { ApplicationVerificationView } from '../../../../generated/graphql'
 import VerificationListItem from '../../../../shared/components/VerificationListItem'
 import { CustomRenderOptions, renderWithOptions } from '../../../../testing/render'

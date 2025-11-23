@@ -1,6 +1,6 @@
 import { Search } from '@mui/icons-material'
 import { Autocomplete, InputAdornment, Stack, TextField } from '@mui/material'
-import React, { ReactElement, useContext, useMemo } from 'react'
+import { ReactElement, useContext, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Region, useGetRegionsQuery } from '../../generated/graphql'

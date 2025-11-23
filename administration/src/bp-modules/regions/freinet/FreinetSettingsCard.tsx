@@ -9,7 +9,7 @@ import {
   Typography,
   styled,
 } from '@mui/material'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { FreinetAgency } from '../../../generated/graphql'

@@ -3,7 +3,7 @@ import { ThemeProvider, createTheme } from '@mui/material'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { RenderOptions, RenderResult, render as rawRender } from '@testing-library/react'
-import React, { ReactElement, ReactNode, createElement } from 'react'
+import { ReactElement, ReactNode, createElement } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import { MemoryRouter } from 'react-router'
 

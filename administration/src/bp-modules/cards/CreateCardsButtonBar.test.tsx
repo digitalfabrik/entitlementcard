@@ -1,5 +1,4 @@
 import { act, fireEvent } from '@testing-library/react'
-import React from 'react'
 
 import { initializeCard } from '../../cards/Card'
 import bayernConfig from '../../project-configs/bayern/config'

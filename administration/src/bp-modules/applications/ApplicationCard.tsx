@@ -26,7 +26,7 @@ import {
   useTheme,
 } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import React, { memo, useContext, useMemo, useRef, useState } from 'react'
+import { memo, useContext, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useReactToPrint } from 'react-to-print'
 

@@ -1,5 +1,5 @@
 import { Stack, Typography } from '@mui/material'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 import NavigationItems from '../../mui-modules/navigation/NavigationItems'
 

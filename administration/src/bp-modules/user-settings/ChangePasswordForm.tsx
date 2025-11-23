@@ -1,6 +1,6 @@
 import { Button, Stack, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useWhoAmI } from '../../WhoAmIProvider'

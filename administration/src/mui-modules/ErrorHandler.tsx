@@ -1,6 +1,6 @@
 import { Button, Card, Typography } from '@mui/material'
 import { styled } from '@mui/system'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 type ErrorHandlerProps = {

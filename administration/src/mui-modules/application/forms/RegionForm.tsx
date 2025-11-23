@@ -1,7 +1,7 @@
 import { Alert, CircularProgress, Link, Typography } from '@mui/material'
 import { styled } from '@mui/system'
 import { TFunction } from 'i18next'
-import React, { useContext, useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { Region, useGetRegionsByPostalCodeQuery } from '../../../generated/graphql'

@@ -1,5 +1,3 @@
-import React from 'react'
-
 import bayernConfig from '../../project-configs/bayern/config'
 import { getCsvHeaders } from '../../project-configs/helper'
 import koblenzConfig from '../../project-configs/koblenz/config'

@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, createContext } from 'react'
+import { ReactElement, ReactNode, createContext } from 'react'
 
 import type { ProjectConfig } from './getProjectConfig'
 import showcaseConfig from './showcase/config'

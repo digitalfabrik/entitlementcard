@@ -1,4 +1,4 @@
-import React, { ReactElement, useContext, useMemo } from 'react'
+import { ReactElement, useContext, useMemo } from 'react'
 import { Outlet, Route, RouterProvider, createBrowserRouter, createRoutesFromElements, useNavigate } from 'react-router'
 
 import { AuthContext } from './AuthProvider'

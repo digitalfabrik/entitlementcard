@@ -1,6 +1,6 @@
 import { Save } from '@mui/icons-material'
 import { Stack, TextField } from '@mui/material'
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import graphQlErrorMap from '../../errors/GraphQlErrorMap'

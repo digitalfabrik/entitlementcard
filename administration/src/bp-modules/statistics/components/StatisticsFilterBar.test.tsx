@@ -1,6 +1,5 @@
 import { act, fireEvent } from '@testing-library/react'
 import { formatDate } from 'date-fns/format'
-import React from 'react'
 
 import { CustomRenderOptions, renderWithOptions } from '../../../testing/render'
 import { defaultEndDate, defaultStartDate } from '../constants'

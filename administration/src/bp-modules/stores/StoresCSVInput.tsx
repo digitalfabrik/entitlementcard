@@ -2,7 +2,7 @@ import { ArrowCircleUp } from '@mui/icons-material'
 import { Button, Stack } from '@mui/material'
 import { parse } from 'csv-parse/browser/esm/sync'
 import { useSnackbar } from 'notistack'
-import React, { ChangeEventHandler, ReactElement, useCallback, useRef } from 'react'
+import { ChangeEventHandler, ReactElement, useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Blankslate from '../../components/Blankslate'

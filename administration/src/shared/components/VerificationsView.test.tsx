@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { verificationsMixed } from '../../bp-modules/applications/__mocks__/verificationData'
 import { type ApplicationPublic, ApplicationStatus, type ApplicationVerificationView } from '../../generated/graphql'
 import { CustomRenderOptions, renderWithOptions } from '../../testing/render'

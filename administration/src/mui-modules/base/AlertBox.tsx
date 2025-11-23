@@ -1,6 +1,6 @@
 import { Alert, AlertColor, AlertTitle, Button, SxProps } from '@mui/material'
 import { Theme } from '@mui/system'
-import React, { ReactElement, ReactNode } from 'react'
+import { ReactElement, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
 type AlertBoxProps = {

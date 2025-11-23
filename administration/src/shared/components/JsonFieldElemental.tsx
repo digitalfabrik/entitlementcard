@@ -2,7 +2,7 @@ import { Close, Done, DownloadForOffline } from '@mui/icons-material'
 import { Button, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useSnackbar } from 'notistack'
-import React, { memo, useContext } from 'react'
+import { memo, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { AuthContext } from '../../AuthProvider'

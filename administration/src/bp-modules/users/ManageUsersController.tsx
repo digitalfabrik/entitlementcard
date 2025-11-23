@@ -1,5 +1,5 @@
 import { Card, Stack, Typography } from '@mui/material'
-import React, { ReactElement, useContext } from 'react'
+import { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useWhoAmI } from '../../WhoAmIProvider'

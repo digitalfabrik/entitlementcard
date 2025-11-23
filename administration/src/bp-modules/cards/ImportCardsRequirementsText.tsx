@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material'
-import React, { ReactElement, useContext } from 'react'
+import { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'

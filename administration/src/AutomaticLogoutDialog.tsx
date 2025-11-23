@@ -1,7 +1,7 @@
 import { CheckCircleOutline, Close } from '@mui/icons-material'
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import React, { ReactElement, useContext, useEffect, useState } from 'react'
+import { ReactElement, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useWhoAmI } from './WhoAmIProvider'

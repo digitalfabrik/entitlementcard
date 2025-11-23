@@ -1,6 +1,5 @@
 import { EditNote, PrintOutlined } from '@mui/icons-material'
 import { fireEvent, render, waitFor } from '@testing-library/react'
-import React from 'react'
 
 import BaseMenu from '../BaseMenu'
 

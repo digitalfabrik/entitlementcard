@@ -1,6 +1,6 @@
 /* eslint-disable react/destructuring-assignment */
 import { Tooltip } from '@mui/material'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 import type { Application } from '../types'
 

@@ -1,7 +1,7 @@
 import { Box, Link, Typography } from '@mui/material'
 import MUILink from '@mui/material/Link'
 import { grey } from '@mui/material/colors'
-import React, { ReactElement, useContext } from 'react'
+import { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import AppStoreLinks from '../../bp-modules/components/AppStoreLinks'

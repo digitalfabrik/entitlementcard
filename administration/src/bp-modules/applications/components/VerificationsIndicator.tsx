@@ -3,7 +3,7 @@ import { EditNote } from '@mui/icons-material'
 import { Box, Stack, Tooltip, Typography, styled, useTheme } from '@mui/material'
 import { blue, yellow } from '@mui/material/colors'
 import { Theme } from '@mui/system'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { VerificationIcon } from '../../../shared/components/VerificationIcon'

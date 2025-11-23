@@ -2,7 +2,7 @@ import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded'
 import { Box, IconButton, Link, SxProps } from '@mui/material'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import { TFunction } from 'i18next'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { AcceptingStoresData } from '../applications/types'

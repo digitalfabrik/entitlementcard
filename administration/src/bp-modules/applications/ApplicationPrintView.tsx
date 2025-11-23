@@ -1,5 +1,5 @@
 import { Box, Stack, Typography, css } from '@mui/material'
-import React, { ReactElement, forwardRef } from 'react'
+import { ReactElement, forwardRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { ApplicationAdmin, ApplicationStatus, ApplicationVerificationView } from '../../generated/graphql'

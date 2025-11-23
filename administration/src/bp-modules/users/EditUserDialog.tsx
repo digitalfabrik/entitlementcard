@@ -1,7 +1,7 @@
 import { Edit } from '@mui/icons-material'
 import { Link, Stack, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import React, { ReactElement, useContext, useEffect, useState } from 'react'
+import { ReactElement, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { WhoAmIContext } from '../../WhoAmIProvider'

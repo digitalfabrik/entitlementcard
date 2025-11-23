@@ -1,6 +1,6 @@
 import { Card, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import React, { ReactElement, useContext } from 'react'
+import { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
@@ -19,7 +19,7 @@ const Login = ({ onSignIn }: { onSignIn: (payload: SignInPayload) => void }): Re
   const config = useContext(ProjectConfigContext)
   const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('auth')
-  const [state, setState] = React.useState<State>({ email: '', password: '' })
+  const [state, setState] = useState<State>({ email: '', password: '' })
   const [signIn, mutationState] = useSignInMutation({
     onCompleted: (payload: SignInMutation) => onSignIn(payload.signInPayload),
     onError: error => {

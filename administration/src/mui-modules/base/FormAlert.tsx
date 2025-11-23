@@ -1,7 +1,7 @@
 import InfoOutlined from '@mui/icons-material/InfoOutlined'
 import { Typography, styled } from '@mui/material'
 import { Theme } from '@mui/system'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 const severityColors = (theme: Theme) => ({
   info: theme.palette.common.black,

@@ -1,6 +1,6 @@
 import { Clear } from '@mui/icons-material'
 import { CardContent, FormGroup, IconButton, Card as MuiCard, Stack } from '@mui/material'
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { Card } from '../../cards/Card'

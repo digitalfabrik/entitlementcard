@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 import i18next from '../../../i18n'
 import { SelfServiceCardGenerationStep } from '../hooks/useCardGeneratorSelfService'

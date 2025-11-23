@@ -3,7 +3,7 @@ import { Button, Typography, useTheme } from '@mui/material'
 import { Theme } from '@mui/system'
 import { TFunction } from 'i18next'
 import { useSnackbar } from 'notistack'
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import EmailLink from '../../bp-modules/EmailLink'

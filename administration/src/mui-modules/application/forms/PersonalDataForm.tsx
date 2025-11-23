@@ -1,5 +1,4 @@
 import { sub } from 'date-fns'
-import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { PersonalDataInput, Region } from '../../../generated/graphql'

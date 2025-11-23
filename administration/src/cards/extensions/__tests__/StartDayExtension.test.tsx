@@ -1,5 +1,4 @@
 import { fireEvent } from '@testing-library/react'
-import React from 'react'
 
 import { CustomRenderOptions, renderWithOptions } from '../../../testing/render'
 import PlainDate from '../../../util/PlainDate'

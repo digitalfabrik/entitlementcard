@@ -1,7 +1,6 @@
 import { fireEvent, waitFor } from '@testing-library/react'
 import { parse } from 'csv-parse/browser/esm/sync'
 import { mocked } from 'jest-mock'
-import React from 'react'
 
 import nuernbergConfig from '../../../project-configs/nuernberg/config'
 import { CustomRenderOptions, renderWithOptions } from '../../../testing/render'

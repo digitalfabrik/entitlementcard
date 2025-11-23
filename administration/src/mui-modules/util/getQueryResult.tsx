@@ -1,5 +1,5 @@
 import { OperationVariables, QueryResult } from '@apollo/client'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import AlertBox from '../base/AlertBox'

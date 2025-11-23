@@ -1,5 +1,3 @@
-import React from 'react'
-
 import nuernbergConfig from '../../../project-configs/nuernberg/config'
 import { CustomRenderOptions, renderWithOptions } from '../../../testing/render'
 import ActivityLogTable from '../ActivityLogTable'

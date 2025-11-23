@@ -1,6 +1,6 @@
 import { Edit, PersonAdd, PersonRemove } from '@mui/icons-material'
 import { Button, Stack, Typography, styled } from '@mui/material'
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Administrator, Region } from '../../generated/graphql'

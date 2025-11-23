@@ -1,7 +1,7 @@
 import { AttachFile, Attachment } from '@mui/icons-material'
 import { Button, Chip } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import React, { ChangeEventHandler, useContext, useEffect, useRef } from 'react'
+import { ChangeEventHandler, useContext, useEffect, useRef } from 'react'
 
 import { AttachmentInput } from '../../../generated/graphql'
 import i18next from '../../../i18n'

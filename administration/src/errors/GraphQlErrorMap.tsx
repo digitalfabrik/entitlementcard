@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 import { CardInfo } from '../generated/card_pb'
 import { CodeType, GraphQlExceptionCode } from '../generated/graphql'

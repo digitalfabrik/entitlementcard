@@ -11,7 +11,8 @@ import {
   Stepper,
 } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import React, { ReactElement, ReactNode, useCallback, useEffect, useState } from 'react'
+import { ReactElement, ReactNode, useCallback, useEffect, useState } from 'react'
+import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import i18next from '../../i18n'

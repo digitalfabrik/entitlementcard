@@ -1,6 +1,7 @@
 import { EditSquare, Logout, Settings } from '@mui/icons-material'
 import { Avatar, Box, Button, Divider, IconButton, Menu, Typography } from '@mui/material'
-import React, { ReactElement, useContext } from 'react'
+import { ReactElement, useContext } from 'react'
+import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 
@@ -56,43 +57,43 @@ const UserMenu = (): ReactElement => {
         }}
         open={Boolean(anchorElUser)}
         onClose={handleCloseUserMenu}>
-          <Box sx={{ paddingX: 1, marginY: 1 }}>
-            <Typography noWrap fontWeight='500'>
-              {email}
-            </Typography>
-            <Typography>Rolle: {roleToText(role)}</Typography>
-          </Box>
-          <Divider sx={{ my: 1, width: '100%' }} />
+        <Box sx={{ paddingX: 1, marginY: 1 }}>
+          <Typography noWrap fontWeight='500'>
+            {email}
+          </Typography>
+          <Typography>Rolle: {roleToText(role)}</Typography>
+        </Box>
+        <Divider sx={{ my: 1, width: '100%' }} />
+        <Button
+          href='/user-settings'
+          fullWidth
+          variant='text'
+          sx={{ justifyContent: 'flex-start' }}
+          startIcon={<Settings />}
+          onClick={handleCloseUserMenu}>
+          {t('userSettings')}
+        </Button>
+        <RenderGuard
+          condition={projectConfig.activityLogConfig !== undefined}
+          allowedRoles={[Role.RegionManager, Role.RegionAdmin]}>
           <Button
-            href='/user-settings'
+            href='/activity-log'
             fullWidth
             variant='text'
+            startIcon={<EditSquare />}
             sx={{ justifyContent: 'flex-start' }}
-            startIcon={<Settings />}
             onClick={handleCloseUserMenu}>
-            {t('userSettings')}
+            {t('activityLog')}
           </Button>
-          <RenderGuard
-            condition={projectConfig.activityLogConfig !== undefined}
-            allowedRoles={[Role.RegionManager, Role.RegionAdmin]}>
-            <Button
-              href='/activity-log'
-              fullWidth
-              variant='text'
-              startIcon={<EditSquare />}
-              sx={{ justifyContent: 'flex-start' }}
-              onClick={handleCloseUserMenu}>
-              {t('activityLog')}
-            </Button>
-          </RenderGuard>
-          <Button
-            sx={{ justifyContent: 'flex-start' }}
-            fullWidth
-            variant='text'
-            startIcon={<Logout />}
-            onClick={() => navigate('/logout')}>
-            {t('logout')}
-          </Button>
+        </RenderGuard>
+        <Button
+          sx={{ justifyContent: 'flex-start' }}
+          fullWidth
+          variant='text'
+          startIcon={<Logout />}
+          onClick={() => navigate('/logout')}>
+          {t('logout')}
+        </Button>
       </Menu>
     </Box>
   )

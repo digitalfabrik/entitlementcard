@@ -1,6 +1,6 @@
 import { AddCard, UploadFile } from '@mui/icons-material'
 import { Button, Stack, SxProps } from '@mui/material'
-import React, { ReactElement, useContext } from 'react'
+import { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useWhoAmI } from '../../WhoAmIProvider'

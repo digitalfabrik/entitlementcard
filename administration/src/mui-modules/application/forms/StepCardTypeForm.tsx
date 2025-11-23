@@ -1,5 +1,4 @@
 import { Link, Typography } from '@mui/material'
-import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { ApplicationType, BavariaCardType } from '../../../generated/graphql'

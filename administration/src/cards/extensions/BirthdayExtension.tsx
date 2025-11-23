@@ -1,5 +1,5 @@
 import { FormGroup } from '@mui/material'
-import React, { ReactElement, useContext, useState } from 'react'
+import { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import CustomDatePicker from '../../bp-modules/components/CustomDatePicker'

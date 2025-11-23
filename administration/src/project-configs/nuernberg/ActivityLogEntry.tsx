@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 import { ActivityLogEntryType } from '../../bp-modules/activity-log/ActivityLog'
 import { BIRTHDAY_EXTENSION_NAME } from '../../cards/extensions/BirthdayExtension'

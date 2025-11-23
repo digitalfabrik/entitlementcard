@@ -1,6 +1,6 @@
 import { Box, Stack } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import React, { ReactElement, useContext } from 'react'
+import { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { CardStatisticsResultModel, Region, Role } from '../../generated/graphql'

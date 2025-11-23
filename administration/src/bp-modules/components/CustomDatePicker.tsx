@@ -3,7 +3,7 @@ import { deepmerge } from '@mui/utils'
 import { DesktopDatePicker } from '@mui/x-date-pickers'
 import type { DesktopDatePickerSlotProps } from '@mui/x-date-pickers/DesktopDatePicker/DesktopDatePicker.types'
 import { deDE } from '@mui/x-date-pickers/locales'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 export type CustomDatePickerTextFieldProps = DesktopDatePickerSlotProps<true>['textField']
 

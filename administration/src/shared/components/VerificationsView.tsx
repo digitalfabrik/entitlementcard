@@ -1,5 +1,5 @@
 import { Typography, styled } from '@mui/material'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { ApplicationPublic, ApplicationStatus, ApplicationVerificationView } from '../../generated/graphql'

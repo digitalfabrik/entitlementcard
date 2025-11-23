@@ -1,5 +1,5 @@
 import { Stack, Table, TableBody, TableCell, TableHead, TableRow, Tooltip } from '@mui/material'
-import React, { ReactElement, useContext } from 'react'
+import { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Card, getValueByCSVHeader, isValueValid } from '../../cards/Card'

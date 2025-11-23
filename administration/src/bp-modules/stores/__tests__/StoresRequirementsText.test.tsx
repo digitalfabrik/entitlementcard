@@ -1,5 +1,3 @@
-import React from 'react'
-
 import type { StoresFieldConfig } from '../../../project-configs/getProjectConfig'
 import { storesManagementConfig } from '../../../project-configs/storesManagementConfig'
 import { renderWithOptions } from '../../../testing/render'

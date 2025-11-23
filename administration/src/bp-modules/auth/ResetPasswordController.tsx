@@ -1,6 +1,6 @@
 import { Box, Button, Card, Stack, TextField, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import React, { ReactElement, useContext, useState } from 'react'
+import { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useSearchParams } from 'react-router'
 

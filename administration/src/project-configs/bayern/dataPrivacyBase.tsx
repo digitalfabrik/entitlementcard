@@ -1,5 +1,5 @@
 import { Link, Typography } from '@mui/material'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 export const dataPrivacyBaseHeadline =
   'Datenschutzerklärung für die Nutzung und Beantragung der digitalen bayerischen Ehrenamtskarte'

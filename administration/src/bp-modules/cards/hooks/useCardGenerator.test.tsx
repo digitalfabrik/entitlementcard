@@ -1,7 +1,7 @@
 import { MockedProvider as ApolloProvider } from '@apollo/client/testing'
 import { act, renderHook } from '@testing-library/react'
 import { mocked } from 'jest-mock'
-import React, { ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { MemoryRouter } from 'react-router'
 
 import { AppSnackbarProvider } from '../../../AppSnackbar'

@@ -1,6 +1,6 @@
 /* eslint-disable react/destructuring-assignment */
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Blocker } from 'react-router'
 

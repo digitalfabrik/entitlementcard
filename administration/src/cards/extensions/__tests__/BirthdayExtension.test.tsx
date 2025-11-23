@@ -1,5 +1,4 @@
 import { fireEvent } from '@testing-library/react'
-import React from 'react'
 
 import koblenzConfig from '../../../project-configs/koblenz/config'
 import nuernbergConfig from '../../../project-configs/nuernberg/config'

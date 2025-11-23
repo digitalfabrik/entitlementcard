@@ -1,5 +1,4 @@
 import { fireEvent, waitFor } from '@testing-library/react'
-import React from 'react'
 
 import { AppSnackbarProvider } from '../../AppSnackbar'
 import { BAVARIA_CARD_TYPE_GOLD, BAVARIA_CARD_TYPE_STANDARD } from '../../cards/extensions/BavariaCardTypeExtension'

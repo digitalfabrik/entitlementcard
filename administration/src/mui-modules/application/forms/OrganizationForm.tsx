@@ -1,5 +1,4 @@
 import { Alert, Typography, styled } from '@mui/material'
-import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { OrganizationInput } from '../../../generated/graphql'

@@ -2,7 +2,7 @@ import { CheckCircleOutline, Close } from '@mui/icons-material'
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import { ButtonPropsColorOverrides } from '@mui/material/Button/Button'
 import { OverridableStringUnion } from '@mui/types'
-import React, { ReactElement, ReactNode } from 'react'
+import { ReactElement, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
 const ConfirmDialog = ({

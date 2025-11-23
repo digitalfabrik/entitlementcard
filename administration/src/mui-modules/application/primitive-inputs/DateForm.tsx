@@ -1,6 +1,6 @@
 import { FormGroup } from '@mui/material'
 import { formatISO, parseISO } from 'date-fns'
-import React, { useContext, useState } from 'react'
+import { useContext, useState } from 'react'
 
 import CustomDatePicker from '../../../bp-modules/components/CustomDatePicker'
 import { DateInput } from '../../../generated/graphql'

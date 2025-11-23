@@ -1,6 +1,6 @@
 import { Check, Close } from '@mui/icons-material'
 import { Alert, Box, Button, Card, Divider, Typography, styled } from '@mui/material'
-import React, { ReactElement, useContext } from 'react'
+import { ReactElement, useContext } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { ApplicationVerificationPublic } from '../../bp-modules/applications/types'

@@ -1,5 +1,5 @@
 import { ArrowCircleUp, Error } from '@mui/icons-material'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 import CenteredCircularProgress from '../mui-modules/base/CenteredCircularProgress'
 

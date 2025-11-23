@@ -1,7 +1,7 @@
 import { PersonRemove } from '@mui/icons-material'
 import { Box, Stack, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import React, { ReactElement, useContext, useState } from 'react'
+import { ReactElement, useContext, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { AuthContext } from '../../AuthProvider'

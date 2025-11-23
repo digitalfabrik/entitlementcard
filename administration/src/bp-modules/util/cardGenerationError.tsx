@@ -1,6 +1,5 @@
 import { ApolloError } from '@apollo/client'
 import { EnqueueSnackbar } from 'notistack'
-import React from 'react'
 
 import { CsvError } from '../../cards/CsvFactory'
 import { PdfError } from '../../cards/PdfFactory'
