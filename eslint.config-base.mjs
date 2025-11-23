@@ -169,6 +169,10 @@ export default [
           maxDepth: '∞',
         },
       ],
+
+      // React 19
+      "react/jsx-uses-react": "off",
+      "react/react-in-jsx-scope": "off"
     },
   },
   {
