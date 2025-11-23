@@ -37,6 +37,7 @@ const create = () => {
       [require('@babel/preset-typescript').default],
     ].filter(Boolean),
     plugins: [
+      'babel-plugin-react-compiler', // must run first!
       // Turn on legacy decorators for TypeScript files
       [require('@babel/plugin-proposal-decorators').default, false],
       // Polyfills the runtime needed for async/await, generators, and friends
