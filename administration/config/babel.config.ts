@@ -17,7 +17,7 @@ const create = () => {
       // class { handleClick = () => { } }
       // Add assumptions to use assignment instead of defineProperty
       privateFieldsAsProperties: true,
-      setPublicClassFields: true,
+      setPublicClassFields: true
     },
     presets: [
       [require('@babel/preset-env').default],
@@ -29,15 +29,15 @@ const create = () => {
           development: isEnvDevelopment,
           // Will use the native built-in instead of trying to polyfill
           // behavior for any plugins that require one.
-          // TODO: useBuiltins is removed in Babel 8 (as it will use the automatic runtime).
           useBuiltIns: true,
-          runtime: 'classic',
-        },
+          runtime: 'automatic'
+        }
       ],
-      [require('@babel/preset-typescript').default],
+      [require('@babel/preset-typescript').default]
     ].filter(Boolean),
     plugins: [
-      'babel-plugin-react-compiler', // must run first!
+      // Use React compiler (has to run first!)
+      [require('babel-plugin-react-compiler').default],
       // Turn on legacy decorators for TypeScript files
       [require('@babel/plugin-proposal-decorators').default, false],
       // Polyfills the runtime needed for async/await, generators, and friends
@@ -52,23 +52,23 @@ const create = () => {
           // https://github.com/babel/babel/issues/10261
           version: require('@babel/runtime/package.json').version,
           // Option that lets us encapsulate our runtime, ensuring the correct version is used
-          absoluteRuntime: absoluteRuntimePath,
-        },
+          absoluteRuntime: absoluteRuntimePath
+        }
       ],
       isEnvProduction && [
         // Remove PropTypes from production build
         require('babel-plugin-transform-react-remove-prop-types').default,
         {
-          removeImport: true,
-        },
-      ],
+          removeImport: true
+        }
+      ]
     ].filter(Boolean),
     overrides: [
       {
         test: /\.tsx?$/,
-        plugins: [[require('@babel/plugin-proposal-decorators').default, { legacy: true }]],
-      },
-    ].filter(Boolean),
+        plugins: [[require('@babel/plugin-proposal-decorators').default, { legacy: true }]]
+      }
+    ].filter(Boolean)
   }
 }
 
