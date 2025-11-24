@@ -1,6 +1,6 @@
 services:
   martin:
-    image: ghcr.io/maplibre/martin:v0.13.0
+    image: ghcr.io/maplibre/martin:1.0.0
     command: --config /app/config.yaml
     volumes:
       - ./docker/martin-config.yaml:/app/config.yaml
