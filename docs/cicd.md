@@ -59,6 +59,7 @@ If the reason for a delivery to fail was just a transient error that was fixed i
 In other cases, please do not restart the workflow, but trigger a fresh release, to avoid another failure and version inconsistencies.
 
 In that case you can add a bugfix on the release branch or base a hotfix branch on the release branch and commit your fix there.
+Remove the git tag of the failed release, since github can't generate release notes correctly for the next release.
 Then you can [trigger a delivery](#triggering-a-delivery). It is possible to either just execute `delivery_beta_frontend` or
 `delivery_beta_backend_administration` or just run the whole `delivery_beta_all` workflow again.
 
