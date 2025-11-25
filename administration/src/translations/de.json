@@ -331,6 +331,7 @@
     "cancel": "Abbrechen",
     "save": "Speichern",
     "close": "Schließen",
+    "edit": "Bearbeiten",
     "administration": "Verwaltung",
     "inComingApplications": "Eingehende Anträge",
     "createCards": "Karten erstellen",
@@ -516,7 +517,12 @@
     "storesListColumnEmail": "E-Mail",
     "storesListColumnTelephone": "Telefon",
     "storesListOverviewNoEntryTitle": "Noch keine Einträge",
-    "storesListOverviewNoEntryDescription": "Legen Sie eine neue Akzeptanzstelle an oder importieren Sie eine bestehende Liste."
+    "storesListOverviewNoEntryDescription": "Legen Sie eine neue Akzeptanzstelle an oder importieren Sie eine bestehende Liste.",
+    "storeEditDialogHeadline": "Akzeptanzstelle bearbeiten",
+    "storesAddDialogHeadline": "Akzeptanzstelle erstellen",
+    "storesEditDialogDescription": "Bearbeiten Sie die Informationen der Akzeptanzstelle. Erforderliche Felder sind markiert.",
+    "storesAddDialogDescription": "Bitte geben Sie die Angaben für die neue Akzeptanzstelle ein. Erforderliche Felder sind markiert.",
+    "storeMenu": "Akzeptanzstellen Menü"
   },
   "userSettings": {
     "passwordChangeSuccessful": "Passwort erfolgreich geändert.",
