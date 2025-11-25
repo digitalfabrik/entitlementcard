@@ -2,7 +2,7 @@ import { Button, Typography } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import SettingsCard, { SettingsCardButtonBox } from '../../../shared/components/SettingsCard'
+import SettingsCard, { SettingsCardButtonBox } from '../../../components/SettingsCard'
 import ApplicationConfirmationNote from './ApplicationConfirmationNote'
 
 type ApplicationConfirmationNoteCardProps = {

@@ -5,9 +5,9 @@ import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Card, isValid } from '../../../cards/Card'
+import ButtonBar from '../../../components/ButtonBar'
+import { CsvIcon } from '../../../icons/CsvIcon'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
-import ButtonBar from '../../../shared/components/ButtonBar'
-import { CsvIcon } from '../../../shared/icons/CsvIcon'
 
 const CreateCardsButtonBar = ({
   cards,

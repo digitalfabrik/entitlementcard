@@ -3,10 +3,10 @@ import { useSnackbar } from 'notistack'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import BaseCheckbox from '../../../components/BaseCheckbox'
+import SettingsCard, { SettingsCardButtonBox } from '../../../components/SettingsCard'
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
 import { useGetNotificationSettingsQuery, useUpdateNotificationSettingsMutation } from '../../../generated/graphql'
-import BaseCheckbox from '../../../shared/components/BaseCheckbox'
-import SettingsCard, { SettingsCardButtonBox } from '../../../shared/components/SettingsCard'
 import getQueryResult from '../../../util/getQueryResult'
 
 const NotificationSettings = (): ReactElement => {

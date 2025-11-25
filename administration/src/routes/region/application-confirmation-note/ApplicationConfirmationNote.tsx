@@ -1,8 +1,8 @@
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import BaseCheckbox from '../../../shared/components/BaseCheckbox'
-import TextAreaDialog from '../../../shared/components/TextAreaDialog'
+import BaseCheckbox from '../../../components/BaseCheckbox'
+import TextAreaDialog from '../../../components/TextAreaDialog'
 
 type ApplicationConfirmationNoteDialogProps = {
   defaultConfirmationNote?: string | null

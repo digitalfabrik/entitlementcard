@@ -3,7 +3,7 @@ import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 
-import SettingsCard, { SettingsCardButtonBox } from '../../../shared/components/SettingsCard'
+import SettingsCard, { SettingsCardButtonBox } from '../../../components/SettingsCard'
 
 const DataPrivacyCard = (): ReactElement => {
   const navigate = useNavigate()

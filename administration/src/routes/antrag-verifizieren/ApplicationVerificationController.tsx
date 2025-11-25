@@ -3,6 +3,8 @@ import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
 
+import AlertBox from '../../components/AlertBox'
+import CenteredStack from '../../components/CenteredStack'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import {
   ApplicationStatus,
@@ -10,8 +12,6 @@ import {
   useVerifyOrRejectApplicationVerificationMutation,
 } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import AlertBox from '../../shared/components/AlertBox'
-import CenteredStack from '../../shared/components/CenteredStack'
 import formatDateWithTimezone from '../../util/formatDate'
 import getQueryResult from '../../util/getQueryResult'
 import { applicationWasAlreadyProcessed, parseApplication } from '../applications/utils/application'

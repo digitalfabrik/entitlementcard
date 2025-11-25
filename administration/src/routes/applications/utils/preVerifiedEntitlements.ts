@@ -1,4 +1,4 @@
-import { GeneralJsonField, JsonField, findValue } from '../../../shared/components/JsonFieldView'
+import { GeneralJsonField, JsonField, findValue } from '../../../components/JsonFieldView'
 
 export const preVerifiedEntitlements = {
   Juleica: 'blueCardJuleicaEntitlement',

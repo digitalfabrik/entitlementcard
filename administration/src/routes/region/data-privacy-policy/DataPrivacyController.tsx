@@ -1,9 +1,9 @@
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import RenderGuard from '../../../components/RenderGuard'
 import { Role, useGetDataPolicyQuery } from '../../../generated/graphql'
 import { useWhoAmI } from '../../../provider/WhoAmIProvider'
-import RenderGuard from '../../../shared/components/RenderGuard'
 import getQueryResult from '../../../util/getQueryResult'
 import DataPrivacyOverview from './DataPrivacyOverview'
 

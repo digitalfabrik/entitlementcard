@@ -3,9 +3,9 @@ import { Autocomplete, InputAdornment, Stack, TextField } from '@mui/material'
 import React, { ReactElement, useContext, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import FormAlert from '../../../components/FormAlert'
 import { Region, useGetRegionsQuery } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
-import FormAlert from '../../../shared/components/FormAlert'
 import getQueryResult from '../../../util/getQueryResult'
 
 const getTitle = (region?: Region): string | undefined => (region ? `${region.prefix} ${region.name}` : undefined)

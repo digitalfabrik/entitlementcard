@@ -2,9 +2,9 @@ import { FormGroup } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import CustomDatePicker from '../../components/CustomDatePicker'
+import FormAlert from '../../components/FormAlert'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import CustomDatePicker from '../../shared/components/CustomDatePicker'
-import FormAlert from '../../shared/components/FormAlert'
 import PlainDate from '../../util/PlainDate'
 import type { Extension, ExtensionComponentProps } from './extensions'
 

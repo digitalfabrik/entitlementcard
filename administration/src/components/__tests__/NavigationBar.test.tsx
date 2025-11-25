@@ -1,14 +1,14 @@
 import React from 'react'
 
-import { Role } from '../../../generated/graphql'
-import bayernConfig from '../../../project-configs/bayern/config'
-import koblenzConfig from '../../../project-configs/koblenz/config'
-import nuernbergConfig from '../../../project-configs/nuernberg/config'
-import { useWhoAmI } from '../../../provider/WhoAmIProvider'
-import { CustomRenderOptions, renderWithOptions } from '../../../testing/render'
+import { Role } from '../../generated/graphql'
+import bayernConfig from '../../project-configs/bayern/config'
+import koblenzConfig from '../../project-configs/koblenz/config'
+import nuernbergConfig from '../../project-configs/nuernberg/config'
+import { useWhoAmI } from '../../provider/WhoAmIProvider'
+import { CustomRenderOptions, renderWithOptions } from '../../testing/render'
 import NavigationBar from '../NavigationBar'
 
-jest.mock('../../../provider/WhoAmIProvider', () => ({
+jest.mock('../../provider/WhoAmIProvider', () => ({
   useWhoAmI: jest.fn(),
 }))
 

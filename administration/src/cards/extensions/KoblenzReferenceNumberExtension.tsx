@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import useWindowDimensions from '../../shared/hooks/useWindowDimensions'
+import useWindowDimensions from '../../hooks/useWindowDimensions'
 import CardTextField from './components/CardTextField'
 import ClearInputButton from './components/ClearInputButton'
 import type { Extension, ExtensionComponentProps } from './extensions'

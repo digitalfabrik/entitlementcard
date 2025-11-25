@@ -1,10 +1,10 @@
 import { TextField } from '@mui/material'
 import React, { useContext, useState } from 'react'
 
+import FormAlert from '../../../../components/FormAlert'
 import { EmailInput } from '../../../../generated/graphql'
-import FormAlert from '../../../../shared/components/FormAlert'
-import { isEmailValid } from '../../../../shared/verifications'
 import i18next from '../../../../translations/i18n'
+import { isEmailValid } from '../../../../util/verifications'
 import { Form, FormComponentProps } from '../../util/FormType'
 import { FormContext } from '../forms/SteppedSubForms'
 import { MAX_SHORT_TEXT_LENGTH } from './ShortTextForm'

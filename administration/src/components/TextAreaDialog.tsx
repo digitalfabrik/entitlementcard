@@ -3,9 +3,9 @@ import { Stack, TextField } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import graphQlErrorMap from '../../errors/GraphQlErrorMap'
-import { GraphQlExceptionCode } from '../../generated/graphql'
 import AlertBox from '../components/AlertBox'
+import graphQlErrorMap from '../errors/GraphQlErrorMap'
+import { GraphQlExceptionCode } from '../generated/graphql'
 import CharacterCounter from './CharacterCounter'
 import ConfirmDialog from './ConfirmDialog'
 

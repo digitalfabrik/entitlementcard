@@ -3,9 +3,9 @@ import { Button, Stack, Typography } from '@mui/material'
 import React, { ReactElement, ReactNode, createContext, useContext, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import CenteredCircularProgress from '../components/CenteredCircularProgress'
+import StandaloneCenter from '../components/StandaloneCenter'
 import { WhoAmIQuery, useWhoAmIQuery } from '../generated/graphql'
-import CenteredCircularProgress from '../shared/components/CenteredCircularProgress'
-import StandaloneCenter from '../shared/components/StandaloneCenter'
 import { hasProp } from '../util/helper'
 import { AuthContext } from './AuthProvider'
 

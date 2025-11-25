@@ -30,6 +30,11 @@ import React, { memo, useContext, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useReactToPrint } from 'react-to-print'
 
+import { AccordionExpandButton } from '../../../components/AccordionExpandButton'
+import BaseMenu, { MenuItemType } from '../../../components/BaseMenu'
+import ConfirmDialog from '../../../components/ConfirmDialog'
+import JsonFieldView from '../../../components/JsonFieldView'
+import VerificationsView from '../../../components/VerificationsView'
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
 import {
   ApplicationStatus,
@@ -37,14 +42,9 @@ import {
   useDeleteApplicationMutation,
   useRejectApplicationStatusMutation,
 } from '../../../generated/graphql'
+import { CsvIcon } from '../../../icons/CsvIcon'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import type { ProjectConfig } from '../../../project-configs/getProjectConfig'
-import { AccordionExpandButton } from '../../../shared/components/AccordionExpandButton'
-import BaseMenu, { MenuItemType } from '../../../shared/components/BaseMenu'
-import ConfirmDialog from '../../../shared/components/ConfirmDialog'
-import JsonFieldView from '../../../shared/components/JsonFieldView'
-import VerificationsView from '../../../shared/components/VerificationsView'
-import { CsvIcon } from '../../../shared/icons/CsvIcon'
 import getApiBaseUrl from '../../../util/getApiBaseUrl'
 import type { Application } from '../types/types'
 import { ApplicationDataIncompleteError } from '../utils/applicationDataHelper'

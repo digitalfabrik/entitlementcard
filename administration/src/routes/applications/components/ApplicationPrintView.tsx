@@ -2,9 +2,9 @@ import { Box, Stack, Typography, css } from '@mui/material'
 import React, { ReactElement, forwardRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import JsonFieldView from '../../../components/JsonFieldView'
+import VerificationsView from '../../../components/VerificationsView'
 import { ApplicationAdmin, ApplicationStatus, ApplicationVerificationView } from '../../../generated/graphql'
-import JsonFieldView from '../../../shared/components/JsonFieldView'
-import VerificationsView from '../../../shared/components/VerificationsView'
 import { ApplicationParsedJsonValue } from '../utils/application'
 import { ApplicationStatusNote } from './ApplicationStatusNote'
 

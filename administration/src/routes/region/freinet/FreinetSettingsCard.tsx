@@ -12,9 +12,9 @@ import {
 import React, { ReactElement } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
+import BaseCheckbox from '../../../components/BaseCheckbox'
+import SettingsCard, { SettingsCardButtonBox } from '../../../components/SettingsCard'
 import { FreinetAgency } from '../../../generated/graphql'
-import BaseCheckbox from '../../../shared/components/BaseCheckbox'
-import SettingsCard, { SettingsCardButtonBox } from '../../../shared/components/SettingsCard'
 
 const WordBreakingTableCell = styled(TableCell)({
   wordBreak: 'break-all',

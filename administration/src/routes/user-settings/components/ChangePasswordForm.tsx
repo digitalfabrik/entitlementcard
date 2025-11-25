@@ -4,12 +4,12 @@ import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import validatePasswordInput from '../../../auth/validateNewPasswordInput'
+import AlertBox from '../../../components/AlertBox'
+import PasswordInput from '../../../components/PasswordInput'
+import SettingsCard, { SettingsCardButtonBox } from '../../../components/SettingsCard'
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
 import { useChangePasswordMutation } from '../../../generated/graphql'
 import { useWhoAmI } from '../../../provider/WhoAmIProvider'
-import AlertBox from '../../../shared/components/AlertBox'
-import PasswordInput from '../../../shared/components/PasswordInput'
-import SettingsCard, { SettingsCardButtonBox } from '../../../shared/components/SettingsCard'
 
 const ChangePasswordForm = (): ReactElement => {
   const { t: tAuth } = useTranslation('auth')

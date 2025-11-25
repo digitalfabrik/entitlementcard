@@ -4,8 +4,8 @@ import { grey } from '@mui/material/colors'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import AppStoreLinks from '../../components/AppStoreLinks'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import AppStoreLinks from '../../shared/components/AppStoreLinks'
 import { getBuildConfig } from '../../util/getBuildConfig'
 
 const DownloadPage = (): ReactElement => {

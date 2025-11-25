@@ -3,9 +3,9 @@ import { Alert, Box, Button, Card, Divider, Typography, styled } from '@mui/mate
 import React, { ReactElement, useContext } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
+import JsonFieldView from '../../components/JsonFieldView'
 import { GetApplicationByApplicantQuery } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import JsonFieldView from '../../shared/components/JsonFieldView'
 import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { ApplicationVerificationPublic } from '../applications/types/types'

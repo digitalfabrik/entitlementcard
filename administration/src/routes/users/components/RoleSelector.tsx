@@ -3,9 +3,9 @@ import { Box, Stack } from '@mui/system'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import FormAlert from '../../../components/FormAlert'
 import { Role } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
-import FormAlert from '../../../shared/components/FormAlert'
 import roleToText from '../utils/roleToText'
 import RoleHelpButton from './RoleHelpButton'
 

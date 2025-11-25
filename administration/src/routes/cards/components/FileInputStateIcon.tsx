@@ -1,7 +1,7 @@
 import { ArrowCircleUp, Error } from '@mui/icons-material'
 import React, { ReactElement } from 'react'
 
-import CenteredCircularProgress from '../../../shared/components/CenteredCircularProgress'
+import CenteredCircularProgress from '../../../components/CenteredCircularProgress'
 
 export type FileInputStateType = 'loading' | 'error' | 'idle'
 

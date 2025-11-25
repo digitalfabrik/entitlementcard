@@ -2,10 +2,10 @@ import { Card, Stack, Typography } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import RenderGuard from '../../components/RenderGuard'
 import { Role } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { ActivityLogConfig } from '../../project-configs/getProjectConfig'
-import RenderGuard from '../../shared/components/RenderGuard'
 import ActivityLogTable from './components/ActivityLogTable'
 import { loadActivityLog } from './utils/ActivityLog'
 

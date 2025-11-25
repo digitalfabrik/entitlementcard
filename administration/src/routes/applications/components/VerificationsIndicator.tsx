@@ -6,8 +6,8 @@ import { Theme } from '@mui/system'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { VerificationIcon } from '../../../shared/components/VerificationIcon'
-import { VerificationStatus, verificationStatus } from '../../../shared/verifications'
+import { VerificationIcon } from '../../../components/VerificationIcon'
+import { VerificationStatus, verificationStatus } from '../../../util/verifications'
 import { Application, ApplicationVerification } from '../types/types'
 import {
   PreVerifiedEntitlementType,

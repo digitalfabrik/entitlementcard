@@ -3,7 +3,7 @@ import { Box } from '@mui/system'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import AppStoreLinks from '../../../shared/components/AppStoreLinks'
+import AppStoreLinks from '../../../components/AppStoreLinks'
 import { getBuildConfig } from '../../../util/getBuildConfig'
 
 type CardSelfServiceInformationProps = {

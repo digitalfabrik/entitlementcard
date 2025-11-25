@@ -5,6 +5,10 @@ import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import CenteredCircularProgress from '../../components/CenteredCircularProgress'
+import ConfirmDialog from '../../components/ConfirmDialog'
+import JsonFieldView from '../../components/JsonFieldView'
+import VerificationsView from '../../components/VerificationsView'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import {
   ApplicationStatus,
@@ -12,10 +16,6 @@ import {
   useWithdrawApplicationMutation,
 } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import CenteredCircularProgress from '../../shared/components/CenteredCircularProgress'
-import ConfirmDialog from '../../shared/components/ConfirmDialog'
-import JsonFieldView from '../../shared/components/JsonFieldView'
-import VerificationsView from '../../shared/components/VerificationsView'
 import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { ApplicationParsedJsonValue } from '../applications/utils/application'

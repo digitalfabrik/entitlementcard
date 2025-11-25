@@ -5,12 +5,12 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useSearchParams } from 'react-router'
 
 import validateNewPasswordInput from '../../auth/validateNewPasswordInput'
+import AlertBox from '../../components/AlertBox'
+import PasswordInput from '../../components/PasswordInput'
+import StandaloneCenter from '../../components/StandaloneCenter'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useCheckPasswordResetLinkQuery, useResetPasswordMutation } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import AlertBox from '../../shared/components/AlertBox'
-import PasswordInput from '../../shared/components/PasswordInput'
-import StandaloneCenter from '../../shared/components/StandaloneCenter'
 import getQueryResult from '../../util/getQueryResult'
 
 const ResetPasswordController = (): ReactElement => {

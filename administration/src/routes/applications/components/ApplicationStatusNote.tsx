@@ -6,8 +6,8 @@ import { de } from 'date-fns/locale'
 import React, { ReactElement } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
+import AlertBox from '../../../components/AlertBox'
 import { ApplicationStatus } from '../../../generated/graphql'
-import AlertBox from '../../../shared/components/AlertBox'
 
 const statusTranslationKey = (applicationStatus: ApplicationStatus, isAdminView: boolean): string | undefined => {
   switch (applicationStatus) {

@@ -4,9 +4,9 @@ import { OverridableStringUnion } from '@mui/types'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Role } from '../../generated/graphql'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import { useWhoAmI } from '../../provider/WhoAmIProvider'
+import { Role } from '../generated/graphql'
+import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
+import { useWhoAmI } from '../provider/WhoAmIProvider'
 import RenderGuard from './RenderGuard'
 
 type NavigationItemsProps = {

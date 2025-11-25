@@ -3,9 +3,9 @@ import { Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import ConfirmDialog from '../../../../components/ConfirmDialog'
+import CustomDivider from '../../../../components/CustomDivider'
 import { WorkAtOrganizationInput } from '../../../../generated/graphql'
-import ConfirmDialog from '../../../../shared/components/ConfirmDialog'
-import CustomDivider from '../../../../shared/components/CustomDivider'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
 import { Form, FormComponentProps } from '../../util/FormType'
 import {

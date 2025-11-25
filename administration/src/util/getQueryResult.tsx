@@ -1,9 +1,9 @@
 import { OperationVariables, QueryResult } from '@apollo/client'
 import React, { ReactElement } from 'react'
 
+import AlertBox from '../components/AlertBox'
+import CenteredCircularProgress from '../components/CenteredCircularProgress'
 import getMessageFromApolloError from '../errors/getMessageFromApolloError'
-import AlertBox from '../shared/components/AlertBox'
-import CenteredCircularProgress from '../shared/components/CenteredCircularProgress'
 
 type QueryHandlerResult<Data> =
   | {

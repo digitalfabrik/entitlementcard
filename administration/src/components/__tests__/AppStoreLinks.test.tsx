@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { renderWithOptions } from '../../../testing/render'
+import { renderWithOptions } from '../../testing/render'
 import AppStoreLinks from '../AppStoreLinks'
 
 describe('AppStoreLinks', () => {

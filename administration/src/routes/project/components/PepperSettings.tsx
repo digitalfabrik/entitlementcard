@@ -2,9 +2,9 @@ import { Stack, Typography } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import AlertBox from '../../../components/AlertBox'
+import PasswordInput from '../../../components/PasswordInput'
 import { useGetHashingPepperQuery } from '../../../generated/graphql'
-import AlertBox from '../../../shared/components/AlertBox'
-import PasswordInput from '../../../shared/components/PasswordInput'
 import getQueryResult from '../../../util/getQueryResult'
 
 const PepperSettings = (): ReactElement => {

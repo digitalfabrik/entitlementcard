@@ -2,7 +2,7 @@ import { Box, Typography } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import BaseCheckbox from '../../../../shared/components/BaseCheckbox'
+import BaseCheckbox from '../../../../components/BaseCheckbox'
 
 type StoreImportAlertProps = {
   dryRun: boolean

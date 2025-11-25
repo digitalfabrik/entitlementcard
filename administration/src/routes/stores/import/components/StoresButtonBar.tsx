@@ -3,8 +3,8 @@ import { Button, Tooltip } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import ButtonBar from '../../../../shared/components/ButtonBar'
-import ConfirmDialog from '../../../../shared/components/ConfirmDialog'
+import ButtonBar from '../../../../components/ButtonBar'
+import ConfirmDialog from '../../../../components/ConfirmDialog'
 import { AcceptingStoresEntry } from '../utils/AcceptingStoresEntry'
 import StoresImportAlert from './StoresImportAlert'
 

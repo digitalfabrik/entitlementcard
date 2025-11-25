@@ -1,7 +1,7 @@
 import React from 'react'
 
+import VerificationListItem from '../../../../components/VerificationListItem'
 import { ApplicationVerificationView } from '../../../../generated/graphql'
-import VerificationListItem from '../../../../shared/components/VerificationListItem'
 import { CustomRenderOptions, renderWithOptions } from '../../../../testing/render'
 import { verificationsAwaiting, verificationsRejected, verificationsVerified } from '../../__mocks__/verificationData'
 

@@ -1,6 +1,6 @@
 import React, { ReactElement, useContext, useState } from 'react'
 
-import BaseCheckbox from '../../../../shared/components/BaseCheckbox'
+import BaseCheckbox from '../../../../components/BaseCheckbox'
 import { Form, FormComponentProps } from '../../util/FormType'
 import { FormContext } from '../forms/SteppedSubForms'
 

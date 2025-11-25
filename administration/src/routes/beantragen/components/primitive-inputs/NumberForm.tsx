@@ -1,7 +1,7 @@
 import { TextField } from '@mui/material'
 import React, { useContext, useState } from 'react'
 
-import FormAlert from '../../../../shared/components/FormAlert'
+import FormAlert from '../../../../components/FormAlert'
 import i18next from '../../../../translations/i18n'
 import { Form, FormComponentProps } from '../../util/FormType'
 import { FormContext } from '../forms/SteppedSubForms'

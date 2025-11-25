@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next'
 
 import KoblenzLogo from '../../assets/koblenz_logo.svg'
 import { updateCard } from '../../cards/Card'
-import CenteredCircularProgress from '../../shared/components/CenteredCircularProgress'
+import CenteredCircularProgress from '../../components/CenteredCircularProgress'
 import CardSelfServiceActivation from './components/CardSelfServiceActivation'
 import CardSelfServiceForm from './components/CardSelfServiceForm'
 import CardSelfServiceInformation from './components/CardSelfServiceInformation'

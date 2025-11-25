@@ -2,8 +2,8 @@ import { Button, Typography } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import BaseCheckbox from '../../../shared/components/BaseCheckbox'
-import SettingsCard, { SettingsCardButtonBox } from '../../../shared/components/SettingsCard'
+import BaseCheckbox from '../../../components/BaseCheckbox'
+import SettingsCard, { SettingsCardButtonBox } from '../../../components/SettingsCard'
 
 const RegionSettingsCard = ({
   onSave,

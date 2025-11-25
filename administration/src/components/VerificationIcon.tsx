@@ -2,7 +2,7 @@
 import { Cancel, CheckCircle, Help } from '@mui/icons-material'
 import React, { ReactElement } from 'react'
 
-import { VerificationStatus } from '../verifications'
+import { VerificationStatus } from '../util/verifications'
 
 const colorByStatus = (status: VerificationStatus): 'success' | 'warning' | 'error' => {
   switch (status) {

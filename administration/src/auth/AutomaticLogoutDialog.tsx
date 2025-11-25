@@ -4,11 +4,11 @@ import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import PasswordInput from '../components/PasswordInput'
 import getMessageFromApolloError from '../errors/getMessageFromApolloError'
 import { type SignInPayload, useSignInMutation } from '../generated/graphql'
 import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
 import { useWhoAmI } from '../provider/WhoAmIProvider'
-import PasswordInput from '../shared/components/PasswordInput'
 
 const computeSecondsRemaining = (expiresAt: Date) => Math.round((expiresAt.valueOf() - Date.now()) / 1000)
 const openAtRemainingSeconds = 180

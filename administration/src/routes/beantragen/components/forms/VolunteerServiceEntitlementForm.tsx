@@ -2,8 +2,8 @@ import { Typography } from '@mui/material'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
+import CustomDivider from '../../../../components/CustomDivider'
 import { BlueCardVolunteerServiceEntitlementInput } from '../../../../generated/graphql'
-import CustomDivider from '../../../../shared/components/CustomDivider'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
 import { Form, FormComponentProps } from '../../util/FormType'
 import {

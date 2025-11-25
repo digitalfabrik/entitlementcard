@@ -3,6 +3,8 @@ import { Outlet, Route, RouterProvider, createBrowserRouter, createRoutesFromEle
 
 import AutomaticLogoutDialog from './auth/AutomaticLogoutDialog'
 import Login from './auth/Login'
+import NavigationBar from './components/NavigationBar'
+import useMetaTags from './hooks/useMetaTags'
 import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
 import { AuthContext } from './provider/AuthProvider'
 import WhoAmIProvider from './provider/WhoAmIProvider'
@@ -31,8 +33,6 @@ import StoresController from './routes/stores/StoresController'
 import StoresImportController from './routes/stores/import/StoresImportController'
 import UserSettingsController from './routes/user-settings/UserSettingsController'
 import ManageUsersController from './routes/users/ManageUsersController'
-import NavigationBar from './shared/components/NavigationBar'
-import useMetaTags from './shared/hooks/useMetaTags'
 
 const AuthLayout = (): ReactElement => {
   const { data: authData, signIn } = useContext(AuthContext)

@@ -1,7 +1,7 @@
 import { Stack, Typography } from '@mui/material'
 import React, { ReactElement } from 'react'
 
-import NavigationItems from '../../shared/components/NavigationItems'
+import NavigationItems from '../../components/NavigationItems'
 
 const HomeController = (): ReactElement => (
   <Stack sx={{ flexGrow: 1, alignItems: 'center', justifyContent: 'center', overflow: 'auto', padding: 4, gap: 2 }}>

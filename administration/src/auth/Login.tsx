@@ -3,11 +3,11 @@ import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import ProjectSwitcher from '../components/ProjectSwitcher'
+import StandaloneCenter from '../components/StandaloneCenter'
 import getMessageFromApolloError from '../errors/getMessageFromApolloError'
 import { SignInMutation, SignInPayload, useSignInMutation } from '../generated/graphql'
 import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
-import ProjectSwitcher from '../shared/components/ProjectSwitcher'
-import StandaloneCenter from '../shared/components/StandaloneCenter'
 import LoginForm from './LoginForm'
 
 type State = {

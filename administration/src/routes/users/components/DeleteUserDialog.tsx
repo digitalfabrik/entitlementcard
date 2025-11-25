@@ -4,13 +4,13 @@ import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
+import AlertBox from '../../../components/AlertBox'
+import BaseCheckbox from '../../../components/BaseCheckbox'
+import ConfirmDialog from '../../../components/ConfirmDialog'
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
 import { Administrator, useDeleteAdministratorMutation } from '../../../generated/graphql'
 import { AuthContext } from '../../../provider/AuthProvider'
 import { WhoAmIContext } from '../../../provider/WhoAmIProvider'
-import AlertBox from '../../../shared/components/AlertBox'
-import BaseCheckbox from '../../../shared/components/BaseCheckbox'
-import ConfirmDialog from '../../../shared/components/ConfirmDialog'
 
 const DeleteUserDialog = ({
   selectedUser,

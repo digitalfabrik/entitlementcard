@@ -2,8 +2,8 @@ import { Typography, styled } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { ApplicationPublic, ApplicationStatus, ApplicationVerificationView } from '../../generated/graphql'
-import { VerificationStatus, verificationStatus } from '../verifications'
+import { ApplicationPublic, ApplicationStatus, ApplicationVerificationView } from '../generated/graphql'
+import { VerificationStatus, verificationStatus } from '../util/verifications'
 import VerificationListItem from './VerificationListItem'
 
 const VerificationContainer = styled('ul')`

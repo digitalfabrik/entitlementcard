@@ -3,8 +3,8 @@ import { Box, Typography } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import PopoverWrapper from '../../../components/PopoverWrapper'
 import { Role } from '../../../generated/graphql'
-import PopoverWrapper from '../../../shared/components/PopoverWrapper'
 import roleToText from '../utils/roleToText'
 
 const RoleHelpButton = (): ReactElement => {

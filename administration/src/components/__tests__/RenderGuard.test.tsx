@@ -1,12 +1,12 @@
 import { render } from '@testing-library/react'
 import React from 'react'
 
-import { Role } from '../../../generated/graphql'
-import { useWhoAmI } from '../../../provider/WhoAmIProvider'
-import { renderWithOptions } from '../../../testing/render'
+import { Role } from '../../generated/graphql'
+import { useWhoAmI } from '../../provider/WhoAmIProvider'
+import { renderWithOptions } from '../../testing/render'
 import RenderGuard from '../RenderGuard'
 
-jest.mock('../../../provider/WhoAmIProvider', () => ({
+jest.mock('../../provider/WhoAmIProvider', () => ({
   useWhoAmI: jest.fn(),
 }))
 

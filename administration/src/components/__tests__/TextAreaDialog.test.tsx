@@ -1,7 +1,7 @@
 import { act, fireEvent } from '@testing-library/react'
 import React from 'react'
 
-import { renderWithOptions } from '../../../testing/render'
+import { renderWithOptions } from '../../testing/render'
 import TextAreaDialog from '../TextAreaDialog'
 
 describe('TextAreaDialog', () => {

@@ -14,9 +14,9 @@ import {
 } from '../../../../cards/Card'
 import { maxCardValidity } from '../../../../cards/constants'
 import CardTextField from '../../../../cards/extensions/components/CardTextField'
-import CustomDatePicker from '../../../../shared/components/CustomDatePicker'
-import ExtensionForms from '../../../../shared/components/ExtensionForms'
-import FormAlert from '../../../../shared/components/FormAlert'
+import CustomDatePicker from '../../../../components/CustomDatePicker'
+import ExtensionForms from '../../../../components/ExtensionForms'
+import FormAlert from '../../../../components/FormAlert'
 import PlainDate from '../../../../util/PlainDate'
 
 const AddCardForm = ({

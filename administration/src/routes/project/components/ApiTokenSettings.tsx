@@ -18,6 +18,8 @@ import { useSnackbar } from 'notistack'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import ConfirmDialog from '../../../components/ConfirmDialog'
+import SettingsCard from '../../../components/SettingsCard'
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
 import {
   ApiTokenMetaData,
@@ -25,8 +27,6 @@ import {
   useDeleteApiTokenMutation,
   useGetApiTokenMetaDataQuery,
 } from '../../../generated/graphql'
-import ConfirmDialog from '../../../shared/components/ConfirmDialog'
-import SettingsCard from '../../../shared/components/SettingsCard'
 import { formatDate } from '../../../util/formatDate'
 import getQueryResult from '../../../util/getQueryResult'
 import PepperSettings from './PepperSettings'

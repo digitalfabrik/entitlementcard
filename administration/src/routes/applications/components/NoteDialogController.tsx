@@ -4,9 +4,9 @@ import { useSnackbar } from 'notistack'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import TextAreaDialog from '../../../components/TextAreaDialog'
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
 import { useUpdateApplicationNoteMutation } from '../../../generated/graphql'
-import TextAreaDialog from '../../../shared/components/TextAreaDialog'
 import type { Application } from '../types/types'
 import { ApplicationNoteTooltip } from './ApplicationNoteTooltip'
 

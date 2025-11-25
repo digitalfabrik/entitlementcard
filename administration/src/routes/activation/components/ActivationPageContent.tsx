@@ -2,8 +2,8 @@ import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import getCustomDeepLinkFromActivationCode from '../../../cards/getCustomDeepLinkFromActivationCode'
+import ProjectSwitcher from '../../../components/ProjectSwitcher'
 import { ProjectConfig } from '../../../project-configs/getProjectConfig'
-import ProjectSwitcher from '../../../shared/components/ProjectSwitcher'
 import { getBuildConfig } from '../../../util/getBuildConfig'
 
 const ActivationPageContent = ({

@@ -1,4 +1,4 @@
-import { JsonField, findValue } from '../../../shared/components/JsonFieldView'
+import { JsonField, findValue } from '../../../components/JsonFieldView'
 import { formatDate } from '../../../util/formatDate'
 
 export type PersonalApplicationData = {

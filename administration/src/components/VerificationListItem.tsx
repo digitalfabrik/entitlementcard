@@ -6,9 +6,9 @@ import { useSnackbar } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { ApplicationVerificationView, useSendApprovalMailToOrganisationMutation } from '../../generated/graphql'
 import EmailLink from '../components/EmailLink'
-import { isEmailValid, verificationStatus } from '../verifications'
+import { ApplicationVerificationView, useSendApprovalMailToOrganisationMutation } from '../generated/graphql'
+import { isEmailValid, verificationStatus } from '../util/verifications'
 import { VerificationIcon } from './VerificationIcon'
 
 const getStatusMetaData = (

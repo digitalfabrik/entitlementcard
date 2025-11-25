@@ -2,8 +2,8 @@ import { TextField } from '@mui/material'
 import i18next from 'i18next'
 import React, { useContext, useState } from 'react'
 
+import FormAlert from '../../../../components/FormAlert'
 import { ShortTextInput } from '../../../../generated/graphql'
-import FormAlert from '../../../../shared/components/FormAlert'
 import { Form, FormComponentProps, ValidationResult } from '../../util/FormType'
 import { FormContext } from '../forms/SteppedSubForms'
 

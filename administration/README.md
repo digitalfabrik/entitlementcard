@@ -12,12 +12,14 @@ The administration frontend relies on [Material UI](https://mui.com) library and
 
 - src
   - assets
+  - components
   - global modules (f.e. `auth` or `cards` with content that is used in this particular context)
     - hooks \*
     - util \*
     - ...components
   - errors (general functions and templates for error handling)
   - graphql (graphl queries and mutations)
+  - hooks
   - routes
     - route A \*
       - hooks \*
@@ -25,9 +27,6 @@ The administration frontend relies on [Material UI](https://mui.com) library and
       - components \*
       - hooks \*
       - ...main controller/view
-  - shared (generic reusable components, hooks, assets, used within the application without specific context)
-    - hooks \*
-    - components \*
     - module B
       - hooks \*
       - util \*

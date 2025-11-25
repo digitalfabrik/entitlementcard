@@ -3,10 +3,10 @@ import { Button, Stack, SxProps } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import RenderGuard from '../../components/RenderGuard'
 import { Role } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { useWhoAmI } from '../../provider/WhoAmIProvider'
-import RenderGuard from '../../shared/components/RenderGuard'
 import { FREINET_PARAM } from './constants'
 
 const buttonStyle: SxProps = {

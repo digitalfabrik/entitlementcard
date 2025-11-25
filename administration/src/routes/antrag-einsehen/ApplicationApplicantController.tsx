@@ -3,9 +3,9 @@ import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
 
+import AlertBox from '../../components/AlertBox'
+import CenteredStack from '../../components/CenteredStack'
 import { ApplicationStatus, useGetApplicationByApplicantQuery } from '../../generated/graphql'
-import AlertBox from '../../shared/components/AlertBox'
-import CenteredStack from '../../shared/components/CenteredStack'
 import getQueryResult from '../../util/getQueryResult'
 import { ApplicationStatusNote } from '../applications/components/ApplicationStatusNote'
 import {

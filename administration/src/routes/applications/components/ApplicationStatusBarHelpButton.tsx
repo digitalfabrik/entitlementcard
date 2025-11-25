@@ -3,7 +3,7 @@ import { Box, Typography } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import PopoverWrapper from '../../../shared/components/PopoverWrapper'
+import PopoverWrapper from '../../../components/PopoverWrapper'
 
 const ApplicationStatusHelpButton = (): ReactElement => {
   const { t } = useTranslation('applicationsOverview')

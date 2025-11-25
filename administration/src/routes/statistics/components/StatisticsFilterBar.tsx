@@ -6,8 +6,8 @@ import { formatDate } from 'date-fns/format'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import CustomDatePicker from '../../../shared/components/CustomDatePicker'
-import type { CustomDatePickerTextFieldProps } from '../../../shared/components/CustomDatePicker'
+import CustomDatePicker from '../../../components/CustomDatePicker'
+import type { CustomDatePickerTextFieldProps } from '../../../components/CustomDatePicker'
 import { defaultEndDate, defaultStartDate } from '../constants'
 
 const filterDateFormat = 'yyyy-MM-dd'

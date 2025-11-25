@@ -3,8 +3,8 @@ import { styled } from '@mui/system'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import AndroidStoreIcon from '../../assets/android_appstore_icon.svg'
-import AppStoreIcon from '../../assets/ios_appstore_icon.svg'
+import AndroidStoreIcon from '../assets/android_appstore_icon.svg'
+import AppStoreIcon from '../assets/ios_appstore_icon.svg'
 
 const StoreLink = styled(Link)(({ theme }) => ({
   display: 'flex',

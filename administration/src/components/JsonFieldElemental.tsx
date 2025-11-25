@@ -5,10 +5,10 @@ import { useSnackbar } from 'notistack'
 import React, { memo, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { AuthContext } from '../../provider/AuthProvider'
-import downloadDataUri from '../../util/downloadDataUri'
 import EmailLink from '../components/EmailLink'
-import { isEmailValid } from '../verifications'
+import { AuthContext } from '../provider/AuthProvider'
+import downloadDataUri from '../util/downloadDataUri'
+import { isEmailValid } from '../util/verifications'
 import type { GeneralJsonField, JsonField, JsonFieldViewProps } from './JsonFieldView'
 
 const extensionByContentType = new Map([

@@ -1,6 +1,7 @@
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import AlertBox from '../../components/AlertBox'
 import {
   Region,
   Role,
@@ -9,7 +10,6 @@ import {
 } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { useWhoAmI } from '../../provider/WhoAmIProvider'
-import AlertBox from '../../shared/components/AlertBox'
 import getQueryResult from '../../util/getQueryResult'
 import StatisticsOverview from './components/StatisticsOverview'
 import { defaultEndDate, defaultStartDate } from './constants'
