@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This script determines the last commit of the folder administration/src/mui-modules/application.
+# This script determines the last commit of the folder administration/src/routes/applications
 # This is used as a version for the application form. The form should reset whenever there are changes to the source
 # code of the application form.
 
@@ -11,7 +11,7 @@ then
 fi
 
 basedir=$(dirname "$0")
-application_src_dir="${basedir}/src/mui-modules/application"
+application_src_dir="${basedir}/src/routes/applications"
 
 if [ ! -d "${application_src_dir}" ]
 then

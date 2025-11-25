@@ -1,6 +1,6 @@
 import { ApolloError } from '@apollo/client'
 
-import i18next from '../i18n'
+import i18next from '../translations/i18n'
 import type { GraphQLErrorMessage } from './getMessageFromApolloError'
 
 const defaultErrorMap = (error: ApolloError): GraphQLErrorMessage => {
