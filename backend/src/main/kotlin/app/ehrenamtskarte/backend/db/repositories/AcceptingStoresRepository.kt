@@ -1,6 +1,8 @@
 package app.ehrenamtskarte.backend.db.repositories
 
 import app.ehrenamtskarte.backend.db.columns.GisPointColumn
+import app.ehrenamtskarte.backend.db.entities.AcceptingStoreDescriptionEntity
+import app.ehrenamtskarte.backend.db.entities.AcceptingStoreDescriptions
 import app.ehrenamtskarte.backend.db.entities.AcceptingStoreEntity
 import app.ehrenamtskarte.backend.db.entities.AcceptingStores
 import app.ehrenamtskarte.backend.db.entities.AddressEntity
@@ -8,6 +10,7 @@ import app.ehrenamtskarte.backend.db.entities.Addresses
 import app.ehrenamtskarte.backend.db.entities.Categories
 import app.ehrenamtskarte.backend.db.entities.ContactEntity
 import app.ehrenamtskarte.backend.db.entities.Contacts
+import app.ehrenamtskarte.backend.db.entities.LanguageCode
 import app.ehrenamtskarte.backend.db.entities.PhysicalStoreEntity
 import app.ehrenamtskarte.backend.db.entities.PhysicalStores
 import app.ehrenamtskarte.backend.db.entities.Projects
@@ -26,6 +29,7 @@ import org.jetbrains.exposed.sql.OrOp
 import org.jetbrains.exposed.sql.SizedIterable
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.isNull
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.doubleParam
@@ -57,7 +61,7 @@ object AcceptingStoresRepository {
                 OrOp(
                     listOf(
                         AcceptingStores.name ilike "%$searchText%",
-                        AcceptingStores.description ilike "%$searchText%",
+                        AcceptingStoreDescriptions.description ilike "%$searchText%",
                         Addresses.location ilike "%$searchText%",
                         Addresses.postalCode ilike "%$searchText%",
                         Addresses.street ilike "%$searchText%",
@@ -74,8 +78,10 @@ object AcceptingStoresRepository {
             AcceptingStores.name
         }
 
-        return (Projects innerJoin (AcceptingStores leftJoin PhysicalStores leftJoin Addresses))
-            .select(AcceptingStores.columns)
+        return (
+            Projects innerJoin
+                (AcceptingStores leftJoin AcceptingStoreDescriptions leftJoin PhysicalStores leftJoin Addresses)
+        ).select(AcceptingStores.columns)
             .where(Projects.project eq project and categoryMatcher and textMatcher)
             .orderBy(sortExpression)
             .limit(limit)
@@ -83,8 +89,17 @@ object AcceptingStoresRepository {
             .let { AcceptingStoreEntity.wrapRows(it) }
     }
 
-    fun getIdIfExists(acceptingStore: AcceptingStore, projectId: EntityID<Int>, regionId: EntityID<Int>?): Int? =
-        AcceptingStores.innerJoin(PhysicalStores).innerJoin(Addresses).innerJoin(Contacts)
+    fun getIdIfExists(
+        acceptingStore: AcceptingStore,
+        projectId: EntityID<Int>,
+        regionId: EntityID<Int>?,
+        language: LanguageCode,
+    ): Int? =
+        AcceptingStores
+            .leftJoin(AcceptingStoreDescriptions)
+            .innerJoin(Contacts)
+            .innerJoin(PhysicalStores)
+            .innerJoin(Addresses)
             .select(AcceptingStores.id)
             .where(
                 (Addresses.street eq acceptingStore.streetWithHouseNumber) and
@@ -95,11 +110,16 @@ object AcceptingStoresRepository {
                     (Contacts.telephone eq acceptingStore.telephone) and
                     (Contacts.website eq acceptingStore.website) and
                     (AcceptingStores.name eq acceptingStore.name) and
-                    (AcceptingStores.description eq acceptingStore.discount) and
                     (AcceptingStores.categoryId eq acceptingStore.categoryId) and
                     (AcceptingStores.regionId eq regionId) and
                     (AcceptingStores.projectId eq projectId) and
-                    (PhysicalStores.coordinates eq Point(acceptingStore.longitude!!, acceptingStore.latitude!!)),
+                    (PhysicalStores.coordinates eq Point(acceptingStore.longitude!!, acceptingStore.latitude!!)) and
+                    if (acceptingStore.discount == null) {
+                        AcceptingStoreDescriptions.id.isNull()
+                    } else {
+                        (AcceptingStoreDescriptions.description eq acceptingStore.discount) and
+                            (AcceptingStoreDescriptions.language eq language)
+                    },
             )
             .firstOrNull()?.let { it[AcceptingStores.id].value }
 
@@ -109,7 +129,12 @@ object AcceptingStoresRepository {
             .where(AcceptingStores.projectId eq projectId)
             .map { it[AcceptingStores.id].value }.toMutableSet()
 
-    fun createStore(acceptingStore: AcceptingStore, projectId: EntityID<Int>, regionId: EntityID<Int>?) {
+    fun createStore(
+        acceptingStore: AcceptingStore,
+        projectId: EntityID<Int>,
+        regionId: EntityID<Int>?,
+        language: LanguageCode,
+    ) {
         val address = AddressEntity.new {
             street = acceptingStore.streetWithHouseNumber
             postalCode = acceptingStore.postalCode!!
@@ -123,11 +148,17 @@ object AcceptingStoresRepository {
         }
         val storeEntity = AcceptingStoreEntity.new {
             name = acceptingStore.name
-            description = acceptingStore.discount
             contactId = contact.id
             categoryId = EntityID(acceptingStore.categoryId, Categories)
             this.regionId = regionId
             this.projectId = projectId
+        }
+        if (acceptingStore.discount != null) {
+            AcceptingStoreDescriptionEntity.new {
+                this.storeId = storeEntity.id
+                this.description = acceptingStore.discount
+                this.language = language
+            }
         }
         PhysicalStoreEntity.new {
             storeId = storeEntity.id
@@ -142,31 +173,16 @@ object AcceptingStoresRepository {
             .where { AcceptingStores.id inList acceptingStoreIds }
             .map { it[Contacts.id] }
 
-        val physicalStoresDelete = (PhysicalStores innerJoin AcceptingStores)
-            .select(PhysicalStores.id)
-            .where { AcceptingStores.id inList acceptingStoreIds }
-            .map { it[PhysicalStores.id] }
-
         val addressesDelete = ((PhysicalStores innerJoin Addresses) innerJoin AcceptingStores)
             .select(Addresses.id)
             .where { AcceptingStores.id inList acceptingStoreIds }
             .map { it[Addresses.id] }
 
-        PhysicalStores.deleteWhere {
-            id inList physicalStoresDelete
-        }
-
-        Addresses.deleteWhere {
-            id inList addressesDelete
-        }
-
-        AcceptingStores.deleteWhere {
-            id inList acceptingStoreIds
-        }
-
-        Contacts.deleteWhere {
-            id inList contactsDelete
-        }
+        AcceptingStoreDescriptions.deleteWhere { storeId inList acceptingStoreIds }
+        PhysicalStores.deleteWhere { storeId inList acceptingStoreIds }
+        Addresses.deleteWhere { id inList addressesDelete }
+        AcceptingStores.deleteWhere { id inList acceptingStoreIds }
+        Contacts.deleteWhere { id inList contactsDelete }
     }
 
     fun findByIds(ids: List<Int>) =

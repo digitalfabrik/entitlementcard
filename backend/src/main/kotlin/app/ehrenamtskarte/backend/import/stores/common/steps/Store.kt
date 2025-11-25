@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.import.stores.common.steps
 
 import app.ehrenamtskarte.backend.db.entities.AcceptingStores
+import app.ehrenamtskarte.backend.db.entities.LanguageCode
 import app.ehrenamtskarte.backend.db.entities.ProjectEntity
 import app.ehrenamtskarte.backend.db.entities.Projects
 import app.ehrenamtskarte.backend.db.entities.RegionEntity
@@ -40,7 +41,12 @@ class Store(config: ImportConfig, private val logger: Logger) :
                     )
                     // If an exact duplicate is found in the DB, we do not recreate it and instead
                     // remove the id from `acceptingStoreIdsToRemove`.
-                    val idInDb = AcceptingStoresRepository.getIdIfExists(acceptingStore, project.id, region?.id)
+                    val idInDb = AcceptingStoresRepository.getIdIfExists(
+                        acceptingStore,
+                        project.id,
+                        region?.id,
+                        LanguageCode.DE,
+                    )
 
                     if (idInDb != null) {
                         acceptingStoreIdsToRemove.remove(idInDb)
@@ -48,7 +54,7 @@ class Store(config: ImportConfig, private val logger: Logger) :
                         continue
                     }
 
-                    AcceptingStoresRepository.createStore(acceptingStore, project.id, region?.id)
+                    AcceptingStoresRepository.createStore(acceptingStore, project.id, region?.id, LanguageCode.DE)
                     numStoresCreated += 1
                 }
 
