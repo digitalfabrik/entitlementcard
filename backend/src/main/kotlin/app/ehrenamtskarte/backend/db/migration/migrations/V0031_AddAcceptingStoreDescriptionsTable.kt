@@ -11,13 +11,21 @@ internal class V0031_AddAcceptingStoreDescriptionsTable : Migration() {
             CREATE TABLE acceptingstoredescriptions (
                 id SERIAL PRIMARY KEY,
                 "storeId" integer NOT NULL,
-                "language" character varying(2) NOT NULL,
-                "description" character varying(2500)
+                "description" character varying(2500) NULL,
+                "language" character varying(2) NOT NULL DEFAULT 'DE',
+                CONSTRAINT acceptingstoredescriptions_language_check CHECK (language IN ('EN', 'DE'))
             );
             
             ALTER TABLE acceptingstoredescriptions 
             ADD CONSTRAINT fk_acceptingstoredescriptions_storeid__id FOREIGN KEY ("storeId") 
             REFERENCES acceptingstores(id) ON DELETE RESTRICT ON UPDATE RESTRICT;
+            
+            INSERT INTO acceptingstoredescriptions ("storeId", "description", "language")
+            SELECT id, description, 'DE'
+            FROM acceptingstores
+            WHERE description IS NOT NULL;
+            
+            ALTER TABLE acceptingstores DROP COLUMN "description";
             """.trimIndent(),
         )
     }
