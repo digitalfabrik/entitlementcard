@@ -128,7 +128,7 @@ ThemeData get darkTheme {
     dividerTheme: DividerThemeData(color: Color(0xFF505050)),
     appBarTheme: AppBarTheme(
       systemOverlayStyle: SystemUiOverlayStyle.light,
-      color: theme.colorScheme.primary,
+      backgroundColor: theme.colorScheme.primary,
       foregroundColor: Colors.white,
       titleTextStyle: titleMedium,
     ),
