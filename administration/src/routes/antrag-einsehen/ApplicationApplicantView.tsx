@@ -57,14 +57,7 @@ const ApplicationApplicantView = ({
       const { title } = getMessageFromApolloError(error)
       enqueueSnackbar(title, { variant: 'error' })
     },
-    onCompleted: ({ isWithdrawn }: { isWithdrawn: boolean }) => {
-      if (isWithdrawn) {
-        onWithdraw()
-      } else {
-        console.error('Withdraw operation returned false.')
-        enqueueSnackbar(t('alreadyWithdrawn'), { variant: 'error' })
-      }
-    },
+    onCompleted: () => onWithdraw(),
   })
   const submitWithdrawal = () => {
     withdrawApplication({
