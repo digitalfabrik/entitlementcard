@@ -215,10 +215,7 @@ tasks.bootDistTar {
     enabled = false
 }
 
-tasks.withType<Zip>().configureEach {
-    enabled = false
-}
-
+// Do not append version to tar file name, since the pack_backend job expects a defined name
 tasks.withType<Tar>().configureEach {
     archiveVersion.set("")
 }
