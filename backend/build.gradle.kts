@@ -1,5 +1,3 @@
-val isProductionEnvironment = System.getProperty("env") == "prod"
-
 plugins {
     alias(libs.plugins.expediagroup.graphql)
     alias(libs.plugins.gitlab.arturbosch.detekt)
@@ -20,8 +18,11 @@ group = "app.ehrenamtskarte.backend"
 version = "0.0.1-SNAPSHOT"
 description = "Backend for the Ehrenamtskarte system"
 
+val isProductionEnvironment = System.getProperty("env") == "prod"
+val packageRoot = "app.ehrenamtskarte.backend"
+
 application {
-    mainClass.set("${project.group}.EntryPointKt")
+    mainClass.set("$packageRoot.EntryPointKt")
 }
 
 sourceSets {
@@ -193,7 +194,7 @@ kover {
     reports {
         filters {
             includes {
-                classes("${project.group}.*")
+                classes("$packageRoot.*")
             }
         }
     }
@@ -246,7 +247,7 @@ tasks.graphqlGenerateTestClient {
         dependsOn(tasks.sentryCollectSourcesJava)
     }
     schemaFile.set(rootDir.parentFile.resolve("specs/backend-api.graphql"))
-    packageName.set("${project.group}.generated")
+    packageName.set("$packageRoot.generated")
     queryFiles.setFrom(fileTree("src/test/resources/graphql"))
 }
 
