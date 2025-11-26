@@ -18,6 +18,18 @@ group = "app.ehrenamtskarte.backend"
 version = "0.0.1-SNAPSHOT"
 description = "Backend for the Ehrenamtskarte system"
 
+/**
+ * These environment variables are set by the CI pipeline.
+ * See: https://app.circleci.com/settings/organization/github/digitalfabrik/contexts/0d0d3d24-cd54-4c43-85a5-273e3a9e2152
+ */
+object CiConfig {
+    val circleCiCommitHash = System.getenv("CIRCLE_SHA1")
+    val sentryAuthToken = System.getenv("SENTRY_BACKEND_AUTH_TOKEN")
+
+    // Set by the CircleCI `bump_version` job
+    val versionName = System.getProperty("NEW_VERSION_NAME", "1.0.0")
+}
+
 val isProductionEnvironment = System.getProperty("env") == "prod"
 val packageRoot = "app.ehrenamtskarte.backend"
 
@@ -61,8 +73,8 @@ kotlin {
 
 buildConfig {
     packageName(project.group.toString())
-    buildConfigField("VERSION_NAME", System.getProperty("NEW_VERSION_NAME", "1.0.0"))
-    buildConfigField("COMMIT_HASH", System.getenv("CIRCLE_SHA1"))
+    buildConfigField("VERSION_NAME", CiConfig.versionName)
+    buildConfigField("COMMIT_HASH", CiConfig.circleCiCommitHash)
 }
 
 repositories {
@@ -72,7 +84,7 @@ repositories {
 dependencies {
     annotationProcessor(libs.springframework.boot.configurationprocessor)
 
-    // todo this prevents webserver to be run from CliktCommand; fix or remove
+    // TODO This prevents webserver to be run from CliktCommand; fix or remove
     // developmentOnly(libs.springframework.boot.devtools)
 
     implementation(libs.ajalt.clikt)
@@ -167,10 +179,9 @@ if (isProductionEnvironment) {
         // This enables source context, allowing you to see your source
         // code as part of your stack traces in Sentry.
         includeSourceContext = true
-
         org = "digitalfabrik"
         projectName = "entitlementcard-backend"
-        authToken = System.getenv("SENTRY_AUTH_TOKEN")
+        authToken = CiConfig.sentryAuthToken
     }
 }
 
