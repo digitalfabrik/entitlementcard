@@ -12,8 +12,8 @@ steps:
   - run:
       name: Setup submodules
       command: |
-          git submodule sync
-          git submodule update --init
+        git submodule sync
+        git submodule update --init
   - restore_cache:
       keys:
         - v1-gradle-{{ checksum "build.gradle.kts" }}
@@ -21,7 +21,7 @@ steps:
       name: Build backend
       # Use `assemble` instead of `build` to not run tests
       # Use production environment to build with sentry
-      command: ./gradlew assemble -Denv=prod
+      command: ./gradlew distTar -Denv=prod
   - save_cache:
       key: v1-gradle-{{ checksum "build.gradle.kts" }}
       paths:
