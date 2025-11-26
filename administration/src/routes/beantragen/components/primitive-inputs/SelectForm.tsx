@@ -1,5 +1,5 @@
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useId, useState } from 'react'
 
 import FormAlert from '../../../../components/FormAlert'
 import { ShortTextInput } from '../../../../generated/graphql'
@@ -33,23 +33,23 @@ const SelectForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
   Component: ({ state, setState, label, options }: FormComponentProps<State, AdditionalProps, Options>) => {
     const [touched, setTouched] = useState(false)
     const { showAllErrors, disableAllInputs } = useContext(FormContext)
+    const labelId = useId()
+
     const validationResult = SelectForm.validate(state, options)
     const isInvalid = validationResult.type === 'error'
 
     return (
       <FormControl fullWidth variant='standard' required style={{ margin: '4px 0' }} error={touched && isInvalid}>
-        <InputLabel>{label}</InputLabel>
+        <InputLabel id={labelId}>{label}</InputLabel>
         <Select
-          inputProps={{
-            'aria-label': label,
-          }}
+          labelId={labelId}
           disabled={disableAllInputs}
           value={state.selectedValue}
           label={label}
           onBlur={() => setTouched(true)}
           onChange={e => setState(() => ({ selectedValue: e.target.value, manuallySelected: true }))}>
           {options.items.map(item => (
-            <MenuItem key={item.label} value={item.value} aria-label={item.label}>
+            <MenuItem key={item.label} value={item.value}>
               {item.label}
             </MenuItem>
           ))}
