@@ -10,7 +10,6 @@ import app.ehrenamtskarte.backend.db.entities.Addresses
 import app.ehrenamtskarte.backend.db.entities.Categories
 import app.ehrenamtskarte.backend.db.entities.ContactEntity
 import app.ehrenamtskarte.backend.db.entities.Contacts
-import app.ehrenamtskarte.backend.db.entities.LanguageCode
 import app.ehrenamtskarte.backend.db.entities.PhysicalStoreEntity
 import app.ehrenamtskarte.backend.db.entities.PhysicalStores
 import app.ehrenamtskarte.backend.db.entities.Projects
@@ -29,7 +28,6 @@ import org.jetbrains.exposed.sql.OrOp
 import org.jetbrains.exposed.sql.SizedIterable
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.isNull
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.doubleParam
@@ -82,6 +80,7 @@ object AcceptingStoresRepository {
             Projects innerJoin
                 (AcceptingStores leftJoin AcceptingStoreDescriptions leftJoin PhysicalStores leftJoin Addresses)
         ).select(AcceptingStores.columns)
+            .withDistinct()
             .where(Projects.project eq project and categoryMatcher and textMatcher)
             .orderBy(sortExpression)
             .limit(limit)
@@ -89,18 +88,12 @@ object AcceptingStoresRepository {
             .let { AcceptingStoreEntity.wrapRows(it) }
     }
 
-    fun getIdIfExists(
-        acceptingStore: AcceptingStore,
-        projectId: EntityID<Int>,
-        regionId: EntityID<Int>?,
-        language: LanguageCode,
-    ): Int? =
-        AcceptingStores
-            .leftJoin(AcceptingStoreDescriptions)
+    fun getIdIfExists(acceptingStore: AcceptingStore, projectId: EntityID<Int>, regionId: EntityID<Int>?): Int? {
+        val store = AcceptingStores
             .innerJoin(Contacts)
             .innerJoin(PhysicalStores)
             .innerJoin(Addresses)
-            .select(AcceptingStores.id)
+            .select(AcceptingStores.columns)
             .where(
                 (Addresses.street eq acceptingStore.streetWithHouseNumber) and
                     (Addresses.postalCode eq acceptingStore.postalCode!!) and
@@ -113,15 +106,16 @@ object AcceptingStoresRepository {
                     (AcceptingStores.categoryId eq acceptingStore.categoryId) and
                     (AcceptingStores.regionId eq regionId) and
                     (AcceptingStores.projectId eq projectId) and
-                    (PhysicalStores.coordinates eq Point(acceptingStore.longitude!!, acceptingStore.latitude!!)) and
-                    if (acceptingStore.discount == null) {
-                        AcceptingStoreDescriptions.id.isNull()
-                    } else {
-                        (AcceptingStoreDescriptions.description eq acceptingStore.discount) and
-                            (AcceptingStoreDescriptions.language eq language)
-                    },
-            )
-            .firstOrNull()?.let { it[AcceptingStores.id].value }
+                    (PhysicalStores.coordinates eq Point(acceptingStore.longitude!!, acceptingStore.latitude!!)))
+            .firstOrNull()?.let { row -> AcceptingStoreEntity.wrapRow(row) }
+
+        val storeDescriptions = store?.descriptions?.associate { it.language to it.description }
+        if (acceptingStore.discounts != storeDescriptions) {
+            return null
+        }
+
+        return store.id.value
+    }
 
     fun getAllIdsInProject(projectId: EntityID<Int>): MutableSet<Int> =
         AcceptingStores
@@ -129,12 +123,7 @@ object AcceptingStoresRepository {
             .where(AcceptingStores.projectId eq projectId)
             .map { it[AcceptingStores.id].value }.toMutableSet()
 
-    fun createStore(
-        acceptingStore: AcceptingStore,
-        projectId: EntityID<Int>,
-        regionId: EntityID<Int>?,
-        language: LanguageCode,
-    ) {
+    fun createStore(acceptingStore: AcceptingStore, projectId: EntityID<Int>, regionId: EntityID<Int>?) {
         val address = AddressEntity.new {
             street = acceptingStore.streetWithHouseNumber
             postalCode = acceptingStore.postalCode!!
@@ -153,17 +142,17 @@ object AcceptingStoresRepository {
             this.regionId = regionId
             this.projectId = projectId
         }
-        if (acceptingStore.discount != null) {
-            AcceptingStoreDescriptionEntity.new {
-                this.storeId = storeEntity.id
-                this.description = acceptingStore.discount
-                this.language = language
-            }
-        }
         PhysicalStoreEntity.new {
             storeId = storeEntity.id
             addressId = address.id
             coordinates = Point(acceptingStore.longitude!!, acceptingStore.latitude!!)
+        }
+        acceptingStore.discounts.forEach {
+            AcceptingStoreDescriptionEntity.new {
+                this.storeId = storeEntity.id
+                this.description = it.value
+                this.language = it.key
+            }
         }
     }
 
