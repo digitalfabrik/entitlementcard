@@ -1,12 +1,12 @@
 jobs:
-  #  - bump_version:
-  #      prepare_delivery: true
-  #      context:
-  #        - deliverino
+  - bump_version:
+      prepare_delivery: true
+      context:
+        - deliverino
   - build_backend:
       context:
         - credentials-ehrenamtskarte
   - pack_backend:
       requires:
         - build_backend
-#        - bump_version
+        - bump_version

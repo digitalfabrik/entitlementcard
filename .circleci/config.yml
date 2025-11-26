@@ -1360,10 +1360,15 @@ workflows:
         when: << pipeline.parameters.run_promotion_frontend >>
     test_pack_backend:
         jobs:
+            - bump_version:
+                context:
+                    - deliverino
+                prepare_delivery: true
             - build_backend:
                 context:
                     - credentials-ehrenamtskarte
             - pack_backend:
                 requires:
                     - build_backend
+                    - bump_version
 
