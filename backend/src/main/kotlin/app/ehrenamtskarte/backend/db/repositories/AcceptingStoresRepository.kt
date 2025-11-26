@@ -89,12 +89,13 @@ object AcceptingStoresRepository {
     }
 
     fun getIdIfExists(acceptingStore: AcceptingStore, projectId: EntityID<Int>, regionId: EntityID<Int>?): Int? {
-        val store = AcceptingStores
-            .innerJoin(Contacts)
-            .innerJoin(PhysicalStores)
-            .innerJoin(Addresses)
-            .select(AcceptingStores.columns)
-            .where(
+        val stores = (AcceptingStores innerJoin Contacts innerJoin PhysicalStores innerJoin Addresses)
+            .leftJoin(AcceptingStoreDescriptions)
+            .select(
+                AcceptingStores.id,
+                AcceptingStoreDescriptions.language,
+                AcceptingStoreDescriptions.description,
+            ).where({
                 (Addresses.street eq acceptingStore.streetWithHouseNumber) and
                     (Addresses.postalCode eq acceptingStore.postalCode!!) and
                     (Addresses.location eq acceptingStore.location) and
@@ -106,15 +107,28 @@ object AcceptingStoresRepository {
                     (AcceptingStores.categoryId eq acceptingStore.categoryId) and
                     (AcceptingStores.regionId eq regionId) and
                     (AcceptingStores.projectId eq projectId) and
-                    (PhysicalStores.coordinates eq Point(acceptingStore.longitude!!, acceptingStore.latitude!!)))
-            .firstOrNull()?.let { row -> AcceptingStoreEntity.wrapRow(row) }
+                    (PhysicalStores.coordinates eq Point(acceptingStore.longitude!!, acceptingStore.latitude!!))
+            }).toList()
 
-        val storeDescriptions = store?.descriptions?.associate { it.language to it.description }
-        if (acceptingStore.discounts != storeDescriptions) {
+        if (stores.isEmpty()) {
             return null
         }
 
-        return store.id.value
+        val storesWithDescriptions = stores.groupBy(
+            keySelector = { it[AcceptingStores.id] },
+            valueTransform = { row ->
+                val language = row.getOrNull(AcceptingStoreDescriptions.language)
+                val description = row.getOrNull(AcceptingStoreDescriptions.description)
+                if (language != null && description != null) language to description else null
+            },
+        ).mapValues { (_, descriptionPairs) ->
+            descriptionPairs.filterNotNull().toMap()
+        }
+
+        val matchingStoreId = storesWithDescriptions.entries
+            .find { (_, descriptionMap) -> descriptionMap == acceptingStore.discounts }?.key
+
+        return matchingStoreId?.value
     }
 
     fun getAllIdsInProject(projectId: EntityID<Int>): MutableSet<Int> =
