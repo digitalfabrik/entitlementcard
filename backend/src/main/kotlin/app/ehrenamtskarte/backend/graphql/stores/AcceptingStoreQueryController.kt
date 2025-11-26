@@ -11,12 +11,12 @@ import app.ehrenamtskarte.backend.shared.Matomo
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import graphql.schema.DataFetchingEnvironment
-import jakarta.servlet.http.HttpServletRequest
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.ContextValue
 import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.stereotype.Controller
+import org.springframework.web.reactive.function.server.ServerRequest
 
 @Controller
 class AcceptingStoreQueryController(
@@ -67,7 +67,7 @@ class AcceptingStoreQueryController(
         @Argument project: String,
         @Argument params: SearchParams,
         dfe: DataFetchingEnvironment,
-        @GraphQLIgnore @ContextValue request: HttpServletRequest,
+        @GraphQLIgnore @ContextValue request: ServerRequest,
     ): List<AcceptingStore> {
         val projectConfig = backendConfig.getProjectConfig(project)
         val filteredStores = transaction {

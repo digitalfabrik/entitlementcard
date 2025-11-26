@@ -44,7 +44,6 @@ import extensionStartDayOrNull
 import graphql.schema.DataFetchingEnvironment
 import io.ktor.util.decodeBase64Bytes
 import io.ktor.util.encodeBase64
-import jakarta.servlet.http.HttpServletRequest
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -52,6 +51,7 @@ import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.ContextValue
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.stereotype.Controller
+import org.springframework.web.reactive.function.server.ServerRequest
 import java.security.SecureRandom
 import java.sql.Connection.TRANSACTION_REPEATABLE_READ
 import java.time.LocalDate
@@ -153,7 +153,7 @@ class CardMutationController(
         @Argument encodedCardInfo: String,
         @Argument generateStaticCode: Boolean,
         @GraphQLIgnore @ContextValue remoteIp: String,
-        @GraphQLIgnore @ContextValue request: HttpServletRequest,
+        @GraphQLIgnore @ContextValue request: ServerRequest,
         dfe: DataFetchingEnvironment,
     ): CardCreationResultModel {
         val config = backendConfiguration.getProjectConfig(project)
@@ -266,7 +266,7 @@ class CardMutationController(
         @Argument encodedCardInfos: List<String>,
         @Argument generateStaticCodes: Boolean,
         @Argument applicationIdToMarkAsProcessed: Int? = null,
-        @GraphQLIgnore @ContextValue request: HttpServletRequest,
+        @GraphQLIgnore @ContextValue request: ServerRequest,
     ): List<CardCreationResultModel> {
         val authContext = dfe.requireAuthContext()
         val projectConfig = backendConfiguration.getProjectConfig(authContext.project)
@@ -324,7 +324,7 @@ class CardMutationController(
         @Argument activationSecretBase64: String,
         @Argument overwrite: Boolean,
         @GraphQLIgnore @ContextValue remoteIp: String,
-        @GraphQLIgnore @ContextValue request: HttpServletRequest,
+        @GraphQLIgnore @ContextValue request: ServerRequest,
         dfe: DataFetchingEnvironment,
     ): CardActivationResultModel {
         val projectConfig = backendConfiguration.getProjectConfig(project)
