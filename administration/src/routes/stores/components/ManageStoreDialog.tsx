@@ -8,37 +8,24 @@ import ConfirmDialog from '../../../components/ConfirmDialog'
 import { useGetStoreCategoriesQuery } from '../../../generated/graphql'
 import { getBuildConfig } from '../../../util/getBuildConfig'
 import getQueryResult from '../../../util/getQueryResult'
-import { AcceptingStoresData } from '../../applications/types/types'
-import StoreForm, { AcceptingStoreFormData } from './StoreForm'
-
-const mapAcceptingStoreFormData = (store: AcceptingStoresData): AcceptingStoreFormData => ({
-  id: store.id,
-  name: store.name ?? '',
-  street: store.physicalStore?.address.street ?? '',
-  postalCode: store.physicalStore?.address.postalCode ?? '',
-  city: store.physicalStore?.address.location ?? '',
-  telephone: store.contact.telephone ?? '',
-  email: store.contact.email ?? '',
-  homepage: store.contact.website ?? '',
-  descriptionDe: store.description ?? '',
-  descriptionEn: '',
-  categoryId: store.category.id,
-})
+import StoreForm, { AcceptingStoreFormData, UpdateStoreFunction } from './StoreForm'
 
 const ManageStoreDialog = ({
   open,
   onClose,
-  activeStore,
+  acceptingStore,
   onConfirm,
   loading,
   isEditMode,
+  updateStore,
 }: {
   open: boolean
   onClose: () => void
   onConfirm: () => void
-  activeStore?: AcceptingStoresData
+  acceptingStore?: AcceptingStoreFormData
   isEditMode: boolean
   loading: boolean
+  updateStore: UpdateStoreFunction
 }): ReactElement => {
   const { t } = useTranslation('stores')
   const projectCategories = getBuildConfig(window.location.hostname).common.categories
@@ -54,7 +41,7 @@ const ManageStoreDialog = ({
     <ConfirmDialog
       open={open}
       onClose={onClose}
-      title={isEditMode ? t('storeEditDialogHeadline') : t('storedAddDialogHeadline')}
+      title={isEditMode ? t('storeEditDialogHeadline') : t('storeAddDialogHeadline')}
       id={isEditMode ? 'edit-store-dialog' : 'add-store-dialog'}
       onConfirm={onConfirm}
       loading={loading}
@@ -63,10 +50,11 @@ const ManageStoreDialog = ({
       confirmButtonIcon={<Edit />}>
       <Stack sx={{ gap: 2 }}>
         <Typography variant='body1' sx={{ color: grey[700] }}>
-          {isEditMode ? t('storesEditDialogDescription') : t('storesAddDialogDescription')}
+          {isEditMode ? t('storeEditDialogDescription') : t('storeAddDialogDescription')}
         </Typography>
         <StoreForm
-          activeStore={activeStore ? mapAcceptingStoreFormData(activeStore) : undefined}
+          acceptingStore={acceptingStore}
+          updateStore={updateStore}
           categories={categories.filter(category => projectCategories.includes(category.id))}
         />
       </Stack>

@@ -1,5 +1,5 @@
 import { Stack, Typography } from '@mui/material'
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import CardTextField from '../../../cards/extensions/components/CardTextField'
@@ -29,27 +29,16 @@ export type AcceptingStoreFormData = {
 }
 
 const StoreForm = ({
-  activeStore,
+  acceptingStore,
   categories,
+  updateStore,
 }: {
-  activeStore?: AcceptingStoreFormData
+  acceptingStore?: AcceptingStoreFormData
   categories: Category[]
+  updateStore: UpdateStoreFunction
 }): ReactElement => {
-  const [acceptingStore, setAcceptingStore] = useState<AcceptingStoreFormData | undefined>(activeStore)
-
   const { t } = useTranslation('storeForm')
-  const updateStore = <K extends keyof AcceptingStoreFormData>(field: K, value: AcceptingStoreFormData[K]) => {
-    setAcceptingStore(
-      prevStore =>
-        ({
-          ...prevStore,
-          [field]: value,
-        } as AcceptingStoreFormData)
-    )
-  }
 
-  console.log(activeStore)
-  console.log(acceptingStore)
   return (
     <Stack sx={{ gap: 2 }} direction='column'>
       <Typography variant='h6' marginY={1}>
