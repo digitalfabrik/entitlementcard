@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.import.stores.common.steps
 
+import app.ehrenamtskarte.backend.db.entities.LanguageCode
 import app.ehrenamtskarte.backend.import.stores.ImportConfig
 import app.ehrenamtskarte.backend.import.stores.PipelineStep
 import app.ehrenamtskarte.backend.import.stores.bayern.types.FilteredStore
@@ -52,7 +53,17 @@ class FilterDuplicates(
         val latitude = mapNotNull { it.latitude }.maxBy { it.toString().length }
 
         // Combine all descriptions because we have no way of knowing which is the correct one
-        val discounts = mapNotNull { it.discount }.toSet().joinToString("\n")
+        val mergedDiscounts = this
+            .flatMap { it.discounts.values }
+            .filter { it.isNotBlank() }
+            .toSet()
+            .joinToString("\n")
+
+        val discounts = if (mergedDiscounts.isNotBlank()) {
+            mapOf(LanguageCode.DE to mergedDiscounts)
+        } else {
+            emptyMap()
+        }
 
         return AcceptingStore(
             store.name,

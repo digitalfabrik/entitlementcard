@@ -1,12 +1,15 @@
 package app.ehrenamtskarte.backend.stores
 
 import app.ehrenamtskarte.backend.IntegrationTest
+import app.ehrenamtskarte.backend.db.entities.AcceptingStoreDescriptionEntity
+import app.ehrenamtskarte.backend.db.entities.AcceptingStoreDescriptions
 import app.ehrenamtskarte.backend.db.entities.AcceptingStoreEntity
 import app.ehrenamtskarte.backend.db.entities.AcceptingStores
 import app.ehrenamtskarte.backend.db.entities.AddressEntity
 import app.ehrenamtskarte.backend.db.entities.Addresses
 import app.ehrenamtskarte.backend.db.entities.ContactEntity
 import app.ehrenamtskarte.backend.db.entities.Contacts
+import app.ehrenamtskarte.backend.db.entities.LanguageCode
 import app.ehrenamtskarte.backend.db.entities.PhysicalStoreEntity
 import app.ehrenamtskarte.backend.db.entities.PhysicalStores
 import app.ehrenamtskarte.backend.generated.ImportAcceptingStores
@@ -38,6 +41,7 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
         transaction {
             PhysicalStores.deleteAll()
             Addresses.deleteAll()
+            AcceptingStoreDescriptions.deleteAll()
             AcceptingStores.deleteAll()
             Contacts.deleteAll()
         }
@@ -114,11 +118,16 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
             val acceptanceStore = AcceptingStoreEntity.all().single()
 
             assertEquals("Test store", acceptanceStore.name)
-            assertEquals("100% Ermäßigung\n\n100% discount", acceptanceStore.description)
             assertEquals(17, acceptanceStore.categoryId.value)
             assertEquals(2, acceptanceStore.projectId.value)
             assertEquals(95, acceptanceStore.regionId?.value)
             assertNotNull(acceptanceStore.createdDate)
+
+            val descriptions = AcceptingStoreDescriptionEntity.all().associate { it.language to it.description }
+
+            assertEquals(2, descriptions.size)
+            assertEquals("100% Ermäßigung", descriptions[LanguageCode.DE])
+            assertEquals("100% discount", descriptions[LanguageCode.EN])
 
             val contact = ContactEntity.all().single()
 
@@ -169,7 +178,7 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
             val acceptanceStore = AcceptingStoreEntity.all().single()
 
             assertEquals("Test store", acceptanceStore.name)
-            assertNull(acceptanceStore.description)
+            assertEquals(0, acceptanceStore.descriptions.count())
             assertEquals(17, acceptanceStore.categoryId.value)
             assertEquals(2, acceptanceStore.projectId.value)
             assertEquals(95, acceptanceStore.regionId?.value)

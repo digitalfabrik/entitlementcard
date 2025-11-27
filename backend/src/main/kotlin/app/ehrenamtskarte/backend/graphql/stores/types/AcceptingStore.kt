@@ -18,14 +18,22 @@ data class AcceptingStore(
     val categoryId: Int,
 ) {
     companion object {
-        fun fromDbEntity(entity: AcceptingStoreEntity) =
-            AcceptingStore(
+        fun fromDbEntity(entity: AcceptingStoreEntity): AcceptingStore {
+            // merge descriptions from all languages into a single string for backward compatibility
+            val description = entity.descriptions
+                .map { it.description }
+                .filterNot { it.isNullOrBlank() }
+                .joinToString(separator = "\n\n")
+                .ifEmpty { null }
+
+            return AcceptingStore(
                 id = entity.id.value,
                 name = entity.name,
-                description = entity.description,
+                description = description,
                 contactId = entity.contactId.value,
                 categoryId = entity.categoryId.value,
             )
+        }
     }
 
     // Dummy functions for compatibility with the schema generator.

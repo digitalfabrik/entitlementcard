@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.helper
 
+import app.ehrenamtskarte.backend.db.entities.AcceptingStoreDescriptions
 import app.ehrenamtskarte.backend.db.entities.AcceptingStoreEntity
 import app.ehrenamtskarte.backend.db.entities.AcceptingStores
 import app.ehrenamtskarte.backend.db.entities.Addresses
@@ -12,6 +13,7 @@ import app.ehrenamtskarte.backend.db.entities.Applications
 import app.ehrenamtskarte.backend.db.entities.Cards
 import app.ehrenamtskarte.backend.db.entities.CodeType
 import app.ehrenamtskarte.backend.db.entities.Contacts
+import app.ehrenamtskarte.backend.db.entities.LanguageCode
 import app.ehrenamtskarte.backend.db.entities.PhysicalStores
 import app.ehrenamtskarte.backend.db.entities.UserEntitlements
 import app.ehrenamtskarte.backend.db.entities.UserEntitlementsEntity
@@ -82,7 +84,6 @@ object TestData {
 
     fun createAcceptingStore(
         name: String = "Test store",
-        description: String? = "100% Ermäßigung\n\n100% discount",
         street: String = "Teststr. 10",
         postalCode: String = "90408",
         location: String = "Nürnberg",
@@ -108,13 +109,22 @@ object TestData {
             }
             val acceptingStoreRow = AcceptingStores.insert {
                 it[AcceptingStores.name] = name
-                it[AcceptingStores.description] = description
                 it[AcceptingStores.contactId] = contactId
                 it[AcceptingStores.categoryId] = categoryId
                 it[AcceptingStores.regionId] = regionId
                 it[AcceptingStores.projectId] = projectId
             }.resultedValues!!.first()
             val acceptingStoreEntity = AcceptingStoreEntity.wrapRow(acceptingStoreRow)
+            AcceptingStoreDescriptions.insert {
+                it[AcceptingStoreDescriptions.storeId] = acceptingStoreEntity.id.value
+                it[AcceptingStoreDescriptions.description] = "100% Ermäßigung"
+                it[AcceptingStoreDescriptions.language] = LanguageCode.DE
+            }
+            AcceptingStoreDescriptions.insert {
+                it[AcceptingStoreDescriptions.storeId] = acceptingStoreEntity.id.value
+                it[AcceptingStoreDescriptions.description] = "100% discount"
+                it[AcceptingStoreDescriptions.language] = LanguageCode.EN
+            }
             PhysicalStores.insert {
                 it[PhysicalStores.storeId] = acceptingStoreEntity.id.value
                 it[PhysicalStores.addressId] = addressId

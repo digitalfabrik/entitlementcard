@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.graphql.stores
 
+import app.ehrenamtskarte.backend.db.entities.LanguageCode
 import app.ehrenamtskarte.backend.db.entities.mayUpdateStoresInProject
 import app.ehrenamtskarte.backend.db.repositories.AcceptingStoresRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
@@ -87,9 +88,14 @@ class AcceptingStoresMutationService {
 }
 
 fun mapCsvToStore(csvStore: CSVAcceptingStore): AcceptingStore {
-    val discount = listOf(csvStore.discountDE, csvStore.discountEN)
-        .filterNot { it.isNullOrEmpty() }
-        .joinToString("\n\n")
+    val discounts = buildMap {
+        csvStore.discountDE?.clean(false)?.let {
+            put(LanguageCode.DE, it)
+        }
+        csvStore.discountEN?.clean(false)?.let {
+            put(LanguageCode.EN, it)
+        }
+    }
     return AcceptingStore(
         csvStore.name.clean()!!,
         COUNTRY_CODE,
@@ -104,7 +110,7 @@ fun mapCsvToStore(csvStore: CSVAcceptingStore): AcceptingStore {
         csvStore.email.clean(false),
         csvStore.telephone.clean(false),
         csvStore.homepage.clean(false),
-        discount.clean(false),
+        discounts,
         freinetId = null,
         districtName = null,
     )

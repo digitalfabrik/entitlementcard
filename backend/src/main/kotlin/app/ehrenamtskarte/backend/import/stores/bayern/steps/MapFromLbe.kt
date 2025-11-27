@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.import.stores.bayern.steps
 
+import app.ehrenamtskarte.backend.db.entities.LanguageCode
 import app.ehrenamtskarte.backend.import.ALTERNATIVE_MISCELLANEOUS_CATEGORY_ID
 import app.ehrenamtskarte.backend.import.COUNTRY_CODE
 import app.ehrenamtskarte.backend.import.MISCELLANEOUS_CATEGORY_ID
@@ -22,6 +23,10 @@ class MapFromLbe(
     override fun execute(input: List<LbeAcceptingStore>) =
         input.mapNotNull {
             try {
+                val discounts = it.discount.clean(false)?.let { discount ->
+                    mapOf(LanguageCode.DE to discount)
+                } ?: emptyMap()
+
                 AcceptingStore(
                     it.name.clean()!!,
                     COUNTRY_CODE,
@@ -36,7 +41,7 @@ class MapFromLbe(
                     it.email.clean(),
                     it.telephone.clean(),
                     it.homepage.clean(),
-                    it.discount.clean(false),
+                    discounts,
                     it.freinetId.clean()?.toInt(),
                     it.districtName.clean(),
                 )
