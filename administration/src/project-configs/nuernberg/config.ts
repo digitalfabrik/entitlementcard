@@ -68,6 +68,7 @@ const config: ProjectConfig = {
   storesManagement: storesManagementConfig,
   userImportApiEnabled: false,
   showBirthdayExtensionHint: false,
+  locales: buildConfigNuernberg.common.appLocales,
 }
 
 export default config

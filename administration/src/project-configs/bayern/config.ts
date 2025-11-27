@@ -111,6 +111,7 @@ const config: ProjectConfig = {
   },
   userImportApiEnabled: false,
   showBirthdayExtensionHint: false,
+  locales: buildConfigBayern.common.appLocales,
 }
 
 export default config
