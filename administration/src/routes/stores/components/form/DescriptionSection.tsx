@@ -4,10 +4,9 @@ import { Trans, useTranslation } from 'react-i18next'
 
 import CardTextField from '../../../../cards/extensions/components/CardTextField'
 import { ProjectConfigContext } from '../../../../project-configs/ProjectConfigContext'
-import { AcceptingStoreFormData, UpdateStoreFunction } from '../StoreForm'
-import { descriptionValidation } from './validation'
+import type { AcceptingStoreFormData, UpdateStoreFunction } from '../StoreForm'
+import { DESCRIPTION_MAX_CHARS, descriptionValidation } from './validation'
 
-export const DESCRIPTION_MAX_CHARS = 2000
 const DescriptionSection = ({
   acceptingStore,
   updateStore,

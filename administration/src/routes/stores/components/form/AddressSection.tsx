@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import CardTextField from '../../../../cards/extensions/components/CardTextField'
 import AlertBox from '../../../../components/AlertBox'
 import { getStoreCoordinates } from '../../../region/util/storeGeoDataService'
-import { AcceptingStoreFormData, UpdateStoreFunction } from '../StoreForm'
+import type { AcceptingStoreFormData, UpdateStoreFunction } from '../StoreForm'
 import { cityValidation, postalCodeValidation, streetValidation } from './validation'
 
 const AddressSection = ({

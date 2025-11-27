@@ -1,8 +1,7 @@
 import React, { ReactElement } from 'react'
 import { Trans } from 'react-i18next'
 
-import { DESCRIPTION_MAX_CHARS } from './DescriptionSection'
-
+export const DESCRIPTION_MAX_CHARS = 2000
 const VALIDATION_CONSTANTS = {
   NAME: { min: 3, max: 150 },
   STREET: { min: 3, max: 100 },

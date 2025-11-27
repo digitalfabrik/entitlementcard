@@ -4,7 +4,7 @@ import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import CardTextField from '../../../../cards/extensions/components/CardTextField'
-import { AcceptingStoreFormData, UpdateStoreFunction } from '../StoreForm'
+import type { AcceptingStoreFormData, UpdateStoreFunction } from '../StoreForm'
 
 const ContactSection = ({
   acceptingStore,
