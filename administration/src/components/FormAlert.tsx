@@ -20,13 +20,13 @@ const Container = styled('span', {
 }))
 
 type FormAlertProps = {
-  errorMessage: string | null | undefined
+  errorMessage: string | ReactElement | null | undefined
   isToast?: boolean
   severity?: 'info' | 'error'
 }
 
 const FormAlert = ({ errorMessage, isToast = false, severity = 'error' }: FormAlertProps): ReactElement | null =>
-  errorMessage ? (
+  errorMessage !== null ? (
     <Container $severity={severity} $isToast={isToast} data-testid='form-alert'>
       <InfoOutlined />
       <Typography>{errorMessage}</Typography>
