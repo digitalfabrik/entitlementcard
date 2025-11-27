@@ -17,8 +17,6 @@ const customToolBarStyles: SxProps = {
   '.MuiDataGrid-toolbar': { '.MuiDivider-vertical': { display: 'none' } },
 }
 
-// TODO 2471 Implement Menu and enable cell
-
 const EMailCell = ({ email }: { email: string }): ReactElement => <Link href={`mailto:${email}`}>{email}</Link>
 const columns = (t: TFunction, editStore: (storeId: number) => void): GridColDef[] => [
   {

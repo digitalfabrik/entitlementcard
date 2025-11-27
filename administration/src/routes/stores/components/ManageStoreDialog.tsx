@@ -35,14 +35,14 @@ const ManageStoreDialog = ({
       id={isEditMode ? 'edit-store-dialog' : 'add-store-dialog'}
       onConfirm={onConfirm}
       loading={loading}
+      maxWidth='md'
       confirmButtonText={t('misc:save')}
       confirmButtonIcon={<Edit />}>
       <Stack sx={{ gap: 2 }}>
         <Typography variant='body1' sx={{ color: grey[700] }}>
           {isEditMode ? t('storesEditDialogDescription') : t('storesAddDialogDescription')}
         </Typography>
-        <div>{activeStore?.name}</div>
-        <StoreForm />
+        <StoreForm activeStore={activeStore} />
       </Stack>
     </ConfirmDialog>
   )
