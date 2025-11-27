@@ -55,13 +55,16 @@ fi
 # create conffiles file
 if [[ -n "$configfile" ]]; then
     echo "$configfile" >> "${debworkdir}/DEBIAN/conffiles"
+else
+    echo "Warning: config file '$configfile' not found"
+#    exit 1
 fi
 
 # copy files to deb workdir
 if [[ -n "$tarfile" ]]; then
-    echo "Copying $tarfile …"
+    echo "Unpacking $tarfile …"
     mkdir -p "${debworkdir}/opt/ehrenamtskarte/backend"
-    tar -xf "$tarfile" -C "${debworkdir}/opt/ehrenamtskarte"
+    tar -xf "$tarfile" -C "${debworkdir}/opt/ehrenamtskarte" --verbose
 
     # create postinst for db migration to ensure that after every package upgrade a database migration runs
     postinstfile="${debworkdir}/DEBIAN/postinst"
@@ -72,22 +75,32 @@ if [[ -n "$tarfile" ]]; then
     echo "sudo -u backend /opt/ehrenamtskarte/backend/bin/backend migrate" >> "$postinstfile"
    # TODO https://github.com/digitalfabrik/entitlementcard/issues/2266
    # echo "systemctl restart eak-backend.service" >> "$postinstfile"
+else
+    echo "Warning: tar file '$tarfile' not found"
 fi
+
 if [[ -n "$servicefile" ]]; then
     echo "Copying $servicefile …"
     mkdir -p "${debworkdir}/etc/systemd/system"
     cp "$servicefile" "${debworkdir}/etc/systemd/system/${name}.service"
+else
+    echo "Warning: service file '$servicefile' not found"
 fi
+
 if [[ -n "$adminfolder" ]]; then
     echo "Copying $adminfolder …"
     mkdir -p "${debworkdir}/opt/ehrenamtskarte/administration"
     cp -r "$adminfolder/"* "${debworkdir}/opt/ehrenamtskarte/administration"
-
+else
+    echo "Warning: admin directory '$adminfolder' not found"
 fi
+
 if [[ -n "$martinfolder" ]]; then
     echo "Copying $martinfolder …"
     mkdir -p "${debworkdir}/opt/ehrenamtskarte/martin"
     cp -r "$martinfolder/"* "${debworkdir}/opt/ehrenamtskarte/martin"
+else
+    echo "Warning: martin directory '$martinfolder' not found"
 fi
 
 
