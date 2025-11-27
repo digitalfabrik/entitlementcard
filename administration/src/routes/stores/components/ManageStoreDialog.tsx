@@ -18,6 +18,8 @@ const ManageStoreDialog = ({
   loading,
   isEditMode,
   updateStore,
+  closeOnConfirm,
+  formSendAttempt,
 }: {
   open: boolean
   onClose: () => void
@@ -25,7 +27,9 @@ const ManageStoreDialog = ({
   acceptingStore?: AcceptingStoreFormData
   isEditMode: boolean
   loading: boolean
+  closeOnConfirm?: boolean
   updateStore: UpdateStoreFunction
+  formSendAttempt: boolean
 }): ReactElement => {
   const { t } = useTranslation('stores')
   const projectCategories = getBuildConfig(window.location.hostname).common.categories
@@ -46,6 +50,7 @@ const ManageStoreDialog = ({
       onConfirm={onConfirm}
       loading={loading}
       maxWidth='md'
+      closeOnConfirm={closeOnConfirm}
       confirmButtonText={t('misc:save')}
       confirmButtonIcon={<Edit />}>
       <Stack sx={{ gap: 2 }}>
@@ -55,6 +60,7 @@ const ManageStoreDialog = ({
         <StoreForm
           acceptingStore={acceptingStore}
           updateStore={updateStore}
+          formSendAttempt={formSendAttempt}
           categories={categories.filter(category => projectCategories.includes(category.id))}
         />
       </Stack>

@@ -84,7 +84,7 @@ const StoresListTable = ({
         initialState={{
           columns: {
             columnVisibilityModel: {
-              // Show menu only in development mode
+              // TODO #2692 Remove this after implementation
               id: isDevelopmentEnvironment(),
             },
           },

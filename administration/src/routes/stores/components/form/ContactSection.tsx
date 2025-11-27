@@ -9,14 +9,16 @@ import { AcceptingStoreFormData, UpdateStoreFunction } from '../StoreForm'
 const ContactSection = ({
   acceptingStore,
   updateStore,
+  formSendAttempt,
 }: {
   acceptingStore?: AcceptingStoreFormData
   updateStore: UpdateStoreFunction
+  formSendAttempt: boolean
 }): ReactElement => {
   const { t } = useTranslation('storeForm')
   return (
     <>
-      <Typography variant='h6' marginY={1}>
+      <Typography variant='h6' marginY={0.5}>
         {t('contactSection')}
       </Typography>
       <Box sx={{ flexDirection: 'row', gap: 2, display: 'flex' }}>
@@ -27,6 +29,7 @@ const ContactSection = ({
           value={acceptingStore?.telephone ?? ''}
           onChange={value => updateStore('telephone', value)}
           showError={false}
+          forceError={formSendAttempt}
           errorMessage={null}
           sx={{ flex: '0 0 50%' }}
         />
@@ -35,6 +38,7 @@ const ContactSection = ({
           label={t('emailLabel')}
           placeholder={t('emailPlaceholder')}
           value={acceptingStore?.email ?? ''}
+          forceError={formSendAttempt}
           onChange={value => updateStore('email', value)}
           showError={false}
           errorMessage={null}
@@ -45,6 +49,7 @@ const ContactSection = ({
         label={t('homepageLabel')}
         placeholder={t('homepagePlaceholder')}
         value={acceptingStore?.homepage ?? ''}
+        forceError={formSendAttempt}
         onChange={value => updateStore('homepage', value)}
         showError={false}
         errorMessage={null}

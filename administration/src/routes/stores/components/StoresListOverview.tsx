@@ -1,17 +1,24 @@
-import { AddBusinessOutlined, FileUpload, AddBusiness } from '@mui/icons-material'
+import { AddBusiness, AddBusinessOutlined, FileUpload } from '@mui/icons-material'
 import { Box, Button } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Blankslate from '../../../components/Blankslate'
+import { isDevelopmentEnvironment } from '../../../util/helper'
 import { AcceptingStoresData } from '../../applications/types/types'
 import ManageStoreDialog from './ManageStoreDialog'
 import { AcceptingStoreFormData } from './StoreForm'
 import StoresListTable from './StoresListTable'
-import { isDevelopmentEnvironment } from '../../../util/helper'
+import {
+  cityValidation,
+  coordinatesInvalid,
+  descriptionValidation,
+  nameValidation,
+  streetValidation,
+} from './form/validation'
 
-const mapAcceptingStoreFormData = (store: AcceptingStoresData): AcceptingStoreFormData => ({
+const initializeAcceptingStoreForm = (store: AcceptingStoresData): AcceptingStoreFormData => ({
   id: store.id,
   name: store.name ?? '',
   street: store.physicalStore?.address.street ?? '',
@@ -24,28 +31,49 @@ const mapAcceptingStoreFormData = (store: AcceptingStoresData): AcceptingStoreFo
   // TODO 2692 map english description field
   descriptionEn: '',
   categoryId: store.category.id,
+  longitude: store.physicalStore?.coordinates.lng ?? undefined,
+  latitude: store.physicalStore?.coordinates.lat ?? undefined,
 })
 const StoresListOverview = ({ data }: { data: AcceptingStoresData[] }): ReactElement => {
   const { t } = useTranslation('stores')
   const [openEditDialog, setOpenEditDialog] = useState(false)
+  const [formSendAttempt, setFormSendAttempt] = useState(false)
   const [acceptingStore, setAcceptingStore] = useState<AcceptingStoreFormData>()
   const { enqueueSnackbar } = useSnackbar()
+  const isStoreFormInvalid = [
+    nameValidation(acceptingStore?.name).invalid,
+    streetValidation(acceptingStore?.street).invalid,
+    cityValidation(acceptingStore?.city).invalid,
+    descriptionValidation(acceptingStore?.descriptionDe).invalid,
+    descriptionValidation(acceptingStore?.descriptionEn).invalid,
+    coordinatesInvalid(acceptingStore?.latitude, acceptingStore?.longitude),
+  ].some(Boolean)
 
-  const editStore = (storeId: number) => {
+  const openEditStoreDialog = (storeId: number) => {
     const activeStore = data.find(store => store.id === storeId)
     if (activeStore) {
       setOpenEditDialog(true)
-      setAcceptingStore(mapAcceptingStoreFormData(activeStore))
+      setAcceptingStore(initializeAcceptingStoreForm(activeStore))
     }
   }
-
-  // TODO #2472 send data to the addStore endpoint
-  const addStore = () => {
-      setOpenEditDialog(true)
+  const openAddStoreDialog = () => {
+    setOpenEditDialog(true)
   }
 
-  // TODO 2692 send data to the editStore endpoint
+  const closeStoreDialog = () => {
+    setAcceptingStore(undefined)
+    setFormSendAttempt(false)
+    setOpenEditDialog(false)
+  }
+
+  // TODO #2692 send data to the editStore endpoint if there is a storeId
+  // TODO #2472 send data to the addStore endpoint if there is no storeId
   const saveStore = () => {
+    setFormSendAttempt(true)
+    if (isStoreFormInvalid) {
+      enqueueSnackbar(t('storeForm:errorInvalidStoreForm'), { variant: 'error' })
+      return
+    }
     enqueueSnackbar('Save action not yet implemented.', { variant: 'warning' })
   }
 
@@ -66,7 +94,7 @@ const StoresListOverview = ({ data }: { data: AcceptingStoresData[] }): ReactEle
   )
 
   const addStoreButton = (
-    <Button color='primary' variant='contained' startIcon={<AddBusiness />} onClick={addStore}>
+    <Button color='primary' variant='contained' startIcon={<AddBusiness />} onClick={openAddStoreDialog}>
       {t('addStoreButton')}
     </Button>
   )
@@ -79,17 +107,18 @@ const StoresListOverview = ({ data }: { data: AcceptingStoresData[] }): ReactEle
           icon={<AddBusinessOutlined color='disabled' sx={{ fontSize: '64px' }} />}
           title={t('storesListOverviewNoEntryTitle')}
           description={t('storesListOverviewNoEntryDescription')}>
-          {addStoreButton}
+          {/* TODO 2692 remove this button when the addStore endpoint is implemented */}
+          {isDevelopmentEnvironment() ? addStoreButton : undefined}
           {fileUploadButton}
         </Blankslate>
       ) : (
         <>
-          <Box sx={{ py: 2, justifyContent: 'flex-end', display: 'flex', gap:2 }}>
+          <Box sx={{ py: 2, justifyContent: 'flex-end', display: 'flex', gap: 2 }}>
             {/* TODO 2692 remove this button when the addStore endpoint is implemented */}
             {isDevelopmentEnvironment() && addStoreButton}
             {fileUploadButton}
           </Box>
-          <StoresListTable data={data} editStore={editStore} />
+          <StoresListTable data={data} editStore={openEditStoreDialog} />
         </>
       )}
       <ManageStoreDialog
@@ -97,9 +126,11 @@ const StoresListOverview = ({ data }: { data: AcceptingStoresData[] }): ReactEle
         open={openEditDialog}
         isEditMode={acceptingStore !== undefined}
         acceptingStore={acceptingStore}
+        closeOnConfirm={!isStoreFormInvalid}
         updateStore={updateStore}
-        onClose={() => setOpenEditDialog(false)}
+        onClose={closeStoreDialog}
         onConfirm={saveStore}
+        formSendAttempt={formSendAttempt}
       />
     </>
   )
