@@ -584,6 +584,7 @@
     "regionManagerRight2": "Kann Anträge in seiner Region verwalten.",
     "externalVerifiedApiUser1": "Externer Nutzer (z.B. Verein360) kann Anträge erstellen,",
     "externalVerifiedApiUser2": "die bereits beim Anlegen automatisch durch die Organisation verifiziert sind.",
+    "projectStoreManagerRight": "Kann Akzeptanzstellen verwalten.",
     "noRights": "Keine",
     "projectAdmin": "Administrator",
     "projectStoreManager": "Akzeptanzpartnerverwaltung",
