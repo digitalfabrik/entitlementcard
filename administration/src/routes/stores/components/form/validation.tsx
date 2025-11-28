@@ -1,6 +1,8 @@
 import React, { ReactElement } from 'react'
 import { Trans } from 'react-i18next'
 
+import { AcceptingStoreFormData } from '../StoreForm'
+
 export const DESCRIPTION_MAX_CHARS = 2000
 const VALIDATION_CONSTANTS = {
   NAME: { min: 3, max: 150 },
@@ -116,3 +118,13 @@ export const descriptionValidation = (description?: string): FormValidation => {
 
 export const coordinatesInvalid = (latitude?: number, longitude?: number): boolean =>
   latitude === undefined || longitude === undefined
+
+export const isStoreFormInvalid = (acceptingStore: AcceptingStoreFormData): boolean =>
+  [
+    nameValidation(acceptingStore.name).invalid,
+    streetValidation(acceptingStore.street).invalid,
+    cityValidation(acceptingStore.city).invalid,
+    descriptionValidation(acceptingStore.descriptionDe).invalid,
+    descriptionValidation(acceptingStore.descriptionEn).invalid,
+    coordinatesInvalid(acceptingStore.latitude, acceptingStore.longitude),
+  ].some(Boolean)

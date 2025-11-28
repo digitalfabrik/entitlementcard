@@ -6,18 +6,13 @@ import { useTranslation } from 'react-i18next'
 
 import Blankslate from '../../../components/Blankslate'
 import { isDevelopmentEnvironment } from '../../../util/helper'
+import { trimStringFields } from '../../../util/normalizeString'
 import { AcceptingStoresData } from '../../applications/types/types'
 import { getStoreCoordinates } from '../../region/util/storeGeoDataService'
 import ManageStoreDialog from './ManageStoreDialog'
 import { AcceptingStoreFormData } from './StoreForm'
 import StoresListTable from './StoresListTable'
-import {
-  cityValidation,
-  coordinatesInvalid,
-  descriptionValidation,
-  nameValidation,
-  streetValidation,
-} from './form/validation'
+import { isStoreFormInvalid } from './form/validation'
 
 const initializeAcceptingStoreForm = (store: AcceptingStoresData): AcceptingStoreFormData => ({
   id: store.id,
@@ -43,14 +38,7 @@ const StoresListOverview = ({ data }: { data: AcceptingStoresData[] }): ReactEle
   const [showAddressError, setShowAddressError] = useState(false)
   const [acceptingStore, setAcceptingStore] = useState<AcceptingStoreFormData>()
   const { enqueueSnackbar } = useSnackbar()
-  const isStoreFormInvalid = [
-    nameValidation(acceptingStore?.name).invalid,
-    streetValidation(acceptingStore?.street).invalid,
-    cityValidation(acceptingStore?.city).invalid,
-    descriptionValidation(acceptingStore?.descriptionDe).invalid,
-    descriptionValidation(acceptingStore?.descriptionEn).invalid,
-    coordinatesInvalid(acceptingStore?.latitude, acceptingStore?.longitude),
-  ].some(Boolean)
+  const formFieldsAreValid = acceptingStore !== undefined && !isStoreFormInvalid(acceptingStore)
 
   const openEditStoreDialog = (storeId: number) => {
     const activeStore = data.find(store => store.id === storeId)
@@ -70,15 +58,16 @@ const StoresListOverview = ({ data }: { data: AcceptingStoresData[] }): ReactEle
     setOpenEditDialog(false)
   }
 
-  // TODO #2692 send data to the editStore endpoint if there is a storeId
-  // TODO #2472 send data to the addStore endpoint if there is no storeId
   const saveStore = () => {
     setFormSendAttempt(true)
-    if (isStoreFormInvalid) {
+    if (formFieldsAreValid) {
+      enqueueSnackbar('Save action not yet implemented.', { variant: 'warning' })
+      // TODO #2472 send data to the addStore endpoint if there is no acceptingStore.id
+      // TODO #2692 send data to the editStore endpoint if there is acceptingStore.id
+      console.log(trimStringFields(acceptingStore))
+    } else {
       enqueueSnackbar(t('storeForm:errorInvalidStoreForm'), { variant: 'error' })
-      return
     }
-    enqueueSnackbar('Save action not yet implemented.', { variant: 'warning' })
   }
 
   const updateStore = <K extends keyof AcceptingStoreFormData>(field: K, value: AcceptingStoreFormData[K]) => {
@@ -148,7 +137,7 @@ const StoresListOverview = ({ data }: { data: AcceptingStoresData[] }): ReactEle
         showAddressError={showAddressError}
         isEditMode={acceptingStore !== undefined}
         acceptingStore={acceptingStore}
-        closeOnConfirm={!isStoreFormInvalid}
+        closeOnConfirm={formFieldsAreValid}
         updateStore={updateStore}
         onClose={closeStoreDialog}
         onConfirm={saveStore}
