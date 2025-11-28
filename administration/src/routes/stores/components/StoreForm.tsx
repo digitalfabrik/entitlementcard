@@ -32,15 +32,19 @@ export type AcceptingStoreFormData = {
 }
 
 const StoreForm = ({
-  acceptingStore,
   categories,
   updateStore,
   formSendAttempt,
+  getAddressCoordinates,
+  showAddressError,
+  acceptingStore,
 }: {
-  acceptingStore?: AcceptingStoreFormData
   categories: Category[]
   updateStore: UpdateStoreFunction
   formSendAttempt: boolean
+  getAddressCoordinates: () => void
+  showAddressError: boolean
+  acceptingStore?: AcceptingStoreFormData
 }): ReactElement => {
   const { t } = useTranslation('storeForm')
 
@@ -60,7 +64,13 @@ const StoreForm = ({
         errorMessage={nameValidation(acceptingStore?.name).message}
         required
       />
-      <AddressSection acceptingStore={acceptingStore} updateStore={updateStore} formSendAttempt={formSendAttempt} />
+      <AddressSection
+        acceptingStore={acceptingStore}
+        updateStore={updateStore}
+        formSendAttempt={formSendAttempt}
+        getAddressCoordinates={getAddressCoordinates}
+        showAddressError={showAddressError}
+      />
       <CategorySection
         acceptingStore={acceptingStore}
         updateStore={updateStore}

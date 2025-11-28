@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 import Blankslate from '../../../components/Blankslate'
 import { isDevelopmentEnvironment } from '../../../util/helper'
 import { AcceptingStoresData } from '../../applications/types/types'
+import { getStoreCoordinates } from '../../region/util/storeGeoDataService'
 import ManageStoreDialog from './ManageStoreDialog'
 import { AcceptingStoreFormData } from './StoreForm'
 import StoresListTable from './StoresListTable'
@@ -38,6 +39,8 @@ const StoresListOverview = ({ data }: { data: AcceptingStoresData[] }): ReactEle
   const { t } = useTranslation('stores')
   const [openEditDialog, setOpenEditDialog] = useState(false)
   const [formSendAttempt, setFormSendAttempt] = useState(false)
+  const [isFetchingCoordinates, setIsFetchingCoordinates] = useState(false)
+  const [showAddressError, setShowAddressError] = useState(false)
   const [acceptingStore, setAcceptingStore] = useState<AcceptingStoreFormData>()
   const { enqueueSnackbar } = useSnackbar()
   const isStoreFormInvalid = [
@@ -63,6 +66,7 @@ const StoresListOverview = ({ data }: { data: AcceptingStoresData[] }): ReactEle
   const closeStoreDialog = () => {
     setAcceptingStore(undefined)
     setFormSendAttempt(false)
+    setShowAddressError(false)
     setOpenEditDialog(false)
   }
 
@@ -85,6 +89,23 @@ const StoresListOverview = ({ data }: { data: AcceptingStoresData[] }): ReactEle
           [field]: value,
         } as AcceptingStoreFormData)
     )
+  }
+
+  const getAddressCoordinates = () => {
+    if (acceptingStore !== undefined && acceptingStore.street.length > 0 && acceptingStore.city.length > 0) {
+      setIsFetchingCoordinates(true)
+      Promise.resolve(getStoreCoordinates(acceptingStore.city, acceptingStore.street))
+        .then(position => {
+          const hasValidPosition = position?.length === 2
+          updateStore('longitude', hasValidPosition ? position[0] : undefined)
+          updateStore('latitude', hasValidPosition ? position[1] : undefined)
+          setShowAddressError(!hasValidPosition)
+        })
+        .catch(() => {
+          enqueueSnackbar(t('storeForm:errorGeoServiceNotReachable'), { variant: 'error' })
+        })
+        .finally(() => setIsFetchingCoordinates(false))
+    }
   }
 
   const fileUploadButton = (
@@ -122,8 +143,9 @@ const StoresListOverview = ({ data }: { data: AcceptingStoresData[] }): ReactEle
         </>
       )}
       <ManageStoreDialog
-        loading={false}
+        loading={isFetchingCoordinates}
         open={openEditDialog}
+        showAddressError={showAddressError}
         isEditMode={acceptingStore !== undefined}
         acceptingStore={acceptingStore}
         closeOnConfirm={!isStoreFormInvalid}
@@ -131,6 +153,7 @@ const StoresListOverview = ({ data }: { data: AcceptingStoresData[] }): ReactEle
         onClose={closeStoreDialog}
         onConfirm={saveStore}
         formSendAttempt={formSendAttempt}
+        getAddressCoordinates={getAddressCoordinates}
       />
     </>
   )

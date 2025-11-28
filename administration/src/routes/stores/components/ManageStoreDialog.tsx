@@ -13,23 +13,27 @@ import StoreForm, { AcceptingStoreFormData, UpdateStoreFunction } from './StoreF
 const ManageStoreDialog = ({
   open,
   onClose,
-  acceptingStore,
   onConfirm,
   loading,
   isEditMode,
   updateStore,
   closeOnConfirm,
   formSendAttempt,
+  getAddressCoordinates,
+  showAddressError,
+  acceptingStore,
 }: {
   open: boolean
   onClose: () => void
   onConfirm: () => void
-  acceptingStore?: AcceptingStoreFormData
   isEditMode: boolean
   loading: boolean
-  closeOnConfirm?: boolean
+  closeOnConfirm: boolean
   updateStore: UpdateStoreFunction
   formSendAttempt: boolean
+  getAddressCoordinates: () => void
+  showAddressError: boolean
+  acceptingStore?: AcceptingStoreFormData
 }): ReactElement => {
   const { t } = useTranslation('stores')
   const projectCategories = getBuildConfig(window.location.hostname).common.categories
@@ -58,6 +62,8 @@ const ManageStoreDialog = ({
           {isEditMode ? t('storeEditDialogDescription') : t('storeAddDialogDescription')}
         </Typography>
         <StoreForm
+          getAddressCoordinates={getAddressCoordinates}
+          showAddressError={showAddressError}
           acceptingStore={acceptingStore}
           updateStore={updateStore}
           formSendAttempt={formSendAttempt}
