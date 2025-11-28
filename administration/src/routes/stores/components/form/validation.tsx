@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import { Trans } from 'react-i18next'
 
-import { AcceptingStoreFormData } from '../StoreForm'
+import { AcceptingStoreFormData } from '../../types'
 
 export const DESCRIPTION_MAX_CHARS = 2000
 const VALIDATION_CONSTANTS = {
@@ -18,7 +18,6 @@ export type FormValidation = {
   message: string | ReactElement | null
 }
 
-// Hilfsfunktionen für häufig verwendete Validierungen
 const requiredFieldError = (): FormValidation => ({
   invalid: true,
   message: <Trans i18nKey='storeForm:errorRequiredField' />,

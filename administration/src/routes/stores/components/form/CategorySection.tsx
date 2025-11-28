@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import CustomSelect from '../../../../components/CustomSelect'
 import { Category } from '../../../../generated/graphql'
-import type { AcceptingStoreFormData, UpdateStoreFunction } from '../StoreForm'
+import type { AcceptingStoreFormData, UpdateStoreFunction } from '../../types'
 
 const CategorySection = ({
   acceptingStore,

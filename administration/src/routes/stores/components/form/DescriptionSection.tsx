@@ -4,7 +4,7 @@ import { Trans, useTranslation } from 'react-i18next'
 
 import CardTextField from '../../../../cards/extensions/components/CardTextField'
 import { ProjectConfigContext } from '../../../../project-configs/ProjectConfigContext'
-import type { AcceptingStoreFormData, UpdateStoreFunction } from '../StoreForm'
+import type { AcceptingStoreFormData, UpdateStoreFunction } from '../../types'
 import { DESCRIPTION_MAX_CHARS, descriptionValidation } from './validation'
 
 const DescriptionSection = ({

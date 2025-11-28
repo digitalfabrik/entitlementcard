@@ -8,7 +8,8 @@ import ConfirmDialog from '../../../components/ConfirmDialog'
 import { useGetStoreCategoriesQuery } from '../../../generated/graphql'
 import { getBuildConfig } from '../../../util/getBuildConfig'
 import getQueryResult from '../../../util/getQueryResult'
-import StoreForm, { AcceptingStoreFormData, UpdateStoreFunction } from './StoreForm'
+import { AcceptingStoreFormData, UpdateStoreFunction } from '../types'
+import StoreForm from './StoreForm'
 
 const ManageStoreDialog = ({
   open,
