@@ -47,6 +47,7 @@ const config: ProjectConfig = {
   storesManagement: storesManagementConfig,
   userImportApiEnabled: true,
   showBirthdayExtensionHint: true,
+  locales: buildConfigKoblenz.common.appLocales,
 }
 
 export default config

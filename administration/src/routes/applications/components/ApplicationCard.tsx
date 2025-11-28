@@ -6,6 +6,8 @@ import {
   CreditScore,
   Delete,
   ExpandMore,
+  KeyboardArrowDown,
+  KeyboardArrowUp,
   PrintOutlined,
   Search,
   Warning,
@@ -398,7 +400,13 @@ const ApplicationCard = ({
             />
           )}
 
-          <BaseMenu menuItems={menuItems} menuLabel={t('moreActionsButtonLabel')} />
+          <BaseMenu
+            menuItems={menuItems}
+            menuLabel={t('moreActionsButtonLabel')}
+            variant='Button'
+            openIcon={<KeyboardArrowUp />}
+            closeIcon={<KeyboardArrowDown />}
+          />
         </Stack>
 
         <Box sx={{ position: 'absolute', top: 0, right: theme.spacing(2), zIndex: 1 }}>

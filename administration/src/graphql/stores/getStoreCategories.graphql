@@ -1,0 +1,6 @@
+query getStoreCategories {
+  categories: categories {
+    id
+    name
+  }
+}

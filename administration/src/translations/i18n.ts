@@ -31,6 +31,7 @@ export const loadTranslations = (): Translations => ({
     selfService: deTranslations.selfService,
     statistics: deTranslations.statistics,
     stores: deTranslations.stores,
+    storeForm: deTranslations.storeForm,
     userSettings: deTranslations.userSettings,
     users: deTranslations.users,
     shared: deTranslations.shared,
