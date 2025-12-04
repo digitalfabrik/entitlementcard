@@ -28,6 +28,7 @@ import org.jetbrains.exposed.sql.OrOp
 import org.jetbrains.exposed.sql.SizedIterable
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
+import org.jetbrains.exposed.sql.alias
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.doubleParam
@@ -49,11 +50,11 @@ object AcceptingStoresRepository {
             if (categoryIds == null) {
                 Op.TRUE
             } else {
-                Op.build { AcceptingStores.categoryId inList categoryIds }
+                AcceptingStores.categoryId inList categoryIds
             }
 
         val textMatcher =
-            if (searchText == null) {
+            if (searchText.isNullOrBlank()) {
                 Op.TRUE
             } else {
                 OrOp(
@@ -70,8 +71,11 @@ object AcceptingStoresRepository {
         val sortExpression = if (coordinates != null) {
             DistanceFunction(
                 PhysicalStores.coordinates,
-                MakePointFunction(doubleParam(coordinates.lng), doubleParam(coordinates.lat)),
-            )
+                MakePointFunction(
+                    doubleParam(coordinates.lng),
+                    doubleParam(coordinates.lat),
+                ),
+            ).alias("dist")
         } else {
             AcceptingStores.name
         }
@@ -79,7 +83,7 @@ object AcceptingStoresRepository {
         return (
             Projects innerJoin
                 (AcceptingStores leftJoin AcceptingStoreDescriptions leftJoin PhysicalStores leftJoin Addresses)
-        ).select(AcceptingStores.columns)
+        ).select(AcceptingStores.columns + sortExpression)
             .withDistinct()
             .where(Projects.project eq project and categoryMatcher and textMatcher)
             .orderBy(sortExpression)
