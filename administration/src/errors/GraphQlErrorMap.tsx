@@ -104,6 +104,10 @@ const graphQlErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
       return {
         title: i18next.t('errors:invalidRole'),
       }
+    case GraphQlExceptionCode.InvalidApplicationStatus:
+      return {
+        title: i18next.t('errors:invalidApplicationStatus'),
+      }
     case GraphQlExceptionCode.UserEntitlementNotFound:
       return {
         title: i18next.t('errors:entitlementNotFound'),
