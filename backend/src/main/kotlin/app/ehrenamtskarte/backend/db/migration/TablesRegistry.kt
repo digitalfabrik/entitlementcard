@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.db.migration
 
+import app.ehrenamtskarte.backend.db.entities.AcceptingStoreDescriptions
 import app.ehrenamtskarte.backend.db.entities.AcceptingStores
 import app.ehrenamtskarte.backend.db.entities.Addresses
 import app.ehrenamtskarte.backend.db.entities.Administrators
@@ -28,6 +29,7 @@ object TablesRegistry {
             Regions,
             PhysicalStores,
             AcceptingStores,
+            AcceptingStoreDescriptions,
             Addresses,
             Contacts,
             Categories,

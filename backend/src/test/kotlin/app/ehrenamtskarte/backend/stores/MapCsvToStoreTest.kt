@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.stores
 
+import app.ehrenamtskarte.backend.db.entities.LanguageCode
 import app.ehrenamtskarte.backend.graphql.stores.mapCsvToStore
 import app.ehrenamtskarte.backend.graphql.stores.types.CSVAcceptingStore
 import app.ehrenamtskarte.backend.import.stores.common.types.AcceptingStore
@@ -37,7 +38,10 @@ internal class MapCsvToStoreTest {
             "info@test.de",
             "0911/123456",
             "https://www.test.de/kontakt/",
-            "20% Ermäßigung für Erwachsene\n\n20% discount for adults",
+            discounts = mapOf(
+                LanguageCode.DE to "20% Ermäßigung für Erwachsene",
+                LanguageCode.EN to "20% discount for adults",
+            ),
             null,
             null,
             "Teststr. 10",
@@ -70,7 +74,7 @@ internal class MapCsvToStoreTest {
             null,
             null,
             null,
-            null,
+            emptyMap(),
             null,
             null,
             "Teststr. 10",
@@ -103,7 +107,7 @@ internal class MapCsvToStoreTest {
             null,
             null,
             null,
-            "20% Ermäßigung für Erwachsene",
+            discounts = mapOf(LanguageCode.DE to "20% Ermäßigung für Erwachsene"),
             null,
             null,
             "Teststr. 10",
