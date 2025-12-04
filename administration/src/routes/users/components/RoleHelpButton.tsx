@@ -54,6 +54,12 @@ const RoleHelpButton = (): ReactElement => {
               </Typography>
             </Typography>
           </Typography>
+          <Typography component='li' variant='body2bold'>
+            {roleToText(Role.ProjectStoreManager)}:
+            <Typography variant='body1' component='ul'>
+              <Typography component='li'>{t('projectStoreManagerRight')}</Typography>
+            </Typography>
+          </Typography>
         </Typography>
       </Box>
     </PopoverWrapper>
