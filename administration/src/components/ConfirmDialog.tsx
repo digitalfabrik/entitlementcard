@@ -1,5 +1,5 @@
 import { CheckCircleOutline, Close } from '@mui/icons-material'
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
+import { Breakpoint, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import { ButtonPropsColorOverrides } from '@mui/material/Button/Button'
 import { OverridableStringUnion } from '@mui/types'
 import React, { ReactElement, ReactNode } from 'react'
@@ -19,6 +19,8 @@ const ConfirmDialog = ({
   color = 'primary',
   confirmButtonIcon,
   showCancelButton = true,
+  maxWidth = false,
+  closeOnConfirm = true,
 }: {
   actionDisabled?: boolean
   loading?: boolean
@@ -36,11 +38,13 @@ const ConfirmDialog = ({
     'inherit' | 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning',
     ButtonPropsColorOverrides
   >
+  closeOnConfirm?: boolean
+  maxWidth?: false | Breakpoint
 }): ReactElement => {
   const { t } = useTranslation('misc')
 
   return (
-    <Dialog open={open} aria-describedby={id} fullWidth onClose={onClose}>
+    <Dialog open={open} aria-describedby={id} fullWidth onClose={onClose} maxWidth={maxWidth}>
       <DialogTitle>{title}</DialogTitle>
       <DialogContent id={id}>{children}</DialogContent>
       <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
@@ -57,7 +61,9 @@ const ConfirmDialog = ({
           startIcon={confirmButtonIcon ?? <CheckCircleOutline />}
           onClick={() => {
             onConfirm()
-            onClose()
+            if (closeOnConfirm) {
+              onClose()
+            }
           }}>
           {confirmButtonText ?? t('confirm')}
         </Button>

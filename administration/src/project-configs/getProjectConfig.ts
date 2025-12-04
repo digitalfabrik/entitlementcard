@@ -129,6 +129,7 @@ export type ProjectConfig = {
   storesManagement: StoresManagementConfig
   userImportApiEnabled: boolean
   showBirthdayExtensionHint: boolean
+  locales: string[]
 }
 
 const getProjectConfig = (hostname: string): ProjectConfig => {

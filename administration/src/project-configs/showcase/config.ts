@@ -42,6 +42,7 @@ const config: ProjectConfig = {
   },
   userImportApiEnabled: false,
   showBirthdayExtensionHint: false,
+  locales: ['de'],
 }
 
 export default config

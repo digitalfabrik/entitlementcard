@@ -1,6 +1,5 @@
 /* eslint-disable react/destructuring-assignment */
-import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material'
-import { Button, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material'
+import { Button, IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 
 export type MenuItemType = {
@@ -10,8 +9,11 @@ export type MenuItemType = {
 }
 
 type BaseMenuProps = {
-  menuLabel: string
   menuItems: MenuItemType[]
+  variant: 'IconButton' | 'Button'
+  openIcon: ReactElement
+  closeIcon: ReactElement
+  menuLabel?: string
 }
 
 const BaseMenu = (props: BaseMenuProps): ReactElement => {
@@ -31,18 +33,34 @@ const BaseMenu = (props: BaseMenuProps): ReactElement => {
 
   return (
     <>
-      <Button
-        aria-controls={open ? 'base-menu' : undefined}
-        aria-haspopup='true'
-        aria-expanded={open ? 'true' : undefined}
-        variant='contained'
-        onClick={handleMenuOpen}
-        endIcon={open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-        sx={{
-          justifyContent: 'space-between',
-        }}>
-        {props.menuLabel}
-      </Button>
+      {props.variant === 'Button' && (
+        <Button
+          aria-controls={open ? 'base-menu' : undefined}
+          aria-haspopup='true'
+          aria-expanded={open ? 'true' : undefined}
+          variant='contained'
+          onClick={handleMenuOpen}
+          endIcon={open ? props.openIcon : props.closeIcon}
+          sx={{
+            justifyContent: 'space-between',
+          }}>
+          {props.menuLabel}
+        </Button>
+      )}
+
+      {props.variant === 'IconButton' && (
+        <IconButton
+          aria-controls={open ? 'base-menu' : undefined}
+          aria-haspopup='true'
+          aria-expanded={open ? 'true' : undefined}
+          aria-label={props.menuLabel}
+          onClick={handleMenuOpen}
+          sx={{
+            justifyContent: 'space-between',
+          }}>
+          {props.openIcon}
+        </IconButton>
+      )}
 
       <Menu
         id='base-menu'
