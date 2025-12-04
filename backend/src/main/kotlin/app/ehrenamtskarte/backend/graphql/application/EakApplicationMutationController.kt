@@ -123,9 +123,12 @@ class EakApplicationMutationController(
         transaction {
             val application = ApplicationEntity.find { Applications.accessKey eq accessKey }
                 .singleOrNull() ?: throw InvalidLinkException()
-            if (application.status != Status.Pending) throw InvalidApplicationStatusException()
-            application.status = Status.Withdrawn
-            true
+            if (application.status != Status.Pending) {
+                throw InvalidApplicationStatusException()
+            } else {
+                application.status = Status.Withdrawn
+                true
+            }
         }
 
     @GraphQLDescription("Verifies or rejects an application verification")
