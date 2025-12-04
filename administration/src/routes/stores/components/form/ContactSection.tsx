@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import CardTextField from '../../../../cards/extensions/components/CardTextField'
 import type { AcceptingStoreFormData, UpdateStoreFunction } from '../../types'
+import { emailValidation, homepageValidation, phoneValidation } from './validation'
 
 const ContactSection = ({
   acceptingStore,
@@ -28,9 +29,9 @@ const ContactSection = ({
           placeholder={t('telephonePlaceholder')}
           value={acceptingStore?.telephone ?? ''}
           onChange={value => updateStore('telephone', value)}
-          showError={false}
+          showError={phoneValidation(acceptingStore?.telephone).invalid}
           forceError={formSendAttempt}
-          errorMessage={null}
+          errorMessage={phoneValidation(acceptingStore?.telephone).message}
           sx={{ flex: '0 0 50%' }}
         />
         <CardTextField
@@ -40,8 +41,8 @@ const ContactSection = ({
           value={acceptingStore?.email ?? ''}
           forceError={formSendAttempt}
           onChange={value => updateStore('email', value)}
-          showError={false}
-          errorMessage={null}
+          showError={emailValidation(acceptingStore?.email).invalid}
+          errorMessage={emailValidation(acceptingStore?.email).message}
         />
       </Box>
       <CardTextField
@@ -51,8 +52,8 @@ const ContactSection = ({
         value={acceptingStore?.homepage ?? ''}
         forceError={formSendAttempt}
         onChange={value => updateStore('homepage', value)}
-        showError={false}
-        errorMessage={null}
+        showError={homepageValidation(acceptingStore?.homepage).invalid}
+        errorMessage={homepageValidation(acceptingStore?.homepage).message}
       />
     </>
   )
