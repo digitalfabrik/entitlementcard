@@ -3,12 +3,6 @@ steps:
       name: Install curl and sudo
       command: apt update -y && apt install -y curl sudo
   - run:
-      name: Install ca-certificates-java # workaround for current issue: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1030129
-      command: apt install ca-certificates-java -y
-  - run:
-      name: Install openjdk-17-jre-headless
-      command: apt install openjdk-17-jre-headless -y
-  - run:
       name: Install backend
       command: dpkg -i ~/attached_workspace/debs/backend/eak-backend*.deb
   - run:

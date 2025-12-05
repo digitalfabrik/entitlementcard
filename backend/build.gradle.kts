@@ -1,5 +1,3 @@
-val isProductionEnvironment = System.getProperty("env") == "prod"
-
 plugins {
     alias(libs.plugins.expediagroup.graphql)
     alias(libs.plugins.gitlab.arturbosch.detekt)
@@ -20,23 +18,63 @@ group = "app.ehrenamtskarte.backend"
 version = "0.0.1-SNAPSHOT"
 description = "Backend for the Ehrenamtskarte system"
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+/**
+ * These environment variables are set by the CI pipeline.
+ * See: https://app.circleci.com/settings/organization/github/digitalfabrik/contexts/0d0d3d24-cd54-4c43-85a5-273e3a9e2152
+ */
+object CiConfig {
+    val circleCiCommitHash = System.getenv("CIRCLE_SHA1")
+    val sentryAuthToken = System.getenv("SENTRY_BACKEND_AUTH_TOKEN")
+
+    /** Set by the CircleCI `bump_version` job */
+    val versionName = System.getProperty("NEW_VERSION_NAME", "1.0.0")
+}
+
+val isProductionEnvironment = System.getProperty("env") == "prod"
+val packageRoot = "app.ehrenamtskarte.backend"
+
+application {
+    mainClass.set("$packageRoot.EntryPointKt")
+}
+
+sourceSets {
+    main {
+        proto {
+            srcDir("../specs")
+        }
+    }
+    test {
+        kotlin {
+            srcDir("${layout.buildDirectory.get()}/generated/source/graphql")
+        }
     }
 }
 
-protobuf {
-    protoc {
-        artifact = "com.google.protobuf:protoc:${libs.versions.protobuf.get()}"
+// TODO JVM 25 support is planned for Kotlin 2.3.0:
+// https://youtrack.jetbrains.com/issue/KT-81077/Add-JVM-target-bytecode-version-25
+// After moving to JRE 25, this block can be removed.
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+        // kotlinCompile tasks will target JRE 24, so set the javaCompile tasks to target JRE 24 as well
+        sourceCompatibility = JavaVersion.VERSION_24
+        targetCompatibility = JavaVersion.VERSION_24
     }
-    generateProtoTasks {
-        all().configureEach {
-            builtins {
-                create("kotlin")
-            }
-        }
+}
+
+kotlin {
+    // Sets the Java version as well:
+    // https://kotlinlang.org/docs/gradle-configure-project.html#gradle-java-toolchains-support
+    jvmToolchain(25)
+    compilerOptions {
+        freeCompilerArgs.addAll("-Xjsr305=strict")
     }
+}
+
+buildConfig {
+    packageName(project.group.toString())
+    buildConfigField("VERSION_NAME", CiConfig.versionName)
+    buildConfigField("COMMIT_HASH", CiConfig.circleCiCommitHash)
 }
 
 repositories {
@@ -46,7 +84,7 @@ repositories {
 dependencies {
     annotationProcessor(libs.springframework.boot.configurationprocessor)
 
-    // todo this prevents webserver to be run from CliktCommand; fix or remove
+    // TODO This prevents webserver to be run from CliktCommand; fix or remove
     // developmentOnly(libs.springframework.boot.devtools)
 
     implementation(libs.ajalt.clikt)
@@ -122,16 +160,17 @@ dependencyManagement {
     }
 }
 
-kotlin {
-    compilerOptions {
-        freeCompilerArgs.addAll("-Xjsr305=strict")
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:${libs.versions.protobuf.get()}"
     }
-}
-
-buildConfig {
-    packageName(project.group.toString())
-    buildConfigField("VERSION_NAME", System.getProperty("NEW_VERSION_NAME", "1.0.0"))
-    buildConfigField("COMMIT_HASH", System.getenv("CIRCLE_SHA1"))
+    generateProtoTasks {
+        all().configureEach {
+            builtins {
+                create("kotlin")
+            }
+        }
+    }
 }
 
 if (isProductionEnvironment) {
@@ -140,31 +179,9 @@ if (isProductionEnvironment) {
         // This enables source context, allowing you to see your source
         // code as part of your stack traces in Sentry.
         includeSourceContext = true
-
         org = "digitalfabrik"
         projectName = "entitlementcard-backend"
-        authToken = System.getenv("SENTRY_AUTH_TOKEN")
-    }
-}
-
-sourceSets {
-    main {
-        proto {
-            srcDir("../specs")
-        }
-    }
-    test {
-        kotlin {
-            srcDir("${layout.buildDirectory.get()}/generated/source/graphql")
-        }
-    }
-}
-
-tasks.processResources {
-    // required to load graphql schema by spring-boot
-    from("../specs") {
-        include("*.graphql")
-        into("specs")
+        authToken = CiConfig.sentryAuthToken
     }
 }
 
@@ -184,29 +201,30 @@ ktlint {
     }
 }
 
-tasks.bootDistTar {
-    enabled = false
-}
-
-tasks.withType<Zip>().configureEach {
-    enabled = false
-}
-
-tasks.withType<Tar>().configureEach {
-    archiveVersion.set("")
-}
-
-application {
-    mainClass.set("${project.group}.EntryPointKt")
-}
-
 kover {
     reports {
         filters {
             includes {
-                classes("${project.group}.*")
+                classes("$packageRoot.*")
             }
         }
+    }
+}
+
+tasks.bootDistTar {
+    enabled = false
+}
+
+// Do not append version to tar file name, since the pack_backend job expects a defined name
+tasks.withType<Tar>().configureEach {
+    archiveVersion.set("")
+}
+
+tasks.processResources {
+    // required to load graphql schema by spring-boot
+    from("../specs") {
+        include("*.graphql")
+        into("specs")
     }
 }
 
@@ -237,7 +255,7 @@ tasks.graphqlGenerateTestClient {
         dependsOn(tasks.sentryCollectSourcesJava)
     }
     schemaFile.set(rootDir.parentFile.resolve("specs/backend-api.graphql"))
-    packageName.set("${project.group}.generated")
+    packageName.set("$packageRoot.generated")
     queryFiles.setFrom(fileTree("src/test/resources/graphql"))
 }
 
