@@ -1,6 +1,6 @@
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import { Box, Stack } from '@mui/system'
-import React, { ReactElement, useContext, useState } from 'react'
+import React, { ReactElement, useContext, useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import FormAlert from '../../../components/FormAlert'
@@ -25,15 +25,19 @@ const RoleSelector = ({
   const showExternalVerifiedApiUser = config.applicationFeature?.applicationUsableWithApiToken && isProjectAdmin
   const showProjectStoreManager = config.storesManagement.enabled && isProjectAdmin
   const showError = selectedRole === null && touched
+  const labelId = useId()
   return (
     <>
       <Stack direction='row'>
         <FormControl fullWidth size='small' required>
-          <InputLabel shrink={selectedRole !== null}>{t('selectRole')}</InputLabel>
+          <InputLabel shrink={selectedRole !== null} id={labelId}>
+            {t('selectRole')}
+          </InputLabel>
           <Select
             notched={selectedRole !== null}
             size='small'
             label={t('selectRole')}
+            labelId={labelId}
             value={selectedRole ?? ''}
             onBlur={() => setTouched(true)}
             onChange={e => onChange(e.target.value as Role)}>
