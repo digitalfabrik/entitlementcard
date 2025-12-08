@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.graphql.stores
 
+import app.ehrenamtskarte.backend.db.entities.LanguageCode
 import app.ehrenamtskarte.backend.db.entities.mayUpdateStoresInProject
 import app.ehrenamtskarte.backend.db.repositories.AcceptingStoresRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
@@ -87,24 +88,25 @@ class AcceptingStoresMutationService {
 }
 
 fun mapCsvToStore(csvStore: CSVAcceptingStore): AcceptingStore {
-    val discount = listOf(csvStore.discountDE, csvStore.discountEN)
-        .filterNot { it.isNullOrEmpty() }
-        .joinToString("\n\n")
+    val discounts = buildMap {
+        csvStore.discountDE?.clean(false)?.let { put(LanguageCode.DE, it) }
+        csvStore.discountEN?.clean(false)?.let { put(LanguageCode.EN, it) }
+    }
     return AcceptingStore(
-        csvStore.name.clean()!!,
-        COUNTRY_CODE,
-        csvStore.location.clean()!!,
-        csvStore.postalCode.clean(),
-        csvStore.street.clean(),
-        csvStore.houseNumber.clean(),
+        name = csvStore.name.clean()!!,
+        countryCode = COUNTRY_CODE,
+        location = csvStore.location.clean()!!,
+        postalCode = csvStore.postalCode.clean(),
+        street = csvStore.street.clean(),
+        houseNumber = csvStore.houseNumber.clean(),
         additionalAddressInformation = "",
-        csvStore.longitude,
-        csvStore.latitude,
-        csvStore.categoryId,
-        csvStore.email.clean(false),
-        csvStore.telephone.clean(false),
-        csvStore.homepage.clean(false),
-        discount.clean(false),
+        longitude = csvStore.longitude,
+        latitude = csvStore.latitude,
+        categoryId = csvStore.categoryId,
+        email = csvStore.email.clean(false),
+        telephone = csvStore.telephone.clean(false),
+        website = csvStore.homepage.clean(false),
+        discounts = discounts,
         freinetId = null,
         districtName = null,
     )
