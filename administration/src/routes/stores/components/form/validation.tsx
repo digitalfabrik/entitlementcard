@@ -85,7 +85,7 @@ export const phoneValidation = (phoneNr: string | undefined): FormValidation => 
   const lengthValidation = validateFieldWithLength(
     phoneNr,
     VALIDATION_CONSTANTS.PHONE,
-    'storeForm:errorPhoneInvalidMaxMinChars'
+    'storeForm:errorPhoneInvalidMaxChars'
   )
 
   if (lengthValidation.invalid) {
@@ -102,7 +102,7 @@ export const emailValidation = (email: string | undefined): FormValidation => {
   const lengthValidation = validateFieldWithLength(
     email,
     VALIDATION_CONSTANTS.EMAIL,
-    'storeForm:errorPhoneInvalidMaxMinChars'
+    'storeForm:errorEmailInvalidMaxChars'
   )
 
   if (lengthValidation.invalid) {

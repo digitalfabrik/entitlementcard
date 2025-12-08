@@ -29,7 +29,7 @@ const FormAlert = ({ errorMessage, isToast = false, severity = 'error' }: FormAl
   errorMessage !== null ? (
     <Container $severity={severity} $isToast={isToast} data-testid='form-alert'>
       <InfoOutlined />
-      <Typography>{errorMessage}</Typography>
+      <Typography component='span'>{errorMessage}</Typography>
     </Container>
   ) : null
 

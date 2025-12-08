@@ -45,7 +45,7 @@ const DescriptionSection = ({
       />
       {locales.includes('en') && (
         <CardTextField
-          id='store-descriptionDe-input'
+          id='store-descriptionEn-input'
           label={
             hasDescriptionEn ? (
               <Trans
