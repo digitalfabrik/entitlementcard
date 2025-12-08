@@ -8,7 +8,7 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 object AcceptingStoreDescriptions : IntIdTable() {
     val storeId = reference("storeId", AcceptingStores)
     val description = varchar("description", 2500).nullable()
-    val language = enumerationByName("language", 2, LanguageCode::class).default(LanguageCode.DE)
+    val language = enumerationByName<LanguageCode>("language", 2).default(LanguageCode.DE)
 }
 
 class AcceptingStoreDescriptionEntity(id: EntityID<Int>) : IntEntity(id) {

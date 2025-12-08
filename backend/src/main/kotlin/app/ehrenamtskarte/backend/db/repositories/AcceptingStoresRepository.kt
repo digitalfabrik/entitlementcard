@@ -99,7 +99,7 @@ object AcceptingStoresRepository {
                 AcceptingStores.id,
                 AcceptingStoreDescriptions.language,
                 AcceptingStoreDescriptions.description,
-            ).where({
+            ).where {
                 (Addresses.street eq acceptingStore.streetWithHouseNumber) and
                     (Addresses.postalCode eq acceptingStore.postalCode!!) and
                     (Addresses.location eq acceptingStore.location) and
@@ -112,7 +112,7 @@ object AcceptingStoresRepository {
                     (AcceptingStores.regionId eq regionId) and
                     (AcceptingStores.projectId eq projectId) and
                     (PhysicalStores.coordinates eq Point(acceptingStore.longitude!!, acceptingStore.latitude!!))
-            }).toList()
+            }.toList()
 
         if (stores.isEmpty()) {
             return null
