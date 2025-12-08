@@ -2,11 +2,12 @@
 /// used like the apple navigation bars.
 library;
 
+import 'package:ehrenamtskarte/category_assets.dart';
 import 'package:ehrenamtskarte/debouncer.dart';
-import 'package:flutter/material.dart';
-
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
+import 'package:ehrenamtskarte/search/category_filter_bar.dart';
 import 'package:ehrenamtskarte/themes.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 class CustomAppBar extends StatelessWidget {
@@ -160,24 +161,34 @@ class SliverStatusBarProtector extends StatelessWidget {
 
 class SliverSearchAppBar extends StatefulWidget {
   final ValueChanged<String> onChanged;
+  final void Function(CategoryAsset, bool) onCategoryPress;
   final Debouncer debouncer = Debouncer(delay: const Duration(milliseconds: 50));
 
-  SliverSearchAppBar({super.key, required this.onChanged});
+  SliverSearchAppBar({super.key, required this.onChanged, required this.onCategoryPress});
 
   @override
-  SliverSearchAppBarState createState() => SliverSearchAppBarState();
+  SliverSearchAppBarState createState() => SliverSearchAppBarState(onCategoryPress);
 }
 
 class SliverSearchAppBarState extends State<SliverSearchAppBar> {
   final TextEditingController textEditingController = TextEditingController();
   final FocusNode focusNode = FocusNode();
+  final void Function(CategoryAsset, bool) onCategoryPress;
+
+  SliverSearchAppBarState(this.onCategoryPress);
 
   @override
   Widget build(BuildContext context) {
     final t = context.t;
     final theme = Theme.of(context);
     final foregroundColor = theme.appBarTheme.foregroundColor;
+
     return SliverAppBar(
+      pinned: true,
+      snap: true,
+      floating: true,
+      // TODO Calculate the CategoryFilterBar's height and set it here
+      expandedHeight: 250,
       title: TextField(
         onTapOutside: (PointerDownEvent event) {
           focusNode.nextFocus();
@@ -192,7 +203,7 @@ class SliverSearchAppBarState extends State<SliverSearchAppBar> {
         cursorColor: foregroundColor,
         style: theme.textTheme.bodyLarge?.apply(color: foregroundColor),
       ),
-      pinned: true,
+      flexibleSpace: CategoryFilterBar(onCategoryPress: onCategoryPress),
       actionsIconTheme: IconThemeData(color: foregroundColor),
       actions: [
         if (textEditingController.value.text.isNotEmpty)
