@@ -20,45 +20,51 @@ class CategoryFilterBar extends FlexibleSpaceBar {
               ..add(categoryAssets(context).where((category) => category.id == 9).single);
             final filteredCategories = sortedCategories.where((element) => buildConfig.categories.contains(element.id));
 
-            return Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(8, kToolbarHeight + MediaQuery.of(context).padding.top, 8, 8),
-                  child: Row(
-                    children: [
-                      Text(
-                        t.search.filterByCategories.toUpperCase(),
-                        maxLines: 1,
-                        style: theme.textTheme.bodyMedium?.apply(color: theme.hintColor),
-                      ),
-                      Expanded(
-                        child: Padding(padding: EdgeInsets.only(left: 8), child: Divider(thickness: 0.7)),
-                      ),
-                    ],
-                  ),
-                ),
-                Row(
+            return Container(
+              padding: EdgeInsets.fromLTRB(0, kToolbarHeight + MediaQuery.of(context).padding.top, 0, 0),
+              child: Container(
+                color: theme.colorScheme.surface,
+                child: Column(
                   children: [
-                    Expanded(
-                      child: Wrap(
-                        alignment: WrapAlignment.spaceEvenly,
-                        runSpacing: 8,
-                        spacing: 4,
-                        children: filteredCategories
-                            .mapIndexed(
-                              (index, category) => FilterBarButton(
-                                key: ValueKey(category.id),
-                                index: index,
-                                asset: category,
-                                onCategoryPress: onCategoryPress,
-                              ),
-                            )
-                            .toList(),
+                    Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Row(
+                        children: [
+                          Text(
+                            t.search.filterByCategories.toUpperCase(),
+                            maxLines: 1,
+                            style: theme.textTheme.bodyMedium?.apply(color: theme.hintColor),
+                          ),
+                          Expanded(
+                            child: Padding(padding: EdgeInsets.only(left: 8), child: Divider(thickness: 0.7)),
+                          ),
+                        ],
                       ),
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Wrap(
+                            alignment: WrapAlignment.spaceEvenly,
+                            runSpacing: 8,
+                            spacing: 4,
+                            children: filteredCategories
+                                .mapIndexed(
+                                  (index, category) => FilterBarButton(
+                                    key: ValueKey(category.id),
+                                    index: index,
+                                    asset: category,
+                                    onCategoryPress: onCategoryPress,
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
+              ),
             );
           },
         ),
