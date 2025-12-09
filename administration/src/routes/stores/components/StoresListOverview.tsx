@@ -81,7 +81,13 @@ const StoresListOverview = ({ data }: { data: AcceptingStoresData[] }): ReactEle
   }
 
   const getAddressCoordinates = () => {
-    if (acceptingStore !== undefined && acceptingStore.street.length > 0 && acceptingStore.city.length > 0) {
+    if (
+      acceptingStore !== undefined &&
+      acceptingStore.street &&
+      acceptingStore.street.length > 0 &&
+      acceptingStore.city &&
+      acceptingStore.city.length > 0
+    ) {
       setIsFetchingCoordinates(true)
       Promise.resolve(getStoreCoordinates(acceptingStore.city, acceptingStore.street))
         .then(position => {
@@ -138,7 +144,7 @@ const StoresListOverview = ({ data }: { data: AcceptingStoresData[] }): ReactEle
         isEditMode={acceptingStore !== undefined}
         acceptingStore={acceptingStore}
         closeOnConfirm={formFieldsAreValid}
-        updateStore={updateStore}
+        onUpdateStore={updateStore}
         onClose={closeStoreDialog}
         onConfirm={saveStore}
         formSendAttempt={formSendAttempt}

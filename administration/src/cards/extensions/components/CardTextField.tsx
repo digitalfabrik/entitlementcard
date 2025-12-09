@@ -53,9 +53,7 @@ const CardTextField = ({
       value={value}
       onBlur={() => {
         setTouched(true)
-        if (onBlur) {
-          onBlur()
-        }
+        onBlur?.()
       }}
       onChange={event => onChange(event.target.value)}
       error={showErrorAfterTouched}

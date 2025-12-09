@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material'
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useId } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import CustomSelect from '../../../../components/CustomSelect'
@@ -8,17 +8,18 @@ import type { AcceptingStoreFormData, UpdateStoreFunction } from '../../types'
 
 const CategorySection = ({
   acceptingStore,
-  updateStore,
+  onUpdateStore,
   categories,
   formSendAttempt,
 }: {
   acceptingStore?: AcceptingStoreFormData
-  updateStore: UpdateStoreFunction
+  onUpdateStore: UpdateStoreFunction
   categories: Category[]
   formSendAttempt: boolean
 }): ReactElement => {
   const { t } = useTranslation('storeForm')
   const categorySelected = acceptingStore?.categoryId !== undefined
+  const labelId = useId()
   return (
     <Box>
       <Typography variant='h6' marginTop={1} marginBottom={2}>
@@ -27,8 +28,8 @@ const CategorySection = ({
       <CustomSelect
         options={categories}
         forceError={formSendAttempt}
-        onChange={value => updateStore('categoryId', Number(value))}
-        id='store-category'
+        onChange={value => onUpdateStore('categoryId', Number(value))}
+        id={labelId}
         label={t('selectCategory')}
         fullWidth
         required

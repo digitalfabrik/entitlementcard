@@ -1,43 +1,49 @@
 import { Typography } from '@mui/material'
-import React, { ReactElement, useContext } from 'react'
+import React, { ReactElement, useContext, useId } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
 import CardTextField from '../../../../cards/extensions/components/CardTextField'
 import { ProjectConfigContext } from '../../../../project-configs/ProjectConfigContext'
 import type { AcceptingStoreFormData, UpdateStoreFunction } from '../../types'
-import { DESCRIPTION_MAX_CHARS, descriptionValidation } from './validation'
+import { descriptionMaxChars, descriptionValidation } from './validation'
 
+const getRemainingCharacters = (description: string) => {
+  const remainingCharacters = descriptionMaxChars - description.length
+  return remainingCharacters < 0 ? 0 : remainingCharacters
+}
 const DescriptionSection = ({
   acceptingStore,
-  updateStore,
+  onUpdateStore,
 }: {
   acceptingStore?: AcceptingStoreFormData
-  updateStore: UpdateStoreFunction
+  onUpdateStore: UpdateStoreFunction
 }): ReactElement => {
   const { t } = useTranslation('storeForm')
   const { locales } = useContext(ProjectConfigContext)
   const hasDescriptionDe = acceptingStore?.descriptionDe !== undefined
   const hasDescriptionEn = acceptingStore?.descriptionEn !== undefined
+  const descriptionDeLabelId = useId()
+  const descriptionEnLabelId = useId()
   return (
     <>
       <Typography variant='h6' marginY={0.5}>
         {t('descriptionSection')}
       </Typography>
       <CardTextField
-        id='store-descriptionDe-input'
+        id={descriptionDeLabelId}
         label={
           hasDescriptionDe ? (
             <Trans
               i18nKey='storeForm:descriptionRemainingCharactersDe'
-              values={{ chars: DESCRIPTION_MAX_CHARS - acceptingStore.descriptionDe.length }}
+              values={{ chars: getRemainingCharacters(acceptingStore.descriptionDe) }}
             />
           ) : (
-            <Trans i18nKey='storeForm:descriptionLabelDe' values={{ maxChars: DESCRIPTION_MAX_CHARS }} />
+            <Trans i18nKey='storeForm:descriptionLabelDe' values={{ maxChars: descriptionMaxChars }} />
           )
         }
         placeholder={t('descriptionPlaceholder')}
         value={acceptingStore?.descriptionDe ?? ''}
-        onChange={value => updateStore('descriptionDe', value)}
+        onChange={value => onUpdateStore('descriptionDe', value)}
         rows={4}
         multiline
         showError={descriptionValidation(acceptingStore?.descriptionDe).invalid}
@@ -45,20 +51,20 @@ const DescriptionSection = ({
       />
       {locales.includes('en') && (
         <CardTextField
-          id='store-descriptionEn-input'
+          id={descriptionEnLabelId}
           label={
             hasDescriptionEn ? (
               <Trans
                 i18nKey='storeForm:descriptionRemainingCharactersEn'
-                values={{ chars: DESCRIPTION_MAX_CHARS - acceptingStore.descriptionEn.length }}
+                values={{ chars: getRemainingCharacters(acceptingStore.descriptionEn) }}
               />
             ) : (
-              <Trans i18nKey='storeForm:descriptionLabelEn' values={{ maxChars: DESCRIPTION_MAX_CHARS }} />
+              <Trans i18nKey='storeForm:descriptionLabelEn' values={{ maxChars: descriptionMaxChars }} />
             )
           }
           placeholder={t('descriptionPlaceholder')}
           value={acceptingStore?.descriptionEn ?? ''}
-          onChange={value => updateStore('descriptionEn', value)}
+          onChange={value => onUpdateStore('descriptionEn', value)}
           rows={4}
           multiline
           showError={descriptionValidation(acceptingStore?.descriptionEn).invalid}

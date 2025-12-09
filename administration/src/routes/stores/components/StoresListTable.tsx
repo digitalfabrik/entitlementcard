@@ -23,7 +23,7 @@ const columns = (t: TFunction, editStore: (storeId: number) => void): GridColDef
     field: 'id',
     headerName: '',
     width: 60,
-    renderCell: ({ row }: { row: AcceptingStoresData }) => <TableMenu storeId={row.id} editStore={editStore} />,
+    renderCell: ({ row }: { row: AcceptingStoresData }) => <TableMenu storeId={row.id} onEditStore={editStore} />,
   },
   {
     field: 'name',

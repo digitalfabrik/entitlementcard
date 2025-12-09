@@ -17,7 +17,7 @@ const ManageStoreDialog = ({
   onConfirm,
   loading,
   isEditMode,
-  updateStore,
+  onUpdateStore,
   closeOnConfirm,
   formSendAttempt,
   getAddressCoordinates,
@@ -30,7 +30,7 @@ const ManageStoreDialog = ({
   isEditMode: boolean
   loading: boolean
   closeOnConfirm: boolean
-  updateStore: UpdateStoreFunction
+  onUpdateStore: UpdateStoreFunction
   formSendAttempt: boolean
   getAddressCoordinates: () => void
   showAddressError: boolean
@@ -66,7 +66,7 @@ const ManageStoreDialog = ({
           getAddressCoordinates={getAddressCoordinates}
           showAddressError={showAddressError}
           acceptingStore={acceptingStore}
-          updateStore={updateStore}
+          onUpdateStore={onUpdateStore}
           formSendAttempt={formSendAttempt}
           categories={categories.filter(category => projectCategories.includes(category.id))}
         />

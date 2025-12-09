@@ -1,6 +1,5 @@
-import { Typography } from '@mui/material'
-import { Box } from '@mui/system'
-import React, { ReactElement } from 'react'
+import { Stack, Typography } from '@mui/material'
+import React, { ReactElement, useId } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import CardTextField from '../../../../cards/extensions/components/CardTextField'
@@ -9,49 +8,52 @@ import { emailValidation, homepageValidation, phoneValidation } from './validati
 
 const ContactSection = ({
   acceptingStore,
-  updateStore,
+  onUpdateStore,
   formSendAttempt,
 }: {
   acceptingStore?: AcceptingStoreFormData
-  updateStore: UpdateStoreFunction
+  onUpdateStore: UpdateStoreFunction
   formSendAttempt: boolean
 }): ReactElement => {
   const { t } = useTranslation('storeForm')
+  const telephoneLabelId = useId()
+  const emailLabelId = useId()
+  const homepageLabelId = useId()
   return (
     <>
       <Typography variant='h6' marginY={0.5}>
         {t('contactSection')}
       </Typography>
-      <Box sx={{ flexDirection: 'row', gap: 2, display: 'flex' }}>
+      <Stack sx={{ flexDirection: 'row', gap: 2 }}>
         <CardTextField
-          id='store-telephone-input'
+          id={telephoneLabelId}
           label={t('telephoneLabel')}
           placeholder={t('telephonePlaceholder')}
           value={acceptingStore?.telephone ?? ''}
-          onChange={value => updateStore('telephone', value)}
+          onChange={value => onUpdateStore('telephone', value)}
           showError={phoneValidation(acceptingStore?.telephone).invalid}
           forceError={formSendAttempt}
           errorMessage={phoneValidation(acceptingStore?.telephone).message}
           sx={{ flex: '0 0 50%' }}
         />
         <CardTextField
-          id='store-email-input'
+          id={emailLabelId}
           label={t('emailLabel')}
           placeholder={t('emailPlaceholder')}
           value={acceptingStore?.email ?? ''}
           forceError={formSendAttempt}
-          onChange={value => updateStore('email', value)}
+          onChange={value => onUpdateStore('email', value)}
           showError={emailValidation(acceptingStore?.email).invalid}
           errorMessage={emailValidation(acceptingStore?.email).message}
         />
-      </Box>
+      </Stack>
       <CardTextField
-        id='store-homepage-input'
+        id={homepageLabelId}
         label={t('homepageLabel')}
         placeholder={t('homepagePlaceholder')}
         value={acceptingStore?.homepage ?? ''}
         forceError={formSendAttempt}
-        onChange={value => updateStore('homepage', value)}
+        onChange={value => onUpdateStore('homepage', value)}
         showError={homepageValidation(acceptingStore?.homepage).invalid}
         errorMessage={homepageValidation(acceptingStore?.homepage).message}
       />

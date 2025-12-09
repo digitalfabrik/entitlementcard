@@ -13,14 +13,14 @@ import { nameValidation } from './form/validation'
 
 const StoreForm = ({
   categories,
-  updateStore,
+  onUpdateStore,
   formSendAttempt,
   getAddressCoordinates,
   showAddressError,
   acceptingStore,
 }: {
   categories: Category[]
-  updateStore: UpdateStoreFunction
+  onUpdateStore: UpdateStoreFunction
   formSendAttempt: boolean
   getAddressCoordinates: () => void
   showAddressError: boolean
@@ -39,26 +39,26 @@ const StoreForm = ({
         placeholder={t('namePlaceholder')}
         value={acceptingStore?.name ?? ''}
         forceError={formSendAttempt}
-        onChange={value => updateStore('name', value)}
+        onChange={value => onUpdateStore('name', value)}
         showError={nameValidation(acceptingStore?.name).invalid}
         errorMessage={nameValidation(acceptingStore?.name).message}
         required
       />
       <AddressSection
         acceptingStore={acceptingStore}
-        updateStore={updateStore}
+        onUpdateStore={onUpdateStore}
         formSendAttempt={formSendAttempt}
         getAddressCoordinates={getAddressCoordinates}
         showAddressError={showAddressError}
       />
       <CategorySection
         acceptingStore={acceptingStore}
-        updateStore={updateStore}
+        onUpdateStore={onUpdateStore}
         categories={categories}
         formSendAttempt={formSendAttempt}
       />
-      <ContactSection acceptingStore={acceptingStore} updateStore={updateStore} formSendAttempt={formSendAttempt} />
-      <DescriptionSection acceptingStore={acceptingStore} updateStore={updateStore} />
+      <ContactSection acceptingStore={acceptingStore} onUpdateStore={onUpdateStore} formSendAttempt={formSendAttempt} />
+      <DescriptionSection acceptingStore={acceptingStore} onUpdateStore={onUpdateStore} />
     </Stack>
   )
 }

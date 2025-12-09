@@ -51,7 +51,7 @@ const CustomSelect = ({
           error={showErrorAfterTouched}
           labelId={id}
           label={label}
-          value={value}
+          value={value ?? ''}
           onBlur={() => {
             setTouched(true)
             if (onBlur) {

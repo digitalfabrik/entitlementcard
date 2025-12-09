@@ -1,27 +1,28 @@
 import React, { ReactElement } from 'react'
 import { Trans } from 'react-i18next'
+import XRegExp from 'xregexp'
 
+import { isEmailValid } from '../../../../util/verifications'
 import { AcceptingStoreFormData } from '../../types'
 
-export const DESCRIPTION_MAX_CHARS = 2000
-const VALIDATION_CONSTANTS = {
-  NAME: { min: 3, max: 150 },
-  STREET: { min: 3, max: 100 },
-  CITY: { min: 3, max: 100 },
-  POSTAL_CODE: { LENGTH: 5 },
-  PHONE: { min: 0, max: 100 },
-  EMAIL: { min: 0, max: 100 },
-  HOMEPAGE: { min: 0, max: 200 },
-  DESCRIPTION: { min: 0, max: DESCRIPTION_MAX_CHARS },
+export const descriptionMaxChars = 2000
+const validationConstants = {
+  name: { min: 3, max: 150 },
+  street: { min: 3, max: 100 },
+  city: { min: 3, max: 100 },
+  postal_code: { length: 5 },
+  phone: { min: 0, max: 100 },
+  email: { min: 0, max: 100 },
+  homepage: { min: 0, max: 200 },
+  description: { min: 0, max: descriptionMaxChars },
 }
 
-const ADDRESS_REGEX = /^[a-zA-ZäöüÄÖÜß0-9\s.-]+$/
 const PHONE_REGEX: RegExp = /^\+?\d+(?:[ \-./]?\d+)*$/
-const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+(?<!\.)@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*\.[a-zA-Z]+$/
+const ADDRESS_REGEX = XRegExp('^[\\p{Letter}\\p{Number}\\.,-/() ]+$')
 
 export type FormValidation = {
-  invalid: boolean
-  message: string | ReactElement | null
+  readonly invalid: boolean
+  readonly message: string | ReactElement | null
 }
 
 const requiredFieldError = (): FormValidation => ({
@@ -34,10 +35,10 @@ const lengthError = (i18nKey: string, min: number, max: number): FormValidation 
   message: <Trans i18nKey={i18nKey} values={{ min, max }} />,
 })
 
-const validResult = (): FormValidation => ({
+const validResult: FormValidation = {
   invalid: false,
   message: null,
-})
+}
 
 const specialCharacterError = (i18nKey: string): FormValidation => ({
   invalid: true,
@@ -51,23 +52,23 @@ const validateFieldWithLength = (
 ): FormValidation => {
   const trimmedValue = value?.trim()
   if (!trimmedValue) {
-    return min > 0 ? requiredFieldError() : validResult()
+    return min > 0 ? requiredFieldError() : validResult
   }
 
   if (trimmedValue.length < min || trimmedValue.length > max) {
     return lengthError(lengthErrorKey, min, max)
   }
 
-  return validResult()
+  return validResult
 }
 
 export const nameValidation = (name: string | undefined): FormValidation =>
-  validateFieldWithLength(name, VALIDATION_CONSTANTS.NAME, 'storeForm:errorNameInvalidMaxMinChars')
+  validateFieldWithLength(name, validationConstants.name, 'storeForm:errorNameInvalidMaxMinChars')
 
 export const streetValidation = (street: string | undefined): FormValidation => {
   const lengthValidation = validateFieldWithLength(
     street,
-    VALIDATION_CONSTANTS.STREET,
+    validationConstants.street,
     'storeForm:errorStreetInvalidMaxMinChars'
   )
 
@@ -78,13 +79,13 @@ export const streetValidation = (street: string | undefined): FormValidation => 
   if (!ADDRESS_REGEX.test(street!)) {
     return specialCharacterError('storeForm:errorStreetValidationSpecialCharacters')
   }
-  return validResult()
+  return validResult
 }
 
 export const phoneValidation = (phoneNr: string | undefined): FormValidation => {
   const lengthValidation = validateFieldWithLength(
     phoneNr,
-    VALIDATION_CONSTANTS.PHONE,
+    validationConstants.phone,
     'storeForm:errorPhoneInvalidMaxChars'
   )
 
@@ -95,13 +96,13 @@ export const phoneValidation = (phoneNr: string | undefined): FormValidation => 
   if (phoneNr && !PHONE_REGEX.test(phoneNr)) {
     return specialCharacterError('storeForm:errorPhoneValidationSpecialCharacters')
   }
-  return validResult()
+  return validResult
 }
 
 export const emailValidation = (email: string | undefined): FormValidation => {
   const lengthValidation = validateFieldWithLength(
     email,
-    VALIDATION_CONSTANTS.EMAIL,
+    validationConstants.email,
     'storeForm:errorEmailInvalidMaxChars'
   )
 
@@ -109,16 +110,16 @@ export const emailValidation = (email: string | undefined): FormValidation => {
     return lengthValidation
   }
 
-  if (email && !EMAIL_REGEX.test(email)) {
+  if (email && !isEmailValid(email)) {
     return specialCharacterError('storeForm:errorEmailValidationSpecialCharacters')
   }
-  return validResult()
+  return validResult
 }
 
 export const cityValidation = (city: string | undefined): FormValidation => {
   const lengthValidation = validateFieldWithLength(
     city,
-    VALIDATION_CONSTANTS.CITY,
+    validationConstants.city,
     'storeForm:errorCityInvalidMaxMinChars'
   )
 
@@ -129,16 +130,16 @@ export const cityValidation = (city: string | undefined): FormValidation => {
   if (!ADDRESS_REGEX.test(city!)) {
     return specialCharacterError('storeForm:errorCityValidationSpecialCharacters')
   }
-  return validResult()
+  return validResult
 }
 
 export const homepageValidation = (homepage: string | undefined): FormValidation => {
   if (!homepage) {
-    return validResult()
+    return validResult
   }
   const lengthValidation = validateFieldWithLength(
     homepage,
-    VALIDATION_CONSTANTS.HOMEPAGE,
+    validationConstants.homepage,
     'storeForm:errorHomepageInvalidMaxMinChars'
   )
 
@@ -147,9 +148,14 @@ export const homepageValidation = (homepage: string | undefined): FormValidation
   }
 
   try {
-    // eslint-disable-next-line no-new
-    new URL(homepage)
-    return validResult()
+    const url = new URL(homepage)
+    if (!homepage.includes('//') || !url.protocol || !url.host) {
+      return {
+        invalid: true,
+        message: <Trans i18nKey='storeForm:errorHomepageInvalidUrl' />,
+      }
+    }
+    return validResult
   } catch {
     return {
       invalid: true,
@@ -163,22 +169,22 @@ export const postalCodeValidation = (postalCode: string | undefined): FormValida
     return requiredFieldError()
   }
 
-  if (postalCode.length !== VALIDATION_CONSTANTS.POSTAL_CODE.LENGTH) {
+  if (postalCode.length !== validationConstants.postal_code.length) {
     return {
       invalid: true,
       message: (
         <Trans
           i18nKey='storeForm:errorPostalCodeInvalidLength'
-          values={{ length: VALIDATION_CONSTANTS.POSTAL_CODE.LENGTH }}
+          values={{ length: validationConstants.postal_code.length }}
         />
       ),
     }
   }
-  return validResult()
+  return validResult
 }
 
 export const descriptionValidation = (description?: string): FormValidation =>
-  validateFieldWithLength(description, VALIDATION_CONSTANTS.DESCRIPTION, 'storeForm:errorDescriptionInvalidMaxChars')
+  validateFieldWithLength(description, validationConstants.description, 'storeForm:errorDescriptionMaxChars')
 
 export const coordinatesInvalid = (latitude?: number, longitude?: number): boolean =>
   latitude === undefined || longitude === undefined

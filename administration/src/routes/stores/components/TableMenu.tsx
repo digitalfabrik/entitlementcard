@@ -5,13 +5,19 @@ import { useTranslation } from 'react-i18next'
 
 import BaseMenu, { MenuItemType } from '../../../components/BaseMenu'
 
-const TableMenu = ({ storeId, editStore }: { storeId: number; editStore: (storeId: number) => void }): ReactElement => {
+const TableMenu = ({
+  storeId,
+  onEditStore,
+}: {
+  storeId: number
+  onEditStore: (storeId: number) => void
+}): ReactElement => {
   const { t } = useTranslation('misc')
   const menuItems: MenuItemType[] = [
     {
       name: t('edit'),
       onClick: () => {
-        editStore(storeId)
+        onEditStore(storeId)
       },
       icon: <EditOutlinedIcon sx={{ height: 20 }} />,
     },

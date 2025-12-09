@@ -34,7 +34,7 @@ const getStoreCoordinatesFromGeoDataService = (
   storeIndex: number,
   showInputError: (message: string, timeout?: number) => void
 ): Promise<AcceptingStoresEntry> =>
-  fetch(getGeoDataUrlWithParams(store.data.location, `${store.data.street} ${store.data.houseNumber}`).href)
+  fetch(getGeoDataUrlWithParams(store.data.location, `${store.data.houseNumber} ${store.data.street}`).href)
     .then(response => response.json())
     .then(({ features }: FeatureCollection<Point, GeoJSON>) => {
       if (features.length === 0) {
