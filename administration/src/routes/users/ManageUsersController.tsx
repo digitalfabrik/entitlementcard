@@ -1,8 +1,9 @@
-import { Card, Stack, Typography } from '@mui/material'
+import { Card, Typography } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import AlertBox from '../../components/AlertBox'
+import CenteredStack from '../../components/CenteredStack'
 import {
   Region,
   Role,
@@ -16,14 +17,14 @@ import getQueryResult from '../../util/getQueryResult'
 import UsersTable from './components/UsersTable'
 
 const UsersTableContainer = ({ children, title }: { children: ReactElement; title: string }) => (
-  <Stack sx={{ flexGrow: 1, alignItems: 'center', justifyContent: 'safe center' }}>
-    <Card style={{ maxWidth: '1200px', margin: 2 }}>
+  <CenteredStack>
+    <Card sx={{ maxWidth: '1200px', padding: 2 }}>
       <Typography variant='h5' sx={{ textAlign: 'center', marginY: 1 }}>
         {title}
       </Typography>
       {children}
     </Card>
-  </Stack>
+  </CenteredStack>
 )
 
 const ManageProjectUsers = () => {

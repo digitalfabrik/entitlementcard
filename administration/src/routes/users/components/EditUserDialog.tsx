@@ -131,7 +131,7 @@ const EditUserDialog = ({
           showError={!email || !isEmailValid(email)}
           errorMessage={t('noUserNameError')}
         />
-        <RoleSelector role={role} onChange={setRole} hideProjectAdmin={regionIdOverride !== null} />
+        <RoleSelector selectedRole={role} onChange={setRole} />
         {showRegionSelector ? (
           <RegionSelector onSelect={region => setRegionId(region ? region.id : null)} selectedId={regionId} />
         ) : null}
