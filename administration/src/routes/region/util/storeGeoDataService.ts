@@ -1,4 +1,4 @@
-import { FeatureCollection, GeoJSON, Point } from 'geojson'
+import { FeatureCollection, GeoJSON, Point, Position } from 'geojson'
 import i18next from 'i18next'
 
 import { LONG_ERROR_TIMEOUT } from '../../stores/import/constants'
@@ -20,12 +20,12 @@ const handleStoreWithMissingLocationInformation = (
   )
   return store
 }
-const getGeoDataUrlWithParams = (location: string, street: string, houseNr: string): URL => {
+const getGeoDataUrlWithParams = (location: string, street: string): URL => {
   const geoServiceUrl = new URL(GEO_SERVICE_URL)
   geoServiceUrl.searchParams.append('format', 'geojson')
   geoServiceUrl.searchParams.append('countrycodes', 'de')
   geoServiceUrl.searchParams.append('city', location)
-  geoServiceUrl.searchParams.append('street', `${houseNr} ${street}`)
+  geoServiceUrl.searchParams.append('street', `${street}`)
   return geoServiceUrl
 }
 
@@ -34,7 +34,7 @@ const getStoreCoordinatesFromGeoDataService = (
   storeIndex: number,
   showInputError: (message: string, timeout?: number) => void
 ): Promise<AcceptingStoresEntry> =>
-  fetch(getGeoDataUrlWithParams(store.data.location, store.data.street, store.data.houseNumber).href)
+  fetch(getGeoDataUrlWithParams(store.data.location, `${store.data.houseNumber} ${store.data.street}`).href)
     .then(response => response.json())
     .then(({ features }: FeatureCollection<Point, GeoJSON>) => {
       if (features.length === 0) {
@@ -71,3 +71,10 @@ export const getStoresWithCoordinates = (
     }
     return getStoreCoordinatesFromGeoDataService(store, index, showInputError)
   })
+
+export const getStoreCoordinates = async (city: string, street: string): Promise<Position | undefined> =>
+  fetch(getGeoDataUrlWithParams(city, street).href)
+    .then(response => response.json())
+    .then(({ features }: FeatureCollection<Point, GeoJSON>) =>
+      features.length === 0 ? undefined : features[0].geometry.coordinates
+    )

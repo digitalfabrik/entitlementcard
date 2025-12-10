@@ -11,3 +11,8 @@ const disallowedCharsInNameRegex = /[^a-zA-Z0-9]/g
 export const normalizeName = (name: string): string => normalizeString(name).replace(disallowedCharsInNameRegex, '')
 
 export default normalizeString
+
+export const trimStringFields = <T extends Record<string, string | unknown>>(obj: T): T =>
+  Object.fromEntries(
+    Object.entries(obj).map(([key, value]) => [key, typeof value === 'string' ? value.trim() : value])
+  ) as T

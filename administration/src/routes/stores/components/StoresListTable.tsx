@@ -1,11 +1,12 @@
-import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded'
-import { Box, IconButton, Link, SxProps } from '@mui/material'
+import { Box, Link, SxProps } from '@mui/material'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import { TFunction } from 'i18next'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { isDevelopmentEnvironment } from '../../../util/helper'
 import { AcceptingStoresData } from '../../applications/types/types'
+import TableMenu from './TableMenu'
 
 const customToolBarStyles: SxProps = {
   '.MuiButtonBase-root': {
@@ -16,20 +17,13 @@ const customToolBarStyles: SxProps = {
   '.MuiDataGrid-toolbar': { '.MuiDivider-vertical': { display: 'none' } },
 }
 
-// TODO 2471 Implement Menu and enable cell
-const EditCell = (): ReactElement => (
-  <IconButton aria-label='edit-cell'>
-    <MoreVertRoundedIcon />
-  </IconButton>
-)
 const EMailCell = ({ email }: { email: string }): ReactElement => <Link href={`mailto:${email}`}>{email}</Link>
-
-const columns = (t: TFunction): GridColDef[] => [
+const columns = (t: TFunction, editStore: (storeId: number) => void): GridColDef[] => [
   {
     field: 'id',
     headerName: '',
     width: 60,
-    renderCell: () => <EditCell />,
+    renderCell: ({ row }: { row: AcceptingStoresData }) => <TableMenu storeId={row.id} onEditStore={editStore} />,
   },
   {
     field: 'name',
@@ -67,7 +61,13 @@ const columns = (t: TFunction): GridColDef[] => [
   },
 ]
 
-const StoresListTable = ({ data }: { data: AcceptingStoresData[] }): ReactElement => {
+const StoresListTable = ({
+  data,
+  editStore,
+}: {
+  data: AcceptingStoresData[]
+  editStore: (storeId: number) => void
+}): ReactElement => {
   const { t } = useTranslation('stores')
 
   return (
@@ -80,11 +80,12 @@ const StoresListTable = ({ data }: { data: AcceptingStoresData[] }): ReactElemen
           '.MuiTablePagination-displayedRows': { m: 0 },
           ...customToolBarStyles,
         }}
-        columns={columns(t)}
+        columns={columns(t, editStore)}
         initialState={{
           columns: {
             columnVisibilityModel: {
-              id: false,
+              // TODO #2692 Remove this after implementation
+              id: isDevelopmentEnvironment(),
             },
           },
           sorting: {
