@@ -13,11 +13,23 @@ const ProjectSettingsController = (): ReactElement => {
   const { role } = useWhoAmI().me
   const { t } = useTranslation('errors')
   const isProjectAdminWithUserImportApiEnabled = role === Role.ProjectAdmin && userImportApiEnabled
-  const showProjectSettings = isProjectAdminWithUserImportApiEnabled || role === Role.ExternalVerifiedApiUser
+  const showProjectSettings =
+    isProjectAdminWithUserImportApiEnabled || role === Role.ExternalVerifiedApiUser
 
   return (
-    <RenderGuard condition={showProjectSettings} error={{ description: t('notAuthorizedForProjectSettings') }}>
-      <Stack sx={{ flexGrow: 1, justifyContent: 'safe center', alignItems: 'center', overflow: 'auto', padding: 4 }}>
+    <RenderGuard
+      condition={showProjectSettings}
+      error={{ description: t('notAuthorizedForProjectSettings') }}
+    >
+      <Stack
+        sx={{
+          flexGrow: 1,
+          justifyContent: 'safe center',
+          alignItems: 'center',
+          overflow: 'auto',
+          padding: 4,
+        }}
+      >
         <ApiTokenSettings showPepperSection={isProjectAdminWithUserImportApiEnabled} />
       </Stack>
     </RenderGuard>

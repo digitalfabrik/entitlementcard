@@ -1,6 +1,10 @@
 import React from 'react'
 
-import { type ApplicationPublic, ApplicationStatus, ApplicationVerificationView } from '../../generated/graphql'
+import {
+  type ApplicationPublic,
+  ApplicationStatus,
+  ApplicationVerificationView,
+} from '../../generated/graphql'
 import { verificationsMixed } from '../../routes/applications/__mocks__/verificationData'
 import { CustomRenderOptions, renderWithOptions } from '../../testing/render'
 import { JsonField } from '../JsonFieldView'
@@ -16,9 +20,13 @@ describe('VerificationsView', () => {
     application: Pick<ApplicationPublic, 'status' | 'id'> & {
       verifications: Pick<
         ApplicationVerificationView,
-        'organizationName' | 'contactEmailAddress' | 'verificationId' | 'rejectedDate' | 'verifiedDate'
+        | 'organizationName'
+        | 'contactEmailAddress'
+        | 'verificationId'
+        | 'rejectedDate'
+        | 'verifiedDate'
       >[]
-    }
+    },
   ) => renderWithOptions(<VerificationsView application={application} />, mockProvider)
 
   it('should show a hint if there are no verifications', () => {

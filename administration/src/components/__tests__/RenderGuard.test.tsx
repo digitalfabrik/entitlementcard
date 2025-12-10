@@ -35,7 +35,9 @@ describe('RenderGuard', () => {
 
     it('should render children when user role is in allowedRoles', () => {
       const { getByTestId } = render(
-        <RenderGuard allowedRoles={[Role.RegionAdmin, Role.RegionManager]}>{mockChildren}</RenderGuard>
+        <RenderGuard allowedRoles={[Role.RegionAdmin, Role.RegionManager]}>
+          {mockChildren}
+        </RenderGuard>,
       )
 
       expect(getByTestId('protected-content')).toBeTruthy()
@@ -64,7 +66,9 @@ describe('RenderGuard', () => {
 
     it('should neither render children nor error when user role is not in allowedRoles and no error is provided', () => {
       const { queryByTestId } = render(
-        <RenderGuard allowedRoles={[Role.RegionManager, Role.RegionAdmin]}>{mockChildren}</RenderGuard>
+        <RenderGuard allowedRoles={[Role.RegionManager, Role.RegionAdmin]}>
+          {mockChildren}
+        </RenderGuard>,
       )
 
       expect(queryByTestId('protected-content')).toBeNull()
@@ -80,7 +84,7 @@ describe('RenderGuard', () => {
       const { queryByTestId, getByText } = render(
         <RenderGuard allowedRoles={[Role.RegionManager, Role.RegionAdmin]} error={error}>
           {mockChildren}
-        </RenderGuard>
+        </RenderGuard>,
       )
 
       expect(queryByTestId('protected-content')).toBeNull()
@@ -93,7 +97,7 @@ describe('RenderGuard', () => {
         <RenderGuard allowedRoles={[Role.RegionAdmin]} error={{}}>
           {mockChildren}
         </RenderGuard>,
-        { translation: true }
+        { translation: true },
       )
 
       expect(queryByTestId('protected-content')).toBeNull()
@@ -109,7 +113,7 @@ describe('RenderGuard', () => {
       const { getByText } = render(
         <RenderGuard allowedRoles={[Role.RegionAdmin]} error={error}>
           {mockChildren}
-        </RenderGuard>
+        </RenderGuard>,
       )
 
       expect(getByText('Custom Title Only')).toBeTruthy()
@@ -124,7 +128,7 @@ describe('RenderGuard', () => {
       const { getByText } = render(
         <RenderGuard allowedRoles={[Role.RegionAdmin]} error={error}>
           {mockChildren}
-        </RenderGuard>
+        </RenderGuard>,
       )
 
       expect(getByText('Fehlende Berechtigung')).toBeTruthy()
@@ -144,7 +148,7 @@ describe('RenderGuard', () => {
       const { queryByTestId } = render(
         <RenderGuard condition={false} allowedRoles={[Role.RegionAdmin]}>
           {mockChildren}
-        </RenderGuard>
+        </RenderGuard>,
       )
 
       expect(queryByTestId('protected-content')).toBeNull()
@@ -159,7 +163,7 @@ describe('RenderGuard', () => {
       const { getByText } = render(
         <RenderGuard condition={false} error={error}>
           {mockChildren}
-        </RenderGuard>
+        </RenderGuard>,
       )
 
       expect(getByText('Error Title')).toBeTruthy()

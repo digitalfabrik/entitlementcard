@@ -27,7 +27,7 @@ const WorkAtOrganizationFormHelper = ({
   const setState = useMemo(() => setStateByKey(listKey), [setStateByKey, listKey])
   const onDelete = useMemo(
     () => (deleteByKey === undefined ? undefined : () => deleteByKey(listKey)),
-    [deleteByKey, listKey]
+    [deleteByKey, listKey],
   )
   return (
     <WorkAtOrganizationForm.Component
@@ -56,7 +56,8 @@ type ValidatedInput = BlueCardWorkAtOrganizationsEntitlementInput
 type AdditionalProps = { applicantName: string }
 const WorkAtOrganizationsEntitlementForm: Form<State, ValidatedInput, AdditionalProps> = {
   initialState: [{ key: 0, value: WorkAtOrganizationForm.initialState }],
-  getArrayBufferKeys: state => state.map(({ value }) => WorkAtOrganizationForm.getArrayBufferKeys(value)).flat(),
+  getArrayBufferKeys: state =>
+    state.map(({ value }) => WorkAtOrganizationForm.getArrayBufferKeys(value)).flat(),
   validate: state => {
     const validationResults = state.map(({ value }) => WorkAtOrganizationForm.validate(value))
     if (validationResults.some(({ type }) => type === 'error')) {
@@ -88,7 +89,7 @@ const WorkAtOrganizationsEntitlementForm: Form<State, ValidatedInput, Additional
           const index = state.findIndex(element => element.key === key)
           return replaceAt(state, index, { key, value: update(state[index].value) })
         }),
-      [setState]
+      [setState],
     )
 
     const deleteByKey = useMemo(() => {
@@ -99,8 +100,8 @@ const WorkAtOrganizationsEntitlementForm: Form<State, ValidatedInput, Additional
         setState(state =>
           removeAt(
             state,
-            state.findIndex(item => item.key === key)
-          )
+            state.findIndex(item => item.key === key),
+          ),
         )
     }, [state.length, setState])
 

@@ -12,7 +12,11 @@ type StoreImportAlertProps = {
 
 const STORES_COUNT_NOTE_THRESHOLD = 500
 const STORES_IMPORT_PER_SECOND = 100
-const StoresImportAlert = ({ dryRun, setDryRun, storesCount }: StoreImportAlertProps): ReactElement => {
+const StoresImportAlert = ({
+  dryRun,
+  setDryRun,
+  storesCount,
+}: StoreImportAlertProps): ReactElement => {
   const { t } = useTranslation('stores')
   return (
     <>
@@ -28,8 +32,8 @@ const StoresImportAlert = ({ dryRun, setDryRun, storesCount }: StoreImportAlertP
           <br />
           {storesCount > STORES_COUNT_NOTE_THRESHOLD && (
             <Box sx={{ marginTop: 1.5 }} data-testid='duration-alert'>
-              <b>{t('timeForImport')}:</b> {Math.ceil(storesCount / STORES_IMPORT_PER_SECOND / 60)} {t('minutes')}.{' '}
-              <br />
+              <b>{t('timeForImport')}:</b> {Math.ceil(storesCount / STORES_IMPORT_PER_SECOND / 60)}{' '}
+              {t('minutes')}. <br />
               {t('pleaseDoNotCloseTheWindow')}
             </Box>
           )}

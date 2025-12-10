@@ -69,19 +69,26 @@ const UsersTable = ({
               <tr key={user.id}>
                 <Typography component='td'>{user.email}</Typography>
                 {selectedRegionId !== null ? null : (
-                  <Typography component='td'>{regionName === null ? <i>({t('none')})</i> : regionName}</Typography>
+                  <Typography component='td'>
+                    {regionName === null ? <i>({t('none')})</i> : regionName}
+                  </Typography>
                 )}
                 <Typography component='td'>{roleToText(user.role)}</Typography>
                 <td>
                   <Stack sx={{ flexDirection: 'row', gap: 1 }}>
-                    <Button startIcon={<Edit />} size='small' onClick={() => setUserInEditDialog(user)}>
+                    <Button
+                      startIcon={<Edit />}
+                      size='small'
+                      onClick={() => setUserInEditDialog(user)}
+                    >
                       {t('edit')}
                     </Button>
                     <Button
                       startIcon={<PersonRemove />}
                       color='error'
                       size='small'
-                      onClick={() => setUserInDeleteDialog(user)}>
+                      onClick={() => setUserInDeleteDialog(user)}
+                    >
                       {t('delete')}
                     </Button>
                   </Stack>

@@ -6,7 +6,8 @@ import pdfTemplate from './pdf-template.pdf'
 
 const renderPdfInfo = ({ info, region }: InfoParams): string => {
   const expirationDay = info.expirationDay ?? 0
-  const expirationDate = expirationDay > 0 ? PlainDate.fromDaysSinceEpoch(expirationDay).format() : 'unbegrenzt'
+  const expirationDate =
+    expirationDay > 0 ? PlainDate.fromDaysSinceEpoch(expirationDay).format() : 'unbegrenzt'
 
   const cardType = info.extensions?.extensionBavariaCardType?.cardType
   return `${info.fullName}

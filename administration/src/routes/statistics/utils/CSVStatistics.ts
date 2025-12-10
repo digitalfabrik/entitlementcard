@@ -13,9 +13,14 @@ export class CsvStatisticsError extends Error {
 }
 
 export const getCsvFileName = (dateRange: string, region?: Region): string =>
-  region ? `${region.prefix}${region.name}_CardStatistics_${dateRange}.csv` : `CardStatistics_${dateRange}.csv`
+  region
+    ? `${region.prefix}${region.name}_CardStatistics_${dateRange}.csv`
+    : `CardStatistics_${dateRange}.csv`
 
-export const generateCsv = (statistics: CardStatisticsResultModel[], cardStatistics: CardStatistics): Blob => {
+export const generateCsv = (
+  statistics: CardStatisticsResultModel[],
+  cardStatistics: CardStatistics,
+): Blob => {
   if (!cardStatistics.enabled) {
     throw new CsvStatisticsError('CSV statistic export is disabled for this project')
   }

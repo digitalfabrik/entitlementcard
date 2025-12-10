@@ -7,7 +7,7 @@ import path from 'path'
 import getPaths from './getPaths'
 
 const getClientEnvironment = (
-  publicUrl: string
+  publicUrl: string,
 ): {
   raw: Record<string, string | boolean | undefined>
   stringified: { 'process.env': Record<string, string> }
@@ -39,7 +39,7 @@ const getClientEnvironment = (
       expand(
         dotenv.config({
           path: dotenvFile,
-        })
+        }),
       )
     }
   })
@@ -87,7 +87,7 @@ const getClientEnvironment = (
         // Whether react-refresh is enabled.
         // It is defined here so it is available in the webpackHotDevClient.
         FAST_REFRESH: process.env.FAST_REFRESH !== 'false',
-      }
+      },
     )
   // Stringify all values so we can feed into webpack DefinePlugin
   const stringified = {

@@ -29,7 +29,7 @@ describe('CardSelfServiceActivation', () => {
   it('should have the correct deeplink', async () => {
     const { getByText } = renderWithOptions(
       <CardSelfServiceActivation downloadPdf={downloadPdf} code={code} />,
-      mockProvider
+      mockProvider,
     )
     expect(getByText('KoblenzPass jetzt aktivieren').getAttribute('href')).toBe(deepLink)
   })
@@ -37,7 +37,7 @@ describe('CardSelfServiceActivation', () => {
   it('should provide a pdf download button', async () => {
     const { getByText } = renderWithOptions(
       <CardSelfServiceActivation downloadPdf={downloadPdf} code={code} />,
-      mockProvider
+      mockProvider,
     )
 
     const downloadPDFButton = getByText('KoblenzPass PDF')

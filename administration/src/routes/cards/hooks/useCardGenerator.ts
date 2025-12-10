@@ -32,7 +32,7 @@ import useSendCardConfirmationMails from './useSendCardConfirmationMails'
 const initializeCardsFromQueryParams = (
   projectConfig: ProjectConfig,
   searchParams: URLSearchParams,
-  region: Region
+  region: Region,
 ) => {
   const headers = getCsvHeaders(projectConfig)
   const values = headers.map(header => searchParams.get(header))
@@ -45,7 +45,7 @@ type GenerateCardFunction = (
   codes: CreateCardsResult[],
   cards: Card[],
   projectConfig: ProjectConfig,
-  region?: Region
+  region?: Region,
 ) => Promise<Blob> | Blob
 
 type UseCardGeneratorProps = {
@@ -63,7 +63,10 @@ type UseCardGeneratorReturn = {
   cards: Card[]
 }
 
-const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorProps): UseCardGeneratorReturn => {
+const useCardGenerator = ({
+  region,
+  initializeCards = true,
+}: UseCardGeneratorProps): UseCardGeneratorReturn => {
   const projectConfig = useContext(ProjectConfigContext)
   const [searchParams] = useSearchParams()
   const [cardGenerationStep, setCardGenerationStep] = useState<CardGenerationStep>('input')
@@ -84,7 +87,9 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
     },
   })
   const sendConfirmationMails = useSendCardConfirmationMails()
-  const initializedCards = initializeCards ? initializeCardsFromQueryParams(projectConfig, searchParams, region) : []
+  const initializedCards = initializeCards
+    ? initializeCardsFromQueryParams(projectConfig, searchParams, region)
+    : []
   const [cards, setCards] = useState<Card[]>(initializedCards)
   const rawApplicationId = searchParams.get('applicationIdToMarkAsProcessed')
   const applicationId = rawApplicationId ? parseInt(rawApplicationId, 10) : null
@@ -92,7 +97,7 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
   const updateCard = useCallback(
     (updatedCard: Partial<Card>, index: number) =>
       setCards(updateArrayItem(cards, updateCardObject(cards[index], updatedCard), index)),
-    [cards]
+    [cards],
   )
 
   const generateCards = useCallback(
@@ -101,10 +106,18 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
       setCardGenerationStep('loading')
 
       // Normalize each card's full name
-      const normalizedCards = cards.map(card => ({ ...card, fullName: normalizeWhitespace(card.fullName) }))
+      const normalizedCards = cards.map(card => ({
+        ...card,
+        fullName: normalizeWhitespace(card.fullName),
+      }))
 
       try {
-        codes = await createCards(createCardsMutation, projectConfig, normalizedCards, applicationId)
+        codes = await createCards(
+          createCardsMutation,
+          projectConfig,
+          normalizedCards,
+          applicationId,
+        )
         const dataUri = await generateFunction(codes, normalizedCards, projectConfig, region)
         downloadDataUri(dataUri, filename)
         normalizedCards.forEach(saveActivityLog)
@@ -128,8 +141,8 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
             getDeepLinkFromQrCode(
               { case: 'dynamicActivationCode', value: code.dynamicActivationCode },
               getBuildConfig(window.location.hostname),
-              isProductionEnvironment()
-            )
+              isProductionEnvironment(),
+            ),
           )
         }
 
@@ -155,17 +168,17 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
       sendConfirmationMails,
       enqueueSnackbar,
       deleteCardsMutation,
-    ]
+    ],
   )
 
   const generateCardsPdf = useCallback(
     async () => generateCards(generatePdf, getPdfFilename(cards)),
-    [generateCards, cards]
+    [generateCards, cards],
   )
 
   const generateCardsCsv = useCallback(
     async () => generateCards(generateCsv, getCSVFilename(cards)),
-    [cards, generateCards]
+    [cards, generateCards],
   )
 
   return {

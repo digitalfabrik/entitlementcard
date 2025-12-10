@@ -27,7 +27,8 @@ const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
   const projectConfig = useContext(ProjectConfigContext)
   const { enqueueSnackbar } = useSnackbar()
   const [searchParams] = useSearchParams()
-  const [cardGenerationStep, setCardGenerationStep] = useState<SelfServiceCardGenerationStep>('input')
+  const [cardGenerationStep, setCardGenerationStep] =
+    useState<SelfServiceCardGenerationStep>('input')
   const [code, setCode] = useState<CreateCardsResult | null>(null)
   const [createCardsSelfService] = useCreateCardsFromSelfServiceMutation()
   const [selfServiceCard, setSelfServiceCard] = useState(() => {
@@ -39,7 +40,11 @@ const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
   const generateCards = useCallback(async (): Promise<void> => {
     setCardGenerationStep('loading')
     try {
-      const code = await createSelfServiceCard(createCardsSelfService, projectConfig, selfServiceCard)
+      const code = await createSelfServiceCard(
+        createCardsSelfService,
+        projectConfig,
+        selfServiceCard,
+      )
       setCode(code)
       setCardGenerationStep('information')
     } catch (error) {

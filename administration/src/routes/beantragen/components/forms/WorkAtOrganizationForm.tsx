@@ -37,7 +37,8 @@ const ActivityDivider = ({ onDelete }: { onDelete?: () => void }) => {
           onClose={() => setDeleteDialogOpen(false)}
           confirmButtonText={t('misc:delete')}
           onConfirm={onDelete}
-          title={t('deleteActivityTitle')}>
+          title={t('deleteActivityTitle')}
+        >
           <Typography> {t('deleteActivityContent')}</Typography>
         </ConfirmDialog>
       )}
@@ -68,7 +69,12 @@ const WorkAtOrganizationForm: Form<State, ValidatedInput, AdditionalProps> = {
     payment: paymentOptions,
     workSinceDate: { maximumDate: undefined },
   }),
-  Component: ({ state, setState, onDelete, applicantName }: FormComponentProps<State, AdditionalProps>) => {
+  Component: ({
+    state,
+    setState,
+    onDelete,
+    applicantName,
+  }: FormComponentProps<State, AdditionalProps>) => {
     const { t } = useTranslation('application')
     return (
       <>

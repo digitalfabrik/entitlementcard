@@ -14,7 +14,9 @@ describe('normalizeString', () => {
 
 describe('normalizeName', () => {
   it('should normalize search string', () => {
-    expect(normalizeName('Dr. Hans-Peter Müller Lüdenscheid  ')).toBe('drhanspetermullerludenscheid')
+    expect(normalizeName('Dr. Hans-Peter Müller Lüdenscheid  ')).toBe(
+      'drhanspetermullerludenscheid',
+    )
     expect(normalizeName('Dr. Hans Peter Müller Lüdenscheid')).toBe('drhanspetermullerludenscheid')
   })
 })

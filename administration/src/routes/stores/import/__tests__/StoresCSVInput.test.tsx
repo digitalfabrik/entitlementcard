@@ -45,14 +45,16 @@ describe('StoresCSVInput', () => {
     } as unknown as FileReader
     jest.spyOn(global, 'FileReader').mockReturnValue(fileReaderMock)
     const file = new File([csv], 'Stores.csv', { type: 'text/csv' })
-    const fields = nuernbergConfig.storesManagement.enabled ? nuernbergConfig.storesManagement.fields : []
+    const fields = nuernbergConfig.storesManagement.enabled
+      ? nuernbergConfig.storesManagement.fields
+      : []
     const { getByTestId } = renderWithOptions(
       <StoresCSVInput
         setAcceptingStores={setAcceptingStores}
         fields={fields}
         setIsLoadingCoordinates={setIsLoadingCoordinates}
       />,
-      mockProvider
+      mockProvider,
     )
 
     const fileInput = getByTestId('store-file-upload') as HTMLInputElement
@@ -115,7 +117,8 @@ describe('StoresCSVInput', () => {
   })
 
   it(`should fail if the column format is not correct`, async () => {
-    const error = 'Die erforderlichen Spalten sind nicht vorhanden oder nicht in der richtigen Reihenfolge.'
+    const error =
+      'Die erforderlichen Spalten sind nicht vorhanden oder nicht in der richtigen Reihenfolge.'
     const csv = ''
     mocked(parse).mockReturnValueOnce([
       [
@@ -241,7 +244,11 @@ describe('StoresCSVInput', () => {
       ],
     ])
     await waitFor(async () => renderAndSubmitStoreInput(csv))
-    expect(enqueueSnackbarMock).toHaveBeenCalledWith(error, { variant: 'error', autoHideDuration: 0, persist: true })
+    expect(enqueueSnackbarMock).toHaveBeenCalledWith(error, {
+      variant: 'error',
+      autoHideDuration: 0,
+      persist: true,
+    })
     expect(setAcceptingStores).not.toHaveBeenCalled()
   })
 })

@@ -14,7 +14,10 @@ import {
   createCompoundValidate,
 } from '../../util/compoundFormUtils'
 import DateForm from '../primitive-inputs/DateForm'
-import FileInputForm, { FileRequirementsText, OptionalFileInputForm } from '../primitive-inputs/FileInputForm'
+import FileInputForm, {
+  FileRequirementsText,
+  OptionalFileInputForm,
+} from '../primitive-inputs/FileInputForm'
 import ShortTextForm from '../primitive-inputs/ShortTextForm'
 
 const SubForms = {
@@ -58,7 +61,10 @@ const JuleicaEntitlementForm: Form<State, ValidatedInput> = {
         />
         {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions */}
         {(state.copyOfJuleicaFront || (!state.copyOfJuleicaFront && state.copyOfJuleicaBack)) && (
-          <SubForms.copyOfJuleicaBack.Component state={state.copyOfJuleicaBack} setState={juleicaBackSetState} />
+          <SubForms.copyOfJuleicaBack.Component
+            state={state.copyOfJuleicaBack}
+            setState={juleicaBackSetState}
+          />
         )}
       </>
     )

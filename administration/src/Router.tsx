@@ -1,11 +1,20 @@
 import React, { ReactElement, useContext, useMemo } from 'react'
-import { Outlet, Route, RouterProvider, createBrowserRouter, createRoutesFromElements, useNavigate } from 'react-router'
+import {
+  Outlet,
+  Route,
+  RouterProvider,
+  createBrowserRouter,
+  createRoutesFromElements,
+  useNavigate,
+} from 'react-router'
 
 import AutomaticLogoutDialog from './auth/AutomaticLogoutDialog'
 import Login from './auth/Login'
+import { JsonField } from './components/JsonFieldView'
 import NavigationBar from './components/NavigationBar'
 import useMetaTags from './hooks/useMetaTags'
 import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
+import type { ProjectConfig } from './project-configs/getProjectConfig'
 import { AuthContext } from './provider/AuthProvider'
 import WhoAmIProvider from './provider/WhoAmIProvider'
 import ActivationPage from './routes/activation/ActivationPage'
@@ -33,6 +42,35 @@ import StoresController from './routes/stores/StoresController'
 import StoresImportController from './routes/stores/import/StoresImportController'
 import UserSettingsController from './routes/user-settings/UserSettingsController'
 import ManageUsersController from './routes/users/ManageUsersController'
+
+/** Creates a route string in a type-safe way. */
+export const createRoute = (
+  route:
+    | { page: 'cards' }
+    /** Throws, if the application data cannot be mapped to a query. */
+    | {
+        page: 'cards/addquery'
+        application: { id: number; jsonValue: JsonField<'Array'> }
+        projectConfig: ProjectConfig
+      },
+): string => {
+  switch (route.page) {
+    case 'cards':
+      return '/cards'
+    case 'cards/addquery': {
+      const query = route.projectConfig.applicationFeature?.applicationJsonToCardQuery(
+        route.application.jsonValue,
+      )
+
+      if (typeof query === 'string') {
+        return `/cards/add${query}&applicationIdToMarkAsProcessed=${route.application.id}`
+      }
+      throw new Error('Application data cannot be mapped to a query')
+    }
+    default:
+      throw new Error('Unknown route')
+  }
+}
 
 const AuthLayout = (): ReactElement => {
   const { data: authData, signIn } = useContext(AuthContext)
@@ -81,12 +119,17 @@ const Router = (): ReactElement => {
                   path='/antrag-verifizieren/:applicationVerificationAccessKey'
                   element={<ApplicationVerificationController />}
                 />
-                <Route path='/antrag-einsehen/:accessKey' element={<ApplicationApplicantController />} />
+                <Route
+                  path='/antrag-einsehen/:accessKey'
+                  element={<ApplicationApplicantController />}
+                />
                 <Route path='/beantragen' element={<ApplyController />} />
               </>
             )}
 
-            {projectConfig.selfServiceEnabled && <Route path='/erstellen' element={<CardSelfServiceView />} />}
+            {projectConfig.selfServiceEnabled && (
+              <Route path='/erstellen' element={<CardSelfServiceView />} />
+            )}
 
             {/* Authenticated routes */}
 
@@ -98,7 +141,9 @@ const Router = (): ReactElement => {
               <Route path='users' element={<ManageUsersController />} />
               <Route path='*' element={<HomeController />} />
 
-              {projectConfig.cardStatistics.enabled && <Route path='statistics' element={<StatisticsController />} />}
+              {projectConfig.cardStatistics.enabled && (
+                <Route path='statistics' element={<StatisticsController />} />
+              )}
 
               {projectConfig.applicationFeature && (
                 <>
@@ -112,7 +157,9 @@ const Router = (): ReactElement => {
               {projectConfig.activityLogConfig && (
                 <Route
                   path='activity-log'
-                  element={<ActivityLogController activityLogConfig={projectConfig.activityLogConfig} />}
+                  element={
+                    <ActivityLogController activityLogConfig={projectConfig.activityLogConfig} />
+                  }
                 />
               )}
 
@@ -124,10 +171,10 @@ const Router = (): ReactElement => {
                 </>
               )}
             </Route>
-          </>
-        )
+          </>,
+        ),
       ),
-    [projectConfig]
+    [projectConfig],
   )
 
   return <RouterProvider router={router} />

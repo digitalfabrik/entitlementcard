@@ -19,7 +19,10 @@ const importStores = jest.fn()
 const mockProvider: CustomRenderOptions = { theme: true, translation: true }
 
 describe('StoresButtonBar', () => {
-  const projectConfigsWithStoreUpload = [{ projectConfig: nuernbergConfig }, { projectConfig: koblenzConfig }]
+  const projectConfigsWithStoreUpload = [
+    { projectConfig: nuernbergConfig },
+    { projectConfig: koblenzConfig },
+  ]
   it.each(projectConfigsWithStoreUpload)(
     `should goBack when clicking back for $projectConfig.name`,
     async ({ projectConfig }) => {
@@ -32,7 +35,7 @@ describe('StoresButtonBar', () => {
           acceptingStores={[]}
           importStores={importStores}
         />,
-        mockProvider
+        mockProvider,
       )
 
       const backButton = getByText('Zurück zur Auswahl')
@@ -42,7 +45,7 @@ describe('StoresButtonBar', () => {
       await act(async () => null) // Popper update() - https://github.com/popperjs/react-popper/issues/350
 
       expect(goBack).toHaveBeenCalled()
-    }
+    },
   )
 
   it.each(projectConfigsWithStoreUpload)(
@@ -57,10 +60,12 @@ describe('StoresButtonBar', () => {
           acceptingStores={[]}
           importStores={importStores}
         />,
-        mockProvider
+        mockProvider,
       )
 
-      const importButton = getByText('Importiere Akzeptanzpartner').closest('button') as HTMLButtonElement
+      const importButton = getByText('Importiere Akzeptanzpartner').closest(
+        'button',
+      ) as HTMLButtonElement
       expect(importButton).toBeTruthy()
       expect(importButton.disabled).toBeTruthy()
       fireEvent.mouseOver(importButton)
@@ -71,14 +76,16 @@ describe('StoresButtonBar', () => {
 
       expect(getByText('Laden sie bitte eine Datei mit Akzeptanzpartnern hoch.')).toBeTruthy()
       expect(importStores).not.toHaveBeenCalled()
-    }
+    },
   )
 
   it.each(projectConfigsWithStoreUpload)(
     `should disable import stores for invalid store entries for $projectConfig.name`,
     async ({ projectConfig }) => {
       localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, projectConfig.projectId)
-      const fields = projectConfig.storesManagement.enabled ? projectConfig.storesManagement.fields : []
+      const fields = projectConfig.storesManagement.enabled
+        ? projectConfig.storesManagement.fields
+        : []
       const stores = [new AcceptingStoresEntry(invalidStoreData, fields)]
       const { getByText } = renderWithOptions(
         <StoresButtonBar
@@ -88,10 +95,12 @@ describe('StoresButtonBar', () => {
           acceptingStores={stores}
           importStores={importStores}
         />,
-        mockProvider
+        mockProvider,
       )
 
-      const importButton = getByText('Importiere Akzeptanzpartner').closest('button') as HTMLButtonElement
+      const importButton = getByText('Importiere Akzeptanzpartner').closest(
+        'button',
+      ) as HTMLButtonElement
       expect(importButton).toBeTruthy()
       fireEvent.mouseOver(importButton)
       fireEvent.click(importButton)
@@ -101,16 +110,20 @@ describe('StoresButtonBar', () => {
       })
 
       expect(importButton.disabled).toBeTruthy()
-      expect(getByText('Fehlerhafte Einträge. Bitte prüfen sie die rot markierten Felder.')).toBeTruthy()
+      expect(
+        getByText('Fehlerhafte Einträge. Bitte prüfen sie die rot markierten Felder.'),
+      ).toBeTruthy()
       expect(importStores).not.toHaveBeenCalled()
-    }
+    },
   )
 
   it.each(projectConfigsWithStoreUpload)(
     `should import valid stores for $projectConfig.name`,
     async ({ projectConfig }) => {
       localStorage.setItem(LOCAL_STORAGE_PROJECT_KEY, projectConfig.projectId)
-      const fields = projectConfig.storesManagement.enabled ? projectConfig.storesManagement.fields : []
+      const fields = projectConfig.storesManagement.enabled
+        ? projectConfig.storesManagement.fields
+        : []
       const stores = [new AcceptingStoresEntry(validStoreData, fields)]
       const { getAllByText } = renderWithOptions(
         <StoresButtonBar
@@ -120,17 +133,21 @@ describe('StoresButtonBar', () => {
           acceptingStores={stores}
           importStores={importStores}
         />,
-        mockProvider
+        mockProvider,
       )
 
-      const importButton = getAllByText('Importiere Akzeptanzpartner')[0].closest('button') as HTMLButtonElement
+      const importButton = getAllByText('Importiere Akzeptanzpartner')[0].closest(
+        'button',
+      ) as HTMLButtonElement
       expect(importButton).toBeTruthy()
       fireEvent.click(importButton)
-      const importConfirmationButton = getAllByText('Bestätigen')[0].closest('button') as HTMLButtonElement
+      const importConfirmationButton = getAllByText('Bestätigen')[0].closest(
+        'button',
+      ) as HTMLButtonElement
       fireEvent.click(importConfirmationButton)
       await act(async () => null) // Popper update() - https://github.com/popperjs/react-popper/issues/350
 
       expect(importStores).toHaveBeenCalled()
-    }
+    },
   )
 })

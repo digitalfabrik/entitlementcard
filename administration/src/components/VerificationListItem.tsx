@@ -7,14 +7,17 @@ import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import EmailLink from '../components/EmailLink'
-import { ApplicationVerificationView, useSendApprovalMailToOrganisationMutation } from '../generated/graphql'
+import {
+  ApplicationVerificationView,
+  useSendApprovalMailToOrganisationMutation,
+} from '../generated/graphql'
 import { isEmailValid, verificationStatus } from '../util/verifications'
 import { VerificationIcon } from './VerificationIcon'
 
 const getStatusMetaData = (
   verification: Pick<ApplicationVerificationView, 'rejectedDate' | 'verifiedDate'>,
   t: TFunction,
-  theme: Theme
+  theme: Theme,
 ): { text: string; color: string } => {
   const unverifiedText = verification.rejectedDate
     ? `${t('rejectedOn')} ${new Date(verification.rejectedDate).toLocaleString('de')}`
@@ -22,7 +25,9 @@ const getStatusMetaData = (
   const text = verification.verifiedDate
     ? `${t('verifiedOn')} ${new Date(verification.verifiedDate).toLocaleString('de')}`
     : unverifiedText
-  const unverifiedColor = verification.rejectedDate ? theme.palette.error.main : theme.palette.warning.main
+  const unverifiedColor = verification.rejectedDate
+    ? theme.palette.error.main
+    : theme.palette.warning.main
   const color = verification.verifiedDate ? theme.palette.success.main : unverifiedColor
 
   return { text, color }
@@ -66,7 +71,11 @@ const VerificationListItem = ({
   }
 
   return (
-    <Typography component='li' sx={{ borderLeft: `2px solid ${color}`, position: 'relative' }} paddingLeft={1.5}>
+    <Typography
+      component='li'
+      sx={{ borderLeft: `2px solid ${color}`, position: 'relative' }}
+      paddingLeft={1.5}
+    >
       <table cellPadding='2px'>
         <tbody>
           <tr>
@@ -97,7 +106,8 @@ const VerificationListItem = ({
           onClick={() => onSendApprovalEmailClick()}
           startIcon={<ForwardToInboxIcon />}
           sx={{ displayPrint: 'none', mt: 1 }}
-          disabled={Boolean(sendApprovalEmailResult.loading) || isApprovalRequestSent}>
+          disabled={Boolean(sendApprovalEmailResult.loading) || isApprovalRequestSent}
+        >
           {isApprovalRequestSent ? t('approvalRequestHasBeenSent') : t('resendApprovalRequest')}
         </Button>
       )}

@@ -1,3 +1,6 @@
 mutation updateDataTransferToFreinet($regionId: Int!, $dataTransferActivated: Boolean!) {
-  result: updateDataTransferToFreinet(regionId: $regionId, dataTransferActivated: $dataTransferActivated)
+  result: updateDataTransferToFreinet(
+    regionId: $regionId
+    dataTransferActivated: $dataTransferActivated
+  )
 }

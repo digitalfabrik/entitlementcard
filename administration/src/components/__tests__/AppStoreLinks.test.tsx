@@ -9,10 +9,16 @@ describe('AppStoreLinks', () => {
   it('should provide correct store links', () => {
     const { getByRole } = renderWithOptions(
       <AppStoreLinks playStoreLink={examplePlayStoreLink} appStoreLink={exampleAppStoreLink} />,
-      { translation: true, theme: true }
+      { translation: true, theme: true },
     )
 
-    expect(getByRole('link', { name: 'App Store öffnen' })).toHaveAttribute('href', exampleAppStoreLink)
-    expect(getByRole('link', { name: 'Google Play öffnen' })).toHaveAttribute('href', examplePlayStoreLink)
+    expect(getByRole('link', { name: 'App Store öffnen' })).toHaveAttribute(
+      'href',
+      exampleAppStoreLink,
+    )
+    expect(getByRole('link', { name: 'Google Play öffnen' })).toHaveAttribute(
+      'href',
+      examplePlayStoreLink,
+    )
   })
 })

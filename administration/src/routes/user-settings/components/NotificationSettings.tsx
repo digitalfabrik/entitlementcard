@@ -6,7 +6,10 @@ import { useTranslation } from 'react-i18next'
 import BaseCheckbox from '../../../components/BaseCheckbox'
 import SettingsCard, { SettingsCardButtonBox } from '../../../components/SettingsCard'
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
-import { useGetNotificationSettingsQuery, useUpdateNotificationSettingsMutation } from '../../../generated/graphql'
+import {
+  useGetNotificationSettingsQuery,
+  useUpdateNotificationSettingsMutation,
+} from '../../../generated/graphql'
 import getQueryResult from '../../../util/getQueryResult'
 
 const NotificationSettings = (): ReactElement => {
@@ -60,7 +63,8 @@ const NotificationSettings = (): ReactElement => {
         onSubmit={event => {
           event.preventDefault()
           submit()
-        }}>
+        }}
+      >
         <BaseCheckbox
           checked={receiveEmailForActivation}
           onChange={checked => setReceiveEmailForActivation(checked)}

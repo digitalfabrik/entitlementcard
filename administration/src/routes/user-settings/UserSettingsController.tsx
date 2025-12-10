@@ -12,7 +12,15 @@ const UserSettingsController = (): ReactElement => {
   const { role } = useWhoAmI().me
   return (
     <Stack
-      sx={{ flexGrow: 1, justifyContent: 'safe center', alignItems: 'center', padding: 2, gap: 2, overflow: 'auto' }}>
+      sx={{
+        flexGrow: 1,
+        justifyContent: 'safe center',
+        alignItems: 'center',
+        padding: 2,
+        gap: 2,
+        overflow: 'auto',
+      }}
+    >
       {applicationFeature && role !== Role.ProjectAdmin && <NotificationSettings />}
       <ChangePasswordForm />
     </Stack>

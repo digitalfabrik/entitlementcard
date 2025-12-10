@@ -20,7 +20,12 @@ type State = CompoundState<typeof SubForms>
 type ValidatedInput = GoldenCardHonoredByMinisterPresidentEntitlementInput
 type Options = Record<string, unknown>
 type AdditionalProps = Record<string, unknown>
-const HonoredByMinisterPresidentEntitlementForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
+const HonoredByMinisterPresidentEntitlementForm: Form<
+  State,
+  ValidatedInput,
+  AdditionalProps,
+  Options
+> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: createCompoundValidate(SubForms, {}),
@@ -35,7 +40,10 @@ const HonoredByMinisterPresidentEntitlementForm: Form<State, ValidatedInput, Add
         <Typography component='p'>
           {t('honoredByMinisterCertificateDescription')} {FileRequirementsText}
         </Typography>
-        <FileInputForm.Component state={state.certificate} setState={useUpdateStateCallback(setState, 'certificate')} />
+        <FileInputForm.Component
+          state={state.certificate}
+          setState={useUpdateStateCallback(setState, 'certificate')}
+        />
       </>
     )
   },

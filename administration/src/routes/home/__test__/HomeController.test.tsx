@@ -103,7 +103,10 @@ describe('HomeController', () => {
     })
 
     it('should render the correct NavBar items for koblenz', async () => {
-      const { queryByText } = renderWithOptions(<HomeController />, { router: true, projectConfig: koblenzConfig })
+      const { queryByText } = renderWithOptions(<HomeController />, {
+        router: true,
+        projectConfig: koblenzConfig,
+      })
       expect(queryByText('Akzeptanzpartner verwalten')).toBeNull()
       expect(queryByText('Benutzer verwalten')).toBeNull()
       expect(queryByText('Eingehende Anträge')).toBeNull()
@@ -195,11 +198,17 @@ describe('HomeController', () => {
         me: { role: Role.ProjectStoreManager },
       })
     })
-    const projectConfigsWithStoreUpload = [{ projectConfig: nuernbergConfig }, { projectConfig: koblenzConfig }]
+    const projectConfigsWithStoreUpload = [
+      { projectConfig: nuernbergConfig },
+      { projectConfig: koblenzConfig },
+    ]
     it.each(projectConfigsWithStoreUpload)(
       `should render the correct NavBar items for $projectConfig.name`,
       ({ projectConfig }) => {
-        const { getByText, queryByText } = renderWithOptions(<HomeController />, { router: true, projectConfig })
+        const { getByText, queryByText } = renderWithOptions(<HomeController />, {
+          router: true,
+          projectConfig,
+        })
         expect(getByText('Akzeptanzpartner verwalten')).toBeTruthy()
         expect(queryByText('Benutzer verwalten')).toBeNull()
         expect(queryByText('Eingehende Anträge')).toBeNull()
@@ -207,7 +216,7 @@ describe('HomeController', () => {
         expect(queryByText('Projekt verwalten')).toBeNull()
         expect(queryByText('Region verwalten')).toBeNull()
         expect(queryByText('Statistiken')).toBeNull()
-      }
+      },
     )
   })
 })

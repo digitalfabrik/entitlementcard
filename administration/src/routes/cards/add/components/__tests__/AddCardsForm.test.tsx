@@ -30,7 +30,7 @@ describe('AddCardsForm', () => {
   it('should not render add card button when showAddMoreCardsButton is false', () => {
     const { queryByText } = renderWithOptions(
       <AddCardsForm {...defaultProps} showAddMoreCardsButton={false} />,
-      mockBaseProvider
+      mockBaseProvider,
     )
     const addButton = queryByText('Karte hinzufügen')
     expect(addButton).toBeNull()

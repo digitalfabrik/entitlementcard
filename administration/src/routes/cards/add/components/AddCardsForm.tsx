@@ -54,7 +54,9 @@ const AddCardsForm = ({
   }
 
   return (
-    <Stack sx={{ flexGrow: 1, overflow: 'auto', justifyContent: 'safe center', alignItems: 'center' }}>
+    <Stack
+      sx={{ flexGrow: 1, overflow: 'auto', justifyContent: 'safe center', alignItems: 'center' }}
+    >
       <Stack
         sx={{
           flexDirection: 'row',
@@ -63,7 +65,8 @@ const AddCardsForm = ({
           alignItems: 'center',
           padding: 2,
           gap: 2,
-        }}>
+        }}
+      >
         <AnimatePresence initial={false}>
           {cards.map((card, index) => (
             <motion.div {...animationProperties} key={card.id.toString()}>
@@ -81,7 +84,8 @@ const AddCardsForm = ({
                 width: '400px',
                 justifyContent: 'center',
                 alignItems: 'center',
-              }}>
+              }}
+            >
               <Button startIcon={<AddCard />} variant='contained' onClick={addCard}>
                 {t('addCard')}
               </Button>

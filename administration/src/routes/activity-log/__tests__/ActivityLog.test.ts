@@ -10,7 +10,7 @@ describe('ActivityLog', () => {
     expect(setItemSpy).toHaveBeenCalledTimes(1)
     expect(setItemSpy).toHaveBeenCalledWith(
       'activity-log',
-      '[{"timestamp":"2024-01-01T00:00:00Z","card":{"id":732401,"fullName":"Thea Test","expirationDate":"2026-01-01","extensions":{"startDay":"2025-01-01","birthday":"2000-02-01","nuernbergPassId":"3132222","addressLine1":"","addressLine2":"","addressPlz":"","addressLocation":"","regionId":"93"}}}]'
+      '[{"timestamp":"2024-01-01T00:00:00Z","card":{"id":732401,"fullName":"Thea Test","expirationDate":"2026-01-01","extensions":{"startDay":"2025-01-01","birthday":"2000-02-01","nuernbergPassId":"3132222","addressLine1":"","addressLine2":"","addressPlz":"","addressLocation":"","regionId":"93"}}}]',
     )
   })
 

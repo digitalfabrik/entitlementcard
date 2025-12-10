@@ -12,9 +12,11 @@ type KoblenzReferenceNumberExtensionState = { [KOBLENZ_REFERENCE_NUMBER_EXTENSIO
 
 const KoblenzReferenceNumberMinLength = 4
 const KoblenzReferenceNumberMaxLength = 15
-const hasSpecialChars = (referenceNr: string): boolean => /[`!@#$%^&*()_+\-=\]{};':"\\|,<>?~]/.test(referenceNr)
+const hasSpecialChars = (referenceNr: string): boolean =>
+  /[`!@#$%^&*()_+\-=\]{};':"\\|,<>?~]/.test(referenceNr)
 const hasInvalidLength = (referenceNumberLength: number): boolean =>
-  referenceNumberLength < KoblenzReferenceNumberMinLength || referenceNumberLength > KoblenzReferenceNumberMaxLength
+  referenceNumberLength < KoblenzReferenceNumberMinLength ||
+  referenceNumberLength > KoblenzReferenceNumberMaxLength
 
 const KoblenzReferenceNumberExtensionForm = ({
   value,
@@ -34,7 +36,10 @@ const KoblenzReferenceNumberExtensionForm = ({
     }
     if (hasInvalidLength(value.koblenzReferenceNumber.length)) {
       errors.push(
-        t('referenceNrInvalidLengthError', { KoblenzReferenceNumberMinLength, KoblenzReferenceNumberMaxLength })
+        t('referenceNrInvalidLengthError', {
+          KoblenzReferenceNumberMinLength,
+          KoblenzReferenceNumberMaxLength,
+        }),
       )
     }
     return errors.join(' ')
@@ -52,7 +57,11 @@ const KoblenzReferenceNumberExtensionForm = ({
       inputProps={{
         sx: { paddingRight: 0 },
         endAdornment: (
-          <ClearInputButton viewportSmall={viewportSmall} onClick={clearInput} input={koblenzReferenceNumber} />
+          <ClearInputButton
+            viewportSmall={viewportSmall}
+            onClick={clearInput}
+            input={koblenzReferenceNumber}
+          />
         ),
         inputProps: {
           max: KoblenzReferenceNumberMaxLength,
@@ -64,8 +73,11 @@ const KoblenzReferenceNumberExtensionForm = ({
   )
 }
 
-const fromString = (value: string): KoblenzReferenceNumberExtensionState => ({ koblenzReferenceNumber: value })
-const toString = ({ koblenzReferenceNumber }: KoblenzReferenceNumberExtensionState): string => koblenzReferenceNumber
+const fromString = (value: string): KoblenzReferenceNumberExtensionState => ({
+  koblenzReferenceNumber: value,
+})
+const toString = ({ koblenzReferenceNumber }: KoblenzReferenceNumberExtensionState): string =>
+  koblenzReferenceNumber
 
 const KoblenzReferenceNumberExtension: Extension<KoblenzReferenceNumberExtensionState> = {
   name: KOBLENZ_REFERENCE_NUMBER_EXTENSION_NAME,

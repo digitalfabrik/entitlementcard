@@ -16,12 +16,12 @@ describe('KoblenzReferenceNumberExtension', () => {
           isValid
           forceError={false}
         />,
-        { translation: true }
+        { translation: true },
       )
       expect(
         KoblenzReferenceNumberExtension.isValid({
           koblenzReferenceNumber: '',
-        })
+        }),
       ).toBe(false)
       expect(getByLabelText('Aktenzeichen')).toBeTruthy()
     })
@@ -34,12 +34,12 @@ describe('KoblenzReferenceNumberExtension', () => {
           isValid
           forceError={false}
         />,
-        { translation: true }
+        { translation: true },
       )
       expect(
         KoblenzReferenceNumberExtension.isValid({
           koblenzReferenceNumber: '',
-        })
+        }),
       ).toBe(false)
       expect(getByPlaceholderText('5.031.025.281, 000D000001, 91459')).toBeTruthy()
     })
@@ -52,14 +52,14 @@ describe('KoblenzReferenceNumberExtension', () => {
           isValid
           forceError={false}
         />,
-        { translation: true }
+        { translation: true },
       )
       const input = getByLabelText('Aktenzeichen')
       fireEvent.change(input, { target: { value: '12345' } })
       expect(
         KoblenzReferenceNumberExtension.isValid({
           koblenzReferenceNumber: '12345',
-        })
+        }),
       ).toBe(true)
       expect(mockSetValue).toHaveBeenCalledWith({ koblenzReferenceNumber: '12345' })
     })
@@ -73,12 +73,12 @@ describe('KoblenzReferenceNumberExtension', () => {
           isValid={false}
           forceError={false}
         />,
-        { translation: true }
+        { translation: true },
       )
       expect(
         KoblenzReferenceNumberExtension.isValid({
           koblenzReferenceNumber: initialValue,
-        })
+        }),
       ).toBe(false)
       expect(queryByTestId('form-alert')).toBeNull()
     })
@@ -92,14 +92,14 @@ describe('KoblenzReferenceNumberExtension', () => {
           isValid={false}
           forceError
         />,
-        { translation: true }
+        { translation: true },
       )
       const input = getByDisplayValue(initialValue)
       fireEvent.blur(input)
       expect(
         KoblenzReferenceNumberExtension.isValid({
           koblenzReferenceNumber: initialValue,
-        })
+        }),
       ).toBe(false)
       expect(getByText('Das Aktenzeichen enthält ungültige Sonderzeichen.')).toBeTruthy()
     })
@@ -113,14 +113,14 @@ describe('KoblenzReferenceNumberExtension', () => {
           isValid={false}
           forceError
         />,
-        { translation: true }
+        { translation: true },
       )
       const input = getByDisplayValue(initialValue)
       fireEvent.blur(input)
       expect(
         KoblenzReferenceNumberExtension.isValid({
           koblenzReferenceNumber: initialValue,
-        })
+        }),
       ).toBe(false)
       expect(getByText('Das Aktenzeichen muss eine Länge zwischen 4 und 15 haben.')).toBeTruthy()
     })
@@ -134,14 +134,14 @@ describe('KoblenzReferenceNumberExtension', () => {
           isValid={false}
           forceError
         />,
-        { translation: true }
+        { translation: true },
       )
       const input = getByDisplayValue(initialValue)
       fireEvent.blur(input)
       expect(
         KoblenzReferenceNumberExtension.isValid({
           koblenzReferenceNumber: initialValue,
-        })
+        }),
       ).toBe(false)
       expect(getByText('Das Aktenzeichen muss eine Länge zwischen 4 und 15 haben.')).toBeTruthy()
     })
@@ -154,7 +154,7 @@ describe('KoblenzReferenceNumberExtension', () => {
           isValid
           forceError={false}
         />,
-        { translation: true }
+        { translation: true },
       )
 
       const clearButton = getByRole('button')
@@ -164,7 +164,9 @@ describe('KoblenzReferenceNumberExtension', () => {
 
     describe('getInitializeState', () => {
       it('should initialize koblenzReferenceNumber state with today', () => {
-        expect(KoblenzReferenceNumberExtension.getInitialState()).toEqual({ koblenzReferenceNumber: '' })
+        expect(KoblenzReferenceNumberExtension.getInitialState()).toEqual({
+          koblenzReferenceNumber: '',
+        })
       })
     })
 

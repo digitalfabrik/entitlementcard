@@ -41,7 +41,10 @@ const Component = <I,>({
       onBlur={() => setTouched(true)}
       value={state.shortText}
       onChange={e => setState(() => ({ shortText: e.target.value }))}
-      helperText={(showAllErrors || touched) && isInvalid && <FormAlert errorMessage={validationResult.message} />}
+      helperText={
+        (showAllErrors || touched) &&
+        isInvalid && <FormAlert errorMessage={validationResult.message} />
+      }
       slotProps={{
         htmlInput: { maxLength: MAX_SHORT_TEXT_LENGTH },
       }}
@@ -59,7 +62,9 @@ const ShortTextForm: Form<State, ValidatedInput, AdditionalProps> = {
     if (shortText.length > MAX_SHORT_TEXT_LENGTH) {
       return {
         type: 'error',
-        message: i18next.t('applicationForms:maxShortTextLengthError', { maxLength: MAX_SHORT_TEXT_LENGTH }),
+        message: i18next.t('applicationForms:maxShortTextLengthError', {
+          maxLength: MAX_SHORT_TEXT_LENGTH,
+        }),
       }
     }
     return { type: 'valid', value: { shortText } }
@@ -76,7 +81,8 @@ export const OptionalShortTextForm: Form<State, ValidatedInput | null, Additiona
     }
     return ShortTextForm.validate(state)
   },
-  Component: props => Component({ ...props, validate: OptionalShortTextForm.validate, required: false }),
+  Component: props =>
+    Component({ ...props, validate: OptionalShortTextForm.validate, required: false }),
 }
 
 export default ShortTextForm

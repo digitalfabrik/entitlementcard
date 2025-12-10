@@ -16,7 +16,11 @@ export type StartDayExtensionState = { [START_DAY_EXTENSION_NAME]: PlainDate | n
 // We also have to provide some minStartDay in the past for csv cards imports that may contain startDay in the past.
 export const minStartDay = PlainDate.fromLocalDate(new Date()).subtract({ years: 5 })
 
-const StartDayForm = ({ value, setValue, isValid }: ExtensionComponentProps<StartDayExtensionState>): ReactElement => {
+const StartDayForm = ({
+  value,
+  setValue,
+  isValid,
+}: ExtensionComponentProps<StartDayExtensionState>): ReactElement => {
   const { t } = useTranslation('extensions')
   const [touched, setTouched] = useState(false)
   const showError = !isValid && touched
@@ -69,7 +73,9 @@ const StartDayExtension: Extension<StartDayExtensionState> = {
   causesInfiniteLifetime: () => false,
   getProtobufData: (state: StartDayExtensionState) => ({
     extensionStartDay: {
-      startDay: isStartDayValid(state) ? state.startDay?.toDaysSinceEpoch() : minStartDay.toDaysSinceEpoch(),
+      startDay: isStartDayValid(state)
+        ? state.startDay?.toDaysSinceEpoch()
+        : minStartDay.toDaysSinceEpoch(),
     },
   }),
   isValid: isStartDayValid,

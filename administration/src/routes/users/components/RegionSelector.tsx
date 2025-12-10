@@ -8,7 +8,8 @@ import { Region, useGetRegionsQuery } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import getQueryResult from '../../../util/getQueryResult'
 
-const getTitle = (region?: Region): string | undefined => (region ? `${region.prefix} ${region.name}` : undefined)
+const getTitle = (region?: Region): string | undefined =>
+  region ? `${region.prefix} ${region.name}` : undefined
 
 const RegionSelector = ({
   onSelect,
@@ -29,7 +30,7 @@ const RegionSelector = ({
       regionsQueryResult.successful
         ? [...regionsQueryResult.data.regions].sort((a, b) => a.name.localeCompare(b.name))
         : [],
-    [regionsQueryResult]
+    [regionsQueryResult],
   )
 
   if (!regionsQueryResult.successful) {
@@ -39,7 +40,9 @@ const RegionSelector = ({
   return (
     <Stack gap={0}>
       <Autocomplete
-        value={selectedId != null ? getTitle(regions.find(region => region.id === selectedId)) : null}
+        value={
+          selectedId != null ? getTitle(regions.find(region => region.id === selectedId)) : null
+        }
         renderInput={params => (
           <TextField
             sx={{ marginY: -2 }}

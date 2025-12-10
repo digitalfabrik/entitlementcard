@@ -9,7 +9,10 @@ import { Trans, useTranslation } from 'react-i18next'
 import AlertBox from '../../../components/AlertBox'
 import { ApplicationStatus } from '../../../generated/graphql'
 
-const statusTranslationKey = (applicationStatus: ApplicationStatus, isAdminView: boolean): string | undefined => {
+const statusTranslationKey = (
+  applicationStatus: ApplicationStatus,
+  isAdminView: boolean,
+): string | undefined => {
   switch (applicationStatus) {
     case ApplicationStatus.Approved:
     case ApplicationStatus.ApprovedCardCreated:
@@ -23,7 +26,9 @@ const statusTranslationKey = (applicationStatus: ApplicationStatus, isAdminView:
   }
 }
 
-const statusColor = (applicationStatus: ApplicationStatus): 'success' | 'error' | 'warning' | 'inherit' => {
+const statusColor = (
+  applicationStatus: ApplicationStatus,
+): 'success' | 'error' | 'warning' | 'inherit' => {
   switch (applicationStatus) {
     case ApplicationStatus.Approved:
     case ApplicationStatus.ApprovedCardCreated:
@@ -78,7 +83,9 @@ export const ApplicationStatusNote = (p: {
               reason: p.reason !== undefined ? t('reason', { message: p.reason }) : '',
             }}
             components={{
-              resolution: <Typography component='span' fontWeight='bold' fontSize='inherit' color={color} />,
+              resolution: (
+                <Typography component='span' fontWeight='bold' fontSize='inherit' color={color} />
+              ),
             }}
           />
         ) : undefined

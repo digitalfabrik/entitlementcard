@@ -12,18 +12,25 @@ describe('ActivityLogTable', () => {
   it('should render an empty list, if there are no log entries', () => {
     const { getByText, queryAllByRole } = renderWithOptions(
       <ActivityLogTable activityLog={[]} activityLogConfig={nuernbergConfig.activityLogConfig!} />,
-      mockProvider
+      mockProvider,
     )
-    expect(queryAllByRole('row')[0].textContent).toBe(nuernbergConfig.activityLogConfig!.columnNames.join(''))
+    expect(queryAllByRole('row')[0].textContent).toBe(
+      nuernbergConfig.activityLogConfig!.columnNames.join(''),
+    )
     expect(getByText('Keine Einträge vorhanden')).toBeTruthy()
   })
 
   it('should render the table body with correct amount of entries', () => {
     const { queryByText, queryAllByRole } = renderWithOptions(
-      <ActivityLogTable activityLog={activityLogEntries} activityLogConfig={nuernbergConfig.activityLogConfig!} />,
-      mockProvider
+      <ActivityLogTable
+        activityLog={activityLogEntries}
+        activityLogConfig={nuernbergConfig.activityLogConfig!}
+      />,
+      mockProvider,
     )
-    expect(queryAllByRole('row')[0].textContent).toBe(nuernbergConfig.activityLogConfig!.columnNames.join(''))
+    expect(queryAllByRole('row')[0].textContent).toBe(
+      nuernbergConfig.activityLogConfig!.columnNames.join(''),
+    )
     expect(queryByText('Keine Einträge vorhanden')).toBeNull()
     expect(queryAllByRole('row')).toHaveLength(3)
   })

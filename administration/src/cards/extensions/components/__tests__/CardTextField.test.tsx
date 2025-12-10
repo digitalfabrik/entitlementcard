@@ -49,7 +49,7 @@ describe('CardTextField', () => {
 
   it('should display error message when showError is true', () => {
     const { getByText, getByLabelText } = render(
-      <CardTextField {...defaultProps} showError errorMessage='Error occurred' />
+      <CardTextField {...defaultProps} showError errorMessage='Error occurred' />,
     )
     const input = getByLabelText('Test Label')
     fireEvent.blur(input)
