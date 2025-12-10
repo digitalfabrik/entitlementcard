@@ -5,11 +5,15 @@
   "semi": false,
   "singleQuote": true,
   "arrowParens": "avoid",
-  "printWidth": 120,
-  "bracketSameLine": true,
+  "printWidth": 100,
+  "bracketSameLine": false,
   "jsxSingleQuote": true,
-  "endOfLine": "auto",
   "importOrderSeparation": true,
-  "importOrder": ["<THIRD_PARTY_MODULES>", "^[./]"],
-  "importOrderSortSpecifiers": true
+  "importOrder": [
+    "<THIRD_PARTY_MODULES>",
+    "^[./]"
+  ],
+  "importOrderSortSpecifiers": true,
+  "endOfLine": "lf",
+  "trailingComma": "all"
 }
