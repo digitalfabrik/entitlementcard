@@ -1,24 +1,38 @@
 import 'package:collection/collection.dart';
-import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
-import 'package:ehrenamtskarte/category_assets.dart';
+import 'package:ehrenamtskarte/category_assets.dart' show CategoryAsset;
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/search/filter_bar_button.dart';
 import 'package:flutter/material.dart';
 
+/// Approximate the height of the CategoryFilterBar
+double categoryFilterBarExpectedHeight(BuildContext context, int categoriesCount) {
+  final double screenWidth = MediaQuery.of(context).size.width;
+  final double buttonWidth = 80;
+  final double buttonHeight = 74;
+  final double horizontalSpacing = 4;
+  final double verticalSpacing = 8;
+
+  // Technically, this isn't 100% correct, since the last button has no spacing, but it is close enough
+  int buttonsPerRow = (screenWidth / (buttonWidth + horizontalSpacing)).floor();
+  int rowsCount = (categoriesCount / buttonsPerRow).ceil();
+
+  return (kToolbarHeight +
+      MediaQuery.of(context).padding.top +
+      (rowsCount * buttonHeight) +
+      (rowsCount - 1) * verticalSpacing);
+}
+
 class CategoryFilterBar extends FlexibleSpaceBar {
   final Function(CategoryAsset, bool) onCategoryPress;
+  final List<CategoryAsset> categoryAssets;
 
-  CategoryFilterBar({super.key, required this.onCategoryPress})
+  CategoryFilterBar({super.key, required this.categoryAssets, required this.onCategoryPress})
     : super(
         collapseMode: CollapseMode.none,
         background: Builder(
           builder: (BuildContext context) {
             final t = context.t;
             final theme = Theme.of(context);
-            final sortedCategories = [...categoryAssets(context).where((category) => category.id != 9)]
-              ..sort((a, b) => a.shortName.length.compareTo(b.shortName.length))
-              ..add(categoryAssets(context).where((category) => category.id == 9).single);
-            final filteredCategories = sortedCategories.where((element) => buildConfig.categories.contains(element.id));
 
             return Container(
               padding: EdgeInsets.fromLTRB(0, kToolbarHeight + MediaQuery.of(context).padding.top, 0, 0),
@@ -45,10 +59,10 @@ class CategoryFilterBar extends FlexibleSpaceBar {
                       children: [
                         Expanded(
                           child: Wrap(
-                            alignment: WrapAlignment.spaceEvenly,
+                            alignment: WrapAlignment.center,
                             runSpacing: 8,
                             spacing: 4,
-                            children: filteredCategories
+                            children: categoryAssets
                                 .mapIndexed(
                                   (index, category) => FilterBarButton(
                                     key: ValueKey(category.id),
