@@ -11,13 +11,13 @@ describe('getCustomDeepLinkFromQrCode', () => {
   const dynamicPdfQrCode: PdfQrCode = {
     case: 'dynamicActivationCode',
     value: DynamicActivationCode.fromBinary(
-      base64ToUint8Array(mockedCardMutation.result.data.card.dynamicActivationCode.codeBase64)
+      base64ToUint8Array(mockedCardMutation.result.data.card.dynamicActivationCode.codeBase64),
     ),
   }
 
   it('should generate correct deep link', () => {
     expect(getCustomDeepLinkFromQrCode(koblenzConfig, dynamicPdfQrCode)).toBe(
-      'koblenzpass://koblenz.sozialpass.app/activation/code#ClcKLQoNS2FybGEgS29ibGVuehDmnwEaGAoCCF8SBAjqvgEqBAiLmgEyBgoEMTIzSxIQL%2Fle3xYGNIKS50god4ITmxoUOUYGq%2FjAE99bK4edMPo2I3ojr78%3D'
+      'koblenzpass://koblenz.sozialpass.app/activation/code#ClcKLQoNS2FybGEgS29ibGVuehDmnwEaGAoCCF8SBAjqvgEqBAiLmgEyBgoEMTIzSxIQL%2Fle3xYGNIKS50god4ITmxoUOUYGq%2FjAE99bK4edMPo2I3ojr78%3D',
     )
   })
 })

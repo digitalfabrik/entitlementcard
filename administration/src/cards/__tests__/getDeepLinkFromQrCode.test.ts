@@ -50,9 +50,9 @@ describe('DeepLink generation', () => {
       const projectId = buildConfig.common.projectId.staging
 
       expect(getDeepLinkFromQrCode(dynamicPdfQrCode, buildConfig, false)).toBe(
-        `${HTTPS_SCHEME}://${projectId}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}#${encodedActivationCodeBase64}`
+        `${HTTPS_SCHEME}://${projectId}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}#${encodedActivationCodeBase64}`,
       )
-    }
+    },
   )
 
   it.each(buildConfigs)(
@@ -61,8 +61,8 @@ describe('DeepLink generation', () => {
       const projectId = buildConfig.common.projectId.production
 
       expect(getDeepLinkFromQrCode(dynamicPdfQrCode, buildConfig, true)).toBe(
-        `${HTTPS_SCHEME}://${projectId}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}#${encodedActivationCodeBase64}`
+        `${HTTPS_SCHEME}://${projectId}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}#${encodedActivationCodeBase64}`,
       )
-    }
+    },
   )
 })

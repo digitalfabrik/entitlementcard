@@ -69,7 +69,9 @@ const AddressSection = ({
           errorMessage={cityValidation(acceptingStore?.city).message}
         />
       </Box>
-      {showAddressError && <AlertBox title={t('errorAddressNotFound')} fullWidth severity='error' />}
+      {showAddressError && (
+        <AlertBox title={t('errorAddressNotFound')} fullWidth severity='error' />
+      )}
     </>
   )
 }

@@ -16,7 +16,7 @@ describe('CardSelfServiceInformation', () => {
 
     const { getByText } = renderWithOptions(
       <CardSelfServiceInformation goToActivation={goToActivation} />,
-      mockProvider
+      mockProvider,
     )
 
     const goNextButton = getByText('Weiter zur Aktivierung')
@@ -29,7 +29,7 @@ describe('CardSelfServiceInformation', () => {
 
     const { getByText } = renderWithOptions(
       <CardSelfServiceInformation goToActivation={goToActivation} />,
-      mockProvider
+      mockProvider,
     )
 
     expect(getByText('Haben sie die App noch nicht?')).toBeTruthy()

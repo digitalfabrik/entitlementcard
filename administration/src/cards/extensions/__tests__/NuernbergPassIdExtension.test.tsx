@@ -19,18 +19,24 @@ describe('NuernbergPassIdExtension', () => {
 
   describe('Component', () => {
     it('should render input field with correct placeholder and label', () => {
-      const { getByLabelText } = renderWithOptions(<NuernbergPassIdExtension.Component {...defaultProps} />, {
-        translation: true,
-      })
+      const { getByLabelText } = renderWithOptions(
+        <NuernbergPassIdExtension.Component {...defaultProps} />,
+        {
+          translation: true,
+        },
+      )
 
       const input = getByLabelText('Nürnberg-Pass-ID')
       expect(input).toHaveAttribute('placeholder', '12345678')
     })
 
     it('should allow entering valid numeric values', () => {
-      const { getByLabelText } = renderWithOptions(<NuernbergPassIdExtension.Component {...defaultProps} />, {
-        translation: true,
-      })
+      const { getByLabelText } = renderWithOptions(
+        <NuernbergPassIdExtension.Component {...defaultProps} />,
+        {
+          translation: true,
+        },
+      )
       const input = getByLabelText('Nürnberg-Pass-ID')
 
       fireEvent.change(input, { target: { value: '123456' } })
@@ -44,7 +50,9 @@ describe('NuernbergPassIdExtension', () => {
         value: { nuernbergPassId: 123456 },
       }
 
-      const { getByRole } = renderWithOptions(<NuernbergPassIdExtension.Component {...props} />, { translation: true })
+      const { getByRole } = renderWithOptions(<NuernbergPassIdExtension.Component {...props} />, {
+        translation: true,
+      })
       const clearButton = getByRole('button')
 
       fireEvent.click(clearButton)
@@ -58,9 +66,12 @@ describe('NuernbergPassIdExtension', () => {
         isValid: false,
       }
 
-      const { getByLabelText, getByText } = renderWithOptions(<NuernbergPassIdExtension.Component {...props} />, {
-        translation: true,
-      })
+      const { getByLabelText, getByText } = renderWithOptions(
+        <NuernbergPassIdExtension.Component {...props} />,
+        {
+          translation: true,
+        },
+      )
       const input = getByLabelText('Nürnberg-Pass-ID')
 
       fireEvent.change(input, { target: { value: '123' } })
@@ -71,9 +82,12 @@ describe('NuernbergPassIdExtension', () => {
     })
 
     it('should handle non-numeric input correctly', () => {
-      const { getByLabelText } = renderWithOptions(<NuernbergPassIdExtension.Component {...defaultProps} />, {
-        translation: true,
-      })
+      const { getByLabelText } = renderWithOptions(
+        <NuernbergPassIdExtension.Component {...defaultProps} />,
+        {
+          translation: true,
+        },
+      )
       const input = getByLabelText('Nürnberg-Pass-ID')
 
       fireEvent.change(input, { target: { value: 'abc' } })
@@ -82,9 +96,12 @@ describe('NuernbergPassIdExtension', () => {
     })
 
     it('should prevent input longer than maximum length', () => {
-      const { getByLabelText } = renderWithOptions(<NuernbergPassIdExtension.Component {...defaultProps} />, {
-        translation: true,
-      })
+      const { getByLabelText } = renderWithOptions(
+        <NuernbergPassIdExtension.Component {...defaultProps} />,
+        {
+          translation: true,
+        },
+      )
       const input = getByLabelText('Nürnberg-Pass-ID')
 
       fireEvent.change(input, { target: { value: '1234567890' } })

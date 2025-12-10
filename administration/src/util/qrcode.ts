@@ -24,14 +24,15 @@ const DEFAULT_QUIET_ZONE_SIZE = 4 // pt
 // Level 8 seems appropriate right now.
 export const DEFAULT_VERSION: QRCodeVersion = QRCodeVersion.getVersionForNumber(8)
 // From EC L to M we have a double of EC capability: 7% -> 15%
-export const DEFAULT_ERROR_CORRECTION: QRCodeDecoderErrorCorrectionLevel = QRCodeDecoderErrorCorrectionLevel.M
+export const DEFAULT_ERROR_CORRECTION: QRCodeDecoderErrorCorrectionLevel =
+  QRCodeDecoderErrorCorrectionLevel.M
 
 // Adapted and modified from https://github.com/zxing-js/library/blob/5719e939f2fc513f71627c3f37c227e26efe06c1/src/core/qrcode/encoder/Encoder.ts#L189
 const calculateBitsNeeded = (
   mode: QRCodeMode,
   headerBitsSize: number,
   dataBitsSize: number,
-  version: QRCodeVersion
+  version: QRCodeVersion,
 ): number => headerBitsSize + mode.getCharacterCountBits(version) + dataBitsSize
 
 // Adapted and modified from https://github.com/zxing-js/library/blob/5719e939f2fc513f71627c3f37c227e26efe06c1/src/core/qrcode/encoder/Encoder.ts#L294
@@ -40,7 +41,7 @@ const willFit = (
   headerBitsSize: number,
   dataBitsSize: number,
   version: QRCodeVersion,
-  ecLevel: QRCodeDecoderErrorCorrectionLevel
+  ecLevel: QRCodeDecoderErrorCorrectionLevel,
 ): boolean => {
   // In the following comments, we use numbers of Version 7-H.
   // numBytes = 196
@@ -68,7 +69,7 @@ const chooseMaskPattern = (
   bits: BitArray,
   ecLevel: QRCodeDecoderErrorCorrectionLevel,
   version: QRCodeVersion,
-  matrix: QRCodeByteMatrix
+  matrix: QRCodeByteMatrix,
 ): number => {
   let minPenalty = Number.MAX_SAFE_INTEGER // Lower penalty is better.
   let bestMaskPattern = -1
@@ -98,7 +99,13 @@ const createHeader = (mode: QRCodeMode) => {
 
 export const isContentLengthValid = (content: Uint8Array): boolean => {
   const mode = QRCodeMode.BYTE
-  return willFit(mode, createHeader(mode).getSize(), content.length * 8, DEFAULT_VERSION, DEFAULT_ERROR_CORRECTION)
+  return willFit(
+    mode,
+    createHeader(mode).getSize(),
+    content.length * 8,
+    DEFAULT_VERSION,
+    DEFAULT_ERROR_CORRECTION,
+  )
 }
 
 /**
@@ -150,7 +157,7 @@ export const encodeQRCode = (content: Uint8Array): QRCode => {
     headerAndDataBits,
     version.getTotalCodewords(),
     numDataBytes,
-    ecBlocks.getNumBlocks()
+    ecBlocks.getNumBlocks(),
   )
 
   const qrCode = new QRCode()
@@ -177,7 +184,7 @@ const createQRCode = (
   content: Uint8Array,
   renderRect: (x: number, y: number, size: number) => void,
   renderBoundary: (x: number, y: number, width: number, height: number) => void,
-  size: number
+  size: number,
 ) => {
   const code: QRCode = encodeQRCode(content)
   const quietZone = DEFAULT_QUIET_ZONE_SIZE
@@ -217,7 +224,7 @@ export const drawQRCode = (
   y: number,
   size: number,
   pdfDocument: PDFPage,
-  border = true
+  border = true,
 ): void => {
   createQRCode(
     content,
@@ -241,7 +248,7 @@ export const drawQRCode = (
         })
       }
     },
-    size
+    size,
   )
 }
 
@@ -255,6 +262,8 @@ export const convertProtobufToHexCode = (qrCode: QrCode): string => {
 
 export const convertHexmapToUInt8Array = (hexmap: string): Uint8Array[] => {
   const hexRows = hexmap.split('-')
-  const binaryStringMatrix = hexRows.map(hex => BigInt(`0x${hex}`).toString(2).padStart(hexRows.length, '0'))
+  const binaryStringMatrix = hexRows.map(hex =>
+    BigInt(`0x${hex}`).toString(2).padStart(hexRows.length, '0'),
+  )
   return binaryStringMatrix.map(stringRow => Uint8Array.from(stringRow.split(''), x => Number(x)))
 }

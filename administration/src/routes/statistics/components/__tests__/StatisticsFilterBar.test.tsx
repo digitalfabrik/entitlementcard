@@ -20,8 +20,12 @@ describe('StatisticFilterBar', () => {
 
   it('should execute onApplyFilter if filter button was clicked', async () => {
     const { getByText } = renderWithOptions(
-      <StatisticsFilterBar onApplyFilter={onApplyFilter} isDataAvailable onExportCsv={onExportCsv} />,
-      mockProvider
+      <StatisticsFilterBar
+        onApplyFilter={onApplyFilter}
+        isDataAvailable
+        onExportCsv={onExportCsv}
+      />,
+      mockProvider,
     )
     const applyFilterButton = getByText('Filter anwenden')
     fireEvent.click(applyFilterButton)
@@ -31,8 +35,12 @@ describe('StatisticFilterBar', () => {
 
   it('should disable filter button if start date is after end date', async () => {
     const { getByText, getByDisplayValue } = renderWithOptions(
-      <StatisticsFilterBar onApplyFilter={onApplyFilter} isDataAvailable onExportCsv={onExportCsv} />,
-      mockProvider
+      <StatisticsFilterBar
+        onApplyFilter={onApplyFilter}
+        isDataAvailable
+        onExportCsv={onExportCsv}
+      />,
+      mockProvider,
     )
     const applyFilterButton = getByText('Filter anwenden')
     const startInput = getByDisplayValue(formatDate(defaultStartDate.toLocalDate(), dateFormat))
@@ -54,8 +62,12 @@ describe('StatisticFilterBar', () => {
 
   it('should disable filter button if input is not a correct date string', () => {
     const { getByText, getByDisplayValue } = renderWithOptions(
-      <StatisticsFilterBar onApplyFilter={onApplyFilter} isDataAvailable onExportCsv={onExportCsv} />,
-      mockProvider
+      <StatisticsFilterBar
+        onApplyFilter={onApplyFilter}
+        isDataAvailable
+        onExportCsv={onExportCsv}
+      />,
+      mockProvider,
     )
 
     const applyFilterButton = getByText('Filter anwenden')
@@ -71,8 +83,12 @@ describe('StatisticFilterBar', () => {
 
   it('should display a proper tooltip message if filter button is disabled and filtering should not be applied', async () => {
     const { getByText, getByDisplayValue } = renderWithOptions(
-      <StatisticsFilterBar onApplyFilter={onApplyFilter} isDataAvailable onExportCsv={onExportCsv} />,
-      mockProvider
+      <StatisticsFilterBar
+        onApplyFilter={onApplyFilter}
+        isDataAvailable
+        onExportCsv={onExportCsv}
+      />,
+      mockProvider,
     )
     const applyFilterButton = getByText('Filter anwenden')
     const startInput = getByDisplayValue(formatDate(defaultStartDate.toLocalDate(), dateFormat))
@@ -91,16 +107,20 @@ describe('StatisticFilterBar', () => {
 
     expect(
       getByText(
-        'Bitte geben Sie ein gültiges Start- und Enddatum an. Das Enddatum darf nicht vor dem Startdatum liegen.'
-      )
+        'Bitte geben Sie ein gültiges Start- und Enddatum an. Das Enddatum darf nicht vor dem Startdatum liegen.',
+      ),
     ).toBeTruthy()
     expect(onApplyFilter).not.toHaveBeenCalled()
   })
 
   it('should execute onExportCsv if csv export button was clicked', async () => {
     const { getByText } = renderWithOptions(
-      <StatisticsFilterBar onApplyFilter={onApplyFilter} isDataAvailable onExportCsv={onExportCsv} />,
-      mockProvider
+      <StatisticsFilterBar
+        onApplyFilter={onApplyFilter}
+        isDataAvailable
+        onExportCsv={onExportCsv}
+      />,
+      mockProvider,
     )
     const csvExportButton = getByText('CSV Export')
     fireEvent.click(csvExportButton)
@@ -110,8 +130,12 @@ describe('StatisticFilterBar', () => {
 
   it('should disable csv export button if no data is available and show tooltip', async () => {
     const { getByText } = renderWithOptions(
-      <StatisticsFilterBar onApplyFilter={onApplyFilter} isDataAvailable={false} onExportCsv={onExportCsv} />,
-      mockProvider
+      <StatisticsFilterBar
+        onApplyFilter={onApplyFilter}
+        isDataAvailable={false}
+        onExportCsv={onExportCsv}
+      />,
+      mockProvider,
     )
 
     const csvExportButton = getByText('CSV Export')

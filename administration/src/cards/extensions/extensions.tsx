@@ -19,9 +19,8 @@ import RegionExtension from './RegionExtension'
 import StartDayExtension from './StartDayExtension'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type InferExtensionStateType<T extends Extension<any>> = T extends Extension<infer ExtensionStateType>
-  ? ExtensionStateType
-  : never
+export type InferExtensionStateType<T extends Extension<any>> =
+  T extends Extension<infer ExtensionStateType> ? ExtensionStateType : never
 
 export type ExtensionComponentProps<T> = {
   value: T

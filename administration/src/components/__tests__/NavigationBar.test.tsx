@@ -203,7 +203,10 @@ describe('NavigationBar', () => {
         me: { role: Role.ProjectStoreManager },
       })
     })
-    const projectConfigsWithStoreUpload = [{ projectConfig: nuernbergConfig }, { projectConfig: koblenzConfig }]
+    const projectConfigsWithStoreUpload = [
+      { projectConfig: nuernbergConfig },
+      { projectConfig: koblenzConfig },
+    ]
     it.each(projectConfigsWithStoreUpload)(
       `should render the correct NavBar items for $projectConfig.name`,
       ({ projectConfig }) => {
@@ -218,7 +221,7 @@ describe('NavigationBar', () => {
         expect(queryByText('Projekt verwalten')).toBeNull()
         expect(queryByText('Region verwalten')).toBeNull()
         expect(queryByText('Statistiken')).toBeNull()
-      }
+      },
     )
   })
 })

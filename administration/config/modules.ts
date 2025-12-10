@@ -7,7 +7,10 @@ import getPaths from './getPaths'
 /**
  * Get webpack aliases based on the baseUrl of a compilerOptions object.
  */
-const getWebpackAliases = (paths: ReturnType<typeof getPaths>, options: { baseUrl?: string } = {}) => {
+const getWebpackAliases = (
+  paths: ReturnType<typeof getPaths>,
+  options: { baseUrl?: string } = {},
+) => {
   const baseUrl = options.baseUrl
 
   if (!baseUrl) {

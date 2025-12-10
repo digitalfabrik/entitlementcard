@@ -35,7 +35,9 @@ test.describe('Bayern testing', () => {
     await page.getByRole('textbox', { name: 'Ehrenamtliche Tätigkeit' }).fill('activity 1')
     await fillDateInput(page, 'Tätig seit', '10.10.1999', browser)
     await page.getByRole('spinbutton', { name: 'Arbeitsstunden pro Woche (' }).fill('56')
-    await expect(page.getByText('Angaben zur Organisation', { exact: false })).toBeVisible({ timeout: 10_000 })
+    await expect(page.getByText('Angaben zur Organisation', { exact: false })).toBeVisible({
+      timeout: 10_000,
+    })
     await page.getByRole('textbox', { name: 'Name der Organisation bzw.' }).fill('organization')
     await page.getByRole('textbox', { name: 'Straße' }).fill('number 9')
     await page.getByRole('textbox', { name: 'Hausnummer' }).fill('123')
@@ -47,7 +49,7 @@ test.describe('Bayern testing', () => {
     await page.getByRole('option', { name: 'Sport' }).click()
     await expect(page.locator('form')).toContainText('Kontaktperson der Organisation')
     await expect(page.locator('form')).toContainText(
-      'Bitte geben Sie hier die Daten der Person an, die ihr ehrenamtliches Engagement bestätigen kann.'
+      'Bitte geben Sie hier die Daten der Person an, die ihr ehrenamtliches Engagement bestätigen kann.',
     )
     await page.getByRole('textbox', { name: 'Vor- und Nachname der' }).fill('John doe 2')
     await page.getByRole('textbox', { name: 'E-Mail-Adresse' }).fill('test@gmail.com')
@@ -58,7 +60,7 @@ test.describe('Bayern testing', () => {
 
     await expect(page.locator('form').first()).toContainText('Tätigkeitsnachweis')
     await expect(page.locator('form')).toContainText(
-      'Falls vorhanden, hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. Die Datei darf maximal 5 MB groß sein und muss im JPG, PNG oder PDF Format sein.'
+      'Falls vorhanden, hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. Die Datei darf maximal 5 MB groß sein und muss im JPG, PNG oder PDF Format sein.',
     )
     await testImageFileSelection(page, 'Datei Anhängen')
     await expect(page.getByRole('button', { name: 'Weitere Tätigkeit hinzufügen' })).toBeVisible()
@@ -80,13 +82,15 @@ test.describe('Bayern testing', () => {
     await page.getByRole('textbox', { name: 'E-Mail-Adresse' }).fill('test@outlook.com')
     await page.getByRole('textbox', { name: 'Telefon' }).fill('123456789')
     await expect(page.locator('form')).toContainText(
-      'Die Kontaktperson hat der Weitergabe ihrer Daten zum Zwecke der Antragsverarbeitung zugestimmt und darf zur Überprüfung kontaktiert werden *'
+      'Die Kontaktperson hat der Weitergabe ihrer Daten zum Zwecke der Antragsverarbeitung zugestimmt und darf zur Überprüfung kontaktiert werden *',
     )
     await page.getByRole('checkbox', { name: 'Die Kontaktperson hat der' }).check()
-    await page.getByRole('textbox', { name: 'Funktion oder Tätigkeit' }).fill('activity about activity')
+    await page
+      .getByRole('textbox', { name: 'Funktion oder Tätigkeit' })
+      .fill('activity about activity')
     await expect(page.locator('form')).toContainText('Tätigkeitsnachweis')
     await expect(page.locator('form')).toContainText(
-      'Falls vorhanden, hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. Die Datei darf maximal 5 MB groß sein und muss im JPG, PNG oder PDF Format sein.'
+      'Falls vorhanden, hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. Die Datei darf maximal 5 MB groß sein und muss im JPG, PNG oder PDF Format sein.',
     )
     await testImageFileSelection(page, 'Datei Anhängen')
   }
@@ -116,10 +120,10 @@ test.describe('Bayern testing', () => {
   const cardType = async (page: Page, cardType, applicationType = 'initial') => {
     const form = page.locator('form').last()
     await expect(form).toContainText(
-      'Die Bayerische Ehrenamtskarte gibt es in zwei Varianten: Die blaue Ehrenamtskarte, welche für drei Jahre gültig ist, und die goldene Ehrenamtskarte, welche unbegrenzt gültig ist. Für die blaue Ehrenamtskarte ist beispielsweise berechtigt, wer sich seit mindestens zwei Jahren mindestens fünf Stunden pro Woche ehrenamtlich engagiert. Für die goldene Ehrenamtskarte ist beispielsweise berechtigt, wer sich seit mindestens 25 Jahren mindestens fünf Stunden pro Woche ehrenamtlich engagiert.'
+      'Die Bayerische Ehrenamtskarte gibt es in zwei Varianten: Die blaue Ehrenamtskarte, welche für drei Jahre gültig ist, und die goldene Ehrenamtskarte, welche unbegrenzt gültig ist. Für die blaue Ehrenamtskarte ist beispielsweise berechtigt, wer sich seit mindestens zwei Jahren mindestens fünf Stunden pro Woche ehrenamtlich engagiert. Für die goldene Ehrenamtskarte ist beispielsweise berechtigt, wer sich seit mindestens 25 Jahren mindestens fünf Stunden pro Woche ehrenamtlich engagiert.',
     )
     await expect(form).toContainText(
-      'Die Erfüllung der Voraussetzungen wird im nächsten Schritt des Antrags abgefragt. Weitere Informationen können Sie hier einsehen.'
+      'Die Erfüllung der Voraussetzungen wird im nächsten Schritt des Antrags abgefragt. Weitere Informationen können Sie hier einsehen.',
     )
     await expect(form).toContainText('Antrag auf: *')
     await expect(page.getByRole('radio', { name: 'Blaue Ehrenamtskarte' })).toBeVisible()
@@ -127,22 +131,26 @@ test.describe('Bayern testing', () => {
     await expect(page.getByRole('radiogroup')).toContainText('Blaue Ehrenamtskarte')
     await expect(page.getByRole('radiogroup')).toContainText('Goldene Ehrenamtskarte')
     await expect(form).toContainText(
-      'Die Ehrenamtskarte ist als physische Karte und als digitale Version für Ihr Smartphone oder Tablet erhältlich.Hier können Sie auswählen, welche Kartentypen Sie beantragen möchten.'
+      'Die Ehrenamtskarte ist als physische Karte und als digitale Version für Ihr Smartphone oder Tablet erhältlich.Hier können Sie auswählen, welche Kartentypen Sie beantragen möchten.',
     )
     await page
-      .getByRole('radio', { name: cardType == 'blue' ? 'Blaue Ehrenamtskarte' : 'Goldene Ehrenamtskarte' })
+      .getByRole('radio', {
+        name: cardType == 'blue' ? 'Blaue Ehrenamtskarte' : 'Goldene Ehrenamtskarte',
+      })
       .click()
     if (cardType == 'blue') {
       await expect(form).toContainText('Antrag auf: *')
       await expect(form).toContainText('Verlängerungsantrag *')
       await page
-        .getByRole('radio', { name: applicationType == 'initial' ? 'Erstantrag' : 'Verlängerungsantrag' })
+        .getByRole('radio', {
+          name: applicationType == 'initial' ? 'Erstantrag' : 'Verlängerungsantrag',
+        })
         .click()
     }
 
     await page.getByRole('checkbox', { name: 'Ich beantrage eine physische' }).check()
     await expect(form).toContainText(
-      'Die Ehrenamtskarte ist als physische Karte und als digitale Version für Ihr Smartphone oder Tablet erhältlich.Hier können Sie auswählen, welche Kartentypen Sie beantragen möchten.'
+      'Die Ehrenamtskarte ist als physische Karte und als digitale Version für Ihr Smartphone oder Tablet erhältlich.Hier können Sie auswählen, welche Kartentypen Sie beantragen möchten.',
     )
     await expect(form).toContainText('Ich beantrage eine digitale Ehrenamtskarte')
     await expect(form).toContainText('Ich beantrage eine physische Ehrenamtskarte')
@@ -164,20 +172,22 @@ test.describe('Bayern testing', () => {
 
   const handleBlueCardRequirements = async (page: Page, requirement: number, browser: string) => {
     await expect(page.locator('form').first()).toContainText(
-      'Ich erfülle folgende Voraussetzung für die Beantragung einer blauen Ehrenamtskarte: *'
+      'Ich erfülle folgende Voraussetzung für die Beantragung einer blauen Ehrenamtskarte: *',
     )
     await expect(page.getByRole('radiogroup')).toContainText(
-      'Ich engagiere mich ehrenamtlich seit mindestens zwei Jahren freiwillig mindestens fünf Stunden pro Woche oder bei Projektarbeiten mindestens 250 Stunden jährlich.'
-    )
-    await expect(page.getByRole('radiogroup')).toContainText('Ich bin Inhaber:in einer JuLeiCa (Jugendleiter:in-Card).')
-    await expect(page.getByRole('radiogroup')).toContainText(
-      'Ich bin aktiv in der Freiwilligen Feuerwehr mit abgeschlossener Truppmannausbildung bzw. abgeschlossenem Basis-Modul der Modularen Truppausbildung (MTA), oder im Katastrophenschutz oder im Rettungsdienst mit abgeschlossener Grundausbildung.'
+      'Ich engagiere mich ehrenamtlich seit mindestens zwei Jahren freiwillig mindestens fünf Stunden pro Woche oder bei Projektarbeiten mindestens 250 Stunden jährlich.',
     )
     await expect(page.getByRole('radiogroup')).toContainText(
-      'Ich habe in den vergangenen zwei Kalenderjahren als Reservist regelmäßig aktiven Wehrdienst in der Bundeswehr geleistet, indem ich insgesamt mindestens 40 Tage Reservisten-Dienstleistung erbracht habe oder ständige:r Angehörige:r eines Bezirks- oder Kreisverbindungskommandos war.'
+      'Ich bin Inhaber:in einer JuLeiCa (Jugendleiter:in-Card).',
     )
     await expect(page.getByRole('radiogroup')).toContainText(
-      'Ich leiste einen Freiwilligendienst ab in einem Freiwilligen Sozialen Jahr (FSJ), einem Freiwilligen Ökologischen Jahr (FÖJ) oder einem Bundesfreiwilligendienst (BFD).'
+      'Ich bin aktiv in der Freiwilligen Feuerwehr mit abgeschlossener Truppmannausbildung bzw. abgeschlossenem Basis-Modul der Modularen Truppausbildung (MTA), oder im Katastrophenschutz oder im Rettungsdienst mit abgeschlossener Grundausbildung.',
+    )
+    await expect(page.getByRole('radiogroup')).toContainText(
+      'Ich habe in den vergangenen zwei Kalenderjahren als Reservist regelmäßig aktiven Wehrdienst in der Bundeswehr geleistet, indem ich insgesamt mindestens 40 Tage Reservisten-Dienstleistung erbracht habe oder ständige:r Angehörige:r eines Bezirks- oder Kreisverbindungskommandos war.',
+    )
+    await expect(page.getByRole('radiogroup')).toContainText(
+      'Ich leiste einen Freiwilligendienst ab in einem Freiwilligen Sozialen Jahr (FSJ), einem Freiwilligen Ökologischen Jahr (FÖJ) oder einem Bundesfreiwilligendienst (BFD).',
     )
 
     switch (requirement) {
@@ -192,7 +202,7 @@ test.describe('Bayern testing', () => {
         await fillDateInput(page, 'Karte gültig bis', '10.10.1999', browser)
         await expect(page.locator('h4')).toContainText('Kopie der JuLeiCa')
         await expect(page.getByRole('paragraph')).toContainText(
-          'Hängen Sie hier bitte Ihre eingescannte oder abfotografierte JuLeiCa an. Die Datei darf maximal 5 MB groß sein und muss im JPG, PNG oder PDF Format sein.'
+          'Hängen Sie hier bitte Ihre eingescannte oder abfotografierte JuLeiCa an. Die Datei darf maximal 5 MB groß sein und muss im JPG, PNG oder PDF Format sein.',
         )
         await testImageFileSelection(page, 'Datei Anhängen *')
         break
@@ -205,7 +215,7 @@ test.describe('Bayern testing', () => {
         await expect(page.locator('form')).toContainText('ANGABEN ZUR TÄTIGKEIT')
         await expect(page.locator('h4')).toContainText('Tätigkeitsnachweis')
         await expect(page.getByRole('paragraph')).toContainText(
-          'Falls vorhanden, hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. Die Datei darf maximal 5 MB groß sein und muss im JPG, PNG oder PDF Format sein.'
+          'Falls vorhanden, hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. Die Datei darf maximal 5 MB groß sein und muss im JPG, PNG oder PDF Format sein.',
         )
         await testImageFileSelection(page, 'Datei Anhängen *')
         break
@@ -214,7 +224,7 @@ test.describe('Bayern testing', () => {
         await expect(page.locator('form')).toContainText('ANGABEN ZUR TÄTIGKEIT')
         await page.getByRole('textbox', { name: 'Name des Programms' }).fill('the program')
         await expect(page.locator('form')).toContainText(
-          'Falls vorhanden, hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. Die Datei darf maximal 5 MB groß sein und muss im JPG, PNG oder PDF Format sein.'
+          'Falls vorhanden, hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. Die Datei darf maximal 5 MB groß sein und muss im JPG, PNG oder PDF Format sein.',
         )
         await testImageFileSelection(page, 'Datei Anhängen *')
         break
@@ -223,19 +233,19 @@ test.describe('Bayern testing', () => {
 
   const handleGoldCardRequirements = async (page: Page, requirement: number, browser: string) => {
     await expect(page.locator('form').first()).toContainText(
-      'Ich erfülle folgende Voraussetzung für die Beantragung einer goldenen Ehrenamtskarte: *'
+      'Ich erfülle folgende Voraussetzung für die Beantragung einer goldenen Ehrenamtskarte: *',
     )
     await expect(page.getByRole('radiogroup')).toContainText(
-      'Ich bin seit mindestens 25 Jahren mindestens 5 Stunden pro Woche oder 250 Stunden pro Jahr bei einem Verein oder einer Organisation ehrenamtlich tätig.'
+      'Ich bin seit mindestens 25 Jahren mindestens 5 Stunden pro Woche oder 250 Stunden pro Jahr bei einem Verein oder einer Organisation ehrenamtlich tätig.',
     )
     await expect(page.getByRole('radiogroup')).toContainText(
-      'Ich bin Inhaber:in des Ehrenzeichens für Verdienste im Ehrenamt des Bayerischen Ministerpräsidenten.'
+      'Ich bin Inhaber:in des Ehrenzeichens für Verdienste im Ehrenamt des Bayerischen Ministerpräsidenten.',
     )
     await expect(page.getByRole('radiogroup')).toContainText(
-      'Ich bin Feuerwehrdienstleistende:r oder Einsatzkraft im Rettungsdienst oder in Einheiten des Katastrophenschutzes und habe eine Dienstzeitauszeichnung nach dem Feuerwehr- und Hilfsorganisationen-Ehrenzeichengesetz (FwHOEzG) erhalten.'
+      'Ich bin Feuerwehrdienstleistende:r oder Einsatzkraft im Rettungsdienst oder in Einheiten des Katastrophenschutzes und habe eine Dienstzeitauszeichnung nach dem Feuerwehr- und Hilfsorganisationen-Ehrenzeichengesetz (FwHOEzG) erhalten.',
     )
     await expect(page.getByRole('radiogroup')).toContainText(
-      'Ich leiste als Reservist:in seit mindestens 25 Jahren regelmäßig aktiven Wehrdienst in der Bundeswehr, indem ich in dieser Zeit entweder insgesamt mindestens 500 Tage Reservisten-Dienstleistung erbracht habe oder in dieser Zeit ständige:r Angehörige:r eines Bezirks- oder Kreisverbindungskommandos war. *'
+      'Ich leiste als Reservist:in seit mindestens 25 Jahren regelmäßig aktiven Wehrdienst in der Bundeswehr, indem ich in dieser Zeit entweder insgesamt mindestens 500 Tage Reservisten-Dienstleistung erbracht habe oder in dieser Zeit ständige:r Angehörige:r eines Bezirks- oder Kreisverbindungskommandos war. *',
     )
     switch (requirement) {
       case 1:
@@ -247,7 +257,7 @@ test.describe('Bayern testing', () => {
         await expect(page.locator('form')).toContainText('ANGABEN ZUM EHRENZEICHEN')
         await expect(page.locator('h4')).toContainText('Urkunde')
         await expect(page.getByRole('paragraph')).toContainText(
-          'Hängen Sie hier bitte Ihre eingescannte oder abfotografierte Urkunde an. Die Datei darf maximal 5 MB groß sein und muss im JPG, PNG oder PDF Format sein.'
+          'Hängen Sie hier bitte Ihre eingescannte oder abfotografierte Urkunde an. Die Datei darf maximal 5 MB groß sein und muss im JPG, PNG oder PDF Format sein.',
         )
         await testImageFileSelection(page, 'Datei Anhängen *')
         break
@@ -264,7 +274,7 @@ test.describe('Bayern testing', () => {
         await expect(page.locator('form')).toContainText('ANGABEN ZUR TÄTIGKEIT')
         await expect(page.locator('h4')).toContainText('Tätigkeitsnachweis')
         await expect(page.getByRole('paragraph')).toContainText(
-          'Falls vorhanden, hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. Die Datei darf maximal 5 MB groß sein und muss im JPG, PNG oder PDF Format sein.'
+          'Falls vorhanden, hängen Sie hier bitte einen eingescannten oder abfotografierten Tätigkeitsnachweis an. Die Datei darf maximal 5 MB groß sein und muss im JPG, PNG oder PDF Format sein.',
         )
         await testImageFileSelection(page, 'Datei Anhängen *')
         break
@@ -273,16 +283,18 @@ test.describe('Bayern testing', () => {
 
   const sendRequest = async (page: Page) => {
     await page.getByRole('button', { name: 'Datenschutzerklärung' }).click()
-    await expect(page.locator('div').filter({ hasText: 'Datenschutzerklärung für die' }).nth(1)).toBeVisible()
+    await expect(
+      page.locator('div').filter({ hasText: 'Datenschutzerklärung für die' }).nth(1),
+    ).toBeVisible()
     await page.getByTestId('CloseIcon').click()
     await expect(page.locator('form').first()).toContainText(
-      'Ich erkläre mich damit einverstanden, dass meine Daten zum Zwecke der Antragsverarbeitung gespeichert werden und akzeptiere die Datenschutzerklärung.'
+      'Ich erkläre mich damit einverstanden, dass meine Daten zum Zwecke der Antragsverarbeitung gespeichert werden und akzeptiere die Datenschutzerklärung.',
     )
     await expect(page.locator('form').first()).toContainText(
-      'Ich stimme zu, dass ich von der lokalen Ehrenamtskoordination über Verlosungen und regionale Angebote informiert werden darf.'
+      'Ich stimme zu, dass ich von der lokalen Ehrenamtskoordination über Verlosungen und regionale Angebote informiert werden darf.',
     )
     await expect(page.locator('form').first()).toContainText(
-      'Ich versichere, dass alle angegebenen Informationen korrekt und vollständig sind.'
+      'Ich versichere, dass alle angegebenen Informationen korrekt und vollständig sind.',
     )
     await expect(page.getByRole('button', { name: 'Antrag Abschicken' })).toBeVisible()
     await page.getByRole('checkbox', { name: 'Ich erkläre mich damit' }).check()
@@ -293,7 +305,7 @@ test.describe('Bayern testing', () => {
   const sentSuccessfully = async (page: Page) => {
     await expect(page.getByRole('heading')).toHaveText('Erfolgreich gesendet', { timeout: 10_000 })
     await expect(page.getByRole('paragraph')).toContainText(
-      'Ihr Antrag für die Ehrenamtskarte wurde erfolgreich übermittelt.Über den Fortschritt Ihres Antrags werden Sie per E-Mail informiert.Sie können das Fenster jetzt schließen.'
+      'Ihr Antrag für die Ehrenamtskarte wurde erfolgreich übermittelt.Über den Fortschritt Ihres Antrags werden Sie per E-Mail informiert.Sie können das Fenster jetzt schließen.',
     )
     await page.getByText('Ihr Antrag für die').click()
     await page.close()

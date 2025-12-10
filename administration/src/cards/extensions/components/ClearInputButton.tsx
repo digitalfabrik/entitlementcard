@@ -4,7 +4,11 @@ import React, { ReactElement } from 'react'
 
 type ClearInputButtonProps = { viewportSmall: boolean; onClick: () => void; input?: string }
 
-const ClearInputButton = ({ viewportSmall, onClick, input }: ClearInputButtonProps): ReactElement | null => {
+const ClearInputButton = ({
+  viewportSmall,
+  onClick,
+  input,
+}: ClearInputButtonProps): ReactElement | null => {
   if (!input || input.length === 0) {
     return null
   }

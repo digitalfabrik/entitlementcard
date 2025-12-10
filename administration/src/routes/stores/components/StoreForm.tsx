@@ -57,7 +57,11 @@ const StoreForm = ({
         categories={categories}
         formSendAttempt={formSendAttempt}
       />
-      <ContactSection acceptingStore={acceptingStore} onUpdateStore={onUpdateStore} formSendAttempt={formSendAttempt} />
+      <ContactSection
+        acceptingStore={acceptingStore}
+        onUpdateStore={onUpdateStore}
+        formSendAttempt={formSendAttempt}
+      />
       <DescriptionSection acceptingStore={acceptingStore} onUpdateStore={onUpdateStore} />
     </Stack>
   )

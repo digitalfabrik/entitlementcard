@@ -13,7 +13,11 @@ export class CsvError extends Error {
   }
 }
 
-export const generateCsv = (codes: CreateCardsResult[], cards: Card[], projectConfig: ProjectConfig): Blob => {
+export const generateCsv = (
+  codes: CreateCardsResult[],
+  cards: Card[],
+  projectConfig: ProjectConfig,
+): Blob => {
   const csvConfig = projectConfig.csvExport
   if (!csvConfig.enabled) {
     throw new CsvError('CSV Export is disabled for this project')
@@ -33,6 +37,9 @@ export const generateCsv = (codes: CreateCardsResult[], cards: Card[], projectCo
 }
 
 export const getCSVFilename = (cards: Card[]): string => {
-  const filename = cards.length === 1 ? cards[0].extensions[NUERNBERG_PASS_ID_EXTENSION_NAME] : 'SozialpassMassExport'
+  const filename =
+    cards.length === 1
+      ? cards[0].extensions[NUERNBERG_PASS_ID_EXTENSION_NAME]
+      : 'SozialpassMassExport'
   return `${filename}.csv`
 }

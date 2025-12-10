@@ -22,7 +22,11 @@ export class PdfError extends Error {
   }
 }
 
-const loadCustomFontWithFallback = async (font: string, doc: PDFDocument, fallbackFont: string): Promise<PDFFont> => {
+const loadCustomFontWithFallback = async (
+  font: string,
+  doc: PDFDocument,
+  fallbackFont: string,
+): Promise<PDFFont> => {
   doc.registerFontkit(fontkit)
   const fontUrl = `${process.env.PUBLIC_URL}/fonts/${font}`
   try {
@@ -45,7 +49,7 @@ const fillContentAreas = async (
   code: CreateCardsResult,
   card: Card,
   pdfConfig: PdfConfig,
-  region?: Region
+  region?: Region,
 ): Promise<void> => {
   const { dynamicActivationCode, staticVerificationCode, dynamicCardInfoHashBase64 } = code
   const dynamicCode: PdfQrCode = { case: 'dynamicActivationCode', value: dynamicActivationCode }
@@ -57,7 +61,7 @@ const fillContentAreas = async (
     : null
   const font = await doc.embedFont(StandardFonts.Helvetica)
   pdfConfig.elements?.dynamicActivationQrCodes.forEach(configOptions =>
-    pdfQrCodeElement(configOptions, { page: templatePage, qrCode: dynamicCode })
+    pdfQrCodeElement(configOptions, { page: templatePage, qrCode: dynamicCode }),
   )
 
   const fontBold = pdfConfig.customBoldFont
@@ -69,13 +73,17 @@ const fillContentAreas = async (
       doc,
       page: templatePage,
       font: fontBold,
-      url: getDeepLinkFromQrCode(dynamicCode, getBuildConfig(window.location.hostname), isProductionEnvironment()),
+      url: getDeepLinkFromQrCode(
+        dynamicCode,
+        getBuildConfig(window.location.hostname),
+        isProductionEnvironment(),
+      ),
     })
   }
 
   if (staticCode) {
     pdfConfig.elements?.staticVerificationQrCodes?.forEach(configOptions =>
-      pdfQrCodeElement(configOptions, { page: templatePage, qrCode: staticCode })
+      pdfQrCodeElement(configOptions, { page: templatePage, qrCode: staticCode }),
     )
   } else if (pdfConfig.elements?.staticVerificationQrCodes) {
     throw Error('To create this PDF a static QR-Code is required. However, it seems to be missing.')
@@ -91,7 +99,7 @@ const fillContentAreas = async (
       card,
       cardInfoHash: dynamicCardInfoHashBase64,
       region,
-    })
+    }),
   )
 
   pdfConfig.elements?.text.forEach(configOptions =>
@@ -102,7 +110,7 @@ const fillContentAreas = async (
       card,
       cardInfoHash: dynamicCardInfoHashBase64,
       region,
-    })
+    }),
   )
 }
 
@@ -110,12 +118,14 @@ export const generatePdf = async (
   codes: CreateCardsResult[],
   cards: Card[],
   projectConfig: ProjectConfig,
-  region?: Region
+  region?: Region,
 ): Promise<Blob> => {
   const pdfConfig = projectConfig.pdf
   try {
     const doc = await PDFDocument.create()
-    const templateDocument = await PDFDocument.load(await fetch(pdfConfig.templatePath).then(res => res.arrayBuffer()))
+    const templateDocument = await PDFDocument.load(
+      await fetch(pdfConfig.templatePath).then(res => res.arrayBuffer()),
+    )
 
     for (let index = 0; index < codes.length; index++) {
       // eslint-disable-next-line no-await-in-loop

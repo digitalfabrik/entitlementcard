@@ -3,7 +3,8 @@ export const isCoordinate = (coordinate: string): boolean => !Number.isNaN(parse
 export const noValidationRequired = (): boolean => true
 const validDigitPattern = '^\\d+$'
 export const isValidDigit = (value: string): boolean => new RegExp(validDigitPattern).test(value)
-export const hasValidPostalCode = (value: string): boolean => hasMandatoryValue(value) && isValidDigit(value)
+export const hasValidPostalCode = (value: string): boolean =>
+  hasMandatoryValue(value) && isValidDigit(value)
 export const hasValidCategoryId = (categoryId: string, projectCategories: number[]): boolean => {
   const category = parseInt(categoryId, 10)
   if (Number.isNaN(category)) {

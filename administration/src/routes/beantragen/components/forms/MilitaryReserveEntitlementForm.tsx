@@ -35,7 +35,10 @@ const MilitaryReserveEntitlementForm: Form<State, ValidatedInput> = {
         <Typography component='p'>
           {t('certificateDescription')} {FileRequirementsText}
         </Typography>
-        <FileInputForm.Component state={state.certificate} setState={useUpdateStateCallback(setState, 'certificate')} />
+        <FileInputForm.Component
+          state={state.certificate}
+          setState={useUpdateStateCallback(setState, 'certificate')}
+        />
       </>
     )
   },

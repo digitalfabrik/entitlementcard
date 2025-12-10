@@ -47,7 +47,11 @@ const ApplicationApplicantController = ({ providedKey }: { providedKey: string }
       <CenteredStack>
         <AlertBox
           severity={getAlertSeverityByApplicationStatus(application.status)}
-          title={t(application.status === ApplicationStatus.Rejected ? 'titleStatusRejected' : 'titleStatusApproved')}
+          title={t(
+            application.status === ApplicationStatus.Rejected
+              ? 'titleStatusRejected'
+              : 'titleStatusApproved',
+          )}
           description={
             <ApplicationStatusNote
               statusResolvedDate={new Date(application.statusResolvedDate)}

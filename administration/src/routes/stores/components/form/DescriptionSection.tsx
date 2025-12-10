@@ -38,7 +38,10 @@ const DescriptionSection = ({
               values={{ chars: getRemainingCharacters(acceptingStore.descriptionDe) }}
             />
           ) : (
-            <Trans i18nKey='storeForm:descriptionLabelDe' values={{ maxChars: descriptionMaxChars }} />
+            <Trans
+              i18nKey='storeForm:descriptionLabelDe'
+              values={{ maxChars: descriptionMaxChars }}
+            />
           )
         }
         placeholder={t('descriptionPlaceholder')}
@@ -59,7 +62,10 @@ const DescriptionSection = ({
                 values={{ chars: getRemainingCharacters(acceptingStore.descriptionEn) }}
               />
             ) : (
-              <Trans i18nKey='storeForm:descriptionLabelEn' values={{ maxChars: descriptionMaxChars }} />
+              <Trans
+                i18nKey='storeForm:descriptionLabelEn'
+                values={{ maxChars: descriptionMaxChars }}
+              />
             )
           }
           placeholder={t('descriptionPlaceholder')}

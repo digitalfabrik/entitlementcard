@@ -24,7 +24,7 @@ export type CustomRenderOptions = {
 
 export const renderWithOptions = (
   ui: ReactElement,
-  options: RenderOptions & CustomRenderOptions = {}
+  options: RenderOptions & CustomRenderOptions = {},
 ): RenderResult => {
   const {
     projectConfig,
@@ -47,11 +47,15 @@ export const renderWithOptions = (
   }
 
   if (translation) {
-    wrappers.push(({ children }: { children: ReactNode }) => <I18nextProvider i18n={i18n}>{children}</I18nextProvider>)
+    wrappers.push(({ children }: { children: ReactNode }) => (
+      <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
+    ))
   }
 
   if (router) {
-    wrappers.push(({ children }: { children: ReactNode }) => <MemoryRouter>{children}</MemoryRouter>)
+    wrappers.push(({ children }: { children: ReactNode }) => (
+      <MemoryRouter>{children}</MemoryRouter>
+    ))
   }
 
   if (localization) {
@@ -61,7 +65,9 @@ export const renderWithOptions = (
   }
 
   if (snackbar) {
-    wrappers.push(({ children }: { children: ReactNode }) => <AppSnackbarProvider>{children}</AppSnackbarProvider>)
+    wrappers.push(({ children }: { children: ReactNode }) => (
+      <AppSnackbarProvider>{children}</AppSnackbarProvider>
+    ))
   }
 
   if (projectConfig) {
@@ -71,7 +77,9 @@ export const renderWithOptions = (
   }
 
   if (apollo) {
-    wrappers.push(({ children }: { children: ReactNode }) => <MockedProvider>{children}</MockedProvider>)
+    wrappers.push(({ children }: { children: ReactNode }) => (
+      <MockedProvider>{children}</MockedProvider>
+    ))
   }
 
   return rawRender(ui, {

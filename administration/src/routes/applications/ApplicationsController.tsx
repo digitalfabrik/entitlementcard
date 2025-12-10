@@ -19,7 +19,9 @@ const ApplicationsController = ({ region }: { region: Region }) => {
   return !applicationsQueryResult.successful ? (
     applicationsQueryResult.component
   ) : (
-    <ApplicationsOverview applications={applicationsQueryResult.data.applications.map(parseApplication)} />
+    <ApplicationsOverview
+      applications={applicationsQueryResult.data.applications.map(parseApplication)}
+    />
   )
 }
 
@@ -36,11 +38,13 @@ const ControllerWithRegion = (): ReactElement => {
         padding: 2,
         overflow: 'auto',
         '@media print': { overflow: 'visible' },
-      }}>
+      }}
+    >
       <RenderGuard
         allowedRoles={[Role.RegionManager, Role.RegionAdmin]}
         condition={region !== undefined}
-        error={{ description: t('notAuthorizedToSeeApplications') }}>
+        error={{ description: t('notAuthorizedToSeeApplications') }}
+      >
         <ApplicationsController region={region!} />
       </RenderGuard>
     </Stack>

@@ -9,7 +9,9 @@ const renderPdfDetails = ({ info }: InfoParams): string => {
     throw new Error('expirationDay must be defined for Koblenz')
   }
   const expirationDate = PlainDate.fromDaysSinceEpoch(expirationDay)
-  const birthdayDate = PlainDate.fromDaysSinceEpoch(info.extensions?.extensionBirthday?.birthday ?? 0)
+  const birthdayDate = PlainDate.fromDaysSinceEpoch(
+    info.extensions?.extensionBirthday?.birthday ?? 0,
+  )
   const startDate = PlainDate.fromDaysSinceEpoch(info.extensions?.extensionStartDay?.startDay ?? 0)
   return `${startDate.format()} - ${expirationDate.format()}
 ${birthdayDate.format()}
@@ -24,7 +26,17 @@ const pdfConfiguration: PdfConfig = {
   elements: {
     staticVerificationQrCodes: [{ x: 152, y: 230, size: 34 }],
     dynamicActivationQrCodes: [{ x: 130, y: 103, size: 54 }],
-    text: [{ x: 109, y: 254, maxWidth: 80, fontSize: 9, bold: true, spacing: 10, infoToText: renderPdfDetails }],
+    text: [
+      {
+        x: 109,
+        y: 254,
+        maxWidth: 80,
+        fontSize: 9,
+        bold: true,
+        spacing: 10,
+        infoToText: renderPdfDetails,
+      },
+    ],
     deepLinkArea: { x: 130, y: 103, size: 54 },
   },
 }

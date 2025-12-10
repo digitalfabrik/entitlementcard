@@ -13,7 +13,13 @@ type PdfLinkAreaRendererProps = {
   url: string
 }
 
-const createPageLinkAnnotation = (url: string, x: number, y: number, size: number, doc: PDFDocument): PDFRef =>
+const createPageLinkAnnotation = (
+  url: string,
+  x: number,
+  y: number,
+  size: number,
+  doc: PDFDocument,
+): PDFRef =>
   doc.context.register(
     doc.context.obj({
       Type: 'Annot',
@@ -30,9 +36,12 @@ const createPageLinkAnnotation = (url: string, x: number, y: number, size: numbe
       // /* C: [2, 2, 1], */
       // URI Action
       A: { Type: 'Action', S: 'URI', URI: PDFString.of(url) },
-    })
+    }),
   )
-const pdfLinkArea: PdfElement<PdfLinkAreaProps, PdfLinkAreaRendererProps> = ({ size, x, y }, { doc, page, url }) => {
+const pdfLinkArea: PdfElement<PdfLinkAreaProps, PdfLinkAreaRendererProps> = (
+  { size, x, y },
+  { doc, page, url },
+) => {
   const deepLinkAreaSize = mmToPt(size)
   const deepLinkAreaX = mmToPt(x)
   const deepLinkAreaY = page.getSize().height - deepLinkAreaSize - mmToPt(y)

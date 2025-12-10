@@ -15,15 +15,22 @@ import AddCardsForm from './components/AddCardsForm'
 const InnerAddCardsController = ({ region }: { region: Region }) => {
   const navigate = useNavigate()
   const { t } = useTranslation('cards')
-  const { cardGenerationStep, setCardGenerationStep, generateCardsPdf, generateCardsCsv, setCards, updateCard, cards } =
-    useCardGenerator({ region })
+  const {
+    cardGenerationStep,
+    setCardGenerationStep,
+    generateCardsPdf,
+    generateCardsCsv,
+    setCards,
+    updateCard,
+    cards,
+  } = useCardGenerator({ region })
   const [searchParams, setSearchParams] = useSearchParams()
 
   const blocker = useBlocker(
     ({ currentLocation, nextLocation }) =>
       currentLocation.pathname !== nextLocation.pathname &&
       cards.length > 0 &&
-      cards.some(card => card.fullName.trim().length > 0 || card.expirationDate !== null)
+      cards.some(card => card.fullName.trim().length > 0 || card.expirationDate !== null),
   )
 
   switch (cardGenerationStep) {
@@ -73,7 +80,8 @@ const AddCardsController = (): ReactElement => {
     <RenderGuard
       allowedRoles={[Role.RegionManager, Role.RegionAdmin]}
       condition={region !== undefined}
-      error={{ description: t('notAuthorizedToCreateCards') }}>
+      error={{ description: t('notAuthorizedToCreateCards') }}
+    >
       <InnerAddCardsController region={region!} />
     </RenderGuard>
   )

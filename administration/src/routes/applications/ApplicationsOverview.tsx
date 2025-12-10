@@ -37,7 +37,8 @@ export const barItems: { [key in string]: ApplicationStatusBarItemType } = {
   withdrawn: {
     barItemI18nKey: 'statusBarWithdrawn',
     applicationAdjectiveI18nKey: 'applicationAdjectiveWithdrawn',
-    filter: (application: Application): boolean => application.status === ApplicationStatus.Withdrawn,
+    filter: (application: Application): boolean =>
+      application.status === ApplicationStatus.Withdrawn,
   },
   open: {
     barItemI18nKey: 'statusBarOpen',
@@ -77,13 +78,15 @@ const ApplicationsOverview = ({ applications }: { applications: Application[] })
             // Sort by status
             applicationListOrder(a) - applicationListOrder(b) ||
             // If status is equal, sort by date
-            new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime()
+            new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime(),
         ),
-    [activeBarItem, updatedApplications]
+    [activeBarItem, updatedApplications],
   )
 
   return (
-    <Stack sx={{ flexGrow: 1, maxWidth: '90%', width: '1000px', gap: 2, '@media print': { gap: 0 } }}>
+    <Stack
+      sx={{ flexGrow: 1, maxWidth: '90%', width: '1000px', gap: 2, '@media print': { gap: 0 } }}
+    >
       <ApplicationStatusBar
         applications={updatedApplications}
         activeBarItem={activeBarItem}
@@ -98,13 +101,18 @@ const ApplicationsOverview = ({ applications }: { applications: Application[] })
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.2, ease: 'easeOut' }}>
+              transition={{ duration: 0.2, ease: 'easeOut' }}
+            >
               <ApplicationCard
                 application={application}
-                onDelete={() => setUpdatedApplications(updatedApplications.filter(a => a !== application))}
+                onDelete={() =>
+                  setUpdatedApplications(updatedApplications.filter(a => a !== application))
+                }
                 onChange={changed =>
                   setUpdatedApplications(
-                    updatedApplications.map(original => (original.id === changed.id ? changed : original))
+                    updatedApplications.map(original =>
+                      original.id === changed.id ? changed : original,
+                    ),
                   )
                 }
               />
@@ -114,8 +122,12 @@ const ApplicationsOverview = ({ applications }: { applications: Application[] })
       ) : (
         <AlertBox
           severity='info'
-          title={t('noApplicationsOfType', { status: t(activeBarItem.applicationAdjectiveI18nKey) })}
-          description={t('noApplicationsOfTypeDescription', { status: t(activeBarItem.applicationAdjectiveI18nKey) })}
+          title={t('noApplicationsOfType', {
+            status: t(activeBarItem.applicationAdjectiveI18nKey),
+          })}
+          description={t('noApplicationsOfTypeDescription', {
+            status: t(activeBarItem.applicationAdjectiveI18nKey),
+          })}
         />
       )}
     </Stack>

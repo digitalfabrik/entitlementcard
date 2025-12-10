@@ -1,5 +1,13 @@
 import { CheckCircleOutline, Close } from '@mui/icons-material'
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography } from '@mui/material'
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Stack,
+  Typography,
+} from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -10,7 +18,8 @@ import { type SignInPayload, useSignInMutation } from '../generated/graphql'
 import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
 import { useWhoAmI } from '../provider/WhoAmIProvider'
 
-const computeSecondsRemaining = (expiresAt: Date) => Math.round((expiresAt.valueOf() - Date.now()) / 1000)
+const computeSecondsRemaining = (expiresAt: Date) =>
+  Math.round((expiresAt.valueOf() - Date.now()) / 1000)
 const openAtRemainingSeconds = 180
 
 const AutomaticLogoutDialog = ({
@@ -55,25 +64,41 @@ const AutomaticLogoutDialog = ({
   }, [expiresAt, onSignOut])
 
   return (
-    <Dialog open={secondsLeft <= openAtRemainingSeconds} aria-describedby='keep-alive-dialog' fullWidth>
+    <Dialog
+      open={secondsLeft <= openAtRemainingSeconds}
+      aria-describedby='keep-alive-dialog'
+      fullWidth
+    >
       <DialogTitle>{t('loginPeriodExpires')}</DialogTitle>
       <DialogContent id='keep-alive-dialog'>
         <Stack>
           <Typography component='p'>{t('loginPeriodSecondsLeft', { secondsLeft })}</Typography>
           <Typography component='p'>{t('loginPeriodPasswordPrompt')}</Typography>
-          <PasswordInput placeholder={t('loginPeriodPasswordPlaceholder')} setValue={setPassword} value={password} />
+          <PasswordInput
+            placeholder={t('loginPeriodPasswordPlaceholder')}
+            setValue={setPassword}
+            value={password}
+          />
         </Stack>
       </DialogContent>
       <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
-        <Button variant='outlined' startIcon={<Close />} onClick={onSignOut} loading={mutationState.loading}>
+        <Button
+          variant='outlined'
+          startIcon={<Close />}
+          onClick={onSignOut}
+          loading={mutationState.loading}
+        >
           {t('loginPeriodLogoutButton')}
         </Button>
         <Button
           variant='contained'
           color='primary'
-          onClick={() => signIn({ variables: { project: projectId, authData: { email, password } } })}
+          onClick={() =>
+            signIn({ variables: { project: projectId, authData: { email, password } } })
+          }
           startIcon={<CheckCircleOutline />}
-          loading={mutationState.loading}>
+          loading={mutationState.loading}
+        >
           {t('loginPeriodExtendButton')}
         </Button>
       </DialogActions>

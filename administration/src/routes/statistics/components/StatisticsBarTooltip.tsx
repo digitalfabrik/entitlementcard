@@ -19,7 +19,11 @@ export const ToolTipContainer = styled('div')(({ theme }) => ({
   marginLeft: '50%',
 }))
 
-const StatisticsBarTooltip = ({ id, color, value }: BarTooltipProps<CardStatisticsResultModel>): ReactElement => {
+const StatisticsBarTooltip = ({
+  id,
+  color,
+  value,
+}: BarTooltipProps<CardStatisticsResultModel>): ReactElement => {
   const { t } = useTranslation('statistics')
   return (
     <ToolTipContainer>

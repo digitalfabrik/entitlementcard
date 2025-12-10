@@ -10,12 +10,20 @@ type CardSelfServiceInformationProps = {
   goToActivation: () => void
 }
 
-const CardSelfServiceInformation = ({ goToActivation }: CardSelfServiceInformationProps): ReactElement => {
+const CardSelfServiceInformation = ({
+  goToActivation,
+}: CardSelfServiceInformationProps): ReactElement => {
   const { ios, android } = getBuildConfig(window.location.hostname)
   const { t } = useTranslation('selfService')
   return (
     <>
-      <Button color='secondary' onClick={goToActivation} variant='contained' size='large' sx={{ width: 'fit-content' }}>
+      <Button
+        color='secondary'
+        onClick={goToActivation}
+        variant='contained'
+        size='large'
+        sx={{ width: 'fit-content' }}
+      >
         {t('nextToActivation')}
       </Button>
       <Box sx={{ marginTop: 6, marginBottom: 1 }}>

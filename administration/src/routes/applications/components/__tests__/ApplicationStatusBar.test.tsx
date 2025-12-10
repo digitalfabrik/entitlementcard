@@ -101,7 +101,7 @@ describe('ApplicationStatusBar', () => {
         barItems={Object.values(barItems)}
         activeBarItem={barItems.all}
       />,
-      { translation: true }
+      { translation: true },
     )
     const allApplicationsCount = getByTestId('status-Alle Anträge-count')
     expect(allApplicationsCount).toHaveTextContent('4')
@@ -114,7 +114,7 @@ describe('ApplicationStatusBar', () => {
         barItems={Object.values(barItems)}
         activeBarItem={barItems.open}
       />,
-      { translation: true }
+      { translation: true },
     )
     const openApplicationsCount = getByTestId('status-Offen-count')
     expect(openApplicationsCount).toHaveTextContent('1')
@@ -127,7 +127,7 @@ describe('ApplicationStatusBar', () => {
         barItems={Object.values(barItems)}
         activeBarItem={barItems.withdrawn}
       />,
-      { translation: true }
+      { translation: true },
     )
     const withdrawnApplicationsCount = getByTestId('status-Zurückgezogen-count')
     expect(withdrawnApplicationsCount).toHaveTextContent('1')
@@ -140,7 +140,7 @@ describe('ApplicationStatusBar', () => {
         barItems={Object.values(barItems)}
         activeBarItem={barItems.rejected}
       />,
-      { translation: true }
+      { translation: true },
     )
     const rejectedApplicationsCount = getByTestId('status-Abgelehnt-count')
     expect(rejectedApplicationsCount).toHaveTextContent('0')
@@ -153,7 +153,7 @@ describe('ApplicationStatusBar', () => {
         barItems={Object.values(barItems)}
         activeBarItem={barItems.accepted}
       />,
-      { translation: true }
+      { translation: true },
     )
     const acceptedApplicationsCount = getByTestId('status-Akzeptiert-count')
     expect(acceptedApplicationsCount).toHaveTextContent('2')

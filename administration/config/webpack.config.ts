@@ -37,7 +37,7 @@ const generateAssetLinks = (config: DeeplLinkingConfig) =>
       },
     ],
     null,
-    2
+    2,
   )
 
 const generateAppleAppSiteAssociation = (config: DeeplLinkingConfig) =>
@@ -59,7 +59,7 @@ const generateAppleAppSiteAssociation = (config: DeeplLinkingConfig) =>
       },
     },
     null,
-    2
+    2,
   )
 
 // This is the production and development configuration.
@@ -105,7 +105,9 @@ const createWebpackConfig = (webpackEnv: 'development' | 'production'): Configur
       // In development, it does not produce real files.
       filename: isEnvProduction ? 'static/js/[name].[contenthash:8].js' : 'static/js/bundle.js',
       // There are also additional JS chunk files if you use code splitting.
-      chunkFilename: isEnvProduction ? 'static/js/[name].[contenthash:8].chunk.js' : 'static/js/[name].chunk.js',
+      chunkFilename: isEnvProduction
+        ? 'static/js/[name].[contenthash:8].chunk.js'
+        : 'static/js/[name].chunk.js',
       assetModuleFilename: 'static/media/[name].[hash][ext]',
       // Webpack uses `publicPath` to determine where the app is being served from.
       // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -242,9 +244,11 @@ const createWebpackConfig = (webpackEnv: 'development' | 'production'): Configur
                     },
                   ],
                 ],
-                plugins: [isEnvDevelopment && shouldUseReactRefresh && require.resolve('react-refresh/babel')].filter(
-                  Boolean
-                ),
+                plugins: [
+                  isEnvDevelopment &&
+                    shouldUseReactRefresh &&
+                    require.resolve('react-refresh/babel'),
+                ].filter(Boolean),
                 // This is a feature of `babel-loader` for webpack (not Babel itself).
                 // It enables caching results in ./node_modules/.cache/babel-loader/
                 // directory for faster rebuilds.

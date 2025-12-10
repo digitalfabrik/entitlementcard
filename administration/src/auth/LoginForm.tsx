@@ -25,7 +25,8 @@ const LoginForm = ({
       onSubmit={event => {
         event.preventDefault()
         onSubmit()
-      }}>
+      }}
+    >
       <Stack sx={{ gap: 2, marginY: 2 }}>
         <TextField
           placeholder='erika.musterfrau@example.org'

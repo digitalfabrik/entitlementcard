@@ -14,7 +14,7 @@ describe('ImportCardsRequirementsText', () => {
     const csvHeaders = getCsvHeaders(projectConfig)
     const { getByText } = renderWithOptions(
       <ImportCardsRequirementsText csvHeaders={csvHeaders} isFreinetFormat={false} />,
-      { projectConfig, translation: true }
+      { projectConfig, translation: true },
     )
     expect(getByText('Spaltenformat: Name*, Ablaufdatum*, Kartentyp*')).toBeTruthy()
   })
@@ -24,9 +24,11 @@ describe('ImportCardsRequirementsText', () => {
     const csvHeaders = getCsvHeaders(projectConfig)
     const { getByText } = renderWithOptions(
       <ImportCardsRequirementsText csvHeaders={csvHeaders} isFreinetFormat={false} />,
-      { projectConfig, translation: true }
+      { projectConfig, translation: true },
     )
-    expect(getByText('Spaltenformat: Name*, Ablaufdatum*, Kartentyp*, MailNotification')).toBeTruthy()
+    expect(
+      getByText('Spaltenformat: Name*, Ablaufdatum*, Kartentyp*, MailNotification'),
+    ).toBeTruthy()
   })
 
   it('should show mandatory requirements with asterisks at Nuernberg', () => {
@@ -34,12 +36,12 @@ describe('ImportCardsRequirementsText', () => {
     const csvHeaders = getCsvHeaders(projectConfig)
     const { getByText } = renderWithOptions(
       <ImportCardsRequirementsText csvHeaders={csvHeaders} isFreinetFormat={false} />,
-      { projectConfig, translation: true }
+      { projectConfig, translation: true },
     )
     expect(
       getByText(
-        'Spaltenformat: Name*, Ablaufdatum*, Startdatum*, Geburtsdatum*, Pass-ID*, Adresszeile 1, Adresszeile 2, PLZ, Ort'
-      )
+        'Spaltenformat: Name*, Ablaufdatum*, Startdatum*, Geburtsdatum*, Pass-ID*, Adresszeile 1, Adresszeile 2, PLZ, Ort',
+      ),
     ).toBeTruthy()
   })
 
@@ -48,8 +50,10 @@ describe('ImportCardsRequirementsText', () => {
     const csvHeaders = getCsvHeaders(projectConfig)
     const { getByText } = renderWithOptions(
       <ImportCardsRequirementsText csvHeaders={csvHeaders} isFreinetFormat={false} />,
-      { projectConfig, translation: true }
+      { projectConfig, translation: true },
     )
-    expect(getByText('Spaltenformat: Name*, Ablaufdatum*, Geburtsdatum*, Referenznummer*')).toBeTruthy()
+    expect(
+      getByText('Spaltenformat: Name*, Ablaufdatum*, Geburtsdatum*, Referenznummer*'),
+    ).toBeTruthy()
   })
 })

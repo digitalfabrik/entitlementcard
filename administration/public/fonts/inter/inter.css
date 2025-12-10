@@ -2,7 +2,9 @@
   font-family: 'Inter';
   font-weight: 400;
   font-style: normal;
-  src: local('Inter Regular'), local('Inter-Regular'),
+  src:
+    local('Inter Regular'),
+    local('Inter-Regular'),
     /* Super Modern Browsers */ url('Inter-Regular.woff2') format('woff2'),
     /* Modern Browsers */ url('Inter-Regular.woff') format('woff'),
     /* Safari, Android, iOS */ url('Inter-Regular.ttf') format('truetype');
@@ -13,7 +15,9 @@
   font-family: 'Inter';
   font-weight: 500;
   font-style: normal;
-  src: local('Inter Medium'), local('Inter-Medium'),
+  src:
+    local('Inter Medium'),
+    local('Inter-Medium'),
     /* Super Modern Browsers */ url('Inter-Medium.woff2') format('woff2'),
     /* Modern Browsers */ url('Inter-Medium.woff') format('woff'),
     /* Safari, Android, iOS */ url('Inter-Medium.ttf') format('truetype');
@@ -24,7 +28,9 @@
   font-family: 'Inter';
   font-weight: 600;
   font-style: normal;
-  src: local('Inter SemiBold'), local('Inter-SemiBold'),
+  src:
+    local('Inter SemiBold'),
+    local('Inter-SemiBold'),
     /* Super Modern Browsers */ url('Inter-SemiBold.woff2') format('woff2'),
     /* Modern Browsers */ url('Inter-SemiBold.woff') format('woff'),
     /* Safari, Android, iOS */ url('Inter-SemiBold.ttf') format('truetype');

@@ -30,7 +30,7 @@ type PdfFormElementRendererProps = {
 
 const pdfFormElements: PdfElement<PdfFormElementProps, PdfFormElementRendererProps> = (
   { infoToFormFields, fontSize, width, x, y },
-  { page, form, font, info, region, card, cardInfoHash }
+  { page, form, font, info, region, card, cardInfoHash },
 ) => {
   const pageIdx = page.doc.getPageCount()
   const formFields = infoToFormFields(form, pageIdx, { info, region, card, cardInfoHash })

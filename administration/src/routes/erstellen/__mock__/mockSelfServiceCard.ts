@@ -6,7 +6,10 @@ import PlainDate from '../../../util/PlainDate'
 
 export const exampleCard = initializeCard(koblenzConfig.card, undefined, {
   fullName: 'Karla Koblenz',
-  extensions: { birthday: PlainDate.safeFromCustomFormat('10.06.2003'), koblenzReferenceNumber: '123K' },
+  extensions: {
+    birthday: PlainDate.safeFromCustomFormat('10.06.2003'),
+    koblenzReferenceNumber: '123K',
+  },
 })
 export const mockedCardMutation = {
   request: {
@@ -28,7 +31,8 @@ export const mockedCardMutation = {
         },
         staticVerificationCode: {
           cardInfoHashBase64: 'y13Ua0VilM29n/vDZOG6T86rslmnyNJ2TH4LBIr8IBE=',
-          codeBase64: 'Ci0KDUthcmxhIEtvYmxlbnoQ5p8BGhgKAghfEgQI6r4BKgQIi5oBMgYKBDEyM0sSEIucOBuTDmlimynsrXgvfgs=',
+          codeBase64:
+            'Ci0KDUthcmxhIEtvYmxlbnoQ5p8BGhgKAghfEgQI6r4BKgQIi5oBMgYKBDEyM0sSEIucOBuTDmlimynsrXgvfgs=',
         },
       },
     },

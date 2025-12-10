@@ -13,7 +13,10 @@ import DiscardAllInputsButton from './components/DiscardAllInputsButton'
 import ApplicationForm from './components/forms/ApplicationForm'
 import { applicationStorageKey } from './constants'
 import useVersionedLocallyStoredState from './hooks/useVersionedLocallyStoredState'
-import { useGarbageCollectArrayBuffers, useInitializeGlobalArrayBuffersManager } from './util/globalArrayBuffersManager'
+import {
+  useGarbageCollectArrayBuffers,
+  useInitializeGlobalArrayBuffersManager,
+} from './util/globalArrayBuffersManager'
 
 // This env variable is determined by '../../../application_commit.sh'. It holds the hash of the last commit to the
 // application form.
@@ -33,12 +36,16 @@ const ApplyController = (): React.ReactElement | null => {
   const { status, state, setState } = useVersionedLocallyStoredState(
     ApplicationForm.initialState,
     applicationStorageKey,
-    lastCommitForApplicationForm
+    lastCommitForApplicationForm,
   )
   const [addEakApplication, { loading: loadingSubmit }] = useAddEakApplicationMutation({
     onError: error => {
       const { title } = getMessageFromApolloError(error)
-      enqueueSnackbar(title, { variant: 'error', style: { whiteSpace: 'pre-line' }, autoHideDuration: 7200 })
+      enqueueSnackbar(title, {
+        variant: 'error',
+        style: { whiteSpace: 'pre-line' },
+        autoHideDuration: 7200,
+      })
     },
     onCompleted: ({ result }) => {
       if (result) {
@@ -56,7 +63,7 @@ const ApplyController = (): React.ReactElement | null => {
   const arrayBufferManagerInitialized = useInitializeGlobalArrayBuffersManager()
   const getArrayBufferKeys = useMemo(
     () => (status === 'loading' ? null : () => ApplicationForm.getArrayBufferKeys(state)),
-    [state, status]
+    [state, status],
   )
   useGarbageCollectArrayBuffers(getArrayBufferKeys)
 
@@ -107,7 +114,9 @@ const ApplyController = (): React.ReactElement | null => {
           />
         )}
         <Box sx={{ justifyContent: 'flex-end', display: 'flex', marginY: 2 }}>
-          {loadingSubmit || formSubmitted ? null : <DiscardAllInputsButton discardAll={discardAll} />}
+          {loadingSubmit || formSubmitted ? null : (
+            <DiscardAllInputsButton discardAll={discardAll} />
+          )}
         </Box>
       </div>
     </div>

@@ -24,12 +24,18 @@ describe('StartDayExtension', () => {
     }
 
     it('should render date picker with correct initial value', () => {
-      const { getByDisplayValue } = renderWithOptions(<StartDayExtension.Component {...defaultProps} />, mockProvider)
+      const { getByDisplayValue } = renderWithOptions(
+        <StartDayExtension.Component {...defaultProps} />,
+        mockProvider,
+      )
       expect(getByDisplayValue('01.01.2024')).toBeTruthy()
     })
 
     it('should clear input when clear button is clicked', () => {
-      const { getByTitle } = renderWithOptions(<StartDayExtension.Component {...defaultProps} />, mockProvider)
+      const { getByTitle } = renderWithOptions(
+        <StartDayExtension.Component {...defaultProps} />,
+        mockProvider,
+      )
       const clearButton = getByTitle('Wert leeren')
       fireEvent.click(clearButton)
       expect(mockSetValue).toHaveBeenCalledWith({ startDay: null })
@@ -37,8 +43,12 @@ describe('StartDayExtension', () => {
 
     it('should show error message when startDay is empty and field was touched', () => {
       const { getByText, getByPlaceholderText } = renderWithOptions(
-        <StartDayExtension.Component {...defaultProps} isValid={false} value={{ startDay: null }} />,
-        mockProvider
+        <StartDayExtension.Component
+          {...defaultProps}
+          isValid={false}
+          value={{ startDay: null }}
+        />,
+        mockProvider,
       )
       const datePicker = getByPlaceholderText('TT.MM.JJJJ')
       fireEvent.blur(datePicker)
@@ -50,13 +60,15 @@ describe('StartDayExtension', () => {
       const startDay = minStartDay.subtract({ days: 1 })
       const { getByText, getByDisplayValue } = renderWithOptions(
         <StartDayExtension.Component {...defaultProps} isValid={false} value={{ startDay }} />,
-        mockProvider
+        mockProvider,
       )
       const datePicker = getByDisplayValue(startDay.format())
       fireEvent.blur(datePicker)
       expect(StartDayExtension.isValid({ startDay })).toBeFalsy()
       expect(
-        getByText(`Das Startdatum darf nicht weiter als ${minStartDay.format()} in der Vergangenheit liegen.`)
+        getByText(
+          `Das Startdatum darf nicht weiter als ${minStartDay.format()} in der Vergangenheit liegen.`,
+        ),
       ).toBeTruthy()
     })
 
@@ -64,21 +76,29 @@ describe('StartDayExtension', () => {
       const today = PlainDate.fromLocalDate(new Date())
       const startDayTooFarInFuture = today.add(maxCardValidity).add({ days: 1 })
       const { getByText, getByDisplayValue } = renderWithOptions(
-        <StartDayExtension.Component {...defaultProps} isValid={false} value={{ startDay: startDayTooFarInFuture }} />,
-        mockProvider
+        <StartDayExtension.Component
+          {...defaultProps}
+          isValid={false}
+          value={{ startDay: startDayTooFarInFuture }}
+        />,
+        mockProvider,
       )
       const datePicker = getByDisplayValue(startDayTooFarInFuture.format())
       fireEvent.blur(datePicker)
       expect(StartDayExtension.isValid({ startDay: startDayTooFarInFuture })).toBeFalsy()
       expect(
-        getByText(`Das Startdatum darf nicht weiter als ${today.add(maxCardValidity).format()} in der Zukunft liegen.`)
+        getByText(
+          `Das Startdatum darf nicht weiter als ${today
+            .add(maxCardValidity)
+            .format()} in der Zukunft liegen.`,
+        ),
       ).toBeTruthy()
     })
 
     it('should not show error message when form is invalid but untouched', () => {
       const { queryByTestId } = renderWithOptions(
         <StartDayExtension.Component {...defaultProps} isValid={false} />,
-        mockProvider
+        mockProvider,
       )
       expect(StartDayExtension.isValid({ startDay: null })).toBeFalsy()
       expect(queryByTestId('form-alert')).toBeNull()
@@ -88,7 +108,7 @@ describe('StartDayExtension', () => {
       const startDay = minStartDay
       const { queryByTestId, getByDisplayValue } = renderWithOptions(
         <StartDayExtension.Component {...defaultProps} value={{ startDay }} />,
-        mockProvider
+        mockProvider,
       )
       const datePicker = getByDisplayValue(startDay.format())
       fireEvent.blur(datePicker)
@@ -97,7 +117,10 @@ describe('StartDayExtension', () => {
     })
 
     it('should call setValue when date is changed', () => {
-      const { getByDisplayValue } = renderWithOptions(<StartDayExtension.Component {...defaultProps} />, mockProvider)
+      const { getByDisplayValue } = renderWithOptions(
+        <StartDayExtension.Component {...defaultProps} />,
+        mockProvider,
+      )
       const startDayChanged = new PlainDate(2025, 1, 2)
       const datePicker = getByDisplayValue('01.01.2024')
       fireEvent.change(datePicker, { target: { value: startDayChanged.format() } })
@@ -105,7 +128,10 @@ describe('StartDayExtension', () => {
     })
 
     it('should set startDay to null if no valid date was typed in', () => {
-      const { getByDisplayValue } = renderWithOptions(<StartDayExtension.Component {...defaultProps} />, mockProvider)
+      const { getByDisplayValue } = renderWithOptions(
+        <StartDayExtension.Component {...defaultProps} />,
+        mockProvider,
+      )
       const datePicker = getByDisplayValue('01.01.2024')
       fireEvent.change(datePicker, { target: { value: '02' } })
       expect(mockSetValue).toHaveBeenCalledWith({ startDay: null })
@@ -143,7 +169,9 @@ describe('StartDayExtension', () => {
 
     describe('toString', () => {
       it('should convert a PlainDate to the particular string', () => {
-        expect(StartDayExtension.toString({ startDay: new PlainDate(1998, 2, 10) })).toBe('10.02.1998')
+        expect(StartDayExtension.toString({ startDay: new PlainDate(1998, 2, 10) })).toBe(
+          '10.02.1998',
+        )
       })
 
       it('should convert a null value to an empty string', () => {
@@ -153,7 +181,9 @@ describe('StartDayExtension', () => {
 
     describe('serialize', () => {
       it('should serialize a PlainDate to a correct ISO string', () => {
-        expect(StartDayExtension.serialize({ startDay: new PlainDate(1998, 2, 10) })).toBe('1998-02-10')
+        expect(StartDayExtension.serialize({ startDay: new PlainDate(1998, 2, 10) })).toBe(
+          '1998-02-10',
+        )
       })
 
       it('should serialize a null value to an empty string', () => {
@@ -163,7 +193,9 @@ describe('StartDayExtension', () => {
 
     describe('fromSerialized', () => {
       it('should deserialize an ISO string to a PlainDate', () => {
-        expect(StartDayExtension.fromSerialized('1998-02-10')).toEqual({ startDay: new PlainDate(1998, 2, 10) })
+        expect(StartDayExtension.fromSerialized('1998-02-10')).toEqual({
+          startDay: new PlainDate(1998, 2, 10),
+        })
       })
 
       it('should deserialize an empty string to null', () => {
@@ -173,7 +205,9 @@ describe('StartDayExtension', () => {
 
     describe('getInitializeState', () => {
       it('should initialize startDay state with today', () => {
-        expect(StartDayExtension.getInitialState()).toEqual({ startDay: PlainDate.fromLocalDate(new Date()) })
+        expect(StartDayExtension.getInitialState()).toEqual({
+          startDay: PlainDate.fromLocalDate(new Date()),
+        })
       })
     })
   })

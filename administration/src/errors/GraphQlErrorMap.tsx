@@ -97,7 +97,10 @@ const graphQlErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
           ? i18next.t('errors:invalidQrCodeSize:dynamicType')
           : i18next.t('errors:invalidQrCodeSize:staticType')
       return {
-        title: i18next.t('errors:invalidQrCodeSize:title', { codeType: codeTypeText, fullName: cardInfo.fullName }),
+        title: i18next.t('errors:invalidQrCodeSize:title', {
+          codeType: codeTypeText,
+          fullName: cardInfo.fullName,
+        }),
       }
     }
     case GraphQlExceptionCode.InvalidRole:
@@ -143,7 +146,9 @@ const graphQlErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
       }
     case GraphQlExceptionCode.InvalidApplicationConfirmationNoteSize:
       return {
-        title: i18next.t('errors:invalidApplicationConfirmationNoteSize', { maxSize: extensions.maxSize }),
+        title: i18next.t('errors:invalidApplicationConfirmationNoteSize', {
+          maxSize: extensions.maxSize,
+        }),
       }
     case GraphQlExceptionCode.FreinetFoundMultiplePersons: {
       return {

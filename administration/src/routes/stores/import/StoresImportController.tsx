@@ -39,7 +39,7 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
         />,
         {
           persist: true,
-        }
+        },
       )
       setAcceptingStores([])
     },
@@ -116,7 +116,8 @@ const StoresImportController = (): ReactElement => {
     <RenderGuard
       allowedRoles={[Role.ProjectStoreManager]}
       condition={storesManagement.enabled}
-      error={{ description: t('notAuthorizedToManageStores') }}>
+      error={{ description: t('notAuthorizedToManageStores') }}
+    >
       {storesManagement.enabled && <StoresImport fields={storesManagement.fields} />}
     </RenderGuard>
   )
