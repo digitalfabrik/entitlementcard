@@ -10,18 +10,18 @@ import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
 import 'package:ehrenamtskarte/home/home_page.dart';
 
-class ResultsLoader extends StatefulWidget {
+class SliverResultsLoader extends StatefulWidget {
   final Input$CoordinatesInput? coordinates;
   final String? searchText;
   final List<int> categoryIds;
 
-  const ResultsLoader({super.key, this.coordinates, this.searchText, required this.categoryIds});
+  const SliverResultsLoader({super.key, this.coordinates, this.searchText, required this.categoryIds});
 
   @override
-  State<StatefulWidget> createState() => ResultsLoaderState();
+  State<StatefulWidget> createState() => SliverResultsLoaderState();
 }
 
-class ResultsLoaderState extends State<ResultsLoader> {
+class SliverResultsLoaderState extends State<SliverResultsLoader> {
   static const _pageSize = 20;
   GraphQLClient? _client;
 
@@ -43,7 +43,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
   }
 
   @override
-  void didUpdateWidget(ResultsLoader oldWidget) {
+  void didUpdateWidget(SliverResultsLoader oldWidget) {
     super.didUpdateWidget(oldWidget);
     _pagingController.refresh();
   }
