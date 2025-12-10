@@ -2,7 +2,8 @@
 /// used like the apple navigation bars.
 library;
 
-import 'package:ehrenamtskarte/category_assets.dart';
+import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
+import 'package:ehrenamtskarte/category_assets.dart' show categoryAssets, CategoryAsset;
 import 'package:ehrenamtskarte/debouncer.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/search/category_filter_bar.dart';
@@ -182,13 +183,18 @@ class SliverSearchAppBarState extends State<SliverSearchAppBar> {
     final t = context.t;
     final theme = Theme.of(context);
     final foregroundColor = theme.appBarTheme.foregroundColor;
+    final List<CategoryAsset> categoryAssetList = [...categoryAssets(context).where((category) => category.id != 9)]
+      ..sort((a, b) => a.shortName.length.compareTo(b.shortName.length))
+      ..add(categoryAssets(context).where((category) => category.id == 9).single);
+    final List<CategoryAsset> filteredAssetList = categoryAssetList
+        .where((element) => buildConfig.categories.contains(element.id))
+        .toList();
 
     return SliverAppBar(
       pinned: true,
       snap: true,
       floating: true,
-      // TODO Calculate the CategoryFilterBar's height and set it here
-      expandedHeight: 250,
+      expandedHeight: categoryFilterBarExpectedHeight(context, filteredAssetList.length),
       title: TextField(
         onTapOutside: (PointerDownEvent event) {
           focusNode.nextFocus();
@@ -203,7 +209,7 @@ class SliverSearchAppBarState extends State<SliverSearchAppBar> {
         cursorColor: foregroundColor,
         style: theme.textTheme.bodyLarge?.apply(color: foregroundColor),
       ),
-      flexibleSpace: CategoryFilterBar(onCategoryPress: onCategoryPress),
+      flexibleSpace: CategoryFilterBar(categoryAssets: filteredAssetList, onCategoryPress: onCategoryPress),
       actionsIconTheme: IconThemeData(color: foregroundColor),
       actions: [
         if (textEditingController.value.text.isNotEmpty)
