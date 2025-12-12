@@ -24,8 +24,11 @@ const ActivationPageContent = ({
       {activationText(
         config.name,
         downloadLink,
-        getCustomDeepLinkFromActivationCode(activationCode, getBuildConfig(window.location.hostname)),
-        t
+        getCustomDeepLinkFromActivationCode(
+          activationCode,
+          getBuildConfig(window.location.hostname),
+        ),
+        t,
       )}
     </>
   )

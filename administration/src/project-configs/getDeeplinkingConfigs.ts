@@ -1,4 +1,9 @@
-import { DeeplLinkingConfig, buildConfigBayern, buildConfigKoblenz, buildConfigNuernberg } from 'build-configs'
+import {
+  DeeplLinkingConfig,
+  buildConfigBayern,
+  buildConfigKoblenz,
+  buildConfigNuernberg,
+} from 'build-configs'
 
 const getDeepLinkingConfigs = (): DeeplLinkingConfig[] => [
   buildConfigBayern.common.deepLinking,

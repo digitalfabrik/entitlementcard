@@ -20,7 +20,12 @@ type RenderGuardProps = {
   error?: { title?: string; description?: string }
 }
 
-const RenderGuard = ({ allowedRoles, children, condition, error }: RenderGuardProps): ReactElement | null => {
+const RenderGuard = ({
+  allowedRoles,
+  children,
+  condition,
+  error,
+}: RenderGuardProps): ReactElement | null => {
   const { t } = useTranslation('errors')
   const { role } = useWhoAmI().me
 

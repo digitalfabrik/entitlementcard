@@ -63,7 +63,7 @@ const AuthProvider = ({ children }: { children: ReactNode }): ReactElement => {
         setTokenPayload(null)
       },
     }),
-    [tokenPayload]
+    [tokenPayload],
   )
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>

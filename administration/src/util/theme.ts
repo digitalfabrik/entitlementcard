@@ -266,5 +266,5 @@ export const theme = (config: ProjectConfig): Theme =>
         },
       },
     },
-    deDE
+    deDE,
   )

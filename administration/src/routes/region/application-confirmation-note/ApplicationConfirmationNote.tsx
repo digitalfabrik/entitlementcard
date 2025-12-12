@@ -23,7 +23,7 @@ const ApplicationConfirmationNoteDialog = ({
   saveApplicationConfirmationNote,
 }: ApplicationConfirmationNoteDialogProps): ReactElement => {
   const [applicationConfirmationNoteActivated, setApplicationConfirmationNoteActivated] = useState(
-    defaultConfirmationNoteActivated
+    defaultConfirmationNoteActivated,
   )
   const { t } = useTranslation('regionSettings')
 

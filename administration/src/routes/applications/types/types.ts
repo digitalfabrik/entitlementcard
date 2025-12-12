@@ -6,7 +6,8 @@ import {
 import { ApplicationParsedJsonValue } from '../utils/application'
 
 /** A Verification that was obtained from the `getApplications` query. */
-export type ApplicationVerification = GetApplicationsQuery['applications'][number]['verifications'][number]
+export type ApplicationVerification =
+  GetApplicationsQuery['applications'][number]['verifications'][number]
 
 export type ApplicationStatusBarItemType = {
   /** A translation key for this category's bar item */
@@ -20,6 +21,9 @@ export type ApplicationStatusBarItemType = {
 /** An application that was obtained from the `getApplications` query. */
 export type Application = ApplicationParsedJsonValue<GetApplicationsQuery['applications'][number]>
 
-export type ApplicationVerificationPublic = Omit<ApplicationVerificationView, 'contactEmailAddress' | 'verificationId'>
+export type ApplicationVerificationPublic = Omit<
+  ApplicationVerificationView,
+  'contactEmailAddress' | 'verificationId'
+>
 
 export type AcceptingStoresData = SearchAcceptingStoresInProjectQuery['stores'][number]

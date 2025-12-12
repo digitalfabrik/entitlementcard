@@ -23,16 +23,17 @@ const ApplicationConfirmationNoteController = ({
     variables: { regionId },
   })
 
-  const [updateApplicationConfirmationNote, { loading }] = useUpdateApplicationConfirmationNoteMutation({
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
-      enqueueSnackbar(title, { variant: 'error' })
-    },
-    onCompleted: () => {
-      enqueueSnackbar(t('applicationConfirmationMailNoteSavedSuccessful'), { variant: 'success' })
-      applicationConfirmationNoteQuery.refetch({ regionId })
-    },
-  })
+  const [updateApplicationConfirmationNote, { loading }] =
+    useUpdateApplicationConfirmationNoteMutation({
+      onError: error => {
+        const { title } = getMessageFromApolloError(error)
+        enqueueSnackbar(title, { variant: 'error' })
+      },
+      onCompleted: () => {
+        enqueueSnackbar(t('applicationConfirmationMailNoteSavedSuccessful'), { variant: 'success' })
+        applicationConfirmationNoteQuery.refetch({ regionId })
+      },
+    })
 
   const applicationConfirmationNoteQueryResult = getQueryResult(applicationConfirmationNoteQuery)
   if (!applicationConfirmationNoteQueryResult.successful) {

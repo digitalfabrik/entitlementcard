@@ -81,7 +81,11 @@ const DateForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
             },
           }}
         />
-        <FormAlert errorMessage={(showAllErrors || touched) && isInvalid ? validationResult.message : undefined} />
+        <FormAlert
+          errorMessage={
+            (showAllErrors || touched) && isInvalid ? validationResult.message : undefined
+          }
+        />
       </FormGroup>
     )
   },

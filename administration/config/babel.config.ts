@@ -4,7 +4,9 @@ const path = require('path')
 const create = () => {
   const env = process.env.NODE_ENV
   if (env !== 'development' && env !== 'production') {
-    throw Error(`Environment not specified. Received ${env}. Expected one of: development, production`)
+    throw Error(
+      `Environment not specified. Received ${env}. Expected one of: development, production`,
+    )
   }
 
   const isEnvDevelopment = env === 'development'

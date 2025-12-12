@@ -73,8 +73,15 @@ const ManageRegionUsers = ({ region }: { region: Region }) => {
   const users = usersQueryResult.data.users
 
   return (
-    <UsersTableContainer title={t('allUsersOfRegion', { prefix: region.prefix, name: region.name })}>
-      <UsersTable users={users} regions={regions} selectedRegionId={region.id} refetch={usersQuery.refetch} />
+    <UsersTableContainer
+      title={t('allUsersOfRegion', { prefix: region.prefix, name: region.name })}
+    >
+      <UsersTable
+        users={users}
+        regions={regions}
+        selectedRegionId={region.id}
+        refetch={usersQuery.refetch}
+      />
     </UsersTableContainer>
   )
 }
@@ -88,7 +95,13 @@ const ManageUsersController = (): ReactElement => {
   if (role === Role.ProjectAdmin) {
     return <ManageProjectUsers />
   }
-  return <AlertBox severity='error' title={t('notAuthorized')} description={t('notAuthorizedToManageUsers')} />
+  return (
+    <AlertBox
+      severity='error'
+      title={t('notAuthorized')}
+      description={t('notAuthorizedToManageUsers')}
+    />
+  )
 }
 
 export default ManageUsersController

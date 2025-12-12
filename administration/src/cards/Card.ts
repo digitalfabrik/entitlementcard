@@ -14,7 +14,12 @@ import { normalizeWhitespace } from '../util/normalizeString'
 import { maxCardValidity } from './constants'
 import { REGION_EXTENSION_NAME } from './extensions/RegionExtension'
 import Extensions from './extensions/extensions'
-import type { Extension, ExtensionKey, ExtensionState, InferExtensionStateType } from './extensions/extensions'
+import type {
+  Extension,
+  ExtensionKey,
+  ExtensionState,
+  InferExtensionStateType,
+} from './extensions/extensions'
 
 // Due to limited space on the cards
 export const MAX_NAME_LENGTH = 30
@@ -33,14 +38,17 @@ const createRandomId = () => Math.floor(Math.random() * 1000000)
 const getInitialExtensionState = (cardConfig: CardConfig, region: Region | undefined) =>
   cardConfig.extensions.reduce(
     (acc, extension) =>
-      Object.assign(acc, extension.getInitialState(extension.name === REGION_EXTENSION_NAME ? region : undefined)),
-    {}
+      Object.assign(
+        acc,
+        extension.getInitialState(extension.name === REGION_EXTENSION_NAME ? region : undefined),
+      ),
+    {},
   )
 
 export const initializeCard = (
   cardConfig: CardConfig,
   region: Region | undefined = undefined,
-  { id, fullName, expirationDate, extensions }: Partial<Card> = {}
+  { id, fullName, expirationDate, extensions }: Partial<Card> = {},
 ): Card => {
   const defaultExpirationDate = PlainDate.fromLocalDate(new Date()).add(cardConfig.defaultValidity)
 
@@ -87,7 +95,7 @@ export const serializeCard = (card: Card): SerializedCard => ({
       ...acc,
       [extension.extension.name]: extension.extension.serialize(extension.state),
     }),
-    {}
+    {},
   ),
 })
 
@@ -106,7 +114,11 @@ export const hasInfiniteLifetime = (card: Card): boolean =>
 
 const hasValidNameLength = (fullName: string): boolean => {
   const encodedName = new TextEncoder().encode(fullName)
-  return fullName.length > 0 && encodedName.length <= MAX_ENCODED_NAME_LENGTH && fullName.length <= MAX_NAME_LENGTH
+  return (
+    fullName.length > 0 &&
+    encodedName.length <= MAX_ENCODED_NAME_LENGTH &&
+    fullName.length <= MAX_NAME_LENGTH
+  )
 }
 
 const hasNameAndForename = (fullName: string): boolean => {
@@ -137,28 +149,33 @@ export const isExpirationDateValid = (card: Card, { nullable } = { nullable: fal
 
 export const cardHasAllMandatoryExtensions = (card: Card, cardConfig: CardConfig): boolean => {
   const mandatoryExtensions = cardConfig.extensions.filter(extension => extension.isMandatory)
-  return mandatoryExtensions.every(extension => Object.keys(card.extensions).includes(extension.name))
+  return mandatoryExtensions.every(extension =>
+    Object.keys(card.extensions).includes(extension.name),
+  )
 }
 
 export const isValid = (
   card: Card,
   cardConfig: CardConfig,
-  { expirationDateNullable } = { expirationDateNullable: false }
+  { expirationDateNullable } = { expirationDateNullable: false },
 ): boolean =>
   isFullNameValid(card) &&
   getExtensions(card).every(({ extension, state }) => extension.isValid(state)) &&
-  (isExpirationDateValid(card, { nullable: expirationDateNullable }) || hasInfiniteLifetime(card)) &&
+  (isExpirationDateValid(card, { nullable: expirationDateNullable }) ||
+    hasInfiniteLifetime(card)) &&
   cardHasAllMandatoryExtensions(card, cardConfig)
 
 export const generateCardInfo = (card: Card): CardInfo => {
   const extensionsMessage: PartialMessage<CardExtensions> = getExtensions(card).reduce(
     (acc, { extension, state }) => Object.assign(acc, extension.getProtobufData(state)),
-    {}
+    {},
   )
 
   const expirationDate = card.expirationDate
   const expirationDay =
-    expirationDate !== null && !hasInfiniteLifetime(card) ? Math.max(expirationDate.toDaysSinceEpoch(), 0) : undefined
+    expirationDate !== null && !hasInfiniteLifetime(card)
+      ? Math.max(expirationDate.toDaysSinceEpoch(), 0)
+      : undefined
 
   return new CardInfo({
     fullName: card.fullName,
@@ -167,7 +184,10 @@ export const generateCardInfo = (card: Card): CardInfo => {
   })
 }
 
-const getExtensionNameByCSVHeader = (cardConfig: CardConfig, columnHeader: string): ExtensionKey | null => {
+const getExtensionNameByCSVHeader = (
+  cardConfig: CardConfig,
+  columnHeader: string,
+): ExtensionKey | null => {
   const extensionIndex = cardConfig.extensionColumnNames.indexOf(columnHeader)
   return (cardConfig.extensions[extensionIndex]?.name as ExtensionKey | undefined) ?? null
 }
@@ -189,7 +209,7 @@ export const isValueValid = (card: Card, cardConfig: CardConfig, columnHeader: s
 export const getValueByCSVHeader = (
   card: Card,
   cardConfig: CardConfig,
-  columnHeader: string
+  columnHeader: string,
 ): string | number | undefined => {
   switch (columnHeader) {
     case cardConfig.nameColumnName:
@@ -198,7 +218,9 @@ export const getValueByCSVHeader = (
       return card.expirationDate?.format()
     default: {
       const extensionName = getExtensionNameByCSVHeader(cardConfig, columnHeader)
-      const extension = getExtensions(card).find(({ extension }) => extension.name === extensionName)
+      const extension = getExtensions(card).find(
+        ({ extension }) => extension.name === extensionName,
+      )
       return extension?.extension.toString(extension.state)
     }
   }
@@ -209,22 +231,29 @@ export const initializeCardFromCSV = (
   line: (string | null)[],
   headers: string[],
   region: Region | undefined,
-  withDefaults = false
+  withDefaults = false,
 ): Card => {
   const defaultCard = withDefaults
     ? initializeCard(cardConfig, region)
-    : { fullName: '', expirationDate: null, extensions: region ? { [REGION_EXTENSION_NAME]: region.id } : {} }
+    : {
+        fullName: '',
+        expirationDate: null,
+        extensions: region ? { [REGION_EXTENSION_NAME]: region.id } : {},
+      }
   const extensions = headers.reduce((acc, header, index) => {
     const value = line[index]
     const extension = cardConfig.extensions.find(
-      extension => extension.name === getExtensionNameByCSVHeader(cardConfig, header)
+      extension => extension.name === getExtensionNameByCSVHeader(cardConfig, header),
     )
     return extension && value != null ? Object.assign(acc, extension.fromString(value)) : acc
   }, defaultCard.extensions)
 
-  const fullName = normalizeWhitespace(line[headers.indexOf(cardConfig.nameColumnName)] ?? defaultCard.fullName)
+  const fullName = normalizeWhitespace(
+    line[headers.indexOf(cardConfig.nameColumnName)] ?? defaultCard.fullName,
+  )
   const rawExpirationDate = line[headers.indexOf(cardConfig.expiryColumnName)]
-  const expirationDate = PlainDate.safeFromCustomFormat(rawExpirationDate) ?? defaultCard.expirationDate
+  const expirationDate =
+    PlainDate.safeFromCustomFormat(rawExpirationDate) ?? defaultCard.expirationDate
 
   return {
     id: createRandomId(),
@@ -255,7 +284,9 @@ export const getFullNameValidationErrorMessage = (name: string): string => {
     errors.push(i18next.t('cards:fullNameValidationCompleteNameError'))
   }
   if (!hasValidNameLength(name)) {
-    errors.push(i18next.t('cards:fullNameValidationMaxNameLengthError', { maxNameLength: MAX_NAME_LENGTH }))
+    errors.push(
+      i18next.t('cards:fullNameValidationMaxNameLengthError', { maxNameLength: MAX_NAME_LENGTH }),
+    )
   }
   return errors.join(' ')
 }
@@ -275,7 +306,9 @@ export const getExpirationDateErrorMessage = (card: Card): string => {
   }
   if (isExceedingMaxValidityDate(card.expirationDate)) {
     errors.push(
-      i18next.t('cards:expirationDateFutureError', { maxValidationDate: today.add(maxCardValidity).format() })
+      i18next.t('cards:expirationDateFutureError', {
+        maxValidationDate: today.add(maxCardValidity).format(),
+      }),
     )
   }
   return errors.join(' ')

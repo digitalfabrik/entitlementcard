@@ -23,7 +23,7 @@ describe('CreateCardsButtonBar', () => {
         generateCardsPdf={() => Promise.resolve()}
         generateCardsCsv={() => Promise.resolve()}
       />,
-      mockProvider
+      mockProvider,
     )
 
     const backButton = getByText('Zurück zur Auswahl')
@@ -45,7 +45,7 @@ describe('CreateCardsButtonBar', () => {
         generateCardsPdf={generateCardsPdf}
         generateCardsCsv={generateCardsCsv}
       />,
-      mockProvider
+      mockProvider,
     )
 
     const generateButton = getByText('QR-Codes drucken').closest('button') as HTMLButtonElement
@@ -73,7 +73,7 @@ describe('CreateCardsButtonBar', () => {
         generateCardsPdf={generateCardsPdf}
         generateCardsCsv={generateCardsCsv}
       />,
-      mockProvider
+      mockProvider,
     )
 
     const generateButton = getByText('QR-Codes drucken').closest('button') as HTMLButtonElement
@@ -102,7 +102,7 @@ describe('CreateCardsButtonBar', () => {
         generateCardsPdf={generateCardsPdf}
         generateCardsCsv={generateCardsCsv}
       />,
-      mockProvider
+      mockProvider,
     )
 
     const generateButton = getByText('QR-Codes drucken').closest('button') as HTMLButtonElement

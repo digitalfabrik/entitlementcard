@@ -17,7 +17,10 @@ type RegionOverviewProps = {
 
 const MAX_CHARS = 20000
 
-const DataPrivacyOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProps): ReactElement => {
+const DataPrivacyOverview = ({
+  dataPrivacyPolicy,
+  regionId,
+}: RegionOverviewProps): ReactElement => {
   const { palette } = useTheme()
   const navigate = useNavigate()
   const { enqueueSnackbar } = useSnackbar()
@@ -51,7 +54,8 @@ const DataPrivacyOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProp
         sx={{
           zIndex: 0,
           height: '100vh',
-        }}>
+        }}
+      >
         <Typography variant='h5' textAlign='center' margin={2}>
           {t('dataPrivacy')}
         </Typography>
@@ -78,7 +82,8 @@ const DataPrivacyOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProp
           sx={{
             alignSelf: 'flex-start',
             color: maxCharsExceeded ? palette.error.main : palette.text.primary,
-          }}>
+          }}
+        >
           {dataPrivacyText.length}/{MAX_CHARS}
         </Typography>
       </Stack>
@@ -94,7 +99,8 @@ const DataPrivacyOverview = ({ dataPrivacyPolicy, regionId }: RegionOverviewProp
               variant='contained'
               color='primary'
               onClick={onSave}
-              loading={loading}>
+              loading={loading}
+            >
               {t('save')}
             </Button>
           </span>

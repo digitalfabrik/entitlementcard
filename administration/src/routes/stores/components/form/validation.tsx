@@ -48,7 +48,7 @@ const specialCharacterError = (i18nKey: string): FormValidation => ({
 const validateFieldWithLength = (
   value: string | undefined,
   { min, max }: { min: number; max: number },
-  lengthErrorKey: string
+  lengthErrorKey: string,
 ): FormValidation => {
   const trimmedValue = value?.trim()
   if (!trimmedValue) {
@@ -69,7 +69,7 @@ export const streetValidation = (street: string | undefined): FormValidation => 
   const lengthValidation = validateFieldWithLength(
     street,
     validationConstants.street,
-    'storeForm:errorStreetInvalidMaxMinChars'
+    'storeForm:errorStreetInvalidMaxMinChars',
   )
 
   if (lengthValidation.invalid) {
@@ -86,7 +86,7 @@ export const phoneValidation = (phoneNr: string | undefined): FormValidation => 
   const lengthValidation = validateFieldWithLength(
     phoneNr,
     validationConstants.phone,
-    'storeForm:errorPhoneInvalidMaxChars'
+    'storeForm:errorPhoneInvalidMaxChars',
   )
 
   if (lengthValidation.invalid) {
@@ -103,7 +103,7 @@ export const emailValidation = (email: string | undefined): FormValidation => {
   const lengthValidation = validateFieldWithLength(
     email,
     validationConstants.email,
-    'storeForm:errorEmailInvalidMaxChars'
+    'storeForm:errorEmailInvalidMaxChars',
   )
 
   if (lengthValidation.invalid) {
@@ -120,7 +120,7 @@ export const cityValidation = (city: string | undefined): FormValidation => {
   const lengthValidation = validateFieldWithLength(
     city,
     validationConstants.city,
-    'storeForm:errorCityInvalidMaxMinChars'
+    'storeForm:errorCityInvalidMaxMinChars',
   )
 
   if (lengthValidation.invalid) {
@@ -140,7 +140,7 @@ export const homepageValidation = (homepage: string | undefined): FormValidation
   const lengthValidation = validateFieldWithLength(
     homepage,
     validationConstants.homepage,
-    'storeForm:errorHomepageInvalidMaxMinChars'
+    'storeForm:errorHomepageInvalidMaxMinChars',
   )
 
   if (lengthValidation.invalid) {
@@ -184,7 +184,11 @@ export const postalCodeValidation = (postalCode: string | undefined): FormValida
 }
 
 export const descriptionValidation = (description?: string): FormValidation =>
-  validateFieldWithLength(description, validationConstants.description, 'storeForm:errorDescriptionMaxChars')
+  validateFieldWithLength(
+    description,
+    validationConstants.description,
+    'storeForm:errorDescriptionMaxChars',
+  )
 
 export const coordinatesInvalid = (latitude?: number, longitude?: number): boolean =>
   latitude === undefined || longitude === undefined

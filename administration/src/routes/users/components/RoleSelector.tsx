@@ -22,7 +22,8 @@ const RoleSelector = ({
   const [touched, setTouched] = useState(false)
   const config = useContext(ProjectConfigContext)
   const isProjectAdmin = activeRole === Role.ProjectAdmin
-  const showExternalVerifiedApiUser = config.applicationFeature?.applicationUsableWithApiToken && isProjectAdmin
+  const showExternalVerifiedApiUser =
+    config.applicationFeature?.applicationUsableWithApiToken && isProjectAdmin
   const showProjectStoreManager = config.storesManagement.enabled && isProjectAdmin
   const showError = selectedRole === null && touched
   const labelId = useId()
@@ -40,13 +41,20 @@ const RoleSelector = ({
             labelId={labelId}
             value={selectedRole ?? ''}
             onBlur={() => setTouched(true)}
-            onChange={e => onChange(e.target.value as Role)}>
-            {isProjectAdmin && <MenuItem value={Role.ProjectAdmin}>{roleToText(Role.ProjectAdmin)}</MenuItem>}
+            onChange={e => onChange(e.target.value as Role)}
+          >
+            {isProjectAdmin && (
+              <MenuItem value={Role.ProjectAdmin}>{roleToText(Role.ProjectAdmin)}</MenuItem>
+            )}
             {showProjectStoreManager && (
-              <MenuItem value={Role.ProjectStoreManager}>{roleToText(Role.ProjectStoreManager)}</MenuItem>
+              <MenuItem value={Role.ProjectStoreManager}>
+                {roleToText(Role.ProjectStoreManager)}
+              </MenuItem>
             )}
             {showExternalVerifiedApiUser && (
-              <MenuItem value={Role.ExternalVerifiedApiUser}>{roleToText(Role.ExternalVerifiedApiUser)}</MenuItem>
+              <MenuItem value={Role.ExternalVerifiedApiUser}>
+                {roleToText(Role.ExternalVerifiedApiUser)}
+              </MenuItem>
             )}
             <MenuItem value={Role.RegionAdmin}>{roleToText(Role.RegionAdmin)}</MenuItem>
             <MenuItem value={Role.RegionManager}>{roleToText(Role.RegionManager)}</MenuItem>

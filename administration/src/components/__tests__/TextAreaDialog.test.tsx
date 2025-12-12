@@ -9,7 +9,13 @@ describe('TextAreaDialog', () => {
   const onSave = jest.fn()
   const defaultText = 'Hallo'
   const placeholderText = 'Hier kann ein Text stehen...'
-  const renderTextDialog = ({ maxChars, defaultText }: { maxChars?: number; defaultText: string | null }) =>
+  const renderTextDialog = ({
+    maxChars,
+    defaultText,
+  }: {
+    maxChars?: number
+    defaultText: string | null
+  }) =>
     renderWithOptions(
       <TextAreaDialog
         title='Show note'
@@ -22,7 +28,7 @@ describe('TextAreaDialog', () => {
         onClose={onClose}
         onSave={onSave}
       />,
-      { translation: true }
+      { translation: true },
     )
 
   it('should disable save button when character limit is exceeded', async () => {

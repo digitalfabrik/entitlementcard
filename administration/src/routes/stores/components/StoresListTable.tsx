@@ -17,13 +17,17 @@ const customToolBarStyles: SxProps = {
   '.MuiDataGrid-toolbar': { '.MuiDivider-vertical': { display: 'none' } },
 }
 
-const EMailCell = ({ email }: { email: string }): ReactElement => <Link href={`mailto:${email}`}>{email}</Link>
+const EMailCell = ({ email }: { email: string }): ReactElement => (
+  <Link href={`mailto:${email}`}>{email}</Link>
+)
 const columns = (t: TFunction, editStore: (storeId: number) => void): GridColDef[] => [
   {
     field: 'id',
     headerName: '',
     width: 60,
-    renderCell: ({ row }: { row: AcceptingStoresData }) => <TableMenu storeId={row.id} onEditStore={editStore} />,
+    renderCell: ({ row }: { row: AcceptingStoresData }) => (
+      <TableMenu storeId={row.id} onEditStore={editStore} />
+    ),
   },
   {
     field: 'name',

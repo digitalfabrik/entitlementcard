@@ -4,7 +4,10 @@ import { QrCode } from '../../generated/card_pb'
 import { drawQRCode } from '../../util/qrcode'
 import { Coordinates, PdfElement, mmToPt } from './PdfElements'
 
-export type PdfQrCode = Extract<QrCode['qrCode'], { case: 'staticVerificationCode' | 'dynamicActivationCode' }>
+export type PdfQrCode = Extract<
+  QrCode['qrCode'],
+  { case: 'staticVerificationCode' | 'dynamicActivationCode' }
+>
 
 export type PdfQrCodeElementProps = {
   size: number
@@ -17,7 +20,7 @@ type PdfQrCodeElementRendererProps = {
 
 const pdfQrCodeElement: PdfElement<PdfQrCodeElementProps, PdfQrCodeElementRendererProps> = (
   { size, x, y },
-  { page, qrCode }
+  { page, qrCode },
 ) => {
   const qrCodeSizePdf = mmToPt(size)
   const qrCodeXPdf = mmToPt(x)

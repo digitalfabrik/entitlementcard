@@ -71,7 +71,8 @@ const ResetPasswordController = (): ReactElement => {
           onSubmit={e => {
             e.preventDefault()
             submit()
-          }}>
+          }}
+        >
           <Stack sx={{ gap: 2, marginTop: 3, marginBottom: 2 }}>
             <TextField
               fullWidth
@@ -107,11 +108,24 @@ const ResetPasswordController = (): ReactElement => {
             )}
           </Stack>
 
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 1.5 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              paddingTop: 1.5,
+            }}
+          >
             <Button href='/' variant='text'>
               {t('backToLogin')}
             </Button>
-            <Button type='submit' loading={loading} variant='contained' color='primary' disabled={warnMessage !== null}>
+            <Button
+              type='submit'
+              loading={loading}
+              variant='contained'
+              color='primary'
+              disabled={warnMessage !== null}
+            >
               {t('resetPassword')}
             </Button>
           </Box>

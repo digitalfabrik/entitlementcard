@@ -24,8 +24,11 @@ const CreateCardsController = (): ReactElement => {
     <RenderGuard
       allowedRoles={[Role.RegionManager, Role.RegionAdmin]}
       condition={region !== undefined}
-      error={{ description: t('errors:notAuthorizedToCreateCards') }}>
-      <Stack sx={{ flexGrow: 1, alignItems: 'center', justifyContent: 'safe center', overflowY: 'auto' }}>
+      error={{ description: t('errors:notAuthorizedToCreateCards') }}
+    >
+      <Stack
+        sx={{ flexGrow: 1, alignItems: 'center', justifyContent: 'safe center', overflowY: 'auto' }}
+      >
         <Stack sx={{ width: '400px', padding: 2, gap: 2 }}>
           <Button sx={buttonStyle} startIcon={<AddCard />} size='large' href='./add'>
             {t('createSingleCards')}
@@ -34,7 +37,12 @@ const CreateCardsController = (): ReactElement => {
             {t('importMultipleCards')}
           </Button>
           {freinetCSVImportEnabled && (
-            <Button sx={buttonStyle} startIcon={<UploadFile />} size='large' href={`./import?${FREINET_PARAM}=true`}>
+            <Button
+              sx={buttonStyle}
+              startIcon={<UploadFile />}
+              size='large'
+              href={`./import?${FREINET_PARAM}=true`}
+            >
               {t('importCardsFromFreinet')}
             </Button>
           )}

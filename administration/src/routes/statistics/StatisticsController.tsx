@@ -27,7 +27,12 @@ const ViewProjectStatistics = () => {
   if (!cardStatisticsQueryResult.successful) {
     return cardStatisticsQueryResult.component
   }
-  return <StatisticsOverview onApplyFilter={applyFilter} statistics={cardStatisticsQueryResult.data.result} />
+  return (
+    <StatisticsOverview
+      onApplyFilter={applyFilter}
+      statistics={cardStatisticsQueryResult.data.result}
+    />
+  )
 }
 
 const ViewRegionStatistics = ({ region }: { region: Region }) => {
@@ -66,6 +71,12 @@ const StatisticsController = (): ReactElement => {
   if (role === Role.ProjectAdmin && cardStatistics.enabled) {
     return <ViewProjectStatistics />
   }
-  return <AlertBox severity='error' description={t('notAuthorizedToSeeStatistics')} title={t('notAuthorized')} />
+  return (
+    <AlertBox
+      severity='error'
+      description={t('notAuthorizedToSeeStatistics')}
+      title={t('notAuthorized')}
+    />
+  )
 }
 export default StatisticsController

@@ -53,7 +53,8 @@ const TextAreaDialog = ({
       confirmButtonText={t('save')}
       confirmButtonIcon={<Save />}
       actionDisabled={maxCharsExceeded}
-      loading={loading}>
+      loading={loading}
+    >
       <Stack sx={{ gap: 1 }}>
         <TextField
           id='outlined-textarea'

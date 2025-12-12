@@ -18,11 +18,16 @@ const StoreTableEntry = ({ storeEntry, fields }: StoreEntryProps): ReactElement 
         const isValid = field.isValid(value)
         const fieldValue = value.trim().length > 0 ? value : '-'
         return (
-          <Tooltip placement='right' key={field.name} title={isValid ? undefined : t('validationError')}>
+          <Tooltip
+            placement='right'
+            key={field.name}
+            title={isValid ? undefined : t('validationError')}
+          >
             <TableCell
               sx={theme => ({
                 backgroundColor: isValid ? undefined : theme.palette.error.light,
-              })}>
+              })}
+            >
               {fieldValue}
             </TableCell>
           </Tooltip>

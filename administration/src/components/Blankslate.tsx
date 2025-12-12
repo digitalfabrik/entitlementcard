@@ -10,7 +10,13 @@ type BlankslateProps = {
   containerSx?: SxProps
 }
 
-const Blankslate = ({ icon, title, description, children, containerSx }: BlankslateProps): ReactElement => (
+const Blankslate = ({
+  icon,
+  title,
+  description,
+  children,
+  containerSx,
+}: BlankslateProps): ReactElement => (
   <Stack sx={{ alignItems: 'center', gap: 2.5, ...containerSx }}>
     {icon}
     <Typography variant='h5' sx={{ m: 0 }}>

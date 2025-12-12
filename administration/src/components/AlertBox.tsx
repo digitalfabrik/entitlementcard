@@ -52,7 +52,8 @@ const AlertBox = ({
             {actionButtonLabel || t('retry')}
           </Button>
         ) : undefined
-      }>
+      }
+    >
       {title !== undefined && <AlertTitle sx={{ margin: 0 }}>{title}</AlertTitle>}
       {description}
     </Alert>

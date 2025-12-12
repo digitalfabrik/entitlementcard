@@ -36,7 +36,12 @@ const AddCardForm = ({
   return (
     <MuiCard sx={{ width: '400px' }} variant='outlined' key={card.id}>
       <Stack
-        sx={{ flexDirection: 'row', borderBottom: '1px solid rgba(16, 22, 26, 0.15)', justifyContent: 'flex-end' }}>
+        sx={{
+          flexDirection: 'row',
+          borderBottom: '1px solid rgba(16, 22, 26, 0.15)',
+          justifyContent: 'flex-end',
+        }}
+      >
         <IconButton onClick={() => onRemove()} data-testid='remove-card'>
           <Clear />
         </IconButton>

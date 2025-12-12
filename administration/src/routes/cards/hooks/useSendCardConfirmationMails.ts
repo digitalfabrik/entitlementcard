@@ -39,7 +39,7 @@ const useSendCardConfirmationMails = (): SendCardConfirmationMail => {
           const deepLink = getDeepLinkFromQrCode(
             { case: 'dynamicActivationCode', value: code.dynamicActivationCode },
             getBuildConfig(window.location.hostname),
-            isProductionEnvironment()
+            isProductionEnvironment(),
           )
           await sendMail({
             variables: {
@@ -49,10 +49,10 @@ const useSendCardConfirmationMails = (): SendCardConfirmationMail => {
               deepLink,
             },
           })
-        })
+        }),
       )
     },
-    [sendMail]
+    [sendMail],
   )
 }
 

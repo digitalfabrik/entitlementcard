@@ -43,7 +43,8 @@ const BaseMenu = (props: BaseMenuProps): ReactElement => {
           endIcon={open ? props.openIcon : props.closeIcon}
           sx={{
             justifyContent: 'space-between',
-          }}>
+          }}
+        >
           {props.menuLabel}
         </Button>
       )}
@@ -57,7 +58,8 @@ const BaseMenu = (props: BaseMenuProps): ReactElement => {
           onClick={handleMenuOpen}
           sx={{
             justifyContent: 'space-between',
-          }}>
+          }}
+        >
           {props.openIcon}
         </IconButton>
       )}
@@ -68,15 +70,19 @@ const BaseMenu = (props: BaseMenuProps): ReactElement => {
         sx={{ marginTop: 1 }}
         slotProps={{ list: { sx: { padding: 0 } } }}
         open={open}
-        onClose={handleMenuClose}>
+        onClose={handleMenuClose}
+      >
         {props.menuItems.map(menuItem => (
           <MenuItem
             key={menuItem.name}
             sx={{ marginY: 0.5 }}
             onClick={() => handleMenuItemClick(menuItem.onClick)}
-            disableRipple>
+            disableRipple
+          >
             <ListItemIcon>{menuItem.icon}</ListItemIcon>
-            <ListItemText slotProps={{ primary: { typography: 'button', color: 'textSecondary', margin: 0 } }}>
+            <ListItemText
+              slotProps={{ primary: { typography: 'button', color: 'textSecondary', margin: 0 } }}
+            >
               {menuItem.name}
             </ListItemText>
           </MenuItem>

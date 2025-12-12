@@ -80,7 +80,7 @@ const CustomDatePicker = ({
               },
             },
           },
-          textFieldSlotProps
+          textFieldSlotProps,
         ),
       }}
       // We use this property, since it (sort of) fixes some issues for Firefox Mobile (keyboard

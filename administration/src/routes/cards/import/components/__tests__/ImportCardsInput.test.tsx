@@ -33,7 +33,11 @@ describe('ImportCardsInput', () => {
 
   const setCards = jest.fn()
 
-  const renderAndSubmitCardsInput = async (projectConfig: ProjectConfig, csv: string, setCards: () => void) => {
+  const renderAndSubmitCardsInput = async (
+    projectConfig: ProjectConfig,
+    csv: string,
+    setCards: () => void,
+  ) => {
     const fileReaderMock = {
       // eslint-disable-next-line func-names
       readAsText: jest.fn(function (this: FileReader, _: Blob) {
@@ -49,7 +53,7 @@ describe('ImportCardsInput', () => {
           <ImportCardsInput setCards={setCards} region={region} />
         </ProjectConfigProvider>
       </AppSnackbarProvider>,
-      { router: true }
+      { router: true },
     )
 
     const fileInput = getByTestId('file-upload') as HTMLInputElement

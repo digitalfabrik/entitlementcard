@@ -57,7 +57,8 @@ const ManageStoreDialog = ({
       maxWidth='md'
       closeOnConfirm={closeOnConfirm}
       confirmButtonText={t('misc:save')}
-      confirmButtonIcon={<Edit />}>
+      confirmButtonIcon={<Edit />}
+    >
       <Stack sx={{ gap: 2 }}>
         <Typography variant='body1' sx={{ color: grey[700] }}>
           {isEditMode ? t('storeEditDialogDescription') : t('storeAddDialogDescription')}

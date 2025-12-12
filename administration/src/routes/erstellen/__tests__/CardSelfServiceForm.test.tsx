@@ -40,7 +40,7 @@ describe('CardSelfServiceForm', () => {
         dataPrivacyAccepted={DataPrivacyAcceptingStatus.untouched}
         setDataPrivacyAccepted={setDataPrivacyAccepted}
       />,
-      mockProvider
+      mockProvider,
     )
 
     expect(getByLabelText('Vorname Name').closest('input')).toBeTruthy()
@@ -66,7 +66,7 @@ describe('CardSelfServiceForm', () => {
         dataPrivacyAccepted={DataPrivacyAcceptingStatus.accepted}
         setDataPrivacyAccepted={setDataPrivacyAccepted}
       />,
-      mockProvider
+      mockProvider,
     )
 
     const createPassButton = getByText('KoblenzPass erstellen')
@@ -79,7 +79,7 @@ describe('CardSelfServiceForm', () => {
       <FormAlert isToast errorMessage='Mindestens eine Ihrer Angaben ist ungültig.' />,
       {
         variant: 'error',
-      }
+      },
     )
   })
 
@@ -92,7 +92,7 @@ describe('CardSelfServiceForm', () => {
         dataPrivacyAccepted={DataPrivacyAcceptingStatus.accepted}
         setDataPrivacyAccepted={setDataPrivacyAccepted}
       />,
-      mockProvider
+      mockProvider,
     )
 
     const createPassButton = getByText('KoblenzPass erstellen')

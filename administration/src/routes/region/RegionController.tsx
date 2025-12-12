@@ -20,7 +20,8 @@ const RegionController = (): ReactElement => {
     <RenderGuard
       allowedRoles={[Role.RegionAdmin]}
       condition={region !== undefined}
-      error={{ description: t('notAuthorizedForRegionSettings') }}>
+      error={{ description: t('notAuthorizedForRegionSettings') }}
+    >
       {region && (
         <Stack
           sx={{
@@ -31,7 +32,8 @@ const RegionController = (): ReactElement => {
             padding: 2,
             gap: 2,
             overflow: 'auto',
-          }}>
+          }}
+        >
           <DataPrivacyCard />
           <RegionSettingsController regionId={region.id} />
           <ApplicationConfirmationNoteController regionId={region.id} />
