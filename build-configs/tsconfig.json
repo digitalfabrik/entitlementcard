@@ -1,9 +1,10 @@
 {
-  "extends": "../administration/tsconfig.json",
+  "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "moduleResolution": "bundler",
-    "noEmit": false,
-    "outDir": "dist"
+    "moduleResolution": "nodenext",
+    "outDir": "dist",
+    "module": "NodeNext",
+    "declaration": true
   },
   "include": ["**/*.ts"]
 }
