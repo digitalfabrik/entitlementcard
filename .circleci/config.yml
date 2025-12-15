@@ -247,7 +247,7 @@ jobs:
             - prepare_workspace
             - install_node_modules
             - run:
-                command: npm run build --version_name=${NEW_VERSION_NAME}
+                command: npm run build
                 name: Build
             - persist_to_workspace:
                 paths:

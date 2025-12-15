@@ -28,7 +28,7 @@ const loadCustomFontWithFallback = async (
   fallbackFont: string,
 ): Promise<PDFFont> => {
   doc.registerFontkit(fontkit)
-  const fontUrl = `${process.env.PUBLIC_URL}/fonts/${font}`
+  const fontUrl = `/fonts/${font}`
   try {
     const res = await fetch(fontUrl)
     if (res.ok && res.headers.get('Content-Type')?.includes('font')) {
