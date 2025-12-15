@@ -1,5 +1,6 @@
 const getApiBaseUrl = (): string =>
   window.location.hostname.match(/staging./)
     ? 'https://api.staging.entitlementcard.app'
-    : (process.env.REACT_APP_API_BASE_URL as string)
+    : VITE_BUILD_API_BASE_URL
+
 export default getApiBaseUrl
