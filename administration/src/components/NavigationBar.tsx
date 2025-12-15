@@ -46,7 +46,7 @@ const NavigationBar = (): ReactElement => {
                   {region.prefix} {region.name}
                 </Typography>
               )}
-              <Typography component='span'>{`(${process.env.REACT_APP_VERSION})`}</Typography>
+              <Typography component='span'>{VITE_BUILD_VERSION_NAME}</Typography>
             </Stack>
           </Stack>
         </Link>

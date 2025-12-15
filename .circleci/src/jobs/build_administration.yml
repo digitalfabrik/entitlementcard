@@ -7,7 +7,7 @@ steps:
   - install_node_modules
   - run:
       name: Build
-      command: npm run build --version_name=${NEW_VERSION_NAME}
+      command: npm run build
   - persist_to_workspace:
       root: ~/project
       paths:

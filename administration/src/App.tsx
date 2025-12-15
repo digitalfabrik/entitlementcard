@@ -12,8 +12,8 @@ import AuthProvider from './provider/AuthProvider'
 import './translations/i18n'
 import { theme } from './util/theme'
 
-if (!process.env.REACT_APP_API_BASE_URL) {
-  throw new Error('REACT_APP_API_BASE_URL is not set!')
+if (!import.meta.env.BASE_URL) {
+  throw new Error('BASE_URL is not set!')
 }
 
 const App = (): ReactElement => (

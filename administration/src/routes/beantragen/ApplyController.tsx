@@ -20,7 +20,7 @@ import {
 
 // This env variable is determined by '../../../application_commit.sh'. It holds the hash of the last commit to the
 // application form.
-const lastCommitForApplicationForm = process.env.REACT_APP_APPLICATION_COMMIT as string
+const lastCommitForApplicationForm = VITE_BUILD_COMMIT
 
 const SuccessContent = styled('div')(({ theme }) => ({
   marginBottom: theme.spacing(2),

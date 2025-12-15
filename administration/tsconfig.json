@@ -20,6 +20,7 @@
     "config",
     "jest.config.ts",
     "jest.setup.ts",
-    ".eslintrc.js"
+    ".eslintrc.js",
+    "vite.config*.ts"
   ]
 }
