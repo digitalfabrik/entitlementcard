@@ -1,6 +1,7 @@
 {
   "name": "administration",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@apollo/client": "^3.14.0",
     "@bufbuild/protobuf": "^1.2.1",

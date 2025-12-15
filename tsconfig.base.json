@@ -1,8 +1,6 @@
 {
   "compilerOptions": {
-    "esModuleInterop": true,
-    "module": "commonjs",
-    "noEmit": true,
+    // emit
     "target": "es2020",
     "sourceMap": true,
     // modules
@@ -20,12 +18,8 @@
     "strict": true,
     "noImplicitAny": true,
     "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node",
-    "isolatedModules": true,
-    "jsx": "react-jsx",
-    "types": [
-      "node",
-      "jest"
-    ]
+    // Language and Environment
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "jsx": "react-jsx"
   }
 }
