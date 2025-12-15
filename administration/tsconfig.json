@@ -1,23 +1,17 @@
 {
+  "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "esModuleInterop": true,
-    "module": "commonjs",
     "noEmit": true,
+    "module": "ES2022",
+    // modules
     "resolveJsonModule": true,
-    "target": "es2020",
-    "sourceMap": true,
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    // types
+    "types": ["vite/client"],
+    // Language and Environment
     "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "noImplicitAny": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node",
-    "isolatedModules": true,
-    "jsx": "react-jsx",
-    "types": ["node", "jest"]
+    "jsx": "react-jsx"
   },
   "include": [
     "@types",
@@ -27,10 +21,5 @@
     "jest.config.ts",
     "jest.setup.ts",
     ".eslintrc.js"
-  ],
-  "references": [
-    {
-      "path": "../frontend/build-configs"
-    }
   ]
 }
