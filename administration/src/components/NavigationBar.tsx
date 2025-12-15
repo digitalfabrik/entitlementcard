@@ -1,8 +1,8 @@
-import { AppBar, Divider, Link, Stack, SvgIcon, Toolbar, Typography, useTheme } from '@mui/material'
+import { AppBar, Divider, Icon, Link, Stack, Toolbar, Typography, useTheme } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import EntitlementIcon from '../assets/icons/entitlement_icon_outline.svg'
+import entitlementIcon from '../assets/icons/entitlement_icon_outline.svg'
 import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
 import { useWhoAmI } from '../provider/WhoAmIProvider'
 import NavigationItems from './NavigationItems'
@@ -23,9 +23,9 @@ const NavigationBar = (): ReactElement => {
             padding: 1.5,
           },
         })}>
-        <SvgIcon fontSize='large'>
-          <EntitlementIcon />
-        </SvgIcon>
+        <Icon fontSize='large'>
+          <img src={entitlementIcon} />
+        </Icon>
         <Link
           href='/'
           underline='none'

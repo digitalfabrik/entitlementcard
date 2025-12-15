@@ -6,7 +6,6 @@
     "types": ["vite/client", "jest"]
   },
   "include": [
-    "@types",
     "src",
     "scripts",
     "config",
