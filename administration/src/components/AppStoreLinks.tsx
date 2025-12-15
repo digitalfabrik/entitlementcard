@@ -1,10 +1,10 @@
-import { Box, Link, Typography } from '@mui/material'
+import { Box, Icon, Link, Typography } from '@mui/material'
 import { styled } from '@mui/system'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import AndroidStoreIcon from '../assets/android_appstore_icon.svg'
-import AppStoreIcon from '../assets/ios_appstore_icon.svg'
+import androidPlayStoreIcon from '../assets/android_appstore_icon.svg'
+import iosAppStoreIcon from '../assets/ios_appstore_icon.svg'
 
 const StoreLink = styled(Link)(({ theme }) => ({
   display: 'flex',
@@ -24,11 +24,15 @@ const AppStoreLinks = ({ appStoreLink, playStoreLink }: AppStoreLinksProps): Rea
   return (
     <Box sx={{ mb: 1 }}>
       <StoreLink href={appStoreLink} target='_blank' rel='noreferrer'>
-        <AppStoreIcon height='40px' width='130px' aria-hidden />
+        <Icon sx={{ height: '40px', width: '130px' }} aria-hidden>
+          <img src={iosAppStoreIcon} alt='iOS App Store icon' />
+        </Icon>
         <Typography variant='body1'>{t('openAppStore')}</Typography>
       </StoreLink>
       <StoreLink href={playStoreLink} target='_blank' rel='noreferrer'>
-        <AndroidStoreIcon height='40px' width='130px' aria-hidden />
+        <Icon sx={{ height: '40px', width: '130px' }} aria-hidden>
+          <img src={androidPlayStoreIcon} alt='Android Play Store icon' />
+        </Icon>
         <Typography variant='body1'>{t('openPlayStore')}</Typography>
       </StoreLink>
     </Box>
