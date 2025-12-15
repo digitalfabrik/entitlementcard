@@ -5,13 +5,5 @@
     "esModuleInterop": true,
     "types": ["vite/client", "jest"]
   },
-  "include": [
-    "src",
-    "scripts",
-    "config",
-    "jest.config.ts",
-    "jest.setup.ts",
-    ".eslintrc.js",
-    "vite.config*.ts"
-  ]
+  "include": ["src", "scripts", "jest.config.ts", "jest.setup.ts", ".eslintrc.js", "vite.config*.ts"]
 }
