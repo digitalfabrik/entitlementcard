@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "noEmit": true,
+    "target": "es2020",
+    "sourceMap": true,
+    // modules
+    "module": "es2022",
+    "resolveJsonModule": true,
+    // JS support
+    "allowJs": true,
+    // Interop Constraints
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    // Completeness
+    "skipLibCheck": true,
+    // Type Checking
+    "strict": true,
+    "noImplicitAny": true,
+    "noFallthroughCasesInSwitch": true,
+    "moduleResolution": "node",
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "types": [
+      "node",
+      "jest"
+    ]
+  }
+}
