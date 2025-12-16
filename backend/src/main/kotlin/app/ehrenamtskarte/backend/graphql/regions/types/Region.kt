@@ -14,7 +14,7 @@ data class Region(
     val applicationConfirmationMailNote: String?,
 ) {
     companion object {
-        fun fromDbEntity(entity: RegionEntity): Region =
+        fun fromEntity(entity: RegionEntity): Region =
             Region(
                 entity.id.value,
                 entity.prefix,
