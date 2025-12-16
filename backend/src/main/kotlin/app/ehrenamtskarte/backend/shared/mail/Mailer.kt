@@ -38,8 +38,8 @@ object Mailer {
                     to = recipient.email,
                     subject = "Ein neuer Antrag ist eingegangen",
                     message = emailBody {
-                        p { +"Guten Tag," }
-                        p { +"ein neuer Antrag liegt in ${projectConfig.administrationName} vor." }
+                        p { t("Guten Tag,") }
+                        p { t("ein neuer Antrag liegt in ${projectConfig.administrationName} vor.") }
 
                         viewApplicationsParagraph(projectConfig)
                         adjustNotificationsParagraph(projectConfig)
@@ -69,8 +69,8 @@ object Mailer {
                     to = recipient.email,
                     subject = "Ein Antrag wurde verifiziert",
                     message = emailBody {
-                        p { +"Guten Tag," }
-                        p { +"ein Antrag wurde verifiziert." }
+                        p { t("Guten Tag,") }
+                        p { t("ein Antrag wurde verifiziert.") }
                         viewApplicationsParagraph(projectConfig)
                         adjustNotificationsParagraph(projectConfig)
                         finalInformationParagraph(projectConfig)
@@ -94,21 +94,28 @@ object Mailer {
             to = applicationVerification.contactEmailAddress,
             subject = "Bestätigung der Angaben für den Antrag auf eine Ehrenamtskarte von $applicantName",
             message = emailBody {
-                p { +"Sehr geehrte/r ${applicationVerification.contactName}," }
+                p { t("Sehr geehrte/r ${applicationVerification.contactName},") }
                 p {
-                    +"im Rahmen des Antrags auf eine Ehrenamtskarte wurden Sie als Kontaktperson der Organisation "
-                    +"${applicationVerification.organizationName} angegeben. "
-                    +"Wir möchten Sie daher bitten, die im Antrag gemachten Angaben zu überprüfen und zu bestätigen."
+                    t(
+                        "im Rahmen des Antrags auf eine Ehrenamtskarte wurden Sie als Kontaktperson der Organisation " +
+                            "${applicationVerification.organizationName} angegeben. " +
+                            "Wir möchten Sie daher bitten, die im Antrag gemachten Angaben zu überprüfen und zu " +
+                            "bestätigen.",
+                    )
                 }
                 p {
-                    +"Unter dem folgenden Link können Sie den Antrag einsehen und die Angaben entweder bestätigen "
-                    +"oder ihnen widersprechen:"
+                    t(
+                        "Unter dem folgenden Link können Sie den Antrag einsehen und die Angaben entweder bestätigen " +
+                            "oder ihnen widersprechen:",
+                    )
                     br()
                     link(verificationLink(projectConfig, applicationVerification))
                 }
                 p {
-                    +"Hinweis: Die Website ist durch eine sichere Verbindung geschützt. "
-                    +"Sie müssen keine persönlichen Daten eingeben."
+                    t(
+                        "Hinweis: Die Website ist durch eine sichere Verbindung geschützt. Sie müssen keine " +
+                            "persönlichen Daten eingeben.",
+                    )
                 }
                 finalInformationParagraph(projectConfig)
             },
@@ -129,23 +136,30 @@ object Mailer {
             to = personalData.emailAddress.email,
             subject = "Ihr Antrag für die Ehrenamtskarte Bayern ist eingegangen",
             message = emailBody {
-                p { +"Sehr geehrte/r ${personalData.forenames.shortText} ${personalData.surname.shortText}," }
+                p { t("Sehr geehrte/r ${personalData.forenames.shortText} ${personalData.surname.shortText},") }
                 p {
-                    +"vielen Dank für Ihren Antrag und Ihr Interesse an der Bayerischen Ehrenamtskarte. "
-                    +"Wir danken Ihnen für das Engagement und die Zeit, die Sie zum Wohle der Gemeinschaft einbringen."
+                    t(
+                        "vielen Dank für Ihren Antrag und Ihr Interesse an der Bayerischen Ehrenamtskarte. " +
+                            "Wir danken Ihnen für das Engagement und die Zeit, die Sie zum Wohle der Gemeinschaft " +
+                            "einbringen.",
+                    )
                 }
                 p {
-                    +"Wir möchten Sie darüber informieren, dass Ihr Antrag derzeit bearbeitet wird. "
-                    +"Unter folgendem Link können Sie den aktuellen Status Ihres Antrags einsehen oder den Antrag "
-                    +"bei Bedarf zurückziehen:"
+                    t(
+                        "Wir möchten Sie darüber informieren, dass Ihr Antrag derzeit bearbeitet wird. " +
+                            "Unter folgendem Link können Sie den aktuellen Status Ihres Antrags einsehen oder den " +
+                            "Antrag bei Bedarf zurückziehen:",
+                    )
                     br()
                     link(reviewApplicationLink(projectConfig, accessKey))
                 }
                 applicationConfirmationNoteParagraph(applicationConfirmationNote)
                 p {
-                    +"Falls Sie Fragen zu Ihrem Antrag haben oder Unterstützung benötigen, "
-                    +"wenden Sie sich bitte direkt an das örtliche Landratsamt bzw. die Verwaltung Ihrer kreisfreien "
-                    +"Stadt."
+                    t(
+                        "Falls Sie Fragen zu Ihrem Antrag haben oder Unterstützung benötigen, " +
+                            "wenden Sie sich bitte direkt an das örtliche Landratsamt bzw. die Verwaltung Ihrer " +
+                            "kreisfreien Stadt.",
+                    )
                 }
                 finalInformationParagraph(projectConfig)
             },
@@ -167,21 +181,27 @@ object Mailer {
             to = personalData.emailAddress.email,
             subject = "Antrag erfolgreich eingereicht",
             message = emailBody {
-                p { +"Sehr geehrte/r $contactPerson," }
+                p { t("Sehr geehrte/r $contactPerson,") }
                 p {
-                    +"Ihr Antrag auf die Bayerische Ehrenamtskarte für ${personalData.forenames.shortText} "
-                    +"${personalData.surname.shortText} wurde erfolgreich eingereicht."
+                    t(
+                        "Ihr Antrag auf die Bayerische Ehrenamtskarte für ${personalData.forenames.shortText} " +
+                            "${personalData.surname.shortText} wurde erfolgreich eingereicht.",
+                    )
                 }
                 p {
-                    +"Den aktuellen Status Ihres Antrags können Sie jederzeit unter folgendem Link einsehen. "
-                    +"Dort haben Sie auch die Möglichkeit, Ihren Antrag bei Bedarf zurückzuziehen:"
+                    t(
+                        "Den aktuellen Status Ihres Antrags können Sie jederzeit unter folgendem Link einsehen. " +
+                            "Dort haben Sie auch die Möglichkeit, Ihren Antrag bei Bedarf zurückzuziehen:",
+                    )
                     br()
                     link(reviewApplicationLink(projectConfig, accessKey))
                 }
                 applicationConfirmationNoteParagraph(applicationConfirmationNote)
                 p {
-                    +"Bei Rückfragen wenden Sie sich bitte direkt an Ihr zuständiges Landratsamt oder die "
-                    +"Verwaltung Ihrer kreisfreien Stadt."
+                    t(
+                        "Bei Rückfragen wenden Sie sich bitte direkt an Ihr zuständiges Landratsamt oder die " +
+                            "Verwaltung Ihrer kreisfreien Stadt.",
+                    )
                 }
                 finalInformationParagraph(projectConfig)
             },
@@ -201,14 +221,14 @@ object Mailer {
             to = recipient,
             subject = "Passwort Zurücksetzen",
             message = emailBody {
-                p { +"Guten Tag," }
-                p { +"Sie haben angefragt, Ihr Passwort für ${projectConfig.administrationName} zurückzusetzen." }
+                p { t("Guten Tag,") }
+                p { t("Sie haben angefragt, Ihr Passwort für ${projectConfig.administrationName} zurückzusetzen.") }
                 p {
-                    +"Sie können Ihr Passwort unter dem folgenden Link zurücksetzen:"
+                    t("Sie können Ihr Passwort unter dem folgenden Link zurücksetzen:")
                     br()
                     link(resetPasswordLink(projectConfig, recipient, passwortResetKey))
                 }
-                p { +"Dieser Link ist 24 Stunden gültig." }
+                p { t("Dieser Link ist 24 Stunden gültig.") }
                 finalInformationParagraph(projectConfig)
             },
         )
@@ -227,14 +247,14 @@ object Mailer {
             to = recipient,
             subject = "Kontoerstellung",
             message = emailBody {
-                p { +"Guten Tag," }
-                p { +"für Sie wurde ein Account für ${projectConfig.administrationName} erstellt." }
+                p { t("Guten Tag,") }
+                p { t("für Sie wurde ein Account für ${projectConfig.administrationName} erstellt.") }
                 p {
-                    +"Sie können Ihr Passwort unter dem folgenden Link setzen:"
+                    t("Sie können Ihr Passwort unter dem folgenden Link setzen:")
                     br()
                     link(resetPasswordLink(projectConfig, recipient, passwordResetKey))
                 }
-                p { +"Dieser Link ist 24 Stunden gültig." }
+                p { t("Dieser Link ist 24 Stunden gültig.") }
                 finalInformationParagraph(projectConfig)
             },
         )
@@ -254,26 +274,34 @@ object Mailer {
             to = recipientAddress,
             subject = "Ihr Antrag für die Ehrenamtskarte Bayern wurde bewilligt",
             message = emailBody {
-                p { +"Sehr geehrte/r $recipientName," }
+                p { t("Sehr geehrte/r $recipientName,") }
                 p {
-                    +"wir freuen uns, Ihnen mitteilen zu können, "
-                    +"dass Ihr Antrag auf die Bayerische Ehrenamtskarte bewilligt wurde!"
+                    t(
+                        "wir freuen uns, Ihnen mitteilen zu können, " +
+                            "dass Ihr Antrag auf die Bayerische Ehrenamtskarte bewilligt wurde!",
+                    )
                 }
                 p {
-                    +"In den kommenden Tagen erhalten Sie Ihre persönliche Ehrenamtskarte "
-                    +"zusammen mit einer Anleitung, wie Sie die digitale Version einrichten können."
+                    t(
+                        "In den kommenden Tagen erhalten Sie Ihre persönliche Ehrenamtskarte " +
+                            "zusammen mit einer Anleitung, wie Sie die digitale Version einrichten können.",
+                    )
                 }
                 p {
-                    +"Falls Sie bereits die App „Ehrenamtskarte Bayern“ auf Ihrem Smartphone installiert haben, "
-                    +"können Sie in vielen Fällen die digitale Karte schon jetzt aktivieren. "
-                    +"Klicken Sie dazu einfach auf den folgenden Link von Ihrem Smartphone aus: "
+                    t(
+                        "Falls Sie bereits die App „Ehrenamtskarte Bayern“ auf Ihrem Smartphone installiert haben, " +
+                            "können Sie in vielen Fällen die digitale Karte schon jetzt aktivieren. " +
+                            "Klicken Sie dazu einfach auf den folgenden Link von Ihrem Smartphone aus: ",
+                    )
                     br()
                     link(URI.create(deepLink))
                 }
                 p {
-                    +"Hinweis: Die Vorab-Aktivierung wird nicht auf allen Endgeräten unterstützt. "
-                    +"Sollte der Vorgang also nicht erfolgreich sein, "
-                    +"warten Sie bitte auf das offizielle Schreiben, das alle notwendigen Informationen enthält."
+                    t(
+                        "Hinweis: Die Vorab-Aktivierung wird nicht auf allen Endgeräten unterstützt. Sollte der " +
+                            "Vorgang also nicht erfolgreich sein, warten Sie bitte auf das offizielle Schreiben, " +
+                            "das alle notwendigen Informationen enthält.",
+                    )
                 }
                 finalInformationParagraph(projectConfig)
             },
@@ -295,16 +323,18 @@ object Mailer {
                 to = applicantAddress,
                 subject = "Ihr Antrag wurde abgelehnt",
                 message = emailBody {
-                    p { +"Sehr geehrte/r $applicantName," }
+                    p { t("Sehr geehrte/r $applicantName,") }
                     p {
-                        +"""
-                        vielen Dank für Ihren Antrag und Ihr Interesse an der Bayerischen Ehrenamtskarte. Wir danken 
-                        Ihnen für das Engagement und die Zeit, die Sie zum Wohle der Gemeinschaft einbringen. Ihr 
-                        Einsatz ist von großem Wert und verdient Anerkennung. In diesem Fall ist es leider nicht 
-                        möglich, dass Sie die Bayerische Ehrenamtskarte erhalten.                            
-                        """.trimIndent()
+                        t(
+                            """
+                            vielen Dank für Ihren Antrag und Ihr Interesse an der Bayerischen Ehrenamtskarte. Wir danken 
+                            Ihnen für das Engagement und die Zeit, die Sie zum Wohle der Gemeinschaft einbringen. Ihr 
+                            Einsatz ist von großem Wert und verdient Anerkennung. In diesem Fall ist es leider nicht 
+                            möglich, dass Sie die Bayerische Ehrenamtskarte erhalten.                            
+                            """.trimIndent(),
+                        )
                     }
-                    p { +rejectionMessage }
+                    p { plain(rejectionMessage) }
                     finalInformationParagraph(projectConfig)
                 },
             )
@@ -315,19 +345,22 @@ object Mailer {
 
 private fun EmailBody.finalInformationParagraph(projectConfig: ProjectConfig) {
     p {
-        +"Bitte beachten Sie, dass dies eine automatisierte Nachricht ist. "
-        +"Antworten auf diese E-Mail werden nicht gelesen."
+        t(
+            "Bitte beachten Sie, dass dies eine automatisierte Nachricht ist. " +
+                "Antworten auf diese E-Mail werden nicht gelesen.",
+        )
         br()
+    }
+    p {
+        t("Mit freundlichen Grüßen")
         br()
-        +"Mit freundlichen Grüßen"
-        br()
-        +projectConfig.emailSignature
+        plain(projectConfig.emailSignature)
     }
 }
 
 private fun EmailBody.adjustNotificationsParagraph(projectConfig: ProjectConfig) {
     p {
-        +"Email-Benachrichtigungen zu Anträgen können Sie hier konfigurieren:"
+        t("Email-Benachrichtigungen zu Anträgen können Sie hier konfigurieren:")
         br()
         link(URI.create("${projectConfig.administrationBaseUrl}/user-settings"))
     }
@@ -335,7 +368,7 @@ private fun EmailBody.adjustNotificationsParagraph(projectConfig: ProjectConfig)
 
 private fun EmailBody.viewApplicationsParagraph(projectConfig: ProjectConfig) {
     p {
-        +"Unter folgendem Link können Sie Anträge einsehen und bearbeiten:"
+        t("Unter folgendem Link können Sie Anträge einsehen und bearbeiten:")
         br()
         link(URI.create("${projectConfig.administrationBaseUrl}/applications"))
     }
