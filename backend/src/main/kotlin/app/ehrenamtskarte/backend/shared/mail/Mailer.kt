@@ -358,25 +358,26 @@ private fun sendMail(
     message: EmailBody,
 ) {
     // Skip sending emails for cases like e2e tests
-    if (backendConfig.disableMailService) {
-        return
-    }
-
-    if (backendConfig.isDevelopment()) {
-        logger.info(
-            """
-            Sending Email:
-            FromName: $fromName
-            To: $to
-            Subject: $subject
-            -----------------------
-            
-            """.trimIndent() + message.renderPlain(),
-        )
-
-        if (!JMail.isValid(smtpConfig.username)) {
-            logger.info("SMTP config invalid; did not try to send email.")
+    when {
+        backendConfig.disableMailService -> {
             return
+        }
+
+        backendConfig.isDevelopment() -> {
+            logger.info(
+                """
+                Sending Email:
+                FromName: $fromName
+                To: $to
+                Subject: $subject
+                -----------------------
+                
+                """.trimIndent() + message.renderPlain(),
+            )
+            if (!JMail.isValid(smtpConfig.username)) {
+                logger.info("SMTP config invalid; did not try to send email.")
+                return
+            }
         }
     }
 
