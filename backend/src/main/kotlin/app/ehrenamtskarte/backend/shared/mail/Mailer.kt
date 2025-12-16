@@ -396,7 +396,7 @@ private fun sendMail(
             )
             .join()
     } catch (exception: MailException) {
-        logger.error(exception.message)
+        logger.error("Error sending mail", exception)
         throw MailNotSentException(to)
     }
 }
