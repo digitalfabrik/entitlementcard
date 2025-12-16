@@ -38,24 +38,6 @@ object RegionsRepository {
 
     fun findRegionById(regionId: Int): RegionEntity = RegionEntity[regionId]
 
-    fun updateDataPolicy(region: RegionEntity, dataPrivacyText: String) {
-        region.dataPrivacyPolicy = dataPrivacyText
-    }
-
-    fun updateApplicationConfirmationNote(region: RegionEntity, note: String, activated: Boolean) {
-        region.applicationConfirmationMailNote = note
-        region.applicationConfirmationMailNoteActivated = activated
-    }
-
-    fun updateRegionSettings(
-        region: RegionEntity,
-        activatedForApplication: Boolean,
-        activatedForConfirmationMail: Boolean,
-    ) {
-        region.activatedForApplication = activatedForApplication
-        region.activatedForCardConfirmationMail = activatedForConfirmationMail
-    }
-
     fun findRegionByRegionIdentifier(regionIdentifier: String, projectId: EntityID<Int>): RegionEntity? =
         RegionEntity
             .find {
