@@ -9,6 +9,6 @@ import org.springframework.stereotype.Component
 class RegionDataLoader : BaseDataLoader<Int, Region>() {
     override fun loadBatch(keys: List<Int>): Map<Int, Region> =
         RegionsRepository.findByIds(keys)
-            .mapNotNull { it?.let { it.id.value to Region.fromDbEntity(it) } }
+            .mapNotNull { it?.let { it.id.value to Region.fromEntity(it) } }
             .toMap()
 }
