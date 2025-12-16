@@ -153,3 +153,5 @@ ON CONFLICT ("id") DO UPDATE SET
                                  "statusResolvedDate" = "excluded"."statusResolvedDate",
                                  "rejectionMessage" = "excluded"."rejectionMessage"
 ;
+
+select setval('applications_id_seq', (select max("id") from "applications"));
