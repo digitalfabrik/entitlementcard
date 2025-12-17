@@ -1,5 +1,7 @@
 import react from '@vitejs/plugin-react'
 // eslint-disable-next-line import/no-extraneous-dependencies
+import tsconfigPaths from 'vite-tsconfig-paths'
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { defineConfig, UserConfig } from 'vite'
 import { execFile } from 'node:child_process'
 import { join } from 'node:path'
@@ -13,7 +15,8 @@ export default defineConfig(async () => {
   return {
     appType: 'spa',
     plugins: [
-      react()
+      react(),
+      tsconfigPaths()
     ],
     build: {
       assetsInlineLimit: 10000
