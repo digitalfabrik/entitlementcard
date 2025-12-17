@@ -11,6 +11,7 @@ import { join } from 'node:path'
 import { env } from 'node:process'
 import { promisify } from 'node:util'
 import { UserConfig, defineConfig } from 'vite'
+import tsconfigPaths from 'vite-tsconfig-paths'
 
 import versionJson from '../version.json'
 
@@ -23,7 +24,7 @@ export default defineConfig(async configEnv => {
 
   return {
     appType: 'spa',
-    plugins: [react()],
+    plugins: [react(), tsconfigPaths()],
     build: {
       assetsInlineLimit: 10000,
     },
