@@ -7,9 +7,9 @@
     </scripts>
     <node-interpreter value="project" />
     <envs />
-    <method v="2">
-      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Generate Administration GraphQL" run_configuration_type="js.build_tools.npm" />
-      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Generate Administration Protobuf" run_configuration_type="js.build_tools.npm" />
-    </method>
+    <EXTENSION ID="com.intellij.javascript.debugger.execution.StartBrowserRunConfigurationExtension">
+      <browser with-js-debugger="true" />
+    </EXTENSION>
+    <method v="2" />
   </configuration>
 </component>
