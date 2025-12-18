@@ -21,23 +21,23 @@ export const koblenzCommon: CommonBuildConfigType = {
     production: KOBLENZ_PRODUCTION_ID,
     showcase: 'showcase.entitlementcard.app',
     local: KOBLENZ_PRODUCTION_ID,
-    staging: KOBLENZ_STAGING_ID
+    staging: KOBLENZ_STAGING_ID,
   },
   categories: [9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
   theme: {
     primaryLight: '#d10074',
     primaryDark: '#ff68bc',
-    fontFamily: 'TexGyreHeroes'
+    fontFamily: 'TexGyreHeroes',
   },
   mapStyleUrl: {
     production: 'https://api.entitlementcard.app/project/koblenz.sozialpass.app/map',
     staging: 'https://api.staging.entitlementcard.app/project/koblenz.sozialpass.app/map',
     showcase: 'https://api.entitlementcard.app/project/showcase.entitlementcard.app/map',
-    local: 'http://localhost:8000/project/koblenz.sozialpass.app/map'
+    local: 'http://localhost:8000/project/koblenz.sozialpass.app/map',
   },
   mapAttribution: {
     text: 'Stadt Koblenz',
-    url: 'https://koblenz.de/'
+    url: 'https://koblenz.de/',
   },
   mapInitialCoordinatesLat: 50.3575886,
   mapInitialCoordinatesLng: 7.5846829,
@@ -46,7 +46,7 @@ export const koblenzCommon: CommonBuildConfigType = {
     production: 'https://api.entitlementcard.app',
     staging: 'https://api.staging.entitlementcard.app',
     showcase: 'https://api.entitlementcard.app',
-    local: 'http://localhost:8000'
+    local: 'http://localhost:8000',
   },
   appLocales: ['de'],
   localeOverridePath: 'assets/koblenz/l10n',
@@ -71,23 +71,23 @@ export const koblenzCommon: CommonBuildConfigType = {
     bodyBackgroundImageUrl: '',
     colorStandard: '#ffffff',
     colorPremium: '#ffffff',
-    boxDecorationRadius: 0
+    boxDecorationRadius: 0,
   },
   iconInAboutTab: 'assets/koblenz/icon.png',
   introSlidesImages: [
     'assets/koblenz/icon.png',
     'assets/koblenz/intro_slides/apply_for_sozialpass.png',
     'assets/koblenz/intro_slides/map_zoom.png',
-    'assets/koblenz/intro_slides/search_with_location.png'
+    'assets/koblenz/intro_slides/search_with_location.png',
   ],
   featureFlags: {
     verification: true,
-    favorites: false
+    favorites: false,
   },
   applicationUrl: {
     production: `https://${KOBLENZ_PRODUCTION_ID}/erstellen`,
     staging: `https://${KOBLENZ_STAGING_ID}/erstellen`,
-    local: 'http://localhost:3000/erstellen'
+    local: 'http://localhost:3000/erstellen',
   },
   applicationQueryKeyName: QUERY_PARAM_NAME,
   applicationQueryKeyBirthday: QUERY_PARAM_BIRTHDAY,
@@ -105,14 +105,14 @@ export const koblenzCommon: CommonBuildConfigType = {
       applicationId: ANDROID_APPLICATION_ID,
       path: `/${ACTIVATION_PATH}/.*`,
       sha256CertFingerprint:
-        '87:56:79:B8:71:5C:50:D4:25:7D:40:62:BD:45:B4:B5:F7:15:1B:E6:65:1B:82:6D:35:BE:BC:57:87:8A:CA:7A'
+        '87:56:79:B8:71:5C:50:D4:25:7D:40:62:BD:45:B4:B5:F7:15:1B:E6:65:1B:82:6D:35:BE:BC:57:87:8A:CA:7A',
     },
     ios: {
       appleAppSiteAssociationAppId: `7272KE28TJ.${IOS_BUNDLE_IDENTIFIER}`,
       path: `/${ACTIVATION_PATH}/*`,
-      pathComment: `Matches any URL with a path that starts with /${ACTIVATION_PATH}/.`
-    }
-  }
+      pathComment: `Matches any URL with a path that starts with /${ACTIVATION_PATH}/.`,
+    },
+  },
 }
 
 const koblenz: BuildConfigType = {
@@ -122,9 +122,9 @@ const koblenz: BuildConfigType = {
     applicationId: ANDROID_APPLICATION_ID,
     buildFeatures: {
       excludeLocationPlayServices: false,
-      excludeX86: false
+      excludeX86: false,
     },
-    appStoreLink: `https://play.google.com/store/apps/details?id=${ANDROID_APPLICATION_ID}`
+    appStoreLink: `https://play.google.com/store/apps/details?id=${ANDROID_APPLICATION_ID}`,
   },
   ios: {
     ...koblenzCommon,
