@@ -1,10 +1,10 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "composite": true,
-    "types": [],
-    "noEmit": false,
-    "outDir": "dist"
+    "module": "ES2022",
+    "moduleResolution": "bundler",
+    "outDir": "dist",
+    "declaration": true
   },
   "include": [
     "**/*.ts"

@@ -1,7 +1,7 @@
-import { ACTIVATION_PATH, BAYERN_PRODUCTION_ID, BAYERN_STAGING_ID } from '../constants'
-import BuildConfigType, { CommonBuildConfigType } from '../types'
-import disclaimerText from './disclaimerText'
-import publisherText from './publisherText'
+import { ACTIVATION_PATH, BAYERN_PRODUCTION_ID, BAYERN_STAGING_ID } from '../constants/index.js'
+import BuildConfigType, { CommonBuildConfigType } from '../types.js'
+import disclaimerText from './disclaimerText.js'
+import publisherText from './publisherText.js'
 
 const ANDROID_APPLICATION_ID = 'de.nrw.it.giz.ehrensache.bayern.android'
 const IOS_BUNDLE_IDENTIFIER = 'de.nrw.it.ehrensachebayern'
@@ -13,23 +13,23 @@ export const bayernCommon: CommonBuildConfigType = {
     production: BAYERN_PRODUCTION_ID,
     showcase: 'showcase.entitlementcard.app',
     local: BAYERN_PRODUCTION_ID,
-    staging: BAYERN_STAGING_ID,
+    staging: BAYERN_STAGING_ID
   },
   categories: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
   theme: {
     primaryLight: '#8377A9',
     primaryDark: '#8377A9',
-    fontFamily: 'Roboto',
+    fontFamily: 'Roboto'
   },
   mapStyleUrl: {
     production: 'https://api.entitlementcard.app/project/bayern.ehrenamtskarte.app/map',
     staging: 'https://api.staging.entitlementcard.app/project/bayern.ehrenamtskarte.app/map',
     showcase: 'https://api.entitlementcard.app/project/showcase.entitlementcard.app/map',
-    local: 'http://localhost:8000/project/bayern.ehrenamtskarte.app/map',
+    local: 'http://localhost:8000/project/bayern.ehrenamtskarte.app/map'
   },
   mapAttribution: {
     text: 'LBE Bayern',
-    url: 'https://www.lbe.bayern.de/',
+    url: 'https://www.lbe.bayern.de/'
   },
   mapInitialCoordinatesLat: 48.949444,
   mapInitialCoordinatesLng: 11.395,
@@ -38,7 +38,7 @@ export const bayernCommon: CommonBuildConfigType = {
     production: 'https://api.entitlementcard.app',
     staging: 'https://api.staging.entitlementcard.app',
     showcase: 'https://api.entitlementcard.app',
-    local: 'http://localhost:8000',
+    local: 'http://localhost:8000'
   },
   appLocales: ['de'],
   localeOverridePath: null,
@@ -63,23 +63,23 @@ export const bayernCommon: CommonBuildConfigType = {
     bodyBackgroundImageUrl: '',
     colorStandard: '#cfeaff',
     colorPremium: '#cab374',
-    boxDecorationRadius: 1,
+    boxDecorationRadius: 1
   },
   iconInAboutTab: 'assets/bayern/icon.png',
   introSlidesImages: [
     'assets/bayern/icon.png',
     'assets/bayern/intro_slides/apply_for_eak.png',
     'assets/bayern/intro_slides/map_zoom.jpeg',
-    'assets/bayern/intro_slides/search_with_location.png',
+    'assets/bayern/intro_slides/search_with_location.png'
   ],
   featureFlags: {
     verification: true,
-    favorites: false,
+    favorites: false
   },
   applicationUrl: {
     production: `https://${BAYERN_PRODUCTION_ID}/beantragen`,
     staging: `https://${BAYERN_STAGING_ID}/beantragen`,
-    local: 'http://localhost:3000/beantragen',
+    local: 'http://localhost:3000/beantragen'
   },
   applicationQueryKeyName: null,
   applicationQueryKeyBirthday: null,
@@ -97,14 +97,14 @@ export const bayernCommon: CommonBuildConfigType = {
       applicationId: ANDROID_APPLICATION_ID,
       path: `/${ACTIVATION_PATH}/.*`,
       sha256CertFingerprint:
-        '9D:BE:FB:95:02:09:90:B6:8D:4E:06:BA:8A:35:8C:8A:AD:53:4E:98:60:DA:F3:07:B1:3F:E2:8A:24:5D:B2:8B',
+        '9D:BE:FB:95:02:09:90:B6:8D:4E:06:BA:8A:35:8C:8A:AD:53:4E:98:60:DA:F3:07:B1:3F:E2:8A:24:5D:B2:8B'
     },
     ios: {
       appleAppSiteAssociationAppId: `7272KE28TJ.${IOS_BUNDLE_IDENTIFIER}`,
       path: `/${ACTIVATION_PATH}/*`,
-      pathComment: `Matches any URL with a path that starts with /${ACTIVATION_PATH}/.`,
-    },
-  },
+      pathComment: `Matches any URL with a path that starts with /${ACTIVATION_PATH}/.`
+    }
+  }
 }
 
 const bayern: BuildConfigType = {
@@ -114,16 +114,16 @@ const bayern: BuildConfigType = {
     applicationId: ANDROID_APPLICATION_ID,
     buildFeatures: {
       excludeLocationPlayServices: false,
-      excludeX86: false,
+      excludeX86: false
     },
-    appStoreLink: `https://play.google.com/store/apps/details?id=${ANDROID_APPLICATION_ID}`,
+    appStoreLink: `https://play.google.com/store/apps/details?id=${ANDROID_APPLICATION_ID}`
   },
   ios: {
     ...bayernCommon,
     bundleIdentifier: IOS_BUNDLE_IDENTIFIER,
     provisioningProfileSpecifier: 'match AppStore de.nrw.it.ehrensachebayern',
-    appStoreLink: 'https://apps.apple.com/de/app/ehrenamtskarte-bayern/id1261285110',
-  },
+    appStoreLink: 'https://apps.apple.com/de/app/ehrenamtskarte-bayern/id1261285110'
+  }
 }
 
 export default bayern
