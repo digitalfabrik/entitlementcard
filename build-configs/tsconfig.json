@@ -1,10 +1,10 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "composite": true,
-    "types": [],
-    "noEmit": false,
-    "outDir": "dist"
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+    "outDir": "dist",
+    "declaration": true
   },
   "include": [
     "**/*.ts"
