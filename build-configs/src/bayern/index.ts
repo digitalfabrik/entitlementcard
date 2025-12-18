@@ -1,12 +1,15 @@
-import { ACTIVATION_PATH, BAYERN_PRODUCTION_ID, BAYERN_STAGING_ID } from '../constants/index.js'
+import { ACTIVATION_PATH } from '../constants.js'
 import BuildConfigType, { CommonBuildConfigType } from '../types.js'
 import disclaimerText from './disclaimerText.js'
 import publisherText from './publisherText.js'
 
+export const BAYERN_PRODUCTION_ID = 'bayern.ehrenamtskarte.app'
+export const BAYERN_STAGING_ID = 'staging.bayern.ehrenamtskarte.app'
+
 const ANDROID_APPLICATION_ID = 'de.nrw.it.giz.ehrensache.bayern.android'
 const IOS_BUNDLE_IDENTIFIER = 'de.nrw.it.ehrensachebayern'
 
-export const bayernCommon: CommonBuildConfigType = {
+const bayernCommon: CommonBuildConfigType = {
   appName: 'Ehrenamt',
   appIcon: 'app_icon_bayern',
   projectId: {
@@ -107,7 +110,7 @@ export const bayernCommon: CommonBuildConfigType = {
   }
 }
 
-const bayern: BuildConfigType = {
+export const buildConfigBayern: BuildConfigType = {
   common: bayernCommon,
   android: {
     ...bayernCommon,
@@ -125,5 +128,3 @@ const bayern: BuildConfigType = {
     appStoreLink: 'https://apps.apple.com/de/app/ehrenamtskarte-bayern/id1261285110'
   }
 }
-
-export default bayern

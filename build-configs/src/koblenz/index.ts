@@ -1,20 +1,21 @@
 import {
   ACTIVATION_PATH,
-  KOBLENZ_PRODUCTION_ID,
-  KOBLENZ_STAGING_ID,
   QUERY_PARAM_BIRTHDAY,
   QUERY_PARAM_KOBLENZ_REFERENCE_NUMBER,
   QUERY_PARAM_NAME
-} from '../constants/index.js'
+} from '../constants.js'
 import BuildConfigType, { CommonBuildConfigType } from '../types.js'
 import disclaimerText from './disclaimerText.js'
 import publisherText from './publisherText.js'
+
+export const KOBLENZ_PRODUCTION_ID = 'koblenz.sozialpass.app'
+export const KOBLENZ_STAGING_ID = 'staging.koblenz.sozialpass.app'
 
 const ANDROID_APPLICATION_ID = 'app.sozialpass.koblenz'
 const IOS_BUNDLE_IDENTIFIER = 'app.sozialpass.koblenz'
 const APP_NAME = 'KoblenzPass'
 
-export const koblenzCommon: CommonBuildConfigType = {
+const koblenzCommon: CommonBuildConfigType = {
   appName: APP_NAME,
   appIcon: 'app_icon_koblenz',
   projectId: {
@@ -115,7 +116,7 @@ export const koblenzCommon: CommonBuildConfigType = {
   }
 }
 
-const koblenz: BuildConfigType = {
+export const buildConfigKoblenz: BuildConfigType = {
   common: koblenzCommon,
   android: {
     ...koblenzCommon,
@@ -133,5 +134,3 @@ const koblenz: BuildConfigType = {
     appStoreLink: 'https://apps.apple.com/de/app/koblenzpass/id6670392532'
   }
 }
-
-export default koblenz

@@ -1,12 +1,15 @@
-import { ACTIVATION_PATH, NUERNBERG_PRODUCTION_ID, NUERNBERG_STAGING_ID } from '../constants/index.js'
+import { ACTIVATION_PATH } from '../constants.js'
 import BuildConfigType, { CommonBuildConfigType } from '../types.js'
 import disclaimerText from './disclaimerText.js'
 import publisherText from './publisherText.js'
 
+export const NUERNBERG_PRODUCTION_ID = 'nuernberg.sozialpass.app'
+export const NUERNBERG_STAGING_ID = 'staging.nuernberg.sozialpass.app'
+
 const ANDROID_APPLICATION_ID = 'app.entitlementcard.nuernberg'
 const IOS_BUNDLE_IDENTIFIER = 'app.sozialpass.nuernberg'
 
-export const nuernbergCommon: CommonBuildConfigType = {
+const nuernbergCommon: CommonBuildConfigType = {
   appName: 'Nürnberg-Pass',
   appIcon: 'app_icon_nuernberg',
   projectId: {
@@ -108,7 +111,7 @@ export const nuernbergCommon: CommonBuildConfigType = {
   }
 }
 
-const nuernberg: BuildConfigType = {
+export const buildConfigNuernberg: BuildConfigType = {
   common: nuernbergCommon,
   android: {
     ...nuernbergCommon,
@@ -126,5 +129,3 @@ const nuernberg: BuildConfigType = {
     appStoreLink: 'https://apps.apple.com/de/app/n%C3%BCrnberg-pass/id1667599309'
   }
 }
-
-export default nuernberg
