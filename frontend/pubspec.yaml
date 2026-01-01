@@ -17,18 +17,18 @@ dependencies:
     sdk: flutter
   intl: ^0.20.2
   mutex: ^3.1.0
-  maplibre_gl: ^0.22.0
+  maplibre_gl: ^0.24.1
   provider: ^6.1.5
   graphql_flutter: ^5.2.1
   url_launcher: ^6.3.2
-  flutter_svg: ^2.2.1
+  flutter_svg: ^2.2.3
   permission_handler: ^11.3.0
   package_info_plus: ^8.3.1 # for about dialog
   # Cannot be updated to v7 due to https://github.com/juliansteenbakker/mobile_scanner/issues/1444
   mobile_scanner: 6.0.11
   fixnum: ^1.1.0
   # Manually update this dependency, issues can result in data loss
-  flutter_secure_storage: 9.2.4
+  flutter_secure_storage: 10.0.0
   infinite_scroll_pagination: ^4.1.0
   geolocator: ^14.0.2
   geolocator_android: ^5.0.2
@@ -36,12 +36,12 @@ dependencies:
   base32: ^2.2.0
   qr_flutter: ^4.0.0
   otp: ^3.2.0
-  crypto: ^3.0.6
-  shared_preferences: ^2.5.3
+  crypto: ^3.0.7
+  shared_preferences: ^2.5.4
   tinycolor2: ^3.0.1
-  sentry_flutter: ^9.7.0
+  sentry_flutter: ^9.9.1
   carousel_slider: ^5.1.1
-  slang: ^4.9.0
+  slang: ^4.11.1
   slang_flutter: ^4.2.0
   flutter_html: ^3.0.0-beta.2
   timezone: ^0.10.1
