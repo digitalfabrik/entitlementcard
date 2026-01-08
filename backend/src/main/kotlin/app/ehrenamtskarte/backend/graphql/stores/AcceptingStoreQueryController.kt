@@ -61,6 +61,9 @@ class AcceptingStoreQueryController(
             }
         }
 
+    @Deprecated(
+        "Use searchAcceptingStoresInProjectV2 for localized descriptions. Should be able to safely remove in January 2028.",
+    )
     @GraphQLDescription(
         "Search for accepting stores in the given project using searchText and categoryIds.",
     )
