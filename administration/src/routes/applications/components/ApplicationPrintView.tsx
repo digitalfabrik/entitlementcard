@@ -4,7 +4,11 @@ import { useTranslation } from 'react-i18next'
 
 import JsonFieldView from '../../../components/JsonFieldView'
 import VerificationsView from '../../../components/VerificationsView'
-import { ApplicationAdmin, ApplicationStatus, ApplicationVerificationView } from '../../../generated/graphql'
+import {
+  ApplicationAdmin,
+  ApplicationStatus,
+  ApplicationVerificationView,
+} from '../../../generated/graphql'
 import { ApplicationParsedJsonValue } from '../utils/application'
 import { ApplicationStatusNote } from './ApplicationStatusNote'
 
@@ -39,7 +43,11 @@ export const ApplicationPrintView = forwardRef<
     > & {
       verifications: Pick<
         ApplicationVerificationView,
-        'organizationName' | 'contactEmailAddress' | 'verificationId' | 'rejectedDate' | 'verifiedDate'
+        | 'organizationName'
+        | 'contactEmailAddress'
+        | 'verificationId'
+        | 'rejectedDate'
+        | 'verifiedDate'
       >[]
     }
   }
@@ -52,16 +60,24 @@ export const ApplicationPrintView = forwardRef<
         {t('applicationFrom', { date: new Date(p.application.createdDate) })}
       </Typography>
 
-      {p.application.status === ApplicationStatus.Withdrawn && !!p.application.statusResolvedDate && (
-        <Box sx={{ border: '1pt solid black', borderRadius: '4pt', padding: 2, width: 'fit-content' }}>
-          <Typography>
-            {' '}
-            {t('withdrawalMessage', { date: new Date(p.application.statusResolvedDate) })}
-            <br />
-            {t('deleteApplicationSoonPrompt')}
-          </Typography>
-        </Box>
-      )}
+      {p.application.status === ApplicationStatus.Withdrawn &&
+        !!p.application.statusResolvedDate && (
+          <Box
+            sx={{
+              border: '1pt solid black',
+              borderRadius: '4pt',
+              padding: 2,
+              width: 'fit-content',
+            }}
+          >
+            <Typography>
+              {' '}
+              {t('withdrawalMessage', { date: new Date(p.application.statusResolvedDate) })}
+              <br />
+              {t('deleteApplicationSoonPrompt')}
+            </Typography>
+          </Box>
+        )}
       <hr />
       <JsonFieldView
         jsonField={p.application.jsonValue}

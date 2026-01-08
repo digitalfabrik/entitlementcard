@@ -21,7 +21,10 @@ const StyledLine = styled('line')(({ theme }) => ({
 
 const OVERLAP_HEIGHT = 10
 
-const CustomAxisLines = ({ innerWidth, innerHeight }: BarCustomLayerProps<CardStatisticsResultModel>) => (
+const CustomAxisLines = ({
+  innerWidth,
+  innerHeight,
+}: BarCustomLayerProps<CardStatisticsResultModel>) => (
   <>
     {/* Bottom Axis Line */}
     <StyledLine x1={0} x2={innerWidth + OVERLAP_HEIGHT} y1={innerHeight} y2={innerHeight} />
@@ -30,7 +33,11 @@ const CustomAxisLines = ({ innerWidth, innerHeight }: BarCustomLayerProps<CardSt
   </>
 )
 
-const StatisticsBarChart = ({ statistic }: { statistic: CardStatisticsResultModel }): ReactElement => {
+const StatisticsBarChart = ({
+  statistic,
+}: {
+  statistic: CardStatisticsResultModel
+}): ReactElement => {
   const { cardStatistics } = useContext(ProjectConfigContext)
   const { t } = useTranslation('statistics')
   const barHeight = 32

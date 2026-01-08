@@ -76,7 +76,8 @@ const ApplicationApplicantView = ({
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
         title={t('withdrawConfirmationTitle')}
-        onConfirm={submitWithdrawal}>
+        onConfirm={submitWithdrawal}
+      >
         <Typography> {t('withdrawConfirmationContent')}</Typography>
       </ConfirmDialog>
 
@@ -101,7 +102,11 @@ const ApplicationApplicantView = ({
               <Typography marginTop={1} marginBottom={2}>
                 {t('withdrawInformation')}
               </Typography>
-              <Button variant='contained' startIcon={<Delete />} onClick={() => setDialogOpen(true)}>
+              <Button
+                variant='contained'
+                startIcon={<Delete />}
+                onClick={() => setDialogOpen(true)}
+              >
                 {t('withdrawApplication')}
               </Button>
             </>

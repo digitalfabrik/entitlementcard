@@ -1,3 +1,8 @@
 mutation editAdministrator($adminId: Int!, $newEmail: String!, $newRegionId: Int, $newRole: Role!) {
-  result: editAdministrator(adminId: $adminId, newEmail: $newEmail, newRegionId: $newRegionId, newRole: $newRole)
+  result: editAdministrator(
+    adminId: $adminId
+    newEmail: $newEmail
+    newRegionId: $newRegionId
+    newRole: $newRole
+  )
 }

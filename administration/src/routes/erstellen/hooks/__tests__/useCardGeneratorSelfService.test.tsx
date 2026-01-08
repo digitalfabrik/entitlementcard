@@ -32,7 +32,13 @@ jest.mock('notistack', () => ({
   }),
 }))
 
-const wrapper = ({ children, initialRoutes }: { children: ReactNode; initialRoutes?: string[] }) => (
+const wrapper = ({
+  children,
+  initialRoutes,
+}: {
+  children: ReactNode
+  initialRoutes?: string[]
+}) => (
   <MemoryRouter initialEntries={initialRoutes}>
     <AppSnackbarProvider>
       <MockedProvider mocks={mocks} addTypename={false}>

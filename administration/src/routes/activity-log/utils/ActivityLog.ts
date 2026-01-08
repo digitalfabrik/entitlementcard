@@ -13,7 +13,8 @@ export type ActivityLogEntryType = {
   card: Card
 }
 
-const getActivityLog = (): JsonActivityLogEntry[] => JSON.parse(sessionStorage.getItem(STORAGE_KEY) ?? '[]')
+const getActivityLog = (): JsonActivityLogEntry[] =>
+  JSON.parse(sessionStorage.getItem(STORAGE_KEY) ?? '[]')
 
 export const loadActivityLog = (cardConfig: CardConfig): ActivityLogEntryType[] =>
   getActivityLog().map(entry => ({

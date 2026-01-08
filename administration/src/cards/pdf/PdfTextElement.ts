@@ -33,8 +33,18 @@ type PdfTextElementRendererProps = {
 }
 
 const pdfTextElement: PdfElement<PdfTextElementProps, PdfTextElementRendererProps> = (
-  { maxWidth, x, y, fontSize, infoToText, spacing = 1, angle = 0, color = undefined, textAlign = 'left' },
-  { page, font, info, region, card, cardInfoHash }
+  {
+    maxWidth,
+    x,
+    y,
+    fontSize,
+    infoToText,
+    spacing = 1,
+    angle = 0,
+    color = undefined,
+    textAlign = 'left',
+  },
+  { page, font, info, region, card, cardInfoHash },
 ) => {
   const text = infoToText({ info, region, card, cardInfoHash })
 

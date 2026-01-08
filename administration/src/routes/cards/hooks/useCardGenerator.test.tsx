@@ -142,7 +142,10 @@ describe('useCardGenerator', () => {
       await result.current.generateCardsPdf()
     })
 
-    expect(enqueueSnackbarMock).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ variant: 'error' }))
+    expect(enqueueSnackbarMock).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({ variant: 'error' }),
+    )
     expect(deleteCards).toHaveBeenCalled()
     expect(deleteCards).toHaveBeenCalledWith(expect.anything(), region.id, codes)
     expect(downloadDataUri).not.toHaveBeenCalled()
@@ -155,14 +158,18 @@ describe('useCardGenerator', () => {
     const { result } = renderHook(() => useCardGenerator({ region }), {
       wrapper: withCustomWrapper(
         bayernConfig,
-        '?Name=Thea+Test&Ablaufdatum=26.02.2028&MailNotification=thea.test%40gmail.com&applicationIdToMarkAsProcessed=1'
+        '?Name=Thea+Test&Ablaufdatum=26.02.2028&MailNotification=thea.test%40gmail.com&applicationIdToMarkAsProcessed=1',
       ),
     })
 
     expect(result.current.cards).toEqual([
       {
         expirationDate: { day: 26, isoMonth: 2, isoYear: 2028 },
-        extensions: { bavariaCardType: 'Standard', regionId: 0, emailNotification: 'thea.test@gmail.com' },
+        extensions: {
+          bavariaCardType: 'Standard',
+          regionId: 0,
+          emailNotification: 'thea.test@gmail.com',
+        },
         fullName: 'Thea Test',
         id: expect.any(Number),
       },
@@ -174,7 +181,7 @@ describe('useCardGenerator', () => {
     const { result } = renderHook(() => useCardGenerator({ region }), {
       wrapper: withCustomWrapper(
         nuernbergConfig,
-        '?Name=Thea+Test&Ablaufdatum=03.3.2026&Geburtsdatum=01.01.2000&Passnummer=12345678&Pass-ID=123&Adresszeile+1=Teststraße+3&Adresszeile+2=EG+Rechts&PLZ=86111&Ort=Musterstadt&Startdatum=01.05.2025'
+        '?Name=Thea+Test&Ablaufdatum=03.3.2026&Geburtsdatum=01.01.2000&Passnummer=12345678&Pass-ID=123&Adresszeile+1=Teststraße+3&Adresszeile+2=EG+Rechts&PLZ=86111&Ort=Musterstadt&Startdatum=01.05.2025',
       ),
     })
 

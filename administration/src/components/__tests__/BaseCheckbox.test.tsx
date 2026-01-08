@@ -29,13 +29,17 @@ describe('BaseCheckbox', () => {
   })
 
   it('should display error message when hasError is true', () => {
-    const { getByText } = render(<BaseCheckbox {...defaultProps} hasError errorMessage='Error occurred' />)
+    const { getByText } = render(
+      <BaseCheckbox {...defaultProps} hasError errorMessage='Error occurred' />,
+    )
 
     expect(getByText('Error occurred')).toBeTruthy()
   })
 
   it('should not display error message when hasError is false', () => {
-    const { queryByText } = render(<BaseCheckbox {...defaultProps} hasError={false} errorMessage='Error occurred' />)
+    const { queryByText } = render(
+      <BaseCheckbox {...defaultProps} hasError={false} errorMessage='Error occurred' />,
+    )
 
     expect(queryByText('Error occurred')).toBeNull()
   })

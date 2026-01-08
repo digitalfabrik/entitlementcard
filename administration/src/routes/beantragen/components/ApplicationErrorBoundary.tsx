@@ -34,7 +34,7 @@ class ApplicationErrorBoundary extends Component<{ children: ReactNode }, { rese
   static getDerivedStateFromError(error: Error): { resetting: boolean } {
     console.error(
       'An error occurred while rendering the application form. Resetting the stored application state...',
-      error
+      error,
     )
     return { resetting: true }
   }

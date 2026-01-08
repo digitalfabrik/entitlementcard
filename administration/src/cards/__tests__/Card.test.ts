@@ -15,7 +15,9 @@ import {
   isValueValid,
 } from '../Card'
 import AddressExtensions from '../extensions/AddressFieldExtensions'
-import BavariaCardTypeExtension, { BAVARIA_CARD_TYPE_EXTENSION_NAME } from '../extensions/BavariaCardTypeExtension'
+import BavariaCardTypeExtension, {
+  BAVARIA_CARD_TYPE_EXTENSION_NAME,
+} from '../extensions/BavariaCardTypeExtension'
 import BirthdayExtension, { BIRTHDAY_EXTENSION_NAME } from '../extensions/BirthdayExtension'
 import KoblenzReferenceNumberExtension, {
   KOBLENZ_REFERENCE_NUMBER_EXTENSION_NAME,
@@ -147,8 +149,21 @@ describe('Card', () => {
         defaultValidity: { years: 3 },
         nameColumnName: 'Name',
         expiryColumnName: 'Ablaufdatum',
-        extensionColumnNames: ['Startdatum', 'Geburtsdatum', 'Pass-ID', 'Adresszeile 1', 'Adresszeile 2', 'PLZ', 'Ort'],
-        extensions: [StartDayExtension, BirthdayExtension, NuernbergPassIdExtension, ...AddressExtensions],
+        extensionColumnNames: [
+          'Startdatum',
+          'Geburtsdatum',
+          'Pass-ID',
+          'Adresszeile 1',
+          'Adresszeile 2',
+          'PLZ',
+          'Ort',
+        ],
+        extensions: [
+          StartDayExtension,
+          BirthdayExtension,
+          NuernbergPassIdExtension,
+          ...AddressExtensions,
+        ],
       }
       const line = [
         'Torben عربيزي Trost',
@@ -189,7 +204,7 @@ describe('Card', () => {
       expect(card.fullName).toBe(fullName)
       expect(isValueValid(card, cardConfig, 'Name')).toBeFalsy()
       expect(isValid(card, cardConfig)).toBeFalsy()
-    }
+    },
   )
 
   it.each(['Dr. Karl Lauterbach', " Mac O'Connor", 'Hans-Wilhelm Müller-Wohlfahrt'])(
@@ -199,7 +214,7 @@ describe('Card', () => {
       expect(card.fullName).toBe(fullName)
       expect(isValueValid(card, cardConfig, 'Name')).toBeTruthy()
       expect(isValid(card, cardConfig)).toBeTruthy()
-    }
+    },
   )
 
   it.each([' Karla Koblenz', ' Karla Karl', ' Karla Karls '])(
@@ -209,17 +224,22 @@ describe('Card', () => {
       expect(card.fullName).toBe(fullName)
       expect(isValueValid(card, cardConfig, 'Name')).toBeTruthy()
       expect(isValid(card, cardConfig)).toBeTruthy()
-    }
+    },
   )
 
-  it.each(['Karla', 'Peter'])('should correctly identify invalid fullname that is incomplete', fullName => {
-    const card = initializeCard(cardConfig, region, { fullName })
-    expect(isValueValid(card, cardConfig, 'Name')).toBeFalsy()
-    expect(isValid(card, cardConfig)).toBeFalsy()
-  })
+  it.each(['Karla', 'Peter'])(
+    'should correctly identify invalid fullname that is incomplete',
+    fullName => {
+      const card = initializeCard(cardConfig, region, { fullName })
+      expect(isValueValid(card, cardConfig, 'Name')).toBeFalsy()
+      expect(isValid(card, cardConfig)).toBeFalsy()
+    },
+  )
 
   it(`should correctly identify invalid fullname that exceeds max length (${MAX_NAME_LENGTH} characters)`, () => {
-    const card = initializeCard(cardConfig, region, { fullName: 'Karl LauterLauterLauterLauterLauterLauterLauterbach' })
+    const card = initializeCard(cardConfig, region, {
+      fullName: 'Karl LauterLauterLauterLauterLauterLauterLauterbach',
+    })
     expect(isValueValid(card, cardConfig, 'Name')).toBeFalsy()
     expect(isValid(card, cardConfig)).toBeFalsy()
   })
@@ -267,7 +287,7 @@ describe('Card', () => {
       const card = initializeCardFromCSV(projectConfig.card, line, headers, region)
       expect(isValueValid(card, projectConfig.card, missingExtension)).toBeFalsy()
       expect(isValid(card, cardConfig)).toBeFalsy()
-    }
+    },
   )
 
   describe('self service', () => {
@@ -285,9 +305,11 @@ describe('Card', () => {
 
       expect(card.fullName).toBe('Karla Koblenz')
       expect(card.expirationDate).toEqual(expirationDate)
-      expect(card.extensions[BIRTHDAY_EXTENSION_NAME]).toBe(BirthdayExtension.getInitialState().birthday)
+      expect(card.extensions[BIRTHDAY_EXTENSION_NAME]).toBe(
+        BirthdayExtension.getInitialState().birthday,
+      )
       expect(card.extensions[KOBLENZ_REFERENCE_NUMBER_EXTENSION_NAME]).toBe(
-        KoblenzReferenceNumberExtension.getInitialState().koblenzReferenceNumber
+        KoblenzReferenceNumberExtension.getInitialState().koblenzReferenceNumber,
       )
     })
 

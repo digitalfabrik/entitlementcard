@@ -18,9 +18,12 @@ describe('BavariaCardTypeExtension', () => {
   }
 
   it('should render the component with default value', () => {
-    const { getByLabelText } = renderWithOptions(<BavariaCardTypeExtension.Component {...defaultProps} />, {
-      translation: true,
-    })
+    const { getByLabelText } = renderWithOptions(
+      <BavariaCardTypeExtension.Component {...defaultProps} />,
+      {
+        translation: true,
+      },
+    )
 
     const select = getByLabelText('Kartentyp')
     expect(select).toBeTruthy()
@@ -29,7 +32,7 @@ describe('BavariaCardTypeExtension', () => {
   it('should display both card type options', () => {
     const { getByLabelText, getAllByRole } = renderWithOptions(
       <BavariaCardTypeExtension.Component {...defaultProps} />,
-      { translation: true }
+      { translation: true },
     )
 
     const select = getByLabelText('Kartentyp')
@@ -42,9 +45,12 @@ describe('BavariaCardTypeExtension', () => {
   })
 
   it('should call setValue with correct value when an option is selected', () => {
-    const { getByLabelText, getByText } = renderWithOptions(<BavariaCardTypeExtension.Component {...defaultProps} />, {
-      translation: true,
-    })
+    const { getByLabelText, getByText } = renderWithOptions(
+      <BavariaCardTypeExtension.Component {...defaultProps} />,
+      {
+        translation: true,
+      },
+    )
 
     const select = getByLabelText('Kartentyp')
     fireEvent.mouseDown(select)
@@ -71,7 +77,9 @@ describe('BavariaCardTypeExtension', () => {
   })
 
   it('isValid function should validate correctly', () => {
-    expect(BavariaCardTypeExtension.isValid({ bavariaCardType: BAVARIA_CARD_TYPE_STANDARD })).toBe(true)
+    expect(BavariaCardTypeExtension.isValid({ bavariaCardType: BAVARIA_CARD_TYPE_STANDARD })).toBe(
+      true,
+    )
     expect(BavariaCardTypeExtension.isValid({ bavariaCardType: BAVARIA_CARD_TYPE_GOLD })).toBe(true)
   })
 

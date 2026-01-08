@@ -39,7 +39,8 @@ const FileInputButton = ({
         startIcon={<AttachFile />}
         variant='contained'
         onClick={() => inputRef.current?.click()}
-        disabled={disabled}>
+        disabled={disabled}
+      >
         {label}
       </Button>
       <input ref={inputRef} type='file' accept='.pdf,.jpeg,.jpg,.png' onChange={onChange} hidden />
@@ -74,9 +75,12 @@ const Component = <I,>({
       return
     }
     if (file.size > FILE_SIZE_LIMIT_BYTES) {
-      enqueueSnackbar(i18next.t('errors:invalidFileSizeWithMaximum', { maxSize: FILE_SIZE_LIMIT_MEGA_BYTES }), {
-        variant: 'error',
-      })
+      enqueueSnackbar(
+        i18next.t('errors:invalidFileSizeWithMaximum', { maxSize: FILE_SIZE_LIMIT_MEGA_BYTES }),
+        {
+          variant: 'error',
+        },
+      )
       e.target.value = ''
       return
     }
@@ -104,7 +108,9 @@ const Component = <I,>({
           label={`${i18next.t('applicationForms:attachFileButton')}${required ? ' *' : ''}`}
           disabled={disableAllInputs}
         />
-        {showAllErrors && validationResult.type === 'error' && <FormAlert errorMessage={validationResult.message} />}
+        {showAllErrors && validationResult.type === 'error' && (
+          <FormAlert errorMessage={validationResult.message} />
+        )}
       </>
     )
   }
@@ -137,7 +143,8 @@ const FileInputForm: Form<State, ValidatedInput> = {
       },
     }
   },
-  Component: ({ state, setState }) => Component({ state, setState, required: true, validate: FileInputForm.validate }),
+  Component: ({ state, setState }) =>
+    Component({ state, setState, required: true, validate: FileInputForm.validate }),
 }
 
 export const OptionalFileInputForm: Form<State, ValidatedInput | null> = {

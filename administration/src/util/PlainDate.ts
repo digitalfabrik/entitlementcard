@@ -39,7 +39,10 @@ class PlainDate {
     this.day = day
   }
 
-  static constructSafely<T>(value: T | null, construct: (value: T) => PlainDate | null): PlainDate | null {
+  static constructSafely<T>(
+    value: T | null,
+    construct: (value: T) => PlainDate | null,
+  ): PlainDate | null {
     if (value === null) {
       return null
     }
@@ -71,7 +74,10 @@ class PlainDate {
     return PlainDate.fromCustomFormat(valueISO8601, ISO_8601_DATE_FORMAT)
   }
 
-  static safeFromCustomFormat(value: string | null, format: string = 'dd.MM.yyyy'): PlainDate | null {
+  static safeFromCustomFormat(
+    value: string | null,
+    format: string = 'dd.MM.yyyy',
+  ): PlainDate | null {
     return PlainDate.constructSafely(value, value => PlainDate.fromCustomFormat(value, format))
   }
 

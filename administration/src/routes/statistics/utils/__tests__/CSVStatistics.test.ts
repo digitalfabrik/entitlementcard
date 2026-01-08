@@ -15,7 +15,13 @@ describe('CSVStatistics', () => {
   const dateString = '2023-02-01_2024-03-01'
 
   const statisticsData: CardStatisticsResultModel[] = [
-    { region: 'Stadt Augsburg', cardsCreated: 10, cardsActivated: 5, cardsActivatedBlue: 3, cardsActivatedGolden: 2 },
+    {
+      region: 'Stadt Augsburg',
+      cardsCreated: 10,
+      cardsActivated: 5,
+      cardsActivatedBlue: 3,
+      cardsActivatedGolden: 2,
+    },
   ]
 
   it('should create a proper filename for a single region', () => {
@@ -30,13 +36,13 @@ describe('CSVStatistics', () => {
 
   it('should throw an error if card statistics are not enabled', () => {
     expect(() => generateCsv(statisticsData, nuernbergConfig.cardStatistics)).toThrow(
-      new CsvStatisticsError('CSV statistic export is disabled for this project')
+      new CsvStatisticsError('CSV statistic export is disabled for this project'),
     )
   })
 
   it('should throw an error if there is no data to export', () => {
     expect(() => generateCsv([], bayernConfig.cardStatistics)).toThrow(
-      new CsvStatisticsError('There is no data available to create a csv file')
+      new CsvStatisticsError('There is no data available to create a csv file'),
     )
   })
 
@@ -45,7 +51,7 @@ describe('CSVStatistics', () => {
       .spyOn(global, 'Blob')
       .mockImplementationOnce(
         (blobParts?: BlobPart[] | undefined, options?: BlobPropertyBag | undefined): Blob =>
-          TEST_BLOB_CONSTRUCTOR(blobParts, options)
+          TEST_BLOB_CONSTRUCTOR(blobParts, options),
       )
 
     generateCsv(statisticsData, bayernConfig.cardStatistics)
@@ -55,7 +61,7 @@ describe('CSVStatistics', () => {
       ],
       {
         type: 'text/csv;charset=utf-8;',
-      }
+      },
     )
   })
 })

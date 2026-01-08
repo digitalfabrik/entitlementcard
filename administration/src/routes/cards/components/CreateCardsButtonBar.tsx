@@ -42,7 +42,8 @@ const CreateCardsButtonBar = ({
             onClick={generateCardsPdf}
             disabled={buttonDisabled}
             color='primary'
-            variant='contained'>
+            variant='contained'
+          >
             {t('printQRCodes')}
           </Button>
         </span>
@@ -56,7 +57,8 @@ const CreateCardsButtonBar = ({
               onClick={generateCardsCsv}
               disabled={buttonDisabled}
               color='primary'
-              variant='contained'>
+              variant='contained'
+            >
               {t('exportCsv')}
             </Button>
           </span>

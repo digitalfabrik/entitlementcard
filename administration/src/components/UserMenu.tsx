@@ -32,7 +32,8 @@ const UserMenu = (): ReactElement => {
           display: 'flex',
           justifyContent: 'flex-end',
         },
-      })}>
+      })}
+    >
       <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
         <Avatar alt={email} />
       </IconButton>
@@ -55,7 +56,8 @@ const UserMenu = (): ReactElement => {
           horizontal: 'right',
         }}
         open={Boolean(anchorElUser)}
-        onClose={handleCloseUserMenu}>
+        onClose={handleCloseUserMenu}
+      >
         <>
           <Box sx={{ paddingX: 1, marginY: 1 }}>
             <Typography noWrap fontWeight='500'>
@@ -70,19 +72,22 @@ const UserMenu = (): ReactElement => {
             variant='text'
             sx={{ justifyContent: 'flex-start' }}
             startIcon={<Settings />}
-            onClick={handleCloseUserMenu}>
+            onClick={handleCloseUserMenu}
+          >
             {t('userSettings')}
           </Button>
           <RenderGuard
             condition={projectConfig.activityLogConfig !== undefined}
-            allowedRoles={[Role.RegionManager, Role.RegionAdmin]}>
+            allowedRoles={[Role.RegionManager, Role.RegionAdmin]}
+          >
             <Button
               href='/activity-log'
               fullWidth
               variant='text'
               startIcon={<EditSquare />}
               sx={{ justifyContent: 'flex-start' }}
-              onClick={handleCloseUserMenu}>
+              onClick={handleCloseUserMenu}
+            >
               {t('activityLog')}
             </Button>
           </RenderGuard>
@@ -91,7 +96,8 @@ const UserMenu = (): ReactElement => {
             fullWidth
             variant='text'
             startIcon={<Logout />}
-            onClick={() => navigate('/logout')}>
+            onClick={() => navigate('/logout')}
+          >
             {t('logout')}
           </Button>
         </>

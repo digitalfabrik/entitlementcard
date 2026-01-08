@@ -1,6 +1,9 @@
 import { ACTIVATION_FRAGMENT, ACTIVATION_PATH, BuildConfigType } from 'build-configs'
 
-const getCustomSchemeDeepLinkFromCode = (activationCode: string, buildConfig: BuildConfigType): string => {
+const getCustomSchemeDeepLinkFromCode = (
+  activationCode: string,
+  buildConfig: BuildConfigType,
+): string => {
   const { deepLinking, projectId } = buildConfig.common
   const { production: host } = projectId
   const { customScheme } = deepLinking

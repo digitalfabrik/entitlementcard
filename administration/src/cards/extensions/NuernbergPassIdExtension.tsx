@@ -39,7 +39,11 @@ const NuernbergPassIdForm = ({
       inputProps={{
         sx: { paddingRight: 0 },
         endAdornment: (
-          <ClearInputButton viewportSmall={viewportSmall} onClick={clearInput} input={nuernbergPassId?.toString()} />
+          <ClearInputButton
+            viewportSmall={viewportSmall}
+            onClick={clearInput}
+            input={nuernbergPassId?.toString()}
+          />
         ),
         inputProps: {
           max: nuernbergPassIdLength,
@@ -54,7 +58,8 @@ const fromString = (value: string): NuernbergPassIdExtensionState => {
   const nuernbergPassId = parseInt(value, 10)
   return { nuernbergPassId: Number.isNaN(nuernbergPassId) ? null : nuernbergPassId }
 }
-const toString = ({ nuernbergPassId }: NuernbergPassIdExtensionState): string => nuernbergPassId?.toString() ?? ''
+const toString = ({ nuernbergPassId }: NuernbergPassIdExtensionState): string =>
+  nuernbergPassId?.toString() ?? ''
 
 const NuernbergPassIdExtension: Extension<NuernbergPassIdExtensionState> = {
   name: NUERNBERG_PASS_ID_EXTENSION_NAME,
@@ -69,7 +74,11 @@ const NuernbergPassIdExtension: Extension<NuernbergPassIdExtensionState> = {
   }),
   isValid: state => {
     const nuernbergPassId = state?.nuernbergPassId ?? null
-    return nuernbergPassId !== null && nuernbergPassId > 0 && nuernbergPassId < 10 ** nuernbergPassIdLength
+    return (
+      nuernbergPassId !== null &&
+      nuernbergPassId > 0 &&
+      nuernbergPassId < 10 ** nuernbergPassIdLength
+    )
   },
   fromString,
   toString,

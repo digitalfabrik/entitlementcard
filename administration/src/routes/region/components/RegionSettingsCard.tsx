@@ -17,9 +17,11 @@ const RegionSettingsCard = ({
   defaultConfirmationMailActivation: boolean
 }): ReactElement => {
   const { t } = useTranslation('regionSettings')
-  const [activatedForApplication, setActivatedForApplication] = useState<boolean>(defaultApplicationActivation)
+  const [activatedForApplication, setActivatedForApplication] = useState<boolean>(
+    defaultApplicationActivation,
+  )
   const [activatedForCardConfirmationMail, setActivatedForCardConfirmationMail] = useState<boolean>(
-    defaultConfirmationMailActivation
+    defaultConfirmationMailActivation,
   )
 
   return (
@@ -39,7 +41,10 @@ const RegionSettingsCard = ({
         errorMessage={undefined}
       />
       <SettingsCardButtonBox>
-        <Button onClick={() => onSave(activatedForApplication, activatedForCardConfirmationMail)} loading={loading}>
+        <Button
+          onClick={() => onSave(activatedForApplication, activatedForCardConfirmationMail)}
+          loading={loading}
+        >
           {t('save')}
         </Button>
       </SettingsCardButtonBox>

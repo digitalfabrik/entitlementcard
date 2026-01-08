@@ -14,13 +14,20 @@ import ImportCardsInput from './components/ImportCardsInput'
 import CardImportTable from './components/ImportCardsTable'
 
 const InnerImportCardsController = ({ region }: { region: Region }): ReactElement => {
-  const { cardGenerationStep, setCardGenerationStep, generateCardsPdf, generateCardsCsv, setCards, cards } =
-    useCardGenerator({ region, initializeCards: false })
+  const {
+    cardGenerationStep,
+    setCardGenerationStep,
+    generateCardsPdf,
+    generateCardsCsv,
+    setCards,
+    cards,
+  } = useCardGenerator({ region, initializeCards: false })
   const navigate = useNavigate()
   const { t } = useTranslation('cards')
 
   const blocker = useBlocker(
-    ({ currentLocation, nextLocation }) => currentLocation.pathname !== nextLocation.pathname && cards.length > 0
+    ({ currentLocation, nextLocation }) =>
+      currentLocation.pathname !== nextLocation.pathname && cards.length > 0,
   )
 
   const goBack = () => {
@@ -75,7 +82,8 @@ const ImportCardsController = (): ReactElement => {
     <RenderGuard
       allowedRoles={[Role.RegionManager, Role.RegionAdmin]}
       condition={region !== undefined}
-      error={{ description: t('notAuthorizedToCreateCards') }}>
+      error={{ description: t('notAuthorizedToCreateCards') }}
+    >
       <InnerImportCardsController region={region!} />
     </RenderGuard>
   )

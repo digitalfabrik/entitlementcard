@@ -2,7 +2,12 @@
 
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
 import { TypographyPropsVariantOverrides } from '@mui/material/Typography'
-import { Palette, PaletteOptions, TypographyVariants, TypographyVariantsOptions } from '@mui/material/styles'
+import {
+  Palette,
+  PaletteOptions,
+  TypographyVariants,
+  TypographyVariantsOptions,
+} from '@mui/material/styles'
 import React from 'react'
 
 // Enable and disable typography variants according to our design system

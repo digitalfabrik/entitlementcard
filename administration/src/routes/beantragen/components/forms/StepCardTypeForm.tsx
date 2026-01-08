@@ -65,23 +65,32 @@ const StepCardTypeForm: Form<State, ValidatedInput> = {
         cardType: cardTypeOptions,
         wantsPhysicalCard: wantsPhysicalCardOptions,
         wantsDigitalCard: wantsDigitalCardOptions,
-      }
+      },
     )(state)
     if (partialValidationResult.type === 'error') {
       return { type: 'error' }
     }
-    if (!partialValidationResult.value.wantsPhysicalCard && !partialValidationResult.value.wantsDigitalCard) {
+    if (
+      !partialValidationResult.value.wantsPhysicalCard &&
+      !partialValidationResult.value.wantsDigitalCard
+    ) {
       return { type: 'error', message: i18next.t('applicationForms:cardTypeNotChosenError') }
     }
     // Application type must not be null if and only if card type is blue
     if (partialValidationResult.value.cardType !== BavariaCardType.Blue) {
       return { type: 'valid', value: { ...partialValidationResult.value, applicationType: null } }
     }
-    const applicationTypeResult = ApplicationTypeForm.validate(state.applicationType, applicationTypeOptions)
+    const applicationTypeResult = ApplicationTypeForm.validate(
+      state.applicationType,
+      applicationTypeOptions,
+    )
     if (applicationTypeResult.type === 'error') {
       return { type: 'error' }
     }
-    return { type: 'valid', value: { ...partialValidationResult.value, applicationType: applicationTypeResult.value } }
+    return {
+      type: 'valid',
+      value: { ...partialValidationResult.value, applicationType: applicationTypeResult.value },
+    }
   },
   Component: ({ state, setState }: FormComponentProps<State>) => {
     const { t } = useTranslation('application')
@@ -97,7 +106,8 @@ const StepCardTypeForm: Form<State, ValidatedInput> = {
           <Link
             href='https://www.ehrenamt.bayern.de/vorteile-wettbewerbe/ehrenamtskarte/index.php#sec3'
             target='_blank'
-            rel='noreferrer'>
+            rel='noreferrer'
+          >
             {t('applicationForms:cardTypeRequirementsButton')}
           </Link>
           .
@@ -137,7 +147,9 @@ const StepCardTypeForm: Form<State, ValidatedInput> = {
           label={t('wantsPhysicalCard')}
           options={wantsPhysicalCardOptions}
         />
-        {isInvalid && validationResult.message !== undefined && <FormAlert errorMessage={validationResult.message} />}
+        {isInvalid && validationResult.message !== undefined && (
+          <FormAlert errorMessage={validationResult.message} />
+        )}
       </div>
     )
   },

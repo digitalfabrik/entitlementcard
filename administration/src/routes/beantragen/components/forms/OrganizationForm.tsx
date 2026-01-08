@@ -96,7 +96,10 @@ const OrganizationForm: Form<State, ValidatedInput, AdditionalProps> = {
           setState={useUpdateStateCallback(setState, 'name')}
           label={t('organization.name')}
         />
-        <AddressForm.Component state={state.address} setState={useUpdateStateCallback(setState, 'address')} />
+        <AddressForm.Component
+          state={state.address}
+          setState={useUpdateStateCallback(setState, 'address')}
+        />
         <SelectForm.Component
           state={state.category}
           setState={useUpdateStateCallback(setState, 'category')}

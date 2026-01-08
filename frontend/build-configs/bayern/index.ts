@@ -85,7 +85,8 @@ export const bayernCommon: CommonBuildConfigType = {
   applicationQueryKeyBirthday: null,
   applicationQueryKeyReferenceNumber: null,
   dataPrivacyPolicyUrl: 'https://bayern.ehrenamtskarte.app/data-privacy-policy',
-  publisherAddress: 'Bayerisches Staatsministerium\nfür Familie, Arbeit und Soziales\nWinzererstraße 9\n80797 München',
+  publisherAddress:
+    'Bayerisches Staatsministerium\nfür Familie, Arbeit und Soziales\nWinzererstraße 9\n80797 München',
   publisherText,
   disclaimerText,
   maxCardAmount: 1,

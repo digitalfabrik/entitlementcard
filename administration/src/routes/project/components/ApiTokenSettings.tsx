@@ -53,7 +53,13 @@ const ApiTokenGeneration = (): ReactElement => {
   })
 
   return (
-    <Stack my={1} p={2} borderRadius={2} boxShadow='inset 0 2px 4px rgba(0, 0, 0, 0.05)' bgcolor='ghostwhite'>
+    <Stack
+      my={1}
+      p={2}
+      borderRadius={2}
+      boxShadow='inset 0 2px 4px rgba(0, 0, 0, 0.05)'
+      bgcolor='ghostwhite'
+    >
       <Typography variant='h6'>{t('createNewToken')}</Typography>
       <Typography component='p'>{t('tokenOnlyShowedOnceHint')}</Typography>
       <Stack direction='row' my={2} spacing={2}>
@@ -66,7 +72,8 @@ const ApiTokenGeneration = (): ReactElement => {
             id='expiresIn'
             value={expiresIn}
             label={t('validPeriod')}
-            onChange={e => setExpiresIn(e.target.value)}>
+            onChange={e => setExpiresIn(e.target.value)}
+          >
             <MenuItem value={1}>1 {t('month')}</MenuItem>
             <MenuItem value={3}>3 {t('months')}</MenuItem>
             <MenuItem value={12}>1 {t('year')}</MenuItem>
@@ -138,7 +145,8 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
         }}
         onClose={() => setTokenToDelete(null)}
         confirmButtonIcon={<Delete />}
-        confirmButtonText={t('deleteToken')}>
+        confirmButtonText={t('deleteToken')}
+      >
         <Typography component='p'>{t('deleteTokenConfirmationPrompt')}</Typography>
       </ConfirmDialog>
       <SettingsCard title={t('apiToken')}>

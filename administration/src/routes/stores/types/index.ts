@@ -16,5 +16,5 @@ export type AcceptingStoreFormData = {
 
 export type UpdateStoreFunction = <K extends keyof AcceptingStoreFormData>(
   field: K,
-  value: AcceptingStoreFormData[K]
+  value: AcceptingStoreFormData[K],
 ) => void

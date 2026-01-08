@@ -21,8 +21,13 @@ describe('BirthdayExtension', () => {
   describe('Component', () => {
     it('should display correct placeholder if no birthday is provided', () => {
       const { getByPlaceholderText } = renderWithOptions(
-        <BirthdayExtension.Component forceError setValue={setValue} isValid={false} value={{ birthday: null }} />,
-        mockProvider
+        <BirthdayExtension.Component
+          forceError
+          setValue={setValue}
+          isValid={false}
+          value={{ birthday: null }}
+        />,
+        mockProvider,
       )
       expect(getByPlaceholderText('TT.MM.JJJJ')).toBeTruthy()
     })
@@ -35,7 +40,7 @@ describe('BirthdayExtension', () => {
           isValid={false}
           value={{ birthday: new PlainDate(1955, 1, 1) }}
         />,
-        mockProvider
+        mockProvider,
       )
       const clearButton = getByTitle('Wert leeren')
       fireEvent.click(clearButton)
@@ -44,8 +49,13 @@ describe('BirthdayExtension', () => {
 
     it('should show error if no birthday is provided and forceError is true', () => {
       const { getByText } = renderWithOptions(
-        <BirthdayExtension.Component forceError setValue={setValue} isValid={false} value={{ birthday: null }} />,
-        mockProvider
+        <BirthdayExtension.Component
+          forceError
+          setValue={setValue}
+          isValid={false}
+          value={{ birthday: null }}
+        />,
+        mockProvider,
       )
       expect(BirthdayExtension.isValid({ birthday: null })).toBeFalsy()
       expect(getByText('Bitte geben Sie ein gültiges Geburtsdatum an.')).toBeTruthy()
@@ -59,7 +69,7 @@ describe('BirthdayExtension', () => {
           isValid={false}
           value={{ birthday: null }}
         />,
-        mockProvider
+        mockProvider,
       )
       expect(BirthdayExtension.isValid({ birthday: null })).toBeFalsy()
       expect(queryByTestId('form-alert')).toBeNull()
@@ -73,7 +83,7 @@ describe('BirthdayExtension', () => {
           isValid={false}
           value={{ birthday: null }}
         />,
-        mockProvider
+        mockProvider,
       )
       const datePicker = getByPlaceholderText('TT.MM.JJJJ')
       fireEvent.blur(datePicker)
@@ -90,7 +100,7 @@ describe('BirthdayExtension', () => {
           isValid={false}
           value={{ birthday: birthDayTooFarInPast }}
         />,
-        mockProvider
+        mockProvider,
       )
       expect(BirthdayExtension.isValid({ birthday: birthDayTooFarInPast })).toBeFalsy()
       expect(getByText('Das Geburtsdatum darf nicht vor dem 01.01.1900 liegen.')).toBeTruthy()
@@ -98,8 +108,13 @@ describe('BirthdayExtension', () => {
 
     it('should not show error if provided birthday is today', () => {
       const { queryByTestId } = renderWithOptions(
-        <BirthdayExtension.Component forceError setValue={setValue} isValid={false} value={{ birthday: today }} />,
-        mockProvider
+        <BirthdayExtension.Component
+          forceError
+          setValue={setValue}
+          isValid={false}
+          value={{ birthday: today }}
+        />,
+        mockProvider,
       )
       expect(BirthdayExtension.isValid({ birthday: today })).toBeTruthy()
       expect(queryByTestId('form-alert')).toBeNull()
@@ -113,7 +128,7 @@ describe('BirthdayExtension', () => {
           isValid={false}
           value={{ birthday: minBirthday }}
         />,
-        mockProvider
+        mockProvider,
       )
       expect(BirthdayExtension.isValid({ birthday: minBirthday })).toBeTruthy()
       expect(queryByTestId('form-alert')).toBeNull()
@@ -122,8 +137,13 @@ describe('BirthdayExtension', () => {
     it('should not show error if a correct birthday is provided', () => {
       const birthday = new PlainDate(2020, 1, 1)
       const { queryByTestId } = renderWithOptions(
-        <BirthdayExtension.Component forceError setValue={setValue} isValid={false} value={{ birthday }} />,
-        mockProvider
+        <BirthdayExtension.Component
+          forceError
+          setValue={setValue}
+          isValid={false}
+          value={{ birthday }}
+        />,
+        mockProvider,
       )
       expect(BirthdayExtension.isValid({ birthday })).toBeTruthy()
       expect(queryByTestId('form-alert')).toBeNull()
@@ -132,8 +152,13 @@ describe('BirthdayExtension', () => {
     it('should show error if provided birthday is in the future', () => {
       const tomorrow = PlainDate.fromLocalDate(new Date()).add({ days: 1 })
       const { getByText } = renderWithOptions(
-        <BirthdayExtension.Component forceError setValue={setValue} isValid={false} value={{ birthday: tomorrow }} />,
-        mockProvider
+        <BirthdayExtension.Component
+          forceError
+          setValue={setValue}
+          isValid={false}
+          value={{ birthday: tomorrow }}
+        />,
+        mockProvider,
       )
       expect(BirthdayExtension.isValid({ birthday: tomorrow })).toBeFalsy()
       expect(getByText('Das Geburtsdatum darf nicht in der Zukunft liegen.')).toBeTruthy()
@@ -141,28 +166,38 @@ describe('BirthdayExtension', () => {
 
     it('should show an underage hint if provided birthday is today for koblenz', () => {
       const { getByText } = renderWithOptions(
-        <BirthdayExtension.Component forceError setValue={setValue} isValid value={{ birthday: today }} />,
-        { ...mockProvider, projectConfig: koblenzConfig }
+        <BirthdayExtension.Component
+          forceError
+          setValue={setValue}
+          isValid
+          value={{ birthday: today }}
+        />,
+        { ...mockProvider, projectConfig: koblenzConfig },
       )
       expect(BirthdayExtension.isValid({ birthday: today })).toBeTruthy()
       expect(
         getByText(
-          'Bei Minderjährigen unter 16 Jahren darf der KoblenzPass nur mit Einverständnis der Erziehungsberechtigten abgerufen werden.'
-        )
+          'Bei Minderjährigen unter 16 Jahren darf der KoblenzPass nur mit Einverständnis der Erziehungsberechtigten abgerufen werden.',
+        ),
       ).toBeTruthy()
     })
 
     it('should show a hint if provided birthday is underage for koblenz', () => {
       const underAgeBirthday = today.subtract({ years: 16 }).add({ days: 1 })
       const { getByText } = renderWithOptions(
-        <BirthdayExtension.Component forceError setValue={setValue} isValid value={{ birthday: underAgeBirthday }} />,
-        { ...mockProvider, projectConfig: koblenzConfig }
+        <BirthdayExtension.Component
+          forceError
+          setValue={setValue}
+          isValid
+          value={{ birthday: underAgeBirthday }}
+        />,
+        { ...mockProvider, projectConfig: koblenzConfig },
       )
       expect(BirthdayExtension.isValid({ birthday: underAgeBirthday })).toBeTruthy()
       expect(
         getByText(
-          'Bei Minderjährigen unter 16 Jahren darf der KoblenzPass nur mit Einverständnis der Erziehungsberechtigten abgerufen werden.'
-        )
+          'Bei Minderjährigen unter 16 Jahren darf der KoblenzPass nur mit Einverständnis der Erziehungsberechtigten abgerufen werden.',
+        ),
       ).toBeTruthy()
     })
 
@@ -174,12 +209,12 @@ describe('BirthdayExtension', () => {
           isValid={false}
           value={{ birthday: new PlainDate(2020, 1, 1) }}
         />,
-        { ...mockProvider, projectConfig: nuernbergConfig }
+        { ...mockProvider, projectConfig: nuernbergConfig },
       )
       expect(
         queryByText(
-          'Bei Minderjährigen unter 16 Jahren darf der KoblenzPass nur mit Einverständnis der Erziehungsberechtigten abgerufen werden.'
-        )
+          'Bei Minderjährigen unter 16 Jahren darf der KoblenzPass nur mit Einverständnis der Erziehungsberechtigten abgerufen werden.',
+        ),
       ).toBeNull()
     })
 
@@ -192,19 +227,24 @@ describe('BirthdayExtension', () => {
           isValid={false}
           value={{ birthday: notUnderageBirthday }}
         />,
-        { ...mockProvider, projectConfig: koblenzConfig }
+        { ...mockProvider, projectConfig: koblenzConfig },
       )
       expect(
         queryByText(
-          'Bei Minderjährigen unter 16 Jahren darf der KoblenzPass nur mit Einverständnis der Erziehungsberechtigten abgerufen werden.'
-        )
+          'Bei Minderjährigen unter 16 Jahren darf der KoblenzPass nur mit Einverständnis der Erziehungsberechtigten abgerufen werden.',
+        ),
       ).toBeNull()
     })
 
     it('should call setValue when date is changed', () => {
       const { getByPlaceholderText } = renderWithOptions(
-        <BirthdayExtension.Component forceError setValue={setValue} isValid={false} value={{ birthday: null }} />,
-        mockProvider
+        <BirthdayExtension.Component
+          forceError
+          setValue={setValue}
+          isValid={false}
+          value={{ birthday: null }}
+        />,
+        mockProvider,
       )
       const datePicker = getByPlaceholderText('TT.MM.JJJJ')
 
@@ -229,7 +269,9 @@ describe('BirthdayExtension', () => {
 
   describe('fromString', () => {
     it('should convert a birthday string to the particular birthday extension state', () => {
-      expect(BirthdayExtension.fromString('10.02.1998')).toEqual({ birthday: { day: 10, isoMonth: 2, isoYear: 1998 } })
+      expect(BirthdayExtension.fromString('10.02.1998')).toEqual({
+        birthday: { day: 10, isoMonth: 2, isoYear: 1998 },
+      })
     })
 
     it('should convert an empty string to null', () => {
@@ -239,7 +281,9 @@ describe('BirthdayExtension', () => {
 
   describe('toString', () => {
     it('should convert a PlainDate to the particular string', () => {
-      expect(BirthdayExtension.toString({ birthday: new PlainDate(1998, 2, 10) })).toBe('10.02.1998')
+      expect(BirthdayExtension.toString({ birthday: new PlainDate(1998, 2, 10) })).toBe(
+        '10.02.1998',
+      )
     })
 
     it('should convert a null value to an empty string', () => {
@@ -249,7 +293,9 @@ describe('BirthdayExtension', () => {
 
   describe('serialize', () => {
     it('should serialize a PlainDate to a correct ISO string', () => {
-      expect(BirthdayExtension.serialize({ birthday: new PlainDate(1998, 2, 10) })).toBe('1998-02-10')
+      expect(BirthdayExtension.serialize({ birthday: new PlainDate(1998, 2, 10) })).toBe(
+        '1998-02-10',
+      )
     })
 
     it('should serialize a null value to an empty string', () => {
@@ -259,7 +305,9 @@ describe('BirthdayExtension', () => {
 
   describe('fromSerialized', () => {
     it('should deserialize an ISO string to a PlainDate', () => {
-      expect(BirthdayExtension.fromSerialized('1998-02-10')).toEqual({ birthday: new PlainDate(1998, 2, 10) })
+      expect(BirthdayExtension.fromSerialized('1998-02-10')).toEqual({
+        birthday: new PlainDate(1998, 2, 10),
+      })
     })
 
     it('should deserialize an empty string to null', () => {

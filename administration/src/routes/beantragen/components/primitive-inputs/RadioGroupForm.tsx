@@ -10,7 +10,12 @@ type State<T extends string> = { selectedValue: T | null }
 type ValidatedInput<T extends string> = T
 type Options<T extends string> = { labelByValue: { [value in T]: string } }
 type AdditionalProps = { divideItems: boolean; title: string }
-type RadioGroupForm<T extends string> = Form<State<T>, ValidatedInput<T>, AdditionalProps, Options<T>>
+type RadioGroupForm<T extends string> = Form<
+  State<T>,
+  ValidatedInput<T>,
+  AdditionalProps,
+  Options<T>
+>
 
 export const createRadioGroupForm = <T extends string>(): RadioGroupForm<T> => {
   const validate = ({ selectedValue }: State<T>, options: Options<T>): ValidationResult<T> => {
@@ -40,15 +45,25 @@ export const createRadioGroupForm = <T extends string>(): RadioGroupForm<T> => {
       const { showAllErrors, disableAllInputs } = useContext(FormContext)
       const validationResult = validate(state, options)
       const isInvalid = validationResult.type === 'error'
-      const labelByValueEntries: [T, string][] = Object.entries(options.labelByValue) as [T, string][]
+      const labelByValueEntries: [T, string][] = Object.entries(options.labelByValue) as [
+        T,
+        string,
+      ][]
       return (
-        <FormControl fullWidth variant='standard' required sx={{ marginY: 0.5 }} error={touched && isInvalid}>
+        <FormControl
+          fullWidth
+          variant='standard'
+          required
+          sx={{ marginY: 0.5 }}
+          error={touched && isInvalid}
+        >
           <FormLabel>{title}</FormLabel>
           <RadioGroup
             sx={{ '& > label': { marginTop: '4px', marginBottom: '4px' } }}
             value={state.selectedValue}
             onBlur={() => setTouched(true)}
-            onChange={e => setState(() => ({ selectedValue: e.target.value as T }))}>
+            onChange={e => setState(() => ({ selectedValue: e.target.value as T }))}
+          >
             {labelByValueEntries.map(([value, label], index, array) => (
               <React.Fragment key={label}>
                 <FormControlLabel
@@ -61,7 +76,9 @@ export const createRadioGroupForm = <T extends string>(): RadioGroupForm<T> => {
               </React.Fragment>
             ))}
           </RadioGroup>
-          {(showAllErrors || touched) && isInvalid && <FormAlert errorMessage={validationResult.message} />}
+          {(showAllErrors || touched) && isInvalid && (
+            <FormAlert errorMessage={validationResult.message} />
+          )}
         </FormControl>
       )
     },

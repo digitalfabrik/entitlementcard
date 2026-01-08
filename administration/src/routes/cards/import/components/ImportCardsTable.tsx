@@ -39,7 +39,8 @@ const CardImportTable = ({ cards }: { cards: Card[] }): ReactElement => {
                         backgroundColor: isValid ? undefined : theme.palette.error.light,
                         whiteSpace: 'break-spaces',
                         verticalAlign: 'top',
-                      })}>
+                      })}
+                    >
                       {value}
                     </TableCell>
                   </Tooltip>

@@ -21,7 +21,7 @@ export const buildCsvLine = (createCardsResult: CreateCardsResult, card: Card): 
         case: 'dynamicActivationCode',
         value: createCardsResult.dynamicActivationCode,
       },
-    })
+    }),
   )
   const staticVerificationHex = createCardsResult.staticVerificationCode
     ? convertProtobufToHexCode(
@@ -30,7 +30,7 @@ export const buildCsvLine = (createCardsResult: CreateCardsResult, card: Card): 
             case: 'staticVerificationCode',
             value: createCardsResult.staticVerificationCode,
           },
-        })
+        }),
       )
     : ''
 

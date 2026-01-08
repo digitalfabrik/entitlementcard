@@ -47,7 +47,10 @@ type ActivityLogTableProps = {
   activityLogConfig: ActivityLogConfig
 }
 
-const ActivityLogTable = ({ activityLog, activityLogConfig }: ActivityLogTableProps): ReactElement => {
+const ActivityLogTable = ({
+  activityLog,
+  activityLogConfig,
+}: ActivityLogTableProps): ReactElement => {
   const { t } = useTranslation('activityLog')
   return (
     <StyledTable>

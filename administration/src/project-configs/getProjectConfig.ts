@@ -55,7 +55,9 @@ export type CardConfig<T extends readonly Extension<any>[] = readonly Extension<
 }
 
 export type ApplicationFeature = {
-  applicationJsonToPersonalData: (json: JsonField<'Array'>) => { forenames?: string; surname?: string } | null
+  applicationJsonToPersonalData: (
+    json: JsonField<'Array'>,
+  ) => { forenames?: string; surname?: string } | null
   applicationJsonToCardQuery: (json: JsonField<'Array'>) => string | null
   applicationUsableWithApiToken: boolean
   csvExport: boolean
@@ -117,7 +119,12 @@ export type ProjectConfig = {
   timezone: string
   activityLogConfig?: ActivityLogConfig
   activation?: {
-    activationText: (applicationName: string, downloadLink: string, deepLink: string, t: TFunction) => ReactElement
+    activationText: (
+      applicationName: string,
+      downloadLink: string,
+      deepLink: string,
+      t: TFunction,
+    ) => ReactElement
     downloadLink: string
   }
   csvExport: CsvExport

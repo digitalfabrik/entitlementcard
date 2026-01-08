@@ -5,7 +5,7 @@ import { SetState, useUpdateStateCallback } from './useUpdateStateCallback'
 
 const useLocallyStoredState = <T>(
   initialState: T,
-  storageKey: string
+  storageKey: string,
 ): {
   status: 'loading' | 'ready'
   state: T
@@ -37,7 +37,7 @@ const useLocallyStoredState = <T>(
         })
       }
     },
-    [status]
+    [status],
   )
 
   useEffect(() => {
@@ -69,7 +69,7 @@ const useLocallyStoredState = <T>(
 const useVersionedLocallyStoredState = <T>(
   initialState: T,
   storageKey: string,
-  version: string
+  version: string,
 ): {
   status: 'loading' | 'ready'
   state: T
@@ -89,7 +89,7 @@ const useVersionedLocallyStoredState = <T>(
       console.warn(
         `Resetting storage because of version mismatch: \n` +
           `Locally stored version: ${locallyStoredVersion}.\n` +
-          `New version: ${version}.`
+          `New version: ${version}.`,
       )
       setLocallyStoredState(() => ({ version, value: initialState }))
     }

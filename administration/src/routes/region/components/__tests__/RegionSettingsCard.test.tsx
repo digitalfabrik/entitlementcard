@@ -20,7 +20,7 @@ describe('RegionSettingsCard', () => {
         defaultConfirmationMailActivation={defaultConfirmationMailActivation}
         onSave={onSave}
       />,
-      { translation: true }
+      { translation: true },
     )
 
   it('should execute on save if button was clicked', () => {
@@ -38,11 +38,13 @@ describe('RegionSettingsCard', () => {
       defaultApplicationActivation: true,
       defaultConfirmationMailActivation: false,
     })
-    expect(getByLabelText('Region ist für den neuen Beantragungsprozess freigeschaltet')).toBeChecked()
+    expect(
+      getByLabelText('Region ist für den neuen Beantragungsprozess freigeschaltet'),
+    ).toBeChecked()
     expect(
       getByLabelText(
-        'Nach der Erstellung einer Karte verschickt das System eine E-Mail-Bestätigung an den Antragsstellenden mit einem Link zur Vorab-Aktivierung'
-      )
+        'Nach der Erstellung einer Karte verschickt das System eine E-Mail-Bestätigung an den Antragsstellenden mit einem Link zur Vorab-Aktivierung',
+      ),
     ).not.toBeChecked()
   })
 })

@@ -1,6 +1,13 @@
 /* eslint-disable react/jsx-pascal-case  -- we cannot change the keys of application namespace, see translation file comment */
 import { Close } from '@mui/icons-material'
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material'
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Typography,
+} from '@mui/material'
 import React, { useContext, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
@@ -22,7 +29,10 @@ const hasAcceptedDatePrivacyOptions: { required: boolean; notCheckedErrorMessage
   required: true,
   notCheckedErrorMessage: i18next.t('applicationForms:uncheckedDataPrivacyError'),
 }
-const givenInformationIsCorrectAndCompleteOptions: { required: boolean; notCheckedErrorMessage: string } = {
+const givenInformationIsCorrectAndCompleteOptions: {
+  required: boolean
+  notCheckedErrorMessage: string
+} = {
   required: true,
   notCheckedErrorMessage: i18next.t('applicationForms:uncheckedCorrectAndCompleteError'),
 }
@@ -54,10 +64,13 @@ const StepSendForm: Form<State, ValidatedInput, AdditionalProps> = {
   }),
   Component: ({ state, setState, regionId }: FormComponentProps<State, AdditionalProps>) => {
     const { t } = useTranslation('applicationForms')
-    const setHasAcceptedDataPrivacyState = useUpdateStateCallback(setState, 'hasAcceptedDataPrivacy')
+    const setHasAcceptedDataPrivacyState = useUpdateStateCallback(
+      setState,
+      'hasAcceptedDataPrivacy',
+    )
     const setGivenInformationIsCorrectAndComplete = useUpdateStateCallback(
       setState,
-      'givenInformationIsCorrectAndComplete'
+      'givenInformationIsCorrectAndComplete',
     )
     const setHasAcceptedEmailUsage = useUpdateStateCallback(setState, 'hasAcceptedEmailUsage')
     const policyQuery = useGetDataPolicyQuery({
@@ -73,7 +86,8 @@ const StepSendForm: Form<State, ValidatedInput, AdditionalProps> = {
           variant='text'
           color='primary'
           sx={{ textTransform: 'capitalize', padding: 0, verticalAlign: 'unset' }}
-          onClick={() => setOpenPrivacyPolicy(true)}>
+          onClick={() => setOpenPrivacyPolicy(true)}
+        >
           {t('acceptDataPrivacyButton')}
         </Button>
         .
@@ -110,12 +124,14 @@ const StepSendForm: Form<State, ValidatedInput, AdditionalProps> = {
           open={openPrivacyPolicy}
           aria-describedby='data-privacy-dialog'
           fullWidth
-          onClose={() => setOpenPrivacyPolicy(false)}>
+          onClose={() => setOpenPrivacyPolicy(false)}
+        >
           <DialogTitle>{config.dataPrivacyHeadline}</DialogTitle>
           <DialogContent id='data-privacy-dialog'>
             <>
               <config.dataPrivacyContent />
-              {config.dataPrivacyAdditionalBaseContent && (!dataPrivacyPolicy || dataPrivacyPolicy.length === 0) ? (
+              {config.dataPrivacyAdditionalBaseContent &&
+              (!dataPrivacyPolicy || dataPrivacyPolicy.length === 0) ? (
                 <config.dataPrivacyAdditionalBaseContent />
               ) : (
                 <Typography>{dataPrivacyPolicy}</Typography>
@@ -123,7 +139,11 @@ const StepSendForm: Form<State, ValidatedInput, AdditionalProps> = {
             </>
           </DialogContent>
           <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
-            <Button onClick={() => setOpenPrivacyPolicy(false)} variant='outlined' startIcon={<Close />}>
+            <Button
+              onClick={() => setOpenPrivacyPolicy(false)}
+              variant='outlined'
+              startIcon={<Close />}
+            >
               {t('misc:close')}
             </Button>
           </DialogActions>

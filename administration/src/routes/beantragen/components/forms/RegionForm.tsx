@@ -18,7 +18,9 @@ import SelectForm, { SelectItem } from '../primitive-inputs/SelectForm'
 
 const StyledAlert = styled(Alert)`
   margin: 16px 0;
-  transition: background-color 0.2s, color 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
 `
 
 const SubForms = {
@@ -33,13 +35,16 @@ type AdditionalProps = { postalCode: string }
 const getOptionsLabel = (prefix: string, name: string) => `${name} (${prefix})`
 
 export const getOptions = (regions: Region[]): SelectItem[] =>
-  regions.map(region => ({ label: getOptionsLabel(region.prefix, region.name), value: region.id.toString() }))
+  regions.map(region => ({
+    label: getOptionsLabel(region.prefix, region.name),
+    value: region.id.toString(),
+  }))
 
 const renderAlert = (
   state: State,
   postalCode: string,
   query: ReturnType<typeof useGetRegionsByPostalCodeQuery>,
-  t: TFunction
+  t: TFunction,
 ) => {
   if (state.region.manuallySelected) {
     return null
@@ -91,7 +96,12 @@ const RegionForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
     }
     return { type: 'valid', value: { regionId: Number(result.value.shortText) } }
   },
-  Component: ({ state, setState, options, postalCode }: FormComponentProps<State, AdditionalProps, Options>) => {
+  Component: ({
+    state,
+    setState,
+    options,
+    postalCode,
+  }: FormComponentProps<State, AdditionalProps, Options>) => {
     const { t } = useTranslation('applicationForms')
     const setRegionState = useUpdateStateCallback(setState, 'region')
     const project = useContext(ProjectConfigContext).projectId
@@ -119,7 +129,10 @@ const RegionForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
       if (state.region.manuallySelected && state.postalCodeUsedForAutoSelect !== null) {
         // Clear postalCodeUsedForAutoSelect, as the region was manually selected.
         setState(prevState => ({ ...prevState, postalCodeUsedForAutoSelect: null }))
-      } else if (state.postalCodeUsedForAutoSelect !== null && postalCode !== state.postalCodeUsedForAutoSelect) {
+      } else if (
+        state.postalCodeUsedForAutoSelect !== null &&
+        postalCode !== state.postalCodeUsedForAutoSelect
+      ) {
         // Clear the auto-selected region
         setState(() => ({
           region: { selectedValue: '', manuallySelected: false },
@@ -135,7 +148,8 @@ const RegionForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
           <Link
             href='https://www.ehrenamt.bayern.de/vorteile-wettbewerbe/ehrenamtskarte/'
             target='_blank'
-            rel='noreferrer'>
+            rel='noreferrer'
+          >
             {t('misc:clickHere')}
           </Link>{' '}
           {t('regionSelectionDescriptionEnd')}
@@ -145,7 +159,8 @@ const RegionForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
           <Link
             href='https://www.ehrenamt.bayern.de/vorteile-wettbewerbe/ehrenamtskarte/landkreise.php'
             target='_blank'
-            rel='noreferrer'>
+            rel='noreferrer'
+          >
             {t('misc:clickHere')}
           </Link>{' '}
           {t('regionSelectionListTextEnd')}

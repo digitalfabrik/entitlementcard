@@ -66,7 +66,9 @@ describe('BaseMenu', () => {
   })
 
   it('should close menu after clicking menu item', async () => {
-    const { getByRole, getByText, queryByRole } = render(<BaseMenu {...defaultProps} variant='Button' />)
+    const { getByRole, getByText, queryByRole } = render(
+      <BaseMenu {...defaultProps} variant='Button' />,
+    )
     const menuButton = getByRole('button', { name: 'Test Menu' })
     fireEvent.click(menuButton)
     const menuItem = getByText('Print PDF')
@@ -79,7 +81,9 @@ describe('BaseMenu', () => {
   })
 
   it('should open menu when icon is clicked', () => {
-    const { getByLabelText, getByRole } = render(<BaseMenu {...defaultProps} variant='IconButton' />)
+    const { getByLabelText, getByRole } = render(
+      <BaseMenu {...defaultProps} variant='IconButton' />,
+    )
     const menuButton = getByLabelText('Test Menu')
 
     fireEvent.click(menuButton)

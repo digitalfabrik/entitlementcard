@@ -53,7 +53,7 @@ describe('CsvFactory', () => {
     ]
 
     expect(() => generateCsv(codes, cards, bayernConfig)).toThrow(
-      new CsvError('CSV Export is disabled for this project')
+      new CsvError('CSV Export is disabled for this project'),
     )
   })
 
@@ -62,15 +62,18 @@ describe('CsvFactory', () => {
       .spyOn(global, 'Blob')
       .mockImplementationOnce(
         (blobParts?: BlobPart[] | undefined, options?: BlobPropertyBag | undefined): Blob =>
-          TEST_BLOB_CONSTRUCTOR(blobParts, options)
+          TEST_BLOB_CONSTRUCTOR(blobParts, options),
       )
 
     if (!nuernbergConfig.csvExport.enabled) {
       throw Error('test failed')
     }
     generateCsv([], [], nuernbergConfig)
-    expect(TEST_BLOB_CONSTRUCTOR).toHaveBeenCalledWith([nuernbergConfig.csvExport.csvHeader.join(',')], {
-      type: CSV_MIME_TYPE_UTF8,
-    })
+    expect(TEST_BLOB_CONSTRUCTOR).toHaveBeenCalledWith(
+      [nuernbergConfig.csvExport.csvHeader.join(',')],
+      {
+        type: CSV_MIME_TYPE_UTF8,
+      },
+    )
   })
 })

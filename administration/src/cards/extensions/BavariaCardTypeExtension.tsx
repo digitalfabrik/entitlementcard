@@ -12,7 +12,9 @@ const BAVARIA_CARD_TYPE_STANDARD_LEGACY = 'blau'
 export const BAVARIA_CARD_TYPE_GOLD = 'Goldkarte'
 const BAVARIA_CARD_TYPE_GOLD_LEGACY = 'gold'
 type BavariaCardTypeState = typeof BAVARIA_CARD_TYPE_STANDARD | typeof BAVARIA_CARD_TYPE_GOLD
-export type BavariaCardTypeExtensionState = { [BAVARIA_CARD_TYPE_EXTENSION_NAME]: BavariaCardTypeState }
+export type BavariaCardTypeExtensionState = {
+  [BAVARIA_CARD_TYPE_EXTENSION_NAME]: BavariaCardTypeState
+}
 
 const BavarianCardTypeForm = ({
   value,
@@ -29,7 +31,10 @@ const BavarianCardTypeForm = ({
         labelId='eak-card-type-select-label'
         value={value.bavariaCardType}
         label={t('bavariaCardTypeLabel')}
-        onChange={event => setValue({ bavariaCardType: event.target.value as BavariaCardTypeState })}>
+        onChange={event =>
+          setValue({ bavariaCardType: event.target.value as BavariaCardTypeState })
+        }
+      >
         {items.map(item => (
           <MenuItem key={item} value={item}>
             {item}
@@ -60,11 +65,14 @@ const BavariaCardTypeExtension: Extension<BavariaCardTypeExtensionState> = {
   getProtobufData: state => ({
     extensionBavariaCardType: {
       cardType:
-        state.bavariaCardType === BAVARIA_CARD_TYPE_GOLD ? BavariaCardTypeEnum.GOLD : BavariaCardTypeEnum.STANDARD,
+        state.bavariaCardType === BAVARIA_CARD_TYPE_GOLD
+          ? BavariaCardTypeEnum.GOLD
+          : BavariaCardTypeEnum.STANDARD,
     },
   }),
   isValid: state =>
-    state?.bavariaCardType === BAVARIA_CARD_TYPE_STANDARD || state?.bavariaCardType === BAVARIA_CARD_TYPE_GOLD,
+    state?.bavariaCardType === BAVARIA_CARD_TYPE_STANDARD ||
+    state?.bavariaCardType === BAVARIA_CARD_TYPE_GOLD,
   fromString,
   toString,
   fromSerialized: fromString,

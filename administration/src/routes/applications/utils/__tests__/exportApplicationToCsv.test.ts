@@ -42,25 +42,33 @@ describe('exportApplicationToCsv', () => {
     }
 
     expect(() => exportApplicationToCsv(mockApplicationBlue, configWithoutExport)).toThrow(
-      new ApplicationToCsvError('Es ist ein Fehler beim Export des Antrags aufgetreten.')
+      new ApplicationToCsvError('Es ist ein Fehler beim Export des Antrags aufgetreten.'),
     )
   })
 
   it('should throw error when address data is missing in application', () => {
     expect(() => exportApplicationToCsv(mockApplicationWithoutAddress, bayernConfig)).toThrow(
-      new ApplicationDataIncompleteError('Erforderliche Antragsdaten fehlen oder sind unvollständig.')
+      new ApplicationDataIncompleteError(
+        'Erforderliche Antragsdaten fehlen oder sind unvollständig.',
+      ),
     )
   })
 
   it('should throw error when personal data is missing in application', () => {
     expect(() => exportApplicationToCsv(mockApplicationWithoutPersonalData, bayernConfig)).toThrow(
-      new ApplicationDataIncompleteError('Erforderliche Antragsdaten fehlen oder sind unvollständig.')
+      new ApplicationDataIncompleteError(
+        'Erforderliche Antragsdaten fehlen oder sind unvollständig.',
+      ),
     )
   })
 
   it('should throw error when application details are missing in application', () => {
-    expect(() => exportApplicationToCsv(mockApplicationWithoutApplicationDetails, bayernConfig)).toThrow(
-      new ApplicationDataIncompleteError('Erforderliche Antragsdaten fehlen oder sind unvollständig.')
+    expect(() =>
+      exportApplicationToCsv(mockApplicationWithoutApplicationDetails, bayernConfig),
+    ).toThrow(
+      new ApplicationDataIncompleteError(
+        'Erforderliche Antragsdaten fehlen oder sind unvollständig.',
+      ),
     )
   })
 
@@ -79,7 +87,7 @@ describe('exportApplicationToCsv', () => {
       .spyOn(global, 'Blob')
       .mockImplementationOnce(
         (blobParts?: BlobPart[] | undefined, options?: BlobPropertyBag | undefined): Blob =>
-          TEST_BLOB_CONSTRUCTOR(blobParts, options)
+          TEST_BLOB_CONSTRUCTOR(blobParts, options),
       )
 
     exportApplicationToCsv(mockApplicationBlue, bayernConfig)
@@ -90,7 +98,7 @@ describe('exportApplicationToCsv', () => {
       ],
       {
         type: 'text/csv;charset=utf-8;',
-      }
+      },
     )
   })
 
@@ -99,7 +107,7 @@ describe('exportApplicationToCsv', () => {
       .spyOn(global, 'Blob')
       .mockImplementationOnce(
         (blobParts?: BlobPart[] | undefined, options?: BlobPropertyBag | undefined): Blob =>
-          TEST_BLOB_CONSTRUCTOR(blobParts, options)
+          TEST_BLOB_CONSTRUCTOR(blobParts, options),
       )
 
     exportApplicationToCsv(mockApplicationGold, bayernConfig)
@@ -110,7 +118,7 @@ describe('exportApplicationToCsv', () => {
       ],
       {
         type: 'text/csv;charset=utf-8;',
-      }
+      },
     )
   })
 })

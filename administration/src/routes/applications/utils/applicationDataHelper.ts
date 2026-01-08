@@ -42,7 +42,13 @@ export const getPersonalApplicationData = (json: JsonField<'Array'>): PersonalAp
   const emailAddress = findValue(personalData, 'emailAddress', 'String')?.value
   const dateOfBirth = findValue(personalData, 'dateOfBirth', 'Date')?.value
   const telephone = findValue(personalData, 'telephone', 'String')?.value
-  return { forenames, surname, emailAddress, dateOfBirth: dateOfBirth ? formatDate(dateOfBirth) : '', telephone }
+  return {
+    forenames,
+    surname,
+    emailAddress,
+    dateOfBirth: dateOfBirth ? formatDate(dateOfBirth) : '',
+    telephone,
+  }
 }
 
 export const getAddressApplicationData = (json: JsonField<'Array'>): AddressApplicationData => {

@@ -1,4 +1,6 @@
-import EMailNotificationExtension, { EMAIL_NOTIFICATION_EXTENSION_NAME } from '../EMailNotificationExtension'
+import EMailNotificationExtension, {
+  EMAIL_NOTIFICATION_EXTENSION_NAME,
+} from '../EMailNotificationExtension'
 
 describe('EMailNotificationExtension', () => {
   const testEmail = 'test@example.com'
@@ -31,7 +33,9 @@ describe('EMailNotificationExtension', () => {
   })
 
   it('should handle serialization and deserialization correctly', () => {
-    const serialized = EMailNotificationExtension.serialize({ [EMAIL_NOTIFICATION_EXTENSION_NAME]: testEmail })
+    const serialized = EMailNotificationExtension.serialize({
+      [EMAIL_NOTIFICATION_EXTENSION_NAME]: testEmail,
+    })
     const deserialized = EMailNotificationExtension.fromSerialized(serialized)
     expect(deserialized).toEqual({ emailNotification: testEmail })
   })

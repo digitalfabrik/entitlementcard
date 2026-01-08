@@ -17,7 +17,7 @@ type QueryHandlerResult<Data> =
 
 const getQueryResult = <Data, Variables extends OperationVariables>(
   queryResult: QueryResult<Data, Variables>,
-  errorComponent?: ReactElement
+  errorComponent?: ReactElement,
 ): QueryHandlerResult<Data> => {
   const { error, loading, data, refetch } = queryResult
   if (loading) {
@@ -28,7 +28,12 @@ const getQueryResult = <Data, Variables extends OperationVariables>(
     return {
       successful: false,
       component: errorComponent ?? (
-        <AlertBox title={title} description={description} onAction={retryable ? refetch : undefined} severity='error' />
+        <AlertBox
+          title={title}
+          description={description}
+          onAction={retryable ? refetch : undefined}
+          severity='error'
+        />
       ),
     }
   }

@@ -23,7 +23,7 @@ describe('FreinetSettingsCard', () => {
         dataTransferActivated={false}
         setDataTransferActivated={setDateTransferActivated}
       />,
-      { translation: true }
+      { translation: true },
     )
     expect(getByText(agencyData.agencyName)).toBeTruthy()
     expect(getByText(agencyData.agencyId)).toBeTruthy()
@@ -38,7 +38,7 @@ describe('FreinetSettingsCard', () => {
         dataTransferActivated={false}
         setDataTransferActivated={setDateTransferActivated}
       />,
-      { translation: true }
+      { translation: true },
     )
     const saveButton = getByText('Speichern') as HTMLElement
     fireEvent.click(saveButton)

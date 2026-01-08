@@ -21,7 +21,9 @@ type ApplicationVerificationProps = {
   applicationVerificationAccessKey: string
 }
 
-const ApplicationVerificationController = ({ applicationVerificationAccessKey }: ApplicationVerificationProps) => {
+const ApplicationVerificationController = ({
+  applicationVerificationAccessKey,
+}: ApplicationVerificationProps) => {
   const { t } = useTranslation('applicationVerification')
   const [verificationFinished, setVerificationFinished] = useState(false)
   const config = useContext(ProjectConfigContext)
@@ -85,7 +87,10 @@ const ApplicationVerificationController = ({ applicationVerificationAccessKey }:
   if (verificationFinished) {
     return (
       <CenteredStack>
-        <AlertBox title={t('verificationFinishedTitle')} description={t('verificationFinishedContent')} />
+        <AlertBox
+          title={t('verificationFinishedTitle')}
+          description={t('verificationFinishedContent')}
+        />
       </CenteredStack>
     )
   }
@@ -121,7 +126,11 @@ const ControllerWithAccessKey = (): ReactElement => {
     )
   }
 
-  return <ApplicationVerificationController applicationVerificationAccessKey={applicationVerificationAccessKey} />
+  return (
+    <ApplicationVerificationController
+      applicationVerificationAccessKey={applicationVerificationAccessKey}
+    />
+  )
 }
 
 export default ControllerWithAccessKey
