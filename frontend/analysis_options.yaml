@@ -5,6 +5,7 @@ analyzer:
     - build/**
     - lib/graphql_gen/**
     - lib/build_config/build_config.dart
+    - lib/l10n/*.g.dart
     - lib/proto/*.dart
     - pubs/**
   errors:
@@ -154,6 +155,8 @@ analyzer:
   language:
     strict-casts: true
     strict-inference: true
+    strict-raw-types: true
+
 linter:
   rules:
     # Too strict rules
