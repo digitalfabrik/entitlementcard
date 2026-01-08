@@ -49,13 +49,16 @@ fun emailBody(builder: EmailBody.() -> Unit): EmailBody = EmailBody().apply { bu
 class Paragraph {
     private val children: ArrayList<InlineRenderable> = ArrayList(0)
 
-    operator fun String.unaryPlus() {
-        children.add(Text(this))
+    fun t(text: String) {
+        children.add(Text(text))
     }
 
     fun plain(plainText: String) {
         plainText.trim().lines().forEachIndexed { index, text ->
-            children.add(if (index != 0) LineBreak() else Text(text))
+            if (index != 0) {
+                children.add(LineBreak())
+            }
+            children.add(Text(text))
         }
     }
 
