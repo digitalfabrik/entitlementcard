@@ -1,6 +1,7 @@
 import android.databinding.tool.ext.capitalizeUS
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import java.nio.file.Paths
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id("com.android.application")
@@ -22,6 +23,12 @@ val buildConfigs = listOf(
     "nuernberg",
     "koblenz"
 )
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_17)
+    }
+}
 
 android {
     val localProperties = gradleLocalProperties(projectDir, providers)
@@ -52,10 +59,6 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     flavorDimensions.add("buildConfig")
