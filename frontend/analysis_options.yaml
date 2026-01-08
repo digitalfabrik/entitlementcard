@@ -153,7 +153,7 @@ analyzer:
     void_checks: error
   language:
     strict-casts: true
-
+    strict-inference: true
 linter:
   rules:
     # Too strict rules

@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
 class FilterBar extends StatelessWidget {
-  final Function(CategoryAsset, bool) onCategoryPress;
+  final void Function(CategoryAsset, bool) onCategoryPress;
 
   const FilterBar({super.key, required this.onCategoryPress});
 
