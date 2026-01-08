@@ -6,7 +6,7 @@ void main() {
   group('toCanonicalJsonObject', () {
     test('should map an empty cardInfo correctly', () {
       final cardInfo = CardInfo();
-      expect(cardInfo.toCanonicalJsonObject(), {});
+      expect(cardInfo.toCanonicalJsonObject(), <String, dynamic>{});
     });
 
     test('should map a cardInfo for a Bavarian Blue EAK correctly', () {

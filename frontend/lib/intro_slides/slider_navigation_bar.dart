@@ -7,7 +7,7 @@ class SliderNavigationBar extends StatelessWidget {
   final int currentIndex;
   final int length;
   final Animation<double> tabBarAnimation;
-  final Function(int) animateTo;
+  final void Function(int) animateTo;
   final VoidCallback? onDonePressed;
 
   const SliderNavigationBar({

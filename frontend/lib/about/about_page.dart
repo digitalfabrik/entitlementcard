@@ -153,7 +153,7 @@ class AboutPageState extends State<AboutPage> {
                   ListTile(
                     leading: const Icon(Icons.build),
                     title: Text(t.about.developmentOptions),
-                    onTap: () => showDialog(
+                    onTap: () => showDialog<void>(
                       context: context,
                       builder: (context) =>
                           SimpleDialog(title: Text(t.about.developmentOptions), children: [DevSettingsView()]),
