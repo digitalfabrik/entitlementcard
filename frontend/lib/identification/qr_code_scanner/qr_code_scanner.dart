@@ -162,7 +162,7 @@ class _QRViewState extends State<QrCodeScanner> {
         setState(() => showWaiting = false);
         // Block the processing of further QR codes for a short time so that the user knows that we are back to
         // the scanning activity.
-        await Future.delayed(Duration(milliseconds: 500));
+        await Future<void>.delayed(Duration(milliseconds: 500));
         processingCode = false;
       }
     }

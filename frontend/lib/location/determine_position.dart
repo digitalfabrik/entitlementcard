@@ -130,7 +130,7 @@ Future<LocationStatus> checkAndRequestLocationPermission(
         // your App should show an explanatory UI now.
 
         if (context.mounted) {
-          final result = await showDialog(
+          final result = await showDialog<bool>(
             context: context,
             builder: (context) => RationaleDialog(rationale: t.location.activateLocationAccessRationale),
           );

@@ -7,7 +7,7 @@ import 'package:tinycolor2/tinycolor2.dart';
 
 class FilterBarButton extends StatefulWidget {
   final CategoryAsset asset;
-  final Function(CategoryAsset, bool) onCategoryPress;
+  final void Function(CategoryAsset, bool) onCategoryPress;
   final int index;
 
   const FilterBarButton({super.key, required this.asset, required this.onCategoryPress, required this.index});
