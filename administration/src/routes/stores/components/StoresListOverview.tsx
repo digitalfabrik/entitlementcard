@@ -48,11 +48,11 @@ const StoresListOverview = ({ data }: { data: AcceptingStoresData[] }): ReactEle
     }
   }
   const openAddStoreDialog = () => {
+    setAcceptingStore(undefined)
     setOpenEditDialog(true)
   }
 
   const closeStoreDialog = () => {
-    setAcceptingStore(undefined)
     setFormSendAttempt(false)
     setShowAddressError(false)
     setOpenEditDialog(false)
