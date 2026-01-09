@@ -141,7 +141,7 @@ const StoresListOverview = ({ data }: { data: AcceptingStoresData[] }): ReactEle
         loading={isFetchingCoordinates}
         open={openEditDialog}
         showAddressError={showAddressError}
-        isEditMode={acceptingStore !== undefined}
+        isEditMode={acceptingStore?.id !== undefined}
         acceptingStore={acceptingStore}
         closeOnConfirm={formFieldsAreValid}
         onUpdateStore={updateStore}
