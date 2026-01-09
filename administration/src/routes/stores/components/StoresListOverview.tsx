@@ -48,11 +48,11 @@ const StoresListOverview = ({ data }: { data: AcceptingStoresData[] }): ReactEle
     }
   }
   const openAddStoreDialog = () => {
+    setAcceptingStore(undefined)
     setOpenEditDialog(true)
   }
 
   const closeStoreDialog = () => {
-    setAcceptingStore(undefined)
     setFormSendAttempt(false)
     setShowAddressError(false)
     setOpenEditDialog(false)
@@ -141,7 +141,7 @@ const StoresListOverview = ({ data }: { data: AcceptingStoresData[] }): ReactEle
         loading={isFetchingCoordinates}
         open={openEditDialog}
         showAddressError={showAddressError}
-        isEditMode={acceptingStore !== undefined}
+        isEditMode={acceptingStore?.id !== undefined}
         acceptingStore={acceptingStore}
         closeOnConfirm={formFieldsAreValid}
         onUpdateStore={updateStore}
