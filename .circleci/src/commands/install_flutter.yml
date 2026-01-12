@@ -9,7 +9,7 @@ steps:
       command: |
         curl -fsSL https://raw.githubusercontent.com/leoafarias/fvm/refs/heads/main/scripts/install.sh | bash
         curl -sL https://raw.githubusercontent.com/leoafarias/fvm/refs/heads/main/scripts/install.sh | shasum -a 256
-        echo 'export PATH="/home/circleci/fvm/bin:$PATH"' >> $BASH_ENV
+        echo 'export PATH="$HOME/fvm/bin:$PATH"' >> $BASH_ENV
   - restore_cache:
       name: Restore flutter
       keys:
