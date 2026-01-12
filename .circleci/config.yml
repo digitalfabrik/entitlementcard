@@ -8,12 +8,6 @@ commands:
                 command: apt update -y && apt install -y curl sudo
                 name: Install curl and sudo
             - run:
-                command: apt install ca-certificates-java -y
-                name: Install ca-certificates-java
-            - run:
-                command: apt install openjdk-17-jre-headless -y
-                name: Install openjdk-17-jre-headless
-            - run:
                 command: dpkg -i ~/attached_workspace/debs/backend/eak-backend*.deb
                 name: Install backend
             - run:
@@ -170,6 +164,21 @@ commands:
                 name: Save pods
                 paths:
                     - ~/Library/Caches/CocoaPods
+    install_temurin:
+        description: Install the temurin JDK
+        steps:
+            - run:
+                command: apt-get update && apt-get install -y --no-install-recommends wget apt-transport-https gpg ca-certificates
+                name: Add wget, apt-transport-https, gnupg
+            - run:
+                command: wget -qO - "https://packages.adoptium.net/artifactory/api/gpg/key/public" | gpg --dearmor | tee /etc/apt/trusted.gpg.d/adoptium.gpg > /dev/null
+                name: Add temurin GPG key
+            - run:
+                command: echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
+                name: Add temurin repo
+            - run:
+                command: apt-get update && apt-get install -y --no-install-recommends temurin-25-jdk
+                name: Install temurin-25
     notify:
         description: Send a notification (to Mattermost) at the end of a job, based on success or failure. Must be the last step in a job.
         parameters:
@@ -306,7 +315,7 @@ jobs:
         working_directory: ~/project/frontend
     build_backend:
         docker:
-            - image: cimg/openjdk:17.0.13-node
+            - image: cimg/openjdk:25.0-node
         environment:
             _JAVA_OPTIONS: -Xmx3g
             GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2
@@ -324,7 +333,7 @@ jobs:
                 keys:
                     - v1-gradle-{{ checksum "build.gradle.kts" }}
             - run:
-                command: SENTRY_AUTH_TOKEN=$SENTRY_BACKEND_AUTH_TOKEN ./gradlew assemble -Denv=prod
+                command: ./gradlew distTar -Denv=prod
                 name: Build backend
             - save_cache:
                 key: v1-gradle-{{ checksum "build.gradle.kts" }}
@@ -441,7 +450,7 @@ jobs:
         working_directory: ~/project/administration
     check_backend:
         docker:
-            - image: cimg/openjdk:17.0.14-node
+            - image: cimg/openjdk:25.0-node
         environment:
             _JAVA_OPTIONS: -Xmx3g
             GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2
@@ -702,13 +711,15 @@ jobs:
         steps:
             - prepare_workspace
             - run:
-                command: scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -t ~/attached_workspace/backend/build/distributions/backend.tar -s scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "openjdk-17-jre-headless"
+                command: |
+                    scripts/pack_deb.sh  -v "${NEW_VERSION_NAME}"  -t ~/attached_workspace/backend/build/distributions/backend.tar  -s scripts/eak-backend.service  -d "Backend server for the Ehrenamtskarte app"  -n "eak-backend"  -c "temurin-25-jdk"
                 name: Pack backend
             - run:
                 command: |
                     mkdir -p ~/attached_workspace/debs/backend
                     mv *.deb ~/attached_workspace/debs/backend
                 name: Move package
+            - install_temurin
             - check_backend_health
             - store_artifacts:
                 path: ~/attached_workspace
