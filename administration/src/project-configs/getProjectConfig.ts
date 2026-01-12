@@ -6,7 +6,7 @@ import {
   KOBLENZ_STAGING_ID,
   NUERNBERG_PRODUCTION_ID,
   NUERNBERG_STAGING_ID,
-} from 'build-configs/constants'
+} from 'build-configs'
 import { Duration } from 'date-fns'
 import { TFunction } from 'i18next'
 import { ReactElement, ReactNode } from 'react'

@@ -8,8 +8,8 @@ import {
   DialogContent,
   DialogTitle,
   Stack,
-  styled,
   Typography,
+  styled,
 } from '@mui/material'
 import { grey } from '@mui/material/colors'
 import React, { ReactElement, useState } from 'react'
