@@ -73,8 +73,8 @@ services:
     # Dev mail server, open at http://localhost:5026
     image: maildev/maildev
     environment:
-      - MAILDEV_SMTP_PORT=25
-      - MAILDEV_WEB_PORT=80
+      - MAILDEV_SMTP_PORT=1025
+      - MAILDEV_WEB_PORT=1080
       - MAILDEV_MAIL_DIRECTORY=/var/maildev
       - MAILDEV_INCOMING_USER=maildev@localhost.local
       - MAILDEV_INCOMING_PASS=maildev
@@ -82,8 +82,8 @@ services:
       - type: tmpfs
         target: /var/maildev
     ports:
-      - 5025:25
-      - 5026:80
+      - 5025:1025
+      - 5026:1080
     networks:
       - network
 networks:
