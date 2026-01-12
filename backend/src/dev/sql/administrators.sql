@@ -86,3 +86,5 @@ ON CONFLICT ("id") DO UPDATE SET
     "notificationOnApplication" = "excluded"."notificationOnApplication",
     "notificationOnVerification" = "excluded"."notificationOnVerification"
 ;
+
+select setval('administrators_id_seq', (select max("id") from "administrators"));
