@@ -24,17 +24,19 @@ class RegionMutationController {
         @Argument regionId: Int,
         @Argument dataPrivacyText: String,
     ): Boolean {
-        val admin = dfe.requireAuthContext().admin
-        transaction {
-            if (dataPrivacyText.length > PRIVACY_POLICY_MAX_CHARS) {
-                throw InvalidDataPolicySizeException(PRIVACY_POLICY_MAX_CHARS)
-            }
-            if (!admin.mayUpdateSettingsInRegion(regionId)) {
-                throw ForbiddenException()
-            }
-            val region = RegionsRepository.findRegionById(regionId)
-            RegionsRepository.updateDataPolicy(region, dataPrivacyText)
+        if (!dfe.requireAuthContext().admin.mayUpdateSettingsInRegion(regionId)) {
+            throw ForbiddenException()
         }
+        if (dataPrivacyText.length > PRIVACY_POLICY_MAX_CHARS) {
+            throw InvalidDataPolicySizeException(PRIVACY_POLICY_MAX_CHARS)
+        }
+
+        transaction {
+            RegionsRepository.findRegionById(regionId).apply {
+                dataPrivacyPolicy = dataPrivacyText
+            }
+        }
+
         return true
     }
 
@@ -46,18 +48,17 @@ class RegionMutationController {
         @Argument activatedForApplication: Boolean,
         @Argument activatedForConfirmationMail: Boolean,
     ): Boolean {
-        val admin = dfe.requireAuthContext().admin
-        transaction {
-            if (!admin.mayUpdateSettingsInRegion(regionId)) {
-                throw ForbiddenException()
-            }
-            val region = RegionsRepository.findRegionById(regionId)
-            RegionsRepository.updateRegionSettings(
-                region,
-                activatedForApplication,
-                activatedForConfirmationMail,
-            )
+        if (!dfe.requireAuthContext().admin.mayUpdateSettingsInRegion(regionId)) {
+            throw ForbiddenException()
         }
+
+        transaction {
+            RegionsRepository.findRegionById(regionId).apply {
+                this.activatedForApplication = activatedForApplication
+                activatedForCardConfirmationMail = activatedForConfirmationMail
+            }
+        }
+
         return true
     }
 
@@ -69,21 +70,20 @@ class RegionMutationController {
         @Argument applicationConfirmationNote: String,
         @Argument applicationConfirmationNoteActivated: Boolean,
     ): Boolean {
-        val admin = dfe.requireAuthContext().admin
-        transaction {
-            if (applicationConfirmationNote.length > APPLICATION_CONFIRMATION_MAIL_NOTE_MAX_CHARS) {
-                throw InvalidApplicationConfirmationNoteSizeException(APPLICATION_CONFIRMATION_MAIL_NOTE_MAX_CHARS)
-            }
-            if (!admin.mayUpdateSettingsInRegion(regionId)) {
-                throw ForbiddenException()
-            }
-            val region = RegionsRepository.findRegionById(regionId)
-            RegionsRepository.updateApplicationConfirmationNote(
-                region,
-                applicationConfirmationNote,
-                applicationConfirmationNoteActivated,
-            )
+        if (!dfe.requireAuthContext().admin.mayUpdateSettingsInRegion(regionId)) {
+            throw ForbiddenException()
         }
+        if (applicationConfirmationNote.length > APPLICATION_CONFIRMATION_MAIL_NOTE_MAX_CHARS) {
+            throw InvalidApplicationConfirmationNoteSizeException(APPLICATION_CONFIRMATION_MAIL_NOTE_MAX_CHARS)
+        }
+
+        transaction {
+            RegionsRepository.findRegionById(regionId).apply {
+                applicationConfirmationMailNote = applicationConfirmationNote
+                applicationConfirmationMailNoteActivated = applicationConfirmationNoteActivated
+            }
+        }
+
         return true
     }
 }
