@@ -25,17 +25,7 @@ class RegionQueryController(
     ): List<Region> =
         transaction {
             RegionsRepository.findAllInProject(project).map {
-                Region(
-                    it.id.value,
-                    it.prefix,
-                    it.name,
-                    it.regionIdentifier,
-                    it.dataPrivacyPolicy,
-                    it.activatedForApplication,
-                    it.activatedForCardConfirmationMail,
-                    it.applicationConfirmationMailNoteActivated,
-                    it.applicationConfirmationMailNote,
-                )
+                Region.fromEntity(it)
             }
         }
 
@@ -46,23 +36,7 @@ class RegionQueryController(
         @Argument ids: List<Int>,
     ): List<Region?> =
         transaction {
-            RegionsRepository.findByIdsInProject(project, ids).map {
-                if (it == null) {
-                    null
-                } else {
-                    Region(
-                        it.id.value,
-                        it.prefix,
-                        it.name,
-                        it.regionIdentifier,
-                        it.dataPrivacyPolicy,
-                        it.activatedForApplication,
-                        it.activatedForCardConfirmationMail,
-                        it.applicationConfirmationMailNoteActivated,
-                        it.applicationConfirmationMailNote,
-                    )
-                }
-            }
+            RegionsRepository.findByIdsInProject(project, ids).map { it?.let { region -> Region.fromEntity(region) } }
         }
 
     @GraphQLDescription("Returns region data for specific region.")
@@ -71,18 +45,7 @@ class RegionQueryController(
         @Argument regionId: Int,
     ): Region =
         transaction {
-            val regionEntity = RegionsRepository.findRegionById(regionId)
-            Region(
-                regionEntity.id.value,
-                regionEntity.prefix,
-                regionEntity.name,
-                regionEntity.regionIdentifier,
-                regionEntity.dataPrivacyPolicy,
-                regionEntity.activatedForApplication,
-                regionEntity.activatedForCardConfirmationMail,
-                regionEntity.applicationConfirmationMailNoteActivated,
-                regionEntity.applicationConfirmationMailNote,
-            )
+            Region.fromEntity(RegionsRepository.findRegionById(regionId))
         }
 
     @GraphQLDescription(
@@ -109,17 +72,7 @@ class RegionQueryController(
                 ?: throw RegionNotFoundException()
 
             regionEntities.map {
-                Region(
-                    it.id.value,
-                    it.prefix,
-                    it.name,
-                    it.regionIdentifier,
-                    it.dataPrivacyPolicy,
-                    it.activatedForApplication,
-                    it.activatedForCardConfirmationMail,
-                    it.applicationConfirmationMailNoteActivated,
-                    it.applicationConfirmationMailNote,
-                )
+                Region.fromEntity(it)
             }
         }
 }

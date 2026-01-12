@@ -27,52 +27,78 @@
 
 ## Prerequisites
 
-- Install Java JDK 17.
-   *If you use a later version, it has to be compatible with the [configured Gradle version](../frontend/android/gradle/wrapper/gradle-wrapper.properties).
-   Check the [Gradle Compatibility Matrix](https://docs.gradle.org/current/userguide/compatibility.html#java) for details.*
-- Open the [root project](..) in IntelliJ.
+- **JDK 25**: for running the backend and the Android version of the frontend. We use [Eclipse Temurin](https://adoptium.net/de/temurin/releases), but others _might_ work as well.
+- **[fvm](https://fvm.app/documentation/getting-started/installation) >= 4.0.1**: managing Dart and Flutter versions.
+- **[Node.js](https://nodejs.org/en/) >= 24.x.x**: to develop the administration web application.
+- One of:
+  - **[Docker](https://docs.docker.com/get-docker/) >= 4.5.0**: for running the various backend services.
+  - **[Podman](https://podman.io/getting-started/installation) >= 5.6.2** (experimental).
+- For developing and building the iOS version of the mobile app (macOS required):
+  - **[brew](https://formulae.brew.sh/)** package manager for macOS. Optional but highly recommended. 
+  - **[XCode](https://apps.apple.com/de/app/xcode/id497799835?mt=12) >= 16.4**
+  - **[Ruby](https://www.ruby-lang.org/en/downloads/) >= 3.4.7**
+  - **[Bundler](https://bundler.io/) >= 2.7**: for installing cocoapods and other dependencies.
+  - **[cocoapods](https://cocoapods.org/) >= 1.16.2**: for installing the iOS dependencies.
+- For developing and building the Android version of the mobile app:
+
+  One of: 
+  - **[Android Studio](https://developer.android.com/studio) >= 2025.2.1**
+  - **[Android plugin](https://plugins.jetbrains.com/plugin/22989-android)**  for IntelliJ
+
+Recommended IDEs:
+- **[IntelliJ Community Edition](https://www.jetbrains.com/de-de/idea/)**, with the following plugins:
+  - [Dart](https://plugins.jetbrains.com/plugin/6351-dart/versions)
+  - [Flutter](https://plugins.jetbrains.com/plugin/9212-flutter)
+  - [Prettier](https://plugins.jetbrains.com/plugin/10456-prettier) (compatible with IDEA Ultimate only)
+  - [Ktlint](https://plugins.jetbrains.com/plugin/15057-ktlint)
+- **[VS Code](https://code.visualstudio.com/)**: currently only useful for the administration web application and Flutter mobile app (very basic support at the moment).
+
+
+## Auxiliary Services
+
+> [!NOTE]: all commands here are meant to be executed in the project root directory.
+ 
+If you want to develop or test against a local backend, you need to start some auxiliary services. You can either use the open-source Podman/Podman Compose or classic Docker/Docker Compose.  
+
+- When using Podman, initialize and start the machine:
+    ```shell
+    podman machine init
+    podman machine start
+    ```
+
+- Start auxiliary backend services:
+  - When using Podman: `podman compose up -d`
+  - When using Docker: `docker compose up -d`
+
 
 ## Frontend
 
+> [!NOTE]: all commands here are meant to be executed in the `/frontend` directory.
+
 ### Frontend Setup
 
-1. Install [fvm](https://fvm.app/documentation/getting-started/installation) (flutter version manager)
-2. Install flutter dependencies
-```shell
-cd frontend && fvm flutter pub get
-```
-
-3. Open IntelliJ settings and
-   - Install the Android plugin and set the Android SDK path
+- Install flutter dependencies: `fvm flutter pub get`
+- When using IntelliJ, open the settings and
    - Install the Dart plugin and set the Dart SDK path
    - Install the Flutter plugin and set the Flutter SDK path
 
-*Note: IntelliJ needs access to environment variables to run these commands successfully.*
+    *Note: IntelliJ needs access to environment variables to run these commands successfully.*
 
 #### Android
 
-1. Install Android SDK via Android Studio
+- When using IntelliJ, install the Android plugin.
+- Install the Android SDK.
+- Set the Android SDK path in the IntelliJ settings.
 
 #### iOS
 
-1. Install XCode
-2. Install ruby bundler
-3. Install gems
-``` shell
-cd frontend/ios && bundle install
-```
-4. Install cocoapods
-``` shell
-cd frontend/ios && bundle exec pod install --repo-update
-```
-5. [Optional] Install cocoapods globally (only necessary if using IntelliJ run configurations to run on iOS)
-``` shell
-brew install cocoapods
-```
+- Install gems: `cd ios && bundle install`
+- Install cocoapods: `cd ios && bundle exec pod install --repo-update`
+- *Optional*: install cocoapods globally (only necessary if using IntelliJ run configurations to run on iOS): `brew install cocoapods`
 
 ### Run Frontend
 
-1. Forward ports. As there are several services running and interacting some ports need to be forwarded.
+1. Forward ports. As there are several services running and interacting, some ports need to be forwarded.
 This includes the backend port 8000 and the map tiles port at 5002.
 The command has to be run every time a device is connected.
 
@@ -85,87 +111,52 @@ adb reverse tcp:8081 tcp:8081 && adb reverse tcp:8000 tcp:8000 && adb reverse tc
    - Nuernberg: `Run (env:local+buildConfig:nuernberg)`
    - Koblenz: `Run (env:local+buildConfig:koblenz)`
 
+
+
 ## Administration
 
-### Administration Setup
+> [!NOTE]: all commands here are meant to be executed in the `/administration` directory.
 
-1. Install node_modules
+### Setup
 
-```shell
-npm install
-```
+Install Node.js dependencies: `npm install`
 
 ### Run Administration
 
-Run `Start administration (env:local+buildConfig:all)` from Intellij run configurations
+- With the IntelliJ run configuration: run `Start administration (env:local+buildConfig:all)`.
+- With a shell: `npm run start`
 
 ### Run e2e-tests for Administration
 
 1. Run [backend](#run-backend) and start the [administration](#run-administration).
 2. install supported browsers for [Playwright](https://playwright.dev/docs/browsers#install-browsers): `npx playwright install`
 3. Run Playwright tests:
-   - All tests: `/administration`: `npm run test:e2e`
+   - All tests: `npm run test:e2e`
    - You can run individual tests by `npm run test:e2e [file name]`
+
+
 
 ## Backend
 
-### Prerequisites
+> [!NOTE]: all commands here are meant to be executed in the `/backend` directory. 
 
-You can either use the open-source docker replacement podman/podman-compose or classic docker/docker compose.
 
-#### Podman
+### IntelliJ set up
 
-1. Install podman and podman-compose
-2. Setup podman-compose
-```shell
-podman machine init
-podman machine start && podman-compose up
-```
-
-#### Docker
-
-1. Install docker
-2. Setup docker compose
-```shell
-docker compose rm
-docker compose build
-docker compose up --force-recreate
-```
-
-### Recommended IDE set up
-
-For IntelliJ, the following plugins are recommended:
-
-- [detekt](https://plugins.jetbrains.com/plugin/10761-detekt)
-- [Ktlint](https://plugins.jetbrains.com/plugin/15057-ktlint)
+Open the IntelliJ project structure dialog under `/File/Project Structure…` and set up the project SDK to a JDK 25 installation. If the JDK is not listed in the SDK drop down, you might need to set it up under *Platform Settings/SDKs* (in the same dialog) first. 
+  ![SDK/JDK setup](./img/intellij-sdk-setup.png)
 
 ### Backend Setup
 
-1. Open the IntelliJ "Project Structure" and set up the required SDK called "entitlementcard-jdk" and point it to your JDK installation.
-   ![SDK/JDK setup](./img/intellij-sdk-setup.png)
-2. Run the backend migration (`Migrate DB`)
-```shell
-cd backend && ./gradlew run --args "migrate"
-```
-3. Create a backend account with one of the run configurations or the following command:
-```shell
-./gradlew run --args="create-admin <project> <role> <email> <password> <region>"`
-```
+- Create a DB with some test data (`Migrate DB`)
+  - With an IntelliJ run configuration: `Backend commands / DB recreate`
+  - With a shell: `./gradlew run db-recreate`
 
 ### Run Backend
 
-1. Start `podman-compose`
-```shell
-podman machine start && podman-compose up
-```
-or `docker compose`
-```shell
-sudo docker compose up --force-recreate
-```
-2. Run the backend (`Run backend (env:local+buildConfig:all)`)
-```shell
-./gradlew run --args="execute"
-```
+Start the backend service
+  - Using IntelliJ run configuration: `Run backend (env:local+buildConfig:all)`
+  - Using a shell: `./gradlew run --args="execute"`
 
 ### Optional Backend Setup
 
@@ -173,17 +164,27 @@ The following setup is only necessary if you work with the corresponding service
 
 #### Local Backend Configuration
 
-The backend configuration file [config.yml](../backend/src/main/resources/config/config.yml) is checked in git and should therefore not be modified for development purposes.
+The backend configuration file [config.yml](../backend/src/main/resources/config/config.yml) is checked in git and
+should therefore not be modified for development purposes.
 Instead, you can create your own local copy:
 
-1. Copy [config.yml](../backend/src/main/resources/config/config.yml) to `~/.config/entitlementcard/config.yml`
-
-```shell
-mkdir ~/.config/entitlementcard
-cp backend/src/main/resources/config/config.yml ~/.config/entitlementcard
-```
+1. Copy [config.yml](../backend/src/main/resources/config/config.yml) to `/backend/src/main/resources/config.local.yml`:
+    ```shell
+    cp backend/src/main/resources/config/config.yml backend/src/main/resources/config.local.yml
+    ```
 
 2. Adjust config
+
+   A development SMTP server is configured as a Docker service in the [docker-compose.yml](../docker-compose.yml) file.
+   To use it, set the `smtp` config to the following values:
+   ```yaml
+   smtp:
+      host: localhost
+      port: 5025
+      username: maildev@localhost.local
+      password: maildev
+   ```
+   The web UI is available at http://localhost:5026
 
 #### Map Styles
 

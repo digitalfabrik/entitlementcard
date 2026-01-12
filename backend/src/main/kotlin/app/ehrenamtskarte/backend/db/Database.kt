@@ -14,6 +14,7 @@ import app.ehrenamtskarte.backend.graphql.freinet.util.FreinetAgenciesLoader
 import org.jetbrains.exposed.sql.Database.Companion.connect
 import org.jetbrains.exposed.sql.DatabaseConfig
 import org.jetbrains.exposed.sql.StdOutSqlLogger
+import org.jetbrains.exposed.sql.statements.StatementType
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.BufferedReader
@@ -32,7 +33,7 @@ object Database {
 
     fun executeSqlFile(file: File) {
         transaction {
-            exec(file.bufferedReader().use { it.readText() })
+            exec(file.bufferedReader().use { it.readText() }, explicitStatementType = StatementType.MULTI)
         }
     }
 
