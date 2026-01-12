@@ -10,12 +10,20 @@ steps:
   - prepare_workspace
   - run:
       name: Pack backend
-      command: scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -t ~/attached_workspace/backend/build/distributions/backend.tar -s scripts/eak-backend.service -d "Backend server for the Ehrenamtskarte app" -n "eak-backend" -c "openjdk-17-jre-headless"
+      command: >
+        scripts/pack_deb.sh 
+        -v "${NEW_VERSION_NAME}" 
+        -t ~/attached_workspace/backend/build/distributions/backend.tar 
+        -s scripts/eak-backend.service 
+        -d "Backend server for the Ehrenamtskarte app" 
+        -n "eak-backend" 
+        -c "temurin-25-jdk"
   - run:
       name: Move package
       command: |
         mkdir -p ~/attached_workspace/debs/backend
         mv *.deb ~/attached_workspace/debs/backend
+  - install_temurin
   - check_backend_health
   - store_artifacts:
       path: ~/attached_workspace
