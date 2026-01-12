@@ -1,5 +1,7 @@
 package app.ehrenamtskarte.backend.import.stores.common.types
 
+import app.ehrenamtskarte.backend.db.entities.LanguageCode
+
 data class AcceptingStore(
     val name: String,
     val countryCode: String,
@@ -14,7 +16,7 @@ data class AcceptingStore(
     val email: String?,
     val telephone: String?,
     val website: String?,
-    val discount: String?,
+    val discounts: Map<LanguageCode, String>,
     // All stores either come from a district directly or from freinet.
     // In the first case, freinetId is null and districtName is set. In the second case, it is the other way round.
     val freinetId: Int?,

@@ -1,4 +1,4 @@
-import { EditNote, PrintOutlined } from '@mui/icons-material'
+import { EditNote, KeyboardArrowDown, KeyboardArrowUp, PrintOutlined } from '@mui/icons-material'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import React from 'react'
 
@@ -23,17 +23,19 @@ describe('BaseMenu', () => {
     menuItems: mockMenuItems,
     containerWidth: 200,
     itemHeight: 48,
+    openIcon: <KeyboardArrowUp />,
+    closeIcon: <KeyboardArrowDown />,
   }
 
   it('should render menu button with correct label', () => {
-    const { getByRole } = render(<BaseMenu {...defaultProps} />)
+    const { getByRole } = render(<BaseMenu {...defaultProps} variant='Button' />)
     const menuButton = getByRole('button', { name: 'Test Menu' })
 
     expect(menuButton).toBeTruthy()
   })
 
   it('should open menu when button is clicked', () => {
-    const { getByRole } = render(<BaseMenu {...defaultProps} />)
+    const { getByRole } = render(<BaseMenu {...defaultProps} variant='Button' />)
     const menuButton = getByRole('button', { name: 'Test Menu' })
 
     fireEvent.click(menuButton)
@@ -43,7 +45,7 @@ describe('BaseMenu', () => {
   })
 
   it('should render all menu items when the menu is open', () => {
-    const { getByRole, getByText } = render(<BaseMenu {...defaultProps} />)
+    const { getByRole, getByText } = render(<BaseMenu {...defaultProps} variant='Button' />)
     const menuButton = getByRole('button', { name: 'Test Menu' })
 
     fireEvent.click(menuButton)
@@ -53,7 +55,7 @@ describe('BaseMenu', () => {
   })
 
   it('should call onClick handler when menu item is clicked', () => {
-    const { getByRole, getByText } = render(<BaseMenu {...defaultProps} />)
+    const { getByRole, getByText } = render(<BaseMenu {...defaultProps} variant='Button' />)
     const menuButton = getByRole('button', { name: 'Test Menu' })
 
     fireEvent.click(menuButton)
@@ -64,7 +66,7 @@ describe('BaseMenu', () => {
   })
 
   it('should close menu after clicking menu item', async () => {
-    const { getByRole, getByText, queryByRole } = render(<BaseMenu {...defaultProps} />)
+    const { getByRole, getByText, queryByRole } = render(<BaseMenu {...defaultProps} variant='Button' />)
     const menuButton = getByRole('button', { name: 'Test Menu' })
     fireEvent.click(menuButton)
     const menuItem = getByText('Print PDF')
@@ -74,5 +76,15 @@ describe('BaseMenu', () => {
       const menu = queryByRole('menu')
       expect(menu).toBeNull()
     })
+  })
+
+  it('should open menu when icon is clicked', () => {
+    const { getByLabelText, getByRole } = render(<BaseMenu {...defaultProps} variant='IconButton' />)
+    const menuButton = getByLabelText('Test Menu')
+
+    fireEvent.click(menuButton)
+    const menu = getByRole('menu')
+
+    expect(menu).toBeTruthy()
   })
 })

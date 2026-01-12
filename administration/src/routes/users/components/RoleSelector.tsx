@@ -1,41 +1,50 @@
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import { Box, Stack } from '@mui/system'
-import React, { ReactElement, useContext, useState } from 'react'
+import React, { ReactElement, useContext, useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import FormAlert from '../../../components/FormAlert'
 import { Role } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
+import { useWhoAmI } from '../../../provider/WhoAmIProvider'
 import roleToText from '../utils/roleToText'
 import RoleHelpButton from './RoleHelpButton'
 
 const RoleSelector = ({
-  role,
+  selectedRole,
   onChange,
-  hideProjectAdmin,
 }: {
-  role: Role | null
+  selectedRole: Role | null
   onChange: (role: Role | null) => void
-  hideProjectAdmin: boolean
 }): ReactElement => {
   const { t } = useTranslation('users')
+  const { role: activeRole } = useWhoAmI().me
   const [touched, setTouched] = useState(false)
   const config = useContext(ProjectConfigContext)
-  const showExternalVerifiedApiUser = config.applicationFeature?.applicationUsableWithApiToken && !hideProjectAdmin
-  const showError = role === null && touched
+  const isProjectAdmin = activeRole === Role.ProjectAdmin
+  const showExternalVerifiedApiUser = config.applicationFeature?.applicationUsableWithApiToken && isProjectAdmin
+  const showProjectStoreManager = config.storesManagement.enabled && isProjectAdmin
+  const showError = selectedRole === null && touched
+  const labelId = useId()
   return (
     <>
       <Stack direction='row'>
         <FormControl fullWidth size='small' required>
-          <InputLabel shrink={role !== null}>{t('selectRole')}</InputLabel>
+          <InputLabel shrink={selectedRole !== null} id={labelId}>
+            {t('selectRole')}
+          </InputLabel>
           <Select
-            notched={role !== null}
+            notched={selectedRole !== null}
             size='small'
             label={t('selectRole')}
-            value={role ?? ''}
+            labelId={labelId}
+            value={selectedRole ?? ''}
             onBlur={() => setTouched(true)}
             onChange={e => onChange(e.target.value as Role)}>
-            {hideProjectAdmin ? null : <MenuItem value={Role.ProjectAdmin}>{roleToText(Role.ProjectAdmin)}</MenuItem>}
+            {isProjectAdmin && <MenuItem value={Role.ProjectAdmin}>{roleToText(Role.ProjectAdmin)}</MenuItem>}
+            {showProjectStoreManager && (
+              <MenuItem value={Role.ProjectStoreManager}>{roleToText(Role.ProjectStoreManager)}</MenuItem>
+            )}
             {showExternalVerifiedApiUser && (
               <MenuItem value={Role.ExternalVerifiedApiUser}>{roleToText(Role.ExternalVerifiedApiUser)}</MenuItem>
             )}

@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.graphql.stores
 
 import app.ehrenamtskarte.backend.config.BackendConfiguration
+import app.ehrenamtskarte.backend.db.entities.AcceptingStoreEntity
 import app.ehrenamtskarte.backend.db.repositories.AcceptingStoresRepository
 import app.ehrenamtskarte.backend.db.repositories.PhysicalStoresRepository
 import app.ehrenamtskarte.backend.graphql.stores.types.AcceptingStore
@@ -12,6 +13,7 @@ import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import graphql.schema.DataFetchingEnvironment
 import jakarta.servlet.http.HttpServletRequest
+import org.jetbrains.exposed.dao.with
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.ContextValue
@@ -78,15 +80,8 @@ class AcceptingStoreQueryController(
                 params.coordinates,
                 params.limit ?: Int.MAX_VALUE,
                 params.offset ?: 0,
-            ).map {
-                AcceptingStore(
-                    it.id.value,
-                    it.name,
-                    it.description,
-                    it.contactId.value,
-                    it.categoryId.value,
-                )
-            }
+            ).with(AcceptingStoreEntity::descriptions)
+                .map { AcceptingStore.fromDbEntity(it) }
         }
         Matomo.trackSearch(
             backendConfig,
