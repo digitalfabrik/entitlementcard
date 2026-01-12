@@ -164,17 +164,27 @@ The following setup is only necessary if you work with the corresponding service
 
 #### Local Backend Configuration
 
-The backend configuration file [config.yml](../backend/src/main/resources/config/config.yml) is checked in git and should therefore not be modified for development purposes.
+The backend configuration file [config.yml](../backend/src/main/resources/config/config.yml) is checked in git and
+should therefore not be modified for development purposes.
 Instead, you can create your own local copy:
 
-1. Copy [config.yml](../backend/src/main/resources/config/config.yml) to `~/.config/entitlementcard/config.yml`
-
-```shell
-mkdir ~/.config/entitlementcard
-cp backend/src/main/resources/config/config.yml ~/.config/entitlementcard
-```
+1. Copy [config.yml](../backend/src/main/resources/config/config.yml) to `/backend/src/main/resources/config.local.yml`:
+    ```shell
+    cp backend/src/main/resources/config/config.yml backend/src/main/resources/config.local.yml
+    ```
 
 2. Adjust config
+
+   A development SMTP server is configured as a Docker service in the [docker-compose.yml](../docker-compose.yml) file.
+   To use it, set the `smtp` config to the following values:
+   ```yaml
+   smtp:
+      host: localhost
+      port: 5025
+      username: maildev@localhost.local
+      password: maildev
+   ```
+   The web UI is available at http://localhost:5026
 
 #### Map Styles
 
