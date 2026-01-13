@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AppRoute extends MaterialPageRoute {
+class AppRoute extends MaterialPageRoute<dynamic> {
   AppRoute({required WidgetBuilder builder, super.settings})
     : super(
         builder: (BuildContext context) {

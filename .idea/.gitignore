@@ -3,6 +3,7 @@
 
 # Whitelist project config
 !/codeStyles
+!/dataSources.xml
 !/runConfigurations
 !/detekt.xml
 !/entitlementcard.iml

@@ -4,4 +4,4 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 class FakeQueryOptions extends Fake implements QueryOptions {}
 
-class FakeRoute extends Fake implements Route {}
+class FakeRoute extends Fake implements Route<dynamic> {}
