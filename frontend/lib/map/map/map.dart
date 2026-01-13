@@ -103,7 +103,7 @@ class _MapContainerState extends State<MapContainer> implements MapController {
             icon: const Icon(Icons.info_outline),
             tooltip: t.map.showMapCopyright,
             onPressed: () {
-              showDialog(context: context, builder: (context) => const AttributionDialog());
+              showDialog<void>(context: context, builder: (context) => const AttributionDialog());
             },
           ),
         ),

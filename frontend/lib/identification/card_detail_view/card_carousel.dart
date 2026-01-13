@@ -5,7 +5,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 class CardCarousel extends StatefulWidget {
   final List<Widget> cards;
   final int cardIndex;
-  final Function(int index) updateIndex;
+  final void Function(int index) updateIndex;
   final CarouselSliderController carouselController;
 
   const CardCarousel({
