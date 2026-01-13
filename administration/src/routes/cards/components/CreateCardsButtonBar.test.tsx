@@ -1,7 +1,7 @@
 import { act, fireEvent } from '@testing-library/react'
 import React from 'react'
 
-import { initializeCard } from '../../../cards/Card'
+import { initializeCard } from '../../../cards/card'
 import bayernConfig from '../../../project-configs/bayern/config'
 import { CustomRenderOptions, renderWithOptions } from '../../../testing/render'
 import { getTestRegion } from '../../user-settings/__mocks__/Region'

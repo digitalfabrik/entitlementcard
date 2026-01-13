@@ -1,7 +1,7 @@
 import { fireEvent } from '@testing-library/react'
 import React, { act } from 'react'
 
-import { initializeCardFromCSV } from '../../../cards/Card'
+import { initializeCardFromCSV } from '../../../cards/card'
 import FormAlert from '../../../components/FormAlert'
 import koblenzConfig from '../../../project-configs/koblenz/config'
 import { CustomRenderOptions, renderWithOptions } from '../../../testing/render'

@@ -3,7 +3,7 @@ import React, { ReactElement } from 'react'
 import { useNavigate } from 'react-router'
 
 import { LOCAL_STORAGE_PROJECT_KEY } from '../project-configs/constants'
-import { clearActivityLog } from '../routes/activity-log/utils/ActivityLog'
+import { clearActivityLog } from '../routes/activity-log/utils/activityLog'
 
 const ProjectSwitcher = (): ReactElement | null => {
   const navigate = useNavigate()

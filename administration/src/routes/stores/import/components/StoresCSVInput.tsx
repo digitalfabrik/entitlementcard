@@ -9,7 +9,7 @@ import Blankslate from '../../../../components/Blankslate'
 import { StoresFieldConfig } from '../../../../project-configs/getProjectConfig'
 import { getStoresWithCoordinates } from '../../../region/util/storeGeoDataService'
 import { DEFAULT_ERROR_TIMEOUT, FILE_SIZE_LIMIT_MEGA_BYTES, LONG_ERROR_TIMEOUT } from '../constants'
-import { AcceptingStoresEntry } from '../utils/AcceptingStoresEntry'
+import { AcceptingStoresEntry } from '../utils/acceptingStoresEntry'
 import StoresImportDuplicates from './StoresImportDuplicates'
 import StoresRequirementsText from './StoresRequirementsText'
 

@@ -2,8 +2,8 @@ import { PDFFont, PDFForm, PDFPage, PDFTextField, grayscale } from '@cantoo/pdf-
 
 import { CardInfo } from '../../generated/card_pb'
 import { Region } from '../../generated/graphql'
-import { Card } from '../Card'
-import { Coordinates, PdfElement, mmToPt } from './PdfElements'
+import { Card } from '../card'
+import { Coordinates, PdfElement, mmToPt } from './pdfElements'
 
 export type InfoParams = {
   info: CardInfo

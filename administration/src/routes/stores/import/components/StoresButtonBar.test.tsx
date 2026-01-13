@@ -6,7 +6,7 @@ import koblenzConfig from '../../../../project-configs/koblenz/config'
 import nuernbergConfig from '../../../../project-configs/nuernberg/config'
 import { CustomRenderOptions, renderWithOptions } from '../../../../testing/render'
 import { invalidStoreData, validStoreData } from '../__mock__/mockStoreEntry'
-import { AcceptingStoresEntry } from '../utils/AcceptingStoresEntry'
+import { AcceptingStoresEntry } from '../utils/acceptingStoresEntry'
 import StoresButtonBar from './StoresButtonBar'
 
 jest.useFakeTimers()

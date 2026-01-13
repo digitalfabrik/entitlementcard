@@ -13,7 +13,7 @@ import StoresButtonBar from './components/StoresButtonBar'
 import StoresCSVInput from './components/StoresCSVInput'
 import StoresImportResult from './components/StoresImportResult'
 import StoresTable from './components/StoresTable'
-import { AcceptingStoresEntry } from './utils/AcceptingStoresEntry'
+import { AcceptingStoresEntry } from './utils/acceptingStoresEntry'
 
 type StoreImportProps = {
   fields: StoresFieldConfig[]

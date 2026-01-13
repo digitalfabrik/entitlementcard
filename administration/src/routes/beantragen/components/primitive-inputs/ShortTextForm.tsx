@@ -4,7 +4,7 @@ import React, { useContext, useState } from 'react'
 
 import FormAlert from '../../../../components/FormAlert'
 import { ShortTextInput } from '../../../../generated/graphql'
-import { Form, FormComponentProps, ValidationResult } from '../../util/FormType'
+import { Form, FormComponentProps, ValidationResult } from '../../util/formType'
 import { FormContext } from '../forms/SteppedSubForms'
 
 export const MAX_SHORT_TEXT_LENGTH = 300

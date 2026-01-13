@@ -16,7 +16,7 @@ import { useTranslation } from 'react-i18next'
 
 import i18next from '../../../../translations/i18n'
 import { SetState, useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
-import { Form, ValidationResult } from '../../util/FormType'
+import { Form, ValidationResult } from '../../util/formType'
 
 type FormContextType = {
   /**

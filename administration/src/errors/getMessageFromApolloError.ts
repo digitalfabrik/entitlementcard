@@ -1,8 +1,8 @@
 import { ApolloError } from '@apollo/client'
 import { ReactElement } from 'react'
 
-import defaultErrorMap from './DefaultErrorMap'
-import graphQlErrorMap from './GraphQlErrorMap'
+import defaultErrorMap from './defaultErrorMap'
+import graphQlErrorMap from './graphQlErrorMap'
 
 export type GraphQLErrorMessage = {
   title: string

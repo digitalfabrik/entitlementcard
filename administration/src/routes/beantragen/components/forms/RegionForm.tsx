@@ -8,12 +8,12 @@ import { Trans, useTranslation } from 'react-i18next'
 import { Region, useGetRegionsByPostalCodeQuery } from '../../../../generated/graphql'
 import { ProjectConfigContext } from '../../../../project-configs/ProjectConfigContext'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
-import { Form, FormComponentProps } from '../../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
   createCompoundInitialState,
 } from '../../util/compoundFormUtils'
+import { Form, FormComponentProps } from '../../util/formType'
 import SelectForm, { SelectItem } from '../primitive-inputs/SelectForm'
 
 const StyledAlert = styled(Alert)`

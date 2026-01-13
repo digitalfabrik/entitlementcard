@@ -5,7 +5,7 @@ import FormAlert from '../../../../components/FormAlert'
 import { EmailInput } from '../../../../generated/graphql'
 import i18next from '../../../../translations/i18n'
 import { isEmailValid } from '../../../../util/verifications'
-import { Form, FormComponentProps } from '../../util/FormType'
+import { Form, FormComponentProps } from '../../util/formType'
 import { FormContext } from '../forms/SteppedSubForms'
 import { MAX_SHORT_TEXT_LENGTH } from './ShortTextForm'
 

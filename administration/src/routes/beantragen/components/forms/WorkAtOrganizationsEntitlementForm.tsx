@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next'
 import CustomDivider from '../../../../components/CustomDivider'
 import { BlueCardWorkAtOrganizationsEntitlementInput } from '../../../../generated/graphql'
 import { SetState } from '../../hooks/useUpdateStateCallback'
-import { Form, FormComponentProps } from '../../util/FormType'
 import { InferState } from '../../util/compoundFormUtils'
+import { Form, FormComponentProps } from '../../util/formType'
 import WorkAtOrganizationForm from './WorkAtOrganizationForm'
 
 type WorkAtOrganizationFormState = InferState<typeof WorkAtOrganizationForm>

@@ -16,13 +16,13 @@ import { ProjectConfigContext } from '../../../../project-configs/ProjectConfigC
 import i18next from '../../../../translations/i18n'
 import getQueryResult from '../../../../util/getQueryResult'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
-import { Form, FormComponentProps } from '../../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
   createCompoundInitialState,
   createCompoundValidate,
 } from '../../util/compoundFormUtils'
+import { Form, FormComponentProps } from '../../util/formType'
 import CheckboxForm from '../primitive-inputs/CheckboxForm'
 
 const hasAcceptedDatePrivacyOptions: { required: boolean; notCheckedErrorMessage: string } = {

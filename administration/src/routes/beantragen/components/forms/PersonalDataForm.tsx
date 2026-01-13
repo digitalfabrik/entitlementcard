@@ -7,13 +7,13 @@ import CustomDivider from '../../../../components/CustomDivider'
 import { PersonalDataInput, Region } from '../../../../generated/graphql'
 import i18next from '../../../../translations/i18n'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
-import { Form, FormComponentProps } from '../../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
   createCompoundInitialState,
   createCompoundValidate,
 } from '../../util/compoundFormUtils'
+import { Form, FormComponentProps } from '../../util/formType'
 import DateForm from '../primitive-inputs/DateForm'
 import EmailForm from '../primitive-inputs/EmailForm'
 import ShortTextForm, { OptionalShortTextForm } from '../primitive-inputs/ShortTextForm'

@@ -1,7 +1,7 @@
 import { fireEvent } from '@testing-library/react'
 import React from 'react'
 
-import { generateCardInfo, initializeCard } from '../../../cards/Card'
+import { generateCardInfo, initializeCard } from '../../../cards/card'
 import { CreateCardsResult } from '../../../cards/createCards'
 import getCustomDeepLinkFromQrCode from '../../../cards/getCustomDeepLinkFromQrCode'
 import { DynamicActivationCode } from '../../../generated/card_pb'

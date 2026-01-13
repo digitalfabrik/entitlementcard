@@ -17,8 +17,8 @@ jest.mock('../../../generated/graphql', () => ({
   generatePdf: jest.fn(),
 }))
 
-jest.mock('../../../cards/pdf/PdfFactory', () => ({
-  ...jest.requireActual('../../../cards/pdf/PdfFactory'),
+jest.mock('../../../cards/pdf/pdfFactory', () => ({
+  ...jest.requireActual('../../../cards/pdf/pdfFactory'),
   generatePdf: jest.fn(),
 }))
 

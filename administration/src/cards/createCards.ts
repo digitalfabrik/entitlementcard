@@ -6,8 +6,8 @@ import {
 } from '../generated/graphql'
 import type { ProjectConfig } from '../project-configs/getProjectConfig'
 import { mapGraphqlRequestResult } from '../util/helper'
-import { Card, generateCardInfo } from './Card'
 import { base64ToUint8Array, uint8ArrayToBase64 } from './base64'
+import { Card, generateCardInfo } from './card'
 
 export class CreateCardsError extends Error {
   constructor(message: string) {

@@ -6,13 +6,13 @@ import { OrganizationInput } from '../../../../generated/graphql'
 import i18next from '../../../../translations/i18n'
 import { normalizeName } from '../../../../util/normalizeString'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
-import { Form, FormComponentProps } from '../../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
   createCompoundInitialState,
   createCompoundValidate,
 } from '../../util/compoundFormUtils'
+import { Form, FormComponentProps } from '../../util/formType'
 import CheckboxForm from '../primitive-inputs/CheckboxForm'
 import EmailForm from '../primitive-inputs/EmailForm'
 import SelectForm from '../primitive-inputs/SelectForm'

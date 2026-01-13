@@ -2,7 +2,7 @@ import { LOCAL_STORAGE_PROJECT_KEY } from '../../../../project-configs/constants
 import koblenzConfig from '../../../../project-configs/koblenz/config'
 import nuernbergConfig from '../../../../project-configs/nuernberg/config'
 import { invalidStoreData, validStoreData } from '../__mock__/mockStoreEntry'
-import { AcceptingStoresEntry } from './AcceptingStoresEntry'
+import { AcceptingStoresEntry } from './acceptingStoresEntry'
 
 describe('AcceptanceStoreEntry', () => {
   const projectConfigsWithStoreUpload = [

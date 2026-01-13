@@ -4,7 +4,7 @@ import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import AlertBox from '../components/AlertBox'
-import graphQlErrorMap from '../errors/GraphQlErrorMap'
+import graphQlErrorMap from '../errors/graphQlErrorMap'
 import { GraphQlExceptionCode } from '../generated/graphql'
 import CharacterCounter from './CharacterCounter'
 import ConfirmDialog from './ConfirmDialog'

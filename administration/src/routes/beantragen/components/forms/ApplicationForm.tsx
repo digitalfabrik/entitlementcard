@@ -3,12 +3,12 @@ import { useTranslation } from 'react-i18next'
 
 import { ApplicationInput, BavariaCardType, Region } from '../../../../generated/graphql'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
-import { Form, FormComponentProps, ValidationResult } from '../../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
   createCompoundInitialState,
 } from '../../util/compoundFormUtils'
+import { Form, FormComponentProps, ValidationResult } from '../../util/formType'
 import PersonalDataForm from './PersonalDataForm'
 import StepCardTypeForm from './StepCardTypeForm'
 import StepRequirementsForm from './StepRequirementsForm'

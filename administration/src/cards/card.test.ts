@@ -13,7 +13,7 @@ import {
   initializeCardFromCSV,
   isValid,
   isValueValid,
-} from './Card'
+} from './card'
 import AddressExtensions from './extensions/AddressFieldExtensions'
 import BavariaCardTypeExtension, {
   BAVARIA_CARD_TYPE_EXTENSION_NAME,

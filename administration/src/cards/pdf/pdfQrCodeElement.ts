@@ -2,7 +2,7 @@ import { PDFPage } from '@cantoo/pdf-lib'
 
 import { QrCode } from '../../generated/card_pb'
 import { drawQRCode } from '../../util/qrcode'
-import { Coordinates, PdfElement, mmToPt } from './PdfElements'
+import { Coordinates, PdfElement, mmToPt } from './pdfElements'
 
 export type PdfQrCode = Extract<
   QrCode['qrCode'],

@@ -8,12 +8,12 @@ import {
 
 import { DynamicActivationCode } from '../generated/card_pb'
 import { getTestRegion } from '../routes/user-settings/__mocks__/Region'
-import { generateCardInfo, initializeCard } from './Card'
+import { generateCardInfo, initializeCard } from './card'
 import { CreateCardsResult } from './createCards'
 import BavariaCardTypeExtension from './extensions/BavariaCardTypeExtension'
 import RegionExtension from './extensions/RegionExtension'
 import getDeepLinkFromQrCode from './getDeepLinkFromQrCode'
-import { PdfQrCode } from './pdf/PdfQrCodeElement'
+import { PdfQrCode } from './pdf/pdfQrCodeElement'
 
 jest.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
 

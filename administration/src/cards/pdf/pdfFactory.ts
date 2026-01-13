@@ -7,13 +7,13 @@ import { getBuildConfig } from '../../util/getBuildConfig'
 import { isProductionEnvironment } from '../../util/helper'
 import normalizeString from '../../util/normalizeString'
 import { reportErrorToSentry } from '../../util/sentry'
-import { Card } from '../Card'
+import { Card } from '../card'
 import { CreateCardsResult } from '../createCards'
 import getDeepLinkFromQrCode from '../getDeepLinkFromQrCode'
-import pdfFormElement from './PdfFormElement'
-import pdfLinkArea from './PdfLinkArea'
-import pdfQrCodeElement, { PdfQrCode } from './PdfQrCodeElement'
-import pdfTextElement from './PdfTextElement'
+import pdfFormElement from './pdfFormElement'
+import pdfLinkArea from './pdfLinkArea'
+import pdfQrCodeElement, { PdfQrCode } from './pdfQrCodeElement'
+import pdfTextElement from './pdfTextElement'
 
 export class PdfError extends Error {
   constructor(message: string) {

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Form, ValidationResult } from './FormType'
+import { Form, ValidationResult } from './formType'
 
 const mapValues = <
   VPre extends { [k in keyof VPre]: unknown },

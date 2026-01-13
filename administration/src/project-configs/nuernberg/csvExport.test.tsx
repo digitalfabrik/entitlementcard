@@ -1,4 +1,4 @@
-import { generateCardInfo, initializeCard } from '../../cards/Card'
+import { generateCardInfo, initializeCard } from '../../cards/card'
 import { CreateCardsResult } from '../../cards/createCards'
 import { DynamicActivationCode } from '../../generated/card_pb'
 import { getTestRegion } from '../../routes/user-settings/__mocks__/Region'

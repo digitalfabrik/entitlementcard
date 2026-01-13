@@ -4,7 +4,7 @@ import React, { useContext, useId, useState } from 'react'
 import FormAlert from '../../../../components/FormAlert'
 import { ShortTextInput } from '../../../../generated/graphql'
 import i18next from '../../../../translations/i18n'
-import { Form, FormComponentProps } from '../../util/FormType'
+import { Form, FormComponentProps } from '../../util/formType'
 import { FormContext } from '../forms/SteppedSubForms'
 
 type State = { selectedValue: string; manuallySelected: boolean }

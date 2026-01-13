@@ -11,7 +11,7 @@ import {
   getFullNameValidationErrorMessage,
   isFullNameValid,
   isValid,
-} from '../../../cards/Card'
+} from '../../../cards/card'
 import CardTextField from '../../../cards/extensions/components/CardTextField'
 import ClearInputButton from '../../../cards/extensions/components/ClearInputButton'
 import BaseCheckbox from '../../../components/BaseCheckbox'

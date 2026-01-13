@@ -4,7 +4,7 @@ import React, { ReactElement } from 'react'
 
 import { StoresFieldConfig } from '../../../../project-configs/getProjectConfig'
 import StoreTableEntry from '../../components/StoreTableEntry'
-import { AcceptingStoresEntry } from '../utils/AcceptingStoresEntry'
+import { AcceptingStoresEntry } from '../utils/acceptingStoresEntry'
 
 type CardImportTableProps = {
   fields: StoresFieldConfig[]

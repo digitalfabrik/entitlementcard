@@ -1,5 +1,5 @@
-import { generateCardInfo, initializeCard } from '../../../cards/Card'
 import { uint8ArrayToBase64 } from '../../../cards/base64'
+import { generateCardInfo, initializeCard } from '../../../cards/card'
 import { CreateCardsFromSelfServiceDocument } from '../../../generated/graphql'
 import koblenzConfig from '../../../project-configs/koblenz/config'
 import PlainDate from '../../../util/PlainDate'

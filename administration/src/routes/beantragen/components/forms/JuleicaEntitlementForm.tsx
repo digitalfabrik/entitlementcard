@@ -6,13 +6,13 @@ import { useTranslation } from 'react-i18next'
 import CustomDivider from '../../../../components/CustomDivider'
 import { BlueCardJuleicaEntitlementInput } from '../../../../generated/graphql'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
-import { Form, FormComponentProps } from '../../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
   createCompoundInitialState,
   createCompoundValidate,
 } from '../../util/compoundFormUtils'
+import { Form, FormComponentProps } from '../../util/formType'
 import DateForm from '../primitive-inputs/DateForm'
 import FileInputForm, {
   FileRequirementsText,

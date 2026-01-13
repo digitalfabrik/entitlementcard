@@ -1,7 +1,7 @@
 import React, { ReactElement, useContext, useState } from 'react'
 
 import BaseCheckbox from '../../../../components/BaseCheckbox'
-import { Form, FormComponentProps } from '../../util/FormType'
+import { Form, FormComponentProps } from '../../util/formType'
 import { FormContext } from '../forms/SteppedSubForms'
 
 type State = { checked: boolean }

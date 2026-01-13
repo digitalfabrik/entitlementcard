@@ -7,7 +7,7 @@ import { Role } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import { ActivityLogConfig } from '../../project-configs/getProjectConfig'
 import ActivityLogTable from './components/ActivityLogTable'
-import { loadActivityLog } from './utils/ActivityLog'
+import { loadActivityLog } from './utils/activityLog'
 
 const ActivityLogController = ({
   activityLogConfig,

@@ -2,7 +2,7 @@ import { act, fireEvent } from '@testing-library/react'
 import React from 'react'
 
 import { mockRegion } from '../../../../cards/__mocks__/mockRegion'
-import { initializeCardFromCSV } from '../../../../cards/Card'
+import { initializeCardFromCSV } from '../../../../cards/card'
 import bayernConfig from '../../../../project-configs/bayern/config'
 import { CustomRenderOptions, renderWithOptions } from '../../../../testing/render'
 import AddCardsForm from './AddCardsForm'

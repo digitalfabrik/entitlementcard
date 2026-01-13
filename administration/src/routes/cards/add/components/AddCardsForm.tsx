@@ -6,7 +6,7 @@ import React, { ReactElement, useCallback, useContext, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 
-import { Card, initializeCard } from '../../../../cards/Card'
+import { Card, initializeCard } from '../../../../cards/card'
 import { Region } from '../../../../generated/graphql'
 import { ProjectConfigContext } from '../../../../project-configs/ProjectConfigContext'
 import AddCardForm from './AddCardForm'

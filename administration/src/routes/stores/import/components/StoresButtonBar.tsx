@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import ButtonBar from '../../../../components/ButtonBar'
 import ConfirmDialog from '../../../../components/ConfirmDialog'
-import { AcceptingStoresEntry } from '../utils/AcceptingStoresEntry'
+import { AcceptingStoresEntry } from '../utils/acceptingStoresEntry'
 import StoresImportAlert from './StoresImportAlert'
 
 type UploadStoresButtonBarProps = {

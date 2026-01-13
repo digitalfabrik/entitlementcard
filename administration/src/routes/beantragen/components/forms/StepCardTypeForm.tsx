@@ -8,13 +8,13 @@ import FormAlert from '../../../../components/FormAlert'
 import { ApplicationType, BavariaCardType } from '../../../../generated/graphql'
 import i18next from '../../../../translations/i18n'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
-import { Form, FormComponentProps } from '../../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
   createCompoundInitialState,
   createCompoundValidate,
 } from '../../util/compoundFormUtils'
+import { Form, FormComponentProps } from '../../util/formType'
 import CheckboxForm from '../primitive-inputs/CheckboxForm'
 import { createRadioGroupForm } from '../primitive-inputs/RadioGroupForm'
 

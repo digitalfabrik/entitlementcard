@@ -4,10 +4,10 @@ import { mocked } from 'jest-mock'
 import React, { ReactNode } from 'react'
 import { MemoryRouter } from 'react-router'
 
-import { generateCardInfo, initializeCard } from '../../../cards/Card'
+import { generateCardInfo, initializeCard } from '../../../cards/card'
 import createCards, { CreateCardsError, CreateCardsResult } from '../../../cards/createCards'
 import deleteCards from '../../../cards/deleteCards'
-import { PdfError, generatePdf } from '../../../cards/pdf/PdfFactory'
+import { PdfError, generatePdf } from '../../../cards/pdf/pdfFactory'
 import { DynamicActivationCode, StaticVerificationCode } from '../../../generated/card_pb'
 import { ProjectConfigProvider } from '../../../project-configs/ProjectConfigContext'
 import bayernConfig from '../../../project-configs/bayern/config'
@@ -20,8 +20,8 @@ import { getTestRegion } from '../../user-settings/__mocks__/Region'
 import useCardGenerator from './useCardGenerator'
 
 jest.useFakeTimers({ now: new Date('2025-01-01T00:00:00.000Z') })
-jest.mock('../../../cards/pdf/PdfFactory', () => ({
-  ...jest.requireActual('../../../cards/pdf/PdfFactory'),
+jest.mock('../../../cards/pdf/pdfFactory', () => ({
+  ...jest.requireActual('../../../cards/pdf/pdfFactory'),
   generatePdf: jest.fn(),
 }))
 jest.mock('../../../cards/createCards', () => ({

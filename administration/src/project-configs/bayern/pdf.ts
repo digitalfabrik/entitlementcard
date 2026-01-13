@@ -1,4 +1,4 @@
-import type { InfoParams } from '../../cards/pdf/PdfTextElement'
+import type { InfoParams } from '../../cards/pdf/pdfTextElement'
 import { BavariaCardType } from '../../generated/card_pb'
 import PlainDate from '../../util/PlainDate'
 import type { PdfConfig } from '../getProjectConfig'

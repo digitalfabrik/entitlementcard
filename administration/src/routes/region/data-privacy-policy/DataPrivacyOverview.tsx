@@ -6,8 +6,8 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 
 import ButtonBar from '../../../components/ButtonBar'
-import graphQlErrorMap from '../../../errors/GraphQlErrorMap'
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
+import graphQlErrorMap from '../../../errors/graphQlErrorMap'
 import { GraphQlExceptionCode, useUpdateDataPolicyMutation } from '../../../generated/graphql'
 
 type RegionOverviewProps = {

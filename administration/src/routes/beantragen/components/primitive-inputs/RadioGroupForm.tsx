@@ -3,7 +3,7 @@ import React, { useContext, useState } from 'react'
 
 import FormAlert from '../../../../components/FormAlert'
 import i18next from '../../../../translations/i18n'
-import { Form, FormComponentProps, ValidationResult } from '../../util/FormType'
+import { Form, FormComponentProps, ValidationResult } from '../../util/formType'
 import { FormContext } from '../forms/SteppedSubForms'
 
 type State<T extends string> = { selectedValue: T | null }

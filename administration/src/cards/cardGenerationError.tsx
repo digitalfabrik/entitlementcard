@@ -6,9 +6,9 @@ import FormAlert from '../components/FormAlert'
 import getMessageFromApolloError from '../errors/getMessageFromApolloError'
 import i18next from '../translations/i18n'
 import { reportErrorToSentry } from '../util/sentry'
-import { CsvError } from './CsvFactory'
 import { CreateCardsError } from './createCards'
-import { PdfError } from './pdf/PdfFactory'
+import { CsvError } from './csvFactory'
+import { PdfError } from './pdf/pdfFactory'
 
 export const showCardGenerationError = (enqueueSnackbar: EnqueueSnackbar, error: unknown): void => {
   if (error instanceof CreateCardsError) {

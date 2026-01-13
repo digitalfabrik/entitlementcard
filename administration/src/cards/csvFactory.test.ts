@@ -3,9 +3,9 @@ import bayernConfig from '../project-configs/bayern/config'
 import nuernbergConfig from '../project-configs/nuernberg/config'
 import { CSV_MIME_TYPE_UTF8 } from '../routes/applications/constants'
 import { getTestRegion } from '../routes/user-settings/__mocks__/Region'
-import { generateCardInfo, initializeCard } from './Card'
-import { CsvError, generateCsv, getCSVFilename } from './CsvFactory'
+import { generateCardInfo, initializeCard } from './card'
 import { CreateCardsResult } from './createCards'
+import { CsvError, generateCsv, getCSVFilename } from './csvFactory'
 import { NUERNBERG_PASS_ID_EXTENSION_NAME } from './extensions/NuernbergPassIdExtension'
 
 jest.mock('csv-stringify/browser/esm/sync', () => ({

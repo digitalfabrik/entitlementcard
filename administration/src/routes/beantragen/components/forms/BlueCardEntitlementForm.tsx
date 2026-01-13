@@ -5,13 +5,13 @@ import { useTranslation } from 'react-i18next'
 import { BlueCardEntitlementInput, BlueCardEntitlementType } from '../../../../generated/graphql'
 import i18next from '../../../../translations/i18n'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
-import { Form, FormComponentProps } from '../../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
   createCompoundInitialState,
   createSwitchValidate,
 } from '../../util/compoundFormUtils'
+import { Form, FormComponentProps } from '../../util/formType'
 import SwitchComponent from '../SwitchComponent'
 import { createRadioGroupForm } from '../primitive-inputs/RadioGroupForm'
 import JuleicaEntitlementForm from './JuleicaEntitlementForm'

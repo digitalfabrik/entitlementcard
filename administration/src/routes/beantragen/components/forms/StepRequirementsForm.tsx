@@ -7,12 +7,12 @@ import {
   GoldenCardEntitlementInput,
 } from '../../../../generated/graphql'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
-import { Form, FormComponentProps } from '../../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
   createCompoundInitialState,
 } from '../../util/compoundFormUtils'
+import { Form, FormComponentProps } from '../../util/formType'
 import SwitchComponent from '../SwitchComponent'
 import BlueCardEntitlementForm from './BlueCardEntitlementForm'
 import GoldenCardEntitlementForm from './GoldenCardEntitlementForm'

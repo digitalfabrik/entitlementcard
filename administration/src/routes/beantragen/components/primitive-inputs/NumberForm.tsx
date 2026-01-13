@@ -3,7 +3,7 @@ import React, { useContext, useState } from 'react'
 
 import FormAlert from '../../../../components/FormAlert'
 import i18next from '../../../../translations/i18n'
-import { Form, FormComponentProps } from '../../util/FormType'
+import { Form, FormComponentProps } from '../../util/formType'
 import { FormContext } from '../forms/SteppedSubForms'
 
 type State = { type: 'NumberForm'; value: string }

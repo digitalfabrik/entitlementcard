@@ -3,7 +3,7 @@ import { ACTIVATION_FRAGMENT, ACTIVATION_PATH, HTTPS_SCHEME } from 'build-config
 
 import { QrCode } from '../generated/card_pb'
 import { uint8ArrayToBase64 } from './base64'
-import { PdfQrCode } from './pdf/PdfQrCodeElement'
+import { PdfQrCode } from './pdf/pdfQrCodeElement'
 
 const getDeepLinkFromQrCode = (
   qrCode: PdfQrCode,

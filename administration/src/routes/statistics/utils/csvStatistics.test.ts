@@ -2,7 +2,7 @@ import { CardStatisticsResultModel } from '../../../generated/graphql'
 import bayernConfig from '../../../project-configs/bayern/config'
 import nuernbergConfig from '../../../project-configs/nuernberg/config'
 import { getTestRegion } from '../../user-settings/__mocks__/Region'
-import { CsvStatisticsError, generateCsv, getCsvFileName } from './CSVStatistics'
+import { CsvStatisticsError, generateCsv, getCsvFileName } from './csvStatistics'
 
 jest.mock('csv-stringify/browser/esm/sync', () => ({
   stringify: (input: string[][]) => input[0].join(','),

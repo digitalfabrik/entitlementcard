@@ -1,5 +1,5 @@
 import { containsOnlyLatinAndCommonCharset } from '../../util/helper'
-import type { Card } from '../Card'
+import type { Card } from '../card'
 import type { Extension } from './extensions'
 
 const ADDRESS_LINE_1_EXTENSION = 'addressLine1'

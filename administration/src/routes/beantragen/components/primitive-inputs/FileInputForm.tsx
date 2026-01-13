@@ -6,7 +6,7 @@ import React, { ChangeEventHandler, useContext, useEffect, useRef } from 'react'
 import FormAlert from '../../../../components/FormAlert'
 import { AttachmentInput } from '../../../../generated/graphql'
 import i18next from '../../../../translations/i18n'
-import { Form, FormComponentProps, ValidationResult } from '../../util/FormType'
+import { Form, FormComponentProps, ValidationResult } from '../../util/formType'
 import globalArrayBuffersManager from '../../util/globalArrayBuffersManager'
 import { FormContext } from '../forms/SteppedSubForms'
 

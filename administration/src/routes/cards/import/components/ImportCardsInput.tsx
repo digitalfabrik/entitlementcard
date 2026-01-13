@@ -4,7 +4,7 @@ import React, { ChangeEvent, ReactElement, useCallback, useContext, useRef, useS
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
 
-import { Card, initializeCardFromCSV } from '../../../../cards/Card'
+import { Card, initializeCardFromCSV } from '../../../../cards/card'
 import Blankslate from '../../../../components/Blankslate'
 import { Region } from '../../../../generated/graphql'
 import { ProjectConfigContext } from '../../../../project-configs/ProjectConfigContext'
