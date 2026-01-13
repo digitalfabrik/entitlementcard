@@ -57,7 +57,7 @@ type AcceptingStoreV2 {
   categoryId: Int!
   contact: Contact!
   contactId: Int!
-  description: [LocalizedDescription!]
+  descriptions: [LocalizedDescription!]
   id: Int!
   name: String
   physicalStore: PhysicalStore
