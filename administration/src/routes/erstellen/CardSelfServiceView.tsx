@@ -15,9 +15,9 @@ import { grey } from '@mui/material/colors'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import KoblenzLogo from '../../assets/koblenz_logo.svg'
 import { updateCard } from '../../cards/Card'
 import CenteredCircularProgress from '../../components/CenteredCircularProgress'
+import { KoblenzLogo } from '../../icons/KoblenzLogo'
 import CardSelfServiceActivation from './components/CardSelfServiceActivation'
 import CardSelfServiceForm from './components/CardSelfServiceForm'
 import CardSelfServiceInformation from './components/CardSelfServiceInformation'
@@ -58,7 +58,7 @@ const CardSelfServiceView = (): ReactElement => {
   return (
     <Container>
       <Box sx={{ backgroundColor: grey[100], padding: 1.5, display: 'flex', justifyContent: 'space-between' }}>
-        <KoblenzLogo height='40px' />
+        <KoblenzLogo sx={{ height: '40px' }} />
         <Button
           color='inherit'
           variant='text'

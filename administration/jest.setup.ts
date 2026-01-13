@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals'
 import '@testing-library/jest-dom'
 import { subtle } from 'crypto'
 import { TextDecoder, TextEncoder } from 'util'
@@ -6,6 +7,28 @@ Object.assign(global, { TextDecoder, TextEncoder })
 Object.assign(window, { isSecureContext: true })
 Object.assign(window.crypto, { subtle })
 Object.assign(window.URL, { createObjectURL: jest.fn() })
+
+// Mock import.meta for Vite
+Object.defineProperty(globalThis, 'import', {
+  value: {
+    meta: {
+      env: {
+        BASE_URL: '/',
+        DEV: false,
+        MODE: 'test',
+        PROD: false,
+      },
+    },
+  },
+})
+
+// Mock Vite build constants
+Object.defineProperty(globalThis, 'VITE_BUILD_VERSION_NAME', {
+  value: 'test',
+})
+Object.defineProperty(globalThis, 'VITE_BUILD_API_BASE_URL', {
+  value: 'http://localhost:8080',
+})
 
 jest.mock('csv-stringify/browser/esm/sync', () => ({
   stringify: jest.fn(),

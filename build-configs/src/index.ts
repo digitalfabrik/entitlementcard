@@ -1,0 +1,5 @@
+export { buildConfigNuernberg, NUERNBERG_PRODUCTION_ID, NUERNBERG_STAGING_ID } from './nuernberg/index.js'
+export { buildConfigBayern, BAYERN_STAGING_ID, BAYERN_PRODUCTION_ID } from './bayern/index.js'
+export { buildConfigKoblenz, KOBLENZ_STAGING_ID, KOBLENZ_PRODUCTION_ID } from './koblenz/index.js'
+export type { DeeplLinkingConfig, BuildConfigType } from './types.js'
+export * from './constants.js'

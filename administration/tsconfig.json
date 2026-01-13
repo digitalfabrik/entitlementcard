@@ -1,38 +1,9 @@
 {
+  "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "esModuleInterop": true,
-    "module": "commonjs",
     "noEmit": true,
-    "resolveJsonModule": true,
-    "target": "es2020",
-    "sourceMap": true,
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "noImplicitAny": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node",
-    "isolatedModules": true,
-    "jsx": "react-jsx",
-    "types": ["node", "jest"]
+    "esModuleInterop": true,
+    "types": ["vite/client", "jest"]
   },
-  "include": [
-    "@types",
-    "src",
-    "scripts",
-    "config",
-    "jest.config.ts",
-    "jest.setup.ts",
-    "src/**/*.d.ts",
-    "src/graphql/customScalarTypes.d.ts",
-    ".eslintrc.js"
-  ],
-  "references": [
-    {
-      "path": "../frontend/build-configs"
-    }
-  ]
+  "include": ["src", "scripts", "jest.config.ts", "jest.setup.ts", ".eslintrc.js", "vite.config*.ts"]
 }
