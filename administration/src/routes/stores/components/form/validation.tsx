@@ -189,6 +189,9 @@ export const descriptionValidation = (description?: string): FormValidation =>
 export const coordinatesInvalid = (latitude?: number, longitude?: number): boolean =>
   latitude === undefined || longitude === undefined
 
+export const categoryValidation = (categoryId: number | undefined): FormValidation =>
+  categoryId === undefined ? requiredFieldError() : validResult
+
 export const isStoreFormInvalid = (acceptingStore: AcceptingStoreFormData): boolean =>
   [
     nameValidation(acceptingStore.name).invalid,
@@ -197,6 +200,7 @@ export const isStoreFormInvalid = (acceptingStore: AcceptingStoreFormData): bool
     descriptionValidation(acceptingStore.descriptionDe).invalid,
     descriptionValidation(acceptingStore.descriptionEn).invalid,
     coordinatesInvalid(acceptingStore.latitude, acceptingStore.longitude),
+    categoryValidation(acceptingStore.categoryId).invalid,
     homepageValidation(acceptingStore.homepage).invalid,
     phoneValidation(acceptingStore.telephone).invalid,
     emailValidation(acceptingStore.email).invalid,

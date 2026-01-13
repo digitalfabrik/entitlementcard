@@ -2,7 +2,7 @@ environment:
   _JAVA_OPTIONS: "-Xmx3g"
   GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
 docker:
-  - image: cimg/openjdk:17.0.13-node
+  - image: cimg/openjdk:25.0-node
 resource_class: small
 working_directory: ~/project/backend
 steps:
@@ -12,17 +12,16 @@ steps:
   - run:
       name: Setup submodules
       command: |
-          git submodule sync
-          git submodule update --init
+        git submodule sync
+        git submodule update --init
   - restore_cache:
       keys:
         - v1-gradle-{{ checksum "build.gradle.kts" }}
   - run:
       name: Build backend
       # Use `assemble` instead of `build` to not run tests
-      # Provide sentry auth token for build.gradle.kts
       # Use production environment to build with sentry
-      command: SENTRY_AUTH_TOKEN=$SENTRY_BACKEND_AUTH_TOKEN ./gradlew assemble -Denv=prod
+      command: ./gradlew distTar -Denv=prod
   - save_cache:
       key: v1-gradle-{{ checksum "build.gradle.kts" }}
       paths:
