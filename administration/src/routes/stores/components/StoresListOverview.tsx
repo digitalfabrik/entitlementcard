@@ -23,9 +23,8 @@ const initializeAcceptingStoreForm = (store: AcceptingStoresData): AcceptingStor
   telephone: store.contact.telephone ?? '',
   email: store.contact.email ?? '',
   homepage: store.contact.website ?? '',
-  descriptionDe: store.description ?? '',
-  // TODO 2692 map english description field
-  descriptionEn: '',
+  descriptionDe: store.descriptions?.find(desc => desc.locale === 'DE')?.text ?? '',
+  descriptionEn: store.descriptions?.find(desc => desc.locale === 'EN')?.text ?? '',
   categoryId: store.category.id,
   longitude: store.physicalStore?.coordinates.lng ?? undefined,
   latitude: store.physicalStore?.coordinates.lat ?? undefined,

@@ -10,27 +10,35 @@ import org.springframework.graphql.data.method.annotation.SchemaMapping
 import org.springframework.stereotype.Controller
 import java.util.concurrent.CompletableFuture
 
-@Deprecated("Use AcceptingStoreV2 for localized descriptions. Should be able to safely remove in January 2028.")
-data class AcceptingStore(
+data class LocalizedDescription(
+    val locale: String,
+    val text: String,
+)
+
+data class AcceptingStoreV2(
     val id: Int,
     val name: String?,
-    val description: String?,
+    val descriptions: List<LocalizedDescription>?,
     val contactId: Int,
     val categoryId: Int,
 ) {
     companion object {
-        fun fromDbEntity(entity: AcceptingStoreEntity): AcceptingStore {
-            // merge descriptions from all languages into a single string for backward compatibility
-            val description = entity.descriptions
-                .map { it.description }
-                .filterNot { it.isNullOrBlank() }
-                .joinToString(separator = "\n\n")
+        fun fromDbEntity(entity: AcceptingStoreEntity): AcceptingStoreV2 {
+            val descriptions = entity.descriptions
+                .mapNotNull { desc ->
+                    desc.description.takeUnless { it.isNullOrBlank() }?.let {
+                        LocalizedDescription(
+                            locale = desc.language.name,
+                            text = desc.description ?: "",
+                        )
+                    }
+                }
                 .ifEmpty { null }
 
-            return AcceptingStore(
+            return AcceptingStoreV2(
                 id = entity.id.value,
                 name = entity.name,
-                description = description,
+                descriptions = descriptions,
                 contactId = entity.contactId.value,
                 categoryId = entity.categoryId.value,
             )
@@ -50,16 +58,16 @@ data class AcceptingStore(
 }
 
 @Controller
-class AcceptingStoreResolver {
-    @SchemaMapping(typeName = "AcceptingStore", field = "contact")
-    fun contact(store: AcceptingStore, dfe: DataFetchingEnvironment): CompletableFuture<Contact> =
+class AcceptingStoreResolverV2 {
+    @SchemaMapping(typeName = "AcceptingStoreV2", field = "contact")
+    fun contact(store: AcceptingStoreV2, dfe: DataFetchingEnvironment): CompletableFuture<Contact> =
         dfe.loadFrom(ContactDataLoader::class, store.contactId).thenApply { it!! }
 
-    @SchemaMapping(typeName = "AcceptingStore", field = "category")
-    fun category(store: AcceptingStore, dfe: DataFetchingEnvironment): CompletableFuture<Category> =
+    @SchemaMapping(typeName = "AcceptingStoreV2", field = "category")
+    fun category(store: AcceptingStoreV2, dfe: DataFetchingEnvironment): CompletableFuture<Category> =
         dfe.loadFrom(CategoryDataLoader::class, store.categoryId).thenApply { it!! }
 
-    @SchemaMapping(typeName = "AcceptingStore", field = "physicalStore")
-    fun physicalStore(store: AcceptingStore, dfe: DataFetchingEnvironment): CompletableFuture<PhysicalStore?> =
+    @SchemaMapping(typeName = "AcceptingStoreV2", field = "physicalStore")
+    fun physicalStore(store: AcceptingStoreV2, dfe: DataFetchingEnvironment): CompletableFuture<PhysicalStore?> =
         dfe.loadFrom(PhysicalStoreByStoreIdLoader::class, store.id)
 }

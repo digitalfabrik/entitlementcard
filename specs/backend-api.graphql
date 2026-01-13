@@ -52,6 +52,17 @@ type AcceptingStore {
   physicalStore: PhysicalStore
 }
 
+type AcceptingStoreV2 {
+  category: Category!
+  categoryId: Int!
+  contact: Contact!
+  contactId: Int!
+  descriptions: [LocalizedDescription!]
+  id: Int!
+  name: String
+  physicalStore: PhysicalStore
+}
+
 type Address {
   id: Int!
   location: String
@@ -158,6 +169,11 @@ type FreinetAgency {
   agencyName: String!
   apiAccessKey: String!
   dataTransferActivated: Boolean!
+}
+
+type LocalizedDescription {
+  locale: String!
+  text: String!
 }
 
 type Mutation {
@@ -277,7 +293,9 @@ type Query {
   "Return list of all regions in the given project."
   regionsInProject(project: String!): [Region!]!
   "Search for accepting stores in the given project using searchText and categoryIds."
-  searchAcceptingStoresInProject(params: SearchParamsInput!, project: String!): [AcceptingStore!]!
+  searchAcceptingStoresInProject(params: SearchParamsInput!, project: String!): [AcceptingStore!]! @deprecated(reason : "Use searchAcceptingStoresInProjectV2 for localized descriptions. Should be able to safely remove in January 2028.")
+  "Search for accepting stores in the given project using searchText and categoryIds."
+  searchAcceptingStoresInProjectV2(params: SearchParamsInput!, project: String!): [AcceptingStoreV2!]!
   "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid, extendable and a timestamp of the last check"
   verifyCardInProjectV2(card: CardVerificationModelInput!, project: String!): CardVerificationResultModel!
   "Returns the requesting administrator as retrieved from his JWT token."
