@@ -91,7 +91,8 @@ class ResultsLoaderState extends State<ResultsLoader> {
       if (newData == null) {
         throw Exception('Fetched data is null.');
       }
-
+      // TODO 2691: Remove ignore of deprecation, when new endpoint will be used
+      // ignore: deprecated_member_use_from_same_package
       final newItems = newData.stores;
 
       final isLastPage = newItems.length < _pageSize;
