@@ -29,6 +29,7 @@ import { saveActivityLog } from '../../activity-log/utils/ActivityLog'
 import { getFreinetCardFromCards } from '../utils/getFreinetCardFromCards'
 import useSendCardConfirmationMails from './useSendCardConfirmationMails'
 
+
 const initializeCardsFromQueryParams = (
   projectConfig: ProjectConfig,
   searchParams: URLSearchParams,
@@ -137,7 +138,11 @@ const useCardGenerator = ({ region, initializeCards = true }: UseCardGeneratorPr
       } catch (error) {
         if (codes) {
           // Rollback
-          await deleteCards(deleteCardsMutation, region.id, codes).catch(reportErrorToSentry)
+          try {
+            await deleteCards(deleteCardsMutation, region.id, codes)
+          } catch (error) {
+            reportErrorToSentry(error)
+          }
         }
         showCardGenerationError(enqueueSnackbar, error)
         setCardGenerationStep('input')
