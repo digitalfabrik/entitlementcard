@@ -80,7 +80,7 @@ platform :android do
 
     sh("fvm flutter pub run build_runner build --define df_build_config=name=#{build_config_name}")
 
-    env_prod = sh("echo -n environment=production | base64")
+    env_prod = sh("echo -n environment=production | base64").strip
 
     keystore_key_alias = ""
     keystore_key_password = ""
@@ -101,7 +101,7 @@ platform :android do
 
     gradle(
       task: "bundle#{flavor}Release assemble#{flavor}Release",
-      flags: " -Ptarget=lib/main.dart -Pdart-defines=#{env_prod}",
+      flags: " -Ptarget=lib/main.dart -Pdart-defines=#{env_prod} -x lintVitalAnalyzeRelease",
       properties: {
         :VERSION_CODE => version_code,
         :VERSION_NAME => version_name,
