@@ -9,6 +9,10 @@ object AcceptingStoreDescriptions : IntIdTable() {
     val storeId = reference("storeId", AcceptingStores)
     val description = varchar("description", 2500).nullable()
     val language = enumerationByName<LanguageCode>("language", 2).default(LanguageCode.DE)
+
+    init {
+        uniqueIndex(storeId, language)
+    }
 }
 
 class AcceptingStoreDescriptionEntity(id: EntityID<Int>) : IntEntity(id) {
