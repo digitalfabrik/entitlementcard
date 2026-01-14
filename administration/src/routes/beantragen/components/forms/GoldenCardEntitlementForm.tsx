@@ -2,16 +2,19 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { GoldenCardEntitlementInput, GoldenCardEntitlementType } from '../../../../generated/graphql'
+import {
+  GoldenCardEntitlementInput,
+  GoldenCardEntitlementType,
+} from '../../../../generated/graphql'
 import i18next from '../../../../translations/i18n'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
-import { Form, FormComponentProps } from '../../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
   createCompoundInitialState,
   createSwitchValidate,
 } from '../../util/compoundFormUtils'
+import { Form, FormComponentProps } from '../../util/formType'
 import SwitchComponent from '../SwitchComponent'
 import { createRadioGroupForm } from '../primitive-inputs/RadioGroupForm'
 import HonoredByMinisterPresidentEntitlementForm from './HonoredByMinisterPresidentEntitlementForm'
@@ -21,12 +24,18 @@ import WorkAtOrganizationsEntitlementForm from './WorkAtOrganizationsEntitlement
 
 const entitlementTypeOptions: { labelByValue: { [K in GoldenCardEntitlementType]: string } } = {
   labelByValue: {
-    [GoldenCardEntitlementType.WorkAtOrganizations]: i18next.t('application:goldenCardWorkAtOrganizationsEntitlement'),
-    [GoldenCardEntitlementType.HonoredByMinisterPresident]: i18next.t(
-      'application:goldenCardHonoredByMinisterPresidentEntitlement:title'
+    [GoldenCardEntitlementType.WorkAtOrganizations]: i18next.t(
+      'application:goldenCardWorkAtOrganizationsEntitlement',
     ),
-    [GoldenCardEntitlementType.WorkAtDepartment]: i18next.t('application:goldenCardWorkAtDepartmentEntitlement'),
-    [GoldenCardEntitlementType.MilitaryReserve]: i18next.t('application:goldenCardMilitaryReserveEntitlement'),
+    [GoldenCardEntitlementType.HonoredByMinisterPresident]: i18next.t(
+      'application:goldenCardHonoredByMinisterPresidentEntitlement:title',
+    ),
+    [GoldenCardEntitlementType.WorkAtDepartment]: i18next.t(
+      'application:goldenCardWorkAtDepartmentEntitlement',
+    ),
+    [GoldenCardEntitlementType.MilitaryReserve]: i18next.t(
+      'application:goldenCardMilitaryReserveEntitlement',
+    ),
   },
 }
 
@@ -47,13 +56,22 @@ type AdditionalProps = { applicantName: string }
 const GoldenCardEntitlementForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
-  validate: createSwitchValidate(SubForms, { entitlementType: entitlementTypeOptions }, 'entitlementType', {
-    WORK_AT_ORGANIZATIONS: 'workAtOrganizationsEntitlement',
-    WORK_AT_DEPARTMENT: 'workAtDepartmentEntitlement',
-    MILITARY_RESERVE: 'militaryReserveEntitlement',
-    HONORED_BY_MINISTER_PRESIDENT: 'honoredByMinisterPresidentEntitlement',
-  }),
-  Component: ({ state, setState, applicantName }: FormComponentProps<State, AdditionalProps, Options>) => {
+  validate: createSwitchValidate(
+    SubForms,
+    { entitlementType: entitlementTypeOptions },
+    'entitlementType',
+    {
+      WORK_AT_ORGANIZATIONS: 'workAtOrganizationsEntitlement',
+      WORK_AT_DEPARTMENT: 'workAtDepartmentEntitlement',
+      MILITARY_RESERVE: 'militaryReserveEntitlement',
+      HONORED_BY_MINISTER_PRESIDENT: 'honoredByMinisterPresidentEntitlement',
+    },
+  ),
+  Component: ({
+    state,
+    setState,
+    applicantName,
+  }: FormComponentProps<State, AdditionalProps, Options>) => {
     const { t } = useTranslation('applicationForms')
     return (
       <>

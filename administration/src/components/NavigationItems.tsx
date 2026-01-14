@@ -10,7 +10,9 @@ import { useWhoAmI } from '../provider/WhoAmIProvider'
 import RenderGuard from './RenderGuard'
 
 type NavigationItemsProps = {
-  variant: OverridableStringUnion<'text' | 'outlined' | 'contained', ButtonPropsVariantOverrides> | undefined
+  variant:
+    | OverridableStringUnion<'text' | 'outlined' | 'contained', ButtonPropsVariantOverrides>
+    | undefined
 }
 
 const NavigationItems = ({ variant }: NavigationItemsProps): ReactElement => {
@@ -18,7 +20,8 @@ const NavigationItems = ({ variant }: NavigationItemsProps): ReactElement => {
   const config = useContext(ProjectConfigContext)
   const { role } = useWhoAmI().me
   const canSeeProjectSettings =
-    (role === Role.ProjectAdmin && config.userImportApiEnabled) || role === Role.ExternalVerifiedApiUser
+    (role === Role.ProjectAdmin && config.userImportApiEnabled) ||
+    role === Role.ExternalVerifiedApiUser
 
   return (
     <>
@@ -46,7 +49,10 @@ const NavigationItems = ({ variant }: NavigationItemsProps): ReactElement => {
         ) : null}
       </RenderGuard>
 
-      <RenderGuard allowedRoles={[Role.RegionAdmin]} condition={config.applicationFeature !== undefined}>
+      <RenderGuard
+        allowedRoles={[Role.RegionAdmin]}
+        condition={config.applicationFeature !== undefined}
+      >
         <Button href='/region' variant={variant} startIcon={<Map />}>
           {t('manageRegion')}
         </Button>

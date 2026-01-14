@@ -11,15 +11,15 @@ import { Duration } from 'date-fns'
 import { TFunction } from 'i18next'
 import { ReactElement, ReactNode } from 'react'
 
-import type { Card } from '../cards/Card'
+import type { Card } from '../cards/card'
 import type { CreateCardsResult } from '../cards/createCards'
 import type { Extension } from '../cards/extensions/extensions'
-import type { PdfFormElementProps } from '../cards/pdf/PdfFormElement'
-import type { PdfLinkAreaProps } from '../cards/pdf/PdfLinkArea'
-import type { PdfQrCodeElementProps } from '../cards/pdf/PdfQrCodeElement'
-import type { PdfTextElementProps } from '../cards/pdf/PdfTextElement'
+import type { PdfFormElementProps } from '../cards/pdf/pdfFormElement'
+import type { PdfLinkAreaProps } from '../cards/pdf/pdfLinkArea'
+import type { PdfQrCodeElementProps } from '../cards/pdf/pdfQrCodeElement'
+import type { PdfTextElementProps } from '../cards/pdf/pdfTextElement'
 import type { JsonField } from '../components/JsonFieldView'
-import type { ActivityLogEntryType } from '../routes/activity-log/utils/ActivityLog'
+import type { ActivityLogEntryType } from '../routes/activity-log/utils/activityLog'
 import bayernConfig from './bayern/config'
 import { LOCAL_STORAGE_PROJECT_KEY } from './constants'
 import koblenzConfig from './koblenz/config'
@@ -55,7 +55,9 @@ export type CardConfig<T extends readonly Extension<any>[] = readonly Extension<
 }
 
 export type ApplicationFeature = {
-  applicationJsonToPersonalData: (json: JsonField<'Array'>) => { forenames?: string; surname?: string } | null
+  applicationJsonToPersonalData: (
+    json: JsonField<'Array'>,
+  ) => { forenames?: string; surname?: string } | null
   applicationJsonToCardQuery: (json: JsonField<'Array'>) => string | null
   applicationUsableWithApiToken: boolean
   csvExport: boolean
@@ -117,7 +119,12 @@ export type ProjectConfig = {
   timezone: string
   activityLogConfig?: ActivityLogConfig
   activation?: {
-    activationText: (applicationName: string, downloadLink: string, deepLink: string, t: TFunction) => ReactElement
+    activationText: (
+      applicationName: string,
+      downloadLink: string,
+      deepLink: string,
+      t: TFunction,
+    ) => ReactElement
     downloadLink: string
   }
   csvExport: CsvExport

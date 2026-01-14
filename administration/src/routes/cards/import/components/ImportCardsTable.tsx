@@ -2,7 +2,7 @@ import { Stack, Table, TableBody, TableCell, TableHead, TableRow, Tooltip } from
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Card, getValueByCSVHeader, isValueValid } from '../../../../cards/Card'
+import { Card, getValueByCSVHeader, isValueValid } from '../../../../cards/card'
 import { ProjectConfigContext } from '../../../../project-configs/ProjectConfigContext'
 import { getCsvHeaders } from '../../../../project-configs/helper'
 
@@ -39,7 +39,8 @@ const CardImportTable = ({ cards }: { cards: Card[] }): ReactElement => {
                         backgroundColor: isValid ? undefined : theme.palette.error.light,
                         whiteSpace: 'break-spaces',
                         verticalAlign: 'top',
-                      })}>
+                      })}
+                    >
                       {value}
                     </TableCell>
                   </Tooltip>

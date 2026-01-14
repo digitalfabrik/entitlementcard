@@ -1,4 +1,4 @@
-import { Card } from '../../../cards/Card'
+import { Card } from '../../../cards/card'
 import { FreinetCardInput } from '../../../generated/graphql'
 
 export const getFreinetCardFromCards = (cards: Card[]): FreinetCardInput => {

@@ -58,7 +58,8 @@ const CustomSelect = ({
               onBlur()
             }
           }}
-          onChange={event => onChange(event.target.value)}>
+          onChange={event => onChange(event.target.value)}
+        >
           {options.map(option => (
             <MenuItem key={option.id} value={option.id}>
               {option.name}

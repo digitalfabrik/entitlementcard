@@ -2,10 +2,10 @@ import { useSnackbar } from 'notistack'
 import { useCallback, useContext, useState } from 'react'
 import { useSearchParams } from 'react-router'
 
-import { Card, initializeCardFromCSV } from '../../../cards/Card'
+import { Card, initializeCardFromCSV } from '../../../cards/card'
 import { showCardGenerationError } from '../../../cards/cardGenerationError'
 import { CreateCardsResult, createSelfServiceCard } from '../../../cards/createCards'
-import { generatePdf } from '../../../cards/pdf/PdfFactory'
+import { generatePdf } from '../../../cards/pdf/pdfFactory'
 import { useCreateCardsFromSelfServiceMutation } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import { getCsvHeaders } from '../../../project-configs/helper'
@@ -27,7 +27,8 @@ const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
   const projectConfig = useContext(ProjectConfigContext)
   const { enqueueSnackbar } = useSnackbar()
   const [searchParams] = useSearchParams()
-  const [cardGenerationStep, setCardGenerationStep] = useState<SelfServiceCardGenerationStep>('input')
+  const [cardGenerationStep, setCardGenerationStep] =
+    useState<SelfServiceCardGenerationStep>('input')
   const [code, setCode] = useState<CreateCardsResult | null>(null)
   const [createCardsSelfService] = useCreateCardsFromSelfServiceMutation()
   const [selfServiceCard, setSelfServiceCard] = useState(() => {
@@ -39,7 +40,11 @@ const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
   const generateCards = useCallback(async (): Promise<void> => {
     setCardGenerationStep('loading')
     try {
-      const code = await createSelfServiceCard(createCardsSelfService, projectConfig, selfServiceCard)
+      const code = await createSelfServiceCard(
+        createCardsSelfService,
+        projectConfig,
+        selfServiceCard,
+      )
       setCode(code)
       setCardGenerationStep('information')
     } catch (error) {

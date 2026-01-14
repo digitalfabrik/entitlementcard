@@ -1,4 +1,4 @@
-import type { InfoParams } from '../../cards/pdf/PdfTextElement'
+import type { InfoParams } from '../../cards/pdf/pdfTextElement'
 import { BavariaCardType } from '../../generated/card_pb'
 import PlainDate from '../../util/PlainDate'
 import type { PdfConfig } from '../getProjectConfig'
@@ -6,7 +6,8 @@ import pdfTemplate from './pdf-template.pdf'
 
 const renderPdfInfo = ({ info, region }: InfoParams): string => {
   const expirationDay = info.expirationDay ?? 0
-  const expirationDate = expirationDay > 0 ? PlainDate.fromDaysSinceEpoch(expirationDay).format() : 'unbegrenzt'
+  const expirationDate =
+    expirationDay > 0 ? PlainDate.fromDaysSinceEpoch(expirationDay).format() : 'unbegrenzt'
 
   const cardType = info.extensions?.extensionBavariaCardType?.cardType
   return `${info.fullName}

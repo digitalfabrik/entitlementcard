@@ -35,18 +35,28 @@ const ApplicationStatusBar = ({
         {t('status')}
       </Typography>
       <ApplicationStatusHelpButton />
-      <ToggleButtonGroup exclusive color='primary' value={activeBarItem} sx={{ flex: 1, flexWrap: 'wrap' }}>
+      <ToggleButtonGroup
+        exclusive
+        color='primary'
+        value={activeBarItem}
+        sx={{ flex: 1, flexWrap: 'wrap' }}
+      >
         {Object.values(barItems).map(item => {
-          const count = applications.reduce((count, application) => count + (item.filter(application) ? 1 : 0), 0)
+          const count = applications.reduce(
+            (count, application) => count + (item.filter(application) ? 1 : 0),
+            0,
+          )
           return (
             <ToggleButton
               key={item.barItemI18nKey}
               sx={{ flex: 1, textTransform: 'uppercase', color: theme.palette.text.primary }}
               value={item}
               onClick={() => onSetActiveBarItem(item)}
-              id={item.barItemI18nKey}>
+              id={item.barItemI18nKey}
+            >
               <Typography variant='body2bold'>
-                {t(item.barItemI18nKey)} (<span data-testid={`status-${t(item.barItemI18nKey)}-count`}>{count}</span>)
+                {t(item.barItemI18nKey)} (
+                <span data-testid={`status-${t(item.barItemI18nKey)}-count`}>{count}</span>)
               </Typography>
             </ToggleButton>
           )

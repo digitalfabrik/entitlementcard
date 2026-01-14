@@ -9,7 +9,9 @@ export type JsonField<T extends keyof JsonFieldValueByType> = {
   value: JsonFieldValueByType[T]
 }
 
-export type GeneralJsonField = { [K in keyof JsonFieldValueByType]: JsonField<K> }[keyof JsonFieldValueByType]
+export type GeneralJsonField = {
+  [K in keyof JsonFieldValueByType]: JsonField<K>
+}[keyof JsonFieldValueByType]
 
 export type JsonFieldValueByType = {
   Array: GeneralJsonField[]
@@ -24,7 +26,7 @@ export type JsonFieldValueByType = {
 export const findValue = <T extends keyof JsonFieldValueByType>(
   object: JsonField<'Array'>,
   key: string,
-  type: T
+  type: T,
 ): JsonField<T> | undefined => {
   const entry = object.value.find(entry => entry.name === key)
   if (entry?.type === type) {

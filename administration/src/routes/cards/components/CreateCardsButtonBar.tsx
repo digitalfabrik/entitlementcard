@@ -4,7 +4,7 @@ import { Button, Tooltip } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Card, isValid } from '../../../cards/Card'
+import { Card, isValid } from '../../../cards/card'
 import ButtonBar from '../../../components/ButtonBar'
 import { CsvIcon } from '../../../icons/CsvIcon'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
@@ -42,7 +42,8 @@ const CreateCardsButtonBar = ({
             onClick={generateCardsPdf}
             disabled={buttonDisabled}
             color='primary'
-            variant='contained'>
+            variant='contained'
+          >
             {t('printQRCodes')}
           </Button>
         </span>
@@ -56,7 +57,8 @@ const CreateCardsButtonBar = ({
               onClick={generateCardsCsv}
               disabled={buttonDisabled}
               color='primary'
-              variant='contained'>
+              variant='contained'
+            >
               {t('exportCsv')}
             </Button>
           </span>

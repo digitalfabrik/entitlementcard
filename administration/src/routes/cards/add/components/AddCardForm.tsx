@@ -3,7 +3,7 @@ import { CardContent, FormGroup, IconButton, Card as MuiCard, Stack } from '@mui
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import type { Card } from '../../../../cards/Card'
+import type { Card } from '../../../../cards/card'
 import {
   MAX_NAME_LENGTH,
   getExpirationDateErrorMessage,
@@ -11,7 +11,7 @@ import {
   hasInfiniteLifetime,
   isExpirationDateValid,
   isFullNameValid,
-} from '../../../../cards/Card'
+} from '../../../../cards/card'
 import { maxCardValidity } from '../../../../cards/constants'
 import CardTextField from '../../../../cards/extensions/components/CardTextField'
 import CustomDatePicker from '../../../../components/CustomDatePicker'
@@ -36,7 +36,12 @@ const AddCardForm = ({
   return (
     <MuiCard sx={{ width: '400px' }} variant='outlined' key={card.id}>
       <Stack
-        sx={{ flexDirection: 'row', borderBottom: '1px solid rgba(16, 22, 26, 0.15)', justifyContent: 'flex-end' }}>
+        sx={{
+          flexDirection: 'row',
+          borderBottom: '1px solid rgba(16, 22, 26, 0.15)',
+          justifyContent: 'flex-end',
+        }}
+      >
         <IconButton onClick={() => onRemove()} data-testid='remove-card'>
           <Clear />
         </IconButton>

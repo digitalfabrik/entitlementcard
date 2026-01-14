@@ -3,9 +3,13 @@ import { ACTIVATION_FRAGMENT, ACTIVATION_PATH, HTTPS_SCHEME } from 'build-config
 
 import { QrCode } from '../generated/card_pb'
 import { uint8ArrayToBase64 } from './base64'
-import { PdfQrCode } from './pdf/PdfQrCodeElement'
+import { PdfQrCode } from './pdf/pdfQrCodeElement'
 
-const getDeepLinkFromQrCode = (qrCode: PdfQrCode, buildConfig: BuildConfigType, isProduction: boolean): string => {
+const getDeepLinkFromQrCode = (
+  qrCode: PdfQrCode,
+  buildConfig: BuildConfigType,
+  isProduction: boolean,
+): string => {
   const qrCodeContent = new QrCode({
     qrCode,
   }).toBinary()
@@ -13,7 +17,7 @@ const getDeepLinkFromQrCode = (qrCode: PdfQrCode, buildConfig: BuildConfigType, 
   // custom link schemes don't work in browsers or pdf thats why we use the staging link scheme also for development
   const host = isProduction ? buildConfigProjectId.production : buildConfigProjectId.staging
   const deepLink = `${HTTPS_SCHEME}://${host}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}#${encodeURIComponent(
-    uint8ArrayToBase64(qrCodeContent)
+    uint8ArrayToBase64(qrCodeContent),
   )}`
   if (!isProduction) {
     console.log(deepLink)

@@ -61,7 +61,8 @@ const CreateUserDialog = ({
     return role !== null && rolesWithRegion.includes(role) ? regionId : null
   }
 
-  const showRegionSelector = regionIdOverride === null && role !== null && rolesWithRegion.includes(role)
+  const showRegionSelector =
+    regionIdOverride === null && role !== null && rolesWithRegion.includes(role)
   const userCreationDisabled = !email || role === null || (showRegionSelector && regionId === null)
   return (
     <ConfirmDialog
@@ -82,7 +83,8 @@ const CreateUserDialog = ({
             sendWelcomeMail,
           },
         })
-      }>
+      }
+    >
       <Stack sx={{ paddingY: 1, gap: 2 }}>
         <CardTextField
           id='create-user-name-input'
@@ -96,7 +98,10 @@ const CreateUserDialog = ({
         <RoleSelector selectedRole={role} onChange={setRole} />
 
         {showRegionSelector ? (
-          <RegionSelector onSelect={region => setRegionId(region ? region.id : null)} selectedId={regionId} />
+          <RegionSelector
+            onSelect={region => setRegionId(region ? region.id : null)}
+            selectedId={regionId}
+          />
         ) : null}
 
         <BaseCheckbox

@@ -11,7 +11,9 @@ type SelfServiceStepInfo = {
   text: ReactElement
 }
 
-const selfServiceStepInfo: { [step in Exclude<SelfServiceCardGenerationStep, 'loading'>]: SelfServiceStepInfo } = {
+const selfServiceStepInfo: {
+  [step in Exclude<SelfServiceCardGenerationStep, 'loading'>]: SelfServiceStepInfo
+} = {
   input: {
     stepNr: 1,
     headline: i18next.t('selfService:welcome'),
@@ -42,7 +44,8 @@ const selfServiceStepInfo: { [step in Exclude<SelfServiceCardGenerationStep, 'lo
       <Typography variant='body1' component='span'>
         {i18next.t('selfService:lastStepExplanation1')}
         <b>{i18next.t('selfService:lastStepExplanation2')}</b>
-        {i18next.t('selfService:lastStepExplanation3')} <b>{i18next.t('selfService:lastStepExplanation4')}</b>.
+        {i18next.t('selfService:lastStepExplanation3')}{' '}
+        <b>{i18next.t('selfService:lastStepExplanation4')}</b>.
       </Typography>
     ),
   },

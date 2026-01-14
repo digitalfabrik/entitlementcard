@@ -3,12 +3,12 @@ import { useTranslation } from 'react-i18next'
 
 import { ApplicationInput, BavariaCardType, Region } from '../../../../generated/graphql'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
-import { Form, FormComponentProps, ValidationResult } from '../../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
   createCompoundInitialState,
 } from '../../util/compoundFormUtils'
+import { Form, FormComponentProps, ValidationResult } from '../../util/formType'
 import PersonalDataForm from './PersonalDataForm'
 import StepCardTypeForm from './StepCardTypeForm'
 import StepRequirementsForm from './StepRequirementsForm'
@@ -63,18 +63,29 @@ const ApplicationForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
             wantsDigitalCard: stepCardType.value.wantsDigitalCard,
             wantsPhysicalCard: stepCardType.value.wantsPhysicalCard,
             blueCardEntitlement:
-              stepRequirements.value.type === BavariaCardType.Blue ? stepRequirements.value.value : null,
+              stepRequirements.value.type === BavariaCardType.Blue
+                ? stepRequirements.value.value
+                : null,
             goldenCardEntitlement:
-              stepRequirements.value.type === BavariaCardType.Golden ? stepRequirements.value.value : null,
+              stepRequirements.value.type === BavariaCardType.Golden
+                ? stepRequirements.value.value
+                : null,
             hasAcceptedPrivacyPolicy: stepSend.value.hasAcceptedDataPrivacy,
-            givenInformationIsCorrectAndComplete: stepSend.value.givenInformationIsCorrectAndComplete,
+            givenInformationIsCorrectAndComplete:
+              stepSend.value.givenInformationIsCorrectAndComplete,
             hasAcceptedEmailUsage: stepSend.value.hasAcceptedEmailUsage,
           },
         },
       ],
     }
   },
-  Component: ({ state, setState, options, onSubmit, loading }: FormComponentProps<State, AdditionalProps, Options>) => {
+  Component: ({
+    state,
+    setState,
+    options,
+    onSubmit,
+    loading,
+  }: FormComponentProps<State, AdditionalProps, Options>) => {
     const { t } = useTranslation('applicationForms')
     const personalDataStep = useFormAsStep(
       t('applicationStepPersonalData'),
@@ -83,9 +94,17 @@ const ApplicationForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
       setState,
       'stepPersonalData',
       { regions: options.regions },
-      {}
+      {},
     )
-    const cardTypeStep = useFormAsStep('Kartentyp', StepCardTypeForm, state, setState, 'stepCardType', {}, {})
+    const cardTypeStep = useFormAsStep(
+      'Kartentyp',
+      StepCardTypeForm,
+      state,
+      setState,
+      'stepCardType',
+      {},
+      {},
+    )
     const requirementsStep = useFormAsStep(
       t('applicationStepRequirements'),
       StepRequirementsForm,
@@ -93,7 +112,9 @@ const ApplicationForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
       setState,
       'stepRequirements',
       { cardType: state.stepCardType.cardType.selectedValue },
-      { applicantName: `${state.stepPersonalData.forenames.shortText} ${state.stepPersonalData.surname.shortText}` }
+      {
+        applicantName: `${state.stepPersonalData.forenames.shortText} ${state.stepPersonalData.surname.shortText}`,
+      },
     )
     const sendStep = useFormAsStep(
       t('applicationStepSubmit'),
@@ -102,7 +123,7 @@ const ApplicationForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
       setState,
       'stepSend',
       {},
-      { regionId: state.stepPersonalData.region.region.selectedValue }
+      { regionId: state.stepPersonalData.region.region.selectedValue },
     )
     return (
       <SteppedSubForms

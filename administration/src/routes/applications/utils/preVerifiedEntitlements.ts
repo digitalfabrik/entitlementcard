@@ -6,19 +6,24 @@ export const preVerifiedEntitlements = {
   HonoredByMinisterPresident: 'goldenCardHonoredByMinisterPresidentEntitlement',
 } as const
 
-export type PreVerifiedEntitlementType = (typeof preVerifiedEntitlements)[keyof typeof preVerifiedEntitlements]
+export type PreVerifiedEntitlementType =
+  (typeof preVerifiedEntitlements)[keyof typeof preVerifiedEntitlements]
 
 const verein360Matcher = (entitlement?: GeneralJsonField): boolean => {
-  const entitlements = entitlement !== undefined && Array.isArray(entitlement.value) ? entitlement.value : []
+  const entitlements =
+    entitlement !== undefined && Array.isArray(entitlement.value) ? entitlement.value : []
   return entitlements.some(
     (item: GeneralJsonField) =>
       Array.isArray(item.value) &&
-      item.value.some((subItem: GeneralJsonField) => subItem.name === 'isAlreadyVerified' && subItem.value === true)
+      item.value.some(
+        (subItem: GeneralJsonField) =>
+          subItem.name === 'isAlreadyVerified' && subItem.value === true,
+      ),
   )
 }
 
 export const getPreVerifiedEntitlementType = (
-  applicationJsonValue: JsonField<'Array'>
+  applicationJsonValue: JsonField<'Array'>,
 ): PreVerifiedEntitlementType | undefined => {
   const applicationDetails = findValue(applicationJsonValue, 'applicationDetails', 'Array')
 
@@ -26,7 +31,9 @@ export const getPreVerifiedEntitlementType = (
     ? Object.values(preVerifiedEntitlements).find(type => {
         const entitlement = findValue(applicationDetails, type, 'Array')
 
-        return type === preVerifiedEntitlements.Verein360 ? verein360Matcher(entitlement) : entitlement !== undefined
+        return type === preVerifiedEntitlements.Verein360
+          ? verein360Matcher(entitlement)
+          : entitlement !== undefined
       })
     : undefined
 }

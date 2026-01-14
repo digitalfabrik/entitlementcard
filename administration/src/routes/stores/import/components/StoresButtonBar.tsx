@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import ButtonBar from '../../../../components/ButtonBar'
 import ConfirmDialog from '../../../../components/ConfirmDialog'
-import { AcceptingStoresEntry } from '../utils/AcceptingStoresEntry'
+import { AcceptingStoresEntry } from '../utils/acceptingStoresEntry'
 import StoresImportAlert from './StoresImportAlert'
 
 type UploadStoresButtonBarProps = {
@@ -52,7 +52,8 @@ const StoresButtonBar = ({
             color='primary'
             variant='contained'
             onClick={() => setImportDialogIsOpen(true)}
-            disabled={hasNoAcceptingStores || hasInvalidStores}>
+            disabled={hasNoAcceptingStores || hasInvalidStores}
+          >
             {t('importStores')}
           </Button>
         </div>
@@ -62,8 +63,13 @@ const StoresButtonBar = ({
         title={t('importStores')}
         id='import-stores-dialog'
         onClose={() => setImportDialogIsOpen(false)}
-        onConfirm={confirmImportDialog}>
-        <StoresImportAlert dryRun={dryRun} setDryRun={setDryRun} storesCount={acceptingStores.length} />
+        onConfirm={confirmImportDialog}
+      >
+        <StoresImportAlert
+          dryRun={dryRun}
+          setDryRun={setDryRun}
+          storesCount={acceptingStores.length}
+        />
       </ConfirmDialog>
     </ButtonBar>
   )

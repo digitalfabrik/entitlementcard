@@ -12,7 +12,8 @@ const CharacterCounter = ({ text, maxChars }: CharacterCounterProps): ReactEleme
       color: text.length > maxChars ? theme.palette.error.main : theme.palette.common.black,
       alignSelf: 'center',
     })}
-    aria-label='Character Counter'>
+    aria-label='Character Counter'
+  >
     {text.length}/{maxChars}
   </Box>
 )

@@ -6,7 +6,7 @@ import CustomDatePicker from '../../../../components/CustomDatePicker'
 import FormAlert from '../../../../components/FormAlert'
 import { DateInput } from '../../../../generated/graphql'
 import i18next from '../../../../translations/i18n'
-import type { Form, FormComponentProps } from '../../util/FormType'
+import type { Form, FormComponentProps } from '../../util/formType'
 import { FormContext } from '../forms/SteppedSubForms'
 
 type State = { type: 'DateForm'; value: string }
@@ -81,7 +81,11 @@ const DateForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
             },
           }}
         />
-        <FormAlert errorMessage={(showAllErrors || touched) && isInvalid ? validationResult.message : undefined} />
+        <FormAlert
+          errorMessage={
+            (showAllErrors || touched) && isInvalid ? validationResult.message : undefined
+          }
+        />
       </FormGroup>
     )
   },

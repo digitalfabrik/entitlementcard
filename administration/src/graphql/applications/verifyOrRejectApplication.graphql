@@ -1,3 +1,11 @@
-mutation verifyOrRejectApplicationVerification($project: String!, $accessKey: String!, $verified: Boolean!) {
-  result: verifyOrRejectApplicationVerification(project: $project, accessKey: $accessKey, verified: $verified)
+mutation verifyOrRejectApplicationVerification(
+  $project: String!
+  $accessKey: String!
+  $verified: Boolean!
+) {
+  result: verifyOrRejectApplicationVerification(
+    project: $project
+    accessKey: $accessKey
+    verified: $verified
+  )
 }

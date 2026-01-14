@@ -12,11 +12,15 @@ import {
 import { ActivationText } from '../common/ActivationText'
 import { commonColors } from '../common/colors'
 import type { CardConfig, ProjectConfig } from '../getProjectConfig'
-import { DataPrivacyAdditionalBaseText, DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
+import {
+  DataPrivacyAdditionalBaseText,
+  DataPrivacyBaseText,
+  dataPrivacyBaseHeadline,
+} from './dataPrivacyBase'
 import pdfConfiguration from './pdf'
 
 export const applicationJsonToPersonalData = (
-  json: JsonField<'Array'>
+  json: JsonField<'Array'>,
 ): { forenames?: string; surname?: string; emailAddress?: string } | null => {
   const personalData = findValue(json, 'personalData', 'Array')
 
@@ -49,14 +53,19 @@ export const applicationJsonToCardQuery = (json: JsonField<'Array'>): string | n
     }
 
     query.set(cardConfig.nameColumnName, `${personalData.forenames} ${personalData.surname}`)
-    const cardTypeExtensionIdx = cardConfig.extensions.findIndex(ext => ext === BavariaCardTypeExtension)
+    const cardTypeExtensionIdx = cardConfig.extensions.findIndex(
+      ext => ext === BavariaCardTypeExtension,
+    )
     const value = cardType === 'Goldene Ehrenamtskarte' ? 'Goldkarte' : 'Standard'
     query.set(cardConfig.extensionColumnNames[cardTypeExtensionIdx] ?? '', value)
     if (personalData.emailAddress) {
       const applicantMailNotificationExtensionIdx = cardConfig.extensions.findIndex(
-        ext => ext === EMailNotificationExtension
+        ext => ext === EMailNotificationExtension,
       )
-      query.set(cardConfig.extensionColumnNames[applicantMailNotificationExtensionIdx] ?? '', personalData.emailAddress)
+      query.set(
+        cardConfig.extensionColumnNames[applicantMailNotificationExtensionIdx] ?? '',
+        personalData.emailAddress,
+      )
     }
 
     return `?${query.toString()}`

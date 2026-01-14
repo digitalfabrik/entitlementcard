@@ -3,7 +3,7 @@ import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { ActivityLogConfig } from '../../../project-configs/getProjectConfig'
-import { ActivityLogEntryType } from '../utils/ActivityLog'
+import { ActivityLogEntryType } from '../utils/activityLog'
 
 const StickyTableHeader = styled('thead')`
   position: sticky;
@@ -47,7 +47,10 @@ type ActivityLogTableProps = {
   activityLogConfig: ActivityLogConfig
 }
 
-const ActivityLogTable = ({ activityLog, activityLogConfig }: ActivityLogTableProps): ReactElement => {
+const ActivityLogTable = ({
+  activityLog,
+  activityLogConfig,
+}: ActivityLogTableProps): ReactElement => {
   const { t } = useTranslation('activityLog')
   return (
     <StyledTable>

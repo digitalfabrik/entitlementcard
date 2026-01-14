@@ -13,7 +13,7 @@ import StoresButtonBar from './components/StoresButtonBar'
 import StoresCSVInput from './components/StoresCSVInput'
 import StoresImportResult from './components/StoresImportResult'
 import StoresTable from './components/StoresTable'
-import { AcceptingStoresEntry } from './utils/AcceptingStoresEntry'
+import { AcceptingStoresEntry } from './utils/acceptingStoresEntry'
 
 type StoreImportProps = {
   fields: StoresFieldConfig[]
@@ -39,7 +39,7 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
         />,
         {
           persist: true,
-        }
+        },
       )
       setAcceptingStores([])
     },
@@ -116,7 +116,8 @@ const StoresImportController = (): ReactElement => {
     <RenderGuard
       allowedRoles={[Role.ProjectStoreManager]}
       condition={storesManagement.enabled}
-      error={{ description: t('notAuthorizedToManageStores') }}>
+      error={{ description: t('notAuthorizedToManageStores') }}
+    >
       {storesManagement.enabled && <StoresImport fields={storesManagement.fields} />}
     </RenderGuard>
   )

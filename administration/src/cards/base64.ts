@@ -2,7 +2,7 @@ export const uint8ArrayToBase64 = (uint8Array: Uint8Array): string =>
   btoa(
     Array.from(uint8Array.values())
       .map(value => String.fromCharCode(value))
-      .join('')
+      .join(''),
   )
 
 export const base64ToUint8Array = (base64: string): Uint8Array => {
