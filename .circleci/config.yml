@@ -285,7 +285,7 @@ jobs:
                 name: Install Ninja
             - restore_cache:
                 keys:
-                    - v1-gradle-{{ checksum "android/build.gradle.kts" }}-{{ checksum "android/app/build.gradle.kts" }}-{{ checksum "android/settings.gradle.kts" }}
+                    - v2-gradle-{{ checksum "android/build.gradle.kts" }}-{{ checksum "android/app/build.gradle.kts" }}-{{ checksum "android/settings.gradle.kts" }}
             - run:
                 command: bundle exec fastlane keystore
                 name: '[FL] Prepare Android Keystore'
@@ -295,10 +295,12 @@ jobs:
                 name: '[FL] Build'
                 working_directory: android
             - save_cache:
-                key: v1-gradle-{{ checksum "android/build.gradle.kts" }}-{{ checksum "android/app/build.gradle.kts" }}-{{ checksum "android/settings.gradle.kts" }}
+                key: v2-gradle-{{ checksum "android/build.gradle.kts" }}-{{ checksum "android/app/build.gradle.kts" }}-{{ checksum "android/settings.gradle.kts" }}
                 paths:
                     - ~/.gradle/caches
                     - ~/.gradle/wrapper
+                    - ~/android-sdk/ndk
+                    - ~/android-sdk/build-tools
             - run:
                 command: |
                     mv build/app/outputs/bundle/<< parameters.build_config >>Release/app-<< parameters.build_config >>-release.aab ~/attached_workspace/<< parameters.build_config >>.aab

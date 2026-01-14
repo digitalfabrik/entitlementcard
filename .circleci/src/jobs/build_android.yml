@@ -24,7 +24,7 @@ steps:
       command: sudo apt-get update && sudo apt-get install -y ninja-build
   - restore_cache:
       keys:
-        - v1-gradle-{{ checksum "android/build.gradle.kts" }}-{{ checksum "android/app/build.gradle.kts" }}-{{ checksum "android/settings.gradle.kts" }}
+        - v2-gradle-{{ checksum "android/build.gradle.kts" }}-{{ checksum "android/app/build.gradle.kts" }}-{{ checksum "android/settings.gradle.kts" }}
   - run:
       name: '[FL] Prepare Android Keystore'
       command: bundle exec fastlane keystore
@@ -34,10 +34,12 @@ steps:
       command: bundle exec fastlane android build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} build_config_name:<< parameters.build_config >>
       working_directory: android
   - save_cache:
-      key: v1-gradle-{{ checksum "android/build.gradle.kts" }}-{{ checksum "android/app/build.gradle.kts" }}-{{ checksum "android/settings.gradle.kts" }}
+      key: v2-gradle-{{ checksum "android/build.gradle.kts" }}-{{ checksum "android/app/build.gradle.kts" }}-{{ checksum "android/settings.gradle.kts" }}
       paths:
         - ~/.gradle/caches
         - ~/.gradle/wrapper
+        - ~/android-sdk/ndk
+        - ~/android-sdk/build-tools
   - run:
       name: Move artifacts
       command: |
