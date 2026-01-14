@@ -68,8 +68,8 @@ platform :android do
     end
 
     gradle_system_properties = {
-      # 2GB Gradle + 1GB dex + 2-2.5GB RN < 6GB of circleci resource class medium+
-      :"org.gradle.jvmargs" => "-Xms512m -Xmx2024m",
+      # 4GB Gradle + 1GB dex + overhead < 8GB of circleci resource class large
+      :"org.gradle.jvmargs" => "-Xms512m -Xmx4096m",
       :"org.gradle.daemon" => false
     }
 
