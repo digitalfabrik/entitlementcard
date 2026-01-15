@@ -70,6 +70,7 @@ const DeleteDialog = (props: {
       onClose={props.onCancel}
       title={t('deleteApplication')}
       id='alert-dialog-description'
+      maxWidth='xs'
       onConfirm={props.onConfirm}
       actionDisabled={props.deleteResult.loading || props.deleteResult.called}
       color='error'
