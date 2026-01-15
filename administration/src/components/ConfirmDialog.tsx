@@ -25,8 +25,8 @@ const ConfirmDialog = ({
   cancelButtonText,
   color = 'primary',
   confirmButtonIcon,
+  maxWidth = 'sm',
   showCancelButton = true,
-  maxWidth = false,
   closeOnConfirm = true,
 }: {
   actionDisabled?: boolean
@@ -46,7 +46,7 @@ const ConfirmDialog = ({
     ButtonPropsColorOverrides
   >
   closeOnConfirm?: boolean
-  maxWidth?: false | Breakpoint
+  maxWidth?: Breakpoint
 }): ReactElement => {
   const { t } = useTranslation('misc')
 

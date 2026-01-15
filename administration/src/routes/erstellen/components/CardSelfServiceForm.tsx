@@ -165,6 +165,7 @@ const CardSelfServiceForm = ({
         confirmButtonIcon={<Close />}
         showCancelButton={false}
         open={openDataPrivacy}
+        maxWidth='md'
         color='secondary'
         title={projectConfig.dataPrivacyHeadline}
         id='data-privacy-dialog'
