@@ -28,18 +28,28 @@ const ImportCardsRequirementsText = ({
   const projectConfig = useContext(ProjectConfigContext)
   const { t } = useTranslation('cards')
   const decoratedHeaders = csvHeaders.map(header =>
-    getRequiredHeaders(projectConfig).includes(header) ? `${header}*` : header
+    getRequiredHeaders(projectConfig).includes(header) ? `${header}*` : header,
   )
 
   return (
-    <Typography color='textDisabled' variant='body1' component='ul' paddingLeft={2.5} sx={{ textAlign: 'left' }}>
-      <Typography component='li'>{t('maxFileSize', { maxFileSize: FILE_SIZE_LIMIT_MEGA_BYTES })} </Typography>
+    <Typography
+      color='textDisabled'
+      variant='body1'
+      component='ul'
+      paddingLeft={2.5}
+      sx={{ textAlign: 'left' }}
+    >
+      <Typography component='li'>
+        {t('maxFileSize', { maxFileSize: FILE_SIZE_LIMIT_MEGA_BYTES })}{' '}
+      </Typography>
       <Typography component='li'>{t('fileFormatCSV')} </Typography>
       <Typography component='li'>
         {t('maxNumberOfEntries')}: {ENTRY_LIMIT}
       </Typography>
       <Typography component='li'>
-        {isFreinetFormat ? t('minColumnsForFreinet') : `${t('columnFormat')}:  ${decoratedHeaders.join(', ')}`}{' '}
+        {isFreinetFormat
+          ? t('minColumnsForFreinet')
+          : `${t('columnFormat')}:  ${decoratedHeaders.join(', ')}`}{' '}
       </Typography>
       <Typography component='li'>{t('dateFormatHint')} </Typography>
     </Typography>

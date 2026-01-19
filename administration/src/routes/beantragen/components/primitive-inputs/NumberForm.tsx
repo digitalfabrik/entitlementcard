@@ -3,7 +3,7 @@ import React, { useContext, useState } from 'react'
 
 import FormAlert from '../../../../components/FormAlert'
 import i18next from '../../../../translations/i18n'
-import { Form, FormComponentProps } from '../../util/FormType'
+import { Form, FormComponentProps } from '../../util/formType'
 import { FormContext } from '../forms/SteppedSubForms'
 
 type State = { type: 'NumberForm'; value: string }
@@ -26,7 +26,10 @@ const NumberForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
       return { type: 'error', message: i18next.t('applicationForms:noValidNumberError') }
     }
     if (number < min || number > max) {
-      return { type: 'error', message: i18next.t('applicationForms:minMaxNumberError', { min, max }) }
+      return {
+        type: 'error',
+        message: i18next.t('applicationForms:minMaxNumberError', { min, max }),
+      }
     }
     return { type: 'valid', value: number }
   },
@@ -59,7 +62,9 @@ const NumberForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
           const sanitizedValue = e.target.value.replace(/\s/g, '')
           setState(() => ({ type: 'NumberForm', value: sanitizedValue }))
         }}
-        helperText={<FormAlert errorMessage={touched && isInvalid ? validationResult.message : undefined} />}
+        helperText={
+          <FormAlert errorMessage={touched && isInvalid ? validationResult.message : undefined} />
+        }
         slotProps={{
           htmlInput: { inputMode: 'numeric', min: options.min, max: options.max },
         }}

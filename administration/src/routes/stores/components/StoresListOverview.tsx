@@ -23,9 +23,8 @@ const initializeAcceptingStoreForm = (store: AcceptingStoresData): AcceptingStor
   telephone: store.contact.telephone ?? '',
   email: store.contact.email ?? '',
   homepage: store.contact.website ?? '',
-  descriptionDe: store.description ?? '',
-  // TODO 2692 map english description field
-  descriptionEn: '',
+  descriptionDe: store.descriptions?.find(desc => desc.locale === 'DE')?.text ?? '',
+  descriptionEn: store.descriptions?.find(desc => desc.locale === 'EN')?.text ?? '',
   categoryId: store.category.id,
   longitude: store.physicalStore?.coordinates.lng ?? undefined,
   latitude: store.physicalStore?.coordinates.lat ?? undefined,
@@ -70,13 +69,16 @@ const StoresListOverview = ({ data }: { data: AcceptingStoresData[] }): ReactEle
     }
   }
 
-  const updateStore = <K extends keyof AcceptingStoreFormData>(field: K, value: AcceptingStoreFormData[K]) => {
+  const updateStore = <K extends keyof AcceptingStoreFormData>(
+    field: K,
+    value: AcceptingStoreFormData[K],
+  ) => {
     setAcceptingStore(
       prevStore =>
         ({
           ...prevStore,
           [field]: value,
-        } as AcceptingStoreFormData)
+        }) as AcceptingStoreFormData,
     )
   }
 
@@ -110,7 +112,12 @@ const StoresListOverview = ({ data }: { data: AcceptingStoresData[] }): ReactEle
   )
 
   const addStoreButton = (
-    <Button color='primary' variant='contained' startIcon={<AddBusiness />} onClick={openAddStoreDialog}>
+    <Button
+      color='primary'
+      variant='contained'
+      startIcon={<AddBusiness />}
+      onClick={openAddStoreDialog}
+    >
       {t('addStoreButton')}
     </Button>
   )
@@ -122,7 +129,8 @@ const StoresListOverview = ({ data }: { data: AcceptingStoresData[] }): ReactEle
           containerSx={{ m: 4 }}
           icon={<AddBusinessOutlined color='disabled' sx={{ fontSize: '64px' }} />}
           title={t('storesListOverviewNoEntryTitle')}
-          description={t('storesListOverviewNoEntryDescription')}>
+          description={t('storesListOverviewNoEntryDescription')}
+        >
           {/* TODO 2692 remove this button when the addStore endpoint is implemented */}
           {isDevelopmentEnvironment() ? addStoreButton : undefined}
           {fileUploadButton}

@@ -11,7 +11,15 @@ const UserSettingsController = (): ReactElement => {
   const { applicationFeature } = useContext(ProjectConfigContext)
   return (
     <Stack
-      sx={{ flexGrow: 1, justifyContent: 'safe center', alignItems: 'center', padding: 2, gap: 2, overflow: 'auto' }}>
+      sx={{
+        flexGrow: 1,
+        justifyContent: 'safe center',
+        alignItems: 'center',
+        padding: 2,
+        gap: 2,
+        overflow: 'auto'
+    }}
+    >
       <RenderGuard allowedRoles={[Role.RegionAdmin, Role.RegionManager]} condition={!!applicationFeature}>
         <NotificationSettings />
       </RenderGuard>

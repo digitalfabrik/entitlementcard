@@ -7,13 +7,13 @@ import CustomDivider from '../../../../components/CustomDivider'
 import { PersonalDataInput, Region } from '../../../../generated/graphql'
 import i18next from '../../../../translations/i18n'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
-import { Form, FormComponentProps } from '../../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
   createCompoundInitialState,
   createCompoundValidate,
 } from '../../util/compoundFormUtils'
+import { Form, FormComponentProps } from '../../util/formType'
 import DateForm from '../primitive-inputs/DateForm'
 import EmailForm from '../primitive-inputs/EmailForm'
 import ShortTextForm, { OptionalShortTextForm } from '../primitive-inputs/ShortTextForm'
@@ -44,7 +44,11 @@ const PersonalDataForm: Form<State, ValidatedInput, AdditionalProps, Options> = 
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: (state, options) =>
     createCompoundValidate(SubForms, { dateOfBirth: dateOfBirthOptions, region: options })(state),
-  Component: ({ state, setState, options }: FormComponentProps<State, AdditionalProps, Options>) => {
+  Component: ({
+    state,
+    setState,
+    options,
+  }: FormComponentProps<State, AdditionalProps, Options>) => {
     const { t } = useTranslation('application')
     return (
       <>
@@ -65,7 +69,10 @@ const PersonalDataForm: Form<State, ValidatedInput, AdditionalProps, Options> = 
           </div>
         </div>
         <CustomDivider label={t('applicationForms:personalAddress')} />
-        <SubForms.address.Component state={state.address} setState={useUpdateStateCallback(setState, 'address')} />
+        <SubForms.address.Component
+          state={state.address}
+          setState={useUpdateStateCallback(setState, 'address')}
+        />
         <CustomDivider label={t('applicationForms:personalFurtherInformation')} />
         <SubForms.emailAddress.Component
           state={state.emailAddress}

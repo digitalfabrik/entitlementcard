@@ -20,7 +20,8 @@ const InputContainer = styled('div')`
   flex: 1;
   gap: 16px;
 `
-const isValidDate = (value: Date | null): value is Date => value !== null && !Number.isNaN(value.valueOf())
+const isValidDate = (value: Date | null): value is Date =>
+  value !== null && !Number.isNaN(value.valueOf())
 
 const isValidDateTimePeriod = (dateStart: Date | null, dateEnd: Date | null): boolean =>
   isValidDate(dateStart) && isValidDate(dateEnd) && dateStart.valueOf() <= dateEnd.valueOf()
@@ -61,7 +62,8 @@ const StatisticsFilterBar = ({
         gap: 2,
         padding: 2,
         backgroundColor: grey[50],
-      }}>
+      }}
+    >
       <InputContainer>
         <FormControlLabel
           label={t('start')}
@@ -95,17 +97,23 @@ const StatisticsFilterBar = ({
             />
           }
         />
-        <Tooltip title={isValidDateTimePeriod(dateStart, dateEnd) ? undefined : t('invalidStartOrEnd')}>
+        <Tooltip
+          title={isValidDateTimePeriod(dateStart, dateEnd) ? undefined : t('invalidStartOrEnd')}
+        >
           <Button
             variant='contained'
             color='primary'
             startIcon={<FilterAlt />}
             onClick={() => {
               if (isValidDate(dateStart) && isValidDate(dateEnd)) {
-                onApplyFilter(formatDate(dateStart, filterDateFormat), formatDate(dateEnd, filterDateFormat))
+                onApplyFilter(
+                  formatDate(dateStart, filterDateFormat),
+                  formatDate(dateEnd, filterDateFormat),
+                )
               }
             }}
-            disabled={!isValidDateTimePeriod(dateStart, dateEnd)}>
+            disabled={!isValidDateTimePeriod(dateStart, dateEnd)}
+          >
             {t('applyFilter')}
           </Button>
         </Tooltip>
@@ -120,7 +128,8 @@ const StatisticsFilterBar = ({
                 onExportCsv(dateStart.toLocaleDateString(), dateEnd.toLocaleDateString())
               }
             }}
-            disabled={!isDataAvailable}>
+            disabled={!isDataAvailable}
+          >
             {t('exportToCsv')}
           </Button>
         </div>

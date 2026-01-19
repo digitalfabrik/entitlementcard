@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 
-import { Card, getExtensions } from '../cards/Card'
+import { Card, getExtensions } from '../cards/card'
 
 type ExtensionFormsProps = {
   card: Card

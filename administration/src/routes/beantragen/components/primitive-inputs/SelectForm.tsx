@@ -4,7 +4,7 @@ import React, { useContext, useId, useState } from 'react'
 import FormAlert from '../../../../components/FormAlert'
 import { ShortTextInput } from '../../../../generated/graphql'
 import i18next from '../../../../translations/i18n'
-import { Form, FormComponentProps } from '../../util/FormType'
+import { Form, FormComponentProps } from '../../util/formType'
 import { FormContext } from '../forms/SteppedSubForms'
 
 type State = { selectedValue: string; manuallySelected: boolean }
@@ -30,7 +30,12 @@ const SelectForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
     }
     return { type: 'valid', value: { shortText: selectedValue } }
   },
-  Component: ({ state, setState, label, options }: FormComponentProps<State, AdditionalProps, Options>) => {
+  Component: ({
+    state,
+    setState,
+    label,
+    options,
+  }: FormComponentProps<State, AdditionalProps, Options>) => {
     const [touched, setTouched] = useState(false)
     const { showAllErrors, disableAllInputs } = useContext(FormContext)
     const labelId = useId()
@@ -39,7 +44,13 @@ const SelectForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
     const isInvalid = validationResult.type === 'error'
 
     return (
-      <FormControl fullWidth variant='standard' required style={{ margin: '4px 0' }} error={touched && isInvalid}>
+      <FormControl
+        fullWidth
+        variant='standard'
+        required
+        style={{ margin: '4px 0' }}
+        error={touched && isInvalid}
+      >
         <InputLabel id={labelId}>{label}</InputLabel>
         <Select
           labelId={labelId}
@@ -47,14 +58,19 @@ const SelectForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
           value={state.selectedValue}
           label={label}
           onBlur={() => setTouched(true)}
-          onChange={e => setState(() => ({ selectedValue: e.target.value, manuallySelected: true }))}>
+          onChange={e =>
+            setState(() => ({ selectedValue: e.target.value, manuallySelected: true }))
+          }
+        >
           {options.items.map(item => (
             <MenuItem key={item.label} value={item.value}>
               {item.label}
             </MenuItem>
           ))}
         </Select>
-        {(showAllErrors || touched) && isInvalid && <FormAlert errorMessage={validationResult.message} />}
+        {(showAllErrors || touched) && isInvalid && (
+          <FormAlert errorMessage={validationResult.message} />
+        )}
       </FormControl>
     )
   },

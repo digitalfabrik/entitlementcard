@@ -5,7 +5,7 @@ import FormAlert from '../../../../components/FormAlert'
 import { EmailInput } from '../../../../generated/graphql'
 import i18next from '../../../../translations/i18n'
 import { isEmailValid } from '../../../../util/verifications'
-import { Form, FormComponentProps } from '../../util/FormType'
+import { Form, FormComponentProps } from '../../util/formType'
 import { FormContext } from '../forms/SteppedSubForms'
 import { MAX_SHORT_TEXT_LENGTH } from './ShortTextForm'
 
@@ -22,7 +22,9 @@ const EmailForm: Form<State, ValidatedInput, AdditionalProps> = {
     if (email.length > MAX_SHORT_TEXT_LENGTH) {
       return {
         type: 'error',
-        message: i18next.t('applicationForms:maxShortTextLengthError', { maxLength: MAX_SHORT_TEXT_LENGTH }),
+        message: i18next.t('applicationForms:maxShortTextLengthError', {
+          maxLength: MAX_SHORT_TEXT_LENGTH,
+        }),
       }
     }
     if (!isEmailValid(email)) {
@@ -33,7 +35,12 @@ const EmailForm: Form<State, ValidatedInput, AdditionalProps> = {
     }
     return { type: 'valid', value: { email } }
   },
-  Component: ({ state, setState, label, minWidth = 100 }: FormComponentProps<State, AdditionalProps>) => {
+  Component: ({
+    state,
+    setState,
+    label,
+    minWidth = 100,
+  }: FormComponentProps<State, AdditionalProps>) => {
     const [touched, setTouched] = useState(false)
     const { showAllErrors, disableAllInputs } = useContext(FormContext)
     const validationResult = EmailForm.validate(state)
@@ -53,7 +60,10 @@ const EmailForm: Form<State, ValidatedInput, AdditionalProps> = {
         disabled={disableAllInputs}
         onBlur={() => setTouched(true)}
         onChange={e => setState(() => ({ email: e.target.value }))}
-        helperText={(showAllErrors || touched) && isInvalid && <FormAlert errorMessage={validationResult.message} />}
+        helperText={
+          (showAllErrors || touched) &&
+          isInvalid && <FormAlert errorMessage={validationResult.message} />
+        }
         slotProps={{
           htmlInput: { maxLength: MAX_SHORT_TEXT_LENGTH },
         }}

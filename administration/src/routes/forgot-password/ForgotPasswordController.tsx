@@ -60,7 +60,8 @@ const ForgotPasswordController = (): ReactElement => {
               onSubmit={e => {
                 e.preventDefault()
                 submit()
-              }}>
+              }}
+            >
               <TextField
                 value={email}
                 fullWidth
@@ -71,11 +72,24 @@ const ForgotPasswordController = (): ReactElement => {
                 type='email'
                 placeholder='erika.musterfrau@example.org'
               />
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 3 }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginTop: 3,
+                }}
+              >
                 <Button href='/' variant='text'>
                   {t('backToLogin')}
                 </Button>
-                <Button type='submit' variant='contained' color='primary' loading={loading} disabled={email === ''}>
+                <Button
+                  type='submit'
+                  variant='contained'
+                  color='primary'
+                  loading={loading}
+                  disabled={email === ''}
+                >
                   {t('resetPassword')}
                 </Button>
               </Box>

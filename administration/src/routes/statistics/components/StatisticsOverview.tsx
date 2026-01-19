@@ -7,7 +7,7 @@ import RenderGuard from '../../../components/RenderGuard'
 import { CardStatisticsResultModel, Region, Role } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import downloadDataUri from '../../../util/downloadDataUri'
-import { generateCsv, getCsvFileName } from '../utils/CSVStatistics'
+import { generateCsv, getCsvFileName } from '../utils/csvStatistics'
 import StatisticsBarChart from './StatisticsBarChart'
 import StatisticsFilterBar from './StatisticsFilterBar'
 import StatisticsLegend from './StatisticsLegend'
@@ -27,7 +27,10 @@ const StatisticsOverview = ({
   const { t } = useTranslation('statistics')
   const exportCardDataToCsv = (dateStart: string, dateEnd: string) => {
     try {
-      downloadDataUri(generateCsv(statistics, cardStatistics), getCsvFileName(`${dateStart}_${dateEnd}`, region))
+      downloadDataUri(
+        generateCsv(statistics, cardStatistics),
+        getCsvFileName(`${dateStart}_${dateEnd}`, region),
+      )
     } catch {
       enqueueSnackbar(t('exportCsvNotPossible'), { variant: 'error' })
     }
@@ -49,12 +52,15 @@ const StatisticsOverview = ({
             alignItems: 'center',
             marginRight: '330px',
             gap: 6,
-          }}>
+          }}
+        >
           {statistics.map(statistic => (
             <StatisticsBarChart key={statistic.region} statistic={statistic} />
           ))}
         </Box>
-        {cardStatistics.enabled && <StatisticsLegend items={statisticKeys} statisticsTheme={cardStatistics.theme} />}
+        {cardStatistics.enabled && (
+          <StatisticsLegend items={statisticKeys} statisticsTheme={cardStatistics.theme} />
+        )}
       </Stack>
       <StatisticsFilterBar
         onApplyFilter={onApplyFilter}

@@ -16,7 +16,7 @@ import { useTranslation } from 'react-i18next'
 
 import i18next from '../../../../translations/i18n'
 import { SetState, useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
-import { Form, ValidationResult } from '../../util/FormType'
+import { Form, ValidationResult } from '../../util/formType'
 
 type FormContextType = {
   /**
@@ -62,7 +62,7 @@ const SubForm = ({
         onSubmit()
       }
     },
-    [validate, onSubmit, setActiveStep, index, enqueueSnackbar]
+    [validate, onSubmit, setActiveStep, index, enqueueSnackbar],
   )
   return (
     <FormContext.Provider value={formContext}>
@@ -71,12 +71,20 @@ const SubForm = ({
         <Divider sx={{ margin: '16px' }} />
         <Stack direction='row' sx={{ gap: 2 }}>
           {index === 0 ? null : (
-            <Button onClick={() => setActiveStep(() => index - 1)} disabled={formContext.disableAllInputs}>
+            <Button
+              onClick={() => setActiveStep(() => index - 1)}
+              disabled={formContext.disableAllInputs}
+            >
               {t('backButton')}
             </Button>
           )}
           {onSubmit === undefined ? (
-            <Button type='submit' color='primary' variant='contained' disabled={formContext.disableAllInputs}>
+            <Button
+              type='submit'
+              color='primary'
+              variant='contained'
+              disabled={formContext.disableAllInputs}
+            >
               {t('nextStepButton')}
             </Button>
           ) : (
@@ -85,7 +93,8 @@ const SubForm = ({
               variant='contained'
               color='primary'
               disabled={formContext.disableAllInputs}
-              endIcon={loading ? <CircularProgress size={20} /> : <Send />}>
+              endIcon={loading ? <CircularProgress size={20} /> : <Send />}
+            >
               {t('submitApplicationButton')}
             </Button>
           )}
@@ -100,7 +109,7 @@ export const useFormAsStep = <
   ValidatedInput,
   AdditionalProps extends Record<string, unknown>,
   ParentState,
-  KeyInParent extends keyof ParentState
+  KeyInParent extends keyof ParentState,
 >(
   label: string,
   form: Form<ParentState[KeyInParent], ValidatedInput, AdditionalProps, Options>,
@@ -108,7 +117,7 @@ export const useFormAsStep = <
   setParentState: SetState<ParentState>,
   keyInParent: KeyInParent,
   options: Options,
-  additionalProps: AdditionalProps
+  additionalProps: AdditionalProps,
 ): { label: string; validate: () => ValidationResult<unknown>; element: ReactNode } => {
   const state = parentState[keyInParent]
   const setState = useUpdateStateCallback(setParentState, keyInParent)
@@ -144,7 +153,11 @@ const SteppedSubForms = ({
     <Stepper activeStep={activeStep} orientation='vertical'>
       {subForms.map(({ validate, label, element }, index) => (
         <Step key={label}>
-          <ButtonBase onClick={() => tryGoTo(index)} style={{ marginLeft: '-8px' }} disabled={loading}>
+          <ButtonBase
+            onClick={() => tryGoTo(index)}
+            style={{ marginLeft: '-8px' }}
+            disabled={loading}
+          >
             <StepLabel style={{ cursor: 'pointer', padding: '8px' }}>{label}</StepLabel>
           </ButtonBase>
           <StepContent>
@@ -153,7 +166,8 @@ const SteppedSubForms = ({
               index={index}
               setActiveStep={setActiveStep}
               loading={loading}
-              onSubmit={index === subForms.length - 1 ? onSubmit : undefined}>
+              onSubmit={index === subForms.length - 1 ? onSubmit : undefined}
+            >
               {element}
             </SubForm>
           </StepContent>

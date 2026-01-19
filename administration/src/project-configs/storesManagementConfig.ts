@@ -35,7 +35,8 @@ export const storesManagementConfig: StoresManagementConfig = {
     {
       name: 'categoryId',
       isMandatory: true,
-      isValid: category => hasValidCategoryId(category, getBuildConfig(window.location.hostname).common.categories),
+      isValid: category =>
+        hasValidCategoryId(category, getBuildConfig(window.location.hostname).common.categories),
       columnWidth: 100,
     },
   ],

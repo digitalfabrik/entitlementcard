@@ -4,7 +4,7 @@ import React, { ChangeEvent, ReactElement, useCallback, useContext, useRef, useS
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
 
-import { Card, initializeCardFromCSV } from '../../../../cards/Card'
+import { Card, initializeCardFromCSV } from '../../../../cards/card'
 import Blankslate from '../../../../components/Blankslate'
 import { Region } from '../../../../generated/graphql'
 import { ProjectConfigContext } from '../../../../project-configs/ProjectConfigContext'
@@ -45,7 +45,7 @@ const ImportCardsInput = ({
       }
       fileInput.current.value = ''
     },
-    [enqueueSnackbar]
+    [enqueueSnackbar],
   )
 
   const onLoadEnd = useCallback(
@@ -78,13 +78,17 @@ const ImportCardsInput = ({
         return
       }
 
-      const [csvHeaders, ...entries] = isFreinetFormat ? convertFreinetImport(lines, projectConfig) : lines
-      const cards = entries.map(line => initializeCardFromCSV(projectConfig.card, line, csvHeaders, region))
+      const [csvHeaders, ...entries] = isFreinetFormat
+        ? convertFreinetImport(lines, projectConfig)
+        : lines
+      const cards = entries.map(line =>
+        initializeCardFromCSV(projectConfig.card, line, csvHeaders, region),
+      )
 
       setCards(cards)
       setInputState('idle')
     },
-    [setCards, showInputError, isFreinetFormat, projectConfig, region, t]
+    [setCards, showInputError, isFreinetFormat, projectConfig, region, t],
   )
 
   const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -113,7 +117,10 @@ const ImportCardsInput = ({
       <Blankslate
         icon={<FileInputStateIcon inputState={inputState} />}
         title={t('selectAFile')}
-        description={<ImportCardsRequirementsText csvHeaders={csvHeaders} isFreinetFormat={isFreinetFormat} />}>
+        description={
+          <ImportCardsRequirementsText csvHeaders={csvHeaders} isFreinetFormat={isFreinetFormat} />
+        }
+      >
         <Button variant='contained' color='primary' component='label'>
           <input
             style={{ display: 'none' }}

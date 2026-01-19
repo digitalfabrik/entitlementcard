@@ -22,7 +22,9 @@ const VerificationItem = (p: { status: VerificationStatus; count: number }): Rea
   </Box>
 )
 
-export const VerificationIndicator = (p: { verifications: ApplicationVerification[] }): ReactElement => {
+export const VerificationIndicator = (p: {
+  verifications: ApplicationVerification[]
+}): ReactElement => {
   const { t } = useTranslation('applicationsOverview')
   const verificationStatuses = p.verifications.map(verificationStatus)
 
@@ -37,19 +39,29 @@ export const VerificationIndicator = (p: { verifications: ApplicationVerificatio
             {t('verified/pending/rejected')}
           </Typography>
         </Box>
-      }>
+      }
+    >
       <Stack direction='row' sx={{ height: '25px', alignItems: 'center', gap: 1 }}>
         <VerificationItem
           status={VerificationStatus.Verified}
-          count={verificationStatuses.reduce((count, s) => (s === VerificationStatus.Verified ? count + 1 : count), 0)}
+          count={verificationStatuses.reduce(
+            (count, s) => (s === VerificationStatus.Verified ? count + 1 : count),
+            0,
+          )}
         />
         <VerificationItem
           status={VerificationStatus.Pending}
-          count={verificationStatuses.reduce((count, s) => (s === VerificationStatus.Pending ? count + 1 : count), 0)}
+          count={verificationStatuses.reduce(
+            (count, s) => (s === VerificationStatus.Pending ? count + 1 : count),
+            0,
+          )}
         />
         <VerificationItem
           status={VerificationStatus.Rejected}
-          count={verificationStatuses.reduce((count, s) => (s === VerificationStatus.Rejected ? count + 1 : count), 0)}
+          count={verificationStatuses.reduce(
+            (count, s) => (s === VerificationStatus.Rejected ? count + 1 : count),
+            0,
+          )}
         />
       </Stack>
     </Tooltip>
@@ -62,7 +74,9 @@ type PreVerifiedLabelMetaData = {
   labelText: string
 }
 
-const preVerifiedLabelMetaData = (theme: Theme): Record<PreVerifiedEntitlementType, PreVerifiedLabelMetaData> => ({
+const preVerifiedLabelMetaData = (
+  theme: Theme,
+): Record<PreVerifiedEntitlementType, PreVerifiedLabelMetaData> => ({
   [preVerifiedEntitlements.Juleica]: {
     backgroundColor: '#bfd4f2',
     fontColor: theme.palette.common.black,
@@ -80,20 +94,26 @@ const preVerifiedLabelMetaData = (theme: Theme): Record<PreVerifiedEntitlementTy
   },
 })
 
-const PreVerifiedLabel = styled('span')<{ itemType: PreVerifiedEntitlementType }>(({ theme, itemType }) => ({
-  padding: '6px 12px',
-  fontSize: '14px',
-  fontWeight: 600,
-  backgroundColor: preVerifiedLabelMetaData(theme)[itemType].backgroundColor,
-  color: preVerifiedLabelMetaData(theme)[itemType].fontColor,
-  borderRadius: '2em',
-  lineHeight: 1,
-  marginRight: theme.spacing(1), // Using MUI theme for spacing
-  display: 'inline-block',
-  whiteSpace: 'nowrap',
-}))
+const PreVerifiedLabel = styled('span')<{ itemType: PreVerifiedEntitlementType }>(
+  ({ theme, itemType }) => ({
+    padding: '6px 12px',
+    fontSize: '14px',
+    fontWeight: 600,
+    backgroundColor: preVerifiedLabelMetaData(theme)[itemType].backgroundColor,
+    color: preVerifiedLabelMetaData(theme)[itemType].fontColor,
+    borderRadius: '2em',
+    lineHeight: 1,
+    marginRight: theme.spacing(1), // Using MUI theme for spacing
+    display: 'inline-block',
+    whiteSpace: 'nowrap',
+  }),
+)
 
-export const PreVerifiedIndicator = ({ type }: { type: PreVerifiedEntitlementType }): ReactElement => {
+export const PreVerifiedIndicator = ({
+  type,
+}: {
+  type: PreVerifiedEntitlementType
+}): ReactElement => {
   const { t } = useTranslation('applicationsOverview')
   const theme = useTheme()
   return (
@@ -106,16 +126,26 @@ export const PreVerifiedIndicator = ({ type }: { type: PreVerifiedEntitlementTyp
             {t('noConfirmationNeeded')}
           </Typography>
         </div>
-      }>
-      <Stack direction='row' sx={{ height: '25px', alignItems: 'center', '&:focus': { outline: 'none' } }}>
-        <PreVerifiedLabel itemType={type}>{preVerifiedLabelMetaData(theme)[type].labelText}</PreVerifiedLabel>
+      }
+    >
+      <Stack
+        direction='row'
+        sx={{ height: '25px', alignItems: 'center', '&:focus': { outline: 'none' } }}
+      >
+        <PreVerifiedLabel itemType={type}>
+          {preVerifiedLabelMetaData(theme)[type].labelText}
+        </PreVerifiedLabel>
         <VerificationIcon status={VerificationStatus.Verified} />
       </Stack>
     </Tooltip>
   )
 }
 
-export const ApplicationIndicators = ({ application }: { application: Application }): ReactElement => {
+export const ApplicationIndicators = ({
+  application,
+}: {
+  application: Application
+}): ReactElement => {
   const preVerifiedEntitlementType = getPreVerifiedEntitlementType(application.jsonValue)
 
   return (

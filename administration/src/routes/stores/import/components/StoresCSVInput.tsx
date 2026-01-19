@@ -9,7 +9,7 @@ import Blankslate from '../../../../components/Blankslate'
 import { StoresFieldConfig } from '../../../../project-configs/getProjectConfig'
 import { getStoresWithCoordinates } from '../../../region/util/storeGeoDataService'
 import { DEFAULT_ERROR_TIMEOUT, FILE_SIZE_LIMIT_MEGA_BYTES, LONG_ERROR_TIMEOUT } from '../constants'
-import { AcceptingStoresEntry } from '../utils/AcceptingStoresEntry'
+import { AcceptingStoresEntry } from '../utils/acceptingStoresEntry'
 import StoresImportDuplicates from './StoresImportDuplicates'
 import StoresRequirementsText from './StoresRequirementsText'
 
@@ -24,7 +24,11 @@ const defaultExtensionsByMIMEType = {
 }
 const FILE_SIZE_LIMIT_BYTES = FILE_SIZE_LIMIT_MEGA_BYTES * 1000 * 1000
 
-const lineToStoreEntry = (line: string[], headers: string[], fields: StoresFieldConfig[]): AcceptingStoresEntry => {
+const lineToStoreEntry = (
+  line: string[],
+  headers: string[],
+  fields: StoresFieldConfig[],
+): AcceptingStoresEntry => {
   const storeData = line.reduce((acc, entry, index) => {
     const columnName = headers[index]
     return { ...acc, [columnName]: entry.trim() }
@@ -36,7 +40,13 @@ const getStoreDuplicates = (stores: AcceptingStoresEntry[]): number[][] =>
   Object.values(
     stores.reduce((acc: Record<string, number[]>, entry, index) => {
       const { data } = entry
-      const groupKey = JSON.stringify([data.name, data.street, data.houseNumber, data.postalCode, data.location])
+      const groupKey = JSON.stringify([
+        data.name,
+        data.street,
+        data.houseNumber,
+        data.postalCode,
+        data.location,
+      ])
       const entryNumber = index + 1
       // This is necessary, can be removed once "noUncheckedIndexedAccess" is enabled in tsconfig
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -44,10 +54,14 @@ const getStoreDuplicates = (stores: AcceptingStoresEntry[]): number[][] =>
         return { ...acc, [groupKey]: [entryNumber] }
       }
       return { ...acc, [groupKey]: [...acc[groupKey], entryNumber] }
-    }, {})
+    }, {}),
   ).filter(entryNumber => entryNumber.length > 1)
 
-const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }: StoresCsvInputProps): ReactElement => {
+const StoresCsvInput = ({
+  setAcceptingStores,
+  fields,
+  setIsLoadingCoordinates,
+}: StoresCsvInputProps): ReactElement => {
   const fileInput = useRef<HTMLInputElement>(null)
   const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('stores')
@@ -65,7 +79,7 @@ const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }:
       }
       fileInput.current.value = ''
     },
-    [enqueueSnackbar]
+    [enqueueSnackbar],
   )
 
   const onLoadEnd = useCallback(
@@ -80,8 +94,10 @@ const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }:
       } catch (error) {
         if (error instanceof Error && error.message.includes('line')) {
           showInputError(
-            `${t('csvInvalidDifferentColumnLength')} (${t('errorInLine')} ${error.message.split('line')[1].trim()})`,
-            LONG_ERROR_TIMEOUT
+            `${t('csvInvalidDifferentColumnLength')} (${t('errorInLine')} ${error.message
+              .split('line')[1]
+              .trim()})`,
+            LONG_ERROR_TIMEOUT,
           )
           return
         }
@@ -113,7 +129,9 @@ const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }:
         showInputError(t('csvInvalidColumns'))
         return
       }
-      const acceptingStores = lines.map((line: string[]) => lineToStoreEntry(line, csvHeader, fields))
+      const acceptingStores = lines.map((line: string[]) =>
+        lineToStoreEntry(line, csvHeader, fields),
+      )
 
       const duplicatedStoreEntries = getStoreDuplicates(acceptingStores)
       if (duplicatedStoreEntries.length > 0) {
@@ -130,7 +148,7 @@ const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }:
         })
         .finally(() => setIsLoadingCoordinates(false))
     },
-    [showInputError, setAcceptingStores, headers, fields, setIsLoadingCoordinates, t]
+    [showInputError, setAcceptingStores, headers, fields, setIsLoadingCoordinates, t],
   )
 
   const onInputChange: ChangeEventHandler<HTMLInputElement> = event => {
@@ -158,7 +176,8 @@ const StoresCsvInput = ({ setAcceptingStores, fields, setIsLoadingCoordinates }:
       <Blankslate
         icon={<ArrowCircleUp color='warning' sx={{ fontSize: 56 }} />}
         title={t('selectAFile')}
-        description={<StoresRequirementsText header={fields} />}>
+        description={<StoresRequirementsText header={fields} />}
+      >
         <Button variant='contained' color='primary' component='label'>
           <input
             style={{ display: 'none' }}

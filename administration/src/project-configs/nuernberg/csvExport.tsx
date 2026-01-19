@@ -1,6 +1,6 @@
 import { stringify } from 'csv-stringify/browser/esm/sync'
 
-import { Card } from '../../cards/Card'
+import { Card } from '../../cards/card'
 import { CreateCardsResult } from '../../cards/createCards'
 import { getAddressFieldExtensionsValues } from '../../cards/extensions/AddressFieldExtensions'
 import { BIRTHDAY_EXTENSION_NAME } from '../../cards/extensions/BirthdayExtension'
@@ -21,7 +21,7 @@ export const buildCsvLine = (createCardsResult: CreateCardsResult, card: Card): 
         case: 'dynamicActivationCode',
         value: createCardsResult.dynamicActivationCode,
       },
-    })
+    }),
   )
   const staticVerificationHex = createCardsResult.staticVerificationCode
     ? convertProtobufToHexCode(
@@ -30,7 +30,7 @@ export const buildCsvLine = (createCardsResult: CreateCardsResult, card: Card): 
             case: 'staticVerificationCode',
             value: createCardsResult.staticVerificationCode,
           },
-        })
+        }),
       )
     : ''
 

@@ -2,7 +2,7 @@ import { useSnackbar } from 'notistack'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Card } from '../../../cards/Card'
+import { Card } from '../../../cards/card'
 import { CreateCardsResult } from '../../../cards/createCards'
 import { EMAIL_NOTIFICATION_EXTENSION_NAME } from '../../../cards/extensions/EMailNotificationExtension'
 import getDeepLinkFromQrCode from '../../../cards/getDeepLinkFromQrCode'
@@ -39,7 +39,7 @@ const useSendCardConfirmationMails = (): SendCardConfirmationMail => {
           const deepLink = getDeepLinkFromQrCode(
             { case: 'dynamicActivationCode', value: code.dynamicActivationCode },
             getBuildConfig(window.location.hostname),
-            isProductionEnvironment()
+            isProductionEnvironment(),
           )
           await sendMail({
             variables: {
@@ -49,10 +49,10 @@ const useSendCardConfirmationMails = (): SendCardConfirmationMail => {
               deepLink,
             },
           })
-        })
+        }),
       )
     },
-    [sendMail]
+    [sendMail],
   )
 }
 

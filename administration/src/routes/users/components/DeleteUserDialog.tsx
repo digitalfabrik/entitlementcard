@@ -83,11 +83,15 @@ const DeleteUserDialog = ({
       loading={loading}
       actionDisabled={selectedUser?.id === actingAdminId && !deleteWarningConfirmed}
       confirmButtonIcon={<PersonRemove />}
-      confirmButtonText={t('deleteUser')}>
+      confirmButtonText={t('deleteUser')}
+    >
       <Stack gap={2}>
         <Box>
           <Typography>
-            <Trans i18nKey='users:deleteUserIrrevocableConfirmPrompt' values={{ mail: selectedUser?.email }} />
+            <Trans
+              i18nKey='users:deleteUserIrrevocableConfirmPrompt'
+              values={{ mail: selectedUser?.email }}
+            />
           </Typography>
         </Box>
         {selectedUser?.id !== actingAdminId ? null : (

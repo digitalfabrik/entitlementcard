@@ -3,7 +3,10 @@ import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
-import { useGetRegionSettingsByIdQuery, useUpdateRegionSettingsMutation } from '../../generated/graphql'
+import {
+  useGetRegionSettingsByIdQuery,
+  useUpdateRegionSettingsMutation,
+} from '../../generated/graphql'
 import getQueryResult from '../../util/getQueryResult'
 import RegionSettingsCard from './components/RegionSettingsCard'
 
@@ -39,7 +42,8 @@ const RegionSettingsController = ({ regionId }: { regionId: number }): ReactElem
     })
   }
 
-  const { activatedForApplication, activatedForCardConfirmationMail } = regionSettingsByIdQueryResult.data.result
+  const { activatedForApplication, activatedForCardConfirmationMail } =
+    regionSettingsByIdQueryResult.data.result
 
   return (
     <RegionSettingsCard

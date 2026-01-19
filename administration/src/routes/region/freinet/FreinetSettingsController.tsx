@@ -3,7 +3,10 @@ import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
-import { useGetFreinetAgencyByRegionIdQuery, useUpdateDataTransferToFreinetMutation } from '../../../generated/graphql'
+import {
+  useGetFreinetAgencyByRegionIdQuery,
+  useUpdateDataTransferToFreinetMutation,
+} from '../../../generated/graphql'
 import getQueryResult from '../../../util/getQueryResult'
 import FreinetSettingsCard from './FreinetSettingsCard'
 

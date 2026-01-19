@@ -38,7 +38,7 @@ test.describe('Bayern regional admin', () => {
     await expectVisible(item, 'E-Mail-Adresse: test@outlook.com')
     await expectVisible(
       item,
-      'Die Kontaktperson hat der Weitergabe ihrer Daten zum Zwecke der Antragsverarbeitung zugestimmt und darf zur Überprüfung kontaktiert werden: Ja'
+      'Die Kontaktperson hat der Weitergabe ihrer Daten zum Zwecke der Antragsverarbeitung zugestimmt und darf zur Überprüfung kontaktiert werden: Ja',
     )
   }
 
@@ -60,19 +60,19 @@ test.describe('Bayern regional admin', () => {
     await expectVisible(item, 'E-Mail-Adresse: test@gmail.com')
     await expectVisible(
       item,
-      'Die Kontaktperson hat der Weitergabe ihrer Daten zum Zwecke der Antragsverarbeitung zugestimmt und darf zur Überprüfung kontaktiert werden: Ja'
+      'Die Kontaktperson hat der Weitergabe ihrer Daten zum Zwecke der Antragsverarbeitung zugestimmt und darf zur Überprüfung kontaktiert werden: Ja',
     )
     await expectVisible(item, 'Tätigkeit: activity 1')
     await expectVisible(item, 'Arbeitsstunden pro Woche (Durchschnitt): 56')
     await expectVisible(item, 'Tätig seit: 10.10.1999')
     await expectVisible(
       item,
-      'Für diese ehrenamtliche Tätigkeit wurde eine Aufwandsentschädigung gewährt, die über den jährlichen Freibetrag hinaus geht (840 Euro Ehrenamtspauschale bzw. 3000 Euro Übungsleiterpauschale): Nein'
+      'Für diese ehrenamtliche Tätigkeit wurde eine Aufwandsentschädigung gewährt, die über den jährlichen Freibetrag hinaus geht (840 Euro Ehrenamtspauschale bzw. 3000 Euro Übungsleiterpauschale): Nein',
     )
     await expectVisible(item, 'Tätigkeitsnachweis: Anhang 1(siehe Anhang 1)')
     await expectVisible(
       item,
-      'Der Antrag wurde direkt von der Organisation/Verein gestellt (z. B. über Drittanbietersoftware verein360).: Nein'
+      'Der Antrag wurde direkt von der Organisation/Verein gestellt (z. B. über Drittanbietersoftware verein360).: Nein',
     )
   }
 
@@ -80,7 +80,17 @@ test.describe('Bayern regional admin', () => {
 
   test('should assert all test applications', async ({ page, browserName }) => {
     test.setTimeout(200_000)
-    const casesToVisit = new Set(['blue1', 'blue2', 'blue3', 'blue4', 'blue5', 'gold1', 'gold2', 'gold3', 'gold4'])
+    const casesToVisit = new Set([
+      'blue1',
+      'blue2',
+      'blue3',
+      'blue4',
+      'blue5',
+      'gold1',
+      'gold2',
+      'gold3',
+      'gold4',
+    ])
     const visitedCases = new Set()
     await page.getByRole('button', { name: 'Eingehende Anträge' }).nth(1).click()
     await expect(page.getByText('Status', { exact: true })).toBeVisible()
@@ -93,24 +103,27 @@ test.describe('Bayern regional admin', () => {
     await page.getByRole('button').filter({ hasText: /^$/ }).click()
     await expect(page.locator('body')).toContainText('Welcher Status hat welche Bedeutung?')
     await expect(page.locator('body')).toContainText(
-      'Akzeptiert:Der Antrag wurden von allen Organisationen geprüft und genehmigt.Die Karte kann erstellt werden.'
+      'Akzeptiert:Der Antrag wurden von allen Organisationen geprüft und genehmigt.Die Karte kann erstellt werden.',
     )
     await expect(page.locator('body')).toContainText(
-      'Abgelehnt:Der Antrag wurde von allen Organisationen abgelehnt.Der Antrag kann gelöscht werden.'
+      'Abgelehnt:Der Antrag wurde von allen Organisationen abgelehnt.Der Antrag kann gelöscht werden.',
     )
     await expect(page.locator('body')).toContainText(
-      'Zurückgezogen:Der Antragssteller hat den Antrag zurückgezogen.Der Antrag kann gelöscht werden.'
+      'Zurückgezogen:Der Antragssteller hat den Antrag zurückgezogen.Der Antrag kann gelöscht werden.',
     )
     await expect(page.locator('body')).toContainText(
-      'Offen:Der Antrag wurde noch nicht von allen Organisationen geprüft.Die Karte sollte noch nicht erstellt werden.'
+      'Offen:Der Antrag wurde noch nicht von allen Organisationen geprüft.Die Karte sollte noch nicht erstellt werden.',
     )
     await expect(
-      page.getByText('Welcher Status hat welche Bedeutung?Akzeptiert:Der Antrag wurden von allen')
+      page.getByText('Welcher Status hat welche Bedeutung?Akzeptiert:Der Antrag wurden von allen'),
     ).toBeVisible()
     await page.getByRole('button').filter({ hasText: /^$/ }).click()
 
     // await page.getByRole('button', { name: 'Akzeptiert' }).click()
-    const listItems = await page.locator('.MuiAccordion-root').filter({ hasText: 'Antrag vom' }).all()
+    const listItems = await page
+      .locator('.MuiAccordion-root')
+      .filter({ hasText: 'Antrag vom' })
+      .all()
     for (const item of listItems) {
       const data = await item.innerText()
       if (!data.includes(`Name: Doe, ${browserName}`)) {
@@ -147,8 +160,12 @@ test.describe('Bayern regional admin', () => {
       await item.getByRole('heading', { name: 'Antragsdetails' }).click()
       const element = item.getByText(/Antrag auf: (Goldene|Blaue)/).first()
       await expect(element).toBeVisible()
-      await expect(await item.getByText('Ich beantrage eine digitale Ehrenamtskarte: Ja').first()).toBeVisible()
-      await expect(await item.getByText('Ich beantrage eine physische Ehrenamtskarte: Ja').first()).toBeVisible()
+      await expect(
+        await item.getByText('Ich beantrage eine digitale Ehrenamtskarte: Ja').first(),
+      ).toBeVisible()
+      await expect(
+        await item.getByText('Ich beantrage eine physische Ehrenamtskarte: Ja').first(),
+      ).toBeVisible()
 
       if ((await item.innerText()).includes('Goldene')) {
         const h6Element = await item
@@ -190,7 +207,9 @@ test.describe('Bayern regional admin', () => {
         // blue
 
         await expect(await item.getByText('Antrag auf: Blaue Ehrenamtskarte').first()).toBeVisible()
-        const typeOfApplication = item.getByText(/Art des Antrags: (Verlängerungsantrag|Erstantrag)/).first()
+        const typeOfApplication = item
+          .getByText(/Art des Antrags: (Verlängerungsantrag|Erstantrag)/)
+          .first()
         await expect(typeOfApplication).toBeVisible()
 
         await expectVisible(item, 'Ich beantrage eine digitale Ehrenamtskarte: Ja')
@@ -242,13 +261,16 @@ test.describe('Bayern regional admin', () => {
       }
       await expectVisible(
         item,
-        'Ich erkläre mich damit einverstanden, dass meine Daten zum Zwecke der Antragsverarbeitung gespeichert werden und akzeptiere die Datenschutzerklärung: Ja'
+        'Ich erkläre mich damit einverstanden, dass meine Daten zum Zwecke der Antragsverarbeitung gespeichert werden und akzeptiere die Datenschutzerklärung: Ja',
       )
       await expectVisible(
         item,
-        'Ich stimme zu, dass ich von der lokalen Ehrenamtskoordination über Verlosungen und regionale Angebote informiert werden darf: Nein'
+        'Ich stimme zu, dass ich von der lokalen Ehrenamtskoordination über Verlosungen und regionale Angebote informiert werden darf: Nein',
       )
-      await expectVisible(item, 'Ich versichere, dass alle angegebenen Informationen korrekt und vollständig sind: Ja')
+      await expectVisible(
+        item,
+        'Ich versichere, dass alle angegebenen Informationen korrekt und vollständig sind: Ja',
+      )
     }
   })
 })

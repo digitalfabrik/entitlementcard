@@ -1,7 +1,7 @@
 import React, { ReactElement, useContext, useState } from 'react'
 
 import BaseCheckbox from '../../../../components/BaseCheckbox'
-import { Form, FormComponentProps } from '../../util/FormType'
+import { Form, FormComponentProps } from '../../util/formType'
 import { FormContext } from '../forms/SteppedSubForms'
 
 type State = { checked: boolean }
@@ -17,7 +17,12 @@ const CheckboxForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
     }
     return { type: 'valid', value: checked }
   },
-  Component: ({ state, setState, label, options }: FormComponentProps<State, AdditionalProps, Options>) => {
+  Component: ({
+    state,
+    setState,
+    label,
+    options,
+  }: FormComponentProps<State, AdditionalProps, Options>) => {
     const [touched, setTouched] = useState(false)
     const { disableAllInputs, showAllErrors } = useContext(FormContext)
     const validationResult = CheckboxForm.validate(state, options)

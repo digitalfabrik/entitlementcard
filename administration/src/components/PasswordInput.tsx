@@ -40,7 +40,8 @@ const PasswordInput = (p: {
                   onClick={() => {
                     setPasswordHidden(!passwordHidden)
                   }}
-                  edge='end'>
+                  edge='end'
+                >
                   {passwordHidden ? <Visibility /> : <VisibilityOff />}
                 </IconButton>
               </Tooltip>

@@ -1,14 +1,18 @@
 /* eslint-disable react/jsx-pascal-case  -- we cannot change the keys of application namespace, see translation file comment */
 import React from 'react'
 
-import { BavariaCardType, BlueCardEntitlementInput, GoldenCardEntitlementInput } from '../../../../generated/graphql'
+import {
+  BavariaCardType,
+  BlueCardEntitlementInput,
+  GoldenCardEntitlementInput,
+} from '../../../../generated/graphql'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
-import { Form, FormComponentProps } from '../../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
   createCompoundInitialState,
 } from '../../util/compoundFormUtils'
+import { Form, FormComponentProps } from '../../util/formType'
 import SwitchComponent from '../SwitchComponent'
 import BlueCardEntitlementForm from './BlueCardEntitlementForm'
 import GoldenCardEntitlementForm from './GoldenCardEntitlementForm'
@@ -23,7 +27,12 @@ type ValidatedInput =
   | { type: BavariaCardType.Golden; value: GoldenCardEntitlementInput }
 type Options = { cardType: BavariaCardType | null }
 type AdditionalProps = { applicantName: string }
-const StepRequirementsForm: Form<StepRequirementsFormState, ValidatedInput, AdditionalProps, Options> = {
+const StepRequirementsForm: Form<
+  StepRequirementsFormState,
+  ValidatedInput,
+  AdditionalProps,
+  Options
+> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: (state, options) => {
@@ -33,14 +42,22 @@ const StepRequirementsForm: Form<StepRequirementsFormState, ValidatedInput, Addi
         if (blueCardEntitlement.type === 'error') {
           return { type: 'error' }
         }
-        return { type: 'valid', value: { type: BavariaCardType.Blue, value: blueCardEntitlement.value } }
+        return {
+          type: 'valid',
+          value: { type: BavariaCardType.Blue, value: blueCardEntitlement.value },
+        }
       }
       case BavariaCardType.Golden: {
-        const goldenCardEntitlement = GoldenCardEntitlementForm.validate(state.goldenCardEntitlement)
+        const goldenCardEntitlement = GoldenCardEntitlementForm.validate(
+          state.goldenCardEntitlement,
+        )
         if (goldenCardEntitlement.type === 'error') {
           return { type: 'error' }
         }
-        return { type: 'valid', value: { type: BavariaCardType.Golden, value: goldenCardEntitlement.value } }
+        return {
+          type: 'valid',
+          value: { type: BavariaCardType.Golden, value: goldenCardEntitlement.value },
+        }
       }
       case null:
       default:

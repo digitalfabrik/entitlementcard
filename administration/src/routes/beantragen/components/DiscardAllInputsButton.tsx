@@ -19,7 +19,8 @@ const DiscardAllInputsButton = ({ discardAll }: { discardAll: () => void }): Rea
         onClose={() => setDialogOpen(false)}
         title={t('discardInputsTitle')}
         color='error'
-        onConfirm={discardAll}>
+        onConfirm={discardAll}
+      >
         <Typography>{t('discardInputsContent')}</Typography>
       </ConfirmDialog>
     </>

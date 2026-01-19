@@ -16,7 +16,7 @@ import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import KoblenzLogo from '../../assets/koblenz_logo.svg'
-import { updateCard } from '../../cards/Card'
+import { updateCard } from '../../cards/card'
 import CenteredCircularProgress from '../../components/CenteredCircularProgress'
 import CardSelfServiceActivation from './components/CardSelfServiceActivation'
 import CardSelfServiceForm from './components/CardSelfServiceForm'
@@ -37,7 +37,9 @@ const Container = styled('div')(({ theme }) => ({
 
 const CardSelfServiceView = (): ReactElement => {
   const { t } = useTranslation('selfService')
-  const [dataPrivacyCheckbox, setDataPrivacyCheckbox] = useState(DataPrivacyAcceptingStatus.untouched)
+  const [dataPrivacyCheckbox, setDataPrivacyCheckbox] = useState(
+    DataPrivacyAcceptingStatus.untouched,
+  )
   const [openHelpDialog, setOpenHelpDialog] = useState(false)
   const {
     cardGenerationStep,
@@ -57,22 +59,35 @@ const CardSelfServiceView = (): ReactElement => {
 
   return (
     <Container>
-      <Box sx={{ backgroundColor: grey[100], padding: 1.5, display: 'flex', justifyContent: 'space-between' }}>
+      <Box
+        sx={{
+          backgroundColor: grey[100],
+          padding: 1.5,
+          display: 'flex',
+          justifyContent: 'space-between',
+        }}
+      >
         <KoblenzLogo height='40px' />
         <Button
           color='inherit'
           variant='text'
           size='large'
           onClick={() => setOpenHelpDialog(true)}
-          endIcon={<HelpOutlineOutlinedIcon />}>
+          endIcon={<HelpOutlineOutlinedIcon />}
+        >
           {' '}
           {t('help')}
         </Button>
       </Box>
       <Stack padding={2}>
-        <Typography component='div' variant='body1' color='inherit' sx={{ p: 2, alignSelf: 'flex-end' }}>{`${t(
-          'step'
-        )} ${selfServiceStepInfo[cardGenerationStep].stepNr}/${totalSteps}`}</Typography>
+        <Typography
+          component='div'
+          variant='body1'
+          color='inherit'
+          sx={{ p: 2, alignSelf: 'flex-end' }}
+        >{`${t('step')} ${
+          selfServiceStepInfo[cardGenerationStep].stepNr
+        }/${totalSteps}`}</Typography>
         <Typography variant='h6' color='accent' component='h1'>
           {selfServiceStepInfo[cardGenerationStep].headline}
         </Typography>
@@ -98,7 +113,12 @@ const CardSelfServiceView = (): ReactElement => {
           <CardSelfServiceActivation downloadPdf={downloadPdf} code={code} />
         )}
       </Stack>
-      <Dialog open={openHelpDialog} aria-describedby='help-dialog' fullWidth onClose={() => setOpenHelpDialog(false)}>
+      <Dialog
+        open={openHelpDialog}
+        aria-describedby='help-dialog'
+        fullWidth
+        onClose={() => setOpenHelpDialog(false)}
+      >
         <DialogTitle>{t('help')}</DialogTitle>
         <DialogContent id='help-dialog'>
           <Typography marginTop={1.5} marginBottom={3}>

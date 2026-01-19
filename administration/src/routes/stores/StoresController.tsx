@@ -19,7 +19,9 @@ const StoresController = (): ReactElement => {
     },
   })
 
-  const searchAcceptingStoresInProjectQueryResult = getQueryResult(searchAcceptingStoresInProjectQuery)
+  const searchAcceptingStoresInProjectQueryResult = getQueryResult(
+    searchAcceptingStoresInProjectQuery,
+  )
 
   if (!searchAcceptingStoresInProjectQueryResult.successful) {
     return searchAcceptingStoresInProjectQueryResult.component
@@ -34,7 +36,8 @@ const StoresController = (): ReactElement => {
         description: storesManagement.enabled
           ? t('errors:notAuthorizedToManageStores')
           : t('errors:manageStoresNotActivated'),
-      }}>
+      }}
+    >
       <Stack sx={{ maxWidth: '95vw', m: 2, gap: 2, alignSelf: 'center' }}>
         <StoresListOverview data={storeData} />
       </Stack>

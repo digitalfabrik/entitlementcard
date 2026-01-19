@@ -34,5 +34,6 @@ object MigrationsRegistry {
             V0029_Add_Application_Rejection_message(),
             V0030_Fold_Application_Withdrawal_Into_Status(),
             V0031_AddAcceptingStoreDescriptionsTable(),
+            V0032_AddUniqueIndexForAcceptingStoreDescriptionsTable(),
         )
 }
