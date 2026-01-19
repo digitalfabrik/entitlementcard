@@ -17,10 +17,13 @@ const UserSettingsController = (): ReactElement => {
         alignItems: 'center',
         padding: 2,
         gap: 2,
-        overflow: 'auto'
-    }}
+        overflow: 'auto',
+      }}
     >
-      <RenderGuard allowedRoles={[Role.RegionAdmin, Role.RegionManager]} condition={!!applicationFeature}>
+      <RenderGuard
+        allowedRoles={[Role.RegionAdmin, Role.RegionManager]}
+        condition={!!applicationFeature}
+      >
         <NotificationSettings />
       </RenderGuard>
       <ChangePasswordForm />
