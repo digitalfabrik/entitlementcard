@@ -1,15 +1,14 @@
 import { Stack } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 
+import RenderGuard from '../../components/RenderGuard'
 import { Role } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import { useWhoAmI } from '../../provider/WhoAmIProvider'
 import ChangePasswordForm from './components/ChangePasswordForm'
 import NotificationSettings from './components/NotificationSettings'
 
 const UserSettingsController = (): ReactElement => {
   const { applicationFeature } = useContext(ProjectConfigContext)
-  const { role } = useWhoAmI().me
   return (
     <Stack
       sx={{
@@ -21,7 +20,12 @@ const UserSettingsController = (): ReactElement => {
         overflow: 'auto',
       }}
     >
-      {applicationFeature && role !== Role.ProjectAdmin && <NotificationSettings />}
+      <RenderGuard
+        allowedRoles={[Role.RegionAdmin, Role.RegionManager]}
+        condition={!!applicationFeature}
+      >
+        <NotificationSettings />
+      </RenderGuard>
       <ChangePasswordForm />
     </Stack>
   )
