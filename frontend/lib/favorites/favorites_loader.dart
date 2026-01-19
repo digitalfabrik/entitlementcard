@@ -139,15 +139,16 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
     final physicalStore = item.physicalStore;
     if (physicalStore != null) {
       return IntrinsicHeight(
+        // TODO: fix favorites loading
         child: AcceptingStoreSummary(
           key: ValueKey(physicalStore.id),
-          store: AcceptingStoreSummaryModel(
-            physicalStore.id,
-            physicalStore.store.name,
-            physicalStore.store.description,
-            physicalStore.store.category.id,
-            null,
-            null,
+          store: AcceptingStoreModel(
+            id: physicalStore.id,
+            categoryId: physicalStore.store.category.id,
+            name: physicalStore.store.name,
+            description: physicalStore.store.description,
+            coordinates: null,
+            location: null,
           ),
           showOnMap: (it) => HomePageData.of(context)?.navigateToMapTab(it),
         ),

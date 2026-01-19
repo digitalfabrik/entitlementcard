@@ -6,13 +6,20 @@ query AcceptingStoresSearch($project: String!, $params: SearchParamsInput!) {
             locale
             text
         }
+        contact {
+            telephone
+            website
+            email
+        }
         physicalStore {
             id
             address {
                 location
+                postalCode
+                street
             }
             coordinates {
-                lat,
+                lat
                 lng
             }
         }

@@ -25,6 +25,7 @@ import org.springframework.stereotype.Controller
 class AcceptingStoreQueryController(
     private val backendConfig: BackendConfiguration,
 ) {
+    // TODO: remove unused
     @GraphQLDescription("Returns list of all accepting stores in the given project.")
     @QueryMapping
     fun physicalStoresInProject(

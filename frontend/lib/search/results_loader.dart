@@ -125,13 +125,19 @@ class ResultsLoaderState extends State<ResultsLoader> {
           return IntrinsicHeight(
             child: AcceptingStoreSummary(
               key: ValueKey(item.id),
-              store: AcceptingStoreSummaryModel(
-                item.physicalStore?.id,
-                item.name,
-                _getLocalizedDescription(item.descriptions),
-                item.categoryId,
-                storeCoordinates != null ? Coordinates(storeCoordinates.lat, storeCoordinates.lng) : null,
-                item.physicalStore?.address.location,
+              store: AcceptingStoreModel(
+                id: item.id,
+                categoryId: item.categoryId,
+                physicalStoreId: item.physicalStore?.id,
+                name: item.name,
+                description: _getLocalizedDescription(item.descriptions),
+                coordinates: storeCoordinates != null ? Coordinates(storeCoordinates.lat, storeCoordinates.lng) : null,
+                location: item.physicalStore?.address.location,
+                website: item.contact.website,
+                telephone: item.contact.telephone,
+                email: item.contact.email,
+                street: item.physicalStore?.address.street,
+                postalCode: item.physicalStore?.address.postalCode,
               ),
               coordinates: widget.coordinates,
               showOnMap: (it) => HomePageData.of(context)?.navigateToMapTab(it),
