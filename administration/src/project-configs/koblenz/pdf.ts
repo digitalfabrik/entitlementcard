@@ -21,6 +21,7 @@ ${info.fullName}`
 const pdfConfiguration: PdfConfig = {
   title: 'KoblenzPass',
   templatePath: pdfTemplate,
+  customFont: 'inter/Inter-Regular.ttf',
   customBoldFont: 'texgyreheros-bold.ttf',
   issuer: 'Stadt Koblenz',
   elements: {
