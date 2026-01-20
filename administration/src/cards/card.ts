@@ -1,9 +1,9 @@
 import { PartialMessage } from '@bufbuild/protobuf'
+import { t } from 'i18next'
 
 import { CardExtensions, CardInfo } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
 import type { CardConfig } from '../project-configs/getProjectConfig'
-import i18next from '../translations/i18n'
 import PlainDate from '../util/PlainDate'
 import {
   containsOnlyLatinAndCommonCharset,
@@ -13,13 +13,13 @@ import {
 import { normalizeWhitespace } from '../util/normalizeString'
 import { maxCardValidity } from './constants'
 import { REGION_EXTENSION_NAME } from './extensions/RegionExtension'
-import Extensions from './extensions/extensions'
 import type {
   Extension,
   ExtensionKey,
   ExtensionState,
   InferExtensionStateType,
 } from './extensions/extensions'
+import Extensions from './extensions/extensions'
 
 // Due to limited space on the cards
 export const MAX_NAME_LENGTH = 30
@@ -275,18 +275,16 @@ export const updateCard = (oldCard: Card, updatedCard: Partial<Card>): Card => (
 export const getFullNameValidationErrorMessage = (name: string): string => {
   const errors: string[] = []
   if (!name) {
-    return i18next.t('cards:fullNameValidationInvalidNameError')
+    return t('cards:fullNameValidationInvalidNameError')
   }
   if (!containsOnlyLatinAndCommonCharset(name) || containsSpecialCharacters(name)) {
-    errors.push(i18next.t('cards:fullNameValidationSpecialCharactersError'))
+    errors.push(t('cards:fullNameValidationSpecialCharactersError'))
   }
   if (!hasNameAndForename(name)) {
-    errors.push(i18next.t('cards:fullNameValidationCompleteNameError'))
+    errors.push(t('cards:fullNameValidationCompleteNameError'))
   }
   if (!hasValidNameLength(name)) {
-    errors.push(
-      i18next.t('cards:fullNameValidationMaxNameLengthError', { maxNameLength: MAX_NAME_LENGTH }),
-    )
+    errors.push(t('cards:fullNameValidationMaxNameLengthError', { maxNameLength: MAX_NAME_LENGTH }))
   }
   return errors.join(' ')
 }
@@ -296,17 +294,17 @@ export const getExpirationDateErrorMessage = (card: Card): string => {
   const today = PlainDate.fromLocalDate(new Date())
   const errors: string[] = []
   if (!card.expirationDate) {
-    return i18next.t('cards:expirationDateError')
+    return t('cards:expirationDateError')
   }
   if (card.expirationDate.isBeforeOrEqual(today)) {
-    errors.push(i18next.t('cards:expirationDateNotInFutureError'))
+    errors.push(t('cards:expirationDateNotInFutureError'))
   }
   if (startDay && card.expirationDate.isBeforeOrEqual(startDay)) {
-    errors.push(i18next.t('cards:expirationDateBeforeStartDayError'))
+    errors.push(t('cards:expirationDateBeforeStartDayError'))
   }
   if (isExceedingMaxValidityDate(card.expirationDate)) {
     errors.push(
-      i18next.t('cards:expirationDateFutureError', {
+      t('cards:expirationDateFutureError', {
         maxValidationDate: today.add(maxCardValidity).format(),
       }),
     )
