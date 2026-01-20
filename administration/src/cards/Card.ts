@@ -109,14 +109,13 @@ const hasValidNameLength = (fullName: string): boolean => {
   return fullName.length > 0 && encodedName.length <= MAX_ENCODED_NAME_LENGTH && fullName.length <= MAX_NAME_LENGTH
 }
 
-const hasNameAndForename = (fullName: string): boolean => {
-  const names = normalizeWhitespace(fullName).split(' ')
-  return names.length > 1 && names.every(name => name.length > 0)
-}
+// const hasNameAndForename = (fullName: string): boolean => {
+//   const names = normalizeWhitespace(fullName).split(' ')
+//   return names.length > 1 && names.every(name => name.length > 0)
+// }
 
 export const isFullNameValid = ({ fullName }: Card): boolean =>
   hasValidNameLength(fullName) &&
-  hasNameAndForename(fullName) &&
   containsOnlyLatinAndCommonCharset(fullName) &&
   !containsSpecialCharacters(fullName)
 
@@ -250,9 +249,6 @@ export const getFullNameValidationErrorMessage = (name: string): string => {
   }
   if (!containsOnlyLatinAndCommonCharset(name) || containsSpecialCharacters(name)) {
     errors.push(t('cards:fullNameValidationSpecialCharactersError'))
-  }
-  if (!hasNameAndForename(name)) {
-    errors.push(t('cards:fullNameValidationCompleteNameError'))
   }
   if (!hasValidNameLength(name)) {
     errors.push(t('cards:fullNameValidationMaxNameLengthError', { maxNameLength: MAX_NAME_LENGTH }))
