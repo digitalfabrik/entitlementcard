@@ -1,8 +1,11 @@
 query AcceptingStoresSearch($project: String!, $params: SearchParamsInput!) {
-    stores: searchAcceptingStoresInProject(project: $project, params: $params) {
+    stores: searchAcceptingStoresInProjectV2(project: $project, params: $params) {
         id
         name
-        description
+        descriptions {
+            locale
+            text
+        }
         physicalStore {
             id
             address {

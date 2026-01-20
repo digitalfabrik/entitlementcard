@@ -128,7 +128,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
               store: AcceptingStoreSummaryModel(
                 item.physicalStore?.id,
                 item.name,
-                item.description,
+                _getLocalizedDescription(item.descriptions),
                 item.categoryId,
                 storeCoordinates != null ? Coordinates(storeCoordinates.lat, storeCoordinates.lng) : null,
                 item.physicalStore?.address.location,
@@ -186,6 +186,26 @@ class ResultsLoaderState extends State<ResultsLoader> {
         ],
       ),
     );
+  }
+
+  String? _getLocalizedDescription(List<Query$AcceptingStoresSearch$stores$descriptions>? descriptions) {
+    if (descriptions == null || descriptions.isEmpty) return null;
+
+    final appLocale = LocaleSettings.currentLocale.languageCode.toUpperCase();
+    final fallbackLocale = AppLocale.de.languageCode.toUpperCase();
+
+    String? fallback;
+
+    for (final description in descriptions) {
+      if (description.locale == appLocale) {
+        return description.text;
+      }
+      if (description.locale == fallbackLocale) {
+        fallback ??= description.text;
+      }
+    }
+
+    return fallback;
   }
 
   @override
