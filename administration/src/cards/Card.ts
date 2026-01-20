@@ -115,9 +115,7 @@ const hasValidNameLength = (fullName: string): boolean => {
 // }
 
 export const isFullNameValid = ({ fullName }: Card): boolean =>
-  hasValidNameLength(fullName) &&
-  containsOnlyLatinAndCommonCharset(fullName) &&
-  !containsSpecialCharacters(fullName)
+  hasValidNameLength(fullName) && containsOnlyLatinAndCommonCharset(fullName) && !containsSpecialCharacters(fullName)
 
 export const isExpirationDateValid = (card: Card, { nullable } = { nullable: false }): boolean => {
   const today = PlainDate.fromLocalDate(new Date())
@@ -273,7 +271,7 @@ export const getExpirationDateErrorMessage = (card: Card): string => {
     errors.push(
       t('cards:expirationDateFutureError', {
         maxValidationDate: today.add(maxCardValidity).format(),
-      }),
+      })
     )
   }
   return errors.join(' ')
