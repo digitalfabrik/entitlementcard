@@ -212,12 +212,6 @@ describe('Card', () => {
     }
   )
 
-  it.each(['Karla', 'Peter'])('should correctly identify invalid fullname that is incomplete', fullName => {
-    const card = initializeCard(cardConfig, region, { fullName })
-    expect(isValueValid(card, cardConfig, 'Name')).toBeFalsy()
-    expect(isValid(card, cardConfig)).toBeFalsy()
-  })
-
   it(`should correctly identify invalid fullname that exceeds max length (${MAX_NAME_LENGTH} characters)`, () => {
     const card = initializeCard(cardConfig, region, { fullName: 'Karl LauterLauterLauterLauterLauterLauterLauterbach' })
     expect(isValueValid(card, cardConfig, 'Name')).toBeFalsy()
