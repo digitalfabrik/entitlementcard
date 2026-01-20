@@ -191,14 +191,16 @@ class ResultsLoaderState extends State<ResultsLoader> {
   String? _getLocalizedDescription(List<Query$AcceptingStoresSearch$stores$descriptions>? descriptions) {
     if (descriptions == null || descriptions.isEmpty) return null;
 
+    final appLocale = LocaleSettings.currentLocale.languageCode.toUpperCase();
+    final fallbackLocale = AppLocale.de.languageCode.toUpperCase();
+
     String? fallback;
 
     for (final description in descriptions) {
-      final locale = description.locale.toLowerCase();
-      if (locale == LocaleSettings.currentLocale.languageCode.toLowerCase()) {
+      if (description.locale == appLocale) {
         return description.text;
       }
-      if (locale == AppLocale.de.languageCode.toLowerCase()) {
+      if (description.locale == fallbackLocale) {
         fallback ??= description.text;
       }
     }
