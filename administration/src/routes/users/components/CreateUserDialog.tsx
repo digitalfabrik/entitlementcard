@@ -94,6 +94,7 @@ const CreateUserDialog = ({
           onChange={value => setEmail(value)}
           showError={!email || !isEmailValid(email)}
           errorMessage={t('noUserNameError')}
+          required
         />
         <RoleSelector selectedRole={role} onChange={setRole} />
 
