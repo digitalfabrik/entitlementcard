@@ -121,15 +121,12 @@ const hasValidNameLength = (fullName: string): boolean => {
   )
 }
 
-// const hasNameAndForename = (fullName: string): boolean => {
-//   const names = normalizeWhitespace(fullName).split(' ')
-//   return names.length > 1 && names.every(name => name.length > 0)
-// }
-
-export const isFullNameValid = ({ fullName }: Card): boolean =>
-  hasValidNameLength(fullName) &&
-  containsOnlyLatinAndCommonCharset(fullName) &&
-  !containsSpecialCharacters(fullName)
+export const isFullNameValid = ({ fullName }: Card): boolean => {
+  const normalizedName = normalizeWhitespace(fullName)
+  return hasValidNameLength(normalizedName) &&
+  containsOnlyLatinAndCommonCharset(normalizedName) &&
+  !containsSpecialCharacters(normalizedName)
+}
 
 export const isExpirationDateValid = (card: Card, { nullable } = { nullable: false }): boolean => {
   const today = PlainDate.fromLocalDate(new Date())
@@ -272,14 +269,15 @@ export const updateCard = (oldCard: Card, updatedCard: Partial<Card>): Card => (
 })
 
 export const getFullNameValidationErrorMessage = (name: string): string => {
+  const normalizedName = normalizeWhitespace(name)
   const errors: string[] = []
-  if (!name) {
+  if (!normalizedName) {
     return t('cards:fullNameValidationInvalidNameError')
   }
-  if (!containsOnlyLatinAndCommonCharset(name) || containsSpecialCharacters(name)) {
+  if (!containsOnlyLatinAndCommonCharset(normalizedName) || containsSpecialCharacters(normalizedName)) {
     errors.push(t('cards:fullNameValidationSpecialCharactersError'))
   }
-  if (!hasValidNameLength(name)) {
+  if (!hasValidNameLength(normalizedName)) {
     errors.push(t('cards:fullNameValidationMaxNameLengthError', { maxNameLength: MAX_NAME_LENGTH }))
   }
   return errors.join(' ')
