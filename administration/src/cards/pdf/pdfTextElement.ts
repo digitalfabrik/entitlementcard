@@ -47,8 +47,8 @@ const pdfTextElement: PdfElement<PdfTextElementProps, PdfTextElementRendererProp
   { page, font, info, region, card, cardInfoHash },
 ) => {
   const text = infoToText({ info, region, card, cardInfoHash })
-
   let xPt: number
+
   switch (textAlign) {
     case 'left':
       xPt = mmToPt(x)
