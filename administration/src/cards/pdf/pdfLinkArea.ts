@@ -1,6 +1,6 @@
 import { PDFDocument, PDFFont, PDFPage, PDFString } from '@cantoo/pdf-lib'
 
-import { Coordinates, PdfElement, mmToPt } from './pdfElements'
+import { Coordinates, mmToPt } from './pdfElements'
 
 export type PdfLinkAreaProps = {
   size: number
@@ -13,15 +13,16 @@ type PdfLinkAreaRendererProps = {
   url: string
 }
 
-const pdfLinkArea: PdfElement<PdfLinkAreaProps, PdfLinkAreaRendererProps> = (
-  { size, x, y },
-  { doc, page, url },
-) => {
-  const deepLinkAreaSize = mmToPt(size)
-  const deepLinkAreaX = mmToPt(x)
-  const deepLinkAreaY = page.getSize().height - deepLinkAreaSize - mmToPt(y)
-  const link = doc.context.register(
-    doc.context.obj({
+const pdfLinkArea = (
+  linkAreaElementProps: PdfLinkAreaProps,
+  linkAreaRenderProps: PdfLinkAreaRendererProps,
+): void => {
+  const deepLinkAreaSize = mmToPt(linkAreaElementProps.size)
+  const deepLinkAreaX = mmToPt(linkAreaElementProps.x)
+  const deepLinkAreaY =
+    linkAreaRenderProps.page.getSize().height - deepLinkAreaSize - mmToPt(linkAreaElementProps.y)
+  const link = linkAreaRenderProps.doc.context.register(
+    linkAreaRenderProps.doc.context.obj({
       Type: 'Annot',
       Subtype: 'Link',
       /* Bounds of the link on the page */
@@ -35,10 +36,10 @@ const pdfLinkArea: PdfElement<PdfLinkAreaProps, PdfLinkAreaRendererProps> = (
       Border: [0, 0, 0],
       // /* C: [2, 2, 1], */
       // URI Action
-      A: { Type: 'Action', S: 'URI', URI: PDFString.of(url) },
+      A: { Type: 'Action', S: 'URI', URI: PDFString.of(linkAreaRenderProps.url) },
     }),
   )
 
-  page.node.addAnnot(link)
+  linkAreaRenderProps.page.node.addAnnot(link)
 }
 export default pdfLinkArea
