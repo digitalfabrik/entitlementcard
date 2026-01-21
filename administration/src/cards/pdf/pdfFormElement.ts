@@ -18,19 +18,17 @@ export type PdfFormElementProps = {
   width: number
 } & Coordinates
 
-type PdfFormElementRendererProps = {
-  page: PDFPage
-  form: PDFForm
-  font: PDFFont
-  info: CardInfo
-  card: Card
-  cardInfoHash: string
-  region?: Region
-}
-
 const pdfFormElements = (
   formElementProps: PdfFormElementProps,
-  formRenderProps: PdfFormElementRendererProps,
+  formRenderProps: {
+    page: PDFPage
+    form: PDFForm
+    font: PDFFont
+    info: CardInfo
+    card: Card
+    cardInfoHash: string
+    region?: Region
+  },
 ): void => {
   const pageIdx = formRenderProps.page.doc.getPageCount()
   const formFields = formElementProps.infoToFormFields(formRenderProps.form, pageIdx, {
