@@ -3,7 +3,7 @@ import koblenzConfig from '../project-configs/koblenz/config'
 import { mockedCardMutation } from '../routes/erstellen/__mock__/mockSelfServiceCard'
 import { base64ToUint8Array } from './base64'
 import getCustomDeepLinkFromQrCode from './getCustomDeepLinkFromQrCode'
-import { PdfQrCode } from './pdf/pdfQrCodeElement'
+import type { PdfQrCode } from './pdf/elements'
 
 jest.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
 
