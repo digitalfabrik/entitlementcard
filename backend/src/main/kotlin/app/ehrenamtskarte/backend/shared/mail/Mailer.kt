@@ -156,6 +156,7 @@ object Mailer {
         backendConfig: BackendConfiguration,
         projectConfig: ProjectConfig,
         contactPerson: String,
+        contactEmailAddress: String,
         personalData: PersonalData,
         accessKey: String,
         applicationConfirmationNote: String?,
@@ -164,7 +165,7 @@ object Mailer {
             backendConfig = backendConfig,
             smtpConfig = projectConfig.smtp,
             fromName = projectConfig.administrationName,
-            to = personalData.emailAddress.email,
+            to = contactEmailAddress,
             subject = "Antrag erfolgreich eingereicht",
             message = emailBody {
                 p { +"Sehr geehrte/r $contactPerson," }
