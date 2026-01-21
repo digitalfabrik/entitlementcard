@@ -227,8 +227,24 @@ describe('Card', () => {
     },
   )
 
-  it.each(['Karla', 'Peter'])(
-    'should correctly identify invalid fullname that is incomplete',
+  it.each(['Karla', 'Peter'])('should correctly create a card with single name part', fullName => {
+    const card = initializeCard(cardConfig, region, { fullName })
+    expect(isValueValid(card, cardConfig, 'Name')).toBeTruthy()
+    expect(isValid(card, cardConfig)).toBeTruthy()
+  })
+
+  // There is a convention that if a part of the name is unknown, you can use a plus
+  it.each(['Erika +', 'Erika+'])(
+    'should correctly create a card with single name part including a plus',
+    fullName => {
+      const card = initializeCard(cardConfig, region, { fullName })
+      expect(isValueValid(card, cardConfig, 'Name')).toBeTruthy()
+      expect(isValid(card, cardConfig)).toBeTruthy()
+    },
+  )
+
+  it.each(['', ' ', '   '])(
+    'should identify invalid names if they only contain empty strings',
     fullName => {
       const card = initializeCard(cardConfig, region, { fullName })
       expect(isValueValid(card, cardConfig, 'Name')).toBeFalsy()
