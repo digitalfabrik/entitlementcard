@@ -6,16 +6,14 @@ export type PdfLinkAreaProps = {
   size: number
 } & Coordinates
 
-type PdfLinkAreaRendererProps = {
-  doc: PDFDocument
-  page: PDFPage
-  font: PDFFont
-  url: string
-}
-
 const pdfLinkArea = (
   linkAreaElementProps: PdfLinkAreaProps,
-  linkAreaRenderProps: PdfLinkAreaRendererProps,
+  linkAreaRenderProps: {
+    doc: PDFDocument
+    page: PDFPage
+    font: PDFFont
+    url: string
+  },
 ): void => {
   const deepLinkAreaSize = mmToPt(linkAreaElementProps.size)
   const deepLinkAreaX = mmToPt(linkAreaElementProps.x)

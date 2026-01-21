@@ -23,18 +23,16 @@ export type PdfTextElementProps = {
   infoToText: (info: InfoParams) => string
 } & Coordinates
 
-type PdfTextElementRendererProps = {
-  page: PDFPage
-  font: PDFFont
-  info: CardInfo
-  card: Card
-  cardInfoHash: string
-  region?: Region
-}
-
 const pdfTextElement = (
   textElementProps: PdfTextElementProps,
-  textRenderProps: PdfTextElementRendererProps,
+  textRenderProps: {
+    page: PDFPage
+    font: PDFFont
+    info: CardInfo
+    card: Card
+    cardInfoHash: string
+    region?: Region
+  },
 ): void => {
   const spacing = textElementProps.spacing === undefined ? 1 : textElementProps.spacing
   const angle = textElementProps.angle === undefined ? 0 : textElementProps.angle

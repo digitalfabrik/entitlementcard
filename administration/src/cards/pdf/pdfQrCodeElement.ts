@@ -13,14 +13,12 @@ export type PdfQrCodeElementProps = {
   size: number
 } & Coordinates
 
-type PdfQrCodeElementRendererProps = {
-  page: PDFPage
-  qrCode: PdfQrCode
-}
-
 const pdfQrCodeElement = (
   qrCodeElementProps: PdfQrCodeElementProps,
-  qrCodeRenderProps: PdfQrCodeElementRendererProps,
+  qrCodeRenderProps: {
+    page: PDFPage
+    qrCode: PdfQrCode
+  },
 ): void => {
   const qrCodeSizePdf = mmToPt(qrCodeElementProps.size)
   const qrCodeXPdf = mmToPt(qrCodeElementProps.x)
