@@ -14,10 +14,12 @@ import { ReactElement, ReactNode } from 'react'
 import type { Card } from '../cards/card'
 import type { CreateCardsResult } from '../cards/createCards'
 import type { Extension } from '../cards/extensions/extensions'
-import type { PdfFormElementProps } from '../cards/pdf/pdfFormElement'
-import type { PdfLinkAreaProps } from '../cards/pdf/pdfLinkArea'
-import type { PdfQrCodeElementProps } from '../cards/pdf/pdfQrCodeElement'
-import type { PdfTextElementProps } from '../cards/pdf/pdfTextElement'
+import type {
+  PdfFormElementProps,
+  PdfLinkAreaProps,
+  PdfQrCodeElementProps,
+  PdfTextElementProps,
+} from '../cards/pdf/elements'
 import type { JsonField } from '../components/JsonFieldView'
 import type { ActivityLogEntryType } from '../routes/activity-log/utils/activityLog'
 import bayernConfig from './bayern/config'
