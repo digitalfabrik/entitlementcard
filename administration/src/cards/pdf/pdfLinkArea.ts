@@ -1,6 +1,6 @@
 import { PDFDocument, PDFFont, PDFPage, PDFString } from '@cantoo/pdf-lib'
 
-import { Coordinates, mmToPt, PdfElement } from './pdfElements'
+import { Coordinates, PdfElement, mmToPt } from './pdfElements'
 
 export type PdfLinkAreaProps = {
   size: number
