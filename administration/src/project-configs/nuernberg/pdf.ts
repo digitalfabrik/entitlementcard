@@ -1,7 +1,7 @@
 import { PDFForm, PDFTextField, rgb } from '@cantoo/pdf-lib'
 
 import { getAddressFieldExtensionsValues } from '../../cards/extensions/AddressFieldExtensions'
-import type { InfoParams } from '../../cards/pdf/pdfTextElement'
+import type { InfoParams } from '../../cards/pdf/elements'
 import { formatDateDefaultGerman, plainDateFromDaysSinceEpoch } from '../../util/date'
 import type { PdfConfig } from '../getProjectConfig'
 import pdfTemplate from './pdf-template.pdf'
