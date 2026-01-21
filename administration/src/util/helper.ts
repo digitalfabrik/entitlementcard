@@ -30,7 +30,7 @@ const multipleSpacePattern = /\s\s+/g
 export const removeMultipleSpaces = (value: string): string =>
   value.replace(multipleSpacePattern, ' ')
 export const containsSpecialCharacters = (value: string): boolean =>
-  /[`!@#$%^&*()_=\]{};:"\\|,<>?€¥°[£¢§~¡“¶≠¿«∑®†Ω¨øπ•±‘æœ∆ª©ƒ∂å≈ç√∫–µ0123456789]/.test(value)
+  /[!@#$%^&*()_=\]{};:"\\|,<>?€¥°[£¢§~¡“¶≠¿«∑®†Ω¨øπ•±‘æœ∆ª©ƒ∂å≈ç√∫µ0123456789]/.test(value)
 
 /** This regEx is needed to avoid breaking pdf creation due to incompatible charsets in form fields
  * Common charset includes common pattern f.e. empty spaces.
