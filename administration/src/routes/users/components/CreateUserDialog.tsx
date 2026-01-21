@@ -63,7 +63,8 @@ const CreateUserDialog = ({
 
   const showRegionSelector =
     regionIdOverride === null && role !== null && rolesWithRegion.includes(role)
-  const userCreationDisabled = !email || role === null || (showRegionSelector && regionId === null)
+  const userCreationDisabled =
+    !email || role === null || (showRegionSelector && regionId === null) || !isEmailValid(email)
   return (
     <ConfirmDialog
       open={isOpen}
