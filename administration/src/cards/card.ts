@@ -123,9 +123,11 @@ const hasValidNameLength = (fullName: string): boolean => {
 
 export const isFullNameValid = ({ fullName }: Card): boolean => {
   const normalizedName = normalizeWhitespace(fullName)
-  return hasValidNameLength(normalizedName) &&
-  containsOnlyLatinAndCommonCharset(normalizedName) &&
-  !containsSpecialCharacters(normalizedName)
+  return (
+    hasValidNameLength(normalizedName) &&
+    containsOnlyLatinAndCommonCharset(normalizedName) &&
+    !containsSpecialCharacters(normalizedName)
+  )
 }
 
 export const isExpirationDateValid = (card: Card, { nullable } = { nullable: false }): boolean => {
@@ -274,7 +276,10 @@ export const getFullNameValidationErrorMessage = (name: string): string => {
   if (!normalizedName) {
     return t('cards:fullNameValidationInvalidNameError')
   }
-  if (!containsOnlyLatinAndCommonCharset(normalizedName) || containsSpecialCharacters(normalizedName)) {
+  if (
+    !containsOnlyLatinAndCommonCharset(normalizedName) ||
+    containsSpecialCharacters(normalizedName)
+  ) {
     errors.push(t('cards:fullNameValidationSpecialCharactersError'))
   }
   if (!hasValidNameLength(normalizedName)) {
