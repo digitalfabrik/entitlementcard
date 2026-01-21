@@ -10,10 +10,13 @@ import { reportErrorToSentry } from '../../util/sentry'
 import { Card } from '../card'
 import { CreateCardsResult } from '../createCards'
 import getDeepLinkFromQrCode from '../getDeepLinkFromQrCode'
-import pdfFormElement from './pdfFormElement'
-import pdfLinkArea from './pdfLinkArea'
-import pdfQrCodeElement, { PdfQrCode } from './pdfQrCodeElement'
-import pdfTextElement from './pdfTextElement'
+import {
+  type PdfQrCode,
+  pdfFormElement,
+  pdfLinkArea,
+  pdfQrCodeElement,
+  pdfTextElement,
+} from './elements'
 
 export class PdfError extends Error {
   constructor(message: string) {
