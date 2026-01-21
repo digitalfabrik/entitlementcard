@@ -4,15 +4,15 @@ import type { PdfConfig } from '../getProjectConfig'
 import pdfTemplate from './pdf-template.pdf'
 
 const renderPdfDetails = ({ info }: InfoParams): string => {
-  const expirationDay = info.expirationDay
-  if (expirationDay === undefined) {
+  if (info.expirationDay === undefined) {
     throw new Error('expirationDay must be defined for Koblenz')
   }
-  const expirationDate = plainDateFromDaysSinceEpoch(expirationDay)
+  const expirationDate = plainDateFromDaysSinceEpoch(info.expirationDay)
   const birthdayDate = plainDateFromDaysSinceEpoch(
     info.extensions?.extensionBirthday?.birthday ?? 0,
   )
   const startDate = plainDateFromDaysSinceEpoch(info.extensions?.extensionStartDay?.startDay ?? 0)
+
   return `${formatDateDefaultGerman(startDate)} - ${formatDateDefaultGerman(expirationDate)}
 ${formatDateDefaultGerman(birthdayDate)}
 ${info.fullName}`

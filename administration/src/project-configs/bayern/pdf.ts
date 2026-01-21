@@ -8,15 +8,15 @@ import pdfTemplate from './pdf-template.pdf'
 
 const renderPdfInfo = ({ info, region }: InfoParams): string => {
   const expirationDay = info.expirationDay ?? 0
-  const expirationDate =
+  const cardType = info.extensions?.extensionBavariaCardType?.cardType
+
+  return `${info.fullName}
+Kartentyp: ${cardType === BavariaCardType.STANDARD ? 'Blau' : 'Gold'}
+Gültig bis: ${
     expirationDay > 0
       ? formatDateDefaultGerman(plainDateFromDaysSinceEpoch(expirationDay))
       : 'unbegrenzt'
-
-  const cardType = info.extensions?.extensionBavariaCardType?.cardType
-  return `${info.fullName}
-Kartentyp: ${cardType === BavariaCardType.STANDARD ? 'Blau' : 'Gold'}
-Gültig bis: ${expirationDate}
+  }
 Ausgestellt am ${formatDateDefaultGerman(Temporal.Now.plainDateISO())}
 ${region ? `von ${region.prefix} ${region.name}` : ''}`
 }
