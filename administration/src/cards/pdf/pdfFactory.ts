@@ -29,6 +29,7 @@ const loadCustomFontWithFallback = async (
 ): Promise<PDFFont> => {
   doc.registerFontkit(fontkit)
   const fontUrl = `/fonts/${font}`
+
   try {
     const res = await fetch(fontUrl)
     if (res.ok && res.headers.get('Content-Type')?.includes('font')) {
@@ -62,6 +63,7 @@ const fillContentAreas = async (
   const font = pdfConfig.customFont
     ? await loadCustomFontWithFallback(pdfConfig.customFont, doc, StandardFonts.Helvetica)
     : await doc.embedFont(StandardFonts.Helvetica)
+
   pdfConfig.elements?.dynamicActivationQrCodes.forEach(configOptions =>
     pdfQrCodeElement(configOptions, { page: templatePage, qrCode: dynamicCode }),
   )
@@ -103,7 +105,6 @@ const fillContentAreas = async (
       region,
     }),
   )
-
   pdfConfig.elements?.text.forEach(configOptions =>
     pdfTextElement(configOptions, {
       page: templatePage,
@@ -123,6 +124,7 @@ export const generatePdf = async (
   region?: Region,
 ): Promise<Blob> => {
   const pdfConfig = projectConfig.pdf
+
   try {
     const doc = await PDFDocument.create()
     const templateDocument = await PDFDocument.load(
@@ -141,6 +143,7 @@ export const generatePdf = async (
     doc.setAuthor(pdfConfig.issuer)
 
     const pdfBytes = await doc.save()
+
     return new Blob([pdfBytes.buffer as ArrayBuffer], { type: 'application/pdf' })
   } catch (error) {
     if (error instanceof Error) {

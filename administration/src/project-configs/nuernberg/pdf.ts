@@ -8,15 +8,18 @@ import pdfTemplate from './pdf-template.pdf'
 
 const renderPdfDetails = ({ info }: InfoParams): string => {
   const expirationDay = info.expirationDay
+
   if (expirationDay === undefined) {
     throw new Error('expirationDay must be defined for Nürnberg')
   }
+
   const passId = info.extensions?.extensionNuernbergPassId?.passId
   const expirationDate = PlainDate.fromDaysSinceEpoch(expirationDay)
   const birthdayDate = PlainDate.fromDaysSinceEpoch(
     info.extensions?.extensionBirthday?.birthday ?? 0,
   )
   const startDate = PlainDate.fromDaysSinceEpoch(info.extensions?.extensionStartDay?.startDay ?? 0)
+
   return `${info.fullName}
 Pass-ID: ${passId ?? ''}
 Geburtsdatum: ${birthdayDate.format()}
@@ -29,7 +32,6 @@ const createAddressFormFields = (
   { info, card }: InfoParams,
 ): PDFTextField[] => {
   const [addressLine1, addressLine2, plz, location] = getAddressFieldExtensionsValues(card)
-
   const nameField = form.createTextField(`${pageIdx}.address.name`)
   const addressLine1Field = form.createTextField(`${pageIdx}.address.line.1`)
   const addressLine2Field = form.createTextField(`${pageIdx}.address.line.2`)
@@ -52,13 +54,12 @@ const createAddressFormFields = (
       plzAndLocationField.setText(`${plz} ${location}`)
     }
   }
+
   return [nameField, addressLine1Field, addressLine2Field, plzAndLocationField]
 }
 
-const renderPassId = ({ info }: InfoParams): string => {
-  const passId = info.extensions?.extensionNuernbergPassId?.passId
-  return passId?.toString() ?? ''
-}
+const renderPassId = ({ info }: InfoParams): string =>
+  info.extensions?.extensionNuernbergPassId?.passId?.toString() ?? ''
 
 const renderCardHash = ({ cardInfoHash }: InfoParams): string => cardInfoHash
 
