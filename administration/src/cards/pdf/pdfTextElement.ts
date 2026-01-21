@@ -3,7 +3,7 @@ import { Color, PDFFont, PDFPage, RotationTypes } from '@cantoo/pdf-lib'
 import { CardInfo } from '../../generated/card_pb'
 import { Region } from '../../generated/graphql'
 import { Card } from '../card'
-import { Coordinates, PdfElement, mmToPt } from './pdfElements'
+import { Coordinates, mmToPt } from './pdfElements'
 
 export type InfoParams = {
   info: CardInfo
@@ -32,47 +32,51 @@ type PdfTextElementRendererProps = {
   region?: Region
 }
 
-const pdfTextElement: PdfElement<PdfTextElementProps, PdfTextElementRendererProps> = (
-  {
-    maxWidth,
-    x,
-    y,
-    fontSize,
-    infoToText,
-    spacing = 1,
-    angle = 0,
-    color = undefined,
-    textAlign = 'left',
-  },
-  { page, font, info, region, card, cardInfoHash },
-) => {
-  const text = infoToText({ info, region, card, cardInfoHash })
+const pdfTextElement = (
+  textElementProps: PdfTextElementProps,
+  textRenderProps: PdfTextElementRendererProps,
+): void => {
+  const spacing = textElementProps.spacing === undefined ? 1 : textElementProps.spacing
+  const angle = textElementProps.angle === undefined ? 0 : textElementProps.angle
+  const color = textElementProps.color === undefined ? undefined : textElementProps.color
+  const textAlign = textElementProps.textAlign === undefined ? 'left' : textElementProps.textAlign
+  const text = textElementProps.infoToText({
+    info: textRenderProps.info,
+    region: textRenderProps.region,
+    card: textRenderProps.card,
+    cardInfoHash: textRenderProps.cardInfoHash,
+  })
   let xPt: number
 
   switch (textAlign) {
     case 'left':
-      xPt = mmToPt(x)
+      xPt = mmToPt(textElementProps.x)
       break
     case 'right':
-      xPt = mmToPt(x) - font.widthOfTextAtSize(text, fontSize)
+      xPt =
+        mmToPt(textElementProps.x) -
+        textRenderProps.font.widthOfTextAtSize(text, textElementProps.fontSize)
       break
     case 'center':
-      xPt = mmToPt(x) - font.widthOfTextAtSize(text, fontSize) / 2
+      xPt =
+        mmToPt(textElementProps.x) -
+        textRenderProps.font.widthOfTextAtSize(text, textElementProps.fontSize) / 2
       break
   }
 
-  const lineHeight = font.heightAtSize(fontSize) + spacing
+  const lineHeight = textRenderProps.font.heightAtSize(textElementProps.fontSize) + spacing
 
-  page.drawText(text, {
-    font,
+  textRenderProps.page.drawText(text, {
+    font: textRenderProps.font,
     x: xPt,
-    y: page.getSize().height - mmToPt(y) - lineHeight,
-    maxWidth: maxWidth !== undefined ? mmToPt(maxWidth) : undefined,
+    y: textRenderProps.page.getSize().height - mmToPt(textElementProps.y) - lineHeight,
+    maxWidth:
+      textElementProps.maxWidth !== undefined ? mmToPt(textElementProps.maxWidth) : undefined,
     wordBreaks: text.split('').filter(c => !'\n\f\r\u000B'.includes(c)), // Split on every character
     lineHeight,
     color,
     rotate: { angle, type: RotationTypes.Degrees },
-    size: fontSize,
+    size: textElementProps.fontSize,
   })
 }
 
