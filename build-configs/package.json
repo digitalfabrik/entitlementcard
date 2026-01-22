@@ -2,7 +2,13 @@
   "name": "build-configs",
   "version": "0.0.1",
   "private": true,
-  "main": "dist/index.js",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
   "scripts": {
     "format": "eslint . --fix && prettier . --write",
     "lint": "eslint . && prettier . --check",
