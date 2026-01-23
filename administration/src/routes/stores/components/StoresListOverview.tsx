@@ -5,10 +5,13 @@ import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Blankslate from '../../../components/Blankslate'
+import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
+import { CsvAcceptingStoreInput, useAddAcceptingStoreMutation } from '../../../generated/graphql'
 import { isDevelopmentEnvironment } from '../../../util/helper'
 import { trimStringFields } from '../../../util/normalizeString'
 import { AcceptingStoresData } from '../../applications/types/types'
 import { getStoreCoordinates } from '../../region/util/storeGeoDataService'
+import { splitStreetAndHouseNumber } from '../import/utils/splitStreetAndHouseNumber'
 import { AcceptingStoreFormData } from '../types'
 import ManageStoreDialog from './ManageStoreDialog'
 import StoresListTable from './StoresListTable'
@@ -29,6 +32,24 @@ const initializeAcceptingStoreForm = (store: AcceptingStoresData): AcceptingStor
   longitude: store.physicalStore?.coordinates.lng ?? undefined,
   latitude: store.physicalStore?.coordinates.lat ?? undefined,
 })
+
+const mapFormDataToCsvAcceptingStore = (store: AcceptingStoreFormData): CsvAcceptingStoreInput => ({
+  name: store.name,
+  street: splitStreetAndHouseNumber(store.street).street,
+  houseNumber: splitStreetAndHouseNumber(store.street).houseNumber,
+  postalCode: store.postalCode,
+  location: store.city,
+  telephone: store.telephone,
+  email: store.email,
+  homepage: store.homepage,
+  discountDE: store.descriptionDe,
+  discountEN: store.descriptionEn,
+  categoryId: store.categoryId,
+  longitude: store.longitude!,
+  latitude: store.latitude!,
+})
+
+// TODO trigger refetch after add, validate houseNr in address section, check long/lat for undefined
 const StoresListOverview = ({ data }: { data: AcceptingStoresData[] }): ReactElement => {
   const { t } = useTranslation('stores')
   const [openEditDialog, setOpenEditDialog] = useState(false)
@@ -38,6 +59,18 @@ const StoresListOverview = ({ data }: { data: AcceptingStoresData[] }): ReactEle
   const [acceptingStore, setAcceptingStore] = useState<AcceptingStoreFormData>()
   const { enqueueSnackbar } = useSnackbar()
   const formFieldsAreValid = acceptingStore !== undefined && !isStoreFormInvalid(acceptingStore)
+  const [addAcceptingStore, { loading: isAddingStore }] = useAddAcceptingStoreMutation({
+    onCompleted: () => {
+     // TODO add translation
+      enqueueSnackbar('Store added', { variant: 'success' })
+      setAcceptingStore(undefined)
+    },
+    onError: error => {
+      // TODO add duplicate error to graphqlErrorList
+      const { title } = getMessageFromApolloError(error)
+      enqueueSnackbar(title, { variant: 'error' })
+    },
+  })
 
   const openEditStoreDialog = (storeId: number) => {
     const activeStore = data.find(store => store.id === storeId)
@@ -60,8 +93,11 @@ const StoresListOverview = ({ data }: { data: AcceptingStoresData[] }): ReactEle
   const saveStore = () => {
     setFormSendAttempt(true)
     if (formFieldsAreValid) {
-      enqueueSnackbar('Save action not yet implemented.', { variant: 'warning' })
-      // TODO #2472 send data to the addStore endpoint if there is no acceptingStore.id
+      if (acceptingStore.id == null) {
+        addAcceptingStore({ variables: { store: mapFormDataToCsvAcceptingStore(acceptingStore) } })
+      } else {
+        enqueueSnackbar('Edit action not yet implemented.', { variant: 'warning' })
+      }
       // TODO #2692 send data to the editStore endpoint if there is acceptingStore.id
       console.log(trimStringFields(acceptingStore))
     } else {
@@ -146,7 +182,7 @@ const StoresListOverview = ({ data }: { data: AcceptingStoresData[] }): ReactEle
         </>
       )}
       <ManageStoreDialog
-        loading={isFetchingCoordinates}
+        loading={isFetchingCoordinates || isAddingStore}
         open={openEditDialog}
         showAddressError={showAddressError}
         isEditMode={acceptingStore?.id !== undefined}
