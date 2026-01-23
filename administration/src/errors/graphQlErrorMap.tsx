@@ -144,6 +144,10 @@ const graphQlErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
       return {
         title: i18next.t('errors:regionNotUnique'),
       }
+    case GraphQlExceptionCode.StoreAlreadyExists:
+      return {
+        title: i18next.t('errors:storeAlreadyExists'),
+      }
     case GraphQlExceptionCode.InvalidApplicationConfirmationNoteSize:
       return {
         title: i18next.t('errors:invalidApplicationConfirmationNoteSize', {
