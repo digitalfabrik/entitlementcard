@@ -6,6 +6,7 @@ import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/sentry.dart';
 import 'package:ehrenamtskarte/settings_provider.dart';
 import 'package:ehrenamtskarte/util/android_utils.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -32,7 +33,7 @@ Future<void> main() async {
     ]).then((value) => runApp(TranslationProvider(child: SettingsProvider(child: const App()))));
   }
 
-  if (isProduction()) {
+  if (kReleaseMode) {
     runAppWithSentry(run);
   } else {
     run();
