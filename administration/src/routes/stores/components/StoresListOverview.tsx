@@ -20,7 +20,8 @@ import { isStoreFormInvalid } from './form/validation'
 const initializeAcceptingStoreForm = (store: AcceptingStoresData): AcceptingStoreFormData => ({
   id: store.id,
   name: store.name ?? '',
-  street: store.physicalStore?.address.street ?? '',
+  street: splitStreetAndHouseNumber(store.physicalStore?.address.street).street,
+  houseNumber: splitStreetAndHouseNumber(store.physicalStore?.address.street).houseNumber,
   postalCode: store.physicalStore?.address.postalCode ?? '',
   city: store.physicalStore?.address.location ?? '',
   telephone: store.contact.telephone ?? '',
@@ -35,8 +36,8 @@ const initializeAcceptingStoreForm = (store: AcceptingStoresData): AcceptingStor
 
 const mapFormDataToCsvAcceptingStore = (store: AcceptingStoreFormData): CsvAcceptingStoreInput => ({
   name: store.name,
-  street: splitStreetAndHouseNumber(store.street).street,
-  houseNumber: splitStreetAndHouseNumber(store.street).houseNumber,
+  street: store.street,
+  houseNumber: store.houseNumber,
   postalCode: store.postalCode,
   location: store.city,
   telephone: store.telephone,
@@ -49,8 +50,13 @@ const mapFormDataToCsvAcceptingStore = (store: AcceptingStoreFormData): CsvAccep
   latitude: store.latitude!,
 })
 
-// TODO trigger refetch after add, validate houseNr in address section, check long/lat for undefined
-const StoresListOverview = ({ data }: { data: AcceptingStoresData[] }): ReactElement => {
+const StoresListOverview = ({
+  data,
+  refetchStores,
+}: {
+  data: AcceptingStoresData[]
+  refetchStores: () => void
+}): ReactElement => {
   const { t } = useTranslation('stores')
   const [openEditDialog, setOpenEditDialog] = useState(false)
   const [formSendAttempt, setFormSendAttempt] = useState(false)
@@ -61,12 +67,11 @@ const StoresListOverview = ({ data }: { data: AcceptingStoresData[] }): ReactEle
   const formFieldsAreValid = acceptingStore !== undefined && !isStoreFormInvalid(acceptingStore)
   const [addAcceptingStore, { loading: isAddingStore }] = useAddAcceptingStoreMutation({
     onCompleted: () => {
-     // TODO add translation
-      enqueueSnackbar('Store added', { variant: 'success' })
+      enqueueSnackbar(t('storeAdded'), { variant: 'success' })
       setAcceptingStore(undefined)
+      refetchStores()
     },
     onError: error => {
-      // TODO add duplicate error to graphqlErrorList
       const { title } = getMessageFromApolloError(error)
       enqueueSnackbar(title, { variant: 'error' })
     },
