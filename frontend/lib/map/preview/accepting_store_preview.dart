@@ -2,6 +2,7 @@ import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/accepting_store_by_physical_store_id.graphql.dart';
 import 'package:ehrenamtskarte/map/preview/accepting_store_preview_card.dart';
 import 'package:ehrenamtskarte/map/preview/models.dart';
+import 'package:ehrenamtskarte/store_widgets/store_description_helper.dart';
 import 'package:flutter/material.dart';
 
 class AcceptingStorePreview extends StatelessWidget {
@@ -53,8 +54,7 @@ class AcceptingStorePreview extends StatelessWidget {
       physicalStoreId: item.physicalStore?.id ?? physicalStoreId,
       categoryId: item.categoryId,
       name: item.name,
-      // TODO: use localized description
-      description: item.descriptions?.firstOrNull?.text,
+      description: getLocalizedDescription(item.descriptions),
       website: item.contact.website,
       telephone: item.contact.telephone,
       email: item.contact.email,
