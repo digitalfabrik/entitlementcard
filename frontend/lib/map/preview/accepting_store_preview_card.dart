@@ -30,12 +30,7 @@ class AcceptingStorePreviewCard extends StatelessWidget {
   final void Function()? refetch;
   final AcceptingStoreModel? acceptingStore;
 
-  const AcceptingStorePreviewCard({
-    super.key,
-    required this.isLoading,
-    this.acceptingStore,
-    this.refetch,
-  });
+  const AcceptingStorePreviewCard({super.key, required this.isLoading, this.acceptingStore, this.refetch});
 
   @override
   Widget build(BuildContext context) {

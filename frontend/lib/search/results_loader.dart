@@ -2,6 +2,7 @@ import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/graphql_gen/schema.graphql.dart';
 import 'package:ehrenamtskarte/map/preview/models.dart';
 import 'package:ehrenamtskarte/store_widgets/accepting_store_summary.dart';
+import 'package:ehrenamtskarte/store_widgets/store_description_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -130,7 +131,7 @@ class ResultsLoaderState extends State<ResultsLoader> {
                 categoryId: item.categoryId,
                 physicalStoreId: item.physicalStore?.id,
                 name: item.name,
-                description: _getLocalizedDescription(item.descriptions),
+                description: getLocalizedDescription(item.descriptions),
                 coordinates: storeCoordinates != null ? Coordinates(storeCoordinates.lat, storeCoordinates.lng) : null,
                 location: item.physicalStore?.address.location,
                 website: item.contact.website,
@@ -192,24 +193,6 @@ class ResultsLoaderState extends State<ResultsLoader> {
         ],
       ),
     );
-  }
-
-  String? _getLocalizedDescription(List<Query$AcceptingStoresSearch$stores$descriptions>? descriptions) {
-    if (descriptions == null || descriptions.isEmpty) return null;
-
-    String? fallback;
-
-    for (final description in descriptions) {
-      final locale = description.locale.toLowerCase();
-      if (locale == LocaleSettings.currentLocale.languageCode.toLowerCase()) {
-        return description.text;
-      }
-      if (locale == AppLocale.de.languageCode.toLowerCase()) {
-        fallback ??= description.text;
-      }
-    }
-
-    return fallback;
   }
 
   @override

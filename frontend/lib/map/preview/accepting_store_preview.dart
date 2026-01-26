@@ -2,6 +2,7 @@ import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/accepting_store_by_physical_store_id.graphql.dart';
 import 'package:ehrenamtskarte/map/preview/accepting_store_preview_card.dart';
 import 'package:ehrenamtskarte/map/preview/models.dart';
+import 'package:ehrenamtskarte/store_widgets/store_description_helper.dart';
 import 'package:flutter/material.dart';
 
 class AcceptingStorePreview extends StatelessWidget {
@@ -12,10 +13,13 @@ class AcceptingStorePreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final projectId = Configuration.of(context).projectId;
-    
+
     return Query$AcceptingStoreByPhysicalStoreId$Widget(
       options: Options$Query$AcceptingStoreByPhysicalStoreId(
-        variables: Variables$Query$AcceptingStoreByPhysicalStoreId(project: projectId, physicalStoreId: physicalStoreId),
+        variables: Variables$Query$AcceptingStoreByPhysicalStoreId(
+          project: projectId,
+          physicalStoreId: physicalStoreId,
+        ),
       ),
       builder: (result, {refetch, fetchMore}) {
         try {
@@ -35,10 +39,7 @@ class AcceptingStorePreview extends StatelessWidget {
           if (store == null) {
             throw Exception('ID not found.');
           }
-          return AcceptingStorePreviewCard(
-            isLoading: false,
-            acceptingStore: _convertToAcceptingStoreModel(store),
-          );
+          return AcceptingStorePreviewCard(isLoading: false, acceptingStore: _convertToAcceptingStoreModel(store));
         } on Exception catch (e) {
           debugPrint(e.toString());
           return AcceptingStorePreviewCard(isLoading: false, refetch: refetch);
@@ -53,8 +54,7 @@ class AcceptingStorePreview extends StatelessWidget {
       physicalStoreId: item.physicalStore?.id ?? physicalStoreId,
       categoryId: item.categoryId,
       name: item.name,
-      // TODO: use localized description
-      description: item.descriptions?.firstOrNull?.text,
+      description: getLocalizedDescription(item.descriptions),
       website: item.contact.website,
       telephone: item.contact.telephone,
       email: item.contact.email,

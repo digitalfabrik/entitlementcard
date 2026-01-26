@@ -121,11 +121,7 @@ class DetailContent extends StatelessWidget {
     }
     Navigator.of(context).pop();
     showOnMapProp(
-      PhysicalStoreFeatureData(
-        acceptingStore.id,
-        LatLng(coordinates.lat, coordinates.lng),
-        acceptingStore.categoryId,
-      ),
+      PhysicalStoreFeatureData(acceptingStore.id, LatLng(coordinates.lat, coordinates.lng), acceptingStore.categoryId),
     );
   }
 }
