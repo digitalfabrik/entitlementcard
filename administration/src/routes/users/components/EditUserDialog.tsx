@@ -90,7 +90,8 @@ const EditUserDialog = ({
     !email ||
     role === null ||
     (showRegionSelector && regionId === null) ||
-    notificationShownAndNotConfirmed
+    notificationShownAndNotConfirmed ||
+    !isEmailValid(email)
 
   const editUserAlertDescription = (
     <>
