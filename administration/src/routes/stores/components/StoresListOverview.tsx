@@ -126,13 +126,20 @@ const StoresListOverview = ({
   const getAddressCoordinates = () => {
     if (
       acceptingStore !== undefined &&
+      acceptingStore.houseNumber &&
+      acceptingStore.houseNumber.length > 0 &&
       acceptingStore.street &&
       acceptingStore.street.length > 0 &&
       acceptingStore.city &&
       acceptingStore.city.length > 0
     ) {
       setIsFetchingCoordinates(true)
-      Promise.resolve(getStoreCoordinates(acceptingStore.city, acceptingStore.street))
+      Promise.resolve(
+        getStoreCoordinates(
+          acceptingStore.city,
+          `${acceptingStore.street} ${acceptingStore.houseNumber}`,
+        ),
+      )
         .then(position => {
           const hasValidPosition = position?.length === 2
           updateStore('longitude', hasValidPosition ? position[0] : undefined)
