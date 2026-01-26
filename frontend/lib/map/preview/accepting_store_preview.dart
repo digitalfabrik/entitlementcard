@@ -1,5 +1,5 @@
 import 'package:ehrenamtskarte/configuration/configuration.dart';
-import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/physical_store_by_id.graphql.dart';
+import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/accepting_store_by_physical_store_id.graphql.dart';
 import 'package:ehrenamtskarte/map/preview/accepting_store_preview_card.dart';
 import 'package:ehrenamtskarte/map/preview/models.dart';
 import 'package:flutter/material.dart';
@@ -12,9 +12,10 @@ class AcceptingStorePreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final projectId = Configuration.of(context).projectId;
-    return Query$PhysicalStoreById$Widget(
-      options: Options$Query$PhysicalStoreById(
-        variables: Variables$Query$PhysicalStoreById(project: projectId, ids: [physicalStoreId]),
+    
+    return Query$AcceptingStoreByPhysicalStoreId$Widget(
+      options: Options$Query$AcceptingStoreByPhysicalStoreId(
+        variables: Variables$Query$AcceptingStoreByPhysicalStoreId(project: projectId, physicalStoreId: physicalStoreId),
       ),
       builder: (result, {refetch, fetchMore}) {
         try {
@@ -30,11 +31,7 @@ class AcceptingStorePreview extends StatelessWidget {
             return const AcceptingStorePreviewCard(isLoading: true);
           }
 
-          final stores = fetchedData.stores;
-          if (stores.length != 1) {
-            throw Exception('Server unexpectedly returned an array of the wrong size.');
-          }
-          final store = stores[0];
+          final store = fetchedData.store;
           if (store == null) {
             throw Exception('ID not found.');
           }
@@ -50,21 +47,23 @@ class AcceptingStorePreview extends StatelessWidget {
     );
   }
 
-  AcceptingStoreModel _convertToAcceptingStoreModel(Query$PhysicalStoreById$stores item) {
+  AcceptingStoreModel _convertToAcceptingStoreModel(Query$AcceptingStoreByPhysicalStoreId$store item) {
     return AcceptingStoreModel(
       id: item.id,
-      physicalStoreId: item.id,
-      categoryId: item.store.category.id,
-      name: item.store.name,
+      physicalStoreId: item.physicalStore?.id ?? physicalStoreId,
+      categoryId: item.categoryId,
+      name: item.name,
       // TODO: use localized description
-      description: item.store.description,
-      website: item.store.contact.website,
-      telephone: item.store.contact.telephone,
-      email: item.store.contact.email,
-      street: item.address.street,
-      postalCode: item.address.postalCode,
-      location: item.address.location,
-      coordinates: Coordinates(item.coordinates.lat, item.coordinates.lng),
+      description: item.descriptions?.firstOrNull?.text,
+      website: item.contact.website,
+      telephone: item.contact.telephone,
+      email: item.contact.email,
+      street: item.physicalStore?.address.street,
+      postalCode: item.physicalStore?.address.postalCode,
+      location: item.physicalStore?.address.location,
+      coordinates: item.physicalStore != null
+          ? Coordinates(item.physicalStore!.coordinates.lat, item.physicalStore!.coordinates.lng)
+          : null,
     );
   }
 }

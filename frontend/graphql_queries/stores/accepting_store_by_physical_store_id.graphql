@@ -1,0 +1,28 @@
+query AcceptingStoreByPhysicalStoreId($project: String!, $physicalStoreId: Int!) {
+    store: acceptingStoreByPhysicalStoreIdInProject(project: $project, physicalStoreId: $physicalStoreId) {
+        id
+        name
+        descriptions {
+            locale
+            text
+        }
+        contact {
+            telephone
+            website
+            email
+        }
+        physicalStore {
+            id
+            address {
+                location
+                postalCode
+                street
+            }
+            coordinates {
+                lat
+                lng
+            }
+        }
+        categoryId
+    }
+}
