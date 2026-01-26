@@ -25,6 +25,9 @@ import org.springframework.stereotype.Controller
 class AcceptingStoreQueryController(
     private val backendConfig: BackendConfiguration,
 ) {
+    @Deprecated(
+        "Use acceptingStoreByPhysicalStoreIdInProject for localized descriptions. Should be able to safely remove in January 2028.",
+    )
     @GraphQLDescription("Returns list of all accepting stores in the given project queried by ids.")
     @QueryMapping
     fun physicalStoresByIdInProject(
@@ -114,4 +117,15 @@ class AcceptingStoreQueryController(
         )
         return filteredStores
     }
+
+    @GraphQLDescription("Returns accepting store in the given project queried by physical store id.")
+    @QueryMapping
+    fun acceptingStoreByPhysicalStoreIdInProject(
+        @Argument project: String,
+        @Argument physicalStoreId: Int,
+    ): AcceptingStoreV2? =
+        transaction {
+            AcceptingStoresRepository.findByPhysicalStoreIdInProject(project, physicalStoreId)
+                ?.let { AcceptingStoreV2.fromDbEntity(it) }
+        }
 }

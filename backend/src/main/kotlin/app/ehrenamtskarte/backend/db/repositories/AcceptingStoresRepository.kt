@@ -19,6 +19,7 @@ import app.ehrenamtskarte.backend.import.stores.common.types.AcceptingStore
 import app.ehrenamtskarte.backend.shared.database.sortByKeys
 import net.postgis.jdbc.geometry.Point
 import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.dao.with
 import org.jetbrains.exposed.sql.ComparisonOp
 import org.jetbrains.exposed.sql.CustomFunction
 import org.jetbrains.exposed.sql.DoubleColumnType
@@ -194,6 +195,14 @@ object AcceptingStoresRepository {
 
     fun findByIds(ids: List<Int>) =
         AcceptingStoreEntity.find { AcceptingStores.id inList ids }.sortByKeys({ it.id.value }, ids)
+
+    fun findByPhysicalStoreIdInProject(project: String, physicalStoreId: Int): AcceptingStoreEntity? =
+        (Projects innerJoin AcceptingStores innerJoin PhysicalStores)
+            .select(AcceptingStores.columns)
+            .where { Projects.project eq project and (PhysicalStores.id eq physicalStoreId) }
+            .let { AcceptingStoreEntity.wrapRows(it) }
+            .with(AcceptingStoreEntity::descriptions)
+            .singleOrNull()
 }
 
 // Postgres' "like" operation uses case-sensitive comparison by default.
