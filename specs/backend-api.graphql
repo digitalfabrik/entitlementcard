@@ -282,8 +282,6 @@ type Query {
   getUsersInRegion(regionId: Int!): [Administrator!]!
   "Returns list of all accepting stores in the given project queried by ids."
   physicalStoresByIdInProject(ids: [Int!]!, project: String!): [PhysicalStore]!
-  "Returns list of all accepting stores in the given project."
-  physicalStoresInProject(project: String!): [PhysicalStore!]!
   "Returns region data for specific region."
   regionByRegionId(regionId: Int!): Region!
   "Returns regions queried by ids in the given project."

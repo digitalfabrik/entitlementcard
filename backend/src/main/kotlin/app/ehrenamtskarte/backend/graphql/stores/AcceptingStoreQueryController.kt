@@ -25,23 +25,6 @@ import org.springframework.stereotype.Controller
 class AcceptingStoreQueryController(
     private val backendConfig: BackendConfiguration,
 ) {
-    // TODO: remove unused
-    @GraphQLDescription("Returns list of all accepting stores in the given project.")
-    @QueryMapping
-    fun physicalStoresInProject(
-        @Argument project: String,
-    ): List<PhysicalStore> =
-        transaction {
-            PhysicalStoresRepository.findAllInProject(project).map {
-                PhysicalStore(
-                    it.id.value,
-                    it.storeId.value,
-                    it.addressId.value,
-                    Coordinates(it.coordinates.x, it.coordinates.y),
-                )
-            }
-        }
-
     @GraphQLDescription("Returns list of all accepting stores in the given project queried by ids.")
     @QueryMapping
     fun physicalStoresByIdInProject(
