@@ -124,9 +124,7 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
     if (data == null) {
       throw Exception('Fetched data is null');
     }
-    return data.acceptingStoresByPhysicalStoreIdsInProject
-        .map((store) => AcceptingStoreModel.fromGraphql(store))
-        .toList();
+    return data.stores.map((store) => AcceptingStoreModel.fromGraphql(store)).toList();
   }
 
   @override

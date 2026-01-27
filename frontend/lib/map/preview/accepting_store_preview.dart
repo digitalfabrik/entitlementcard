@@ -34,7 +34,11 @@ class AcceptingStorePreview extends StatelessWidget {
             return const AcceptingStorePreviewCard(isLoading: true);
           }
 
-          final store = fetchedData.acceptingStoresByPhysicalStoreIdsInProject.firstOrNull;
+          final stores = fetchedData.stores;
+          if (stores.length != 1) {
+            throw Exception('Server unexpectedly returned an array of the wrong size.');
+          }
+          final store = stores.firstOrNull;
           if (store == null) {
             throw Exception('ID not found.');
           }

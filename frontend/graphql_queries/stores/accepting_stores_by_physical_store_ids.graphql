@@ -1,5 +1,5 @@
 query AcceptingStoresByPhysicalStoreIds($project: String!, $physicalStoreIds: [Int!]!) {
-    acceptingStoresByPhysicalStoreIdsInProject(project: $project, physicalStoreIds: $physicalStoreIds) {
+    stores: acceptingStoresByPhysicalStoreIdsInProject(project: $project, physicalStoreIds: $physicalStoreIds) {
         id
         name
         descriptions {
