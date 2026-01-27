@@ -13,7 +13,8 @@ import 'package:ehrenamtskarte/store_widgets/removed_store_summary.dart';
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:provider/provider.dart';
-import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/physical_store_by_id.graphql.dart';
+import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/accepting_store_by_physical_store_id.graphql.dart';
+import 'package:ehrenamtskarte/store_widgets/store_description_helper.dart';
 
 class FavoritesLoader extends StatefulWidget {
   const FavoritesLoader({super.key});
@@ -75,7 +76,9 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
       final fetchIds = favorites.getRange(pageKey, min(pageKey + _pageSize, favorites.length)).toList();
 
       final newItems = await Future.wait(
-        fetchIds.map((id) async => favoritesModel.getFavoriteStore(id)..physicalStore = await _fetchPhysicalStore(id)),
+        fetchIds.map(
+          (id) async => favoritesModel.getFavoriteStore(id)..acceptingStore = await _fetchAcceptingStore(id),
+        ),
       );
 
       if (mounted) {
@@ -94,7 +97,7 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
     }
   }
 
-  Future<Query$PhysicalStoreById$stores?> _fetchPhysicalStore(int storeId) async {
+  Future<AcceptingStoreModel?> _fetchAcceptingStore(int physicalStoreId) async {
     final projectId = Configuration.of(context).projectId;
 
     final client = _client;
@@ -102,9 +105,12 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
       throw Exception('GraphQL client is not yet initialized!');
     }
 
-    final result = await client.query$PhysicalStoreById(
-      Options$Query$PhysicalStoreById(
-        variables: Variables$Query$PhysicalStoreById(project: projectId, ids: [storeId]),
+    final result = await client.query$AcceptingStoreByPhysicalStoreId(
+      Options$Query$AcceptingStoreByPhysicalStoreId(
+        variables: Variables$Query$AcceptingStoreByPhysicalStoreId(
+          project: projectId,
+          physicalStoreId: physicalStoreId,
+        ),
       ),
     );
     final exception = result.exception;
@@ -116,7 +122,26 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
     if (data == null) {
       throw Exception('Fetched data is null');
     }
-    return data.stores.firstOrNull;
+    final store = data.store;
+    if (store == null) {
+      return null;
+    }
+    return AcceptingStoreModel(
+      id: store.id,
+      physicalStoreId: store.physicalStore?.id ?? physicalStoreId,
+      categoryId: store.categoryId,
+      name: store.name,
+      description: getLocalizedDescription(store.descriptions),
+      coordinates: store.physicalStore != null
+          ? Coordinates(store.physicalStore!.coordinates.lat, store.physicalStore!.coordinates.lng)
+          : null,
+      location: store.physicalStore?.address.location,
+      website: store.contact.website,
+      telephone: store.contact.telephone,
+      email: store.contact.email,
+      street: store.physicalStore?.address.street,
+      postalCode: store.physicalStore?.address.postalCode,
+    );
   }
 
   @override
@@ -136,20 +161,12 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
   }
 
   Widget _buildItem(BuildContext context, FavoriteStore item, index) {
-    final physicalStore = item.physicalStore;
-    if (physicalStore != null) {
+    final store = item.acceptingStore;
+    if (store != null) {
       return IntrinsicHeight(
-        // TODO: fix favorites loading
         child: AcceptingStoreSummary(
-          key: ValueKey(physicalStore.id),
-          store: AcceptingStoreModel(
-            id: physicalStore.id,
-            categoryId: physicalStore.store.category.id,
-            name: physicalStore.store.name,
-            description: physicalStore.store.description,
-            coordinates: null,
-            location: null,
-          ),
+          key: ValueKey(store.id),
+          store: store,
           showOnMap: (it) => HomePageData.of(context)?.navigateToMapTab(it),
         ),
       );
