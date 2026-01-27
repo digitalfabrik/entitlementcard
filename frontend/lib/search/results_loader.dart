@@ -1,8 +1,7 @@
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/graphql_gen/schema.graphql.dart';
-import 'package:ehrenamtskarte/map/preview/models.dart';
 import 'package:ehrenamtskarte/store_widgets/accepting_store_summary.dart';
-import 'package:ehrenamtskarte/store_widgets/store_description_helper.dart';
+import 'package:ehrenamtskarte/map/preview/models.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -120,24 +119,10 @@ class ResultsLoaderState extends State<ResultsLoader> {
       pagingController: _pagingController,
       builderDelegate: PagedChildBuilderDelegate<Query$AcceptingStoresSearch$stores>(
         itemBuilder: (context, item, index) {
-          final storeCoordinates = item.physicalStore?.coordinates;
           return IntrinsicHeight(
             child: AcceptingStoreSummary(
               key: ValueKey(item.id),
-              store: AcceptingStoreModel(
-                id: item.id,
-                categoryId: item.categoryId,
-                physicalStoreId: item.physicalStore?.id,
-                name: item.name,
-                description: getLocalizedDescription(item.descriptions),
-                coordinates: storeCoordinates != null ? Coordinates(storeCoordinates.lat, storeCoordinates.lng) : null,
-                location: item.physicalStore?.address.location,
-                website: item.contact.website,
-                telephone: item.contact.telephone,
-                email: item.contact.email,
-                street: item.physicalStore?.address.street,
-                postalCode: item.physicalStore?.address.postalCode,
-              ),
+              store: AcceptingStoreModel.fromGraphql(item),
               coordinates: widget.coordinates,
               showOnMap: (it) => HomePageData.of(context)?.navigateToMapTab(it),
             ),

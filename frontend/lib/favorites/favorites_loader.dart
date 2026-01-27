@@ -14,7 +14,6 @@ import 'package:ehrenamtskarte/store_widgets/removed_store_summary.dart';
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:provider/provider.dart';
-import 'package:ehrenamtskarte/store_widgets/store_description_helper.dart';
 
 class FavoritesLoader extends StatefulWidget {
   const FavoritesLoader({super.key});
@@ -125,24 +124,9 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
     if (data == null) {
       throw Exception('Fetched data is null');
     }
-    return data.acceptingStoresByPhysicalStoreIdsInProject.map((store) {
-      return AcceptingStoreModel(
-        id: store.id,
-        physicalStoreId: store.physicalStore?.id,
-        categoryId: store.categoryId,
-        name: store.name,
-        description: getLocalizedDescription(store.descriptions),
-        coordinates: store.physicalStore != null
-            ? Coordinates(store.physicalStore!.coordinates.lat, store.physicalStore!.coordinates.lng)
-            : null,
-        location: store.physicalStore?.address.location,
-        website: store.contact.website,
-        telephone: store.contact.telephone,
-        email: store.contact.email,
-        street: store.physicalStore?.address.street,
-        postalCode: store.physicalStore?.address.postalCode,
-      );
-    }).toList();
+    return data.acceptingStoresByPhysicalStoreIdsInProject
+        .map((store) => AcceptingStoreModel.fromGraphql(store))
+        .toList();
   }
 
   @override
