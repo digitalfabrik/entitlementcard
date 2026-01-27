@@ -90,7 +90,8 @@ const EditUserDialog = ({
     !email ||
     role === null ||
     (showRegionSelector && regionId === null) ||
-    notificationShownAndNotConfirmed
+    notificationShownAndNotConfirmed ||
+    !isEmailValid(email)
 
   const editUserAlertDescription = (
     <>
@@ -135,6 +136,7 @@ const EditUserDialog = ({
           onChange={value => setEmail(value)}
           showError={!email || !isEmailValid(email)}
           errorMessage={t('noUserNameError')}
+          required
         />
         <RoleSelector selectedRole={role} onChange={setRole} />
         {showRegionSelector ? (

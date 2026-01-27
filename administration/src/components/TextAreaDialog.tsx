@@ -47,6 +47,7 @@ const TextAreaDialog = ({
       open={isOpen}
       title={title}
       id={id}
+      maxWidth='md'
       onConfirm={() => onSave(text)}
       onClose={onClose}
       cancelButtonText={t('close')}

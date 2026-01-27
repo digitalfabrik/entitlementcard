@@ -39,7 +39,7 @@ dependencies:
   crypto: ^3.0.7
   shared_preferences: ^2.5.4
   tinycolor2: ^3.0.1
-  sentry_flutter: ^9.9.1
+  sentry_flutter: ^9.10.0
   carousel_slider: ^5.1.1
   slang: ^4.11.1
   slang_flutter: ^4.2.0
