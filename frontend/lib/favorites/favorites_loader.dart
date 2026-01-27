@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/accepting_stores_by_physical_store_ids.graphql.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -13,7 +14,6 @@ import 'package:ehrenamtskarte/store_widgets/removed_store_summary.dart';
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:provider/provider.dart';
-import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/accepting_store_by_physical_store_id.graphql.dart';
 import 'package:ehrenamtskarte/store_widgets/store_description_helper.dart';
 
 class FavoritesLoader extends StatefulWidget {
@@ -75,11 +75,14 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
 
       final fetchIds = favorites.getRange(pageKey, min(pageKey + _pageSize, favorites.length)).toList();
 
-      final newItems = await Future.wait(
-        fetchIds.map(
-          (id) async => favoritesModel.getFavoriteStore(id)..acceptingStore = await _fetchAcceptingStore(id),
-        ),
-      );
+      final acceptingStores = {
+        for (final store in await _fetchAcceptingStores(fetchIds))
+          if (store.physicalStoreId != null) store.physicalStoreId!: store,
+      };
+
+      final newItems = fetchIds
+          .map((id) => favoritesModel.getFavoriteStore(id)..acceptingStore = acceptingStores[id])
+          .toList();
 
       if (mounted) {
         final isLastPage = newItems.length < _pageSize;
@@ -97,7 +100,7 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
     }
   }
 
-  Future<AcceptingStoreModel?> _fetchAcceptingStore(int physicalStoreId) async {
+  Future<List<AcceptingStoreModel>> _fetchAcceptingStores(List<int> physicalStoreIds) async {
     final projectId = Configuration.of(context).projectId;
 
     final client = _client;
@@ -105,11 +108,11 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
       throw Exception('GraphQL client is not yet initialized!');
     }
 
-    final result = await client.query$AcceptingStoreByPhysicalStoreId(
-      Options$Query$AcceptingStoreByPhysicalStoreId(
-        variables: Variables$Query$AcceptingStoreByPhysicalStoreId(
+    final result = await client.query$AcceptingStoresByPhysicalStoreIds(
+      Options$Query$AcceptingStoresByPhysicalStoreIds(
+        variables: Variables$Query$AcceptingStoresByPhysicalStoreIds(
           project: projectId,
-          physicalStoreId: physicalStoreId,
+          physicalStoreIds: physicalStoreIds,
         ),
       ),
     );
@@ -122,26 +125,24 @@ class FavoritesLoaderState extends State<FavoritesLoader> {
     if (data == null) {
       throw Exception('Fetched data is null');
     }
-    final store = data.store;
-    if (store == null) {
-      return null;
-    }
-    return AcceptingStoreModel(
-      id: store.id,
-      physicalStoreId: store.physicalStore?.id ?? physicalStoreId,
-      categoryId: store.categoryId,
-      name: store.name,
-      description: getLocalizedDescription(store.descriptions),
-      coordinates: store.physicalStore != null
-          ? Coordinates(store.physicalStore!.coordinates.lat, store.physicalStore!.coordinates.lng)
-          : null,
-      location: store.physicalStore?.address.location,
-      website: store.contact.website,
-      telephone: store.contact.telephone,
-      email: store.contact.email,
-      street: store.physicalStore?.address.street,
-      postalCode: store.physicalStore?.address.postalCode,
-    );
+    return data.acceptingStoresByPhysicalStoreIdsInProject.map((store) {
+      return AcceptingStoreModel(
+        id: store.id,
+        physicalStoreId: store.physicalStore?.id,
+        categoryId: store.categoryId,
+        name: store.name,
+        description: getLocalizedDescription(store.descriptions),
+        coordinates: store.physicalStore != null
+            ? Coordinates(store.physicalStore!.coordinates.lat, store.physicalStore!.coordinates.lng)
+            : null,
+        location: store.physicalStore?.address.location,
+        website: store.contact.website,
+        telephone: store.contact.telephone,
+        email: store.contact.email,
+        street: store.physicalStore?.address.street,
+        postalCode: store.physicalStore?.address.postalCode,
+      );
+    }).toList();
   }
 
   @override

@@ -118,14 +118,14 @@ class AcceptingStoreQueryController(
         return filteredStores
     }
 
-    @GraphQLDescription("Returns accepting store in the given project queried by physical store id.")
+    @GraphQLDescription("Returns accepting stores in the given project queried by physical store ids.")
     @QueryMapping
-    fun acceptingStoreByPhysicalStoreIdInProject(
+    fun acceptingStoresByPhysicalStoreIdsInProject(
         @Argument project: String,
-        @Argument physicalStoreId: Int,
-    ): AcceptingStoreV2? =
+        @Argument physicalStoreIds: List<Int>,
+    ): List<AcceptingStoreV2> =
         transaction {
-            AcceptingStoresRepository.findByPhysicalStoreIdInProject(project, physicalStoreId)
-                ?.let { AcceptingStoreV2.fromDbEntity(it) }
+            AcceptingStoresRepository.findByPhysicalStoreIdsInProject(project, physicalStoreIds)
+                .map { AcceptingStoreV2.fromDbEntity(it) }
         }
 }

@@ -1,5 +1,5 @@
 import 'package:ehrenamtskarte/configuration/configuration.dart';
-import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/accepting_store_by_physical_store_id.graphql.dart';
+import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/accepting_stores_by_physical_store_ids.graphql.dart';
 import 'package:ehrenamtskarte/map/preview/accepting_store_preview_card.dart';
 import 'package:ehrenamtskarte/map/preview/models.dart';
 import 'package:ehrenamtskarte/store_widgets/store_description_helper.dart';
@@ -14,11 +14,11 @@ class AcceptingStorePreview extends StatelessWidget {
   Widget build(BuildContext context) {
     final projectId = Configuration.of(context).projectId;
 
-    return Query$AcceptingStoreByPhysicalStoreId$Widget(
-      options: Options$Query$AcceptingStoreByPhysicalStoreId(
-        variables: Variables$Query$AcceptingStoreByPhysicalStoreId(
+    return Query$AcceptingStoresByPhysicalStoreIds$Widget(
+      options: Options$Query$AcceptingStoresByPhysicalStoreIds(
+        variables: Variables$Query$AcceptingStoresByPhysicalStoreIds(
           project: projectId,
-          physicalStoreId: physicalStoreId,
+          physicalStoreIds: [physicalStoreId],
         ),
       ),
       builder: (result, {refetch, fetchMore}) {
@@ -35,7 +35,7 @@ class AcceptingStorePreview extends StatelessWidget {
             return const AcceptingStorePreviewCard(isLoading: true);
           }
 
-          final store = fetchedData.store;
+          final store = fetchedData.acceptingStoresByPhysicalStoreIdsInProject.firstOrNull;
           if (store == null) {
             throw Exception('ID not found.');
           }
@@ -48,7 +48,9 @@ class AcceptingStorePreview extends StatelessWidget {
     );
   }
 
-  AcceptingStoreModel _convertToAcceptingStoreModel(Query$AcceptingStoreByPhysicalStoreId$store item) {
+  AcceptingStoreModel _convertToAcceptingStoreModel(
+    Query$AcceptingStoresByPhysicalStoreIds$acceptingStoresByPhysicalStoreIdsInProject item,
+  ) {
     return AcceptingStoreModel(
       id: item.id,
       physicalStoreId: item.physicalStore?.id ?? physicalStoreId,

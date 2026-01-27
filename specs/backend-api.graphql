@@ -252,8 +252,8 @@ type PhysicalStore {
 }
 
 type Query {
-  "Returns accepting store in the given project queried by physical store id."
-  acceptingStoreByPhysicalStoreIdInProject(physicalStoreId: Int!, project: String!): AcceptingStoreV2
+  "Returns accepting stores in the given project queried by physical store ids."
+  acceptingStoresByPhysicalStoreIdsInProject(physicalStoreIds: [Int!]!, project: String!): [AcceptingStoreV2!]!
   "Return list of all categories."
   categories: [Category!]!
   "Verify password reset link"

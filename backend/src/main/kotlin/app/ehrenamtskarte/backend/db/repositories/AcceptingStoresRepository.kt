@@ -196,13 +196,13 @@ object AcceptingStoresRepository {
     fun findByIds(ids: List<Int>) =
         AcceptingStoreEntity.find { AcceptingStores.id inList ids }.sortByKeys({ it.id.value }, ids)
 
-    fun findByPhysicalStoreIdInProject(project: String, physicalStoreId: Int): AcceptingStoreEntity? =
+    fun findByPhysicalStoreIdsInProject(project: String, physicalStoreIds: List<Int>): List<AcceptingStoreEntity> =
         (Projects innerJoin AcceptingStores innerJoin PhysicalStores)
             .select(AcceptingStores.columns)
-            .where { Projects.project eq project and (PhysicalStores.id eq physicalStoreId) }
+            .where { Projects.project eq project and (PhysicalStores.id inList physicalStoreIds) }
             .let { AcceptingStoreEntity.wrapRows(it) }
             .with(AcceptingStoreEntity::descriptions)
-            .singleOrNull()
+            .toList()
 }
 
 // Postgres' "like" operation uses case-sensitive comparison by default.
