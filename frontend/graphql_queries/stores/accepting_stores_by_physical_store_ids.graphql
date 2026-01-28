@@ -1,5 +1,5 @@
-query AcceptingStoresSearch($project: String!, $params: SearchParamsInput!) {
-    stores: searchAcceptingStoresInProjectV2(project: $project, params: $params) {
+query AcceptingStoresByPhysicalStoreIds($project: String!, $physicalStoreIds: [Int!]!) {
+    stores: acceptingStoresByPhysicalStoreIdsInProject(project: $project, physicalStoreIds: $physicalStoreIds) {
         id
         name
         descriptions {

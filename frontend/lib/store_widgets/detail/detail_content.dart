@@ -1,8 +1,8 @@
 import 'dart:developer';
 import 'dart:io' show Platform;
 
-import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/physical_store_by_id.graphql.dart';
 import 'package:ehrenamtskarte/map/map_page.dart';
+import 'package:ehrenamtskarte/map/preview/models.dart';
 import 'package:ehrenamtskarte/store_widgets/detail/contact_info_row.dart';
 import 'package:ehrenamtskarte/util/color_utils.dart';
 import 'package:ehrenamtskarte/util/sanitize_contact_details.dart';
@@ -14,7 +14,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
 class DetailContent extends StatelessWidget {
-  final Query$PhysicalStoreById$stores acceptingStore;
+  final AcceptingStoreModel acceptingStore;
   final void Function(PhysicalStoreFeatureData)? showOnMap;
   final Color? accentColor;
   final Color? readableOnAccentColor;
@@ -25,20 +25,18 @@ class DetailContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.t;
     final theme = Theme.of(context);
-    final address = acceptingStore.address;
-    final street = address.street;
-    final location = '${address.postalCode} ${address.location}';
+    final street = acceptingStore.street;
+    final location = '${acceptingStore.postalCode} ${acceptingStore.location}';
     final addressString = '${street != null ? '$street\n' : ''}$location';
     final mapQueryString = '${street != null ? '$street, ' : ''}$location';
 
-    final contact = acceptingStore.store.contact;
     final currentAccentColor = accentColor;
     final readableOnAccentColor = currentAccentColor == null ? null : getReadableOnColor(currentAccentColor);
 
-    final storeDescription = acceptingStore.store.description;
-    final website = contact.website;
-    final telephone = contact.telephone;
-    final email = contact.email;
+    final storeDescription = acceptingStore.description;
+    final website = acceptingStore.website;
+    final telephone = acceptingStore.telephone;
+    final email = acceptingStore.email;
     return SingleChildScrollView(
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 18),
@@ -90,7 +88,7 @@ class DetailContent extends StatelessWidget {
                   ),
               ],
             ),
-            if (showOnMap != null) ...[
+            if (showOnMap != null && acceptingStore.coordinates != null) ...[
               Divider(thickness: 0.7, height: 48, color: theme.primaryColorLight),
               OverflowBar(
                 alignment: MainAxisAlignment.center,
@@ -116,17 +114,14 @@ class DetailContent extends StatelessWidget {
   Future<void> _showOnMap(BuildContext context) async {
     // Hint: The promise here is unused
     final showOnMapProp = showOnMap;
-    if (showOnMapProp == null) {
-      log('Error: showOnMap is null, but button was pressed.');
+    final coordinates = acceptingStore.coordinates;
+    if (showOnMapProp == null || coordinates == null) {
+      log('Error: showOnMap or coordinates is null, but button was pressed.');
       return;
     }
     Navigator.of(context).pop();
     showOnMapProp(
-      PhysicalStoreFeatureData(
-        acceptingStore.id,
-        LatLng(acceptingStore.coordinates.lat, acceptingStore.coordinates.lng),
-        acceptingStore.store.category.id,
-      ),
+      PhysicalStoreFeatureData(acceptingStore.id, LatLng(coordinates.lat, coordinates.lng), acceptingStore.categoryId),
     );
   }
 }
