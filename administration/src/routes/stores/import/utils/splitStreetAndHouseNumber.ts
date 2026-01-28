@@ -18,7 +18,7 @@ export const splitStreetAndHouseNumber = (
 
   if (match) {
     const street = trimmed.substring(0, match.index).trim()
-    const houseNumber = match[1].trim() // Nur äußere Leerzeichen entfernen
+    const houseNumber = match[1].trim()
 
     if (street.length > 0) {
       return { street, houseNumber }

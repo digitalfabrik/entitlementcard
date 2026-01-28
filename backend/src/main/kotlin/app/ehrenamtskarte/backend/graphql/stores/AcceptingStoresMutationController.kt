@@ -59,6 +59,8 @@ class AcceptingStoresMutationService {
         }
 
         transaction {
+            // Since we only have ProjectStoreManagers for projects with one exact region, we are fine with getting a single entity.
+            // If we want to enable this for projects with multiple regions f.e. EAK, we have to provide a regionId.
             val regionEntity = RegionsRepository.findAllInProject(authContext.project).singleOrNull()
                 ?: throw RegionNotUniqueException()
             val acceptingStore = mapCsvToStore(store)
