@@ -123,7 +123,7 @@ const StoresListOverview = ({
     )
   }
 
-  const getAddressCoordinates = () => {
+  const getAddressCoordinates = async () => {
     if (
       acceptingStore !== undefined &&
       acceptingStore.houseNumber &&
@@ -133,23 +133,21 @@ const StoresListOverview = ({
       acceptingStore.city &&
       acceptingStore.city.length > 0
     ) {
-      setIsFetchingCoordinates(true)
-      Promise.resolve(
-        getStoreCoordinates(
+      try {
+        setIsFetchingCoordinates(true)
+        const position = await getStoreCoordinates(
           acceptingStore.city,
           `${acceptingStore.street} ${acceptingStore.houseNumber}`,
-        ),
-      )
-        .then(position => {
-          const hasValidPosition = position?.length === 2
-          updateStore('longitude', hasValidPosition ? position[0] : undefined)
-          updateStore('latitude', hasValidPosition ? position[1] : undefined)
-          setShowAddressError(!hasValidPosition)
-        })
-        .catch(() => {
-          enqueueSnackbar(t('storeForm:errorGeoServiceNotReachable'), { variant: 'error' })
-        })
-        .finally(() => setIsFetchingCoordinates(false))
+        )
+        const hasValidPosition = position?.length === 2
+        updateStore('longitude', hasValidPosition ? position[0] : undefined)
+        updateStore('latitude', hasValidPosition ? position[1] : undefined)
+        setShowAddressError(!hasValidPosition)
+      } catch {
+        enqueueSnackbar(t('storeForm:errorGeoServiceNotReachable'), { variant: 'error' })
+      } finally {
+        setIsFetchingCoordinates(false)
+      }
     }
   }
 
