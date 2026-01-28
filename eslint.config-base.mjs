@@ -16,7 +16,7 @@ const require = createRequire(import.meta.url)
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const compat = new FlatCompat({
-  baseDirectory: __dirname,
+  baseDirectory: __dirname
 })
 
 export default [
@@ -38,11 +38,11 @@ export default [
       'jsx-expressions': fixupPluginRules(jsxExpressions),
       'prefer-arrow': preferArrow,
       react: react,
-      'react-hooks': reactHooks,
+      'react-hooks': reactHooks
     },
 
     linterOptions: {
-      reportUnusedDisableDirectives: true,
+      reportUnusedDisableDirectives: true
     },
 
     languageOptions: {
@@ -51,20 +51,21 @@ export default [
       sourceType: 'script',
 
       parserOptions: {
-        project: true,
-      },
+        project: true
+      }
     },
 
     settings: {
       jest: {
         // Since eslint is installed in a different directory than jest, the jest eslint plugin fails to automatically detect the version of jest//
         // https://github.com/digitalfabrik/entitlementcard/issues/1659
-        version: require('jest/package.json').version,
-      },
+        version: require('jest/package.json').version
+      }
     },
 
     rules: {
       // Overly strict rules (for now)
+      '@typescript-eslint/no-non-null-assertion': 'off',
       'class-methods-use-this': 'off',
       'no-console': 'off',
       'no-magic-numbers': 'off',
@@ -72,63 +73,27 @@ export default [
       'no-plusplus': 'off',
       'no-shadow': 'off',
       'no-underscore-dangle': 'off',
-      '@typescript-eslint/no-non-null-assertion': 'off',
       'jest/no-mocks-import': 'off',
       'react/display-name': 'off',
       'react/jsx-props-no-spreading': 'off',
 
       // Unwanted
-      'lines-between-class-members': 'off',
       'import/extensions': 'off',
       'import/named': 'off',
       'import/prefer-default-export': 'off',
       'import/no-named-as-default-member': 'off',
-      'react/require-default-props': 'off',
-      'react/sort-comp': 'off',
+      'lines-between-class-members': 'off',
       'jest/expect-expect': 'off',
-
       'jsx-a11y/label-has-associated-control': [
         'error',
         {
-          controlComponents: ['HTMLSelect'],
-        },
+          controlComponents: ['HTMLSelect']
+        }
       ],
-      // Disabling since better @typescript-eslint rules available or they make no sense for ts projects
-      'consistent-return': 'off',
-      'default-case': 'off',
-      'no-use-before-define': 'off',
-      'import/no-unresolved': 'off',
-      'react/jsx-filename-extension': 'off',
-      curly: ['error', 'all'],
-      'func-names': 'error',
+      'react/require-default-props': 'off',
+      'react/sort-comp': 'off',
 
-      'prefer-destructuring': [
-        'error',
-        {
-          array: false,
-        },
-      ],
-
-      'prefer-object-spread': 'error',
-
-      'react/function-component-definition': [
-        'error',
-        {
-          namedComponents: 'arrow-function',
-          unnamedComponents: 'arrow-function',
-        },
-      ],
-
-      'react/jsx-no-useless-fragment': [
-        'error',
-        {
-          allowExpressions: true,
-        },
-      ],
-
-      'react/no-did-mount-set-state': 'error',
-      'react/no-unused-prop-types': 'warn',
-      'react-hooks/exhaustive-deps': 'error',
+      // Disabled since better @typescript-eslint rules available, or they make no sense for ts projects
       '@typescript-eslint/await-thenable': 'error',
       '@typescript-eslint/ban-ts-comment': 'error',
       '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
@@ -136,40 +101,65 @@ export default [
       '@typescript-eslint/no-empty-function': 'error',
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-unnecessary-condition': 'error',
-
       '@typescript-eslint/no-unused-vars': [
         'error',
         {
           argsIgnorePattern: '_(unused)?',
           varsIgnorePattern: '_(unused)?',
-          ignoreRestSiblings: true,
-        },
+          ignoreRestSiblings: true
+        }
       ],
-
       '@typescript-eslint/no-use-before-define': 'error',
       '@typescript-eslint/prefer-ts-expect-error': 'error',
-
       '@typescript-eslint/strict-boolean-expressions': [
         'error',
         {
           allowNullableBoolean: true,
-          allowNullableString: true,
-        },
+          allowNullableString: true
+        }
       ],
-
       '@typescript-eslint/switch-exhaustiveness-check': 'error',
-      'jest/consistent-test-it': 'error',
-      'jest/no-alias-methods': 'error',
-      'jsx-expressions/strict-logical-expressions': 'error',
-      'prefer-arrow/prefer-arrow-functions': 'error',
-
+      'consistent-return': 'off',
+      curly: ['error', 'all'],
+      'default-case': 'off',
+      'func-names': 'error',
       'import/no-cycle': [
         'error',
         {
-          maxDepth: '∞',
-        },
+          maxDepth: '∞'
+        }
       ],
-    },
+      'import/no-unresolved': 'off',
+      'jest/consistent-test-it': 'error',
+      'jest/no-alias-methods': 'error',
+      'jsx-expressions/strict-logical-expressions': 'error',
+      'no-use-before-define': 'off',
+      'prefer-arrow/prefer-arrow-functions': 'error',
+      'prefer-destructuring': [
+        'error',
+        {
+          array: false
+        }
+      ],
+      'prefer-object-spread': 'error',
+      'react/function-component-definition': [
+        'error',
+        {
+          namedComponents: 'arrow-function',
+          unnamedComponents: 'arrow-function'
+        }
+      ],
+      'react/jsx-no-useless-fragment': [
+        'error',
+        {
+          allowExpressions: true
+        }
+      ],
+      'react/jsx-filename-extension': 'off',
+      'react/no-did-mount-set-state': 'error',
+      'react/no-unused-prop-types': 'warn',
+      'react-hooks/exhaustive-deps': 'error'
+    }
   },
   {
     files: [
@@ -177,19 +167,19 @@ export default [
       '**/__mocks__/*.{ts,tsx}',
       '**/testing/*.{ts,tsx}',
       '**/jest.setup.ts',
-      '**/jest.config.ts',
+      '**/jest.config.ts'
     ],
 
     rules: {
-      'global-require': 'off',
-      'no-console': 'off',
-      'no-magic-numbers': 'off',
       '@typescript-eslint/no-var-requires': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',
+      'global-require': 'off',
       'import/no-extraneous-dependencies': 'off',
       'jsx-a11y/click-events-have-key-events': 'off',
       'jsx-a11y/no-static-element-interactions': 'off',
-      'react/jsx-no-constructed-context-values': 'off',
-    },
-  },
+      'no-console': 'off',
+      'no-magic-numbers': 'off',
+      'react/jsx-no-constructed-context-values': 'off'
+    }
+  }
 ]
