@@ -3,17 +3,15 @@ import { PDFPage, rgb } from '@cantoo/pdf-lib'
 import {
   BitArray,
   IllegalStateException,
-  QRCodeEncoderQRCode as QRCode,
   QRCodeByteMatrix,
   QRCodeDecoderErrorCorrectionLevel,
   QRCodeEncoder,
+  QRCodeEncoderQRCode,
+  QRCodeMaskUtil,
   QRCodeMatrixUtil,
   QRCodeMode,
   QRCodeVersion,
 } from '@zxing/library/cjs'
-import ECBlocks from '@zxing/library/cjs/core/qrcode/decoder/ECBlocks'
-import MaskUtil from '@zxing/library/cjs/core/qrcode/encoder/MaskUtil'
-import MatrixUtil from '@zxing/library/cjs/core/qrcode/encoder/MatrixUtil'
 
 import { QrCode } from '../generated/card_pb'
 
@@ -59,10 +57,10 @@ const willFit = (
 // Basically it applies four rules and summate all penalties.
 // Adapted from https://github.com/zxing-js/library/blob/5719e939f2fc513f71627c3f37c227e26efe06c1/src/core/qrcode/encoder/Encoder.ts#L65
 const calculateMaskPenalty = (matrix: QRCodeByteMatrix): number =>
-  MaskUtil.applyMaskPenaltyRule1(matrix) +
-  MaskUtil.applyMaskPenaltyRule2(matrix) +
-  MaskUtil.applyMaskPenaltyRule3(matrix) +
-  MaskUtil.applyMaskPenaltyRule4(matrix)
+  QRCodeMaskUtil.applyMaskPenaltyRule1(matrix) +
+  QRCodeMaskUtil.applyMaskPenaltyRule2(matrix) +
+  QRCodeMaskUtil.applyMaskPenaltyRule3(matrix) +
+  QRCodeMaskUtil.applyMaskPenaltyRule4(matrix)
 
 // Adapted from https://github.com/zxing-js/library/blob/5719e939f2fc513f71627c3f37c227e26efe06c1/src/core/qrcode/encoder/Encoder.ts#L261
 const chooseMaskPattern = (
@@ -74,8 +72,8 @@ const chooseMaskPattern = (
   let minPenalty = Number.MAX_SAFE_INTEGER // Lower penalty is better.
   let bestMaskPattern = -1
   // We try all mask patterns to choose the best one.
-  for (let maskPattern = 0; maskPattern < QRCode.NUM_MASK_PATTERNS; maskPattern++) {
-    MatrixUtil.buildMatrix(bits, ecLevel, version, maskPattern, matrix)
+  for (let maskPattern = 0; maskPattern < QRCodeEncoderQRCode.NUM_MASK_PATTERNS; maskPattern++) {
+    QRCodeMatrixUtil.buildMatrix(bits, ecLevel, version, maskPattern, matrix)
     const penalty = calculateMaskPenalty(matrix)
     if (penalty < minPenalty) {
       minPenalty = penalty
@@ -116,7 +114,7 @@ export const isContentLengthValid = (content: Uint8Array): boolean => {
  *
  * @param content binary content
  */
-export const encodeQRCode = (content: Uint8Array): QRCode => {
+export const encodeQRCode = (content: Uint8Array): QRCodeEncoderQRCode => {
   // Pick an encoding mode appropriate for the content.
   const mode: QRCodeMode = QRCodeMode.BYTE
 
@@ -146,7 +144,7 @@ export const encodeQRCode = (content: Uint8Array): QRCode => {
   // Put data together into the overall payload
   headerAndDataBits.appendBitArray(dataBits)
 
-  const ecBlocks: ECBlocks = version.getECBlocksForLevel(ecLevel)
+  const ecBlocks = version.getECBlocksForLevel(ecLevel)
   const numDataBytes = version.getTotalCodewords() - ecBlocks.getTotalECCodewords()
 
   // Terminate the bits properly.
@@ -160,7 +158,7 @@ export const encodeQRCode = (content: Uint8Array): QRCode => {
     ecBlocks.getNumBlocks(),
   )
 
-  const qrCode = new QRCode()
+  const qrCode = new QRCodeEncoderQRCode()
 
   qrCode.setECLevel(ecLevel)
   qrCode.setMode(mode)
@@ -186,7 +184,7 @@ const createQRCode = (
   renderBoundary: (x: number, y: number, width: number, height: number) => void,
   size: number,
 ) => {
-  const code: QRCode = encodeQRCode(content)
+  const code = encodeQRCode(content)
   const quietZone = DEFAULT_QUIET_ZONE_SIZE
 
   const input = code.getMatrix()

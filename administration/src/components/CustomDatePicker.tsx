@@ -1,7 +1,7 @@
 import { useMediaQuery } from '@mui/system'
 import { deepmerge } from '@mui/utils'
+import type { DesktopDatePickerSlotProps } from '@mui/x-date-pickers'
 import { DesktopDatePicker } from '@mui/x-date-pickers'
-import type { DesktopDatePickerSlotProps } from '@mui/x-date-pickers/DesktopDatePicker/DesktopDatePicker.types'
 import { deDE } from '@mui/x-date-pickers/locales'
 import React, { ReactElement } from 'react'
 

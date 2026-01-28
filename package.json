@@ -1,7 +1,7 @@
 {
   "workspaces": [
     "administration",
-    "frontend/build-configs"
+    "build-configs"
   ],
   "scripts": {
     "expose:ports": "adb get-state 1>/dev/null 2>&1 && adb reverse tcp:8081 tcp:8081 && adb reverse tcp:8000 tcp:8000 && adb reverse tcp:5002 tcp:5002 || echo 'no android device attached'",
@@ -30,7 +30,7 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-unicorn": "^60.0.0",
-    "prettier": "^3.7.4",
+    "prettier": "^3.8.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.0"
   }

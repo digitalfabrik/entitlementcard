@@ -4,7 +4,7 @@ import {
   HTTPS_SCHEME,
   buildConfigBayern,
   buildConfigKoblenz,
-} from 'build-configs/dist/index'
+} from 'build-configs'
 
 import { DynamicActivationCode } from '../generated/card_pb'
 import { getTestRegion } from '../routes/user-settings/__mocks__/Region'

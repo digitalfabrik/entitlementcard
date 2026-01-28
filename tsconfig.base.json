@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    // emit
+    "target": "es2020",
+    "sourceMap": true,
+    // JS support
+    "allowJs": true,
+    // Interop Constraints
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    // Completeness
+    "skipLibCheck": true,
+    // Type Checking
+    "strict": true,
+    "noImplicitAny": true,
+    "noFallthroughCasesInSwitch": true
+  }
+}

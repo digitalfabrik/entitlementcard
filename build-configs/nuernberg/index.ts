@@ -1,7 +1,11 @@
-import { ACTIVATION_PATH, NUERNBERG_PRODUCTION_ID, NUERNBERG_STAGING_ID } from '../constants'
-import BuildConfigType, { CommonBuildConfigType } from '../types'
-import disclaimerText from './disclaimerText'
-import publisherText from './publisherText'
+import {
+  ACTIVATION_PATH,
+  NUERNBERG_PRODUCTION_ID,
+  NUERNBERG_STAGING_ID,
+} from '../constants/index.js'
+import BuildConfigType, { CommonBuildConfigType } from '../types.js'
+import disclaimerText from './disclaimerText.js'
+import publisherText from './publisherText.js'
 
 const ANDROID_APPLICATION_ID = 'app.entitlementcard.nuernberg'
 const IOS_BUNDLE_IDENTIFIER = 'app.sozialpass.nuernberg'
