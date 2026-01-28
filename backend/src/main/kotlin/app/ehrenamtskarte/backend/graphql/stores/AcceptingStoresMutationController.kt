@@ -7,6 +7,7 @@ import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.graphql.auth.requireAuthContext
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidJsonException
 import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotUniqueException
+import app.ehrenamtskarte.backend.graphql.exceptions.StoreAlreadyExistsException
 import app.ehrenamtskarte.backend.graphql.stores.types.CSVAcceptingStore
 import app.ehrenamtskarte.backend.graphql.stores.types.StoreImportReturnResultModel
 import app.ehrenamtskarte.backend.import.COUNTRY_CODE
@@ -44,6 +45,36 @@ class AcceptingStoresMutationService {
             assertNoDuplicateStores(stores)
             handleStoreImport(stores, authContext.admin.projectId, regionEntity.id, dryRun)
         }
+    }
+
+    @GraphQLDescription("Add accepting store")
+    @MutationMapping
+    fun addAcceptingStore(
+        @Argument store: CSVAcceptingStore,
+        dfe: DataFetchingEnvironment,
+    ): Boolean {
+        val authContext = dfe.requireAuthContext()
+        if (!authContext.admin.mayUpdateStoresInProject(authContext.projectId)) {
+            throw ForbiddenException()
+        }
+
+        transaction {
+            // Since we only have ProjectStoreManagers for projects with one exact region, we are fine with getting a single entity.
+            // If we want to enable this for projects with multiple regions f.e. EAK, we have to provide a regionId.
+            val regionEntity = RegionsRepository.findAllInProject(authContext.project).singleOrNull()
+                ?: throw RegionNotUniqueException()
+            val acceptingStore = mapCsvToStore(store)
+            val existingStoreId = AcceptingStoresRepository.getIdIfExists(
+                acceptingStore,
+                authContext.admin.projectId,
+                regionEntity.id,
+            )
+            if (existingStoreId != null) {
+                throw StoreAlreadyExistsException()
+            }
+            AcceptingStoresRepository.createStore(mapCsvToStore(store), authContext.admin.projectId, regionEntity.id)
+        }
+        return true
     }
 
     private fun assertNoDuplicateStores(stores: List<CSVAcceptingStore>) {

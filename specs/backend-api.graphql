@@ -179,6 +179,8 @@ type LocalizedDescription {
 type Mutation {
   "Activate a dynamic entitlement card"
   activateCard(activationSecretBase64: String!, cardInfoHashBase64: String!, overwrite: Boolean!, project: String!): CardActivationResultModel!
+  "Add accepting store"
+  addAcceptingStore(store: CSVAcceptingStoreInput!): Boolean!
   "Stores a new application for an EAK"
   addEakApplication(application: ApplicationInput!, project: String!, regionId: Int!): Boolean!
   "Approve an application"
@@ -414,6 +416,7 @@ enum GraphQLExceptionCode {
   REGION_NOT_ACTIVATED_FOR_APPLICATION
   REGION_NOT_FOUND
   REGION_NOT_UNIQUE
+  STORE_ALREADY_EXISTS
   UNAUTHORIZED
   USER_ENTITLEMENT_EXPIRED
   USER_ENTITLEMENT_NOT_FOUND
