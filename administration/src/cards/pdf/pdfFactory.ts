@@ -59,7 +59,9 @@ const fillContentAreas = async (
         value: staticVerificationCode,
       }
     : null
-  const font = await doc.embedFont(StandardFonts.Helvetica)
+  const font = pdfConfig.customFont
+    ? await loadCustomFontWithFallback(pdfConfig.customFont, doc, StandardFonts.Helvetica)
+    : await doc.embedFont(StandardFonts.Helvetica)
   pdfConfig.elements?.dynamicActivationQrCodes.forEach(configOptions =>
     pdfQrCodeElement(configOptions, { page: templatePage, qrCode: dynamicCode }),
   )

@@ -23,6 +23,7 @@ const pdfConfiguration: PdfConfig = {
   title: 'Ehrenamtskarten',
   templatePath: pdfTemplate,
   issuer: 'Bayerische Staatsministerium für Arbeit und Soziales, Familie und Integration',
+  customFont: 'inter/Inter-Regular.ttf',
   elements: {
     dynamicActivationQrCodes: [{ x: 140, y: 73, size: 51 }],
     text: [
