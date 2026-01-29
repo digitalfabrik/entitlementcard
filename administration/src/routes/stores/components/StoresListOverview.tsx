@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 
 import Blankslate from '../../../components/Blankslate'
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
-import { AcceptingStoreInput, useAddAcceptingStoreMutation } from '../../../generated/graphql'
+import { AcceptingStoreInput, useAddAcceptingStoreMutation, useEditAcceptingStoreMutation } from '../../../generated/graphql'
 import { isDevelopmentEnvironment } from '../../../util/helper'
 import { trimStringFields } from '../../../util/normalizeString'
 import { AcceptingStoresData } from '../../applications/types/types'
@@ -77,6 +77,18 @@ const StoresListOverview = ({
     },
   })
 
+  const [editAcceptingStore, { loading: isEditingStore }] = useEditAcceptingStoreMutation({
+    onCompleted: () => {
+      enqueueSnackbar(t('storeEdited'), { variant: 'success' })
+      setAcceptingStore(undefined)
+      refetchStores()
+    },
+    onError: error => {
+      const { title } = getMessageFromApolloError(error)
+      enqueueSnackbar(title, { variant: 'error' })
+    },
+  })
+
   const openEditStoreDialog = (storeId: number) => {
     const activeStore = data.find(store => store.id === storeId)
     if (activeStore) {
@@ -98,13 +110,12 @@ const StoresListOverview = ({
   const saveStore = () => {
     setFormSendAttempt(true)
     if (formFieldsAreValid) {
+      const mappedStore = mapFormDataToCsvAcceptingStore(acceptingStore)
       if (acceptingStore.id == null) {
-        addAcceptingStore({ variables: { store: mapFormDataToCsvAcceptingStore(acceptingStore) } })
+        addAcceptingStore({ variables: { store: mappedStore } })
       } else {
-        enqueueSnackbar('Edit action not yet implemented.', { variant: 'warning' })
+        editAcceptingStore({ variables: { storeId: acceptingStore.id, store: mappedStore } })
       }
-      // TODO #2692 send data to the editStore endpoint if there is acceptingStore.id
-      console.log(trimStringFields(acceptingStore))
     } else {
       enqueueSnackbar(t('storeForm:errorInvalidStoreForm'), { variant: 'error' })
     }
@@ -178,22 +189,20 @@ const StoresListOverview = ({
           title={t('storesListOverviewNoEntryTitle')}
           description={t('storesListOverviewNoEntryDescription')}
         >
-          {/* TODO 2692 remove this button when the addStore endpoint is implemented */}
-          {isDevelopmentEnvironment() ? addStoreButton : undefined}
+          {addStoreButton}
           {fileUploadButton}
         </Blankslate>
       ) : (
         <>
           <Box sx={{ py: 2, justifyContent: 'flex-end', display: 'flex', gap: 2 }}>
-            {/* TODO 2692 remove this button when the addStore endpoint is implemented */}
-            {isDevelopmentEnvironment() && addStoreButton}
+            {addStoreButton}
             {fileUploadButton}
           </Box>
           <StoresListTable data={data} editStore={openEditStoreDialog} />
         </>
       )}
       <ManageStoreDialog
-        loading={isFetchingCoordinates || isAddingStore}
+        loading={isFetchingCoordinates || isAddingStore || isEditingStore}
         open={openEditDialog}
         showAddressError={showAddressError}
         isEditMode={acceptingStore?.id !== undefined}
