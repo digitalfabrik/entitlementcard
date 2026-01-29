@@ -20,16 +20,15 @@ class _FilterBarButtonState extends State<FilterBarButton> {
   @override
   Widget build(BuildContext context) {
     final color = widget.asset.color;
-    final textColor = _selected
-        ? (color!.computeLuminance() > 0.5 ? Colors.black : Colors.white)
-        : Theme.of(context).textTheme.bodyMedium?.color;
+    final textColor = Theme.of(context).textTheme.bodyMedium?.color;
 
     return FilterChip(
+      avatarBoxConstraints: const BoxConstraints.tightFor(width: 28, height: 28),
       avatar: ClipOval(
         child: Container(
           color: color,
-          width: 26,
-          height: 26,
+          width: 28,
+          height: 28,
           alignment: Alignment.center,
           child: Icon(widget.asset.icon, size: 18, color: Colors.white),
         ),
@@ -40,11 +39,12 @@ class _FilterBarButtonState extends State<FilterBarButton> {
       ),
       selected: _selected,
       shape: const StadiumBorder(),
-      side: BorderSide(color: _selected ? Colors.transparent : Colors.grey),
+      side: BorderSide(color: _selected ? Colors.transparent : Colors.grey.shade200),
       showCheckmark: false,
-      selectedColor: color,
-      backgroundColor: color!.withOpacity(0.1),
-      visualDensity: const VisualDensity(vertical: -2),
+      selectedColor: color!.withOpacity(0.3),
+      backgroundColor: Colors.grey.shade100,
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
+      visualDensity: VisualDensity.standard,
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       onSelected: (bool value) {
         setState(() {

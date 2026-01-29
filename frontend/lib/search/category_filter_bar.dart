@@ -4,32 +4,21 @@ import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/search/filter_bar_button.dart';
 import 'package:flutter/material.dart';
 
+const verticalSpacing = 8.0;
+const horizontalSpacing = 4.0;
+
 /// Approximate the height of the CategoryFilterBar
 double categoryFilterBarExpectedHeight(BuildContext context, int categoriesCount) {
-  // Measure the height of one text line width the subheader style
-  final textPainter = TextPainter(
-    text: TextSpan(text: 'TEXT', style: Theme.of(context).textTheme.bodyMedium),
-    maxLines: 1,
-    textDirection: TextDirection.ltr,
-  );
-  textPainter.layout();
+  const headerHeight = 36.0; // "filter by categories" label
+  const estimatedButtonWidth = 90.0;
+  const estimatedButtonHeight = 28.0;
 
-  final headerHeight = textPainter.size.height + 2 * 8;
-  final double screenWidth = MediaQuery.of(context).size.width;
-  final double horizontalSpacing = 4;
-  final double verticalSpacing = 8;
+  final screenWidth = MediaQuery.of(context).size.width;
+  final buttonsPerRow = ((screenWidth + horizontalSpacing) / (estimatedButtonWidth + horizontalSpacing)).floor();
+  final safeButtonsPerRow = buttonsPerRow > 0 ? buttonsPerRow : 1;
+  final rowsCount = (categoriesCount / safeButtonsPerRow).ceil();
 
-  const double estimatedButtonWidth = 110;
-  const double estimatedButtonHeight = 32;
-
-  final int buttonsPerRow = ((screenWidth + horizontalSpacing) / (estimatedButtonWidth + horizontalSpacing)).floor();
-  final int rowsCount = (categoriesCount / (buttonsPerRow > 0 ? buttonsPerRow : 1)).ceil();
-
-  return MediaQuery.of(context).viewInsets.top +
-      kToolbarHeight +
-      headerHeight +
-      (rowsCount * estimatedButtonHeight) +
-      (rowsCount - 1) * verticalSpacing;
+  return MediaQuery.of(context).padding.top + kToolbarHeight + headerHeight + rowsCount * estimatedButtonHeight;
 }
 
 class CategoryFilterBar extends FlexibleSpaceBar {
@@ -60,18 +49,19 @@ class CategoryFilterBar extends FlexibleSpaceBar {
                             style: theme.textTheme.bodyMedium?.apply(color: theme.hintColor),
                           ),
                           Expanded(
-                            child: Padding(padding: EdgeInsets.only(left: 8), child: Divider(thickness: 0.7)),
+                            child: Padding(padding: EdgeInsets.only(left: 8), child: Divider()),
                           ),
                         ],
                       ),
                     ),
+                    const SizedBox(height: verticalSpacing),
                     Row(
                       children: [
                         Expanded(
                           child: Wrap(
                             alignment: WrapAlignment.center,
-                            runSpacing: 8,
-                            spacing: 4,
+                            runSpacing: verticalSpacing,
+                            spacing: horizontalSpacing,
                             children: categoryAssets
                                 .mapIndexed(
                                   (index, category) => FilterBarButton(
