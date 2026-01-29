@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 import 'package:ehrenamtskarte/category_assets.dart';
 
@@ -20,7 +19,7 @@ class CategoryIndicator extends StatelessWidget {
     final useWideDepiction = MediaQuery.of(context).size.width > 400;
 
     if (useWideDepiction) {
-      return CategoryIconIndicator(svgIconPath: itemCategoryAsset?.icon, categoryName: categoryName);
+      return CategoryIconIndicator(icon: itemCategoryAsset?.icon, categoryName: categoryName);
     } else {
       return CategoryColorIndicator(categoryColor: categoryColor);
     }
@@ -28,24 +27,24 @@ class CategoryIndicator extends StatelessWidget {
 }
 
 class CategoryIconIndicator extends StatelessWidget {
-  final String? svgIconPath;
+  final IconData? icon;
   final String categoryName;
   final EdgeInsets padding;
 
   const CategoryIconIndicator({
     super.key,
-    required this.svgIconPath,
+    required this.icon,
     required this.categoryName,
     this.padding = const EdgeInsets.symmetric(horizontal: 16),
   });
 
   @override
   Widget build(BuildContext context) {
-    final currentSvgIconPath = svgIconPath;
+    final currentIcon = icon;
     return Padding(
       padding: padding,
-      child: currentSvgIconPath != null
-          ? SvgPicture.asset(currentSvgIconPath, width: 30, semanticsLabel: categoryName)
+      child: currentIcon != null
+          ? Icon(currentIcon, size: 30, semanticLabel: categoryName)
           : const Icon(Icons.info, size: 30),
     );
   }

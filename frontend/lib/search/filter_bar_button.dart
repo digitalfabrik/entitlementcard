@@ -1,6 +1,5 @@
 import 'package:ehrenamtskarte/category_assets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
 class FilterBarButton extends StatefulWidget {
@@ -84,7 +83,7 @@ class _FilterBarButtonState extends State<FilterBarButton> with SingleTickerProv
               },
               child: Column(
                 children: [
-                  SvgPicture.asset(widget.asset.icon, width: 40.0, semanticsLabel: widget.asset.name),
+                  Icon(widget.asset.icon, size: 30.0, semanticLabel: widget.asset.name),
                   Expanded(
                     child: Container(
                       alignment: Alignment.topCenter,
