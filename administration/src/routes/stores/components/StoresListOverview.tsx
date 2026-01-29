@@ -200,7 +200,13 @@ const StoresListOverview = ({
             {addStoreButton}
             {fileUploadButton}
           </Box>
-          <StoresListTable data={data} editStore={openEditStoreDialog} />
+          <StoresListTable
+            data={data}
+            onEditStore={openEditStoreDialog}
+            onDeleteStore={() => {
+              /* TODO */
+            }}
+          />
         </>
       )}
       <ManageStoreDialog
