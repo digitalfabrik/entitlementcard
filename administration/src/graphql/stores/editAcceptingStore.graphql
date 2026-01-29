@@ -1,0 +1,3 @@
+mutation editAcceptingStore($storeId: Int!, $store: CSVAcceptingStoreInput!) {
+  result: editAcceptingStore(storeId: $storeId, store: $store)
+}

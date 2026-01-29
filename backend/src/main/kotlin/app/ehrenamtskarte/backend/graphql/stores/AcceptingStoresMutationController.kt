@@ -1,13 +1,16 @@
 package app.ehrenamtskarte.backend.graphql.stores
 
+import app.ehrenamtskarte.backend.db.entities.AcceptingStoreEntity
 import app.ehrenamtskarte.backend.db.entities.LanguageCode
 import app.ehrenamtskarte.backend.db.entities.mayUpdateStoresInProject
 import app.ehrenamtskarte.backend.db.repositories.AcceptingStoresRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.graphql.auth.requireAuthContext
+import app.ehrenamtskarte.backend.graphql.exceptions.GraphQLBaseException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidJsonException
 import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotUniqueException
 import app.ehrenamtskarte.backend.graphql.exceptions.StoreAlreadyExistsException
+import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
 import app.ehrenamtskarte.backend.graphql.stores.types.AcceptingStoreInput
 import app.ehrenamtskarte.backend.graphql.stores.types.StoreImportReturnResultModel
 import app.ehrenamtskarte.backend.import.COUNTRY_CODE
@@ -73,6 +76,32 @@ class AcceptingStoresMutationService {
                 throw StoreAlreadyExistsException()
             }
             AcceptingStoresRepository.createStore(acceptingStore, authContext.admin.projectId, regionEntity.id)
+            AcceptingStoresRepository.createStore(acceptingStore, authContext.admin.projectId, regionEntity.id)
+        }
+        return true
+    }
+
+    @GraphQLDescription("Edit existing accepting store")
+    @MutationMapping
+    fun editAcceptingStore(
+        @Argument storeId: Int,
+        @Argument store: AcceptingStore,
+        dfe: DataFetchingEnvironment,
+    ): Boolean {
+        val authContext = dfe.requireAuthContext()
+        if (!authContext.admin.mayUpdateStoresInProject(authContext.projectId)) {
+            throw ForbiddenException()
+        }
+
+        transaction {
+            // Since we only have ProjectStoreManagers for projects with one exact region, we are fine with getting a single entity.
+            // If we want to enable this for projects with multiple regions f.e. EAK, we have to provide a regionId.
+            RegionsRepository.findAllInProject(authContext.project).singleOrNull()
+                ?: throw RegionNotUniqueException()
+            val existingStore =
+                AcceptingStoreEntity.findById(storeId)
+                    ?: throw GraphQLBaseException(GraphQLExceptionCode.STORE_NOT_FOUND)
+            AcceptingStoresRepository.editStore(existingStore, mapCsvToStore(store))
         }
         return true
     }

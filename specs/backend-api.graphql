@@ -203,6 +203,8 @@ type Mutation {
   deleteApplication(applicationId: Int!): Boolean!
   "Deletes a batch of cards (that have not yet been activated)"
   deleteInactiveCards(cardInfoHashBase64List: [String!]!, regionId: Int!): Boolean!
+  "Edit existing accepting store"
+  editAcceptingStore(store: CSVAcceptingStoreInput!, storeId: Int!): Boolean!
   "Edits an existing administrator"
   editAdministrator(adminId: Int!, newEmail: String!, newRegionId: Int, newRole: Role!): Boolean!
   "Import accepting stores via csv"
@@ -417,6 +419,7 @@ enum GraphQLExceptionCode {
   REGION_NOT_FOUND
   REGION_NOT_UNIQUE
   STORE_ALREADY_EXISTS
+  STORE_NOT_FOUND
   UNAUTHORIZED
   USER_ENTITLEMENT_EXPIRED
   USER_ENTITLEMENT_NOT_FOUND
