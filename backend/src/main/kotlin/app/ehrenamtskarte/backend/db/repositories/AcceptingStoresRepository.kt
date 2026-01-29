@@ -31,6 +31,7 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.sql.alias
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.deleteReturning
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.doubleParam
 import org.jetbrains.exposed.sql.stringParam
@@ -213,7 +214,8 @@ object AcceptingStoresRepository {
         }
     }
 
-    fun deleteStores(acceptingStoreIds: Iterable<Int>) {
+    /** Delete a list of accepting stores, their associated data and return the deleted store IDs */
+    fun deleteStores(acceptingStoreIds: Iterable<Int>): List<EntityID<Int>> {
         val contactsDelete = (AcceptingStores innerJoin Contacts)
             .select(Contacts.id)
             .where { AcceptingStores.id inList acceptingStoreIds }
@@ -227,8 +229,14 @@ object AcceptingStoresRepository {
         AcceptingStoreDescriptions.deleteWhere { storeId inList acceptingStoreIds }
         PhysicalStores.deleteWhere { storeId inList acceptingStoreIds }
         Addresses.deleteWhere { id inList addressesDelete }
-        AcceptingStores.deleteWhere { id inList acceptingStoreIds }
+
+        val deletedAcceptingStoreIds =
+            AcceptingStores.deleteReturning(listOf(AcceptingStores.id)) { AcceptingStores.id inList acceptingStoreIds }
+                .map { it[AcceptingStores.id] }.toList()
+
         Contacts.deleteWhere { id inList contactsDelete }
+
+        return deletedAcceptingStoreIds
     }
 
     fun findByIds(ids: List<Int>) =
