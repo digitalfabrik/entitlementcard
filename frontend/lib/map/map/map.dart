@@ -1,7 +1,10 @@
 import 'dart:io';
 import 'dart:math' as math;
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:ehrenamtskarte/build_config/build_config.dart';
+import 'package:ehrenamtskarte/category_assets.dart';
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/map/map/attribution_dialog.dart';
 import 'package:ehrenamtskarte/map/map/map_controller.dart';
@@ -118,10 +121,74 @@ class _MapContainerState extends State<MapContainer> implements MapController {
       _controller = controller;
     });
 
+    _addCategoryIcons(controller);
+
     final onMapCreated = widget.onMapCreated;
     if (onMapCreated != null) {
       onMapCreated(this);
     }
+  }
+
+  Future<void> _addCategoryIcons(MapLibreMapController controller) async {
+    final assets = categoryAssets(context);
+    for (final asset in assets) {
+      final color = asset.color ?? const Color(0xFF000000);
+      final icon = asset.icon;
+      final iconImage = await _createCategoryIcon(icon, color);
+      await controller.addImage(asset.id.toString(), iconImage);
+    }
+  }
+
+  /// Generates a custom marker icon as a PNG byte array.
+  ///
+  /// This function creates a composite icon by drawing:
+  /// 1. A background "location pin" icon (Icons.location_on) in the category's color.
+  /// 2. A smaller foreground category icon (e.g., museum, sports) in white, centered within the pin.
+  Future<Uint8List> _createCategoryIcon(IconData icon, Color color) async {
+    final pictureRecorder = ui.PictureRecorder();
+    final canvas = Canvas(pictureRecorder);
+    const size = 128.0;
+    const targetSize = 42.0;
+    const scale = size / targetSize;
+
+    final textPainter = TextPainter(
+      textDirection: TextDirection.ltr,
+    );
+
+    textPainter.text = TextSpan(
+      text: String.fromCharCode(Icons.location_on.codePoint),
+      style: TextStyle(
+        fontSize: size,
+        fontFamily: Icons.location_on.fontFamily,
+        package: Icons.location_on.fontPackage,
+        color: color,
+      ),
+    );
+    textPainter.layout();
+    textPainter.paint(canvas, Offset((size - textPainter.width) / 2, (size - textPainter.height) / 2));
+
+    final paint = ui.Paint()
+      ..color = color
+      ..style = ui.PaintingStyle.fill;
+    canvas.drawCircle(Offset(size / 2, 16.0 * scale), 10.0 * scale, paint);
+
+    textPainter.text = TextSpan(
+      text: String.fromCharCode(icon.codePoint),
+      style: TextStyle(
+        fontSize: 16.0 * scale,
+        fontFamily: icon.fontFamily,
+        package: icon.fontPackage,
+        color: Colors.white,
+      ),
+    );
+    textPainter.layout();
+
+    textPainter.paint(canvas, Offset((size - textPainter.width) / 2, 9.0 * scale));
+
+    final picture = pictureRecorder.endRecording();
+    final image = await picture.toImage(size.toInt(), size.toInt());
+    final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    return byteData!.buffer.asUint8List();
   }
 
   @override
@@ -156,9 +223,7 @@ class _MapContainerState extends State<MapContainer> implements MapController {
     final onFeatureClick = widget.onFeatureClick;
     final onNoFeatureClick = widget.onNoFeatureClick;
 
-    final pixelRatio = MediaQuery.of(context).devicePixelRatio;
-
-    final touchTargetSize = pixelRatio * 38.0; // corresponds to 1 cm roughly
+    const touchTargetSize = 1.0;
     final rect = Rect.fromCenter(center: Offset(point.x, point.y), width: touchTargetSize, height: touchTargetSize);
 
     final jsonFeatures = await controller.queryRenderedFeaturesInRect(rect, widget.onFeatureClickLayerFilter, null);
