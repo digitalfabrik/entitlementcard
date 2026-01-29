@@ -19,7 +19,11 @@ class CategoryIndicator extends StatelessWidget {
     final useWideDepiction = MediaQuery.of(context).size.width > 400;
 
     if (useWideDepiction) {
-      return CategoryIconIndicator(icon: itemCategoryAsset?.icon, categoryName: categoryName);
+      return CategoryIconIndicator(
+        icon: itemCategoryAsset?.icon,
+        color: categoryColor,
+        categoryName: categoryName,
+      );
     } else {
       return CategoryColorIndicator(categoryColor: categoryColor);
     }
@@ -28,12 +32,14 @@ class CategoryIndicator extends StatelessWidget {
 
 class CategoryIconIndicator extends StatelessWidget {
   final IconData? icon;
+  final Color? color;
   final String categoryName;
   final EdgeInsets padding;
 
   const CategoryIconIndicator({
     super.key,
     required this.icon,
+    this.color,
     required this.categoryName,
     this.padding = const EdgeInsets.symmetric(horizontal: 16),
   });
@@ -43,9 +49,17 @@ class CategoryIconIndicator extends StatelessWidget {
     final currentIcon = icon;
     return Padding(
       padding: padding,
-      child: currentIcon != null
-          ? Icon(currentIcon, size: 30, semanticLabel: categoryName)
-          : const Icon(Icons.info, size: 30),
+      child: ClipOval(
+        child: Container(
+          width: 36,
+          height: 36,
+          color: color ?? Theme.of(context).colorScheme.primary,
+          alignment: Alignment.center,
+          child: currentIcon != null
+              ? Icon(currentIcon, size: 24, semanticLabel: categoryName, color: Colors.white)
+              : const Icon(Icons.info, size: 24, color: Colors.white),
+        ),
+      ),
     );
   }
 }

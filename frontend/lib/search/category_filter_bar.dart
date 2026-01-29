@@ -19,13 +19,16 @@ double categoryFilterBarExpectedHeight(BuildContext context, int categoriesCount
   final double horizontalSpacing = 4;
   final double verticalSpacing = 8;
 
-  final int buttonsPerRow = ((screenWidth + horizontalSpacing) / (FilterBarButton.width + horizontalSpacing)).floor();
-  final int rowsCount = (categoriesCount / buttonsPerRow).ceil();
+  const double estimatedButtonWidth = 110;
+  const double estimatedButtonHeight = 32;
+
+  final int buttonsPerRow = ((screenWidth + horizontalSpacing) / (estimatedButtonWidth + horizontalSpacing)).floor();
+  final int rowsCount = (categoriesCount / (buttonsPerRow > 0 ? buttonsPerRow : 1)).ceil();
 
   return MediaQuery.of(context).viewInsets.top +
       kToolbarHeight +
       headerHeight +
-      (rowsCount * FilterBarButton.height) +
+      (rowsCount * estimatedButtonHeight) +
       (rowsCount - 1) * verticalSpacing;
 }
 

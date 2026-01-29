@@ -1,11 +1,7 @@
 import 'package:ehrenamtskarte/category_assets.dart';
 import 'package:flutter/material.dart';
-import 'package:tinycolor2/tinycolor2.dart';
 
 class FilterBarButton extends StatefulWidget {
-  static const double width = 74;
-  static const double height = 74;
-
   final CategoryAsset asset;
   final void Function(CategoryAsset, bool) onCategoryPress;
   final int index;
@@ -18,88 +14,43 @@ class FilterBarButton extends StatefulWidget {
   }
 }
 
-class _FilterBarButtonState extends State<FilterBarButton> with SingleTickerProviderStateMixin {
+class _FilterBarButtonState extends State<FilterBarButton> {
   bool _selected = false;
-  AnimationController? _animationController;
-  Animation<double>? _colorTween;
-
-  _FilterBarButtonState();
-
-  @override
-  void initState() {
-    _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 200));
-
-    super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    final animationController = _animationController;
-
-    if (animationController != null) {
-      _colorTween = Tween<double>(begin: 0, end: 1).animate(animationController);
-      super.didChangeDependencies();
-    }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _animationController?.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final selectedColor = theme.brightness == Brightness.dark
-        ? theme.colorScheme.primary.toHSLColor().withLightness(0.2).toColor()
-        : theme.colorScheme.primary.toHSLColor().withLightness(0.9).toColor();
-    final colorTween = _colorTween;
-    final animationController = _animationController;
+    final color = widget.asset.color;
+    final textColor = _selected
+        ? (color!.computeLuminance() > 0.5 ? Colors.black : Colors.white)
+        : Theme.of(context).textTheme.bodyMedium?.color;
 
-    if (colorTween == null || animationController == null) {
-      return const Center();
-    }
-
-    return AnimatedBuilder(
-      animation: colorTween,
-      builder: (context, child) {
-        final color = Color.lerp(theme.colorScheme.surface, selectedColor, colorTween.value);
-        return ConstrainedBox(
-          constraints: BoxConstraints.tightFor(width: FilterBarButton.width, height: FilterBarButton.height),
-          child: Card(
-            margin: EdgeInsets.zero,
-            color: color,
-            elevation: 0,
-            clipBehavior: Clip.hardEdge,
-            child: InkWell(
-              onTap: () {
-                final isSelected = !_selected;
-                setState(() {
-                  _selected = isSelected;
-                  animationController.animateTo(isSelected ? 1 : 0);
-                  widget.onCategoryPress(widget.asset, isSelected);
-                });
-              },
-              child: Column(
-                children: [
-                  Icon(widget.asset.icon, size: 30.0, semanticLabel: widget.asset.name),
-                  Expanded(
-                    child: Container(
-                      alignment: Alignment.topCenter,
-                      child: Text(
-                        widget.asset.shortName,
-                        maxLines: 2,
-                        style: theme.textTheme.labelSmall,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
+    return FilterChip(
+      avatar: ClipOval(
+        child: Container(
+          color: color,
+          width: 26,
+          height: 26,
+          alignment: Alignment.center,
+          child: Icon(widget.asset.icon, size: 18, color: Colors.white),
+        ),
+      ),
+      label: Text(
+        widget.asset.shortName,
+        style: TextStyle(color: textColor),
+      ),
+      selected: _selected,
+      shape: const StadiumBorder(),
+      side: BorderSide(color: _selected ? Colors.transparent : Colors.grey),
+      showCheckmark: false,
+      selectedColor: color,
+      backgroundColor: color!.withOpacity(0.1),
+      visualDensity: const VisualDensity(vertical: -2),
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      onSelected: (bool value) {
+        setState(() {
+          _selected = value;
+          widget.onCategoryPress(widget.asset, value);
+        });
       },
     );
   }
