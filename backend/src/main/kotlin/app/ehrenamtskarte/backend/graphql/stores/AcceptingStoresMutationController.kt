@@ -6,6 +6,7 @@ import app.ehrenamtskarte.backend.db.entities.mayUpdateStoresInProject
 import app.ehrenamtskarte.backend.db.repositories.AcceptingStoresRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.graphql.auth.requireAuthContext
+import app.ehrenamtskarte.backend.graphql.auth.requirePermission
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidJsonException
 import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotUniqueException
@@ -105,10 +106,26 @@ class AcceptingStoresMutationService {
         return true
     }
 
+    @GraphQLDescription("Delete a list of accepting stores, return the IDs of all deleted stores.")
+    @MutationMapping
+    fun deleteAcceptingStores(
+        @Argument storeIds: List<Int>,
+        dfe: DataFetchingEnvironment,
+    ): List<Int> {
+        val authContext = dfe.requireAuthContext()
+
+        requirePermission(authContext.admin.mayUpdateStoresInProject(authContext.projectId))
+
+        return transaction {
+            AcceptingStoresRepository.deleteStores(storeIds).map { it.value }
+        }
+    }
+
     private fun assertNoDuplicateStores(stores: List<AcceptingStoreInput>) {
-        val duplicates = stores.groupBy { "${it.name} ${it.street} ${it.houseNumber} ${it.postalCode} ${it.location}" }
-            .filterValues { it.size > 1 }
-            .keys
+        val duplicates =
+            stores.groupBy { "${it.name} ${it.street} ${it.houseNumber} ${it.postalCode} ${it.location}" }
+                .filterValues { it.size > 1 }
+                .keys
 
         if (duplicates.isNotEmpty()) {
             throw InvalidJsonException("Duplicate store(s) found: ${duplicates.joinToString()}")

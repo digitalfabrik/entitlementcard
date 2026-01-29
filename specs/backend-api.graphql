@@ -195,6 +195,8 @@ type Mutation {
   createCardFromSelfService(encodedCardInfo: String!, generateStaticCode: Boolean!, project: String!): CardCreationResultModel!
   "Creates a new digital entitlementcard and returns it"
   createCardsByCardInfos(applicationIdToMarkAsProcessed: Int, encodedCardInfos: [String!]!, generateStaticCodes: Boolean!): [CardCreationResultModel!]!
+  "Delete a list of accepting stores, return the IDs of all deleted stores."
+  deleteAcceptingStores(storeIds: [Int!]!): [Int!]!
   "Deletes an existing administrator"
   deleteAdministrator(adminId: Int!): Boolean!
   "Deletes a selected API token"
