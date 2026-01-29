@@ -22,10 +22,12 @@ const EMailCell = ({ email }: { email: string }): ReactElement => (
 
 const StoresListTable = ({
   data,
-  editStore,
+  onEditStore,
+  onDeleteStore,
 }: {
   data: AcceptingStoresData[]
-  editStore: (storeId: number) => void
+  onEditStore: (storeId: number) => void
+  onDeleteStore: (store: AcceptingStoresData) => void
 }): ReactElement => {
   const { t } = useTranslation('stores')
 
@@ -57,7 +59,13 @@ const StoresListTable = ({
             field: 'id',
             headerName: '',
             width: 60,
-            renderCell: ({ row }) => <TableMenu storeId={row.id} onEditStore={editStore} />,
+            renderCell: ({ row }) => (
+              <TableMenu
+                storeId={row.id}
+                onEditStore={onEditStore}
+                onDeleteStore={() => onDeleteStore(row)}
+              />
+            ),
           },
           {
             field: 'name',
