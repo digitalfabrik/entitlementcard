@@ -148,6 +148,10 @@ const graphQlErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
       return {
         title: i18next.t('errors:storeAlreadyExists'),
       }
+    case GraphQlExceptionCode.StoreNotFound:
+      return {
+        title: i18next.t('errors:storeNotFound'),
+      }
     case GraphQlExceptionCode.InvalidApplicationConfirmationNoteSize:
       return {
         title: i18next.t('errors:invalidApplicationConfirmationNoteSize', {
