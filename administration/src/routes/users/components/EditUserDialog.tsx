@@ -120,7 +120,6 @@ const EditUserDialog = ({
       open={selectedUser !== null}
       onClose={onClose}
       title={t('editUser')}
-      id='edit-user-dialog'
       onConfirm={onEditUser}
       loading={loading}
       actionDisabled={userEditDisabled}
