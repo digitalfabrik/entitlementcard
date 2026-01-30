@@ -85,9 +85,9 @@ export const getStoresWithCoordinates = (
 
 export const getStoreCoordinates = async (
   city: string,
-  street: string,
+  streetWithHouseNumber: string,
 ): Promise<Position | undefined> =>
-  fetch(getGeoDataUrlWithParams(city, street).href)
+  fetch(getGeoDataUrlWithParams(city, streetWithHouseNumber).href)
     .then(response => response.json())
     .then(({ features }: FeatureCollection<Point, GeoJSON>) =>
       features.length === 0 ? undefined : features[0].geometry.coordinates,

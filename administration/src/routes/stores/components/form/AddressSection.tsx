@@ -6,7 +6,12 @@ import { useTranslation } from 'react-i18next'
 import CardTextField from '../../../../cards/extensions/components/CardTextField'
 import AlertBox from '../../../../components/AlertBox'
 import type { AcceptingStoreFormData, UpdateStoreFunction } from '../../types'
-import { cityValidation, postalCodeValidation, streetValidation } from './validation'
+import {
+  cityValidation,
+  houseNumberValidation,
+  postalCodeValidation,
+  streetValidation,
+} from './validation'
 
 const AddressSection = ({
   onUpdateStore,
@@ -23,6 +28,7 @@ const AddressSection = ({
 }): ReactElement => {
   const { t } = useTranslation('storeForm')
   const streetLabelId = useId()
+  const houseNumberLabelId = useId()
   const postalCodelabelId = useId()
   const cityLabelId = useId()
 
@@ -31,18 +37,33 @@ const AddressSection = ({
       <Typography variant='h6' marginY={0.5}>
         {t('addressSection')}
       </Typography>
-      <CardTextField
-        id={streetLabelId}
-        label={t('streetLabel')}
-        placeholder={t('streetPlaceholder')}
-        forceError={formSendAttempt}
-        value={acceptingStore?.street ?? ''}
-        onBlur={getAddressCoordinates}
-        onChange={value => onUpdateStore('street', value)}
-        showError={streetValidation(acceptingStore?.street).invalid}
-        errorMessage={streetValidation(acceptingStore?.street).message}
-        required
-      />
+      <Box sx={{ flexDirection: 'row', gap: 2, display: 'flex' }}>
+        <CardTextField
+          id={streetLabelId}
+          label={t('streetLabel')}
+          placeholder={t('streetPlaceholder')}
+          forceError={formSendAttempt}
+          value={acceptingStore?.street ?? ''}
+          onBlur={getAddressCoordinates}
+          onChange={value => onUpdateStore('street', value)}
+          showError={streetValidation(acceptingStore?.street).invalid}
+          errorMessage={streetValidation(acceptingStore?.street).message}
+          required
+        />
+        <CardTextField
+          id={houseNumberLabelId}
+          label={t('houseNumberLabel')}
+          placeholder={t('houseNumberPlaceholder')}
+          forceError={formSendAttempt}
+          value={acceptingStore?.houseNumber ?? ''}
+          onBlur={getAddressCoordinates}
+          onChange={value => onUpdateStore('houseNumber', value)}
+          showError={houseNumberValidation(acceptingStore?.houseNumber).invalid}
+          errorMessage={houseNumberValidation(acceptingStore?.houseNumber).message}
+          required
+          sx={{ flex: '0 0 25%' }}
+        />
+      </Box>
       <Box sx={{ flexDirection: 'row', gap: 2, display: 'flex' }}>
         <CardTextField
           id={postalCodelabelId}

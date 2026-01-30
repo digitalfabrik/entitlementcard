@@ -28,6 +28,10 @@ const StoresController = (): ReactElement => {
   }
   const storeData = searchAcceptingStoresInProjectQueryResult.data.stores
 
+  const refetchStores = () => {
+    searchAcceptingStoresInProjectQuery.refetch({ project, params: {} })
+  }
+
   return (
     <RenderGuard
       allowedRoles={[Role.ProjectStoreManager]}
@@ -39,7 +43,7 @@ const StoresController = (): ReactElement => {
       }}
     >
       <Stack sx={{ maxWidth: '95vw', m: 2, gap: 2, alignSelf: 'center' }}>
-        <StoresListOverview data={storeData} />
+        <StoresListOverview data={storeData} refetchStores={refetchStores} />
       </Stack>
     </RenderGuard>
   )
