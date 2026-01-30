@@ -11,7 +11,6 @@ import ConfirmDialog from './ConfirmDialog'
 
 type NoteProps = {
   title: string
-  id: string
   placeholder: string
   isOpen: boolean
   onSave: (text: string) => void
@@ -31,7 +30,6 @@ const TextAreaDialog = ({
   defaultText,
   maxChars,
   title,
-  id,
   additionalContent,
 }: NoteProps): ReactElement => {
   const { t } = useTranslation('misc')
@@ -46,7 +44,6 @@ const TextAreaDialog = ({
     <ConfirmDialog
       open={isOpen}
       title={title}
-      id={id}
       maxWidth='md'
       onConfirm={() => onSave(text)}
       onClose={onClose}

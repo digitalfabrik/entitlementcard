@@ -44,7 +44,6 @@ const ApplicationConfirmationNoteDialog = ({
   return (
     <TextAreaDialog
       title={t('applicationConfirmationMailNoteDialogTitle')}
-      id='application-confirmation-note-dialog'
       defaultText={defaultConfirmationNote}
       maxChars={MAX_NOTE_CHARS}
       placeholder={t('applicationConfirmationMailNoteDialogPlaceholder')}

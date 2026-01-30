@@ -137,7 +137,6 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
         open={tokenToDelete !== null}
         title={t('deleteToken')}
         maxWidth='xs'
-        id='delete-api-token-dialog'
         onConfirm={() => {
           if (tokenToDelete !== null) {
             deleteToken({ variables: { id: tokenToDelete } })

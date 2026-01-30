@@ -1,8 +1,15 @@
 import { CheckCircleOutline, Close } from '@mui/icons-material'
-import { Breakpoint, Button, Dialog, DialogActions, DialogContent, DialogTitle, } from '@mui/material'
+import {
+  Breakpoint,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material'
 import { ButtonPropsColorOverrides } from '@mui/material/Button/Button'
 import { OverridableStringUnion } from '@mui/types'
-import React, { ReactElement, ReactNode } from 'react'
+import React, { ReactElement, ReactNode, useId } from 'react'
 import { useTranslation } from 'react-i18next'
 
 const ConfirmDialog = ({
@@ -11,7 +18,6 @@ const ConfirmDialog = ({
   open,
   title,
   children,
-  id,
   onConfirm,
   onClose,
   confirmButtonText,
@@ -27,7 +33,6 @@ const ConfirmDialog = ({
   open: boolean
   title: string
   children: ReactNode
-  id: string
   onConfirm: () => void
   onClose: () => void
   cancelButtonText?: string
@@ -42,11 +47,19 @@ const ConfirmDialog = ({
   maxWidth?: Breakpoint
 }): ReactElement => {
   const { t } = useTranslation('misc')
+  // MUI <Dialog> automatically sets aria-labelledby, but not aria-describedby.
+  const contentId = useId()
 
   return (
-    <Dialog open={open} aria-describedby={id} fullWidth onClose={onClose} maxWidth={maxWidth}>
+    <Dialog
+      open={open}
+      fullWidth
+      onClose={onClose}
+      maxWidth={maxWidth}
+      aria-describedby={contentId}
+    >
       <DialogTitle>{title}</DialogTitle>
-      <DialogContent id={id}>{children}</DialogContent>
+      <DialogContent id={contentId}>{children}</DialogContent>
       <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
         {showCancelButton && (
           <Button onClick={onClose} variant='outlined' startIcon={<Close />}>

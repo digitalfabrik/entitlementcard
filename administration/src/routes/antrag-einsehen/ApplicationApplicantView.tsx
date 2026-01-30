@@ -72,7 +72,6 @@ const ApplicationApplicantView = ({
   ) : (
     <>
       <ConfirmDialog
-        id='withdraw-confirmation-dialog'
         open={dialogOpen}
         maxWidth='xs'
         onClose={() => setDialogOpen(false)}

@@ -70,7 +70,6 @@ const CreateUserDialog = ({
       open={isOpen}
       title={t('addUser')}
       loading={loading}
-      id='add-user-dialog'
       actionDisabled={userCreationDisabled}
       onClose={clearAndCloseDialog}
       confirmButtonText={t('addUser')}

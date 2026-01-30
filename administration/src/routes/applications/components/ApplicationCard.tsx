@@ -69,7 +69,6 @@ const DeleteDialog = (props: {
       open={props.isOpen}
       onClose={props.onCancel}
       title={t('deleteApplication')}
-      id='alert-dialog-description'
       maxWidth='xs'
       onConfirm={props.onConfirm}
       actionDisabled={props.deleteResult.loading || props.deleteResult.called}
@@ -101,7 +100,6 @@ const RejectionDialog = (props: {
     <ConfirmDialog
       open={props.open}
       title={t('rejectionDialogTitle')}
-      id='reject-dialog-description'
       onConfirm={() => {
         if (reason !== null) {
           props.onConfirm(reason)
