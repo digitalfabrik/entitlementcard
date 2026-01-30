@@ -5,8 +5,13 @@ import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Blankslate from '../../../components/Blankslate'
+import ConfirmDialog from '../../../components/ConfirmDialog'
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
-import { CsvAcceptingStoreInput, useAddAcceptingStoreMutation } from '../../../generated/graphql'
+import {
+  CsvAcceptingStoreInput,
+  useAddAcceptingStoreMutation,
+  useDeleteStoresMutation,
+} from '../../../generated/graphql'
 import { isDevelopmentEnvironment } from '../../../util/helper'
 import { trimStringFields } from '../../../util/normalizeString'
 import { AcceptingStoresData } from '../../applications/types/types'
@@ -59,6 +64,8 @@ const StoresListOverview = ({
 }): ReactElement => {
   const { t } = useTranslation('stores')
   const [openEditDialog, setOpenEditDialog] = useState(false)
+  const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false)
+  const [selectedStore, setSelectedStore] = useState<AcceptingStoresData>()
   const [formSendAttempt, setFormSendAttempt] = useState(false)
   const [isFetchingCoordinates, setIsFetchingCoordinates] = useState(false)
   const [showAddressError, setShowAddressError] = useState(false)
@@ -67,8 +74,19 @@ const StoresListOverview = ({
   const formFieldsAreValid = acceptingStore !== undefined && !isStoreFormInvalid(acceptingStore)
   const [addAcceptingStore, { loading: isAddingStore }] = useAddAcceptingStoreMutation({
     onCompleted: () => {
+      // TODO We can use the returned storeId to update the store in the list instead of refetching the whole list
       enqueueSnackbar(t('storeAdded'), { variant: 'success' })
       setAcceptingStore(undefined)
+      refetchStores()
+    },
+    onError: error => {
+      const { title } = getMessageFromApolloError(error)
+      enqueueSnackbar(title, { variant: 'error' })
+    },
+  })
+  const [deleteStores, { loading: isDeleting }] = useDeleteStoresMutation({
+    onCompleted: () => {
+      enqueueSnackbar(t('storesDeleted'), { variant: 'success' })
       refetchStores()
     },
     onError: error => {
@@ -188,7 +206,14 @@ const StoresListOverview = ({
             {isDevelopmentEnvironment() && addStoreButton}
             {fileUploadButton}
           </Box>
-          <StoresListTable data={data} editStore={openEditStoreDialog} />
+          <StoresListTable
+            data={data}
+            onEditStore={openEditStoreDialog}
+            onDeleteStore={store => {
+              setSelectedStore(store)
+              setDeleteDialogIsOpen(true)
+            }}
+          />
         </>
       )}
       <ManageStoreDialog
@@ -204,6 +229,26 @@ const StoresListOverview = ({
         formSendAttempt={formSendAttempt}
         getAddressCoordinates={getAddressCoordinates}
       />
+      <ConfirmDialog
+        title={t('confirmDeletionDialogTitle')}
+        open={deleteDialogIsOpen}
+        loading={isDeleting}
+        onConfirm={() => {
+          if (selectedStore !== undefined) {
+            deleteStores({ variables: { storeIds: [selectedStore.id] } })
+          } else {
+            setDeleteDialogIsOpen(false)
+          }
+        }}
+        onClose={() => {
+          setSelectedStore(undefined)
+          setDeleteDialogIsOpen(false)
+        }}
+      >
+        {t('confirmDeletionDialogMessage')}
+        <br />
+        <b>{selectedStore?.name ?? ''}</b>
+      </ConfirmDialog>
     </>
   )
 }

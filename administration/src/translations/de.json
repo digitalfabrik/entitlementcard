@@ -524,7 +524,9 @@
     "storeAddDialogDescription": "Bitte geben Sie die Angaben für die neue Akzeptanzstelle ein. Erforderliche Felder sind mit * markiert.",
     "storeMenu": "Akzeptanzstellen Menü",
     "addStoreButton": "Neu hinzufügen",
-    "storeAdded": "Die Akzeptanzstelle wurde hinzugefügt."
+    "storeAdded": "Die Akzeptanzstelle wurde hinzugefügt.",
+    "confirmDeletionDialogTitle": "Akzeptanzstelle löschen",
+    "confirmDeletionDialogMessage": "Sind Sie sicher, dass Sie diese Akzeptanzstelle löschen möchten?"
   },
   "storeForm": {
     "nameLabel": "Name",
