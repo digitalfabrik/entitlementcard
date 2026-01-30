@@ -252,6 +252,8 @@ type PhysicalStore {
 }
 
 type Query {
+  "Returns accepting stores in the given project queried by physical store ids."
+  acceptingStoresByPhysicalStoreIdsInProject(physicalStoreIds: [Int!]!, project: String!): [AcceptingStoreV2!]!
   "Return list of all categories."
   categories: [Category!]!
   "Verify password reset link"
@@ -281,9 +283,7 @@ type Query {
   "Returns all administrators in a region. This query requires the role REGION_ADMIN or PROJECT_ADMIN."
   getUsersInRegion(regionId: Int!): [Administrator!]!
   "Returns list of all accepting stores in the given project queried by ids."
-  physicalStoresByIdInProject(ids: [Int!]!, project: String!): [PhysicalStore]!
-  "Returns list of all accepting stores in the given project."
-  physicalStoresInProject(project: String!): [PhysicalStore!]!
+  physicalStoresByIdInProject(ids: [Int!]!, project: String!): [PhysicalStore]! @deprecated(reason : "Use acceptingStoreByPhysicalStoreIdInProject for localized descriptions. Should be able to safely remove in January 2028.")
   "Returns region data for specific region."
   regionByRegionId(regionId: Int!): Region!
   "Returns regions queried by ids in the given project."

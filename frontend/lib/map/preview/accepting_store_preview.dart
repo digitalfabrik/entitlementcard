@@ -1,5 +1,5 @@
 import 'package:ehrenamtskarte/configuration/configuration.dart';
-import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/physical_store_summary_by_id.graphql.dart';
+import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/accepting_stores_by_physical_store_ids.graphql.dart';
 import 'package:ehrenamtskarte/map/preview/accepting_store_preview_card.dart';
 import 'package:ehrenamtskarte/map/preview/models.dart';
 import 'package:flutter/material.dart';
@@ -12,9 +12,13 @@ class AcceptingStorePreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final projectId = Configuration.of(context).projectId;
-    return Query$PhysicalStoreSummaryById$Widget(
-      options: Options$Query$PhysicalStoreSummaryById(
-        variables: Variables$Query$PhysicalStoreSummaryById(project: projectId, ids: [physicalStoreId]),
+
+    return Query$AcceptingStoresByPhysicalStoreIds$Widget(
+      options: Options$Query$AcceptingStoresByPhysicalStoreIds(
+        variables: Variables$Query$AcceptingStoresByPhysicalStoreIds(
+          project: projectId,
+          physicalStoreIds: [physicalStoreId],
+        ),
       ),
       builder: (result, {refetch, fetchMore}) {
         try {
@@ -34,27 +38,16 @@ class AcceptingStorePreview extends StatelessWidget {
           if (stores.length != 1) {
             throw Exception('Server unexpectedly returned an array of the wrong size.');
           }
-          final store = stores[0];
+          final store = stores.firstOrNull;
           if (store == null) {
             throw Exception('ID not found.');
           }
-          return AcceptingStorePreviewCard(isLoading: false, acceptingStore: _convertToAcceptingStoreSummary(store));
+          return AcceptingStorePreviewCard(isLoading: false, acceptingStore: AcceptingStoreModel.fromGraphql(store));
         } on Exception catch (e) {
           debugPrint(e.toString());
           return AcceptingStorePreviewCard(isLoading: false, refetch: refetch);
         }
       },
-    );
-  }
-
-  AcceptingStoreSummaryModel _convertToAcceptingStoreSummary(Query$PhysicalStoreSummaryById$stores item) {
-    return AcceptingStoreSummaryModel(
-      item.id,
-      item.store.name,
-      item.store.description,
-      item.store.categoryId,
-      null,
-      null,
     );
   }
 }

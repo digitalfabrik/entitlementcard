@@ -14,7 +14,7 @@ import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/map/map_page.dart';
 
 class AcceptingStoreSummary extends StatelessWidget {
-  final AcceptingStoreSummaryModel store;
+  final AcceptingStoreModel store;
   final Input$CoordinatesInput? coordinates;
   final double wideDepictionThreshold;
   final void Function(PhysicalStoreFeatureData)? showOnMap;
@@ -81,14 +81,14 @@ class AcceptingStoreSummary extends StatelessWidget {
     }
     Navigator.of(context, rootNavigator: true).push(
       AppRoute(
-        builder: (context) => DetailPage(physicalStoreId: physicalStoreId, showOnMap: showOnMap),
+        builder: (context) => DetailPage(store: store, showOnMap: showOnMap),
       ),
     );
   }
 }
 
 class StoreTextOverview extends StatelessWidget {
-  final AcceptingStoreSummaryModel store;
+  final AcceptingStoreModel store;
   final bool showTownName;
 
   const StoreTextOverview({super.key, required this.store, this.showTownName = false});

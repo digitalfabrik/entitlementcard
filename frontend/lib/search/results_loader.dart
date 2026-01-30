@@ -1,7 +1,7 @@
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/graphql_gen/schema.graphql.dart';
-import 'package:ehrenamtskarte/map/preview/models.dart';
 import 'package:ehrenamtskarte/store_widgets/accepting_store_summary.dart';
+import 'package:ehrenamtskarte/map/preview/models.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -91,8 +91,6 @@ class SliverResultsLoaderState extends State<SliverResultsLoader> {
       if (newData == null) {
         throw Exception('Fetched data is null.');
       }
-      // TODO 2691: Remove ignore of deprecation, when new endpoint will be used
-      // ignore: deprecated_member_use_from_same_package
       final newItems = newData.stores;
 
       final isLastPage = newItems.length < _pageSize;
@@ -121,18 +119,10 @@ class SliverResultsLoaderState extends State<SliverResultsLoader> {
       pagingController: _pagingController,
       builderDelegate: PagedChildBuilderDelegate<Query$AcceptingStoresSearch$stores>(
         itemBuilder: (context, item, index) {
-          final storeCoordinates = item.physicalStore?.coordinates;
           return IntrinsicHeight(
             child: AcceptingStoreSummary(
               key: ValueKey(item.id),
-              store: AcceptingStoreSummaryModel(
-                item.physicalStore?.id,
-                item.name,
-                _getLocalizedDescription(item.descriptions),
-                item.categoryId,
-                storeCoordinates != null ? Coordinates(storeCoordinates.lat, storeCoordinates.lng) : null,
-                item.physicalStore?.address.location,
-              ),
+              store: AcceptingStoreModel.fromGraphql(item),
               coordinates: widget.coordinates,
               showOnMap: (it) => HomePageData.of(context)?.navigateToMapTab(it),
             ),
@@ -186,26 +176,6 @@ class SliverResultsLoaderState extends State<SliverResultsLoader> {
         ],
       ),
     );
-  }
-
-  String? _getLocalizedDescription(List<Query$AcceptingStoresSearch$stores$descriptions>? descriptions) {
-    if (descriptions == null || descriptions.isEmpty) return null;
-
-    final appLocale = LocaleSettings.currentLocale.languageCode.toUpperCase();
-    final fallbackLocale = AppLocale.de.languageCode.toUpperCase();
-
-    String? fallback;
-
-    for (final description in descriptions) {
-      if (description.locale == appLocale) {
-        return description.text;
-      }
-      if (description.locale == fallbackLocale) {
-        fallback ??= description.text;
-      }
-    }
-
-    return fallback;
   }
 
   @override
