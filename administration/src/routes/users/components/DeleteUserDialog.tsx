@@ -76,7 +76,6 @@ const DeleteUserDialog = ({
     <ConfirmDialog
       open={selectedUser !== null}
       title={t('deleteUserConfirmPrompt')}
-      id='delete-user-dialog'
       onClose={onClose}
       color='error'
       onConfirm={deleteUser}

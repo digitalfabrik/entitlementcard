@@ -140,7 +140,6 @@ const CardSelfServiceForm = ({
         color='secondary'
         confirmButtonText={t('misc:close')}
         confirmButtonIcon={<Close />}
-        id='reference-information-dialog'
         onConfirm={() => setOpenReferenceInformation(false)}
         onClose={() => setOpenReferenceInformation(false)}
         showCancelButton={false}
@@ -168,7 +167,6 @@ const CardSelfServiceForm = ({
         maxWidth='md'
         color='secondary'
         title={projectConfig.dataPrivacyHeadline}
-        id='data-privacy-dialog'
         onConfirm={() => setOpenDataPrivacy(false)}
         onClose={() => setOpenDataPrivacy(false)}
       >
