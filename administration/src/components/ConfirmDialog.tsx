@@ -1,12 +1,5 @@
 import { CheckCircleOutline, Close } from '@mui/icons-material'
-import {
-  Breakpoint,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from '@mui/material'
+import { Breakpoint, Button, Dialog, DialogActions, DialogContent, DialogTitle, } from '@mui/material'
 import { ButtonPropsColorOverrides } from '@mui/material/Button/Button'
 import { OverridableStringUnion } from '@mui/types'
 import React, { ReactElement, ReactNode } from 'react'
@@ -33,7 +26,7 @@ const ConfirmDialog = ({
   loading?: boolean
   open: boolean
   title: string
-  children: ReactElement | string
+  children: ReactNode
   id: string
   onConfirm: () => void
   onClose: () => void
