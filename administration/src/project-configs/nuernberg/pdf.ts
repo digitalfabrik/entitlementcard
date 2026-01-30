@@ -66,6 +66,7 @@ const pdfConfiguration: PdfConfig = {
   title: 'Nürnberg-Pässe',
   templatePath: pdfTemplate,
   issuer: 'Stadt Nürnberg',
+  customFont: 'inter/Inter-Regular.ttf',
   elements: {
     staticVerificationQrCodes: [
       { x: 53, y: 222, size: 47 },
