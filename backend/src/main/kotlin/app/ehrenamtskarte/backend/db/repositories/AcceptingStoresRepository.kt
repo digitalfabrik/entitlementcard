@@ -13,7 +13,6 @@ import app.ehrenamtskarte.backend.db.entities.Contacts
 import app.ehrenamtskarte.backend.db.entities.PhysicalStoreEntity
 import app.ehrenamtskarte.backend.db.entities.PhysicalStores
 import app.ehrenamtskarte.backend.db.entities.Projects
-import app.ehrenamtskarte.backend.graphql.exceptions.StoreNotFoundException
 import app.ehrenamtskarte.backend.graphql.stores.types.Coordinates
 import app.ehrenamtskarte.backend.import.COUNTRY_CODE
 import app.ehrenamtskarte.backend.import.stores.common.types.AcceptingStore
@@ -178,19 +177,20 @@ object AcceptingStoresRepository {
 
     fun editStore(existingStore: AcceptingStoreEntity, acceptingStore: AcceptingStore) {
         existingStore.name = acceptingStore.name
-        existingStore.categoryId = EntityID(acceptingStore.categoryId, Categories)
+        Categories.select(Categories.id eq acceptingStore.categoryId)
+            .firstOrNull() ?: throw NullPointerException()
 
-        val contact = ContactEntity.findById(existingStore.contactId.value) ?: throw StoreNotFoundException()
+        val contact = ContactEntity.findById(existingStore.contactId.value) ?: throw NullPointerException()
         contact.email = acceptingStore.email
         contact.telephone = acceptingStore.telephone
         contact.website = acceptingStore.website
 
         val physicalStore =
             PhysicalStoreEntity.find { PhysicalStores.storeId eq existingStore.id }.firstOrNull()
-                ?: throw StoreNotFoundException()
-        val address = AddressEntity.findById(physicalStore.addressId.value) ?: throw StoreNotFoundException()
+                ?: throw NullPointerException()
+        val address = AddressEntity.findById(physicalStore.addressId.value) ?: throw NullPointerException()
         address.street = acceptingStore.streetWithHouseNumber
-        address.postalCode = acceptingStore.postalCode!!
+        address.postalCode = acceptingStore.postalCode ?: throw NullPointerException()
         address.location = acceptingStore.location
 
         physicalStore.coordinates = Point(acceptingStore.longitude!!, acceptingStore.latitude!!)
@@ -222,8 +222,6 @@ object AcceptingStoresRepository {
         AcceptingStores.deleteWhere { id inList acceptingStoreIds }
         Contacts.deleteWhere { id inList contactsDelete }
     }
-
-    fun findById(id: Int): AcceptingStoreEntity? = AcceptingStoreEntity.findById(id)
 
     fun findByIds(ids: List<Int>) =
         AcceptingStoreEntity.find { AcceptingStores.id inList ids }.sortByKeys({ it.id.value }, ids)

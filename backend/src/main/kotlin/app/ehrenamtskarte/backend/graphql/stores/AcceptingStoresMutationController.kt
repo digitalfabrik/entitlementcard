@@ -76,7 +76,6 @@ class AcceptingStoresMutationService {
                 throw StoreAlreadyExistsException()
             }
             AcceptingStoresRepository.createStore(acceptingStore, authContext.admin.projectId, regionEntity.id)
-            AcceptingStoresRepository.createStore(acceptingStore, authContext.admin.projectId, regionEntity.id)
         }
         return true
     }
@@ -85,7 +84,7 @@ class AcceptingStoresMutationService {
     @MutationMapping
     fun editAcceptingStore(
         @Argument storeId: Int,
-        @Argument store: AcceptingStore,
+        @Argument store: AcceptingStoreInput,
         dfe: DataFetchingEnvironment,
     ): Boolean {
         val authContext = dfe.requireAuthContext()
