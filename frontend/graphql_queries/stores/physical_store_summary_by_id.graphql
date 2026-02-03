@@ -2,6 +2,7 @@ query PhysicalStoreSummaryById($project: String!, $ids: [Int!]!) {
     stores: physicalStoresByIdInProject(project: $project, ids: $ids) {
         id,
         store {
+            id
             name
             description
             categoryId
