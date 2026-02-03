@@ -23,33 +23,26 @@ class AcceptingStorePreview extends StatelessWidget {
         ),
       ),
       builder: (result, {refetch, fetchMore}) {
-        try {
-          final exception = result.exception;
+        final data = result.parsedData;
+        if (result.isLoading && data == null) {
+          return const AcceptingStorePreviewCard(isLoading: true);
+        }
 
-          if (result.hasException && exception != null) {
-            throw exception;
+        if (result.hasException) {
+          debugPrint('AcceptingStores query failed: ${result.exception}');
+          // If we have cached data, show it even if the network request fails
+          if (data == null) {
+            return AcceptingStorePreviewCard(isLoading: false, refetch: refetch);
           }
+        }
 
-          final fetchedData = result.parsedData;
-
-          if (result.isLoading && fetchedData == null) {
-            return const AcceptingStorePreviewCard(isLoading: true);
-          }
-
-          if (fetchedData == null) {
-            throw Exception('Fetched data is null.');
-          }
-
-          final stores = fetchedData.stores;
-          if (stores.length != 1) {
-            throw Exception('Server unexpectedly returned an array of the wrong size.');
-          }
-          final store = stores.first;
-          return AcceptingStorePreviewCard(isLoading: false, acceptingStore: AcceptingStoreModel.fromGraphql(store));
-        } on Exception catch (e) {
-          debugPrint(e.toString());
+        if (data == null || data.stores.length != 1) {
+          debugPrint('Unexpected AcceptingStores response length: ${data?.stores.length}');
           return AcceptingStorePreviewCard(isLoading: false, refetch: refetch);
         }
+
+        final store = data.stores.single;
+        return AcceptingStorePreviewCard(isLoading: false, acceptingStore: AcceptingStoreModel.fromGraphql(store));
       },
     );
   }
