@@ -8,13 +8,6 @@ import app.ehrenamtskarte.backend.shared.database.sortByKeys
 import org.jetbrains.exposed.sql.and
 
 object PhysicalStoresRepository {
-    fun findAllInProject(project: String): List<PhysicalStoreEntity> {
-        val query = (Projects innerJoin AcceptingStores innerJoin PhysicalStores)
-            .select(PhysicalStores.columns)
-            .where { Projects.project eq project }
-        return PhysicalStoreEntity.wrapRows(query).toList()
-    }
-
     fun findByIdsInProject(project: String, ids: List<Int>): List<PhysicalStoreEntity?> {
         val query = (Projects innerJoin AcceptingStores innerJoin PhysicalStores)
             .select(PhysicalStores.columns)

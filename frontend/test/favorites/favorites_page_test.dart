@@ -1,7 +1,7 @@
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/favorites/favorites_model.dart';
 import 'package:ehrenamtskarte/favorites/favorites_page.dart';
-import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/physical_store_by_id.graphql.dart';
+import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/accepting_stores_by_physical_store_ids.graphql.dart';
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/store_widgets/accepting_store_summary.dart';
 import 'package:ehrenamtskarte/store_widgets/detail/detail_app_bar.dart';
@@ -23,8 +23,8 @@ void main() {
       registerFallbackValue(FakeQueryOptions());
       registerFallbackValue(FakeRoute());
       registerFallbackValue(
-        Options$Query$PhysicalStoreById(
-          variables: Variables$Query$PhysicalStoreById(project: '', ids: []),
+        Options$Query$AcceptingStoresByPhysicalStoreIds(
+          variables: Variables$Query$AcceptingStoresByPhysicalStoreIds(project: '', physicalStoreIds: []),
         ),
       );
     });
@@ -56,35 +56,39 @@ void main() {
         'favorites': ['{"storeId":1,"storeName":"Test store","categoryId":9}'],
       });
 
-      when(() => mockClient.query(any<Options$Query$PhysicalStoreById>())).thenAnswer((invocation) async {
-        final options = invocation.positionalArguments.first as Options$Query$PhysicalStoreById;
+      when(() => mockClient.query(any<Options$Query$AcceptingStoresByPhysicalStoreIds>())).thenAnswer((
+        invocation,
+      ) async {
+        final options = invocation.positionalArguments.first as Options$Query$AcceptingStoresByPhysicalStoreIds;
         return QueryResult(
           data: {
             'stores': [
               {
                 'id': 1,
-                'coordinates': {'lat': 48.235256, 'lng': 12.678656, '__typename': 'Coordinates'},
-                'store': {
+                'name': 'Test store',
+                'categoryId': 9,
+                'descriptions': [
+                  {'locale': 'DE', 'text': 'Test description', '__typename': 'LocalizedDescription'},
+                ],
+                'contact': {
                   'id': 1,
-                  'name': 'Test store',
-                  'description': 'Test description',
-                  'contact': {
-                    'id': 1,
-                    'email': null,
-                    'telephone': '08671 95 80 45',
-                    'website': null,
-                    '__typename': 'Contact',
+                  'email': null,
+                  'telephone': '08671 95 80 45',
+                  'website': null,
+                  '__typename': 'Contact',
+                },
+                'physicalStore': {
+                  'id': 1,
+                  'coordinates': {'lat': 48.235256, 'lng': 12.678656, '__typename': 'Coordinates'},
+                  'address': {
+                    'street': 'Bahnhofstraße 1',
+                    'postalCode': '84503',
+                    'location': 'Altötting',
+                    '__typename': 'Address',
                   },
-                  'category': {'id': 9, 'name': 'Sonstiges', '__typename': 'Category'},
-                  '__typename': 'AcceptingStore',
+                  '__typename': 'PhysicalStore',
                 },
-                'address': {
-                  'street': 'Bahnhofstraße 1',
-                  'postalCode': '84503',
-                  'location': 'Altötting',
-                  '__typename': 'Address',
-                },
-                '__typename': 'PhysicalStore',
+                '__typename': 'AcceptingStore',
               },
             ],
             '__typename': 'Query',
@@ -112,13 +116,12 @@ void main() {
         'favorites': ['{"storeId":1,"storeName":"Test store","categoryId":9}'],
       });
 
-      when(() => mockClient.query(any<Options$Query$PhysicalStoreById>())).thenAnswer((invocation) async {
-        final options = invocation.positionalArguments.first as Options$Query$PhysicalStoreById;
+      when(() => mockClient.query(any<Options$Query$AcceptingStoresByPhysicalStoreIds>())).thenAnswer((
+        invocation,
+      ) async {
+        final options = invocation.positionalArguments.first as Options$Query$AcceptingStoresByPhysicalStoreIds;
         return QueryResult(
-          data: {
-            'stores': [null],
-            '__typename': 'Query',
-          },
+          data: {'stores': <Map<String, dynamic>>[], '__typename': 'Query'},
           source: QueryResultSource.network,
           options: options,
         );

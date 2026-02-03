@@ -81,6 +81,8 @@ services:
     volumes:
       - type: tmpfs
         target: /var/maildev
+        tmpfs:
+          mode: 0777
     ports:
       - 5025:1025
       - 5026:1080

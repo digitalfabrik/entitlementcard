@@ -1,12 +1,10 @@
 import 'package:ehrenamtskarte/category_assets.dart';
-import 'package:ehrenamtskarte/search/filter_bar.dart';
-import 'package:ehrenamtskarte/search/sorting_button.dart';
+import 'package:ehrenamtskarte/graphql_gen/schema.graphql.dart';
+import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/search/results_loader.dart';
+import 'package:ehrenamtskarte/search/sorting_button.dart';
 import 'package:ehrenamtskarte/widgets/app_bars.dart';
 import 'package:flutter/material.dart';
-import 'package:ehrenamtskarte/l10n/translations.g.dart';
-
-import 'package:ehrenamtskarte/graphql_gen/schema.graphql.dart';
 
 enum SortingMode { alphabetically, byDistance }
 
@@ -39,12 +37,12 @@ class _SearchPageState extends State<SearchPage> {
       children: [
         CustomScrollView(
           slivers: [
-            SearchSliverAppBar(
+            SliverSearchAppBar(
               onChanged: (text) => setState(() {
                 searchFieldText = text;
               }),
+              onCategoryPress: _onCategoryPress,
             ),
-            FilterBar(onCategoryPress: _onCategoryPress),
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.all(8),
@@ -61,7 +59,7 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               ),
             ),
-            ResultsLoader(
+            SliverResultsLoader(
               searchText: searchFieldText,
               categoryIds: _selectedCategories.map((e) => e.id).toList(),
               coordinates: _sortingMode == SortingMode.byDistance ? _coordinates : null,
