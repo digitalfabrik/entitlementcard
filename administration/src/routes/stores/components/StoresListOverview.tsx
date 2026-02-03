@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 
 import Blankslate from '../../../components/Blankslate'
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
-import { CsvAcceptingStoreInput, useAddAcceptingStoreMutation } from '../../../generated/graphql'
+import { AcceptingStoreInput, useAddAcceptingStoreMutation } from '../../../generated/graphql'
 import { isDevelopmentEnvironment } from '../../../util/helper'
 import { trimStringFields } from '../../../util/normalizeString'
 import { AcceptingStoresData } from '../../applications/types/types'
@@ -15,7 +15,7 @@ import { splitStreetAndHouseNumber } from '../import/utils/splitStreetAndHouseNu
 import { AcceptingStoreFormData } from '../types'
 import ManageStoreDialog from './ManageStoreDialog'
 import StoresListTable from './StoresListTable'
-import { isStoreFormInvalid } from './form/validation'
+import { isAddressInvalid, isStoreFormInvalid } from './form/validation'
 
 const initializeAcceptingStoreForm = (store: AcceptingStoresData): AcceptingStoreFormData => ({
   id: store.id,
@@ -34,7 +34,7 @@ const initializeAcceptingStoreForm = (store: AcceptingStoresData): AcceptingStor
   latitude: store.physicalStore?.coordinates.lat ?? undefined,
 })
 
-const mapFormDataToCsvAcceptingStore = (store: AcceptingStoreFormData): CsvAcceptingStoreInput => ({
+const mapFormDataToCsvAcceptingStore = (store: AcceptingStoreFormData): AcceptingStoreInput => ({
   name: store.name,
   street: store.street,
   houseNumber: store.houseNumber,
@@ -131,7 +131,8 @@ const StoresListOverview = ({
       acceptingStore.street &&
       acceptingStore.street.length > 0 &&
       acceptingStore.city &&
-      acceptingStore.city.length > 0
+      acceptingStore.city.length > 0 &&
+      !isAddressInvalid(acceptingStore)
     ) {
       try {
         setIsFetchingCoordinates(true)

@@ -220,11 +220,17 @@ export const coordinatesInvalid = (latitude?: number, longitude?: number): boole
 export const categoryValidation = (categoryId: number | undefined): FormValidation =>
   categoryId === undefined ? requiredFieldError() : validResult
 
+export const isAddressInvalid = (acceptingStore: AcceptingStoreFormData): boolean =>
+  [
+    houseNumberValidation(acceptingStore.houseNumber).invalid,
+    streetValidation(acceptingStore.street).invalid,
+    cityValidation(acceptingStore.city).invalid,
+    postalCodeValidation(acceptingStore.postalCode).invalid,
+  ].some(Boolean)
+
 export const isStoreFormInvalid = (acceptingStore: AcceptingStoreFormData): boolean =>
   [
     nameValidation(acceptingStore.name).invalid,
-    streetValidation(acceptingStore.street).invalid,
-    cityValidation(acceptingStore.city).invalid,
     descriptionValidation(acceptingStore.descriptionDe).invalid,
     descriptionValidation(acceptingStore.descriptionEn).invalid,
     coordinatesInvalid(acceptingStore.latitude, acceptingStore.longitude),
@@ -232,5 +238,5 @@ export const isStoreFormInvalid = (acceptingStore: AcceptingStoreFormData): bool
     homepageValidation(acceptingStore.homepage).invalid,
     phoneValidation(acceptingStore.telephone).invalid,
     emailValidation(acceptingStore.email).invalid,
-    houseNumberValidation(acceptingStore.houseNumber).invalid,
+    isAddressInvalid(acceptingStore),
   ].some(Boolean)
