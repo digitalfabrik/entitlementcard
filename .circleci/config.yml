@@ -332,7 +332,7 @@ jobs:
                 keys:
                     - v1-gradle-{{ checksum "build.gradle.kts" }}
             - run:
-                command: ./gradlew distTar -Denv=prod
+                command: ./gradlew distTar
                 name: Build backend
             - save_cache:
                 key: v1-gradle-{{ checksum "build.gradle.kts" }}
