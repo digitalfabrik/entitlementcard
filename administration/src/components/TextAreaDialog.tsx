@@ -4,7 +4,7 @@ import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import AlertBox from '../components/AlertBox'
-import graphQlErrorMap from '../errors/GraphQlErrorMap'
+import graphQlErrorMap from '../errors/graphQlErrorMap'
 import { GraphQlExceptionCode } from '../generated/graphql'
 import CharacterCounter from './CharacterCounter'
 import ConfirmDialog from './ConfirmDialog'
@@ -47,13 +47,15 @@ const TextAreaDialog = ({
       open={isOpen}
       title={title}
       id={id}
+      maxWidth='md'
       onConfirm={() => onSave(text)}
       onClose={onClose}
       cancelButtonText={t('close')}
       confirmButtonText={t('save')}
       confirmButtonIcon={<Save />}
       actionDisabled={maxCharsExceeded}
-      loading={loading}>
+      loading={loading}
+    >
       <Stack sx={{ gap: 1 }}>
         <TextField
           id='outlined-textarea'

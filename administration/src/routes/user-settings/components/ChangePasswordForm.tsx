@@ -58,13 +58,24 @@ const ChangePasswordForm = (): ReactElement => {
         onSubmit={event => {
           event.preventDefault()
           submit()
-        }}>
+        }}
+      >
         <Stack sx={{ gap: 2 }}>
-          <PasswordInput value={currentPassword} setValue={setCurrentPassword} label={t('currentPassword')} />
+          <PasswordInput
+            value={currentPassword}
+            setValue={setCurrentPassword}
+            label={t('currentPassword')}
+          />
           <PasswordInput value={newPassword} setValue={setNewPassword} label={t('newPassword')} />
-          <PasswordInput value={repeatNewPassword} setValue={setRepeatNewPassword} label={t('newPassword')} />
+          <PasswordInput
+            value={repeatNewPassword}
+            setValue={setRepeatNewPassword}
+            label={t('newPassword')}
+          />
 
-          {warnMessage === null ? null : <AlertBox sx={{ my: 2, mx: 0 }} severity='error' description={warnMessage} />}
+          {warnMessage === null ? null : (
+            <AlertBox sx={{ my: 2, mx: 0 }} severity='error' description={warnMessage} />
+          )}
           <SettingsCardButtonBox>
             <Button type='submit' disabled={!valid} loading={loading}>
               {t('changePassword')}

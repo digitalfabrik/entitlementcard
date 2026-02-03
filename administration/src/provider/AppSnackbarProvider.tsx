@@ -34,11 +34,12 @@ export const AppSnackbarProvider = ({ children }: { children: ReactNode }): Reac
         sx={{
           color: 'inherit',
         }}
-        onClick={() => closeSnackbar(snackbarKey)}>
+        onClick={() => closeSnackbar(snackbarKey)}
+      >
         <CloseIcon />
       </IconButton>
     ),
-    []
+    [],
   )
 
   return (
@@ -53,7 +54,8 @@ export const AppSnackbarProvider = ({ children }: { children: ReactNode }): Reac
         warning: StyledMaterialDesignSnackbar,
         error: StyledMaterialDesignSnackbar,
         default: StyledMaterialDesignSnackbar,
-      }}>
+      }}
+    >
       {children}
     </SnackbarProvider>
   )

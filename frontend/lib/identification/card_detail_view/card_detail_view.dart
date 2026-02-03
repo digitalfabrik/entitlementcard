@@ -98,7 +98,7 @@ class _CardDetailViewState extends State<CardDetailView> {
   }
 
   void _onMoreActionsPressed(BuildContext context) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => MoreActionsDialog(
         startActivation: widget.startActivation,

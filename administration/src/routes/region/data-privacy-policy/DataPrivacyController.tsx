@@ -30,7 +30,8 @@ const DataPrivacyWithRegion = (): ReactElement => {
     <RenderGuard
       allowedRoles={[Role.RegionAdmin]}
       condition={region !== undefined}
-      error={{ description: t('notAuthorizedForDataPrivacy') }}>
+      error={{ description: t('notAuthorizedForDataPrivacy') }}
+    >
       {region && <DataPrivacyController regionId={region.id} />}
     </RenderGuard>
   )

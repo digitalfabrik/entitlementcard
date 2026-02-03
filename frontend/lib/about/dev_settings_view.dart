@@ -120,7 +120,7 @@ class DevSettingsView extends StatelessWidget {
   }
 
   Future<void> _showRawCardInput(BuildContext context) async {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         final theme = Theme.of(context);

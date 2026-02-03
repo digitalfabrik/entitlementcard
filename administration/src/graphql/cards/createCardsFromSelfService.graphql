@@ -1,4 +1,8 @@
-mutation createCardsFromSelfService($project: String!, $encodedCardInfo: String!, $generateStaticCodes: Boolean!) {
+mutation createCardsFromSelfService(
+  $project: String!
+  $encodedCardInfo: String!
+  $generateStaticCodes: Boolean!
+) {
   card: createCardFromSelfService(
     project: $project
     encodedCardInfo: $encodedCardInfo

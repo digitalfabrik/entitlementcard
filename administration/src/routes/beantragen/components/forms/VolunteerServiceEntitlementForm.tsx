@@ -5,13 +5,13 @@ import { useTranslation } from 'react-i18next'
 import CustomDivider from '../../../../components/CustomDivider'
 import { BlueCardVolunteerServiceEntitlementInput } from '../../../../generated/graphql'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
-import { Form, FormComponentProps } from '../../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
   createCompoundInitialState,
   createCompoundValidate,
 } from '../../util/compoundFormUtils'
+import { Form, FormComponentProps } from '../../util/formType'
 import FileInputForm, { FileRequirementsText } from '../primitive-inputs/FileInputForm'
 import ShortTextForm from '../primitive-inputs/ShortTextForm'
 
@@ -42,7 +42,10 @@ const VolunteerServiceEntitlementForm: Form<State, ValidatedInput> = {
         <Typography component='p'>
           {t('certificateDescription')} {FileRequirementsText}
         </Typography>
-        <FileInputForm.Component state={state.certificate} setState={useUpdateStateCallback(setState, 'certificate')} />
+        <FileInputForm.Component
+          state={state.certificate}
+          setState={useUpdateStateCallback(setState, 'certificate')}
+        />
       </>
     )
   },

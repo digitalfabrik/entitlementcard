@@ -4,10 +4,10 @@ import { mocked } from 'jest-mock'
 import React, { ReactNode } from 'react'
 import { MemoryRouter } from 'react-router'
 
-import { generateCardInfo, initializeCard } from '../../../cards/Card'
+import { generateCardInfo, initializeCard } from '../../../cards/card'
 import createCards, { CreateCardsError, CreateCardsResult } from '../../../cards/createCards'
 import deleteCards from '../../../cards/deleteCards'
-import { PdfError, generatePdf } from '../../../cards/pdf/PdfFactory'
+import { PdfError, generatePdf } from '../../../cards/pdf/pdfFactory'
 import { DynamicActivationCode, StaticVerificationCode } from '../../../generated/card_pb'
 import { ProjectConfigProvider } from '../../../project-configs/ProjectConfigContext'
 import bayernConfig from '../../../project-configs/bayern/config'
@@ -20,8 +20,8 @@ import { getTestRegion } from '../../user-settings/__mocks__/Region'
 import useCardGenerator from './useCardGenerator'
 
 jest.useFakeTimers({ now: new Date('2025-01-01T00:00:00.000Z') })
-jest.mock('../../../cards/pdf/PdfFactory', () => ({
-  ...jest.requireActual('../../../cards/pdf/PdfFactory'),
+jest.mock('../../../cards/pdf/pdfFactory', () => ({
+  ...jest.requireActual('../../../cards/pdf/pdfFactory'),
   generatePdf: jest.fn(),
 }))
 jest.mock('../../../cards/createCards', () => ({
@@ -142,7 +142,10 @@ describe('useCardGenerator', () => {
       await result.current.generateCardsPdf()
     })
 
-    expect(enqueueSnackbarMock).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ variant: 'error' }))
+    expect(enqueueSnackbarMock).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({ variant: 'error' }),
+    )
     expect(deleteCards).toHaveBeenCalled()
     expect(deleteCards).toHaveBeenCalledWith(expect.anything(), region.id, codes)
     expect(downloadDataUri).not.toHaveBeenCalled()
@@ -155,14 +158,18 @@ describe('useCardGenerator', () => {
     const { result } = renderHook(() => useCardGenerator({ region }), {
       wrapper: withCustomWrapper(
         bayernConfig,
-        '?Name=Thea+Test&Ablaufdatum=26.02.2028&MailNotification=thea.test%40gmail.com&applicationIdToMarkAsProcessed=1'
+        '?Name=Thea+Test&Ablaufdatum=26.02.2028&MailNotification=thea.test%40gmail.com&applicationIdToMarkAsProcessed=1',
       ),
     })
 
     expect(result.current.cards).toEqual([
       {
         expirationDate: { day: 26, isoMonth: 2, isoYear: 2028 },
-        extensions: { bavariaCardType: 'Standard', regionId: 0, emailNotification: 'thea.test@gmail.com' },
+        extensions: {
+          bavariaCardType: 'Standard',
+          regionId: 0,
+          emailNotification: 'thea.test@gmail.com',
+        },
         fullName: 'Thea Test',
         id: expect.any(Number),
       },
@@ -174,7 +181,7 @@ describe('useCardGenerator', () => {
     const { result } = renderHook(() => useCardGenerator({ region }), {
       wrapper: withCustomWrapper(
         nuernbergConfig,
-        '?Name=Thea+Test&Ablaufdatum=03.3.2026&Geburtsdatum=01.01.2000&Passnummer=12345678&Pass-ID=123&Adresszeile+1=Teststraße+3&Adresszeile+2=EG+Rechts&PLZ=86111&Ort=Musterstadt&Startdatum=01.05.2025'
+        '?Name=Thea+Test&Ablaufdatum=03.3.2026&Geburtsdatum=01.01.2000&Passnummer=12345678&Pass-ID=123&Adresszeile+1=Teststraße+3&Adresszeile+2=EG+Rechts&PLZ=86111&Ort=Musterstadt&Startdatum=01.05.2025',
       ),
     })
 

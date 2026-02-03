@@ -7,7 +7,8 @@ class ArrayBuffersManager {
   private arrayBuffers: { key: number; value: ArrayBuffer }[] = []
 
   async initialize() {
-    const arrayBuffers = await localforage.getItem<{ key: number; value: ArrayBuffer }[]>(globalArrayBuffersKey)
+    const arrayBuffers =
+      await localforage.getItem<{ key: number; value: ArrayBuffer }[]>(globalArrayBuffersKey)
     if (arrayBuffers !== null) {
       this.arrayBuffers = arrayBuffers
     }
@@ -48,7 +49,9 @@ export const useInitializeGlobalArrayBuffersManager = (): boolean => {
   return initialized
 }
 
-export const useGarbageCollectArrayBuffers = (getUsedArrayBufferKeys: (() => number[]) | null): void => {
+export const useGarbageCollectArrayBuffers = (
+  getUsedArrayBufferKeys: (() => number[]) | null,
+): void => {
   const getUsedArrayBufferKeysRef = useRef(getUsedArrayBufferKeys)
 
   useEffect(() => {

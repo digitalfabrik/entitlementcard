@@ -9,7 +9,8 @@ import PlainDate from './PlainDate'
 export const isStagingEnvironment = (): boolean => !!window.location.hostname.match(/staging./)
 export const isProductionEnvironment = (): boolean =>
   process.env.REACT_APP_IS_PRODUCTION === 'true' && !isStagingEnvironment()
-export const isDevelopmentEnvironment = (): boolean => process.env.REACT_APP_IS_PRODUCTION === 'false'
+export const isDevelopmentEnvironment = (): boolean =>
+  process.env.REACT_APP_IS_PRODUCTION === 'false'
 
 export const updateArrayItem = <T>(array: T[], updatedItem: T, index: number): T[] => {
   if (index >= array.length || index < 0) {
@@ -19,12 +20,17 @@ export const updateArrayItem = <T>(array: T[], updatedItem: T, index: number): T
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type UnionToIntersection<U> = (U extends any ? (x: U) => void : never) extends (x: infer I) => void ? I : never
+export type UnionToIntersection<U> = (U extends any ? (x: U) => void : never) extends (
+  x: infer I,
+) => void
+  ? I
+  : never
 
 const multipleSpacePattern = /\s\s+/g
-export const removeMultipleSpaces = (value: string): string => value.replace(multipleSpacePattern, ' ')
+export const removeMultipleSpaces = (value: string): string =>
+  value.replace(multipleSpacePattern, ' ')
 export const containsSpecialCharacters = (value: string): boolean =>
-  /[`!@#$%^&*()_+=\]{};:"\\|,<>?€¥°[£¢§~¡“¶≠¿«∑®†Ω¨øπ•±‘æœ∆ª©ƒ∂å≈ç√∫–µ0123456789]/.test(value)
+  /[!@#$%^&*()_=\]{};:"\\|,<>?€¥°[£¢§~¡“¶≠¿«∑®†Ω¨øπ•±‘æœ∆ª©ƒ∂å≈ç√∫µ0123456789]/.test(value)
 
 /** This regEx is needed to avoid breaking pdf creation due to incompatible charsets in form fields
  * Common charset includes common pattern f.e. empty spaces.
@@ -33,11 +39,12 @@ export const containsSpecialCharacters = (value: string): boolean =>
 export const containsOnlyLatinAndCommonCharset = (value: string): boolean =>
   XRegExp('^[\\p{Latin}\\p{Common}]*$').test(value)
 
-export const toLowerCaseFirstLetter = (value: string): string => value.charAt(0).toLowerCase() + value.slice(1)
+export const toLowerCaseFirstLetter = (value: string): string =>
+  value.charAt(0).toLowerCase() + value.slice(1)
 
 export const mapGraphqlRequestResult = <T>(
   result: FetchResult<T>,
-  createError: (message: string) => Error
+  createError: (message: string) => Error,
 ): Exclude<FetchResult['data'], null | undefined> => {
   if (result.errors) {
     const { title } = getMessageFromApolloError(new ApolloError({ graphQLErrors: result.errors }))
@@ -51,7 +58,7 @@ export const mapGraphqlRequestResult = <T>(
 
 export const hasProp = <P extends PropertyKey, O extends { [p in P]: unknown }>(
   obj: O,
-  p: P
+  p: P,
 ): obj is O & { [p in P]: NonNullable<unknown> } => obj[p] !== undefined && obj[p] !== null
 
 export const isExceedingMaxValidityDate = (currentDate: PlainDate): boolean =>

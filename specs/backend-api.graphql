@@ -52,6 +52,17 @@ type AcceptingStore {
   physicalStore: PhysicalStore
 }
 
+type AcceptingStoreV2 {
+  category: Category!
+  categoryId: Int!
+  contact: Contact!
+  contactId: Int!
+  descriptions: [LocalizedDescription!]
+  id: Int!
+  name: String
+  physicalStore: PhysicalStore
+}
+
 type Address {
   id: Int!
   location: String
@@ -160,6 +171,11 @@ type FreinetAgency {
   dataTransferActivated: Boolean!
 }
 
+type LocalizedDescription {
+  locale: String!
+  text: String!
+}
+
 type Mutation {
   "Activate a dynamic entitlement card"
   activateCard(activationSecretBase64: String!, cardInfoHashBase64: String!, overwrite: Boolean!, project: String!): CardActivationResultModel!
@@ -236,6 +252,8 @@ type PhysicalStore {
 }
 
 type Query {
+  "Returns accepting stores in the given project queried by physical store ids."
+  acceptingStoresByPhysicalStoreIdsInProject(physicalStoreIds: [Int!]!, project: String!): [AcceptingStoreV2!]!
   "Return list of all categories."
   categories: [Category!]!
   "Verify password reset link"
@@ -265,9 +283,7 @@ type Query {
   "Returns all administrators in a region. This query requires the role REGION_ADMIN or PROJECT_ADMIN."
   getUsersInRegion(regionId: Int!): [Administrator!]!
   "Returns list of all accepting stores in the given project queried by ids."
-  physicalStoresByIdInProject(ids: [Int!]!, project: String!): [PhysicalStore]!
-  "Returns list of all accepting stores in the given project."
-  physicalStoresInProject(project: String!): [PhysicalStore!]!
+  physicalStoresByIdInProject(ids: [Int!]!, project: String!): [PhysicalStore]! @deprecated(reason : "Use acceptingStoreByPhysicalStoreIdInProject for localized descriptions. Should be able to safely remove in January 2028.")
   "Returns region data for specific region."
   regionByRegionId(regionId: Int!): Region!
   "Returns regions queried by ids in the given project."
@@ -277,7 +293,9 @@ type Query {
   "Return list of all regions in the given project."
   regionsInProject(project: String!): [Region!]!
   "Search for accepting stores in the given project using searchText and categoryIds."
-  searchAcceptingStoresInProject(params: SearchParamsInput!, project: String!): [AcceptingStore!]!
+  searchAcceptingStoresInProject(params: SearchParamsInput!, project: String!): [AcceptingStore!]! @deprecated(reason : "Use searchAcceptingStoresInProjectV2 for localized descriptions. Should be able to safely remove in January 2028.")
+  "Search for accepting stores in the given project using searchText and categoryIds."
+  searchAcceptingStoresInProjectV2(params: SearchParamsInput!, project: String!): [AcceptingStoreV2!]!
   "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid, extendable and a timestamp of the last check"
   verifyCardInProjectV2(card: CardVerificationModelInput!, project: String!): CardVerificationResultModel!
   "Returns the requesting administrator as retrieved from his JWT token."

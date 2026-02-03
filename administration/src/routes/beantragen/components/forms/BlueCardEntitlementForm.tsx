@@ -5,13 +5,13 @@ import { useTranslation } from 'react-i18next'
 import { BlueCardEntitlementInput, BlueCardEntitlementType } from '../../../../generated/graphql'
 import i18next from '../../../../translations/i18n'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
-import { Form, FormComponentProps } from '../../util/FormType'
 import {
   CompoundState,
   createCompoundGetArrayBufferKeys,
   createCompoundInitialState,
   createSwitchValidate,
 } from '../../util/compoundFormUtils'
+import { Form, FormComponentProps } from '../../util/formType'
 import SwitchComponent from '../SwitchComponent'
 import { createRadioGroupForm } from '../primitive-inputs/RadioGroupForm'
 import JuleicaEntitlementForm from './JuleicaEntitlementForm'
@@ -23,11 +23,19 @@ import WorkAtOrganizationsEntitlementForm from './WorkAtOrganizationsEntitlement
 const EntitlementTypeRadioGroupForm = createRadioGroupForm<BlueCardEntitlementType>()
 const entitlementTypeOptions: { labelByValue: { [K in BlueCardEntitlementType]: string } } = {
   labelByValue: {
-    [BlueCardEntitlementType.WorkAtOrganizations]: i18next.t('application:blueCardWorkAtOrganizationsEntitlement'),
+    [BlueCardEntitlementType.WorkAtOrganizations]: i18next.t(
+      'application:blueCardWorkAtOrganizationsEntitlement',
+    ),
     [BlueCardEntitlementType.Juleica]: i18next.t('application:blueCardJuleicaEntitlement'),
-    [BlueCardEntitlementType.WorkAtDepartment]: i18next.t('application:blueCardWorkAtDepartmentEntitlement'),
-    [BlueCardEntitlementType.MilitaryReserve]: i18next.t('application:blueCardMilitaryReserveEntitlement'),
-    [BlueCardEntitlementType.VolunteerService]: i18next.t('application:volunteerServiceEntitlement:title'),
+    [BlueCardEntitlementType.WorkAtDepartment]: i18next.t(
+      'application:blueCardWorkAtDepartmentEntitlement',
+    ),
+    [BlueCardEntitlementType.MilitaryReserve]: i18next.t(
+      'application:blueCardMilitaryReserveEntitlement',
+    ),
+    [BlueCardEntitlementType.VolunteerService]: i18next.t(
+      'application:volunteerServiceEntitlement:title',
+    ),
   },
 }
 
@@ -47,14 +55,23 @@ type AdditionalProps = { applicantName: string }
 const BlueCardEntitlementForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
-  validate: createSwitchValidate(SubForms, { entitlementType: entitlementTypeOptions }, 'entitlementType', {
-    JULEICA: 'juleicaEntitlement',
-    MILITARY_RESERVE: 'militaryReserveEntitlement',
-    VOLUNTEER_SERVICE: 'volunteerServiceEntitlement',
-    WORK_AT_DEPARTMENT: 'workAtDepartmentEntitlement',
-    WORK_AT_ORGANIZATIONS: 'workAtOrganizationsEntitlement',
-  }),
-  Component: ({ state, setState, applicantName }: FormComponentProps<State, AdditionalProps, Options>) => {
+  validate: createSwitchValidate(
+    SubForms,
+    { entitlementType: entitlementTypeOptions },
+    'entitlementType',
+    {
+      JULEICA: 'juleicaEntitlement',
+      MILITARY_RESERVE: 'militaryReserveEntitlement',
+      VOLUNTEER_SERVICE: 'volunteerServiceEntitlement',
+      WORK_AT_DEPARTMENT: 'workAtDepartmentEntitlement',
+      WORK_AT_ORGANIZATIONS: 'workAtOrganizationsEntitlement',
+    },
+  ),
+  Component: ({
+    state,
+    setState,
+    applicantName,
+  }: FormComponentProps<State, AdditionalProps, Options>) => {
     const { t } = useTranslation('applicationForms')
     return (
       <>

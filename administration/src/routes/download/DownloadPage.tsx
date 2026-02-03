@@ -39,7 +39,8 @@ const DownloadPage = (): ReactElement => {
         target='_blank'
         rel='noreferrer'
         color='textPrimary'
-        underline='always'>
+        underline='always'
+      >
         Tür an Tür - Digitalfabrik gGmbH
       </MUILink>
       <Typography variant='h5' component='h2' mt={6}>

@@ -1,13 +1,14 @@
-import 'dart:math';
-
 import 'package:ehrenamtskarte/category_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
 class FilterBarButton extends StatefulWidget {
+  static const double width = 74;
+  static const double height = 74;
+
   final CategoryAsset asset;
-  final Function(CategoryAsset, bool) onCategoryPress;
+  final void Function(CategoryAsset, bool) onCategoryPress;
   final int index;
 
   const FilterBarButton({super.key, required this.asset, required this.onCategoryPress, required this.index});
@@ -50,34 +51,13 @@ class _FilterBarButtonState extends State<FilterBarButton> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
-    // At least a width of 65 is needed to fit all category names
-    const requiredTitleWidth = 65.0;
-    const maxElementWidth = 80.0;
-    const paddingPerElement = 8;
-    const minNumberElements = 5;
-    final totalWidth = MediaQuery.of(context).size.width;
-
-    final totalWidthWithoutPadding = totalWidth - minNumberElements * paddingPerElement;
-    final availableElementWidth = totalWidthWithoutPadding / minNumberElements;
-
-    final smallWidth = min(maxElementWidth, availableElementWidth);
-    final largeWidth = max(requiredTitleWidth, smallWidth);
-
-    final numSmallElementsPerRow = totalWidth ~/ smallWidth;
-    final numElementsFirstRow = max(minNumberElements, numSmallElementsPerRow);
-    final isSecondRow = widget.index >= numElementsFirstRow;
-
-    // In the second row we can use larger width as there are only 4 categories
-    final width = isSecondRow ? largeWidth : smallWidth;
-
     final theme = Theme.of(context);
-
     final selectedColor = theme.brightness == Brightness.dark
         ? theme.colorScheme.primary.toHSLColor().withLightness(0.2).toColor()
         : theme.colorScheme.primary.toHSLColor().withLightness(0.9).toColor();
-
     final colorTween = _colorTween;
     final animationController = _animationController;
+
     if (colorTween == null || animationController == null) {
       return const Center();
     }
@@ -87,7 +67,7 @@ class _FilterBarButtonState extends State<FilterBarButton> with SingleTickerProv
       builder: (context, child) {
         final color = Color.lerp(theme.colorScheme.surface, selectedColor, colorTween.value);
         return ConstrainedBox(
-          constraints: BoxConstraints.tightFor(width: width, height: 74),
+          constraints: BoxConstraints.tightFor(width: FilterBarButton.width, height: FilterBarButton.height),
           child: Card(
             margin: EdgeInsets.zero,
             color: color,

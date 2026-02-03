@@ -7,7 +7,7 @@ export const ActivationText = (
   applicationName: string,
   downloadLink: string,
   deepLink: string,
-  t: TFunction
+  t: TFunction,
 ): ReactElement => (
   <div>
     <Typography variant='h6' marginBottom={1}>

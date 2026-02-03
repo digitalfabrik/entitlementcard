@@ -3,8 +3,11 @@ import type { Extension } from './extensions'
 export const EMAIL_NOTIFICATION_EXTENSION_NAME = 'emailNotification'
 type EmailNotificationExtensionState = { [EMAIL_NOTIFICATION_EXTENSION_NAME]: string }
 
-const fromString = (value: string): EmailNotificationExtensionState => ({ [EMAIL_NOTIFICATION_EXTENSION_NAME]: value })
-const toString = ({ emailNotification }: EmailNotificationExtensionState): string => emailNotification
+const fromString = (value: string): EmailNotificationExtensionState => ({
+  [EMAIL_NOTIFICATION_EXTENSION_NAME]: value,
+})
+const toString = ({ emailNotification }: EmailNotificationExtensionState): string =>
+  emailNotification
 
 const EMailNotificationExtension: Extension<EmailNotificationExtensionState> = {
   name: EMAIL_NOTIFICATION_EXTENSION_NAME,

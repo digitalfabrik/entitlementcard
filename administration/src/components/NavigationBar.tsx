@@ -22,7 +22,8 @@ const NavigationBar = (): ReactElement => {
           [theme.breakpoints.down('lg')]: {
             padding: 1.5,
           },
-        })}>
+        })}
+      >
         <SvgIcon fontSize='large'>
           <EntitlementIcon />
         </SvgIcon>
@@ -33,7 +34,8 @@ const NavigationBar = (): ReactElement => {
             '&:hover': { textDecoration: 'none', color: theme.palette.common.black },
             color: theme.palette.common.black,
           }}
-          marginX={1.5}>
+          marginX={1.5}
+        >
           <Stack>
             <Typography component='span'>
               {config.name} {t('administration')}

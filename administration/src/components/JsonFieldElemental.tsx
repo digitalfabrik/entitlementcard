@@ -22,7 +22,12 @@ const getTranslationKey = (fieldName: string, parentName?: string) =>
   parentName ? `${parentName}.${fieldName}` : fieldName
 
 const JsonFieldAttachment = memo(
-  ({ jsonField, baseUrl, attachmentAccessible, parentName }: JsonFieldViewProps<JsonField<'Attachment'>>) => {
+  ({
+    jsonField,
+    baseUrl,
+    attachmentAccessible,
+    parentName,
+  }: JsonFieldViewProps<JsonField<'Attachment'>>) => {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar()
     const token = useContext(AuthContext).data?.token
     const { t } = useTranslation('application')
@@ -33,7 +38,7 @@ const JsonFieldAttachment = memo(
       const onClick = async () => {
         const loadingSnackbarKey = enqueueSnackbar(
           `${t('applicationsOverview:loadAttachment')} ${attachment.fileIndex + 1}...`,
-          { variant: 'info', persist: true, action: () => null }
+          { variant: 'info', persist: true, action: () => null },
         )
         try {
           const result = await fetch(downloadUrl, { headers: { authorization: `Bearer ${token}` } })
@@ -63,9 +68,8 @@ const JsonFieldAttachment = memo(
             size='small'
             endIcon={<DownloadForOffline />}
             onClick={onClick}
-            sx={{ py: 0, displayPrint: 'none', boxShadow: 0 }}>{`${t('applicationsOverview:attachment')} ${
-            jsonField.value.fileIndex + 1
-          }`}</Button>
+            sx={{ py: 0, displayPrint: 'none', boxShadow: 0 }}
+          >{`${t('applicationsOverview:attachment')} ${jsonField.value.fileIndex + 1}`}</Button>
           <Typography sx={{ display: 'none', displayPrint: 'block' }}>
             {`(${t('applicationsOverview:seeAttachment')} ${jsonField.value.fileIndex + 1})`}
           </Typography>
@@ -78,7 +82,7 @@ const JsonFieldAttachment = memo(
         <Typography component='span'>{t('applicationsOverview:submittedButNotVisible')}</Typography>
       </Typography>
     )
-  }
+  },
 )
 
 const JsonFieldElemental = ({
@@ -104,14 +108,20 @@ const JsonFieldElemental = ({
       return (
         <Typography component='p'>
           {t(getTranslationKey(jsonField.name, parentName))}:{' '}
-          <Typography component='span'>{t(getTranslationKey(jsonField.value, parentName))}</Typography>
+          <Typography component='span'>
+            {t(getTranslationKey(jsonField.value, parentName))}
+          </Typography>
         </Typography>
       )
     case 'Date':
       return (
         <Typography component='p'>
           {t(getTranslationKey(jsonField.name, parentName))}:{' '}
-          {new Date(jsonField.value).toLocaleDateString('de', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+          {new Date(jsonField.value).toLocaleDateString('de', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+          })}
         </Typography>
       )
     case 'Number':

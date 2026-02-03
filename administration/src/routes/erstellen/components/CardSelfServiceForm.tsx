@@ -6,7 +6,12 @@ import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 
-import { Card, getFullNameValidationErrorMessage, isFullNameValid, isValid } from '../../../cards/Card'
+import {
+  Card,
+  getFullNameValidationErrorMessage,
+  isFullNameValid,
+  isValid,
+} from '../../../cards/card'
 import CardTextField from '../../../cards/extensions/components/CardTextField'
 import ClearInputButton from '../../../cards/extensions/components/ClearInputButton'
 import BaseCheckbox from '../../../components/BaseCheckbox'
@@ -49,7 +54,9 @@ const CardSelfServiceForm = ({
       setDataPrivacyAccepted(DataPrivacyAcceptingStatus.denied)
     }
     if (!cardValid || dataPrivacyAccepted !== DataPrivacyAcceptingStatus.accepted) {
-      enqueueSnackbar(<FormAlert isToast errorMessage={t('atLeastOneInputIsInvalid')} />, { variant: 'error' })
+      enqueueSnackbar(<FormAlert isToast errorMessage={t('atLeastOneInputIsInvalid')} />, {
+        variant: 'error',
+      })
       return
     }
     await generateCards()
@@ -86,7 +93,8 @@ const CardSelfServiceForm = ({
           variant='text'
           onClick={() => setOpenReferenceInformation(true)}
           sx={{ width: 'fit-content' }}
-          startIcon={<InfoOutlined />}>
+          startIcon={<InfoOutlined />}
+        >
           {' '}
           <Typography>{t('whereToFindReferenceNumber')}</Typography>
         </Button>
@@ -99,7 +107,8 @@ const CardSelfServiceForm = ({
                 color='info'
                 variant='text'
                 sx={{ textDecoration: 'underline', px: 0, verticalAlign: 'unset' }}
-                onClick={() => setOpenDataPrivacy(true)}>
+                onClick={() => setOpenDataPrivacy(true)}
+              >
                 {t('datePrivacyAgreement')}
               </Button>
               .
@@ -109,7 +118,7 @@ const CardSelfServiceForm = ({
             setDataPrivacyAccepted(
               dataPrivacyAccepted === DataPrivacyAcceptingStatus.accepted
                 ? DataPrivacyAcceptingStatus.denied
-                : DataPrivacyAcceptingStatus.accepted
+                : DataPrivacyAcceptingStatus.accepted,
             )
           }
           hasError={dataPrivacyAccepted === DataPrivacyAcceptingStatus.denied}
@@ -121,7 +130,8 @@ const CardSelfServiceForm = ({
         sx={{ width: 'fit-content' }}
         onClick={createKoblenzPass}
         variant='contained'
-        size='large'>
+        size='large'
+      >
         {t('createKoblenzPass')}
       </Button>
       <ConfirmDialog
@@ -133,14 +143,16 @@ const CardSelfServiceForm = ({
         id='reference-information-dialog'
         onConfirm={() => setOpenReferenceInformation(false)}
         onClose={() => setOpenReferenceInformation(false)}
-        showCancelButton={false}>
+        showCancelButton={false}
+      >
         <Typography>
           {t('whereToFindReferenceNumberExplanation')} <br />
           {t('moreInformationAndExamples')}
           <Link
             href='https://www.koblenz.de/leben-in-koblenz/soziales/koblenzpass/#accordion-2-4'
             target='_blank'
-            rel='noreferrer'>
+            rel='noreferrer'
+          >
             www.koblenz.de/koblenzpass
           </Link>
           . <br />
@@ -153,11 +165,13 @@ const CardSelfServiceForm = ({
         confirmButtonIcon={<Close />}
         showCancelButton={false}
         open={openDataPrivacy}
+        maxWidth='md'
         color='secondary'
         title={projectConfig.dataPrivacyHeadline}
         id='data-privacy-dialog'
         onConfirm={() => setOpenDataPrivacy(false)}
-        onClose={() => setOpenDataPrivacy(false)}>
+        onClose={() => setOpenDataPrivacy(false)}
+      >
         <projectConfig.dataPrivacyContent />
       </ConfirmDialog>
     </>

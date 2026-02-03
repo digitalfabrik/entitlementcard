@@ -82,6 +82,7 @@ class ApplicationHandler(
                     backendConfig,
                     projectConfig,
                     applicationVerification.contactName,
+                    applicationVerification.contactEmailAddress,
                     application.personalData,
                     applicationEntity.accessKey,
                     applicationConfirmationNote,

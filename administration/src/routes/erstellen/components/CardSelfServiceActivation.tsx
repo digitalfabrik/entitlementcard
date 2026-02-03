@@ -12,7 +12,10 @@ type CardSelfServiceActivationProps = {
   downloadPdf: (code: CreateCardsResult, fileName: string) => Promise<void>
 }
 
-const CardSelfServiceActivation = ({ code, downloadPdf }: CardSelfServiceActivationProps): ReactElement => {
+const CardSelfServiceActivation = ({
+  code,
+  downloadPdf,
+}: CardSelfServiceActivationProps): ReactElement => {
   const projectConfig = useContext(ProjectConfigContext)
   const { t } = useTranslation('selfService')
   const deepLink = getCustomDeepLinkFromQrCode(projectConfig, {
@@ -27,7 +30,8 @@ const CardSelfServiceActivation = ({ code, downloadPdf }: CardSelfServiceActivat
         variant='text'
         onClick={() => downloadPdf(code, `${projectConfig.name}.pdf`)}
         sx={theme => ({ width: 'fit-content', color: theme.palette.common.black })}
-        startIcon={<FileDownloadOutlinedIcon />}>
+        startIcon={<FileDownloadOutlinedIcon />}
+      >
         {' '}
         {t('koblenzPassPdf')}
       </Button>
@@ -37,7 +41,13 @@ const CardSelfServiceActivation = ({ code, downloadPdf }: CardSelfServiceActivat
         <b>{t('important')}: </b>
         {t('koblenzPassAppNeedsToBeInstalled')}
       </Typography>
-      <Button color='secondary' href={deepLink} variant='contained' size='large' sx={{ width: 'fit-content' }}>
+      <Button
+        color='secondary'
+        href={deepLink}
+        variant='contained'
+        size='large'
+        sx={{ width: 'fit-content' }}
+      >
         {t('activatePass')}
       </Button>
     </>

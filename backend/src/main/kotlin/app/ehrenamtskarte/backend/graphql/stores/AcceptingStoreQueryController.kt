@@ -5,6 +5,7 @@ import app.ehrenamtskarte.backend.db.entities.AcceptingStoreEntity
 import app.ehrenamtskarte.backend.db.repositories.AcceptingStoresRepository
 import app.ehrenamtskarte.backend.db.repositories.PhysicalStoresRepository
 import app.ehrenamtskarte.backend.graphql.stores.types.AcceptingStore
+import app.ehrenamtskarte.backend.graphql.stores.types.AcceptingStoreV2
 import app.ehrenamtskarte.backend.graphql.stores.types.Coordinates
 import app.ehrenamtskarte.backend.graphql.stores.types.PhysicalStore
 import app.ehrenamtskarte.backend.graphql.stores.types.SearchParams
@@ -24,22 +25,9 @@ import org.springframework.stereotype.Controller
 class AcceptingStoreQueryController(
     private val backendConfig: BackendConfiguration,
 ) {
-    @GraphQLDescription("Returns list of all accepting stores in the given project.")
-    @QueryMapping
-    fun physicalStoresInProject(
-        @Argument project: String,
-    ): List<PhysicalStore> =
-        transaction {
-            PhysicalStoresRepository.findAllInProject(project).map {
-                PhysicalStore(
-                    it.id.value,
-                    it.storeId.value,
-                    it.addressId.value,
-                    Coordinates(it.coordinates.x, it.coordinates.y),
-                )
-            }
-        }
-
+    @Deprecated(
+        "Use acceptingStoreByPhysicalStoreIdInProject for localized descriptions. Should be able to safely remove in January 2028.",
+    )
     @GraphQLDescription("Returns list of all accepting stores in the given project queried by ids.")
     @QueryMapping
     fun physicalStoresByIdInProject(
@@ -61,6 +49,9 @@ class AcceptingStoreQueryController(
             }
         }
 
+    @Deprecated(
+        "Use searchAcceptingStoresInProjectV2 for localized descriptions. Should be able to safely remove in January 2028.",
+    )
     @GraphQLDescription(
         "Search for accepting stores in the given project using searchText and categoryIds.",
     )
@@ -74,23 +65,67 @@ class AcceptingStoreQueryController(
         val projectConfig = backendConfig.getProjectConfig(project)
         val filteredStores = transaction {
             AcceptingStoresRepository.findBySearch(
-                project,
-                params.searchText,
-                params.categoryIds,
-                params.coordinates,
-                params.limit ?: Int.MAX_VALUE,
-                params.offset ?: 0,
+                project = project,
+                searchText = params.searchText,
+                categoryIds = params.categoryIds,
+                coordinates = params.coordinates,
+                limit = params.limit ?: Int.MAX_VALUE,
+                offset = params.offset ?: 0,
             ).with(AcceptingStoreEntity::descriptions)
                 .map { AcceptingStore.fromDbEntity(it) }
         }
         Matomo.trackSearch(
-            backendConfig,
-            projectConfig,
-            request,
-            dfe.field.name,
-            params,
-            filteredStores.size,
+            config = backendConfig,
+            projectConfig = projectConfig,
+            request = request,
+            query = dfe.field.name,
+            params = params,
+            numResults = filteredStores.size,
         )
         return filteredStores
     }
+
+    @GraphQLDescription(
+        "Search for accepting stores in the given project using searchText and categoryIds.",
+    )
+    @QueryMapping
+    fun searchAcceptingStoresInProjectV2(
+        @Argument project: String,
+        @Argument params: SearchParams,
+        dfe: DataFetchingEnvironment,
+        @GraphQLIgnore @ContextValue request: HttpServletRequest,
+    ): List<AcceptingStoreV2> {
+        val projectConfig = backendConfig.getProjectConfig(project)
+        val filteredStores = transaction {
+            AcceptingStoresRepository.findBySearch(
+                project = project,
+                searchText = params.searchText,
+                categoryIds = params.categoryIds,
+                coordinates = params.coordinates,
+                limit = params.limit ?: Int.MAX_VALUE,
+                offset = params.offset ?: 0,
+            ).with(AcceptingStoreEntity::descriptions)
+                .map { AcceptingStoreV2.fromDbEntity(it) }
+        }
+        Matomo.trackSearch(
+            config = backendConfig,
+            projectConfig = projectConfig,
+            request = request,
+            query = dfe.field.name,
+            params = params,
+            numResults = filteredStores.size,
+        )
+        return filteredStores
+    }
+
+    @GraphQLDescription("Returns accepting stores in the given project queried by physical store ids.")
+    @QueryMapping
+    fun acceptingStoresByPhysicalStoreIdsInProject(
+        @Argument project: String,
+        @Argument physicalStoreIds: List<Int>,
+    ): List<AcceptingStoreV2> =
+        transaction {
+            AcceptingStoresRepository.findByPhysicalStoreIdsInProject(project, physicalStoreIds)
+                .map { AcceptingStoreV2.fromDbEntity(it) }
+        }
 }

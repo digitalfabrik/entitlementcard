@@ -83,10 +83,15 @@ const EditUserDialog = ({
       },
     })
   }
-  const showRegionSelector = regionIdOverride === null && role !== null && rolesWithRegion.includes(role)
+  const showRegionSelector =
+    regionIdOverride === null && role !== null && rolesWithRegion.includes(role)
   const notificationShownAndNotConfirmed = selectedUser?.id === me?.id && !notificationConfirmed
   const userEditDisabled =
-    !email || role === null || (showRegionSelector && regionId === null) || notificationShownAndNotConfirmed
+    !email ||
+    role === null ||
+    (showRegionSelector && regionId === null) ||
+    notificationShownAndNotConfirmed ||
+    !isEmailValid(email)
 
   const editUserAlertDescription = (
     <>
@@ -120,7 +125,8 @@ const EditUserDialog = ({
       loading={loading}
       actionDisabled={userEditDisabled}
       confirmButtonText={t('editUser')}
-      confirmButtonIcon={<Edit />}>
+      confirmButtonIcon={<Edit />}
+    >
       <Stack sx={{ paddingY: 1, gap: 2 }}>
         <CardTextField
           id='edit-user-name-input'
@@ -130,10 +136,14 @@ const EditUserDialog = ({
           onChange={value => setEmail(value)}
           showError={!email || !isEmailValid(email)}
           errorMessage={t('noUserNameError')}
+          required
         />
         <RoleSelector selectedRole={role} onChange={setRole} />
         {showRegionSelector ? (
-          <RegionSelector onSelect={region => setRegionId(region ? region.id : null)} selectedId={regionId} />
+          <RegionSelector
+            onSelect={region => setRegionId(region ? region.id : null)}
+            selectedId={regionId}
+          />
         ) : null}
         <AlertBox fullWidth severity='info' description={editUserAlertDescription} />
         {selectedUser?.id === me?.id ? (

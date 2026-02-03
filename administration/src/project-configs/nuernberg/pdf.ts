@@ -1,7 +1,7 @@
 import { PDFForm, PDFTextField, rgb } from '@cantoo/pdf-lib'
 
 import { getAddressFieldExtensionsValues } from '../../cards/extensions/AddressFieldExtensions'
-import type { InfoParams } from '../../cards/pdf/PdfTextElement'
+import type { InfoParams } from '../../cards/pdf/pdfTextElement'
 import PlainDate from '../../util/PlainDate'
 import type { PdfConfig } from '../getProjectConfig'
 import pdfTemplate from './pdf-template.pdf'
@@ -13,7 +13,9 @@ const renderPdfDetails = ({ info }: InfoParams): string => {
   }
   const passId = info.extensions?.extensionNuernbergPassId?.passId
   const expirationDate = PlainDate.fromDaysSinceEpoch(expirationDay)
-  const birthdayDate = PlainDate.fromDaysSinceEpoch(info.extensions?.extensionBirthday?.birthday ?? 0)
+  const birthdayDate = PlainDate.fromDaysSinceEpoch(
+    info.extensions?.extensionBirthday?.birthday ?? 0,
+  )
   const startDate = PlainDate.fromDaysSinceEpoch(info.extensions?.extensionStartDay?.startDay ?? 0)
   return `${info.fullName}
 Pass-ID: ${passId ?? ''}
@@ -21,7 +23,11 @@ Geburtsdatum: ${birthdayDate.format()}
 Gültig: ${startDate.format()} bis ${expirationDate.format()}`
 }
 
-const createAddressFormFields = (form: PDFForm, pageIdx: number, { info, card }: InfoParams): PDFTextField[] => {
+const createAddressFormFields = (
+  form: PDFForm,
+  pageIdx: number,
+  { info, card }: InfoParams,
+): PDFTextField[] => {
   const [addressLine1, addressLine2, plz, location] = getAddressFieldExtensionsValues(card)
 
   const nameField = form.createTextField(`${pageIdx}.address.name`)
@@ -68,10 +74,19 @@ const pdfConfiguration: PdfConfig = {
     dynamicActivationQrCodes: [{ x: 122, y: 110, size: 63 }],
     text: [
       { x: 108, y: 243, maxWidth: 52, fontSize: 9, spacing: 5, infoToText: renderPdfDetails },
-      { x: 135, y: 85, maxWidth: 44, fontSize: 13, color: rgb(0.17, 0.17, 0.2), infoToText: renderPassId },
+      {
+        x: 135,
+        y: 85,
+        maxWidth: 44,
+        fontSize: 13,
+        color: rgb(0.17, 0.17, 0.2),
+        infoToText: renderPassId,
+      },
       { x: 153.892, y: 178, fontSize: 6, textAlign: 'center', infoToText: renderCardHash },
     ],
-    form: [{ infoToFormFields: createAddressFormFields, x: 18.5, y: 68.5, width: 57, fontSize: 10 }],
+    form: [
+      { infoToFormFields: createAddressFormFields, x: 18.5, y: 68.5, width: 57, fontSize: 10 },
+    ],
   },
 }
 

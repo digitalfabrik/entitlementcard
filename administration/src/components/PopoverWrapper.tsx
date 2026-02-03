@@ -29,7 +29,8 @@ const PopoverWrapper = ({ children, icon }: PopoverWrapperProps): ReactElement =
         transformOrigin={{
           vertical: 'top',
           horizontal: 'center',
-        }}>
+        }}
+      >
         {children}
       </Popover>
       <IconButton onClick={handleClick}>{icon}</IconButton>

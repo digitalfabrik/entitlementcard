@@ -20,13 +20,17 @@ export type ApplicationWithoutVerifications<T extends ApplicationJsonValue> = Om
 >
 
 /** Return an application object with the 'jsonValue' property already parsed */
-export const parseApplication = <T extends ApplicationJsonValue>(rawApplication: T): ApplicationParsedJsonValue<T> => ({
+export const parseApplication = <T extends ApplicationJsonValue>(
+  rawApplication: T,
+): ApplicationParsedJsonValue<T> => ({
   ...rawApplication,
   /** Application data, already parsed from JSON. */
   jsonValue: JSON.parse(rawApplication.jsonValue),
 })
 
-export const getAlertSeverityByApplicationStatus = (applicationStatus: ApplicationStatus): AlertColor | undefined => {
+export const getAlertSeverityByApplicationStatus = (
+  applicationStatus: ApplicationStatus,
+): AlertColor | undefined => {
   switch (applicationStatus) {
     case ApplicationStatus.Pending:
       return undefined

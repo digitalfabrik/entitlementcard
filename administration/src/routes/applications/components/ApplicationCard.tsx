@@ -70,9 +70,11 @@ const DeleteDialog = (props: {
       onClose={props.onCancel}
       title={t('deleteApplication')}
       id='alert-dialog-description'
+      maxWidth='xs'
       onConfirm={props.onConfirm}
       actionDisabled={props.deleteResult.loading || props.deleteResult.called}
-      color='error'>
+      color='error'
+    >
       <Stack direction='row' sx={{ gap: 2, alignItems: 'center' }}>
         <Typography>{t('deleteApplicationConfirmationPrompt')}</Typography>
       </Stack>
@@ -107,7 +109,8 @@ const RejectionDialog = (props: {
       }}
       onClose={closeAndClearDialog}
       cancelButtonText={t('rejectionCancelButton')}
-      confirmButtonText={t('rejectionButton')}>
+      confirmButtonText={t('rejectionButton')}
+    >
       <>
         <Typography paddingBottom={1}>{t('rejectionDialogMessage')}</Typography>
         <Autocomplete
@@ -152,14 +155,16 @@ const ButtonsApplicationPending = (props: {
         color='primary'
         startIcon={<Check />}
         disabled={props.disabled}
-        onClick={props.onPrimaryButtonClick}>
+        onClick={props.onPrimaryButtonClick}
+      >
         {t('applicationApprove')}
       </Button>
       <Button
         startIcon={<CancelOutlined />}
         color='error'
         disabled={props.disabled}
-        onClick={props.onSecondaryButtonClick}>
+        onClick={props.onSecondaryButtonClick}
+      >
         {t('applicationReject')}
       </Button>
     </>
@@ -177,14 +182,17 @@ const ButtonsApplicationResolved = (props: {
       {/* Make the outer Tooltip independent of the button's disabled state */}
       {(props.applicationStatus === ApplicationStatus.Approved ||
         props.applicationStatus === ApplicationStatus.ApprovedCardCreated) && (
-        <Tooltip title={props.primaryButtonHref ? undefined : t('incompleteApplicationDataTooltip')}>
+        <Tooltip
+          title={props.primaryButtonHref ? undefined : t('incompleteApplicationDataTooltip')}
+        >
           <div>
             <Button
               href={props.primaryButtonHref}
               color='primary'
               variant='contained'
               disabled={props.primaryButtonHref.length === 0}
-              startIcon={<CreditScore />}>
+              startIcon={<CreditScore />}
+            >
               {' '}
               {props.applicationStatus === ApplicationStatus.ApprovedCardCreated
                 ? t('createCardAgain')
@@ -193,7 +201,12 @@ const ButtonsApplicationResolved = (props: {
           </div>
         </Tooltip>
       )}
-      <Button onClick={props.onSecondaryButtonClick} startIcon={<Delete />} variant='outlined' color='error'>
+      <Button
+        onClick={props.onSecondaryButtonClick}
+        startIcon={<Delete />}
+        variant='outlined'
+        color='error'
+      >
         {t('deleteApplication')}
       </Button>
     </>
@@ -274,7 +287,7 @@ const ApplicationCard = ({
 
   const personalData = useMemo(
     () => config.applicationFeature?.applicationJsonToPersonalData(application.jsonValue),
-    [config.applicationFeature, application.jsonValue]
+    [config.applicationFeature, application.jsonValue],
   )
 
   const menuItems: MenuItemType[] = [
@@ -284,7 +297,10 @@ const ApplicationCard = ({
         try {
           exportApplicationToCsv(application, config)
         } catch (error) {
-          if (error instanceof ApplicationToCsvError || error instanceof ApplicationDataIncompleteError) {
+          if (
+            error instanceof ApplicationToCsvError ||
+            error instanceof ApplicationDataIncompleteError
+          ) {
             enqueueSnackbar(error.message, { variant: 'error' })
           }
         }
@@ -301,7 +317,11 @@ const ApplicationCard = ({
   ]
 
   return (
-    <Accordion disableGutters aria-controls='panel-content' onChange={(_, expanded) => setAccordionExpanded(expanded)}>
+    <Accordion
+      disableGutters
+      aria-controls='panel-content'
+      onChange={(_, expanded) => setAccordionExpanded(expanded)}
+    >
       <AccordionSummary
         // Need this to display the `expandIconWrapper` slot, even if this is not directly used.
         expandIcon={<ExpandMore />}
@@ -310,7 +330,8 @@ const ApplicationCard = ({
           // @ts-expect-error Currently, MUI apparently cannot properly forward prop types from the slots
           expandIconWrapper: { expanded: accordionExpanded },
         }}
-        sx={{ flexDirection: 'column', alignItems: 'stretch', padding: 0 }}>
+        sx={{ flexDirection: 'column', alignItems: 'stretch', padding: 0 }}
+      >
         <Stack direction='row' sx={{ width: '100%', gap: 2, paddingLeft: 2, paddingRight: 2 }}>
           <Typography variant='h6' sx={{ minWidth: '250px' }} marginY={0}>
             {t('applicationFrom', { date: new Date(application.createdDate) })}
@@ -329,7 +350,8 @@ const ApplicationCard = ({
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap',
               overflow: 'hidden',
-            }}>
+            }}
+          >
             {personalData &&
               personalData.forenames !== undefined &&
               personalData.surname !== undefined &&
@@ -340,16 +362,26 @@ const ApplicationCard = ({
       </AccordionSummary>
 
       <AccordionDetails sx={{ position: 'relative' }}>
-        <Stack sx={{ spacing: 2, alignItems: 'flex-start', gap: 2, marginLeft: 2, marginBottom: 2, marginRight: 2 }}>
-          {application.status === ApplicationStatus.Withdrawn && !!application.statusResolvedDate && (
-            <Box sx={{ backgroundColor: theme.palette.warning.light, padding: 2 }}>
-              <Typography>
-                {t('withdrawalMessage', { date: new Date(application.statusResolvedDate) })}
-                <br />
-                {t('deleteApplicationSoonPrompt')}{' '}
-              </Typography>
-            </Box>
-          )}
+        <Stack
+          sx={{
+            spacing: 2,
+            alignItems: 'flex-start',
+            gap: 2,
+            marginLeft: 2,
+            marginBottom: 2,
+            marginRight: 2,
+          }}
+        >
+          {application.status === ApplicationStatus.Withdrawn &&
+            !!application.statusResolvedDate && (
+              <Box sx={{ backgroundColor: theme.palette.warning.light, padding: 2 }}>
+                <Typography>
+                  {t('withdrawalMessage', { date: new Date(application.statusResolvedDate) })}
+                  <br />
+                  {t('deleteApplicationSoonPrompt')}{' '}
+                </Typography>
+              </Box>
+            )}
           {/* TODO: <JsonFieldView> does not emit a root element and thus, <Stack> would insert a gap here */}
           <Box>
             <JsonFieldView

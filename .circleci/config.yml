@@ -350,7 +350,7 @@ jobs:
         environment:
             FASTLANE_SKIP_UPDATE_CHECK: true
         macos:
-            xcode: 16.4.0
+            xcode: 26.2.0
         parameters:
             build_config:
                 description: Name of the build config to use
@@ -556,7 +556,7 @@ jobs:
         environment:
             FASTLANE_SKIP_UPDATE_CHECK: true
         macos:
-            xcode: 16.4.0
+            xcode: 26.2.0
         parameters:
             build_config:
                 enum:
@@ -829,7 +829,7 @@ jobs:
         environment:
             FASTLANE_SKIP_UPDATE_CHECK: true
         macos:
-            xcode: 16.4.0
+            xcode: 26.2.0
         parameters:
             build_config:
                 default: bayern

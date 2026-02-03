@@ -40,7 +40,7 @@ const NoteDialogController = ({
 
   const onSave = (text: string) => {
     updateApplicationNote({ variables: { applicationId: application.id, text } }).then(
-      result => result.data?.success && onChange({ ...application, note: text })
+      result => result.data?.success && onChange({ ...application, note: text }),
     )
   }
 
@@ -51,7 +51,8 @@ const NoteDialogController = ({
           color={application.note ? 'primary' : 'inherit'}
           variant='contained'
           onClick={() => onOpenNoteDialog(true)}
-          startIcon={<EditNote />}>
+          startIcon={<EditNote />}
+        >
           {application.note ? t('noteButtonShow') : t('noteButtonCreate')}
         </Button>
       </ApplicationNoteTooltip>
