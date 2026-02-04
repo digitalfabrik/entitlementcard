@@ -22,7 +22,7 @@ const ConfirmDialog = ({
   onClose,
   confirmButtonText,
   cancelButtonText,
-  color = 'primary',
+  confirmButtonColor = 'primary',
   confirmButtonIcon,
   maxWidth = 'sm',
   showCancelButton = true,
@@ -38,11 +38,11 @@ const ConfirmDialog = ({
   cancelButtonText?: string
   confirmButtonIcon?: ReactNode
   confirmButtonText?: string
-  showCancelButton?: boolean
-  color?: OverridableStringUnion<
+  confirmButtonColor?: OverridableStringUnion<
     'inherit' | 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning',
     ButtonPropsColorOverrides
   >
+  showCancelButton?: boolean
   closeOnConfirm?: boolean
   maxWidth?: Breakpoint
 }): ReactElement => {
@@ -68,7 +68,7 @@ const ConfirmDialog = ({
         )}
         <Button
           variant='contained'
-          color={color}
+          color={confirmButtonColor}
           loading={loading}
           disabled={actionDisabled}
           startIcon={confirmButtonIcon ?? <CheckCircleOutline />}

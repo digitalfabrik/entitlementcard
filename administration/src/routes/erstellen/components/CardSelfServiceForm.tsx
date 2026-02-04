@@ -137,7 +137,7 @@ const CardSelfServiceForm = ({
       <ConfirmDialog
         open={openReferenceInformation}
         title={t('whereToFindReferenceNumber')}
-        color='secondary'
+        confirmButtonColor='secondary'
         confirmButtonText={t('misc:close')}
         confirmButtonIcon={<Close />}
         onConfirm={() => setOpenReferenceInformation(false)}
@@ -165,7 +165,7 @@ const CardSelfServiceForm = ({
         showCancelButton={false}
         open={openDataPrivacy}
         maxWidth='md'
-        color='secondary'
+        confirmButtonColor='secondary'
         title={projectConfig.dataPrivacyHeadline}
         onConfirm={() => setOpenDataPrivacy(false)}
         onClose={() => setOpenDataPrivacy(false)}
