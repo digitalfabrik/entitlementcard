@@ -13,6 +13,8 @@ import app.ehrenamtskarte.backend.db.entities.Contacts
 import app.ehrenamtskarte.backend.db.entities.PhysicalStoreEntity
 import app.ehrenamtskarte.backend.db.entities.PhysicalStores
 import app.ehrenamtskarte.backend.db.entities.Projects
+import app.ehrenamtskarte.backend.graphql.exceptions.GraphQLBaseException
+import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
 import app.ehrenamtskarte.backend.graphql.stores.types.Coordinates
 import app.ehrenamtskarte.backend.import.COUNTRY_CODE
 import app.ehrenamtskarte.backend.import.stores.common.types.AcceptingStore
@@ -178,19 +180,25 @@ object AcceptingStoresRepository {
     fun editStore(existingStore: AcceptingStoreEntity, acceptingStore: AcceptingStore) {
         existingStore.name = acceptingStore.name
         Categories.select(Categories.id eq acceptingStore.categoryId)
-            .firstOrNull() ?: throw NullPointerException()
+            .firstOrNull() ?: throw GraphQLBaseException(GraphQLExceptionCode.STORE_NOT_FOUND)
+        existingStore.categoryId = EntityID(acceptingStore.categoryId, Categories)
 
-        val contact = ContactEntity.findById(existingStore.contactId.value) ?: throw NullPointerException()
+        val contact =
+            ContactEntity.findById(existingStore.contactId.value)
+                ?: throw GraphQLBaseException(GraphQLExceptionCode.STORE_NOT_FOUND)
         contact.email = acceptingStore.email
         contact.telephone = acceptingStore.telephone
         contact.website = acceptingStore.website
 
         val physicalStore =
             PhysicalStoreEntity.find { PhysicalStores.storeId eq existingStore.id }.firstOrNull()
-                ?: throw NullPointerException()
-        val address = AddressEntity.findById(physicalStore.addressId.value) ?: throw NullPointerException()
+                ?: throw GraphQLBaseException(GraphQLExceptionCode.STORE_NOT_FOUND)
+        val address =
+            AddressEntity.findById(physicalStore.addressId.value)
+                ?: throw GraphQLBaseException(GraphQLExceptionCode.STORE_NOT_FOUND)
         address.street = acceptingStore.streetWithHouseNumber
-        address.postalCode = acceptingStore.postalCode ?: throw NullPointerException()
+        address.postalCode =
+            acceptingStore.postalCode ?: throw GraphQLBaseException(GraphQLExceptionCode.STORE_NOT_FOUND)
         address.location = acceptingStore.location
 
         physicalStore.coordinates = Point(acceptingStore.longitude!!, acceptingStore.latitude!!)
