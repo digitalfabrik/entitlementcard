@@ -492,6 +492,7 @@
     "importResult": "Folgende Änderungen in der Datenbank wurden vorgenommen:",
     "storesCreated": "Akzeptanzstellen erstellt:",
     "storesDeleted": "Akzeptanzstellen gelöscht:",
+    "storeDeleted": "Akzeptanzstellen gelöscht.",
     "storesUntouched": "Akzeptanzstellen unverändert:",
     "wasSuccessful": "der Akzeptanzpartner war erfolgreich!",
     "maxFileSize": "Maximale Dateigröße: {{maxFileSize}}MB",
@@ -524,7 +525,9 @@
     "storeAddDialogDescription": "Bitte geben Sie die Angaben für die neue Akzeptanzstelle ein. Erforderliche Felder sind mit * markiert.",
     "storeMenu": "Akzeptanzstellen Menü",
     "addStoreButton": "Neu hinzufügen",
-    "storeAdded": "Die Akzeptanzstelle wurde hinzugefügt."
+    "storeAdded": "Die Akzeptanzstelle wurde hinzugefügt.",
+    "confirmDeletionDialogTitle": "Akzeptanzstelle löschen",
+    "confirmDeletionDialogMessage": "Sind Sie sicher, dass Sie diese Akzeptanzstelle löschen möchten?"
   },
   "storeForm": {
     "nameLabel": "Name",

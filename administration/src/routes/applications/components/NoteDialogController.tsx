@@ -60,7 +60,6 @@ const NoteDialogController = ({
         <TextAreaDialog
           defaultText={application.note}
           title={t('noteDialogTitle')}
-          id='application-note-dialog'
           isOpen={isOpen}
           maxChars={1000}
           loading={loading}

@@ -69,11 +69,10 @@ const DeleteDialog = (props: {
       open={props.isOpen}
       onClose={props.onCancel}
       title={t('deleteApplication')}
-      id='alert-dialog-description'
       maxWidth='xs'
       onConfirm={props.onConfirm}
       actionDisabled={props.deleteResult.loading || props.deleteResult.called}
-      color='error'
+      confirmButtonColor='error'
     >
       <Stack direction='row' sx={{ gap: 2, alignItems: 'center' }}>
         <Typography>{t('deleteApplicationConfirmationPrompt')}</Typography>
@@ -101,7 +100,6 @@ const RejectionDialog = (props: {
     <ConfirmDialog
       open={props.open}
       title={t('rejectionDialogTitle')}
-      id='reject-dialog-description'
       onConfirm={() => {
         if (reason !== null) {
           props.onConfirm(reason)
