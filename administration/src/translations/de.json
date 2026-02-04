@@ -524,7 +524,8 @@
     "storeAddDialogDescription": "Bitte geben Sie die Angaben für die neue Akzeptanzstelle ein. Erforderliche Felder sind mit * markiert.",
     "storeMenu": "Akzeptanzstellen Menü",
     "addStoreButton": "Neu hinzufügen",
-    "storeAdded": "Die Akzeptanzstelle wurde hinzugefügt."
+    "storeAdded": "Die Akzeptanzstelle wurde hinzugefügt.",
+    "storeEdited": "Die Akzeptanzstelle wurde geändert."
   },
   "storeForm": {
     "nameLabel": "Name",
@@ -713,7 +714,8 @@
     "freinetCardDataInvalid": "Die Kartendaten können nicht an Freinet übertragen werden, weil diese ungültig sind.",
     "freinetDataTransferNotPermitted": "Für diese Region ist keine Datenübermittlung erlaubt.",
     "projectNotFound": "Dieses Projekt existiert nicht.",
-    "storeAlreadyExists": "Diese Akzeptanzstelle existiert bereits."
+    "storeAlreadyExists": "Diese Akzeptanzstelle existiert bereits.",
+    "storeNotFound": "Diese Akzeptanzstelle existiert nicht mehr."
   },
   "applicationVerification": {
     "applicationAlreadyProcessed": "Der Antrag wurde bereits bearbeitet. Eine weitere Bestätigung oder Ablehnung ist nicht mehr möglich.",

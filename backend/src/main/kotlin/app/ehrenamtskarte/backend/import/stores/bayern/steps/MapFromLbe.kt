@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.import.stores.bayern.steps
 
 import app.ehrenamtskarte.backend.db.entities.LanguageCode
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.import.ALTERNATIVE_MISCELLANEOUS_CATEGORY_ID
 import app.ehrenamtskarte.backend.import.COUNTRY_CODE
 import app.ehrenamtskarte.backend.import.MISCELLANEOUS_CATEGORY_ID
@@ -28,9 +29,9 @@ class MapFromLbe(
                 } ?: emptyMap()
 
                 AcceptingStore(
-                    it.name.clean()!!,
+                    it.name.clean() ?: throw InvalidInputException("Name is required"),
                     COUNTRY_CODE,
-                    it.location.clean()!!,
+                    it.location.clean() ?: throw InvalidInputException("Location is required"),
                     it.postalCode.clean(),
                     it.street.clean(),
                     it.houseNumber.clean(),

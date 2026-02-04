@@ -175,6 +175,44 @@ object AcceptingStoresRepository {
         }
     }
 
+    fun editStore(existingStore: AcceptingStoreEntity, acceptingStore: AcceptingStore) {
+        existingStore.name = acceptingStore.name
+        Categories.select(Categories.id).where { Categories.id eq acceptingStore.categoryId }
+            .firstOrNull() ?: throw IllegalStateException("Category not found for id: ${acceptingStore.categoryId}")
+        existingStore.categoryId = EntityID(acceptingStore.categoryId, Categories)
+
+        val contact =
+            ContactEntity.findById(existingStore.contactId.value)
+                ?: throw IllegalStateException("Contact not found for store: ${existingStore.id}")
+        contact.email = acceptingStore.email
+        contact.telephone = acceptingStore.telephone
+        contact.website = acceptingStore.website
+
+        val physicalStore =
+            PhysicalStoreEntity.find { PhysicalStores.storeId eq existingStore.id }.firstOrNull()
+                ?: throw IllegalStateException("Physical store not found for store: ${existingStore.id}")
+
+        val address =
+            AddressEntity.findById(physicalStore.addressId.value)
+                ?: throw IllegalStateException("Address not found for store: ${physicalStore.addressId.value}")
+        address.street = acceptingStore.streetWithHouseNumber
+        address.postalCode =
+            acceptingStore.postalCode
+                ?: throw IllegalStateException("Postal code must be set for store: ${existingStore.id}")
+        address.location = acceptingStore.location
+
+        physicalStore.coordinates = Point(acceptingStore.longitude!!, acceptingStore.latitude!!)
+
+        AcceptingStoreDescriptions.deleteWhere { storeId eq existingStore.id }
+        acceptingStore.discounts.forEach {
+            AcceptingStoreDescriptionEntity.new {
+                this.storeId = existingStore.id
+                this.description = it.value
+                this.language = it.key
+            }
+        }
+    }
+
     fun deleteStores(acceptingStoreIds: Iterable<Int>) {
         val contactsDelete = (AcceptingStores innerJoin Contacts)
             .select(Contacts.id)
