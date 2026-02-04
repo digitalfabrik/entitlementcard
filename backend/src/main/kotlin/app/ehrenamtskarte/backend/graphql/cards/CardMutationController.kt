@@ -42,8 +42,6 @@ import com.google.protobuf.ByteString
 import com.google.protobuf.InvalidProtocolBufferException
 import extensionStartDayOrNull
 import graphql.schema.DataFetchingEnvironment
-import io.ktor.util.decodeBase64Bytes
-import io.ktor.util.encodeBase64
 import jakarta.servlet.http.HttpServletRequest
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.slf4j.Logger
@@ -55,8 +53,8 @@ import org.springframework.stereotype.Controller
 import java.security.SecureRandom
 import java.sql.Connection.TRANSACTION_REPEATABLE_READ
 import java.time.LocalDate
-import java.util.Base64
 import javax.crypto.KeyGenerator
+import kotlin.io.encoding.Base64
 
 @Controller
 class CardMutationController(
@@ -87,7 +85,7 @@ class CardMutationController(
             .build()
 
         if (!QRCodeUtil.isContentLengthValid(dynamicActivationCode)) {
-            throw InvalidQrCodeSize(cardInfo.toByteArray().encodeBase64(), CodeType.DYNAMIC)
+            throw InvalidQrCodeSize(Base64.encode(cardInfo.toByteArray()), CodeType.DYNAMIC)
         }
 
         if (!cardInfo.extensions.hasExtensionRegion()) {
@@ -106,8 +104,8 @@ class CardMutationController(
         )
 
         return DynamicActivationCodeResult(
-            cardInfoHashBase64 = hashedCardInfo.encodeBase64(),
-            codeBase64 = dynamicActivationCode.toByteArray().encodeBase64(),
+            cardInfoHashBase64 = Base64.encode(hashedCardInfo),
+            codeBase64 = Base64.encode(dynamicActivationCode.toByteArray()),
         )
     }
 
@@ -126,7 +124,7 @@ class CardMutationController(
             .build()
 
         if (!QRCodeUtil.isContentLengthValid(staticVerificationCode)) {
-            throw InvalidQrCodeSize(cardInfo.toByteArray().encodeBase64(), CodeType.STATIC)
+            throw InvalidQrCodeSize(Base64.encode(cardInfo.toByteArray()), CodeType.STATIC)
         }
 
         CardRepository.insert(
@@ -141,8 +139,8 @@ class CardMutationController(
         )
 
         return StaticVerificationCodeResult(
-            cardInfoHashBase64 = hashedCardInfo.encodeBase64(),
-            codeBase64 = staticVerificationCode.toByteArray().encodeBase64(),
+            cardInfoHashBase64 = Base64.encode(hashedCardInfo),
+            codeBase64 = Base64.encode(staticVerificationCode.toByteArray()),
         )
     }
 
@@ -251,7 +249,7 @@ class CardMutationController(
             .build()
 
     private fun parseEncodedCardInfo(encodedCardInfo: String): Card.CardInfo {
-        val cardInfoBytes = encodedCardInfo.decodeBase64Bytes()
+        val cardInfoBytes = Base64.decode(encodedCardInfo)
         try {
             return Card.CardInfo.parseFrom(cardInfoBytes)
         } catch (_: InvalidProtocolBufferException) {
@@ -328,8 +326,8 @@ class CardMutationController(
         dfe: DataFetchingEnvironment,
     ): CardActivationResultModel {
         val projectConfig = backendConfiguration.getProjectConfig(project)
-        val cardHash = Base64.getDecoder().decode(cardInfoHashBase64)
-        val rawActivationSecret = Base64.getDecoder().decode(activationSecretBase64)
+        val cardHash = Base64.decode(cardInfoHashBase64)
+        val rawActivationSecret = Base64.decode(activationSecretBase64)
 
         // Avoid race conditions when activating a card.
         val activationResult = transaction(transactionIsolation = TRANSACTION_REPEATABLE_READ) t@{
@@ -376,7 +374,7 @@ class CardMutationController(
             }
 
             val totpSecret = generateTotpSecret()
-            val encodedTotpSecret = Base64.getEncoder().encodeToString(totpSecret)
+            val encodedTotpSecret = Base64.encode(totpSecret)
             CardRepository.activate(card, totpSecret)
             logger.info(
                 "Card with id:${card.id} and overwrite: $overwrite was activated from $remoteIp",
@@ -402,7 +400,7 @@ class CardMutationController(
         dfe: DataFetchingEnvironment,
     ): Boolean {
         val authContext = dfe.requireAuthContext()
-        val cardInfoHashList = cardInfoHashBase64List.map { it.decodeBase64Bytes() }
+        val cardInfoHashList = cardInfoHashBase64List.map { Base64.decode(it) }
 
         transaction {
             if (!authContext.admin.mayDeleteCardInRegion(regionId)) {
