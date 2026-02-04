@@ -77,7 +77,7 @@ const DeleteUserDialog = ({
       open={selectedUser !== null}
       title={t('deleteUserConfirmPrompt')}
       onClose={onClose}
-      color='error'
+      confirmButtonColor='error'
       onConfirm={deleteUser}
       loading={loading}
       actionDisabled={selectedUser?.id === actingAdminId && !deleteWarningConfirmed}

@@ -72,7 +72,7 @@ const DeleteDialog = (props: {
       maxWidth='xs'
       onConfirm={props.onConfirm}
       actionDisabled={props.deleteResult.loading || props.deleteResult.called}
-      color='error'
+      confirmButtonColor='error'
     >
       <Stack direction='row' sx={{ gap: 2, alignItems: 'center' }}>
         <Typography>{t('deleteApplicationConfirmationPrompt')}</Typography>

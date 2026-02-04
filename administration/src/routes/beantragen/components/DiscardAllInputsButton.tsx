@@ -18,7 +18,7 @@ const DiscardAllInputsButton = ({ discardAll }: { discardAll: () => void }): Rea
         maxWidth='xs'
         onClose={() => setDialogOpen(false)}
         title={t('discardInputsTitle')}
-        color='error'
+        confirmButtonColor='error'
         onConfirm={discardAll}
       >
         <Typography>{t('discardInputsContent')}</Typography>
