@@ -9,6 +9,7 @@ export const descriptionMaxChars = 2000
 const validationConstants = {
   name: { min: 3, max: 150 },
   street: { min: 3, max: 100 },
+  houseNumber: { min: 1, max: 10 },
   city: { min: 3, max: 100 },
   postal_code: { length: 5 },
   phone: { min: 0, max: 100 },
@@ -18,7 +19,9 @@ const validationConstants = {
 }
 
 const PHONE_REGEX: RegExp = /^\+?\d+(?:[ \-./]?\d+)*$/
-const ADDRESS_REGEX = XRegExp('^[\\p{Letter}\\p{Number}\\.,-/() ]+$')
+const HOUSE_NUMBER_SPECIAL_CHARS_REGEX = XRegExp("^[\\p{Letter}\\p{Number}\\.,+'\\-/() ]+$")
+const HOUSE_NUMBER_CONTAINS_NUMBER_REGEX = XRegExp('\\p{Number}')
+const ADDRESS_REGEX = XRegExp("^[\\p{Letter}\\.,'\\-/() ]+$")
 
 export type FormValidation = {
   readonly invalid: boolean
@@ -78,6 +81,27 @@ export const streetValidation = (street: string | undefined): FormValidation => 
 
   if (!ADDRESS_REGEX.test(street!)) {
     return specialCharacterError('storeForm:errorStreetValidationSpecialCharacters')
+  }
+  return validResult
+}
+
+export const houseNumberValidation = (houseNumber: string | undefined): FormValidation => {
+  const lengthValidation = validateFieldWithLength(
+    houseNumber,
+    validationConstants.houseNumber,
+    'storeForm:errorHouseNumberInvalidMaxMinChars',
+  )
+
+  if (lengthValidation.invalid) {
+    return lengthValidation
+  }
+
+  if (!HOUSE_NUMBER_CONTAINS_NUMBER_REGEX.test(houseNumber!)) {
+    return specialCharacterError('storeForm:errorHouseNumberValidationNoNumber')
+  }
+
+  if (!HOUSE_NUMBER_SPECIAL_CHARS_REGEX.test(houseNumber!)) {
+    return specialCharacterError('storeForm:errorHouseNumberValidationSpecialCharacters')
   }
   return validResult
 }
@@ -196,11 +220,17 @@ export const coordinatesInvalid = (latitude?: number, longitude?: number): boole
 export const categoryValidation = (categoryId: number | undefined): FormValidation =>
   categoryId === undefined ? requiredFieldError() : validResult
 
+export const isAddressInvalid = (acceptingStore: AcceptingStoreFormData): boolean =>
+  [
+    houseNumberValidation(acceptingStore.houseNumber).invalid,
+    streetValidation(acceptingStore.street).invalid,
+    cityValidation(acceptingStore.city).invalid,
+    postalCodeValidation(acceptingStore.postalCode).invalid,
+  ].some(Boolean)
+
 export const isStoreFormInvalid = (acceptingStore: AcceptingStoreFormData): boolean =>
   [
     nameValidation(acceptingStore.name).invalid,
-    streetValidation(acceptingStore.street).invalid,
-    cityValidation(acceptingStore.city).invalid,
     descriptionValidation(acceptingStore.descriptionDe).invalid,
     descriptionValidation(acceptingStore.descriptionEn).invalid,
     coordinatesInvalid(acceptingStore.latitude, acceptingStore.longitude),
@@ -208,4 +238,5 @@ export const isStoreFormInvalid = (acceptingStore: AcceptingStoreFormData): bool
     homepageValidation(acceptingStore.homepage).invalid,
     phoneValidation(acceptingStore.telephone).invalid,
     emailValidation(acceptingStore.email).invalid,
+    isAddressInvalid(acceptingStore),
   ].some(Boolean)

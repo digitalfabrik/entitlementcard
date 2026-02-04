@@ -7,7 +7,8 @@ import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.graphql.auth.requireAuthContext
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidJsonException
 import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotUniqueException
-import app.ehrenamtskarte.backend.graphql.stores.types.CSVAcceptingStore
+import app.ehrenamtskarte.backend.graphql.exceptions.StoreAlreadyExistsException
+import app.ehrenamtskarte.backend.graphql.stores.types.AcceptingStoreInput
 import app.ehrenamtskarte.backend.graphql.stores.types.StoreImportReturnResultModel
 import app.ehrenamtskarte.backend.import.COUNTRY_CODE
 import app.ehrenamtskarte.backend.import.stores.common.types.AcceptingStore
@@ -26,7 +27,7 @@ class AcceptingStoresMutationService {
     @GraphQLDescription("Import accepting stores via csv")
     @MutationMapping
     fun importAcceptingStores(
-        @Argument stores: List<CSVAcceptingStore>,
+        @Argument stores: List<AcceptingStoreInput>,
         @Argument dryRun: Boolean,
         dfe: DataFetchingEnvironment,
     ): StoreImportReturnResultModel {
@@ -46,7 +47,37 @@ class AcceptingStoresMutationService {
         }
     }
 
-    private fun assertNoDuplicateStores(stores: List<CSVAcceptingStore>) {
+    @GraphQLDescription("Add accepting store")
+    @MutationMapping
+    fun addAcceptingStore(
+        @Argument store: AcceptingStoreInput,
+        dfe: DataFetchingEnvironment,
+    ): Boolean {
+        val authContext = dfe.requireAuthContext()
+        if (!authContext.admin.mayUpdateStoresInProject(authContext.projectId)) {
+            throw ForbiddenException()
+        }
+
+        transaction {
+            // Since we only have ProjectStoreManagers for projects with one exact region, we are fine with getting a single entity.
+            // If we want to enable this for projects with multiple regions f.e. EAK, we have to provide a regionId.
+            val regionEntity = RegionsRepository.findAllInProject(authContext.project).singleOrNull()
+                ?: throw RegionNotUniqueException()
+            val acceptingStore = mapCsvToStore(store)
+            val existingStoreId = AcceptingStoresRepository.getIdIfExists(
+                acceptingStore,
+                authContext.admin.projectId,
+                regionEntity.id,
+            )
+            if (existingStoreId != null) {
+                throw StoreAlreadyExistsException()
+            }
+            AcceptingStoresRepository.createStore(acceptingStore, authContext.admin.projectId, regionEntity.id)
+        }
+        return true
+    }
+
+    private fun assertNoDuplicateStores(stores: List<AcceptingStoreInput>) {
         val duplicates = stores.groupBy { "${it.name} ${it.street} ${it.houseNumber} ${it.postalCode} ${it.location}" }
             .filterValues { it.size > 1 }
             .keys
@@ -57,7 +88,7 @@ class AcceptingStoresMutationService {
     }
 
     private fun handleStoreImport(
-        stores: List<CSVAcceptingStore>,
+        stores: List<AcceptingStoreInput>,
         projectId: EntityID<Int>,
         regionId: EntityID<Int>,
         dryRun: Boolean,
@@ -87,7 +118,7 @@ class AcceptingStoresMutationService {
     }
 }
 
-fun mapCsvToStore(csvStore: CSVAcceptingStore): AcceptingStore {
+fun mapCsvToStore(csvStore: AcceptingStoreInput): AcceptingStore {
     val discounts = buildMap {
         csvStore.discountDE?.clean(false)?.let { put(LanguageCode.DE, it) }
         csvStore.discountEN?.clean(false)?.let { put(LanguageCode.EN, it) }

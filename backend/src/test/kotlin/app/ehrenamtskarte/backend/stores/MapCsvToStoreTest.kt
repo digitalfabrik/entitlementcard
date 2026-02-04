@@ -2,7 +2,7 @@ package app.ehrenamtskarte.backend.stores
 
 import app.ehrenamtskarte.backend.db.entities.LanguageCode
 import app.ehrenamtskarte.backend.graphql.stores.mapCsvToStore
-import app.ehrenamtskarte.backend.graphql.stores.types.CSVAcceptingStore
+import app.ehrenamtskarte.backend.graphql.stores.types.AcceptingStoreInput
 import app.ehrenamtskarte.backend.import.stores.common.types.AcceptingStore
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
@@ -10,7 +10,7 @@ import kotlin.test.assertEquals
 
 internal class MapCsvToStoreTest {
     private val mapCsvToStoreTestData = listOf(
-        CSVAcceptingStore(
+        AcceptingStoreInput(
             " Test  store with trailing  spaces ",
             " Teststr. ",
             " 10 ",
@@ -46,7 +46,7 @@ internal class MapCsvToStoreTest {
             null,
             "Teststr. 10",
         ),
-        CSVAcceptingStore(
+        AcceptingStoreInput(
             "Test store with empty optional fields",
             "Teststr.",
             "10",
@@ -79,7 +79,7 @@ internal class MapCsvToStoreTest {
             null,
             "Teststr. 10",
         ),
-        CSVAcceptingStore(
+        AcceptingStoreInput(
             "Test store with german-only description",
             "Teststr.",
             "10",

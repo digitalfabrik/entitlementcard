@@ -2,7 +2,7 @@ package app.ehrenamtskarte.backend.graphql.stores.types
 
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidJsonException
 
-data class CSVAcceptingStore(
+data class AcceptingStoreInput(
     var name: String,
     var street: String,
     var houseNumber: String,

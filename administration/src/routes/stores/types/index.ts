@@ -2,6 +2,7 @@ export type AcceptingStoreFormData = {
   id?: number
   name: string
   street: string
+  houseNumber: string
   postalCode: string
   city: string
   telephone: string
