@@ -6,9 +6,11 @@ import { useTranslation } from 'react-i18next'
 
 import Blankslate from '../../../components/Blankslate'
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
-import { AcceptingStoreInput, useAddAcceptingStoreMutation, useEditAcceptingStoreMutation } from '../../../generated/graphql'
-import { isDevelopmentEnvironment } from '../../../util/helper'
-import { trimStringFields } from '../../../util/normalizeString'
+import {
+  AcceptingStoreInput,
+  useAddAcceptingStoreMutation,
+  useEditAcceptingStoreMutation,
+} from '../../../generated/graphql'
 import { AcceptingStoresData } from '../../applications/types/types'
 import { getStoreCoordinates } from '../../region/util/storeGeoDataService'
 import { splitStreetAndHouseNumber } from '../import/utils/splitStreetAndHouseNumber'
