@@ -523,13 +523,16 @@
     "storeEditDialogDescription": "Bearbeiten Sie die Informationen der Akzeptanzstelle. Erforderliche Felder sind mit * markiert.",
     "storeAddDialogDescription": "Bitte geben Sie die Angaben für die neue Akzeptanzstelle ein. Erforderliche Felder sind mit * markiert.",
     "storeMenu": "Akzeptanzstellen Menü",
-    "addStoreButton": "Neu hinzufügen"
+    "addStoreButton": "Neu hinzufügen",
+    "storeAdded": "Die Akzeptanzstelle wurde hinzugefügt."
   },
   "storeForm": {
     "nameLabel": "Name",
     "namePlaceholder": "Name der Akzeptanzstelle",
     "streetLabel": "Straße",
     "streetPlaceholder": "Straßenname",
+    "houseNumberLabel": "Hausnummer",
+    "houseNumberPlaceholder": "Hausnummer",
     "postalCodeLabel": "PLZ",
     "postalCodePlaceholder": "12345",
     "cityLabel": "Stadt",
@@ -555,8 +558,11 @@
     "errorDescriptionMaxChars": "Die Beschreibung darf maximal {{max}} enthalten.",
     "errorNameInvalidMaxMinChars": "Der Name muss mindestens {{min}} und darf maximal {{max}} Zeichen enthalten.",
     "errorStreetInvalidMaxMinChars": "Die Straße muss mindestens {{min}} und darf maximal {{max}} Zeichen enthalten.",
+    "errorHouseNumberInvalidMaxMinChars": "Die Hausnummer muss mindestens {{min}} und darf maximal {{max}} Zeichen enthalten.",
     "errorCityInvalidMaxMinChars": "Die Stadt muss mindestens {{min}} und darf maximal {{max}} Zeichen enthalten.",
     "errorStreetValidationSpecialCharacters": "Die Straße darf nur folgende Sonderzeichen enthalten: \".,-/()\"",
+    "errorHouseNumberValidationSpecialCharacters": "Die Hausnummer darf nur folgende Sonderzeichen enthalten: \".,-/()\"",
+    "errorHouseNumberValidationNoNumber": "Die Hausnummer muss eine Zahl enthalten.",
     "errorPhoneValidationSpecialCharacters": "Die Telefonnummer darf nur Zahlen und folgende Sonderzeichen innerhalb der Nummer enthalten: \".-/\"",
     "errorCityValidationSpecialCharacters": "Die Stadt darf nur folgende Sonderzeichen enthalten: \".,-/()\".",
     "errorEmailValidationSpecialCharacters": "Bitte geben Sie eine gültige Mailadresse ein.",
@@ -706,7 +712,8 @@
     "freinetPersonDataInvalid": "Erforderliche Personendaten von Freinet sind nicht verfügbar. Die Kartendaten konnten deshalb nicht übertragen werden.",
     "freinetCardDataInvalid": "Die Kartendaten können nicht an Freinet übertragen werden, weil diese ungültig sind.",
     "freinetDataTransferNotPermitted": "Für diese Region ist keine Datenübermittlung erlaubt.",
-    "projectNotFound": "Dieses Projekt existiert nicht."
+    "projectNotFound": "Dieses Projekt existiert nicht.",
+    "storeAlreadyExists": "Diese Akzeptanzstelle existiert bereits."
   },
   "applicationVerification": {
     "applicationAlreadyProcessed": "Der Antrag wurde bereits bearbeitet. Eine weitere Bestätigung oder Ablehnung ist nicht mehr möglich.",

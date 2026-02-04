@@ -179,6 +179,8 @@ type LocalizedDescription {
 type Mutation {
   "Activate a dynamic entitlement card"
   activateCard(activationSecretBase64: String!, cardInfoHashBase64: String!, overwrite: Boolean!, project: String!): CardActivationResultModel!
+  "Add accepting store"
+  addAcceptingStore(store: AcceptingStoreInput!): Boolean!
   "Stores a new application for an EAK"
   addEakApplication(application: ApplicationInput!, project: String!, regionId: Int!): Boolean!
   "Approve an application"
@@ -204,7 +206,7 @@ type Mutation {
   "Edits an existing administrator"
   editAdministrator(adminId: Int!, newEmail: String!, newRegionId: Int, newRole: Role!): Boolean!
   "Import accepting stores via csv"
-  importAcceptingStores(dryRun: Boolean!, stores: [CSVAcceptingStoreInput!]!): StoreImportReturnResultModel!
+  importAcceptingStores(dryRun: Boolean!, stores: [AcceptingStoreInput!]!): StoreImportReturnResultModel!
   "Reject an application"
   rejectApplicationStatus(applicationId: Int!, rejectionMessage: String!): ApplicationAdmin!
   "Reset the administrator's password"
@@ -414,6 +416,7 @@ enum GraphQLExceptionCode {
   REGION_NOT_ACTIVATED_FOR_APPLICATION
   REGION_NOT_FOUND
   REGION_NOT_UNIQUE
+  STORE_ALREADY_EXISTS
   UNAUTHORIZED
   USER_ENTITLEMENT_EXPIRED
   USER_ENTITLEMENT_NOT_FOUND
@@ -433,6 +436,22 @@ scalar Long
 
 "A file part in a multipart request"
 scalar Upload
+
+input AcceptingStoreInput {
+  categoryId: Int!
+  discountDE: String
+  discountEN: String
+  email: String
+  homepage: String
+  houseNumber: String!
+  latitude: Float!
+  location: String!
+  longitude: Float!
+  name: String!
+  postalCode: String!
+  street: String!
+  telephone: String
+}
 
 input AddressInput {
   addressSupplement: ShortTextInput
@@ -508,22 +527,6 @@ input BlueCardWorkAtDepartmentEntitlementInput {
 
 input BlueCardWorkAtOrganizationsEntitlementInput {
   list: [WorkAtOrganizationInput!]!
-}
-
-input CSVAcceptingStoreInput {
-  categoryId: Int!
-  discountDE: String
-  discountEN: String
-  email: String
-  homepage: String
-  houseNumber: String!
-  latitude: Float!
-  location: String!
-  longitude: Float!
-  name: String!
-  postalCode: String!
-  street: String!
-  telephone: String
 }
 
 input CardVerificationModelInput {
