@@ -13,7 +13,7 @@ import app.ehrenamtskarte.backend.db.entities.LanguageCode
 import app.ehrenamtskarte.backend.db.entities.PhysicalStoreEntity
 import app.ehrenamtskarte.backend.db.entities.PhysicalStores
 import app.ehrenamtskarte.backend.generated.ImportAcceptingStores
-import app.ehrenamtskarte.backend.generated.inputs.CSVAcceptingStoreInput
+import app.ehrenamtskarte.backend.generated.inputs.AcceptingStoreInput
 import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
 import app.ehrenamtskarte.backend.helper.CSVAcceptanceStoreBuilder
 import app.ehrenamtskarte.backend.helper.TestAdministrators
@@ -273,13 +273,13 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
         }
     }
 
-    data class ValidationErrorTestCase(val csvStore: CSVAcceptingStoreInput, val error: String)
+    data class ValidationErrorTestCase(val csvStore: AcceptingStoreInput, val error: String)
 
     companion object {
         @JvmStatic
         fun validationErrorTestCases(): List<ValidationErrorTestCase> {
             val blankValues = listOf("", " ")
-            val builders: Map<String, (String) -> CSVAcceptingStoreInput> = mapOf(
+            val builders: Map<String, (String) -> AcceptingStoreInput> = mapOf(
                 "name" to { value -> CSVAcceptanceStoreBuilder.build(name = value) },
                 "location" to { value -> CSVAcceptanceStoreBuilder.build(location = value) },
                 "street" to { value -> CSVAcceptanceStoreBuilder.build(street = value) },
@@ -313,7 +313,7 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
         assertEquals(testCase.error, error.message)
     }
 
-    private fun createMutation(dryRun: Boolean = false, stores: List<CSVAcceptingStoreInput>): ImportAcceptingStores {
+    private fun createMutation(dryRun: Boolean = false, stores: List<AcceptingStoreInput>): ImportAcceptingStores {
         val variables = ImportAcceptingStores.Variables(
             dryRun = dryRun,
             stores = stores,
