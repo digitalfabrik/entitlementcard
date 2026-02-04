@@ -204,7 +204,7 @@ type Mutation {
   "Deletes a batch of cards (that have not yet been activated)"
   deleteInactiveCards(cardInfoHashBase64List: [String!]!, regionId: Int!): Boolean!
   "Edit existing accepting store"
-  editAcceptingStore(store: CSVAcceptingStoreInput!, storeId: Int!): Boolean!
+  editAcceptingStore(store: AcceptingStoreInput!, storeId: Int!): Boolean!
   "Edits an existing administrator"
   editAdministrator(adminId: Int!, newEmail: String!, newRegionId: Int, newRole: Role!): Boolean!
   "Import accepting stores via csv"
