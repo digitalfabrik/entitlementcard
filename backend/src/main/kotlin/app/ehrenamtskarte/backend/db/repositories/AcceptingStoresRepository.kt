@@ -13,8 +13,6 @@ import app.ehrenamtskarte.backend.db.entities.Contacts
 import app.ehrenamtskarte.backend.db.entities.PhysicalStoreEntity
 import app.ehrenamtskarte.backend.db.entities.PhysicalStores
 import app.ehrenamtskarte.backend.db.entities.Projects
-import app.ehrenamtskarte.backend.graphql.exceptions.GraphQLBaseException
-import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
 import app.ehrenamtskarte.backend.graphql.stores.types.Coordinates
 import app.ehrenamtskarte.backend.import.COUNTRY_CODE
 import app.ehrenamtskarte.backend.import.stores.common.types.AcceptingStore
@@ -179,26 +177,28 @@ object AcceptingStoresRepository {
 
     fun editStore(existingStore: AcceptingStoreEntity, acceptingStore: AcceptingStore) {
         existingStore.name = acceptingStore.name
-        Categories.select(Categories.id eq acceptingStore.categoryId)
-            .firstOrNull() ?: throw GraphQLBaseException(GraphQLExceptionCode.STORE_NOT_FOUND)
+        Categories.select(Categories.id).where { Categories.id eq acceptingStore.categoryId }
+            .firstOrNull() ?: throw IllegalStateException("Category not found for id: ${acceptingStore.categoryId}")
         existingStore.categoryId = EntityID(acceptingStore.categoryId, Categories)
 
         val contact =
             ContactEntity.findById(existingStore.contactId.value)
-                ?: throw GraphQLBaseException(GraphQLExceptionCode.STORE_NOT_FOUND)
+                ?: throw IllegalStateException("Contact not found for store: ${existingStore.id}")
         contact.email = acceptingStore.email
         contact.telephone = acceptingStore.telephone
         contact.website = acceptingStore.website
 
         val physicalStore =
             PhysicalStoreEntity.find { PhysicalStores.storeId eq existingStore.id }.firstOrNull()
-                ?: throw GraphQLBaseException(GraphQLExceptionCode.STORE_NOT_FOUND)
+                ?: throw IllegalStateException("Physical store not found for store: ${existingStore.id}")
+
         val address =
             AddressEntity.findById(physicalStore.addressId.value)
-                ?: throw GraphQLBaseException(GraphQLExceptionCode.STORE_NOT_FOUND)
+                ?: throw IllegalStateException("Address not found for store: ${physicalStore.addressId.value}")
         address.street = acceptingStore.streetWithHouseNumber
         address.postalCode =
-            acceptingStore.postalCode ?: throw GraphQLBaseException(GraphQLExceptionCode.STORE_NOT_FOUND)
+            acceptingStore.postalCode
+                ?: throw IllegalStateException("Postal code must be set for store: ${existingStore.id}")
         address.location = acceptingStore.location
 
         physicalStore.coordinates = Point(acceptingStore.longitude!!, acceptingStore.latitude!!)

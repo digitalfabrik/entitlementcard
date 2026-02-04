@@ -6,11 +6,11 @@ import app.ehrenamtskarte.backend.db.entities.mayUpdateStoresInProject
 import app.ehrenamtskarte.backend.db.repositories.AcceptingStoresRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.graphql.auth.requireAuthContext
-import app.ehrenamtskarte.backend.graphql.exceptions.GraphQLBaseException
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidJsonException
 import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotUniqueException
 import app.ehrenamtskarte.backend.graphql.exceptions.StoreAlreadyExistsException
-import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
+import app.ehrenamtskarte.backend.graphql.exceptions.StoreNotFoundException
 import app.ehrenamtskarte.backend.graphql.stores.types.AcceptingStoreInput
 import app.ehrenamtskarte.backend.graphql.stores.types.StoreImportReturnResultModel
 import app.ehrenamtskarte.backend.import.COUNTRY_CODE
@@ -99,7 +99,7 @@ class AcceptingStoresMutationService {
                 ?: throw RegionNotUniqueException()
             val existingStore =
                 AcceptingStoreEntity.findById(storeId)
-                    ?: throw GraphQLBaseException(GraphQLExceptionCode.STORE_NOT_FOUND)
+                    ?: throw StoreNotFoundException()
             AcceptingStoresRepository.editStore(existingStore, mapCsvToStore(store))
         }
         return true
@@ -152,9 +152,9 @@ fun mapCsvToStore(csvStore: AcceptingStoreInput): AcceptingStore {
         csvStore.discountEN?.clean(false)?.let { put(LanguageCode.EN, it) }
     }
     return AcceptingStore(
-        name = csvStore.name.clean()!!,
+        name = csvStore.name.clean() ?: throw InvalidInputException("Name is required"),
         countryCode = COUNTRY_CODE,
-        location = csvStore.location.clean()!!,
+        location = csvStore.location.clean() ?: throw InvalidInputException("Location is required"),
         postalCode = csvStore.postalCode.clean(),
         street = csvStore.street.clean(),
         houseNumber = csvStore.houseNumber.clean(),
