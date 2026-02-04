@@ -5,10 +5,10 @@ import {
   QUERY_PARAM_BIRTHDAY,
   QUERY_PARAM_KOBLENZ_REFERENCE_NUMBER,
   QUERY_PARAM_NAME,
-} from '../constants'
-import BuildConfigType, { CommonBuildConfigType } from '../types'
-import disclaimerText from './disclaimerText'
-import publisherText from './publisherText'
+} from '../constants/index.js'
+import BuildConfigType, { CommonBuildConfigType } from '../types.js'
+import disclaimerText from './disclaimerText.js'
+import publisherText from './publisherText.js'
 
 const ANDROID_APPLICATION_ID = 'app.sozialpass.koblenz'
 const IOS_BUNDLE_IDENTIFIER = 'app.sozialpass.koblenz'

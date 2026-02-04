@@ -1,5 +1,4 @@
-import { BuildConfigType } from 'build-configs'
-import { ACTIVATION_FRAGMENT, ACTIVATION_PATH, HTTPS_SCHEME } from 'build-configs/constants'
+import { ACTIVATION_FRAGMENT, ACTIVATION_PATH, BuildConfigType, HTTPS_SCHEME } from 'build-configs'
 
 import { QrCode } from '../generated/card_pb'
 import { uint8ArrayToBase64 } from './base64'
