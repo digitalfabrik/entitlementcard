@@ -4,20 +4,45 @@ import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExte
 import EMailNotificationExtension from '../../cards/extensions/EMailNotificationExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
 import { JsonField, findValue } from '../../components/JsonFieldView'
+import { BavariaCardType } from '../../generated/card_pb'
 import {
   ApplicationDataIncompleteError,
   getCardTypeApplicationData,
   getPersonalApplicationData,
 } from '../../routes/applications/utils/applicationDataHelper'
+import PlainDate from '../../util/PlainDate'
 import { ActivationText } from '../common/ActivationText'
 import { commonColors } from '../common/colors'
-import type { CardConfig, ProjectConfig } from '../index'
+import type { CardConfig, InfoParams, ProjectConfig } from '../index'
 import {
   DataPrivacyAdditionalBaseText,
   DataPrivacyBaseText,
   dataPrivacyBaseHeadline,
 } from './dataPrivacyBase'
-import pdfConfiguration from './pdf'
+import pdfTemplate from './pdf-template.pdf'
+
+const renderPdfInfo = ({ info, region }: InfoParams): string => {
+  const expirationDay = info.expirationDay ?? 0
+  const expirationDate =
+    expirationDay > 0 ? PlainDate.fromDaysSinceEpoch(expirationDay).format() : 'unbegrenzt'
+  const cardType = info.extensions?.extensionBavariaCardType?.cardType
+
+  return `${info.fullName}
+Kartentyp: ${cardType === BavariaCardType.STANDARD ? 'Blau' : 'Gold'}
+Gültig bis: ${expirationDate}
+Ausgestellt am ${PlainDate.fromLocalDate(new Date()).format()} 
+${region ? `von ${region.prefix} ${region.name}` : ''}`
+}
+
+const renderCardHash = ({ cardInfoHash }: InfoParams): string => cardInfoHash
+
+const cardConfig: CardConfig = {
+  defaultValidity: { years: 3 },
+  nameColumnName: 'Name',
+  expiryColumnName: 'Ablaufdatum',
+  extensionColumnNames: ['Kartentyp', null, 'MailNotification'],
+  extensions: [BavariaCardTypeExtension, RegionExtension, EMailNotificationExtension],
+}
 
 export const applicationJsonToPersonalData = (
   json: JsonField<'Array'>,
@@ -31,14 +56,6 @@ export const applicationJsonToPersonalData = (
   const { forenames, surname, emailAddress } = getPersonalApplicationData(json)
 
   return { forenames, surname, emailAddress }
-}
-
-const cardConfig: CardConfig = {
-  defaultValidity: { years: 3 },
-  nameColumnName: 'Name',
-  expiryColumnName: 'Ablaufdatum',
-  extensionColumnNames: ['Kartentyp', null, 'MailNotification'],
-  extensions: [BavariaCardTypeExtension, RegionExtension, EMailNotificationExtension],
 }
 
 export const applicationJsonToCardQuery = (json: JsonField<'Array'>): string | null => {
@@ -77,7 +94,7 @@ export const applicationJsonToCardQuery = (json: JsonField<'Array'>): string | n
   }
 }
 
-const config: ProjectConfig = {
+export const config: ProjectConfig = {
   colorPalette: commonColors,
   name: 'Ehrenamtskarte Bayern',
   projectId: 'bayern.ehrenamtskarte.app',
@@ -98,7 +115,20 @@ const config: ProjectConfig = {
     downloadLink: 'https://download.bayern.ehrenamtskarte.app/',
   },
   timezone: 'Europe/Berlin',
-  pdf: pdfConfiguration,
+  pdf: {
+    title: 'Ehrenamtskarten',
+    templatePath: pdfTemplate,
+    issuer: 'Bayerische Staatsministerium für Arbeit und Soziales, Familie und Integration',
+    customFont: 'inter/Inter-Regular.ttf',
+    elements: {
+      dynamicActivationQrCodes: [{ x: 140, y: 73, size: 51 }],
+      text: [
+        { x: 142, y: 137, maxWidth: 84, fontSize: 10, spacing: 4, infoToText: renderPdfInfo },
+        { x: 165, y: 129, fontSize: 6, textAlign: 'center', infoToText: renderCardHash },
+      ],
+      deepLinkArea: { x: 140, y: 73, size: 51 },
+    },
+  },
   csvExport: {
     enabled: false,
   },
@@ -122,5 +152,3 @@ const config: ProjectConfig = {
   showBirthdayExtensionHint: false,
   locales: buildConfigBayern.common.appLocales,
 }
-
-export default config

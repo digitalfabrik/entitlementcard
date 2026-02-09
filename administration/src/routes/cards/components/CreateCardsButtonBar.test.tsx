@@ -2,7 +2,7 @@ import { act, fireEvent } from '@testing-library/react'
 import React from 'react'
 
 import { initializeCard } from '../../../cards/card'
-import bayernConfig from '../../../project-configs/bayern/config'
+import { config } from '../../../project-configs/bayern/config'
 import { CustomRenderOptions, renderWithOptions } from '../../../testing/render'
 import { getTestRegion } from '../../user-settings/__mocks__/Region'
 import CreateCardsButtonBar from './CreateCardsButtonBar'
@@ -65,7 +65,7 @@ describe('CreateCardsButtonBar', () => {
   it('Should disable generate button for invalid cards', async () => {
     const generateCardsPdf = jest.fn()
     const generateCardsCsv = jest.fn()
-    const cards = [initializeCard(bayernConfig.card, region, { fullName: '' })]
+    const cards = [initializeCard(config.card, region, { fullName: '' })]
     const { getByText } = renderWithOptions(
       <CreateCardsButtonBar
         goBack={() => undefined}
@@ -94,7 +94,7 @@ describe('CreateCardsButtonBar', () => {
   it('Should generate valid cards', async () => {
     const generateCardsPdf = jest.fn()
     const generateCardsCsv = jest.fn()
-    const cards = [initializeCard(bayernConfig.card, region, { fullName: 'Thea Test' })]
+    const cards = [initializeCard(config.card, region, { fullName: 'Thea Test' })]
     const { getByText } = renderWithOptions(
       <CreateCardsButtonBar
         goBack={() => undefined}

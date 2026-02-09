@@ -19,11 +19,11 @@ import type { JsonField } from '../components/JsonFieldView'
 import { CardInfo } from '../generated/card_pb'
 import { type Region } from '../generated/graphql'
 import type { ActivityLogEntryType } from '../routes/activity-log/utils/activityLog'
-import bayernConfig from './bayern/config'
+import { config as bayernConfig } from './bayern/config'
 import { LOCAL_STORAGE_PROJECT_KEY } from './constants'
-import koblenzConfig from './koblenz/config'
-import nuernbergConfig from './nuernberg/config'
-import showcaseConfig from './showcase/config'
+import { config as koblenzConfig } from './koblenz/config'
+import { config as nuernbergConfig } from './nuernberg/config'
+import { config as showcaseConfig } from './showcase/config'
 
 export type ProjectConfig = {
   name: string
@@ -48,7 +48,15 @@ export type ProjectConfig = {
     ) => ReactElement
     downloadLink: string
   }
-  csvExport: CsvExport
+  csvExport:
+    | {
+        enabled: true
+        csvHeader: string[]
+        buildCsvLine: (createCardsResult: CreateCardsResult, card: Card) => string
+      }
+    | {
+        enabled: false
+      }
   cardStatistics: CardStatistics
   freinetCSVImportEnabled: boolean
   freinetDataTransferEnabled: boolean
@@ -134,16 +142,6 @@ export type ApplicationFeature = {
   applicationUsableWithApiToken: boolean
   csvExport: boolean
 }
-
-export type CsvExport =
-  | {
-      enabled: true
-      csvHeader: string[]
-      buildCsvLine: (createCardsResult: CreateCardsResult, card: Card) => string
-    }
-  | {
-      enabled: false
-    }
 
 export type StatisticsTheme = {
   colorCardCreated: string

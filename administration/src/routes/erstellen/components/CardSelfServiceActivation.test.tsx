@@ -5,23 +5,23 @@ import { generateCardInfo, initializeCard } from '../../../cards/card'
 import { CreateCardsResult } from '../../../cards/createCards'
 import getCustomDeepLinkFromQrCode from '../../../cards/getCustomDeepLinkFromQrCode'
 import { DynamicActivationCode } from '../../../generated/card_pb'
-import koblenzConfig from '../../../project-configs/koblenz/config'
+import { config } from '../../../project-configs/koblenz/config'
 import { CustomRenderOptions, renderWithOptions } from '../../../testing/render'
 import CardSelfServiceActivation from './CardSelfServiceActivation'
 
 const downloadPdf = jest.fn()
 const mockProvider: CustomRenderOptions = {
-  projectConfig: koblenzConfig,
+  projectConfig: config,
   translation: true,
 }
 
 describe('CardSelfServiceActivation', () => {
-  const card = initializeCard(koblenzConfig.card, undefined, { fullName: 'Thea Test' })
+  const card = initializeCard(config.card, undefined, { fullName: 'Thea Test' })
   const code: CreateCardsResult = {
     dynamicCardInfoHashBase64: 'rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=',
     dynamicActivationCode: new DynamicActivationCode({ info: generateCardInfo(card) }),
   }
-  const deepLink = getCustomDeepLinkFromQrCode(koblenzConfig, {
+  const deepLink = getCustomDeepLinkFromQrCode(config, {
     case: 'dynamicActivationCode',
     value: code.dynamicActivationCode,
   })

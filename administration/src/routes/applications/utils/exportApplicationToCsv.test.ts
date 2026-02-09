@@ -1,4 +1,4 @@
-import bayernConfig from '../../../project-configs/bayern/config'
+import { config } from '../../../project-configs/bayern/config'
 import * as downloadDataUri from '../../../util/downloadDataUri'
 import {
   mockApplicationBlue,
@@ -24,7 +24,7 @@ describe('exportApplicationToCsv', () => {
   it('should successfully export application data to CSV with correct filename', () => {
     const downloadSpy = jest.spyOn(downloadDataUri, 'default')
 
-    exportApplicationToCsv(mockApplicationBlue, bayernConfig)
+    exportApplicationToCsv(mockApplicationBlue, config)
 
     expect(downloadSpy).toHaveBeenCalled()
     expect(downloadSpy.mock.calls[0][1]).toBe('Doe_John_21.05.2025, 09:57.csv')
@@ -32,7 +32,7 @@ describe('exportApplicationToCsv', () => {
 
   it('should throw error when CSV export is disabled', () => {
     const configWithoutExport = {
-      ...bayernConfig,
+      ...config,
       applicationFeature: {
         csvExport: false,
         applicationJsonToPersonalData: jest.fn(),
@@ -47,7 +47,7 @@ describe('exportApplicationToCsv', () => {
   })
 
   it('should throw error when address data is missing in application', () => {
-    expect(() => exportApplicationToCsv(mockApplicationWithoutAddress, bayernConfig)).toThrow(
+    expect(() => exportApplicationToCsv(mockApplicationWithoutAddress, config)).toThrow(
       new ApplicationDataIncompleteError(
         'Erforderliche Antragsdaten fehlen oder sind unvollständig.',
       ),
@@ -55,7 +55,7 @@ describe('exportApplicationToCsv', () => {
   })
 
   it('should throw error when personal data is missing in application', () => {
-    expect(() => exportApplicationToCsv(mockApplicationWithoutPersonalData, bayernConfig)).toThrow(
+    expect(() => exportApplicationToCsv(mockApplicationWithoutPersonalData, config)).toThrow(
       new ApplicationDataIncompleteError(
         'Erforderliche Antragsdaten fehlen oder sind unvollständig.',
       ),
@@ -63,9 +63,7 @@ describe('exportApplicationToCsv', () => {
   })
 
   it('should throw error when application details are missing in application', () => {
-    expect(() =>
-      exportApplicationToCsv(mockApplicationWithoutApplicationDetails, bayernConfig),
-    ).toThrow(
+    expect(() => exportApplicationToCsv(mockApplicationWithoutApplicationDetails, config)).toThrow(
       new ApplicationDataIncompleteError(
         'Erforderliche Antragsdaten fehlen oder sind unvollständig.',
       ),
@@ -75,7 +73,7 @@ describe('exportApplicationToCsv', () => {
   it('should create CSV with correct mime type', () => {
     const downloadSpy = jest.spyOn(downloadDataUri, 'default')
 
-    exportApplicationToCsv(mockApplicationBlue, bayernConfig)
+    exportApplicationToCsv(mockApplicationBlue, config)
 
     const blobData = downloadSpy.mock.calls[0][0]
     expect(blobData).toBeInstanceOf(Blob)
@@ -90,7 +88,7 @@ describe('exportApplicationToCsv', () => {
           TEST_BLOB_CONSTRUCTOR(blobParts, options),
       )
 
-    exportApplicationToCsv(mockApplicationBlue, bayernConfig)
+    exportApplicationToCsv(mockApplicationBlue, config)
     expect(TEST_BLOB_CONSTRUCTOR).toHaveBeenCalledWith(
       [
         'Vorname(n),Nachname,E-Mail-Adresse,Geburtsdatum,Telefonnummer,Straße,Adresszusatz,Hausnummer,Postleitzahl,Ort,Antrag auf,Antragsstellung' +
@@ -110,7 +108,7 @@ describe('exportApplicationToCsv', () => {
           TEST_BLOB_CONSTRUCTOR(blobParts, options),
       )
 
-    exportApplicationToCsv(mockApplicationGold, bayernConfig)
+    exportApplicationToCsv(mockApplicationGold, config)
     expect(TEST_BLOB_CONSTRUCTOR).toHaveBeenCalledWith(
       [
         'Vorname(n),Nachname,E-Mail-Adresse,Geburtsdatum,Telefonnummer,Straße,Adresszusatz,Hausnummer,Postleitzahl,Ort,Antrag auf,Antragsstellung' +

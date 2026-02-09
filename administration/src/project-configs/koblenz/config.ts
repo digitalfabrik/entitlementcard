@@ -7,15 +7,34 @@ import {
 
 import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
 import KoblenzReferenceNumberExtension from '../../cards/extensions/KoblenzReferenceNumberExtension'
+import PlainDate from '../../util/PlainDate'
 import { ActivationText } from '../common/ActivationText'
 import { commonColors } from '../common/colors'
-import type { ProjectConfig } from '../index'
+import type { InfoParams, ProjectConfig } from '../index'
 import { storesManagementConfig } from '../storesManagementConfig'
 import colorsOverride from './colorsOverride'
 import { DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
-import pdfConfig from './pdf'
+import pdfTemplate from './pdf-template.pdf'
 
-const config: ProjectConfig = {
+const renderPdfDetails = ({ info }: InfoParams): string => {
+  const expirationDay = info.expirationDay
+
+  if (expirationDay === undefined) {
+    throw new Error('expirationDay must be defined for Koblenz')
+  }
+
+  const expirationDate = PlainDate.fromDaysSinceEpoch(expirationDay)
+  const birthdayDate = PlainDate.fromDaysSinceEpoch(
+    info.extensions?.extensionBirthday?.birthday ?? 0,
+  )
+  const startDate = PlainDate.fromDaysSinceEpoch(info.extensions?.extensionStartDay?.startDay ?? 0)
+
+  return `${startDate.format()} - ${expirationDate.format()}
+${birthdayDate.format()}
+${info.fullName}`
+}
+
+export const config: ProjectConfig = {
   colorPalette: { ...commonColors, ...colorsOverride },
   name: 'KoblenzPass',
   projectId: 'koblenz.sozialpass.app',
@@ -31,7 +50,29 @@ const config: ProjectConfig = {
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
   dataPrivacyContent: DataPrivacyBaseText,
   timezone: 'Europe/Berlin',
-  pdf: pdfConfig,
+  pdf: {
+    title: 'KoblenzPass',
+    templatePath: pdfTemplate,
+    customFont: 'texgyreheros-regular.ttf',
+    customBoldFont: 'texgyreheros-bold.ttf',
+    issuer: 'Stadt Koblenz',
+    elements: {
+      staticVerificationQrCodes: [{ x: 152, y: 230, size: 34 }],
+      dynamicActivationQrCodes: [{ x: 130, y: 103, size: 54 }],
+      text: [
+        {
+          x: 109,
+          y: 254,
+          maxWidth: 80,
+          fontSize: 9,
+          bold: true,
+          spacing: 10,
+          infoToText: renderPdfDetails,
+        },
+      ],
+      deepLinkArea: { x: 130, y: 103, size: 54 },
+    },
+  },
   csvExport: {
     enabled: false,
   },
@@ -49,5 +90,3 @@ const config: ProjectConfig = {
   showBirthdayExtensionHint: true,
   locales: buildConfigKoblenz.common.appLocales,
 }
-
-export default config
