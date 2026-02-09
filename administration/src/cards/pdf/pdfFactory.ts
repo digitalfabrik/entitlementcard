@@ -2,7 +2,7 @@ import { PDFDocument, PDFFont, PDFPage, StandardFonts } from '@cantoo/pdf-lib'
 import fontkit from '@pdf-lib/fontkit'
 
 import { Region } from '../../generated/graphql'
-import { PdfConfig, ProjectConfig } from '../../project-configs/getProjectConfig'
+import { PdfConfig, ProjectConfig } from '../../project-configs'
 import { getBuildConfig } from '../../util/getBuildConfig'
 import { isProductionEnvironment } from '../../util/helper'
 import normalizeString from '../../util/normalizeString'

@@ -15,7 +15,7 @@ import {
   PdfLinkAreaProps,
   PdfQrCodeElementProps,
   PdfTextElementProps,
-} from '../../project-configs/getProjectConfig'
+} from '../../project-configs'
 import { drawQRCode } from '../../util/qrcode'
 import { Card } from '../card'
 
