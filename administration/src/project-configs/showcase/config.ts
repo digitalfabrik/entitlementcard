@@ -1,12 +1,15 @@
 import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
-import { applicationJsonToCardQuery, applicationJsonToPersonalData } from '../bayern/config'
+import {
+  applicationJsonToCardQuery,
+  applicationJsonToPersonalData,
+  config as bayernConfig,
+} from '../bayern/config'
 import { DataPrivacyBaseText, dataPrivacyBaseHeadline } from '../bayern/dataPrivacyBase'
-import pdfConfiguration from '../bayern/pdf'
 import { commonColors } from '../common/colors'
 import type { ProjectConfig } from '../index'
 
-const config: ProjectConfig = {
+export const config: ProjectConfig = {
   colorPalette: commonColors,
   name: 'Showcase Berechtigungskarte',
   projectId: 'showcase.entitlementcard.app',
@@ -28,7 +31,7 @@ const config: ProjectConfig = {
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
   dataPrivacyContent: DataPrivacyBaseText,
   timezone: 'Europe/Berlin',
-  pdf: pdfConfiguration,
+  pdf: bayernConfig.pdf,
   csvExport: {
     enabled: false,
   },
@@ -44,5 +47,3 @@ const config: ProjectConfig = {
   showBirthdayExtensionHint: false,
   locales: ['de'],
 }
-
-export default config
