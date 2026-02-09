@@ -92,8 +92,7 @@ commands:
         steps:
             - run:
                 command: |
-                    curl -fsSL https://raw.githubusercontent.com/leoafarias/fvm/refs/heads/main/scripts/install.sh | bash
-                    curl -sL https://raw.githubusercontent.com/leoafarias/fvm/refs/heads/main/scripts/install.sh | shasum -a 256
+                    curl -fsSL https://fvm.app/install.sh | bash
                     echo 'export PATH="$HOME/fvm/bin:$PATH"' >> $BASH_ENV
                 name: Install fvm
             - restore_cache:
