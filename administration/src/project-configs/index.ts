@@ -30,7 +30,14 @@ export type ProjectConfig = {
   colorPalette: PaletteOptions
   projectId: string
   publisherText: string
-  applicationFeature?: ApplicationFeature
+  applicationFeature?: {
+    applicationJsonToPersonalData: (
+      json: JsonField<'Array'>,
+    ) => { forenames?: string; surname?: string } | null
+    applicationJsonToCardQuery: (json: JsonField<'Array'>) => string | null
+    applicationUsableWithApiToken: boolean
+    csvExport: boolean
+  }
   staticQrCodesEnabled: boolean
   card: CardConfig
   dataPrivacyHeadline: string
@@ -132,15 +139,6 @@ export type CardConfig<T extends readonly Extension<any>[] = readonly Extension<
   extensionColumnNames: (string | null)[]
   defaultValidity: Duration
   extensions: T
-}
-
-export type ApplicationFeature = {
-  applicationJsonToPersonalData: (
-    json: JsonField<'Array'>,
-  ) => { forenames?: string; surname?: string } | null
-  applicationJsonToCardQuery: (json: JsonField<'Array'>) => string | null
-  applicationUsableWithApiToken: boolean
-  csvExport: boolean
 }
 
 export type StatisticsTheme = {
