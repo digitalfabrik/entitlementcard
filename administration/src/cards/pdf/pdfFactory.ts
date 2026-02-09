@@ -132,28 +132,28 @@ export const generatePdf = async (
   projectConfig: ProjectConfig,
   region?: Region,
 ): Promise<Blob> => {
-  const pdfConfig = projectConfig.pdf
-
   try {
-    const doc = await PDFDocument.create()
     const templateDocument = await PDFDocument.load(
-      await fetch(pdfConfig.templatePath).then(res => res.arrayBuffer()),
+      await (await fetch(projectConfig.pdf.templatePath)).arrayBuffer(),
     )
 
+    const doc = await PDFDocument.create()
+
     for (let index = 0; index < codes.length; index++) {
-      // eslint-disable-next-line no-await-in-loop
       const [templatePage] = await doc.copyPages(templateDocument, [0])
       const page = doc.addPage(templatePage)
-      // eslint-disable-next-line no-await-in-loop
-      await fillContentAreas(doc, page, codes[index], cards[index], pdfConfig, region)
+      await fillContentAreas(
+        templateDocument,
+        doc,
+        page,
+        codes[index],
+        cards[index],
+        projectConfig.pdf,
+        region,
+      )
     }
 
-    doc.setTitle(pdfConfig.title)
-    doc.setAuthor(pdfConfig.issuer)
-
-    const pdfBytes = await doc.save()
-
-    return new Blob([pdfBytes.buffer as ArrayBuffer], { type: 'application/pdf' })
+    return new Blob([(await doc.save()).buffer as ArrayBuffer], { type: 'application/pdf' })
   } catch (error) {
     if (error instanceof Error) {
       throw new PdfError(error.message)
