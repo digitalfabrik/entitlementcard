@@ -1,5 +1,5 @@
 import { formatDateDefaultGerman, plainDateFromDaysSinceEpoch } from '../../util/date'
-import type { InfoParams, PdfConfig } from '../getProjectConfig'
+import type { InfoParams, PdfConfig } from '../index'
 import pdfTemplate from './pdf-template.pdf'
 
 const renderPdfDetails = ({ info }: InfoParams): string => {

@@ -2,7 +2,7 @@ import { styled } from '@mui/system'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { ActivityLogConfig } from '../../../project-configs/getProjectConfig'
+import { ActivityLogConfig } from '../../../project-configs'
 import { ActivityLogEntryType } from '../utils/activityLog'
 
 const StickyTableHeader = styled('thead')`

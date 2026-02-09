@@ -12,7 +12,7 @@ import {
 } from '../../routes/applications/utils/applicationDataHelper'
 import { ActivationText } from '../common/ActivationText'
 import { commonColors } from '../common/colors'
-import type { CardConfig, ProjectConfig } from '../getProjectConfig'
+import type { CardConfig, ProjectConfig } from '../index'
 import {
   DataPrivacyAdditionalBaseText,
   DataPrivacyBaseText,

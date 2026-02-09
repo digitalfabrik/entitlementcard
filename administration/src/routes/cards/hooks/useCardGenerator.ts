@@ -17,8 +17,8 @@ import {
   useDeleteCardsMutation,
   useSendApplicationAndCardDataToFreinetMutation,
 } from '../../../generated/graphql'
+import { ProjectConfig } from '../../../project-configs'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
-import { ProjectConfig } from '../../../project-configs/getProjectConfig'
 import { getCsvHeaders } from '../../../project-configs/helper'
 import downloadDataUri from '../../../util/downloadDataUri'
 import { getBuildConfig } from '../../../util/getBuildConfig'

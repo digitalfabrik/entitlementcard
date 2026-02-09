@@ -4,7 +4,7 @@ import { Temporal } from 'temporal-polyfill'
 
 import { CardExtensions, CardInfo } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
-import type { CardConfig } from '../project-configs/getProjectConfig'
+import type { CardConfig } from '../project-configs'
 import {
   formatDateDefaultGerman,
   plainDateToDaysSinceEpoch,

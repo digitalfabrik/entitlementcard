@@ -2,7 +2,7 @@ import { Temporal } from 'temporal-polyfill'
 
 import { BavariaCardType } from '../../generated/card_pb'
 import { formatDateDefaultGerman, plainDateFromDaysSinceEpoch } from '../../util/date'
-import type { InfoParams, PdfConfig } from '../getProjectConfig'
+import type { InfoParams, PdfConfig } from '../index'
 import pdfTemplate from './pdf-template.pdf'
 
 const renderPdfInfo = ({ info, region }: InfoParams): string => {

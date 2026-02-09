@@ -3,7 +3,7 @@ import fontkit from '@pdf-lib/fontkit'
 import { Temporal } from 'temporal-polyfill'
 
 import { Region } from '../../generated/graphql'
-import { PdfConfig, ProjectConfig } from '../../project-configs/getProjectConfig'
+import { PdfConfig, ProjectConfig } from '../../project-configs'
 import { getBuildConfig } from '../../util/getBuildConfig'
 import { isProductionEnvironment } from '../../util/helper'
 import normalizeString from '../../util/normalizeString'

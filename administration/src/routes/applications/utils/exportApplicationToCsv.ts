@@ -1,7 +1,7 @@
 import { stringify } from 'csv-stringify/browser/esm/sync'
 import { Temporal } from 'temporal-polyfill'
 
-import { ProjectConfig } from '../../../project-configs/getProjectConfig'
+import { ProjectConfig } from '../../../project-configs'
 import i18next from '../../../translations/i18n'
 import downloadDataUri from '../../../util/downloadDataUri'
 import { CSV_MIME_TYPE_UTF8 } from '../constants'
