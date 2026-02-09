@@ -1,7 +1,6 @@
-import type { InfoParams } from '../../cards/pdf/elements'
 import { BavariaCardType } from '../../generated/card_pb'
 import PlainDate from '../../util/PlainDate'
-import type { PdfConfig } from '../getProjectConfig'
+import type { InfoParams, PdfConfig } from '../getProjectConfig'
 import pdfTemplate from './pdf-template.pdf'
 
 const renderPdfInfo = ({ info, region }: InfoParams): string => {
