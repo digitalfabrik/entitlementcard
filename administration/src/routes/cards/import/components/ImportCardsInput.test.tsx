@@ -5,9 +5,9 @@ import {
   BAVARIA_CARD_TYPE_GOLD,
   BAVARIA_CARD_TYPE_STANDARD,
 } from '../../../../cards/extensions/BavariaCardTypeExtension'
+import { ProjectConfig } from '../../../../project-configs'
 import { ProjectConfigProvider } from '../../../../project-configs/ProjectConfigContext'
 import bayernConfig from '../../../../project-configs/bayern/config'
-import { ProjectConfig } from '../../../../project-configs/getProjectConfig'
 import koblenzConfig from '../../../../project-configs/koblenz/config'
 import nuernbergConfig from '../../../../project-configs/nuernberg/config'
 import { AppSnackbarProvider } from '../../../../provider/AppSnackbarProvider'

@@ -9,7 +9,7 @@ jest.mock('csv-stringify/browser/esm/sync', () => ({
   stringify: (input: string[][]) => input[0].join(','),
 }))
 
-jest.mock('../getProjectConfig', () => ({
+jest.mock('../index', () => ({
   __esModule: true,
   default: jest.fn(),
 }))

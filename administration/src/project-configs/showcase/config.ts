@@ -4,7 +4,7 @@ import { applicationJsonToCardQuery, applicationJsonToPersonalData } from '../ba
 import { DataPrivacyBaseText, dataPrivacyBaseHeadline } from '../bayern/dataPrivacyBase'
 import pdfConfiguration from '../bayern/pdf'
 import { commonColors } from '../common/colors'
-import type { ProjectConfig } from '../getProjectConfig'
+import type { ProjectConfig } from '../index'
 
 const config: ProjectConfig = {
   colorPalette: commonColors,
