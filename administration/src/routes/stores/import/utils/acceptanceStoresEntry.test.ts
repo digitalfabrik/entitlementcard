@@ -1,12 +1,13 @@
 import { LOCAL_STORAGE_PROJECT_KEY } from '../../../../project-configs/constants'
-import koblenzConfig from '../../../../project-configs/koblenz/config'
-import nuernbergConfig from '../../../../project-configs/nuernberg/config'
+import { config as koblenzConfig } from '../../../../project-configs/koblenz/config'
+import { config } from '../../../../project-configs/nuernberg/config'
+import { LOCAL_STORAGE_PROJECT_KEY } from '../../../../util/getBuildConfig'
 import { invalidStoreData, validStoreData } from '../__mock__/mockStoreEntry'
 import { AcceptingStoresEntry } from './acceptingStoresEntry'
 
 describe('AcceptanceStoreEntry', () => {
   const projectConfigsWithStoreUpload = [
-    { projectConfig: nuernbergConfig },
+    { projectConfig: config },
     { projectConfig: koblenzConfig },
   ]
   it.each(projectConfigsWithStoreUpload)(

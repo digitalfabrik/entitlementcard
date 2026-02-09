@@ -5,7 +5,7 @@ import { MemoryRouter } from 'react-router'
 import { Temporal } from 'temporal-polyfill'
 
 import { ProjectConfigProvider } from '../../../project-configs/ProjectConfigContext'
-import koblenzConfig from '../../../project-configs/koblenz/config'
+import { config } from '../../../project-configs/koblenz/config'
 import { AppSnackbarProvider } from '../../../provider/AppSnackbarProvider'
 import downloadDataUri from '../../../util/downloadDataUri'
 import { exampleCard, mockedCardMutation } from '../__mock__/mockSelfServiceCard'
@@ -43,7 +43,7 @@ const wrapper = ({
   <MemoryRouter initialEntries={initialRoutes}>
     <AppSnackbarProvider>
       <MockedProvider mocks={mocks} addTypename={false}>
-        <ProjectConfigProvider projectConfig={koblenzConfig}>{children}</ProjectConfigProvider>
+        <ProjectConfigProvider projectConfig={config}>{children}</ProjectConfigProvider>
       </MockedProvider>
     </AppSnackbarProvider>
   </MemoryRouter>

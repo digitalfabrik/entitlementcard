@@ -2,8 +2,8 @@ import { fireEvent } from '@testing-library/react'
 import React from 'react'
 import { Temporal } from 'temporal-polyfill'
 
-import koblenzConfig from '../../project-configs/koblenz/config'
-import nuernbergConfig from '../../project-configs/nuernberg/config'
+import { config as koblenzConfig } from '../../project-configs/koblenz/config'
+import { config as nuernbergConfig } from '../../project-configs/nuernberg/config'
 import { CustomRenderOptions, renderWithOptions } from '../../testing/render'
 import BirthdayExtension, { minBirthday } from './BirthdayExtension'
 

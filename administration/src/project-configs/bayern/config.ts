@@ -5,6 +5,7 @@ import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExte
 import EMailNotificationExtension from '../../cards/extensions/EMailNotificationExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
 import { JsonField, findValue } from '../../components/JsonFieldView'
+import { BavariaCardType } from '../../generated/card_pb'
 import {
   ApplicationDataIncompleteError,
   getCardTypeApplicationData,
@@ -12,13 +13,15 @@ import {
 } from '../../routes/applications/utils/applicationDataHelper'
 import { ActivationText } from '../common/ActivationText'
 import { commonColors } from '../common/colors'
-import type { CardConfig, ProjectConfig } from '../index'
+import type { CardConfig, InfoParams, ProjectConfig } from '../index'
 import {
   DataPrivacyAdditionalBaseText,
   DataPrivacyBaseText,
   dataPrivacyBaseHeadline,
 } from './dataPrivacyBase'
-import pdfConfiguration from './pdf'
+import pdfTemplate from './pdf-template.pdf'
+
+const renderCardHash = ({ cardInfoHash }: InfoParams): string => cardInfoHash
 
 export const applicationJsonToPersonalData = (
   json: JsonField<'Array'>,
@@ -78,7 +81,7 @@ export const applicationJsonToCardQuery = (json: JsonField<'Array'>): string | n
   }
 }
 
-const config: ProjectConfig = {
+export const config: ProjectConfig = {
   colorPalette: commonColors,
   name: 'Ehrenamtskarte Bayern',
   projectId: 'bayern.ehrenamtskarte.app',
@@ -99,7 +102,20 @@ const config: ProjectConfig = {
     downloadLink: 'https://download.bayern.ehrenamtskarte.app/',
   },
   timezone: 'Europe/Berlin',
-  pdf: pdfConfiguration,
+  pdf: {
+    title: 'Ehrenamtskarten',
+    templatePath: pdfTemplate,
+    issuer: 'Bayerische Staatsministerium für Arbeit und Soziales, Familie und Integration',
+    customFont: 'inter/Inter-Regular.ttf',
+    elements: {
+      dynamicActivationQrCodes: [{ x: 140, y: 73, size: 51 }],
+      text: [
+        { x: 142, y: 137, maxWidth: 84, fontSize: 10, spacing: 4, infoToText: renderPdfInfo },
+        { x: 165, y: 129, fontSize: 6, textAlign: 'center', infoToText: renderCardHash },
+      ],
+      deepLinkArea: { x: 140, y: 73, size: 51 },
+    },
+  },
   csvExport: {
     enabled: false,
   },
@@ -123,5 +139,3 @@ const config: ProjectConfig = {
   showBirthdayExtensionHint: false,
   locales: buildConfigBayern.common.appLocales,
 }
-
-export default config
