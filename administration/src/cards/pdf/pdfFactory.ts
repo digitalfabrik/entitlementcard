@@ -49,36 +49,32 @@ const loadCustomFontWithFallback = async (
 
 const fillContentAreas = async (
   doc: PDFDocument,
-  templatePage: PDFPage,
+  page: PDFPage,
   code: CreateCardsResult,
   card: Card,
   pdfConfig: PdfConfig,
-  region?: Region,
+  region: Region | undefined,
 ): Promise<void> => {
-  const { dynamicActivationCode, staticVerificationCode, dynamicCardInfoHashBase64 } = code
-  const dynamicCode: PdfQrCode = { case: 'dynamicActivationCode', value: dynamicActivationCode }
-  const staticCode: PdfQrCode | null = staticVerificationCode
-    ? {
-        case: 'staticVerificationCode',
-        value: staticVerificationCode,
-      }
-    : null
   const font = pdfConfig.customFont
     ? await loadCustomFontWithFallback(pdfConfig.customFont, doc, StandardFonts.Helvetica)
     : await doc.embedFont(StandardFonts.Helvetica)
 
-  pdfConfig.elements?.dynamicActivationQrCodes.forEach(configOptions =>
-    pdfQrCodeElement(configOptions, { page: templatePage, qrCode: dynamicCode }),
-  )
-
   const fontBold = pdfConfig.customBoldFont
     ? await loadCustomFontWithFallback(pdfConfig.customBoldFont, doc, StandardFonts.HelveticaBold)
     : await doc.embedFont(StandardFonts.HelveticaBold)
+  const dynamicCode: PdfQrCode = {
+    case: 'dynamicActivationCode',
+    value: code.dynamicActivationCode,
+  }
+
+  pdfConfig.elements?.dynamicActivationQrCodes.forEach(configOptions =>
+    pdfQrCodeElement(configOptions, { page, qrCode: dynamicCode }),
+  )
 
   if (pdfConfig.elements?.deepLinkArea) {
     pdfLinkArea(pdfConfig.elements.deepLinkArea, {
       doc,
-      page: templatePage,
+      page,
       font: fontBold,
       url: getDeepLinkFromQrCode(
         dynamicCode,
@@ -88,33 +84,43 @@ const fillContentAreas = async (
     })
   }
 
-  if (staticCode) {
-    pdfConfig.elements?.staticVerificationQrCodes?.forEach(configOptions =>
-      pdfQrCodeElement(configOptions, { page: templatePage, qrCode: staticCode }),
-    )
-  } else if (pdfConfig.elements?.staticVerificationQrCodes) {
-    throw Error('To create this PDF a static QR-Code is required. However, it seems to be missing.')
+  if (pdfConfig.elements?.staticVerificationQrCodes) {
+    if (code.staticVerificationCode) {
+      const staticCode: PdfQrCode = {
+        case: 'staticVerificationCode',
+        value: code.staticVerificationCode,
+      }
+
+      pdfConfig.elements.staticVerificationQrCodes.forEach(configOptions =>
+        pdfQrCodeElement(configOptions, { page, qrCode: staticCode }),
+      )
+    } else {
+      throw Error(
+        'To create this PDF a static QR-Code is required. However, it seems to be missing.',
+      )
+    }
   }
 
   const form = doc.getForm()
+
   pdfConfig.elements?.form?.forEach(configOptions =>
     pdfFormElement(configOptions, {
-      page: templatePage,
+      page,
       form,
       font,
       info: dynamicCode.value.info!,
       card,
-      cardInfoHash: dynamicCardInfoHashBase64,
+      cardInfoHash: code.dynamicCardInfoHashBase64,
       region,
     }),
   )
   pdfConfig.elements?.text.forEach(configOptions =>
     pdfTextElement(configOptions, {
-      page: templatePage,
+      page,
       font: configOptions.bold ? fontBold : font,
       info: dynamicCode.value.info!,
       card,
-      cardInfoHash: dynamicCardInfoHashBase64,
+      cardInfoHash: code.dynamicCardInfoHashBase64,
       region,
     }),
   )
