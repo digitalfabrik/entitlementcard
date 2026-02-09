@@ -3,7 +3,7 @@ import React, { act } from 'react'
 
 import { initializeCardFromCSV } from '../../../cards/card'
 import FormAlert from '../../../components/FormAlert'
-import koblenzConfig from '../../../project-configs/koblenz/config'
+import { config } from '../../../project-configs/koblenz/config'
 import { CustomRenderOptions, renderWithOptions } from '../../../testing/render'
 import { exampleCard } from '../__mock__/mockSelfServiceCard'
 import { DataPrivacyAcceptingStatus } from '../constants'
@@ -18,7 +18,7 @@ jest.mock('notistack', () => ({
 }))
 
 const mockProvider: CustomRenderOptions = {
-  projectConfig: koblenzConfig,
+  projectConfig: config,
   localization: true,
   translation: true,
   router: true,
@@ -36,7 +36,7 @@ describe('CardSelfServiceForm', () => {
       <CardSelfServiceForm
         updateCard={updateCard}
         generateCards={generateCards}
-        card={initializeCardFromCSV(koblenzConfig.card, [], [], undefined, true)}
+        card={initializeCardFromCSV(config.card, [], [], undefined, true)}
         dataPrivacyAccepted={DataPrivacyAcceptingStatus.notInteracted}
         setDataPrivacyAccepted={setDataPrivacyAccepted}
       />,
@@ -62,7 +62,7 @@ describe('CardSelfServiceForm', () => {
       <CardSelfServiceForm
         updateCard={updateCard}
         generateCards={generateCards}
-        card={initializeCardFromCSV(koblenzConfig.card, [], [], undefined, true)}
+        card={initializeCardFromCSV(config.card, [], [], undefined, true)}
         dataPrivacyAccepted={DataPrivacyAcceptingStatus.accepted}
         setDataPrivacyAccepted={setDataPrivacyAccepted}
       />,

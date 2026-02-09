@@ -3,7 +3,7 @@ import React from 'react'
 
 import { mockRegion } from '../../../../cards/__mocks__/mockRegion'
 import { initializeCardFromCSV } from '../../../../cards/card'
-import bayernConfig from '../../../../project-configs/bayern/config'
+import { config } from '../../../../project-configs/bayern/config'
 import { CustomRenderOptions, renderWithOptions } from '../../../../testing/render'
 import AddCardsForm from './AddCardsForm'
 
@@ -12,7 +12,7 @@ const mockBaseProvider: CustomRenderOptions = {
   router: true,
 }
 describe('AddCardsForm', () => {
-  const card = initializeCardFromCSV(bayernConfig.card, [], [], mockRegion)
+  const card = initializeCardFromCSV(config.card, [], [], mockRegion)
   const defaultProps = {
     region: mockRegion,
     cards: [],
