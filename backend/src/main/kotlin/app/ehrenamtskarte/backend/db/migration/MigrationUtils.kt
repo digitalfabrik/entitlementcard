@@ -4,13 +4,13 @@ import app.ehrenamtskarte.backend.db.entities.MigrationEntity
 import app.ehrenamtskarte.backend.db.entities.Migrations
 import app.ehrenamtskarte.backend.db.migration.migrations.MigrationsRegistry
 import app.ehrenamtskarte.backend.db.migration.migrations.V0001_Baseline
-import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.exceptions.ExposedSQLException
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.exists
-import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.vendors.currentDialect
+import org.jetbrains.exposed.v1.core.dao.id.EntityID
+import org.jetbrains.exposed.v1.exceptions.ExposedSQLException
+import org.jetbrains.exposed.v1.jdbc.Database
+import org.jetbrains.exposed.v1.jdbc.SchemaUtils
+import org.jetbrains.exposed.v1.jdbc.exists
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.vendors.currentDialectMetadata
 import org.slf4j.LoggerFactory
 import java.time.Instant.now
 
@@ -47,7 +47,7 @@ object MigrationUtils {
                 if (!Migrations.exists()) {
                     logger.info("Migrations table did not exist. Creating it.")
                     transaction { SchemaUtils.create(Migrations) }
-                    currentDialect.resetCaches()
+                    currentDialectMetadata.resetCaches()
                 } else {
                     // If changes to the Migrations table ever need to made, they need to be handled here (before any
                     // migrations are applied).
@@ -66,7 +66,7 @@ object MigrationUtils {
                         logger.info("Applying ${migration.javaClass.simpleName}")
                         transaction(statement = migration.migrate)
                         // If we create or drop tables in a migration, we need to reset Exposed's caches.
-                        currentDialect.resetCaches()
+                        currentDialectMetadata.resetCaches()
                     }
                     transaction {
                         MigrationEntity.new {

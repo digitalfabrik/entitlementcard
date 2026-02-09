@@ -18,24 +18,25 @@ import app.ehrenamtskarte.backend.import.COUNTRY_CODE
 import app.ehrenamtskarte.backend.import.stores.common.types.AcceptingStore
 import app.ehrenamtskarte.backend.shared.database.sortByKeys
 import net.postgis.jdbc.geometry.Point
-import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.with
-import org.jetbrains.exposed.sql.ComparisonOp
-import org.jetbrains.exposed.sql.CustomFunction
-import org.jetbrains.exposed.sql.DoubleColumnType
-import org.jetbrains.exposed.sql.Expression
-import org.jetbrains.exposed.sql.Op
-import org.jetbrains.exposed.sql.OrOp
-import org.jetbrains.exposed.sql.SizedIterable
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.inSubQuery
-import org.jetbrains.exposed.sql.alias
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.deleteReturning
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.doubleParam
-import org.jetbrains.exposed.sql.stringParam
+import org.jetbrains.exposed.v1.core.ComparisonOp
+import org.jetbrains.exposed.v1.core.CustomFunction
+import org.jetbrains.exposed.v1.core.DoubleColumnType
+import org.jetbrains.exposed.v1.core.Expression
+import org.jetbrains.exposed.v1.core.Op
+import org.jetbrains.exposed.v1.core.OrOp
+import org.jetbrains.exposed.v1.core.alias
+import org.jetbrains.exposed.v1.core.and
+import org.jetbrains.exposed.v1.core.dao.id.EntityID
+import org.jetbrains.exposed.v1.core.doubleParam
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.core.inList
+import org.jetbrains.exposed.v1.core.inSubQuery
+import org.jetbrains.exposed.v1.core.stringParam
+import org.jetbrains.exposed.v1.dao.with
+import org.jetbrains.exposed.v1.jdbc.SizedIterable
+import org.jetbrains.exposed.v1.jdbc.deleteReturning
+import org.jetbrains.exposed.v1.jdbc.deleteWhere
+import org.jetbrains.exposed.v1.jdbc.select
 
 object AcceptingStoresRepository {
     // TODO would be great to support combinations like "Tür an Tür Augsburg"

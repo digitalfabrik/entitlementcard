@@ -22,8 +22,8 @@ import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.clikt.parameters.types.file
 import graphql.schema.GraphQLSchema
-import org.jetbrains.exposed.sql.exists
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.exists
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.slf4j.LoggerFactory
 import org.springframework.boot.WebApplicationType
 import org.springframework.boot.runApplication

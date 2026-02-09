@@ -1,12 +1,13 @@
 package app.ehrenamtskarte.backend.db.entities
 
-import org.jetbrains.exposed.dao.EntityClass
-import org.jetbrains.exposed.dao.IntEntity
-import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.id.IdTable
-import org.jetbrains.exposed.sql.exists
-import org.jetbrains.exposed.sql.javatime.timestamp
-import org.jetbrains.exposed.sql.max
+import org.jetbrains.exposed.v1.core.dao.id.EntityID
+import org.jetbrains.exposed.v1.core.dao.id.IdTable
+import org.jetbrains.exposed.v1.core.max
+import org.jetbrains.exposed.v1.dao.EntityClass
+import org.jetbrains.exposed.v1.dao.IntEntity
+import org.jetbrains.exposed.v1.javatime.timestamp
+import org.jetbrains.exposed.v1.jdbc.exists
+import org.jetbrains.exposed.v1.jdbc.select
 
 object Migrations : IdTable<Int>() {
     override val id = integer("version").entityId()

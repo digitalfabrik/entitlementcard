@@ -6,7 +6,9 @@ import app.ehrenamtskarte.backend.db.entities.Projects
 import app.ehrenamtskarte.backend.shared.exceptions.UnauthorizedException
 import com.expediagroup.graphql.generator.extensions.get
 import graphql.schema.DataFetchingEnvironment
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.jdbc.select
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
 data class AuthContext(
     val adminId: Int,

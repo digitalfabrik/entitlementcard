@@ -19,9 +19,9 @@ import app.ehrenamtskarte.backend.db.entities.UserEntitlements
 import app.ehrenamtskarte.backend.db.entities.UserEntitlementsEntity
 import app.ehrenamtskarte.backend.shared.crypto.PasswordCrypto
 import net.postgis.jdbc.geometry.Point
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.insertAndGetId
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.insert
+import org.jetbrains.exposed.v1.jdbc.insertAndGetId
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import java.time.Instant
 import java.time.LocalDate
 import java.time.OffsetDateTime
