@@ -1,3 +1,4 @@
+import { Color, PDFForm, PDFTextField } from '@cantoo/pdf-lib'
 import { PaletteOptions } from '@mui/material'
 import {
   BAYERN_PRODUCTION_ID,
@@ -14,19 +15,50 @@ import { ReactElement, ReactNode } from 'react'
 import type { Card } from '../cards/card'
 import type { CreateCardsResult } from '../cards/createCards'
 import type { Extension } from '../cards/extensions/extensions'
-import type {
-  PdfFormElementProps,
-  PdfLinkAreaProps,
-  PdfQrCodeElementProps,
-  PdfTextElementProps,
-} from '../cards/pdf/elements'
 import type { JsonField } from '../components/JsonFieldView'
+import { CardInfo } from '../generated/card_pb'
+import { type Region } from '../generated/graphql'
 import type { ActivityLogEntryType } from '../routes/activity-log/utils/activityLog'
 import bayernConfig from './bayern/config'
 import { LOCAL_STORAGE_PROJECT_KEY } from './constants'
 import koblenzConfig from './koblenz/config'
 import nuernbergConfig from './nuernberg/config'
 import showcaseConfig from './showcase/config'
+
+export type ProjectConfig = {
+  name: string
+  colorPalette: PaletteOptions
+  projectId: string
+  publisherText: string
+  applicationFeature?: ApplicationFeature
+  staticQrCodesEnabled: boolean
+  card: CardConfig
+  dataPrivacyHeadline: string
+  dataPrivacyContent: () => ReactElement
+  dataPrivacyAdditionalBaseContent?: () => ReactElement
+  pdf: PdfConfig
+  timezone: string
+  activityLogConfig?: ActivityLogConfig
+  activation?: {
+    activationText: (
+      applicationName: string,
+      downloadLink: string,
+      deepLink: string,
+      t: TFunction,
+    ) => ReactElement
+    downloadLink: string
+  }
+  csvExport: CsvExport
+  cardStatistics: CardStatistics
+  freinetCSVImportEnabled: boolean
+  freinetDataTransferEnabled: boolean
+  cardCreation: boolean
+  selfServiceEnabled: boolean
+  storesManagement: StoresManagementConfig
+  userImportApiEnabled: boolean
+  showBirthdayExtensionHint: boolean
+  locales: string[]
+}
 
 export type PdfConfig = {
   title: string
@@ -43,9 +75,46 @@ export type PdfConfig = {
   }
 }
 
+type Coordinates = {
+  x: number
+  y: number
+}
+
+export type PdfQrCodeElementProps = {
+  size: number
+} & Coordinates
+
+export type PdfFormElementProps = {
+  infoToFormFields: (form: PDFForm, pageIdx: number, info: InfoParams) => PDFTextField[]
+  fontSize: number
+  width: number
+} & Coordinates
+
+export type PdfLinkAreaProps = {
+  size: number
+} & Coordinates
+
+export type PdfTextElementProps = {
+  bold?: boolean
+  maxWidth?: number | undefined
+  fontSize: number
+  textAlign?: 'left' | 'right' | 'center'
+  spacing?: number
+  angle?: number | undefined
+  color?: Color
+  infoToText: (info: InfoParams) => string
+} & Coordinates
+
 export type ActivityLogConfig = {
   columnNames: string[]
   renderLogEntry: (logEntry: ActivityLogEntryType) => ReactNode
+}
+
+export type InfoParams = {
+  info: CardInfo
+  card: Card
+  cardInfoHash: string
+  region?: Region
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -106,41 +175,6 @@ export type StoresManagementConfig =
   | {
       enabled: false
     }
-
-export type ProjectConfig = {
-  name: string
-  colorPalette: PaletteOptions
-  projectId: string
-  publisherText: string
-  applicationFeature?: ApplicationFeature
-  staticQrCodesEnabled: boolean
-  card: CardConfig
-  dataPrivacyHeadline: string
-  dataPrivacyContent: () => ReactElement
-  dataPrivacyAdditionalBaseContent?: () => ReactElement
-  pdf: PdfConfig
-  timezone: string
-  activityLogConfig?: ActivityLogConfig
-  activation?: {
-    activationText: (
-      applicationName: string,
-      downloadLink: string,
-      deepLink: string,
-      t: TFunction,
-    ) => ReactElement
-    downloadLink: string
-  }
-  csvExport: CsvExport
-  cardStatistics: CardStatistics
-  freinetCSVImportEnabled: boolean
-  freinetDataTransferEnabled: boolean
-  cardCreation: boolean
-  selfServiceEnabled: boolean
-  storesManagement: StoresManagementConfig
-  userImportApiEnabled: boolean
-  showBirthdayExtensionHint: boolean
-  locales: string[]
-}
 
 const getProjectConfig = (hostname: string): ProjectConfig => {
   switch (window.localStorage.getItem(LOCAL_STORAGE_PROJECT_KEY) ?? hostname) {
