@@ -1,39 +1,25 @@
 import {
-  Color,
   PDFDocument,
   PDFFont,
   PDFForm,
   PDFPage,
   PDFString,
-  PDFTextField,
   RotationTypes,
   grayscale,
 } from '@cantoo/pdf-lib'
 
 import { CardInfo, QrCode } from '../../generated/card_pb'
-import { Region } from '../../generated/graphql'
+import { type Region } from '../../generated/graphql'
+import {
+  PdfFormElementProps,
+  PdfLinkAreaProps,
+  PdfQrCodeElementProps,
+  PdfTextElementProps,
+} from '../../project-configs/getProjectConfig'
 import { drawQRCode } from '../../util/qrcode'
 import { Card } from '../card'
 
-type Coordinates = {
-  x: number
-  y: number
-}
-
 const mmToPt = (mm: number): number => (mm / 25.4) * 72
-
-export type InfoParams = {
-  info: CardInfo
-  card: Card
-  cardInfoHash: string
-  region?: Region
-}
-
-export type PdfFormElementProps = {
-  infoToFormFields: (form: PDFForm, pageIdx: number, info: InfoParams) => PDFTextField[]
-  fontSize: number
-  width: number
-} & Coordinates
 
 export const pdfFormElement = (
   formElementProps: PdfFormElementProps,
@@ -71,10 +57,6 @@ export const pdfFormElement = (
 
   // form.flatten()
 }
-
-export type PdfLinkAreaProps = {
-  size: number
-} & Coordinates
 
 export const pdfLinkArea = (
   linkAreaElementProps: PdfLinkAreaProps,
@@ -116,10 +98,6 @@ export type PdfQrCode = Extract<
   { case: 'staticVerificationCode' | 'dynamicActivationCode' }
 >
 
-export type PdfQrCodeElementProps = {
-  size: number
-} & Coordinates
-
 export const pdfQrCodeElement = (
   qrCodeElementProps: PdfQrCodeElementProps,
   qrCodeRenderProps: {
@@ -138,17 +116,6 @@ export const pdfQrCodeElement = (
 
   drawQRCode(qrCodeContent, qrCodeXPdf, qrCodeYPdf, qrCodeSizePdf, qrCodeRenderProps.page, false)
 }
-
-export type PdfTextElementProps = {
-  bold?: boolean
-  maxWidth?: number | undefined
-  fontSize: number
-  textAlign?: 'left' | 'right' | 'center'
-  spacing?: number
-  angle?: number | undefined
-  color?: Color
-  infoToText: (info: InfoParams) => string
-} & Coordinates
 
 export const pdfTextElement = (
   textElementProps: PdfTextElementProps,

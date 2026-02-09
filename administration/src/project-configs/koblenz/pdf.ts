@@ -1,6 +1,5 @@
-import type { InfoParams } from '../../cards/pdf/elements'
 import { formatDateDefaultGerman, plainDateFromDaysSinceEpoch } from '../../util/date'
-import type { PdfConfig } from '../getProjectConfig'
+import type { InfoParams, PdfConfig } from '../getProjectConfig'
 import pdfTemplate from './pdf-template.pdf'
 
 const renderPdfDetails = ({ info }: InfoParams): string => {
