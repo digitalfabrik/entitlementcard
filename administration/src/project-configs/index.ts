@@ -75,12 +75,17 @@ export type ProjectConfig = {
   locales: string[]
 }
 
+/**
+ * For referencing embedded fonts, use a string, for downloading fonts use an URL.
+ */
+export type PdfFontReference = string | URL | undefined | null
+
 export type PdfConfig = {
   title: string
   templatePath: string
   issuer: string
-  customFont?: string
-  customBoldFont?: string
+  customFont?: PdfFontReference
+  customBoldFont?: PdfFontReference
   elements?: {
     staticVerificationQrCodes?: PdfQrCodeElementProps[]
     dynamicActivationQrCodes: PdfQrCodeElementProps[]
