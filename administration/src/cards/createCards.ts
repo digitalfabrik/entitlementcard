@@ -4,7 +4,7 @@ import {
   CreateCardsMutation,
   CreateCardsMutationFn,
 } from '../generated/graphql'
-import type { ProjectConfig } from '../project-configs/getProjectConfig'
+import type { ProjectConfig } from '../project-configs'
 import { mapGraphqlRequestResult } from '../util/helper'
 import { base64ToUint8Array, uint8ArrayToBase64 } from './base64'
 import { Card, generateCardInfo } from './card'

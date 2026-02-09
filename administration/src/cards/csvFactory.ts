@@ -1,6 +1,6 @@
 import { stringify } from 'csv-stringify/browser/esm/sync'
 
-import { ProjectConfig } from '../project-configs/getProjectConfig'
+import { ProjectConfig } from '../project-configs'
 import { CSV_MIME_TYPE_UTF8 } from '../routes/applications/constants'
 import { Card } from './card'
 import { CreateCardsResult } from './createCards'

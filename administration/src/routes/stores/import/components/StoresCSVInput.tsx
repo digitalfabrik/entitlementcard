@@ -6,7 +6,7 @@ import React, { ChangeEventHandler, ReactElement, useCallback, useRef } from 're
 import { useTranslation } from 'react-i18next'
 
 import Blankslate from '../../../../components/Blankslate'
-import { StoresFieldConfig } from '../../../../project-configs/getProjectConfig'
+import { StoresFieldConfig } from '../../../../project-configs'
 import { getStoresWithCoordinates } from '../../../region/util/storeGeoDataService'
 import { DEFAULT_ERROR_TIMEOUT, FILE_SIZE_LIMIT_MEGA_BYTES, LONG_ERROR_TIMEOUT } from '../constants'
 import { AcceptingStoresEntry } from '../utils/acceptingStoresEntry'

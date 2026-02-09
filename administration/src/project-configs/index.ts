@@ -176,7 +176,7 @@ export type StoresManagementConfig =
       enabled: false
     }
 
-const getProjectConfig = (hostname: string): ProjectConfig => {
+export const getProjectConfig = (hostname: string): ProjectConfig => {
   switch (window.localStorage.getItem(LOCAL_STORAGE_PROJECT_KEY) ?? hostname) {
     case BAYERN_PRODUCTION_ID:
     case BAYERN_STAGING_ID:
@@ -192,5 +192,3 @@ const getProjectConfig = (hostname: string): ProjectConfig => {
       return showcaseConfig
   }
 }
-
-export default getProjectConfig

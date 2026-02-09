@@ -8,7 +8,6 @@ import {
   FIELD_POSTAL_CODE,
   FIELD_STREET,
 } from './constants'
-import type { StoresManagementConfig } from './getProjectConfig'
 import {
   hasMandatoryValue,
   hasValidCategoryId,
@@ -16,6 +15,7 @@ import {
   isCoordinate,
   noValidationRequired,
 } from './helper/storeFieldValidation'
+import type { StoresManagementConfig } from './index'
 
 export const storesManagementConfig: StoresManagementConfig = {
   enabled: true,

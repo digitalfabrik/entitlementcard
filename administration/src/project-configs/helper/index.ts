@@ -1,4 +1,4 @@
-import { ProjectConfig } from '../getProjectConfig'
+import { ProjectConfig } from '../index'
 
 export const getCsvHeaders = (projectConfig: ProjectConfig): string[] => [
   projectConfig.card.nameColumnName,

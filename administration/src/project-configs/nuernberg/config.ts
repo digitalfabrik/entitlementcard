@@ -6,7 +6,7 @@ import NuernbergPassIdExtension from '../../cards/extensions/NuernbergPassIdExte
 import RegionExtension from '../../cards/extensions/RegionExtension'
 import StartDayExtension from '../../cards/extensions/StartDayExtension'
 import { commonColors } from '../common/colors'
-import type { ProjectConfig } from '../getProjectConfig'
+import type { ProjectConfig } from '../index'
 import { storesManagementConfig } from '../storesManagementConfig'
 import ActivityLogEntry from './ActivityLogEntry'
 import { buildCsvLine } from './csvExport'
