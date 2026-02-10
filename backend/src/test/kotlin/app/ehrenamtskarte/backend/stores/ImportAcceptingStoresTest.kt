@@ -225,10 +225,12 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
     fun `should return a successful response if one store has been created and another one has been deleted`() {
         TestData.createAcceptingStore()
 
-        val mutation = createImportMutation(
-            stores = listOf(CSVAcceptanceStoreBuilder.build(name = "Test store 2")),
+        val response = postGraphQL(
+            createImportMutation(
+                stores = listOf(CSVAcceptanceStoreBuilder.build(name = "Test store 2")),
+            ),
+            projectStoreManager.getJwtToken(),
         )
-        val response = postGraphQL(mutation, projectStoreManager.getJwtToken())
 
         assertEquals(HttpStatus.OK, response.statusCode)
 
@@ -239,9 +241,7 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
         assertEquals(0, data.findValue("storesUntouched").asInt())
 
         transaction {
-            AcceptingStores.selectAll().single().let {
-                assertEquals("Test store 2", it[AcceptingStores.name])
-            }
+            assertEquals("Test store 2", AcceptingStores.selectAll().single().let { it[AcceptingStores.name] })
             assertEquals(1, Contacts.selectAll().count())
             assertEquals(1, Addresses.selectAll().count())
             assertEquals(1, PhysicalStores.selectAll().count())
