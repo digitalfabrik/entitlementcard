@@ -20,7 +20,6 @@ import app.ehrenamtskarte.backend.import.stores.replaceNa
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
-import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.MutationMapping
@@ -36,18 +35,38 @@ class AcceptingStoresMutationService {
         dfe: DataFetchingEnvironment,
     ): StoreImportReturnResultModel {
         val authContext = dfe.requireAuthContext()
+        requirePermission(authContext.admin.mayUpdateStoresInProject(authContext.projectId))
 
         return transaction {
-            if (!authContext.admin.mayUpdateStoresInProject(authContext.projectId)) {
-                throw ForbiddenException()
-            }
-
             // TODO 2012 provide region ars
             val regionEntity = RegionsRepository.findAllInProject(authContext.project).singleOrNull()
                 ?: throw RegionNotUniqueException()
 
             assertNoDuplicateStores(stores)
-            handleStoreImport(stores, authContext.admin.projectId, regionEntity.id, dryRun)
+
+            var numStoresCreated = 0
+            var numStoresUntouched = 0
+            val acceptingStoreIdsToRemove = AcceptingStoresRepository.getAllIdsInProject(authContext.admin.projectId)
+
+            stores.map { store -> mapCsvToStore(store) }.forEach {
+                val existingStoreId =
+                    AcceptingStoresRepository.getIdIfExists(it, authContext.admin.projectId, regionEntity.id)
+                if (existingStoreId == null) {
+                    if (!dryRun) {
+                        AcceptingStoresRepository.createStore(it, authContext.admin.projectId, regionEntity.id)
+                    }
+                    numStoresCreated++
+                } else {
+                    acceptingStoreIdsToRemove.remove(existingStoreId)
+                    numStoresUntouched++
+                }
+            }
+
+            if (!dryRun) {
+                AcceptingStoresRepository.deleteStores(acceptingStoreIdsToRemove)
+            }
+
+            StoreImportReturnResultModel(numStoresCreated, acceptingStoreIdsToRemove.size, numStoresUntouched)
         }
     }
 
@@ -130,36 +149,6 @@ class AcceptingStoresMutationService {
         if (duplicates.isNotEmpty()) {
             throw InvalidJsonException("Duplicate store(s) found: ${duplicates.joinToString()}")
         }
-    }
-
-    private fun handleStoreImport(
-        stores: List<AcceptingStoreInput>,
-        projectId: EntityID<Int>,
-        regionId: EntityID<Int>,
-        dryRun: Boolean,
-    ): StoreImportReturnResultModel {
-        var numStoresCreated = 0
-        var numStoresUntouched = 0
-
-        val acceptingStoreIdsToRemove = AcceptingStoresRepository.getAllIdsInProject(projectId)
-
-        stores.map { store -> mapCsvToStore(store) }.forEach {
-            val existingStoreId = AcceptingStoresRepository.getIdIfExists(it, projectId, regionId)
-            if (existingStoreId == null) {
-                if (!dryRun) {
-                    AcceptingStoresRepository.createStore(it, projectId, regionId)
-                }
-                numStoresCreated++
-            } else {
-                acceptingStoreIdsToRemove.remove(existingStoreId)
-                numStoresUntouched++
-            }
-        }
-        if (!dryRun) {
-            AcceptingStoresRepository.deleteStores(acceptingStoreIdsToRemove)
-        }
-
-        return StoreImportReturnResultModel(numStoresCreated, acceptingStoreIdsToRemove.size, numStoresUntouched)
     }
 }
 
