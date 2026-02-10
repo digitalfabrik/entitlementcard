@@ -140,7 +140,7 @@ class AcceptingStoresMutationService {
         requirePermission(authContext.admin.mayUpdateStoresInProject(authContext.projectId))
 
         return transaction {
-            AcceptingStoresRepository.deleteStores(storeIds).map { it.value }
+            AcceptingStoresRepository.deleteStores(storeIds, listOf(projectId)).map { it.value }
         }
     }
 
