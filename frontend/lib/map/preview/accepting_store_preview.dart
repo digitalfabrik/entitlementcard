@@ -3,6 +3,7 @@ import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/accepting_stor
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 import 'package:ehrenamtskarte/map/preview/accepting_store_preview_card.dart';
 import 'package:ehrenamtskarte/map/preview/models.dart';
+import 'package:ehrenamtskarte/sentry.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -40,6 +41,7 @@ class AcceptingStorePreview extends StatelessWidget {
 
         if (data == null || data.stores.length != 1) {
           debugPrint('Unexpected AcceptingStores response length: ${data?.stores.length}');
+          reportError('AcceptanceStore $physicalStoreId was deleted and cannot be shown on the map', null);
           final client = GraphQLProvider.of(context).value;
           client.cache.store.reset();
           debugPrint('Clear store cache, data is not in sync');
