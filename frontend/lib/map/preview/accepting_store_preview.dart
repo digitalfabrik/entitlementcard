@@ -40,6 +40,9 @@ class AcceptingStorePreview extends StatelessWidget {
 
         if (data == null || data.stores.length != 1) {
           debugPrint('Unexpected AcceptingStores response length: ${data?.stores.length}');
+          final client = GraphQLProvider.of(context).value;
+          client.cache.store.reset();
+          debugPrint('Clear store cache, data is not in sync');
           return AcceptingStorePreviewCard(isLoading: false, errorMessage: t.store.acceptingStoreNotAvailable);
         }
 
