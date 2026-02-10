@@ -31,10 +31,10 @@ PODS:
     - GoogleUtilities/Logger
     - GoogleUtilities/Privacy
   - GTMSessionFetcher/Core (3.5.0)
-  - MapLibre (6.14.0)
-  - maplibre_gl (0.0.1):
+  - MapLibre (6.19.1)
+  - maplibre_gl (0.25.0):
     - Flutter
-    - MapLibre (= 6.14.0)
+    - MapLibre (= 6.19.1)
   - MLImage (1.0.0-beta6)
   - MLKitBarcodeScanning (6.0.0):
     - MLKitCommon (~> 12.0)
@@ -149,8 +149,8 @@ SPEC CHECKSUMS:
   GoogleToolboxForMac: d1a2cbf009c453f4d6ded37c105e2f67a32206d8
   GoogleUtilities: 00c88b9a86066ef77f0da2fab05f65d7768ed8e1
   GTMSessionFetcher: 5aea5ba6bd522a239e236100971f10cb71b96ab6
-  MapLibre: 69e572367f4ef6287e18246cfafc39c80cdcabcd
-  maplibre_gl: 3c924e44725147b03dda33430ad216005b40555f
+  MapLibre: 7f24faba45439f80ccb0f83393c29fa32cb81952
+  maplibre_gl: a2114567cbd1065866614fbd34dfb75ab782aaa2
   MLImage: 0ad1c5f50edd027672d8b26b0fee78a8b4a0fc56
   MLKitBarcodeScanning: 0a3064da0a7f49ac24ceb3cb46a5bc67496facd2
   MLKitCommon: 07c2c33ae5640e5380beaaa6e4b9c249a205542d
