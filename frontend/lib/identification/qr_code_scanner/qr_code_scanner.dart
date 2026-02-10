@@ -62,7 +62,7 @@ class _QRViewState extends State<QrCodeScanner> {
       builder: (context, AsyncSnapshot<bool> snapshot) {
         final hasCameraIssues = snapshot.data;
         if (snapshot.hasError && snapshot.error != null) {
-          return ErrorMessage(snapshot.error.toString());
+          return ErrorMessage(message: snapshot.error.toString());
         } else if (hasCameraIssues == null) {
           return const Center();
         }

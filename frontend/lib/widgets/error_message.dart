@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 class ErrorMessage extends StatelessWidget {
-  final String _message;
+  final String message;
+  final bool canRefetch;
 
-  const ErrorMessage(this._message, {super.key});
+  const ErrorMessage({super.key, required this.message, this.canRefetch = true});
 
   @override
   Widget build(BuildContext context) {
@@ -11,8 +12,8 @@ class ErrorMessage extends StatelessWidget {
       children: [
         const Icon(Icons.warning, color: Colors.orange),
         const SizedBox(width: 10),
-        Expanded(child: Text(_message, style: Theme.of(context).textTheme.bodyMedium)),
-        const Icon(Icons.replay),
+        Expanded(child: Text(message, style: Theme.of(context).textTheme.bodyMedium)),
+        canRefetch ? const Icon(Icons.replay) : Container(),
       ],
     );
   }
