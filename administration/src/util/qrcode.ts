@@ -1,8 +1,6 @@
 // Most of the functions are from https://github.com/zxing-js/library
-import { PDFPage, rgb } from '@cantoo/pdf-lib'
 import {
   BitArray,
-  IllegalStateException,
   QRCodeByteMatrix,
   QRCodeDecoderErrorCorrectionLevel,
   QRCodeEncoder,
@@ -15,14 +13,12 @@ import {
 
 import { QrCode } from '../generated/card_pb'
 
-const DEFAULT_QUIET_ZONE_SIZE = 4 // pt
-
 // Level 8 with EC of M gives 152 bytes
 // Level 7 with EC of L gives 154 bytes
 // Level 8 seems appropriate right now.
-export const DEFAULT_VERSION: QRCodeVersion = QRCodeVersion.getVersionForNumber(8)
+const DEFAULT_VERSION: QRCodeVersion = QRCodeVersion.getVersionForNumber(8)
 // From EC L to M we have a double of EC capability: 7% -> 15%
-export const DEFAULT_ERROR_CORRECTION: QRCodeDecoderErrorCorrectionLevel =
+const DEFAULT_ERROR_CORRECTION: QRCodeDecoderErrorCorrectionLevel =
   QRCodeDecoderErrorCorrectionLevel.M
 
 // Adapted and modified from https://github.com/zxing-js/library/blob/5719e939f2fc513f71627c3f37c227e26efe06c1/src/core/qrcode/encoder/Encoder.ts#L189
@@ -54,7 +50,7 @@ const willFit = (
 }
 
 // The mask penalty calculation is complicated.  See Table 21 of JISX0510:2004 (p.45) for details.
-// Basically it applies four rules and summate all penalties.
+// Basically, it applies four rules and summates all penalties.
 // Adapted from https://github.com/zxing-js/library/blob/5719e939f2fc513f71627c3f37c227e26efe06c1/src/core/qrcode/encoder/Encoder.ts#L65
 const calculateMaskPenalty = (matrix: QRCodeByteMatrix): number =>
   QRCodeMaskUtil.applyMaskPenaltyRule1(matrix) +
@@ -175,79 +171,6 @@ export const encodeQRCode = (content: Uint8Array): QRCodeEncoderQRCode => {
   qrCode.setMatrix(matrix)
 
   return qrCode
-}
-
-// Adapted from https://github.com/zxing-js/library/blob/d1a270cb8ef3c4dba72966845991f5c876338aac/src/browser/BrowserQRCodeSvgWriter.ts#L91
-const createQRCode = (
-  content: Uint8Array,
-  renderRect: (x: number, y: number, size: number) => void,
-  renderBoundary: (x: number, y: number, width: number, height: number) => void,
-  size: number,
-) => {
-  const code = encodeQRCode(content)
-  const quietZone = DEFAULT_QUIET_ZONE_SIZE
-
-  const input = code.getMatrix()
-
-  const inputWidth = input.getWidth()
-  const inputHeight = input.getHeight()
-
-  if (inputWidth !== inputHeight) {
-    throw new IllegalStateException('QRCode is not quadratic')
-  }
-  const requestedSize = size - quietZone * 2
-
-  const multiple = requestedSize / inputWidth
-
-  const leftPadding = quietZone
-  const topPadding = quietZone
-
-  renderBoundary(0, 0, size, size)
-
-  for (let inputY = 0; inputY < inputHeight; inputY++) {
-    // Write the contents of this row of the barcode
-    for (let inputX = 0; inputX < inputWidth; inputX++) {
-      if (input.get(inputX, inputY) === 1) {
-        const outputX = leftPadding + inputX * multiple
-        const outputY = topPadding + inputY * multiple
-        renderRect(outputX, outputY, multiple)
-      }
-    }
-  }
-}
-
-export const drawQRCode = (
-  content: Uint8Array,
-  x: number,
-  y: number,
-  size: number,
-  pdfDocument: PDFPage,
-  border = true,
-): void => {
-  createQRCode(
-    content,
-    (rectX: number, rectY: number, rectSize: number) => {
-      pdfDocument.drawRectangle({
-        x: x + rectX,
-        y: y + (size - rectY),
-        width: rectSize,
-        height: -rectSize,
-      })
-    },
-    (rectX: number, rectY: number, rectWidth: number, rectHeight: number) => {
-      if (border) {
-        pdfDocument.drawRectangle({
-          x: x + rectX,
-          y: y + rectY,
-          width: rectWidth,
-          height: rectHeight,
-          borderWidth: 1,
-          color: rgb(1, 1, 1),
-        })
-      }
-    },
-    size,
-  )
 }
 
 export const convertProtobufToHexCode = (qrCode: QrCode): string => {

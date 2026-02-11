@@ -53,7 +53,7 @@ const fillContentAreas = async (
   }
 
   pdfConfig.elements?.dynamicActivationQrCodes.forEach(configOptions =>
-    pdfQrCodeElement(configOptions, { page, qrCode: dynamicCode }),
+    pdfQrCodeElement(page, dynamicCode, configOptions),
   )
 
   if (pdfConfig.elements?.deepLinkArea) {
@@ -77,7 +77,7 @@ const fillContentAreas = async (
       }
 
       pdfConfig.elements.staticVerificationQrCodes.forEach(configOptions =>
-        pdfQrCodeElement(configOptions, { page, qrCode: staticCode }),
+        pdfQrCodeElement(page, staticCode, configOptions),
       )
     } else {
       throw Error(
