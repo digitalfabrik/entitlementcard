@@ -49,7 +49,7 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
 
     @Test
     fun `should return an error when the auth token is missing`() {
-        val mutation = createMutation(stores = emptyList())
+        val mutation = createImportMutation(stores = emptyList())
         val response = postGraphQL(mutation)
 
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -61,7 +61,7 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
 
     @Test
     fun `should return an error when the user is not allowed to import stores`() {
-        val mutation = createMutation(stores = emptyList())
+        val mutation = createImportMutation(stores = emptyList())
         val response = postGraphQL(mutation, projectAdmin.getJwtToken())
 
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -73,7 +73,7 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
 
     @Test
     fun `should return an error response if no unique region can be found for a project`() {
-        val mutation = createMutation(
+        val mutation = createImportMutation(
             stores = listOf(CSVAcceptanceStoreBuilder.build()),
         )
         val response = postGraphQL(mutation, TestAdministrators.EAK_PROJECT_STORE_MANAGER.getJwtToken())
@@ -87,7 +87,7 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
 
     @Test
     fun `should return a successful response if the list of accepting stores is empty`() {
-        val mutation = createMutation(stores = emptyList())
+        val mutation = createImportMutation(stores = emptyList())
         val response = postGraphQL(mutation, projectStoreManager.getJwtToken())
 
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -101,7 +101,7 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
 
     @Test
     fun `should return a successful response if one accepting store with all fields has been created`() {
-        val mutation = createMutation(
+        val mutation = createImportMutation(
             stores = listOf(CSVAcceptanceStoreBuilder.build()),
         )
         val response = postGraphQL(mutation, projectStoreManager.getJwtToken())
@@ -153,7 +153,7 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
 
     @Test
     fun `should return a successful response if one accepting store with only mandatory fields has been created`() {
-        val mutation = createMutation(
+        val mutation = createImportMutation(
             stores = listOf(
                 CSVAcceptanceStoreBuilder.build(
                     telephone = "",
@@ -208,7 +208,7 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
 
     @Test
     fun `should return an error if two duplicate acceptance stores are submitted`() {
-        val mutation = createMutation(
+        val mutation = createImportMutation(
             stores = listOf(CSVAcceptanceStoreBuilder.build(), CSVAcceptanceStoreBuilder.build()),
         )
         val response = postGraphQL(mutation, projectStoreManager.getJwtToken())
@@ -225,10 +225,12 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
     fun `should return a successful response if one store has been created and another one has been deleted`() {
         TestData.createAcceptingStore()
 
-        val mutation = createMutation(
-            stores = listOf(CSVAcceptanceStoreBuilder.build(name = "Test store 2")),
+        val response = postGraphQL(
+            createImportMutation(
+                stores = listOf(CSVAcceptanceStoreBuilder.build(name = "Test store 2")),
+            ),
+            projectStoreManager.getJwtToken(),
         )
-        val response = postGraphQL(mutation, projectStoreManager.getJwtToken())
 
         assertEquals(HttpStatus.OK, response.statusCode)
 
@@ -239,9 +241,7 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
         assertEquals(0, data.findValue("storesUntouched").asInt())
 
         transaction {
-            AcceptingStores.selectAll().single().let {
-                assertEquals("Test store 2", it[AcceptingStores.name])
-            }
+            assertEquals("Test store 2", AcceptingStores.selectAll().single().let { it[AcceptingStores.name] })
             assertEquals(1, Contacts.selectAll().count())
             assertEquals(1, Addresses.selectAll().count())
             assertEquals(1, PhysicalStores.selectAll().count())
@@ -252,7 +252,7 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
     fun `should return a successful response if nothing has changed`() {
         TestData.createAcceptingStore()
 
-        val mutation = createMutation(
+        val mutation = createImportMutation(
             stores = listOf(CSVAcceptanceStoreBuilder.build()),
         )
         val response = postGraphQL(mutation, projectStoreManager.getJwtToken())
@@ -300,7 +300,7 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
     @ParameterizedTest
     @MethodSource("validationErrorTestCases")
     fun `should return validation error when the csv store input is not valid`(testCase: ValidationErrorTestCase) {
-        val mutation = createMutation(
+        val mutation = createImportMutation(
             stores = listOf(testCase.csvStore),
         )
         val response = postGraphQL(mutation, projectStoreManager.getJwtToken())
@@ -313,11 +313,14 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
         assertEquals(testCase.error, error.message)
     }
 
-    private fun createMutation(dryRun: Boolean = false, stores: List<AcceptingStoreInput>): ImportAcceptingStores {
-        val variables = ImportAcceptingStores.Variables(
-            dryRun = dryRun,
-            stores = stores,
+    private fun createImportMutation(
+        dryRun: Boolean = false,
+        stores: List<AcceptingStoreInput>,
+    ): ImportAcceptingStores =
+        ImportAcceptingStores(
+            ImportAcceptingStores.Variables(
+                dryRun = dryRun,
+                stores = stores,
+            ),
         )
-        return ImportAcceptingStores(variables)
-    }
 }

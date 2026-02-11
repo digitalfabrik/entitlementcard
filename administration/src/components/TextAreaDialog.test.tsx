@@ -19,7 +19,6 @@ describe('TextAreaDialog', () => {
     renderWithOptions(
       <TextAreaDialog
         title='Show note'
-        id='show-note-dialog'
         loading={false}
         maxChars={maxChars}
         defaultText={defaultText}

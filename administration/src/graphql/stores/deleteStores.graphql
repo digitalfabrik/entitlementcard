@@ -1,0 +1,3 @@
+mutation deleteStores($storeIds: [Int!]!) {
+  result: deleteAcceptingStores(storeIds: $storeIds)
+}

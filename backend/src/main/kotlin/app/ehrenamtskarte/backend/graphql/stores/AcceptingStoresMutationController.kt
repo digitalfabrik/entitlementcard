@@ -6,6 +6,7 @@ import app.ehrenamtskarte.backend.db.entities.mayUpdateStoresInProject
 import app.ehrenamtskarte.backend.db.repositories.AcceptingStoresRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.graphql.auth.requireAuthContext
+import app.ehrenamtskarte.backend.graphql.auth.requirePermission
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidJsonException
 import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotUniqueException
@@ -19,7 +20,6 @@ import app.ehrenamtskarte.backend.import.stores.replaceNa
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
-import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.MutationMapping
@@ -35,18 +35,41 @@ class AcceptingStoresMutationService {
         dfe: DataFetchingEnvironment,
     ): StoreImportReturnResultModel {
         val authContext = dfe.requireAuthContext()
+        requirePermission(authContext.admin.mayUpdateStoresInProject(authContext.projectId))
 
         return transaction {
-            if (!authContext.admin.mayUpdateStoresInProject(authContext.projectId)) {
-                throw ForbiddenException()
-            }
-
             // TODO 2012 provide region ars
             val regionEntity = RegionsRepository.findAllInProject(authContext.project).singleOrNull()
                 ?: throw RegionNotUniqueException()
 
             assertNoDuplicateStores(stores)
-            handleStoreImport(stores, authContext.admin.projectId, regionEntity.id, dryRun)
+
+            var numStoresCreated = 0
+            var numStoresUntouched = 0
+            val acceptingStoreIdsToRemove = AcceptingStoresRepository.getAllIdsInProject(authContext.admin.projectId)
+
+            stores.forEach { storeInput ->
+                val store = mapCsvToStore(storeInput)
+
+                val existingStoreId =
+                    AcceptingStoresRepository.getIdIfExists(store, authContext.admin.projectId, regionEntity.id)
+
+                if (existingStoreId == null) {
+                    if (!dryRun) {
+                        AcceptingStoresRepository.createStore(store, authContext.admin.projectId, regionEntity.id)
+                    }
+                    numStoresCreated++
+                } else {
+                    acceptingStoreIdsToRemove.remove(existingStoreId)
+                    numStoresUntouched++
+                }
+            }
+
+            if (!dryRun) {
+                AcceptingStoresRepository.deleteStores(acceptingStoreIdsToRemove)
+            }
+
+            StoreImportReturnResultModel(numStoresCreated, acceptingStoreIdsToRemove.size, numStoresUntouched)
         }
     }
 
@@ -105,44 +128,31 @@ class AcceptingStoresMutationService {
         return true
     }
 
+    @GraphQLDescription("Delete a list of accepting stores, return the IDs of all deleted stores.")
+    @MutationMapping
+    fun deleteAcceptingStores(
+        @Argument storeIds: List<Int>,
+        dfe: DataFetchingEnvironment,
+    ): List<Int> {
+        val authContext = dfe.requireAuthContext()
+        val projectId = authContext.projectId
+
+        requirePermission(authContext.admin.mayUpdateStoresInProject(authContext.projectId))
+
+        return transaction {
+            AcceptingStoresRepository.deleteStores(storeIds, listOf(projectId)).map { it.value }
+        }
+    }
+
     private fun assertNoDuplicateStores(stores: List<AcceptingStoreInput>) {
-        val duplicates = stores.groupBy { "${it.name} ${it.street} ${it.houseNumber} ${it.postalCode} ${it.location}" }
-            .filterValues { it.size > 1 }
-            .keys
+        val duplicates =
+            stores.groupBy { "${it.name} ${it.street} ${it.houseNumber} ${it.postalCode} ${it.location}" }
+                .filterValues { it.size > 1 }
+                .keys
 
         if (duplicates.isNotEmpty()) {
             throw InvalidJsonException("Duplicate store(s) found: ${duplicates.joinToString()}")
         }
-    }
-
-    private fun handleStoreImport(
-        stores: List<AcceptingStoreInput>,
-        projectId: EntityID<Int>,
-        regionId: EntityID<Int>,
-        dryRun: Boolean,
-    ): StoreImportReturnResultModel {
-        var numStoresCreated = 0
-        var numStoresUntouched = 0
-
-        val acceptingStoreIdsToRemove = AcceptingStoresRepository.getAllIdsInProject(projectId)
-
-        stores.map { store -> mapCsvToStore(store) }.forEach {
-            val existingStoreId = AcceptingStoresRepository.getIdIfExists(it, projectId, regionId)
-            if (existingStoreId == null) {
-                if (!dryRun) {
-                    AcceptingStoresRepository.createStore(it, projectId, regionId)
-                }
-                numStoresCreated++
-            } else {
-                acceptingStoreIdsToRemove.remove(existingStoreId)
-                numStoresUntouched++
-            }
-        }
-        if (!dryRun) {
-            AcceptingStoresRepository.deleteStores(acceptingStoreIdsToRemove)
-        }
-
-        return StoreImportReturnResultModel(numStoresCreated, acceptingStoreIdsToRemove.size, numStoresUntouched)
     }
 }
 

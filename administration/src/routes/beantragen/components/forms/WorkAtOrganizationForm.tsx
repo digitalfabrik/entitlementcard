@@ -32,7 +32,6 @@ const ActivityDivider = ({ onDelete }: { onDelete?: () => void }) => {
       />
       {onDelete === undefined ? null : (
         <ConfirmDialog
-          id='delete-activity-dialog'
           open={deleteDialogOpen}
           maxWidth='xs'
           onClose={() => setDeleteDialogOpen(false)}

@@ -51,7 +51,6 @@ const ManageStoreDialog = ({
       open={open}
       onClose={onClose}
       title={isEditMode ? t('storeEditDialogHeadline') : t('storeAddDialogHeadline')}
-      id={isEditMode ? 'edit-store-dialog' : 'add-store-dialog'}
       onConfirm={onConfirm}
       loading={loading}
       maxWidth='md'
