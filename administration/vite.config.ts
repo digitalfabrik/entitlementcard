@@ -7,7 +7,7 @@
 /* eslint-disable no-else-return */
 import react from '@vitejs/plugin-react'
 import {
-  type DeeplLinkingConfig,
+  type DeepLinkingConfig,
   buildConfigBayern,
   buildConfigKoblenz,
   buildConfigNuernberg,
@@ -95,7 +95,7 @@ async function currentCommitHash() {
   ).stdout
 }
 
-function buildFilesFromConfigs(projectLinkinConfigs: DeeplLinkingConfig[]): GenerateFile[] {
+function buildFilesFromConfigs(projectLinkinConfigs: DeepLinkingConfig[]): GenerateFile[] {
   return projectLinkinConfigs.flatMap(config => [
     {
       type: 'json',
