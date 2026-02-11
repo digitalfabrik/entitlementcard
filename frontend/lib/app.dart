@@ -1,4 +1,5 @@
 import 'package:ehrenamtskarte/activation/deeplink_activation.dart';
+import 'package:ehrenamtskarte/app_lifecycle_observer.dart';
 import 'package:ehrenamtskarte/build_config/build_config.dart';
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/configuration/definitions.dart';
@@ -100,30 +101,32 @@ class App extends StatelessWidget {
       }
     });
 
-    return Configuration(
-      mapStyleUrl: mapStyleUrl,
-      graphqlUrl: graphqlUrl,
-      projectId: projectId,
-      showDevSettings: kDebugMode,
-      child: ConfiguredGraphQlProvider(
-        child: MultiProvider(
-          providers: [
-            ChangeNotifierProvider<UserCodeModel>(create: (_) => UserCodeModel()..initialize()),
-            ChangeNotifierProvider<FavoritesModel>(create: (_) => FavoritesModel()..initialize()),
-          ],
-          child: MaterialApp.router(
-            theme: lightTheme,
-            darkTheme: darkTheme,
-            themeMode: ThemeMode.system,
-            debugShowCheckedModeBanner: false,
-            localizationsDelegates: [
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
+    return AppLifecycleObserver(
+      child: Configuration(
+        mapStyleUrl: mapStyleUrl,
+        graphqlUrl: graphqlUrl,
+        projectId: projectId,
+        showDevSettings: kDebugMode,
+        child: ConfiguredGraphQlProvider(
+          child: MultiProvider(
+            providers: [
+              ChangeNotifierProvider<UserCodeModel>(create: (_) => UserCodeModel()..initialize()),
+              ChangeNotifierProvider<FavoritesModel>(create: (_) => FavoritesModel()..initialize()),
             ],
-            supportedLocales: buildConfig.appLocales.map((locale) => Locale(locale)),
-            locale: TranslationProvider.of(context).flutterLocale,
-            routerConfig: router,
+            child: MaterialApp.router(
+              theme: lightTheme,
+              darkTheme: darkTheme,
+              themeMode: ThemeMode.system,
+              debugShowCheckedModeBanner: false,
+              localizationsDelegates: [
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: buildConfig.appLocales.map((locale) => Locale(locale)),
+              locale: TranslationProvider.of(context).flutterLocale,
+              routerConfig: router,
+            ),
           ),
         ),
       ),

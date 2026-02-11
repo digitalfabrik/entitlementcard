@@ -1,3 +1,4 @@
+import 'package:ehrenamtskarte/app_lifecycle_observer.dart';
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/graphql_gen/schema.graphql.dart';
 import 'package:ehrenamtskarte/store_widgets/accepting_store_summary.dart';
@@ -27,10 +28,17 @@ class SliverResultsLoaderState extends State<SliverResultsLoader> {
 
   final PagingController<int, Query$AcceptingStoresSearch$stores> _pagingController = PagingController(firstPageKey: 0);
 
+  Future<void> _onAppResumed() async {
+    final client = GraphQLProvider.of(context).value;
+    client.cache.store.reset();
+    _pagingController.refresh();
+  }
+
   @override
   void initState() {
     super.initState();
     _pagingController.addPageRequestListener(_fetchPage);
+    AppResumeNotifier().addListener(_onAppResumed);
   }
 
   @override
@@ -181,6 +189,7 @@ class SliverResultsLoaderState extends State<SliverResultsLoader> {
   @override
   void dispose() {
     _pagingController.dispose();
+    AppResumeNotifier().removeListener(_onAppResumed);
     super.dispose();
   }
 }
