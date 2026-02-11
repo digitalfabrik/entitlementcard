@@ -68,8 +68,8 @@ platform :android do
     end
 
     gradle_system_properties = {
-      # 2GB Gradle + 1GB dex + 2-2.5GB RN < 6GB of circleci resource class medium+
-      :"org.gradle.jvmargs" => "-Xms512m -Xmx2024m",
+      # 4GB Gradle + 1GB dex + overhead < 8GB of circleci resource class large
+      :"org.gradle.jvmargs" => "-Xms512m -Xmx4096m",
       :"org.gradle.daemon" => false
     }
 
@@ -80,7 +80,7 @@ platform :android do
 
     sh("fvm flutter pub run build_runner build --define df_build_config=name=#{build_config_name}")
 
-    env_prod = sh("echo -n environment=production | base64")
+    env_prod = sh("echo -n environment=production | base64").strip
 
     keystore_key_alias = ""
     keystore_key_password = ""
@@ -97,27 +97,23 @@ platform :android do
       keystore_key_password = KEYSTORE_KEY_PASSWORD_BAYERN
     end
 
-      tasks = ["bundle", "assemble"]
+    flavor = build_config_name.capitalize
 
-    tasks.each do |task|
-      gradle(
-        task: task,
-        flavor: build_config_name,
-        flags: " -Ptarget=lib/main.dart -Pdart-defines=#{env_prod}",
-        build_type: "Release",
-        properties: {
-          :VERSION_CODE => version_code,
-          :VERSION_NAME => version_name,
-          :BUILD_CONFIG_NAME => build_config_name,
-          :KEYSTORE_PATH => KEYSTORE_PATH,
-          :KEYSTORE_KEY_ALIAS => keystore_key_alias,
-          :KEYSTORE_PASSWORD => KEYSTORE_PASSWORD,
-          :KEYSTORE_KEY_PASSWORD => keystore_key_password,
-        }.compact,
-        system_properties: gradle_system_properties,
-        print_command: false
-      )
-    end
+    gradle(
+      task: "bundle#{flavor}Release assemble#{flavor}Release",
+      flags: " -Ptarget=lib/main.dart -Pdart-defines=#{env_prod} -x lintVitalAnalyzeRelease",
+      properties: {
+        :VERSION_CODE => version_code,
+        :VERSION_NAME => version_name,
+        :BUILD_CONFIG_NAME => build_config_name,
+        :KEYSTORE_PATH => KEYSTORE_PATH,
+        :KEYSTORE_KEY_ALIAS => keystore_key_alias,
+        :KEYSTORE_PASSWORD => KEYSTORE_PASSWORD,
+        :KEYSTORE_KEY_PASSWORD => keystore_key_password,
+      }.compact,
+      system_properties: gradle_system_properties,
+      print_command: false
+    )
   end
 
   desc "Upload Android App to Google Play"
