@@ -113,7 +113,7 @@ export const config: ProjectConfig = {
     title: 'Nürnberg-Pässe',
     templatePath: pdfTemplate,
     issuer: 'Stadt Nürnberg',
-    customFont: URL.parse(`${process.env.PUBLIC_URL}/fonts/inter/Inter-Regular.ttf`),
+    customFont: 'Helvetica', // URL.parse(`${process.env.PUBLIC_URL}/fonts/inter/Inter-Regular.ttf`),
     elements: {
       staticVerificationQrCodes: [
         { x: 53, y: 222, size: 47 },

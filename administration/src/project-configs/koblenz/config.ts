@@ -53,8 +53,8 @@ export const config: ProjectConfig = {
   pdf: {
     title: 'KoblenzPass',
     templatePath: pdfTemplate,
-    customFont: URL.parse(`${process.env.PUBLIC_URL}/fonts/texgyreheros-regular.ttf`),
-    customBoldFont: URL.parse(`${process.env.PUBLIC_URL}/fonts/texgyreheros-bold.ttf`),
+    customFont: 'ArialMT',
+    customBoldFont: 'Arial-BoldMT',
     issuer: 'Stadt Koblenz',
     elements: {
       staticVerificationQrCodes: [{ x: 152, y: 230, size: 34 }],
@@ -66,7 +66,7 @@ export const config: ProjectConfig = {
           maxWidth: 80,
           fontSize: 9,
           bold: true,
-          spacing: 10,
+          spacing: 13,
           infoToText: renderPdfDetails,
         },
       ],
