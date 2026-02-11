@@ -84,8 +84,8 @@ ThemeData get lightTheme {
       fillColor: WidgetStatePropertyAll(primaryColor),
     ),
     chipTheme: ChipThemeData(
-      backgroundColor: Colors.grey.shade50,
-      selectedColor: Colors.grey.shade300,
+      backgroundColor: Colors.white10,
+      selectedColor: Colors.grey.shade400,
       side: BorderSide(color: Colors.grey.shade200),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     ),

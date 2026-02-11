@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class FilterBarButton extends StatefulWidget {
-  static const double width = 80;
-  static const double height = 80;
+  static const double width = 74;
+  static const double height = 74;
 
   final CategoryAsset asset;
   final void Function(CategoryAsset, bool) onCategoryPress;
