@@ -26,73 +26,78 @@ const execFileAsync = promisify(execFile)
 
 type ViteMode = 'development' | 'production'
 
-export default defineConfig(async configEnv => {
-  const commitHash = await currentCommitHash()
+export default defineConfig(
+  async configEnv =>
+    ({
+      appType: 'spa',
+      plugins: [
+        react(),
+        tsconfigPaths(),
+        generateFile(
+          buildFilesFromConfigs([
+            buildConfigBayern.common.deepLinking,
+            buildConfigNuernberg.common.deepLinking,
+            buildConfigKoblenz.common.deepLinking,
+          ]),
+        ),
+      ],
+      build: {
+        outDir: 'build',
+        assetsInlineLimit: 10000,
+      },
+      define: {
+        VITE_BUILD_API_BASE_URL: await defineBuildConstant('VITE_BUILD_API_BASE_URL', () =>
+          apiBaseUrl(configEnv.mode as ViteMode),
+        ),
+        VITE_BUILD_VERSION_NAME: await defineBuildConstant('VITE_BUILD_VERSION_NAME', () =>
+          versionName(configEnv.mode as ViteMode),
+        ),
+        VITE_BUILD_COMMIT: await defineBuildConstant('VITE_BUILD_COMMIT', () =>
+          currentCommitHash(),
+        ),
+      },
+      preview: {
+        open: true,
+      },
+      server: {
+        port: 3000,
+      },
+    }) satisfies UserConfig,
+)
 
-  return {
-    appType: 'spa',
-    plugins: [
-      react(),
-      tsconfigPaths(),
-      generateFile(
-        buildFilesFromConfigs([
-          buildConfigBayern.common.deepLinking,
-          buildConfigNuernberg.common.deepLinking,
-          buildConfigKoblenz.common.deepLinking,
-        ]),
-      ),
-    ],
-    build: {
-      outDir: 'build',
-      assetsInlineLimit: 10000,
-    },
-    define: {
-      VITE_BUILD_API_BASE_URL: JSON.stringify(apiBaseUrl(configEnv.mode as ViteMode)),
-      VITE_BUILD_VERSION_NAME: JSON.stringify(versionName(configEnv.mode as ViteMode)),
-      VITE_BUILD_COMMIT: JSON.stringify(commitHash),
-    },
-    preview: {
-      open: true,
-    },
-    server: {
-      port: 3000,
-    },
-  } satisfies UserConfig
-})
+async function defineBuildConstant(
+  name: string,
+  fn: () => Promise<string | undefined> | string | undefined,
+): Promise<string> {
+  const value = JSON.stringify(await Promise.try(fn))
+  console.log(`vite.config.ts: ${name}=${value}`)
+
+  return value
+}
 
 function apiBaseUrl(mode: ViteMode): string | undefined {
-  if (mode === 'development') {
-    console.log('vite.config.ts: VITE_BUILD_API_BASE_URL="http://localhost:8000"')
-  } else {
-    console.log('vite.config.ts: VITE_BUILD_API_BASE_URL=undefined (use release constants)')
-    return undefined
-  }
+  return mode === 'development' ? 'http://localhost:8000' : undefined
 }
 
 function versionName(mode: ViteMode): string {
   if (mode === 'development') {
-    console.log('vite.config.ts: VITE_BUILD_VERSION_NAME="development"')
     return 'development'
   } else if (env.NEW_VERSION_NAME) {
-    console.log(
-      `vite.config.ts: VITE_BUILD_VERSION_NAME="${env.NEW_VERSION_NAME}" (from env variable NEW_VERSION_NAME)`,
-    )
+    console.log(`vite.config.ts: using 'NEW_VERSION_NAME' env var`)
     return env.NEW_VERSION_NAME
   } else {
-    console.log(
-      `vite.config.ts: VITE_BUILD_VERSION_NAME="${versionJson.versionName}" (from ../version.json)`,
-    )
+    console.log(`vite.config.ts: using 'version.json'`)
     return versionJson.versionName
   }
 }
 
-async function currentCommitHash() {
+async function currentCommitHash(): Promise<string> {
   return (
     await execFileAsync('git', ['log', '-n1', '--format=%h'], {
       cwd: join(__dirname, '..'),
       encoding: 'utf8',
     })
-  ).stdout
+  ).stdout.trim()
 }
 
 function buildFilesFromConfigs(projectLinkinConfigs: DeepLinkingConfig[]): GenerateFile[] {
