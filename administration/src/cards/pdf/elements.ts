@@ -16,10 +16,11 @@ import {
   PdfQrCodeElementProps,
   PdfTextElementProps,
 } from '../../project-configs'
-import { drawQRCode } from '../../util/qrcode'
+import { encodeQRCode } from '../../util/qrcode'
 import { Card } from '../card'
 
 const mmToPt = (mm: number): number => (mm / 25.4) * 72
+const DEFAULT_QUIET_ZONE_SIZE = 4 // pt
 
 export const pdfFormElement = (
   formElementProps: PdfFormElementProps,
@@ -99,22 +100,37 @@ export type PdfQrCode = Extract<
 >
 
 export const pdfQrCodeElement = (
+  page: PDFPage,
+  qrCode: PdfQrCode,
   qrCodeElementProps: PdfQrCodeElementProps,
-  qrCodeRenderProps: {
-    page: PDFPage
-    qrCode: PdfQrCode
-  },
 ): void => {
   const qrCodeSizePdf = mmToPt(qrCodeElementProps.size)
   const qrCodeXPdf = mmToPt(qrCodeElementProps.x)
-  const qrCodeYPdf =
-    qrCodeRenderProps.page.getSize().height - qrCodeSizePdf - mmToPt(qrCodeElementProps.y)
+  const qrCodeYPdf = page.getSize().height - qrCodeSizePdf - mmToPt(qrCodeElementProps.y)
+  const qrCodeMatrix = encodeQRCode(new QrCode({ qrCode }).toBinary()).getMatrix()
+  const inputWidth = qrCodeMatrix.getWidth()
+  const inputHeight = qrCodeMatrix.getHeight()
+  const requestedSize = qrCodeSizePdf - DEFAULT_QUIET_ZONE_SIZE * 2
+  const dotSize = requestedSize / inputWidth
+  const leftPadding = DEFAULT_QUIET_ZONE_SIZE
+  const topPadding = DEFAULT_QUIET_ZONE_SIZE
 
-  const qrCodeContent = new QrCode({
-    qrCode: qrCodeRenderProps.qrCode,
-  }).toBinary()
+  if (inputWidth !== inputHeight) {
+    throw new Error('QRCode is not quadratic')
+  }
 
-  drawQRCode(qrCodeContent, qrCodeXPdf, qrCodeYPdf, qrCodeSizePdf, qrCodeRenderProps.page, false)
+  for (let y = 0; y < inputHeight; y++) {
+    for (let x = 0; x < inputWidth; x++) {
+      if (qrCodeMatrix.get(x, y) === 1) {
+        page.drawRectangle({
+          x: qrCodeXPdf + leftPadding + x * dotSize,
+          y: qrCodeYPdf + (qrCodeSizePdf - (topPadding + y * dotSize)),
+          width: dotSize,
+          height: -dotSize,
+        })
+      }
+    }
+  }
 }
 
 export const pdfTextElement = (
