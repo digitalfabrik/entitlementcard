@@ -1,8 +1,6 @@
 // Most of the functions are from https://github.com/zxing-js/library
-import { PDFPage, rgb } from '@cantoo/pdf-lib'
 import {
   BitArray,
-  IllegalStateException,
   QRCodeEncoderQRCode as QRCode,
   QRCodeByteMatrix,
   QRCodeDecoderErrorCorrectionLevel,
@@ -16,8 +14,6 @@ import MaskUtil from '@zxing/library/cjs/core/qrcode/encoder/MaskUtil'
 import MatrixUtil from '@zxing/library/cjs/core/qrcode/encoder/MatrixUtil'
 
 import { QrCode } from '../generated/card_pb'
-
-const DEFAULT_QUIET_ZONE_SIZE = 4 // pt
 
 // Level 8 with EC of M gives 152 bytes
 // Level 7 with EC of L gives 154 bytes
@@ -180,77 +176,6 @@ export const encodeQRCode = (content: Uint8Array): QRCode => {
 }
 
 // Adapted from https://github.com/zxing-js/library/blob/d1a270cb8ef3c4dba72966845991f5c876338aac/src/browser/BrowserQRCodeSvgWriter.ts#L91
-const createQRCode = (
-  content: Uint8Array,
-  renderRect: (x: number, y: number, size: number) => void,
-  renderBoundary: (x: number, y: number, width: number, height: number) => void,
-  size: number,
-) => {
-  const code: QRCode = encodeQRCode(content)
-  const quietZone = DEFAULT_QUIET_ZONE_SIZE
-
-  const input = code.getMatrix()
-
-  const inputWidth = input.getWidth()
-  const inputHeight = input.getHeight()
-
-  if (inputWidth !== inputHeight) {
-    throw new IllegalStateException('QRCode is not quadratic')
-  }
-  const requestedSize = size - quietZone * 2
-
-  const multiple = requestedSize / inputWidth
-
-  const leftPadding = quietZone
-  const topPadding = quietZone
-
-  renderBoundary(0, 0, size, size)
-
-  for (let inputY = 0; inputY < inputHeight; inputY++) {
-    // Write the contents of this row of the barcode
-    for (let inputX = 0; inputX < inputWidth; inputX++) {
-      if (input.get(inputX, inputY) === 1) {
-        const outputX = leftPadding + inputX * multiple
-        const outputY = topPadding + inputY * multiple
-        renderRect(outputX, outputY, multiple)
-      }
-    }
-  }
-}
-
-export const drawQRCode = (
-  content: Uint8Array,
-  x: number,
-  y: number,
-  size: number,
-  pdfDocument: PDFPage,
-  border = true,
-): void => {
-  createQRCode(
-    content,
-    (rectX: number, rectY: number, rectSize: number) => {
-      pdfDocument.drawRectangle({
-        x: x + rectX,
-        y: y + (size - rectY),
-        width: rectSize,
-        height: -rectSize,
-      })
-    },
-    (rectX: number, rectY: number, rectWidth: number, rectHeight: number) => {
-      if (border) {
-        pdfDocument.drawRectangle({
-          x: x + rectX,
-          y: y + rectY,
-          width: rectWidth,
-          height: rectHeight,
-          borderWidth: 1,
-          color: rgb(1, 1, 1),
-        })
-      }
-    },
-    size,
-  )
-}
 
 export const convertProtobufToHexCode = (qrCode: QrCode): string => {
   const qrCodeMatrix = encodeQRCode(qrCode.toBinary()).getMatrix()

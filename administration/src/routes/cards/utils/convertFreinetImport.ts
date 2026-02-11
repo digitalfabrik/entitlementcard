@@ -2,7 +2,7 @@ import {
   BAVARIA_CARD_TYPE_GOLD,
   BAVARIA_CARD_TYPE_STANDARD,
 } from '../../../cards/extensions/BavariaCardTypeExtension'
-import { ProjectConfig } from '../../../project-configs/getProjectConfig'
+import { ProjectConfig } from '../../../project-configs'
 
 const FREINET_EXPIRATION_DATE_COLUMN_HEADER = 'eak_datum'
 const FREINET_FIRSTNAME_COLUMN_HEADER = 'vorname'
