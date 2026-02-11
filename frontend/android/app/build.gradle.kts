@@ -1,11 +1,10 @@
 import android.databinding.tool.ext.capitalizeUS
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
-import java.nio.file.Paths
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.nio.file.Paths
 
 plugins {
     id("com.android.application")
-    id("kotlin-android")
     id("dev.flutter.flutter-gradle-plugin")
     id("idea")
 }
@@ -17,11 +16,10 @@ idea {
     }
 }
 
-
 val buildConfigs = listOf(
     "bayern",
     "nuernberg",
-    "koblenz"
+    "koblenz",
 )
 
 kotlin {
@@ -48,7 +46,6 @@ android {
             versionName = project.property("VERSION_NAME") as String
         }
     }
-
 
     sourceSets {
         named("main") {
@@ -116,14 +113,14 @@ android {
             }
 
             signingConfig = signingConfigs.getByName(
-                if (project.hasProperty("KEYSTORE_PATH"))
+                if (project.hasProperty("KEYSTORE_PATH")) {
                     "release"
-                else if (localProperties.containsKey("signing.keyAlias"))
+                } else if (localProperties.containsKey("signing.keyAlias")) {
                     "localProps"
-                else
+                } else {
                     "debug"
+                },
             )
-
 
             // We need to configure proguard here because of some bug which occurred when adding flutter dependencies,
             // probably involving image-picker.
@@ -151,11 +148,11 @@ android {
                     // Then see if there are files located at com.android.gms (Cursive files are not present, only referenced)
                     variant.compileConfiguration.exclude(
                         group = "com.google.android.gms",
-                        module = "play-services-location"
+                        module = "play-services-location",
                     )
                     variant.runtimeConfiguration.exclude(
                         group = "com.google.android.gms",
-                        module = "play-services-location"
+                        module = "play-services-location",
                     )
                 }
             }
@@ -179,6 +176,7 @@ fun setupChecksForBuildConfig() {
         }
     }
     val suffixRegex = Regex("(Release|Debug|Profile|Test|Unit|Android)$")
+
     tailrec fun removeSuffixes(name: String): String {
         val match = suffixRegex.find(name) ?: return name
         return removeSuffixes(name.substring(0, name.length - match.value.length))
@@ -200,7 +198,7 @@ fun assertBuildRunnerWasRunCorrectly(buildConfigName: String) {
     }
     val generatedDartText = generatedDartFile.readText()
     if (!generatedDartText.contains("String buildConfigName = \"${buildConfigName}\";")) {
-        val msg = "The dart build runner was not run with the correct build config. Run `${buildRunnerCmd}`!"
+        val msg = "The dart build runner was not run with the correct build config. Run `$buildRunnerCmd`!"
         throw GradleException(msg)
     }
 }
