@@ -106,7 +106,7 @@ export const config: ProjectConfig = {
     title: 'Ehrenamtskarten',
     templatePath: pdfTemplate,
     issuer: 'Bayerische Staatsministerium für Arbeit und Soziales, Familie und Integration',
-    customFont: 'Inter-Regular',
+    customFont: URL.parse('./fonts/inter/Inter-Regular.ttf', window.location.origin),
     elements: {
       dynamicActivationQrCodes: [{ x: 140, y: 73, size: 51 }],
       text: [
