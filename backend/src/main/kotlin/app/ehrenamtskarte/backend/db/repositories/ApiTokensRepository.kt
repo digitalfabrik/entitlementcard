@@ -3,7 +3,8 @@ package app.ehrenamtskarte.backend.db.repositories
 import app.ehrenamtskarte.backend.db.entities.ApiTokenEntity
 import app.ehrenamtskarte.backend.db.entities.ApiTokenType
 import app.ehrenamtskarte.backend.db.entities.ApiTokens
-import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.v1.core.dao.id.EntityID
+import org.jetbrains.exposed.v1.core.eq
 import java.time.LocalDate
 
 object ApiTokensRepository {

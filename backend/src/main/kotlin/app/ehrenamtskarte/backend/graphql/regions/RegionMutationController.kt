@@ -10,7 +10,7 @@ import app.ehrenamtskarte.backend.graphql.exceptions.InvalidDataPolicySizeExcept
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.stereotype.Controller

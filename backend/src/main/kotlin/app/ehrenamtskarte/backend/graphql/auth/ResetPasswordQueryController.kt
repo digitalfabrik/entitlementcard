@@ -9,9 +9,11 @@ import app.ehrenamtskarte.backend.graphql.exceptions.PasswordResetKeyExpiredExce
 import app.ehrenamtskarte.backend.shared.crypto.PasswordCrypto
 import app.ehrenamtskarte.backend.shared.exceptions.ProjectNotFoundException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.not
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.core.and
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.core.isNotNull
+import org.jetbrains.exposed.v1.core.not
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.stereotype.Controller

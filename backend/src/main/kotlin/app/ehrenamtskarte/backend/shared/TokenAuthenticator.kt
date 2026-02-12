@@ -7,7 +7,7 @@ import app.ehrenamtskarte.backend.shared.crypto.PasswordCrypto
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import app.ehrenamtskarte.backend.shared.exceptions.UnauthorizedException
 import jakarta.servlet.http.HttpServletRequest
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import java.time.LocalDate
 
 // todo: this will be removed or refactored after #2452

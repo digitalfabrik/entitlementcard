@@ -7,8 +7,10 @@ import app.ehrenamtskarte.backend.db.repositories.ApplicationRepository
 import app.ehrenamtskarte.backend.graphql.BaseDataLoader
 import app.ehrenamtskarte.backend.graphql.application.types.ApplicationAdminGql
 import app.ehrenamtskarte.backend.graphql.application.types.ApplicationVerificationView
-import org.jetbrains.exposed.sql.SortOrder
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.core.SortOrder
+import org.jetbrains.exposed.v1.core.inList
+import org.jetbrains.exposed.v1.jdbc.select
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.springframework.stereotype.Component
 
 @Component

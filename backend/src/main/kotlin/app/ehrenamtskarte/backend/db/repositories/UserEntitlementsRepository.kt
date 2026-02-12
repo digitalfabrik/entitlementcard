@@ -2,8 +2,9 @@ package app.ehrenamtskarte.backend.db.repositories
 
 import app.ehrenamtskarte.backend.db.entities.UserEntitlements
 import app.ehrenamtskarte.backend.db.entities.UserEntitlementsEntity
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.update
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.jdbc.insert
+import org.jetbrains.exposed.v1.jdbc.update
 import java.time.Instant
 import java.time.LocalDate
 

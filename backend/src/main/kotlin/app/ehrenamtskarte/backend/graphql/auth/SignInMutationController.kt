@@ -7,7 +7,7 @@ import app.ehrenamtskarte.backend.graphql.auth.types.SignInPayload
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidCredentialsException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.slf4j.LoggerFactory
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.ContextValue

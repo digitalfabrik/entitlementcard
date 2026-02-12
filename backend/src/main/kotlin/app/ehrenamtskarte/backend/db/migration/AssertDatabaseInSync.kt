@@ -2,10 +2,10 @@ package app.ehrenamtskarte.backend.db.migration
 
 import app.ehrenamtskarte.backend.db.entities.Migrations
 import app.ehrenamtskarte.backend.db.migration.migrations.MigrationsRegistry
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.transactions.TransactionManager
-import org.jetbrains.exposed.sql.vendors.currentDialect
+import org.jetbrains.exposed.v1.core.Table
+import org.jetbrains.exposed.v1.jdbc.SchemaUtils
+import org.jetbrains.exposed.v1.jdbc.transactions.TransactionManager
+import org.jetbrains.exposed.v1.jdbc.vendors.currentDialectMetadata
 
 class DatabaseOutOfSyncException(suggestedMigrationStatements: List<String>? = null, comment: String? = null) :
     Exception(
@@ -38,7 +38,7 @@ fun assertDatabaseIsInSync() {
     var outOfSyncComment: String? = null
 
     // Check if all tables in the DB appear in `allTables` and vice versa. We ignore spatial_ref_sys.
-    val tablesInDb = currentDialect
+    val tablesInDb = currentDialectMetadata
         .allTablesNames().map { it.substringAfter(".") }
         .filter { it != "spatial_ref_sys" }
         .toSet()
@@ -72,7 +72,7 @@ private fun dropExcessiveColumns(vararg tables: Table): List<String> {
     val transaction = TransactionManager.current()
 
     val statements = mutableListOf<String>()
-    val existingColumnsByTable = currentDialect.tableColumns(*tables)
+    val existingColumnsByTable = currentDialectMetadata.tableColumns(*tables)
     for (table in tables) {
         val columns = existingColumnsByTable[table] ?: continue
         for (column in columns) {

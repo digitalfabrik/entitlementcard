@@ -2,13 +2,13 @@ package app.ehrenamtskarte.backend.db.entities
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import org.jetbrains.exposed.dao.IntEntity
-import org.jetbrains.exposed.dao.IntEntityClass
-import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.sql.javatime.CurrentTimestamp
-import org.jetbrains.exposed.sql.javatime.timestamp
-import org.jetbrains.exposed.sql.javatime.timestampWithTimeZone
+import org.jetbrains.exposed.v1.core.dao.id.EntityID
+import org.jetbrains.exposed.v1.core.dao.id.IntIdTable
+import org.jetbrains.exposed.v1.dao.IntEntity
+import org.jetbrains.exposed.v1.dao.IntEntityClass
+import org.jetbrains.exposed.v1.javatime.CurrentTimestamp
+import org.jetbrains.exposed.v1.javatime.timestamp
+import org.jetbrains.exposed.v1.javatime.timestampWithTimeZone
 import java.time.OffsetDateTime
 
 const val NOTE_MAX_CHARS = 1000
@@ -65,7 +65,11 @@ class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
 /** Check if this state transition makes sense */
 private fun ApplicationEntity.Status.canTransitionTo(newValue: ApplicationEntity.Status): Boolean =
     when (this) {
-        newValue -> true // Always allow setting the same state
+        newValue -> {
+            true
+        }
+
+        // Always allow setting the same state
         ApplicationEntity.Status.Pending -> {
             when (newValue) {
                 ApplicationEntity.Status.Approved -> true
@@ -74,11 +78,15 @@ private fun ApplicationEntity.Status.canTransitionTo(newValue: ApplicationEntity
                 else -> false
             }
         }
+
         ApplicationEntity.Status.Approved -> {
             when (newValue) {
                 ApplicationEntity.Status.ApprovedCardCreated -> true
                 else -> false
             }
         }
-        else -> false
+
+        else -> {
+            false
+        }
     }

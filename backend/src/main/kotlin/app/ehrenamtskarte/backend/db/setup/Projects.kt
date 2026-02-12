@@ -2,7 +2,7 @@ package app.ehrenamtskarte.backend.db.setup
 
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.db.entities.ProjectEntity
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
 fun insertOrUpdateProjects(config: BackendConfiguration) {
     transaction {

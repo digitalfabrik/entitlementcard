@@ -3,7 +3,7 @@ package app.ehrenamtskarte.backend.graphql.cards.utils
 import app.ehrenamtskarte.backend.db.entities.UserEntitlementsEntity
 import app.ehrenamtskarte.backend.db.repositories.CardRepository
 import com.eatthepath.otp.TimeBasedOneTimePasswordGenerator
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import java.time.Clock
 import java.time.Duration
 import java.time.Instant

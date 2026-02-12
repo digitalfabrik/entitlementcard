@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.jetbrains.com)",
+      "WebFetch(domain:blog.jetbrains.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(backend/gradlew -p backend compileKotlin:*)",
+      "Bash(backend/gradlew -p backend compileTestKotlin:*)",
+      "Bash(backend/gradlew:*)"
+    ]
+  }
+}

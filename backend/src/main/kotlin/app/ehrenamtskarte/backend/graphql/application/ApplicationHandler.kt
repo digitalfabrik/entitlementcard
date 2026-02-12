@@ -23,7 +23,7 @@ import app.ehrenamtskarte.backend.shared.mail.Mailer
 import graphql.execution.DataFetcherResult
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.Part
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import java.io.File
 
 class ApplicationHandler(

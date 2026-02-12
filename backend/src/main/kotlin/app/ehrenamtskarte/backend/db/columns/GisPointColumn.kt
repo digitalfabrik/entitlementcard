@@ -2,9 +2,9 @@ package app.ehrenamtskarte.backend.db.columns
 
 import net.postgis.jdbc.PGgeometry
 import net.postgis.jdbc.geometry.Point
-import org.jetbrains.exposed.sql.Column
-import org.jetbrains.exposed.sql.ColumnType
-import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.v1.core.Column
+import org.jetbrains.exposed.v1.core.ColumnType
+import org.jetbrains.exposed.v1.core.Table
 
 /**
  * @see https://en.wikipedia.org/wiki/World_Geodetic_System#Identifiers

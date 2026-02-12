@@ -9,7 +9,8 @@ import app.ehrenamtskarte.backend.graphql.regions.types.Region
 import app.ehrenamtskarte.backend.graphql.shared.EAK_BAYERN_PROJECT
 import app.ehrenamtskarte.backend.shared.exceptions.ProjectNotFoundException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.stereotype.Controller

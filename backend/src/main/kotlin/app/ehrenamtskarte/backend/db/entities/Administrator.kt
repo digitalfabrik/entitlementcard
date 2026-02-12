@@ -3,16 +3,21 @@ package app.ehrenamtskarte.backend.db.entities
 import app.ehrenamtskarte.backend.graphql.auth.types.Role
 import app.ehrenamtskarte.backend.graphql.shared.EAK_BAYERN_PROJECT
 import app.ehrenamtskarte.backend.graphql.shared.KOBLENZ_PASS_PROJECT
-import org.jetbrains.exposed.dao.IntEntity
-import org.jetbrains.exposed.dao.IntEntityClass
-import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.sql.Op
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.javatime.timestamp
-import org.jetbrains.exposed.sql.lowerCase
-import org.jetbrains.exposed.sql.or
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.core.Op
+import org.jetbrains.exposed.v1.core.and
+import org.jetbrains.exposed.v1.core.dao.id.EntityID
+import org.jetbrains.exposed.v1.core.dao.id.IntIdTable
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.core.inList
+import org.jetbrains.exposed.v1.core.isNotNull
+import org.jetbrains.exposed.v1.core.isNull
+import org.jetbrains.exposed.v1.core.lowerCase
+import org.jetbrains.exposed.v1.core.neq
+import org.jetbrains.exposed.v1.core.or
+import org.jetbrains.exposed.v1.dao.IntEntity
+import org.jetbrains.exposed.v1.dao.IntEntityClass
+import org.jetbrains.exposed.v1.javatime.timestamp
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
 object Administrators : IntIdTable() {
     val email = varchar("email", 254)

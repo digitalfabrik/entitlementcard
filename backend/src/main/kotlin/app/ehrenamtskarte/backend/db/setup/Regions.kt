@@ -10,7 +10,7 @@ import app.ehrenamtskarte.backend.graphql.shared.EAK_BAYERN_PROJECT
 import app.ehrenamtskarte.backend.graphql.shared.FREINET_DEMO_REGION_NAME
 import app.ehrenamtskarte.backend.graphql.shared.KOBLENZ_PASS_PROJECT
 import app.ehrenamtskarte.backend.graphql.shared.NUERNBERG_PASS_PROJECT
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
 fun insertOrUpdateRegions(agencies: List<FreinetApiAgency>, config: BackendConfiguration) {
     val projects = ProjectEntity.all()

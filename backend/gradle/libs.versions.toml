@@ -17,7 +17,7 @@ spring-dependencymanagement = { id = "io.spring.dependency-management", version 
 [versions]
 
 graphql = "8.8.1"
-jetbrains-exposed = "0.61.0"
+jetbrains-exposed = "1.0.0"
 junixsocket = "2.10.1"
 kotlin = "2.3.0"
 kotlinx-coroutines = "1.10.2"

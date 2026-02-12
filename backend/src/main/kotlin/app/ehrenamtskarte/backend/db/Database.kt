@@ -11,12 +11,12 @@ import app.ehrenamtskarte.backend.db.setup.insertOrUpdateProjects
 import app.ehrenamtskarte.backend.db.setup.insertOrUpdateRegions
 import app.ehrenamtskarte.backend.graphql.auth.types.Role
 import app.ehrenamtskarte.backend.graphql.freinet.util.FreinetAgenciesLoader
-import org.jetbrains.exposed.sql.Database.Companion.connect
-import org.jetbrains.exposed.sql.DatabaseConfig
-import org.jetbrains.exposed.sql.StdOutSqlLogger
-import org.jetbrains.exposed.sql.statements.StatementType
-import org.jetbrains.exposed.sql.transactions.TransactionManager
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.core.DatabaseConfig
+import org.jetbrains.exposed.v1.core.StdOutSqlLogger
+import org.jetbrains.exposed.v1.core.statements.StatementType
+import org.jetbrains.exposed.v1.jdbc.Database.Companion.connect
+import org.jetbrains.exposed.v1.jdbc.transactions.TransactionManager
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
@@ -53,7 +53,7 @@ object Database {
         }
     }
 
-    fun setupWithInitialDataAndMigrationChecks(config: BackendConfiguration): org.jetbrains.exposed.sql.Database =
+    fun setupWithInitialDataAndMigrationChecks(config: BackendConfiguration): org.jetbrains.exposed.v1.jdbc.Database =
         setupWithoutMigrationCheck(config).apply {
             val agencies = FreinetAgenciesLoader().loadAgenciesFromXml(config.projects)
             transaction {
@@ -68,7 +68,7 @@ object Database {
     fun setupWithoutMigrationCheck(
         config: BackendConfiguration,
         log: Boolean = true,
-    ): org.jetbrains.exposed.sql.Database =
+    ): org.jetbrains.exposed.v1.jdbc.Database =
         connect(
             config.postgres.url,
             driver = "org.postgresql.Driver",

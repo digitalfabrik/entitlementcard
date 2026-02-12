@@ -1,8 +1,8 @@
 package app.ehrenamtskarte.backend.db.migration
 
-import org.jetbrains.exposed.sql.Transaction
+import org.jetbrains.exposed.v1.jdbc.JdbcTransaction
 
-typealias Statement = (Transaction.() -> Unit?)
+typealias Statement = (JdbcTransaction.() -> Unit?)
 
 abstract class Migration {
     val name: String

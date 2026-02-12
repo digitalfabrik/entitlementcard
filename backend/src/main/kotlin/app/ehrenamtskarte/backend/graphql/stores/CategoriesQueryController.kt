@@ -3,7 +3,7 @@ package app.ehrenamtskarte.backend.graphql.stores
 import app.ehrenamtskarte.backend.db.repositories.CategoriesRepository
 import app.ehrenamtskarte.backend.graphql.stores.types.Category
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.stereotype.Controller
 

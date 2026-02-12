@@ -5,7 +5,10 @@ import app.ehrenamtskarte.backend.db.entities.PhysicalStoreEntity
 import app.ehrenamtskarte.backend.db.entities.PhysicalStores
 import app.ehrenamtskarte.backend.db.entities.Projects
 import app.ehrenamtskarte.backend.shared.database.sortByKeys
-import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.v1.core.and
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.core.inList
+import org.jetbrains.exposed.v1.jdbc.select
 
 object PhysicalStoresRepository {
     fun findByIdsInProject(project: String, ids: List<Int>): List<PhysicalStoreEntity?> {
