@@ -3,7 +3,6 @@ import { DataGrid } from '@mui/x-data-grid'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { isDevelopmentEnvironment } from '../../../util/helper'
 import { AcceptingStoresData } from '../../applications/types/types'
 import TableMenu from './TableMenu'
 
@@ -42,12 +41,6 @@ const StoresListTable = ({
           ...customToolBarStyles,
         }}
         initialState={{
-          columns: {
-            columnVisibilityModel: {
-              // TODO #2692 Remove this after implementation
-              id: isDevelopmentEnvironment(),
-            },
-          },
           sorting: {
             sortModel: [{ field: 'name', sort: 'asc' }],
           },
