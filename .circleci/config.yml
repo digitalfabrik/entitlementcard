@@ -241,13 +241,13 @@ commands:
 jobs:
     build_administration:
         docker:
-            - image: cimg/node:20.18.0
+            - image: cimg/node:24.13
         resource_class: medium
         steps:
             - prepare_workspace
             - install_node_modules
             - run:
-                command: npm run build --version_name=${NEW_VERSION_NAME}
+                command: npm run build
                 name: Build
             - persist_to_workspace:
                 paths:
@@ -386,7 +386,7 @@ jobs:
         working_directory: ~/project/frontend
     bump_version:
         docker:
-            - image: cimg/node:20.18.0
+            - image: cimg/node:24.13
         parameters:
             prepare_delivery:
                 default: false
@@ -424,7 +424,7 @@ jobs:
             - notify
     check_administration:
         docker:
-            - image: cimg/node:20.18.0
+            - image: cimg/node:24.13
         resource_class: small
         steps:
             - prepare_workspace
@@ -495,17 +495,13 @@ jobs:
         working_directory: ~/project/backend
     check_frontend:
         docker:
-            - image: cimg/node:20.18.0
+            - image: cimg/node:24.13
         resource_class: small
         steps:
             - prepare_workspace
             - check_circleci_config
             - install_app_toolbelt
             - install_flutter
-            - run:
-                command: npm run lint
-                name: Lint build config
-                working_directory: build-configs
             - run:
                 command: fvm dart format -l 120 -o none --set-exit-if-changed .
                 name: Check formatting
@@ -589,7 +585,7 @@ jobs:
         working_directory: ~/project/frontend/ios
     deliver_server:
         docker:
-            - image: cimg/node:20.18.0
+            - image: cimg/node:24.13
         parameters:
             production:
                 description: Whether builds are delivered to production or beta.
@@ -645,7 +641,7 @@ jobs:
             - notify
     notify_release:
         docker:
-            - image: cimg/node:20.18.0
+            - image: cimg/node:24.13
         parameters:
             platform:
                 default: all
@@ -805,7 +801,7 @@ jobs:
         working_directory: ~/project/frontend/android
     promote_github_release:
         docker:
-            - image: cimg/node:20.18.0
+            - image: cimg/node:24.13
         parameters:
             platform:
                 default: all
@@ -851,7 +847,7 @@ jobs:
         working_directory: ~/project/frontend/ios
     promote_server:
         docker:
-            - image: cimg/node:20.18.0
+            - image: cimg/node:24.13
         resource_class: small
         steps:
             - prepare_workspace

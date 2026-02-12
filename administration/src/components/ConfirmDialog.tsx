@@ -2,12 +2,12 @@ import { CheckCircleOutline, Close } from '@mui/icons-material'
 import {
   Breakpoint,
   Button,
+  ButtonPropsColorOverrides,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
 } from '@mui/material'
-import { ButtonPropsColorOverrides } from '@mui/material/Button/Button'
 import { OverridableStringUnion } from '@mui/types'
 import React, { ReactElement, ReactNode, useId } from 'react'
 import { useTranslation } from 'react-i18next'

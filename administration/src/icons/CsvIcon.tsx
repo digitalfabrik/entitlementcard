@@ -1,10 +1,10 @@
-import { SvgIcon, SvgIconProps } from '@mui/material'
+import { Icon, IconProps } from '@mui/material'
 import React, { ReactElement } from 'react'
 
-import CsvImage from '../assets/icons/csv.svg'
+import csvImage from '../assets/icons/csv.svg'
 
-export const CsvIcon = (p: SvgIconProps): ReactElement => (
-  <SvgIcon {...p}>
-    <CsvImage />
-  </SvgIcon>
+export const CsvIcon = (p: IconProps): ReactElement => (
+  <Icon {...p}>
+    <img src={csvImage} alt='CSV file icon' />
+  </Icon>
 )
