@@ -8,8 +8,9 @@ import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
 class AcceptingStorePreviewError extends StatelessWidget {
   final void Function()? refetch;
+  final String? errorMessage;
 
-  const AcceptingStorePreviewError({super.key, this.refetch});
+  const AcceptingStorePreviewError({super.key, this.refetch, this.errorMessage});
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +19,8 @@ class AcceptingStorePreviewError extends StatelessWidget {
       onTap: refetch,
       child: Container(
         height: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: ErrorMessage(t.store.loadingDataFailed),
+        padding: const EdgeInsets.all(12),
+        child: ErrorMessage(message: errorMessage ?? t.store.loadingDataFailed, canRefetch: refetch != null),
       ),
     );
   }
@@ -29,8 +30,15 @@ class AcceptingStorePreviewCard extends StatelessWidget {
   final bool isLoading;
   final void Function()? refetch;
   final AcceptingStoreModel? acceptingStore;
+  final String? errorMessage;
 
-  const AcceptingStorePreviewCard({super.key, required this.isLoading, this.acceptingStore, this.refetch});
+  const AcceptingStorePreviewCard({
+    super.key,
+    required this.isLoading,
+    this.acceptingStore,
+    this.refetch,
+    this.errorMessage,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +55,7 @@ class AcceptingStorePreviewCard extends StatelessWidget {
           child: isLoading
               ? Container(padding: const EdgeInsets.symmetric(horizontal: 40), child: const LinearProgressIndicator())
               : currentAcceptingStore == null
-              ? AcceptingStorePreviewError(refetch: refetch)
+              ? AcceptingStorePreviewError(refetch: refetch, errorMessage: errorMessage)
               : AcceptingStoreSummary(
                   store: currentAcceptingStore,
                   showLocation: false,

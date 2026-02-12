@@ -41,7 +41,7 @@ class _CustomLicensePageState extends State<CustomLicensePage> {
         final licenses = snapshot.data;
         final error = snapshot.error;
         if (snapshot.hasError && error != null) {
-          return ErrorMessage(error.toString());
+          return ErrorMessage(message: error.toString());
         } else if (snapshot.hasData && licenses != null) {
           final licensesPerPackage = licenses.fold<List<CustomLicenseEntry>>([], (value, entry) {
             for (final packageName in entry.packages) {
