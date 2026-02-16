@@ -4,7 +4,7 @@
 
 expediagroup-graphql = { id = "com.expediagroup.graphql", version.ref = "graphql" }
 gitlab-arturbosch-detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.8" }
-gmazzo-buildconfig = { id = "com.github.gmazzo.buildconfig", version = "5.7.1"}
+gmazzo-buildconfig = { id = "com.github.gmazzo.buildconfig", version = "5.7.1" }
 google-protobuf = { id = "com.google.protobuf", version = "0.9.6" }
 jetbrains-kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
@@ -70,9 +70,8 @@ postgis-jdbc = { module = "net.postgis:postgis-jdbc", version = "2025.1.1" }
 postgresql-postgresql = { module = "org.postgresql:postgresql", version = "42.7.9" }
 projectreactor-reactor-test = { module = "io.projectreactor:reactor-test", version = "3.8.2" }
 projectreactor-reactor-kotlinextensions = { module = "io.projectreactor.kotlin:reactor-kotlin-extensions", version = "1.3.0" }
-sentry-springbootstarter = { module = "io.sentry:sentry-spring-boot-starter-jakarta", version = "8.31.0" }
 simplejavamail = { module = "org.simplejavamail:simple-java-mail", version = "8.12.6" }
-springdoc-openapi-starter = {module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version="2.8.15"}
+springdoc-openapi-starter = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version = "2.8.15" }
 springframework-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools" }
 springframework-boot-configurationprocessor = { module = "org.springframework.boot:spring-boot-configuration-processor" }
 springframework-boot-starter-mail = { module = "org.springframework.boot:spring-boot-starter-mail", version.ref = "spring" }

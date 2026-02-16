@@ -108,7 +108,6 @@ dependencies {
     implementation(libs.piwik.matomo.java.tracker)
     implementation(libs.postgis.jdbc)
     implementation(libs.projectreactor.reactor.kotlinextensions)
-    implementation(libs.sentry.springbootstarter)
     implementation(libs.simplejavamail)
     implementation(libs.springdoc.openapi.starter)
     implementation(libs.springframework.boot.starter.mail)
