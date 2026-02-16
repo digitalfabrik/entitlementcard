@@ -2,7 +2,7 @@ package app.ehrenamtskarte.backend.graphql
 
 import graphql.schema.DataFetchingEnvironment
 import kotlinx.coroutines.reactor.mono
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.springframework.context.event.ContextRefreshedEvent
 import org.springframework.context.event.EventListener
 import org.springframework.graphql.execution.BatchLoaderRegistry

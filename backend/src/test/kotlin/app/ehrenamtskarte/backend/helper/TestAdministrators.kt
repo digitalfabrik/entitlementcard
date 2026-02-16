@@ -7,8 +7,8 @@ import app.ehrenamtskarte.backend.graphql.auth.JwtService
 import app.ehrenamtskarte.backend.graphql.auth.types.Administrator
 import app.ehrenamtskarte.backend.graphql.auth.types.Role
 import app.ehrenamtskarte.backend.shared.crypto.PasswordCrypto
-import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.upsert
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.upsert
 
 enum class TestAdministrators(
     val id: Int,

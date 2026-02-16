@@ -9,24 +9,25 @@ import app.ehrenamtskarte.backend.db.entities.Regions
 import app.ehrenamtskarte.backend.db.entities.UserEntitlements
 import app.ehrenamtskarte.backend.graphql.cards.types.CardStatisticsResultModel
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidCodeTypeException
-import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.sql.Coalesce
-import org.jetbrains.exposed.sql.JoinType
-import org.jetbrains.exposed.sql.Op
-import org.jetbrains.exposed.sql.QueryAlias
-import org.jetbrains.exposed.sql.SortOrder
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.greaterEq
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.isNotNull
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.isNull
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.less
-import org.jetbrains.exposed.sql.alias
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.count
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.intLiteral
-import org.jetbrains.exposed.sql.update
+import org.jetbrains.exposed.v1.core.Coalesce
+import org.jetbrains.exposed.v1.core.JoinType
+import org.jetbrains.exposed.v1.core.Op
+import org.jetbrains.exposed.v1.core.QueryAlias
+import org.jetbrains.exposed.v1.core.SortOrder
+import org.jetbrains.exposed.v1.core.alias
+import org.jetbrains.exposed.v1.core.and
+import org.jetbrains.exposed.v1.core.count
+import org.jetbrains.exposed.v1.core.dao.id.EntityID
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.core.greaterEq
+import org.jetbrains.exposed.v1.core.inList
+import org.jetbrains.exposed.v1.core.intLiteral
+import org.jetbrains.exposed.v1.core.isNotNull
+import org.jetbrains.exposed.v1.core.isNull
+import org.jetbrains.exposed.v1.core.less
+import org.jetbrains.exposed.v1.jdbc.deleteWhere
+import org.jetbrains.exposed.v1.jdbc.select
+import org.jetbrains.exposed.v1.jdbc.update
 import java.time.Instant
 
 object CardRepository {
@@ -135,9 +136,11 @@ object CardRepository {
     }
 
     fun revokeByEntitlementId(entitlementId: Int): Int =
-        Cards.update({
-            Cards.entitlementId eq entitlementId and (Cards.revoked eq false)
-        }) {
+        Cards.update(
+            {
+                Cards.entitlementId eq entitlementId and (Cards.revoked eq false)
+            },
+        ) {
             it[revoked] = true
         }
 }
