@@ -39,7 +39,6 @@ import com.eatthepath.otp.TimeBasedOneTimePasswordGenerator
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.google.protobuf.ByteString
-import com.google.protobuf.InvalidProtocolBufferException
 import extensionStartDayOrNull
 import graphql.schema.DataFetchingEnvironment
 import jakarta.servlet.http.HttpServletRequest
@@ -248,14 +247,12 @@ class CardMutationController(
             )
             .build()
 
-    private fun parseEncodedCardInfo(encodedCardInfo: String): Card.CardInfo {
-        val cardInfoBytes = Base64.decode(encodedCardInfo)
+    private fun parseEncodedCardInfo(encodedCardInfo: String): Card.CardInfo =
         try {
-            return Card.CardInfo.parseFrom(cardInfoBytes)
-        } catch (_: InvalidProtocolBufferException) {
+            Card.CardInfo.parseFrom(Base64.decode(encodedCardInfo))
+        } catch (_: Throwable) {
             throw InvalidInputException("Failed to parse encodedCardInfo")
         }
-    }
 
     @GraphQLDescription("Creates a new digital entitlementcard and returns it")
     @MutationMapping
