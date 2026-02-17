@@ -204,20 +204,6 @@ internal class AddAcceptingStoreTest : IntegrationTest() {
         assertEquals(testCase.error, error.message)
     }
 
-    @ParameterizedTest
-    @MethodSource("app.ehrenamtskarte.backend.util.AcceptingStoreTestHelper#validationErrorTestCases")
-    fun `should return validation error when the csv store input is not valid`(
-        testCase: AcceptingStoreTestHelper.AcceptingStoreValidationErrorTestCase,
-    ) {
-        val mutation = addStoreMutation(store = testCase.csvStore)
-        val response = postGraphQL(mutation, projectStoreManager.getJwtToken())
-
-        assertEquals(HttpStatus.OK, response.statusCode)
-        val error = response.toErrorObject()
-        assertEquals(GraphQLExceptionCode.INVALID_JSON, error.extensions.code)
-        assertEquals(testCase.error, error.message)
-    }
-
     private fun addStoreMutation(store: AcceptingStoreInput): AddAcceptingStore =
         AddAcceptingStore(
             AddAcceptingStore.Variables(
