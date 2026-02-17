@@ -89,7 +89,6 @@ internal class EditAcceptingStoreTest : IntegrationTest() {
     @Test
     fun `should return no error if optional fields are removed`() {
         val store = TestData.createAcceptingStore()
-
         val response = postGraphQL(
             editStoreMutation(
                 store = CSVAcceptanceStoreBuilder.build(
@@ -105,8 +104,7 @@ internal class EditAcceptingStoreTest : IntegrationTest() {
         )
 
         assertEquals(HttpStatus.OK, response.statusCode)
-        val data = response.json()
-        assertEquals(true, data.findValue("result").asBoolean())
+        assertEquals(true, response.json().findValue("result").asBoolean())
 
         transaction {
             val contact = ContactEntity.all().single()

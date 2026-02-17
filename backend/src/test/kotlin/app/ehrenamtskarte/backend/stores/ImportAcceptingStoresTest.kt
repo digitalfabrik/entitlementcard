@@ -20,6 +20,7 @@ import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestData
 import app.ehrenamtskarte.backend.helper.json
 import app.ehrenamtskarte.backend.helper.toErrorObject
+import app.ehrenamtskarte.backend.util.AcceptingStoreTestHelper
 import org.jetbrains.exposed.v1.jdbc.deleteAll
 import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
@@ -273,33 +274,11 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
         }
     }
 
-    data class ValidationErrorTestCase(val csvStore: AcceptingStoreInput, val error: String)
-
-    companion object {
-        @JvmStatic
-        fun validationErrorTestCases(): List<ValidationErrorTestCase> {
-            val blankValues = listOf("", " ")
-            val builders: Map<String, (String) -> AcceptingStoreInput> = mapOf(
-                "name" to { value -> CSVAcceptanceStoreBuilder.build(name = value) },
-                "location" to { value -> CSVAcceptanceStoreBuilder.build(location = value) },
-                "street" to { value -> CSVAcceptanceStoreBuilder.build(street = value) },
-                "houseNumber" to { value -> CSVAcceptanceStoreBuilder.build(houseNumber = value) },
-                "postalCode" to { value -> CSVAcceptanceStoreBuilder.build(postalCode = value) },
-            )
-            return builders.flatMap { (fieldName, builder) ->
-                blankValues.map { value ->
-                    ValidationErrorTestCase(
-                        csvStore = builder(value),
-                        error = "Empty string passed for required property: $fieldName",
-                    )
-                }
-            }
-        }
-    }
-
     @ParameterizedTest
-    @MethodSource("validationErrorTestCases")
-    fun `should return validation error when the csv store input is not valid`(testCase: ValidationErrorTestCase) {
+    @MethodSource("app.ehrenamtskarte.backend.util.AcceptingStoreTestHelper#validationErrorTestCases")
+    fun `should return validation error when the csv store input is not valid`(
+        testCase: AcceptingStoreTestHelper.AcceptingStoreValidationErrorTestCase,
+    ) {
         val mutation = createImportMutation(
             stores = listOf(testCase.csvStore),
         )
