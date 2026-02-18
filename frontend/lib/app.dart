@@ -101,18 +101,19 @@ class App extends StatelessWidget {
       }
     });
 
-    return AppLifecycleObserver(
-      child: Configuration(
-        mapStyleUrl: mapStyleUrl,
-        graphqlUrl: graphqlUrl,
-        projectId: projectId,
-        showDevSettings: kDebugMode,
-        child: ConfiguredGraphQlProvider(
-          child: MultiProvider(
-            providers: [
-              ChangeNotifierProvider<UserCodeModel>(create: (_) => UserCodeModel()..initialize()),
-              ChangeNotifierProvider<FavoritesModel>(create: (_) => FavoritesModel()..initialize()),
-            ],
+    return Configuration(
+      mapStyleUrl: mapStyleUrl,
+      graphqlUrl: graphqlUrl,
+      projectId: projectId,
+      showDevSettings: kDebugMode,
+      child: ConfiguredGraphQlProvider(
+        child: MultiProvider(
+          providers: [
+            ChangeNotifierProvider<UserCodeModel>(create: (_) => UserCodeModel()..initialize()),
+            ChangeNotifierProvider<FavoritesModel>(create: (_) => FavoritesModel()..initialize()),
+            ChangeNotifierProvider<AppResumeNotifier>(create: (_) => AppResumeNotifier()),
+          ],
+          child: AppLifecycleObserver(
             child: MaterialApp.router(
               theme: lightTheme,
               darkTheme: darkTheme,
