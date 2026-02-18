@@ -559,7 +559,7 @@
     "descriptionPlaceholder": "Beschreibung einfügen",
     "selectCategory": "Kategorie auswählen",
     "errorRequiredField": "Dies ist ein Pflichtfeld.",
-    "errorDescriptionMaxChars": "Die Beschreibung darf maximal {{max}} enthalten.",
+    "errorDescriptionMaxChars": "Die Beschreibung darf maximal {{max}} Zeichen enthalten.",
     "errorNameInvalidMaxMinChars": "Der Name muss mindestens {{min}} und darf maximal {{max}} Zeichen enthalten.",
     "errorStreetInvalidMaxMinChars": "Die Straße muss mindestens {{min}} und darf maximal {{max}} Zeichen enthalten.",
     "errorHouseNumberInvalidMaxMinChars": "Die Hausnummer muss mindestens {{min}} und darf maximal {{max}} Zeichen enthalten.",

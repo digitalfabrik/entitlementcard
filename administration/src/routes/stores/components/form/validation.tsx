@@ -19,9 +19,10 @@ const validationConstants = {
 }
 
 const PHONE_REGEX: RegExp = /^\+?\d+(?:[ \-./]?\d+)*$/
-const HOUSE_NUMBER_SPECIAL_CHARS_REGEX = XRegExp("^[\\p{Letter}\\p{Number}\\.,+'\\-/() ]+$")
-const HOUSE_NUMBER_CONTAINS_NUMBER_REGEX = XRegExp('\\p{Number}')
-const ADDRESS_REGEX = XRegExp("^[\\p{Letter}\\.,'\\-/() ]+$")
+const HOUSE_NUMBER_SPECIAL_CHARS_REGEX = XRegExp(String.raw`^[\p{Letter}\p{Number}\.,+'\-/() ]+$`)
+const HOUSE_NUMBER_CONTAINS_NUMBER_REGEX = XRegExp(String.raw`\p{Number}`)
+const CITY_REGEX = XRegExp(String.raw`^[\p{Letter}\.,'/() -]+$`)
+const STREET_REGEX = XRegExp(String.raw`^[\p{Letter}\p{Number}\.,'/() -]+$`)
 
 export type FormValidation = {
   readonly invalid: boolean
@@ -79,7 +80,7 @@ export const streetValidation = (street: string | undefined): FormValidation => 
     return lengthValidation
   }
 
-  if (!ADDRESS_REGEX.test(street!)) {
+  if (!STREET_REGEX.test(street!)) {
     return specialCharacterError('storeForm:errorStreetValidationSpecialCharacters')
   }
   return validResult
@@ -151,7 +152,7 @@ export const cityValidation = (city: string | undefined): FormValidation => {
     return lengthValidation
   }
 
-  if (!ADDRESS_REGEX.test(city!)) {
+  if (!CITY_REGEX.test(city!)) {
     return specialCharacterError('storeForm:errorCityValidationSpecialCharacters')
   }
   return validResult

@@ -96,16 +96,16 @@ describe('Store Form Validation', () => {
       expect(result.message).not.toBeNull()
     })
 
-    it('should return special character error when street contains numbers', () => {
-      const result = streetValidation('Hauptstraße 123')
-      expect(result.invalid).toBe(true)
-      expect(result.message).not.toBeNull()
-    })
-
     it('should return special character error when street contains invalid characters', () => {
       const result = streetValidation('Straße@Hotel')
       expect(result.invalid).toBe(true)
       expect(result.message).not.toBeNull()
+    })
+
+    it('should return allow numbers in street name', () => {
+      const result = streetValidation('Straße des 20.Juli')
+      expect(result.invalid).toBe(false)
+      expect(result.message).toBeNull()
     })
 
     it('should return valid for valid street name', () => {
