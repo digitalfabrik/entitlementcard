@@ -20,9 +20,10 @@ import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestData
 import app.ehrenamtskarte.backend.helper.json
 import app.ehrenamtskarte.backend.helper.toErrorObject
-import org.jetbrains.exposed.sql.deleteAll
-import org.jetbrains.exposed.sql.selectAll
-import org.jetbrains.exposed.sql.transactions.transaction
+import app.ehrenamtskarte.backend.util.AcceptingStoreTestHelper
+import org.jetbrains.exposed.v1.jdbc.deleteAll
+import org.jetbrains.exposed.v1.jdbc.selectAll
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -49,7 +50,7 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
 
     @Test
     fun `should return an error when the auth token is missing`() {
-        val mutation = createMutation(stores = emptyList())
+        val mutation = createImportMutation(stores = emptyList())
         val response = postGraphQL(mutation)
 
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -61,7 +62,7 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
 
     @Test
     fun `should return an error when the user is not allowed to import stores`() {
-        val mutation = createMutation(stores = emptyList())
+        val mutation = createImportMutation(stores = emptyList())
         val response = postGraphQL(mutation, projectAdmin.getJwtToken())
 
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -73,7 +74,7 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
 
     @Test
     fun `should return an error response if no unique region can be found for a project`() {
-        val mutation = createMutation(
+        val mutation = createImportMutation(
             stores = listOf(CSVAcceptanceStoreBuilder.build()),
         )
         val response = postGraphQL(mutation, TestAdministrators.EAK_PROJECT_STORE_MANAGER.getJwtToken())
@@ -87,7 +88,7 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
 
     @Test
     fun `should return a successful response if the list of accepting stores is empty`() {
-        val mutation = createMutation(stores = emptyList())
+        val mutation = createImportMutation(stores = emptyList())
         val response = postGraphQL(mutation, projectStoreManager.getJwtToken())
 
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -101,7 +102,7 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
 
     @Test
     fun `should return a successful response if one accepting store with all fields has been created`() {
-        val mutation = createMutation(
+        val mutation = createImportMutation(
             stores = listOf(CSVAcceptanceStoreBuilder.build()),
         )
         val response = postGraphQL(mutation, projectStoreManager.getJwtToken())
@@ -153,7 +154,7 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
 
     @Test
     fun `should return a successful response if one accepting store with only mandatory fields has been created`() {
-        val mutation = createMutation(
+        val mutation = createImportMutation(
             stores = listOf(
                 CSVAcceptanceStoreBuilder.build(
                     telephone = "",
@@ -208,7 +209,7 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
 
     @Test
     fun `should return an error if two duplicate acceptance stores are submitted`() {
-        val mutation = createMutation(
+        val mutation = createImportMutation(
             stores = listOf(CSVAcceptanceStoreBuilder.build(), CSVAcceptanceStoreBuilder.build()),
         )
         val response = postGraphQL(mutation, projectStoreManager.getJwtToken())
@@ -225,10 +226,12 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
     fun `should return a successful response if one store has been created and another one has been deleted`() {
         TestData.createAcceptingStore()
 
-        val mutation = createMutation(
-            stores = listOf(CSVAcceptanceStoreBuilder.build(name = "Test store 2")),
+        val response = postGraphQL(
+            createImportMutation(
+                stores = listOf(CSVAcceptanceStoreBuilder.build(name = "Test store 2")),
+            ),
+            projectStoreManager.getJwtToken(),
         )
-        val response = postGraphQL(mutation, projectStoreManager.getJwtToken())
 
         assertEquals(HttpStatus.OK, response.statusCode)
 
@@ -239,9 +242,7 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
         assertEquals(0, data.findValue("storesUntouched").asInt())
 
         transaction {
-            AcceptingStores.selectAll().single().let {
-                assertEquals("Test store 2", it[AcceptingStores.name])
-            }
+            assertEquals("Test store 2", AcceptingStores.selectAll().single().let { it[AcceptingStores.name] })
             assertEquals(1, Contacts.selectAll().count())
             assertEquals(1, Addresses.selectAll().count())
             assertEquals(1, PhysicalStores.selectAll().count())
@@ -252,7 +253,7 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
     fun `should return a successful response if nothing has changed`() {
         TestData.createAcceptingStore()
 
-        val mutation = createMutation(
+        val mutation = createImportMutation(
             stores = listOf(CSVAcceptanceStoreBuilder.build()),
         )
         val response = postGraphQL(mutation, projectStoreManager.getJwtToken())
@@ -273,34 +274,12 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
         }
     }
 
-    data class ValidationErrorTestCase(val csvStore: AcceptingStoreInput, val error: String)
-
-    companion object {
-        @JvmStatic
-        fun validationErrorTestCases(): List<ValidationErrorTestCase> {
-            val blankValues = listOf("", " ")
-            val builders: Map<String, (String) -> AcceptingStoreInput> = mapOf(
-                "name" to { value -> CSVAcceptanceStoreBuilder.build(name = value) },
-                "location" to { value -> CSVAcceptanceStoreBuilder.build(location = value) },
-                "street" to { value -> CSVAcceptanceStoreBuilder.build(street = value) },
-                "houseNumber" to { value -> CSVAcceptanceStoreBuilder.build(houseNumber = value) },
-                "postalCode" to { value -> CSVAcceptanceStoreBuilder.build(postalCode = value) },
-            )
-            return builders.flatMap { (fieldName, builder) ->
-                blankValues.map { value ->
-                    ValidationErrorTestCase(
-                        csvStore = builder(value),
-                        error = "Empty string passed for required property: $fieldName",
-                    )
-                }
-            }
-        }
-    }
-
     @ParameterizedTest
-    @MethodSource("validationErrorTestCases")
-    fun `should return validation error when the csv store input is not valid`(testCase: ValidationErrorTestCase) {
-        val mutation = createMutation(
+    @MethodSource("app.ehrenamtskarte.backend.util.AcceptingStoreTestHelper#validationErrorTestCases")
+    fun `should return validation error when the csv store input is not valid`(
+        testCase: AcceptingStoreTestHelper.AcceptingStoreValidationErrorTestCase,
+    ) {
+        val mutation = createImportMutation(
             stores = listOf(testCase.csvStore),
         )
         val response = postGraphQL(mutation, projectStoreManager.getJwtToken())
@@ -313,11 +292,14 @@ internal class ImportAcceptingStoresTest : IntegrationTest() {
         assertEquals(testCase.error, error.message)
     }
 
-    private fun createMutation(dryRun: Boolean = false, stores: List<AcceptingStoreInput>): ImportAcceptingStores {
-        val variables = ImportAcceptingStores.Variables(
-            dryRun = dryRun,
-            stores = stores,
+    private fun createImportMutation(
+        dryRun: Boolean = false,
+        stores: List<AcceptingStoreInput>,
+    ): ImportAcceptingStores =
+        ImportAcceptingStores(
+            ImportAcceptingStores.Variables(
+                dryRun = dryRun,
+                stores = stores,
+            ),
         )
-        return ImportAcceptingStores(variables)
-    }
 }

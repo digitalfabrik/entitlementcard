@@ -45,7 +45,7 @@ import graphql.schema.DataFetchingEnvironment
 import io.ktor.util.decodeBase64Bytes
 import io.ktor.util.encodeBase64
 import jakarta.servlet.http.HttpServletRequest
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.graphql.data.method.annotation.Argument
@@ -332,7 +332,7 @@ class CardMutationController(
         val rawActivationSecret = Base64.getDecoder().decode(activationSecretBase64)
 
         // Avoid race conditions when activating a card.
-        val activationResult = transaction(TRANSACTION_REPEATABLE_READ) t@{
+        val activationResult = transaction(transactionIsolation = TRANSACTION_REPEATABLE_READ) t@{
             this.maxAttempts = 1
 
             val card = CardRepository.findByHash(project, cardHash)

@@ -26,7 +26,8 @@ import app.ehrenamtskarte.backend.db.entities.mayViewUsersInProject
 import app.ehrenamtskarte.backend.db.entities.mayViewUsersInRegion
 import app.ehrenamtskarte.backend.graphql.auth.types.Role
 import app.ehrenamtskarte.backend.helper.TestAdministrators
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.junit.jupiter.api.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue

@@ -70,11 +70,8 @@ class _CustomAnimatedSwitcher extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
       duration: Duration(milliseconds: 200),
-      layoutBuilder: (currentChild, previousChildren) => Stack(
-        alignment: Alignment.center,
-        fit: StackFit.passthrough,
-        children: [...previousChildren, if (currentChild != null) currentChild],
-      ),
+      layoutBuilder: (currentChild, previousChildren) =>
+          Stack(alignment: Alignment.center, fit: StackFit.passthrough, children: [...previousChildren, ?currentChild]),
       child: child,
     );
   }

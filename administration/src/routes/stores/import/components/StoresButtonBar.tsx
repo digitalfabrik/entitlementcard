@@ -61,7 +61,6 @@ const StoresButtonBar = ({
       <ConfirmDialog
         open={importDialogIsOpen}
         title={t('importStores')}
-        id='import-stores-dialog'
         onClose={() => setImportDialogIsOpen(false)}
         onConfirm={confirmImportDialog}
       >

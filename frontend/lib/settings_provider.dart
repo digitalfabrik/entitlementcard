@@ -31,7 +31,7 @@ class SettingsProviderState extends State<SettingsProvider> {
       builder: (context, snapshot) {
         final error = snapshot.error;
         if (error != null) {
-          return ErrorMessage(error.toString());
+          return ErrorMessage(message: error.toString());
         }
         if (snapshot.connectionState != ConnectionState.done) {
           return Container();
