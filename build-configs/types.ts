@@ -9,7 +9,7 @@ export type FeatureFlagsType = {
   favorites: boolean
 }
 
-export type DeeplLinkingConfig = {
+export type DeepLinkingConfig = {
   android: {
     path: string
     applicationId: string
@@ -114,7 +114,7 @@ export type CommonBuildConfigType = {
   disclaimerText: string
   maxCardAmount: number
   activationPath: string
-  deepLinking: DeeplLinkingConfig
+  deepLinking: DeepLinkingConfig
 }
 
 export type AndroidBuildConfigType = CommonBuildConfigType & {

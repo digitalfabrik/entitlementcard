@@ -1,0 +1,10 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "moduleResolution": "nodenext",
+    "outDir": "dist",
+    "module": "NodeNext",
+    "declaration": true
+  },
+  "include": ["**/*.ts"]
+}

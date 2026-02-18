@@ -1,5 +1,5 @@
 docker:
-  - image: cimg/node:20.18.0
+  - image: cimg/node:24.13
 resource_class: small
 working_directory: ~/project/frontend
 steps:
@@ -7,10 +7,6 @@ steps:
   - check_circleci_config
   - install_app_toolbelt
   - install_flutter
-  - run:
-      name: Lint build config
-      working_directory: "build-configs"
-      command: npm run lint
   - run:
       name: Check formatting
       command: fvm dart format -l 120 -o none --set-exit-if-changed .

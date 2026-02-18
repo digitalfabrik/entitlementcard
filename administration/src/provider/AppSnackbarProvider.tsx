@@ -1,7 +1,7 @@
 import CloseIcon from '@mui/icons-material/Close'
 import { IconButton, styled } from '@mui/material'
-import { MaterialDesignContent, SnackbarKey, SnackbarProvider, closeSnackbar } from 'notistack'
-import React, { ReactElement, ReactNode, useCallback } from 'react'
+import { MaterialDesignContent, SnackbarProvider, useSnackbar } from 'notistack'
+import React, { ReactElement, ReactNode } from 'react'
 
 const StyledMaterialDesignSnackbar = styled(MaterialDesignContent)(({ theme }) => ({
   '&.notistack-MuiContent-success': {
@@ -26,37 +26,36 @@ const StyledMaterialDesignSnackbar = styled(MaterialDesignContent)(({ theme }) =
   },
 }))
 
-export const AppSnackbarProvider = ({ children }: { children: ReactNode }): ReactElement => {
-  const action = useCallback(
-    (snackbarKey: SnackbarKey) => (
-      <IconButton
-        aria-label='close snackbar'
-        sx={{
-          color: 'inherit',
-        }}
-        onClick={() => closeSnackbar(snackbarKey)}
-      >
-        <CloseIcon />
-      </IconButton>
-    ),
-    [],
-  )
+const CloseButton = () => {
+  const { closeSnackbar } = useSnackbar()
 
   return (
-    <SnackbarProvider
-      maxSnack={Number.MAX_VALUE}
-      anchorOrigin={{ horizontal: 'center', vertical: 'top' }}
-      hideIconVariant
-      action={action}
-      Components={{
-        success: StyledMaterialDesignSnackbar,
-        info: StyledMaterialDesignSnackbar,
-        warning: StyledMaterialDesignSnackbar,
-        error: StyledMaterialDesignSnackbar,
-        default: StyledMaterialDesignSnackbar,
+    <IconButton
+      aria-label='close snackbar'
+      sx={{
+        color: 'inherit',
       }}
+      onClick={() => closeSnackbar()}
     >
-      {children}
-    </SnackbarProvider>
+      <CloseIcon />
+    </IconButton>
   )
 }
+
+export const AppSnackbarProvider = ({ children }: { children: ReactNode }): ReactElement => (
+  <SnackbarProvider
+    maxSnack={Number.MAX_VALUE}
+    anchorOrigin={{ horizontal: 'center', vertical: 'top' }}
+    hideIconVariant
+    action={<CloseButton />}
+    Components={{
+      success: StyledMaterialDesignSnackbar,
+      info: StyledMaterialDesignSnackbar,
+      warning: StyledMaterialDesignSnackbar,
+      error: StyledMaterialDesignSnackbar,
+      default: StyledMaterialDesignSnackbar,
+    }}
+  >
+    {children}
+  </SnackbarProvider>
+)
