@@ -13,7 +13,6 @@ import app.ehrenamtskarte.backend.helper.SampleCards.getEncoded
 import app.ehrenamtskarte.backend.helper.TestData
 import app.ehrenamtskarte.backend.helper.toDataObject
 import app.ehrenamtskarte.backend.helper.toErrorObject
-import io.ktor.util.decodeBase64Bytes
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.deleteAll
 import org.jetbrains.exposed.v1.jdbc.selectAll
@@ -22,6 +21,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
 import java.time.LocalDate
+import kotlin.io.encoding.Base64
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
@@ -185,7 +185,7 @@ internal class CreateCardFromSelfServiceTest : IntegrationTest() {
 
             val userEntitlement = UserEntitlementsEntity.findById(userEntitlementId)!!
 
-            CardEntity.find { Cards.cardInfoHash eq newDynamicActivationCode.cardInfoHashBase64.decodeBase64Bytes() }
+            CardEntity.find { Cards.cardInfoHash eq Base64.decode(newDynamicActivationCode.cardInfoHashBase64) }
                 .single().let {
                     assertNotNull(it.activationSecretHash)
                     assertNull(it.totpSecret)
@@ -198,7 +198,7 @@ internal class CreateCardFromSelfServiceTest : IntegrationTest() {
                     assertEquals(userEntitlement.id, it.entitlementId)
                 }
 
-            CardEntity.find { Cards.cardInfoHash eq newStaticVerificationCode.cardInfoHashBase64.decodeBase64Bytes() }
+            CardEntity.find { Cards.cardInfoHash eq Base64.decode(newStaticVerificationCode.cardInfoHashBase64) }
                 .single().let {
                     assertNull(it.activationSecretHash)
                     assertNull(it.totpSecret)

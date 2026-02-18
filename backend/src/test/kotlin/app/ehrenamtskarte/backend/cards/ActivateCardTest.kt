@@ -14,7 +14,6 @@ import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestData
 import app.ehrenamtskarte.backend.helper.toDataObject
 import app.ehrenamtskarte.backend.helper.toErrorObject
-import io.ktor.util.encodeBase64
 import org.jetbrains.exposed.v1.jdbc.deleteAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.junit.jupiter.api.BeforeEach
@@ -22,6 +21,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
 import java.time.LocalDate
 import java.time.ZoneOffset
+import kotlin.io.encoding.Base64
 import kotlin.random.Random
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -42,8 +42,8 @@ internal class ActivateCardTest : IntegrationTest() {
     fun `should return an error when project does not exist`() {
         val mutation = activateCardMutation(
             project = "non-existent.sozialpass.app",
-            cardInfoHashBase64 = Random.nextBytes(20).encodeBase64(),
-            activationSecretBase64 = Random.nextBytes(20).encodeBase64(),
+            cardInfoHashBase64 = Base64.encode(Random.nextBytes(20)),
+            activationSecretBase64 = Base64.encode(Random.nextBytes(20)),
         )
         val response = postGraphQL(mutation)
 
@@ -69,8 +69,8 @@ internal class ActivateCardTest : IntegrationTest() {
         )
 
         val mutation = activateCardMutation(
-            cardInfoHashBase64 = cardInfoHash.encodeBase64(),
-            activationSecretBase64 = rawActivationSecret.encodeBase64(),
+            cardInfoHashBase64 = Base64.encode(cardInfoHash),
+            activationSecretBase64 = Base64.encode(rawActivationSecret),
         )
         val response = postGraphQL(mutation)
 
@@ -85,7 +85,7 @@ internal class ActivateCardTest : IntegrationTest() {
             val card = CardEntity.findById(cardId) ?: fail("Card not found")
 
             assertNotNull(card.firstActivationDate)
-            assertEquals(activationResult.totpSecret, card.totpSecret?.encodeBase64())
+            assertEquals(activationResult.totpSecret, card.totpSecret?.let { Base64.encode(it) })
         }
     }
 
@@ -96,8 +96,8 @@ internal class ActivateCardTest : IntegrationTest() {
         val cardId = TestData.createStaticCard(cardInfoHash, issuerId = eakRegionAdmin.id)
 
         val mutation = activateCardMutation(
-            cardInfoHashBase64 = cardInfoHash.encodeBase64(),
-            activationSecretBase64 = Random.nextBytes(20).encodeBase64(),
+            cardInfoHashBase64 = Base64.encode(cardInfoHash),
+            activationSecretBase64 = Base64.encode(Random.nextBytes(20)),
         )
         val response = postGraphQL(mutation)
 
@@ -119,8 +119,8 @@ internal class ActivateCardTest : IntegrationTest() {
     @Test
     fun `should return not_found state when the card not found`() {
         val mutation = activateCardMutation(
-            cardInfoHashBase64 = Random.nextBytes(20).encodeBase64(),
-            activationSecretBase64 = Random.nextBytes(20).encodeBase64(),
+            cardInfoHashBase64 = Base64.encode(Random.nextBytes(20)),
+            activationSecretBase64 = Base64.encode(Random.nextBytes(20)),
         )
         val response = postGraphQL(mutation)
 
@@ -146,8 +146,8 @@ internal class ActivateCardTest : IntegrationTest() {
         )
 
         val mutation = activateCardMutation(
-            cardInfoHashBase64 = cardInfoHash.encodeBase64(),
-            activationSecretBase64 = Random.nextBytes(20).encodeBase64(),
+            cardInfoHashBase64 = Base64.encode(cardInfoHash),
+            activationSecretBase64 = Base64.encode(Random.nextBytes(20)),
         )
         val response = postGraphQL(mutation)
 
@@ -181,8 +181,8 @@ internal class ActivateCardTest : IntegrationTest() {
         )
 
         val mutation = activateCardMutation(
-            cardInfoHashBase64 = cardInfoHash.encodeBase64(),
-            activationSecretBase64 = rawActivationSecret.encodeBase64(),
+            cardInfoHashBase64 = Base64.encode(cardInfoHash),
+            activationSecretBase64 = Base64.encode(rawActivationSecret),
         )
         val response = postGraphQL(mutation)
 
@@ -216,8 +216,8 @@ internal class ActivateCardTest : IntegrationTest() {
         )
 
         val mutation = activateCardMutation(
-            cardInfoHashBase64 = cardInfoHash.encodeBase64(),
-            activationSecretBase64 = rawActivationSecret.encodeBase64(),
+            cardInfoHashBase64 = Base64.encode(cardInfoHash),
+            activationSecretBase64 = Base64.encode(rawActivationSecret),
         )
         val response = postGraphQL(mutation)
 
@@ -254,8 +254,8 @@ internal class ActivateCardTest : IntegrationTest() {
         )
 
         val mutation = activateCardMutation(
-            cardInfoHashBase64 = cardInfoHash.encodeBase64(),
-            activationSecretBase64 = rawActivationSecret.encodeBase64(),
+            cardInfoHashBase64 = Base64.encode(cardInfoHash),
+            activationSecretBase64 = Base64.encode(rawActivationSecret),
             overwrite = true,
         )
         val response = postGraphQL(mutation)
@@ -273,7 +273,7 @@ internal class ActivateCardTest : IntegrationTest() {
             // first activation date should not change
             assertEquals(firstActivationDate, card.firstActivationDate)
             // new totp secret should be generated
-            assertEquals(activationResult.totpSecret, card.totpSecret?.encodeBase64())
+            assertEquals(activationResult.totpSecret, card.totpSecret?.let { Base64.encode(it) })
         }
     }
 
@@ -296,8 +296,8 @@ internal class ActivateCardTest : IntegrationTest() {
         )
 
         val mutation = activateCardMutation(
-            cardInfoHashBase64 = cardInfoHash.encodeBase64(),
-            activationSecretBase64 = rawActivationSecret.encodeBase64(),
+            cardInfoHashBase64 = Base64.encode(cardInfoHash),
+            activationSecretBase64 = Base64.encode(rawActivationSecret),
             overwrite = false,
         )
         val response = postGraphQL(mutation)
@@ -315,7 +315,7 @@ internal class ActivateCardTest : IntegrationTest() {
             // first activation date should not change
             assertEquals(firstActivationDate, card.firstActivationDate)
             // totp secret should not change
-            assertEquals(firstTotpSecret.encodeBase64(), card.totpSecret?.encodeBase64())
+            assertEquals(Base64.encode(firstTotpSecret), card.totpSecret?.let { Base64.encode(it) })
         }
     }
 

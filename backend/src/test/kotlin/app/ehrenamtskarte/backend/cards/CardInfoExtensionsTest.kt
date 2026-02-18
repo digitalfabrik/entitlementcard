@@ -2,18 +2,17 @@ package app.ehrenamtskarte.backend.cards
 
 import app.ehrenamtskarte.backend.graphql.cards.utils.hash
 import app.ehrenamtskarte.backend.helper.SampleCards
-import io.ktor.util.decodeBase64Bytes
-import io.ktor.util.encodeBase64
 import org.junit.jupiter.api.Test
+import kotlin.io.encoding.Base64
 import kotlin.test.assertEquals
 
 internal class CardInfoExtensionsTest {
-    private val pepper = "MvMjEqa0ulFDAgACElMjWA==".decodeBase64Bytes()
+    private val pepper = Base64.decode("MvMjEqa0ulFDAgACElMjWA==")
 
     @Test
     fun shouldCreateStableHashForBavarianBlueEAK() {
         val cardInfo = SampleCards.bavarianStandard()
-        val hash = cardInfo.hash(pepper).encodeBase64()
+        val hash = Base64.encode(cardInfo.hash(pepper))
 
         assertEquals("rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=", hash)
     }
@@ -21,7 +20,7 @@ internal class CardInfoExtensionsTest {
     @Test
     fun shouldCreateStableHashForBavarianGoldenEAK() {
         val cardInfo = SampleCards.bavarianGold()
-        val hash = cardInfo.hash(pepper).encodeBase64()
+        val hash = Base64.encode(cardInfo.hash(pepper))
 
         assertEquals("ZZTYNcFwEoAT7Z2ylesSn3oF7OInshUqWbZpP3zZcDw=", hash)
     }
@@ -29,7 +28,7 @@ internal class CardInfoExtensionsTest {
     @Test
     fun shouldCreateStableHashForNuernbergPass() {
         val cardInfo = SampleCards.nuernberg()
-        val hash = cardInfo.hash(pepper).encodeBase64()
+        val hash = Base64.encode(cardInfo.hash(pepper))
 
         assertEquals("zogEJOhnSSp//8qhym/DdorQYgL/763Kfq4slWduxMg=", hash)
     }
@@ -37,7 +36,7 @@ internal class CardInfoExtensionsTest {
     @Test
     fun shouldCreateStableHashForNuernbergPassWithStartDay() {
         val cardInfo = SampleCards.nuernbergWithStartDay()
-        val hash = cardInfo.hash(pepper).encodeBase64()
+        val hash = Base64.encode(cardInfo.hash(pepper))
 
         assertEquals("1ChHiAvWygwu+bH2yOZOk1zdmwTDZ4mkvu079cyuLjE=", hash)
     }
@@ -45,7 +44,7 @@ internal class CardInfoExtensionsTest {
     @Test
     fun shouldCreateStableHashForNuernbergPassWithPassIdIdentifier() {
         val cardInfo = SampleCards.nuernbergWithPassId()
-        val hash = cardInfo.hash(pepper).encodeBase64()
+        val hash = Base64.encode(cardInfo.hash(pepper))
 
         assertEquals("6BS3mnTtX1myCu9HSUD3e7KjaFBnX9Bkw7wgkrrWMZg=", hash)
     }
@@ -53,7 +52,7 @@ internal class CardInfoExtensionsTest {
     @Test
     fun shouldCreateStableHashForNuernbergPassWithPassNrIdentifier() {
         val cardInfo = SampleCards.nuernbergWithPassNr()
-        val hash = cardInfo.hash(pepper).encodeBase64()
+        val hash = Base64.encode(cardInfo.hash(pepper))
 
         assertEquals("A7KP1ypGngrmegXVmsyP9iMgheGHUDg9rnqbb9nlMWw=", hash)
     }

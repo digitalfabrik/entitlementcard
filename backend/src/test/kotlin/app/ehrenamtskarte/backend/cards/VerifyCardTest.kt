@@ -12,7 +12,6 @@ import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
 import app.ehrenamtskarte.backend.helper.TestData
 import app.ehrenamtskarte.backend.helper.toDataObject
 import app.ehrenamtskarte.backend.helper.toErrorObject
-import io.ktor.util.encodeBase64
 import org.jetbrains.exposed.v1.jdbc.deleteAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.junit.jupiter.api.BeforeEach
@@ -21,6 +20,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import org.springframework.http.HttpStatus
 import java.time.LocalDate
+import kotlin.io.encoding.Base64
 import kotlin.random.Random
 import kotlin.test.assertEquals
 import kotlin.test.fail
@@ -118,7 +118,7 @@ internal class VerifyCardTest : IntegrationTest() {
             CardEntity.findById(testCase.createCard()) ?: fail("Test card has not been created")
         }
         val query = createQuery(
-            cardInfoHash = card.cardInfoHash.encodeBase64(),
+            cardInfoHash = Base64.encode(card.cardInfoHash),
             codeType = CodeType.valueOf(card.codeType.name),
         )
         val response = postGraphQL(query)
@@ -134,7 +134,7 @@ internal class VerifyCardTest : IntegrationTest() {
     @Test
     fun `should return valid = false and extendable = false when the card doesn't exist`() {
         val query = createQuery(
-            cardInfoHash = Random.nextBytes(20).encodeBase64(),
+            cardInfoHash = Base64.encode(Random.nextBytes(20)),
             codeType = CodeType.STATIC,
         )
         val response = postGraphQL(query)
