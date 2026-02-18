@@ -1,15 +1,12 @@
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 class AppResumeNotifier extends ChangeNotifier {
-  static final AppResumeNotifier _instance = AppResumeNotifier._();
-
-  factory AppResumeNotifier() => _instance;
-
-  AppResumeNotifier._();
-
   void emitResumed() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      notifyListeners();
+      if (hasListeners) {
+        notifyListeners();
+      }
     });
   }
 }
@@ -37,8 +34,8 @@ class _AppLifecycleObserverState extends State<AppLifecycleObserver> with Widget
     if (_lastState == state) return;
     _lastState = state;
 
-    if (state == AppLifecycleState.resumed) {
-      AppResumeNotifier().emitResumed();
+    if (state == AppLifecycleState.resumed && mounted) {
+      context.read<AppResumeNotifier>().emitResumed();
     }
   }
 
