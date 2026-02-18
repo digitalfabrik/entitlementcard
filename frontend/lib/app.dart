@@ -1,4 +1,5 @@
 import 'package:ehrenamtskarte/activation/deeplink_activation.dart';
+import 'package:ehrenamtskarte/app_lifecycle_observer.dart';
 import 'package:ehrenamtskarte/build_config/build_config.dart';
 import 'package:ehrenamtskarte/configuration/configuration.dart';
 import 'package:ehrenamtskarte/configuration/definitions.dart';
@@ -110,20 +111,23 @@ class App extends StatelessWidget {
           providers: [
             ChangeNotifierProvider<UserCodeModel>(create: (_) => UserCodeModel()..initialize()),
             ChangeNotifierProvider<FavoritesModel>(create: (_) => FavoritesModel()..initialize()),
+            ChangeNotifierProvider<AppResumeNotifier>(create: (_) => AppResumeNotifier()),
           ],
-          child: MaterialApp.router(
-            theme: lightTheme,
-            darkTheme: darkTheme,
-            themeMode: ThemeMode.system,
-            debugShowCheckedModeBanner: false,
-            localizationsDelegates: [
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: buildConfig.appLocales.map((locale) => Locale(locale)),
-            locale: TranslationProvider.of(context).flutterLocale,
-            routerConfig: router,
+          child: AppLifecycleObserver(
+            child: MaterialApp.router(
+              theme: lightTheme,
+              darkTheme: darkTheme,
+              themeMode: ThemeMode.system,
+              debugShowCheckedModeBanner: false,
+              localizationsDelegates: [
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: buildConfig.appLocales.map((locale) => Locale(locale)),
+              locale: TranslationProvider.of(context).flutterLocale,
+              routerConfig: router,
+            ),
           ),
         ),
       ),
