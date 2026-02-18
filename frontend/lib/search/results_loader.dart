@@ -10,6 +10,7 @@ import 'package:ehrenamtskarte/graphql_gen/graphql_queries/stores/accepting_stor
 import 'package:ehrenamtskarte/l10n/translations.g.dart';
 
 import 'package:ehrenamtskarte/home/home_page.dart';
+import 'package:provider/provider.dart';
 
 class SliverResultsLoader extends StatefulWidget {
   final Input$CoordinatesInput? coordinates;
@@ -25,10 +26,12 @@ class SliverResultsLoader extends StatefulWidget {
 class SliverResultsLoaderState extends State<SliverResultsLoader> {
   static const _pageSize = 20;
   GraphQLClient? _client;
+  AppResumeNotifier? _resumeNotifier;
 
   final PagingController<int, Query$AcceptingStoresSearch$stores> _pagingController = PagingController(firstPageKey: 0);
 
-  Future<void> _onAppResumed() async {
+  void _onAppResumed() {
+    if (!mounted) return;
     final client = GraphQLProvider.of(context).value;
     client.cache.store.reset();
     _pagingController.refresh();
@@ -38,15 +41,22 @@ class SliverResultsLoaderState extends State<SliverResultsLoader> {
   void initState() {
     super.initState();
     _pagingController.addPageRequestListener(_fetchPage);
-    AppResumeNotifier().addListener(_onAppResumed);
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
     final client = GraphQLProvider.of(context).value;
     if (client != _client) {
       _client = client;
+    }
+
+    final newNotifier = context.read<AppResumeNotifier>();
+    if (_resumeNotifier != newNotifier) {
+      _resumeNotifier?.removeListener(_onAppResumed);
+      _resumeNotifier = newNotifier;
+      _resumeNotifier?.addListener(_onAppResumed);
     }
   }
 
@@ -58,6 +68,8 @@ class SliverResultsLoaderState extends State<SliverResultsLoader> {
 
   Future<void> _fetchPage(int pageKey) async {
     final oldWidget = widget;
+    if (!mounted) return;
+
     final projectId = Configuration.of(context).projectId;
     try {
       final client = _client;
@@ -189,7 +201,8 @@ class SliverResultsLoaderState extends State<SliverResultsLoader> {
   @override
   void dispose() {
     _pagingController.dispose();
-    AppResumeNotifier().removeListener(_onAppResumed);
+    _resumeNotifier?.removeListener(_onAppResumed);
+
     super.dispose();
   }
 }
