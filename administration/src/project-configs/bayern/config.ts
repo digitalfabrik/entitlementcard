@@ -4,21 +4,18 @@ import { Temporal } from 'temporal-polyfill'
 import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
 import EMailNotificationExtension from '../../cards/extensions/EMailNotificationExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
-import { JsonField, findValue } from '../../components/JsonFieldView'
+import { findValue, JsonField } from '../../components/JsonFieldView'
 import { BavariaCardType } from '../../generated/card_pb'
 import {
   ApplicationDataIncompleteError,
   getCardTypeApplicationData,
-  getPersonalApplicationData,
+  getPersonalApplicationData
 } from '../../routes/applications/utils/applicationDataHelper'
 import { ActivationText } from '../common/ActivationText'
 import { commonColors } from '../common/colors'
 import type { CardConfig, InfoParams, ProjectConfig } from '../index'
-import {
-  DataPrivacyAdditionalBaseText,
-  DataPrivacyBaseText,
-  dataPrivacyBaseHeadline,
-} from './dataPrivacyBase'
+import { DataPrivacyAdditionalBaseText, DataPrivacyBaseText } from './dataPrivacy'
+import { renderPdfInfo } from './pdf'
 import pdfTemplate from './pdf-template.pdf'
 
 const renderCardHash = ({ cardInfoHash }: InfoParams): string => cardInfoHash
@@ -94,7 +91,7 @@ export const config: ProjectConfig = {
   },
   staticQrCodesEnabled: false,
   card: cardConfig,
-  dataPrivacyHeadline: dataPrivacyBaseHeadline,
+  dataPrivacyHeadline: 'Datenschutzerklärung für die Nutzung und Beantragung der digitalen bayerischen Ehrenamtskarte',
   dataPrivacyContent: DataPrivacyBaseText,
   dataPrivacyAdditionalBaseContent: DataPrivacyAdditionalBaseText,
   activation: {
