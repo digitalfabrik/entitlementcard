@@ -23,7 +23,7 @@ const CheckboxForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
     label,
     options,
   }: FormComponentProps<State, AdditionalProps, Options>) => {
-    const [touched, setTouched] = useState(false)
+    const [interacted, setInteracted] = useState(false)
     const { disableAllInputs, showAllErrors } = useContext(FormContext)
     const validationResult = CheckboxForm.validate(state, options)
 
@@ -36,9 +36,9 @@ const CheckboxForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
         checked={state.checked}
         label={label}
         onChange={checked => setState(() => ({ checked }))}
-        hasError={(showAllErrors || touched) && isInvalid}
+        hasError={(showAllErrors || interacted) && isInvalid}
         errorMessage={isInvalid ? validationResult.message : null}
-        onBlur={() => setTouched(true)}
+        onBlur={() => setInteracted(true)}
       />
     )
   },

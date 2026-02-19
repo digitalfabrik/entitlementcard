@@ -20,9 +20,9 @@ const BirthdayForm = ({
   forceError,
 }: ExtensionComponentProps<BirthdayExtensionState>): ReactElement => {
   const { t } = useTranslation('extensions')
-  const [touched, setTouched] = useState(false)
+  const [interacted, setInteracted] = useState(false)
   const { birthday } = value
-  const showErrorMessage = touched || forceError
+  const showErrorMessage = interacted || forceError
   const projectConfig = useContext(ProjectConfigContext)
 
   const showBirthdayHint = (): boolean => {
@@ -53,8 +53,8 @@ const BirthdayForm = ({
     <FormGroup>
       <CustomDatePicker
         value={birthday?.toLocalDate() ?? null}
-        onBlur={() => setTouched(true)}
-        onClose={() => setTouched(true)}
+        onBlur={() => setInteracted(true)}
+        onClose={() => setInteracted(true)}
         onChange={date => {
           setValue({ birthday: PlainDate.safeFromLocalDate(date) })
         }}

@@ -41,7 +41,7 @@ describe('StartDayExtension', () => {
       expect(mockSetValue).toHaveBeenCalledWith({ startDay: null })
     })
 
-    it('should show error message when startDay is empty and field was touched', () => {
+    it('should show error message when startDay is empty and field was interacted', () => {
       const { getByText, getByPlaceholderText } = renderWithOptions(
         <StartDayExtension.Component
           {...defaultProps}
@@ -56,7 +56,7 @@ describe('StartDayExtension', () => {
       expect(getByText('Bitte geben Sie ein gültiges Startdatum ein.')).toBeTruthy()
     })
 
-    it('should show error message when startDay is too far in the past and touched', () => {
+    it('should show error message when startDay is too far in the past and interacted', () => {
       const startDay = minStartDay.subtract({ days: 1 })
       const { getByText, getByDisplayValue } = renderWithOptions(
         <StartDayExtension.Component {...defaultProps} isValid={false} value={{ startDay }} />,
@@ -72,7 +72,7 @@ describe('StartDayExtension', () => {
       ).toBeTruthy()
     })
 
-    it('should show error message when startDay is too far in the future and touched', () => {
+    it('should show error message when startDay is too far in the future and interacted', () => {
       const today = PlainDate.fromLocalDate(new Date())
       const startDayTooFarInFuture = today.add(maxCardValidity).add({ days: 1 })
       const { getByText, getByDisplayValue } = renderWithOptions(
@@ -95,7 +95,7 @@ describe('StartDayExtension', () => {
       ).toBeTruthy()
     })
 
-    it('should not show error message when form is invalid but untouched', () => {
+    it('should not show error message when form is invalid but not interacted', () => {
       const { queryByTestId } = renderWithOptions(
         <StartDayExtension.Component {...defaultProps} isValid={false} />,
         mockProvider,

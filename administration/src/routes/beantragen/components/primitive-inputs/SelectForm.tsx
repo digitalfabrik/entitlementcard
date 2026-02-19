@@ -36,7 +36,7 @@ const SelectForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
     label,
     options,
   }: FormComponentProps<State, AdditionalProps, Options>) => {
-    const [touched, setTouched] = useState(false)
+    const [interacted, setInteracted] = useState(false)
     const { showAllErrors, disableAllInputs } = useContext(FormContext)
     const labelId = useId()
 
@@ -49,7 +49,7 @@ const SelectForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
         variant='standard'
         required
         style={{ margin: '4px 0' }}
-        error={touched && isInvalid}
+        error={interacted && isInvalid}
       >
         <InputLabel id={labelId}>{label}</InputLabel>
         <Select
@@ -57,7 +57,7 @@ const SelectForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
           disabled={disableAllInputs}
           value={state.selectedValue}
           label={label}
-          onBlur={() => setTouched(true)}
+          onBlur={() => setInteracted(true)}
           onChange={e =>
             setState(() => ({ selectedValue: e.target.value, manuallySelected: true }))
           }
@@ -68,7 +68,7 @@ const SelectForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
             </MenuItem>
           ))}
         </Select>
-        {(showAllErrors || touched) && isInvalid && (
+        {(showAllErrors || interacted) && isInvalid && (
           <FormAlert errorMessage={validationResult.message} />
         )}
       </FormControl>

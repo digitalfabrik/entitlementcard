@@ -41,7 +41,7 @@ export const createRadioGroupForm = <T extends string>(): RadioGroupForm<T> => {
       divideItems,
       title,
     }: FormComponentProps<State<T>, AdditionalProps, Options<T>>) => {
-      const [touched, setTouched] = useState(false)
+      const [interacted, setInteracted] = useState(false)
       const { showAllErrors, disableAllInputs } = useContext(FormContext)
       const validationResult = validate(state, options)
       const isInvalid = validationResult.type === 'error'
@@ -55,13 +55,13 @@ export const createRadioGroupForm = <T extends string>(): RadioGroupForm<T> => {
           variant='standard'
           required
           sx={{ marginY: 0.5 }}
-          error={touched && isInvalid}
+          error={interacted && isInvalid}
         >
           <FormLabel>{title}</FormLabel>
           <RadioGroup
             sx={{ '& > label': { marginTop: '4px', marginBottom: '4px' } }}
             value={state.selectedValue}
-            onBlur={() => setTouched(true)}
+            onBlur={() => setInteracted(true)}
             onChange={e => setState(() => ({ selectedValue: e.target.value as T }))}
           >
             {labelByValueEntries.map(([value, label], index, array) => (
@@ -76,7 +76,7 @@ export const createRadioGroupForm = <T extends string>(): RadioGroupForm<T> => {
               </React.Fragment>
             ))}
           </RadioGroup>
-          {(showAllErrors || touched) && isInvalid && (
+          {(showAllErrors || interacted) && isInvalid && (
             <FormAlert errorMessage={validationResult.message} />
           )}
         </FormControl>

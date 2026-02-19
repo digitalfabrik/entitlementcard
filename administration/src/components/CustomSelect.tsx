@@ -11,7 +11,7 @@ type CustomSelectProps = {
   id: string
   label: string
   fullWidth?: boolean
-  // shows error message even component was not touched yet
+  // shows error message even there was no interaction with the component yet
   forceError?: boolean
   value?: string | number
   onChange: (value: string | number) => void
@@ -35,8 +35,8 @@ const CustomSelect = ({
   options,
   onBlur,
 }: CustomSelectProps): ReactElement => {
-  const [touched, setTouched] = useState(false)
-  const showErrorAfterTouched = (touched || forceError) && showError
+  const [interacted, setInteracted] = useState(false)
+  const showErrorAfterInteraction = (interacted || forceError) && showError
   return (
     <Box>
       <FormControl fullWidth={fullWidth} size='small' required={required}>
@@ -48,12 +48,12 @@ const CustomSelect = ({
           notched={value !== undefined}
           size='small'
           fullWidth={fullWidth}
-          error={showErrorAfterTouched}
+          error={showErrorAfterInteraction}
           labelId={id}
           label={label}
           value={value ?? ''}
           onBlur={() => {
-            setTouched(true)
+            setInteracted(true)
             if (onBlur) {
               onBlur()
             }
@@ -67,7 +67,7 @@ const CustomSelect = ({
           ))}
         </Select>
       </FormControl>
-      {showErrorAfterTouched && <FormAlert errorMessage={errorMessage} />}
+      {showErrorAfterInteraction && <FormAlert errorMessage={errorMessage} />}
     </Box>
   )
 }

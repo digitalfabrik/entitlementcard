@@ -41,7 +41,7 @@ const EmailForm: Form<State, ValidatedInput, AdditionalProps> = {
     label,
     minWidth = 100,
   }: FormComponentProps<State, AdditionalProps>) => {
-    const [touched, setTouched] = useState(false)
+    const [interacted, setInteracted] = useState(false)
     const { showAllErrors, disableAllInputs } = useContext(FormContext)
     const validationResult = EmailForm.validate(state)
 
@@ -55,13 +55,13 @@ const EmailForm: Form<State, ValidatedInput, AdditionalProps> = {
         style={{ margin: '4px 0', minWidth }}
         label={label}
         required
-        error={touched && isInvalid}
+        error={interacted && isInvalid}
         value={state.email}
         disabled={disableAllInputs}
-        onBlur={() => setTouched(true)}
+        onBlur={() => setInteracted(true)}
         onChange={e => setState(() => ({ email: e.target.value }))}
         helperText={
-          (showAllErrors || touched) &&
+          (showAllErrors || interacted) &&
           isInvalid && <FormAlert errorMessage={validationResult.message} />
         }
         slotProps={{

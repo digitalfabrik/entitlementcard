@@ -37,7 +37,7 @@ describe('CardSelfServiceForm', () => {
         updateCard={updateCard}
         generateCards={generateCards}
         card={initializeCardFromCSV(koblenzConfig.card, [], [], undefined, true)}
-        dataPrivacyAccepted={DataPrivacyAcceptingStatus.untouched}
+        dataPrivacyAccepted={DataPrivacyAcceptingStatus.notInteracted}
         setDataPrivacyAccepted={setDataPrivacyAccepted}
       />,
       mockProvider,

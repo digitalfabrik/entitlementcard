@@ -60,7 +60,7 @@ describe('NuernbergPassIdExtension', () => {
       expect(mockSetValue).toHaveBeenCalledWith({ nuernbergPassId: null })
     })
 
-    it('should show error message when invalid and touched', () => {
+    it('should show error message when invalid and interacted', () => {
       const props = {
         ...defaultProps,
         isValid: false,

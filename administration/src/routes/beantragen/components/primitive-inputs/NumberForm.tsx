@@ -40,7 +40,7 @@ const NumberForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
     options,
     minWidth = 100,
   }: FormComponentProps<State, AdditionalProps, Options>) => {
-    const [touched, setTouched] = useState(false)
+    const [interacted, setInteracted] = useState(false)
     const { showAllErrors, disableAllInputs } = useContext(FormContext)
     const validationResult = NumberForm.validate(state, options)
     const isInvalid = validationResult.type === 'error'
@@ -55,15 +55,17 @@ const NumberForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
         label={label}
         required
         disabled={disableAllInputs}
-        error={(showAllErrors || touched) && isInvalid}
+        error={(showAllErrors || interacted) && isInvalid}
         value={state.value}
-        onBlur={() => setTouched(true)}
+        onBlur={() => setInteracted(true)}
         onChange={e => {
           const sanitizedValue = e.target.value.replace(/\s/g, '')
           setState(() => ({ type: 'NumberForm', value: sanitizedValue }))
         }}
         helperText={
-          <FormAlert errorMessage={touched && isInvalid ? validationResult.message : undefined} />
+          <FormAlert
+            errorMessage={interacted && isInvalid ? validationResult.message : undefined}
+          />
         }
         slotProps={{
           htmlInput: { inputMode: 'numeric', min: options.min, max: options.max },

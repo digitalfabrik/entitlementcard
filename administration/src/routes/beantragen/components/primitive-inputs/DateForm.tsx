@@ -49,7 +49,7 @@ const DateForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
     minWidth = 100,
     options,
   }: FormComponentProps<State, AdditionalProps, Options>) => {
-    const [touched, setTouched] = useState(false)
+    const [interacted, setInteracted] = useState(false)
     const { showAllErrors, disableAllInputs } = useContext(FormContext)
     const validationResult = DateForm.validate(state, options)
     const isInvalid = validationResult.type === 'error'
@@ -59,11 +59,11 @@ const DateForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
         <CustomDatePicker
           value={parseDateFromState(state.value)}
           disabled={disableAllInputs}
-          error={(showAllErrors || touched) && isInvalid}
+          error={(showAllErrors || interacted) && isInvalid}
           label={label}
           minDate={minDate}
           maxDate={options.maximumDate}
-          onBlur={() => setTouched(true)}
+          onBlur={() => setInteracted(true)}
           onChange={date => {
             setState(() => ({
               type: 'DateForm',
@@ -83,7 +83,7 @@ const DateForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
         />
         <FormAlert
           errorMessage={
-            (showAllErrors || touched) && isInvalid ? validationResult.message : undefined
+            (showAllErrors || interacted) && isInvalid ? validationResult.message : undefined
           }
         />
       </FormGroup>
