@@ -38,7 +38,7 @@ const Container = styled('div')(({ theme }) => ({
 const CardSelfServiceView = (): ReactElement => {
   const { t } = useTranslation('selfService')
   const [dataPrivacyCheckbox, setDataPrivacyCheckbox] = useState(
-    DataPrivacyAcceptingStatus.untouched,
+    DataPrivacyAcceptingStatus.notInteracted,
   )
   const [openHelpDialog, setOpenHelpDialog] = useState(false)
   const {

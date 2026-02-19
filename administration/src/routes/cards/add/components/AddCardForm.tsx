@@ -30,8 +30,8 @@ const AddCardForm = ({
 }): ReactElement => {
   const today = PlainDate.fromLocalDate(new Date())
   const { t } = useTranslation('cards')
-  const [touchedValidationDate, setTouchedValidationDate] = useState(false)
-  const showValidationDateError = !isExpirationDateValid(card) && touchedValidationDate
+  const [interactedValidationDate, setInteractedValidationDate] = useState(false)
+  const showValidationDateError = !isExpirationDateValid(card) && interactedValidationDate
 
   return (
     <MuiCard sx={{ width: '400px' }} variant='outlined' key={card.id}>
@@ -66,8 +66,8 @@ const AddCardForm = ({
           {!hasInfiniteLifetime(card) && (
             <FormGroup>
               <CustomDatePicker
-                onClose={() => setTouchedValidationDate(true)}
-                onBlur={() => setTouchedValidationDate(true)}
+                onClose={() => setInteractedValidationDate(true)}
+                onBlur={() => setInteractedValidationDate(true)}
                 label={t('expirationDate')}
                 value={card.expirationDate?.toLocalDate() ?? null}
                 error={showValidationDateError}

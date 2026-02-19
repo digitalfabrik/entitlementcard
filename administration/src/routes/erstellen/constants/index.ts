@@ -1,5 +1,5 @@
 export enum DataPrivacyAcceptingStatus {
-  untouched,
+  notInteracted,
   accepted,
   denied,
 }

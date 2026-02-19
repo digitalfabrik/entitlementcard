@@ -90,9 +90,12 @@ const RejectionDialog = (props: {
   const { t } = useTranslation('applicationsOverview')
   const rejectionMessages = t('rejectionReasons', { returnObjects: true }) as string[]
   const [reason, setReason] = useState<string | null>(null)
+  const [interacted, setInteracted] = useState(false)
+  const showError = reason === null && interacted
 
   const closeAndClearDialog = () => {
     setReason(null)
+    setInteracted(false)
     props.onCancel()
   }
 
@@ -104,7 +107,9 @@ const RejectionDialog = (props: {
         if (reason !== null) {
           props.onConfirm(reason)
         }
+        setInteracted(true)
       }}
+      closeOnConfirm={reason !== null}
       onClose={closeAndClearDialog}
       cancelButtonText={t('rejectionCancelButton')}
       confirmButtonText={t('rejectionButton')}
@@ -116,6 +121,9 @@ const RejectionDialog = (props: {
             <TextField
               {...params}
               variant='outlined'
+              onBlur={() => setInteracted(true)}
+              error={showError}
+              helperText={showError && t('applicationRejectReasonRequired')}
               label={t('rejectionInputHint')}
               slotProps={{
                 input: {

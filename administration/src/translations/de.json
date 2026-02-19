@@ -219,6 +219,7 @@
     "failedToSendApprovalRequest": "Anfrage konnte nicht gesendet werden",
     "applicationApprove": "Antrag bestätigen",
     "applicationReject": "Antrag ablehnen",
+    "applicationRejectReasonRequired": "Bitte wählen Sie einen Grund aus.",
     "applicationApprovedToastMessage": "Der Antrag wurde genehmigt.",
     "applicationRejectedToastMessage": "Der Antrag wurde abgelehnt. Der Antragsteller oder die Antragstellerin wurde per E-Mail informiert.",
     "incompleteApplicationDataTooltip": "Aus den Antragsdaten kann keine Karte erzeugt werden.",

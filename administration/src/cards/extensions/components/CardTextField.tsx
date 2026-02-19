@@ -8,7 +8,7 @@ type CardTextFieldProps = {
   label: string | ReactElement
   placeholder: string
   autoFocus?: boolean
-  // shows error message even component was not touched yet
+  // shows error message even there was no interaction with the component yet
   forceError?: boolean
   value: string
   onChange: (value: string) => void
@@ -39,8 +39,8 @@ const CardTextField = ({
   rows = 1,
   multiline = false,
 }: CardTextFieldProps): ReactElement => {
-  const [touched, setTouched] = useState(false)
-  const showErrorAfterTouched = (touched || forceError) && showError
+  const [interacted, setInteracted] = useState(false)
+  const showErrorAfterInteraction = (interacted || forceError) && showError
   return (
     <TextField
       id={id}
@@ -52,15 +52,15 @@ const CardTextField = ({
       multiline={multiline}
       value={value}
       onBlur={() => {
-        setTouched(true)
+        setInteracted(true)
         onBlur?.()
       }}
       onChange={event => onChange(event.target.value)}
-      error={showErrorAfterTouched}
+      error={showErrorAfterInteraction}
       fullWidth
       required={required}
       size='small'
-      helperText={showErrorAfterTouched && <FormAlert errorMessage={errorMessage} />}
+      helperText={showErrorAfterInteraction && <FormAlert errorMessage={errorMessage} />}
       slotProps={{
         input: inputProps,
         formHelperText: { sx: { margin: 0 } },

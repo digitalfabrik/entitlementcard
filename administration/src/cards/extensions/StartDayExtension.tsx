@@ -22,8 +22,8 @@ const StartDayForm = ({
   isValid,
 }: ExtensionComponentProps<StartDayExtensionState>): ReactElement => {
   const { t } = useTranslation('extensions')
-  const [touched, setTouched] = useState(false)
-  const showError = !isValid && touched
+  const [interacted, setInteracted] = useState(false)
+  const showError = !isValid && interacted
 
   const getStartDayErrorMessage = (): string | null => {
     const startDay = value.startDay
@@ -44,8 +44,8 @@ const StartDayForm = ({
     <FormGroup>
       <CustomDatePicker
         label={t('startDayLabel')}
-        onBlur={() => setTouched(true)}
-        onClose={() => setTouched(true)}
+        onBlur={() => setInteracted(true)}
+        onClose={() => setInteracted(true)}
         value={value.startDay?.toLocalDate() ?? null}
         onChange={date => setValue({ startDay: PlainDate.safeFromLocalDate(date) })}
         error={showError}

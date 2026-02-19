@@ -50,7 +50,7 @@ const CardSelfServiceForm = ({
 
   const createKoblenzPass = async () => {
     setFormSendAttempt(true)
-    if (dataPrivacyAccepted === DataPrivacyAcceptingStatus.untouched) {
+    if (dataPrivacyAccepted === DataPrivacyAcceptingStatus.notInteracted) {
       setDataPrivacyAccepted(DataPrivacyAcceptingStatus.denied)
     }
     if (!cardValid || dataPrivacyAccepted !== DataPrivacyAcceptingStatus.accepted) {

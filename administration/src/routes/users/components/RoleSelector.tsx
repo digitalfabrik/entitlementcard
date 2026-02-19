@@ -19,13 +19,13 @@ const RoleSelector = ({
 }): ReactElement => {
   const { t } = useTranslation('users')
   const { role: activeRole } = useWhoAmI().me
-  const [touched, setTouched] = useState(false)
+  const [interacted, setInteracted] = useState(false)
   const config = useContext(ProjectConfigContext)
   const isProjectAdmin = activeRole === Role.ProjectAdmin
   const showExternalVerifiedApiUser =
     config.applicationFeature?.applicationUsableWithApiToken && isProjectAdmin
   const showProjectStoreManager = config.storesManagement.enabled && isProjectAdmin
-  const showError = selectedRole === null && touched
+  const showError = selectedRole === null && interacted
   const labelId = useId()
   return (
     <>
@@ -40,7 +40,7 @@ const RoleSelector = ({
             label={t('selectRole')}
             labelId={labelId}
             value={selectedRole ?? ''}
-            onBlur={() => setTouched(true)}
+            onBlur={() => setInteracted(true)}
             onChange={e => onChange(e.target.value as Role)}
           >
             {isProjectAdmin && (

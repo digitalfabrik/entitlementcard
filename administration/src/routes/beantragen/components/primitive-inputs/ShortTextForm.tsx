@@ -24,7 +24,7 @@ const Component = <I,>({
   validate: (state: State) => ValidationResult<I>
   required: boolean
 }) => {
-  const [touched, setTouched] = useState(false)
+  const [interacted, setInteracted] = useState(false)
   const { showAllErrors, disableAllInputs } = useContext(FormContext)
   const validationResult = validate(state)
   const isInvalid = validationResult.type === 'error'
@@ -37,12 +37,12 @@ const Component = <I,>({
       label={label}
       required={required}
       disabled={disableAllInputs}
-      error={touched && isInvalid}
-      onBlur={() => setTouched(true)}
+      error={interacted && isInvalid}
+      onBlur={() => setInteracted(true)}
       value={state.shortText}
       onChange={e => setState(() => ({ shortText: e.target.value }))}
       helperText={
-        (showAllErrors || touched) &&
+        (showAllErrors || interacted) &&
         isInvalid && <FormAlert errorMessage={validationResult.message} />
       }
       slotProps={{
