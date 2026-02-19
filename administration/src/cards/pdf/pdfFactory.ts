@@ -8,7 +8,6 @@
 
 /* eslint-disable no-await-in-loop */
 import {
-  decodePDFRawStream,
   PDFArray,
   PDFDict,
   PDFDocument,
@@ -16,7 +15,8 @@ import {
   PDFName,
   PDFPage,
   PDFRawStream,
-  StandardFonts
+  StandardFonts,
+  decodePDFRawStream,
 } from '@cantoo/pdf-lib'
 import fontkit from '@pdf-lib/fontkit'
 
@@ -29,7 +29,13 @@ import { reportErrorToSentry } from '../../util/sentry'
 import { Card } from '../card'
 import { CreateCardsResult } from '../createCards'
 import getDeepLinkFromQrCode from '../getDeepLinkFromQrCode'
-import { pdfFormElement, pdfLinkArea, type PdfQrCode, pdfQrCodeElement, pdfTextElement } from './elements'
+import {
+  type PdfQrCode,
+  pdfFormElement,
+  pdfLinkArea,
+  pdfQrCodeElement,
+  pdfTextElement,
+} from './elements'
 
 export class PdfError extends Error {
   constructor(message: string) {
@@ -53,22 +59,21 @@ const fillContentAreas = async (
     value: code.dynamicActivationCode,
   }
 
-  pdfConfig.elements?.dynamicActivationQrCodes.forEach(configOptions =>
-    pdfQrCodeElement(page, dynamicCode, configOptions),
-  )
-
   if (pdfConfig.elements?.deepLinkArea) {
-    pdfLinkArea(pdfConfig.elements.deepLinkArea, {
-      doc: targetDocument,
+    pdfLinkArea(
       page,
-      font: fontBold,
-      url: getDeepLinkFromQrCode(
+      getDeepLinkFromQrCode(
         dynamicCode,
         getBuildConfig(window.location.hostname),
         isProductionEnvironment(),
       ),
-    })
+      pdfConfig.elements.deepLinkArea,
+    )
   }
+
+  pdfConfig.elements?.dynamicActivationQrCodes.forEach(configOptions =>
+    pdfQrCodeElement(page, dynamicCode, configOptions),
+  )
 
   if (pdfConfig.elements?.staticVerificationQrCodes) {
     if (code.staticVerificationCode) {
@@ -87,28 +92,31 @@ const fillContentAreas = async (
     }
   }
 
-  const form = targetDocument.getForm()
-
   pdfConfig.elements?.form?.forEach(configOptions =>
-    pdfFormElement(configOptions, {
+    pdfFormElement(
       page,
-      form,
-      font: fontRegular,
-      info: dynamicCode.value.info!,
-      card,
-      cardInfoHash: code.dynamicCardInfoHashBase64,
-      region,
-    }),
+      configOptions.infoToFormFields(targetDocument.getForm(), page.doc.getPageCount(), {
+        info: dynamicCode.value.info!,
+        region,
+        card,
+        cardInfoHash: code.dynamicCardInfoHashBase64,
+      }),
+      fontRegular,
+      configOptions,
+    ),
   )
   pdfConfig.elements?.text.forEach(configOptions =>
-    pdfTextElement(configOptions, {
+    pdfTextElement(
       page,
-      font: configOptions.bold ? fontBold : fontRegular,
-      info: dynamicCode.value.info!,
-      card,
-      cardInfoHash: code.dynamicCardInfoHashBase64,
-      region,
-    }),
+      configOptions.bold ? fontBold : fontRegular,
+      configOptions.infoToText({
+        info: dynamicCode.value.info!,
+        region,
+        card,
+        cardInfoHash: code.dynamicCardInfoHashBase64,
+      }),
+      configOptions,
+    ),
   )
 }
 
@@ -130,7 +138,12 @@ export const generatePdf = async (
     targetDocument.setAuthor(projectConfig.pdf.issuer)
 
     const [fontRegular, fontBold] = await Promise.all([
-      getFont(templateDocument, targetDocument, projectConfig.pdf.customFont, StandardFonts.Helvetica),
+      getFont(
+        templateDocument,
+        targetDocument,
+        projectConfig.pdf.customFont,
+        StandardFonts.Helvetica,
+      ),
       getFont(
         templateDocument,
         targetDocument,
