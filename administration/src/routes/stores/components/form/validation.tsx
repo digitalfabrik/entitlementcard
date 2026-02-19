@@ -11,7 +11,7 @@ const validationConstants = {
   street: { min: 3, max: 100 },
   houseNumber: { min: 1, max: 10 },
   city: { min: 3, max: 100 },
-  postal_code: { length: 5 },
+  postal_code: { min: 5, max: 10 },
   phone: { min: 0, max: 100 },
   email: { min: 0, max: 100 },
   homepage: { min: 0, max: 200 },
@@ -21,6 +21,7 @@ const validationConstants = {
 const PHONE_REGEX: RegExp = /^\+?\d+(?:[ \-./]?\d+)*$/
 const HOUSE_NUMBER_SPECIAL_CHARS_REGEX = XRegExp(String.raw`^[\p{Letter}\p{Number}\.,+'\-/() ]+$`)
 const HOUSE_NUMBER_CONTAINS_NUMBER_REGEX = XRegExp(String.raw`\p{Number}`)
+const POSTAL_CODE_REGEX = XRegExp(String.raw`^[\p{Number}\s\-]+$`)
 const CITY_REGEX = XRegExp(String.raw`^[\p{Letter}\.,'/() -]+$`)
 const STREET_REGEX = XRegExp(String.raw`^[\p{Letter}\p{Number}\.,'/() -]+$`)
 
@@ -190,20 +191,18 @@ export const homepageValidation = (homepage: string | undefined): FormValidation
 }
 
 export const postalCodeValidation = (postalCode: string | undefined): FormValidation => {
-  if (!postalCode) {
-    return requiredFieldError()
+  const lengthValidation = validateFieldWithLength(
+    postalCode,
+    validationConstants.postal_code,
+    'storeForm:errorPostalCodeInvalidMaxMinChars',
+  )
+
+  if (lengthValidation.invalid) {
+    return lengthValidation
   }
 
-  if (postalCode.length !== validationConstants.postal_code.length) {
-    return {
-      invalid: true,
-      message: (
-        <Trans
-          i18nKey='storeForm:errorPostalCodeInvalidLength'
-          values={{ length: validationConstants.postal_code.length }}
-        />
-      ),
-    }
+  if (!POSTAL_CODE_REGEX.test(postalCode!)) {
+    return specialCharacterError('storeForm:errorPostalCodeValidationSpecialCharacters')
   }
   return validResult
 }
