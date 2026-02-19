@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class FilterBarButton extends StatefulWidget {
-  static const double width = 80;
-  static const double height = 80;
+  static const double width = 74;
+  static const double height = 74;
 
   final CategoryAsset asset;
   final void Function(CategoryAsset, bool) onCategoryPress;
@@ -32,7 +32,7 @@ class _FilterBarButtonState extends State<FilterBarButton> {
       height: FilterBarButton.height,
       child: Material(
         color: _selected ? chipTheme.selectedColor : chipTheme.backgroundColor,
-        shape: shape.copyWith(side: _selected ? BorderSide.none : chipTheme.side),
+        shape: shape.copyWith(side: _selected ? BorderSide(color: theme.colorScheme.outline) : chipTheme.side),
         child: InkWell(
           customBorder: shape,
           onTap: () {

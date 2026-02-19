@@ -84,9 +84,9 @@ ThemeData get lightTheme {
       fillColor: WidgetStatePropertyAll(primaryColor),
     ),
     chipTheme: ChipThemeData(
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: backgroundColor,
       selectedColor: Colors.grey.shade300,
-      side: BorderSide(color: Colors.grey.shade200),
+      side: BorderSide.none,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     ),
   );
@@ -153,9 +153,9 @@ ThemeData get darkTheme {
       fillColor: WidgetStatePropertyAll(primaryColor),
     ),
     chipTheme: ChipThemeData(
-      backgroundColor: Colors.grey.shade900,
+      backgroundColor: backgroundColor,
       selectedColor: Colors.grey.shade700,
-      side: BorderSide(color: Colors.grey.shade800),
+      side: BorderSide.none,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     ),
   );
