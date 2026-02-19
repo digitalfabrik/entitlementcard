@@ -1,8 +1,8 @@
 import {
+  buildConfigKoblenz,
   QUERY_PARAM_BIRTHDAY,
   QUERY_PARAM_KOBLENZ_REFERENCE_NUMBER,
-  QUERY_PARAM_NAME,
-  buildConfigKoblenz,
+  QUERY_PARAM_NAME
 } from 'build-configs'
 
 import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
@@ -12,8 +12,7 @@ import { ActivationText } from '../common/ActivationText'
 import { commonColors } from '../common/colors'
 import type { InfoParams, ProjectConfig } from '../index'
 import { storesManagementConfig } from '../storesManagementConfig'
-import colorsOverride from './colorsOverride'
-import { DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
+import { DataPrivacyBaseText } from './dataPrivacy'
 import pdfTemplate from './pdf-template.pdf'
 
 const renderPdfDetails = ({ info }: InfoParams): string => {
@@ -35,7 +34,12 @@ ${info.fullName}`
 }
 
 export const config: ProjectConfig = {
-  colorPalette: { ...commonColors, ...colorsOverride },
+  colorPalette: {
+    ...commonColors,
+    primary: { main: '#3b83f6', light: '#bdddff' },
+    secondary: { main: '#922224', light: '#f1c9cf' },
+    accent: { main: '#E2007A', light: '#fce5f0' },
+  },
   name: 'KoblenzPass',
   projectId: 'koblenz.sozialpass.app',
   publisherText: buildConfigKoblenz.common.publisherText,
@@ -47,7 +51,7 @@ export const config: ProjectConfig = {
     defaultValidity: { years: 1 },
     extensions: [BirthdayExtension, KoblenzReferenceNumberExtension],
   },
-  dataPrivacyHeadline: dataPrivacyBaseHeadline,
+  dataPrivacyHeadline: 'Datenschutzerklärung für die Nutzung und Aktivierung des digitalen KoblenzPasses',
   dataPrivacyContent: DataPrivacyBaseText,
   timezone: 'Europe/Berlin',
   pdf: {
