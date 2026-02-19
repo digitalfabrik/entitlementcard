@@ -1,0 +1,5 @@
+export { default as buildConfigNuernberg } from './nuernberg/index.js'
+export { default as buildConfigBayern } from './bayern/index.js'
+export { default as buildConfigKoblenz } from './koblenz/index.js'
+export type { DeepLinkingConfig, BuildConfigType } from './types.js'
+export * from './constants/index.js'

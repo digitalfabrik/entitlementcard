@@ -1,4 +1,4 @@
-import { ACTIVATION_FRAGMENT, ACTIVATION_PATH } from 'build-configs/constants'
+import { ACTIVATION_FRAGMENT, ACTIVATION_PATH } from 'build-configs'
 
 import { QrCode } from '../generated/card_pb'
 import { ProjectConfig } from '../project-configs/getProjectConfig'

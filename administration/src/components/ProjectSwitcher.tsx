@@ -14,7 +14,7 @@ const ProjectSwitcher = (): ReactElement | null => {
     navigate(0)
   }
 
-  return process.env.NODE_ENV === 'development' ? (
+  return import.meta.env.DEV ? (
     <Box sx={{ marginTop: 2 }}>
       <Button variant='text' onClick={() => switchProject('koblenz.sozialpass.app')}>
         Switch to Koblenz

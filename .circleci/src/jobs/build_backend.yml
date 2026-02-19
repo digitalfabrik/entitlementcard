@@ -20,8 +20,7 @@ steps:
   - run:
       name: Build backend
       # Use `assemble` instead of `build` to not run tests
-      # Use production environment to build with sentry
-      command: ./gradlew distTar -Denv=prod
+      command: ./gradlew distTar
   - save_cache:
       key: v1-gradle-{{ checksum "build.gradle.kts" }}
       paths:

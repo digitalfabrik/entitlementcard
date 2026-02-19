@@ -1,5 +1,5 @@
 docker:
-  - image: cimg/node:20.18.0
+  - image: cimg/node:24.13
 resource_class: medium
 working_directory: ~/project/administration
 steps:
@@ -7,7 +7,7 @@ steps:
   - install_node_modules
   - run:
       name: Build
-      command: npm run build --version_name=${NEW_VERSION_NAME}
+      command: npm run build
   - persist_to_workspace:
       root: ~/project
       paths:

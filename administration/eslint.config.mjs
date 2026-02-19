@@ -4,20 +4,20 @@ export default [
   ...baseConfig,
   {
     ignores: [
-      'src/generated/**/*',
-      'src/coverage/**/*',
-      'build/**/*',
       '**eslint.config.mjs',
+      'build/**/*',
       'e2e-tests/',
       'playwright.config.ts',
+      'src/generated/**/*',
+      'src/coverage/**/*',
     ],
   },
   {
     files: ['scripts/**', 'config/**'],
     rules: {
-      'global-require': 'off',
       '@typescript-eslint/no-var-requires': 'off',
       '@typescript-eslint/no-require-imports': 'off',
+      'global-require': 'off',
       'import/no-extraneous-dependencies': 'off',
       'import/no-dynamic-require': 'off',
     },

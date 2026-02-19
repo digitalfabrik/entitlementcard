@@ -463,18 +463,36 @@ describe('Store Form Validation', () => {
     })
 
     it('should return length error when postal code is too long', () => {
-      const result = postalCodeValidation('123456')
+      const result = postalCodeValidation('12345678910')
       expect(result.invalid).toBe(true)
       expect(result.message).not.toBeNull()
     })
 
-    it('should return valid for valid postal code', () => {
-      const result = postalCodeValidation('12345')
+    it('should return invalid for a postal code including letters', () => {
+      const result = postalCodeValidation('80331abc')
+      expect(result.invalid).toBe(true)
+      expect(result.message).not.toBeNull()
+    })
+
+    it('should return invalid for a postal code including special characters', () => {
+      const result = postalCodeValidation('80331 :!"/(')
+      expect(result.invalid).toBe(true)
+      expect(result.message).not.toBeNull()
+    })
+
+    it('should return valid for valid postal code with hyphen', () => {
+      const result = postalCodeValidation('12345-213')
       expect(result.invalid).toBe(false)
       expect(result.message).toBeNull()
     })
 
-    it('should return valid for another valid postal code', () => {
+    it('should return valid for valid postal code with empty space', () => {
+      const result = postalCodeValidation('12345 213')
+      expect(result.invalid).toBe(false)
+      expect(result.message).toBeNull()
+    })
+
+    it('should return valid for a typical german postal code', () => {
       const result = postalCodeValidation('80331')
       expect(result.invalid).toBe(false)
       expect(result.message).toBeNull()

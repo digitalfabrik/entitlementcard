@@ -4,6 +4,7 @@ import app.ehrenamtskarte.backend.routes.exception.UserImportException
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import app.ehrenamtskarte.backend.shared.exceptions.NotFoundException
 import app.ehrenamtskarte.backend.shared.exceptions.UnauthorizedException
+import io.sentry.Sentry
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -37,7 +38,9 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception::class)
     fun handleGeneralException(ex: Exception): ResponseEntity<Map<String, String>> {
-        logger.error("An internal error occurred", ex)
+        logger.error("Unhandled exception in HTTP route", ex)
+        Sentry.captureException(ex)
+
         return ResponseEntity.status(
             HttpStatus.INTERNAL_SERVER_ERROR,
         ).body(mapOf("message" to "Internal error occurred"))

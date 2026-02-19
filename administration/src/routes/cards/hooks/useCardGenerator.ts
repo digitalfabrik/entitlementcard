@@ -150,7 +150,11 @@ const useCardGenerator = ({
       } catch (error) {
         if (codes) {
           // Rollback
-          await deleteCards(deleteCardsMutation, region.id, codes).catch(reportErrorToSentry)
+          try {
+            await deleteCards(deleteCardsMutation, region.id, codes)
+          } catch (error) {
+            reportErrorToSentry(error)
+          }
         }
         showCardGenerationError(enqueueSnackbar, error)
         setCardGenerationStep('input')
