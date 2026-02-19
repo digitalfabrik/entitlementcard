@@ -7,6 +7,7 @@ import app.ehrenamtskarte.backend.shared.exceptions.UnauthorizedException
 import graphql.ExceptionWhileDataFetching
 import graphql.GraphQLError
 import graphql.schema.DataFetchingEnvironment
+import io.sentry.Sentry
 import org.slf4j.LoggerFactory
 import org.springframework.beans.BeanInstantiationException
 import org.springframework.graphql.data.method.annotation.GraphQlExceptionHandler
@@ -21,11 +22,22 @@ class GraphQLExceptionHandler {
     fun handleGraphQLException(ex: Exception, env: DataFetchingEnvironment): GraphQLError {
         val unwrapped = ex.unwrap()
         return when (unwrapped) {
-            is GraphQLBaseException -> unwrapped.toGraphQLError(env)
-            is UnauthorizedException -> GraphQLBaseException(GraphQLExceptionCode.UNAUTHORIZED).toGraphQLError(env)
-            is ForbiddenException -> GraphQLBaseException(GraphQLExceptionCode.FORBIDDEN).toGraphQLError(env)
+            is GraphQLBaseException -> {
+                unwrapped.toGraphQLError(env)
+            }
+
+            is UnauthorizedException -> {
+                GraphQLBaseException(GraphQLExceptionCode.UNAUTHORIZED).toGraphQLError(env)
+            }
+
+            is ForbiddenException -> {
+                GraphQLBaseException(GraphQLExceptionCode.FORBIDDEN).toGraphQLError(env)
+            }
+
             else -> {
-                logger.error("Unexpected GraphQL error on field '${env.field.name}'", unwrapped)
+                logger.error("Unhandled exception in GraphQL controller, field='${env.field.name}'", unwrapped)
+                Sentry.captureException(unwrapped)
+
                 ExceptionWhileDataFetching(env.executionStepInfo.path, unwrapped, env.field.sourceLocation)
             }
         }

@@ -22,7 +22,9 @@ description = "Backend for the Ehrenamtskarte system"
  * These environment variables are set by the CI pipeline.
  * See: https://app.circleci.com/settings/organization/github/digitalfabrik/contexts/0d0d3d24-cd54-4c43-85a5-273e3a9e2152
  */
-object CiConfig {
+object BuildConfig {
+    /** https://circleci.com/docs/reference/variables/#built-in-environment-variables */
+    val isCiBuild = System.getProperty("CI") == "true"
     val circleCiCommitHash = System.getenv("CIRCLE_SHA1")
     val sentryAuthToken = System.getenv("SENTRY_BACKEND_AUTH_TOKEN")
 
@@ -30,7 +32,6 @@ object CiConfig {
     val versionName = System.getProperty("NEW_VERSION_NAME", "1.0.0")
 }
 
-val isProductionEnvironment = System.getProperty("env") == "prod"
 val packageRoot = "app.ehrenamtskarte.backend"
 
 application {
@@ -61,8 +62,8 @@ kotlin {
 
 buildConfig {
     packageName(project.group.toString())
-    buildConfigField("VERSION_NAME", CiConfig.versionName)
-    buildConfigField("COMMIT_HASH", CiConfig.circleCiCommitHash)
+    buildConfigField("VERSION_NAME", BuildConfig.versionName)
+    buildConfigField("COMMIT_HASH", BuildConfig.circleCiCommitHash)
 }
 
 repositories {
@@ -107,7 +108,6 @@ dependencies {
     implementation(libs.piwik.matomo.java.tracker)
     implementation(libs.postgis.jdbc)
     implementation(libs.projectreactor.reactor.kotlinextensions)
-    implementation(libs.sentry.springbootstarter)
     implementation(libs.simplejavamail)
     implementation(libs.springdoc.openapi.starter)
     implementation(libs.springframework.boot.starter.mail)
@@ -161,7 +161,7 @@ protobuf {
     }
 }
 
-if (isProductionEnvironment) {
+if (BuildConfig.isCiBuild) {
     sentry {
         // Generates a JVM (Java, Kotlin, etc.) source bundle and uploads your source code to Sentry.
         // This enables source context, allowing you to see your source
@@ -169,7 +169,7 @@ if (isProductionEnvironment) {
         includeSourceContext = true
         org = "digitalfabrik"
         projectName = "entitlementcard-backend"
-        authToken = CiConfig.sentryAuthToken
+        authToken = BuildConfig.sentryAuthToken
     }
 }
 
@@ -238,7 +238,7 @@ tasks.sentryCollectSourcesJava {
 }
 
 tasks.graphqlGenerateTestClient {
-    if (isProductionEnvironment) {
+    if (BuildConfig.isCiBuild) {
         dependsOn(tasks.generateSentryBundleIdJava)
         dependsOn(tasks.sentryCollectSourcesJava)
     }
