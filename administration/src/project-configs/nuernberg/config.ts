@@ -1,76 +1,19 @@
-import { PDFForm, PDFTextField, rgb } from '@cantoo/pdf-lib'
+import { rgb } from '@cantoo/pdf-lib'
 import { buildConfigNuernberg } from 'build-configs'
 
-import AddressExtensions, { getAddressFieldExtensionsValues } from '../../cards/extensions/AddressFieldExtensions'
+import AddressExtensions from '../../cards/extensions/AddressFieldExtensions'
 import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
 import NuernbergPassIdExtension from '../../cards/extensions/NuernbergPassIdExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
 import StartDayExtension from '../../cards/extensions/StartDayExtension'
-import PlainDate from '../../util/PlainDate'
 import { commonColors } from '../common/colors'
-import type { InfoParams, ProjectConfig } from '../index'
+import type { ProjectConfig } from '../index'
 import { storesManagementConfig } from '../storesManagementConfig'
 import ActivityLogEntry from './ActivityLogEntry'
 import { buildCsvLine } from './csvExport'
 import { DataPrivacyBaseText } from './dataPrivacy'
+import { createAddressFormFields, renderCardHash, renderPassId, renderPdfDetails } from './pdf'
 import pdfTemplate from './pdf-template.pdf'
-
-const renderPdfDetails = ({ info }: InfoParams): string => {
-  const expirationDay = info.expirationDay
-
-  if (expirationDay === undefined) {
-    throw new Error('expirationDay must be defined for Nürnberg')
-  }
-
-  const passId = info.extensions?.extensionNuernbergPassId?.passId
-  const expirationDate = PlainDate.fromDaysSinceEpoch(expirationDay)
-  const birthdayDate = PlainDate.fromDaysSinceEpoch(
-    info.extensions?.extensionBirthday?.birthday ?? 0,
-  )
-  const startDate = PlainDate.fromDaysSinceEpoch(info.extensions?.extensionStartDay?.startDay ?? 0)
-
-  return `${info.fullName}
-Pass-ID: ${passId ?? ''}
-Geburtsdatum: ${birthdayDate.format()}
-Gültig: ${startDate.format()} bis ${expirationDate.format()}`
-}
-
-const createAddressFormFields = (
-  form: PDFForm,
-  pageIdx: number,
-  { info, card }: InfoParams,
-): PDFTextField[] => {
-  const [addressLine1, addressLine2, plz, location] = getAddressFieldExtensionsValues(card)
-  const nameField = form.createTextField(`${pageIdx}.address.name`)
-  const addressLine1Field = form.createTextField(`${pageIdx}.address.line.1`)
-  const addressLine2Field = form.createTextField(`${pageIdx}.address.line.2`)
-  const plzAndLocationField = form.createTextField(`${pageIdx}.address.location`)
-
-  if (addressLine1 || addressLine2 || plz || location) {
-    // avoid only printing the name
-    nameField.setText(info.fullName)
-  }
-  if (addressLine1) {
-    addressLine1Field.setText(addressLine1)
-  }
-  if (addressLine2) {
-    addressLine2Field.setText(addressLine2)
-  }
-  if (plz && location) {
-    if (!addressLine2) {
-      addressLine2Field.setText(`${plz} ${location}`)
-    } else {
-      plzAndLocationField.setText(`${plz} ${location}`)
-    }
-  }
-
-  return [nameField, addressLine1Field, addressLine2Field, plzAndLocationField]
-}
-
-const renderPassId = ({ info }: InfoParams): string =>
-  info.extensions?.extensionNuernbergPassId?.passId?.toString() ?? ''
-
-const renderCardHash = ({ cardInfoHash }: InfoParams): string => cardInfoHash
 
 export const config: ProjectConfig = {
   colorPalette: commonColors,
@@ -100,7 +43,8 @@ export const config: ProjectConfig = {
       RegionExtension,
     ],
   },
-  dataPrivacyHeadline: 'Datenschutzerklärung für die Nutzung und Beantragung des digitalen Nürnberg-Pass',
+  dataPrivacyHeadline:
+    'Datenschutzerklärung für die Nutzung und Beantragung des digitalen Nürnberg-Pass',
   dataPrivacyContent: DataPrivacyBaseText,
   timezone: 'Europe/Berlin',
   activityLogConfig: {
