@@ -1,4 +1,3 @@
-import { LOCAL_STORAGE_PROJECT_KEY } from '../../../../project-configs/constants'
 import { config as koblenzConfig } from '../../../../project-configs/koblenz/config'
 import { config } from '../../../../project-configs/nuernberg/config'
 import { LOCAL_STORAGE_PROJECT_KEY } from '../../../../util/getBuildConfig'

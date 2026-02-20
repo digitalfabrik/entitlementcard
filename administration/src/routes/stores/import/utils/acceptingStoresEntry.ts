@@ -1,6 +1,6 @@
 import { StoresFieldConfig } from '../../../../project-configs'
-import { FIELD_LATITUDE, FIELD_LONGITUDE } from '../../../../project-configs/constants'
 import { isCoordinate } from '../../../../project-configs/helper/storeFieldValidation'
+import { FIELD_LATITUDE, FIELD_LONGITUDE } from '../../../../project-configs/storesManagementConfig'
 import type { StoresData } from '../StoresImportController'
 
 export class AcceptingStoresEntry {
