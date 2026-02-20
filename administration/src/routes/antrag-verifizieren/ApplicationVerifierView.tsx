@@ -6,7 +6,7 @@ import { Temporal } from 'temporal-polyfill'
 
 import JsonFieldView from '../../components/JsonFieldView'
 import { GetApplicationByApplicantQuery } from '../../generated/graphql'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { ApplicationVerificationPublic } from '../applications/types/types'
 import { ApplicationWithoutVerifications } from '../applications/utils/application'

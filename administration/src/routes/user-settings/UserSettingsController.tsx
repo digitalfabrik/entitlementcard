@@ -3,7 +3,7 @@ import React, { ReactElement, useContext } from 'react'
 
 import RenderGuard from '../../components/RenderGuard'
 import { Role } from '../../generated/graphql'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import ChangePasswordForm from './components/ChangePasswordForm'
 import NotificationSettings from './components/NotificationSettings'
 

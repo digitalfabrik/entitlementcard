@@ -10,7 +10,7 @@ import PasswordInput from '../../components/PasswordInput'
 import StandaloneCenter from '../../components/StandaloneCenter'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useCheckPasswordResetLinkQuery, useResetPasswordMutation } from '../../generated/graphql'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import getQueryResult from '../../util/getQueryResult'
 
 const ResetPasswordController = (): ReactElement => {

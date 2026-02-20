@@ -12,7 +12,7 @@ import {
   useGetApplicationByApplicationVerificationAccessKeyQuery,
   useVerifyOrRejectApplicationVerificationMutation,
 } from '../../generated/graphql'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import getQueryResult from '../../util/getQueryResult'
 import { applicationWasAlreadyProcessed, parseApplication } from '../applications/utils/application'
 import ApplicationVerifierView from './ApplicationVerifierView'

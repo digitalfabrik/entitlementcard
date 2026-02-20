@@ -6,7 +6,7 @@ import { Temporal } from 'temporal-polyfill'
 import RenderGuard from '../../components/RenderGuard'
 import { Role } from '../../generated/graphql'
 import { ActivityLogConfig } from '../../project-configs'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import ActivityLogTable from './components/ActivityLogTable'
 import { loadActivityLog } from './utils/activityLog'
 

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 
 import { Role } from '../generated/graphql'
-import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../provider/ProjectConfigContext'
 import { useWhoAmI } from '../provider/WhoAmIProvider'
 import roleToText from '../routes/users/utils/roleToText'
 import RenderGuard from './RenderGuard'
