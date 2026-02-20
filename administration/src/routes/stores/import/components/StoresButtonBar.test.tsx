@@ -1,10 +1,10 @@
 import { act, fireEvent } from '@testing-library/react'
 import React from 'react'
 
-import { LOCAL_STORAGE_PROJECT_KEY } from '../../../../project-configs/constants'
 import { config as koblenzConfig } from '../../../../project-configs/koblenz/config'
 import { config as nuernbergConfig } from '../../../../project-configs/nuernberg/config'
 import { CustomRenderOptions, renderWithOptions } from '../../../../testing/render'
+import { LOCAL_STORAGE_PROJECT_KEY } from '../../../../util/getBuildConfig'
 import { invalidStoreData, validStoreData } from '../__mock__/mockStoreEntry'
 import { AcceptingStoresEntry } from '../utils/acceptingStoresEntry'
 import StoresButtonBar from './StoresButtonBar'

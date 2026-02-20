@@ -1,9 +1,9 @@
 import { fireEvent } from '@testing-library/react'
 import React from 'react'
 
-import { LOCAL_STORAGE_PROJECT_KEY } from '../../../project-configs/constants'
 import { config } from '../../../project-configs/koblenz/config'
 import { CustomRenderOptions, renderWithOptions } from '../../../testing/render'
+import { LOCAL_STORAGE_PROJECT_KEY } from '../../../util/getBuildConfig'
 import CardSelfServiceInformation from './CardSelfServiceInformation'
 
 const goToActivation = jest.fn()
