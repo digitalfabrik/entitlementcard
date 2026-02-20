@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import CustomDatePicker from '../../components/CustomDatePicker'
 import FormAlert from '../../components/FormAlert'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import PlainDate from '../../util/PlainDate'
 import type { Extension, ExtensionComponentProps } from './extensions'
 

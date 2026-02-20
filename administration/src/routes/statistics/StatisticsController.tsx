@@ -8,7 +8,7 @@ import {
   useGetCardStatisticsInProjectQuery,
   useGetCardStatisticsInRegionQuery,
 } from '../../generated/graphql'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import { useWhoAmI } from '../../provider/WhoAmIProvider'
 import getQueryResult from '../../util/getQueryResult'
 import StatisticsOverview from './components/StatisticsOverview'

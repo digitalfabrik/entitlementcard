@@ -5,10 +5,10 @@ import React, { ReactElement } from 'react'
 
 import Router from './Router'
 import { getProjectConfig } from './project-configs'
-import { ProjectConfigProvider } from './project-configs/ProjectConfigContext'
 import AppApolloProvider from './provider/AppApolloProvider'
 import { AppSnackbarProvider } from './provider/AppSnackbarProvider'
 import AuthProvider from './provider/AuthProvider'
+import { ProjectConfigProvider } from './provider/ProjectConfigContext'
 import './translations/i18n'
 import { theme } from './util/theme'
 

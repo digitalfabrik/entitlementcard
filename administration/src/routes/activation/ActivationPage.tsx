@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
 
 import AlertBox from '../../components/AlertBox'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import ActivationPageContent from './components/ActivationPageContent'
 
 const CardContainer = styled(Card)`

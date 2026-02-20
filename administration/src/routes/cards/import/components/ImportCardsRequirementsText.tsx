@@ -3,7 +3,7 @@ import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { ProjectConfig } from '../../../../project-configs'
-import { ProjectConfigContext } from '../../../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../../../provider/ProjectConfigContext'
 import { FILE_SIZE_LIMIT_MEGA_BYTES } from '../../../stores/import/constants'
 import { ENTRY_LIMIT } from '../../constants'
 

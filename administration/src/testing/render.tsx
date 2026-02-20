@@ -8,8 +8,8 @@ import { I18nextProvider } from 'react-i18next'
 import { MemoryRouter } from 'react-router'
 
 import { ProjectConfig } from '../project-configs'
-import { ProjectConfigProvider } from '../project-configs/ProjectConfigContext'
 import { AppSnackbarProvider } from '../provider/AppSnackbarProvider'
+import { ProjectConfigProvider } from '../provider/ProjectConfigContext'
 import i18n from '../translations/i18n'
 
 export type CustomRenderOptions = {
