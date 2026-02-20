@@ -11,7 +11,7 @@ import {
   buildConfigNuernberg,
 } from 'build-configs'
 
-import { LOCAL_STORAGE_PROJECT_KEY } from '../project-configs/constants'
+export const LOCAL_STORAGE_PROJECT_KEY = 'project-override'
 
 export const getBuildConfig = (hostname: string): BuildConfigType => {
   switch (window.localStorage.getItem(LOCAL_STORAGE_PROJECT_KEY) ?? hostname) {
