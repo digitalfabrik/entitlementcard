@@ -112,7 +112,7 @@ const config: ProjectConfig = {
     },
   },
   freinetCSVImportEnabled: true,
-  freinetDataTransferEnabled: false,
+  freinetDataTransferEnabled: true,
   cardCreation: true,
   selfServiceEnabled: false,
   storesManagement: {

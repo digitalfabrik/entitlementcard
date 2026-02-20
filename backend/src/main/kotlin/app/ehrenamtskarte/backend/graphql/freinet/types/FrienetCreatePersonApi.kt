@@ -6,6 +6,7 @@ data class FreinetPerson(
     val nachname: String,
     val geburtstag: String,
     val address: Map<String, FreinetAddress>,
+    val user_id: Int? = null,
 )
 
 data class FreinetAddress(
