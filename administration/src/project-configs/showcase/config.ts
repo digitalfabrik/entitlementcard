@@ -1,7 +1,11 @@
 import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
-import { applicationJsonToCardQuery, applicationJsonToPersonalData, config as bayernConfig } from '../bayern/config'
+import { config as bayernConfig } from '../bayern/config'
 import { DataPrivacyBaseText } from '../bayern/dataPrivacy'
+import {
+  applicationJsonToCardQuery,
+  applicationJsonToPersonalData,
+} from '../common/applicationFeatures'
 import { commonColors } from '../common/colors'
 import type { ProjectConfig } from '../index'
 
@@ -24,7 +28,8 @@ export const config: ProjectConfig = {
     defaultValidity: { years: 3 },
     extensions: [BavariaCardTypeExtension, RegionExtension],
   },
-  dataPrivacyHeadline: 'Datenschutzerklärung für die Nutzung und Beantragung der digitalen Berechtigungskarte',
+  dataPrivacyHeadline:
+    'Datenschutzerklärung für die Nutzung und Beantragung der digitalen Berechtigungskarte',
   dataPrivacyContent: DataPrivacyBaseText,
   timezone: 'Europe/Berlin',
   pdf: bayernConfig.pdf,

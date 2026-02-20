@@ -1,37 +1,19 @@
 import {
-  buildConfigKoblenz,
   QUERY_PARAM_BIRTHDAY,
   QUERY_PARAM_KOBLENZ_REFERENCE_NUMBER,
-  QUERY_PARAM_NAME
+  QUERY_PARAM_NAME,
+  buildConfigKoblenz,
 } from 'build-configs'
 
 import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
 import KoblenzReferenceNumberExtension from '../../cards/extensions/KoblenzReferenceNumberExtension'
-import PlainDate from '../../util/PlainDate'
 import { ActivationText } from '../common/ActivationText'
 import { commonColors } from '../common/colors'
-import type { InfoParams, ProjectConfig } from '../index'
+import { ProjectConfig } from '../index'
 import { storesManagementConfig } from '../storesManagementConfig'
 import { DataPrivacyBaseText } from './dataPrivacy'
+import { renderPdfDetails } from './pdf'
 import pdfTemplate from './pdf-template.pdf'
-
-const renderPdfDetails = ({ info }: InfoParams): string => {
-  const expirationDay = info.expirationDay
-
-  if (expirationDay === undefined) {
-    throw new Error('expirationDay must be defined for Koblenz')
-  }
-
-  const expirationDate = PlainDate.fromDaysSinceEpoch(expirationDay)
-  const birthdayDate = PlainDate.fromDaysSinceEpoch(
-    info.extensions?.extensionBirthday?.birthday ?? 0,
-  )
-  const startDate = PlainDate.fromDaysSinceEpoch(info.extensions?.extensionStartDay?.startDay ?? 0)
-
-  return `${startDate.format()} - ${expirationDate.format()}
-${birthdayDate.format()}
-${info.fullName}`
-}
 
 export const config: ProjectConfig = {
   colorPalette: {
@@ -51,7 +33,8 @@ export const config: ProjectConfig = {
     defaultValidity: { years: 1 },
     extensions: [BirthdayExtension, KoblenzReferenceNumberExtension],
   },
-  dataPrivacyHeadline: 'Datenschutzerklärung für die Nutzung und Aktivierung des digitalen KoblenzPasses',
+  dataPrivacyHeadline:
+    'Datenschutzerklärung für die Nutzung und Aktivierung des digitalen KoblenzPasses',
   dataPrivacyContent: DataPrivacyBaseText,
   timezone: 'Europe/Berlin',
   pdf: {
