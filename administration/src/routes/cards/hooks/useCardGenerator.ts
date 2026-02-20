@@ -122,8 +122,7 @@ const useCardGenerator = ({
         downloadDataUri(dataUri, filename)
         normalizedCards.forEach(saveActivityLog)
 
-        // This is a temporary condition from #2141
-        if (!isProductionEnvironment() && applicationId != null) {
+        if (applicationId != null) {
           const freinetCard = getFreinetCardFromCards(normalizedCards)
           sendToFreinet({
             variables: {
