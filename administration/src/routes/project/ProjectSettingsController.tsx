@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import RenderGuard from '../../components/RenderGuard'
 import { Role } from '../../generated/graphql'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import { useWhoAmI } from '../../provider/WhoAmIProvider'
 import ApiTokenSettings from './components/ApiTokenSettings'
 

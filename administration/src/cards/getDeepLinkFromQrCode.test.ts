@@ -13,7 +13,7 @@ import { CreateCardsResult } from './createCards'
 import BavariaCardTypeExtension from './extensions/BavariaCardTypeExtension'
 import RegionExtension from './extensions/RegionExtension'
 import getDeepLinkFromQrCode from './getDeepLinkFromQrCode'
-import { PdfQrCode } from './pdf/pdfQrCodeElement'
+import type { PdfQrCode } from './pdf/elements'
 
 jest.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
 

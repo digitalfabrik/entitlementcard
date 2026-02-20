@@ -2,14 +2,14 @@ import { generateCardInfo, initializeCard } from '../../cards/card'
 import { CreateCardsResult } from '../../cards/createCards'
 import { DynamicActivationCode } from '../../generated/card_pb'
 import { getTestRegion } from '../../routes/user-settings/__mocks__/Region'
-import nuernbergConfig from './config'
+import { config } from './config'
 import { buildCsvLine } from './csvExport'
 
 jest.mock('csv-stringify/browser/esm/sync', () => ({
   stringify: (input: string[][]) => input[0].join(','),
 }))
 
-jest.mock('../getProjectConfig', () => ({
+jest.mock('../index', () => ({
   __esModule: true,
   default: jest.fn(),
 }))
@@ -18,7 +18,7 @@ describe('csvExport', () => {
   it('header should have same length as line', () => {
     const nuernberg = getTestRegion({})
 
-    const cards = [initializeCard(nuernbergConfig.card, nuernberg, { fullName: 'Thea Test' })]
+    const cards = [initializeCard(config.card, nuernberg, { fullName: 'Thea Test' })]
 
     const codes: CreateCardsResult[] = [
       {
@@ -27,7 +27,7 @@ describe('csvExport', () => {
       },
     ]
 
-    const csvConfig = nuernbergConfig.csvExport
+    const csvConfig = config.csvExport
     expect(csvConfig.enabled).toBeTruthy()
     if (!csvConfig.enabled) {
       throw new Error('Tested failed')

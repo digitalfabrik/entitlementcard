@@ -5,7 +5,7 @@ import { Trans, useTranslation } from 'react-i18next'
 
 import JsonFieldView from '../../components/JsonFieldView'
 import { GetApplicationByApplicantQuery } from '../../generated/graphql'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { ApplicationVerificationPublic } from '../applications/types/types'

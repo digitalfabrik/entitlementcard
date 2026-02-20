@@ -1,7 +1,7 @@
 import { Stack, Typography } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 
 const DataPrivacyPolicy = (): ReactElement => {
   const config = useContext(ProjectConfigContext)

@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next'
 
 import RenderGuard from '../../components/RenderGuard'
 import { Role } from '../../generated/graphql'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import { ActivityLogConfig } from '../../project-configs/getProjectConfig'
+import { ActivityLogConfig } from '../../project-configs'
+import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import ActivityLogTable from './components/ActivityLogTable'
 import { loadActivityLog } from './utils/activityLog'
 

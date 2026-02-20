@@ -5,7 +5,7 @@ import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Role } from '../generated/graphql'
-import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../provider/ProjectConfigContext'
 import { useWhoAmI } from '../provider/WhoAmIProvider'
 import RenderGuard from './RenderGuard'
 

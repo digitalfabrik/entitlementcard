@@ -12,7 +12,7 @@ import React, { useContext, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { useGetDataPolicyQuery } from '../../../../generated/graphql'
-import { ProjectConfigContext } from '../../../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../../../provider/ProjectConfigContext'
 import i18next from '../../../../translations/i18n'
 import getQueryResult from '../../../../util/getQueryResult'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'

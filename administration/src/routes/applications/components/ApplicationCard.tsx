@@ -45,8 +45,8 @@ import {
   useRejectApplicationStatusMutation,
 } from '../../../generated/graphql'
 import { CsvIcon } from '../../../icons/CsvIcon'
-import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
-import type { ProjectConfig } from '../../../project-configs/getProjectConfig'
+import type { ProjectConfig } from '../../../project-configs'
+import { ProjectConfigContext } from '../../../provider/ProjectConfigContext'
 import getApiBaseUrl from '../../../util/getApiBaseUrl'
 import type { Application } from '../types/types'
 import { ApplicationDataIncompleteError } from '../utils/applicationDataHelper'

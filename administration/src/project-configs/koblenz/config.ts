@@ -9,14 +9,19 @@ import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
 import KoblenzReferenceNumberExtension from '../../cards/extensions/KoblenzReferenceNumberExtension'
 import { ActivationText } from '../common/ActivationText'
 import { commonColors } from '../common/colors'
-import type { ProjectConfig } from '../getProjectConfig'
+import { ProjectConfig } from '../index'
 import { storesManagementConfig } from '../storesManagementConfig'
-import colorsOverride from './colorsOverride'
-import { DataPrivacyBaseText, dataPrivacyBaseHeadline } from './dataPrivacyBase'
-import pdfConfig from './pdf'
+import { DataPrivacyBaseText } from './dataPrivacy'
+import { renderPdfDetails } from './pdf'
+import pdfTemplate from './pdf-template.pdf'
 
-const config: ProjectConfig = {
-  colorPalette: { ...commonColors, ...colorsOverride },
+export const config: ProjectConfig = {
+  colorPalette: {
+    ...commonColors,
+    primary: { main: '#3b83f6', light: '#bdddff' },
+    secondary: { main: '#922224', light: '#f1c9cf' },
+    accent: { main: '#E2007A', light: '#fce5f0' },
+  },
   name: 'KoblenzPass',
   projectId: 'koblenz.sozialpass.app',
   publisherText: buildConfigKoblenz.common.publisherText,
@@ -28,10 +33,33 @@ const config: ProjectConfig = {
     defaultValidity: { years: 1 },
     extensions: [BirthdayExtension, KoblenzReferenceNumberExtension],
   },
-  dataPrivacyHeadline: dataPrivacyBaseHeadline,
+  dataPrivacyHeadline:
+    'Datenschutzerklärung für die Nutzung und Aktivierung des digitalen KoblenzPasses',
   dataPrivacyContent: DataPrivacyBaseText,
   timezone: 'Europe/Berlin',
-  pdf: pdfConfig,
+  pdf: {
+    title: 'KoblenzPass',
+    templatePath: pdfTemplate,
+    customFont: 'ArialMT',
+    customBoldFont: 'Arial-BoldMT',
+    issuer: 'Stadt Koblenz',
+    elements: {
+      staticVerificationQrCodes: [{ x: 152, y: 230, size: 34 }],
+      dynamicActivationQrCodes: [{ x: 130, y: 103, size: 54 }],
+      text: [
+        {
+          x: 109,
+          y: 254,
+          maxWidth: 80,
+          fontSize: 9,
+          bold: true,
+          spacing: 13,
+          infoToText: renderPdfDetails,
+        },
+      ],
+      deepLinkArea: { x: 130, y: 103, size: 54 },
+    },
+  },
   csvExport: {
     enabled: false,
   },
@@ -49,5 +77,3 @@ const config: ProjectConfig = {
   showBirthdayExtensionHint: true,
   locales: buildConfigKoblenz.common.appLocales,
 }
-
-export default config

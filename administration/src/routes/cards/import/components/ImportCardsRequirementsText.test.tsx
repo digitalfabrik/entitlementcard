@@ -1,10 +1,10 @@
 import React from 'react'
 
-import bayernConfig from '../../../../project-configs/bayern/config'
+import { config as bayernConfig } from '../../../../project-configs/bayern/config'
 import { getCsvHeaders } from '../../../../project-configs/helper'
-import koblenzConfig from '../../../../project-configs/koblenz/config'
-import nuernbergConfig from '../../../../project-configs/nuernberg/config'
-import showcaseConfig from '../../../../project-configs/showcase/config'
+import { config as koblenzConfig } from '../../../../project-configs/koblenz/config'
+import { config as nuernbergConfig } from '../../../../project-configs/nuernberg/config'
+import { config as showcaseConfig } from '../../../../project-configs/showcase/config'
 import { renderWithOptions } from '../../../../testing/render'
 import ImportCardsRequirementsText from './ImportCardsRequirementsText'
 

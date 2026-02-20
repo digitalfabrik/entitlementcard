@@ -3,7 +3,7 @@ import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import entitlementIcon from '../assets/icons/entitlement_icon_outline.svg'
-import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../provider/ProjectConfigContext'
 import { useWhoAmI } from '../provider/WhoAmIProvider'
 import NavigationItems from './NavigationItems'
 import UserMenu from './UserMenu'

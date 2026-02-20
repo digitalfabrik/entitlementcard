@@ -1,9 +1,6 @@
 import { Link, Typography } from '@mui/material'
 import React, { ReactElement } from 'react'
 
-export const dataPrivacyBaseHeadline =
-  'Datenschutzerklärung für die Nutzung und Beantragung des digitalen Nürnberg-Pass'
-
 /* Generated using https://magic.reactjs.net/htmltojsx.htm
 Instructions:
 Generate an HTML file from the Word document in OnlyOffice.

@@ -3,7 +3,7 @@ import { styled } from '@mui/system'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { StatisticsTheme } from '../../../project-configs/getProjectConfig'
+import { StatisticsTheme } from '../../../project-configs'
 
 const ColorIndicator = styled('div')(props => ({
   backgroundColor: props.color,

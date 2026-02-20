@@ -2,7 +2,7 @@ import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material'
 import { Stack } from '@mui/system'
 import React, { ReactElement } from 'react'
 
-import { StoresFieldConfig } from '../../../../project-configs/getProjectConfig'
+import { StoresFieldConfig } from '../../../../project-configs'
 import StoreTableEntry from '../../components/StoreTableEntry'
 import { AcceptingStoresEntry } from '../utils/acceptingStoresEntry'
 

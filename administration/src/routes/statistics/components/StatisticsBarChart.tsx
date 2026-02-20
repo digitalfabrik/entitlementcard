@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import AlertBox from '../../../components/AlertBox'
 import { CardStatisticsResultModel } from '../../../generated/graphql'
-import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../../provider/ProjectConfigContext'
 import StatisticsBarTooltip from './StatisticsBarTooltip'
 
 const BarContainer = styled('div')<{ height: number }>`

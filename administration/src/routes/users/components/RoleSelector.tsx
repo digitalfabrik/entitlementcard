@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import FormAlert from '../../../components/FormAlert'
 import { Role } from '../../../generated/graphql'
-import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../../provider/ProjectConfigContext'
 import { useWhoAmI } from '../../../provider/WhoAmIProvider'
 import roleToText from '../utils/roleToText'
 import RoleHelpButton from './RoleHelpButton'

@@ -3,7 +3,7 @@ import { grey } from '@mui/material/colors'
 import { Theme } from '@mui/system'
 import { deDE } from '@mui/x-data-grid/locales'
 
-import { ProjectConfig } from '../project-configs/getProjectConfig'
+import { ProjectConfig } from '../project-configs'
 import LinkBehavior from './LinkBehavior'
 
 export const theme = (config: ProjectConfig): Theme =>

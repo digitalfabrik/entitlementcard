@@ -1,8 +1,27 @@
-import { PDFDocument, PDFFont, PDFPage, StandardFonts } from '@cantoo/pdf-lib'
+/* eslint-disable prefer-arrow/prefer-arrow-functions */
+
+/* eslint-disable @typescript-eslint/no-use-before-define */
+
+/* eslint-disable no-else-return */
+
+/* eslint-disable no-restricted-syntax */
+
+/* eslint-disable no-await-in-loop */
+import {
+  PDFArray,
+  PDFDict,
+  PDFDocument,
+  PDFFont,
+  PDFName,
+  PDFPage,
+  PDFRawStream,
+  StandardFonts,
+  decodePDFRawStream,
+} from '@cantoo/pdf-lib'
 import fontkit from '@pdf-lib/fontkit'
 
 import { Region } from '../../generated/graphql'
-import { PdfConfig, ProjectConfig } from '../../project-configs/getProjectConfig'
+import { PdfConfig, PdfFontReference, ProjectConfig } from '../../project-configs'
 import { getBuildConfig } from '../../util/getBuildConfig'
 import { isProductionEnvironment } from '../../util/helper'
 import normalizeString from '../../util/normalizeString'
@@ -10,10 +29,13 @@ import { reportErrorToSentry } from '../../util/sentry'
 import { Card } from '../card'
 import { CreateCardsResult } from '../createCards'
 import getDeepLinkFromQrCode from '../getDeepLinkFromQrCode'
-import pdfFormElement from './pdfFormElement'
-import pdfLinkArea from './pdfLinkArea'
-import pdfQrCodeElement, { PdfQrCode } from './pdfQrCodeElement'
-import pdfTextElement from './pdfTextElement'
+import {
+  type PdfQrCode,
+  pdfFormElement,
+  pdfLinkArea,
+  pdfQrCodeElement,
+  pdfTextElement,
+} from './elements'
 
 export class PdfError extends Error {
   constructor(message: string) {
@@ -22,97 +44,79 @@ export class PdfError extends Error {
   }
 }
 
-const loadCustomFontWithFallback = async (
-  font: string,
-  doc: PDFDocument,
-  fallbackFont: string,
-): Promise<PDFFont> => {
-  doc.registerFontkit(fontkit)
-  const fontUrl = `/fonts/${font}`
-  try {
-    const res = await fetch(fontUrl)
-    if (res.ok && res.headers.get('Content-Type')?.includes('font')) {
-      const fontBytes = await res.arrayBuffer()
-      return doc.embedFont(fontBytes)
-    }
-    reportErrorToSentry(`Couldn't load custom font ${font}. Using fallback font.`)
-    return doc.embedFont(fallbackFont)
-  } catch (error) {
-    reportErrorToSentry(error)
-    return doc.embedFont(fallbackFont)
-  }
-}
-
 const fillContentAreas = async (
-  doc: PDFDocument,
-  templatePage: PDFPage,
+  targetDocument: PDFDocument,
+  page: PDFPage,
   code: CreateCardsResult,
   card: Card,
   pdfConfig: PdfConfig,
-  region?: Region,
+  region: Region | undefined,
+  fontRegular: PDFFont,
+  fontBold: PDFFont,
 ): Promise<void> => {
-  const { dynamicActivationCode, staticVerificationCode, dynamicCardInfoHashBase64 } = code
-  const dynamicCode: PdfQrCode = { case: 'dynamicActivationCode', value: dynamicActivationCode }
-  const staticCode: PdfQrCode | null = staticVerificationCode
-    ? {
-        case: 'staticVerificationCode',
-        value: staticVerificationCode,
-      }
-    : null
-  const font = pdfConfig.customFont
-    ? await loadCustomFontWithFallback(pdfConfig.customFont, doc, StandardFonts.Helvetica)
-    : await doc.embedFont(StandardFonts.Helvetica)
-  pdfConfig.elements?.dynamicActivationQrCodes.forEach(configOptions =>
-    pdfQrCodeElement(configOptions, { page: templatePage, qrCode: dynamicCode }),
-  )
-
-  const fontBold = pdfConfig.customBoldFont
-    ? await loadCustomFontWithFallback(pdfConfig.customBoldFont, doc, StandardFonts.HelveticaBold)
-    : await doc.embedFont(StandardFonts.HelveticaBold)
+  const dynamicCode: PdfQrCode = {
+    case: 'dynamicActivationCode',
+    value: code.dynamicActivationCode,
+  }
 
   if (pdfConfig.elements?.deepLinkArea) {
-    pdfLinkArea(pdfConfig.elements.deepLinkArea, {
-      doc,
-      page: templatePage,
-      font: fontBold,
-      url: getDeepLinkFromQrCode(
+    pdfLinkArea(
+      page,
+      getDeepLinkFromQrCode(
         dynamicCode,
         getBuildConfig(window.location.hostname),
         isProductionEnvironment(),
       ),
-    })
-  }
-
-  if (staticCode) {
-    pdfConfig.elements?.staticVerificationQrCodes?.forEach(configOptions =>
-      pdfQrCodeElement(configOptions, { page: templatePage, qrCode: staticCode }),
+      pdfConfig.elements.deepLinkArea,
     )
-  } else if (pdfConfig.elements?.staticVerificationQrCodes) {
-    throw Error('To create this PDF a static QR-Code is required. However, it seems to be missing.')
   }
 
-  const form = doc.getForm()
-  pdfConfig.elements?.form?.forEach(configOptions =>
-    pdfFormElement(configOptions, {
-      page: templatePage,
-      form,
-      font,
-      info: dynamicCode.value.info!,
-      card,
-      cardInfoHash: dynamicCardInfoHashBase64,
-      region,
-    }),
+  pdfConfig.elements?.dynamicActivationQrCodes.forEach(configOptions =>
+    pdfQrCodeElement(page, dynamicCode, configOptions),
   )
 
+  if (pdfConfig.elements?.staticVerificationQrCodes) {
+    if (code.staticVerificationCode) {
+      const staticCode: PdfQrCode = {
+        case: 'staticVerificationCode',
+        value: code.staticVerificationCode,
+      }
+
+      pdfConfig.elements.staticVerificationQrCodes.forEach(configOptions =>
+        pdfQrCodeElement(page, staticCode, configOptions),
+      )
+    } else {
+      throw Error(
+        'To create this PDF a static QR-Code is required. However, it seems to be missing.',
+      )
+    }
+  }
+
+  pdfConfig.elements?.form?.forEach(configOptions =>
+    pdfFormElement(
+      page,
+      configOptions.infoToFormFields(targetDocument.getForm(), page.doc.getPageCount(), {
+        info: dynamicCode.value.info!,
+        region,
+        card,
+        cardInfoHash: code.dynamicCardInfoHashBase64,
+      }),
+      fontRegular,
+      configOptions,
+    ),
+  )
   pdfConfig.elements?.text.forEach(configOptions =>
-    pdfTextElement(configOptions, {
-      page: templatePage,
-      font: configOptions.bold ? fontBold : font,
-      info: dynamicCode.value.info!,
-      card,
-      cardInfoHash: dynamicCardInfoHashBase64,
-      region,
-    }),
+    pdfTextElement(
+      page,
+      configOptions.bold ? fontBold : fontRegular,
+      configOptions.infoToText({
+        info: dynamicCode.value.info!,
+        region,
+        card,
+        cardInfoHash: code.dynamicCardInfoHashBase64,
+      }),
+      configOptions,
+    ),
   )
 }
 
@@ -122,27 +126,52 @@ export const generatePdf = async (
   projectConfig: ProjectConfig,
   region?: Region,
 ): Promise<Blob> => {
-  const pdfConfig = projectConfig.pdf
   try {
-    const doc = await PDFDocument.create()
     const templateDocument = await PDFDocument.load(
-      await fetch(pdfConfig.templatePath).then(res => res.arrayBuffer()),
+      await (await fetch(projectConfig.pdf.templatePath)).arrayBuffer(),
     )
+    templateDocument.registerFontkit(fontkit)
+
+    const targetDocument = await PDFDocument.create()
+    targetDocument.registerFontkit(fontkit)
+    targetDocument.setTitle(projectConfig.pdf.title)
+    targetDocument.setAuthor(projectConfig.pdf.issuer)
+
+    const [fontRegular, fontBold] = await Promise.all([
+      getFont(
+        templateDocument,
+        targetDocument,
+        projectConfig.pdf.customFont,
+        StandardFonts.Helvetica,
+      ),
+      getFont(
+        templateDocument,
+        targetDocument,
+        projectConfig.pdf.customBoldFont,
+        StandardFonts.HelveticaBold,
+      ),
+    ])
 
     for (let index = 0; index < codes.length; index++) {
-      // eslint-disable-next-line no-await-in-loop
-      const [templatePage] = await doc.copyPages(templateDocument, [0])
-      const page = doc.addPage(templatePage)
-      // eslint-disable-next-line no-await-in-loop
-      await fillContentAreas(doc, page, codes[index], cards[index], pdfConfig, region)
+      const [templatePage] = await targetDocument.copyPages(templateDocument, [0])
+      const page = targetDocument.addPage(templatePage)
+      await fillContentAreas(
+        targetDocument,
+        page,
+        codes[index],
+        cards[index],
+        projectConfig.pdf,
+        region,
+        fontRegular,
+        fontBold,
+      )
     }
 
-    doc.setTitle(pdfConfig.title)
-    doc.setAuthor(pdfConfig.issuer)
-
-    const pdfBytes = await doc.save()
-    return new Blob([pdfBytes.buffer as ArrayBuffer], { type: 'application/pdf' })
+    return new Blob([(await targetDocument.save()).buffer as ArrayBuffer], {
+      type: 'application/pdf',
+    })
   } catch (error) {
+    // TODO What is the point of this?
     if (error instanceof Error) {
       throw new PdfError(error.message)
     }
@@ -157,4 +186,94 @@ export const getPdfFilename = (cards: Card[]): string => {
       ? `Berechtigungskarte_${normalizeString(cards[0].fullName)}-${new Date().getFullYear()}`
       : 'berechtigungskarten'
   return `${filename}.pdf`
+}
+
+async function getFont(
+  templateDocument: PDFDocument,
+  targetDocument: PDFDocument,
+  fontReference: PdfFontReference,
+  fallbackFont: string,
+): Promise<PDFFont> {
+  if (typeof fontReference === 'string') {
+    // Try to copy the font from the template document.
+    return (
+      (await copyEmbeddedFont(templateDocument, targetDocument, fontReference)) ??
+      targetDocument.embedFont(fallbackFont)
+    )
+  } else if (fontReference instanceof URL) {
+    // Load the font from an URL
+    return (await loadFont(targetDocument, fontReference)) ?? targetDocument.embedFont(fallbackFont)
+  } else if (fontReference === null) {
+    // The configured URL could not be parsed.
+    reportErrorToSentry('Error loading custom font, URL not parseable')
+    return targetDocument.embedFont(fallbackFont)
+  } else {
+    // No font configured
+    return targetDocument.embedFont(fallbackFont)
+  }
+}
+
+/**
+ * Extract an embedded font from a template PDF document and copies it to a target PDF document.
+ * Adapted from https://github.com/Hopding/pdf-lib/issues/463
+ *
+ * @returns The embedded font, or undefined if the font could not be found.
+ */
+async function copyEmbeddedFont(
+  templateDocument: PDFDocument,
+  targetDocument: PDFDocument,
+  fontName: string,
+): Promise<PDFFont | undefined> {
+  try {
+    for (const page of templateDocument.getPages()) {
+      for (const [_, fontRef] of page.node.normalizedEntries().Font.entries()) {
+        // Depending on the PDF, the font may accessible via any of these reference chains
+        const fontDescriptor =
+          templateDocument.context
+            .lookupMaybe(fontRef, PDFDict)
+            ?.lookupMaybe(PDFName.of('FontDescriptor'), PDFDict) ??
+          templateDocument.context
+            .lookupMaybe(
+              templateDocument.context
+                .lookupMaybe(fontRef, PDFDict)
+                ?.lookupMaybe(PDFName.of('DescendantFonts'), PDFArray)
+                ?.get(0),
+              PDFDict,
+            )
+            ?.lookupMaybe(PDFName.of('FontDescriptor'), PDFDict)
+
+        console.log(`Found desc ${fontDescriptor} --`)
+
+        if (fontDescriptor) {
+          const embeddedFontName = fontDescriptor.get(PDFName.of('FontName'))?.toString()
+          // https://www.verypdf.com/document/pdf-format-reference/pg_0466.htm
+          const fontFile = templateDocument.context.lookup(
+            fontDescriptor.get(PDFName.of('FontFile2')),
+          )
+
+          // The font name contains a generated prefix, but this match should work for most fonts.
+          if (embeddedFontName?.endsWith(fontName) && fontFile) {
+            return targetDocument.embedFont(decodePDFRawStream(fontFile as PDFRawStream).decode())
+          }
+        }
+      }
+    }
+
+    console.warn(`Embedded font ${fontName} not found`)
+    reportErrorToSentry(`Error loading embedded font ${fontName}: not found`)
+  } catch (error) {
+    console.error(error)
+    reportErrorToSentry(`Error loading embedded font ${fontName}: ${error}`)
+  }
+}
+
+/** Load a font from an URL */
+async function loadFont(doc: PDFDocument, url: URL): Promise<PDFFont | undefined> {
+  const res = await fetch(url)
+
+  if (res.ok && res.headers.get('Content-Type')?.includes('font')) {
+    return doc.embedFont(await res.arrayBuffer())
+  } else {
+    reportErrorToSentry(`Couldn't load custom font from ${url}`)
+  }
 }

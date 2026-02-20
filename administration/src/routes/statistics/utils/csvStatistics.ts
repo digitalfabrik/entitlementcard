@@ -2,7 +2,7 @@ import { stringify } from 'csv-stringify/browser/esm/sync'
 import i18next from 'i18next'
 
 import { CardStatisticsResultModel, Region } from '../../../generated/graphql'
-import { CardStatistics } from '../../../project-configs/getProjectConfig'
+import { CardStatistics } from '../../../project-configs'
 import { CSV_MIME_TYPE_UTF8 } from '../../applications/constants'
 
 export class CsvStatisticsError extends Error {
