@@ -74,25 +74,27 @@ class _MapContainerState extends State<MapContainer> implements MapController {
 
     return Stack(
       children: [
-        MapLibreMap(
-          initialCameraPosition: cameraPosition,
-          styleString: config.mapStyleUrl,
-          // We provide our own attribution menu
-          attributionButtonMargins: const math.Point(-100, -100),
-          // There is no way to remove the logo, so set the margins to a really large value to hide it
-          logoViewMargins: const math.Point(double.maxFinite, double.maxFinite),
-          myLocationEnabled: _permissionGiven,
-          myLocationTrackingMode: _permissionGiven ? MyLocationTrackingMode.tracking : MyLocationTrackingMode.none,
-          // required to prevent mapbox iOS from requesting location
-          // permissions on startup, as discussed in #249
-          myLocationRenderMode: MyLocationRenderMode.normal,
-          onMapCreated: _onMapCreated,
-          onMapClick: _onMapClick,
-          onStyleLoadedCallback: () {},
-          compassViewMargins: math.Point(Platform.isIOS ? compassMargin : 0, compassMargin),
-          compassViewPosition: CompassViewPosition.topRight,
-          minMaxZoomPreference: const MinMaxZoomPreference(4.0, 18.0),
-          onCameraTrackingDismissed: () => widget.setFollowUserLocation(false),
+        Positioned.fill(
+          child: MapLibreMap(
+            initialCameraPosition: cameraPosition,
+            styleString: config.mapStyleUrl,
+            // We provide our own attribution menu
+            attributionButtonMargins: const math.Point(-100, -100),
+            // There is no way to remove the logo, so set the margins to a really large value to hide it
+            logoViewMargins: const math.Point(double.maxFinite, double.maxFinite),
+            myLocationEnabled: _permissionGiven,
+            myLocationTrackingMode: _permissionGiven ? MyLocationTrackingMode.tracking : MyLocationTrackingMode.none,
+            // required to prevent mapbox iOS from requesting location
+            // permissions on startup, as discussed in #249
+            myLocationRenderMode: MyLocationRenderMode.normal,
+            onMapCreated: _onMapCreated,
+            onMapClick: _onMapClick,
+            onStyleLoadedCallback: () {},
+            compassViewMargins: math.Point(Platform.isIOS ? compassMargin : 0, compassMargin),
+            compassViewPosition: CompassViewPosition.topRight,
+            minMaxZoomPreference: const MinMaxZoomPreference(4.0, 18.0),
+            onCameraTrackingDismissed: () => widget.setFollowUserLocation(false),
+          ),
         ),
         Positioned(
           bottom: 3,
