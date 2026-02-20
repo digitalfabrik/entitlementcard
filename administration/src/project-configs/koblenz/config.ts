@@ -1,8 +1,8 @@
 import {
-  buildConfigKoblenz,
   QUERY_PARAM_BIRTHDAY,
   QUERY_PARAM_KOBLENZ_REFERENCE_NUMBER,
-  QUERY_PARAM_NAME
+  QUERY_PARAM_NAME,
+  buildConfigKoblenz,
 } from 'build-configs'
 import { Temporal } from 'temporal-polyfill'
 
@@ -10,7 +10,7 @@ import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
 import KoblenzReferenceNumberExtension from '../../cards/extensions/KoblenzReferenceNumberExtension'
 import { ActivationText } from '../common/ActivationText'
 import { commonColors } from '../common/colors'
-import type { InfoParams, ProjectConfig } from '../index'
+import { ProjectConfig } from '../index'
 import { storesManagementConfig } from '../storesManagementConfig'
 import { DataPrivacyBaseText } from './dataPrivacy'
 import { renderPdfDetails } from './pdf'
@@ -34,7 +34,8 @@ export const config: ProjectConfig = {
     defaultValidity: Temporal.Duration.from({ years: 1 }),
     extensions: [BirthdayExtension, KoblenzReferenceNumberExtension],
   },
-  dataPrivacyHeadline: 'Datenschutzerklärung für die Nutzung und Aktivierung des digitalen KoblenzPasses',
+  dataPrivacyHeadline:
+    'Datenschutzerklärung für die Nutzung und Aktivierung des digitalen KoblenzPasses',
   dataPrivacyContent: DataPrivacyBaseText,
   timezone: 'Europe/Berlin',
   pdf: {

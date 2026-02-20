@@ -2,7 +2,7 @@ import { rgb } from '@cantoo/pdf-lib'
 import { buildConfigNuernberg } from 'build-configs'
 import { Temporal } from 'temporal-polyfill'
 
-import AddressExtensions, { getAddressFieldExtensionsValues } from '../../cards/extensions/AddressFieldExtensions'
+import AddressExtensions from '../../cards/extensions/AddressFieldExtensions'
 import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
 import NuernbergPassIdExtension from '../../cards/extensions/NuernbergPassIdExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
@@ -44,7 +44,8 @@ export const config: ProjectConfig = {
       RegionExtension,
     ],
   },
-  dataPrivacyHeadline: 'Datenschutzerklärung für die Nutzung und Beantragung des digitalen Nürnberg-Pass',
+  dataPrivacyHeadline:
+    'Datenschutzerklärung für die Nutzung und Beantragung des digitalen Nürnberg-Pass',
   dataPrivacyContent: DataPrivacyBaseText,
   timezone: 'Europe/Berlin',
   activityLogConfig: {

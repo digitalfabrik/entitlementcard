@@ -1,26 +1,26 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import { buildConfigBayern } from 'build-configs'
 import { Temporal } from 'temporal-polyfill'
 
 import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
 import EMailNotificationExtension from '../../cards/extensions/EMailNotificationExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
-import { findValue, JsonField } from '../../components/JsonFieldView'
-import { BavariaCardType } from '../../generated/card_pb'
+import { JsonField, findValue } from '../../components/JsonFieldView'
 import {
   ApplicationDataIncompleteError,
   getCardTypeApplicationData,
-  getPersonalApplicationData
+  getPersonalApplicationData,
 } from '../../routes/applications/utils/applicationDataHelper'
 import { ActivationText } from '../common/ActivationText'
 import { commonColors } from '../common/colors'
-import type { CardConfig, InfoParams, ProjectConfig } from '../index'
+import type { InfoParams, ProjectConfig } from '../index'
 import { DataPrivacyAdditionalBaseText, DataPrivacyBaseText } from './dataPrivacy'
 import { renderPdfInfo } from './pdf'
 import pdfTemplate from './pdf-template.pdf'
 
 const renderCardHash = ({ cardInfoHash }: InfoParams): string => cardInfoHash
 
-export const applicationJsonToPersonalData = (
+const applicationJsonToPersonalData = (
   json: JsonField<'Array'>,
 ): { forenames?: string; surname?: string; emailAddress?: string } | null => {
   const personalData = findValue(json, 'personalData', 'Array')
@@ -34,15 +34,7 @@ export const applicationJsonToPersonalData = (
   return { forenames, surname, emailAddress }
 }
 
-const cardConfig: CardConfig = {
-  defaultValidity: Temporal.Duration.from({ years: 3 }),
-  nameColumnName: 'Name',
-  expiryColumnName: 'Ablaufdatum',
-  extensionColumnNames: ['Kartentyp', null, 'MailNotification'],
-  extensions: [BavariaCardTypeExtension, RegionExtension, EMailNotificationExtension],
-}
-
-export const applicationJsonToCardQuery = (json: JsonField<'Array'>): string | null => {
+const applicationJsonToCardQuery = (json: JsonField<'Array'>): string | null => {
   const query = new URLSearchParams()
   try {
     const { cardType } = getCardTypeApplicationData(json)
@@ -53,18 +45,18 @@ export const applicationJsonToCardQuery = (json: JsonField<'Array'>): string | n
       throw new ApplicationDataIncompleteError('Missing personal data')
     }
 
-    query.set(cardConfig.nameColumnName, `${personalData.forenames} ${personalData.surname}`)
-    const cardTypeExtensionIdx = cardConfig.extensions.findIndex(
+    query.set(config.card.nameColumnName, `${personalData.forenames} ${personalData.surname}`)
+    const cardTypeExtensionIdx = config.card.extensions.findIndex(
       ext => ext === BavariaCardTypeExtension,
     )
     const value = cardType === 'Goldene Ehrenamtskarte' ? 'Goldkarte' : 'Standard'
-    query.set(cardConfig.extensionColumnNames[cardTypeExtensionIdx] ?? '', value)
+    query.set(config.card.extensionColumnNames[cardTypeExtensionIdx] ?? '', value)
     if (personalData.emailAddress) {
-      const applicantMailNotificationExtensionIdx = cardConfig.extensions.findIndex(
+      const applicantMailNotificationExtensionIdx = config.card.extensions.findIndex(
         ext => ext === EMailNotificationExtension,
       )
       query.set(
-        cardConfig.extensionColumnNames[applicantMailNotificationExtensionIdx] ?? '',
+        config.card.extensionColumnNames[applicantMailNotificationExtensionIdx] ?? '',
         personalData.emailAddress,
       )
     }
@@ -90,8 +82,15 @@ export const config: ProjectConfig = {
     csvExport: true,
   },
   staticQrCodesEnabled: false,
-  card: cardConfig,
-  dataPrivacyHeadline: 'Datenschutzerklärung für die Nutzung und Beantragung der digitalen bayerischen Ehrenamtskarte',
+  card: {
+    defaultValidity: Temporal.Duration.from({ years: 3 }),
+    nameColumnName: 'Name',
+    expiryColumnName: 'Ablaufdatum',
+    extensionColumnNames: ['Kartentyp', null, 'MailNotification'],
+    extensions: [BavariaCardTypeExtension, RegionExtension, EMailNotificationExtension],
+  },
+  dataPrivacyHeadline:
+    'Datenschutzerklärung für die Nutzung und Beantragung der digitalen bayerischen Ehrenamtskarte',
   dataPrivacyContent: DataPrivacyBaseText,
   dataPrivacyAdditionalBaseContent: DataPrivacyAdditionalBaseText,
   activation: {
