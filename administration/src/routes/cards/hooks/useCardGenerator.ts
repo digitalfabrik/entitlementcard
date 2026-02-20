@@ -18,8 +18,8 @@ import {
   useSendApplicationAndCardDataToFreinetMutation,
 } from '../../../generated/graphql'
 import { ProjectConfig } from '../../../project-configs'
-import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import { getCsvHeaders } from '../../../project-configs/helper'
+import { ProjectConfigContext } from '../../../provider/ProjectConfigContext'
 import downloadDataUri from '../../../util/downloadDataUri'
 import { getBuildConfig } from '../../../util/getBuildConfig'
 import { isProductionEnvironment, updateArrayItem } from '../../../util/helper'
