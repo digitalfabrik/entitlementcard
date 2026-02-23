@@ -83,6 +83,12 @@ ThemeData get lightTheme {
       checkColor: WidgetStatePropertyAll(textColor),
       fillColor: WidgetStatePropertyAll(primaryColor),
     ),
+    chipTheme: ChipThemeData(
+      backgroundColor: backgroundColor,
+      selectedColor: Colors.grey.shade300,
+      side: BorderSide.none,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+    ),
   );
 }
 
@@ -145,6 +151,12 @@ ThemeData get darkTheme {
     checkboxTheme: CheckboxThemeData(
       checkColor: const WidgetStatePropertyAll(Colors.white),
       fillColor: WidgetStatePropertyAll(primaryColor),
+    ),
+    chipTheme: ChipThemeData(
+      backgroundColor: backgroundColor,
+      selectedColor: Colors.grey.shade700,
+      side: BorderSide.none,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     ),
   );
 }
