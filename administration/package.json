@@ -110,6 +110,10 @@
     "ts:check": "tsc --build"
   },
   "madge": {
+    "excludeRegExp": [
+      "^project-configs\\/index\\.ts$",
+      "^project-configs\\/bayern\\/config\\.ts$"
+    ],
     "detectiveOptions": {
       "ts": {
         "skipTypeImports": true
