@@ -74,6 +74,7 @@ class _MapContainerState extends State<MapContainer> implements MapController {
 
     return Stack(
       children: [
+        // 2824: Use a filled layout container to avoid rendering issues until MapLibreMap container is fully rendered.
         Positioned.fill(
           child: MapLibreMap(
             initialCameraPosition: cameraPosition,
