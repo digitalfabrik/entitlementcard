@@ -78,6 +78,19 @@ VALUES
     false,
     false
 ), (
+    'region-admin-freinet@bayern.ehrenamtskarte.app',
+    1,
+    (select "id" from "regions" where "regionIdentifier" = '00000'),
+    'REGION_ADMIN',
+    decode(
+        '243261243131246344447662704F716D71716C313132434A64563555756E3257704C41496A70713579566E633877304D346368324A32306E50646D57',
+        'hex'),
+    NULL,
+    NULL,
+    false,
+    false,
+    false
+), (
     'project-admin@nuernberg.sozialpass.app',
     2,
     NULL,
