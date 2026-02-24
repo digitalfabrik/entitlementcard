@@ -1,8 +1,6 @@
 /* eslint-disable react/destructuring-assignment */
 import { CancelOutlined, CheckCircleOutlined, RemoveCircleOutline } from '@mui/icons-material'
 import { Typography } from '@mui/material'
-import { format } from 'date-fns'
-import { de } from 'date-fns/locale'
 import React, { ReactElement } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
@@ -78,8 +76,8 @@ export const ApplicationStatusNote = (p: {
             t={t}
             i18nKey={translationKey}
             values={{
-              date: format(p.statusResolvedDate, 'dd. MMMM yyyy', { locale: de }),
-              time: format(p.statusResolvedDate, 'HH:mm', { locale: de }),
+              date: p.statusResolvedDate,
+              time: p.statusResolvedDate,
               reason: p.reason !== undefined ? t('reason', { message: p.reason }) : '',
             }}
             components={{

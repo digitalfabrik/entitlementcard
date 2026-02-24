@@ -750,11 +750,11 @@
     "titleStatusRejected": "Antrag abgelehnt"
   },
   "applicationStatusNote": {
-    "noticeApprovedAdmin": "Dieser Antrag wurde am {{date}} um {{time}} Uhr <resolution>genehmigt</resolution>.",
-    "noticeApprovedPublic": "Ihr Antrag wurde am {{date}} um {{time}} Uhr <resolution>genehmigt</resolution>. Sie erhalten alle weiteren Informationen per Mail.",
-    "noticeRejectedAdmin": "Dieser Antrag wurde am {{date}} um {{time}} Uhr <resolution>abgelehnt</resolution>{{reason}}.",
-    "noticeRejectedPublic": "Leider wurde Ihr Antrag am {{date}} um {{time}} Uhr <resolution>abgelehnt</resolution>. Sie erhalten alle weiteren Informationen per Mail.",
-    "noticeWithdrawn": "Dieser Antrag wurde am {{date}} um {{time}} Uhr <resolution>zurückgezogen</resolution>.",
+    "noticeApprovedAdmin": "Dieser Antrag wurde am {{date, datetime(dateStyle: 'medium')}} um {{time, datetime(timeStyle: 'short')}} Uhr <resolution>genehmigt</resolution>.",
+    "noticeApprovedPublic": "Ihr Antrag wurde am {{date, datetime(dateStyle: 'medium')}} um {{time, datetime(timeStyle: 'short')}} Uhr <resolution>genehmigt</resolution>. Sie erhalten alle weiteren Informationen per Mail.",
+    "noticeRejectedAdmin": "Dieser Antrag wurde am {{date, datetime(dateStyle: 'medium')}} um {{time, datetime(timeStyle: 'short')}} Uhr <resolution>abgelehnt</resolution>{{reason}}.",
+    "noticeRejectedPublic": "Leider wurde Ihr Antrag am {{date, datetime(dateStyle: 'medium')}} um {{time, datetime(timeStyle: 'short')}} Uhr <resolution>abgelehnt</resolution>. Sie erhalten alle weiteren Informationen per Mail.",
+    "noticeWithdrawn": "Dieser Antrag wurde am {{date, datetime(dateStyle: 'medium')}} um {{time, datetime(timeStyle: 'short')}} Uhr <resolution>zurückgezogen</resolution>.",
     "reason": " (Begründung: {{message}})"
   },
   "errorTemplates": {

@@ -2,7 +2,6 @@ import { FilterAlt, SaveAlt } from '@mui/icons-material'
 import type { FormControlLabelProps } from '@mui/material'
 import { Button, FormControlLabel, Stack, Tooltip, styled } from '@mui/material'
 import { grey } from '@mui/material/colors'
-import { formatDate } from 'date-fns/format'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -10,8 +9,6 @@ import CustomDatePicker from '../../../components/CustomDatePicker'
 import type { CustomDatePickerTextFieldProps } from '../../../components/CustomDatePicker'
 import { plainDateToLegacyDate } from '../../../util/date'
 import { defaultEndDate, defaultStartDate } from '../constants'
-
-const filterDateFormat = 'yyyy-MM-dd'
 
 const InputContainer = styled('div')`
   flex-direction: row;
@@ -52,6 +49,7 @@ const StatisticsFilterBar = ({
   const { t } = useTranslation('statistics')
   const [dateStart, setDateStart] = useState<Date | null>(plainDateToLegacyDate(defaultStartDate))
   const [dateEnd, setDateEnd] = useState<Date | null>(plainDateToLegacyDate(defaultEndDate))
+  const dateFormatter = new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' })
 
   return (
     <Stack
@@ -107,10 +105,7 @@ const StatisticsFilterBar = ({
             startIcon={<FilterAlt />}
             onClick={() => {
               if (isValidDate(dateStart) && isValidDate(dateEnd)) {
-                onApplyFilter(
-                  formatDate(dateStart, filterDateFormat),
-                  formatDate(dateEnd, filterDateFormat),
-                )
+                onApplyFilter(dateFormatter.format(dateStart), dateFormatter.format(dateEnd))
               }
             }}
             disabled={!isValidDateTimePeriod(dateStart, dateEnd)}
