@@ -1,4 +1,5 @@
 import { buildConfigNuernberg } from 'build-configs'
+import { Temporal } from 'temporal-polyfill'
 
 import AddressExtensions from '../../cards/extensions/AddressFieldExtensions'
 import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
@@ -32,7 +33,7 @@ const config: ProjectConfig = {
       'Ort',
       null,
     ],
-    defaultValidity: { years: 1 },
+    defaultValidity: Temporal.Duration.from({ years: 1 }),
     extensions: [
       StartDayExtension,
       BirthdayExtension,
