@@ -1,3 +1,4 @@
+
 package app.ehrenamtskarte.backend.graphql.freinet.util
 
 import app.ehrenamtskarte.backend.graphql.freinet.types.CARD_TYPE_GOLD
@@ -15,14 +16,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpRequestRetry
-import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.request.request
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsChannel
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
-import io.ktor.http.HttpStatusCode
 import io.ktor.http.URLProtocol
 import io.ktor.http.contentType
 import io.ktor.http.path
@@ -40,13 +39,7 @@ class FreinetApi(private val host: String, private val accessKey: String, privat
             retryOnException(maxRetries = 3, retryOnTimeout = false)
             exponentialDelay()
         }
-        HttpResponseValidator {
-            validateResponse { response ->
-                if (response.status != HttpStatusCode.OK) {
-                    throw Exception(response.status.toString())
-                }
-            }
-        }
+        expectSuccess = true
     }
 
     private val objectMapper = jacksonObjectMapper()
