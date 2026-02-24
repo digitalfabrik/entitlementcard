@@ -5,6 +5,7 @@ import { useParams } from 'react-router'
 
 import AlertBox from '../../components/AlertBox'
 import CenteredStack from '../../components/CenteredStack'
+import PageLayout from '../../components/PageLayout'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import {
   ApplicationStatus,
@@ -67,39 +68,47 @@ const ApplicationVerificationController = ({
 
   if (verification.rejectedDate || verification.verifiedDate) {
     return (
-      <CenteredStack>
-        <AlertBox severity='info' description={t('alreadyVerified')} />
-      </CenteredStack>
+      <PageLayout>
+        <CenteredStack>
+          <AlertBox severity='info' description={t('alreadyVerified')} />
+        </CenteredStack>
+      </PageLayout>
     )
   }
   if (application.status === ApplicationStatus.Withdrawn && application.statusResolvedDate) {
     return (
-      <CenteredStack>
-        <AlertBox
-          severity='info'
-          description={t('withdrawMessageForVerifier', {
-            date: formatDateWithTimezone(application.statusResolvedDate, config.timezone),
-          })}
-        />
-      </CenteredStack>
+      <PageLayout>
+        <CenteredStack>
+          <AlertBox
+            severity='info'
+            description={t('withdrawMessageForVerifier', {
+              date: formatDateWithTimezone(application.statusResolvedDate, config.timezone),
+            })}
+          />
+        </CenteredStack>
+      </PageLayout>
     )
   }
   if (verificationFinished) {
     return (
-      <CenteredStack>
-        <AlertBox
-          title={t('verificationFinishedTitle')}
-          description={t('verificationFinishedContent')}
-        />
-      </CenteredStack>
+      <PageLayout>
+        <CenteredStack>
+          <AlertBox
+            title={t('verificationFinishedTitle')}
+            description={t('verificationFinishedContent')}
+          />
+        </CenteredStack>
+      </PageLayout>
     )
   }
 
   if (applicationWasAlreadyProcessed(application.status)) {
     return (
-      <CenteredStack>
-        <AlertBox description={t('applicationAlreadyProcessed')} severity='info' />
-      </CenteredStack>
+      <PageLayout>
+        <CenteredStack>
+          <AlertBox description={t('applicationAlreadyProcessed')} severity='info' />
+        </CenteredStack>
+      </PageLayout>
     )
   }
 
