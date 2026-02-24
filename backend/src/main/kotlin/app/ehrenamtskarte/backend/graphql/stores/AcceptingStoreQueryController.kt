@@ -4,6 +4,8 @@ import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.db.entities.AcceptingStoreEntity
 import app.ehrenamtskarte.backend.db.repositories.AcceptingStoresRepository
 import app.ehrenamtskarte.backend.db.repositories.PhysicalStoresRepository
+import app.ehrenamtskarte.backend.graphql.shared.DEFAULT_PROJECT
+import app.ehrenamtskarte.backend.graphql.shared.types.IdsParams
 import app.ehrenamtskarte.backend.graphql.stores.types.AcceptingStore
 import app.ehrenamtskarte.backend.graphql.stores.types.AcceptingStoreV2
 import app.ehrenamtskarte.backend.graphql.stores.types.Coordinates
@@ -26,7 +28,7 @@ class AcceptingStoreQueryController(
     private val backendConfig: BackendConfiguration,
 ) {
     @Deprecated(
-        "Use acceptingStoreByPhysicalStoreIdInProject for localized descriptions. Should be able to safely remove in January 2028.",
+        "Use acceptingStoresByPhysicalStoreIdsInProject query for localized descriptions. Can be safely removed in January 2028.",
     )
     @GraphQLDescription("Returns list of all accepting stores in the given project queried by ids.")
     @QueryMapping
@@ -50,7 +52,15 @@ class AcceptingStoreQueryController(
         }
 
     @Deprecated(
-        "Use searchAcceptingStoresInProjectV2 for localized descriptions. Should be able to safely remove in January 2028.",
+        "Use acceptingStoresByPhysicalStoreIdsInProject query for localized descriptions. Can be safely removed in January 2028.",
+    )
+    @GraphQLDescription(
+        "Returns list of all accepting stores queried by ids in the eak bayern project.",
+    )
+    fun physicalStoresById(params: IdsParams) = physicalStoresByIdInProject(DEFAULT_PROJECT, params.ids)
+
+    @Deprecated(
+        "Use searchAcceptingStoresInProjectV2 query for localized descriptions. Can be safely removed in January 2028.",
     )
     @GraphQLDescription(
         "Search for accepting stores in the given project using searchText and categoryIds.",

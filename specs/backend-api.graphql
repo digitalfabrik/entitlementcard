@@ -288,8 +288,10 @@ type Query {
   getUsersInProject: [Administrator!]!
   "Returns all administrators in a region. This query requires the role REGION_ADMIN or PROJECT_ADMIN."
   getUsersInRegion(regionId: Int!): [Administrator!]!
+  "Returns list of all accepting stores queried by ids in the eak bayern project."
+  physicalStoresById(params: IdsParamsInput!): [PhysicalStore]! @deprecated(reason : "Use acceptingStoresByPhysicalStoreIdsInProject query for localized descriptions. Can be safely removed in January 2028.")
   "Returns list of all accepting stores in the given project queried by ids."
-  physicalStoresByIdInProject(ids: [Int!]!, project: String!): [PhysicalStore]! @deprecated(reason : "Use acceptingStoreByPhysicalStoreIdInProject for localized descriptions. Should be able to safely remove in January 2028.")
+  physicalStoresByIdInProject(ids: [Int!]!, project: String!): [PhysicalStore]! @deprecated(reason : "Use acceptingStoresByPhysicalStoreIdsInProject query for localized descriptions. Can be safely removed in January 2028.")
   "Returns region data for specific region."
   regionByRegionId(regionId: Int!): Region!
   "Returns regions queried by ids in the given project."
@@ -299,7 +301,7 @@ type Query {
   "Return list of all regions in the given project."
   regionsInProject(project: String!): [Region!]!
   "Search for accepting stores in the given project using searchText and categoryIds."
-  searchAcceptingStoresInProject(params: SearchParamsInput!, project: String!): [AcceptingStore!]! @deprecated(reason : "Use searchAcceptingStoresInProjectV2 for localized descriptions. Should be able to safely remove in January 2028.")
+  searchAcceptingStoresInProject(params: SearchParamsInput!, project: String!): [AcceptingStore!]! @deprecated(reason : "Use searchAcceptingStoresInProjectV2 query for localized descriptions. Can be safely removed in January 2028.")
   "Search for accepting stores in the given project using searchText and categoryIds."
   searchAcceptingStoresInProjectV2(params: SearchParamsInput!, project: String!): [AcceptingStoreV2!]!
   "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid, extendable and a timestamp of the last check"
@@ -585,6 +587,10 @@ input GoldenCardWorkAtDepartmentEntitlementInput {
 
 input GoldenCardWorkAtOrganizationsEntitlementInput {
   list: [WorkAtOrganizationInput!]!
+}
+
+input IdsParamsInput {
+  ids: [Int!]!
 }
 
 input NotificationSettingsInput {
