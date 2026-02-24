@@ -8,6 +8,7 @@ import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useAddEakApplicationMutation, useGetRegionsQuery } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import getQueryResult from '../../util/getQueryResult'
+import { reportErrorToSentry } from '../../util/sentry'
 import ApplicationErrorBoundary from './components/ApplicationErrorBoundary'
 import DiscardAllInputsButton from './components/DiscardAllInputsButton'
 import ApplicationForm from './components/forms/ApplicationForm'
@@ -46,6 +47,8 @@ const ApplyController = (): React.ReactElement | null => {
         style: { whiteSpace: 'pre-line' },
         autoHideDuration: 7200,
       })
+      // 2851: Add error logging to get more client information
+      reportErrorToSentry(error)
     },
     onCompleted: ({ result }) => {
       if (result) {
