@@ -5,7 +5,7 @@
   "dependencies": {
     "@apollo/client": "^3.14.0",
     "@bufbuild/protobuf": "^1.2.1",
-    "@cantoo/pdf-lib": "^2.5.3",
+    "@cantoo/pdf-lib": "^2.6.1",
     "@emotion/styled": "^11.14.0",
     "@fontsource/roboto": "^5.2.8",
     "@mui/icons-material": "^7.3.4",
