@@ -3,6 +3,7 @@ import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import Footer from '../components/Footer'
 import ProjectSwitcher from '../components/ProjectSwitcher'
 import StandaloneCenter from '../components/StandaloneCenter'
 import getMessageFromApolloError from '../errors/getMessageFromApolloError'
@@ -36,28 +37,31 @@ const Login = ({ onSignIn }: { onSignIn: (payload: SignInPayload) => void }): Re
     })
 
   return (
-    <StandaloneCenter>
-      <Card sx={{ width: '100%', maxWidth: '500px', padding: 3 }}>
-        <Typography variant='h4' component='h1'>
-          {config.name}
-        </Typography>
-        <Typography variant='h5' component='h2'>
-          {t('administration')}
-        </Typography>
-        <Typography variant='h6' component='h3' marginBottom={3}>
-          {t('login')}
-        </Typography>
-        <LoginForm
-          password={state.password}
-          email={state.email}
-          setEmail={email => setState({ ...state, email })}
-          setPassword={password => setState({ ...state, password: password ?? '' })}
-          onSubmit={onSubmit}
-          loading={mutationState.loading}
-        />
-        <ProjectSwitcher />
-      </Card>
-    </StandaloneCenter>
+    <>
+      <StandaloneCenter>
+        <Card sx={{ width: '100%', maxWidth: '500px', padding: 3 }}>
+          <Typography variant='h4' component='h1'>
+            {config.name}
+          </Typography>
+          <Typography variant='h5' component='h2'>
+            {t('administration')}
+          </Typography>
+          <Typography variant='h6' component='h3' marginBottom={3}>
+            {t('login')}
+          </Typography>
+          <LoginForm
+            password={state.password}
+            email={state.email}
+            setEmail={email => setState({ ...state, email })}
+            setPassword={password => setState({ ...state, password: password ?? '' })}
+            onSubmit={onSubmit}
+            loading={mutationState.loading}
+          />
+          <ProjectSwitcher />
+        </Card>
+      </StandaloneCenter>
+      <Footer />
+    </>
   )
 }
 
