@@ -161,7 +161,7 @@
     "minMaxNumberError": "Wert muss zwischen {{min}} und {{max}} liegen.",
     "valueHasToBeSelectableOptionError": "Wert muss einer der auswählbaren Optionen entsprechen.",
     "invalidDataError": "Ihre Eingaben sind ungültig oder nicht vollständig.",
-    "dateBefore1900Error": "Das Datum muss nach dem 1.1.1900 liegen."
+    "dateBeforeMinDateError": "Das Datum muss nach dem {{date, datetime(dateStyle: 'medium')}} liegen."
   },
   "applicationsOverview": {
     "statusBarAll": "Alle Anträge",

@@ -1,4 +1,5 @@
-import { Temporal } from '@js-temporal/polyfill'
+import { Temporal } from 'temporal-polyfill'
+
 import { initializeCard } from '../../../cards/card'
 import nuernbergConfig from '../../../project-configs/nuernberg/config'
 import { getTestRegion } from '../../user-settings/__mocks__/Region'
@@ -33,6 +34,6 @@ export const activityLogCardExample2 = initializeCard(nuernbergConfig.card, regi
   },
 })
 export const activityLogEntries: ActivityLogEntryType[] = [
-  { card: activityLogCardExample, timestamp: new Date() },
-  { card: activityLogCardExample2, timestamp: new Date() },
+  { card: activityLogCardExample, timestamp: Temporal.Now.instant() },
+  { card: activityLogCardExample2, timestamp: Temporal.Now.instant() },
 ]

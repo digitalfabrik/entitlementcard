@@ -1,20 +1,23 @@
 import { FormGroup } from '@mui/material'
-import { formatISO, parseISO } from 'date-fns'
 import React, { useContext, useState } from 'react'
+import { Temporal } from 'temporal-polyfill'
 
 import CustomDatePicker from '../../../../components/CustomDatePicker'
 import FormAlert from '../../../../components/FormAlert'
 import { DateInput } from '../../../../generated/graphql'
 import i18next from '../../../../translations/i18n'
+import { plainDateToLegacyDate } from '../../../../util/date'
 import type { Form, FormComponentProps } from '../../util/formType'
 import { FormContext } from '../forms/SteppedSubForms'
 
 type State = { type: 'DateForm'; value: string }
 type ValidatedInput = DateInput
-type Options = { maximumDate: Date; maximumDateErrorMessage: string } | { maximumDate: undefined }
+type Options =
+  | { maximumDate: Temporal.PlainDate; maximumDateErrorMessage: string }
+  | { maximumDate: undefined }
 type AdditionalProps = { label: string; minWidth?: number }
 
-const minDate = new Date('1900-01-01')
+const minDate = Temporal.PlainDate.from('1900-01-01')
 
 const parseDateFromState = (state: string): Date | null => {
   const date = new Date(state)
@@ -25,22 +28,26 @@ const DateForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
   initialState: { type: 'DateForm', value: '' },
   getArrayBufferKeys: () => [],
   validate: ({ value }, options) => {
-    if (value === '') {
+    if (value.length === 0) {
       return { type: 'error', message: i18next.t('applicationForms:fieldRequiredError') }
     }
 
-    const date = parseISO(value)
+    try {
+      const date = Temporal.PlainDate.from(value)
 
-    if (Number.isNaN(date.valueOf())) {
+      if (Temporal.PlainDate.compare(date, minDate) <= 0) {
+        return {
+          type: 'error',
+          message: i18next.t('applicationForms:dateBeforeMinDateError', { date: minDate }),
+        }
+      }
+      if (options.maximumDate && Temporal.PlainDate.compare(date, options.maximumDate) > 0) {
+        return { type: 'error', message: options.maximumDateErrorMessage }
+      }
+      return { type: 'valid', value: { date: date.toString() } }
+    } catch {
       return { type: 'error', message: i18next.t('applicationForms:invalidDateError') }
     }
-    if (date <= minDate) {
-      return { type: 'error', message: i18next.t('applicationForms:dateBefore1900Error') }
-    }
-    if (options.maximumDate && date > options.maximumDate) {
-      return { type: 'error', message: options.maximumDateErrorMessage }
-    }
-    return { type: 'valid', value: { date: formatISO(date, { representation: 'date' }) } }
   },
   Component: ({
     state,
@@ -61,8 +68,8 @@ const DateForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
           disabled={disableAllInputs}
           error={(showAllErrors || interacted) && isInvalid}
           label={label}
-          minDate={minDate}
-          maxDate={options.maximumDate}
+          minDate={plainDateToLegacyDate(minDate)}
+          maxDate={options.maximumDate ? plainDateToLegacyDate(options.maximumDate) : undefined}
           onBlur={() => setInteracted(true)}
           onChange={date => {
             setState(() => ({
