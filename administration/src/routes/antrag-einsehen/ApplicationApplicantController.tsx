@@ -5,6 +5,7 @@ import { useParams } from 'react-router'
 
 import AlertBox from '../../components/AlertBox'
 import CenteredStack from '../../components/CenteredStack'
+import PageLayout from '../../components/PageLayout'
 import { ApplicationStatus, useGetApplicationByApplicantQuery } from '../../generated/graphql'
 import getQueryResult from '../../util/getQueryResult'
 import { ApplicationStatusNote } from '../applications/components/ApplicationStatusNote'
@@ -29,49 +30,57 @@ const ApplicationApplicantController = ({ providedKey }: { providedKey: string }
 
   if (application.status === ApplicationStatus.Withdrawn) {
     return (
-      <CenteredStack>
-        <AlertBox severity='info' description={t('alreadyWithdrawn')} />
-      </CenteredStack>
+      <PageLayout>
+        <CenteredStack>
+          <AlertBox severity='info' description={t('alreadyWithdrawn')} />
+        </CenteredStack>
+      </PageLayout>
     )
   }
   if (isWithdrawn) {
     return (
-      <CenteredStack>
-        <AlertBox severity='info' description={t('withdrawConfirmation')} />
-      </CenteredStack>
+      <PageLayout>
+        <CenteredStack>
+          <AlertBox severity='info' description={t('withdrawConfirmation')} />
+        </CenteredStack>
+      </PageLayout>
     )
   }
 
   if (applicationWasAlreadyProcessed(application.status) && !!application.statusResolvedDate) {
     return (
-      <CenteredStack>
-        <AlertBox
-          severity={getAlertSeverityByApplicationStatus(application.status)}
-          title={t(
-            application.status === ApplicationStatus.Rejected
-              ? 'titleStatusRejected'
-              : 'titleStatusApproved',
-          )}
-          description={
-            <ApplicationStatusNote
-              statusResolvedDate={new Date(application.statusResolvedDate)}
-              status={application.status}
-              showIcon={false}
-            />
-          }
-        />
-      </CenteredStack>
+      <PageLayout>
+        <CenteredStack>
+          <AlertBox
+            severity={getAlertSeverityByApplicationStatus(application.status)}
+            title={t(
+              application.status === ApplicationStatus.Rejected
+                ? 'titleStatusRejected'
+                : 'titleStatusApproved',
+            )}
+            description={
+              <ApplicationStatusNote
+                statusResolvedDate={new Date(application.statusResolvedDate)}
+                status={application.status}
+                showIcon={false}
+              />
+            }
+          />
+        </CenteredStack>
+      </PageLayout>
     )
   }
 
   return (
-    <Stack sx={{ alignSelf: 'center', justifyContent: 'flex-start' }}>
-      <ApplicationApplicantView
-        application={application}
-        onWithdraw={() => setIsWithdrawn(true)}
-        providedKey={providedKey}
-      />
-    </Stack>
+    <PageLayout>
+      <Stack sx={{ alignSelf: 'center', justifyContent: 'flex-start', flexGrow: 1 }}>
+        <ApplicationApplicantView
+          application={application}
+          onWithdraw={() => setIsWithdrawn(true)}
+          providedKey={providedKey}
+        />
+      </Stack>
+    </PageLayout>
   )
 }
 
