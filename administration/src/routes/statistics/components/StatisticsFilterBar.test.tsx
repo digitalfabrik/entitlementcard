@@ -3,6 +3,7 @@ import { formatDate } from 'date-fns/format'
 import React from 'react'
 
 import { CustomRenderOptions, renderWithOptions } from '../../../testing/render'
+import { plainDateToLegacyDate } from '../../../util/date'
 import { defaultEndDate, defaultStartDate } from '../constants'
 import StatisticsFilterBar from './StatisticsFilterBar'
 
@@ -43,8 +44,12 @@ describe('StatisticFilterBar', () => {
       mockProvider,
     )
     const applyFilterButton = getByText('Filter anwenden')
-    const startInput = getByDisplayValue(formatDate(defaultStartDate.toLocalDate(), dateFormat))
-    const endInput = getByDisplayValue(formatDate(defaultEndDate.toLocalDate(), dateFormat))
+    const startInput = getByDisplayValue(
+      formatDate(plainDateToLegacyDate(defaultStartDate), dateFormat),
+    )
+    const endInput = getByDisplayValue(
+      formatDate(plainDateToLegacyDate(defaultEndDate), dateFormat),
+    )
 
     fireEvent.change(startInput, {
       target: {
@@ -71,7 +76,9 @@ describe('StatisticFilterBar', () => {
     )
 
     const applyFilterButton = getByText('Filter anwenden')
-    const startInput = getByDisplayValue(formatDate(defaultStartDate.toLocalDate(), dateFormat))
+    const startInput = getByDisplayValue(
+      formatDate(plainDateToLegacyDate(defaultStartDate), dateFormat),
+    )
 
     fireEvent.change(startInput, {
       target: {
@@ -91,7 +98,9 @@ describe('StatisticFilterBar', () => {
       mockProvider,
     )
     const applyFilterButton = getByText('Filter anwenden')
-    const startInput = getByDisplayValue(formatDate(defaultStartDate.toLocalDate(), dateFormat))
+    const startInput = getByDisplayValue(
+      formatDate(plainDateToLegacyDate(defaultStartDate), dateFormat),
+    )
 
     fireEvent.change(startInput, {
       target: {

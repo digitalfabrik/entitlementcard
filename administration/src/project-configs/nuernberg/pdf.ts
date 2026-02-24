@@ -2,7 +2,7 @@ import { PDFForm, PDFTextField, rgb } from '@cantoo/pdf-lib'
 
 import { getAddressFieldExtensionsValues } from '../../cards/extensions/AddressFieldExtensions'
 import type { InfoParams } from '../../cards/pdf/pdfTextElement'
-import PlainDate from '../../util/PlainDate'
+import { formatDateDefaultGerman, plainDateFromDaysSinceEpoch } from '../../util/date'
 import type { PdfConfig } from '../getProjectConfig'
 import pdfTemplate from './pdf-template.pdf'
 
@@ -12,15 +12,15 @@ const renderPdfDetails = ({ info }: InfoParams): string => {
     throw new Error('expirationDay must be defined for Nürnberg')
   }
   const passId = info.extensions?.extensionNuernbergPassId?.passId
-  const expirationDate = PlainDate.fromDaysSinceEpoch(expirationDay)
-  const birthdayDate = PlainDate.fromDaysSinceEpoch(
+  const expirationDate = plainDateFromDaysSinceEpoch(expirationDay)
+  const birthdayDate = plainDateFromDaysSinceEpoch(
     info.extensions?.extensionBirthday?.birthday ?? 0,
   )
-  const startDate = PlainDate.fromDaysSinceEpoch(info.extensions?.extensionStartDay?.startDay ?? 0)
+  const startDate = plainDateFromDaysSinceEpoch(info.extensions?.extensionStartDay?.startDay ?? 0)
   return `${info.fullName}
 Pass-ID: ${passId ?? ''}
-Geburtsdatum: ${birthdayDate.format()}
-Gültig: ${startDate.format()} bis ${expirationDate.format()}`
+Geburtsdatum: ${formatDateDefaultGerman(birthdayDate)}
+Gültig: ${formatDateDefaultGerman(startDate)} bis ${formatDateDefaultGerman(expirationDate)}`
 }
 
 const createAddressFormFields = (

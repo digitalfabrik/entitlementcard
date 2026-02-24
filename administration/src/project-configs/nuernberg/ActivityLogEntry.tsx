@@ -3,6 +3,7 @@ import React, { ReactElement } from 'react'
 import { BIRTHDAY_EXTENSION_NAME } from '../../cards/extensions/BirthdayExtension'
 import { NUERNBERG_PASS_ID_EXTENSION_NAME } from '../../cards/extensions/NuernbergPassIdExtension'
 import { ActivityLogEntryType } from '../../routes/activity-log/utils/activityLog'
+import { formatDateDefaultGerman } from '../../util/date'
 
 // Check column names of the activityLogConfig have the same order and amount than here
 const ActivityLogEntry = (logEntry: ActivityLogEntryType): ReactElement => {
@@ -15,8 +16,8 @@ const ActivityLogEntry = (logEntry: ActivityLogEntryType): ReactElement => {
       <td>{timestamp.toLocaleString()}</td>
       <td>{card.fullName}</td>
       {passIdExtension !== null && <td>{passIdExtension}</td>}
-      {birthdayExtension !== null && <td>{birthdayExtension.format()}</td>}
-      {card.expirationDate !== null && <td>{card.expirationDate.format()}</td>}
+      {birthdayExtension !== null && <td>{formatDateDefaultGerman(birthdayExtension)}</td>}
+      {card.expirationDate !== null && <td>{formatDateDefaultGerman(card.expirationDate)}</td>}
     </tr>
   )
 }

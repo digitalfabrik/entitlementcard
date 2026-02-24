@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next'
 
 import CustomDatePicker from '../../../components/CustomDatePicker'
 import type { CustomDatePickerTextFieldProps } from '../../../components/CustomDatePicker'
+import { plainDateToLegacyDate } from '../../../util/date'
 import { defaultEndDate, defaultStartDate } from '../constants'
 
 const filterDateFormat = 'yyyy-MM-dd'
@@ -49,8 +50,8 @@ const StatisticsFilterBar = ({
   onExportCsv: (dateStart: string, dateEnd: string) => void
 }): ReactElement => {
   const { t } = useTranslation('statistics')
-  const [dateStart, setDateStart] = useState<Date | null>(defaultStartDate.toLocalDate())
-  const [dateEnd, setDateEnd] = useState<Date | null>(defaultEndDate.toLocalDate())
+  const [dateStart, setDateStart] = useState<Date | null>(plainDateToLegacyDate(defaultStartDate))
+  const [dateEnd, setDateEnd] = useState<Date | null>(plainDateToLegacyDate(defaultEndDate))
 
   return (
     <Stack
@@ -73,7 +74,7 @@ const StatisticsFilterBar = ({
             <CustomDatePicker
               value={dateStart}
               error={!isValidDate(dateStart)}
-              maxDate={dateEnd ?? defaultStartDate.toLocalDate()}
+              maxDate={dateEnd ?? plainDateToLegacyDate(defaultStartDate)}
               textFieldSlotProps={datePickerTextFieldProps}
               onChange={date => {
                 setDateStart(date)

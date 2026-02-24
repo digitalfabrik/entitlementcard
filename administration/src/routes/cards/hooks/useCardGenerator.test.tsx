@@ -3,6 +3,7 @@ import { act, renderHook } from '@testing-library/react'
 import { mocked } from 'jest-mock'
 import React, { ReactNode } from 'react'
 import { MemoryRouter } from 'react-router'
+import { Temporal } from 'temporal-polyfill'
 
 import { generateCardInfo, initializeCard } from '../../../cards/card'
 import createCards, { CreateCardsError, CreateCardsResult } from '../../../cards/createCards'
@@ -164,7 +165,7 @@ describe('useCardGenerator', () => {
 
     expect(result.current.cards).toEqual([
       {
-        expirationDate: { day: 26, isoMonth: 2, isoYear: 2028 },
+        expirationDate: Temporal.PlainDate.from({ day: 26, month: 2, year: 2028 }),
         extensions: {
           bavariaCardType: 'Standard',
           regionId: 0,
@@ -187,20 +188,20 @@ describe('useCardGenerator', () => {
 
     expect(result.current.cards).toEqual([
       {
-        expirationDate: { day: 3, isoMonth: 3, isoYear: 2026 },
+        expirationDate: Temporal.PlainDate.from({ day: 3, month: 3, year: 2026 }),
         extensions: {
-          birthday: {
+          birthday: Temporal.PlainDate.from({
             day: 1,
-            isoMonth: 1,
-            isoYear: 2000,
-          },
+            month: 1,
+            year: 2000,
+          }),
           addressLine1: 'Teststraße 3',
           addressLine2: 'EG Rechts',
           addressLocation: 'Musterstadt',
           addressPlz: '86111',
           nuernbergPassId: 123,
           regionId: 0,
-          startDay: { day: 1, isoMonth: 5, isoYear: 2025 },
+          startDay: Temporal.PlainDate.from({ day: 1, month: 5, year: 2025 }),
         },
         fullName: 'Thea Test',
         id: expect.any(Number),

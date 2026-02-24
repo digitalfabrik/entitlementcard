@@ -2,6 +2,7 @@ import { Clear } from '@mui/icons-material'
 import { CardContent, FormGroup, IconButton, Card as MuiCard, Stack } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Temporal } from 'temporal-polyfill'
 
 import type { Card } from '../../../../cards/card'
 import {
@@ -17,7 +18,7 @@ import CardTextField from '../../../../cards/extensions/components/CardTextField
 import CustomDatePicker from '../../../../components/CustomDatePicker'
 import ExtensionForms from '../../../../components/ExtensionForms'
 import FormAlert from '../../../../components/FormAlert'
-import PlainDate from '../../../../util/PlainDate'
+import { plainDateToLegacyDate, safeFromLocalDate } from '../../../../util/date'
 
 const AddCardForm = ({
   card,
@@ -28,7 +29,7 @@ const AddCardForm = ({
   updateCard: (card: Partial<Card>) => void
   onRemove: () => void
 }): ReactElement => {
-  const today = PlainDate.fromLocalDate(new Date())
+  const today = Temporal.Now.plainDateISO()
   const { t } = useTranslation('cards')
   const [interactedValidationDate, setInteractedValidationDate] = useState(false)
   const showValidationDateError = !isExpirationDateValid(card) && interactedValidationDate
@@ -69,12 +70,14 @@ const AddCardForm = ({
                 onClose={() => setInteractedValidationDate(true)}
                 onBlur={() => setInteractedValidationDate(true)}
                 label={t('expirationDate')}
-                value={card.expirationDate?.toLocalDate() ?? null}
+                value={
+                  card.expirationDate !== null ? plainDateToLegacyDate(card.expirationDate) : null
+                }
                 error={showValidationDateError}
-                minDate={today.add({ days: 1 }).toLocalDate()}
-                maxDate={today.add(maxCardValidity).toLocalDate()}
+                minDate={plainDateToLegacyDate(today.add({ days: 1 }))}
+                maxDate={plainDateToLegacyDate(today.add(maxCardValidity))}
                 onChange={date => {
-                  updateCard({ expirationDate: PlainDate.safeFromLocalDate(date) })
+                  updateCard({ expirationDate: safeFromLocalDate(date) })
                 }}
                 textFieldSlotProps={{
                   sx: {
