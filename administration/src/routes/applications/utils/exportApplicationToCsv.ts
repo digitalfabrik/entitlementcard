@@ -59,13 +59,13 @@ export const exportApplicationToCsv = (application: Application, config: Project
     downloadDataUri(blob, `${surname}_${forenames}_${creationDate}.csv`)
   } catch (error) {
     if (error instanceof ApplicationToCsvError) {
-      console.error(error.message)
       throw new ApplicationToCsvError(i18next.t('errors:applicationToCsvError'))
     } else if (error instanceof ApplicationDataIncompleteError) {
-      console.error(error.message)
       throw new ApplicationDataIncompleteError(
         i18next.t('errors:applicationDataIncompleteException'),
       )
+    } else {
+      console.error(error)
     }
   }
 }
