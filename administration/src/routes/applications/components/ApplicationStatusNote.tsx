@@ -3,6 +3,7 @@ import { CancelOutlined, CheckCircleOutlined, RemoveCircleOutline } from '@mui/i
 import { Typography } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { Temporal } from 'temporal-polyfill'
 
 import AlertBox from '../../../components/AlertBox'
 import { ApplicationStatus } from '../../../generated/graphql'
@@ -55,7 +56,7 @@ const icon = (applicationStatus: ApplicationStatus): ReactElement | undefined =>
 }
 
 export const ApplicationStatusNote = (p: {
-  statusResolvedDate: Date
+  statusResolvedDate: Temporal.Instant
   status: ApplicationStatus
   reason?: string | undefined
   adminView?: boolean

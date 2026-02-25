@@ -414,7 +414,7 @@ const ApplicationCard = ({
           <Box sx={{ p: 2 }}>
             <ApplicationStatusNote
               showIcon
-              statusResolvedDate={new Date(application.statusResolvedDate)}
+              statusResolvedDate={Temporal.Instant.from(application.statusResolvedDate)}
               status={application.status}
               reason={application.rejectionMessage ?? undefined}
               adminView
