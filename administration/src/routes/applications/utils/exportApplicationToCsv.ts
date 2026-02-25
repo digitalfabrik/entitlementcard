@@ -42,13 +42,12 @@ export const exportApplicationToCsv = (application: Application, config: Project
       ...getPersonalApplicationData(application.jsonValue),
       ...getAddressApplicationData(application.jsonValue),
       ...getCardTypeApplicationData(application.jsonValue),
-      ...{
-        creationDate: new Intl.DateTimeFormat(undefined, {
-          dateStyle: 'medium',
-          timeStyle: 'short',
-          timeZone: config.timezone,
-        }).format(Temporal.Instant.from(application.createdDate)),
-      },
+      // TODO Remove the hardcoded locale with either a setting or export ISO dates
+      //  (also applies to other dates in this export)
+      creationDate: Temporal.Instant.from(application.createdDate).toLocaleString('de-DE', {
+        dateStyle: 'medium',
+        timeStyle: 'short',
+      }),
     }
 
     const csvHeader = Object.keys(csvData).map(key => i18next.t(`application:${key}`))
