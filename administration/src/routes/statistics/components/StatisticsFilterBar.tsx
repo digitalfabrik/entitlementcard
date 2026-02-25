@@ -99,19 +99,21 @@ const StatisticsFilterBar = ({
         <Tooltip
           title={isValidDateTimePeriod(dateStart, dateEnd) ? undefined : t('invalidStartOrEnd')}
         >
-          <Button
-            variant='contained'
-            color='primary'
-            startIcon={<FilterAlt />}
-            onClick={() => {
-              if (isValidDate(dateStart) && isValidDate(dateEnd)) {
-                onApplyFilter(dateFormatter.format(dateStart), dateFormatter.format(dateEnd))
-              }
-            }}
-            disabled={!isValidDateTimePeriod(dateStart, dateEnd)}
-          >
-            {t('applyFilter')}
-          </Button>
+          <div>
+            <Button
+              variant='contained'
+              color='primary'
+              startIcon={<FilterAlt />}
+              onClick={() => {
+                if (isValidDate(dateStart) && isValidDate(dateEnd)) {
+                  onApplyFilter(dateFormatter.format(dateStart), dateFormatter.format(dateEnd))
+                }
+              }}
+              disabled={!isValidDateTimePeriod(dateStart, dateEnd)}
+            >
+              {t('applyFilter')}
+            </Button>
+          </div>
         </Tooltip>
       </InputContainer>
       <Tooltip title={isDataAvailable ? undefined : t('noDataAvailableForExport')}>
