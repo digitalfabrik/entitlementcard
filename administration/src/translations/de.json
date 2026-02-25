@@ -724,6 +724,7 @@
     "storeNotFound": "Diese Akzeptanzstelle existiert nicht mehr."
   },
   "applicationVerification": {
+    "info": "Antrag vom {{date, datetime(dateStyle: 'medium'; timeStyle: 'short')}}",
     "applicationAlreadyProcessed": "Der Antrag wurde bereits bearbeitet. Eine weitere Bestätigung oder Ablehnung ist nicht mehr möglich.",
     "withdrawMessageForVerifier": "Der Antrag wurde vom Antragsteller am {{date}} zurückgezogen.",
     "verificationFinishedTitle": "Ihre Eingaben wurden erfolgreich gespeichert.",
