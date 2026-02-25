@@ -31,6 +31,7 @@ import { useSnackbar } from 'notistack'
 import React, { memo, useContext, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useReactToPrint } from 'react-to-print'
+import { Temporal } from 'temporal-polyfill'
 
 import { AccordionExpandButton } from '../../../components/AccordionExpandButton'
 import BaseMenu, { MenuItemType } from '../../../components/BaseMenu'
@@ -340,7 +341,7 @@ const ApplicationCard = ({
       >
         <Stack direction='row' sx={{ width: '100%', gap: 2, paddingLeft: 2, paddingRight: 2 }}>
           <Typography variant='h6' sx={{ minWidth: '250px' }} marginY={0}>
-            {t('applicationFrom', { date: new Date(application.createdDate) })}
+            {t('applicationFrom', { date: Temporal.Instant.from(application.createdDate) })}
           </Typography>
           <Warning
             color='warning'
