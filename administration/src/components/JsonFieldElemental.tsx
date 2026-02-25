@@ -8,17 +8,18 @@ import { Intl, Temporal } from 'temporal-polyfill'
 
 import EmailLink from '../components/EmailLink'
 import { AuthContext } from '../provider/AuthProvider'
+import { defaultUiLocale } from '../translations/i18n'
 import downloadDataUri from '../util/downloadDataUri'
 import { isEmailValid } from '../util/verifications'
 import type { GeneralJsonField, JsonField, JsonFieldViewProps } from './JsonFieldView'
 
-const extensionByContentType = new Map([
-  ['application/pdf', 'pdf'],
-  ['image/png', 'png'],
-  ['image/jpeg', 'jpg'],
-])
+const extensionByContentType: Record<string, string> = {
+  'application/pdf': 'pdf',
+  'image/png': 'png',
+  'image/jpeg': 'jpg',
+} as const
 
-// Some field names are equal therefore the parents are needed for resolving the label
+// Some field names are equal, therefore, the parents are needed for resolving the label
 const getTranslationKey = (fieldName: string, parentName?: string) =>
   parentName ? `${parentName}.${fieldName}` : fieldName
 
@@ -35,33 +36,36 @@ const JsonFieldAttachment = memo(
     const attachment = jsonField.value
 
     if (attachmentAccessible) {
-      const downloadUrl = `${baseUrl}/file/${attachment.fileIndex}`
       const onClick = async () => {
         const loadingSnackbarKey = enqueueSnackbar(
-          `${t('applicationsOverview:loadAttachment')} ${attachment.fileIndex + 1}...`,
+          t('applicationsOverview:loadAttachment', { index: attachment.fileIndex + 1 }),
           { variant: 'info', persist: true, action: () => null },
         )
-        try {
-          const result = await fetch(downloadUrl, { headers: { authorization: `Bearer ${token}` } })
-          const contentType = result.headers.get('content-type')
-          if (result.status !== 200) {
-            throw Error('Status Code is not OK')
-          } else if (contentType === null || !extensionByContentType.has(contentType)) {
-            throw Error('Invalid Content Type')
-          }
-          const filename = `${t('applicationsOverview:attachment')}${
-            attachment.fileIndex + 1
-          }.${extensionByContentType.get(contentType)}`
-          const arrayBuffer = await result.arrayBuffer()
-          const file = new File([arrayBuffer], filename, { type: contentType })
-          downloadDataUri(file, filename)
-        } catch (e) {
-          console.error(e)
+        const result = await fetch(`${baseUrl}/file/${attachment.fileIndex}`, {
+          headers: { authorization: `Bearer ${token}` },
+        })
+        const contentType = result.headers.get('content-type')
+
+        if (
+          result.status !== 200 ||
+          contentType === null ||
+          !(contentType in extensionByContentType)
+        ) {
           enqueueSnackbar(t('errors:unknown'), { variant: 'error' })
-        } finally {
-          closeSnackbar(loadingSnackbarKey)
+        } else {
+          const filename = t('applicationsOverview:attachmentFilename', {
+            index: attachment.fileIndex + 1,
+            fileExtension: extensionByContentType[contentType],
+          })
+
+          downloadDataUri(
+            new File([await result.arrayBuffer()], filename, { type: contentType }),
+            filename,
+          )
         }
+        closeSnackbar(loadingSnackbarKey)
       }
+
       return (
         <Stack direction='row' sx={{ alignItems: 'center', gap: 1 }}>
           <Typography> {t(getTranslationKey(jsonField.name, parentName))}:</Typography>
@@ -92,7 +96,7 @@ const JsonFieldElemental = ({
   ...rest
 }: JsonFieldViewProps<Exclude<GeneralJsonField, JsonField<'Array'>>>) => {
   const { t } = useTranslation('application')
-  const dateFormatter = Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' })
+  const dateFormatter = Intl.DateTimeFormat(defaultUiLocale, { dateStyle: 'medium' })
 
   switch (jsonField.type) {
     case 'String':
