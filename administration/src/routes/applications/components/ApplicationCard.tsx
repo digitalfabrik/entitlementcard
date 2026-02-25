@@ -245,7 +245,7 @@ const ApplicationCard = ({
   const printApplication = useReactToPrint({
     contentRef: printContentRef,
     pageStyle: applicationPrintViewPageStyle.styles,
-    documentTitle: t('applicationFrom', { date: new Date(application.createdDate) }),
+    documentTitle: t('applicationFrom', { date: Temporal.Instant.from(application.createdDate) }),
   })
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [rejectionDialogOpen, setRejectionDialogOpen] = useState(false)
@@ -383,7 +383,9 @@ const ApplicationCard = ({
             !!application.statusResolvedDate && (
               <Box sx={{ backgroundColor: theme.palette.warning.light, padding: 2 }}>
                 <Typography>
-                  {t('withdrawalMessage', { date: new Date(application.statusResolvedDate) })}
+                  {t('withdrawalMessage', {
+                    date: Temporal.Instant.from(application.statusResolvedDate),
+                  })}
                   <br />
                   {t('deleteApplicationSoonPrompt')}{' '}
                 </Typography>

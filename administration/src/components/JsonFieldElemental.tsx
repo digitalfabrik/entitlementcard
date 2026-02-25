@@ -4,6 +4,7 @@ import { Stack } from '@mui/system'
 import { useSnackbar } from 'notistack'
 import React, { memo, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Intl, Temporal } from 'temporal-polyfill'
 
 import EmailLink from '../components/EmailLink'
 import { AuthContext } from '../provider/AuthProvider'
@@ -91,6 +92,7 @@ const JsonFieldElemental = ({
   ...rest
 }: JsonFieldViewProps<Exclude<GeneralJsonField, JsonField<'Array'>>>) => {
   const { t } = useTranslation('application')
+  const dateFormatter = Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' })
 
   switch (jsonField.type) {
     case 'String':
@@ -117,11 +119,7 @@ const JsonFieldElemental = ({
       return (
         <Typography component='p'>
           {t(getTranslationKey(jsonField.name, parentName))}:{' '}
-          {new Date(jsonField.value).toLocaleDateString('de', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-          })}
+          {dateFormatter.format(Temporal.PlainDateTime.from(jsonField.value))}
         </Typography>
       )
     case 'Number':
