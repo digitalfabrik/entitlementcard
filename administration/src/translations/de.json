@@ -726,7 +726,7 @@
   "applicationVerification": {
     "info": "Antrag vom {{date, datetime(dateStyle: 'medium'; timeStyle: 'short')}}",
     "applicationAlreadyProcessed": "Der Antrag wurde bereits bearbeitet. Eine weitere Bestätigung oder Ablehnung ist nicht mehr möglich.",
-    "withdrawMessageForVerifier": "Der Antrag wurde vom Antragsteller am {{date}} zurückgezogen.",
+    "withdrawMessageForVerifier": "Der Antrag wurde vom Antragsteller am {{date, datetime(dateStyle: 'medium', timeStyle: 'short')}} zurückgezogen.",
     "verificationFinishedTitle": "Ihre Eingaben wurden erfolgreich gespeichert.",
     "verificationFinishedContent": "Vielen Dank für Ihre Mithilfe. Sie können das Fenster jetzt schließen.",
     "greeting": "Guten Tag {{contactName}},",
