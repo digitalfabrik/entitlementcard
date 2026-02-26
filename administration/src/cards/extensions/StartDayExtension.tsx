@@ -8,8 +8,6 @@ import FormAlert from '../../components/FormAlert'
 import {
   formatDateDefaultGerman,
   plainDateToDaysSinceEpoch,
-  plainDateToLegacyDate,
-  safeFromLocalDate,
   safeParseGermanPlainDateString,
   safeParseISOPlainDate,
 } from '../../util/date'
@@ -35,16 +33,16 @@ const StartDayForm = ({
 
   const getStartDayErrorMessage = (): string | null => {
     const startDay = value.startDay
-    const today = Temporal.Now.plainDateISO()
+
     if (!startDay) {
       return t('startDayError')
     }
     if (Temporal.PlainDate.compare(startDay, minStartDay) < 0) {
-      return t('startDayPastError', { minStartDay: formatDateDefaultGerman(minStartDay) })
+      return t('startDayPastError', { minStartDay })
     }
     if (isExceedingMaxValidityDate(startDay)) {
       return t('startDayFutureError', {
-        maxValidationDate: formatDateDefaultGerman(today.add(maxCardValidity)),
+        maxValidationDate: Temporal.Now.plainDateISO().add(maxCardValidity),
       })
     }
     return null
