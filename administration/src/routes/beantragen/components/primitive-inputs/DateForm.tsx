@@ -6,7 +6,6 @@ import CustomDatePicker from '../../../../components/CustomDatePicker'
 import FormAlert from '../../../../components/FormAlert'
 import { DateInput } from '../../../../generated/graphql'
 import i18next from '../../../../translations/i18n'
-import { plainDateToLegacyDate } from '../../../../util/date'
 import type { Form, FormComponentProps } from '../../util/formType'
 import { FormContext } from '../forms/SteppedSubForms'
 
@@ -19,9 +18,12 @@ type AdditionalProps = { label: string; minWidth?: number }
 
 const minDate = Temporal.PlainDate.from('1900-01-01')
 
-const parseDateFromState = (state: string): Date | null => {
-  const date = new Date(state)
-  return !Number.isNaN(date.valueOf()) ? date : null
+const parseDateFromState = (state: string): Temporal.PlainDate | null => {
+  try {
+    return Temporal.PlainDate.from(state)
+  } catch {
+    return null
+  }
 }
 
 const DateForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
@@ -68,14 +70,13 @@ const DateForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
           disabled={disableAllInputs}
           error={(showAllErrors || interacted) && isInvalid}
           label={label}
-          minDate={plainDateToLegacyDate(minDate)}
-          maxDate={options.maximumDate ? plainDateToLegacyDate(options.maximumDate) : undefined}
+          minDate={minDate}
+          maxDate={options.maximumDate}
           onBlur={() => setInteracted(true)}
           onChange={date => {
             setState(() => ({
               type: 'DateForm',
-              // Catch invalid dates: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#the_epoch_timestamps_and_invalid_date
-              value: date && !Number.isNaN(date.valueOf()) ? date.toISOString() : '',
+              value: date?.toString() ?? '',
             }))
           }}
           textFieldSlotProps={{

@@ -18,7 +18,6 @@ import CardTextField from '../../../../cards/extensions/components/CardTextField
 import CustomDatePicker from '../../../../components/CustomDatePicker'
 import ExtensionForms from '../../../../components/ExtensionForms'
 import FormAlert from '../../../../components/FormAlert'
-import { plainDateToLegacyDate, safeFromLocalDate } from '../../../../util/date'
 
 const AddCardForm = ({
   card,
@@ -70,14 +69,12 @@ const AddCardForm = ({
                 onClose={() => setInteractedValidationDate(true)}
                 onBlur={() => setInteractedValidationDate(true)}
                 label={t('expirationDate')}
-                value={
-                  card.expirationDate !== null ? plainDateToLegacyDate(card.expirationDate) : null
-                }
+                value={card.expirationDate}
                 error={showValidationDateError}
-                minDate={plainDateToLegacyDate(today.add({ days: 1 }))}
-                maxDate={plainDateToLegacyDate(today.add(maxCardValidity))}
+                minDate={today.add({ days: 1 })}
+                maxDate={today.add(maxCardValidity)}
                 onChange={date => {
-                  updateCard({ expirationDate: safeFromLocalDate(date) })
+                  updateCard({ expirationDate: date })
                 }}
                 textFieldSlotProps={{
                   sx: {

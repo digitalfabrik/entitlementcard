@@ -9,8 +9,6 @@ import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext
 import {
   formatDateDefaultGerman,
   plainDateToDaysSinceEpoch,
-  plainDateToLegacyDate,
-  safeFromLocalDate,
   safeParseGermanPlainDateString,
   safeParseISOPlainDate,
 } from '../../util/date'
@@ -65,11 +63,11 @@ const BirthdayForm = ({
   return (
     <FormGroup>
       <CustomDatePicker
-        value={birthday !== null ? plainDateToLegacyDate(birthday) : null}
+        value={birthday}
         onBlur={() => setInteracted(true)}
         onClose={() => setInteracted(true)}
         onChange={date => {
-          setValue({ birthday: safeFromLocalDate(date) })
+          setValue({ birthday: date })
         }}
         onClear={() => setValue({ birthday: null })}
         error={!isValid && showErrorMessage}

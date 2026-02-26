@@ -4,25 +4,11 @@ import type { DesktopDatePickerSlotProps } from '@mui/x-date-pickers'
 import { DesktopDatePicker } from '@mui/x-date-pickers'
 import { deDE } from '@mui/x-date-pickers/locales'
 import React, { ReactElement } from 'react'
+import { Temporal } from 'temporal-polyfill'
+
+import { plainDateFromLegacyDate, plainDateToLegacyDate } from '../util/date'
 
 export type CustomDatePickerTextFieldProps = DesktopDatePickerSlotProps<true>['textField']
-
-type CustomDatePickerProps = {
-  value?: Date | null
-  disabled?: boolean
-  label?: string
-  onBlur?: () => void
-  onClose?: () => void
-  onChange?: (date: Date | null) => void
-  onClear?: () => void
-  error: boolean
-  minDate?: Date
-  maxDate?: Date
-  disableFuture?: boolean
-  disablePast?: boolean
-  textFieldHelperText?: string
-  textFieldSlotProps?: CustomDatePickerTextFieldProps
-}
 
 const CustomDatePicker = ({
   value,
@@ -39,7 +25,22 @@ const CustomDatePicker = ({
   disablePast,
   textFieldHelperText,
   textFieldSlotProps,
-}: CustomDatePickerProps): ReactElement => {
+}: {
+  value?: Temporal.PlainDate | null
+  disabled?: boolean
+  label?: string
+  onBlur?: () => void
+  onClose?: () => void
+  onChange?: (date: Temporal.PlainDate | null) => void
+  onClear?: () => void
+  error: boolean
+  minDate?: Temporal.PlainDate
+  maxDate?: Temporal.PlainDate
+  disableFuture?: boolean
+  disablePast?: boolean
+  textFieldHelperText?: string
+  textFieldSlotProps?: CustomDatePickerTextFieldProps
+}): ReactElement => {
   const isMobile = !useMediaQuery('(pointer: fine)')
 
   return (
@@ -48,7 +49,7 @@ const CustomDatePicker = ({
       label={label}
       views={['year', 'month', 'day']}
       openTo='year'
-      value={value}
+      value={value ? plainDateToLegacyDate(value) : null}
       format='dd.MM.yyyy'
       sx={{ '& input[value=""]:not(:focus)': { color: 'transparent' } }}
       slotProps={{
@@ -92,9 +93,9 @@ const CustomDatePicker = ({
       localeText={deDE.components.MuiLocalizationProvider.defaultProps.localeText}
       disableFuture={disableFuture}
       disablePast={disablePast}
-      minDate={minDate}
-      maxDate={maxDate}
-      onChange={onChange}
+      minDate={minDate ? plainDateToLegacyDate(minDate) : undefined}
+      maxDate={maxDate ? plainDateToLegacyDate(maxDate) : undefined}
+      onChange={date => onChange?.(date ? plainDateFromLegacyDate(date) : null)}
       onClose={onClose}
     />
   )

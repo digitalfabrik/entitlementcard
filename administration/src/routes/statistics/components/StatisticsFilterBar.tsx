@@ -8,7 +8,6 @@ import { Temporal } from 'temporal-polyfill'
 
 import type { CustomDatePickerTextFieldProps } from '../../../components/CustomDatePicker'
 import CustomDatePicker from '../../../components/CustomDatePicker'
-import { plainDateFromLegacyDate, plainDateToLegacyDate } from '../../../util/date'
 import { defaultEndDate, defaultStartDate } from '../constants'
 
 const InputContainer = styled('div')`
@@ -71,12 +70,12 @@ const StatisticsFilterBar = ({
           sx={formControlStyle}
           control={
             <CustomDatePicker
-              value={dateStart ? plainDateToLegacyDate(dateStart) : null}
+              value={dateStart}
               error={!(dateStart !== null)}
-              maxDate={plainDateToLegacyDate(dateEnd ?? defaultEndDate)}
+              maxDate={dateEnd ?? undefined}
               textFieldSlotProps={datePickerTextFieldProps}
               onChange={date => {
-                setDateStart(date ? plainDateFromLegacyDate(date) : null)
+                setDateStart(date)
               }}
             />
           }
@@ -87,12 +86,12 @@ const StatisticsFilterBar = ({
           sx={formControlStyle}
           control={
             <CustomDatePicker
-              value={dateEnd ? plainDateToLegacyDate(dateEnd) : null}
+              value={dateEnd}
               error={!(dateEnd !== null)}
               textFieldSlotProps={datePickerTextFieldProps}
-              maxDate={new Date()}
+              maxDate={Temporal.Now.plainDateISO()}
               onChange={date => {
-                setDateEnd(date ? plainDateFromLegacyDate(date) : null)
+                setDateEnd(date)
               }}
             />
           }

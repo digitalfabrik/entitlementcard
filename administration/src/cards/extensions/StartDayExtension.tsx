@@ -56,10 +56,10 @@ const StartDayForm = ({
         label={t('startDayLabel')}
         onBlur={() => setInteracted(true)}
         onClose={() => setInteracted(true)}
-        value={value.startDay !== null ? plainDateToLegacyDate(value.startDay) : null}
-        onChange={date => setValue({ startDay: safeFromLocalDate(date) })}
+        value={value.startDay}
+        onChange={date => setValue({ startDay: date })}
         error={showError}
-        minDate={plainDateToLegacyDate(minStartDay)}
+        minDate={minStartDay}
         textFieldSlotProps={{
           sx: {
             '.MuiPickersSectionList-root': {
