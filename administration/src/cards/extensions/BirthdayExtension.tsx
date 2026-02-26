@@ -10,7 +10,7 @@ import {
   formatDateDefaultGerman,
   plainDateToDaysSinceEpoch,
   safeParseGermanPlainDateString,
-  safeParseISOPlainDate,
+  safeParseIsoPlainDate,
 } from '../../util/date'
 import type { Extension, ExtensionComponentProps } from './extensions'
 
@@ -111,7 +111,7 @@ const BirthdayExtension: Extension<BirthdayExtensionState> = {
   toString: ({ birthday }: BirthdayExtensionState) =>
     birthday !== null ? formatDateDefaultGerman(birthday) : '',
   fromSerialized: (value: string) => {
-    const birthday = safeParseISOPlainDate(value)
+    const birthday = safeParseIsoPlainDate(value)
     return birthday === null ? null : { birthday }
   },
   serialize: ({ birthday }: BirthdayExtensionState) => birthday?.toString() ?? '',

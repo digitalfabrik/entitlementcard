@@ -9,7 +9,7 @@ import {
   formatDateDefaultGerman,
   plainDateToDaysSinceEpoch,
   safeParseGermanPlainDateString,
-  safeParseISOPlainDate,
+  safeParseIsoPlainDate,
 } from '../../util/date'
 import { isExceedingMaxValidityDate } from '../../util/helper'
 import { maxCardValidity } from '../constants'
@@ -97,7 +97,7 @@ const StartDayExtension: Extension<StartDayExtensionState> = {
   toString: ({ startDay }: StartDayExtensionState) =>
     startDay !== null ? formatDateDefaultGerman(startDay) : '',
   fromSerialized: (value: string) => {
-    const startDay = safeParseISOPlainDate(value)
+    const startDay = safeParseIsoPlainDate(value)
     return startDay === null ? null : { startDay }
   },
   serialize: ({ startDay }: StartDayExtensionState) => startDay?.toString() ?? '',

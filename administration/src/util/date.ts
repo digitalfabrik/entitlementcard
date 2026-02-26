@@ -17,36 +17,19 @@ export function plainDateToLegacyDate(date: Temporal.PlainDate): Date {
   return jsDate
 }
 
-export function safeFromLocalDate(date: Date | null): Temporal.PlainDate | null {
-  if (date === null || Number.isNaN(date.getTime())) {
-    return null
-  }
-  try {
-    return plainDateFromLegacyDate(date)
-  } catch {
-    return null
-  }
-}
-
 export function safeParseGermanPlainDateString(
   dateString: string | null,
 ): Temporal.PlainDate | null {
-  if (dateString === null) {
-    return null
-  }
   try {
-    return parseGermanPlainDateString(dateString)
+    return dateString != null ? parseGermanPlainDateString(dateString) : null
   } catch {
     return null
   }
 }
 
-export function safeParseISOPlainDate(isoString: string | null): Temporal.PlainDate | null {
-  if (isoString === null) {
-    return null
-  }
+export function safeParseIsoPlainDate(isoString: string | null): Temporal.PlainDate | null {
   try {
-    return Temporal.PlainDate.from(isoString)
+    return isoString != null ? Temporal.PlainDate.from(isoString) : null
   } catch {
     return null
   }
@@ -60,10 +43,22 @@ export function plainDateToDaysSinceEpoch(date: Temporal.PlainDate): number {
   return date.since('1970-01-01', { largestUnit: 'days' }).days
 }
 
+/**
+ * A default formatter for formatting dates in German.
+ *
+ * Usually, this object should _not_ be used for user facing strings, instead use the string
+ * translation and formatting facilities of i18next.
+ */
 export const dateFormatterDateDefaultGerman = new Intl.DateTimeFormat('de-DE', {
   dateStyle: 'medium',
 })
 
+/**
+ * A default formatter function for formatting dates in German.
+ *
+ * Usually, this object should _not_ be used for user facing strings, instead use the string
+ * translation and formatting facilities of i18next.
+ */
 export function formatDateDefaultGerman(date: Temporal.PlainDate): string {
   return dateFormatterDateDefaultGerman.format(date)
 }

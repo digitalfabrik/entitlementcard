@@ -9,7 +9,7 @@ import {
   formatDateDefaultGerman,
   plainDateToDaysSinceEpoch,
   safeParseGermanPlainDateString,
-  safeParseISOPlainDate,
+  safeParseIsoPlainDate,
 } from '../util/date'
 import {
   containsOnlyLatinAndCommonCharset,
@@ -108,7 +108,7 @@ export const serializeCard = (card: Card): SerializedCard => ({
 export const deserializeCard = (serializedCard: SerializedCard, cardConfig: CardConfig): Card => ({
   id: serializedCard.id,
   fullName: serializedCard.fullName,
-  expirationDate: safeParseISOPlainDate(serializedCard.expirationDate),
+  expirationDate: safeParseIsoPlainDate(serializedCard.expirationDate),
   extensions: Object.entries(serializedCard.extensions).reduce((acc, [key, value]) => {
     const extension = cardConfig.extensions.find(it => it.name === key)
     return extension ? { ...acc, ...extension.fromSerialized(value) } : acc
