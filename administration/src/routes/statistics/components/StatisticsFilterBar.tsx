@@ -4,10 +4,11 @@ import { Button, FormControlLabel, Stack, Tooltip, styled } from '@mui/material'
 import { grey } from '@mui/material/colors'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Temporal } from 'temporal-polyfill'
 
-import CustomDatePicker from '../../../components/CustomDatePicker'
 import type { CustomDatePickerTextFieldProps } from '../../../components/CustomDatePicker'
-import { plainDateToLegacyDate } from '../../../util/date'
+import CustomDatePicker from '../../../components/CustomDatePicker'
+import { plainDateFromLegacyDate, plainDateToLegacyDate } from '../../../util/date'
 import { defaultEndDate, defaultStartDate } from '../constants'
 
 const InputContainer = styled('div')`
@@ -18,11 +19,12 @@ const InputContainer = styled('div')`
   flex: 1;
   gap: 16px;
 `
-const isValidDate = (value: Date | null): value is Date =>
-  value !== null && !Number.isNaN(value.valueOf())
 
-const isValidDateTimePeriod = (dateStart: Date | null, dateEnd: Date | null): boolean =>
-  isValidDate(dateStart) && isValidDate(dateEnd) && dateStart.valueOf() <= dateEnd.valueOf()
+const isValidDateTimePeriod = (
+  dateStart: Temporal.PlainDate | null,
+  dateEnd: Temporal.PlainDate | null,
+): boolean =>
+  dateStart !== null && dateEnd !== null && Temporal.PlainDate.compare(dateStart, dateEnd) <= 0
 
 const formControlStyle: FormControlLabelProps['sx'] = {
   marginLeft: 0,
@@ -43,13 +45,12 @@ const StatisticsFilterBar = ({
   onExportCsv,
 }: {
   isDataAvailable: boolean
-  onApplyFilter: (dateStart: string, dateEnd: string) => void
-  onExportCsv: (dateStart: string, dateEnd: string) => void
+  onApplyFilter: (dateStart: Temporal.PlainDate, dateEnd: Temporal.PlainDate) => void
+  onExportCsv: (dateStart: Temporal.PlainDate, dateEnd: Temporal.PlainDate) => void
 }): ReactElement => {
   const { t } = useTranslation('statistics')
-  const [dateStart, setDateStart] = useState<Date | null>(plainDateToLegacyDate(defaultStartDate))
-  const [dateEnd, setDateEnd] = useState<Date | null>(plainDateToLegacyDate(defaultEndDate))
-  const dateFormatter = new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' })
+  const [dateStart, setDateStart] = useState<Temporal.PlainDate | null>(defaultStartDate)
+  const [dateEnd, setDateEnd] = useState<Temporal.PlainDate | null>(defaultEndDate)
 
   return (
     <Stack
@@ -70,12 +71,12 @@ const StatisticsFilterBar = ({
           sx={formControlStyle}
           control={
             <CustomDatePicker
-              value={dateStart}
-              error={!isValidDate(dateStart)}
-              maxDate={dateEnd ?? plainDateToLegacyDate(defaultStartDate)}
+              value={dateStart ? plainDateToLegacyDate(dateStart) : null}
+              error={!(dateStart !== null)}
+              maxDate={plainDateToLegacyDate(dateEnd ?? defaultEndDate)}
               textFieldSlotProps={datePickerTextFieldProps}
               onChange={date => {
-                setDateStart(date)
+                setDateStart(date ? plainDateFromLegacyDate(date) : null)
               }}
             />
           }
@@ -86,12 +87,12 @@ const StatisticsFilterBar = ({
           sx={formControlStyle}
           control={
             <CustomDatePicker
-              value={dateEnd}
-              error={!isValidDate(dateEnd)}
+              value={dateEnd ? plainDateToLegacyDate(dateEnd) : null}
+              error={!(dateEnd !== null)}
               textFieldSlotProps={datePickerTextFieldProps}
               maxDate={new Date()}
               onChange={date => {
-                setDateEnd(date)
+                setDateEnd(date ? plainDateFromLegacyDate(date) : null)
               }}
             />
           }
@@ -105,8 +106,8 @@ const StatisticsFilterBar = ({
               color='primary'
               startIcon={<FilterAlt />}
               onClick={() => {
-                if (isValidDate(dateStart) && isValidDate(dateEnd)) {
-                  onApplyFilter(dateFormatter.format(dateStart), dateFormatter.format(dateEnd))
+                if (dateStart !== null && dateEnd !== null) {
+                  onApplyFilter(dateStart, dateEnd)
                 }
               }}
               disabled={!isValidDateTimePeriod(dateStart, dateEnd)}
@@ -122,8 +123,8 @@ const StatisticsFilterBar = ({
             variant='contained'
             startIcon={<SaveAlt />}
             onClick={() => {
-              if (isValidDate(dateStart) && isValidDate(dateEnd)) {
-                onExportCsv(dateStart.toLocaleDateString(), dateEnd.toLocaleDateString())
+              if (dateStart !== null && dateEnd !== null) {
+                onExportCsv(dateStart, dateEnd)
               }
             }}
             disabled={!isDataAvailable}
