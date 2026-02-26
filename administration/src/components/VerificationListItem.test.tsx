@@ -1,13 +1,13 @@
 import React from 'react'
 
-import VerificationListItem from '../../../components/VerificationListItem'
-import { ApplicationVerificationView } from '../../../generated/graphql'
-import { CustomRenderOptions, renderWithOptions } from '../../../testing/render'
+import { ApplicationVerificationView } from '../generated/graphql'
 import {
   verificationsAwaiting,
   verificationsRejected,
   verificationsVerified,
-} from '../__mocks__/verificationData'
+} from '../routes/applications/__mocks__/verificationData'
+import { CustomRenderOptions, renderWithOptions } from '../testing/render'
+import VerificationListItem from './VerificationListItem'
 
 const mockProvider: CustomRenderOptions = {
   translation: true,
