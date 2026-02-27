@@ -1,4 +1,3 @@
-
 package app.ehrenamtskarte.backend.graphql.freinet.util
 
 import app.ehrenamtskarte.backend.graphql.freinet.types.CARD_TYPE_GOLD
@@ -15,7 +14,6 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.ktor.client.HttpClient
-import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.request.request
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsChannel
@@ -31,17 +29,13 @@ import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class FreinetApi(private val host: String, private val accessKey: String, private val agencyId: Int) {
+class FreinetApi(
+    private val httpClient: HttpClient,
+    private val host: String,
+    private val accessKey: String,
+    private val agencyId: Int,
+) {
     private val logger = LoggerFactory.getLogger(FreinetApi::class.java)
-    private val httpClient = HttpClient {
-        install(HttpRequestRetry) {
-            retryOnServerErrors(maxRetries = 3)
-            retryOnException(maxRetries = 3, retryOnTimeout = false)
-            exponentialDelay()
-        }
-        expectSuccess = true
-    }
-
     private val objectMapper = jacksonObjectMapper()
 
     fun searchPersons(firstName: String, lastName: String, dateOfBirth: String): JsonNode =
@@ -135,6 +129,8 @@ class FreinetApi(private val host: String, private val accessKey: String, privat
                 userEmail = userEmail,
             ),
         )
+        logger.devInfo(requestBody)
+
         return runBlocking {
             try {
                 val response = httpClient.request {
@@ -180,6 +176,7 @@ class FreinetApi(private val host: String, private val accessKey: String, privat
                 updateType = "add_replace",
             ),
         )
+        logger.devInfo(requestBody)
 
         return runBlocking {
             try {
@@ -220,6 +217,7 @@ class FreinetApi(private val host: String, private val accessKey: String, privat
         }
 
         val requestBody = objectMapper.writeValueAsString(body)
+        logger.devInfo(requestBody)
 
         return runBlocking {
             try {
