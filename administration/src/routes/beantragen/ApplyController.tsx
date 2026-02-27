@@ -4,6 +4,7 @@ import React, { ReactElement, useCallback, useContext, useMemo, useState } from 
 import { Trans, useTranslation } from 'react-i18next'
 
 import CenteredCircularProgress from '../../components/CenteredCircularProgress'
+import PageLayout from '../../components/PageLayout'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useAddEakApplicationMutation, useGetRegionsQuery } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
@@ -93,33 +94,37 @@ const ApplyController = (): React.ReactElement | null => {
   }
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', margin: '16px' }}>
-      <div style={{ maxWidth: '1000px', width: '100%' }}>
-        <Typography variant='h4' component='h1' margin={2} textAlign='center'>
-          {formSubmitted ? t('sentSuccessfully') : t('title')}
-        </Typography>
-        {formSubmitted ? (
-          <SuccessContent>
-            <Typography>
-              <Trans i18nKey='applicationForms:submitSuccessText' />
-            </Typography>
-          </SuccessContent>
-        ) : (
-          <ApplicationForm.Component
-            state={state}
-            setState={setState}
-            onSubmit={submit}
-            loading={loadingSubmit}
-            options={{ regions }}
-          />
-        )}
-        <Box sx={{ justifyContent: 'flex-end', display: 'flex', marginY: 2 }}>
-          {loadingSubmit || formSubmitted ? null : (
-            <DiscardAllInputsButton discardAll={discardAll} />
+    <PageLayout showDataPrivacy={false}>
+      <div
+        style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', margin: '16px' }}
+      >
+        <div style={{ maxWidth: '1000px', width: '100%' }}>
+          <Typography variant='h4' component='h1' margin={2} textAlign='center'>
+            {formSubmitted ? t('sentSuccessfully') : t('title')}
+          </Typography>
+          {formSubmitted ? (
+            <SuccessContent>
+              <Typography>
+                <Trans i18nKey='applicationForms:submitSuccessText' />
+              </Typography>
+            </SuccessContent>
+          ) : (
+            <ApplicationForm.Component
+              state={state}
+              setState={setState}
+              onSubmit={submit}
+              loading={loadingSubmit}
+              options={{ regions }}
+            />
           )}
-        </Box>
+          <Box sx={{ justifyContent: 'flex-end', display: 'flex', marginY: 2 }}>
+            {loadingSubmit || formSubmitted ? null : (
+              <DiscardAllInputsButton discardAll={discardAll} />
+            )}
+          </Box>
+        </div>
       </div>
-    </div>
+    </PageLayout>
   )
 }
 
