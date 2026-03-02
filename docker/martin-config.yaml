@@ -2,7 +2,7 @@
 listen_addresses: '0.0.0.0:3000'
 
 # Number of web server workers
-worker_processes: 8
+worker_processes: 2
 
 # Amount of memory (in MB) to use for caching tiles [default: 512, 0 to disable]
 # We disable it, as martin cannot flush its own cache (yet?), so the tiles would never be updated.
