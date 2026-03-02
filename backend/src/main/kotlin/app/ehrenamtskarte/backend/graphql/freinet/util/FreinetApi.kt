@@ -16,14 +16,12 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.ktor.client.HttpClient
 import io.ktor.client.request.request
 import io.ktor.client.request.setBody
-import io.ktor.client.statement.bodyAsChannel
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
 import io.ktor.http.URLProtocol
 import io.ktor.http.contentType
 import io.ktor.http.path
-import io.ktor.utils.io.jvm.javaio.toInputStream
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
@@ -41,9 +39,9 @@ class FreinetApi(
     fun searchPersons(firstName: String, lastName: String, dateOfBirth: String): JsonNode =
         runBlocking {
             try {
-                httpClient.request {
+                val response = httpClient.request {
                     url {
-                        protocol = URLProtocol.HTTP
+                        protocol = URLProtocol.HTTPS
                         this.host = this@FreinetApi.host
                         path("/api/input/v3/personen/suche")
                         parameters.append("vorname", firstName)
@@ -53,9 +51,10 @@ class FreinetApi(
                         parameters.append("agencyID", agencyId.toString())
                     }
                     method = HttpMethod.Get
-                }.bodyAsChannel().toInputStream().use { objectMapper.readTree(it) }
+                }
+                objectMapper.readTree(response.bodyAsText())
             } catch (e: Exception) {
-                logger.error("Freinet search person API error: $e")
+                logger.error("Freinet search person API error", e)
                 throw e
             }
         }
@@ -120,16 +119,14 @@ class FreinetApi(
         personalDataNode: JsonNode,
         userEmail: String,
     ): FreinetPersonCreationResultModel {
-        val requestBody = objectMapper.writeValueAsString(
-            buildPersonBody(
-                firstName = firstName,
-                lastName = lastName,
-                dateOfBirth = dateOfBirth,
-                personalDataNode = personalDataNode,
-                userEmail = userEmail,
-            ),
+        val body = buildPersonBody(
+            firstName = firstName,
+            lastName = lastName,
+            dateOfBirth = dateOfBirth,
+            personalDataNode = personalDataNode,
+            userEmail = userEmail,
         )
-        logger.devInfo(requestBody)
+        val requestBody = objectMapper.writeValueAsString(body)
 
         return runBlocking {
             try {
@@ -143,15 +140,14 @@ class FreinetApi(
                     contentType(ContentType.Application.Json)
                     setBody(requestBody)
                 }
-                logger.devInfo("Successfully created person in freinet: ${response.bodyAsText()}")
+                val responseBody = response.bodyAsText()
+                logger.devInfo("Successfully created person in freinet: $responseBody")
                 FreinetPersonCreationResultModel(
                     true,
-                    response.bodyAsChannel().toInputStream().use {
-                        objectMapper.readTree(it)
-                    },
+                    objectMapper.readTree(responseBody),
                 )
             } catch (e: Exception) {
-                logger.error("Error creating person in freinet $e")
+                logger.error("Error creating person in freinet", e)
                 throw e
             }
         }
@@ -165,18 +161,16 @@ class FreinetApi(
         userEmail: String,
         userId: Int,
     ): FreinetPersonCreationResultModel {
-        val requestBody = objectMapper.writeValueAsString(
-            buildPersonBody(
-                firstName = firstName,
-                lastName = lastName,
-                dateOfBirth = dateOfBirth,
-                personalDataNode = personalDataNode,
-                userEmail = userEmail,
-                userId = userId,
-                updateType = "add_replace",
-            ),
+        val body = buildPersonBody(
+            firstName = firstName,
+            lastName = lastName,
+            dateOfBirth = dateOfBirth,
+            personalDataNode = personalDataNode,
+            userEmail = userEmail,
+            userId = userId,
+            updateType = "add_replace",
         )
-        logger.devInfo(requestBody)
+        val requestBody = objectMapper.writeValueAsString(body)
 
         return runBlocking {
             try {
@@ -190,15 +184,14 @@ class FreinetApi(
                     contentType(ContentType.Application.Json)
                     setBody(requestBody)
                 }
-                logger.devInfo("Successfully updated person in freinet: ${response.bodyAsText()}")
+                val responseBody = response.bodyAsText()
+                logger.devInfo("Successfully updated person in freinet: $responseBody")
                 FreinetPersonCreationResultModel(
                     true,
-                    response.bodyAsChannel().toInputStream().use {
-                        objectMapper.readTree(it)
-                    },
+                    objectMapper.readTree(responseBody),
                 )
             } catch (e: Exception) {
-                logger.error("Error updating person in freinet $e")
+                logger.error("Error updating person in freinet", e)
                 throw e
             }
         }
@@ -215,11 +208,9 @@ class FreinetApi(
             }
             addFreinetInitInformation(agencyId, accessKey, "ehrenamtskarte")
         }
-
         val requestBody = objectMapper.writeValueAsString(body)
-        logger.devInfo(requestBody)
 
-        return runBlocking {
+        runBlocking {
             try {
                 val response = httpClient.request {
                     url {
@@ -233,7 +224,7 @@ class FreinetApi(
                 }
                 logger.devInfo("Successfully created card in freinet: ${response.bodyAsText()}")
             } catch (e: Exception) {
-                logger.error("Error creating card in freinet $e")
+                logger.error("Error creating card in freinet", e)
                 throw e
             }
         }
