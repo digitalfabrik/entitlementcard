@@ -1,5 +1,4 @@
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
+import groovy.json.JsonSlurper
 import java.io.File
 import java.io.StringReader
 import java.util.*
@@ -28,7 +27,6 @@ object CommandLine {
 }
 
 
-@Serializable
 data class BuildConfig(
     val appName: String,
     val applicationId: String,
@@ -36,17 +34,25 @@ data class BuildConfig(
     val buildFeatures: BuildFeatures
 )
 
-@Serializable
 data class BuildFeatures(val excludeX86: Boolean, val excludeLocationPlayServices: Boolean)
 
-private val json = Json { ignoreUnknownKeys = true }
-
+@Suppress("UNCHECKED_CAST")
 fun readBuildConfig(buildConfigName: String): BuildConfig {
     val jsonString = CommandLine.execute(
         listOf("npx", "--no", "app-toolbelt", "v0", "build-config", "to-json", buildConfigName, "android"),
         File(System.getProperty("user.dir"))
     )
-    return json.decodeFromString(jsonString)
+    val map = JsonSlurper().parseText(jsonString) as Map<String, Any>
+    val featuresMap = map["buildFeatures"] as Map<String, Any>
+    return BuildConfig(
+        appName = map["appName"] as String,
+        applicationId = map["applicationId"] as String,
+        appIcon = map["appIcon"] as String,
+        buildFeatures = BuildFeatures(
+            excludeX86 = featuresMap["excludeX86"] as Boolean,
+            excludeLocationPlayServices = featuresMap["excludeLocationPlayServices"] as Boolean
+        )
+    )
 }
 
 data class ResValue(val type: String, val name: String, val value: String)
