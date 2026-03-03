@@ -1,3 +1,5 @@
+# Reference: https://maplibre.org/martin/config-file.html
+
 # The socket address to bind [default: 0.0.0.0:3000]
 listen_addresses: '0.0.0.0:3000'
 
@@ -15,11 +17,13 @@ postgres:
   #   ${DATABASE_URL:-postgresql://postgres@localhost/db}
   connection_string: 'postgres://postgres:postgres@db-postgis:5432/ehrenamtskarte'
 
-  # Associative arrays of function sources
   functions:
+    # Calls the `physical_stores` DB function
     physical_stores:
       schema: public
       function: physical_stores
+
+    # Call the `physical_stores_clustered` DB function
     physical_stores_clustered:
       schema: public
       function: physical_stores_clustered
