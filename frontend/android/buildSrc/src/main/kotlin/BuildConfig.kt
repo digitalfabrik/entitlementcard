@@ -8,65 +8,79 @@ object CommandLine {
 
     fun execute(command: List<String>, workingDir: File): String {
         val cacheKey = Pair(command, workingDir.absolutePath)
-        val item = cache[cacheKey]
-        if (item != null) return item
 
-        val process = ProcessBuilder(command)
+        return cache[cacheKey] ?: ProcessBuilder(command)
             .directory(workingDir)
             .redirectError(ProcessBuilder.Redirect.INHERIT)
             .redirectOutput(ProcessBuilder.Redirect.PIPE)
             .start()
-        process.waitFor()
-        val status = process.exitValue()
-        if (status != 0)
-            throw Error("Command $command at $workingDir failed with status code $status!")
-        val stdOut = process.inputStream.bufferedReader().readText()
-        cache[cacheKey] = stdOut
-        return stdOut
+            .let { process ->
+                process.waitFor()
+
+                if (process.exitValue() != 0) {
+                    throw Error("Command $command at $workingDir failed with status code ${process.exitValue()}!")
+                } else {
+                    process.inputStream.bufferedReader().readText().also {
+                        cache[cacheKey] = it
+                    }
+                }
+            }
     }
 }
-
 
 data class BuildConfig(
     val appName: String,
     val applicationId: String,
     val appIcon: String,
-    val buildFeatures: BuildFeatures
+    val buildFeatures: BuildFeatures,
 )
 
 data class BuildFeatures(val excludeX86: Boolean, val excludeLocationPlayServices: Boolean)
 
 @Suppress("UNCHECKED_CAST")
 fun readBuildConfig(buildConfigName: String): BuildConfig {
-    val jsonString = CommandLine.execute(
-        listOf("npx", "--no", "app-toolbelt", "v0", "build-config", "to-json", buildConfigName, "android"),
-        File(System.getProperty("user.dir"))
-    )
-    val map = JsonSlurper().parseText(jsonString) as Map<String, Any>
+    val map = JsonSlurper().parseText(
+        CommandLine.execute(
+            listOf("npx", "--no", "app-toolbelt", "v0", "build-config", "to-json", buildConfigName, "android"),
+            File(System.getProperty("user.dir")),
+        ),
+    ) as Map<String, Any>
     val featuresMap = map["buildFeatures"] as Map<String, Any>
+
     return BuildConfig(
         appName = map["appName"] as String,
         applicationId = map["applicationId"] as String,
         appIcon = map["appIcon"] as String,
         buildFeatures = BuildFeatures(
             excludeX86 = featuresMap["excludeX86"] as Boolean,
-            excludeLocationPlayServices = featuresMap["excludeLocationPlayServices"] as Boolean
-        )
+            excludeLocationPlayServices = featuresMap["excludeLocationPlayServices"] as Boolean,
+        ),
     )
 }
 
 data class ResValue(val type: String, val name: String, val value: String)
 
-fun readResValues(buildConfigName: String): List<ResValue> {
-    val resString = CommandLine.execute(
-        listOf("npx", "--no", "app-toolbelt", "v0", "build-config", "to-properties", buildConfigName, "android"),
-        File(System.getProperty("user.dir"))
-    )
-    val props = Properties()
-    props.load(StringReader(resString))
-    return props.map {
+fun readResValues(buildConfigName: String): List<ResValue> =
+    Properties().apply {
+        load(
+            StringReader(
+                CommandLine.execute(
+                    listOf(
+                        "npx",
+                        "--no",
+                        "app-toolbelt",
+                        "v0",
+                        "build-config",
+                        "to-properties",
+                        buildConfigName,
+                        "android",
+                    ),
+                    File(System.getProperty("user.dir")),
+                ),
+            ),
+        )
+    }.map {
         val escaped = (it.value as String).replace("%", "\\\\u0025")
         // Make build config values available as string resource, e.g. for use in AndroidManifest
         ResValue("string", it.key as String, "\"$escaped\"")
     }
-}
