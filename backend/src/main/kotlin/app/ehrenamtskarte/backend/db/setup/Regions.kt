@@ -14,9 +14,9 @@ import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
 fun insertOrUpdateRegions(agencies: List<FreinetApiAgency>, config: BackendConfiguration) {
     transaction {
-        val projects = ProjectEntity.all().toList()
-        val dbRegions = RegionEntity.all().toList()
-        val dbFreinetRegionInformation = FreinetAgenciesEntity.all().toList()
+        val projectsByName = ProjectEntity.all().associateBy { it.project }
+        val regionsByProjectId = RegionEntity.all().groupBy { it.projectId }
+        val freinetAgenciesById = FreinetAgenciesEntity.all().associateBy { it.agencyId }
 
         fun createOrUpdateRegion(
             regionProjectId: String,
@@ -26,9 +26,10 @@ fun insertOrUpdateRegions(agencies: List<FreinetApiAgency>, config: BackendConfi
             regionWebsite: String,
             regionActivatedForApplication: Boolean,
         ) {
-            val project = projects.firstOrNull { it.project == regionProjectId }
+            val project = projectsByName[regionProjectId]
                 ?: throw Error("Required project '$regionProjectId' not found!")
-            val region = dbRegions.singleOrNull { it.projectId == project.id }
+            val region = regionsByProjectId[project.id]?.singleOrNull()
+
             if (region == null) {
                 RegionEntity.new {
                     projectId = project.id
@@ -47,15 +48,17 @@ fun insertOrUpdateRegions(agencies: List<FreinetApiAgency>, config: BackendConfi
             }
         }
 
-        val eakProject = projects.firstOrNull { it.project == EAK_BAYERN_PROJECT }
+        val eakProject = projectsByName[EAK_BAYERN_PROJECT]
             ?: throw Error("Required project '$EAK_BAYERN_PROJECT' not found!")
-        val eakRegions = EAK_BAYERN_REGIONS.toMutableList()
-        if (config.environment != Environment.PRODUCTION) {
-            eakRegions.add(listOf("Stadt", FREINET_DEMO_REGION_NAME, "00000", "https://dummy"))
+        val eakRegions = EAK_BAYERN_REGIONS.also {
+            if (config.environment != Environment.PRODUCTION) {
+                it.toMutableList().add(listOf("Stadt", FREINET_DEMO_REGION_NAME, "00000", "https://dummy"))
+            }
         }
+
         eakRegions.forEach { (prefix, name, regionIdentifier, website) ->
-            val regionEntity = dbRegions.find {
-                it.regionIdentifier == regionIdentifier && it.projectId == eakProject.id
+            val regionEntity = regionsByProjectId[eakProject.id]?.find {
+                it.regionIdentifier == regionIdentifier
             }?.apply {
                 this.name = name
                 this.prefix = prefix
@@ -67,10 +70,16 @@ fun insertOrUpdateRegions(agencies: List<FreinetApiAgency>, config: BackendConfi
                 this.regionIdentifier = regionIdentifier
                 this.website = website
             }
+
             agencies.find { it.hasRegionKey(regionIdentifier) }?.let { agency ->
-                insertOrUpdateFreinetRegionInformation(agency, dbFreinetRegionInformation, regionEntity)
+                insertOrUpdateFreinetRegionInformation(
+                    agency,
+                    freinetAgenciesById[agency.agencyId],
+                    regionEntity,
+                )
             }
         }
+
         createOrUpdateRegion(
             NUERNBERG_PASS_PROJECT,
             "Nürnberg",

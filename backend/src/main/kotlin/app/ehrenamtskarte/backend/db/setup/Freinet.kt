@@ -6,11 +6,10 @@ import app.ehrenamtskarte.backend.graphql.freinet.types.FreinetApiAgency
 
 fun insertOrUpdateFreinetRegionInformation(
     agency: FreinetApiAgency,
-    dbFreinetRegionInformation: Iterable<FreinetAgenciesEntity>,
+    freinetRegionAgencyEntity: FreinetAgenciesEntity?,
     regionEntity: RegionEntity,
 ) {
-    val dbAgency = dbFreinetRegionInformation.find { it.agencyId == agency.agencyId }
-    if (dbAgency == null) {
+    if (freinetRegionAgencyEntity == null) {
         FreinetAgenciesEntity.new {
             regionId = regionEntity.id
             agencyId = agency.agencyId
@@ -18,8 +17,8 @@ fun insertOrUpdateFreinetRegionInformation(
             apiAccessKey = agency.apiAccessKey
         }
     } else {
-        dbAgency.agencyId = agency.agencyId
-        dbAgency.agencyName = agency.agencyName
-        dbAgency.apiAccessKey = agency.apiAccessKey
+        freinetRegionAgencyEntity.agencyId = agency.agencyId
+        freinetRegionAgencyEntity.agencyName = agency.agencyName
+        freinetRegionAgencyEntity.apiAccessKey = agency.apiAccessKey
     }
 }
