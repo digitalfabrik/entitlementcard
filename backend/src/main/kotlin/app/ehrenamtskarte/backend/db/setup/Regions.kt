@@ -13,40 +13,40 @@ import app.ehrenamtskarte.backend.graphql.shared.NUERNBERG_PASS_PROJECT
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
 fun insertOrUpdateRegions(agencies: List<FreinetApiAgency>, config: BackendConfiguration) {
-    val projects = ProjectEntity.all()
-    val dbRegions = RegionEntity.all()
-    val dbFreinetRegionInformation = FreinetAgenciesEntity.all()
-
-    fun createOrUpdateRegion(
-        regionProjectId: String,
-        regionName: String,
-        regionPrefix: String,
-        regionKey: String,
-        regionWebsite: String,
-        regionActivatedForApplication: Boolean,
-    ) {
-        val project = projects.firstOrNull { it.project == regionProjectId }
-            ?: throw Error("Required project '$regionProjectId' not found!")
-        val region = dbRegions.singleOrNull { it.projectId == project.id }
-        if (region == null) {
-            RegionEntity.new {
-                projectId = project.id
-                name = regionName
-                prefix = regionPrefix
-                regionIdentifier = regionKey
-                website = regionWebsite
-                activatedForApplication = regionActivatedForApplication
-            }
-        } else {
-            region.name = regionName
-            region.prefix = regionPrefix
-            region.website = regionWebsite
-            region.regionIdentifier = regionKey
-            region.activatedForApplication = regionActivatedForApplication
-        }
-    }
-
     transaction {
+        val projects = ProjectEntity.all().toList()
+        val dbRegions = RegionEntity.all().toList()
+        val dbFreinetRegionInformation = FreinetAgenciesEntity.all().toList()
+
+        fun createOrUpdateRegion(
+            regionProjectId: String,
+            regionName: String,
+            regionPrefix: String,
+            regionKey: String,
+            regionWebsite: String,
+            regionActivatedForApplication: Boolean,
+        ) {
+            val project = projects.firstOrNull { it.project == regionProjectId }
+                ?: throw Error("Required project '$regionProjectId' not found!")
+            val region = dbRegions.singleOrNull { it.projectId == project.id }
+            if (region == null) {
+                RegionEntity.new {
+                    projectId = project.id
+                    name = regionName
+                    prefix = regionPrefix
+                    regionIdentifier = regionKey
+                    website = regionWebsite
+                    activatedForApplication = regionActivatedForApplication
+                }
+            } else {
+                region.name = regionName
+                region.prefix = regionPrefix
+                region.website = regionWebsite
+                region.regionIdentifier = regionKey
+                region.activatedForApplication = regionActivatedForApplication
+            }
+        }
+
         val eakProject = projects.firstOrNull { it.project == EAK_BAYERN_PROJECT }
             ?: throw Error("Required project '$EAK_BAYERN_PROJECT' not found!")
         val eakRegions = EAK_BAYERN_REGIONS.toMutableList()
