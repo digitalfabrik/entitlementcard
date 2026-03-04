@@ -1,4 +1,3 @@
-
 package app.ehrenamtskarte.backend.graphql.freinet.util
 
 import app.ehrenamtskarte.backend.graphql.freinet.types.CARD_TYPE_GOLD
@@ -15,41 +14,34 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.ktor.client.HttpClient
-import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.request.request
 import io.ktor.client.request.setBody
-import io.ktor.client.statement.bodyAsChannel
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
 import io.ktor.http.URLProtocol
 import io.ktor.http.contentType
 import io.ktor.http.path
-import io.ktor.utils.io.jvm.javaio.toInputStream
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class FreinetApi(private val host: String, private val accessKey: String, private val agencyId: Int) {
+class FreinetApi(
+    private val httpClient: HttpClient,
+    private val host: String,
+    private val accessKey: String,
+    private val agencyId: Int,
+) {
     private val logger = LoggerFactory.getLogger(FreinetApi::class.java)
-    private val httpClient = HttpClient {
-        install(HttpRequestRetry) {
-            retryOnServerErrors(maxRetries = 3)
-            retryOnException(maxRetries = 3, retryOnTimeout = false)
-            exponentialDelay()
-        }
-        expectSuccess = true
-    }
-
     private val objectMapper = jacksonObjectMapper()
 
     fun searchPersons(firstName: String, lastName: String, dateOfBirth: String): JsonNode =
         runBlocking {
             try {
-                httpClient.request {
+                val response = httpClient.request {
                     url {
-                        protocol = URLProtocol.HTTP
+                        protocol = URLProtocol.HTTPS
                         this.host = this@FreinetApi.host
                         path("/api/input/v3/personen/suche")
                         parameters.append("vorname", firstName)
@@ -59,9 +51,10 @@ class FreinetApi(private val host: String, private val accessKey: String, privat
                         parameters.append("agencyID", agencyId.toString())
                     }
                     method = HttpMethod.Get
-                }.bodyAsChannel().toInputStream().use { objectMapper.readTree(it) }
+                }
+                objectMapper.readTree(response.bodyAsText())
             } catch (e: Exception) {
-                logger.error("Freinet search person API error: $e")
+                logger.error("Freinet search person API error", e)
                 throw e
             }
         }
@@ -126,15 +119,15 @@ class FreinetApi(private val host: String, private val accessKey: String, privat
         personalDataNode: JsonNode,
         userEmail: String,
     ): FreinetPersonCreationResultModel {
-        val requestBody = objectMapper.writeValueAsString(
-            buildPersonBody(
-                firstName = firstName,
-                lastName = lastName,
-                dateOfBirth = dateOfBirth,
-                personalDataNode = personalDataNode,
-                userEmail = userEmail,
-            ),
+        val body = buildPersonBody(
+            firstName = firstName,
+            lastName = lastName,
+            dateOfBirth = dateOfBirth,
+            personalDataNode = personalDataNode,
+            userEmail = userEmail,
         )
+        val requestBody = objectMapper.writeValueAsString(body)
+
         return runBlocking {
             try {
                 val response = httpClient.request {
@@ -147,15 +140,14 @@ class FreinetApi(private val host: String, private val accessKey: String, privat
                     contentType(ContentType.Application.Json)
                     setBody(requestBody)
                 }
-                logger.devInfo("Successfully created person in freinet: ${response.bodyAsText()}")
+                val responseBody = response.bodyAsText()
+                logger.devInfo("Successfully created person in freinet: $responseBody")
                 FreinetPersonCreationResultModel(
                     true,
-                    response.bodyAsChannel().toInputStream().use {
-                        objectMapper.readTree(it)
-                    },
+                    objectMapper.readTree(responseBody),
                 )
             } catch (e: Exception) {
-                logger.error("Error creating person in freinet $e")
+                logger.error("Error creating person in freinet", e)
                 throw e
             }
         }
@@ -169,17 +161,16 @@ class FreinetApi(private val host: String, private val accessKey: String, privat
         userEmail: String,
         userId: Int,
     ): FreinetPersonCreationResultModel {
-        val requestBody = objectMapper.writeValueAsString(
-            buildPersonBody(
-                firstName = firstName,
-                lastName = lastName,
-                dateOfBirth = dateOfBirth,
-                personalDataNode = personalDataNode,
-                userEmail = userEmail,
-                userId = userId,
-                updateType = "add_replace",
-            ),
+        val body = buildPersonBody(
+            firstName = firstName,
+            lastName = lastName,
+            dateOfBirth = dateOfBirth,
+            personalDataNode = personalDataNode,
+            userEmail = userEmail,
+            userId = userId,
+            updateType = "add_replace",
         )
+        val requestBody = objectMapper.writeValueAsString(body)
 
         return runBlocking {
             try {
@@ -193,15 +184,14 @@ class FreinetApi(private val host: String, private val accessKey: String, privat
                     contentType(ContentType.Application.Json)
                     setBody(requestBody)
                 }
-                logger.devInfo("Successfully updated person in freinet: ${response.bodyAsText()}")
+                val responseBody = response.bodyAsText()
+                logger.devInfo("Successfully updated person in freinet: $responseBody")
                 FreinetPersonCreationResultModel(
                     true,
-                    response.bodyAsChannel().toInputStream().use {
-                        objectMapper.readTree(it)
-                    },
+                    objectMapper.readTree(responseBody),
                 )
             } catch (e: Exception) {
-                logger.error("Error updating person in freinet $e")
+                logger.error("Error updating person in freinet", e)
                 throw e
             }
         }
@@ -218,10 +208,9 @@ class FreinetApi(private val host: String, private val accessKey: String, privat
             }
             addFreinetInitInformation(agencyId, accessKey, "ehrenamtskarte")
         }
-
         val requestBody = objectMapper.writeValueAsString(body)
 
-        return runBlocking {
+        runBlocking {
             try {
                 val response = httpClient.request {
                     url {
@@ -235,7 +224,7 @@ class FreinetApi(private val host: String, private val accessKey: String, privat
                 }
                 logger.devInfo("Successfully created card in freinet: ${response.bodyAsText()}")
             } catch (e: Exception) {
-                logger.error("Error creating card in freinet $e")
+                logger.error("Error creating card in freinet", e)
                 throw e
             }
         }
