@@ -10,26 +10,24 @@ import { config } from '../bayern/config'
 
 export const applicationJsonToPersonalData = (
   json: JsonField<'Array'>,
-): { forenames?: string; surname?: string; emailAddress?: string } | null => {
+): { forenames?: string; surname?: string; emailAddress?: string } => {
   const personalData = findValue(json, 'personalData', 'Array')
 
   if (!personalData) {
     throw new ApplicationDataIncompleteError('Missing personal data')
   }
 
-  const { forenames, surname, emailAddress } = getPersonalApplicationData(json)
-
-  return { forenames, surname, emailAddress }
+  return getPersonalApplicationData(json)
 }
 
 export const applicationJsonToCardQuery = (json: JsonField<'Array'>): string | null => {
   const query = new URLSearchParams()
+
   try {
     const { cardType } = getCardTypeApplicationData(json)
-
     const personalData = applicationJsonToPersonalData(json)
 
-    if (!personalData || !personalData.forenames || !personalData.surname || !cardType) {
+    if (!personalData.forenames || !personalData.surname || !cardType) {
       throw new ApplicationDataIncompleteError('Missing personal data')
     }
 
@@ -37,8 +35,10 @@ export const applicationJsonToCardQuery = (json: JsonField<'Array'>): string | n
     const cardTypeExtensionIdx = config.card.extensions.findIndex(
       ext => ext === BavariaCardTypeExtension,
     )
+    // TODO Move these constants to a universal place
     const value = cardType === 'Goldene Ehrenamtskarte' ? 'Goldkarte' : 'Standard'
     query.set(config.card.extensionColumnNames[cardTypeExtensionIdx] ?? '', value)
+
     if (personalData.emailAddress) {
       const applicantMailNotificationExtensionIdx = config.card.extensions.findIndex(
         ext => ext === EMailNotificationExtension,
