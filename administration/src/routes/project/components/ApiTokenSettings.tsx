@@ -17,7 +17,7 @@ import {
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Intl, Temporal } from 'temporal-polyfill'
+import { Temporal } from 'temporal-polyfill'
 
 import ConfirmDialog from '../../../components/ConfirmDialog'
 import SettingsCard from '../../../components/SettingsCard'
@@ -103,7 +103,6 @@ type ApiTokenSettingsProps = {
 }
 const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactElement => {
   const { t } = useTranslation('projectSettings')
-  const dateFormatter = Intl.DateTimeFormat(undefined, { dateStyle: 'medium' })
   const metaDataQuery = useGetApiTokenMetaDataQuery({})
   const { enqueueSnackbar } = useSnackbar()
   const [tokenMetaData, setTokenMetadata] = useState<Array<ApiTokenMetaData>>([])
@@ -167,7 +166,7 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
                   <TableRow key={item.id}>
                     <TableCell>{item.creatorEmail}</TableCell>
                     <TableCell>
-                      {dateFormatter.format(Temporal.Instant.from(item.expirationDate))}
+                      {t('expiresIn', { date: Temporal.PlainDate.from(item.expirationDate) })}
                     </TableCell>
                     <TableCell>
                       <Delete

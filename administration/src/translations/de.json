@@ -381,7 +381,8 @@
     "eMailOfCreator": "E-Mail des Erstellers",
     "expirationDate": "Ablaufdatum",
     "pepperExplanation": "Um den Endpunkt zu nutzen, müssen die Nutzerdaten mit folgenden Pepper gehasht werden",
-    "noPepper": "Es ist kein Koblenz Pepper hinterlegt. Diese Funktion ist in dieser Umgebung aktuell nicht verfügbar!"
+    "noPepper": "Es ist kein Koblenz Pepper hinterlegt. Diese Funktion ist in dieser Umgebung aktuell nicht verfügbar!",
+    "expiresIn": "{{date, datetime(dateStyle: 'medium')}}"
   },
   "regionSettings": {
     "dataPrivacy": "Datenschutzerklärung",
