@@ -63,7 +63,9 @@ const ActivityLogTable = ({
       </StickyTableHeader>
       <tbody>
         {activityLog.length > 0 ? (
-          activityLog.map(activityLogConfig.renderLogEntry)
+          activityLog.map(entry => (
+            <activityLogConfig.renderLogEntry logEntry={entry} key={entry.card.id} />
+          ))
         ) : (
           <EmptyLogRow>
             <EmptyLogColumn colSpan={999}>{t('noEntries')}</EmptyLogColumn>

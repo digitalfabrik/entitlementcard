@@ -8,7 +8,7 @@ import {
   NUERNBERG_STAGING_ID,
 } from 'build-configs'
 import { TFunction } from 'i18next'
-import { ReactElement, ReactNode } from 'react'
+import { ComponentType, ReactElement } from 'react'
 import { Temporal } from 'temporal-polyfill'
 
 import type { Card } from '../cards/card'
@@ -43,7 +43,7 @@ export type PdfConfig = {
 
 export type ActivityLogConfig = {
   columnNames: string[]
-  renderLogEntry: (logEntry: ActivityLogEntryType) => ReactNode
+  renderLogEntry: ComponentType<{ logEntry: ActivityLogEntryType }>
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

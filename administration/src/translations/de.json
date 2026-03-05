@@ -601,7 +601,8 @@
   "activityLog": {
     "viewActivity": "Aktivitäten ansehen",
     "activityLogDescription": "Hier können Sie den Verlauf der erstellten Karten einsehen. Bitte beachten Sie, dass diese Informationen nur innerhalb der aktuellen Sitzung verfügbar sind - sobald Sie den Tab schließen, werden die Daten gelöscht.",
-    "noEntries": "Keine Einträge vorhanden"
+    "noEntries": "Keine Einträge vorhanden",
+    "date": "{{date, datetime(dateStyle: 'medium'; timeStyle: 'medium')}}"
   },
   "users": {
     "addUserSuccess": "Benutzer erfolgreich erstellt.",
