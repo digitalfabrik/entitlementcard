@@ -8,7 +8,7 @@ import RenderGuard from '../../../components/RenderGuard'
 import { CardStatisticsResultModel, Region, Role } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import downloadDataUri from '../../../util/downloadDataUri'
-import { generateCsv, getCsvFileName } from '../utils/csvStatistics'
+import { csvFileName, generateCsv } from '../utils/csvStatistics'
 import StatisticsBarChart from './StatisticsBarChart'
 import StatisticsFilterBar from './StatisticsFilterBar'
 import StatisticsLegend from './StatisticsLegend'
@@ -60,7 +60,7 @@ const StatisticsOverview = ({
           try {
             downloadDataUri(
               generateCsv(statistics, cardStatistics),
-              getCsvFileName(`${dateStart}_${dateEnd}`, region),
+              csvFileName(dateStart, dateEnd, region),
             )
           } catch {
             enqueueSnackbar(t('exportCsvNotPossible'), { variant: 'error' })

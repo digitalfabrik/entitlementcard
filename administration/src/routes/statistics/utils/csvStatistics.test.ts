@@ -1,8 +1,10 @@
+import { Temporal } from 'temporal-polyfill'
+
 import { CardStatisticsResultModel } from '../../../generated/graphql'
 import bayernConfig from '../../../project-configs/bayern/config'
 import nuernbergConfig from '../../../project-configs/nuernberg/config'
 import { getTestRegion } from '../../user-settings/__mocks__/Region'
-import { CsvStatisticsError, generateCsv, getCsvFileName } from './csvStatistics'
+import { CsvStatisticsError, csvFileName, generateCsv } from './csvStatistics'
 
 jest.mock('csv-stringify/browser/esm/sync', () => ({
   stringify: (input: string[][]) => input[0].join(','),
@@ -12,7 +14,9 @@ jest.mock('../../../project-configs/showcase/config')
 const TEST_BLOB_CONSTRUCTOR = jest.fn()
 describe('CSVStatistics', () => {
   const region = getTestRegion({ prefix: 'Stadt' })
-  const dateString = '2023-02-01_2024-03-01'
+  const dateString = '01_02_2023_01_03_2024'
+  const dateStart = Temporal.PlainDate.from('2023-02-01')
+  const dateEnd = Temporal.PlainDate.from('2024-03-01')
 
   const statisticsData: CardStatisticsResultModel[] = [
     {
@@ -25,12 +29,12 @@ describe('CSVStatistics', () => {
   ]
 
   it('should create a proper filename for a single region', () => {
-    const filename = getCsvFileName(dateString, region)
+    const filename = csvFileName(dateStart, dateEnd, region)
     expect(filename).toBe(`${region.prefix}${region.name}_CardStatistics_${dateString}.csv`)
   })
 
   it('should create a proper filename if no region was passed', () => {
-    const filename = getCsvFileName(dateString)
+    const filename = csvFileName(dateStart, dateEnd)
     expect(filename).toBe(`CardStatistics_${dateString}.csv`)
   })
 
