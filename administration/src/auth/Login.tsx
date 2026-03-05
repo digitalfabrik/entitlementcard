@@ -3,7 +3,7 @@ import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import Footer from '../components/Footer'
+import PageLayout from '../components/PageLayout'
 import ProjectSwitcher from '../components/ProjectSwitcher'
 import StandaloneCenter from '../components/StandaloneCenter'
 import getMessageFromApolloError from '../errors/getMessageFromApolloError'
@@ -37,7 +37,7 @@ const Login = ({ onSignIn }: { onSignIn: (payload: SignInPayload) => void }): Re
     })
 
   return (
-    <>
+    <PageLayout>
       <StandaloneCenter>
         <Card sx={{ width: '100%', maxWidth: '500px', padding: 3 }}>
           <Typography variant='h4' component='h1'>
@@ -60,8 +60,7 @@ const Login = ({ onSignIn }: { onSignIn: (payload: SignInPayload) => void }): Re
           <ProjectSwitcher />
         </Card>
       </StandaloneCenter>
-      <Footer />
-    </>
+    </PageLayout>
   )
 }
 
