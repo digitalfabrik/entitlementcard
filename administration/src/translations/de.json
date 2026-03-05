@@ -469,7 +469,8 @@
     "exportCsvNotPossible": "Etwas ist schiefgegangen beim Export der CSV.",
     "noDataRegionInfo": "Für diese Region sind keine Daten für den ausgewählten Zeitraum vorhanden.",
     "totalCardsGolden": "Gold",
-    "totalCardsBlue": "Blau"
+    "totalCardsBlue": "Blau",
+    "csvFileName": "{{dateStart, datetime(dateStyle: 'medium')}} - {{dateEnd, datetime(dateStyle: 'medium')}}"
   },
   "stores": {
     "entry": "Eintrag",

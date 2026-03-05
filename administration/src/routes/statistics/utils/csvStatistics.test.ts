@@ -1,3 +1,5 @@
+import { Temporal } from 'temporal-polyfill'
+
 import { CardStatisticsResultModel } from '../../../generated/graphql'
 import bayernConfig from '../../../project-configs/bayern/config'
 import nuernbergConfig from '../../../project-configs/nuernberg/config'
@@ -13,6 +15,8 @@ const TEST_BLOB_CONSTRUCTOR = jest.fn()
 describe('CSVStatistics', () => {
   const region = getTestRegion({ prefix: 'Stadt' })
   const dateString = '2023-02-01_2024-03-01'
+  const dateStart = Temporal.PlainDate.from('2023-02-01')
+  const dateEnd = Temporal.PlainDate.from('2024-03-01')
 
   const statisticsData: CardStatisticsResultModel[] = [
     {
@@ -25,12 +29,12 @@ describe('CSVStatistics', () => {
   ]
 
   it('should create a proper filename for a single region', () => {
-    const filename = getCsvFileName(dateString, region)
+    const filename = getCsvFileName(dateStart, dateEnd, region)
     expect(filename).toBe(`${region.prefix}${region.name}_CardStatistics_${dateString}.csv`)
   })
 
   it('should create a proper filename if no region was passed', () => {
-    const filename = getCsvFileName(dateString)
+    const filename = getCsvFileName(dateStart, dateEnd)
     expect(filename).toBe(`CardStatistics_${dateString}.csv`)
   })
 

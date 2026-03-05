@@ -60,7 +60,7 @@ const StatisticsOverview = ({
           try {
             downloadDataUri(
               generateCsv(statistics, cardStatistics),
-              getCsvFileName(`${dateStart}_${dateEnd}`, region),
+              getCsvFileName(dateStart, dateEnd, region),
             )
           } catch {
             enqueueSnackbar(t('exportCsvNotPossible'), { variant: 'error' })
