@@ -1,10 +1,11 @@
 import React, { ReactElement, ReactNode, createContext, useMemo, useState } from 'react'
+import { Temporal } from 'temporal-polyfill'
 
 import { SignInPayload } from '../generated/graphql'
 
 export type TokenPayload = {
   token: string
-  expiry: Date
+  expiry: Temporal.Instant
   adminId: number
 }
 
@@ -24,8 +25,12 @@ const removeToken = () => window.localStorage.removeItem(LOCAL_STORAGE_KEY)
 
 const extractTokenPayload = (token: string): TokenPayload => {
   const payload: { exp: number; adminId: number } = JSON.parse(atob(token.split('.')[1]))
-  const expiry = new Date(payload.exp * 1000) // exp is in seconds, not milliseconds
-  return { token, expiry, adminId: payload.adminId }
+  return {
+    token,
+    // exp is in seconds, not milliseconds
+    expiry: Temporal.Instant.fromEpochMilliseconds(payload.exp * 1000),
+    adminId: payload.adminId,
+  }
 }
 
 const loadTokenPayload = (): TokenPayload | null => {
@@ -36,7 +41,7 @@ const loadTokenPayload = (): TokenPayload | null => {
 
   try {
     const { expiry, adminId } = extractTokenPayload(token)
-    if (expiry < new Date()) {
+    if (Temporal.Instant.compare(expiry, Temporal.Now.instant()) < 0) {
       removeToken()
       return null
     }

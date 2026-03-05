@@ -1,5 +1,6 @@
 import { stringify } from 'csv-stringify/browser/esm/sync'
 import i18next from 'i18next'
+import { Temporal } from 'temporal-polyfill'
 
 import { CardStatisticsResultModel, Region } from '../../../generated/graphql'
 import { CardStatistics } from '../../../project-configs/getProjectConfig'
@@ -12,10 +13,15 @@ export class CsvStatisticsError extends Error {
   }
 }
 
-export const getCsvFileName = (dateRange: string, region?: Region): string =>
-  region
-    ? `${region.prefix}${region.name}_CardStatistics_${dateRange}.csv`
-    : `CardStatistics_${dateRange}.csv`
+export const getCsvFileName = (
+  dateStart: Temporal.PlainDate,
+  dateEnd: Temporal.PlainDate,
+  region?: Region,
+): string => {
+  const regionPrefix = region ? `${region.prefix}${region.name}_` : ''
+  const dateSuffix = `${dateStart}${Temporal.PlainDate.compare(dateStart, dateEnd) !== 0 ? `_${dateEnd}` : ''}`
+  return `${regionPrefix}CardStatistics_${dateSuffix}.csv`
+}
 
 export const generateCsv = (
   statistics: CardStatisticsResultModel[],

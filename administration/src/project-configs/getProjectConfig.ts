@@ -7,9 +7,9 @@ import {
   NUERNBERG_PRODUCTION_ID,
   NUERNBERG_STAGING_ID,
 } from 'build-configs'
-import { Duration } from 'date-fns'
 import { TFunction } from 'i18next'
-import { ReactElement, ReactNode } from 'react'
+import { ComponentType, ReactElement } from 'react'
+import { Temporal } from 'temporal-polyfill'
 
 import type { Card } from '../cards/card'
 import type { CreateCardsResult } from '../cards/createCards'
@@ -43,7 +43,7 @@ export type PdfConfig = {
 
 export type ActivityLogConfig = {
   columnNames: string[]
-  renderLogEntry: (logEntry: ActivityLogEntryType) => ReactNode
+  renderLogEntry: ComponentType<{ logEntry: ActivityLogEntryType }>
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -51,7 +51,7 @@ export type CardConfig<T extends readonly Extension<any>[] = readonly Extension<
   nameColumnName: string
   expiryColumnName: string
   extensionColumnNames: (string | null)[]
-  defaultValidity: Duration
+  defaultValidity: Temporal.Duration
   extensions: T
 }
 

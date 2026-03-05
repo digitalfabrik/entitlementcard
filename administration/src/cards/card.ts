@@ -1,10 +1,16 @@
 import { PartialMessage } from '@bufbuild/protobuf'
 import { t } from 'i18next'
+import { Temporal } from 'temporal-polyfill'
 
 import { CardExtensions, CardInfo } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
 import type { CardConfig } from '../project-configs/getProjectConfig'
-import PlainDate from '../util/PlainDate'
+import {
+  formatDateDefaultGerman,
+  plainDateToDaysSinceEpoch,
+  safeParseGermanPlainDateString,
+  safeParseIsoPlainDate,
+} from '../util/date'
 import {
   containsOnlyLatinAndCommonCharset,
   containsSpecialCharacters,
@@ -29,7 +35,7 @@ const MAX_ENCODED_NAME_LENGTH = 50
 export type Card = {
   id: number
   fullName: string
-  expirationDate: PlainDate | null
+  expirationDate: Temporal.PlainDate | null
   extensions: Partial<ExtensionState>
 }
 
@@ -50,7 +56,7 @@ export const initializeCard = (
   region: Region | undefined = undefined,
   { id, fullName, expirationDate, extensions }: Partial<Card> = {},
 ): Card => {
-  const defaultExpirationDate = PlainDate.fromLocalDate(new Date()).add(cardConfig.defaultValidity)
+  const defaultExpirationDate = Temporal.Now.plainDateISO().add(cardConfig.defaultValidity)
 
   return {
     id: id ?? createRandomId(),
@@ -89,7 +95,7 @@ export type SerializedCard = {
 export const serializeCard = (card: Card): SerializedCard => ({
   id: card.id,
   fullName: card.fullName,
-  expirationDate: card.expirationDate?.formatISO() ?? null,
+  expirationDate: card.expirationDate?.toString() ?? null,
   extensions: getExtensions(card).reduce(
     (acc, extension) => ({
       ...acc,
@@ -102,7 +108,7 @@ export const serializeCard = (card: Card): SerializedCard => ({
 export const deserializeCard = (serializedCard: SerializedCard, cardConfig: CardConfig): Card => ({
   id: serializedCard.id,
   fullName: serializedCard.fullName,
-  expirationDate: PlainDate.safeFrom(serializedCard.expirationDate),
+  expirationDate: safeParseIsoPlainDate(serializedCard.expirationDate),
   extensions: Object.entries(serializedCard.extensions).reduce((acc, [key, value]) => {
     const extension = cardConfig.extensions.find(it => it.name === key)
     return extension ? { ...acc, ...extension.fromSerialized(value) } : acc
@@ -131,7 +137,7 @@ export const isFullNameValid = ({ fullName }: Card): boolean => {
 }
 
 export const isExpirationDateValid = (card: Card, { nullable } = { nullable: false }): boolean => {
-  const today = PlainDate.fromLocalDate(new Date())
+  const today = Temporal.Now.plainDateISO()
   const startDay = card.extensions.startDay
 
   if (card.expirationDate === null) {
@@ -139,9 +145,11 @@ export const isExpirationDateValid = (card: Card, { nullable } = { nullable: fal
   }
 
   return (
-    card.expirationDate.isAfter(today) &&
+    Temporal.PlainDate.compare(card.expirationDate, today) > 0 &&
     !isExceedingMaxValidityDate(card.expirationDate) &&
-    (startDay?.isBefore(card.expirationDate) ?? true)
+    (startDay !== undefined && startDay !== null
+      ? Temporal.PlainDate.compare(startDay, card.expirationDate) < 0
+      : true)
   )
 }
 
@@ -172,7 +180,7 @@ export const generateCardInfo = (card: Card): CardInfo => {
   const expirationDate = card.expirationDate
   const expirationDay =
     expirationDate !== null && !hasInfiniteLifetime(card)
-      ? Math.max(expirationDate.toDaysSinceEpoch(), 0)
+      ? Math.max(plainDateToDaysSinceEpoch(expirationDate), 0)
       : undefined
 
   return new CardInfo({
@@ -213,7 +221,7 @@ export const getValueByCSVHeader = (
     case cardConfig.nameColumnName:
       return card.fullName
     case cardConfig.expiryColumnName:
-      return card.expirationDate?.format()
+      return card.expirationDate !== null ? formatDateDefaultGerman(card.expirationDate) : undefined
     default: {
       const extensionName = getExtensionNameByCSVHeader(cardConfig, columnHeader)
       const extension = getExtensions(card).find(
@@ -251,7 +259,7 @@ export const initializeCardFromCSV = (
   )
   const rawExpirationDate = line[headers.indexOf(cardConfig.expiryColumnName)]
   const expirationDate =
-    PlainDate.safeFromCustomFormat(rawExpirationDate) ?? defaultCard.expirationDate
+    safeParseGermanPlainDateString(rawExpirationDate) ?? defaultCard.expirationDate
 
   return {
     id: createRandomId(),
@@ -290,21 +298,21 @@ export const getFullNameValidationErrorMessage = (name: string): string => {
 
 export const getExpirationDateErrorMessage = (card: Card): string => {
   const startDay = card.extensions.startDay
-  const today = PlainDate.fromLocalDate(new Date())
+  const today = Temporal.Now.plainDateISO()
   const errors: string[] = []
   if (!card.expirationDate) {
     return t('cards:expirationDateError')
   }
-  if (card.expirationDate.isBeforeOrEqual(today)) {
+  if (Temporal.PlainDate.compare(card.expirationDate, today) <= 0) {
     errors.push(t('cards:expirationDateNotInFutureError'))
   }
-  if (startDay && card.expirationDate.isBeforeOrEqual(startDay)) {
+  if (startDay && Temporal.PlainDate.compare(card.expirationDate, startDay) <= 0) {
     errors.push(t('cards:expirationDateBeforeStartDayError'))
   }
   if (isExceedingMaxValidityDate(card.expirationDate)) {
     errors.push(
       t('cards:expirationDateFutureError', {
-        maxValidationDate: today.add(maxCardValidity).format(),
+        maxValidationDate: formatDateDefaultGerman(today.add(maxCardValidity)),
       }),
     )
   }

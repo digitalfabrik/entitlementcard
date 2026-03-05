@@ -2,6 +2,7 @@ import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
+import { Temporal } from 'temporal-polyfill'
 
 import AlertBox from '../../components/AlertBox'
 import CenteredStack from '../../components/CenteredStack'
@@ -12,7 +13,6 @@ import {
   useVerifyOrRejectApplicationVerificationMutation,
 } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import formatDateWithTimezone from '../../util/formatDate'
 import getQueryResult from '../../util/getQueryResult'
 import { applicationWasAlreadyProcessed, parseApplication } from '../applications/utils/application'
 import ApplicationVerifierView from './ApplicationVerifierView'
@@ -78,7 +78,7 @@ const ApplicationVerificationController = ({
         <AlertBox
           severity='info'
           description={t('withdrawMessageForVerifier', {
-            date: formatDateWithTimezone(application.statusResolvedDate, config.timezone),
+            date: Temporal.Instant.from(application.statusResolvedDate),
           })}
         />
       </CenteredStack>

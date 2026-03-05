@@ -2,11 +2,11 @@ import { Check, Close } from '@mui/icons-material'
 import { Alert, Box, Button, Card, Divider, Typography, styled } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { Temporal } from 'temporal-polyfill'
 
 import JsonFieldView from '../../components/JsonFieldView'
 import { GetApplicationByApplicantQuery } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { ApplicationVerificationPublic } from '../applications/types/types'
 import { ApplicationWithoutVerifications } from '../applications/utils/application'
@@ -41,8 +41,7 @@ const ApplicationVerifierView = ({
 }: ApplicationVerificantViewProps): ReactElement => {
   const config = useContext(ProjectConfigContext)
   const { t } = useTranslation('applicationVerification')
-  const { createdDate: createdDateString, id, jsonValue } = application
-  const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${id}`
+  const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${application.id}`
   return (
     <Box sx={{ flexGrow: 1, overflow: 'auto', alignItems: 'safe center' }}>
       <ApplicationViewCard elevation={2}>
@@ -61,10 +60,10 @@ const ApplicationVerifierView = ({
           </Typography>
           <Divider style={{ margin: '24px 0px' }} />
           <Typography variant='h6' marginBottom={1}>
-            Antrag vom {formatDateWithTimezone(createdDateString, config.timezone)}
+            {t('info', { date: Temporal.Instant.from(application.createdDate) })}
           </Typography>
           <JsonFieldView
-            jsonField={jsonValue}
+            jsonField={application.jsonValue}
             baseUrl={baseUrl}
             hierarchyIndex={0}
             attachmentAccessible={false}
