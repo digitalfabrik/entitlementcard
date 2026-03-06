@@ -6,7 +6,7 @@ import React, { useContext, useEffect } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { Region, useGetRegionsByPostalCodeQuery } from '../../../../generated/graphql'
-import { ProjectConfigContext } from '../../../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../../../provider/ProjectConfigContext'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
 import {
   CompoundState,

@@ -1,4 +1,4 @@
-import nuernbergConfig from '../../../project-configs/nuernberg/config'
+import { config as nuernbergConfig } from '../../../project-configs/nuernberg/config'
 import { activityLogCardExample } from '../__mocks__/ActivityLogData'
 import { loadActivityLog, saveActivityLog } from './activityLog'
 

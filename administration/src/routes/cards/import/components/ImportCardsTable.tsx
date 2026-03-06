@@ -3,8 +3,8 @@ import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Card, getValueByCSVHeader, isValueValid } from '../../../../cards/card'
-import { ProjectConfigContext } from '../../../../project-configs/ProjectConfigContext'
 import { getCsvHeaders } from '../../../../project-configs/helper'
+import { ProjectConfigContext } from '../../../../provider/ProjectConfigContext'
 
 const CardImportTable = ({ cards }: { cards: Card[] }): ReactElement => {
   const projectConfig = useContext(ProjectConfigContext)

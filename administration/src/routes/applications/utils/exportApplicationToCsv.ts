@@ -1,6 +1,6 @@
 import { stringify } from 'csv-stringify/browser/esm/sync'
 
-import { ProjectConfig } from '../../../project-configs/getProjectConfig'
+import { ProjectConfig } from '../../../project-configs'
 import i18next from '../../../translations/i18n'
 import downloadDataUri from '../../../util/downloadDataUri'
 import formatDateWithTimezone from '../../../util/formatDate'

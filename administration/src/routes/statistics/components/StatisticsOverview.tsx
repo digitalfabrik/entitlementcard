@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import RenderGuard from '../../../components/RenderGuard'
 import { CardStatisticsResultModel, Region, Role } from '../../../generated/graphql'
-import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../../provider/ProjectConfigContext'
 import downloadDataUri from '../../../util/downloadDataUri'
 import { generateCsv, getCsvFileName } from '../utils/csvStatistics'
 import StatisticsBarChart from './StatisticsBarChart'

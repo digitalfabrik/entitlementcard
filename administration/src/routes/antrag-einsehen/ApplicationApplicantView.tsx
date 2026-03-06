@@ -15,7 +15,7 @@ import {
   GetApplicationByApplicantQuery,
   useWithdrawApplicationMutation,
 } from '../../generated/graphql'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import formatDateWithTimezone from '../../util/formatDate'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { ApplicationParsedJsonValue } from '../applications/utils/application'

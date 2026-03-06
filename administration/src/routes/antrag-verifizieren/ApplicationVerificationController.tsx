@@ -11,7 +11,7 @@ import {
   useGetApplicationByApplicationVerificationAccessKeyQuery,
   useVerifyOrRejectApplicationVerificationMutation,
 } from '../../generated/graphql'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import formatDateWithTimezone from '../../util/formatDate'
 import getQueryResult from '../../util/getQueryResult'
 import { applicationWasAlreadyProcessed, parseApplication } from '../applications/utils/application'

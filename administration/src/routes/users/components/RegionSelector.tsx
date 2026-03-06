@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import FormAlert from '../../../components/FormAlert'
 import { Region, useGetRegionsQuery } from '../../../generated/graphql'
-import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../../provider/ProjectConfigContext'
 import getQueryResult from '../../../util/getQueryResult'
 
 const getTitle = (region?: Region): string | undefined =>

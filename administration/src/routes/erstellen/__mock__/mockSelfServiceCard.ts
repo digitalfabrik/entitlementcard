@@ -1,10 +1,10 @@
 import { uint8ArrayToBase64 } from '../../../cards/base64'
 import { generateCardInfo, initializeCard } from '../../../cards/card'
 import { CreateCardsFromSelfServiceDocument } from '../../../generated/graphql'
-import koblenzConfig from '../../../project-configs/koblenz/config'
+import { config } from '../../../project-configs/koblenz/config'
 import PlainDate from '../../../util/PlainDate'
 
-export const exampleCard = initializeCard(koblenzConfig.card, undefined, {
+export const exampleCard = initializeCard(config.card, undefined, {
   fullName: 'Karla Koblenz',
   extensions: {
     birthday: PlainDate.safeFromCustomFormat('10.06.2003'),
@@ -15,7 +15,7 @@ export const mockedCardMutation = {
   request: {
     query: CreateCardsFromSelfServiceDocument,
     variables: {
-      project: koblenzConfig.projectId,
+      project: config.projectId,
       generateStaticCodes: true,
       encodedCardInfo: uint8ArrayToBase64(generateCardInfo(exampleCard).toBinary()),
     },

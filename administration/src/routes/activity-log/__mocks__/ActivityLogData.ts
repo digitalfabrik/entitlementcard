@@ -1,5 +1,5 @@
 import { initializeCard } from '../../../cards/card'
-import nuernbergConfig from '../../../project-configs/nuernberg/config'
+import { config } from '../../../project-configs/nuernberg/config'
 import PlainDate from '../../../util/PlainDate'
 import { getTestRegion } from '../../user-settings/__mocks__/Region'
 import { ActivityLogEntryType } from '../utils/activityLog'
@@ -11,7 +11,7 @@ const region = getTestRegion({
   activatedForApplication: false,
   activatedForCardConfirmationMail: false,
 })
-export const activityLogCardExample = initializeCard(nuernbergConfig.card, region, {
+export const activityLogCardExample = initializeCard(config.card, region, {
   id: 732401,
   fullName: 'Thea Test',
   expirationDate: PlainDate.from('2026-01-01'),
@@ -22,7 +22,7 @@ export const activityLogCardExample = initializeCard(nuernbergConfig.card, regio
   },
 })
 
-export const activityLogCardExample2 = initializeCard(nuernbergConfig.card, region, {
+export const activityLogCardExample2 = initializeCard(config.card, region, {
   id: 7324321,
   fullName: 'Thea Test',
   expirationDate: PlainDate.from('2026-01-01'),

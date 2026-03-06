@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { CreateCardsResult } from '../../../cards/createCards'
 import getCustomDeepLinkFromQrCode from '../../../cards/getCustomDeepLinkFromQrCode'
-import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../../provider/ProjectConfigContext'
 
 type CardSelfServiceActivationProps = {
   code: CreateCardsResult
