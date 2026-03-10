@@ -158,7 +158,7 @@ describe('useCardGenerator', () => {
     const { result } = renderHook(() => useCardGenerator({ region }), {
       wrapper: withCustomWrapper(
         bayernConfig,
-        '?Name=Thea+Test&Ablaufdatum=26.02.2028&MailNotification=thea.test%40gmail.com&applicationIdToMarkAsProcessed=1',
+        '?Name=Thea+Test&Ablaufdatum=26.02.2028&MailNotification=thea.test%40gmail.com&UserId=12345&applicationIdToMarkAsProcessed=1',
       ),
     })
 
@@ -169,6 +169,7 @@ describe('useCardGenerator', () => {
           bavariaCardType: 'Standard',
           regionId: 0,
           emailNotification: 'thea.test@gmail.com',
+          freinetUserId: '12345',
         },
         fullName: 'Thea Test',
         id: expect.any(Number),

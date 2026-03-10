@@ -27,7 +27,7 @@ describe('ImportCardsRequirementsText', () => {
       { projectConfig, translation: true },
     )
     expect(
-      getByText('Spaltenformat: Name*, Ablaufdatum*, Kartentyp*, MailNotification'),
+      getByText('Spaltenformat: Name*, Ablaufdatum*, Kartentyp*, MailNotification, UserId'),
     ).toBeTruthy()
   })
 
