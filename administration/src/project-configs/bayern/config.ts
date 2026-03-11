@@ -3,6 +3,7 @@ import { Temporal } from 'temporal-polyfill'
 
 import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
 import EMailNotificationExtension from '../../cards/extensions/EMailNotificationExtension'
+import FreinetUserIdExtension from '../../cards/extensions/FreinetUserIdExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
 import { JsonField, findValue } from '../../components/JsonFieldView'
 import {
@@ -38,8 +39,13 @@ const cardConfig: CardConfig = {
   defaultValidity: Temporal.Duration.from({ years: 3 }),
   nameColumnName: 'Name',
   expiryColumnName: 'Ablaufdatum',
-  extensionColumnNames: ['Kartentyp', null, 'MailNotification'],
-  extensions: [BavariaCardTypeExtension, RegionExtension, EMailNotificationExtension],
+  extensionColumnNames: ['Kartentyp', null, 'MailNotification', 'UserId'],
+  extensions: [
+    BavariaCardTypeExtension,
+    RegionExtension,
+    EMailNotificationExtension,
+    FreinetUserIdExtension,
+  ],
 }
 
 export const applicationJsonToCardQuery = (json: JsonField<'Array'>): string | null => {

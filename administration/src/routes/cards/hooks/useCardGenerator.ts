@@ -16,6 +16,7 @@ import {
   useCreateCardsMutation,
   useDeleteCardsMutation,
   useSendApplicationAndCardDataToFreinetMutation,
+  useSendCardDataToFreinetMutation,
 } from '../../../generated/graphql'
 import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
 import { ProjectConfig } from '../../../project-configs/getProjectConfig'
@@ -75,7 +76,7 @@ const useCardGenerator = ({
   const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('cards')
 
-  const [sendToFreinet] = useSendApplicationAndCardDataToFreinetMutation({
+  const [sendApplicationAndCardDataToFreinet] = useSendApplicationAndCardDataToFreinetMutation({
     onCompleted: data => {
       if (data.sendApplicationAndCardDataToFreinet === true) {
         enqueueSnackbar(t('freinetDataSyncSuccessMessage'), { variant: 'success' })
@@ -86,6 +87,19 @@ const useCardGenerator = ({
       enqueueSnackbar(title, { variant: 'error', persist: true })
     },
   })
+
+  const [sendCardDataToFreinet] = useSendCardDataToFreinetMutation({
+    onCompleted: data => {
+      if (data.sendCardDataToFreinet === true) {
+        enqueueSnackbar(t('freinetCardDataTransferSuccessMessage'), { variant: 'success' })
+      }
+    },
+    onError: error => {
+      const { title } = getMessageFromApolloError(error)
+      enqueueSnackbar(title, { variant: 'error', persist: true })
+    },
+  })
+
   const sendConfirmationMails = useSendCardConfirmationMails()
   const initializedCards = initializeCards
     ? initializeCardsFromQueryParams(projectConfig, searchParams, region)
@@ -124,9 +138,20 @@ const useCardGenerator = ({
 
         if (applicationId != null) {
           const freinetCard = getFreinetCardFromCards(normalizedCards)
-          sendToFreinet({
+          sendApplicationAndCardDataToFreinet({
             variables: {
               applicationId,
+              freinetCard,
+            },
+          })
+        }
+
+        const freinetUserId = normalizedCards[0]?.extensions.freinetUserId
+        if (freinetUserId) {
+          const freinetCard = getFreinetCardFromCards(normalizedCards)
+          sendCardDataToFreinet({
+            variables: {
+              userId: parseInt(freinetUserId, 10),
               freinetCard,
             },
           })
@@ -167,7 +192,8 @@ const useCardGenerator = ({
       cards,
       applicationId,
       region,
-      sendToFreinet,
+      sendApplicationAndCardDataToFreinet,
+      sendCardDataToFreinet,
       sendConfirmationMails,
       enqueueSnackbar,
       deleteCardsMutation,

@@ -9,7 +9,8 @@ import { getCsvHeaders } from '../../../../project-configs/helper'
 const CardImportTable = ({ cards }: { cards: Card[] }): ReactElement => {
   const projectConfig = useContext(ProjectConfigContext)
   const { card: cardConfig } = projectConfig
-  const csvHeaders = getCsvHeaders(projectConfig)
+  // TODO: we temporarily filter out the UserId header until #2779 is implemented
+  const csvHeaders = getCsvHeaders(projectConfig).filter(header => header !== 'UserId')
   const { t } = useTranslation('cards')
 
   return (

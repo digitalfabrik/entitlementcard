@@ -34,7 +34,6 @@ class FreinetApi(
     private val agencyId: Int,
 ) {
     private val logger = LoggerFactory.getLogger(FreinetApi::class.java)
-    private val objectMapper = jacksonObjectMapper()
 
     fun searchPersons(firstName: String, lastName: String, dateOfBirth: String): JsonNode =
         runBlocking {
@@ -247,5 +246,9 @@ class FreinetApi(
                 put("update_type", updateType)
             }
         }
+    }
+
+    companion object {
+        private val objectMapper = jacksonObjectMapper()
     }
 }

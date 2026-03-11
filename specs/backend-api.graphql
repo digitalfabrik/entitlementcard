@@ -221,6 +221,8 @@ type Mutation {
   sendApprovalMailToOrganisation(applicationId: Int!, applicationVerificationId: Int!): Boolean!
   "Sends a confirmation mail to the user when the card creation was successful"
   sendCardCreationConfirmationMail(deepLink: String!, recipientAddress: String!, recipientName: String!, regionId: Int!): Boolean!
+  "Send card information to Freinet"
+  sendCardDataToFreinet(freinetCard: FreinetCardInput!, userId: Int!): Boolean!
   "Sends a mail that allows the administrator to reset their password."
   sendResetMail(email: String!, project: String!): Boolean!
   "Signs in an administrator"
