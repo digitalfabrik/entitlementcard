@@ -1,19 +1,23 @@
+import { Temporal } from 'temporal-polyfill'
+
 import type { InfoParams } from '../../cards/pdf/pdfTextElement'
 import { BavariaCardType } from '../../generated/card_pb'
-import PlainDate from '../../util/PlainDate'
+import { formatDateDefaultGerman, plainDateFromDaysSinceEpoch } from '../../util/date'
 import type { PdfConfig } from '../getProjectConfig'
 import pdfTemplate from './pdf-template.pdf'
 
 const renderPdfInfo = ({ info, region }: InfoParams): string => {
   const expirationDay = info.expirationDay ?? 0
   const expirationDate =
-    expirationDay > 0 ? PlainDate.fromDaysSinceEpoch(expirationDay).format() : 'unbegrenzt'
+    expirationDay > 0
+      ? formatDateDefaultGerman(plainDateFromDaysSinceEpoch(expirationDay))
+      : 'unbegrenzt'
 
   const cardType = info.extensions?.extensionBavariaCardType?.cardType
   return `${info.fullName}
 Kartentyp: ${cardType === BavariaCardType.STANDARD ? 'Blau' : 'Gold'}
 Gültig bis: ${expirationDate}
-Ausgestellt am ${PlainDate.fromLocalDate(new Date()).format()} 
+Ausgestellt am ${formatDateDefaultGerman(Temporal.Now.plainDateISO())}
 ${region ? `von ${region.prefix} ${region.name}` : ''}`
 }
 

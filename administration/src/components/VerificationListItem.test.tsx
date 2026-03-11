@@ -1,13 +1,13 @@
 import React from 'react'
 
-import VerificationListItem from '../../../components/VerificationListItem'
-import { ApplicationVerificationView } from '../../../generated/graphql'
-import { CustomRenderOptions, renderWithOptions } from '../../../testing/render'
+import { ApplicationVerificationView } from '../generated/graphql'
 import {
   verificationsAwaiting,
   verificationsRejected,
   verificationsVerified,
-} from '../__mocks__/verificationData'
+} from '../routes/applications/__mocks__/verificationData'
+import { CustomRenderOptions, renderWithOptions } from '../testing/render'
+import VerificationListItem from './VerificationListItem'
 
 const mockProvider: CustomRenderOptions = {
   translation: true,
@@ -42,7 +42,7 @@ describe('VerificationListItem', () => {
     expect(getByText('E-Mail:')).toBeTruthy()
     expect(getByText('erika.musterfrau@posteo.de')).toBeTruthy()
     expect(getByText('Status:')).toBeTruthy()
-    expect(getByText('Widersprochen am 16.1.2025, 16:22:52')).toBeTruthy()
+    expect(getByText('Widersprochen am 16.01.2025, 16:22')).toBeTruthy()
     expect(queryByText('Anfrage erneut senden')).toBeTruthy()
   })
 
@@ -69,7 +69,7 @@ describe('VerificationListItem', () => {
     expect(getByText('E-Mail:')).toBeTruthy()
     expect(getByText('erika.musterfrau@posteo.de')).toBeTruthy()
     expect(getByText('Status:')).toBeTruthy()
-    expect(getByText('Bestätigt am 16.1.2025, 16:22:52')).toBeTruthy()
+    expect(getByText('Bestätigt am 16.01.2025, 16:22')).toBeTruthy()
     expect(queryByText('Anfrage erneut senden')).toBeTruthy()
   })
 

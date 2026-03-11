@@ -1,20 +1,26 @@
 import { FormGroup } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Temporal } from 'temporal-polyfill'
 
 import CustomDatePicker from '../../components/CustomDatePicker'
 import FormAlert from '../../components/FormAlert'
-import PlainDate from '../../util/PlainDate'
+import {
+  formatDateDefaultGerman,
+  plainDateToDaysSinceEpoch,
+  safeParseGermanPlainDateString,
+  safeParseIsoPlainDate,
+} from '../../util/date'
 import { isExceedingMaxValidityDate } from '../../util/helper'
 import { maxCardValidity } from '../constants'
 import type { Extension, ExtensionComponentProps } from './extensions'
 
 export const START_DAY_EXTENSION_NAME = 'startDay'
-export type StartDayExtensionState = { [START_DAY_EXTENSION_NAME]: PlainDate | null }
+export type StartDayExtensionState = { [START_DAY_EXTENSION_NAME]: Temporal.PlainDate | null }
 
 // Some minimum start day after 1970 is necessary, as we use an uint32 in the protobuf.
 // We also have to provide some minStartDay in the past for csv cards imports that may contain startDay in the past.
-export const minStartDay = PlainDate.fromLocalDate(new Date()).subtract({ years: 5 })
+export const minStartDay = Temporal.Now.plainDateISO().subtract({ years: 5 })
 
 const StartDayForm = ({
   value,
@@ -27,15 +33,17 @@ const StartDayForm = ({
 
   const getStartDayErrorMessage = (): string | null => {
     const startDay = value.startDay
-    const today = PlainDate.fromLocalDate(new Date())
+
     if (!startDay) {
       return t('startDayError')
     }
-    if (startDay.isBefore(minStartDay)) {
-      return t('startDayPastError', { minStartDay: minStartDay.format() })
+    if (Temporal.PlainDate.compare(startDay, minStartDay) < 0) {
+      return t('startDayPastError', { minStartDay })
     }
     if (isExceedingMaxValidityDate(startDay)) {
-      return t('startDayFutureError', { maxValidationDate: today.add(maxCardValidity).format() })
+      return t('startDayFutureError', {
+        maxValidationDate: Temporal.Now.plainDateISO().add(maxCardValidity),
+      })
     }
     return null
   }
@@ -46,10 +54,10 @@ const StartDayForm = ({
         label={t('startDayLabel')}
         onBlur={() => setInteracted(true)}
         onClose={() => setInteracted(true)}
-        value={value.startDay?.toLocalDate() ?? null}
-        onChange={date => setValue({ startDay: PlainDate.safeFromLocalDate(date) })}
+        value={value.startDay}
+        onChange={date => setValue({ startDay: date })}
         error={showError}
-        minDate={minStartDay.toLocalDate()}
+        minDate={minStartDay}
         textFieldSlotProps={{
           sx: {
             '.MuiPickersSectionList-root': {
@@ -64,31 +72,35 @@ const StartDayForm = ({
 }
 
 const isStartDayValid = ({ startDay }: StartDayExtensionState): boolean =>
-  startDay ? startDay.isAfterOrEqual(minStartDay) && !isExceedingMaxValidityDate(startDay) : false
+  startDay
+    ? Temporal.PlainDate.compare(startDay, minStartDay) >= 0 &&
+      !isExceedingMaxValidityDate(startDay)
+    : false
 
 const StartDayExtension: Extension<StartDayExtensionState> = {
   name: START_DAY_EXTENSION_NAME,
   Component: StartDayForm,
-  getInitialState: () => ({ startDay: PlainDate.fromLocalDate(new Date()) }),
+  getInitialState: () => ({ startDay: Temporal.Now.plainDateISO() }),
   causesInfiniteLifetime: () => false,
   getProtobufData: (state: StartDayExtensionState) => ({
     extensionStartDay: {
       startDay: isStartDayValid(state)
-        ? state.startDay?.toDaysSinceEpoch()
-        : minStartDay.toDaysSinceEpoch(),
+        ? plainDateToDaysSinceEpoch(state.startDay!)
+        : plainDateToDaysSinceEpoch(minStartDay),
     },
   }),
   isValid: isStartDayValid,
   fromString: (value: string) => {
-    const startDay = PlainDate.safeFromCustomFormat(value)
+    const startDay = safeParseGermanPlainDateString(value)
     return startDay === null ? null : { startDay }
   },
-  toString: ({ startDay }: StartDayExtensionState) => startDay?.format() ?? '',
+  toString: ({ startDay }: StartDayExtensionState) =>
+    startDay !== null ? formatDateDefaultGerman(startDay) : '',
   fromSerialized: (value: string) => {
-    const startDay = PlainDate.safeFrom(value)
+    const startDay = safeParseIsoPlainDate(value)
     return startDay === null ? null : { startDay }
   },
-  serialize: ({ startDay }: StartDayExtensionState) => startDay?.formatISO() ?? '',
+  serialize: ({ startDay }: StartDayExtensionState) => startDay?.toString() ?? '',
   isMandatory: true,
 }
 

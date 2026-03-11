@@ -7,13 +7,16 @@ import { BIRTHDAY_EXTENSION_NAME } from '../../cards/extensions/BirthdayExtensio
 import { NUERNBERG_PASS_ID_EXTENSION_NAME } from '../../cards/extensions/NuernbergPassIdExtension'
 import { START_DAY_EXTENSION_NAME } from '../../cards/extensions/StartDayExtension'
 import { QrCode } from '../../generated/card_pb'
+import { formatDateDefaultGerman } from '../../util/date'
 import { convertProtobufToHexCode } from '../../util/qrcode'
 
 export const buildCsvLine = (createCardsResult: CreateCardsResult, card: Card): string => {
   const [addressLine1, addressLine2, plz, location] = getAddressFieldExtensionsValues(card)
   const passId = card.extensions[NUERNBERG_PASS_ID_EXTENSION_NAME]
-  const birthday = card.extensions[BIRTHDAY_EXTENSION_NAME]?.format()
-  const startDay = card.extensions[START_DAY_EXTENSION_NAME]?.format()
+  const birthdayDate = card.extensions[BIRTHDAY_EXTENSION_NAME]
+  const birthday = birthdayDate ? formatDateDefaultGerman(birthdayDate) : undefined
+  const startDayDate = card.extensions[START_DAY_EXTENSION_NAME]
+  const startDay = startDayDate ? formatDateDefaultGerman(startDayDate) : undefined
 
   const activationHex = convertProtobufToHexCode(
     new QrCode({
@@ -43,7 +46,7 @@ export const buildCsvLine = (createCardsResult: CreateCardsResult, card: Card): 
       passId,
       birthday,
       startDay,
-      card.expirationDate?.format(),
+      card.expirationDate !== null ? formatDateDefaultGerman(card.expirationDate) : undefined,
       createCardsResult.staticCardInfoHashBase64,
       activationHex,
       staticVerificationHex,

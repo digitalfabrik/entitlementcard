@@ -7,6 +7,7 @@ import {
   createRoutesFromElements,
   useNavigate,
 } from 'react-router'
+import { Temporal } from 'temporal-polyfill'
 
 import AutomaticLogoutDialog from './auth/AutomaticLogoutDialog'
 import Login from './auth/Login'
@@ -75,7 +76,8 @@ export const createRoute = (
 const AuthLayout = (): ReactElement => {
   const { data: authData, signIn } = useContext(AuthContext)
   const navigate = useNavigate()
-  const isLoggedIn = authData !== null && authData.expiry > new Date()
+  const isLoggedIn =
+    authData !== null && Temporal.Instant.compare(authData.expiry, Temporal.Now.instant()) > 0
 
   return isLoggedIn ? (
     <WhoAmIProvider>

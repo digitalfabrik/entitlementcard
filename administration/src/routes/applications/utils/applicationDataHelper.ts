@@ -1,5 +1,6 @@
+import { Intl, Temporal } from 'temporal-polyfill'
+
 import { JsonField, findValue } from '../../../components/JsonFieldView'
-import { formatDate } from '../../../util/formatDate'
 
 export type PersonalApplicationData = {
   forenames: string | undefined
@@ -37,17 +38,19 @@ export const getPersonalApplicationData = (json: JsonField<'Array'>): PersonalAp
   if (!personalData) {
     throw new ApplicationDataIncompleteError('personalData not found')
   }
-  const forenames = findValue(personalData, 'forenames', 'String')?.value
-  const surname = findValue(personalData, 'surname', 'String')?.value
-  const emailAddress = findValue(personalData, 'emailAddress', 'String')?.value
+
   const dateOfBirth = findValue(personalData, 'dateOfBirth', 'Date')?.value
-  const telephone = findValue(personalData, 'telephone', 'String')?.value
+
   return {
-    forenames,
-    surname,
-    emailAddress,
-    dateOfBirth: dateOfBirth ? formatDate(dateOfBirth) : '',
-    telephone,
+    forenames: findValue(personalData, 'forenames', 'String')?.value,
+    surname: findValue(personalData, 'surname', 'String')?.value,
+    emailAddress: findValue(personalData, 'emailAddress', 'String')?.value,
+    dateOfBirth: dateOfBirth
+      ? Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' }).format(
+          Temporal.PlainDate.from(dateOfBirth),
+        )
+      : '',
+    telephone: findValue(personalData, 'telephone', 'String')?.value,
   }
 }
 
@@ -56,18 +59,19 @@ export const getAddressApplicationData = (json: JsonField<'Array'>): AddressAppl
   if (!personalData) {
     throw new ApplicationDataIncompleteError('personalData not found')
   }
-  const addressData = findValue(personalData, 'address', 'Array')
 
+  const addressData = findValue(personalData, 'address', 'Array')
   if (!addressData) {
     throw new ApplicationDataIncompleteError('addressData not found')
   }
 
-  const street = findValue(addressData, 'street', 'String')?.value
-  const addressSupplement = findValue(addressData, 'addressSupplement', 'String')?.value
-  const houseNumber = findValue(addressData, 'houseNumber', 'String')?.value
-  const postalCode = findValue(addressData, 'postalCode', 'String')?.value
-  const location = findValue(addressData, 'location', 'String')?.value
-  return { street, addressSupplement, houseNumber, postalCode, location }
+  return {
+    street: findValue(addressData, 'street', 'String')?.value,
+    addressSupplement: findValue(addressData, 'addressSupplement', 'String')?.value,
+    houseNumber: findValue(addressData, 'houseNumber', 'String')?.value,
+    postalCode: findValue(addressData, 'postalCode', 'String')?.value,
+    location: findValue(addressData, 'location', 'String')?.value,
+  }
 }
 
 export const getCardTypeApplicationData = (json: JsonField<'Array'>): CardTypeApplicationData => {
@@ -75,6 +79,6 @@ export const getCardTypeApplicationData = (json: JsonField<'Array'>): CardTypeAp
   if (!applicationDetails) {
     throw new ApplicationDataIncompleteError('applicationDetails not found')
   }
-  const cardType = findValue(applicationDetails, 'cardType', 'String')?.value
-  return { cardType }
+
+  return { cardType: findValue(applicationDetails, 'cardType', 'String')?.value }
 }

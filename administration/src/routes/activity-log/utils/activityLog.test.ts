@@ -3,6 +3,7 @@ import { activityLogCardExample } from '../__mocks__/ActivityLogData'
 import { loadActivityLog, saveActivityLog } from './activityLog'
 
 jest.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
+
 describe('ActivityLog', () => {
   it('should save activity log session storage', () => {
     const setItemSpy = jest.spyOn(Object.getPrototypeOf(sessionStorage), 'setItem')

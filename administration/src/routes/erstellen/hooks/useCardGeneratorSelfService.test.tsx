@@ -2,6 +2,7 @@ import { MockedProvider, MockedResponse } from '@apollo/client/testing'
 import { act, renderHook } from '@testing-library/react'
 import React, { ReactNode } from 'react'
 import { MemoryRouter } from 'react-router'
+import { Temporal } from 'temporal-polyfill'
 
 import { ProjectConfigProvider } from '../../../project-configs/ProjectConfigContext'
 import koblenzConfig from '../../../project-configs/koblenz/config'
@@ -79,13 +80,13 @@ describe('useCardGeneratorSelfService', () => {
     })
 
     expect(result.current.selfServiceCard).toEqual({
-      expirationDate: { day: 1, isoMonth: 1, isoYear: 2026 },
+      expirationDate: Temporal.PlainDate.from({ year: 2026, month: 1, day: 1 }),
       extensions: {
-        birthday: {
+        birthday: Temporal.PlainDate.from({
           day: 10,
-          isoMonth: 6,
-          isoYear: 2003,
-        },
+          month: 6,
+          year: 2003,
+        }),
         koblenzReferenceNumber: '123K',
       },
       fullName: 'Karla Koblenz',

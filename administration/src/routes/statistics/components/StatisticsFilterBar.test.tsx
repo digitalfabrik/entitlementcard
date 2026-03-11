@@ -1,13 +1,13 @@
 import { act, fireEvent } from '@testing-library/react'
-import { formatDate } from 'date-fns/format'
 import React from 'react'
+import { Intl } from 'temporal-polyfill'
 
 import { CustomRenderOptions, renderWithOptions } from '../../../testing/render'
 import { defaultEndDate, defaultStartDate } from '../constants'
 import StatisticsFilterBar from './StatisticsFilterBar'
 
 jest.useFakeTimers()
-const dateFormat = 'dd.MM.yyyy'
+const dateFormatter = new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' })
 const mockProvider: CustomRenderOptions = {
   localization: true,
   translation: true,
@@ -43,8 +43,8 @@ describe('StatisticFilterBar', () => {
       mockProvider,
     )
     const applyFilterButton = getByText('Filter anwenden')
-    const startInput = getByDisplayValue(formatDate(defaultStartDate.toLocalDate(), dateFormat))
-    const endInput = getByDisplayValue(formatDate(defaultEndDate.toLocalDate(), dateFormat))
+    const startInput = getByDisplayValue(dateFormatter.format(defaultStartDate))
+    const endInput = getByDisplayValue(dateFormatter.format(defaultEndDate))
 
     fireEvent.change(startInput, {
       target: {
@@ -71,7 +71,7 @@ describe('StatisticFilterBar', () => {
     )
 
     const applyFilterButton = getByText('Filter anwenden')
-    const startInput = getByDisplayValue(formatDate(defaultStartDate.toLocalDate(), dateFormat))
+    const startInput = getByDisplayValue(dateFormatter.format(defaultStartDate))
 
     fireEvent.change(startInput, {
       target: {
@@ -91,7 +91,7 @@ describe('StatisticFilterBar', () => {
       mockProvider,
     )
     const applyFilterButton = getByText('Filter anwenden')
-    const startInput = getByDisplayValue(formatDate(defaultStartDate.toLocalDate(), dateFormat))
+    const startInput = getByDisplayValue(dateFormatter.format(defaultStartDate))
 
     fireEvent.change(startInput, {
       target: {
