@@ -1,5 +1,7 @@
 import org.gradle.api.tasks.Delete
 
+rootProject.layout.buildDirectory.set(file("../build"))
+
 allprojects {
     repositories {
         google()
@@ -7,11 +9,8 @@ allprojects {
     }
 }
 
-rootProject.layout.buildDirectory.set(file("../build"))
 subprojects {
     project.layout.buildDirectory.set(file("${rootProject.layout.buildDirectory.get()}/${project.name}"))
-}
-subprojects {
     project.evaluationDependsOn(":app")
 }
 
