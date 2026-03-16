@@ -1,14 +1,20 @@
 import android.databinding.tool.ext.capitalizeUS
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
-import java.nio.file.Paths
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.nio.file.Paths
 
 plugins {
     id("com.android.application")
-    id("kotlin-android")
+    id("org.jetbrains.kotlin.android")
     id("dev.flutter.flutter-gradle-plugin")
     id("idea")
 }
+
+private val buildConfigs = listOf(
+    "bayern",
+    "nuernberg",
+    "koblenz",
+)
 
 idea {
     module {
@@ -16,13 +22,6 @@ idea {
         isDownloadSources = true
     }
 }
-
-
-val buildConfigs = listOf(
-    "bayern",
-    "nuernberg",
-    "koblenz"
-)
 
 kotlin {
     compilerOptions {
@@ -43,12 +42,12 @@ android {
         multiDexEnabled = true
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+
         if (project.hasProperty("VERSION_CODE")) {
             versionCode = (project.property("VERSION_CODE") as String).toInt()
             versionName = project.property("VERSION_NAME") as String
         }
     }
-
 
     sourceSets {
         named("main") {
@@ -67,9 +66,11 @@ android {
         buildConfigs.forEach { buildConfigName ->
             create(buildConfigName) {
                 val buildConfig = readBuildConfig(buildConfigName)
+
                 applicationId = buildConfig.applicationId
                 manifestPlaceholders["icon"] = buildConfig.appIcon
                 manifestPlaceholders["appName"] = buildConfig.appName
+                // noinspection WrongGradleMethod
                 readResValues(buildConfigName).forEach {
                     resValue(it.type, it.name, it.value)
                 }
@@ -82,24 +83,30 @@ android {
     }
 
     signingConfigs {
-        if (System.getenv()["KEYSTORE_PATH"] != null) { // Signing with env variables (CI)
-            println("Selected keystore using env variables")
-            create("release") {
-                storeFile = file("file://" + System.getProperty("user.home") + project.property("KEYSTORE_PATH"))
-                storePassword = project.property("KEYSTORE_PASSWORD") as String
-                keyAlias = project.property("KEYSTORE_KEY_ALIAS") as String
-                keyPassword = project.property("KEYSTORE_KEY_PASSWORD") as String
+        when {
+            System.getenv()["KEYSTORE_PATH"] != null -> { // Signing with env variables (CI)
+                println("Selected keystore using env variables")
+                create("release") {
+                    storeFile = file("file://" + System.getProperty("user.home") + project.property("KEYSTORE_PATH"))
+                    storePassword = project.property("KEYSTORE_PASSWORD") as String
+                    keyAlias = project.property("KEYSTORE_KEY_ALIAS") as String
+                    keyPassword = project.property("KEYSTORE_KEY_PASSWORD") as String
+                }
             }
-        } else if (localProperties.containsKey("signing.keyAlias")) { // Signing with local.properties file (locally)
-            println("Selected keystore using localProps")
-            create("localProps") {
-                keyAlias = localProperties.getProperty("signing.keyAlias")
-                keyPassword = localProperties.getProperty("signing.keyPassword")
-                storeFile = file(localProperties.getProperty("signing.storeFile"))
-                storePassword = localProperties.getProperty("signing.storePassword")
+
+            localProperties.containsKey("signing.keyAlias") -> { // Signing with local.properties file (locally)
+                println("Selected keystore using localProps")
+                create("localProps") {
+                    keyAlias = localProperties.getProperty("signing.keyAlias")
+                    keyPassword = localProperties.getProperty("signing.keyPassword")
+                    storeFile = file(localProperties.getProperty("signing.storeFile"))
+                    storePassword = localProperties.getProperty("signing.storePassword")
+                }
             }
-        } else {
-            println("Selecting debug keystore")
+
+            else -> {
+                println("Selecting debug keystore")
+            }
         }
     }
 
@@ -116,14 +123,12 @@ android {
             }
 
             signingConfig = signingConfigs.getByName(
-                if (project.hasProperty("KEYSTORE_PATH"))
-                    "release"
-                else if (localProperties.containsKey("signing.keyAlias"))
-                    "localProps"
-                else
-                    "debug"
+                when {
+                    project.hasProperty("KEYSTORE_PATH") -> "release"
+                    localProperties.containsKey("signing.keyAlias") -> "localProps"
+                    else -> "debug"
+                },
             )
-
 
             // We need to configure proguard here because of some bug which occurred when adding flutter dependencies,
             // probably involving image-picker.
@@ -151,11 +156,11 @@ android {
                     // Then see if there are files located at com.android.gms (Cursive files are not present, only referenced)
                     variant.compileConfiguration.exclude(
                         group = "com.google.android.gms",
-                        module = "play-services-location"
+                        module = "play-services-location",
                     )
                     variant.runtimeConfiguration.exclude(
                         group = "com.google.android.gms",
-                        module = "play-services-location"
+                        module = "play-services-location",
                     )
                 }
             }
@@ -165,6 +170,10 @@ android {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
 }
 
 /** Add checks verifying that the correct build config is used for the specified flavor. */
@@ -179,6 +188,7 @@ fun setupChecksForBuildConfig() {
         }
     }
     val suffixRegex = Regex("(Release|Debug|Profile|Test|Unit|Android)$")
+
     tailrec fun removeSuffixes(name: String): String {
         val match = suffixRegex.find(name) ?: return name
         return removeSuffixes(name.substring(0, name.length - match.value.length))
@@ -200,7 +210,7 @@ fun assertBuildRunnerWasRunCorrectly(buildConfigName: String) {
     }
     val generatedDartText = generatedDartFile.readText()
     if (!generatedDartText.contains("String buildConfigName = \"${buildConfigName}\";")) {
-        val msg = "The dart build runner was not run with the correct build config. Run `${buildRunnerCmd}`!"
+        val msg = "The dart build runner was not run with the correct build config. Run `$buildRunnerCmd`!"
         throw GradleException(msg)
     }
 }
