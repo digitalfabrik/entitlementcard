@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import StandaloneCenter from '../../components/StandaloneCenter'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useSendResetMailMutation } from '../../generated/graphql'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 
 const ForgotPasswordController = (): ReactElement => {
   const config = useContext(ProjectConfigContext)

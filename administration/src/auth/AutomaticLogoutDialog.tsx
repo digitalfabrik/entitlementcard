@@ -16,7 +16,7 @@ import { Temporal } from 'temporal-polyfill'
 import PasswordInput from '../components/PasswordInput'
 import getMessageFromApolloError from '../errors/getMessageFromApolloError'
 import { type SignInPayload, useSignInMutation } from '../generated/graphql'
-import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../provider/ProjectConfigContext'
 import { useWhoAmI } from '../provider/WhoAmIProvider'
 
 const computeSecondsRemaining = (expiresAt: Temporal.Instant) =>

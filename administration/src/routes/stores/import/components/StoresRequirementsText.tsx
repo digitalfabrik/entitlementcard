@@ -2,7 +2,7 @@ import { Typography } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import type { StoresFieldConfig } from '../../../../project-configs/getProjectConfig'
+import type { StoresFieldConfig } from '../../../../project-configs'
 import { FILE_SIZE_LIMIT_MEGA_BYTES } from '../constants'
 
 type ImportCardsRequirementsProps = {

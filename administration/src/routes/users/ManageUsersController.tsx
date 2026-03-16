@@ -11,7 +11,7 @@ import {
   useGetUsersInProjectQuery,
   useGetUsersInRegionQuery,
 } from '../../generated/graphql'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import { useWhoAmI } from '../../provider/WhoAmIProvider'
 import getQueryResult from '../../util/getQueryResult'
 import UsersTable from './components/UsersTable'

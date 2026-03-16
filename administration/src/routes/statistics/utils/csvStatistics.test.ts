@@ -1,8 +1,8 @@
 import { Temporal } from 'temporal-polyfill'
 
 import { CardStatisticsResultModel } from '../../../generated/graphql'
-import bayernConfig from '../../../project-configs/bayern/config'
-import nuernbergConfig from '../../../project-configs/nuernberg/config'
+import { config as bayernConfig } from '../../../project-configs/bayern/config'
+import { config as nuernbergConfig } from '../../../project-configs/nuernberg/config'
 import { getTestRegion } from '../../user-settings/__mocks__/Region'
 import { CsvStatisticsError, csvFileName, generateCsv } from './csvStatistics'
 

@@ -1,6 +1,6 @@
 import { DynamicActivationCode } from '../generated/card_pb'
-import bayernConfig from '../project-configs/bayern/config'
-import nuernbergConfig from '../project-configs/nuernberg/config'
+import { config as bayernConfig } from '../project-configs/bayern/config'
+import { config as nuernbergConfig } from '../project-configs/nuernberg/config'
 import { CSV_MIME_TYPE_UTF8 } from '../routes/applications/constants'
 import { getTestRegion } from '../routes/user-settings/__mocks__/Region'
 import { generateCardInfo, initializeCard } from './card'

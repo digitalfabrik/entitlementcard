@@ -2,13 +2,16 @@ import { Temporal } from 'temporal-polyfill'
 
 import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
-import { applicationJsonToCardQuery, applicationJsonToPersonalData } from '../bayern/config'
-import { DataPrivacyBaseText, dataPrivacyBaseHeadline } from '../bayern/dataPrivacyBase'
-import pdfConfiguration from '../bayern/pdf'
+import { config as bayernConfig } from '../bayern/config'
+import { DataPrivacyBaseText } from '../bayern/dataPrivacy'
+import {
+  applicationJsonToCardQuery,
+  applicationJsonToPersonalData,
+} from '../common/applicationFeatures'
 import { commonColors } from '../common/colors'
-import type { ProjectConfig } from '../getProjectConfig'
+import type { ProjectConfig } from '../index'
 
-const config: ProjectConfig = {
+export const config: ProjectConfig = {
   colorPalette: commonColors,
   name: 'Showcase Berechtigungskarte',
   projectId: 'showcase.entitlementcard.app',
@@ -27,10 +30,11 @@ const config: ProjectConfig = {
     defaultValidity: Temporal.Duration.from({ years: 3 }),
     extensions: [BavariaCardTypeExtension, RegionExtension],
   },
-  dataPrivacyHeadline: dataPrivacyBaseHeadline,
+  dataPrivacyHeadline:
+    'Datenschutzerklärung für die Nutzung und Beantragung der digitalen Berechtigungskarte',
   dataPrivacyContent: DataPrivacyBaseText,
   timezone: 'Europe/Berlin',
-  pdf: pdfConfiguration,
+  pdf: bayernConfig.pdf,
   csvExport: {
     enabled: false,
   },
@@ -46,5 +50,3 @@ const config: ProjectConfig = {
   showBirthdayExtensionHint: false,
   locales: ['de'],
 }
-
-export default config

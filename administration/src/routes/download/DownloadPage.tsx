@@ -5,7 +5,7 @@ import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import AppStoreLinks from '../../components/AppStoreLinks'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import { getBuildConfig } from '../../util/getBuildConfig'
 
 const DownloadPage = (): ReactElement => {

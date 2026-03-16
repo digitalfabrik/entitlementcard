@@ -3,7 +3,7 @@ import React, { ReactElement, useContext, useId } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
 import CardTextField from '../../../../cards/extensions/components/CardTextField'
-import { ProjectConfigContext } from '../../../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../../../provider/ProjectConfigContext'
 import type { AcceptingStoreFormData, UpdateStoreFunction } from '../../types'
 import { descriptionMaxChars, descriptionValidation } from './validation'
 

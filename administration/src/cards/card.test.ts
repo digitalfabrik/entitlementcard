@@ -2,9 +2,9 @@ import { Temporal } from 'temporal-polyfill'
 
 import { BavariaCardType } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
-import bayernConfig from '../project-configs/bayern/config'
-import koblenzConfig from '../project-configs/koblenz/config'
-import nuernbergConfig from '../project-configs/nuernberg/config'
+import { config as bayernConfig } from '../project-configs/bayern/config'
+import { config as koblenzConfig } from '../project-configs/koblenz/config'
+import { config as nuernbergConfig } from '../project-configs/nuernberg/config'
 import { getTestRegion } from '../routes/user-settings/__mocks__/Region'
 import { formatDateDefaultGerman, parseGermanPlainDateString } from '../util/date'
 import {

@@ -7,7 +7,7 @@ import PageLayout from '../components/PageLayout'
 import ProjectSwitcher from '../components/ProjectSwitcher'
 import getMessageFromApolloError from '../errors/getMessageFromApolloError'
 import { SignInMutation, SignInPayload, useSignInMutation } from '../generated/graphql'
-import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../provider/ProjectConfigContext'
 import LoginForm from './LoginForm'
 
 type State = {

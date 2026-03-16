@@ -6,7 +6,7 @@ import { Temporal } from 'temporal-polyfill'
 
 import RenderGuard from '../../../components/RenderGuard'
 import { CardStatisticsResultModel, Region, Role } from '../../../generated/graphql'
-import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../../provider/ProjectConfigContext'
 import downloadDataUri from '../../../util/downloadDataUri'
 import { csvFileName, generateCsv } from '../utils/csvStatistics'
 import StatisticsBarChart from './StatisticsBarChart'

@@ -5,7 +5,7 @@ import { Temporal } from 'temporal-polyfill'
 
 import CustomDatePicker from '../../components/CustomDatePicker'
 import FormAlert from '../../components/FormAlert'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import {
   formatDateDefaultGerman,
   plainDateToDaysSinceEpoch,
