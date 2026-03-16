@@ -18,7 +18,6 @@ import { env } from 'node:process'
 import { promisify } from 'node:util'
 import { UserConfig, defineConfig } from 'vite'
 import generateFile, { GenerateFile } from 'vite-plugin-generate-file'
-import tsconfigPaths from 'vite-tsconfig-paths'
 
 import versionJson from '../version.json'
 
@@ -32,7 +31,6 @@ export default defineConfig(
       appType: 'spa',
       plugins: [
         react(),
-        tsconfigPaths(),
         generateFile(
           buildFilesFromConfigs([
             buildConfigBayern.common.deepLinking,
@@ -41,6 +39,9 @@ export default defineConfig(
           ]),
         ),
       ],
+      resolve: {
+        tsconfigPaths: true,
+      },
       build: {
         outDir: 'build',
         assetsInlineLimit: 10000,
