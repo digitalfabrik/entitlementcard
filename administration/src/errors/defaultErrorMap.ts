@@ -4,6 +4,9 @@ import i18next from '../translations/i18n'
 import type { GraphQLErrorMessage } from './getMessageFromApolloError'
 
 const defaultErrorMap = (error: ApolloError): GraphQLErrorMessage => {
+  if (error.message.includes('400')) {
+    return { title: i18next.t('errors:invalidRequestFormat') }
+  }
   if (error.message.includes('401')) {
     return { title: i18next.t('errors:notAuthorized') }
   }
