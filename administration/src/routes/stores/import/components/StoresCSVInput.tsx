@@ -85,7 +85,7 @@ const StoresCsvInput = ({
   const onLoadEnd = useCallback(
     (event: ProgressEvent<FileReader>) => {
       const content = event.target?.result as string
-      let lines: [][] = []
+      let lines: string[][] = []
       try {
         lines = parse(content, {
           delimiter: ',',
