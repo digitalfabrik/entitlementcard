@@ -9,7 +9,6 @@ import {
   DialogTitle,
   Stack,
   Typography,
-  styled,
 } from '@mui/material'
 import { grey } from '@mui/material/colors'
 import React, { ReactElement, useState } from 'react'
@@ -25,16 +24,6 @@ import CardSelfServiceInformation from './components/CardSelfServiceInformation'
 import { DataPrivacyAcceptingStatus } from './constants'
 import selfServiceStepInfo from './constants/selfServiceStepInfo'
 import useCardGeneratorSelfService from './hooks/useCardGeneratorSelfService'
-
-const Container = styled('div')(({ theme }) => ({
-  alignSelf: 'center',
-  justifyContent: 'center',
-  display: 'flex',
-  flexDirection: 'column',
-  width: '100%',
-  maxWidth: theme.breakpoints.values.sm,
-  border: `1px solid ${theme.palette.divider}`,
-}))
 
 const CardSelfServiceView = (): ReactElement => {
   const { t } = useTranslation('selfService')
@@ -59,97 +48,98 @@ const CardSelfServiceView = (): ReactElement => {
   const totalSteps = Object.keys(selfServiceStepInfo).length
 
   return (
-    <PageLayout showDataPrivacy={false}>
-      <Container>
-        <Box
-          sx={{
-            backgroundColor: grey[100],
-            padding: 1.5,
-            display: 'flex',
-            justifyContent: 'space-between',
-          }}
+    <PageLayout
+      showDataPrivacy={false}
+      sx={{
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+      containerSx={{
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        maxWidth: theme => theme.breakpoints.values.sm,
+        margin: '0 auto',
+        border: theme => `1px solid ${theme.palette.divider}`,
+      }}
+    >
+      <Box
+        sx={{
+          backgroundColor: grey[100],
+          padding: 1.5,
+          display: 'flex',
+          width: '100%',
+          justifyContent: 'space-between',
+        }}
+      >
+        <KoblenzLogo height='40' />
+        <Button
+          color='inherit'
+          variant='text'
+          size='large'
+          onClick={() => setOpenHelpDialog(true)}
+          endIcon={<HelpOutlineOutlinedIcon />}
         >
-          <KoblenzLogo height='40' />
-          <Button
-            color='inherit'
-            variant='text'
-            size='large'
-            onClick={() => setOpenHelpDialog(true)}
-            endIcon={<HelpOutlineOutlinedIcon />}
-          >
-            {' '}
-            {t('help')}
+          {' '}
+          {t('help')}
+        </Button>
+      </Box>
+      <Stack padding={2}>
+        <Typography
+          component='div'
+          variant='body1'
+          color='inherit'
+          sx={{ p: 2, alignSelf: 'flex-end' }}
+        >{`${t('step')} ${
+          selfServiceStepInfo[cardGenerationStep].stepNr
+        }/${totalSteps}`}</Typography>
+        <Typography variant='h6' color='accent' component='h1'>
+          {selfServiceStepInfo[cardGenerationStep].headline}
+        </Typography>
+        <Typography variant='h5' component='h2'>
+          {selfServiceStepInfo[cardGenerationStep].subHeadline}
+        </Typography>
+        <Typography variant='body1' marginBottom={3}>
+          {selfServiceStepInfo[cardGenerationStep].text}
+        </Typography>
+        {cardGenerationStep === 'input' && (
+          <CardSelfServiceForm
+            card={selfServiceCard}
+            dataPrivacyAccepted={dataPrivacyCheckbox}
+            setDataPrivacyAccepted={setDataPrivacyCheckbox}
+            updateCard={updatedCard => setSelfServiceCard(updateCard(selfServiceCard, updatedCard))}
+            generateCards={generateCards}
+          />
+        )}
+        {cardGenerationStep === 'information' && (
+          <CardSelfServiceInformation goToActivation={() => setCardGenerationStep('activation')} />
+        )}
+        {cardGenerationStep === 'activation' && code && (
+          <CardSelfServiceActivation downloadPdf={downloadPdf} code={code} />
+        )}
+      </Stack>
+      <Dialog
+        open={openHelpDialog}
+        aria-describedby='help-dialog'
+        fullWidth
+        onClose={() => setOpenHelpDialog(false)}
+      >
+        <DialogTitle>{t('help')}</DialogTitle>
+        <DialogContent id='help-dialog'>
+          <Typography marginTop={1.5} marginBottom={3}>
+            {t('youHaveProblemsCreatingAPass')} <br />
+            {t('pleaseContactUsForHelp')}
+          </Typography>
+        </DialogContent>
+        <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
+          <Button onClick={() => setOpenHelpDialog(false)} variant='outlined' startIcon={<Close />}>
+            {t('misc:cancel')}
           </Button>
-        </Box>
-        <Stack padding={2}>
-          <Typography
-            component='div'
-            variant='body1'
-            color='inherit'
-            sx={{ p: 2, alignSelf: 'flex-end' }}
-          >{`${t('step')} ${
-            selfServiceStepInfo[cardGenerationStep].stepNr
-          }/${totalSteps}`}</Typography>
-          <Typography variant='h6' color='accent' component='h1'>
-            {selfServiceStepInfo[cardGenerationStep].headline}
-          </Typography>
-          <Typography variant='h5' component='h2'>
-            {selfServiceStepInfo[cardGenerationStep].subHeadline}
-          </Typography>
-          <Typography variant='body1' marginBottom={3}>
-            {selfServiceStepInfo[cardGenerationStep].text}
-          </Typography>
-          {cardGenerationStep === 'input' && (
-            <CardSelfServiceForm
-              card={selfServiceCard}
-              dataPrivacyAccepted={dataPrivacyCheckbox}
-              setDataPrivacyAccepted={setDataPrivacyCheckbox}
-              updateCard={updatedCard =>
-                setSelfServiceCard(updateCard(selfServiceCard, updatedCard))
-              }
-              generateCards={generateCards}
-            />
-          )}
-          {cardGenerationStep === 'information' && (
-            <CardSelfServiceInformation
-              goToActivation={() => setCardGenerationStep('activation')}
-            />
-          )}
-          {cardGenerationStep === 'activation' && code && (
-            <CardSelfServiceActivation downloadPdf={downloadPdf} code={code} />
-          )}
-        </Stack>
-        <Dialog
-          open={openHelpDialog}
-          aria-describedby='help-dialog'
-          fullWidth
-          onClose={() => setOpenHelpDialog(false)}
-        >
-          <DialogTitle>{t('help')}</DialogTitle>
-          <DialogContent id='help-dialog'>
-            <Typography marginTop={1.5} marginBottom={3}>
-              {t('youHaveProblemsCreatingAPass')} <br />
-              {t('pleaseContactUsForHelp')}
-            </Typography>
-          </DialogContent>
-          <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
-            <Button
-              onClick={() => setOpenHelpDialog(false)}
-              variant='outlined'
-              startIcon={<Close />}
-            >
-              {t('misc:cancel')}
-            </Button>
-            <Button
-              color='secondary'
-              variant='contained'
-              href='mailto:koblenzpass@stadt.koblenz.de'
-            >
-              {t('sendMail')}
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </Container>
+          <Button color='secondary' variant='contained' href='mailto:koblenzpass@stadt.koblenz.de'>
+            {t('sendMail')}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </PageLayout>
   )
 }

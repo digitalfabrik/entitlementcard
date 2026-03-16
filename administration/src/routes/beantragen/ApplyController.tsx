@@ -97,36 +97,40 @@ const ApplyController = (): React.ReactElement | null => {
   }
 
   return (
-    <PageLayout showDataPrivacy={false}>
-      <div
-        style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', margin: '16px' }}
-      >
-        <div style={{ maxWidth: '1000px', width: '100%' }}>
-          <Typography variant='h4' component='h1' margin={2} textAlign='center'>
-            {formSubmitted ? t('sentSuccessfully') : t('title')}
-          </Typography>
-          {formSubmitted ? (
-            <SuccessContent>
-              <Typography>
-                <Trans i18nKey='applicationForms:submitSuccessText' />
-              </Typography>
-            </SuccessContent>
-          ) : (
-            <ApplicationForm.Component
-              state={state}
-              setState={setState}
-              onSubmit={submit}
-              loading={loadingSubmit}
-              options={{ regions }}
-            />
+    <PageLayout
+      showDataPrivacy={false}
+      containerSx={{
+        justifyContent: 'center',
+        flexDirection: 'row',
+        alignItems: 'start',
+        margin: 2,
+      }}
+    >
+      <Box sx={{ maxWidth: '1000px', width: '100%' }}>
+        <Typography variant='h4' component='h1' margin={2} textAlign='center'>
+          {formSubmitted ? t('sentSuccessfully') : t('title')}
+        </Typography>
+        {formSubmitted ? (
+          <SuccessContent>
+            <Typography>
+              <Trans i18nKey='applicationForms:submitSuccessText' />
+            </Typography>
+          </SuccessContent>
+        ) : (
+          <ApplicationForm.Component
+            state={state}
+            setState={setState}
+            onSubmit={submit}
+            loading={loadingSubmit}
+            options={{ regions }}
+          />
+        )}
+        <Box sx={{ justifyContent: 'flex-end', display: 'flex', marginY: 2 }}>
+          {loadingSubmit || formSubmitted ? null : (
+            <DiscardAllInputsButton discardAll={discardAll} />
           )}
-          <Box sx={{ justifyContent: 'flex-end', display: 'flex', marginY: 2 }}>
-            {loadingSubmit || formSubmitted ? null : (
-              <DiscardAllInputsButton discardAll={discardAll} />
-            )}
-          </Box>
-        </div>
-      </div>
+        </Box>
+      </Box>
     </PageLayout>
   )
 }
