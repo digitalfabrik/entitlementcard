@@ -11,15 +11,17 @@ import {
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Temporal } from 'temporal-polyfill'
 
 import PasswordInput from '../components/PasswordInput'
 import getMessageFromApolloError from '../errors/getMessageFromApolloError'
 import { type SignInPayload, useSignInMutation } from '../generated/graphql'
-import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../provider/ProjectConfigContext'
 import { useWhoAmI } from '../provider/WhoAmIProvider'
 
-const computeSecondsRemaining = (expiresAt: Date) =>
-  Math.round((expiresAt.valueOf() - Date.now()) / 1000)
+const computeSecondsRemaining = (expiresAt: Temporal.Instant) =>
+  Temporal.Now.instant().until(expiresAt, { roundingMode: 'ceil', largestUnit: 'second' }).seconds
+
 const openAtRemainingSeconds = 180
 
 const AutomaticLogoutDialog = ({
@@ -27,7 +29,7 @@ const AutomaticLogoutDialog = ({
   onSignOut,
   onSignIn,
 }: {
-  expiresAt: Date
+  expiresAt: Temporal.Instant
   onSignIn: (payload: SignInPayload) => void
   onSignOut: () => void
 }): ReactElement => {

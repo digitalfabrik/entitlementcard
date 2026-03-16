@@ -161,7 +161,7 @@
     "minMaxNumberError": "Wert muss zwischen {{min}} und {{max}} liegen.",
     "valueHasToBeSelectableOptionError": "Wert muss einer der auswählbaren Optionen entsprechen.",
     "invalidDataError": "Ihre Eingaben sind ungültig oder nicht vollständig.",
-    "dateBefore1900Error": "Das Datum muss nach dem 1.1.1900 liegen."
+    "dateBeforeMinDateError": "Das Datum muss nach dem {{date, datetime(dateStyle: 'medium')}} liegen."
   },
   "applicationsOverview": {
     "statusBarAll": "Alle Anträge",
@@ -195,8 +195,9 @@
     "deleteApplicationConfirmationPrompt": "Möchten Sie den Antrag unwiderruflich löschen?",
     "exportCsv": "Als CSV exportieren",
     "exportPdf": "Als PDF exportieren",
-    "loadAttachment": "Lade Anhang",
+    "loadAttachment": "Lade Anhang {{index}}...",
     "attachment": "Anhang",
+    "attachmentFilename": "Anhang_{{index}}.{{fileExtension}}",
     "seeAttachment": "siehe Anhang",
     "submittedButNotVisible": "eingereicht, nicht sichtbar",
     "noteDialogTitle": "Notiz anlegen",
@@ -207,9 +208,9 @@
     "confirmationsByOrganizations": "Bestätigung(en) durch Organisationen:",
     "noConfirmationNeeded": "Bestätigung ist nicht erforderlich",
     "verified/pending/rejected": "Bestätigt/Ausstehend/Widersprochen",
-    "verifiedOn": "Bestätigt am",
+    "verifiedOn": "Bestätigt am {{date, datetime(dateStyle: 'medium'; timeStyle: 'short')}}",
     "pending": "Ausstehend",
-    "rejectedOn": "Widersprochen am",
+    "rejectedOn": "Widersprochen am {{date, datetime(dateStyle: 'medium'; timeStyle: 'short')}}",
     "organization": "Organisation",
     "eMail": "E-Mail",
     "none": "keine",
@@ -381,7 +382,8 @@
     "eMailOfCreator": "E-Mail des Erstellers",
     "expirationDate": "Ablaufdatum",
     "pepperExplanation": "Um den Endpunkt zu nutzen, müssen die Nutzerdaten mit folgenden Pepper gehasht werden",
-    "noPepper": "Es ist kein Koblenz Pepper hinterlegt. Diese Funktion ist in dieser Umgebung aktuell nicht verfügbar!"
+    "noPepper": "Es ist kein Koblenz Pepper hinterlegt. Diese Funktion ist in dieser Umgebung aktuell nicht verfügbar!",
+    "expiresIn": "{{date, datetime(dateStyle: 'medium')}}"
   },
   "regionSettings": {
     "dataPrivacy": "Datenschutzerklärung",
@@ -601,7 +603,8 @@
   "activityLog": {
     "viewActivity": "Aktivitäten ansehen",
     "activityLogDescription": "Hier können Sie den Verlauf der erstellten Karten einsehen. Bitte beachten Sie, dass diese Informationen nur innerhalb der aktuellen Sitzung verfügbar sind - sobald Sie den Tab schließen, werden die Daten gelöscht.",
-    "noEntries": "Keine Einträge vorhanden"
+    "noEntries": "Keine Einträge vorhanden",
+    "date": "{{date, datetime(dateStyle: 'medium'; timeStyle: 'medium')}}"
   },
   "users": {
     "addUserSuccess": "Benutzer erfolgreich erstellt.",
@@ -725,8 +728,9 @@
     "storeNotFound": "Diese Akzeptanzstelle existiert nicht mehr."
   },
   "applicationVerification": {
+    "info": "Antrag vom {{date, datetime(dateStyle: 'medium'; timeStyle: 'short')}}",
     "applicationAlreadyProcessed": "Der Antrag wurde bereits bearbeitet. Eine weitere Bestätigung oder Ablehnung ist nicht mehr möglich.",
-    "withdrawMessageForVerifier": "Der Antrag wurde vom Antragsteller am {{date}} zurückgezogen.",
+    "withdrawMessageForVerifier": "Der Antrag wurde vom Antragsteller am {{date, datetime(dateStyle: 'medium', timeStyle: 'short')}} zurückgezogen.",
     "verificationFinishedTitle": "Ihre Eingaben wurden erfolgreich gespeichert.",
     "verificationFinishedContent": "Vielen Dank für Ihre Mithilfe. Sie können das Fenster jetzt schließen.",
     "greeting": "Guten Tag {{contactName}},",
@@ -741,7 +745,7 @@
   },
   "applicationApplicant": {
     "alreadyWithdrawn": "Der Antrag wurde bereits zurückgezogen.",
-    "headline": "Ihr Antrag auf die Ehrenamtskarte Bayern vom",
+    "headline": "Ihr Antrag auf die Ehrenamtskarte Bayern vom {{date, datetime(dateStyle: 'medium'; timeStyle: 'short')}}",
     "withdrawInformation": "Hier können Sie Ihren Antrag zurückziehen und Ihre Eingaben unwiderruflich löschen.",
     "withdrawApplication": "Antrag zurückziehen",
     "withdrawConfirmationTitle": "Antrag zurückziehen?",
@@ -751,11 +755,11 @@
     "titleStatusRejected": "Antrag abgelehnt"
   },
   "applicationStatusNote": {
-    "noticeApprovedAdmin": "Dieser Antrag wurde am {{date}} um {{time}} Uhr <resolution>genehmigt</resolution>.",
-    "noticeApprovedPublic": "Ihr Antrag wurde am {{date}} um {{time}} Uhr <resolution>genehmigt</resolution>. Sie erhalten alle weiteren Informationen per Mail.",
-    "noticeRejectedAdmin": "Dieser Antrag wurde am {{date}} um {{time}} Uhr <resolution>abgelehnt</resolution>{{reason}}.",
-    "noticeRejectedPublic": "Leider wurde Ihr Antrag am {{date}} um {{time}} Uhr <resolution>abgelehnt</resolution>. Sie erhalten alle weiteren Informationen per Mail.",
-    "noticeWithdrawn": "Dieser Antrag wurde am {{date}} um {{time}} Uhr <resolution>zurückgezogen</resolution>.",
+    "noticeApprovedAdmin": "Dieser Antrag wurde am {{date, datetime(dateStyle: 'medium')}} um {{time, datetime(timeStyle: 'short')}} Uhr <resolution>genehmigt</resolution>.",
+    "noticeApprovedPublic": "Ihr Antrag wurde am {{date, datetime(dateStyle: 'medium')}} um {{time, datetime(timeStyle: 'short')}} Uhr <resolution>genehmigt</resolution>. Sie erhalten alle weiteren Informationen per Mail.",
+    "noticeRejectedAdmin": "Dieser Antrag wurde am {{date, datetime(dateStyle: 'medium')}} um {{time, datetime(timeStyle: 'short')}} Uhr <resolution>abgelehnt</resolution>{{reason}}.",
+    "noticeRejectedPublic": "Leider wurde Ihr Antrag am {{date, datetime(dateStyle: 'medium')}} um {{time, datetime(timeStyle: 'short')}} Uhr <resolution>abgelehnt</resolution>. Sie erhalten alle weiteren Informationen per Mail.",
+    "noticeWithdrawn": "Dieser Antrag wurde am {{date, datetime(dateStyle: 'medium')}} um {{time, datetime(timeStyle: 'short')}} Uhr <resolution>zurückgezogen</resolution>.",
     "reason": " (Begründung: {{message}})"
   },
   "errorTemplates": {
@@ -772,7 +776,7 @@
     "bavariaCardTypeLabel": "Kartentyp",
     "birthdayMissingError": "Bitte geben Sie ein gültiges Geburtsdatum an.",
     "birthdayFutureError": "Das Geburtsdatum darf nicht in der Zukunft liegen.",
-    "birthdayBeforeMinBirthdayError": "Das Geburtsdatum darf nicht vor dem {{minBirthday}} liegen.",
+    "birthdayBeforeMinBirthdayError": "Das Geburtsdatum darf nicht vor dem {{minBirthday, datetime(dateStyle: 'medium')}} liegen.",
     "birthdayLabel": "Geburtsdatum",
     "birthdayHint": "Bei Minderjährigen unter 16 Jahren darf der KoblenzPass nur mit Einverständnis der Erziehungsberechtigten abgerufen werden.",
     "nuernbergPassIdError": "Bitte geben Sie eine gültige Nürnberg-Pass-ID ein.",
@@ -781,8 +785,8 @@
     "referenceNrLabel": "Aktenzeichen",
     "startDayLabel": "Startdatum",
     "startDayError": "Bitte geben Sie ein gültiges Startdatum ein.",
-    "startDayPastError": "Das Startdatum darf nicht weiter als {{minStartDay}} in der Vergangenheit liegen.",
-    "startDayFutureError": "Das Startdatum darf nicht weiter als {{maxValidationDate}} in der Zukunft liegen."
+    "startDayPastError": "Das Startdatum darf nicht weiter als {{minStartDay, datetime(dateStyle: 'medium')}} in der Vergangenheit liegen.",
+    "startDayFutureError": "Das Startdatum darf nicht weiter als {{maxValidationDate, datetime(dateStyle: 'medium')}} in der Zukunft liegen."
   },
   "shared": {
     "warningDialogTitle": "Warnung",

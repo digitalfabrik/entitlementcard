@@ -1,18 +1,19 @@
+import { StackProps } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
+import { Temporal } from 'temporal-polyfill'
 
 import AlertBox from '../../components/AlertBox'
-import CenteredStack from '../../components/CenteredStack'
+import PageLayout from '../../components/PageLayout'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import {
   ApplicationStatus,
   useGetApplicationByApplicationVerificationAccessKeyQuery,
   useVerifyOrRejectApplicationVerificationMutation,
 } from '../../generated/graphql'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import formatDateWithTimezone from '../../util/formatDate'
+import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import getQueryResult from '../../util/getQueryResult'
 import { applicationWasAlreadyProcessed, parseApplication } from '../applications/utils/application'
 import ApplicationVerifierView from './ApplicationVerifierView'
@@ -21,6 +22,11 @@ type ApplicationVerificationProps = {
   applicationVerificationAccessKey: string
 }
 
+const centeredContainerSx: StackProps['sx'] = {
+  alignSelf: 'center',
+  justifyContent: 'center',
+  p: 2,
+}
 const ApplicationVerificationController = ({
   applicationVerificationAccessKey,
 }: ApplicationVerificationProps) => {
@@ -67,39 +73,39 @@ const ApplicationVerificationController = ({
 
   if (verification.rejectedDate || verification.verifiedDate) {
     return (
-      <CenteredStack>
+      <PageLayout containerSx={centeredContainerSx}>
         <AlertBox severity='info' description={t('alreadyVerified')} />
-      </CenteredStack>
+      </PageLayout>
     )
   }
   if (application.status === ApplicationStatus.Withdrawn && application.statusResolvedDate) {
     return (
-      <CenteredStack>
+      <PageLayout containerSx={centeredContainerSx}>
         <AlertBox
           severity='info'
           description={t('withdrawMessageForVerifier', {
-            date: formatDateWithTimezone(application.statusResolvedDate, config.timezone),
+            date: Temporal.Instant.from(application.statusResolvedDate),
           })}
         />
-      </CenteredStack>
+      </PageLayout>
     )
   }
   if (verificationFinished) {
     return (
-      <CenteredStack>
+      <PageLayout containerSx={centeredContainerSx}>
         <AlertBox
           title={t('verificationFinishedTitle')}
           description={t('verificationFinishedContent')}
         />
-      </CenteredStack>
+      </PageLayout>
     )
   }
 
   if (applicationWasAlreadyProcessed(application.status)) {
     return (
-      <CenteredStack>
+      <PageLayout containerSx={centeredContainerSx}>
         <AlertBox description={t('applicationAlreadyProcessed')} severity='info' />
-      </CenteredStack>
+      </PageLayout>
     )
   }
 

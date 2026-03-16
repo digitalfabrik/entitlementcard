@@ -19,7 +19,7 @@ import ConfirmDialog from '../../../components/ConfirmDialog'
 import ExtensionForms from '../../../components/ExtensionForms'
 import FormAlert from '../../../components/FormAlert'
 import useWindowDimensions from '../../../hooks/useWindowDimensions'
-import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../../provider/ProjectConfigContext'
 import { removeMultipleSpaces } from '../../../util/helper'
 import { DataPrivacyAcceptingStatus } from '../constants'
 

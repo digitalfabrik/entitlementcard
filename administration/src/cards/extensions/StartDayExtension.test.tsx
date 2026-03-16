@@ -1,8 +1,9 @@
 import { fireEvent } from '@testing-library/react'
 import React from 'react'
+import { Temporal } from 'temporal-polyfill'
 
 import { CustomRenderOptions, renderWithOptions } from '../../testing/render'
-import PlainDate from '../../util/PlainDate'
+import { formatDateDefaultGerman, plainDateToDaysSinceEpoch } from '../../util/date'
 import { maxCardValidity } from '../constants'
 import StartDayExtension, { minStartDay } from './StartDayExtension'
 
@@ -17,7 +18,7 @@ describe('StartDayExtension', () => {
   describe('Component', () => {
     const mockSetValue = jest.fn()
     const defaultProps = {
-      value: { startDay: new PlainDate(2024, 1, 1) },
+      value: { startDay: new Temporal.PlainDate(2024, 1, 1) },
       setValue: mockSetValue,
       isValid: true,
       forceError: false,
@@ -62,18 +63,18 @@ describe('StartDayExtension', () => {
         <StartDayExtension.Component {...defaultProps} isValid={false} value={{ startDay }} />,
         mockProvider,
       )
-      const datePicker = getByDisplayValue(startDay.format())
+      const datePicker = getByDisplayValue(formatDateDefaultGerman(startDay))
       fireEvent.blur(datePicker)
       expect(StartDayExtension.isValid({ startDay })).toBeFalsy()
       expect(
         getByText(
-          `Das Startdatum darf nicht weiter als ${minStartDay.format()} in der Vergangenheit liegen.`,
+          `Das Startdatum darf nicht weiter als ${formatDateDefaultGerman(minStartDay)} in der Vergangenheit liegen.`,
         ),
       ).toBeTruthy()
     })
 
     it('should show error message when startDay is too far in the future and interacted', () => {
-      const today = PlainDate.fromLocalDate(new Date())
+      const today = Temporal.Now.plainDateISO()
       const startDayTooFarInFuture = today.add(maxCardValidity).add({ days: 1 })
       const { getByText, getByDisplayValue } = renderWithOptions(
         <StartDayExtension.Component
@@ -83,14 +84,14 @@ describe('StartDayExtension', () => {
         />,
         mockProvider,
       )
-      const datePicker = getByDisplayValue(startDayTooFarInFuture.format())
+      const datePicker = getByDisplayValue(formatDateDefaultGerman(startDayTooFarInFuture))
       fireEvent.blur(datePicker)
       expect(StartDayExtension.isValid({ startDay: startDayTooFarInFuture })).toBeFalsy()
       expect(
         getByText(
-          `Das Startdatum darf nicht weiter als ${today
-            .add(maxCardValidity)
-            .format()} in der Zukunft liegen.`,
+          `Das Startdatum darf nicht weiter als ${formatDateDefaultGerman(
+            today.add(maxCardValidity),
+          )} in der Zukunft liegen.`,
         ),
       ).toBeTruthy()
     })
@@ -110,7 +111,7 @@ describe('StartDayExtension', () => {
         <StartDayExtension.Component {...defaultProps} value={{ startDay }} />,
         mockProvider,
       )
-      const datePicker = getByDisplayValue(startDay.format())
+      const datePicker = getByDisplayValue(formatDateDefaultGerman(startDay))
       fireEvent.blur(datePicker)
       expect(StartDayExtension.isValid({ startDay })).toBeTruthy()
       expect(queryByTestId('form-alert')).toBeNull()
@@ -121,9 +122,11 @@ describe('StartDayExtension', () => {
         <StartDayExtension.Component {...defaultProps} />,
         mockProvider,
       )
-      const startDayChanged = new PlainDate(2025, 1, 2)
+      const startDayChanged = new Temporal.PlainDate(2025, 1, 2)
       const datePicker = getByDisplayValue('01.01.2024')
-      fireEvent.change(datePicker, { target: { value: startDayChanged.format() } })
+      fireEvent.change(datePicker, {
+        target: { value: formatDateDefaultGerman(startDayChanged) },
+      })
       expect(mockSetValue).toHaveBeenCalledWith({ startDay: startDayChanged })
     })
 
@@ -139,14 +142,16 @@ describe('StartDayExtension', () => {
 
     describe('getProtobufData', () => {
       it('should result in correct days since epoch 1970', () => {
-        expect(StartDayExtension.getProtobufData({ startDay: new PlainDate(2022, 1, 1) })).toEqual({
+        expect(
+          StartDayExtension.getProtobufData({ startDay: new Temporal.PlainDate(2022, 1, 1) }),
+        ).toEqual({
           extensionStartDay: { startDay: 18993 },
         })
       })
 
       it('should result in minStartDay if no startDay is provided', () => {
         expect(StartDayExtension.getProtobufData({ startDay: null })).toEqual({
-          extensionStartDay: { startDay: minStartDay.toDaysSinceEpoch() },
+          extensionStartDay: { startDay: plainDateToDaysSinceEpoch(minStartDay) },
         })
       })
     })
@@ -154,11 +159,7 @@ describe('StartDayExtension', () => {
     describe('fromString', () => {
       it('should convert a startDay string to the particular startDay extension state', () => {
         expect(StartDayExtension.fromString('10.02.1998')).toEqual({
-          startDay: {
-            day: 10,
-            isoMonth: 2,
-            isoYear: 1998,
-          },
+          startDay: Temporal.PlainDate.from('1998-02-10'),
         })
       })
 
@@ -169,7 +170,7 @@ describe('StartDayExtension', () => {
 
     describe('toString', () => {
       it('should convert a PlainDate to the particular string', () => {
-        expect(StartDayExtension.toString({ startDay: new PlainDate(1998, 2, 10) })).toBe(
+        expect(StartDayExtension.toString({ startDay: new Temporal.PlainDate(1998, 2, 10) })).toBe(
           '10.02.1998',
         )
       })
@@ -181,7 +182,7 @@ describe('StartDayExtension', () => {
 
     describe('serialize', () => {
       it('should serialize a PlainDate to a correct ISO string', () => {
-        expect(StartDayExtension.serialize({ startDay: new PlainDate(1998, 2, 10) })).toBe(
+        expect(StartDayExtension.serialize({ startDay: new Temporal.PlainDate(1998, 2, 10) })).toBe(
           '1998-02-10',
         )
       })
@@ -194,7 +195,7 @@ describe('StartDayExtension', () => {
     describe('fromSerialized', () => {
       it('should deserialize an ISO string to a PlainDate', () => {
         expect(StartDayExtension.fromSerialized('1998-02-10')).toEqual({
-          startDay: new PlainDate(1998, 2, 10),
+          startDay: Temporal.PlainDate.from('1998-02-10'),
         })
       })
 
@@ -206,7 +207,7 @@ describe('StartDayExtension', () => {
     describe('getInitializeState', () => {
       it('should initialize startDay state with today', () => {
         expect(StartDayExtension.getInitialState()).toEqual({
-          startDay: PlainDate.fromLocalDate(new Date()),
+          startDay: Temporal.Now.plainDateISO(),
         })
       })
     })

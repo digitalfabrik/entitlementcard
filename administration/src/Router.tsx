@@ -7,15 +7,16 @@ import {
   createRoutesFromElements,
   useNavigate,
 } from 'react-router'
+import { Temporal } from 'temporal-polyfill'
 
 import AutomaticLogoutDialog from './auth/AutomaticLogoutDialog'
 import Login from './auth/Login'
 import { JsonField } from './components/JsonFieldView'
 import NavigationBar from './components/NavigationBar'
 import useMetaTags from './hooks/useMetaTags'
-import { ProjectConfigContext } from './project-configs/ProjectConfigContext'
-import type { ProjectConfig } from './project-configs/getProjectConfig'
+import type { ProjectConfig } from './project-configs'
 import { AuthContext } from './provider/AuthProvider'
+import { ProjectConfigContext } from './provider/ProjectConfigContext'
 import WhoAmIProvider from './provider/WhoAmIProvider'
 import ActivationPage from './routes/activation/ActivationPage'
 import ActivityLogController from './routes/activity-log/ActivityLogController'
@@ -75,7 +76,8 @@ export const createRoute = (
 const AuthLayout = (): ReactElement => {
   const { data: authData, signIn } = useContext(AuthContext)
   const navigate = useNavigate()
-  const isLoggedIn = authData !== null && authData.expiry > new Date()
+  const isLoggedIn =
+    authData !== null && Temporal.Instant.compare(authData.expiry, Temporal.Now.instant()) > 0
 
   return isLoggedIn ? (
     <WhoAmIProvider>

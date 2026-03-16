@@ -5,14 +5,14 @@ import {
   BAVARIA_CARD_TYPE_GOLD,
   BAVARIA_CARD_TYPE_STANDARD,
 } from '../../../../cards/extensions/BavariaCardTypeExtension'
-import { ProjectConfigProvider } from '../../../../project-configs/ProjectConfigContext'
-import bayernConfig from '../../../../project-configs/bayern/config'
-import { ProjectConfig } from '../../../../project-configs/getProjectConfig'
-import koblenzConfig from '../../../../project-configs/koblenz/config'
-import nuernbergConfig from '../../../../project-configs/nuernberg/config'
+import { ProjectConfig } from '../../../../project-configs'
+import { config as bayernConfig } from '../../../../project-configs/bayern/config'
+import { config as koblenzConfig } from '../../../../project-configs/koblenz/config'
+import { config as nuernbergConfig } from '../../../../project-configs/nuernberg/config'
 import { AppSnackbarProvider } from '../../../../provider/AppSnackbarProvider'
+import { ProjectConfigProvider } from '../../../../provider/ProjectConfigContext'
 import { renderWithOptions } from '../../../../testing/render'
-import PlainDate from '../../../../util/PlainDate'
+import { parseGermanPlainDateString } from '../../../../util/date'
 import { getTestRegion } from '../../../user-settings/__mocks__/Region'
 import { ENTRY_LIMIT } from '../../constants'
 import ImportCardsInput from './ImportCardsInput'
@@ -77,7 +77,7 @@ Tilo Traber,,gold
     expect(setCards).toHaveBeenCalledTimes(1)
     expect(setCards).toHaveBeenCalledWith([
       {
-        expirationDate: PlainDate.fromCustomFormat('03.04.2024'),
+        expirationDate: parseGermanPlainDateString('03.04.2024'),
         extensions: { bavariaCardType: BAVARIA_CARD_TYPE_STANDARD, regionId: 0 },
         fullName: 'Thea Test',
         id: expect.any(Number),
@@ -106,7 +106,7 @@ inhaber_ehrenamtskarte;eak_datum;eak_karten_status;co_name;anrede;titel;vorname;
     expect(setCards).toHaveBeenCalledTimes(1)
     expect(setCards).toHaveBeenCalledWith([
       {
-        expirationDate: PlainDate.fromCustomFormat('01.12.2029'),
+        expirationDate: parseGermanPlainDateString('01.12.2029'),
         extensions: { bavariaCardType: BAVARIA_CARD_TYPE_STANDARD, regionId: 0 },
         fullName: 'Maxim Musterin',
         id: expect.any(Number),
@@ -134,23 +134,23 @@ Tilo Traber,03.04.2025,01.01.2026,12.01.1984,98765432
     expect(setCards).toHaveBeenCalledTimes(1)
     expect(setCards).toHaveBeenCalledWith([
       {
-        expirationDate: PlainDate.fromCustomFormat('03.04.2024'),
+        expirationDate: parseGermanPlainDateString('03.04.2024'),
         extensions: {
-          birthday: PlainDate.fromCustomFormat('10.10.2000'),
+          birthday: parseGermanPlainDateString('10.10.2000'),
           regionId: 0,
           nuernbergPassId: 12345678,
-          startDay: PlainDate.fromCustomFormat('01.01.2026'),
+          startDay: parseGermanPlainDateString('01.01.2026'),
         },
         fullName: 'Thea Test',
         id: expect.any(Number),
       },
       {
-        expirationDate: PlainDate.fromCustomFormat('03.04.2025'),
+        expirationDate: parseGermanPlainDateString('03.04.2025'),
         extensions: {
-          birthday: PlainDate.fromCustomFormat('12.01.1984'),
+          birthday: parseGermanPlainDateString('12.01.1984'),
           regionId: 0,
           nuernbergPassId: 98765432,
-          startDay: PlainDate.fromCustomFormat('01.01.2026'),
+          startDay: parseGermanPlainDateString('01.01.2026'),
         },
         fullName: 'Tilo Traber',
         id: expect.any(Number),
@@ -172,9 +172,9 @@ Tilo Traber,03.04.2025,12.01.1984,98765432
     expect(setCards).toHaveBeenCalledTimes(1)
     expect(setCards).toHaveBeenCalledWith([
       {
-        expirationDate: PlainDate.fromCustomFormat('03.04.2024'),
+        expirationDate: parseGermanPlainDateString('03.04.2024'),
         extensions: {
-          birthday: PlainDate.fromCustomFormat('10.10.2000'),
+          birthday: parseGermanPlainDateString('10.10.2000'),
           regionId: 0,
           koblenzReferenceNumber: '123k',
         },
@@ -182,9 +182,9 @@ Tilo Traber,03.04.2025,12.01.1984,98765432
         id: expect.any(Number),
       },
       {
-        expirationDate: PlainDate.fromCustomFormat('03.04.2025'),
+        expirationDate: parseGermanPlainDateString('03.04.2025'),
         extensions: {
-          birthday: PlainDate.fromCustomFormat('12.01.1984'),
+          birthday: parseGermanPlainDateString('12.01.1984'),
           regionId: 0,
           koblenzReferenceNumber: '98765432',
         },

@@ -1,6 +1,7 @@
 import { Box, Stack, Typography, css } from '@mui/material'
 import React, { ReactElement, forwardRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Temporal } from 'temporal-polyfill'
 
 import JsonFieldView from '../../../components/JsonFieldView'
 import VerificationsView from '../../../components/VerificationsView'
@@ -57,7 +58,7 @@ export const ApplicationPrintView = forwardRef<
   return (
     <Stack ref={ref} sx={{ gap: 4 }}>
       <Typography variant='h6' marginY={0}>
-        {t('applicationFrom', { date: new Date(p.application.createdDate) })}
+        {t('applicationFrom', { date: Temporal.Instant.from(p.application.createdDate) })}
       </Typography>
 
       {p.application.status === ApplicationStatus.Withdrawn &&
@@ -72,7 +73,9 @@ export const ApplicationPrintView = forwardRef<
           >
             <Typography>
               {' '}
-              {t('withdrawalMessage', { date: new Date(p.application.statusResolvedDate) })}
+              {t('withdrawalMessage', {
+                date: Temporal.Instant.from(p.application.statusResolvedDate),
+              })}
               <br />
               {t('deleteApplicationSoonPrompt')}
             </Typography>
@@ -92,7 +95,7 @@ export const ApplicationPrintView = forwardRef<
       <hr />
       {p.application.statusResolvedDate != null && (
         <ApplicationStatusNote
-          statusResolvedDate={new Date(p.application.statusResolvedDate)}
+          statusResolvedDate={Temporal.Instant.from(p.application.statusResolvedDate)}
           status={p.application.status}
           reason={p.application.rejectionMessage ?? undefined}
           adminView

@@ -3,18 +3,19 @@ import { act, renderHook } from '@testing-library/react'
 import { mocked } from 'jest-mock'
 import React, { ReactNode } from 'react'
 import { MemoryRouter } from 'react-router'
+import { Temporal } from 'temporal-polyfill'
 
 import { generateCardInfo, initializeCard } from '../../../cards/card'
 import createCards, { CreateCardsError, CreateCardsResult } from '../../../cards/createCards'
 import deleteCards from '../../../cards/deleteCards'
 import { PdfError, generatePdf } from '../../../cards/pdf/pdfFactory'
 import { DynamicActivationCode, StaticVerificationCode } from '../../../generated/card_pb'
-import { ProjectConfigProvider } from '../../../project-configs/ProjectConfigContext'
-import bayernConfig from '../../../project-configs/bayern/config'
-import { ProjectConfig } from '../../../project-configs/getProjectConfig'
-import nuernbergConfig from '../../../project-configs/nuernberg/config'
-import showcaseConfig from '../../../project-configs/showcase/config'
+import { ProjectConfig } from '../../../project-configs'
+import { config as bayernConfig } from '../../../project-configs/bayern/config'
+import { config as nuernbergConfig } from '../../../project-configs/nuernberg/config'
+import { config as showcaseConfig } from '../../../project-configs/showcase/config'
 import { AppSnackbarProvider } from '../../../provider/AppSnackbarProvider'
+import { ProjectConfigProvider } from '../../../provider/ProjectConfigContext'
 import downloadDataUri from '../../../util/downloadDataUri'
 import { getTestRegion } from '../../user-settings/__mocks__/Region'
 import useCardGenerator from './useCardGenerator'
@@ -164,7 +165,7 @@ describe('useCardGenerator', () => {
 
     expect(result.current.cards).toEqual([
       {
-        expirationDate: { day: 26, isoMonth: 2, isoYear: 2028 },
+        expirationDate: Temporal.PlainDate.from({ day: 26, month: 2, year: 2028 }),
         extensions: {
           bavariaCardType: 'Standard',
           regionId: 0,
@@ -188,20 +189,20 @@ describe('useCardGenerator', () => {
 
     expect(result.current.cards).toEqual([
       {
-        expirationDate: { day: 3, isoMonth: 3, isoYear: 2026 },
+        expirationDate: Temporal.PlainDate.from({ day: 3, month: 3, year: 2026 }),
         extensions: {
-          birthday: {
+          birthday: Temporal.PlainDate.from({
             day: 1,
-            isoMonth: 1,
-            isoYear: 2000,
-          },
+            month: 1,
+            year: 2000,
+          }),
           addressLine1: 'Teststraße 3',
           addressLine2: 'EG Rechts',
           addressLocation: 'Musterstadt',
           addressPlz: '86111',
           nuernbergPassId: 123,
           regionId: 0,
-          startDay: { day: 1, isoMonth: 5, isoYear: 2025 },
+          startDay: Temporal.PlainDate.from({ day: 1, month: 5, year: 2025 }),
         },
         fullName: 'Thea Test',
         id: expect.any(Number),

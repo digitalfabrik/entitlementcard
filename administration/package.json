@@ -5,7 +5,7 @@
   "dependencies": {
     "@apollo/client": "^3.14.0",
     "@bufbuild/protobuf": "^1.2.1",
-    "@cantoo/pdf-lib": "^2.5.3",
+    "@cantoo/pdf-lib": "^2.6.1",
     "@emotion/styled": "^11.14.0",
     "@fontsource/roboto": "^5.2.8",
     "@mui/icons-material": "^7.3.4",
@@ -36,6 +36,7 @@
     "react-i18next": "^15.7.4",
     "react-router": "^7.12.0",
     "react-to-print": "^3.2.0",
+    "temporal-polyfill": "^0.3.0",
     "xregexp": "^5.1.2"
   },
   "devDependencies": {
@@ -109,6 +110,10 @@
     "ts:check": "tsc --build"
   },
   "madge": {
+    "excludeRegExp": [
+      "^project-configs\\/index\\.ts$",
+      "^project-configs\\/bayern\\/config\\.ts$"
+    ],
     "detectiveOptions": {
       "ts": {
         "skipTypeImports": true

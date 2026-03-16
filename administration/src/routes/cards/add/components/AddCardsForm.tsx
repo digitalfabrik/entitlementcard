@@ -8,7 +8,7 @@ import { useSearchParams } from 'react-router'
 
 import { Card, initializeCard } from '../../../../cards/card'
 import { Region } from '../../../../generated/graphql'
-import { ProjectConfigContext } from '../../../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../../../provider/ProjectConfigContext'
 import AddCardForm from './AddCardForm'
 
 const animationProperties: MotionNodeAnimationOptions = {

@@ -1,10 +1,12 @@
+import { Temporal } from 'temporal-polyfill'
+
 import { BavariaCardType } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
-import bayernConfig from '../project-configs/bayern/config'
-import koblenzConfig from '../project-configs/koblenz/config'
-import nuernbergConfig from '../project-configs/nuernberg/config'
+import { config as bayernConfig } from '../project-configs/bayern/config'
+import { config as koblenzConfig } from '../project-configs/koblenz/config'
+import { config as nuernbergConfig } from '../project-configs/nuernberg/config'
 import { getTestRegion } from '../routes/user-settings/__mocks__/Region'
-import PlainDate from '../util/PlainDate'
+import { formatDateDefaultGerman, parseGermanPlainDateString } from '../util/date'
 import {
   MAX_NAME_LENGTH,
   generateCardInfo,
@@ -32,7 +34,7 @@ describe('Card', () => {
   const region = getTestRegion({})
 
   const cardConfig = {
-    defaultValidity: { years: 3 },
+    defaultValidity: Temporal.Duration.from({ years: 3 }),
     nameColumnName: 'Name',
     expiryColumnName: 'Ablaufdatum',
     extensionColumnNames: ['Kartentyp', null],
@@ -43,7 +45,7 @@ describe('Card', () => {
     const card = initializeCard(cardConfig, region, { fullName: 'Thea Test' })
 
     expect(card.fullName).toBe('Thea Test')
-    expect(card.expirationDate).toEqual(PlainDate.from('2023-01-01'))
+    expect(card.expirationDate).toEqual(Temporal.PlainDate.from('2023-01-01'))
     expect(card.extensions[BAVARIA_CARD_TYPE_EXTENSION_NAME]).toBe('Standard')
     expect(card.extensions[REGION_EXTENSION_NAME]).toEqual(region.id)
   })
@@ -51,7 +53,7 @@ describe('Card', () => {
   it('should generate CardInfo even with invalid expiration date', () => {
     const card = initializeCard(cardConfig, region, {
       fullName: '',
-      expirationDate: PlainDate.from('1900-01-01'),
+      expirationDate: Temporal.PlainDate.from('1900-01-01'),
     })
     expect(generateCardInfo(card).toJson({ enumAsInteger: true })).toEqual({
       fullName: '',
@@ -79,7 +81,7 @@ describe('Card', () => {
     }
 
     const cardConfig = {
-      defaultValidity: { years: 3 },
+      defaultValidity: Temporal.Duration.from({ years: 3 }),
       nameColumnName: 'Name',
       expiryColumnName: 'Ablaufdatum',
       extensionColumnNames: ['Kartentyp', null],
@@ -97,7 +99,7 @@ describe('Card', () => {
 
     it('should correctly set and get value', () => {
       const dateString = '03.04.2022'
-      const date = PlainDate.fromCustomFormat(dateString)
+      const date = parseGermanPlainDateString(dateString)
       const line = ['Thea Test', dateString, 'Goldkarte']
       const headers = ['Name', 'Ablaufdatum', 'Kartentyp']
       const card = initializeCardFromCSV(cardConfig, line, headers, region)
@@ -112,7 +114,9 @@ describe('Card', () => {
       expect(isValid(card, cardConfig)).toBeTruthy()
 
       expect(getValueByCSVHeader(card, cardConfig, 'Name')).toBe('Thea Test')
-      expect(getValueByCSVHeader(card, cardConfig, 'Ablaufdatum')).toBe(date.format())
+      expect(getValueByCSVHeader(card, cardConfig, 'Ablaufdatum')).toBe(
+        formatDateDefaultGerman(date),
+      )
       expect(getValueByCSVHeader(card, cardConfig, 'Kartentyp')).toBe('Goldkarte')
     })
 
@@ -146,7 +150,7 @@ describe('Card', () => {
 
     it('should correctly identify invalid arabic characters in name and address fields', () => {
       const cardConfig = {
-        defaultValidity: { years: 3 },
+        defaultValidity: Temporal.Duration.from({ years: 3 }),
         nameColumnName: 'Name',
         expiryColumnName: 'Ablaufdatum',
         extensionColumnNames: [
@@ -308,13 +312,13 @@ describe('Card', () => {
 
   describe('self service', () => {
     const cardConfig = {
-      defaultValidity: { years: 3 },
+      defaultValidity: Temporal.Duration.from({ years: 3 }),
       nameColumnName: 'Name',
       expiryColumnName: 'Ablaufdatum',
       extensionColumnNames: ['Geburtsdatum', 'Referenznummer'],
       extensions: [BirthdayExtension, KoblenzReferenceNumberExtension],
     }
-    const expirationDate = PlainDate.fromLocalDate(new Date()).add(cardConfig.defaultValidity)
+    const expirationDate = Temporal.Now.plainDateISO().add(cardConfig.defaultValidity)
 
     it('should correctly initialize Card', () => {
       const card = initializeCard(cardConfig, undefined, { fullName: 'Karla Koblenz' })
@@ -333,7 +337,7 @@ describe('Card', () => {
       const card = initializeCard(cardConfig, undefined, { fullName: 'Karla Koblenz' })
       expect(generateCardInfo(card).toJson()).toEqual({
         fullName: 'Karla Koblenz',
-        expirationDay: expirationDate.toDaysSinceEpoch(),
+        expirationDay: expirationDate.since('1970-01-01', { largestUnit: 'days' }).days,
         extensions: {
           extensionBirthday: {},
           extensionKoblenzReferenceNumber: {

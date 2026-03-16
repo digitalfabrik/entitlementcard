@@ -4,6 +4,7 @@ import { styled } from '@mui/system'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Temporal } from 'temporal-polyfill'
 
 import CenteredCircularProgress from '../../components/CenteredCircularProgress'
 import ConfirmDialog from '../../components/ConfirmDialog'
@@ -15,8 +16,7 @@ import {
   GetApplicationByApplicantQuery,
   useWithdrawApplicationMutation,
 } from '../../generated/graphql'
-import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import formatDateWithTimezone from '../../util/formatDate'
+import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { ApplicationParsedJsonValue } from '../applications/utils/application'
 
@@ -48,9 +48,8 @@ const ApplicationApplicantView = ({
 }): ReactElement => {
   const { t } = useTranslation('applicationApplicant')
   const [dialogOpen, setDialogOpen] = useState<boolean>(false)
-  const { createdDate: createdDateString, id } = application
   const config = useContext(ProjectConfigContext)
-  const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${id}`
+  const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${application.id}`
   const { enqueueSnackbar } = useSnackbar()
   const [withdrawApplication, { loading: withdrawalLoading }] = useWithdrawApplicationMutation({
     onError: error => {
@@ -78,13 +77,13 @@ const ApplicationApplicantView = ({
         title={t('withdrawConfirmationTitle')}
         onConfirm={submitWithdrawal}
       >
-        <Typography> {t('withdrawConfirmationContent')}</Typography>
+        <Typography>{t('withdrawConfirmationContent')}</Typography>
       </ConfirmDialog>
 
       <ApplicationViewCard elevation={2}>
         <ApplicationViewCardContent>
           <Typography marginBottom={1} variant='h6'>
-            {`${t('headline')} ${formatDateWithTimezone(createdDateString, config.timezone)}`}
+            {t('headline', { date: Temporal.Instant.from(application.createdDate) })}
           </Typography>
           <JsonFieldView
             jsonField={application.jsonValue}

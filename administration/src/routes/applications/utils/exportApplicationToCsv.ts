@@ -1,9 +1,9 @@
 import { stringify } from 'csv-stringify/browser/esm/sync'
+import { Temporal } from 'temporal-polyfill'
 
-import { ProjectConfig } from '../../../project-configs/getProjectConfig'
+import { ProjectConfig } from '../../../project-configs'
 import i18next from '../../../translations/i18n'
 import downloadDataUri from '../../../util/downloadDataUri'
-import formatDateWithTimezone from '../../../util/formatDate'
 import { CSV_MIME_TYPE_UTF8 } from '../constants'
 import type { Application } from '../types/types'
 import {
@@ -29,6 +29,10 @@ export class ApplicationToCsvError extends Error {
   }
 }
 
+/**
+ * TODO If this function is to be called in a loop, refactor it to take the date formatter as an
+ *   argument.
+ */
 export const exportApplicationToCsv = (application: Application, config: ProjectConfig): void => {
   try {
     if (!config.applicationFeature?.csvExport) {
@@ -38,7 +42,12 @@ export const exportApplicationToCsv = (application: Application, config: Project
       ...getPersonalApplicationData(application.jsonValue),
       ...getAddressApplicationData(application.jsonValue),
       ...getCardTypeApplicationData(application.jsonValue),
-      ...{ creationDate: formatDateWithTimezone(application.createdDate, config.timezone) },
+      // TODO Remove the hardcoded locale with either a setting or export ISO dates
+      //  (also applies to other dates in this export)
+      creationDate: Temporal.Instant.from(application.createdDate).toLocaleString('de-DE', {
+        dateStyle: 'medium',
+        timeStyle: 'short',
+      }),
     }
 
     const csvHeader = Object.keys(csvData).map(key => i18next.t(`application:${key}`))
@@ -50,13 +59,13 @@ export const exportApplicationToCsv = (application: Application, config: Project
     downloadDataUri(blob, `${surname}_${forenames}_${creationDate}.csv`)
   } catch (error) {
     if (error instanceof ApplicationToCsvError) {
-      console.error(error.message)
       throw new ApplicationToCsvError(i18next.t('errors:applicationToCsvError'))
     } else if (error instanceof ApplicationDataIncompleteError) {
-      console.error(error.message)
       throw new ApplicationDataIncompleteError(
         i18next.t('errors:applicationDataIncompleteException'),
       )
+    } else {
+      console.error(error)
     }
   }
 }

@@ -2,12 +2,13 @@ import { Box, Stack } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Temporal } from 'temporal-polyfill'
 
 import RenderGuard from '../../../components/RenderGuard'
 import { CardStatisticsResultModel, Region, Role } from '../../../generated/graphql'
-import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../../provider/ProjectConfigContext'
 import downloadDataUri from '../../../util/downloadDataUri'
-import { generateCsv, getCsvFileName } from '../utils/csvStatistics'
+import { csvFileName, generateCsv } from '../utils/csvStatistics'
 import StatisticsBarChart from './StatisticsBarChart'
 import StatisticsFilterBar from './StatisticsFilterBar'
 import StatisticsLegend from './StatisticsLegend'
@@ -19,22 +20,12 @@ const StatisticsOverview = ({
   region,
 }: {
   statistics: CardStatisticsResultModel[]
-  onApplyFilter: (dateStart: string, dateEnd: string) => void
+  onApplyFilter: (dateStart: Temporal.PlainDate, dateEnd: Temporal.PlainDate) => void
   region?: Region
 }): ReactElement => {
   const { enqueueSnackbar } = useSnackbar()
   const { cardStatistics } = useContext(ProjectConfigContext)
   const { t } = useTranslation('statistics')
-  const exportCardDataToCsv = (dateStart: string, dateEnd: string) => {
-    try {
-      downloadDataUri(
-        generateCsv(statistics, cardStatistics),
-        getCsvFileName(`${dateStart}_${dateEnd}`, region),
-      )
-    } catch {
-      enqueueSnackbar(t('exportCsvNotPossible'), { variant: 'error' })
-    }
-  }
   const statisticKeys = Object.keys(statistics[0]).filter(item => item !== 'region')
   const isSingleChartView = statistics.length === 1
 
@@ -62,9 +53,19 @@ const StatisticsOverview = ({
           <StatisticsLegend items={statisticKeys} statisticsTheme={cardStatistics.theme} />
         )}
       </Stack>
+
       <StatisticsFilterBar
         onApplyFilter={onApplyFilter}
-        onExportCsv={exportCardDataToCsv}
+        onExportCsv={(dateStart: Temporal.PlainDate, dateEnd: Temporal.PlainDate) => {
+          try {
+            downloadDataUri(
+              generateCsv(statistics, cardStatistics),
+              csvFileName(dateStart, dateEnd, region),
+            )
+          } catch {
+            enqueueSnackbar(t('exportCsvNotPossible'), { variant: 'error' })
+          }
+        }}
         isDataAvailable={statistics.length > 0}
       />
     </>

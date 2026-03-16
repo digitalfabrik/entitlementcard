@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { Card, isValid } from '../../../cards/card'
 import ButtonBar from '../../../components/ButtonBar'
 import { CsvIcon } from '../../../icons/CsvIcon'
-import { ProjectConfigContext } from '../../../project-configs/ProjectConfigContext'
+import { ProjectConfigContext } from '../../../provider/ProjectConfigContext'
 
 const CreateCardsButtonBar = ({
   cards,

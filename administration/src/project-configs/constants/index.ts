@@ -1,8 +1,0 @@
-export const LOCAL_STORAGE_PROJECT_KEY = 'project-override'
-export const FIELD_NAME = 'name'
-export const FIELD_STREET = 'street'
-export const FIELD_HOUSE_NUMBER = 'houseNumber'
-export const FIELD_POSTAL_CODE = 'postalCode'
-export const FIELD_LOCATION = 'location'
-export const FIELD_LATITUDE = 'latitude'
-export const FIELD_LONGITUDE = 'longitude'

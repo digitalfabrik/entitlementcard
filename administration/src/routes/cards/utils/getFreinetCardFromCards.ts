@@ -11,7 +11,8 @@ export const getFreinetCardFromCards = (cards: Card[]): FreinetCardInput => {
   }
 
   return {
-    expirationDate: cards[0].expirationDate?.format('yyyy-MM-dd'),
+    expirationDate:
+      cards[0].expirationDate !== null ? cards[0].expirationDate.toString() : undefined,
     cardType: cards[0].extensions.bavariaCardType,
   }
 }

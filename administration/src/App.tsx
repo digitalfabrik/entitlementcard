@@ -1,14 +1,15 @@
 import { CssBaseline, ThemeProvider } from '@mui/material'
 import { LocalizationProvider } from '@mui/x-date-pickers'
+// TODO Use Temporal adapter, when it is available: https://github.com/mui/mui-x/issues/4399
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import React, { ReactElement } from 'react'
 
 import Router from './Router'
-import { ProjectConfigProvider } from './project-configs/ProjectConfigContext'
-import getProjectConfig from './project-configs/getProjectConfig'
+import { getProjectConfig } from './project-configs'
 import AppApolloProvider from './provider/AppApolloProvider'
 import { AppSnackbarProvider } from './provider/AppSnackbarProvider'
 import AuthProvider from './provider/AuthProvider'
+import { ProjectConfigProvider } from './provider/ProjectConfigContext'
 import './translations/i18n'
 import { theme } from './util/theme'
 
