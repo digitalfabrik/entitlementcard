@@ -1,3 +1,4 @@
+import { create } from '@bufbuild/protobuf'
 import { stringify } from 'csv-stringify/browser/esm/sync'
 
 import { Card } from '../../cards/card'
@@ -6,7 +7,7 @@ import { getAddressFieldExtensionsValues } from '../../cards/extensions/AddressF
 import { BIRTHDAY_EXTENSION_NAME } from '../../cards/extensions/BirthdayExtension'
 import { NUERNBERG_PASS_ID_EXTENSION_NAME } from '../../cards/extensions/NuernbergPassIdExtension'
 import { START_DAY_EXTENSION_NAME } from '../../cards/extensions/StartDayExtension'
-import { QrCode } from '../../generated/card_pb'
+import { QrCodeSchema } from '../../generated/card_pb'
 import { formatDateDefaultGerman } from '../../util/date'
 import { convertProtobufToHexCode } from '../../util/qrcode'
 
@@ -19,7 +20,7 @@ export const buildCsvLine = (createCardsResult: CreateCardsResult, card: Card): 
   const startDay = startDayDate ? formatDateDefaultGerman(startDayDate) : undefined
 
   const activationHex = convertProtobufToHexCode(
-    new QrCode({
+    create(QrCodeSchema, {
       qrCode: {
         case: 'dynamicActivationCode',
         value: createCardsResult.dynamicActivationCode,
@@ -28,7 +29,7 @@ export const buildCsvLine = (createCardsResult: CreateCardsResult, card: Card): 
   )
   const staticVerificationHex = createCardsResult.staticVerificationCode
     ? convertProtobufToHexCode(
-        new QrCode({
+        create(QrCodeSchema, {
           qrCode: {
             case: 'staticVerificationCode',
             value: createCardsResult.staticVerificationCode,

@@ -1,4 +1,5 @@
 import { MockedProvider as ApolloProvider } from '@apollo/client/testing'
+import { create } from '@bufbuild/protobuf'
 import { act, renderHook } from '@testing-library/react'
 import { mocked } from 'jest-mock'
 import React, { ReactNode } from 'react'
@@ -9,7 +10,10 @@ import { generateCardInfo, initializeCard } from '../../../cards/card'
 import createCards, { CreateCardsError, CreateCardsResult } from '../../../cards/createCards'
 import deleteCards from '../../../cards/deleteCards'
 import { PdfError, generatePdf } from '../../../cards/pdf/pdfFactory'
-import { DynamicActivationCode, StaticVerificationCode } from '../../../generated/card_pb'
+import {
+  DynamicActivationCodeSchema,
+  StaticVerificationCodeSchema,
+} from '../../../generated/card_pb'
 import { ProjectConfig } from '../../../project-configs'
 import { config as bayernConfig } from '../../../project-configs/bayern/config'
 import { config as nuernbergConfig } from '../../../project-configs/nuernberg/config'
@@ -78,13 +82,19 @@ describe('useCardGenerator', () => {
   const codes: CreateCardsResult[] = [
     {
       dynamicCardInfoHashBase64: 'rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=',
-      dynamicActivationCode: new DynamicActivationCode({ info: generateCardInfo(cards[0]) }),
+      dynamicActivationCode: create(DynamicActivationCodeSchema, {
+        info: generateCardInfo(cards[0]),
+      }),
     },
     {
       dynamicCardInfoHashBase64: 'rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=',
-      dynamicActivationCode: new DynamicActivationCode({ info: generateCardInfo(cards[1]) }),
+      dynamicActivationCode: create(DynamicActivationCodeSchema, {
+        info: generateCardInfo(cards[1]),
+      }),
       staticCardInfoHashBase64: 'rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=',
-      staticVerificationCode: new StaticVerificationCode({ info: generateCardInfo(cards[1]) }),
+      staticVerificationCode: create(StaticVerificationCodeSchema, {
+        info: generateCardInfo(cards[1]),
+      }),
     },
   ]
 
