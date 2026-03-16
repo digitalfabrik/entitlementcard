@@ -52,8 +52,6 @@ const AutomaticLogoutDialog = ({
   })
 
   useEffect(() => {
-    setSecondsLeft(computeSecondsRemaining(expiresAt))
-
     const interval = setInterval(() => {
       const secondsRemaining = computeSecondsRemaining(expiresAt)
       setSecondsLeft(Math.max(secondsRemaining, 0))

@@ -111,8 +111,8 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
   useEffect(() => {
     const metaDataQueryResult = getQueryResult(metaDataQuery)
     if (metaDataQueryResult.successful) {
-      const { tokenMetaData } = metaDataQueryResult.data
-      setTokenMetadata(tokenMetaData)
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setTokenMetadata(metaDataQueryResult.data.tokenMetaData)
     }
   }, [metaDataQuery, t])
 
