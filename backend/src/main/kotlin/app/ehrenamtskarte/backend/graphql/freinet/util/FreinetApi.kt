@@ -249,6 +249,6 @@ class FreinetApi(
     }
 
     companion object {
-        private val objectMapper = jacksonObjectMapper()
+        private val objectMapper by lazy { jacksonObjectMapper() }
     }
 }

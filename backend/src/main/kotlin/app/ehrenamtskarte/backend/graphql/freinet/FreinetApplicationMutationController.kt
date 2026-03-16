@@ -141,14 +141,8 @@ class FreinetApplicationMutationController(
                 ?.takeIf { it.dataTransferActivated }
         } ?: return false
 
-        val freinetApi = FreinetApi(
-            freinetHttpClient,
-            projectConfig.freinet.host,
-            freinetAgency.apiAccessKey,
-            freinetAgency.agencyId,
-        )
-
-        freinetApi.sendCardInformation(userId, freinetCard)
+        FreinetApi(freinetHttpClient, projectConfig.freinet.host, freinetAgency.apiAccessKey, freinetAgency.agencyId)
+            .sendCardInformation(userId, freinetCard)
 
         return true
     }

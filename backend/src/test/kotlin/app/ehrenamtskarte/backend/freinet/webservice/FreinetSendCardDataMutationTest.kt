@@ -39,50 +39,37 @@ internal class FreinetSendCardDataMutationTest : IntegrationTest() {
 
     @Test
     fun `should return an unauthorized error when not logged in`() {
-        val mutation = createMutation()
-        val response = postGraphQL(mutation)
+        val response = postGraphQL(createMutation())
 
         assertEquals(HttpStatus.OK, response.statusCode)
-
-        val error = response.toErrorObject()
-
-        assertEquals(GraphQLExceptionCode.UNAUTHORIZED, error.extensions.code)
+        assertEquals(GraphQLExceptionCode.UNAUTHORIZED, response.toErrorObject().extensions.code)
 
         verify(exactly = 0) { anyConstructed<FreinetApi>().sendCardInformation(any(), any()) }
     }
 
     @Test
     fun `should return not implemented error if freinet is not configured`() {
-        val mutation = createMutation()
-        val response = postGraphQL(mutation, TestAdministrators.KOBLENZ_REGION_ADMIN.getJwtToken())
+        val response = postGraphQL(createMutation(), TestAdministrators.KOBLENZ_REGION_ADMIN.getJwtToken())
 
         assertEquals(HttpStatus.OK, response.statusCode)
-
-        val error = response.toErrorObject()
-
-        assertEquals(GraphQLExceptionCode.NOT_IMPLEMENTED, error.extensions.code)
+        assertEquals(GraphQLExceptionCode.NOT_IMPLEMENTED, response.toErrorObject().extensions.code)
 
         verify(exactly = 0) { anyConstructed<FreinetApi>().sendCardInformation(any(), any()) }
     }
 
     @Test
     fun `should return a forbidden error when role is not authorized`() {
-        val mutation = createMutation()
-        val response = postGraphQL(mutation, TestAdministrators.EAK_PROJECT_ADMIN.getJwtToken())
+        val response = postGraphQL(createMutation(), TestAdministrators.EAK_PROJECT_ADMIN.getJwtToken())
 
         assertEquals(HttpStatus.OK, response.statusCode)
-
-        val error = response.toErrorObject()
-
-        assertEquals(GraphQLExceptionCode.FORBIDDEN, error.extensions.code)
+        assertEquals(GraphQLExceptionCode.FORBIDDEN, response.toErrorObject().extensions.code)
 
         verify(exactly = 0) { anyConstructed<FreinetApi>().sendCardInformation(any(), any()) }
     }
 
     @Test
     fun `should return false when data transfer is not activated`() {
-        val mutation = createMutation()
-        val response = postGraphQL(mutation, TestAdministrators.EAK_REGION_ADMIN.getJwtToken())
+        val response = postGraphQL(createMutation(), TestAdministrators.EAK_REGION_ADMIN.getJwtToken())
 
         assertEquals(HttpStatus.OK, response.statusCode)
         assertEquals(false, response.toDataObject())
@@ -92,8 +79,7 @@ internal class FreinetSendCardDataMutationTest : IntegrationTest() {
 
     @Test
     fun `should return true and send card information when data transfer is activated`() {
-        val mutation = createMutation()
-        val response = postGraphQL(mutation, regionAdminFreinet.getJwtToken())
+        val response = postGraphQL(createMutation(), regionAdminFreinet.getJwtToken())
 
         assertEquals(HttpStatus.OK, response.statusCode)
         assertEquals(true, response.toDataObject())
