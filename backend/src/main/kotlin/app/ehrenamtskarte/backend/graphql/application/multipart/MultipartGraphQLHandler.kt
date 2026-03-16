@@ -28,6 +28,7 @@ import org.springframework.web.servlet.function.ServerResponse
  * 3. Inserts the corresponding `fileIndex` into the JSON payload according to each file reference
  *    (e.g. `{"name":"certificate","type":"Attachment","value":{"fileIndex":0}}`).
  * 4. Forwards the reconstructed GraphQL request to the standard [WebGraphQlHandler] for execution.
+ * 5. Handle Multipart request format issues with BadRequest (400) to avoid exception flood.
  *
  * This implementation serves as a compatibility workaround to enable file uploads in GraphQL
  * within Spring Boot applications.
@@ -40,40 +41,44 @@ class MultipartGraphQLHandler(
     private val idGenerator: IdGenerator = AlternativeJdkIdGenerator()
     private val mapper = jacksonObjectMapper()
 
-    @Throws(GraphQLMultipartParseException::class)
     fun handleMultipartRequest(serverRequest: ServerRequest): ServerResponse {
         val request = serverRequest.servletRequest()
 
         // Collect all parts
         val partsMap = request.parts.associateBy { it.name }
 
+        // Validate required parts
         val operationsNode = partsMap["operations"]?.inputStream?.use { mapper.readTree(it) }
-            ?: throw GraphQLMultipartParseException("Missing 'operations' node")
+            ?: return badRequestResponse("Missing required 'operations' field in multipart request")
 
-        val mapNode = partsMap["map"]?.inputStream?.use { mapper.readValue<Map<String, List<String>>>(it) }
-            ?: throw GraphQLMultipartParseException("Missing 'map' node")
+        val mapPart = partsMap["map"] ?: return badRequestResponse("Missing required 'map' field in multipart request")
+        val mapNode = mapPart.inputStream.use {
+            runCatching { mapper.readValue<Map<String, List<String>>>(it) }.getOrNull()
+        } ?: return badRequestResponse("Invalid 'map' field format in multipart request")
 
         // Collect uploaded files
         val files = request.parts.filter { mapNode.containsKey(it.name) }
 
-        // Substitute file references into the GraphQL variables
-        mapNode.forEach { (key, paths) ->
-            if (key == "operations" || key == "map") {
-                throw GraphQLMultipartParseException("Invalid file key: '$key'")
-            }
+        // Substitute file references and deserialize payload — client input, so bad format returns 400
+        val payload: Map<String, Any> = try {
+            mapNode.forEach { (key, paths) ->
+                if (key == "operations" || key == "map") {
+                    return badRequestResponse("Invalid file key: '$key' - reserved field names")
+                }
 
-            val fileIndex = files.indexOfFirst { it.name == key }
-            if (fileIndex == -1) {
-                throw GraphQLMultipartParseException("Part with key '$key' not found")
-            }
+                val fileIndex = files.indexOfFirst { it.name == key }
+                if (fileIndex == -1) {
+                    return badRequestResponse("Referenced file '$key' not found in multipart request")
+                }
 
-            paths.forEach { path ->
-                operationsNode.substitute(path, fileIndex, mapper)
+                paths.forEach { path ->
+                    operationsNode.substitute(path, fileIndex, mapper)
+                }
             }
+            mapper.readValue(mapper.treeAsTokens(operationsNode))
+        } catch (_: Exception) {
+            return badRequestResponse("Invalid multipart request format")
         }
-
-        // Deserialize the final payload
-        val payload: Map<String, Any> = mapper.readValue(mapper.treeAsTokens(operationsNode))
 
         // Copy cookies to the GraphQL request
         val targetCookies = LinkedMultiValueMap<String, HttpCookie>().apply {
@@ -115,6 +120,23 @@ class MultipartGraphQLHandler(
         return ServerResponse.async(future)
     }
 
+    private fun badRequestResponse(errorMessage: String): ServerResponse {
+        val errorBody = mapOf(
+            "errors" to listOf(
+                mapOf(
+                    "message" to "Invalid GraphQL request format",
+                    "extensions" to mapOf(
+                        "code" to "INVALID_MULTIPART_REQUEST",
+                        "details" to errorMessage,
+                    ),
+                ),
+            ),
+        )
+        return ServerResponse.badRequest()
+            .contentType(APPLICATION_JSON)
+            .body(errorBody)
+    }
+
     companion object {
         private val SUPPORTED_MEDIA_TYPES = listOf(APPLICATION_GRAPHQL_RESPONSE, APPLICATION_JSON)
 
@@ -123,6 +145,3 @@ class MultipartGraphQLHandler(
                 ?: APPLICATION_JSON
     }
 }
-
-class GraphQLMultipartParseException(message: String, cause: Throwable? = null) :
-    RuntimeException(message, cause)
