@@ -17,6 +17,7 @@ import {
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Temporal } from 'temporal-polyfill'
 
 import ConfirmDialog from '../../../components/ConfirmDialog'
 import SettingsCard from '../../../components/SettingsCard'
@@ -27,7 +28,6 @@ import {
   useDeleteApiTokenMutation,
   useGetApiTokenMetaDataQuery,
 } from '../../../generated/graphql'
-import { formatDate } from '../../../util/formatDate'
 import getQueryResult from '../../../util/getQueryResult'
 import PepperSettings from './PepperSettings'
 
@@ -102,13 +102,10 @@ type ApiTokenSettingsProps = {
   showPepperSection: boolean
 }
 const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactElement => {
-  const metaDataQuery = useGetApiTokenMetaDataQuery({})
-
-  const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('projectSettings')
-
+  const metaDataQuery = useGetApiTokenMetaDataQuery({})
+  const { enqueueSnackbar } = useSnackbar()
   const [tokenMetaData, setTokenMetadata] = useState<Array<ApiTokenMetaData>>([])
-
   const [tokenToDelete, setTokenToDelete] = useState<number | null>(null)
 
   useEffect(() => {
@@ -168,7 +165,9 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
                 {tokenMetaData.map(item => (
                   <TableRow key={item.id}>
                     <TableCell>{item.creatorEmail}</TableCell>
-                    <TableCell>{formatDate(item.expirationDate)}</TableCell>
+                    <TableCell>
+                      {t('expiresIn', { date: Temporal.PlainDate.from(item.expirationDate) })}
+                    </TableCell>
                     <TableCell>
                       <Delete
                         sx={{ cursor: 'pointer', display: 'block' }}

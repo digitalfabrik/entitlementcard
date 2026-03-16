@@ -1,5 +1,6 @@
 import { CssBaseline, ThemeProvider } from '@mui/material'
 import { LocalizationProvider } from '@mui/x-date-pickers'
+// TODO Use Temporal adapter, when it is available: https://github.com/mui/mui-x/issues/4399
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import React, { ReactElement } from 'react'
 

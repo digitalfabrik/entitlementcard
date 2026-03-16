@@ -31,6 +31,7 @@ import { useSnackbar } from 'notistack'
 import React, { memo, useContext, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useReactToPrint } from 'react-to-print'
+import { Temporal } from 'temporal-polyfill'
 
 import { AccordionExpandButton } from '../../../components/AccordionExpandButton'
 import BaseMenu, { MenuItemType } from '../../../components/BaseMenu'
@@ -244,7 +245,7 @@ const ApplicationCard = ({
   const printApplication = useReactToPrint({
     contentRef: printContentRef,
     pageStyle: applicationPrintViewPageStyle.styles,
-    documentTitle: t('applicationFrom', { date: new Date(application.createdDate) }),
+    documentTitle: t('applicationFrom', { date: Temporal.Instant.from(application.createdDate) }),
   })
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [rejectionDialogOpen, setRejectionDialogOpen] = useState(false)
@@ -340,7 +341,7 @@ const ApplicationCard = ({
       >
         <Stack direction='row' sx={{ width: '100%', gap: 2, paddingLeft: 2, paddingRight: 2 }}>
           <Typography variant='h6' sx={{ minWidth: '250px' }} marginY={0}>
-            {t('applicationFrom', { date: new Date(application.createdDate) })}
+            {t('applicationFrom', { date: Temporal.Instant.from(application.createdDate) })}
           </Typography>
           <Warning
             color='warning'
@@ -382,7 +383,9 @@ const ApplicationCard = ({
             !!application.statusResolvedDate && (
               <Box sx={{ backgroundColor: theme.palette.warning.light, padding: 2 }}>
                 <Typography>
-                  {t('withdrawalMessage', { date: new Date(application.statusResolvedDate) })}
+                  {t('withdrawalMessage', {
+                    date: Temporal.Instant.from(application.statusResolvedDate),
+                  })}
                   <br />
                   {t('deleteApplicationSoonPrompt')}{' '}
                 </Typography>
@@ -413,7 +416,7 @@ const ApplicationCard = ({
           <Box sx={{ p: 2 }}>
             <ApplicationStatusNote
               showIcon
-              statusResolvedDate={new Date(application.statusResolvedDate)}
+              statusResolvedDate={Temporal.Instant.from(application.statusResolvedDate)}
               status={application.status}
               reason={application.rejectionMessage ?? undefined}
               adminView

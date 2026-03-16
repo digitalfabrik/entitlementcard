@@ -5,6 +5,7 @@ import { TFunction } from 'i18next'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Temporal } from 'temporal-polyfill'
 
 import EmailLink from '../components/EmailLink'
 import {
@@ -20,10 +21,10 @@ const getStatusMetaData = (
   theme: Theme,
 ): { text: string; color: string } => {
   const unverifiedText = verification.rejectedDate
-    ? `${t('rejectedOn')} ${new Date(verification.rejectedDate).toLocaleString('de')}`
+    ? t('rejectedOn', { date: Temporal.Instant.from(verification.rejectedDate) })
     : t('pending')
   const text = verification.verifiedDate
-    ? `${t('verifiedOn')} ${new Date(verification.verifiedDate).toLocaleString('de')}`
+    ? t('verifiedOn', { date: Temporal.Instant.from(verification.verifiedDate) })
     : unverifiedText
   const unverifiedColor = verification.rejectedDate
     ? theme.palette.error.main

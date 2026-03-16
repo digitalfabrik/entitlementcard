@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-pascal-case  -- we cannot change the keys of application namespace, see translation file comment */
-import { sub } from 'date-fns'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { Temporal } from 'temporal-polyfill'
 
 import CustomDivider from '../../../../components/CustomDivider'
 import { PersonalDataInput, Region } from '../../../../generated/graphql'
@@ -31,7 +31,7 @@ const SubForms = {
 }
 
 const dateOfBirthOptions = {
-  maximumDate: sub(Date.now(), { years: 16 }),
+  maximumDate: Temporal.Now.plainDateISO().subtract({ years: 16 }),
   maximumDateErrorMessage: i18next.t('applicationForms:maximumDateErrorMessage'),
 } as const
 

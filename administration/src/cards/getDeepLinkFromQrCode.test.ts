@@ -5,6 +5,7 @@ import {
   buildConfigBayern,
   buildConfigKoblenz,
 } from 'build-configs'
+import { Temporal } from 'temporal-polyfill'
 
 import { DynamicActivationCode } from '../generated/card_pb'
 import { getTestRegion } from '../routes/user-settings/__mocks__/Region'
@@ -21,7 +22,7 @@ describe('DeepLink generation', () => {
   const region = getTestRegion({})
 
   const cardConfigBayern = {
-    defaultValidity: { years: 3 },
+    defaultValidity: Temporal.Duration.from({ years: 3 }),
     nameColumnName: 'Name',
     expiryColumnName: 'Ablaufdatum',
     extensionColumnNames: ['Kartentyp', null],
@@ -43,7 +44,8 @@ describe('DeepLink generation', () => {
 
   const buildConfigs = [{ buildConfig: buildConfigBayern }, { buildConfig: buildConfigKoblenz }]
 
-  // custom link schemes don't work in browsers or pdf thats why we use the staging link scheme also for development
+  // Custom link schemes don't work in browsers or PDFs, therefore we use the staging link scheme
+  // also for development
   it.each(buildConfigs)(
     'should generate a correct link for $buildConfig.common.projectId.staging for staging and development',
     ({ buildConfig }) => {

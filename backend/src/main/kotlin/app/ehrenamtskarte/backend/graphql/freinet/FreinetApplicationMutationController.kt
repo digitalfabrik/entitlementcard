@@ -20,6 +20,7 @@ import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import app.ehrenamtskarte.backend.shared.utils.devWarn
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import graphql.schema.DataFetchingEnvironment
+import io.ktor.client.HttpClient
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.slf4j.LoggerFactory
 import org.springframework.graphql.data.method.annotation.Argument
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Controller
 @Controller
 class FreinetApplicationMutationController(
     private val backendConfiguration: BackendConfiguration,
+    private val freinetHttpClient: HttpClient,
 ) {
     private val logger = LoggerFactory.getLogger(FreinetApplicationMutationController::class.java)
 
@@ -69,7 +71,12 @@ class FreinetApplicationMutationController(
             val lastName = application.getApplicantLastName()
             val dateOfBirth = application.getApplicantDateOfBirth()
 
-            val freinetApi = FreinetApi(projectConfig.freinet.host, freinetAgency.apiAccessKey, freinetAgency.agencyId)
+            val freinetApi = FreinetApi(
+                freinetHttpClient,
+                projectConfig.freinet.host,
+                freinetAgency.apiAccessKey,
+                freinetAgency.agencyId,
+            )
 
             val persons = freinetApi.searchPersons(firstName, lastName, dateOfBirth)
 
@@ -91,9 +98,16 @@ class FreinetApplicationMutationController(
                     freinetApi.sendCardInformation(userId.intValue(), freinetCard)
                 }
                 persons.size() == 1 -> {
-                    // TODO: #2143 - Update existing person
                     val userId = persons[0].get("id") ?: throw FreinetPersonDataInvalidException()
                     freinetApi.sendCardInformation(userId.intValue(), freinetCard)
+                    freinetApi.updatePerson(
+                        firstName,
+                        lastName,
+                        dateOfBirth,
+                        application.getPersonalDataNode(),
+                        authContext.admin.email,
+                        userId.intValue(),
+                    )
 
                     logger.devWarn("update existing person and send card data")
                 }

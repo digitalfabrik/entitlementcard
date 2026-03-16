@@ -1,4 +1,5 @@
 import { buildConfigBayern } from 'build-configs'
+import { Temporal } from 'temporal-polyfill'
 
 import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
 import EMailNotificationExtension from '../../cards/extensions/EMailNotificationExtension'
@@ -34,7 +35,7 @@ export const applicationJsonToPersonalData = (
 }
 
 const cardConfig: CardConfig = {
-  defaultValidity: { years: 3 },
+  defaultValidity: Temporal.Duration.from({ years: 3 }),
   nameColumnName: 'Name',
   expiryColumnName: 'Ablaufdatum',
   extensionColumnNames: ['Kartentyp', null, 'MailNotification'],
@@ -112,7 +113,7 @@ const config: ProjectConfig = {
     },
   },
   freinetCSVImportEnabled: true,
-  freinetDataTransferEnabled: false,
+  freinetDataTransferEnabled: true,
   cardCreation: true,
   selfServiceEnabled: false,
   storesManagement: {

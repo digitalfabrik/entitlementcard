@@ -381,7 +381,7 @@ const applicationDetailsGold: JsonField<'Array'> = {
 
 export const mockApplicationBlue: Application = {
   id: 1,
-  createdDate: '2025-05-21 07:57:12.782520',
+  createdDate: '2024-05-15T09:20:23.350015Z',
   note: null,
   status: ApplicationStatus.Approved,
   statusResolvedDate: '2024-12-12',
@@ -395,7 +395,7 @@ export const mockApplicationBlue: Application = {
 
 export const mockApplicationGold: Application = {
   id: 1,
-  createdDate: '2025-05-21 07:57:12.782520',
+  createdDate: '2024-05-15T09:20:23.350015Z',
   note: null,
   status: ApplicationStatus.Approved,
   statusResolvedDate: '2024-12-12',
@@ -409,7 +409,7 @@ export const mockApplicationGold: Application = {
 
 export const mockApplicationWithoutAddress: Application = {
   id: 1,
-  createdDate: '2025-05-21 07:57:12.782520',
+  createdDate: '2024-05-15T09:20:23.350015Z',
   note: null,
   status: ApplicationStatus.Approved,
   statusResolvedDate: '2024-12-12',
@@ -456,7 +456,7 @@ export const mockApplicationWithoutAddress: Application = {
 
 export const mockApplicationWithoutPersonalData: Application = {
   id: 1,
-  createdDate: '2025-05-21 07:57:12.782520',
+  createdDate: '2024-05-15T09:20:23.350015Z',
   note: null,
   status: ApplicationStatus.Approved,
   statusResolvedDate: '2024-12-12',
@@ -470,7 +470,7 @@ export const mockApplicationWithoutPersonalData: Application = {
 
 export const mockApplicationWithoutApplicationDetails: Application = {
   id: 1,
-  createdDate: '2025-05-21 07:57:12.782520',
+  createdDate: '2024-05-15T09:20:23.350015Z',
   note: null,
   status: ApplicationStatus.Approved,
   statusResolvedDate: '2024-12-12',

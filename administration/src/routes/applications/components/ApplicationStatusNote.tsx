@@ -1,10 +1,9 @@
 /* eslint-disable react/destructuring-assignment */
 import { CancelOutlined, CheckCircleOutlined, RemoveCircleOutline } from '@mui/icons-material'
 import { Typography } from '@mui/material'
-import { format } from 'date-fns'
-import { de } from 'date-fns/locale'
 import React, { ReactElement } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { Temporal } from 'temporal-polyfill'
 
 import AlertBox from '../../../components/AlertBox'
 import { ApplicationStatus } from '../../../generated/graphql'
@@ -57,7 +56,7 @@ const icon = (applicationStatus: ApplicationStatus): ReactElement | undefined =>
 }
 
 export const ApplicationStatusNote = (p: {
-  statusResolvedDate: Date
+  statusResolvedDate: Temporal.Instant
   status: ApplicationStatus
   reason?: string | undefined
   adminView?: boolean
@@ -78,8 +77,8 @@ export const ApplicationStatusNote = (p: {
             t={t}
             i18nKey={translationKey}
             values={{
-              date: format(p.statusResolvedDate, 'dd. MMMM yyyy', { locale: de }),
-              time: format(p.statusResolvedDate, 'HH:mm', { locale: de }),
+              date: p.statusResolvedDate,
+              time: p.statusResolvedDate,
               reason: p.reason !== undefined ? t('reason', { message: p.reason }) : '',
             }}
             components={{

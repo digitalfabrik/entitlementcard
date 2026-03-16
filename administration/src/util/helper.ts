@@ -1,10 +1,10 @@
 import { ApolloError, FetchResult } from '@apollo/client'
+import { Temporal } from 'temporal-polyfill'
 import XRegExp from 'xregexp'
 
 import { maxCardValidity } from '../cards/constants'
 import getMessageFromApolloError from '../errors/getMessageFromApolloError'
 import i18next from '../translations/i18n'
-import PlainDate from './PlainDate'
 
 export const isStagingEnvironment = (): boolean => !!window.location.hostname.match(/staging./)
 export const isProductionEnvironment = (): boolean =>
@@ -60,5 +60,5 @@ export const hasProp = <P extends PropertyKey, O extends { [p in P]: unknown }>(
   p: P,
 ): obj is O & { [p in P]: NonNullable<unknown> } => obj[p] !== undefined && obj[p] !== null
 
-export const isExceedingMaxValidityDate = (currentDate: PlainDate): boolean =>
-  currentDate.isAfter(PlainDate.fromLocalDate(new Date()).add(maxCardValidity))
+export const isExceedingMaxValidityDate = (currentDate: Temporal.PlainDate): boolean =>
+  Temporal.PlainDate.compare(currentDate, Temporal.Now.plainDateISO().add(maxCardValidity)) > 0

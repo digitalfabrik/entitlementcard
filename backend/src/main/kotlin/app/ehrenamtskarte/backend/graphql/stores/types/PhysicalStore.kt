@@ -9,7 +9,7 @@ import org.springframework.graphql.data.method.annotation.SchemaMapping
 import org.springframework.stereotype.Controller
 import java.util.concurrent.CompletableFuture
 
-@Deprecated("Use AcceptingStoreV2 for localized descriptions. Should be able to safely remove in January 2028.")
+@Deprecated("Use AcceptingStoreV2 for localized descriptions. Can be safely removed in January 2028.")
 data class PhysicalStore(
     val id: Int,
     val storeId: Int,

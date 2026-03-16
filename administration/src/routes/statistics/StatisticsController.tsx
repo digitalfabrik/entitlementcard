@@ -1,5 +1,6 @@
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Temporal } from 'temporal-polyfill'
 
 import AlertBox from '../../components/AlertBox'
 import {
@@ -20,16 +21,17 @@ const ViewProjectStatistics = () => {
   })
   const cardStatisticsQueryResult = getQueryResult(cardStatisticsQuery)
 
-  const applyFilter = (dateStart: string, dateEnd: string) => {
-    cardStatisticsQuery.refetch({ dateEnd, dateStart })
-  }
-
   if (!cardStatisticsQueryResult.successful) {
     return cardStatisticsQueryResult.component
   }
   return (
     <StatisticsOverview
-      onApplyFilter={applyFilter}
+      onApplyFilter={(dateStart: Temporal.PlainDate, dateEnd: Temporal.PlainDate) => {
+        cardStatisticsQuery.refetch({
+          dateStart: dateStart.toString(),
+          dateEnd: dateEnd.toString(),
+        })
+      }}
       statistics={cardStatisticsQueryResult.data.result}
     />
   )
@@ -45,16 +47,18 @@ const ViewRegionStatistics = ({ region }: { region: Region }) => {
   })
   const cardStatisticsQueryResult = getQueryResult(cardStatisticsQuery)
 
-  const applyFilter = (dateStart: string, dateEnd: string) => {
-    cardStatisticsQuery.refetch({ dateEnd, dateStart, regionId: region.id })
-  }
-
   if (!cardStatisticsQueryResult.successful) {
     return cardStatisticsQueryResult.component
   }
   return (
     <StatisticsOverview
-      onApplyFilter={applyFilter}
+      onApplyFilter={(dateStart: Temporal.PlainDate, dateEnd: Temporal.PlainDate) => {
+        cardStatisticsQuery.refetch({
+          dateStart: dateStart.toString(),
+          dateEnd: dateEnd.toString(),
+          regionId: region.id,
+        })
+      }}
       statistics={cardStatisticsQueryResult.data.result}
       region={region}
     />

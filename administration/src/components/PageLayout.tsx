@@ -1,27 +1,30 @@
-import { Box, BoxProps } from '@mui/material'
+import { Stack, StackProps } from '@mui/material'
 import React, { ReactElement, ReactNode } from 'react'
 
 import Footer from './Footer'
 
-type PageLayoutProps = BoxProps & {
+type PageLayoutProps = StackProps & {
   children: ReactNode
+  containerSx?: StackProps['sx']
   showDataPrivacy?: boolean
 }
 
-const PageLayout = ({ children, showDataPrivacy, ...boxProps }: PageLayoutProps): ReactElement => (
-  <Box
+const PageLayout = ({
+  children,
+  showDataPrivacy,
+  containerSx,
+  ...stackProps
+}: PageLayoutProps): ReactElement => (
+  <Stack
     sx={{
-      display: 'flex',
-      flexDirection: 'column',
       minHeight: '100vh',
-      ...boxProps.sx,
+      ...stackProps.sx,
     }}
-    {...boxProps}
+    {...stackProps}
   >
-    <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>{children}</Box>
-
+    <Stack sx={{ flexGrow: 1, ...containerSx }}>{children}</Stack>
     <Footer showDataPrivacy={showDataPrivacy} />
-  </Box>
+  </Stack>
 )
 
 export default PageLayout

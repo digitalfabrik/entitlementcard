@@ -1,4 +1,4 @@
-import { formatISO, parseISO } from 'date-fns'
+import { Temporal } from 'temporal-polyfill'
 
 import type { Card, SerializedCard } from '../../../cards/card'
 import { deserializeCard, serializeCard } from '../../../cards/card'
@@ -9,7 +9,7 @@ export const STORAGE_KEY = 'activity-log'
 type JsonActivityLogEntry = { timestamp: string; card: SerializedCard }
 
 export type ActivityLogEntryType = {
-  timestamp: Date
+  timestamp: Temporal.Instant
   card: Card
 }
 
@@ -18,17 +18,21 @@ const getActivityLog = (): JsonActivityLogEntry[] =>
 
 export const loadActivityLog = (cardConfig: CardConfig): ActivityLogEntryType[] =>
   getActivityLog().map(entry => ({
+    timestamp: Temporal.Instant.from(entry.timestamp),
     card: deserializeCard(entry.card, cardConfig),
-    timestamp: parseISO(entry.timestamp),
   }))
 
 export const saveActivityLog = (card: Card): void => {
-  const logEntries = getActivityLog()
-  const jsonLogEntry: JsonActivityLogEntry = {
-    timestamp: formatISO(Date.now()),
-    card: serializeCard(card),
-  }
-  sessionStorage.setItem(STORAGE_KEY, JSON.stringify([...logEntries, jsonLogEntry]))
+  sessionStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify([
+      ...getActivityLog(),
+      {
+        timestamp: Temporal.Now.instant().toString({ fractionalSecondDigits: 0 }),
+        card: serializeCard(card),
+      },
+    ]),
+  )
 }
 
 export const clearActivityLog = (): void => sessionStorage.removeItem(STORAGE_KEY)

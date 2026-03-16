@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 
 import PageLayout from '../components/PageLayout'
 import ProjectSwitcher from '../components/ProjectSwitcher'
-import StandaloneCenter from '../components/StandaloneCenter'
 import getMessageFromApolloError from '../errors/getMessageFromApolloError'
 import { SignInMutation, SignInPayload, useSignInMutation } from '../generated/graphql'
 import { ProjectConfigContext } from '../project-configs/ProjectConfigContext'
@@ -37,29 +36,32 @@ const Login = ({ onSignIn }: { onSignIn: (payload: SignInPayload) => void }): Re
     })
 
   return (
-    <PageLayout>
-      <StandaloneCenter>
-        <Card sx={{ width: '100%', maxWidth: '500px', padding: 3 }}>
-          <Typography variant='h4' component='h1'>
-            {config.name}
-          </Typography>
-          <Typography variant='h5' component='h2'>
-            {t('administration')}
-          </Typography>
-          <Typography variant='h6' component='h3' marginBottom={3}>
-            {t('login')}
-          </Typography>
-          <LoginForm
-            password={state.password}
-            email={state.email}
-            setEmail={email => setState({ ...state, email })}
-            setPassword={password => setState({ ...state, password: password ?? '' })}
-            onSubmit={onSubmit}
-            loading={mutationState.loading}
-          />
-          <ProjectSwitcher />
-        </Card>
-      </StandaloneCenter>
+    <PageLayout
+      containerSx={{
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <Card sx={{ width: '100%', maxWidth: '500px', padding: 3 }}>
+        <Typography variant='h4' component='h1'>
+          {config.name}
+        </Typography>
+        <Typography variant='h5' component='h2'>
+          {t('administration')}
+        </Typography>
+        <Typography variant='h6' component='h3' marginBottom={3}>
+          {t('login')}
+        </Typography>
+        <LoginForm
+          password={state.password}
+          email={state.email}
+          setEmail={email => setState({ ...state, email })}
+          setPassword={password => setState({ ...state, password: password ?? '' })}
+          onSubmit={onSubmit}
+          loading={mutationState.loading}
+        />
+        <ProjectSwitcher />
+      </Card>
     </PageLayout>
   )
 }

@@ -4,6 +4,7 @@ import {
   QUERY_PARAM_NAME,
   buildConfigKoblenz,
 } from 'build-configs'
+import { Temporal } from 'temporal-polyfill'
 
 import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
 import KoblenzReferenceNumberExtension from '../../cards/extensions/KoblenzReferenceNumberExtension'
@@ -25,7 +26,7 @@ const config: ProjectConfig = {
     nameColumnName: QUERY_PARAM_NAME,
     expiryColumnName: 'Ablaufdatum',
     extensionColumnNames: [QUERY_PARAM_BIRTHDAY, QUERY_PARAM_KOBLENZ_REFERENCE_NUMBER],
-    defaultValidity: { years: 1 },
+    defaultValidity: Temporal.Duration.from({ years: 1 }),
     extensions: [BirthdayExtension, KoblenzReferenceNumberExtension],
   },
   dataPrivacyHeadline: dataPrivacyBaseHeadline,
