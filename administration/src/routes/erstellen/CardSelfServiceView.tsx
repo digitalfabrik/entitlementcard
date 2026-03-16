@@ -9,7 +9,6 @@ import {
   DialogTitle,
   Stack,
   Typography,
-  styled,
 } from '@mui/material'
 import { grey } from '@mui/material/colors'
 import React, { ReactElement, useState } from 'react'
@@ -17,6 +16,7 @@ import { useTranslation } from 'react-i18next'
 
 import { updateCard } from '../../cards/card'
 import CenteredCircularProgress from '../../components/CenteredCircularProgress'
+import PageLayout from '../../components/PageLayout'
 import { KoblenzLogo } from '../../icons/KoblenzLogo'
 import CardSelfServiceActivation from './components/CardSelfServiceActivation'
 import CardSelfServiceForm from './components/CardSelfServiceForm'
@@ -24,16 +24,6 @@ import CardSelfServiceInformation from './components/CardSelfServiceInformation'
 import { DataPrivacyAcceptingStatus } from './constants'
 import selfServiceStepInfo from './constants/selfServiceStepInfo'
 import useCardGeneratorSelfService from './hooks/useCardGeneratorSelfService'
-
-const Container = styled('div')(({ theme }) => ({
-  alignSelf: 'center',
-  justifyContent: 'center',
-  display: 'flex',
-  flexDirection: 'column',
-  width: '100%',
-  maxWidth: theme.breakpoints.values.sm,
-  border: `1px solid ${theme.palette.divider}`,
-}))
 
 const CardSelfServiceView = (): ReactElement => {
   const { t } = useTranslation('selfService')
@@ -58,12 +48,27 @@ const CardSelfServiceView = (): ReactElement => {
   const totalSteps = Object.keys(selfServiceStepInfo).length
 
   return (
-    <Container>
+    <PageLayout
+      showDataPrivacy={false}
+      sx={{
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+      containerSx={{
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        maxWidth: theme => theme.breakpoints.values.sm,
+        margin: '0 auto',
+        border: theme => `1px solid ${theme.palette.divider}`,
+      }}
+    >
       <Box
         sx={{
           backgroundColor: grey[100],
           padding: 1.5,
           display: 'flex',
+          width: '100%',
           justifyContent: 'space-between',
         }}
       >
@@ -135,7 +140,7 @@ const CardSelfServiceView = (): ReactElement => {
           </Button>
         </DialogActions>
       </Dialog>
-    </Container>
+    </PageLayout>
   )
 }
 

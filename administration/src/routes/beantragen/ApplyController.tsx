@@ -4,6 +4,7 @@ import React, { ReactElement, useCallback, useContext, useMemo, useState } from 
 import { Trans, useTranslation } from 'react-i18next'
 
 import CenteredCircularProgress from '../../components/CenteredCircularProgress'
+import PageLayout from '../../components/PageLayout'
 import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
 import { useAddEakApplicationMutation, useGetRegionsQuery } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
@@ -96,8 +97,16 @@ const ApplyController = (): React.ReactElement | null => {
   }
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'start', margin: '16px' }}>
-      <div style={{ maxWidth: '1000px', width: '100%' }}>
+    <PageLayout
+      showDataPrivacy={false}
+      containerSx={{
+        justifyContent: 'center',
+        flexDirection: 'row',
+        alignItems: 'start',
+        margin: 2,
+      }}
+    >
+      <Box sx={{ maxWidth: '1000px', width: '100%' }}>
         <Typography variant='h4' component='h1' margin={2} textAlign='center'>
           {formSubmitted ? t('sentSuccessfully') : t('title')}
         </Typography>
@@ -121,8 +130,8 @@ const ApplyController = (): React.ReactElement | null => {
             <DiscardAllInputsButton discardAll={discardAll} />
           )}
         </Box>
-      </div>
-    </div>
+      </Box>
+    </PageLayout>
   )
 }
 
