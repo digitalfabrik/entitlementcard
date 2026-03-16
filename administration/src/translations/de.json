@@ -745,7 +745,7 @@
   "applicationApplicant": {
     "alreadyWithdrawn": "Der Antrag wurde bereits zurückgezogen.",
     "headline": "Ihr Antrag auf die Ehrenamtskarte Bayern vom {{date, datetime(dateStyle: 'medium'; timeStyle: 'short')}}",
-    "withdrawInformation": "Hier können Sie Ihren Antrag zurückziehen und Ihre Eingaben unwiderruflich löschen.",
+    "withdrawInformation": "Hier können Sie Ihren Antrag zurückziehen.",
     "withdrawApplication": "Antrag zurückziehen",
     "withdrawConfirmationTitle": "Antrag zurückziehen?",
     "withdrawConfirmationContent": "Möchten Sie Ihren Antrag zurückziehen?",
