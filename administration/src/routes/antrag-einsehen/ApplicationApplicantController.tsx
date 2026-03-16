@@ -1,11 +1,11 @@
-import { Stack } from '@mui/material'
+import { StackProps } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
 import { Temporal } from 'temporal-polyfill'
 
 import AlertBox from '../../components/AlertBox'
-import CenteredStack from '../../components/CenteredStack'
+import PageLayout from '../../components/PageLayout'
 import { ApplicationStatus, useGetApplicationByApplicantQuery } from '../../generated/graphql'
 import getQueryResult from '../../util/getQueryResult'
 import { ApplicationStatusNote } from '../applications/components/ApplicationStatusNote'
@@ -15,6 +15,12 @@ import {
   parseApplication,
 } from '../applications/utils/application'
 import ApplicationApplicantView from './ApplicationApplicantView'
+
+const centeredContainerSx: StackProps['sx'] = {
+  alignSelf: 'center',
+  justifyContent: 'center',
+  p: 2,
+}
 
 const ApplicationApplicantController = ({ providedKey }: { providedKey: string }): ReactElement => {
   const { t } = useTranslation('applicationApplicant')
@@ -27,25 +33,24 @@ const ApplicationApplicantController = ({ providedKey }: { providedKey: string }
     return applicationQueryHandler.component
   }
   const application = parseApplication(applicationQueryHandler.data.application)
-
   if (application.status === ApplicationStatus.Withdrawn) {
     return (
-      <CenteredStack>
+      <PageLayout containerSx={centeredContainerSx}>
         <AlertBox severity='info' description={t('alreadyWithdrawn')} />
-      </CenteredStack>
+      </PageLayout>
     )
   }
   if (isWithdrawn) {
     return (
-      <CenteredStack>
+      <PageLayout containerSx={centeredContainerSx}>
         <AlertBox severity='info' description={t('withdrawConfirmation')} />
-      </CenteredStack>
+      </PageLayout>
     )
   }
 
   if (applicationWasAlreadyProcessed(application.status) && !!application.statusResolvedDate) {
     return (
-      <CenteredStack>
+      <PageLayout containerSx={centeredContainerSx}>
         <AlertBox
           severity={getAlertSeverityByApplicationStatus(application.status)}
           title={t(
@@ -61,18 +66,18 @@ const ApplicationApplicantController = ({ providedKey }: { providedKey: string }
             />
           }
         />
-      </CenteredStack>
+      </PageLayout>
     )
   }
 
   return (
-    <Stack sx={{ alignSelf: 'center', justifyContent: 'flex-start' }}>
+    <PageLayout containerSx={{ alignSelf: 'center', justifyContent: 'flex-start' }}>
       <ApplicationApplicantView
         application={application}
         onWithdraw={() => setIsWithdrawn(true)}
         providedKey={providedKey}
       />
-    </Stack>
+    </PageLayout>
   )
 }
 

@@ -1,10 +1,11 @@
 import { Check, Close } from '@mui/icons-material'
-import { Alert, Box, Button, Card, Divider, Typography, styled } from '@mui/material'
+import { Alert, Button, Card, Divider, Typography, styled } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Temporal } from 'temporal-polyfill'
 
 import JsonFieldView from '../../components/JsonFieldView'
+import PageLayout from '../../components/PageLayout'
 import { GetApplicationByApplicantQuery } from '../../generated/graphql'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
@@ -43,7 +44,7 @@ const ApplicationVerifierView = ({
   const { t } = useTranslation('applicationVerification')
   const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${application.id}`
   return (
-    <Box sx={{ flexGrow: 1, overflow: 'auto', alignItems: 'safe center' }}>
+    <PageLayout>
       <ApplicationViewCard elevation={2}>
         <div style={{ overflow: 'visible', padding: '20px' }}>
           <Typography marginBottom={1.5} variant='h4'>
@@ -101,7 +102,7 @@ const ApplicationVerifierView = ({
           </ButtonContainer>
         </div>
       </ApplicationViewCard>
-    </Box>
+    </PageLayout>
   )
 }
 
