@@ -1,5 +1,6 @@
 import { PDFDocument, PDFFont, PDFPage, StandardFonts } from '@cantoo/pdf-lib'
 import fontkit from '@pdf-lib/fontkit'
+import { Temporal } from 'temporal-polyfill'
 
 import { Region } from '../../generated/graphql'
 import { PdfConfig, ProjectConfig } from '../../project-configs/getProjectConfig'
@@ -154,7 +155,7 @@ export const getPdfFilename = (cards: Card[]): string => {
   // "Berechtigungskarte_" prefix needs to always be in the filename to ensure Nuernberg automation will not break
   const filename =
     cards.length === 1
-      ? `Berechtigungskarte_${normalizeString(cards[0].fullName)}-${new Date().getFullYear()}`
+      ? `Berechtigungskarte_${normalizeString(cards[0].fullName)}-${Temporal.Now.plainDateISO().year}`
       : 'berechtigungskarten'
   return `${filename}.pdf`
 }

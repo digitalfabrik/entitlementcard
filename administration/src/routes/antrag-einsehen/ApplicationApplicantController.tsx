@@ -2,6 +2,7 @@ import { Stack } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
+import { Temporal } from 'temporal-polyfill'
 
 import AlertBox from '../../components/AlertBox'
 import CenteredStack from '../../components/CenteredStack'
@@ -60,7 +61,7 @@ const ApplicationApplicantController = ({ providedKey }: { providedKey: string }
             )}
             description={
               <ApplicationStatusNote
-                statusResolvedDate={new Date(application.statusResolvedDate)}
+                statusResolvedDate={Temporal.Instant.from(application.statusResolvedDate)}
                 status={application.status}
                 showIcon={false}
               />

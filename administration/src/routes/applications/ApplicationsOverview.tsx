@@ -2,6 +2,7 @@ import { Stack } from '@mui/material'
 import { AnimatePresence, motion } from 'motion/react'
 import React, { ReactElement, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Temporal } from 'temporal-polyfill'
 
 import AlertBox from '../../components/AlertBox'
 import { ApplicationStatus } from '../../generated/graphql'
@@ -78,7 +79,10 @@ const ApplicationsOverview = ({ applications }: { applications: Application[] })
             // Sort by status
             applicationListOrder(a) - applicationListOrder(b) ||
             // If status is equal, sort by date
-            new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime(),
+            Temporal.Instant.compare(
+              Temporal.Instant.from(a.createdDate),
+              Temporal.Instant.from(b.createdDate),
+            ),
         ),
     [activeBarItem, updatedApplications],
   )

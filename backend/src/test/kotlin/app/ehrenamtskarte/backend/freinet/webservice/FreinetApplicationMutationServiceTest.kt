@@ -46,11 +46,21 @@ internal class FreinetApplicationMutationServiceTest : IntegrationTest() {
         mockkConstructor(FreinetApi::class)
 
         every { anyConstructed<FreinetApi>().searchPersons(any(), any(), any()) } returns objectMapper.createArrayNode()
+
         val defaultCreatePersonResult = objectMapper.createObjectNode().apply {
             put("NEW_USERID", 12345)
         }
         every { anyConstructed<FreinetApi>().createPerson(any(), any(), any(), any(), any()) } returns
             FreinetPersonCreationResultModel(true, defaultCreatePersonResult)
+
+        val defaultUpdatePersonResult = objectMapper.createObjectNode().apply {
+            put("STATUS", "OK")
+            put("EDITED_USERID", 1277076)
+            putNull("memory")
+        }
+        every { anyConstructed<FreinetApi>().updatePerson(any(), any(), any(), any(), any(), any()) } returns
+            FreinetPersonCreationResultModel(true, defaultUpdatePersonResult)
+
         every { anyConstructed<FreinetApi>().sendCardInformation(any(), any()) } returns Unit
     }
 
@@ -147,7 +157,7 @@ internal class FreinetApplicationMutationServiceTest : IntegrationTest() {
     }
 
     @Test
-    fun `should return true when person already exists in Freinet`() {
+    fun `should return true and update the person when person already exists in Freinet`() {
         transaction {
             val agency = FreinetAgenciesEntity.find { FreinetAgencies.regionId eq regionAdminFreinet.regionId }.single()
             agency.dataTransferActivated = true
@@ -173,7 +183,7 @@ internal class FreinetApplicationMutationServiceTest : IntegrationTest() {
         assertEquals(true, response.toDataObject())
 
         verify { anyConstructed<FreinetApi>().searchPersons("John", "Doe", "1990-01-01") }
-        verify(exactly = 0) { anyConstructed<FreinetApi>().createPerson(any(), any(), any(), any(), any()) }
+        verify { anyConstructed<FreinetApi>().updatePerson("John", "Doe", "1990-01-01", any(), any(), 1277076) }
         verify { anyConstructed<FreinetApi>().sendCardInformation(1277076, any()) }
     }
 

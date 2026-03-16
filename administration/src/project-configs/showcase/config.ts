@@ -1,3 +1,5 @@
+import { Temporal } from 'temporal-polyfill'
+
 import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
 import { applicationJsonToCardQuery, applicationJsonToPersonalData } from '../bayern/config'
@@ -22,7 +24,7 @@ const config: ProjectConfig = {
     nameColumnName: 'Name',
     expiryColumnName: 'Ablaufdatum',
     extensionColumnNames: ['Kartentyp', null],
-    defaultValidity: { years: 3 },
+    defaultValidity: Temporal.Duration.from({ years: 3 }),
     extensions: [BavariaCardTypeExtension, RegionExtension],
   },
   dataPrivacyHeadline: dataPrivacyBaseHeadline,

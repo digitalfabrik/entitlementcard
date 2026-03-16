@@ -1,6 +1,7 @@
 import { Card, Stack, Typography } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Temporal } from 'temporal-polyfill'
 
 import RenderGuard from '../../components/RenderGuard'
 import { Role } from '../../generated/graphql'
@@ -17,7 +18,7 @@ const ActivityLogController = ({
   const { t } = useTranslation('activityLog')
   const { card: cardConfig } = useContext(ProjectConfigContext)
   const activityLogSorted = loadActivityLog(cardConfig).sort((a, b) =>
-    a.timestamp < b.timestamp ? 1 : -1,
+    Temporal.Instant.compare(b.timestamp, a.timestamp),
   )
 
   return (

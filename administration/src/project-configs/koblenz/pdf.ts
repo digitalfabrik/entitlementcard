@@ -1,5 +1,5 @@
 import type { InfoParams } from '../../cards/pdf/pdfTextElement'
-import PlainDate from '../../util/PlainDate'
+import { formatDateDefaultGerman, plainDateFromDaysSinceEpoch } from '../../util/date'
 import type { PdfConfig } from '../getProjectConfig'
 import pdfTemplate from './pdf-template.pdf'
 
@@ -8,13 +8,13 @@ const renderPdfDetails = ({ info }: InfoParams): string => {
   if (expirationDay === undefined) {
     throw new Error('expirationDay must be defined for Koblenz')
   }
-  const expirationDate = PlainDate.fromDaysSinceEpoch(expirationDay)
-  const birthdayDate = PlainDate.fromDaysSinceEpoch(
+  const expirationDate = plainDateFromDaysSinceEpoch(expirationDay)
+  const birthdayDate = plainDateFromDaysSinceEpoch(
     info.extensions?.extensionBirthday?.birthday ?? 0,
   )
-  const startDate = PlainDate.fromDaysSinceEpoch(info.extensions?.extensionStartDay?.startDay ?? 0)
-  return `${startDate.format()} - ${expirationDate.format()}
-${birthdayDate.format()}
+  const startDate = plainDateFromDaysSinceEpoch(info.extensions?.extensionStartDay?.startDay ?? 0)
+  return `${formatDateDefaultGerman(startDate)} - ${formatDateDefaultGerman(expirationDate)}
+${formatDateDefaultGerman(birthdayDate)}
 ${info.fullName}`
 }
 

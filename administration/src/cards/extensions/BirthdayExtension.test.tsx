@@ -1,10 +1,10 @@
 import { fireEvent } from '@testing-library/react'
 import React from 'react'
+import { Temporal } from 'temporal-polyfill'
 
 import koblenzConfig from '../../project-configs/koblenz/config'
 import nuernbergConfig from '../../project-configs/nuernberg/config'
 import { CustomRenderOptions, renderWithOptions } from '../../testing/render'
-import PlainDate from '../../util/PlainDate'
 import BirthdayExtension, { minBirthday } from './BirthdayExtension'
 
 jest.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
@@ -17,7 +17,8 @@ const mockProvider: CustomRenderOptions = {
 }
 
 describe('BirthdayExtension', () => {
-  const today = PlainDate.fromLocalDate(new Date())
+  const today = Temporal.Now.plainDateISO()
+
   describe('Component', () => {
     it('should display correct placeholder if no birthday is provided', () => {
       const { getByPlaceholderText } = renderWithOptions(
@@ -38,7 +39,7 @@ describe('BirthdayExtension', () => {
           forceError
           setValue={setValue}
           isValid={false}
-          value={{ birthday: new PlainDate(1955, 1, 1) }}
+          value={{ birthday: new Temporal.PlainDate(1955, 1, 1) }}
         />,
         mockProvider,
       )
@@ -135,7 +136,7 @@ describe('BirthdayExtension', () => {
     })
 
     it('should not show error if a correct birthday is provided', () => {
-      const birthday = new PlainDate(2020, 1, 1)
+      const birthday = new Temporal.PlainDate(2020, 1, 1)
       const { queryByTestId } = renderWithOptions(
         <BirthdayExtension.Component
           forceError
@@ -150,7 +151,7 @@ describe('BirthdayExtension', () => {
     })
 
     it('should show error if provided birthday is in the future', () => {
-      const tomorrow = PlainDate.fromLocalDate(new Date()).add({ days: 1 })
+      const tomorrow = Temporal.Now.plainDateISO().add({ days: 1 })
       const { getByText } = renderWithOptions(
         <BirthdayExtension.Component
           forceError
@@ -207,7 +208,7 @@ describe('BirthdayExtension', () => {
           forceError
           setValue={setValue}
           isValid={false}
-          value={{ birthday: new PlainDate(2020, 1, 1) }}
+          value={{ birthday: new Temporal.PlainDate(2020, 1, 1) }}
         />,
         { ...mockProvider, projectConfig: nuernbergConfig },
       )
@@ -249,13 +250,15 @@ describe('BirthdayExtension', () => {
       const datePicker = getByPlaceholderText('TT.MM.JJJJ')
 
       fireEvent.change(datePicker, { target: { value: '02.01.2025' } })
-      expect(setValue).toHaveBeenCalledWith({ birthday: { day: 2, isoMonth: 1, isoYear: 2025 } })
+      expect(setValue).toHaveBeenCalledWith({ birthday: new Temporal.PlainDate(2025, 1, 2) })
     })
   })
 
   describe('getProtobufData', () => {
     it('should result in correct days since epoch 1970', () => {
-      expect(BirthdayExtension.getProtobufData({ birthday: new PlainDate(2020, 1, 1) })).toEqual({
+      expect(
+        BirthdayExtension.getProtobufData({ birthday: new Temporal.PlainDate(2020, 1, 1) }),
+      ).toEqual({
         extensionBirthday: { birthday: 18262 },
       })
     })
@@ -270,7 +273,7 @@ describe('BirthdayExtension', () => {
   describe('fromString', () => {
     it('should convert a birthday string to the particular birthday extension state', () => {
       expect(BirthdayExtension.fromString('10.02.1998')).toEqual({
-        birthday: { day: 10, isoMonth: 2, isoYear: 1998 },
+        birthday: Temporal.PlainDate.from('1998-02-10'),
       })
     })
 
@@ -281,7 +284,7 @@ describe('BirthdayExtension', () => {
 
   describe('toString', () => {
     it('should convert a PlainDate to the particular string', () => {
-      expect(BirthdayExtension.toString({ birthday: new PlainDate(1998, 2, 10) })).toBe(
+      expect(BirthdayExtension.toString({ birthday: new Temporal.PlainDate(1998, 2, 10) })).toBe(
         '10.02.1998',
       )
     })
@@ -293,7 +296,7 @@ describe('BirthdayExtension', () => {
 
   describe('serialize', () => {
     it('should serialize a PlainDate to a correct ISO string', () => {
-      expect(BirthdayExtension.serialize({ birthday: new PlainDate(1998, 2, 10) })).toBe(
+      expect(BirthdayExtension.serialize({ birthday: new Temporal.PlainDate(1998, 2, 10) })).toBe(
         '1998-02-10',
       )
     })
@@ -306,7 +309,7 @@ describe('BirthdayExtension', () => {
   describe('fromSerialized', () => {
     it('should deserialize an ISO string to a PlainDate', () => {
       expect(BirthdayExtension.fromSerialized('1998-02-10')).toEqual({
-        birthday: new PlainDate(1998, 2, 10),
+        birthday: Temporal.PlainDate.from('1998-02-10'),
       })
     })
 

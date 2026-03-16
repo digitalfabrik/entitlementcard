@@ -2,12 +2,12 @@ import { uint8ArrayToBase64 } from '../../../cards/base64'
 import { generateCardInfo, initializeCard } from '../../../cards/card'
 import { CreateCardsFromSelfServiceDocument } from '../../../generated/graphql'
 import koblenzConfig from '../../../project-configs/koblenz/config'
-import PlainDate from '../../../util/PlainDate'
+import { safeParseGermanPlainDateString } from '../../../util/date'
 
 export const exampleCard = initializeCard(koblenzConfig.card, undefined, {
   fullName: 'Karla Koblenz',
   extensions: {
-    birthday: PlainDate.safeFromCustomFormat('10.06.2003'),
+    birthday: safeParseGermanPlainDateString('10.06.2003'),
     koblenzReferenceNumber: '123K',
   },
 })

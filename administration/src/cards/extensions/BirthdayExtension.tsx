@@ -1,17 +1,23 @@
 import { FormGroup } from '@mui/material'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Temporal } from 'temporal-polyfill'
 
 import CustomDatePicker from '../../components/CustomDatePicker'
 import FormAlert from '../../components/FormAlert'
 import { ProjectConfigContext } from '../../project-configs/ProjectConfigContext'
-import PlainDate from '../../util/PlainDate'
+import {
+  formatDateDefaultGerman,
+  plainDateToDaysSinceEpoch,
+  safeParseGermanPlainDateString,
+  safeParseIsoPlainDate,
+} from '../../util/date'
 import type { Extension, ExtensionComponentProps } from './extensions'
 
 export const BIRTHDAY_EXTENSION_NAME = 'birthday'
-export type BirthdayExtensionState = { [BIRTHDAY_EXTENSION_NAME]: PlainDate | null }
+export type BirthdayExtensionState = { [BIRTHDAY_EXTENSION_NAME]: Temporal.PlainDate | null }
 
-export const minBirthday = new PlainDate(1900, 1, 1)
+export const minBirthday = new Temporal.PlainDate(1900, 1, 1)
 
 const BirthdayForm = ({
   value,
@@ -29,22 +35,27 @@ const BirthdayForm = ({
     if (!projectConfig.showBirthdayExtensionHint || !birthday) {
       return false
     }
-    const today = PlainDate.fromLocalDate(new Date())
+    const today = Temporal.Now.plainDateISO()
     const underAge = today.subtract({ years: 16 })
-    return birthday.isAfter(underAge) && birthday.isBeforeOrEqual(today)
+    return (
+      Temporal.PlainDate.compare(birthday, underAge) > 0 &&
+      Temporal.PlainDate.compare(birthday, today) <= 0
+    )
   }
 
   const getErrorMessage = (): string | null => {
-    const today = PlainDate.fromLocalDate(new Date())
+    const today = Temporal.Now.plainDateISO()
 
     if (!birthday) {
       return t('birthdayMissingError')
     }
-    if (birthday.isAfter(today)) {
+    if (Temporal.PlainDate.compare(birthday, today) > 0) {
       return t('birthdayFutureError')
     }
-    if (birthday.isBefore(minBirthday)) {
-      return t('birthdayBeforeMinBirthdayError', { minBirthday: minBirthday.format() })
+    if (Temporal.PlainDate.compare(birthday, minBirthday) < 0) {
+      return t('birthdayBeforeMinBirthdayError', {
+        minBirthday,
+      })
     }
     return null
   }
@@ -52,11 +63,11 @@ const BirthdayForm = ({
   return (
     <FormGroup>
       <CustomDatePicker
-        value={birthday?.toLocalDate() ?? null}
+        value={birthday}
         onBlur={() => setInteracted(true)}
         onClose={() => setInteracted(true)}
         onChange={date => {
-          setValue({ birthday: PlainDate.safeFromLocalDate(date) })
+          setValue({ birthday: date })
         }}
         onClear={() => setValue({ birthday: null })}
         error={!isValid && showErrorMessage}
@@ -76,26 +87,34 @@ const BirthdayExtension: Extension<BirthdayExtensionState> = {
   causesInfiniteLifetime: () => false,
   getProtobufData: ({ birthday }: BirthdayExtensionState) => ({
     extensionBirthday: {
-      birthday: birthday?.toDaysSinceEpoch() ?? undefined,
+      birthday: birthday !== null ? plainDateToDaysSinceEpoch(birthday) : undefined,
     },
   }),
   isValid: ({ birthday }: BirthdayExtensionState) => {
     if (!birthday) {
       return false
     }
-    const today = PlainDate.fromLocalDate(new Date())
-    return birthday.isAfterOrEqual(minBirthday) && birthday.isBeforeOrEqual(today)
+    const today = Temporal.Now.plainDateISO()
+    return (
+      Temporal.PlainDate.compare(birthday, minBirthday) >= 0 &&
+      Temporal.PlainDate.compare(birthday, today) <= 0
+    )
   },
   fromString: (value: string) => {
-    const birthday = PlainDate.safeFromCustomFormat(value)
-    return birthday === null ? null : { birthday }
+    const date = safeParseGermanPlainDateString(value)
+    return date !== null
+      ? {
+          [BIRTHDAY_EXTENSION_NAME]: date,
+        }
+      : null
   },
-  toString: ({ birthday }: BirthdayExtensionState) => birthday?.format() ?? '',
+  toString: ({ birthday }: BirthdayExtensionState) =>
+    birthday !== null ? formatDateDefaultGerman(birthday) : '',
   fromSerialized: (value: string) => {
-    const birthday = PlainDate.safeFrom(value)
+    const birthday = safeParseIsoPlainDate(value)
     return birthday === null ? null : { birthday }
   },
-  serialize: ({ birthday }: BirthdayExtensionState) => birthday?.formatISO() ?? '',
+  serialize: ({ birthday }: BirthdayExtensionState) => birthday?.toString() ?? '',
   isMandatory: true,
 }
 

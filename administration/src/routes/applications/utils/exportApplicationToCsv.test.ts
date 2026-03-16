@@ -27,7 +27,7 @@ describe('exportApplicationToCsv', () => {
     exportApplicationToCsv(mockApplicationBlue, bayernConfig)
 
     expect(downloadSpy).toHaveBeenCalled()
-    expect(downloadSpy.mock.calls[0][1]).toBe('Doe_John_21.05.2025, 09:57.csv')
+    expect(downloadSpy.mock.calls[0][1]).toBe('Doe_John_15.05.2024, 09:20.csv')
   })
 
   it('should throw error when CSV export is disabled', () => {
@@ -94,7 +94,7 @@ describe('exportApplicationToCsv', () => {
     expect(TEST_BLOB_CONSTRUCTOR).toHaveBeenCalledWith(
       [
         'Vorname(n),Nachname,E-Mail-Adresse,Geburtsdatum,Telefonnummer,Straße,Adresszusatz,Hausnummer,Postleitzahl,Ort,Antrag auf,Antragsstellung' +
-          'John,Doe,john.doe@gmail.com,04.02.2000,01722222222,Musterstraße,EG links,22,86152,Augsburg,Blaue Ehrenamtskarte,21.05.2025, 09:57',
+          'John,Doe,john.doe@gmail.com,04.02.2000,01722222222,Musterstraße,EG links,22,86152,Augsburg,Blaue Ehrenamtskarte,15.05.2024, 09:20',
       ],
       {
         type: 'text/csv;charset=utf-8;',
@@ -114,7 +114,7 @@ describe('exportApplicationToCsv', () => {
     expect(TEST_BLOB_CONSTRUCTOR).toHaveBeenCalledWith(
       [
         'Vorname(n),Nachname,E-Mail-Adresse,Geburtsdatum,Telefonnummer,Straße,Adresszusatz,Hausnummer,Postleitzahl,Ort,Antrag auf,Antragsstellung' +
-          'John,Doe,john.doe@gmail.com,04.02.2000,01722222222,Musterstraße,EG links,22,86152,Augsburg,Goldene Ehrenamtskarte,21.05.2025, 09:57',
+          'John,Doe,john.doe@gmail.com,04.02.2000,01722222222,Musterstraße,EG links,22,86152,Augsburg,Goldene Ehrenamtskarte,15.05.2024, 09:20',
       ],
       {
         type: 'text/csv;charset=utf-8;',
