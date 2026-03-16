@@ -1,9 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
-
 /* eslint-disable @typescript-eslint/no-use-before-define */
-
 /* eslint-disable prefer-arrow/prefer-arrow-functions */
-
 /* eslint-disable no-else-return */
 import react from '@vitejs/plugin-react'
 import {

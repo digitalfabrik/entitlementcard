@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
 import { TypographyPropsVariantOverrides } from '@mui/material/Typography'
 import {

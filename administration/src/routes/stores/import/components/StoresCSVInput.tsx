@@ -106,8 +106,6 @@ const StoresCsvInput = ({
       }
       const numberOfColumns = lines[0]?.length
 
-      /* This is necessary, can be removed once "noUncheckedIndexedAccess" is enabled in tsconfig  */
-      /* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */
       if (!numberOfColumns) {
         showInputError(t('csvInvalidFileEmpty'))
         return
