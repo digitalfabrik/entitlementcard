@@ -413,42 +413,6 @@ class CardMutationController(
     }
 
     @GraphQLDescription(
-        "Sends a confirmation mail to the user when the card creation was successful",
-    )
-    @MutationMapping
-    fun sendCardCreationConfirmationMail(
-        @Argument regionId: Int,
-        @Argument recipientAddress: String,
-        @Argument recipientName: String,
-        @Argument deepLink: String,
-        dfe: DataFetchingEnvironment,
-    ): Boolean {
-        val authContext = dfe.requireAuthContext()
-        val projectConfig = backendConfiguration.getProjectConfig(authContext.project)
-
-        transaction {
-            val region = authContext.admin.regionId?.value?.let {
-                RegionsRepository.findByIdInProject(authContext.project, it) ?: throw RegionNotFoundException()
-            }
-            if (region != null && !region.activatedForCardConfirmationMail) {
-                throw RegionNotActivatedForCardConfirmationMailException()
-            }
-            if (!authContext.admin.maySendMailsInRegion(regionId)) {
-                throw ForbiddenException()
-            }
-        }
-
-        Mailer.sendCardCreationConfirmationMail(
-            backendConfiguration,
-            projectConfig,
-            deepLink,
-            recipientAddress,
-            recipientName,
-        )
-        return true
-    }
-
-    @GraphQLDescription(
         "Send confirmation mails to users when card creation was successful",
     )
     @MutationMapping
