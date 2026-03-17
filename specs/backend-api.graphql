@@ -215,13 +215,23 @@ type Mutation {
   rejectApplicationStatus(applicationId: Int!, rejectionMessage: String!): ApplicationAdmin!
   "Reset the administrator's password"
   resetPassword(email: String!, newPassword: String!, passwordResetKey: String!, project: String!): Boolean!
-  "Send application and card information to Freinet"
+  """
+  Send application and card information to Freinet.
+      Returns:
+      - true: Data was successfully sent to Freinet.
+      - false: Data transfer is not activated for the user's region.
+  """
   sendApplicationAndCardDataToFreinet(applicationId: Int!, freinetCard: FreinetCardInput!): Boolean!
   "Send approval mail to organisation"
   sendApprovalMailToOrganisation(applicationId: Int!, applicationVerificationId: Int!): Boolean!
   "Sends a confirmation mail to the user when the card creation was successful"
   sendCardCreationConfirmationMail(deepLink: String!, recipientAddress: String!, recipientName: String!, regionId: Int!): Boolean!
-  "Send card information to Freinet"
+  """
+  Send card information to Freinet.
+      Returns:
+      - true: Card data was successfully sent to Freinet.
+      - false: Data transfer is not activated for the user's region.
+  """
   sendCardDataToFreinet(freinetCard: FreinetCardInput!, userId: Int!): Boolean!
   "Sends a mail that allows the administrator to reset their password."
   sendResetMail(email: String!, project: String!): Boolean!

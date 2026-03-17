@@ -34,7 +34,12 @@ class FreinetApplicationMutationController(
 ) {
     private val logger = LoggerFactory.getLogger(FreinetApplicationMutationController::class.java)
 
-    @GraphQLDescription("Send application and card information to Freinet")
+    @GraphQLDescription(
+        """Send application and card information to Freinet.
+    Returns:
+    - true: Data was successfully sent to Freinet.
+    - false: Data transfer is not activated for the user's region.""",
+    )
     @MutationMapping
     fun sendApplicationAndCardDataToFreinet(
         @Argument applicationId: Int,
@@ -117,7 +122,12 @@ class FreinetApplicationMutationController(
         }
     }
 
-    @GraphQLDescription("Send card information to Freinet")
+    @GraphQLDescription(
+        """Send card information to Freinet.
+    Returns:
+    - true: Card data was successfully sent to Freinet.
+    - false: Data transfer is not activated for the user's region.""",
+    )
     @MutationMapping
     fun sendCardDataToFreinet(
         @Argument userId: Int,
