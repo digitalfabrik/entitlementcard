@@ -1,3 +1,4 @@
+import { ApolloError } from '@apollo/client'
 import { useSnackbar } from 'notistack'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -16,18 +17,13 @@ type SendCardConfirmationMail = (codes: CreateCardsResult[], cards: Card[]) => P
 const useSendCardConfirmationMails = (): SendCardConfirmationMail => {
   const { t } = useTranslation('cards')
   const { enqueueSnackbar } = useSnackbar()
-  const [sendMail] = useSendCardCreationConfirmationMailMutation({
-    onCompleted: () => {
-      enqueueSnackbar(t('cards:cardCreationConfirmationMessage'), { variant: 'success' })
-    },
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
-      enqueueSnackbar(title, { variant: 'error', persist: true })
-    },
-  })
+  const [sendMail] = useSendCardCreationConfirmationMailMutation()
 
   return useCallback(
     async (codes: CreateCardsResult[], cards: Card[]): Promise<void> => {
+      let successCount = 0
+      const errors: ApolloError[] = []
+
       await Promise.all(
         codes.map(async (code, index) => {
           const card = cards[index]
@@ -41,18 +37,41 @@ const useSendCardConfirmationMails = (): SendCardConfirmationMail => {
             getBuildConfig(window.location.hostname),
             isProductionEnvironment(),
           )
-          await sendMail({
-            variables: {
-              regionId,
-              recipientAddress: mailNotificationExtensionState,
-              recipientName: card.fullName,
-              deepLink,
-            },
-          })
+          try {
+            await sendMail({
+              variables: {
+                regionId,
+                recipientAddress: mailNotificationExtensionState,
+                recipientName: card.fullName,
+                deepLink,
+              },
+            })
+            successCount++
+          } catch (error) {
+            errors.push(error as ApolloError)
+          }
         }),
       )
+
+      if (successCount === 1) {
+        enqueueSnackbar(t('cards:cardCreationConfirmationMessage'), { variant: 'success' })
+      } else if (successCount > 1) {
+        enqueueSnackbar(t('cards:cardCreationConfirmationMessageMultiple', { count: successCount }), {
+          variant: 'success',
+        })
+      }
+
+      if (errors.length === 1) {
+        const { title } = getMessageFromApolloError(errors[0])
+        enqueueSnackbar(title, { variant: 'error', persist: true })
+      } else if (errors.length > 1) {
+        enqueueSnackbar(t('cards:cardCreationConfirmationErrorMultiple', { count: errors.length }), {
+          variant: 'error',
+          persist: true,
+        })
+      }
     },
-    [sendMail],
+    [sendMail, enqueueSnackbar, t],
   )
 }
 

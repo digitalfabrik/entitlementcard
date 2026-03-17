@@ -326,7 +326,9 @@
     "validationError": "Validierungsfehler",
     "cardCreationConfirmationMessage": "Bestätigungsmail wurde versendet.",
     "freinetDataSyncSuccessMessage": "Antrags- und Kartendaten wurden erfolgreich an Freinet gesendet.",
-    "freinetCardDataTransferSuccessMessage": "Kartendaten wurden erfolgreich an Freinet gesendet."
+    "freinetCardDataTransferSuccessMessage": "Kartendaten wurden erfolgreich an Freinet gesendet.",
+    "cardCreationConfirmationMessageMultiple": "Es wurden {{count}} Bestätigungsmails versendet.",
+    "cardCreationConfirmationErrorMultiple": "Es gab {{count}} Fehler beim Versenden der Bestätigungsmails."
   },
   "misc": {
     "openAppStore": "App Store öffnen",
