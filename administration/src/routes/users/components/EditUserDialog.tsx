@@ -119,7 +119,6 @@ const EditUserDialog = ({
     >
       <Stack sx={{ paddingY: 1, gap: 2 }}>
         <CardTextField
-          id='edit-user-name-input'
           label={t('createUserEmailLabel')}
           placeholder='erika.musterfrau@example.org'
           value={email}
