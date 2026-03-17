@@ -13,6 +13,7 @@ import {
 import BavariaCardTypeExtension from './BavariaCardTypeExtension'
 import BirthdayExtension from './BirthdayExtension'
 import EMailNotificationExtension from './EMailNotificationExtension'
+import FreinetUserIdExtension from './FreinetUserIdExtension'
 import KoblenzReferenceNumberExtension from './KoblenzReferenceNumberExtension'
 import NuernbergPassIdExtension from './NuernbergPassIdExtension'
 import RegionExtension from './RegionExtension'
@@ -55,6 +56,7 @@ const Extensions = [
   NuernbergPassIdExtension,
   EMailNotificationExtension,
   KoblenzReferenceNumberExtension,
+  FreinetUserIdExtension,
 ] as const
 
 export type PossibleExtensionTypes = (typeof Extensions)[number]

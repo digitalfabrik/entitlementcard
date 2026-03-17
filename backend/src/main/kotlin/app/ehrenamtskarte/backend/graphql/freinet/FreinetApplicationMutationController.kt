@@ -34,7 +34,12 @@ class FreinetApplicationMutationController(
 ) {
     private val logger = LoggerFactory.getLogger(FreinetApplicationMutationController::class.java)
 
-    @GraphQLDescription("Send application and card information to Freinet")
+    @GraphQLDescription(
+        """Send application and card information to Freinet.
+    Returns:
+    - true: Data was successfully sent to Freinet.
+    - false: Data transfer is not activated for the user's region.""",
+    )
     @MutationMapping
     fun sendApplicationAndCardDataToFreinet(
         @Argument applicationId: Int,
@@ -115,5 +120,40 @@ class FreinetApplicationMutationController(
 
             return@transaction true
         }
+    }
+
+    @GraphQLDescription(
+        """Send card information to Freinet.
+    Returns:
+    - true: Card data was successfully sent to Freinet.
+    - false: Data transfer is not activated for the user's region.""",
+    )
+    @MutationMapping
+    fun sendCardDataToFreinet(
+        @Argument userId: Int,
+        @Argument freinetCard: FreinetCard,
+        dfe: DataFetchingEnvironment,
+    ): Boolean {
+        val authContext = dfe.requireAuthContext()
+        val projectConfig = backendConfiguration.getProjectConfig(authContext.project)
+
+        if (projectConfig.freinet == null) {
+            throw NotImplementedException("Freinet is not configured in this project")
+        }
+
+        val regionId = authContext.admin.regionId?.value
+            ?.takeIf { authContext.admin.mayViewApplicationsInRegion(it) }
+            ?: throw ForbiddenException()
+
+        val freinetAgency = transaction {
+            FreinetAgencyRepository.getFreinetAgencyByRegionId(regionId)
+                // Freinet is enabled for this region if dataTransferActivated is true
+                ?.takeIf { it.dataTransferActivated }
+        } ?: return false
+
+        FreinetApi(freinetHttpClient, projectConfig.freinet.host, freinetAgency.apiAccessKey, freinetAgency.agencyId)
+            .sendCardInformation(userId, freinetCard)
+
+        return true
     }
 }

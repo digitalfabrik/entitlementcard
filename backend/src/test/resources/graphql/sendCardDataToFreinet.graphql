@@ -1,0 +1,3 @@
+mutation sendCardDataToFreinet($freinetCard: FreinetCardInput!, $userId: Int!) {
+  sendCardDataToFreinet(freinetCard: $freinetCard, userId: $userId)
+}

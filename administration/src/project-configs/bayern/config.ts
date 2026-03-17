@@ -4,6 +4,7 @@ import { Temporal } from 'temporal-polyfill'
 
 import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
 import EMailNotificationExtension from '../../cards/extensions/EMailNotificationExtension'
+import FreinetUserIdExtension from '../../cards/extensions/FreinetUserIdExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
 import { JsonField, findValue } from '../../components/JsonFieldView'
 import {
@@ -86,8 +87,13 @@ export const config: ProjectConfig = {
     defaultValidity: Temporal.Duration.from({ years: 3 }),
     nameColumnName: 'Name',
     expiryColumnName: 'Ablaufdatum',
-    extensionColumnNames: ['Kartentyp', null, 'MailNotification'],
-    extensions: [BavariaCardTypeExtension, RegionExtension, EMailNotificationExtension],
+    extensionColumnNames: ['Kartentyp', null, 'MailNotification', 'UserId'],
+    extensions: [
+      BavariaCardTypeExtension,
+      RegionExtension,
+      EMailNotificationExtension,
+      FreinetUserIdExtension,
+    ],
   },
   dataPrivacyHeadline:
     'Datenschutzerklärung für die Nutzung und Beantragung der digitalen bayerischen Ehrenamtskarte',
