@@ -4,6 +4,7 @@ import Card
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
 import app.ehrenamtskarte.backend.db.entities.CodeType
+import app.ehrenamtskarte.backend.db.entities.RegionEntity
 import app.ehrenamtskarte.backend.db.entities.TOTP_SECRET_LENGTH
 import app.ehrenamtskarte.backend.db.entities.mayCreateCardInRegion
 import app.ehrenamtskarte.backend.db.entities.mayDeleteCardInRegion
@@ -13,7 +14,9 @@ import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.db.repositories.UserEntitlementsRepository
 import app.ehrenamtskarte.backend.graphql.auth.requireAuthContext
 import app.ehrenamtskarte.backend.graphql.cards.types.ActivationState
+import app.ehrenamtskarte.backend.graphql.cards.types.CardCreationConfirmationMailResult
 import app.ehrenamtskarte.backend.graphql.cards.types.CardActivationResultModel
+import app.ehrenamtskarte.backend.graphql.cards.types.CardCreationConfirmationMailInput
 import app.ehrenamtskarte.backend.graphql.cards.types.CardCreationResultModel
 import app.ehrenamtskarte.backend.graphql.cards.types.DynamicActivationCodeResult
 import app.ehrenamtskarte.backend.graphql.cards.types.StaticVerificationCodeResult
@@ -25,6 +28,7 @@ import app.ehrenamtskarte.backend.graphql.cards.utils.hash
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidCardHashException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidQrCodeSize
+import app.ehrenamtskarte.backend.graphql.exceptions.MailNotSentException
 import app.ehrenamtskarte.backend.graphql.exceptions.NotImplementedException
 import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotActivatedForCardConfirmationMailException
 import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotFoundException
@@ -420,6 +424,7 @@ class CardMutationController(
         dfe: DataFetchingEnvironment,
     ): Boolean {
         val authContext = dfe.requireAuthContext()
+        val projectConfig = backendConfiguration.getProjectConfig(authContext.project)
 
         transaction {
             val region = authContext.admin.regionId?.value?.let {
@@ -431,16 +436,59 @@ class CardMutationController(
             if (!authContext.admin.maySendMailsInRegion(regionId)) {
                 throw ForbiddenException()
             }
-            val projectConfig = backendConfiguration.getProjectConfig(authContext.project)
-            Mailer.sendCardCreationConfirmationMail(
-                backendConfiguration,
-                projectConfig,
-                deepLink,
-                recipientAddress,
-                recipientName,
-            )
         }
+
+        Mailer.sendCardCreationConfirmationMail(
+            backendConfiguration,
+            projectConfig,
+            deepLink,
+            recipientAddress,
+            recipientName,
+        )
         return true
+    }
+
+    @GraphQLDescription(
+        "Send confirmation mails to users when card creation was successful",
+    )
+    @MutationMapping
+    fun sendCardCreationConfirmationMails(
+        @Argument regionId: Int,
+        @Argument inputs: List<CardCreationConfirmationMailInput>,
+        dfe: DataFetchingEnvironment,
+    ): CardCreationConfirmationMailResult {
+        val authContext = dfe.requireAuthContext()
+        val projectConfig = backendConfiguration.getProjectConfig(authContext.project)
+
+        if (!authContext.admin.maySendMailsInRegion(regionId)) {
+            throw ForbiddenException()
+        }
+
+        transaction {
+            val region = RegionEntity.findById(regionId) ?: throw RegionNotFoundException()
+            if (!region.activatedForCardConfirmationMail) {
+                throw RegionNotActivatedForCardConfirmationMailException()
+            }
+        }
+
+        val failedRecipients = inputs.mapNotNull { input ->
+            try {
+                Mailer.sendCardCreationConfirmationMail(
+                    backendConfiguration,
+                    projectConfig,
+                    input.deepLink,
+                    input.recipientAddress,
+                    input.recipientName
+                )
+                null
+            } catch (_: MailNotSentException) {
+                input.recipientAddress
+            }
+        }
+
+        val successCount = inputs.size - failedRecipients.size
+
+        return CardCreationConfirmationMailResult(successCount, failedRecipients)
     }
 }
 
