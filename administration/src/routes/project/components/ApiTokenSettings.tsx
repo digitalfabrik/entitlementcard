@@ -15,7 +15,7 @@ import {
   Typography,
 } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Temporal } from 'temporal-polyfill'
 
@@ -105,17 +105,7 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
   const { t } = useTranslation('projectSettings')
   const metaDataQuery = useGetApiTokenMetaDataQuery({})
   const { enqueueSnackbar } = useSnackbar()
-  const [tokenMetaData, setTokenMetadata] = useState<Array<ApiTokenMetaData>>([])
   const [tokenToDelete, setTokenToDelete] = useState<number | null>(null)
-
-  useEffect(() => {
-    const metaDataQueryResult = getQueryResult(metaDataQuery)
-    if (metaDataQueryResult.successful) {
-      const { tokenMetaData } = metaDataQueryResult.data
-      setTokenMetadata(tokenMetaData)
-    }
-  }, [metaDataQuery, t])
-
   const [deleteToken] = useDeleteApiTokenMutation({
     onCompleted: () => {
       enqueueSnackbar(t('tokenDeleteSuccessMessage'), { variant: 'success' })
@@ -126,6 +116,12 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
       enqueueSnackbar(title, { variant: 'error' })
     },
   })
+
+  const metaDataQueryResult = getQueryResult(metaDataQuery)
+  if (!metaDataQueryResult.successful) {
+    return metaDataQueryResult.component
+  }
+  const tokenMetaData: ApiTokenMetaData[] = metaDataQueryResult.data.tokenMetaData
 
   return (
     <>
