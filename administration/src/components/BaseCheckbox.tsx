@@ -27,10 +27,8 @@ const BaseCheckbox = ({
   <FormGroup>
     <FormControl required={required} error={hasError} disabled={disabled}>
       <FormControlLabel
-        sx={{ marginTop: 0.5, marginX: 0 }}
         control={
           <Checkbox
-            sx={{ pl: 0 }}
             required={required}
             checked={checked}
             onBlur={onBlur}
