@@ -16,16 +16,18 @@ import RegionSelector from './RegionSelector'
 import RoleSelector from './RoleSelector'
 
 const EditUserDialog = ({
-  selectedUser,
   onClose,
   onSuccess,
+  selectedUser,
   regionIdOverride,
 }: {
   onClose: () => void
-  selectedUser: Administrator | null
   onSuccess: () => void
-  // If regionIdOverride is set, the region selector will be hidden, and only RegionAdministrator and RegionManager
-  // roles are selectable.
+  selectedUser: Administrator | null
+  /**
+   * If regionIdOverride is set, the region selector will be hidden, and only RegionAdministrator
+   * and RegionManager roles are selectable.
+   */
   regionIdOverride: number | null
 }): ReactElement => {
   const { enqueueSnackbar } = useSnackbar()
@@ -54,25 +56,22 @@ const EditUserDialog = ({
   })
 
   const onEditUser = () => {
-    if (selectedUser === null) {
-      console.error('Form submitted in an unexpected state.')
-      return
+    if (selectedUser != null) {
+      editAdministrator({
+        variables: {
+          adminId: selectedUser.id,
+          newEmail: email,
+          newRole: role as Role,
+          newRegionId:
+            // eslint-disable-next-line no-nested-ternary
+            regionIdOverride !== null
+              ? regionIdOverride
+              : role !== null && rolesWithRegion.includes(role)
+                ? regionId
+                : null,
+        },
+      })
     }
-
-    editAdministrator({
-      variables: {
-        adminId: selectedUser.id,
-        newEmail: email,
-        newRole: role as Role,
-        newRegionId:
-          // eslint-disable-next-line no-nested-ternary
-          regionIdOverride !== null
-            ? regionIdOverride
-            : role !== null && rolesWithRegion.includes(role)
-              ? regionId
-              : null,
-      },
-    })
   }
 
   const showRegionSelector =
