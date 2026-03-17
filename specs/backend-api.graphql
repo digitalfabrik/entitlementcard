@@ -230,7 +230,7 @@ type Mutation {
   "Send approval mail to organisation"
   sendApprovalMailToOrganisation(applicationId: Int!, applicationVerificationId: Int!): Boolean!
   "Send confirmation mails to users when card creation was successful"
-  sendCardCreationConfirmationMails(inputs: [CardCreationConfirmationMailInput!]!, regionId: Int!): CardCreationConfirmationMailResult!
+  sendCardCreationConfirmationMails(notifications: [CardCreationConfirmationMailInput!]!, regionId: Int!): CardCreationConfirmationMailResult!
   """
   Send card information to Freinet.
       Returns:

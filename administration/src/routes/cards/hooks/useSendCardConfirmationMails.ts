@@ -49,27 +49,30 @@ const useSendCardConfirmationMails = (region: Region): SendCardConfirmationMail 
         return
       }
 
-      const result = await sendMails({ variables: { regionId: region.id, inputs: notificationData } })
+      const result = await sendMails({
+        variables: { regionId: region.id, notifications: notificationData },
+      })
       const successCount = result.data?.sendCardCreationConfirmationMails.successCount ?? 0
       const failedRecipients = result.data?.sendCardCreationConfirmationMails.failedRecipients ?? []
 
       if (notificationData.length === 1 && successCount === 1) {
-        enqueueSnackbar(t('cards:cardCreationConfirmationMessage', { count: successCount }), {
+        enqueueSnackbar(t('cards:cardCreationConfirmationMessage'), {
           variant: 'success',
         })
       } else if (successCount > 0) {
-        enqueueSnackbar(t('cards:multipleCardCreationConfirmationMessage', { count: successCount }), {
-          variant: 'success',
-        })
+        enqueueSnackbar(
+          t('cards:multipleCardCreationConfirmationMessage', { count: successCount }),
+          {
+            variant: 'success',
+          },
+        )
       }
 
       if (notificationData.length === 1 && failedRecipients.length === 1) {
-        enqueueSnackbar(
-          t('cards:cardCreationConfirmationFailureMessage', {
-            recipients: failedRecipients.join(', '),
-          }),
-          { variant: 'error', persist: true },
-        )
+        enqueueSnackbar(t('cards:cardCreationConfirmationFailureMessage'), {
+          variant: 'error',
+          persist: true,
+        })
       } else if (failedRecipients.length > 0) {
         enqueueSnackbar(
           t('cards:multipleCardCreationConfirmationFailureMessage', {
