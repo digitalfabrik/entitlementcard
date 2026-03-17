@@ -324,11 +324,12 @@
     "importFileTooBig": "Die ausgewählte Datei ist zu groß.",
     "printQRCodes": "QR-Codes drucken",
     "validationError": "Validierungsfehler",
-    "cardCreationConfirmationMessage": "Bestätigungsmail wurde versendet.",
+    "cardCreationConfirmationMessage": "Bestätigungsmail wurde versendet",
+    "multipleCardCreationConfirmationMessage": "{{count}} Bestätigungsmails wurden gesendet",
+    "cardCreationConfirmationFailureMessage": "Bestätigungsmail konnte nicht zugestellt werden",
+    "multipleCardCreationConfirmationFailureMessage": "Bestätigungsmails konnten an folgende Adressen nicht zugestellt werden: [{{recipients}}]",
     "freinetDataSyncSuccessMessage": "Antrags- und Kartendaten wurden erfolgreich an Freinet gesendet.",
-    "freinetCardDataTransferSuccessMessage": "Kartendaten wurden erfolgreich an Freinet gesendet.",
-    "cardCreationConfirmationMessageMultiple": "Es wurden {{count}} Bestätigungsmails versendet.",
-    "cardCreationConfirmationErrorMultiple": "Es gab {{count}} Fehler beim Versenden der Bestätigungsmails."
+    "freinetCardDataTransferSuccessMessage": "Kartendaten wurden erfolgreich an Freinet gesendet."
   },
   "misc": {
     "openAppStore": "App Store öffnen",
