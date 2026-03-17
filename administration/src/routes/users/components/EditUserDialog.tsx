@@ -1,5 +1,5 @@
 import { Edit } from '@mui/icons-material'
-import { Link, Stack, Typography } from '@mui/material'
+import { Link, Stack } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -151,7 +151,7 @@ const EditUserDialog = ({
             severity='error'
             title={t('youEditYourOwnAccount')}
             description={
-              <Typography component='div'>
+              <>
                 {t('youMayCannotUndoThis')}
                 <BaseCheckbox
                   label={t('ownAccountWarningConfirmation')}
@@ -161,7 +161,7 @@ const EditUserDialog = ({
                   hasError={false}
                   errorMessage={undefined}
                 />
-              </Typography>
+              </>
             }
           />
         ) : null}
