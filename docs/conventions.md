@@ -82,8 +82,8 @@ The version code has to be incremented for every new release uploaded to the sto
 
 Here you find our current list of [labels](https://github.com/digitalfabrik/entitlementcard/labels).
 
-- Please ensure that you set labels according to the affected environments: `backend`, `frontend`, `web`. 
-- If your pull request should not be listed in the changelog (f.e. for release pull requests), add `exclude-changelog`.
-- Since we have a testing team, also mark pull requests that are not testable for "end-users" with `not-testable`, so they will be listed separately in our release notes. 
+- `backend`, `web`, `native`: Please ensure that you set labels according to the affected environments.
+- `exclude-changelog`: If your pull request should not be listed in the changelog (f.e. for release pull requests).
+- `maintenance`: Only add this label if the PR does NOT include user facing changes, so they will be listed separately in our release notes. Common topics are dependency upgrades, tests, linting, CI, dev improvements.
 - If your pull request is testable, ensure that there is a proper description in your pull request.
 

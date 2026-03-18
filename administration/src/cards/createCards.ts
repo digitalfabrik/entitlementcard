@@ -1,4 +1,12 @@
-import { DynamicActivationCode, StaticVerificationCode } from '../generated/card_pb'
+import { fromBinary, toBinary } from '@bufbuild/protobuf'
+
+import {
+  CardInfoSchema,
+  type DynamicActivationCode,
+  DynamicActivationCodeSchema,
+  type StaticVerificationCode,
+  StaticVerificationCodeSchema,
+} from '../generated/card_pb'
 import {
   CreateCardsFromSelfServiceMutationFn,
   CreateCardsMutation,
@@ -26,11 +34,15 @@ export type CreateCardsResult = {
 }
 
 const mapCardCreationResult = (card: RawCreateCardsResult): CreateCardsResult => {
-  const dynamicActivationCode = DynamicActivationCode.fromBinary(
+  const dynamicActivationCode = fromBinary(
+    DynamicActivationCodeSchema,
     base64ToUint8Array(card.dynamicActivationCode.codeBase64),
   )
   const staticVerificationCode = card.staticVerificationCode
-    ? StaticVerificationCode.fromBinary(base64ToUint8Array(card.staticVerificationCode.codeBase64))
+    ? fromBinary(
+        StaticVerificationCodeSchema,
+        base64ToUint8Array(card.staticVerificationCode.codeBase64),
+      )
     : undefined
   return {
     dynamicActivationCode,
@@ -45,7 +57,7 @@ export const createSelfServiceCard = async (
   projectConfig: ProjectConfig,
   selfServiceCard: Card,
 ): Promise<CreateCardsResult> => {
-  const cardInfo = uint8ArrayToBase64(generateCardInfo(selfServiceCard).toBinary())
+  const cardInfo = uint8ArrayToBase64(toBinary(CardInfoSchema, generateCardInfo(selfServiceCard)))
   const result = await createCardsSelfService({
     variables: {
       project: projectConfig.projectId,
@@ -54,6 +66,7 @@ export const createSelfServiceCard = async (
     },
   })
   const data = mapGraphqlRequestResult(result, message => new CreateCardsError(message))
+
   return mapCardCreationResult(data.card)
 }
 
@@ -66,7 +79,7 @@ const createCards = async (
   const { staticQrCodesEnabled: generateStaticCodes } = projectConfig
   const encodedCardInfos = cards
     .map(generateCardInfo)
-    .map(cardInfo => uint8ArrayToBase64(cardInfo.toBinary()))
+    .map(cardInfo => uint8ArrayToBase64(toBinary(CardInfoSchema, cardInfo)))
   const result = await createCardsMutation({
     variables: { encodedCardInfos, generateStaticCodes, applicationIdToMarkAsProcessed },
   })

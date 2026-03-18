@@ -11,7 +11,7 @@ import {
   Stepper,
 } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import React, { ReactElement, ReactNode, useCallback, useEffect, useState } from 'react'
+import React, { ReactElement, ReactNode, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import i18next from '../../../../translations/i18n'
@@ -48,7 +48,6 @@ const SubForm = ({
   const { t } = useTranslation('applicationForms')
   const [formContext, setFormContxt] = useState<FormContextType>(initialFormContext)
   const { enqueueSnackbar } = useSnackbar()
-  useEffect(() => setFormContxt(state => ({ ...state, disableAllInputs: loading })), [loading])
 
   const handleOnSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
@@ -71,10 +70,7 @@ const SubForm = ({
         <Divider sx={{ margin: '16px' }} />
         <Stack direction='row' sx={{ gap: 2 }}>
           {index === 0 ? null : (
-            <Button
-              onClick={() => setActiveStep(() => index - 1)}
-              disabled={formContext.disableAllInputs}
-            >
+            <Button onClick={() => setActiveStep(() => index - 1)} disabled={loading}>
               {t('backButton')}
             </Button>
           )}

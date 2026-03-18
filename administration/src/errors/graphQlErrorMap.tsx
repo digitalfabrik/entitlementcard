@@ -1,7 +1,8 @@
+import { fromBinary } from '@bufbuild/protobuf'
 import React, { ReactElement } from 'react'
 
 import { base64ToUint8Array } from '../cards/base64'
-import { CardInfo } from '../generated/card_pb'
+import { CardInfoSchema } from '../generated/card_pb'
 import { CodeType, GraphQlExceptionCode } from '../generated/graphql'
 import i18next from '../translations/i18n'
 import InvalidLink from './templates/InvalidLink'
@@ -91,7 +92,10 @@ const graphQlErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
         description: <InvalidPasswordResetLink />,
       }
     case GraphQlExceptionCode.InvalidQrCodeSize: {
-      const cardInfo = CardInfo.fromBinary(base64ToUint8Array(extensions.encodedCardInfoBase64!))
+      const cardInfo = fromBinary(
+        CardInfoSchema,
+        base64ToUint8Array(extensions.encodedCardInfoBase64!),
+      )
       const codeTypeText =
         extensions.codeType === CodeType.Dynamic
           ? i18next.t('errors:invalidQrCodeSize:dynamicType')

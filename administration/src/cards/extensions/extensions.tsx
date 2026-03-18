@@ -1,4 +1,3 @@
-import { PartialMessage } from '@bufbuild/protobuf'
 import { ReactElement } from 'react'
 
 import { CardExtensions } from '../../generated/card_pb'
@@ -36,7 +35,7 @@ export type Extension<T = Record<string, unknown>> = {
   isValid(state: T | undefined | null): boolean
   Component(props: ExtensionComponentProps<T>): ReactElement | null
   causesInfiniteLifetime(state: T): boolean
-  getProtobufData(state: T): PartialMessage<CardExtensions>
+  getProtobufData(state: T): CardExtensions | object
   fromString(value: string): T | null
   toString(state: T): string
   fromSerialized(value: string): T | null

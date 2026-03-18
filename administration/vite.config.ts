@@ -1,9 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
-
 /* eslint-disable @typescript-eslint/no-use-before-define */
-
 /* eslint-disable prefer-arrow/prefer-arrow-functions */
-
 /* eslint-disable no-else-return */
 import react from '@vitejs/plugin-react'
 import {
@@ -18,7 +15,6 @@ import { env } from 'node:process'
 import { promisify } from 'node:util'
 import { UserConfig, defineConfig } from 'vite'
 import generateFile, { GenerateFile } from 'vite-plugin-generate-file'
-import tsconfigPaths from 'vite-tsconfig-paths'
 
 import versionJson from '../version.json'
 
@@ -32,7 +28,6 @@ export default defineConfig(
       appType: 'spa',
       plugins: [
         react(),
-        tsconfigPaths(),
         generateFile(
           buildFilesFromConfigs([
             buildConfigBayern.common.deepLinking,
@@ -41,6 +36,9 @@ export default defineConfig(
           ]),
         ),
       ],
+      resolve: {
+        tsconfigPaths: true,
+      },
       build: {
         outDir: 'build',
         assetsInlineLimit: 10000,

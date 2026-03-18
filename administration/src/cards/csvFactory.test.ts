@@ -1,4 +1,6 @@
-import { DynamicActivationCode } from '../generated/card_pb'
+import { create } from '@bufbuild/protobuf'
+
+import { DynamicActivationCodeSchema } from '../generated/card_pb'
 import { config as bayernConfig } from '../project-configs/bayern/config'
 import { config as nuernbergConfig } from '../project-configs/nuernberg/config'
 import { CSV_MIME_TYPE_UTF8 } from '../routes/applications/constants'
@@ -48,7 +50,9 @@ describe('CsvFactory', () => {
     const codes: CreateCardsResult[] = [
       {
         dynamicCardInfoHashBase64: 'rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=',
-        dynamicActivationCode: new DynamicActivationCode({ info: generateCardInfo(cards[0]) }),
+        dynamicActivationCode: create(DynamicActivationCodeSchema, {
+          info: generateCardInfo(cards[0]),
+        }),
       },
     ]
 

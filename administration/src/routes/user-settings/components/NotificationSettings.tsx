@@ -31,19 +31,13 @@ const NotificationSettings = (): ReactElement => {
   const notificationSettingsQuery = useGetNotificationSettingsQuery()
 
   useEffect(() => {
-    const notificationQueryResult = getQueryResult(notificationSettingsQuery)
-    if (notificationQueryResult.successful) {
-      const { notificationOnApplication, notificationOnVerification } =
-        notificationQueryResult.data.notificationSettings
-      setReceiveEmailForActivation(notificationOnApplication)
-      setReceiveEmailForVerification(notificationOnVerification)
+    const result = getQueryResult(notificationSettingsQuery)
+    if (result.successful) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setReceiveEmailForActivation(result.data.notificationSettings.notificationOnApplication)
+      setReceiveEmailForVerification(result.data.notificationSettings.notificationOnVerification)
     }
   }, [notificationSettingsQuery, t])
-
-  const notificationQueryResult = getQueryResult(notificationSettingsQuery)
-  if (!notificationQueryResult.successful) {
-    return notificationQueryResult.component
-  }
 
   const submit = () => {
     updateNotificationSettings({
@@ -56,7 +50,11 @@ const NotificationSettings = (): ReactElement => {
     })
   }
 
-  return (
+  const notificationQueryResult = getQueryResult(notificationSettingsQuery)
+
+  return !notificationQueryResult.successful ? (
+    notificationQueryResult.component
+  ) : (
     <SettingsCard title={t('notifications')}>
       <Typography component='p'>{t('notificationsExplanation')}</Typography>
       <form

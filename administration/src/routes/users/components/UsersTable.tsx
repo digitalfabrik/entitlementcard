@@ -110,6 +110,7 @@ const UsersTable = ({
         />
       </div>
       <EditUserDialog
+        key={userInEditDialog?.id}
         selectedUser={userInEditDialog}
         onClose={() => setUserInEditDialog(null)}
         onSuccess={refetch}
