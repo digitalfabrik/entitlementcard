@@ -1,7 +1,5 @@
 /* eslint-disable no-else-return */
-
 /* eslint-disable prefer-arrow/prefer-arrow-functions */
-
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'

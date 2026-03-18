@@ -1,11 +1,7 @@
 /* eslint-disable prefer-arrow/prefer-arrow-functions */
-
 /* eslint-disable @typescript-eslint/no-use-before-define */
-
 /* eslint-disable no-else-return */
-
 /* eslint-disable no-restricted-syntax */
-
 /* eslint-disable no-await-in-loop */
 import {
   CustomFontEmbedder,

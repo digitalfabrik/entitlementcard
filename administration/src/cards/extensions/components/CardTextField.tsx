@@ -4,7 +4,7 @@ import React, { ReactElement, useState } from 'react'
 import FormAlert from '../../../components/FormAlert'
 
 type CardTextFieldProps = {
-  id: string
+  id?: string
   label: string | ReactElement
   placeholder: string
   autoFocus?: boolean

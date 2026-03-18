@@ -1,6 +1,7 @@
+import { toJson } from '@bufbuild/protobuf'
 import { Temporal } from 'temporal-polyfill'
 
-import { BavariaCardType } from '../generated/card_pb'
+import { BavariaCardType, CardInfoSchema } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
 import { config as bayernConfig } from '../project-configs/bayern/config'
 import { config as koblenzConfig } from '../project-configs/koblenz/config'
@@ -55,7 +56,7 @@ describe('Card', () => {
       fullName: '',
       expirationDate: Temporal.PlainDate.from('1900-01-01'),
     })
-    expect(generateCardInfo(card).toJson({ enumAsInteger: true })).toEqual({
+    expect(toJson(CardInfoSchema, generateCardInfo(card), { enumAsInteger: true })).toEqual({
       fullName: '',
       expirationDay: 0,
       extensions: {
@@ -335,7 +336,7 @@ describe('Card', () => {
 
     it('should generate CardInfo', () => {
       const card = initializeCard(cardConfig, undefined, { fullName: 'Karla Koblenz' })
-      expect(generateCardInfo(card).toJson()).toEqual({
+      expect(toJson(CardInfoSchema, generateCardInfo(card))).toEqual({
         fullName: 'Karla Koblenz',
         expirationDay: expirationDate.since('1970-01-01', { largestUnit: 'days' }).days,
         extensions: {

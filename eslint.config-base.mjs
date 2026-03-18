@@ -9,14 +9,14 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import { createRequire } from 'module'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { parser, plugin } from 'typescript-eslint'
+import tseslint from 'typescript-eslint'
 
 const require = createRequire(import.meta.url)
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const compat = new FlatCompat({
-  baseDirectory: __dirname
+  baseDirectory: __dirname,
 })
 
 export default [
@@ -28,39 +28,39 @@ export default [
     'plugin:react-hooks/recommended',
     'prettier',
     'plugin:jest/recommended',
-    'plugin:jest/style'
+    'plugin:jest/style',
   ),
   {
     plugins: {
-      '@typescript-eslint': plugin,
+      '@typescript-eslint': tseslint.plugin,
       jest: jest,
       'jsx-a11y': jsxA11Y,
       'jsx-expressions': fixupPluginRules(jsxExpressions),
       'prefer-arrow': preferArrow,
       react: react,
-      'react-hooks': reactHooks
+      'react-hooks': reactHooks,
     },
 
     linterOptions: {
-      reportUnusedDisableDirectives: true
+      reportUnusedDisableDirectives: true,
     },
 
     languageOptions: {
-      parser: parser,
+      parser: tseslint.parser,
       ecmaVersion: 5,
       sourceType: 'script',
 
       parserOptions: {
-        project: true
-      }
+        project: true,
+      },
     },
 
     settings: {
       jest: {
         // Since eslint is installed in a different directory than jest, the jest eslint plugin fails to automatically detect the version of jest//
         // https://github.com/digitalfabrik/entitlementcard/issues/1659
-        version: require('jest/package.json').version
-      }
+        version: require('jest/package.json').version,
+      },
     },
 
     rules: {
@@ -87,8 +87,8 @@ export default [
       'jsx-a11y/label-has-associated-control': [
         'error',
         {
-          controlComponents: ['HTMLSelect']
-        }
+          controlComponents: ['HTMLSelect'],
+        },
       ],
       'react/require-default-props': 'off',
       'react/sort-comp': 'off',
@@ -106,8 +106,8 @@ export default [
         {
           argsIgnorePattern: '_(unused)?',
           varsIgnorePattern: '_(unused)?',
-          ignoreRestSiblings: true
-        }
+          ignoreRestSiblings: true,
+        },
       ],
       '@typescript-eslint/no-use-before-define': 'error',
       '@typescript-eslint/prefer-ts-expect-error': 'error',
@@ -115,8 +115,8 @@ export default [
         'error',
         {
           allowNullableBoolean: true,
-          allowNullableString: true
-        }
+          allowNullableString: true,
+        },
       ],
       '@typescript-eslint/switch-exhaustiveness-check': 'error',
       'consistent-return': 'off',
@@ -126,8 +126,8 @@ export default [
       'import/no-cycle': [
         'error',
         {
-          maxDepth: '∞'
-        }
+          maxDepth: '∞',
+        },
       ],
       'import/no-unresolved': 'off',
       'jest/consistent-test-it': 'error',
@@ -138,28 +138,28 @@ export default [
       'prefer-destructuring': [
         'error',
         {
-          array: false
-        }
+          array: false,
+        },
       ],
       'prefer-object-spread': 'error',
       'react/function-component-definition': [
         'error',
         {
           namedComponents: 'arrow-function',
-          unnamedComponents: 'arrow-function'
-        }
+          unnamedComponents: 'arrow-function',
+        },
       ],
       'react/jsx-no-useless-fragment': [
         'error',
         {
-          allowExpressions: true
-        }
+          allowExpressions: true,
+        },
       ],
       'react/jsx-filename-extension': 'off',
       'react/no-did-mount-set-state': 'error',
       'react/no-unused-prop-types': 'warn',
-      'react-hooks/exhaustive-deps': 'error'
-    }
+      'react-hooks/exhaustive-deps': 'error',
+    },
   },
   {
     files: [
@@ -167,7 +167,7 @@ export default [
       '**/__mocks__/*.{ts,tsx}',
       '**/testing/*.{ts,tsx}',
       '**/jest.setup.ts',
-      '**/jest.config.ts'
+      '**/jest.config.ts',
     ],
 
     rules: {
@@ -179,7 +179,7 @@ export default [
       'jsx-a11y/no-static-element-interactions': 'off',
       'no-console': 'off',
       'no-magic-numbers': 'off',
-      'react/jsx-no-constructed-context-values': 'off'
-    }
-  }
+      'react/jsx-no-constructed-context-values': 'off',
+    },
+  },
 ]

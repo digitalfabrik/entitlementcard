@@ -1,6 +1,8 @@
+import { create } from '@bufbuild/protobuf'
+
 import { generateCardInfo, initializeCard } from '../../cards/card'
 import { CreateCardsResult } from '../../cards/createCards'
-import { DynamicActivationCode } from '../../generated/card_pb'
+import { DynamicActivationCodeSchema } from '../../generated/card_pb'
 import { getTestRegion } from '../../routes/user-settings/__mocks__/Region'
 import { config } from './config'
 import { buildCsvLine } from './csvExport'
@@ -17,17 +19,17 @@ jest.mock('../index', () => ({
 describe('csvExport', () => {
   it('header should have same length as line', () => {
     const nuernberg = getTestRegion({})
-
     const cards = [initializeCard(config.card, nuernberg, { fullName: 'Thea Test' })]
-
     const codes: CreateCardsResult[] = [
       {
         dynamicCardInfoHashBase64: 'rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=',
-        dynamicActivationCode: new DynamicActivationCode({ info: generateCardInfo(cards[0]) }),
+        dynamicActivationCode: create(DynamicActivationCodeSchema, {
+          info: generateCardInfo(cards[0]),
+        }),
       },
     ]
-
     const csvConfig = config.csvExport
+
     expect(csvConfig.enabled).toBeTruthy()
     if (!csvConfig.enabled) {
       throw new Error('Tested failed')

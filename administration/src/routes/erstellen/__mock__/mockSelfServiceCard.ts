@@ -1,5 +1,8 @@
+import { toBinary } from '@bufbuild/protobuf'
+
 import { uint8ArrayToBase64 } from '../../../cards/base64'
 import { generateCardInfo, initializeCard } from '../../../cards/card'
+import { CardInfoSchema } from '../../../generated/card_pb'
 import { CreateCardsFromSelfServiceDocument } from '../../../generated/graphql'
 import { config } from '../../../project-configs/koblenz/config'
 import { safeParseGermanPlainDateString } from '../../../util/date'
@@ -17,7 +20,7 @@ export const mockedCardMutation = {
     variables: {
       project: config.projectId,
       generateStaticCodes: true,
-      encodedCardInfo: uint8ArrayToBase64(generateCardInfo(exampleCard).toBinary()),
+      encodedCardInfo: uint8ArrayToBase64(toBinary(CardInfoSchema, generateCardInfo(exampleCard))),
     },
   },
 

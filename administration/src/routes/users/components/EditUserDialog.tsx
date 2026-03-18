@@ -1,7 +1,7 @@
 import { Edit } from '@mui/icons-material'
 import { Link, Stack } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import React, { ReactElement, useContext, useEffect, useState } from 'react'
+import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import CardTextField from '../../../cards/extensions/components/CardTextField'
@@ -16,34 +16,28 @@ import RegionSelector from './RegionSelector'
 import RoleSelector from './RoleSelector'
 
 const EditUserDialog = ({
-  selectedUser,
   onClose,
   onSuccess,
+  selectedUser,
   regionIdOverride,
 }: {
   onClose: () => void
-  selectedUser: Administrator | null
   onSuccess: () => void
-  // If regionIdOverride is set, the region selector will be hidden, and only RegionAdministrator and RegionManager
-  // roles are selectable.
+  selectedUser: Administrator | null
+  /**
+   * If regionIdOverride is set, the region selector will be hidden, and only RegionAdministrator
+   * and RegionManager roles are selectable.
+   */
   regionIdOverride: number | null
 }): ReactElement => {
   const { enqueueSnackbar } = useSnackbar()
   const { me, refetch: refetchMe } = useContext(WhoAmIContext)
   const { t } = useTranslation('users')
-  const [email, setEmail] = useState('')
-  const [role, setRole] = useState<Role | null>(null)
-  const [regionId, setRegionId] = useState<number | null>(null)
+  const [email, setEmail] = useState(selectedUser?.email ?? '')
+  const [role, setRole] = useState<Role | null>(selectedUser?.role ?? null)
+  const [regionId, setRegionId] = useState<number | null>(selectedUser?.regionId ?? null)
   const [notificationConfirmed, setNotificationConfirmed] = useState(false)
   const rolesWithRegion = [Role.RegionManager, Role.RegionAdmin]
-
-  useEffect(() => {
-    if (selectedUser !== null) {
-      setEmail(selectedUser.email)
-      setRole(selectedUser.role)
-      setRegionId(selectedUser.regionId === undefined ? null : selectedUser.regionId)
-    }
-  }, [selectedUser])
 
   const [editAdministrator, { loading }] = useEditAdministratorMutation({
     onError: error => {
@@ -61,36 +55,32 @@ const EditUserDialog = ({
     },
   })
 
-  const getRegionId = () => {
-    if (regionIdOverride !== null) {
-      return regionIdOverride
-    }
-    return role !== null && rolesWithRegion.includes(role) ? regionId : null
-  }
-
   const onEditUser = () => {
-    if (selectedUser === null) {
-      console.error('Form submitted in an unexpected state.')
-      return
+    if (selectedUser != null) {
+      editAdministrator({
+        variables: {
+          adminId: selectedUser.id,
+          newEmail: email,
+          newRole: role as Role,
+          newRegionId:
+            // eslint-disable-next-line no-nested-ternary
+            regionIdOverride !== null
+              ? regionIdOverride
+              : role !== null && rolesWithRegion.includes(role)
+                ? regionId
+                : null,
+        },
+      })
     }
-
-    editAdministrator({
-      variables: {
-        adminId: selectedUser.id,
-        newEmail: email,
-        newRole: role as Role,
-        newRegionId: getRegionId(),
-      },
-    })
   }
+
   const showRegionSelector =
     regionIdOverride === null && role !== null && rolesWithRegion.includes(role)
-  const notificationShownAndNotConfirmed = selectedUser?.id === me?.id && !notificationConfirmed
   const userEditDisabled =
     !email ||
     role === null ||
     (showRegionSelector && regionId === null) ||
-    notificationShownAndNotConfirmed ||
+    (selectedUser?.id === me?.id && !notificationConfirmed) ||
     !isEmailValid(email)
 
   const editUserAlertDescription = (
@@ -128,7 +118,6 @@ const EditUserDialog = ({
     >
       <Stack sx={{ paddingY: 1, gap: 2 }}>
         <CardTextField
-          id='edit-user-name-input'
           label={t('createUserEmailLabel')}
           placeholder='erika.musterfrau@example.org'
           value={email}

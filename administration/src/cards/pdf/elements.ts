@@ -1,3 +1,4 @@
+import { create, toBinary } from '@bufbuild/protobuf'
 import {
   PDFFont,
   PDFPage,
@@ -7,7 +8,7 @@ import {
   grayscale,
 } from '@cantoo/pdf-lib'
 
-import { QrCode } from '../../generated/card_pb'
+import { type QrCode, QrCodeSchema } from '../../generated/card_pb'
 import {
   PdfFormElementProps,
   PdfLinkAreaProps,
@@ -83,7 +84,9 @@ export const pdfQrCodeElement = (
   const qrCodeSizePdf = mmToPt(qrCodeElementProps.size)
   const qrCodeXPdf = mmToPt(qrCodeElementProps.x)
   const qrCodeYPdf = page.getSize().height - qrCodeSizePdf - mmToPt(qrCodeElementProps.y)
-  const qrCodeMatrix = encodeQRCode(new QrCode({ qrCode }).toBinary()).getMatrix()
+  const qrCodeMatrix = encodeQRCode(
+    toBinary(QrCodeSchema, create(QrCodeSchema, { qrCode })),
+  ).getMatrix()
   const requestedSize = qrCodeSizePdf - DEFAULT_QUIET_ZONE_SIZE * 2
   const dotSize = requestedSize / qrCodeMatrix.getWidth()
 
