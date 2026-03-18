@@ -4,6 +4,9 @@ import { MaterialDesignContent, SnackbarProvider, useSnackbar } from 'notistack'
 import React, { ReactElement, ReactNode } from 'react'
 
 const StyledMaterialDesignSnackbar = styled(MaterialDesignContent)(({ theme }) => ({
+  '& #notistack-snackbar': {
+    maxWidth: '90%',
+  },
   '&.notistack-MuiContent-success': {
     color: theme.palette.success.contrastText,
     backgroundColor: theme.palette.success.main,
