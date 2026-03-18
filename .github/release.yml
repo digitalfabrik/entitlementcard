@@ -8,7 +8,7 @@ changelog:
         - '*'
       exclude:
         labels:
-        - not-testable
+        - maintenance
     - title: Maintenance 🛠
       labels:
-        - not-testable
+        - maintenance
