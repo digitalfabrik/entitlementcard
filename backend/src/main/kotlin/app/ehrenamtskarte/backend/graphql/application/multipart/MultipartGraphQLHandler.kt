@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.graphql.application.multipart
 
 import app.ehrenamtskarte.backend.graphql.shared.substitute
+import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.slf4j.LoggerFactory
@@ -80,7 +81,13 @@ class MultipartGraphQLHandler(
                 }
             }
             mapper.readValue(mapper.treeAsTokens(operationsNode))
-        } catch (e: Exception) {
+        } catch (e: IllegalArgumentException) {
+            logger.debug("Failed to process multipart request", e)
+            return badRequestResponse("Invalid multipart request format")
+        } catch (e: IllegalStateException) {
+            logger.debug("Failed to process multipart request", e)
+            return badRequestResponse("Invalid multipart request format")
+        } catch (e: JsonProcessingException) {
             logger.debug("Failed to process multipart request", e)
             return badRequestResponse("Invalid multipart request format")
         }
