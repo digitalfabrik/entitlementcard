@@ -1,4 +1,6 @@
-import { DynamicActivationCode } from '../generated/card_pb'
+import { fromBinary } from '@bufbuild/protobuf'
+
+import { DynamicActivationCodeSchema } from '../generated/card_pb'
 import { config } from '../project-configs/koblenz/config'
 import { mockedCardMutation } from '../routes/erstellen/__mock__/mockSelfServiceCard'
 import { base64ToUint8Array } from './base64'
@@ -10,7 +12,8 @@ jest.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
 describe('getCustomDeepLinkFromQrCode', () => {
   const dynamicPdfQrCode: PdfQrCode = {
     case: 'dynamicActivationCode',
-    value: DynamicActivationCode.fromBinary(
+    value: fromBinary(
+      DynamicActivationCodeSchema,
       base64ToUint8Array(mockedCardMutation.result.data.card.dynamicActivationCode.codeBase64),
     ),
   }

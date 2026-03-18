@@ -1,3 +1,4 @@
+import { toBinary } from '@bufbuild/protobuf'
 // Most of the functions are from https://github.com/zxing-js/library
 import {
   BitArray,
@@ -11,7 +12,7 @@ import {
   QRCodeVersion,
 } from '@zxing/library/cjs'
 
-import { QrCode } from '../generated/card_pb'
+import { type QrCode, QrCodeSchema } from '../generated/card_pb'
 
 // Level 8 with EC of M gives 152 bytes
 // Level 7 with EC of L gives 154 bytes
@@ -174,7 +175,7 @@ export const encodeQRCode = (content: Uint8Array): QRCodeEncoderQRCode => {
 }
 
 export const convertProtobufToHexCode = (qrCode: QrCode): string => {
-  const qrCodeMatrix = encodeQRCode(qrCode.toBinary()).getMatrix()
+  const qrCodeMatrix = encodeQRCode(toBinary(QrCodeSchema, qrCode)).getMatrix()
   return qrCodeMatrix
     .getArray()
     .map(row => BigInt(`0b${row.join('')}`).toString(16))

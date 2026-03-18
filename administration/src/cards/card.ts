@@ -1,8 +1,8 @@
-import { PartialMessage } from '@bufbuild/protobuf'
+import { create } from '@bufbuild/protobuf'
 import { t } from 'i18next'
 import { Temporal } from 'temporal-polyfill'
 
-import { CardExtensions, CardInfo } from '../generated/card_pb'
+import { CardExtensionsSchema, CardInfo, CardInfoSchema } from '../generated/card_pb'
 import { Region } from '../generated/graphql'
 import type { CardConfig } from '../project-configs'
 import {
@@ -172,7 +172,7 @@ export const isValid = (
   cardHasAllMandatoryExtensions(card, cardConfig)
 
 export const generateCardInfo = (card: Card): CardInfo => {
-  const extensionsMessage: PartialMessage<CardExtensions> = getExtensions(card).reduce(
+  const extensionsMessage = getExtensions(card).reduce(
     (acc, { extension, state }) => Object.assign(acc, extension.getProtobufData(state)),
     {},
   )
@@ -183,10 +183,10 @@ export const generateCardInfo = (card: Card): CardInfo => {
       ? Math.max(plainDateToDaysSinceEpoch(expirationDate), 0)
       : undefined
 
-  return new CardInfo({
+  return create(CardInfoSchema, {
     fullName: card.fullName,
     expirationDay,
-    extensions: new CardExtensions(extensionsMessage),
+    extensions: create(CardExtensionsSchema, extensionsMessage),
   })
 }
 

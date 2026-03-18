@@ -15,7 +15,7 @@ import {
   Typography,
 } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Temporal } from 'temporal-polyfill'
 
@@ -80,7 +80,12 @@ const ApiTokenGeneration = (): ReactElement => {
             <MenuItem value={36}>3 {t('years')}</MenuItem>
           </Select>
         </FormControl>
-        <Button sx={{ minWidth: 'auto' }} onClick={() => createToken({ variables: { expiresIn } })}>
+        <Button
+          color='primary'
+          sx={{ minWidth: 'auto' }}
+          variant='contained'
+          onClick={() => createToken({ variables: { expiresIn } })}
+        >
           {t('create')}
         </Button>
       </Stack>
@@ -105,16 +110,7 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
   const { t } = useTranslation('projectSettings')
   const metaDataQuery = useGetApiTokenMetaDataQuery({})
   const { enqueueSnackbar } = useSnackbar()
-  const [tokenMetaData, setTokenMetadata] = useState<Array<ApiTokenMetaData>>([])
   const [tokenToDelete, setTokenToDelete] = useState<number | null>(null)
-
-  useEffect(() => {
-    const metaDataQueryResult = getQueryResult(metaDataQuery)
-    if (metaDataQueryResult.successful) {
-      const { tokenMetaData } = metaDataQueryResult.data
-      setTokenMetadata(tokenMetaData)
-    }
-  }, [metaDataQuery, t])
 
   const [deleteToken] = useDeleteApiTokenMutation({
     onCompleted: () => {
@@ -126,6 +122,11 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
       enqueueSnackbar(title, { variant: 'error' })
     },
   })
+  const metaDataQueryResult = getQueryResult(metaDataQuery)
+  if (!metaDataQueryResult.successful) {
+    return metaDataQueryResult.component
+  }
+  const tokenMetaData: ApiTokenMetaData[] = metaDataQueryResult.data.tokenMetaData
 
   return (
     <>
@@ -150,37 +151,34 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
         {showPepperSection && <PepperSettings />}
 
         <ApiTokenGeneration />
-
-        <Typography>
-          {tokenMetaData.length > 0 && (
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>{t('eMailOfCreator')}</TableCell>
-                  <TableCell>{t('expirationDate')}</TableCell>
-                  <TableCell aria-label='Delete' />
+        {tokenMetaData.length > 0 && (
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>{t('eMailOfCreator')}</TableCell>
+                <TableCell>{t('expirationDate')}</TableCell>
+                <TableCell aria-label='Delete' />
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {tokenMetaData.map(item => (
+                <TableRow key={item.id}>
+                  <TableCell>{item.creatorEmail}</TableCell>
+                  <TableCell>
+                    {t('expiresIn', { date: Temporal.PlainDate.from(item.expirationDate) })}
+                  </TableCell>
+                  <TableCell>
+                    <Delete
+                      sx={{ cursor: 'pointer', display: 'block' }}
+                      color='error'
+                      onClick={() => setTokenToDelete(item.id)}
+                    />
+                  </TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {tokenMetaData.map(item => (
-                  <TableRow key={item.id}>
-                    <TableCell>{item.creatorEmail}</TableCell>
-                    <TableCell>
-                      {t('expiresIn', { date: Temporal.PlainDate.from(item.expirationDate) })}
-                    </TableCell>
-                    <TableCell>
-                      <Delete
-                        sx={{ cursor: 'pointer', display: 'block' }}
-                        color='error'
-                        onClick={() => setTokenToDelete(item.id)}
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          )}
-        </Typography>
+              ))}
+            </TableBody>
+          </Table>
+        )}
       </SettingsCard>
     </>
   )

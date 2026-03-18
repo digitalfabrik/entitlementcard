@@ -1,3 +1,4 @@
+import { create } from '@bufbuild/protobuf'
 import {
   ACTIVATION_FRAGMENT,
   ACTIVATION_PATH,
@@ -7,7 +8,7 @@ import {
 } from 'build-configs'
 import { Temporal } from 'temporal-polyfill'
 
-import { DynamicActivationCode } from '../generated/card_pb'
+import { DynamicActivationCodeSchema } from '../generated/card_pb'
 import { getTestRegion } from '../routes/user-settings/__mocks__/Region'
 import { generateCardInfo, initializeCard } from './card'
 import { CreateCardsResult } from './createCards'
@@ -20,7 +21,6 @@ jest.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
 
 describe('DeepLink generation', () => {
   const region = getTestRegion({})
-
   const cardConfigBayern = {
     defaultValidity: Temporal.Duration.from({ years: 3 }),
     nameColumnName: 'Name',
@@ -28,20 +28,16 @@ describe('DeepLink generation', () => {
     extensionColumnNames: ['Kartentyp', null],
     extensions: [BavariaCardTypeExtension, RegionExtension],
   }
-
   const card = initializeCard(cardConfigBayern, region, { fullName: 'Thea Test' })
   const code: CreateCardsResult = {
     dynamicCardInfoHashBase64: 'rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=',
-    dynamicActivationCode: new DynamicActivationCode({ info: generateCardInfo(card) }),
+    dynamicActivationCode: create(DynamicActivationCodeSchema, { info: generateCardInfo(card) }),
   }
-
   const dynamicPdfQrCode: PdfQrCode = {
     case: 'dynamicActivationCode',
     value: code.dynamicActivationCode,
   }
-
   const encodedActivationCodeBase64 = 'ChsKGQoJVGhlYSBUZXN0ENOiARoICgIIACICCAA%3D'
-
   const buildConfigs = [{ buildConfig: buildConfigBayern }, { buildConfig: buildConfigKoblenz }]
 
   // Custom link schemes don't work in browsers or PDFs, therefore we use the staging link scheme

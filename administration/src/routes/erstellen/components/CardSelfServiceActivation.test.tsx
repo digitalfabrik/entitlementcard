@@ -1,10 +1,11 @@
+import { create } from '@bufbuild/protobuf'
 import { fireEvent } from '@testing-library/react'
 import React from 'react'
 
 import { generateCardInfo, initializeCard } from '../../../cards/card'
 import { CreateCardsResult } from '../../../cards/createCards'
 import getCustomDeepLinkFromQrCode from '../../../cards/getCustomDeepLinkFromQrCode'
-import { DynamicActivationCode } from '../../../generated/card_pb'
+import { DynamicActivationCodeSchema } from '../../../generated/card_pb'
 import { config } from '../../../project-configs/koblenz/config'
 import { CustomRenderOptions, renderWithOptions } from '../../../testing/render'
 import CardSelfServiceActivation from './CardSelfServiceActivation'
@@ -19,7 +20,7 @@ describe('CardSelfServiceActivation', () => {
   const card = initializeCard(config.card, undefined, { fullName: 'Thea Test' })
   const code: CreateCardsResult = {
     dynamicCardInfoHashBase64: 'rS8nukf7S9j8V1j+PZEkBQWlAeM2WUKkmxBHi1k9hRo=',
-    dynamicActivationCode: new DynamicActivationCode({ info: generateCardInfo(card) }),
+    dynamicActivationCode: create(DynamicActivationCodeSchema, { info: generateCardInfo(card) }),
   }
   const deepLink = getCustomDeepLinkFromQrCode(config, {
     case: 'dynamicActivationCode',

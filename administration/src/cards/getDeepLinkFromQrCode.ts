@@ -1,6 +1,7 @@
+import { create, toBinary } from '@bufbuild/protobuf'
 import { ACTIVATION_FRAGMENT, ACTIVATION_PATH, BuildConfigType, HTTPS_SCHEME } from 'build-configs'
 
-import { QrCode } from '../generated/card_pb'
+import { QrCodeSchema } from '../generated/card_pb'
 import { uint8ArrayToBase64 } from './base64'
 import type { PdfQrCode } from './pdf/elements'
 
@@ -9,11 +10,14 @@ const getDeepLinkFromQrCode = (
   buildConfig: BuildConfigType,
   isProduction: boolean,
 ): string => {
-  const qrCodeContent = new QrCode({
-    qrCode,
-  }).toBinary()
+  const qrCodeContent = toBinary(
+    QrCodeSchema,
+    create(QrCodeSchema, {
+      qrCode,
+    }),
+  )
   const buildConfigProjectId = buildConfig.common.projectId
-  // custom link schemes don't work in browsers or pdf thats why we use the staging link scheme also for development
+  // Custom link schemes do not work in browsers or PDFs, so use the staging link scheme also for development
   const host = isProduction ? buildConfigProjectId.production : buildConfigProjectId.staging
   const deepLink = `${HTTPS_SCHEME}://${host}/${ACTIVATION_PATH}/${ACTIVATION_FRAGMENT}#${encodeURIComponent(
     uint8ArrayToBase64(qrCodeContent),
