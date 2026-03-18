@@ -28,21 +28,19 @@ const useSendCardConfirmationMails = (region: Region): SendCardConfirmationMail 
       const notificationData = codes.flatMap((code, index) => {
         const card = cards[index]
         const mailNotificationExtensionState = card.extensions[EMAIL_NOTIFICATION_EXTENSION_NAME]
-        if (!mailNotificationExtensionState) {
-          return []
-        }
-        const deepLink = getDeepLinkFromQrCode(
-          { case: 'dynamicActivationCode', value: code.dynamicActivationCode },
-          getBuildConfig(window.location.hostname),
-          isProductionEnvironment(),
-        )
-        return [
-          {
-            recipientAddress: mailNotificationExtensionState,
-            recipientName: card.fullName,
-            deepLink,
-          },
-        ]
+        return mailNotificationExtensionState
+          ? [
+              {
+                recipientAddress: mailNotificationExtensionState,
+                recipientName: card.fullName,
+                deepLink: getDeepLinkFromQrCode(
+                  { case: 'dynamicActivationCode', value: code.dynamicActivationCode },
+                  getBuildConfig(window.location.hostname),
+                  isProductionEnvironment(),
+                ),
+              },
+            ]
+          : []
       })
 
       if (notificationData.length === 0) {

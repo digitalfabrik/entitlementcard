@@ -123,6 +123,7 @@ type CardActivationResultModel {
   totpSecret: String
 }
 
+"Result of sending card creation confirmation emails"
 type CardCreationConfirmationMailResult {
   failedRecipients: [String!]!
   successCount: Int!

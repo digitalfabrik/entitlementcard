@@ -327,7 +327,7 @@
     "cardCreationConfirmationMessage": "Bestätigungsmail wurde versendet",
     "multipleCardCreationConfirmationMessage": "{{count}} Bestätigungsmails wurden gesendet",
     "cardCreationConfirmationFailureMessage": "Bestätigungsmail konnte nicht zugestellt werden",
-    "multipleCardCreationConfirmationFailureMessage": "Bestätigungsmails konnten an folgende Adressen nicht zugestellt werden: [{{recipients}}]",
+    "multipleCardCreationConfirmationFailureMessage": "Bestätigungsmails konnten an folgende Adressen nicht zugestellt werden: {{recipients}}",
     "freinetDataSyncSuccessMessage": "Antrags- und Kartendaten wurden erfolgreich an Freinet gesendet.",
     "freinetCardDataTransferSuccessMessage": "Kartendaten wurden erfolgreich an Freinet gesendet."
   },
