@@ -25,7 +25,6 @@ const AlertBox = ({
   actionButtonLabel,
 }: AlertBoxProps): ReactElement => {
   const { t } = useTranslation('errors')
-  const fullWidthStyles = fullWidth ? { margin: 0, maxWidth: 'none' } : {}
 
   return (
     <Alert
@@ -43,8 +42,16 @@ const AlertBox = ({
             margin: '5px',
           },
         }),
-        ...fullWidthStyles,
+        ...(fullWidth ? { margin: 0, maxWidth: 'none' } : {}),
         ...sx,
+      }}
+      slotProps={{
+        // Inhibits clipping of <CheckBox> hover indicators
+        message: {
+          sx: {
+            overflow: 'visible',
+          },
+        },
       }}
       action={
         onAction ? (

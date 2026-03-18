@@ -1,4 +1,4 @@
-import { Checkbox, FormControl, FormControlLabel, FormGroup } from '@mui/material'
+import { Checkbox, FormControl, FormControlLabel } from '@mui/material'
 import React, { ReactElement } from 'react'
 
 import FormAlert from './FormAlert'
@@ -24,26 +24,22 @@ const BaseCheckbox = ({
   hasError,
   errorMessage,
 }: BaseCheckboxProps): ReactElement => (
-  <FormGroup>
-    <FormControl required={required} error={hasError} disabled={disabled}>
-      <FormControlLabel
-        sx={{ marginTop: 0.5, marginX: 0 }}
-        control={
-          <Checkbox
-            sx={{ pl: 0 }}
-            required={required}
-            checked={checked}
-            onBlur={onBlur}
-            onChange={e => {
-              onChange(e.target.checked)
-            }}
-          />
-        }
-        label={label}
-      />
-      {hasError && <FormAlert errorMessage={errorMessage} />}
-    </FormControl>
-  </FormGroup>
+  <FormControl required={required} error={hasError} disabled={disabled}>
+    <FormControlLabel
+      control={
+        <Checkbox
+          required={required}
+          checked={checked}
+          onBlur={onBlur}
+          onChange={e => {
+            onChange(e.target.checked)
+          }}
+        />
+      }
+      label={label}
+    />
+    {hasError && <FormAlert errorMessage={errorMessage} />}
+  </FormControl>
 )
 
 export default BaseCheckbox
