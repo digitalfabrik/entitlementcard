@@ -3,6 +3,7 @@ package app.ehrenamtskarte.backend.graphql.application.multipart
 import app.ehrenamtskarte.backend.graphql.shared.substitute
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.graphql.MediaTypes.APPLICATION_GRAPHQL_RESPONSE
@@ -38,6 +39,7 @@ import org.springframework.web.servlet.function.ServerResponse
 class MultipartGraphQLHandler(
     private val graphQlHandler: WebGraphQlHandler,
 ) {
+    private val logger = LoggerFactory.getLogger(MultipartGraphQLHandler::class.java)
     private val idGenerator: IdGenerator = AlternativeJdkIdGenerator()
     private val mapper = jacksonObjectMapper()
 
@@ -53,7 +55,9 @@ class MultipartGraphQLHandler(
 
         val mapPart = partsMap["map"] ?: return badRequestResponse("Missing required 'map' field in multipart request")
         val mapNode = mapPart.inputStream.use {
-            runCatching { mapper.readValue<Map<String, List<String>>>(it) }.getOrNull()
+            runCatching { mapper.readValue<Map<String, List<String>>>(it) }
+                .onFailure { e -> logger.debug("Failed to parse 'map' field in multipart request", e) }
+                .getOrNull()
         } ?: return badRequestResponse("Invalid 'map' field format in multipart request")
 
         // Collect uploaded files
@@ -76,7 +80,8 @@ class MultipartGraphQLHandler(
                 }
             }
             mapper.readValue(mapper.treeAsTokens(operationsNode))
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            logger.debug("Failed to process multipart request", e)
             return badRequestResponse("Invalid multipart request format")
         }
 
