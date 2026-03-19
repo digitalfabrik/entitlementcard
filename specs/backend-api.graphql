@@ -123,6 +123,12 @@ type CardActivationResultModel {
   totpSecret: String
 }
 
+"Result of sending card creation confirmation emails"
+type CardCreationConfirmationMailResult {
+  failedRecipients: [String!]!
+  successCount: Int!
+}
+
 type CardCreationResultModel {
   dynamicActivationCode: DynamicActivationCodeResult!
   staticVerificationCode: StaticVerificationCodeResult
@@ -224,8 +230,8 @@ type Mutation {
   sendApplicationAndCardDataToFreinet(applicationId: Int!, freinetCard: FreinetCardInput!): Boolean!
   "Send approval mail to organisation"
   sendApprovalMailToOrganisation(applicationId: Int!, applicationVerificationId: Int!): Boolean!
-  "Sends a confirmation mail to the user when the card creation was successful"
-  sendCardCreationConfirmationMail(deepLink: String!, recipientAddress: String!, recipientName: String!, regionId: Int!): Boolean!
+  "Send confirmation mails to users when card creation was successful"
+  sendCardCreationConfirmationMails(notifications: [CardCreationConfirmationMailInput!]!, regionId: Int!): CardCreationConfirmationMailResult!
   """
   Send card information to Freinet.
       Returns:
@@ -546,6 +552,13 @@ input BlueCardWorkAtDepartmentEntitlementInput {
 
 input BlueCardWorkAtOrganizationsEntitlementInput {
   list: [WorkAtOrganizationInput!]!
+}
+
+"Input for a single card creation confirmation mail"
+input CardCreationConfirmationMailInput {
+  deepLink: String!
+  recipientAddress: String!
+  recipientName: String!
 }
 
 input CardVerificationModelInput {

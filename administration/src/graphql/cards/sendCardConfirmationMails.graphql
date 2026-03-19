@@ -1,0 +1,9 @@
+mutation sendCardCreationConfirmationMails(
+  $regionId: Int!
+  $notifications: [CardCreationConfirmationMailInput!]!
+) {
+  sendCardCreationConfirmationMails(regionId: $regionId, notifications: $notifications) {
+    successCount
+    failedRecipients
+  }
+}

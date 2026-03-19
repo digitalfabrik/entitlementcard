@@ -100,7 +100,7 @@ const useCardGenerator = ({
     },
   })
 
-  const sendConfirmationMails = useSendCardConfirmationMails()
+  const sendConfirmationMails = useSendCardConfirmationMails(region)
   const initializedCards = initializeCards
     ? initializeCardsFromQueryParams(projectConfig, searchParams, region)
     : []

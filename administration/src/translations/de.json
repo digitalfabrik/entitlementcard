@@ -324,7 +324,10 @@
     "importFileTooBig": "Die ausgewählte Datei ist zu groß.",
     "printQRCodes": "QR-Codes drucken",
     "validationError": "Validierungsfehler",
-    "cardCreationConfirmationMessage": "Bestätigungsmail wurde versendet.",
+    "cardCreationConfirmationMessage": "Bestätigungsmail wurde versandt",
+    "multipleCardCreationConfirmationMessage": "{{count}} Bestätigungsmails wurden versandt",
+    "cardCreationConfirmationFailureMessage": "Bestätigungsmail konnte nicht zugestellt werden",
+    "multipleCardCreationConfirmationFailureMessage": "Bestätigungsmails konnten an folgende Adressen nicht zugestellt werden: {{recipients}}",
     "freinetDataSyncSuccessMessage": "Antrags- und Kartendaten wurden erfolgreich an Freinet gesendet.",
     "freinetCardDataTransferSuccessMessage": "Kartendaten wurden erfolgreich an Freinet gesendet."
   },
