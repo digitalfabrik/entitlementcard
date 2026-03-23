@@ -5,10 +5,11 @@ export default [
   {
     ignores: [
       '**eslint.config.mjs',
+      'graphql-codegen.ts',
       'build/**/*',
       'e2e-tests/',
       'playwright.config.ts',
-      'src/generated/**/*',
+      'src-gen/**/*',
       'src/coverage/**/*',
     ],
   },
