@@ -1,8 +1,8 @@
 import { fromBinary } from '@bufbuild/protobuf'
 import React, { ReactElement } from 'react'
 
+import { CardInfoSchema } from '../card_pb'
 import { base64ToUint8Array } from '../cards/base64'
-import { CardInfoSchema } from '../generated/card_pb'
 import { CodeType, GraphQlExceptionCode } from '../generated/graphql'
 import i18next from '../translations/i18n'
 import InvalidLink from './templates/InvalidLink'

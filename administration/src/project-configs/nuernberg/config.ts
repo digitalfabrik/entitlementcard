@@ -2,6 +2,7 @@ import { rgb } from '@cantoo/pdf-lib'
 import { buildConfigNuernberg } from 'build-configs'
 import { Temporal } from 'temporal-polyfill'
 
+import type { CardInfo } from '../../card_pb'
 import type { Card } from '../../cards/card'
 import AddressExtensions, {
   getAddressFieldExtensionsValues,
@@ -10,7 +11,6 @@ import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
 import NuernbergPassIdExtension from '../../cards/extensions/NuernbergPassIdExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
 import StartDayExtension from '../../cards/extensions/StartDayExtension'
-import type { CardInfo } from '../../generated/card_pb'
 import { commonColors } from '../common/colors'
 import type { FormConfig, ProjectConfig } from '../index'
 import { storesManagementConfig } from '../storesManagementConfig'
