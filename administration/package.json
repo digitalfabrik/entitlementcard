@@ -90,8 +90,8 @@
   },
   "scripts": {
     "build": "vite build",
-    "codegen:gql": "graphql-codegen --config graphql-codegen.yml",
-    "codegen:gql:dev": "graphql-codegen --config graphql-codegen.yml --watch",
+    "codegen:gql": "graphql-codegen --config graphql-codegen.ts",
+    "codegen:gql:dev": "graphql-codegen --config graphql-codegen.ts --watch",
     "codegen:pb": "buf generate",
     "check-circular-deps": "bash ./scripts/check_circular_deps.sh",
     "format": "eslint . --fix && prettier . --write",

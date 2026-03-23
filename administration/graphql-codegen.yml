@@ -1,9 +1,3 @@
-overwrite: true
+# Used by IDEs only, use graphql-codegen.ts for the actual configuration
 schema: '../specs/backend-api.graphql'
 documents: 'src/graphql/**/*.graphql'
-generates:
-  src/generated/graphql.tsx:
-    plugins:
-      - 'typescript'
-      - 'typescript-operations'
-      - 'typescript-react-apollo'
