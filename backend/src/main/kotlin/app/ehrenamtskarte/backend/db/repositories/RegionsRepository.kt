@@ -60,12 +60,11 @@ object RegionsRepository {
             .singleOrNull()
             ?.let { RegionEntity.wrapRow(it) }
 
-    fun getApplicationConfirmationNote(regionId: Int): String? {
-        return transaction {
+    fun getApplicationConfirmationNote(regionId: Int): String? =
+        transaction {
             RegionEntity.findById(regionId)?.let { region ->
                 region.applicationConfirmationMailNote
                     ?.takeIf { region.applicationConfirmationMailNoteActivated && it.isNotEmpty() }
             }
         }
-    }
 }

@@ -14,18 +14,18 @@ import org.simplejavamail.MailException
 import org.simplejavamail.email.EmailBuilder
 import org.simplejavamail.mailer.MailerBuilder
 import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Service
 import java.net.URI
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 private val logger by lazy { LoggerFactory.getLogger(Mailer::class.java) }
 
-object Mailer {
-    fun sendNotificationForApplicationMails(
-        backendConfig: BackendConfiguration,
-        projectConfig: ProjectConfig,
-        regionId: Int,
-    ) {
+@Service
+class Mailer(
+    private val backendConfig: BackendConfiguration,
+) {
+    fun sendNotificationForApplicationMails(projectConfig: ProjectConfig, regionId: Int) {
         val recipients = AdministratorsRepository
             .getNotificationRecipientsForApplication(projectConfig.id, regionId)
 
@@ -51,11 +51,7 @@ object Mailer {
         }
     }
 
-    fun sendNotificationForVerificationMails(
-        backendConfig: BackendConfiguration,
-        projectConfig: ProjectConfig,
-        regionId: Int,
-    ) {
+    fun sendNotificationForVerificationMails(projectConfig: ProjectConfig, regionId: Int) {
         val recipients = AdministratorsRepository
             .getNotificationRecipientsForVerification(projectConfig.id, regionId)
 
@@ -81,7 +77,6 @@ object Mailer {
     }
 
     fun sendApplicationVerificationMail(
-        backendConfig: BackendConfiguration,
         applicantName: String,
         projectConfig: ProjectConfig,
         applicationVerification: ApplicationVerificationEntity,
@@ -122,7 +117,6 @@ object Mailer {
     }
 
     fun sendApplicationApplicantMail(
-        backendConfig: BackendConfiguration,
         projectConfig: ProjectConfig,
         personalData: PersonalData,
         accessKey: String,
@@ -168,10 +162,8 @@ object Mailer {
     }
 
     fun sendApplicationMailToContactPerson(
-        backendConfig: BackendConfiguration,
         projectConfig: ProjectConfig,
-        contactPerson: String,
-        contactEmailAddress: String,
+        applicationVerification: ApplicationVerificationEntity,
         personalData: PersonalData,
         accessKey: String,
         regionId: Int,
@@ -182,10 +174,10 @@ object Mailer {
             backendConfig = backendConfig,
             smtpConfig = projectConfig.smtp,
             fromName = projectConfig.administrationName,
-            to = contactEmailAddress,
+            to = applicationVerification.contactEmailAddress,
             subject = "Antrag erfolgreich eingereicht",
             message = emailBody {
-                p { t("Sehr geehrte/r $contactPerson,") }
+                p { t("Sehr geehrte/r ${applicationVerification.contactName},") }
                 p {
                     t(
                         "Ihr Antrag auf die Bayerische Ehrenamtskarte für ${personalData.forenames.shortText} " +
@@ -212,12 +204,7 @@ object Mailer {
         )
     }
 
-    fun sendResetPasswordMail(
-        backendConfig: BackendConfiguration,
-        projectConfig: ProjectConfig,
-        passwortResetKey: String,
-        recipient: String,
-    ) {
+    fun sendResetPasswordMail(projectConfig: ProjectConfig, passwortResetKey: String, recipient: String) {
         sendMail(
             backendConfig = backendConfig,
             smtpConfig = projectConfig.smtp,
@@ -238,12 +225,7 @@ object Mailer {
         )
     }
 
-    fun sendWelcomeMail(
-        backendConfig: BackendConfiguration,
-        projectConfig: ProjectConfig,
-        passwordResetKey: String,
-        recipient: String,
-    ) {
+    fun sendWelcomeMail(projectConfig: ProjectConfig, passwordResetKey: String, recipient: String) {
         sendMail(
             backendConfig = backendConfig,
             smtpConfig = projectConfig.smtp,
@@ -265,7 +247,6 @@ object Mailer {
     }
 
     fun sendCardCreationConfirmationMail(
-        backendConfig: BackendConfiguration,
         projectConfig: ProjectConfig,
         deepLink: String,
         recipientAddress: String,
@@ -313,7 +294,6 @@ object Mailer {
     }
 
     fun sendApplicationRejectedMail(
-        backendConfig: BackendConfiguration,
         projectConfig: ProjectConfig,
         applicantName: String,
         applicantAddress: String,

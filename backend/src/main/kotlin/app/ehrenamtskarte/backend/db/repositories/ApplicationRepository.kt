@@ -114,7 +114,6 @@ object ApplicationRepository {
         automaticSource: ApplicationVerificationExternalSource = ApplicationVerificationExternalSource.NONE,
     ): Boolean {
         val applicationVerification = getApplicationVerification(accessKey)
-
         return if (!applicationVerification.isVerified) {
             applicationVerification.verifiedDate = Instant.now()
             applicationVerification.automaticSource = automaticSource

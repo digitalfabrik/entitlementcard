@@ -45,6 +45,7 @@ import org.springframework.stereotype.Controller
 class EakApplicationMutationController(
     private val backendConfiguration: BackendConfiguration,
     private val applicationService: ApplicationService,
+    private val mailService: Mailer,
 ) {
     @GraphQLDescription("Stores a new application for an EAK")
     @MutationMapping
@@ -68,7 +69,11 @@ class EakApplicationMutationController(
                 throw RegionNotActivatedForApplicationException()
             }
 
-            val (applicationEntity, verificationEntities) = applicationService.saveApplication(application, regionId, files.orEmpty())
+            val (applicationEntity, verificationEntities) = applicationService.saveApplication(
+                application,
+                regionId,
+                files.orEmpty(),
+            )
 
             if (isPreVerified) {
                 verificationEntities.forEach {
@@ -78,8 +83,7 @@ class EakApplicationMutationController(
                     )
                 }
             } else {
-                Mailer.sendApplicationApplicantMail(
-                    backendConfiguration,
+                mailService.sendApplicationApplicantMail(
                     projectConfig,
                     application.personalData,
                     applicationEntity.accessKey,
@@ -95,11 +99,9 @@ class EakApplicationMutationController(
         for (applicationVerification in verificationEntities) {
             try {
                 if (isPreVerified) {
-                    Mailer.sendApplicationMailToContactPerson(
-                        backendConfiguration,
+                    mailService.sendApplicationMailToContactPerson(
                         projectConfig,
-                        applicationVerification.contactName,
-                        applicationVerification.contactEmailAddress,
+                        applicationVerification,
                         application.personalData,
                         applicationEntity.accessKey,
                         regionId,
@@ -107,23 +109,14 @@ class EakApplicationMutationController(
                 } else {
                     val applicantName =
                         "${application.personalData.forenames.shortText} ${application.personalData.surname.shortText}"
-                    Mailer.sendApplicationVerificationMail(
-                        backendConfiguration,
-                        applicantName,
-                        projectConfig,
-                        applicationVerification,
-                    )
+                    mailService.sendApplicationVerificationMail(applicantName, projectConfig, applicationVerification)
                 }
             } catch (exception: MailNotSentException) {
                 dataFetcherResultBuilder.error(exception.toGraphQLError())
             }
         }
 
-        Mailer.sendNotificationForApplicationMails(
-            backendConfiguration,
-            projectConfig,
-            regionId,
-        )
+        mailService.sendNotificationForApplicationMails(projectConfig, regionId)
 
         return dataFetcherResultBuilder.data(true).build()
     }
@@ -199,8 +192,7 @@ class EakApplicationMutationController(
                 val projectConfig = backendConfiguration.getProjectConfig(project)
 
                 ApplicationRepository.verifyApplicationVerification(accessKey).also {
-                    Mailer.sendNotificationForVerificationMails(
-                        backendConfiguration,
+                    mailService.sendNotificationForVerificationMails(
                         projectConfig,
                         application.regionId.value,
                     )
@@ -263,8 +255,7 @@ class EakApplicationMutationController(
             application.changeStatusOrThrow(Status.Rejected)
             application.rejectionMessage = rejectionMessage
 
-            Mailer.sendApplicationRejectedMail(
-                backendConfiguration,
+            mailService.sendApplicationRejectedMail(
                 backendConfiguration.getProjectConfig(authContext.project),
                 application.getApplicantName(),
                 application.getApplicantEmail(),
@@ -324,8 +315,7 @@ class EakApplicationMutationController(
                 throw InvalidInputException("Application verification does not belong to the given application")
             }
 
-            Mailer.sendApplicationVerificationMail(
-                backendConfiguration,
+            mailService.sendApplicationVerificationMail(
                 application.getApplicantName(),
                 backendConfiguration.getProjectConfig(authContext.project),
                 applicationVerification,

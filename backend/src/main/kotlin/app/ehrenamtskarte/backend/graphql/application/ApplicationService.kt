@@ -25,7 +25,11 @@ import java.nio.file.Paths
 class ApplicationService(
     private val applicationData: File,
 ) {
-    fun saveApplication(application: Application, regionId: Int, files: List<Part>): Pair<ApplicationEntity, List<ApplicationVerificationEntity>> {
+    fun saveApplication(
+        application: Application,
+        regionId: Int,
+        files: List<Part>,
+    ): Pair<ApplicationEntity, List<ApplicationVerificationEntity>> {
         val (applicationEntity, verificationEntities) = transaction {
             ApplicationRepository.persistApplication(
                 application.toJsonField(),
