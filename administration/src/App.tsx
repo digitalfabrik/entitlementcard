@@ -6,10 +6,10 @@ import React, { ReactElement } from 'react'
 
 import Router from './Router'
 import { getProjectConfig } from './project-configs'
-import AppApolloProvider from './provider/AppApolloProvider'
 import { AppSnackbarProvider } from './provider/AppSnackbarProvider'
 import AuthProvider from './provider/AuthProvider'
 import { ProjectConfigProvider } from './provider/ProjectConfigContext'
+import UrqlClientProvider from './provider/UrqlClientProvider'
 import './translations/i18n'
 import { theme } from './util/theme'
 
@@ -23,11 +23,11 @@ const App = (): ReactElement => (
       <CssBaseline />
       <AppSnackbarProvider>
         <AuthProvider>
-          <AppApolloProvider>
+          <UrqlClientProvider>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <Router />
             </LocalizationProvider>
-          </AppApolloProvider>
+          </UrqlClientProvider>
         </AuthProvider>
       </AppSnackbarProvider>
     </ThemeProvider>
