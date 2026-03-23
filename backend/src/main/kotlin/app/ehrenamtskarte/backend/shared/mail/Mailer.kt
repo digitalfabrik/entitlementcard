@@ -164,7 +164,7 @@ class Mailer(
     fun sendApplicationMailToContactPerson(
         projectConfig: ProjectConfig,
         applicationVerification: ApplicationVerificationEntity,
-        personalData: PersonalData,
+        applicantName: String,
         accessKey: String,
         regionId: Int,
     ) {
@@ -179,10 +179,7 @@ class Mailer(
             message = emailBody {
                 p { t("Sehr geehrte/r ${applicationVerification.contactName},") }
                 p {
-                    t(
-                        "Ihr Antrag auf die Bayerische Ehrenamtskarte für ${personalData.forenames.shortText} " +
-                            "${personalData.surname.shortText} wurde erfolgreich eingereicht.",
-                    )
+                    t("Ihr Antrag auf die Bayerische Ehrenamtskarte für $applicantName wurde erfolgreich eingereicht.")
                 }
                 p {
                     t(

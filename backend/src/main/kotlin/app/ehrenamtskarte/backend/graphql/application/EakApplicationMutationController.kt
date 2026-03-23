@@ -4,28 +4,22 @@ import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity.Status
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
-import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationExternalSource
 import app.ehrenamtskarte.backend.db.entities.Applications
 import app.ehrenamtskarte.backend.db.entities.NOTE_MAX_CHARS
 import app.ehrenamtskarte.backend.db.entities.mayDeleteApplicationsInRegion
 import app.ehrenamtskarte.backend.db.entities.maySendMailsInRegion
 import app.ehrenamtskarte.backend.db.entities.mayUpdateApplicationsInRegion
 import app.ehrenamtskarte.backend.db.repositories.ApplicationRepository
-import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.graphql.application.types.Application
 import app.ehrenamtskarte.backend.graphql.application.types.ApplicationAdminGql
 import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantEmail
 import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantName
 import app.ehrenamtskarte.backend.graphql.auth.requireAuthContext
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidApplicationStatusException
-import app.ehrenamtskarte.backend.graphql.exceptions.InvalidFileSizeException
-import app.ehrenamtskarte.backend.graphql.exceptions.InvalidFileTypeException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidLinkException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidNoteSizeException
 import app.ehrenamtskarte.backend.graphql.exceptions.MailNotSentException
-import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotActivatedForApplicationException
-import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import app.ehrenamtskarte.backend.shared.mail.Mailer
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
@@ -57,32 +51,19 @@ class EakApplicationMutationController(
         @GraphQLIgnore @ContextValue request: HttpServletRequest,
     ): DataFetcherResult<Boolean> {
         val projectConfig = backendConfiguration.getProjectConfig(project)
-
-        if (!files.isNullOrEmpty()) {
-            validateAttachmentTypes(files)
-        }
+        files?.let { applicationService.validateAttachmentTypes(it) }
+        applicationService.validateRegionActivatedForApplication(project, regionId)
         val isPreVerified = applicationService.isValidPreVerifiedApplication(application, request)
 
         val (applicationEntity, verificationEntities) = transaction {
-            val region = RegionsRepository.findByIdInProject(project, regionId) ?: throw RegionNotFoundException()
-            if (!region.activatedForApplication) {
-                throw RegionNotActivatedForApplicationException()
-            }
-
             val (applicationEntity, verificationEntities) = applicationService.saveApplication(
                 application,
                 regionId,
                 files.orEmpty(),
+                isPreVerified,
             )
-
-            if (isPreVerified) {
-                verificationEntities.forEach {
-                    ApplicationRepository.verifyApplicationVerification(
-                        it.accessKey,
-                        ApplicationVerificationExternalSource.VEREIN360,
-                    )
-                }
-            } else {
+            if (!isPreVerified) {
+                // Send mail to applicant within the transaction to ensure rollback on failure
                 mailService.sendApplicationApplicantMail(
                     projectConfig,
                     application.personalData,
@@ -90,46 +71,35 @@ class EakApplicationMutationController(
                     regionId,
                 )
             }
-
             applicationEntity to verificationEntities
         }
 
-        val dataFetcherResultBuilder = DataFetcherResult.newResult<Boolean>()
+        val resultBuilder = DataFetcherResult.newResult<Boolean>()
 
-        for (applicationVerification in verificationEntities) {
+        val applicantName =
+            "${application.personalData.forenames.shortText} ${application.personalData.surname.shortText}"
+
+        verificationEntities.forEach { verification ->
             try {
                 if (isPreVerified) {
                     mailService.sendApplicationMailToContactPerson(
                         projectConfig,
-                        applicationVerification,
-                        application.personalData,
+                        verification,
+                        applicantName,
                         applicationEntity.accessKey,
                         regionId,
                     )
                 } else {
-                    val applicantName =
-                        "${application.personalData.forenames.shortText} ${application.personalData.surname.shortText}"
-                    mailService.sendApplicationVerificationMail(applicantName, projectConfig, applicationVerification)
+                    mailService.sendApplicationVerificationMail(applicantName, projectConfig, verification)
                 }
-            } catch (exception: MailNotSentException) {
-                dataFetcherResultBuilder.error(exception.toGraphQLError())
+            } catch (e: MailNotSentException) {
+                resultBuilder.error(e.toGraphQLError())
             }
         }
 
         mailService.sendNotificationForApplicationMails(projectConfig, regionId)
 
-        return dataFetcherResultBuilder.data(true).build()
-    }
-
-    private fun validateAttachmentTypes(files: List<Part>) {
-        val allowedContentTypes = setOf("application/pdf", "image/png", "image/jpeg")
-        val maxFileSizeBytes = 5 * 1000 * 1000
-        if (!files.all { it.contentType in allowedContentTypes }) {
-            throw InvalidFileTypeException()
-        }
-        if (!files.all { it.size <= maxFileSizeBytes }) {
-            throw InvalidFileSizeException()
-        }
+        return resultBuilder.data(true).build()
     }
 
     @GraphQLDescription("Deletes the application with specified id")

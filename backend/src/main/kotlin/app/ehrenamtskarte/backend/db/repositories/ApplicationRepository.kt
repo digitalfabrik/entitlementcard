@@ -33,6 +33,7 @@ object ApplicationRepository {
         regionId: Int,
         applicationData: File,
         files: List<Part>,
+        automaticSource: ApplicationVerificationExternalSource = ApplicationVerificationExternalSource.NONE,
     ): Pair<ApplicationEntity, List<ApplicationVerificationEntity>> {
         val random = SecureRandom.getInstanceStrong()
         val byteArray = ByteArray(64)
@@ -54,7 +55,10 @@ object ApplicationRepository {
                 this.contactName = it.contactName
                 this.organizationName = it.organizationName
                 this.contactEmailAddress = it.contactEmailAddress
-                this.automaticSource = ApplicationVerificationExternalSource.NONE
+                this.automaticSource = automaticSource
+                if (automaticSource != ApplicationVerificationExternalSource.NONE) {
+                    this.verifiedDate = Instant.now()
+                }
             }
         }
 

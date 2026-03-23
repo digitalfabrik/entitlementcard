@@ -3,14 +3,21 @@ package app.ehrenamtskarte.backend.graphql.application
 import app.ehrenamtskarte.backend.db.entities.ApiTokenType
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
+import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationExternalSource.NONE
+import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationExternalSource.VEREIN360
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerifications
 import app.ehrenamtskarte.backend.db.repositories.ApplicationRepository
+import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.graphql.application.types.Application
 import app.ehrenamtskarte.backend.graphql.application.types.ApplicationType
 import app.ehrenamtskarte.backend.graphql.application.types.BavariaCardType
 import app.ehrenamtskarte.backend.graphql.application.types.BlueCardEntitlementType
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidFileSizeException
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidFileTypeException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidJsonException
+import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotActivatedForApplicationException
+import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.shared.TokenAuthenticator
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.Part
@@ -25,10 +32,31 @@ import java.nio.file.Paths
 class ApplicationService(
     private val applicationData: File,
 ) {
+    fun validateAttachmentTypes(files: List<Part>) {
+        val allowedContentTypes = setOf("application/pdf", "image/png", "image/jpeg")
+        val maxFileSizeBytes = 5 * 1000 * 1000
+        if (!files.all { it.contentType in allowedContentTypes }) {
+            throw InvalidFileTypeException()
+        }
+        if (!files.all { it.size <= maxFileSizeBytes }) {
+            throw InvalidFileSizeException()
+        }
+    }
+
+    fun validateRegionActivatedForApplication(project: String, regionId: Int) {
+        transaction {
+            val region = RegionsRepository.findByIdInProject(project, regionId) ?: throw RegionNotFoundException()
+            if (!region.activatedForApplication) {
+                throw RegionNotActivatedForApplicationException()
+            }
+        }
+    }
+
     fun saveApplication(
         application: Application,
         regionId: Int,
         files: List<Part>,
+        isPreVerified: Boolean,
     ): Pair<ApplicationEntity, List<ApplicationVerificationEntity>> {
         val (applicationEntity, verificationEntities) = transaction {
             ApplicationRepository.persistApplication(
@@ -37,6 +65,7 @@ class ApplicationService(
                 regionId,
                 applicationData,
                 files,
+                if (isPreVerified) VEREIN360 else NONE,
             )
         }
         return Pair(applicationEntity, verificationEntities)
