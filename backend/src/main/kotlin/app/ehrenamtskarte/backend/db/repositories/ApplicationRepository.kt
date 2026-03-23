@@ -20,10 +20,8 @@ import org.jetbrains.exposed.v1.core.dao.id.EntityID
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.inList
 import org.jetbrains.exposed.v1.jdbc.SizedIterable
-import org.jetbrains.exposed.v1.jdbc.deleteWhere
 import org.jetbrains.exposed.v1.jdbc.select
 import java.io.File
-import java.nio.file.Paths
 import java.security.SecureRandom
 import java.time.Instant
 import java.util.Base64
@@ -135,21 +133,6 @@ object ApplicationRepository {
                 false
             }
         }
-
-    fun delete(project: String, application: ApplicationEntity, applicationData: File) {
-        ApplicationVerifications.deleteWhere { ApplicationVerifications.applicationId eq application.id }
-        application.delete()
-
-        val applicationDirectory = Paths.get(
-            applicationData.absolutePath,
-            project,
-            application.id.toString(),
-        ).toFile()
-
-        if (applicationDirectory.exists()) {
-            applicationDirectory.deleteRecursively()
-        }
-    }
 
     fun findByIds(ids: List<Int>): List<ApplicationEntity?> =
         ApplicationEntity

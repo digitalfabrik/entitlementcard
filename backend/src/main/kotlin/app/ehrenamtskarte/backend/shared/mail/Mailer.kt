@@ -6,6 +6,7 @@ import app.ehrenamtskarte.backend.config.SmtpConfig
 import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
 import app.ehrenamtskarte.backend.db.repositories.AdministratorsRepository
+import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.graphql.application.types.PersonalData
 import app.ehrenamtskarte.backend.graphql.exceptions.MailNotSentException
 import com.sanctionco.jmail.JMail
@@ -21,13 +22,12 @@ private val logger by lazy { LoggerFactory.getLogger(Mailer::class.java) }
 
 object Mailer {
     fun sendNotificationForApplicationMails(
-        project: String,
         backendConfig: BackendConfiguration,
         projectConfig: ProjectConfig,
         regionId: Int,
     ) {
         val recipients = AdministratorsRepository
-            .getNotificationRecipientsForApplication(project, regionId)
+            .getNotificationRecipientsForApplication(projectConfig.id, regionId)
 
         for (recipient: AdministratorEntity in recipients) {
             try {
@@ -52,13 +52,12 @@ object Mailer {
     }
 
     fun sendNotificationForVerificationMails(
-        project: String,
         backendConfig: BackendConfiguration,
         projectConfig: ProjectConfig,
         regionId: Int,
     ) {
         val recipients = AdministratorsRepository
-            .getNotificationRecipientsForVerification(project, regionId)
+            .getNotificationRecipientsForVerification(projectConfig.id, regionId)
 
         for (recipient: AdministratorEntity in recipients) {
             try {
@@ -127,8 +126,10 @@ object Mailer {
         projectConfig: ProjectConfig,
         personalData: PersonalData,
         accessKey: String,
-        applicationConfirmationNote: String?,
+        regionId: Int,
     ) {
+        val applicationConfirmationNote = RegionsRepository.getApplicationConfirmationNote(regionId)
+
         sendMail(
             backendConfig = backendConfig,
             smtpConfig = projectConfig.smtp,
@@ -173,8 +174,10 @@ object Mailer {
         contactEmailAddress: String,
         personalData: PersonalData,
         accessKey: String,
-        applicationConfirmationNote: String?,
+        regionId: Int,
     ) {
+        val applicationConfirmationNote = RegionsRepository.getApplicationConfirmationNote(regionId)
+
         sendMail(
             backendConfig = backendConfig,
             smtpConfig = projectConfig.smtp,

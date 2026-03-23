@@ -11,6 +11,7 @@ import org.jetbrains.exposed.v1.core.dao.id.EntityID
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.inList
 import org.jetbrains.exposed.v1.jdbc.select
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
 object RegionsRepository {
     fun findAllInProject(project: String): List<RegionEntity> =
@@ -58,4 +59,13 @@ object RegionsRepository {
             .where(FreinetAgencies.agencyId eq freinetId and (Regions.projectId eq projectId))
             .singleOrNull()
             ?.let { RegionEntity.wrapRow(it) }
+
+    fun getApplicationConfirmationNote(regionId: Int): String? {
+        return transaction {
+            RegionEntity.findById(regionId)?.let { region ->
+                region.applicationConfirmationMailNote
+                    ?.takeIf { region.applicationConfirmationMailNoteActivated && it.isNotEmpty() }
+            }
+        }
+    }
 }

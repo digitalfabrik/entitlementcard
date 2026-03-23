@@ -4,6 +4,7 @@ import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity.Status
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
+import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationExternalSource
 import app.ehrenamtskarte.backend.db.entities.Applications
 import app.ehrenamtskarte.backend.db.entities.NOTE_MAX_CHARS
 import app.ehrenamtskarte.backend.db.entities.mayDeleteApplicationsInRegion
@@ -17,9 +18,14 @@ import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantEmail
 import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantName
 import app.ehrenamtskarte.backend.graphql.auth.requireAuthContext
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidApplicationStatusException
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidFileSizeException
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidFileTypeException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidLinkException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidNoteSizeException
+import app.ehrenamtskarte.backend.graphql.exceptions.MailNotSentException
+import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotActivatedForApplicationException
+import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import app.ehrenamtskarte.backend.shared.mail.Mailer
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
@@ -34,12 +40,11 @@ import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.ContextValue
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.stereotype.Controller
-import java.io.File
 
 @Controller
 class EakApplicationMutationController(
     private val backendConfiguration: BackendConfiguration,
-    private val applicationData: File,
+    private val applicationService: ApplicationService,
 ) {
     @GraphQLDescription("Stores a new application for an EAK")
     @MutationMapping
@@ -49,47 +54,90 @@ class EakApplicationMutationController(
         @Argument project: String,
         @GraphQLIgnore @ContextValue(required = false) files: List<Part>?,
         @GraphQLIgnore @ContextValue request: HttpServletRequest,
-    ): DataFetcherResult<Boolean> =
-        transaction {
-            val applicationHandler = ApplicationHandler(
-                backendConfiguration,
-                application,
-                regionId,
-                project,
-                applicationData,
-                files.orEmpty(),
-                request,
-            )
-            val dataFetcherResultBuilder = DataFetcherResult.newResult<Boolean>()
+    ): DataFetcherResult<Boolean> {
+        val projectConfig = backendConfiguration.getProjectConfig(project)
 
-            applicationHandler.validateRegion()
+        if (!files.isNullOrEmpty()) {
+            validateAttachmentTypes(files)
+        }
+        val isPreVerified = applicationService.isValidPreVerifiedApplication(application, request)
 
-            val region = RegionsRepository.findRegionById(regionId)
-            val applicationConfirmationNote = region.applicationConfirmationMailNote
-                ?.takeIf { region.applicationConfirmationMailNoteActivated && it.isNotEmpty() }
-            applicationHandler.validateAttachmentTypes()
-            val isPreVerified = applicationHandler.isValidPreVerifiedApplication()
+        val (applicationEntity, verificationEntities) = transaction {
+            val region = RegionsRepository.findByIdInProject(project, regionId) ?: throw RegionNotFoundException()
+            if (!region.activatedForApplication) {
+                throw RegionNotActivatedForApplicationException()
+            }
 
-            val (applicationEntity, verificationEntities) = applicationHandler.saveApplication()
+            val (applicationEntity, verificationEntities) = applicationService.saveApplication(application, regionId, files.orEmpty())
 
             if (isPreVerified) {
-                applicationHandler.setApplicationVerificationToPreVerifiedNow(verificationEntities)
-                applicationHandler.sendPreVerifiedApplicationMails(
-                    applicationEntity,
-                    verificationEntities,
-                    dataFetcherResultBuilder,
-                    applicationConfirmationNote,
-                )
+                verificationEntities.forEach {
+                    ApplicationRepository.verifyApplicationVerification(
+                        it.accessKey,
+                        ApplicationVerificationExternalSource.VEREIN360,
+                    )
+                }
             } else {
-                applicationHandler.sendApplicationMails(
-                    applicationEntity,
-                    verificationEntities,
-                    dataFetcherResultBuilder,
-                    applicationConfirmationNote,
+                Mailer.sendApplicationApplicantMail(
+                    backendConfiguration,
+                    projectConfig,
+                    application.personalData,
+                    applicationEntity.accessKey,
+                    regionId,
                 )
             }
-            dataFetcherResultBuilder.data(true).build()
+
+            applicationEntity to verificationEntities
         }
+
+        val dataFetcherResultBuilder = DataFetcherResult.newResult<Boolean>()
+
+        for (applicationVerification in verificationEntities) {
+            try {
+                if (isPreVerified) {
+                    Mailer.sendApplicationMailToContactPerson(
+                        backendConfiguration,
+                        projectConfig,
+                        applicationVerification.contactName,
+                        applicationVerification.contactEmailAddress,
+                        application.personalData,
+                        applicationEntity.accessKey,
+                        regionId,
+                    )
+                } else {
+                    val applicantName =
+                        "${application.personalData.forenames.shortText} ${application.personalData.surname.shortText}"
+                    Mailer.sendApplicationVerificationMail(
+                        backendConfiguration,
+                        applicantName,
+                        projectConfig,
+                        applicationVerification,
+                    )
+                }
+            } catch (exception: MailNotSentException) {
+                dataFetcherResultBuilder.error(exception.toGraphQLError())
+            }
+        }
+
+        Mailer.sendNotificationForApplicationMails(
+            backendConfiguration,
+            projectConfig,
+            regionId,
+        )
+
+        return dataFetcherResultBuilder.data(true).build()
+    }
+
+    private fun validateAttachmentTypes(files: List<Part>) {
+        val allowedContentTypes = setOf("application/pdf", "image/png", "image/jpeg")
+        val maxFileSizeBytes = 5 * 1000 * 1000
+        if (!files.all { it.contentType in allowedContentTypes }) {
+            throw InvalidFileTypeException()
+        }
+        if (!files.all { it.size <= maxFileSizeBytes }) {
+            throw InvalidFileSizeException()
+        }
+    }
 
     @GraphQLDescription("Deletes the application with specified id")
     @MutationMapping
@@ -111,7 +159,7 @@ class EakApplicationMutationController(
                 throw InvalidInputException("Application cannot be deleted while it is in a pending state")
             }
 
-            ApplicationRepository.delete(authContext.project, application, applicationData)
+            applicationService.deleteApplication(authContext.project, application)
         }
         return true
     }
@@ -152,7 +200,6 @@ class EakApplicationMutationController(
 
                 ApplicationRepository.verifyApplicationVerification(accessKey).also {
                     Mailer.sendNotificationForVerificationMails(
-                        project,
                         backendConfiguration,
                         projectConfig,
                         application.regionId.value,
