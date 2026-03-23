@@ -18,11 +18,6 @@ import app.ehrenamtskarte.backend.helper.TestData
 import app.ehrenamtskarte.backend.helper.toDataObject
 import app.ehrenamtskarte.backend.helper.toErrorObject
 import app.ehrenamtskarte.backend.shared.mail.Mailer
-import org.mockito.ArgumentMatchers.anyInt
-import org.mockito.ArgumentMatchers.anyString
-import org.mockito.Mockito
-import org.mockito.Mockito.times
-import org.mockito.Mockito.verify
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.deleteAll
 import org.jetbrains.exposed.v1.jdbc.selectAll
@@ -31,8 +26,13 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
-import org.springframework.test.context.bean.override.mockito.MockitoBean
+import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.ArgumentMatchers.anyString
+import org.mockito.Mockito
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
 import org.springframework.http.HttpStatus
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -206,7 +206,7 @@ internal class Verein360ApplicationTest : IntegrationTest() {
 
         verify(mailer, times(0)).sendApplicationApplicantMail(any(), any(), anyString(), anyInt())
         verify(mailer, times(0)).sendApplicationVerificationMail(anyString(), any(), any())
-        verify(mailer, times(1)).sendApplicationMailToContactPerson(any(), any(), anyString(), anyString(), anyInt())
+        verify(mailer, times(1)).sendPreVerifiedApplicationMail(any(), any(), anyString(), anyString(), anyInt())
         verify(mailer, times(1)).sendNotificationForApplicationMails(any(), anyInt())
     }
 
@@ -235,7 +235,7 @@ internal class Verein360ApplicationTest : IntegrationTest() {
 
         verify(mailer, times(1)).sendApplicationApplicantMail(any(), any(), anyString(), anyInt())
         verify(mailer, times(1)).sendApplicationVerificationMail(anyString(), any(), any())
-        verify(mailer, times(0)).sendApplicationMailToContactPerson(any(), any(), anyString(), anyString(), anyInt())
+        verify(mailer, times(0)).sendPreVerifiedApplicationMail(any(), any(), anyString(), anyString(), anyInt())
         verify(mailer, times(1)).sendNotificationForApplicationMails(any(), anyInt())
     }
 

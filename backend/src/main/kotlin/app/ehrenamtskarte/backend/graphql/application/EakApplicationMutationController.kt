@@ -51,38 +51,32 @@ class EakApplicationMutationController(
         @GraphQLIgnore @ContextValue request: HttpServletRequest,
     ): DataFetcherResult<Boolean> {
         val projectConfig = backendConfiguration.getProjectConfig(project)
+
         files?.let { applicationService.validateAttachmentTypes(it) }
         applicationService.validateRegionActivatedForApplication(project, regionId)
         val isPreVerified = applicationService.isValidPreVerifiedApplication(application, request)
 
         val (applicationEntity, verificationEntities) = transaction {
-            val (applicationEntity, verificationEntities) = applicationService.saveApplication(
-                application,
-                regionId,
-                files.orEmpty(),
-                isPreVerified,
-            )
+            val result = applicationService.saveApplication(application, regionId, files.orEmpty(), isPreVerified)
             if (!isPreVerified) {
                 // Send mail to applicant within the transaction to ensure rollback on failure
                 mailService.sendApplicationApplicantMail(
                     projectConfig,
                     application.personalData,
-                    applicationEntity.accessKey,
+                    result.first.accessKey,
                     regionId,
                 )
             }
-            applicationEntity to verificationEntities
+            result
         }
 
         val resultBuilder = DataFetcherResult.newResult<Boolean>()
-
-        val applicantName =
-            "${application.personalData.forenames.shortText} ${application.personalData.surname.shortText}"
+        val applicantName = application.personalData.fullName()
 
         verificationEntities.forEach { verification ->
             try {
                 if (isPreVerified) {
-                    mailService.sendApplicationMailToContactPerson(
+                    mailService.sendPreVerifiedApplicationMail(
                         projectConfig,
                         verification,
                         applicantName,

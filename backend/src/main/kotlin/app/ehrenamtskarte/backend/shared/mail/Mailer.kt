@@ -161,7 +161,7 @@ class Mailer(
         )
     }
 
-    fun sendApplicationMailToContactPerson(
+    fun sendPreVerifiedApplicationMail(
         projectConfig: ProjectConfig,
         applicationVerification: ApplicationVerificationEntity,
         applicantName: String,
