@@ -6,14 +6,11 @@ import React, { ReactNode } from 'react'
 import { MemoryRouter } from 'react-router'
 import { Temporal } from 'temporal-polyfill'
 
+import { DynamicActivationCodeSchema, StaticVerificationCodeSchema } from '../../../card_pb'
 import { generateCardInfo, initializeCard } from '../../../cards/card'
 import createCards, { CreateCardsError, CreateCardsResult } from '../../../cards/createCards'
 import deleteCards from '../../../cards/deleteCards'
 import { PdfError, generatePdf } from '../../../cards/pdf/pdfFactory'
-import {
-  DynamicActivationCodeSchema,
-  StaticVerificationCodeSchema,
-} from '../../../generated/card_pb'
 import { ProjectConfig } from '../../../project-configs'
 import { config as bayernConfig } from '../../../project-configs/bayern/config'
 import { config as nuernbergConfig } from '../../../project-configs/nuernberg/config'

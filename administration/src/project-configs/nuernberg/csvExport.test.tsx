@@ -1,8 +1,8 @@
 import { create } from '@bufbuild/protobuf'
 
+import { DynamicActivationCodeSchema } from '../../card_pb'
 import { generateCardInfo, initializeCard } from '../../cards/card'
 import { CreateCardsResult } from '../../cards/createCards'
-import { DynamicActivationCodeSchema } from '../../generated/card_pb'
 import { getTestRegion } from '../../routes/user-settings/__mocks__/Region'
 import { config } from './config'
 import { buildCsvLine } from './csvExport'

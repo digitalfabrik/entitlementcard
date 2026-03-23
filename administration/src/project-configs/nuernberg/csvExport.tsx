@@ -1,13 +1,13 @@
 import { create } from '@bufbuild/protobuf'
 import { stringify } from 'csv-stringify/browser/esm/sync'
 
+import { QrCodeSchema } from '../../card_pb'
 import { Card } from '../../cards/card'
 import { CreateCardsResult } from '../../cards/createCards'
 import { getAddressFieldExtensionsValues } from '../../cards/extensions/AddressFieldExtensions'
 import { BIRTHDAY_EXTENSION_NAME } from '../../cards/extensions/BirthdayExtension'
 import { NUERNBERG_PASS_ID_EXTENSION_NAME } from '../../cards/extensions/NuernbergPassIdExtension'
 import { START_DAY_EXTENSION_NAME } from '../../cards/extensions/StartDayExtension'
-import { QrCodeSchema } from '../../generated/card_pb'
 import { formatDateDefaultGerman } from '../../util/date'
 import { convertProtobufToHexCode } from '../../util/qrcode'
 

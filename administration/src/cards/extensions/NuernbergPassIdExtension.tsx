@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { NuernergPassIdentifier } from '../../generated/card_pb'
+import { NuernergPassIdentifier } from '../../card_pb'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
 import CardTextField from './components/CardTextField'
 import ClearInputButton from './components/ClearInputButton'

@@ -1,6 +1,6 @@
 import { ReactElement } from 'react'
 
-import { CardExtensions } from '../../generated/card_pb'
+import { CardExtensions } from '../../card_pb'
 import { Region } from '../../generated/graphql'
 import { UnionToIntersection } from '../../util/helper'
 import {
