@@ -2,11 +2,12 @@ import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
+import { useMutation } from 'urql'
 
 import CenteredCircularProgress from '../../../components/CenteredCircularProgress'
 import RenderGuard from '../../../components/RenderGuard'
-import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
-import { Role, useImportAcceptingStoresMutation } from '../../../generated/graphql'
+import messageFromGraphQlError from '../../../errors/getMessageFromApolloError'
+import { ImportAcceptingStoresDocument, Role } from '../../../graphql'
 import { StoresFieldConfig } from '../../../project-configs'
 import { ProjectConfigContext } from '../../../provider/ProjectConfigContext'
 import StoresButtonBar from './components/StoresButtonBar'
@@ -28,26 +29,7 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
   const [acceptingStores, setAcceptingStores] = useState<AcceptingStoresEntry[]>([])
   const [dryRun, setDryRun] = useState<boolean>(false)
   const [isLoadingCoordinates, setIsLoadingCoordinates] = useState(false)
-  const [importStores, { loading: isApplyingStoreTransaction }] = useImportAcceptingStoresMutation({
-    onCompleted: ({ result }) => {
-      enqueueSnackbar(
-        <StoresImportResult
-          dryRun={dryRun}
-          storesUntouched={result.storesUntouched}
-          storesDeleted={result.storesDeleted}
-          storesCreated={result.storesCreated}
-        />,
-        {
-          persist: true,
-        },
-      )
-      setAcceptingStores([])
-    },
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
-      enqueueSnackbar(title, { variant: 'error' })
-    },
-  })
+  const [importStoresState, importStoresMutation] = useMutation(ImportAcceptingStoresDocument)
 
   const goBack = () => {
     if (!acceptingStores.length) {
@@ -57,7 +39,7 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
     }
   }
 
-  const onImportStores = () => {
+  const onImportStores = async () => {
     const storesToImport = acceptingStores.map(store => {
       const storeData = store.data
       return {
@@ -77,17 +59,33 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
       }
     })
 
-    importStores({
-      variables: {
-        stores: storesToImport,
-        dryRun,
-      },
+    const result = await importStoresMutation({
+      stores: storesToImport,
+      dryRun,
     })
+    if (result.error) {
+      const { title } = messageFromGraphQlError(result.error)
+      enqueueSnackbar(title, { variant: 'error' })
+    } else if (result.data) {
+      const { result: importResult } = result.data
+      enqueueSnackbar(
+        <StoresImportResult
+          dryRun={dryRun}
+          storesUntouched={importResult.storesUntouched}
+          storesDeleted={importResult.storesDeleted}
+          storesCreated={importResult.storesCreated}
+        />,
+        {
+          persist: true,
+        },
+      )
+      setAcceptingStores([])
+    }
   }
 
   return (
     <>
-      {(isApplyingStoreTransaction || isLoadingCoordinates) && <CenteredCircularProgress />}
+      {(importStoresState.fetching || isLoadingCoordinates) && <CenteredCircularProgress />}
       {acceptingStores.length === 0 ? (
         <StoresCSVInput
           setAcceptingStores={setAcceptingStores}

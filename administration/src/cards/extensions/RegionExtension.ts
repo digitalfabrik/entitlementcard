@@ -1,4 +1,4 @@
-import { Region } from '../../generated/graphql'
+import { Region } from '../../graphql'
 import type { Extension } from './extensions'
 
 export const REGION_EXTENSION_NAME = 'regionId'
@@ -10,7 +10,7 @@ const toString = ({ regionId }: RegionExtensionState): string => regionId.toStri
 const RegionExtension: Extension<RegionExtensionState> = {
   name: REGION_EXTENSION_NAME,
   Component: () => null,
-  getInitialState: (region?: Region) => ({ regionId: region!.id }),
+  getInitialState: (region?: Pick<Region, 'id'>) => ({ regionId: region!.id }),
   causesInfiniteLifetime: () => false,
   getProtobufData: ({ regionId }: RegionExtensionState) => ({
     extensionRegion: {

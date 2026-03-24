@@ -6,8 +6,8 @@ import React, { ReactElement, useCallback, useContext, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 
+import { Region } from '../../../../../src-gen/graphql'
 import { Card, initializeCard } from '../../../../cards/card'
-import { Region } from '../../../../generated/graphql'
 import { ProjectConfigContext } from '../../../../provider/ProjectConfigContext'
 import AddCardForm from './AddCardForm'
 

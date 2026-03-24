@@ -1,6 +1,6 @@
 import { create } from '@bufbuild/protobuf'
 
-import { DynamicActivationCodeSchema } from '../generated/card_pb'
+import { DynamicActivationCodeSchema } from '../card_pb'
 import { config as bayernConfig } from '../project-configs/bayern/config'
 import { config as nuernbergConfig } from '../project-configs/nuernberg/config'
 import { CSV_MIME_TYPE_UTF8 } from '../routes/applications/constants'

@@ -2,7 +2,7 @@ import { Stack } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 
 import RenderGuard from '../../components/RenderGuard'
-import { Role } from '../../generated/graphql'
+import { Role } from '../../graphql'
 import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import ChangePasswordForm from './components/ChangePasswordForm'
 import NotificationSettings from './components/NotificationSettings'

@@ -4,7 +4,7 @@ import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import AlertBox from '../../../components/AlertBox'
-import { CardStatisticsResultModel } from '../../../generated/graphql'
+import { CardStatisticsResultModel } from '../../../graphql'
 import { ProjectConfigContext } from '../../../provider/ProjectConfigContext'
 import StatisticsBarTooltip from './StatisticsBarTooltip'
 

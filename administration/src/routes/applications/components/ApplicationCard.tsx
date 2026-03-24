@@ -1,5 +1,4 @@
 /* eslint-disable react/destructuring-assignment */
-import { MutationResult } from '@apollo/client'
 import {
   CancelOutlined,
   Check,
@@ -32,19 +31,20 @@ import React, { memo, useContext, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useReactToPrint } from 'react-to-print'
 import { Temporal } from 'temporal-polyfill'
+import { useMutation } from 'urql'
 
 import { AccordionExpandButton } from '../../../components/AccordionExpandButton'
 import BaseMenu, { MenuItemType } from '../../../components/BaseMenu'
 import ConfirmDialog from '../../../components/ConfirmDialog'
 import JsonFieldView from '../../../components/JsonFieldView'
 import VerificationsView from '../../../components/VerificationsView'
-import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
+import messageFromGraphQlError from '../../../errors/getMessageFromApolloError'
 import {
   ApplicationStatus,
-  useApproveApplicationStatusMutation,
-  useDeleteApplicationMutation,
-  useRejectApplicationStatusMutation,
-} from '../../../generated/graphql'
+  ApproveApplicationStatusDocument,
+  DeleteApplicationDocument,
+  RejectApplicationStatusDocument,
+} from '../../../graphql'
 import { CsvIcon } from '../../../icons/CsvIcon'
 import type { ProjectConfig } from '../../../project-configs'
 import { ProjectConfigContext } from '../../../provider/ProjectConfigContext'
@@ -59,7 +59,7 @@ import { ApplicationIndicators } from './VerificationsIndicator'
 
 const DeleteDialog = (props: {
   isOpen: boolean
-  deleteResult: MutationResult
+  deleteResult: { fetching: boolean; called: boolean }
   onConfirm: () => void
   onCancel: () => void
 }) => {
@@ -72,7 +72,7 @@ const DeleteDialog = (props: {
       title={t('deleteApplication')}
       maxWidth='xs'
       onConfirm={props.onConfirm}
-      actionDisabled={props.deleteResult.loading || props.deleteResult.called}
+      actionDisabled={props.deleteResult.fetching || props.deleteResult.called}
       confirmButtonColor='error'
     >
       <Stack direction='row' sx={{ gap: 2, alignItems: 'center' }}>
@@ -248,49 +248,62 @@ const ApplicationCard = ({
     documentTitle: t('applicationFrom', { date: Temporal.Instant.from(application.createdDate) }),
   })
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [deleteDialogCalled, setDeleteDialogCalled] = useState(false)
   const [rejectionDialogOpen, setRejectionDialogOpen] = useState(false)
   const [openNoteDialog, setOpenNoteDialog] = useState(false)
   const [accordionExpanded, setAccordionExpanded] = useState(false)
 
-  const [deleteApplication, deleteResult] = useDeleteApplicationMutation({
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
+  const [deleteApplicationState, deleteApplicationMutation] = useMutation(DeleteApplicationDocument)
+  const [approveApplicationState, approveApplicationMutation] = useMutation(
+    ApproveApplicationStatusDocument,
+  )
+  const [rejectApplicationState, rejectApplicationMutation] = useMutation(
+    RejectApplicationStatusDocument,
+  )
+
+  const deleteApplication = async () => {
+    setDeleteDialogCalled(true)
+    const result = await deleteApplicationMutation({ applicationId: application.id })
+    if (result.error) {
+      const { title } = messageFromGraphQlError(result.error)
       enqueueSnackbar(title, { variant: 'error' })
-    },
-    onCompleted: ({ deleted }: { deleted: boolean }) => {
-      if (deleted) {
+      setDeleteDialogCalled(false)
+    } else if (result.data) {
+      if (result.data.deleted) {
         onDelete()
       } else {
         console.error('Delete operation returned false.')
         enqueueSnackbar(t('errors:unknown'), { variant: 'error' })
+        setDeleteDialogCalled(false)
       }
-    },
-  })
+    }
+  }
 
-  const [approveStatus, approveStatusResult] = useApproveApplicationStatusMutation({
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
+  const approveStatus = async () => {
+    const result = await approveApplicationMutation({ applicationId: application.id })
+    if (result.error) {
+      const { title } = messageFromGraphQlError(result.error)
       enqueueSnackbar(title, { variant: 'error' })
-    },
-    onCompleted: result => {
-      // Update the application with new fields from the query
-      onChange({ ...application, ...result.updates })
+    } else if (result.data) {
+      onChange({ ...application, ...result.data.updates })
       enqueueSnackbar(t('applicationApprovedToastMessage'), { variant: 'success' })
-    },
-  })
+    }
+  }
 
-  const [rejectStatus, rejectStatusResult] = useRejectApplicationStatusMutation({
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
+  const rejectStatus = async (rejectionMessage: string) => {
+    const result = await rejectApplicationMutation({
+      applicationId: application.id,
+      rejectionMessage,
+    })
+    if (result.error) {
+      const { title } = messageFromGraphQlError(result.error)
       enqueueSnackbar(title, { variant: 'error' })
-    },
-    onCompleted: result => {
+    } else if (result.data) {
       setRejectionDialogOpen(false)
-      // Update the application with new fields from the query
-      onChange({ ...application, ...result.application })
+      onChange({ ...application, ...result.data.application })
       enqueueSnackbar(t('applicationRejectedToastMessage'), { variant: 'success' })
-    },
-  })
+    }
+  }
 
   const personalData = useMemo(
     () => config.applicationFeature?.applicationJsonToPersonalData(application.jsonValue),
@@ -427,10 +440,8 @@ const ApplicationCard = ({
         <Stack sx={{ p: 2, gap: 2, flexDirection: 'row' }}>
           {application.status === ApplicationStatus.Pending ? (
             <ButtonsApplicationPending
-              disabled={approveStatusResult.loading}
-              onPrimaryButtonClick={() => {
-                approveStatus({ variables: { applicationId: application.id } })
-              }}
+              disabled={approveApplicationState.fetching}
+              onPrimaryButtonClick={approveStatus}
               onSecondaryButtonClick={() => setRejectionDialogOpen(true)}
             />
           ) : (
@@ -455,25 +466,23 @@ const ApplicationCard = ({
             application={application}
             isOpen={openNoteDialog}
             onOpenNoteDialog={setOpenNoteDialog}
-            onChange={onChange}
+            onChange={() => onChange(application)}
           />
         </Box>
       </AccordionDetails>
 
       <DeleteDialog
         isOpen={deleteDialogOpen}
-        deleteResult={deleteResult}
-        onConfirm={() => deleteApplication({ variables: { applicationId: application.id } })}
+        deleteResult={{ fetching: deleteApplicationState.fetching, called: deleteDialogCalled }}
+        onConfirm={deleteApplication}
         onCancel={() => setDeleteDialogOpen(false)}
       />
 
       <RejectionDialog
         open={rejectionDialogOpen}
-        loading={rejectStatusResult.loading}
+        loading={rejectApplicationState.fetching}
         onConfirm={message => {
-          rejectStatus({
-            variables: { applicationId: application.id, rejectionMessage: message },
-          })
+          rejectStatus(message)
         }}
         onCancel={() => {
           setRejectionDialogOpen(false)

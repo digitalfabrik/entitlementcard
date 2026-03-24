@@ -8,7 +8,7 @@ import {
   grayscale,
 } from '@cantoo/pdf-lib'
 
-import { type QrCode, QrCodeSchema } from '../../generated/card_pb'
+import { type QrCode, QrCodeSchema } from '../../card_pb'
 import {
   PdfFormElementProps,
   PdfLinkAreaProps,

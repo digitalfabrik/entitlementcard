@@ -5,12 +5,8 @@ import { Temporal } from 'temporal-polyfill'
 
 import JsonFieldView from '../../../components/JsonFieldView'
 import VerificationsView from '../../../components/VerificationsView'
-import {
-  ApplicationAdmin,
-  ApplicationStatus,
-  ApplicationVerificationView,
-} from '../../../generated/graphql'
-import { ApplicationParsedJsonValue } from '../utils/application'
+import { ApplicationStatus } from '../../../graphql'
+import { Application } from '../types/types'
 import { ApplicationStatusNote } from './ApplicationStatusNote'
 
 export const applicationPrintViewPageStyle = css`

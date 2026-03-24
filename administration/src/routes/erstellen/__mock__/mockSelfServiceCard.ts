@@ -1,9 +1,9 @@
 import { toBinary } from '@bufbuild/protobuf'
 
+import { CardInfoSchema } from '../../../card_pb'
 import { uint8ArrayToBase64 } from '../../../cards/base64'
 import { generateCardInfo, initializeCard } from '../../../cards/card'
-import { CardInfoSchema } from '../../../generated/card_pb'
-import { CreateCardsFromSelfServiceDocument } from '../../../generated/graphql'
+import { CreateCardsFromSelfServiceDocument } from '../../../graphql'
 import { config } from '../../../project-configs/koblenz/config'
 import { safeParseGermanPlainDateString } from '../../../util/date'
 

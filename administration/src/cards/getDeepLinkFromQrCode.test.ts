@@ -8,7 +8,7 @@ import {
 } from 'build-configs'
 import { Temporal } from 'temporal-polyfill'
 
-import { DynamicActivationCodeSchema } from '../generated/card_pb'
+import { DynamicActivationCodeSchema } from '../card_pb'
 import { getTestRegion } from '../routes/user-settings/__mocks__/Region'
 import { generateCardInfo, initializeCard } from './card'
 import { CreateCardsResult } from './createCards'

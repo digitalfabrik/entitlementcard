@@ -1,4 +1,4 @@
-import { Region } from '../../../generated/graphql'
+import { Region } from '../../../../src-gen/graphql'
 
 export const getTestRegion = (options: {
   id?: number

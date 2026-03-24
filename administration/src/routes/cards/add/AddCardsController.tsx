@@ -5,7 +5,7 @@ import { useBlocker, useNavigate, useSearchParams } from 'react-router'
 import { BlockerDialog } from '../../../components/BlockerDialog'
 import CenteredCircularProgress from '../../../components/CenteredCircularProgress'
 import RenderGuard from '../../../components/RenderGuard'
-import { Region, Role } from '../../../generated/graphql'
+import { Region, Role } from '../../../graphql'
 import { useWhoAmI } from '../../../provider/WhoAmIProvider'
 import { CardsCreatedScreen } from '../components/CardsCreatedScreen'
 import CreateCardsButtonBar from '../components/CreateCardsButtonBar'
@@ -79,7 +79,7 @@ const AddCardsController = (): ReactElement => {
   return (
     <RenderGuard
       allowedRoles={[Role.RegionManager, Role.RegionAdmin]}
-      condition={region !== undefined}
+      condition={region !== null}
       error={{ description: t('notAuthorizedToCreateCards') }}
     >
       <InnerAddCardsController region={region!} />

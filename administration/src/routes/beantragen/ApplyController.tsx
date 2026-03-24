@@ -2,11 +2,12 @@ import { Box, Typography, styled } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useCallback, useContext, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { useMutation, useQuery } from 'urql'
 
 import CenteredCircularProgress from '../../components/CenteredCircularProgress'
 import PageLayout from '../../components/PageLayout'
-import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
-import { useAddEakApplicationMutation, useGetRegionsQuery } from '../../generated/graphql'
+import messageFromGraphQlError from '../../errors/getMessageFromApolloError'
+import { AddEakApplicationDocument, GetRegionsDocument } from '../../graphql'
 import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import getQueryResult from '../../util/getQueryResult'
 import { reportErrorToSentry } from '../../util/sentry'
@@ -40,30 +41,13 @@ const ApplyController = (): React.ReactElement | null => {
     applicationStorageKey,
     lastCommitForApplicationForm,
   )
-  const [addEakApplication, { loading: loadingSubmit }] = useAddEakApplicationMutation({
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
-      enqueueSnackbar(title, {
-        variant: 'error',
-        style: { whiteSpace: 'pre-line' },
-        autoHideDuration: 7200,
-      })
-      // 2851: Add error logging to get more client information
-      reportErrorToSentry(error)
-    },
-    onCompleted: ({ result }) => {
-      if (result) {
-        setState(() => ApplicationForm.initialState)
-        setFormSubmitted(true)
-      }
-    },
-  })
-
   const projectId = useContext(ProjectConfigContext).projectId
-  const regionsQuery = useGetRegionsQuery({
+  const [addEakApplicationState, addEakApplicationMutation] = useMutation(AddEakApplicationDocument)
+  const [regionsState, regionsQuery] = useQuery({
+    query: GetRegionsDocument,
     variables: { project: projectId },
   })
-  const regionsQueryResult = getQueryResult(regionsQuery)
+  const regionsQueryResult = getQueryResult(regionsState, regionsQuery)
   const arrayBufferManagerInitialized = useInitializeGlobalArrayBuffersManager()
   const getArrayBufferKeys = useMemo(
     () => (status === 'loading' ? null : () => ApplicationForm.getArrayBufferKeys(state)),
@@ -83,7 +67,7 @@ const ApplyController = (): React.ReactElement | null => {
 
   const regions = regionsQueryResult.data.regions.filter(region => region.activatedForApplication)
 
-  const submit = () => {
+  const submit = async () => {
     const validationResult = ApplicationForm.validate(state, { regions })
     if (validationResult.type === 'error') {
       enqueueSnackbar(t('invalidInputError'), { variant: 'error' })
@@ -91,9 +75,20 @@ const ApplyController = (): React.ReactElement | null => {
     }
     const [regionId, application] = validationResult.value
 
-    addEakApplication({
-      variables: { regionId, application, project: projectId },
-    })
+    const result = await addEakApplicationMutation({ regionId, application, project: projectId })
+    if (result.error) {
+      const { title } = messageFromGraphQlError(result.error)
+      enqueueSnackbar(title, {
+        variant: 'error',
+        style: { whiteSpace: 'pre-line' },
+        autoHideDuration: 7200,
+      })
+      // 2851: Add error logging to get more client information
+      reportErrorToSentry(result.error)
+    } else if (result.data?.result) {
+      setState(() => ApplicationForm.initialState)
+      setFormSubmitted(true)
+    }
   }
 
   return (
@@ -121,12 +116,12 @@ const ApplyController = (): React.ReactElement | null => {
             state={state}
             setState={setState}
             onSubmit={submit}
-            loading={loadingSubmit}
+            loading={addEakApplicationState.fetching}
             options={{ regions }}
           />
         )}
         <Box sx={{ justifyContent: 'flex-end', display: 'flex', marginY: 2 }}>
-          {loadingSubmit || formSubmitted ? null : (
+          {addEakApplicationState.fetching || formSubmitted ? null : (
             <DiscardAllInputsButton discardAll={discardAll} />
           )}
         </Box>

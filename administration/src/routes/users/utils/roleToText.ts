@@ -1,6 +1,6 @@
 import i18next from 'i18next'
 
-import { Role } from '../../../generated/graphql'
+import { Role } from '../../../graphql'
 
 const roleToText = (role: Role): string => {
   switch (role) {

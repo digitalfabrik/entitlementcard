@@ -1,5 +1,5 @@
 import { JsonField } from '../../../components/JsonFieldView'
-import { ApplicationStatus } from '../../../generated/graphql'
+import { ApplicationStatus } from '../../../graphql'
 import type { Application } from '../types/types'
 import { verificationsAwaiting } from './verificationData'
 

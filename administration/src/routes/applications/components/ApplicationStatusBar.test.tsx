@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { ApplicationStatus } from '../../../generated/graphql'
+import { ApplicationStatus } from '../../../graphql'
 import { renderWithOptions } from '../../../testing/render'
 import { barItems } from '../ApplicationsOverview'
 import type { Application } from '../types/types'

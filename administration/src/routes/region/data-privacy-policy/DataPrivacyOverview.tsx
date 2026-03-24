@@ -4,11 +4,12 @@ import { useSnackbar } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
+import { useMutation } from 'urql'
 
 import ButtonBar from '../../../components/ButtonBar'
-import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
+import messageFromGraphQlError from '../../../errors/getMessageFromApolloError'
 import graphQlErrorMap from '../../../errors/graphQlErrorMap'
-import { GraphQlExceptionCode, useUpdateDataPolicyMutation } from '../../../generated/graphql'
+import { GraphQlExceptionCode, UpdateDataPolicyDocument } from '../../../graphql'
 
 type RegionOverviewProps = {
   dataPrivacyPolicy: string
@@ -26,18 +27,19 @@ const DataPrivacyOverview = ({
   const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('regionSettings')
   const [dataPrivacyText, setDataPrivacyText] = useState<string>(dataPrivacyPolicy)
-  const [updateDataPrivacy, { loading }] = useUpdateDataPolicyMutation({
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
-      enqueueSnackbar(title, { variant: 'error' })
-    },
-    onCompleted: () => {
-      enqueueSnackbar(t('dataPrivacyChangeSuccessful'), { variant: 'success' })
-    },
-  })
-  const maxCharsExceeded = dataPrivacyText.length > MAX_CHARS
+  const [updateDataPolicyState, updateDataPolicyMutation] = useMutation(UpdateDataPolicyDocument)
 
-  const onSave = () => updateDataPrivacy({ variables: { regionId, text: dataPrivacyText } })
+  const onSave = async () => {
+    const result = await updateDataPolicyMutation({ regionId, text: dataPrivacyText })
+    if (result.error) {
+      const { title } = messageFromGraphQlError(result.error)
+      enqueueSnackbar(title, { variant: 'error' })
+    } else {
+      enqueueSnackbar(t('dataPrivacyChangeSuccessful'), { variant: 'success' })
+    }
+  }
+
+  const maxCharsExceeded = dataPrivacyText.length > MAX_CHARS
 
   const { title: errorMessage } = graphQlErrorMap({
     code: GraphQlExceptionCode.InvalidDataPolicySize,
@@ -99,7 +101,7 @@ const DataPrivacyOverview = ({
               variant='contained'
               color='primary'
               onClick={onSave}
-              loading={loading}
+              loading={updateDataPolicyState.fetching}
             >
               {t('save')}
             </Button>

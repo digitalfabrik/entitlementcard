@@ -3,7 +3,7 @@ import React, { ReactElement, useId } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import CustomSelect from '../../../../components/CustomSelect'
-import { Category } from '../../../../generated/graphql'
+import { Category } from '../../../../graphql'
 import type { AcceptingStoreFormData, UpdateStoreFunction } from '../../types'
 
 const CategorySection = ({

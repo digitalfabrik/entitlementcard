@@ -3,12 +3,13 @@ import { Box, Stack, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { useMutation } from 'urql'
 
 import AlertBox from '../../../components/AlertBox'
 import BaseCheckbox from '../../../components/BaseCheckbox'
 import ConfirmDialog from '../../../components/ConfirmDialog'
-import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
-import { Administrator, useDeleteAdministratorMutation } from '../../../generated/graphql'
+import messageFromGraphQlError from '../../../errors/getMessageFromApolloError'
+import { Administrator, DeleteAdministratorDocument } from '../../../graphql'
 import { AuthContext } from '../../../provider/AuthProvider'
 import { WhoAmIContext } from '../../../provider/WhoAmIProvider'
 
@@ -27,29 +28,29 @@ const DeleteUserDialog = ({
   const [deleteWarningConfirmed, setDeleteWarningConfirmed] = useState(false)
   const { t } = useTranslation('users')
 
-  const [deleteAdministrator, { loading }] = useDeleteAdministratorMutation({
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
-      enqueueSnackbar(title, { variant: 'error' })
-    },
-    onCompleted: () => {
-      enqueueSnackbar(t('deleteUserSuccess'), { variant: 'success' })
-      onClose()
-      onSuccess()
-    },
-  })
+  const [deleteAdministratorState, deleteAdministratorMutation] = useMutation(
+    DeleteAdministratorDocument,
+  )
 
-  const deleteUser = () => {
+  const deleteUser = async () => {
     if (selectedUser === null) {
       console.error('Form submitted in an unexpected state.')
       return
     }
 
-    deleteAdministrator({
-      variables: {
-        adminId: selectedUser.id,
-      },
+    const result = await deleteAdministratorMutation({
+      adminId: selectedUser.id,
     })
+
+    if (result.error) {
+      const { title } = messageFromGraphQlError(result.error)
+      enqueueSnackbar(title, { variant: 'error' })
+      return
+    }
+
+    enqueueSnackbar(t('deleteUserSuccess'), { variant: 'success' })
+    onClose()
+    onSuccess()
 
     if (selectedUser.id === actingAdminId) {
       signOut()
@@ -79,7 +80,7 @@ const DeleteUserDialog = ({
       onClose={onClose}
       confirmButtonColor='error'
       onConfirm={deleteUser}
-      loading={loading}
+      loading={deleteAdministratorState.fetching}
       actionDisabled={selectedUser?.id === actingAdminId && !deleteWarningConfirmed}
       confirmButtonIcon={<PersonRemove />}
       confirmButtonText={t('deleteUser')}

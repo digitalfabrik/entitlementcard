@@ -1,45 +1,45 @@
 import { useSnackbar } from 'notistack'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useMutation, useQuery } from 'urql'
 
-import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
-import {
-  useGetRegionSettingsByIdQuery,
-  useUpdateRegionSettingsMutation,
-} from '../../generated/graphql'
+import messageFromGraphQlError from '../../errors/getMessageFromApolloError'
+import { GetRegionSettingsByIdDocument, UpdateRegionSettingsDocument } from '../../graphql'
 import getQueryResult from '../../util/getQueryResult'
 import RegionSettingsCard from './components/RegionSettingsCard'
 
 const RegionSettingsController = ({ regionId }: { regionId: number }): ReactElement => {
   const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('regionSettings')
-  const regionSettingsByIdQuery = useGetRegionSettingsByIdQuery({
+  const [regionSettingsState, regionSettingsQuery] = useQuery({
+    query: GetRegionSettingsByIdDocument,
     variables: { regionId },
   })
 
-  const [updateRegionSettings, { loading }] = useUpdateRegionSettingsMutation({
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
-      enqueueSnackbar(title, { variant: 'error' })
-    },
-    onCompleted: () => {
-      enqueueSnackbar(t('savedSettingsSuccessful'), { variant: 'success' })
-    },
-  })
+  const [updateRegionSettingsState, updateRegionSettingsMutation] = useMutation(
+    UpdateRegionSettingsDocument,
+  )
 
-  const regionSettingsByIdQueryResult = getQueryResult(regionSettingsByIdQuery)
+  const regionSettingsByIdQueryResult = getQueryResult(regionSettingsState, regionSettingsQuery)
   if (!regionSettingsByIdQueryResult.successful) {
     return regionSettingsByIdQueryResult.component
   }
 
-  const onSave = (activatedForApplication: boolean, activatedForConfirmationMail: boolean) => {
-    updateRegionSettings({
-      variables: {
-        regionId,
-        activatedForApplication,
-        activatedForConfirmationMail,
-      },
+  const onSave = async (
+    activatedForApplication: boolean,
+    activatedForConfirmationMail: boolean,
+  ) => {
+    const result = await updateRegionSettingsMutation({
+      regionId,
+      activatedForApplication,
+      activatedForConfirmationMail,
     })
+    if (result.error) {
+      const { title } = messageFromGraphQlError(result.error)
+      enqueueSnackbar(title, { variant: 'error' })
+    } else {
+      enqueueSnackbar(t('savedSettingsSuccessful'), { variant: 'success' })
+    }
   }
 
   const { activatedForApplication, activatedForCardConfirmationMail } =
@@ -48,7 +48,7 @@ const RegionSettingsController = ({ regionId }: { regionId: number }): ReactElem
   return (
     <RegionSettingsCard
       onSave={onSave}
-      loading={loading}
+      loading={updateRegionSettingsState.fetching}
       defaultApplicationActivation={activatedForApplication}
       defaultConfirmationMailActivation={activatedForCardConfirmationMail}
     />

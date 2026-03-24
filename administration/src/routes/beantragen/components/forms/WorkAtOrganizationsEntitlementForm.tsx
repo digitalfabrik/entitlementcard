@@ -3,7 +3,7 @@ import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import CustomDivider from '../../../../components/CustomDivider'
-import { BlueCardWorkAtOrganizationsEntitlementInput } from '../../../../generated/graphql'
+import { BlueCardWorkAtOrganizationsEntitlementInput } from '../../../../graphql'
 import { SetState } from '../../hooks/useUpdateStateCallback'
 import { InferState } from '../../util/compoundFormUtils'
 import { Form, FormComponentProps } from '../../util/formType'

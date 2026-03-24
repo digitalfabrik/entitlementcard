@@ -1,7 +1,7 @@
 import { fireEvent } from '@testing-library/react'
 import React from 'react'
 
-import { FreinetAgency } from '../../../generated/graphql'
+import { FreinetAgency } from '../../../graphql'
 import { renderWithOptions } from '../../../testing/render'
 import FreinetSettingsCard from './FreinetSettingsCard'
 

@@ -1,7 +1,7 @@
 import { create, toBinary } from '@bufbuild/protobuf'
 import { ACTIVATION_FRAGMENT, ACTIVATION_PATH, BuildConfigType, HTTPS_SCHEME } from 'build-configs'
 
-import { QrCodeSchema } from '../generated/card_pb'
+import { QrCodeSchema } from '../card_pb'
 import { uint8ArrayToBase64 } from './base64'
 import type { PdfQrCode } from './pdf/elements'
 
