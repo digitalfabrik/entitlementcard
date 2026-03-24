@@ -52,9 +52,13 @@ const removeAt = <T,>(array: T[], index: number): T[] => {
 }
 
 type State = { key: number; value: WorkAtOrganizationFormState }[]
-type ValidatedInput = BlueCardWorkAtOrganizationsEntitlementInput
 type AdditionalProps = { applicantName: string }
-const WorkAtOrganizationsEntitlementForm: Form<State, ValidatedInput, AdditionalProps> = {
+
+const WorkAtOrganizationsEntitlementForm: Form<
+  State,
+  BlueCardWorkAtOrganizationsEntitlementInput,
+  AdditionalProps
+> = {
   initialState: [{ key: 0, value: WorkAtOrganizationForm.initialState }],
   getArrayBufferKeys: state =>
     state.map(({ value }) => WorkAtOrganizationForm.getArrayBufferKeys(value)).flat(),

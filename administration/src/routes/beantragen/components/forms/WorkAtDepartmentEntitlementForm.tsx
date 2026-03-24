@@ -24,9 +24,13 @@ const SubForms = {
 }
 
 type State = CompoundState<typeof SubForms>
-type ValidatedInput = BlueCardWorkAtDepartmentEntitlementInput
 type AdditionalProps = { applicantName: string }
-const WorkAtDepartmentEntitlementForm: Form<State, ValidatedInput, AdditionalProps> = {
+
+const WorkAtDepartmentEntitlementForm: Form<
+  State,
+  BlueCardWorkAtDepartmentEntitlementInput,
+  AdditionalProps
+> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: createCompoundValidate(SubForms, {}),

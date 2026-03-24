@@ -47,71 +47,75 @@ const SubForms = {
 }
 
 type State = CompoundState<typeof SubForms>
-type ValidatedInput = GoldenCardEntitlementInput
 type Options = Record<string, unknown>
 type AdditionalProps = { applicantName: string }
-const GoldenCardEntitlementForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
-  initialState: createCompoundInitialState(SubForms),
-  getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
-  validate: createSwitchValidate(
-    SubForms,
-    { entitlementType: entitlementTypeOptions },
-    'entitlementType',
-    {
-      WORK_AT_ORGANIZATIONS: 'workAtOrganizationsEntitlement',
-      WORK_AT_DEPARTMENT: 'workAtDepartmentEntitlement',
-      MILITARY_RESERVE: 'militaryReserveEntitlement',
-      HONORED_BY_MINISTER_PRESIDENT: 'honoredByMinisterPresidentEntitlement',
+
+const GoldenCardEntitlementForm: Form<State, GoldenCardEntitlementInput, AdditionalProps, Options> =
+  {
+    initialState: createCompoundInitialState(SubForms),
+    getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
+    validate: createSwitchValidate(
+      SubForms,
+      { entitlementType: entitlementTypeOptions },
+      'entitlementType',
+      {
+        WORK_AT_ORGANIZATIONS: 'workAtOrganizationsEntitlement',
+        WORK_AT_DEPARTMENT: 'workAtDepartmentEntitlement',
+        MILITARY_RESERVE: 'militaryReserveEntitlement',
+        HONORED_BY_MINISTER_PRESIDENT: 'honoredByMinisterPresidentEntitlement',
+      },
+    ),
+    Component: ({
+      state,
+      setState,
+      applicantName,
+    }: FormComponentProps<State, AdditionalProps, Options>) => {
+      const { t } = useTranslation('applicationForms')
+      return (
+        <>
+          <SubForms.entitlementType.Component
+            state={state.entitlementType}
+            setState={useUpdateStateCallback(setState, 'entitlementType')}
+            options={entitlementTypeOptions}
+            divideItems
+            title={t('goldenCardRequirementsTitle')}
+          />
+          <SwitchComponent value={state.entitlementType.selectedValue}>
+            {{
+              [GoldenCardEntitlementType.WorkAtOrganizations]: (
+                <SubForms.workAtOrganizationsEntitlement.Component
+                  state={state.workAtOrganizationsEntitlement}
+                  setState={useUpdateStateCallback(setState, 'workAtOrganizationsEntitlement')}
+                  applicantName={applicantName}
+                />
+              ),
+              [GoldenCardEntitlementType.HonoredByMinisterPresident]: (
+                <SubForms.honoredByMinisterPresidentEntitlement.Component
+                  state={state.honoredByMinisterPresidentEntitlement}
+                  setState={useUpdateStateCallback(
+                    setState,
+                    'honoredByMinisterPresidentEntitlement',
+                  )}
+                />
+              ),
+              [GoldenCardEntitlementType.WorkAtDepartment]: (
+                <SubForms.workAtDepartmentEntitlement.Component
+                  state={state.workAtDepartmentEntitlement}
+                  setState={useUpdateStateCallback(setState, 'workAtDepartmentEntitlement')}
+                  applicantName={applicantName}
+                />
+              ),
+              [GoldenCardEntitlementType.MilitaryReserve]: (
+                <SubForms.militaryReserveEntitlement.Component
+                  state={state.militaryReserveEntitlement}
+                  setState={useUpdateStateCallback(setState, 'militaryReserveEntitlement')}
+                />
+              ),
+            }}
+          </SwitchComponent>
+        </>
+      )
     },
-  ),
-  Component: ({
-    state,
-    setState,
-    applicantName,
-  }: FormComponentProps<State, AdditionalProps, Options>) => {
-    const { t } = useTranslation('applicationForms')
-    return (
-      <>
-        <SubForms.entitlementType.Component
-          state={state.entitlementType}
-          setState={useUpdateStateCallback(setState, 'entitlementType')}
-          options={entitlementTypeOptions}
-          divideItems
-          title={t('goldenCardRequirementsTitle')}
-        />
-        <SwitchComponent value={state.entitlementType.selectedValue}>
-          {{
-            [GoldenCardEntitlementType.WorkAtOrganizations]: (
-              <SubForms.workAtOrganizationsEntitlement.Component
-                state={state.workAtOrganizationsEntitlement}
-                setState={useUpdateStateCallback(setState, 'workAtOrganizationsEntitlement')}
-                applicantName={applicantName}
-              />
-            ),
-            [GoldenCardEntitlementType.HonoredByMinisterPresident]: (
-              <SubForms.honoredByMinisterPresidentEntitlement.Component
-                state={state.honoredByMinisterPresidentEntitlement}
-                setState={useUpdateStateCallback(setState, 'honoredByMinisterPresidentEntitlement')}
-              />
-            ),
-            [GoldenCardEntitlementType.WorkAtDepartment]: (
-              <SubForms.workAtDepartmentEntitlement.Component
-                state={state.workAtDepartmentEntitlement}
-                setState={useUpdateStateCallback(setState, 'workAtDepartmentEntitlement')}
-                applicantName={applicantName}
-              />
-            ),
-            [GoldenCardEntitlementType.MilitaryReserve]: (
-              <SubForms.militaryReserveEntitlement.Component
-                state={state.militaryReserveEntitlement}
-                setState={useUpdateStateCallback(setState, 'militaryReserveEntitlement')}
-              />
-            ),
-          }}
-        </SwitchComponent>
-      </>
-    )
-  },
-}
+  }
 
 export default GoldenCardEntitlementForm

@@ -59,9 +59,9 @@ const SubForms = {
 }
 
 type State = CompoundState<typeof SubForms>
-type ValidatedInput = WorkAtOrganizationInput
 type AdditionalProps = { onDelete?: () => void; applicantName: string }
-const WorkAtOrganizationForm: Form<State, ValidatedInput, AdditionalProps> = {
+
+const WorkAtOrganizationForm: Form<State, WorkAtOrganizationInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: createCompoundValidate(SubForms, {
