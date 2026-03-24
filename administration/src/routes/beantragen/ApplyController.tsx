@@ -6,7 +6,7 @@ import { useMutation, useQuery } from 'urql'
 
 import CenteredCircularProgress from '../../components/CenteredCircularProgress'
 import PageLayout from '../../components/PageLayout'
-import messageFromGraphQlError from '../../errors/getMessageFromApolloError'
+import { messageFromGraphQlError } from '../../errors'
 import { AddEakApplicationDocument, GetRegionsDocument } from '../../graphql'
 import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import getQueryResult from '../../util/getQueryResult'

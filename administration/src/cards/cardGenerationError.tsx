@@ -3,13 +3,12 @@ import React from 'react'
 import { CombinedError } from 'urql'
 
 import FormAlert from '../components/FormAlert'
-import messageFromGraphQlError from '../errors/getMessageFromApolloError'
+import { messageFromGraphQlError } from '../errors'
 import i18next from '../translations/i18n'
 import { reportErrorToSentry } from '../util/sentry'
 import { CreateCardsError } from './createCards'
 import { CsvError } from './csvFactory'
 import { PdfError } from './pdf/pdfFactory'
-
 
 export const showCardGenerationError = (enqueueSnackbar: EnqueueSnackbar, error: unknown): void => {
   if (error instanceof CreateCardsError) {

@@ -3,7 +3,7 @@ import { OperationResult } from 'urql'
 import XRegExp from 'xregexp'
 
 import { maxCardValidity } from '../cards/constants'
-import messageFromGraphQlError from '../errors/getMessageFromApolloError'
+import { messageFromGraphQlError } from '../errors'
 import i18next from '../translations/i18n'
 
 export const isStagingEnvironment = (): boolean => !!window.location.hostname.match(/staging./)

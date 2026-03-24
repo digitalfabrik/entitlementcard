@@ -11,7 +11,7 @@ import CenteredCircularProgress from '../../components/CenteredCircularProgress'
 import ConfirmDialog from '../../components/ConfirmDialog'
 import JsonFieldView from '../../components/JsonFieldView'
 import VerificationsView from '../../components/VerificationsView'
-import messageFromGraphQlError from '../../errors/getMessageFromApolloError'
+import { messageFromGraphQlError } from '../../errors'
 import {
   ApplicationStatus,
   GetApplicationByApplicantQuery,

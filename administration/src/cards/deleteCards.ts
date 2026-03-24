@@ -1,6 +1,6 @@
 import { UseMutationExecute } from 'urql'
 
-import messageFromGraphQlError from '../errors/getMessageFromApolloError'
+import { messageFromGraphQlError } from '../errors'
 import { DeleteCardsMutation, DeleteCardsMutationVariables } from '../graphql'
 import { CreateCardsError, CreateCardsResult } from './createCards'
 

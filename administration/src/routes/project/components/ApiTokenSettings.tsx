@@ -22,7 +22,7 @@ import { useMutation, useQuery } from 'urql'
 
 import ConfirmDialog from '../../../components/ConfirmDialog'
 import SettingsCard from '../../../components/SettingsCard'
-import messageFromGraphQlError from '../../../errors/getMessageFromApolloError'
+import { messageFromGraphQlError } from '../../../errors'
 import {
   ApiTokenMetaData,
   CreateApiTokenDocument,

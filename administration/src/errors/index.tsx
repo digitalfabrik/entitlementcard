@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import { fromBinary } from '@bufbuild/protobuf'
 import React, { ReactElement } from 'react'
+import { CombinedError } from 'urql'
 
 import { CardInfoSchema } from '../card_pb'
 import { base64ToUint8Array } from '../cards/base64'
@@ -9,20 +11,60 @@ import InvalidLink from './templates/InvalidLink'
 import InvalidPasswordResetLink from './templates/InvalidPasswordResetLink'
 import PasswordResetKeyExpired from './templates/PasswordResetKeyExpired'
 
-type GraphQLErrorMessage = {
+export const messageFromGraphQlError = (
+  error: CombinedError,
+): {
   title: string
-  description?: string | ReactElement<{ extensions: Record<string, unknown> }>
+  description?: string | ReactElement
+  retryable?: boolean
+} => {
+  const allCodesEqual = error.graphQLErrors.every(
+    (value, index, array) => value.extensions!.code === array[0].extensions!.code,
+  )
+
+  return error.graphQLErrors.length < 1 || (error.graphQLErrors.length > 1 && !allCodesEqual)
+    ? defaultErrorMap(error)
+    : graphQlErrorMap(error.graphQLErrors[0].extensions)
 }
 
-type ErrorExtensions = {
+export const defaultErrorMap = (
+  error: CombinedError,
+): {
+  title: string
+  description?: string | ReactElement
+  retryable?: boolean
+} => {
+  if (error.message.includes('400')) {
+    return { title: i18next.t('errors:invalidRequestFormat') }
+  }
+  if (error.message.includes('401')) {
+    return { title: i18next.t('errors:notAuthorized') }
+  }
+  if (error.message.includes('403')) {
+    return { title: i18next.t('errors:notAuthorized') }
+  }
+  if (error.message.includes('404')) {
+    return { title: i18next.t('errors:pageNotFound') }
+  }
+  if (error.message.includes('500')) {
+    return { title: i18next.t('errors:internalError'), retryable: true }
+  }
+  if (error.message.includes('501')) {
+    return { title: i18next.t('errors:functionNotAvailable'), retryable: true }
+  }
+  return { title: i18next.t('errors:serverNotAvailable'), retryable: true }
+}
+
+export const graphQlErrorMap = (extensions?: {
   code?: GraphQlExceptionCode
   maxSize?: number
   encodedCardInfoBase64?: string
   codeType?: CodeType
   [key: string]: unknown
-}
-
-const graphQlErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
+}): {
+  title: string
+  description?: string | ReactElement<{ extensions: Record<string, unknown> }>
+} => {
   const defaultError = { title: i18next.t('errors:unknown') }
 
   if (!extensions || extensions.code === undefined) {
@@ -199,5 +241,3 @@ const graphQlErrorMap = (extensions?: ErrorExtensions): GraphQLErrorMessage => {
       }
   }
 }
-
-export default graphQlErrorMap
