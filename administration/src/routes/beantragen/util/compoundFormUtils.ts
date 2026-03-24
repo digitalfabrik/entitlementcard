@@ -106,7 +106,7 @@ export const createCompoundValidate =
 type SwitchValidationInput<Forms extends SubForms, K extends keyof Forms> = {
   [k in K]: InferValidatedInput<Forms[k]>
 } & {
-  [k in keyof Forms]: InferValidatedInput<Forms[k]> | undefined
+  [k in keyof Forms]: InferValidatedInput<Forms[k]> | null
 }
 
 type FormWithStringValidatedInput = Form<any, string, any, any>

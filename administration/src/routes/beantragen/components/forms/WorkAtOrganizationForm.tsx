@@ -64,11 +64,17 @@ type AdditionalProps = { onDelete?: () => void; applicantName: string }
 const WorkAtOrganizationForm: Form<State, WorkAtOrganizationInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
-  validate: createCompoundValidate(SubForms, {
-    amountOfWork: amountOfWorkOptions,
-    payment: paymentOptions,
-    workSinceDate: { maximumDate: undefined },
-  }),
+  validate: state => {
+    const result = createCompoundValidate(SubForms, {
+      amountOfWork: amountOfWorkOptions,
+      payment: paymentOptions,
+      workSinceDate: { maximumDate: undefined },
+    })(state)
+
+    return result.type === 'error'
+      ? result
+      : { type: 'valid', value: { ...result.value, isAlreadyVerified: null } }
+  },
   Component: ({
     state,
     setState,
