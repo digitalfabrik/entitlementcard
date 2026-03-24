@@ -27,7 +27,10 @@ const StatisticsOverview = ({
   const { enqueueSnackbar } = useSnackbar()
   const { cardStatistics } = useContext(ProjectConfigContext)
   const { t } = useTranslation('statistics')
-  const statisticKeys = Object.keys(statistics[0]).filter(item => item !== 'region')
+  // TODO Devise another way to derive these keys
+  const statisticKeys = Object.keys(statistics[0]).filter(
+    item => item !== 'region' && item !== '__typename',
+  )
   const isSingleChartView = statistics.length === 1
 
   return (
