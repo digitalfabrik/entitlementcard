@@ -19,7 +19,7 @@ const VerificationsView = ({
   isAdminView = false,
 }: {
   application: Pick<ApplicationPublic, 'id' | 'status'> & {
-    verifications: Array<
+    verifications: Readonly<
       Pick<
         ApplicationVerificationView,
         | 'organizationName'
@@ -27,7 +27,7 @@ const VerificationsView = ({
         | 'verificationId'
         | 'rejectedDate'
         | 'verifiedDate'
-      >
+      >[]
     >
   }
   /** Displayed in an administration page, so show administrative UI */

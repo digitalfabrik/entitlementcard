@@ -18,7 +18,7 @@ const dateFormatter = new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' })
 export const csvFileName = (
   dateStart: Temporal.PlainDate,
   dateEnd: Temporal.PlainDate,
-  region?: Region,
+  region?: Pick<Region, 'id' | 'name' | 'prefix'>,
 ): string => {
   const regionPrefix = region ? `${region.prefix}${region.name}_` : ''
   const dateSuffix = (
@@ -30,7 +30,7 @@ export const csvFileName = (
 }
 
 export const generateCsv = (
-  statistics: CardStatisticsResultModel[],
+  statistics: readonly CardStatisticsResultModel[],
   cardStatistics: CardStatistics,
 ): Blob => {
   if (!cardStatistics.enabled) {

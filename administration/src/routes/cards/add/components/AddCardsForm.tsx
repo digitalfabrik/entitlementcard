@@ -25,7 +25,7 @@ const AddCardsForm = ({
   showAddMoreCardsButton,
   updateCard,
 }: {
-  region: Region
+  region: Pick<Region, 'id'>
   cards: Card[]
   setCards: (cards: Card[]) => void
   showAddMoreCardsButton: boolean

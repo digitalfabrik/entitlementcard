@@ -41,7 +41,7 @@ export type Card = {
 
 const createRandomId = () => Math.floor(Math.random() * 1000000)
 
-const getInitialExtensionState = (cardConfig: CardConfig, region: Region | undefined) =>
+const getInitialExtensionState = (cardConfig: CardConfig, region: Pick<Region, 'id'> | undefined) =>
   cardConfig.extensions.reduce(
     (acc, extension) =>
       Object.assign(
@@ -53,7 +53,7 @@ const getInitialExtensionState = (cardConfig: CardConfig, region: Region | undef
 
 export const initializeCard = (
   cardConfig: CardConfig,
-  region: Region | undefined = undefined,
+  region: Pick<Region, 'id'> | undefined = undefined,
   { id, fullName, expirationDate, extensions }: Partial<Card> = {},
 ): Card => {
   const defaultExpirationDate = Temporal.Now.plainDateISO().add(cardConfig.defaultValidity)
@@ -236,7 +236,7 @@ export const initializeCardFromCSV = (
   cardConfig: CardConfig,
   line: (string | null)[],
   headers: string[],
-  region: Region | undefined,
+  region: Pick<Region, 'id' | 'name'> | undefined,
   withDefaults = false,
 ): Card => {
   const defaultCard = withDefaults

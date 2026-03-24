@@ -16,6 +16,8 @@ import getQueryResult from '../../util/getQueryResult'
 import StatisticsOverview from './components/StatisticsOverview'
 import { defaultEndDate, defaultStartDate } from './constants'
 
+type Region = NonNullable<WhoAmIQuery['me']['region']>
+
 const ViewProjectStatistics = () => {
   const [dateStart, setDateStart] = useState(defaultStartDate.toString())
   const [dateEnd, setDateEnd] = useState(defaultEndDate.toString())

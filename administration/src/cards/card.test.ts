@@ -79,6 +79,8 @@ describe('Card', () => {
       activatedForCardConfirmationMail: true,
       applicationConfirmationMailNoteActivated: false,
       applicationConfirmationMailNote: null,
+      dataPrivacyPolicy: null,
+      regionIdentifier: null,
     }
 
     const cardConfig = {

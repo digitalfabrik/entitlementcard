@@ -59,7 +59,7 @@ const StoresListOverview = ({
   data,
   refetchStores,
 }: {
-  data: AcceptingStoresData[]
+  data: readonly AcceptingStoresData[]
   refetchStores: () => void
 }): ReactElement => {
   const { t } = useTranslation('stores')

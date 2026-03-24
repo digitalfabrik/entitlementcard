@@ -13,7 +13,11 @@ import useCardGenerator from '../hooks/useCardGenerator'
 import ImportCardsInput from './components/ImportCardsInput'
 import CardImportTable from './components/ImportCardsTable'
 
-const InnerImportCardsController = ({ region }: { region: Region }): ReactElement => {
+const InnerImportCardsController = ({
+  region,
+}: {
+  region: NonNullable<NonNullable<WhoAmIContextType['me']>['region']>
+}): ReactElement => {
   const {
     cardGenerationStep,
     setCardGenerationStep,

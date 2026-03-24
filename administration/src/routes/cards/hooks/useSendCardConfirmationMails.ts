@@ -14,7 +14,7 @@ import { isProductionEnvironment } from '../../../util/helper'
 
 type SendCardConfirmationMail = (codes: CreateCardsResult[], cards: Card[]) => Promise<void>
 
-const useSendCardConfirmationMails = (region: Region): SendCardConfirmationMail => {
+const useSendCardConfirmationMails = (region: Pick<Region, 'id'>): SendCardConfirmationMail => {
   const { t } = useTranslation('cards')
   const { enqueueSnackbar } = useSnackbar()
   const [, sendConfirmationEmailMutation] = useMutation(SendCardCreationConfirmationMailsDocument)

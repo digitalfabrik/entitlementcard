@@ -19,7 +19,7 @@ const DeleteUserDialog = ({
   onSuccess,
 }: {
   onClose: () => void
-  selectedUser: Administrator | null
+  selectedUser: Pick<Administrator, 'id' | 'email' | 'role' | 'regionId'> | null
   onSuccess: () => void
 }): ReactElement => {
   const { enqueueSnackbar } = useSnackbar()

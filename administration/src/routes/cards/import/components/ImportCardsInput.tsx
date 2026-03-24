@@ -26,7 +26,7 @@ const ImportCardsInput = ({
   region,
 }: {
   setCards: (cards: Card[]) => void
-  region: Region
+  region: Pick<Region, 'id' | 'name'>
 }): ReactElement => {
   const isFreinetFormat = new URLSearchParams(useLocation().search).get(FREINET_PARAM) === 'true'
   const projectConfig = useContext(ProjectConfigContext)

@@ -11,11 +11,13 @@ import { UpdateApplicationNoteDocument } from '../../../graphql'
 import type { Application } from '../types/types'
 import { ApplicationNoteTooltip } from './ApplicationNoteTooltip'
 
+type ApplicationType = Pick<Application, 'id' | 'note'>
+
 type NoteDialogControllerProps = {
-  application: Application
+  application: ApplicationType
   isOpen: boolean
   onOpenNoteDialog: (value: boolean) => void
-  onChange: (application: Application) => void
+  onChange: (application: ApplicationType) => void
 }
 
 const NoteDialogController = ({

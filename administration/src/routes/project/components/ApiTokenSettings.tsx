@@ -127,7 +127,7 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
   if (!metaDataQueryResult.successful) {
     return metaDataQueryResult.component
   }
-  const tokenMetaData: ApiTokenMetaData[] = metaDataQueryResult.data.tokenMetaData
+  const tokenMetaData: readonly ApiTokenMetaData[] = metaDataQueryResult.data.tokenMetaData
 
   return (
     <>
