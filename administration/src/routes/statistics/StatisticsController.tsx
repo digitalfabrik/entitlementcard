@@ -54,10 +54,9 @@ const ViewRegionStatistics = ({ region }: { region: Region }) => {
   })
   const cardStatisticsQueryResult = getQueryResult(cardStatisticsState, cardStatisticsQuery)
 
-  if (!cardStatisticsQueryResult.successful) {
-    return cardStatisticsQueryResult.component
-  }
-  return (
+  return !cardStatisticsQueryResult.successful ? (
+    cardStatisticsQueryResult.component
+  ) : (
     <StatisticsOverview
       onApplyFilter={(newDateStart: Temporal.PlainDate, newDateEnd: Temporal.PlainDate) => {
         setDateStart(newDateStart.toString())

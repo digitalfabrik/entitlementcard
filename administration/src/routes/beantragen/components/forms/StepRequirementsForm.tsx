@@ -39,25 +39,23 @@ const StepRequirementsForm: Form<
     switch (options.cardType) {
       case BavariaCardType.Blue: {
         const blueCardEntitlement = BlueCardEntitlementForm.validate(state.blueCardEntitlement)
-        if (blueCardEntitlement.type === 'error') {
-          return { type: 'error' }
-        }
-        return {
-          type: 'valid',
-          value: { type: BavariaCardType.Blue, value: blueCardEntitlement.value },
-        }
+        return blueCardEntitlement.type === 'error'
+          ? { type: 'error' }
+          : {
+              type: 'valid',
+              value: { type: BavariaCardType.Blue, value: blueCardEntitlement.value },
+            }
       }
       case BavariaCardType.Golden: {
         const goldenCardEntitlement = GoldenCardEntitlementForm.validate(
           state.goldenCardEntitlement,
         )
-        if (goldenCardEntitlement.type === 'error') {
-          return { type: 'error' }
-        }
-        return {
-          type: 'valid',
-          value: { type: BavariaCardType.Golden, value: goldenCardEntitlement.value },
-        }
+        return goldenCardEntitlement.type === 'error'
+          ? { type: 'error' }
+          : {
+              type: 'valid',
+              value: { type: BavariaCardType.Golden, value: goldenCardEntitlement.value },
+            }
       }
       case null:
       default:
