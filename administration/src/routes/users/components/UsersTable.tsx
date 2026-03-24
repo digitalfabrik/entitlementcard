@@ -36,8 +36,8 @@ const UsersTable = ({
   selectedRegionId = null,
   refetch,
 }: {
-  users: Admin[]
-  regions: Pick<Region, 'id' | 'name' | 'prefix'>[]
+  users: readonly Admin[]
+  regions: readonly Pick<Region, 'id' | 'name' | 'prefix'>[]
   // If selectedRegionId is given, the users array is assumed to contain all users of that region.
   // Moreover, the region column of the table is hidden.
   selectedRegionId?: number | null

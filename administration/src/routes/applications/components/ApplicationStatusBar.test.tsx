@@ -26,6 +26,8 @@ const applications: Application[] = [
         verifiedDate: '2024-05-15T13:54:11.010430Z',
       },
     ],
+    statusResolvedDate: null,
+    rejectionMessage: null,
   },
   {
     createdDate: '2024-05-15T09:20:23.350015Z',
@@ -46,6 +48,8 @@ const applications: Application[] = [
         verifiedDate: '2024-05-15T13:54:11.010430Z',
       },
     ],
+    statusResolvedDate: null,
+    rejectionMessage: null,
   },
   {
     createdDate: '2024-05-15T09:20:23.350015Z',
@@ -66,6 +70,8 @@ const applications: Application[] = [
         verifiedDate: null,
       },
     ],
+    statusResolvedDate: null,
+    rejectionMessage: null,
   },
   {
     createdDate: '2024-05-15T09:20:23.350015Z',
@@ -87,6 +93,7 @@ const applications: Application[] = [
         verifiedDate: null,
       },
     ],
+    rejectionMessage: null,
   },
 ]
 

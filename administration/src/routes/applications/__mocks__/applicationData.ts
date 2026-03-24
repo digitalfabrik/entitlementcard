@@ -391,6 +391,7 @@ export const mockApplicationBlue: Application = {
     type: 'Array',
     value: [{ ...personalData }, { ...applicationDetailsBlue }],
   },
+  rejectionMessage: null,
 }
 
 export const mockApplicationGold: Application = {
@@ -405,6 +406,7 @@ export const mockApplicationGold: Application = {
     type: 'Array',
     value: [{ ...personalData }, { ...applicationDetailsGold }],
   },
+  rejectionMessage: null,
 }
 
 export const mockApplicationWithoutAddress: Application = {
@@ -452,6 +454,7 @@ export const mockApplicationWithoutAddress: Application = {
       { ...applicationDetailsBlue },
     ],
   },
+  rejectionMessage: null,
 }
 
 export const mockApplicationWithoutPersonalData: Application = {
@@ -466,6 +469,7 @@ export const mockApplicationWithoutPersonalData: Application = {
     type: 'Array',
     value: [{ ...applicationDetailsBlue }],
   },
+  rejectionMessage: null,
 }
 
 export const mockApplicationWithoutApplicationDetails: Application = {
@@ -480,4 +484,5 @@ export const mockApplicationWithoutApplicationDetails: Application = {
     type: 'Array',
     value: [{ ...personalData }],
   },
+  rejectionMessage: null,
 }

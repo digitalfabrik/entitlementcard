@@ -48,7 +48,7 @@ const fillContentAreas = async (
   code: CreateCardsResult,
   card: Card,
   pdfConfig: PdfConfig,
-  region: Region | undefined,
+  region: Pick<Region, 'id' | 'name' | 'prefix'> | undefined,
   fontRegular: PDFFont,
   fontBold: PDFFont,
 ): Promise<void> => {
@@ -122,7 +122,7 @@ export const generatePdf = async (
   codes: CreateCardsResult[],
   cards: Card[],
   projectConfig: ProjectConfig,
-  region?: Region,
+  region?: Pick<Region, 'id' | 'name' | 'prefix'>,
 ): Promise<Blob> => {
   try {
     const templateDocument = await PDFDocument.load(

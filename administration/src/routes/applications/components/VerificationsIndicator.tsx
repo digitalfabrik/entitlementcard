@@ -23,7 +23,7 @@ const VerificationItem = (p: { status: VerificationStatus; count: number }): Rea
 )
 
 export const VerificationIndicator = (p: {
-  verifications: ApplicationVerification[]
+  verifications: readonly ApplicationVerification[]
 }): ReactElement => {
   const { t } = useTranslation('applicationsOverview')
   const verificationStatuses = p.verifications.map(verificationStatus)

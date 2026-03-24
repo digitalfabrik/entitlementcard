@@ -34,19 +34,7 @@ export const ApplicationPrintView = forwardRef<
   HTMLDivElement,
   {
     // eslint-disable-next-line react/no-unused-prop-types
-    application: Pick<
-      ApplicationParsedJsonValue<ApplicationAdmin>,
-      'createdDate' | 'jsonValue' | 'id' | 'status' | 'statusResolvedDate' | 'rejectionMessage'
-    > & {
-      verifications: Pick<
-        ApplicationVerificationView,
-        | 'organizationName'
-        | 'contactEmailAddress'
-        | 'verificationId'
-        | 'rejectedDate'
-        | 'verifiedDate'
-      >[]
-    }
+    application: Application
   }
 >((p, ref): ReactElement => {
   const { t } = useTranslation('applicationsOverview')
