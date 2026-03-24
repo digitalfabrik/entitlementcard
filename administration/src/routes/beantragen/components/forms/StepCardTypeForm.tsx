@@ -1,11 +1,11 @@
-/* eslint-disable react/jsx-pascal-case  -- we cannot change the keys of application namespace, see translation file comment */
+/* eslint-disable react/jsx-pascal-case -- we cannot change the keys of application namespace, see translation file comment */
 import { Link, Typography } from '@mui/material'
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
 import CustomDivider from '../../../../components/CustomDivider'
 import FormAlert from '../../../../components/FormAlert'
-import { ApplicationType, BavariaCardType } from '../../../../generated/graphql'
+import { ApplicationType, BavariaCardType } from '../../../../graphql'
 import i18next from '../../../../translations/i18n'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
 import {

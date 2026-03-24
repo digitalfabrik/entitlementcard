@@ -3,7 +3,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import CustomDivider from '../../../../components/CustomDivider'
-import { GoldenCardHonoredByMinisterPresidentEntitlementInput } from '../../../../generated/graphql'
+import { GoldenCardHonoredByMinisterPresidentEntitlementInput } from '../../../../graphql'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
 import {
   CompoundState,

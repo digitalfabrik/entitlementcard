@@ -3,10 +3,11 @@ import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
 import { Temporal } from 'temporal-polyfill'
+import { useQuery } from 'urql'
 
 import AlertBox from '../../components/AlertBox'
 import PageLayout from '../../components/PageLayout'
-import { ApplicationStatus, useGetApplicationByApplicantQuery } from '../../generated/graphql'
+import { ApplicationStatus, GetApplicationByApplicantDocument } from '../../graphql'
 import getQueryResult from '../../util/getQueryResult'
 import { ApplicationStatusNote } from '../applications/components/ApplicationStatusNote'
 import {
@@ -25,10 +26,14 @@ const centeredContainerSx: StackProps['sx'] = {
 const ApplicationApplicantController = ({ providedKey }: { providedKey: string }): ReactElement => {
   const { t } = useTranslation('applicationApplicant')
   const [isWithdrawn, setIsWithdrawn] = useState<boolean>(false)
-  const applicationQuery = useGetApplicationByApplicantQuery({
+  const [applicationByApplicantState, applicationByApplicantQuery] = useQuery({
+    query: GetApplicationByApplicantDocument,
     variables: { accessKey: providedKey },
   })
-  const applicationQueryHandler = getQueryResult(applicationQuery)
+  const applicationQueryHandler = getQueryResult(
+    applicationByApplicantState,
+    applicationByApplicantQuery,
+  )
   if (!applicationQueryHandler.successful) {
     return applicationQueryHandler.component
   }

@@ -6,12 +6,10 @@ import { useSnackbar } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Temporal } from 'temporal-polyfill'
+import { useMutation } from 'urql'
 
 import EmailLink from '../components/EmailLink'
-import {
-  ApplicationVerificationView,
-  useSendApprovalMailToOrganisationMutation,
-} from '../generated/graphql'
+import { ApplicationVerificationView, SendApprovalMailToOrganisationDocument } from '../graphql'
 import { isEmailValid, verificationStatus } from '../util/verifications'
 import { VerificationIcon } from './VerificationIcon'
 
@@ -53,22 +51,23 @@ const VerificationListItem = ({
   const theme = useTheme()
   const { text, color } = getStatusMetaData(verification, t, theme)
 
-  const [sendApprovalEmail, sendApprovalEmailResult] = useSendApprovalMailToOrganisationMutation({
-    onError: () => {
-      enqueueSnackbar(t('failedToSendApprovalRequest'), { variant: 'error' })
-    },
-    onCompleted: () => {
-      enqueueSnackbar(t('approvalRequestSentSuccessfully'), { variant: 'success' })
-    },
-  })
-  const onSendApprovalEmailClick = () => {
-    sendApprovalEmail({
-      variables: {
-        applicationId,
-        applicationVerificationId: verification.verificationId,
-      },
-    })
+  const [sendApprovalEmailState, sendApprovalEmailMutation] = useMutation(
+    SendApprovalMailToOrganisationDocument,
+  )
+
+  const onSendApprovalEmailClick = async () => {
     setIsApprovalRequestSent(true)
+    const result = await sendApprovalEmailMutation({
+      applicationId,
+      applicationVerificationId: verification.verificationId,
+    })
+
+    if (result.error) {
+      enqueueSnackbar(t('failedToSendApprovalRequest'), { variant: 'error' })
+      setIsApprovalRequestSent(false)
+    } else {
+      enqueueSnackbar(t('approvalRequestSentSuccessfully'), { variant: 'success' })
+    }
   }
 
   return (
@@ -107,7 +106,7 @@ const VerificationListItem = ({
           onClick={() => onSendApprovalEmailClick()}
           startIcon={<ForwardToInboxIcon />}
           sx={{ displayPrint: 'none', mt: 1 }}
-          disabled={Boolean(sendApprovalEmailResult.loading) || isApprovalRequestSent}
+          disabled={Boolean(sendApprovalEmailState.fetching) || isApprovalRequestSent}
         >
           {isApprovalRequestSent ? t('approvalRequestHasBeenSent') : t('resendApprovalRequest')}
         </Button>

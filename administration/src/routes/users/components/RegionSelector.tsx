@@ -2,11 +2,14 @@ import { Search } from '@mui/icons-material'
 import { Autocomplete, InputAdornment, Stack, TextField } from '@mui/material'
 import React, { ReactElement, useContext, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useQuery } from 'urql'
 
 import FormAlert from '../../../components/FormAlert'
-import { Region, useGetRegionsQuery } from '../../../generated/graphql'
+import { GetRegionsDocument, GetRegionsQuery } from '../../../graphql'
 import { ProjectConfigContext } from '../../../provider/ProjectConfigContext'
 import getQueryResult from '../../../util/getQueryResult'
+
+type Region = GetRegionsQuery['regions'][number]
 
 const getTitle = (region?: Region): string | undefined =>
   region ? `${region.prefix} ${region.name}` : undefined
@@ -20,10 +23,11 @@ const RegionSelector = ({
 }): ReactElement => {
   const { t } = useTranslation('users')
   const projectId = useContext(ProjectConfigContext).projectId
-  const regionsQuery = useGetRegionsQuery({
+  const [regionsState, regionsQuery] = useQuery({
+    query: GetRegionsDocument,
     variables: { project: projectId },
   })
-  const regionsQueryResult = getQueryResult(regionsQuery)
+  const regionsQueryResult = getQueryResult(regionsState, regionsQuery)
 
   const regions = useMemo(
     () =>

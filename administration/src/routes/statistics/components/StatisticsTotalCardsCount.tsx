@@ -3,7 +3,7 @@ import { styled } from '@mui/system'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { CardStatisticsResultModel } from '../../../generated/graphql'
+import { CardStatisticsResultModel } from '../../../graphql'
 import { toLowerCaseFirstLetter } from '../../../util/helper'
 
 const Container = styled('div')`

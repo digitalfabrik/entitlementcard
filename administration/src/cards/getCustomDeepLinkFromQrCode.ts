@@ -1,7 +1,7 @@
 import { create, toBinary } from '@bufbuild/protobuf'
 import { ACTIVATION_FRAGMENT, ACTIVATION_PATH } from 'build-configs'
 
-import { QrCodeSchema } from '../generated/card_pb'
+import { QrCodeSchema } from '../card_pb'
 import { ProjectConfig } from '../project-configs'
 import { getBuildConfig } from '../util/getBuildConfig'
 import { uint8ArrayToBase64 } from './base64'

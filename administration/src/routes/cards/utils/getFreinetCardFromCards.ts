@@ -1,5 +1,5 @@
 import { Card } from '../../../cards/card'
-import { FreinetCardInput } from '../../../generated/graphql'
+import { FreinetCardInput } from '../../../graphql'
 
 export const getFreinetCardFromCards = (cards: Card[]): FreinetCardInput => {
   if (cards.length !== 1) {

@@ -3,9 +3,10 @@ import { Stack, Typography } from '@mui/material'
 import { grey } from '@mui/material/colors'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useQuery } from 'urql'
 
 import ConfirmDialog from '../../../components/ConfirmDialog'
-import { useGetStoreCategoriesQuery } from '../../../generated/graphql'
+import { GetStoreCategoriesDocument } from '../../../graphql'
 import { getBuildConfig } from '../../../util/getBuildConfig'
 import getQueryResult from '../../../util/getQueryResult'
 import { AcceptingStoreFormData, UpdateStoreFunction } from '../types'
@@ -38,8 +39,10 @@ const ManageStoreDialog = ({
 }): ReactElement => {
   const { t } = useTranslation('stores')
   const projectCategories = getBuildConfig(window.location.hostname).common.categories
-  const storeCategoryQuery = useGetStoreCategoriesQuery()
-  const storeCategoryQueryResult = getQueryResult(storeCategoryQuery)
+  const [storeCategoryState, storeCategoryQuery] = useQuery({
+    query: GetStoreCategoriesDocument,
+  })
+  const storeCategoryQueryResult = getQueryResult(storeCategoryState, storeCategoryQuery)
   if (!storeCategoryQueryResult.successful) {
     return storeCategoryQueryResult.component
   }

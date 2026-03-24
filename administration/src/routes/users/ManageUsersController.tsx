@@ -1,20 +1,23 @@
 import { Card, Typography } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useQuery } from 'urql'
 
 import AlertBox from '../../components/AlertBox'
 import CenteredStack from '../../components/CenteredStack'
 import {
-  Region,
+  GetRegionsDocument,
+  GetUsersInProjectDocument,
+  GetUsersInRegionDocument,
   Role,
-  useGetRegionsQuery,
-  useGetUsersInProjectQuery,
-  useGetUsersInRegionQuery,
-} from '../../generated/graphql'
+  WhoAmIQuery,
+} from '../../graphql'
 import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import { useWhoAmI } from '../../provider/WhoAmIProvider'
 import getQueryResult from '../../util/getQueryResult'
 import UsersTable from './components/UsersTable'
+
+type Region = NonNullable<WhoAmIQuery['me']['region']>
 
 const UsersTableContainer = ({ children, title }: { children: ReactElement; title: string }) => (
   <CenteredStack>
@@ -30,11 +33,14 @@ const UsersTableContainer = ({ children, title }: { children: ReactElement; titl
 const ManageProjectUsers = () => {
   const { projectId, name: projectName } = useContext(ProjectConfigContext)
   const { t } = useTranslation('users')
-  const regionsQuery = useGetRegionsQuery({ variables: { project: projectId } })
-  const usersQuery = useGetUsersInProjectQuery()
+  const [regionsState, regionsQuery] = useQuery({
+    query: GetRegionsDocument,
+    variables: { project: projectId },
+  })
+  const [usersState, usersQuery] = useQuery({ query: GetUsersInProjectDocument })
 
-  const regionsQueryResult = getQueryResult(regionsQuery)
-  const usersQueryResult = getQueryResult(usersQuery)
+  const regionsQueryResult = getQueryResult(regionsState, regionsQuery)
+  const usersQueryResult = getQueryResult(usersState, usersQuery)
 
   if (!regionsQueryResult.successful) {
     return regionsQueryResult.component
@@ -48,7 +54,11 @@ const ManageProjectUsers = () => {
 
   return (
     <UsersTableContainer title={t('allUsersOfProject', { projectName })}>
-      <UsersTable users={users} regions={regions} refetch={usersQuery.refetch} />
+      <UsersTable
+        users={users}
+        regions={regions}
+        refetch={() => usersQuery({ requestPolicy: 'network-only' })}
+      />
     </UsersTableContainer>
   )
 }
@@ -56,11 +66,18 @@ const ManageProjectUsers = () => {
 const ManageRegionUsers = ({ region }: { region: Region }) => {
   const { projectId } = useContext(ProjectConfigContext)
   const { t } = useTranslation('users')
-  const regionsQuery = useGetRegionsQuery({ variables: { project: projectId } })
-  const usersQuery = useGetUsersInRegionQuery({ variables: { regionId: region.id } })
+  // TODO Crate a query that includes both regions and users
+  const [regionsState, regionsQuery] = useQuery({
+    query: GetRegionsDocument,
+    variables: { project: projectId },
+  })
+  const [usersState, usersQuery] = useQuery({
+    query: GetUsersInRegionDocument,
+    variables: { regionId: region.id },
+  })
 
-  const regionsQueryResult = getQueryResult(regionsQuery)
-  const usersQueryResult = getQueryResult(usersQuery)
+  const regionsQueryResult = getQueryResult(regionsState, regionsQuery)
+  const usersQueryResult = getQueryResult(usersState, usersQuery)
 
   if (!regionsQueryResult.successful) {
     return regionsQueryResult.component
@@ -80,7 +97,7 @@ const ManageRegionUsers = ({ region }: { region: Region }) => {
         users={users}
         regions={regions}
         selectedRegionId={region.id}
-        refetch={usersQuery.refetch}
+        refetch={() => usersQuery({ requestPolicy: 'network-only' })}
       />
     </UsersTableContainer>
   )

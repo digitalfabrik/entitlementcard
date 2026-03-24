@@ -2,11 +2,12 @@ import { Card, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useMutation } from 'urql'
 
 import PageLayout from '../components/PageLayout'
 import ProjectSwitcher from '../components/ProjectSwitcher'
-import getMessageFromApolloError from '../errors/getMessageFromApolloError'
-import { SignInMutation, SignInPayload, useSignInMutation } from '../generated/graphql'
+import messageFromGraphQlError from '../errors/getMessageFromApolloError'
+import { SignInDocument, SignInPayload } from '../graphql'
 import { ProjectConfigContext } from '../provider/ProjectConfigContext'
 import LoginForm from './LoginForm'
 
@@ -20,20 +21,20 @@ const Login = ({ onSignIn }: { onSignIn: (payload: SignInPayload) => void }): Re
   const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('auth')
   const [state, setState] = React.useState<State>({ email: '', password: '' })
-  const [signIn, mutationState] = useSignInMutation({
-    onCompleted: (payload: SignInMutation) => onSignIn(payload.signInPayload),
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
-      enqueueSnackbar(title, { variant: 'error' })
-    },
-  })
-  const onSubmit = () =>
-    signIn({
-      variables: {
-        project: config.projectId,
-        authData: { email: state.email, password: state.password },
-      },
+  const [signInState, signInMutation] = useMutation(SignInDocument)
+
+  const onSubmit = async () => {
+    const result = await signInMutation({
+      project: config.projectId,
+      authData: { email: state.email, password: state.password },
     })
+    if (result.error) {
+      const { title } = messageFromGraphQlError(result.error)
+      enqueueSnackbar(title, { variant: 'error' })
+    } else if (result.data) {
+      onSignIn(result.data.signInPayload)
+    }
+  }
 
   return (
     <PageLayout
@@ -58,7 +59,7 @@ const Login = ({ onSignIn }: { onSignIn: (payload: SignInPayload) => void }): Re
           setEmail={email => setState({ ...state, email })}
           setPassword={password => setState({ ...state, password: password ?? '' })}
           onSubmit={onSubmit}
-          loading={mutationState.loading}
+          loading={signInState.fetching}
         />
         <ProjectSwitcher />
       </Card>

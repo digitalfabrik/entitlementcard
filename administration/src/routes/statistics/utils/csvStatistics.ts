@@ -2,7 +2,7 @@ import { stringify } from 'csv-stringify/browser/esm/sync'
 import i18next from 'i18next'
 import { Intl, Temporal } from 'temporal-polyfill'
 
-import { CardStatisticsResultModel, Region } from '../../../generated/graphql'
+import { CardStatisticsResultModel, Region } from '../../../graphql'
 import { CardStatistics } from '../../../project-configs'
 import { CSV_MIME_TYPE_UTF8 } from '../../applications/constants'
 

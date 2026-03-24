@@ -1,7 +1,7 @@
 import { AlertColor } from '@mui/material'
 
 import { JsonField } from '../../../components/JsonFieldView'
-import { ApplicationStatus } from '../../../generated/graphql'
+import { ApplicationStatus } from '../../../graphql'
 
 type ApplicationJsonValue = {
   jsonValue: string

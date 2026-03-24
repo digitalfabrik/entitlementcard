@@ -1,5 +1,5 @@
-import { ApolloError } from '@apollo/client'
 import { ReactElement } from 'react'
+import { CombinedError } from 'urql'
 
 import defaultErrorMap from './defaultErrorMap'
 import graphQlErrorMap from './graphQlErrorMap'
@@ -10,7 +10,7 @@ export type GraphQLErrorMessage = {
   retryable?: boolean
 }
 
-const getMessageFromApolloError = (error: ApolloError): GraphQLErrorMessage => {
+const messageFromGraphQlError = (error: CombinedError): GraphQLErrorMessage => {
   const codesEqual = error.graphQLErrors.every(
     (value, index, array) => value.extensions!.code === array[0].extensions!.code,
   )
@@ -21,4 +21,4 @@ const getMessageFromApolloError = (error: ApolloError): GraphQLErrorMessage => {
   return graphQlErrorMap(error.graphQLErrors[0].extensions)
 }
 
-export default getMessageFromApolloError
+export default messageFromGraphQlError

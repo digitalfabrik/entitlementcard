@@ -18,21 +18,22 @@ import { useSnackbar } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Temporal } from 'temporal-polyfill'
+import { useMutation, useQuery } from 'urql'
 
 import ConfirmDialog from '../../../components/ConfirmDialog'
 import SettingsCard from '../../../components/SettingsCard'
-import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
+import messageFromGraphQlError from '../../../errors/getMessageFromApolloError'
 import {
   ApiTokenMetaData,
-  useCreateApiTokenMutation,
-  useDeleteApiTokenMutation,
-  useGetApiTokenMetaDataQuery,
-} from '../../../generated/graphql'
+  CreateApiTokenDocument,
+  DeleteApiTokenDocument,
+  GetApiTokenMetaDataDocument,
+} from '../../../graphql'
 import getQueryResult from '../../../util/getQueryResult'
 import PepperSettings from './PepperSettings'
 
 const ApiTokenGeneration = (): ReactElement => {
-  const metaDataQuery = useGetApiTokenMetaDataQuery({})
+  const [_, apiTokenQuery] = useQuery({ query: GetApiTokenMetaDataDocument })
 
   const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('projectSettings')
@@ -40,17 +41,20 @@ const ApiTokenGeneration = (): ReactElement => {
   const [createdToken, setCreatedToken] = useState<string | null>(null)
   const [expiresIn, setExpiresIn] = useState<number>(1)
 
-  const [createToken] = useCreateApiTokenMutation({
-    onCompleted: result => {
-      enqueueSnackbar(t('tokenCreateSuccessMessage'), { variant: 'success' })
-      setCreatedToken(result.createApiTokenPayload)
-      metaDataQuery.refetch()
-    },
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
+  const [, createApiTokenMutation] = useMutation(CreateApiTokenDocument)
+
+  const createToken = async () => {
+    const result = await createApiTokenMutation({ expiresIn })
+
+    if (result.error) {
+      const { title } = messageFromGraphQlError(result.error)
       enqueueSnackbar(title, { variant: 'error' })
-    },
-  })
+    } else if (result.data) {
+      enqueueSnackbar(t('tokenCreateSuccessMessage'), { variant: 'success' })
+      setCreatedToken(result.data.createApiTokenPayload)
+      apiTokenQuery({ requestPolicy: 'network-only' })
+    }
+  }
 
   return (
     <Stack
@@ -80,12 +84,7 @@ const ApiTokenGeneration = (): ReactElement => {
             <MenuItem value={36}>3 {t('years')}</MenuItem>
           </Select>
         </FormControl>
-        <Button
-          color='primary'
-          sx={{ minWidth: 'auto' }}
-          variant='contained'
-          onClick={() => createToken({ variables: { expiresIn } })}
-        >
+        <Button color='primary' sx={{ minWidth: 'auto' }} variant='contained' onClick={createToken}>
           {t('create')}
         </Button>
       </Stack>
@@ -108,21 +107,24 @@ type ApiTokenSettingsProps = {
 }
 const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactElement => {
   const { t } = useTranslation('projectSettings')
-  const metaDataQuery = useGetApiTokenMetaDataQuery({})
+  const [metaDataState, metaDataQuery] = useQuery({ query: GetApiTokenMetaDataDocument })
   const { enqueueSnackbar } = useSnackbar()
   const [tokenToDelete, setTokenToDelete] = useState<number | null>(null)
+  const [, deleteApiTokenMutation] = useMutation(DeleteApiTokenDocument)
 
-  const [deleteToken] = useDeleteApiTokenMutation({
-    onCompleted: () => {
-      enqueueSnackbar(t('tokenDeleteSuccessMessage'), { variant: 'success' })
-      metaDataQuery.refetch()
-    },
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
+  const deleteToken = async (id: number) => {
+    const result = await deleteApiTokenMutation({ id })
+    if (result.error) {
+      const { title } = messageFromGraphQlError(result.error)
       enqueueSnackbar(title, { variant: 'error' })
-    },
-  })
-  const metaDataQueryResult = getQueryResult(metaDataQuery)
+    } else {
+      enqueueSnackbar(t('tokenDeleteSuccessMessage'), { variant: 'success' })
+      metaDataQuery({ requestPolicy: 'network-only' })
+    }
+  }
+
+  const metaDataQueryResult = getQueryResult(metaDataState, metaDataQuery)
+
   if (!metaDataQueryResult.successful) {
     return metaDataQueryResult.component
   }
@@ -137,7 +139,7 @@ const ApiTokenSettings = ({ showPepperSection }: ApiTokenSettingsProps): ReactEl
         maxWidth='xs'
         onConfirm={() => {
           if (tokenToDelete !== null) {
-            deleteToken({ variables: { id: tokenToDelete } })
+            deleteToken(tokenToDelete)
             setTokenToDelete(null)
           }
         }}
