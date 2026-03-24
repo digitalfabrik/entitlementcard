@@ -21,10 +21,6 @@ import {
   useInitializeGlobalArrayBuffersManager,
 } from './util/globalArrayBuffersManager'
 
-// This env variable is determined by '../../../application_commit.sh'. It holds the hash of the last commit to the
-// application form.
-const lastCommitForApplicationForm = VITE_BUILD_COMMIT
-
 const SuccessContent = styled('div')(({ theme }) => ({
   marginBottom: theme.spacing(2),
   whiteSpace: 'pre-line',
@@ -39,7 +35,7 @@ const ApplyController = (): React.ReactElement | null => {
   const { status, state, setState } = useVersionedLocallyStoredState(
     ApplicationForm.initialState,
     applicationStorageKey,
-    lastCommitForApplicationForm,
+    VITE_BUILD_COMMIT,
   )
   const projectId = useContext(ProjectConfigContext).projectId
   const [addEakApplicationState, addEakApplicationMutation] = useMutation(AddEakApplicationDocument)
