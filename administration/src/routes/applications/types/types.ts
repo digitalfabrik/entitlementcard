@@ -9,6 +9,17 @@ import { ApplicationParsedJsonValue } from '../utils/application'
 export type ApplicationVerification =
   GetApplicationsQuery['applications'][number]['verifications'][number]
 
+/** An application that was obtained from the `getApplications` query. */
+export type Application = Readonly<
+  ApplicationParsedJsonValue<GetApplicationsQuery['applications'][number]>
+>
+
+export type ApplicationVerificationPublic = Readonly<
+  Omit<ApplicationVerificationView, 'contactEmailAddress' | 'verificationId'>
+>
+
+export type AcceptingStoresData = SearchAcceptingStoresInProjectQuery['stores'][number]
+
 export type ApplicationStatusBarItemType = {
   /** A translation key for this category's bar item */
   barItemI18nKey: string
@@ -17,13 +28,3 @@ export type ApplicationStatusBarItemType = {
   /** A filter function that returns true if the given application should be included in this category. */
   filter: (application: Application) => boolean
 }
-
-/** An application that was obtained from the `getApplications` query. */
-export type Application = ApplicationParsedJsonValue<GetApplicationsQuery['applications'][number]>
-
-export type ApplicationVerificationPublic = Omit<
-  ApplicationVerificationView,
-  'contactEmailAddress' | 'verificationId'
->
-
-export type AcceptingStoresData = SearchAcceptingStoresInProjectQuery['stores'][number]

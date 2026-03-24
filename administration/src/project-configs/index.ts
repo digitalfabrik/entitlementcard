@@ -139,7 +139,7 @@ export type InfoParams = {
   info: CardInfo
   card: Card
   cardInfoHash: string
-  region?: Region
+  region?: Pick<Region, 'id' | 'name' | 'prefix'>
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

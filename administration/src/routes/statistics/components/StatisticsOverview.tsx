@@ -20,9 +20,9 @@ const StatisticsOverview = ({
   onApplyFilter,
   region,
 }: {
-  statistics: CardStatisticsResultModel[]
+  statistics: readonly CardStatisticsResultModel[]
   onApplyFilter: (dateStart: Temporal.PlainDate, dateEnd: Temporal.PlainDate) => void
-  region?: Region
+  region?: NonNullable<NonNullable<WhoAmIContextType['me']>['region']>
 }): ReactElement => {
   const { enqueueSnackbar } = useSnackbar()
   const { cardStatistics } = useContext(ProjectConfigContext)

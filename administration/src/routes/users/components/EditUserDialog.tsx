@@ -24,7 +24,7 @@ const EditUserDialog = ({
 }: {
   onClose: () => void
   onSuccess: () => void
-  selectedUser: Administrator | null
+  selectedUser: Pick<Administrator, 'id' | 'email' | 'role' | 'regionId'> | null
   /**
    * If regionIdOverride is set, the region selector will be hidden, and only RegionAdministrator
    * and RegionManager roles are selectable.

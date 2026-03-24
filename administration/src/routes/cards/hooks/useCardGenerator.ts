@@ -34,10 +34,12 @@ import {
 import useSendCardConfirmationMails from './useSendCardConfirmationMails'
 import useSendCardDataToFreinet from './useSendCardDataToFreinet'
 
+type Region = NonNullable<WhoAmIQuery['me']['region']>
+
 const initializeCardsFromQueryParams = (
   projectConfig: ProjectConfig,
   searchParams: URLSearchParams,
-  region: Region,
+  region: Pick<Region, 'id' | 'name'>,
 ) => {
   const headers = getCsvHeaders(projectConfig)
   const values = headers.map(header => searchParams.get(header))
@@ -50,13 +52,8 @@ type GenerateCardFunction = (
   codes: CreateCardsResult[],
   cards: Card[],
   projectConfig: ProjectConfig,
-  region?: Region,
+  region?: Pick<Region, 'id' | 'name' | 'prefix'>,
 ) => Promise<Blob> | Blob
-
-type UseCardGeneratorProps = {
-  region: Region
-  initializeCards?: boolean
-}
 
 type UseCardGeneratorReturn = {
   cardGenerationStep: CardGenerationStep
@@ -71,7 +68,10 @@ type UseCardGeneratorReturn = {
 const useCardGenerator = ({
   region,
   initializeCards = true,
-}: UseCardGeneratorProps): UseCardGeneratorReturn => {
+}: {
+  region: Pick<Region, 'id' | 'name' | 'activatedForCardConfirmationMail' | 'prefix'>
+  initializeCards?: boolean
+}): UseCardGeneratorReturn => {
   const projectConfig = useContext(ProjectConfigContext)
   const [searchParams] = useSearchParams()
   const [cardGenerationStep, setCardGenerationStep] = useState<CardGenerationStep>('input')

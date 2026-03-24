@@ -12,7 +12,11 @@ import CreateCardsButtonBar from '../components/CreateCardsButtonBar'
 import useCardGenerator from '../hooks/useCardGenerator'
 import AddCardsForm from './components/AddCardsForm'
 
-const InnerAddCardsController = ({ region }: { region: Region }) => {
+const InnerAddCardsController = ({
+  region,
+}: {
+  region: Pick<Region, 'id' | 'prefix' | 'activatedForCardConfirmationMail' | 'name'>
+}) => {
   const navigate = useNavigate()
   const { t } = useTranslation('cards')
   const {
