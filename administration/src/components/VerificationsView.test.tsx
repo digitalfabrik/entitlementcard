@@ -1,10 +1,6 @@
 import React from 'react'
 
-import {
-  type ApplicationPublic,
-  ApplicationStatus,
-  ApplicationVerificationView,
-} from '../generated/graphql'
+import { ApplicationStatus } from '../graphql'
 import { verificationsMixed } from '../routes/applications/__mocks__/verificationData'
 import { CustomRenderOptions, renderWithOptions } from '../testing/render'
 import { JsonField } from './JsonFieldView'

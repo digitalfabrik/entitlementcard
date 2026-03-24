@@ -3,7 +3,7 @@ import React, { ReactElement } from 'react'
 
 import { CardInfoSchema } from '../card_pb'
 import { base64ToUint8Array } from '../cards/base64'
-import { CodeType, GraphQlExceptionCode } from '../generated/graphql'
+import { CodeType, GraphQlExceptionCode } from '../graphql'
 import i18next from '../translations/i18n'
 import InvalidLink from './templates/InvalidLink'
 import InvalidPasswordResetLink from './templates/InvalidPasswordResetLink'

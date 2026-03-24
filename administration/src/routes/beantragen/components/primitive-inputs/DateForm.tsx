@@ -4,7 +4,7 @@ import { Temporal } from 'temporal-polyfill'
 
 import CustomDatePicker from '../../../../components/CustomDatePicker'
 import FormAlert from '../../../../components/FormAlert'
-import { DateInput } from '../../../../generated/graphql'
+import { DateInput } from '../../../../graphql'
 import i18next from '../../../../translations/i18n'
 import type { Form, FormComponentProps } from '../../util/formType'
 import { FormContext } from '../forms/SteppedSubForms'

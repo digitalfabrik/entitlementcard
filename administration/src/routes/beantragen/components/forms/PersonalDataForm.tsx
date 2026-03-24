@@ -1,10 +1,10 @@
-/* eslint-disable react/jsx-pascal-case  -- we cannot change the keys of application namespace, see translation file comment */
+/* eslint-disable react/jsx-pascal-case -- we cannot change the keys of application namespace, see translation file comment */
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Temporal } from 'temporal-polyfill'
 
 import CustomDivider from '../../../../components/CustomDivider'
-import { PersonalDataInput, Region } from '../../../../generated/graphql'
+import { PersonalDataInput, Region } from '../../../../graphql'
 import i18next from '../../../../translations/i18n'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
 import {

@@ -6,7 +6,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { Temporal } from 'temporal-polyfill'
 
 import AlertBox from '../../../components/AlertBox'
-import { ApplicationStatus } from '../../../generated/graphql'
+import { ApplicationStatus } from '../../../graphql'
 
 const statusTranslationKey = (
   applicationStatus: ApplicationStatus,

@@ -6,7 +6,7 @@ import { useLocation } from 'react-router'
 
 import { Card, initializeCardFromCSV } from '../../../../cards/card'
 import Blankslate from '../../../../components/Blankslate'
-import { Region } from '../../../../generated/graphql'
+import { Region } from '../../../../graphql'
 import { getCsvHeaders } from '../../../../project-configs/helper'
 import { ProjectConfigContext } from '../../../../provider/ProjectConfigContext'
 import { FILE_SIZE_LIMIT_MEGA_BYTES } from '../../../stores/import/constants'

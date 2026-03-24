@@ -1,9 +1,9 @@
-import { ApolloError, FetchResult } from '@apollo/client'
 import { Temporal } from 'temporal-polyfill'
+import { OperationResult } from 'urql'
 import XRegExp from 'xregexp'
 
 import { maxCardValidity } from '../cards/constants'
-import getMessageFromApolloError from '../errors/getMessageFromApolloError'
+import messageFromGraphQlError from '../errors/getMessageFromApolloError'
 import i18next from '../translations/i18n'
 
 export const isStagingEnvironment = (): boolean => !!window.location.hostname.match(/staging./)
@@ -42,17 +42,17 @@ export const toLowerCaseFirstLetter = (value: string): string =>
   value.charAt(0).toLowerCase() + value.slice(1)
 
 export const mapGraphqlRequestResult = <T>(
-  result: FetchResult<T>,
+  result: OperationResult<T>,
   createError: (message: string) => Error,
-): Exclude<FetchResult['data'], null | undefined> => {
-  if (result.errors) {
-    const { title } = getMessageFromApolloError(new ApolloError({ graphQLErrors: result.errors }))
+): NonNullable<T> => {
+  if (result.error) {
+    const { title } = messageFromGraphQlError(result.error)
     throw createError(title)
   }
   if (result.data === null || result.data === undefined) {
     throw createError(i18next.t('errors:unknownError'))
   }
-  return result.data
+  return result.data as NonNullable<T>
 }
 
 export const hasProp = <P extends PropertyKey, O extends { [p in P]: unknown }>(

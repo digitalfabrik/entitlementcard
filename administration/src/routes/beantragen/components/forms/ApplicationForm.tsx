@@ -1,7 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { ApplicationInput, BavariaCardType, Region } from '../../../../generated/graphql'
+import { ApplicationInput, BavariaCardType, Region } from '../../../../graphql'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
 import {
   CompoundState,

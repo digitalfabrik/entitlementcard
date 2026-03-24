@@ -2,13 +2,14 @@ import { Button, Stack, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useMutation } from 'urql'
 
 import validatePasswordInput from '../../../auth/validateNewPasswordInput'
 import AlertBox from '../../../components/AlertBox'
 import PasswordInput from '../../../components/PasswordInput'
 import SettingsCard, { SettingsCardButtonBox } from '../../../components/SettingsCard'
-import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
-import { useChangePasswordMutation } from '../../../generated/graphql'
+import messageFromGraphQlError from '../../../errors/getMessageFromApolloError'
+import { ChangePasswordDocument } from '../../../graphql'
 import { useWhoAmI } from '../../../provider/WhoAmIProvider'
 
 const ChangePasswordForm = (): ReactElement => {
@@ -17,37 +18,31 @@ const ChangePasswordForm = (): ReactElement => {
   const [currentPassword, setCurrentPassword] = useState<string>('')
   const [newPassword, setNewPassword] = useState<string>('')
   const [repeatNewPassword, setRepeatNewPassword] = useState<string>('')
-
   const { enqueueSnackbar } = useSnackbar()
-  const [changePassword, { loading }] = useChangePasswordMutation({
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
+  const [changePasswordState, changePasswordMutation] = useMutation(ChangePasswordDocument)
+  const email = useWhoAmI().me.email
+
+  const isDirty = newPassword !== '' || repeatNewPassword !== ''
+  const warnMessage = isDirty ? validatePasswordInput(newPassword, repeatNewPassword, tAuth) : null
+  const valid = warnMessage === null
+
+  const submit = async () => {
+    const result = await changePasswordMutation({
+      newPassword,
+      currentPassword,
+      email,
+    })
+
+    if (result.error) {
+      const { title } = messageFromGraphQlError(result.error)
       enqueueSnackbar(title, { variant: 'error' })
-    },
-    onCompleted: () => {
+    } else {
       enqueueSnackbar(t('passwordChangeSuccessful'), { variant: 'success' })
       setCurrentPassword('')
       setNewPassword('')
       setRepeatNewPassword('')
-    },
-  })
-
-  const email = useWhoAmI().me.email
-
-  const isDirty = newPassword !== '' || repeatNewPassword !== ''
-
-  const warnMessage = isDirty ? validatePasswordInput(newPassword, repeatNewPassword, tAuth) : null
-
-  const valid = warnMessage === null
-
-  const submit = async () =>
-    changePassword({
-      variables: {
-        newPassword,
-        currentPassword,
-        email,
-      },
-    })
+    }
+  }
 
   return (
     <SettingsCard title={t('changePassword')}>
@@ -77,7 +72,7 @@ const ChangePasswordForm = (): ReactElement => {
             <AlertBox sx={{ my: 2, mx: 0 }} severity='error' description={warnMessage} />
           )}
           <SettingsCardButtonBox>
-            <Button type='submit' disabled={!valid} loading={loading}>
+            <Button type='submit' disabled={!valid} loading={changePasswordState.fetching}>
               {t('changePassword')}
             </Button>
           </SettingsCardButtonBox>

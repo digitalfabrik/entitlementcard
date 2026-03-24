@@ -1,14 +1,15 @@
-import React, { ReactElement, useContext } from 'react'
+import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Temporal } from 'temporal-polyfill'
+import { useQuery } from 'urql'
 
 import AlertBox from '../../components/AlertBox'
 import {
-  Region,
+  GetCardStatisticsInProjectDocument,
+  GetCardStatisticsInRegionDocument,
   Role,
-  useGetCardStatisticsInProjectQuery,
-  useGetCardStatisticsInRegionQuery,
-} from '../../generated/graphql'
+  WhoAmIQuery,
+} from '../../graphql'
 import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import { useWhoAmI } from '../../provider/WhoAmIProvider'
 import getQueryResult from '../../util/getQueryResult'
@@ -16,21 +17,22 @@ import StatisticsOverview from './components/StatisticsOverview'
 import { defaultEndDate, defaultStartDate } from './constants'
 
 const ViewProjectStatistics = () => {
-  const cardStatisticsQuery = useGetCardStatisticsInProjectQuery({
-    variables: { dateEnd: defaultEndDate.toString(), dateStart: defaultStartDate.toString() },
+  const [dateStart, setDateStart] = useState(defaultStartDate.toString())
+  const [dateEnd, setDateEnd] = useState(defaultEndDate.toString())
+  const [cardStatisticsState, cardStatisticsQuery] = useQuery({
+    query: GetCardStatisticsInProjectDocument,
+    variables: { dateEnd, dateStart },
   })
-  const cardStatisticsQueryResult = getQueryResult(cardStatisticsQuery)
+  const cardStatisticsQueryResult = getQueryResult(cardStatisticsState, cardStatisticsQuery)
 
   if (!cardStatisticsQueryResult.successful) {
     return cardStatisticsQueryResult.component
   }
   return (
     <StatisticsOverview
-      onApplyFilter={(dateStart: Temporal.PlainDate, dateEnd: Temporal.PlainDate) => {
-        cardStatisticsQuery.refetch({
-          dateStart: dateStart.toString(),
-          dateEnd: dateEnd.toString(),
-        })
+      onApplyFilter={(newDateStart: Temporal.PlainDate, newDateEnd: Temporal.PlainDate) => {
+        setDateStart(newDateStart.toString())
+        setDateEnd(newDateEnd.toString())
       }}
       statistics={cardStatisticsQueryResult.data.result}
     />
@@ -38,26 +40,26 @@ const ViewProjectStatistics = () => {
 }
 
 const ViewRegionStatistics = ({ region }: { region: Region }) => {
-  const cardStatisticsQuery = useGetCardStatisticsInRegionQuery({
+  const [dateStart, setDateStart] = useState(defaultStartDate.toString())
+  const [dateEnd, setDateEnd] = useState(defaultEndDate.toString())
+  const [cardStatisticsState, cardStatisticsQuery] = useQuery({
+    query: GetCardStatisticsInRegionDocument,
     variables: {
-      dateEnd: defaultEndDate.toString(),
-      dateStart: defaultStartDate.toString(),
+      dateEnd,
+      dateStart,
       regionId: region.id,
     },
   })
-  const cardStatisticsQueryResult = getQueryResult(cardStatisticsQuery)
+  const cardStatisticsQueryResult = getQueryResult(cardStatisticsState, cardStatisticsQuery)
 
   if (!cardStatisticsQueryResult.successful) {
     return cardStatisticsQueryResult.component
   }
   return (
     <StatisticsOverview
-      onApplyFilter={(dateStart: Temporal.PlainDate, dateEnd: Temporal.PlainDate) => {
-        cardStatisticsQuery.refetch({
-          dateStart: dateStart.toString(),
-          dateEnd: dateEnd.toString(),
-          regionId: region.id,
-        })
+      onApplyFilter={(newDateStart: Temporal.PlainDate, newDateEnd: Temporal.PlainDate) => {
+        setDateStart(newDateStart.toString())
+        setDateEnd(newDateEnd.toString())
       }}
       statistics={cardStatisticsQueryResult.data.result}
       region={region}

@@ -1,9 +1,9 @@
-import { ApolloError } from '@apollo/client'
+import { CombinedError } from 'urql'
 
 import i18next from '../translations/i18n'
 import type { GraphQLErrorMessage } from './getMessageFromApolloError'
 
-const defaultErrorMap = (error: ApolloError): GraphQLErrorMessage => {
+const defaultErrorMap = (error: CombinedError): GraphQLErrorMessage => {
   if (error.message.includes('400')) {
     return { title: i18next.t('errors:invalidRequestFormat') }
   }

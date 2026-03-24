@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { Temporal } from 'temporal-polyfill'
 
 import AlertBox from '../../components/AlertBox'
-import { ApplicationStatus } from '../../generated/graphql'
+import { ApplicationStatus } from '../../graphql'
 import ApplicationCard from './components/ApplicationCard'
 import ApplicationStatusBar from './components/ApplicationStatusBar'
 import type { Application, ApplicationStatusBarItemType } from './types/types'

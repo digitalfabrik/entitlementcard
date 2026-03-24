@@ -1,6 +1,6 @@
 import { fromBinary } from '@bufbuild/protobuf'
 
-import { DynamicActivationCodeSchema } from '../generated/card_pb'
+import { DynamicActivationCodeSchema } from '../card_pb'
 import { config } from '../project-configs/koblenz/config'
 import { mockedCardMutation } from '../routes/erstellen/__mock__/mockSelfServiceCard'
 import { base64ToUint8Array } from './base64'

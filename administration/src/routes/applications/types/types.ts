@@ -2,7 +2,7 @@ import {
   ApplicationVerificationView,
   GetApplicationsQuery,
   SearchAcceptingStoresInProjectQuery,
-} from '../../../generated/graphql'
+} from '../../../graphql'
 import { ApplicationParsedJsonValue } from '../utils/application'
 
 /** A Verification that was obtained from the `getApplications` query. */

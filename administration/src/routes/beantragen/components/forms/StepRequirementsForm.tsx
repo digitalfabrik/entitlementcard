@@ -1,11 +1,11 @@
-/* eslint-disable react/jsx-pascal-case  -- we cannot change the keys of application namespace, see translation file comment */
+/* eslint-disable react/jsx-pascal-case -- we cannot change the keys of application namespace, see translation file comment */
 import React from 'react'
 
 import {
   BavariaCardType,
   BlueCardEntitlementInput,
   GoldenCardEntitlementInput,
-} from '../../../../generated/graphql'
+} from '../../../../graphql'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
 import {
   CompoundState,

@@ -1,10 +1,6 @@
 import { create, toBinary } from '@bufbuild/protobuf'
 
-import {
-  DynamicActivationCodeSchema,
-  QrCodeSchema,
-  StaticVerificationCodeSchema,
-} from '../generated/card_pb'
+import { DynamicActivationCodeSchema, QrCodeSchema, StaticVerificationCodeSchema } from '../card_pb'
 import { convertHexmapToUInt8Array, convertProtobufToHexCode, encodeQRCode } from './qrcode'
 
 describe('qrcode', () => {

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { ApplicationVerificationView } from '../generated/graphql'
+import { ApplicationVerificationView } from '../graphql'
 import {
   verificationsAwaiting,
   verificationsRejected,

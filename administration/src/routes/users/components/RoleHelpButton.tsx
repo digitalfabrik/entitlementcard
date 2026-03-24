@@ -4,7 +4,7 @@ import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import PopoverWrapper from '../../../components/PopoverWrapper'
-import { Role } from '../../../generated/graphql'
+import { Role } from '../../../graphql'
 import roleToText from '../utils/roleToText'
 
 const RoleHelpButton = (): ReactElement => {

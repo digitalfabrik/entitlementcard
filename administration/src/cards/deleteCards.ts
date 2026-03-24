@@ -1,8 +1,13 @@
-import { ApolloError } from '@apollo/client'
+import { UseMutationExecute } from 'urql'
 
-import getMessageFromApolloError from '../errors/getMessageFromApolloError'
-import { DeleteCardsMutationFn } from '../generated/graphql'
+import messageFromGraphQlError from '../errors/getMessageFromApolloError'
+import { DeleteCardsMutation, DeleteCardsMutationVariables } from '../graphql'
 import { CreateCardsError, CreateCardsResult } from './createCards'
+
+export type DeleteCardsMutationFn = UseMutationExecute<
+  DeleteCardsMutation,
+  DeleteCardsMutationVariables
+>
 
 const extractCardInfoHashes = (codes: CreateCardsResult[]) =>
   codes.flatMap(({ dynamicCardInfoHashBase64, staticCardInfoHashBase64 }) =>
@@ -17,10 +22,11 @@ const deleteCards = async (
   codes: CreateCardsResult[],
 ): Promise<void> => {
   const result = await deleteCardsMutation({
-    variables: { regionId, cardInfoHashBase64List: extractCardInfoHashes(codes) },
+    regionId,
+    cardInfoHashBase64List: extractCardInfoHashes(codes),
   })
-  if (result.errors) {
-    const { title } = getMessageFromApolloError(new ApolloError({ graphQLErrors: result.errors }))
+  if (result.error) {
+    const { title } = messageFromGraphQlError(result.error)
     throw new CreateCardsError(title)
   }
 }

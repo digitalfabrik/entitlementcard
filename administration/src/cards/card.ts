@@ -2,8 +2,8 @@ import { create } from '@bufbuild/protobuf'
 import { t } from 'i18next'
 import { Temporal } from 'temporal-polyfill'
 
-import { CardExtensionsSchema, CardInfo, CardInfoSchema } from '../generated/card_pb'
-import { Region } from '../generated/graphql'
+import { CardExtensionsSchema, CardInfo, CardInfoSchema } from '../card_pb'
+import { type Region } from '../graphql'
 import type { CardConfig } from '../project-configs'
 import {
   formatDateDefaultGerman,
