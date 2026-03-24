@@ -23,9 +23,8 @@ const SubForms = {
 }
 
 type State = CompoundState<typeof SubForms>
-type ValidatedInput = AddressInput
 
-const AddressForm: Form<State, ValidatedInput> = {
+const AddressForm: Form<State, AddressInput> = {
   initialState: { ...createCompoundInitialState(SubForms), country: { shortText: 'Deutschland' } },
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: createCompoundValidate(SubForms, {}),

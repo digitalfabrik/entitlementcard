@@ -26,9 +26,10 @@ const SubForms = {
   copyOfJuleicaFront: FileInputForm,
   copyOfJuleicaBack: OptionalFileInputForm,
 }
+
 type State = CompoundState<typeof SubForms>
-type ValidatedInput = BlueCardJuleicaEntitlementInput
-const JuleicaEntitlementForm: Form<State, ValidatedInput> = {
+
+const JuleicaEntitlementForm: Form<State, BlueCardJuleicaEntitlementInput> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: createCompoundValidate(SubForms, { juleicaExpirationDate: { maximumDate: undefined } }),
