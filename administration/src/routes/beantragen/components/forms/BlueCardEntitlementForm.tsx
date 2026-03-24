@@ -66,7 +66,7 @@ const BlueCardEntitlementForm: Form<State, BlueCardEntitlementInput, AdditionalP
       WORK_AT_DEPARTMENT: 'workAtDepartmentEntitlement',
       WORK_AT_ORGANIZATIONS: 'workAtOrganizationsEntitlement',
     },
-  ),
+  ) as unknown as Form<State, BlueCardEntitlementInput, AdditionalProps, Options>['validate'],
   Component: ({
     state,
     setState,

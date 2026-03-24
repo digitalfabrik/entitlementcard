@@ -64,7 +64,7 @@ const GoldenCardEntitlementForm: Form<State, GoldenCardEntitlementInput, Additio
         MILITARY_RESERVE: 'militaryReserveEntitlement',
         HONORED_BY_MINISTER_PRESIDENT: 'honoredByMinisterPresidentEntitlement',
       },
-    ),
+    ) as unknown as Form<State, GoldenCardEntitlementInput, AdditionalProps, Options>['validate'],
     Component: ({
       state,
       setState,
