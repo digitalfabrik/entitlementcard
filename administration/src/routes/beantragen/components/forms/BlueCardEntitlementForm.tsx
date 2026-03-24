@@ -73,6 +73,7 @@ const BlueCardEntitlementForm: Form<State, BlueCardEntitlementInput, AdditionalP
     applicantName,
   }: FormComponentProps<State, AdditionalProps, Options>) => {
     const { t } = useTranslation('applicationForms')
+
     return (
       <>
         <SubForms.entitlementType.Component

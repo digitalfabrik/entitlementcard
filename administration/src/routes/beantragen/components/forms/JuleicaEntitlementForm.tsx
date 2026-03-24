@@ -36,6 +36,7 @@ const JuleicaEntitlementForm: Form<State, BlueCardJuleicaEntitlementInput> = {
   Component: ({ state, setState }: FormComponentProps<State>) => {
     const { t } = useTranslation('application')
     const juleicaBackSetState = useUpdateStateCallback(setState, 'copyOfJuleicaBack')
+
     return (
       <>
         <CustomDivider label='Angaben zur JuLeiCa' />

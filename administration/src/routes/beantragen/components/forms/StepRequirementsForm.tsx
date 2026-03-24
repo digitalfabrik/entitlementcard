@@ -27,6 +27,7 @@ type ValidatedInput =
   | { type: BavariaCardType.Golden; value: GoldenCardEntitlementInput }
 type Options = { cardType: BavariaCardType | null }
 type AdditionalProps = { applicantName: string }
+
 const StepRequirementsForm: Form<
   StepRequirementsFormState,
   ValidatedInput,

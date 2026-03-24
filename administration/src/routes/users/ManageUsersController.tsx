@@ -106,6 +106,7 @@ const ManageRegionUsers = ({ region }: { region: Region }) => {
 const ManageUsersController = (): ReactElement => {
   const { t } = useTranslation('errors')
   const { role, region } = useWhoAmI().me
+
   if (role === Role.RegionAdmin && region) {
     return <ManageRegionUsers region={region} />
   }
