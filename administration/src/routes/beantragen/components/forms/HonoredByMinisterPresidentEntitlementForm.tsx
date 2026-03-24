@@ -20,6 +20,7 @@ type State = CompoundState<typeof SubForms>
 type ValidatedInput = GoldenCardHonoredByMinisterPresidentEntitlementInput
 type Options = Record<string, unknown>
 type AdditionalProps = Record<string, unknown>
+
 const HonoredByMinisterPresidentEntitlementForm: Form<
   State,
   ValidatedInput,

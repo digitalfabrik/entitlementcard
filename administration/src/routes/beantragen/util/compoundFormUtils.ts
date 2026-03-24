@@ -28,6 +28,7 @@ export type InferState<F extends AnyForm> =
   F extends Form<infer State, any, any, any> ? State : never
 type InferOptions<F extends AnyForm> =
   F extends Form<any, any, any, infer Options> ? Options : never
+
 type InferValidatedInput<F extends AnyForm> =
   F extends Form<any, infer ValidatedInput, any, any> ? ValidatedInput : never
 
@@ -57,6 +58,7 @@ export const createCompoundGetArrayBufferKeys =
 type KeyWithOptions<Forms extends SubForms> = {
   [key in keyof Forms]: Record<string, never> extends InferOptions<Forms[key]> ? never : key
 }[keyof Forms]
+
 type SubFormsOptions<Forms extends SubForms> = {
   [key in KeyWithOptions<Forms>]: InferOptions<Forms[key]>
 }
@@ -130,6 +132,7 @@ export const createSwitchValidate =
     if (selectedKeyResult.type === 'error') {
       return { type: 'error' }
     }
+
     return {
       type: 'valid',
       value: {

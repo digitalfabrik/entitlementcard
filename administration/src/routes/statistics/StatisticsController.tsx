@@ -67,6 +67,7 @@ const ViewRegionStatistics = ({ region }: { region: Region }) => {
     />
   )
 }
+
 const StatisticsController = (): ReactElement => {
   const { role, region } = useWhoAmI().me
   const { cardStatistics } = useContext(ProjectConfigContext)
