@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service
 import java.net.URI
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
+import java.util.concurrent.CompletionException
 
 private val logger by lazy { LoggerFactory.getLogger(Mailer::class.java) }
 
@@ -409,6 +410,9 @@ private fun sendMail(
                     .buildEmail(),
             )
             .join()
+    } catch (exception: CompletionException) {
+        logger.error("Error sending mail", exception.cause ?: exception)
+        throw MailNotSentException(to)
     } catch (exception: MailException) {
         logger.error("Error sending mail", exception)
         throw MailNotSentException(to)
