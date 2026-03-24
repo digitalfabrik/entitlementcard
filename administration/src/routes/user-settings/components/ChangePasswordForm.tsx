@@ -8,7 +8,7 @@ import validatePasswordInput from '../../../auth/validateNewPasswordInput'
 import AlertBox from '../../../components/AlertBox'
 import PasswordInput from '../../../components/PasswordInput'
 import SettingsCard, { SettingsCardButtonBox } from '../../../components/SettingsCard'
-import messageFromGraphQlError from '../../../errors/getMessageFromApolloError'
+import { messageFromGraphQlError } from '../../../errors'
 import { ChangePasswordDocument } from '../../../graphql'
 import { useWhoAmI } from '../../../provider/WhoAmIProvider'
 

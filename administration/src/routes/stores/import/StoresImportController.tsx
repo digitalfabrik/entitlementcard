@@ -6,7 +6,7 @@ import { useMutation } from 'urql'
 
 import CenteredCircularProgress from '../../../components/CenteredCircularProgress'
 import RenderGuard from '../../../components/RenderGuard'
-import messageFromGraphQlError from '../../../errors/getMessageFromApolloError'
+import { messageFromGraphQlError } from '../../../errors'
 import { ImportAcceptingStoresDocument, Role } from '../../../graphql'
 import { StoresFieldConfig } from '../../../project-configs'
 import { ProjectConfigContext } from '../../../provider/ProjectConfigContext'

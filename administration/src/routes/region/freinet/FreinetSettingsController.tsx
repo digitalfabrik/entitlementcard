@@ -3,7 +3,7 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery } from 'urql'
 
-import messageFromGraphQlError from '../../../errors/getMessageFromApolloError'
+import { messageFromGraphQlError } from '../../../errors'
 import {
   GetFreinetAgencyByRegionIdDocument,
   UpdateDataTransferToFreinetDocument,

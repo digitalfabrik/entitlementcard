@@ -7,8 +7,7 @@ import { useNavigate } from 'react-router'
 import { useMutation } from 'urql'
 
 import ButtonBar from '../../../components/ButtonBar'
-import messageFromGraphQlError from '../../../errors/getMessageFromApolloError'
-import graphQlErrorMap from '../../../errors/graphQlErrorMap'
+import { graphQlErrorMap, messageFromGraphQlError } from '../../../errors'
 import { GraphQlExceptionCode, UpdateDataPolicyDocument } from '../../../graphql'
 
 type RegionOverviewProps = {

@@ -3,7 +3,7 @@ import { UseQueryExecute, UseQueryState } from 'urql'
 
 import AlertBox from '../components/AlertBox'
 import CenteredCircularProgress from '../components/CenteredCircularProgress'
-import messageFromGraphQlError from '../errors/getMessageFromApolloError'
+import { messageFromGraphQlError } from '../errors'
 
 type QueryHandlerResult<Data> =
   | {

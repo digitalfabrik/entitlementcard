@@ -15,7 +15,7 @@ import { Temporal } from 'temporal-polyfill'
 import { useMutation } from 'urql'
 
 import PasswordInput from '../components/PasswordInput'
-import getMessageFromApolloError from '../errors/getMessageFromApolloError'
+import { messageFromGraphQlError } from '../errors'
 import { SignInDocument, type SignInPayload } from '../graphql'
 import { ProjectConfigContext } from '../provider/ProjectConfigContext'
 import { useWhoAmI } from '../provider/WhoAmIProvider'
@@ -59,7 +59,7 @@ const AutomaticLogoutDialog = ({
     onSignIn(signInState.data.signInPayload)
     setPassword('')
   } else if (signInState.error) {
-    const { title } = getMessageFromApolloError(signInState.error)
+    const { title } = messageFromGraphQlError(signInState.error)
     enqueueSnackbar(title, { variant: 'error' })
   }
 

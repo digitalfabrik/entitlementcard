@@ -8,7 +8,7 @@ import { useMutation, useQuery } from 'urql'
 
 import AlertBox from '../../components/AlertBox'
 import PageLayout from '../../components/PageLayout'
-import messageFromGraphQlError from '../../errors/getMessageFromApolloError'
+import { messageFromGraphQlError } from '../../errors'
 import {
   ApplicationStatus,
   GetApplicationByApplicationVerificationAccessKeyDocument,
