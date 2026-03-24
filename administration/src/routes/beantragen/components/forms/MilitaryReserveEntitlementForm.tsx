@@ -20,6 +20,7 @@ const SubForms = {
 
 type State = CompoundState<typeof SubForms>
 type ValidatedInput = BlueCardMilitaryReserveEntitlementInput
+
 const MilitaryReserveEntitlementForm: Form<State, ValidatedInput> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),

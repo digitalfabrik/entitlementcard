@@ -76,6 +76,7 @@ const WorkAtOrganizationForm: Form<State, WorkAtOrganizationInput, AdditionalPro
     applicantName,
   }: FormComponentProps<State, AdditionalProps>) => {
     const { t } = useTranslation('application')
+
     return (
       <>
         <ActivityDivider onDelete={onDelete} />

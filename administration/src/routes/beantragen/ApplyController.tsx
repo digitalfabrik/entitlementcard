@@ -69,11 +69,11 @@ const ApplyController = (): React.ReactElement | null => {
 
   const submit = async () => {
     const validationResult = ApplicationForm.validate(state, { regions })
+
     if (validationResult.type === 'error') {
       enqueueSnackbar(t('invalidInputError'), { variant: 'error' })
       return
     }
-    const [regionId, application] = validationResult.value
 
     const [regionId, application] = validationResult.value
     const result = await addEakApplicationMutation({ regionId, application, project: projectId })

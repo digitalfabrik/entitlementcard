@@ -33,6 +33,9 @@ const CreateUserDialog = ({
   const [role, setRole] = useState<Role | null>(null)
   const [regionId, setRegionId] = useState<number | null>(null)
   const [sendWelcomeMail, setSendWelcomeMail] = useState(true)
+  const [createAdministratorState, createAdministratorMutation] = useMutation(
+    CreateAdministratorDocument,
+  )
   const rolesWithRegion = [Role.RegionManager, Role.RegionAdmin]
 
   const clearAndCloseDialog = () => {
