@@ -6,7 +6,7 @@ import { useMutation } from 'urql'
 
 import PageLayout from '../components/PageLayout'
 import ProjectSwitcher from '../components/ProjectSwitcher'
-import messageFromGraphQlError from '../errors/getMessageFromApolloError'
+import { messageFromGraphQlError } from '../errors'
 import { SignInDocument, SignInPayload } from '../graphql'
 import { ProjectConfigContext } from '../provider/ProjectConfigContext'
 import LoginForm from './LoginForm'

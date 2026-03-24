@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useMutation } from 'urql'
 
 import StandaloneCenter from '../../components/StandaloneCenter'
-import messageFromGraphQlError from '../../errors/getMessageFromApolloError'
+import { messageFromGraphQlError } from '../../errors'
 import { SendResetMailDocument } from '../../graphql'
 import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 

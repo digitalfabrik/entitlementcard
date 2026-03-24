@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { useMutation } from 'urql'
 
 import TextAreaDialog from '../../../components/TextAreaDialog'
-import messageFromGraphQlError from '../../../errors/getMessageFromApolloError'
+import { messageFromGraphQlError } from '../../../errors'
 import { UpdateApplicationNoteDocument } from '../../../graphql'
 import type { Application } from '../types/types'
 import { ApplicationNoteTooltip } from './ApplicationNoteTooltip'

@@ -11,7 +11,7 @@ import { generateCsv, getCSVFilename } from '../../../cards/csvFactory'
 import deleteCards from '../../../cards/deleteCards'
 import getDeepLinkFromQrCode from '../../../cards/getDeepLinkFromQrCode'
 import { generatePdf, getPdfFilename } from '../../../cards/pdf/pdfFactory'
-import messageFromGraphQlError from '../../../errors/getMessageFromApolloError'
+import { messageFromGraphQlError } from '../../../errors'
 import {
   CreateCardsDocument,
   DeleteCardsDocument,

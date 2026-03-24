@@ -7,7 +7,7 @@ import { useMutation } from 'urql'
 
 import Blankslate from '../../../components/Blankslate'
 import ConfirmDialog from '../../../components/ConfirmDialog'
-import messageFromGraphQlError from '../../../errors/getMessageFromApolloError'
+import { messageFromGraphQlError } from '../../../errors'
 import {
   AcceptingStoreInput,
   AddAcceptingStoreDocument,

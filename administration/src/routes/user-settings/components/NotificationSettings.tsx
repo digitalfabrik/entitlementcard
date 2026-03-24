@@ -6,7 +6,7 @@ import { useMutation, useQuery } from 'urql'
 
 import BaseCheckbox from '../../../components/BaseCheckbox'
 import SettingsCard, { SettingsCardButtonBox } from '../../../components/SettingsCard'
-import messageFromGraphQlError from '../../../errors/getMessageFromApolloError'
+import { messageFromGraphQlError } from '../../../errors'
 import {
   GetNotificationSettingsDocument,
   UpdateNotificationSettingsDocument,
