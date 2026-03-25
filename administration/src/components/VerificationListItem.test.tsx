@@ -11,7 +11,7 @@ import VerificationListItem from './VerificationListItem'
 
 const mockProvider: CustomRenderOptions = {
   translation: true,
-  apollo: true,
+  graphQlProvider: true,
 }
 
 describe('VerificationListItem', () => {
