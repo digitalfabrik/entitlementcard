@@ -91,6 +91,43 @@ Tilo Traber,,gold
     ])
   })
 
+  it('should correctly import CSV Card for bayern with extended data', async () => {
+    const projectConfig = bayernConfig
+    const csv = `
+Name,Ablaufdatum,Kartentyp,MailNotification,UserId
+Thea Test,03.04.2024,Standard,test@test.de,12345678
+Tilo Traber,,gold,test@test.de,98765432
+`
+    await renderAndSubmitCardsInput(projectConfig, csv, setCards)
+
+    expect(enqueueSnackbarMock).not.toHaveBeenCalled()
+    expect(setCards).toHaveBeenCalledTimes(1)
+    expect(setCards).toHaveBeenCalledWith([
+      {
+        expirationDate: parseGermanPlainDateString('03.04.2024'),
+        extensions: {
+          bavariaCardType: BAVARIA_CARD_TYPE_STANDARD,
+          regionId: 0,
+          emailNotification: 'test@test.de',
+          freinetUserId: '12345678',
+        },
+        fullName: 'Thea Test',
+        id: expect.any(Number),
+      },
+      {
+        expirationDate: null,
+        extensions: {
+          regionId: 0,
+          bavariaCardType: BAVARIA_CARD_TYPE_GOLD,
+          emailNotification: 'test@test.de',
+          freinetUserId: '98765432',
+        },
+        fullName: 'Tilo Traber',
+        id: expect.any(Number),
+      },
+    ])
+  })
+
   it('should correctly import CSV Card for bayern freinet', async () => {
     jest.spyOn(URLSearchParams.prototype, 'get').mockReturnValue('true')
 
