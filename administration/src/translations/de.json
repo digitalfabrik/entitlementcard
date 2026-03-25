@@ -727,6 +727,7 @@
     "freinetPersonDataInvalid": "Erforderliche Personendaten von Freinet sind nicht verfügbar. Die Kartendaten konnten deshalb nicht übertragen werden.",
     "freinetCardDataInvalid": "Die Kartendaten können nicht an Freinet übertragen werden, weil diese ungültig sind.",
     "freinetDataTransferNotPermitted": "Für diese Region ist keine Datenübermittlung erlaubt.",
+    "freinetTransferFailed": "Die Daten konnten nicht an Freinet übertragen werden.",
     "projectNotFound": "Dieses Projekt existiert nicht.",
     "storeAlreadyExists": "Diese Akzeptanzstelle existiert bereits.",
     "storeNotFound": "Diese Akzeptanzstelle existiert nicht mehr."
