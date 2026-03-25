@@ -8,7 +8,7 @@ import VerificationsView from './VerificationsView'
 
 const mockProvider: CustomRenderOptions = {
   translation: true,
-  apollo: true,
+  graphQlProvider: true,
 }
 
 describe('VerificationsView', () => {

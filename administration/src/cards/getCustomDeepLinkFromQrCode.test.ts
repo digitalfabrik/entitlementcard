@@ -2,7 +2,7 @@ import { fromBinary } from '@bufbuild/protobuf'
 
 import { DynamicActivationCodeSchema } from '../card_pb'
 import { config } from '../project-configs/koblenz/config'
-import { mockedCardMutation } from '../routes/erstellen/__mock__/mockSelfServiceCard'
+import { mockedCardMutationResult } from '../routes/erstellen/__mock__/mockSelfServiceCard'
 import { base64ToUint8Array } from './base64'
 import getCustomDeepLinkFromQrCode from './getCustomDeepLinkFromQrCode'
 import type { PdfQrCode } from './pdf/elements'
@@ -14,7 +14,7 @@ describe('getCustomDeepLinkFromQrCode', () => {
     case: 'dynamicActivationCode',
     value: fromBinary(
       DynamicActivationCodeSchema,
-      base64ToUint8Array(mockedCardMutation.result.data.card.dynamicActivationCode.codeBase64),
+      base64ToUint8Array(mockedCardMutationResult.data.card.dynamicActivationCode.codeBase64),
     ),
   }
 

@@ -1,10 +1,10 @@
-import { MockedProvider as ApolloProvider } from '@apollo/client/testing'
 import { create } from '@bufbuild/protobuf'
 import { act, renderHook } from '@testing-library/react'
 import { mocked } from 'jest-mock'
 import React, { ReactNode } from 'react'
 import { MemoryRouter } from 'react-router'
 import { Temporal } from 'temporal-polyfill'
+import { Client, Provider as UrqlProvider, cacheExchange } from 'urql'
 
 import { DynamicActivationCodeSchema, StaticVerificationCodeSchema } from '../../../card_pb'
 import { generateCardInfo, initializeCard } from '../../../cards/card'
@@ -54,7 +54,9 @@ const wrapper = ({
   <MemoryRouter initialEntries={initialRoutes}>
     <ProjectConfigProvider projectConfig={projectConfig ?? showcaseConfig}>
       <AppSnackbarProvider>
-        <ApolloProvider>{children}</ApolloProvider>
+        <UrqlProvider value={new Client({ url: '/graphql', exchanges: [cacheExchange] })}>
+          {children}
+        </UrqlProvider>
       </AppSnackbarProvider>
     </ProjectConfigProvider>
   </MemoryRouter>
