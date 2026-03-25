@@ -11,16 +11,13 @@ import app.ehrenamtskarte.backend.db.entities.Applications
 import app.ehrenamtskarte.backend.generated.AddEakApplication
 import app.ehrenamtskarte.backend.generated.enums.ApplicationType
 import app.ehrenamtskarte.backend.generated.inputs.ApplicationInput
-import app.ehrenamtskarte.backend.graphql.application.ApplicationHandler
 import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
 import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestApplicationBuilder
 import app.ehrenamtskarte.backend.helper.TestData
 import app.ehrenamtskarte.backend.helper.toDataObject
 import app.ehrenamtskarte.backend.helper.toErrorObject
-import io.mockk.every
-import io.mockk.mockkConstructor
-import io.mockk.verify
+import app.ehrenamtskarte.backend.shared.mail.Mailer
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.deleteAll
 import org.jetbrains.exposed.v1.jdbc.selectAll
@@ -29,7 +26,13 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
+import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.ArgumentMatchers.anyString
+import org.mockito.Mockito
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
 import org.springframework.http.HttpStatus
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -101,6 +104,9 @@ internal class Verein360ApplicationTest : IntegrationTest() {
             )
     }
 
+    @MockitoBean
+    private lateinit var mailer: Mailer
+
     private val adminVerein360 = TestAdministrators.BAYERN_VEREIN_360
 
     @BeforeEach
@@ -110,19 +116,6 @@ internal class Verein360ApplicationTest : IntegrationTest() {
             Applications.deleteAll()
             ApiTokens.deleteAll()
         }
-    }
-
-    /**
-     * Set up a mock to be able to verify sending emails
-     */
-    @BeforeEach
-    fun mockApplicationHandler() {
-        mockkConstructor(ApplicationHandler::class)
-        every { anyConstructed<ApplicationHandler>().sendApplicationMails(any(), any(), any(), any()) } returns Unit
-        every {
-            anyConstructed<ApplicationHandler>().sendPreVerifiedApplicationMails(any(), any(), any(), any())
-        } returns
-            Unit
     }
 
     @ParameterizedTest
@@ -163,10 +156,7 @@ internal class Verein360ApplicationTest : IntegrationTest() {
         val response = postGraphQL(mutation)
 
         assertEquals(HttpStatus.OK, response.statusCode)
-
-        val error = response.toErrorObject()
-
-        assertEquals(GraphQLExceptionCode.UNAUTHORIZED, error.extensions.code)
+        assertEquals(GraphQLExceptionCode.UNAUTHORIZED, response.toErrorObject().extensions.code)
     }
 
     @Test
@@ -175,10 +165,7 @@ internal class Verein360ApplicationTest : IntegrationTest() {
         val response = postGraphQL(mutation, token = "dummy")
 
         assertEquals(HttpStatus.OK, response.statusCode)
-
-        val error = response.toErrorObject()
-
-        assertEquals(GraphQLExceptionCode.UNAUTHORIZED, error.extensions.code)
+        assertEquals(GraphQLExceptionCode.UNAUTHORIZED, response.toErrorObject().extensions.code)
     }
 
     @Test
@@ -189,10 +176,7 @@ internal class Verein360ApplicationTest : IntegrationTest() {
         val response = postGraphQL(mutation, token = "dummy")
 
         assertEquals(HttpStatus.OK, response.statusCode)
-
-        val error = response.toErrorObject()
-
-        assertEquals(GraphQLExceptionCode.FORBIDDEN, error.extensions.code)
+        assertEquals(GraphQLExceptionCode.FORBIDDEN, response.toErrorObject().extensions.code)
     }
 
     @Test
@@ -220,12 +204,10 @@ internal class Verein360ApplicationTest : IntegrationTest() {
             }
         }
 
-        verify(exactly = 0) {
-            anyConstructed<ApplicationHandler>().sendApplicationMails(any(), any(), any(), any())
-        }
-        verify(exactly = 1) {
-            anyConstructed<ApplicationHandler>().sendPreVerifiedApplicationMails(any(), any(), any(), any())
-        }
+        verify(mailer, times(0)).sendApplicationApplicantMail(any(), any(), anyString(), anyInt())
+        verify(mailer, times(0)).sendApplicationVerificationMail(anyString(), any(), any())
+        verify(mailer, times(1)).sendPreVerifiedApplicationMail(any(), any(), anyString(), anyString(), anyInt())
+        verify(mailer, times(1)).sendNotificationForApplicationMails(any(), anyInt())
     }
 
     @Test
@@ -251,12 +233,10 @@ internal class Verein360ApplicationTest : IntegrationTest() {
             }
         }
 
-        verify(exactly = 1) {
-            anyConstructed<ApplicationHandler>().sendApplicationMails(any(), any(), any(), any())
-        }
-        verify(exactly = 0) {
-            anyConstructed<ApplicationHandler>().sendPreVerifiedApplicationMails(any(), any(), any(), any())
-        }
+        verify(mailer, times(1)).sendApplicationApplicantMail(any(), any(), anyString(), anyInt())
+        verify(mailer, times(1)).sendApplicationVerificationMail(anyString(), any(), any())
+        verify(mailer, times(0)).sendPreVerifiedApplicationMail(any(), any(), anyString(), anyString(), anyInt())
+        verify(mailer, times(1)).sendNotificationForApplicationMails(any(), anyInt())
     }
 
     private fun createMutation(
@@ -270,5 +250,15 @@ internal class Verein360ApplicationTest : IntegrationTest() {
             project = project,
         )
         return AddEakApplication(variables)
+    }
+
+    /**
+     * Mockito.any() returns null, causing NPEs with Kotlin non-null parameters.
+     * This helper bypasses the issue.
+     */
+    @Suppress("UNCHECKED_CAST")
+    private fun <T> any(): T {
+        Mockito.any<T>()
+        return null as T
     }
 }

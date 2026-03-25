@@ -23,6 +23,7 @@ import org.springframework.stereotype.Controller
 @Controller
 class ManageUsersMutationController(
     private val backendConfig: BackendConfiguration,
+    private val mailerService: Mailer,
 ) {
     @GraphQLDescription("Creates a new administrator")
     @MutationMapping
@@ -53,8 +54,7 @@ class ManageUsersMutationController(
 
             if (sendWelcomeMail) {
                 val key = AdministratorsRepository.setNewPasswordResetKey(newUser)
-                Mailer.sendWelcomeMail(
-                    backendConfig,
+                mailerService.sendWelcomeMail(
                     projectConfig,
                     key,
                     email,
