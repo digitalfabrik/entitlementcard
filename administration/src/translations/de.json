@@ -329,7 +329,10 @@
     "cardCreationConfirmationFailureMessage": "Bestätigungsmail konnte nicht zugestellt werden",
     "multipleCardCreationConfirmationFailureMessage": "Bestätigungsmails konnten an folgende Adressen nicht zugestellt werden: {{recipients}}",
     "freinetDataSyncSuccessMessage": "Antrags- und Kartendaten wurden erfolgreich an Freinet gesendet.",
-    "freinetCardDataTransferSuccessMessage": "Kartendaten wurden erfolgreich an Freinet gesendet."
+    "freinetCardDataTransferSuccessMessage": "Kartendaten wurden erfolgreich an Freinet gesendet.",
+    "multipleFreinetCardDataTransferSuccessMessage": "{{count}} Kartendatensätze wurden erfolgreich an Freinet gesendet.",
+    "freinetCardDataTransferFailureMessage": "Kartendaten konnten nicht an Freinet gesendet werden.",
+    "multipleFreinetCardDataTransferFailureMessage": "Für folgende Freinet-User-IDs konnten keine Kartendaten gesendet werden: {{userIds}}"
   },
   "misc": {
     "openAppStore": "App Store öffnen",

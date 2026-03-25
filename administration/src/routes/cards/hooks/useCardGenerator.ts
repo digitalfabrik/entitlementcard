@@ -16,7 +16,6 @@ import {
   useCreateCardsMutation,
   useDeleteCardsMutation,
   useSendApplicationAndCardDataToFreinetMutation,
-  useSendCardDataToFreinetMutation,
 } from '../../../generated/graphql'
 import { ProjectConfig } from '../../../project-configs'
 import { getCsvHeaders } from '../../../project-configs/helper'
@@ -27,8 +26,12 @@ import { isProductionEnvironment, updateArrayItem } from '../../../util/helper'
 import { normalizeWhitespace } from '../../../util/normalizeString'
 import { reportErrorToSentry } from '../../../util/sentry'
 import { saveActivityLog } from '../../activity-log/utils/activityLog'
-import { getFreinetCardFromCards } from '../utils/getFreinetCardFromCards'
+import {
+  getFreinetCardFromCard,
+  getFreinetCardWithUserIdFromCard,
+} from '../utils/freinetCardMapper'
 import useSendCardConfirmationMails from './useSendCardConfirmationMails'
+import useSendCardDataToFreinet from './useSendCardDataToFreinet'
 
 const initializeCardsFromQueryParams = (
   projectConfig: ProjectConfig,
@@ -88,17 +91,7 @@ const useCardGenerator = ({
     },
   })
 
-  const [sendCardDataToFreinet] = useSendCardDataToFreinetMutation({
-    onCompleted: data => {
-      if (data.sendCardDataToFreinet === true) {
-        enqueueSnackbar(t('freinetCardDataTransferSuccessMessage'), { variant: 'success' })
-      }
-    },
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
-      enqueueSnackbar(title, { variant: 'error', persist: true })
-    },
-  })
+  const sendCardDataToFreinet = useSendCardDataToFreinet()
 
   const sendConfirmationMails = useSendCardConfirmationMails(region)
   const initializedCards = initializeCards
@@ -137,24 +130,18 @@ const useCardGenerator = ({
         normalizedCards.forEach(saveActivityLog)
 
         if (applicationId != null) {
-          const freinetCard = getFreinetCardFromCards(normalizedCards)
+          const freinetCard = getFreinetCardFromCard(normalizedCards[0])
           sendApplicationAndCardDataToFreinet({
             variables: {
               applicationId,
               freinetCard,
             },
           })
-        }
-
-        const freinetUserId = normalizedCards[0]?.extensions.freinetUserId
-        if (freinetUserId) {
-          const freinetCard = getFreinetCardFromCards(normalizedCards)
-          sendCardDataToFreinet({
-            variables: {
-              userId: parseInt(freinetUserId, 10),
-              freinetCard,
-            },
-          })
+        } else {
+          const cardsWithFreinetUserId = normalizedCards.flatMap(card =>
+            card.extensions.freinetUserId ? [getFreinetCardWithUserIdFromCard(card)] : [],
+          )
+          sendCardDataToFreinet(cardsWithFreinetUserId)
         }
 
         if (region.activatedForCardConfirmationMail) {
