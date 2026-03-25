@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.graphql.application
 
 import app.ehrenamtskarte.backend.config.BackendConfiguration
+import app.ehrenamtskarte.backend.config.ProjectConfig
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity.Status
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
@@ -34,6 +35,7 @@ import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.ContextValue
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.stereotype.Controller
+import kotlin.collections.orEmpty
 
 @Controller
 class EakApplicationMutationController(
@@ -52,48 +54,77 @@ class EakApplicationMutationController(
     ): DataFetcherResult<Boolean> {
         val projectConfig = backendConfiguration.getProjectConfig(project)
 
-        files?.let { applicationService.validateAttachmentTypes(it) }
+        val attachments = files.orEmpty()
+        applicationService.validateAttachmentTypes(attachments)
         applicationService.validateRegionActivatedForApplication(project, regionId)
-        val isPreVerified = applicationService.isValidPreVerifiedApplication(application, request)
 
-        val (applicationEntity, verificationEntities) = transaction {
-            val result = applicationService.saveApplication(application, regionId, files.orEmpty(), isPreVerified)
-            if (!isPreVerified) {
-                // Send mail to applicant within the transaction to ensure rollback on failure
-                mailService.sendApplicationApplicantMail(
-                    projectConfig,
-                    application.personalData,
-                    result.first.accessKey,
-                    regionId,
-                )
-            }
-            result
+        if (applicationService.isValidPreVerifiedApplication(application, request)) {
+            return addPreVerifiedEakApplication(application, regionId, attachments, projectConfig)
         }
 
-        val resultBuilder = DataFetcherResult.newResult<Boolean>()
-        val applicantName = application.personalData.fullName()
+        val verifications = transaction {
+            val (applicationEntity, verificationEntities) = applicationService.saveApplication(
+                application,
+                regionId,
+                attachments,
+                isPreVerified = false,
+            )
+            // Send mail to applicant within the transaction to ensure rollback on failure
+            mailService.sendApplicationApplicantMail(
+                projectConfig,
+                application.personalData,
+                applicationEntity.accessKey,
+                regionId,
+            )
+            verificationEntities
+        }
 
-        verificationEntities.forEach { verification ->
+        val errors = verifications.mapNotNull { verification ->
             try {
-                if (isPreVerified) {
-                    mailService.sendPreVerifiedApplicationMail(
-                        projectConfig,
-                        verification,
-                        applicantName,
-                        applicationEntity.accessKey,
-                        regionId,
-                    )
-                } else {
-                    mailService.sendApplicationVerificationMail(applicantName, projectConfig, verification)
-                }
+                mailService.sendApplicationVerificationMail(
+                    application.personalData.fullName(),
+                    projectConfig,
+                    verification,
+                )
+                null
             } catch (e: MailNotSentException) {
-                resultBuilder.error(e.toGraphQLError())
+                e.toGraphQLError()
             }
         }
 
         mailService.sendNotificationForApplicationMails(projectConfig, regionId)
 
-        return resultBuilder.data(true).build()
+        return DataFetcherResult.newResult<Boolean>().data(true).errors(errors).build()
+    }
+
+    private fun addPreVerifiedEakApplication(
+        application: Application,
+        regionId: Int,
+        attachments: List<Part>,
+        projectConfig: ProjectConfig,
+    ): DataFetcherResult<Boolean> {
+        val (applicationEntity, verificationEntities) = transaction {
+            applicationService.saveApplication(application, regionId, attachments, isPreVerified = true)
+        }
+
+        val errors = verificationEntities.mapNotNull { verification ->
+            try {
+                mailService.sendPreVerifiedApplicationMail(
+                    projectConfig,
+                    verification,
+                    application.personalData.fullName(),
+                    applicationEntity.accessKey,
+                    regionId,
+                )
+                null
+            } catch (e: MailNotSentException) {
+                e.toGraphQLError()
+            }
+        }
+
+        mailService.sendNotificationForApplicationMails(projectConfig, regionId)
+
+        return DataFetcherResult.newResult<Boolean>().data(true).errors(errors).build()
     }
 
     @GraphQLDescription("Deletes the application with specified id")
