@@ -1,8 +1,10 @@
-import { fireEvent } from '@testing-library/react'
+import { act, fireEvent } from '@testing-library/react'
 import React from 'react'
 
 import { renderWithOptions } from '../../testing/render'
 import NuernbergPassIdExtension from './NuernbergPassIdExtension'
+
+jest.useFakeTimers()
 
 describe('NuernbergPassIdExtension', () => {
   const mockSetValue = jest.fn()
@@ -76,6 +78,8 @@ describe('NuernbergPassIdExtension', () => {
 
       fireEvent.change(input, { target: { value: '123' } })
       fireEvent.blur(input)
+      // Ignore timout for onBlur
+      act(() => jest.runAllTimers())
 
       const errorMessage = getByText('Bitte geben Sie eine gültige Nürnberg-Pass-ID ein.')
       expect(errorMessage).toBeTruthy()

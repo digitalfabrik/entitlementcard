@@ -1,4 +1,4 @@
-import { fireEvent, render } from '@testing-library/react'
+import { act, fireEvent, render } from '@testing-library/react'
 import React from 'react'
 
 import CardTextField from './CardTextField'
@@ -14,6 +14,15 @@ describe('CardTextField', () => {
     errorMessage: null,
     inputProps: {},
   }
+
+  // Replace setTimeout with a controlled implementation so we can advance time manually
+  beforeEach(() => {
+    jest.useFakeTimers()
+  })
+
+  afterEach(() => {
+    jest.useRealTimers()
+  })
 
   it('should render input field with label and placeholder', () => {
     const { getByLabelText } = render(<CardTextField {...defaultProps} />)
@@ -53,6 +62,9 @@ describe('CardTextField', () => {
     )
     const input = getByLabelText('Test Label')
     fireEvent.blur(input)
+    // Ignore timout for onBlur
+    act(() => jest.runAllTimers())
+
     expect(getByText('Error occurred')).toBeTruthy()
   })
 
