@@ -1,9 +1,9 @@
-import { OperationVariables, QueryResult } from '@apollo/client'
 import React, { ReactElement } from 'react'
+import { UseQueryExecute, UseQueryState } from 'urql'
 
 import AlertBox from '../components/AlertBox'
 import CenteredCircularProgress from '../components/CenteredCircularProgress'
-import getMessageFromApolloError from '../errors/getMessageFromApolloError'
+import { messageFromGraphQlError } from '../errors'
 
 type QueryHandlerResult<Data> =
   | {
@@ -15,30 +15,31 @@ type QueryHandlerResult<Data> =
       component: ReactElement
     }
 
-const getQueryResult = <Data, Variables extends OperationVariables>(
-  queryResult: QueryResult<Data, Variables>,
+const getQueryResult = <Data,>(
+  queryState: UseQueryState<Data>,
+  reexecute: UseQueryExecute,
   errorComponent?: ReactElement,
 ): QueryHandlerResult<Data> => {
-  const { error, loading, data, refetch } = queryResult
-  if (loading) {
+  const { error, fetching, data } = queryState
+  if (fetching) {
     return { successful: false, component: <CenteredCircularProgress /> }
   }
   if (error) {
-    const { title, description, retryable } = getMessageFromApolloError(error)
+    const { title, description, retryable } = messageFromGraphQlError(error)
     return {
       successful: false,
       component: errorComponent ?? (
         <AlertBox
           title={title}
           description={description}
-          onAction={retryable ? refetch : undefined}
+          onAction={retryable ? reexecute : undefined}
           severity='error'
         />
       ),
     }
   }
   if (data === undefined) {
-    return { successful: false, component: <AlertBox onAction={refetch} severity='error' /> }
+    return { successful: false, component: <AlertBox onAction={reexecute} severity='error' /> }
   }
   return { successful: true, data }
 }

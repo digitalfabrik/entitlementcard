@@ -1,12 +1,13 @@
 import { useSnackbar } from 'notistack'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useMutation, useQuery } from 'urql'
 
-import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
+import { messageFromGraphQlError } from '../../../errors'
 import {
-  useGetApplicationConfirmationNoteInformationQuery,
-  useUpdateApplicationConfirmationNoteMutation,
-} from '../../../generated/graphql'
+  GetApplicationConfirmationNoteInformationDocument,
+  UpdateApplicationConfirmationNoteDocument,
+} from '../../../graphql'
 import getQueryResult from '../../../util/getQueryResult'
 import ApplicationConfirmationNoteCard from './ApplicationConfirmationNoteCard'
 
@@ -19,23 +20,19 @@ const ApplicationConfirmationNoteController = ({
 }: ApplicationConfirmationNoteControllerProps): ReactElement => {
   const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('regionSettings')
-  const applicationConfirmationNoteQuery = useGetApplicationConfirmationNoteInformationQuery({
+  const [applicationConfirmationNoteState, applicationConfirmationNoteQuery] = useQuery({
+    query: GetApplicationConfirmationNoteInformationDocument,
     variables: { regionId },
   })
 
-  const [updateApplicationConfirmationNote, { loading }] =
-    useUpdateApplicationConfirmationNoteMutation({
-      onError: error => {
-        const { title } = getMessageFromApolloError(error)
-        enqueueSnackbar(title, { variant: 'error' })
-      },
-      onCompleted: () => {
-        enqueueSnackbar(t('applicationConfirmationMailNoteSavedSuccessful'), { variant: 'success' })
-        applicationConfirmationNoteQuery.refetch({ regionId })
-      },
-    })
+  const [updateApplicationNoteState, updateApplicationNoteMutation] = useMutation(
+    UpdateApplicationConfirmationNoteDocument,
+  )
 
-  const applicationConfirmationNoteQueryResult = getQueryResult(applicationConfirmationNoteQuery)
+  const applicationConfirmationNoteQueryResult = getQueryResult(
+    applicationConfirmationNoteState,
+    applicationConfirmationNoteQuery,
+  )
   if (!applicationConfirmationNoteQueryResult.successful) {
     return applicationConfirmationNoteQueryResult.component
   }
@@ -43,14 +40,19 @@ const ApplicationConfirmationNoteController = ({
   const { applicationConfirmationMailNote, applicationConfirmationMailNoteActivated } =
     applicationConfirmationNoteQueryResult.data.region
 
-  const saveApplicationConfirmationNote = (note: string, activated: boolean) => {
-    updateApplicationConfirmationNote({
-      variables: {
-        regionId,
-        note,
-        activated,
-      },
+  const saveApplicationConfirmationNote = async (note: string, activated: boolean) => {
+    const result = await updateApplicationNoteMutation({
+      regionId,
+      note,
+      activated,
     })
+    if (result.error) {
+      const { title } = messageFromGraphQlError(result.error)
+      enqueueSnackbar(title, { variant: 'error' })
+    } else {
+      enqueueSnackbar(t('applicationConfirmationMailNoteSavedSuccessful'), { variant: 'success' })
+      applicationConfirmationNoteQuery({ requestPolicy: 'network-only' })
+    }
   }
 
   return (
@@ -58,7 +60,7 @@ const ApplicationConfirmationNoteController = ({
       defaultConfirmationNote={applicationConfirmationMailNote}
       defaultConfirmationNoteActivated={applicationConfirmationMailNoteActivated}
       saveApplicationConfirmationNote={saveApplicationConfirmationNote}
-      isSavingApplicationConfirmationNote={loading}
+      isSavingApplicationConfirmationNote={updateApplicationNoteState.fetching}
     />
   )
 }

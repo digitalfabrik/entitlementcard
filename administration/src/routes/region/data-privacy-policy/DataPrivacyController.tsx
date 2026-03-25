@@ -1,18 +1,19 @@
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useQuery } from 'urql'
 
 import RenderGuard from '../../../components/RenderGuard'
-import { Role, useGetDataPolicyQuery } from '../../../generated/graphql'
+import { GetDataPolicyDocument, Role } from '../../../graphql'
 import { useWhoAmI } from '../../../provider/WhoAmIProvider'
 import getQueryResult from '../../../util/getQueryResult'
 import DataPrivacyOverview from './DataPrivacyOverview'
 
 const DataPrivacyController = ({ regionId }: { regionId: number }) => {
-  const dataPolicyQuery = useGetDataPolicyQuery({
+  const [dataPolicyState, dataPolicyQuery] = useQuery({
+    query: GetDataPolicyDocument,
     variables: { regionId },
-    onError: error => console.error(error),
   })
-  const dataPolicyQueryResult = getQueryResult(dataPolicyQuery)
+  const dataPolicyQueryResult = getQueryResult(dataPolicyState, dataPolicyQuery)
   if (!dataPolicyQueryResult.successful) {
     return dataPolicyQueryResult.component
   }
@@ -29,7 +30,7 @@ const DataPrivacyWithRegion = (): ReactElement => {
   return (
     <RenderGuard
       allowedRoles={[Role.RegionAdmin]}
-      condition={region !== undefined}
+      condition={region !== null}
       error={{ description: t('notAuthorizedForDataPrivacy') }}
     >
       {region && <DataPrivacyController regionId={region.id} />}

@@ -12,7 +12,7 @@ import {
   QRCodeVersion,
 } from '@zxing/library/cjs'
 
-import { type QrCode, QrCodeSchema } from '../generated/card_pb'
+import { type QrCode, QrCodeSchema } from '../card_pb'
 
 // Level 8 with EC of M gives 152 bytes
 // Level 7 with EC of L gives 154 bytes

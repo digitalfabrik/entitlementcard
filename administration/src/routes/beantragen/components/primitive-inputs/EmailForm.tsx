@@ -2,7 +2,7 @@ import { TextField } from '@mui/material'
 import React, { useContext, useState } from 'react'
 
 import FormAlert from '../../../../components/FormAlert'
-import { EmailInput } from '../../../../generated/graphql'
+import { EmailInput } from '../../../../graphql'
 import i18next from '../../../../translations/i18n'
 import { isEmailValid } from '../../../../util/verifications'
 import { Form, FormComponentProps } from '../../util/formType'

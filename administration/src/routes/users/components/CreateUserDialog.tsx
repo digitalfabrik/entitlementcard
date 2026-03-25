@@ -3,12 +3,13 @@ import { Stack } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useMutation } from 'urql'
 
 import CardTextField from '../../../cards/extensions/components/CardTextField'
 import BaseCheckbox from '../../../components/BaseCheckbox'
 import ConfirmDialog from '../../../components/ConfirmDialog'
-import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
-import { Role, useCreateAdministratorMutation } from '../../../generated/graphql'
+import { messageFromGraphQlError } from '../../../errors'
+import { CreateAdministratorDocument, Role } from '../../../graphql'
 import { isEmailValid } from '../../../util/verifications'
 import RegionSelector from './RegionSelector'
 import RoleSelector from './RoleSelector'
@@ -42,17 +43,9 @@ const CreateUserDialog = ({
     onClose()
   }
 
-  const [createAdministrator, { loading }] = useCreateAdministratorMutation({
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
-      enqueueSnackbar(title, { variant: 'error' })
-    },
-    onCompleted: () => {
-      enqueueSnackbar(t('addUserSuccess'), { variant: 'success' })
-      onSuccess()
-      clearAndCloseDialog()
-    },
-  })
+  const [createAdministratorState, createAdministratorMutation] = useMutation(
+    CreateAdministratorDocument,
+  )
 
   const getRegionId = () => {
     if (regionIdOverride !== null) {
@@ -65,25 +58,34 @@ const CreateUserDialog = ({
     regionIdOverride === null && role !== null && rolesWithRegion.includes(role)
   const userCreationDisabled =
     !email || role === null || (showRegionSelector && regionId === null) || !isEmailValid(email)
+
+  const onConfirm = async () => {
+    const result = await createAdministratorMutation({
+      email,
+      role: role as Role,
+      regionId: getRegionId(),
+      sendWelcomeMail,
+    })
+    if (result.error) {
+      const { title } = messageFromGraphQlError(result.error)
+      enqueueSnackbar(title, { variant: 'error' })
+    } else {
+      enqueueSnackbar(t('addUserSuccess'), { variant: 'success' })
+      onSuccess()
+      clearAndCloseDialog()
+    }
+  }
+
   return (
     <ConfirmDialog
       open={isOpen}
       title={t('addUser')}
-      loading={loading}
+      loading={createAdministratorState.fetching}
       actionDisabled={userCreationDisabled}
       onClose={clearAndCloseDialog}
       confirmButtonText={t('addUser')}
       confirmButtonIcon={<PersonAdd />}
-      onConfirm={() =>
-        createAdministrator({
-          variables: {
-            email,
-            role: role as Role,
-            regionId: getRegionId(),
-            sendWelcomeMail,
-          },
-        })
-      }
+      onConfirm={onConfirm}
     >
       <Stack sx={{ paddingY: 1, gap: 2 }}>
         <CardTextField

@@ -12,10 +12,11 @@ import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Temporal } from 'temporal-polyfill'
+import { useMutation } from 'urql'
 
 import PasswordInput from '../components/PasswordInput'
-import getMessageFromApolloError from '../errors/getMessageFromApolloError'
-import { type SignInPayload, useSignInMutation } from '../generated/graphql'
+import { messageFromGraphQlError } from '../errors'
+import { SignInDocument, type SignInPayload } from '../graphql'
 import { ProjectConfigContext } from '../provider/ProjectConfigContext'
 import { useWhoAmI } from '../provider/WhoAmIProvider'
 
@@ -39,17 +40,7 @@ const AutomaticLogoutDialog = ({
   const [secondsLeft, setSecondsLeft] = useState(computeSecondsRemaining(expiresAt))
   const { enqueueSnackbar } = useSnackbar()
   const [password, setPassword] = useState<string>('')
-  const [signIn, mutationState] = useSignInMutation({
-    onCompleted: payload => {
-      enqueueSnackbar(t('loginPeriodExtended'), { variant: 'success' })
-      onSignIn(payload.signInPayload)
-      setPassword('')
-    },
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
-      enqueueSnackbar(title, { variant: 'error' })
-    },
-  })
+  const [signInState, signInMutation] = useMutation(SignInDocument)
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -62,6 +53,15 @@ const AutomaticLogoutDialog = ({
     }, 1000)
     return () => clearInterval(interval)
   }, [expiresAt, onSignOut])
+
+  if (signInState.data) {
+    enqueueSnackbar(t('loginPeriodExtended'), { variant: 'success' })
+    onSignIn(signInState.data.signInPayload)
+    setPassword('')
+  } else if (signInState.error) {
+    const { title } = messageFromGraphQlError(signInState.error)
+    enqueueSnackbar(title, { variant: 'error' })
+  }
 
   return (
     <Dialog
@@ -86,18 +86,16 @@ const AutomaticLogoutDialog = ({
           variant='outlined'
           startIcon={<Close />}
           onClick={onSignOut}
-          loading={mutationState.loading}
+          loading={signInState.fetching}
         >
           {t('loginPeriodLogoutButton')}
         </Button>
         <Button
           variant='contained'
           color='primary'
-          onClick={() =>
-            signIn({ variables: { project: projectId, authData: { email, password } } })
-          }
+          onClick={() => signInMutation({ project: projectId, authData: { email, password } })}
           startIcon={<CheckCircleOutline />}
-          loading={mutationState.loading}
+          loading={signInState.fetching}
         >
           {t('loginPeriodExtendButton')}
         </Button>

@@ -5,8 +5,9 @@ import { useTranslation } from 'react-i18next'
 import { Temporal } from 'temporal-polyfill'
 
 import RenderGuard from '../../../components/RenderGuard'
-import { CardStatisticsResultModel, Region, Role } from '../../../generated/graphql'
+import { CardStatisticsResultModel, Role } from '../../../graphql'
 import { ProjectConfigContext } from '../../../provider/ProjectConfigContext'
+import { WhoAmIContextType } from '../../../provider/WhoAmIProvider'
 import downloadDataUri from '../../../util/downloadDataUri'
 import { csvFileName, generateCsv } from '../utils/csvStatistics'
 import StatisticsBarChart from './StatisticsBarChart'
@@ -19,14 +20,17 @@ const StatisticsOverview = ({
   onApplyFilter,
   region,
 }: {
-  statistics: CardStatisticsResultModel[]
+  statistics: readonly CardStatisticsResultModel[]
   onApplyFilter: (dateStart: Temporal.PlainDate, dateEnd: Temporal.PlainDate) => void
-  region?: Region
+  region?: NonNullable<NonNullable<WhoAmIContextType['me']>['region']>
 }): ReactElement => {
   const { enqueueSnackbar } = useSnackbar()
   const { cardStatistics } = useContext(ProjectConfigContext)
   const { t } = useTranslation('statistics')
-  const statisticKeys = Object.keys(statistics[0]).filter(item => item !== 'region')
+  // TODO Devise another way to derive these keys
+  const statisticKeys = Object.keys(statistics[0]).filter(
+    item => item !== 'region' && item !== '__typename',
+  )
   const isSingleChartView = statistics.length === 1
 
   return (

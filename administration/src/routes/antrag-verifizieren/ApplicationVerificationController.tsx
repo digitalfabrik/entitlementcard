@@ -4,15 +4,16 @@ import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
 import { Temporal } from 'temporal-polyfill'
+import { useMutation, useQuery } from 'urql'
 
 import AlertBox from '../../components/AlertBox'
 import PageLayout from '../../components/PageLayout'
-import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
+import { messageFromGraphQlError } from '../../errors'
 import {
   ApplicationStatus,
-  useGetApplicationByApplicationVerificationAccessKeyQuery,
-  useVerifyOrRejectApplicationVerificationMutation,
-} from '../../generated/graphql'
+  GetApplicationByApplicationVerificationAccessKeyDocument,
+  VerifyOrRejectApplicationVerificationDocument,
+} from '../../graphql'
 import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import getQueryResult from '../../util/getQueryResult'
 import { applicationWasAlreadyProcessed, parseApplication } from '../applications/utils/application'
@@ -34,36 +35,38 @@ const ApplicationVerificationController = ({
   const [verificationFinished, setVerificationFinished] = useState(false)
   const config = useContext(ProjectConfigContext)
   const { enqueueSnackbar } = useSnackbar()
-  const [verifyOrRejectApplicationVerification] = useVerifyOrRejectApplicationVerificationMutation({
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
+  const [, verifyOrRejectApplicationVerificationMutation] = useMutation(
+    VerifyOrRejectApplicationVerificationDocument,
+  )
+
+  const submitApplicationVerification = async (verified: boolean) => {
+    const result = await verifyOrRejectApplicationVerificationMutation({
+      project: config.projectId,
+      accessKey: applicationVerificationAccessKey,
+      verified,
+    })
+    if (result.error) {
+      const { title } = messageFromGraphQlError(result.error)
       enqueueSnackbar(title, { variant: 'error' })
-    },
-    onCompleted: ({ result }) => {
-      if (!result) {
+    } else if (result.data) {
+      if (!result.data.result) {
         console.error('Verify operation returned false.')
         enqueueSnackbar(t('unknown'), { variant: 'error' })
       } else {
         setVerificationFinished(true)
       }
-    },
-  })
-
-  const submitApplicationVerification = (verified: boolean) => {
-    verifyOrRejectApplicationVerification({
-      variables: {
-        project: config.projectId,
-        accessKey: applicationVerificationAccessKey,
-        verified,
-      },
-    })
+    }
   }
 
-  const applicationQuery = useGetApplicationByApplicationVerificationAccessKeyQuery({
+  const [applicationByVerificationState, applicationByVerificationQuery] = useQuery({
+    query: GetApplicationByApplicationVerificationAccessKeyDocument,
     variables: { applicationVerificationAccessKey },
   })
 
-  const applicationQueryHandler = getQueryResult(applicationQuery)
+  const applicationQueryHandler = getQueryResult(
+    applicationByVerificationState,
+    applicationByVerificationQuery,
+  )
   if (!applicationQueryHandler.successful) {
     return applicationQueryHandler.component
   }

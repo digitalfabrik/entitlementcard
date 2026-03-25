@@ -5,17 +5,18 @@ import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Temporal } from 'temporal-polyfill'
+import { useMutation } from 'urql'
 
 import CenteredCircularProgress from '../../components/CenteredCircularProgress'
 import ConfirmDialog from '../../components/ConfirmDialog'
 import JsonFieldView from '../../components/JsonFieldView'
 import VerificationsView from '../../components/VerificationsView'
-import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
+import { messageFromGraphQlError } from '../../errors'
 import {
   ApplicationStatus,
   GetApplicationByApplicantQuery,
-  useWithdrawApplicationMutation,
-} from '../../generated/graphql'
+  WithdrawApplicationDocument,
+} from '../../graphql'
 import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { ApplicationParsedJsonValue } from '../applications/utils/application'
@@ -51,22 +52,23 @@ const ApplicationApplicantView = ({
   const config = useContext(ProjectConfigContext)
   const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${application.id}`
   const { enqueueSnackbar } = useSnackbar()
-  const [withdrawApplication, { loading: withdrawalLoading }] = useWithdrawApplicationMutation({
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
-      enqueueSnackbar(title, { variant: 'error' })
-    },
-    onCompleted: () => onWithdraw(),
-  })
-  const submitWithdrawal = () => {
-    withdrawApplication({
-      variables: {
-        accessKey: providedKey,
-      },
+  const [withdrawApplicationState, withdrawApplicationMutation] = useMutation(
+    WithdrawApplicationDocument,
+  )
+
+  const submitWithdrawal = async () => {
+    const result = await withdrawApplicationMutation({
+      accessKey: providedKey,
     })
+    if (result.error) {
+      const { title } = messageFromGraphQlError(result.error)
+      enqueueSnackbar(title, { variant: 'error' })
+    } else {
+      onWithdraw()
+    }
   }
 
-  return withdrawalLoading ? (
+  return withdrawApplicationState.fetching ? (
     <CenteredCircularProgress />
   ) : (
     <>

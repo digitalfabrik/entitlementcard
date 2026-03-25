@@ -2,14 +2,15 @@ import { Logout, Replay } from '@mui/icons-material'
 import { Button, Stack, Typography } from '@mui/material'
 import React, { ReactElement, ReactNode, createContext, useContext, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useQuery } from 'urql'
 
 import CenteredCircularProgress from '../components/CenteredCircularProgress'
 import StandaloneCenter from '../components/StandaloneCenter'
-import { WhoAmIQuery, useWhoAmIQuery } from '../generated/graphql'
+import { WhoAmIDocument, WhoAmIQuery } from '../graphql'
 import { hasProp } from '../util/helper'
 import { AuthContext } from './AuthProvider'
 
-type WhoAmIContextType = {
+export type WhoAmIContextType = {
   me: WhoAmIQuery['me'] | null
   refetch: () => void
 }
@@ -30,22 +31,26 @@ export const useWhoAmI = (): WhoAmIContextType & { me: WhoAmIQuery['me'] } => {
 const WhoAmIProvider = ({ children }: { children: ReactNode }): ReactElement => {
   const { t } = useTranslation('auth')
   const { signOut } = useContext(AuthContext)
-  const { loading, error, data, refetch, previousData } = useWhoAmIQuery()
-  // Use the previous data (if existent) while potentially loading new data to prevent remounting
-  const dataForContext = data ?? previousData
-  const context = useMemo(() => ({ me: dataForContext?.me, refetch }), [dataForContext, refetch])
+  const [whoAmIState, whoAmIQuery] = useQuery({ query: WhoAmIDocument })
+  const whoAmIData = useMemo(
+    () => ({
+      me: whoAmIState.data?.me ?? null,
+      refetch: () => whoAmIQuery({ requestPolicy: 'network-only' }),
+    }),
+    [whoAmIState.data, whoAmIQuery],
+  )
 
-  if (!hasProp(context, 'me') && loading) {
+  if (!whoAmIState.data?.me && whoAmIState.fetching) {
     return <CenteredCircularProgress />
   }
-  if (!hasProp(context, 'me') || error) {
+  if (!whoAmIState.data?.me || whoAmIState.error) {
     return (
       <StandaloneCenter>
         <Typography variant='body1' component='p'>
           {t('accountInformationNotAvailable')}
         </Typography>
         <Stack direction='row' spacing={2}>
-          <Button variant='outlined' startIcon={<Replay />} onClick={() => refetch()}>
+          <Button variant='outlined' startIcon={<Replay />} onClick={() => whoAmIData.refetch()}>
             {t('retry')}
           </Button>
           <Button variant='contained' color='error' startIcon={<Logout />} onClick={signOut}>
@@ -56,7 +61,7 @@ const WhoAmIProvider = ({ children }: { children: ReactNode }): ReactElement => 
     )
   }
 
-  return <WhoAmIContext.Provider value={context}>{children}</WhoAmIContext.Provider>
+  return <WhoAmIContext.Provider value={whoAmIData}>{children}</WhoAmIContext.Provider>
 }
 
 export default WhoAmIProvider

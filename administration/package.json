@@ -3,7 +3,6 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@apollo/client": "^3.14.1",
     "@bufbuild/protobuf": "^2.11.0",
     "@cantoo/pdf-lib": "^2.6.3",
     "@emotion/styled": "^11.14.0",
@@ -18,7 +17,6 @@
     "@pdf-lib/fontkit": "^1.1.1",
     "@sentry/react": "^10.45.0",
     "@zxing/library": "^0.21.3",
-    "apollo-upload-client": "^18.0.1",
     "build-configs": "file:../build-configs",
     "csv-parse": "^6.2.0",
     "csv-stringify": "^6.7.0",
@@ -36,6 +34,7 @@
     "react-router": "^7.13.1",
     "react-to-print": "^3.3.0",
     "temporal-polyfill": "^0.3.2",
+    "urql": "^5.0.1",
     "xregexp": "^5.1.2"
   },
   "devDependencies": {
@@ -45,9 +44,9 @@
     "@eslint/compat": "^2.0.3",
     "@eslint/eslintrc": "^3.3.1",
     "@graphql-codegen/cli": "^6.2.1",
+    "@graphql-codegen/typed-document-node": "^6.1.7",
     "@graphql-codegen/typescript": "^5.0.9",
     "@graphql-codegen/typescript-operations": "^5.0.9",
-    "@graphql-codegen/typescript-react-apollo": "^4.4.1",
     "@jest/globals": "^30.2.0",
     "@parcel/watcher": "^2.5.6",
     "@playwright/test": "^1.58.2",
@@ -88,8 +87,8 @@
   },
   "scripts": {
     "build": "vite build",
-    "codegen:gql": "graphql-codegen --config graphql-codegen.yml",
-    "codegen:gql:dev": "graphql-codegen --config graphql-codegen.yml --watch",
+    "codegen:gql": "graphql-codegen --config graphql-codegen.ts",
+    "codegen:gql:dev": "graphql-codegen --config graphql-codegen.ts --watch",
     "codegen:pb": "buf generate",
     "check-circular-deps": "bash ./scripts/check_circular_deps.sh",
     "format": "eslint . --fix && prettier . --write",

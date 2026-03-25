@@ -24,7 +24,7 @@ const StoresListTable = ({
   onEditStore,
   onDeleteStore,
 }: {
-  data: AcceptingStoresData[]
+  data: readonly AcceptingStoresData[]
   onEditStore: (storeId: number) => void
   onDeleteStore: (store: AcceptingStoresData) => void
 }): ReactElement => {

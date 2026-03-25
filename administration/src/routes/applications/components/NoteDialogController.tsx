@@ -3,18 +3,21 @@ import { Button } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useMutation } from 'urql'
 
 import TextAreaDialog from '../../../components/TextAreaDialog'
-import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
-import { useUpdateApplicationNoteMutation } from '../../../generated/graphql'
+import { messageFromGraphQlError } from '../../../errors'
+import { UpdateApplicationNoteDocument } from '../../../graphql'
 import type { Application } from '../types/types'
 import { ApplicationNoteTooltip } from './ApplicationNoteTooltip'
 
+type ApplicationType = Pick<Application, 'id' | 'note'>
+
 type NoteDialogControllerProps = {
-  application: Application
+  application: ApplicationType
   isOpen: boolean
   onOpenNoteDialog: (value: boolean) => void
-  onChange: (application: Application) => void
+  onChange: (application: ApplicationType) => void
 }
 
 const NoteDialogController = ({
@@ -25,23 +28,26 @@ const NoteDialogController = ({
 }: NoteDialogControllerProps): ReactElement => {
   const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('applicationsOverview')
-  const [updateApplicationNote, { loading }] = useUpdateApplicationNoteMutation({
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
-      enqueueSnackbar(title, { variant: 'error' })
-    },
-    onCompleted: () => {
-      enqueueSnackbar(t('noteChangedSuccessfully'), { variant: 'success', autoHideDuration: 2000 })
-      onOpenNoteDialog(false)
-    },
-  })
+  const [updateApplicationState, updateApplicationMutation] = useMutation(
+    UpdateApplicationNoteDocument,
+  )
 
   const onClose = () => onOpenNoteDialog(false)
 
   const onSave = (text: string) => {
-    updateApplicationNote({ variables: { applicationId: application.id, text } }).then(
-      result => result.data?.success && onChange({ ...application, note: text }),
-    )
+    updateApplicationMutation({ applicationId: application.id, text }).then(result => {
+      if (result.error) {
+        const { title } = messageFromGraphQlError(result.error)
+        enqueueSnackbar(title, { variant: 'error' })
+      } else if (result.data?.success) {
+        enqueueSnackbar(t('noteChangedSuccessfully'), {
+          variant: 'success',
+          autoHideDuration: 2000,
+        })
+        onChange({ ...application, note: text })
+        onOpenNoteDialog(false)
+      }
+    })
   }
 
   return (
@@ -62,7 +68,7 @@ const NoteDialogController = ({
           title={t('noteDialogTitle')}
           isOpen={isOpen}
           maxChars={1000}
-          loading={loading}
+          loading={updateApplicationState.fetching}
           onSave={onSave}
           onClose={onClose}
           placeholder={t('applicationNotePlaceholder')}

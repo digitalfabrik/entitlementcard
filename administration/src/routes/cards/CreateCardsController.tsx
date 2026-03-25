@@ -4,7 +4,7 @@ import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import RenderGuard from '../../components/RenderGuard'
-import { Role } from '../../generated/graphql'
+import { Role } from '../../graphql'
 import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import { useWhoAmI } from '../../provider/WhoAmIProvider'
 import { FREINET_PARAM } from './constants'
@@ -23,7 +23,7 @@ const CreateCardsController = (): ReactElement => {
   return (
     <RenderGuard
       allowedRoles={[Role.RegionManager, Role.RegionAdmin]}
-      condition={region !== undefined}
+      condition={region !== null}
       error={{ description: t('errors:notAuthorizedToCreateCards') }}
     >
       <Stack

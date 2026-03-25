@@ -3,7 +3,7 @@ import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import CustomDivider from '../../../../components/CustomDivider'
-import { BlueCardWorkAtOrganizationsEntitlementInput } from '../../../../generated/graphql'
+import { BlueCardWorkAtOrganizationsEntitlementInput } from '../../../../graphql'
 import { SetState } from '../../hooks/useUpdateStateCallback'
 import { InferState } from '../../util/compoundFormUtils'
 import { Form, FormComponentProps } from '../../util/formType'
@@ -52,28 +52,32 @@ const removeAt = <T,>(array: T[], index: number): T[] => {
 }
 
 type State = { key: number; value: WorkAtOrganizationFormState }[]
-type ValidatedInput = BlueCardWorkAtOrganizationsEntitlementInput
 type AdditionalProps = { applicantName: string }
-const WorkAtOrganizationsEntitlementForm: Form<State, ValidatedInput, AdditionalProps> = {
+
+const WorkAtOrganizationsEntitlementForm: Form<
+  State,
+  BlueCardWorkAtOrganizationsEntitlementInput,
+  AdditionalProps
+> = {
   initialState: [{ key: 0, value: WorkAtOrganizationForm.initialState }],
   getArrayBufferKeys: state =>
     state.map(({ value }) => WorkAtOrganizationForm.getArrayBufferKeys(value)).flat(),
   validate: state => {
     const validationResults = state.map(({ value }) => WorkAtOrganizationForm.validate(value))
-    if (validationResults.some(({ type }) => type === 'error')) {
-      return { type: 'error' }
-    }
-    return {
-      type: 'valid',
-      value: {
-        list: validationResults.map(x => {
-          if (x.type !== 'valid') {
-            throw Error('Found an invalid entry despite previous validity check.')
-          }
-          return x.value
-        }),
-      },
-    }
+
+    return validationResults.some(({ type }) => type === 'error')
+      ? { type: 'error' }
+      : {
+          type: 'valid',
+          value: {
+            list: validationResults.map(x => {
+              if (x.type !== 'valid') {
+                throw Error('Found an invalid entry despite previous validity check.')
+              }
+              return x.value
+            }),
+          },
+        }
   },
   Component: ({ state, setState, applicantName }: FormComponentProps<State, AdditionalProps>) => {
     const { t } = useTranslation('applicationForms')

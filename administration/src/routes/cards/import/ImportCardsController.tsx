@@ -5,15 +5,19 @@ import { useBlocker, useNavigate } from 'react-router'
 import { BlockerDialog } from '../../../components/BlockerDialog'
 import CenteredCircularProgress from '../../../components/CenteredCircularProgress'
 import RenderGuard from '../../../components/RenderGuard'
-import { Region, Role } from '../../../generated/graphql'
-import { useWhoAmI } from '../../../provider/WhoAmIProvider'
+import { Role } from '../../../graphql'
+import { WhoAmIContextType, useWhoAmI } from '../../../provider/WhoAmIProvider'
 import { CardsCreatedScreen } from '../components/CardsCreatedScreen'
 import CreateCardsButtonBar from '../components/CreateCardsButtonBar'
 import useCardGenerator from '../hooks/useCardGenerator'
 import ImportCardsInput from './components/ImportCardsInput'
 import CardImportTable from './components/ImportCardsTable'
 
-const InnerImportCardsController = ({ region }: { region: Region }): ReactElement => {
+const InnerImportCardsController = ({
+  region,
+}: {
+  region: NonNullable<NonNullable<WhoAmIContextType['me']>['region']>
+}): ReactElement => {
   const {
     cardGenerationStep,
     setCardGenerationStep,
@@ -81,7 +85,7 @@ const ImportCardsController = (): ReactElement => {
   return (
     <RenderGuard
       allowedRoles={[Role.RegionManager, Role.RegionAdmin]}
-      condition={region !== undefined}
+      condition={region !== null}
       error={{ description: t('notAuthorizedToCreateCards') }}
     >
       <InnerImportCardsController region={region!} />

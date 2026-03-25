@@ -1,6 +1,6 @@
 import { Temporal } from 'temporal-polyfill'
 
-import { CardStatisticsResultModel } from '../../../generated/graphql'
+import { CardStatisticsResultModel } from '../../../graphql'
 import { config as bayernConfig } from '../../../project-configs/bayern/config'
 import { config as nuernbergConfig } from '../../../project-configs/nuernberg/config'
 import { getTestRegion } from '../../user-settings/__mocks__/Region'

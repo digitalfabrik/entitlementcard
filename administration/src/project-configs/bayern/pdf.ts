@@ -1,6 +1,6 @@
 import { Temporal } from 'temporal-polyfill'
 
-import { BavariaCardType } from '../../generated/card_pb'
+import { BavariaCardType } from '../../card_pb'
 import { formatDateDefaultGerman, plainDateFromDaysSinceEpoch } from '../../util/date'
 import type { InfoParams } from '../index'
 

@@ -1,5 +1,5 @@
 import { Card } from '../../../cards/card'
-import { FreinetCardInput } from '../../../generated/graphql'
+import { FreinetCardInput } from '../../../graphql'
 
 export const getFreinetCardFromCards = (cards: Card[]): FreinetCardInput => {
   if (cards.length !== 1) {
@@ -11,8 +11,7 @@ export const getFreinetCardFromCards = (cards: Card[]): FreinetCardInput => {
   }
 
   return {
-    expirationDate:
-      cards[0].expirationDate !== null ? cards[0].expirationDate.toString() : undefined,
+    expirationDate: cards[0].expirationDate?.toString() ?? null,
     cardType: cards[0].extensions.bavariaCardType,
   }
 }

@@ -1,7 +1,7 @@
 import { ReactElement } from 'react'
 
-import { CardExtensions } from '../../generated/card_pb'
-import { Region } from '../../generated/graphql'
+import { CardExtensions } from '../../card_pb'
+import { Region } from '../../graphql'
 import { UnionToIntersection } from '../../util/helper'
 import {
   AddressLine1Extension,
@@ -31,7 +31,7 @@ export type ExtensionComponentProps<T> = {
 
 export type Extension<T = Record<string, unknown>> = {
   name: string
-  getInitialState(region?: Region): T
+  getInitialState(region?: Pick<Region, 'id'>): T
   isValid(state: T | undefined | null): boolean
   Component(props: ExtensionComponentProps<T>): ReactElement | null
   causesInfiniteLifetime(state: T): boolean

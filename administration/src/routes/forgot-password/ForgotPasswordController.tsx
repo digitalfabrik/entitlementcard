@@ -2,10 +2,11 @@ import { Box, Button, Card, TextField, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useMutation } from 'urql'
 
 import StandaloneCenter from '../../components/StandaloneCenter'
-import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
-import { useSendResetMailMutation } from '../../generated/graphql'
+import { messageFromGraphQlError } from '../../errors'
+import { SendResetMailDocument } from '../../graphql'
 import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 
 const ForgotPasswordController = (): ReactElement => {
@@ -14,22 +15,20 @@ const ForgotPasswordController = (): ReactElement => {
   const { t } = useTranslation('auth')
   const [finished, setFinished] = useState(false)
   const [email, setEmail] = useState('')
+  const [sendResetMailState, sendResetMailMutation] = useMutation(SendResetMailDocument)
 
-  const [sendResetMail, { loading }] = useSendResetMailMutation({
-    onCompleted: () => setFinished(true),
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
-      enqueueSnackbar(title, { variant: 'error' })
-    },
-  })
-
-  const submit = () =>
-    sendResetMail({
-      variables: {
-        project: config.projectId,
-        email,
-      },
+  const submit = async () => {
+    const result = await sendResetMailMutation({
+      project: config.projectId,
+      email,
     })
+    if (result.error) {
+      const { title } = messageFromGraphQlError(result.error)
+      enqueueSnackbar(title, { variant: 'error' })
+    } else {
+      setFinished(true)
+    }
+  }
 
   return (
     <StandaloneCenter>
@@ -87,7 +86,7 @@ const ForgotPasswordController = (): ReactElement => {
                   type='submit'
                   variant='contained'
                   color='primary'
-                  loading={loading}
+                  loading={sendResetMailState.fetching}
                   disabled={email === ''}
                 >
                   {t('resetPassword')}

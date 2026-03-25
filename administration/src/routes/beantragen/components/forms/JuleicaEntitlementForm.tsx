@@ -1,10 +1,10 @@
-/* eslint-disable react/jsx-pascal-case  -- we cannot change the keys of application namespace, see translation file comment */
+/* eslint-disable react/jsx-pascal-case -- we cannot change the keys of application namespace, see translation file comment */
 import { Typography } from '@mui/material'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import CustomDivider from '../../../../components/CustomDivider'
-import { BlueCardJuleicaEntitlementInput } from '../../../../generated/graphql'
+import { BlueCardJuleicaEntitlementInput } from '../../../../graphql'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
 import {
   CompoundState,
@@ -26,15 +26,17 @@ const SubForms = {
   copyOfJuleicaFront: FileInputForm,
   copyOfJuleicaBack: OptionalFileInputForm,
 }
+
 type State = CompoundState<typeof SubForms>
-type ValidatedInput = BlueCardJuleicaEntitlementInput
-const JuleicaEntitlementForm: Form<State, ValidatedInput> = {
+
+const JuleicaEntitlementForm: Form<State, BlueCardJuleicaEntitlementInput> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: createCompoundValidate(SubForms, { juleicaExpirationDate: { maximumDate: undefined } }),
   Component: ({ state, setState }: FormComponentProps<State>) => {
     const { t } = useTranslation('application')
     const juleicaBackSetState = useUpdateStateCallback(setState, 'copyOfJuleicaBack')
+
     return (
       <>
         <CustomDivider label='Angaben zur JuLeiCa' />

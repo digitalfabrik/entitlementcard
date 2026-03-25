@@ -2,7 +2,7 @@ import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import React, { useContext, useId, useState } from 'react'
 
 import FormAlert from '../../../../components/FormAlert'
-import { ShortTextInput } from '../../../../generated/graphql'
+import { ShortTextInput } from '../../../../graphql'
 import i18next from '../../../../translations/i18n'
 import { Form, FormComponentProps } from '../../util/formType'
 import { FormContext } from '../forms/SteppedSubForms'

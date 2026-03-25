@@ -2,6 +2,7 @@ import { useSnackbar } from 'notistack'
 import { useCallback, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
+import { useMutation } from 'urql'
 
 import { Card, initializeCardFromCSV, updateCard as updateCardObject } from '../../../cards/card'
 import { showCardGenerationError } from '../../../cards/cardGenerationError'
@@ -10,14 +11,14 @@ import { generateCsv, getCSVFilename } from '../../../cards/csvFactory'
 import deleteCards from '../../../cards/deleteCards'
 import getDeepLinkFromQrCode from '../../../cards/getDeepLinkFromQrCode'
 import { generatePdf, getPdfFilename } from '../../../cards/pdf/pdfFactory'
-import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
+import { messageFromGraphQlError } from '../../../errors'
 import {
-  Region,
-  useCreateCardsMutation,
-  useDeleteCardsMutation,
-  useSendApplicationAndCardDataToFreinetMutation,
-  useSendCardDataToFreinetMutation,
-} from '../../../generated/graphql'
+  CreateCardsDocument,
+  DeleteCardsDocument,
+  SendApplicationAndCardDataToFreinetDocument,
+  SendCardDataToFreinetDocument,
+  WhoAmIQuery,
+} from '../../../graphql'
 import { ProjectConfig } from '../../../project-configs'
 import { getCsvHeaders } from '../../../project-configs/helper'
 import { ProjectConfigContext } from '../../../provider/ProjectConfigContext'
@@ -30,10 +31,12 @@ import { saveActivityLog } from '../../activity-log/utils/activityLog'
 import { getFreinetCardFromCards } from '../utils/getFreinetCardFromCards'
 import useSendCardConfirmationMails from './useSendCardConfirmationMails'
 
+type Region = NonNullable<WhoAmIQuery['me']['region']>
+
 const initializeCardsFromQueryParams = (
   projectConfig: ProjectConfig,
   searchParams: URLSearchParams,
-  region: Region,
+  region: Pick<Region, 'id' | 'name'>,
 ) => {
   const headers = getCsvHeaders(projectConfig)
   const values = headers.map(header => searchParams.get(header))
@@ -46,13 +49,8 @@ type GenerateCardFunction = (
   codes: CreateCardsResult[],
   cards: Card[],
   projectConfig: ProjectConfig,
-  region?: Region,
+  region?: Pick<Region, 'id' | 'name' | 'prefix'>,
 ) => Promise<Blob> | Blob
-
-type UseCardGeneratorProps = {
-  region: Region
-  initializeCards?: boolean
-}
 
 type UseCardGeneratorReturn = {
   cardGenerationStep: CardGenerationStep
@@ -67,38 +65,21 @@ type UseCardGeneratorReturn = {
 const useCardGenerator = ({
   region,
   initializeCards = true,
-}: UseCardGeneratorProps): UseCardGeneratorReturn => {
+}: {
+  region: Pick<Region, 'id' | 'name' | 'activatedForCardConfirmationMail' | 'prefix'>
+  initializeCards?: boolean
+}): UseCardGeneratorReturn => {
   const projectConfig = useContext(ProjectConfigContext)
   const [searchParams] = useSearchParams()
   const [cardGenerationStep, setCardGenerationStep] = useState<CardGenerationStep>('input')
-  const [createCardsMutation] = useCreateCardsMutation()
-  const [deleteCardsMutation] = useDeleteCardsMutation()
+  const [, createCardsMutation] = useMutation(CreateCardsDocument)
+  const [, deleteCardsMutation] = useMutation(DeleteCardsDocument)
+  const [, sendApplicationAndCardDataToFreinetMutation] = useMutation(
+    SendApplicationAndCardDataToFreinetDocument,
+  )
+  const [, sendCardDataToFreinetMutation] = useMutation(SendCardDataToFreinetDocument)
   const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('cards')
-
-  const [sendApplicationAndCardDataToFreinet] = useSendApplicationAndCardDataToFreinetMutation({
-    onCompleted: data => {
-      if (data.sendApplicationAndCardDataToFreinet === true) {
-        enqueueSnackbar(t('freinetDataSyncSuccessMessage'), { variant: 'success' })
-      }
-    },
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
-      enqueueSnackbar(title, { variant: 'error', persist: true })
-    },
-  })
-
-  const [sendCardDataToFreinet] = useSendCardDataToFreinetMutation({
-    onCompleted: data => {
-      if (data.sendCardDataToFreinet === true) {
-        enqueueSnackbar(t('freinetCardDataTransferSuccessMessage'), { variant: 'success' })
-      }
-    },
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
-      enqueueSnackbar(title, { variant: 'error', persist: true })
-    },
-  })
 
   const sendConfirmationMails = useSendCardConfirmationMails(region)
   const initializedCards = initializeCards
@@ -138,22 +119,32 @@ const useCardGenerator = ({
 
         if (applicationId != null) {
           const freinetCard = getFreinetCardFromCards(normalizedCards)
-          sendApplicationAndCardDataToFreinet({
-            variables: {
-              applicationId,
-              freinetCard,
-            },
+          sendApplicationAndCardDataToFreinetMutation({
+            applicationId,
+            freinetCard,
+          }).then(result => {
+            if (result.error) {
+              const { title } = messageFromGraphQlError(result.error)
+              enqueueSnackbar(title, { variant: 'error', persist: true })
+            } else if (result.data?.sendApplicationAndCardDataToFreinet === true) {
+              enqueueSnackbar(t('freinetDataSyncSuccessMessage'), { variant: 'success' })
+            }
           })
         }
 
         const freinetUserId = normalizedCards[0]?.extensions.freinetUserId
         if (freinetUserId) {
           const freinetCard = getFreinetCardFromCards(normalizedCards)
-          sendCardDataToFreinet({
-            variables: {
-              userId: parseInt(freinetUserId, 10),
-              freinetCard,
-            },
+          sendCardDataToFreinetMutation({
+            userId: parseInt(freinetUserId, 10),
+            freinetCard,
+          }).then(result => {
+            if (result.error) {
+              const { title } = messageFromGraphQlError(result.error)
+              enqueueSnackbar(title, { variant: 'error', persist: true })
+            } else if (result.data?.sendCardDataToFreinet === true) {
+              enqueueSnackbar(t('freinetCardDataTransferSuccessMessage'), { variant: 'success' })
+            }
           })
         }
 
@@ -192,11 +183,12 @@ const useCardGenerator = ({
       cards,
       applicationId,
       region,
-      sendApplicationAndCardDataToFreinet,
-      sendCardDataToFreinet,
+      sendApplicationAndCardDataToFreinetMutation,
+      sendCardDataToFreinetMutation,
       sendConfirmationMails,
       enqueueSnackbar,
       deleteCardsMutation,
+      t,
     ],
   )
 

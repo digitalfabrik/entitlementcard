@@ -1,26 +1,34 @@
 import { Stack } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useQuery } from 'urql'
 
 import RenderGuard from '../../components/RenderGuard'
-import { Role, useSearchAcceptingStoresInProjectQuery } from '../../generated/graphql'
+import { Role, SearchAcceptingStoresInProjectDocument } from '../../graphql'
 import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import getQueryResult from '../../util/getQueryResult'
 import StoresListOverview from './components/StoresListOverview'
 
 const StoresController = (): ReactElement => {
   const { projectId: project, storesManagement } = useContext(ProjectConfigContext)
-
   const { t } = useTranslation('stores')
-  const searchAcceptingStoresInProjectQuery = useSearchAcceptingStoresInProjectQuery({
+  const [searchAcceptingStoresState, searchAcceptingStoresQuery] = useQuery({
+    query: SearchAcceptingStoresInProjectDocument,
     variables: {
       project,
-      params: {},
+      params: {
+        categoryIds: null,
+        coordinates: null,
+        limit: null,
+        offset: undefined,
+        searchText: null,
+      },
     },
   })
 
   const searchAcceptingStoresInProjectQueryResult = getQueryResult(
-    searchAcceptingStoresInProjectQuery,
+    searchAcceptingStoresState,
+    searchAcceptingStoresQuery,
   )
 
   if (!searchAcceptingStoresInProjectQueryResult.successful) {
@@ -29,7 +37,7 @@ const StoresController = (): ReactElement => {
   const storeData = searchAcceptingStoresInProjectQueryResult.data.stores
 
   const refetchStores = () => {
-    searchAcceptingStoresInProjectQuery.refetch({ project, params: {} })
+    searchAcceptingStoresQuery({ requestPolicy: 'network-only' })
   }
 
   return (

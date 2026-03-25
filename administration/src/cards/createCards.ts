@@ -1,4 +1,5 @@
 import { fromBinary, toBinary } from '@bufbuild/protobuf'
+import { UseMutationExecute } from 'urql'
 
 import {
   CardInfoSchema,
@@ -6,12 +7,13 @@ import {
   DynamicActivationCodeSchema,
   type StaticVerificationCode,
   StaticVerificationCodeSchema,
-} from '../generated/card_pb'
+} from '../card_pb'
 import {
-  CreateCardsFromSelfServiceMutationFn,
+  CreateCardsFromSelfServiceMutation,
+  CreateCardsFromSelfServiceMutationVariables,
   CreateCardsMutation,
-  CreateCardsMutationFn,
-} from '../generated/graphql'
+  CreateCardsMutationVariables,
+} from '../graphql'
 import type { ProjectConfig } from '../project-configs'
 import { mapGraphqlRequestResult } from '../util/helper'
 import { base64ToUint8Array, uint8ArrayToBase64 } from './base64'
@@ -32,6 +34,15 @@ export type CreateCardsResult = {
   staticCardInfoHashBase64?: string
   staticVerificationCode?: StaticVerificationCode
 }
+
+export type CreateCardsMutationFn = UseMutationExecute<
+  CreateCardsMutation,
+  CreateCardsMutationVariables
+>
+export type CreateCardsFromSelfServiceMutationFn = UseMutationExecute<
+  CreateCardsFromSelfServiceMutation,
+  CreateCardsFromSelfServiceMutationVariables
+>
 
 const mapCardCreationResult = (card: RawCreateCardsResult): CreateCardsResult => {
   const dynamicActivationCode = fromBinary(
@@ -59,11 +70,9 @@ export const createSelfServiceCard = async (
 ): Promise<CreateCardsResult> => {
   const cardInfo = uint8ArrayToBase64(toBinary(CardInfoSchema, generateCardInfo(selfServiceCard)))
   const result = await createCardsSelfService({
-    variables: {
-      project: projectConfig.projectId,
-      generateStaticCodes: true,
-      encodedCardInfo: cardInfo,
-    },
+    project: projectConfig.projectId,
+    generateStaticCodes: true,
+    encodedCardInfo: cardInfo,
   })
   const data = mapGraphqlRequestResult(result, message => new CreateCardsError(message))
 
@@ -81,7 +90,9 @@ const createCards = async (
     .map(generateCardInfo)
     .map(cardInfo => uint8ArrayToBase64(toBinary(CardInfoSchema, cardInfo)))
   const result = await createCardsMutation({
-    variables: { encodedCardInfos, generateStaticCodes, applicationIdToMarkAsProcessed },
+    encodedCardInfos,
+    generateStaticCodes,
+    applicationIdToMarkAsProcessed,
   })
   const data = mapGraphqlRequestResult(result, message => new CreateCardsError(message))
   return data.cards.map(mapCardCreationResult)

@@ -5,12 +5,8 @@ import { Temporal } from 'temporal-polyfill'
 
 import JsonFieldView from '../../../components/JsonFieldView'
 import VerificationsView from '../../../components/VerificationsView'
-import {
-  ApplicationAdmin,
-  ApplicationStatus,
-  ApplicationVerificationView,
-} from '../../../generated/graphql'
-import { ApplicationParsedJsonValue } from '../utils/application'
+import { ApplicationStatus } from '../../../graphql'
+import { Application } from '../types/types'
 import { ApplicationStatusNote } from './ApplicationStatusNote'
 
 export const applicationPrintViewPageStyle = css`
@@ -38,19 +34,7 @@ export const ApplicationPrintView = forwardRef<
   HTMLDivElement,
   {
     // eslint-disable-next-line react/no-unused-prop-types
-    application: Pick<
-      ApplicationParsedJsonValue<ApplicationAdmin>,
-      'createdDate' | 'jsonValue' | 'id' | 'status' | 'statusResolvedDate' | 'rejectionMessage'
-    > & {
-      verifications: Pick<
-        ApplicationVerificationView,
-        | 'organizationName'
-        | 'contactEmailAddress'
-        | 'verificationId'
-        | 'rejectedDate'
-        | 'verifiedDate'
-      >[]
-    }
+    application: Application
   }
 >((p, ref): ReactElement => {
   const { t } = useTranslation('applicationsOverview')

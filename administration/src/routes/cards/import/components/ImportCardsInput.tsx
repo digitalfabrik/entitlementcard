@@ -6,7 +6,7 @@ import { useLocation } from 'react-router'
 
 import { Card, initializeCardFromCSV } from '../../../../cards/card'
 import Blankslate from '../../../../components/Blankslate'
-import { Region } from '../../../../generated/graphql'
+import { Region } from '../../../../graphql'
 import { getCsvHeaders } from '../../../../project-configs/helper'
 import { ProjectConfigContext } from '../../../../provider/ProjectConfigContext'
 import { FILE_SIZE_LIMIT_MEGA_BYTES } from '../../../stores/import/constants'
@@ -26,7 +26,7 @@ const ImportCardsInput = ({
   region,
 }: {
   setCards: (cards: Card[]) => void
-  region: Region
+  region: Pick<Region, 'id' | 'name'>
 }): ReactElement => {
   const isFreinetFormat = new URLSearchParams(useLocation().search).get(FREINET_PARAM) === 'true'
   const projectConfig = useContext(ProjectConfigContext)

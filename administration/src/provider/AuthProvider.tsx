@@ -1,7 +1,7 @@
 import React, { ReactElement, ReactNode, createContext, useMemo, useState } from 'react'
 import { Temporal } from 'temporal-polyfill'
 
-import { SignInPayload } from '../generated/graphql'
+import { SignInPayload } from '../graphql'
 
 export type TokenPayload = {
   token: string
