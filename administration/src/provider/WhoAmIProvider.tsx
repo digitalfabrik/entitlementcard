@@ -32,22 +32,25 @@ const WhoAmIProvider = ({ children }: { children: ReactNode }): ReactElement => 
   const { t } = useTranslation('auth')
   const { signOut } = useContext(AuthContext)
   const [whoAmIState, whoAmIQuery] = useQuery({ query: WhoAmIDocument })
-  const { fetching, error, data } = whoAmIState
-  // urql preserves previous data in `data` while stale/fetching, so no need for previousData
-  const refetch = () => whoAmIQuery({ requestPolicy: 'network-only' })
-  const context = useMemo(() => ({ me: data?.me, refetch }), [data, refetch])
+  const whoAmIData = useMemo(
+    () => ({
+      me: whoAmIState.data?.me ?? null,
+      refetch: () => whoAmIQuery({ requestPolicy: 'network-only' }),
+    }),
+    [whoAmIState.data, whoAmIQuery],
+  )
 
-  if (!hasProp(context, 'me') && fetching) {
+  if (!whoAmIState.data?.me && whoAmIState.fetching) {
     return <CenteredCircularProgress />
   }
-  if (!hasProp(context, 'me') || error) {
+  if (!whoAmIState.data?.me || whoAmIState.error) {
     return (
       <StandaloneCenter>
         <Typography variant='body1' component='p'>
           {t('accountInformationNotAvailable')}
         </Typography>
         <Stack direction='row' spacing={2}>
-          <Button variant='outlined' startIcon={<Replay />} onClick={() => refetch()}>
+          <Button variant='outlined' startIcon={<Replay />} onClick={() => whoAmIData.refetch()}>
             {t('retry')}
           </Button>
           <Button variant='contained' color='error' startIcon={<Logout />} onClick={signOut}>
@@ -58,7 +61,7 @@ const WhoAmIProvider = ({ children }: { children: ReactNode }): ReactElement => 
     )
   }
 
-  return <WhoAmIContext.Provider value={context}>{children}</WhoAmIContext.Provider>
+  return <WhoAmIContext.Provider value={whoAmIData}>{children}</WhoAmIContext.Provider>
 }
 
 export default WhoAmIProvider
