@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/react'
+import { act, fireEvent } from '@testing-library/react'
 import React from 'react'
 import { Temporal } from 'temporal-polyfill'
 
@@ -88,6 +88,8 @@ describe('BirthdayExtension', () => {
       )
       const datePicker = getByPlaceholderText('TT.MM.JJJJ')
       fireEvent.blur(datePicker)
+      // Ignore timout for onBlur
+      act(() => jest.runAllTimers())
       expect(BirthdayExtension.isValid({ birthday: null })).toBeFalsy()
       expect(getByText('Bitte geben Sie ein gültiges Geburtsdatum an.')).toBeTruthy()
     })
