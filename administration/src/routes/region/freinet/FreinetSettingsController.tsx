@@ -19,16 +19,17 @@ const FreinetSettingsController = ({ regionId }: { regionId: number }): ReactEle
     query: GetFreinetAgencyByRegionIdDocument,
     variables: { regionId },
   })
+  const [, updateDataTransferMutation] = useMutation(UpdateDataTransferToFreinetDocument)
 
   useEffect(() => {
     if (freinetAgencyState.data?.agency) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setDataTransferActivated(freinetAgencyState.data.agency.dataTransferActivated)
     }
   }, [freinetAgencyState.data])
 
-  const [, updateDataTransferMutation] = useMutation(UpdateDataTransferToFreinetDocument)
-
   const freinetQueryResult = getQueryResult(freinetAgencyState, freinetAgencyQuery)
+
   if (!freinetQueryResult.successful) {
     return freinetQueryResult.component
   }
