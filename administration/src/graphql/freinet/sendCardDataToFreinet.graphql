@@ -1,3 +1,6 @@
-mutation sendCardDataToFreinet($freinetCard: FreinetCardInput!, $userId: Int!) {
-  sendCardDataToFreinet(freinetCard: $freinetCard, userId: $userId)
+mutation sendCardDataToFreinet($freinetCards: [FreinetCardWithUserIdInput!]!) {
+  sendCardDataToFreinet(freinetCards: $freinetCards) {
+    successCount
+    failedUserIds
+  }
 }
