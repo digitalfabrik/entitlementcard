@@ -3,8 +3,7 @@ package app.ehrenamtskarte.backend.graphql.application
 import app.ehrenamtskarte.backend.db.entities.ApiTokenType
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
-import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationExternalSource.NONE
-import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationExternalSource.VEREIN360
+import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationExternalSource
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerifications
 import app.ehrenamtskarte.backend.db.repositories.ApplicationRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
@@ -56,18 +55,16 @@ class ApplicationService(
         application: Application,
         regionId: Int,
         files: List<Part>,
-        isPreVerified: Boolean,
+        automaticSource: ApplicationVerificationExternalSource,
     ): Pair<ApplicationEntity, List<ApplicationVerificationEntity>> {
-        val (applicationEntity, verificationEntities) = transaction {
-            ApplicationRepository.persistApplication(
-                application.toJsonField(),
-                application.extractApplicationVerifications(),
-                regionId,
-                applicationData,
-                files,
-                if (isPreVerified) VEREIN360 else NONE,
-            )
-        }
+        val (applicationEntity, verificationEntities) = ApplicationRepository.persistApplication(
+            application.toJsonField(),
+            application.extractApplicationVerifications(),
+            regionId,
+            applicationData,
+            files,
+            automaticSource,
+        )
         return Pair(applicationEntity, verificationEntities)
     }
 

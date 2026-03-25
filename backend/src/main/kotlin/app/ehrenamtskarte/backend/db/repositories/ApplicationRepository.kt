@@ -33,7 +33,7 @@ object ApplicationRepository {
         regionId: Int,
         applicationData: File,
         files: List<Part>,
-        automaticSource: ApplicationVerificationExternalSource = ApplicationVerificationExternalSource.NONE,
+        automaticSource: ApplicationVerificationExternalSource,
     ): Pair<ApplicationEntity, List<ApplicationVerificationEntity>> {
         val random = SecureRandom.getInstanceStrong()
         val byteArray = ByteArray(64)

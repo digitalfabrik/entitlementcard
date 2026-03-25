@@ -10,6 +10,7 @@ import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.graphql.application.types.PersonalData
 import app.ehrenamtskarte.backend.graphql.exceptions.MailNotSentException
 import com.sanctionco.jmail.JMail
+import graphql.GraphQLError
 import org.simplejavamail.MailException
 import org.simplejavamail.email.EmailBuilder
 import org.simplejavamail.mailer.MailerBuilder
@@ -324,6 +325,17 @@ class Mailer(
         }
     }
 }
+
+fun <T> collectMailErrors(items: List<T>, send: (T) -> Unit): List<GraphQLError> =
+    buildList {
+        items.forEach { item ->
+            try {
+                send(item)
+            } catch (e: MailNotSentException) {
+                add(e.toGraphQLError())
+            }
+        }
+    }
 
 private fun EmailBody.finalInformationParagraph(projectConfig: ProjectConfig) {
     p {

@@ -5,6 +5,8 @@ import app.ehrenamtskarte.backend.config.ProjectConfig
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity.Status
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
+import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationExternalSource.NONE
+import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationExternalSource.VEREIN360
 import app.ehrenamtskarte.backend.db.entities.Applications
 import app.ehrenamtskarte.backend.db.entities.NOTE_MAX_CHARS
 import app.ehrenamtskarte.backend.db.entities.mayDeleteApplicationsInRegion
@@ -20,9 +22,9 @@ import app.ehrenamtskarte.backend.graphql.exceptions.InvalidApplicationStatusExc
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidLinkException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidNoteSizeException
-import app.ehrenamtskarte.backend.graphql.exceptions.MailNotSentException
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import app.ehrenamtskarte.backend.shared.mail.Mailer
+import app.ehrenamtskarte.backend.shared.mail.collectMailErrors
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import graphql.execution.DataFetcherResult
@@ -67,7 +69,7 @@ class EakApplicationMutationController(
                 application,
                 regionId,
                 attachments,
-                isPreVerified = false,
+                automaticSource = NONE,
             )
             // Send mail to applicant within the transaction to ensure rollback on failure
             mailService.sendApplicationApplicantMail(
@@ -79,19 +81,10 @@ class EakApplicationMutationController(
             verificationEntities
         }
 
-        val errors = verifications.mapNotNull { verification ->
-            try {
-                mailService.sendApplicationVerificationMail(
-                    application.personalData.fullName(),
-                    projectConfig,
-                    verification,
-                )
-                null
-            } catch (e: MailNotSentException) {
-                e.toGraphQLError()
-            }
+        val applicantName = application.personalData.fullName()
+        val errors = collectMailErrors(verifications) { verification ->
+            mailService.sendApplicationVerificationMail(applicantName, projectConfig, verification)
         }
-
         mailService.sendNotificationForApplicationMails(projectConfig, regionId)
 
         return DataFetcherResult.newResult<Boolean>().data(true).errors(errors).build()
@@ -104,24 +97,17 @@ class EakApplicationMutationController(
         projectConfig: ProjectConfig,
     ): DataFetcherResult<Boolean> {
         val (applicationEntity, verificationEntities) = transaction {
-            applicationService.saveApplication(application, regionId, attachments, isPreVerified = true)
+            applicationService.saveApplication(application, regionId, attachments, VEREIN360)
         }
-
-        val errors = verificationEntities.mapNotNull { verification ->
-            try {
-                mailService.sendPreVerifiedApplicationMail(
-                    projectConfig,
-                    verification,
-                    application.personalData.fullName(),
-                    applicationEntity.accessKey,
-                    regionId,
-                )
-                null
-            } catch (e: MailNotSentException) {
-                e.toGraphQLError()
-            }
+        val errors = collectMailErrors(verificationEntities) { verification ->
+            mailService.sendPreVerifiedApplicationMail(
+                projectConfig,
+                verification,
+                application.personalData.fullName(),
+                applicationEntity.accessKey,
+                regionId,
+            )
         }
-
         mailService.sendNotificationForApplicationMails(projectConfig, regionId)
 
         return DataFetcherResult.newResult<Boolean>().data(true).errors(errors).build()
