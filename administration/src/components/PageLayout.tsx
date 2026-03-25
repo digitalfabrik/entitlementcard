@@ -17,7 +17,7 @@ const PageLayout = ({
 }: PageLayoutProps): ReactElement => (
   <Stack
     sx={{
-      minHeight: '100vh',
+      minHeight: '100dvh',
       ...stackProps.sx,
     }}
     {...stackProps}

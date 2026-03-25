@@ -10,6 +10,7 @@ const Footer = ({ showDataPrivacy = true }: FooterProps): ReactElement => {
   const { t } = useTranslation('misc')
   return (
     <Box
+      component='footer'
       sx={{
         bottom: 0,
         display: 'flex',
