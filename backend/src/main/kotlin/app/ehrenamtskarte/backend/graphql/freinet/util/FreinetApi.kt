@@ -3,7 +3,7 @@ package app.ehrenamtskarte.backend.graphql.freinet.util
 import app.ehrenamtskarte.backend.graphql.freinet.types.CARD_TYPE_GOLD
 import app.ehrenamtskarte.backend.graphql.freinet.types.CARD_TYPE_STANDARD
 import app.ehrenamtskarte.backend.graphql.freinet.types.FreinetAddress
-import app.ehrenamtskarte.backend.graphql.freinet.types.FreinetCard
+import app.ehrenamtskarte.backend.graphql.freinet.types.FreinetCardWithUserId
 import app.ehrenamtskarte.backend.graphql.freinet.types.FreinetPerson
 import app.ehrenamtskarte.backend.graphql.freinet.types.FreinetPersonCreationResultModel
 import app.ehrenamtskarte.backend.graphql.freinet.types.FreinetProtocol
@@ -196,11 +196,11 @@ class FreinetApi(
         }
     }
 
-    fun sendCardInformation(userId: Int, card: FreinetCard) {
+    fun sendCardInformation(card: FreinetCardWithUserId) {
         val color = mapOf(CARD_TYPE_STANDARD to 1, CARD_TYPE_GOLD to 2)[card.cardType]
         val body: ObjectNode = objectMapper.createObjectNode().apply {
             put("karten_farbe", color)
-            put("user_id", userId)
+            put("user_id", card.userId)
             put("digital_card", true)
             if (card.cardType == CARD_TYPE_STANDARD && card.expirationDate != null) {
                 put("gueltig_bis", card.expirationDate)

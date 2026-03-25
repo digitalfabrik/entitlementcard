@@ -30,8 +30,7 @@ const ImportCardsInput = ({
 }): ReactElement => {
   const isFreinetFormat = new URLSearchParams(useLocation().search).get(FREINET_PARAM) === 'true'
   const projectConfig = useContext(ProjectConfigContext)
-  // TODO: we temporarily filter out the UserId header until #2779 is implemented
-  const csvHeaders = getCsvHeaders(projectConfig).filter(header => header !== 'UserId')
+  const csvHeaders = getCsvHeaders(projectConfig)
   const { t } = useTranslation('cards')
   const [inputState, setInputState] = useState<'loading' | 'error' | 'idle'>('idle')
   const fileInput = useRef<HTMLInputElement>(null)

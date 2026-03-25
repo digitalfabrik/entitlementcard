@@ -22,7 +22,9 @@ const Blankslate = ({
     <Typography variant='h5' sx={{ m: 0 }}>
       {title}
     </Typography>
-    <Typography variant='body1'>{description}</Typography>
+    <Typography variant='body1' component='div'>
+      {description}
+    </Typography>
     {children}
   </Stack>
 )

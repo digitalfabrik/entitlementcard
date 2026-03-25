@@ -177,6 +177,11 @@ type FreinetAgency {
   dataTransferActivated: Boolean!
 }
 
+type FreinetCardTransferResult {
+  failedUserIds: [Int!]!
+  successCount: Int!
+}
+
 type LocalizedDescription {
   locale: String!
   text: String!
@@ -232,13 +237,8 @@ type Mutation {
   sendApprovalMailToOrganisation(applicationId: Int!, applicationVerificationId: Int!): Boolean!
   "Send confirmation mails to users when card creation was successful"
   sendCardCreationConfirmationMails(notifications: [CardCreationConfirmationMailInput!]!, regionId: Int!): CardCreationConfirmationMailResult!
-  """
-  Send card information to Freinet.
-      Returns:
-      - true: Card data was successfully sent to Freinet.
-      - false: Data transfer is not activated for the user's region.
-  """
-  sendCardDataToFreinet(freinetCard: FreinetCardInput!, userId: Int!): Boolean!
+  "Send card information to Freinet. Returns the number of successful transfers and failedUserIds."
+  sendCardDataToFreinet(freinetCards: [FreinetCardWithUserIdInput!]!): FreinetCardTransferResult!
   "Sends a mail that allows the administrator to reset their password."
   sendResetMail(email: String!, project: String!): Boolean!
   "Signs in an administrator"
@@ -585,6 +585,12 @@ input EmailInput {
 input FreinetCardInput {
   cardType: String!
   expirationDate: String
+}
+
+input FreinetCardWithUserIdInput {
+  cardType: String!
+  expirationDate: String
+  userId: Int!
 }
 
 "Entitlement for a golden EAK. The field selected by entitlementType must not be null; all others must be null."
