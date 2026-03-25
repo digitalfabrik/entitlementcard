@@ -48,11 +48,9 @@ const CardSelfServiceView = (): ReactElement => {
   const totalSteps = Object.keys(selfServiceStepInfo).length
 
   return (
-    <PageLayout showDataPrivacy={false}>
+    <PageLayout showDataPrivacy={false} containerSx={{ alignItems: 'center' }}>
       <Box
         sx={{
-          alignSelf: 'center',
-          justifyContent: 'center',
           width: '100%',
           maxWidth: theme => theme.breakpoints.values.sm,
           border: theme => `1px solid ${theme.palette.divider}`,
