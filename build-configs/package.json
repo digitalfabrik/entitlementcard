@@ -28,6 +28,6 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-unicorn": "^63.0.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.57.0"
+    "typescript-eslint": "^8.57.1"
   }
 }

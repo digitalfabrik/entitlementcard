@@ -674,6 +674,7 @@
     "serverNotAvailable": "Server nicht erreichbar.",
     "unknown": "Etwas ist schief gelaufen.",
     "unknownError": "Ein Fehler ist aufgetreten.",
+    "invalidRequestFormat": "Ihre Anfrage konnte nicht verarbeitet werden",
     "notAuthorized": "Fehlende Berechtigung",
     "notAuthorizedDescription": "Sie sind nicht berechtigt, diesen Bereich einzusehen.",
     "notAuthorizedToSeeApplications": "Sie sind nicht berechtigt, Anträge einzusehen.",

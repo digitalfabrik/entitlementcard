@@ -733,12 +733,13 @@ jobs:
                 command: apt update -y && apt install -y curl
                 name: Install curl
             - run:
-                command: curl -LO "https://github.com/maplibre/martin/releases/download/v0.13.0/martin-x86_64-unknown-linux-gnu.tar.gz"
+                command: curl -LO "https://github.com/maplibre/martin/releases/download/martin-v1.4.0/martin-x86_64-unknown-linux-gnu.tar.gz"
                 name: Download martin
             - run:
                 command: |
                     cp docker/martin-config.yaml config.yaml
                     tar -xvzf martin-x86_64-unknown-linux-gnu.tar.gz -C . martin
+                    NEW_VERSION_NAME="0.1.0"
                     scripts/pack_deb.sh -v "${NEW_VERSION_NAME}" -d "Martin tile server for the Ehrenamtskarte app" -n "eak-martin" -s scripts/eak-martin.service -C "/opt/ehrenamtskarte/martin/config.yaml" -M .
                 name: Pack martin
             - run:
@@ -910,6 +911,7 @@ workflows:
         jobs:
             - check_backend
             - check_frontend
+            - pack_martin
         when:
             and:
                 - << pipeline.parameters.run_commit >>
