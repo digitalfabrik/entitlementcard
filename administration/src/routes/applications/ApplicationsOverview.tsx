@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { Temporal } from 'temporal-polyfill'
 
 import AlertBox from '../../components/AlertBox'
-import { ApplicationStatus } from '../../generated/graphql'
+import { ApplicationStatus } from '../../graphql'
 import ApplicationCard from './components/ApplicationCard'
 import ApplicationStatusBar from './components/ApplicationStatusBar'
 import type { Application, ApplicationStatusBarItemType } from './types/types'
@@ -15,12 +15,12 @@ export const barItems: { [key in string]: ApplicationStatusBarItemType } = {
   all: {
     barItemI18nKey: 'statusBarAll',
     applicationAdjectiveI18nKey: 'applicationAdjectiveAll',
-    filter: (_: Application): boolean => true,
+    filter: (_): boolean => true,
   },
   accepted: {
     barItemI18nKey: 'statusBarAccepted',
     applicationAdjectiveI18nKey: 'applicationAdjectiveAccepted',
-    filter: (application: Application): boolean =>
+    filter: (application): boolean =>
       application.status !== ApplicationStatus.Withdrawn &&
       ((application.verifications.length > 0 &&
         application.verifications.every(verification => verification.verifiedDate !== null)) ||
@@ -29,7 +29,7 @@ export const barItems: { [key in string]: ApplicationStatusBarItemType } = {
   rejected: {
     barItemI18nKey: 'statusBarRejected',
     applicationAdjectiveI18nKey: 'applicationAdjectiveRejected',
-    filter: (application: Application): boolean =>
+    filter: (application): boolean =>
       application.status !== ApplicationStatus.Withdrawn &&
       application.verifications.length > 0 &&
       application.verifications.every(verification => verification.rejectedDate !== null) &&
@@ -38,13 +38,12 @@ export const barItems: { [key in string]: ApplicationStatusBarItemType } = {
   withdrawn: {
     barItemI18nKey: 'statusBarWithdrawn',
     applicationAdjectiveI18nKey: 'applicationAdjectiveWithdrawn',
-    filter: (application: Application): boolean =>
-      application.status === ApplicationStatus.Withdrawn,
+    filter: (application): boolean => application.status === ApplicationStatus.Withdrawn,
   },
   open: {
     barItemI18nKey: 'statusBarOpen',
     applicationAdjectiveI18nKey: 'applicationAdjectiveOpen',
-    filter: (application: Application): boolean =>
+    filter: (application): boolean =>
       !barItems.accepted.filter(application) &&
       !barItems.rejected.filter(application) &&
       !barItems.withdrawn.filter(application),
@@ -69,7 +68,7 @@ const ApplicationsOverview = ({ applications }: { applications: Application[] })
   const [updatedApplications, setUpdatedApplications] = useState(applications)
   const [activeBarItem, setActiveBarItem] = useState<ApplicationStatusBarItemType>(barItems.all)
   const { t } = useTranslation('applicationsOverview')
-  const filteredApplications: Application[] = useMemo(
+  const filteredApplications = useMemo(
     () =>
       updatedApplications
         .filter(application => activeBarItem.filter(application))
@@ -109,16 +108,16 @@ const ApplicationsOverview = ({ applications }: { applications: Application[] })
             >
               <ApplicationCard
                 application={application}
-                onDelete={() =>
+                onDelete={() => {
                   setUpdatedApplications(updatedApplications.filter(a => a !== application))
-                }
-                onChange={changed =>
+                }}
+                onChange={changed => {
                   setUpdatedApplications(
                     updatedApplications.map(original =>
                       original.id === changed.id ? changed : original,
                     ),
                   )
-                }
+                }}
               />
             </motion.div>
           ))}

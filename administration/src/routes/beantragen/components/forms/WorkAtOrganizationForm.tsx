@@ -1,11 +1,11 @@
-/* eslint-disable react/jsx-pascal-case  -- we cannot change the keys of application namespace, see translation file comment */
+/* eslint-disable react/jsx-pascal-case -- we cannot change the keys of application namespace, see translation file comment */
 import { Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import ConfirmDialog from '../../../../components/ConfirmDialog'
 import CustomDivider from '../../../../components/CustomDivider'
-import { WorkAtOrganizationInput } from '../../../../generated/graphql'
+import { WorkAtOrganizationInput } from '../../../../graphql'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
 import {
   CompoundState,
@@ -59,16 +59,22 @@ const SubForms = {
 }
 
 type State = CompoundState<typeof SubForms>
-type ValidatedInput = WorkAtOrganizationInput
 type AdditionalProps = { onDelete?: () => void; applicantName: string }
-const WorkAtOrganizationForm: Form<State, ValidatedInput, AdditionalProps> = {
+
+const WorkAtOrganizationForm: Form<State, WorkAtOrganizationInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
-  validate: createCompoundValidate(SubForms, {
-    amountOfWork: amountOfWorkOptions,
-    payment: paymentOptions,
-    workSinceDate: { maximumDate: undefined },
-  }),
+  validate: state => {
+    const result = createCompoundValidate(SubForms, {
+      amountOfWork: amountOfWorkOptions,
+      payment: paymentOptions,
+      workSinceDate: { maximumDate: undefined },
+    })(state)
+
+    return result.type === 'error'
+      ? result
+      : { type: 'valid', value: { ...result.value, isAlreadyVerified: null } }
+  },
   Component: ({
     state,
     setState,
@@ -76,6 +82,7 @@ const WorkAtOrganizationForm: Form<State, ValidatedInput, AdditionalProps> = {
     applicantName,
   }: FormComponentProps<State, AdditionalProps>) => {
     const { t } = useTranslation('application')
+
     return (
       <>
         <ActivityDivider onDelete={onDelete} />

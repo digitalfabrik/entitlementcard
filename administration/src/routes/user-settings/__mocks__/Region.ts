@@ -1,4 +1,4 @@
-import { Region } from '../../../generated/graphql'
+import { Region } from '../../../graphql'
 
 export const getTestRegion = (options: {
   id?: number
@@ -8,23 +8,15 @@ export const getTestRegion = (options: {
   activatedForCardConfirmationMail?: boolean
   applicationConfirmationMailNoteActivated?: boolean
   applicationConfirmationMailNote?: string
-}): Region => {
-  const {
-    id,
-    name,
-    prefix,
-    activatedForApplication,
-    activatedForCardConfirmationMail,
-    applicationConfirmationMailNoteActivated,
-    applicationConfirmationMailNote,
-  } = options
-  return {
-    id: id ?? 0,
-    name: name ?? 'Augsburg',
-    prefix: prefix ?? 'a',
-    activatedForApplication: activatedForApplication ?? true,
-    activatedForCardConfirmationMail: activatedForCardConfirmationMail ?? true,
-    applicationConfirmationMailNoteActivated: applicationConfirmationMailNoteActivated ?? false,
-    applicationConfirmationMailNote: applicationConfirmationMailNote ?? null,
-  }
-}
+}): Region => ({
+  id: options.id ?? 0,
+  name: options.name ?? 'Augsburg',
+  prefix: options.prefix ?? 'a',
+  activatedForApplication: options.activatedForApplication ?? true,
+  activatedForCardConfirmationMail: options.activatedForCardConfirmationMail ?? true,
+  applicationConfirmationMailNoteActivated:
+    options.applicationConfirmationMailNoteActivated ?? false,
+  applicationConfirmationMailNote: options.applicationConfirmationMailNote ?? null,
+  dataPrivacyPolicy: null,
+  regionIdentifier: null,
+})

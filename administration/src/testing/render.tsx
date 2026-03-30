@@ -1,4 +1,3 @@
-import { MockedProvider } from '@apollo/client/testing'
 import { ThemeProvider, createTheme } from '@mui/material'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
@@ -6,6 +5,7 @@ import { RenderOptions, RenderResult, render as rawRender } from '@testing-libra
 import React, { ReactElement, ReactNode, createElement } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import { MemoryRouter } from 'react-router'
+import { Client, Provider as UrqlProvider, cacheExchange } from 'urql'
 
 import { ProjectConfig } from '../project-configs'
 import { AppSnackbarProvider } from '../provider/AppSnackbarProvider'
@@ -19,7 +19,7 @@ export type CustomRenderOptions = {
   router?: boolean
   localization?: boolean
   snackbar?: boolean
-  apollo?: boolean
+  graphQlProvider?: boolean
 }
 
 export const renderWithOptions = (
@@ -33,7 +33,7 @@ export const renderWithOptions = (
     router = false,
     localization = false,
     snackbar = false,
-    apollo = false,
+    graphQlProvider = false,
     wrapper,
   } = options
   const wrappers: ((props: { children: ReactNode }) => ReactNode)[] = []
@@ -76,9 +76,10 @@ export const renderWithOptions = (
     ))
   }
 
-  if (apollo) {
+  if (graphQlProvider) {
+    const mockUrqlClient = new Client({ url: '/graphql', exchanges: [cacheExchange] })
     wrappers.push(({ children }: { children: ReactNode }) => (
-      <MockedProvider>{children}</MockedProvider>
+      <UrqlProvider value={mockUrqlClient}>{children}</UrqlProvider>
     ))
   }
 

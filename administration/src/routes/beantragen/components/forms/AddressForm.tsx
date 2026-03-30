@@ -1,8 +1,8 @@
-/* eslint-disable react/jsx-pascal-case  -- we cannot change the keys of application namespace, see translation file comment */
+/* eslint-disable react/jsx-pascal-case -- we cannot change the keys of application namespace, see translation file comment */
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { AddressInput } from '../../../../generated/graphql'
+import { AddressInput } from '../../../../graphql'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
 import {
   CompoundState,
@@ -23,9 +23,8 @@ const SubForms = {
 }
 
 type State = CompoundState<typeof SubForms>
-type ValidatedInput = AddressInput
 
-const AddressForm: Form<State, ValidatedInput> = {
+const AddressForm: Form<State, AddressInput> = {
   initialState: { ...createCompoundInitialState(SubForms), country: { shortText: 'Deutschland' } },
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: createCompoundValidate(SubForms, {}),

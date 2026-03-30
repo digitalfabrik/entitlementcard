@@ -1,8 +1,8 @@
-/* eslint-disable react/jsx-pascal-case  -- we cannot change the keys of application namespace, see translation file comment */
+/* eslint-disable react/jsx-pascal-case -- we cannot change the keys of application namespace, see translation file comment */
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { BlueCardEntitlementInput, BlueCardEntitlementType } from '../../../../generated/graphql'
+import { BlueCardEntitlementInput, BlueCardEntitlementType } from '../../../../graphql'
 import i18next from '../../../../translations/i18n'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
 import {
@@ -49,10 +49,10 @@ const SubForms = {
 }
 
 type State = CompoundState<typeof SubForms>
-type ValidatedInput = BlueCardEntitlementInput
 type Options = Record<string, unknown>
 type AdditionalProps = { applicantName: string }
-const BlueCardEntitlementForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
+
+const BlueCardEntitlementForm: Form<State, BlueCardEntitlementInput, AdditionalProps, Options> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: createSwitchValidate(
@@ -73,6 +73,7 @@ const BlueCardEntitlementForm: Form<State, ValidatedInput, AdditionalProps, Opti
     applicantName,
   }: FormComponentProps<State, AdditionalProps, Options>) => {
     const { t } = useTranslation('applicationForms')
+
     return (
       <>
         <SubForms.entitlementType.Component

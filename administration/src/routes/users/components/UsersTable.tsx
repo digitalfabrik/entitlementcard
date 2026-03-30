@@ -3,7 +3,7 @@ import { Button, Stack, Typography, styled } from '@mui/material'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Administrator, Region } from '../../../generated/graphql'
+import { Administrator, Region } from '../../../graphql'
 import roleToText from '../utils/roleToText'
 import CreateUserDialog from './CreateUserDialog'
 import DeleteUserDialog from './DeleteUserDialog'
@@ -28,14 +28,16 @@ const StyledTable = styled('table')(({ theme }) => ({
   },
 }))
 
+type Admin = Pick<Administrator, 'id' | 'email' | 'role' | 'regionId'>
+
 const UsersTable = ({
   users,
   regions,
   selectedRegionId = null,
   refetch,
 }: {
-  users: Administrator[]
-  regions: Region[]
+  users: readonly Admin[]
+  regions: readonly Pick<Region, 'id' | 'name' | 'prefix'>[]
   // If selectedRegionId is given, the users array is assumed to contain all users of that region.
   // Moreover, the region column of the table is hidden.
   selectedRegionId?: number | null
@@ -43,8 +45,8 @@ const UsersTable = ({
 }): ReactElement => {
   const { t } = useTranslation('users')
   const [createUserDialogOpen, setCreateUserDialogOpen] = useState(false)
-  const [userInEditDialog, setUserInEditDialog] = useState<Administrator | null>(null)
-  const [userInDeleteDialog, setUserInDeleteDialog] = useState<Administrator | null>(null)
+  const [userInEditDialog, setUserInEditDialog] = useState<Admin | null>(null)
+  const [userInDeleteDialog, setUserInDeleteDialog] = useState<Admin | null>(null)
 
   return (
     <>

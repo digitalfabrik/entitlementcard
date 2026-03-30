@@ -1,10 +1,10 @@
-/* eslint-disable react/jsx-pascal-case  -- we cannot change the keys of application namespace, see translation file comment */
+/* eslint-disable react/jsx-pascal-case -- we cannot change the keys of application namespace, see translation file comment */
 import { Typography } from '@mui/material'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import CustomDivider from '../../../../components/CustomDivider'
-import { BlueCardWorkAtDepartmentEntitlementInput } from '../../../../generated/graphql'
+import { BlueCardWorkAtDepartmentEntitlementInput } from '../../../../graphql'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
 import {
   CompoundState,
@@ -24,9 +24,13 @@ const SubForms = {
 }
 
 type State = CompoundState<typeof SubForms>
-type ValidatedInput = BlueCardWorkAtDepartmentEntitlementInput
 type AdditionalProps = { applicantName: string }
-const WorkAtDepartmentEntitlementForm: Form<State, ValidatedInput, AdditionalProps> = {
+
+const WorkAtDepartmentEntitlementForm: Form<
+  State,
+  BlueCardWorkAtDepartmentEntitlementInput,
+  AdditionalProps
+> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: createCompoundValidate(SubForms, {}),

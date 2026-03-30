@@ -2,55 +2,59 @@ import { Button, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useMutation, useQuery } from 'urql'
 
 import BaseCheckbox from '../../../components/BaseCheckbox'
 import SettingsCard, { SettingsCardButtonBox } from '../../../components/SettingsCard'
-import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
+import { messageFromGraphQlError } from '../../../errors'
 import {
-  useGetNotificationSettingsQuery,
-  useUpdateNotificationSettingsMutation,
-} from '../../../generated/graphql'
+  GetNotificationSettingsDocument,
+  UpdateNotificationSettingsDocument,
+} from '../../../graphql'
 import getQueryResult from '../../../util/getQueryResult'
 
 const NotificationSettings = (): ReactElement => {
   const { t } = useTranslation('userSettings')
+  const { enqueueSnackbar } = useSnackbar()
   const [receiveEmailForActivation, setReceiveEmailForActivation] = useState<boolean>(false)
   const [receiveEmailForVerification, setReceiveEmailForVerification] = useState<boolean>(false)
-
-  const { enqueueSnackbar } = useSnackbar()
-  const [updateNotificationSettings, { loading }] = useUpdateNotificationSettingsMutation({
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
-      enqueueSnackbar(title, { variant: 'error' })
-    },
-    onCompleted: () => {
-      enqueueSnackbar(t('notificationUpdateSuccess'), { variant: 'success' })
-    },
+  const [updateNotificationSettingsState, updateNotificationSettingsMutation] = useMutation(
+    UpdateNotificationSettingsDocument,
+  )
+  const [notificationSettingsState, notificationSettingsQuery] = useQuery({
+    query: GetNotificationSettingsDocument,
   })
 
-  const notificationSettingsQuery = useGetNotificationSettingsQuery()
-
   useEffect(() => {
-    const result = getQueryResult(notificationSettingsQuery)
+    const result = getQueryResult(notificationSettingsState, notificationSettingsQuery)
+
     if (result.successful) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setReceiveEmailForActivation(result.data.notificationSettings.notificationOnApplication)
       setReceiveEmailForVerification(result.data.notificationSettings.notificationOnVerification)
     }
-  }, [notificationSettingsQuery, t])
+  }, [notificationSettingsState, notificationSettingsQuery])
 
-  const submit = () => {
-    updateNotificationSettings({
-      variables: {
-        notificationSettings: {
-          notificationOnApplication: receiveEmailForActivation,
-          notificationOnVerification: receiveEmailForVerification,
-        },
+  const submit = async () => {
+    const result = await updateNotificationSettingsMutation({
+      notificationSettings: {
+        notificationOnApplication: receiveEmailForActivation,
+        notificationOnVerification: receiveEmailForVerification,
       },
     })
+
+    if (result.error) {
+      const { title } = messageFromGraphQlError(result.error)
+      enqueueSnackbar(title, { variant: 'error' })
+    } else {
+      enqueueSnackbar(t('notificationUpdateSuccess'), { variant: 'success' })
+    }
   }
 
-  const notificationQueryResult = getQueryResult(notificationSettingsQuery)
+  const notificationQueryResult = getQueryResult(
+    notificationSettingsState,
+    notificationSettingsQuery,
+  )
 
   return !notificationQueryResult.successful ? (
     notificationQueryResult.component
@@ -78,7 +82,7 @@ const NotificationSettings = (): ReactElement => {
           errorMessage={undefined}
         />
         <SettingsCardButtonBox>
-          <Button type='submit' loading={loading}>
+          <Button type='submit' loading={updateNotificationSettingsState.fetching}>
             {t('save')}
           </Button>
         </SettingsCardButtonBox>

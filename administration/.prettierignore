@@ -1,4 +1,4 @@
-src/generated
+src-gen
 src/coverage
 build
 playwright-report

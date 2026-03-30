@@ -7,7 +7,7 @@ import type { Application } from '../types/types'
 const EXCERPT_LENGTH = 80
 
 export const ApplicationNoteTooltip = (p: {
-  application: Application
+  application: Pick<Application, 'note'>
   children: ReactElement
 }): ReactElement => (
   <Tooltip

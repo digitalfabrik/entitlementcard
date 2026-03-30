@@ -1,19 +1,16 @@
-import { MockedProvider as ApolloProvider } from '@apollo/client/testing'
 import { create } from '@bufbuild/protobuf'
 import { act, renderHook } from '@testing-library/react'
 import { mocked } from 'jest-mock'
 import React, { ReactNode } from 'react'
 import { MemoryRouter } from 'react-router'
 import { Temporal } from 'temporal-polyfill'
+import { Client, Provider as UrqlProvider, cacheExchange } from 'urql'
 
+import { DynamicActivationCodeSchema, StaticVerificationCodeSchema } from '../../../card_pb'
 import { generateCardInfo, initializeCard } from '../../../cards/card'
 import createCards, { CreateCardsError, CreateCardsResult } from '../../../cards/createCards'
 import deleteCards from '../../../cards/deleteCards'
 import { PdfError, generatePdf } from '../../../cards/pdf/pdfFactory'
-import {
-  DynamicActivationCodeSchema,
-  StaticVerificationCodeSchema,
-} from '../../../generated/card_pb'
 import { ProjectConfig } from '../../../project-configs'
 import { config as bayernConfig } from '../../../project-configs/bayern/config'
 import { config as nuernbergConfig } from '../../../project-configs/nuernberg/config'
@@ -57,7 +54,9 @@ const wrapper = ({
   <MemoryRouter initialEntries={initialRoutes}>
     <ProjectConfigProvider projectConfig={projectConfig ?? showcaseConfig}>
       <AppSnackbarProvider>
-        <ApolloProvider>{children}</ApolloProvider>
+        <UrqlProvider value={new Client({ url: '/graphql', exchanges: [cacheExchange] })}>
+          {children}
+        </UrqlProvider>
       </AppSnackbarProvider>
     </ProjectConfigProvider>
   </MemoryRouter>

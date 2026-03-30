@@ -12,12 +12,12 @@ import { TFunction } from 'i18next'
 import { ComponentType, ReactElement } from 'react'
 import { Temporal } from 'temporal-polyfill'
 
+import { type CardInfo } from '../card_pb'
 import type { Card } from '../cards/card'
 import type { CreateCardsResult } from '../cards/createCards'
 import type { Extension } from '../cards/extensions/extensions'
 import type { JsonField } from '../components/JsonFieldView'
-import { CardInfo } from '../generated/card_pb'
-import { type Region } from '../generated/graphql'
+import { type Region } from '../graphql'
 import type { ActivityLogEntryType } from '../routes/activity-log/utils/activityLog'
 import { LOCAL_STORAGE_PROJECT_KEY } from '../util/getBuildConfig'
 import { config as bayernConfig } from './bayern/config'
@@ -134,7 +134,7 @@ export type InfoParams = {
   info: CardInfo
   card: Card
   cardInfoHash: string
-  region?: Region
+  region?: Pick<Region, 'id' | 'name' | 'prefix'>
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

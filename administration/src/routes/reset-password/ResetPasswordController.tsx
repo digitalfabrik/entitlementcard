@@ -3,13 +3,14 @@ import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useSearchParams } from 'react-router'
+import { useMutation, useQuery } from 'urql'
 
 import validateNewPasswordInput from '../../auth/validateNewPasswordInput'
 import AlertBox from '../../components/AlertBox'
 import PasswordInput from '../../components/PasswordInput'
 import StandaloneCenter from '../../components/StandaloneCenter'
-import getMessageFromApolloError from '../../errors/getMessageFromApolloError'
-import { useCheckPasswordResetLinkQuery, useResetPasswordMutation } from '../../generated/graphql'
+import { messageFromGraphQlError } from '../../errors'
+import { CheckPasswordResetLinkDocument, ResetPasswordDocument } from '../../graphql'
 import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import getQueryResult from '../../util/getQueryResult'
 
@@ -23,38 +24,40 @@ const ResetPasswordController = (): ReactElement => {
   const [repeatNewPassword, setRepeatNewPassword] = useState<string>('')
   const navigate = useNavigate()
 
-  const checkPasswordResetLinkQuery = useCheckPasswordResetLinkQuery({
+  const [checkPasswordResetLinkState, checkPasswordResetLinkQuery] = useQuery({
+    query: CheckPasswordResetLinkDocument,
     variables: {
       project: config.projectId,
       resetKey: queryParams.get('token')!,
     },
   })
 
-  const [resetPassword, { loading }] = useResetPasswordMutation({
-    onCompleted: () => {
+  const [resetPasswordState, resetPasswordMutation] = useMutation(ResetPasswordDocument)
+
+  const submit = async () => {
+    const result = await resetPasswordMutation({
+      project: config.projectId,
+      email: adminEmail,
+      newPassword,
+      passwordResetKey: queryParams.get('token')!,
+    })
+
+    if (result.error) {
+      const { title } = messageFromGraphQlError(result.error)
+      enqueueSnackbar(title, { variant: 'error' })
+    } else {
       enqueueSnackbar(t('setPasswordSuccess'), { variant: 'success' })
       navigate('/')
-    },
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
-      enqueueSnackbar(title, { variant: 'error' })
-    },
-  })
-
-  const submit = () =>
-    resetPassword({
-      variables: {
-        project: config.projectId,
-        email: adminEmail,
-        newPassword,
-        passwordResetKey: queryParams.get('token')!,
-      },
-    })
+    }
+  }
 
   const warnMessage = validateNewPasswordInput(newPassword, repeatNewPassword, t)
   const isDirty = newPassword !== '' || repeatNewPassword !== ''
 
-  const checkPasswordResetLinkQueryResult = getQueryResult(checkPasswordResetLinkQuery)
+  const checkPasswordResetLinkQueryResult = getQueryResult(
+    checkPasswordResetLinkState,
+    checkPasswordResetLinkQuery,
+  )
 
   if (!checkPasswordResetLinkQueryResult.successful) {
     return checkPasswordResetLinkQueryResult.component
@@ -90,7 +93,7 @@ const ResetPasswordController = (): ReactElement => {
               placeholder={t('password')}
               setValue={setNewPassword}
               value={newPassword}
-              disabled={loading}
+              disabled={resetPasswordState.fetching}
               fullWidth
               autoFocus={false}
             />
@@ -99,7 +102,7 @@ const ResetPasswordController = (): ReactElement => {
               placeholder={t('password')}
               setValue={setRepeatNewPassword}
               value={repeatNewPassword}
-              disabled={loading}
+              disabled={resetPasswordState.fetching}
               fullWidth
               autoFocus={false}
             />
@@ -121,7 +124,7 @@ const ResetPasswordController = (): ReactElement => {
             </Button>
             <Button
               type='submit'
-              loading={loading}
+              loading={resetPasswordState.fetching}
               variant='contained'
               color='primary'
               disabled={warnMessage !== null}

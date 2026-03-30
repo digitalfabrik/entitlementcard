@@ -1,8 +1,8 @@
 import { toJson } from '@bufbuild/protobuf'
 import { Temporal } from 'temporal-polyfill'
 
-import { BavariaCardType, CardInfoSchema } from '../generated/card_pb'
-import { Region } from '../generated/graphql'
+import { BavariaCardType, CardInfoSchema } from '../card_pb'
+import { Region } from '../graphql'
 import { config as bayernConfig } from '../project-configs/bayern/config'
 import { config as koblenzConfig } from '../project-configs/koblenz/config'
 import { config as nuernbergConfig } from '../project-configs/nuernberg/config'
@@ -79,6 +79,8 @@ describe('Card', () => {
       activatedForCardConfirmationMail: true,
       applicationConfirmationMailNoteActivated: false,
       applicationConfirmationMailNote: null,
+      dataPrivacyPolicy: null,
+      regionIdentifier: null,
     }
 
     const cardConfig = {

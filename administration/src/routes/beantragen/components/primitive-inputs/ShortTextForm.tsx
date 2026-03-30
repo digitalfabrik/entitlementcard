@@ -3,7 +3,7 @@ import i18next from 'i18next'
 import React, { useContext, useState } from 'react'
 
 import FormAlert from '../../../../components/FormAlert'
-import { ShortTextInput } from '../../../../generated/graphql'
+import { ShortTextInput } from '../../../../graphql'
 import { Form, FormComponentProps, ValidationResult } from '../../util/formType'
 import { FormContext } from '../forms/SteppedSubForms'
 
