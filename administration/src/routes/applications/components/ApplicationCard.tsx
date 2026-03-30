@@ -255,7 +255,6 @@ const ApplicationCard = ({
   const [rejectionDialogOpen, setRejectionDialogOpen] = useState(false)
   const [openNoteDialog, setOpenNoteDialog] = useState(false)
   const [accordionExpanded, setAccordionExpanded] = useState(false)
-
   const [deleteApplicationState, deleteApplicationMutation] = useMutation(DeleteApplicationDocument)
   const [approveApplicationState, approveApplicationMutation] = useMutation(
     ApproveApplicationStatusDocument,
@@ -472,7 +471,9 @@ const ApplicationCard = ({
             application={application}
             isOpen={openNoteDialog}
             onOpenNoteDialog={setOpenNoteDialog}
-            onChange={() => onChange(application)}
+            onChange={note => {
+              onChange({ ...application, note })
+            }}
           />
         </Box>
       </AccordionDetails>

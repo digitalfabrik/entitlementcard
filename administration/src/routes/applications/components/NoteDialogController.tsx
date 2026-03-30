@@ -17,7 +17,7 @@ type NoteDialogControllerProps = {
   application: ApplicationType
   isOpen: boolean
   onOpenNoteDialog: (value: boolean) => void
-  onChange: (application: ApplicationType) => void
+  onChange: (note: string) => void
 }
 
 const NoteDialogController = ({
@@ -45,8 +45,8 @@ const NoteDialogController = ({
         variant: 'success',
         autoHideDuration: 2000,
       })
-      onChange({ ...application, note: text })
       onOpenNoteDialog(false)
+      onChange(text)
     }
   }
 
