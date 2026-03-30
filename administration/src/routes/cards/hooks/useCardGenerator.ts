@@ -15,8 +15,8 @@ import { messageFromGraphQlError } from '../../../errors'
 import {
   CreateCardsDocument,
   DeleteCardsDocument,
-  Region,
   SendApplicationAndCardDataToFreinetDocument,
+  WhoAmIQuery,
 } from '../../../graphql'
 import { ProjectConfig } from '../../../project-configs'
 import { getCsvHeaders } from '../../../project-configs/helper'
@@ -74,21 +74,21 @@ const useCardGenerator = ({
 }): UseCardGeneratorReturn => {
   const projectConfig = useContext(ProjectConfigContext)
   const [searchParams] = useSearchParams()
+  const { enqueueSnackbar } = useSnackbar()
+  const { t } = useTranslation('cards')
+  const sendConfirmationMails = useSendCardConfirmationMails(region)
+  const initializedCards = initializeCards
+    ? initializeCardsFromQueryParams(projectConfig, searchParams, region)
+    : []
+  const [cards, setCards] = useState<Card[]>(initializedCards)
   const [cardGenerationStep, setCardGenerationStep] = useState<CardGenerationStep>('input')
   const [, createCardsMutation] = useMutation(CreateCardsDocument)
   const [, deleteCardsMutation] = useMutation(DeleteCardsDocument)
   const [, sendApplicationAndCardDataToFreinetMutation] = useMutation(
     SendApplicationAndCardDataToFreinetDocument,
   )
-  const { enqueueSnackbar } = useSnackbar()
-  const { t } = useTranslation('cards')
   const sendCardDataToFreinet = useSendCardDataToFreinet()
 
-  const sendConfirmationMails = useSendCardConfirmationMails(region)
-  const initializedCards = initializeCards
-    ? initializeCardsFromQueryParams(projectConfig, searchParams, region)
-    : []
-  const [cards, setCards] = useState<Card[]>(initializedCards)
   const rawApplicationId = searchParams.get('applicationIdToMarkAsProcessed')
   const applicationId = rawApplicationId ? parseInt(rawApplicationId, 10) : null
 
@@ -116,8 +116,11 @@ const useCardGenerator = ({
           normalizedCards,
           applicationId,
         )
-        const dataUri = await generateFunction(codes, normalizedCards, projectConfig, region)
-        downloadDataUri(dataUri, filename)
+
+        downloadDataUri(
+          await generateFunction(codes, normalizedCards, projectConfig, region),
+          filename,
+        )
         normalizedCards.forEach(saveActivityLog)
 
         if (applicationId != null) {
