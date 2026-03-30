@@ -38,35 +38,36 @@ const useCardGeneratorSelfService = (): UseCardGeneratorSelfServiceReturn => {
     return initializeCardFromCSV(projectConfig.card, values, headers, undefined, true)
   })
 
-  const generateCards = useCallback(async (): Promise<void> => {
-    setCardGenerationStep('loading')
-    try {
-      const code = await createSelfServiceCard(
-        createCardsFromSelfServiceMutation,
-        projectConfig,
-        selfServiceCard,
-      )
-      setCode(code)
-      setCardGenerationStep('information')
-    } catch (error) {
-      showCardGenerationError(enqueueSnackbar, error)
-      setCardGenerationStep('input')
-    }
-  }, [projectConfig, setCode, createCardsFromSelfServiceMutation, enqueueSnackbar, selfServiceCard])
-
-  const downloadPdf = async (code: CreateCardsResult, fileName: string): Promise<void> => {
-    const blob = await generatePdf([code], [selfServiceCard], projectConfig)
-    downloadDataUri(blob, fileName)
-  }
-
   return {
     cardGenerationStep,
     setCardGenerationStep,
     code,
     selfServiceCard,
     setSelfServiceCard,
-    generateCards,
-    downloadPdf,
+    generateCards: useCallback(async (): Promise<void> => {
+      setCardGenerationStep('loading')
+      try {
+        const code = await createSelfServiceCard(
+          createCardsFromSelfServiceMutation,
+          projectConfig,
+          selfServiceCard,
+        )
+        setCode(code)
+        setCardGenerationStep('information')
+      } catch (error) {
+        showCardGenerationError(enqueueSnackbar, error)
+        setCardGenerationStep('input')
+      }
+    }, [
+      projectConfig,
+      setCode,
+      createCardsFromSelfServiceMutation,
+      enqueueSnackbar,
+      selfServiceCard,
+    ]),
+    downloadPdf: async (code: CreateCardsResult, fileName: string): Promise<void> => {
+      downloadDataUri(await generatePdf([code], [selfServiceCard], projectConfig), fileName)
+    },
   }
 }
 export default useCardGeneratorSelfService
