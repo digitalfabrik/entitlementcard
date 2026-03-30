@@ -108,16 +108,16 @@ const ApplicationsOverview = ({ applications }: { applications: Application[] })
             >
               <ApplicationCard
                 application={application}
-                onDelete={() =>
+                onDelete={() => {
                   setUpdatedApplications(updatedApplications.filter(a => a !== application))
-                }
-                onChange={changed =>
+                }}
+                onChange={changed => {
                   setUpdatedApplications(
                     updatedApplications.map(original =>
                       original.id === changed.id ? changed : original,
                     ),
                   )
-                }
+                }}
               />
             </motion.div>
           ))}
