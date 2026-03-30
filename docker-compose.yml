@@ -72,6 +72,21 @@ services:
       - 5003:80
     networks:
       - network
+  # Matomo does not archive reports automatically in development. This cron container runs the archiving
+  # every 5 minutes so that event data (e.g. card creations) becomes visible in the Matomo dashboard under Behaviour → Events.
+  matomo-cron:
+    image: "matomo"
+    volumes:
+      - matomo:/var/www/html:z
+    env_file:
+      - ./docker/matomo.env
+    environment:
+      - MATOMO_DATABASE_HOST=matomo_db
+    entrypoint: sh -c "while true; do php /var/www/html/console core:archive --force-all-websites; sleep 300; done"
+    depends_on:
+      - matomo
+    networks:
+      - network
   maildev:
     # Dev mail server, open at http://localhost:5026
     image: maildev/maildev
