@@ -13,7 +13,7 @@
         - [Run Administration](#run-administration)
         - [Run e2e-tests for Administration](#run-e2e-tests-for-administration)
     - [Backend](#backend)
-        - [Recommended IDE set up](#recommended-ide-set-up)
+        - [Recommended IDE set up](#intellij-set-up)
         - [Common development tasks](#common-development-tasks)
         - [Backend Setup](#backend-setup)
         - [Run Backend](#run-backend)
@@ -118,7 +118,7 @@ adb reverse tcp:8081 tcp:8081 && adb reverse tcp:8000 tcp:8000 && adb reverse tc
 
 > [!NOTE]: all commands here are meant to be executed in the `/administration` directory.
 
-### Setup
+### Administration Setup
 
 Install Node.js dependencies: `npm install`
 
@@ -195,14 +195,14 @@ Instead, you can create your own local copy:
 
 #### Matomo
 
-0. Use the docker desktop client
 1. Set up the matomo instance [http://localhost:5003](http://localhost:5003).
-   The public version is available at https://matomo-entitlementcard.tuerantuer.org
-2. Create an access token (login before)
-   at [http://localhost:5003/index.php?module=UsersManager&action=userSecurity](http://localhost:5003/index.php?module=UsersManager&action=userSecurity)
-3. Add `localhost:5003` to `matomos trusted_hosts` at `/var/www/html/config/config.ini.php`
-4. Add your matomo config for each project as described in [Local Backend Configuration](#local-backend-configuration)
+   The public version is available at https://matomo-entitlementcard.tuerantuer.org.
+2. Login with your user. 
+3. Add a [new website](http://localhost:5003/index.php?module=SitesManager&action=index&date=yesterday&period=day) f.e. bavaria (if not already done). 
+4. Create an [access token](http://localhost:5003/index.php?module=UsersManager&action=userSecurity) and disable `Only allow secure requests` for local testing.
+5. Add your matomo config for each project as described in [Local Backend Configuration](#local-backend-configuration)
 
+Example:
 ```yaml
 projects:
   - id: ...
@@ -213,8 +213,15 @@ projects:
       accessToken: <matomo-access-token>
 ```
 
-Troubleshooting: If your matomo instance is corrupt, you can just delete `config/config.ini.php` in folder (
+6. Create a card and check the [Dashboard](http://localhost:5003/index.php?module=CoreHome&action=index&idSite=1&period=day&date=today#?period=day&date=today&idSite=1&category=Dashboard_Dashboard&subcategory=1) of your website
+   <img src="./img/matomo_dashboard.png" width="60%" height="60%" />
+7. Here you find [Events (card actions)](http://localhost:5003/index.php?module=CoreHome&action=index&idSite=1&period=day&date=today#?idSite=1&period=day&date=today&category=General_Actions&subcategory=Events_Events) and [Searches (stores in the app)](http://localhost:5003/index.php?module=CoreHome&action=index&idSite=1&period=day&date=today#?idSite=1&period=day&date=today&category=General_Actions&subcategory=Actions_SubmenuSitesearch)
+- Note: Before you find Events and Searches, the archiving cron job has to be run (scheduled every 5 minutes). Check your selected date filter if you can't find events or searches.
+
+Troubleshooting: 
+- If your matomo instance is corrupt, you can just delete `config/config.ini.php` in folder (
 var/www/html)
+- If you cannot send data to matomo check that your access token accepts unsecure request and `localhost:5003` was added to `matomos trusted_hosts` at `/var/www/html/config/config.ini.php`
 
 #### Inspecting Services
 
