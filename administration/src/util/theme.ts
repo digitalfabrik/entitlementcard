@@ -112,6 +112,8 @@ export const theme = (config: ProjectConfig): Theme =>
         MuiButton: {
           defaultProps: {
             variant: 'outlined',
+
+            onMouseDown: e => e.preventDefault(),
             color: 'inherit',
           },
           styleOverrides: {
