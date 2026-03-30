@@ -71,6 +71,13 @@ const useCardGenerator = ({
 }): UseCardGeneratorReturn => {
   const projectConfig = useContext(ProjectConfigContext)
   const [searchParams] = useSearchParams()
+  const { enqueueSnackbar } = useSnackbar()
+  const { t } = useTranslation('cards')
+  const sendConfirmationMails = useSendCardConfirmationMails(region)
+  const initializedCards = initializeCards
+    ? initializeCardsFromQueryParams(projectConfig, searchParams, region)
+    : []
+  const [cards, setCards] = useState<Card[]>(initializedCards)
   const [cardGenerationStep, setCardGenerationStep] = useState<CardGenerationStep>('input')
   const [, createCardsMutation] = useMutation(CreateCardsDocument)
   const [, deleteCardsMutation] = useMutation(DeleteCardsDocument)
@@ -78,14 +85,7 @@ const useCardGenerator = ({
     SendApplicationAndCardDataToFreinetDocument,
   )
   const [, sendCardDataToFreinetMutation] = useMutation(SendCardDataToFreinetDocument)
-  const { enqueueSnackbar } = useSnackbar()
-  const { t } = useTranslation('cards')
 
-  const sendConfirmationMails = useSendCardConfirmationMails(region)
-  const initializedCards = initializeCards
-    ? initializeCardsFromQueryParams(projectConfig, searchParams, region)
-    : []
-  const [cards, setCards] = useState<Card[]>(initializedCards)
   const rawApplicationId = searchParams.get('applicationIdToMarkAsProcessed')
   const applicationId = rawApplicationId ? parseInt(rawApplicationId, 10) : null
 
@@ -113,39 +113,41 @@ const useCardGenerator = ({
           normalizedCards,
           applicationId,
         )
-        const dataUri = await generateFunction(codes, normalizedCards, projectConfig, region)
-        downloadDataUri(dataUri, filename)
+
+        downloadDataUri(
+          await generateFunction(codes, normalizedCards, projectConfig, region),
+          filename,
+        )
         normalizedCards.forEach(saveActivityLog)
 
         if (applicationId != null) {
-          const freinetCard = getFreinetCardFromCards(normalizedCards)
-          sendApplicationAndCardDataToFreinetMutation({
+          const result = await sendApplicationAndCardDataToFreinetMutation({
             applicationId,
-            freinetCard,
-          }).then(result => {
-            if (result.error) {
-              const { title } = messageFromGraphQlError(result.error)
-              enqueueSnackbar(title, { variant: 'error', persist: true })
-            } else if (result.data?.sendApplicationAndCardDataToFreinet === true) {
-              enqueueSnackbar(t('freinetDataSyncSuccessMessage'), { variant: 'success' })
-            }
+            freinetCard: getFreinetCardFromCards(normalizedCards),
           })
+
+          if (result.error) {
+            const { title } = messageFromGraphQlError(result.error)
+            enqueueSnackbar(title, { variant: 'error', persist: true })
+          } else if (result.data?.sendApplicationAndCardDataToFreinet === true) {
+            enqueueSnackbar(t('freinetDataSyncSuccessMessage'), { variant: 'success' })
+          }
         }
 
         const freinetUserId = normalizedCards[0]?.extensions.freinetUserId
+
         if (freinetUserId) {
-          const freinetCard = getFreinetCardFromCards(normalizedCards)
-          sendCardDataToFreinetMutation({
+          const result = await sendCardDataToFreinetMutation({
             userId: parseInt(freinetUserId, 10),
-            freinetCard,
-          }).then(result => {
-            if (result.error) {
-              const { title } = messageFromGraphQlError(result.error)
-              enqueueSnackbar(title, { variant: 'error', persist: true })
-            } else if (result.data?.sendCardDataToFreinet === true) {
-              enqueueSnackbar(t('freinetCardDataTransferSuccessMessage'), { variant: 'success' })
-            }
+            freinetCard: getFreinetCardFromCards(normalizedCards),
           })
+
+          if (result.error) {
+            const { title } = messageFromGraphQlError(result.error)
+            enqueueSnackbar(title, { variant: 'error', persist: true })
+          } else if (result.data?.sendCardDataToFreinet === true) {
+            enqueueSnackbar(t('freinetCardDataTransferSuccessMessage'), { variant: 'success' })
+          }
         }
 
         if (region.activatedForCardConfirmationMail) {
