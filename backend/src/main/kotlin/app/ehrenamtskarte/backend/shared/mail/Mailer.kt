@@ -11,6 +11,7 @@ import app.ehrenamtskarte.backend.graphql.application.types.PersonalData
 import app.ehrenamtskarte.backend.graphql.exceptions.MailNotSentException
 import com.sanctionco.jmail.JMail
 import graphql.GraphQLError
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.simplejavamail.MailException
 import org.simplejavamail.email.EmailBuilder
 import org.simplejavamail.mailer.MailerBuilder
@@ -28,8 +29,9 @@ class Mailer(
     private val backendConfig: BackendConfiguration,
 ) {
     fun sendNotificationForApplicationMails(projectConfig: ProjectConfig, regionId: Int) {
-        val recipients = AdministratorsRepository
-            .getNotificationRecipientsForApplication(projectConfig.id, regionId)
+        val recipients = transaction {
+            AdministratorsRepository.getNotificationRecipientsForApplication(projectConfig.id, regionId)
+        }
 
         for (recipient: AdministratorEntity in recipients) {
             try {
@@ -54,8 +56,9 @@ class Mailer(
     }
 
     fun sendNotificationForVerificationMails(projectConfig: ProjectConfig, regionId: Int) {
-        val recipients = AdministratorsRepository
-            .getNotificationRecipientsForVerification(projectConfig.id, regionId)
+        val recipients = transaction {
+            AdministratorsRepository.getNotificationRecipientsForVerification(projectConfig.id, regionId)
+        }
 
         for (recipient: AdministratorEntity in recipients) {
             try {
@@ -124,7 +127,7 @@ class Mailer(
         accessKey: String,
         regionId: Int,
     ) {
-        val applicationConfirmationNote = RegionsRepository.getApplicationConfirmationNote(regionId)
+        val applicationConfirmationNote = transaction { RegionsRepository.getApplicationConfirmationNote(regionId) }
 
         sendMail(
             backendConfig = backendConfig,
@@ -170,7 +173,7 @@ class Mailer(
         accessKey: String,
         regionId: Int,
     ) {
-        val applicationConfirmationNote = RegionsRepository.getApplicationConfirmationNote(regionId)
+        val applicationConfirmationNote = transaction { RegionsRepository.getApplicationConfirmationNote(regionId) }
 
         sendMail(
             backendConfig = backendConfig,
