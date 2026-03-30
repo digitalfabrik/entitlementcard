@@ -1,5 +1,5 @@
 /* eslint-disable react/destructuring-assignment */
-import { MutationResult } from '@apollo/client'
+import { ApolloError, FetchResult, MutationResult } from '@apollo/client'
 import {
   CancelOutlined,
   Check,
@@ -41,6 +41,7 @@ import VerificationsView from '../../../components/VerificationsView'
 import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
 import {
   ApplicationStatus,
+  RejectApplicationStatusMutation,
   useApproveApplicationStatusMutation,
   useDeleteApplicationMutation,
   useRejectApplicationStatusMutation,
@@ -280,17 +281,35 @@ const ApplicationCard = ({
   })
 
   const [rejectStatus, rejectStatusResult] = useRejectApplicationStatusMutation({
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
-      enqueueSnackbar(title, { variant: 'error' })
-    },
-    onCompleted: result => {
-      setRejectionDialogOpen(false)
-      // Update the application with new fields from the query
-      onChange({ ...application, ...result.application })
-      enqueueSnackbar(t('applicationRejectedToastMessage'), { variant: 'success' })
-    },
+    errorPolicy: 'all',
   })
+
+  const handleRejectApplication = (message: string) => {
+    rejectStatus({
+      variables: { applicationId: application.id, rejectionMessage: message },
+    })
+      .then((result: FetchResult<RejectApplicationStatusMutation>) => {
+        const { data, errors } = result
+
+        if (data?.application) {
+          setRejectionDialogOpen(false)
+          onChange({ ...application, ...data.application })
+
+          if (errors && errors.length > 0) {
+            enqueueSnackbar(t('applicationRejectedEmailNotSent'), { variant: 'warning' })
+          } else {
+            enqueueSnackbar(t('applicationRejectedEmailSent'), { variant: 'success' })
+          }
+        } else if (errors && errors.length > 0) {
+          const { title } = getMessageFromApolloError(new ApolloError({ graphQLErrors: errors }))
+          enqueueSnackbar(title, { variant: 'error' })
+        }
+      })
+      .catch(error => {
+        const { title } = getMessageFromApolloError(error)
+        enqueueSnackbar(title, { variant: 'error' })
+      })
+  }
 
   const personalData = useMemo(
     () => config.applicationFeature?.applicationJsonToPersonalData(application.jsonValue),
@@ -470,11 +489,7 @@ const ApplicationCard = ({
       <RejectionDialog
         open={rejectionDialogOpen}
         loading={rejectStatusResult.loading}
-        onConfirm={message => {
-          rejectStatus({
-            variables: { applicationId: application.id, rejectionMessage: message },
-          })
-        }}
+        onConfirm={handleRejectApplication}
         onCancel={() => {
           setRejectionDialogOpen(false)
         }}
