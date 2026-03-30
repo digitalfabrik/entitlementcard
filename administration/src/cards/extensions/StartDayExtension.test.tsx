@@ -1,4 +1,4 @@
-import { act, fireEvent } from '@testing-library/react'
+import { fireEvent } from '@testing-library/react'
 import React from 'react'
 import { Temporal } from 'temporal-polyfill'
 
@@ -53,8 +53,6 @@ describe('StartDayExtension', () => {
       )
       const datePicker = getByPlaceholderText('TT.MM.JJJJ')
       fireEvent.blur(datePicker)
-      // Ignore timout for onBlur
-      act(() => jest.runAllTimers())
       expect(StartDayExtension.isValid({ startDay: null })).toBeFalsy()
       expect(getByText('Bitte geben Sie ein gültiges Startdatum ein.')).toBeTruthy()
     })
@@ -67,8 +65,6 @@ describe('StartDayExtension', () => {
       )
       const datePicker = getByDisplayValue(formatDateDefaultGerman(startDay))
       fireEvent.blur(datePicker)
-      // Ignore timout for onBlur
-      act(() => jest.runAllTimers())
       expect(StartDayExtension.isValid({ startDay })).toBeFalsy()
       expect(
         getByText(
@@ -90,8 +86,6 @@ describe('StartDayExtension', () => {
       )
       const datePicker = getByDisplayValue(formatDateDefaultGerman(startDayTooFarInFuture))
       fireEvent.blur(datePicker)
-      // Ignore timout for onBlur
-      act(() => jest.runAllTimers())
       expect(StartDayExtension.isValid({ startDay: startDayTooFarInFuture })).toBeFalsy()
       expect(
         getByText(
@@ -119,8 +113,6 @@ describe('StartDayExtension', () => {
       )
       const datePicker = getByDisplayValue(formatDateDefaultGerman(startDay))
       fireEvent.blur(datePicker)
-      // Ignore timout for onBlur
-      act(() => jest.runAllTimers())
       expect(StartDayExtension.isValid({ startDay })).toBeTruthy()
       expect(queryByTestId('form-alert')).toBeNull()
     })

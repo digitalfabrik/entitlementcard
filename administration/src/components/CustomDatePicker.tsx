@@ -64,9 +64,7 @@ const CustomDatePicker = ({
             placeholder: 'TT.MM.JJJJ',
             error,
             spellCheck: false,
-            /* Delay onBlur to allow click events on other elements to fire before the
-               blur-triggered re-render shifts the layout and moves the click target */
-            onBlur: onBlur ? () => setTimeout(onBlur, 200) : undefined,
+            onBlur,
             size: 'small',
             sx: {
               width: '100%',
