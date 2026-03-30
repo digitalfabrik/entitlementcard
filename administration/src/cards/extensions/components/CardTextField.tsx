@@ -51,9 +51,13 @@ const CardTextField = ({
       rows={rows}
       multiline={multiline}
       value={value}
+      /* Delay onBlur to allow click events on other elements to fire before the
+   blur-triggered re-render shifts the layout and moves the click target */
       onBlur={() => {
-        setInteracted(true)
-        onBlur?.()
+        setTimeout(() => {
+          setInteracted(true)
+          onBlur?.()
+        }, 200)
       }}
       onChange={event => onChange(event.target.value)}
       error={showErrorAfterInteraction}
