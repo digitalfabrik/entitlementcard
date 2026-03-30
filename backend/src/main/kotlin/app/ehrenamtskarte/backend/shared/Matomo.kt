@@ -112,6 +112,7 @@ object Matomo {
         MatomoRequest.request()
             .eventAction(query)
             .eventCategory(codeType.toString())
+            .eventName("card creation successful")
             .eventValue(numberOfCards.toDouble())
             .dimensions(mapOf(1L to regionId))
             .also { attachRequestInformation(it, request) }
@@ -201,6 +202,8 @@ object Matomo {
             projectConfig.matomo,
             MatomoRequest.request()
                 .eventAction(query)
+                .eventCategory("activation")
+                .eventName(if (successful) "activation successful" else "activation failed")
                 .eventValue(if (successful) 1.0 else 0.0)
                 .dimensions(if (card != null) mapOf(1L to card.regionId) else emptyMap())
                 .also { attachRequestInformation(it, request) },
