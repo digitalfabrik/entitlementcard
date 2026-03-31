@@ -4,7 +4,9 @@ import app.ehrenamtskarte.backend.IntegrationTest
 import app.ehrenamtskarte.backend.db.entities.FreinetAgencies
 import app.ehrenamtskarte.backend.db.entities.FreinetAgenciesEntity
 import app.ehrenamtskarte.backend.generated.SendCardDataToFreinet
-import app.ehrenamtskarte.backend.generated.inputs.FreinetCardInput
+import app.ehrenamtskarte.backend.generated.inputs.FreinetCardWithUserIdInput
+import app.ehrenamtskarte.backend.graphql.freinet.exceptions.FreinetCardDataInvalidException
+import app.ehrenamtskarte.backend.graphql.freinet.types.FreinetCardTransferResult
 import app.ehrenamtskarte.backend.graphql.freinet.util.FreinetApi
 import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
 import app.ehrenamtskarte.backend.helper.TestAdministrators
@@ -34,7 +36,9 @@ internal class FreinetSendCardDataMutationTest : IntegrationTest() {
     @BeforeEach
     fun mockFreinetApi() {
         mockkConstructor(FreinetApi::class)
-        every { anyConstructed<FreinetApi>().sendCardInformation(any(), any()) } returns Unit
+        every { anyConstructed<FreinetApi>().sendCardInformation(any()) } returns Unit
+        every { anyConstructed<FreinetApi>().sendCardInformation(match { it.userId == 99999 }) } throws
+            FreinetCardDataInvalidException()
     }
 
     @Test
@@ -44,7 +48,7 @@ internal class FreinetSendCardDataMutationTest : IntegrationTest() {
         assertEquals(HttpStatus.OK, response.statusCode)
         assertEquals(GraphQLExceptionCode.UNAUTHORIZED, response.toErrorObject().extensions.code)
 
-        verify(exactly = 0) { anyConstructed<FreinetApi>().sendCardInformation(any(), any()) }
+        verify(exactly = 0) { anyConstructed<FreinetApi>().sendCardInformation(any()) }
     }
 
     @Test
@@ -54,7 +58,7 @@ internal class FreinetSendCardDataMutationTest : IntegrationTest() {
         assertEquals(HttpStatus.OK, response.statusCode)
         assertEquals(GraphQLExceptionCode.NOT_IMPLEMENTED, response.toErrorObject().extensions.code)
 
-        verify(exactly = 0) { anyConstructed<FreinetApi>().sendCardInformation(any(), any()) }
+        verify(exactly = 0) { anyConstructed<FreinetApi>().sendCardInformation(any()) }
     }
 
     @Test
@@ -64,38 +68,76 @@ internal class FreinetSendCardDataMutationTest : IntegrationTest() {
         assertEquals(HttpStatus.OK, response.statusCode)
         assertEquals(GraphQLExceptionCode.FORBIDDEN, response.toErrorObject().extensions.code)
 
-        verify(exactly = 0) { anyConstructed<FreinetApi>().sendCardInformation(any(), any()) }
+        verify(exactly = 0) { anyConstructed<FreinetApi>().sendCardInformation(any()) }
     }
 
     @Test
-    fun `should return false when data transfer is not activated`() {
+    fun `should return zero successCount when data transfer is not activated`() {
         val response = postGraphQL(createMutation(), TestAdministrators.EAK_REGION_ADMIN.getJwtToken())
 
         assertEquals(HttpStatus.OK, response.statusCode)
-        assertEquals(false, response.toDataObject())
+        val result = response.toDataObject<FreinetCardTransferResult>()
+        assertEquals(0, result.successCount)
+        assertEquals(emptyList(), result.failedUserIds)
 
-        verify(exactly = 0) { anyConstructed<FreinetApi>().sendCardInformation(any(), any()) }
+        verify(exactly = 0) { anyConstructed<FreinetApi>().sendCardInformation(any()) }
     }
 
     @Test
-    fun `should return true and send card information when data transfer is activated`() {
+    fun `should return successCount of 1 and send card information when data transfer is activated`() {
         val response = postGraphQL(createMutation(), regionAdminFreinet.getJwtToken())
 
         assertEquals(HttpStatus.OK, response.statusCode)
-        assertEquals(true, response.toDataObject())
+        val result = response.toDataObject<FreinetCardTransferResult>()
+        assertEquals(1, result.successCount)
+        assertEquals(emptyList(), result.failedUserIds)
 
-        verify { anyConstructed<FreinetApi>().sendCardInformation(12345, any()) }
+        verify(exactly = 1) { anyConstructed<FreinetApi>().sendCardInformation(any()) }
     }
 
-    private fun createMutation(userId: Int = 12345): SendCardDataToFreinet {
-        val freinetCard = FreinetCardInput(
-            cardType = "Standard",
-            expirationDate = "2026-12-31",
-        )
-        val variables = SendCardDataToFreinet.Variables(
-            userId = userId,
-            freinetCard = freinetCard,
-        )
+    @Test
+    fun `should return correct successCount when sending multiple cards`() {
+        val response = postGraphQL(createMutation(userIds = listOf(12345, 67890)), regionAdminFreinet.getJwtToken())
+
+        assertEquals(HttpStatus.OK, response.statusCode)
+        val result = response.toDataObject<FreinetCardTransferResult>()
+        assertEquals(2, result.successCount)
+        assertEquals(emptyList(), result.failedUserIds)
+
+        verify(exactly = 2) { anyConstructed<FreinetApi>().sendCardInformation(any()) }
+    }
+
+    @Test
+    fun `should return failedUserIds when card transfer fails`() {
+        val response = postGraphQL(createMutation(userIds = listOf(99999)), regionAdminFreinet.getJwtToken())
+
+        assertEquals(HttpStatus.OK, response.statusCode)
+        val result = response.toDataObject<FreinetCardTransferResult>()
+        assertEquals(0, result.successCount)
+        assertEquals(listOf(99999), result.failedUserIds)
+    }
+
+    @Test
+    fun `should return partial success when one card transfer fails and one succeeds`() {
+        val response = postGraphQL(createMutation(userIds = listOf(12345, 99999)), regionAdminFreinet.getJwtToken())
+
+        assertEquals(HttpStatus.OK, response.statusCode)
+        val result = response.toDataObject<FreinetCardTransferResult>()
+        assertEquals(1, result.successCount)
+        assertEquals(listOf(99999), result.failedUserIds)
+
+        verify(exactly = 2) { anyConstructed<FreinetApi>().sendCardInformation(any()) }
+    }
+
+    private fun createMutation(userIds: List<Int> = listOf(12345)): SendCardDataToFreinet {
+        val freinetCards = userIds.map { userId ->
+            FreinetCardWithUserIdInput(
+                cardType = "Standard",
+                expirationDate = "2026-12-31",
+                userId = userId,
+            )
+        }
+        val variables = SendCardDataToFreinet.Variables(freinetCards = freinetCards)
         return SendCardDataToFreinet(variables)
     }
 }

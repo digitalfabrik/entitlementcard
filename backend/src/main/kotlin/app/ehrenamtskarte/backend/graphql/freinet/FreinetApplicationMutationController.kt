@@ -12,9 +12,12 @@ import app.ehrenamtskarte.backend.graphql.application.utils.getPersonalDataNode
 import app.ehrenamtskarte.backend.graphql.auth.requireAuthContext
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.graphql.exceptions.NotImplementedException
+import app.ehrenamtskarte.backend.graphql.freinet.exceptions.FreinetCardDataInvalidException
 import app.ehrenamtskarte.backend.graphql.freinet.exceptions.FreinetFoundMultiplePersonsException
 import app.ehrenamtskarte.backend.graphql.freinet.exceptions.FreinetPersonDataInvalidException
 import app.ehrenamtskarte.backend.graphql.freinet.types.FreinetCard
+import app.ehrenamtskarte.backend.graphql.freinet.types.FreinetCardTransferResult
+import app.ehrenamtskarte.backend.graphql.freinet.types.FreinetCardWithUserId
 import app.ehrenamtskarte.backend.graphql.freinet.util.FreinetApi
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import app.ehrenamtskarte.backend.shared.utils.devWarn
@@ -100,11 +103,11 @@ class FreinetApplicationMutationController(
                     )
 
                     val userId = createdPerson.data.get("NEW_USERID") ?: throw FreinetPersonDataInvalidException()
-                    freinetApi.sendCardInformation(userId.intValue(), freinetCard)
+                    freinetApi.sendCardInformation(FreinetCardWithUserId(freinetCard, userId.intValue()))
                 }
                 persons.size() == 1 -> {
                     val userId = persons[0].get("id") ?: throw FreinetPersonDataInvalidException()
-                    freinetApi.sendCardInformation(userId.intValue(), freinetCard)
+                    freinetApi.sendCardInformation(FreinetCardWithUserId(freinetCard, userId.intValue()))
                     freinetApi.updatePerson(
                         firstName,
                         lastName,
@@ -123,17 +126,13 @@ class FreinetApplicationMutationController(
     }
 
     @GraphQLDescription(
-        """Send card information to Freinet.
-    Returns:
-    - true: Card data was successfully sent to Freinet.
-    - false: Data transfer is not activated for the user's region.""",
+        "Send card information to Freinet. Returns the number of successful transfers and failedUserIds.",
     )
     @MutationMapping
     fun sendCardDataToFreinet(
-        @Argument userId: Int,
-        @Argument freinetCard: FreinetCard,
+        @Argument freinetCards: List<FreinetCardWithUserId>,
         dfe: DataFetchingEnvironment,
-    ): Boolean {
+    ): FreinetCardTransferResult {
         val authContext = dfe.requireAuthContext()
         val projectConfig = backendConfiguration.getProjectConfig(authContext.project)
 
@@ -149,11 +148,30 @@ class FreinetApplicationMutationController(
             FreinetAgencyRepository.getFreinetAgencyByRegionId(regionId)
                 // Freinet is enabled for this region if dataTransferActivated is true
                 ?.takeIf { it.dataTransferActivated }
-        } ?: return false
+        } ?: return FreinetCardTransferResult(successCount = 0, failedUserIds = emptyList())
 
-        FreinetApi(freinetHttpClient, projectConfig.freinet.host, freinetAgency.apiAccessKey, freinetAgency.agencyId)
-            .sendCardInformation(userId, freinetCard)
+        val freinetApi = FreinetApi(
+            freinetHttpClient,
+            projectConfig.freinet.host,
+            freinetAgency.apiAccessKey,
+            freinetAgency.agencyId,
+        )
 
-        return true
+        val results = freinetCards.map { freinetCard ->
+            freinetCard.userId to runCatching { freinetApi.sendCardInformation(freinetCard) }
+                .onFailure {
+                    if (it !is FreinetCardDataInvalidException) {
+                        logger.error(
+                            "Unexpected error sending card data to Freinet for userId ${freinetCard.userId}",
+                            it,
+                        )
+                    }
+                }
+        }
+
+        return FreinetCardTransferResult(
+            successCount = results.count { it.second.isSuccess },
+            failedUserIds = results.filter { it.second.isFailure }.map { it.first },
+        )
     }
 }
