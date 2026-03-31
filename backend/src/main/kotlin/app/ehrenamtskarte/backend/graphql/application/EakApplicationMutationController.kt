@@ -1,16 +1,18 @@
 package app.ehrenamtskarte.backend.graphql.application
 
 import app.ehrenamtskarte.backend.config.BackendConfiguration
+import app.ehrenamtskarte.backend.config.ProjectConfig
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity.Status
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
+import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationExternalSource.NONE
+import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationExternalSource.VEREIN360
 import app.ehrenamtskarte.backend.db.entities.Applications
 import app.ehrenamtskarte.backend.db.entities.NOTE_MAX_CHARS
 import app.ehrenamtskarte.backend.db.entities.mayDeleteApplicationsInRegion
 import app.ehrenamtskarte.backend.db.entities.maySendMailsInRegion
 import app.ehrenamtskarte.backend.db.entities.mayUpdateApplicationsInRegion
 import app.ehrenamtskarte.backend.db.repositories.ApplicationRepository
-import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.graphql.application.types.Application
 import app.ehrenamtskarte.backend.graphql.application.types.ApplicationAdminGql
 import app.ehrenamtskarte.backend.graphql.application.utils.getApplicantEmail
@@ -22,6 +24,7 @@ import app.ehrenamtskarte.backend.graphql.exceptions.InvalidLinkException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidNoteSizeException
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import app.ehrenamtskarte.backend.shared.mail.Mailer
+import app.ehrenamtskarte.backend.shared.mail.collectMailErrors
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import graphql.execution.DataFetcherResult
@@ -34,12 +37,13 @@ import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.ContextValue
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.stereotype.Controller
-import java.io.File
+import kotlin.collections.orEmpty
 
 @Controller
 class EakApplicationMutationController(
     private val backendConfiguration: BackendConfiguration,
-    private val applicationData: File,
+    private val applicationService: ApplicationService,
+    private val mailService: Mailer,
 ) {
     @GraphQLDescription("Stores a new application for an EAK")
     @MutationMapping
@@ -49,47 +53,65 @@ class EakApplicationMutationController(
         @Argument project: String,
         @GraphQLIgnore @ContextValue(required = false) files: List<Part>?,
         @GraphQLIgnore @ContextValue request: HttpServletRequest,
-    ): DataFetcherResult<Boolean> =
-        transaction {
-            val applicationHandler = ApplicationHandler(
-                backendConfiguration,
+    ): DataFetcherResult<Boolean> {
+        val projectConfig = backendConfiguration.getProjectConfig(project)
+
+        val attachments = files.orEmpty()
+        applicationService.validateAttachmentTypes(attachments)
+        applicationService.validateRegionActivatedForApplication(project, regionId)
+
+        if (applicationService.isValidPreVerifiedApplication(application, request)) {
+            return addPreVerifiedEakApplication(application, regionId, attachments, projectConfig)
+        }
+
+        val verifications = transaction {
+            val (applicationEntity, verificationEntities) = applicationService.saveApplication(
                 application,
                 regionId,
-                project,
-                applicationData,
-                files.orEmpty(),
-                request,
+                attachments,
+                automaticSource = NONE,
             )
-            val dataFetcherResultBuilder = DataFetcherResult.newResult<Boolean>()
-
-            applicationHandler.validateRegion()
-
-            val region = RegionsRepository.findRegionById(regionId)
-            val applicationConfirmationNote = region.applicationConfirmationMailNote
-                ?.takeIf { region.applicationConfirmationMailNoteActivated && it.isNotEmpty() }
-            applicationHandler.validateAttachmentTypes()
-            val isPreVerified = applicationHandler.isValidPreVerifiedApplication()
-
-            val (applicationEntity, verificationEntities) = applicationHandler.saveApplication()
-
-            if (isPreVerified) {
-                applicationHandler.setApplicationVerificationToPreVerifiedNow(verificationEntities)
-                applicationHandler.sendPreVerifiedApplicationMails(
-                    applicationEntity,
-                    verificationEntities,
-                    dataFetcherResultBuilder,
-                    applicationConfirmationNote,
-                )
-            } else {
-                applicationHandler.sendApplicationMails(
-                    applicationEntity,
-                    verificationEntities,
-                    dataFetcherResultBuilder,
-                    applicationConfirmationNote,
-                )
-            }
-            dataFetcherResultBuilder.data(true).build()
+            // Send mail to applicant within the transaction to ensure rollback on failure
+            mailService.sendApplicationApplicantMail(
+                projectConfig,
+                application.personalData,
+                applicationEntity.accessKey,
+                regionId,
+            )
+            verificationEntities
         }
+
+        val applicantName = application.personalData.fullName()
+        val errors = collectMailErrors(verifications) { verification ->
+            mailService.sendApplicationVerificationMail(applicantName, projectConfig, verification)
+        }
+        mailService.sendNotificationForApplicationMails(projectConfig, regionId)
+
+        return DataFetcherResult.newResult<Boolean>().data(true).errors(errors).build()
+    }
+
+    private fun addPreVerifiedEakApplication(
+        application: Application,
+        regionId: Int,
+        attachments: List<Part>,
+        projectConfig: ProjectConfig,
+    ): DataFetcherResult<Boolean> {
+        val (applicationEntity, verificationEntities) = transaction {
+            applicationService.saveApplication(application, regionId, attachments, VEREIN360)
+        }
+        val errors = collectMailErrors(verificationEntities) { verification ->
+            mailService.sendPreVerifiedApplicationMail(
+                projectConfig,
+                verification,
+                application.personalData.fullName(),
+                applicationEntity.accessKey,
+                regionId,
+            )
+        }
+        mailService.sendNotificationForApplicationMails(projectConfig, regionId)
+
+        return DataFetcherResult.newResult<Boolean>().data(true).errors(errors).build()
+    }
 
     @GraphQLDescription("Deletes the application with specified id")
     @MutationMapping
@@ -111,7 +133,7 @@ class EakApplicationMutationController(
                 throw InvalidInputException("Application cannot be deleted while it is in a pending state")
             }
 
-            ApplicationRepository.delete(authContext.project, application, applicationData)
+            applicationService.deleteApplication(authContext.project, application)
         }
         return true
     }
@@ -151,9 +173,7 @@ class EakApplicationMutationController(
                 val projectConfig = backendConfiguration.getProjectConfig(project)
 
                 ApplicationRepository.verifyApplicationVerification(accessKey).also {
-                    Mailer.sendNotificationForVerificationMails(
-                        project,
-                        backendConfiguration,
+                    mailService.sendNotificationForVerificationMails(
                         projectConfig,
                         application.regionId.value,
                     )
@@ -216,8 +236,7 @@ class EakApplicationMutationController(
             application.changeStatusOrThrow(Status.Rejected)
             application.rejectionMessage = rejectionMessage
 
-            Mailer.sendApplicationRejectedMail(
-                backendConfiguration,
+            mailService.sendApplicationRejectedMail(
                 backendConfiguration.getProjectConfig(authContext.project),
                 application.getApplicantName(),
                 application.getApplicantEmail(),
@@ -277,8 +296,7 @@ class EakApplicationMutationController(
                 throw InvalidInputException("Application verification does not belong to the given application")
             }
 
-            Mailer.sendApplicationVerificationMail(
-                backendConfiguration,
+            mailService.sendApplicationVerificationMail(
                 application.getApplicantName(),
                 backendConfiguration.getProjectConfig(authContext.project),
                 applicationVerification,

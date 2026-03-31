@@ -20,10 +20,8 @@ import org.jetbrains.exposed.v1.core.dao.id.EntityID
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.inList
 import org.jetbrains.exposed.v1.jdbc.SizedIterable
-import org.jetbrains.exposed.v1.jdbc.deleteWhere
 import org.jetbrains.exposed.v1.jdbc.select
 import java.io.File
-import java.nio.file.Paths
 import java.security.SecureRandom
 import java.time.Instant
 import java.util.Base64
@@ -35,6 +33,7 @@ object ApplicationRepository {
         regionId: Int,
         applicationData: File,
         files: List<Part>,
+        automaticSource: ApplicationVerificationExternalSource,
     ): Pair<ApplicationEntity, List<ApplicationVerificationEntity>> {
         val random = SecureRandom.getInstanceStrong()
         val byteArray = ByteArray(64)
@@ -56,7 +55,10 @@ object ApplicationRepository {
                 this.contactName = it.contactName
                 this.organizationName = it.organizationName
                 this.contactEmailAddress = it.contactEmailAddress
-                this.automaticSource = ApplicationVerificationExternalSource.NONE
+                this.automaticSource = automaticSource
+                if (automaticSource != ApplicationVerificationExternalSource.NONE) {
+                    this.verifiedDate = Instant.now()
+                }
             }
         }
 
@@ -116,7 +118,6 @@ object ApplicationRepository {
         automaticSource: ApplicationVerificationExternalSource = ApplicationVerificationExternalSource.NONE,
     ): Boolean {
         val applicationVerification = getApplicationVerification(accessKey)
-
         return if (!applicationVerification.isVerified) {
             applicationVerification.verifiedDate = Instant.now()
             applicationVerification.automaticSource = automaticSource
@@ -135,21 +136,6 @@ object ApplicationRepository {
                 false
             }
         }
-
-    fun delete(project: String, application: ApplicationEntity, applicationData: File) {
-        ApplicationVerifications.deleteWhere { ApplicationVerifications.applicationId eq application.id }
-        application.delete()
-
-        val applicationDirectory = Paths.get(
-            applicationData.absolutePath,
-            project,
-            application.id.toString(),
-        ).toFile()
-
-        if (applicationDirectory.exists()) {
-            applicationDirectory.deleteRecursively()
-        }
-    }
 
     fun findByIds(ids: List<Int>): List<ApplicationEntity?> =
         ApplicationEntity

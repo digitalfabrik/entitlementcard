@@ -17,7 +17,6 @@ import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.inList
 import org.jetbrains.exposed.v1.jdbc.select
-import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import java.time.Instant
 import java.time.Period
 import java.util.UUID
@@ -109,30 +108,26 @@ object AdministratorsRepository {
     }
 
     fun getNotificationRecipientsForApplication(project: String, regionId: Int): List<AdministratorEntity> =
-        transaction {
-            (Administrators innerJoin Projects)
-                .select(Administrators.columns)
-                .where {
-                    (Projects.project eq project) and (Administrators.notificationOnApplication eq true) and
-                        (Administrators.regionId eq regionId) and
-                        (Administrators.deleted eq false)
-                }
-                .let { AdministratorEntity.wrapRows(it) }
-                .toList()
-        }
+        (Administrators innerJoin Projects)
+            .select(Administrators.columns)
+            .where {
+                (Projects.project eq project) and (Administrators.notificationOnApplication eq true) and
+                    (Administrators.regionId eq regionId) and
+                    (Administrators.deleted eq false)
+            }
+            .let { AdministratorEntity.wrapRows(it) }
+            .toList()
 
     fun getNotificationRecipientsForVerification(project: String, regionId: Int): List<AdministratorEntity> =
-        transaction {
-            (Administrators innerJoin Projects)
-                .select(Administrators.columns)
-                .where {
-                    (Projects.project eq project) and (Administrators.notificationOnVerification eq true) and
-                        (Administrators.regionId eq regionId) and
-                        (Administrators.deleted eq false)
-                }
-                .let { AdministratorEntity.wrapRows(it) }
-                .toList()
-        }
+        (Administrators innerJoin Projects)
+            .select(Administrators.columns)
+            .where {
+                (Projects.project eq project) and (Administrators.notificationOnVerification eq true) and
+                    (Administrators.regionId eq regionId) and
+                    (Administrators.deleted eq false)
+            }
+            .let { AdministratorEntity.wrapRows(it) }
+            .toList()
 }
 
 const val minPasswordLength = 12
