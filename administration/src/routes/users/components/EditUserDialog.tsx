@@ -49,9 +49,8 @@ const EditUserDialog = ({
       onClose()
       if (me?.id === selectedUser?.id) {
         refetchMe()
-      } else {
-        onSuccess()
       }
+      onSuccess()
     },
   })
 
