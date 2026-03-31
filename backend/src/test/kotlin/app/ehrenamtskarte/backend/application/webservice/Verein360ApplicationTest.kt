@@ -18,6 +18,7 @@ import app.ehrenamtskarte.backend.helper.TestData
 import app.ehrenamtskarte.backend.helper.toDataObject
 import app.ehrenamtskarte.backend.helper.toErrorObject
 import app.ehrenamtskarte.backend.shared.mail.Mailer
+import app.ehrenamtskarte.backend.util.any
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.deleteAll
 import org.jetbrains.exposed.v1.jdbc.selectAll
@@ -28,7 +29,6 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
-import org.mockito.Mockito
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.springframework.http.HttpStatus
@@ -250,15 +250,5 @@ internal class Verein360ApplicationTest : IntegrationTest() {
             project = project,
         )
         return AddEakApplication(variables)
-    }
-
-    /**
-     * Mockito.any() returns null, causing NPEs with Kotlin non-null parameters.
-     * This helper bypasses the issue.
-     */
-    @Suppress("UNCHECKED_CAST")
-    private fun <T> any(): T {
-        Mockito.any<T>()
-        return null as T
     }
 }
