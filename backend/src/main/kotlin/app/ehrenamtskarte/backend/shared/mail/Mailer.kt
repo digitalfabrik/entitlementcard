@@ -6,28 +6,32 @@ import app.ehrenamtskarte.backend.config.SmtpConfig
 import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
 import app.ehrenamtskarte.backend.db.repositories.AdministratorsRepository
+import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.graphql.application.types.PersonalData
 import app.ehrenamtskarte.backend.graphql.exceptions.MailNotSentException
 import com.sanctionco.jmail.JMail
+import graphql.GraphQLError
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.simplejavamail.MailException
 import org.simplejavamail.email.EmailBuilder
 import org.simplejavamail.mailer.MailerBuilder
 import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Service
 import java.net.URI
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
+import java.util.concurrent.CompletionException
 
 private val logger by lazy { LoggerFactory.getLogger(Mailer::class.java) }
 
-object Mailer {
-    fun sendNotificationForApplicationMails(
-        project: String,
-        backendConfig: BackendConfiguration,
-        projectConfig: ProjectConfig,
-        regionId: Int,
-    ) {
-        val recipients = AdministratorsRepository
-            .getNotificationRecipientsForApplication(project, regionId)
+@Service
+class Mailer(
+    private val backendConfig: BackendConfiguration,
+) {
+    fun sendNotificationForApplicationMails(projectConfig: ProjectConfig, regionId: Int) {
+        val recipients = transaction {
+            AdministratorsRepository.getNotificationRecipientsForApplication(projectConfig.id, regionId)
+        }
 
         for (recipient: AdministratorEntity in recipients) {
             try {
@@ -51,14 +55,10 @@ object Mailer {
         }
     }
 
-    fun sendNotificationForVerificationMails(
-        project: String,
-        backendConfig: BackendConfiguration,
-        projectConfig: ProjectConfig,
-        regionId: Int,
-    ) {
-        val recipients = AdministratorsRepository
-            .getNotificationRecipientsForVerification(project, regionId)
+    fun sendNotificationForVerificationMails(projectConfig: ProjectConfig, regionId: Int) {
+        val recipients = transaction {
+            AdministratorsRepository.getNotificationRecipientsForVerification(projectConfig.id, regionId)
+        }
 
         for (recipient: AdministratorEntity in recipients) {
             try {
@@ -82,7 +82,6 @@ object Mailer {
     }
 
     fun sendApplicationVerificationMail(
-        backendConfig: BackendConfiguration,
         applicantName: String,
         projectConfig: ProjectConfig,
         applicationVerification: ApplicationVerificationEntity,
@@ -123,12 +122,13 @@ object Mailer {
     }
 
     fun sendApplicationApplicantMail(
-        backendConfig: BackendConfiguration,
         projectConfig: ProjectConfig,
         personalData: PersonalData,
         accessKey: String,
-        applicationConfirmationNote: String?,
+        regionId: Int,
     ) {
+        val applicationConfirmationNote = transaction { RegionsRepository.getApplicationConfirmationNote(regionId) }
+
         sendMail(
             backendConfig = backendConfig,
             smtpConfig = projectConfig.smtp,
@@ -166,28 +166,25 @@ object Mailer {
         )
     }
 
-    fun sendApplicationMailToContactPerson(
-        backendConfig: BackendConfiguration,
+    fun sendPreVerifiedApplicationMail(
         projectConfig: ProjectConfig,
-        contactPerson: String,
-        contactEmailAddress: String,
-        personalData: PersonalData,
+        applicationVerification: ApplicationVerificationEntity,
+        applicantName: String,
         accessKey: String,
-        applicationConfirmationNote: String?,
+        regionId: Int,
     ) {
+        val applicationConfirmationNote = transaction { RegionsRepository.getApplicationConfirmationNote(regionId) }
+
         sendMail(
             backendConfig = backendConfig,
             smtpConfig = projectConfig.smtp,
             fromName = projectConfig.administrationName,
-            to = contactEmailAddress,
+            to = applicationVerification.contactEmailAddress,
             subject = "Antrag erfolgreich eingereicht",
             message = emailBody {
-                p { t("Sehr geehrte/r $contactPerson,") }
+                p { t("Sehr geehrte/r ${applicationVerification.contactName},") }
                 p {
-                    t(
-                        "Ihr Antrag auf die Bayerische Ehrenamtskarte für ${personalData.forenames.shortText} " +
-                            "${personalData.surname.shortText} wurde erfolgreich eingereicht.",
-                    )
+                    t("Ihr Antrag auf die Bayerische Ehrenamtskarte für $applicantName wurde erfolgreich eingereicht.")
                 }
                 p {
                     t(
@@ -209,12 +206,7 @@ object Mailer {
         )
     }
 
-    fun sendResetPasswordMail(
-        backendConfig: BackendConfiguration,
-        projectConfig: ProjectConfig,
-        passwortResetKey: String,
-        recipient: String,
-    ) {
+    fun sendResetPasswordMail(projectConfig: ProjectConfig, passwortResetKey: String, recipient: String) {
         sendMail(
             backendConfig = backendConfig,
             smtpConfig = projectConfig.smtp,
@@ -235,12 +227,7 @@ object Mailer {
         )
     }
 
-    fun sendWelcomeMail(
-        backendConfig: BackendConfiguration,
-        projectConfig: ProjectConfig,
-        passwordResetKey: String,
-        recipient: String,
-    ) {
+    fun sendWelcomeMail(projectConfig: ProjectConfig, passwordResetKey: String, recipient: String) {
         sendMail(
             backendConfig = backendConfig,
             smtpConfig = projectConfig.smtp,
@@ -262,7 +249,6 @@ object Mailer {
     }
 
     fun sendCardCreationConfirmationMail(
-        backendConfig: BackendConfiguration,
         projectConfig: ProjectConfig,
         deepLink: String,
         recipientAddress: String,
@@ -310,7 +296,6 @@ object Mailer {
     }
 
     fun sendApplicationRejectedMail(
-        backendConfig: BackendConfiguration,
         projectConfig: ProjectConfig,
         applicantName: String,
         applicantAddress: String,
@@ -340,6 +325,17 @@ object Mailer {
         )
     }
 }
+
+fun <T> collectMailErrors(items: List<T>, send: (T) -> Unit): List<GraphQLError> =
+    buildList {
+        items.forEach { item ->
+            try {
+                send(item)
+            } catch (e: MailNotSentException) {
+                add(e.toGraphQLError())
+            }
+        }
+    }
 
 private fun EmailBody.finalInformationParagraph(projectConfig: ProjectConfig) {
     p {
@@ -426,6 +422,9 @@ private fun sendMail(
                     .buildEmail(),
             )
             .join()
+    } catch (exception: CompletionException) {
+        logger.error("Error sending mail", exception.cause ?: exception)
+        throw MailNotSentException(to)
     } catch (exception: MailException) {
         logger.error("Error sending mail", exception)
         throw MailNotSentException(to)

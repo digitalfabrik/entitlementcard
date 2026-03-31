@@ -1,10 +1,10 @@
 package app.ehrenamtskarte.backend.graphql.application
 
-import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.db.entities.ApiTokenType
 import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationExternalSource
+import app.ehrenamtskarte.backend.db.entities.ApplicationVerifications
 import app.ehrenamtskarte.backend.db.repositories.ApplicationRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.graphql.application.types.Application
@@ -15,86 +15,23 @@ import app.ehrenamtskarte.backend.graphql.exceptions.InvalidFileSizeException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidFileTypeException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidJsonException
-import app.ehrenamtskarte.backend.graphql.exceptions.MailNotSentException
 import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotActivatedForApplicationException
 import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.shared.TokenAuthenticator
-import app.ehrenamtskarte.backend.shared.mail.Mailer
-import graphql.execution.DataFetcherResult
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.Part
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.jdbc.deleteWhere
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import org.springframework.stereotype.Service
 import java.io.File
+import java.nio.file.Paths
 
-class ApplicationHandler(
-    private val backendConfig: BackendConfiguration,
-    private val application: Application,
-    private val regionId: Int,
-    private val project: String,
+@Service
+class ApplicationService(
     private val applicationData: File,
-    private val files: List<Part>,
-    private val request: HttpServletRequest,
 ) {
-    fun sendApplicationMails(
-        applicationEntity: ApplicationEntity,
-        verificationEntities: List<ApplicationVerificationEntity>,
-        dataFetcherResultBuilder: DataFetcherResult.Builder<Boolean>,
-        applicationConfirmationNote: String?,
-    ) {
-        val projectConfig = backendConfig.projects.first { it.id == project }
-
-        Mailer.sendApplicationApplicantMail(
-            backendConfig,
-            projectConfig,
-            application.personalData,
-            applicationEntity.accessKey,
-            applicationConfirmationNote,
-        )
-
-        for (applicationVerification in verificationEntities) {
-            try {
-                val applicantName =
-                    "${application.personalData.forenames.shortText} ${application.personalData.surname.shortText}"
-                Mailer.sendApplicationVerificationMail(
-                    backendConfig,
-                    applicantName,
-                    projectConfig,
-                    applicationVerification,
-                )
-            } catch (exception: MailNotSentException) {
-                dataFetcherResultBuilder.error(exception.toGraphQLError())
-            }
-        }
-        Mailer.sendNotificationForApplicationMails(project, backendConfig, projectConfig, regionId)
-    }
-
-    fun sendPreVerifiedApplicationMails(
-        applicationEntity: ApplicationEntity,
-        verificationEntities: List<ApplicationVerificationEntity>,
-        dataFetcherResultBuilder: DataFetcherResult.Builder<Boolean>,
-        applicationConfirmationNote: String?,
-    ) {
-        val projectConfig = backendConfig.projects.first { it.id == project }
-
-        for (applicationVerification in verificationEntities) {
-            try {
-                Mailer.sendApplicationMailToContactPerson(
-                    backendConfig,
-                    projectConfig,
-                    applicationVerification.contactName,
-                    applicationVerification.contactEmailAddress,
-                    application.personalData,
-                    applicationEntity.accessKey,
-                    applicationConfirmationNote,
-                )
-            } catch (exception: MailNotSentException) {
-                dataFetcherResultBuilder.error(exception.toGraphQLError())
-            }
-        }
-        Mailer.sendNotificationForApplicationMails(project, backendConfig, projectConfig, regionId)
-    }
-
-    fun validateAttachmentTypes() {
+    fun validateAttachmentTypes(files: List<Part>) {
         val allowedContentTypes = setOf("application/pdf", "image/png", "image/jpeg")
         val maxFileSizeBytes = 5 * 1000 * 1000
         if (!files.all { it.contentType in allowedContentTypes }) {
@@ -105,28 +42,48 @@ class ApplicationHandler(
         }
     }
 
-    fun validateRegion() {
-        val region = transaction { RegionsRepository.findByIdInProject(project, regionId) }
-            ?: throw RegionNotFoundException()
-        if (!region.activatedForApplication) {
-            throw RegionNotActivatedForApplicationException()
+    fun validateRegionActivatedForApplication(project: String, regionId: Int) {
+        transaction {
+            val region = RegionsRepository.findByIdInProject(project, regionId) ?: throw RegionNotFoundException()
+            if (!region.activatedForApplication) {
+                throw RegionNotActivatedForApplicationException()
+            }
         }
     }
 
-    fun saveApplication(): Pair<ApplicationEntity, List<ApplicationVerificationEntity>> {
-        val (applicationEntity, verificationEntities) = transaction {
-            ApplicationRepository.persistApplication(
-                application.toJsonField(),
-                application.extractApplicationVerifications(),
-                regionId,
-                applicationData,
-                files,
-            )
-        }
+    fun saveApplication(
+        application: Application,
+        regionId: Int,
+        files: List<Part>,
+        automaticSource: ApplicationVerificationExternalSource,
+    ): Pair<ApplicationEntity, List<ApplicationVerificationEntity>> {
+        val (applicationEntity, verificationEntities) = ApplicationRepository.persistApplication(
+            application.toJsonField(),
+            application.extractApplicationVerifications(),
+            regionId,
+            applicationData,
+            files,
+            automaticSource,
+        )
         return Pair(applicationEntity, verificationEntities)
     }
 
-    fun isValidPreVerifiedApplication(): Boolean {
+    fun deleteApplication(project: String, application: ApplicationEntity) {
+        ApplicationVerifications.deleteWhere { ApplicationVerifications.applicationId eq application.id }
+        application.delete()
+
+        val applicationDirectory = Paths.get(
+            applicationData.absolutePath,
+            project,
+            application.id.toString(),
+        ).toFile()
+
+        if (applicationDirectory.exists()) {
+            applicationDirectory.deleteRecursively()
+        }
+    }
+
+    fun isValidPreVerifiedApplication(application: Application, request: HttpServletRequest): Boolean {
         val isAlreadyVerifiedList =
             application.applicationDetails.blueCardEntitlement?.workAtOrganizationsEntitlement?.list
                 ?.map { it.isAlreadyVerified }
@@ -140,11 +97,11 @@ class ApplicationHandler(
             else -> throw InvalidInputException("isAlreadyVerified must be the same for all entries")
         }
         if (!allAlreadyVerifiedWithToken) return false
-        validateAllAttributesForPreVerifiedApplication()
+        validateAllAttributesForPreVerifiedApplication(application)
         return true
     }
 
-    private fun validateAllAttributesForPreVerifiedApplication() {
+    private fun validateAllAttributesForPreVerifiedApplication(application: Application) {
         try {
             val applicationDetails = application.applicationDetails
 
@@ -183,17 +140,6 @@ class ApplicationHandler(
             }
         } catch (e: IllegalArgumentException) {
             throw InvalidJsonException(e.message!!)
-        }
-    }
-
-    fun setApplicationVerificationToPreVerifiedNow(verificationEntities: List<ApplicationVerificationEntity>) {
-        transaction {
-            verificationEntities.forEach {
-                ApplicationRepository.verifyApplicationVerification(
-                    it.accessKey,
-                    ApplicationVerificationExternalSource.VEREIN360,
-                )
-            }
         }
     }
 }

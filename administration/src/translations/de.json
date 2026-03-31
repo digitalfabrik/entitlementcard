@@ -330,7 +330,10 @@
     "cardCreationConfirmationFailureMessage": "Bestätigungsmail konnte nicht zugestellt werden",
     "multipleCardCreationConfirmationFailureMessage": "Bestätigungsmails konnten an folgende Adressen nicht zugestellt werden: {{recipients}}",
     "freinetDataSyncSuccessMessage": "Antrags- und Kartendaten wurden erfolgreich an Freinet gesendet.",
-    "freinetCardDataTransferSuccessMessage": "Kartendaten wurden erfolgreich an Freinet gesendet."
+    "freinetCardDataTransferSuccessMessage": "Kartendaten wurden erfolgreich an Freinet gesendet.",
+    "multipleFreinetCardDataTransferSuccessMessage": "{{count}} Kartendatensätze wurden erfolgreich an Freinet gesendet.",
+    "freinetCardDataTransferFailureMessage": "Kartendaten konnten nicht an Freinet gesendet werden.",
+    "multipleFreinetCardDataTransferFailureMessage": "Für folgende Freinet-User-IDs konnten keine Kartendaten gesendet werden: {{userIds}}"
   },
   "misc": {
     "openAppStore": "App Store öffnen",
@@ -728,6 +731,7 @@
     "freinetPersonDataInvalid": "Erforderliche Personendaten von Freinet sind nicht verfügbar. Die Kartendaten konnten deshalb nicht übertragen werden.",
     "freinetCardDataInvalid": "Die Kartendaten können nicht an Freinet übertragen werden, weil diese ungültig sind.",
     "freinetDataTransferNotPermitted": "Für diese Region ist keine Datenübermittlung erlaubt.",
+    "freinetTransferFailed": "Die Daten konnten nicht an Freinet übertragen werden.",
     "projectNotFound": "Dieses Projekt existiert nicht.",
     "storeAlreadyExists": "Diese Akzeptanzstelle existiert bereits.",
     "storeNotFound": "Diese Akzeptanzstelle existiert nicht mehr."

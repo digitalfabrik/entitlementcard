@@ -1,0 +1,6 @@
+Name,Ablaufdatum,Kartentyp,MailNotification,UserId
+Bärta Bäumeister,03.3.2027,Standard,test@test.de,1291360
+Rudi Dutschke,,gold,test@test.de,1276621
+Erika Muster,,Goldkarte,test@test.de,1294761
+Kein Freinet,,Goldkarte,test@test.de,99999999
+Kein Freinet,03.7.2027,Standard,test@test.de,11111111

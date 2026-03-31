@@ -27,6 +27,7 @@ import java.time.Instant
 @Controller
 class ResetPasswordMutationController(
     private val backendConfig: BackendConfiguration,
+    private val mailerService: Mailer,
 ) {
     @GraphQLDescription("Sends a mail that allows the administrator to reset their password.")
     @MutationMapping
@@ -50,7 +51,7 @@ class ResetPasswordMutationController(
             // We don't send error messages for empty collection to the user to avoid scraping of mail addresses
             if (user != null) {
                 val key = AdministratorsRepository.setNewPasswordResetKey(user)
-                Mailer.sendResetPasswordMail(backendConfig, projectConfig, key, email)
+                mailerService.sendResetPasswordMail(projectConfig, key, email)
             }
             if (user == null) {
                 // This logging is used for rate limiting

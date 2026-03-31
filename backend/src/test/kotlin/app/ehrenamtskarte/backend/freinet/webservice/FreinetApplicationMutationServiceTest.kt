@@ -61,7 +61,7 @@ internal class FreinetApplicationMutationServiceTest : IntegrationTest() {
         every { anyConstructed<FreinetApi>().updatePerson(any(), any(), any(), any(), any(), any()) } returns
             FreinetPersonCreationResultModel(true, defaultUpdatePersonResult)
 
-        every { anyConstructed<FreinetApi>().sendCardInformation(any(), any()) } returns Unit
+        every { anyConstructed<FreinetApi>().sendCardInformation(any()) } returns Unit
     }
 
     @Test
@@ -153,7 +153,7 @@ internal class FreinetApplicationMutationServiceTest : IntegrationTest() {
 
         verify { anyConstructed<FreinetApi>().searchPersons("John", "Doe", "1990-01-01") }
         verify { anyConstructed<FreinetApi>().createPerson("John", "Doe", "1990-01-01", any(), any()) }
-        verify { anyConstructed<FreinetApi>().sendCardInformation(12345, any()) }
+        verify { anyConstructed<FreinetApi>().sendCardInformation(match { it.userId == 12345 }) }
     }
 
     @Test
@@ -184,7 +184,7 @@ internal class FreinetApplicationMutationServiceTest : IntegrationTest() {
 
         verify { anyConstructed<FreinetApi>().searchPersons("John", "Doe", "1990-01-01") }
         verify { anyConstructed<FreinetApi>().updatePerson("John", "Doe", "1990-01-01", any(), any(), 1277076) }
-        verify { anyConstructed<FreinetApi>().sendCardInformation(1277076, any()) }
+        verify { anyConstructed<FreinetApi>().sendCardInformation(match { it.userId == 1277076 }) }
     }
 
     @Test
@@ -212,7 +212,7 @@ internal class FreinetApplicationMutationServiceTest : IntegrationTest() {
 
         verify { anyConstructed<FreinetApi>().searchPersons("John", "Doe", "1990-01-01") }
         verify(exactly = 0) { anyConstructed<FreinetApi>().createPerson(any(), any(), any(), any(), any()) }
-        verify(exactly = 0) { anyConstructed<FreinetApi>().sendCardInformation(any(), any()) }
+        verify(exactly = 0) { anyConstructed<FreinetApi>().sendCardInformation(any()) }
     }
 
     private fun createTestApplication(regionId: Int = regionAdminFreinet.regionId!!): Int {

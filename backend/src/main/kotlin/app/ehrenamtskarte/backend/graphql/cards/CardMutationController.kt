@@ -61,6 +61,7 @@ import kotlin.io.encoding.Base64
 @Controller
 class CardMutationController(
     private val backendConfiguration: BackendConfiguration,
+    private val mailerService: Mailer,
 ) {
     private val logger: Logger = LoggerFactory.getLogger(CardMutationController::class.java)
 
@@ -436,8 +437,7 @@ class CardMutationController(
 
         val failedRecipients = notifications.mapNotNull { notification ->
             try {
-                Mailer.sendCardCreationConfirmationMail(
-                    backendConfiguration,
+                mailerService.sendCardCreationConfirmationMail(
                     projectConfig,
                     notification.deepLink,
                     notification.recipientAddress,

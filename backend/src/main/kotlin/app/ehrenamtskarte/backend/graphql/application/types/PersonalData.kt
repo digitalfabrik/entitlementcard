@@ -22,6 +22,8 @@ data class PersonalData(
         }
     }
 
+    fun fullName(): String = "${forenames.shortText} ${surname.shortText}"
+
     override fun toJsonField(): JsonField =
         JsonField(
             "personalData",

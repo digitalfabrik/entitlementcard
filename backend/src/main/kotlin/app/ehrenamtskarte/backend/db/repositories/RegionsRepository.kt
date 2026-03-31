@@ -58,4 +58,10 @@ object RegionsRepository {
             .where(FreinetAgencies.agencyId eq freinetId and (Regions.projectId eq projectId))
             .singleOrNull()
             ?.let { RegionEntity.wrapRow(it) }
+
+    fun getApplicationConfirmationNote(regionId: Int): String? =
+        RegionEntity.findById(regionId)?.let { region ->
+            region.applicationConfirmationMailNote
+                ?.takeIf { region.applicationConfirmationMailNoteActivated && it.isNotEmpty() }
+        }
 }
