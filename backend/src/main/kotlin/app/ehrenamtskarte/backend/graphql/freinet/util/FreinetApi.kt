@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.graphql.freinet.util
 
+import app.ehrenamtskarte.backend.graphql.freinet.exceptions.FreinetTransferFailedException
 import app.ehrenamtskarte.backend.graphql.freinet.types.CARD_TYPE_GOLD
 import app.ehrenamtskarte.backend.graphql.freinet.types.CARD_TYPE_STANDARD
 import app.ehrenamtskarte.backend.graphql.freinet.types.FreinetAddress
@@ -54,7 +55,7 @@ class FreinetApi(
                 objectMapper.readTree(response.bodyAsText())
             } catch (e: Exception) {
                 logger.error("Freinet search person API error", e)
-                throw e
+                throw FreinetTransferFailedException()
             }
         }
 
@@ -147,7 +148,7 @@ class FreinetApi(
                 )
             } catch (e: Exception) {
                 logger.error("Error creating person in freinet", e)
-                throw e
+                throw FreinetTransferFailedException()
             }
         }
     }
@@ -191,7 +192,7 @@ class FreinetApi(
                 )
             } catch (e: Exception) {
                 logger.error("Error updating person in freinet", e)
-                throw e
+                throw FreinetTransferFailedException()
             }
         }
     }
@@ -224,7 +225,7 @@ class FreinetApi(
                 logger.devInfo("Successfully created card in freinet: ${response.bodyAsText()}")
             } catch (e: Exception) {
                 logger.error("Error creating card in freinet", e)
-                throw e
+                throw FreinetTransferFailedException()
             }
         }
     }
