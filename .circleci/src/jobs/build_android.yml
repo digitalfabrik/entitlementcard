@@ -12,6 +12,7 @@ environment:
 working_directory: ~/project/frontend
 steps:
   - prepare_workspace
+  - install_npm # Android image has a very old npm version that resolves packages differently
   - install_app_toolbelt
   - ruby/install:
         version: '3.1'

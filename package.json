@@ -11,7 +11,10 @@
   "overrides": {
     "@typescript-eslint/parser": "8.57.0",
     "eslint-plugin-react-hooks": "$eslint-plugin-react-hooks",
-    "eslint": "^9.39.4"
+    "eslint": "^9.39.4",
+    "eslint-plugin-jsx-expressions": {
+      "minimatch": "^9.0.5"
+    }
   },
   "devDependencies": {
     "@eslint/compat": "^2.0.3",
