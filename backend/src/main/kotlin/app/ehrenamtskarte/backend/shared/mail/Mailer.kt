@@ -301,31 +301,28 @@ class Mailer(
         applicantAddress: String,
         rejectionMessage: String,
     ) {
-        try {
-            sendMail(
-                backendConfig = backendConfig,
-                smtpConfig = projectConfig.smtp,
-                fromName = projectConfig.administrationName,
-                to = applicantAddress,
-                subject = "Ihr Antrag wurde abgelehnt",
-                message = emailBody {
-                    p { t("Sehr geehrte/r $applicantName,") }
-                    p {
-                        t(
-                            """
-                            vielen Dank für Ihren Antrag und Ihr Interesse an der Bayerischen Ehrenamtskarte. Wir danken 
-                            Ihnen für das Engagement und die Zeit, die Sie zum Wohle der Gemeinschaft einbringen. Ihr 
-                            Einsatz ist von großem Wert und verdient Anerkennung. In diesem Fall ist es leider nicht 
-                            möglich, dass Sie die Bayerische Ehrenamtskarte erhalten.                            
-                            """.trimIndent(),
-                        )
-                    }
-                    p { plain(rejectionMessage) }
-                    finalInformationParagraph(projectConfig)
-                },
-            )
-        } catch (_: MailNotSentException) {
-        }
+        sendMail(
+            backendConfig = backendConfig,
+            smtpConfig = projectConfig.smtp,
+            fromName = projectConfig.administrationName,
+            to = applicantAddress,
+            subject = "Ihr Antrag wurde abgelehnt",
+            message = emailBody {
+                p { t("Sehr geehrte/r $applicantName,") }
+                p {
+                    t(
+                        """
+                        vielen Dank für Ihren Antrag und Ihr Interesse an der Bayerischen Ehrenamtskarte. Wir danken 
+                        Ihnen für das Engagement und die Zeit, die Sie zum Wohle der Gemeinschaft einbringen. Ihr 
+                        Einsatz ist von großem Wert und verdient Anerkennung. In diesem Fall ist es leider nicht 
+                        möglich, dass Sie die Bayerische Ehrenamtskarte erhalten.                            
+                        """.trimIndent(),
+                    )
+                }
+                p { plain(rejectionMessage) }
+                finalInformationParagraph(projectConfig)
+            },
+        )
     }
 }
 

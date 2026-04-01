@@ -22,6 +22,7 @@ import app.ehrenamtskarte.backend.graphql.exceptions.InvalidApplicationStatusExc
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidInputException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidLinkException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidNoteSizeException
+import app.ehrenamtskarte.backend.graphql.exceptions.MailNotSentException
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import app.ehrenamtskarte.backend.shared.mail.Mailer
 import app.ehrenamtskarte.backend.shared.mail.collectMailErrors
@@ -222,7 +223,7 @@ class EakApplicationMutationController(
         @Argument applicationId: Int,
         @Argument rejectionMessage: String,
         dfe: DataFetchingEnvironment,
-    ): ApplicationAdminGql {
+    ): DataFetcherResult<ApplicationAdminGql> {
         val authContext = dfe.requireAuthContext()
 
         return transaction {
@@ -236,14 +237,18 @@ class EakApplicationMutationController(
             application.changeStatusOrThrow(Status.Rejected)
             application.rejectionMessage = rejectionMessage
 
-            mailService.sendApplicationRejectedMail(
-                backendConfiguration.getProjectConfig(authContext.project),
-                application.getApplicantName(),
-                application.getApplicantEmail(),
-                rejectionMessage,
-            )
-
-            ApplicationAdminGql.fromDbEntity(application)
+            val resultBuilder = DataFetcherResult.newResult<ApplicationAdminGql>()
+            try {
+                mailService.sendApplicationRejectedMail(
+                    backendConfiguration.getProjectConfig(authContext.project),
+                    application.getApplicantName(),
+                    application.getApplicantEmail(),
+                    rejectionMessage,
+                )
+            } catch (e: MailNotSentException) {
+                resultBuilder.error(e.toGraphQLError())
+            }
+            resultBuilder.data(ApplicationAdminGql.fromDbEntity(application)).build()
         }
     }
 

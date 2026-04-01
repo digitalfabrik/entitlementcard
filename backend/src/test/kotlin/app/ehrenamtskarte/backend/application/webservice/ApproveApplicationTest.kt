@@ -75,10 +75,7 @@ internal class ApproveApplicationTest : IntegrationTest() {
         val response = postGraphQL(mutation)
 
         assertEquals(HttpStatus.OK, response.statusCode)
-
-        val error = response.toErrorObject()
-
-        assertEquals(GraphQLExceptionCode.UNAUTHORIZED, error.extensions.code)
+        assertEquals(GraphQLExceptionCode.UNAUTHORIZED, response.toErrorObject().extensions.code)
     }
 
     @Test
@@ -89,10 +86,7 @@ internal class ApproveApplicationTest : IntegrationTest() {
         val response = postGraphQL(mutation, regionAdmin.getJwtToken())
 
         assertEquals(HttpStatus.OK, response.statusCode)
-
-        val error = response.toErrorObject()
-
-        assertEquals(GraphQLExceptionCode.FORBIDDEN, error.extensions.code)
+        assertEquals(GraphQLExceptionCode.FORBIDDEN, response.toErrorObject().extensions.code)
     }
 
     @ParameterizedTest
