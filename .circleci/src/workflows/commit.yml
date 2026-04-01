@@ -8,4 +8,3 @@ jobs:
   # Commented out, because we test gh actions ./github/workflows/check-administration
   #  - check_administration
   - check_frontend
-  - pack_martin
