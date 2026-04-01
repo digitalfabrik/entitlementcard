@@ -75,7 +75,7 @@ internal class RejectApplicationTest : IntegrationTest() {
     }
 
     @Test
-    fun `should return a successful response when the application has been rejected but email failed`() {
+    fun `should return a partially successful response when the application has been rejected but email failed`() {
         // Configure the mailer mock to throw an exception
         doThrow(MailNotSentException("test@test.de")).`when`(mailer).sendApplicationRejectedMail(
             any(),
