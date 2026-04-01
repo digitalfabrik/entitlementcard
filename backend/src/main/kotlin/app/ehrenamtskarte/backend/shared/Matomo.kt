@@ -20,6 +20,20 @@ import java.io.IOException
 import java.net.URI
 import java.util.concurrent.ExecutionException
 
+enum class MatomoEventCategory(val value: String) {
+    ACTIVATION("activation"),
+    DYNAMIC(CodeType.DYNAMIC.name),
+    STATIC(CodeType.STATIC.name),
+}
+
+enum class MatomoEventName(val value: String) {
+    ACTIVATION_FAILED("activation failed"),
+    ACTIVATION_SUCCESSFUL("activation successful"),
+    CARD_CREATION_SUCCESSFUL("card creation successful"),
+    VERIFICATION_FAILED("verification failed"),
+    VERIFICATION_SUCCESSFUL("verification successful"),
+}
+
 object Matomo {
     private val logger = LoggerFactory.getLogger(Matomo::class.java)
     private var tracker: MatomoTracker? = null
@@ -111,7 +125,8 @@ object Matomo {
     ): MatomoRequest.MatomoRequestBuilder =
         MatomoRequest.request()
             .eventAction(query)
-            .eventCategory(codeType.toString())
+            .eventCategory(MatomoEventCategory.valueOf(codeType.name).value)
+            .eventName(MatomoEventName.CARD_CREATION_SUCCESSFUL.value)
             .eventValue(numberOfCards.toDouble())
             .dimensions(mapOf(1L to regionId))
             .also { attachRequestInformation(it, request) }
@@ -179,8 +194,14 @@ object Matomo {
             projectConfig.matomo,
             MatomoRequest.request()
                 .eventAction(query)
-                .eventCategory(codeType.toString())
-                .eventName(if (successful) "verification successful" else "verification failed")
+                .eventCategory(MatomoEventCategory.valueOf(codeType.name).value)
+                .eventName(
+                    if (successful) {
+                        MatomoEventName.VERIFICATION_SUCCESSFUL.value
+                    } else {
+                        MatomoEventName.VERIFICATION_FAILED.value
+                    },
+                )
                 .dimensions(if (card != null) mapOf(1L to card.regionId) else emptyMap())
                 .also { attachRequestInformation(it, request) },
         )
@@ -201,6 +222,14 @@ object Matomo {
             projectConfig.matomo,
             MatomoRequest.request()
                 .eventAction(query)
+                .eventCategory(MatomoEventCategory.ACTIVATION.value)
+                .eventName(
+                    if (successful) {
+                        MatomoEventName.ACTIVATION_SUCCESSFUL.value
+                    } else {
+                        MatomoEventName.ACTIVATION_FAILED.value
+                    },
+                )
                 .eventValue(if (successful) 1.0 else 0.0)
                 .dimensions(if (card != null) mapOf(1L to card.regionId) else emptyMap())
                 .also { attachRequestInformation(it, request) },
