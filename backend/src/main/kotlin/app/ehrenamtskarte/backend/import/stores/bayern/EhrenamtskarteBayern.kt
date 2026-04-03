@@ -12,6 +12,7 @@ import app.ehrenamtskarte.backend.import.stores.common.steps.FilterDuplicates
 import app.ehrenamtskarte.backend.import.stores.common.steps.SanitizeAddress
 import app.ehrenamtskarte.backend.import.stores.common.steps.SanitizeGeocode
 import app.ehrenamtskarte.backend.import.stores.common.steps.Store
+import app.ehrenamtskarte.backend.import.stores.common.steps.StoreImportResultCsvOutput
 import app.ehrenamtskarte.backend.import.stores.pipelines.Pipeline
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpRequestRetry
@@ -54,6 +55,9 @@ object EhrenamtskarteBayern : Pipeline {
             }
             .addStep(Store(config, logger), logger) {
                 logger.info("== Store remaining data to db ==")
+            }
+            .addStep(StoreImportResultCsvOutput(config), logger) {
+                logger.info("== Write CSV Import Result ==")
             }
     }
 }
