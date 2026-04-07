@@ -25,15 +25,14 @@ const NotificationSettings = (): ReactElement => {
     query: GetNotificationSettingsDocument,
   })
 
-  useEffect(() => {
-    const result = getQueryResult(notificationSettingsState, notificationSettingsQuery)
+  const reset = () => {
+    const state = notificationSettingsState.data?.notificationSettings
 
-    if (result.successful) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setReceiveEmailForActivation(result.data.notificationSettings.notificationOnApplication)
-      setReceiveEmailForVerification(result.data.notificationSettings.notificationOnVerification)
+    if (state) {
+      setReceiveEmailForActivation(state.notificationOnApplication)
+      setReceiveEmailForVerification(state.notificationOnVerification)
     }
-  }, [notificationSettingsState, notificationSettingsQuery])
+  }
 
   const submit = async () => {
     const result = await updateNotificationSettingsMutation({
@@ -46,19 +45,27 @@ const NotificationSettings = (): ReactElement => {
     if (result.error) {
       const { title } = messageFromGraphQlError(result.error)
       enqueueSnackbar(title, { variant: 'error' })
+      reset()
     } else {
       enqueueSnackbar(t('notificationUpdateSuccess'), { variant: 'success' })
     }
   }
+
+  useEffect(() => {
+    reset()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [notificationSettingsState])
 
   const notificationQueryResult = getQueryResult(
     notificationSettingsState,
     notificationSettingsQuery,
   )
 
-  return !notificationQueryResult.successful ? (
-    notificationQueryResult.component
-  ) : (
+  if (!notificationQueryResult.successful) {
+    return notificationQueryResult.component
+  }
+
+  return (
     <SettingsCard title={t('notifications')}>
       <Typography component='p'>{t('notificationsExplanation')}</Typography>
       <form
