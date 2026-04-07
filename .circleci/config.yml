@@ -146,6 +146,12 @@ commands:
                 paths:
                     - ~/.npm
                 when: on_success
+    install_npm:
+        steps:
+            - run:
+                command: npm install -g npm@11.8.0
+                name: Install npm@11.8.0
+                working_directory: ~/project
     install_pods:
         description: Restores and saves the cocoa pods cache.
         steps:
@@ -272,6 +278,7 @@ jobs:
         resource_class: large
         steps:
             - prepare_workspace
+            - install_npm
             - install_app_toolbelt
             - ruby/install:
                 version: "3.1"
@@ -538,6 +545,7 @@ jobs:
         resource_class: small
         steps:
             - prepare_workspace
+            - install_npm
             - install_app_toolbelt
             - ruby/install:
                 version: "3.1"
@@ -791,6 +799,7 @@ jobs:
         resource_class: small
         steps:
             - prepare_workspace
+            - install_npm
             - install_app_toolbelt
             - ruby/install:
                 version: "3.1"
