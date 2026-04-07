@@ -1,6 +1,4 @@
 // ignore_for_file: prefer_single_quotes
-library build_config;
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
