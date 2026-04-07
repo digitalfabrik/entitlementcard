@@ -6,8 +6,8 @@ description: App for entitlementcard holders and verifiers.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 environment:
-  sdk: 3.9.2
-  flutter: 3.35.7
+  sdk: 3.10.9
+  flutter: 3.38.10
 
 dependencies:
   flutter:
@@ -42,8 +42,8 @@ dependencies:
   sentry_flutter: ^9.16.0
   carousel_slider: ^5.1.2
   slang: ^4.14.0
-  slang_flutter: ^4.12.1
-  flutter_html: ^3.0.0-beta.2
+  slang_flutter: ^4.14.0
+  flutter_html: ^3.0.0
   timezone: ^0.10.1
   clock: ^1.1.1
 
@@ -57,16 +57,16 @@ dependencies:
   go_router: ^15.1.2
 
 dev_dependencies:
-  build_runner: ^2.4.13
+  build_runner: ^2.12.1
   # We can use the version from pub.dev once the following PR is merged:
   # https://github.com/pikaju/dart-protoc-builder/pull/21
   # For now, we pin the version of the mentioned PR:
-  protoc_builder:
+  protofu:
     git:
-      url: https://github.com/fischerscode/dart-protoc-builder.git
-      ref: fb036776680fb11ac01300915663b72d42213a4b
+      url: https://github.com/digitalfabrik/protofu.git
+      ref: adapt-for-build-runner
   protoc_plugin: ^21.1.2
-  slang_build_runner: ^4.12.1
+  slang_build_runner: ^4.14.0
   df_build_config:
     path: ./pubs/df_build_config
   flutter_test:
@@ -75,7 +75,7 @@ dev_dependencies:
   test: '>=1.0.0'
   mocktail: ^1.0.4
 
-  graphql_codegen: ^1.2.4
+  graphql_codegen: ^3.0.1
   gql: ^1.0.0+1
 
 
