@@ -12,6 +12,7 @@ environment:
 working_directory: ~/project/frontend
 steps:
   - prepare_workspace
+  - install_npm
   - install_app_toolbelt
   - ruby/install:
         version: '3.1'
