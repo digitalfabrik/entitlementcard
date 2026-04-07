@@ -2,13 +2,13 @@ import { Box, Stack } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Temporal } from 'temporal-polyfill'
 
 import RenderGuard from '../../../components/RenderGuard'
 import { CardStatisticsResultModel, Role } from '../../../graphql'
 import { ProjectConfigContext } from '../../../provider/ProjectConfigContext'
 import { WhoAmIContextType } from '../../../provider/WhoAmIProvider'
 import downloadDataUri from '../../../util/downloadDataUri'
+import { type StatisticsRange } from '../constants'
 import { csvFileName, generateCsv } from '../utils/csvStatistics'
 import StatisticsBarChart from './StatisticsBarChart'
 import StatisticsFilterBar from './StatisticsFilterBar'
@@ -16,12 +16,14 @@ import StatisticsLegend from './StatisticsLegend'
 import StatisticsTotalCardsCount from './StatisticsTotalCardsCount'
 
 const StatisticsOverview = ({
+  dateRange,
   statistics,
   onApplyFilter,
   region,
 }: {
+  dateRange: StatisticsRange
   statistics: readonly CardStatisticsResultModel[]
-  onApplyFilter: (dateStart: Temporal.PlainDate, dateEnd: Temporal.PlainDate) => void
+  onApplyFilter: (range: StatisticsRange) => void
   region?: NonNullable<NonNullable<WhoAmIContextType['me']>['region']>
 }): ReactElement => {
   const { enqueueSnackbar } = useSnackbar()
@@ -59,12 +61,13 @@ const StatisticsOverview = ({
       </Stack>
 
       <StatisticsFilterBar
+        dateRange={dateRange}
         onApplyFilter={onApplyFilter}
-        onExportCsv={(dateStart: Temporal.PlainDate, dateEnd: Temporal.PlainDate) => {
+        onExportCsv={range => {
           try {
             downloadDataUri(
               generateCsv(statistics, cardStatistics),
-              csvFileName(dateStart, dateEnd, region),
+              csvFileName(range.start, range.end, region),
             )
           } catch {
             enqueueSnackbar(t('exportCsvNotPossible'), { variant: 'error' })

@@ -2,13 +2,13 @@ import { FilterAlt, SaveAlt } from '@mui/icons-material'
 import type { FormControlLabelProps } from '@mui/material'
 import { Button, FormControlLabel, Stack, Tooltip, styled } from '@mui/material'
 import { grey } from '@mui/material/colors'
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Temporal } from 'temporal-polyfill'
 
 import type { CustomDatePickerTextFieldProps } from '../../../components/CustomDatePicker'
 import CustomDatePicker from '../../../components/CustomDatePicker'
-import { defaultEndDate, defaultStartDate } from '../constants'
+import { type StatisticsRange } from '../constants'
 
 const InputContainer = styled('div')`
   flex-direction: row;
@@ -39,17 +39,26 @@ const datePickerTextFieldProps: CustomDatePickerTextFieldProps = {
 }
 
 const StatisticsFilterBar = ({
+  dateRange,
   isDataAvailable,
   onApplyFilter,
   onExportCsv,
 }: {
+  dateRange: StatisticsRange
   isDataAvailable: boolean
-  onApplyFilter: (dateStart: Temporal.PlainDate, dateEnd: Temporal.PlainDate) => void
-  onExportCsv: (dateStart: Temporal.PlainDate, dateEnd: Temporal.PlainDate) => void
+  onApplyFilter: (range: StatisticsRange) => void
+  onExportCsv: (range: StatisticsRange) => void
 }): ReactElement => {
   const { t } = useTranslation('statistics')
-  const [dateStart, setDateStart] = useState<Temporal.PlainDate | null>(defaultStartDate)
-  const [dateEnd, setDateEnd] = useState<Temporal.PlainDate | null>(defaultEndDate)
+  const [prevDateRange, setPrevDateRange] = useState<StatisticsRange>(dateRange)
+  const [dateStart, setDateStart] = useState<Temporal.PlainDate | null>(dateRange.start)
+  const [dateEnd, setDateEnd] = useState<Temporal.PlainDate | null>(dateRange.end)
+
+  if (dateRange !== prevDateRange) {
+    setPrevDateRange(dateRange)
+    setDateStart(dateRange.start)
+    setDateEnd(dateRange.end)
+  }
 
   return (
     <Stack
@@ -106,7 +115,7 @@ const StatisticsFilterBar = ({
               startIcon={<FilterAlt />}
               onClick={() => {
                 if (dateStart !== null && dateEnd !== null) {
-                  onApplyFilter(dateStart, dateEnd)
+                  onApplyFilter({ start: dateStart, end: dateEnd })
                 }
               }}
               disabled={!isValidDateTimePeriod(dateStart, dateEnd)}
@@ -123,7 +132,7 @@ const StatisticsFilterBar = ({
             startIcon={<SaveAlt />}
             onClick={() => {
               if (dateStart !== null && dateEnd !== null) {
-                onExportCsv(dateStart, dateEnd)
+                onExportCsv({ start: dateStart, end: dateEnd })
               }
             }}
             disabled={!isDataAvailable}

@@ -3,7 +3,7 @@ import React from 'react'
 import { Intl } from 'temporal-polyfill'
 
 import { CustomRenderOptions, renderWithOptions } from '../../../testing/render'
-import { defaultEndDate, defaultStartDate } from '../constants'
+import { defaultStatisticsRange } from '../constants'
 import StatisticsFilterBar from './StatisticsFilterBar'
 
 jest.useFakeTimers()
@@ -21,6 +21,7 @@ describe('StatisticFilterBar', () => {
   it('should execute onApplyFilter if filter button was clicked', async () => {
     const { getByText } = renderWithOptions(
       <StatisticsFilterBar
+        dateRange={defaultStatisticsRange}
         onApplyFilter={onApplyFilter}
         isDataAvailable
         onExportCsv={onExportCsv}
@@ -36,6 +37,7 @@ describe('StatisticFilterBar', () => {
   it('should disable filter button if start date is after end date', async () => {
     const { getByText, getByDisplayValue } = renderWithOptions(
       <StatisticsFilterBar
+        dateRange={defaultStatisticsRange}
         onApplyFilter={onApplyFilter}
         isDataAvailable
         onExportCsv={onExportCsv}
@@ -43,8 +45,8 @@ describe('StatisticFilterBar', () => {
       mockProvider,
     )
     const applyFilterButton = getByText('Filter anwenden')
-    const startInput = getByDisplayValue(dateFormatter.format(defaultStartDate))
-    const endInput = getByDisplayValue(dateFormatter.format(defaultEndDate))
+    const startInput = getByDisplayValue(dateFormatter.format(defaultStatisticsRange.start))
+    const endInput = getByDisplayValue(dateFormatter.format(defaultStatisticsRange.end))
 
     fireEvent.change(startInput, {
       target: {
@@ -63,6 +65,7 @@ describe('StatisticFilterBar', () => {
   it('should disable filter button if input is not a correct date string', () => {
     const { getByText, getByDisplayValue } = renderWithOptions(
       <StatisticsFilterBar
+        dateRange={defaultStatisticsRange}
         onApplyFilter={onApplyFilter}
         isDataAvailable
         onExportCsv={onExportCsv}
@@ -71,7 +74,7 @@ describe('StatisticFilterBar', () => {
     )
 
     const applyFilterButton = getByText('Filter anwenden')
-    const startInput = getByDisplayValue(dateFormatter.format(defaultStartDate))
+    const startInput = getByDisplayValue(dateFormatter.format(defaultStatisticsRange.start))
 
     fireEvent.change(startInput, {
       target: {
@@ -84,6 +87,7 @@ describe('StatisticFilterBar', () => {
   it('should display a proper tooltip message if filter button is disabled and filtering should not be applied', async () => {
     const { getByText, getByDisplayValue } = renderWithOptions(
       <StatisticsFilterBar
+        dateRange={defaultStatisticsRange}
         onApplyFilter={onApplyFilter}
         isDataAvailable
         onExportCsv={onExportCsv}
@@ -91,7 +95,7 @@ describe('StatisticFilterBar', () => {
       mockProvider,
     )
     const applyFilterButton = getByText('Filter anwenden')
-    const startInput = getByDisplayValue(dateFormatter.format(defaultStartDate))
+    const startInput = getByDisplayValue(dateFormatter.format(defaultStatisticsRange.start))
 
     fireEvent.change(startInput, {
       target: {
@@ -116,6 +120,7 @@ describe('StatisticFilterBar', () => {
   it('should execute onExportCsv if csv export button was clicked', async () => {
     const { getByText } = renderWithOptions(
       <StatisticsFilterBar
+        dateRange={defaultStatisticsRange}
         onApplyFilter={onApplyFilter}
         isDataAvailable
         onExportCsv={onExportCsv}
@@ -131,6 +136,7 @@ describe('StatisticFilterBar', () => {
   it('should disable csv export button if no data is available and show tooltip', async () => {
     const { getByText } = renderWithOptions(
       <StatisticsFilterBar
+        dateRange={defaultStatisticsRange}
         onApplyFilter={onApplyFilter}
         isDataAvailable={false}
         onExportCsv={onExportCsv}
