@@ -36,7 +36,7 @@ services:
       start_period: 10s
       start_interval: 1s
   reverse_proxy:
-    image: "nginx:1.29.7"
+    image: "nginx:1.29.8"
     ports:
       - 127.0.0.1:5002:80
     volumes:
