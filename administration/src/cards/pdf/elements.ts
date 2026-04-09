@@ -36,11 +36,8 @@ export const pdfFormElement = (
       width: mmToPt(formElementProps.width),
       font,
     })
-    formField.enableCombing()
     formField.setFontSize(formElementProps.fontSize)
   })
-
-  // form.flatten()
 }
 
 export const pdfLinkArea = (
