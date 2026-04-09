@@ -10,7 +10,6 @@ local.properties
 src/main/resources/config/config.local.yml
 
 src/main/resources/freinet_url.txt
-src/main/resources/import/filtered_stores.csv
-src/main/resources/import/import_result.csv
+logs/
 
 rejectedStores.json

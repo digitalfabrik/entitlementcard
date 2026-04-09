@@ -17,6 +17,8 @@ import app.ehrenamtskarte.backend.import.stores.pipelines.Pipeline
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpRequestRetry
 import org.slf4j.Logger
+import java.nio.file.Files
+import java.nio.file.Paths
 
 object EhrenamtskarteBayern : Pipeline {
     private val httpClient = HttpClient {
@@ -28,6 +30,11 @@ object EhrenamtskarteBayern : Pipeline {
     }
 
     override fun import(config: ImportConfig, logger: Logger, filteredStores: MutableList<FilteredStore>) {
+        // Create log folder if needed
+        listOfNotNull(config.project.filteredStoresOutput, config.project.importLogFilePath)
+            .mapNotNull { Paths.get(it).parent }
+            .forEach { Files.createDirectories(it) }
+
         Unit
             .addStep(DownloadLbe(config, logger, httpClient), logger) {
                 logger.info("== Download lbe data ==")

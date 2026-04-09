@@ -35,7 +35,7 @@ data class ProjectConfig(
     val matomo: MatomoConfig?,
     val freinet: FreinetConfig?,
     val filteredStoresOutput: String?,
-    val importResultOutput: String?,
+    val importLogFilePath: String?,
 )
 
 data class ServerConfig(val dataDirectory: String, val host: String, val port: String)

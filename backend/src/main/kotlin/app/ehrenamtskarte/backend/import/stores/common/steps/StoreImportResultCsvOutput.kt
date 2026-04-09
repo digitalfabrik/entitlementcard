@@ -11,8 +11,10 @@ import java.time.LocalDate
 
 class StoreImportResultCsvOutput(config: ImportConfig) :
     PipelineStep<StoreImportReturnResultModel, StoreImportReturnResultModel>(config) {
+    private val logger = LoggerFactory.getLogger(StoreImportResultCsvOutput::class.java)
+
     override fun execute(input: StoreImportReturnResultModel): StoreImportReturnResultModel {
-        val outputPath = config.project.importResultOutput
+        val outputPath = config.project.importLogFilePath
         if (!outputPath.isNullOrBlank()) {
             writeCsvWithImportResult(outputPath, input)
         }
@@ -20,17 +22,17 @@ class StoreImportResultCsvOutput(config: ImportConfig) :
     }
 
     private fun writeCsvWithImportResult(outputPath: String, result: StoreImportReturnResultModel) {
-        val logger = LoggerFactory.getLogger(StoreImportResultCsvOutput::class.java)
         try {
-            val fileExists = Files.exists(Paths.get(outputPath))
+            val path = Paths.get(outputPath)
+            val isNewFile = !Files.exists(path)
             Files.newBufferedWriter(
-                Paths.get(outputPath),
+                path,
                 java.nio.file.StandardOpenOption.CREATE,
                 java.nio.file.StandardOpenOption.APPEND,
             ).use { writer ->
-                val format = CSVFormat.RFC4180.builder()
+                CSVFormat.RFC4180.builder()
                     .apply {
-                        if (!fileExists) {
+                        if (isNewFile) {
                             setHeader(
                                 "Date",
                                 "StoresTotal",
@@ -40,16 +42,15 @@ class StoreImportResultCsvOutput(config: ImportConfig) :
                             )
                         }
                     }
-                    .get()
-                format.print(writer).use { printer ->
-                    printer.printRecord(
-                        LocalDate.now(config.project.timezone),
-                        result.storesCreated + result.storesUntouched,
-                        result.storesCreated,
-                        result.storesDeleted,
-                        result.storesUntouched,
-                    )
-                }
+                    .get().print(writer).use { printer ->
+                        printer.printRecord(
+                            LocalDate.now(config.project.timezone),
+                            result.storesCreated + result.storesUntouched,
+                            result.storesCreated,
+                            result.storesDeleted,
+                            result.storesUntouched,
+                        )
+                    }
             }
         } catch (e: Exception) {
             logger.error("Error writing import result CSV:", e)

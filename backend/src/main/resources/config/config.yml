@@ -22,7 +22,7 @@ projects:
   - id: bayern.ehrenamtskarte.app
     importUrl: https://www.ehrenamt.bayern.de/xml-json/app-daten.xml
     filteredStoresOutput: /var/archive-data/filtered_stores.csv
-    importResultOutput: /var/archive-data/import_result.csv
+    importLogFilePath: /var/archive-data/import_result.csv
     pipelineName: EhrenamtskarteBayern
     administrationBaseUrl: https://bayern.ehrenamtskarte.app
     administrationName: Ehrenamtskarte-Bayern-Verwaltung
