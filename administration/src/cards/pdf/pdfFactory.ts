@@ -49,6 +49,7 @@ export class PdfError extends Error {
 
 const fillContentAreas = async (
   page: PDFPage,
+  pageIndex: number,
   code: CreateCardsResult,
   card: Card,
   pdfConfig: PdfConfig,
@@ -97,7 +98,7 @@ const fillContentAreas = async (
   pdfConfig.elements?.form?.forEach(configOptions =>
     pdfFormElement(
       page,
-      configOptions.infoToFormFields(page.doc.getForm(), page.doc.getPageCount(), {
+      configOptions.infoToFormFields(page.doc.getForm(), pageIndex, {
         info: dynamicCode.value.info!,
         region,
         card,
@@ -155,6 +156,7 @@ export const generatePdf = async (
     for (let index = 0; index < codes.length; index++) {
       await fillContentAreas(
         templatePages[index],
+        index,
         codes[index],
         cards[index],
         projectConfig.pdf,
