@@ -1089,8 +1089,8 @@ packages:
     description:
       path: "."
       ref: adapt-for-build-runner
-      resolved-ref: "1e2971bbc0120b730d10fb9498eed013e581ebbf"
-      url: "https://github.com/digitalfabrik/protofu.git"
+      resolved-ref: "9b44f7b4724072a8f151dee8b9468a2b40a90923"
+      url: "https://github.com/digitalfabrik/protofu_builder.git"
     source: git
     version: "1.2.1"
   provider:
