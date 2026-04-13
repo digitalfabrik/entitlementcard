@@ -22,13 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
-import java.io.BufferedReader
-import java.io.InputStreamReader
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
-
-private val requiredUserImportColumns = setOf("regionKey", "userHash", "startDate", "endDate", "revoked")
 
 @RestController
 @RequestMapping("/users/import")
@@ -66,63 +62,50 @@ class UserImportController(
             throw UserImportException("User import is not enabled for this project")
         }
 
-        BufferedReader(InputStreamReader(file.inputStream)).use { reader ->
-            getCSVParser(reader).use { csvParser ->
-                if (!csvParser.headerNames.containsAll(requiredUserImportColumns)) {
-                    throw UserImportException(
-                        "Missing required columns: ${requiredUserImportColumns - csvParser.headerNames.toSet()}",
-                    )
-                }
-                transaction {
-                    val regionsByProject = RegionsRepository.findAllInProject(project.project)
+        parseCsvFile(file) { csvParser ->
+            if (!csvParser.headerNames.containsAll(requiredUserImportColumns)) {
+                throw UserImportException(
+                    "Missing required columns: ${requiredUserImportColumns - csvParser.headerNames.toSet()}",
+                )
+            }
 
-                    for (entry in csvParser) {
-                        if (entry.toMap().size != csvParser.headerMap.size) {
-                            throw UserImportException(entry.recordNumber, "Missing data")
-                        }
+            transaction {
+                val regionsByProject = RegionsRepository.findAllInProject(project.project)
 
-                        val region = regionsByProject.singleOrNull { it.regionIdentifier == entry.get("regionKey") }
-                            ?: throw UserImportException(
-                                entry.recordNumber,
-                                "Specified region not found for the current project",
-                            )
-
-                        val userHash = entry.get("userHash")
-                        if (!Argon2IdHasher.isValidUserHash(userHash)) {
-                            throw UserImportException(entry.recordNumber, "Failed to validate userHash")
-                        }
-
-                        val startDate = parseDate(entry.get("startDate"), entry.recordNumber)
-                        val endDate = parseDate(entry.get("endDate"), entry.recordNumber)
-                        if (startDate.isAfter(endDate)) {
-                            throw UserImportException(
-                                entry.recordNumber,
-                                "Start date cannot be after end date",
-                            )
-                        }
-
-                        val revoked = parseRevoked(entry.get("revoked"), entry.recordNumber)
-
-                        upsertUserEntitlement(userHash, startDate, endDate, revoked, region.id.value)
+                for (entry in csvParser) {
+                    if (entry.toMap().size != csvParser.headerMap.size) {
+                        throw UserImportException(entry.recordNumber, "Missing data")
                     }
+
+                    val region = regionsByProject.singleOrNull { it.regionIdentifier == entry.get("regionKey") }
+                        ?: throw UserImportException(
+                            entry.recordNumber,
+                            "Specified region not found for the current project",
+                        )
+
+                    val userHash = entry.get("userHash")
+                    if (!Argon2IdHasher.isValidUserHash(userHash)) {
+                        throw UserImportException(entry.recordNumber, "Failed to validate userHash")
+                    }
+
+                    val startDate = parseDate(entry.get("startDate"), entry.recordNumber)
+                    val endDate = parseDate(entry.get("endDate"), entry.recordNumber)
+                    if (startDate.isAfter(endDate)) {
+                        throw UserImportException(
+                            entry.recordNumber,
+                            "Start date cannot be after end date",
+                        )
+                    }
+
+                    val revoked = parseRevoked(entry.get("revoked"), entry.recordNumber)
+
+                    upsertUserEntitlement(userHash, startDate, endDate, revoked, region.id.value)
                 }
             }
         }
 
         return ResponseEntity.ok(mapOf("message" to "Import successfully completed"))
     }
-
-    private fun getCSVParser(reader: BufferedReader): CSVParser =
-        CSVParser.builder().apply {
-            this.reader = reader
-            this.setFormat(
-                CSVFormat.DEFAULT.builder()
-                    .setHeader()
-                    .setTrim(true)
-                    .setSkipHeaderRecord(true)
-                    .get(),
-            )
-        }.get()
 
     private fun parseDate(dateString: String, lineNumber: Long): LocalDate {
         try {
@@ -169,3 +152,19 @@ class UserImportController(
         }
     }
 }
+
+private val requiredUserImportColumns = setOf("regionKey", "userHash", "startDate", "endDate", "revoked")
+
+private fun parseCsvFile(file: MultipartFile, fn: (CSVParser) -> Unit) =
+    file.inputStream.reader().buffered().use { reader ->
+        CSVParser.builder().apply {
+            this.reader = reader
+            this.setFormat(
+                CSVFormat.DEFAULT.builder()
+                    .setHeader()
+                    .setTrim(true)
+                    .setSkipHeaderRecord(true)
+                    .get(),
+            )
+        }.get().use { fn(it) }
+    }
