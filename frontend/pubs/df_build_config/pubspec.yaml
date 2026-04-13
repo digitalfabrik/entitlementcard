@@ -3,10 +3,10 @@ description: Adds compatability for build configs
 version: 0.0.1
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
-  build: ^2.5.4
+  build: ^4.0.0
   test: '>=1.0.0'
   logging: ^1.3.0
   lint: ^2.8.0
