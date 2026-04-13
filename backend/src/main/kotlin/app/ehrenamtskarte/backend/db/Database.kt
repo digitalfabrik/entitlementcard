@@ -17,6 +17,7 @@ import org.jetbrains.exposed.v1.core.statements.StatementType
 import org.jetbrains.exposed.v1.jdbc.Database.Companion.connect
 import org.jetbrains.exposed.v1.jdbc.transactions.TransactionManager
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import org.postgresql.ds.PGSimpleDataSource
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
@@ -70,13 +71,15 @@ object Database {
         log: Boolean = true,
     ): org.jetbrains.exposed.v1.jdbc.Database =
         connect(
-            config.postgres.url,
-            driver = "org.postgresql.Driver",
-            user = config.postgres.user,
-            password = config.postgres.password,
+            datasource = PGSimpleDataSource().apply {
+                setUrl(config.postgres.url)
+                user = config.postgres.user
+                password = config.postgres.password
+                setProperty("reWriteBatchedInserts", "true")
+            },
             setupConnection = {
                 // Set session time zone to UTC, to make timestamps work properly in every configuration.
-                // Note(michael-markl): I believe this is postgres specific syntax.
+                // Note(michael-markl): I believe this is Postgres specific syntax.
                 it.prepareStatement("SET TIME ZONE 'UTC';").executeUpdate()
             },
             databaseConfig = DatabaseConfig.invoke {
