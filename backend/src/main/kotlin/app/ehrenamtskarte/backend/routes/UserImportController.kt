@@ -6,6 +6,7 @@ import app.ehrenamtskarte.backend.db.entities.ProjectEntity
 import app.ehrenamtskarte.backend.db.entities.Projects
 import app.ehrenamtskarte.backend.db.repositories.CardRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
+import app.ehrenamtskarte.backend.db.repositories.UserEntitlementImportEntry
 import app.ehrenamtskarte.backend.db.repositories.UserEntitlementsRepository
 import app.ehrenamtskarte.backend.routes.exception.UserImportException
 import app.ehrenamtskarte.backend.shared.TokenAuthenticator
@@ -96,38 +97,36 @@ class UserImportController(
     }
 
     private fun importData(csvParser: CSVParser, project: String) {
-        transaction {
-            val regionsByProject = RegionsRepository.findAllInProject(project)
+        val regionsByProject = transaction { RegionsRepository.findAllInProject(project) }
 
-            for (entry in csvParser) {
-                if (entry.toMap().size != csvParser.headerMap.size) {
-                    throw UserImportException(entry.recordNumber, "Missing data")
-                }
-
-                val region = regionsByProject.singleOrNull { it.regionIdentifier == entry.get("regionKey") }
+        // Validate and collect all rows before touching the database
+        val entries = csvParser.map { entry ->
+            if (entry.toMap().size != csvParser.headerMap.size) {
+                throw UserImportException(entry.recordNumber, "Missing data")
+            }
+            val region =
+                regionsByProject.singleOrNull { it.regionIdentifier == entry.get("regionKey") }
                     ?: throw UserImportException(
                         entry.recordNumber,
                         "Specified region not found for the current project",
                     )
-
-                val userHash = entry.get("userHash")
-                if (!Argon2IdHasher.isValidUserHash(userHash)) {
-                    throw UserImportException(entry.recordNumber, "Failed to validate userHash")
-                }
-
-                val startDate = parseDate(entry.get("startDate"), entry.recordNumber)
-                val endDate = parseDate(entry.get("endDate"), entry.recordNumber)
-                if (startDate.isAfter(endDate)) {
-                    throw UserImportException(
-                        entry.recordNumber,
-                        "Start date cannot be after end date",
-                    )
-                }
-
-                val revoked = parseRevoked(entry.get("revoked"), entry.recordNumber)
-
-                upsertUserEntitlement(userHash, startDate, endDate, revoked, region.id.value)
+            val userHash = entry.get("userHash")
+            if (!Argon2IdHasher.isValidUserHash(userHash)) {
+                throw UserImportException(entry.recordNumber, "Failed to validate userHash")
             }
+            val startDate = parseDate(entry.get("startDate"), entry.recordNumber)
+            val endDate = parseDate(entry.get("endDate"), entry.recordNumber)
+            if (startDate.isAfter(endDate)) {
+                throw UserImportException(entry.recordNumber, "Start date cannot be after end date")
+            }
+            val revoked = parseRevoked(entry.get("revoked"), entry.recordNumber)
+            UserEntitlementImportEntry(userHash.toByteArray(), startDate, endDate, revoked, region.id.value)
+        }
+
+        transaction {
+            UserEntitlementsRepository.batchUpsert(entries)
+            val revokedHashes = entries.filter { it.revoked }.map { it.userHash }
+            CardRepository.revokeCardsByUserHashes(revokedHashes)
         }
     }
 
@@ -145,34 +144,4 @@ class UserImportController(
     private fun parseRevoked(revokedString: String, lineNumber: Long): Boolean =
         revokedString.toBooleanStrictOrNull()
             ?: throw UserImportException(lineNumber, "Revoked must be a boolean value")
-
-    private fun upsertUserEntitlement(
-        userHash: String,
-        startDate: LocalDate,
-        endDate: LocalDate,
-        revoked: Boolean,
-        regionId: Int,
-    ) {
-        val userEntitlement = UserEntitlementsRepository.findByUserHash(userHash.toByteArray())
-        if (userEntitlement == null) {
-            UserEntitlementsRepository.insert(
-                userHash.toByteArray(),
-                startDate,
-                endDate,
-                revoked,
-                regionId,
-            )
-        } else {
-            UserEntitlementsRepository.update(
-                userHash.toByteArray(),
-                startDate,
-                endDate,
-                revoked,
-                regionId,
-            )
-            if (revoked) {
-                CardRepository.revokeByEntitlementId(userEntitlement.id.value)
-            }
-        }
-    }
 }

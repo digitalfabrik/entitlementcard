@@ -21,6 +21,7 @@ import org.jetbrains.exposed.v1.core.dao.id.EntityID
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.greaterEq
 import org.jetbrains.exposed.v1.core.inList
+import org.jetbrains.exposed.v1.core.inSubQuery
 import org.jetbrains.exposed.v1.core.intLiteral
 import org.jetbrains.exposed.v1.core.isNotNull
 import org.jetbrains.exposed.v1.core.isNull
@@ -143,4 +144,15 @@ object CardRepository {
         ) {
             it[revoked] = true
         }
+
+    fun revokeCardsByUserHashes(userHashes: List<ByteArray>) {
+        if (userHashes.isEmpty()) return
+        val entitlementIds =
+            UserEntitlements
+                .select(UserEntitlements.id)
+                .where { UserEntitlements.userHash inList userHashes }
+        Cards.update({ (Cards.entitlementId inSubQuery entitlementIds) and (Cards.revoked eq false) }) {
+            it[revoked] = true
+        }
+    }
 }
