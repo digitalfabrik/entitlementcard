@@ -3,7 +3,6 @@ package app.ehrenamtskarte.backend.routes
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.db.entities.ApiTokenType
 import app.ehrenamtskarte.backend.db.entities.ProjectEntity
-import app.ehrenamtskarte.backend.db.entities.Projects
 import app.ehrenamtskarte.backend.db.repositories.CardRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.db.repositories.UserEntitlementsRepository
@@ -15,7 +14,6 @@ import io.swagger.v3.oas.annotations.Parameter
 import jakarta.servlet.http.HttpServletRequest
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
-import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -61,7 +59,8 @@ class UserImportController(
         val file = files.single()
 
         val apiToken = TokenAuthenticator.authenticate(request, ApiTokenType.USER_IMPORT)
-        val project = transaction { ProjectEntity.find { Projects.id eq apiToken.projectId }.single() }
+        val project =
+            transaction { ProjectEntity.findById(apiToken.projectId) } ?: throw UserImportException("Project not found")
         val projectConfig = config.getProjectConfig(project.project)
 
         if (!projectConfig.selfServiceEnabled) {
