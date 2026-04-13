@@ -40,21 +40,21 @@ Copy the resulting string into the htmltojsx converter.
 
 export const DataPrivacyBaseText = (): ReactElement => (
   <div>
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       Diese Datenschutzerklärung bezieht sich auf die Verarbeitung personenbezogener Daten im Rahmen
       des digitalen NürnbergPass einschließlich verbundener Dienste.
     </Typography>
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       Der digitale NürnbergPass wird im Auftrag der Stadt Nürnberg, Amt für Existenzsicherung und
       soziale Integration, Dietzstraße 4, 90443 Nürnberg durch die Tür an Tür – Digitalfabrik gGmbH,
       Wertachstr. 29, 86153 Augsburg betrieben.
     </Typography>
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       Die Betreiber dieser Seiten nehmen den Schutz Ihrer persönlichen Daten sehr ernst. Wir
       behandeln Ihre personenbezogenen Daten vertraulich und entsprechend den gesetzlichen
       Datenschutzvorschriften sowie dieser Datenschutzerklärung.
     </Typography>
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       Der gesamte Programmcode des digitalen NürnbergPass ist darüber hinaus quelloffen lizenziert
       unter der MIT-Lizenz und kann hier eingesehen werden:
       <br />
@@ -67,11 +67,11 @@ export const DataPrivacyBaseText = (): ReactElement => (
         https://github.com/digitalfabrik/entitlementcard
       </Link>
     </Typography>
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       Für nähere Informationen zur Verarbeitung Ihrer personenbezogenen Daten können Sie uns unter
       den unten genannten Kontaktdaten erreichen.
     </Typography>
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       <Typography variant='body2bold' component='span'>
         Name und Kontaktdaten des Verantwortlichen
       </Typography>
@@ -94,7 +94,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
         <Typography component='span'>SHA@stadt.nuernberg.de</Typography>
       </Link>
     </Typography>
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       <Typography variant='body2bold' component='span'>
         Für Fragen zum Datenschutz
       </Typography>
@@ -121,7 +121,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
       </Link>
     </Typography>
     <br />
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       <Typography variant='body2bold' component='span'>
         Zwecke und Rechtsgrundlagen für die Verarbeitung personenbezogener Daten
       </Typography>
@@ -129,23 +129,23 @@ export const DataPrivacyBaseText = (): ReactElement => (
         <br />
       </Typography>
     </Typography>
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       Zweck der Verarbeitung ist die Erfüllung der uns vom Gesetzgeber zugewiesenen öffentlichen
       Aufgaben, insbesondere der Bereitstellung von Sozialleistungen.
     </Typography>
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       Die Rechtsgrundlage für die Verarbeitung Ihrer Daten ergibt sich, soweit nichts anderes
       angegeben ist, aus Art. 4 Abs. 1 des Bayerischen Datenschutzgesetzes (BayDSG) in Verbindung
       mit Art. 6 Abs. 1 UAbs. 1 Buchst. e der Datenschutzgrundverordnung (DSGVO). Demnach ist es uns
       erlaubt, die zur Erfüllung einer uns obliegenden Aufgabe erforderlichen Daten zu
       verarbeiten.{' '}
     </Typography>
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       Soweit Sie in eine Verarbeitung eingewilligt haben, stützt sich die Datenverarbeitung auf Art.
       6 Abs. 1<Typography component='span'>&nbsp;</Typography>
       UAbs. 1 Buchstabe a DSGVO.
     </Typography>
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       <Typography variant='body2bold' component='span'>
         <br />
         Automatische Speicherung von Daten
@@ -184,7 +184,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
         Standort-Positionen, falls der Standort in den Apps freigegeben ist.
       </Typography>
     </Typography>
-    <Typography component='p' margin={0}>
+    <Typography component='p' sx={{ margin: 0 }}>
       Sonstige Daten werden bei Ihrer Nutzung nicht automatisch erhoben und nicht an unsere Server
       gesendet. Nach dem Grundsatz der Datenvermeidung und der Datensparsamkeit sowie dem Grundsatz
       der anonymen und pseudonymen Nutzung wird nur das Minimum an Nutzungsdaten erhoben, soweit
@@ -193,23 +193,23 @@ export const DataPrivacyBaseText = (): ReactElement => (
       Zusatzwissen auf eine bestimmte Person zurückgeführt werden. Die einzelnen Nutzerinnen und
       Nutzer können somit nicht identifiziert werden. Wir erstellen keine Nutzungsprofile.
     </Typography>
-    <Typography component='p' margin={0}>
+    <Typography component='p' sx={{ margin: 0 }}>
       &nbsp;
     </Typography>
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       Zur Gewährleistung des technischen Betriebs wird die IP-Adresse für 14 Tage in den
       Serverprotokollen gespeichert und danach gelöscht.
     </Typography>
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       <Typography variant='body2bold' component='span'>
         Weitergabe erhobener Daten
       </Typography>
     </Typography>
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       Der technische Betrieb unserer Datenverarbeitungssysteme erfolgt durch:
     </Typography>
     <br />
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       Tür an Tür – Digitalfabrik gGmbH,
       <Typography component='span'>
         <br />
@@ -221,11 +221,11 @@ export const DataPrivacyBaseText = (): ReactElement => (
       </Typography>
     </Typography>
     <br />
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       Gegebenenfalls werden Ihre Daten an die zuständigen Aufsichts- und Rechnungsprüfungsbehörden
       zur Wahrnehmung der jeweiligen Kontrollrechte übermittelt.
     </Typography>
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       Zur Abwehr von Gefahren für die Sicherheit in der Informationstechnik können bei
       elektronischer Übermittlung Daten an das Landesamt für Sicherheit in der Informationstechnik
       weitergeleitet werden und dort auf Grundlage der Art. 12 ff. des Bayerischen
@@ -233,12 +233,12 @@ export const DataPrivacyBaseText = (): ReactElement => (
       für Existenzsicherung und soziale Integration, Dietzstraße 4, 90443 Nürnberg weitergegeben, um
       den NürnbergPass sachgemäß auszustellen.
     </Typography>
-    <Typography component='p' margin={0}>
+    <Typography component='p' sx={{ margin: 0 }}>
       Eine Übermittlung der Daten in andere Drittländer&nbsp;erfolgt nicht. Der Serverstandort ist
       Deutschland.
     </Typography>
     <br />
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       <Typography variant='body2bold' component='span'>
         Zustimmung (Einwilligung) zur Erhebung, Nutzung und Verarbeitung personenbezogener Daten
       </Typography>
@@ -246,11 +246,11 @@ export const DataPrivacyBaseText = (): ReactElement => (
         <br />
       </Typography>
     </Typography>
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       Außerhalb gesetzlicher Verpflichtungen dürfen personenbezogene Daten nur mit (und im Rahmen)
       Ihrer Zustimmung erhoben, genutzt oder verarbeitet werden.
     </Typography>
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       Beim Zugriff auf dieses Internetangebot werden von uns Cookies (kleine Dateien) auf Ihrer
       Festplatte mit einer Gültigkeitsdauer von zwölf Monaten gespeichert. Wir verwenden diese
       ausschließlich dazu, Sie bei diesem und weiteren Besuchen unserer Webseite wiedererkennen zu
@@ -258,13 +258,13 @@ export const DataPrivacyBaseText = (): ReactElement => (
       akzeptieren, diese Funktion kann aber durch die Einstellung des Internetbrowsers von Ihnen für
       die laufende Sitzung oder dauerhaft abgeschaltet werden.“
     </Typography>
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       Alle Einwilligungen können verweigert bzw. jederzeit ohne Angabe von Gründen durch Mitteilung
       an digitalfabrik@tuerantuer.de widerrufen werden. In diesem Fall werden alle gespeicherten
       personenbezogenen Daten gelöscht. Aus der Nicht-Einwilligung oder einem Widerruf darf Ihnen
       kein Nachteil entstehen. Ein Widerruf kann nur mit Wirkung für die Zukunft erklärt werden.
     </Typography>
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       <Typography variant='body2bold' component='span'>
         Einwilligung durch Minderjährige
       </Typography>
@@ -274,23 +274,23 @@ export const DataPrivacyBaseText = (): ReactElement => (
       Bei Minderjährigen unter 16 Jahren müssen die Erziehungsberechtigten einwilligen.
     </Typography>
     <br />
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       <Typography variant='body2bold' component='span'>
         Dauer der Speicherung der personenbezogenen Daten
       </Typography>
     </Typography>
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       Ihre Daten werden nur so lange gespeichert, wie dies unter Beachtung gesetzlicher
       Aufbewahrungsfristen zur Aufgabenerfüllung erforderlich ist. Die Speicherdauer kann bis zu 10
       Jahre dauern.
     </Typography>
     <br />
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       <Typography variant='body2bold' component='span'>
         Ihre Rechte
       </Typography>
     </Typography>
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       Soweit wir von Ihnen personenbezogene Daten verarbeiten, stehen Ihnen als Betroffener
       nachfolgende Rechte zu:
     </Typography>
@@ -331,16 +331,16 @@ export const DataPrivacyBaseText = (): ReactElement => (
       </Typography>
     </Typography>
     <br />
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       <Typography variant='body2bold' component='span'>
         Beschwerderecht bei der Aufsichtsbehörde
       </Typography>
     </Typography>
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       Weiterhin besteht ein Beschwerderecht beim Bayerischen Landesbeauftragten für den Datenschutz.
       Diesen können Sie unter folgenden Kontaktdaten erreichen:
     </Typography>
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       Postanschrift: Postfach 22 12 19, 80502 München
       <Typography component='span'>
         <br />
@@ -360,7 +360,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
       </Typography>
     </Typography>
     <br />
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       <Typography variant='body2bold' component='span'>
         Datensicherheit
       </Typography>
@@ -373,7 +373,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
       überprüfen wir regelmäßig und passen sie dem technologischen Fortschritt an.
     </Typography>
     <br />
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       <Typography variant='body2bold' component='span'>
         Offenlegung und Weitergabe personenbezogener Daten
       </Typography>
@@ -385,7 +385,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
       </Typography>
     </Typography>
     <br />
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       <Typography variant='body2bold' component='span'>
         Datenerhebung, Datennutzung und Verarbeitung
       </Typography>
@@ -401,7 +401,7 @@ export const DataPrivacyBaseText = (): ReactElement => (
       SSL-Verschlüsselung, um Ihre Daten vor einer Kenntnisnahme durch Unbefugte zu schützen.
     </Typography>
     <br />
-    <Typography component='p' marginTop={1}>
+    <Typography component='p' sx={{ mt: 1 }}>
       <Typography variant='body2bold' component='span'>
         Elektronische Post (E-Mail)
       </Typography>

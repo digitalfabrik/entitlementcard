@@ -35,7 +35,7 @@ const CardSelfServiceActivation = ({
         {' '}
         {t('koblenzPassPdf')}
       </Button>
-      <Typography variant='body1' marginTop={1.5} marginBottom={3}>
+      <Typography variant='body1' sx={{ mt: 1.5, mb: 3 }}>
         {t('howToActivateHint')} <br />
         <br />
         <b>{t('important')}: </b>

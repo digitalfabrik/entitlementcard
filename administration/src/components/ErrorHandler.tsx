@@ -18,7 +18,7 @@ const ErrorHandler = ({ refetch, title, description }: ErrorHandlerProps): React
   return (
     <ErrorContainer>
       <Typography variant='h6'>{title ?? t('unknownError')}</Typography>
-      <Typography variant='body1' component='div' marginY={1}>
+      <Typography variant='body1' component='div' sx={{ marginY: 1 }}>
         {description}
       </Typography>
       <Button color='primary' variant='contained' onClick={() => refetch()}>

@@ -17,8 +17,7 @@ const StoresRequirementsText = ({ header }: ImportCardsRequirementsProps): React
       color='textDisabled'
       variant='body1'
       component='ul'
-      paddingLeft={3}
-      sx={{ textAlign: 'left' }}
+      sx={{ textAlign: 'left', paddingLeft: 3 }}
     >
       <Typography component='li'>
         {t('maxFileSize', { maxFileSize: FILE_SIZE_LIMIT_MEGA_BYTES })}{' '}

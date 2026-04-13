@@ -101,7 +101,7 @@ const ApplyController = (): React.ReactElement | null => {
       }}
     >
       <Box sx={{ maxWidth: '1000px', width: '100%' }}>
-        <Typography variant='h4' component='h1' margin={2} textAlign='center'>
+        <Typography variant='h4' component='h1' sx={{ margin: 2, textAlign: 'center' }}>
           {formSubmitted ? t('sentSuccessfully') : t('title')}
         </Typography>
         {formSubmitted ? (

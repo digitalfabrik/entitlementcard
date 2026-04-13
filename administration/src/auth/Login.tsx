@@ -50,7 +50,7 @@ const Login = ({ onSignIn }: { onSignIn: (payload: SignInPayload) => void }): Re
         <Typography variant='h5' component='h2'>
           {t('administration')}
         </Typography>
-        <Typography variant='h6' component='h3' marginBottom={3}>
+        <Typography variant='h6' component='h3' sx={{ marginBottom: 3 }}>
           {t('login')}
         </Typography>
         <LoginForm

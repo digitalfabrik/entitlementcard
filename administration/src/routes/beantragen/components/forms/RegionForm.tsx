@@ -72,7 +72,7 @@ const renderAlert = (
     return (
       <StyledAlert severity='warning'>
         <Trans i18nKey='applicationForms:regionNotUnique' />
-        <Typography component='ul' marginX={0.5}>
+        <Typography component='ul' sx={{ marginX: 0.5 }}>
           {regions.map(region => {
             const displayName = `${region.name} (${region.prefix})`
             return (

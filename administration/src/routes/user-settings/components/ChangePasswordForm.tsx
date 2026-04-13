@@ -46,7 +46,7 @@ const ChangePasswordForm = (): ReactElement => {
 
   return (
     <SettingsCard title={t('changePassword')}>
-      <Typography component='p' mb={2}>
+      <Typography component='p' sx={{ mb: 2 }}>
         {t('changePasswordExplanation')}
       </Typography>
       <form

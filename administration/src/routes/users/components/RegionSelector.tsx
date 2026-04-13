@@ -42,7 +42,7 @@ const RegionSelector = ({
   }
 
   return (
-    <Stack gap={0}>
+    <Stack sx={{ gap: 0 }}>
       <Autocomplete
         value={
           selectedId != null ? getTitle(regions.find(region => region.id === selectedId)) : null
@@ -56,7 +56,7 @@ const RegionSelector = ({
             required
             slotProps={{
               input: {
-                ...params.InputProps,
+                ...params.slotProps,
                 size: 'small',
                 startAdornment: (
                   <InputAdornment position='start'>

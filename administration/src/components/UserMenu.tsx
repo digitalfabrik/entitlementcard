@@ -59,7 +59,7 @@ const UserMenu = (): ReactElement => {
         onClose={handleCloseUserMenu}
       >
         <Box sx={{ paddingX: 1, marginY: 1 }}>
-          <Typography noWrap fontWeight='500'>
+          <Typography noWrap sx={{ fontWeight: '500' }}>
             {email}
           </Typography>
           <Typography>Rolle: {roleToText(role)}</Typography>

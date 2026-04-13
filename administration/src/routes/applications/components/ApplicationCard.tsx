@@ -116,7 +116,7 @@ const RejectionDialog = (props: {
       confirmButtonText={t('rejectionButton')}
     >
       <>
-        <Typography paddingBottom={1}>{t('rejectionDialogMessage')}</Typography>
+        <Typography sx={{ paddingBottom: 1 }}>{t('rejectionDialogMessage')}</Typography>
         <Autocomplete
           renderInput={params => (
             <TextField
@@ -128,7 +128,7 @@ const RejectionDialog = (props: {
               label={t('rejectionInputHint')}
               slotProps={{
                 input: {
-                  ...params.InputProps,
+                  ...params.slotProps.input,
                   size: 'small',
                   startAdornment: (
                     <InputAdornment position='start'>
@@ -365,7 +365,7 @@ const ApplicationCard = ({
         sx={{ flexDirection: 'column', alignItems: 'stretch', padding: 0 }}
       >
         <Stack direction='row' sx={{ width: '100%', gap: 2, paddingLeft: 2, paddingRight: 2 }}>
-          <Typography variant='h6' sx={{ minWidth: '250px' }} marginY={0}>
+          <Typography variant='h6' sx={{ minWidth: '250px', marginY: 0 }}>
             {t('applicationFrom', { date: Temporal.Instant.from(application.createdDate) })}
           </Typography>
           <Warning

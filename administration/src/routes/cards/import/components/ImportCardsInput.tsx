@@ -128,7 +128,7 @@ const ImportCardsInput = ({
             ref={fileInput}
             accept='.csv, text/csv'
             type='file'
-            onInput={onInputChange}
+            onChange={onInputChange}
           />
           {t('misc:browseButtonLabelSingleFile')}
         </Button>

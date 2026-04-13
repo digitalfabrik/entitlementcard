@@ -29,7 +29,7 @@ const MilitaryReserveEntitlementForm: Form<State, ValidatedInput> = {
     return (
       <>
         <CustomDivider label={t('activityInformation')} />
-        <Typography variant='body2bold' component='h4' marginY={1.5}>
+        <Typography variant='body2bold' component='h4' sx={{ marginY: 1.5 }}>
           {t('certificateHeadline')}
         </Typography>
         <Typography component='p'>

@@ -73,8 +73,7 @@ const VerificationListItem = ({
   return (
     <Typography
       component='li'
-      sx={{ borderLeft: `2px solid ${color}`, position: 'relative' }}
-      paddingLeft={1.5}
+      sx={{ borderLeft: `2px solid ${color}`, paddingLeft: 1.5, position: 'relative' }}
     >
       <table cellPadding='2px'>
         <tbody>

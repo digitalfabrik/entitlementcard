@@ -22,7 +22,7 @@ const CategorySection = ({
   const labelId = useId()
   return (
     <Box>
-      <Typography variant='h6' marginTop={1} marginBottom={2}>
+      <Typography variant='h6' sx={{ mt: 1, marginBottom: 2 }}>
         {t('categorySection')}
       </Typography>
       <CustomSelect

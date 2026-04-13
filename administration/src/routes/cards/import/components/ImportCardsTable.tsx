@@ -13,7 +13,7 @@ const CardImportTable = ({ cards }: { cards: Card[] }): ReactElement => {
   const { t } = useTranslation('cards')
 
   return (
-    <Stack alignItems='center' flexGrow={1} sx={{ overflow: 'auto', marginTop: 2 }}>
+    <Stack sx={{ overflow: 'auto', marginTop: 2, alignItems: 'center', flexGrow: 1 }}>
       <Table sx={{ maxWidth: 860 }} size='small' stickyHeader>
         <TableHead>
           <TableRow>

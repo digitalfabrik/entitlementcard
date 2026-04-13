@@ -33,8 +33,8 @@ const NavigationBar = (): ReactElement => {
           sx={{
             '&:hover': { textDecoration: 'none', color: theme.palette.common.black },
             color: theme.palette.common.black,
+            marginY: 1.5,
           }}
-          marginX={1.5}
         >
           <Stack>
             <Typography component='span'>

@@ -7,7 +7,7 @@ export const CardsCreatedScreen = ({ onProceed }: { onProceed: () => void }): Re
   const { t } = useTranslation('cards')
 
   return (
-    <Stack justifyContent='center' alignItems='center' spacing={2} sx={{ height: '100%' }}>
+    <Stack spacing={2} sx={{ height: '100%', justifyContent: 'center', alignItems: 'center' }}>
       <CheckCircle color='success' sx={{ fontSize: 100 }} />
       <Typography component='p'>{t('addCardSuccessMessage')}</Typography>
       <Button onClick={onProceed}>{t('createMoreCards')}</Button>

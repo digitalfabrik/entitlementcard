@@ -26,9 +26,9 @@ const CardSelfServiceInformation = ({
       >
         {t('nextToActivation')}
       </Button>
-      <Box sx={{ marginTop: 6, marginBottom: 1 }}>
+      <Box sx={{ mt: 6, marginBottom: 1 }}>
         <Typography variant='body1'>{t('appNotInstalled')}</Typography>
-        <Typography variant='body1' fontWeight='bold'>
+        <Typography variant='body1' sx={{ fontWeight: 'bold' }}>
           {t('downloadApp')}
         </Typography>
       </Box>

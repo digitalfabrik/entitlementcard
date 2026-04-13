@@ -56,7 +56,7 @@ const VerificationsView = ({
         })}
       </VerificationContainer>
       {application.verifications.length === 0 ? (
-        <Typography fontStyle='italic' role='note'>
+        <Typography sx={{ fontStyle: 'italic' }} role='note'>
           ({t('none')})
         </Typography>
       ) : null}

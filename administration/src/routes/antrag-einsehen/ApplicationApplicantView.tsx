@@ -85,7 +85,7 @@ const ApplicationApplicantView = ({
 
       <ApplicationViewCard elevation={2}>
         <ApplicationViewCardContent>
-          <Typography marginBottom={1} variant='h6'>
+          <Typography sx={{ mb: 1 }} variant='h6'>
             {t('headline', { date: Temporal.Instant.from(application.createdDate) })}
           </Typography>
           <JsonFieldView
@@ -101,9 +101,7 @@ const ApplicationApplicantView = ({
           {application.status === ApplicationStatus.Pending && (
             <>
               <StyledDivider />
-              <Typography marginTop={1} marginBottom={2}>
-                {t('withdrawInformation')}
-              </Typography>
+              <Typography sx={{ mt: 1, mb: 2 }}>{t('withdrawInformation')}</Typography>
               <Button
                 variant='contained'
                 startIcon={<Delete />}

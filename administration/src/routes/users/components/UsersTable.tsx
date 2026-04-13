@@ -53,11 +53,11 @@ const UsersTable = ({
       <StyledTable>
         <thead>
           <tr>
-            <Typography fontWeight='bold' variant='body1' component='th'>
+            <Typography variant='body1' component='th' sx={{ fontWeight: 'bold' }}>
               {t('eMail')}
             </Typography>
             {selectedRegionId !== null ? null : <th>{t('region')}</th>}
-            <Typography fontWeight='bold' variant='body1' component='th'>
+            <Typography variant='body1' component='th' sx={{ fontWeight: 'bold' }}>
               {t('role')} <RoleHelpButton />
             </Typography>
             <th>{/* Action Buttons */}</th>

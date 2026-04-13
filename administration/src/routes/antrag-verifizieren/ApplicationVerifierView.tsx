@@ -47,10 +47,10 @@ const ApplicationVerifierView = ({
     <PageLayout>
       <ApplicationViewCard elevation={2}>
         <div style={{ overflow: 'visible', padding: '20px' }}>
-          <Typography marginBottom={1.5} variant='h4'>
+          <Typography sx={{ mb: 1.5 }} variant='h4'>
             {config.name}
           </Typography>
-          <Typography marginY={1} variant='body1'>
+          <Typography sx={{ marginY: 1 }} variant='body1'>
             {t('greeting', { contactName: verification.contactName })}
             <br />
             <br />
@@ -60,7 +60,7 @@ const ApplicationVerifierView = ({
             />
           </Typography>
           <Divider style={{ margin: '24px 0px' }} />
-          <Typography variant='h6' marginBottom={1}>
+          <Typography variant='h6' sx={{ mb: 1 }}>
             {t('info', { date: Temporal.Instant.from(application.createdDate) })}
           </Typography>
           <JsonFieldView
@@ -72,7 +72,7 @@ const ApplicationVerifierView = ({
           />
           <Divider style={{ margin: '24px 0px' }} />
 
-          <Typography marginTop={1} variant='body1'>
+          <Typography sx={{ mt: 1 }} variant='body1'>
             <Trans
               i18nKey='applicationVerification:confirmationMessage'
               values={{ organizationName: verification.organizationName }}

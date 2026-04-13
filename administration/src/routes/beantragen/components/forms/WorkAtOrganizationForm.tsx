@@ -86,7 +86,7 @@ const WorkAtOrganizationForm: Form<State, WorkAtOrganizationInput, AdditionalPro
     return (
       <>
         <ActivityDivider onDelete={onDelete} />
-        <Typography variant='body2bold' component='h4' marginY={1.5}>
+        <Typography variant='body2bold' component='h4' sx={{ marginY: 1.5 }}>
           {t('applicationForms:workAtOrganizationHeadline')}
         </Typography>
         <SubForms.responsibility.Component
@@ -124,7 +124,7 @@ const WorkAtOrganizationForm: Form<State, WorkAtOrganizationInput, AdditionalPro
           label={t('payment')}
           options={paymentOptions}
         />
-        <Typography variant='body2bold' component='h4' marginY={1.5}>
+        <Typography variant='body2bold' component='h4' sx={{ marginY: 1.5 }}>
           {t('applicationForms:certificateHeadline')}
         </Typography>
         <Typography component='p'>

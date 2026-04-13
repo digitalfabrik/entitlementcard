@@ -1,4 +1,4 @@
-import { CheckCircleOutline, Close } from '@mui/icons-material'
+import { CheckCircleOutlined, Close } from '@mui/icons-material'
 import {
   Button,
   Dialog,
@@ -96,7 +96,7 @@ const AutomaticLogoutDialog = ({
           variant='contained'
           color='primary'
           onClick={() => signIn()}
-          startIcon={<CheckCircleOutline />}
+          startIcon={<CheckCircleOutlined />}
           loading={signInState.fetching}
         >
           {t('loginPeriodExtendButton')}

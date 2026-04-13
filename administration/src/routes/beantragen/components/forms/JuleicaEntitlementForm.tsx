@@ -50,7 +50,7 @@ const JuleicaEntitlementForm: Form<State, BlueCardJuleicaEntitlementInput> = {
           setState={useUpdateStateCallback(setState, 'juleicaExpirationDate')}
           options={{ maximumDate: undefined }}
         />
-        <Typography variant='body2bold' component='h4' marginY={1.5}>
+        <Typography variant='body2bold' component='h4' sx={{ marginY: 1.5 }}>
           {t('applicationForms:juleicaCardAttachmentTitle')}
         </Typography>
         <Typography component='p'>

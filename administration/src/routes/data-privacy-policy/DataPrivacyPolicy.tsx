@@ -7,7 +7,7 @@ const DataPrivacyPolicy = (): ReactElement => {
   const config = useContext(ProjectConfigContext)
   return (
     <Card sx={{ marginX: 'auto', padding: 4, overflow: 'auto', maxWidth: '900px' }}>
-      <Typography variant='h4' component='h1' marginBottom={4}>
+      <Typography variant='h4' component='h1' sx={{ mb: 4 }}>
         {config.dataPrivacyHeadline}
       </Typography>
       <config.dataPrivacyContent />

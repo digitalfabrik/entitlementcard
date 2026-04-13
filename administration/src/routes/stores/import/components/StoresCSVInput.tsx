@@ -2,7 +2,7 @@ import { ArrowCircleUp } from '@mui/icons-material'
 import { Button, Stack } from '@mui/material'
 import { parse } from 'csv-parse/browser/esm/sync'
 import { useSnackbar } from 'notistack'
-import { ChangeEventHandler, ReactElement, useCallback, useRef } from 'react'
+import { InputEventHandler, ReactElement, useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Blankslate from '../../../../components/Blankslate'
@@ -149,7 +149,7 @@ const StoresCsvInput = ({
     [showInputError, setAcceptingStores, headers, fields, setIsLoadingCoordinates, t],
   )
 
-  const onInputChange: ChangeEventHandler<HTMLInputElement> = event => {
+  const onInputChange: InputEventHandler<HTMLInputElement> = event => {
     if (!event.currentTarget.files) {
       return
     }
