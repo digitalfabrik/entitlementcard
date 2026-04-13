@@ -18,7 +18,7 @@ import app.ehrenamtskarte.backend.graphql.exceptions.InvalidJsonException
 import app.ehrenamtskarte.backend.graphql.exceptions.MailNotSentException
 import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotActivatedForApplicationException
 import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotFoundException
-import app.ehrenamtskarte.backend.shared.TokenAuthenticator
+import app.ehrenamtskarte.backend.shared.authenticateApiToken
 import app.ehrenamtskarte.backend.shared.mail.Mailer
 import graphql.execution.DataFetcherResult
 import jakarta.servlet.http.HttpServletRequest
@@ -132,12 +132,20 @@ class ApplicationHandler(
                 ?.map { it.isAlreadyVerified }
                 ?: emptyList()
         val allAlreadyVerifiedWithToken = when {
-            isAlreadyVerifiedList.all { it == false || it == null } -> false
+            isAlreadyVerifiedList.all { it == false || it == null } -> {
+                false
+            }
+
             isAlreadyVerifiedList.all { it == true } -> {
-                TokenAuthenticator.authenticate(request, ApiTokenType.VERIFIED_APPLICATION)
+                transaction {
+                    request.authenticateApiToken(ApiTokenType.VERIFIED_APPLICATION)
+                }
                 true
             }
-            else -> throw InvalidInputException("isAlreadyVerified must be the same for all entries")
+
+            else -> {
+                throw InvalidInputException("isAlreadyVerified must be the same for all entries")
+            }
         }
         if (!allAlreadyVerifiedWithToken) return false
         validateAllAttributesForPreVerifiedApplication()
