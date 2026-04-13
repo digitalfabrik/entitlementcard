@@ -30,6 +30,8 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
+private val requiredUserImportColumns = setOf("regionKey", "userHash", "startDate", "endDate", "revoked")
+
 @RestController
 @RequestMapping("/users/import")
 class UserImportController(
@@ -68,7 +70,11 @@ class UserImportController(
 
         BufferedReader(InputStreamReader(file.inputStream)).use { reader ->
             getCSVParser(reader).use { csvParser ->
-                validateHeaders(csvParser.headerNames)
+                if (!csvParser.headerNames.containsAll(requiredUserImportColumns)) {
+                    throw UserImportException(
+                        "Missing required columns: ${requiredUserImportColumns - csvParser.headerNames.toSet()}",
+                    )
+                }
                 importData(csvParser, project.project)
             }
         }
@@ -87,13 +93,6 @@ class UserImportController(
                     .get(),
             )
         }.get()
-
-    private fun validateHeaders(headers: List<String>) {
-        val requiredColumns = setOf("regionKey", "userHash", "startDate", "endDate", "revoked")
-        if (!headers.containsAll(requiredColumns)) {
-            throw UserImportException("Missing required columns: ${requiredColumns - headers.toSet()}")
-        }
-    }
 
     private fun importData(csvParser: CSVParser, project: String) {
         transaction {
