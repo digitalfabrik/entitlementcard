@@ -52,12 +52,11 @@ class UserImportController(
         @RequestParam("file", required = false) files: List<MultipartFile>?,
         request: HttpServletRequest,
     ): ResponseEntity<Map<String, String>> {
-        when {
+        val file = when {
             files.isNullOrEmpty() -> throw UserImportException("No file uploaded")
             files.size > 1 -> throw UserImportException("Multiple files uploaded")
+            else -> files.first()
         }
-        val file = files.single()
-
         val apiToken = TokenAuthenticator.authenticate(request, ApiTokenType.USER_IMPORT)
         val project =
             transaction { ProjectEntity.findById(apiToken.projectId) } ?: throw UserImportException("Project not found")
