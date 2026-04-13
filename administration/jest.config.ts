@@ -13,8 +13,15 @@ const config: JestConfigWithTsJest = {
     '^.+\\.(tsx?|js)$': [
       'ts-jest',
       {
+        tsconfig: {
+          // ts-jest internally forces moduleResolution to Node10 (via fixupCompilerOptionsForModuleKind),
+          // which TypeScript 6.0 has deprecated. This silences the resulting TS5107 error.
+          ignoreDeprecations: '6.0',
+        },
         diagnostics: {
-          ignoreCodes: [1343],
+          // 1343: ts-jest internal
+          // 5011: ts-jest forces noEmit:false, causing TypeScript 6 to require rootDir when emitting
+          ignoreCodes: [1343, 5011],
         },
         astTransformers: {
           before: [
