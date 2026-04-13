@@ -1088,8 +1088,8 @@ packages:
     dependency: "direct dev"
     description:
       path: "."
-      ref: adapt-for-build-runner
-      resolved-ref: "9b44f7b4724072a8f151dee8b9468a2b40a90923"
+      ref: "1.2.1"
+      resolved-ref: "66f528e16fd0ab8503e2676d0c9131b451147c25"
       url: "https://github.com/digitalfabrik/protofu_builder.git"
     source: git
     version: "1.2.1"

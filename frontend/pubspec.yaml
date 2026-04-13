@@ -58,12 +58,13 @@ dependencies:
 
 dev_dependencies:
   build_runner: ^2.12.1
-  # Since there is no maintained protobuf build runner, we forked protofu and adapted it
+  # Since there is no maintained protobuf build runner, we forked protofu and adapted it.
+  # Here is an open pr on the original repo: https://github.com/jtmcdole/protofu/pull/9.
+  # If it will be merged, we can use the original repo.
   protofu:
     git:
       url: https://github.com/digitalfabrik/protofu_builder.git
-      # TODO use here a tag when pr is merged
-      ref: adapt-for-build-runner
+      ref: 1.2.1
   protoc_plugin: ^21.1.2
   slang_build_runner: ^4.14.0
   df_build_config:
