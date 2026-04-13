@@ -73,7 +73,39 @@ class UserImportController(
                         "Missing required columns: ${requiredUserImportColumns - csvParser.headerNames.toSet()}",
                     )
                 }
-                importData(csvParser, project.project)
+                transaction {
+                    val regionsByProject = RegionsRepository.findAllInProject(project.project)
+
+                    for (entry in csvParser) {
+                        if (entry.toMap().size != csvParser.headerMap.size) {
+                            throw UserImportException(entry.recordNumber, "Missing data")
+                        }
+
+                        val region = regionsByProject.singleOrNull { it.regionIdentifier == entry.get("regionKey") }
+                            ?: throw UserImportException(
+                                entry.recordNumber,
+                                "Specified region not found for the current project",
+                            )
+
+                        val userHash = entry.get("userHash")
+                        if (!Argon2IdHasher.isValidUserHash(userHash)) {
+                            throw UserImportException(entry.recordNumber, "Failed to validate userHash")
+                        }
+
+                        val startDate = parseDate(entry.get("startDate"), entry.recordNumber)
+                        val endDate = parseDate(entry.get("endDate"), entry.recordNumber)
+                        if (startDate.isAfter(endDate)) {
+                            throw UserImportException(
+                                entry.recordNumber,
+                                "Start date cannot be after end date",
+                            )
+                        }
+
+                        val revoked = parseRevoked(entry.get("revoked"), entry.recordNumber)
+
+                        upsertUserEntitlement(userHash, startDate, endDate, revoked, region.id.value)
+                    }
+                }
             }
         }
 
@@ -91,42 +123,6 @@ class UserImportController(
                     .get(),
             )
         }.get()
-
-    private fun importData(csvParser: CSVParser, project: String) {
-        transaction {
-            val regionsByProject = RegionsRepository.findAllInProject(project)
-
-            for (entry in csvParser) {
-                if (entry.toMap().size != csvParser.headerMap.size) {
-                    throw UserImportException(entry.recordNumber, "Missing data")
-                }
-
-                val region = regionsByProject.singleOrNull { it.regionIdentifier == entry.get("regionKey") }
-                    ?: throw UserImportException(
-                        entry.recordNumber,
-                        "Specified region not found for the current project",
-                    )
-
-                val userHash = entry.get("userHash")
-                if (!Argon2IdHasher.isValidUserHash(userHash)) {
-                    throw UserImportException(entry.recordNumber, "Failed to validate userHash")
-                }
-
-                val startDate = parseDate(entry.get("startDate"), entry.recordNumber)
-                val endDate = parseDate(entry.get("endDate"), entry.recordNumber)
-                if (startDate.isAfter(endDate)) {
-                    throw UserImportException(
-                        entry.recordNumber,
-                        "Start date cannot be after end date",
-                    )
-                }
-
-                val revoked = parseRevoked(entry.get("revoked"), entry.recordNumber)
-
-                upsertUserEntitlement(userHash, startDate, endDate, revoked, region.id.value)
-            }
-        }
-    }
 
     private fun parseDate(dateString: String, lineNumber: Long): LocalDate {
         try {
