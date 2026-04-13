@@ -15,7 +15,7 @@
     "prepare": "tsc --build"
   },
   "devDependencies": {
-    "@eslint/compat": "^2.0.3",
+    "@eslint/compat": "^2.0.4",
     "@eslint/eslintrc": "^3.3.1",
     "eslint": "^9.39.4",
     "eslint-config-airbnb": "^19.0.4",
@@ -28,6 +28,6 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-unicorn": "^63.0.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.57.1"
+    "typescript-eslint": "^8.58.0"
   }
 }

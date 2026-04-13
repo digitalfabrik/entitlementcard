@@ -1,0 +1,6 @@
+# This command is needed for android images that have a very old npm version. Old npm versions resolve packages differently. We have to ensure to run at least v11.
+steps:
+  - run:
+      name: Install npm@11.8.0
+      command: npm install -g npm@11.8.0
+      working_directory: ~/project

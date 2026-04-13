@@ -10,7 +10,21 @@ A single large XML file is hosted at [lbe.bayern.de](https://www.ehrenamt.bayern
 ```
 https://www.ehrenamt.bayern.de/xml-json/app-daten.xml
 ```
- 
+
+### Missing Stores
+We are applying some cleaning and filtering of the data, since there might be location information missing that leads to unresolved coordinates.
+Result: 
+```
+https://bayern.ehrenamtskarte.app/acceptance-stores/filtered_stores.csv
+```
+
+### Import Results
+Here we check how many stores were created/deleted/unchanged since with the last import.
+Result:
+```
+https://bayern.ehrenamtskarte.app/acceptance-stores/import_result.csv
+```
+
 The format is not formally specified. The field `p_eak_agentur_id` specifies the Stadt or Landkreis where the Akzeptanzstelle is located or managed.
 
 ## Freinet JSON API
@@ -21,7 +35,7 @@ The Agenturen are also available through a JSON API:
 https://freinet-online.de/files/api_bayerische_eak/agenturen.php?accessKey={access_key}
 ```
 
-The `{access_key}` can be requested from [@maxammann](https://github.com/maxammann).
+The `{access_key}` can be found in passbolt
 
 All Akzeptanzstellen are also available. First get the current "version":
 

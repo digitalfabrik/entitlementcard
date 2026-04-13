@@ -6,6 +6,7 @@ import app.ehrenamtskarte.backend.db.entities.Projects
 import app.ehrenamtskarte.backend.db.entities.RegionEntity
 import app.ehrenamtskarte.backend.db.repositories.AcceptingStoresRepository
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
+import app.ehrenamtskarte.backend.graphql.stores.types.StoreImportReturnResultModel
 import app.ehrenamtskarte.backend.import.stores.ImportConfig
 import app.ehrenamtskarte.backend.import.stores.PipelineStep
 import app.ehrenamtskarte.backend.import.stores.common.types.AcceptingStore
@@ -20,8 +21,8 @@ import org.slf4j.Logger
  * Longitude, latitude and postal code of [AcceptingStore] must not be null.
  */
 class Store(config: ImportConfig, private val logger: Logger) :
-    PipelineStep<List<AcceptingStore>, Unit>(config) {
-    override fun execute(input: List<AcceptingStore>) {
+    PipelineStep<List<AcceptingStore>, StoreImportReturnResultModel>(config) {
+    override fun execute(input: List<AcceptingStore>): StoreImportReturnResultModel =
         transaction {
             val project = ProjectEntity.find { Projects.project eq config.project.id }.single()
             try {
@@ -63,13 +64,13 @@ class Store(config: ImportConfig, private val logger: Logger) :
                         Count stores untouched: $numStoresUntouched
                     """.trimIndent(),
                 )
+                StoreImportReturnResultModel(numStoresCreated, acceptingStoreIdsToRemove.size, numStoresUntouched)
             } catch (e: Exception) {
                 logger.error("Unknown exception while storing to db", e)
                 rollback()
                 throw e
             }
         }
-    }
 }
 
 private fun getRegionFromAcceptingStore(
