@@ -10,5 +10,6 @@ local.properties
 src/main/resources/config/config.local.yml
 
 src/main/resources/freinet_url.txt
+logs/
 
 rejectedStores.json
