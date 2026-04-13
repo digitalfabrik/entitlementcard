@@ -8,7 +8,7 @@ import app.ehrenamtskarte.backend.db.entities.Projects
 import app.ehrenamtskarte.backend.db.entities.Regions
 import app.ehrenamtskarte.backend.db.entities.UserEntitlements
 import app.ehrenamtskarte.backend.routes.exception.UserImportException
-import app.ehrenamtskarte.backend.shared.TokenAuthenticator
+import app.ehrenamtskarte.backend.shared.authenticateApiToken
 import app.ehrenamtskarte.backend.shared.crypto.Argon2IdHasher
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -64,9 +64,12 @@ class UserImportController(
             files.size > 1 -> throw UserImportException("Multiple files uploaded")
             else -> files.first()
         }
-        val apiToken = TokenAuthenticator.authenticate(request, ApiTokenType.USER_IMPORT)
+
         val project =
-            transaction { ProjectEntity.findById(apiToken.projectId) } ?: throw UserImportException("Project not found")
+            transaction {
+                val apiToken = request.authenticateApiToken(ApiTokenType.USER_IMPORT)
+                ProjectEntity.findById(apiToken.projectId)
+            } ?: throw UserImportException("Project not found")
 
         if (!config.getProjectConfig(project.project).selfServiceEnabled) {
             throw UserImportException("User import is not enabled for this project")
