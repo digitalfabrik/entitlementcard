@@ -2,18 +2,22 @@ import { rgb } from '@cantoo/pdf-lib'
 import { buildConfigNuernberg } from 'build-configs'
 import { Temporal } from 'temporal-polyfill'
 
-import AddressExtensions from '../../cards/extensions/AddressFieldExtensions'
+import type { Card } from '../../cards/card'
+import AddressExtensions, {
+  getAddressFieldExtensionsValues,
+} from '../../cards/extensions/AddressFieldExtensions'
 import BirthdayExtension from '../../cards/extensions/BirthdayExtension'
 import NuernbergPassIdExtension from '../../cards/extensions/NuernbergPassIdExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
 import StartDayExtension from '../../cards/extensions/StartDayExtension'
+import type { CardInfo } from '../../generated/card_pb'
 import { commonColors } from '../common/colors'
-import type { ProjectConfig } from '../index'
+import type { FormConfig, ProjectConfig } from '../index'
 import { storesManagementConfig } from '../storesManagementConfig'
 import ActivityLogEntry from './ActivityLogEntry'
 import { buildCsvLine } from './csvExport'
 import { DataPrivacyBaseText } from './dataPrivacy'
-import { createAddressFormFields, renderCardHash, renderPassId, renderPdfDetails } from './pdf'
+import { renderCardHash, renderPassId, renderPdfDetails } from './pdf'
 import pdfTemplate from './pdf-template.pdf'
 
 export const config: ProjectConfig = {
@@ -76,7 +80,8 @@ export const config: ProjectConfig = {
         { x: 153.892, y: 178, fontSize: 6, textAlign: 'center', infoToText: renderCardHash },
       ],
       form: [
-        { infoToFormFields: createAddressFormFields, x: 18.5, y: 68.5, width: 57, fontSize: 10 },
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+        { createFormFields: createAddressFormFields, x: 18.5, y: 68.5, width: 57, fontSize: 10 },
       ],
     },
   },
@@ -106,4 +111,27 @@ export const config: ProjectConfig = {
   userImportApiEnabled: false,
   showBirthdayExtensionHint: false,
   locales: buildConfigNuernberg.common.appLocales,
+}
+
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+function createAddressFormFields(pageIndex: number, info: CardInfo, card: Card): FormConfig[] {
+  const [addressLine1, addressLine2, plz, location] = getAddressFieldExtensionsValues(card)
+
+  return [
+    // Name
+    {
+      name: `${pageIndex}.address.name`,
+      // avoid only printing the name
+      text: addressLine1 || addressLine2 || plz || location ? info.fullName : undefined,
+    },
+    // Address field 1
+    { name: `${pageIndex}.address.line.1`, text: addressLine1 },
+    // Address field 2
+    { name: `${pageIndex}.address.line.2`, text: addressLine2 },
+    // ZIP code and location
+    {
+      name: `${pageIndex}.address.location`,
+      text: plz && location ? `${plz} ${location}` : undefined,
+    },
+  ].filter(field => field.text !== undefined && field.text.trim() !== '') as FormConfig[]
 }

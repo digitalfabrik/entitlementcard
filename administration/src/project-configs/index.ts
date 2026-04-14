@@ -1,4 +1,4 @@
-import { Color, PDFForm, PDFTextField } from '@cantoo/pdf-lib'
+import { Color } from '@cantoo/pdf-lib'
 import { PaletteOptions } from '@mui/material'
 import {
   BAYERN_PRODUCTION_ID,
@@ -16,7 +16,7 @@ import type { Card } from '../cards/card'
 import type { CreateCardsResult } from '../cards/createCards'
 import type { Extension } from '../cards/extensions/extensions'
 import type { JsonField } from '../components/JsonFieldView'
-import { CardInfo } from '../generated/card_pb'
+import type { CardInfo } from '../generated/card_pb'
 import { type Region } from '../generated/graphql'
 import type { ActivityLogEntryType } from '../routes/activity-log/utils/activityLog'
 import { LOCAL_STORAGE_PROJECT_KEY } from '../util/getBuildConfig'
@@ -104,8 +104,13 @@ export type PdfQrCodeElementProps = {
   size: number
 } & Coordinates
 
+export type FormConfig = {
+  name: string
+  text: string
+}
+
 export type PdfFormElementProps = {
-  infoToFormFields: (form: PDFForm, pageIdx: number, info: InfoParams) => PDFTextField[]
+  createFormFields: (pageIndex: number, info: CardInfo, card: Card) => FormConfig[]
   fontSize: number
   width: number
 } & Coordinates
