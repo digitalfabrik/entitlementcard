@@ -43,18 +43,34 @@ class UserImportController(
 ) {
     @PostMapping(consumes = [MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE])
     @Operation(
-        summary = "Imports user data from a CSV file",
+        summary = "Imports user entitlements from a CSV file",
+        description = """
+            Accepts a UTF-8 encoded CSV file uploaded as multipart/form-data.
+
+            **Required columns:**
+            | Column     | Format          | Description |
+            |------------|-----------------|-------------|
+            | regionKey  | string          | Region identifier (Amtlicher Gemeindeschlüssel), e.g. `07111` |
+            | userHash   | string          | Argon2id hash of the user identifier |
+            | startDate  | dd.MM.yyyy      | Start date of the entitlement period |
+            | endDate    | dd.MM.yyyy      | End date of the entitlement period, must be after startDate |
+            | revoked    | true/false      | Whether the entitlement is revoked |
+
+            **Example CSV:**
+            ```
+            regionKey,userHash,startDate,endDate,revoked
+            07111,${'$'}argon2id${'$'}v=19${'$'}m=19456,t=2,p=1${'$'}AAAA...,01.01.2026,31.12.2026,false
+            07111,${'$'}argon2id${'$'}v=19${'$'}m=19456,t=2,p=1${'$'}BBBB...,01.06.2025,31.05.2026,true
+            ```
+
+            **Behavior:**
+            - Each row is upserted by userHash. If a userHash appears multiple times, the last occurrence wins.
+            - `revoked=true`: all associated cards for that user are deactivated.
+            - `revoked=false`: previously deactivated cards for that user are reactivated.
+        """,
     )
     fun handleUserImport(
-        @Parameter(
-            description = "CSV file with user information",
-            example = """
-    
-        regionKey,userHash,startDate,endDate,revoked
-        07111,hashedUser1,01.01.2022,31.12.2022,false
-        07111,hashedUser2,01.06.2022,31.05.2023,true
-    """,
-        )
+        @Parameter(description = "UTF-8 encoded CSV file with user entitlements.")
         @RequestParam("file", required = false) files: List<MultipartFile>?,
         request: HttpServletRequest,
     ): ResponseEntity<Map<String, String>> {
