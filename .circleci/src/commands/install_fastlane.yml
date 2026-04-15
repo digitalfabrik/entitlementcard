@@ -7,8 +7,8 @@ steps:
   - restore_cache:
       name: Restore gems
       keys:
-        - v1-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
-        - v1-gems-{{ arch }}
+        - v2-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
+        - v2-gems-{{ arch }}
   - run:
       name: Install fastlane
       command: |
@@ -18,6 +18,6 @@ steps:
       working_directory: << parameters.directory >>
   - save_cache:
       name: Save gems
-      key: v1-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
+      key: v2-gems-{{ arch }}-{{ checksum "<< parameters.directory >>/Gemfile.lock" }}
       paths:
         - ~/.bundle
