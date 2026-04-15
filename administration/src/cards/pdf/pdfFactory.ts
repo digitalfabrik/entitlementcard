@@ -94,13 +94,8 @@ const fillContentAreas = async (
   pdfConfig.elements?.form?.forEach(configOptions =>
     pdfFormElement(
       page,
-      configOptions.infoToFormFields(page.doc.getForm(), pageIndex, {
-        info: dynamicCode.value.info!,
-        region,
-        card,
-        cardInfoHash: code.dynamicCardInfoHashBase64,
-      }),
       fontRegular,
+      configOptions.createFormFields(pageIndex, dynamicCode.value.info!, card),
       configOptions,
     ),
   )
@@ -166,11 +161,7 @@ export const generatePdf = async (
       type: 'application/pdf',
     })
   } catch (error) {
-    // TODO What is the point of this?
-    if (error instanceof Error) {
-      throw new PdfError(error.message)
-    }
-    throw error
+    throw new PdfError(error instanceof Error ? error.message : 'Unknown PDF generation error')
   }
 }
 

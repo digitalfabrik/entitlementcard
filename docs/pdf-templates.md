@@ -1,7 +1,15 @@
-# PDF Templates
+# Preparing PDF templates
 
-The pdf templates of each project can be found in `administration/src/project-configs/{project}/pdf-template.pdf`.
-The pdfs have been created with indesign and the source files reside in our nextcloud:
+The PDF templates are located in the `/administration/project-config/<project>` directories. They are exported
+from their source files in `/administration/resources/pdf-templates` with
+[Affinity Studio](https://www.affinity.studio/) (free use, registration necessary).
 
-- [Nürnberg](https://nextcloud.tuerantuer.org/index.php/apps/files/?dir=/Projects/Digitale%20Berechtigungskarte/Stadt%20N%C3%BCrnberg/Releasedokumente/2305%20PDF-Vorlage%20Digitale%20Berechtigungskarte%20N%C3%BCrnberg)
-- [Bayern](https://nextcloud.tuerantuer.org/index.php/apps/files/?dir=/Projects/Digitale%20Berechtigungskarte/Sozialministerium%20Bayern/Releasedokumente)
+A few important export settings:
+
+- Use document resolution ☑️
+- Downsample images ☑️
+- Above DPI: ~300 DPI
+- Compatibility: PDF/X-3:2003
+- Color space: "As document"
+- Embed fonts: "All fonts"
+- Subset fonts: ☑️

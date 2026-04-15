@@ -1,15 +1,9 @@
 import { create, toBinary } from '@bufbuild/protobuf'
-import {
-  PDFFont,
-  PDFPage,
-  PDFString,
-  PDFTextField,
-  RotationTypes,
-  grayscale,
-} from '@cantoo/pdf-lib'
+import { PDFFont, PDFPage, PDFString, RotationTypes, grayscale } from '@cantoo/pdf-lib'
 
 import { type QrCode, QrCodeSchema } from '../../generated/card_pb'
 import {
+  FormConfig,
   PdfFormElementProps,
   PdfLinkAreaProps,
   PdfQrCodeElementProps,
@@ -22,14 +16,17 @@ const DEFAULT_QUIET_ZONE_SIZE = 4 // pt
 
 export const pdfFormElement = (
   page: PDFPage,
-  formFields: PDFTextField[],
   font: PDFFont,
+  formConfigs: FormConfig[],
   formElementProps: PdfFormElementProps,
 ): void => {
+  const form = page.doc.getForm()
   const lineHeight = font.heightAtSize(formElementProps.fontSize) + 6
 
-  formFields.forEach((formField, index) => {
-    formField.addToPage(page, {
+  formConfigs.forEach((config, index) => {
+    const textField = form.createTextField(config.name)
+
+    textField.addToPage(page, {
       x: mmToPt(formElementProps.x),
       y: page.getSize().height - mmToPt(formElementProps.y) - lineHeight * index,
       borderColor: grayscale(1),
@@ -37,11 +34,9 @@ export const pdfFormElement = (
       width: mmToPt(formElementProps.width),
       font,
     })
-    formField.enableCombing()
-    formField.setFontSize(formElementProps.fontSize)
+    textField.setText(config.text)
+    textField.updateAppearances(font)
   })
-
-  // form.flatten()
 }
 
 export const pdfLinkArea = (
