@@ -1,0 +1,6 @@
+name: dev
+variables:
+  - name: backend_user_import_token
+    value: "{{process.env.backend_user_import_token}}"
+  - name: backend_base_url
+    value: http://localhost:8000

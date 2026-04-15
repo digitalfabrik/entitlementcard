@@ -298,7 +298,6 @@ internal class UserImportTest : IntegrationTest() {
         val response = importUsers(csvFile)
 
         assertEquals(HttpStatus.OK, response.statusCode)
-        assertEquals("Import successfully completed", response.body?.message)
 
         transaction {
             assertEquals(1, UserEntitlements.selectAll().count())
@@ -330,7 +329,6 @@ internal class UserImportTest : IntegrationTest() {
         val response = importUsers(csvFile)
 
         assertEquals(HttpStatus.OK, response.statusCode)
-        assertEquals("Import successfully completed", response.body?.message)
 
         transaction {
             assertEquals(1, UserEntitlements.selectAll().count())
@@ -364,7 +362,6 @@ internal class UserImportTest : IntegrationTest() {
         val response = importUsers(csvFile)
 
         assertEquals(HttpStatus.OK, response.statusCode)
-        assertEquals("Import successfully completed", response.body?.message)
 
         transaction {
             assertTrue(CardEntity.find { Cards.id eq dynamicCardId }.single().revoked)

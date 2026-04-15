@@ -35,5 +35,6 @@ object MigrationsRegistry {
             V0030_Fold_Application_Withdrawal_Into_Status(),
             V0031_AddAcceptingStoreDescriptionsTable(),
             V0032_AddUniqueIndexForAcceptingStoreDescriptionsTable(),
+            V0033_AddIndexOnCardsEntitlementId(),
         )
 }

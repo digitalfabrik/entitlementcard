@@ -1,0 +1,24 @@
+info:
+  name: Import users
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{backend_base_url}}/users/import"
+  body:
+    type: multipart-form
+    data:
+      - name: file
+        type: file
+        value:
+          - sample-data/userentitlements/user-entitlements-with-duplicates.csv
+  auth:
+    type: bearer
+    token: "{{backend_user_import_token}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
