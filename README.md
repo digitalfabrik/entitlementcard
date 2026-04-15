@@ -26,8 +26,9 @@
 * [Deep Linking](./docs/deep-linking.md)
 * [Domains & Projects](./docs/domains-projects.md)
 * [Upgrade flutter](./docs/flutter-upgrade.md)
+* [Preparing PDF templates](docs/pdf-templates.md)
 
-## What is a "entitlementcard"
+## What is an "entitlementcard"
 
 Short answer, it is a whitelabel for benefit cards in Germany, mainly targeted at volunteers and socially vulnerable
 groups.
