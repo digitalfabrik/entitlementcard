@@ -1,5 +1,5 @@
 import { Card } from '../../../cards/card'
-import { FreinetCardInput, FreinetCardWithUserIdInput } from '../../../generated/graphql'
+import { FreinetCardInput, FreinetCardWithUserIdInput } from '../../../graphql'
 
 export const getFreinetCardFromCard = (card: Card): FreinetCardInput => {
   if (!card.extensions.bavariaCardType) {
@@ -7,7 +7,7 @@ export const getFreinetCardFromCard = (card: Card): FreinetCardInput => {
   }
 
   return {
-    expirationDate: card.expirationDate !== null ? card.expirationDate.toString() : undefined,
+    expirationDate: card.expirationDate?.toString() ?? null,
     cardType: card.extensions.bavariaCardType,
   }
 }
@@ -22,7 +22,7 @@ export const getFreinetCardWithUserIdFromCard = (card: Card): FreinetCardWithUse
   }
 
   return {
-    expirationDate: card.expirationDate !== null ? card.expirationDate.toString() : undefined,
+    expirationDate: card.expirationDate?.toString() ?? null,
     cardType: card.extensions.bavariaCardType,
     userId: parseInt(card.extensions.freinetUserId, 10),
   }

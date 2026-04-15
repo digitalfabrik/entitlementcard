@@ -1,4 +1,4 @@
-/* eslint-disable react/jsx-pascal-case  -- we cannot change the keys of application namespace, see translation file comment */
+/* eslint-disable react/jsx-pascal-case -- we cannot change the keys of application namespace, see translation file comment */
 import { Close } from '@mui/icons-material'
 import {
   Button,
@@ -10,8 +10,9 @@ import {
 } from '@mui/material'
 import React, { useContext, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { useQuery } from 'urql'
 
-import { useGetDataPolicyQuery } from '../../../../generated/graphql'
+import { GetDataPolicyDocument } from '../../../../graphql'
 import { ProjectConfigContext } from '../../../../provider/ProjectConfigContext'
 import i18next from '../../../../translations/i18n'
 import getQueryResult from '../../../../util/getQueryResult'
@@ -73,9 +74,10 @@ const StepSendForm: Form<State, ValidatedInput, AdditionalProps> = {
       'givenInformationIsCorrectAndComplete',
     )
     const setHasAcceptedEmailUsage = useUpdateStateCallback(setState, 'hasAcceptedEmailUsage')
-    const policyQuery = useGetDataPolicyQuery({
+    const [dataPolicyState, dataPolicyQuery] = useQuery({
+      query: GetDataPolicyDocument,
       variables: { regionId: Number(regionId) },
-      skip: regionId.length === 0 || Number.isNaN(regionId),
+      pause: regionId.length === 0 || Number.isNaN(regionId),
     })
     const config = useContext(ProjectConfigContext)
     const [openPrivacyPolicy, setOpenPrivacyPolicy] = useState<boolean>(false)
@@ -94,7 +96,7 @@ const StepSendForm: Form<State, ValidatedInput, AdditionalProps> = {
       </Typography>
     )
 
-    const policyQueryHandler = getQueryResult(policyQuery)
+    const policyQueryHandler = getQueryResult(dataPolicyState, dataPolicyQuery)
     if (!policyQueryHandler.successful) {
       return policyQueryHandler.component
     }

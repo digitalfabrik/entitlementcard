@@ -3,16 +3,17 @@ import { Box, Button } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useMutation } from 'urql'
 
 import Blankslate from '../../../components/Blankslate'
 import ConfirmDialog from '../../../components/ConfirmDialog'
-import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
+import { messageFromGraphQlError } from '../../../errors'
 import {
   AcceptingStoreInput,
-  useAddAcceptingStoreMutation,
-  useDeleteStoresMutation,
-  useEditAcceptingStoreMutation,
-} from '../../../generated/graphql'
+  AddAcceptingStoreDocument,
+  DeleteStoresDocument,
+  EditAcceptingStoreDocument,
+} from '../../../graphql'
 import { AcceptingStoresData } from '../../applications/types/types'
 import { getStoreCoordinates } from '../../region/util/storeGeoDataService'
 import { splitStreetAndHouseNumber } from '../import/utils/splitStreetAndHouseNumber'
@@ -58,7 +59,7 @@ const StoresListOverview = ({
   data,
   refetchStores,
 }: {
-  data: AcceptingStoresData[]
+  data: readonly AcceptingStoresData[]
   refetchStores: () => void
 }): ReactElement => {
   const { t } = useTranslation('stores')
@@ -70,49 +71,23 @@ const StoresListOverview = ({
   const [showAddressError, setShowAddressError] = useState(false)
   const [acceptingStore, setAcceptingStore] = useState<AcceptingStoreFormData>()
   const { enqueueSnackbar } = useSnackbar()
-  const formFieldsAreValid = acceptingStore !== undefined && !isStoreFormInvalid(acceptingStore)
-  const [addAcceptingStore, { loading: isAddingStore }] = useAddAcceptingStoreMutation({
-    onCompleted: () => {
-      // TODO We can use the returned storeId to update the store in the list instead of refetching the whole list
-      enqueueSnackbar(t('storeAdded'), { variant: 'success' })
-      setAcceptingStore(undefined)
-      refetchStores()
-    },
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
-      enqueueSnackbar(title, { variant: 'error' })
-    },
-  })
-  const [deleteStores, { loading: isDeleting }] = useDeleteStoresMutation({
-    onCompleted: () => {
-      enqueueSnackbar(t('storeDeleted'), { variant: 'success' })
-      refetchStores()
-    },
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
-      enqueueSnackbar(title, { variant: 'error' })
-    },
-  })
+  const [addAcceptingStoreState, addAcceptingStoreMutation] = useMutation(AddAcceptingStoreDocument)
+  const [deleteStoresState, deleteStoresMutation] = useMutation(DeleteStoresDocument)
+  const [editAcceptingStoreState, editAcceptingStoreMutation] = useMutation(
+    EditAcceptingStoreDocument,
+  )
 
-  const [editAcceptingStore, { loading: isEditingStore }] = useEditAcceptingStoreMutation({
-    onCompleted: () => {
-      enqueueSnackbar(t('storeEdited'), { variant: 'success' })
-      setAcceptingStore(undefined)
-      refetchStores()
-    },
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
-      enqueueSnackbar(title, { variant: 'error' })
-    },
-  })
+  const formFieldsAreValid = acceptingStore !== undefined && !isStoreFormInvalid(acceptingStore)
 
   const openEditStoreDialog = (storeId: number) => {
     const activeStore = data.find(store => store.id === storeId)
+
     if (activeStore) {
       setOpenEditDialog(true)
       setAcceptingStore(initializeAcceptingStoreForm(activeStore))
     }
   }
+
   const openAddStoreDialog = () => {
     setAcceptingStore(undefined)
     setOpenEditDialog(true)
@@ -124,14 +99,38 @@ const StoresListOverview = ({
     setOpenEditDialog(false)
   }
 
-  const saveStore = () => {
+  const saveStore = async () => {
     setFormSendAttempt(true)
+
     if (formFieldsAreValid) {
       const mappedStore = mapFormDataToCsvAcceptingStore(acceptingStore)
+
       if (acceptingStore.id == null) {
-        addAcceptingStore({ variables: { store: mappedStore } })
+        const result = await addAcceptingStoreMutation({ store: mappedStore })
+
+        if (result.error) {
+          const { title } = messageFromGraphQlError(result.error)
+          enqueueSnackbar(title, { variant: 'error' })
+        } else {
+          // TODO We can use the returned storeId to update the store in the list instead of refetching the whole list
+          enqueueSnackbar(t('storeAdded'), { variant: 'success' })
+          setAcceptingStore(undefined)
+          refetchStores()
+        }
       } else {
-        editAcceptingStore({ variables: { storeId: acceptingStore.id, store: mappedStore } })
+        const result = await editAcceptingStoreMutation({
+          storeId: acceptingStore.id,
+          store: mappedStore,
+        })
+
+        if (result.error) {
+          const { title } = messageFromGraphQlError(result.error)
+          enqueueSnackbar(title, { variant: 'error' })
+        } else {
+          enqueueSnackbar(t('storeEdited'), { variant: 'success' })
+          setAcceptingStore(undefined)
+          refetchStores()
+        }
       }
     } else {
       enqueueSnackbar(t('storeForm:errorInvalidStoreForm'), { variant: 'error' })
@@ -164,11 +163,14 @@ const StoresListOverview = ({
     ) {
       try {
         setIsFetchingCoordinates(true)
+
+        // TODO Wrap this fetch in a hook or use a library like tanstack-query, SWR, etc…
         const position = await getStoreCoordinates(
           acceptingStore.city,
           `${acceptingStore.street} ${acceptingStore.houseNumber}`,
         )
         const hasValidPosition = position?.length === 2
+
         updateStore('longitude', hasValidPosition ? position[0] : undefined)
         updateStore('latitude', hasValidPosition ? position[1] : undefined)
         setShowAddressError(!hasValidPosition)
@@ -226,7 +228,11 @@ const StoresListOverview = ({
         </>
       )}
       <ManageStoreDialog
-        loading={isFetchingCoordinates || isAddingStore || isEditingStore}
+        loading={
+          isFetchingCoordinates ||
+          addAcceptingStoreState.fetching ||
+          editAcceptingStoreState.fetching
+        }
         open={openEditDialog}
         showAddressError={showAddressError}
         isEditMode={acceptingStore?.id !== undefined}
@@ -241,13 +247,20 @@ const StoresListOverview = ({
       <ConfirmDialog
         title={t('confirmDeletionDialogTitle')}
         open={deleteDialogIsOpen}
-        loading={isDeleting}
+        loading={deleteStoresState.fetching}
         confirmButtonText={t('misc:delete')}
         confirmButtonIcon={<DeleteOutline />}
         confirmButtonColor='error'
-        onConfirm={() => {
+        onConfirm={async () => {
           if (selectedStore !== undefined) {
-            deleteStores({ variables: { storeIds: [selectedStore.id] } })
+            const result = await deleteStoresMutation({ storeIds: [selectedStore.id] })
+            if (result.error) {
+              const { title } = messageFromGraphQlError(result.error)
+              enqueueSnackbar(title, { variant: 'error' })
+            } else {
+              enqueueSnackbar(t('storeDeleted'), { variant: 'success' })
+              refetchStores()
+            }
           } else {
             setDeleteDialogIsOpen(false)
           }

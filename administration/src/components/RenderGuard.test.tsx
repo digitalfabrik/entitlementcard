@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react'
 import React from 'react'
 
-import { Role } from '../generated/graphql'
+import { Role } from '../graphql'
 import { useWhoAmI } from '../provider/WhoAmIProvider'
 import { renderWithOptions } from '../testing/render'
 import RenderGuard from './RenderGuard'

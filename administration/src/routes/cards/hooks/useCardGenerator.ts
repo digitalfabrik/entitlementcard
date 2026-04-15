@@ -2,6 +2,7 @@ import { useSnackbar } from 'notistack'
 import { useCallback, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
+import { useMutation } from 'urql'
 
 import { Card, initializeCardFromCSV, updateCard as updateCardObject } from '../../../cards/card'
 import { showCardGenerationError } from '../../../cards/cardGenerationError'
@@ -10,13 +11,13 @@ import { generateCsv, getCSVFilename } from '../../../cards/csvFactory'
 import deleteCards from '../../../cards/deleteCards'
 import getDeepLinkFromQrCode from '../../../cards/getDeepLinkFromQrCode'
 import { generatePdf, getPdfFilename } from '../../../cards/pdf/pdfFactory'
-import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
+import { messageFromGraphQlError } from '../../../errors'
 import {
-  Region,
-  useCreateCardsMutation,
-  useDeleteCardsMutation,
-  useSendApplicationAndCardDataToFreinetMutation,
-} from '../../../generated/graphql'
+  CreateCardsDocument,
+  DeleteCardsDocument,
+  SendApplicationAndCardDataToFreinetDocument,
+  WhoAmIQuery,
+} from '../../../graphql'
 import { ProjectConfig } from '../../../project-configs'
 import { getCsvHeaders } from '../../../project-configs/helper'
 import { ProjectConfigContext } from '../../../provider/ProjectConfigContext'
@@ -33,10 +34,12 @@ import {
 import useSendCardConfirmationMails from './useSendCardConfirmationMails'
 import useSendCardDataToFreinet from './useSendCardDataToFreinet'
 
+type Region = NonNullable<WhoAmIQuery['me']['region']>
+
 const initializeCardsFromQueryParams = (
   projectConfig: ProjectConfig,
   searchParams: URLSearchParams,
-  region: Region,
+  region: Pick<Region, 'id' | 'name'>,
 ) => {
   const headers = getCsvHeaders(projectConfig)
   const values = headers.map(header => searchParams.get(header))
@@ -49,13 +52,8 @@ type GenerateCardFunction = (
   codes: CreateCardsResult[],
   cards: Card[],
   projectConfig: ProjectConfig,
-  region?: Region,
+  region?: Pick<Region, 'id' | 'name' | 'prefix'>,
 ) => Promise<Blob> | Blob
-
-type UseCardGeneratorProps = {
-  region: Region
-  initializeCards?: boolean
-}
 
 type UseCardGeneratorReturn = {
   cardGenerationStep: CardGenerationStep
@@ -70,34 +68,27 @@ type UseCardGeneratorReturn = {
 const useCardGenerator = ({
   region,
   initializeCards = true,
-}: UseCardGeneratorProps): UseCardGeneratorReturn => {
+}: {
+  region: Pick<Region, 'id' | 'name' | 'activatedForCardConfirmationMail' | 'prefix'>
+  initializeCards?: boolean
+}): UseCardGeneratorReturn => {
   const projectConfig = useContext(ProjectConfigContext)
   const [searchParams] = useSearchParams()
-  const [cardGenerationStep, setCardGenerationStep] = useState<CardGenerationStep>('input')
-  const [createCardsMutation] = useCreateCardsMutation()
-  const [deleteCardsMutation] = useDeleteCardsMutation()
   const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('cards')
-
-  const [sendApplicationAndCardDataToFreinet] = useSendApplicationAndCardDataToFreinetMutation({
-    onCompleted: data => {
-      if (data.sendApplicationAndCardDataToFreinet === true) {
-        enqueueSnackbar(t('freinetDataSyncSuccessMessage'), { variant: 'success' })
-      }
-    },
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
-      enqueueSnackbar(title, { variant: 'error', persist: true })
-    },
-  })
-
-  const sendCardDataToFreinet = useSendCardDataToFreinet()
-
   const sendConfirmationMails = useSendCardConfirmationMails(region)
   const initializedCards = initializeCards
     ? initializeCardsFromQueryParams(projectConfig, searchParams, region)
     : []
   const [cards, setCards] = useState<Card[]>(initializedCards)
+  const [cardGenerationStep, setCardGenerationStep] = useState<CardGenerationStep>('input')
+  const [, createCardsMutation] = useMutation(CreateCardsDocument)
+  const [, deleteCardsMutation] = useMutation(DeleteCardsDocument)
+  const [, sendApplicationAndCardDataToFreinetMutation] = useMutation(
+    SendApplicationAndCardDataToFreinetDocument,
+  )
+  const sendCardDataToFreinet = useSendCardDataToFreinet()
+
   const rawApplicationId = searchParams.get('applicationIdToMarkAsProcessed')
   const applicationId = rawApplicationId ? parseInt(rawApplicationId, 10) : null
 
@@ -125,18 +116,26 @@ const useCardGenerator = ({
           normalizedCards,
           applicationId,
         )
-        const dataUri = await generateFunction(codes, normalizedCards, projectConfig, region)
-        downloadDataUri(dataUri, filename)
+
+        downloadDataUri(
+          await generateFunction(codes, normalizedCards, projectConfig, region),
+          filename,
+        )
         normalizedCards.forEach(saveActivityLog)
 
         if (applicationId != null) {
           const freinetCard = getFreinetCardFromCard(normalizedCards[0])
-          sendApplicationAndCardDataToFreinet({
-            variables: {
-              applicationId,
-              freinetCard,
-            },
+          const result = await sendApplicationAndCardDataToFreinetMutation({
+            applicationId,
+            freinetCard,
           })
+
+          if (result.error) {
+            const { title } = messageFromGraphQlError(result.error)
+            enqueueSnackbar(title, { variant: 'error', persist: true })
+          } else if (result.data?.sendApplicationAndCardDataToFreinet === true) {
+            enqueueSnackbar(t('freinetDataSyncSuccessMessage'), { variant: 'success' })
+          }
         } else {
           const cardsWithFreinetUserId = normalizedCards.flatMap(card =>
             card.extensions.freinetUserId ? [getFreinetCardWithUserIdFromCard(card)] : [],
@@ -179,11 +178,12 @@ const useCardGenerator = ({
       cards,
       applicationId,
       region,
-      sendApplicationAndCardDataToFreinet,
+      sendApplicationAndCardDataToFreinetMutation,
       sendCardDataToFreinet,
       sendConfirmationMails,
       enqueueSnackbar,
       deleteCardsMutation,
+      t,
     ],
   )
 

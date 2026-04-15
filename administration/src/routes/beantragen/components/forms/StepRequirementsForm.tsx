@@ -1,11 +1,11 @@
-/* eslint-disable react/jsx-pascal-case  -- we cannot change the keys of application namespace, see translation file comment */
+/* eslint-disable react/jsx-pascal-case -- we cannot change the keys of application namespace, see translation file comment */
 import React from 'react'
 
 import {
   BavariaCardType,
   BlueCardEntitlementInput,
   GoldenCardEntitlementInput,
-} from '../../../../generated/graphql'
+} from '../../../../graphql'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
 import {
   CompoundState,
@@ -27,6 +27,7 @@ type ValidatedInput =
   | { type: BavariaCardType.Golden; value: GoldenCardEntitlementInput }
 type Options = { cardType: BavariaCardType | null }
 type AdditionalProps = { applicantName: string }
+
 const StepRequirementsForm: Form<
   StepRequirementsFormState,
   ValidatedInput,
@@ -39,25 +40,23 @@ const StepRequirementsForm: Form<
     switch (options.cardType) {
       case BavariaCardType.Blue: {
         const blueCardEntitlement = BlueCardEntitlementForm.validate(state.blueCardEntitlement)
-        if (blueCardEntitlement.type === 'error') {
-          return { type: 'error' }
-        }
-        return {
-          type: 'valid',
-          value: { type: BavariaCardType.Blue, value: blueCardEntitlement.value },
-        }
+        return blueCardEntitlement.type === 'error'
+          ? { type: 'error' }
+          : {
+              type: 'valid',
+              value: { type: BavariaCardType.Blue, value: blueCardEntitlement.value },
+            }
       }
       case BavariaCardType.Golden: {
         const goldenCardEntitlement = GoldenCardEntitlementForm.validate(
           state.goldenCardEntitlement,
         )
-        if (goldenCardEntitlement.type === 'error') {
-          return { type: 'error' }
-        }
-        return {
-          type: 'valid',
-          value: { type: BavariaCardType.Golden, value: goldenCardEntitlement.value },
-        }
+        return goldenCardEntitlement.type === 'error'
+          ? { type: 'error' }
+          : {
+              type: 'valid',
+              value: { type: BavariaCardType.Golden, value: goldenCardEntitlement.value },
+            }
       }
       case null:
       default:

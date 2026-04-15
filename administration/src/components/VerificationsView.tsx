@@ -2,11 +2,7 @@ import { Typography, styled } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import {
-  ApplicationPublic,
-  ApplicationStatus,
-  ApplicationVerificationView,
-} from '../generated/graphql'
+import { ApplicationPublic, ApplicationStatus, ApplicationVerificationView } from '../graphql'
 import { VerificationStatus, verificationStatus } from '../util/verifications'
 import VerificationListItem from './VerificationListItem'
 
@@ -23,7 +19,7 @@ const VerificationsView = ({
   isAdminView = false,
 }: {
   application: Pick<ApplicationPublic, 'id' | 'status'> & {
-    verifications: Array<
+    verifications: Readonly<
       Pick<
         ApplicationVerificationView,
         | 'organizationName'
@@ -31,7 +27,7 @@ const VerificationsView = ({
         | 'verificationId'
         | 'rejectedDate'
         | 'verifiedDate'
-      >
+      >[]
     >
   }
   /** Displayed in an administration page, so show administrative UI */

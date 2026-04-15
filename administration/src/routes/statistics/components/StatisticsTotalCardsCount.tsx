@@ -3,7 +3,7 @@ import { styled } from '@mui/system'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { CardStatisticsResultModel } from '../../../generated/graphql'
+import { CardStatisticsResultModel } from '../../../graphql'
 import { toLowerCaseFirstLetter } from '../../../util/helper'
 
 const Container = styled('div')`
@@ -17,7 +17,7 @@ const Container = styled('div')`
 `
 
 type StatisticsTotalCountProps = {
-  statistics: CardStatisticsResultModel[]
+  statistics: readonly CardStatisticsResultModel[]
 }
 
 type TotalAmountResultModel = {
@@ -27,7 +27,9 @@ type TotalAmountResultModel = {
   totalCardsGolden: number
 }
 
-const sumTotalAmounts = (statistics: CardStatisticsResultModel[]): TotalAmountResultModel => ({
+const sumTotalAmounts = (
+  statistics: readonly CardStatisticsResultModel[],
+): TotalAmountResultModel => ({
   totalCardsCreated: statistics.reduce((sum, current) => sum + current.cardsCreated, 0),
   totalCardsActivated: statistics.reduce((sum, current) => sum + current.cardsActivated, 0),
   totalCardsBlue: statistics.reduce((sum, current) => sum + current.cardsActivatedBlue, 0),

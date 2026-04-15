@@ -3,7 +3,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import CustomDivider from '../../../../components/CustomDivider'
-import { GoldenCardHonoredByMinisterPresidentEntitlementInput } from '../../../../generated/graphql'
+import { GoldenCardHonoredByMinisterPresidentEntitlementInput } from '../../../../graphql'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
 import {
   CompoundState,
@@ -20,6 +20,7 @@ type State = CompoundState<typeof SubForms>
 type ValidatedInput = GoldenCardHonoredByMinisterPresidentEntitlementInput
 type Options = Record<string, unknown>
 type AdditionalProps = Record<string, unknown>
+
 const HonoredByMinisterPresidentEntitlementForm: Form<
   State,
   ValidatedInput,

@@ -4,7 +4,7 @@ import React, { ReactElement, useContext, useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import FormAlert from '../../../components/FormAlert'
-import { Role } from '../../../generated/graphql'
+import { Role } from '../../../graphql'
 import { ProjectConfigContext } from '../../../provider/ProjectConfigContext'
 import { useWhoAmI } from '../../../provider/WhoAmIProvider'
 import roleToText from '../utils/roleToText'

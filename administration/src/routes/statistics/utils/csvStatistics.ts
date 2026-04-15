@@ -2,7 +2,7 @@ import { stringify } from 'csv-stringify/browser/esm/sync'
 import i18next from 'i18next'
 import { Intl, Temporal } from 'temporal-polyfill'
 
-import { CardStatisticsResultModel, Region } from '../../../generated/graphql'
+import { CardStatisticsResultModel, Region } from '../../../graphql'
 import { CardStatistics } from '../../../project-configs'
 import { CSV_MIME_TYPE_UTF8 } from '../../applications/constants'
 
@@ -18,7 +18,7 @@ const dateFormatter = new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' })
 export const csvFileName = (
   dateStart: Temporal.PlainDate,
   dateEnd: Temporal.PlainDate,
-  region?: Region,
+  region?: Pick<Region, 'id' | 'name' | 'prefix'>,
 ): string => {
   const regionPrefix = region ? `${region.prefix}${region.name}_` : ''
   const dateSuffix = (
@@ -30,7 +30,7 @@ export const csvFileName = (
 }
 
 export const generateCsv = (
-  statistics: CardStatisticsResultModel[],
+  statistics: readonly CardStatisticsResultModel[],
   cardStatistics: CardStatistics,
 ): Blob => {
   if (!cardStatistics.enabled) {

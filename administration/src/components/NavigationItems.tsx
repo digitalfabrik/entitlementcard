@@ -4,7 +4,7 @@ import { OverridableStringUnion } from '@mui/types'
 import React, { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Role } from '../generated/graphql'
+import { Role } from '../graphql'
 import { ProjectConfigContext } from '../provider/ProjectConfigContext'
 import { useWhoAmI } from '../provider/WhoAmIProvider'
 import RenderGuard from './RenderGuard'

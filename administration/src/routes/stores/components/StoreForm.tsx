@@ -3,7 +3,7 @@ import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import CardTextField from '../../../cards/extensions/components/CardTextField'
-import { Category } from '../../../generated/graphql'
+import { Category } from '../../../graphql'
 import { AcceptingStoreFormData, UpdateStoreFunction } from '../types'
 import AddressSection from './form/AddressSection'
 import CategorySection from './form/CategorySection'

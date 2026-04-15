@@ -4,7 +4,7 @@ import { useSnackbar } from 'notistack'
 import React, { ChangeEventHandler, useContext, useEffect, useRef } from 'react'
 
 import FormAlert from '../../../../components/FormAlert'
-import { AttachmentInput } from '../../../../generated/graphql'
+import { AttachmentInput } from '../../../../graphql'
 import i18next from '../../../../translations/i18n'
 import { Form, FormComponentProps, ValidationResult } from '../../util/formType'
 import globalArrayBuffersManager from '../../util/globalArrayBuffersManager'

@@ -2,7 +2,7 @@ import { Alert, Typography, styled } from '@mui/material'
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
-import { OrganizationInput } from '../../../../generated/graphql'
+import { OrganizationInput } from '../../../../graphql'
 import i18next from '../../../../translations/i18n'
 import { normalizeName } from '../../../../util/normalizeString'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
@@ -59,9 +59,9 @@ const getValidatedCompoundInput = createCompoundValidate(SubForms, {
 })
 
 type State = CompoundState<typeof SubForms>
-type ValidatedInput = OrganizationInput
 type AdditionalProps = { applicantName: string }
-const OrganizationForm: Form<State, ValidatedInput, AdditionalProps> = {
+
+const OrganizationForm: Form<State, OrganizationInput, AdditionalProps> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: state => {

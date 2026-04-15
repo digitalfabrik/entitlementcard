@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 
 import { Card, initializeCard } from '../../../../cards/card'
-import { Region } from '../../../../generated/graphql'
+import { Region } from '../../../../graphql'
 import { ProjectConfigContext } from '../../../../provider/ProjectConfigContext'
 import AddCardForm from './AddCardForm'
 
@@ -25,7 +25,7 @@ const AddCardsForm = ({
   showAddMoreCardsButton,
   updateCard,
 }: {
-  region: Region
+  region: Pick<Region, 'id'>
   cards: Card[]
   setCards: (cards: Card[]) => void
   showAddMoreCardsButton: boolean

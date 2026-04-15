@@ -3,7 +3,7 @@ import { BarTooltipProps } from '@nivo/bar'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { CardStatisticsResultModel } from '../../../generated/graphql'
+import { CardStatisticsResultModel } from '../../../graphql'
 
 export const ToolTipContainer = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,

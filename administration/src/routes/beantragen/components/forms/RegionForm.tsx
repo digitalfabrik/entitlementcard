@@ -1,11 +1,16 @@
-/* eslint-disable react/jsx-pascal-case  -- we cannot change the keys of application namespace, see translation file comment */
+/* eslint-disable react/jsx-pascal-case -- we cannot change the keys of application namespace, see translation file comment */
 import { Alert, CircularProgress, Link, Typography } from '@mui/material'
 import { styled } from '@mui/system'
 import { TFunction } from 'i18next'
 import React, { useContext, useEffect } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { UseQueryState, useQuery } from 'urql'
 
-import { Region, useGetRegionsByPostalCodeQuery } from '../../../../generated/graphql'
+import {
+  GetRegionsByPostalCodeDocument,
+  GetRegionsByPostalCodeQuery,
+  Region,
+} from '../../../../graphql'
 import { ProjectConfigContext } from '../../../../provider/ProjectConfigContext'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
 import {
@@ -43,7 +48,7 @@ export const getOptions = (regions: Region[]): SelectItem[] =>
 const renderAlert = (
   state: State,
   postalCode: string,
-  query: ReturnType<typeof useGetRegionsByPostalCodeQuery>,
+  queryState: UseQueryState<GetRegionsByPostalCodeQuery>,
   t: TFunction,
 ) => {
   if (state.region.manuallySelected) {
@@ -52,18 +57,18 @@ const renderAlert = (
   if (postalCode.length !== 5) {
     return <StyledAlert severity='error'>{t('regionAlertPostalCode')}</StyledAlert>
   }
-  if (query.loading) {
+  if (queryState.fetching) {
     return <StyledAlert severity='info' icon={<CircularProgress size='1em' />} />
   }
-  if (query.error) {
+  if (queryState.error) {
     return (
       <StyledAlert severity='warning'>
         <Trans i18nKey='applicationForms:regionNotDetermined' />
       </StyledAlert>
     )
   }
-  if (query.data && query.data.regions.length > 1) {
-    const regions = query.data.regions
+  if (queryState.data && queryState.data.regions.length > 1) {
+    const regions = queryState.data.regions
     return (
       <StyledAlert severity='warning'>
         <Trans i18nKey='applicationForms:regionNotUnique' />
@@ -80,7 +85,7 @@ const renderAlert = (
       </StyledAlert>
     )
   }
-  if (query.data) {
+  if (queryState.data) {
     return <StyledAlert severity='success'>{t('regionDetermined')}</StyledAlert>
   }
   return null
@@ -105,24 +110,27 @@ const RegionForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
     const { t } = useTranslation('applicationForms')
     const setRegionState = useUpdateStateCallback(setState, 'region')
     const project = useContext(ProjectConfigContext).projectId
-    const regionQuery = useGetRegionsByPostalCodeQuery({
-      onCompleted: result => {
-        if (result.regions.length === 1) {
-          const region = result.regions[0]
-          setState(prevState => {
-            if (prevState.region.manuallySelected) {
-              return prevState
-            }
-            return {
-              region: { selectedValue: region.id.toString(), manuallySelected: false },
-              postalCodeUsedForAutoSelect: postalCode,
-            }
-          })
-        }
-      },
+    const [regionQueryState] = useQuery({
+      query: GetRegionsByPostalCodeDocument,
       variables: { postalCode, project },
-      skip: postalCode.length !== 5 || state.region.manuallySelected,
+      pause: postalCode.length !== 5 || state.region.manuallySelected,
     })
+
+    // Auto-select region when query returns exactly one result
+    useEffect(() => {
+      if (regionQueryState.data?.regions.length === 1) {
+        const region = regionQueryState.data.regions[0]
+        setState(prevState => {
+          if (prevState.region.manuallySelected) {
+            return prevState
+          }
+          return {
+            region: { selectedValue: region.id.toString(), manuallySelected: false },
+            postalCodeUsedForAutoSelect: postalCode,
+          }
+        })
+      }
+    }, [regionQueryState.data, postalCode, setState])
 
     // Clear auto-selected region when postal code changes
     useEffect(() => {
@@ -165,7 +173,7 @@ const RegionForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
           </Link>{' '}
           {t('regionSelectionListTextEnd')}
         </Typography>
-        {renderAlert(state, postalCode, regionQuery, t)}
+        {renderAlert(state, postalCode, regionQueryState, t)}
         <SubForms.region.Component
           state={state.region}
           setState={setRegionState}

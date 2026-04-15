@@ -19,7 +19,7 @@ import {
 import fontkit from '@pdf-lib/fontkit'
 import { Temporal } from 'temporal-polyfill'
 
-import { Region } from '../../generated/graphql'
+import { Region } from '../../graphql'
 import { PdfConfig, PdfFontReference, ProjectConfig } from '../../project-configs'
 import { getBuildConfig } from '../../util/getBuildConfig'
 import { isProductionEnvironment } from '../../util/helper'
@@ -49,7 +49,7 @@ const fillContentAreas = async (
   code: CreateCardsResult,
   card: Card,
   pdfConfig: PdfConfig,
-  region: Region | undefined,
+  region: Pick<Region, 'id' | 'name' | 'prefix'> | undefined,
   fontRegular: PDFFont,
   fontBold: PDFFont,
 ): Promise<void> => {
@@ -118,7 +118,7 @@ export const generatePdf = async (
   codes: CreateCardsResult[],
   cards: Card[],
   projectConfig: ProjectConfig,
-  region?: Region,
+  region?: Pick<Region, 'id' | 'name' | 'prefix'>,
 ): Promise<Blob> => {
   try {
     const templateDocument = await PDFDocument.load(

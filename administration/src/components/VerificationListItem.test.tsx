@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { ApplicationVerificationView } from '../generated/graphql'
+import { ApplicationVerificationView } from '../graphql'
 import {
   verificationsAwaiting,
   verificationsRejected,
@@ -11,7 +11,7 @@ import VerificationListItem from './VerificationListItem'
 
 const mockProvider: CustomRenderOptions = {
   translation: true,
-  apollo: true,
+  graphQlProvider: true,
 }
 
 describe('VerificationListItem', () => {

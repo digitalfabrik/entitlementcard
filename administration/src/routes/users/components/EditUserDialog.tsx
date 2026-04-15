@@ -3,13 +3,14 @@ import { Link, Stack } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useMutation } from 'urql'
 
 import CardTextField from '../../../cards/extensions/components/CardTextField'
 import AlertBox from '../../../components/AlertBox'
 import BaseCheckbox from '../../../components/BaseCheckbox'
 import ConfirmDialog from '../../../components/ConfirmDialog'
-import getMessageFromApolloError from '../../../errors/getMessageFromApolloError'
-import { Administrator, Role, useEditAdministratorMutation } from '../../../generated/graphql'
+import { messageFromGraphQlError } from '../../../errors'
+import { Administrator, EditAdministratorDocument, Role } from '../../../graphql'
 import { WhoAmIContext } from '../../../provider/WhoAmIProvider'
 import { isEmailValid } from '../../../util/verifications'
 import RegionSelector from './RegionSelector'
@@ -23,7 +24,7 @@ const EditUserDialog = ({
 }: {
   onClose: () => void
   onSuccess: () => void
-  selectedUser: Administrator | null
+  selectedUser: Pick<Administrator, 'id' | 'email' | 'role' | 'regionId'> | null
   /**
    * If regionIdOverride is set, the region selector will be hidden, and only RegionAdministrator
    * and RegionManager roles are selectable.
@@ -37,39 +38,36 @@ const EditUserDialog = ({
   const [role, setRole] = useState<Role | null>(selectedUser?.role ?? null)
   const [regionId, setRegionId] = useState<number | null>(selectedUser?.regionId ?? null)
   const [notificationConfirmed, setNotificationConfirmed] = useState(false)
+  const [editAdministratorState, editAdministratorMutation] = useMutation(EditAdministratorDocument)
   const rolesWithRegion = [Role.RegionManager, Role.RegionAdmin]
 
-  const [editAdministrator, { loading }] = useEditAdministratorMutation({
-    onError: error => {
-      const { title } = getMessageFromApolloError(error)
-      enqueueSnackbar(title, { variant: 'error' })
-    },
-    onCompleted: () => {
-      enqueueSnackbar(t('editUserSuccess'), { variant: 'success' })
-      onClose()
-      if (me?.id === selectedUser?.id) {
-        refetchMe()
-      }
-      onSuccess()
-    },
-  })
-
-  const onEditUser = () => {
+  const onEditUser = async () => {
     if (selectedUser != null) {
-      editAdministrator({
-        variables: {
-          adminId: selectedUser.id,
-          newEmail: email,
-          newRole: role as Role,
-          newRegionId:
-            // eslint-disable-next-line no-nested-ternary
-            regionIdOverride !== null
-              ? regionIdOverride
-              : role !== null && rolesWithRegion.includes(role)
-                ? regionId
-                : null,
-        },
+      const result = await editAdministratorMutation({
+        adminId: selectedUser.id,
+        newEmail: email,
+        newRole: role as Role,
+        newRegionId:
+          // eslint-disable-next-line no-nested-ternary
+          regionIdOverride !== null
+            ? regionIdOverride
+            : role !== null && rolesWithRegion.includes(role)
+              ? regionId
+              : null,
       })
+
+      if (result.error) {
+        const { title } = messageFromGraphQlError(result.error)
+        enqueueSnackbar(title, { variant: 'error' })
+      } else {
+        enqueueSnackbar(t('editUserSuccess'), { variant: 'success' })
+        onClose()
+
+        if (me?.id === selectedUser.id) {
+          refetchMe()
+        }
+        onSuccess()
+      }
     }
   }
 
@@ -110,7 +108,7 @@ const EditUserDialog = ({
       onClose={onClose}
       title={t('editUser')}
       onConfirm={onEditUser}
-      loading={loading}
+      loading={editAdministratorState.fetching}
       actionDisabled={userEditDisabled}
       confirmButtonText={t('editUser')}
       confirmButtonIcon={<Edit />}

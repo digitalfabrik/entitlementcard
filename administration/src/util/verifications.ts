@@ -1,4 +1,4 @@
-import { ApplicationVerificationView } from '../generated/graphql'
+import { ApplicationVerificationView } from '../graphql'
 
 export const isEmailValid = (email: string): boolean =>
   // Regex source: https://emailregex.com/index.html

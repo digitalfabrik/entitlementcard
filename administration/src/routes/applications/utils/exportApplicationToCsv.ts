@@ -33,7 +33,10 @@ export class ApplicationToCsvError extends Error {
  * TODO If this function is to be called in a loop, refactor it to take the date formatter as an
  *   argument.
  */
-export const exportApplicationToCsv = (application: Application, config: ProjectConfig): void => {
+export const exportApplicationToCsv = (
+  application: Pick<Application, 'jsonValue' | 'createdDate'>,
+  config: ProjectConfig,
+): void => {
   try {
     if (!config.applicationFeature?.csvExport) {
       throw new ApplicationToCsvError('This project does not support application CSV export.')

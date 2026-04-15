@@ -1,36 +1,23 @@
 import React from 'react'
 
-import {
-  type ApplicationPublic,
-  ApplicationStatus,
-  ApplicationVerificationView,
-} from '../generated/graphql'
+import { ApplicationStatus } from '../graphql'
 import { verificationsMixed } from '../routes/applications/__mocks__/verificationData'
+import { Application } from '../routes/applications/types/types'
 import { CustomRenderOptions, renderWithOptions } from '../testing/render'
 import { JsonField } from './JsonFieldView'
 import VerificationsView from './VerificationsView'
 
 const mockProvider: CustomRenderOptions = {
   translation: true,
-  apollo: true,
+  graphQlProvider: true,
 }
 
 describe('VerificationsView', () => {
-  const renderView = (
-    application: Pick<ApplicationPublic, 'status' | 'id'> & {
-      verifications: Pick<
-        ApplicationVerificationView,
-        | 'organizationName'
-        | 'contactEmailAddress'
-        | 'verificationId'
-        | 'rejectedDate'
-        | 'verifiedDate'
-      >[]
-    },
-  ) => renderWithOptions(<VerificationsView application={application} />, mockProvider)
+  const renderView = (application: Application) =>
+    renderWithOptions(<VerificationsView application={application} />, mockProvider)
 
   it('should show a hint if there are no verifications', () => {
-    const application = {
+    const application: Application = {
       createdDate: '2024-05-15T09:20:23.350015Z',
       id: 1,
       jsonValue: {
@@ -41,6 +28,8 @@ describe('VerificationsView', () => {
       status: ApplicationStatus.Pending,
       note: 'neu',
       verifications: [],
+      statusResolvedDate: null,
+      rejectionMessage: null,
     }
     const { getByText, getByRole } = renderView(application)
     expect(getByText('Bestätigung(en) durch Organisationen:')).toBeTruthy()
@@ -48,7 +37,7 @@ describe('VerificationsView', () => {
   })
 
   it('should render a list of verification items', () => {
-    const application = {
+    const application: Application = {
       createdDate: '2024-05-15T09:20:23.350015Z',
       id: 2,
       jsonValue: {
@@ -59,6 +48,8 @@ describe('VerificationsView', () => {
       status: ApplicationStatus.Pending,
       note: 'neu',
       verifications: verificationsMixed,
+      statusResolvedDate: null,
+      rejectionMessage: null,
     }
     const { getByText, queryAllByRole } = renderView(application)
     expect(getByText('Bestätigung(en) durch Organisationen:')).toBeTruthy()

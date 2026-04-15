@@ -3,7 +3,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import CustomDivider from '../../../../components/CustomDivider'
-import { BlueCardVolunteerServiceEntitlementInput } from '../../../../generated/graphql'
+import { BlueCardVolunteerServiceEntitlementInput } from '../../../../graphql'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
 import {
   CompoundState,
@@ -22,6 +22,7 @@ const SubForms = {
 
 type State = CompoundState<typeof SubForms>
 type ValidatedInput = BlueCardVolunteerServiceEntitlementInput
+
 const VolunteerServiceEntitlementForm: Form<State, ValidatedInput> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),

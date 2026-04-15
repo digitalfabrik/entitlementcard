@@ -1,9 +1,9 @@
-import { ApolloError } from '@apollo/client'
 import { EnqueueSnackbar } from 'notistack'
 import React from 'react'
+import { CombinedError } from 'urql'
 
 import FormAlert from '../components/FormAlert'
-import getMessageFromApolloError from '../errors/getMessageFromApolloError'
+import { messageFromGraphQlError } from '../errors'
 import i18next from '../translations/i18n'
 import { reportErrorToSentry } from '../util/sentry'
 import { CreateCardsError } from './createCards'
@@ -13,8 +13,8 @@ import { PdfError } from './pdf/pdfFactory'
 export const showCardGenerationError = (enqueueSnackbar: EnqueueSnackbar, error: unknown): void => {
   if (error instanceof CreateCardsError) {
     enqueueSnackbar(error.message, { variant: 'error' })
-  } else if (error instanceof ApolloError) {
-    const { title } = getMessageFromApolloError(error)
+  } else if (error instanceof CombinedError) {
+    const { title } = messageFromGraphQlError(error)
     enqueueSnackbar(<FormAlert isToast errorMessage={title} />, {
       variant: 'error',
       autoHideDuration: 8000,

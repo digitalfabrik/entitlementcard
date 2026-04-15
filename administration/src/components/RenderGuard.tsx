@@ -2,7 +2,7 @@ import React, { ReactElement, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import AlertBox from '../components/AlertBox'
-import { Role } from '../generated/graphql'
+import { Role } from '../graphql'
 import { useWhoAmI } from '../provider/WhoAmIProvider'
 
 /** With this component you can protect rendering child components.

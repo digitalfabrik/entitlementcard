@@ -1,36 +1,45 @@
-import React, { ReactElement, useContext } from 'react'
+import React, { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Temporal } from 'temporal-polyfill'
+import { useQuery } from 'urql'
 
 import AlertBox from '../../components/AlertBox'
 import {
-  Region,
+  GetCardStatisticsInProjectDocument,
+  GetCardStatisticsInRegionDocument,
   Role,
-  useGetCardStatisticsInProjectQuery,
-  useGetCardStatisticsInRegionQuery,
-} from '../../generated/graphql'
+  WhoAmIQuery,
+} from '../../graphql'
 import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import { useWhoAmI } from '../../provider/WhoAmIProvider'
 import getQueryResult from '../../util/getQueryResult'
 import StatisticsOverview from './components/StatisticsOverview'
-import { defaultEndDate, defaultStartDate } from './constants'
+import { defaultStatisticsRange } from './constants'
+
+type Region = NonNullable<WhoAmIQuery['me']['region']>
 
 const ViewProjectStatistics = () => {
-  const cardStatisticsQuery = useGetCardStatisticsInProjectQuery({
-    variables: { dateEnd: defaultEndDate.toString(), dateStart: defaultStartDate.toString() },
+  const [dateRange, setDateRange] = useState(defaultStatisticsRange)
+  const [cardStatisticsState, cardStatisticsQuery] = useQuery({
+    query: GetCardStatisticsInProjectDocument,
+    variables: {
+      dateEnd: defaultStatisticsRange.end.toString(),
+      dateStart: defaultStatisticsRange.start.toString(),
+    },
   })
-  const cardStatisticsQueryResult = getQueryResult(cardStatisticsQuery)
+  const cardStatisticsQueryResult = getQueryResult(cardStatisticsState, cardStatisticsQuery)
 
   if (!cardStatisticsQueryResult.successful) {
     return cardStatisticsQueryResult.component
   }
   return (
     <StatisticsOverview
-      onApplyFilter={(dateStart: Temporal.PlainDate, dateEnd: Temporal.PlainDate) => {
-        cardStatisticsQuery.refetch({
-          dateStart: dateStart.toString(),
-          dateEnd: dateEnd.toString(),
+      dateRange={dateRange}
+      onApplyFilter={range => {
+        cardStatisticsQuery({
+          requestPolicy: 'network-only',
+          variables: { dateEnd: range.end.toString(), dateStart: range.start.toString() },
         })
+        setDateRange(range)
       }}
       statistics={cardStatisticsQueryResult.data.result}
     />
@@ -38,32 +47,35 @@ const ViewProjectStatistics = () => {
 }
 
 const ViewRegionStatistics = ({ region }: { region: Region }) => {
-  const cardStatisticsQuery = useGetCardStatisticsInRegionQuery({
+  const [dateRange, setDateRange] = useState(defaultStatisticsRange)
+  const [cardStatisticsState, cardStatisticsQuery] = useQuery({
+    query: GetCardStatisticsInRegionDocument,
     variables: {
-      dateEnd: defaultEndDate.toString(),
-      dateStart: defaultStartDate.toString(),
+      dateEnd: defaultStatisticsRange.end.toString(),
+      dateStart: defaultStatisticsRange.start.toString(),
       regionId: region.id,
     },
   })
-  const cardStatisticsQueryResult = getQueryResult(cardStatisticsQuery)
+  const cardStatisticsQueryResult = getQueryResult(cardStatisticsState, cardStatisticsQuery)
 
-  if (!cardStatisticsQueryResult.successful) {
-    return cardStatisticsQueryResult.component
-  }
-  return (
+  return !cardStatisticsQueryResult.successful ? (
+    cardStatisticsQueryResult.component
+  ) : (
     <StatisticsOverview
-      onApplyFilter={(dateStart: Temporal.PlainDate, dateEnd: Temporal.PlainDate) => {
-        cardStatisticsQuery.refetch({
-          dateStart: dateStart.toString(),
-          dateEnd: dateEnd.toString(),
-          regionId: region.id,
+      dateRange={dateRange}
+      onApplyFilter={range => {
+        cardStatisticsQuery({
+          requestPolicy: 'network-only',
+          variables: { dateEnd: range.end.toString(), dateStart: range.start.toString() },
         })
+        setDateRange(range)
       }}
       statistics={cardStatisticsQueryResult.data.result}
       region={region}
     />
   )
 }
+
 const StatisticsController = (): ReactElement => {
   const { role, region } = useWhoAmI().me
   const { cardStatistics } = useContext(ProjectConfigContext)

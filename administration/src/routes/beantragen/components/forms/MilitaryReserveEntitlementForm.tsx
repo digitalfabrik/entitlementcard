@@ -3,7 +3,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import CustomDivider from '../../../../components/CustomDivider'
-import { BlueCardMilitaryReserveEntitlementInput } from '../../../../generated/graphql'
+import { BlueCardMilitaryReserveEntitlementInput } from '../../../../graphql'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
 import {
   CompoundState,
@@ -20,6 +20,7 @@ const SubForms = {
 
 type State = CompoundState<typeof SubForms>
 type ValidatedInput = BlueCardMilitaryReserveEntitlementInput
+
 const MilitaryReserveEntitlementForm: Form<State, ValidatedInput> = {
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),

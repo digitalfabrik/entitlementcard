@@ -1,7 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { ApplicationInput, BavariaCardType, Region } from '../../../../generated/graphql'
+import { ApplicationInput, BavariaCardType, Region } from '../../../../graphql'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
 import {
   CompoundState,
@@ -28,6 +28,7 @@ type State = { activeStep: number } & CompoundState<typeof SubForms>
 type ValidatedInput = [RegionId, ApplicationInput]
 type Options = { regions: Region[] }
 type AdditionalProps = { onSubmit: () => void; loading: boolean }
+
 const ApplicationForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
   initialState: {
     ...createCompoundInitialState(SubForms),
@@ -87,49 +88,44 @@ const ApplicationForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
     loading,
   }: FormComponentProps<State, AdditionalProps, Options>) => {
     const { t } = useTranslation('applicationForms')
-    const personalDataStep = useFormAsStep(
-      t('applicationStepPersonalData'),
-      PersonalDataForm,
-      state,
-      setState,
-      'stepPersonalData',
-      { regions: options.regions },
-      {},
-    )
-    const cardTypeStep = useFormAsStep(
-      'Kartentyp',
-      StepCardTypeForm,
-      state,
-      setState,
-      'stepCardType',
-      {},
-      {},
-    )
-    const requirementsStep = useFormAsStep(
-      t('applicationStepRequirements'),
-      StepRequirementsForm,
-      state,
-      setState,
-      'stepRequirements',
-      { cardType: state.stepCardType.cardType.selectedValue },
-      {
-        applicantName: `${state.stepPersonalData.forenames.shortText} ${state.stepPersonalData.surname.shortText}`,
-      },
-    )
-    const sendStep = useFormAsStep(
-      t('applicationStepSubmit'),
-      StepSendForm,
-      state,
-      setState,
-      'stepSend',
-      {},
-      { regionId: state.stepPersonalData.region.region.selectedValue },
-    )
+    const steps = [
+      useFormAsStep(
+        t('applicationStepPersonalData'),
+        PersonalDataForm,
+        state,
+        setState,
+        'stepPersonalData',
+        { regions: options.regions },
+        {},
+      ),
+      useFormAsStep('Kartentyp', StepCardTypeForm, state, setState, 'stepCardType', {}, {}),
+      useFormAsStep(
+        t('applicationStepRequirements'),
+        StepRequirementsForm,
+        state,
+        setState,
+        'stepRequirements',
+        { cardType: state.stepCardType.cardType.selectedValue },
+        {
+          applicantName: `${state.stepPersonalData.forenames.shortText} ${state.stepPersonalData.surname.shortText}`,
+        },
+      ),
+      useFormAsStep(
+        t('applicationStepSubmit'),
+        StepSendForm,
+        state,
+        setState,
+        'stepSend',
+        {},
+        { regionId: state.stepPersonalData.region.region.selectedValue },
+      ),
+    ]
+
     return (
       <SteppedSubForms
         activeStep={state.activeStep}
         setActiveStep={useUpdateStateCallback(setState, 'activeStep')}
-        subForms={[personalDataStep, cardTypeStep, requirementsStep, sendStep]}
+        subForms={steps}
         onSubmit={onSubmit}
         loading={loading}
       />
