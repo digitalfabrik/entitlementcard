@@ -1,7 +1,6 @@
 import { Box, Typography, styled } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import { ReactElement, useCallback, useContext, useMemo, useState } from 'react'
-import * as React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useMutation, useQuery } from 'urql'
 
