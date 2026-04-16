@@ -22,8 +22,8 @@ const ViewProjectStatistics = () => {
   const [cardStatisticsState, cardStatisticsQuery] = useQuery({
     query: GetCardStatisticsInProjectDocument,
     variables: {
-      dateEnd: defaultStatisticsRange.end.toString(),
-      dateStart: defaultStatisticsRange.start.toString(),
+      dateEnd: dateRange.end.toString(),
+      dateStart: dateRange.start.toString(),
     },
   })
   const cardStatisticsQueryResult = getQueryResult(cardStatisticsState, cardStatisticsQuery)
@@ -34,13 +34,7 @@ const ViewProjectStatistics = () => {
   return (
     <StatisticsOverview
       dateRange={dateRange}
-      onApplyFilter={range => {
-        cardStatisticsQuery({
-          requestPolicy: 'network-only',
-          variables: { dateEnd: range.end.toString(), dateStart: range.start.toString() },
-        })
-        setDateRange(range)
-      }}
+      onApplyFilter={setDateRange}
       statistics={cardStatisticsQueryResult.data.result}
     />
   )
@@ -51,8 +45,8 @@ const ViewRegionStatistics = ({ region }: { region: Region }) => {
   const [cardStatisticsState, cardStatisticsQuery] = useQuery({
     query: GetCardStatisticsInRegionDocument,
     variables: {
-      dateEnd: defaultStatisticsRange.end.toString(),
-      dateStart: defaultStatisticsRange.start.toString(),
+      dateEnd: dateRange.end.toString(),
+      dateStart: dateRange.start.toString(),
       regionId: region.id,
     },
   })
@@ -63,13 +57,7 @@ const ViewRegionStatistics = ({ region }: { region: Region }) => {
   ) : (
     <StatisticsOverview
       dateRange={dateRange}
-      onApplyFilter={range => {
-        cardStatisticsQuery({
-          requestPolicy: 'network-only',
-          variables: { dateEnd: range.end.toString(), dateStart: range.start.toString() },
-        })
-        setDateRange(range)
-      }}
+      onApplyFilter={setDateRange}
       statistics={cardStatisticsQueryResult.data.result}
       region={region}
     />
