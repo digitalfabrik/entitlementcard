@@ -140,12 +140,11 @@ export const generatePdf = async (
     targetDocument.setTitle(projectConfig.pdf.title)
     targetDocument.setAuthor(projectConfig.pdf.issuer)
 
-    const templatePages = await targetDocument.copyPages(
-      templateDocument,
-      Array.from({ length: codes.length }, () => 0),
-    )
+    const templatePages: PDFPage[] = []
     for (let i = 0; i < codes.length; i++) {
-      targetDocument.addPage(templatePages[i])
+      const [page] = await targetDocument.copyPages(templateDocument, [0])
+      targetDocument.addPage(page)
+      templatePages.push(page)
     }
 
     const [fontRegular, fontBold] = await Promise.all([
