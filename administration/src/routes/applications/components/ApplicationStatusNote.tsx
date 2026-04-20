@@ -1,5 +1,5 @@
 /* eslint-disable react/destructuring-assignment */
-import { CancelOutlined, CheckCircleOutlined, RemoveCircleOutline } from '@mui/icons-material'
+import { CancelOutlined, CheckCircleOutlined, RemoveCircleOutlined } from '@mui/icons-material'
 import { Typography } from '@mui/material'
 import React, { ReactElement } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
@@ -51,7 +51,7 @@ const icon = (applicationStatus: ApplicationStatus): ReactElement | undefined =>
     case ApplicationStatus.Rejected:
       return <CancelOutlined fontSize='small' color={statusColor(applicationStatus)} />
     case ApplicationStatus.Withdrawn:
-      return <RemoveCircleOutline fontSize='small' color={statusColor(applicationStatus)} />
+      return <RemoveCircleOutlined fontSize='small' color={statusColor(applicationStatus)} />
   }
 }
 
@@ -83,7 +83,11 @@ export const ApplicationStatusNote = (p: {
             }}
             components={{
               resolution: (
-                <Typography component='span' fontWeight='bold' fontSize='inherit' color={color} />
+                <Typography
+                  component='span'
+                  sx={{ fontWeight: 'bold', fontSize: 'inherit' }}
+                  color={color}
+                />
               ),
             }}
           />

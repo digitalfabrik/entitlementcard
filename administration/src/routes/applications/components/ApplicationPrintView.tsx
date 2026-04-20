@@ -1,5 +1,5 @@
 import { Box, Stack, Typography, css } from '@mui/material'
-import React, { ReactElement, forwardRef } from 'react'
+import { ReactElement, forwardRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Temporal } from 'temporal-polyfill'
 
@@ -41,7 +41,7 @@ export const ApplicationPrintView = forwardRef<
 
   return (
     <Stack ref={ref} sx={{ gap: 4 }}>
-      <Typography variant='h6' marginY={0}>
+      <Typography variant='h6' sx={{ marginY: 0 }}>
         {t('applicationFrom', { date: Temporal.Instant.from(p.application.createdDate) })}
       </Typography>
 

@@ -3,7 +3,7 @@ import { Button, Typography, useTheme } from '@mui/material'
 import { Theme } from '@mui/system'
 import { TFunction } from 'i18next'
 import { useSnackbar } from 'notistack'
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Temporal } from 'temporal-polyfill'
 import { useMutation } from 'urql'
@@ -73,8 +73,7 @@ const VerificationListItem = ({
   return (
     <Typography
       component='li'
-      sx={{ borderLeft: `2px solid ${color}`, position: 'relative' }}
-      paddingLeft={1.5}
+      sx={{ borderLeft: `2px solid ${color}`, paddingLeft: 1.5, position: 'relative' }}
     >
       <table cellPadding='2px'>
         <tbody>

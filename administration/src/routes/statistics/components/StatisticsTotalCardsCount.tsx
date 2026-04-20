@@ -1,6 +1,6 @@
 import { Typography } from '@mui/material'
 import { styled } from '@mui/system'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { CardStatisticsResultModel } from '../../../graphql'
@@ -39,7 +39,7 @@ const StatisticsTotalCardsCount = ({ statistics }: StatisticsTotalCountProps): R
   const { t } = useTranslation('statistics')
   return (
     <Container>
-      <Typography variant='h6' margin={0} textAlign='center'>
+      <Typography variant='h6' sx={{ margin: 0, textAlign: 'center' }}>
         {t('allRegions')}
       </Typography>
       <Typography component='span' data-testid='totalCardsCreated'>

@@ -1,5 +1,4 @@
 import { Alert, Typography, styled } from '@mui/material'
-import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { OrganizationInput } from '../../../../graphql'
@@ -88,7 +87,7 @@ const OrganizationForm: Form<State, OrganizationInput, AdditionalProps> = {
     const { t } = useTranslation('application')
     return (
       <>
-        <Typography variant='body2bold' component='h4' marginY={1.5}>
+        <Typography variant='body2bold' component='h4' sx={{ marginY: 1.5 }}>
           {t('organization.title')}
         </Typography>
         <ShortTextForm.Component
@@ -106,7 +105,7 @@ const OrganizationForm: Form<State, OrganizationInput, AdditionalProps> = {
           label={t('organization.category')}
           options={organizationCategoryOptions}
         />
-        <Typography variant='body2bold' component='h4' marginY={1.5}>
+        <Typography variant='body2bold' component='h4' sx={{ marginY: 1.5 }}>
           {t('organizationContact.title')}
         </Typography>
         <Typography>{t('applicationForms:organizationContactPersonDescription')}</Typography>

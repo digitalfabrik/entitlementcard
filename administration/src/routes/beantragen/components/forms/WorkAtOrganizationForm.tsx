@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-pascal-case -- we cannot change the keys of application namespace, see translation file comment */
 import { Typography } from '@mui/material'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import ConfirmDialog from '../../../../components/ConfirmDialog'
@@ -86,7 +86,7 @@ const WorkAtOrganizationForm: Form<State, WorkAtOrganizationInput, AdditionalPro
     return (
       <>
         <ActivityDivider onDelete={onDelete} />
-        <Typography variant='body2bold' component='h4' marginY={1.5}>
+        <Typography variant='body2bold' component='h4' sx={{ marginY: 1.5 }}>
           {t('applicationForms:workAtOrganizationHeadline')}
         </Typography>
         <SubForms.responsibility.Component
@@ -124,7 +124,7 @@ const WorkAtOrganizationForm: Form<State, WorkAtOrganizationInput, AdditionalPro
           label={t('payment')}
           options={paymentOptions}
         />
-        <Typography variant='body2bold' component='h4' marginY={1.5}>
+        <Typography variant='body2bold' component='h4' sx={{ marginY: 1.5 }}>
           {t('applicationForms:certificateHeadline')}
         </Typography>
         <Typography component='p'>

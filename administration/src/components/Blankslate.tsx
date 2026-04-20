@@ -1,6 +1,6 @@
 import { SxProps, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
-import React, { ReactElement, ReactNode } from 'react'
+import { ReactElement, ReactNode } from 'react'
 
 type BlankslateProps = {
   icon: ReactElement

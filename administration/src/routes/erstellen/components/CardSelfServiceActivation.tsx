@@ -1,6 +1,6 @@
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined'
 import { Button, Typography } from '@mui/material'
-import React, { ReactElement, useContext } from 'react'
+import { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { CreateCardsResult } from '../../../cards/createCards'
@@ -35,7 +35,7 @@ const CardSelfServiceActivation = ({
         {' '}
         {t('koblenzPassPdf')}
       </Button>
-      <Typography variant='body1' marginTop={1.5} marginBottom={3}>
+      <Typography variant='body1' sx={{ mt: 1.5, mb: 3 }}>
         {t('howToActivateHint')} <br />
         <br />
         <b>{t('important')}: </b>

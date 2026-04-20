@@ -1,7 +1,7 @@
 import { ArrowBack, SaveAlt } from '@mui/icons-material'
 import { Button, Stack, TextField, Tooltip, Typography, useTheme } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { useMutation } from 'urql'
@@ -49,16 +49,16 @@ const DataPrivacyOverview = ({
   return (
     <>
       <Stack
-        px={12}
-        justifyContent='space-evenly'
-        alignItems='center'
-        flexGrow={0}
         sx={{
+          px: 12,
+          justifyContent: 'space-evenly',
+          alignItems: 'center',
+          flexGrow: 0,
           zIndex: 0,
           height: '100vh',
         }}
       >
-        <Typography variant='h5' textAlign='center' margin={2}>
+        <Typography variant='h5' sx={{ textAlign: 'center', margin: 2 }}>
           {t('dataPrivacy')}
         </Typography>
         <TextField
@@ -80,8 +80,8 @@ const DataPrivacyOverview = ({
           onChange={e => setDataPrivacyText(e.target.value)}
         />
         <Typography
-          m={2}
           sx={{
+            m: 2,
             alignSelf: 'flex-start',
             color: maxCharsExceeded ? palette.error.main : palette.text.primary,
           }}

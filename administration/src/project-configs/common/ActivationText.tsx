@@ -1,6 +1,6 @@
 import { Button, Link, Typography } from '@mui/material'
 import { TFunction } from 'i18next'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { Trans } from 'react-i18next'
 
 export const ActivationText = (
@@ -10,7 +10,7 @@ export const ActivationText = (
   t: TFunction,
 ): ReactElement => (
   <div>
-    <Typography variant='h6' marginBottom={1}>
+    <Typography variant='h6' sx={{ marginBottom: 1 }}>
       {t('headline')}
     </Typography>
     <Typography component='span'>

@@ -81,7 +81,9 @@ const BaseMenu = (props: BaseMenuProps): ReactElement => {
           >
             <ListItemIcon>{menuItem.icon}</ListItemIcon>
             <ListItemText
-              slotProps={{ primary: { typography: 'button', color: 'textSecondary', margin: 0 } }}
+              slotProps={{
+                primary: { variant: 'button', color: 'textSecondary', sx: { margin: 0 } },
+              }}
             >
               {menuItem.name}
             </ListItemText>

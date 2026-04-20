@@ -1,5 +1,5 @@
 import { Stack, Table, TableBody, TableCell, TableHead, TableRow, Tooltip } from '@mui/material'
-import React, { ReactElement, useContext } from 'react'
+import { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Card, getValueByCSVHeader, isValueValid } from '../../../../cards/card'
@@ -13,7 +13,7 @@ const CardImportTable = ({ cards }: { cards: Card[] }): ReactElement => {
   const { t } = useTranslation('cards')
 
   return (
-    <Stack alignItems='center' flexGrow={1} sx={{ overflow: 'auto', marginTop: 2 }}>
+    <Stack sx={{ overflow: 'auto', marginTop: 2, alignItems: 'center', flexGrow: 1 }}>
       <Table sx={{ maxWidth: 860 }} size='small' stickyHeader>
         <TableHead>
           <TableRow>

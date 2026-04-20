@@ -2,7 +2,7 @@
 import { Alert, CircularProgress, Link, Typography } from '@mui/material'
 import { styled } from '@mui/system'
 import { TFunction } from 'i18next'
-import React, { useContext, useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { UseQueryState, useQuery } from 'urql'
 
@@ -72,7 +72,7 @@ const renderAlert = (
     return (
       <StyledAlert severity='warning'>
         <Trans i18nKey='applicationForms:regionNotUnique' />
-        <Typography component='ul' marginX={0.5}>
+        <Typography component='ul' sx={{ marginX: 0.5 }}>
           {regions.map(region => {
             const displayName = `${region.name} (${region.prefix})`
             return (

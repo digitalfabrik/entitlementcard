@@ -1,5 +1,4 @@
 import { Typography } from '@mui/material'
-import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import CustomDivider from '../../../../components/CustomDivider'
@@ -35,7 +34,7 @@ const HonoredByMinisterPresidentEntitlementForm: Form<
     return (
       <>
         <CustomDivider label={t('honoredByMinisterDivider')} />
-        <Typography variant='body2bold' component='h4' marginY={1.5}>
+        <Typography variant='body2bold' component='h4' sx={{ marginY: 1.5 }}>
           {t('honoredByMinisterCertificate')}
         </Typography>
         <Typography component='p'>

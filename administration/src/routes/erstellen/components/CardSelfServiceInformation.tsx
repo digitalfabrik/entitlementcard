@@ -1,6 +1,6 @@
 import { Button, Typography } from '@mui/material'
 import { Box } from '@mui/system'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import AppStoreLinks from '../../../components/AppStoreLinks'
@@ -26,9 +26,9 @@ const CardSelfServiceInformation = ({
       >
         {t('nextToActivation')}
       </Button>
-      <Box sx={{ marginTop: 6, marginBottom: 1 }}>
+      <Box sx={{ mt: 6, marginBottom: 1 }}>
         <Typography variant='body1'>{t('appNotInstalled')}</Typography>
-        <Typography variant='body1' fontWeight='bold'>
+        <Typography variant='body1' sx={{ fontWeight: 'bold' }}>
           {t('downloadApp')}
         </Typography>
       </Box>

@@ -51,34 +51,54 @@ export const defaultUiLocale = 'de-DE'
 i18n.use(initReactI18next).init({
   fallbackLng: 'de',
   resources: loadTranslations(),
-  interpolation: {
-    // Enable interpolation of Temporal types
-    format: (value, format) => {
-      if (value instanceof Temporal.Duration) {
-        return value.toLocaleString(defaultUiLocale)
-      } else if (
-        value instanceof Temporal.PlainMonthDay ||
-        value instanceof Temporal.PlainYearMonth ||
-        value instanceof Temporal.Instant ||
-        value instanceof Temporal.PlainDate ||
-        value instanceof Temporal.PlainDateTime ||
-        value instanceof Temporal.ZonedDateTime ||
-        value instanceof Date
-      ) {
-        return value.toLocaleString(defaultUiLocale, parseI18nFormatToIntlOptions(format))
-      } else {
-        return value
-      }
-    },
-  },
 })
+
+// i18next v26 introduced a built-in Formatter class that always overrides interpolation.format.
+// We override the built-in 'datetime' format to support Temporal types.
+i18n.services.formatter?.add(
+  'datetime',
+  (value: unknown, _lng: string | undefined, options: Record<string, unknown>) => {
+    const intlOptions = parseI18nFormatToIntlOptions(options)
+
+    if (value instanceof Temporal.Duration) {
+      return value.toLocaleString(defaultUiLocale)
+    } else if (
+      value instanceof Temporal.PlainMonthDay ||
+      value instanceof Temporal.PlainYearMonth ||
+      value instanceof Temporal.Instant ||
+      value instanceof Temporal.PlainDate ||
+      value instanceof Temporal.PlainDateTime ||
+      value instanceof Temporal.ZonedDateTime ||
+      value instanceof Date
+    ) {
+      return (
+        value as { toLocaleString(locale: string, opts?: Intl.DateTimeFormatOptions): string }
+      ).toLocaleString(defaultUiLocale, intlOptions)
+    }
+    return String(value)
+  },
+)
 
 export default i18n
 
 function parseI18nFormatToIntlOptions(
-  format: string | undefined,
+  format: string | Record<string, unknown> | undefined,
 ): Intl.DateTimeFormatOptions | undefined {
-  const options = format?.match(datetimeParser)?.[0]?.matchAll(datetimeStyleParser) ?? null
+  if (typeof format === 'object') {
+    const result: Intl.DateTimeFormatOptions = {}
+
+    if (isDateTimeStyle(format.dateStyle as string | undefined)) {
+      result.dateStyle = format.dateStyle as Intl.DateTimeFormatOptions['dateStyle']
+    }
+    if (isDateTimeStyle(format.timeStyle as string | undefined)) {
+      result.timeStyle = format.timeStyle as Intl.DateTimeFormatOptions['timeStyle']
+    }
+    return result
+  }
+
+  const options =
+    (format as string | undefined)?.match(datetimeParser)?.[0]?.matchAll(datetimeStyleParser) ??
+    null
 
   if (options) {
     return options.reduce((acc, match) => {

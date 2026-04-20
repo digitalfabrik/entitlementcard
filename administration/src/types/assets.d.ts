@@ -46,11 +46,9 @@ declare global {
   }
 
   declare module '*.svg' {
-    import * as React from 'react'
+    import { FunctionComponent } from 'react'
 
-    export const ReactComponent: React.FunctionComponent<
-      React.SVGProps<SVGSVGElement> & { title?: string }
-    >
+    export const ReactComponent: FunctionComponent<SVGProps<SVGSVGElement> & { title?: string }>
 
     const src: string
     export default src

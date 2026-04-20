@@ -1,6 +1,6 @@
 import { Card } from '@mui/material'
 import { styled } from '@mui/system'
-import React, { ReactElement, useContext } from 'react'
+import { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
 

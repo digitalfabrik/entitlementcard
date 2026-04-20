@@ -1,7 +1,7 @@
 import { Box, Link, Typography } from '@mui/material'
 import MUILink from '@mui/material/Link'
 import { grey } from '@mui/material/colors'
-import React, { ReactElement, useContext } from 'react'
+import { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import AppStoreLinks from '../../components/AppStoreLinks'
@@ -16,7 +16,9 @@ const DownloadPage = (): ReactElement => {
   const { ios, android } = getBuildConfig(window.location.hostname)
 
   return (
-    <Box display='flex' flexDirection='column' alignItems='center' mx='auto' mt={10}>
+    <Box
+      sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mx: 'auto', mt: 10 }}
+    >
       <Box
         component='img'
         sx={{
@@ -43,11 +45,11 @@ const DownloadPage = (): ReactElement => {
       >
         Tür an Tür - Digitalfabrik gGmbH
       </MUILink>
-      <Typography variant='h5' component='h2' mt={6}>
+      <Typography variant='h5' component='h2' sx={{ mt: 6 }}>
         {activationTranslations('downloadNow')}
       </Typography>
       <AppStoreLinks playStoreLink={android.appStoreLink} appStoreLink={ios.appStoreLink} />
-      <Box display='flex' flexWrap='wrap' justifyContent='center' gap={2}>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 2 }}>
         <Link href='/imprint' color='textPrimary' underline='none'>
           Impressum
         </Link>

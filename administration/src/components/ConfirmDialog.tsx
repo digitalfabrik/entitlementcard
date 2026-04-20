@@ -1,4 +1,4 @@
-import { CheckCircleOutline, Close } from '@mui/icons-material'
+import { CheckCircleOutlined, Close } from '@mui/icons-material'
 import {
   Breakpoint,
   Button,
@@ -71,7 +71,7 @@ const ConfirmDialog = ({
           color={confirmButtonColor}
           loading={loading}
           disabled={actionDisabled}
-          startIcon={confirmButtonIcon ?? <CheckCircleOutline />}
+          startIcon={confirmButtonIcon ?? <CheckCircleOutlined />}
           onClick={() => {
             onConfirm()
             if (closeOnConfirm) {

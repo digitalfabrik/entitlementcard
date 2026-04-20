@@ -1,6 +1,6 @@
 import { Card, Typography } from '@mui/material'
 import parse from 'html-react-parser'
-import React, { ReactElement, useContext } from 'react'
+import { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
@@ -10,7 +10,7 @@ const ImprintPage = (): ReactElement => {
   const { publisherText } = useContext(ProjectConfigContext)
   return (
     <Card sx={{ marginX: 'auto', padding: 4, overflow: 'auto', maxWidth: '900px' }}>
-      <Typography variant='h4' component='h1' marginBottom={4}>
+      <Typography variant='h4' component='h1' sx={{ mb: 4 }}>
         {t('imprint')}
       </Typography>
       {parse(publisherText)}
