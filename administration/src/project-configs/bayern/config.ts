@@ -3,7 +3,7 @@ import { buildConfigBayern } from 'build-configs'
 import { Temporal } from 'temporal-polyfill'
 
 import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
-import EMailNotificationExtension from '../../cards/extensions/EMailNotificationExtension'
+import EMailExtension from '../../cards/extensions/EMailExtension'
 import FreinetUserIdExtension from '../../cards/extensions/FreinetUserIdExtension'
 import RegionExtension from '../../cards/extensions/RegionExtension'
 import { JsonField, findValue } from '../../components/JsonFieldView'
@@ -54,7 +54,7 @@ const applicationJsonToCardQuery = (json: JsonField<'Array'>): string | null => 
     query.set(config.card.extensionColumnNames[cardTypeExtensionIdx] ?? '', value)
     if (personalData.emailAddress) {
       const applicantMailNotificationExtensionIdx = config.card.extensions.findIndex(
-        ext => ext === EMailNotificationExtension,
+        ext => ext === EMailExtension,
       )
       query.set(
         config.card.extensionColumnNames[applicantMailNotificationExtensionIdx] ?? '',
@@ -87,13 +87,8 @@ export const config: ProjectConfig = {
     defaultValidity: Temporal.Duration.from({ years: 3 }),
     nameColumnName: 'Name',
     expiryColumnName: 'Ablaufdatum',
-    extensionColumnNames: ['Kartentyp', null, 'MailNotification', 'UserId'],
-    extensions: [
-      BavariaCardTypeExtension,
-      RegionExtension,
-      EMailNotificationExtension,
-      FreinetUserIdExtension,
-    ],
+    extensionColumnNames: ['Kartentyp', null, 'EMail', 'UserId'],
+    extensions: [BavariaCardTypeExtension, RegionExtension, EMailExtension, FreinetUserIdExtension],
   },
   dataPrivacyHeadline:
     'Datenschutzerklärung für die Nutzung und Beantragung der digitalen bayerischen Ehrenamtskarte',

@@ -11,7 +11,7 @@ import {
 } from './AddressFieldExtensions'
 import BavariaCardTypeExtension from './BavariaCardTypeExtension'
 import BirthdayExtension from './BirthdayExtension'
-import EMailNotificationExtension from './EMailNotificationExtension'
+import EMailExtension from './EMailExtension'
 import FreinetUserIdExtension from './FreinetUserIdExtension'
 import KoblenzReferenceNumberExtension from './KoblenzReferenceNumberExtension'
 import NuernbergPassIdExtension from './NuernbergPassIdExtension'
@@ -53,7 +53,7 @@ const Extensions = [
   AddressPlzExtension,
   AddressLocationExtension,
   NuernbergPassIdExtension,
-  EMailNotificationExtension,
+  EMailExtension,
   KoblenzReferenceNumberExtension,
   FreinetUserIdExtension,
 ] as const

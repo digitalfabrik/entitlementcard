@@ -5,7 +5,7 @@ import { useMutation } from 'urql'
 
 import { Card } from '../../../cards/card'
 import { CreateCardsResult } from '../../../cards/createCards'
-import { EMAIL_NOTIFICATION_EXTENSION_NAME } from '../../../cards/extensions/EMailNotificationExtension'
+import { EMAIL_EXTENSION_NAME } from '../../../cards/extensions/EMailExtension'
 import getDeepLinkFromQrCode from '../../../cards/getDeepLinkFromQrCode'
 import { messageFromGraphQlError } from '../../../errors'
 import { Region, SendCardCreationConfirmationMailsDocument } from '../../../graphql'
@@ -23,11 +23,11 @@ const useSendCardConfirmationMails = (region: Pick<Region, 'id'>): SendCardConfi
     async (codes: CreateCardsResult[], cards: Card[]): Promise<void> => {
       const notificationData = codes.flatMap((code, index) => {
         const card = cards[index]
-        const mailNotificationExtensionState = card.extensions[EMAIL_NOTIFICATION_EXTENSION_NAME]
-        return mailNotificationExtensionState
+        const mailExtensionState = card.extensions[EMAIL_EXTENSION_NAME]
+        return mailExtensionState
           ? [
               {
-                recipientAddress: mailNotificationExtensionState,
+                recipientAddress: mailExtensionState,
                 recipientName: card.fullName,
                 deepLink: getDeepLinkFromQrCode(
                   { case: 'dynamicActivationCode', value: code.dynamicActivationCode },

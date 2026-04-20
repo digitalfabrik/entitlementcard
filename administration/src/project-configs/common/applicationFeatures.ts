@@ -1,5 +1,5 @@
 import BavariaCardTypeExtension from '../../cards/extensions/BavariaCardTypeExtension'
-import EMailNotificationExtension from '../../cards/extensions/EMailNotificationExtension'
+import EMailExtension from '../../cards/extensions/EMailExtension'
 import { JsonField, findValue } from '../../components/JsonFieldView'
 import {
   ApplicationDataIncompleteError,
@@ -41,7 +41,7 @@ export const applicationJsonToCardQuery = (json: JsonField<'Array'>): string | n
 
     if (personalData.emailAddress) {
       const applicantMailNotificationExtensionIdx = config.card.extensions.findIndex(
-        ext => ext === EMailNotificationExtension,
+        ext => ext === EMailExtension,
       )
       query.set(
         config.card.extensionColumnNames[applicantMailNotificationExtensionIdx] ?? '',
