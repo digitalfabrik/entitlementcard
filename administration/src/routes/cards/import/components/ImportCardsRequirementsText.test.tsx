@@ -26,9 +26,7 @@ describe('ImportCardsRequirementsText', () => {
       <ImportCardsRequirementsText csvHeaders={csvHeaders} isFreinetFormat={false} />,
       { projectConfig, translation: true },
     )
-    expect(
-      getByText('Spaltenformat: Name*, Ablaufdatum*, Kartentyp*, MailNotification, UserId'),
-    ).toBeTruthy()
+    expect(getByText('Spaltenformat: Name*, Ablaufdatum*, Kartentyp*, EMail, UserId')).toBeTruthy()
   })
 
   it('should show mandatory requirements with asterisks at Nuernberg', () => {

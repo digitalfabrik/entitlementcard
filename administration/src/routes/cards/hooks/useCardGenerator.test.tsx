@@ -178,7 +178,7 @@ describe('useCardGenerator', () => {
         extensions: {
           bavariaCardType: 'Standard',
           regionId: 0,
-          emailNotification: 'thea.test@gmail.com',
+          email: 'thea.test@gmail.com',
           freinetUserId: '12345',
         },
         fullName: 'Thea Test',

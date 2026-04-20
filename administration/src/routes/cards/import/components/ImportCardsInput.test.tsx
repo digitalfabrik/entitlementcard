@@ -94,7 +94,7 @@ Tilo Traber,,gold
   it('should correctly import CSV Card for bayern with extended data', async () => {
     const projectConfig = bayernConfig
     const csv = `
-Name,Ablaufdatum,Kartentyp,MailNotification,UserId
+Name,Ablaufdatum,Kartentyp,EMail,UserId
 Thea Test,03.04.2024,Standard,test@test.de,12345678
 Tilo Traber,,gold,test@test.de,98765432
 `
@@ -108,7 +108,7 @@ Tilo Traber,,gold,test@test.de,98765432
         extensions: {
           bavariaCardType: BAVARIA_CARD_TYPE_STANDARD,
           regionId: 0,
-          emailNotification: 'test@test.de',
+          email: 'test@test.de',
           freinetUserId: '12345678',
         },
         fullName: 'Thea Test',
@@ -119,7 +119,7 @@ Tilo Traber,,gold,test@test.de,98765432
         extensions: {
           regionId: 0,
           bavariaCardType: BAVARIA_CARD_TYPE_GOLD,
-          emailNotification: 'test@test.de',
+          email: 'test@test.de',
           freinetUserId: '98765432',
         },
         fullName: 'Tilo Traber',
