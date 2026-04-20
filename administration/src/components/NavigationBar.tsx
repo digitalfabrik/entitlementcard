@@ -24,9 +24,6 @@ const NavigationBar = (): ReactElement => {
           },
         })}
       >
-        <Icon fontSize='large'>
-          <img src={entitlementIcon} alt='Entitlement card project icon' />
-        </Icon>
         <Link
           href='/'
           underline='none'
@@ -36,17 +33,18 @@ const NavigationBar = (): ReactElement => {
             marginY: 1.5,
           }}
         >
-          <Stack>
-            <Typography component='span'>
-              {config.name} {t('administration')}
-            </Typography>
-            <Stack direction='row' sx={{ gap: 1 }}>
-              {!region ? null : (
-                <Typography component='span'>
-                  {region.prefix} {region.name}
-                </Typography>
-              )}
-              <Typography component='span'>{VITE_BUILD_VERSION_NAME}</Typography>
+          <Stack direction='row' sx={{ alignItems: 'center' }}>
+            <Icon fontSize='large'>
+              <img src={entitlementIcon} alt='Entitlement card project icon' />
+            </Icon>
+            <Stack sx={{ paddingX: 1 }}>
+              <Typography component='span'>
+                {config.name} {t('administration')}
+              </Typography>
+              <Typography component='span'>
+                {region ? `${region.prefix} ${region.name} ` : undefined}
+                {VITE_BUILD_VERSION_NAME}
+              </Typography>
             </Stack>
           </Stack>
         </Link>
