@@ -127,6 +127,7 @@ const RejectionDialog = (props: {
               helperText={showError && t('applicationRejectReasonRequired')}
               label={t('rejectionInputHint')}
               slotProps={{
+                ...params.slotProps,
                 input: {
                   ...params.slotProps.input,
                   size: 'small',
