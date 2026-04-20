@@ -1,4 +1,4 @@
-Name,Ablaufdatum,Kartentyp,MailNotification,UserId
+Name,Ablaufdatum,Kartentyp,EMail,UserId
 Bärta Bäumeister,03.3.2027,Standard,test@test.de,1291360
 Rudi Dutschke,,gold,test@test.de,1276621
 Erika Muster,,Goldkarte,test@test.de,1294761
