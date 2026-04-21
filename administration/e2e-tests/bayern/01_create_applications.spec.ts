@@ -26,7 +26,12 @@ test.describe('Bayern testing', () => {
       await page.getByRole('radio', { name: 'October' }).click()
       await page.getByRole('gridcell', { name: '10' }).click()
     } else {
-      await page.getByRole('textbox', { name: inputName }).fill(dateValue)
+      // MUI X v9 date picker uses spinbutton inputs (one per date section) instead of a single textbox.
+      // Click the day section and type all digits — the field auto-advances between sections.
+      const [day, month, year] = dateValue.split('.')
+      const group = page.getByRole('group', { name: inputName })
+      await group.getByRole('spinbutton', { name: 'Tag' }).click()
+      await page.keyboard.type(day + month + year)
     }
   }
 
