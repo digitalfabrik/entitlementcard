@@ -1,4 +1,4 @@
-import React, { ReactElement, useContext, useState } from 'react'
+import { ReactElement, useContext, useState } from 'react'
 
 import BaseCheckbox from '../../../../components/BaseCheckbox'
 import { Form, FormComponentProps } from '../../util/formType'

@@ -1,6 +1,5 @@
 /* eslint-disable react/jsx-pascal-case -- we cannot change the keys of application namespace, see translation file comment */
 import { Typography } from '@mui/material'
-import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import CustomDivider from '../../../../components/CustomDivider'
@@ -44,7 +43,7 @@ const WorkAtDepartmentEntitlementForm: Form<
           setState={useUpdateStateCallback(setState, 'organization')}
           applicantName={applicantName}
         />
-        <Typography variant='body2bold' component='h4' marginY={1.5}>
+        <Typography variant='body2bold' component='h4' sx={{ marginY: 1.5 }}>
           {t('activityInformation')}
         </Typography>
         <SubForms.responsibility.Component
@@ -52,7 +51,7 @@ const WorkAtDepartmentEntitlementForm: Form<
           state={state.responsibility}
           setState={useUpdateStateCallback(setState, 'responsibility')}
         />
-        <Typography variant='body2bold' component='h4' marginY={1.5}>
+        <Typography variant='body2bold' component='h4' sx={{ marginY: 1.5 }}>
           {t('certificateHeadline')}
         </Typography>
         <Typography component='p'>

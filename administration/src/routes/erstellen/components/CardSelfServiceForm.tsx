@@ -2,7 +2,7 @@ import { Close } from '@mui/icons-material'
 import InfoOutlined from '@mui/icons-material/InfoOutlined'
 import { Button, Link, Stack, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import React, { ReactElement, useContext, useState } from 'react'
+import { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 

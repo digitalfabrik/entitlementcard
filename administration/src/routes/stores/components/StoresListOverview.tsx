@@ -1,4 +1,4 @@
-import { AddBusiness, AddBusinessOutlined, DeleteOutline, FileUpload } from '@mui/icons-material'
+import { AddBusiness, AddBusinessOutlined, DeleteOutlined, FileUpload } from '@mui/icons-material'
 import { Box, Button } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { ReactElement, useState } from 'react'
@@ -249,7 +249,7 @@ const StoresListOverview = ({
         open={deleteDialogIsOpen}
         loading={deleteStoresState.fetching}
         confirmButtonText={t('misc:delete')}
-        confirmButtonIcon={<DeleteOutline />}
+        confirmButtonIcon={<DeleteOutlined />}
         confirmButtonColor='error'
         onConfirm={async () => {
           if (selectedStore !== undefined) {

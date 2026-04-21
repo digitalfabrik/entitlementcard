@@ -1,6 +1,6 @@
 import CloseIcon from '@mui/icons-material/Close'
 import { IconButton } from '@mui/material'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 type ClearInputButtonProps = { viewportSmall: boolean; onClick: () => void; input?: string }
 

@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { StoresFieldConfig } from '../../../../project-configs'
@@ -17,8 +17,7 @@ const StoresRequirementsText = ({ header }: ImportCardsRequirementsProps): React
       color='textDisabled'
       variant='body1'
       component='ul'
-      paddingLeft={3}
-      sx={{ textAlign: 'left' }}
+      sx={{ textAlign: 'left', paddingLeft: 3 }}
     >
       <Typography component='li'>
         {t('maxFileSize', { maxFileSize: FILE_SIZE_LIMIT_MEGA_BYTES })}{' '}

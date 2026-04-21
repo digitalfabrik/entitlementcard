@@ -21,7 +21,7 @@ const ContactSection = ({
   const homepageLabelId = useId()
   return (
     <>
-      <Typography variant='h6' marginY={0.5}>
+      <Typography variant='h6' sx={{ marginY: 0.5 }}>
         {t('contactSection')}
       </Typography>
       <Stack sx={{ flexDirection: 'row', gap: 2 }}>

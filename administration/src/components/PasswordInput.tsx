@@ -2,7 +2,7 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import { IconButton, InputAdornment, SxProps, TextField, Tooltip } from '@mui/material'
 import { Theme } from '@mui/system'
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 const PasswordInput = (p: {

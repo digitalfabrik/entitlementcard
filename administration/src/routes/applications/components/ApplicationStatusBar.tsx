@@ -1,5 +1,5 @@
 import { ToggleButton, ToggleButtonGroup, Typography, styled, useTheme } from '@mui/material'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { Application, ApplicationStatusBarItemType } from '../types/types'
@@ -31,7 +31,7 @@ const ApplicationStatusBar = ({
   const { t } = useTranslation('applicationsOverview')
   return (
     <Container>
-      <Typography variant='h6' margin={0}>
+      <Typography variant='h6' sx={{ margin: 0 }}>
         {t('status')}
       </Typography>
       <ApplicationStatusHelpButton />

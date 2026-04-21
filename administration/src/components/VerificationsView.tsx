@@ -1,5 +1,5 @@
 import { Typography, styled } from '@mui/material'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { ApplicationPublic, ApplicationStatus, ApplicationVerificationView } from '../graphql'
@@ -56,7 +56,7 @@ const VerificationsView = ({
         })}
       </VerificationContainer>
       {application.verifications.length === 0 ? (
-        <Typography fontStyle='italic' role='note'>
+        <Typography sx={{ fontStyle: 'italic' }} role='note'>
           ({t('none')})
         </Typography>
       ) : null}
