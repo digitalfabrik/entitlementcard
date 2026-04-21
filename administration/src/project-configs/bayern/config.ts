@@ -53,11 +53,11 @@ const applicationJsonToCardQuery = (json: JsonField<'Array'>): string | null => 
     const value = cardType === 'Goldene Ehrenamtskarte' ? 'Goldkarte' : 'Standard'
     query.set(config.card.extensionColumnNames[cardTypeExtensionIdx] ?? '', value)
     if (personalData.emailAddress) {
-      const applicantMailNotificationExtensionIdx = config.card.extensions.findIndex(
+      const applicantMailExtensionIdx = config.card.extensions.findIndex(
         ext => ext === EMailExtension,
       )
       query.set(
-        config.card.extensionColumnNames[applicantMailNotificationExtensionIdx] ?? '',
+        config.card.extensionColumnNames[applicantMailExtensionIdx] ?? '',
         personalData.emailAddress,
       )
     }
