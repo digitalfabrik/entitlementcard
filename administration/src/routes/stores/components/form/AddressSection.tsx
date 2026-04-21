@@ -34,7 +34,7 @@ const AddressSection = ({
 
   return (
     <>
-      <Typography variant='h6' marginY={0.5}>
+      <Typography variant='h6' sx={{ marginY: 0.5 }}>
         {t('addressSection')}
       </Typography>
       <Box sx={{ flexDirection: 'row', gap: 2, display: 'flex' }}>

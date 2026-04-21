@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material'
-import React, { ReactElement, useContext } from 'react'
+import { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { ProjectConfig } from '../../../../project-configs'
@@ -36,8 +36,7 @@ const ImportCardsRequirementsText = ({
       color='textDisabled'
       variant='body1'
       component='ul'
-      paddingLeft={2.5}
-      sx={{ textAlign: 'left' }}
+      sx={{ textAlign: 'left', paddingLeft: 2.5 }}
     >
       <Typography component='li'>
         {t('maxFileSize', { maxFileSize: FILE_SIZE_LIMIT_MEGA_BYTES })}{' '}

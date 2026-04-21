@@ -1,6 +1,6 @@
 import { Edit, PersonAdd, PersonRemove } from '@mui/icons-material'
 import { Button, Stack, Typography, styled } from '@mui/material'
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Administrator, Region } from '../../../graphql'
@@ -53,11 +53,11 @@ const UsersTable = ({
       <StyledTable>
         <thead>
           <tr>
-            <Typography fontWeight='bold' variant='body1' component='th'>
+            <Typography variant='body1' component='th' sx={{ fontWeight: 'bold' }}>
               {t('eMail')}
             </Typography>
             {selectedRegionId !== null ? null : <th>{t('region')}</th>}
-            <Typography fontWeight='bold' variant='body1' component='th'>
+            <Typography variant='body1' component='th' sx={{ fontWeight: 'bold' }}>
               {t('role')} <RoleHelpButton />
             </Typography>
             <th>{/* Action Buttons */}</th>

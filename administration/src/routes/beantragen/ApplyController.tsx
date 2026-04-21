@@ -1,6 +1,6 @@
 import { Box, Typography, styled } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import React, { ReactElement, useCallback, useContext, useMemo, useState } from 'react'
+import { ReactElement, useCallback, useContext, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useMutation, useQuery } from 'urql'
 
@@ -100,7 +100,7 @@ const ApplyController = (): React.ReactElement | null => {
       }}
     >
       <Box sx={{ maxWidth: '1000px', width: '100%' }}>
-        <Typography variant='h4' component='h1' margin={2} textAlign='center'>
+        <Typography variant='h4' component='h1' sx={{ margin: 2, textAlign: 'center' }}>
           {formSubmitted ? t('sentSuccessfully') : t('title')}
         </Typography>
         {formSubmitted ? (

@@ -1,6 +1,6 @@
 import { Box, Card, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import React, { PropsWithChildren, ReactNode } from 'react'
+import { PropsWithChildren, ReactNode } from 'react'
 
 export const SettingsCardButtonBox = styled(Box)(({ theme }) => ({
   textAlign: 'right',

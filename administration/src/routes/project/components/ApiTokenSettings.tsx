@@ -58,15 +58,17 @@ const ApiTokenGeneration = (): ReactElement => {
 
   return (
     <Stack
-      my={1}
-      p={2}
-      borderRadius={2}
-      boxShadow='inset 0 2px 4px rgba(0, 0, 0, 0.05)'
-      bgcolor='ghostwhite'
+      sx={{
+        my: 1,
+        p: 2,
+        borderRadius: 2,
+        boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.05)',
+        bgcolor: 'ghostwhite',
+      }}
     >
       <Typography variant='h6'>{t('createNewToken')}</Typography>
       <Typography component='p'>{t('tokenOnlyShowedOnceHint')}</Typography>
-      <Stack direction='row' my={2} spacing={2}>
+      <Stack direction='row' spacing={2} sx={{ my: 2 }}>
         <FormControl fullWidth>
           <InputLabel id='expiresIn-label'>{t('validPeriod')}</InputLabel>
           <Select
@@ -91,7 +93,7 @@ const ApiTokenGeneration = (): ReactElement => {
       {createdToken !== null && (
         <>
           <Typography component='p'>{t('newToken')}:</Typography>
-          <Box p={2} mt={1} border={1} borderRadius={2} sx={{ wordBreak: 'break-all' }}>
+          <Box sx={{ p: 2, mt: 1, border: 1, borderRadius: 2, wordBreak: 'break-all' }}>
             <Typography variant='body1' sx={{ userSelect: 'all' }}>
               {createdToken}
             </Typography>

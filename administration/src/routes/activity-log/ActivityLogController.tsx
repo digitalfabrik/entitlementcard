@@ -1,5 +1,5 @@
 import { Card, Stack, Typography } from '@mui/material'
-import React, { ReactElement, useContext } from 'react'
+import { ReactElement, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Temporal } from 'temporal-polyfill'
 
@@ -29,7 +29,7 @@ const ActivityLogController = ({
       <Stack sx={{ flexGrow: 1, alignItems: 'center', justifyContent: 'safe center' }}>
         <Card sx={{ maxWidth: '850px', p: 2, flexGrow: 1, overflow: 'auto' }}>
           <Typography variant='h4'>{t('misc:activityLog')}</Typography>
-          <Typography component='p' paddingY={1.5}>
+          <Typography component='p' sx={{ py: 1.5 }}>
             {t('activityLogDescription')}
           </Typography>
           <ActivityLogTable activityLog={activityLogSorted} activityLogConfig={activityLogConfig} />

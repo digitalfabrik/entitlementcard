@@ -1,4 +1,4 @@
-import { CheckCircleOutline, Close } from '@mui/icons-material'
+import { CheckCircleOutlined, Close } from '@mui/icons-material'
 import {
   Button,
   Dialog,
@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import React, { ReactElement, useContext, useEffect, useState } from 'react'
+import { ReactElement, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Temporal } from 'temporal-polyfill'
 import { useMutation } from 'urql'
@@ -96,7 +96,7 @@ const AutomaticLogoutDialog = ({
           variant='contained'
           color='primary'
           onClick={() => signIn()}
-          startIcon={<CheckCircleOutline />}
+          startIcon={<CheckCircleOutlined />}
           loading={signInState.fetching}
         >
           {t('loginPeriodExtendButton')}

@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react'
-import React, { ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { MemoryRouter } from 'react-router'
 import { Temporal } from 'temporal-polyfill'
 import { Client, Provider as UrqlProvider, cacheExchange } from 'urql'

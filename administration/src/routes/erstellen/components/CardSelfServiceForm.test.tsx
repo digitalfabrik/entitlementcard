@@ -1,5 +1,5 @@
 import { fireEvent } from '@testing-library/react'
-import React, { act } from 'react'
+import { act } from 'react'
 
 import { initializeCardFromCSV } from '../../../cards/card'
 import FormAlert from '../../../components/FormAlert'

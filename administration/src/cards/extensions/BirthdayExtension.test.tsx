@@ -77,7 +77,7 @@ describe('BirthdayExtension', () => {
     })
 
     it('should show error if no birthday is provided, forceError is false and user left field', () => {
-      const { getByText, getByPlaceholderText } = renderWithOptions(
+      const { getByText, container } = renderWithOptions(
         <BirthdayExtension.Component
           forceError={false}
           setValue={setValue}
@@ -86,8 +86,8 @@ describe('BirthdayExtension', () => {
         />,
         mockProvider,
       )
-      const datePicker = getByPlaceholderText('TT.MM.JJJJ')
-      fireEvent.blur(datePicker)
+      const sectionList = container.querySelector('.MuiPickersSectionList-root')!
+      fireEvent.blur(sectionList)
       // Ignore timout for onBlur
       act(() => jest.runAllTimers())
       expect(BirthdayExtension.isValid({ birthday: null })).toBeFalsy()
@@ -240,7 +240,7 @@ describe('BirthdayExtension', () => {
     })
 
     it('should call setValue when date is changed', () => {
-      const { getByPlaceholderText } = renderWithOptions(
+      const { container } = renderWithOptions(
         <BirthdayExtension.Component
           forceError
           setValue={setValue}
@@ -249,9 +249,9 @@ describe('BirthdayExtension', () => {
         />,
         mockProvider,
       )
-      const datePicker = getByPlaceholderText('TT.MM.JJJJ')
+      const hiddenInput = container.querySelector('input[aria-hidden="true"]')!
 
-      fireEvent.change(datePicker, { target: { value: '02.01.2025' } })
+      fireEvent.change(hiddenInput, { target: { value: '02.01.2025' } })
       expect(setValue).toHaveBeenCalledWith({ birthday: new Temporal.PlainDate(2025, 1, 2) })
     })
   })
