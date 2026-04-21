@@ -34,7 +34,7 @@ const formControlStyle: FormControlLabelProps['sx'] = {
 const datePickerTextFieldProps: CustomDatePickerTextFieldProps = {
   size: 'small',
   sx: {
-    width: '180px',
+    width: '200px',
   },
 }
 

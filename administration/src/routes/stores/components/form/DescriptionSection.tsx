@@ -26,7 +26,7 @@ const DescriptionSection = ({
   const descriptionEnLabelId = useId()
   return (
     <>
-      <Typography variant='h6' marginY={0.5}>
+      <Typography variant='h6' sx={{ marginY: 0.5 }}>
         {t('descriptionSection')}
       </Typography>
       <CardTextField

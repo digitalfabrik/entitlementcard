@@ -1,6 +1,6 @@
 import { ArrowBack, UploadFile } from '@mui/icons-material'
 import { Button, Tooltip } from '@mui/material'
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import ButtonBar from '../../../../components/ButtonBar'

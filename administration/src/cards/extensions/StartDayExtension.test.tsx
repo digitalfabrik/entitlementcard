@@ -43,7 +43,7 @@ describe('StartDayExtension', () => {
     })
 
     it('should show error message when startDay is empty and field was interacted', () => {
-      const { getByText, getByPlaceholderText } = renderWithOptions(
+      const { getByText, container } = renderWithOptions(
         <StartDayExtension.Component
           {...defaultProps}
           isValid={false}
@@ -51,8 +51,8 @@ describe('StartDayExtension', () => {
         />,
         mockProvider,
       )
-      const datePicker = getByPlaceholderText('TT.MM.JJJJ')
-      fireEvent.blur(datePicker)
+      const sectionList = container.querySelector('.MuiPickersSectionList-root')!
+      fireEvent.blur(sectionList)
       // Ignore timout for onBlur
       act(() => jest.runAllTimers())
       expect(StartDayExtension.isValid({ startDay: null })).toBeFalsy()
@@ -61,12 +61,12 @@ describe('StartDayExtension', () => {
 
     it('should show error message when startDay is too far in the past and interacted', () => {
       const startDay = minStartDay.subtract({ days: 1 })
-      const { getByText, getByDisplayValue } = renderWithOptions(
+      const { getByText, container } = renderWithOptions(
         <StartDayExtension.Component {...defaultProps} isValid={false} value={{ startDay }} />,
         mockProvider,
       )
-      const datePicker = getByDisplayValue(formatDateDefaultGerman(startDay))
-      fireEvent.blur(datePicker)
+      const sectionList = container.querySelector('.MuiPickersSectionList-root')!
+      fireEvent.blur(sectionList)
       // Ignore timout for onBlur
       act(() => jest.runAllTimers())
       expect(StartDayExtension.isValid({ startDay })).toBeFalsy()
@@ -80,7 +80,7 @@ describe('StartDayExtension', () => {
     it('should show error message when startDay is too far in the future and interacted', () => {
       const today = Temporal.Now.plainDateISO()
       const startDayTooFarInFuture = today.add(maxCardValidity).add({ days: 1 })
-      const { getByText, getByDisplayValue } = renderWithOptions(
+      const { getByText, container } = renderWithOptions(
         <StartDayExtension.Component
           {...defaultProps}
           isValid={false}
@@ -88,8 +88,8 @@ describe('StartDayExtension', () => {
         />,
         mockProvider,
       )
-      const datePicker = getByDisplayValue(formatDateDefaultGerman(startDayTooFarInFuture))
-      fireEvent.blur(datePicker)
+      const sectionList = container.querySelector('.MuiPickersSectionList-root')!
+      fireEvent.blur(sectionList)
       // Ignore timout for onBlur
       act(() => jest.runAllTimers())
       expect(StartDayExtension.isValid({ startDay: startDayTooFarInFuture })).toBeFalsy()
@@ -113,12 +113,12 @@ describe('StartDayExtension', () => {
 
     it('should not show error message when startDay is minStartDay', () => {
       const startDay = minStartDay
-      const { queryByTestId, getByDisplayValue } = renderWithOptions(
+      const { queryByTestId, container } = renderWithOptions(
         <StartDayExtension.Component {...defaultProps} value={{ startDay }} />,
         mockProvider,
       )
-      const datePicker = getByDisplayValue(formatDateDefaultGerman(startDay))
-      fireEvent.blur(datePicker)
+      const sectionList = container.querySelector('.MuiPickersSectionList-root')!
+      fireEvent.blur(sectionList)
       // Ignore timout for onBlur
       act(() => jest.runAllTimers())
       expect(StartDayExtension.isValid({ startDay })).toBeTruthy()

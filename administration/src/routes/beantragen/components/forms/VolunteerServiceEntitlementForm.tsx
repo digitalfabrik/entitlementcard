@@ -1,5 +1,4 @@
 import { Typography } from '@mui/material'
-import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import CustomDivider from '../../../../components/CustomDivider'
@@ -37,7 +36,7 @@ const VolunteerServiceEntitlementForm: Form<State, ValidatedInput> = {
           state={state.programName}
           setState={useUpdateStateCallback(setState, 'programName')}
         />
-        <Typography variant='body2bold' component='h4' marginY={1.5}>
+        <Typography variant='body2bold' component='h4' sx={{ marginY: 1.5 }}>
           {t('application:volunteerServiceEntitlement:certificate')}
         </Typography>
         <Typography component='p'>

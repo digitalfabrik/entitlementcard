@@ -1,5 +1,4 @@
 import { fireEvent, waitFor } from '@testing-library/react'
-import React from 'react'
 
 import {
   BAVARIA_CARD_TYPE_GOLD,

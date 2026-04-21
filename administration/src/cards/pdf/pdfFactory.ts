@@ -131,12 +131,16 @@ export const generatePdf = async (
     targetDocument.setTitle(projectConfig.pdf.title)
     targetDocument.setAuthor(projectConfig.pdf.issuer)
 
-    const templatePages = await targetDocument.copyPages(
-      templateDocument,
-      Array.from({ length: codes.length }, () => 0),
-    )
+    // copyPages must be called once per card.
+    // Per https://github.com/Hopding/pdf-lib/issues/422, copying the same page multiple times in
+    // one call is expected to share object references (incl. Annots), causing all pages to end up
+    // with the same deep link annotation. Separate calls each create a fresh Copier that
+    // independently copies all referenced objects, giving every page its own Annots array.
+    const templatePages: PDFPage[] = []
     for (let i = 0; i < codes.length; i++) {
-      targetDocument.addPage(templatePages[i])
+      const [page] = await targetDocument.copyPages(templateDocument, [0])
+      targetDocument.addPage(page)
+      templatePages.push(page)
     }
 
     const [fontRegular, fontBold] = await Promise.all([

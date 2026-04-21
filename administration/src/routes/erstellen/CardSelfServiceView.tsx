@@ -77,7 +77,7 @@ const CardSelfServiceView = (): ReactElement => {
             {t('help')}
           </Button>
         </Box>
-        <Stack padding={2}>
+        <Stack sx={{ padding: 2 }}>
           <Typography
             component='div'
             variant='body1'
@@ -92,7 +92,7 @@ const CardSelfServiceView = (): ReactElement => {
           <Typography variant='h5' component='h2'>
             {selfServiceStepInfo[cardGenerationStep].subHeadline}
           </Typography>
-          <Typography variant='body1' marginBottom={3}>
+          <Typography variant='body1' sx={{ marginBottom: 3 }}>
             {selfServiceStepInfo[cardGenerationStep].text}
           </Typography>
           {cardGenerationStep === 'input' && (
@@ -123,7 +123,7 @@ const CardSelfServiceView = (): ReactElement => {
         >
           <DialogTitle>{t('help')}</DialogTitle>
           <DialogContent id='help-dialog'>
-            <Typography marginTop={1.5} marginBottom={3}>
+            <Typography sx={{ marginTop: 1.5, marginBottom: 3 }}>
               {t('youHaveProblemsCreatingAPass')} <br />
               {t('pleaseContactUsForHelp')}
             </Typography>

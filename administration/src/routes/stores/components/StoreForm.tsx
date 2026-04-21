@@ -30,7 +30,7 @@ const StoreForm = ({
 
   return (
     <Stack sx={{ gap: 2 }} direction='column'>
-      <Typography variant='h6' marginY={0.5}>
+      <Typography variant='h6' sx={{ marginY: 0.5 }}>
         {t('nameSection')}
       </Typography>
       <CardTextField

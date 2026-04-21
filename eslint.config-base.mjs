@@ -74,6 +74,8 @@ export default [
       'no-shadow': 'off',
       'no-underscore-dangle': 'off',
       'jest/no-mocks-import': 'off',
+      'react/jsx-uses-react': 'off', // React 19
+      'react/react-in-jsx-scope': 'off', // React 19
       'react/display-name': 'off',
       'react/jsx-props-no-spreading': 'off',
 

@@ -1,5 +1,5 @@
 import { IconButton, Popover } from '@mui/material'
-import React, { ReactElement } from 'react'
+import { ReactElement, useState } from 'react'
 
 type PopoverWrapperProps = {
   icon: ReactElement
@@ -7,7 +7,7 @@ type PopoverWrapperProps = {
 }
 
 const PopoverWrapper = ({ children, icon }: PopoverWrapperProps): ReactElement => {
-  const [anchorElement, setAnchorElement] = React.useState<HTMLButtonElement | null>(null)
+  const [anchorElement, setAnchorElement] = useState<HTMLButtonElement | null>(null)
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorElement(event.currentTarget)
