@@ -34,7 +34,7 @@ test.describe('Bayern testing', () => {
     await expect(page.locator('form')).toContainText('EHRENAMTLICHE TÄTIGKEIT')
     await page.getByRole('textbox', { name: 'Ehrenamtliche Tätigkeit' }).fill('activity 1')
     await fillDateInput(page, 'Tätig seit', '10.10.1999', browser)
-    await page.getByRole('spinbutton', { name: 'Arbeitsstunden pro Woche (' }).fill('56')
+    await page.getByRole('textbox', { name: 'Arbeitsstunden pro Woche (' }).fill('56')
     await expect(page.getByText('Angaben zur Organisation', { exact: false })).toBeVisible({
       timeout: 10_000,
     })
