@@ -48,6 +48,10 @@ steps:
       command: ./gradlew run --args="migrate"
       working_directory: ~/project/backend
   - run:
+      name: Import dev data
+      command: ./gradlew run --args="db-import-dev src/dev/sql"
+      working_directory: ~/project/backend
+  - run:
       name: Start backend
       command: JWT_SECRET=HelloWorld KOBLENZ_PEPPER=123456789ABC ./run-backend.sh
       background: true
