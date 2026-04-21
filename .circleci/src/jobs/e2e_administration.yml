@@ -72,7 +72,6 @@ steps:
       working_directory: ~/project/administration
       environment:
         CI: "true"
-        E2E_SERVERS_PRESTARTED: "true"
   - store_artifacts:
       path: ~/project/administration/playwright-report
       destination: playwright-report

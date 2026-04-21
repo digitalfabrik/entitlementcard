@@ -719,7 +719,6 @@ jobs:
                 command: npm run test:e2e
                 environment:
                     CI: "true"
-                    E2E_SERVERS_PRESTARTED: "true"
                 name: Run e2e tests
                 working_directory: ~/project/administration
             - store_artifacts:
