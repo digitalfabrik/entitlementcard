@@ -79,25 +79,29 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: [
-    {
-      command: 'docker compose -p entitlementcard up',
-      name: 'Running docker container',
-      reuseExistingServer: !process.env.CI,
-      stdout: 'ignore',
-      stderr: 'ignore',
-    },
-    {
-      command: 'podman compose -p entitlementcard up',
-      name: 'Running podman container',
-      reuseExistingServer: !process.env.CI,
-      stdout: 'ignore',
-      stderr: 'ignore',
-    },
+    ...(!process.env.E2E_SERVERS_PRESTARTED
+      ? [
+          {
+            command: 'docker compose -p entitlementcard up',
+            name: 'Running docker container',
+            reuseExistingServer: !process.env.CI,
+            stdout: 'ignore' as const,
+            stderr: 'ignore' as const,
+          },
+          {
+            command: 'podman compose -p entitlementcard up',
+            name: 'Running podman container',
+            reuseExistingServer: !process.env.CI,
+            stdout: 'ignore' as const,
+            stderr: 'ignore' as const,
+          },
+        ]
+      : []),
     {
       command: 'npm run start:ci',
       name: 'Administration',
       url: 'http://localhost:3000',
-      reuseExistingServer: !process.env.CI,
+      reuseExistingServer: !process.env.CI || !!process.env.E2E_SERVERS_PRESTARTED,
       stdout: 'ignore',
       stderr: 'ignore',
     },
@@ -111,7 +115,7 @@ export default defineConfig({
       port: 8000,
       stdout: 'ignore',
       stderr: 'ignore',
-      reuseExistingServer: !process.env.CI,
+      reuseExistingServer: !process.env.CI || !!process.env.E2E_SERVERS_PRESTARTED,
     },
   ],
 })
