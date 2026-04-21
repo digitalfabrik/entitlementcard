@@ -647,6 +647,82 @@ jobs:
                         command: curl https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-backend-admin-$EAK_WEBHOOK
                         name: Install packages
             - notify
+    e2e_administration:
+        docker:
+            - image: cimg/openjdk:25.0-node
+            - environment:
+                POSTGRES_DB: ehrenamtskarte
+                POSTGRES_PASSWORD: postgres
+                POSTGRES_USER: postgres
+              image: postgis/postgis:17-3.5
+        environment:
+            _JAVA_OPTIONS: -Xmx3g
+            GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2
+        resource_class: medium
+        steps:
+            - prepare_workspace
+            - restore_cache:
+                keys:
+                    - v1-gradle-{{ checksum "backend/build.gradle.kts" }}
+            - run:
+                command: |
+                    git submodule sync
+                    git submodule update --init
+                name: Setup submodules
+            - run:
+                background: true
+                command: ./gradlew classes processResources && touch /tmp/backend-build.done || touch /tmp/backend-build.failed
+                name: Build backend
+                working_directory: ~/project/backend
+            - install_node_modules
+            - run:
+                command: npx playwright install --with-deps chromium
+                environment:
+                    DEBIAN_FRONTEND: noninteractive
+                    NEEDRESTART_MODE: a
+                name: Install Playwright browsers
+                working_directory: ~/project/administration
+            - run:
+                command: |
+                    while [ ! -f /tmp/backend-build.done ] && [ ! -f /tmp/backend-build.failed ]; do sleep 1; done
+                    [ -f /tmp/backend-build.failed ] && exit 1 || exit 0
+                name: Wait for backend build
+            - save_cache:
+                key: v1-gradle-{{ checksum "backend/build.gradle.kts" }}
+                paths:
+                    - ~/.gradle/caches
+                    - ~/.gradle/wrapper
+            - run:
+                command: ./gradlew run --args="migrate"
+                name: Migrate database
+                working_directory: ~/project/backend
+            - run:
+                background: true
+                command: JWT_SECRET=HelloWorld KOBLENZ_PEPPER=123456789ABC ./run-backend.sh
+                name: Start backend
+                working_directory: ~/project/administration
+            - run:
+                background: true
+                command: npm run start:ci
+                environment:
+                    BROWSER: none
+                name: Start administration frontend
+                working_directory: ~/project/administration
+            - run:
+                command: curl --retry 120 --retry-delay 10 --retry-all-errors http://localhost:8000/health
+                name: Check backend health
+            - run:
+                command: npm run test:e2e
+                environment:
+                    CI: "true"
+                    E2E_SERVERS_PRESTARTED: "true"
+                name: Run e2e tests
+                working_directory: ~/project/administration
+            - store_artifacts:
+                destination: playwright-report
+                path: ~/project/administration/playwright-report
+            - notify
+        working_directory: ~/project
     notify_release:
         docker:
             - image: cimg/node:24.13
@@ -902,6 +978,9 @@ parameters:
         default: false
         type: boolean
     run_delivery_production_frontend:
+        default: false
+        type: boolean
+    run_e2e_tests:
         default: false
         type: boolean
     run_promotion_all:
@@ -1290,6 +1369,15 @@ workflows:
                     - deliver_android
                     - deliver_ios
         when: << pipeline.parameters.run_delivery_production_frontend >>
+    e2e-tests:
+        jobs:
+            - e2e_administration
+        when:
+            or:
+                - << pipeline.parameters.run_e2e_tests >>
+                - matches:
+                    pattern: ^(release|hotfix)-.*
+                    value: << pipeline.git.branch >>
     promotion_all:
         jobs:
             - promote_android:

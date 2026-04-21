@@ -34,3 +34,6 @@ parameters:
   run_promotion_all:
     default: false
     type: boolean
+  run_e2e_tests:
+    default: false
+    type: boolean

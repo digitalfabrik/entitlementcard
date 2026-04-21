@@ -1,0 +1,75 @@
+docker:
+  - image: cimg/openjdk:25.0-node
+  - image: postgis/postgis:17-3.5
+    environment:
+      POSTGRES_DB: ehrenamtskarte
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+resource_class: medium
+environment:
+  _JAVA_OPTIONS: "-Xmx3g"
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
+working_directory: ~/project
+steps:
+  - prepare_workspace
+  - restore_cache:
+      keys:
+        - v1-gradle-{{ checksum "backend/build.gradle.kts" }}
+  - run:
+      name: Setup submodules
+      command: |
+        git submodule sync
+        git submodule update --init
+  - run:
+      name: Build backend
+      command: ./gradlew classes processResources && touch /tmp/backend-build.done || touch /tmp/backend-build.failed
+      background: true
+      working_directory: ~/project/backend
+  - install_node_modules
+  - run:
+      name: Install Playwright browsers
+      command: npx playwright install --with-deps chromium
+      working_directory: ~/project/administration
+      environment:
+        DEBIAN_FRONTEND: noninteractive
+        NEEDRESTART_MODE: a
+  - run:
+      name: Wait for backend build
+      command: |
+        while [ ! -f /tmp/backend-build.done ] && [ ! -f /tmp/backend-build.failed ]; do sleep 1; done
+        [ -f /tmp/backend-build.failed ] && exit 1 || exit 0
+  - save_cache:
+      key: v1-gradle-{{ checksum "backend/build.gradle.kts" }}
+      paths:
+        - ~/.gradle/caches
+        - ~/.gradle/wrapper
+  - run:
+      name: Migrate database
+      command: ./gradlew run --args="migrate"
+      working_directory: ~/project/backend
+  - run:
+      name: Start backend
+      command: JWT_SECRET=HelloWorld KOBLENZ_PEPPER=123456789ABC ./run-backend.sh
+      background: true
+      working_directory: ~/project/administration
+  - run:
+      name: Start administration frontend
+      command: npm run start:ci
+      background: true
+      working_directory: ~/project/administration
+      environment:
+        BROWSER: none
+  - run:
+      name: Check backend health
+      command: curl --retry 120 --retry-delay 10 --retry-all-errors http://localhost:8000/health
+  - run:
+      name: Run e2e tests
+      command: npm run test:e2e
+      working_directory: ~/project/administration
+      environment:
+        CI: "true"
+        E2E_SERVERS_PRESTARTED: "true"
+  - store_artifacts:
+      path: ~/project/administration/playwright-report
+      destination: playwright-report
+  - notify

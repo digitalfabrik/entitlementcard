@@ -1,0 +1,8 @@
+when:
+  or:
+    - << pipeline.parameters.run_e2e_tests >>
+    - matches:
+        pattern: "^(release|hotfix)-.*"
+        value: << pipeline.git.branch >>
+jobs:
+  - e2e_administration
