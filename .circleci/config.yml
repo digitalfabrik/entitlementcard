@@ -697,10 +697,6 @@ jobs:
                 name: Migrate database
                 working_directory: ~/project/backend
             - run:
-                command: ./gradlew run --args="db-import-dev src/dev/sql"
-                name: Import dev data
-                working_directory: ~/project/backend
-            - run:
                 background: true
                 command: JWT_SECRET=HelloWorld KOBLENZ_PEPPER=123456789ABC ./run-backend.sh
                 name: Start backend
@@ -713,8 +709,12 @@ jobs:
                 name: Start administration frontend
                 working_directory: ~/project/administration
             - run:
-                command: curl --retry 120 --retry-delay 10 --retry-all-errors http://localhost:8000/health
+                command: curl --retry 120 --retry-delay 1 --retry-all-errors http://localhost:8000/health
                 name: Check backend health
+            - run:
+                command: ./gradlew run --args="db-import-dev src/dev/sql"
+                name: Import dev data
+                working_directory: ~/project/backend
             - run:
                 command: npm run test:e2e
                 environment:

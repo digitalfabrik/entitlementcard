@@ -48,10 +48,6 @@ steps:
       command: ./gradlew run --args="migrate"
       working_directory: ~/project/backend
   - run:
-      name: Import dev data
-      command: ./gradlew run --args="db-import-dev src/dev/sql"
-      working_directory: ~/project/backend
-  - run:
       name: Start backend
       command: JWT_SECRET=HelloWorld KOBLENZ_PEPPER=123456789ABC ./run-backend.sh
       background: true
@@ -65,7 +61,11 @@ steps:
         BROWSER: none
   - run:
       name: Check backend health
-      command: curl --retry 120 --retry-delay 10 --retry-all-errors http://localhost:8000/health
+      command: curl --retry 120 --retry-delay 1 --retry-all-errors http://localhost:8000/health
+  - run:
+      name: Import dev data
+      command: ./gradlew run --args="db-import-dev src/dev/sql"
+      working_directory: ~/project/backend
   - run:
       name: Run e2e tests
       command: npm run test:e2e
