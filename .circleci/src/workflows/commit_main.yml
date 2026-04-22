@@ -16,6 +16,9 @@ jobs:
         - credentials-ehrenamtskarte
       requires:
         - bump_version
+  - e2e_administration:
+      requires:
+        - build_backend
   - build_android:
       build_config: bayern
       context:
