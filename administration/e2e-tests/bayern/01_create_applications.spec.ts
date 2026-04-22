@@ -26,7 +26,12 @@ test.describe('Bayern testing', () => {
       await page.getByRole('radio', { name: 'October' }).click()
       await page.getByRole('gridcell', { name: '10' }).click()
     } else {
-      await page.getByRole('textbox', { name: inputName }).fill(dateValue)
+      // MUI X v9 date picker uses spinbutton inputs (one per date section)
+      // instead of a single textbox.
+      const [day, month, year] = dateValue.split('.')
+      const group = page.getByRole('group', { name: inputName })
+      await group.getByRole('spinbutton', { name: 'Tag' }).click()
+      await page.keyboard.type(day + month + year)
     }
   }
 
@@ -34,7 +39,7 @@ test.describe('Bayern testing', () => {
     await expect(page.locator('form')).toContainText('EHRENAMTLICHE TÄTIGKEIT')
     await page.getByRole('textbox', { name: 'Ehrenamtliche Tätigkeit' }).fill('activity 1')
     await fillDateInput(page, 'Tätig seit', '10.10.1999', browser)
-    await page.getByRole('spinbutton', { name: 'Arbeitsstunden pro Woche (' }).fill('56')
+    await page.getByRole('textbox', { name: 'Arbeitsstunden pro Woche (' }).fill('56')
     await expect(page.getByText('Angaben zur Organisation', { exact: false })).toBeVisible({
       timeout: 10_000,
     })
