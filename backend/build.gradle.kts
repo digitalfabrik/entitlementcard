@@ -29,7 +29,7 @@ object BuildConfig {
     val sentryAuthToken = System.getenv("SENTRY_BACKEND_AUTH_TOKEN")
 
     /** Set by the CircleCI `bump_version` job */
-    val versionName = System.getProperty("NEW_VERSION_NAME", "1.0.0")
+    val versionName = System.getenv("NEW_VERSION_NAME") ?: "1.0.0"
 }
 
 val packageRoot = "app.ehrenamtskarte.backend"
