@@ -8,8 +8,8 @@ send_notification() {
 
     echo $MM_MESSAGE
 
-    if ! ($allow_all_branches || [ "$CIRCLE_BRANCH" = "main" ] || begins_with $CIRCLE_BRANCH "release"); then
-        echo "Not on main or release branch. Skipping."
+    if ! ($allow_all_branches || [ "$CIRCLE_BRANCH" = "main" ] || begins_with $CIRCLE_BRANCH "release" || begins_with $CIRCLE_BRANCH "hotfix"); then
+        echo "Not on main, release or hotfix branch. Skipping."
         exit 0
     fi
 
