@@ -19,8 +19,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 3 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
@@ -34,21 +33,21 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: 'chromium',
+      name: '01_create_applications',
       testMatch: '01_create_applications.spec.ts',
-      use: {
-        ...devices['Desktop Chrome'],
-      },
+      use: { ...devices['Desktop Chrome'] },
     },
     {
-      name: 'chromium',
+      name: '02_check_applications',
       testMatch: '02_check_applications.spec.ts',
       use: { ...devices['Desktop Chrome'] },
+      dependencies: ['01_create_applications'],
     },
     {
-      name: 'chromium',
+      name: '03_delete_applications',
       testMatch: '03_delete_applications.spec.ts',
       use: { ...devices['Desktop Chrome'] },
+      dependencies: ['02_check_applications'],
     },
 
     // {
@@ -77,27 +76,31 @@ export default defineConfig({
     // },
   ],
 
-  /* Run your local dev server before starting the tests */
+  /* Run your local dev server before starting the tests, not needed for CI */
   webServer: [
-    {
-      command: 'docker compose -p entitlementcard up',
-      name: 'Running docker container',
-      reuseExistingServer: !process.env.CI,
-      stdout: 'ignore',
-      stderr: 'ignore',
-    },
-    {
-      command: 'podman compose -p entitlementcard up',
-      name: 'Running podman container',
-      reuseExistingServer: !process.env.CI,
-      stdout: 'ignore',
-      stderr: 'ignore',
-    },
+    ...(process.env.CI
+      ? []
+      : [
+          {
+            command: 'docker compose -p entitlementcard up',
+            name: 'Running docker container',
+            reuseExistingServer: true,
+            stdout: 'ignore' as const,
+            stderr: 'ignore' as const,
+          },
+          {
+            command: 'podman compose -p entitlementcard up',
+            name: 'Running podman container',
+            reuseExistingServer: true,
+            stdout: 'ignore' as const,
+            stderr: 'ignore' as const,
+          },
+        ]),
     {
       command: 'npm run start:ci',
       name: 'Administration',
       url: 'http://localhost:3000',
-      reuseExistingServer: !process.env.CI,
+      reuseExistingServer: true,
       stdout: 'ignore',
       stderr: 'ignore',
     },
@@ -111,7 +114,7 @@ export default defineConfig({
       port: 8000,
       stdout: 'ignore',
       stderr: 'ignore',
-      reuseExistingServer: !process.env.CI,
+      reuseExistingServer: true,
     },
   ],
 })

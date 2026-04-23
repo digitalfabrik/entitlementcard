@@ -9,16 +9,16 @@ test.describe('Bayern regional admin', () => {
     await page.goto('/')
     await page.getByRole('button', { name: 'Switch to Ehrenamtskarte' }).click()
     await page
-      .getByRole('textbox', { name: 'erika.musterfrau@example.org' })
+      .getByRole('textbox', { name: 'Email-Adresse' })
       .fill('region-admin@bayern.ehrenamtskarte.app')
     await page.getByPlaceholder('Passwort').fill('Administrator!')
     await page.getByRole('button', { name: 'Anmelden' }).click()
     await expect(page.getByRole('heading').first()).toContainText('Wählen Sie eine Aktion aus:')
-    await expect(page.getByRole('button', { name: 'Eingehende Anträge' }).nth(1)).toBeVisible()
-    await expect(page.getByRole('button', { name: 'Karten erstellen' }).nth(1)).toBeVisible()
-    await expect(page.getByRole('button', { name: 'Benutzer verwalten' }).nth(1)).toBeVisible()
-    await expect(page.getByRole('button', { name: 'Statistiken' }).nth(1)).toBeVisible()
-    await expect(page.getByRole('button', { name: 'Region verwalten' }).nth(1)).toBeVisible()
+    await expect(page.getByRole('link', { name: 'Eingehende Anträge' }).nth(1)).toBeVisible()
+    await expect(page.getByRole('link', { name: 'Karten erstellen' }).nth(1)).toBeVisible()
+    await expect(page.getByRole('link', { name: 'Benutzer verwalten' }).nth(1)).toBeVisible()
+    await expect(page.getByRole('link', { name: 'Statistiken' }).nth(1)).toBeVisible()
+    await expect(page.getByRole('link', { name: 'Region verwalten' }).nth(1)).toBeVisible()
   })
 
   const organizationInfoTest = async item => {
@@ -34,7 +34,6 @@ test.describe('Bayern regional admin', () => {
     await expectVisible(item, 'Kontaktperson der Organisation')
     await expectVisible(item, 'Vor- und Nachname der Kontaktperson in der Organisation: person 1')
     await expectVisible(item, 'Telefon: 123456789')
-
     await expectVisible(item, 'E-Mail-Adresse: test@outlook.com')
     await expectVisible(
       item,
@@ -92,15 +91,15 @@ test.describe('Bayern regional admin', () => {
       'gold4',
     ])
     const visitedCases = new Set()
-    await page.getByRole('button', { name: 'Eingehende Anträge' }).nth(1).click()
+    await page.getByRole('link', { name: 'Eingehende Anträge' }).nth(1).click()
     await expect(page.getByText('Status', { exact: true })).toBeVisible()
-    await expect(page.getByRole('button').filter({ hasText: /^$/ })).toBeVisible()
+    await expect(page.getByRole('button').filter({ hasText: /^$/ }).nth(1)).toBeVisible()
     await expect(page.locator('#statusBarAll')).toContainText('Alle Anträge')
     await expect(page.locator('#statusBarAccepted')).toContainText('Akzeptiert')
     await expect(page.locator('#statusBarRejected')).toContainText('Abgelehnt')
     await expect(page.locator('#statusBarWithdrawn')).toContainText('Zurückgezogen')
     await expect(page.locator('#statusBarOpen')).toContainText('Offen')
-    await page.getByRole('button').filter({ hasText: /^$/ }).click()
+    await page.getByRole('button').filter({ hasText: /^$/ }).nth(1).click()
     await expect(page.locator('body')).toContainText('Welcher Status hat welche Bedeutung?')
     await expect(page.locator('body')).toContainText(
       'Akzeptiert:Der Antrag wurden von allen Organisationen geprüft und genehmigt.Die Karte kann erstellt werden.',
@@ -117,7 +116,7 @@ test.describe('Bayern regional admin', () => {
     await expect(
       page.getByText('Welcher Status hat welche Bedeutung?Akzeptiert:Der Antrag wurden von allen'),
     ).toBeVisible()
-    await page.getByRole('button').filter({ hasText: /^$/ }).click()
+    await page.keyboard.press('Escape')
 
     // await page.getByRole('button', { name: 'Akzeptiert' }).click()
     const listItems = await page

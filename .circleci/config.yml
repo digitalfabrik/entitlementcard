@@ -647,6 +647,66 @@ jobs:
                         command: curl https://webhook.entitlementcard-test.tuerantuer.org/hooks/install-backend-admin-$EAK_WEBHOOK
                         name: Install packages
             - notify
+    e2e_administration:
+        docker:
+            - image: cimg/openjdk:25.0-node
+            - environment:
+                POSTGRES_DB: ehrenamtskarte
+                POSTGRES_PASSWORD: postgres
+                POSTGRES_USER: postgres
+              image: postgis/postgis:17-3.5
+        environment:
+            _JAVA_OPTIONS: -Xmx1g
+        resource_class: medium
+        steps:
+            - prepare_workspace
+            - run:
+                command: |
+                    git submodule sync
+                    git submodule update --init
+                name: Setup submodules
+            - run:
+                command: tar -xf ~/attached_workspace/backend/build/distributions/backend.tar -C ~/
+                name: Extract backend distribution
+            - run:
+                command: ~/backend/bin/backend migrate
+                name: Migrate database
+            - run:
+                background: true
+                command: JWT_SECRET=HelloWorld KOBLENZ_PEPPER=123456789ABC ~/backend/bin/backend --disable-mail-service=true execute
+                name: Start backend
+            - install_node_modules
+            - run:
+                command: npx playwright install --with-deps chromium
+                environment:
+                    DEBIAN_FRONTEND: noninteractive
+                    NEEDRESTART_MODE: a
+                name: Install Playwright browsers
+                working_directory: ~/project/administration
+            - run:
+                background: true
+                command: npm run start:ci
+                environment:
+                    BROWSER: none
+                name: Start administration frontend
+                working_directory: ~/project/administration
+            - run:
+                command: curl --retry 120 --retry-delay 1 --retry-all-errors http://localhost:8000/health
+                name: Check backend health
+            - run:
+                command: cd ~/project/backend && ~/backend/bin/backend db-import-dev src/dev/sql
+                name: Import dev data
+            - run:
+                command: npm run test:e2e
+                environment:
+                    CI: "true"
+                name: Run e2e tests
+                working_directory: ~/project/administration
+            - store_artifacts:
+                destination: playwright-report
+                path: ~/project/administration/playwright-report
+            - notify
+        working_directory: ~/project
     notify_release:
         docker:
             - image: cimg/node:24.13
@@ -939,6 +999,9 @@ workflows:
                     - credentials-ehrenamtskarte
                 requires:
                     - bump_version
+            - e2e_administration:
+                requires:
+                    - build_backend
             - build_android:
                 build_config: bayern
                 context:

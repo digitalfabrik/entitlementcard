@@ -5,7 +5,7 @@ test.describe('DeleteApplications', () => {
     await page.goto('/')
     await page.getByRole('button', { name: 'Switch to Ehrenamtskarte' }).click()
     await page
-      .getByRole('textbox', { name: 'erika.musterfrau@example.org' })
+      .getByRole('textbox', { name: 'Email-Adresse' })
       .fill('region-admin@bayern.ehrenamtskarte.app')
     await page.getByPlaceholder('Passwort').fill('Administrator!')
     await page.getByRole('button', { name: 'Anmelden' }).click()
@@ -13,8 +13,8 @@ test.describe('DeleteApplications', () => {
 
   test('should test applications be deleted', async ({ page, browserName }) => {
     test.setTimeout(200_000)
-    await expect(page.getByRole('button', { name: 'Eingehende Anträge' }).nth(1)).toBeVisible()
-    await page.getByRole('button', { name: 'Eingehende Anträge' }).nth(1).click()
+    await expect(page.getByRole('link', { name: 'Eingehende Anträge' }).nth(1)).toBeVisible()
+    await page.getByRole('link', { name: 'Eingehende Anträge' }).nth(1).click()
     await expect(page.getByText('Status', { exact: true })).toBeVisible()
 
     while (true) {

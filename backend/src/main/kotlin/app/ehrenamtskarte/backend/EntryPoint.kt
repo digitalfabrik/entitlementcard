@@ -188,6 +188,7 @@ class Execute : CliktCommand() {
 
     override fun run() {
         Database.setupWithInitialDataAndMigrationChecks(config)
+        logger.info("Current backend version: ${BuildConfig.VERSION_NAME}, sha1: ${BuildConfig.COMMIT_HASH}")
         runApplication<BackendApplication> {
             setAdditionalProfiles(config.environment.toString().lowercase())
             setDefaultProperties(
