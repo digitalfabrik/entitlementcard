@@ -11,16 +11,18 @@ import app.ehrenamtskarte.backend.db.setup.insertOrUpdateProjects
 import app.ehrenamtskarte.backend.db.setup.insertOrUpdateRegions
 import app.ehrenamtskarte.backend.graphql.auth.types.Role
 import app.ehrenamtskarte.backend.graphql.freinet.util.FreinetAgenciesLoader
+import com.zaxxer.hikari.HikariConfig
+import com.zaxxer.hikari.HikariDataSource
 import org.jetbrains.exposed.v1.core.DatabaseConfig
 import org.jetbrains.exposed.v1.core.StdOutSqlLogger
 import org.jetbrains.exposed.v1.core.statements.StatementType
 import org.jetbrains.exposed.v1.jdbc.Database.Companion.connect
 import org.jetbrains.exposed.v1.jdbc.transactions.TransactionManager
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
-import org.postgresql.ds.PGSimpleDataSource
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
+import java.util.Properties
 
 object Database {
     fun executeSqlResource(path: String) {
@@ -71,17 +73,24 @@ object Database {
         log: Boolean = true,
     ): org.jetbrains.exposed.v1.jdbc.Database =
         connect(
-            datasource = PGSimpleDataSource().apply {
-                setUrl(config.postgres.url)
-                user = config.postgres.user
-                password = config.postgres.password
-                setProperty("reWriteBatchedInserts", "true")
-            },
-            setupConnection = {
-                // Set session time zone to UTC, to make timestamps work properly in every configuration.
-                // Note(michael-markl): I believe this is Postgres specific syntax.
-                it.prepareStatement("SET TIME ZONE 'UTC';").executeUpdate()
-            },
+            datasource = HikariDataSource(
+                HikariConfig().apply {
+                    dataSourceClassName = "org.postgresql.ds.PGSimpleDataSource"
+                    username = config.postgres.user
+                    password = config.postgres.password
+                    maximumPoolSize = 8
+                    // Lazily initialize the connection pool
+                    initializationFailTimeout = -1
+                    isAutoCommit = false
+                    maxLifetime = 1000 * 60 * 8 // 8 minutes
+                    // Set session time zone to UTC, to make timestamps work properly in every configuration.
+                    connectionInitSql = "SET TIME ZONE 'UTC'"
+                    dataSourceProperties = Properties().apply {
+                        setProperty("url", config.postgres.url)
+                        setProperty("reWriteBatchedInserts", "true")
+                    }
+                },
+            ),
             databaseConfig = DatabaseConfig.invoke {
                 // Nested transactions are helpful for applying migrations in subtransactions.
                 useNestedTransactions = true
