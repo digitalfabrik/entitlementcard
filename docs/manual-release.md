@@ -44,14 +44,32 @@ In `frontend/iOS`  run `bundle exec fastlane match appstore` .
 Hint: Since we want to keep all our platforms on the same version, try to avoid single platform releases.
 
 ## Create a hotfix release
-- Get the latest tag: `git tag --sort=-creatordate`
-- Create a branch from the latest release tag. For example: `git checkout -b 2025.6.4-hotfix 2025.6.4-all`
-- Make the fixes and commit your changes
-- Create a PR for your hotfix branch
-- Open [CircleCI Entitlementcard Project](https://app.circleci.com/pipelines/github/digitalfabrik/entitlementcard) and select your branch
+
+### 1. Apply the fix to the hotfix branch
+
+- Create an issue for the bug.
+- Get the latest tags: `git tag --sort=-creatordate | head -5`.
+- Create a hotfix branch from the release tag you want to fix. The branch name **must start with `hotfix`** (e.g. `hotfix-2025.6.5`): `git checkout -b hotfix-2025.6.5 2025.6.4-all`.
+- Create the commits with the particular issue number prefix.
+- Push the hotfix branch.
+- Create a draft PR for reviews.
+
+### 2. Trigger the delivery
+
+- Open [CircleCI Entitlementcard Project](https://app.circleci.com/pipelines/github/digitalfabrik/entitlementcard) and select your hotfix branch.
 - Click "Trigger pipeline" and set the particular workflow to `true`.
-- Choose `run_delivery_beta_all` for all platforms or `run_delivery_beta_frontend`, `run_delivery_beta_backend_administration` for the particular platform.
-- Delete the generated release notes (since they were compared with main branch) and add the changes manually. Please refer to your release pull request to identify the actual changes.
+- Choose `run_delivery_beta_all` for all platforms or `run_delivery_beta_frontend`, `run_delivery_beta_backend_administration` for the particular platform
+- The release notes are generated automatically from commits made after branching from the tag (grouped by issue when possible).
+- Close the draft pr and delete the branch.
+
+### 3. Implement and review the fix on main
+
+- Create a regular issue branch from `main`: `git checkout -b <issue-number> main`.
+- Cherry-pick the commits from the hotfix branch and open a PR against `main` for review and CI.
+```bash
+git cherry-pick <commit-sha>  # repeat for each fix commit
+```
+- Merge the PR into `main`.
 
 ### Frontend
 
