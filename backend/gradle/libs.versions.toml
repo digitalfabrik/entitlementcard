@@ -80,3 +80,4 @@ springframework-boot-testcontainers = { module = "org.springframework.boot:sprin
 testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }
 testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter", version.ref = "testcontainers" }
 testcontainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "testcontainers" }
+zaxxer-hickaricp = { module = "com.zaxxer:HikariCP", version = "7.0.2" }
