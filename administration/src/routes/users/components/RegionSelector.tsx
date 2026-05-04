@@ -55,8 +55,9 @@ const RegionSelector = ({
             label={t('region')}
             required
             slotProps={{
+              ...params.slotProps,
               input: {
-                ...params.slotProps,
+                ...params.slotProps.input,
                 size: 'small',
                 startAdornment: (
                   <InputAdornment position='start'>
