@@ -112,6 +112,7 @@ dependencies {
     implementation(libs.springframework.boot.starter.mail)
     implementation(libs.springframework.boot.starter.web)
     implementation(libs.springframework.boot.starter.graphql)
+    implementation(libs.zaxxer.hickaricp)
 
     runtimeOnly(libs.postgresql.postgresql)
 
