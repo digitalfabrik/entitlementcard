@@ -82,7 +82,7 @@ object Database {
                     // Lazily initialize the connection pool
                     initializationFailTimeout = -1
                     isAutoCommit = false
-                    maxLifetime = 1000 * 60 * 8 // 8 minutes
+                    maxLifetime = 1000 * 60 * 8 // 8 minutes - default psql idle timeout is 10 minutes.
                     // Set session time zone to UTC, to make timestamps work properly in every configuration.
                     connectionInitSql = "SET TIME ZONE 'UTC'"
                     dataSourceProperties = Properties().apply {
