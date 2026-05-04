@@ -413,7 +413,9 @@ jobs:
                 condition: << parameters.prepare_delivery >>
                 steps:
                     - run:
-                        command: npx --no app-toolbelt v0 release bump-to ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} --branch ${CIRCLE_BRANCH}
+                        command: |
+                            HOTFIX_FLAG=$([[ "${CIRCLE_BRANCH}" == hotfix* ]] && echo "--hotfix")
+                            npx --no app-toolbelt v0 release bump-to ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} --branch ${CIRCLE_BRANCH} ${HOTFIX_FLAG}
                         name: Bump git version
             - when:
                 condition:
@@ -724,7 +726,8 @@ jobs:
             - install_app_toolbelt
             - run:
                 command: |
-                    RELEASE=$(npx --no app-toolbelt v0 release create << parameters.platform >> ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} <<# parameters.production_delivery >>--production-release<</ parameters.production_delivery >>)
+                    HOTFIX_FLAG=$([[ "${CIRCLE_BRANCH}" == hotfix* ]] && echo "--hotfix --branch ${CIRCLE_BRANCH}")
+                    RELEASE=$(npx --no app-toolbelt v0 release create << parameters.platform >> ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} <<# parameters.production_delivery >>--production-release<</ parameters.production_delivery >> ${HOTFIX_FLAG})
                     echo "export RELEASE_ID=$(echo ${RELEASE} | jq .id)" >> ${BASH_ENV}
                     echo "export RELEASE_NOTES=$(echo ${RELEASE} | jq .releaseNotes)" >> ${BASH_ENV}
                 name: Create github release
