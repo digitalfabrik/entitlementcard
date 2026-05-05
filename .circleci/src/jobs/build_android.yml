@@ -5,7 +5,7 @@ parameters:
   build_config:
     description: "Name of the build config to use"
     type: enum
-    enum: [bayern, nuernberg, koblenz]
+    enum: [ bayern, nuernberg, koblenz ]
 environment:
   FASTLANE_SKIP_UPDATE_CHECK: true
   GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m" -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2'
@@ -15,7 +15,7 @@ steps:
   - install_npm
   - install_app_toolbelt
   - ruby/install:
-        version: '3.1'
+      version: '3.3'
   - install_flutter:
       precache: android
   - install_fastlane:
@@ -42,8 +42,8 @@ steps:
   - run:
       name: Move artifacts
       command: |
-          mv build/app/outputs/bundle/<< parameters.build_config >>Release/app-<< parameters.build_config >>-release.aab ~/attached_workspace/<< parameters.build_config >>.aab
-          mv build/app/outputs/apk/<< parameters.build_config >>/release/app-<< parameters.build_config >>-release.apk ~/attached_workspace/<< parameters.build_config >>.apk
+        mv build/app/outputs/bundle/<< parameters.build_config >>Release/app-<< parameters.build_config >>-release.aab ~/attached_workspace/<< parameters.build_config >>.aab
+        mv build/app/outputs/apk/<< parameters.build_config >>/release/app-<< parameters.build_config >>-release.apk ~/attached_workspace/<< parameters.build_config >>.apk
   - persist_to_workspace:
       root: ~/attached_workspace
       paths:

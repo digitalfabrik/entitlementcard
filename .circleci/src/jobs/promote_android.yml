@@ -2,7 +2,7 @@
 parameters:
   build_config:
     type: enum
-    enum: [bayern, nuernberg, koblenz]
+    enum: [ bayern, nuernberg, koblenz ]
     default: bayern
 docker:
   - image: cimg/android:2025.04.1-node
@@ -15,7 +15,7 @@ steps:
   - install_npm
   - install_app_toolbelt
   - ruby/install:
-      version: '3.1'
+      version: '3.3'
   - install_fastlane
   - run:
       name: '[FL] Play Store Promotion'
