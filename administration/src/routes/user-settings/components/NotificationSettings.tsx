@@ -1,6 +1,6 @@
 import { Button, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery } from 'urql'
 
@@ -16,8 +16,8 @@ import getQueryResult from '../../../util/getQueryResult'
 const NotificationSettings = (): ReactElement => {
   const { t } = useTranslation('userSettings')
   const { enqueueSnackbar } = useSnackbar()
-  const [receiveEmailForActivation, setReceiveEmailForActivation] = useState<boolean>(false)
-  const [receiveEmailForVerification, setReceiveEmailForVerification] = useState<boolean>(false)
+  const [pendingActivation, setPendingActivation] = useState<boolean | null>(null)
+  const [pendingVerification, setPendingVerification] = useState<boolean | null>(null)
   const [updateNotificationSettingsState, updateNotificationSettingsMutation] = useMutation(
     UpdateNotificationSettingsDocument,
   )
@@ -25,36 +25,29 @@ const NotificationSettings = (): ReactElement => {
     query: GetNotificationSettingsDocument,
   })
 
-  const reset = () => {
-    const state = notificationSettingsState.data?.notificationSettings
-
-    if (state) {
-      setReceiveEmailForActivation(state.notificationOnApplication)
-      setReceiveEmailForVerification(state.notificationOnVerification)
-    }
-  }
+  const savedSettings = notificationSettingsState.data?.notificationSettings
+  const notificationOnApplication =
+    pendingActivation ?? savedSettings?.notificationOnApplication ?? false
+  const notificationOnVerification =
+    pendingVerification ?? savedSettings?.notificationOnVerification ?? false
 
   const submit = async () => {
     const result = await updateNotificationSettingsMutation({
       notificationSettings: {
-        notificationOnApplication: receiveEmailForActivation,
-        notificationOnVerification: receiveEmailForVerification,
+        notificationOnApplication,
+        notificationOnVerification,
       },
     })
 
     if (result.error) {
       const { title } = messageFromGraphQlError(result.error)
       enqueueSnackbar(title, { variant: 'error' })
-      reset()
+      setPendingActivation(null)
+      setPendingVerification(null)
     } else {
       enqueueSnackbar(t('notificationUpdateSuccess'), { variant: 'success' })
     }
   }
-
-  useEffect(() => {
-    reset()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [notificationSettingsState])
 
   const notificationQueryResult = getQueryResult(
     notificationSettingsState,
@@ -75,15 +68,15 @@ const NotificationSettings = (): ReactElement => {
         }}
       >
         <BaseCheckbox
-          checked={receiveEmailForActivation}
-          onChange={checked => setReceiveEmailForActivation(checked)}
+          checked={notificationOnApplication}
+          onChange={checked => setPendingActivation(checked)}
           label={<Typography>{t('newApplications')}</Typography>}
           hasError={false}
           errorMessage={undefined}
         />
         <BaseCheckbox
-          checked={receiveEmailForVerification}
-          onChange={checked => setReceiveEmailForVerification(checked)}
+          checked={notificationOnVerification}
+          onChange={checked => setPendingVerification(checked)}
           label={<Typography>{t('newVerifications')}</Typography>}
           hasError={false}
           errorMessage={undefined}
