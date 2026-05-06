@@ -2,7 +2,7 @@
 cocoapods = { version = '1.16.2', os = 'macos' }
 java = { version = 'temurin-25', os = 'linux' }
 ruby = '4.0.4'
-
+flutter = '3.38.10'
 
 [hooks]
 postinstall = [

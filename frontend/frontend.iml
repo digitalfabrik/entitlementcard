@@ -25,6 +25,12 @@
       <excludeFolder url="file://$MODULE_DIR$/android/buildSrc/build" />
       <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks" />
       <excludeFolder url="file://$MODULE_DIR$/ios/build" />
+      <excludeFolder url="file://$MODULE_DIR$/android/.idea/modules" />
+      <excludeFolder url="file://$MODULE_DIR$/ios/Pods" />
+      <excludeFolder url="file://$MODULE_DIR$/ios/Runner.xcodeproj/project.xcworkspace/xcuserdata" />
+      <excludeFolder url="file://$MODULE_DIR$/lib/graphql_gen" />
+      <excludeFolder url="file://$MODULE_DIR$/lib/l10n" />
+      <excludeFolder url="file://$MODULE_DIR$/lib/proto" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Flutter Plugins" level="project" />

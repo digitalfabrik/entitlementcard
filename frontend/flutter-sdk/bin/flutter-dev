@@ -1,0 +1,4 @@
+#/bin/zsh
+
+eval "$(mise activate zsh --shims)"
+flutter-dev "$@"

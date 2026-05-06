@@ -1,6 +1,0 @@
-source "https://rubygems.org"
-
-# https://github.com/fastlane/fastlane/issues/21794
-gem "rb-readline"
-gem "fastlane", ">= 2.227.1"
-
