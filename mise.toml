@@ -1,0 +1,14 @@
+experimental_monorepo_root = true
+
+# https://mise.jdx.dev/tasks/monorepo.html#config-roots
+[monorepo]
+config_roots = [
+    "frontend",
+    "backend",
+]
+
+
+[tools]
+docker-cli = 'latest'
+docker-compose = 'latest'
+node = '26'

@@ -1,0 +1,14 @@
+[tools]
+cocoapods = { version = '1.16.2', os = 'macos' }
+java = { version = 'temurin-25', os = 'linux' }
+ruby = '4.0.4'
+
+
+[hooks]
+postinstall = [
+    'bundle install --binstubs=.bundlestubs',
+]
+
+
+[env]
+_.path = [".bundlestubs"]
