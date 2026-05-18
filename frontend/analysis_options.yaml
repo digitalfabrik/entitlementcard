@@ -6,6 +6,7 @@ formatter:
 analyzer:
   exclude:
     - build/**
+    - flutter-sdk/**
     - lib/graphql_gen/**
     - lib/build_config/build_config.dart
     - lib/l10n/*.g.dart

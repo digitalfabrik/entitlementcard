@@ -24,6 +24,8 @@ doc/api/
 .flutter-plugins
 .flutter-plugins-dependencies
 
+/flutter-sdk
+
 vendor/
 runConfigurations.xml
 
@@ -37,3 +39,6 @@ dist/
 
 # FVM Version Cache
 .fvm/
+
+/.bundle
+/.bundlestubs

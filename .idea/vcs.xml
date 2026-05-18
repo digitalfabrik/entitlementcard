@@ -11,5 +11,6 @@
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/backend/ehrenamtskarte-maplibre-style" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/backend/ehrenamtskarte-maplibre-style/font-glyphs" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/frontend/flutter-sdk" vcs="Git" />
   </component>
 </project>
