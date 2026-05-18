@@ -1,0 +1,6 @@
+steps:
+  - run:
+      name: Install mise
+      # https://mise.en.dev/installing-mise.html
+      command: curl https://mise.run | sh
+
