@@ -1,0 +1,10 @@
+description: Installs the mise tool manager
+steps:
+  - run:
+      name: Install mise
+      # https://mise.en.dev/installing-mise.html
+      command: |
+        curl https://mise.run | sh
+        echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$BASH_ENV"
+        # Do not install Ruby gem docs
+        echo 'gem: --no-document' >> ~/.gemrc

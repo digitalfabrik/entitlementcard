@@ -1,3 +1,0 @@
-version: 2.1
-orbs:
-  ruby: circleci/ruby@2.5.3

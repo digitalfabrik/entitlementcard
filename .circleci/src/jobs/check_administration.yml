@@ -1,23 +1,24 @@
 docker:
-  - image: cimg/node:24.13
+  - image: cimg/base:2026.04
 resource_class: small
 working_directory: ~/project/administration
 steps:
   - prepare_workspace
   - check_circleci_config
+  - install_mise
   - install_node_modules
   - run:
       name: Typescript
-      command: npm run ts:check
+      command: mise x -- npm run ts:check
   - run:
       name: Lint
-      command: npm run lint
+      command: mise x -- npm run lint
   - run:
       name: Check circular dependencies
-      command: npm run check-circular-deps
+      command: mise x -- npm run check-circular-deps
   - run:
       name: Run tests and generate coverage report
-      command: npm run test:coverage -- --maxWorkers=1
+      command: mise x -- npm run test:coverage -- --maxWorkers=1
   - store_artifacts:
       path: src/coverage
       destination: ~/attached_workspace/coverage

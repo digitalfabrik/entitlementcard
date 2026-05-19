@@ -1,33 +1,31 @@
 # Deliver the app to the Apple App Store or Testflight.
-parameters:
-  build_config:
-    type: enum
-    enum: [bayern, nuernberg, koblenz]
-  production_delivery:
-    description: Whether to deliver the build to production.
-    type: boolean
 macos:
   xcode: 26.2.0
 resource_class: m4pro.medium
+parameters:
+  build_config:
+    type: enum
+    enum: [ bayern, nuernberg, koblenz ]
+  production_delivery:
+    description: Whether to deliver the build to production.
+    type: boolean
 environment:
   FASTLANE_SKIP_UPDATE_CHECK: true
 working_directory: ~/project/frontend/ios
 steps:
   - prepare_workspace
+  - install_mise
   - install_app_toolbelt
-  - ruby/install:
-      version: '3.3'
-  - install_fastlane
   - when:
       condition: << parameters.production_delivery >>
       steps:
         - run:
             name: '[FL] App Store Connect Upload'
-            command: bundle exec fastlane ios appstoreconnect_upload build_config_name:<< parameters.build_config >> ipa_path:attached_workspace/<< parameters.build_config >>.ipa version_name:${NEW_VERSION_NAME}
+            command: mise x -- fastlane ios appstoreconnect_upload build_config_name:<< parameters.build_config >> ipa_path:attached_workspace/<< parameters.build_config >>.ipa version_name:${NEW_VERSION_NAME}
   - unless:
       condition: << parameters.production_delivery >>
       steps:
         - run:
             name: '[FL] TestFlight Upload'
-            command: bundle exec fastlane ios upload_to_test_flight build_config_name:<< parameters.build_config >> ipa_path:attached_workspace/<< parameters.build_config >>.ipa
+            command: mise x -- fastlane ios upload_to_test_flight build_config_name:<< parameters.build_config >> ipa_path:attached_workspace/<< parameters.build_config >>.ipa
   - notify

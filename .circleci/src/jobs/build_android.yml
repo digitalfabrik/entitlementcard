@@ -1,5 +1,5 @@
 docker:
-  - image: cimg/android:2025.04.1-node
+  - image: cimg/android:2026.03
 resource_class: large
 parameters:
   build_config:
@@ -12,29 +12,23 @@ environment:
 working_directory: ~/project/frontend
 steps:
   - prepare_workspace
-  - install_npm
+  - install_mise
   - install_app_toolbelt
-  - ruby/install:
-      version: '3.3'
-  - install_flutter:
+  - install_flutter_packages:
       precache: android
-  - install_fastlane:
-      directory: android
-  - run:
-      name: Install Ninja
-      command: sudo apt-get update && sudo apt-get install -y ninja-build
   - restore_cache:
       keys:
         - v1-gradle-{{ checksum "android/build.gradle.kts" }}-{{ checksum "android/app/build.gradle.kts" }}-{{ checksum "android/settings.gradle.kts" }}
   - run:
       name: '[FL] Prepare Android Keystore'
-      command: bundle exec fastlane keystore
-      working_directory: android
+      working_directory: ~/project/frontend/android
+      command: mise x -- fastlane keystore
   - run:
       name: '[FL] Build'
-      command: bundle exec fastlane android build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} build_config_name:<< parameters.build_config >>
-      working_directory: android
+      working_directory: ~/project/frontend/android
+      command: mise x -- fastlane android build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} build_config_name:<< parameters.build_config >>
   - save_cache:
+      # TODO Also include gradle.properties and wrapper
       key: v1-gradle-{{ checksum "android/build.gradle.kts" }}-{{ checksum "android/app/build.gradle.kts" }}-{{ checksum "android/settings.gradle.kts" }}
       paths:
         - ~/.gradle/caches

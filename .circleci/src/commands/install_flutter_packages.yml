@@ -1,0 +1,26 @@
+parameters:
+  precache:
+    type: enum
+    default: none
+    enum: [ none, android, ios ]
+steps:
+  - restore_cache:
+      name: Restore flutter
+      keys:
+        - flutter-v0-{{ arch }}-{{ checksum "pubspec.yaml" }}-{{ checksum "pubspec.lock"  }}
+        - flutter-v0-{{ arch }}
+  - run:
+      name: Install flutter packages
+      command: mise x flutter -- flutter pub get --enforce-lockfile
+  - unless:
+      condition:
+        equal: [ << parameters.precache >>, none ]
+      steps:
+        - run:
+            name: Precache flutter binary artifacts
+            command: mise x flutter -- flutter precache --<< parameters.precache >>
+  - save_cache:
+      name: Save flutter
+      key: flutter-v0-{{ arch }}-{{ checksum "pubspec.yaml" }}-{{ checksum "pubspec.lock"  }}
+      paths:
+        - ~/.pub-cache

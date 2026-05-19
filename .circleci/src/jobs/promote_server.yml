@@ -1,5 +1,5 @@
 docker:
-  - image: cimg/node:24.13
+  - image: cimg/base:2026.04
 resource_class: small
 steps:
   - prepare_workspace
@@ -9,12 +9,11 @@ steps:
   - run:
       name: Transfer artifacts to production
       command: |
-              mkdir -p ~/.ssh
-              echo ${APT_FINGERPRINT_STAGING} >> ~/.ssh/known_hosts
-              echo ${APT_FINGERPRINT_PRODUCTION} >> ~/.ssh/known_hosts
-              scp ci@entitlementcard-test.tuerantuer.org:/srv/local-apt-repository/eak*.deb ci@entitlementcard.tuerantuer.org:/srv/local-apt-repository/
+        mkdir -p ~/.ssh
+        echo ${APT_FINGERPRINT_STAGING} >> ~/.ssh/known_hosts
+        echo ${APT_FINGERPRINT_PRODUCTION} >> ~/.ssh/known_hosts
+        scp ci@entitlementcard-test.tuerantuer.org:/srv/local-apt-repository/eak*.deb ci@entitlementcard.tuerantuer.org:/srv/local-apt-repository/
   - run:
       name: Install administration & backend packages via webhook
-      command: |
-              curl https://webhook.entitlementcard.tuerantuer.org/hooks/install-backend-admin-$EAK_WEBHOOK
+      command: curl https://webhook.entitlementcard.tuerantuer.org/hooks/install-backend-admin-$EAK_WEBHOOK
   - notify

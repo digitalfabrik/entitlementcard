@@ -1,5 +1,5 @@
 steps:
   - run:
       name: Install app-toolbelt
-      command: npm ci --workspaces=false
+      command: mise x -- npm ci --workspaces=false
       working_directory: ~/project
