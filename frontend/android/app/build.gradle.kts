@@ -202,7 +202,7 @@ fun setupChecksForBuildConfig() {
 }
 
 fun assertBuildRunnerWasRunCorrectly(buildConfigName: String) {
-    val buildRunnerCmd = "fvm dart run build_runner build --define \"df_build_config=name=${buildConfigName}\""
+    val buildRunnerCmd = ".bin/fvm.sh dart run build_runner build --define \"df_build_config=name=${buildConfigName}\""
     val generatedDartFile = Paths.get(rootDir.path, "../lib/build_config/build_config.dart").toFile()
     if (!generatedDartFile.exists()) {
         val msg = "The dart build runner was not executed. Run `$buildRunnerCmd`!"
