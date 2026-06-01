@@ -13,11 +13,13 @@ import {
 } from '../../../graphql'
 import getQueryResult from '../../../util/getQueryResult'
 
+type NotificationState = { notificationOnApplication: boolean; notificationOnVerification: boolean }
+
 const NotificationSettings = (): ReactElement => {
   const { t } = useTranslation('userSettings')
   const { enqueueSnackbar } = useSnackbar()
-  const [pendingActivation, setPendingActivation] = useState<boolean | null>(null)
-  const [pendingVerification, setPendingVerification] = useState<boolean | null>(null)
+  const [pendingSettings, setPendingSettings] = useState<NotificationState | null>(null)
+  const [lastSaved, setLastSaved] = useState<NotificationState | null>(null)
   const [updateNotificationSettingsState, updateNotificationSettingsMutation] = useMutation(
     UpdateNotificationSettingsDocument,
   )
@@ -25,11 +27,11 @@ const NotificationSettings = (): ReactElement => {
     query: GetNotificationSettingsDocument,
   })
 
-  const savedSettings = notificationSettingsState.data?.notificationSettings
+  const baseSettings = lastSaved ?? notificationSettingsState.data?.notificationSettings
   const notificationOnApplication =
-    pendingActivation ?? savedSettings?.notificationOnApplication ?? false
+    pendingSettings?.notificationOnApplication ?? baseSettings?.notificationOnApplication ?? false
   const notificationOnVerification =
-    pendingVerification ?? savedSettings?.notificationOnVerification ?? false
+    pendingSettings?.notificationOnVerification ?? baseSettings?.notificationOnVerification ?? false
 
   const submit = async () => {
     const result = await updateNotificationSettingsMutation({
@@ -42,10 +44,11 @@ const NotificationSettings = (): ReactElement => {
     if (result.error) {
       const { title } = messageFromGraphQlError(result.error)
       enqueueSnackbar(title, { variant: 'error' })
-      setPendingActivation(null)
-      setPendingVerification(null)
+      setPendingSettings(null)
     } else {
       enqueueSnackbar(t('notificationUpdateSuccess'), { variant: 'success' })
+      setLastSaved({ notificationOnApplication, notificationOnVerification })
+      setPendingSettings(null)
     }
   }
 
@@ -69,14 +72,18 @@ const NotificationSettings = (): ReactElement => {
       >
         <BaseCheckbox
           checked={notificationOnApplication}
-          onChange={checked => setPendingActivation(checked)}
+          onChange={checked =>
+            setPendingSettings({ notificationOnApplication: checked, notificationOnVerification })
+          }
           label={<Typography>{t('newApplications')}</Typography>}
           hasError={false}
           errorMessage={undefined}
         />
         <BaseCheckbox
           checked={notificationOnVerification}
-          onChange={checked => setPendingVerification(checked)}
+          onChange={checked =>
+            setPendingSettings({ notificationOnApplication, notificationOnVerification: checked })
+          }
           label={<Typography>{t('newVerifications')}</Typography>}
           hasError={false}
           errorMessage={undefined}
