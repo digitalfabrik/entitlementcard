@@ -66,6 +66,10 @@ buildConfig {
     buildConfigField("COMMIT_HASH", BuildConfig.circleCiCommitHash)
 }
 
+// TODO This is a temporary fix to force Spring Boot to not override our requested kotlinx-coroutines version
+// See also: https://github.com/digitalfabrik/entitlementcard/issues/3029
+extra["kotlin-coroutines.version"] = libs.versions.kotlinx.coroutines.get()
+
 repositories {
     mavenCentral()
 }
