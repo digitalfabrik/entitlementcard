@@ -31,7 +31,7 @@
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "react-i18next": "^17.0.2",
-    "react-router": "^7.14.0",
+    "react-router": "^7.15.1",
     "react-to-print": "^3.3.0",
     "temporal-polyfill": "^0.3.2",
     "urql": "^5.0.1",
