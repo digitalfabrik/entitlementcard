@@ -4,28 +4,28 @@
 
 expediagroup-graphql = { id = "com.expediagroup.graphql", version.ref = "graphql" }
 gitlab-arturbosch-detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.8" }
-gmazzo-buildconfig = { id = "com.github.gmazzo.buildconfig", version = "5.7.1" }
-google-protobuf = { id = "com.google.protobuf", version = "0.9.6" }
+gmazzo-buildconfig = { id = "com.github.gmazzo.buildconfig", version = "6.0.10" }
+google-protobuf = { id = "com.google.protobuf", version = "0.10.0" }
 jetbrains-kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 jetbrains-kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version = "0.9.8" }
-jlleitschuh-gradle-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "13.1.0" }
-sentry-jvm-gradle = { id = "io.sentry.jvm.gradle", version = "6.3.0" }
+jlleitschuh-gradle-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "14.2.0" }
+sentry-jvm-gradle = { id = "io.sentry.jvm.gradle", version = "6.13.0" }
 springframework-boot = { id = "org.springframework.boot", version.ref = "spring" }
 spring-dependencymanagement = { id = "io.spring.dependency-management", version = "1.1.7" }
 
 [versions]
 
-graphql = "8.8.1"
-jetbrains-exposed = "1.2.0"
+graphql = "10.1.1"
+jetbrains-exposed = "1.3.1"
 junixsocket = "2.10.1"
 kotlin = "2.3.20"
-kotlinx-coroutines = "1.10.2"
-kotlinx-serialization = "1.10.0"
-ktor = "3.4.2"
-spring = "3.5.13"
+kotlinx-coroutines = "1.11.0"
+kotlinx-serialization = "1.11.0"
+ktor = "3.5.1"
+spring = "3.5.16"
 testcontainers = "1.21.4"
-protobuf = "4.34.1"
+protobuf = "4.35.1"
 
 [libraries]
 
@@ -33,8 +33,8 @@ ajalt-clikt = { module = "com.github.ajalt.clikt:clikt", version = "5.1.0" }
 apache-commons-compress = { module = "org.apache.commons:commons-compress", version = "1.28.0" }
 apache-commons-csv = { module = "org.apache.commons:commons-csv", version = "1.14.1" }
 apache-commons-text = { module = "org.apache.commons:commons-text", version = "1.15.0" }
-auth0-java-jwt = { module = "com.auth0:java-jwt", version = "4.5.1" }
-bouncycastle-bcpkix-jdk18on = { module = "org.bouncycastle:bcpkix-jdk18on", version = "1.83" }
+auth0-java-jwt = { module = "com.auth0:java-jwt", version = "4.5.2" }
+bouncycastle-bcpkix-jdk18on = { module = "org.bouncycastle:bcpkix-jdk18on", version = "1.84" }
 eatthepath-java-otp = { module = "com.eatthepath:java-otp", version = "0.4.0" }
 expediagroup-graphql-kotlin-client = { module = "com.expediagroup:graphql-kotlin-client", version.ref = "graphql" }
 expediagroup-graphql-kotlin-schema-generator = { module = "com.expediagroup:graphql-kotlin-schema-generator", version.ref = "graphql" }
@@ -45,7 +45,7 @@ fasterxml-jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jacks
 favre-lib-bcrypt = { module = "at.favre.lib:bcrypt", version = "0.10.2" }
 google-protobuf-kotlin = { module = "com.google.protobuf:protobuf-kotlin", version.ref = "protobuf" }
 google-zxing-core = { module = "com.google.zxing:core", version = "3.5.4" }
-grundig-geojson-jackson = { module = "de.grundid.opendatalab:geojson-jackson", version = "1.14" }
+grundig-geojson-jackson = { module = "de.grundid.opendatalab:geojson-jackson", version = "3.0" }
 graphql-extended-scalars = { module = "com.graphql-java:graphql-java-extended-scalars", version = "24.0" }
 jetbrains-exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "jetbrains-exposed" }
 jetbrains-exposed-dao = { module = "org.jetbrains.exposed:exposed-dao", version.ref = "jetbrains-exposed" }
@@ -64,12 +64,12 @@ kohlschutter-junixsocket-common = { module = "com.kohlschutter.junixsocket:junix
 kohlschutter-junixsocket-core = { module = "com.kohlschutter.junixsocket:junixsocket-core", version.ref = "junixsocket" }
 ktor-client-cio-jvm = { module = "io.ktor:ktor-client-cio-jvm", version.ref = "ktor" }
 ktor-client-core-jvm = { module = "io.ktor:ktor-client-core-jvm", version.ref = "ktor" }
-mockk = { module = "io.mockk:mockk", version = "1.14.9" }
-piwik-matomo-java-tracker = { module = "org.piwik.java.tracking:matomo-java-tracker", version = "3.4.0" }
+mockk = { module = "io.mockk:mockk", version = "1.14.11" }
+piwik-matomo-java-tracker = { module = "org.piwik.java.tracking:matomo-java-tracker", version = "4.0.0" }
 postgis-jdbc = { module = "net.postgis:postgis-jdbc", version = "2025.1.1" }
-postgresql-postgresql = { module = "org.postgresql:postgresql", version = "42.7.10" }
+postgresql-postgresql = { module = "org.postgresql:postgresql", version = "42.7.12" }
 simplejavamail = { module = "org.simplejavamail:simple-java-mail", version = "8.12.6" }
-springdoc-openapi-starter = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version = "2.8.16" }
+springdoc-openapi-starter = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version = "3.0.3" }
 springframework-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools" }
 springframework-boot-configurationprocessor = { module = "org.springframework.boot:spring-boot-configuration-processor" }
 springframework-boot-starter-mail = { module = "org.springframework.boot:spring-boot-starter-mail", version.ref = "spring" }
@@ -80,4 +80,4 @@ springframework-boot-testcontainers = { module = "org.springframework.boot:sprin
 testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }
 testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter", version.ref = "testcontainers" }
 testcontainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "testcontainers" }
-zaxxer-hickaricp = { module = "com.zaxxer:HikariCP", version = "7.0.2" }
+zaxxer-hickaricp = { module = "com.zaxxer:HikariCP", version = "7.1.0" }

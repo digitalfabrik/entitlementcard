@@ -18,6 +18,11 @@ group = "app.ehrenamtskarte.backend"
 version = "0.0.1-SNAPSHOT"
 description = "Backend for the Ehrenamtskarte system"
 
+// Spring Boot's BOM pins kotlinx-coroutines to an older version (1.8.1) than Ktor 3.5.x is compiled
+// against, which causes a runtime NoSuchMethodError (Job.invokeOnCompletion). Override the managed
+// version so it matches the version declared in the version catalog.
+extra["kotlin-coroutines.version"] = libs.versions.kotlinx.coroutines.get()
+
 /**
  * These environment variables are set by the CI pipeline.
  * See: https://app.circleci.com/settings/organization/github/digitalfabrik/contexts/0d0d3d24-cd54-4c43-85a5-273e3a9e2152
@@ -131,18 +136,6 @@ dependencies {
             because(
                 "Replace transitive dependency in testcontainers to mitigate vulnerability: testcontainers/testcontainers-java#8338",
             )
-        }
-    }
-}
-
-// Workaround for detekt with recent kotlin version, should be removed when detekt plugin v2.0.0 is stable
-// https://github.com/detekt/detekt/issues/6198#issuecomment-2265183695
-dependencyManagement {
-    configurations.matching { it.name == "detekt" }.all {
-        resolutionStrategy.eachDependency {
-            if (requested.group == "org.jetbrains.kotlin") {
-                useVersion(io.gitlab.arturbosch.detekt.getSupportedKotlinVersion())
-            }
         }
     }
 }
