@@ -29,11 +29,11 @@ class GlobalExceptionHandler {
         ResponseEntity.status(HttpStatus.FORBIDDEN).body(mapOf("message" to ex.message))
 
     @ExceptionHandler(NotFoundException::class)
-    fun handleNotFoundException(ex: NotFoundException): ResponseEntity<Map<String, String?>?> =
+    fun handleNotFoundException(ex: NotFoundException): ResponseEntity<Map<String, String?>> =
         ResponseEntity.status(HttpStatus.NOT_FOUND).body(mapOf("message" to ex.message))
 
     @ExceptionHandler(NoResourceFoundException::class)
-    fun handleNoResourceFound(ex: NoResourceFoundException): ResponseEntity<Map<String, String?>?> =
+    fun handleNoResourceFound(ex: NoResourceFoundException): ResponseEntity<Map<String, String?>> =
         ResponseEntity.status(HttpStatus.NOT_FOUND).body(mapOf("message" to ex.message))
 
     @ExceptionHandler(Exception::class)

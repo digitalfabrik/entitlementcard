@@ -113,7 +113,7 @@ class GraphQLExport : CliktCommand("graphql-export") {
 
     override fun run() {
         val springContext = runApplication<BackendApplication> {
-            webApplicationType = WebApplicationType.NONE
+            setWebApplicationType(WebApplicationType.NONE)
             addInitializers(
                 beans {
                     bean { config }

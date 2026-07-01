@@ -23,6 +23,14 @@ description = "Backend for the Ehrenamtskarte system"
 // version so it matches the version declared in the version catalog.
 extra["kotlin-coroutines.version"] = libs.versions.kotlinx.coroutines.get()
 
+// Spring Boot's BOM pins protobuf-java older than the protoc we generate code with, which makes the
+// generated code's RuntimeVersion gate throw at runtime. Keep the runtime aligned with the catalog.
+dependencyManagement {
+    dependencies {
+        dependency("com.google.protobuf:protobuf-java:${libs.versions.protobuf.get()}")
+    }
+}
+
 /**
  * These environment variables are set by the CI pipeline.
  * See: https://app.circleci.com/settings/organization/github/digitalfabrik/contexts/0d0d3d24-cd54-4c43-85a5-273e3a9e2152
@@ -114,7 +122,7 @@ dependencies {
     implementation(libs.simplejavamail)
     implementation(libs.springdoc.openapi.starter)
     implementation(libs.springframework.boot.starter.mail)
-    implementation(libs.springframework.boot.starter.web)
+    implementation(libs.springframework.boot.starter.webmvc)
     implementation(libs.springframework.boot.starter.graphql)
     implementation(libs.zaxxer.hickaricp)
 
@@ -126,6 +134,8 @@ dependencies {
     testImplementation(libs.jetbrains.kotlinx.coroutines.test)
     testImplementation(libs.mockk)
     testImplementation(libs.springframework.boot.starter.test)
+    testImplementation(libs.springframework.boot.resttestclient)
+    testImplementation(libs.springframework.boot.restclient)
     testImplementation(libs.springframework.boot.testcontainers)
     testImplementation(libs.testcontainers)
     testImplementation(libs.testcontainers.junit.jupiter)
@@ -135,6 +145,18 @@ dependencies {
             because(
                 "Replace transitive dependency in testcontainers to mitigate vulnerability: testcontainers/testcontainers-java#8338",
             )
+        }
+    }
+}
+
+// protobuf-gradle-plugin registers a gRPC code-generator locator whose `io.grpc:protoc-gen-grpc-java`
+// dependency has no version (resolves to `:null` and fails :generateProto). This project defines no
+// gRPC services (card.proto is message-only) so nothing is actually generated; pin the locator's
+// version so the configuration resolves.
+configurations.matching { it.name == "protobufToolsLocator_grpc" }.configureEach {
+    resolutionStrategy.eachDependency {
+        if (requested.group == "io.grpc" && requested.name == "protoc-gen-grpc-java") {
+            useVersion("1.82.1")
         }
     }
 }

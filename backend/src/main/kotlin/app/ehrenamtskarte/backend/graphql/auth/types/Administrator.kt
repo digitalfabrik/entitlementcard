@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.graphql.auth.types
 
 import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
+import app.ehrenamtskarte.backend.graphql.loadFrom
 import app.ehrenamtskarte.backend.graphql.regions.RegionDataLoader
 import app.ehrenamtskarte.backend.graphql.regions.types.Region
 import graphql.schema.DataFetchingEnvironment
@@ -28,9 +29,10 @@ data class Administrator(
 
 @Controller
 class AdministratorResolver {
+    @Suppress("UNCHECKED_CAST")
     @SchemaMapping(typeName = "Administrator", field = "region")
     fun region(admin: Administrator, dfe: DataFetchingEnvironment): CompletableFuture<Region?> =
-        admin.regionId?.let { id ->
-            dfe.getDataLoader<Int, Region>(RegionDataLoader::class.java.name)?.load(id)
-        } ?: CompletableFuture.completedFuture(null)
+        admin.regionId
+            ?.let { dfe.loadFrom(RegionDataLoader::class, it) }
+            ?: CompletableFuture.completedFuture(null)
 }

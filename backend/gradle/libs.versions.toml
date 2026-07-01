@@ -23,7 +23,7 @@ kotlin = "2.3.20"
 kotlinx-coroutines = "1.11.0"
 kotlinx-serialization = "1.11.0"
 ktor = "3.5.1"
-spring = "3.5.16"
+spring = "4.1.0"
 testcontainers = "1.21.4"
 protobuf = "4.35.1"
 
@@ -72,10 +72,12 @@ springdoc-openapi-starter = { module = "org.springdoc:springdoc-openapi-starter-
 springframework-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools" }
 springframework-boot-configurationprocessor = { module = "org.springframework.boot:spring-boot-configuration-processor" }
 springframework-boot-starter-mail = { module = "org.springframework.boot:spring-boot-starter-mail", version.ref = "spring" }
-springframework-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "spring" }
+springframework-boot-starter-webmvc = { module = "org.springframework.boot:spring-boot-starter-webmvc", version.ref = "spring" }
 springframework-boot-starter-graphql = { module = "org.springframework.boot:spring-boot-starter-graphql", version.ref = "spring" }
 springframework-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
 springframework-boot-testcontainers = { module = "org.springframework.boot:spring-boot-testcontainers" }
+springframework-boot-resttestclient = { module = "org.springframework.boot:spring-boot-resttestclient" }
+springframework-boot-restclient = { module = "org.springframework.boot:spring-boot-restclient" }
 testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }
 testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter", version.ref = "testcontainers" }
 testcontainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "testcontainers" }

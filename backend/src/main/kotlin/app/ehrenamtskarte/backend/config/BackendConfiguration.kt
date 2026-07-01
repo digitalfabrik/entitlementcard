@@ -90,7 +90,7 @@ data class BackendConfiguration(
             .build()
 
         fun load(url: URL): BackendConfiguration =
-            mapper.readValue(url, BackendConfiguration::class.java)
+            url.openStream().use { mapper.readValue(it, BackendConfiguration::class.java) }
                 .sanityCheckMatomoConfig()
     }
 }

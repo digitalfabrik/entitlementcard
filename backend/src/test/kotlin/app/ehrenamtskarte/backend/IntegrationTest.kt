@@ -8,8 +8,9 @@ import app.ehrenamtskarte.backend.helper.TestFreinetAgencies
 import com.expediagroup.graphql.client.types.GraphQLClientRequest
 import org.junit.jupiter.api.BeforeAll
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.resttestclient.TestRestTemplate
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.context.annotation.Import
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -21,6 +22,7 @@ import org.testcontainers.utility.DockerImageName
  * Base class for integration tests providing a fully initialized Spring Boot application context
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureTestRestTemplate
 @Import(IntegrationTestConfig::class)
 open class IntegrationTest {
     companion object {

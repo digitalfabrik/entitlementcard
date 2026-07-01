@@ -26,13 +26,16 @@ class DataLoaderInitializer(
  * Helper to load a value from a DataLoader, reducing boilerplate in resolvers.
  * It throws an IllegalStateException if the DataLoader is not registered.
  */
+@Suppress("UNCHECKED_CAST")
 fun <K : Any, V : Any> DataFetchingEnvironment.loadFrom(
     loaderClass: KClass<out BaseDataLoader<K, V>>,
     key: K,
 ): CompletableFuture<V?> =
-    getDataLoader<K, V>(loaderClass.java.name)
-        ?.load(key)
-        ?: throw IllegalStateException("DataLoader '${loaderClass.simpleName}' not registered.")
+    (
+        getDataLoader<K, V>(loaderClass.java.name)
+            ?.load(key)
+            ?: throw IllegalStateException("DataLoader '${loaderClass.simpleName}' not registered.")
+    ) as CompletableFuture<V?>
 
 /**
  * Abstract base class for GraphQL data loaders.
