@@ -4,7 +4,6 @@ import app.ehrenamtskarte.backend.import.COUNTRY_CODE
 import app.ehrenamtskarte.backend.import.STATE
 import app.ehrenamtskarte.backend.import.stores.ImportConfig
 import app.ehrenamtskarte.backend.import.stores.common.types.AcceptingStore
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.ktor.client.HttpClient
 import io.ktor.client.request.request
 import io.ktor.client.statement.bodyAsText
@@ -13,6 +12,7 @@ import io.ktor.http.URLProtocol
 import io.ktor.http.path
 import org.geojson.Feature
 import org.geojson.FeatureCollection
+import tools.jackson.databind.ObjectMapper
 
 class FeatureFetcher(private val config: ImportConfig, private val httpClient: HttpClient) {
     /**

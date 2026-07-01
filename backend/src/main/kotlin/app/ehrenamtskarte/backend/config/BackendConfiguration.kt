@@ -2,11 +2,9 @@ package app.ehrenamtskarte.backend.config
 
 import app.ehrenamtskarte.backend.shared.exceptions.ProjectNotFoundException
 import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.KotlinModule
+import tools.jackson.databind.DeserializationFeature
+import tools.jackson.dataformat.yaml.YAMLMapper
+import tools.jackson.module.kotlin.kotlinModule
 import java.net.URL
 import java.time.ZoneId
 
@@ -81,14 +79,15 @@ data class BackendConfiguration(
     }
 
     companion object {
-        private val mapper = ObjectMapper(YAMLFactory())
-            .registerModule(KotlinModule.Builder().build())
-            .registerModule(JavaTimeModule())
+        private val mapper = YAMLMapper.builder()
+            .addModule(kotlinModule())
+            // JSR-310 (java.time) support is built into jackson-databind in Jackson 3, no module needed.
             // Allows unknown (potentially future) config options.
             // Without this parsing a config fails if a property is defined that is missing
             // from the BackendConfiguration class. We might want to be able to load configs that contain configuration
             // for future features, therefore we want to allow unknown properties.
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+            .build()
 
         fun load(url: URL): BackendConfiguration =
             mapper.readValue(url, BackendConfiguration::class.java)

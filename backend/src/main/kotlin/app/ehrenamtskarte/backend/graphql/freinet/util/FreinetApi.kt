@@ -11,9 +11,6 @@ import app.ehrenamtskarte.backend.graphql.freinet.types.FreinetProtocol
 import app.ehrenamtskarte.backend.shared.utils.devInfo
 import app.ehrenamtskarte.backend.shared.utils.findValueByName
 import app.ehrenamtskarte.backend.shared.utils.findValueByNameNode
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.ktor.client.HttpClient
 import io.ktor.client.request.request
 import io.ktor.client.request.setBody
@@ -25,6 +22,9 @@ import io.ktor.http.contentType
 import io.ktor.http.path
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.module.kotlin.jacksonObjectMapper
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -107,8 +107,8 @@ class FreinetApi(
 
         return objectMapper.createObjectNode().apply {
             addFreinetInitInformation(agencyId, accessKey, "personen", updateType)
-            set<ObjectNode>("person", objectMapper.valueToTree(person))
-            set<ObjectNode>("protokoll", objectMapper.valueToTree(mapOf("1" to protocolEntry)))
+            set("person", objectMapper.valueToTree(person))
+            set("protokoll", objectMapper.valueToTree(mapOf("1" to protocolEntry)))
         }
     }
 

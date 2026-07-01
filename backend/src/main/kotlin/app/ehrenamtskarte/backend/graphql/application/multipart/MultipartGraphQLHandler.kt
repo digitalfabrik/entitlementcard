@@ -1,9 +1,6 @@
 package app.ehrenamtskarte.backend.graphql.application.multipart
 
 import app.ehrenamtskarte.backend.graphql.shared.substitute
-import com.fasterxml.jackson.core.JsonProcessingException
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication
 import org.springframework.context.i18n.LocaleContextHolder
@@ -19,6 +16,9 @@ import org.springframework.util.IdGenerator
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.servlet.function.ServerRequest
 import org.springframework.web.servlet.function.ServerResponse
+import tools.jackson.core.JacksonException
+import tools.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.module.kotlin.readValue
 
 /**
  * Custom handler for processing GraphQL multipart requests (file uploads).
@@ -87,7 +87,7 @@ class MultipartGraphQLHandler(
         } catch (e: IllegalStateException) {
             logger.debug("Failed to process multipart request", e)
             return badRequestResponse("Invalid multipart request format")
-        } catch (e: JsonProcessingException) {
+        } catch (e: JacksonException) {
             logger.debug("Failed to process multipart request", e)
             return badRequestResponse("Invalid multipart request format")
         }

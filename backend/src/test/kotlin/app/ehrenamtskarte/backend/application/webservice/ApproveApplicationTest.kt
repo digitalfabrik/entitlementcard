@@ -43,8 +43,8 @@ internal class ApproveApplicationTest : IntegrationTest() {
 
         val data = response.json()
 
-        assertEquals("Approved", data.findValue("status").asText())
-        assertNotNull(data.findValue("statusResolvedDate").asText())
+        assertEquals("Approved", data.findValue("status").asString())
+        assertNotNull(data.findValue("statusResolvedDate").asString())
 
         transaction {
             ApplicationEntity.find { Applications.id eq applicationId }.single().let {

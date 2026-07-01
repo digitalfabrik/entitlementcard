@@ -2,11 +2,6 @@ package app.ehrenamtskarte.backend.routes
 
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.shared.exceptions.ProjectNotFoundException
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.node.ArrayNode
-import com.fasterxml.jackson.databind.node.JsonNodeFactory
-import com.fasterxml.jackson.databind.node.ObjectNode
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import org.springframework.http.MediaType
@@ -14,6 +9,11 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.databind.node.ArrayNode
+import tools.jackson.databind.node.JsonNodeFactory
+import tools.jackson.databind.node.ObjectNode
 
 @RestController
 class MapStyleController(
@@ -41,7 +41,7 @@ class MapStyleController(
 
         return config.projects.associate { project ->
             val newStyle = patchSources(style) { id: String, source: JsonNode ->
-                id to source.deepCopy<ObjectNode>().also {
+                id to (source.deepCopy() as ObjectNode).also {
                     when (id) {
                         "physical_stores" -> {
                             it.replace(

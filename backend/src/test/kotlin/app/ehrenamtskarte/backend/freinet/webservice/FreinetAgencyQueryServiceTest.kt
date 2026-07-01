@@ -9,6 +9,7 @@ import app.ehrenamtskarte.backend.helper.toErrorObject
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 internal class FreinetAgencyQueryServiceTest : IntegrationTest() {
     @Test
@@ -56,7 +57,7 @@ internal class FreinetAgencyQueryServiceTest : IntegrationTest() {
 
         val jsonResponse = response.json()
 
-        assertEquals("null", jsonResponse.findValue("agency").asText())
+        assertTrue(jsonResponse.findValue("agency").isNull)
     }
 
     @Test
@@ -69,10 +70,10 @@ internal class FreinetAgencyQueryServiceTest : IntegrationTest() {
         val jsonResponse = response.json()
 
         jsonResponse.apply {
-            assertEquals("123", findValuesAsText("agencyId").single())
-            assertEquals("Freinet Demo", findValuesAsText("agencyName").single())
-            assertEquals("testKey", findValuesAsText("apiAccessKey").single())
-            assertEquals("false", findValuesAsText("dataTransferActivated").single())
+            assertEquals("123", findValuesAsString("agencyId").single())
+            assertEquals("Freinet Demo", findValuesAsString("agencyName").single())
+            assertEquals("testKey", findValuesAsString("apiAccessKey").single())
+            assertEquals("false", findValuesAsString("dataTransferActivated").single())
         }
     }
 

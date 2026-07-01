@@ -2,9 +2,9 @@ package app.ehrenamtskarte.backend.helper
 
 import app.ehrenamtskarte.backend.graphql.shared.types.GraphQLExceptionCode
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.treeToValue
+import tools.jackson.databind.JsonNode
+import tools.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.module.kotlin.treeToValue
 import org.junit.jupiter.api.fail
 import org.springframework.http.ResponseEntity
 

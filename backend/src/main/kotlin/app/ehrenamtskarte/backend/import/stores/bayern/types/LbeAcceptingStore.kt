@@ -1,7 +1,7 @@
 package app.ehrenamtskarte.backend.import.stores.bayern.types
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData
+import tools.jackson.dataformat.xml.annotation.JacksonXmlCData
 
 data class LbeAcceptingStore(
     @JsonProperty("name")
