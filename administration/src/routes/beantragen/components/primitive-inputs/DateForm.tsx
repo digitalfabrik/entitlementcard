@@ -12,8 +12,7 @@ import { FormContext } from '../forms/SteppedSubForms'
 type State = { type: 'DateForm'; value: string }
 type ValidatedInput = DateInput
 type Options =
-  | { maximumDate: Temporal.PlainDate; maximumDateErrorMessage: string }
-  | { maximumDate: undefined }
+  { maximumDate: Temporal.PlainDate; maximumDateErrorMessage: string } | { maximumDate: undefined }
 type AdditionalProps = { label: string; minWidth?: number }
 
 const minDate = Temporal.PlainDate.from('1900-01-01')
