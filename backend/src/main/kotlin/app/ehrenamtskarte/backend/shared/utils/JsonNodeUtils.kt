@@ -7,7 +7,7 @@ fun JsonNode.findValueByName(fieldName: String): String? = findValueByNameNode(f
 fun JsonNode.findValueByNameNode(fieldName: String): JsonNode? =
     when {
         this["name"]?.asString() == fieldName -> this["value"]
-        this.isArray -> this.firstOrNull { it["name"].asString() == fieldName }?.get("value")
+        this.isArray -> this.firstOrNull { it["name"]?.asString() == fieldName }?.get("value")
         else -> null
     }
 
