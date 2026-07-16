@@ -86,7 +86,6 @@ class AcceptingStoreQueryController(
                 .map { AcceptingStore.fromDbEntity(it) }
         }
         matomo.trackSearch(
-            config = backendConfig,
             projectConfig = projectConfig,
             request = request,
             query = dfe.field.name,
@@ -119,7 +118,6 @@ class AcceptingStoreQueryController(
                 .map { AcceptingStoreV2.fromDbEntity(it) }
         }
         matomo.trackSearch(
-            config = backendConfig,
             projectConfig = projectConfig,
             request = request,
             query = dfe.field.name,

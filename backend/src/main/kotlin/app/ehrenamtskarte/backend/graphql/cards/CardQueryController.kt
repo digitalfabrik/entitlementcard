@@ -49,8 +49,7 @@ class CardQueryController(
         )
 
         matomo.trackVerification(
-            backendConfiguration,
-            projectConfig,
+            projectConfig = projectConfig,
             request,
             dfe.field.name,
             cardHash,

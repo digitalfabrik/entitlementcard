@@ -158,8 +158,9 @@ class CardMutationController(
         @GraphQLIgnore @ContextValue request: HttpServletRequest,
         dfe: DataFetchingEnvironment,
     ): CardCreationResultModel {
-        val config = backendConfiguration.getProjectConfig(project)
-        if (!config.selfServiceEnabled) {
+        val projectConfig = backendConfiguration.getProjectConfig(project)
+
+        if (!projectConfig.selfServiceEnabled) {
             throw NotImplementedException("Self-Service is not enabled in the project")
         }
 
@@ -216,8 +217,7 @@ class CardMutationController(
         }
 
         matomo.trackCreateCards(
-            backendConfiguration,
-            config,
+            projectConfig = projectConfig,
             request,
             dfe.field.name,
             userEntitlements.regionId.value,
@@ -303,8 +303,7 @@ class CardMutationController(
 
         if (regionId != null) {
             matomo.trackCreateCards(
-                backendConfiguration,
-                projectConfig,
+                projectConfig = projectConfig,
                 request,
                 dfe.field.name,
                 regionId,
@@ -384,8 +383,7 @@ class CardMutationController(
             return@t CardActivationResultModel(ActivationState.success, encodedTotpSecret)
         }
         matomo.trackActivation(
-            backendConfiguration,
-            projectConfig,
+            projectConfig = projectConfig,
             request,
             dfe.field.name,
             cardHash,
