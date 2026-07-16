@@ -19,6 +19,7 @@ import java.util.Base64
 @Controller
 class CardQueryController(
     private val backendConfiguration: BackendConfiguration,
+    private val matomo: Matomo,
 ) {
     @GraphQLDescription(
         "Returns whether there is a card in the given project with that hash registered for that this TOTP is currently valid, extendable and a timestamp of the last check",
@@ -47,7 +48,7 @@ class CardQueryController(
             CardVerifier.isExtendable(project, cardHash),
         )
 
-        Matomo.trackVerification(
+        matomo.trackVerification(
             backendConfiguration,
             projectConfig,
             request,

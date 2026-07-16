@@ -26,6 +26,7 @@ import org.springframework.stereotype.Controller
 @Controller
 class AcceptingStoreQueryController(
     private val backendConfig: BackendConfiguration,
+    private val matomo: Matomo,
 ) {
     @Deprecated(
         "Use acceptingStoresByPhysicalStoreIdsInProject query for localized descriptions. Can be safely removed in January 2028.",
@@ -84,7 +85,7 @@ class AcceptingStoreQueryController(
             ).with(AcceptingStoreEntity::descriptions)
                 .map { AcceptingStore.fromDbEntity(it) }
         }
-        Matomo.trackSearch(
+        matomo.trackSearch(
             config = backendConfig,
             projectConfig = projectConfig,
             request = request,
@@ -117,7 +118,7 @@ class AcceptingStoreQueryController(
             ).with(AcceptingStoreEntity::descriptions)
                 .map { AcceptingStoreV2.fromDbEntity(it) }
         }
-        Matomo.trackSearch(
+        matomo.trackSearch(
             config = backendConfig,
             projectConfig = projectConfig,
             request = request,

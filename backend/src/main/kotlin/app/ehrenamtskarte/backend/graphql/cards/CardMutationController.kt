@@ -62,6 +62,7 @@ import kotlin.io.encoding.Base64
 class CardMutationController(
     private val backendConfiguration: BackendConfiguration,
     private val mailerService: Mailer,
+    private val matomo: Matomo,
 ) {
     private val logger: Logger = LoggerFactory.getLogger(CardMutationController::class.java)
 
@@ -214,7 +215,7 @@ class CardMutationController(
             )
         }
 
-        Matomo.trackCreateCards(
+        matomo.trackCreateCards(
             backendConfiguration,
             config,
             request,
@@ -301,7 +302,7 @@ class CardMutationController(
         val regionId = authContext.admin.regionId?.value
 
         if (regionId != null) {
-            Matomo.trackCreateCards(
+            matomo.trackCreateCards(
                 backendConfiguration,
                 projectConfig,
                 request,
@@ -382,7 +383,7 @@ class CardMutationController(
             )
             return@t CardActivationResultModel(ActivationState.success, encodedTotpSecret)
         }
-        Matomo.trackActivation(
+        matomo.trackActivation(
             backendConfiguration,
             projectConfig,
             request,

@@ -16,7 +16,7 @@ import org.matomo.java.tracking.MatomoTracker
 import org.matomo.java.tracking.TrackerConfiguration
 import org.matomo.java.tracking.parameters.AcceptLanguage
 import org.slf4j.LoggerFactory
-import java.io.IOException
+import org.springframework.stereotype.Service
 import java.net.URI
 
 enum class MatomoEventCategory(val value: String) {
@@ -33,7 +33,10 @@ enum class MatomoEventName(val value: String) {
     VERIFICATION_SUCCESSFUL("verification successful"),
 }
 
-object Matomo {
+@Service
+class Matomo(
+    config: BackendConfiguration,
+) {
     private val logger = LoggerFactory.getLogger(Matomo::class.java)
     private var tracker: MatomoTracker? = null
 
@@ -43,7 +46,7 @@ object Matomo {
             val newTracker = MatomoTracker(
                 TrackerConfiguration.builder().apiEndpoint(URI.create(config.matomoUrl)).build(),
             )
-            Matomo.tracker = newTracker
+            this.tracker = newTracker
             return newTracker
         }
 
