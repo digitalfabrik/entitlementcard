@@ -41,87 +41,6 @@ class Matomo(
         TrackerConfiguration.builder().apiEndpoint(URI.create(config.matomoUrl)).build(),
     )
 
-    private fun sendTrackingRequest(projectConfig: ProjectConfig, requestBuilder: MatomoRequest.MatomoRequestBuilder) {
-        CoroutineScope(Dispatchers.IO).launch {
-            projectConfig.matomo?.let { matomoConfig ->
-                val matomoRequest = requestBuilder
-                    .siteId(matomoConfig.siteId)
-                    .authToken(matomoConfig.accessToken)
-                    .build()
-
-                try {
-                    tracker.sendRequestAsync(matomoRequest)
-                } catch (e: Exception) {
-                    when (e) {
-                        is IOException -> {
-                            logger.error("Could not send request to Matomo")
-                        }
-
-                        is ExecutionException, is InterruptedException -> {
-                            logger.error("Error while getting response", e)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private fun sendBulkTrackingRequest(
-        projectConfig: ProjectConfig,
-        requestBuilder: Iterable<MatomoRequest.MatomoRequestBuilder>,
-    ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            projectConfig.matomo?.let { matomoConfig ->
-                val siteId = matomoConfig.siteId
-                val matomoRequests = requestBuilder.map {
-                    it.siteId(siteId)
-                    it.authToken(matomoConfig.accessToken)
-                    it.build()
-                }
-                try {
-                    tracker.sendBulkRequestAsync(matomoRequests)
-                } catch (e: Exception) {
-                    when (e) {
-                        is IOException -> {
-                            logger.debug("Could not send request to Matomo")
-                        }
-
-                        is ExecutionException, is InterruptedException -> {
-                            logger.debug("Error while getting response")
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private fun attachRequestInformation(
-        builder: MatomoRequest.MatomoRequestBuilder,
-        request: HttpServletRequest,
-    ): MatomoRequest.MatomoRequestBuilder {
-        val userAgent = request.getHeader("User-Agent")
-        val acceptLanguage = request.getHeader("Accept-Language")
-        return builder
-            .headerAcceptLanguage(AcceptLanguage.fromHeader(acceptLanguage))
-            .headerUserAgent(userAgent)
-            .visitorIp(request.remoteAddr)
-    }
-
-    private fun buildCardsTrackingRequest(
-        request: HttpServletRequest,
-        regionId: Int,
-        query: String,
-        codeType: CodeType,
-        numberOfCards: Int,
-    ): MatomoRequest.MatomoRequestBuilder =
-        MatomoRequest.request()
-            .eventAction(query)
-            .eventCategory(MatomoEventCategory.valueOf(codeType.name).value)
-            .eventName(MatomoEventName.CARD_CREATION_SUCCESSFUL.value)
-            .eventValue(numberOfCards.toDouble())
-            .dimensions(mapOf(1L to regionId))
-            .also { attachRequestInformation(it, request) }
-
     fun trackCreateCards(
         projectConfig: ProjectConfig,
         request: HttpServletRequest,
@@ -130,38 +49,32 @@ class Matomo(
         numberOfDynamicCards: Int,
         numberOfStaticCards: Int,
     ) {
-        if (numberOfDynamicCards > 0 && numberOfStaticCards > 0) {
-            sendBulkTrackingRequest(
-                projectConfig = projectConfig,
-                listOf(
-                    buildCardsTrackingRequest(
-                        request,
-                        regionId,
-                        query,
-                        CodeType.STATIC,
-                        numberOfStaticCards,
-                    ),
-                    buildCardsTrackingRequest(
-                        request,
-                        regionId,
-                        query,
-                        CodeType.DYNAMIC,
-                        numberOfDynamicCards,
-                    ),
-                ),
-            )
-        } else if (numberOfDynamicCards > 0) {
-            sendTrackingRequest(
-                projectConfig = projectConfig,
-                buildCardsTrackingRequest(
-                    request,
-                    regionId,
-                    query,
-                    CodeType.DYNAMIC,
-                    numberOfDynamicCards,
-                ),
-            )
-        }
+        sendTrackingRequests(
+            projectConfig = projectConfig,
+            httpRequest = request,
+            requestBuilders = listOfNotNull(
+                if (numberOfStaticCards > 0) {
+                    MatomoRequest.request()
+                        .eventAction(query)
+                        .eventCategory(MatomoEventCategory.valueOf(CodeType.STATIC.name).value)
+                        .eventName(MatomoEventName.CARD_CREATION_SUCCESSFUL.value)
+                        .eventValue(numberOfStaticCards.toDouble())
+                        .dimensions(mapOf(1L to regionId))
+                } else {
+                    null
+                },
+                if (numberOfDynamicCards > 0) {
+                    MatomoRequest.request()
+                        .eventAction(query)
+                        .eventCategory(MatomoEventCategory.valueOf(CodeType.DYNAMIC.name).value)
+                        .eventName(MatomoEventName.CARD_CREATION_SUCCESSFUL.value)
+                        .eventValue(numberOfDynamicCards.toDouble())
+                        .dimensions(mapOf(1L to regionId))
+                } else {
+                    null
+                },
+            ),
+        )
     }
 
     fun trackVerification(
@@ -174,20 +87,22 @@ class Matomo(
     ) {
         val card = transaction { CardRepository.findByHash(projectConfig.id, cardHash) }
 
-        sendTrackingRequest(
+        sendTrackingRequests(
             projectConfig = projectConfig,
-            MatomoRequest.request()
-                .eventAction(query)
-                .eventCategory(MatomoEventCategory.valueOf(codeType.name).value)
-                .eventName(
-                    if (successful) {
-                        MatomoEventName.VERIFICATION_SUCCESSFUL.value
-                    } else {
-                        MatomoEventName.VERIFICATION_FAILED.value
-                    },
-                )
-                .dimensions(if (card != null) mapOf(1L to card.regionId) else emptyMap())
-                .also { attachRequestInformation(it, request) },
+            httpRequest = request,
+            requestBuilders = listOf(
+                MatomoRequest.request()
+                    .eventAction(query)
+                    .eventCategory(MatomoEventCategory.valueOf(codeType.name).value)
+                    .eventName(
+                        if (successful) {
+                            MatomoEventName.VERIFICATION_SUCCESSFUL.value
+                        } else {
+                            MatomoEventName.VERIFICATION_FAILED.value
+                        },
+                    )
+                    .dimensions(if (card != null) mapOf(1L to card.regionId) else emptyMap()),
+            ),
         )
     }
 
@@ -200,21 +115,23 @@ class Matomo(
     ) {
         val card = transaction { CardRepository.findByHash(projectConfig.id, cardHash) }
 
-        sendTrackingRequest(
+        sendTrackingRequests(
             projectConfig = projectConfig,
-            MatomoRequest.request()
-                .eventAction(query)
-                .eventCategory(MatomoEventCategory.ACTIVATION.value)
-                .eventName(
-                    if (successful) {
-                        MatomoEventName.ACTIVATION_SUCCESSFUL.value
-                    } else {
-                        MatomoEventName.ACTIVATION_FAILED.value
-                    },
-                )
-                .eventValue(if (successful) 1.0 else 0.0)
-                .dimensions(if (card != null) mapOf(1L to card.regionId) else emptyMap())
-                .also { attachRequestInformation(it, request) },
+            httpRequest = request,
+            requestBuilders = listOf(
+                MatomoRequest.request()
+                    .eventAction(query)
+                    .eventCategory(MatomoEventCategory.ACTIVATION.value)
+                    .eventName(
+                        if (successful) {
+                            MatomoEventName.ACTIVATION_SUCCESSFUL.value
+                        } else {
+                            MatomoEventName.ACTIVATION_FAILED.value
+                        },
+                    )
+                    .eventValue(if (successful) 1.0 else 0.0)
+                    .dimensions(if (card != null) mapOf(1L to card.regionId) else emptyMap()),
+            ),
         )
     }
 
@@ -225,16 +142,55 @@ class Matomo(
         params: SearchParams,
         numResults: Int,
     ) {
-        if (params.searchText === null && params.categoryIds === null) return
+        if (params.searchText != null || params.categoryIds != null) {
+            sendTrackingRequests(
+                projectConfig = projectConfig,
+                httpRequest = request,
+                requestBuilders = listOf(
+                    MatomoRequest.request()
+                        .actionName(query)
+                        .searchCategory(params.categoryIds?.joinToString(","))
+                        .searchQuery(params.searchText ?: "")
+                        .searchResultsCount(numResults.toLong()),
+                ),
+            )
+        }
+    }
 
-        sendTrackingRequest(
-            projectConfig = projectConfig,
-            MatomoRequest.request()
-                .actionName(query)
-                .searchCategory(params.categoryIds?.joinToString(","))
-                .searchQuery(params.searchText ?: "")
-                .searchResultsCount(numResults.toLong())
-                .also { attachRequestInformation(it, request) },
-        )
+    private fun sendTrackingRequests(
+        projectConfig: ProjectConfig,
+        httpRequest: HttpServletRequest,
+        requestBuilders: List<MatomoRequest.MatomoRequestBuilder>,
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            projectConfig.matomo?.let { matomoConfig ->
+                try {
+                    if (requestBuilders.isNotEmpty()) {
+                        tracker.sendBulkRequestAsync(
+                            requestBuilders.map {
+                                it.siteId(matomoConfig.siteId)
+                                it.authToken(matomoConfig.accessToken)
+                                it.headerAcceptLanguage(AcceptLanguage.fromHeader(httpRequest.getHeader("Accept-Language")))
+                                it.headerUserAgent(httpRequest.getHeader("User-Agent"))
+                                it.visitorIp(httpRequest.remoteAddr)
+                                it.build()
+                            },
+                        )
+                    }
+                } catch (e: Exception) {
+                    when (e) {
+                        is IOException -> {
+                            logger.error("Could not send request to Matomo")
+                        }
+
+                            else -> {
+                                logger.error("Unexpected error while sending request to Matomo $exception")
+                            }
+                        }
+                        null
+                    }
+                }
+            }
+        }
     }
 }
