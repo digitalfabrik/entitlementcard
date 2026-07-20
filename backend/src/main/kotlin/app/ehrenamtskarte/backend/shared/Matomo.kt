@@ -6,9 +6,6 @@ import app.ehrenamtskarte.backend.db.entities.CodeType
 import app.ehrenamtskarte.backend.db.repositories.CardRepository
 import app.ehrenamtskarte.backend.graphql.stores.types.SearchParams
 import jakarta.servlet.http.HttpServletRequest
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.matomo.java.tracking.MatomoRequest
 import org.matomo.java.tracking.MatomoTracker
@@ -162,26 +159,24 @@ class Matomo(
         httpRequest: HttpServletRequest,
         requestBuilders: List<MatomoRequest.MatomoRequestBuilder>,
     ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            projectConfig.matomo?.let { matomoConfig ->
+        projectConfig.matomo?.let { matomoConfig ->
+            if (requestBuilders.isNotEmpty()) {
+                // Also catch synchronous exceptions
                 try {
-                    if (requestBuilders.isNotEmpty()) {
-                        tracker.sendBulkRequestAsync(
-                            requestBuilders.map {
-                                it.siteId(matomoConfig.siteId)
-                                it.authToken(matomoConfig.accessToken)
-                                it.headerAcceptLanguage(AcceptLanguage.fromHeader(httpRequest.getHeader("Accept-Language")))
-                                it.headerUserAgent(httpRequest.getHeader("User-Agent"))
-                                it.visitorIp(httpRequest.remoteAddr)
-                                it.build()
-                            },
-                        )
-                    }
-                } catch (e: Exception) {
-                    when (e) {
-                        is IOException -> {
-                            logger.error("Could not send request to Matomo")
-                        }
+                    tracker.sendBulkRequestAsync(
+                        requestBuilders.map {
+                            it.siteId(matomoConfig.siteId)
+                            it.authToken(matomoConfig.accessToken)
+                            it.headerAcceptLanguage(AcceptLanguage.fromHeader(httpRequest.getHeader("Accept-Language")))
+                            it.headerUserAgent(httpRequest.getHeader("User-Agent"))
+                            it.visitorIp(httpRequest.remoteAddr)
+                            it.build()
+                        },
+                    ).exceptionally { exception ->
+                        when (exception) {
+                            is MatomoException -> {
+                                logger.error("Could not send request to Matomo $exception")
+                            }
 
                             else -> {
                                 logger.error("Unexpected error while sending request to Matomo $exception")
@@ -189,6 +184,8 @@ class Matomo(
                         }
                         null
                     }
+                } catch (e: Throwable) {
+                    logger.error("Error while sending tracking request: $e")
                 }
             }
         }
