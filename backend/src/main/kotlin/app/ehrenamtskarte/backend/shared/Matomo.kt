@@ -4,6 +4,7 @@ import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.ProjectConfig
 import app.ehrenamtskarte.backend.db.entities.CardEntity
 import app.ehrenamtskarte.backend.db.entities.CodeType
+import app.ehrenamtskarte.backend.graphql.cards.types.ActivationState
 import app.ehrenamtskarte.backend.graphql.stores.types.SearchParams
 import jakarta.servlet.http.HttpServletRequest
 import org.matomo.java.tracking.MatomoException
@@ -106,7 +107,7 @@ class Matomo(
         request: HttpServletRequest,
         query: String,
         cardEntity: CardEntity?,
-        successful: Boolean,
+        cardActivationState: ActivationState,
     ) {
         sendTrackingRequests(
             projectConfig = projectConfig,
@@ -116,13 +117,13 @@ class Matomo(
                     .eventAction(query)
                     .eventCategory(MatomoEventCategory.ACTIVATION.value)
                     .eventName(
-                        if (successful) {
+                        if (cardActivationState == ActivationState.success) {
                             MatomoEventName.ACTIVATION_SUCCESSFUL.value
                         } else {
                             MatomoEventName.ACTIVATION_FAILED.value
                         },
                     )
-                    .eventValue(if (successful) 1.0 else 0.0)
+                    .eventValue(if (cardActivationState == ActivationState.success) 1.0 else 0.0)
                     .dimensions(if (cardEntity != null) mapOf(1L to cardEntity.regionId) else emptyMap()),
             ),
         )

@@ -394,7 +394,7 @@ class CardMutationController(
             request = request,
             query = dfe.field.name,
             cardEntity = cardEntity,
-            successful = activationResult.activationState == ActivationState.success,
+            cardActivationState = activationResult.activationState,
         )
 
         return activationResult
