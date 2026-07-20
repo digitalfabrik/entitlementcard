@@ -38,12 +38,14 @@ class CardQueryController(
         val cardEntity = transaction { CardRepository.findByHash(projectConfig.id, cardHash) }
         val isValid = when (card.codeType) {
             CodeType.STATIC ->
-                card.totp == null &&
-                    CardVerifier.verifyStaticCard(project, cardHash, projectConfig.timezone)
+                cardEntity != null &&
+                    card.totp == null &&
+                    CardVerifier.verifyStaticCard(cardEntity, projectConfig.timezone)
 
             CodeType.DYNAMIC ->
-                card.totp != null &&
-                    CardVerifier.verifyDynamicCard(project, cardHash, card.totp, projectConfig.timezone)
+                cardEntity != null &&
+                    card.totp != null &&
+                    CardVerifier.verifyDynamicCard(cardEntity, card.totp, projectConfig.timezone)
         }
         val verificationResult = CardVerificationResultModel(
             isValid,

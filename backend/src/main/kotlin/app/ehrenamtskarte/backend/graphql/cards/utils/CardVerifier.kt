@@ -1,5 +1,6 @@
 package app.ehrenamtskarte.backend.graphql.cards.utils
 
+import app.ehrenamtskarte.backend.db.entities.CardEntity
 import app.ehrenamtskarte.backend.db.entities.UserEntitlementsEntity
 import app.ehrenamtskarte.backend.db.repositories.CardRepository
 import com.eatthepath.otp.TimeBasedOneTimePasswordGenerator
@@ -16,20 +17,16 @@ val TIME_STEP: Duration = Duration.ofSeconds(30)
 const val TOTP_LENGTH = 6
 
 object CardVerifier {
-    fun verifyStaticCard(project: String, cardHash: ByteArray, timezone: ZoneId): Boolean {
-        val card = transaction { CardRepository.findByHash(project, cardHash) } ?: return false
-        return !isExpired(card.expirationDay, timezone) &&
-            isYetValid(card.startDay, timezone) &&
-            !card.revoked
-    }
+    fun verifyStaticCard(cardEntity: CardEntity, timezone: ZoneId): Boolean =
+        !isExpired(cardEntity.expirationDay, timezone) &&
+            isYetValid(cardEntity.startDay, timezone) &&
+            !cardEntity.revoked
 
-    fun verifyDynamicCard(project: String, cardHash: ByteArray, totp: Int, timezone: ZoneId): Boolean {
-        val card = transaction { CardRepository.findByHash(project, cardHash) } ?: return false
-        return !isExpired(card.expirationDay, timezone) &&
-            isYetValid(card.startDay, timezone) &&
-            !card.revoked &&
-            isTotpValid(totp, card.totpSecret)
-    }
+    fun verifyDynamicCard(cardEntity: CardEntity, totp: Int, timezone: ZoneId): Boolean =
+        !isExpired(cardEntity.expirationDay, timezone) &&
+            isYetValid(cardEntity.startDay, timezone) &&
+            !cardEntity.revoked &&
+            isTotpValid(totp, cardEntity.totpSecret)
 
     fun isExpired(expirationDay: Long?, timezone: ZoneId): Boolean =
         expirationDay != null && !isOnOrBeforeToday(daysSinceEpochToDate(expirationDay), timezone)
