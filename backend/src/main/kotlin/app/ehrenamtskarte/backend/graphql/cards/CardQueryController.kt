@@ -2,6 +2,7 @@ package app.ehrenamtskarte.backend.graphql.cards
 
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.db.entities.CodeType
+import app.ehrenamtskarte.backend.db.repositories.CardRepository
 import app.ehrenamtskarte.backend.graphql.cards.types.CardVerificationModel
 import app.ehrenamtskarte.backend.graphql.cards.types.CardVerificationResultModel
 import app.ehrenamtskarte.backend.graphql.cards.utils.CardVerifier
@@ -10,6 +11,7 @@ import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import graphql.schema.DataFetchingEnvironment
 import jakarta.servlet.http.HttpServletRequest
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.ContextValue
 import org.springframework.graphql.data.method.annotation.QueryMapping
@@ -33,16 +35,16 @@ class CardQueryController(
     ): CardVerificationResultModel {
         val projectConfig = backendConfiguration.getProjectConfig(project)
         val cardHash = Base64.getDecoder().decode(card.cardInfoHashBase64)
-
+        val cardEntity = transaction { CardRepository.findByHash(projectConfig.id, cardHash) }
         val isValid = when (card.codeType) {
             CodeType.STATIC ->
                 card.totp == null &&
                     CardVerifier.verifyStaticCard(project, cardHash, projectConfig.timezone)
+
             CodeType.DYNAMIC ->
                 card.totp != null &&
                     CardVerifier.verifyDynamicCard(project, cardHash, card.totp, projectConfig.timezone)
         }
-
         val verificationResult = CardVerificationResultModel(
             isValid,
             CardVerifier.isExtendable(project, cardHash),
@@ -50,12 +52,13 @@ class CardQueryController(
 
         matomo.trackVerification(
             projectConfig = projectConfig,
-            request,
-            dfe.field.name,
-            cardHash,
-            card.codeType,
-            verificationResult.valid,
+            request = request,
+            query = dfe.field.name,
+            card = cardEntity,
+            codeType = card.codeType,
+            successful = verificationResult.valid,
         )
+
         return verificationResult
     }
 }

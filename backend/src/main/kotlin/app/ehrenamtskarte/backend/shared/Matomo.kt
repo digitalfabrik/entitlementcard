@@ -2,11 +2,11 @@ package app.ehrenamtskarte.backend.shared
 
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.config.ProjectConfig
+import app.ehrenamtskarte.backend.db.entities.CardEntity
 import app.ehrenamtskarte.backend.db.entities.CodeType
-import app.ehrenamtskarte.backend.db.repositories.CardRepository
 import app.ehrenamtskarte.backend.graphql.stores.types.SearchParams
 import jakarta.servlet.http.HttpServletRequest
-import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import org.matomo.java.tracking.MatomoException
 import org.matomo.java.tracking.MatomoRequest
 import org.matomo.java.tracking.MatomoTracker
 import org.matomo.java.tracking.TrackerConfiguration
@@ -78,12 +78,10 @@ class Matomo(
         projectConfig: ProjectConfig,
         request: HttpServletRequest,
         query: String,
-        cardHash: ByteArray,
+        card: CardEntity?,
         codeType: CodeType,
         successful: Boolean,
     ) {
-        val card = transaction { CardRepository.findByHash(projectConfig.id, cardHash) }
-
         sendTrackingRequests(
             projectConfig = projectConfig,
             httpRequest = request,
@@ -107,11 +105,9 @@ class Matomo(
         projectConfig: ProjectConfig,
         request: HttpServletRequest,
         query: String,
-        cardHash: ByteArray,
+        cardEntity: CardEntity?,
         successful: Boolean,
     ) {
-        val card = transaction { CardRepository.findByHash(projectConfig.id, cardHash) }
-
         sendTrackingRequests(
             projectConfig = projectConfig,
             httpRequest = request,
@@ -127,7 +123,7 @@ class Matomo(
                         },
                     )
                     .eventValue(if (successful) 1.0 else 0.0)
-                    .dimensions(if (card != null) mapOf(1L to card.regionId) else emptyMap()),
+                    .dimensions(if (cardEntity != null) mapOf(1L to cardEntity.regionId) else emptyMap()),
             ),
         )
     }

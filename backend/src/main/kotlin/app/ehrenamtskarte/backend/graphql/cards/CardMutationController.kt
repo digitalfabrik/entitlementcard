@@ -331,64 +331,72 @@ class CardMutationController(
         val rawActivationSecret = Base64.decode(activationSecretBase64)
 
         // Avoid race conditions when activating a card.
-        val activationResult = transaction(transactionIsolation = TRANSACTION_REPEATABLE_READ) t@{
+        val (cardEntity, activationResult) = transaction(transactionIsolation = TRANSACTION_REPEATABLE_READ) {
             this.maxAttempts = 1
 
-            val card = CardRepository.findByHash(project, cardHash)
-            val activationSecretHash = card?.activationSecretHash
+            val cardEntity = CardRepository.findByHash(project, cardHash)
+            val activationSecretHash = cardEntity?.activationSecretHash
 
-            if (card == null || activationSecretHash == null) {
-                logger.info(
-                    "$remoteIp failed to activate card, card not found with cardHash:$cardInfoHashBase64",
-                )
-                return@t CardActivationResultModel(ActivationState.not_found)
+            when {
+                cardEntity == null || activationSecretHash == null -> {
+                    logger.info(
+                        "$remoteIp failed to activate card, card not found with cardHash:$cardInfoHashBase64",
+                    )
+                    Pair(cardEntity, CardActivationResultModel(ActivationState.not_found))
+                }
+
+                !verifyActivationSecret(rawActivationSecret, activationSecretHash) -> {
+                    logger.info(
+                        "$remoteIp failed to activate card with id:${cardEntity.id} and overwrite: $overwrite",
+                    )
+                    Pair(cardEntity, CardActivationResultModel(ActivationState.wrong_secret))
+                }
+
+                CardVerifier.isExpired(cardEntity.expirationDay, projectConfig.timezone) -> {
+                    logger.info(
+                        "$remoteIp failed to activate card with id:${cardEntity.id} and overwrite: " +
+                            "$overwrite because card is expired",
+                    )
+                    Pair(cardEntity, CardActivationResultModel(ActivationState.expired))
+                }
+
+                cardEntity.revoked -> {
+                    logger.info(
+                        "$remoteIp failed to activate card with id:${cardEntity.id} and overwrite: " +
+                            "$overwrite because card is revoked",
+                    )
+                    Pair(cardEntity, CardActivationResultModel(ActivationState.revoked))
+                }
+
+                !overwrite && cardEntity.totpSecret != null -> {
+                    logger.info(
+                        "Card with id:${cardEntity.id} did not overwrite card from $remoteIp",
+                    )
+                    Pair(cardEntity, CardActivationResultModel(ActivationState.did_not_overwrite_existing))
+                }
+
+                else -> {
+                    val totpSecret = generateTotpSecret()
+                    val encodedTotpSecret = Base64.encode(totpSecret)
+
+                    CardRepository.activate(cardEntity, totpSecret)
+
+                    logger.info(
+                        "Card with id:${cardEntity.id} and overwrite: $overwrite was activated from $remoteIp",
+                    )
+                    Pair(cardEntity, CardActivationResultModel(ActivationState.success, encodedTotpSecret))
+                }
             }
-
-            if (!verifyActivationSecret(rawActivationSecret, activationSecretHash)) {
-                logger.info(
-                    "$remoteIp failed to activate card with id:${card.id} and overwrite: $overwrite",
-                )
-                return@t CardActivationResultModel(ActivationState.wrong_secret)
-            }
-
-            if (CardVerifier.isExpired(card.expirationDay, projectConfig.timezone)) {
-                logger.info(
-                    "$remoteIp failed to activate card with id:${card.id} and overwrite: " +
-                        "$overwrite because card is expired",
-                )
-                return@t CardActivationResultModel(ActivationState.expired)
-            }
-
-            if (card.revoked) {
-                logger.info(
-                    "$remoteIp failed to activate card with id:${card.id} and overwrite: " +
-                        "$overwrite because card is revoked",
-                )
-                return@t CardActivationResultModel(ActivationState.revoked)
-            }
-
-            if (!overwrite && card.totpSecret != null) {
-                logger.info(
-                    "Card with id:${card.id} did not overwrite card from $remoteIp",
-                )
-                return@t CardActivationResultModel(ActivationState.did_not_overwrite_existing)
-            }
-
-            val totpSecret = generateTotpSecret()
-            val encodedTotpSecret = Base64.encode(totpSecret)
-            CardRepository.activate(card, totpSecret)
-            logger.info(
-                "Card with id:${card.id} and overwrite: $overwrite was activated from $remoteIp",
-            )
-            return@t CardActivationResultModel(ActivationState.success, encodedTotpSecret)
         }
+
         matomo.trackActivation(
             projectConfig = projectConfig,
-            request,
-            dfe.field.name,
-            cardHash,
-            activationResult.activationState == ActivationState.success,
+            request = request,
+            query = dfe.field.name,
+            cardEntity = cardEntity,
+            successful = activationResult.activationState == ActivationState.success,
         )
+
         return activationResult
     }
 
