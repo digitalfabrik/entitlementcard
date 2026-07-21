@@ -122,16 +122,16 @@ function createAddressFormFields(pageIndex: number, info: CardInfo, card: Card):
     {
       name: `${pageIndex}.address.name`,
       // avoid only printing the name
-      text: addressLine1 || addressLine2 || plz || location ? info.fullName : undefined,
+      text: (addressLine1 || addressLine2 || plz || location ? info.fullName : undefined) ?? '',
     },
     // Address field 1
-    { name: `${pageIndex}.address.line.1`, text: addressLine1 },
+    { name: `${pageIndex}.address.line.1`, text: addressLine1 ?? '' },
     // Address field 2
-    { name: `${pageIndex}.address.line.2`, text: addressLine2 },
+    { name: `${pageIndex}.address.line.2`, text: addressLine2 ?? '' },
     // ZIP code and location
     {
       name: `${pageIndex}.address.location`,
-      text: plz && location ? `${plz} ${location}` : undefined,
+      text: plz && location ? `${plz} ${location}` : '',
     },
-  ].filter(field => field.text !== undefined && field.text.trim() !== '') as FormConfig[]
+  ]
 }
