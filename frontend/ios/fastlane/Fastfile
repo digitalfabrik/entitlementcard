@@ -45,7 +45,7 @@ platform :ios do
       raise "'nil' passed as parameter! Aborting..."
     end
 
-    bundleIdentifier = sh("npx --no app-toolbelt v0 build-config to-json #{build_config_name} ios | jq -rj .bundleIdentifier")
+    bundleIdentifier = sh("npm exec -- app-toolbelt v0 build-config to-json #{build_config_name} ios 2>/dev/null | jq -rj .bundleIdentifier")
 
     match(type: "appstore", app_identifier: bundleIdentifier, readonly: true)
   end
@@ -83,7 +83,7 @@ platform :ios do
     ENV["BUILD_CONFIG_NAME"] = build_config_name
     # DO NOT OVERWRITE THE BUNDLE_CONFIG ENV VARIABLE! It is used by ruby bundle.
 
-    sh("fvm flutter pub run build_runner build --define df_build_config=name=#{build_config_name}")
+    sh("../../.bin/fvm.sh flutter pub run build_runner build --define df_build_config=name=#{build_config_name}")
      # use base64 encoded variable "environment=production" directly, because shell result does not work for gym as it does for gradle (android/Fastfile)
     env_prod_base64 = "ZW52aXJvbm1lbnQ9cHJvZHVjdGlvbg=="
 
@@ -158,7 +158,7 @@ platform :ios do
       raise "'nil' passed as parameter! Aborting..."
     end
 
-    bundle_identifier = sh("npx --no app-toolbelt v0 build-config to-json #{build_config_name} ios | jq -rj .bundleIdentifier ")
+    bundle_identifier = sh("npm exec -- app-toolbelt v0 build-config to-json #{build_config_name} ios 2>/dev/null | jq -rj .bundleIdentifier ")
 
     testflight_build_number = latest_testflight_build_number(app_identifier: bundle_identifier)
     testflight_version = lane_context[SharedValues::LATEST_TESTFLIGHT_VERSION]
@@ -189,7 +189,7 @@ platform :ios do
 
   desc "Generate new localized screenshots"
   lane :snap_bayern do
-   sh "fvm flutter pub run build_runner build --define df_build_config=name=bayern"
+   sh "../../.bin/fvm.sh flutter pub run build_runner build --define df_build_config=name=bayern"
    bundle_identifier = "de.nrw.it.ehrensachebayern"
     capture_screenshots(
       workspace: "Runner.xcworkspace", 
@@ -201,7 +201,7 @@ platform :ios do
   end
 
   lane :snap_nuernberg do
-    sh "fvm flutter pub run build_runner build --define df_build_config=name=nuernberg"
+    sh "../../.bin/fvm.sh flutter pub run build_runner build --define df_build_config=name=nuernberg"
     bundle_identifier = "app.sozialpass.nuernberg"
     capture_screenshots(
       workspace: "Runner.xcworkspace", 
@@ -213,7 +213,7 @@ platform :ios do
   end
 
   lane :snap_koblenz do
-    sh "fvm flutter pub run build_runner build --define df_build_config=name=koblenz"
+    sh "../../.bin/fvm.sh flutter pub run build_runner build --define df_build_config=name=koblenz"
     bundle_identifier = "app.sozialpass.koblenz"
     capture_screenshots(
       workspace: "Runner.xcworkspace",

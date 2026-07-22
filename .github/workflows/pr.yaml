@@ -20,28 +20,31 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6.0.2
 
-      - name: Setup node
-        uses: actions/setup-node@v6
+      - uses: jdx/mise-action@v4.0.1
         with:
-          node-version: '24.13.0'
-          cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
+          version: v2026.5.12
+          cache: false
+          install: false
+          experimental: true
+
+      - name: Cache npm packages
+        uses: ./.github/actions/cache-npm
 
       - name: Install node modules
-        run: npm ci
+        run: mise exec -- npm ci
 
       - name: Check Typescript
-        run: npm run ts:check
+        run: mise exec -- npm run ts:check
         working-directory: administration
 
       - name: Run Lint
-        run: npm run lint
+        run: mise exec -- npm run lint
         working-directory: administration
 
       - name: Check circular dependencies
-        run: npm run check-circular-deps
+        run: mise exec -- npm run check-circular-deps
         working-directory: administration
 
       - name: Run tests with coverage
@@ -51,11 +54,11 @@ jobs:
           base-coverage-file: report.json
           skip-step: install
           working-directory: administration
-          test-script: npm run test:coverage -- --silent --ci --json --testLocationInResults --outputFile=report.json --maxWorkers=1
+          test-script: mise exec -- npm run test:coverage -- --silent --ci --json --testLocationInResults --outputFile=report.json --maxWorkers=1
 
       - name: Run tests
         if: github.event.pull_request.user.login == 'dependabot[bot]'
-        run: npm run test -- --maxWorkers=1
+        run: mise exec -- npm run test -- --maxWorkers=1
         working-directory: administration
 
   build-configs-check:
@@ -64,18 +67,21 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6.0.2
 
-      - name: Setup node
-        uses: actions/setup-node@v6
+      - uses: jdx/mise-action@v4.0.1
         with:
-          node-version: '24.13.0'
-          cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
+          version: v2026.5.12
+          cache: false
+          install: false
+          experimental: true
+
+      - name: Cache npm packages
+        uses: ./.github/actions/cache-npm
 
       - name: Install node modules
-        run: npm ci
+        run: mise exec -- npm ci
 
       - name: Run Lint
-        run: npm run lint
+        run: mise exec -- npm run lint
         working-directory: build-configs

@@ -5,6 +5,6 @@ when:
         equal: [ main, << pipeline.git.branch >> ]
 jobs:
   - check_backend
-  # Commented out, because we test gh actions ./github/workflows/check-administration
+  # Commented out, because we test gh actions ./github/workflows
   #  - check_administration
   - check_frontend

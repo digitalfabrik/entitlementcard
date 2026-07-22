@@ -1,13 +1,14 @@
+docker:
+  - image: cimg/base:2026.04
+resource_class: small
 environment:
   _JAVA_OPTIONS: "-Xmx3g"
   GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
-docker:
-  - image: cimg/openjdk:25.0-node
-resource_class: small
 working_directory: ~/project/backend
 steps:
   - prepare_workspace
   - check_circleci_config
+  - install_mise
   - setup_remote_docker:
       docker_layer_caching: true
   - run:
@@ -21,19 +22,19 @@ steps:
   - run:
       name: Check GraphQL scheme stability
       command: |
-        ./gradlew run --args="graphql-export ../specs/backend-api.graphql"
-        git diff --exit-code
+        mise x java -- ./gradlew run --args="graphql-export ../specs/backend-api.graphql"
+        git diff --exit-code ../specs/backend-api.graphql
   - run:
       name: Check backend formatting
-      command: ./gradlew ktlintCheck
+      command: mise x java -- ./gradlew ktlintCheck
   - run:
       name: Test
-      command: ./gradlew test
+      command: mise x java -- ./gradlew test
   - store_test_results:
       path: ./build/test-results
   - run:
       name: Generate test coverage report
-      command: ./gradlew koverLog koverHtmlReport
+      command: mise x java -- ./gradlew koverLog koverHtmlReport
   - store_artifacts:
       path: ./build/reports/kover/html
       destination: test-coverage-report

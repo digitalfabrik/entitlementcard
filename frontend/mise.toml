@@ -1,0 +1,11 @@
+[tools]
+ninja = '1.13.2'
+java = 'temurin-25'
+ruby = '4.0.4'
+flutter = {
+  version = '3.38.10',
+  # Link the Flutter SDK to ./flutter-sdk, so IDEs can always use this path.
+  postinstall = 'ln -fs "$MISE_TOOL_INSTALL_PATH" ./flutter-sdk',
+}
+'gem:cocoapods' = { version = '1.16.2', os = 'macos' }
+'gem:fastlane' = '2.227.1'

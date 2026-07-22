@@ -18,11 +18,11 @@ parameters:
 steps:
   - run:
       command: |
-        echo 'export MM_MESSAGE=":fire: [${CIRCLE_JOB}](${CIRCLE_BUILD_URL}) failed on branch ${CIRCLE_BRANCH}! :fire: << parameters.failure_mentions >>"' >> $BASH_ENV
+        echo 'export MM_MESSAGE=":fire: [${CIRCLE_JOB}](${CIRCLE_BUILD_URL}) failed on branch ${CIRCLE_BRANCH}! :fire: << parameters.failure_mentions >>"' >> "$BASH_ENV"
       name: Mattermost - Prepare failure message
       when: on_fail
   - run:
-      command: echo 'export MM_MESSAGE="<< parameters.success_message >>"' >> $BASH_ENV
+      command: echo 'export MM_MESSAGE="<< parameters.success_message >>"' >> "$BASH_ENV"
       name: Mattermost - Prepare success message
       when: on_success
   - run:

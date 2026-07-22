@@ -1,0 +1,27 @@
+# Config file for mise: https://mise.en.dev/
+#
+# When running in CI, mise will automatically pick up GITHUB_TOKEN environment variables set in
+# Github Actions (set automatically) and CircleCI (defined in project config):
+#
+# https://mise.en.dev/dev-tools/github-tokens.html
+
+
+monorepo_root = true
+
+[settings]
+lockfile = true
+ruby.compile = false
+
+[monorepo]
+# https://mise.jdx.dev/tasks/monorepo.html#config-roots
+config_roots = [
+  "administration",
+  "frontend",
+  "backend",
+]
+
+[tools]
+docker-cli = 'latest'
+docker-compose = 'latest'
+node = '26'
+npm = '11'

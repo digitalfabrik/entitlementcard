@@ -7,7 +7,6 @@ when:
 jobs:
   - bump_version:
       prepare_delivery: false
-
   - build_administration:
       requires:
         - bump_version

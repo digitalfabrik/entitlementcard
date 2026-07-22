@@ -1,5 +1,6 @@
 docker:
-  - image: cimg/openjdk:25.0-node
+  # https://playwright.dev/docs/ci#circleci
+  - image: mcr.microsoft.com/playwright:v1.60.0-noble
   - image: postgis/postgis:17-3.5
     environment:
       POSTGRES_DB: ehrenamtskarte
@@ -16,29 +17,37 @@ steps:
       command: |
         git submodule sync
         git submodule update --init
+  - install_mise
+  - install_node_modules
   - run:
       name: Extract backend distribution
       command: tar -xf ~/attached_workspace/backend/build/distributions/backend.tar -C ~/
   - run:
       name: Migrate database
-      command: ~/backend/bin/backend migrate
+      # Run from backend directory, so mise can pick up the java toolchain
+      working_directory: ~/project/backend
+      command: mise x -- ~/backend/bin/backend migrate
   - run:
       name: Start backend
-      command: JWT_SECRET=HelloWorld KOBLENZ_PEPPER=123456789ABC ~/backend/bin/backend --disable-mail-service=true execute
+      environment:
+        KOBLENZ_PEPPER: 123456789ABC
+        JWT_SECRET: HelloWorld
+      # Run from backend directory, so mise can pick up the java toolchain
+      working_directory: ~/project/backend
+      command: mise x -- ~/backend/bin/backend --disable-mail-service=true execute
       background: true
-  - install_node_modules
   - run:
       name: Install Playwright browsers
-      command: npx playwright install --with-deps chromium
       working_directory: ~/project/administration
+      command: mise x -- npm exec -- playwright install --with-deps chromium
       environment:
         DEBIAN_FRONTEND: noninteractive
         NEEDRESTART_MODE: a
   - run:
       name: Start administration frontend
-      command: npm run start:ci
-      background: true
       working_directory: ~/project/administration
+      command: mise x -- npm run start:ci
+      background: true
       environment:
         BROWSER: none
   - run:
@@ -46,13 +55,13 @@ steps:
       command: curl --retry 120 --retry-delay 1 --retry-all-errors http://localhost:8000/health
   - run:
       name: Import dev data
-      command: cd ~/project/backend && ~/backend/bin/backend db-import-dev src/dev/sql
+      working_directory: ~/project/backend
+      command: mise x -- ~/backend/bin/backend db-import-dev src/dev/sql
   - run:
       name: Run e2e tests
-      command: npm run test:e2e
       working_directory: ~/project/administration
-      environment:
-        CI: "true"
+      # TODO Use sharding: https://playwright.dev/docs/ci#sharding-in-circleci
+      command: mise x -- npm run test:e2e
   - store_artifacts:
       path: ~/project/administration/playwright-report
       destination: playwright-report

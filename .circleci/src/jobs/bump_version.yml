@@ -5,17 +5,18 @@ parameters:
     type: boolean
     default: false
 docker:
-  - image: cimg/node:24.13
+  - image: cimg/base:2026.04
 resource_class: small
 steps:
   - prepare_workspace
+  - install_mise
   - install_app_toolbelt
   - run:
       name: Calculate next version name
-      command: echo "export NEW_VERSION_NAME=$(npx --no app-toolbelt v0 version calc | jq .versionName)" >> ${BASH_ENV}
+      command: echo "export NEW_VERSION_NAME=$(mise x -- npm exec -- app-toolbelt v0 version calc | jq .versionName)" >> "$BASH_ENV"
   - run:
       name: Calculate next version code
-      command: echo "export NEW_VERSION_CODE=$(npx --no app-toolbelt v0 version calc | jq .versionCode)" >> ${BASH_ENV}
+      command: echo "export NEW_VERSION_CODE=$(mise x -- npm exec -- app-toolbelt v0 version calc | jq .versionCode)" >> "$BASH_ENV"
   - when:
       condition: << parameters.prepare_delivery >>
       steps:
@@ -23,13 +24,13 @@ steps:
             name: Bump git version
             command: |
               HOTFIX_FLAG=$([[ "${CIRCLE_BRANCH}" == hotfix* ]] && echo "--hotfix" || true)
-              npx --no app-toolbelt v0 release bump-to ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} --branch ${CIRCLE_BRANCH} ${HOTFIX_FLAG}
+              mise x -- npm exec -- app-toolbelt v0 release bump-to ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} --branch ${CIRCLE_BRANCH} ${HOTFIX_FLAG}
   - when:
       condition:
         and:
           - << parameters.prepare_delivery >>
           - not:
-              equal: [main, << pipeline.git.branch >>]
+              equal: [ main, << pipeline.git.branch >> ]
       steps:
         - notify:
             success_message: Delivery was made on branch << pipeline.git.branch >>. Make sure to merge this branch before next delivery.

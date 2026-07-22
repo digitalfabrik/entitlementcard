@@ -1,13 +1,14 @@
 docker:
-  - image: cimg/node:24.13
+  - image: cimg/base:2026.04
 resource_class: medium
 working_directory: ~/project/administration
 steps:
   - prepare_workspace
+  - install_mise
   - install_node_modules
   - run:
       name: Build
-      command: npm run build
+      command: mise x -- npm run build
   - persist_to_workspace:
       root: ~/project
       paths:

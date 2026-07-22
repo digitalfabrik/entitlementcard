@@ -76,7 +76,16 @@ class BuildConfigBuilder extends Builder {
 
   @override
   FutureOr<void> build(BuildStep buildStep) async {
-    final process = await Process.run("npx", ["--no", "app-toolbelt", "v0", "build-config", "to-json", name, "common"]);
+    final process = await Process.run("npm", [
+      "exec",
+      "--",
+      "app-toolbelt",
+      "v0",
+      "build-config",
+      "to-json",
+      name,
+      "common",
+    ]);
     final exitCode = process.exitCode;
 
     if (exitCode != 0) {
@@ -97,7 +106,7 @@ class BuildConfigBuilder extends Builder {
 
   @override
   Map<String, List<String>> get buildExtensions => {
-        ".yaml": [".dart"]
+        ".yaml": [".dart"],
       };
 }
 

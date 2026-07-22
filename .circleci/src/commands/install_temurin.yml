@@ -1,7 +1,7 @@
 #
 # https://github.com/adoptium/adoptium.net/blob/main/content/asciidoc-pages/installation/linux/index.adoc#deb-installation-on-debian-or-ubuntu
 #
-description: Install the temurin JDK
+description: Install the temurin JDK (for Debian base images only)
 steps:
   - run:
       name: Add wget, apt-transport-https, gnupg

@@ -1,5 +1,5 @@
 docker:
-  - image: cimg/node:24.13
+  - image: cimg/base:2026.04
 resource_class: small
 parameters:
   production:
