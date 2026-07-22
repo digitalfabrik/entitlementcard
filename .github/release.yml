@@ -9,6 +9,7 @@ changelog:
       exclude:
         labels:
         - maintenance
+        - dependencies
     - title: Maintenance 🛠
       labels:
         - maintenance
