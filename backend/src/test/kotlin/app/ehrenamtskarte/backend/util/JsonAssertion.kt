@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.util
 
-import com.fasterxml.jackson.databind.JsonNode
+import tools.jackson.databind.JsonNode
 import kotlin.test.assertEquals
 
 object JsonAssertion {
@@ -19,7 +19,7 @@ object JsonAssertion {
             is Double -> actualNode.numberValue()?.toDouble()
                 ?: throw AssertionError("Key '$key' is not a Double")
             is Boolean -> actualNode.booleanValue()
-            is String -> actualNode.asText()
+            is String -> actualNode.asString()
             else -> throw IllegalArgumentException("Unsupported type")
         }
 

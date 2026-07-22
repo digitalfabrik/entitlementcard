@@ -83,7 +83,7 @@ internal class DeleteAcceptingStoresTest : IntegrationTest() {
         assertEquals(HttpStatus.OK, response.statusCode)
 
         val result = response.json().findValue("result")
-        assertEquals(listOf(firstStore.id.value, secondStore.id.value), result.map { it.asInt() })
+        assertEquals(listOf(firstStore.id.value, secondStore.id.value), result.toList().map { it.asInt() })
         transaction {
             assertEquals(0, AcceptingStoreEntity.all().count())
             assertEquals(0, ContactEntity.all().count())

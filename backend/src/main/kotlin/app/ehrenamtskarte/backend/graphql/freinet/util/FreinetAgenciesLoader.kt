@@ -5,9 +5,6 @@ import app.ehrenamtskarte.backend.graphql.freinet.types.FreinetApiAgency
 import app.ehrenamtskarte.backend.graphql.freinet.types.XMLAgencies
 import app.ehrenamtskarte.backend.graphql.shared.EAK_BAYERN_PROJECT
 import app.ehrenamtskarte.backend.shared.exceptions.ProjectNotFoundException
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.dataformat.xml.XmlMapper
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.HttpResponseValidator
@@ -19,6 +16,9 @@ import io.ktor.http.URLProtocol
 import io.ktor.http.path
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
+import tools.jackson.databind.DeserializationFeature
+import tools.jackson.dataformat.xml.XmlMapper
+import tools.jackson.module.kotlin.kotlinModule
 
 class FreinetAgenciesLoader {
     private val logger = LoggerFactory.getLogger(FreinetAgenciesLoader::class.java)
@@ -62,11 +62,12 @@ class FreinetAgenciesLoader {
             }
 
             return transformAndFilterAgencyData(
-                XmlMapper().apply {
-                    registerModule(KotlinModule.Builder().build())
-                    enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
-                    disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-                }.readValue(response, XMLAgencies::class.java),
+                XmlMapper.builder()
+                    .addModule(kotlinModule())
+                    .enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
+                    .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                    .build()
+                    .readValue(response, XMLAgencies::class.java),
             )
         } catch (e: Exception) {
             logger.error("Couldn't fetch agency information: ", e)

@@ -15,7 +15,6 @@ import app.ehrenamtskarte.backend.helper.TestAdministrators
 import app.ehrenamtskarte.backend.helper.TestData
 import app.ehrenamtskarte.backend.helper.toDataObject
 import app.ehrenamtskarte.backend.helper.toErrorObject
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.mockk.every
 import io.mockk.mockkConstructor
 import io.mockk.verify
@@ -25,6 +24,7 @@ import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
+import tools.jackson.module.kotlin.jacksonObjectMapper
 import kotlin.test.assertEquals
 
 internal class FreinetApplicationMutationServiceTest : IntegrationTest() {

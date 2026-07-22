@@ -1,6 +1,6 @@
 package app.ehrenamtskarte.backend.graphql.freinet.types
 
-import com.fasterxml.jackson.databind.JsonNode
+import tools.jackson.databind.JsonNode
 
 data class FreinetPersonCreationResultModel(
     val result: Boolean,

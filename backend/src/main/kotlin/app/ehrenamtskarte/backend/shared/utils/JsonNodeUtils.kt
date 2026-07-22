@@ -1,13 +1,13 @@
 package app.ehrenamtskarte.backend.shared.utils
 
-import com.fasterxml.jackson.databind.JsonNode
+import tools.jackson.databind.JsonNode
 
-fun JsonNode.findValueByName(fieldName: String): String? = findValueByNameNode(fieldName)?.asText()
+fun JsonNode.findValueByName(fieldName: String): String? = findValueByNameNode(fieldName)?.asString()
 
 fun JsonNode.findValueByNameNode(fieldName: String): JsonNode? =
     when {
-        this["name"]?.asText() == fieldName -> this["value"]
-        this.isArray -> this.firstOrNull { it["name"].asText() == fieldName }?.get("value")
+        this["name"]?.asString() == fieldName -> this["value"]
+        this.isArray -> this.firstOrNull { it["name"]?.asString() == fieldName }?.get("value")
         else -> null
     }
 

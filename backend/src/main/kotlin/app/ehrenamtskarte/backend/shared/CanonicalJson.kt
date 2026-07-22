@@ -1,8 +1,6 @@
 package app.ehrenamtskarte.backend.shared
 
 import app.ehrenamtskarte.backend.graphql.cards.utils.KoblenzUser
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.protobuf.Descriptors
 import com.google.protobuf.Descriptors.FieldDescriptor.Type
 import com.google.protobuf.GeneratedMessage
@@ -11,6 +9,8 @@ import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
+import tools.jackson.core.type.TypeReference
+import tools.jackson.databind.ObjectMapper
 import kotlin.math.pow
 
 object CanonicalJson {

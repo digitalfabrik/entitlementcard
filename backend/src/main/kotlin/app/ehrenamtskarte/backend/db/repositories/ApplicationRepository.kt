@@ -12,8 +12,6 @@ import app.ehrenamtskarte.backend.graphql.application.types.ExtractedApplication
 import app.ehrenamtskarte.backend.graphql.application.types.JsonField
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidLinkException
 import app.ehrenamtskarte.backend.shared.database.sortByKeys
-import com.fasterxml.jackson.databind.json.JsonMapper
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import jakarta.servlet.http.Part
 import org.jetbrains.exposed.v1.core.SortOrder
 import org.jetbrains.exposed.v1.core.dao.id.EntityID
@@ -21,6 +19,8 @@ import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.inList
 import org.jetbrains.exposed.v1.jdbc.SizedIterable
 import org.jetbrains.exposed.v1.jdbc.select
+import tools.jackson.databind.json.JsonMapper
+import tools.jackson.module.kotlin.kotlinModule
 import java.io.File
 import java.security.SecureRandom
 import java.time.Instant
@@ -86,8 +86,7 @@ object ApplicationRepository {
 
     // TODO Express this as a method of JsonField (and reuse mapper)
     private fun toString(obj: JsonField): String {
-        val mapper = JsonMapper()
-        mapper.registerModule(KotlinModule.Builder().build())
+        val mapper = JsonMapper.builder().addModule(kotlinModule()).build()
         return mapper.writeValueAsString(obj)
     }
 

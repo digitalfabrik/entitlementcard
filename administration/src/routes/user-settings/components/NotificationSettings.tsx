@@ -52,6 +52,8 @@ const NotificationSettings = (): ReactElement => {
   }
 
   useEffect(() => {
+    // Seed local checkbox state from the fetched notification settings.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     reset()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [notificationSettingsState])

@@ -19,7 +19,7 @@
   "devDependencies": {
     "@eslint/compat": "^2.0.4",
     "@eslint/eslintrc": "^3.3.1",
-    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "@trivago/prettier-plugin-sort-imports": "^6.0.2",
     "@typescript-eslint/eslint-plugin": "^8.58.2",
     "app-toolbelt": "github:digitalfabrik/app-toolbelt#semver:1.0.0",
     "eslint": "^9.39.4",
@@ -32,9 +32,16 @@
     "eslint-plugin-prefer-arrow": "^1.2.3",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
-    "eslint-plugin-unicorn": "^63.0.0",
+    "eslint-plugin-unicorn": "^70.0.0",
     "prettier": "^3.8.0",
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.58.2"
+  },
+  "allowScripts": {
+    "@bufbuild/buf@1.71.0": true,
+    "@parcel/watcher@2.5.6": true,
+    "esbuild@0.28.1": true,
+    "fsevents@2.3.3": true,
+    "fsevents@2.3.2": true
   }
 }

@@ -4,7 +4,7 @@ import app.ehrenamtskarte.backend.db.entities.ApplicationEntity
 import app.ehrenamtskarte.backend.graphql.exceptions.ApplicationDataIncompleteException
 import app.ehrenamtskarte.backend.shared.utils.findValueByName
 import app.ehrenamtskarte.backend.shared.utils.findValueByPath
-import com.fasterxml.jackson.databind.JsonNode
+import tools.jackson.databind.JsonNode
 
 fun ApplicationEntity.getApplicantFirstName(): String =
     this.getPersonalDataNode().findValueByName("forenames")

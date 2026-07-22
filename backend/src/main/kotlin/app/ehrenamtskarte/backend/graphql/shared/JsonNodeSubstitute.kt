@@ -1,10 +1,10 @@
 package app.ehrenamtskarte.backend.graphql.shared
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.node.ArrayNode
-import com.fasterxml.jackson.databind.node.IntNode
-import com.fasterxml.jackson.databind.node.ObjectNode
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.databind.node.ArrayNode
+import tools.jackson.databind.node.IntNode
+import tools.jackson.databind.node.ObjectNode
 
 fun JsonNode.substitute(path: String, value: Int, mapper: ObjectMapper) {
     val paths = path.split(".")
@@ -33,7 +33,7 @@ fun JsonNode.substitute(path: String, value: Int, mapper: ObjectMapper) {
         ] =
             replaceWith
 
-        is ObjectNode -> node.set<ObjectNode>(lastPath, replaceWith)
+        is ObjectNode -> node.set(lastPath, replaceWith)
         else -> throw IllegalStateException("Expected ArrayNode or ObjectNode.")
     }
 }

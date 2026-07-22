@@ -18,6 +18,19 @@ group = "app.ehrenamtskarte.backend"
 version = "0.0.1-SNAPSHOT"
 description = "Backend for the Ehrenamtskarte system"
 
+// Spring Boot's BOM pins kotlinx-coroutines to an older version (1.8.1) than Ktor 3.5.x is compiled
+// against, which causes a runtime NoSuchMethodError (Job.invokeOnCompletion). Override the managed
+// version so it matches the version declared in the version catalog.
+extra["kotlin-coroutines.version"] = libs.versions.kotlinx.coroutines.get()
+
+// Spring Boot's BOM pins protobuf-java older than the protoc we generate code with, which makes the
+// generated code's RuntimeVersion gate throw at runtime. Keep the runtime aligned with the catalog.
+dependencyManagement {
+    dependencies {
+        dependency("com.google.protobuf:protobuf-java:${libs.versions.protobuf.get()}")
+    }
+}
+
 /**
  * These environment variables are set by the CI pipeline.
  * See: https://app.circleci.com/settings/organization/github/digitalfabrik/contexts/0d0d3d24-cd54-4c43-85a5-273e3a9e2152
@@ -84,10 +97,9 @@ dependencies {
     implementation(libs.eatthepath.java.otp)
     implementation(libs.expediagroup.graphql.kotlin.schema.generator)
     implementation(libs.favre.lib.bcrypt)
-    implementation(libs.fasterxml.jackson.dataformat.xml)
-    implementation(libs.fasterxml.jackson.dataformat.yaml)
-    implementation(libs.fasterxml.jackson.datatype.jsr310)
-    implementation(libs.fasterxml.jackson.module.kotlin)
+    implementation(libs.jackson.dataformat.xml)
+    implementation(libs.jackson.dataformat.yaml)
+    implementation(libs.jackson.module.kotlin)
     implementation(libs.google.zxing.core)
     implementation(libs.google.protobuf.kotlin)
     implementation(libs.graphql.extended.scalars)
@@ -110,7 +122,7 @@ dependencies {
     implementation(libs.simplejavamail)
     implementation(libs.springdoc.openapi.starter)
     implementation(libs.springframework.boot.starter.mail)
-    implementation(libs.springframework.boot.starter.web)
+    implementation(libs.springframework.boot.starter.webmvc)
     implementation(libs.springframework.boot.starter.graphql)
     implementation(libs.zaxxer.hickaricp)
 
@@ -122,6 +134,8 @@ dependencies {
     testImplementation(libs.jetbrains.kotlinx.coroutines.test)
     testImplementation(libs.mockk)
     testImplementation(libs.springframework.boot.starter.test)
+    testImplementation(libs.springframework.boot.resttestclient)
+    testImplementation(libs.springframework.boot.restclient)
     testImplementation(libs.springframework.boot.testcontainers)
     testImplementation(libs.testcontainers)
     testImplementation(libs.testcontainers.junit.jupiter)
@@ -135,14 +149,14 @@ dependencies {
     }
 }
 
-// Workaround for detekt with recent kotlin version, should be removed when detekt plugin v2.0.0 is stable
-// https://github.com/detekt/detekt/issues/6198#issuecomment-2265183695
-dependencyManagement {
-    configurations.matching { it.name == "detekt" }.all {
-        resolutionStrategy.eachDependency {
-            if (requested.group == "org.jetbrains.kotlin") {
-                useVersion(io.gitlab.arturbosch.detekt.getSupportedKotlinVersion())
-            }
+// protobuf-gradle-plugin registers a gRPC code-generator locator whose `io.grpc:protoc-gen-grpc-java`
+// dependency has no version (resolves to `:null` and fails :generateProto). This project defines no
+// gRPC services (card.proto is message-only) so nothing is actually generated; pin the locator's
+// version so the configuration resolves.
+configurations.matching { it.name == "protobufToolsLocator_grpc" }.configureEach {
+    resolutionStrategy.eachDependency {
+        if (requested.group == "io.grpc" && requested.name == "protoc-gen-grpc-java") {
+            useVersion("1.82.1")
         }
     }
 }

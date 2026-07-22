@@ -18,7 +18,6 @@ import org.matomo.java.tracking.parameters.AcceptLanguage
 import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.net.URI
-import java.util.concurrent.ExecutionException
 
 enum class MatomoEventCategory(val value: String) {
     ACTIVATION("activation"),
@@ -66,14 +65,12 @@ object Matomo {
                 .build()
 
             try {
-                // will log errors using it's own logger
+                // Will log errors using its own logger
                 tracker.sendRequestAsync(matomoRequest)
+            } catch (_: IOException) {
+                logger.error("Could not send request to Matomo")
             } catch (e: Exception) {
-                when (e) {
-                    is IOException -> logger.error("Could not send request to Matomo")
-                    is ExecutionException, is InterruptedException ->
-                        logger.error("Error while getting response", e)
-                }
+                logger.error("Unexpected error while sending Matomo request", e)
             }
         }
     }
@@ -94,12 +91,10 @@ object Matomo {
             try {
                 // will log errors using it's own logger
                 tracker.sendBulkRequestAsync(matomoRequests)
+            } catch (_: IOException) {
+                logger.error("Could not send request to Matomo")
             } catch (e: Exception) {
-                when (e) {
-                    is IOException -> logger.debug("Could not send request to Matomo")
-                    is ExecutionException, is InterruptedException ->
-                        logger.debug("Error while getting response")
-                }
+                logger.error("Unexpected error while sending Matomo request", e)
             }
         }
     }
