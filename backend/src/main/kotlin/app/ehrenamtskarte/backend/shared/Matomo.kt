@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.shared
 
 import app.ehrenamtskarte.backend.config.BackendConfiguration
+import app.ehrenamtskarte.backend.config.MatomoConfig
 import app.ehrenamtskarte.backend.config.ProjectConfig
 import app.ehrenamtskarte.backend.db.entities.CardEntity
 import app.ehrenamtskarte.backend.db.entities.CodeType
@@ -47,32 +48,38 @@ class Matomo(
         numberOfDynamicCards: Int,
         numberOfStaticCards: Int,
     ) {
-        sendTrackingRequests(
-            projectConfig = projectConfig,
-            httpRequest = request,
-            requestBuilders = listOfNotNull(
-                if (numberOfStaticCards > 0) {
-                    MatomoRequest.request()
-                        .eventAction(query)
-                        .eventCategory(MatomoEventCategory.valueOf(CodeType.STATIC.name).value)
-                        .eventName(MatomoEventName.CARD_CREATION_SUCCESSFUL.value)
-                        .eventValue(numberOfStaticCards.toDouble())
-                        .dimensions(mapOf(1L to regionId))
-                } else {
-                    null
-                },
-                if (numberOfDynamicCards > 0) {
-                    MatomoRequest.request()
-                        .eventAction(query)
-                        .eventCategory(MatomoEventCategory.valueOf(CodeType.DYNAMIC.name).value)
-                        .eventName(MatomoEventName.CARD_CREATION_SUCCESSFUL.value)
-                        .eventValue(numberOfDynamicCards.toDouble())
-                        .dimensions(mapOf(1L to regionId))
-                } else {
-                    null
-                },
-            ),
-        )
+        projectConfig.matomo?.let { matomoConfig ->
+            sendTrackingRequests(
+                listOfNotNull(
+                    if (numberOfStaticCards > 0) {
+                        createEventRequest(
+                            matomoConfig = matomoConfig,
+                            httpRequest = request,
+                            eventAction = query,
+                            eventCategory = MatomoEventCategory.STATIC,
+                            eventName = MatomoEventName.CARD_CREATION_SUCCESSFUL,
+                            eventValue = numberOfStaticCards.toDouble(),
+                            dimensions = mapOf(1L to regionId),
+                        )
+                    } else {
+                        null
+                    },
+                    if (numberOfDynamicCards > 0) {
+                        createEventRequest(
+                            matomoConfig = matomoConfig,
+                            httpRequest = request,
+                            eventAction = query,
+                            eventCategory = MatomoEventCategory.DYNAMIC,
+                            eventName = MatomoEventName.CARD_CREATION_SUCCESSFUL,
+                            eventValue = numberOfDynamicCards.toDouble(),
+                            dimensions = mapOf(1L to regionId),
+                        )
+                    } else {
+                        null
+                    },
+                ),
+            )
+        }
     }
 
     fun trackVerification(
@@ -83,23 +90,26 @@ class Matomo(
         codeType: CodeType,
         successful: Boolean,
     ) {
-        sendTrackingRequests(
-            projectConfig = projectConfig,
-            httpRequest = request,
-            requestBuilders = listOf(
-                MatomoRequest.request()
-                    .eventAction(query)
-                    .eventCategory(MatomoEventCategory.valueOf(codeType.name).value)
-                    .eventName(
-                        if (successful) {
-                            MatomoEventName.VERIFICATION_SUCCESSFUL.value
-                        } else {
-                            MatomoEventName.VERIFICATION_FAILED.value
-                        },
-                    )
-                    .dimensions(if (card != null) mapOf(1L to card.regionId) else emptyMap()),
-            ),
-        )
+        projectConfig.matomo?.let { matomoConfig ->
+            sendTrackingRequest(
+                createEventRequest(
+                    matomoConfig = matomoConfig,
+                    httpRequest = request,
+                    eventAction = query,
+                    eventCategory = when (codeType) {
+                        CodeType.DYNAMIC -> MatomoEventCategory.DYNAMIC
+                        CodeType.STATIC -> MatomoEventCategory.STATIC
+                    },
+                    eventName = if (successful) {
+                        MatomoEventName.VERIFICATION_SUCCESSFUL
+                    } else {
+                        MatomoEventName.VERIFICATION_FAILED
+                    },
+                    eventValue = null,
+                    dimensions = if (card != null) mapOf(1L to card.regionId) else emptyMap(),
+                ),
+            )
+        }
     }
 
     fun trackActivation(
@@ -109,24 +119,23 @@ class Matomo(
         cardEntity: CardEntity?,
         cardActivationState: ActivationState,
     ) {
-        sendTrackingRequests(
-            projectConfig = projectConfig,
-            httpRequest = request,
-            requestBuilders = listOf(
-                MatomoRequest.request()
-                    .eventAction(query)
-                    .eventCategory(MatomoEventCategory.ACTIVATION.value)
-                    .eventName(
-                        if (cardActivationState == ActivationState.success) {
-                            MatomoEventName.ACTIVATION_SUCCESSFUL.value
-                        } else {
-                            MatomoEventName.ACTIVATION_FAILED.value
-                        },
-                    )
-                    .eventValue(if (cardActivationState == ActivationState.success) 1.0 else 0.0)
-                    .dimensions(if (cardEntity != null) mapOf(1L to cardEntity.regionId) else emptyMap()),
-            ),
-        )
+        projectConfig.matomo?.let { matomoConfig ->
+            sendTrackingRequest(
+                createEventRequest(
+                    matomoConfig = matomoConfig,
+                    httpRequest = request,
+                    eventAction = query,
+                    eventCategory = MatomoEventCategory.ACTIVATION,
+                    eventName = if (cardActivationState == ActivationState.success) {
+                        MatomoEventName.ACTIVATION_SUCCESSFUL
+                    } else {
+                        MatomoEventName.ACTIVATION_FAILED
+                    },
+                    eventValue = if (cardActivationState == ActivationState.success) 1.0 else 0.0,
+                    dimensions = if (cardEntity != null) mapOf(1L to cardEntity.regionId) else emptyMap(),
+                ),
+            )
+        }
     }
 
     fun trackSearch(
@@ -137,54 +146,91 @@ class Matomo(
         numResults: Int,
     ) {
         if (params.searchText != null || params.categoryIds != null) {
-            sendTrackingRequests(
-                projectConfig = projectConfig,
-                httpRequest = request,
-                requestBuilders = listOf(
-                    MatomoRequest.request()
-                        .actionName(query)
-                        .searchCategory(params.categoryIds?.joinToString(","))
-                        .searchQuery(params.searchText ?: "")
-                        .searchResultsCount(numResults.toLong()),
-                ),
-            )
-        }
-    }
-
-    private fun sendTrackingRequests(
-        projectConfig: ProjectConfig,
-        httpRequest: HttpServletRequest,
-        requestBuilders: List<MatomoRequest.MatomoRequestBuilder>,
-    ) {
-        projectConfig.matomo?.let { matomoConfig ->
-            if (requestBuilders.isNotEmpty()) {
-                // Also catch synchronous exceptions
-                try {
-                    tracker.sendBulkRequestAsync(
-                        requestBuilders.map {
-                            it.siteId(matomoConfig.siteId)
-                            it.authToken(matomoConfig.accessToken)
-                            it.headerAcceptLanguage(AcceptLanguage.fromHeader(httpRequest.getHeader("Accept-Language")))
-                            it.headerUserAgent(httpRequest.getHeader("User-Agent"))
-                            it.visitorIp(httpRequest.remoteAddr)
-                            it.build()
-                        },
-                    ).exceptionally { exception ->
-                        when (exception) {
-                            is MatomoException -> {
-                                logger.error("Could not send request to Matomo $exception")
-                            }
-
-                            else -> {
-                                logger.error("Unexpected error while sending request to Matomo $exception")
-                            }
-                        }
-                        null
-                    }
-                } catch (e: Throwable) {
-                    logger.error("Error while sending tracking request: $e")
-                }
+            projectConfig.matomo?.let { matomoConfig ->
+                sendTrackingRequest(
+                    createSearchRequest(
+                        matomoConfig = matomoConfig,
+                        httpRequest = request,
+                        eventAction = query,
+                        searchCategories = params.categoryIds,
+                        searchText = params.searchText,
+                        searchResultCount = numResults,
+                    ),
+                )
             }
         }
     }
+
+    private fun sendTrackingRequest(matomoRequest: MatomoRequest) {
+        try {
+            tracker.sendRequestAsync(matomoRequest).exceptionally(::logMatomoErrors)
+        } catch (e: Throwable) {
+            logger.error("Error while sending tracking request: $e")
+        }
+    }
+
+    private fun sendTrackingRequests(matomoRequests: List<MatomoRequest>) {
+        if (matomoRequests.isNotEmpty()) {
+            try {
+                tracker.sendBulkRequestAsync(matomoRequests).exceptionally(::logMatomoErrors)
+            } catch (e: Exception) {
+                logger.error("Error while sending tracking request: $e")
+            }
+        }
+    }
+
+    private fun logMatomoErrors(exception: Throwable): Nothing? {
+        when (exception.cause) {
+            is MatomoException -> {
+                logger.error("Could not send request to Matomo $exception")
+            }
+
+            else -> {
+                logger.error("Unexpected error while sending request to Matomo $exception")
+            }
+        }
+        return null
+    }
 }
+
+private fun createEventRequest(
+    matomoConfig: MatomoConfig,
+    httpRequest: HttpServletRequest,
+    eventAction: String,
+    eventCategory: MatomoEventCategory,
+    eventName: MatomoEventName,
+    eventValue: Double?,
+    dimensions: Map<Long, Any>,
+): MatomoRequest =
+    MatomoRequest.request()
+        .siteId(matomoConfig.siteId)
+        .authToken(matomoConfig.accessToken)
+        .headerAcceptLanguage(AcceptLanguage.fromHeader(httpRequest.getHeader("Accept-Language")))
+        .headerUserAgent(httpRequest.getHeader("User-Agent"))
+        .visitorIp(httpRequest.remoteAddr)
+        .eventAction(eventAction)
+        .eventCategory(eventCategory.value)
+        .eventName(eventName.value)
+        .apply { eventValue?.let { eventValue(eventValue) } }
+        .dimensions(dimensions)
+        .build()
+
+private fun createSearchRequest(
+    matomoConfig: MatomoConfig,
+    httpRequest: HttpServletRequest,
+    eventAction: String,
+    searchCategories: List<Int>?,
+    searchText: String?,
+    searchResultCount: Int,
+): MatomoRequest =
+    MatomoRequest.request()
+        .siteId(matomoConfig.siteId)
+        .authToken(matomoConfig.accessToken)
+        .headerAcceptLanguage(AcceptLanguage.fromHeader(httpRequest.getHeader("Accept-Language")))
+        .headerUserAgent(httpRequest.getHeader("User-Agent"))
+        .visitorIp(httpRequest.remoteAddr)
+        .eventAction(eventAction)
+        .searchCategory(searchCategories?.joinToString(","))
+        .searchQuery(searchText ?: "")
+        .searchResultsCount(searchResultCount.toLong())
+        .build()
