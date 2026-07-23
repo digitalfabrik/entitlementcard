@@ -18,8 +18,8 @@ import java.net.URI
 
 enum class MatomoEventCategory(val value: String) {
     ACTIVATION("activation"),
-    DYNAMIC(CodeType.DYNAMIC.name),
-    STATIC(CodeType.STATIC.name),
+    DYNAMIC("DYNAMIC"),
+    STATIC("STATIC"),
 }
 
 enum class MatomoEventName(val value: String) {
