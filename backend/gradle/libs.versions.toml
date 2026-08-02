@@ -8,18 +8,18 @@ gmazzo-buildconfig = { id = "com.github.gmazzo.buildconfig", version = "6.0.10" 
 google-protobuf = { id = "com.google.protobuf", version = "0.10.0" }
 jetbrains-kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-jetbrains-kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version = "0.9.8" }
+jetbrains-kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version = "0.9.9" }
 jlleitschuh-gradle-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "14.2.0" }
-sentry-jvm-gradle = { id = "io.sentry.jvm.gradle", version = "6.13.0" }
+sentry-jvm-gradle = { id = "io.sentry.jvm.gradle", version = "6.16.0" }
 springframework-boot = { id = "org.springframework.boot", version.ref = "spring" }
 spring-dependencymanagement = { id = "io.spring.dependency-management", version = "1.1.7" }
 
 [versions]
 
-graphql = "10.1.1"
+graphql = "10.2.0"
 jetbrains-exposed = "1.3.1"
 junixsocket = "2.10.1"
-kotlin = "2.3.20"
+kotlin = "2.4.10"
 kotlinx-coroutines = "1.11.0"
 kotlinx-serialization = "1.11.0"
 ktor = "3.5.1"
@@ -33,8 +33,8 @@ ajalt-clikt = { module = "com.github.ajalt.clikt:clikt", version = "5.1.0" }
 apache-commons-compress = { module = "org.apache.commons:commons-compress", version = "1.28.0" }
 apache-commons-csv = { module = "org.apache.commons:commons-csv", version = "1.14.1" }
 apache-commons-text = { module = "org.apache.commons:commons-text", version = "1.15.0" }
-auth0-java-jwt = { module = "com.auth0:java-jwt", version = "4.5.2" }
-bouncycastle-bcpkix-jdk18on = { module = "org.bouncycastle:bcpkix-jdk18on", version = "1.84" }
+auth0-java-jwt = { module = "com.auth0:java-jwt", version = "4.6.0" }
+bouncycastle-bcpkix-jdk18on = { module = "org.bouncycastle:bcpkix-jdk18on", version = "1.85" }
 eatthepath-java-otp = { module = "com.eatthepath:java-otp", version = "0.4.0" }
 expediagroup-graphql-kotlin-client = { module = "com.expediagroup:graphql-kotlin-client", version.ref = "graphql" }
 expediagroup-graphql-kotlin-schema-generator = { module = "com.expediagroup:graphql-kotlin-schema-generator", version.ref = "graphql" }
@@ -58,7 +58,7 @@ jetbrains-kotlinx-coroutines-reactor = { module = "org.jetbrains.kotlinx:kotlinx
 jetbrains-kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 jetbrains-kotlinx-html-jvm = { module = "org.jetbrains.kotlinx:kotlinx-html-jvm", version = "0.12.0" }
 jetbrains-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
-jetbrains-kover-jvm-agent = "org.jetbrains.kotlinx:kover-jvm-agent:0.9.8"
+jetbrains-kover-jvm-agent = "org.jetbrains.kotlinx:kover-jvm-agent:0.9.9"
 kohlschutter-junixsocket-common = { module = "com.kohlschutter.junixsocket:junixsocket-common", version.ref = "junixsocket" }
 kohlschutter-junixsocket-core = { module = "com.kohlschutter.junixsocket:junixsocket-core", version.ref = "junixsocket" }
 ktor-client-cio-jvm = { module = "io.ktor:ktor-client-cio-jvm", version.ref = "ktor" }
@@ -66,7 +66,7 @@ ktor-client-core-jvm = { module = "io.ktor:ktor-client-core-jvm", version.ref = 
 mockk = { module = "io.mockk:mockk", version = "1.14.11" }
 piwik-matomo-java-tracker = { module = "org.piwik.java.tracking:matomo-java-tracker", version = "4.0.0" }
 postgis-jdbc = { module = "net.postgis:postgis-jdbc", version = "2025.1.1" }
-postgresql-postgresql = { module = "org.postgresql:postgresql", version = "42.7.12" }
+postgresql-postgresql = { module = "org.postgresql:postgresql", version = "42.7.13" }
 simplejavamail = { module = "org.simplejavamail:simple-java-mail", version = "8.12.6" }
 springdoc-openapi-starter = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version = "3.0.3" }
 springframework-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools" }
