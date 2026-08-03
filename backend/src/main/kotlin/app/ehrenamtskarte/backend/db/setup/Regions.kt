@@ -11,6 +11,9 @@ import app.ehrenamtskarte.backend.graphql.shared.FREINET_DEMO_REGION_NAME
 import app.ehrenamtskarte.backend.graphql.shared.KOBLENZ_PASS_PROJECT
 import app.ehrenamtskarte.backend.graphql.shared.NUERNBERG_PASS_PROJECT
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import org.slf4j.LoggerFactory
+
+private val logger by lazy { LoggerFactory.getLogger("Regions") }
 
 fun insertOrUpdateRegions(agencies: List<FreinetApiAgency>, config: BackendConfiguration) {
     transaction {
@@ -53,6 +56,9 @@ fun insertOrUpdateRegions(agencies: List<FreinetApiAgency>, config: BackendConfi
         if (config.environment != Environment.PRODUCTION) {
             eakRegions.add(listOf("Stadt", FREINET_DEMO_REGION_NAME, "00000", "https://dummy"))
         }
+
+        val agencyToRegion = mutableMapOf<Int, String>()
+
         eakRegions.forEach { (prefix, name, regionIdentifier, website) ->
             val regionEntity = dbRegions.find {
                 it.regionIdentifier == regionIdentifier && it.projectId == eakProject.id
@@ -67,10 +73,21 @@ fun insertOrUpdateRegions(agencies: List<FreinetApiAgency>, config: BackendConfi
                 this.regionIdentifier = regionIdentifier
                 this.website = website
             }
+
             agencies.find { it.hasRegionKey(regionIdentifier) }?.let { agency ->
+                val previousRegion = agencyToRegion.putIfAbsent(agency.agencyId, regionIdentifier)
+                if (previousRegion != null) {
+                    logger.error("Freinet agency {} is assigned to multiple regions ({} and {}). Skipping duplicate assignment.",
+                        agency.agencyId,
+                        previousRegion,
+                        regionIdentifier,
+                    )
+                    return@let
+                }
                 insertOrUpdateFreinetRegionInformation(agency, dbFreinetRegionInformation, regionEntity)
             }
         }
+
         createOrUpdateRegion(
             NUERNBERG_PASS_PROJECT,
             "Nürnberg",
