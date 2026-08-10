@@ -25,3 +25,4 @@ docker-cli = 'latest'
 docker-compose = 'latest'
 node = '26'
 npm = '11'
+"github:CircleCI-Public/circleci-cli" = "1.0.47471"

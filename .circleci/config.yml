@@ -24,10 +24,11 @@ commands:
         description: This command builds the circle config from the files in src and validates that it is up-to-date and valid.
         steps:
             - run:
-                command: curl -fLSs https://raw.githubusercontent.com/CircleCI-Public/circleci-cli/master/install.sh | sudo bash
+                command: mise install "github:CircleCI-Public/circleci-cli"
                 name: Install CircleCI CLI
+                working_directory: ~/project
             - run:
-                command: scripts/circleci-update-config
+                command: mise x -- scripts/circleci-update-config
                 name: Build circle config
                 working_directory: ~/project
             - run:
@@ -42,12 +43,12 @@ commands:
                       echo "The CircleCI config is up to date."
                       exit 0;
                     else
-                      echo "The CircleCI config is not up to date. You can update it by running the `./scripts/circleci-update-config` script."
+                      echo "The CircleCI config is not up to date. You can update it by running the \`./scripts/circleci-update-config\` script."
                       exit 1;
                     fi
                 name: CircleCI config up to date
             - run:
-                command: circleci config validate
+                command: mise x -- circleci config validate
                 name: Validate circle config
                 working_directory: ~/project
     install_app_toolbelt:
@@ -397,8 +398,8 @@ jobs:
         resource_class: small
         steps:
             - prepare_workspace
-            - check_circleci_config
             - install_mise
+            - check_circleci_config
             - install_node_modules
             - run:
                 command: mise x -- npm run ts:check
@@ -426,8 +427,8 @@ jobs:
         resource_class: small
         steps:
             - prepare_workspace
-            - check_circleci_config
             - install_mise
+            - check_circleci_config
             - setup_remote_docker:
                 docker_layer_caching: true
             - run:
@@ -470,8 +471,8 @@ jobs:
         resource_class: small
         steps:
             - prepare_workspace
-            - check_circleci_config
             - install_mise
+            - check_circleci_config
             - install_app_toolbelt
             - install_flutter_packages
             - run:
@@ -1383,4 +1384,3 @@ workflows:
                     - promote_android
                     - promote_ios
         when: << pipeline.parameters.run_promotion_frontend >>
-
