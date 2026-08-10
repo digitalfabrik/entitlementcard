@@ -11,7 +11,7 @@ import {
   Stepper,
 } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import React, { ReactElement, ReactNode, useCallback, useState } from 'react'
+import React, { ReactElement, ReactNode, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import i18next from '../../../../translations/i18n'
@@ -46,15 +46,20 @@ const SubForm = ({
   loading: boolean
 }) => {
   const { t } = useTranslation('applicationForms')
-  const [formContext, setFormContxt] = useState<FormContextType>(initialFormContext)
+  const [showAllErrors, setShowAllErrors] = useState(initialFormContext.showAllErrors)
   const { enqueueSnackbar } = useSnackbar()
+
+  const formContext = useMemo<FormContextType>(
+    () => ({ showAllErrors, disableAllInputs: loading }),
+    [showAllErrors, loading],
+  )
 
   const handleOnSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
       if (validate().type === 'error') {
         enqueueSnackbar(i18next.t('applicationForms:invalidDataError'), { variant: 'error' })
-        setFormContxt(state => ({ ...state, showAllErrors: true }))
+        setShowAllErrors(true)
       } else if (onSubmit === undefined) {
         setActiveStep(() => index + 1)
       } else {
