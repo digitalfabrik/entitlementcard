@@ -4,8 +4,8 @@ resource_class: small
 working_directory: ~/project/frontend
 steps:
   - prepare_workspace
-  - check_circleci_config
   - install_mise
+  - check_circleci_config
   - install_app_toolbelt
   - install_flutter_packages
   - run:

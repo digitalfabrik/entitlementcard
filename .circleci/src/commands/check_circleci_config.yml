@@ -1,11 +1,16 @@
 description: This command builds the circle config from the files in src and validates that it is up-to-date and valid.
 steps:
   - run:
+      # Installs the exact version pinned in mise.toml/mise.lock instead of always grabbing
+      # the newest release, so `circleci config pack` produces the same output locally and in
+      # CI. An unpinned CLI silently reformats .circleci/config.yml on every new release, which
+      # made this check fail with no actual config change (#3091 investigation).
       name: Install CircleCI CLI
-      command: curl -fLSs https://raw.githubusercontent.com/CircleCI-Public/circleci-cli/master/install.sh | sudo bash
+      command: mise install "github:CircleCI-Public/circleci-cli"
+      working_directory: ~/project
   - run:
       name: Build circle config
-      command: scripts/circleci-update-config
+      command: mise x -- scripts/circleci-update-config
       working_directory: ~/project
   - run: # Taken from https://github.com/roopakv/orbs/blob/master/src/commands/fail_if_dirty.yml
       name: CircleCI config up to date
@@ -21,10 +26,10 @@ steps:
           echo "The CircleCI config is up to date."
           exit 0;
         else
-          echo "The CircleCI config is not up to date. You can update it by running the `./scripts/circleci-update-config` script."
+          echo "The CircleCI config is not up to date. You can update it by running the \`./scripts/circleci-update-config\` script."
           exit 1;
         fi
   - run:
       name: Validate circle config
-      command: circleci config validate
+      command: mise x -- circleci config validate
       working_directory: ~/project
