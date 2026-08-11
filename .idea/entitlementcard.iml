@@ -7,6 +7,11 @@
       <excludeFolder url="file://$MODULE_DIR$/.idea/libraries" />
       <excludeFolder url="file://$MODULE_DIR$/.idea/modules" />
       <excludeFolder url="file://$MODULE_DIR$/.idea/queries" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/.gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/.kotlin" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/build" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/data/applications" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/logs" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
   </component>

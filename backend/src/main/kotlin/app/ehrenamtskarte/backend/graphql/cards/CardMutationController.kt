@@ -62,6 +62,7 @@ import kotlin.io.encoding.Base64
 class CardMutationController(
     private val backendConfiguration: BackendConfiguration,
     private val mailerService: Mailer,
+    private val matomo: Matomo,
 ) {
     private val logger: Logger = LoggerFactory.getLogger(CardMutationController::class.java)
 
@@ -157,8 +158,9 @@ class CardMutationController(
         @GraphQLIgnore @ContextValue request: HttpServletRequest,
         dfe: DataFetchingEnvironment,
     ): CardCreationResultModel {
-        val config = backendConfiguration.getProjectConfig(project)
-        if (!config.selfServiceEnabled) {
+        val projectConfig = backendConfiguration.getProjectConfig(project)
+
+        if (!projectConfig.selfServiceEnabled) {
             throw NotImplementedException("Self-Service is not enabled in the project")
         }
 
@@ -214,9 +216,8 @@ class CardMutationController(
             )
         }
 
-        Matomo.trackCreateCards(
-            backendConfiguration,
-            config,
+        matomo.trackCreateCards(
+            projectConfig = projectConfig,
             request,
             dfe.field.name,
             userEntitlements.regionId.value,
@@ -301,9 +302,8 @@ class CardMutationController(
         val regionId = authContext.admin.regionId?.value
 
         if (regionId != null) {
-            Matomo.trackCreateCards(
-                backendConfiguration,
-                projectConfig,
+            matomo.trackCreateCards(
+                projectConfig = projectConfig,
                 request,
                 dfe.field.name,
                 regionId,
@@ -331,65 +331,72 @@ class CardMutationController(
         val rawActivationSecret = Base64.decode(activationSecretBase64)
 
         // Avoid race conditions when activating a card.
-        val activationResult = transaction(transactionIsolation = TRANSACTION_REPEATABLE_READ) t@{
+        val (cardEntity, activationResult) = transaction(transactionIsolation = TRANSACTION_REPEATABLE_READ) {
             this.maxAttempts = 1
 
-            val card = CardRepository.findByHash(project, cardHash)
-            val activationSecretHash = card?.activationSecretHash
+            val cardEntity = CardRepository.findByHash(project, cardHash)
+            val activationSecretHash = cardEntity?.activationSecretHash
 
-            if (card == null || activationSecretHash == null) {
-                logger.info(
-                    "$remoteIp failed to activate card, card not found with cardHash:$cardInfoHashBase64",
-                )
-                return@t CardActivationResultModel(ActivationState.not_found)
+            when {
+                cardEntity == null || activationSecretHash == null -> {
+                    logger.info(
+                        "$remoteIp failed to activate card, card not found with cardHash:$cardInfoHashBase64",
+                    )
+                    Pair(cardEntity, CardActivationResultModel(ActivationState.not_found))
+                }
+
+                !verifyActivationSecret(rawActivationSecret, activationSecretHash) -> {
+                    logger.info(
+                        "$remoteIp failed to activate card with id:${cardEntity.id} and overwrite: $overwrite",
+                    )
+                    Pair(cardEntity, CardActivationResultModel(ActivationState.wrong_secret))
+                }
+
+                CardVerifier.isExpired(cardEntity.expirationDay, projectConfig.timezone) -> {
+                    logger.info(
+                        "$remoteIp failed to activate card with id:${cardEntity.id} and overwrite: " +
+                            "$overwrite because card is expired",
+                    )
+                    Pair(cardEntity, CardActivationResultModel(ActivationState.expired))
+                }
+
+                cardEntity.revoked -> {
+                    logger.info(
+                        "$remoteIp failed to activate card with id:${cardEntity.id} and overwrite: " +
+                            "$overwrite because card is revoked",
+                    )
+                    Pair(cardEntity, CardActivationResultModel(ActivationState.revoked))
+                }
+
+                !overwrite && cardEntity.totpSecret != null -> {
+                    logger.info(
+                        "Card with id:${cardEntity.id} did not overwrite card from $remoteIp",
+                    )
+                    Pair(cardEntity, CardActivationResultModel(ActivationState.did_not_overwrite_existing))
+                }
+
+                else -> {
+                    val totpSecret = generateTotpSecret()
+                    val encodedTotpSecret = Base64.encode(totpSecret)
+
+                    CardRepository.activate(cardEntity, totpSecret)
+
+                    logger.info(
+                        "Card with id:${cardEntity.id} and overwrite: $overwrite was activated from $remoteIp",
+                    )
+                    Pair(cardEntity, CardActivationResultModel(ActivationState.success, encodedTotpSecret))
+                }
             }
-
-            if (!verifyActivationSecret(rawActivationSecret, activationSecretHash)) {
-                logger.info(
-                    "$remoteIp failed to activate card with id:${card.id} and overwrite: $overwrite",
-                )
-                return@t CardActivationResultModel(ActivationState.wrong_secret)
-            }
-
-            if (CardVerifier.isExpired(card.expirationDay, projectConfig.timezone)) {
-                logger.info(
-                    "$remoteIp failed to activate card with id:${card.id} and overwrite: " +
-                        "$overwrite because card is expired",
-                )
-                return@t CardActivationResultModel(ActivationState.expired)
-            }
-
-            if (card.revoked) {
-                logger.info(
-                    "$remoteIp failed to activate card with id:${card.id} and overwrite: " +
-                        "$overwrite because card is revoked",
-                )
-                return@t CardActivationResultModel(ActivationState.revoked)
-            }
-
-            if (!overwrite && card.totpSecret != null) {
-                logger.info(
-                    "Card with id:${card.id} did not overwrite card from $remoteIp",
-                )
-                return@t CardActivationResultModel(ActivationState.did_not_overwrite_existing)
-            }
-
-            val totpSecret = generateTotpSecret()
-            val encodedTotpSecret = Base64.encode(totpSecret)
-            CardRepository.activate(card, totpSecret)
-            logger.info(
-                "Card with id:${card.id} and overwrite: $overwrite was activated from $remoteIp",
-            )
-            return@t CardActivationResultModel(ActivationState.success, encodedTotpSecret)
         }
-        Matomo.trackActivation(
-            backendConfiguration,
-            projectConfig,
-            request,
-            dfe.field.name,
-            cardHash,
-            activationResult.activationState == ActivationState.success,
+
+        matomo.trackActivation(
+            projectConfig = projectConfig,
+            request = request,
+            query = dfe.field.name,
+            cardEntity = cardEntity,
+            cardActivationState = activationResult.activationState,
         )
+
         return activationResult
     }
 
@@ -460,19 +467,16 @@ private const val cost = 10
 fun hashActivationSecret(rawActivationSecret: ByteArray): ByteArray =
     BCrypt.withDefaults().hash(cost, rawActivationSecret)
 
-@Synchronized
-private fun generateTotpSecret(): ByteArray {
-    // https://tools.ietf.org/html/rfc6238#section-3 - R3 (TOTP uses HTOP)
-    // https://tools.ietf.org/html/rfc4226#section-4 - R6 (How long should a shared secret be?
-    // -> 160bit)
-    // https://tools.ietf.org/html/rfc4226#section-7.5 - Random Generation (How to generate a
-    // secret? -> Random))))
-    val algorithm = TimeBasedOneTimePasswordGenerator.TOTP_ALGORITHM_HMAC_SHA256
-    val keyGenerator = KeyGenerator.getInstance(algorithm)
-    keyGenerator.init(TOTP_SECRET_LENGTH * 8)
-
-    return keyGenerator.generateKey().encoded
-}
+/**
+ * https://tools.ietf.org/html/rfc6238#section-3 - R3 (TOTP uses HOTP)
+ * https://tools.ietf.org/html/rfc4226#section-4 - R6 (How long should a shared secret be? -> 160bit)
+ * https://tools.ietf.org/html/rfc4226#section-7.5 - Random Generation
+ */
+private fun generateTotpSecret(): ByteArray =
+    KeyGenerator.getInstance(TimeBasedOneTimePasswordGenerator.TOTP_ALGORITHM_HMAC_SHA256).run {
+        init(TOTP_SECRET_LENGTH * 8)
+        generateKey().encoded
+    }
 
 private fun verifyActivationSecret(rawActivationSecret: ByteArray, activationSecretHash: ByteArray): Boolean =
     BCrypt.verifyer().verify(rawActivationSecret, activationSecretHash).verified

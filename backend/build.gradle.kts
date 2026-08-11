@@ -108,7 +108,6 @@ dependencies {
     implementation(libs.jetbrains.exposed.dao)
     implementation(libs.jetbrains.exposed.jdbc)
     implementation(libs.jetbrains.exposed.java.time)
-    implementation(libs.jetbrains.kotlin.stdlib)
     implementation(libs.jetbrains.kotlin.reflect)
     implementation(libs.jetbrains.kotlinx.coroutines.reactor)
     implementation(libs.jetbrains.kotlinx.html.jvm)

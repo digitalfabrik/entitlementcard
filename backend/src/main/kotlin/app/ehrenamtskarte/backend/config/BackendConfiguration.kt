@@ -68,14 +68,12 @@ data class BackendConfiguration(
     fun getProjectConfig(project: String): ProjectConfig =
         projects.find { it.id == project } ?: throw ProjectNotFoundException(project)
 
-    fun sanityCheckMatomoConfig(): BackendConfiguration {
-        val matomoConfig = projects.mapNotNull { it.matomo }
-        if (matomoConfig.size != matomoConfig.distinctBy { it.siteId }.count()) {
-            throw Error(
-                "There are at least two matomo configs with the same siteId. This seems to be a copy/paste error.",
-            )
+    fun sanityCheckMatomoConfig() {
+        val matomoConfigs = projects.mapNotNull { it.matomo }
+
+        if (matomoConfigs.size != matomoConfigs.distinctBy { it.siteId }.count()) {
+            throw Error("There are at least two matomo configs with the same siteId")
         }
-        return this
     }
 
     companion object {
@@ -85,12 +83,13 @@ data class BackendConfiguration(
             // Allows unknown (potentially future) config options.
             // Without this parsing a config fails if a property is defined that is missing
             // from the BackendConfiguration class. We might want to be able to load configs that contain configuration
-            // for future features, therefore we want to allow unknown properties.
+            // for future features. Therefore, we want to allow unknown properties.
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
             .build()
 
         fun load(url: URL): BackendConfiguration =
-            url.openStream().use { mapper.readValue(it, BackendConfiguration::class.java) }
-                .sanityCheckMatomoConfig()
+            url.openStream().use { mapper.readValue(it, BackendConfiguration::class.java) }.also {
+                it.sanityCheckMatomoConfig()
+            }
     }
 }
