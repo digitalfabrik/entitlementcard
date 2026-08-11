@@ -12,6 +12,7 @@ parameters:
     type: string
 steps:
   - prepare_workspace
+  - install_mise
   - install_app_toolbelt
   - run:
       name: Create github release

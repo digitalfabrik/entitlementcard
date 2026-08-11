@@ -687,6 +687,7 @@ jobs:
         resource_class: small
         steps:
             - prepare_workspace
+            - install_mise
             - install_app_toolbelt
             - run:
                 command: |
@@ -845,6 +846,7 @@ jobs:
         resource_class: small
         steps:
             - prepare_workspace
+            - install_mise
             - install_app_toolbelt
             - run:
                 command: |
