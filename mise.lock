@@ -17,6 +17,7 @@ url = "https://download.docker.com/linux/static/stable/x86_64/docker-29.6.2.tgz"
 url = "https://download.docker.com/linux/static/stable/x86_64/docker-29.6.2.tgz"
 
 [tools.docker-cli."platforms.macos-arm64"]
+checksum = "blake3:064dc02f39e423316a443a65c30e74b503145118926d21fc372dbd620173a278"
 url = "https://download.docker.com/mac/static/stable/aarch64/docker-29.6.2.tgz"
 
 [tools.docker-cli."platforms.macos-x64"]
@@ -70,6 +71,45 @@ checksum = "sha256:6d36cc701393c066d67ebc77773b718d8c738bc4ccb350fbf1dc0e6a09f44
 url = "https://github.com/docker/compose/releases/download/v5.3.1/docker-compose-windows-x86_64.exe"
 url_api = "https://api.github.com/repos/docker/compose/releases/assets/469146923"
 provenance = "cosign"
+
+[[tools."github:CircleCI-Public/circleci-cli"]]
+version = "1.0.47471"
+backend = "github:CircleCI-Public/circleci-cli"
+
+[tools."github:CircleCI-Public/circleci-cli"."platforms.linux-arm64"]
+checksum = "sha256:9baf45cc2e7b04fefc8261a72cde92ed12f76b59cba14496e7c89c4b752fcf84"
+url = "https://github.com/CircleCI-Public/circleci-cli/releases/download/v1.0.47471/circleci-cli_1.0.47471_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/CircleCI-Public/circleci-cli/releases/assets/505347257"
+
+[tools."github:CircleCI-Public/circleci-cli"."platforms.linux-arm64-musl"]
+checksum = "sha256:9baf45cc2e7b04fefc8261a72cde92ed12f76b59cba14496e7c89c4b752fcf84"
+url = "https://github.com/CircleCI-Public/circleci-cli/releases/download/v1.0.47471/circleci-cli_1.0.47471_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/CircleCI-Public/circleci-cli/releases/assets/505347257"
+
+[tools."github:CircleCI-Public/circleci-cli"."platforms.linux-x64"]
+checksum = "sha256:0831fa38d0d51624f5a5720424351b85eaeec6ef0d0c589b3f0e9a84945e0fda"
+url = "https://github.com/CircleCI-Public/circleci-cli/releases/download/v1.0.47471/circleci-cli_1.0.47471_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/CircleCI-Public/circleci-cli/releases/assets/505347262"
+
+[tools."github:CircleCI-Public/circleci-cli"."platforms.linux-x64-musl"]
+checksum = "sha256:0831fa38d0d51624f5a5720424351b85eaeec6ef0d0c589b3f0e9a84945e0fda"
+url = "https://github.com/CircleCI-Public/circleci-cli/releases/download/v1.0.47471/circleci-cli_1.0.47471_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/CircleCI-Public/circleci-cli/releases/assets/505347262"
+
+[tools."github:CircleCI-Public/circleci-cli"."platforms.macos-arm64"]
+checksum = "sha256:6b6240d48fc9623955fe433bf8d805c5618847909a48238380e53f3539c5168f"
+url = "https://github.com/CircleCI-Public/circleci-cli/releases/download/v1.0.47471/circleci-cli_1.0.47471_darwin_arm64.tar.gz"
+url_api = "https://api.github.com/repos/CircleCI-Public/circleci-cli/releases/assets/505347259"
+
+[tools."github:CircleCI-Public/circleci-cli"."platforms.macos-x64"]
+checksum = "sha256:7bf2b31197dcb6df108b6dbaf738901969fb1c78710d56925b4bfa40ff0d34e0"
+url = "https://github.com/CircleCI-Public/circleci-cli/releases/download/v1.0.47471/circleci-cli_1.0.47471_darwin_amd64.tar.gz"
+url_api = "https://api.github.com/repos/CircleCI-Public/circleci-cli/releases/assets/505347258"
+
+[tools."github:CircleCI-Public/circleci-cli"."platforms.windows-x64"]
+checksum = "sha256:3fb392145741542db46862ae5f069278100af161b2ff21cef9589b052bffc69c"
+url = "https://github.com/CircleCI-Public/circleci-cli/releases/download/v1.0.47471/circleci-cli_1.0.47471_windows_amd64.zip"
+url_api = "https://api.github.com/repos/CircleCI-Public/circleci-cli/releases/assets/505347263"
 
 [[tools.node]]
 version = "26.5.0"
