@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 /// a ruler?
 const creditCardAspectRatio = 86 / 54;
 
-class Region with EquatableMixin {
+class Region with Equatable {
   final String prefix;
   final String name;
 
