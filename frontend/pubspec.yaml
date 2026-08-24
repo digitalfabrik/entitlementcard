@@ -28,7 +28,10 @@ dependencies:
   mobile_scanner: 6.0.11
   fixnum: ^1.1.0
   # Manually update this dependency, issues can result in data loss
-  flutter_secure_storage: 11.0.0
+  # Pinned to 10.3.1 (not 11.0.0): 11.0.0 raised its Android module's compileSdk to 37, which
+  # needs AGP 9 to resolve. That upgrade (+ required plugin version bumps) is tracked for a
+  # separate PR. Revisit once that lands.
+  flutter_secure_storage: 10.3.1
   infinite_scroll_pagination: ^4.1.0
   geolocator: ^14.0.3
   geolocator_android: ^5.0.2
