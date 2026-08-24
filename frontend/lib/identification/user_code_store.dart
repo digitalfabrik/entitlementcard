@@ -9,7 +9,16 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ehrenamtskarte/util/read_write_lock.dart';
 
 class UserCodeStore {
-  final _storage = ReadWriteLock(FlutterSecureStorage());
+  // resetOnError defaults to true since flutter_secure_storage 10.0.0, which
+  // would silently wipe the store on any migration/decrypt failure (e.g. the
+  // upstream issue below). We handle that case ourselves in `_safeRead`
+  // instead, so failures must surface rather than be erased automatically.
+  // migrateWithBackup keeps a backup during cipher/format migrations so a
+  // crash mid-migration can't destroy the original data.
+  // Upstream issue: https://github.com/juliansteenbakker/flutter_secure_storage/issues/1079
+  final _storage = ReadWriteLock(
+    FlutterSecureStorage(aOptions: const AndroidOptions(resetOnError: false, migrateWithBackup: true)),
+  );
   static const _userCodesBase64Key = 'userCodesBase64';
 
   // legacy key for single card
