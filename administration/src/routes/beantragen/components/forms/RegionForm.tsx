@@ -11,6 +11,7 @@ import {
   GetRegionsByPostalCodeQuery,
   Region,
 } from '../../../../graphql'
+import useDebouncedValue from '../../../../hooks/useDebouncedValue'
 import { ProjectConfigContext } from '../../../../provider/ProjectConfigContext'
 import { useUpdateStateCallback } from '../../hooks/useUpdateStateCallback'
 import {
@@ -49,6 +50,7 @@ const renderAlert = (
   state: State,
   postalCode: string,
   queryState: UseQueryState<GetRegionsByPostalCodeQuery>,
+  isCurrentResult: boolean,
   t: TFunction,
 ) => {
   if (state.region.manuallySelected) {
@@ -57,10 +59,17 @@ const renderAlert = (
   if (postalCode.length !== 5) {
     return <StyledAlert severity='error'>{t('regionAlertPostalCode')}</StyledAlert>
   }
-  if (queryState.fetching) {
+  if (queryState.fetching || !isCurrentResult) {
     return <StyledAlert severity='info' icon={<CircularProgress size='1em' />} />
   }
   if (queryState.error) {
+    return (
+      <StyledAlert severity='warning'>
+        <Trans i18nKey='applicationForms:regionNotDetermined' />
+      </StyledAlert>
+    )
+  }
+  if (queryState.data && queryState.data.regions.length === 0) {
     return (
       <StyledAlert severity='warning'>
         <Trans i18nKey='applicationForms:regionNotDetermined' />
@@ -110,15 +119,19 @@ const RegionForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
     const { t } = useTranslation('applicationForms')
     const setRegionState = useUpdateStateCallback(setState, 'region')
     const project = useContext(ProjectConfigContext).projectId
+    const debouncedPostalCode = useDebouncedValue(postalCode, 300)
     const [regionQueryState] = useQuery({
       query: GetRegionsByPostalCodeDocument,
-      variables: { postalCode, project },
-      pause: postalCode.length !== 5 || state.region.manuallySelected,
+      variables: { postalCode: debouncedPostalCode, project },
+      pause: debouncedPostalCode.length !== 5 || state.region.manuallySelected,
     })
+    // Guards against a race condition where an in-flight query for an older postal code could settle after a newer one and be mistaken for it,
+    // so the result is only trusted if it still matches the postal code currently shown.
+    const isCurrentResult = regionQueryState.operation?.variables.postalCode === postalCode
 
     // Auto-select region when query returns exactly one result
     useEffect(() => {
-      if (regionQueryState.data?.regions.length === 1) {
+      if (isCurrentResult && regionQueryState.data?.regions.length === 1) {
         const region = regionQueryState.data.regions[0]
         setState(prevState => {
           if (prevState.region.manuallySelected) {
@@ -130,7 +143,7 @@ const RegionForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
           }
         })
       }
-    }, [regionQueryState.data, postalCode, setState])
+    }, [isCurrentResult, regionQueryState.data, postalCode, setState])
 
     // Clear auto-selected region when postal code changes
     useEffect(() => {
@@ -173,7 +186,7 @@ const RegionForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
           </Link>{' '}
           {t('regionSelectionListTextEnd')}
         </Typography>
-        {renderAlert(state, postalCode, regionQueryState, t)}
+        {renderAlert(state, postalCode, regionQueryState, isCurrentResult, t)}
         <SubForms.region.Component
           state={state.region}
           setState={setRegionState}
