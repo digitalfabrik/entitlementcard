@@ -22,7 +22,7 @@ class LocationServiceDialog extends StatelessWidget {
 class RationaleDialog extends StatelessWidget {
   final String _rationale;
 
-  const RationaleDialog({super.key, required String rationale}) : _rationale = rationale;
+  const RationaleDialog({super.key, required this._rationale});
 
   @override
   Widget build(BuildContext context) {

@@ -1,15 +1,8 @@
 PODS:
-  - connectivity_plus (0.0.1):
-    - Flutter
-  - device_info_plus (0.0.1):
-    - Flutter
   - Flutter (1.0.0)
   - flutter_secure_storage (6.0.0):
     - Flutter
-  - geolocator_apple (1.2.0):
-    - Flutter
-    - FlutterMacOS
-  - GoogleDataTransport (10.1.0):
+  - GoogleDataTransport (10.1.1):
     - nanopb (~> 3.30910.0)
     - PromisesObjC (~> 2.4)
   - GoogleMLKit/BarcodeScanning (7.0.0):
@@ -32,10 +25,6 @@ PODS:
     - GoogleUtilities/Logger
     - GoogleUtilities/Privacy
   - GTMSessionFetcher/Core (3.5.0)
-  - MapLibre (6.19.1)
-  - maplibre_gl (0.25.0):
-    - Flutter
-    - MapLibre (= 6.19.1)
   - MLImage (1.0.0-beta6)
   - MLKitBarcodeScanning (6.0.0):
     - MLKitCommon (~> 12.0)
@@ -61,39 +50,12 @@ PODS:
     - nanopb/encode (= 3.30910.0)
   - nanopb/decode (3.30910.0)
   - nanopb/encode (3.30910.0)
-  - package_info_plus (0.4.5):
-    - Flutter
-  - path_provider_foundation (0.0.1):
-    - Flutter
-    - FlutterMacOS
-  - permission_handler_apple (9.4.8):
-    - Flutter
   - PromisesObjC (2.4.1)
-  - Sentry/HybridSDK (8.58.3)
-  - sentry_flutter (9.22.0):
-    - Flutter
-    - FlutterMacOS
-    - Sentry/HybridSDK (= 8.58.3)
-  - shared_preferences_foundation (0.0.1):
-    - Flutter
-    - FlutterMacOS
-  - url_launcher_ios (0.0.1):
-    - Flutter
 
 DEPENDENCIES:
-  - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
-  - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - Flutter (from `Flutter`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
-  - geolocator_apple (from `.symlinks/plugins/geolocator_apple/darwin`)
-  - maplibre_gl (from `.symlinks/plugins/maplibre_gl/ios`)
   - mobile_scanner (from `.symlinks/plugins/mobile_scanner/ios`)
-  - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
-  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
-  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
-  - sentry_flutter (from `.symlinks/plugins/sentry_flutter/ios`)
-  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
-  - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 SPEC REPOS:
   trunk:
@@ -102,70 +64,36 @@ SPEC REPOS:
     - GoogleToolboxForMac
     - GoogleUtilities
     - GTMSessionFetcher
-    - MapLibre
     - MLImage
     - MLKitBarcodeScanning
     - MLKitCommon
     - MLKitVision
     - nanopb
     - PromisesObjC
-    - Sentry
 
 EXTERNAL SOURCES:
-  connectivity_plus:
-    :path: ".symlinks/plugins/connectivity_plus/ios"
-  device_info_plus:
-    :path: ".symlinks/plugins/device_info_plus/ios"
   Flutter:
     :path: Flutter
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
-  geolocator_apple:
-    :path: ".symlinks/plugins/geolocator_apple/darwin"
-  maplibre_gl:
-    :path: ".symlinks/plugins/maplibre_gl/ios"
   mobile_scanner:
     :path: ".symlinks/plugins/mobile_scanner/ios"
-  package_info_plus:
-    :path: ".symlinks/plugins/package_info_plus/ios"
-  path_provider_foundation:
-    :path: ".symlinks/plugins/path_provider_foundation/darwin"
-  permission_handler_apple:
-    :path: ".symlinks/plugins/permission_handler_apple/ios"
-  sentry_flutter:
-    :path: ".symlinks/plugins/sentry_flutter/ios"
-  shared_preferences_foundation:
-    :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
-  url_launcher_ios:
-    :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
-  connectivity_plus: cb623214f4e1f6ef8fe7403d580fdad517d2f7dd
-  device_info_plus: 21fcca2080fbcd348be798aa36c3e5ed849eefbe
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   flutter_secure_storage: 1ed9476fba7e7a782b22888f956cce43e2c62f13
-  geolocator_apple: ab36aa0e8b7d7a2d7639b3b4e48308394e8cef5e
-  GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
+  GoogleDataTransport: a24e58982ab3ba2f64d79613e027fe7f57e88539
   GoogleMLKit: eff9e23ec1d90ea4157a1ee2e32a4f610c5b3318
   GoogleToolboxForMac: d1a2cbf009c453f4d6ded37c105e2f67a32206d8
   GoogleUtilities: 766ace00c6b10d8148408f329d10c4f051931850
   GTMSessionFetcher: 5aea5ba6bd522a239e236100971f10cb71b96ab6
-  MapLibre: 7f24faba45439f80ccb0f83393c29fa32cb81952
-  maplibre_gl: a2114567cbd1065866614fbd34dfb75ab782aaa2
   MLImage: 0ad1c5f50edd027672d8b26b0fee78a8b4a0fc56
   MLKitBarcodeScanning: 0a3064da0a7f49ac24ceb3cb46a5bc67496facd2
   MLKitCommon: 07c2c33ae5640e5380beaaa6e4b9c249a205542d
   MLKitVision: 45e79d68845a2de77e2dd4d7f07947f0ed157b0e
   mobile_scanner: af8f71879eaba2bbcb4d86c6a462c3c0e7f23036
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
-  package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
-  path_provider_foundation: bb55f6dbba17d0dccd6737fe6f7f34fbd0376880
-  permission_handler_apple: 92d754bbaa7361d436db2d6c3c1c2a0fdcec462e
   PromisesObjC: 752c3227f599e3467650e47ea36f433eeb10c273
-  Sentry: 108fdbb76299c4189af12246bf0308c09c278922
-  sentry_flutter: fbb8a76a5a009ce7ba7bde295ee6b50b11916851
-  shared_preferences_foundation: 7036424c3d8ec98dfe75ff1667cb0cd531ec82bb
-  url_launcher_ios: 7a95fa5b60cc718a708b8f2966718e93db0cef1b
 
 PODFILE CHECKSUM: 61acc5da35f24f5204eec690219508875774a2f2
 
