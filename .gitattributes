@@ -1,1 +1,4 @@
 /.circleci/config.yml linguist-generated=true
+**/Gemfile.lock linguist-generated=true
+**/Podfile.lock linguist-generated=true
+**/pubspec.lock linguist-generated=true
