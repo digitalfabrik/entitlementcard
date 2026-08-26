@@ -80,7 +80,7 @@ class _QRViewState extends State<QrCodeScanner> {
                     children: [
                       MobileScanner(
                         key: qrKey,
-                        placeholderBuilder: (context, _) => Align(
+                        placeholderBuilder: (context) => Align(
                           alignment: Alignment.center,
                           child: Icon(Icons.camera_alt_outlined, size: 128, color: Colors.grey),
                         ),
@@ -147,7 +147,11 @@ class _QRViewState extends State<QrCodeScanner> {
   Future<void> _onCodeScanned(BarcodeCapture capture) async {
     if (capture.barcodes.length != 1) return;
     final barcode = capture.barcodes[0];
-    final code = barcode.rawBytes;
+    final code = switch (barcode.rawDecodedBytes) {
+      DecodedBarcodeBytes(:final bytes) => bytes,
+      DecodedVisionBarcodeBytes(:final bytes) => bytes,
+      null => null,
+    };
     if (code == null) return;
 
     if (processingCode) return;
