@@ -33,12 +33,16 @@ android {
     val localProperties = gradleLocalProperties(projectDir, providers)
 
     namespace = "app.entitlementcard"
-    compileSdk = 36
+    compileSdk = 37
     ndkVersion = "28.2.13676358"
+
+    buildFeatures {
+        resValues = true
+    }
 
     defaultConfig {
         minSdk = flutter.minSdkVersion
-        targetSdk = 36
+        targetSdk = 37
         multiDexEnabled = true
         versionCode = flutter.versionCode
         versionName = flutter.versionName
