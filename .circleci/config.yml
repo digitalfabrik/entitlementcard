@@ -697,6 +697,9 @@ jobs:
                     echo "export RELEASE_NOTES=$(echo ${RELEASE} | jq .releaseNotes)" >> ${BASH_ENV}
                 name: Create github release
             - run:
+                command: npm exec -- app-toolbelt v0 sbom --release-id ${RELEASE_ID} --version-name ${NEW_VERSION_NAME} --path _manifest/spdx_2.3/manifest.spdx.json --branch ${CIRCLE_BRANCH} --private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
+                name: Generate SBoM, commit it and upload to github release
+            - run:
                 command: npm exec -- app-toolbelt v0 release upload --releaseId ${RELEASE_ID} --files "$(ls ~/attached_workspace/*.apk)" --private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME}
                 name: Upload android apks to github release
             - run:
