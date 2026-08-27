@@ -88,6 +88,8 @@ object Database {
                     dataSourceProperties = Properties().apply {
                         setProperty("url", config.postgres.url)
                         setProperty("reWriteBatchedInserts", "true")
+                        setProperty("socketTimeout", "30")
+                        setProperty("tcpKeepAlive", "true")
                     }
                 },
             ),
