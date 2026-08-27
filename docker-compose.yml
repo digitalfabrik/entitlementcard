@@ -36,7 +36,7 @@ services:
       start_period: 10s
       start_interval: 1s
   reverse_proxy:
-    image: "nginx:1.31.0"
+    image: "nginx:1.31.4"
     ports:
       - 127.0.0.1:5002:80
     volumes:
@@ -48,7 +48,7 @@ services:
     networks:
       - network
   matomo_db:
-    image: "mariadb:12.2"
+    image: "mariadb:12.3"
     command: --max-allowed-packet=64MB
     volumes:
       - matomo_db_volume:/var/lib/mysql:Z
