@@ -45,7 +45,7 @@ dependencies:
   sentry_flutter: ^9.27.0
   carousel_slider: ^5.1.2
   slang: ^4.19.0
-  slang_flutter: ^4.14.0
+  slang_flutter: ^4.19.0
   flutter_html: ^3.0.0
   timezone: ^0.10.1
   clock: ^1.1.1
