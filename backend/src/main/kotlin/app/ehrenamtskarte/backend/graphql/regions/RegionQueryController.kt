@@ -4,7 +4,6 @@ import app.ehrenamtskarte.backend.db.entities.ProjectEntity
 import app.ehrenamtskarte.backend.db.entities.Projects
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.graphql.exceptions.NotEakProjectException
-import app.ehrenamtskarte.backend.graphql.exceptions.RegionNotFoundException
 import app.ehrenamtskarte.backend.graphql.regions.types.Region
 import app.ehrenamtskarte.backend.graphql.shared.EAK_BAYERN_PROJECT
 import app.ehrenamtskarte.backend.shared.exceptions.ProjectNotFoundException
@@ -64,16 +63,11 @@ class RegionQueryController(
             if (projectEntity.project != EAK_BAYERN_PROJECT) {
                 throw NotEakProjectException()
             }
-            val regionEntities = regionIdentifierService.regionIdentifierByPostalCode
+            regionIdentifierService.regionIdentifierByPostalCode
                 .filter { pair -> pair.first == postalCode }
                 .mapNotNull { region ->
                     RegionsRepository.findRegionByRegionIdentifier(region.second, projectEntity.id)
                 }
-                .takeIf { it.isNotEmpty() }
-                ?: throw RegionNotFoundException()
-
-            regionEntities.map {
-                Region.fromEntity(it)
-            }
+                .map { Region.fromEntity(it) }
         }
 }
