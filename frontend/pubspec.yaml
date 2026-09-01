@@ -17,7 +17,7 @@ dependencies:
     sdk: flutter
   intl: ^0.20.2
   mutex: ^3.1.0
-  maplibre_gl: ^0.25.0
+  maplibre_gl: ^0.27.0
   provider: ^6.1.5
   graphql_flutter: ^5.3.0
   url_launcher: ^6.3.2
@@ -82,6 +82,8 @@ dev_dependencies:
   gql: ^1.0.0+1
 
 dependency_overrides:
+  # maplibre requires higher version than used in protofu
+  archive: ^4.0.7
   # path_provider_foundation 2.6.0 pulls in objective_c, which ships a native
   # assets `hook/build.dart`. build_runner AOT-compiles its build script and
   # `dart compile` refuses to run when the package graph contains a build hook,
