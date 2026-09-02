@@ -31,7 +31,12 @@ const FormAlert = ({
   severity = 'error',
 }: FormAlertProps): ReactElement | null =>
   errorMessage != null ? (
-    <Container $severity={severity} $isToast={isToast} data-testid='form-alert'>
+    <Container
+      $severity={severity}
+      $isToast={isToast}
+      role={isToast ? undefined : 'alert'}
+      data-testid='form-alert'
+    >
       <InfoOutlined />
       <Typography component='span'>{errorMessage}</Typography>
     </Container>
