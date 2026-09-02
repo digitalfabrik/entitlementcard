@@ -1,11 +1,11 @@
 /* eslint-disable react/jsx-pascal-case -- we cannot change the keys of application namespace, see translation file comment */
-import { Alert, CircularProgress, Link, Typography } from '@mui/material'
-import { styled } from '@mui/system'
+import { CircularProgress, Link, Typography } from '@mui/material'
 import { TFunction } from 'i18next'
 import { useContext, useEffect } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { UseQueryState, useQuery } from 'urql'
 
+import AlertBox from '../../../../components/AlertBox'
 import {
   GetRegionsByPostalCodeDocument,
   GetRegionsByPostalCodeQuery,
@@ -22,12 +22,7 @@ import {
 import { Form, FormComponentProps } from '../../util/formType'
 import SelectForm, { SelectItem } from '../primitive-inputs/SelectForm'
 
-const StyledAlert = styled(Alert)`
-  margin: 16px 0;
-  transition:
-    background-color 0.2s,
-    color 0.2s;
-`
+const alertSx = { margin: '16px 0', transition: 'background-color 0.2s, color 0.2s' }
 
 const SubForms = {
   region: SelectForm,
@@ -57,45 +52,69 @@ const renderAlert = (
     return null
   }
   if (postalCode.length !== 5) {
-    return <StyledAlert severity='error'>{t('regionAlertPostalCode')}</StyledAlert>
+    return (
+      <AlertBox fullWidth severity='error' sx={alertSx} description={t('regionAlertPostalCode')} />
+    )
   }
   if (queryState.fetching || !isCurrentResult) {
-    return <StyledAlert severity='info' icon={<CircularProgress size='1em' />} />
+    return (
+      <AlertBox
+        fullWidth
+        severity='info'
+        sx={alertSx}
+        customIcon={<CircularProgress size='1em' />}
+      />
+    )
   }
   if (queryState.error) {
     return (
-      <StyledAlert severity='warning'>
-        <Trans i18nKey='applicationForms:regionNotDetermined' />
-      </StyledAlert>
+      <AlertBox
+        fullWidth
+        severity='warning'
+        sx={alertSx}
+        description={<Trans i18nKey='applicationForms:regionNotDetermined' />}
+      />
     )
   }
   if (queryState.data && queryState.data.regions.length === 0) {
     return (
-      <StyledAlert severity='warning'>
-        <Trans i18nKey='applicationForms:regionNotDetermined' />
-      </StyledAlert>
+      <AlertBox
+        fullWidth
+        severity='warning'
+        sx={alertSx}
+        description={<Trans i18nKey='applicationForms:regionNotDetermined' />}
+      />
     )
   }
   if (queryState.data && queryState.data.regions.length > 1) {
     const regions = queryState.data.regions
     return (
-      <StyledAlert severity='warning'>
-        <Trans i18nKey='applicationForms:regionNotUnique' />
-        <Typography component='ul' sx={{ marginX: 0.5 }}>
-          {regions.map(region => {
-            const displayName = `${region.name} (${region.prefix})`
-            return (
-              <Typography component='li' key={displayName}>
-                {displayName}
-              </Typography>
-            )
-          })}
-        </Typography>
-      </StyledAlert>
+      <AlertBox
+        fullWidth
+        severity='warning'
+        sx={alertSx}
+        description={
+          <>
+            <Trans i18nKey='applicationForms:regionNotUnique' />
+            <Typography component='ul' sx={{ marginX: 0.5 }}>
+              {regions.map(region => {
+                const displayName = `${region.name} (${region.prefix})`
+                return (
+                  <Typography component='li' key={displayName}>
+                    {displayName}
+                  </Typography>
+                )
+              })}
+            </Typography>
+          </>
+        }
+      />
     )
   }
   if (queryState.data) {
-    return <StyledAlert severity='success'>{t('regionDetermined')}</StyledAlert>
+    return (
+      <AlertBox fullWidth severity='success' sx={alertSx} description={t('regionDetermined')} />
+    )
   }
   return null
 }

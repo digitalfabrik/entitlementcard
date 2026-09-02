@@ -253,7 +253,8 @@
     ],
     "rejectionButton": "Ablehnung bestätigen",
     "rejectionCancelButton": "Ablehnung abbrechen",
-    "moreActionsButtonLabel": "Weitere Optionen"
+    "moreActionsButtonLabel": "Weitere Optionen",
+    "deleteApplicationSuccessMessage": "Der Antrag wurde erfolgreich gelöscht."
   },
   "auth": {
     "administration": "Verwaltung",
