@@ -272,14 +272,14 @@ export const initializeCardFromCSV = (
   }
 }
 
-export const updateCard = (oldCard: Card, updatedCard: Partial<Card>): Card => ({
-  ...oldCard,
-  ...updatedCard,
-  extensions: {
-    ...oldCard.extensions,
-    ...(updatedCard.extensions ?? {}),
-  },
-})
+export const updateCard = (oldCard: Card, updatedCard: Partial<Card>): Card => {
+  const mergedCard = {
+    ...oldCard,
+    ...updatedCard,
+    extensions: { ...oldCard.extensions, ...updatedCard.extensions },
+  }
+  return hasInfiniteLifetime(mergedCard) ? { ...mergedCard, expirationDate: null } : mergedCard
+}
 
 export const getFullNameValidationErrorMessage = (name: string): string => {
   const normalizedName = normalizeWhitespace(name)

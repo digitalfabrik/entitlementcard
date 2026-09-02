@@ -16,6 +16,7 @@ import {
   initializeCardFromCSV,
   isValid,
   isValueValid,
+  updateCard,
 } from './card'
 import AddressExtensions from './extensions/AddressFieldExtensions'
 import BavariaCardTypeExtension, {
@@ -49,6 +50,29 @@ describe('Card', () => {
     expect(card.expirationDate).toEqual(Temporal.PlainDate.from('2023-01-01'))
     expect(card.extensions[BAVARIA_CARD_TYPE_EXTENSION_NAME]).toBe('Standard')
     expect(card.extensions[REGION_EXTENSION_NAME]).toEqual(region.id)
+  })
+
+  describe('updateCard', () => {
+    it('should clear the expirationDate when the card becomes an infinite-lifetime Goldkarte', () => {
+      const card = initializeCard(cardConfig, region, { fullName: 'Thea Test' })
+      expect(card.expirationDate).not.toBeNull()
+
+      const goldCard = updateCard(card, {
+        extensions: { [BAVARIA_CARD_TYPE_EXTENSION_NAME]: 'Goldkarte' },
+      })
+
+      expect(goldCard.expirationDate).toBeNull()
+      expect(isValid(goldCard, cardConfig)).toBe(true)
+    })
+
+    it('should keep the expirationDate for a card with finite lifetime', () => {
+      const card = initializeCard(cardConfig, region, { fullName: 'Thea Test' })
+      const newExpirationDate = Temporal.PlainDate.from('2022-06-15')
+
+      const updated = updateCard(card, { expirationDate: newExpirationDate })
+
+      expect(updated.expirationDate).toEqual(newExpirationDate)
+    })
   })
 
   it('should generate CardInfo even with invalid expiration date', () => {
