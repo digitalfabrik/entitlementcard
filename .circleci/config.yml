@@ -673,6 +673,26 @@ jobs:
                 path: ~/project/administration/playwright-report
             - notify
         working_directory: ~/project
+    llm-pr-review:
+        docker:
+            - image: cimg/python:3.11
+        environment:
+            LLM_REVIEW_PR_NUMBER: << pipeline.parameters.llm_review_pr_number >>
+        resource_class: small
+        steps:
+            - checkout
+            - run:
+                command: pip install --user "PyJWT[crypto]" requests
+                name: Install python dependencies
+            - run:
+                command: |
+                    TOKEN=$(./.circleci/scripts/get_access_token.py)
+                    echo "export DELIVERINO_ACCESS_TOKEN=$TOKEN" >> $BASH_ENV
+                name: Request Deliverino installation access token
+            - run:
+                command: ./.circleci/scripts/llm-pr-review.py
+                name: Run LLM PR review
+            - notify
     notify_release:
         docker:
             - image: cimg/node:24.13
@@ -904,6 +924,9 @@ jobs:
                 name: Install administration & backend packages via webhook
             - notify
 parameters:
+    llm_review_pr_number:
+        default: ""
+        type: string
     run_commit:
         default: true
         type: boolean
@@ -927,6 +950,9 @@ parameters:
         default: false
         type: boolean
     run_delivery_production_frontend:
+        default: false
+        type: boolean
+    run_llm_review:
         default: false
         type: boolean
     run_promotion_all:
@@ -1318,6 +1344,14 @@ workflows:
                     - deliver_android
                     - deliver_ios
         when: << pipeline.parameters.run_delivery_production_frontend >>
+    llm_review:
+        jobs:
+            - llm-pr-review:
+                context:
+                    - mattermost
+                    - deliverino
+                    - digitalfabrik-llm-api
+        when: << pipeline.parameters.run_llm_review >>
     promotion_all:
         jobs:
             - promote_android:
