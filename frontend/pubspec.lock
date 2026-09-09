@@ -26,13 +26,13 @@ packages:
     source: hosted
     version: "2.0.3"
   archive:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: archive
-      sha256: cb6a278ef2dbb298455e1a713bda08524a175630ec643a242c399c932a0a1f7d
+      sha256: ace891da0862b0e4cabbb064ee3fd87b2728b898949fdb366d83fe98342c9f19
       url: "https://pub.dev"
     source: hosted
-    version: "3.6.1"
+    version: "4.2.0"
   args:
     dependency: transitive
     description:
@@ -664,10 +664,10 @@ packages:
     dependency: transitive
     description:
       name: image
-      sha256: f31d52537dc417fdcde36088fdf11d191026fd5e4fae742491ebd40e5a8bea7d
+      sha256: "1976370a4df3091bb0f72409c187ad1f9132a818bc6b95ca59c0bae1c75c688e"
       url: "https://pub.dev"
     source: hosted
-    version: "4.3.0"
+    version: "4.9.2"
   infinite_scroll_pagination:
     dependency: "direct main"
     description:
@@ -776,26 +776,26 @@ packages:
     dependency: "direct main"
     description:
       name: maplibre_gl
-      sha256: d9773555ae4ebab94bbc3ae2176b077cfda486ec729eefe01e1613f164cb8410
+      sha256: "8b24dce6a050ba44779154c550e0318654ee12c572fa5fd1ad0c12e90d061356"
       url: "https://pub.dev"
     source: hosted
-    version: "0.25.0"
+    version: "0.27.0"
   maplibre_gl_platform_interface:
     dependency: transitive
     description:
       name: maplibre_gl_platform_interface
-      sha256: bd7de401dea24dd7e8a6f2fa736ddee7dbbee3e24a9027f0afdd619994702047
+      sha256: "8a1952b77ce841162fcd2601dc857f5b3f8eea46d34025b901ef803bb15d2adc"
       url: "https://pub.dev"
     source: hosted
-    version: "0.25.0"
+    version: "0.27.0"
   maplibre_gl_web:
     dependency: transitive
     description:
       name: maplibre_gl_web
-      sha256: af0e48bf96e8dd99f8b958a1953126971eb8a0527b9735441d4f24df3913f5a2
+      sha256: c9c7bb1183cc9c6baafcef0b5b741420db869ca45e474ca80edf732168a286ee
       url: "https://pub.dev"
     source: hosted
-    version: "0.25.0"
+    version: "0.27.0"
   matcher:
     dependency: transitive
     description:
@@ -1068,6 +1068,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.2"
+  posix:
+    dependency: transitive
+    description:
+      name: posix
+      sha256: bc1bad54ad2b735816e31f8d4600cfde6c7839975085ddfbca48b6c9f7c4044e
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.5.2"
   protobuf:
     dependency: "direct main"
     description:
