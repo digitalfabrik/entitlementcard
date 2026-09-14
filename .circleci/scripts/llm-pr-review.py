@@ -113,43 +113,36 @@ report on:
  project-specific behavior (e.g. project name, colors, feature flags)
  outside of `build-configs`, unless the change is explicitly scoped to one
  project.
-5. GraphQL & Protobuf: the schema lives in `specs/backend-api.graphql`
- (symlinked into `frontend` and `administration`); a schema change should
- come with regenerated types (`npm run codegen:gql` in `administration`,
- `build_runner` in `frontend`). Likewise, Protobuf changes in `specs`
- should come with regenerated code (`npm run codegen:pb` /
- `dart-protoc-builder`). Flag a schema/proto change that isn't accompanied
- by the corresponding generated-code diff, unless the file list shows the
- generated files were genuinely unaffected.
-6. Code quality gates: `backend` enforces ktlint and detekt
- (`./gradlew ktlintCheck`, `./gradlew detekt`, config in `detekt.yml`);
- `administration` enforces ESLint (Airbnb + typescript-eslint, see
- `eslint.config.mjs` / `eslint.config-base.mjs`) and Prettier via
- `npm run lint`; `frontend` enforces `fvm flutter analyze` and
- `fvm flutter format`. Flag obvious formatting drift or unjustified
+5. Code quality gates: `backend` enforces ktlint and detekt,
+ `administration` enforces ESLint and Prettier, `frontend` enforces
+ `fvm flutter analyze`/`fvm flutter format` — these already run in CI, so
+ don't flag general formatting drift. Only flag unjustified
  lint-suppression comments (`// ktlint-disable`, `eslint-disable`,
  `// ignore:`).
-7. Security: watch for secrets (API keys, tokens, JWT signing keys)
+6. Security: watch for secrets (API keys, tokens, JWT signing keys)
  committed to source, missing input validation on data coming from the
  app/administration API, and unsafe handling of personal data — this
  platform stores volunteers' and cardholders' personal information, so PII
  must be handled carefully (logging, storage, access control).
-8. Testing: `backend` uses JUnit (`./gradlew test`, Testcontainers for
+7. Testing: `backend` uses JUnit (`./gradlew test`, Testcontainers for
  integration tests); `administration` places tests next to the component
  (`Component.test.tsx`) using Jest and React Testing Library; `frontend`
  places tests under `frontend/test`. New or changed behavior should come
- with tests. If a PR changes a shared function's signature, check that all
- call sites (including tests and mocks) were updated.
-9. Clean code & maintainability: flag dead code, duplicated logic that
+ with tests. If a PR changes a shared function's signature, check that
+ call sites in Flutter/Dart tests and in loosely-typed JS/TS test doubles
+ or mocks (e.g. using `any`) were updated accordingly — for Kotlin and
+ strictly-typed TypeScript call sites, the compiler already catches this,
+ so don't flag it there.
+8. Clean code & maintainability: flag dead code, duplicated logic that
  should be a shared component/hook/util, overly long functions doing too
  many things, unclear naming, and unnecessary complexity. Prefer small,
  focused, well-named units over clever one-offs — this is a long-lived
  project maintained by multiple contributors, so readability beats
  brevity.
-10. Obvious typos in code, comments, file paths, identifiers, and
+9. Obvious typos in code, comments, file paths, identifiers, and
  documentation. Only flag clear spelling mistakes — do not nitpick
  stylistic word choices.
-11. Commit message / PR title style. The repository convention (see
+10. Commit message / PR title style. The repository convention (see
  `docs/conventions.md`) is:
  - `<issue number>: Your commit message`, e.g. "1234: Add commit message
    documentation" — the issue number prefix should match the branch name's
@@ -160,14 +153,8 @@ report on:
    tautological ("change X to X"), or that don't explain a non-obvious
    change.
  Dependabot commits are exempt from these rules.
-12. CircleCI config: `.circleci/config.yml` is auto-generated from
- `.circleci/src/{commands,jobs,workflows}/*.yml` via
- `npm run circleci:update-config`. Flag a PR that edits `.circleci/config.yml`
- directly without a matching change under `.circleci/src`.
-13. Labels (see `docs/conventions.md`). The message lists the labels
+11. Labels (see `docs/conventions.md`). The message lists the labels
  currently set on this PR:
- - `backend`, `web`, `native`: should reflect the environments actually
-   touched by the diff (backend, administration, frontend respectively).
  - `maintenance`: only for changes with no user-facing effect (CI, dev
    tooling, tests, refactorings, dependency bumps).
  - `exclude-changelog`: changes that should not appear in the release
