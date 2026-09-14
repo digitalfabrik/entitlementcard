@@ -1,3 +1,6 @@
+// PhysicalStore (V1) is kept for GraphQL backward compatibility until January 2028.
+@file:Suppress("DEPRECATION")
+
 package app.ehrenamtskarte.backend.graphql.stores
 
 import app.ehrenamtskarte.backend.db.entities.PhysicalStoreEntity
