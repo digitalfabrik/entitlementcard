@@ -1,0 +1,47 @@
+name: LLM PR review
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review, synchronize]
+
+permissions: {}
+
+concurrency:
+  group: llm-pr-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  trigger-circleci:
+    name: Trigger the LLM review pipeline on CircleCI
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger CircleCI pipeline
+        env:
+          CIRCLECI_API_TOKEN: ${{ secrets.CIRCLECI_API_TOKEN }}
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          if [ -z "${CIRCLECI_API_TOKEN}" ]; then
+            echo "::error::The CIRCLECI_API_TOKEN repository secret is not set."
+            exit 1
+          fi
+
+          BODY=$(jq -n \
+            --arg branch "${BRANCH}" \
+            --arg pr_number "${PR_NUMBER}" \
+            '{
+              branch: $branch,
+              parameters: {
+                run_commit: false,
+                run_llm_review: true,
+                llm_review_pr_number: $pr_number
+              }
+            }')
+
+          echo "Triggering LLM review for PR #${PR_NUMBER} on branch ${BRANCH} ..."
+          curl --fail-with-body --silent --show-error \
+            --url "https://circleci.com/api/v2/project/github/${GITHUB_REPOSITORY}/pipeline" \
+            --header "Circle-Token: ${CIRCLECI_API_TOKEN}" \
+            --header "Content-Type: application/json" \
+            --data "${BODY}"
