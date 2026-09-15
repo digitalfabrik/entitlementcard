@@ -275,6 +275,7 @@ const ApplicationCard = ({
     } else if (result.data) {
       if (result.data.deleted) {
         onDelete()
+        enqueueSnackbar(t('deleteApplicationSuccessMessage'), { variant: 'success' })
       } else {
         console.error('Delete operation returned false.')
         enqueueSnackbar(t('errors:unknown'), { variant: 'error' })

@@ -1,6 +1,7 @@
-import { Alert, Typography, styled } from '@mui/material'
+import { Typography } from '@mui/material'
 import { Trans, useTranslation } from 'react-i18next'
 
+import AlertBox from '../../../../components/AlertBox'
 import { OrganizationInput } from '../../../../graphql'
 import i18next from '../../../../translations/i18n'
 import { normalizeName } from '../../../../util/normalizeString'
@@ -17,10 +18,6 @@ import EmailForm from '../primitive-inputs/EmailForm'
 import SelectForm from '../primitive-inputs/SelectForm'
 import ShortTextForm from '../primitive-inputs/ShortTextForm'
 import AddressForm from './AddressForm'
-
-const WarningContactPersonSamePerson = styled(Alert)`
-  margin: 8px 0;
-`
 
 const organizationCategoryOptions = {
   items: [
@@ -110,9 +107,12 @@ const OrganizationForm: Form<State, OrganizationInput, AdditionalProps> = {
         </Typography>
         <Typography>{t('applicationForms:organizationContactPersonDescription')}</Typography>
         {normalizeName(applicantName) === normalizeName(state.contactName.shortText) && (
-          <WarningContactPersonSamePerson severity='warning'>
-            <Trans i18nKey='applicationForms:organizationContactPersonAlert' />
-          </WarningContactPersonSamePerson>
+          <AlertBox
+            fullWidth
+            severity='warning'
+            sx={{ margin: '8px 0' }}
+            description={<Trans i18nKey='applicationForms:organizationContactPersonAlert' />}
+          />
         )}
         <ShortTextForm.Component
           state={state.contactName}
