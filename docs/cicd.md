@@ -3,6 +3,7 @@
 ## Content
 
 - [Workflows](#workflows)
+- [LLM Pull Request Review](#llm-pull-request-review)
 - [Failed Delivery](#failed-delivery)
 - [Deliver a new release by triggering the CI](#triggering-a-delivery)
 - [Services](#services)
@@ -25,6 +26,7 @@ Several workflows exist for different purposes:
 | promotion_frontend                         | manual           | :x:                 | production        | :x:                             | :x:                |
 | delivery_production_frontend               | manual           | :heavy_check_mark:  | production        | :x:                             | :heavy_check_mark: |
 | delivery_production_backend_administration | manual           | :heavy_check_mark:  | :x:               | production                      | :heavy_check_mark: |
+| llm_review                                 | PR opened/updated (via GitHub Actions) | :x: | :x:      | :x:                              | :x:                |
 
 Steps executed if _Checks_ is checked :heavy_check_mark::
 
@@ -51,6 +53,28 @@ Steps executed if _Checks_ is checked :heavy_check_mark::
 - Unit tests
 
 For `commit_main` additionally all packages will be build and and backend health check will be done
+
+## LLM Pull Request Review
+
+The **llm_review** workflow posts an automated review comment on pull requests.
+CircleCI cannot subscribe to GitHub's `pull_request` event, so the GitHub Actions
+workflow [`.github/workflows/llm-pr-review.yml`](../.github/workflows/llm-pr-review.yml)
+reacts to that event and triggers the workflow through the CircleCI API.
+
+It runs when a pull request is opened, reopened, marked ready for review, or receives a
+push. Pull requests from forks are skipped, because they get no secrets. The trigger
+passes three pipeline parameters:
+
+- `run_llm_review`: `true`, which selects the workflow.
+- `llm_review_pr_number`: the number of the pull request to review.
+- `run_commit`: `false`, so the **commit** workflow does not run a second time (its default is `true`).
+
+The actual review is done by [`.circleci/scripts/llm-pr-review.py`](../.circleci/scripts/llm-pr-review.py),
+which fetches the diff, commit messages and labels of the pull request via the GitHub API
+(authenticating as the `deliverino` GitHub App, see [Services](#services)), sends them to a
+LiteLLM endpoint, and posts (or updates) a single comment on the PR. The review only
+comments — it never approves, rejects or changes labels — and the script always exits
+successfully, so an LLM or network failure can never block a merge.
 
 ## Failed Delivery
 If the reason for a delivery to fail was just a transient error that was fixed in the meantime and doesn't require a code change
@@ -166,6 +190,8 @@ The next version of the app must be determined programmatically.
 | DELIVERINO_PRIVATE_KEY          | Base64 encoded PEM private key                                                    | Password Manager                           | [Deliverino Settings](https://github.com/organizations/Integreat/settings/apps/deliverino) | [Deliverino](https://github.com/apps/deliverino)                                         |
 | MM_WEBHOOK                      | URL which can be used to send notifications to our mattermost. Keep this private! | Mattermost server settings                 | https://chat.tuerantuer.org/hooks/...                                                      | [Mattermost Documentation](https://docs.mattermost.com/developer/webhooks-incoming.html) |
 | CREDENTIALS_GIT_REPOSITORY_URL  | Git remote URL to the credentials repository which contains the Java Keystore     | Ask the team about this secret repository  | git@github.com:digitalfabrik/app-credentials.git                                           | -                                                                                        |
+| NB_LLM_API_TOKEN                | API key for litellm.netzbegruenung.verdigado.net, stored as a **CircleCI** context (`digitalfabrik-llm-api`) secret. Used by the [llm_review](#llm-pull-request-review) workflow. | Ask the team about this secret | -                                                                                          | -                                                                                        |
+| CIRCLECI_API_TOKEN              | CircleCI Personal API Token, stored as a **GitHub** repository secret. Used by the GitHub Actions workflow to trigger the [llm_review](#llm-pull-request-review) workflow. | [CircleCI user settings](https://app.circleci.com/settings/user/tokens) | -                                                                                          | [Managing API tokens](https://circleci.com/docs/managing-api-tokens/)                    |
 
 ### Android Variables
 
