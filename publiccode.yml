@@ -1,8 +1,10 @@
-publiccodeYmlVersion: "0.4.0"
-name: Entitlementcard
-url: "https://github.com/digitalfabrik/entitlementcard.git"
-softwareVersion: "2025.9.2"
-releaseDate: "2025-09-01"
+publiccodeYmlVersion: 0.7.0
+name: Berechtigungskarte
+url: https://github.com/digitalfabrik/entitlementcard.git
+landingURL: https://berechtigungskarte.app/
+softwareVersion: 2025.9.2
+releaseDate: 2025-09-01
+logo: logo.svg
 platforms:
   - web
   - ios
@@ -10,32 +12,150 @@ platforms:
 categories:
   - digital-citizenship
   - identity-management
+organisation:
+  name: Tür an Tür - Digitalfabrik gGmbH
+  uri: https://tuerantuer.org
 usedBy:
   - Germany - Bavaria
   - Germany - City of Koblenz
   - Germany - City of Nuremberg
 developmentStatus: stable
 softwareType: standalone/mobile
+supports:
+  - id: alias:gdpr
+intendedAudience:
+  scope:
+    - culture
 description:
-  en:
-    shortDescription: The app allows accepting stores to validate that card holders are entitled to benefits.
-    longDescription: >
-           Benefit card for volunteers or socially vulnerable groups in Germany. App for Android & iOS + Backend + Administration Web Portal.
+  de:
+    shortDescription: "Plattform für digitale Berechtigungskarten: Anträge,
+      Ausstellung, Prüfung per QR-Code und Verwaltung von Akzeptanzstellen."
+    longDescription: >-
+      Die Digitale Berechtigungskarte ist eine Plattform, mit der öffentliche
+      Verwaltungen beliebige Berechtigungs- und Vorteilskarten digital ausgeben
+      und verwalten können. Sie deckt den gesamten Lebenszyklus einer Karte ab:
+      Antragstellung, Prüfung, Ausstellung, Nutzung im Alltag und
+      Gültigkeitsprüfung an der Akzeptanzstelle.
+
+
+      Die Plattform ist nicht auf einen einzelnen Anwendungsfall festgelegt.
+      Kartentypen, Berechtigungskriterien, Gültigkeitsdauer und Bezeichnungen
+      werden konfiguriert, sodass sich unterschiedliche Karten mit derselben
+      Technologie abbilden lassen – etwa Karten für Menschen mit geringem
+      Einkommen, für Familien, für ältere Menschen, für ehrenamtlich Engagierte
+      oder für neu zugezogene Einwohnerinnen und Einwohner. Mehrere Kartentypen
+      können parallel betrieben werden.
+
+
+      Das System besteht aus drei Komponenten:
+
+
+      * einem **Verwaltungsportal** für die Sachbearbeitung, in dem Anträge
+      entgegengenommen und geprüft, Karten einzeln oder als Massenimport
+      ausgestellt, Akzeptanzstellen gepflegt und Benutzerrechte verwaltet
+      werden,
+
+      * einer **App für Berechtigte** (Android und iOS), die die Karte vorhält,
+      verfügbare Vergünstigungen auf einer interaktiven Karte nach Kategorie und
+      Standort anzeigt und ein diskretes Vorzeigen ermöglicht,
+
+      * einer **Prüffunktion für Akzeptanzstellen**, die die Gültigkeit einer
+      Karte per QR-Code-Scan bestätigt und dabei keine personenbezogenen Daten
+      anzeigt.
+
+
+      Anträge können digital, über ein Papierformular oder über eine
+      Schnittstelle eingehen. Optional lässt sich ein mehrstufiger
+      Bestätigungsprozess vorschalten, bei dem Dritte eine Voraussetzung
+      bestätigen, bevor der Antrag die ausstellende Stelle erreicht. Die Ausgabe
+      der Karte kann rein digital oder hybrid, also zusätzlich physisch,
+      erfolgen.
+
+
+      Die Anwendung folgt dem Prinzip der Datensparsamkeit: Es werden nur die
+      für Ausstellung und Prüfung erforderlichen Daten erhoben, das
+      Verwaltungsportal kann ohne eigene Stammdatenhaltung betrieben und über
+      eine API an bestehende Fachverfahren angebunden werden. Der Betrieb ist
+      auf eigener Infrastruktur in Deutschland oder der EU möglich. Name, Logo
+      und Farben von Karte und App lassen sich an das Erscheinungsbild der
+      jeweiligen Verwaltung anpassen.
     features:
-       - Digital Identity Management
-       - Digital Benefit Card
+      - Digitale Antragstellung rund um die Uhr, ohne Behördenbesuch
+      - Posteingang für Anträge mit Prüfung und Bearbeitung im Verwaltungsportal
+      - Optionaler mehrstufiger Bestätigungsprozess durch Dritte
+      - Ausstellung einzelner Karten sowie Massenimport
+      - Hybride Ausgabe der Karte digital und physisch möglich
+      - Verwaltung von Akzeptanzstellen
+      - Rollenbasierte Benutzerverwaltung für Verwaltungsmitarbeitende
+      - Mehrsprachige, barrierearme Oberfläche für Berechtigte
+      - API zur Anbindung bestehender Fachverfahren
+  en:
+    localisedName: Entitlement card
+    shortDescription: "Platform for digital entitlement cards: applications,
+      issuing, QR code verification and management of participating partners."
+    longDescription: >-
+      Digital Entitlement Card is a platform that lets public authorities issue
+      and manage any kind of entitlement or benefit card digitally. It covers
+      the full lifecycle of a card: application, review, issuing, everyday use
+      and verification at the point of acceptance.
+
+
+      The platform is not tied to a single use case. Card types, eligibility
+      criteria, validity periods and labels are configurable, so different cards
+      can be run on the same technology – for example cards for people on a low
+      income, for families, for older people, for volunteers or for new
+      residents. Several card types can be operated in parallel.
+
+
+      The system consists of three components:
+
+
+      * an **administration portal** for caseworkers, used to receive and review
+      applications, issue cards individually or in bulk, maintain participating
+      partners and manage user permissions,
+
+      * an **app for cardholders** (Android and iOS) that stores the card, shows
+      available benefits on an interactive map by category and location, and
+      allows the card to be presented discreetly,
+
+      * a **verification function for participating partners** that confirms the
+      validity of a card by scanning a QR code without revealing personal data.
+
+
+      Applications can arrive digitally, on paper or through an interface. An
+      optional multistep confirmation workflow allows a third party to confirm a
+      prerequisite before the application reaches the issuing authority. Cards
+      can be issued digitally only or in hybrid form, with an additional
+      physical card.
+
+
+      The software follows the principle of data minimization: only the data
+      required to issue and verify a card is collected, the administration
+      portal can be operated without holding master data itself, and existing
+      case management systems can be connected through an API. The system can be
+      self-hosted in Germany or the EU. Card and app name, logo and colors can
+      be adapted to the visual identity of the issuing authority.
+    features:
+      - Digital applications around the clock, without visiting an office
+      - Application inbox with review and processing in the administration portal
+      - Optional multistep confirmation workflow involving third parties
+      - Issuing of single cards and bulk import
+      - Hybrid issuing, digital and physical card in parallel
+      - Management of participating partners
+      - Role-based user management for administrative staff
+      - Multilingual, low-barrier interface for cardholders
+      - API for integration with existing case management systems
 legal:
   license: MIT
-  mainCopyrightOwner: "Tür an Tür Digitalfabrik gGmbH"
-  repoOwner: "Tür an Tür Digitalfabrik gGmbH"
+  mainCopyrightOwner: Tür an Tür - Digitalfabrik gGmbH
 maintenance:
   type: internal
   contacts:
     - name: Sven Seeberg
       email: sven.seeberg@tuerantuer.org
-      affiliation: Tuer an Tuer Digitalfabrik gGmbH
+      affiliation: Tür an Tür - Digitalfabrik gGmbH
 localisation:
   localisationReady: true
   availableLanguages:
-    - en
     - de
+    - en
