@@ -3,7 +3,6 @@ import { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { StoresFieldConfig } from '../../../../project-configs'
-import { FIELD_LATITUDE, FIELD_LONGITUDE } from '../../../../project-configs/storesManagementConfig'
 import { FILE_SIZE_LIMIT_MEGA_BYTES } from '../constants'
 
 type ImportCardsRequirementsProps = {
@@ -11,10 +10,7 @@ type ImportCardsRequirementsProps = {
 }
 
 const StoresRequirementsText = ({ header }: ImportCardsRequirementsProps): ReactElement => {
-  const headers = header
-    // Long/Lat is only required for the import not for the csv file, since it will be resolved by location
-    .filter(field => ![FIELD_LATITUDE, FIELD_LONGITUDE].includes(field.name))
-    .map(field => (field.isMandatory ? `${field.name}*` : `${field.name}`))
+  const headers = header.map(field => (field.isMandatory ? `${field.name}*` : `${field.name}`))
   const { t } = useTranslation('stores')
   return (
     <Typography
@@ -28,7 +24,7 @@ const StoresRequirementsText = ({ header }: ImportCardsRequirementsProps): React
       </Typography>
       <Typography component='li'>{t('fileFormat')} </Typography>
       <Typography component='li'>
-        {t('neededColumns')} {headers.join(', ')}
+        {t('columnFormat')} {headers.join(', ')}
       </Typography>
     </Typography>
   )

@@ -510,7 +510,7 @@
     "wasSuccessful": "der Akzeptanzpartner war erfolgreich!",
     "maxFileSize": "Maximale Dateigröße: {{maxFileSize}}MB",
     "fileFormat": "Dateiformat: CSV",
-    "neededColumns": "Erforderliche Spalten: ",
+    "columnFormat": "Spaltenformat: ",
     "validationError": "Validierungsfehler",
     "errorInLine": "Fehler in Zeile",
     "csvInvalidDifferentColumnLength": "Keine gültige CSV Datei. Nicht jede Reihe enthält gleich viele Spalten.",
