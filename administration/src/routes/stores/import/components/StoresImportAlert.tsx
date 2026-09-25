@@ -39,6 +39,7 @@ const StoresImportAlert = ({
           )}
         </>
       )}
+      <br />
       <BaseCheckbox
         checked={dryRun}
         onChange={checked => setDryRun(checked)}

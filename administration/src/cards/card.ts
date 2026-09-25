@@ -141,7 +141,11 @@ export const isExpirationDateValid = (card: Card, { nullable } = { nullable: fal
   const startDay = card.extensions.startDay
 
   if (card.expirationDate === null) {
-    return nullable
+    return nullable || hasInfiniteLifetime(card)
+  }
+
+  if (hasInfiniteLifetime(card)) {
+    return false
   }
 
   return (
@@ -167,8 +171,7 @@ export const isValid = (
 ): boolean =>
   isFullNameValid(card) &&
   getExtensions(card).every(({ extension, state }) => extension.isValid(state)) &&
-  (isExpirationDateValid(card, { nullable: expirationDateNullable }) ||
-    hasInfiniteLifetime(card)) &&
+  isExpirationDateValid(card, { nullable: expirationDateNullable }) &&
   cardHasAllMandatoryExtensions(card, cardConfig)
 
 export const generateCardInfo = (card: Card): CardInfo => {
@@ -203,7 +206,7 @@ export const isValueValid = (card: Card, cardConfig: CardConfig, columnHeader: s
     case cardConfig.nameColumnName:
       return isFullNameValid(card)
     case cardConfig.expiryColumnName:
-      return isExpirationDateValid(card) || hasInfiniteLifetime(card)
+      return isExpirationDateValid(card)
     default: {
       const extensionName = getExtensionNameByCSVHeader(cardConfig, columnHeader)
       const extension = cardConfig.extensions.find(extension => extension.name === extensionName)
@@ -269,14 +272,14 @@ export const initializeCardFromCSV = (
   }
 }
 
-export const updateCard = (oldCard: Card, updatedCard: Partial<Card>): Card => ({
-  ...oldCard,
-  ...updatedCard,
-  extensions: {
-    ...oldCard.extensions,
-    ...(updatedCard.extensions ?? {}),
-  },
-})
+export const updateCard = (oldCard: Card, updatedCard: Partial<Card>): Card => {
+  const mergedCard = {
+    ...oldCard,
+    ...updatedCard,
+    extensions: { ...oldCard.extensions, ...updatedCard.extensions },
+  }
+  return hasInfiniteLifetime(mergedCard) ? { ...mergedCard, expirationDate: null } : mergedCard
+}
 
 export const getFullNameValidationErrorMessage = (name: string): string => {
   const normalizedName = normalizeWhitespace(name)

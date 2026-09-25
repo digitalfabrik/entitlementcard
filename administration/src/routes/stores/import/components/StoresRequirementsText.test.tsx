@@ -12,11 +12,11 @@ describe('StoresRequirementsText', () => {
     .map(field => (field.isMandatory ? `${field.name}*` : field.name))
     .join(', ')
 
-  it('should show mandatory requirements with asterisks', () => {
+  it('should show all columns, marking mandatory ones with an asterisk', () => {
     const { getByText } = renderWithOptions(<StoresRequirementsText header={fields} />, {
       translation: true,
     })
 
-    expect(getByText(`Erforderliche Spalten: ${expectedHeaders}`)).toBeTruthy()
+    expect(getByText(`Spaltenformat: ${expectedHeaders}`)).toBeTruthy()
   })
 })
