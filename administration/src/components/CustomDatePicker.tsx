@@ -2,6 +2,7 @@ import { deepmerge } from '@mui/utils'
 import type { DesktopDatePickerSlotProps } from '@mui/x-date-pickers'
 import { DesktopDatePicker } from '@mui/x-date-pickers'
 import { deDE } from '@mui/x-date-pickers/locales'
+import { isValid } from 'date-fns'
 import React, { ReactElement } from 'react'
 import { Temporal } from 'temporal-polyfill'
 
@@ -87,7 +88,7 @@ const CustomDatePicker = ({
     disablePast={disablePast}
     minDate={minDate ? plainDateToLegacyDate(minDate) : undefined}
     maxDate={maxDate ? plainDateToLegacyDate(maxDate) : undefined}
-    onChange={date => onChange?.(date ? plainDateFromLegacyDate(date) : null)}
+    onChange={date => onChange?.(date && isValid(date) ? plainDateFromLegacyDate(date) : null)}
     onClose={onClose}
   />
 )
