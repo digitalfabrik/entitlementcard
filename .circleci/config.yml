@@ -1096,6 +1096,7 @@ workflows:
                     - credentials-ehrenamtskarte
                 requires:
                     - check_backend
+                    - bump_version
             - pack_backend:
                 requires:
                     - bump_version
@@ -1144,6 +1145,7 @@ workflows:
                     - credentials-ehrenamtskarte
                 requires:
                     - check_backend
+                    - bump_version
             - pack_backend:
                 requires:
                     - bump_version
@@ -1257,6 +1259,7 @@ workflows:
                     - credentials-ehrenamtskarte
                 requires:
                     - check_backend
+                    - bump_version
             - pack_backend:
                 requires:
                     - bump_version
