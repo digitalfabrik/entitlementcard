@@ -23,6 +23,7 @@ jobs:
 
   - check_backend
   - build_backend:
+      release: true
       context:
         - credentials-ehrenamtskarte
       requires:
