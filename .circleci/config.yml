@@ -297,8 +297,6 @@ jobs:
         steps:
             - prepare_workspace
             - install_mise
-            - setup_remote_docker:
-                docker_layer_caching: true
             - run:
                 command: |
                     git submodule sync
@@ -435,8 +433,7 @@ jobs:
             - prepare_workspace
             - install_mise
             - check_circleci_config
-            - setup_remote_docker:
-                docker_layer_caching: true
+            - setup_remote_docker
             - run:
                 command: |
                     git submodule sync
