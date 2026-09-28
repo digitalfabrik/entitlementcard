@@ -36,8 +36,8 @@ dependencyManagement {
  * See: https://app.circleci.com/settings/organization/github/digitalfabrik/contexts/0d0d3d24-cd54-4c43-85a5-273e3a9e2152
  */
 object BuildConfig {
-    /** https://circleci.com/docs/reference/variables/#built-in-environment-variables */
-    val isCiBuild = System.getProperty("CI") == "true"
+    /** Set by the CircleCI `build_backend` job in delivery workflows */
+    val isReleaseBuild = System.getenv("RELEASE_BUILD") == "true"
     val circleCiCommitHash = System.getenv("CIRCLE_SHA1")
     val sentryAuthToken = System.getenv("SENTRY_BACKEND_AUTH_TOKEN")
 
@@ -173,7 +173,7 @@ protobuf {
     }
 }
 
-if (BuildConfig.isCiBuild) {
+if (BuildConfig.isReleaseBuild) {
     sentry {
         // Generates a JVM (Java, Kotlin, etc.) source bundle and uploads your source code to Sentry.
         // This enables source context, allowing you to see your source
@@ -241,19 +241,31 @@ val copyStyleTask = tasks.register<Copy>("copyStyle") {
 }
 tasks.named("classes") { dependsOn(copyStyleTask) }
 
+// The Sentry plugin collects the sources of all source sets, but only main sources are relevant for stack traces
+val sentrySourceDirs = sourceSets.main.map { it.java.srcDirs + it.kotlin.srcDirs }
+
 tasks.generateProto {
     dependsOn(tasks.generateSentryBundleIdJava)
 }
 
 tasks.sentryCollectSourcesJava {
-    dependsOn(tasks.generateProto)
+    dependsOn(tasks.generateProto, tasks.generateBuildConfigClasses)
+    sourceDirs.setFrom(sentrySourceDirs)
+}
+
+// The Sentry plugin only hooks the upload into `assemble`, but CI builds the release artifact via `distTar`
+if (BuildConfig.isReleaseBuild) {
+    tasks.distTar {
+        finalizedBy(tasks.sentryUploadSourceBundleJava)
+    }
+}
+
+tasks.generateSentryBundleIdJava {
+    dependsOn(tasks.generateBuildConfigClasses)
+    sourceDirs.setFrom(sentrySourceDirs)
 }
 
 tasks.graphqlGenerateTestClient {
-    if (BuildConfig.isCiBuild) {
-        dependsOn(tasks.generateSentryBundleIdJava)
-        dependsOn(tasks.sentryCollectSourcesJava)
-    }
     schemaFile.set(rootDir.parentFile.resolve("specs/backend-api.graphql"))
     packageName.set("$packageRoot.generated")
     queryFiles.setFrom(fileTree("src/test/resources/graphql"))
