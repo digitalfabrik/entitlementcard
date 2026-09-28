@@ -41,8 +41,12 @@ object BuildConfig {
     val circleCiCommitHash = System.getenv("CIRCLE_SHA1")
     val sentryAuthToken = System.getenv("SENTRY_BACKEND_AUTH_TOKEN")
 
-    /** Set by the CircleCI `bump_version` job */
-    val versionName = System.getenv("NEW_VERSION_NAME") ?: "1.0.0"
+    /**
+     * Set by the CircleCI `bump_version` job.
+     * Release builds must fail without a version, other builds use an immediately recognizable dummy version.
+     */
+    val versionName = System.getenv("NEW_VERSION_NAME")?.takeIf { it.isNotBlank() }
+        ?: if (isReleaseBuild) error("NEW_VERSION_NAME must be set for release builds") else "0.0.0-dev"
 }
 
 val packageRoot = "app.ehrenamtskarte.backend"
