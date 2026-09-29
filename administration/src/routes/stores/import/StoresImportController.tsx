@@ -78,6 +78,7 @@ const StoresImport = ({ fields }: StoreImportProps): ReactElement => {
         />,
         {
           persist: true,
+          variant: 'success',
         },
       )
       setAcceptingStores([])
