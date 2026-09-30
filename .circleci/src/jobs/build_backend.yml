@@ -1,15 +1,19 @@
 docker:
   - image: cimg/base:2026.04
 resource_class: small
+parameters:
+  release:
+    description: Whether this is a release build. If true, the source context is uploaded to Sentry.
+    type: boolean
+    default: false
 environment:
   _JAVA_OPTIONS: "-Xmx3g"
   GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
+  RELEASE_BUILD: << parameters.release >>
 working_directory: ~/project/backend
 steps:
   - prepare_workspace
   - install_mise
-  - setup_remote_docker:
-      docker_layer_caching: true
   - run:
       name: Setup submodules
       command: |
