@@ -13,7 +13,7 @@ concurrency:
 jobs:
   trigger-circleci:
     name: Trigger the LLM review pipeline on CircleCI
-    if: github.event.pull_request.head.repo.full_name == github.repository
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: Trigger CircleCI pipeline
