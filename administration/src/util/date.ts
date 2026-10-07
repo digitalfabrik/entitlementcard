@@ -6,8 +6,10 @@ export function parseGermanPlainDateString(dateString: string): Temporal.PlainDa
   return new Temporal.PlainDate(parseInt(year, 10), parseInt(month, 10), parseInt(day, 10))
 }
 
-export function plainDateFromLegacyDate(date: Date): Temporal.PlainDate {
-  return new Temporal.PlainDate(date.getFullYear(), date.getMonth() + 1, date.getDate())
+export function plainDateFromLegacyDate(date: Date): Temporal.PlainDate | null {
+  return Number.isNaN(date.getTime())
+    ? null
+    : new Temporal.PlainDate(date.getFullYear(), date.getMonth() + 1, date.getDate())
 }
 
 export function plainDateToLegacyDate(date: Temporal.PlainDate): Date {
