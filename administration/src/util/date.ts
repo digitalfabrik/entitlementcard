@@ -6,17 +6,6 @@ export function parseGermanPlainDateString(dateString: string): Temporal.PlainDa
   return new Temporal.PlainDate(parseInt(year, 10), parseInt(month, 10), parseInt(day, 10))
 }
 
-export function plainDateFromLegacyDate(date: Date): Temporal.PlainDate {
-  return new Temporal.PlainDate(date.getFullYear(), date.getMonth() + 1, date.getDate())
-}
-
-export function plainDateToLegacyDate(date: Temporal.PlainDate): Date {
-  const jsDate = new Date(date.year, date.month - 1, date.day)
-  // We need to setFullYear, as the Date constructor adds 1900 years if year is between 0 and 99 inclusive.
-  jsDate.setFullYear(date.year)
-  return jsDate
-}
-
 export function safeParseGermanPlainDateString(
   dateString: string | null,
 ): Temporal.PlainDate | null {
