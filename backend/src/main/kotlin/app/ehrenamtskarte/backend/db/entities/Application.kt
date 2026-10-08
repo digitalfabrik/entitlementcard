@@ -26,7 +26,9 @@ object Applications : IntIdTable() {
 }
 
 class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<ApplicationEntity>(Applications)
+    companion object : IntEntityClass<ApplicationEntity>(Applications) {
+        private val jsonMapper = jacksonObjectMapper()
+    }
 
     enum class Status {
         Pending,
@@ -59,7 +61,7 @@ class ApplicationEntity(id: EntityID<Int>) : IntEntity(id) {
     var statusResolvedDate by Applications.statusResolvedDate
     var rejectionMessage by Applications.rejectionMessage
 
-    fun parseJsonValue(): JsonNode = jacksonObjectMapper().readTree(jsonValue)
+    fun parseJsonValue(): JsonNode = jsonMapper.readTree(jsonValue)
 }
 
 /** Check if this state transition makes sense */

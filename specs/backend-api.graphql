@@ -90,7 +90,7 @@ type ApplicationAdmin {
   verifications: [ApplicationVerificationView!]!
 }
 
-type ApplicationPublic {
+type ApplicationApplicant {
   createdDate: String!
   id: Int!
   jsonValue: String!
@@ -107,6 +107,15 @@ type ApplicationVerificationView {
   rejectedDate: String
   verificationId: Int!
   verifiedDate: String
+}
+
+type ApplicationVerifier {
+  createdDate: String!
+  id: Int!
+  jsonValue: String!
+  regionId: Int!
+  status: ApplicationStatus!
+  statusResolvedDate: String
 }
 
 type CardActivationResultModel {
@@ -277,9 +286,9 @@ type Query {
   "Gets metadata of all api tokens for a project"
   getApiTokenMetaData: [ApiTokenMetaData!]!
   "Queries an application by application accessKey"
-  getApplicationByApplicant(accessKey: String!): ApplicationPublic!
+  getApplicationByApplicant(accessKey: String!): ApplicationApplicant!
   "Queries an application by application verification accessKey"
-  getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey: String!): ApplicationPublic!
+  getApplicationByApplicationVerificationAccessKey(applicationVerificationAccessKey: String!): ApplicationVerifier!
   "Queries an application verification by application verification accessKey"
   getApplicationVerification(applicationVerificationAccessKey: String!): ApplicationVerificationView!
   "Queries all applications for a specific region"

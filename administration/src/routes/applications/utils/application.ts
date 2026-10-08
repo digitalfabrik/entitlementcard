@@ -14,11 +14,6 @@ export type ApplicationParsedJsonValue<T extends ApplicationJsonValue> = {
   jsonValue: JsonField<'Array'>
 }
 
-export type ApplicationWithoutVerifications<T extends ApplicationJsonValue> = Omit<
-  ApplicationParsedJsonValue<T>,
-  'verifications'
->
-
 /** Return an application object with the 'jsonValue' property already parsed */
 export const parseApplication = <T extends ApplicationJsonValue>(
   rawApplication: T,
