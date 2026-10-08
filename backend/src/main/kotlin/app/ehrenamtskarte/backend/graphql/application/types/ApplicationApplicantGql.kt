@@ -8,8 +8,8 @@ import org.springframework.graphql.data.method.annotation.SchemaMapping
 import org.springframework.stereotype.Controller
 import java.util.concurrent.CompletableFuture
 
-@GraphQLName("ApplicationPublic")
-data class ApplicationPublicGql(
+@GraphQLName("ApplicationApplicant")
+data class ApplicationApplicantGql(
     val id: Int,
     val regionId: Int,
     val createdDate: String,
@@ -19,8 +19,8 @@ data class ApplicationPublicGql(
     val verifications: List<ApplicationVerificationView> = emptyList(), // resolved by ApplicationVerificationsResolver
 ) {
     companion object {
-        fun fromDbEntity(entity: ApplicationEntity): ApplicationPublicGql =
-            ApplicationPublicGql(
+        fun fromDbEntity(entity: ApplicationEntity): ApplicationApplicantGql =
+            ApplicationApplicantGql(
                 id = entity.id.value,
                 regionId = entity.regionId.value,
                 createdDate = entity.createdDate.toString(),
@@ -32,9 +32,9 @@ data class ApplicationPublicGql(
 
     @Controller
     class ApplicationVerificationsResolver {
-        @SchemaMapping(typeName = "ApplicationPublic", field = "verifications")
+        @SchemaMapping(typeName = "ApplicationApplicant", field = "verifications")
         fun verifications(
-            application: ApplicationPublicGql,
+            application: ApplicationApplicantGql,
             dfe: DataFetchingEnvironment,
         ): CompletableFuture<List<ApplicationVerificationView>> {
             val loader = dfe.getDataLoader<Int, List<ApplicationVerificationView>>(

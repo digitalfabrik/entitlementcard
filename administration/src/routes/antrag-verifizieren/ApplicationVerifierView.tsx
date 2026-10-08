@@ -7,11 +7,11 @@ import { Temporal } from 'temporal-polyfill'
 import AlertBox from '../../components/AlertBox'
 import JsonFieldView from '../../components/JsonFieldView'
 import PageLayout from '../../components/PageLayout'
-import { GetApplicationByApplicantQuery } from '../../graphql'
+import { GetApplicationByVerifierQuery } from '../../graphql'
 import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { ApplicationVerificationPublic } from '../applications/types/types'
-import { ApplicationWithoutVerifications } from '../applications/utils/application'
+import { ApplicationParsedJsonValue } from '../applications/utils/application'
 
 const ApplicationViewCard = styled(Card)`
   max-width: 800px;
@@ -26,7 +26,7 @@ const ButtonContainer = styled('div')`
 `
 
 type ApplicationVerificantViewProps = {
-  application: ApplicationWithoutVerifications<GetApplicationByApplicantQuery['application']>
+  application: ApplicationParsedJsonValue<GetApplicationByVerifierQuery['application']>
   verification: ApplicationVerificationPublic
   submitApplicationVerification: (verified: boolean) => void
 }
