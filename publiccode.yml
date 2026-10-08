@@ -2,8 +2,8 @@ publiccodeYmlVersion: 0.7.0
 name: Berechtigungskarte
 url: https://github.com/digitalfabrik/entitlementcard.git
 landingURL: https://berechtigungskarte.app/
-softwareVersion: 2025.9.2
-releaseDate: 2025-09-01
+softwareVersion: "2026.10.0"
+releaseDate: "2026-10-08"
 logo: logo.svg
 platforms:
   - web
