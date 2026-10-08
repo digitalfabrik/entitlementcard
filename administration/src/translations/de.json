@@ -200,6 +200,7 @@
     "attachmentFilename": "Anhang_{{index}}.{{fileExtension}}",
     "seeAttachment": "siehe Anhang",
     "submittedButNotVisible": "eingereicht, nicht sichtbar",
+    "note": "Notiz",
     "noteDialogTitle": "Notiz anlegen",
     "noteButtonCreate": "Notiz anlegen",
     "noteButtonShow": "Notiz anzeigen",

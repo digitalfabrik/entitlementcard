@@ -1,4 +1,4 @@
-import { Box, Stack, Typography, css } from '@mui/material'
+import { Box, Stack, Typography, alpha, css } from '@mui/material'
 import { ReactElement, forwardRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Temporal } from 'temporal-polyfill'
@@ -44,6 +44,28 @@ export const ApplicationPrintView = forwardRef<
       <Typography variant='h6' sx={{ marginY: 0 }}>
         {t('applicationFrom', { date: Temporal.Instant.from(p.application.createdDate) })}
       </Typography>
+
+      {!!p.application.note && (
+        <Stack
+          direction='row'
+          sx={theme => ({
+            gap: 2,
+            alignItems: 'flex-start',
+            border: `1pt solid ${theme.palette.warning.main}`,
+            borderRadius: '4pt',
+            backgroundColor: alpha(theme.palette.warning.main, 0.1),
+            padding: 2,
+            breakInside: 'avoid',
+            printColorAdjust: 'exact',
+            WebkitPrintColorAdjust: 'exact',
+          })}
+        >
+          <Stack>
+            <Typography variant='body2bold'>{t('note')}:</Typography>
+            <Typography sx={{ whiteSpace: 'pre-wrap' }}>{p.application.note}</Typography>
+          </Stack>
+        </Stack>
+      )}
 
       {p.application.status === ApplicationStatus.Withdrawn &&
         !!p.application.statusResolvedDate && (
