@@ -89,14 +89,27 @@ const RejectionDialog = (props: {
   onCancel: () => void
 }) => {
   const { t } = useTranslation('applicationsOverview')
-  const rejectionMessages = t('rejectionReasons', { returnObjects: true }) as string[]
-  const [reason, setReason] = useState<string | null>(null)
+  const customReasonOption = t('rejectionCustomReasonOption')
+  const rejectionMessages = [
+    ...(t('rejectionReasons', { returnObjects: true }) as string[]),
+    customReasonOption,
+  ]
+  const [selectedOption, setSelectedOption] = useState<string | null>(null)
+  const [customReason, setCustomReason] = useState('')
   const [interacted, setInteracted] = useState(false)
-  const showError = reason === null && interacted
+  const [customReasonInteracted, setCustomReasonInteracted] = useState(false)
+  const isCustomReason = selectedOption === customReasonOption
+  const trimmedCustomReason = customReason.trim()
+  const reason = isCustomReason ? trimmedCustomReason || null : selectedOption
+  const showError = selectedOption === null && interacted
+  const showCustomReasonError =
+    isCustomReason && trimmedCustomReason === '' && customReasonInteracted
 
   const closeAndClearDialog = () => {
-    setReason(null)
+    setSelectedOption(null)
+    setCustomReason('')
     setInteracted(false)
+    setCustomReasonInteracted(false)
     props.onCancel()
   }
 
@@ -109,6 +122,7 @@ const RejectionDialog = (props: {
           props.onConfirm(reason)
         }
         setInteracted(true)
+        setCustomReasonInteracted(true)
       }}
       closeOnConfirm={reason !== null}
       onClose={closeAndClearDialog}
@@ -142,8 +156,25 @@ const RejectionDialog = (props: {
           )}
           options={rejectionMessages}
           sx={{ marginTop: 2 }}
-          onChange={(_, value) => setReason(value)}
+          onChange={(_, value) => setSelectedOption(value)}
         />
+        {isCustomReason && (
+          <TextField
+            variant='outlined'
+            label={t('rejectionCustomReasonLabel')}
+            value={customReason}
+            onChange={event => setCustomReason(event.target.value)}
+            onBlur={() => setCustomReasonInteracted(true)}
+            error={showCustomReasonError}
+            helperText={showCustomReasonError && t('applicationRejectCustomReasonRequired')}
+            multiline
+            minRows={2}
+            maxRows={5}
+            fullWidth
+            autoFocus
+            sx={{ marginTop: 2 }}
+          />
+        )}
       </>
     </ConfirmDialog>
   )

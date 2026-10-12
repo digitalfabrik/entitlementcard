@@ -228,6 +228,9 @@
     "rejectionDialogTitle": "Antrag ablehnen",
     "rejectionDialogMessage": "Bitte wählen Sie einen Ablehnungsgrund. Der/die Antragsteller/in wird über diesen anschließend via E-Mail informiert.",
     "rejectionInputHint": "Grund",
+    "rejectionCustomReasonOption": "Sonstiges (bitte eingeben)",
+    "rejectionCustomReasonLabel": "Eigener Ablehnungsgrund",
+    "applicationRejectCustomReasonRequired": "Bitte geben Sie einen Grund ein.",
     "rejectionReasons": [
       "Die angegebene Anwartschaftszeit des Engagements ist leider nicht ausreichend, um die blaue Bayerische Ehrenamtskarte zu erhalten. Erforderlich ist ein Engagement von mindestens zwei Jahren.",
       "Die angegebene Anwartschaftszeit des Engagements ist leider nicht ausreichend, um die goldene Bayerische Ehrenamtskarte zu erhalten. Erforderlich ist ein Engagement von mindestens 25 Jahren.",
