@@ -1,9 +1,10 @@
 import { Check, Close } from '@mui/icons-material'
-import { Alert, Button, Card, Divider, Typography, styled } from '@mui/material'
+import { Button, Card, Divider, Typography, styled } from '@mui/material'
 import React, { ReactElement, useContext } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Temporal } from 'temporal-polyfill'
 
+import AlertBox from '../../components/AlertBox'
 import JsonFieldView from '../../components/JsonFieldView'
 import PageLayout from '../../components/PageLayout'
 import { GetApplicationByApplicantQuery } from '../../graphql'
@@ -15,11 +16,6 @@ import { ApplicationWithoutVerifications } from '../applications/utils/applicati
 const ApplicationViewCard = styled(Card)`
   max-width: 800px;
   margin: 16px auto 16px auto;
-`
-
-const StyledAlert = styled(Alert)`
-  margin: 20px 0;
-  background-color: transparent;
 `
 
 const ButtonContainer = styled('div')`
@@ -78,9 +74,11 @@ const ApplicationVerifierView = ({
               values={{ organizationName: verification.organizationName }}
             />
           </Typography>
-          <StyledAlert severity='warning'>
-            <Trans i18nKey='applicationVerification:confirmationNote' />
-          </StyledAlert>
+          <AlertBox
+            severity='warning'
+            description={<Trans i18nKey='applicationVerification:confirmationNote' />}
+            sx={{ my: 3 }}
+          />
 
           <ButtonContainer>
             <Button

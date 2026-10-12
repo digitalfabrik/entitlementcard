@@ -5,9 +5,20 @@ import { deDE } from '@mui/x-date-pickers/locales'
 import React, { ReactElement } from 'react'
 import { Temporal } from 'temporal-polyfill'
 
-import { plainDateFromLegacyDate, plainDateToLegacyDate } from '../util/date'
-
 export type CustomDatePickerTextFieldProps = DesktopDatePickerSlotProps['textField']
+
+// MUI date pickers do not support Temporal yet, see https://github.com/mui/mui-x/issues/4399
+const plainDateFromLegacyDate = (date: Date): Temporal.PlainDate | null =>
+  Number.isNaN(date.getTime())
+    ? null
+    : new Temporal.PlainDate(date.getFullYear(), date.getMonth() + 1, date.getDate())
+
+const plainDateToLegacyDate = (date: Temporal.PlainDate): Date => {
+  const jsDate = new Date(date.year, date.month - 1, date.day)
+  // We need to setFullYear, as the Date constructor adds 1900 years if year is between 0 and 99 inclusive.
+  jsDate.setFullYear(date.year)
+  return jsDate
+}
 
 const CustomDatePicker = ({
   value,

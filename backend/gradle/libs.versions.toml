@@ -10,22 +10,22 @@ jetbrains-kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.r
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 jetbrains-kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version = "0.9.9" }
 jlleitschuh-gradle-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "14.2.0" }
-sentry-jvm-gradle = { id = "io.sentry.jvm.gradle", version = "6.16.0" }
+sentry-jvm-gradle = { id = "io.sentry.jvm.gradle", version = "6.20.0" }
 springframework-boot = { id = "org.springframework.boot", version.ref = "spring" }
 spring-dependencymanagement = { id = "io.spring.dependency-management", version = "1.1.7" }
 
 [versions]
 
-graphql = "10.2.0"
-jetbrains-exposed = "1.3.1"
-junixsocket = "2.10.1"
+graphql = "10.2.2"
+jetbrains-exposed = "1.5.0"
+junixsocket = "2.11.0"
 kotlin = "2.4.10"
 kotlinx-coroutines = "1.11.0"
 kotlinx-serialization = "1.11.0"
-ktor = "3.5.1"
-spring = "4.1.0"
+ktor = "3.5.2"
+spring = "4.1.1"
 testcontainers = "1.21.4"
-protobuf = "4.35.1"
+protobuf = "4.36.0"
 
 [libraries]
 
@@ -68,7 +68,7 @@ piwik-matomo-java-tracker = { module = "org.piwik.java.tracking:matomo-java-trac
 postgis-jdbc = { module = "net.postgis:postgis-jdbc", version = "2025.1.1" }
 postgresql-postgresql = { module = "org.postgresql:postgresql", version = "42.7.13" }
 simplejavamail = { module = "org.simplejavamail:simple-java-mail", version = "8.12.6" }
-springdoc-openapi-starter = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version = "3.0.3" }
+springdoc-openapi-starter = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version = "3.1.0" }
 springframework-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools" }
 springframework-boot-configurationprocessor = { module = "org.springframework.boot:spring-boot-configuration-processor" }
 springframework-boot-starter-mail = { module = "org.springframework.boot:spring-boot-starter-mail", version.ref = "spring" }

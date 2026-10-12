@@ -53,7 +53,8 @@ data class AcceptingStoreV2(
     @Suppress("unused")
     fun category(): CompletableFuture<Category> = CompletableFuture.completedFuture(null)
 
-    @Suppress("unused")
+    // PhysicalStore (V1) is kept for GraphQL backward compatibility until January 2028.
+    @Suppress("unused", "DEPRECATION")
     fun physicalStore(): CompletableFuture<PhysicalStore?> = CompletableFuture.completedFuture(null)
 }
 
@@ -68,6 +69,7 @@ class AcceptingStoreResolverV2 {
         dfe.loadFrom(CategoryDataLoader::class, store.categoryId).thenApply { it!! }
 
     @SchemaMapping(typeName = "AcceptingStoreV2", field = "physicalStore")
+    @Suppress("DEPRECATION") // PhysicalStore (V1) is kept for GraphQL backward compatibility until January 2028.
     fun physicalStore(store: AcceptingStoreV2, dfe: DataFetchingEnvironment): CompletableFuture<PhysicalStore?> =
         dfe.loadFrom(PhysicalStoreByStoreIdLoader::class, store.id)
 }

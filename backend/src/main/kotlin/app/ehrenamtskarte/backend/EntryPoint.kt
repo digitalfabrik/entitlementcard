@@ -25,14 +25,23 @@ import graphql.schema.GraphQLSchema
 import org.jetbrains.exposed.v1.jdbc.exists
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.BeanRegistrarDsl
 import org.springframework.boot.WebApplicationType
 import org.springframework.boot.runApplication
-import org.springframework.context.support.beans
+import org.springframework.context.ApplicationContextInitializer
+import org.springframework.context.support.GenericApplicationContext
 import java.io.File
 import java.sql.SQLException
 import java.util.TimeZone
 
 private val logger by lazy { LoggerFactory.getLogger("EntryPoint") }
+
+private fun configBeanRegistrarInitializer(
+    config: BackendConfiguration,
+): ApplicationContextInitializer<GenericApplicationContext> =
+    ApplicationContextInitializer { context ->
+        context.register(BeanRegistrarDsl { registerBean<BackendConfiguration> { config } })
+    }
 
 class Entry : CliktCommand() {
     private val config by option().file(canBeDir = false, mustBeReadable = true)
@@ -114,11 +123,7 @@ class GraphQLExport : CliktCommand("graphql-export") {
     override fun run() {
         val springContext = runApplication<BackendApplication> {
             setWebApplicationType(WebApplicationType.NONE)
-            addInitializers(
-                beans {
-                    bean { config }
-                },
-            )
+            addInitializers(configBeanRegistrarInitializer(config))
         }
         try {
             val schema = springContext.getBean(GraphQLSchema::class.java)
@@ -197,11 +202,7 @@ class Execute : CliktCommand() {
                     "server.port" to config.server.port,
                 ),
             )
-            addInitializers(
-                beans {
-                    bean { config }
-                },
-            )
+            addInitializers(configBeanRegistrarInitializer(config))
         }
     }
 }

@@ -287,12 +287,16 @@ jobs:
         environment:
             _JAVA_OPTIONS: -Xmx3g
             GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2
+            RELEASE_BUILD: << parameters.release >>
+        parameters:
+            release:
+                default: false
+                description: Whether this is a release build. If true, the source context is uploaded to Sentry.
+                type: boolean
         resource_class: small
         steps:
             - prepare_workspace
             - install_mise
-            - setup_remote_docker:
-                docker_layer_caching: true
             - run:
                 command: |
                     git submodule sync
@@ -376,7 +380,7 @@ jobs:
                     - run:
                         command: |
                             HOTFIX_FLAG=$([[ "${CIRCLE_BRANCH}" == hotfix* ]] && echo "--hotfix" || true)
-                            mise x -- npm exec -- app-toolbelt v0 release bump-to ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} --branch ${CIRCLE_BRANCH} ${HOTFIX_FLAG}
+                            mise x -- npm exec -- app-toolbelt v0 release bump-to ${NEW_VERSION_NAME} ${NEW_VERSION_CODE} --private-key ${DELIVERINO_PRIVATE_KEY} --owner ${CIRCLE_PROJECT_USERNAME} --repo ${CIRCLE_PROJECT_REPONAME} --branch ${CIRCLE_BRANCH} --update-public-code ${HOTFIX_FLAG}
                         name: Bump git version
             - when:
                 condition:
@@ -429,8 +433,7 @@ jobs:
             - prepare_workspace
             - install_mise
             - check_circleci_config
-            - setup_remote_docker:
-                docker_layer_caching: true
+            - setup_remote_docker
             - run:
                 command: |
                     git submodule sync
@@ -673,6 +676,26 @@ jobs:
                 path: ~/project/administration/playwright-report
             - notify
         working_directory: ~/project
+    llm-pr-review:
+        docker:
+            - image: cimg/python:3.11
+        environment:
+            LLM_REVIEW_PR_NUMBER: << pipeline.parameters.llm_review_pr_number >>
+        resource_class: small
+        steps:
+            - checkout
+            - run:
+                command: pip install --user "PyJWT[crypto]" requests
+                name: Install python dependencies
+            - run:
+                command: |
+                    TOKEN=$(./.circleci/scripts/get_access_token.py)
+                    echo "export DELIVERINO_ACCESS_TOKEN=$TOKEN" >> $BASH_ENV
+                name: Request Deliverino installation access token
+            - run:
+                command: ./.circleci/scripts/llm-pr-review.py
+                name: Run LLM PR review
+            - notify
     notify_release:
         docker:
             - image: cimg/node:24.13
@@ -904,6 +927,9 @@ jobs:
                 name: Install administration & backend packages via webhook
             - notify
 parameters:
+    llm_review_pr_number:
+        default: ""
+        type: string
     run_commit:
         default: true
         type: boolean
@@ -927,6 +953,9 @@ parameters:
         default: false
         type: boolean
     run_delivery_production_frontend:
+        default: false
+        type: boolean
+    run_llm_review:
         default: false
         type: boolean
     run_promotion_all:
@@ -1068,8 +1097,10 @@ workflows:
             - build_backend:
                 context:
                     - credentials-ehrenamtskarte
+                release: true
                 requires:
                     - check_backend
+                    - bump_version
             - pack_backend:
                 requires:
                     - bump_version
@@ -1116,8 +1147,10 @@ workflows:
             - build_backend:
                 context:
                     - credentials-ehrenamtskarte
+                release: true
                 requires:
                     - check_backend
+                    - bump_version
             - pack_backend:
                 requires:
                     - bump_version
@@ -1229,8 +1262,10 @@ workflows:
             - build_backend:
                 context:
                     - credentials-ehrenamtskarte
+                release: true
                 requires:
                     - check_backend
+                    - bump_version
             - pack_backend:
                 requires:
                     - bump_version
@@ -1318,6 +1353,14 @@ workflows:
                     - deliver_android
                     - deliver_ios
         when: << pipeline.parameters.run_delivery_production_frontend >>
+    llm_review:
+        jobs:
+            - llm-pr-review:
+                context:
+                    - mattermost
+                    - deliverino
+                    - digitalfabrik-llm-api
+        when: << pipeline.parameters.run_llm_review >>
     promotion_all:
         jobs:
             - promote_android:

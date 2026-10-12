@@ -24,7 +24,7 @@ const StoresRequirementsText = ({ header }: ImportCardsRequirementsProps): React
       </Typography>
       <Typography component='li'>{t('fileFormat')} </Typography>
       <Typography component='li'>
-        {t('neededColumns')} {headers.join(', ')}
+        {t('columnFormat')} {headers.join(', ')}
       </Typography>
     </Typography>
   )
