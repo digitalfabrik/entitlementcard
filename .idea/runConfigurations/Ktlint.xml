@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Ktlint &amp; detekt" type="GradleRunConfiguration" factoryName="Gradle" folderName="Backend Commands">
+  <configuration default="false" name="Ktlint" type="GradleRunConfiguration" factoryName="Gradle" folderName="Backend Commands">
     <ExternalSystemSettings>
       <option name="executionName" />
       <option name="externalProjectPath" value="$PROJECT_DIR$/backend" />
@@ -11,7 +11,6 @@
       <option name="taskNames">
         <list>
           <option value="ktlintCheck" />
-          <option value="detekt" />
         </list>
       </option>
       <option name="vmOptions" />
