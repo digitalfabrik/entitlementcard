@@ -155,6 +155,8 @@
     "fieldRequiredError": "Feld ist erforderlich.",
     "invalidDateError": "Eingabe ist kein gültiges Datum.",
     "invalidMailError": "E-Mail-Adresse ist ungültig.",
+    "emailMismatchError": "Die E-Mail-Adressen stimmen nicht überein.",
+    "emailAddressConfirmation": "E-Mail-Adresse wiederholen",
     "maxShortTextLengthError": "Text überschreitet die maximal erlaubten {{maxLength}} Zeichen.",
     "fileRequirementsError": "Die Datei darf maximal {{fileSizeLimit}} MB groß sein und muss im JPG, PNG oder PDF Format sein.",
     "noValidNumberError": "Eingabe ist keine Zahl.",
