@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Role } from '../../graphql'
 import { config as bayernConfig } from '../../project-configs/bayern/config'
 import { config as koblenzConfig } from '../../project-configs/koblenz/config'

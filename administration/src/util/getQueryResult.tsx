@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { UseQueryExecute, UseQueryState } from 'urql'
 
 import AlertBox from '../components/AlertBox'

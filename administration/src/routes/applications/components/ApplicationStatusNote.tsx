@@ -1,7 +1,7 @@
 /* eslint-disable react/destructuring-assignment */
 import { CancelOutlined, CheckCircleOutlined, RemoveCircleOutlined } from '@mui/icons-material'
 import { Typography } from '@mui/material'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Temporal } from 'temporal-polyfill'
 

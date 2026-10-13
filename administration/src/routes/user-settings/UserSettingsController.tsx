@@ -1,5 +1,5 @@
 import { Stack } from '@mui/material'
-import React, { ReactElement, useContext } from 'react'
+import { ReactElement, useContext } from 'react'
 
 import RenderGuard from '../../components/RenderGuard'
 import { Role } from '../../graphql'

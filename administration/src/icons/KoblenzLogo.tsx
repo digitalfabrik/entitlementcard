@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 import svgImage from '../assets/koblenz_logo.svg'
 

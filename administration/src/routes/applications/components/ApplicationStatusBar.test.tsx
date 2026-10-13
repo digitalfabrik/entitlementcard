@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { ApplicationStatus } from '../../../graphql'
 import { renderWithOptions } from '../../../testing/render'
 import { barItems } from '../ApplicationsOverview'

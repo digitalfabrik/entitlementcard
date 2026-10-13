@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { config } from '../../../project-configs/nuernberg/config'
 import { CustomRenderOptions, renderWithOptions } from '../../../testing/render'
 import { activityLogEntries } from '../__mocks__/ActivityLogData'

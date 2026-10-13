@@ -1,5 +1,5 @@
 import { Box, Button } from '@mui/material'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 type FooterProps = {

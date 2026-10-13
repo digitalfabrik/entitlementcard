@@ -1,7 +1,7 @@
 import { AddBusiness, AddBusinessOutlined, DeleteOutlined, FileUpload } from '@mui/icons-material'
 import { Box, Button } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation } from 'urql'
 

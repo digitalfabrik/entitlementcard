@@ -1,5 +1,4 @@
 import { act, fireEvent } from '@testing-library/react'
-import React from 'react'
 import { Temporal } from 'temporal-polyfill'
 
 import { renderWithOptions } from '../testing/render'

@@ -1,5 +1,5 @@
 import { Stack, StackProps } from '@mui/material'
-import React, { ReactElement, ReactNode } from 'react'
+import { ReactElement, ReactNode } from 'react'
 
 import Footer from './Footer'
 

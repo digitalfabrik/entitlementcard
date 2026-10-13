@@ -15,7 +15,7 @@ import {
   Typography,
 } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Temporal } from 'temporal-polyfill'
 import { useMutation, useQuery } from 'urql'

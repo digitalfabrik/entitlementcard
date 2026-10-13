@@ -11,7 +11,7 @@ import {
   Stepper,
 } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import React, { ReactElement, ReactNode, useCallback, useMemo, useState } from 'react'
+import { ReactElement, ReactNode, createContext, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import i18next from '../../../../translations/i18n'
@@ -28,7 +28,7 @@ type FormContextType = {
 }
 const initialFormContext: FormContextType = { showAllErrors: false, disableAllInputs: false }
 
-export const FormContext = React.createContext<FormContextType>(initialFormContext)
+export const FormContext = createContext<FormContextType>(initialFormContext)
 
 const SubForm = ({
   children,

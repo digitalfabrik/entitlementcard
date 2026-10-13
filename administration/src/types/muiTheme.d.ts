@@ -7,7 +7,7 @@ import {
   TypographyVariants,
   TypographyVariantsOptions,
 } from '@mui/material/styles'
-import React from 'react'
+import { CSSProperties } from 'react'
 
 // Enable and disable typography variants according to our design system
 // docs: https://mui.com/material-ui/customization/typography/#adding-amp-disabling-variants
@@ -15,7 +15,7 @@ import React from 'react'
 declare module '@mui/material/styles' {
   // allow configuration using `createTheme()`
   interface TypographyVariantsOptions {
-    body2bold?: React.CSSProperties
+    body2bold?: CSSProperties
   }
 }
 

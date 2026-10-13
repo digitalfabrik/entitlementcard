@@ -1,6 +1,6 @@
 import { EditSquare, Logout, Settings } from '@mui/icons-material'
 import { Avatar, Box, Button, Divider, IconButton, Menu, Typography } from '@mui/material'
-import React, { ReactElement, useContext } from 'react'
+import { MouseEvent, ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 
@@ -15,8 +15,8 @@ const UserMenu = (): ReactElement => {
   const { t } = useTranslation('misc')
   const projectConfig = useContext(ProjectConfigContext)
   const navigate = useNavigate()
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null)
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null)
+  const handleOpenUserMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget)
   }
   const handleCloseUserMenu = () => {

@@ -1,8 +1,8 @@
-import React from 'react'
+import { forwardRef } from 'react'
 import { Link, LinkProps } from 'react-router'
 
 // https://mui.com/material-ui/integrations/routing/#link
-const LinkBehavior = React.forwardRef<
+const LinkBehavior = forwardRef<
   HTMLAnchorElement,
   Omit<LinkProps, 'to'> & { href: LinkProps['to'] }
 >((props, ref) => {

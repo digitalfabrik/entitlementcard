@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { fromBinary } from '@bufbuild/protobuf'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { CombinedError } from 'urql'
 
 import { CardInfoSchema } from '../card_pb'
