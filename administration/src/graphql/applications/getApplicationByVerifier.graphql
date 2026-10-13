@@ -1,4 +1,4 @@
-query getApplicationByApplicationVerificationAccessKey($applicationVerificationAccessKey: String!) {
+query getApplicationByVerifier($applicationVerificationAccessKey: String!) {
   application: getApplicationByApplicationVerificationAccessKey(
     applicationVerificationAccessKey: $applicationVerificationAccessKey
   ) {

@@ -11,7 +11,7 @@ import PageLayout from '../../components/PageLayout'
 import { messageFromGraphQlError } from '../../errors'
 import {
   ApplicationStatus,
-  GetApplicationByApplicationVerificationAccessKeyDocument,
+  GetApplicationByVerifierDocument,
   VerifyOrRejectApplicationVerificationDocument,
 } from '../../graphql'
 import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
@@ -60,7 +60,7 @@ const ApplicationVerificationController = ({
   }
 
   const [applicationByVerificationState, applicationByVerificationQuery] = useQuery({
-    query: GetApplicationByApplicationVerificationAccessKeyDocument,
+    query: GetApplicationByVerifierDocument,
     variables: { applicationVerificationAccessKey },
   })
 
