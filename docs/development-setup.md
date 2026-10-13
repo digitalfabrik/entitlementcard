@@ -243,7 +243,6 @@ var/www/html)
 
 - Run Ktlint diagnostic: `./gradlew ktlintCheck`
 - Run Ktlint formatter: `./gradlew ktlintFormat`
-- Run Detekt diagnostic: `./gradlew detekt`
 
 ### DB tasks
 

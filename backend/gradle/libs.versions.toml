@@ -3,7 +3,6 @@
 [plugins]
 
 expediagroup-graphql = { id = "com.expediagroup.graphql", version.ref = "graphql" }
-gitlab-arturbosch-detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.8" }
 gmazzo-buildconfig = { id = "com.github.gmazzo.buildconfig", version = "6.1.2" }
 google-protobuf = { id = "com.google.protobuf", version = "0.10.0" }
 jetbrains-kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
