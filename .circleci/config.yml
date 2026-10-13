@@ -356,7 +356,7 @@ jobs:
         environment:
             FASTLANE_SKIP_UPDATE_CHECK: true
         macos:
-            xcode: 26.2.0
+            xcode: 26.4.0
         parameters:
             build_config:
                 description: Name of the build config to use
@@ -1427,4 +1427,3 @@ workflows:
                     - promote_android
                     - promote_ios
         when: << pipeline.parameters.run_promotion_frontend >>
-
