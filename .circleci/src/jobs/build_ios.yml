@@ -12,6 +12,11 @@ working_directory: ~/project/frontend
 steps:
   - prepare_workspace
   - install_app_toolbelt
+  - run:
+      # The ruby orb runs `brew install gpg2`, which exits 1 on xcode 26.4 images because brew post-install steps fail.
+      # gpg works without them, so preinstall it here and ignore the error. The orb then finds it already installed.
+      name: Install gnupg
+      command: brew install gnupg || brew list gnupg
   - ruby/install:
         version: '3.3'
   - run:

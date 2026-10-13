@@ -369,6 +369,9 @@ jobs:
         steps:
             - prepare_workspace
             - install_app_toolbelt
+            - run:
+                command: brew install gnupg || brew list gnupg
+                name: Install gnupg
             - ruby/install:
                 version: "3.3"
             - run:
