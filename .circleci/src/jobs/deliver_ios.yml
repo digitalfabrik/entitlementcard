@@ -1,6 +1,6 @@
 # Deliver the app to the Apple App Store or Testflight.
 macos:
-  xcode: 26.2.0
+  xcode: 26.6.0
 resource_class: m4pro.medium
 parameters:
   build_config:
