@@ -370,10 +370,16 @@ jobs:
             - prepare_workspace
             - install_app_toolbelt
             - run:
-                command: brew install gnupg || brew list gnupg
-                name: Install gnupg
-            - ruby/install:
-                version: "3.3"
+                command: |
+                    RUBY_VERSION=$(rbenv versions --bare | grep -E '^3\.3\.[0-9]+$' | sort -V | tail -1)
+                    if [ -z "${RUBY_VERSION}" ]; then
+                      RUBY_VERSION=$(rbenv install --list | grep -E '^3\.3\.[0-9]+$' | sort -V | tail -1)
+                      rbenv install "${RUBY_VERSION}"
+                    fi
+                    rbenv global "${RUBY_VERSION}"
+                    rbenv rehash
+                    ruby --version
+                name: Install ruby 3.3
             - run:
                 command: softwareupdate --install-rosetta --agree-to-license
                 name: Install rosetta

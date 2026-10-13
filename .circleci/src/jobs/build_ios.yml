@@ -13,12 +13,18 @@ steps:
   - prepare_workspace
   - install_app_toolbelt
   - run:
-      # The ruby orb runs `brew install gpg2`, which exits 1 on xcode 26.4 images because brew post-install steps fail.
-      # gpg works without them, so preinstall it here and ignore the error. The orb then finds it already installed.
-      name: Install gnupg
-      command: brew install gnupg || brew list gnupg
-  - ruby/install:
-        version: '3.3'
+      # The ruby orb installs RVM via `brew install gpg2`, which exits 1 on xcode 26.4 images because brew post-install
+      # steps fail. Use the preinstalled rbenv instead.
+      name: Install ruby 3.3
+      command: |
+        RUBY_VERSION=$(rbenv versions --bare | grep -E '^3\.3\.[0-9]+$' | sort -V | tail -1)
+        if [ -z "${RUBY_VERSION}" ]; then
+          RUBY_VERSION=$(rbenv install --list | grep -E '^3\.3\.[0-9]+$' | sort -V | tail -1)
+          rbenv install "${RUBY_VERSION}"
+        fi
+        rbenv global "${RUBY_VERSION}"
+        rbenv rehash
+        ruby --version
   - run:
       # Rosetta is necessary to build flutter apps on circleci mac m1 images
       # https://github.com/digitalfabrik/entitlementcard/pull/2001#discussion_r2010122708
