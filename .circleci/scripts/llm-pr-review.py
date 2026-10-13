@@ -113,7 +113,7 @@ report on:
  project-specific behavior (e.g. project name, colors, feature flags)
  outside of `build-configs`, unless the change is explicitly scoped to one
  project.
-5. Code quality gates: `backend` enforces ktlint and detekt,
+5. Code quality gates: `backend` enforces ktlint,
  `administration` enforces ESLint and Prettier, `frontend` enforces
  `fvm flutter analyze`/`fvm flutter format` — these already run in CI, so
  don't flag general formatting drift. Only flag unjustified

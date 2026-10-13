@@ -41,7 +41,6 @@ npm run codegen:pb             # Regenerate Protobuf types
 ./gradlew test                 # Run tests
 ./gradlew ktlintCheck          # Lint
 ./gradlew ktlintFormat         # Auto-fix lint
-./gradlew detekt               # Static analysis
 ./gradlew run --args="execute" # Start server (port 8000)
 ```
 

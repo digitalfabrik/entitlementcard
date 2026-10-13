@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.expediagroup.graphql)
-    alias(libs.plugins.gitlab.arturbosch.detekt)
     alias(libs.plugins.gmazzo.buildconfig)
     alias(libs.plugins.google.protobuf)
     alias(libs.plugins.jetbrains.kotlin.jvm)
@@ -189,19 +188,19 @@ if (BuildConfig.isReleaseBuild) {
     }
 }
 
-detekt {
-    // https://detekt.dev/docs/gettingstarted/gradle
-    toolVersion = "1.23.8"
-    config.setFrom(file("../detekt.yml"))
-    buildUponDefaultConfig = true
-    basePath = project.layout.projectDirectory.toString()
-    ignoreFailures = true
-}
-
 ktlint {
     version.set("1.5.0")
     filter {
         exclude { it.file.path.contains("${layout.buildDirectory.get()}/generated/") }
+    }
+}
+
+// ktlint ships its own Kotlin compiler, so the project's Kotlin version must not be forced onto it
+configurations.matching { it.name.startsWith("ktlint") }.configureEach {
+    resolutionStrategy.eachDependency {
+        if (requested.group == "org.jetbrains.kotlin") {
+            useVersion(requested.version!!)
+        }
     }
 }
 
