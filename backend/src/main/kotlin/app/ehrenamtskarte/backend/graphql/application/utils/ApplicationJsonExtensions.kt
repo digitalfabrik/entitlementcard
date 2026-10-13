@@ -38,11 +38,10 @@ fun ApplicationEntity.getPersonalDataNode(): JsonNode =
  * Returns the json value of the application, keeping only the organizations whose contact email matches
  * [contactEmailAddress], so that a verifying organization does not see data entered for other organizations.
  */
-fun ApplicationEntity.getJsonValueForOrganization(contactEmailAddress: String): String {
-    val root = this.parseJsonValue()
-    root.removeWorkAtOrganizationsExcept(contactEmailAddress)
-    return root.toString()
-}
+fun ApplicationEntity.getJsonValueForOrganization(contactEmailAddress: String): String =
+    this.parseJsonValue().apply {
+        removeWorkAtOrganizationsExcept(contactEmailAddress)
+    }.toString()
 
 private fun JsonNode.removeWorkAtOrganizationsExcept(contactEmailAddress: String) {
     val children = this["value"] as? ArrayNode ?: return
