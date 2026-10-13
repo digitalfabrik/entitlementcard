@@ -57,7 +57,8 @@ test.describe('Bayern testing', () => {
       'Bitte geben Sie hier die Daten der Person an, die ihr ehrenamtliches Engagement bestätigen kann.',
     )
     await page.getByRole('textbox', { name: 'Vor- und Nachname der' }).fill('John doe 2')
-    await page.getByRole('textbox', { name: 'E-Mail-Adresse' }).fill('test@gmail.com')
+    await page.getByRole('textbox', { name: 'E-Mail-Adresse', exact: true }).fill('test@gmail.com')
+    await page.getByRole('textbox', { name: 'E-Mail-Adresse wiederholen' }).fill('test@gmail.com')
     await page.getByRole('textbox', { name: 'Telefon' }).fill('123456798')
     await page.getByRole('checkbox', { name: 'Die Kontaktperson hat der' }).check()
     await expect(page.getByText('Die Kontaktperson hat der')).toBeVisible()
@@ -84,7 +85,12 @@ test.describe('Bayern testing', () => {
     await page.getByRole('combobox').click()
     await page.getByRole('option', { name: 'Sport' }).click()
     await page.getByRole('textbox', { name: 'Vor- und Nachname der' }).fill('person 1')
-    await page.getByRole('textbox', { name: 'E-Mail-Adresse' }).fill('test@outlook.com')
+    await page
+      .getByRole('textbox', { name: 'E-Mail-Adresse', exact: true })
+      .fill('test@outlook.com')
+    await page
+      .getByRole('textbox', { name: 'E-Mail-Adresse wiederholen', exact: true })
+      .fill('test@outlook.com')
     await page.getByRole('textbox', { name: 'Telefon' }).fill('123456789')
     await expect(page.locator('form')).toContainText(
       'Die Kontaktperson hat der Weitergabe ihrer Daten zum Zwecke der Antragsverarbeitung zugestimmt und darf zur Überprüfung kontaktiert werden *',
@@ -112,8 +118,14 @@ test.describe('Bayern testing', () => {
     await page.getByRole('textbox', { name: 'Ort' }).fill('my place')
     await page.getByRole('textbox', { name: 'Land' }).click()
     await expect(page.locator('form')).toContainText('WEITERE ANGABEN')
-    await page.getByRole('textbox', { name: 'E-Mail-Adresse' }).click()
-    await page.getByRole('textbox', { name: 'E-Mail-Adresse' }).fill('example@gmail.com')
+    await page.getByRole('textbox', { name: 'E-Mail-Adresse', exact: true }).click()
+    await page
+      .getByRole('textbox', { name: 'E-Mail-Adresse', exact: true })
+      .fill('example@gmail.com')
+    await page.getByRole('textbox', { name: 'E-Mail-Adresse wiederholen' }).click()
+    await page
+      .getByRole('textbox', { name: 'E-Mail-Adresse wiederholen' })
+      .fill('example@gmail.com')
     await page.getByRole('textbox', { name: 'Telefonnummer' }).click()
     await page.getByRole('textbox', { name: 'Telefonnummer' }).fill('02312312')
     await fillDateInput(page, 'Geburtsdatum', '10.10.1999', browserName)
