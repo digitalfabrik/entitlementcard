@@ -1,22 +1,16 @@
 import { Check, Close } from '@mui/icons-material'
-import { Button, Card, Divider, Typography, styled } from '@mui/material'
+import { Button, Divider, Typography, styled } from '@mui/material'
 import { ReactElement, useContext } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Temporal } from 'temporal-polyfill'
 
 import AlertBox from '../../components/AlertBox'
 import JsonFieldView from '../../components/JsonFieldView'
-import PageLayout from '../../components/PageLayout'
 import { GetApplicationByVerifierQuery } from '../../graphql'
 import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { ApplicationVerificationPublic } from '../applications/types/types'
 import { ApplicationParsedJsonValue } from '../applications/utils/application'
-
-const ApplicationViewCard = styled(Card)`
-  max-width: 800px;
-  margin: 16px auto 16px auto;
-`
 
 const ButtonContainer = styled('div')`
   display: flex;
@@ -40,67 +34,60 @@ const ApplicationVerifierView = ({
   const { t } = useTranslation('applicationVerification')
   const baseUrl = `${getApiBaseUrl()}/application/${config.projectId}/${application.id}`
   return (
-    <PageLayout>
-      <ApplicationViewCard elevation={2}>
-        <div style={{ overflow: 'visible', padding: '20px' }}>
-          <Typography sx={{ mb: 1.5 }} variant='h4'>
-            {config.name}
-          </Typography>
-          <Typography sx={{ marginY: 1 }} variant='body1'>
-            {t('greeting', { contactName: verification.contactName })}
-            <br />
-            <br />
-            <Trans
-              i18nKey='applicationVerification:text'
-              values={{ organizationName: verification.organizationName }}
-            />
-          </Typography>
-          <Divider style={{ margin: '24px 0px' }} />
-          <Typography variant='h6' sx={{ mb: 1 }}>
-            {t('info', { date: Temporal.Instant.from(application.createdDate) })}
-          </Typography>
-          <JsonFieldView
-            jsonField={application.jsonValue}
-            baseUrl={baseUrl}
-            hierarchyIndex={0}
-            attachmentAccessible={false}
-            expandedRoot
-          />
-          <Divider style={{ margin: '24px 0px' }} />
+    <>
+      <Typography sx={{ marginY: 1 }} variant='body1'>
+        {t('greeting', { contactName: verification.contactName })}
+        <br />
+        <br />
+        <Trans
+          i18nKey='applicationVerification:text'
+          values={{ organizationName: verification.organizationName }}
+        />
+      </Typography>
+      <Divider style={{ margin: '24px 0px' }} />
+      <Typography variant='h6' sx={{ mb: 1 }}>
+        {t('info', { date: Temporal.Instant.from(application.createdDate) })}
+      </Typography>
+      <JsonFieldView
+        jsonField={application.jsonValue}
+        baseUrl={baseUrl}
+        hierarchyIndex={0}
+        attachmentAccessible={false}
+        expandedRoot
+      />
+      <Divider style={{ margin: '24px 0px' }} />
 
-          <Typography sx={{ mt: 1 }} variant='body1'>
-            <Trans
-              i18nKey='applicationVerification:confirmationMessage'
-              values={{ organizationName: verification.organizationName }}
-            />
-          </Typography>
-          <AlertBox
-            severity='warning'
-            description={<Trans i18nKey='applicationVerification:confirmationNote' />}
-            sx={{ my: 3 }}
-          />
+      <Typography sx={{ mt: 1 }} variant='body1'>
+        <Trans
+          i18nKey='applicationVerification:confirmationMessage'
+          values={{ organizationName: verification.organizationName }}
+        />
+      </Typography>
+      <AlertBox
+        severity='warning'
+        description={<Trans i18nKey='applicationVerification:confirmationNote' />}
+        sx={{ my: 3 }}
+      />
 
-          <ButtonContainer>
-            <Button
-              variant='contained'
-              color='error'
-              endIcon={<Close />}
-              onClick={() => submitApplicationVerification(false)}
-            >
-              {t('rejectButton')}
-            </Button>
-            <Button
-              variant='contained'
-              color='success'
-              endIcon={<Check />}
-              onClick={() => submitApplicationVerification(true)}
-            >
-              {t('confirmationButton')}
-            </Button>
-          </ButtonContainer>
-        </div>
-      </ApplicationViewCard>
-    </PageLayout>
+      <ButtonContainer>
+        <Button
+          variant='contained'
+          color='error'
+          endIcon={<Close />}
+          onClick={() => submitApplicationVerification(false)}
+        >
+          {t('rejectButton')}
+        </Button>
+        <Button
+          variant='contained'
+          color='success'
+          endIcon={<Check />}
+          onClick={() => submitApplicationVerification(true)}
+        >
+          {t('confirmationButton')}
+        </Button>
+      </ButtonContainer>
+    </>
   )
 }
 
