@@ -1,5 +1,4 @@
 import { EnqueueSnackbar } from 'notistack'
-import React from 'react'
 import { CombinedError } from 'urql'
 
 import FormAlert from '../components/FormAlert'

@@ -1,6 +1,4 @@
 /* eslint-disable react/jsx-pascal-case -- we cannot change the keys of application namespace, see translation file comment */
-import React from 'react'
-
 import {
   BavariaCardType,
   BlueCardEntitlementInput,

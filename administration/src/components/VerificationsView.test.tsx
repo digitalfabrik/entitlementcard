@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { ApplicationStatus } from '../graphql'
 import { verificationsMixed } from '../routes/applications/__mocks__/verificationData'
 import { Application } from '../routes/applications/types/types'

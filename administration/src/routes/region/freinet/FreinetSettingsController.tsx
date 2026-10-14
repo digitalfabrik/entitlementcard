@@ -1,5 +1,5 @@
 import { useSnackbar } from 'notistack'
-import React, { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery } from 'urql'
 

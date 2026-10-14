@@ -8,7 +8,7 @@ import {
   DialogTitle,
   Typography,
 } from '@mui/material'
-import React, { useContext, useState } from 'react'
+import { useContext, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useQuery } from 'urql'
 

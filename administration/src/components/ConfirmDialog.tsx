@@ -9,7 +9,7 @@ import {
   DialogTitle,
 } from '@mui/material'
 import { OverridableStringUnion } from '@mui/types'
-import React, { ReactElement, ReactNode, useId } from 'react'
+import { ReactElement, ReactNode, useId } from 'react'
 import { useTranslation } from 'react-i18next'
 
 const ConfirmDialog = ({

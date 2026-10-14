@@ -1,6 +1,6 @@
 import { Card, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import React, { ReactElement, useContext } from 'react'
+import { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation } from 'urql'
 
@@ -20,7 +20,7 @@ const Login = ({ onSignIn }: { onSignIn: (payload: SignInPayload) => void }): Re
   const config = useContext(ProjectConfigContext)
   const { enqueueSnackbar } = useSnackbar()
   const { t } = useTranslation('auth')
-  const [state, setState] = React.useState<State>({ email: '', password: '' })
+  const [state, setState] = useState<State>({ email: '', password: '' })
   const [signInState, signInMutation] = useMutation(SignInDocument)
 
   const onSubmit = async () => {

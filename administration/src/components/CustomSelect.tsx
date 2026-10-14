@@ -1,5 +1,5 @@
 import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material'
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 
 import FormAlert from './FormAlert'
 

@@ -1,6 +1,6 @@
 import { Box, Link, SxProps } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { AcceptingStoresData } from '../../applications/types/types'

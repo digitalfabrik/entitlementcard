@@ -1,5 +1,5 @@
 import { SvgIcon, SvgIconProps } from '@mui/material'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 export const CsvIcon = (p: SvgIconProps): ReactElement => (
   <SvgIcon {...p} viewBox='0 0 24 24'>

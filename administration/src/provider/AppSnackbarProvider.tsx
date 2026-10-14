@@ -1,7 +1,7 @@
 import CloseIcon from '@mui/icons-material/Close'
 import { IconButton, styled } from '@mui/material'
 import { MaterialDesignContent, SnackbarProvider, useSnackbar } from 'notistack'
-import React, { ReactElement, ReactNode } from 'react'
+import { ReactElement, ReactNode } from 'react'
 
 const StyledMaterialDesignSnackbar = styled(MaterialDesignContent)(({ theme }) => ({
   '& #notistack-snackbar': {

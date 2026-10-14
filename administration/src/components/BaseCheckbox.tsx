@@ -1,5 +1,5 @@
 import { Checkbox, FormControl, FormControlLabel } from '@mui/material'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 import FormAlert from './FormAlert'
 

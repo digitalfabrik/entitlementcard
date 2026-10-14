@@ -1,7 +1,7 @@
 import { Edit } from '@mui/icons-material'
 import { Stack, Typography } from '@mui/material'
 import { grey } from '@mui/material/colors'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from 'urql'
 

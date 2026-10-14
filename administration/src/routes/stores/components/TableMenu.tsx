@@ -1,5 +1,5 @@
 import { DeleteOutlineOutlined, EditOutlined, MoreVertRounded } from '@mui/icons-material'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import BaseMenu, { MenuItemType } from '../../../components/BaseMenu'

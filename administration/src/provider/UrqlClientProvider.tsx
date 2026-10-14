@@ -1,4 +1,4 @@
-import React, { ReactElement, useContext, useMemo } from 'react'
+import { ReactElement, useContext, useMemo } from 'react'
 import { Client, Provider, fetchExchange } from 'urql'
 
 import getApiBaseUrl from '../util/getApiBaseUrl'

@@ -1,5 +1,5 @@
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
-import React, { useContext, useId, useState } from 'react'
+import { useContext, useId, useState } from 'react'
 
 import FormAlert from '../../../../components/FormAlert'
 import { ShortTextInput } from '../../../../graphql'

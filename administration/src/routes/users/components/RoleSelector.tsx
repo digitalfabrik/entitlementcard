@@ -1,6 +1,6 @@
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import { Box, Stack } from '@mui/system'
-import React, { ReactElement, useContext, useId, useState } from 'react'
+import { ReactElement, useContext, useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import FormAlert from '../../../components/FormAlert'

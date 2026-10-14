@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material'
-import React, { ReactElement, useContext, useId } from 'react'
+import { ReactElement, useContext, useId } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
 import CardTextField from '../../../../cards/extensions/components/CardTextField'

@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react'
-import React from 'react'
 import { Temporal } from 'temporal-polyfill'
 
 import { activityLogCardExample } from '../../routes/activity-log/__mocks__/ActivityLogData'

@@ -1,6 +1,6 @@
 /* eslint-disable react/destructuring-assignment */
 import { Button, IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material'
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 
 export type MenuItemType = {
   name: string

@@ -1,4 +1,4 @@
-import React, { ReactElement, useContext, useState } from 'react'
+import { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from 'urql'
 

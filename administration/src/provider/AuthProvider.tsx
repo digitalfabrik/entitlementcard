@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, createContext, useMemo, useState } from 'react'
+import { ReactElement, ReactNode, createContext, useMemo, useState } from 'react'
 import { Temporal } from 'temporal-polyfill'
 
 import { SignInPayload } from '../graphql'
