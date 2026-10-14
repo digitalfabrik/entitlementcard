@@ -2,6 +2,7 @@ services:
   martin:
     # https://github.com/maplibre/martin/pkgs/container/martin
     # Accessed through reverse_proxy:80
+    # This version will be used for release builds, see pack-martin.yml
     image: ghcr.io/maplibre/martin:1.16.1
     command: --config /app/config.yaml
     volumes:
