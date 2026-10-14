@@ -48,7 +48,7 @@ test.describe('DeleteApplications', () => {
 
         await page
           .getByRole('option', {
-            name: 'Die angegebene Anwartschaftszeit des Engagements ist leider nicht ausreichend, um die blaue Bayerische Ehrenamtskarte zu erhalten. Erforderlich ist ein Engagement von mindestens zwei Jahren.',
+            name: 'Anwartschaftszeit blau (2 Jahre) nicht erreicht',
             exact: true,
           })
           .click()
