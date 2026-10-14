@@ -1,8 +1,7 @@
 /* eslint-disable react/destructuring-assignment */
-import { EditNote } from '@mui/icons-material'
-import { Box, Stack, Tooltip, Typography, styled, useTheme } from '@mui/material'
-import { blue, yellow } from '@mui/material/colors'
-import { Theme } from '@mui/system'
+import { AttachFile, EditNote } from '@mui/icons-material'
+import { Box, Stack, Tooltip, Typography, styled } from '@mui/material'
+import { green } from '@mui/material/colors'
 import { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -12,7 +11,6 @@ import { Application, ApplicationVerification } from '../types/types'
 import {
   PreVerifiedEntitlementType,
   getPreVerifiedEntitlementType,
-  preVerifiedEntitlements,
 } from '../utils/preVerifiedEntitlements'
 import { ApplicationNoteTooltip } from './ApplicationNoteTooltip'
 
@@ -69,75 +67,65 @@ export const VerificationIndicator = (p: {
 }
 
 type PreVerifiedLabelMetaData = {
-  backgroundColor: string
-  fontColor: string
   labelText: string
+  attachment: boolean
 }
 
-const preVerifiedLabelMetaData = (
-  theme: Theme,
-): Record<PreVerifiedEntitlementType, PreVerifiedLabelMetaData> => ({
-  [preVerifiedEntitlements.Juleica]: {
-    backgroundColor: '#bfd4f2',
-    fontColor: theme.palette.common.black,
+const preVerifiedLabelMetaData: Record<PreVerifiedEntitlementType, PreVerifiedLabelMetaData> = {
+  Juleica: {
     labelText: 'Juleica',
+    attachment: true,
   },
-  [preVerifiedEntitlements.Verein360]: {
-    backgroundColor: blue[500],
-    fontColor: theme.palette.common.white,
+  Verein360: {
     labelText: 'Verein360',
+    attachment: false,
   },
-  [preVerifiedEntitlements.HonoredByMinisterPresident]: {
-    backgroundColor: yellow[700],
-    fontColor: theme.palette.common.black,
+  MilitaryReserve: {
+    labelText: 'Wehrdienst',
+    attachment: true,
+  },
+  VolunteerService: {
+    labelText: 'Freiwilligendienst',
+    attachment: true,
+  },
+  HonoredByMinisterPresident: {
     labelText: 'Ehrenzeichen',
+    attachment: true,
   },
-})
+}
 
-const PreVerifiedLabel = styled('span')<{ itemType: PreVerifiedEntitlementType }>(
-  ({ theme, itemType }) => ({
-    padding: '6px 12px',
-    fontSize: '14px',
-    fontWeight: 600,
-    backgroundColor: preVerifiedLabelMetaData(theme)[itemType].backgroundColor,
-    color: preVerifiedLabelMetaData(theme)[itemType].fontColor,
-    borderRadius: '2em',
-    lineHeight: 1,
-    marginRight: theme.spacing(1), // Using MUI theme for spacing
-    display: 'inline-block',
-    whiteSpace: 'nowrap',
-  }),
-)
+const PreVerifiedLabel = styled('span')<{ itemType: PreVerifiedEntitlementType }>(({ theme }) => ({
+  padding: '4px 10px',
+  fontSize: '14px',
+  backgroundColor: green[50],
+  borderColor: green[900],
+  borderWidth: '1px',
+  borderStyle: 'solid',
+  borderRadius: '2em',
+  color: green[900],
+  marginRight: theme.spacing(1), // Using MUI theme for spacing
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: theme.spacing(0.5),
+  whiteSpace: 'nowrap',
+}))
 
 export const PreVerifiedIndicator = ({
   type,
 }: {
   type: PreVerifiedEntitlementType
 }): ReactElement => {
-  const { t } = useTranslation('applicationsOverview')
-  const theme = useTheme()
+  const { labelText, attachment } = preVerifiedLabelMetaData[type]
   return (
-    <Tooltip
-      title={
-        <div>
-          <Typography>
-            <b>{t('confirmationsByOrganizations')}</b>
-            <br />
-            {t('noConfirmationNeeded')}
-          </Typography>
-        </div>
-      }
+    <Stack
+      direction='row'
+      sx={{ height: '25px', alignItems: 'center', '&:focus': { outline: 'none' } }}
     >
-      <Stack
-        direction='row'
-        sx={{ height: '25px', alignItems: 'center', '&:focus': { outline: 'none' } }}
-      >
-        <PreVerifiedLabel itemType={type}>
-          {preVerifiedLabelMetaData(theme)[type].labelText}
-        </PreVerifiedLabel>
-        <VerificationIcon status={VerificationStatus.Verified} />
-      </Stack>
-    </Tooltip>
+      <PreVerifiedLabel itemType={type}>
+        {attachment && <AttachFile sx={{ fontSize: 16 }} />}
+        {labelText}
+      </PreVerifiedLabel>
+    </Stack>
   )
 }
 

@@ -6,10 +6,7 @@ import {
   verificationsRejected,
   verificationsVerified,
 } from '../__mocks__/verificationData'
-import {
-  PreVerifiedEntitlementType,
-  preVerifiedEntitlements,
-} from '../utils/preVerifiedEntitlements'
+import { PreVerifiedEntitlementType } from '../utils/preVerifiedEntitlements'
 import { PreVerifiedIndicator, VerificationIndicator } from './VerificationsIndicator'
 
 describe('VerificationQuickIndicator', () => {
@@ -64,9 +61,9 @@ describe('VerificationQuickIndicator', () => {
 
 describe('PreVerifiedQuickIndicator', () => {
   const cases: [string, PreVerifiedEntitlementType][] = [
-    ['Juleica', preVerifiedEntitlements.Juleica],
-    ['Verein360', preVerifiedEntitlements.Verein360],
-    ['Ehrenzeichen', preVerifiedEntitlements.HonoredByMinisterPresident],
+    ['Juleica', 'Juleica'],
+    ['Verein360', 'Verein360'],
+    ['Ehrenzeichen', 'HonoredByMinisterPresident'],
   ]
 
   it.each(cases)('should show %s label when type is %s', (expectedLabel, type) => {

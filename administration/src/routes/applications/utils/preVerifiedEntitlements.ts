@@ -1,13 +1,14 @@
 import { GeneralJsonField, JsonField, findValue } from '../../../components/JsonFieldView'
 
-export const preVerifiedEntitlements = {
-  Juleica: 'blueCardJuleicaEntitlement',
-  Verein360: 'blueCardWorkAtOrganizationsEntitlement',
-  HonoredByMinisterPresident: 'goldenCardHonoredByMinisterPresidentEntitlement',
+const preVerifiedEntitlementFields = {
+  Juleica: ['blueCardJuleicaEntitlement'],
+  Verein360: ['blueCardWorkAtOrganizationsEntitlement'],
+  MilitaryReserve: ['blueCardMilitaryReserveEntitlement', 'goldenCardMilitaryReserveEntitlement'],
+  VolunteerService: ['volunteerServiceEntitlement'],
+  HonoredByMinisterPresident: ['goldenCardHonoredByMinisterPresidentEntitlement'],
 } as const
 
-export type PreVerifiedEntitlementType =
-  (typeof preVerifiedEntitlements)[keyof typeof preVerifiedEntitlements]
+export type PreVerifiedEntitlementType = keyof typeof preVerifiedEntitlementFields
 
 const verein360Matcher = (entitlement?: GeneralJsonField): boolean => {
   const entitlements =
@@ -26,14 +27,16 @@ export const getPreVerifiedEntitlementType = (
   applicationJsonValue: JsonField<'Array'>,
 ): PreVerifiedEntitlementType | undefined => {
   const applicationDetails = findValue(applicationJsonValue, 'applicationDetails', 'Array')
-
-  return applicationDetails !== undefined
-    ? Object.values(preVerifiedEntitlements).find(type => {
-        const entitlement = findValue(applicationDetails, type, 'Array')
-
-        return type === preVerifiedEntitlements.Verein360
-          ? verein360Matcher(entitlement)
-          : entitlement !== undefined
-      })
-    : undefined
+  if (applicationDetails === undefined) {
+    return undefined
+  }
+  return (Object.keys(preVerifiedEntitlementFields) as PreVerifiedEntitlementType[]).find(type =>
+    preVerifiedEntitlementFields[type].some(field => {
+      const entitlement = findValue(applicationDetails, field, 'Array')
+      if (type === 'Verein360') {
+        return verein360Matcher(entitlement)
+      }
+      return entitlement !== undefined
+    }),
+  )
 }

@@ -209,7 +209,6 @@
     "noteChangedSuccessfully": "Notiz erfolgreich geändert.",
     "applicationNotePlaceholder": "Fügen Sie hier eine Notiz hinzu...",
     "confirmationsByOrganizations": "Bestätigung(en) durch Organisationen:",
-    "noConfirmationNeeded": "Bestätigung ist nicht erforderlich",
     "verified/pending/rejected": "Bestätigt/Ausstehend/Widersprochen",
     "verifiedOn": "Bestätigt am {{date, datetime(dateStyle: 'medium'; timeStyle: 'short')}}",
     "pending": "Ausstehend",
