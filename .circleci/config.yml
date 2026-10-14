@@ -792,10 +792,14 @@ jobs:
         steps:
             - prepare_workspace
             - run:
-                command: apt update -y && apt install -y curl
-                name: Install curl
+                command: apt update -y && apt install -y curl yq
+                name: Install curl and yq
             - run:
-                command: curl -LO "https://github.com/maplibre/martin/releases/download/martin-v1.4.0/martin-x86_64-unknown-linux-gnu.tar.gz"
+                command: |
+                    MARTIN_IMAGE=$(yq -r '.services.martin.image' docker-compose.yml)
+                    MARTIN_VERSION="${MARTIN_IMAGE##*:}"
+                    echo "Using martin ${MARTIN_VERSION}"
+                    curl -fLO "https://github.com/maplibre/martin/releases/download/martin-v${MARTIN_VERSION}/martin-x86_64-unknown-linux-gnu.tar.gz"
                 name: Download martin
             - run:
                 command: |
