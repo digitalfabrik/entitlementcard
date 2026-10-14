@@ -8,7 +8,9 @@
     "activateButton": "Karte aktivieren",
     "openOnMobileDevice": "Öffnen Sie dafür den folgenden Link auf Ihrem Smartphone:",
     "downloadApp": "Laden Sie sich die App <strong>{{applicationName}}</strong> im App- oder PlayStore auf Ihrem Smartphone herunter.",
-    "downloadNow": "Jetzt herunterladen:"
+    "downloadTitle": "{{appName}} App herunterladen",
+    "downloadDescription": "Öffnen Sie die App im jeweiligen Store.",
+    "operatedBy": "Betrieben von"
   },
   "application": {
     "_comment": "!Important! These keys should not be edited, since they are stored in the database and have to remain resolvable. If you change these keys, labels of old applications can not be resolved anymore.",
@@ -343,8 +345,8 @@
     "multipleFreinetCardDataTransferFailureMessage": "Für folgende Freinet-User-IDs konnten keine Kartendaten gesendet werden: {{userIds}}"
   },
   "misc": {
-    "openAppStore": "App Store öffnen",
-    "openPlayStore": "Google Play öffnen",
+    "openAppStore": "In App Store öffnen",
+    "openPlayStore": "Bei Google Play öffnen",
     "cancel": "Abbrechen",
     "save": "Speichern",
     "close": "Schließen",
