@@ -84,7 +84,7 @@ const OrganizationForm: Form<State, OrganizationInput, AdditionalProps> = {
     const { t } = useTranslation('application')
     return (
       <>
-        <Typography variant='body2bold' component='h4' sx={{ marginY: 1.5 }}>
+        <Typography variant='body2bold' component='h4' sx={{ marginTop: 3, marginBottom: 1.5 }}>
           {t('organization.title')}
         </Typography>
         <ShortTextForm.Component
@@ -102,7 +102,7 @@ const OrganizationForm: Form<State, OrganizationInput, AdditionalProps> = {
           label={t('organization.category')}
           options={organizationCategoryOptions}
         />
-        <Typography variant='body2bold' component='h4' sx={{ marginY: 1.5 }}>
+        <Typography variant='body2bold' component='h4' sx={{ marginTop: 3, marginBottom: 1.5 }}>
           {t('organizationContact.title')}
         </Typography>
         <Typography>{t('applicationForms:organizationContactPersonDescription')}</Typography>
