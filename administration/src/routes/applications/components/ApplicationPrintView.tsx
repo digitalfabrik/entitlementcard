@@ -45,12 +45,9 @@ export const ApplicationPrintView = forwardRef<
         {t('applicationFrom', { date: Temporal.Instant.from(p.application.createdDate) })}
       </Typography>
 
-      {!!p.application.note && (
+      {!!p.application.note?.trim() && (
         <Stack
-          direction='row'
           sx={theme => ({
-            gap: 2,
-            alignItems: 'flex-start',
             border: `1pt solid ${theme.palette.info.main}`,
             borderRadius: '4pt',
             backgroundColor: alpha(theme.palette.info.main, 0.1),

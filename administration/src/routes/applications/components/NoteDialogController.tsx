@@ -46,7 +46,7 @@ const NoteDialogController = ({
         autoHideDuration: 2000,
       })
       onOpenNoteDialog(false)
-      onChange(text)
+      onChange(text.trim())
     }
   }
 
