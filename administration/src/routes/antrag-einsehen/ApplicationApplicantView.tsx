@@ -1,5 +1,5 @@
 import { Delete } from '@mui/icons-material'
-import { Button, Card, Divider, Typography } from '@mui/material'
+import { Button, Divider, Typography } from '@mui/material'
 import { styled } from '@mui/system'
 import { useSnackbar } from 'notistack'
 import { ReactElement, useContext, useState } from 'react'
@@ -20,19 +20,6 @@ import {
 import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
 import getApiBaseUrl from '../../util/getApiBaseUrl'
 import { ApplicationParsedJsonValue } from '../applications/utils/application'
-
-const ApplicationViewCard = styled(Card)`
-  @media screen and (min-width: 600px) {
-    width: 60vw;
-  }
-  margin: 10px;
-  align-self: center;
-`
-
-const ApplicationViewCardContent = styled('div')`
-  overflow: visible;
-  padding: 20px;
-`
 
 const StyledDivider = styled(Divider)`
   margin: 24px 0;
@@ -83,36 +70,28 @@ const ApplicationApplicantView = ({
         <Typography>{t('withdrawConfirmationContent')}</Typography>
       </ConfirmDialog>
 
-      <ApplicationViewCard elevation={2}>
-        <ApplicationViewCardContent>
-          <Typography sx={{ mb: 1 }} variant='h6'>
-            {t('headline', { date: Temporal.Instant.from(application.createdDate) })}
-          </Typography>
-          <JsonFieldView
-            jsonField={application.jsonValue}
-            baseUrl={baseUrl}
-            key={0}
-            hierarchyIndex={0}
-            attachmentAccessible={false}
-            expandedRoot={false}
-          />
+      <Typography sx={{ mb: 1 }} variant='h6'>
+        {t('headline', { date: Temporal.Instant.from(application.createdDate) })}
+      </Typography>
+      <JsonFieldView
+        jsonField={application.jsonValue}
+        baseUrl={baseUrl}
+        key={0}
+        hierarchyIndex={0}
+        attachmentAccessible={false}
+        expandedRoot={false}
+      />
+      <StyledDivider />
+      <VerificationsView application={application} />
+      {application.status === ApplicationStatus.Pending && (
+        <>
           <StyledDivider />
-          <VerificationsView application={application} />
-          {application.status === ApplicationStatus.Pending && (
-            <>
-              <StyledDivider />
-              <Typography sx={{ mt: 1, mb: 2 }}>{t('withdrawInformation')}</Typography>
-              <Button
-                variant='contained'
-                startIcon={<Delete />}
-                onClick={() => setDialogOpen(true)}
-              >
-                {t('withdrawApplication')}
-              </Button>
-            </>
-          )}
-        </ApplicationViewCardContent>
-      </ApplicationViewCard>
+          <Typography sx={{ mt: 1, mb: 2 }}>{t('withdrawInformation')}</Typography>
+          <Button variant='contained' startIcon={<Delete />} onClick={() => setDialogOpen(true)}>
+            {t('withdrawApplication')}
+          </Button>
+        </>
+      )}
     </>
   )
 }
