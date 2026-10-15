@@ -5,7 +5,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useMutation, useQuery } from 'urql'
 
 import CenteredCircularProgress from '../../components/CenteredCircularProgress'
-import PageLayout from '../../components/PageLayout'
+import PublicPageLayout from '../../components/PublicPageLayout'
 import { messageFromGraphQlError } from '../../errors'
 import { AddEakApplicationDocument, GetRegionsDocument } from '../../graphql'
 import { ProjectConfigContext } from '../../provider/ProjectConfigContext'
@@ -90,48 +90,40 @@ const ApplyController = (): React.ReactElement | null => {
   }
 
   return (
-    <PageLayout
-      showDataPrivacy={false}
-      containerSx={{
-        justifyContent: 'center',
-        flexDirection: 'row',
-        alignItems: 'start',
-        margin: 2,
-      }}
-    >
-      <Box sx={{ maxWidth: '1000px', width: '100%' }}>
-        <Typography variant='h4' component='h1' sx={{ margin: 2, textAlign: 'center' }}>
-          {formSubmitted ? t('sentSuccessfully') : t('title')}
-        </Typography>
-        {formSubmitted ? (
-          <SuccessContent>
-            <Typography>
-              <Trans i18nKey='applicationForms:submitSuccessText' />
-            </Typography>
-          </SuccessContent>
-        ) : (
-          <ApplicationForm.Component
-            state={state}
-            setState={setState}
-            onSubmit={submit}
-            loading={addEakApplicationState.fetching}
-            options={{ regions }}
-          />
+    <>
+      <Typography variant='h6' component='h2' sx={{ mb: 2 }}>
+        {formSubmitted ? t('sentSuccessfully') : t('title')}
+      </Typography>
+      {formSubmitted ? (
+        <SuccessContent>
+          <Typography>
+            <Trans i18nKey='applicationForms:submitSuccessText' />
+          </Typography>
+        </SuccessContent>
+      ) : (
+        <ApplicationForm.Component
+          state={state}
+          setState={setState}
+          onSubmit={submit}
+          loading={addEakApplicationState.fetching}
+          options={{ regions }}
+        />
+      )}
+      <Box sx={{ justifyContent: 'flex-end', display: 'flex', marginY: 2 }}>
+        {addEakApplicationState.fetching || formSubmitted ? null : (
+          <DiscardAllInputsButton discardAll={discardAll} />
         )}
-        <Box sx={{ justifyContent: 'flex-end', display: 'flex', marginY: 2 }}>
-          {addEakApplicationState.fetching || formSubmitted ? null : (
-            <DiscardAllInputsButton discardAll={discardAll} />
-          )}
-        </Box>
       </Box>
-    </PageLayout>
+    </>
   )
 }
 
 const ApplyApp = (): ReactElement => (
-  <ApplicationErrorBoundary>
-    <ApplyController />
-  </ApplicationErrorBoundary>
+  <PublicPageLayout maxWidth={1000} showDataPrivacy={false}>
+    <ApplicationErrorBoundary>
+      <ApplyController />
+    </ApplicationErrorBoundary>
+  </PublicPageLayout>
 )
 
 export default ApplyApp

@@ -8,13 +8,21 @@ import PageLayout from './PageLayout'
 type PublicPageLayoutProps = {
   children: ReactNode
   maxWidth?: number | string
+  showDataPrivacy?: boolean
 }
 
-const PublicPageLayout = ({ children, maxWidth = 800 }: PublicPageLayoutProps): ReactElement => {
+const PublicPageLayout = ({
+  children,
+  maxWidth = 800,
+  showDataPrivacy,
+}: PublicPageLayoutProps): ReactElement => {
   const config = useContext(ProjectConfigContext)
 
   return (
-    <PageLayout containerSx={{ alignItems: 'center', paddingX: 2, paddingY: 4 }}>
+    <PageLayout
+      showDataPrivacy={showDataPrivacy}
+      containerSx={{ alignItems: 'center', paddingX: 2, paddingY: 4 }}
+    >
       <Card elevation={2} sx={{ width: '100%', maxWidth, marginY: 'auto' }}>
         <Stack
           component='header'
