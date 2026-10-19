@@ -650,6 +650,7 @@ input PersonalDataInput {
   dateOfBirth: DateInput!
   emailAddress: EmailInput!
   forenames: ShortTextInput!
+  salutation: ShortTextInput
   surname: ShortTextInput!
   telephone: ShortTextInput
 }

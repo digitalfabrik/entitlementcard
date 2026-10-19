@@ -50,7 +50,7 @@ test.describe('Bayern testing', () => {
     await page.getByRole('textbox', { name: 'Postleitzahl' }).fill('123456')
     await page.getByRole('textbox', { name: 'Ort' }).fill('12')
     await expect(page.getByRole('textbox', { name: 'Land' })).toHaveValue('Deutschland')
-    await page.getByRole('combobox').click()
+    await page.getByRole('combobox', { name: 'Einsatzgebiet' }).click()
     await page.getByRole('option', { name: 'Sport' }).click()
     await expect(page.locator('form')).toContainText('Kontaktperson der Organisation')
     await expect(page.locator('form')).toContainText(
@@ -82,7 +82,7 @@ test.describe('Bayern testing', () => {
     await page.getByRole('textbox', { name: 'Postleitzahl' }).fill('123123')
     await page.getByRole('textbox', { name: 'Ort' }).fill('That place')
     await expect(page.getByRole('textbox', { name: 'Land' })).toHaveValue('Deutschland')
-    await page.getByRole('combobox').click()
+    await page.getByRole('combobox', { name: 'Einsatzgebiet' }).click()
     await page.getByRole('option', { name: 'Sport' }).click()
     await page.getByRole('textbox', { name: 'Vor- und Nachname der' }).fill('person 1')
     await page
@@ -129,7 +129,7 @@ test.describe('Bayern testing', () => {
     await page.getByRole('textbox', { name: 'Telefonnummer' }).click()
     await page.getByRole('textbox', { name: 'Telefonnummer' }).fill('02312312')
     await fillDateInput(page, 'Geburtsdatum', '10.10.1999', browserName)
-    await page.getByRole('combobox', { expanded: false }).click()
+    await page.getByRole('combobox', { name: 'Empfänger des Antrags' }).click()
     await page.getByRole('option', { name: 'Augsburg (Stadt)' }).click()
     await page.getByRole('button', { name: 'Nächster Schritt' }).click()
   }

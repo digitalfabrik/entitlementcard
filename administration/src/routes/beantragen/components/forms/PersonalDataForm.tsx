@@ -15,11 +15,13 @@ import {
 import { Form, FormComponentProps } from '../../util/formType'
 import DateForm from '../primitive-inputs/DateForm'
 import EmailForm from '../primitive-inputs/EmailForm'
+import { OptionalSelectForm } from '../primitive-inputs/SelectForm'
 import ShortTextForm, { OptionalShortTextForm } from '../primitive-inputs/ShortTextForm'
 import AddressForm from './AddressForm'
 import RegionForm from './RegionForm'
 
 const SubForms = {
+  salutation: OptionalSelectForm,
   forenames: ShortTextForm,
   surname: ShortTextForm,
   address: AddressForm,
@@ -27,6 +29,13 @@ const SubForms = {
   telephone: OptionalShortTextForm,
   dateOfBirth: DateForm,
   region: RegionForm,
+}
+
+const salutationOptions = {
+  items: ['salutationFemale', 'salutationMale', 'salutationNeutral'].map(item => ({
+    label: i18next.t(`application:${item}`),
+    value: item,
+  })),
 }
 
 const dateOfBirthOptions = {
@@ -42,7 +51,11 @@ const PersonalDataForm: Form<State, ValidatedInput, AdditionalProps, Options> = 
   initialState: createCompoundInitialState(SubForms),
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
   validate: (state, options) =>
-    createCompoundValidate(SubForms, { dateOfBirth: dateOfBirthOptions, region: options })(state),
+    createCompoundValidate(SubForms, {
+      salutation: salutationOptions,
+      dateOfBirth: dateOfBirthOptions,
+      region: options,
+    })(state),
   Component: ({
     state,
     setState,
@@ -52,6 +65,14 @@ const PersonalDataForm: Form<State, ValidatedInput, AdditionalProps, Options> = 
     return (
       <>
         <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+          <div style={{ width: '140px', marginRight: '16px' }}>
+            <SubForms.salutation.Component
+              state={state.salutation}
+              setState={useUpdateStateCallback(setState, 'salutation')}
+              label={t('salutation')}
+              options={salutationOptions}
+            />
+          </div>
           <div style={{ flex: '1', minWidth: '200px' }}>
             <SubForms.forenames.Component
               state={state.forenames}

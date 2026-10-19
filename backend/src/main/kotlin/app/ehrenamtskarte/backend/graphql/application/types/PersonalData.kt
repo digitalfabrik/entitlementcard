@@ -8,6 +8,7 @@ import java.time.LocalDate
 import java.time.ZoneId
 
 data class PersonalData(
+    val salutation: ShortTextInput? = null,
     val forenames: ShortTextInput,
     val surname: ShortTextInput,
     val address: Address,
@@ -29,6 +30,7 @@ data class PersonalData(
             "personalData",
             Type.Array,
             listOfNotNull(
+                salutation?.toJsonField("salutation", translatable = true),
                 forenames.toJsonField("forenames"),
                 surname.toJsonField("surname"),
                 address.toJsonField(),
