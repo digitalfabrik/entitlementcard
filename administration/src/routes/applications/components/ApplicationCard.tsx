@@ -20,6 +20,7 @@ import {
   Button,
   Divider,
   InputAdornment,
+  Paper,
   Stack,
   TextField,
   Tooltip,
@@ -183,15 +184,23 @@ const RejectionDialog = (props: {
           />
         )}
         {selectedOption !== null && !isCustomReason && (
-          <TextField
-            variant='outlined'
-            label={t('rejectionMessagePreviewLabel')}
-            value={selectedOption.message}
-            multiline
-            fullWidth
-            sx={{ marginTop: 3 }}
-            slotProps={{ input: { readOnly: true } }}
-          />
+          <Stack sx={{ marginTop: 3, gap: 0.5 }}>
+            <Typography variant='caption' color='text.secondary'>
+              {t('rejectionMessagePreviewLabel')}
+            </Typography>
+            <Paper
+              variant='outlined'
+              sx={theme => ({
+                padding: 2,
+                backgroundColor: theme.palette.grey[100],
+                borderColor: theme.palette.grey[200],
+              })}
+            >
+              <Typography variant='body2' sx={{ whiteSpace: 'pre-wrap' }}>
+                {selectedOption.message}
+              </Typography>
+            </Paper>
+          </Stack>
         )}
       </>
     </ConfirmDialog>
