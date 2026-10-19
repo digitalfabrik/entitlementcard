@@ -305,11 +305,11 @@
         "message": "Leider hat Ihr Verein bzw. Ihre Organisation das von Ihnen geleistet Ehrenamt bislang nicht bestätigt. Ohne eine entsprechende Bestätigung Ihres Engagements kann keine Ehrenamtskarte ausgestellt werden."
       },
       {
-        "label": "gültige EAK blau vorhanden",
+        "label": "Gültige EAK blau vorhanden",
         "message": "Sie sind bereits im Besitz einer noch gültigen Ehrenamtskarte, weshalb aktuell keine neue ausgestellt werden kann. Bitte beantragen Sie eine neue Karte, wenn das Gültigkeitsdatum auf der bisherigen abgelaufen ist oder demnächst abläuft."
       },
       {
-        "label": "gültige EAK gold vorhanden",
+        "label": "Gültige EAK gold vorhanden",
         "message": "Laut unseren Unterlagen besitzen Sie bereits eine goldene Ehrenamtskarte mit unbegrenzter Gültigkeit. Sollten Sie diese verloren haben, bitten wir um kurze formlose Mitteilung, damit wir eine neue Karte ausstellen können."
       },
       {
@@ -317,7 +317,7 @@
         "message": "Leider erkennen wir bei Ihrem Ehrenamt nicht, dass Sie in den letzten beiden Jahren auf mindestens 5 Stunden pro Woche ehrenamtlich tätig waren. Falls Sie Nachweise haben, die eine wöchentliche Zeit von 5 Stunden belegen, können Sie diese zusammen mit einem neuen Antrag einreichen."
       },
       {
-        "label": "keinen Grund angeben",
+        "label": "Keinen Grund angeben",
         "message": "Leider erfüllen Sie derzeit nicht alle erforderlichen Voraussetzungen. Bitte stellen Sie den Antrag erneut, sobald diese erfüllt sind."
       }
     ],
