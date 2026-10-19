@@ -63,6 +63,8 @@ describe('PreVerifiedQuickIndicator', () => {
   const cases: [string, PreVerifiedEntitlementType][] = [
     ['Juleica', 'Juleica'],
     ['Verein360', 'Verein360'],
+    ['Wehrdienst', 'MilitaryReserve'],
+    ['Freiwilligendienst', 'VolunteerService'],
     ['Ehrenzeichen', 'HonoredByMinisterPresident'],
   ]
 
@@ -71,5 +73,19 @@ describe('PreVerifiedQuickIndicator', () => {
       translation: true,
     })
     expect(getByText(expectedLabel)).toBeTruthy()
+  })
+
+  it('should show the attachment icon for entitlements with attachments', () => {
+    const { queryByTestId } = renderWithOptions(<PreVerifiedIndicator type='Juleica' />, {
+      translation: true,
+    })
+    expect(queryByTestId('AttachFileIcon')).not.toBeNull()
+  })
+
+  it('should not show the attachment icon for entitlements without attachments', () => {
+    const { queryByTestId } = renderWithOptions(<PreVerifiedIndicator type='Verein360' />, {
+      translation: true,
+    })
+    expect(queryByTestId('AttachFileIcon')).toBeNull()
   })
 })
