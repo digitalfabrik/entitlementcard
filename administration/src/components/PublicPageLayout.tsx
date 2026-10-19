@@ -21,9 +21,18 @@ const PublicPageLayout = ({
   return (
     <PageLayout
       showDataPrivacy={showDataPrivacy}
-      containerSx={{ alignItems: 'center', paddingX: 2, paddingY: 4 }}
+      containerSx={{ alignItems: 'center', paddingX: { xs: 0, sm: 2 }, paddingY: { xs: 0, sm: 4 } }}
     >
-      <Card elevation={2} sx={{ width: '100%', maxWidth, marginY: 'auto' }}>
+      <Card
+        elevation={2}
+        sx={{
+          width: '100%',
+          maxWidth,
+          marginY: { xs: 0, sm: 'auto' },
+          borderRadius: { xs: 0, sm: 1 },
+          boxShadow: { xs: 'none', sm: 2 },
+        }}
+      >
         <Stack
           component='header'
           direction='row'

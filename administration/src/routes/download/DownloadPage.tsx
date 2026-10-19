@@ -15,7 +15,7 @@ const DownloadPage = (): ReactElement => {
 
   return (
     <PublicPageLayout maxWidth={600}>
-      <Box sx={{ padding: 2 }}>
+      <Box sx={{ padding: { xs: 1, sm: 2 } }}>
         <Typography variant='h4' component='h2' sx={{ fontWeight: 'bold', marginBottom: 4 }}>
           {t('downloadTitle', { appName: config.name })}
         </Typography>

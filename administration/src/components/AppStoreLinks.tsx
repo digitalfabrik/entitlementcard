@@ -9,12 +9,10 @@ import iosAppStoreIcon from '../assets/ios_appstore_icon.svg'
 
 const StoreLink = styled(Link)(({ theme }) => ({
   display: 'flex',
-  gap: theme.spacing(2.5),
   alignItems: 'center',
   textDecoration: 'none',
   color: theme.palette.text.primary,
   margin: theme.spacing(2, 0),
-  padding: theme.spacing(2, 3),
   border: `1px solid ${theme.palette.divider}`,
   borderRadius: theme.spacing(1),
   '&:hover': {
@@ -47,11 +45,24 @@ const AppStoreLinks = ({ appStoreLink, playStoreLink }: AppStoreLinksProps): Rea
   return (
     <Box sx={{ mb: 1 }}>
       {stores.map(({ href, icon, alt, label }) => (
-        <StoreLink key={href} href={href} target='_blank' rel='noreferrer'>
+        <StoreLink
+          key={href}
+          href={href}
+          target='_blank'
+          rel='noreferrer'
+          sx={{
+            gap: { xs: 1.5, sm: 2.5 },
+            paddingX: { xs: 1.5, sm: 3 },
+            paddingY: { xs: 1.5, sm: 2 },
+          }}
+        >
           <Icon sx={{ height: '40px', width: '130px' }} aria-hidden>
             <img src={icon} alt={alt} />
           </Icon>
-          <Typography variant='body1' sx={{ flexGrow: 1, fontWeight: 'bold' }}>
+          <Typography
+            variant='body1'
+            sx={{ flexGrow: 1, fontWeight: 'bold', fontSize: { xs: '12px', sm: '1rem' } }}
+          >
             {label}
           </Typography>
           <ChevronRight aria-hidden />
