@@ -50,10 +50,11 @@ import type { ProjectConfig } from '../../../project-configs'
 import { ProjectConfigContext } from '../../../provider/ProjectConfigContext'
 import getApiBaseUrl from '../../../util/getApiBaseUrl'
 import type { Application } from '../types/types'
-import { ApplicationDataIncompleteError } from '../utils/applicationDataHelper'
+import { ApplicationDataIncompleteError, getApplicationType } from '../utils/applicationDataHelper'
 import { ApplicationToCsvError, exportApplicationToCsv } from '../utils/exportApplicationToCsv'
 import { ApplicationPrintView, applicationPrintViewPageStyle } from './ApplicationPrintView'
 import { ApplicationStatusNote } from './ApplicationStatusNote'
+import { ApplicationTypeChip } from './ApplicationTypeChip'
 import NoteDialogController from './NoteDialogController'
 import { ApplicationIndicators } from './VerificationsIndicator'
 
@@ -375,6 +376,8 @@ const ApplicationCard = ({
     }
   }
 
+  const applicationType = getApplicationType(application.jsonValue)
+
   const personalData = useMemo(
     () => config.applicationFeature?.applicationJsonToPersonalData(application.jsonValue),
     [config.applicationFeature, application.jsonValue],
@@ -445,7 +448,12 @@ const ApplicationCard = ({
               {t('applicationDate', { date: Temporal.Instant.from(application.createdDate) })}
             </Typography>
           </Stack>
-          <Stack direction='row' sx={{ justifyContent: 'flex-end' }}>
+          <Stack direction='row' sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
+            <Box>
+              {applicationType !== undefined && (
+                <ApplicationTypeChip applicationType={applicationType} />
+              )}
+            </Box>
             <ApplicationIndicators application={application} />
           </Stack>
         </Stack>
