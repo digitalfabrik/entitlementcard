@@ -16,12 +16,14 @@
       "minimatch": "^9.0.5"
     }
   },
+  "dependencies": {
+    "app-toolbelt": "github:digitalfabrik/app-toolbelt#semver:1.2.2"
+  },
   "devDependencies": {
     "@eslint/compat": "^2.0.4",
     "@eslint/eslintrc": "^3.3.6",
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",
     "@typescript-eslint/eslint-plugin": "^8.68.0",
-    "app-toolbelt": "github:digitalfabrik/app-toolbelt#semver:1.2.2",
     "eslint": "^9.39.4",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^10.1.8",
