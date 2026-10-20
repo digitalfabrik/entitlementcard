@@ -72,17 +72,17 @@ const ApplicationVerifierView = ({
 
       <ButtonContainer>
         <Button
-          variant='contained'
+          variant='outlined'
           color='error'
-          endIcon={<Close />}
+          startIcon={<Close />}
           onClick={() => submitApplicationVerification(false)}
         >
           {t('rejectButton')}
         </Button>
         <Button
           variant='contained'
-          color='success'
-          endIcon={<Check />}
+          color='primary'
+          startIcon={<Check />}
           onClick={() => submitApplicationVerification(true)}
         >
           {t('confirmationButton')}
