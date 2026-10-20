@@ -25,7 +25,6 @@ const SuccessContent = styled('div')(({ theme }) => ({
   marginBottom: theme.spacing(2),
   whiteSpace: 'pre-line',
   display: 'flex',
-  justifyContent: 'center',
 }))
 
 const ApplyController = (): React.ReactElement | null => {
