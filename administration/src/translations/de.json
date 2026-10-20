@@ -172,6 +172,8 @@
     "dateBeforeMinDateError": "Das Datum muss nach dem {{date, datetime(dateStyle: 'medium')}} liegen."
   },
   "applicationsOverview": {
+    "firstApplication": "Erstantrag",
+    "renewalApplication": "Verlängerung",
     "statusBarAll": "Alle Anträge",
     "statusBarAccepted": "Akzeptiert",
     "statusBarRejected": "Abgelehnt",
