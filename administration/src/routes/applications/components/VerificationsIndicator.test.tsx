@@ -6,10 +6,7 @@ import {
   verificationsRejected,
   verificationsVerified,
 } from '../__mocks__/verificationData'
-import {
-  PreVerifiedEntitlementType,
-  preVerifiedEntitlements,
-} from '../utils/preVerifiedEntitlements'
+import { PreVerifiedEntitlementType } from '../utils/preVerifiedEntitlements'
 import { PreVerifiedIndicator, VerificationIndicator } from './VerificationsIndicator'
 
 describe('VerificationQuickIndicator', () => {
@@ -64,9 +61,11 @@ describe('VerificationQuickIndicator', () => {
 
 describe('PreVerifiedQuickIndicator', () => {
   const cases: [string, PreVerifiedEntitlementType][] = [
-    ['Juleica', preVerifiedEntitlements.Juleica],
-    ['Verein360', preVerifiedEntitlements.Verein360],
-    ['Ehrenzeichen', preVerifiedEntitlements.HonoredByMinisterPresident],
+    ['Juleica', 'Juleica'],
+    ['Verein360', 'Verein360'],
+    ['Wehrdienst', 'MilitaryReserve'],
+    ['Freiwilligendienst', 'VolunteerService'],
+    ['Ehrenzeichen', 'HonoredByMinisterPresident'],
   ]
 
   it.each(cases)('should show %s label when type is %s', (expectedLabel, type) => {
@@ -74,5 +73,19 @@ describe('PreVerifiedQuickIndicator', () => {
       translation: true,
     })
     expect(getByText(expectedLabel)).toBeTruthy()
+  })
+
+  it('should show the attachment icon for entitlements with attachments', () => {
+    const { queryByTestId } = renderWithOptions(<PreVerifiedIndicator type='Juleica' />, {
+      translation: true,
+    })
+    expect(queryByTestId('AttachFileIcon')).not.toBeNull()
+  })
+
+  it('should not show the attachment icon for entitlements without attachments', () => {
+    const { queryByTestId } = renderWithOptions(<PreVerifiedIndicator type='Verein360' />, {
+      translation: true,
+    })
+    expect(queryByTestId('AttachFileIcon')).toBeNull()
   })
 })
