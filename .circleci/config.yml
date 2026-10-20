@@ -129,7 +129,7 @@ commands:
                     - v1-pods
                 name: Restore pods
             - run:
-                command: mise x ruby -- pod install --deployment
+                command: mise x ruby gem:cocoapods -- pod install --deployment
                 name: Install pods
                 working_directory: ios
             - save_cache:
@@ -344,7 +344,7 @@ jobs:
                 command: softwareupdate --install-rosetta --agree-to-license
                 name: Install rosetta
             - run:
-                command: mise x ruby -- fastlane ios build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} build_config_name:<< parameters.build_config >>
+                command: mise x ruby gem:fastlane -- fastlane ios build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} build_config_name:<< parameters.build_config >>
                 name: '[FL] Build'
                 working_directory: ~/project/frontend/ios
             - store_artifacts:
@@ -860,7 +860,7 @@ jobs:
             - install_mise
             - install_app_toolbelt
             - run:
-                command: mise x ruby -- fastlane android playstore_promote build_config_name:<< parameters.build_config >>
+                command: mise x ruby gem:fastlane -- fastlane android playstore_promote build_config_name:<< parameters.build_config >>
                 name: '[FL] Play Store Promotion'
                 working_directory: ~/project/frontend/android
             - notify
@@ -906,7 +906,7 @@ jobs:
             - install_mise
             - install_app_toolbelt
             - run:
-                command: mise x ruby -- fastlane ios appstoreconnect_promote build_config_name:<< parameters.build_config >>
+                command: mise x ruby gem:fastlane -- fastlane ios appstoreconnect_promote build_config_name:<< parameters.build_config >>
                 name: '[FL] Appstore Connect Store Promotion'
             - notify
         working_directory: ~/project/frontend/ios
