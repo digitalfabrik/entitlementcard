@@ -1,6 +1,7 @@
 import { Intl, Temporal } from 'temporal-polyfill'
 
 import { JsonField, findValue } from '../../../components/JsonFieldView'
+import { ApplicationType } from '../../../graphql'
 
 export type PersonalApplicationData = {
   forenames: string | undefined
@@ -81,4 +82,17 @@ export const getCardTypeApplicationData = (json: JsonField<'Array'>): CardTypeAp
   }
 
   return { cardType: findValue(applicationDetails, 'cardType', 'String')?.value }
+}
+
+/** The backend stores the application type as a German label that has to be mapped. */
+const applicationTypeByLabel: Partial<Record<string, ApplicationType>> = {
+  Erstantrag: ApplicationType.FirstApplication,
+  Verlängerungsantrag: ApplicationType.RenewalApplication,
+}
+
+export const getApplicationType = (json: JsonField<'Array'>): ApplicationType | undefined => {
+  const applicationDetails = findValue(json, 'applicationDetails', 'Array')
+  const label =
+    applicationDetails && findValue(applicationDetails, 'applicationType', 'String')?.value
+  return label !== undefined ? applicationTypeByLabel[label] : undefined
 }
