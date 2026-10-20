@@ -54,7 +54,7 @@ commands:
     install_app_toolbelt:
         steps:
             - run:
-                command: mise x -- npm ci --workspaces=false
+                command: mise x node npm -- npm ci --workspaces=false --omit=dev
                 name: Install app-toolbelt
                 working_directory: ~/project
     install_flutter_packages:
