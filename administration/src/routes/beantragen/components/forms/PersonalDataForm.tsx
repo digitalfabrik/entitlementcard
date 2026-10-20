@@ -64,8 +64,8 @@ const PersonalDataForm: Form<State, ValidatedInput, AdditionalProps, Options> = 
     const { t } = useTranslation('application')
     return (
       <>
-        <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
-          <div style={{ width: '140px', marginRight: '16px' }}>
+        <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', columnGap: '16px' }}>
+          <div style={{ flex: '1 1 140px' }}>
             <SubForms.salutation.Component
               state={state.salutation}
               setState={useUpdateStateCallback(setState, 'salutation')}
@@ -73,19 +73,28 @@ const PersonalDataForm: Form<State, ValidatedInput, AdditionalProps, Options> = 
               options={salutationOptions}
             />
           </div>
-          <div style={{ flex: '1', minWidth: '200px' }}>
-            <SubForms.forenames.Component
-              state={state.forenames}
-              setState={useUpdateStateCallback(setState, 'forenames')}
-              label={t('forenames')}
-            />
-          </div>
-          <div style={{ flex: '1', minWidth: '200px' }}>
-            <SubForms.surname.Component
-              state={state.surname}
-              setState={useUpdateStateCallback(setState, 'surname')}
-              label={t('surname')}
-            />
+          <div
+            style={{
+              flex: '1000 1 400px',
+              display: 'flex',
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+            }}
+          >
+            <div style={{ flex: '1 1 200px' }}>
+              <SubForms.forenames.Component
+                state={state.forenames}
+                setState={useUpdateStateCallback(setState, 'forenames')}
+                label={t('forenames')}
+              />
+            </div>
+            <div style={{ flex: '1 1 200px' }}>
+              <SubForms.surname.Component
+                state={state.surname}
+                setState={useUpdateStateCallback(setState, 'surname')}
+                label={t('surname')}
+              />
+            </div>
           </div>
         </div>
         <CustomDivider label={t('applicationForms:personalAddress')} />
