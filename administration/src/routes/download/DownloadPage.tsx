@@ -14,15 +14,13 @@ const DownloadPage = (): ReactElement => {
   const { ios, android } = getBuildConfig(window.location.hostname)
 
   return (
-    <PublicPageLayout maxWidth={600}>
+    <PublicPageLayout maxWidth='sm'>
       <Box sx={{ padding: { xs: 1, sm: 2 } }}>
         <Typography variant='h4' component='h2' sx={{ fontWeight: 'bold', marginBottom: 4 }}>
           {t('downloadTitle', { appName: config.name })}
         </Typography>
         <Typography>{t('downloadDescription')}</Typography>
-        <Box sx={{ maxWidth: 480 }}>
-          <AppStoreLinks playStoreLink={android.appStoreLink} appStoreLink={ios.appStoreLink} />
-        </Box>
+        <AppStoreLinks playStoreLink={android.appStoreLink} appStoreLink={ios.appStoreLink} />
         <Divider sx={{ marginY: 3 }} />
         <Typography color='textSecondary'>
           {t('operatedBy')}{' '}

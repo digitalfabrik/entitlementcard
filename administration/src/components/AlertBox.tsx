@@ -33,16 +33,19 @@ const AlertBox = ({
       icon={customIcon}
       variant='outlined'
       sx={{
-        margin: 'auto',
         display: 'flex',
         justifyContent: 'flex-start',
-        maxWidth: '900px',
-        '&': theme => ({
-          [theme.breakpoints.down('md')]: {
-            margin: '5px',
-          },
-        }),
-        ...(fullWidth ? { margin: 0, maxWidth: 'none' } : {}),
+        ...(fullWidth
+          ? { margin: 0, maxWidth: 'none' }
+          : {
+              margin: 'auto',
+              maxWidth: theme => theme.breakpoints.values.md,
+              '&': theme => ({
+                [theme.breakpoints.down('md')]: {
+                  margin: '5px',
+                },
+              }),
+            }),
         ...sx,
       }}
       slotProps={{

@@ -1,4 +1,4 @@
-import { Box, Card, Stack, Typography } from '@mui/material'
+import { Box, Breakpoint, Card, Stack, Typography } from '@mui/material'
 import { grey } from '@mui/material/colors'
 import { ReactElement, ReactNode, useContext } from 'react'
 
@@ -7,13 +7,13 @@ import PageLayout from './PageLayout'
 
 type PublicPageLayoutProps = {
   children: ReactNode
-  maxWidth?: number | string
+  maxWidth?: Breakpoint | number
   showDataPrivacy?: boolean
 }
 
 const PublicPageLayout = ({
   children,
-  maxWidth = 800,
+  maxWidth = 'md',
   showDataPrivacy,
 }: PublicPageLayoutProps): ReactElement => {
   const config = useContext(ProjectConfigContext)
@@ -27,7 +27,8 @@ const PublicPageLayout = ({
         elevation={2}
         sx={{
           width: '100%',
-          maxWidth,
+          maxWidth: theme =>
+            typeof maxWidth === 'number' ? maxWidth : theme.breakpoints.values[maxWidth],
           marginY: { xs: 0, sm: 'auto' },
           borderRadius: { xs: 0, sm: 1 },
           boxShadow: { xs: 'none', sm: 2 },

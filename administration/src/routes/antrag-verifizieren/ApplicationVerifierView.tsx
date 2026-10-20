@@ -66,6 +66,7 @@ const ApplicationVerifierView = ({
       <AlertBox
         severity='warning'
         description={<Trans i18nKey='applicationVerification:confirmationNote' />}
+        fullWidth
         sx={{ my: 3 }}
       />
 
