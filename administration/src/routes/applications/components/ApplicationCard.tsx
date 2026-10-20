@@ -20,6 +20,7 @@ import {
   Button,
   Divider,
   InputAdornment,
+  Paper,
   Stack,
   TextField,
   Tooltip,
@@ -82,6 +83,8 @@ const DeleteDialog = (props: {
   )
 }
 
+type RejectionReason = { label: string; message: string }
+
 const RejectionDialog = (props: {
   open: boolean
   loading: boolean
@@ -89,18 +92,21 @@ const RejectionDialog = (props: {
   onCancel: () => void
 }) => {
   const { t } = useTranslation('applicationsOverview')
-  const customReasonOption = t('rejectionCustomReasonOption')
-  const rejectionMessages = [
-    ...(t('rejectionReasons', { returnObjects: true }) as string[]),
+  const customReasonOption: RejectionReason = {
+    label: t('rejectionCustomReasonOption'),
+    message: '',
+  }
+  const rejectionReasons = [
+    ...(t('rejectionReasons', { returnObjects: true }) as RejectionReason[]),
     customReasonOption,
   ]
-  const [selectedOption, setSelectedOption] = useState<string | null>(null)
+  const [selectedOption, setSelectedOption] = useState<RejectionReason | null>(null)
   const [customReason, setCustomReason] = useState('')
   const [interacted, setInteracted] = useState(false)
   const [customReasonInteracted, setCustomReasonInteracted] = useState(false)
-  const isCustomReason = selectedOption === customReasonOption
+  const isCustomReason = selectedOption?.label === customReasonOption.label
   const trimmedCustomReason = customReason.trim()
-  const reason = isCustomReason ? trimmedCustomReason || null : selectedOption
+  const reason = isCustomReason ? trimmedCustomReason || null : (selectedOption?.message ?? null)
   const showError = selectedOption === null && interacted
   const showCustomReasonError =
     isCustomReason && trimmedCustomReason === '' && customReasonInteracted
@@ -154,7 +160,9 @@ const RejectionDialog = (props: {
               }}
             />
           )}
-          options={rejectionMessages}
+          options={rejectionReasons}
+          getOptionLabel={option => option.label}
+          isOptionEqualToValue={(option, value) => option.label === value.label}
           sx={{ marginTop: 2 }}
           onChange={(_, value) => setSelectedOption(value)}
         />
@@ -172,8 +180,27 @@ const RejectionDialog = (props: {
             maxRows={5}
             fullWidth
             autoFocus
-            sx={{ marginTop: 2 }}
+            sx={{ marginTop: 3 }}
           />
+        )}
+        {selectedOption !== null && !isCustomReason && (
+          <Stack sx={{ marginTop: 3, gap: 0.5 }}>
+            <Typography variant='caption' color='text.secondary'>
+              {t('rejectionMessagePreviewLabel')}
+            </Typography>
+            <Paper
+              variant='outlined'
+              sx={theme => ({
+                padding: 2,
+                backgroundColor: theme.palette.grey[100],
+                borderColor: theme.palette.grey[200],
+              })}
+            >
+              <Typography variant='body2' sx={{ whiteSpace: 'pre-wrap' }}>
+                {selectedOption.message}
+              </Typography>
+            </Paper>
+          </Stack>
         )}
       </>
     </ConfirmDialog>
