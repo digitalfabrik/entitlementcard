@@ -27,16 +27,13 @@ export const getPreVerifiedEntitlementType = (
   applicationJsonValue: JsonField<'Array'>,
 ): PreVerifiedEntitlementType | undefined => {
   const applicationDetails = findValue(applicationJsonValue, 'applicationDetails', 'Array')
-  if (applicationDetails === undefined) {
-    return undefined
-  }
-  return (Object.keys(preVerifiedEntitlementFields) as PreVerifiedEntitlementType[]).find(type =>
-    preVerifiedEntitlementFields[type].some(field => {
-      const entitlement = findValue(applicationDetails, field, 'Array')
-      if (type === 'Verein360') {
-        return verein360Matcher(entitlement)
-      }
-      return entitlement !== undefined
-    }),
-  )
+
+  return applicationDetails !== undefined
+    ? (Object.keys(preVerifiedEntitlementFields) as PreVerifiedEntitlementType[]).find(type =>
+        preVerifiedEntitlementFields[type].some(field => {
+          const entitlement = findValue(applicationDetails, field, 'Array')
+          return type === 'Verein360' ? verein360Matcher(entitlement) : entitlement !== undefined
+        }),
+      )
+    : undefined
 }

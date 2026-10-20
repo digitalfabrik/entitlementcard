@@ -94,7 +94,7 @@ const preVerifiedLabelMetaData: Record<PreVerifiedEntitlementType, PreVerifiedLa
   },
 }
 
-const PreVerifiedLabel = styled('span')<{ itemType: PreVerifiedEntitlementType }>(({ theme }) => ({
+const PreVerifiedLabel = styled('span')(({ theme }) => ({
   padding: '4px 10px',
   fontSize: '14px',
   backgroundColor: green[50],
@@ -117,15 +117,10 @@ export const PreVerifiedIndicator = ({
 }): ReactElement => {
   const { labelText, attachment } = preVerifiedLabelMetaData[type]
   return (
-    <Stack
-      direction='row'
-      sx={{ height: '25px', alignItems: 'center', '&:focus': { outline: 'none' } }}
-    >
-      <PreVerifiedLabel itemType={type}>
-        {attachment && <AttachFile sx={{ fontSize: 16 }} />}
-        {labelText}
-      </PreVerifiedLabel>
-    </Stack>
+    <PreVerifiedLabel>
+      {attachment && <AttachFile sx={{ fontSize: 16 }} />}
+      {labelText}
+    </PreVerifiedLabel>
   )
 }
 
