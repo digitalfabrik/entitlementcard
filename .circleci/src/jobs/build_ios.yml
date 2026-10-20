@@ -24,7 +24,7 @@ steps:
   - run:
       name: '[FL] Build'
       working_directory: ~/project/frontend/ios
-      command: mise x ruby -- fastlane ios build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} build_config_name:<< parameters.build_config >>
+      command: mise x ruby gem:fastlane -- fastlane ios build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} build_config_name:<< parameters.build_config >>
   - store_artifacts:
       path: ~/<< parameters.build_config >>.ipa
   - persist_to_workspace:

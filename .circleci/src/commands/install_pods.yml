@@ -7,7 +7,7 @@ steps:
         - v1-pods
   - run:
       name: Install pods
-      command: mise x ruby -- pod install --deployment
+      command: mise x ruby gem:cocoapods -- pod install --deployment
       working_directory: ios
   - save_cache:
       name: Save pods
