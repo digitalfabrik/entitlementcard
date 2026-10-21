@@ -423,6 +423,7 @@ const ApplicationCard = ({
               variant='subtitle2'
               color='common.black'
               sx={{
+                fontSize: theme.typography.subtitle1.fontSize,
                 marginY: 0,
                 flexGrow: 1,
                 flexShrink: 1,
