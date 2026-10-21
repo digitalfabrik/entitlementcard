@@ -64,14 +64,12 @@ test.describe('Bayern regional admin', () => {
     await expectVisible(item, 'Tätigkeit: activity 1')
     await expectVisible(item, 'Arbeitsstunden pro Woche (Durchschnitt): 56')
     await expectVisible(item, 'Tätig seit: 10.10.1999')
-    await expectVisible(
-      item,
-      'Für diese ehrenamtliche Tätigkeit wurde eine Aufwandsentschädigung gewährt, die über den jährlichen Freibetrag hinaus geht (840 Euro Ehrenamtspauschale bzw. 3000 Euro Übungsleiterpauschale): Nein',
-    )
+    await expectVisible(item, 'Art der Aufwandsentschädigung: Ehrenamtspauschale')
+    await expectVisible(item, 'Höhe der Aufwandsentschädigung pro Jahr (in Euro): 840')
     await expectVisible(item, 'Tätigkeitsnachweis: Anhang 1(siehe Anhang 1)')
     await expectVisible(
       item,
-      'Der Antrag wurde direkt von der Organisation/Verein gestellt (z. B. über Drittanbietersoftware verein360).: Nein',
+      'Der Antrag wurde direkt von der Organisation/Verein gestellt (z. B. über Drittanbietersoftware Verein360).: Nein',
     )
   }
 

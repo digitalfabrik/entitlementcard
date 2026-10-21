@@ -401,6 +401,12 @@ enum CodeType {
   STATIC
 }
 
+enum CompensationType {
+  NONE
+  TRAINER_ALLOWANCE
+  VOLUNTEER_ALLOWANCE
+}
+
 enum GoldenCardEntitlementType {
   HONORED_BY_MINISTER_PRESIDENT
   MILITARY_RESERVE
@@ -671,9 +677,10 @@ input ShortTextInput {
 input WorkAtOrganizationInput {
   amountOfWork: Float!
   certificate: AttachmentInput
+  compensationAmount: Float
+  compensationType: CompensationType!
   isAlreadyVerified: Boolean
   organization: OrganizationInput!
-  payment: Boolean!
   responsibility: ShortTextInput!
   workSinceDate: DateInput!
 }

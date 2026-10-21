@@ -200,9 +200,9 @@ const applicationDetailsBlue: JsonField<'Array'> = {
               value: '2000-02-02',
             },
             {
-              name: 'payment',
-              type: 'Boolean',
-              value: false,
+              name: 'compensationType',
+              type: 'TranslatableString',
+              value: 'compensationTypeNone',
             },
             {
               name: 'isAlreadyVerified',
@@ -348,9 +348,9 @@ const applicationDetailsGold: JsonField<'Array'> = {
               value: '2000-02-02',
             },
             {
-              name: 'payment',
-              type: 'Boolean',
-              value: false,
+              name: 'compensationType',
+              type: 'TranslatableString',
+              value: 'compensationTypeNone',
             },
             {
               name: 'isAlreadyVerified',

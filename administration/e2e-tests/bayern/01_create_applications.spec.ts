@@ -40,6 +40,9 @@ test.describe('Bayern testing', () => {
     await page.getByRole('textbox', { name: 'Ehrenamtliche Tätigkeit' }).fill('activity 1')
     await fillDateInput(page, 'Tätig seit', '10.10.1999', browser)
     await page.getByRole('textbox', { name: 'Arbeitsstunden pro Woche (' }).fill('56')
+    await page.getByRole('combobox', { name: 'Art der Aufwandsentschädigung' }).click()
+    await page.getByRole('option', { name: 'Ehrenamtspauschale' }).click()
+    await page.getByRole('textbox', { name: 'Höhe der Aufwandsentschädigung' }).fill('840')
     await expect(page.getByText('Angaben zur Organisation', { exact: false })).toBeVisible({
       timeout: 10_000,
     })
@@ -62,7 +65,6 @@ test.describe('Bayern testing', () => {
     await page.getByRole('textbox', { name: 'Telefon' }).fill('123456798')
     await page.getByRole('checkbox', { name: 'Die Kontaktperson hat der' }).check()
     await expect(page.getByText('Die Kontaktperson hat der')).toBeVisible()
-    await expect(page.getByText('Für diese ehrenamtliche Tä')).toBeVisible()
 
     await expect(page.locator('form').first()).toContainText('Tätigkeitsnachweis')
     await expect(page.locator('form')).toContainText(
