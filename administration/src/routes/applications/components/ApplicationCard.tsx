@@ -50,14 +50,12 @@ import type { ProjectConfig } from '../../../project-configs'
 import { ProjectConfigContext } from '../../../provider/ProjectConfigContext'
 import getApiBaseUrl from '../../../util/getApiBaseUrl'
 import type { Application } from '../types/types'
-import { ApplicationDataIncompleteError, getApplicationCardType, getApplicationType } from '../utils/applicationDataHelper'
+import { ApplicationDataIncompleteError } from '../utils/applicationDataHelper'
 import { ApplicationToCsvError, exportApplicationToCsv } from '../utils/exportApplicationToCsv'
 import { ApplicationPrintView, applicationPrintViewPageStyle } from './ApplicationPrintView'
 import { ApplicationStatusNote } from './ApplicationStatusNote'
-import { CardTypeIndicator } from './CardTypeIndicator'
 import NoteDialogController from './NoteDialogController'
 import { ApplicationIndicators } from './VerificationsIndicator'
-import { ApplicationTypeChip } from './ApplicationTypeChip'
 
 const DeleteDialog = (props: {
   isOpen: boolean
@@ -377,8 +375,6 @@ const ApplicationCard = ({
     }
   }
 
-  const applicationType = getApplicationType(application.jsonValue)
-
   const personalData = useMemo(
     () => config.applicationFeature?.applicationJsonToPersonalData(application.jsonValue),
     [config.applicationFeature, application.jsonValue],
@@ -449,13 +445,7 @@ const ApplicationCard = ({
               {t('applicationDate', { date: Temporal.Instant.from(application.createdDate) })}
             </Typography>
           </Stack>
-          <Stack direction='row' sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
-            <CardTypeIndicator type={getApplicationCardType(application.jsonValue)} />
-            {applicationType !== undefined && (
-              <ApplicationTypeChip applicationType={applicationType} />
-            )}
-            <ApplicationIndicators application={application} />
-          </Stack>
+          <ApplicationIndicators application={application} />
         </Stack>
       </AccordionSummary>
 
