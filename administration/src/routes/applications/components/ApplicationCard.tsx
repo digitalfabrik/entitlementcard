@@ -50,13 +50,14 @@ import type { ProjectConfig } from '../../../project-configs'
 import { ProjectConfigContext } from '../../../provider/ProjectConfigContext'
 import getApiBaseUrl from '../../../util/getApiBaseUrl'
 import type { Application } from '../types/types'
-import { ApplicationDataIncompleteError, getApplicationType } from '../utils/applicationDataHelper'
+import { ApplicationDataIncompleteError, getApplicationCardType, getApplicationType } from '../utils/applicationDataHelper'
 import { ApplicationToCsvError, exportApplicationToCsv } from '../utils/exportApplicationToCsv'
 import { ApplicationPrintView, applicationPrintViewPageStyle } from './ApplicationPrintView'
 import { ApplicationStatusNote } from './ApplicationStatusNote'
-import { ApplicationTypeChip } from './ApplicationTypeChip'
+import { CardTypeIndicator } from './CardTypeIndicator'
 import NoteDialogController from './NoteDialogController'
 import { ApplicationIndicators } from './VerificationsIndicator'
+import { ApplicationTypeChip } from './ApplicationTypeChip'
 
 const DeleteDialog = (props: {
   isOpen: boolean
@@ -448,11 +449,10 @@ const ApplicationCard = ({
             </Typography>
           </Stack>
           <Stack direction='row' sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
-            <Box>
-              {applicationType !== undefined && (
-                <ApplicationTypeChip applicationType={applicationType} />
-              )}
-            </Box>
+            <CardTypeIndicator type={getApplicationCardType(application.jsonValue)} />
+            {applicationType !== undefined && (
+              <ApplicationTypeChip applicationType={applicationType} />
+            )}
             <ApplicationIndicators application={application} />
           </Stack>
         </Stack>
