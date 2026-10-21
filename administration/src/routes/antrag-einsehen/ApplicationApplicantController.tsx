@@ -1,4 +1,3 @@
-import { StackProps } from '@mui/material'
 import { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
@@ -6,7 +5,7 @@ import { Temporal } from 'temporal-polyfill'
 import { useQuery } from 'urql'
 
 import AlertBox from '../../components/AlertBox'
-import PageLayout from '../../components/PageLayout'
+import PublicPageLayout from '../../components/PublicPageLayout'
 import { ApplicationStatus, GetApplicationByApplicantDocument } from '../../graphql'
 import getQueryResult from '../../util/getQueryResult'
 import { ApplicationStatusNote } from '../applications/components/ApplicationStatusNote'
@@ -16,12 +15,6 @@ import {
   parseApplication,
 } from '../applications/utils/application'
 import ApplicationApplicantView from './ApplicationApplicantView'
-
-const centeredContainerSx: StackProps['sx'] = {
-  alignSelf: 'center',
-  justifyContent: 'center',
-  p: 2,
-}
 
 const ApplicationApplicantController = ({ providedKey }: { providedKey: string }): ReactElement => {
   const { t } = useTranslation('applicationApplicant')
@@ -39,50 +32,38 @@ const ApplicationApplicantController = ({ providedKey }: { providedKey: string }
   }
   const application = parseApplication(applicationQueryHandler.data.application)
   if (application.status === ApplicationStatus.Withdrawn) {
-    return (
-      <PageLayout containerSx={centeredContainerSx}>
-        <AlertBox severity='info' description={t('alreadyWithdrawn')} />
-      </PageLayout>
-    )
+    return <AlertBox severity='info' description={t('alreadyWithdrawn')} />
   }
   if (isWithdrawn) {
-    return (
-      <PageLayout containerSx={centeredContainerSx}>
-        <AlertBox severity='info' description={t('withdrawConfirmation')} />
-      </PageLayout>
-    )
+    return <AlertBox severity='info' description={t('withdrawConfirmation')} />
   }
 
   if (applicationWasAlreadyProcessed(application.status) && !!application.statusResolvedDate) {
     return (
-      <PageLayout containerSx={centeredContainerSx}>
-        <AlertBox
-          severity={getAlertSeverityByApplicationStatus(application.status)}
-          title={t(
-            application.status === ApplicationStatus.Rejected
-              ? 'titleStatusRejected'
-              : 'titleStatusApproved',
-          )}
-          description={
-            <ApplicationStatusNote
-              statusResolvedDate={Temporal.Instant.from(application.statusResolvedDate)}
-              status={application.status}
-              showIcon={false}
-            />
-          }
-        />
-      </PageLayout>
+      <AlertBox
+        severity={getAlertSeverityByApplicationStatus(application.status)}
+        title={t(
+          application.status === ApplicationStatus.Rejected
+            ? 'titleStatusRejected'
+            : 'titleStatusApproved',
+        )}
+        description={
+          <ApplicationStatusNote
+            statusResolvedDate={Temporal.Instant.from(application.statusResolvedDate)}
+            status={application.status}
+            showIcon={false}
+          />
+        }
+      />
     )
   }
 
   return (
-    <PageLayout containerSx={{ alignSelf: 'center', justifyContent: 'flex-start' }}>
-      <ApplicationApplicantView
-        application={application}
-        onWithdraw={() => setIsWithdrawn(true)}
-        providedKey={providedKey}
-      />
-    </PageLayout>
+    <ApplicationApplicantView
+      application={application}
+      onWithdraw={() => setIsWithdrawn(true)}
+      providedKey={providedKey}
+    />
   )
 }
 
@@ -92,7 +73,11 @@ const ControllerWithAccessKey = (): ReactElement | null => {
   if (!accessKey) {
     return null
   }
-  return <ApplicationApplicantController providedKey={accessKey} />
+  return (
+    <PublicPageLayout>
+      <ApplicationApplicantController providedKey={accessKey} />
+    </PublicPageLayout>
+  )
 }
 
 export default ControllerWithAccessKey

@@ -1,4 +1,3 @@
-import { StackProps } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import { ReactElement, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -7,7 +6,7 @@ import { Temporal } from 'temporal-polyfill'
 import { useMutation, useQuery } from 'urql'
 
 import AlertBox from '../../components/AlertBox'
-import PageLayout from '../../components/PageLayout'
+import PublicPageLayout from '../../components/PublicPageLayout'
 import { messageFromGraphQlError } from '../../errors'
 import {
   ApplicationStatus,
@@ -23,11 +22,6 @@ type ApplicationVerificationProps = {
   applicationVerificationAccessKey: string
 }
 
-const centeredContainerSx: StackProps['sx'] = {
-  alignSelf: 'center',
-  justifyContent: 'center',
-  p: 2,
-}
 const ApplicationVerificationController = ({
   applicationVerificationAccessKey,
 }: ApplicationVerificationProps) => {
@@ -76,41 +70,29 @@ const ApplicationVerificationController = ({
   const application = parseApplication(applicationQueryHandler.data.application)
 
   if (verification.rejectedDate || verification.verifiedDate) {
-    return (
-      <PageLayout containerSx={centeredContainerSx}>
-        <AlertBox severity='info' description={t('alreadyVerified')} />
-      </PageLayout>
-    )
+    return <AlertBox severity='info' description={t('alreadyVerified')} />
   }
   if (application.status === ApplicationStatus.Withdrawn && application.statusResolvedDate) {
     return (
-      <PageLayout containerSx={centeredContainerSx}>
-        <AlertBox
-          severity='info'
-          description={t('withdrawMessageForVerifier', {
-            date: Temporal.Instant.from(application.statusResolvedDate),
-          })}
-        />
-      </PageLayout>
+      <AlertBox
+        severity='info'
+        description={t('withdrawMessageForVerifier', {
+          date: Temporal.Instant.from(application.statusResolvedDate),
+        })}
+      />
     )
   }
   if (verificationFinished) {
     return (
-      <PageLayout containerSx={centeredContainerSx}>
-        <AlertBox
-          title={t('verificationFinishedTitle')}
-          description={t('verificationFinishedContent')}
-        />
-      </PageLayout>
+      <AlertBox
+        title={t('verificationFinishedTitle')}
+        description={t('verificationFinishedContent')}
+      />
     )
   }
 
   if (applicationWasAlreadyProcessed(application.status)) {
-    return (
-      <PageLayout containerSx={centeredContainerSx}>
-        <AlertBox description={t('applicationAlreadyProcessed')} severity='info' />
-      </PageLayout>
-    )
+    return <AlertBox description={t('applicationAlreadyProcessed')} severity='info' />
   }
 
   return (
@@ -126,20 +108,20 @@ const ControllerWithAccessKey = (): ReactElement => {
   const { t } = useTranslation('applicationVerification')
   const { applicationVerificationAccessKey } = useParams()
 
-  if (!applicationVerificationAccessKey) {
-    return (
-      <AlertBox
-        severity='error'
-        title={t('verificationNotFoundTitle')}
-        description={t('verificationNotFoundDescription')}
-      />
-    )
-  }
-
   return (
-    <ApplicationVerificationController
-      applicationVerificationAccessKey={applicationVerificationAccessKey}
-    />
+    <PublicPageLayout>
+      {applicationVerificationAccessKey ? (
+        <ApplicationVerificationController
+          applicationVerificationAccessKey={applicationVerificationAccessKey}
+        />
+      ) : (
+        <AlertBox
+          severity='error'
+          title={t('verificationNotFoundTitle')}
+          description={t('verificationNotFoundDescription')}
+        />
+      )}
+    </PublicPageLayout>
   )
 }
 
