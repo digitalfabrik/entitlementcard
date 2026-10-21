@@ -109,7 +109,9 @@ test.describe('Bayern testing', () => {
   const personalInfo = async (page: Page, browserName) => {
     await page.getByRole('textbox', { name: 'Vorname(n)' }).fill(browserName)
     await page.getByRole('textbox', { name: 'Nachname' }).fill('Doe')
-    await expect(page.getByRole('heading')).toContainText('Bayerische Ehrenamtskarte beantragen')
+    await expect(page.getByRole('heading', { level: 2 })).toContainText(
+      'Bayerische Ehrenamtskarte beantragen',
+    )
     await expect(page.locator('form')).toContainText('ADRESSE (ERSTWOHNSITZ)')
     await page.getByRole('textbox', { name: 'Straße' }).fill('street 32')
     await page.getByRole('textbox', { name: 'Hausnummer' }).fill('12')
@@ -320,7 +322,9 @@ test.describe('Bayern testing', () => {
   }
 
   const sentSuccessfully = async (page: Page) => {
-    await expect(page.getByRole('heading')).toHaveText('Erfolgreich gesendet', { timeout: 10_000 })
+    await expect(page.getByRole('heading', { level: 2 })).toHaveText('Erfolgreich gesendet', {
+      timeout: 10_000,
+    })
     await expect(page.getByRole('paragraph')).toContainText(
       'Ihr Antrag für die Ehrenamtskarte wurde erfolgreich übermittelt.Über den Fortschritt Ihres Antrags werden Sie per E-Mail informiert.Sie können das Fenster jetzt schließen.',
     )
