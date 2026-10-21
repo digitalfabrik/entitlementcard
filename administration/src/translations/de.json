@@ -15,6 +15,10 @@
   "application": {
     "_comment": "!Important! These keys should not be edited, since they are stored in the database and have to remain resolvable. If you change these keys, labels of old applications can not be resolved anymore.",
     "personalData": "Persönliche Daten",
+    "salutation": "Anrede",
+    "salutationFemale": "Frau",
+    "salutationMale": "Herr",
+    "salutationNeutral": "Neutrale Anrede",
     "forenames": "Vorname(n)",
     "surname": "Nachname",
     "address": "Adresse",

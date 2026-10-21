@@ -14,7 +14,7 @@ export type SelectItem = { label: string; value: string }
 type Options = {
   items: SelectItem[]
 }
-type AdditionalProps = { label: string }
+type AdditionalProps = { label: string; required?: boolean }
 const SelectForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
   initialState: { selectedValue: '', manuallySelected: false },
   getArrayBufferKeys: () => [],
@@ -35,19 +35,21 @@ const SelectForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
     setState,
     label,
     options,
+    required = true,
   }: FormComponentProps<State, AdditionalProps, Options>) => {
     const [interacted, setInteracted] = useState(false)
     const { showAllErrors, disableAllInputs } = useContext(FormContext)
     const labelId = useId()
 
     const validationResult = SelectForm.validate(state, options)
-    const isInvalid = validationResult.type === 'error'
+    const isInvalid =
+      validationResult.type === 'error' && (required || state.selectedValue.length > 0)
 
     return (
       <FormControl
         fullWidth
         variant='standard'
-        required
+        required={required}
         style={{ margin: '4px 0' }}
         error={interacted && isInvalid}
       >
@@ -62,6 +64,8 @@ const SelectForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
             setState(() => ({ selectedValue: e.target.value, manuallySelected: true }))
           }
         >
+          {/* Non-breaking space keeps the empty option from collapsing to zero height */}
+          {!required && <MenuItem value=''>&nbsp;</MenuItem>}
           {options.items.map(item => (
             <MenuItem key={item.label} value={item.value}>
               {item.label}
@@ -74,6 +78,18 @@ const SelectForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
       </FormControl>
     )
   },
+}
+
+export const OptionalSelectForm: Form<State, ValidatedInput | null, AdditionalProps, Options> = {
+  initialState: SelectForm.initialState,
+  getArrayBufferKeys: SelectForm.getArrayBufferKeys,
+  validate: (state, options) => {
+    if (state.selectedValue.length === 0) {
+      return { type: 'valid', value: null }
+    }
+    return SelectForm.validate(state, options)
+  },
+  Component: props => <SelectForm.Component {...props} required={false} />,
 }
 
 export default SelectForm
