@@ -76,13 +76,6 @@ const AddCardForm = ({
                 onChange={date => {
                   updateCard({ expirationDate: date })
                 }}
-                textFieldSlotProps={{
-                  sx: {
-                    '.MuiPickersSectionList-root': {
-                      padding: '5px 0',
-                    },
-                  },
-                }}
               />
               {showValidationDateError && (
                 <FormAlert severity='error' errorMessage={getExpirationDateErrorMessage(card)} />

@@ -81,11 +81,8 @@ const DateForm: Form<State, ValidatedInput, AdditionalProps, Options> = {
           textFieldSlotProps={{
             required: true,
             variant: 'standard',
+            size: 'medium',
             style: { margin: '4px 0', minWidth },
-            sx: {
-              input: { paddingTop: '4px' },
-              '.MuiInputAdornment-root': { transform: 'translateX(-8px)' },
-            },
           }}
         />
         <FormAlert
