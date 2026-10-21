@@ -190,6 +190,14 @@ const ButtonsApplicationPending = (props: {
   return (
     <>
       <Button
+        startIcon={<CancelOutlined />}
+        color='error'
+        disabled={props.disabled}
+        onClick={props.onSecondaryButtonClick}
+      >
+        {t('applicationReject')}
+      </Button>
+      <Button
         variant='contained'
         color='primary'
         startIcon={<Check />}
@@ -197,14 +205,6 @@ const ButtonsApplicationPending = (props: {
         onClick={props.onPrimaryButtonClick}
       >
         {t('applicationApprove')}
-      </Button>
-      <Button
-        startIcon={<CancelOutlined />}
-        color='error'
-        disabled={props.disabled}
-        onClick={props.onSecondaryButtonClick}
-      >
-        {t('applicationReject')}
       </Button>
     </>
   )
