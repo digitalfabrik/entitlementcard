@@ -332,7 +332,9 @@
     "rejectionButton": "Ablehnung bestätigen",
     "rejectionCancelButton": "Ablehnung abbrechen",
     "moreActionsButtonLabel": "Weitere Optionen",
-    "deleteApplicationSuccessMessage": "Der Antrag wurde erfolgreich gelöscht."
+    "deleteApplicationSuccessMessage": "Der Antrag wurde erfolgreich gelöscht.",
+    "cardTypeBlue": "Blau",
+    "cardTypeGold": "Gold"
   },
   "auth": {
     "administration": "Verwaltung",
@@ -671,7 +673,6 @@
     "errorGeoServiceNotReachable": "Leider konnte die Adresse nicht überprüft werden, weil ein interner Fehler aufgetreten ist.",
     "errorInvalidStoreForm": "Ihre Angaben sind fehlerhaft oder unvollständig."
   },
-
   "userSettings": {
     "passwordChangeSuccessful": "Passwort erfolgreich geändert.",
     "changePassword": "Passwort ändern",
