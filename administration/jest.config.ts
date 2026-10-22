@@ -1,6 +1,10 @@
+import { join } from 'node:path'
 import { type JestConfigWithTsJest, createDefaultEsmPreset } from 'ts-jest'
 
 process.env.TZ = 'GMT'
+
+// ESM-only dependencies (without CommonJS build), which have to be transformed to CommonJS for Jest.
+const esmOnlyModules = '(react-router|@remix-run|cookie-es|temporal-polyfill|temporal-utils)'
 
 const config: JestConfigWithTsJest = {
   ...createDefaultEsmPreset(),
@@ -9,6 +13,19 @@ const config: JestConfigWithTsJest = {
   verbose: true,
   automock: false,
   transform: {
+    // ts-jest transpiles node_modules without astTransformers (i.e. leaves `import.meta` untouched),
+    // so babel-jest is used instead.
+    [`/node_modules/${esmOnlyModules}/.+\\.m?js$`]: [
+      'babel-jest',
+      {
+        babelrc: false,
+        configFile: false,
+        plugins: [
+          join(import.meta.dirname, 'scripts/babel-plugin-jest-import-meta.cjs'),
+          '@babel/plugin-transform-modules-commonjs',
+        ],
+      },
+    ],
     // Also process Js files, so we can support 'build-configs'.
     '^.+\\.(tsx?|js)$': [
       'ts-jest',
@@ -44,6 +61,7 @@ const config: JestConfigWithTsJest = {
       },
     ],
   },
+  transformIgnorePatterns: [`/node_modules/(?!${esmOnlyModules}/)`],
   moduleNameMapper: {
     '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga|pdf)$':
       '<rootDir>/src/__mocks__/fileMock.ts',
@@ -52,6 +70,8 @@ const config: JestConfigWithTsJest = {
     // (e.g. '../../card_pb', '../graphql') need to be remapped to their actual location.
     '^.+/card_pb$': '<rootDir>/src-gen/card_pb',
     '^.+/graphql$': '<rootDir>/src-gen/graphql',
+    // temporal-polyfill uses the native Temporal if available, which ignores Jest's fake timers.
+    '^temporal-polyfill$': 'temporal-polyfill/implementation',
   },
   setupFilesAfterEnv: ['./jest.setup.ts'],
   restoreMocks: true,
