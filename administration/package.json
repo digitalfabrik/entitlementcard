@@ -31,13 +31,15 @@
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-i18next": "^17.0.11",
-    "react-router": "^7.18.3",
+    "react-router": "^8.5.0",
     "react-to-print": "^3.3.0",
     "temporal-polyfill": "^0.3.2",
     "urql": "^5.0.4",
     "xregexp": "^5.1.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.29.7",
+    "@babel/plugin-transform-modules-commonjs": "^7.29.7",
     "@babel/runtime": "^8.0.0",
     "@bufbuild/buf": "^1.75.0",
     "@bufbuild/protoc-gen-es": "^2.13.0",
