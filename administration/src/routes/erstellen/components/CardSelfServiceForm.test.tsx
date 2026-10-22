@@ -1,5 +1,6 @@
 import { fireEvent } from '@testing-library/react'
 import { act } from 'react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { initializeCardFromCSV } from '../../../cards/card'
 import FormAlert from '../../../components/FormAlert'
@@ -9,9 +10,9 @@ import { exampleCard } from '../__mock__/mockSelfServiceCard'
 import { DataPrivacyAcceptingStatus } from '../constants'
 import CardSelfServiceForm from './CardSelfServiceForm'
 
-const enqueueSnackbarMock = jest.fn()
-jest.mock('notistack', () => ({
-  ...jest.requireActual('notistack'),
+const enqueueSnackbarMock = vi.fn()
+vi.mock('notistack', async importOriginal => ({
+  ...(await importOriginal<typeof import('notistack')>()),
   useSnackbar: () => ({
     enqueueSnackbar: enqueueSnackbarMock,
   }),
@@ -25,11 +26,11 @@ const mockProvider: CustomRenderOptions = {
   snackbar: true,
 }
 
-const setDataPrivacyAccepted = jest.fn()
-const updateCard = jest.fn()
-const generateCards = jest.fn()
+const setDataPrivacyAccepted = vi.fn()
+const updateCard = vi.fn()
+const generateCards = vi.fn()
 describe('CardSelfServiceForm', () => {
-  beforeEach(jest.resetAllMocks)
+  beforeEach(vi.resetAllMocks)
 
   it('should display all elements in initial state', () => {
     const { getByLabelText, getByPlaceholderText, getByText, getByRole } = renderWithOptions(

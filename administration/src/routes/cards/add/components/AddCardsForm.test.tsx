@@ -1,4 +1,5 @@
 import { act, fireEvent } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
 
 import { mockRegion } from '../../../../cards/__mocks__/mockRegion'
 import { initializeCardFromCSV } from '../../../../cards/card'
@@ -15,9 +16,9 @@ describe('AddCardsForm', () => {
   const defaultProps = {
     region: mockRegion,
     cards: [],
-    setCards: jest.fn(),
+    setCards: vi.fn(),
     showAddMoreCardsButton: true,
-    updateCard: jest.fn(),
+    updateCard: vi.fn(),
   }
 
   it('should render add card button when showAddMoreCardsButton is true', () => {

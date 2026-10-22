@@ -1,5 +1,6 @@
 import { EditNote, KeyboardArrowDown, KeyboardArrowUp, PrintOutlined } from '@mui/icons-material'
 import { fireEvent, render, waitFor } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
 
 import BaseMenu from './BaseMenu'
 
@@ -7,12 +8,12 @@ describe('BaseMenu', () => {
   const mockMenuItems = [
     {
       name: 'Print PDF',
-      onClick: jest.fn(),
+      onClick: vi.fn(),
       icon: <PrintOutlined />,
     },
     {
       name: 'Edit Note',
-      onClick: jest.fn(),
+      onClick: vi.fn(),
       icon: <EditNote />,
     },
   ]

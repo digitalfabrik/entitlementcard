@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest'
+
 import { splitStreetAndHouseNumber } from './splitStreetAndHouseNumber'
 
 describe('splitStreetAndHouseNumber', () => {

@@ -1,4 +1,5 @@
 import { act, fireEvent } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
 
 import { config as koblenzConfig } from '../../../../project-configs/koblenz/config'
 import { config as nuernbergConfig } from '../../../../project-configs/nuernberg/config'
@@ -8,12 +9,12 @@ import { invalidStoreData, validStoreData } from '../__mock__/mockStoreEntry'
 import { AcceptingStoresEntry } from '../utils/acceptingStoresEntry'
 import StoresButtonBar from './StoresButtonBar'
 
-jest.useFakeTimers()
+vi.useFakeTimers()
 
-const setDryRun = jest.fn()
+const setDryRun = vi.fn()
 
-const goBack = jest.fn()
-const importStores = jest.fn()
+const goBack = vi.fn()
+const importStores = vi.fn()
 
 const mockProvider: CustomRenderOptions = { theme: true, translation: true }
 
@@ -70,7 +71,7 @@ describe('StoresButtonBar', () => {
       fireEvent.mouseOver(importButton)
       fireEvent.click(importButton)
       await act(async () => {
-        jest.advanceTimersByTime(100)
+        vi.advanceTimersByTime(100)
       })
 
       expect(getByText('Laden sie bitte eine Datei mit Akzeptanzpartnern hoch.')).toBeTruthy()
@@ -105,7 +106,7 @@ describe('StoresButtonBar', () => {
       fireEvent.click(importButton)
 
       await act(async () => {
-        jest.advanceTimersByTime(100)
+        vi.advanceTimersByTime(100)
       })
 
       expect(importButton.disabled).toBeTruthy()

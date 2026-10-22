@@ -7,6 +7,7 @@ import {
   buildConfigKoblenz,
 } from 'build-configs'
 import { Temporal } from 'temporal-polyfill'
+import { describe, expect, it, vi } from 'vitest'
 
 import { DynamicActivationCodeSchema } from '../card_pb'
 import { getTestRegion } from '../routes/user-settings/__mocks__/Region'
@@ -17,7 +18,7 @@ import RegionExtension from './extensions/RegionExtension'
 import getDeepLinkFromQrCode from './getDeepLinkFromQrCode'
 import type { PdfQrCode } from './pdf/elements'
 
-jest.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
+vi.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
 
 describe('DeepLink generation', () => {
   const region = getTestRegion({})

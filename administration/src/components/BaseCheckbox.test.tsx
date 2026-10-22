@@ -1,4 +1,5 @@
 import { fireEvent, render } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
 
 import BaseCheckbox from './BaseCheckbox'
 
@@ -6,7 +7,7 @@ describe('BaseCheckbox', () => {
   const defaultProps = {
     label: 'Test Checkbox',
     checked: false,
-    onChange: jest.fn(),
+    onChange: vi.fn(),
     hasError: false,
     errorMessage: null,
   }
@@ -18,7 +19,7 @@ describe('BaseCheckbox', () => {
   })
 
   it('should call onChange when clicked', () => {
-    const onChange = jest.fn()
+    const onChange = vi.fn()
     const { getByLabelText } = render(<BaseCheckbox {...defaultProps} onChange={onChange} />)
 
     const checkbox = getByLabelText('Test Checkbox')
@@ -51,7 +52,7 @@ describe('BaseCheckbox', () => {
   })
 
   it('should call onBlur when focus is lost', () => {
-    const onBlur = jest.fn()
+    const onBlur = vi.fn()
     const { getByLabelText } = render(<BaseCheckbox {...defaultProps} onBlur={onBlur} />)
 
     const checkbox = getByLabelText('Test Checkbox')

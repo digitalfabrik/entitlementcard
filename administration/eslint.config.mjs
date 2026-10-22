@@ -10,7 +10,7 @@ export default [
       'e2e-tests/',
       'playwright.config.ts',
       'src-gen/**/*',
-      'src/coverage/**/*',
+      'coverage/**/*',
     ],
   },
   {

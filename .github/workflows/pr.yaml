@@ -48,17 +48,19 @@ jobs:
         working-directory: administration
 
       - name: Run tests with coverage
-        uses: ArtiomTr/jest-coverage-report-action@v2
         if: github.event.pull_request.user.login != 'dependabot[bot]'
+        run: mise exec -- npm run test:coverage -- --silent
+        working-directory: administration
+
+      - name: Report coverage
+        uses: davelosert/vitest-coverage-report-action@v2.13.1
+        if: always() && github.event.pull_request.user.login != 'dependabot[bot]'
         with:
-          base-coverage-file: report.json
-          skip-step: install
           working-directory: administration
-          test-script: mise exec -- npm run test:coverage -- --silent --ci --json --testLocationInResults --outputFile=report.json --maxWorkers=1
 
       - name: Run tests
         if: github.event.pull_request.user.login == 'dependabot[bot]'
-        run: mise exec -- npm run test -- --maxWorkers=1
+        run: mise exec -- npm run test
         working-directory: administration
 
   build-configs-check:

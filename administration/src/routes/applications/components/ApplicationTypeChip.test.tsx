@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest'
+
 import { ApplicationType } from '../../../graphql'
 import { renderWithOptions } from '../../../testing/render'
 import { ApplicationTypeChip } from './ApplicationTypeChip'

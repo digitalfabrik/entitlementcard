@@ -1,17 +1,14 @@
 import { fixupPluginRules } from '@eslint/compat'
 import { FlatCompat } from '@eslint/eslintrc'
-import jest from 'eslint-plugin-jest'
 import jsxA11Y from 'eslint-plugin-jsx-a11y'
 import jsxExpressions from 'eslint-plugin-jsx-expressions'
 import preferArrow from 'eslint-plugin-prefer-arrow'
 import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
-import { createRequire } from 'module'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import tseslint from 'typescript-eslint'
-
-const require = createRequire(import.meta.url)
+import vitest from '@vitest/eslint-plugin'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -27,18 +24,16 @@ export default [
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
     'prettier',
-    'plugin:jest/recommended',
-    'plugin:jest/style',
   ),
   {
     plugins: {
       '@typescript-eslint': tseslint.plugin,
-      jest: jest,
       'jsx-a11y': jsxA11Y,
       'jsx-expressions': fixupPluginRules(jsxExpressions),
       'prefer-arrow': preferArrow,
       react: react,
       'react-hooks': reactHooks,
+      vitest,
     },
 
     linterOptions: {
@@ -55,15 +50,20 @@ export default [
       },
     },
 
-    settings: {
-      jest: {
-        // Since eslint is installed in a different directory than jest, the jest eslint plugin fails to automatically detect the version of jest//
-        // https://github.com/digitalfabrik/entitlementcard/issues/1659
-        version: require('jest/package.json').version,
-      },
-    },
-
     rules: {
+      ...vitest.configs.recommended.rules,
+      // Stricter rules, which are not part of the recommended config
+      'vitest/no-conditional-expect': 'error',
+      'vitest/no-disabled-tests': 'warn',
+      'vitest/no-focused-tests': 'error',
+      'vitest/no-interpolation-in-snapshots': 'error',
+      'vitest/no-standalone-expect': 'error',
+      'vitest/no-test-prefixes': 'error',
+      'vitest/valid-expect-in-promise': 'error',
+      'vitest/prefer-to-be': 'error',
+      'vitest/prefer-to-contain': 'error',
+      'vitest/prefer-to-have-length': 'error',
+
       // Overly strict rules (for now)
       '@typescript-eslint/no-non-null-assertion': 'off',
       'class-methods-use-this': 'off',
@@ -73,7 +73,7 @@ export default [
       'no-plusplus': 'off',
       'no-shadow': 'off',
       'no-underscore-dangle': 'off',
-      'jest/no-mocks-import': 'off',
+      'vitest/no-mocks-import': 'off',
       'react/jsx-uses-react': 'off', // React 19
       'react/react-in-jsx-scope': 'off', // React 19
       'react/display-name': 'off',
@@ -85,7 +85,7 @@ export default [
       'import/prefer-default-export': 'off',
       'import/no-named-as-default-member': 'off',
       'lines-between-class-members': 'off',
-      'jest/expect-expect': 'off',
+      'vitest/expect-expect': 'off',
       'jsx-a11y/label-has-associated-control': [
         'error',
         {
@@ -132,8 +132,8 @@ export default [
         },
       ],
       'import/no-unresolved': 'off',
-      'jest/consistent-test-it': 'error',
-      'jest/no-alias-methods': 'error',
+      'vitest/consistent-test-it': 'error',
+      'vitest/no-alias-methods': 'error',
       'jsx-expressions/strict-logical-expressions': 'error',
       'no-use-before-define': 'off',
       'prefer-arrow/prefer-arrow-functions': 'error',
@@ -168,8 +168,8 @@ export default [
       '**/*.test.{ts,tsx}',
       '**/__mocks__/*.{ts,tsx}',
       '**/testing/*.{ts,tsx}',
-      '**/jest.setup.ts',
-      '**/jest.config.ts',
+      '**/vitest.setup.ts',
+      '**/vitest.config.ts',
     ],
 
     rules: {

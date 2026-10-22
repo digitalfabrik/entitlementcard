@@ -4,6 +4,7 @@ import {
   buildConfigBayern,
   buildConfigKoblenz,
 } from 'build-configs'
+import { describe, expect, it } from 'vitest'
 
 import getCustomDeepLinkFromActivationCode from './getCustomDeepLinkFromActivationCode'
 

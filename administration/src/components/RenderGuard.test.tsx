@@ -1,21 +1,22 @@
 import { render } from '@testing-library/react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { Role } from '../graphql'
 import { useWhoAmI } from '../provider/WhoAmIProvider'
 import { renderWithOptions } from '../testing/render'
 import RenderGuard from './RenderGuard'
 
-jest.mock('../provider/WhoAmIProvider', () => ({
-  useWhoAmI: jest.fn(),
+vi.mock('../provider/WhoAmIProvider', () => ({
+  useWhoAmI: vi.fn(),
 }))
 
-const mockUseWhoAmI = useWhoAmI as jest.MockedFunction<typeof useWhoAmI>
+const mockUseWhoAmI = vi.mocked(useWhoAmI)
 
 describe('RenderGuard', () => {
   const mockChildren = <div data-testid='protected-content'>Protected Content</div>
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   describe('when user has valid role', () => {

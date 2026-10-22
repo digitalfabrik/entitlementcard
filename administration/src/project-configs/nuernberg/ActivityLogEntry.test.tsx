@@ -1,10 +1,11 @@
 import { render } from '@testing-library/react'
 import { Temporal } from 'temporal-polyfill'
+import { describe, expect, it, vi } from 'vitest'
 
 import { activityLogCardExample } from '../../routes/activity-log/__mocks__/ActivityLogData'
 import ActivityLogEntry from './ActivityLogEntry'
 
-jest.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
+vi.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
 describe('ActivityLogEntry', () => {
   it('should render the correct log entry content', () => {
     const { getByText } = render(
