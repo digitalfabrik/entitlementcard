@@ -1,3 +1,4 @@
+import { join } from 'node:path'
 import { type JestConfigWithTsJest, createDefaultEsmPreset } from 'ts-jest'
 
 process.env.TZ = 'GMT'
@@ -9,6 +10,19 @@ const config: JestConfigWithTsJest = {
   verbose: true,
   automock: false,
   transform: {
+    // react-router and its dependencies are ESM-only since v8 and use `import.meta`.
+    // ts-jest transpiles node_modules without astTransformers, so babel-jest is used instead.
+    '/node_modules/(react-router|@remix-run|cookie-es)/.+\\.m?js$': [
+      'babel-jest',
+      {
+        babelrc: false,
+        configFile: false,
+        plugins: [
+          join(import.meta.dirname, 'scripts/babel-plugin-jest-import-meta.cjs'),
+          '@babel/plugin-transform-modules-commonjs',
+        ],
+      },
+    ],
     // Also process Js files, so we can support 'build-configs'.
     '^.+\\.(tsx?|js)$': [
       'ts-jest',
@@ -44,6 +58,7 @@ const config: JestConfigWithTsJest = {
       },
     ],
   },
+  transformIgnorePatterns: ['/node_modules/(?!(react-router|@remix-run|cookie-es)/)'],
   moduleNameMapper: {
     '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga|pdf)$':
       '<rootDir>/src/__mocks__/fileMock.ts',
