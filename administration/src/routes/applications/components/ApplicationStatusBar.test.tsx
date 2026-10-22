@@ -1,3 +1,5 @@
+import { describe, expect, it, vi } from 'vitest'
+
 import { ApplicationStatus } from '../../../graphql'
 import { renderWithOptions } from '../../../testing/render'
 import { barItems } from '../ApplicationsOverview'
@@ -96,7 +98,7 @@ const applications: Application[] = [
 ]
 
 describe('ApplicationStatusBar', () => {
-  const setActiveBarItem = jest.fn()
+  const setActiveBarItem = vi.fn()
 
   it('Should show the correct count for all applications', () => {
     const { getByTestId } = renderWithOptions(

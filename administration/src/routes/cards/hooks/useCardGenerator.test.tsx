@@ -1,10 +1,10 @@
 import { create } from '@bufbuild/protobuf'
 import { act, renderHook } from '@testing-library/react'
-import { mocked } from 'jest-mock'
 import { ReactNode } from 'react'
 import { MemoryRouter } from 'react-router'
 import { Temporal } from 'temporal-polyfill'
 import { Client, Provider as UrqlProvider, cacheExchange } from 'urql'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { DynamicActivationCodeSchema, StaticVerificationCodeSchema } from '../../../card_pb'
 import { generateCardInfo, initializeCard } from '../../../cards/card'
@@ -21,22 +21,21 @@ import downloadDataUri from '../../../util/downloadDataUri'
 import { getTestRegion } from '../../user-settings/__mocks__/Region'
 import useCardGenerator from './useCardGenerator'
 
-jest.useFakeTimers({ now: new Date('2025-01-01T00:00:00.000Z') })
-jest.mock('../../../cards/pdf/pdfFactory', () => ({
-  ...jest.requireActual('../../../cards/pdf/pdfFactory'),
-  generatePdf: jest.fn(),
+vi.useFakeTimers({ now: new Date('2025-01-01T00:00:00.000Z') })
+vi.mock('../../../cards/pdf/pdfFactory', async importOriginal => ({
+  ...(await importOriginal<typeof import('../../../cards/pdf/pdfFactory')>()),
+  generatePdf: vi.fn(),
 }))
-jest.mock('../../../cards/createCards', () => ({
-  ...jest.requireActual('../../../cards/createCards'),
-  __esModule: true,
-  default: jest.fn(),
+vi.mock('../../../cards/createCards', async importOriginal => ({
+  ...(await importOriginal<typeof import('../../../cards/createCards')>()),
+  default: vi.fn(),
 }))
-jest.mock('../../../cards/deleteCards')
-jest.mock('../../../util/downloadDataUri')
+vi.mock('../../../cards/deleteCards')
+vi.mock('../../../util/downloadDataUri')
 
-const enqueueSnackbarMock = jest.fn()
-jest.mock('notistack', () => ({
-  ...jest.requireActual('notistack'),
+const enqueueSnackbarMock = vi.fn()
+vi.mock('notistack', async importOriginal => ({
+  ...(await importOriginal<typeof import('notistack')>()),
   useSnackbar: () => ({
     enqueueSnackbar: enqueueSnackbarMock,
   }),
@@ -97,10 +96,10 @@ describe('useCardGenerator', () => {
     },
   ]
 
-  beforeEach(jest.resetAllMocks)
+  beforeEach(vi.resetAllMocks)
 
   it('should successfully create multiple cards', async () => {
-    mocked(createCards).mockReturnValueOnce(Promise.resolve(codes))
+    vi.mocked(createCards).mockReturnValueOnce(Promise.resolve(codes))
     const { result } = renderHook(() => useCardGenerator({ region }), { wrapper })
     act(() => result.current.setCards(cards))
 
@@ -117,7 +116,7 @@ describe('useCardGenerator', () => {
   })
 
   it('should show error message for failed card generation', async () => {
-    mocked(createCards).mockImplementation(() => {
+    vi.mocked(createCards).mockImplementation(() => {
       throw new CreateCardsError('error')
     })
 
@@ -137,9 +136,9 @@ describe('useCardGenerator', () => {
   })
 
   it('should show error message and run rollback for failed pdf generation', async () => {
-    mocked(createCards).mockReturnValueOnce(Promise.resolve(codes))
-    mocked(deleteCards).mockReturnValueOnce(Promise.resolve())
-    mocked(generatePdf).mockImplementationOnce(() => {
+    vi.mocked(createCards).mockReturnValueOnce(Promise.resolve(codes))
+    vi.mocked(deleteCards).mockReturnValueOnce(Promise.resolve())
+    vi.mocked(generatePdf).mockImplementationOnce(() => {
       throw new PdfError('error')
     })
 
@@ -164,7 +163,7 @@ describe('useCardGenerator', () => {
   })
 
   it('should successfully initialize cards with searchParams for bavaria', async () => {
-    mocked(createCards).mockReturnValueOnce(Promise.resolve(codes))
+    vi.mocked(createCards).mockReturnValueOnce(Promise.resolve(codes))
     const { result } = renderHook(() => useCardGenerator({ region }), {
       wrapper: withCustomWrapper(
         bayernConfig,
@@ -188,7 +187,7 @@ describe('useCardGenerator', () => {
   })
 
   it('should successfully initialize cards with searchParams for nuernberg', async () => {
-    mocked(createCards).mockReturnValueOnce(Promise.resolve(codes))
+    vi.mocked(createCards).mockReturnValueOnce(Promise.resolve(codes))
     const { result } = renderHook(() => useCardGenerator({ region }), {
       wrapper: withCustomWrapper(
         nuernbergConfig,

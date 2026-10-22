@@ -14,5 +14,5 @@
     "jsx": "react-jsx",
     "rootDirs": ["src", "src-gen"]
   },
-  "include": ["src", "src-gen", "scripts", "jest.config.ts", "jest.setup.ts", "vite.config*.ts"]
+  "include": ["src", "src-gen", "scripts", "vitest.config.ts", "vitest.setup.ts", "vite.config*.ts"]
 }

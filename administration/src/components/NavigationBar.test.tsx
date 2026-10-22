@@ -1,3 +1,5 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { Role } from '../graphql'
 import { config as bayernConfig } from '../project-configs/bayern/config'
 import { config as koblenzConfig } from '../project-configs/koblenz/config'
@@ -6,16 +8,16 @@ import { useWhoAmI } from '../provider/WhoAmIProvider'
 import { CustomRenderOptions, renderWithOptions } from '../testing/render'
 import NavigationBar from './NavigationBar'
 
-jest.mock('../provider/WhoAmIProvider', () => ({
-  useWhoAmI: jest.fn(),
+vi.mock('../provider/WhoAmIProvider', () => ({
+  useWhoAmI: vi.fn(),
 }))
 
-const mockUseWhoAmI = useWhoAmI as jest.MockedFunction<typeof useWhoAmI>
+const mockUseWhoAmI = vi.mocked(useWhoAmI)
 const mockBaseProvider: CustomRenderOptions = { router: true, translation: true }
 
 describe('NavigationBar', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   describe('when user RegionAdmin is logged in', () => {

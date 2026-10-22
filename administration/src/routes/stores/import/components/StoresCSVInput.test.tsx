@@ -1,6 +1,6 @@
 import { fireEvent, waitFor } from '@testing-library/react'
 import { parse } from 'csv-parse/browser/esm/sync'
-import { mocked } from 'jest-mock'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { config } from '../../../../project-configs/nuernberg/config'
 import { CustomRenderOptions, renderWithOptions } from '../../../../testing/render'
@@ -8,18 +8,17 @@ import { DEFAULT_ERROR_TIMEOUT } from '../constants'
 import StoresCSVInput from './StoresCSVInput'
 import StoresImportDuplicates from './StoresImportDuplicates'
 
-// TODO #1575 Remove mock values when jest can handle ECMA modules (#1574)
-
 const fieldNames = config.storesManagement.enabled
   ? config.storesManagement.fields.map(field => field.name)
   : []
-jest.mock('csv-parse/browser/esm/sync', () => ({
-  parse: jest.fn(),
+
+vi.mock('csv-parse/browser/esm/sync', () => ({
+  parse: vi.fn(),
 }))
 
-const enqueueSnackbarMock = jest.fn()
-jest.mock('notistack', () => ({
-  ...jest.requireActual('notistack'),
+const enqueueSnackbarMock = vi.fn()
+vi.mock('notistack', async importOriginal => ({
+  ...(await importOriginal<typeof import('notistack')>()),
   useSnackbar: () => ({
     enqueueSnackbar: enqueueSnackbarMock,
   }),
@@ -30,19 +29,23 @@ const mockProvider: CustomRenderOptions = {
   translation: true,
 }
 
-const setAcceptingStores = jest.fn()
-const setIsLoadingCoordinates = jest.fn()
+const setAcceptingStores = vi.fn()
+const setIsLoadingCoordinates = vi.fn()
 
 describe('StoresCSVInput', () => {
-  beforeEach(jest.resetAllMocks)
+  beforeEach(vi.resetAllMocks)
   const renderAndSubmitStoreInput = async (csv: string) => {
     const fileReaderMock = {
       // eslint-disable-next-line func-names
-      readAsText: jest.fn(function (this: FileReader, _: Blob) {
+      readAsText: vi.fn(function (this: FileReader, _: Blob) {
         this.onloadend!({ target: { result: csv } } as ProgressEvent<FileReader>)
       }),
     } as unknown as FileReader
-    jest.spyOn(global, 'FileReader').mockReturnValue(fileReaderMock)
+    vi.spyOn(global, 'FileReader').mockImplementation(
+      class {
+        readAsText = fileReaderMock.readAsText
+      } as unknown as typeof FileReader,
+    )
     const file = new File([csv], 'Stores.csv', { type: 'text/csv' })
     const fields = config.storesManagement.enabled ? config.storesManagement.fields : []
     const { getByTestId } = renderWithOptions(
@@ -63,7 +66,7 @@ describe('StoresCSVInput', () => {
 
   it(`should correctly import csv store`, async () => {
     const csv = ''
-    mocked(parse).mockReturnValueOnce([
+    vi.mocked(parse).mockReturnValueOnce([
       fieldNames,
       [
         'Test store',
@@ -90,7 +93,7 @@ describe('StoresCSVInput', () => {
   it(`should fail with error if empty csv is provided`, async () => {
     const error = 'Die gewählte Datei ist leer.'
     const csv = ''
-    mocked(parse).mockReturnValueOnce([])
+    vi.mocked(parse).mockReturnValueOnce([])
     await waitFor(async () => renderAndSubmitStoreInput(csv))
     expect(enqueueSnackbarMock).toHaveBeenCalledWith(error, {
       variant: 'error',
@@ -103,7 +106,7 @@ describe('StoresCSVInput', () => {
   it(`should fail if no store entry is provided`, async () => {
     const error = 'Die Datei muss mindestens einen Eintrag enthalten.'
     const csv = ''
-    mocked(parse).mockReturnValueOnce([fieldNames])
+    vi.mocked(parse).mockReturnValueOnce([fieldNames])
     await waitFor(async () => renderAndSubmitStoreInput(csv))
     expect(enqueueSnackbarMock).toHaveBeenCalledWith(error, {
       variant: 'error',
@@ -117,7 +120,7 @@ describe('StoresCSVInput', () => {
     const error =
       'Die erforderlichen Spalten sind nicht vorhanden oder nicht in der richtigen Reihenfolge.'
     const csv = ''
-    mocked(parse).mockReturnValueOnce([
+    vi.mocked(parse).mockReturnValueOnce([
       [
         'name',
         'street',
@@ -161,7 +164,7 @@ describe('StoresCSVInput', () => {
   it(`should fail if the column amount is not correct`, async () => {
     const error = `Die CSV enthält eine ungültige Anzahl an Spalten.`
     const csv = ''
-    mocked(parse).mockReturnValueOnce([
+    vi.mocked(parse).mockReturnValueOnce([
       [
         'name',
         'street',
@@ -207,7 +210,7 @@ describe('StoresCSVInput', () => {
   it(`should fail if the csv includes duplicated stores`, async () => {
     const error = <StoresImportDuplicates entries={[[1, 2]]} />
     const csv = ''
-    mocked(parse).mockReturnValueOnce([
+    vi.mocked(parse).mockReturnValueOnce([
       fieldNames,
       [
         'Test store',

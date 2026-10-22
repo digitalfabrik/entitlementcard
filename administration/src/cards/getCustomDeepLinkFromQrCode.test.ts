@@ -1,4 +1,5 @@
 import { fromBinary } from '@bufbuild/protobuf'
+import { describe, expect, it, vi } from 'vitest'
 
 import { DynamicActivationCodeSchema } from '../card_pb'
 import { config } from '../project-configs/koblenz/config'
@@ -7,7 +8,7 @@ import { base64ToUint8Array } from './base64'
 import getCustomDeepLinkFromQrCode from './getCustomDeepLinkFromQrCode'
 import type { PdfQrCode } from './pdf/elements'
 
-jest.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
+vi.useFakeTimers({ now: new Date('2024-01-01T00:00:00.000Z') })
 
 describe('getCustomDeepLinkFromQrCode', () => {
   const dynamicPdfQrCode: PdfQrCode = {

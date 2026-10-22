@@ -1,4 +1,5 @@
 import { act, render } from '@testing-library/react'
+import { afterAll, describe, expect, it } from 'vitest'
 
 import useWindowDimensions from './useWindowDimensions'
 

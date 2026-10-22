@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest'
+
 import { AddressLine1Extension, AddressPlzExtension } from './AddressFieldExtensions'
 
 describe('AddressExtensions', () => {

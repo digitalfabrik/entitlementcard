@@ -419,7 +419,7 @@ jobs:
                 name: Run tests and generate coverage report
             - store_artifacts:
                 destination: ~/attached_workspace/coverage
-                path: src/coverage
+                path: coverage
             - notify
         working_directory: ~/project/administration
     check_backend:

@@ -1,4 +1,5 @@
 import { create } from '@bufbuild/protobuf'
+import { describe, expect, it, vi } from 'vitest'
 
 import { DynamicActivationCodeSchema } from '../../card_pb'
 import { generateCardInfo, initializeCard } from '../../cards/card'
@@ -7,13 +8,12 @@ import { getTestRegion } from '../../routes/user-settings/__mocks__/Region'
 import { config } from './config'
 import { buildCsvLine } from './csvExport'
 
-jest.mock('csv-stringify/browser/esm/sync', () => ({
+vi.mock('csv-stringify/browser/esm/sync', () => ({
   stringify: (input: string[][]) => input[0].join(','),
 }))
 
-jest.mock('../index', () => ({
-  __esModule: true,
-  default: jest.fn(),
+vi.mock('../index', () => ({
+  default: vi.fn(),
 }))
 
 describe('csvExport', () => {

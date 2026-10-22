@@ -1,11 +1,12 @@
 import { act, fireEvent } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
 
 import { renderWithOptions } from '../testing/render'
 import TextAreaDialog from './TextAreaDialog'
 
 describe('TextAreaDialog', () => {
-  const onClose = jest.fn()
-  const onSave = jest.fn()
+  const onClose = vi.fn()
+  const onSave = vi.fn()
   const defaultText = 'Hallo'
   const placeholderText = 'Hier kann ein Text stehen...'
   const renderTextDialog = ({

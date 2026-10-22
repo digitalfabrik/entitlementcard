@@ -1,11 +1,12 @@
 import { fireEvent } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
 
 import { config } from '../../../project-configs/koblenz/config'
 import { CustomRenderOptions, renderWithOptions } from '../../../testing/render'
 import { LOCAL_STORAGE_PROJECT_KEY } from '../../../util/getBuildConfig'
 import CardSelfServiceInformation from './CardSelfServiceInformation'
 
-const goToActivation = jest.fn()
+const goToActivation = vi.fn()
 
 const mockProvider: CustomRenderOptions = { translation: true, theme: true }
 

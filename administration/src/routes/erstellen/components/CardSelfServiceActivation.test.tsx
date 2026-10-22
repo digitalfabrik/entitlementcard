@@ -1,5 +1,6 @@
 import { create } from '@bufbuild/protobuf'
 import { fireEvent } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
 
 import { DynamicActivationCodeSchema } from '../../../card_pb'
 import { generateCardInfo, initializeCard } from '../../../cards/card'
@@ -9,7 +10,7 @@ import { config } from '../../../project-configs/koblenz/config'
 import { CustomRenderOptions, renderWithOptions } from '../../../testing/render'
 import CardSelfServiceActivation from './CardSelfServiceActivation'
 
-const downloadPdf = jest.fn()
+const downloadPdf = vi.fn()
 const mockProvider: CustomRenderOptions = {
   projectConfig: config,
   translation: true,

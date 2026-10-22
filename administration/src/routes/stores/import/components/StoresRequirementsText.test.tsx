@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest'
+
 import type { StoresFieldConfig } from '../../../../project-configs'
 import { storesManagementConfig } from '../../../../project-configs/storesManagementConfig'
 import { renderWithOptions } from '../../../../testing/render'

@@ -3,6 +3,7 @@ import { ReactNode } from 'react'
 import { MemoryRouter } from 'react-router'
 import { Temporal } from 'temporal-polyfill'
 import { Client, Provider as UrqlProvider, cacheExchange } from 'urql'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { config } from '../../../project-configs/koblenz/config'
 import { AppSnackbarProvider } from '../../../provider/AppSnackbarProvider'
@@ -14,16 +15,16 @@ import useCardGeneratorSelfService from './useCardGeneratorSelfService'
 
 const mocks: MockUrqlResult[] = []
 
-jest.mock('../../../cards/pdf/pdfFactory', () => ({
-  ...jest.requireActual('../../../cards/pdf/pdfFactory'),
-  generatePdf: jest.fn(),
+vi.mock('../../../cards/pdf/pdfFactory', async importOriginal => ({
+  ...(await importOriginal<typeof import('../../../cards/pdf/pdfFactory')>()),
+  generatePdf: vi.fn(),
 }))
 
-jest.mock('../../../util/downloadDataUri')
+vi.mock('../../../util/downloadDataUri')
 
-const enqueueSnackbarMock = jest.fn()
-jest.mock('notistack', () => ({
-  ...jest.requireActual('notistack'),
+const enqueueSnackbarMock = vi.fn()
+vi.mock('notistack', async importOriginal => ({
+  ...(await importOriginal<typeof import('notistack')>()),
   useSnackbar: () => ({
     enqueueSnackbar: enqueueSnackbarMock,
   }),
@@ -58,7 +59,7 @@ const withCustomWrapper =
     })
 
 describe('useCardGeneratorSelfService', () => {
-  beforeEach(jest.resetAllMocks)
+  beforeEach(vi.resetAllMocks)
 
   it('should successfully create a card', async () => {
     mocks.push(mockedCardMutationResult)
@@ -74,7 +75,7 @@ describe('useCardGeneratorSelfService', () => {
   })
 
   it('should successfully initialize cards with searchParams for koblenz', async () => {
-    jest.useFakeTimers({ now: new Date('2025-01-01T00:00:00.000Z') })
+    vi.useFakeTimers({ now: new Date('2025-01-01T00:00:00.000Z') })
     const { result } = renderHook(() => useCardGeneratorSelfService(), {
       wrapper: withCustomWrapper('?Name=Karla Koblenz&Referenznummer=123K&Geburtsdatum=10.06.2003'),
     })
