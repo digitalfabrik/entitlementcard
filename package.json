@@ -23,7 +23,7 @@
     "@eslint/compat": "^2.0.4",
     "@eslint/eslintrc": "^3.3.6",
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",
-    "@typescript-eslint/eslint-plugin": "^8.68.0",
+    "@typescript-eslint/eslint-plugin": "^8.72.0",
     "eslint": "^9.39.4",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^10.1.8",
@@ -37,7 +37,7 @@
     "eslint-plugin-unicorn": "^70.0.0",
     "prettier": "^3.9.6",
     "typescript": "^6.0.2",
-    "typescript-eslint": "^8.68.0"
+    "typescript-eslint": "^8.72.0"
   },
   "allowScripts": {
     "@bufbuild/buf@1.71.0": true,
