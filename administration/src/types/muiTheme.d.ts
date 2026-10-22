@@ -7,6 +7,7 @@ import {
   TypographyVariants,
   TypographyVariantsOptions,
 } from '@mui/material/styles'
+import '@mui/x-date-pickers/themeAugmentation'
 import { CSSProperties } from 'react'
 
 // Enable and disable typography variants according to our design system
