@@ -1,5 +1,6 @@
 import { act, fireEvent } from '@testing-library/react'
 import { Temporal } from 'temporal-polyfill'
+import { describe, expect, it, vi } from 'vitest'
 
 import { renderWithOptions } from '../testing/render'
 import CustomDatePicker from './CustomDatePicker'
@@ -13,7 +14,7 @@ const typeIntoSection = (section: HTMLElement, text: string) => {
 
 describe('CustomDatePicker', () => {
   it('should call onChange with the entered date', () => {
-    const onChange = jest.fn()
+    const onChange = vi.fn()
     const { getAllByRole } = renderWithOptions(
       <CustomDatePicker error={false} onChange={onChange} />,
       {
@@ -30,7 +31,7 @@ describe('CustomDatePicker', () => {
   })
 
   it('should call onChange with null for an impossible date', () => {
-    const onChange = jest.fn()
+    const onChange = vi.fn()
     const { getAllByRole } = renderWithOptions(
       <CustomDatePicker error={false} onChange={onChange} />,
       {

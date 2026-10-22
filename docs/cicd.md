@@ -38,7 +38,7 @@ Steps executed if _Checks_ is checked :heavy_check_mark::
 - GraphQL scheme
 - Prettier formatting
 - TypeScript checks
-- Unit testing with jest
+- Unit testing with vitest
 
 ### Backend
 - KLint

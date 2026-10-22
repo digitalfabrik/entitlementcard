@@ -1,4 +1,5 @@
 import { create } from '@bufbuild/protobuf'
+import { describe, expect, it, vi } from 'vitest'
 
 import { DynamicActivationCodeSchema } from '../card_pb'
 import { config as bayernConfig } from '../project-configs/bayern/config'
@@ -10,13 +11,13 @@ import { CreateCardsResult } from './createCards'
 import { CsvError, generateCsv, getCSVFilename } from './csvFactory'
 import { NUERNBERG_PASS_ID_EXTENSION_NAME } from './extensions/NuernbergPassIdExtension'
 
-jest.mock('csv-stringify/browser/esm/sync', () => ({
+vi.mock('csv-stringify/browser/esm/sync', () => ({
   stringify: (input: string[][]) => input[0].join(','),
 }))
 
-jest.mock('../project-configs/showcase/config')
+vi.mock('../project-configs/showcase/config')
 
-const TEST_BLOB_CONSTRUCTOR = jest.fn()
+const TEST_BLOB_CONSTRUCTOR = vi.fn()
 
 describe('CsvFactory', () => {
   const nuernberg = getTestRegion({})
@@ -62,12 +63,13 @@ describe('CsvFactory', () => {
   })
 
   it('should return only header csv for empty input', async () => {
-    jest
-      .spyOn(global, 'Blob')
-      .mockImplementationOnce(
-        (blobParts?: BlobPart[] | undefined, options?: BlobPropertyBag | undefined): Blob =>
-          TEST_BLOB_CONSTRUCTOR(blobParts, options),
-      )
+    vi.spyOn(global, 'Blob').mockImplementationOnce(
+      class {
+        constructor(blobParts?: BlobPart[] | undefined, options?: BlobPropertyBag | undefined) {
+          TEST_BLOB_CONSTRUCTOR(blobParts, options)
+        }
+      } as typeof Blob,
+    )
 
     if (!nuernbergConfig.csvExport.enabled) {
       throw Error('test failed')

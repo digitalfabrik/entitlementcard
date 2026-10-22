@@ -126,7 +126,7 @@ report on:
  must be handled carefully (logging, storage, access control).
 7. Testing: `backend` uses JUnit (`./gradlew test`, Testcontainers for
  integration tests); `administration` places tests next to the component
- (`Component.test.tsx`) using Jest and React Testing Library; `frontend`
+ (`Component.test.tsx`) using Vitest and React Testing Library; `frontend`
  places tests under `frontend/test`. New or changed behavior should come
  with tests. If a PR changes a shared function's signature, check that
  call sites in Flutter/Dart tests and in loosely-typed JS/TS test doubles

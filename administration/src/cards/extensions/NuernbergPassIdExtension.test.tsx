@@ -1,12 +1,13 @@
 import { act, fireEvent } from '@testing-library/react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { renderWithOptions } from '../../testing/render'
 import NuernbergPassIdExtension from './NuernbergPassIdExtension'
 
-jest.useFakeTimers()
+vi.useFakeTimers()
 
 describe('NuernbergPassIdExtension', () => {
-  const mockSetValue = jest.fn()
+  const mockSetValue = vi.fn()
   const defaultProps = {
     value: { nuernbergPassId: null },
     setValue: mockSetValue,
@@ -15,7 +16,7 @@ describe('NuernbergPassIdExtension', () => {
   }
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   describe('Component', () => {
@@ -78,7 +79,7 @@ describe('NuernbergPassIdExtension', () => {
       fireEvent.change(input, { target: { value: '123' } })
       fireEvent.blur(input)
       // Ignore timout for onBlur
-      act(() => jest.runAllTimers())
+      act(() => vi.runAllTimers())
 
       const errorMessage = getByText('Bitte geben Sie eine gültige Nürnberg-Pass-ID ein.')
       expect(errorMessage).toBeTruthy()

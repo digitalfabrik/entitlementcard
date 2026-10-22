@@ -1,10 +1,11 @@
 import { fireEvent } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
 
 import { renderWithOptions } from '../../../testing/render'
 import RegionSettingsCard from './RegionSettingsCard'
 
 describe('RegionSettingsCard', () => {
-  const onSave = jest.fn()
+  const onSave = vi.fn()
   const renderRegionSettingsCard = ({
     defaultApplicationActivation,
     defaultConfirmationMailActivation,

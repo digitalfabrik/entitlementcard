@@ -1,3 +1,5 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { config } from '../../../project-configs/bayern/config'
 import * as downloadDataUri from '../../../util/downloadDataUri'
 import {
@@ -10,19 +12,24 @@ import {
 import { ApplicationDataIncompleteError } from './applicationDataHelper'
 import { ApplicationToCsvError, exportApplicationToCsv } from './exportApplicationToCsv'
 
-jest.mock('csv-stringify/browser/esm/sync', () => ({
+vi.mock('csv-stringify/browser/esm/sync', () => ({
   stringify: (input: string[][]) => input[0].join(','),
 }))
-jest.mock('../../../util/downloadDataUri')
+vi.mock('../../../util/downloadDataUri')
 
 describe('exportApplicationToCsv', () => {
-  const TEST_BLOB_CONSTRUCTOR = jest.fn()
+  const TEST_BLOB_CONSTRUCTOR = vi.fn()
+  class TestBlob {
+    constructor(blobParts?: BlobPart[] | undefined, options?: BlobPropertyBag | undefined) {
+      TEST_BLOB_CONSTRUCTOR(blobParts, options)
+    }
+  }
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('should successfully export application data to CSV with correct filename', () => {
-    const downloadSpy = jest.spyOn(downloadDataUri, 'default')
+    const downloadSpy = vi.spyOn(downloadDataUri, 'default')
 
     exportApplicationToCsv(mockApplicationBlue, config)
 
@@ -35,8 +42,8 @@ describe('exportApplicationToCsv', () => {
       ...config,
       applicationFeature: {
         csvExport: false,
-        applicationJsonToPersonalData: jest.fn(),
-        applicationJsonToCardQuery: jest.fn(),
+        applicationJsonToPersonalData: vi.fn(),
+        applicationJsonToCardQuery: vi.fn(),
         applicationUsableWithApiToken: false,
       },
     }
@@ -71,7 +78,7 @@ describe('exportApplicationToCsv', () => {
   })
 
   it('should create CSV with correct mime type', () => {
-    const downloadSpy = jest.spyOn(downloadDataUri, 'default')
+    const downloadSpy = vi.spyOn(downloadDataUri, 'default')
 
     exportApplicationToCsv(mockApplicationBlue, config)
 
@@ -81,12 +88,7 @@ describe('exportApplicationToCsv', () => {
   })
 
   it('should create a correct csv blob with headline and content for blue card application', async () => {
-    jest
-      .spyOn(global, 'Blob')
-      .mockImplementationOnce(
-        (blobParts?: BlobPart[] | undefined, options?: BlobPropertyBag | undefined): Blob =>
-          TEST_BLOB_CONSTRUCTOR(blobParts, options),
-      )
+    vi.spyOn(global, 'Blob').mockImplementationOnce(TestBlob as typeof Blob)
 
     exportApplicationToCsv(mockApplicationBlue, config)
     expect(TEST_BLOB_CONSTRUCTOR).toHaveBeenCalledWith(
@@ -101,12 +103,7 @@ describe('exportApplicationToCsv', () => {
   })
 
   it('should create a correct csv blob with headline and content for gold card application', async () => {
-    jest
-      .spyOn(global, 'Blob')
-      .mockImplementationOnce(
-        (blobParts?: BlobPart[] | undefined, options?: BlobPropertyBag | undefined): Blob =>
-          TEST_BLOB_CONSTRUCTOR(blobParts, options),
-      )
+    vi.spyOn(global, 'Blob').mockImplementationOnce(TestBlob as typeof Blob)
 
     exportApplicationToCsv(mockApplicationGold, config)
     expect(TEST_BLOB_CONSTRUCTOR).toHaveBeenCalledWith(

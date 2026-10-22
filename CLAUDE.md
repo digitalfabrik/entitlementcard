@@ -25,9 +25,9 @@ npm run build                  # Production build
 npm run lint                   # ESLint + Prettier check
 npm run format                 # Auto-fix lint/format issues
 npm run ts:check               # TypeScript type check
-npm run test                   # Jest unit tests
-npm run test:watch             # Jest watch mode
-npm run test -- --testPathPattern=<file>  # Single test file
+npm run test                   # Vitest unit tests
+npm run test:watch             # Vitest watch mode
+npm run test -- <file>         # Single test file
 npm run test:e2e               # Playwright e2e tests
 npm run check-circular-deps    # Check for circular imports
 npm run codegen:gql            # Regenerate GraphQL types
