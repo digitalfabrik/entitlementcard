@@ -103,7 +103,6 @@ const PreVerifiedLabel = styled('span')(({ theme }) => ({
   borderStyle: 'solid',
   borderRadius: '2em',
   color: green[900],
-  marginRight: theme.spacing(1), // Using MUI theme for spacing
   display: 'inline-flex',
   alignItems: 'center',
   gap: theme.spacing(0.5),
