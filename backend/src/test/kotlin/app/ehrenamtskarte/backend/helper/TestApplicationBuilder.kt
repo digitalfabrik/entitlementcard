@@ -3,7 +3,6 @@ package app.ehrenamtskarte.backend.helper
 import app.ehrenamtskarte.backend.generated.enums.ApplicationType
 import app.ehrenamtskarte.backend.generated.enums.BavariaCardType
 import app.ehrenamtskarte.backend.generated.enums.BlueCardEntitlementType
-import app.ehrenamtskarte.backend.generated.enums.CompensationType
 import app.ehrenamtskarte.backend.generated.inputs.AddressInput
 import app.ehrenamtskarte.backend.generated.inputs.ApplicationDetailsInput
 import app.ehrenamtskarte.backend.generated.inputs.ApplicationInput
@@ -87,8 +86,7 @@ object TestApplicationBuilder {
                         amountOfWork = 7.5,
                         responsibility = ShortTextInput("Trainer"),
                         workSinceDate = DateInput("2020-10-06"),
-                        compensationType = CompensationType.NONE,
-                        compensationAmount = null,
+                        payment = false,
                         certificate = null,
                         isAlreadyVerified = isAlreadyVerified,
                     ),

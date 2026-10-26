@@ -678,9 +678,10 @@ input WorkAtOrganizationInput {
   amountOfWork: Float!
   certificate: AttachmentInput
   compensationAmount: Float
-  compensationType: CompensationType!
+  compensationType: CompensationType
   isAlreadyVerified: Boolean
   organization: OrganizationInput!
+  payment: Boolean @deprecated(reason : "Use compensationType and compensationAmount instead")
   responsibility: ShortTextInput!
   workSinceDate: DateInput!
 }

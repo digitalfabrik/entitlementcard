@@ -102,6 +102,7 @@ const WorkAtOrganizationForm: Form<State, WorkAtOrganizationInput, AdditionalPro
         compensationType: result.value.compensationType.shortText as CompensationType,
         compensationAmount: compensationAmountResult.value,
         isAlreadyVerified: null,
+        payment: null,
       },
     }
   },
