@@ -1,24 +1,25 @@
 import { Repeat } from '@mui/icons-material'
-import { Chip, alpha } from '@mui/material'
+import { Theme, useTheme } from '@mui/material'
 import { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { BaseChip } from '../../../components/BaseChip'
 import { ApplicationType } from '../../../graphql'
 import { CircledOneIcon } from '../../../icons/CircledOneIcon'
 
 const applicationTypeChipMetaData: Record<
   ApplicationType,
-  { i18nKey: string; icon: ReactElement; color: 'default' | 'primary' }
+  { i18nKey: string; icon: ReactElement; color: (theme: Theme) => string }
 > = {
   [ApplicationType.FirstApplication]: {
     i18nKey: 'firstApplication',
     icon: <CircledOneIcon />,
-    color: 'default',
+    color: theme => theme.palette.grey[700],
   },
   [ApplicationType.RenewalApplication]: {
     i18nKey: 'renewalApplication',
     icon: <Repeat />,
-    color: 'primary',
+    color: theme => theme.palette.primary.main,
   },
 }
 
@@ -28,26 +29,9 @@ export const ApplicationTypeChip = ({
   applicationType: ApplicationType
 }): ReactElement => {
   const { t } = useTranslation('applicationsOverview')
+  const theme = useTheme()
 
   const { i18nKey, icon, color } = applicationTypeChipMetaData[applicationType]
 
-  return (
-    <Chip
-      size='small'
-      variant='outlined'
-      icon={icon}
-      color={color}
-      label={t(i18nKey)}
-      sx={theme => ({
-        alignSelf: 'center',
-        height: 24,
-        padding: theme.spacing(0, 1),
-        gap: theme.spacing(0.5),
-        '& .MuiChip-icon': { margin: 0 },
-        '& .MuiChip-label': { padding: 0 },
-        backgroundColor:
-          color === 'primary' ? alpha(theme.palette.primary.main, 0.08) : theme.palette.grey[100],
-      })}
-    />
-  )
+  return <BaseChip label={t(i18nKey)} icon={icon} color={color(theme)} />
 }

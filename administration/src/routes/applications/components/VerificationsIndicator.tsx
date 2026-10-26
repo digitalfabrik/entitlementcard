@@ -1,10 +1,11 @@
 /* eslint-disable react/destructuring-assignment */
 import { AttachFile, EditNote } from '@mui/icons-material'
-import { Box, Stack, Tooltip, Typography, styled } from '@mui/material'
+import { Box, Stack, Tooltip, Typography } from '@mui/material'
 import { green } from '@mui/material/colors'
 import { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { BaseChip } from '../../../components/BaseChip'
 import { VerificationIcon } from '../../../components/VerificationIcon'
 import { VerificationStatus, verificationStatus } from '../../../util/verifications'
 import { Application, ApplicationVerification } from '../types/types'
@@ -97,21 +98,6 @@ const preVerifiedLabelMetaData: Record<PreVerifiedEntitlementType, PreVerifiedLa
   },
 }
 
-const PreVerifiedLabel = styled('span')(({ theme }) => ({
-  padding: '4px 10px',
-  fontSize: '14px',
-  backgroundColor: green[50],
-  borderColor: green[900],
-  borderWidth: '1px',
-  borderStyle: 'solid',
-  borderRadius: '2em',
-  color: green[900],
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: theme.spacing(0.5),
-  whiteSpace: 'nowrap',
-}))
-
 export const PreVerifiedIndicator = ({
   type,
 }: {
@@ -119,10 +105,12 @@ export const PreVerifiedIndicator = ({
 }): ReactElement => {
   const { labelText, attachment } = preVerifiedLabelMetaData[type]
   return (
-    <PreVerifiedLabel>
-      {attachment && <AttachFile sx={{ fontSize: 16 }} />}
-      {labelText}
-    </PreVerifiedLabel>
+    <BaseChip
+      label={labelText}
+      icon={attachment ? <AttachFile /> : undefined}
+      color={green[900]}
+      backgroundColor={green[50]}
+    />
   )
 }
 
