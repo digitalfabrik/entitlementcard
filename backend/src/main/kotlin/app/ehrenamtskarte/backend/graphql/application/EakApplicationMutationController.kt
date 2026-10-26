@@ -60,6 +60,7 @@ class EakApplicationMutationController(
         val attachments = files.orEmpty()
         applicationService.validateAttachmentTypes(attachments)
         applicationService.validateRegionActivatedForApplication(project, regionId)
+        applicationService.validateCardFormatsAvailableInRegion(application, regionId)
 
         if (applicationService.isValidPreVerifiedApplication(application, request)) {
             return addPreVerifiedEakApplication(application, regionId, attachments, projectConfig)
