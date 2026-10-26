@@ -86,6 +86,7 @@
   },
   "scripts": {
     "build": "vite build",
+    "build:ci": "NODE_ENV=development vite build --mode development",
     "codegen:gql": "graphql-codegen --config graphql-codegen.ts",
     "codegen:gql:dev": "graphql-codegen --config graphql-codegen.ts --watch",
     "codegen:pb": "buf generate",
@@ -95,7 +96,7 @@
     "postinstall": "npm run codegen:pb && npm run codegen:gql",
     "start": "concurrently 'npm run start:dev' 'npm run codegen:gql:dev'",
     "start:dev": "vite --open",
-    "start:ci": "vite",
+    "start:ci": "vite preview",
     "test": "jest",
     "test:e2e": "npx playwright test",
     "test:coverage": "jest --coverage",

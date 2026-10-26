@@ -632,6 +632,10 @@ jobs:
             - install_mise
             - install_node_modules
             - run:
+                command: mise x -- npm run build:ci
+                name: Build administration frontend
+                working_directory: ~/project/administration
+            - run:
                 command: tar -xf ~/attached_workspace/backend/build/distributions/backend.tar -C ~/
                 name: Extract backend distribution
             - run:
