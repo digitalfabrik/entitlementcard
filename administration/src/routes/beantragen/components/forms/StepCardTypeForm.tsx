@@ -50,14 +50,15 @@ type ValidatedInput = {
   wantsPhysicalCard: boolean
   wantsDigitalCard: boolean
 }
-const StepCardTypeForm: Form<State, ValidatedInput> = {
+type Options = { physicalCardAvailable: boolean }
+const StepCardTypeForm: Form<State, ValidatedInput, Record<string, unknown>, Options> = {
   initialState: {
     ...createCompoundInitialState(SubForms),
     wantsDigitalCard: { checked: true },
     wantsPhysicalCard: { checked: false },
   },
   getArrayBufferKeys: createCompoundGetArrayBufferKeys(SubForms),
-  validate: state => {
+  validate: (state, { physicalCardAvailable }) => {
     const partialValidationResult = createCompoundValidate(
       { cardType: CardTypeForm, wantsPhysicalCard: CheckboxForm, wantsDigitalCard: CheckboxForm },
       {
@@ -69,15 +70,16 @@ const StepCardTypeForm: Form<State, ValidatedInput> = {
     if (partialValidationResult.type === 'error') {
       return { type: 'error' }
     }
-    if (
-      !partialValidationResult.value.wantsPhysicalCard &&
-      !partialValidationResult.value.wantsDigitalCard
-    ) {
+
+    const value = physicalCardAvailable
+      ? partialValidationResult.value
+      : { ...partialValidationResult.value, wantsDigitalCard: true, wantsPhysicalCard: false }
+    if (!value.wantsPhysicalCard && !value.wantsDigitalCard) {
       return { type: 'error', message: i18next.t('applicationForms:cardTypeNotChosenError') }
     }
     // Application type must not be null if and only if card type is blue
-    if (partialValidationResult.value.cardType !== BavariaCardType.Blue) {
-      return { type: 'valid', value: { ...partialValidationResult.value, applicationType: null } }
+    if (value.cardType !== BavariaCardType.Blue) {
+      return { type: 'valid', value: { ...value, applicationType: null } }
     }
     const applicationTypeResult = ApplicationTypeForm.validate(
       state.applicationType,
@@ -88,13 +90,18 @@ const StepCardTypeForm: Form<State, ValidatedInput> = {
     }
     return {
       type: 'valid',
-      value: { ...partialValidationResult.value, applicationType: applicationTypeResult.value },
+      value: { ...value, applicationType: applicationTypeResult.value },
     }
   },
-  Component: ({ state, setState }: FormComponentProps<State>) => {
+  Component: ({
+    state,
+    setState,
+    options,
+  }: FormComponentProps<State, Record<string, unknown>, Options>) => {
     const { t } = useTranslation('application')
     const updateApplicationType = useUpdateStateCallback(setState, 'applicationType')
-    const validationResult = StepCardTypeForm.validate(state)
+    const updateWantsPhysicalCard = useUpdateStateCallback(setState, 'wantsPhysicalCard')
+    const validationResult = StepCardTypeForm.validate(state, options)
     const isInvalid = validationResult.type === 'error'
 
     return (
@@ -131,21 +138,27 @@ const StepCardTypeForm: Form<State, ValidatedInput> = {
           </>
         ) : null}
         <CustomDivider />
-        <Typography>
-          <Trans i18nKey='applicationForms:applicationTypeDescription' />
-        </Typography>
+        {options.physicalCardAvailable && (
+          <Typography>
+            <Trans i18nKey='applicationForms:applicationTypeDescription' />
+          </Typography>
+        )}
+        {/* If the region only offers digital cards, a digital card is always requested (see validate) */}
         <SubForms.wantsDigitalCard.Component
-          state={state.wantsDigitalCard}
+          state={options.physicalCardAvailable ? state.wantsDigitalCard : { checked: true }}
           setState={useUpdateStateCallback(setState, 'wantsDigitalCard')}
           label={t('wantsDigitalCard')}
           options={wantsDigitalCardOptions}
+          disabled={!options.physicalCardAvailable}
         />
-        <SubForms.wantsPhysicalCard.Component
-          state={state.wantsPhysicalCard}
-          setState={useUpdateStateCallback(setState, 'wantsPhysicalCard')}
-          label={t('wantsPhysicalCard')}
-          options={wantsPhysicalCardOptions}
-        />
+        {options.physicalCardAvailable && (
+          <SubForms.wantsPhysicalCard.Component
+            state={state.wantsPhysicalCard}
+            setState={updateWantsPhysicalCard}
+            label={t('wantsPhysicalCard')}
+            options={wantsPhysicalCardOptions}
+          />
+        )}
         {isInvalid && validationResult.message !== undefined && (
           <FormAlert errorMessage={validationResult.message} />
         )}
