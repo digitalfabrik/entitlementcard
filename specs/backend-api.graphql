@@ -255,7 +255,7 @@ type Mutation {
   "Updates the notification settings"
   updateNotificationSettings(notificationSettings: NotificationSettingsInput!): Boolean!
   "Updates the region specific settings"
-  updateRegionSettings(activatedForApplication: Boolean!, activatedForConfirmationMail: Boolean!, regionId: Int!): Boolean!
+  updateRegionSettings(activatedForApplication: Boolean!, activatedForConfirmationMail: Boolean!, availableCardFormats: AvailableCardFormats!, regionId: Int!): Boolean!
   "Verifies or rejects an application verification"
   verifyOrRejectApplicationVerification(accessKey: String!, project: String!, verified: Boolean!): Boolean!
   "Withdraws the application"
@@ -334,6 +334,7 @@ type Region {
   activatedForCardConfirmationMail: Boolean!
   applicationConfirmationMailNote: String
   applicationConfirmationMailNoteActivated: Boolean!
+  availableCardFormats: AvailableCardFormats!
   dataPrivacyPolicy: String
   id: Int!
   name: String!
@@ -381,6 +382,11 @@ enum ApplicationStatus {
 enum ApplicationType {
   FIRST_APPLICATION
   RENEWAL_APPLICATION
+}
+
+enum AvailableCardFormats {
+  DIGITAL
+  DIGITAL_AND_PHYSICAL
 }
 
 enum BavariaCardType {
@@ -437,6 +443,7 @@ enum GraphQLExceptionCode {
   MAIL_NOT_SENT
   NOT_IMPLEMENTED
   PASSWORD_RESET_KEY_EXPIRED
+  PHYSICAL_CARD_NOT_AVAILABLE_IN_REGION
   PROJECT_NOT_FOUND
   REGION_NOT_ACTIVATED_CARD_CONFIRMATION_MAIL
   REGION_NOT_ACTIVATED_FOR_APPLICATION
