@@ -8,11 +8,14 @@ import { useTranslation } from 'react-i18next'
 import { VerificationIcon } from '../../../components/VerificationIcon'
 import { VerificationStatus, verificationStatus } from '../../../util/verifications'
 import { Application, ApplicationVerification } from '../types/types'
+import { getApplicationCardType, getApplicationType } from '../utils/applicationDataHelper'
 import {
   PreVerifiedEntitlementType,
   getPreVerifiedEntitlementType,
 } from '../utils/preVerifiedEntitlements'
 import { ApplicationNoteTooltip } from './ApplicationNoteTooltip'
+import { ApplicationTypeChip } from './ApplicationTypeChip'
+import { CardTypeIndicator } from './CardTypeIndicator'
 
 const VerificationItem = (p: { status: VerificationStatus; count: number }): ReactElement => (
   <Box sx={{ display: 'inline-flex', alignItems: 'center' }} data-testid={`indicator-${p.status}`}>
@@ -130,19 +133,28 @@ export const ApplicationIndicators = ({
   application: Application
 }): ReactElement => {
   const preVerifiedEntitlementType = getPreVerifiedEntitlementType(application.jsonValue)
-
+  const applicationType = getApplicationType(application.jsonValue)
   return (
-    <Stack direction='row' spacing={2} sx={{ displayPrint: 'none' }}>
-      {(application.note ?? '').trim().length > 0 && (
-        <ApplicationNoteTooltip application={application}>
-          <EditNote color='primary' />
-        </ApplicationNoteTooltip>
-      )}
-      {preVerifiedEntitlementType !== undefined ? (
-        <PreVerifiedIndicator type={preVerifiedEntitlementType} />
-      ) : (
-        <VerificationIndicator verifications={application.verifications} />
-      )}
+    <Stack
+      direction='row'
+      sx={{ displayPrint: 'none', justifyContent: 'space-between', alignItems: 'center', gap: 2 }}
+    >
+      <Stack direction='row' sx={{ alignItems: 'center', gap: 2 }}>
+        <CardTypeIndicator type={getApplicationCardType(application.jsonValue)} />
+        {applicationType !== undefined && <ApplicationTypeChip applicationType={applicationType} />}
+      </Stack>
+      <Stack direction='row' sx={{ alignItems: 'center', gap: 2 }}>
+        {(application.note ?? '').trim().length > 0 && (
+          <ApplicationNoteTooltip application={application}>
+            <EditNote color='primary' />
+          </ApplicationNoteTooltip>
+        )}
+        {preVerifiedEntitlementType !== undefined ? (
+          <PreVerifiedIndicator type={preVerifiedEntitlementType} />
+        ) : (
+          <VerificationIndicator verifications={application.verifications} />
+        )}
+      </Stack>
     </Stack>
   )
 }
