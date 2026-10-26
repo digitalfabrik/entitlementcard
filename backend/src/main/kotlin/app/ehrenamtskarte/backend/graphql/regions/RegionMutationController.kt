@@ -1,6 +1,7 @@
 package app.ehrenamtskarte.backend.graphql.regions
 
 import app.ehrenamtskarte.backend.db.entities.APPLICATION_CONFIRMATION_MAIL_NOTE_MAX_CHARS
+import app.ehrenamtskarte.backend.db.entities.AvailableCardFormats
 import app.ehrenamtskarte.backend.db.entities.PRIVACY_POLICY_MAX_CHARS
 import app.ehrenamtskarte.backend.db.entities.mayUpdateSettingsInRegion
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
@@ -47,6 +48,7 @@ class RegionMutationController {
         @Argument regionId: Int,
         @Argument activatedForApplication: Boolean,
         @Argument activatedForConfirmationMail: Boolean,
+        @Argument availableCardFormats: AvailableCardFormats,
     ): Boolean {
         if (!dfe.requireAuthContext().admin.mayUpdateSettingsInRegion(regionId)) {
             throw ForbiddenException()
@@ -56,6 +58,7 @@ class RegionMutationController {
             RegionsRepository.findRegionById(regionId).apply {
                 this.activatedForApplication = activatedForApplication
                 activatedForCardConfirmationMail = activatedForConfirmationMail
+                this.availableCardFormats = availableCardFormats
             }
         }
 
