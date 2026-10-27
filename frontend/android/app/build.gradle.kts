@@ -40,6 +40,7 @@ android {
     }
 
     defaultConfig {
+        // Required for sentry v10
         minSdk = 26
         targetSdk = 37
         multiDexEnabled = true
