@@ -40,7 +40,7 @@ android {
     }
 
     defaultConfig {
-        minSdk = flutter.minSdkVersion
+        minSdk = 26
         targetSdk = 37
         multiDexEnabled = true
         versionCode = flutter.versionCode
