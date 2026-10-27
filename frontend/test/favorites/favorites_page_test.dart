@@ -56,47 +56,46 @@ void main() {
         'favorites': ['{"storeId":1,"storeName":"Test store","categoryId":9}'],
       });
 
-      when(() => mockClient.query(any<Options$Query$AcceptingStoresByPhysicalStoreIds>())).thenAnswer((
-        invocation,
-      ) async {
-        final options = invocation.positionalArguments.first as Options$Query$AcceptingStoresByPhysicalStoreIds;
-        return QueryResult(
-          data: {
-            'stores': [
-              {
-                'id': 1,
-                'name': 'Test store',
-                'categoryId': 9,
-                'descriptions': [
-                  {'locale': 'DE', 'text': 'Test description', '__typename': 'LocalizedDescription'},
-                ],
-                'contact': {
-                  'id': 1,
-                  'email': null,
-                  'telephone': '08671 95 80 45',
-                  'website': null,
-                  '__typename': 'Contact',
-                },
-                'physicalStore': {
-                  'id': 1,
-                  'coordinates': {'lat': 48.235256, 'lng': 12.678656, '__typename': 'Coordinates'},
-                  'address': {
-                    'street': 'Bahnhofstraße 1',
-                    'postalCode': '84503',
-                    'location': 'Altötting',
-                    '__typename': 'Address',
+      when(() => mockClient.query(any<Options$Query$AcceptingStoresByPhysicalStoreIds>()))
+          .thenAnswer((invocation) async {
+            final options = invocation.positionalArguments.first as Options$Query$AcceptingStoresByPhysicalStoreIds;
+            return QueryResult(
+              data: {
+                'stores': [
+                  {
+                    'id': 1,
+                    'name': 'Test store',
+                    'categoryId': 9,
+                    'descriptions': [
+                      {'locale': 'DE', 'text': 'Test description', '__typename': 'LocalizedDescription'},
+                    ],
+                    'contact': {
+                      'id': 1,
+                      'email': null,
+                      'telephone': '08671 95 80 45',
+                      'website': null,
+                      '__typename': 'Contact',
+                    },
+                    'physicalStore': {
+                      'id': 1,
+                      'coordinates': {'lat': 48.235256, 'lng': 12.678656, '__typename': 'Coordinates'},
+                      'address': {
+                        'street': 'Bahnhofstraße 1',
+                        'postalCode': '84503',
+                        'location': 'Altötting',
+                        '__typename': 'Address',
+                      },
+                      '__typename': 'PhysicalStore',
+                    },
+                    '__typename': 'AcceptingStore',
                   },
-                  '__typename': 'PhysicalStore',
-                },
-                '__typename': 'AcceptingStore',
+                ],
+                '__typename': 'Query',
               },
-            ],
-            '__typename': 'Query',
-          },
-          source: QueryResultSource.network,
-          options: options,
-        );
-      });
+              source: QueryResultSource.network,
+              options: options,
+            );
+          });
 
       await tester.pumpWidget(createTestWidget());
       await tester.pumpAndSettle();
@@ -116,16 +115,15 @@ void main() {
         'favorites': ['{"storeId":1,"storeName":"Test store","categoryId":9}'],
       });
 
-      when(() => mockClient.query(any<Options$Query$AcceptingStoresByPhysicalStoreIds>())).thenAnswer((
-        invocation,
-      ) async {
-        final options = invocation.positionalArguments.first as Options$Query$AcceptingStoresByPhysicalStoreIds;
-        return QueryResult(
-          data: {'stores': <Map<String, dynamic>>[], '__typename': 'Query'},
-          source: QueryResultSource.network,
-          options: options,
-        );
-      });
+      when(() => mockClient.query(any<Options$Query$AcceptingStoresByPhysicalStoreIds>()))
+          .thenAnswer((invocation) async {
+            final options = invocation.positionalArguments.first as Options$Query$AcceptingStoresByPhysicalStoreIds;
+            return QueryResult(
+              data: {'stores': <Map<String, dynamic>>[], '__typename': 'Query'},
+              source: QueryResultSource.network,
+              options: options,
+            );
+          });
 
       await tester.pumpWidget(createTestWidget());
       await tester.pumpAndSettle();

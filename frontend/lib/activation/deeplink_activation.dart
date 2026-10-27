@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:ehrenamtskarte/app.dart';
 import 'package:ehrenamtskarte/build_config/build_config.dart' show buildConfig;
 import 'package:ehrenamtskarte/home/home_page.dart';
@@ -158,9 +159,8 @@ class _DeepLinkActivationState extends State<DeepLinkActivation> {
                               setState(() {
                                 _state = _State.waiting;
                               });
-                              ScaffoldMessenger.of(
-                                context,
-                              ).showSnackBar(SnackBar(content: Text(t.common.unknownError)));
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(content: Text(t.common.unknownError)));
                               rethrow;
                             }
                           }

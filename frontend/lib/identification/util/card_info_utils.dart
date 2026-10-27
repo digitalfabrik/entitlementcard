@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:clock/clock.dart';
 import 'package:crypto/crypto.dart';
 import 'package:ehrenamtskarte/identification/activation_workflow/activation_code_parser.dart';
@@ -62,9 +63,8 @@ bool cardWasVerifiedLately(CardVerification cardVerification) {
   return lastVerificationTimestamp == null
       ? false
       : DateTime.now().toUtc().isBefore(
-          DateTime.fromMillisecondsSinceEpoch(
-            0,
-          ).add(Duration(seconds: lastVerificationTimestamp.toInt() + cardValidationExpireSeconds)),
+          DateTime.fromMillisecondsSinceEpoch(0)
+              .add(Duration(seconds: lastVerificationTimestamp.toInt() + cardValidationExpireSeconds)),
         );
 }
 

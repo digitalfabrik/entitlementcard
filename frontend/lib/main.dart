@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:ehrenamtskarte/app.dart';
 import 'package:ehrenamtskarte/build_config/build_config.dart';
 import 'package:ehrenamtskarte/configuration/definitions.dart';
@@ -27,10 +28,8 @@ Future<void> main() async {
   debugPrint('Environment: $appEnvironment');
 
   Future<void> run() {
-    return SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]).then((value) => runApp(TranslationProvider(child: SettingsProvider(child: const App()))));
+    return SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
+        .then((value) => runApp(TranslationProvider(child: SettingsProvider(child: const App()))));
   }
 
   if (kReleaseMode) {
