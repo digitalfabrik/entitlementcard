@@ -323,9 +323,6 @@ jobs:
             - install_flutter_packages:
                 precache: ios
             - run:
-                command: softwareupdate --install-rosetta --agree-to-license
-                name: Install rosetta
-            - run:
                 command: mise x ruby gem:fastlane -- fastlane ios build version_name:${NEW_VERSION_NAME} version_code:${NEW_VERSION_CODE} build_config_name:<< parameters.build_config >>
                 name: '[FL] Build'
                 working_directory: ~/project/frontend/ios
