@@ -441,7 +441,7 @@ const ApplicationCard = ({
               color='warning'
               visibility={application.status === ApplicationStatus.Withdrawn ? 'visible' : 'hidden'}
             />
-            <Typography variant='body1' color='grey.600' sx={{ whiteSpace: 'nowrap' }}>
+            <Typography variant='body1' color='textSecondary' sx={{ whiteSpace: 'nowrap' }}>
               {t('applicationDate', { date: Temporal.Instant.from(application.createdDate) })}
             </Typography>
           </Stack>
