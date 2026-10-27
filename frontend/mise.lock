@@ -24,10 +24,6 @@ url = "https://storage.googleapis.com/flutter_infra_release/releases/stable/maco
 checksum = "sha256:11e19ea3409808fe3b3765ea8149640c299e58cce6eda7c9f38fc1b4a193eb6e"
 url = "https://storage.googleapis.com/flutter_infra_release/releases/stable/windows/flutter_windows_3.47.8-stable.zip"
 
-[[tools."gem:cocoapods"]]
-version = "1.17.0"
-backend = "gem:cocoapods"
-
 [[tools."gem:fastlane"]]
 version = "2.240.1"
 backend = "gem:fastlane"
