@@ -28,7 +28,6 @@
       <excludeFolder url="file://$MODULE_DIR$/.bundle" />
       <excludeFolder url="file://$MODULE_DIR$/.bundlestubs" />
       <excludeFolder url="file://$MODULE_DIR$/android/.idea/modules" />
-      <excludeFolder url="file://$MODULE_DIR$/ios/Pods" />
       <excludeFolder url="file://$MODULE_DIR$/ios/Runner.xcodeproj/project.xcworkspace/xcuserdata" />
       <excludeFolder url="file://$MODULE_DIR$/lib/graphql_gen" />
       <excludeFolder url="file://$MODULE_DIR$/lib/l10n" />
