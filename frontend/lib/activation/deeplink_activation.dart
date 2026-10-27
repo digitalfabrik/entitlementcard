@@ -233,15 +233,15 @@ DynamicActivationCode? getActivationCode(
       const Base64Decoder().convert(Uri.decodeComponent(sanitizedBase64QrCode)),
     );
     return activationCode;
-  } on CardExpiredException catch (e, _) {
+  } on CardExpiredException catch (e) {
     updateErrorMessage(
       t.deeplinkActivation.cardExpiredExceptionMessage(expiryDate: DateFormat('dd.MM.yyyy').format(e.expiry)),
     );
     return null;
-  } on QrCodeParseException catch (e, _) {
+  } on QrCodeParseException {
     updateErrorMessage(t.deeplinkActivation.qrCodeParseExceptionMessage);
     return null;
-  } on FormatException catch (e, _) {
+  } on FormatException {
     updateErrorMessage(t.deeplinkActivation.formatExceptionMessage);
     return null;
   }
