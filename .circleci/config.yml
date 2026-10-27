@@ -120,23 +120,6 @@ commands:
                 paths:
                     - ~/.npm
                 when: on_success
-    install_pods:
-        description: Restores and saves the cocoa pods cache.
-        steps:
-            - restore_cache:
-                keys:
-                    - v1-pods-{{ checksum "ios/Podfile.lock" }}
-                    - v1-pods
-                name: Restore pods
-            - run:
-                command: mise x ruby gem:cocoapods -- pod install --deployment
-                name: Install pods
-                working_directory: ios
-            - save_cache:
-                key: v1-pods-{{ checksum "ios/Podfile.lock" }}
-                name: Save pods
-                paths:
-                    - ~/Library/Caches/CocoaPods
     install_temurin:
         description: Install the temurin JDK (for Debian base images only)
         steps:
@@ -339,7 +322,6 @@ jobs:
             - install_app_toolbelt
             - install_flutter_packages:
                 precache: ios
-            - install_pods
             - run:
                 command: softwareupdate --install-rosetta --agree-to-license
                 name: Install rosetta
