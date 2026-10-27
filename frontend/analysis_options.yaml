@@ -12,6 +12,8 @@ analyzer:
     - lib/l10n/*.g.dart
     - lib/proto/*.dart
     - pubs/**
+    - android/**
+    - ios/**
   errors:
     # Analysis options
     missing_required_param: warning
