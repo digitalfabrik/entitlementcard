@@ -58,13 +58,6 @@ const StartDayForm = ({
         onChange={date => setValue({ startDay: date })}
         error={showError}
         minDate={minStartDay}
-        textFieldSlotProps={{
-          sx: {
-            '.MuiPickersSectionList-root': {
-              padding: '5px 0',
-            },
-          },
-        }}
       />
       {showError && <FormAlert severity='error' errorMessage={getStartDayErrorMessage()} />}
     </FormGroup>
