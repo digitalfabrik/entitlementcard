@@ -58,6 +58,7 @@ const ApplicationConfirmationNoteController = ({
 
   return (
     <ApplicationConfirmationNoteCard
+      regionId={regionId}
       defaultConfirmationNote={applicationConfirmationMailNote}
       defaultConfirmationNoteActivated={applicationConfirmationMailNoteActivated}
       saveApplicationConfirmationNote={saveApplicationConfirmationNote}

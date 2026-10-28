@@ -495,10 +495,14 @@
     "freinetActivateDataTransferSuccessful": "Ihre Einstellungen zur Datenübermittlung wurden erfolgreich gespeichert.",
     "applicationConfirmationMailNoteHeadline": "Eingangsbestätigung Antrag",
     "applicationConfirmationMailNoteDialogPlaceholder": "Fügen Sie hier Ihre Notiz ein...",
-    "applicationConfirmationMailNoteExplanation": "Hier können Sie eine allgemeine Notiz hinterlegen, welche dem Antragssteller in der Eingangsbestätigungsmail des Antrags zusätzlich angezeigt wird. Sie können die Notiz jederzeit aktivieren oder deaktivieren.",
+    "applicationConfirmationMailNoteExplanation": "Zusätzliche Notiz in der Eingangsbestätigungsmail. Sie können die Notiz jederzeit aktivieren oder deaktivieren.",
     "applicationConfirmationMailNoteActivated": "Notiz aktivieren",
     "applicationConfirmationMailNoteDialogTitle": "Notiz zur Eingangsbestätigung",
-    "applicationConfirmationMailNoteSavedSuccessful": "Ihre Notizeinstellungen wurden erfolgreich geändert."
+    "applicationConfirmationMailNoteSavedSuccessful": "Ihre Notizeinstellungen wurden erfolgreich geändert.",
+    "applicationConfirmationMailPreview": "E-Mail-Vorschau",
+    "applicationConfirmationMailPreviewHint": "So sieht die E-Mail für den Antragsteller aus. Name und Link sind Beispieldaten.",
+    "applicationConfirmationMailPreviewNoteShown": "Die Notiz ist aktiviert und wird angezeigt. Sie ist nur exemplarisch hervorgehoben.",
+    "applicationConfirmationMailPreviewNoteHidden": "Die Notiz ist nicht aktiviert oder leer und wird nicht angezeigt."
   },
   "selfService": {
     "welcome": "Herzlich Willkommen!",
