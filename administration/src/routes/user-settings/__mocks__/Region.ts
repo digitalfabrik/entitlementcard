@@ -17,6 +17,8 @@ export const getTestRegion = (options: {
   applicationConfirmationMailNoteActivated:
     options.applicationConfirmationMailNoteActivated ?? false,
   applicationConfirmationMailNote: options.applicationConfirmationMailNote ?? null,
+  contactInformationActivated: false,
+  contactInformation: null,
   dataPrivacyPolicy: null,
   regionIdentifier: null,
 })
