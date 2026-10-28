@@ -1,0 +1,3 @@
+query GetApplicationConfirmationMailPreview($regionId: Int!) {
+    preview: getApplicationConfirmationMailPreview(regionId: $regionId)
+}

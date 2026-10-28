@@ -24,6 +24,9 @@ import java.util.concurrent.CompletionException
 
 private val logger by lazy { LoggerFactory.getLogger(Mailer::class.java) }
 
+private const val EXAMPLE_APPLICANT_NAME = "Erika Musterfrau"
+private const val EXAMPLE_ACCESS_KEY = "beispiel"
+
 @Service
 class Mailer(
     private val backendConfig: BackendConfiguration,
@@ -135,36 +138,32 @@ class Mailer(
             fromName = projectConfig.administrationName,
             to = personalData.emailAddress.email,
             subject = "Ihr Antrag für die Ehrenamtskarte Bayern ist eingegangen",
-            message = emailBody {
-                p { t("Sehr geehrte/r ${personalData.forenames.shortText} ${personalData.surname.shortText},") }
-                p {
-                    t(
-                        "vielen Dank für Ihren Antrag und Ihr Interesse an der Bayerischen Ehrenamtskarte. " +
-                            "Wir danken Ihnen für das Engagement und die Zeit, die Sie zum Wohle der Gemeinschaft " +
-                            "einbringen.",
-                    )
-                }
-                p {
-                    t(
-                        "Wir möchten Sie darüber informieren, dass Ihr Antrag derzeit bearbeitet wird. " +
-                            "Unter folgendem Link können Sie den aktuellen Status Ihres Antrags einsehen oder den " +
-                            "Antrag bei Bedarf zurückziehen:",
-                    )
-                    br()
-                    link(reviewApplicationLink(projectConfig, accessKey))
-                }
-                applicationConfirmationNoteParagraph(applicationConfirmationNote)
-                p {
-                    t(
-                        "Falls Sie Fragen zu Ihrem Antrag haben oder Unterstützung benötigen, " +
-                            "wenden Sie sich bitte direkt an das örtliche Landratsamt bzw. die Verwaltung Ihrer " +
-                            "kreisfreien Stadt.",
-                    )
-                }
-                finalInformationParagraph(projectConfig)
-            },
+            message = applicationApplicantMailBody(
+                projectConfig = projectConfig,
+                applicantName = "${personalData.forenames.shortText} ${personalData.surname.shortText}",
+                accessKey = accessKey,
+                applicationConfirmationNote = applicationConfirmationNote,
+            ),
         )
     }
+
+    /**
+     * Renders the HTML of the mail that is sent to the applicant after submitting an application,
+     * filled with example data and the given (possibly unsaved) application confirmation note.
+     * The note is only included if it is activated.
+     */
+    fun getApplicationApplicantMailPreview(
+        projectConfig: ProjectConfig,
+        applicationConfirmationNote: String,
+        applicationConfirmationNoteActivated: Boolean,
+    ): String =
+        applicationApplicantMailBody(
+            projectConfig = projectConfig,
+            applicantName = EXAMPLE_APPLICANT_NAME,
+            accessKey = EXAMPLE_ACCESS_KEY,
+            applicationConfirmationNote = applicationConfirmationNote.takeIf { applicationConfirmationNoteActivated },
+            highlightNote = true,
+        ).renderHtml()
 
     fun sendPreVerifiedApplicationMail(
         projectConfig: ProjectConfig,
@@ -368,9 +367,45 @@ private fun EmailBody.viewApplicationsParagraph(projectConfig: ProjectConfig) {
     }
 }
 
-private fun EmailBody.applicationConfirmationNoteParagraph(note: String?) {
-    if (!note.isNullOrBlank()) {
+private fun applicationApplicantMailBody(
+    projectConfig: ProjectConfig,
+    applicantName: String,
+    accessKey: String,
+    applicationConfirmationNote: String?,
+    highlightNote: Boolean = false,
+): EmailBody =
+    emailBody {
+        p { t("Sehr geehrte/r $applicantName,") }
         p {
+            t(
+                "vielen Dank für Ihren Antrag und Ihr Interesse an der Bayerischen Ehrenamtskarte. " +
+                    "Wir danken Ihnen für das Engagement und die Zeit, die Sie zum Wohle der Gemeinschaft " +
+                    "einbringen.",
+            )
+        }
+        p {
+            t(
+                "Wir möchten Sie darüber informieren, dass Ihr Antrag derzeit bearbeitet wird. " +
+                    "Unter folgendem Link können Sie den aktuellen Status Ihres Antrags einsehen oder den " +
+                    "Antrag bei Bedarf zurückziehen:",
+            )
+            br()
+            link(reviewApplicationLink(projectConfig, accessKey))
+        }
+        applicationConfirmationNoteParagraph(applicationConfirmationNote, highlightNote)
+        p {
+            t(
+                "Falls Sie Fragen zu Ihrem Antrag haben oder Unterstützung benötigen, " +
+                    "wenden Sie sich bitte direkt an das örtliche Landratsamt bzw. die Verwaltung Ihrer " +
+                    "kreisfreien Stadt.",
+            )
+        }
+        finalInformationParagraph(projectConfig)
+    }
+
+private fun EmailBody.applicationConfirmationNoteParagraph(note: String?, highlighted: Boolean = false) {
+    if (!note.isNullOrBlank()) {
+        p(highlighted) {
             plain(note)
         }
     }
