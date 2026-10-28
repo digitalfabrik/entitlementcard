@@ -5,11 +5,17 @@ import { useMutation, useQuery } from 'urql'
 
 import { messageFromGraphQlError } from '../../../errors'
 import {
+  GetApplicationConfirmationMailPreviewDocument,
   GetApplicationConfirmationNoteInformationDocument,
+  GraphQlExceptionCode,
   UpdateApplicationConfirmationNoteDocument,
 } from '../../../graphql'
 import getQueryResult from '../../../util/getQueryResult'
-import ApplicationConfirmationNoteCard from './ApplicationConfirmationNoteCard'
+import MailTextPreview from '../mail-text-setting/MailTextPreview'
+import MailTextSettingCard from '../mail-text-setting/MailTextSettingCard'
+
+// Must match APPLICATION_CONFIRMATION_MAIL_NOTE_MAX_CHARS in backend/src/main/kotlin/app/ehrenamtskarte/backend/db/entities/Region.kt
+const MAX_NOTE_CHARS = 1000
 
 type ApplicationConfirmationNoteControllerProps = {
   regionId: number
@@ -57,12 +63,34 @@ const ApplicationConfirmationNoteController = ({
   }
 
   return (
-    <ApplicationConfirmationNoteCard
-      regionId={regionId}
-      defaultConfirmationNote={applicationConfirmationMailNote}
-      defaultConfirmationNoteActivated={applicationConfirmationMailNoteActivated}
-      saveApplicationConfirmationNote={saveApplicationConfirmationNote}
-      isSavingApplicationConfirmationNote={updateApplicationNoteState.fetching}
+    <MailTextSettingCard
+      texts={{
+        headline: t('applicationConfirmationMailNoteHeadline'),
+        explanation: t('applicationConfirmationMailNoteExplanation'),
+        dialogTitle: t('applicationConfirmationMailNoteDialogTitle'),
+        placeholder: t('applicationConfirmationMailNoteDialogPlaceholder'),
+        activatedLabel: t('applicationConfirmationMailNoteActivated'),
+      }}
+      maxChars={MAX_NOTE_CHARS}
+      maxCharsErrorCode={GraphQlExceptionCode.InvalidApplicationConfirmationNoteSize}
+      defaultText={applicationConfirmationMailNote}
+      defaultActivated={applicationConfirmationMailNoteActivated}
+      isSaving={updateApplicationNoteState.fetching}
+      onSave={saveApplicationConfirmationNote}
+      renderPreview={(text, activated) => (
+        <MailTextPreview
+          query={GetApplicationConfirmationMailPreviewDocument}
+          variables={{
+            regionId,
+            applicationConfirmationNote: text,
+            applicationConfirmationNoteActivated: activated,
+          }}
+          text={text}
+          activated={activated}
+          textShownStatus={t('applicationConfirmationMailPreviewNoteShown')}
+          textHiddenStatus={t('applicationConfirmationMailPreviewNoteHidden')}
+        />
+      )}
     />
   )
 }
