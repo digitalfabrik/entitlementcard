@@ -5,8 +5,8 @@ import app.ehrenamtskarte.backend.config.ProjectConfig
 import app.ehrenamtskarte.backend.config.SmtpConfig
 import app.ehrenamtskarte.backend.db.entities.AdministratorEntity
 import app.ehrenamtskarte.backend.db.entities.ApplicationVerificationEntity
+import app.ehrenamtskarte.backend.db.entities.RegionEntity
 import app.ehrenamtskarte.backend.db.repositories.AdministratorsRepository
-import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.graphql.application.types.PersonalData
 import app.ehrenamtskarte.backend.graphql.exceptions.MailNotSentException
 import com.sanctionco.jmail.JMail
@@ -130,7 +130,10 @@ class Mailer(
         accessKey: String,
         regionId: Int,
     ) {
-        val applicationConfirmationNote = transaction { RegionsRepository.getApplicationConfirmationNote(regionId) }
+        val (applicationConfirmationNote, contactInformation) = transaction {
+            val region = RegionEntity.findById(regionId)
+            region?.activeApplicationConfirmationMailNote to region?.activeContactInformation
+        }
 
         sendMail(
             backendConfig = backendConfig,
@@ -143,6 +146,7 @@ class Mailer(
                 applicantName = "${personalData.forenames.shortText} ${personalData.surname.shortText}",
                 accessKey = accessKey,
                 applicationConfirmationNote = applicationConfirmationNote,
+                contactInformation = contactInformation,
             ),
         )
     }
@@ -162,7 +166,27 @@ class Mailer(
             applicantName = EXAMPLE_APPLICANT_NAME,
             accessKey = EXAMPLE_ACCESS_KEY,
             applicationConfirmationNote = applicationConfirmationNote.takeIf { applicationConfirmationNoteActivated },
-            highlightNote = true,
+            contactInformation = null,
+            highlightCustomTexts = true,
+        ).renderHtml()
+
+    /**
+     * Renders the HTML of the mail that is sent to the applicant after submitting an application,
+     * filled with example data and the given (possibly unsaved) contact information.
+     * The contact information is only included if it is activated.
+     */
+    fun getContactInformationMailPreview(
+        projectConfig: ProjectConfig,
+        contactInformation: String,
+        contactInformationActivated: Boolean,
+    ): String =
+        applicationApplicantMailBody(
+            projectConfig = projectConfig,
+            applicantName = EXAMPLE_APPLICANT_NAME,
+            accessKey = EXAMPLE_ACCESS_KEY,
+            applicationConfirmationNote = null,
+            contactInformation = contactInformation.takeIf { contactInformationActivated },
+            highlightCustomTexts = true,
         ).renderHtml()
 
     fun sendPreVerifiedApplicationMail(
@@ -172,7 +196,10 @@ class Mailer(
         accessKey: String,
         regionId: Int,
     ) {
-        val applicationConfirmationNote = transaction { RegionsRepository.getApplicationConfirmationNote(regionId) }
+        val (applicationConfirmationNote, contactInformation) = transaction {
+            val region = RegionEntity.findById(regionId)
+            region?.activeApplicationConfirmationMailNote to region?.activeContactInformation
+        }
 
         sendMail(
             backendConfig = backendConfig,
@@ -200,7 +227,7 @@ class Mailer(
                             "Verwaltung Ihrer kreisfreien Stadt.",
                     )
                 }
-                finalInformationParagraph(projectConfig)
+                finalInformationParagraph(projectConfig, contactInformation)
             },
         )
     }
@@ -252,7 +279,10 @@ class Mailer(
         deepLink: String,
         recipientAddress: String,
         recipientName: String,
+        regionId: Int,
     ) {
+        val contactInformation = transaction { RegionEntity.findById(regionId)?.activeContactInformation }
+
         sendMail(
             backendConfig = backendConfig,
             smtpConfig = projectConfig.smtp,
@@ -289,7 +319,7 @@ class Mailer(
                             "das alle notwendigen Informationen enthält.",
                     )
                 }
-                finalInformationParagraph(projectConfig)
+                finalInformationParagraph(projectConfig, contactInformation)
             },
         )
     }
@@ -299,7 +329,10 @@ class Mailer(
         applicantName: String,
         applicantAddress: String,
         rejectionMessage: String,
+        regionId: Int,
     ) {
+        val contactInformation = transaction { RegionEntity.findById(regionId)?.activeContactInformation }
+
         sendMail(
             backendConfig = backendConfig,
             smtpConfig = projectConfig.smtp,
@@ -319,7 +352,7 @@ class Mailer(
                     )
                 }
                 p { plain(rejectionMessage) }
-                finalInformationParagraph(projectConfig)
+                finalInformationParagraph(projectConfig, contactInformation)
             },
         )
     }
@@ -336,7 +369,11 @@ fun <T> collectMailErrors(items: List<T>, send: (T) -> Unit): List<GraphQLError>
         }
     }
 
-private fun EmailBody.finalInformationParagraph(projectConfig: ProjectConfig) {
+private fun EmailBody.finalInformationParagraph(
+    projectConfig: ProjectConfig,
+    contactInformation: String? = null,
+    highlightContactInformation: Boolean = false,
+) {
     p {
         t(
             "Bitte beachten Sie, dass dies eine automatisierte Nachricht ist. " +
@@ -349,6 +386,7 @@ private fun EmailBody.finalInformationParagraph(projectConfig: ProjectConfig) {
         br()
         plain(projectConfig.emailSignature)
     }
+    contactInformationParagraphs(contactInformation, highlightContactInformation)
 }
 
 private fun EmailBody.adjustNotificationsParagraph(projectConfig: ProjectConfig) {
@@ -372,7 +410,8 @@ private fun applicationApplicantMailBody(
     applicantName: String,
     accessKey: String,
     applicationConfirmationNote: String?,
-    highlightNote: Boolean = false,
+    contactInformation: String?,
+    highlightCustomTexts: Boolean = false,
 ): EmailBody =
     emailBody {
         p { t("Sehr geehrte/r $applicantName,") }
@@ -392,7 +431,7 @@ private fun applicationApplicantMailBody(
             br()
             link(reviewApplicationLink(projectConfig, accessKey))
         }
-        applicationConfirmationNoteParagraph(applicationConfirmationNote, highlightNote)
+        applicationConfirmationNoteParagraph(applicationConfirmationNote, highlightCustomTexts)
         p {
             t(
                 "Falls Sie Fragen zu Ihrem Antrag haben oder Unterstützung benötigen, " +
@@ -400,8 +439,17 @@ private fun applicationApplicantMailBody(
                     "kreisfreien Stadt.",
             )
         }
-        finalInformationParagraph(projectConfig)
+        finalInformationParagraph(projectConfig, contactInformation, highlightCustomTexts)
     }
+
+private fun EmailBody.contactInformationParagraphs(contactInformation: String?, highlighted: Boolean = false) {
+    if (!contactInformation.isNullOrBlank()) {
+        p { t("Bei Fragen zu Ihrem Antrag wenden Sie sich bitte direkt an die zuständige Stelle:") }
+        p(highlighted) {
+            plain(contactInformation)
+        }
+    }
+}
 
 private fun EmailBody.applicationConfirmationNoteParagraph(note: String?, highlighted: Boolean = false) {
     if (!note.isNullOrBlank()) {

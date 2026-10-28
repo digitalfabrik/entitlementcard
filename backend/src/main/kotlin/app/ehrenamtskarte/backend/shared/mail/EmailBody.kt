@@ -22,7 +22,8 @@ class EmailBody {
     private val children = ArrayList<Paragraph>(0)
 
     /**
-     * Adds a paragraph. A highlighted paragraph is wrapped in a blockquote, e.g. to mark customizable parts in previews.
+     * Adds a paragraph. A highlighted paragraph is wrapped in a blockquote.
+     * Only intended to mark customizable parts in mail previews, not for mails that are actually sent.
      */
     fun p(highlighted: Boolean = false, builder: Paragraph.() -> Unit) {
         children.add(Paragraph(highlighted).apply { builder() })
