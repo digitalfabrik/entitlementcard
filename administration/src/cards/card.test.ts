@@ -171,6 +171,24 @@ describe('Card', () => {
       expect(isValid(card, cardConfig)).toBeTruthy()
     })
 
+    it('should not set the default expiration date for a gold card initialized with defaults', () => {
+      const line = ['Thea Test', 'Goldkarte']
+      const headers = ['Name', 'Kartentyp']
+      const card = initializeCardFromCSV(cardConfig, line, headers, region, true)
+
+      expect(card.expirationDate).toBeNull()
+      expect(isValid(card, cardConfig)).toBeTruthy()
+    })
+
+    it('should set the default expiration date for a standard card initialized with defaults', () => {
+      const line = ['Thea Test', 'Standard']
+      const headers = ['Name', 'Kartentyp']
+      const card = initializeCardFromCSV(cardConfig, line, headers, region, true)
+
+      expect(card.expirationDate).toEqual(Temporal.PlainDate.from('2023-01-01'))
+      expect(isValid(card, cardConfig)).toBeTruthy()
+    })
+
     it('should not modify value for invalid header', () => {
       const line = ['1']
       const headers = ['Region']
