@@ -47,7 +47,7 @@ const ActivityDivider = ({ onDelete }: { onDelete?: () => void }) => {
 }
 
 const amountOfWorkOptions = { min: 0, max: 100 }
-const compensationAmountOptions = { min: 0, max: 10000 }
+const compensationAmountOptions = { min: 0, max: 10000, integer: true }
 
 const compensationTypeOptions = {
   items: [

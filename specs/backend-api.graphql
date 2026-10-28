@@ -677,7 +677,7 @@ input ShortTextInput {
 input WorkAtOrganizationInput {
   amountOfWork: Float!
   certificate: AttachmentInput
-  compensationAmount: Float
+  compensationAmount: Int
   compensationType: CompensationType
   isAlreadyVerified: Boolean
   organization: OrganizationInput!

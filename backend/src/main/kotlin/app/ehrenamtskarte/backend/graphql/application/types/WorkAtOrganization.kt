@@ -19,7 +19,7 @@ data class WorkAtOrganization(
     @Deprecated("Use compensationType and compensationAmount instead")
     val payment: Boolean? = null, // still used by Verein360
     val compensationType: CompensationType? = null,
-    val compensationAmount: Double? = null,
+    val compensationAmount: Int? = null,
     val certificate: Attachment?,
     val isAlreadyVerified: Boolean?,
 ) : JsonFieldSerializable {
