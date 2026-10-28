@@ -1,5 +1,5 @@
 import { Save } from '@mui/icons-material'
-import { Box, Stack, Tab, Tabs, TextField } from '@mui/material'
+import { Box, Stack, Tab, Tabs, TextField, Typography } from '@mui/material'
 import { ReactElement, ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -11,6 +11,7 @@ import ConfirmDialog from './ConfirmDialog'
 
 type NoteProps = {
   title: string
+  description?: string
   placeholder: string
   isOpen: boolean
   onSave: (text: string) => void
@@ -18,12 +19,15 @@ type NoteProps = {
   loading: boolean
   defaultText?: string | null
   maxChars?: number
+  maxCharsErrorCode?: GraphQlExceptionCode
   additionalContent?: ReactElement
   preview?: {
     label: string
     render: (text: string) => ReactNode
   }
 }
+
+const PREVIEW_DIALOG_CONTENT_HEIGHT = 600
 
 const TextAreaDialog = ({
   isOpen,
@@ -33,7 +37,9 @@ const TextAreaDialog = ({
   placeholder,
   defaultText,
   maxChars,
+  maxCharsErrorCode = GraphQlExceptionCode.InvalidNoteSize,
   title,
+  description,
   additionalContent,
   preview,
 }: NoteProps): ReactElement => {
@@ -43,7 +49,7 @@ const TextAreaDialog = ({
   const showPreview = preview !== undefined && activeTab === 'preview'
   const maxCharsExceeded = maxChars === undefined ? false : text.length > maxChars
   const { title: errorMessage } = graphQlErrorMap({
-    code: GraphQlExceptionCode.InvalidNoteSize,
+    code: maxCharsErrorCode,
     maxSize: maxChars,
   })
 
@@ -59,7 +65,7 @@ const TextAreaDialog = ({
       confirmButtonIcon={<Save />}
       actionDisabled={maxCharsExceeded}
       loading={loading}
-      showCloseIcon={preview !== undefined}
+      showCloseIcon
     >
       {preview !== undefined && (
         <Tabs
@@ -72,18 +78,25 @@ const TextAreaDialog = ({
         </Tabs>
       )}
       <Box
-        sx={theme => ({
-          height: theme.breakpoints.values.sm,
+        // A fixed height prevents the dialog from changing its size when switching tabs
+        sx={{
+          height: preview !== undefined ? PREVIEW_DIALOG_CONTENT_HEIGHT : undefined,
           display: 'flex',
           flexDirection: 'column',
-        })}
+        }}
       >
         {showPreview ? (
           <Box sx={{ flex: 1, minHeight: 0 }}>{preview.render(text)}</Box>
         ) : (
           <Stack sx={{ gap: 1, flex: 1, minHeight: 0 }}>
+            {description !== undefined && (
+              <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+                {description}
+              </Typography>
+            )}
             <TextField
               id='outlined-textarea'
+              rows={12}
               fullWidth
               placeholder={placeholder}
               multiline

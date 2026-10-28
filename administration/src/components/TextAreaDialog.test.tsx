@@ -73,9 +73,8 @@ describe('TextAreaDialog', () => {
   })
 
   it('should not show tabs if no preview was provided', () => {
-    const { queryByRole, queryByLabelText } = renderTextDialog({ defaultText })
+    const { queryByRole } = renderTextDialog({ defaultText })
     expect(queryByRole('tab')).toBeNull()
-    expect(queryByLabelText('Schließen')).toBeNull()
   })
 
   it('should render the preview of the current text in the preview tab', () => {
