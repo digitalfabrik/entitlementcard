@@ -24,6 +24,9 @@ data class WorkAtOrganization(
     val isAlreadyVerified: Boolean?,
 ) : JsonFieldSerializable {
     init {
+        if (payment == null && compensationType == null) {
+            throw InvalidJsonException("Either payment or compensation type must be set.")
+        }
         if (compensationType == CompensationType.NONE && compensationAmount != null) {
             throw InvalidJsonException("Compensation amount must not be set if compensation type is NONE.")
         }
