@@ -2,12 +2,14 @@ package app.ehrenamtskarte.backend.graphql.regions
 
 import app.ehrenamtskarte.backend.config.BackendConfiguration
 import app.ehrenamtskarte.backend.db.entities.APPLICATION_CONFIRMATION_MAIL_NOTE_MAX_CHARS
+import app.ehrenamtskarte.backend.db.entities.CONTACT_INFORMATION_MAX_CHARS
 import app.ehrenamtskarte.backend.db.entities.ProjectEntity
 import app.ehrenamtskarte.backend.db.entities.Projects
 import app.ehrenamtskarte.backend.db.entities.mayUpdateSettingsInRegion
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.graphql.auth.requireAuthContext
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidApplicationConfirmationNoteSizeException
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidContactInformationSizeException
 import app.ehrenamtskarte.backend.graphql.exceptions.NotEakProjectException
 import app.ehrenamtskarte.backend.graphql.regions.types.Region
 import app.ehrenamtskarte.backend.graphql.shared.EAK_BAYERN_PROJECT
@@ -104,6 +106,31 @@ class RegionQueryController(
             backendConfiguration.getProjectConfig(authContext.project),
             applicationConfirmationNote,
             applicationConfirmationNoteActivated,
+        )
+    }
+
+    @GraphQLDescription(
+        "Returns the HTML of the mail that is sent to the applicant after submitting an application, " +
+            "filled with example data. The given contact information is included if it is activated and not blank.",
+    )
+    @QueryMapping
+    fun getContactInformationMailPreview(
+        dfe: DataFetchingEnvironment,
+        @Argument regionId: Int,
+        @Argument contactInformation: String,
+        @Argument contactInformationActivated: Boolean,
+    ): String {
+        val authContext = dfe.requireAuthContext()
+        if (!authContext.admin.mayUpdateSettingsInRegion(regionId)) {
+            throw ForbiddenException()
+        }
+        if (contactInformation.length > CONTACT_INFORMATION_MAX_CHARS) {
+            throw InvalidContactInformationSizeException(CONTACT_INFORMATION_MAX_CHARS)
+        }
+        return mailer.getContactInformationMailPreview(
+            backendConfiguration.getProjectConfig(authContext.project),
+            contactInformation,
+            contactInformationActivated,
         )
     }
 }

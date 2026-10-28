@@ -244,6 +244,7 @@ class EakApplicationMutationController(
                     application.getApplicantName(),
                     application.getApplicantEmail(),
                     rejectionMessage,
+                    application.regionId.value,
                 )
             } catch (e: MailNotSentException) {
                 resultBuilder.error(e.toGraphQLError())

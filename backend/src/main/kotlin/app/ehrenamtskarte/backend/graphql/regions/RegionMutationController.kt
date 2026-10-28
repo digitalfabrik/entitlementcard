@@ -1,11 +1,13 @@
 package app.ehrenamtskarte.backend.graphql.regions
 
 import app.ehrenamtskarte.backend.db.entities.APPLICATION_CONFIRMATION_MAIL_NOTE_MAX_CHARS
+import app.ehrenamtskarte.backend.db.entities.CONTACT_INFORMATION_MAX_CHARS
 import app.ehrenamtskarte.backend.db.entities.PRIVACY_POLICY_MAX_CHARS
 import app.ehrenamtskarte.backend.db.entities.mayUpdateSettingsInRegion
 import app.ehrenamtskarte.backend.db.repositories.RegionsRepository
 import app.ehrenamtskarte.backend.graphql.auth.requireAuthContext
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidApplicationConfirmationNoteSizeException
+import app.ehrenamtskarte.backend.graphql.exceptions.InvalidContactInformationSizeException
 import app.ehrenamtskarte.backend.graphql.exceptions.InvalidDataPolicySizeException
 import app.ehrenamtskarte.backend.shared.exceptions.ForbiddenException
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
@@ -81,6 +83,31 @@ class RegionMutationController {
             RegionsRepository.findRegionById(regionId).apply {
                 applicationConfirmationMailNote = applicationConfirmationNote
                 applicationConfirmationMailNoteActivated = applicationConfirmationNoteActivated
+            }
+        }
+
+        return true
+    }
+
+    @GraphQLDescription("Updates the contact information that is appended to mails sent to applicants")
+    @MutationMapping
+    fun updateContactInformation(
+        dfe: DataFetchingEnvironment,
+        @Argument regionId: Int,
+        @Argument contactInformation: String,
+        @Argument contactInformationActivated: Boolean,
+    ): Boolean {
+        if (!dfe.requireAuthContext().admin.mayUpdateSettingsInRegion(regionId)) {
+            throw ForbiddenException()
+        }
+        if (contactInformation.length > CONTACT_INFORMATION_MAX_CHARS) {
+            throw InvalidContactInformationSizeException(CONTACT_INFORMATION_MAX_CHARS)
+        }
+
+        transaction {
+            RegionsRepository.findRegionById(regionId).apply {
+                this.contactInformation = contactInformation
+                this.contactInformationActivated = contactInformationActivated
             }
         }
 

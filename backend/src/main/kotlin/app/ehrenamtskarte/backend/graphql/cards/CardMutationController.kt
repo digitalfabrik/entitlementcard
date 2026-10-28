@@ -449,6 +449,7 @@ class CardMutationController(
                     notification.deepLink,
                     notification.recipientAddress,
                     notification.recipientName,
+                    regionId,
                 )
                 null
             } catch (_: MailNotSentException) {
