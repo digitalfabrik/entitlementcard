@@ -7,6 +7,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
 } from '@mui/material'
 import { OverridableStringUnion } from '@mui/types'
 import { ReactElement, ReactNode, useId } from 'react'
@@ -27,6 +28,7 @@ const ConfirmDialog = ({
   maxWidth = 'sm',
   showCancelButton = true,
   closeOnConfirm = true,
+  showCloseIcon = false,
 }: {
   actionDisabled?: boolean
   loading?: boolean
@@ -44,6 +46,7 @@ const ConfirmDialog = ({
   >
   showCancelButton?: boolean
   closeOnConfirm?: boolean
+  showCloseIcon?: boolean
   maxWidth?: Breakpoint
 }): ReactElement => {
   const { t } = useTranslation('misc')
@@ -58,7 +61,16 @@ const ConfirmDialog = ({
       maxWidth={maxWidth}
       aria-describedby={contentId}
     >
-      <DialogTitle>{title}</DialogTitle>
+      <DialogTitle sx={showCloseIcon ? { paddingRight: 7 } : undefined}>{title}</DialogTitle>
+      {showCloseIcon && (
+        <IconButton
+          aria-label={t('close')}
+          onClick={onClose}
+          sx={{ position: 'absolute', right: 8, top: 8 }}
+        >
+          <Close />
+        </IconButton>
+      )}
       <DialogContent id={contentId}>{children}</DialogContent>
       <DialogActions sx={{ paddingLeft: 3, paddingRight: 3, paddingBottom: 3 }}>
         {showCancelButton && (
