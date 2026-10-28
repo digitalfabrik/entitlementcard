@@ -261,15 +261,15 @@ export const initializeCardFromCSV = (
     line[headers.indexOf(cardConfig.nameColumnName)] ?? defaultCard.fullName,
   )
   const rawExpirationDate = line[headers.indexOf(cardConfig.expiryColumnName)]
-  const expirationDate =
-    safeParseGermanPlainDateString(rawExpirationDate) ?? defaultCard.expirationDate
-
-  return {
+  const card = {
     id: createRandomId(),
     fullName,
-    expirationDate,
+    expirationDate: safeParseGermanPlainDateString(rawExpirationDate),
     extensions,
   }
+  return card.expirationDate === null && !hasInfiniteLifetime(card)
+    ? { ...card, expirationDate: defaultCard.expirationDate }
+    : card
 }
 
 export const updateCard = (oldCard: Card, updatedCard: Partial<Card>): Card => {
